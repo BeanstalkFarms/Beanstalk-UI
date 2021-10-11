@@ -101,8 +101,8 @@ export default function NFTs(props) {
       />
 
       <ClaimNFT
-        buttonDescription='Mint All of your BeaNFTs in one transaction'
-        claimTitle='Mint All NFTs'
+        buttonDescription='Use this button to Mint all your Mintable BeaNFTs.'
+        claimTitle='Mint All BeaNFTs'
         nfts={unclaimedNFTs}
         claimedNfts={claimedNFTs}
         {...props}

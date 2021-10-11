@@ -54,7 +54,7 @@ const BasicTable = (props) => {
     ? <SingleButton
         backgroundColor='#3B3B3B'
         color='white'
-        description='Users can mint individual NFTs here.'
+        description='Use this button to Mint only the individual BeaNFT currently being displayed.'
         fontSize='15px'
         handleClick={() => {
           const nft = props.crates[i]
@@ -64,7 +64,7 @@ const BasicTable = (props) => {
         margin='-10px 7px 0 0'
         marginTooltip='0 0 -5px 20px'
         size='small'
-        title='Mint NFT'
+        title='Mint BeaNFT'
         width='50%'
         widthTooltip='150px'
       />
@@ -79,7 +79,7 @@ const BasicTable = (props) => {
             {Object.keys(props.crates)
               .slice(props.page * rowsPerPage, props.page * rowsPerPage + rowsPerPage)
               .map((index) => (
-                <TableRow key={'User NFT List'}>
+                <TableRow key={'User BeaNFT List'}>
                   <TableCell align='center' className={classes.lucidaStyle} component='th' scope='index'>
                     <Image
                       loader={({ src }) => {

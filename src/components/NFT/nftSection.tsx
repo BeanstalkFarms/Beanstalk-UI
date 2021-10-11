@@ -69,7 +69,7 @@ export default function NftSection(props) {
   //   sectionTitlesInfo.push('Top Deposits')
   // }
 
-  // create All NFT Transactions table
+  // create All BeaNFT Transactions table
 
   if (props.nfts !== undefined && (Object.keys(props.nfts).length > 0 )) {
     sectionsInfo.push(
@@ -77,18 +77,18 @@ export default function NftSection(props) {
         indexType='number'
         crates={props.nfts}
         colTitles={['ID', 'Tx Hash', 'Address']}
-        description='Every NFT minted will show up here'
+        description='Every BeaNFT minted will show up here.'
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
         style={{width: 'auto', maxWidth: '450px'}}
-        title='Minted NFTs'
+        title='Minted BeaNFTs'
       />
     )
-    sectionTitlesInfo.push('All NFTs')
+    sectionTitlesInfo.push('All BeaNFTs')
   }
 
-  // create User NFT Transactions table
+  // create User BeaNFT Transactions table
 
   if (props.userNFTs !== undefined && (Object.keys(props.userNFTs).length > 0 )) {
     sectionsInfo.push(
@@ -97,15 +97,15 @@ export default function NftSection(props) {
         assetType='nft'
         crates={props.userNFTs}
         colTitles={['ID', 'Transaction Hash']}
-        description='A list of your collection of NFTs'
+        description='A list of your collection of BeaNFTs.'
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
         style={{width: 'auto', maxWidth: '450px'}}
-        title='Your NFTs'
+        title='Your BeaNFTs'
       />
     )
-    sectionTitlesInfo.push('Your NFTs')
+    sectionTitlesInfo.push('Your BeaNFTs')
   }
 
   // Table Wrapper with tabs

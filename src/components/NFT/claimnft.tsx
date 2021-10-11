@@ -39,15 +39,15 @@ export default function ClaimNFT(props) {
         canClaimNFT={canClaimNFT}
         crates={nfts}
         colTitles={['ID', 'Transaction Hash']}
-        description='A list of your collection of NFTs'
+        description='A list of your collection of BeaNFTs'
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={1}
         style={{width: 'auto', maxWidth: '450px'}}
-        title='Unminted NFTs'
+        title='Unminted BeaNFTs'
       />
     )
-    sectionTitlesInfo.push('Unminted NFTs')
+    sectionTitlesInfo.push('Unminted BeaNFTs')
   }
   if (claimedNfts !== undefined && (Object.keys(claimedNfts).length > 0)) {
     sectionsInfo.push(
@@ -57,15 +57,15 @@ export default function ClaimNFT(props) {
         claimed={true}
         crates={claimedNfts}
         colTitles={['ID', 'Transaction Hash']}
-        description='A list of your collection of NFTs'
+        description='A list of your collection of BeaNFTs'
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={1}
         style={{width: 'auto', maxWidth: '450px'}}
-        title='Minted NFTs'
+        title='Minted BeaNFTs'
       />
     )
-    sectionTitlesInfo.push('Minted NFTs')
+    sectionTitlesInfo.push('Minted BeaNFTs')
   }
 
   // Table Wrapper
@@ -85,7 +85,7 @@ export default function ClaimNFT(props) {
       : null
   )
 
-  // Claim all Unclaimed NFTs Button
+  // Claim all Unclaimed BeaNFTs Button
 
   const showButton = (
     canClaimNFT
@@ -113,7 +113,7 @@ export default function ClaimNFT(props) {
   const showSection = (
     canClaimNFT || claimedNfts.length > 0
     ? <div style={headderStyle}>
-        Your NFTs
+        Your BeaNFTs
       </div>
     : null
   )
