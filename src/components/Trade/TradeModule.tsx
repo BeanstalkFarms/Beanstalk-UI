@@ -20,7 +20,7 @@ import SwapSubModule from './SwapSubModule'
 export default function TradeModule(props) {
   const [section, setSection] = useState(0)
   const sectionTitles = ['Swap', 'Send']
-  const sectionTitlesDescription = ['Swap Description - unique1234', 'Send Description - unique1234']
+  const sectionTitlesDescription = ['Trade against BEAN:ETH Uniswap pool directly on bean.money.', 'Send Beans to another Ethereum address.']
   const handleTabChange = (event, newSection) => {
     handleSwapCallback()
     setToAddress('')

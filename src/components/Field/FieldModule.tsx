@@ -21,7 +21,7 @@ export default function FieldModule(props) {
   })
 
   const sectionTitles = ['Sow']
-  const sectionTitlesDescription = ['Sowing Description - unique1234']
+  const sectionTitlesDescription = ['Use this tab to Sow Beans in the Field in exchange for Pods.']
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {

@@ -25,7 +25,7 @@ export default function SiloBeanModule(props) {
   const [page, setPage] = React.useState(0)
 
   const sectionTitles = ['Deposit', 'Withdraw']
-  const sectionTitlesDescription = ['Bean Deposit Description - unique1234', 'Bean Withdraw Description - unique1234']
+  const sectionTitlesDescription = ['Use this sub-tab to Deposit Beans to the Silo. You can toggle the settings to Deposit from Beans, ETH, or both.', 'Use this sub-tab to Withdraw Beans from the Silo. Withdrawals will be Claimable 24 Full Seasons after Withdrawal.']
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
@@ -109,7 +109,7 @@ export default function SiloBeanModule(props) {
       />
     )
     sectionTitles.push('Claim')
-    sectionTitlesDescription.push('Bean Claim Description - unique1234')
+    sectionTitlesDescription.push('Use this sub-tab to Claim Withrawn LP tokens from the Silo.')
   }
   if (section > sectionTitles.length - 1) setSection(0)
 

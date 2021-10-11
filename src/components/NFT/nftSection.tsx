@@ -36,7 +36,7 @@ export default function NftSection(props) {
   } else {
     sectionsInfo.push(
       <div style={{width:'auto', maxWidth: '450px', margin: '20px 0'}}>
-        There are no Sows this Season yet
+        There are no Sows this Season yet.
       </div>
     )
     sectionTitlesInfo.push('Top Sows')
@@ -63,7 +63,7 @@ export default function NftSection(props) {
   // } else if (price > 1) {
   //   sectionsInfo.push(
   //     <div style={{width:'auto', minWidth: '450px', margin: '20px 0'}}>
-  //       There are no Deposits this Season yet
+  //       There are no Deposits this Season yet.
   //     </div>
   //   )
   //   sectionTitlesInfo.push('Top Deposits')
