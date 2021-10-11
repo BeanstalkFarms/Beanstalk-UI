@@ -105,7 +105,7 @@ const BipTable = (props) => {
         <span className={classes.title}>
           BIPs
           <QuestionModule
-            description='Beanstalk Improvement Proposals'
+            description='A complete list of all historical BIPs.'
             margin='-12px 0 0 2px'
           />
         </span>

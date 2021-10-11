@@ -105,7 +105,7 @@ export default function Vote(props) {
         <span className={classes.title}>
           Active BIPs
           <QuestionModule
-            description='Active Beanstalk Improvement Proposals Currently Being Voted On'
+            description='Active Beanstalk Improvement Proposals currently being voted on.'
             margin='-6px 0 0 2px'
           />
         </span>

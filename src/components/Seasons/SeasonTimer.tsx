@@ -14,7 +14,7 @@ export default function SeasonTimer(props) {
     else {
       timeDifference = time
       title = 'Next Sunrise'
-      description = 'Time Until the Next Sunrise Can Be Called'
+      description = 'The time until the next Sunrise function can be called at the top of the hour.'
     }
 
     return [title, timeToString(timeDifference), description]

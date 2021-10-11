@@ -41,7 +41,7 @@ export default function SettingsFormModule(props) {
       visible: props.showLP && props.settings.mode !== SwapMode.LP,
       component: () => (
         <SwitchModule
-          description='Toggle to also Deposit LP Tokens'
+          description='Toggle to also Deposit Circulating LP Tokens.'
           label='Use LP'
           setValue={(value) => props.setSettings({...props.settings, useLP:value})}
           value={props.settings.useLP}
@@ -52,7 +52,7 @@ export default function SettingsFormModule(props) {
       visible: props.hasClaimable,
       component: () => (
         <SwitchModule
-          description='Toggle to Claim and Use Claimable Assets in Tx'
+          description='Toggle to Claim and use Claimable assets in the transaction.'
           label='Claim'
           setValue={(value) => props.setSettings({...props.settings, claim:value})}
           value={props.settings.claim}
@@ -64,7 +64,7 @@ export default function SettingsFormModule(props) {
       component: () => (
         <SwitchModule
           disabled={props.disableConvertible}
-          description='Toggle to Convert Deposited Beans into LP Tokens'
+          description='Toggle to convert Deposited Beans into Deposited LP Tokens.'
           label='Convert'
           setValue={(value) => {
             if (props.settings.mode !== SwapMode.BeanEthereum) props.handleMode(SwapMode.BeanEthereum)

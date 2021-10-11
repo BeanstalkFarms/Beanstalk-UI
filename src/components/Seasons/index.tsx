@@ -69,7 +69,7 @@ export default function Seasons(props) {
       <Grid container item xs={12} spacing={3} justifyContent='center'>
         <Grid item md={5} sm={6} xs={12} style={{maxWidth: '300px', padding: '12px'}}>
           <HeaderLabel
-            description='Current Season'
+            description='Seasons are the timekeeping mechanism of Beanstalk. Every Season is approximately 1 hour. Each Season begins when the Sunrise function is called on the Ethereum blockchain. The Sunrise function can be called by anyone at the top of each hour.'
             title='Current Season'
             value={props.season.isNegative() ? '---' : String(props.season)}
           />
