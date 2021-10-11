@@ -10,11 +10,13 @@ export default function Field(props) {
 
   return (
     <ContentSection id='field' title='Field'>
-    <div style={{maxWidth: '50%', margin: '20px 0'}}>
-      {`The Field is the credit facility of Beanstalk. Users can purchase Beanstalk debt when there is Available Soil by "Sowing" Beans for Pods. Pods are the debt asset. The interest on Sowing is the Weather. Pods will be paid off when the TWAP > 1 for a Season on a First in First Out (FIFO) basis.`}
-      <p>For more info, click <Link href={'https://google.com'} target='blank'>{' here'}</Link>.</p>
-    </div>
       <Grid container item xs={12} spacing={3} justifyContent='center'>
+        <Grid container item xs={12} spacing={3} justifyContent='center'>
+          <Grid item xs={12} sm={12} style={{maxWidth: '500px', margin: '20px 0', padding: '12px'}}>
+            {`The Field is the Beanstalk credit facility. Anyone can lend Beans to Beanstalk anytime there is Soil by Sowing Beans in the Field in exchange for Pods. Pods are the debt asset of Beanstalk. The Weather at the time of the Sow determines amount of Pods received for each Bean Sown. When the Bean supply increases Pods become redeemable for 1 Bean each on a FIFO basis.`}
+            <p><Link href={`https://medium.com/@BeanstalkFarms/earn-interest-from-beanstalk-just-the-basics-165a8cc5fecd#0b33`} target='blank'>{'Read More'}</Link>.</p>
+          </Grid>
+        </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
             description='Number of Beans that Can be Lent to Beanstalk'
@@ -35,7 +37,7 @@ export default function Field(props) {
           <HeaderLabel
             description='Interest Rate for Sowing Beans'
             title='Weather'
-            value={`${props.weather.toFixed()}%`}
+            value={`${displayBN(props.weather)}%`}
           />
         </Grid>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>

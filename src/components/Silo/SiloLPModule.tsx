@@ -27,7 +27,7 @@ export default function SiloLPModule(props) {
   const [page, setPage] = React.useState(0)
 
   const sectionTitles = ['Deposit', 'Withdraw']
-  const sectionTitlesDescription = ['LP Deposit Description - unique1234', 'LP Withdraw Description - unique1234']
+  const sectionTitlesDescription = ['Use this sub-tab to Deposit LP tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both.', 'LP Withdraw Description - unique1234']
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
