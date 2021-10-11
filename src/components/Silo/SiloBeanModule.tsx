@@ -207,6 +207,7 @@ export default function SiloBeanModule(props) {
       mode={settings.mode}
       section={section}
       sectionTitles={sectionTitles}
+      sectionTitlesDescription={sectionTitlesDescription}
       setAllowance={props.setBeanstalkBeanAllowance}
     >
       {sections[section]}

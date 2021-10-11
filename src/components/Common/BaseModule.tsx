@@ -225,5 +225,5 @@ BaseModule.defaultProps = {
   showButton: true,
   removeBackground: false,
   marginTop: '44px',
-  margin: '-12px 0 0 5px',
+  margin: '-12px 0 0 0px',
 }
