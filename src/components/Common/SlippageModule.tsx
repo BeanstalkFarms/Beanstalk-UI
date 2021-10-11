@@ -83,7 +83,7 @@ export default function SlippageModule(props) {
 }
 
 SlippageModule.defaultProps = {
-  description: 'Customize the Maximum Difference Between the Current Price and the Price when your Transaction is Processed',
+  description: 'Customize the maximum difference between the current price and the price when your transaction is mined.',
   margin: '-5px 0 0 -1px',
   marginTooltip: '0px 0 5px 10px',
 }

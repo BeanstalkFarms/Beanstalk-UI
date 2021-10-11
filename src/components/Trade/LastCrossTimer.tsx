@@ -25,7 +25,7 @@ export default function LastCrossTimer(props) {
     return [
       'Time Since $1 Crossed',
       time === 0 ? '-' : timeToString(time),
-      'Time Since TWAP Last Crossed $1'
+      'Time elapsed since the TWAP last crossed the peg.'
     ]
   }
 

@@ -54,7 +54,7 @@ const BasicTable = (props) => {
     ? <SingleButton
         backgroundColor='#3B3B3B'
         color='white'
-        description='Users can mint individual NFTs by their ID number here'
+        description='Users can mint individual NFTs here.'
         fontSize='15px'
         handleClick={() => {
           const nft = props.crates[i]

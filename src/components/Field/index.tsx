@@ -19,14 +19,14 @@ export default function Field(props) {
         </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
-            description='Number of Beans that Can be Lent to Beanstalk'
+            description='Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any amount of Beans up to the Avalable Soil in exchange for Pods.'
             title='Available Soil'
             value={displayBN(props.soil)}
           />
         </Grid>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
-            description='Total Unharvestable Pods'
+            description='The Pod Line is the total amount of Unharvestable Pods. This is the amount of debt Beanstalk has issued.'
             title='Pod Line'
             value={displayBN(props.unripenedPods)}
           />
@@ -35,14 +35,14 @@ export default function Field(props) {
       <Grid container item xs={12} spacing={3} justifyContent='center'>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
-            description='Interest Rate for Sowing Beans'
+            description='The Weather is the interest rate for Sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean Sown.'
             title='Weather'
             value={`${displayBN(props.weather)}%`}
           />
         </Grid>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
-            description='Total Harvested Pods Over All Seasons'
+            description='The total Harvested Pods over all Seasons. This is the amount of debt Beanstalk has paid off thus far.'
             title='Pods Harvested'
             value={displayBN(props.harvestableIndex)}
           />

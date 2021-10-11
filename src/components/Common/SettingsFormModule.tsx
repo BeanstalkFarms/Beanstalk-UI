@@ -78,7 +78,7 @@ export default function SettingsFormModule(props) {
       visible: props.hasRemoveLP,
       component: () => (
         <SwitchModule
-          description='Toggle to Remove the Beans and ETH from the Liquidity Pool'
+          description='Toggle to remove the Beans and ETH from the liquidity pool. By default this is toggled on.'
           label='Remove LP'
           margin='-50px 0px 0px 20px'
           setValue={(value) => props.setSettings({...props.settings, removeLP: value})}

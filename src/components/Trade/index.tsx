@@ -18,7 +18,7 @@ export default function Trade(props) {
           <HeaderLabel
             title='Current Bean Price'
             value={`$${props.beanPrice.toFixed(4)}`}
-            description='Current Bean Price on Uniswap'
+            description='This is the live Bean price on Uniswap.'
           />
         </Grid>
         <Grid item xs={12} sm={6} style={{maxWidth: '300px'}}>

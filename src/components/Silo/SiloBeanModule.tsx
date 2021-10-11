@@ -109,7 +109,7 @@ export default function SiloBeanModule(props) {
       />
     )
     sectionTitles.push('Claim')
-    sectionTitlesDescription.push('Use this sub-tab to Claim Withrawn LP tokens from the Silo.')
+    sectionTitlesDescription.push('Use this sub-tab to Claim Withrawn LP Tokens from the Silo.')
   }
   if (section > sectionTitles.length - 1) setSection(0)
 
