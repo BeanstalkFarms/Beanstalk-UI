@@ -1,0 +1,285 @@
+.App {
+  text-align: center;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  opacity: 1.5;
+  overflow-x: hidden;
+  width: 100vw;
+  font-family: Futura-PT-Book;
+  z-index: 1;
+  overflow: hidden;
+  margin-bottom: '60px';
+}
+
+.BeanstalkBG[name="Chain1"] {
+  background-image: url('../../img/beanstalk-background.svg');
+}
+
+.BeanstalkBG[name="Chain3"] {
+  background-image: url('../../img/beanstalk-background-ropsten.svg');
+}
+
+.BeanstalkBG {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 96%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+@media screen and (max-width: 599px) {
+  .BeanstalkBG {
+    background-position: 99%;
+  }
+}
+
+.BalanceSection-mobile {
+    display: none !important;
+}
+
+@media screen and (max-width: 1065px) {
+  .BalanceSection {
+    display: none !important;
+  }
+  .BalanceSection-mobile {
+    display: block !important;
+    max-width: 500px;
+  }
+  .SiloSection {
+    max-width: 1050px;
+    padding: 0px;
+  }
+}
+
+.AppContent {
+  padding-top: 100px;
+  min-height: 80vh;
+  width: 100vw;
+  position: relative;
+  display: flex;
+  font-family: Futura-PT-Book;
+}
+
+.AppBar-shadow {
+  box-shadow:
+    0px 2px 4px -1px rgb(0 0 0 / 20%),
+    0px 4px 5px 0px rgb(0 0 0 / 14%),
+    0px 1px 10px 0px rgb(0 0 0 / 12%);
+}
+
+.NavigationBar {
+  display: flex;
+  justify-content: space-between;
+}
+.NavigationBarHamburger {
+  display: none;
+}
+
+@media screen and (max-width: 770px) {
+  .NavigationBar {
+    display: none;
+  }
+  .NavigationBarHamburger {
+    display: flex;
+  }
+}
+
+.App-logo {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* .App-logo {
+    animation: App-logo-spin infinite 8s linear;
+  } */
+  .Loading-logo {
+    animation: App-logo-spin infinite 2s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.TextField-rounded fieldset {
+  border-radius: 25px;
+}
+
+.BalanceModule-title {
+  display: inline-block;
+  text-align: left;
+  font-size: 14px;
+  font-family: Futura-PT-Book;
+  margin: 2px;
+}
+.BalanceModule-balance {
+  display: inline-block;
+  font-family: Lucida Console;
+  margin: 3px;
+  width: 100%;
+}
+.BalanceModule-balanceContent {
+  display: inline;
+  margin: 10px;
+  line-height: 100%;
+  font-size: 12px;
+  font-family: Lucida Console;
+  font-weight: 400;
+  right: -10px;
+}
+.TokenBalanceModule-header {
+  text-align: left;
+  font-family: Futura-PT-Book;
+  position: absolute;
+  left:0;
+  padding-left: 10px;
+}
+.TokenBalanceModule-content {
+  text-align: right;
+  font-family: Lucida Console;
+  position:absolute;
+  width:auto;
+  right:-10px;
+}
+.nftTextField-box {
+  background-color: #F5FAFF;
+  border-radius: 25px;
+  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%),0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%);
+  padding: 25px;
+  font-size: 18px;
+  width: auto;
+  max-width: 580px;
+  justify-content: center;
+}
+
+/* For large screens */
+
+@media screen and (max-width: 899px) {
+  .nftTextField-box {
+    background-color: #F5FAFF;
+    border-radius: 25px;
+    box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%),0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%);
+    padding: 25px;
+    font-size: 18px;
+    width: auto;
+    max-width: 480px;
+    justify-content: center;
+  }
+}
+
+/* For medium screens */
+
+@media screen and (max-width: 599px) {
+  .BalanceModule-title {
+    text-align: left;
+    padding-left: 10px;
+    width: 50%;
+  }
+  .BalanceModule-balance {
+    width: 47%;
+    text-align: right;
+    padding-right: 15px;
+  }
+  .TokenBalanceModule-header {
+    padding-left: 10px;
+  }
+  .TokenBalanceModule-content {
+    text-align: right;
+    font-size: 12px;
+    width: 47%;
+    right: 0px;
+    padding-right: 15px;
+  }
+  .BalanceModule-balanceContent {
+    text-align: right;
+    width: 40%;
+    font-size: 12px;
+    right:0px;
+  }
+}
+
+/* For small screens */
+
+@media screen and (max-width: 510px) {
+  .BalanceModule-title {
+    text-align: left;
+    padding-left: 10px;
+    width: 50%;
+  }
+  .BalanceModule-balance {
+    width: 44%;
+    text-align: right;
+    padding-right: 15px;
+  }
+  .TokenBalanceModule-header {
+    padding-left: 15px;
+  }
+  .TokenBalanceModule-content {
+    text-align: right;
+    font-size: 12px;
+    width: 44%;
+    right: 0px;
+    padding-right: 20px;
+  }
+  .BalanceModule-balanceContent {
+    text-align: right;
+    width: 40%;
+    font-size: 12px;
+    right:0px;
+  }
+}
+
+/* For tiny screens */
+
+@media screen and (max-width: 400px) {
+  .BalanceModule-title {
+    text-align: left;
+    padding-left: 10px;
+    width: 50%;
+  }
+  .BalanceModule-balance {
+    width: 40%;
+    text-align: right;
+    padding-right: 15px;
+  }
+  .TokenBalanceModule-header {
+    padding-left: 15px;
+  }
+  .TokenBalanceModule-content {
+    text-align: right;
+    font-size: 12px;
+    width: 44%;
+    right: 0px;
+    padding-right: 20px;
+  }
+  .BalanceModule-balanceContent {
+    text-align: right;
+    width: 40%;
+    font-size: 12px;
+    right:0px;
+  }
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.Settings-drawer {
+  transition: right 0.5s;
+}

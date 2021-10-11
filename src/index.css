@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'Futura-PT';
+  src: url('./font/FuturaPTLight.otf');
+}
+
+@font-face {
+  font-family: 'Futura-PT-Book';
+  src: url('./font/FuturaPTBook.otf');
+}
+
+@font-face {
+  font-family: 'Lucida Console';
+  src: url('./font/LucidaConsoleRegular.ttf');
+}
+
+html, body {height: 100%;}
+
+body {
+  position: relative;
+  background-color: #DAF2FF !important;
+  margin: 0;
+  font-family: 'Futura-PT', 'Futura-PT-Book';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: 'Futura-PT', 'Futura-PT-Book', 'Lucida Console';
+}
+
+.visx-tooltip {
+  z-index: 9999; /* or whatever height is appropriate */
+}
+
+body:before {
+	content:"";
+	height:100%;
+	float:left;
+	width:0;
+	margin-top:-32767px;
+}

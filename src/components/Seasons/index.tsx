@@ -1,0 +1,95 @@
+import React, { useEffect, useRef, useState } from 'react'
+import sunriseIcon from '../../img/black-sun.svg'
+import { sunrise, chainId } from '../../util'
+
+import {
+  ContentSection,
+  Grid,
+  HeaderLabel,
+  SingleButton
+} from '../Common'
+import PegMaintenance from './PegMaintenance'
+import Governance from '../Governance'
+import SeasonReward from './SeasonReward'
+import SeasonTimer from './SeasonTimer'
+
+export default function Seasons(props) {
+  const nextSeasonTime = props.start.plus(props.season.plus(1).multipliedBy(props.period))
+  const timeUntilSunrise = (deadline) => {
+    return parseInt(deadline) - (Date.now() / 1e3)
+  }
+
+  const timer = useRef()
+  const [time, setTime] = useState(timeUntilSunrise(nextSeasonTime))
+
+  useEffect(() => {
+    timer.current = window.setInterval(() => {
+      setTime(timeUntilSunrise(nextSeasonTime))
+    }, 1000)
+    return () => {
+      window.clearInterval(timer.current)
+    }
+  }, [time, nextSeasonTime])
+
+  const advanceButton = (
+    time <= 0 && chainId === 3
+      ? <SingleButton
+          description='Advance the Season by calling the Sunrise function'
+          handleClick={() => {sunrise()}}
+          icon={sunriseIcon}
+          margin='-13px 7px 0 0'
+          size='small'
+          title='Sunrise'
+        />
+      : null
+  )
+
+  const sunriseStats = (
+    time <= 0
+      ? <Grid item md={5} sm={6} xs={12} style={{maxWidth: '300px', padding: '12px'}}>
+          <SeasonReward time={time} />
+        </Grid>
+      : null
+  )
+
+  const governanceSection = (
+    <Governance
+      key='governance'
+      bips={props.bips}
+      season={props.season}
+      totalStalk={props.totalRoots}
+      userStalk={props.userStalk}
+      votedBips={props.votedBips}
+    />
+  )
+
+  return (
+    <>
+    <ContentSection id='seasons' title='Seasons' size='20px'>
+      <Grid container item xs={12} spacing={3} justifyContent='center'>
+        <Grid item md={5} sm={6} xs={12} style={{maxWidth: '300px', padding: '12px'}}>
+          <HeaderLabel
+            description='Current Season'
+            title='Current Season'
+            value={props.season.isNegative() ? '---' : String(props.season)}
+          />
+        </Grid>
+        <Grid item md={5} sm={6} xs={12} style={{maxWidth: '300px', padding: '12px'}}>
+          <SeasonTimer time={time} />
+        </Grid>
+        {sunriseStats}
+      </Grid>
+      <Grid item md={5} sm={6} xs={12} style={{maxWidth: '300px', padding: '12px'}}>
+        {advanceButton}
+      </Grid>
+
+      <Grid container item xs={12} style={{padding: '0px', marginTop: '12px'}} justifyContent='center'>
+        <PegMaintenance {...props} />
+      </Grid>
+
+      {props.hasActiveBIP ? null : governanceSection}
+    </ContentSection>
+    {props.hasActiveBIP ? governanceSection : null}
+    </>
+  )
+}
