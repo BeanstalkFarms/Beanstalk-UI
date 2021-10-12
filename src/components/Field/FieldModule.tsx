@@ -57,6 +57,7 @@ export default function FieldModule(props) {
   let sections = [
     <SowModule
       key={0}
+      unripenedPods={props.unripenedPods}
       beanBalance={props.beanBalance}
       beanClaimableBalance={props.beanClaimableBalance}
       beanReserve={props.beanReserve}

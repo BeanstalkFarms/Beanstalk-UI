@@ -167,11 +167,8 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
         <div style={{marginRight: '5px'}}>{toBurnStalkField}</div>
         <div style={{marginLeft: '5px'}}>{toBurnSeedsField}</div>
       </div>
-      <div style={{display: 'inline-block', width: '100%', textTransform: 'uppercase', color: 'red'}}>
-        <span>{`You are burning ${displayBN(new BigNumber(fromStalkValue))} Stalk and ${displayBN(new BigNumber(fromSeedsValue))} Seeds and losing ${fromStalkValue.dividedBy(props.totalStalk).multipliedBy(100).toFixed(3)}% ownership of Beanstalk.`}</span>
-      </div>
       <div style={{display: 'inline-block', width: '100%'}}>{toTransitBeanField}</div>
-      <div style={{display: 'inline-block', width: '100%', textTransform: 'uppercase', color: 'red'}}>
+      <div style={{display: 'inline-block', width: '100%', color: 'red'}}>
         <span>{`Warning: Your withdrawal will be frozen for 24 full Seasons.`}</span>
         <br/>
         <span>{`You are burning ${displayBN(new BigNumber(fromStalkValue))} Stalk and ${displayBN(new BigNumber(fromSeedsValue))} Seeds and losing ${fromStalkValue.dividedBy(props.totalStalk).multipliedBy(100).toFixed(3)}% ownership of Beanstalk.`}</span>

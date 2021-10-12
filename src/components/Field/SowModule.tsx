@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 import React, { forwardRef, useImperativeHandle, useState } from 'react'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { BEAN, ETH, SLIPPAGE_THRESHOLD } from '../../constants'
+import {displayBN} from '../../util'
 import {
   buyAndSowBeans,
   getFromAmount,
@@ -91,14 +92,16 @@ export const SowModule = forwardRef((props, ref) => {
 
   /* Transaction Details, settings and text */
 
-  const sowText = (
+  let weatherText = (
     buyBeanValue.plus(fromBeanValue).isEqualTo(props.soil)
-      ? `Sowing Maximum Soil With ${props.weather.toFixed()}% Weather`
-      : `Sowing With ${props.weather.toFixed()}% Weather`
+      ? `Sowing Maximum Soil With ${props.weather.toFixed()}% Weather.`
+      : `Sowing With ${props.weather.toFixed()}% Weather.`
   )
-  const sowTextField = (
-    <div style={{marginTop: '-5px', fontFamily: 'Futura-PT-Book'}}>{sowText}</div>
-  )
+  let podLineText = `The Pods will be placed at the end of the ${displayBN(props.unripenedPods)} Pod line.`
+  const sowTextField = [
+    <div style={{marginTop: '-5px', fontFamily: 'Futura-PT-Book'}}>{weatherText}</div>,
+    <div style={{fontFamily: 'Futura-PT-Book'}}>{podLineText}</div>
+  ]
   const noSoilTextField = (
     props.soil.isEqualTo(0)
       ? <div style={{marginTop: '-2px', fontFamily: 'Futura-PT-Book'}}>Currently No Soil</div>
