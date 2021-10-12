@@ -4,13 +4,13 @@ import { BEAN } from '../../constants'
 import {
   isAddress,
   toStringBaseUnitBN,
-  transferBeans,
+  transferPlot,
   TrimBN
 } from '../../util'
 import { AddressInputField, ListInputField } from '../Common'
 
 export const SendPlotModule = forwardRef((props, ref) => {
-  const [place, setPlace] = useState(new BigNumber(-1))
+  const [plotIndex, setPlotIndex] = useState(new BigNumber(-1))
   const [plotEndIndex, setPlotEndIndex] = useState(new BigNumber(-1))
 
   var [snappedToAddress, setSnappedToAddress] = useState(false)
@@ -25,7 +25,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
   const handleFromChange = (event) => {
     if (event.target.value) {
       fromValueUpdated(new BigNumber(props.plots[event.target.value])) // gives you the value at the selected plot pod value
-      setPlace(event.target.value) // plot index
+      setPlotIndex(event.target.value) // plot index
       console.log(event.target.value)
     } else {
       fromValueUpdated(new BigNumber(-1))
@@ -104,14 +104,9 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
       if (plotEndIndex.isGreaterThan(0)) {
         const startPlot = '0'
-        const placeLine = place - props.index
         const endPlot = toStringBaseUnitBN(plotEndIndex, BEAN.decimals)
-        console.log('sending plots to: ' + props.toAddress)
-        console.log('Index place: ' + place)
-        console.log('place in line: ' + placeLine)
-        console.log('Start: ' + startPlot)
-        console.log('Pods: ' + endPlot)
-        transferBeans(props.toAddress, endPlot, () => {
+        const id = toStringBaseUnitBN(plotIndex, BEAN.decimals)
+        transferPlot(props.toAddress, id, startPlot, endPlot, () => {
           fromValueUpdated(new BigNumber(-1), new BigNumber(-1))
         })
 
