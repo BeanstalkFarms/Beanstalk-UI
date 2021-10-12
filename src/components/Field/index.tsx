@@ -1,6 +1,7 @@
 import { Link } from '@material-ui/core'
 import { displayBN } from '../../util'
 import { MEDIUM_INTEREST_LINK } from '../../constants'
+import BeanLogo from '../../img/bean-logo.svg'
 import {
   BaseModule,
   ContentSection,
@@ -15,26 +16,26 @@ export default function Field(props) {
   const headerLabelStyle = {
     maxWidth: '300px',
   }
-  
+
   return (
     <ContentSection id='field' title='Field'>
       <Grid container item xs={12} spacing={3} justifyContent='center'>
         <Grid container item xs={12} spacing={3} justifyContent='center'>
           <Grid item xs={12} sm={12} style={{maxWidth: '500px', margin: '20px 0', padding: '12px'}}>
-            {`The Field is the Beanstalk credit facility. Anyone can lend Beans to Beanstalk anytime there is Available Soil by Sowing Beans in the Field in exchange for Pods. Pods are the debt asset of Beanstalk. The Weather at the time of the Sow determines amount of Pods received for each Bean Sown. When the Bean supply increases Pods become redeemable for 1 Bean each on a FIFO basis.`}
+            {`The Field is the Beanstalk credit facility. Anyone can lend Beans to Beanstalk anytime there is Available Soil by sowing Beans in the Field in exchange for Pods. Pods are the debt asset of Beanstalk. The Weather of the Season Beans are sown determines the number of Pods received for each Bean sown. When the Bean supply increases, Pods become redeemable for`}&nbsp;<img style={{verticalAlign: 'middle', marginRight: '-1px', padding: '0px 0px 2px'}} height='12px' src={BeanLogo}/>{`1 each on a FIFO basis.`}
             <p><Link href={`${MEDIUM_INTEREST_LINK}#0b33`} target='blank'>{'Read More'}</Link>.</p>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
-            description='Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any amount of Beans up to the Avalable Soil in exchange for Pods.'
+            description='Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any number of Beans up to the Available Soil in exchange for Pods.'
             title='Available Soil'
             value={displayBN(props.soil)}
           />
         </Grid>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
-            description='The Pod Line is the total amount of Unharvestable Pods. This is the amount of debt Beanstalk has issued.'
+            description='The Pod Line is the total number of Unharvestable Pods. This is the amount of debt Beanstalk has issued.'
             title='Pod Line'
             value={displayBN(props.unripenedPods)}
           />
@@ -43,7 +44,7 @@ export default function Field(props) {
       <Grid container item xs={12} spacing={3} justifyContent='center'>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
-            description='The Weather is the interest rate for Sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean Sown.'
+            description='The Weather is the interest rate for sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean sown.'
             title='Weather'
             value={`${props.weather.toFixed()}%`}
           />
