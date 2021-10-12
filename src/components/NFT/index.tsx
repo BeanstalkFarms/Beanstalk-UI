@@ -81,7 +81,7 @@ export default function NFTs(props) {
     <ContentSection id='nft' title='BeaNFTs' textTransform='none'>
       <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginBottom: '20px'}}>
         <Grid container item className='nftTextField-box'>
-          <p>BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk. For more info, click <Link href={MEDIUM_NFT_LINK} target='blank'>{' here'}</Link>.</p>
+          <p>BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk. <Link href={MEDIUM_NFT_LINK} target='blank'>{'Read More'}</Link></p>
           <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginTop: '10px'}}>
               <span>{`Your BeaNFTs:  `}</span>
               <span style={{fontSize: '70px'}}>&nbsp; {userNFTs.length} &nbsp;</span>

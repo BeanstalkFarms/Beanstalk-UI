@@ -99,7 +99,7 @@ export default function Balances(props) {
             balance={props.rootsBalance.isEqualTo(0) ? new BigNumber(0) : props.grownStalkBalance}
             buttonDescription={'Farm Beans, Seeds and Stalk.'}
             claimTitle='FARM'
-            description={'Stalk grown from previously Claimed Seeds will start earning interest when Farmed.'}
+            description={'Stalk grown from previously claimed Seeds does not earn interest until it is farmed. Use this button to farm Grown Stalk.'}
             claimable={props.grownStalkBalance}
             userClaimable={props.grownStalkBalance.isGreaterThan(0)}
             widthTooltip='230px'
