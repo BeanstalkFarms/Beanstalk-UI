@@ -87,8 +87,8 @@ const BasicTable = (props) => {
                         return `${BASE_IPFS_LINK}${props.crates[index].imageIpfsHash}`
                       }}
                       src={`${BASE_IPFS_LINK}${props.crates[index].imageIpfsHash}`}
-                      width='300px'
-                      height='300px'
+                      width='290px'
+                      height='290px'
                     />
                   </TableCell>
                 </TableRow>

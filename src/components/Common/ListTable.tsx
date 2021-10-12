@@ -108,11 +108,11 @@ const BasicTable = (props) => {
   if (props.claimableBalance !== undefined && props.claimableBalance.isGreaterThan(0)) {
     if (props.asset === FarmAsset.Pods) {
       claimWord = 'Harvestable'
-      claimDescription = 'Pods that Can be Harvested for 1 Bean Each'
+      claimDescription = 'Harvestable Pods can be redeemed for 1 Bean each, at any time.'
     }
     if (props.asset === SiloAsset.Bean) {
       claimWord = 'Farmable'
-      claimDescription = `Farmable ${TokenLabel(props.asset)} are Deposited in a Specific Season the Next Time You Interact with the Silo`
+      claimDescription = `Farmable ${TokenLabel(props.asset)} are deposited in a specific Season the next time you interact with the Silo.`
     }
     claimableRow =
     <TableRow style={{backgroundColor: '#0E8837'}} >

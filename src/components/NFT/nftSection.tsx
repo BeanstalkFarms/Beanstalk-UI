@@ -14,7 +14,7 @@ export default function NftSection(props) {
   // create Top Sows table
 
   const sectionTitlesInfo = ['TOP SOWS', 'ALL']
-  const sectionTitlesDescription = ['Top Sows Description - unique1234', 'All BeaNFTs Description - unique1234']
+  const sectionTitlesDescription = ['This tab displays the top 10 sow transactions of the current Season.', 'This tab displays all previously created BeaNFTs. This includes minted and unminted BeaNFTs.']
 
   var sectionsInfo = []
   if (props.sows.length > 0) {
@@ -23,17 +23,17 @@ export default function NftSection(props) {
         indexType='time'
         crates={props.sows}
         colTitles={['Rank', 'Time', 'Beans', 'Address']}
-        description='The top 10 Sows per Season will show up here'
+        description='N/A'
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
-        style={{width:'auto', maxWidth: '550px'}}
+        style={{width:'auto', maxWidth: '450px'}}
         title='Top 10 Sows'
       />
     )
   } else {
     sectionsInfo.push(
-      <div style={{width:'auto', maxWidth: '550px', margin: '20px 0'}}>
+      <div style={{width:'auto', maxWidth: '450px', margin: '20px 0'}}>
         There are no Sows this Season yet.
       </div>
     )
@@ -47,11 +47,11 @@ export default function NftSection(props) {
         indexType='number'
         crates={props.nfts}
         colTitles={['ID', 'Tx Hash', 'Address']}
-        description='Every BeaNFT minted will show up here.'
+        description='N/A'
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
-        style={{width: 'auto', maxWidth: '550px'}}
+        style={{width: 'auto', maxWidth: '450px'}}
         title='All BeaNFTs'
       />
     )
@@ -70,19 +70,19 @@ export default function NftSection(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
-        style={{width: 'auto', maxWidth: '550px'}}
+        style={{width: 'auto', maxWidth: '450px'}}
         title='Your BeaNFTs'
       />
     )
     sectionTitlesInfo.push('YOURS')
-    sectionTitlesDescription.push('Your BeaNFTs Description - unique1234')
+    sectionTitlesDescription.push('This tab displays all of your sow transactions that have yielded a BeaNFT. This includes both minted and unminted BeaNFTs.')
   }
 
   // Table Wrapper with tabs
 
   const showListTables = (
     sectionsInfo.length > 0
-      ? <div style={{marginTop: '0px', maxWidth: '550px', minWidth: '370px', width: 'calc(350px + 10vw)'}}>
+      ? <div style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
           <BaseModule
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}

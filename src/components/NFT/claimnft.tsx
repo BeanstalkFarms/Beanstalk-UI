@@ -45,12 +45,12 @@ export default function ClaimNFT(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={1}
-        style={{width: 'auto', maxWidth: '550px'}}
+        style={{width: 'auto', maxWidth: '450px'}}
         title='Unminted BeaNFTs'
       />
     )
     sectionTitlesInfo.push('UNMINTED')
-    sectionTitlesDescription.push('Unminted BeaNFTs Description - unique1234')
+    sectionTitlesDescription.push('Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty to wait to mint.')
   }
   if (claimedNfts !== undefined && (Object.keys(claimedNfts).length > 0)) {
     sectionsInfo.push(
@@ -64,19 +64,19 @@ export default function ClaimNFT(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={1}
-        style={{width: 'auto', maxWidth: '550px'}}
+        style={{width: 'auto', maxWidth: '450px'}}
         title='Minted BeaNFTs'
       />
     )
     sectionTitlesInfo.push('MINTED')
-    sectionTitlesDescription.push('Minted BeaNFTs Description - unique1234')
+    sectionTitlesDescription.push('Use this tab to view all the BeaNFTs you own but have already minted.')
   }
 
   // Table Wrapper
 
   const showListTables = (
     sectionsInfo.length > 0
-      ? <div style={{marginTop: '0px', maxWidth: '550px', minWidth: '370px', width: 'calc(350px + 10vw)'}}>
+      ? <div style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
           <BaseModule
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
