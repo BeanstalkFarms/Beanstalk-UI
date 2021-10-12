@@ -103,7 +103,7 @@ export default function FieldModule(props) {
       />
     )
     sectionTitles.push('Harvest')
-    sectionTitlesDescription.push('Use this tab to Harvest Pods. You can also toggle the `Claim` setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.')
+    sectionTitlesDescription.push('Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.')
   }
   if (section > sectionTitles.length - 1) setSection(0)
 
@@ -152,6 +152,7 @@ export default function FieldModule(props) {
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
             sectionTitles={sectionTitlesInfo}
+            sectionTitlesDescription={['Plots Description - unique1234']}
             showButton={false}
           >
             {sectionsInfo[sectionInfo]}

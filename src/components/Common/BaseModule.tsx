@@ -30,6 +30,14 @@ export default function BaseModule(props) {
       textTransform: props.textTransform,
       borderRadius: '15px'
     },
+    singleSection: {
+      fontFamily: 'Futura-Pt-Book',
+      fontSize: s ? '14px' : '18px',
+      minWidth: '44px',
+      textTransform: props.textTransform,
+      borderRadius: '15px',
+      margin: '12px 0 12px 0'
+    },
     formButton: {
       borderRadius: '15px',
       fontFamily: 'Futura-Pt-Book',
@@ -169,7 +177,7 @@ export default function BaseModule(props) {
 
   return (
     <>
-    {props.normalBox
+    {props.normalBox && props.sectionTitles.length > 1
       ? <AppBar style={props.style} className={props.removeBackground ? classes.metaModule : classes.inputModule} position='static'>
         <Tabs
           classes={props.sectionTitles.length > 1 ? {indicator: classes.indicator} : {indicator: classes.noIndicator}}
@@ -217,11 +225,43 @@ export default function BaseModule(props) {
             </span>
         }
       </AppBar>
-      : <AppBar style={props.style} className={props.removeBackground ? classes.metaModule : classes.inputModule} position='static'>
-          <span style={{padding: '0px 10px'}}>
-            {moduleContent}
-          </span>
-        </AppBar>
+      : props.sectionTitles.length === 1 && props.normalBox
+          ? <AppBar style={props.style} className={props.removeBackground ? classes.metaModule : classes.inputModule} position='static'>
+            {
+              <span className={classes.singleSection}>
+                {props.sectionTitlesDescription !== undefined
+                  ? <div>
+                      {props.sectionTitles[0]}
+                      <QuestionModule
+                        description={props.sectionTitlesDescription[0]}
+                        margin={props.margin}
+                        marginTooltip={props.marginTooltip}
+                        widthTooltip={props.widthTooltip}
+                      />
+                    </div>
+                  : props.sectionTitles[0]
+                }
+              </span>
+            }
+            <hr style={{color: 'primary', backgroundColor: 'primary', margin: '4px 8px'}} />
+            {props.showButton
+              ? <form autoComplete='off' noValidate style={{padding: '0 10px'}}>
+                  {moduleContent}
+                </form>
+              : <span style={{padding: '0px 10px'}}>
+                  {moduleContent}
+                </span>
+            }
+          </AppBar>
+
+
+
+
+          : <AppBar style={props.style} className={props.removeBackground ? classes.metaModule : classes.inputModule} position='static'>
+              <span style={{padding: '0px 10px'}}>
+                {moduleContent}
+              </span>
+            </AppBar>
     }
     </>
   )
