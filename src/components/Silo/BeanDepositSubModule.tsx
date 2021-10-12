@@ -132,9 +132,11 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
       </div>
       <div style={{display: 'inline-block', width: '100%'}}>{toSiloBeanField}</div>
       <div style={{display: 'inline-block', width: '100%'}}>
-        <span>{`You will immediately receive ${displayBN(new BigNumber(toStalkValue))} Stalk, ${displayBN(new BigNumber(toSeedsValue))} Seeds.`}</span>
+        <span>{`You are Depositing ${displayBN(new BigNumber(toStalkValue))} Beans in the Silo.`}</span>
         <br/>
-        <span>{`This currently translates to ${toStalkValue.dividedBy(props.totalStalk).multipliedBy(100).toFixed(3)}% ownership of Beanstalk.`}</span>
+        <span>{`You will immediately receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds.`}</span>
+        <br/>
+        <span>{`${displayBN(new BigNumber(toStalkValue))} Stalk currently translates to ${toStalkValue.dividedBy(props.totalStalk).multipliedBy(100).toFixed(3)}% ownership of Beanstalk.`}</span>
       </div>
       </>
     )
