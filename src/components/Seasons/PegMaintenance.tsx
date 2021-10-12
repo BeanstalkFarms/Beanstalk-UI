@@ -162,7 +162,7 @@ export default function PegMaintenance(props) {
     one: {
       title: 'New Beans',
       balance: displayBN(newBeans),
-      description: 'The number of new Beans expected to be minted at the beginning of next Season based on the current TWAP.',
+      description: 'This is the number of new Beans expected to be minted at the beginning of next Season based on the current TWAP.',
       balanceDescription: (
         newBeans > 0
           ? `${displayFullBN(newBeans)} Beans`
@@ -173,7 +173,7 @@ export default function PegMaintenance(props) {
     two: {
       title: 'New Soil',
       balance: displayBN(newSoil),
-      description: 'The number of new Soil expected to be minted at the beginning of next Season based on the current TWAP.',
+      description: 'This is the number of new Soil expected to be minted at the beginning of next Season based on the current TWAP.',
       balanceDescription: (
         newSoil > 0
           ? `${displayFullBN(newSoil)} Soil`
@@ -184,7 +184,7 @@ export default function PegMaintenance(props) {
     three: {
       title: 'Weather Forecast',
       balance: `${props.weather.plus(deltaWeather)}%`,
-      description: 'The expected Weather next Season based on the current TWAP, Pod Rate, and Delta Demand.',
+      description: 'The Weather Forecast predicts the expected Weather next Season based on the current TWAP, Pod Rate, and Delta Demand.',
       balanceDescription: (
         deltaWeather !== 0
           ? `${props.weather.plus(deltaWeather).toString()}% Weather`
@@ -195,7 +195,7 @@ export default function PegMaintenance(props) {
     four: {
       title: 'Rain Forecast',
         balance: rainForecast,
-      description: 'Whether it is expected to Rain next Season or not. It is expected to Rain if TWAP > 1 and Pod Rate < 5%.'
+      description: 'The Rain Forecast predicts whether it is expected to Rain next Season or not. It is expected to Rain if TWAP > 1 and Pod Rate < 5%.'
     }
   }
 
@@ -204,14 +204,14 @@ export default function PegMaintenance(props) {
     one: {
       title: 'Price',
       balance: `$${price.toFixed(4)}`,
-      description: 'The time weighted average Bean price during the course of the current Season.',
+      description: 'This is the time weighted average Bean price during the course of the current Season.',
       balanceDescription: `$${displayFullBN(price)} Price`,
       placement: 'bottom'
     },
     two: {
       title: 'Pod Rate',
       balance: `${displayBN(podRate)}%`,
-      description: 'The total Unharvestable Pods as a percent of total Bean supply. The Pod Rate is the Beanstalk debt level relative to the current Bean supply.',
+      description: 'This is the total Unharvestable Pods as a percent of total Bean supply. The Pod Rate is the Beanstalk debt level relative to the current Bean supply.',
       balanceDescription: (
         podRate.isGreaterThan(0)
           ? `${displayFullBN(podRate)}% Pod Rate`
@@ -226,7 +226,7 @@ export default function PegMaintenance(props) {
           ? <span><span style={{fontSize: '19px'}}>&#8734;</span>%</span>
           : `${deltaDemand.multipliedBy(100).toFixed(2)}%`
       ),
-      description: 'Delta Demand is the rate of change in demand for Pods over the past two Seasons. Delta Demand is computed as Beans Sown this Season / Beans Sown last Season.',
+      description: 'Delta Demand is the rate of change in demand for Pods over the past two Seasons. Delta Demand is computed as Beans sown this Season / Beans sown last Season.',
       balanceDescription: (
         props.lastDSoil.isEqualTo(0) || deltaSoil.isGreaterThan(0)
           ? undefined
@@ -239,7 +239,7 @@ export default function PegMaintenance(props) {
     currentSeasonStats['four'] = {
       title: 'Seasons of Rain',
       balance: displayBN(rainingSeasons.plus(1)),
-      description: 'Number of Consecutive Seasons it has been Raining For'
+      description: 'This is the number of consecutive Seasons it has been Raining for.'
     }
   }
 
@@ -249,7 +249,7 @@ export default function PegMaintenance(props) {
         <div className='AppBar-shadow' style={pegMaintenanceStyle}>
           <span style={pegMaintenanceSpanStyle}>
             Peg Maintenance
-            <QuestionModule description='The primary datapoints of the state of Beanstalk.' margin='-6px 0 0 2px' />
+            <QuestionModule description='Below are the primary datapoints of the state of Beanstalk.' margin='-6px 0 0 2px' />
           </span>
           <hr style={lineStyle}
           />

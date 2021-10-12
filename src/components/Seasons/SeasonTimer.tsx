@@ -9,12 +9,12 @@ export default function SeasonTimer(props) {
     if (time <= 0) {
       timeDifference = -time
       title = 'Sunrise Overdue By'
-      description = 'Time Sunrise Call is Overdue'
+      description = 'This is the time elapsed since the Sunrise function could be called.'
     }
     else {
       timeDifference = time
       title = 'Next Sunrise'
-      description = 'The time until the next Sunrise function can be called at the top of the hour.'
+      description = 'This is the time until the next Sunrise function can be called at the top of the hour.'
     }
 
     return [title, timeToString(timeDifference), description]

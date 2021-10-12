@@ -25,7 +25,7 @@ export default function SiloBeanModule(props) {
   const [page, setPage] = React.useState(0)
 
   const sectionTitles = ['Deposit', 'Withdraw']
-  const sectionTitlesDescription = ['Use this sub-tab to Deposit Beans to the Silo. You can toggle the settings to Deposit from Beans, ETH, or both.', 'Use this sub-tab to Withdraw Beans from the Silo. Withdrawals will be Claimable 24 Full Seasons after Withdrawal.']
+  const sectionTitlesDescription = ['Use this sub-tab to deposit Beans to the Silo. You can toggle the settings to deposit from Beans, ETH, or both.', 'Use this sub-tab to withdraw Beans from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.']
   const sectionTitlesInfoDescription = ['View all your current Bean Deposits in this table.', 'View all your current Bean Withdrawals in this table.']
 
   const handleTabChange = (event, newSection) => {

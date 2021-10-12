@@ -80,7 +80,7 @@ export function Chart(props) {
       <TimeSelector size={props.size} setValue={props.setTimeMode} value={props.timeMode} dataMode={props.dataMode} />
       <span style={titleStyle}>
         {title}
-        <QuestionModule description={`Historical Bean ${props.title} Chart`} margin='-6px 0 0 2px' />
+        <QuestionModule description={`This is the historical Bean ${props.title} chart.`} margin='-6px 0 0 2px' />
       </span>
       <hr style={lineStyle} />
       <XYChart

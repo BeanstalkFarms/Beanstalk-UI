@@ -22,7 +22,7 @@ export default function Field(props) {
       <Grid container item xs={12} spacing={3} justifyContent='center'>
         <Grid container item xs={12} spacing={3} justifyContent='center'>
           <Grid item xs={12} sm={12} style={{maxWidth: '500px', margin: '20px 0', padding: '12px'}}>
-            {`The Field is the Beanstalk credit facility. Anyone can lend Beans to Beanstalk anytime there is Available Soil by sowing Beans in the Field in exchange for Pods. Pods are the debt asset of Beanstalk. The Weather of the Season Beans are sown determines the number of Pods received for each Bean sown. When the Bean supply increases, Pods become redeemable for`}&nbsp;<img style={{verticalAlign: 'middle', marginRight: '-1.5px', padding: '0 0 4px 0'}} height='17px' src={BeanLogo} alt='Beans'/>{`1 each on a FIFO basis.`}
+            {`The Field is the Beanstalk credit facility. Anyone can lend Beans to Beanstalk anytime there is Available Soil by sowing Beans in the Field in exchange for Pods. Pods are the debt asset of Beanstalk. The Weather during the Season Beans are sown determines the number of Pods received for each Bean sown. When the Bean supply increases, Pods become redeemable for`}&nbsp;<img style={{verticalAlign: 'middle', marginRight: '-1.5px', padding: '0 0 4px 0'}} height='17px' src={BeanLogo} alt='Beans'/>{`1 each on a FIFO basis.`}
             {` `}<Link href={`${MEDIUM_INTEREST_LINK}#0b33`} target='blank'>{'Read More'}</Link>{`.`}
           </Grid>
         </Grid>
@@ -35,7 +35,7 @@ export default function Field(props) {
         </Grid>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
-            description='The Pod Line is the total number of Unharvestable Pods. This is the amount of debt Beanstalk has issued.'
+            description='The Pod Line is the total number of Unharvestable Pods. This is the amount of debt Beanstalk has outstanding.'
             title='Pod Line'
             value={displayBN(props.unripenedPods)}
           />
@@ -51,7 +51,7 @@ export default function Field(props) {
         </Grid>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
-            description='The total Harvested Pods over all Seasons. This is the amount of debt Beanstalk has paid off thus far.'
+            description='The total Harvested Pods over all Seasons is the amount of debt Beanstalk has paid off thus far.'
             title='Pods Harvested'
             value={displayBN(props.harvestableIndex)}
           />

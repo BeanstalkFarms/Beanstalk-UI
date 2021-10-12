@@ -27,7 +27,7 @@ export default function SiloLPModule(props) {
   const [page, setPage] = React.useState(0)
 
   const sectionTitles = ['Deposit', 'Withdraw']
-  const sectionTitlesDescription = ['Use this sub-tab to Deposit LP Tokens to the Silo. You can toggle the settings to Deposit from Beans, ETH, or both and to Convert Deposited Beans to Deposited LP Tokens.', 'Use this sub-tab to Withdraw LP Tokens from the Silo. Withdrawals will be Claimable 24 Full Seasons after Withdrawal.']
+  const sectionTitlesDescription = ['Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.', 'Use this sub-tab to withdraw LP Tokens from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.']
   const sectionTitlesInfoDescription = ['View all your current LP Token Deposits in this table.', 'View all your current LP Token Withdrawals in this table.']
 
   const handleTabChange = (event, newSection) => {

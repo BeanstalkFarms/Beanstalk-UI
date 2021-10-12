@@ -8,7 +8,7 @@ export default function TabbedSilo(props) {
 
   const [section, setSection] = useState(0)
   const sectionTitles = ['LP', 'Beans']
-  const sectionTitlesDescription = ['Use this tab to Deposit, Withdraw, and Claim LP Tokens to and from the Silo.', 'Use this tab to Deposit, Withdraw, and Claim Beans to and from the Silo.']
+  const sectionTitlesDescription = ['Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.', 'Use this tab to deposit, withdraw, and claim Beans to and from the Silo.']
   const sections = [<SiloLPModule {...props} />, <SiloBeanModule {...props} />]
 
   return (
