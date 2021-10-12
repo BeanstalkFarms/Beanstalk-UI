@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js'
 import {
-  BEAN,
   UNI_V2_ETH_BEAN_LP,
   UNI_V2_USDC_ETH_LP
 } from '../constants'
@@ -8,7 +7,6 @@ import {
   account,
   beanstalkContractReadOnly,
   pairContractReadOnly,
-  tokenContractReadOnly,
   txCallback
 } from './index'
 
@@ -31,7 +29,6 @@ export async function initializeEventListener(callback, updatePrices, updateTota
   const startTime = benchmarkStart('EVENT LISTENER')
 
   const beanstalk = beanstalkContractReadOnly()
-  const bean = tokenContractReadOnly(BEAN)
   const beanPair = pairContractReadOnly(UNI_V2_ETH_BEAN_LP)
   const usdcPair = pairContractReadOnly(UNI_V2_USDC_ETH_LP)
 

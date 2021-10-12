@@ -14,6 +14,7 @@ export {
 
 export { default as AddressInputField } from './AddressInputField'
 export { default as BalanceField} from './BalanceField'
+export { default as ListInputField} from './ListInputField'
 export { default as BaseModule } from './BaseModule'
 export { default as ContentSection } from './ContentSection'
 export { default as DataBalanceModule } from'./DataBalanceModule'
@@ -59,17 +60,17 @@ FormatTooltip.defaultProps = {
 export const walletDescriptions = {
   beanBalance: 'Circulating Beans are in your wallet. Circulating Beans do not earn interest. You can Deposit Beans in the Silo or Sow Beans in the Field to start earning interest on your Beans.',
   lpBalance: 'Circulating LP Tokens are in your wallet. Circulating LP Tokens do not earn interest. You can Deposit LP Tokens in the Silo to start earning interest on your Beans. To remove your liquidity from the BEAN:ETH pool, go to Uniswap.',
-  beanSiloBalance: 'Your Beans Deposited in the Silo. This includes Beans you have been paid as interest on your Stalk holdings.',
-  lpSiloBalance: 'Your LP Tokens Deposited in the Silo.',
-  beanTransitBalance: 'Your total Beans in Unclaimable Withdrawals. Withdrawals become Claimable 24 Full Seasons after Withdrawal.',
-  lpTransitBalance: 'Your total LP Tokens in Unclaimable Withdrawals. Withdrawals become Claimable 24 Full Seasons after Withdrawal.',
-  claimableBeanBalance: 'Your total Claimable Beans from Pod Harvests and Withdrawals.',
-  claimablelpBalance: 'Your total Claimable LP Tokens from Withdrawals.',
+  beanSiloBalance: 'Your Beans Deposited in the Silo. This includes Beans you have been paid as interest on your Stalk holdings. For more information on your Deposited Beans, look in the Silo module.',
+  lpSiloBalance: 'Your LP Tokens Deposited in the Silo. For more information on your Deposited LP Tokens, look in the Silo module.',
+  beanTransitBalance: 'Your total Beans in Unclaimable Withdrawals. Withdrawals become Claimable 24 Full Seasons after Withdrawal. For more information on your Withdrawn Beans, look in the Silo module.',
+  lpTransitBalance: 'Your total LP Tokens in Unclaimable Withdrawals. Withdrawals become Claimable 24 Full Seasons after Withdrawal. For more information on your Withdrawn LP Tokens, look in the Silo module.',
+  claimableBeanBalance: 'Your total Claimable Beans from Pod Harvests and Withdrawals. For more information on your Claimable Bean Withdrawals, look in the Silo module. For more information on your Harvestable Pods, look in the Field module.',
+  claimablelpBalance: 'Your total Claimable LP Tokens from Withdrawals. For more information on your Claimable LP Token Withdrawals, look in the Silo module.',
   claimableEthBalance:  'Your total Claimable ETH from Seasons of Plenty.',
   stalkBalance: 'Your total Stalk Balance. Stalk are the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo.',
-  seedBalance: 'Your total Seed Balance. Each Seed yields .0001 Stalk each Season.',
-  podBalance: 'Your total Unharvestable Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line look in the Field module.',
-  ethBalance: 'Your Ethereum wallet total ETH Balance',
+  seedBalance: 'Your total Seed Balance. Each Seed yields .0001 Grown Stalk each Season. Grown Stalk must be Farmed in order to be included in your Stalk balance and start earning interest.',
+  podBalance: 'Your total Unharvestable Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, look in the Field module.',
+  ethBalance: 'This is the ETH balance of your wallet.',
   topLeft: 'The Bean Balance is the total USD value of your Beans and LP Tokens. This total does not include your Pods or claimable ETH.',
   topLeftTitle: 'Bean Balance',
   topRight: 'Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk.',

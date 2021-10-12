@@ -211,7 +211,7 @@ export default function PegMaintenance(props) {
     two: {
       title: 'Pod Rate',
       balance: `${displayBN(podRate)}%`,
-      description: 'The Pod Rate as a percent of total Bean supply. The Pod Rate is an indicator of the Beanstalk debt level relative to the current Bean supply.',
+      description: 'The total Unharvestable Pods as a percent of total Bean supply. The Pod Rate is the Beanstalk debt level relative to the current Bean supply.',
       balanceDescription: (
         podRate.isGreaterThan(0)
           ? `${displayFullBN(podRate)}% Pod Rate`

@@ -82,6 +82,7 @@ export const SowModule = forwardRef((props, ref) => {
 
   const toPodField = (
     <TokenOutputField
+      key='pods'
       token={FarmAsset.Pods}
       value={toPodValue}
       // value={MaxBN(buyBeanValue, new BigNumber(0)).plus(MaxBN(fromBeanValue, new BigNumber(0)))}
@@ -99,8 +100,8 @@ export const SowModule = forwardRef((props, ref) => {
   )
   let podLineText = `The Pods will be placed at the end of the ${displayBN(props.unripenedPods)} Pod line.`
   const sowTextField = [
-    <div style={{marginTop: '-5px', fontFamily: 'Futura-PT-Book'}}>{weatherText}</div>,
-    <div style={{fontFamily: 'Futura-PT-Book'}}>{podLineText}</div>
+    <div key='Weather' style={{marginTop: '-5px', fontFamily: 'Futura-PT-Book'}}>{weatherText}</div>,
+    <div key='PodLine' style={{fontFamily: 'Futura-PT-Book'}}>{podLineText}</div>
   ]
   const noSoilTextField = (
     props.soil.isEqualTo(0)

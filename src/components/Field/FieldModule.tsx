@@ -4,9 +4,10 @@ import { IconButton } from '@material-ui/core'
 import ListIcon from '@material-ui/icons/List'
 import { BASE_SLIPPAGE } from '../../constants'
 import { approveBeanstalkBean, SwapMode } from '../../util'
-import { BaseModule, FarmAsset, ListTable } from '../Common'
+import { CryptoAsset, BaseModule, FarmAsset, ListTable } from '../Common'
 import { SowModule } from './SowModule'
 import { HarvestModule } from './HarvestModule'
+import { SendPlotModule } from './SendPlotModule'
 
 export default function FieldModule(props) {
 
@@ -19,6 +20,8 @@ export default function FieldModule(props) {
     mode: null,
     slippage: new BigNumber(BASE_SLIPPAGE),
   })
+
+  const [toAddress, setToAddress] = useState('')
 
   const sectionTitles = ['Sow']
   const sectionTitlesDescription = ['Use this tab to sow Beans in the Field in exchange for Pods.']
@@ -42,13 +45,13 @@ export default function FieldModule(props) {
   }
 
   const sowRef = useRef<any>()
-  // const sendRef = useRef<any>()
+  const sendRef = useRef<any>()
   const harvestRef = useRef<any>()
   function handleForm() {
     switch (section) {
       case 0: sowRef.current.handleForm(); break
-      // case 1: sendRef.current.handleForm(); break
-      case 1: harvestRef.current.handleForm(); break
+      case 1: sendRef.current.handleForm(); break
+      case 2: harvestRef.current.handleForm(); break
       default: break
     }
   }
@@ -73,25 +76,7 @@ export default function FieldModule(props) {
       soil={props.soil}
       updateExpectedPrice={props.updateExpectedPrice}
       weather={props.weather}
-    />,
-    // <SendModule
-    //   key={1}
-    //   claimable={props.claimable}
-    //   crates={props.beanDeposits}
-    //   hasClaimable={props.hasClaimable}
-    //   locked={section === 1 && props.locked}
-    //   maxFromBeanVal={props.beanSiloBalance}
-    //   maxFromSeedsVal={props.seedBalance}
-    //   maxFromStalkVal={props.stalkBalance}
-    //   ref={withdrawRef}
-    //   season={props.season}
-    //   setIsFormDisabled={setIsFormDisabled}
-    //   setSection={setSection}
-    //   setSettings={setSettings}
-    //   settings={settings}
-    //   totalStalk={props.totalStalk}
-    // />
-  ]
+    />]
   if (props.harvestablePodBalance.isGreaterThan(0)) {
     sections.push(
       <HarvestModule
@@ -105,6 +90,24 @@ export default function FieldModule(props) {
     )
     sectionTitles.push('Harvest')
     sectionTitlesDescription.push('Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.')
+  }
+  if (Object.keys(props.plots).length > 0) {
+    sections.push(
+    <SendPlotModule
+      key={2}
+      plots={props.plots}
+      hasPlots={props.plots !== undefined && (Object.keys(props.plots).length > 0 || props.harvestablePodBalance.isGreaterThan(0))}
+      index={parseFloat(props.harvestableIndex)}
+      fromAddress={props.address}
+      fromToken={CryptoAsset.Bean}
+      ref={sendRef}
+      setIsFormDisabled={setIsFormDisabled}
+      setToAddress={setToAddress}
+      setSection={setSection}
+      toAddress={toAddress}
+    />)
+    sectionTitles.push('Send')
+    sectionTitlesDescription.push('Use this tab to send Plots to another Ethereum address.')
   }
   if (section > sectionTitles.length - 1) setSection(0)
 
@@ -177,7 +180,7 @@ export default function FieldModule(props) {
       handleApprove={approveBeanstalkBean}
       handleForm={handleForm}
       handleTabChange={handleTabChange}
-      isDisabled={isFormDisabled}
+      isDisabled={isFormDisabled && sectionTitles[section] !== 'Harvest'}
       marginTop='14px'
       mode={settings.mode}
       section={section}
