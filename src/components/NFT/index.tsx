@@ -81,7 +81,7 @@ export default function NFTs(props) {
     <ContentSection id='nft' title='BeaNFTs' textTransform='none'>
       <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginBottom: '20px'}}>
         <Grid container item className='nftTextField-box'>
-          <p>BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk. <Link href={MEDIUM_NFT_LINK} target='blank'>{'Read More'}</Link></p>
+          <p>BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk. <Link href={MEDIUM_NFT_LINK} target='blank'>{'Read More'}</Link>{`.`}</p>
           <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginTop: '10px'}}>
               <span>{`Your BeaNFTs:  `}</span>
               <span style={{fontSize: '70px'}}>&nbsp; {userNFTs.length} &nbsp;</span>
@@ -92,15 +92,15 @@ export default function NFTs(props) {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container item xs={12} justifyContent='center' alignItems='center' style={width > 500 ? {width:'550px'} : {width:'250px'}}>
+
         <NftSection
           sows={sows}
           nfts={nfts}
           userNFTs={userNFTs}
           {...props}
         />
-      </Grid>
-      <Grid container item xs={12} justifyContent='center' alignItems='center' style={width > 500 ? {width:'550px'} : {width:'250px'}}>
+
+
         <ClaimNFT
           buttonDescription='Use this button to Mint all your Mintable BeaNFTs.'
           claimTitle='MINT ALL'
@@ -108,7 +108,7 @@ export default function NFTs(props) {
           claimedNfts={claimedNFTs}
           {...props}
         />
-      </Grid>
+
     </ContentSection>
   )
 }

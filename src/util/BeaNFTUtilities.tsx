@@ -30,8 +30,6 @@ export const getMintedNFTs = async () => {
     return [ownedIds, tradedIds]
 }
 
-let lastId = -1
-
 export const listenForNFTTransfers = async(callback) => {
     const beaNFT = beaNFTContractReadOnly()
     beaNFT.events.allEvents({

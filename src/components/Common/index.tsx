@@ -14,6 +14,7 @@ export {
 
 export { default as AddressInputField } from './AddressInputField'
 export { default as BalanceField} from './BalanceField'
+export { default as ListInputField} from './ListInputField'
 export { default as BaseModule } from './BaseModule'
 export { default as ContentSection } from './ContentSection'
 export { default as DataBalanceModule } from'./DataBalanceModule'

@@ -27,13 +27,13 @@ export default function NftSection(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
-        style={{width:'auto', maxWidth: '550px'}}
+        style={{width:'auto', maxWidth: '450px'}}
         title='Top 10 Sows'
       />
     )
   } else {
     sectionsInfo.push(
-      <div style={{width:'auto', maxWidth: '550px', margin: '20px 0'}}>
+      <div style={{width:'auto', maxWidth: '450px', margin: '20px 0'}}>
         There are no Sows this Season yet.
       </div>
     )
@@ -51,7 +51,7 @@ export default function NftSection(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
-        style={{width: 'auto', maxWidth: '550px'}}
+        style={{width: 'auto', maxWidth: '450px'}}
         title='All BeaNFTs'
       />
     )
@@ -70,7 +70,7 @@ export default function NftSection(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
-        style={{width: 'auto', maxWidth: '550px'}}
+        style={{width: 'auto', maxWidth: '450px'}}
         title='Your BeaNFTs'
       />
     )
@@ -82,7 +82,7 @@ export default function NftSection(props) {
 
   const showListTables = (
     sectionsInfo.length > 0
-      ? <div style={{marginTop: '0px', maxWidth: '550px', minWidth: '370px', width: 'calc(350px + 10vw)'}}>
+      ? <div style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
           <BaseModule
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
