@@ -14,7 +14,7 @@ export default function NftSection(props) {
   // create Top Sows table
 
   const sectionTitlesInfo = ['TOP SOWS', 'ALL']
-  const sectionTitlesDescription = ['Top Sows Description - unique1234', 'All BeaNFTs Description - unique1234']
+  const sectionTitlesDescription = ['This tab displays the top 10 sow transactions of the current Season.', 'This tab displays all previously created BeaNFTs. This includes minted and unminted BeaNFTs.']
 
   var sectionsInfo = []
   if (props.sows.length > 0) {
@@ -23,7 +23,7 @@ export default function NftSection(props) {
         indexType='time'
         crates={props.sows}
         colTitles={['Rank', 'Time', 'Beans', 'Address']}
-        description='The top 10 Sows per Season will show up here'
+        description='N/A'
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
@@ -47,7 +47,7 @@ export default function NftSection(props) {
         indexType='number'
         crates={props.nfts}
         colTitles={['ID', 'Tx Hash', 'Address']}
-        description='Every BeaNFT minted will show up here.'
+        description='N/A'
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
@@ -75,7 +75,7 @@ export default function NftSection(props) {
       />
     )
     sectionTitlesInfo.push('YOURS')
-    sectionTitlesDescription.push('Your BeaNFTs Description - unique1234')
+    sectionTitlesDescription.push('This tab displays all of your sow transactions that have yielded a BeaNFT. This includes both minted and unminted BeaNFTs.')
   }
 
   // Table Wrapper with tabs

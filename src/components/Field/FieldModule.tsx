@@ -153,7 +153,7 @@ export default function FieldModule(props) {
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
             sectionTitles={sectionTitlesInfo}
-            sectionTitlesDescription={['Plots Description - unique1234']}
+            sectionTitlesDescription={['A Plot of Pods is created every time Beans are Sown. Plots have a place in the Pod Line based on the order they were created. Entire Plots and sections of Plots can be transferred using the Send tab of the Field module.']}
             showButton={false}
           >
             {sectionsInfo[sectionInfo]}

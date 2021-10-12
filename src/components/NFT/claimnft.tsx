@@ -50,7 +50,7 @@ export default function ClaimNFT(props) {
       />
     )
     sectionTitlesInfo.push('UNMINTED')
-    sectionTitlesDescription.push('Unminted BeaNFTs Description - unique1234')
+    sectionTitlesDescription.push('Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty to wait to mint.')
   }
   if (claimedNfts !== undefined && (Object.keys(claimedNfts).length > 0)) {
     sectionsInfo.push(
@@ -69,7 +69,7 @@ export default function ClaimNFT(props) {
       />
     )
     sectionTitlesInfo.push('MINTED')
-    sectionTitlesDescription.push('Minted BeaNFTs Description - unique1234')
+    sectionTitlesDescription.push('Use this tab to view all the BeaNFTs you own but have already minted.')
   }
 
   // Table Wrapper
