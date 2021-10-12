@@ -1,4 +1,4 @@
-import { beanstalkContract, txCallback } from './index'
+import { beanstalkContract, txCallback, account } from './index'
 
 export const sowBeans = async (amount, claimable, callback) => {
   (claimable
@@ -22,6 +22,14 @@ export const buyAndSowBeans = async (amount, buyBeanAmount, ethAmount, claimable
 
 export const harvest = async (plots, callback) => {
   beanstalkContract().harvest(plots).then(response => {
+    callback()
+    response.wait().then(receipt => { txCallback() })
+  })
+}
+
+export const transferPlot = async (recipient, index, start, end, callback) => {
+  beanstalkContract().transferPlot(account, recipient, index, start, end)
+  .then(response => {
     callback()
     response.wait().then(receipt => { txCallback() })
   })
