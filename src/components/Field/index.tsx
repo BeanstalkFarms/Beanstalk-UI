@@ -1,7 +1,12 @@
 import { Link } from '@material-ui/core'
 import { displayBN } from '../../util'
 import { MEDIUM_INTEREST_LINK } from '../../constants'
-import { ContentSection, Grid, HeaderLabel, BaseModule } from '../Common'
+import {
+  BaseModule,
+  ContentSection,
+  Grid,
+  HeaderLabel
+} from '../Common'
 import FieldModule from './FieldModule'
 
 export default function Field(props) {
