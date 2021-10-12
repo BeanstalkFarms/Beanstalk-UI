@@ -21,7 +21,7 @@ export default function FieldModule(props) {
   })
 
   const sectionTitles = ['Sow']
-  const sectionTitlesDescription = ['Use this tab to Sow Beans in the Field in exchange for Pods.']
+  const sectionTitlesDescription = ['Use this tab to sow Beans in the Field in exchange for Pods.']
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
@@ -116,7 +116,7 @@ export default function FieldModule(props) {
         claimableBalance={props.harvestablePodBalance}
         claimableCrates={props.harvestablePlots}
         crates={props.plots}
-        description='Sown Plots will show up here'
+        description='Sown Plots will show up here.'
         handleChange={handlePageChange}
         indexTitle='Place in Line'
         index={parseFloat(props.harvestableIndex)}
