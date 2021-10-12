@@ -23,7 +23,7 @@ export default function Field(props) {
         <Grid container item xs={12} spacing={3} justifyContent='center'>
           <Grid item xs={12} sm={12} style={{maxWidth: '500px', margin: '20px 0', padding: '12px'}}>
             {`The Field is the Beanstalk credit facility. Anyone can lend Beans to Beanstalk anytime there is Available Soil by sowing Beans in the Field in exchange for Pods. Pods are the debt asset of Beanstalk. The Weather of the Season Beans are sown determines the number of Pods received for each Bean sown. When the Bean supply increases, Pods become redeemable for`}&nbsp;<img style={{verticalAlign: 'middle', marginRight: '-1.5px', padding: '0 0 3px 0'}} height='16px' src={BeanLogo} alt='bean logo'/>{`1 each on a FIFO basis.`}
-            <p><Link href={`${MEDIUM_INTEREST_LINK}#0b33`} target='blank'>{'Read More'}</Link>.</p>
+            {` `}<Link href={`${MEDIUM_INTEREST_LINK}#0b33`} target='blank'>{'Read More'}</Link>{`.`}
           </Grid>
         </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>

@@ -92,15 +92,15 @@ export default function NFTs(props) {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container item xs={12} justifyContent='center' alignItems='center' style={width > 500 ? {width:'550px'} : {width:'250px'}}>
+
         <NftSection
           sows={sows}
           nfts={nfts}
           userNFTs={userNFTs}
           {...props}
         />
-      </Grid>
-      <Grid container item xs={12} justifyContent='center' alignItems='center' style={width > 500 ? {width:'550px'} : {width:'250px'}}>
+
+
         <ClaimNFT
           buttonDescription='Use this button to Mint all your Mintable BeaNFTs.'
           claimTitle='MINT ALL'
@@ -108,7 +108,7 @@ export default function NFTs(props) {
           claimedNfts={claimedNFTs}
           {...props}
         />
-      </Grid>
+
     </ContentSection>
   )
 }

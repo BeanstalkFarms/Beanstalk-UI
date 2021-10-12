@@ -45,7 +45,7 @@ export default function ClaimNFT(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={1}
-        style={{width: 'auto', maxWidth: '550px'}}
+        style={{width: 'auto', maxWidth: '450px'}}
         title='Unminted BeaNFTs'
       />
     )
@@ -64,7 +64,7 @@ export default function ClaimNFT(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={1}
-        style={{width: 'auto', maxWidth: '550px'}}
+        style={{width: 'auto', maxWidth: '450px'}}
         title='Minted BeaNFTs'
       />
     )
@@ -76,7 +76,7 @@ export default function ClaimNFT(props) {
 
   const showListTables = (
     sectionsInfo.length > 0
-      ? <div style={{marginTop: '0px', maxWidth: '550px', minWidth: '370px', width: 'calc(350px + 10vw)'}}>
+      ? <div style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
           <BaseModule
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
