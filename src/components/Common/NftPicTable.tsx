@@ -111,7 +111,7 @@ const BasicTable = (props) => {
                         <Link href={`${BASE_IPFS_LINK}${props.crates[index].metadataIpfsHash}`} color='inherit' target='blank'>
                           <span>{`${props.crates[index].metadataIpfsHash.substring(0, 6)}...${props.crates[index].metadataIpfsHash.substring(props.crates[index].metadataIpfsHash.length - 4)}`}</span>
                         </Link>
-                        <div>
+                        <div style={{margin: '-2px 0'}}>
                         {showButton(index)}
                         </div>
                       </div>
