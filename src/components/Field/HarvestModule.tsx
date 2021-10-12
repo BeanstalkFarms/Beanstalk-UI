@@ -15,7 +15,6 @@ import {
 } from '../Common'
 
 export const HarvestModule = forwardRef((props, ref) => {
-  props.setIsFormDisabled(props.harvestablePodBalance.isLessThanOrEqualTo(0))
 
   /* Input Fields */
 

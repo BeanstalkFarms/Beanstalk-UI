@@ -19,6 +19,7 @@ export default function AddressInputField(props) {
     fontFamily: 'Futura-PT-Book',
     fontSize: 'calc(9px + 0.7vmin)',
     marginLeft: '13px',
+    marginTop: props.marginTop,
     textAlign: 'left' as const,
     textTransform: 'uppercase' as const,
     width: 'calc(100% - 13px)',
@@ -46,7 +47,7 @@ export default function AddressInputField(props) {
   }
 
   return (
-    <div style={{margin: '8px 0'}}>
+    <div>
       <div style={smallLabels}>{'Recipient Address'}</div>
 
       <TextField
@@ -76,7 +77,5 @@ export default function AddressInputField(props) {
 }
 
 AddressInputField.defaultProps = {
-  action: 'Send',
-  token: 'Beans',
-  maxval: 0,
+  marginTop: '8px',
 }

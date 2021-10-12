@@ -58,6 +58,7 @@ export default function SendSubModule(props) {
       setAddress={props.setWalletText}
       fromAddress={props.address}
       handleChange={handleChange}
+      marginTop={window.innerWidth > 400 ? '8px' : '7px'}
       snapped={snappedToAddress}
       handleClear={clearHandler}
       isValidAddress={isValidAddress}

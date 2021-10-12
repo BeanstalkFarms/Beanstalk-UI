@@ -82,6 +82,7 @@ const BasicTable = (props) => {
                 <TableRow key={'User BeaNFT List'}>
                   <TableCell align='center' className={classes.lucidaStyle} component='th' scope='index'>
                     <Image
+                      unoptimized
                       loader={({ src }) => {
                         return `${BASE_IPFS_LINK}${props.crates[index].imageIpfsHash}`
                       }}
