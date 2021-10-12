@@ -64,7 +64,7 @@ const BasicTable = (props) => {
         margin='-10px 7px 0 0'
         marginTooltip='0 0 -5px 20px'
         size='small'
-        title='Mint BeaNFT'
+        title='Mint One'
         width='50%'
         widthTooltip='150px'
       />
@@ -86,8 +86,8 @@ const BasicTable = (props) => {
                         return `${BASE_IPFS_LINK}${props.crates[index].imageIpfsHash}`
                       }}
                       src={`${BASE_IPFS_LINK}${props.crates[index].imageIpfsHash}`}
-                      width='245px'
-                      height='245px'
+                      width='300px'
+                      height='300px'
                     />
                   </TableCell>
                 </TableRow>
@@ -98,19 +98,21 @@ const BasicTable = (props) => {
                 .map((index) => (
                   <TableRow key={index}>
                     <TableCell align='center' className={classes.lucidaStyle} component='th' scope='index'>
-                    <div>
-                      {props.claimed
-                        ? <Link href={`${BASE_OPENSEA_LINK}/${props.crates[index].id}`} color='inherit' target='blank'>
-                            {`ID: ${props.crates[index].id}`}
-                          </Link>
-                        : `ID: ${props.crates[index].id}`
-                      }
-                      <br/>
-                      <span>{`Metadata: `}</span>
-                      <Link href={`${BASE_IPFS_LINK}${props.crates[index].metadataIpfsHash}`} color='inherit' target='blank'>
-                        <span>{`${props.crates[index].metadataIpfsHash.substring(0, 6)}...${props.crates[index].metadataIpfsHash.substring(props.crates[index].metadataIpfsHash.length - 4)}`}</span>
-                      </Link>
-                      {showButton(index)}
+                      <div>
+                        {props.claimed
+                          ? <Link href={`${BASE_OPENSEA_LINK}/${props.crates[index].id}`} color='inherit' target='blank'>
+                              {`ID: ${props.crates[index].id}`}
+                            </Link>
+                          : `ID: ${props.crates[index].id}`
+                        }
+                        <br/>
+                        <span>{`Metadata: `}</span>
+                        <Link href={`${BASE_IPFS_LINK}${props.crates[index].metadataIpfsHash}`} color='inherit' target='blank'>
+                          <span>{`${props.crates[index].metadataIpfsHash.substring(0, 6)}...${props.crates[index].metadataIpfsHash.substring(props.crates[index].metadataIpfsHash.length - 4)}`}</span>
+                        </Link>
+                        <div>
+                        {showButton(index)}
+                        </div>
                       </div>
                     </TableCell>
                   </TableRow>

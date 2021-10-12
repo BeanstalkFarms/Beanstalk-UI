@@ -16,7 +16,6 @@ export default function ClaimNFT(props) {
     fontSize: '24px',
     marginTop: '40px',
     padding: '5px',
-    textTransform: 'uppercase',
     width: '100%'
   }
 
@@ -28,9 +27,12 @@ export default function ClaimNFT(props) {
   }
   const handlePageChange = (event, newPage) => { setPage(newPage) }
 
-  var sectionTitlesInfo = []
-  var sectionsInfo = []
   const canClaimNFT = nfts.length > 0
+
+  var sectionTitlesInfo = []
+  var sectionTitlesDescription = []
+
+  var sectionsInfo = []
   if (nfts !== undefined && Object.keys(nfts).length > 0 && canClaimNFT) {
     sectionsInfo.push(
       <NftPicTable
@@ -43,11 +45,12 @@ export default function ClaimNFT(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={1}
-        style={{width: 'auto', maxWidth: '450px'}}
+        style={{width: 'auto', maxWidth: '550px'}}
         title='Unminted BeaNFTs'
       />
     )
-    sectionTitlesInfo.push('Unminted BeaNFTs')
+    sectionTitlesInfo.push('UNMINTED')
+    sectionTitlesDescription.push('Unminted BeaNFTs Description - unique1234')
   }
   if (claimedNfts !== undefined && (Object.keys(claimedNfts).length > 0)) {
     sectionsInfo.push(
@@ -61,23 +64,26 @@ export default function ClaimNFT(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={1}
-        style={{width: 'auto', maxWidth: '450px'}}
+        style={{width: 'auto', maxWidth: '550px'}}
         title='Minted BeaNFTs'
       />
     )
-    sectionTitlesInfo.push('Minted BeaNFTs')
+    sectionTitlesInfo.push('MINTED')
+    sectionTitlesDescription.push('Minted BeaNFTs Description - unique1234')
   }
 
   // Table Wrapper
 
   const showListTables = (
     sectionsInfo.length > 0
-      ? <div style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
+      ? <div style={{marginTop: '0px', maxWidth: '550px', minWidth: '370px', width: 'calc(350px + 10vw)'}}>
           <BaseModule
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
             sectionTitles={sectionTitlesInfo}
+            sectionTitlesDescription={sectionTitlesDescription}
             showButton={false}
+            textTransform='none'
           >
             {sectionsInfo[sectionInfo]}
           </BaseModule>
@@ -106,6 +112,7 @@ export default function ClaimNFT(props) {
         title={props.claimTitle}
         width='80%'
         widthTooltip='150px'
+        textTransform='none'
       />
     : null
   )
@@ -113,7 +120,7 @@ export default function ClaimNFT(props) {
   const showSection = (
     canClaimNFT || claimedNfts.length > 0
     ? <div style={headderStyle}>
-        Your BeaNFTs
+        YOUR BeaNFTs
       </div>
     : null
   )
@@ -125,9 +132,9 @@ export default function ClaimNFT(props) {
         <Grid container item justifyContent='center' alignItems='flex-start' style={{marginBottom: '20px'}}>
           {showListTables}
         </Grid>
-        <Grid container item justifyContent='center' >
-          {showButton}
-        </Grid>
+      </Grid>
+      <Grid container item justifyContent='center' alignItems='flex-start' style={{marginBottom: '20px'}}>
+        {showButton}
       </Grid>
     </Grid>
   )

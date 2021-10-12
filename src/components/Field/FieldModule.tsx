@@ -176,6 +176,7 @@ export default function FieldModule(props) {
       handleForm={handleForm}
       handleTabChange={handleTabChange}
       isDisabled={isFormDisabled}
+      marginTop='14px'
       mode={settings.mode}
       section={section}
       sectionTitles={sectionTitles}

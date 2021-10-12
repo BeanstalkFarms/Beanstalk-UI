@@ -1,3 +1,5 @@
+import { Link } from '@material-ui/core'
+import { WHITEPAPER } from '../../constants'
 import { ContentSection, Grid } from '../Common'
 import GovernanceTable from './GovernanceTable'
 import Vote from './Vote'
@@ -47,6 +49,12 @@ export default function Governance(props) {
 
   return (
     <ContentSection id='governance' title='Governance' size='20px'>
+    <Grid container item xs={12} spacing={3} justifyContent='center'>
+      <Grid item xs={12} sm={12} style={{maxWidth: '745px', margin: '20px 0', padding: '12px'}}>
+        {`Beanstalk is upgraded in a decentralized fashion through Beanstalk Improvement Proposals. Anyone with for that .1% of the total outstanding Stalk can propose a BIP. Any Stalk holder can vote for the BIP. BIPs can be Committed in as little as 24 Seasons with a 2/3 supermajority, or after 168 Seasons with a 1/2 majority.`}
+        <p><Link href={`${WHITEPAPER}#governance`} target='blank'>{'Read More'}</Link>.</p>
+      </Grid>
+    </Grid>
       <Grid container item sm={12} xs={12} alignItems='flex-start' justifyContent='center' style={{minHeight: '200px'}}>
         <Grid item xs={12}>
           {voteField}

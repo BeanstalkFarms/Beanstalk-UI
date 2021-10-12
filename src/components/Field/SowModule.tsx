@@ -4,7 +4,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { BEAN, ETH, SLIPPAGE_THRESHOLD } from '../../constants'
 import {
   buyAndSowBeans,
-  displayBN,
   getFromAmount,
   getToAmount,
   MaxBN,

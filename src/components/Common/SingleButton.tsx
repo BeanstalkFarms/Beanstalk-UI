@@ -17,7 +17,7 @@ export default function SingleButton(props) {
       margin: '12px',
       maxWidth: maxWidth,
       opacity: '95%',
-      textTransform: 'uppercase',
+      textTransform: props.textTransform,
       transition: '0.2s ease-out opacity',
       width: props.width,
       '&:hover': {
@@ -34,7 +34,7 @@ export default function SingleButton(props) {
   }
 
   return (
-    <Button className={classes.button} onClick={() => props.handleClick()} >
+    <Button className={classes.button} onClick={() => props.handleClick()}>
       {getIcon()}
       <div>
         {props.title}
@@ -58,5 +58,6 @@ SingleButton.defaultProps = {
   isDisabled: 'false',
   margin: '-12px 0 0 5px',
   size: 'small',
+  textTransform: 'uppercase',
   width: '200px'
 }

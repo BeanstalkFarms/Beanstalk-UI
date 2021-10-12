@@ -16,7 +16,6 @@ import ClaimNFT from './claimnft'
 
 export default function NFTs(props) {
   let [sows, setSows] = useState([])
-  // let [deposits, setDeposits] = useState([])
   let [nfts, setNFTs] = useState([])
   let [unclaimedNFTs, setUnclaimedNFTs] = useState([])
   let [claimedNFTs, setClaimedNFTs] = useState([])
@@ -76,6 +75,8 @@ export default function NFTs(props) {
   let userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u['id'])
   userNFTs = nfts.filter((n) => userNFTs.includes(n['id']))
 
+  const { innerWidth: width } = window
+
   return (
     <ContentSection id='nft' title='BeaNFTs' textTransform='none'>
       <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginBottom: '20px'}}>
@@ -91,23 +92,23 @@ export default function NFTs(props) {
           </Grid>
         </Grid>
       </Grid>
-
-      <NftSection
-        sows={sows}
-        nfts={nfts}
-        userNFTs={userNFTs}
-        // deposits={deposits}
-        {...props}
-      />
-
-      <ClaimNFT
-        buttonDescription='Use this button to Mint all your Mintable BeaNFTs.'
-        claimTitle='Mint All BeaNFTs'
-        nfts={unclaimedNFTs}
-        claimedNfts={claimedNFTs}
-        {...props}
-      />
-
+      <Grid container item xs={12} justifyContent='center' alignItems='center' style={width > 500 ? {width:'550px'} : {width:'250px'}}>
+        <NftSection
+          sows={sows}
+          nfts={nfts}
+          userNFTs={userNFTs}
+          {...props}
+        />
+      </Grid>
+      <Grid container item xs={12} justifyContent='center' alignItems='center' style={width > 500 ? {width:'550px'} : {width:'250px'}}>
+        <ClaimNFT
+          buttonDescription='Use this button to Mint all your Mintable BeaNFTs.'
+          claimTitle='MINT ALL'
+          nfts={unclaimedNFTs}
+          claimedNfts={claimedNFTs}
+          {...props}
+        />
+      </Grid>
     </ContentSection>
   )
 }

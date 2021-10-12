@@ -11,11 +11,11 @@ export default function NftSection(props) {
   }
   const handlePageChange = (event, newPage) => { setPage(newPage) }
 
-  // const price = props.beanTWAPPrice.dividedBy(props.usdcTWAPPrice)
-
   // create Top Sows table
 
-  var sectionTitlesInfo = []
+  const sectionTitlesInfo = ['TOP SOWS', 'ALL']
+  const sectionTitlesDescription = ['Top Sows Description - unique1234', 'All BeaNFTs Description - unique1234']
+
   var sectionsInfo = []
   if (props.sows.length > 0) {
     sectionsInfo.push(
@@ -25,49 +25,19 @@ export default function NftSection(props) {
         colTitles={['Rank', 'Time', 'Beans', 'Address']}
         description='The top 10 Sows per Season will show up here'
         handleChange={handlePageChange}
-        // price={price}
         page={page}
         rowsPerPage={10}
-        style={{width:'auto', maxWidth: '450px'}}
+        style={{width:'auto', maxWidth: '550px'}}
         title='Top 10 Sows'
       />
     )
-    sectionTitlesInfo.push('Top Sows')
   } else {
     sectionsInfo.push(
-      <div style={{width:'auto', maxWidth: '450px', margin: '20px 0'}}>
+      <div style={{width:'auto', maxWidth: '550px', margin: '20px 0'}}>
         There are no Sows this Season yet.
       </div>
     )
-    sectionTitlesInfo.push('Top Sows')
   }
-
-  // create Top Deposits table
-
-  // if (props.deposits.length > 0 && price > 1) {
-  //   sectionsInfo.push(
-  //     <NftListTable
-  //       indexType='time'
-  //       crates={props.deposits}
-  //       colTitles={['Time', 'Beans', 'Address']}
-  //       description='The top 10 Deposits per Season will show up here'
-  //       handleChange={handlePageChange}
-  //       price={price}
-  //       page={page}
-  //       rowsPerPage={10}
-  //       style={{width:'auto', maxWidth: '450px'}}
-  //       title='Top 10 Deposits'
-  //     />
-  //   )
-  //   sectionTitlesInfo.push('Top Deposits')
-  // } else if (price > 1) {
-  //   sectionsInfo.push(
-  //     <div style={{width:'auto', minWidth: '450px', margin: '20px 0'}}>
-  //       There are no Deposits this Season yet.
-  //     </div>
-  //   )
-  //   sectionTitlesInfo.push('Top Deposits')
-  // }
 
   // create All BeaNFT Transactions table
 
@@ -81,11 +51,10 @@ export default function NftSection(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
-        style={{width: 'auto', maxWidth: '450px'}}
-        title='Minted BeaNFTs'
+        style={{width: 'auto', maxWidth: '550px'}}
+        title='All BeaNFTs'
       />
     )
-    sectionTitlesInfo.push('All BeaNFTs')
   }
 
   // create User BeaNFT Transactions table
@@ -101,23 +70,26 @@ export default function NftSection(props) {
         handleChange={handlePageChange}
         page={page}
         rowsPerPage={10}
-        style={{width: 'auto', maxWidth: '450px'}}
+        style={{width: 'auto', maxWidth: '550px'}}
         title='Your BeaNFTs'
       />
     )
-    sectionTitlesInfo.push('Your BeaNFTs')
+    sectionTitlesInfo.push('YOURS')
+    sectionTitlesDescription.push('Your BeaNFTs Description - unique1234')
   }
 
   // Table Wrapper with tabs
 
   const showListTables = (
     sectionsInfo.length > 0
-      ? <div style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
+      ? <div style={{marginTop: '0px', maxWidth: '550px', minWidth: '370px', width: 'calc(350px + 10vw)'}}>
           <BaseModule
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
             sectionTitles={sectionTitlesInfo}
+            sectionTitlesDescription={sectionTitlesDescription}
             showButton={false}
+            textTransform='none'
           >
             {sectionsInfo[sectionInfo]}
           </BaseModule>
@@ -125,9 +97,5 @@ export default function NftSection(props) {
       : null
   )
 
-  return (
-    <>
-    {showListTables}
-    </>
-  )
+  return (<>{showListTables}</>)
 }

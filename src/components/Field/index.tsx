@@ -1,20 +1,23 @@
 import { Link } from '@material-ui/core'
 import { displayBN } from '../../util'
-import { ContentSection, Grid, HeaderLabel } from '../Common'
+import { MEDIUM_INTEREST_LINK } from '../../constants'
+import { ContentSection, Grid, HeaderLabel, BaseModule } from '../Common'
 import FieldModule from './FieldModule'
 
 export default function Field(props) {
+  const { innerWidth: width } = window
+
   const headerLabelStyle = {
     maxWidth: '300px',
   }
-
+  
   return (
     <ContentSection id='field' title='Field'>
       <Grid container item xs={12} spacing={3} justifyContent='center'>
         <Grid container item xs={12} spacing={3} justifyContent='center'>
           <Grid item xs={12} sm={12} style={{maxWidth: '500px', margin: '20px 0', padding: '12px'}}>
             {`The Field is the Beanstalk credit facility. Anyone can lend Beans to Beanstalk anytime there is Available Soil by Sowing Beans in the Field in exchange for Pods. Pods are the debt asset of Beanstalk. The Weather at the time of the Sow determines amount of Pods received for each Bean Sown. When the Bean supply increases Pods become redeemable for 1 Bean each on a FIFO basis.`}
-            <p><Link href={`https://medium.com/@BeanstalkFarms/earn-interest-from-beanstalk-just-the-basics-165a8cc5fecd#0b33`} target='blank'>{'Read More'}</Link>.</p>
+            <p><Link href={`${MEDIUM_INTEREST_LINK}#0b33`} target='blank'>{'Read More'}</Link>.</p>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
@@ -37,7 +40,7 @@ export default function Field(props) {
           <HeaderLabel
             description='The Weather is the interest rate for Sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean Sown.'
             title='Weather'
-            value={`${displayBN(props.weather)}%`}
+            value={`${props.weather.toFixed()}%`}
           />
         </Grid>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
@@ -49,11 +52,21 @@ export default function Field(props) {
         </Grid>
       </Grid>
 
-      <Grid container item xs={12} justifyContent='center'>
-        <Grid item sm={8} xs={10} style={{maxWidth: '500px', minHeight: '450px'}}>
-          <FieldModule {...props} />
+      <Grid container item xs={12} spacing={2} className='SiloSection' alignItems='flex-start' justifyContent='center' style={{minHeight: '550px', height: '100%'}}>
+        <Grid item md={6} sm={12} style={width > 500 ? {maxWidth: '550px'} : {width: width - 64}}>
+          <BaseModule
+            section={0}
+            sectionTitles={['']}
+            sectionTitlesDescription={['']}
+            showButton={false}
+            removeBackground={true}
+            normalBox={false}
+          >
+            {<FieldModule {...props} />}
+          </BaseModule>
         </Grid>
       </Grid>
+
     </ContentSection>
   )
 }

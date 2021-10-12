@@ -1,4 +1,3 @@
-import { Link } from '@material-ui/core'
 import { ContentSection, Grid, HeaderLabel } from '../Common'
 import TradeModule from './TradeModule'
 import LastCrossTimer from './LastCrossTimer'

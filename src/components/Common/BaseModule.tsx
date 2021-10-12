@@ -27,7 +27,7 @@ export default function BaseModule(props) {
       fontFamily: 'Futura-Pt-Book',
       fontSize: s ? '14px' : '18px',
       minWidth: '44px',
-      textTransform: 'uppercase',
+      textTransform: props.textTransform,
       borderRadius: '15px'
     },
     formButton: {
@@ -168,53 +168,62 @@ export default function BaseModule(props) {
   )
 
   return (
-    <AppBar style={props.style} className={props.removeBackground ? classes.metaModule : classes.inputModule} position='static'>
-      <Tabs
-        classes={props.sectionTitles.length > 1 ? {indicator: classes.indicator} : {indicator: classes.noIndicator}}
-        indicatorColor='primary'
-        onChange={props.handleTabChange}
-        style={{width: '100%', borderRadius: '15px'}}
-        TabIndicatorProps={{ children: <span /> }}
-        textColor='primary'
-        value={props.section}
-        variant='fullWidth'
-      >
-      {
-        props.sectionTitles.map((sectionTitle, index) => {
-          return (
-            <Tab
-              className={classes.sectionTab}
-              disabled={props.sectionTitles.length < 2}
-              label={
-                props.sectionTitlesDescription !== undefined
-                  ? <div>
-                      {sectionTitle}
-                      <QuestionModule
-                        description={props.sectionTitlesDescription[index]}
-                        margin={props.margin}
-                        marginTooltip={props.marginTooltip}
-                        widthTooltip={props.widthTooltip}
-                      />
-                    </div>
-                  : sectionTitle
-              }
-              style={{color: 'black'}}
-              {...a11yProps(index)}
-            />
-          )
-        })
-      }
-      </Tabs>
-      <hr style={{color: 'primary', backgroundColor: 'primary', margin: '4px 8px'}} />
-      {props.showButton
-        ? <form autoComplete='off' noValidate style={{padding: '0 10px'}}>
-            {moduleContent}
-          </form>
-        : <span style={{padding: '0px 10px'}}>
+    <>
+    {props.normalBox
+      ? <AppBar style={props.style} className={props.removeBackground ? classes.metaModule : classes.inputModule} position='static'>
+        <Tabs
+          classes={props.sectionTitles.length > 1 ? {indicator: classes.indicator} : {indicator: classes.noIndicator}}
+          indicatorColor='primary'
+          onChange={props.handleTabChange}
+          style={{width: '100%', borderRadius: '15px'}}
+          TabIndicatorProps={{ children: <span /> }}
+          textColor='primary'
+          value={props.section}
+          variant='fullWidth'
+        >
+        {
+          props.sectionTitles.map((sectionTitle, index) => {
+            return (
+              <Tab
+                className={classes.sectionTab}
+                disabled={props.sectionTitles.length < 2}
+                label={
+                  props.sectionTitlesDescription !== undefined
+                    ? <div>
+                        {sectionTitle}
+                        <QuestionModule
+                          description={props.sectionTitlesDescription[index]}
+                          margin={props.margin}
+                          marginTooltip={props.marginTooltip}
+                          widthTooltip={props.widthTooltip}
+                        />
+                      </div>
+                    : sectionTitle
+                }
+                style={{color: 'black'}}
+                {...a11yProps(index)}
+              />
+            )
+          })
+        }
+        </Tabs>
+        <hr style={{color: 'primary', backgroundColor: 'primary', margin: '4px 8px'}} />
+        {props.showButton
+          ? <form autoComplete='off' noValidate style={{padding: '0 10px'}}>
+              {moduleContent}
+            </form>
+          : <span style={{padding: '0px 10px'}}>
+              {moduleContent}
+            </span>
+        }
+      </AppBar>
+      : <AppBar style={props.style} className={props.removeBackground ? classes.metaModule : classes.inputModule} position='static'>
+          <span style={{padding: '0px 10px'}}>
             {moduleContent}
           </span>
-      }
-    </AppBar>
+        </AppBar>
+    }
+    </>
   )
 }
 
@@ -226,4 +235,6 @@ BaseModule.defaultProps = {
   removeBackground: false,
   marginTop: '44px',
   margin: '-12px 0 0 0px',
+  normalBox: true,
+  textTransform: 'uppercase',
 }

@@ -28,11 +28,11 @@ export const BASE_ETHERSCAN_TX_LINK = 'https://etherscan.io/tx/'
 export const BASE_ETHERSCAN_ADDR_LINK = 'https://etherscan.io/address/'
 
   /* Informational Links */
+export const MEDIUM_INTEREST_LINK = 'https://medium.com/@BeanstalkFarms/earn-interest-from-beanstalk-just-the-basics-165a8cc5fecd'
 export const SLIPPAGE_LINK = 'https://coinmarketcap.com/alexandria/glossary/slippage'
 export const DIAMONDS_LINK = 'https://eips.ethereum.org/EIPS/eip-2535'
 
   /* NFT Links */
-// export const BASE_IPFS_LINK = 'https://ipfs.io/ipfs/'
 export const BASE_IPFS_LINK = 'https://gateway.pinata.cloud/ipfs/'
 export const BASE_OPENSEA_LINK = 'https://opensea.io/assets/0xa755a670aaf1fecef2bea56115e65e03f7722a79'
 export const NFT_LINK = 'https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/beanft-orstw/service/beanApi/incoming_webhook/getNFTs'
