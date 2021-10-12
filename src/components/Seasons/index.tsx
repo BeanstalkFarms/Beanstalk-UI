@@ -9,7 +9,6 @@ import {
   SingleButton
 } from '../Common'
 import PegMaintenance from './PegMaintenance'
-import Governance from '../Governance'
 import SeasonReward from './SeasonReward'
 import SeasonTimer from './SeasonTimer'
 
@@ -52,20 +51,8 @@ export default function Seasons(props) {
       : null
   )
 
-  const governanceSection = (
-    <Governance
-      key='governance'
-      bips={props.bips}
-      season={props.season}
-      totalStalk={props.totalRoots}
-      userStalk={props.userStalk}
-      votedBips={props.votedBips}
-    />
-  )
-
   return (
-    <>
-    <ContentSection id='seasons' title='Seasons' size='20px'>
+    <ContentSection id='seasons' title='Seasons' size='20px' style={{minHeight:'600px'}}>
       <Grid container item xs={12} spacing={3} justifyContent='center'>
         <Grid item md={5} sm={6} xs={12} style={{maxWidth: '300px', padding: '12px'}}>
           <HeaderLabel
@@ -86,10 +73,6 @@ export default function Seasons(props) {
       <Grid container item xs={12} style={{padding: '0px', marginTop: '12px'}} justifyContent='center'>
         <PegMaintenance {...props} />
       </Grid>
-
-      {props.hasActiveBIP ? null : governanceSection}
     </ContentSection>
-    {props.hasActiveBIP ? governanceSection : null}
-    </>
   )
 }

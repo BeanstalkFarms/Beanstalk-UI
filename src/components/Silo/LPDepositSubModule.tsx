@@ -250,12 +250,9 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
         <div style={{marginRight: '5px'}}>{toStalkField}</div>
         <div style={{marginLeft: '5px'}}>{toSeedsField}</div>
       </div>
-      <div style={{display: 'inline-block', width: '100%'}}>
-        <span>{`You will receive ${displayBN(new BigNumber(toStalkValue))} Stalk, ${displayBN(new BigNumber(toSeedsValue))} Seeds and gain ${toSiloLPValue.dividedBy(props.totalLP).multipliedBy(100).toFixed(3)}% of the LP pool.`}</span>
-      </div>
       <div style={{display: 'inline-block', width: '100%'}}>{toSiloLPField}</div>
       <div style={{display: 'inline-block', width: '100%'}}>
-        <span>{`Note: Your deposit will be instantly received.`}</span>
+        <span>{`Note: Your Deposit will be instantly received.`}</span>
         <br/>
         <span>{`You will receive ${displayBN(new BigNumber(toStalkValue))} Stalk, ${displayBN(new BigNumber(toSeedsValue))} Seeds and gain ${toSiloLPValue.dividedBy(props.totalLP).multipliedBy(100).toFixed(3)}% of the LP pool.`}</span>
       </div>
