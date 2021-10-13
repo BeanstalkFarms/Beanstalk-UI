@@ -153,7 +153,7 @@ export default function BaseModule(props) {
     <div style={{position: 'relative', zIndex: '0'}}>
       {props.children}
       {props.allowance.isEqualTo(0)
-        ? <div style={classes.moduleContent}>
+        ? <div className={classes.moduleContent}>
           </div>
         : null
       }
