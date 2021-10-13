@@ -115,6 +115,18 @@
   border-radius: 25px;
 }
 
+.TextField-rounded-mint fieldset {
+  border-radius: 25px;
+  background-color: rgb(0, 255, 0, 0.05);
+  z-index:-100;
+}
+
+.TextField-rounded-burn fieldset {
+  border-radius: 25px;
+  background-color: rgb(255, 0, 0, 0.05);
+  z-index:-100;
+}
+
 .BalanceModule-title {
   display: inline-block;
   text-align: left;

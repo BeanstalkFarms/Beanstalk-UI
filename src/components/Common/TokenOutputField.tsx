@@ -39,7 +39,7 @@ export default function TokenOutputField(props) {
 
   var startAdornment = (
     props.burn
-      ? <InputAdornment position='start'>-</InputAdornment>
+    ? <InputAdornment position='start'>–</InputAdornment>
       : null
   )
   startAdornment = (
@@ -48,6 +48,10 @@ export default function TokenOutputField(props) {
       : startAdornment
   )
 
+  let className = 'TextField-rounded'
+  if (props.mint) className = 'TextField-rounded-mint'
+  if (props.burn) className = 'TextField-rounded-burn'
+
   return (
     <div style={{margin: '8px 0'}}>
       <div style={smallLabels}>
@@ -55,7 +59,7 @@ export default function TokenOutputField(props) {
       </div>
 
       <TextField
-        className='TextField-rounded'
+        className={className}
         placeholder='0.0000'
         variant='outlined'
         size='small'
