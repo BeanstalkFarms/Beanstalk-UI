@@ -178,7 +178,7 @@ function summaryBips(open, bip) {
     if (bipsList.length > bipID) {
       if (Object.keys(bipsList).length > parseInt(bip[0])) {
         return (
-          <iframe src={bipsList[bipID].path} style={{border:'none'}} title={`BIP-${bipID}`} width='100%' height='450px' />
+          <iframe src={bipsList[bipID].path} style={{border:'none'}} title={`BIP-${bipID}`} width='100%' height='455px' />
         )
       } else {
         return (

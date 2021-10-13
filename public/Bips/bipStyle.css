@@ -29,7 +29,9 @@ h2:after {
 }
 h1 {
   font-size: 18px;
-  margin: 0.55em 0;
+  margin: 0em 0;
+  padding-top: 10px;
+  line-height: 1.33em;
 }
 h2 {
   font-size: 18px;
