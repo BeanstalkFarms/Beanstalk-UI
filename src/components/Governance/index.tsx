@@ -39,8 +39,8 @@ export default function Governance(props) {
             bips={activeBips}
             seasonBips={seasonBips}
             stalkBips={stalkBips}
-            totalStalk={props.totalStalk}
-            userStalk={props.userStalk}
+            totalRoots={props.totalRoots}
+            userRoots={props.userRoots}
             votedBips={votedBips}
           />
         </Grid>

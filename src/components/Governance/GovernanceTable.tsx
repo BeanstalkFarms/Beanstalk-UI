@@ -76,7 +76,7 @@ const BipTable = (props) => {
 
   let titles = ['BIP', 'Title', 'Status', '% Voted']
   const tableBips = props.bips.reduce((tableBips,bip) => {
-    let voteProportion = bip.roots.dividedBy(props.totalStalk)
+    let voteProportion = bip.roots.dividedBy(props.totalRoots)
     const bipID = bip.id
     const tb = {
       BIP: bipID.toString(),
@@ -94,7 +94,7 @@ const BipTable = (props) => {
     } else {
       tb.status = `${bip.period.minus(props.season.minus(bip.start))} Seasons Remaining`
     }
-    tb.voted = percentForStalk(bip.roots, bip.endTotalRoots.isGreaterThan(0) ? bip.endTotalRoots : props.totalStalk)
+    tb.voted = percentForStalk(bip.roots, bip.endTotalRoots.isGreaterThan(0) ? bip.endTotalRoots : props.totalRoots)
     tableBips.push([tb.BIP, tb.title, tb.status, tb.voted])
     return tableBips
   }, []).reverse()

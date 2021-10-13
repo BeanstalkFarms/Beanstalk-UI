@@ -93,7 +93,7 @@ export default function App() {
           hasActiveBIP={hasActiveBIP}
           hasActiveNFT={hasActiveNFT}
           poolForLPRatio={poolForLPRatio}
-          userStalk={userBalance.stalkBalance}
+          userRoots={userBalance.rootsBalance}
           votedBips={userBalance.votedBips}
           beanReserve={prices.beanReserve}
           ethReserve={prices.ethReserve}

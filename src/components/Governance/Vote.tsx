@@ -80,11 +80,11 @@ export default function Vote(props) {
     row.push(`${props.seasonBips[bip]}`)
     const newStalk = (
       props.votedBips[bip]
-        ? props.stalkBips[bip].minus(props.userStalk)
-        : props.stalkBips[bip].plus(props.userStalk)
+        ? props.stalkBips[bip].minus(props.userRoots)
+        : props.stalkBips[bip].plus(props.userRoots)
       )
-    const percentForNewStalk = percentForStalk(newStalk,props.totalStalk)
-    const percentForPrevStalk = percentForStalk(props.stalkBips[bip],props.totalStalk)
+    const percentForNewStalk = percentForStalk(newStalk,props.totalRoots)
+    const percentForPrevStalk = percentForStalk(props.stalkBips[bip],props.totalRoots)
     row.push(props.votedBips[bip])
     row.push(
       <div>
@@ -148,11 +148,11 @@ export default function Vote(props) {
       <Button
         className={classes.formButton}
         color='primary'
-        disabled={props.userStalk.isLessThanOrEqualTo(0)}
+        disabled={props.userRoots.isLessThanOrEqualTo(0)}
         onClick={buttonHandler}
         variant='contained'
       >
-        {props.userStalk.isGreaterThan(0)
+        {props.userRoots.isGreaterThan(0)
           ? `${props.votedBips[props.bips[selected]] ? 'Unvote' : 'Vote'}: BIP ${props.bips[selected]}`
           : 'No Stalk'
         }

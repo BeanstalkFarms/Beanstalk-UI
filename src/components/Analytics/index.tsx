@@ -20,8 +20,8 @@ export default function Analytics(props) {
       key='governance'
       bips={props.bips}
       season={props.season}
-      totalStalk={props.totalRoots}
-      userStalk={props.userStalk}
+      totalRoots={props.totalRoots}
+      userRoots={props.userRoots}
       votedBips={props.votedBips}
     />
     </>
