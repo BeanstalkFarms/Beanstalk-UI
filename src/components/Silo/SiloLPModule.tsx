@@ -87,6 +87,7 @@ export default function SiloLPModule(props) {
         setSettings={setSettings}
         settings={settings}
         totalLP={props.totalLP}
+        totalStalk={props.totalStalk}
       />,
       <LPWithdrawSubModule
         claimable={props.claimable}
@@ -106,6 +107,7 @@ export default function SiloLPModule(props) {
         setSettings={setSettings}
         settings={settings}
         totalLP={props.totalLP}
+        totalStalk={props.totalStalk}
       />
     ]
   if (props.lpReceivableBalance.isGreaterThan(0)) {

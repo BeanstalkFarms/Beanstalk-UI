@@ -252,11 +252,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       </div>
       <div style={{display: 'inline-block', width: '100%'}}>{toSiloLPField}</div>
       <div style={{display: 'inline-block', width: '100%'}}>
-        <span>{`You will Deposit ${displayBN(new BigNumber(toSiloLPValue))} LP Tokens in the Silo.`}</span>
-        <br/>
-        <span>{`You will immediately receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds.`}</span>
-        <br/>
-        <span>{`${displayBN(new BigNumber(toStalkValue))} Stalk currently translates to ${toSiloLPValue.dividedBy(props.totalLP).multipliedBy(100).toFixed(3)} ownership of Beanstalk.`}</span>
+        <span>{`You will gain ${toStalkValue.dividedBy(props.totalStalk).multipliedBy(100).toFixed(3)}% ownership of Beanstalk.`}</span>
       </div>
       </>
     )

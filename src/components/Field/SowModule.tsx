@@ -98,7 +98,7 @@ export const SowModule = forwardRef((props, ref) => {
       ? `Sowing Maximum Soil With ${props.weather.toFixed()}% Weather.`
       : `Sowing With ${props.weather.toFixed()}% Weather.`
   )
-  let podLineText = `The Pods will be placed at the end of the ${displayBN(props.unripenedPods)} Pod line.`
+  let podLineText = `The Plot will be placed ${displayBN(props.unripenedPods)} in the Pod Line.`
   const sowTextField = [
     <div key='Weather' style={{marginTop: '-5px', fontFamily: 'Futura-PT-Book'}}>{weatherText}</div>,
     <div key='PodLine' style={{fontFamily: 'Futura-PT-Book'}}>{podLineText}</div>
