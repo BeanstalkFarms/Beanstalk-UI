@@ -176,14 +176,14 @@ export const LPWithdrawSubModule = forwardRef((props, ref) => {
         <div style={{marginLeft: '5px'}}>{toBurnSeedsField}</div>
       </div>
       <div style={{display: 'inline-block', width: '100%'}}>{toTransitLPField}</div>
-      <div style={{display: 'inline-block', width: '100%', color: 'black'}}>
-        <span>{`You will Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo.`}</span>
+      <div style={{display: 'inline-block', width: '100%'}}>
+        <span>{`You will withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo.`}</span>
         <br/>
         <span>{`You will immediately burn ${displayBN(new BigNumber(fromStalkValue))} Stalk and ${displayBN(new BigNumber(fromSeedsValue))} Seeds.`}</span>
         <br/>
         <span>{`${displayBN(new BigNumber(fromStalkValue))} Stalk currently translates to ${fromStalkValue.dividedBy(props.totalStalk).multipliedBy(100).toFixed(3)}% ownership of Beanstalk.`}</span>
         <br/>
-        <span>{`WARNING: Your Withdrawal will be frozen for 24 full Seasons.`}</span>
+        <span style={{color: 'red'}}>{`WARNING: Your Withdrawal will be frozen for 24 full Seasons.`}</span>
       </div>
       </>
     )

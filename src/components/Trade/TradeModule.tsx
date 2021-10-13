@@ -42,6 +42,7 @@ export default function TradeModule(props) {
   /* Send Sub-Module state */
 
   const [toAddress, setToAddress] = useState('')
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   function handleSwapCallback() {
     setFromValue(new BigNumber(-1))
@@ -68,7 +69,7 @@ export default function TradeModule(props) {
   const disabled = (
     section === 0
       ? toValue.isLessThanOrEqualTo(0)
-      : (fromValue.isLessThanOrEqualTo(0) || toAddress.length !== 42)
+      : (fromValue.isLessThanOrEqualTo(0) || toAddress.length !== 42 || isValidAddress !== true)
   )
 
   const sections = [
@@ -102,6 +103,8 @@ export default function TradeModule(props) {
       setToAddress={setToAddress}
       fromAddress={props.address}
       fromBeanValue={fromValue}
+      isValidAddress={isValidAddress}
+      setIsValidAddress={setIsValidAddress}
       setFromBeanValue={setFromValue}
       maxFromBeanVal={props.beanBalance}
       fromToken={CryptoAsset.Bean}

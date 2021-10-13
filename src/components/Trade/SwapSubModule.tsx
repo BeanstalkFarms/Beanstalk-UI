@@ -143,15 +143,15 @@ export default function SwapSubModule(props) {
 
   const textTransaction = (
     props.orderIndex
-      ? `Buying About ${displayBN(props.toValue.multipliedBy(props.settings.slippage))} ${TokenLabel(props.toToken)} with ${props.fromValue.toFixed(3)} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(2)} Each`
-      : `Selling ${displayBN(props.fromValue)} ${TokenLabel(props.fromToken)} for About ${props.toValue.toFixed(3)} ${TokenLabel(props.toToken)} for ${expectedBeanPrice.toFixed(2)} Each`
+      ? `You will buy ~${displayBN(props.toValue.multipliedBy(props.settings.slippage))} ${TokenLabel(props.toToken)} with ${props.fromValue.toFixed(3)} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(2)} each.`
+      : `You will sell ~${displayBN(props.fromValue)} ${TokenLabel(props.fromToken)} for about ${props.toValue.toFixed(3)} ${TokenLabel(props.toToken)} for ${expectedBeanPrice.toFixed(2)} each.`
   )
 
   function transactionDetails() {
     if (props.toValue.isGreaterThan(0)) {
       return (
         <>
-        <div style={{fontFamily: 'Futura-PT-Book', marginTop: '-5px'}}>{textTransaction}</div>
+        <div style={{fontFamily: 'Futura-PT-Book'}}>{textTransaction}</div>
         <TransactionDetailsModule
             fields={{
               'Minimum Received':`${props.toValue.multipliedBy(props.settings.slippage).toFixed(4)} ${TokenLabel(props.toToken)}`,

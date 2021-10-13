@@ -6,7 +6,6 @@ import { AddressInputField, CryptoAsset, TokenInputField } from '../Common'
 
 export default function SendSubModule(props) {
   var [snappedToAddress, setSnappedToAddress] = useState(false)
-  const [isValidAddress, setIsValidAddress] = useState(false)
   const [walletText, setWalletText] = useState('')
 
   function fromValueUpdated(newFromNumber) {
@@ -23,6 +22,7 @@ export default function SendSubModule(props) {
 
   async function toAddressUpdated(newToAddress) {
     if (snappedToAddress) {
+      fromValueUpdated(new BigNumber(-1))
       props.setToAddress('')
       setWalletText('')
       setSnappedToAddress(false)
@@ -32,7 +32,7 @@ export default function SendSubModule(props) {
     if (newToAddress.length === 42) {
       setWalletText(`${newToAddress.substring(0, 6)}...${newToAddress.substring(newToAddress.length - 4)}`)
       setSnappedToAddress(true)
-      setIsValidAddress(await isAddress(newToAddress))
+      props.setIsValidAddress(await isAddress(newToAddress))
     } else {
       setWalletText('')
     }
@@ -61,12 +61,12 @@ export default function SendSubModule(props) {
       marginTop={window.innerWidth > 400 ? '8px' : '7px'}
       snapped={snappedToAddress}
       handleClear={clearHandler}
-      isValidAddress={isValidAddress}
+      isValidAddress={props.isValidAddress}
     />
   )
   const fromBeanField = (
     <TokenInputField
-      hidden={props.toAddress.length !== 42}
+      hidden={props.toAddress.length !== 42 || props.isValidAddress !== true}
       token={CryptoAsset.Bean}
       value={props.fromBeanValue}
       setValue={fromValueUpdated}

@@ -14,7 +14,6 @@ export const SendPlotModule = forwardRef((props, ref) => {
   const [plotEndIndex, setPlotEndIndex] = useState(new BigNumber(-1))
 
   var [snappedToAddress, setSnappedToAddress] = useState(false)
-  const [isValidAddress, setIsValidAddress] = useState(false)
   const [walletText, setWalletText] = useState('')
 
   function fromValueUpdated(newFromNumber) {
@@ -26,7 +25,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
     if (event.target.value) {
       fromValueUpdated(new BigNumber(props.plots[event.target.value])) // gives you the value at the selected plot pod value
       setPlotIndex(event.target.value) // plot index
-      console.log(event.target.value)
+      if(props.plots[event.target.value] === undefined) props.setIsFormDisabled(true)
     } else {
       fromValueUpdated(new BigNumber(-1))
     }
@@ -44,9 +43,10 @@ export const SendPlotModule = forwardRef((props, ref) => {
     if (newToAddress.length === 42) {
       setWalletText(`${newToAddress.substring(0, 6)}...${newToAddress.substring(newToAddress.length - 4)}`)
       setSnappedToAddress(true)
-      setIsValidAddress(await isAddress(newToAddress))
+      props.setIsValidAddress(await isAddress(newToAddress))
     } else {
       setWalletText('')
+      props.setIsFormDisabled(true)
     }
     props.setToAddress(newToAddress)
   }
@@ -71,12 +71,12 @@ export const SendPlotModule = forwardRef((props, ref) => {
       marginTop={window.innerWidth > 400 ? '8px' : '7px'}
       snapped={snappedToAddress}
       handleClear={clearHandler}
-      isValidAddress={isValidAddress}
+      isValidAddress={props.isValidAddress}
     />
   )
   const fromPlotField = (
     <ListInputField
-      hidden={props.toAddress.length !== 42 || walletText === ''}
+      hidden={props.toAddress.length !== 42 || walletText === '' || props.isValidAddress !== true}
       index={props.index}
       items={props.plots}
       marginBottom={props.hasPlots === true ? '0px' : '-7px'}
@@ -92,7 +92,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
     return (
       <>
       <div style={{display: 'inline-block', width: '100%', color: 'red'}}>
-        <span>{`Warning: You are sending your plots to another wallet. Beanstalk doesn't currently support buying and selling Plots. Use at your own risk.`}</span>
+        <span>{`WARNING: Beanstalk doesn't currently support a market for buying and selling Plots. Use at your own risk`}</span>
       </div>
       </>
     )

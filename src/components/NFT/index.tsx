@@ -20,6 +20,15 @@ export default function NFTs(props) {
   let [unclaimedNFTs, setUnclaimedNFTs] = useState([])
   let [claimedNFTs, setClaimedNFTs] = useState([])
 
+  const nftStyle = {
+    backgroundColor: '#F5FAFF',
+    borderRadius: '25px',
+    boxShadow: '0px 2px 4px -1px rgb(0 0 0 / 20%),0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    padding: '10px',
+    fontSize: '18px',
+    width: '370px',
+    justifyContent: 'center',
+  }
   useEffect(() => {
     async function loadData() {
       const [s, n] = await Promise.all([
@@ -79,10 +88,13 @@ export default function NFTs(props) {
 
   return (
     <ContentSection id='nft' title='BeaNFTs' textTransform='none'>
+      <div style={{width: '370px', margin: '20px 0 0 0', padding: '12px'}}>
+        {`BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk.`}
+        {` `}<Link href={MEDIUM_NFT_LINK} target='blank'>{'Read More'}</Link>{`.`}
+      </div>
       <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginBottom: '20px'}}>
-        <Grid container item className='nftTextField-box'>
-          <p>BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk. <Link href={MEDIUM_NFT_LINK} target='blank'>{'Read More'}</Link>{`.`}</p>
-          <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginTop: '10px'}}>
+        <Grid container item style={nftStyle}>
+          <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginTop: '-10px'}}>
               <span>{`Your BeaNFTs:  `}</span>
               <span style={{fontSize: '70px'}}>&nbsp; {userNFTs.length} &nbsp;</span>
           </Grid>

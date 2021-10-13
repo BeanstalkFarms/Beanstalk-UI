@@ -22,6 +22,7 @@ export default function FieldModule(props) {
   })
 
   const [toAddress, setToAddress] = useState('')
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   const sectionTitles = ['Sow']
   const sectionTitlesDescription = ['Use this tab to sow Beans in the Field in exchange for Pods.']
@@ -102,6 +103,8 @@ export default function FieldModule(props) {
       fromToken={CryptoAsset.Bean}
       ref={sendRef}
       setIsFormDisabled={setIsFormDisabled}
+      isValidAddress={isValidAddress}
+      setIsValidAddress={setIsValidAddress}
       setToAddress={setToAddress}
       setSection={setSection}
       toAddress={toAddress}

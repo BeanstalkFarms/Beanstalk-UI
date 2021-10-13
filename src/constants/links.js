@@ -4,6 +4,7 @@ export const SILO_CONTRACT_LINK = 'https://etherscan.io/address/0xc1e088fc1323b2
 export const UNISWAP_CONTRACT_LINK = 'https://v2.info.uniswap.org/pair/0x87898263b6c5babe34b4ec53f22d98430b91e371'
 
 export const COINGECKO_LINK = 'https://www.coingecko.com/en/coins/bean'
+export const COINMARKETCAP_LINK = 'https://coinmarketcap.com/currencies/beanstalk/'
 export const DISCORD_LINK = 'https://discord.gg/y4cJNv5DTM'
 export const GITHUB_LINK = 'https://github.com/BeanstalkFarms/Beanstalk'
 export const MEDIUM_LINK = 'https://medium.com/@BeanstalkFarms'

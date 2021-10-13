@@ -4,6 +4,7 @@ import TelegramIcon from '@material-ui/icons/Telegram'
 import TwitterIcon from '@material-ui/icons/Twitter';
 import { makeStyles } from '@material-ui/styles'
 import coingecko from '../../img/coingecko-icon.svg'
+import coinmarketcap from '../../img/coinmarketcap-icon.svg'
 import discord from '../../img/discord-icon.svg'
 import etherscan from '../../img/etherscan-logo.svg'
 // import ground from '../../img/ground.png'
@@ -11,12 +12,13 @@ import ground from '../../img/ground-tall.png'
 import medium from '../../img/medium-icon.svg'
 import opensea from '../../img/opensea-icon.svg'
 // import reddit from '../../img/reddit-icon.svg'
-// import uniswap from '../../img/uniswap-logo-black.svg'
+import uniswap from '../../img/uniswap-logo-black.svg'
 import BarnIcon from '../../img/Barn.svg'
 import SiloIcon from '../../img/Silo.svg'
 import {
   BEAN_TOKEN_LINK,
   COINGECKO_LINK,
+  COINMARKETCAP_LINK,
   DISCORD_LINK,
   GITHUB_LINK,
   MEDIUM_LINK,
@@ -24,8 +26,8 @@ import {
   SILO_CONTRACT_LINK,
   // REDDIT_LINK,
   TELEGRAM_LINK,
-  TWITTER_LINK
-  // UNISWAP_CONTRACT_LINK
+  TWITTER_LINK,
+  UNISWAP_CONTRACT_LINK
 } from '../../constants'
 import { CryptoAsset, TokenTypeImageModule } from '../Common'
 
@@ -60,6 +62,9 @@ export default function Footer(props) {
   const twitterStyle = {
     padding: '10px 12px 0 0',
   }
+  const beanStyle = {
+    padding: '10px 7px 0 0',
+  }
   const siloStyle = {
     bottom: '51px',
     height: '15vw',
@@ -77,57 +82,75 @@ export default function Footer(props) {
     zIndex: -1
   }
 
-return (
-  <>
-  <img alt='Silo Icon' src={SiloIcon} style={siloStyle} />
-  <img alt='Barn Icon' src={BarnIcon} style={barnStyle} />
-  <Grid container className={classes.fixedGround} justifyContent='center'>
-    <Grid item style={twitterStyle}>
-      <Link href={TWITTER_LINK} color='inherit' target='blank'>
-        <TwitterIcon />
-      </Link>
+  const width = window.innerWidth
+
+  return (
+    <>
+    <img alt='Silo Icon' src={SiloIcon} style={siloStyle} />
+    <img alt='Barn Icon' src={BarnIcon} style={barnStyle} />
+    <Grid container className={classes.fixedGround} justifyContent='center'>
+      <Grid item style={twitterStyle}>
+        <Link href={TWITTER_LINK} color='inherit' target='blank'>
+          <TwitterIcon />
+        </Link>
+      </Grid>
+      <Grid item style={linkStyle}>
+        <Link href={TELEGRAM_LINK} color='inherit' target='blank'>
+          <TelegramIcon />
+        </Link>
+      </Grid>
+      <Grid item style={linkStyle}>
+        <Link href={DISCORD_LINK} color='inherit' target='blank'>
+          <img alt='Discord Logo' src={discord} style={logoStyle}/>
+        </Link>
+      </Grid>
+      <Grid item style={linkStyle}>
+        <Link href={MEDIUM_LINK} color='inherit' target='blank'>
+          <img alt='Medium Logo' src={medium} style={logoStyle}/>
+        </Link>
+      </Grid>
+      <Grid item style={linkStyle}>
+        <Link href={OPENSEA_LINK} color='inherit' target='blank'>
+          <img alt='OpenSea Logo' src={opensea} style={logoStyle}/>
+        </Link>
+      </Grid>
+      <Grid item style={linkStyle}>
+        <Link href={COINMARKETCAP_LINK} color='inherit' target='blank'>
+          <img alt='CoinMarketCap Logo' src={coinmarketcap} style={logoStyle}/>
+        </Link>
+      </Grid>
+      {width > 500
+        ? <Grid item style={linkStyle}>
+            <Link href={COINGECKO_LINK} color='inherit' target='blank'>
+              <img alt='CoinGecko Logo' src={coingecko} style={logoStyle}/>
+            </Link>
+          </Grid>
+        : null
+      }
+      <Grid item style={linkStyle}>
+        <Link href={GITHUB_LINK} color='inherit' target='blank'>
+          <GitHubIcon />
+        </Link>
+      </Grid>
+      <Grid item style={beanStyle}>
+        <Link href={BEAN_TOKEN_LINK} color='inherit' target='blank'>
+          <TokenTypeImageModule style={logoStyle} token={CryptoAsset.Bean} />
+        </Link>
+      </Grid>
+      <Grid item style={linkStyle}>
+        <Link href={SILO_CONTRACT_LINK} color='inherit' target='blank'>
+          <img alt='Etherscan Logo' src={etherscan} style={logoStyle}/>
+        </Link>
+      </Grid>
+      {width > 500
+        ? <Grid item style={linkStyle}>
+            <Link href={UNISWAP_CONTRACT_LINK} color='inherit' target='blank'>
+              <img alt='Uniswap Logo' src={uniswap} style={logoStyle}/>
+            </Link>
+          </Grid>
+        : null
+      }
     </Grid>
-    <Grid item style={linkStyle}>
-      <Link href={TELEGRAM_LINK} color='inherit' target='blank'>
-        <TelegramIcon />
-      </Link>
-    </Grid>
-    <Grid item style={linkStyle}>
-      <Link href={DISCORD_LINK} color='inherit' target='blank'>
-        <img alt='Discord Logo' src={discord} style={logoStyle}/>
-      </Link>
-    </Grid>
-    <Grid item style={linkStyle}>
-      <Link href={MEDIUM_LINK} color='inherit' target='blank'>
-        <img alt='Medium Logo' src={medium} style={logoStyle}/>
-      </Link>
-    </Grid>
-    <Grid item style={linkStyle}>
-      <Link href={OPENSEA_LINK} color='inherit' target='blank'>
-        <img alt='OpenSea Logo' src={opensea} style={logoStyle}/>
-      </Link>
-    </Grid>
-    <Grid item style={linkStyle}>
-      <Link href={COINGECKO_LINK} color='inherit' target='blank'>
-        <img alt='CoinGecko Logo' src={coingecko} style={logoStyle}/>
-      </Link>
-    </Grid>
-    <Grid item style={linkStyle}>
-      <Link href={GITHUB_LINK} color='inherit' target='blank'>
-        <GitHubIcon />
-      </Link>
-    </Grid>
-    <Grid item style={linkStyle}>
-      <Link href={BEAN_TOKEN_LINK} color='inherit' target='blank'>
-        <TokenTypeImageModule style={logoStyle} token={CryptoAsset.Bean} />
-      </Link>
-    </Grid>
-    <Grid item style={linkStyle}>
-      <Link href={SILO_CONTRACT_LINK} color='inherit' target='blank'>
-        <img alt='Etherscan Logo' src={etherscan} style={logoStyle}/>
-      </Link>
-    </Grid>
-  </Grid>
-  </>
+    </>
  )
 }
