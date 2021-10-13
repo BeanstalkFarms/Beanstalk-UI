@@ -71,7 +71,7 @@ export const getAccountBalances = async (batch) => {
     [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEANSTALK)],
     [beanstalk.methods.balanceOfFarmableStalk(account), tokenResult(STALK)],
     [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
-    [beanstalk.methods.balanceOfRoots(account), tokenResult(BEANSTALK)],
+    [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
   ])
 }
 /* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
@@ -93,7 +93,7 @@ export const getTotalBalances = async (batch) => {
     [beanstalk.methods.totalSoil(), tokenResult(BEANSTALK)],
     [beanstalk.methods.podIndex(), tokenResult(BEANSTALK)],
     [beanstalk.methods.harvestableIndex(), tokenResult(BEANSTALK)],
-    [beanstalk.methods.totalRoots(), tokenResult(BEANSTALK)],
+    [beanstalk.methods.totalRoots(), bigNumberResult],
     [
       beanstalk.methods.weather(),
       stringWeather => ({
@@ -146,8 +146,8 @@ export const getBips = async () => {
       start: bigNumberResult(bip.start),
       period: bigNumberResult(bip.period),
       proposer: bip.propser,
-      roots: tokenResult(STALK)(bipRoots),
-      endTotalRoots: tokenResult(STALK)(bip.endTotalRoots),
+      roots: bigNumberResult(bipRoots),
+      endTotalRoots: bigNumberResult(bip.endTotalRoots),
       stalkBase: bigNumberResult(bip.stalkBase),
       timestamp: bigNumberResult(bip.timestamp),
       updated: bigNumberResult(bip.updated),
