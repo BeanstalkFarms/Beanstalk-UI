@@ -53,7 +53,7 @@ export default function Charts(props) {
   const baseStyle = isMobile ? {width:'100vw', paddingLeft:0, paddingRight:0} : null
 
   return (
-    <ContentSection id='charts' title='Charts' size='20px' style={{maxWidth: '1000px', marginTop:marginTop}}>
+    <ContentSection id='charts' title='Charts' size='20px' style={{minHeight: '600px', maxWidth: '1000px', marginTop:marginTop}}>
       <BaseModule
         handleTabChange={(event, newSection) => { setSection(newSection) }}
         removeBackground={true}

@@ -50,7 +50,7 @@ export default function Governance(props) {
   return (
     <ContentSection id='governance' title='Governance' size='20px' style={{minHeight:'600px'}}>
     <Grid container item xs={12} spacing={3} justifyContent='center'>
-      <Grid item xs={12} sm={12} style={{maxWidth: '745px', margin: '20px 0', padding: '12px'}}>
+      <Grid className={"section-description"} item xs={12} sm={12} style={{maxWidth: '745px', margin: '20px 0', padding: '12px'}}>
         {`Beanstalk is upgraded in a decentralized fashion through Beanstalk Improvement Proposals (BIPs). Anyone with for that .1% of the total outstanding Stalk can propose a BIP. Any Stalk holder can vote for a BIP. BIPs can be Committed in as little as 24 Seasons with a 2/3 supermajority, or after 168 Seasons with a 1/2 majority.`}
         {` `}<Link href={`${WHITEPAPER}#governance`} target='blank'>{'Read More'}</Link>{`.`}
       </Grid>
