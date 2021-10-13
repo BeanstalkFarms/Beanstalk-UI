@@ -182,7 +182,7 @@ function summaryBips(open, bip) {
         )
       } else {
         return (
-          <iframe src={`/BIPs/BIP-default.html`} style={{border:'none'}} title={`BIP-default`} width='100%' height='30px' />
+          <iframe src={`/BIPs/bip-default.html`} style={{border:'none'}} title={`BIP-default`} width='100%' height='30px' />
         )
       }
     }
