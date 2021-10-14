@@ -51,9 +51,7 @@ export const HarvestModule = forwardRef((props, ref) => {
     handleForm() {
       if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return
 
-      harvest(Object.keys(props.harvestablePlots).map(key => (toStringBaseUnitBN(new BigNumber(key), BEAN.decimals))), () => {
-        fromValueUpdated(new BigNumber(-1))
-      })
+      harvest(Object.keys(props.harvestablePlots).map(key => (toStringBaseUnitBN(new BigNumber(key), BEAN.decimals))), () => {})
     }
   }))
 

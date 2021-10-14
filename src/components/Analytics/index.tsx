@@ -1,10 +1,8 @@
 import { ContentSection } from '../Common'
+import Balances from '../Balances'
 import Charts from '../Charts'
 import Seasons from '../Seasons'
-import NFTs from '../NFT'
 import Governance from '../Governance'
-
-import Balances from '../Balances'
 
 export default function Analytics(props) {
 
@@ -13,7 +11,6 @@ export default function Analytics(props) {
     <ContentSection id='analytics' title='Analytics'>
       <Balances {...props} />
       <Charts />
-      <NFTs {...props} />
       <Seasons {...props} />
     </ContentSection>
     <Governance

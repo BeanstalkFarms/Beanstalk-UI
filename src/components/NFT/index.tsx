@@ -89,7 +89,7 @@ export default function NFTs(props) {
   return (
     <ContentSection id='nft' title='BeaNFTs' textTransform='none' style={{minHeight: '600px'}}>
       <div className={"section-description"} style={{width: '370px', margin: '20px 0 0 0', padding: '12px'}}>
-        {`BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk.`}
+        {`BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk. The top 10 Sows each Season are awarded a generated BeaNFT. The BeaNFT will be available to be minted ~10 minutes after the Season it is awarded.`}
         {` `}<Link href={MEDIUM_NFT_LINK} target='blank'>{'Read More'}</Link>{`.`}
       </div>
       <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginBottom: '20px'}}>
