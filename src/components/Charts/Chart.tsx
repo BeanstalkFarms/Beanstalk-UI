@@ -62,16 +62,17 @@ export function Chart(props) {
   )
 
   const xAxisTickFormatter = (d) => {
-    if (d > 1000) return `${(d / 1000).toLocaleString('en-US')}k`
-    else return `${d}`
+    if (d > 1000000) return `${(d / 1000000).toFixed(2).toLocaleString('en-US')}m`
+    else if (d > 1000) return `${(d / 1000).toLocaleString('en-US')}k`
+    else return `${d === 0 ? d : d.toFixed(2)}`
   }
 
   const title = `Bean ${props.title}`
 
   const chartMargin = (
     n
-      ? {top: 30, right: 60, bottom: 50, left: 60}
-      : {top: 10, right: 20, bottom: 40, left: 60}
+      ? {top: 30, right: 60, bottom: 50, left: 65}
+      : {top: 10, right: 20, bottom: 40, left: 65}
   )
 
   return (
@@ -120,7 +121,7 @@ export function Chart(props) {
           numTicks={6}
           tickLength={n ? 7  : 3}
           label={`${props.title}${props.usd ? ' ($)' : ''}`}
-          labelOffset={25}
+          labelOffset={35}
           orientation='left'
           tickFormat={xAxisTickFormatter}
         />

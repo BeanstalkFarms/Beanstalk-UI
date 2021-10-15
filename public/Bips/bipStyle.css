@@ -13,6 +13,13 @@ ul {
   -webkit-columns: 2;
   -moz-columns: 2;
 }
+@media screen and (max-width: 500px) {
+  ul {
+    columns: 1;
+    -webkit-columns: 1;
+    -moz-columns: 1;
+  }
+}
 h1, h2, h3, h4, h5, h6 {
   padding-top: 15px;
   padding-bottom: 5px;
