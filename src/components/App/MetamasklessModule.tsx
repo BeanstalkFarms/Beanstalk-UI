@@ -1,4 +1,4 @@
-import { Grid, Button, Link } from '@material-ui/core'
+import { Grid, Button, Link, Box } from '@material-ui/core'
 import { initialize, metamaskFailure } from '../../util'
 import { METAMASK_LINK, HOW_TO_MM_PATH } from '../../constants'
 import { SvgCloudIcon } from '../About/SvgCloudIcon'
@@ -55,8 +55,8 @@ export default function MetamasklessModule(props) {
   }
 
   return (
-    <div style={{position: 'relative'}}>
+    <Box style={{position: 'relative'}}>
         <About defaultSection={metamaskModule} />
-    </div>
+    </Box>
   )
 }

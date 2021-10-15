@@ -1,4 +1,4 @@
-import { Link } from '@material-ui/core'
+import { Link, Box } from '@material-ui/core'
 import { WHITEPAPER } from '../../constants'
 import { ContentSection, Grid } from '../Common'
 import GovernanceTable from './GovernanceTable'
@@ -44,7 +44,7 @@ export default function Governance(props) {
             votedBips={votedBips}
           />
         </Grid>
-      : <div style={activeBipStyle}>No Active BIPs</div>
+      : <Box style={activeBipStyle}>No Active BIPs</Box>
   )
 
   return (

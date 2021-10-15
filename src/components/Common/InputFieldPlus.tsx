@@ -1,5 +1,6 @@
-import BigNumber from 'bignumber.js'
 import React, { useEffect } from 'react'
+import { Box } from '@material-ui/core'
+import BigNumber from 'bignumber.js'
 import { CryptoAsset, displayBN, MinBN } from '../../util'
 import { TokenInputField } from './index'
 
@@ -59,7 +60,7 @@ export default function InputFieldPlus(props) {
     <>
     {tokenInputField}
     {props.buyEth.isGreaterThan(0)
-      ? <div style={textStyle}>{textTransaction}</div>
+      ? <Box style={textStyle}>{textTransaction}</Box>
       : null
      }
     </>

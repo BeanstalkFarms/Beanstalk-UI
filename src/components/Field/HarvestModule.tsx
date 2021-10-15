@@ -1,5 +1,6 @@
-import BigNumber from 'bignumber.js'
 import React, { forwardRef, useImperativeHandle } from 'react'
+import BigNumber from 'bignumber.js'
+import { Box } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { BEAN } from '../../constants'
 import {
@@ -42,7 +43,7 @@ export const HarvestModule = forwardRef((props, ref) => {
     return (
       <>
       <ExpandMoreIcon color='primary' style={{marginBottom: '-14px', width: '100%'}} />
-      <div style={{display: 'inline-block', width: '100%'}}>{toBeanField}</div>
+      <Box style={{display: 'inline-block', width: '100%'}}>{toBeanField}</Box>
       </>
     )
   }

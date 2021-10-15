@@ -1,6 +1,6 @@
-import BigNumber from 'bignumber.js'
 import React, { useState } from 'react'
-import { InputAdornment, TextField } from '@material-ui/core'
+import BigNumber from 'bignumber.js'
+import { InputAdornment, TextField, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { BASE_SLIPPAGE, SLIPPAGE_THRESHOLD } from '../../constants'
 import { QuestionModule } from '../Common'
@@ -19,15 +19,15 @@ export default function SlippageModule(props) {
   const defaultSlippage = new BigNumber(1).minus(BASE_SLIPPAGE).multipliedBy(100)
 
   return (
-    <div>
-      <div style={{padding: '5px', fontFamily: 'Futura-PT-Book', fontSize: '11px'}}>
+    <Box>
+      <Box style={{padding: '5px', fontFamily: 'Futura-PT-Book', fontSize: '11px'}}>
         Slippage:
         <QuestionModule
           description={props.description}
           margin={props.margin}
           marginTooltip={props.marginTooltip}
         />
-      </div>
+      </Box>
       <TextField
         type='number'
         error={!isFieldEmpty && props.slippage.isLessThanOrEqualTo(SLIPPAGE_THRESHOLD)}
@@ -78,7 +78,7 @@ export default function SlippageModule(props) {
           )
         }}
       />
-    </div>
+    </Box>
   )
 }
 

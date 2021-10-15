@@ -12,7 +12,8 @@ import {
   MenuItem,
   Paper,
   Popper,
-  Toolbar
+  Toolbar,
+  Box
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -99,7 +100,7 @@ export default function NavigationBar(props) {
   const linkItemStyle = (path) => ( (path === 'governance' || path === 'nft') ? {color: 'rgb(14, 136, 55)'} : null )
 
   const mobileNavigation = (
-    <div className='NavigationBarHamburger'>
+    <Box className='NavigationBarHamburger'>
       <List component='nav' aria-labelledby='main navigation' className={classes.navDisplayFlex}>
         <ListItem>
           <WalletModule {...props} />
@@ -144,7 +145,7 @@ export default function NavigationBar(props) {
           </Grow>
         )}
       </Popper>
-    </div>
+    </Box>
   )
 
   const desktopNavigation = (
@@ -175,9 +176,9 @@ export default function NavigationBar(props) {
       : null
   )
   const currentBeanPrice = (
-    <div className={classes.currentPriceStyle}>
+    <Box className={classes.currentPriceStyle}>
     {`$${props.beanPrice.toFixed(4)}`}
-    </div>
+    </Box>
   )
   const beanLogo = (
     <IconButton edge='start' color='inherit' className='App-logo'>

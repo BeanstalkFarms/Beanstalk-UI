@@ -7,7 +7,8 @@ import {
   TableCell,
   TableContainer,
   TablePagination,
-  TableRow
+  TableRow,
+  Box
 } from '@material-ui/core/'
 import { makeStyles } from '@material-ui/styles'
 import { BASE_IPFS_LINK, BASE_OPENSEA_LINK } from '../../constants'
@@ -16,9 +17,9 @@ import { mintNFT } from '../../util'
 
 export default function NftPicTable(props) {
   return (
-    <div style={props.style}>
+    <Box style={props.style}>
       <BasicTable {...props} />
-    </div>
+    </Box>
   )
 }
 
@@ -72,7 +73,7 @@ const BasicTable = (props) => {
   )
 
   return (
-    <div>
+    <Box>
       <TableContainer>
         <Table className={classes.table} size='small'>
           <TableBody>
@@ -99,7 +100,7 @@ const BasicTable = (props) => {
                 .map((index) => (
                   <TableRow key={index}>
                     <TableCell align='center' className={classes.lucidaStyle} component='th' scope='index'>
-                      <div>
+                      <Box>
                         {props.claimed
                           ? <Link href={`${BASE_OPENSEA_LINK}/${props.crates[index].id}`} color='inherit' target='blank'>
                               {`ID: ${props.crates[index].id}`}
@@ -111,10 +112,10 @@ const BasicTable = (props) => {
                         <Link href={`${BASE_IPFS_LINK}${props.crates[index].metadataIpfsHash}`} color='inherit' target='blank'>
                           <span>{`${props.crates[index].metadataIpfsHash.substring(0, 6)}...${props.crates[index].metadataIpfsHash.substring(props.crates[index].metadataIpfsHash.length - 4)}`}</span>
                         </Link>
-                        <div style={{margin: '-2px 0'}}>
+                        <Box style={{margin: '-2px 0'}}>
                         {showButton(index)}
-                        </div>
-                      </div>
+                        </Box>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))
@@ -135,7 +136,7 @@ const BasicTable = (props) => {
           />
         : null
       }
-    </div>
+    </Box>
   )
 }
 

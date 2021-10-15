@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from '@material-ui/core'
+import { Link, Box } from '@material-ui/core'
 import {
   HOW_TO_PATH,
   HOW_TO_MOBILE_PATH,
@@ -26,7 +26,7 @@ export default function About(props) {
   return (
     <>
     <ContentSection id='about' style={showLandingPage ? {minHeight: '99vh'} : props.style} title={showLandingPage ? 'Beanstalk' : 'About'}>
-      <div style={{minHeight: '510px', width: '100%'}}>
+      <Box style={{minHeight: '510px', width: '100%'}}>
         {props.defaultSection}
         <Grid container style={cloudDivStyle}>
           <Grid item lg={3} md={3} sm={4} xs={6} style={cloudStyle}>
@@ -49,7 +49,7 @@ export default function About(props) {
             </Link>
           </Grid>
         </Grid>
-      </div>
+      </Box>
     </ContentSection>
     </>
   )

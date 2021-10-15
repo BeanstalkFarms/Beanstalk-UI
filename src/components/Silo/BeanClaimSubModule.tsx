@@ -1,5 +1,6 @@
 import React, { forwardRef, useImperativeHandle } from 'react'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { Box } from '@material-ui/core'
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
 import { BEAN } from '../../constants'
 import { TrimBN, claimBeans } from '../../util'
 import {
@@ -40,7 +41,7 @@ export const BeanClaimSubModule = forwardRef((props, ref) => {
     return (
       <>
       <ExpandMoreIcon color='primary' style={{marginBottom: '-14px', width: '100%'}} />
-      <div style={{display: 'inline-block', width: '100%'}}>{toBeanField}</div>
+      <Box style={{display: 'inline-block', width: '100%'}}>{toBeanField}</Box>
       </>
     )
   }

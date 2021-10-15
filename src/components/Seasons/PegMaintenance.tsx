@@ -1,5 +1,6 @@
-import BigNumber from 'bignumber.js'
 import React from 'react'
+import BigNumber from 'bignumber.js'
+import { Box } from '@material-ui/core'
 import {
   BEAN,
   DELTA_POD_DEMAND_LOWER_BOUND,
@@ -246,7 +247,7 @@ export default function PegMaintenance(props) {
   return (
     <Grid container item xs={12} spacing={3} alignItems='center' justifyContent='center' style={{maxWidth: '1145px'}}>
       <Grid item md={8} sm={12} xs={12}>
-        <div className='AppBar-shadow' style={pegMaintenanceStyle}>
+        <Box className='AppBar-shadow' style={pegMaintenanceStyle}>
           <span style={pegMaintenanceSpanStyle}>
             Peg Maintenance
             <QuestionModule description='Below are the primary datapoints of the state of Beanstalk.' margin='-6px 0 0 2px' />
@@ -255,7 +256,7 @@ export default function PegMaintenance(props) {
           />
           <Stats {...nextSeasonStats} />
           <Stats {...currentSeasonStats} />
-        </div>
+        </Box>
       </Grid>
     </Grid>
   )

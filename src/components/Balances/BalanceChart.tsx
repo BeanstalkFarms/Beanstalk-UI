@@ -1,4 +1,5 @@
 import React from 'react'
+import { Box } from '@material-ui/core'
 import { ChartDonut, ChartLabel } from '@patternfly/react-charts'
 import { CryptoAsset } from '../Common'
 
@@ -45,7 +46,7 @@ export default function BalanceChart(props) {
   )
 
   return (
-    <div style={chartSizeStyle}>
+    <Box style={chartSizeStyle}>
       <svg style={svgStyle}>
         <ChartDonut
           standalone={false}
@@ -110,6 +111,6 @@ export default function BalanceChart(props) {
           }]}
         />
       </svg>
-    </div>
+    </Box>
   )
 }

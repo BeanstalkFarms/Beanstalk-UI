@@ -1,6 +1,6 @@
-import BigNumber from 'bignumber.js'
 import React, { useRef, useState } from 'react'
-import { IconButton } from '@material-ui/core'
+import BigNumber from 'bignumber.js'
+import { IconButton, Box } from '@material-ui/core'
 import ListIcon from '@material-ui/icons/List'
 import { BASE_SLIPPAGE, LPBEAN_TO_STALK } from '../../constants'
 import { approveBeanstalkBean, approveBeanstalkLP, SwapMode } from '../../util'
@@ -168,7 +168,7 @@ export default function SiloLPModule(props) {
 
   const showListTablesIcon = (
     sectionsInfo.length > 0
-      ? <div style={{display: 'flex', justifyContent: 'flex-start', margin: '20px 0 -56px -4px'}}>
+      ? <Box style={{display: 'flex', justifyContent: 'flex-start', margin: '20px 0 -56px -4px'}}>
           <IconButton
             color='primary'
             onClick={() => {
@@ -179,14 +179,14 @@ export default function SiloLPModule(props) {
            >
            <ListIcon />
           </IconButton>
-        </div>
+        </Box>
       : null
   )
 
   const [listTablesStyle, setListTablesStyle] = useState({display: 'block'})
   const showListTables = (
     sectionsInfo.length > 0
-      ? <div style={{...listTablesStyle, marginTop: '61px'}}>
+      ? <Box style={{...listTablesStyle, marginTop: '61px'}}>
           <BaseModule
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
@@ -196,7 +196,7 @@ export default function SiloLPModule(props) {
           >
             {sectionsInfo[sectionInfo]}
           </BaseModule>
-        </div>
+        </Box>
       : null
   )
 

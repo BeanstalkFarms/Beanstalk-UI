@@ -1,4 +1,4 @@
-import { InputAdornment, TextField } from '@material-ui/core'
+import { InputAdornment, TextField, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { TrimBN, TokenLabel } from '../../util'
 import { TokenTypeImageModule } from './index'
@@ -53,10 +53,10 @@ export default function TokenOutputField(props) {
   if (props.burn) className = 'TextField-rounded-burn'
 
   return (
-    <div style={{margin: '8px 0'}}>
-      <div style={smallLabels}>
-        <div style={leftStyle}>{tokenLabel}</div>
-      </div>
+    <Box style={{margin: '8px 0'}}>
+      <Box style={smallLabels}>
+        <Box style={leftStyle}>{tokenLabel}</Box>
+      </Box>
 
       <TextField
         className={className}
@@ -81,7 +81,7 @@ export default function TokenOutputField(props) {
           startAdornment,
         }}
       />
-      </div>
+      </Box>
   )
 }
 

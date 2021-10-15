@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Box } from '@material-ui/core'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import { FormatTooltip } from './index'
 
@@ -13,7 +14,7 @@ export default function QuestionModule(props) {
   const [show, setShow] = useState(false)
 
   return (
-    <div style={questionStyle}>
+    <Box style={questionStyle}>
       <FormatTooltip
         margin={props.marginTooltip}
         placement={props.placement !== undefined ? props.placement : 'top-start'}
@@ -26,6 +27,6 @@ export default function QuestionModule(props) {
       >
         <HelpOutlineIcon style={{fontSize: '8px'}} width='100%' />
       </FormatTooltip>
-    </div>
+    </Box>
   )
 }

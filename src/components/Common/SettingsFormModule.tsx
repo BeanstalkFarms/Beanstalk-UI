@@ -1,6 +1,6 @@
-import BigNumber from 'bignumber.js'
 import React, { useState } from 'react'
-import { IconButton } from '@material-ui/core'
+import BigNumber from 'bignumber.js'
+import { IconButton, Box } from '@material-ui/core'
 import SettingsIcon from '@material-ui/icons/Settings'
 import { SwapMode } from '../../util'
 import { SlippageModule, SwitchModule, UnitSelectionModule } from './index'
@@ -103,11 +103,11 @@ export default function SettingsFormModule(props) {
 
   const rightDrawer = (
     rightDrawerVisibleItems
-      ? <div id='y' style={Object.assign(rightSettingStyle, settingsStyle)}>
+      ? <Box id='y' style={Object.assign(rightSettingStyle, settingsStyle)}>
           {rightDrawerItems.map((item, index) => (
             <span key={index}>{item.visible ? item.component() : null}</span>
           ))}
-        </div>
+        </Box>
       : null
   )
 
@@ -129,14 +129,14 @@ export default function SettingsFormModule(props) {
 
   const bottomDrawer = (
     props.showUnitModule
-      ? <div id='x' style={Object.assign(bottomSettingStyle, settingsStyle)}>
+      ? <Box id='x' style={Object.assign(bottomSettingStyle, settingsStyle)}>
           {unitModule}
-        </div>
+        </Box>
       : null
   )
 
   const settingsIcon = (
-    <div style={{display: 'flex', justifyContent: 'flex-end', margin: props.margin}}>
+    <Box style={{display: 'flex', justifyContent: 'flex-end', margin: props.margin}}>
       <IconButton
         color='primary'
         onClick={() => {
@@ -147,7 +147,7 @@ export default function SettingsFormModule(props) {
        >
        <SettingsIcon />
       </IconButton>
-    </div>
+    </Box>
   )
 
   return (

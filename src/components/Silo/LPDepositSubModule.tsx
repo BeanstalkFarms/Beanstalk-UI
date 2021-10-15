@@ -1,7 +1,8 @@
-import BigNumber from 'bignumber.js'
 import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import BigNumber from 'bignumber.js'
 import { unstable_batchedUpdates } from 'react-dom'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { Box } from '@material-ui/core'
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
 import {
   BEAN,
   BEAN_TO_SEEDS,
@@ -18,7 +19,6 @@ import {
   addAndDepositLP,
   convertAddAndDepositLP,
   depositLP,
-  displayBN,
   getBuyAndAddLPAmount,
   getFromAmount,
   lpForPool,
@@ -77,7 +77,6 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
     let fromEtherNumber = new BigNumber(0)
     let fromLPNumber = MaxBN(newFromLPNumber, new BigNumber(0))
     let buyNumber = new BigNumber(0)
-    let stalkRemoved = new BigNumber(0)
     let sellNumber = new BigNumber(0)
     let fromConvertBeans = new BigNumber(0)
     let newBeanReserve = props.beanReserve
@@ -90,7 +89,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       )
       fromNumber = MinBN(newFromNumber, newBeanFromEthNumber)
       if (props.settings.convert) {
-          [stalkRemoved, fromConvertBeans] = handleConvertCrates(fromNumber)
+        fromConvertBeans = handleConvertCrates(fromNumber)[1]
       }
       fromEtherNumber = fromNumber.multipliedBy(props.beanToEth)
       newFromEthNumber = newFromEthNumber.minus(fromEtherNumber)
@@ -246,14 +245,14 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
     return (
       <>
       <ExpandMoreIcon color='primary' style={{marginBottom: '-14px', width: '100%'}} />
-      <div style={{display: 'inline-flex'}}>
-        <div style={{marginRight: '5px'}}>{toStalkField}</div>
-        <div style={{marginLeft: '5px'}}>{toSeedsField}</div>
-      </div>
-      <div style={{display: 'inline-block', width: '100%'}}>{toSiloLPField}</div>
-      <div style={{display: 'inline-block', width: '100%'}}>
+      <Box style={{display: 'inline-flex'}}>
+        <Box style={{marginRight: '5px'}}>{toStalkField}</Box>
+        <Box style={{marginLeft: '5px'}}>{toSeedsField}</Box>
+      </Box>
+      <Box style={{display: 'inline-block', width: '100%'}}>{toSiloLPField}</Box>
+      <Box style={{display: 'inline-block', width: '100%'}}>
         <span>{`You will gain ${toStalkValue.dividedBy(props.totalStalk).multipliedBy(100).toFixed(3)}% ownership of Beanstalk.`}</span>
-      </div>
+      </Box>
       </>
     )
   }

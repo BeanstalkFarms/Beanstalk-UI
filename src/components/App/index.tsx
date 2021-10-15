@@ -1,7 +1,7 @@
-import BigNumber from 'bignumber.js'
 import React, { useEffect, useRef, useState } from 'react'
+import BigNumber from 'bignumber.js'
 import ReactDOM from 'react-dom'
-import { CssBaseline } from '@material-ui/core'
+import { CssBaseline, Box } from '@material-ui/core'
 import { ThemeProvider } from '@material-ui/styles'
 import BeanLogo from '../../img/bean-logo.svg'
 import { lastCrossQuery } from '../../graph'
@@ -630,6 +630,8 @@ export default function App() {
     }
 
     start()
+
+    // eslint-disable-next-line
   }, [])
 
   let app
@@ -638,13 +640,13 @@ export default function App() {
   } else if (!initialized) {
     const { innerHeight: height } = window
     app = (
-      <div style={{height: height-60, overflow: 'hidden'}}>
-        <div style={{marginTop: height/2 - 125}}>
-          <div className='Loading-logo'>
+      <Box style={{height: height-60, overflow: 'hidden'}}>
+        <Box style={{marginTop: height/2 - 125}}>
+          <Box className='Loading-logo'>
             <img style={{verticalAlign: 'middle'}} height='250px' src={BeanLogo} alt='bean.money' />
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
     )
   } else {
     const navMapping = [...defaultNavMapping]
@@ -663,7 +665,7 @@ export default function App() {
         {...totalBalance} {...userBalance}
       />
       { navMapping.map((navItem, index) => (
-          <div key={index}>{navItem.component()}</div>
+          <Box key={index}>{navItem.component()}</Box>
         ))
       }
     </>
@@ -673,11 +675,11 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <div className='App'>
+      <Box className='App'>
         <Main>
           {app}
         </Main>
-      </div>
+      </Box>
     </ThemeProvider>
   )
 }

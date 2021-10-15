@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 
 export default function TitleLabel(props) {
@@ -14,9 +15,9 @@ export default function TitleLabel(props) {
   }))()
 
   return (
-    <div className={classes.label} style={props.style}>
+    <Box className={classes.label} style={props.style}>
       {props.children}
-    </div>
+    </Box>
   )
 }
 

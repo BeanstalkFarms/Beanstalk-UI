@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Box } from '@material-ui/core'
 import { BaseModule, NftListTable } from '../Common'
 
 export default function NftSection(props) {
@@ -33,9 +34,9 @@ export default function NftSection(props) {
     )
   } else {
     sectionsInfo.push(
-      <div style={{width:'auto', maxWidth: '450px', margin: '20px 0'}}>
+      <Box style={{width:'auto', maxWidth: '450px', margin: '20px 0'}}>
         There are no Sows this Season yet.
-      </div>
+      </Box>
     )
   }
 
@@ -82,7 +83,7 @@ export default function NftSection(props) {
 
   const showListTables = (
     sectionsInfo.length > 0
-      ? <div style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
+      ? <Box style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
           <BaseModule
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
@@ -93,7 +94,7 @@ export default function NftSection(props) {
           >
             {sectionsInfo[sectionInfo]}
           </BaseModule>
-        </div>
+        </Box>
       : null
   )
 

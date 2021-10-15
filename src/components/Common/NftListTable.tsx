@@ -8,8 +8,9 @@ import {
   TableContainer,
   TableHead,
   TablePagination,
-  TableRow
-} from '@material-ui/core/'
+  TableRow,
+  Box
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { BASE_ETHERSCAN_ADDR_LINK, BASE_ETHERSCAN_TX_LINK, DIAMONDS_LINK } from '../../constants'
 import { displayBN, displayFullBN } from '../../util'
@@ -17,9 +18,9 @@ import { FormatTooltip } from '../Common'
 
 export default function NftListTable(props) {
   return (
-    <div style={props.style}>
+    <Box style={props.style}>
       <BasicTable {...props} />
-    </div>
+    </Box>
   )
 }
 
@@ -57,7 +58,7 @@ const BasicTable = (props) => {
   let count = 0
 
   return (
-    <div>
+    <Box>
       <TableContainer>
         <Table className={classes.table} size='small'>
           <TableHead>
@@ -133,7 +134,7 @@ const BasicTable = (props) => {
           />
         : null
       }
-    </div>
+    </Box>
   )
 }
 

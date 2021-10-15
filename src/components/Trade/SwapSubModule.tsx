@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { IconButton } from '@material-ui/core'
+import { IconButton, Box } from '@material-ui/core'
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore'
 import {
   BEAN,
@@ -151,7 +151,7 @@ export default function SwapSubModule(props) {
     if (props.toValue.isGreaterThan(0)) {
       return (
         <>
-        <div style={{fontFamily: 'Futura-PT-Book'}}>{textTransaction}</div>
+        <Box style={{fontFamily: 'Futura-PT-Book'}}>{textTransaction}</Box>
         <TransactionDetailsModule
             fields={{
               'Minimum Received':`${props.toValue.multipliedBy(props.settings.slippage).toFixed(4)} ${TokenLabel(props.toToken)}`,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, InputAdornment, TextField } from '@material-ui/core'
+import { Button, InputAdornment, TextField, Box } from '@material-ui/core'
 import CheckIcon from '@material-ui/icons/Check'
 import ClearIcon from '@material-ui/icons/Clear'
 import CancelIcon from '@material-ui/icons/Cancel'
@@ -47,8 +47,8 @@ export default function AddressInputField(props) {
   }
 
   return (
-    <div>
-      <div style={smallLabels}>{'Recipient Address'}</div>
+    <Box>
+      <Box style={smallLabels}>{'Recipient Address'}</Box>
 
       <TextField
         className='TextField-rounded'
@@ -72,7 +72,7 @@ export default function AddressInputField(props) {
           startAdornment
         }}
       />
-    </div>
+    </Box>
   )
 }
 

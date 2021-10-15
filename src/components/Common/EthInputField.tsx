@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core' 
 import BigNumber from 'bignumber.js'
 import { MIN_BALANCE } from '../../constants'
 import {
@@ -50,7 +51,7 @@ export default function EthInputField(props) {
       value={props.value}
     />
    {props.buyBeans.isGreaterThan(0)
-     ? <div style={textStyle}>{textTransaction}</div>
+     ? <Box style={textStyle}>{textTransaction}</Box>
      : null
     }
    </>

@@ -1,5 +1,6 @@
-import BigNumber from 'bignumber.js'
 import { useState } from 'react'
+import { Box } from '@material-ui/core'
+import BigNumber from 'bignumber.js'
 import { UNISWAP_BASE_LP } from '../../constants'
 import {
   BaseModule,
@@ -106,9 +107,9 @@ export default function Balances(props) {
             {...props}
           />
           {props.rootsBalance.isEqualTo(0)
-            ? <div style={{width:'130%', marginLeft:'-15%'}}>
+            ? <Box style={{width:'130%', marginLeft:'-15%'}}>
                 You have not updated your Silo account since the last BIP has passed. Please click 'Farm' to update your Silo.
-              </div>
+              </Box>
             : null
           }
         </Grid>
@@ -180,7 +181,7 @@ export default function Balances(props) {
 
   return (
     <ContentSection id='balances' title='Balances' size='20px' style={{marginTop: '-80px'}}>
-      <div className='BalanceSection-mobile'>
+      <Box className='BalanceSection-mobile'>
         <BaseModule
           handleForm={() => {}}
           handleTabChange={handleTabChange}
@@ -190,23 +191,23 @@ export default function Balances(props) {
         >
           {sections[section]}
         </BaseModule>
-      </div>
+      </Box>
 
       <Grid className='BalanceSection' container item spacing={8} justifyContent='center' alignItems='flex-start' style={{marginTop: '8px'}}>
         <Grid item sm={12} md={6} style={{maxWidth: '500px'}}>
-          <div className='AppBar-shadow' style={balanceStyle}>
-            <div style={divStyle}>My Balances </div>
+          <Box className='AppBar-shadow' style={balanceStyle}>
+            <Box style={divStyle}>My Balances </Box>
             <hr style={lineStyle} />
             {myBalancesSection}
-          </div>
+          </Box>
         </Grid>
 
         <Grid item sm={12} md={6} style={{maxWidth: '500px'}}>
-          <div className='AppBar-shadow' style={balanceStyle}>
-            <div style={divStyle}>Beanstalk</div>
+          <Box className='AppBar-shadow' style={balanceStyle}>
+            <Box style={divStyle}>Beanstalk</Box>
             <hr style={lineStyle} />
             {totalBalancesSection}
-          </div>
+          </Box>
         </Grid>
       </Grid>
     </ContentSection>

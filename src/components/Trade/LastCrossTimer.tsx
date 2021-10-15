@@ -19,6 +19,7 @@ export default function LastCrossTimer(props) {
     return () => {
       window.clearInterval(timer.current)
     }
+    // eslint-disable-next-line
   }, [time, props.lastCross])
 
   function display(time) {

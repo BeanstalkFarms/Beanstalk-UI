@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, InputAdornment, TextField } from '@material-ui/core'
+import { Button, InputAdornment, TextField, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import {
   CryptoAsset,
@@ -91,15 +91,15 @@ export default function TokenInputField(props) {
   if (props.hidden) return null
 
   return (
-    <div style={{margin: '8px 0'}}>
-      <div style={smallLabels}>
-        <div style={leftStyle}>{tokenLabel}</div>
+    <Box style={{margin: '8px 0'}}>
+      <Box style={smallLabels}>
+        <Box style={leftStyle}>{tokenLabel}</Box>
         <FormatTooltip placement='right' title={balanceContent}>
-          <div style={rightStyle}>
+          <Box style={rightStyle}>
             &nbsp;{`Balance: ${displayBN(props.balance)}`}
-          </div>
+          </Box>
         </FormatTooltip>
-      </div>
+      </Box>
 
       <TextField
         className='TextField-rounded'
@@ -134,7 +134,7 @@ export default function TokenInputField(props) {
           endAdornment
         }}
       />
-    </div>
+    </Box>
   )
 }
 

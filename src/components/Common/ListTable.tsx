@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js'
 import React from 'react'
+import BigNumber from 'bignumber.js'
 import {
   Table,
   TableBody,
@@ -7,7 +7,8 @@ import {
   TableContainer,
   TableHead,
   TablePagination,
-  TableRow
+  TableRow,
+  Box
 } from '@material-ui/core/'
 import { makeStyles } from '@material-ui/styles'
 import {
@@ -23,9 +24,9 @@ import { FormatTooltip, QuestionModule } from '../Common'
 
 export default function ListTable(props) {
   return (
-    <div style={props.style}>
+    <Box style={props.style}>
       <BasicTable {...props} />
-    </div>
+    </Box>
   )
 }
 
@@ -122,7 +123,7 @@ const BasicTable = (props) => {
         scope='season'
         style={claimableStyle}
       >
-        <div>
+        <Box>
           {claimWord}
           <QuestionModule
             description={claimDescription}
@@ -130,7 +131,7 @@ const BasicTable = (props) => {
             marginTooltip='10px 0 0 0 '
             placement='bottom'
           />
-        </div>
+        </Box>
       </TableCell>
       <TableCell align='center' className={classes.lucidaStyle} style={{color: 'white'}}>
         <FormatTooltip
@@ -159,7 +160,7 @@ const BasicTable = (props) => {
   }
 
   return (
-    <div>
+    <Box>
       <TableContainer>
         <Table className={classes.table} size='small'>
           <TableHead>
@@ -234,7 +235,7 @@ const BasicTable = (props) => {
           />
         : null
       }
-    </div>
+    </Box>
   )
 }
 

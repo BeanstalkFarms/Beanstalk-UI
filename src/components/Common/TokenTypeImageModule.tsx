@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core'
 import { TokenImage, TokenLabel, TokenTypeImage } from '../../util'
 
 export default function TokenTypeImageModule(props) {
@@ -15,10 +16,10 @@ export default function TokenTypeImageModule(props) {
   }
 
   return (
-    <div style={{...props.style, position: 'relative'}}>
+    <Box style={{...props.style, position: 'relative'}}>
       <img alt={TokenLabel(props.token)} src={TokenImage(props.token)} style={tokenTypeStyle} />
       <img alt='' src={TokenTypeImage(props.token)} style={tokenTypeModifierStyle} />
-    </div>
+    </Box>
   )
 }
 

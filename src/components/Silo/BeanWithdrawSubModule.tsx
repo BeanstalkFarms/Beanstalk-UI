@@ -1,6 +1,7 @@
-import BigNumber from 'bignumber.js'
 import React, { forwardRef, useImperativeHandle, useState } from 'react'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import BigNumber from 'bignumber.js'
+import { Box } from '@material-ui/core'
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
 import {
   BEAN,
   BEAN_TO_SEEDS,
@@ -9,7 +10,6 @@ import {
 } from '../../constants'
 import {
   claimAndWithdrawBeans,
-  displayBN,
   MinBN,
   MinBNs,
   toStringBaseUnitBN,
@@ -144,7 +144,7 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
 
   const unvoteTextField = (
     props.locked
-      ? <div style={{marginTop: '-5px', fontFamily: 'Futura-PT-Book'}}>{'Unvote Active BIPs to Withdraw'}</div>
+      ? <Box style={{marginTop: '-5px', fontFamily: 'Futura-PT-Book'}}>{'Unvote Active BIPs to Withdraw'}</Box>
       : null
   )
   const showSettings = (
@@ -163,16 +163,16 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
     return (
       <>
       <ExpandMoreIcon color='primary' style={{marginBottom: '-14px', width: '100%'}} />
-      <div style={{display: 'inline-flex'}}>
-        <div style={{marginRight: '5px'}}>{toBurnStalkField}</div>
-        <div style={{marginLeft: '5px'}}>{toBurnSeedsField}</div>
-      </div>
-      <div style={{display: 'inline-block', width: '100%'}}>{toTransitBeanField}</div>
-      <div style={{display: 'inline-block', width: '100%', color: 'black'}}>
+      <Box style={{display: 'inline-flex'}}>
+        <Box style={{marginRight: '5px'}}>{toBurnStalkField}</Box>
+        <Box style={{marginLeft: '5px'}}>{toBurnSeedsField}</Box>
+      </Box>
+      <Box style={{display: 'inline-block', width: '100%'}}>{toTransitBeanField}</Box>
+      <Box style={{display: 'inline-block', width: '100%', color: 'black'}}>
         <span>{`You will lose ${fromStalkValue.dividedBy(props.totalStalk).multipliedBy(100).toFixed(3)}% ownership of Beanstalk.`}</span>
         <br/>
         <span style={{color: 'red'}}>{`WARNING: Your Withdrawal will be frozen for 24 full Seasons.`}</span>
-      </div>
+      </Box>
       </>
     )
   }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Box } from '@material-ui/core'
 import { mintAllNFTs } from '../../util/index'
 import {
   BaseModule,
@@ -76,7 +77,7 @@ export default function ClaimNFT(props) {
 
   const showListTables = (
     sectionsInfo.length > 0
-      ? <div style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
+      ? <Box style={{marginTop: '0px', maxWidth: '450px', minWidth: '370px'}}>
           <BaseModule
             handleTabChange={handleTabInfoChange}
             section={sectionInfo}
@@ -87,7 +88,7 @@ export default function ClaimNFT(props) {
           >
             {sectionsInfo[sectionInfo]}
           </BaseModule>
-        </div>
+        </Box>
       : null
   )
 
@@ -119,9 +120,9 @@ export default function ClaimNFT(props) {
 
   const showSection = (
     canClaimNFT || claimedNfts.length > 0
-    ? <div style={headderStyle}>
+    ? <Box style={headderStyle}>
         YOUR BeaNFTs
-      </div>
+      </Box>
     : null
   )
 

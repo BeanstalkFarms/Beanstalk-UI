@@ -1,5 +1,6 @@
-import BigNumber from 'bignumber.js'
 import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import { Box } from '@material-ui/core'
+import BigNumber from 'bignumber.js'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { BEAN, ETH, SLIPPAGE_THRESHOLD } from '../../constants'
 import {displayBN} from '../../util'
@@ -100,12 +101,12 @@ export const SowModule = forwardRef((props, ref) => {
   )
   let podLineText = `The Plot will be placed ${displayBN(props.unripenedPods)} in the Pod Line.`
   const sowTextField = [
-    <div key='Weather' style={{marginTop: '-5px', fontFamily: 'Futura-PT-Book'}}>{weatherText}</div>,
-    <div key='PodLine' style={{fontFamily: 'Futura-PT-Book'}}>{podLineText}</div>
+    <Box key='Weather' style={{marginTop: '-5px', fontFamily: 'Futura-PT-Book'}}>{weatherText}</Box>,
+    <Box key='PodLine' style={{fontFamily: 'Futura-PT-Book'}}>{podLineText}</Box>
   ]
   const noSoilTextField = (
     props.soil.isEqualTo(0)
-      ? <div style={{marginTop: '-2px', fontFamily: 'Futura-PT-Book'}}>Currently No Soil</div>
+      ? <Box style={{marginTop: '-2px', fontFamily: 'Futura-PT-Book'}}>Currently No Soil</Box>
       : null
   )
   const frontrunTextField = (

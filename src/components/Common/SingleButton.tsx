@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core'
+import { Button, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { QuestionModule } from './index'
 
@@ -36,7 +36,7 @@ export default function SingleButton(props) {
   return (
     <Button className={classes.button} onClick={() => props.handleClick()}>
       {getIcon()}
-      <div>
+      <Box>
         {props.title}
         <QuestionModule
           description={props.description}
@@ -44,7 +44,7 @@ export default function SingleButton(props) {
           marginTooltip={props.marginTooltip}
           widthTooltip={props.widthTooltip}
         />
-      </div>
+      </Box>
       {getIcon()}
     </Button>
   )

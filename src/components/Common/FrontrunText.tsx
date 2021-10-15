@@ -1,4 +1,4 @@
-import { Link } from '@material-ui/core'
+import { Link, Box } from '@material-ui/core'
 import { SLIPPAGE_LINK } from '../../constants'
 
 export default function FrontrunText(props) {
@@ -16,13 +16,13 @@ export default function FrontrunText(props) {
   }
 
   return (
-    <div style={textStyle}>
+    <Box style={textStyle}>
       {'Your Transaction may be Frontrun. Consider Lowering Slippage Tolerance.'}
       <br/>
       <Link href={SLIPPAGE_LINK} target='blank' style={linkStyle} >
         Click Here to Learn More
       </Link>
       {'.'}
-    </div>
+    </Box>
   )
 }

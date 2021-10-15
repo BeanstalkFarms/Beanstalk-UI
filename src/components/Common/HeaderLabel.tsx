@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { QuestionModule } from './index'
 import { chainId } from '../../util'
@@ -31,8 +32,8 @@ export default function HeaderLabel(props) {
   }))()
 
   return (
-    <div className={classes.container}>
-      <div className={classes.title}>
+    <Box className={classes.container}>
+      <Box className={classes.title}>
         {props.title}
         {props.description !== undefined
           ? <QuestionModule
@@ -43,11 +44,11 @@ export default function HeaderLabel(props) {
             />
           : undefined
         }
-      </div>
-      <div className={classes.value}>
+      </Box>
+      <Box className={classes.value}>
          {props.value}
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

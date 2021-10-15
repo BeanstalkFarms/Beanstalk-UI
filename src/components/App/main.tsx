@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core'
 import { chainId } from '../../util'
 import Footer from '../About/Footer'
 import background from '../../img/cloud-background.png'
@@ -29,13 +30,13 @@ export default function Main(props) {
 
   return (
     <>
-    <div className='BeanstalkBG' name={`Chain${chainId}`}></div>
-    <div>
+    <Box className='BeanstalkBG' name={`Chain${chainId}`}></Box>
+    <Box>
       <img alt='Sun Icon' src={SunIcon} style={sunStyle} />
-      <div style={navCloudStyle} />
+      <Box style={navCloudStyle} />
       {props.children}
       <Footer />
-    </div>
+    </Box>
     </>
   )
 

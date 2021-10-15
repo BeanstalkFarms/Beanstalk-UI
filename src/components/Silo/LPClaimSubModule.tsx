@@ -1,5 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { Box } from '@material-ui/core'
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
 import { BEAN, UNI_V2_ETH_BEAN_LP } from '../../constants'
 import {
   claimLP,
@@ -72,10 +73,10 @@ export const LPClaimSubModule = forwardRef((props, ref) => {
       return (
         <>
         <ExpandMoreIcon color='primary' style={{marginBottom: '-14px', width: '100%'}} />
-        <div style={{display: 'inline-flex'}}>
-          <div style={{marginRight: '5px'}}>{toLPBeanField}</div>
-          <div style={{marginLeft: '5px'}}>{toLPEthField}</div>
-        </div>
+        <Box style={{display: 'inline-flex'}}>
+          <Box style={{marginRight: '5px'}}>{toLPBeanField}</Box>
+          <Box style={{marginLeft: '5px'}}>{toLPEthField}</Box>
+        </Box>
         </>
       )
     }
@@ -83,7 +84,7 @@ export const LPClaimSubModule = forwardRef((props, ref) => {
     return (
       <>
       <ExpandMoreIcon color='primary' style={{marginBottom: '-14px', width: '100%'}} />
-      <div style={{display: 'inline-block', width: '100%'}}>{toLPField}</div>
+      <Box style={{display: 'inline-block', width: '100%'}}>{toLPField}</Box>
       </>
     )
   }

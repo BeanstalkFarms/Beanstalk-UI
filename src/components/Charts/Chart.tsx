@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core'
 import {
   AnimatedAxis, // any of these can be non-animated equivalents
   AnimatedGrid,
@@ -75,7 +76,7 @@ export function Chart(props) {
   )
 
   return (
-    <div className='AppBar-shadow' style={chartStyle}>
+    <Box className='AppBar-shadow' style={chartStyle}>
       <DataSelector size={props.size} setValue={props.setDataMode} value={props.dataMode} />
       <TimeSelector size={props.size} setValue={props.setTimeMode} value={props.timeMode} dataMode={props.dataMode} />
       <span style={titleStyle}>
@@ -96,17 +97,17 @@ export function Chart(props) {
           showVerticalCrosshair
           showSeriesGlyphs
           renderTooltip={({ tooltipData, colorScale }) => (
-            <div>
-              <div style={{ color: colorScale(tooltipData.datumByKey[props.title].key) }}>
+            <Box>
+              <Box style={{ color: colorScale(tooltipData.datumByKey[props.title].key) }}>
                 {tooltipData.datumByKey[props.title].key}
-              </div>
-              <div style={{marginTop:'5px'}}>
+              </Box>
+              <Box style={{marginTop:'5px'}}>
                 {`${props.usd ? '$' : ''}${accessors.yAccessor(tooltipData.datumByKey[props.title].datum).toLocaleString('en-US')}`}
-              </div>
-              <div style={{marginTop:'5px', color:'#777777'}}>
+              </Box>
+              <Box style={{marginTop:'5px', color:'#777777'}}>
                 {toolTipFormatter(accessors.xAccessor(tooltipData.datumByKey[props.title].datum))}
-              </div>
-            </div>
+              </Box>
+            </Box>
           )}
         />
         <AnimatedAxis
@@ -127,7 +128,7 @@ export function Chart(props) {
         <AnimatedGrid strokeDasharray={2} columns={false} numTicks={6} />
         {getLineForTitle(props.title, data)}
       </XYChart>
-    </div>
+    </Box>
   )
 
   function getLineForTitle(title, data) {

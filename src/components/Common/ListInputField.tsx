@@ -3,7 +3,8 @@ import {
   FormControl,
   InputLabel,
   OutlinedInput,
-  Select
+  Select,
+  Box
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { displayBN } from '../../util'
@@ -43,8 +44,8 @@ export default function ListInputField(props) {
   if (props.hidden) return null
 
   return (
-    <div style={{margin: '8px 0'}}>
-      <div style={smallLabels}>{'Select Plot to Transfer'}</div>
+    <Box style={{margin: '8px 0'}}>
+      <Box style={smallLabels}>{'Select Plot to Transfer'}</Box>
       <FormControl
         variant='outlined'
         size='medium'
@@ -82,7 +83,7 @@ export default function ListInputField(props) {
           }
         </Select>
       </FormControl>
-    </div>
+    </Box>
   )
 }
 

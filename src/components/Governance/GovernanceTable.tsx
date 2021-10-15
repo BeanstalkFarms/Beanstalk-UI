@@ -9,7 +9,8 @@ import {
   TableContainer,
   TablePagination,
   TableHead,
-  TableRow
+  TableRow,
+  Box
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
@@ -27,9 +28,9 @@ import CircularProgressWithLabel from './CircularProgressWithLabel'
 
 export default function GovernanceTable(props) {
   return (
-    <div style={props.style}>
+    <Box style={props.style}>
       <BipTable {...props} />
-    </div>
+    </Box>
   )
 }
 

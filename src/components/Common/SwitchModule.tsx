@@ -1,4 +1,4 @@
-import { FormControlLabel, Switch } from '@material-ui/core/'
+import { FormControlLabel, Switch, Box } from '@material-ui/core'
 import { withStyles } from'@material-ui/styles'
 import { QuestionModule } from './index'
 
@@ -38,8 +38,8 @@ export default function SwitchModule(props) {
   const changeHandler = (event) => props.setValue(event.target.checked)
 
   return (
-    <div style={{display: 'flex', position: 'relative'}}>
-      <div style={switchStyle}>
+    <Box style={{display: 'flex', position: 'relative'}}>
+      <Box style={switchStyle}>
         <GreenFormControlLabel
           checked={props.value}
           control={<GreenSwitch />}
@@ -53,8 +53,8 @@ export default function SwitchModule(props) {
           margin={props.margin}
           marginTooltip={props.marginTooltip}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

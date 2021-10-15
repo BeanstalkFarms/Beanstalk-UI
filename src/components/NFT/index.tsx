@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from '@material-ui/core'
+import { Link, Box } from '@material-ui/core'
 import {
   BEGINNING_NFT_SEASON,
   GENESIS_NFT,
@@ -84,14 +84,12 @@ export default function NFTs(props) {
   let userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u['id'])
   userNFTs = nfts.filter((n) => userNFTs.includes(n['id']))
 
-  const { innerWidth: width } = window
-
   return (
     <ContentSection id='nft' title='BeaNFTs' textTransform='none' style={{minHeight: '600px'}}>
-      <div className={"section-description"} style={{width: '370px', margin: '20px 0 0 0', padding: '12px'}}>
+      <Box className={"section-description"} style={{width: '370px', margin: '20px 0 0 0', padding: '12px'}}>
         {`BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk.`}
         {` `}<Link href={MEDIUM_NFT_LINK} target='blank'>{'Read More'}</Link>{`.`}
-      </div>
+      </Box>
       <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginBottom: '20px'}}>
         <Grid container item style={nftStyle}>
           <Grid container item xs={12} justifyContent='center' alignItems='center' style={{marginTop: '-10px'}}>

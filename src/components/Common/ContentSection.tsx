@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core'
+import { Grid, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { TitleLabel } from './index'
 
@@ -15,17 +15,17 @@ export default function ContentSection(props) {
 
   function renderTitle() {
     if (props.title !== undefined) {
-      return (<div className={classes.sectionTitle}><TitleLabel size={props.size} textTransform={props.textTransform}>{props.title}</TitleLabel></div>)
+      return (<Box className={classes.sectionTitle}><TitleLabel size={props.size} textTransform={props.textTransform}>{props.title}</TitleLabel></Box>)
     }
   }
 
   return (
-    <div id={props.id} className='AppContent' style={props.style}>
+    <Box id={props.id} className='AppContent' style={props.style}>
       <Grid container spacing={3} className={classes.appSection} justifyContent='center'>
         { renderTitle() }
         {props.children}
       </Grid>
-    </div>
+    </Box>
   )
 }
 

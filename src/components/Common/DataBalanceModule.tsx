@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core'
 import { FormatTooltip, QuestionModule } from './index'
 
 export default function DataBalanceModule(props) {
@@ -6,7 +7,7 @@ export default function DataBalanceModule(props) {
     <span>
       {props.content !== undefined
         ? props.content
-        : <div className='BalanceModule-balanceContent' style={props.style}>{props.balance}</div>
+        : <Box className='BalanceModule-balanceContent' style={props.style}>{props.balance}</Box>
       }
     </span>
   )
@@ -24,15 +25,15 @@ export default function DataBalanceModule(props) {
   )
 
   return (
-    <div>
-      <div className={'BalanceModule-title' + (props.swerve !== undefined ? ' TokenBalanceModule-header' : '')} style={props.style}>
+    <Box>
+      <Box className={'BalanceModule-title' + (props.swerve !== undefined ? ' TokenBalanceModule-header' : '')} style={props.style}>
         {props.title}
         <QuestionModule description={props.description} margin={props.questionMargin} widthTooltip={props.widthTooltip}/>
-      </div>
-      <div className={'BalanceModule-balance' + (props.swerve !== undefined ? ' TokenBalanceModule-content' : '')} style={props.style}>
+      </Box>
+      <Box className={'BalanceModule-balance' + (props.swerve !== undefined ? ' TokenBalanceModule-content' : '')} style={props.style}>
         {balanceSection}
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

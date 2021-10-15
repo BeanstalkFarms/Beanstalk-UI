@@ -7,7 +7,8 @@ import {
   MenuItem,
   MenuList,
   Paper,
-  Popper
+  Popper,
+  Box
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import {
@@ -434,18 +435,18 @@ export default function WalletModule(props) {
     const timeString = date.toLocaleTimeString('en-US')
 
     return (
-      <div style={{width: '100%', paddingLeft: '3px'}}>
-        <div style={{width: '100%'}}>
-          <div style={eventTitleStyle}>
+      <Box style={{width: '100%', paddingLeft: '3px'}}>
+        <Box style={{width: '100%'}}>
+          <Box style={eventTitleStyle}>
             {eventTitle}
             <br/>
-            <div style={timestampStyle}>{`${dateString} ${timeString}`}</div>
-          </div>
-          <div style={eventAmountStyle}>
+            <Box style={timestampStyle}>{`${dateString} ${timeString}`}</Box>
+          </Box>
+          <Box style={eventAmountStyle}>
             {eventAmount}
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
     )
   }
 
@@ -453,7 +454,7 @@ export default function WalletModule(props) {
   const [transactionPage, setTransactionPage] = useState(-1)
   const walletEventsDisplay = (
     <>
-    <div style={{zIndex: '1', width: '100%', height: '40px'}}>
+    <Box style={{zIndex: '1', width: '100%', height: '40px'}}>
       {walletSubtitles.map((title, index) => (
         <Button
           key={index}
@@ -483,7 +484,7 @@ export default function WalletModule(props) {
           {title}
         </Button>
       ))}
-    </div>
+    </Box>
     {walletEvents.filter((event) => {
       if (transactionPage === 0) return ['BeanDeposit', 'BeanWithdraw', 'BeanClaim'].includes(event.event)
       if (transactionPage === 1) return ['EtherClaim', 'Swap'].includes(event.event)
@@ -548,7 +549,7 @@ export default function WalletModule(props) {
           <Paper id='wallet-list-paper' style={walletListStyle}>
             <ClickAwayListener onClickAway={handleCloseWallet}>
               <MenuList style={{padding: '0px'}} autoFocusItem={openWallet} id='wallet-list-grow'>
-                <div style={{zIndex: '1', width: '100%', height: '40px', position: 'sticky', top: '0px'}}>
+                <Box style={{zIndex: '1', width: '100%', height: '40px', position: 'sticky', top: '0px'}}>
                   {walletTitles.map((title, index) => (
                     <Button
                       key={index}
@@ -575,10 +576,10 @@ export default function WalletModule(props) {
                       {title}
                     </Button>
                   ))}
-                </div>
-                <div style={{zIndex: '0', paddingTop: '0px'}}>
+                </Box>
+                <Box style={{zIndex: '0', paddingTop: '0px'}}>
                   {walletPages[walletPage]}
-                </div>
+                </Box>
               </MenuList>
             </ClickAwayListener>
           </Paper>

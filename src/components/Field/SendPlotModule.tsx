@@ -1,5 +1,6 @@
-import BigNumber from 'bignumber.js'
 import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import BigNumber from 'bignumber.js'
+import { Box } from '@material-ui/core'
 import { BEAN } from '../../constants'
 import {
   isAddress,
@@ -91,9 +92,9 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
     return (
       <>
-      <div style={{display: 'inline-block', width: '100%', color: 'red'}}>
+      <Box style={{display: 'inline-block', width: '100%', color: 'red'}}>
         <span>{`WARNING: Beanstalk doesn't currently support a market for buying and selling Plots. Use at your own risk`}</span>
-      </div>
+      </Box>
       </>
     )
   }

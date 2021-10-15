@@ -1,6 +1,7 @@
-import BigNumber from 'bignumber.js'
 import React, { forwardRef, useImperativeHandle, useState } from 'react'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import BigNumber from 'bignumber.js'
+import { Box } from '@material-ui/core'
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
 import {
   BEAN,
   BEAN_TO_SEEDS,
@@ -12,7 +13,6 @@ import {
 import {
   buyAndDepositBeans,
   depositBeans,
-  displayBN,
   getToAmount,
   MaxBN,
   SwapMode,
@@ -126,14 +126,14 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
     return (
       <>
       <ExpandMoreIcon color='primary' style={{marginBottom: '-14px', width: '100%'}} />
-      <div style={{display: 'inline-flex'}}>
-        <div style={{marginRight: '5px'}}>{toStalkField}</div>
-        <div style={{marginLeft: '5px'}}>{toSeedsField}</div>
-      </div>
-      <div style={{display: 'inline-block', width: '100%'}}>{toSiloBeanField}</div>
-      <div style={{display: 'inline-block', width: '100%'}}>
+      <Box style={{display: 'inline-flex'}}>
+        <Box style={{marginRight: '5px'}}>{toStalkField}</Box>
+        <Box style={{marginLeft: '5px'}}>{toSeedsField}</Box>
+      </Box>
+      <Box style={{display: 'inline-block', width: '100%'}}>{toSiloBeanField}</Box>
+      <Box style={{display: 'inline-block', width: '100%'}}>
         <span>{`You will gain ${toStalkValue.dividedBy(props.totalStalk).multipliedBy(100).toFixed(3)}% ownership of Beanstalk.`}</span>
-      </div>
+      </Box>
       </>
     )
   }

@@ -8,7 +8,8 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Box
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-scroll'
@@ -87,13 +88,13 @@ export default function Vote(props) {
     const percentForPrevStalk = percentForStalk(props.stalkBips[bip],props.totalRoots)
     row.push(props.votedBips[bip])
     row.push(
-      <div>
+      <Box>
         <CircularProgressWithLabel
           lowvalue={Math.min(percentForNewStalk, percentForPrevStalk)}
           value={Math.max(percentForNewStalk, percentForPrevStalk)}
           voting={!props.votedBips[bip]}
         />
-      </div>
+      </Box>
     )
     dp.push(row)
     return dp

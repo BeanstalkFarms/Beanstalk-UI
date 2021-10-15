@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core'
 import { displayFullBN, TokenLabel } from '../../util'
 import { FormatTooltip } from './index'
 
@@ -13,7 +14,7 @@ export default function BalanceField(props) {
       <span>
         {props.content !== undefined
           ? props.content
-          : (<div style={style}>{props.balance}</div>)
+          : (<Box style={style}>{props.balance}</Box>)
         }
       </span>
     </FormatTooltip>

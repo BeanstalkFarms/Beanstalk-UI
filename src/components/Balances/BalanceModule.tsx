@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Hidden from '@material-ui/core/Hidden'
+import { Hidden, Box } from '@material-ui/core'
 import { BEAN } from '../../constants'
 import { displayBN, displayFullBN, TokenLabel } from '../../util'
 import {
@@ -166,7 +166,7 @@ export default function BalanceModule(props) {
               placement='top'
               title={beanTotals.isGreaterThan(0) && beanActive < 0 ? `${displayFullBN(beanTotals)} Beans` : ''}
             >
-              <div>
+              <Box>
                 <BalanceChart
                   asset={CryptoAsset.Bean}
                   claimable={balance}
@@ -178,7 +178,7 @@ export default function BalanceModule(props) {
                   total={displayBN(beanTotals)}
                   transit={props.beanTransitBalance}
                 />
-              </div>
+              </Box>
             </FormatTooltip>
           </Grid>
       </Grid>
@@ -216,7 +216,7 @@ export default function BalanceModule(props) {
                 : ''
             }
           >
-            <div>
+            <Box>
               <BalanceChart
                 asset={CryptoAsset.LP}
                 claimable={props.lpReceivableBalance}
@@ -227,7 +227,7 @@ export default function BalanceModule(props) {
                 total={`${displayBN(props.beanLPTotal[0])}/${displayBN(props.beanLPTotal[1])}`}
                 transit={props.lpTransitBalance}
               />
-            </div>
+            </Box>
           </FormatTooltip>
         </Grid>
       </Grid>

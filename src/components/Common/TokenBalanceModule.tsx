@@ -1,5 +1,6 @@
-import BigNumber from 'bignumber.js'
 import React, { Fragment } from 'react'
+import BigNumber from 'bignumber.js'
+import { Box } from '@material-ui/core'
 import {
   CryptoAsset,
   displayBN,
@@ -65,7 +66,7 @@ export default function TokenBalanceModule(props) {
   )
 
   return (
-    <div style={{position: 'relative'}}>
+    <Box style={{position: 'relative'}}>
       <DataBalanceModule
         balanceDescription={balanceContent}
         content={content}
@@ -76,7 +77,7 @@ export default function TokenBalanceModule(props) {
         widthTooltip={props.widthTooltip}
         {...props}
       />
-    </div>
+    </Box>
   )
 }
 

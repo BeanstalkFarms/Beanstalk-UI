@@ -1,5 +1,6 @@
-import BigNumber from 'bignumber.js'
 import { Fragment } from 'react'
+import { Box } from '@material-ui/core'
+import BigNumber from 'bignumber.js'
 import { AppBar, Button, Link, Tab, Tabs } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import LockIcon from '@material-ui/icons/Lock'
@@ -112,7 +113,7 @@ export default function BaseModule(props) {
     buttonLabel = (
       <Fragment>
         <LockIcon/>
-        <div style={{style: 'inline-block'}}>{`${props.lockedSeasons} seasons`}</div>
+        <Box style={{style: 'inline-block'}}>{`${props.lockedSeasons} seasons`}</Box>
       </Fragment>
     )
   } else if (props.allowance.isGreaterThan(0)) {
@@ -131,7 +132,7 @@ export default function BaseModule(props) {
         margin='0 0 0 7px'
         title={props.locked ? 'Unvote Active BIPs to Withdraw' : ''}
       >
-        <div>
+        <Box>
           <Button
             className={classes.formButton}
             color='primary'
@@ -141,7 +142,7 @@ export default function BaseModule(props) {
           >
             {buttonLabel}
           </Button>
-        </div>
+        </Box>
       </FormatTooltip>
     )
   } else {
@@ -150,14 +151,14 @@ export default function BaseModule(props) {
 
   const moduleContent = (
     <>
-    <div style={{position: 'relative', zIndex: '0'}}>
+    <Box style={{position: 'relative', zIndex: '0'}}>
       {props.children}
       {props.allowance.isEqualTo(0)
-        ? <div style={classes.moduleContent}>
-          </div>
+        ? <Box style={classes.moduleContent}>
+          </Box>
         : null
       }
-    </div>
+    </Box>
     {showButton}
     {props.allowance.isEqualTo(0)
       ? <span>
@@ -197,7 +198,7 @@ export default function BaseModule(props) {
                 disabled={props.sectionTitles.length < 2}
                 label={
                   props.sectionTitlesDescription !== undefined
-                    ? <div>
+                    ? <Box>
                         {sectionTitle}
                         <QuestionModule
                           description={props.sectionTitlesDescription[index]}
@@ -205,7 +206,7 @@ export default function BaseModule(props) {
                           marginTooltip={props.marginTooltip}
                           widthTooltip={props.widthTooltip}
                         />
-                      </div>
+                      </Box>
                     : sectionTitle
                 }
                 style={{color: 'black'}}
@@ -230,7 +231,7 @@ export default function BaseModule(props) {
             {
               <span className={classes.singleSection}>
                 {props.sectionTitlesDescription !== undefined
-                  ? <div>
+                  ? <Box>
                       {props.sectionTitles[0]}
                       <QuestionModule
                         description={props.sectionTitlesDescription[0]}
@@ -238,7 +239,7 @@ export default function BaseModule(props) {
                         marginTooltip={props.marginTooltip}
                         widthTooltip={props.widthTooltip}
                       />
-                    </div>
+                    </Box>
                   : props.sectionTitles[0]
                 }
               </span>
