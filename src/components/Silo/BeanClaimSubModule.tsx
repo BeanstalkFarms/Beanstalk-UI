@@ -1,17 +1,17 @@
-import React, { forwardRef, useImperativeHandle } from 'react'
-import { Box } from '@material-ui/core'
-import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
-import { BEAN } from '../../constants'
-import { TrimBN, claimBeans } from '../../util'
+import React, { forwardRef, useImperativeHandle } from 'react';
+import { Box } from '@material-ui/core';
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { BEAN } from '../../constants';
+import { TrimBN, claimBeans } from '../../util';
 import {
   ClaimableAsset,
   CryptoAsset,
   TokenInputField,
-  TokenOutputField
-} from '../Common'
+  TokenOutputField,
+} from '../Common';
 
 export const BeanClaimSubModule = forwardRef((props, ref) => {
-  props.setIsFormDisabled(props.maxFromBeansVal.isLessThanOrEqualTo(0))
+  props.setIsFormDisabled(props.maxFromBeansVal.isLessThanOrEqualTo(0));
 
   /* Input Fields */
 
@@ -21,7 +21,7 @@ export const BeanClaimSubModule = forwardRef((props, ref) => {
       token={ClaimableAsset.Bean}
       value={TrimBN(props.maxFromBeansVal, BEAN.decimals)}
     />
-  )
+  );
 
   /* Output Fields */
 
@@ -31,33 +31,38 @@ export const BeanClaimSubModule = forwardRef((props, ref) => {
       token={CryptoAsset.Bean}
       value={TrimBN(props.maxFromBeansVal, BEAN.decimals)}
     />
-  )
+  );
 
   /* Transaction Details, settings and text */
 
   function transactionDetails() {
-    if (props.maxFromBeansVal.isLessThanOrEqualTo(0)) return null
+    if (props.maxFromBeansVal.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
-      <ExpandMoreIcon color='primary' style={{marginBottom: '-14px', width: '100%'}} />
-      <Box style={{display: 'inline-block', width: '100%'}}>{toBeanField}</Box>
+        <ExpandMoreIcon
+          color="primary"
+          style={{ marginBottom: '-14px', width: '100%' }}
+        />
+        <Box style={{ display: 'inline-block', width: '100%' }}>
+          {toBeanField}
+        </Box>
       </>
-    )
+    );
   }
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (props.maxFromBeansVal.isLessThanOrEqualTo(0)) return
+      if (props.maxFromBeansVal.isLessThanOrEqualTo(0)) return;
 
-      claimBeans(Object.keys(props.crates),() => { })
-    }
-  }))
+      claimBeans(Object.keys(props.crates), () => {});
+    },
+  }));
 
   return (
     <>
-    {fromBeansField}
-    {transactionDetails()}
+      {fromBeansField}
+      {transactionDetails()}
     </>
-  )
-})
+  );
+});

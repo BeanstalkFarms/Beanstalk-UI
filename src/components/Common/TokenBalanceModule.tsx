@@ -1,13 +1,8 @@
-import React, { Fragment } from 'react'
-import BigNumber from 'bignumber.js'
-import { Box } from '@material-ui/core'
-import {
-  CryptoAsset,
-  displayBN,
-  displayFullBN,
-  TokenLabel
-} from '../../util'
-import { TokenTypeImageModule, DataBalanceModule } from './index'
+import React, { Fragment } from 'react';
+import BigNumber from 'bignumber.js';
+import { Box } from '@material-ui/core';
+import { CryptoAsset, displayBN, displayFullBN, TokenLabel } from '../../util';
+import { TokenTypeImageModule, DataBalanceModule } from './index';
 
 export default function TokenBalanceModule(props) {
   const style = {
@@ -18,55 +13,53 @@ export default function TokenBalanceModule(props) {
     fontWeight: '400',
     lineHeight: '100%',
     margin: '2px',
-  }
+  };
   const imageStyle = {
     display: 'inline-block',
     height: '20px',
     marginBottom: '-5px',
     marginLeft: '5px',
-  }
+  };
 
-  var balanceStyle = {color: props.balanceColor}
+  let balanceStyle = { color: props.balanceColor };
 
   if (props.claimPadding !== undefined) {
     balanceStyle = {
       color: props.balanceColor,
-      paddingRight:'0px',
-      textAlign:'center',
-      width:'100%',
-    }
+      paddingRight: '0px',
+      textAlign: 'center',
+      width: '100%',
+    };
   }
 
-  const tokenLabel = TokenLabel(props.token)
+  const tokenLabel = TokenLabel(props.token);
   const content = (
-    <Fragment>
+    <>
       <h5 style={style}>
         {props.endText.length > 0
           ? `${displayBN(props.balance)}${props.endText}`
-          : displayBN(props.balance)
-        }
+          : displayBN(props.balance)}
       </h5>
       <TokenTypeImageModule style={imageStyle} token={props.token} />
-    </Fragment>
-  )
+    </>
+  );
 
   function displayLP(balance) {
-    return `${displayBN(balance[0])} ${TokenLabel(CryptoAsset.Bean)}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`
+    return `${displayBN(balance[0])} ${TokenLabel(
+      CryptoAsset.Bean,
+    )}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
-  var balanceContent = (
-    props.balance.isGreaterThan(0)
-      ? `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`
-      : undefined
-  )
-  balanceContent = (
+  let balanceContent = props.balance.isGreaterThan(0)
+    ? `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`
+    : undefined;
+  balanceContent =
     props.balance.isGreaterThan(0) && props.isLP
       ? displayLP(props.poolForLPRatio(props.balance))
-      : balanceContent
-  )
+      : balanceContent;
 
   return (
-    <Box style={{position: 'relative'}}>
+    <Box style={{ position: 'relative' }}>
       <DataBalanceModule
         balanceDescription={balanceContent}
         content={content}
@@ -78,7 +71,7 @@ export default function TokenBalanceModule(props) {
         {...props}
       />
     </Box>
-  )
+  );
 }
 
 TokenBalanceModule.defaultProps = {
@@ -86,5 +79,4 @@ TokenBalanceModule.defaultProps = {
   balanceColor: 'black',
   endText: '',
   startText: '',
-
-}
+};

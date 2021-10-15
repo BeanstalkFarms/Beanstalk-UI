@@ -1,5 +1,5 @@
-import { Box } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Box } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 export default function TitleLabel(props) {
   const classes = makeStyles(theme => ({
@@ -10,17 +10,17 @@ export default function TitleLabel(props) {
       fontSize: props.size || '24px',
       margin: props.margin || '0',
       padding: props.padding || '5px',
-      textTransform: props.textTransform
-    }
-  }))()
+      textTransform: props.textTransform,
+    },
+  }))();
 
   return (
     <Box className={classes.label} style={props.style}>
       {props.children}
     </Box>
-  )
+  );
 }
 
 TitleLabel.defaultProps = {
   textTransform: 'uppercase',
-}
+};

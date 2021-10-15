@@ -1,15 +1,16 @@
-import { Button, Box } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
-import { QuestionModule } from './index'
+import { Button, Box } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import { QuestionModule } from './index';
 
 export default function SingleButton(props) {
-  const maxWidth = props.size === 'small' ? '200px' : '300px'
+  const maxWidth = props.size === 'small' ? '200px' : '300px';
 
   const classes = makeStyles(theme => ({
     button: {
       backgroundColor: props.backgroundColor,
       borderRadius: '15px',
-      boxShadow: '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+      boxShadow:
+        '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
       color: props.color,
       fontFamily: 'Futura-Pt-Book',
       fontSize: props.fontSize,
@@ -23,13 +24,19 @@ export default function SingleButton(props) {
       '&:hover': {
         backgroundColor: props.backgroundColor,
         opacity: '100%',
-      }
-    }
-  }))()
+      },
+    },
+  }))();
 
   function getIcon() {
     if (props.icon !== undefined) {
-      return <img alt='' src={props.icon} style={{height: 'calc(15px + 1vmin)', margin: '15px'}} />
+      return (
+        <img
+          alt=""
+          src={props.icon}
+          style={{ height: 'calc(15px + 1vmin)', margin: '15px' }}
+        />
+      );
     }
   }
 
@@ -47,7 +54,7 @@ export default function SingleButton(props) {
       </Box>
       {getIcon()}
     </Button>
-  )
+  );
 }
 
 SingleButton.defaultProps = {
@@ -59,5 +66,5 @@ SingleButton.defaultProps = {
   margin: '-12px 0 0 5px',
   size: 'small',
   textTransform: 'uppercase',
-  width: '200px'
-}
+  width: '200px',
+};

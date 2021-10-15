@@ -1,5 +1,5 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
-import { UNI_V2_SUBGRAPH_API_LINK } from '../constants'
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { UNI_V2_SUBGRAPH_API_LINK } from '../constants';
 
 // const APIURL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
 
@@ -22,7 +22,7 @@ const DayPoolQuery = `
       dailyVolumeUSD
     }
   }
-`
+`;
 
 const HourPoolQuery = `
   {
@@ -41,51 +41,51 @@ const HourPoolQuery = `
       hourlyVolumeUSD
     }
   }
-`
+`;
 
 const client = new ApolloClient({
   uri: UNI_V2_SUBGRAPH_API_LINK,
-  cache: new InMemoryCache()
-})
+  cache: new InMemoryCache(),
+});
 
 export async function dayUniswapQuery() {
   const data = await client.query({
-    query: gql(DayPoolQuery)
-  })
+    query: gql(DayPoolQuery),
+  });
   const dates = data.data.tokenDayDatas.reduce((acc, d) => {
-    var date = new Date()
-    date.setTime(d.date * 1000)
+    const date = new Date();
+    date.setTime(d.date * 1000);
     // date = `${date.getMonth() + 1}/${date.getDate()}`
     acc.push({
       x: date,
-      liquidity: roundTo4Digits((parseFloat(d.totalLiquidityUSD) * 2)),
-      volume: roundTo4Digits(parseFloat(d.dailyVolumeUSD))
-    })
-    return acc
-  }, [])
-  dates.pop()
-  dates.pop()
-  return dates.reverse()
+      liquidity: roundTo4Digits(parseFloat(d.totalLiquidityUSD) * 2),
+      volume: roundTo4Digits(parseFloat(d.dailyVolumeUSD)),
+    });
+    return acc;
+  }, []);
+  dates.pop();
+  dates.pop();
+  return dates.reverse();
 }
 
 export async function hourUniswapQuery() {
   const data = await client.query({
-    query: gql(HourPoolQuery)
-  })
+    query: gql(HourPoolQuery),
+  });
   const dates = data.data.pairHourDatas.reduce((acc, d) => {
-    var date = new Date()
-    date.setTime(d.hourStartUnix * 1000)
+    const date = new Date();
+    date.setTime(d.hourStartUnix * 1000);
     acc.push({
       x: date,
       liquidity: roundTo4Digits(parseFloat(d.reserveUSD)),
-      volume: roundTo4Digits(parseFloat(d.hourlyVolumeUSD))
-    })
-    return acc
-  }, [])
-  dates.splice(dates.length - 7, 7)
-  return dates.reverse()
+      volume: roundTo4Digits(parseFloat(d.hourlyVolumeUSD)),
+    });
+    return acc;
+  }, []);
+  dates.splice(dates.length - 7, 7);
+  return dates.reverse();
 }
 
 function roundTo4Digits(num) {
-  return parseFloat(num.toFixed(4))
+  return parseFloat(num.toFixed(4));
 }
