@@ -201,6 +201,7 @@ export default function App() {
     totalBeans: initBN,
     totalSiloBeans: initBN,
     totalTransitBeans: initBN,
+    totalBudgetBeans: initBN,
     totalLP: initBN,
     totalSiloLP: initBN,
     totalTransitLP: initBN,
@@ -296,12 +297,14 @@ export default function App() {
       const [
         totalBeans, totalLP, totalSeeds, totalStalk,
         totalSiloBeans, totalSiloLP, totalTransitBeans, totalTransitLP,
-        soil, podIndex, harvestableIndex, totalRoots, weather, rain, season
+        soil, podIndex, harvestableIndex, totalRoots, weather, rain, season,
+        develpomentBudget, marketingBudget
       ] = totalBalances
+      const totalBudgetBeans = develpomentBudget.plus(marketingBudget)
       const [bips, hasActiveBIP] = bipInfo
       const totalPods = podIndex.minus(harvestableIndex)
       setTotalBalance(prev => ({
-        ...prev, totalBeans, totalLP, totalSiloBeans, totalSiloLP,
+        ...prev, totalBeans: totalBeans, totalBudgetBeans, totalLP, totalSiloBeans, totalSiloLP,
         totalTransitBeans, totalTransitLP, totalSeeds, totalStalk, totalPods, totalRoots
       }))
       setWeather(prev => ({...prev, ...weather, ...rain, harvestableIndex, soil}))

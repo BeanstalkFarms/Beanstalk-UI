@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Hidden from '@material-ui/core/Hidden'
 import { BEAN } from '../../constants'
+import BigNumber from 'bignumber.js'
 import { displayBN, displayFullBN, TokenLabel } from '../../util'
 import {
   ClaimableAsset,
@@ -15,6 +16,7 @@ import {
   UniswapAsset
 } from '../Common'
 import BalanceChart from './BalanceChart'
+import ToggleTokenBalanceModule from './ToggleTokenBalanceModule'
 
 export default function BalanceModule(props) {
   const [beanActive, setBeanActive] = useState(-1)
@@ -26,6 +28,7 @@ export default function BalanceModule(props) {
     claimable: '#FED9A6',
     silo: '#CCEBC5',
     transit: '#DECBE4',
+    budget: '#FFFFCC'
   }
   const containerGridStyle = {
     minHeight: '100px',
@@ -56,6 +59,7 @@ export default function BalanceModule(props) {
       .plus(props.beanTransitBalance)
       .plus(props.beanReceivableBalance)
       .plus(props.harvestablePodBalance)
+      .plus(props.budgetBalance)
       .plus(props.beanReserveTotal)
   )
   const lpTotals = (
@@ -69,77 +73,62 @@ export default function BalanceModule(props) {
   /* Show Claimables */
 
   const claimableBeansSection = (
-    balance > 0
-      ? <Grid item xs={12}>
-          <TokenBalanceModule
-            balance={balance}
-            balanceColor={beanActive === 4 ? color.claimable : null}
-            description={props.description.claimableBeanBalance}
-            swerve
-            title={`Claimable ${props.showTokenName ? 'Beans' : ''}`}
-            token={ClaimableAsset.Bean}
-          />
-        </Grid>
-      : null
+    <ToggleTokenBalanceModule
+      balance={balance}
+      balanceColor={beanActive === 4 ? color.claimable : null}
+      description={props.description.claimableBeanBalance}
+      title={`Claimable ${props.showTokenName ? 'Beans' : ''}`}
+      token={ClaimableAsset.Bean}
+    />
+  )
+
+  const budgetBeansSection = (
+    <ToggleTokenBalanceModule 
+      balance={props.budgetBalance}
+      balanceColor={beanActive === 5 ? color.budget : null}
+      description={props.description.budgetBalance}
+      title={`Budgeted ${props.showTokenName ? 'Beans' : ''}`}
+      token={CryptoAsset.Bean}
+    />
   )
   const claimableLPSection = (
-    props.lpReceivableBalance > 0
-      ? <Grid item xs={12} >
-          <TokenBalanceModule
-            balance={props.lpReceivableBalance}
-            balanceColor={lpActive === 4 ? color.claimable : null}
-            description={props.description.claimablelpBalance}
-            isLP={true}
-            poolForLPRatio={props.poolForLPRatio}
-            swerve
-            title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
-            token={ClaimableAsset.LP}
-          />
-        </Grid>
-      : null
+    <ToggleTokenBalanceModule
+      balance={props.lpReceivableBalance}
+      balanceColor={lpActive === 4 ? color.claimable : null}
+      description={props.description.claimablelpBalance}
+      isLP={true}
+      poolForLPRatio={props.poolForLPRatio}
+      title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
+      token={ClaimableAsset.LP}
+    />
   )
   const beanReserveSection = (
-    props.beanReserveTotal > 0
-      ? <Grid item xs={12} >
-          <TokenBalanceModule
-            balance={props.beanReserveTotal}
-            balanceColor={beanActive === 3 ? color.pool : null}
-            description={props.description.beanReserveTotal}
-            swerve
-            token={UniswapAsset.Bean}
-          />
-        </Grid>
-      : null
+    <ToggleTokenBalanceModule
+      balance={props.beanReserveTotal}
+      balanceColor={beanActive === 3 ? color.pool : null}
+      description={props.description.beanReserveTotal}
+      token={UniswapAsset.Bean}
+    />
   )
   const beanTransitSection = (
-    props.beanTransitBalance > 0
-      ? <Grid item xs={12} >
-          <TokenBalanceModule
-            balance={props.beanTransitBalance}
-            balanceColor={beanActive === 2 ? color.transit : null}
-            description={props.description.beanTransitBalance}
-            swerve
-            title={`Withdrawn ${props.showTokenName ? 'Beans' : ''}`}
-            token={TransitAsset.Bean}
-          />
-        </Grid>
-      : null
+    <ToggleTokenBalanceModule
+      balance={props.beanTransitBalance}
+      balanceColor={beanActive === 2 ? color.transit : null}
+      description={props.description.beanTransitBalance}
+      title={`Withdrawn ${props.showTokenName ? 'Beans' : ''}`}
+      token={TransitAsset.Bean}
+    />
   )
   const lpTransitSection = (
-    props.lpTransitBalance > 0
-      ? <Grid item xs={12}>
-          <TokenBalanceModule
-            balance={props.lpTransitBalance}
-            balanceColor={lpActive === 2 ? color.transit : null}
-            description={props.description.lpTransitBalance}
-            isLP={true}
-            poolForLPRatio={props.poolForLPRatio}
-            swerve
-            title={`Withdrawn ${props.showTokenName ? 'LP' : ''}`}
-            token={TransitAsset.LP}
-          />
-        </Grid>
-      : null
+    <ToggleTokenBalanceModule
+      balance={props.lpTransitBalance}
+      balanceColor={lpActive === 2 ? color.transit : null}
+      description={props.description.lpTransitBalance}
+      isLP={true}
+      poolForLPRatio={props.poolForLPRatio}
+      title={`Withdrawn ${props.showTokenName ? 'LP' : ''}`}
+      token={TransitAsset.LP}
+    />
   )
 
   /* Bean Hidden */
@@ -170,6 +159,7 @@ export default function BalanceModule(props) {
                 <BalanceChart
                   asset={CryptoAsset.Bean}
                   claimable={balance}
+                  budget={props.budgetBalance}
                   circulating={props.beanBalance}
                   pool={props.beanReserveTotal}
                   silo={props.beanSiloBalance}
@@ -302,6 +292,7 @@ export default function BalanceModule(props) {
           {beanTransitSection}
           {claimableBeansSection}
           {beanReserveSection}
+          {budgetBeansSection}
         </Grid>
 
         {switchBeanSizeBalances}
@@ -390,4 +381,6 @@ BalanceModule.defaultProps = {
   margin: '4px 0 0 20px',
   padding: '10px',
   showTokenName: true,
+  budgetBalance: new BigNumber(0),
+  beanReserveTotal: new BigNumber(0),
 }

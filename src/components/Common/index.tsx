@@ -78,6 +78,7 @@ export const walletDescriptions = {
 }
 export const totalDescriptions = {
   beanBalance: 'This is the number of Beans not in the Silo or Withdrawals.',
+  budgetBalance: 'This is the number of Beans in the Marketing and Development Budgets.',
   lpBalance: 'This is the number of LP Tokens not in the Silo or Withdrawals.',
   beanSiloBalance: 'This is the number of Beans currently Deposited in the Silo.',
   lpSiloBalance: 'This is the number of LP Tokens Deposited in the Silo.',

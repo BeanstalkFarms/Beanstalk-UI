@@ -122,7 +122,6 @@ export default function Balances(props) {
       strings={walletStrings}
       topLeft={userBalanceInDollars}
       topRight={props.rootsBalance.dividedBy(props.totalRoots).multipliedBy(100)}
-      beanReserveTotal={new BigNumber(0)}
       beanLPTotal={userBeansAndEth}
       {...props}
     />
@@ -144,6 +143,7 @@ export default function Balances(props) {
               .minus(props.totalSiloBeans)
               .minus(props.totalTransitBeans)
               .minus(props.beanReserve)
+              .minus(props.totalBudgetBeans)
           : new BigNumber(0)
       }
       lpBalance={
@@ -154,6 +154,7 @@ export default function Balances(props) {
               .minus(new BigNumber(UNISWAP_BASE_LP))
           : new BigNumber(0)
       }
+      budgetBalance={props.totalBudgetBeans}
       beanSiloBalance={props.totalSiloBeans}
       lpSiloBalance={props.totalSiloLP}
       beanTransitBalance={props.totalTransitBeans}
