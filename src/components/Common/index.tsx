@@ -4,6 +4,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 export { Grid } from '@material-ui/core'
 export type { Token } from '../../util'
 export {
+  BudgetAsset,
   ClaimableAsset,
   CryptoAsset,
   FarmAsset,

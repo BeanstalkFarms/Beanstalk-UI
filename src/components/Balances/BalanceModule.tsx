@@ -4,6 +4,7 @@ import { BEAN } from '../../constants'
 import BigNumber from 'bignumber.js'
 import { displayBN, displayFullBN, TokenLabel } from '../../util'
 import {
+  BudgetAsset,
   ClaimableAsset,
   CryptoAsset,
   DataBalanceModule,
@@ -25,13 +26,13 @@ export default function BalanceModule(props) {
   const color = {
     circulating: '#B3CDE3',
     pool: '#FBB4AE',
-    claimable: '#FED9A6',
+    claimable: '#E5D8BD',
     silo: '#CCEBC5',
     transit: '#DECBE4',
-    budget: '#FFFFCC'
+    budget: '#FED9A6'
   }
   const containerGridStyle = {
-    minHeight: '100px',
+    minHeight: '110px',
     padding: '4px 4px',
     width: '50%',
   }
@@ -83,12 +84,12 @@ export default function BalanceModule(props) {
   )
 
   const budgetBeansSection = (
-    <ToggleTokenBalanceModule 
+    <ToggleTokenBalanceModule
       balance={props.budgetBalance}
       balanceColor={beanActive === 5 ? color.budget : null}
       description={props.description.budgetBalance}
-      title={`Budgeted ${props.showTokenName ? 'Beans' : ''}`}
-      token={CryptoAsset.Bean}
+      title={`Budget ${props.showTokenName ? 'Beans' : ''}`}
+      token={BudgetAsset.Bean}
     />
   )
   const claimableLPSection = (

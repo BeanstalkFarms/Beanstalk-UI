@@ -20,9 +20,9 @@ export default function BalanceChart(props) {
     '#CCEBC5',
     '#DECBE4',
     '#FBB4AE',
-    '#FED9A6',
+    '#E5D8BD',
     '#DEDBDB',
-    '#FFFFCC'
+    '#FED9A6'
   ]
 
   const balance = (
@@ -42,9 +42,9 @@ export default function BalanceChart(props) {
          {x: 'Transit',     y: props.transit,     fill: colors[2]},
          {x: 'Pool',        y: props.pool,        fill: colors[3]},
          {x: 'Claimable',   y: props.claimable,   fill: colors[4]},
-         {x: 'Budget',   y: props.budget,   fill: colors[6]},
+         {x: 'Budget',      y: props.budget,      fill: colors[6]},
         ]
-      : [{x: 'Empty',       y: 100 ,                fill: colors[5]}]
+      : [{x: 'Empty',       y: 100 ,              fill: colors[5]}]
   )
 
   return (
