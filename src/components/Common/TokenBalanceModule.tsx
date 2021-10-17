@@ -12,7 +12,6 @@ export default function TokenBalanceModule(props) {
   const style = {
     color: props.balanceColor,
     display: 'inline',
-    fontSize: '12px',
     fontFamily: 'Lucida Console',
     fontWeight: '400',
     lineHeight: '100%',
@@ -36,17 +35,22 @@ export default function TokenBalanceModule(props) {
     }
   }
 
+  const width = window.innerWidth
+
   const tokenLabel = TokenLabel(props.token)
   const content = (
-    <Fragment>
-      <h5 style={style}>
-        {props.endText.length > 0
-          ? `${displayBN(props.balance)}${props.endText}`
-          : displayBN(props.balance)
-        }
-      </h5>
-      <TokenTypeImageModule style={imageStyle} token={props.token} />
-    </Fragment>
+    width > 360
+      ? <Fragment>
+          <h5 style={style}>
+            {displayBN(props.balance)}
+          </h5>
+          <TokenTypeImageModule style={imageStyle} token={props.token} />
+        </Fragment>
+      : <Fragment>
+          <h5 style={style}>
+            {displayBN(props.balance)}
+          </h5>
+        </Fragment>
   )
 
   function displayLP(balance) {
