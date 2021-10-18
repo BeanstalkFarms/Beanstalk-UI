@@ -1,5 +1,5 @@
 import { HeaderLabelWithTimer } from '../Common'
-import { timeToString } from '../../util'
+import { timeToString, timeToStringDetailed } from '../../util'
 
 export default function SeasonTimer(props) {
   function display(time) {
@@ -17,7 +17,7 @@ export default function SeasonTimer(props) {
       description = 'This is the time until the next Sunrise function can be called at the top of the hour.'
     }
 
-    return [title, timeToString(timeDifference), description]
+    return [title, timeToString(timeDifference), description, timeToStringDetailed(timeDifference)]
   }
 
   return (
