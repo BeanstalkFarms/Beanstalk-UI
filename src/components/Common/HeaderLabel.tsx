@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/styles'
-import { QuestionModule } from './index'
+import { FormatTooltip, QuestionModule } from './index'
 import { chainId } from '../../util'
 
 export default function HeaderLabel(props) {
@@ -30,22 +30,36 @@ export default function HeaderLabel(props) {
     }
   }))()
 
+  const questionTooltip = (
+    props.description !== undefined
+      ? <QuestionModule
+          description={props.description}
+          margin={props.margin}
+          marginTooltip={props.marginTooltip}
+          placement={props.placement}
+        />
+      : undefined
+  )
+  const balanceTooltip = (
+    props.balanceDescription !== undefined
+      ? <FormatTooltip
+           margin='10px'
+           placement='top'
+           title={props.balanceDescription}
+         >
+           <span>{props.value}</span>
+         </FormatTooltip>
+      : props.value
+  )
+
   return (
     <div className={classes.container}>
       <div className={classes.title}>
         {props.title}
-        {props.description !== undefined
-          ? <QuestionModule
-              description={props.description}
-              margin={props.margin}
-              marginTooltip={props.marginTooltip}
-              placement={props.placement}
-            />
-          : undefined
-        }
+        {questionTooltip}
       </div>
       <div className={classes.value}>
-         {props.value}
+        {balanceTooltip}
       </div>
     </div>
   )

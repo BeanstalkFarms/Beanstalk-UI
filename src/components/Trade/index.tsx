@@ -1,3 +1,4 @@
+import { displayFullBN } from '../../util'
 import { ContentSection, Grid, HeaderLabel } from '../Common'
 import TradeModule from './TradeModule'
 import LastCrossTimer from './LastCrossTimer'
@@ -15,9 +16,10 @@ export default function Trade(props) {
       <Grid container item xs={12} sm={12} spacing={3} justifyContent='center'>
         <Grid item xs={12} sm={6} style={{maxWidth: '300px'}}>
           <HeaderLabel
+            description='This is the live Bean price on Uniswap.'
+            balanceDescription={`$${displayFullBN(props.beanPrice)}`}
             title='Current Bean Price'
             value={`$${props.beanPrice.toFixed(4)}`}
-            description='This is the live Bean price on Uniswap.'
           />
         </Grid>
         <Grid item xs={12} sm={6} style={{maxWidth: '300px'}}>
