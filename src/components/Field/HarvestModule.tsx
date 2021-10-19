@@ -1,21 +1,17 @@
-import BigNumber from 'bignumber.js'
-import React, { forwardRef, useImperativeHandle } from 'react'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import { BEAN } from '../../constants'
-import {
-  harvest,
-  toStringBaseUnitBN,
-  TrimBN
-} from '../../util'
+import React, { forwardRef, useImperativeHandle } from 'react';
+import BigNumber from 'bignumber.js';
+import { Box } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { BEAN } from '../../constants';
+import { harvest, toStringBaseUnitBN, TrimBN } from '../../util';
 import {
   CryptoAsset,
   FarmAsset,
   TokenInputField,
-  TokenOutputField
-} from '../Common'
+  TokenOutputField,
+} from '../Common';
 
 export const HarvestModule = forwardRef((props, ref) => {
-
   /* Input Fields */
 
   const fromPodField = (
@@ -24,7 +20,7 @@ export const HarvestModule = forwardRef((props, ref) => {
       token={FarmAsset.Pods}
       value={TrimBN(props.harvestablePodBalance, 6)}
     />
-  )
+  );
 
   /* Output Fields */
 
@@ -34,31 +30,36 @@ export const HarvestModule = forwardRef((props, ref) => {
       token={CryptoAsset.Bean}
       value={TrimBN(props.harvestablePodBalance, BEAN.decimals)}
     />
-  )
+  );
 
   function transactionDetails() {
-    if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return null
+    if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
-      <ExpandMoreIcon color='primary' style={{marginBottom: '-14px', width: '100%'}} />
-      <div style={{display: 'inline-block', width: '100%'}}>{toBeanField}</div>
+        <ExpandMoreIcon
+          color="primary"
+          style={{ marginBottom: '-14px', width: '100%' }}
+        />
+        <Box style={{ display: 'inline-block', width: '100%' }}>
+          {toBeanField}
+        </Box>
       </>
-    )
+    );
   }
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return
+      if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
 
-      harvest(Object.keys(props.harvestablePlots).map(key => (toStringBaseUnitBN(new BigNumber(key), BEAN.decimals))), () => {})
-    }
-  }))
+      harvest(Object.keys(props.harvestablePlots).map((key) => (toStringBaseUnitBN(new BigNumber(key), BEAN.decimals))), () => {});
+    },
+  }));
 
   return (
     <>
-    {fromPodField}
-    {transactionDetails()}
+      {fromPodField}
+      {transactionDetails()}
     </>
-  )
-})
+  );
+});

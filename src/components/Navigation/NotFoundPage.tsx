@@ -1,10 +1,7 @@
+import React from 'react';
 
 export default function NotFoundPage() {
   return (
-    <script>
-      window.onload = function() {
-        window.location.href = '/'
-      }
-    </script>
-  )
+    <script>window.onload = function() {(window.location.href = '/')}</script>
+  );
 }

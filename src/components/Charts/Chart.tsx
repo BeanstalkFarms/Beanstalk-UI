@@ -1,17 +1,19 @@
+import React from 'react';
+import { Box } from '@material-ui/core';
 import {
   AnimatedAxis, // any of these can be non-animated equivalents
   AnimatedGrid,
-  AnimatedLineSeries,
-  AnimatedAreaSeries,
   XYChart,
   Tooltip,
+  AnimatedAreaSeries,
+  AnimatedLineSeries,
   buildChartTheme,
-} from '@visx/xychart'
-import { DataSelector, TimeSelector } from './Selectors'
-import { QuestionModule } from '../Common'
+} from '@visx/xychart';
+import { DataSelector, TimeSelector } from './Selectors';
+import { QuestionModule } from '../Common';
 
 export function Chart(props) {
-  const n = props.size === 'medium'
+  const n = props.size === 'medium';
   const chartStyle = {
     borderRadius: '25px',
     padding: '10px',
@@ -19,69 +21,109 @@ export function Chart(props) {
     marginTop: '30px',
     position: 'relative',
     height: `${n ? '370px' : '240px'}`,
-    backgroundColor: '#F5FAFF'
-  }
+    backgroundColor: '#F5FAFF',
+  };
   const lineStyle = {
     backgroundColor: 'primary',
     color: 'primary',
     margin: '10px 8px',
-  }
+  };
   const titleStyle = {
     width: '100%',
     display: 'inline-block',
     textAlign: 'center',
     marginTop: '5px',
     fontFamily: 'Futura-Pt-Book',
-    fontSize: n ? '20px' : '15px'
-  }
+    fontSize: n ? '20px' : '15px',
+  };
   const theme = buildChartTheme({
     backgroundColor: '#F5FAFF',
-    colors: ['#444444','#888888'],
+    colors: ['#444444', '#888888'],
     gridColor: '#99AB91',
     gridColorDark: '#99AB91',
-    svgLabelBig: {fill: '#1d1b38'},
+    svgLabelBig: { fill: '#1d1b38' },
     tickLength: 8,
-  })
+  });
   const accessors = {
-    xAccessor: d => d.x,
-    yAccessor: d => d.y,
+    xAccessor: (d) => d.x,
+    yAccessor: (d) => d.y,
+  };
+
+  let data = props.dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
+
+  if (props.timeMode === 'week') {
+    data = data.filter((d) => {
+      const date = new Date();
+      date.setDate(date.getDate() - 7);
+      return d.x > date;
+    });
   }
 
-  let data = props.dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]]
-
-  if (props.timeMode === 'week') data = data.filter(d => {
-    let date = new Date()
-    date.setDate(date.getDate() - 7)
-    return d.x > date
-  })
-
-  const toolTipFormatter = (
+  const toolTipFormatter =
     props.dataMode === 'hr'
-      ? (d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}, ${d.getHours()}:00`
-      : (d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`
-  )
+      ? (d) =>
+          `${d.toDateString().split(' ')[1]} ${d.getDate()}, ${d.getHours()}:00`
+      : (d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`;
 
   const xAxisTickFormatter = (d) => {
-    if (d > 1000000) return `${(d / 1000000).toFixed(2).toLocaleString('en-US')}m`
-    else if (d > 1000) return `${(d / 1000).toLocaleString('en-US')}k`
-    else return `${d === 0 ? d : d.toFixed(2)}`
-  }
-
-  const title = `Bean ${props.title}`
+    if (d > 1000000) return `${(d / 1000000).toFixed(2).toLocaleString('en-US')}m`;
+    else if (d > 1000) return `${(d / 1000).toLocaleString('en-US')}k`; // eslint-disable-line
+    else return `${d === 0 ? d : d.toFixed(2)}`;
+  };
 
   const chartMargin = (
     n
-      ? {top: 30, right: 60, bottom: 50, left: 65}
-      : {top: 10, right: 20, bottom: 40, left: 65}
-  )
+      ? { top: 30, right: 60, bottom: 50, left: 65 }
+      : { top: 10, right: 20, bottom: 40, left: 65 }
+  );
+
+  function getLineForTitle(_title, _data) {
+    if (_title === 'Price') {
+      const line = data.reduce((acc, d) => {
+        acc.push({ x: d.x, y: 1 });
+        return acc;
+      }, []);
+      return [
+        <AnimatedAreaSeries
+          key="price"
+          fillOpacity={0.4}
+          y0Accessor={() => 1}
+          dataKey="Price"
+          data={_data}
+          {...accessors}
+        />,
+        <AnimatedLineSeries key="$1" data={line} {...accessors} />,
+      ];
+    }
+    return [
+      <AnimatedLineSeries
+        key="data"
+        dataKey={_title}
+        data={_data}
+        {...accessors}
+      />,
+    ];
+  }
 
   return (
-    <div className='AppBar-shadow' style={chartStyle}>
-      <DataSelector size={props.size} setValue={props.setDataMode} value={props.dataMode} />
-      <TimeSelector size={props.size} setValue={props.setTimeMode} value={props.timeMode} dataMode={props.dataMode} />
+    <Box className="AppBar-shadow" style={chartStyle}>
+      <DataSelector
+        size={props.size}
+        setValue={props.setDataMode}
+        value={props.dataMode}
+      />
+      <TimeSelector
+        size={props.size}
+        setValue={props.setTimeMode}
+        value={props.timeMode}
+        dataMode={props.dataMode}
+      />
       <span style={titleStyle}>
-        {title}
-        <QuestionModule description={`This is the historical Bean ${props.title} chart.`} margin='-6px 0 0 2px' />
+        {props.title}
+        <QuestionModule
+          description={`This is the historical Bean ${props.title} chart.`}
+          margin="-6px 0 0 2px"
+        />
       </span>
       <hr style={lineStyle} />
       <XYChart
@@ -97,56 +139,49 @@ export function Chart(props) {
           showVerticalCrosshair
           showSeriesGlyphs
           renderTooltip={({ tooltipData, colorScale }) => (
-            <div>
-              <div style={{ color: colorScale(tooltipData.datumByKey[props.title].key) }}>
+            <Box>
+              <Box
+                style={{
+                  color: colorScale(tooltipData.datumByKey[props.title].key),
+                }}
+              >
                 {tooltipData.datumByKey[props.title].key}
-              </div>
-              <div style={{marginTop:'5px'}}>
-                {`${props.usd ? '$' : ''}${accessors.yAccessor(tooltipData.datumByKey[props.title].datum).toLocaleString('en-US')}`}
-              </div>
-              <div style={{marginTop:'5px', color:'#777777'}}>
-                {toolTipFormatter(accessors.xAccessor(tooltipData.datumByKey[props.title].datum))}
-              </div>
-            </div>
+              </Box>
+              <Box style={{ marginTop: '5px' }}>
+                {`${props.usd ? '$' : ''}${accessors
+                  .yAccessor(tooltipData.datumByKey[props.title].datum)
+                  .toLocaleString('en-US')}`}
+              </Box>
+              <Box style={{ marginTop: '5px', color: '#777777' }}>
+                {toolTipFormatter(
+                  accessors.xAccessor(tooltipData.datumByKey[props.title].datum)
+                )}
+              </Box>
+            </Box>
           )}
         />
         <AnimatedAxis
-          label='Time'
-          orientation='bottom'
-          tickLength={n ? 7  : 3}
+          label="Time"
+          orientation="bottom"
+          tickLength={n ? 7 : 3}
           numTicks={props.timeMode === 'week' ? 7 : 7}
           tickFormat={(d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`}
         />
         <AnimatedAxis
           numTicks={6}
-          tickLength={n ? 7  : 3}
+          tickLength={n ? 7 : 3}
           label={`${props.title}${props.usd ? ' ($)' : ''}`}
           labelOffset={35}
-          orientation='left'
+          orientation="left"
           tickFormat={xAxisTickFormatter}
         />
         <AnimatedGrid strokeDasharray={2} columns={false} numTicks={6} />
         {getLineForTitle(props.title, data)}
       </XYChart>
-    </div>
-  )
-
-  function getLineForTitle(title, data) {
-    if (title === 'Price') {
-      const line = data.reduce((acc, d, i) => {
-        acc.push({ x: d.x, y: 1 })
-        return acc
-      }, [])
-      return [
-        <AnimatedAreaSeries key='price' fillOpacity={0.4} y0Accessor={d => 1} dataKey='Price' data={data} {...accessors} />,
-        <AnimatedLineSeries key='$1' data={line} {...accessors} />
-      ]
-    } else {
-      return [<AnimatedLineSeries key='data' dataKey={title} data={data} {...accessors} />]
-    }
-  }
+    </Box>
+  );
 }
 
 Chart.defaultProps = {
-  usd: true
-}
+  usd: true,
+};

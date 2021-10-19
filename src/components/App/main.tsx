@@ -1,9 +1,11 @@
-import { chainId } from '../../util'
-import Footer from '../About/Footer'
-import background from '../../img/cloud-background.png'
-import SunIcon from '../../img/Sun.svg'
+import React from 'react';
+import { Box } from '@material-ui/core';
+import Footer from 'components/About/Footer';
+import { chainId } from '../../util';
+import background from '../../img/cloud-background.png';
+import SunIcon from '../../img/Sun.svg';
 
-import './index.tsx'
+import './index.tsx';
 
 export default function Main(props) {
   const navCloudStyle = {
@@ -17,26 +19,25 @@ export default function Main(props) {
     width: '100%',
     position: 'fixed',
     marginBottom: '-85px',
-  }
+  };
   const sunStyle = {
     height: '15vw',
     left: 20,
     maxHeight: '125px',
     position: 'fixed',
     top: 100,
-    zIndex:-1
-  }
+    zIndex: -1,
+  };
 
   return (
     <>
-    <div className='BeanstalkBG' name={`Chain${chainId}`}></div>
-    <div>
-      <img alt='Sun Icon' src={SunIcon} style={sunStyle} />
-      <div style={navCloudStyle} />
-      {props.children}
-      <Footer />
-    </div>
+      <Box className="BeanstalkBG" name={`Chain${chainId}`} />
+      <Box>
+        <img alt="Sun Icon" src={SunIcon} style={sunStyle} />
+        <Box style={navCloudStyle} />
+        {props.children}
+        <Footer />
+      </Box>
     </>
-  )
-
+  );
 }

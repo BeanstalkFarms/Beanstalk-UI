@@ -1,4 +1,6 @@
-import { TokenImage, TokenLabel, TokenTypeImage } from '../../util'
+import React from 'react';
+import { Box } from '@material-ui/core';
+import { TokenImage, TokenLabel, TokenTypeImage } from '../../util';
 
 export default function TokenTypeImageModule(props) {
   const tokenTypeStyle = {
@@ -6,22 +8,30 @@ export default function TokenTypeImageModule(props) {
     left: '0',
     position: 'absolute',
     top: '0',
-  }
+  };
   const tokenTypeModifierStyle = {
     bottom: '0',
     height: '60%',
-    left: `${parseInt(props.style.height)/4}px`,
+    left: `${parseInt(props.style.height, 10) / 4}px`,
     position: 'absolute',
-  }
+  };
 
   return (
-    <div style={{...props.style, position: 'relative'}}>
-      <img alt={TokenLabel(props.token)} src={TokenImage(props.token)} style={tokenTypeStyle} />
-      <img alt='' src={TokenTypeImage(props.token)} style={tokenTypeModifierStyle} />
-    </div>
-  )
+    <Box style={{ ...props.style, position: 'relative' }}>
+      <img
+        alt={TokenLabel(props.token)}
+        src={TokenImage(props.token)}
+        style={tokenTypeStyle}
+      />
+      <img
+        alt=""
+        src={TokenTypeImage(props.token)}
+        style={tokenTypeModifierStyle}
+      />
+    </Box>
+  );
 }
 
 TokenTypeImageModule.defaultProps = {
-  style: {height: '20px'}
-}
+  style: { height: '20px' },
+};

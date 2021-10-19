@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import Hidden from '@material-ui/core/Hidden'
-import { BEAN } from '../../constants'
-import BigNumber from 'bignumber.js'
-import { displayBN, displayFullBN, TokenLabel } from '../../util'
+import React, { useState } from 'react';
+import { Hidden, Box } from '@material-ui/core';
+import BigNumber from 'bignumber.js';
+import { BEAN } from '../../constants';
+import { displayBN, displayFullBN, TokenLabel } from '../../util';
 import {
   BudgetAsset,
   ClaimableAsset,
@@ -14,14 +14,14 @@ import {
   SiloAsset,
   TokenBalanceModule,
   TransitAsset,
-  UniswapAsset
-} from '../Common'
-import BalanceChart from './BalanceChart'
-import ToggleTokenBalanceModule from './ToggleTokenBalanceModule'
+  UniswapAsset,
+} from '../Common';
+import BalanceChart from './BalanceChart';
+import ToggleTokenBalanceModule from './ToggleTokenBalanceModule';
 
 export default function BalanceModule(props) {
-  const [beanActive, setBeanActive] = useState(-1)
-  const [lpActive, setLPActive] = useState(-1)
+  const [beanActive, setBeanActive] = useState(-1);
+  const [lpActive, setLPActive] = useState(-1);
 
   const color = {
     circulating: '#B3CDE3',
@@ -29,16 +29,16 @@ export default function BalanceModule(props) {
     claimable: '#E5D8BD',
     silo: '#CCEBC5',
     transit: '#DECBE4',
-    budget: '#FED9A6'
-  }
+    budget: '#FED9A6',
+  };
   const containerGridStyle = {
     minHeight: '110px',
     padding: '4px 4px',
     width: '50%',
-  }
+  };
   const containerGridHorizontalStyle = {
     padding: '4px 4px',
-  }
+  };
   const spanStyle = {
     display: 'inline-block',
     fontFamily: 'Futura-Pt-Book',
@@ -46,13 +46,13 @@ export default function BalanceModule(props) {
     margin: '5px 0 5px 15px',
     textAlign: 'left',
     width: '100%',
-  }
+  };
   const smallGridStyle = {
     fontWeight: 'bold',
     fontFamily: 'Futura-Pt-Book',
     marginTop: '-5px',
     padding: '0 4px 4px 4px',
-  }
+  };
 
   const beanTotals = (
     props.beanBalance
@@ -62,14 +62,14 @@ export default function BalanceModule(props) {
       .plus(props.harvestablePodBalance)
       .plus(props.budgetBalance)
       .plus(props.beanReserveTotal)
-  )
+  );
   const lpTotals = (
     props.lpBalance
       .plus(props.lpSiloBalance)
       .plus(props.lpTransitBalance)
       .plus(props.lpReceivableBalance)
-  )
-  const balance = props.beanReceivableBalance.plus(props.harvestablePodBalance)
+  );
+  const balance = props.beanReceivableBalance.plus(props.harvestablePodBalance);
 
   /* Show Claimables */
 
@@ -81,7 +81,7 @@ export default function BalanceModule(props) {
       title={`Claimable ${props.showTokenName ? 'Beans' : ''}`}
       token={ClaimableAsset.Bean}
     />
-  )
+  );
 
   const budgetBeansSection = (
     <ToggleTokenBalanceModule
@@ -91,18 +91,18 @@ export default function BalanceModule(props) {
       title={`Budget ${props.showTokenName ? 'Beans' : ''}`}
       token={BudgetAsset.Bean}
     />
-  )
+  );
   const claimableLPSection = (
     <ToggleTokenBalanceModule
       balance={props.lpReceivableBalance}
       balanceColor={lpActive === 4 ? color.claimable : null}
       description={props.description.claimablelpBalance}
-      isLP={true}
+      isLP
       poolForLPRatio={props.poolForLPRatio}
       title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
       token={ClaimableAsset.LP}
     />
-  )
+  );
   const beanReserveSection = (
     <ToggleTokenBalanceModule
       balance={props.beanReserveTotal}
@@ -110,7 +110,7 @@ export default function BalanceModule(props) {
       description={props.description.beanReserveTotal}
       token={UniswapAsset.Bean}
     />
-  )
+  );
   const beanTransitSection = (
     <ToggleTokenBalanceModule
       balance={props.beanTransitBalance}
@@ -119,44 +119,48 @@ export default function BalanceModule(props) {
       title={`Withdrawn ${props.showTokenName ? 'Beans' : ''}`}
       token={TransitAsset.Bean}
     />
-  )
+  );
   const lpTransitSection = (
     <ToggleTokenBalanceModule
       balance={props.lpTransitBalance}
       balanceColor={lpActive === 2 ? color.transit : null}
       description={props.description.lpTransitBalance}
-      isLP={true}
+      isLP
       poolForLPRatio={props.poolForLPRatio}
       title={`Withdrawn ${props.showTokenName ? 'LP' : ''}`}
       token={TransitAsset.LP}
     />
-  )
+  );
 
   /* Bean Hidden */
 
   const switchBeanSizeBalances = (
     <>
-    <Hidden smUp>
-      <Grid item xs={12} style={smallGridStyle}>
-        <TokenBalanceModule
-          balance={beanTotals}
-          description='Total Beans'
-          style={{position: 'relative'}}
-          swerve
-          title='Total Beans'
-          token={CryptoAsset.Bean}
-        />
-      </Grid>
-    </Hidden>
-    <Hidden xsDown>
-      <Grid container item sm={6} xs={12} style={containerGridStyle} >
+      <Hidden smUp>
+        <Grid item xs={12} style={smallGridStyle}>
+          <TokenBalanceModule
+            balance={beanTotals}
+            description="Total Beans"
+            style={{ position: 'relative' }}
+            swerve
+            title="Total Beans"
+            token={CryptoAsset.Bean}
+          />
+        </Grid>
+      </Hidden>
+      <Hidden xsDown>
+        <Grid container item sm={6} xs={12} style={containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
               margin={props.chartMargin}
-              placement='top'
-              title={beanTotals.isGreaterThan(0) && beanActive < 0 ? `${displayFullBN(beanTotals)} Beans` : ''}
+              placement="top"
+              title={
+                beanTotals.isGreaterThan(0) && beanActive < 0
+                  ? `${displayFullBN(beanTotals)} Beans`
+                  : ''
+              }
             >
-              <div>
+              <Box>
                 <BalanceChart
                   asset={CryptoAsset.Bean}
                   claimable={balance}
@@ -165,79 +169,97 @@ export default function BalanceModule(props) {
                   pool={props.beanReserveTotal}
                   silo={props.beanSiloBalance}
                   setActive={setBeanActive}
-                  title='Beans'
+                  title="Beans"
                   total={displayBN(beanTotals)}
                   transit={props.beanTransitBalance}
                 />
-              </div>
+              </Box>
             </FormatTooltip>
           </Grid>
-      </Grid>
-    </Hidden>
+        </Grid>
+      </Hidden>
     </>
-  )
+  );
 
   /* LP Hidden */
 
   const switchLPSizeBalances = (
     <>
-    <Hidden smUp>
-      <Grid item xs={12} style={smallGridStyle}>
-        <TokenBalanceModule
-          balance={lpTotals}
-          description='Total LP'
-          isLP={true}
-          poolForLPRatio={props.poolForLPRatio}
-          style={{position: 'relative'}}
-          swerve
-          title='Total LP'
-          token={CryptoAsset.LP}
-        />
-      </Grid>
-    </Hidden>
-    <Hidden xsDown>
-      <Grid container item sm={6} xs={12} style={containerGridStyle}>
-        <Grid item xs={12}>
-          <FormatTooltip
-            placement='top'
-            margin={props.chartMargin}
-            title={
-              (props.beanLPTotal[0].isGreaterThan(0) || props.beanLPTotal[1].isGreaterThan(0)) && lpActive < 0
-                ? `${displayFullBN(props.beanLPTotal[0], BEAN.decimals)} Beans/${displayFullBN(props.beanLPTotal[1])} ETH`
-                : ''
-            }
-          >
-            <div>
-              <BalanceChart
-                asset={CryptoAsset.LP}
-                claimable={props.lpReceivableBalance}
-                circulating={props.lpBalance}
-                setActive={setLPActive}
-                silo={props.lpSiloBalance}
-                title={`${TokenLabel(CryptoAsset.Bean)}/${TokenLabel(CryptoAsset.Ethereum)}`}
-                total={`${displayBN(props.beanLPTotal[0])}/${displayBN(props.beanLPTotal[1])}`}
-                transit={props.lpTransitBalance}
-              />
-            </div>
-          </FormatTooltip>
+      <Hidden smUp>
+        <Grid item xs={12} style={smallGridStyle}>
+          <TokenBalanceModule
+            balance={lpTotals}
+            description="Total LP"
+            isLP
+            poolForLPRatio={props.poolForLPRatio}
+            style={{ position: 'relative' }}
+            swerve
+            title="Total LP"
+            token={CryptoAsset.LP}
+          />
         </Grid>
-      </Grid>
-    </Hidden>
+      </Hidden>
+      <Hidden xsDown>
+        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+          <Grid item xs={12}>
+            <FormatTooltip
+              placement="top"
+              margin={props.chartMargin}
+              title={
+                (props.beanLPTotal[0].isGreaterThan(0) ||
+                  props.beanLPTotal[1].isGreaterThan(0)) &&
+                lpActive < 0
+                  ? `${displayFullBN(
+                      props.beanLPTotal[0],
+                      BEAN.decimals
+                    )} Beans/${displayFullBN(props.beanLPTotal[1])} ETH`
+                  : ''
+              }
+            >
+              <Box>
+                <BalanceChart
+                  asset={CryptoAsset.LP}
+                  claimable={props.lpReceivableBalance}
+                  circulating={props.lpBalance}
+                  setActive={setLPActive}
+                  silo={props.lpSiloBalance}
+                  title={`${TokenLabel(CryptoAsset.Bean)}/${TokenLabel(
+                    CryptoAsset.Ethereum
+                  )}`}
+                  total={`${displayBN(props.beanLPTotal[0])}/${displayBN(
+                    props.beanLPTotal[1]
+                  )}`}
+                  transit={props.lpTransitBalance}
+                />
+              </Box>
+            </FormatTooltip>
+          </Grid>
+        </Grid>
+      </Hidden>
     </>
-  )
+  );
 
   return (
-    <Grid container justifyContent='center' style={{padding: props.padding}}>
-      <Grid container style={{backgroundColor: 'white', borderRadius: '25px', textAlign: 'left'}}>
-        <Grid container item xs={12} style={containerGridHorizontalStyle} >
+    <Grid container justifyContent="center" style={{ padding: props.padding }}>
+      <Grid
+        container
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '25px',
+          textAlign: 'left',
+        }}
+      >
+        <Grid container item xs={12} style={containerGridHorizontalStyle}>
           <Grid item sm={6} xs={12}>
             <DataBalanceModule
               balance={`$${displayBN(props.topLeft)}`}
-              balanceDescription={`$${displayFullBN(props.topLeft)} ${props.strings.topLeft}`}
+              balanceDescription={`$${displayFullBN(props.topLeft)} ${
+                props.strings.topLeft
+              }`}
               description={props.description.topLeft}
-              margin='0 0 6px 10px'
-              placement='top-start'
-              style={{position: 'relative'}}
+              margin="0 0 6px 10px"
+              placement="top-start"
+              style={{ position: 'relative' }}
               swerve
               title={props.description.topLeftTitle}
             />
@@ -252,14 +274,18 @@ export default function BalanceModule(props) {
               balanceDescription={
                 props.topRight.isGreaterThan(0)
                   ? props.topRight.isLessThanOrEqualTo(100)
-                    ? `${displayFullBN(props.topRight)}% ${props.strings.topRight}`
-                    : `$${displayFullBN(props.topRight)} ${props.strings.topRight}`
+                    ? `${displayFullBN(props.topRight)}% ${
+                        props.strings.topRight
+                      }`
+                    : `$${displayFullBN(props.topRight)} ${
+                        props.strings.topRight
+                      }`
                   : undefined
               }
               description={props.description.topRight}
-              margin='0 0 6px 10px'
-              placement='top-start'
-              style={{position: 'relative'}}
+              margin="0 0 6px 10px"
+              placement="top-start"
+              style={{ position: 'relative' }}
               swerve
               title={props.description.topRightTitle}
             />
@@ -268,7 +294,10 @@ export default function BalanceModule(props) {
       </Grid>
 
       <span style={spanStyle}>Beans</span>
-      <Grid container style={{backgroundColor: 'white', borderRadius: '25px'}}>
+      <Grid
+        container
+        style={{ backgroundColor: 'white', borderRadius: '25px' }}
+      >
         <Grid container item sm={6} xs={12} style={containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
@@ -280,7 +309,7 @@ export default function BalanceModule(props) {
               token={CryptoAsset.Bean}
             />
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={12}>
             <TokenBalanceModule
               balance={props.beanSiloBalance}
               balanceColor={beanActive === 1 ? color.silo : null}
@@ -297,17 +326,19 @@ export default function BalanceModule(props) {
         </Grid>
 
         {switchBeanSizeBalances}
-
       </Grid>
       <span style={spanStyle}>LP</span>
-      <Grid container style={{backgroundColor: 'white', borderRadius: '25px'}}>
+      <Grid
+        container
+        style={{ backgroundColor: 'white', borderRadius: '25px' }}
+      >
         <Grid container item sm={6} xs={12} style={containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
               balance={props.lpBalance}
               balanceColor={lpActive === 0 ? color.circulating : null}
               description={props.description.lpBalance}
-              isLP={true}
+              isLP
               poolForLPRatio={props.poolForLPRatio}
               swerve
               title={`Circulating ${props.showTokenName ? 'LP' : ''}`}
@@ -319,7 +350,7 @@ export default function BalanceModule(props) {
               balance={props.lpSiloBalance}
               balanceColor={lpActive === 1 ? color.silo : null}
               description={props.description.lpSiloBalance}
-              isLP={true}
+              isLP
               poolForLPRatio={props.poolForLPRatio}
               swerve
               title={`Deposited ${props.showTokenName ? 'LP' : ''}`}
@@ -331,16 +362,22 @@ export default function BalanceModule(props) {
         </Grid>
 
         {switchLPSizeBalances}
-
-        </Grid>
-      <Grid container style={{backgroundColor: 'white', borderRadius: '25px', marginTop: '20px'}}>
+      </Grid>
+      <Grid
+        container
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '25px',
+          marginTop: '20px',
+        }}
+      >
         <Grid container item xs={12} style={containerGridHorizontalStyle}>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
               balance={props.stalkBalance}
               description={props.description.stalkBalance}
               margin={props.margin}
-              placement='bottom'
+              placement="bottom"
               token={SiloAsset.Stalk}
             />
           </Grid>
@@ -349,7 +386,7 @@ export default function BalanceModule(props) {
               balance={props.seedBalance}
               description={props.description.seedBalance}
               margin={props.margin}
-              placement='bottom'
+              placement="bottom"
               token={SiloAsset.Seed}
             />
           </Grid>
@@ -358,7 +395,7 @@ export default function BalanceModule(props) {
               balance={props.podBalance}
               description={props.description.podBalance}
               margin={props.margin}
-              placement='bottom'
+              placement="bottom"
               token={FarmAsset.Pods}
             />
           </Grid>
@@ -367,14 +404,14 @@ export default function BalanceModule(props) {
               balance={props.ethBalance}
               description={props.description.ethBalance}
               margin={props.margin}
-              placement='bottom'
+              placement="bottom"
               token={CryptoAsset.Ethereum}
             />
           </Grid>
         </Grid>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 BalanceModule.defaultProps = {
@@ -384,4 +421,4 @@ BalanceModule.defaultProps = {
   showTokenName: true,
   budgetBalance: new BigNumber(0),
   beanReserveTotal: new BigNumber(0),
-}
+};

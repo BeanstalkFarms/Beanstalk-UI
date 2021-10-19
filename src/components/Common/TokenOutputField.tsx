@@ -1,20 +1,21 @@
-import { InputAdornment, TextField } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
-import { TrimBN, TokenLabel } from '../../util'
-import { TokenTypeImageModule } from './index'
+import React from 'react';
+import { InputAdornment, TextField, Box } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import { TrimBN, TokenLabel } from '../../util';
+import { TokenTypeImageModule } from './index';
 
 export default function TokenOutputField(props) {
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     inputText: {
       fontSize: 'calc(12px + 1vmin)',
       fontFamily: 'Lucida Console',
-    }
-  }))()
+    },
+  }))();
 
   const smallLabels = {
     fontFamily: 'Futura-PT-Book',
     fontSize: 'calc(9px + 0.7vmin)',
-  }
+  };
   const leftStyle = {
     display: 'inline-block',
     float: 'left',
@@ -23,66 +24,68 @@ export default function TokenOutputField(props) {
     textAlign: 'left' as const,
     textTransform: 'uppercase' as const,
     width: '100%',
-  }
+  };
   const tokenStyle = {
     height: '30px',
     marginLeft: '-10px',
     width: '20px',
-  }
+  };
 
-  const tokenLabel = TokenLabel(props.token)
+  const tokenLabel = TokenLabel(props.token);
   const endAdornment = (
-    <InputAdornment position='end'>
+    <InputAdornment position="end">
       <TokenTypeImageModule style={tokenStyle} token={props.token} />
     </InputAdornment>
-  )
+  );
 
-  var startAdornment = (
-    props.burn
-    ? <InputAdornment position='start'>–</InputAdornment>
-      : null
-  )
-  startAdornment = (
-    props.mint
-      ? <InputAdornment position='start'>+</InputAdornment>
-      : startAdornment
-  )
+  let startAdornment = props.burn ? (
+    <InputAdornment position="start">–</InputAdornment>
+  ) : null;
+  startAdornment = props.mint ? (
+    <InputAdornment position="start">+</InputAdornment>
+  ) : (
+    startAdornment
+  );
 
-  let className = 'TextField-rounded'
-  if (props.mint) className = 'TextField-rounded-mint'
-  if (props.burn) className = 'TextField-rounded-burn'
+  let className = 'TextField-rounded';
+  if (props.mint) className = 'TextField-rounded-mint';
+  if (props.burn) className = 'TextField-rounded-burn';
 
   return (
-    <div style={{margin: '8px 0'}}>
-      <div style={smallLabels}>
-        <div style={leftStyle}>{tokenLabel}</div>
-      </div>
+    <Box style={{ margin: '8px 0' }}>
+      <Box style={smallLabels}>
+        <Box style={leftStyle}>{tokenLabel}</Box>
+      </Box>
 
       <TextField
         className={className}
-        placeholder='0.0000'
-        variant='outlined'
-        size='small'
-        type='number'
-        style={{fontSize: '10px'}}
+        placeholder="0.0000"
+        variant="outlined"
+        size="small"
+        type="number"
+        style={{ fontSize: '10px' }}
         disabled={props.handleChange === undefined}
-        value={props.decimals !== undefined ? TrimBN(props.value, props.decimals) : props.value}
+        value={
+          props.decimals !== undefined
+            ? TrimBN(props.value, props.decimals)
+            : props.value
+        }
         onChange={props.handleChange}
-        fullWidth={true}
+        fullWidth
         InputProps={{
           inputProps: {
             min: 0.0,
-            step: 1.0
+            step: 1.0,
           },
           classes: {
-            input: classes.inputText
+            input: classes.inputText,
           },
           endAdornment,
           startAdornment,
         }}
       />
-      </div>
-  )
+    </Box>
+  );
 }
 
 TokenOutputField.defaultProps = {
@@ -90,4 +93,4 @@ TokenOutputField.defaultProps = {
   decimals: undefined,
   maxval: 0,
   token: 'Beans',
-}
+};

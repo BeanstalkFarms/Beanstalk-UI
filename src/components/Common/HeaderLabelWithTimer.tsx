@@ -1,20 +1,20 @@
-import { HeaderLabel } from './index'
-import { timeToStringDetailed } from '../../util'
+import React from 'react';
+import { HeaderLabel } from './index';
 
 export default function HeaderLabelWithTimer(props) {
-  const [title, value, description, balanceDescription] = props.display(props.time)
+  const [title, value, description, balanceDescription] = props.display(props.time);
 
   return (
     <HeaderLabel
       balanceDescription={balanceDescription}
       description={description}
-      marginTooltip='0 0 0 10px'
+      marginTooltip="0 0 0 10px"
       title={title}
       value={value}
     />
-  )
+  );
 }
 
 HeaderLabelWithTimer.defaultProps = {
-  display: (v) => { return ['', '', ''] }
-}
+  display: () => ['', '', ''],
+};

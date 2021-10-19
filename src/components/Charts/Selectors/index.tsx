@@ -1,2 +1,2 @@
-export * from './DataSelector'
-export * from './TimeSelector'
+export * from './DataSelector';
+export * from './TimeSelector';

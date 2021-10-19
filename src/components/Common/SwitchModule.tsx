@@ -1,6 +1,7 @@
-import { FormControlLabel, Switch } from '@material-ui/core/'
-import { withStyles } from'@material-ui/styles'
-import { QuestionModule } from './index'
+import React from 'react';
+import { FormControlLabel, Switch, Box } from '@material-ui/core';
+import { withStyles } from '@material-ui/styles';
+import { QuestionModule } from './index';
 
 export default function SwitchModule(props) {
   const switchStyle = {
@@ -9,7 +10,7 @@ export default function SwitchModule(props) {
     marginBottom: '-8px',
     marginLeft: '0px',
     width: '100%',
-  }
+  };
 
   const GreenSwitch = withStyles({
     switchBase: {
@@ -22,44 +23,48 @@ export default function SwitchModule(props) {
     },
     checked: {},
     track: {},
-  })(Switch)
+  })(Switch);
 
   const GreenFormControlLabel = withStyles({
-    label:{
+    label: {
       fontFamily: 'Futura-PT-Book',
       fontSize: '9px',
       marginBottom: '-10px',
       marginLeft: '0',
       marginTop: '3px',
       width: '100%',
-    }
-  })(FormControlLabel)
+    },
+  })(FormControlLabel);
 
-  const changeHandler = (event) => props.setValue(event.target.checked)
+  const changeHandler = (event) => props.setValue(event.target.checked);
 
   return (
-    <div style={{display: 'flex', position: 'relative'}}>
-      <div style={switchStyle}>
+    <Box style={{ display: 'flex', position: 'relative' }}>
+      <Box style={switchStyle}>
         <GreenFormControlLabel
           checked={props.value}
           control={<GreenSwitch />}
           disabled={props.disabled}
           label={props.label}
           onChange={changeHandler}
-          style={{flexDirection: 'column-reverse', marginLeft: '0', width: '100%'}}
+          style={{
+            flexDirection: 'column-reverse',
+            marginLeft: '0',
+            width: '100%',
+          }}
         />
         <QuestionModule
           description={props.description}
           margin={props.margin}
           marginTooltip={props.marginTooltip}
         />
-      </div>
-    </div>
-  )
+      </Box>
+    </Box>
+  );
 }
 
 SwitchModule.defaultProps = {
   disabled: false,
   margin: '-50px 0px 0px 15px',
   marginTooltip: '0px 0 5px 10px',
-}
+};

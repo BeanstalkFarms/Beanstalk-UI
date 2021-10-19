@@ -1,7 +1,11 @@
-import { beanstalkContract, txCallback } from './index'
+import { beanstalkContract, txCallback } from './index';
 
 export const sunrise = async () => {
-  beanstalkContract().sunrise().then(response => {
-    response.wait().then(receipt => { txCallback() })
-  })
-}
+  beanstalkContract()
+    .sunrise()
+    .then((response) => {
+      response.wait().then(() => {
+        txCallback();
+      });
+    });
+};
