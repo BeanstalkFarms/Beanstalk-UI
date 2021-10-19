@@ -8,11 +8,13 @@ blockquote, dl, ol, p, pre, ul {
 ol ol, ol ul, ul ol, ul ul {
   margin: 0;
 }
+
 ul {
-  columns: 2;
-  -webkit-columns: 2;
-  -moz-columns: 2;
+  columns: 1;
+  -webkit-columns: 1;
+  -moz-columns: 1;
 }
+
 h1, h2, h3, h4, h5, h6 {
   padding-top: 15px;
   padding-bottom: 5px;

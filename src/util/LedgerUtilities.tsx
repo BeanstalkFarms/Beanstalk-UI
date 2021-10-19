@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js';
 import {
+  DEVELOPMENT_BUDGET,
+  MARKETING_BUDGET,
   BEAN,
   BEANSTALK,
   ETH,
@@ -121,6 +123,8 @@ export const getTotalBalances = async (batch) => {
         timestamp: bigNumberResult(time.timestamp),
       }),
     ],
+    [bean.methods.balanceOf(DEVELOPMENT_BUDGET), tokenResult(BEAN)],
+    [bean.methods.balanceOf(MARKETING_BUDGET), tokenResult(BEAN)],
   ]);
 };
 

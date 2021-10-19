@@ -51,48 +51,30 @@ export default function Governance(props) {
     );
 
   return (
-    <ContentSection
-      id="governance"
-      title="Governance"
-      size="20px"
-      style={{ minHeight: '600px' }}
-    >
+    <ContentSection id="governance" title="Governance" size="20px" style={{ minHeight: '600px' }}>
       <Grid container item xs={12} spacing={3} justifyContent="center">
+        <Grid className="section-description" item xs={12} sm={12} style={{ maxWidth: '745px', margin: '20px 0', padding: '12px' }}>
+          Beanstalk is upgraded in a decentralized fashion through Beanstalk Improvement Proposals (BIPs). Anyone with more than .1% of the total outstanding Stalk can propose a BIP. Any Stalk holder can vote for a BIP. BIPs can be committed in as little as 24 Seasons with a 2/3 supermajority, or after 168 Seasons with a 1/2 majority.
+          {' '}<Link href={`${WHITEPAPER}#governance`} target="blank">Read More</Link>.
+        </Grid>
         <Grid
-          className="section-description"
+          container
           item
-          xs={12}
           sm={12}
-          style={{ maxWidth: '745px', margin: '20px 0', padding: '12px' }}
+          xs={12}
+          alignItems="flex-start"
+          justifyContent="center"
+          style={{ minHeight: '200px' }}
         >
-          Beanstalk is upgraded in a decentralized fashion through Beanstalk
-          Improvement Proposals (BIPs). Anyone with for that .1% of the total
-          outstanding Stalk can propose a BIP. Any Stalk holder can vote for a
-          BIP. BIPs can be Committed in as little as 24 Seasons with a 2/3
-          supermajority, or after 168 Seasons with a 1/2 majority.{' '}
-          <Link href={`${WHITEPAPER}#governance`} target="blank">
-            Read More
-          </Link>
-          .
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        item
-        sm={12}
-        xs={12}
-        alignItems="flex-start"
-        justifyContent="center"
-        style={{ minHeight: '200px' }}
-      >
-        <Grid item xs={12}>
-          {voteField}
-        </Grid>
-        <Grid item xs={12}>
-          <GovernanceTable
-            {...props}
-            style={{ maxWidth: '745px', margin: '0 auto' }}
-          />
+          <Grid item xs={12}>
+            {voteField}
+          </Grid>
+          <Grid item xs={12}>
+            <GovernanceTable
+              {...props}
+              style={{ maxWidth: '745px', margin: '0 auto' }}
+            />
+          </Grid>
         </Grid>
       </Grid>
     </ContentSection>

@@ -118,13 +118,10 @@ export default function Balances(props) {
         description={walletDescriptions}
         strings={walletStrings}
         topLeft={userBalanceInDollars}
-        topRight={props.rootsBalance
-          .dividedBy(props.totalRoots)
-          .multipliedBy(100)}
-        beanReserveTotal={new BigNumber(0)}
+        topRight={props.rootsBalance.dividedBy(props.totalRoots).multipliedBy(100)}
         beanLPTotal={userBeansAndEth}
         {...props}
-      />
+    />
 
       <Grid container item justifyContent="center">
         {claimable}
@@ -138,21 +135,23 @@ export default function Balances(props) {
         description={totalDescriptions}
         strings={totalStrings}
         beanBalance={
-          props.totalBeans.isGreaterThan(0)
-            ? props.totalBeans
-                .minus(props.totalSiloBeans)
-                .minus(props.totalTransitBeans)
-                .minus(props.beanReserve)
-            : new BigNumber(0)
-        }
+        props.totalBeans.isGreaterThan(0)
+          ? props.totalBeans
+              .minus(props.totalSiloBeans)
+              .minus(props.totalTransitBeans)
+              .minus(props.beanReserve)
+              .minus(props.totalBudgetBeans)
+          : new BigNumber(0)
+      }
         lpBalance={
-          props.totalLP.isGreaterThan(0)
-            ? props.totalLP
-                .minus(props.totalSiloLP)
-                .minus(props.totalTransitLP)
-                .minus(new BigNumber(UNISWAP_BASE_LP))
-            : new BigNumber(0)
-        }
+        props.totalLP.isGreaterThan(0)
+          ? props.totalLP
+              .minus(props.totalSiloLP)
+              .minus(props.totalTransitLP)
+              .minus(new BigNumber(UNISWAP_BASE_LP))
+          : new BigNumber(0)
+      }
+        budgetBalance={props.totalBudgetBeans}
         beanSiloBalance={props.totalSiloBeans}
         lpSiloBalance={props.totalSiloLP}
         beanTransitBalance={props.totalTransitBeans}
@@ -171,7 +170,7 @@ export default function Balances(props) {
         topRight={poolMarketCap}
         beanLPTotal={poolBeansAndEth}
         poolForLPRatio={props.poolForLPRatio}
-      />
+    />
     </>
   );
 

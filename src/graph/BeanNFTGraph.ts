@@ -49,9 +49,10 @@ export async function beanNFTSowQuery(season) {
 }
 
 const NFTQuery = `
-{
+query beanNfts($first: Int, $skip: Int) {
   beanNfts(
-    first: 1000
+    skip: $skip
+    first: $first
     orderBy: id,
     orderDirection: asc,
   ) {
@@ -62,11 +63,17 @@ const NFTQuery = `
 }
 `;
 
-export async function beanNFTQuery() {
-  const data = await client.query({
+function queryNfts(first: Number, skip: Number): Promise {
+  return client.query({
     query: gql(NFTQuery),
+    variables: { first: first, skip: skip },
   });
-  let nfts = data.data.beanNfts.reduce((ns, s) => {
+}
+
+export async function beanNFTQuery() {
+  const [d1, d2] = await Promise.all([queryNfts(1000, 0), queryNfts(1000, 1000)]);
+  const data = d1.data.beanNfts.concat(d2.data.beanNfts);
+  let nfts = data.reduce((ns, s) => {
     const nft = {};
     nft.account = s.account;
     nft.id = parseInt(s.id, 10);

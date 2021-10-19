@@ -15,59 +15,25 @@ import SiloIcon from '../img/silo-icon.svg';
 import StalkLogo from '../img/stalk-logo.svg';
 import TransitIcon from '../img/transit-icon.svg';
 import UniswapIcon from '../img/uniswap-icon.svg';
+import BudgetIcon from '../img/treasury-icon.svg';
 import { account, txCallback, tokenContract } from './index';
 
-const MAX_UINT256 =
-  '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
-export enum CryptoAsset {
-  Bean = 0,
-  Ethereum,
-  LP
-}
-export enum SiloAsset {
-  Stalk = 3,
-  Seed,
-  Bean,
-  LP
-}
-export enum TransitAsset {
-  Bean = 7,
-  LP
-}
-export enum FarmAsset {
-  Pods = 9
-}
-export enum ClaimableAsset {
-  Bean = 10,
-  LP,
-  Ethereum,
-  Stalk
-}
-export enum UniswapAsset {
-  Bean = 14
-}
-export type Token =
-  | CryptoAsset
-  | SiloAsset
-  | FarmAsset
-  | ClaimableAsset
-  | TransitAsset
-  | UniswapAsset;
+export enum CryptoAsset { Bean = 0, Ethereum, LP }
+export enum SiloAsset { Stalk = 3, Seed, Bean, LP }
+export enum TransitAsset { Bean = 7, LP }
+export enum FarmAsset { Pods = 9 }
+export enum ClaimableAsset { Bean = 10, LP, Ethereum, Stalk }
+export enum UniswapAsset { Bean = 14 }
+export enum BudgetAsset { Bean = 15 }
+export type Token = CryptoAsset | SiloAsset | FarmAsset | ClaimableAsset | TransitAsset | UniswapAsset | BudgetAsset
 
-export const transferBeans = async (
-  to: string,
-  amount: BigNumber,
-  callback
-) => {
-  tokenContract(BEAN)
-    .transfer(to, amount)
-    .then((response) => {
-      callback();
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
+export const transferBeans = async (to: string, amount: BigNumber, callback) => {
+  tokenContract(BEAN).transfer(to, amount).then((response) => {
+    callback();
+    response.wait().then(() => { txCallback(); });
+  });
 };
 
 export const approveToken = async (
@@ -137,6 +103,8 @@ export function TokenLabel(tokenType: Token): string {
       return 'Grown Stalk';
     case UniswapAsset.Bean:
       return 'Pooled Beans';
+    case BudgetAsset.Bean:
+      return 'Budget Beans';
     default:
       return '';
   }
@@ -149,7 +117,8 @@ export function TokenImage(tokenType: Token): string {
     case SiloAsset.Bean:
     case TransitAsset.Bean:
     case UniswapAsset.Bean:
-      return BeanLogo;
+    case BudgetAsset.Bean:
+        return BeanLogo;
 
     case ClaimableAsset.Ethereum:
     case CryptoAsset.Ethereum:
@@ -181,6 +150,7 @@ export function TokenTypeImage(tokenType: Token): string {
   if (tokenType < 9) return TransitIcon;
   if (tokenType < 14) return ClaimableIcon;
   if (tokenType < 15) return UniswapIcon;
+  if (tokenType < 16) return BudgetIcon;
 }
 
 export function TrimBN(bn: BigNumber, decimals: number): BigNumber {

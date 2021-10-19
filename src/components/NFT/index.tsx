@@ -95,31 +95,12 @@ export default function NFTs(props) {
   userNFTs = nfts.filter((n) => userNFTs.includes(n.id));
 
   return (
-    <ContentSection
-      id="nft"
-      title="BeaNFTs"
-      textTransform="none"
-      style={{ minHeight: '600px' }}
-    >
-      <Box
-        className="section-description"
-        style={{ width: '370px', margin: '20px 0 0 0', padding: '12px' }}
-      >
-        BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can
-        only be minted by participating in Beanstalk.{' '}
-        <Link href={MEDIUM_NFT_LINK} target="blank">
-          Read More
-        </Link>
-        .
+    <ContentSection id="nft" title="BeaNFTs" textTransform="none" style={{ minHeight: '600px' }}>
+      <Box className="section-description" style={{ width: '370px', margin: '20px 0 0 0', padding: '12px' }}>
+        BeaNFT Genesis Collection is a series of up to 6000 Bean NFTs which can only be minted by participating in Beanstalk. The top 10 Sows each Season are awarded a generated BeaNFT. The BeaNFT will be available to be minted ~10 minutes after the Season it is awarded.
+        {' '}<Link href={MEDIUM_NFT_LINK} target="blank">Read More</Link>.
       </Box>
-      <Grid
-        container
-        item
-        xs={12}
-        justifyContent="center"
-        alignItems="center"
-        style={{ marginBottom: '20px' }}
-      >
+      <Grid container item xs={12} justifyContent="center" alignItems="center" style={{ marginBottom: '20px' }}>
         <Grid container item style={nftStyle}>
           <Grid
             container
@@ -150,7 +131,20 @@ export default function NFTs(props) {
         </Grid>
       </Grid>
 
-      <NftSection sows={sows} nfts={nfts} userNFTs={userNFTs} {...props} />
+      <NftSection
+        sows={sows}
+        nfts={nfts}
+        userNFTs={userNFTs}
+        {...props}
+      />
+
+      <ClaimNFT
+        buttonDescription="Use this button to Mint all your Mintable BeaNFTs."
+        claimTitle="MINT ALL"
+        claimedNfts={claimedNFTs}
+        nfts={unclaimedNFTs}
+        {...props}
+      />
 
       <ClaimNFT
         buttonDescription="Use this button to Mint all your Mintable BeaNFTs."

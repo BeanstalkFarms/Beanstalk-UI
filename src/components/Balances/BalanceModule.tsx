@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Hidden, Box } from '@material-ui/core';
+import BigNumber from 'bignumber.js';
 import { BEAN } from '../../constants';
 import { displayBN, displayFullBN, TokenLabel } from '../../util';
 import {
+  BudgetAsset,
   ClaimableAsset,
   CryptoAsset,
   DataBalanceModule,
@@ -15,6 +17,7 @@ import {
   UniswapAsset,
 } from '../Common';
 import BalanceChart from './BalanceChart';
+import ToggleTokenBalanceModule from './ToggleTokenBalanceModule';
 
 export default function BalanceModule(props) {
   const [beanActive, setBeanActive] = useState(-1);
@@ -23,12 +26,13 @@ export default function BalanceModule(props) {
   const color = {
     circulating: '#B3CDE3',
     pool: '#FBB4AE',
-    claimable: '#FED9A6',
+    claimable: '#E5D8BD',
     silo: '#CCEBC5',
     transit: '#DECBE4',
+    budget: '#FED9A6',
   };
   const containerGridStyle = {
-    minHeight: '100px',
+    minHeight: '110px',
     padding: '4px 4px',
     width: '50%',
   };
@@ -50,88 +54,83 @@ export default function BalanceModule(props) {
     padding: '0 4px 4px 4px',
   };
 
-  const beanTotals = props.beanBalance
-    .plus(props.beanSiloBalance)
-    .plus(props.beanTransitBalance)
-    .plus(props.beanReceivableBalance)
-    .plus(props.harvestablePodBalance)
-    .plus(props.beanReserveTotal);
-  const lpTotals = props.lpBalance
-    .plus(props.lpSiloBalance)
-    .plus(props.lpTransitBalance)
-    .plus(props.lpReceivableBalance);
+  const beanTotals = (
+    props.beanBalance
+      .plus(props.beanSiloBalance)
+      .plus(props.beanTransitBalance)
+      .plus(props.beanReceivableBalance)
+      .plus(props.harvestablePodBalance)
+      .plus(props.budgetBalance)
+      .plus(props.beanReserveTotal)
+  );
+  const lpTotals = (
+    props.lpBalance
+      .plus(props.lpSiloBalance)
+      .plus(props.lpTransitBalance)
+      .plus(props.lpReceivableBalance)
+  );
   const balance = props.beanReceivableBalance.plus(props.harvestablePodBalance);
 
   /* Show Claimables */
 
-  const claimableBeansSection =
-    balance > 0 ? (
-      <Grid item xs={12}>
-        <TokenBalanceModule
-          balance={balance}
-          balanceColor={beanActive === 4 ? color.claimable : null}
-          description={props.description.claimableBeanBalance}
-          swerve
-          title={`Claimable ${props.showTokenName ? 'Beans' : ''}`}
-          token={ClaimableAsset.Bean}
-        />
-      </Grid>
-    ) : null;
-  const claimableLPSection =
-    props.lpReceivableBalance > 0 ? (
-      <Grid item xs={12}>
-        <TokenBalanceModule
-          balance={props.lpReceivableBalance}
-          balanceColor={lpActive === 4 ? color.claimable : null}
-          description={props.description.claimablelpBalance}
-          isLP
-          poolForLPRatio={props.poolForLPRatio}
-          swerve
-          title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
-          token={ClaimableAsset.LP}
-        />
-      </Grid>
-    ) : null;
-  const beanReserveSection =
-    props.beanReserveTotal > 0 ? (
-      <Grid item xs={12}>
-        <TokenBalanceModule
-          balance={props.beanReserveTotal}
-          balanceColor={beanActive === 3 ? color.pool : null}
-          description={props.description.beanReserveTotal}
-          swerve
-          token={UniswapAsset.Bean}
-        />
-      </Grid>
-    ) : null;
-  const beanTransitSection =
-    props.beanTransitBalance > 0 ? (
-      <Grid item xs={12}>
-        <TokenBalanceModule
-          balance={props.beanTransitBalance}
-          balanceColor={beanActive === 2 ? color.transit : null}
-          description={props.description.beanTransitBalance}
-          swerve
-          title={`Withdrawn ${props.showTokenName ? 'Beans' : ''}`}
-          token={TransitAsset.Bean}
-        />
-      </Grid>
-    ) : null;
-  const lpTransitSection =
-    props.lpTransitBalance > 0 ? (
-      <Grid item xs={12}>
-        <TokenBalanceModule
-          balance={props.lpTransitBalance}
-          balanceColor={lpActive === 2 ? color.transit : null}
-          description={props.description.lpTransitBalance}
-          isLP
-          poolForLPRatio={props.poolForLPRatio}
-          swerve
-          title={`Withdrawn ${props.showTokenName ? 'LP' : ''}`}
-          token={TransitAsset.LP}
-        />
-      </Grid>
-    ) : null;
+  const claimableBeansSection = (
+    <ToggleTokenBalanceModule
+      balance={balance}
+      balanceColor={beanActive === 4 ? color.claimable : null}
+      description={props.description.claimableBeanBalance}
+      title={`Claimable ${props.showTokenName ? 'Beans' : ''}`}
+      token={ClaimableAsset.Bean}
+    />
+  );
+
+  const budgetBeansSection = (
+    <ToggleTokenBalanceModule
+      balance={props.budgetBalance}
+      balanceColor={beanActive === 5 ? color.budget : null}
+      description={props.description.budgetBalance}
+      title={`Budget ${props.showTokenName ? 'Beans' : ''}`}
+      token={BudgetAsset.Bean}
+    />
+  );
+  const claimableLPSection = (
+    <ToggleTokenBalanceModule
+      balance={props.lpReceivableBalance}
+      balanceColor={lpActive === 4 ? color.claimable : null}
+      description={props.description.claimablelpBalance}
+      isLP
+      poolForLPRatio={props.poolForLPRatio}
+      title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
+      token={ClaimableAsset.LP}
+    />
+  );
+  const beanReserveSection = (
+    <ToggleTokenBalanceModule
+      balance={props.beanReserveTotal}
+      balanceColor={beanActive === 3 ? color.pool : null}
+      description={props.description.beanReserveTotal}
+      token={UniswapAsset.Bean}
+    />
+  );
+  const beanTransitSection = (
+    <ToggleTokenBalanceModule
+      balance={props.beanTransitBalance}
+      balanceColor={beanActive === 2 ? color.transit : null}
+      description={props.description.beanTransitBalance}
+      title={`Withdrawn ${props.showTokenName ? 'Beans' : ''}`}
+      token={TransitAsset.Bean}
+    />
+  );
+  const lpTransitSection = (
+    <ToggleTokenBalanceModule
+      balance={props.lpTransitBalance}
+      balanceColor={lpActive === 2 ? color.transit : null}
+      description={props.description.lpTransitBalance}
+      isLP
+      poolForLPRatio={props.poolForLPRatio}
+      title={`Withdrawn ${props.showTokenName ? 'LP' : ''}`}
+      token={TransitAsset.LP}
+    />
+  );
 
   /* Bean Hidden */
 
@@ -165,6 +164,7 @@ export default function BalanceModule(props) {
                 <BalanceChart
                   asset={CryptoAsset.Bean}
                   claimable={balance}
+                  budget={props.budgetBalance}
                   circulating={props.beanBalance}
                   pool={props.beanReserveTotal}
                   silo={props.beanSiloBalance}
@@ -322,6 +322,7 @@ export default function BalanceModule(props) {
           {beanTransitSection}
           {claimableBeansSection}
           {beanReserveSection}
+          {budgetBeansSection}
         </Grid>
 
         {switchBeanSizeBalances}
@@ -418,4 +419,6 @@ BalanceModule.defaultProps = {
   margin: '4px 0 0 20px',
   padding: '10px',
   showTokenName: true,
+  budgetBalance: new BigNumber(0),
+  beanReserveTotal: new BigNumber(0),
 };

@@ -1,9 +1,14 @@
 import React from 'react';
 import { Link } from '@material-ui/core';
-import { displayBN } from '../../util';
+import { displayBN, displayFullBN } from '../../util';
 import { MEDIUM_INTEREST_LINK } from '../../constants';
 import BeanLogo from '../../img/bean-bold-logo.svg';
-import { BaseModule, ContentSection, Grid, HeaderLabel } from '../Common';
+import {
+  BaseModule,
+  ContentSection,
+  Grid,
+  HeaderLabel,
+} from '../Common';
 import FieldModule from './FieldModule';
 
 export default function Field(props) {
@@ -49,14 +54,15 @@ export default function Field(props) {
         </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
-            description="Soil is the number of Beans that Beanstalk is currently willing to borrow.
-            Anyone can lend any number of Beans up to the Available Soil in exchange for Pods."
+            balanceDescription={`${displayFullBN(props.soil)} Soil`}
+            description="Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any number of Beans up to the Available Soil in exchange for Pods."
             title="Available Soil"
             value={displayBN(props.soil)}
           />
         </Grid>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
+            balanceDescription={`${displayFullBN(props.unripenedPods)} Unharvestable Pods`}
             description="The Pod Line is the total number of Unharvestable Pods. This is the amount of debt Beanstalk has outstanding."
             title="Pod Line"
             value={displayBN(props.unripenedPods)}
@@ -66,6 +72,7 @@ export default function Field(props) {
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
+            balanceDescription={`${displayFullBN(props.weather)}% Weather`}
             description="The Weather is the interest rate for sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean sown."
             title="Weather"
             value={`${props.weather.toFixed()}%`}
@@ -73,6 +80,7 @@ export default function Field(props) {
         </Grid>
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
+            balanceDescription={`${displayFullBN(props.harvestableIndex)} Harvested Pods`}
             description="The total Harvested Pods over all Seasons is the amount of debt Beanstalk has paid off thus far."
             title="Pods Harvested"
             value={displayBN(props.harvestableIndex)}

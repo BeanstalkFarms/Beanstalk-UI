@@ -25,10 +25,8 @@ export default function FieldModule(props) {
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
 
-  const sectionTitles = ['Sow'];
-  const sectionTitlesDescription = [
-    'Use this tab to sow Beans in the Field in exchange for Pods.',
-  ];
+  const sectionTitles = ['Sow', 'Send'];
+  const sectionTitlesDescription = ['Use this tab to sow Beans in the Field in exchange for Pods.', 'Use this tab to send Plots to another Ethereum address.'];
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
@@ -89,11 +87,25 @@ export default function FieldModule(props) {
       updateExpectedPrice={props.updateExpectedPrice}
       weather={props.weather}
     />,
-  ];
+    <SendPlotModule
+      key={1}
+      plots={props.plots}
+      hasPlots={props.plots !== undefined && (Object.keys(props.plots).length > 0 || props.harvestablePodBalance.isGreaterThan(0))}
+      index={parseFloat(props.harvestableIndex)}
+      fromAddress={props.address}
+      fromToken={CryptoAsset.Bean}
+      ref={sendRef}
+      setIsFormDisabled={setIsFormDisabled}
+      isValidAddress={isValidAddress}
+      setIsValidAddress={setIsValidAddress}
+      setToAddress={setToAddress}
+      setSection={setSection}
+      toAddress={toAddress}
+    />];
   if (props.harvestablePodBalance.isGreaterThan(0)) {
     sections.push(
       <HarvestModule
-        key={1}
+        key={2}
         harvestablePlots={props.harvestablePlots}
         harvestablePodBalance={props.harvestablePodBalance}
         ref={harvestRef}
@@ -102,36 +114,7 @@ export default function FieldModule(props) {
       />
     );
     sectionTitles.push('Harvest');
-    sectionTitlesDescription.push(
-      'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.'
-    );
-  }
-  if (Object.keys(props.plots).length > 0) {
-    sections.push(
-      <SendPlotModule
-        key={2}
-        plots={props.plots}
-        hasPlots={
-          props.plots !== undefined &&
-          (Object.keys(props.plots).length > 0 ||
-            props.harvestablePodBalance.isGreaterThan(0))
-        }
-        index={parseFloat(props.harvestableIndex)}
-        fromAddress={props.address}
-        fromToken={CryptoAsset.Bean}
-        ref={sendRef}
-        setIsFormDisabled={setIsFormDisabled}
-        isValidAddress={isValidAddress}
-        setIsValidAddress={setIsValidAddress}
-        setToAddress={setToAddress}
-        setSection={setSection}
-        toAddress={toAddress}
-      />
-    );
-    sectionTitles.push('Send');
-    sectionTitlesDescription.push(
-      'Use this tab to send Plots to another Ethereum address.'
-    );
+    sectionTitlesDescription.push('Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.');
   }
   if (section > sectionTitles.length - 1) setSection(0);
 

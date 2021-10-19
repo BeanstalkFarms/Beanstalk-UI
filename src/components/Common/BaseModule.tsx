@@ -161,7 +161,7 @@ export default function BaseModule(props) {
       <Box style={{ position: 'relative', zIndex: '0' }}>
         {props.children}
         {props.allowance.isEqualTo(0) ? (
-          <Box style={classes.moduleContent} />
+          <Box className={classes.moduleContent} />
         ) : null}
       </Box>
       {showButton}

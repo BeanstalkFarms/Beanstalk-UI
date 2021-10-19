@@ -1,10 +1,9 @@
 import React from 'react';
-import { ContentSection } from 'components/Common';
-import Charts from 'components/Charts';
-import Seasons from 'components/Seasons';
-import NFTs from 'components/NFT';
-import Governance from 'components/Governance';
-import Balances from 'components/Balances';
+import { ContentSection } from '../Common';
+import Balances from '../Balances';
+import Charts from '../Charts';
+import Seasons from '../Seasons';
+import Governance from '../Governance';
 
 export default function Analytics(props) {
   return (
@@ -12,7 +11,6 @@ export default function Analytics(props) {
       <ContentSection id="analytics" title="Analytics">
         <Balances {...props} />
         <Charts />
-        <NFTs {...props} />
         <Seasons {...props} />
       </ContentSection>
       <Governance
@@ -22,7 +20,7 @@ export default function Analytics(props) {
         totalRoots={props.totalRoots}
         userRoots={props.userRoots}
         votedBips={props.votedBips}
-      />
+    />
     </>
   );
 }

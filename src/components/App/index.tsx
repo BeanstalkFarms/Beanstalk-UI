@@ -23,19 +23,20 @@ import {
   poolForLP,
   toBaseUnitBN,
   toTokenUnitsBN,
-  account,
-} from '../../util';
-import About from '../About';
-import Analytics from '../Analytics';
-import Field from '../Field';
-import MetamasklessModule from './MetamasklessModule';
-import { NavigationBar } from '../Navigation';
-import Silo from '../Silo';
-import theme from './theme';
-import Trade from '../Trade';
+  account
+} from '../../util'
+import About from '../About'
+import Analytics from '../Analytics'
+import Field from '../Field'
+import MetamasklessModule from './MetamasklessModule'
+import { NavigationBar } from '../Navigation'
+import NFTs from '../NFT'
+import Silo from '../Silo'
+import theme from './theme'
+import Trade from '../Trade'
 
-import Main from './main.tsx';
-import './App.css';
+import Main from './main.tsx'
+import './App.css'
 
 export default function App() {
   const defaultNavMapping = [
@@ -92,6 +93,16 @@ export default function App() {
       ),
     },
     {
+      path: 'nft',
+      title: 'BeaNFTs',
+      component: () => (
+        <NFTs
+          key='beanft'
+          {...prices} {...totalBalance} {...season} {...userBalance} {...weather}
+        />
+      )
+    },
+    {
       path: 'analytics',
       title: 'ANALYTICS',
       component: () => (
@@ -99,7 +110,6 @@ export default function App() {
           key="analytics"
           bips={bips}
           hasActiveBIP={hasActiveBIP}
-          hasActiveNFT={hasActiveNFT}
           poolForLPRatio={poolForLPRatio}
           userRoots={userBalance.rootsBalance}
           votedBips={userBalance.votedBips}
@@ -217,6 +227,7 @@ export default function App() {
     totalBeans: initBN,
     totalSiloBeans: initBN,
     totalTransitBeans: initBN,
+    totalBudgetBeans: initBN,
     totalLP: initBN,
     totalSiloLP: initBN,
     totalTransitLP: initBN,
@@ -255,11 +266,10 @@ export default function App() {
     usdcTWAPPrice: initBN,
   });
 
-  const [lastCross, setLastCross] = useState(0);
-  const [bips, setBips] = useState([]);
-  const [hasActiveBIP, setHasActiveBIP] = useState(false);
-  const [hasActiveNFT, setHasActiveNFT] = useState(true);
-  const [contractEvents, setContractEvents] = useState([]);
+  const [lastCross, setLastCross] = useState(0)
+  const [bips, setBips] = useState([])
+  const [hasActiveBIP, setHasActiveBIP] = useState(false)
+  const [contractEvents, setContractEvents] = useState([])
 
   const eventParsingParametersRef = useRef([]);
   eventParsingParametersRef.current = [
@@ -346,49 +356,23 @@ export default function App() {
 
     function processTotalBalances(totalBalances, bipInfo) {
       const [
-        totalBeans,
-        totalLP,
-        totalSeeds,
-        totalStalk,
-        totalSiloBeans,
-        totalSiloLP,
-        totalTransitBeans,
-        totalTransitLP,
-        soil,
-        podIndex,
-        harvestableIndex,
-        totalRoots,
-        weather,
-        rain,
-        season,
-      ] = totalBalances;
-      const [bips, hasActiveBIP] = bipInfo;
-      const totalPods = podIndex.minus(harvestableIndex);
+        totalBeans, totalLP, totalSeeds, totalStalk,
+        totalSiloBeans, totalSiloLP, totalTransitBeans, totalTransitLP,
+        soil, podIndex, harvestableIndex, totalRoots, weather, rain, season,
+        develpomentBudget, marketingBudget
+      ] = totalBalances
+      const totalBudgetBeans = develpomentBudget.plus(marketingBudget)
+      const [bips, hasActiveBIP] = bipInfo
+      const totalPods = podIndex.minus(harvestableIndex)
       setTotalBalance(prev => ({
-        ...prev,
-        totalBeans,
-        totalLP,
-        totalSiloBeans,
-        totalSiloLP,
-        totalTransitBeans,
-        totalTransitLP,
-        totalSeeds,
-        totalStalk,
-        totalPods,
-        totalRoots,
-      }));
-      setWeather(prev => ({
-        ...prev,
-        ...weather,
-        ...rain,
-        harvestableIndex,
-        soil,
-      }));
-      setBips(bips);
-      setHasActiveBIP(hasActiveBIP);
-      setHasActiveNFT(hasActiveNFT);
-      setSeason(season);
-      return season.season;
+        ...prev, totalBeans: totalBeans, totalBudgetBeans, totalLP, totalSiloBeans, totalSiloLP,
+        totalTransitBeans, totalTransitLP, totalSeeds, totalStalk, totalPods, totalRoots
+      }))
+      setWeather(prev => ({...prev, ...weather, ...rain, harvestableIndex, soil}))
+      setBips(bips)
+      setHasActiveBIP(hasActiveBIP)
+      setSeason(season)
+      return season.season
     }
 
     function lpReservesForTokenReserves(tokenReserves, token0) {
@@ -826,18 +810,7 @@ export default function App() {
   } else {
     const navMapping = [...defaultNavMapping];
     if (hasActiveBIP) {
-      navMapping.splice(4, 0, {
-        path: 'governance',
-        title: 'BIPs',
-        component: () => <></>,
-      });
-    }
-    if (hasActiveNFT) {
-      navMapping.splice(4, 0, {
-        path: 'nft',
-        title: 'BeaNFTs',
-        component: () => <></>,
-      });
+      navMapping.splice(5, 0, {path: 'governance', title: 'BIPs', component: () => <></>})
     }
     app = (
       <>

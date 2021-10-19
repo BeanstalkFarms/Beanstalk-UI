@@ -127,13 +127,6 @@
   z-index:-100;
 }
 
-.BalanceModule-title {
-  display: inline-block;
-  text-align: left;
-  font-size: 14px;
-  font-family: Futura-PT-Book;
-  margin: 2px;
-}
 @media screen and (max-width: 700px) {
   .section-description {
     background-color: rgb(245, 250, 255, 0.8);
@@ -142,6 +135,13 @@
   }
 }
 
+.BalanceModule-title {
+  display: inline-block;
+  text-align: left;
+  font-size: 14px;
+  font-family: Futura-PT-Book;
+  margin: 2px;
+} /* format for left side text */
 .BalanceModule-balance {
   display: inline-block;
   font-family: Lucida Console;
@@ -156,21 +156,22 @@
   font-family: Lucida Console;
   font-weight: 400;
   right: -10px;
-}
+} /* format for top right balance numbers */
 .TokenBalanceModule-header {
   text-align: left;
   font-family: Futura-PT-Book;
   position: absolute;
-  left:0;
+  left: 0;
   padding-left: 10px;
-}
+} /* format for left side text */
 .TokenBalanceModule-content {
   text-align: right;
   font-family: Lucida Console;
-  position:absolute;
-  width:auto;
-  right:-10px;
-}
+  position: absolute;
+  width: auto;
+  right: -10px;
+  font-size: 14px;
+} /* format for right side numbers */
 .nftTextField-box {
   background-color: #F5FAFF;
   border-radius: 25px;
@@ -201,7 +202,6 @@
 
 @media screen and (max-width: 599px) {
   .BalanceModule-title {
-    text-align: left;
     padding-left: 10px;
     width: 50%;
   }
@@ -210,52 +210,43 @@
     text-align: right;
     padding-right: 15px;
   }
-  .TokenBalanceModule-header {
-    padding-left: 10px;
-  }
-  .TokenBalanceModule-content {
-    text-align: right;
-    font-size: 12px;
-    width: 47%;
-    right: 0px;
-    padding-right: 15px;
-  }
   .BalanceModule-balanceContent {
     text-align: right;
     width: 40%;
-    font-size: 12px;
-    right:0px;
+    right: 0px;
+  }
+  .TokenBalanceModule-content {
+    width: 47%;
+    right: 0px;
+    padding-right: 15px;
   }
 }
 
 /* For small screens */
 
 @media screen and (max-width: 510px) {
-  .BalanceModule-title {
-    text-align: left;
-    padding-left: 10px;
-    width: 50%;
-  }
   .BalanceModule-balance {
     width: 44%;
-    text-align: right;
-    padding-right: 15px;
+  }
+  .BalanceModule-balanceContent {
+    font-size: 12px;
   }
   .TokenBalanceModule-header {
     padding-left: 15px;
+    width: 53%;
   }
   .TokenBalanceModule-content {
-    text-align: right;
-    font-size: 12px;
     width: 44%;
-    right: 0px;
     padding-right: 20px;
   }
-  .BalanceModule-balanceContent {
-    text-align: right;
-    width: 40%;
-    font-size: 12px;
-    right:0px;
+}
+
+@media screen and (max-width: 475px) {
+  .TokenBalanceModule-header {
+    width: 52%;
+  }
+  .TokenBalanceModule-content {
+    width: 44%;
   }
 }
 
@@ -263,30 +254,51 @@
 
 @media screen and (max-width: 400px) {
   .BalanceModule-title {
-    text-align: left;
-    padding-left: 10px;
+    font-size: 12px;
+  }
+  .BalanceModule-balance {
+    font-size: 12px;
+  }
+  .BalanceModule-balanceContent {
+    font-size: 12px;
+  }
+  .TokenBalanceModule-header {
+    width: 51%;
+    font-size: 12px;
+  }
+  .TokenBalanceModule-content {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .BalanceModule-balance {
+    width: 45%;
+  }
+  .TokenBalanceModule-header {
     width: 50%;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .BalanceModule-title {
+    width: 45%;
+    font-size: 10px;
   }
   .BalanceModule-balance {
     width: 40%;
-    text-align: right;
-    padding-right: 15px;
-  }
-  .TokenBalanceModule-header {
-    padding-left: 15px;
-  }
-  .TokenBalanceModule-content {
-    text-align: right;
-    font-size: 12px;
-    width: 44%;
-    right: 0px;
-    padding-right: 20px;
+    font-size: 10px;
   }
   .BalanceModule-balanceContent {
-    text-align: right;
-    width: 40%;
-    font-size: 12px;
-    right:0px;
+    font-size: 10px;
+  }
+  .TokenBalanceModule-header {
+    width: 50%;
+    font-size: 10px;
+  }
+  .TokenBalanceModule-content {
+    font-size: 10px;
+    width: 44%;
   }
 }
 

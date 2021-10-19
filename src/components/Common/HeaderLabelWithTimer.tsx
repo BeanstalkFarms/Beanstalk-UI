@@ -2,10 +2,11 @@ import React from 'react';
 import { HeaderLabel } from './index';
 
 export default function HeaderLabelWithTimer(props) {
-  const [title, value, description] = props.display(props.time);
+  const [title, value, description, balanceDescription] = props.display(props.time);
 
   return (
     <HeaderLabel
+      balanceDescription={balanceDescription}
       description={description}
       marginTooltip="0 0 0 10px"
       title={title}

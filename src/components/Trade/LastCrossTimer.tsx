@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { HeaderLabelWithTimer } from '../Common';
-import { timeToString } from '../../util';
+import { timeToString, timeToStringDetailed } from '../../util';
 
 export default function LastCrossTimer(props) {
   const timeSinceCross = () => {
@@ -21,10 +21,11 @@ export default function LastCrossTimer(props) {
     // eslint-disable-next-line
   }, [time, props.lastCross]);
 
-  const display = (t) => [
+  const display = (_time) => [
     'Time Since $1 Crossed',
-    t === 0 ? '-' : timeToString(t),
-    'This is the time elapsed since the TWAP last crossed the peg.',
+    _time === 0 ? '-' : timeToString(_time),
+    'This is the time elapsed since the price last crossed the peg.',
+    _time === 0 ? '-' : timeToStringDetailed(_time),
   ];
 
   return <HeaderLabelWithTimer display={display} time={time} />;

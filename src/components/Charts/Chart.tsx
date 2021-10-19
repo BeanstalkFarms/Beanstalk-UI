@@ -3,10 +3,10 @@ import { Box } from '@material-ui/core';
 import {
   AnimatedAxis, // any of these can be non-animated equivalents
   AnimatedGrid,
-  AnimatedLineSeries,
-  AnimatedAreaSeries,
   XYChart,
   Tooltip,
+  AnimatedAreaSeries,
+  AnimatedLineSeries,
   buildChartTheme,
 } from '@visx/xychart';
 import { DataSelector, TimeSelector } from './Selectors';
@@ -66,43 +66,44 @@ export function Chart(props) {
       : (d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`;
 
   const xAxisTickFormatter = (d) => {
-    if (d > 1000) return `${(d / 1000).toLocaleString('en-US')}k`;
-    return `${d}`;
+    if (d > 1000000) return `${(d / 1000000).toFixed(2).toLocaleString('en-US')}m`;
+    else if (d > 1000) return `${(d / 1000).toLocaleString('en-US')}k`; // eslint-disable-line
+    else return `${d === 0 ? d : d.toFixed(2)}`;
   };
 
-  const title = `Bean ${props.title}`;
-
-  const chartMargin = n
-    ? { top: 30, right: 60, bottom: 50, left: 60 }
-    : { top: 10, right: 20, bottom: 40, left: 60 };
+  const chartMargin = (
+    n
+      ? { top: 30, right: 60, bottom: 50, left: 65 }
+      : { top: 10, right: 20, bottom: 40, left: 65 }
+  );
 
   function getLineForTitle(_title, _data) {
-      if (_title === 'Price') {
-        const line = _data.reduce((acc, d) => {
-          acc.push({ x: d.x, y: 1 });
-          return acc;
-        }, []);
-        return [
-          <AnimatedAreaSeries
-            key="price"
-            fillOpacity={0.4}
-            y0Accessor={() => 1}
-            dataKey="Price"
-            data={_data}
-            {...accessors}
-          />,
-          <AnimatedLineSeries key="$1" data={line} {...accessors} />,
-        ];
-      }
+    if (_title === 'Price') {
+      const line = data.reduce((acc, d) => {
+        acc.push({ x: d.x, y: 1 });
+        return acc;
+      }, []);
       return [
-        <AnimatedLineSeries
-          key="data"
-          dataKey={_title}
+        <AnimatedAreaSeries
+          key="price"
+          fillOpacity={0.4}
+          y0Accessor={() => 1}
+          dataKey="Price"
           data={_data}
           {...accessors}
         />,
+        <AnimatedLineSeries key="$1" data={line} {...accessors} />,
       ];
     }
+    return [
+      <AnimatedLineSeries
+        key="data"
+        dataKey={_title}
+        data={_data}
+        {...accessors}
+      />,
+    ];
+  }
 
   return (
     <Box className="AppBar-shadow" style={chartStyle}>
@@ -118,7 +119,7 @@ export function Chart(props) {
         dataMode={props.dataMode}
       />
       <span style={titleStyle}>
-        {title}
+        {props.title}
         <QuestionModule
           description={`This is the historical Bean ${props.title} chart.`}
           margin="-6px 0 0 2px"
@@ -170,7 +171,7 @@ export function Chart(props) {
           numTicks={6}
           tickLength={n ? 7 : 3}
           label={`${props.title}${props.usd ? ' ($)' : ''}`}
-          labelOffset={25}
+          labelOffset={35}
           orientation="left"
           tickFormat={xAxisTickFormatter}
         />
