@@ -1,10 +1,11 @@
+import React from 'react';
 import { InputAdornment, TextField, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { TrimBN, TokenLabel } from '../../util';
 import { TokenTypeImageModule } from './index';
 
 export default function TokenOutputField(props) {
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     inputText: {
       fontSize: 'calc(12px + 1vmin)',
       fontFamily: 'Lucida Console',

@@ -1,10 +1,11 @@
+import React from 'react';
 import { Grid, Button, Link, Box } from '@material-ui/core';
 import { initialize, metamaskFailure } from '../../util';
 import { METAMASK_LINK, HOW_TO_MM_PATH } from '../../constants';
 import { SvgCloudIcon } from '../About/SvgCloudIcon';
 import About from '../About';
 
-export default function MetamasklessModule(props) {
+export default function MetamasklessModule() {
   const connectMetaStyle = {
     fontFamily: 'Futura-PT-Book',
     fontSize: '18px',

@@ -4,9 +4,9 @@ export const sowBeans = async (amount, claimable, callback) => {
   (claimable
     ? beanstalkContract().claimAndSowBeans(amount, claimable)
     : beanstalkContract().sowBeans(amount)
-  ).then(response => {
+  ).then((response) => {
     callback();
-    response.wait().then(receipt => {
+    response.wait().then(() => {
       txCallback();
     });
   });
@@ -17,21 +17,21 @@ export const buyAndSowBeans = async (
   buyBeanAmount,
   ethAmount,
   claimable,
-  callback,
+  callback
 ) => {
   (claimable
     ? beanstalkContract().claimBuyAndSowBeans(
         amount,
         buyBeanAmount,
         claimable,
-        { value: ethAmount },
+        { value: ethAmount }
       )
     : beanstalkContract().buyAndSowBeans(amount, buyBeanAmount, {
         value: ethAmount,
       })
-  ).then(response => {
+  ).then((response) => {
     callback();
-    response.wait().then(receipt => {
+    response.wait().then(() => {
       txCallback();
     });
   });
@@ -40,9 +40,9 @@ export const buyAndSowBeans = async (
 export const harvest = async (plots, callback) => {
   beanstalkContract()
     .harvest(plots)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -51,9 +51,9 @@ export const harvest = async (plots, callback) => {
 export const transferPlot = async (recipient, index, start, end, callback) => {
   beanstalkContract()
     .transferPlot(account, recipient, index, start, end)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });

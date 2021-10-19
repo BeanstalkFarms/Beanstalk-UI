@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js';
 import React, { useEffect, useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Button,
   ClickAwayListener,
@@ -113,11 +113,11 @@ export default function WalletModule(props) {
   const anchorRefWallet = React.useRef<any>(null);
   const [openWallet, setOpenWallet] = React.useState(false);
   const handleToggleWallet = () => {
-    setWalletListStyle(prev => ({
+    setWalletListStyle((prev) => ({
       ...prev,
       right: window.innerWidth < 600 ? '-170px' : '-120px',
     }));
-    setOpenWallet(prevOpen => !prevOpen);
+    setOpenWallet((prevOpen) => !prevOpen);
   };
   const handleCloseWallet = () => {
     setOpenWallet(false);
@@ -127,11 +127,11 @@ export default function WalletModule(props) {
 
   useEffect(() => {
     async function handleWallet() {
-      GetWalletAddress().then(accountHex => {
+      GetWalletAddress().then((accountHex) => {
         if (accountHex !== undefined) {
           const accountDisplay = `${accountHex.substr(
             0,
-            6,
+            6
           )}...${accountHex.substr(accountHex.length - 4, 4)}`;
           setWalletText(accountDisplay);
         } else {
@@ -142,16 +142,16 @@ export default function WalletModule(props) {
 
     async function buildWalletEvents() {
       const timestampPromisesByBlockNumber = {};
-      props.events.forEach((event, _) => {
+      props.events.forEach((event) => {
         if (timestampPromisesByBlockNumber[event.blockNumber] === undefined) {
           timestampPromisesByBlockNumber[event.blockNumber] = getBlockTimestamp(
-            event.blockNumber,
+            event.blockNumber
           );
         }
       });
       const blockNumbers = Object.keys(timestampPromisesByBlockNumber);
       const blockTimePromises = Object.values(timestampPromisesByBlockNumber);
-      Promise.all(blockTimePromises).then(blockTimestamps => {
+      Promise.all(blockTimePromises).then((blockTimestamps) => {
         const timestampsByBlockNumber = {};
         blockTimestamps.forEach((timestamp, index) => {
           const blockNumber = blockNumbers[index];
@@ -159,11 +159,9 @@ export default function WalletModule(props) {
         });
 
         const filteredEvents = [];
-        props.events.forEach((event, _) => {
-          switch (event.event) {
-            case 'BeanRemove':
-            case 'LPRemove':
-              return;
+        props.events.forEach((event) => {
+          if (event.event === 'BeanRemove' || event.event === 'LPRemove') {
+            return;
           }
           event.timestamp = timestampsByBlockNumber[event.blockNumber];
           filteredEvents.push(event);
@@ -178,8 +176,13 @@ export default function WalletModule(props) {
         let pendingAmountsPerType = {};
         let pendingSeasonsPerType = {};
         filteredEvents.forEach((event, index) => {
+          function seasonsDisplay(season) {
+            return season.min === season.max
+              ? ` ${season.min}`
+              : `s ${season.min}-${season.max}`;
+          }
           function flushPendingAmounts() {
-            for (const type in pendingAmountsPerType) {
+            for (const type in pendingAmountsPerType) { // eslint-disable-line
               const batchedEvent = {};
               switch (type) {
                 case 'BeanDeposit': {
@@ -206,6 +209,8 @@ export default function WalletModule(props) {
                   batchedEvents.push(batchedEvent);
                   break;
                 }
+                default:
+                  break;
               }
               batchedEvent.transactionHash = currentBlock.transactionHash;
               batchedEvent.timestamp = currentBlock.timestamp;
@@ -229,11 +234,7 @@ export default function WalletModule(props) {
             pendingSeasons.max = Math.max(pendingSeasons.max, season);
             return pendingSeasons;
           }
-          function seasonsDisplay(season) {
-            return season.min === season.max
-              ? ` ${season.min}`
-              : `s ${season.min}-${season.max}`;
-          }
+
           /* Special Handling for events that may repeat in a single block */
           switch (event.event) {
             case 'BeanDeposit': {
@@ -277,6 +278,8 @@ export default function WalletModule(props) {
               if (lastElement) flushPendingAmounts();
               return;
             }
+            default:
+              break;
           }
           batchedEvents.push(event);
         });
@@ -314,7 +317,7 @@ export default function WalletModule(props) {
         const s = event.returnValues.season;
         const beans = toTokenUnitsBN(
           new BigNumber(event.returnValues.beans),
-          BEAN.decimals,
+          BEAN.decimals
         );
 
         eventTitle = `Bean Deposit (Season${s})`;
@@ -324,7 +327,7 @@ export default function WalletModule(props) {
       case 'BeanClaim': {
         const beans = toTokenUnitsBN(
           new BigNumber(event.returnValues.beans),
-          BEAN.decimals,
+          BEAN.decimals
         );
 
         eventTitle = 'Bean Claim';
@@ -332,15 +335,15 @@ export default function WalletModule(props) {
           beans,
           ClaimableAsset.Bean,
           beans,
-          CryptoAsset.Bean,
+          CryptoAsset.Bean
         );
         break;
       }
       case 'BeanWithdraw': {
-        const s = parseInt(event.returnValues.season);
+        const s = parseInt(event.returnValues.season, 10);
         const beans = toTokenUnitsBN(
           new BigNumber(event.returnValues.beans),
-          BEAN.decimals,
+          BEAN.decimals
         );
 
         eventTitle = `Bean Withdrawal (Season ${s - WITHDRAWAL_FROZEN})`;
@@ -348,7 +351,7 @@ export default function WalletModule(props) {
           beans,
           SiloAsset.Bean,
           beans,
-          TransitAsset.Bean,
+          TransitAsset.Bean
         );
         break;
       }
@@ -368,7 +371,7 @@ export default function WalletModule(props) {
             beans,
             CryptoAsset.Bean,
             pods,
-            FarmAsset.Pods,
+            FarmAsset.Pods
           );
         } else {
           eventTitle = 'Bean Sow';
@@ -387,7 +390,7 @@ export default function WalletModule(props) {
       case 'Harvest': {
         const beans = toTokenUnitsBN(
           new BigNumber(event.returnValues.beans),
-          BEAN.decimals,
+          BEAN.decimals
         );
 
         eventTitle = 'Pod Harvest';
@@ -395,7 +398,7 @@ export default function WalletModule(props) {
           beans,
           FarmAsset.Pods,
           beans,
-          CryptoAsset.Bean,
+          CryptoAsset.Bean
         );
         break;
       }
@@ -403,7 +406,7 @@ export default function WalletModule(props) {
         const s = event.returnValues.season;
         const lp = toTokenUnitsBN(
           new BigNumber(event.returnValues.lp),
-          UNI_V2_ETH_BEAN_LP.decimals,
+          UNI_V2_ETH_BEAN_LP.decimals
         );
 
         eventTitle = `LP Deposit (Season${s})`;
@@ -413,7 +416,7 @@ export default function WalletModule(props) {
       case 'LPClaim': {
         const lp = toTokenUnitsBN(
           new BigNumber(event.returnValues.lp),
-          UNI_V2_ETH_BEAN_LP.decimals,
+          UNI_V2_ETH_BEAN_LP.decimals
         );
 
         eventTitle = 'LP Claim';
@@ -421,10 +424,10 @@ export default function WalletModule(props) {
         break;
       }
       case 'LPWithdraw': {
-        const s = parseInt(event.returnValues.season);
+        const s = parseInt(event.returnValues.season, 10);
         const lp = toTokenUnitsBN(
           new BigNumber(event.returnValues.lp),
-          UNI_V2_ETH_BEAN_LP.decimals,
+          UNI_V2_ETH_BEAN_LP.decimals
         );
 
         eventTitle = `LP Withdrawal (Season ${s - WITHDRAWAL_FROZEN})`;
@@ -461,7 +464,7 @@ export default function WalletModule(props) {
       case 'Incentivization': {
         const beanReward = toTokenUnitsBN(
           new BigNumber(event.returnValues.beans),
-          BEAN.decimals,
+          BEAN.decimals
         );
 
         eventTitle = 'Sunrise Reward';
@@ -472,11 +475,11 @@ export default function WalletModule(props) {
         if (event.returnValues.amount0In !== '0') {
           const swapFrom = toTokenUnitsBN(
             new BigNumber(event.returnValues.amount0In),
-            ETH.decimals,
+            ETH.decimals
           );
           const swapTo = toTokenUnitsBN(
             new BigNumber(event.returnValues.amount1Out),
-            BEAN.decimals,
+            BEAN.decimals
           );
 
           eventTitle = 'ETH to Bean Swap';
@@ -484,16 +487,16 @@ export default function WalletModule(props) {
             swapFrom,
             CryptoAsset.Ethereum,
             swapTo,
-            CryptoAsset.BEAN,
+            CryptoAsset.BEAN
           );
         } else if (event.returnValues.amount1In !== '0') {
           const swapFrom = toTokenUnitsBN(
             new BigNumber(event.returnValues.amount1In),
-            BEAN.decimals,
+            BEAN.decimals
           );
           const swapTo = toTokenUnitsBN(
             new BigNumber(event.returnValues.amount0Out),
-            ETH.decimals,
+            ETH.decimals
           );
 
           eventTitle = 'Bean to ETH Swap';
@@ -501,7 +504,7 @@ export default function WalletModule(props) {
             swapFrom,
             CryptoAsset.BEAN,
             swapTo,
-            CryptoAsset.Ethereum,
+            CryptoAsset.Ethereum
           );
         }
         break;
@@ -509,13 +512,15 @@ export default function WalletModule(props) {
       case 'EtherClaim': {
         const ethReward = toTokenUnitsBN(
           new BigNumber(event.returnValues.ethereum),
-          ETH.decimals,
+          ETH.decimals
         );
 
         eventTitle = 'ETH Claim';
         eventAmount = outDisplay(ethReward, CryptoAsset.Ethereum);
         break;
       }
+      default:
+        break;
     }
 
     const date = new Date(event.timestamp * 1e3);
@@ -543,7 +548,7 @@ export default function WalletModule(props) {
       <Box style={{ zIndex: '1', width: '100%', height: '40px' }}>
         {walletSubtitles.map((title, index) => (
           <Button
-            key={index}
+            key={`transaction_page_${index}`} // eslint-disable-line
             onClick={() => {
               if (transactionPage === index) {
                 setTransactionPage(-1);
@@ -572,21 +577,18 @@ export default function WalletModule(props) {
         ))}
       </Box>
       {walletEvents
-        .filter(event => {
+        .filter((event) => {
           if (transactionPage === 0) {
             return ['BeanDeposit', 'BeanWithdraw', 'BeanClaim'].includes(
-              event.event,
+              event.event
             );
           }
-          if (transactionPage === 1)
-            return ['EtherClaim', 'Swap'].includes(event.event);
-          if (transactionPage === 2)
-            return ['LPDeposit', 'LPWithdraw', 'LPClaim'].includes(event.event);
-          if (transactionPage === 3)
-            return ['Sow', 'Harvest'].includes(event.event);
+          if (transactionPage === 1) return ['EtherClaim', 'Swap'].includes(event.event);
+          if (transactionPage === 2) return ['LPDeposit', 'LPWithdraw', 'LPClaim'].includes(event.event);
+          if (transactionPage === 3) return ['Sow', 'Harvest'].includes(event.event);
           if (transactionPage === 4) {
             return ['Vote', 'Unvote', 'Proposal', 'Incentivization'].includes(
-              event.event,
+              event.event
             );
           }
           return true;
@@ -598,7 +600,7 @@ export default function WalletModule(props) {
             <MenuItem
               onClick={() => window.open(etherscanURL)}
               style={menuItemStyle}
-              key={index}
+              key={`menu_item_${index}`} // eslint-disable-line
             >
               {displayEvent(event)}
             </MenuItem>
@@ -663,7 +665,7 @@ export default function WalletModule(props) {
         transition
         disablePortal
       >
-        {({ TransitionProps, placement }) => (
+        {({ TransitionProps }) => (
           <Grow {...TransitionProps} style={{ transformOrigin: 'center top' }}>
             <Paper id="wallet-list-paper" style={walletListStyle}>
               <ClickAwayListener onClickAway={handleCloseWallet}>
@@ -683,12 +685,12 @@ export default function WalletModule(props) {
                   >
                     {walletTitles.map((title, index) => (
                       <Button
-                        key={index}
+                        key={`wallet_button_${index}`} // eslint-disable-line
                         onClick={() => {
                           setWalletPage(index);
                           setTransactionPage(-1);
                           document.getElementById(
-                            'wallet-list-paper',
+                            'wallet-list-paper'
                           ).scrollTop = 0;
                         }}
                         style={{

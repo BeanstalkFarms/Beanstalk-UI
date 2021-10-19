@@ -1,7 +1,8 @@
+import React from 'react';
 import { Link, Box } from '@material-ui/core';
 import { SLIPPAGE_LINK } from '../../constants';
 
-export default function FrontrunText(props) {
+export default function FrontrunText() {
   const linkStyle = {
     color: 'red',
     fontFamily: 'Futura-PT-Book',

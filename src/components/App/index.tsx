@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import ReactDOM from 'react-dom';

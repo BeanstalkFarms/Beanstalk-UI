@@ -23,22 +23,22 @@ export const createLedgerBatch = () => new web3.BatchRequest();
 
 const makeBatchedPromises = (batch, promisesAndResultHandlers) => {
   const batchedPromises = promisesAndResultHandlers.map(
-    methodAndHandler =>
+    (methodAndHandler) =>
       new Promise((resolve, reject) => {
         batch.add(
           methodAndHandler[0].call.request({}, 'latest', (error, result) => {
             if (result !== undefined) resolve(methodAndHandler[1](result));
             else reject(error);
-          }),
+          })
         );
-      }),
+      })
   );
   return Promise.all(batchedPromises);
 };
 
-const identityResult = result => result;
-const bigNumberResult = result => new BigNumber(result);
-const tokenResult = token => result =>
+const identityResult = (result) => result;
+const bigNumberResult = (result) => new BigNumber(result);
+const tokenResult = (token) => (result) =>
   toTokenUnitsBN(new BigNumber(result), token.decimals);
 
 export async function getEtherBalance() {
@@ -51,7 +51,7 @@ export async function getBlockTimestamp(blockNumber) {
 }
 
 /* Batched Getters */
-export const getAccountBalances = async batch => {
+export const getAccountBalances = async (batch) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
@@ -74,7 +74,7 @@ export const getAccountBalances = async batch => {
 };
 /* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
 
-export const getTotalBalances = async batch => {
+export const getTotalBalances = async (batch) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
@@ -94,7 +94,7 @@ export const getTotalBalances = async batch => {
     [beanstalk.methods.totalRoots(), bigNumberResult],
     [
       beanstalk.methods.weather(),
-      stringWeather => ({
+      (stringWeather) => ({
         didSowBelowMin: stringWeather.didSowBelowMin,
         didSowFaster: stringWeather.didSowFaster,
         lastDSoil: tokenResult(BEAN)(stringWeather.lastDSoil),
@@ -107,14 +107,14 @@ export const getTotalBalances = async batch => {
     ],
     [
       beanstalk.methods.rain(),
-      stringRain => ({
+      (stringRain) => ({
         raining: stringRain.raining,
         rainStart: bigNumberResult(stringRain.start),
       }),
     ],
     [
       beanstalk.methods.time(),
-      time => ({
+      (time) => ({
         season: bigNumberResult(time.current),
         start: bigNumberResult(time.start),
         period: bigNumberResult(time.period),
@@ -128,7 +128,7 @@ export const getTotalBalances = async batch => {
 export const getBips = async () => {
   const beanstalk = beanstalkContractReadOnly();
   const numberOfBips = bigNumberResult(
-    await beanstalk.methods.numberOfBips().call(),
+    await beanstalk.methods.numberOfBips().call()
   );
   const bips = [];
   for (let i = new BigNumber(0); i.isLessThan(numberOfBips); i = i.plus(1)) {
@@ -157,14 +157,14 @@ export const getBips = async () => {
 
   let hasActiveBIP = false;
   const activeBips = await beanstalk.methods.activeBips().call();
-  activeBips.forEach(id => {
+  activeBips.forEach((id) => {
     hasActiveBIP = true;
-    bips[parseInt(id)].active = true;
+    bips[parseInt(id, 10)].active = true;
   });
   return [bips, hasActiveBIP];
 };
 
-export const getPrices = async batch => {
+export const getPrices = async (batch) => {
   const beanstalk = beanstalkContractReadOnly();
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
@@ -172,14 +172,14 @@ export const getPrices = async batch => {
   return makeBatchedPromises(batch, [
     [
       referenceLPContract.methods.getReserves(),
-      reserves => [
+      (reserves) => [
         bigNumberResult(reserves._reserve0),
         bigNumberResult(reserves._reserve1),
       ],
     ],
     [
       lpContract.methods.getReserves(),
-      reserves => [
+      (reserves) => [
         bigNumberResult(reserves._reserve0),
         bigNumberResult(reserves._reserve1),
       ],
@@ -187,7 +187,7 @@ export const getPrices = async batch => {
     [lpContract.methods.token0(), identityResult],
     [
       beanstalk.methods.getTWAPPrices(),
-      prices => [toTokenUnitsBN(prices[0], 18), toTokenUnitsBN(prices[1], 18)],
+      (prices) => [toTokenUnitsBN(prices[0], 18), toTokenUnitsBN(prices[1], 18)],
     ],
   ]);
 };

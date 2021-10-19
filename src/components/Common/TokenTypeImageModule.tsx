@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box } from '@material-ui/core';
 import { TokenImage, TokenLabel, TokenTypeImage } from '../../util';
 
@@ -11,7 +12,7 @@ export default function TokenTypeImageModule(props) {
   const tokenTypeModifierStyle = {
     bottom: '0',
     height: '60%',
-    left: `${parseInt(props.style.height) / 4}px`,
+    left: `${parseInt(props.style.height, 10) / 4}px`,
     position: 'absolute',
   };
 

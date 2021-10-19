@@ -17,7 +17,9 @@ export default function SiloBeanModule(props) {
     mode: null,
     slippage: new BigNumber(BASE_SLIPPAGE),
   });
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = useState(0);
+  const [isFormDisabled, setIsFormDisabled] = useState(true);
+  const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   const sectionTitles = ['Deposit', 'Withdraw'];
   const sectionTitlesDescription = [
@@ -45,18 +47,15 @@ export default function SiloBeanModule(props) {
   };
 
   if (settings.mode === null) {
-    if (props.beanBalance.isGreaterThan(0))
-      setSettings(p => ({ ...p, mode: SwapMode.Bean }));
-    else if (props.ethBalance.isGreaterThan(0))
-      setSettings(p => ({ ...p, mode: SwapMode.Ethereum }));
-    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0))
-      setSettings(p => ({ ...p, mode: SwapMode.Ethereum }));
+    if (props.beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
+    else if (props.ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
   }
 
   const depositRef = useRef<any>();
   const withdrawRef = useRef<any>();
   const claimRef = useRef<any>();
-  function handleForm() {
+  const handleForm = () => {
     switch (section) {
       case 0:
         depositRef.current.handleForm();
@@ -70,8 +69,8 @@ export default function SiloBeanModule(props) {
       default:
         break;
     }
-  }
-  const [isFormDisabled, setIsFormDisabled] = useState(true);
+  };
+
   const sections = [
     <BeanDepositSubModule
       key={0}
@@ -119,11 +118,11 @@ export default function SiloBeanModule(props) {
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
         setSection={setSection}
-      />,
+      />
     );
     sectionTitles.push('Claim');
     sectionTitlesDescription.push(
-      'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.',
+      'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.'
     );
   }
   if (section > sectionTitles.length - 1) setSection(0);
@@ -140,7 +139,7 @@ export default function SiloBeanModule(props) {
         description="Bean Deposits Will Appear Here"
         claimableBalance={props.farmableBeanBalance}
         claimableStalk={props.farmableStalkBalance.plus(
-          props.farmableBeanBalance,
+          props.farmableBeanBalance
         )}
         crates={props.rawBeanDeposits}
         handleChange={handlePageChange}
@@ -148,7 +147,7 @@ export default function SiloBeanModule(props) {
         page={page}
         season={props.season}
         title="Deposits"
-      />,
+      />
     );
     sectionTitlesInfo.push('Bean Deposits');
   }
@@ -169,7 +168,7 @@ export default function SiloBeanModule(props) {
         indexTitle="Seasons to Arrival"
         page={page}
         title="Withdrawals"
-      />,
+      />
     );
     sectionTitlesInfo.push('Bean Withdrawals');
   }
@@ -188,7 +187,7 @@ export default function SiloBeanModule(props) {
           onClick={() => {
             const shouldExpand = listTablesStyle.display === 'none';
             setListTablesStyle(
-              shouldExpand ? { display: 'block' } : { display: 'none' },
+              shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
           style={{ height: '44px', width: '44px', marginTop: '-8px' }}
@@ -198,7 +197,6 @@ export default function SiloBeanModule(props) {
       </Box>
     ) : null;
 
-  const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
   const showListTables =
     sectionsInfo.length > 0 ? (
       <Box style={{ ...listTablesStyle, marginTop: '61px' }}>

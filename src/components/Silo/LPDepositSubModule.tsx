@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { unstable_batchedUpdates } from 'react-dom';
+import { unstable_batchedUpdates } from 'react-dom'; // eslint-disable-line
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import {
@@ -62,6 +62,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       newFromEthNumber.isLessThanOrEqualTo(0) &&
       newFromLPNumber.isLessThan(0)
     ) {
+      // eslint-disable-next-line
       unstable_batchedUpdates(() => {
         setToBuyBeansValue(new BigNumber(0));
         setToSellEthValue(new BigNumber(0));
@@ -85,6 +86,34 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
     let fromConvertBeans = new BigNumber(0);
     let newBeanReserve = props.beanReserve;
     let newEthReserve = props.ethReserve;
+
+    const handleConvertCrates = (beans) => {
+      let beansRemoved = new BigNumber(0);
+      let stalkRemoved = new BigNumber(0);
+      const crates = [];
+      const amounts = [];
+      Object.keys(props.beanCrates)
+        .sort((a, b) => parseInt(b, 10) - parseInt(a, 10))
+        .some((key) => {
+          const crateBeansRemoved = beansRemoved
+            .plus(props.beanCrates[key])
+            .isLessThanOrEqualTo(beans)
+            ? props.beanCrates[key]
+            : beans.minus(beansRemoved);
+          beansRemoved = beansRemoved.plus(crateBeansRemoved);
+          stalkRemoved = stalkRemoved.plus(
+            crateBeansRemoved
+              .multipliedBy(props.season.minus(key))
+              .multipliedBy(BEAN_TO_SEEDS)
+          );
+          crates.push(key);
+          amounts.push(toStringBaseUnitBN(crateBeansRemoved, BEAN.decimals));
+          return beansRemoved.isEqualTo(beans);
+        });
+      setBeanConvertParams({ crates, amounts });
+      return [toTokenUnitsBN(stalkRemoved, 4), beansRemoved];
+    };
+
     if (
       props.settings.mode === SwapMode.BeanEthereum ||
       props.settings.mode === SwapMode.BeanEthereumSwap
@@ -111,13 +140,13 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       buyNumber = getBuyAndAddLPAmount(
         newFromEthNumber.minus(fromEtherNumber),
         props.ethReserve,
-        props.beanReserve,
+        props.beanReserve
       );
       sellNumber = getFromAmount(
         buyNumber,
         props.ethReserve,
         props.beanReserve,
-        ETH.decimals,
+        ETH.decimals
       );
       fromEtherNumber = newFromEthNumber;
       setToBuyBeansValue(buyNumber);
@@ -136,12 +165,12 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       buyNumber = getBuyAndAddLPAmount(
         newFromNumber.minus(fromNumber),
         props.beanReserve,
-        props.ethReserve,
+        props.ethReserve
       );
       sellNumber = getFromAmount(
         buyNumber,
         props.beanReserve,
-        props.ethReserve,
+        props.ethReserve
       );
       fromNumber = newFromNumber;
       setToBuyEthValue(buyNumber);
@@ -160,11 +189,11 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
         newBeanReserve,
         fromEtherNumber,
         newEthReserve,
-        props.totalLP,
-      ),
+        props.totalLP
+      )
     );
     fromNumber = fromNumber.plus(
-      tokenForLP(fromLPNumber, newBeanReserve, props.totalLP),
+      tokenForLP(fromLPNumber, newBeanReserve, props.totalLP)
     );
     setToSiloLPValue(lpToDeposit, UNI_V2_ETH_BEAN_LP.decimals);
     setToStalkValue(
@@ -172,50 +201,23 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
         fromNumber
           .multipliedBy(props.beanToStalk)
           .minus(fromConvertBeans.multipliedBy(BEAN_TO_STALK)),
-        STALK.decimals,
-      ),
+        STALK.decimals
+      )
     );
     setToSeedsValue(
       TrimBN(
         fromNumber
           .multipliedBy(2 * LPBEANS_TO_SEEDS)
           .minus(fromConvertBeans.multipliedBy(BEAN_TO_SEEDS)),
-        SEEDS.decimals,
-      ),
+        SEEDS.decimals
+      )
     );
     props.setIsFormDisabled(
       fromNumber.isLessThanOrEqualTo(0) &&
         fromEtherNumber.isLessThanOrEqualTo(0) &&
-        fromLPNumber.isLessThanOrEqualTo(0),
+        fromLPNumber.isLessThanOrEqualTo(0)
     );
   }
-
-  const handleConvertCrates = beans => {
-    let beansRemoved = new BigNumber(0);
-    let stalkRemoved = new BigNumber(0);
-    const crates = [];
-    const amounts = [];
-    Object.keys(props.beanCrates)
-      .sort((a, b) => parseInt(b) - parseInt(a))
-      .some(key => {
-        const crateBeansRemoved = beansRemoved
-          .plus(props.beanCrates[key])
-          .isLessThanOrEqualTo(beans)
-          ? props.beanCrates[key]
-          : beans.minus(beansRemoved);
-        beansRemoved = beansRemoved.plus(crateBeansRemoved);
-        stalkRemoved = stalkRemoved.plus(
-          crateBeansRemoved
-            .multipliedBy(props.season.minus(key))
-            .multipliedBy(BEAN_TO_SEEDS),
-        );
-        crates.push(key);
-        amounts.push(toStringBaseUnitBN(crateBeansRemoved, BEAN.decimals));
-        return beansRemoved.isEqualTo(beans);
-      });
-    setBeanConvertParams({ crates, amounts });
-    return [toTokenUnitsBN(stalkRemoved, 4), beansRemoved];
-  };
 
   const convertibleBeans =
     props.settings.convert && props.settings.mode === SwapMode.BeanEthereum
@@ -234,13 +236,13 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       buyEth={toBuyEthValue}
       claim={props.settings.claim}
       claimableBalance={props.maxFromClaimableVal}
-      handleChange={v =>
+      handleChange={(v) =>
         fromValueUpdated(
           v,
           props.ethBalance.isGreaterThan(MIN_BALANCE)
             ? props.ethBalance.minus(MIN_BALANCE)
             : new BigNumber(0),
-          fromLPValue,
+          fromLPValue
         )
       }
       sellToken={toSellBeansValue}
@@ -254,7 +256,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       balance={props.lpBalance}
       claim={props.settings.claim}
       claimableBalance={new BigNumber(0)}
-      handleChange={v => fromValueUpdated(fromBeanValue, fromEthValue, v)}
+      handleChange={(v) => fromValueUpdated(fromBeanValue, fromEthValue, v)}
       isLP
       poolForLPRatio={props.poolForLPRatio}
       token={CryptoAsset.LP}
@@ -268,7 +270,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       buyBeans={toBuyBeansValue}
       claim={props.settings.claim}
       claimableBalance={props.claimableEthBalance}
-      handleChange={v => fromValueUpdated(maxBeans, v, fromLPValue)}
+      handleChange={(v) => fromValueUpdated(maxBeans, v, fromLPValue)}
       mode={props.settings.mode}
       sellEth={toSellEthValue}
       updateExpectedPrice={props.updateExpectedPrice}
@@ -358,7 +360,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
         const lp = MaxBN(fromLPValue, new BigNumber(0));
         if (props.settings.mode === SwapMode.LP && lp.isGreaterThan(0)) {
           depositLP(toStringBaseUnitBN(lp, ETH.decimals), claimable, () =>
-            resetFields(),
+            resetFields()
           );
         } else if (props.settings.convert) {
           convertAddAndDepositLP(
@@ -368,17 +370,17 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
               toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
               toStringBaseUnitBN(
                 fromBeanValue.multipliedBy(props.settings.slippage),
-                BEAN.decimals,
+                BEAN.decimals
               ),
               toStringBaseUnitBN(
                 fromEthValue.multipliedBy(props.settings.slippage),
-                ETH.decimals,
+                ETH.decimals
               ),
             ],
             beanConvertParams.crates,
             beanConvertParams.amounts,
             claimable,
-            () => resetFields(),
+            () => resetFields()
           );
         } else {
           const beans = fromBeanValue
@@ -395,15 +397,15 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
               toStringBaseUnitBN(beans, BEAN.decimals),
               toStringBaseUnitBN(
                 beans.multipliedBy(props.settings.slippage),
-                BEAN.decimals,
+                BEAN.decimals
               ),
               toStringBaseUnitBN(
                 eth.multipliedBy(props.settings.slippage),
-                ETH.decimals,
+                ETH.decimals
               ),
             ],
             claimable,
-            () => resetFields(),
+            () => resetFields()
           );
         }
       }

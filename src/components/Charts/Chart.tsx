@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box } from '@material-ui/core';
 import {
   AnimatedAxis, // any of these can be non-animated equivalents
@@ -44,14 +45,14 @@ export function Chart(props) {
     tickLength: 8,
   });
   const accessors = {
-    xAccessor: d => d.x,
-    yAccessor: d => d.y,
+    xAccessor: (d) => d.x,
+    yAccessor: (d) => d.y,
   };
 
   let data = props.dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
 
   if (props.timeMode === 'week') {
-    data = data.filter(d => {
+    data = data.filter((d) => {
       const date = new Date();
       date.setDate(date.getDate() - 7);
       return d.x > date;
@@ -60,11 +61,11 @@ export function Chart(props) {
 
   const toolTipFormatter =
     props.dataMode === 'hr'
-      ? d =>
+      ? (d) =>
           `${d.toDateString().split(' ')[1]} ${d.getDate()}, ${d.getHours()}:00`
-      : d => `${d.toDateString().split(' ')[1]} ${d.getDate()}`;
+      : (d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`;
 
-  const xAxisTickFormatter = d => {
+  const xAxisTickFormatter = (d) => {
     if (d > 1000) return `${(d / 1000).toLocaleString('en-US')}k`;
     return `${d}`;
   };
@@ -74,6 +75,34 @@ export function Chart(props) {
   const chartMargin = n
     ? { top: 30, right: 60, bottom: 50, left: 60 }
     : { top: 10, right: 20, bottom: 40, left: 60 };
+
+  function getLineForTitle(_title, _data) {
+      if (_title === 'Price') {
+        const line = _data.reduce((acc, d) => {
+          acc.push({ x: d.x, y: 1 });
+          return acc;
+        }, []);
+        return [
+          <AnimatedAreaSeries
+            key="price"
+            fillOpacity={0.4}
+            y0Accessor={() => 1}
+            dataKey="Price"
+            data={_data}
+            {...accessors}
+          />,
+          <AnimatedLineSeries key="$1" data={line} {...accessors} />,
+        ];
+      }
+      return [
+        <AnimatedLineSeries
+          key="data"
+          dataKey={_title}
+          data={_data}
+          {...accessors}
+        />,
+      ];
+    }
 
   return (
     <Box className="AppBar-shadow" style={chartStyle}>
@@ -124,9 +153,7 @@ export function Chart(props) {
               </Box>
               <Box style={{ marginTop: '5px', color: '#777777' }}>
                 {toolTipFormatter(
-                  accessors.xAccessor(
-                    tooltipData.datumByKey[props.title].datum,
-                  ),
+                  accessors.xAccessor(tooltipData.datumByKey[props.title].datum)
                 )}
               </Box>
             </Box>
@@ -137,7 +164,7 @@ export function Chart(props) {
           orientation="bottom"
           tickLength={n ? 7 : 3}
           numTicks={props.timeMode === 'week' ? 7 : 7}
-          tickFormat={d => `${d.toDateString().split(' ')[1]} ${d.getDate()}`}
+          tickFormat={(d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`}
         />
         <AnimatedAxis
           numTicks={6}
@@ -152,34 +179,6 @@ export function Chart(props) {
       </XYChart>
     </Box>
   );
-
-  function getLineForTitle(title, data) {
-    if (title === 'Price') {
-      const line = data.reduce((acc, d, i) => {
-        acc.push({ x: d.x, y: 1 });
-        return acc;
-      }, []);
-      return [
-        <AnimatedAreaSeries
-          key="price"
-          fillOpacity={0.4}
-          y0Accessor={d => 1}
-          dataKey="Price"
-          data={data}
-          {...accessors}
-        />,
-        <AnimatedLineSeries key="$1" data={line} {...accessors} />,
-      ];
-    }
-    return [
-      <AnimatedLineSeries
-        key="data"
-        dataKey={title}
-        data={data}
-        {...accessors}
-      />,
-    ];
-  }
 }
 
 Chart.defaultProps = {

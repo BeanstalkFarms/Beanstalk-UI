@@ -1,8 +1,9 @@
+import React from 'react';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 export default function TitleLabel(props) {
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     label: {
       borderRadius: '15px',
       color: 'black',

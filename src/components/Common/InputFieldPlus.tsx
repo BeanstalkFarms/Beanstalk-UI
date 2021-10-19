@@ -28,7 +28,7 @@ export default function InputFieldPlus(props) {
     return null;
   }
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     if (event.target.value === undefined || event.target.value === '') {
       props.handleChange(new BigNumber(-1));
     } else {
@@ -53,11 +53,11 @@ export default function InputFieldPlus(props) {
   const textTransaction =
     props.sellToken !== undefined
       ? `Buying About ${displayBN(
-          props.buyEth,
+          props.buyEth
         )} ETH with ${props.sellToken.toFixed(3)} Beans for ${props
           .updateExpectedPrice(
             props.buyEth.multipliedBy(-1),
-            props.sellToken.multipliedBy(-1),
+            props.sellToken.multipliedBy(-1)
           )
           .toFixed(2)} Each`
       : '';
@@ -77,11 +77,11 @@ InputFieldPlus.defaultProps = {
   claim: false,
   claimableBalance: new BigNumber(0),
   buyEth: new BigNumber(0),
-  handleChange: (value: BigNumber) => {},
+  handleChange: () => {},
   isLP: false,
   poolForLPRatio: undefined,
   token: CryptoAsset.Bean,
-  updateExpectedPrice: (a, b) => {},
+  updateExpectedPrice: () => {},
   value: new BigNumber(-1),
   visible: true,
 };

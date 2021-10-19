@@ -48,6 +48,10 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+function roundTo4Digits(num) {
+  return parseFloat(num.toFixed(4));
+}
+
 export async function dayUniswapQuery() {
   const data = await client.query({
     query: gql(DayPoolQuery),
@@ -84,8 +88,4 @@ export async function hourUniswapQuery() {
   }, []);
   dates.splice(dates.length - 7, 7);
   return dates.reverse();
-}
-
-function roundTo4Digits(num) {
-  return parseFloat(num.toFixed(4));
 }

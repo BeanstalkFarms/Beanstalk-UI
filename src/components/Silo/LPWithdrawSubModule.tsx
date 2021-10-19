@@ -54,17 +54,7 @@ export const LPWithdrawSubModule = forwardRef((props, ref) => {
   }
   */
 
-  function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, props.maxFromLPVal);
-    const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals);
-    setFromLPValue(newFromLPValue);
-    const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber);
-    setFromStalkValue(TrimBN(stalkRemoved, STALK.decimals));
-    setFromSeedsValue(TrimBN(seedsRemoved, SEEDS.decimals));
-    props.setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0));
-  }
-
-  const getStalkAndSeedsRemoved = beans => {
+  const getStalkAndSeedsRemoved = (beans) => {
     let lpRemoved = new BigNumber(0);
     let stalkRemoved = new BigNumber(0);
     let seedsRemoved = new BigNumber(0);
@@ -72,8 +62,8 @@ export const LPWithdrawSubModule = forwardRef((props, ref) => {
     const amounts = [];
     BigNumber.set({ DECIMAL_PLACES: 6 });
     Object.keys(props.crates)
-      .sort((a, b) => parseInt(b) - parseInt(a))
-      .some(key => {
+      .sort((a, b) => parseInt(b, 10) - parseInt(a, 10))
+      .some((key) => {
         const crateLPsRemoved = lpRemoved
           .plus(props.crates[key])
           .isLessThanOrEqualTo(beans)
@@ -86,17 +76,17 @@ export const LPWithdrawSubModule = forwardRef((props, ref) => {
         seedsRemoved = seedsRemoved.plus(crateSeedsRemoved);
         BigNumber.set({ DECIMAL_PLACES: 10 });
         stalkRemoved = stalkRemoved.plus(
-          crateSeedsRemoved.dividedBy(LPBEANS_TO_SEEDS),
+          crateSeedsRemoved.dividedBy(LPBEANS_TO_SEEDS)
         );
         stalkRemoved = stalkRemoved.plus(
           crateSeedsRemoved
             .multipliedBy(props.season.minus(key))
-            .multipliedBy(0.00001),
+            .multipliedBy(0.00001)
         );
         BigNumber.set({ DECIMAL_PLACES: 6 });
         crates.push(key);
         amounts.push(
-          toStringBaseUnitBN(crateLPsRemoved, UNI_V2_ETH_BEAN_LP.decimals),
+          toStringBaseUnitBN(crateLPsRemoved, UNI_V2_ETH_BEAN_LP.decimals)
         );
         return lpRemoved.isEqualTo(beans);
       });
@@ -105,7 +95,17 @@ export const LPWithdrawSubModule = forwardRef((props, ref) => {
     return [stalkRemoved, seedsRemoved];
   };
 
-  const handleFromChange = event => {
+  function fromValueUpdated(newFromNumber) {
+    const fromNumber = MinBN(newFromNumber, props.maxFromLPVal);
+    const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals);
+    setFromLPValue(newFromLPValue);
+    const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber);
+    setFromStalkValue(TrimBN(stalkRemoved, STALK.decimals));
+    setFromSeedsValue(TrimBN(seedsRemoved, SEEDS.decimals));
+    props.setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0));
+  }
+
+  const handleFromChange = (event) => {
     if (event.target.value) {
       fromValueUpdated(new BigNumber(event.target.value));
     } else {
@@ -211,8 +211,7 @@ export const LPWithdrawSubModule = forwardRef((props, ref) => {
         fromLPValue.isLessThanOrEqualTo(0) ||
         withdrawParams.crates.length === 0 ||
         withdrawParams.amounts.length === 0
-      )
-        return;
+      ) return;
 
       if (props.settings.claim) {
         claimAndWithdrawLP(
@@ -221,7 +220,7 @@ export const LPWithdrawSubModule = forwardRef((props, ref) => {
           props.claimable,
           () => {
             fromValueUpdated(new BigNumber(-1));
-          },
+          }
         );
       } else {
         withdrawLP(withdrawParams.crates, withdrawParams.amounts, () => {

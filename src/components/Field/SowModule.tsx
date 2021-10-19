@@ -48,28 +48,28 @@ export const SowModule = forwardRef((props, ref) => {
         maxToVal.minus(MaxBN(newFromValue, new BigNumber(0))),
         props.ethReserve,
         props.beanReserve,
-        ETH.decimals,
+        ETH.decimals
       ),
     ]);
     BigNumber.set({ DECIMAL_PLACES: 6 });
     const buyBeans = getToAmount(
       newFromEthValue,
       props.ethReserve,
-      props.beanReserve,
+      props.beanReserve
     );
     BigNumber.set({ DECIMAL_PLACES: 18 });
     setBuyBeanValue(buyBeans);
     setFromEthValue(TrimBN(newFromEthValue, 6));
     const sowedBeans = MaxBN(buyBeans, new BigNumber(0)).plus(
-      MaxBN(newFromValue, new BigNumber(0)),
+      MaxBN(newFromValue, new BigNumber(0))
     );
     setToPodValue(
       TrimBN(
         sowedBeans.multipliedBy(
-          new BigNumber(1).plus(props.weather.dividedBy(100)),
+          new BigNumber(1).plus(props.weather.dividedBy(100))
         ),
-        6,
-      ),
+        6
+      )
     );
     props.setIsFormDisabled(sowedBeans.isLessThanOrEqualTo(0));
   }
@@ -82,7 +82,7 @@ export const SowModule = forwardRef((props, ref) => {
       balance={props.beanBalance}
       claim={props.settings.claim}
       claimableBalance={props.beanClaimableBalance}
-      handleChange={v => {
+      handleChange={(v) => {
         fromValueUpdated(v, fromEthValue);
       }}
       token={CryptoAsset.Bean}
@@ -97,7 +97,7 @@ export const SowModule = forwardRef((props, ref) => {
       buyBeans={buyBeanValue}
       claim={props.settings.claim}
       claimableBalance={props.claimableEthBalance}
-      handleChange={v => fromValueUpdated(fromBeanValue, v)}
+      handleChange={(v) => fromValueUpdated(fromBeanValue, v)}
       mode={props.settings.mode}
       sellEth={fromEthValue}
       updateExpectedPrice={props.updateExpectedPrice}
@@ -124,7 +124,7 @@ export const SowModule = forwardRef((props, ref) => {
     ? `Sowing Maximum Soil With ${props.weather.toFixed()}% Weather.`
     : `Sowing With ${props.weather.toFixed()}% Weather.`;
   const podLineText = `The Plot will be placed ${displayBN(
-    props.unripenedPods,
+    props.unripenedPods
   )} in the Pod Line.`;
   const sowTextField = [
     <Box
@@ -179,12 +179,12 @@ export const SowModule = forwardRef((props, ref) => {
       if (fromEthValue.isGreaterThan(0)) {
         const beans = MaxBN(
           toBaseUnitBN(fromBeanValue, BEAN.decimals),
-          new BigNumber(0),
+          new BigNumber(0)
         ).toString();
         const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
         const buyBeans = toStringBaseUnitBN(
           buyBeanValue.multipliedBy(props.settings.slippage),
-          BEAN.decimals,
+          BEAN.decimals
         );
         buyAndSowBeans(beans, buyBeans, eth, claimable, () => {
           fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
@@ -195,7 +195,7 @@ export const SowModule = forwardRef((props, ref) => {
           claimable,
           () => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-          },
+          }
         );
       }
     },

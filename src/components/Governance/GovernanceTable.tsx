@@ -26,14 +26,6 @@ import { percentForStalk } from '../../util';
 import { QuestionModule } from '../Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
-export default function GovernanceTable(props) {
-  return (
-    <Box style={props.style}>
-      <BipTable {...props} />
-    </Box>
-  );
-}
-
 const useStyles = makeStyles({
   table: {
     margin: '9px',
@@ -68,7 +60,86 @@ const useStyles = makeStyles({
   },
 });
 
-const BipTable = props => {
+function summaryBips(open, bip) {
+  if (open) {
+    const bipID = parseInt(bip[0], 10);
+    if (bipsList.length > bipID) {
+      if (Object.keys(bipsList).length > parseInt(bip[0], 10)) {
+        return (
+          <iframe
+            src={bipsList[bipID].path}
+            style={{ border: 'none' }}
+            title={`BIP-${bipID}`}
+            width="100%"
+            height="455px"
+          />
+        );
+      }
+      return (
+        <iframe
+          src="/BIPs/bip-default.html"
+          style={{ border: 'none' }}
+          title="BIP-default"
+          width="100%"
+          height="30px"
+        />
+      );
+    }
+  }
+}
+
+const Row = (props) => {
+  const { bip } = props;
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <TableRow id={`bip-${bip[0]}`}>
+        <TableCell style={{ padding: '5px' }}>
+          <IconButton
+            id={`open-bip-${bip[0]}`}
+            aria-label="expand row"
+            onClick={() => setOpen(!open)}
+            size="small"
+          >
+            {open ? (
+              <KeyboardArrowUpIcon id={`bip-${bip[0]}-open`} />
+            ) : (
+              <KeyboardArrowDownIcon />
+            )}
+          </IconButton>
+        </TableCell>
+        {Object.values(bip).map((bipValue, bipIndex) => (
+          <TableCell
+            key={`bip_table_cell_${bipIndex}`} // eslint-disable-line
+            align="center"
+            component="th"
+            scope="bip"
+            style={{ fontFamily: 'Futura-PT-Book', fontSize: '18px' }}
+          >
+            {bipIndex === 3 ? (
+              <CircularProgressWithLabel value={bipValue} />
+            ) : (
+              bipValue
+            )}
+          </TableCell>
+        ))}
+      </TableRow>
+      <TableRow>
+        <TableCell
+          colSpan={6}
+          style={{ fontFamily: 'Futura-Pt-Book', padding: '0px' }}
+        >
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            {summaryBips(open, bip)}
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
+
+const BipTable = (props) => {
   const classes = useStyles();
 
   const [page, setPage] = useState(0);
@@ -79,7 +150,7 @@ const BipTable = props => {
 
   const titles = ['BIP', 'Title', 'Status', '% Voted'];
   const tableBips = props.bips
-    .reduce((tableBips, bip) => {
+    .reduce((bips, bip) => {
       const voteProportion = bip.roots.dividedBy(props.totalRoots);
       const bipID = bip.id;
       const tb = {
@@ -103,23 +174,23 @@ const BipTable = props => {
           .isLessThanOrEqualTo(new Date().getTime() / 1000) &&
         voteProportion.isGreaterThanOrEqualTo(
           GOVERNANCE_EMERGENCY_THRESHOLD_NUMERATOR /
-            GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR,
+            GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR
         )
       ) {
         tb.status = 'Emergency Committable';
       } else {
         tb.status = `${bip.period.minus(
-          props.season.minus(bip.start),
+          props.season.minus(bip.start)
         )} Seasons Remaining`;
       }
       tb.voted = percentForStalk(
         bip.roots,
         bip.endTotalRoots.isGreaterThan(0)
           ? bip.endTotalRoots
-          : props.totalRoots,
+          : props.totalRoots
       );
-      tableBips.push([tb.BIP, tb.title, tb.status, tb.voted]);
-      return tableBips;
+      bips.push([tb.BIP, tb.title, tb.status, tb.voted]);
+      return bips;
     }, [])
     .reverse();
 
@@ -145,7 +216,7 @@ const BipTable = props => {
             <TableHead>
               <TableRow>
                 <TableCell size="small" style={{ width: '10px' }} />
-                {titles.map(t => (
+                {titles.map((t) => (
                   <TableCell
                     key={t}
                     align="center"
@@ -161,7 +232,7 @@ const BipTable = props => {
               {tableBips
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((bip, index) => (
-                  <Row key={index} bip={bip} />
+                  <Row key={`bip_row_${index}`} bip={bip} /> // eslint-disable-line
                 ))}
             </TableBody>
           </Table>
@@ -192,81 +263,10 @@ const BipTable = props => {
  * (3) Submit a merge request on github: https://github.com/BeanstalkFarms/Beanstalk
  */
 
-function summaryBips(open, bip) {
-  if (open) {
-    const bipID = parseInt(bip[0]);
-    if (bipsList.length > bipID) {
-      if (Object.keys(bipsList).length > parseInt(bip[0])) {
-        return (
-          <iframe
-            src={bipsList[bipID].path}
-            style={{ border: 'none' }}
-            title={`BIP-${bipID}`}
-            width="100%"
-            height="455px"
-          />
-        );
-      }
-      return (
-        <iframe
-          src="/BIPs/bip-default.html"
-          style={{ border: 'none' }}
-          title="BIP-default"
-          width="100%"
-          height="30px"
-        />
-      );
-    }
-  }
-}
-
-function Row(props: { row: ReturnType<typeof createData> }) {
-  const { bip } = props;
-  const [open, setOpen] = React.useState(false);
-
+export default function GovernanceTable(props) {
   return (
-    <>
-      <TableRow id={`bip-${bip[0]}`}>
-        <TableCell style={{ padding: '5px' }}>
-          <IconButton
-            id={`open-bip-${bip[0]}`}
-            aria-label="expand row"
-            onClick={() => setOpen(!open)}
-            size="small"
-          >
-            {open ? (
-              <KeyboardArrowUpIcon id={`bip-${bip[0]}-open`} />
-            ) : (
-              <KeyboardArrowDownIcon />
-            )}
-          </IconButton>
-        </TableCell>
-        {Object.values(bip).map((bipValue, bipIndex) => (
-          <TableCell
-            key={bipIndex}
-            align="center"
-            component="th"
-            scope="bip"
-            style={{ fontFamily: 'Futura-PT-Book', fontSize: '18px' }}
-          >
-            {bipIndex === 3 ? (
-              <CircularProgressWithLabel value={bipValue} />
-            ) : (
-              bipValue
-            )}
-          </TableCell>
-        ))}
-      </TableRow>
-      <TableRow>
-        <TableCell
-          colSpan={6}
-          style={{ fontFamily: 'Futura-Pt-Book', padding: '0px' }}
-        >
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            {summaryBips(open, bip)}
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
+    <Box style={props.style}>
+      <BipTable {...props} />
+    </Box>
   );
 }

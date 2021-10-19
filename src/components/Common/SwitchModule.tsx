@@ -1,3 +1,4 @@
+import React from 'react';
 import { FormControlLabel, Switch, Box } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import { QuestionModule } from './index';
@@ -35,7 +36,7 @@ export default function SwitchModule(props) {
     },
   })(FormControlLabel);
 
-  const changeHandler = event => props.setValue(event.target.checked);
+  const changeHandler = (event) => props.setValue(event.target.checked);
 
   return (
     <Box style={{ display: 'flex', position: 'relative' }}>

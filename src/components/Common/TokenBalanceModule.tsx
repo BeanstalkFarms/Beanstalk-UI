@@ -46,7 +46,7 @@ export default function TokenBalanceModule(props) {
 
   function displayLP(balance) {
     return `${displayBN(balance[0])} ${TokenLabel(
-      CryptoAsset.Bean,
+      CryptoAsset.Bean
     )}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 

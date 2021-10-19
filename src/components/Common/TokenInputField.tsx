@@ -13,7 +13,7 @@ import { FormatTooltip, TokenTypeImageModule } from './index';
 export default function TokenInputField(props) {
   const [displayValue, setDisplayValue] = useState('');
 
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     inputText: {
       fontSize: 'calc(15px + 1vmin)',
       fontFamily: 'Lucida Console',
@@ -66,14 +66,14 @@ export default function TokenInputField(props) {
     }
   }
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setDisplayValue(event.target.value);
     props.handleChange(event);
   };
 
   function displayLP(balance) {
     return `${displayBN(balance[0])} ${TokenLabel(
-      CryptoAsset.Bean,
+      CryptoAsset.Bean
     )}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
@@ -120,8 +120,8 @@ export default function TokenInputField(props) {
             : props.value.toFixed()
         }
         onChange={handleChange}
-        onWheel={e => e.target.blur()}
-        onKeyDown={e =>
+        onWheel={(e) => e.target.blur()}
+        onKeyDown={(e) =>
           (e.key === 'e' || e.key === '+' || e.key === '-') &&
           e.preventDefault()
         }

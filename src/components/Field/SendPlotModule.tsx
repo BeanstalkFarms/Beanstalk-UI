@@ -22,12 +22,11 @@ export const SendPlotModule = forwardRef((props, ref) => {
     props.setIsFormDisabled(newFromNumber.isLessThanOrEqualTo(0));
   }
 
-  const handleFromChange = event => {
+  const handleFromChange = (event) => {
     if (event.target.value) {
       fromValueUpdated(new BigNumber(props.plots[event.target.value])); // gives you the value at the selected plot pod value
       setPlotIndex(event.target.value); // plot index
-      if (props.plots[event.target.value] === undefined)
-        props.setIsFormDisabled(true);
+      if (props.plots[event.target.value] === undefined) props.setIsFormDisabled(true);
     } else {
       fromValueUpdated(new BigNumber(-1));
     }
@@ -45,8 +44,8 @@ export const SendPlotModule = forwardRef((props, ref) => {
     if (newToAddress.length === 42) {
       setWalletText(
         `${newToAddress.substring(0, 6)}...${newToAddress.substring(
-          newToAddress.length - 4,
-        )}`,
+          newToAddress.length - 4
+        )}`
       );
       setSnappedToAddress(true);
       props.setIsValidAddress(await isAddress(newToAddress));
@@ -57,7 +56,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
     props.setToAddress(newToAddress);
   }
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     if (event.target.value) {
       toAddressUpdated(event.target.value);
     } else {
@@ -105,7 +104,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
       <>
         <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
           <span>
-            WARNING: Beanstalk doesn't currently support a market for buying and
+            WARNING: Beanstalk doesn&apos;t currently support a market for buying and
             selling Plots. Use at your own risk
           </span>
         </Box>

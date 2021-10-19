@@ -10,7 +10,7 @@ export enum SwapMode {
   BeanEthereum,
   Ethereum,
   LP,
-  BeanEthereumSwap,
+  BeanEthereumSwap
 }
 
 export const buyBeans = async (amountIn, amountOutMin, callback) => {
@@ -20,11 +20,11 @@ export const buyBeans = async (amountIn, amountOutMin, callback) => {
       [WETH.addr, BEAN.addr],
       account,
       createDeadline(),
-      { value: amountIn },
+      { value: amountIn }
     )
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -37,11 +37,11 @@ export const sellBeans = async (amountIn, amountOutMin, callback) => {
       amountOutMin,
       [BEAN.addr, WETH.addr],
       account,
-      createDeadline(),
+      createDeadline()
     )
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -56,8 +56,7 @@ export const poolForLP = (amount, reserve1, reserve2, totalLP) => {
     reserve1.isLessThanOrEqualTo(0) ||
     reserve2.isLessThanOrEqualTo(0) ||
     totalLP.isLessThanOrEqualTo(0)
-  )
-    return [new BigNumber(0), new BigNumber(0)];
+  ) return [new BigNumber(0), new BigNumber(0)];
   return [
     tokenForLP(amount, reserve1, totalLP),
     tokenForLP(amount, reserve2, totalLP),
@@ -70,20 +69,19 @@ export const lpForToken = (amount, reserve, totalLP) =>
 export const lpForPool = (amount1, reserve1, amount2, reserve2, totalLP) =>
   MinBN(
     lpForToken(amount1, reserve1, totalLP),
-    lpForToken(amount2, reserve2, totalLP),
+    lpForToken(amount2, reserve2, totalLP)
   );
 
 export const getToAmount = (
   amountIn: BigNumber,
   reserveIn: BigNumber,
-  reserveOut: BigNumber,
+  reserveOut: BigNumber
 ) => {
   if (
     amountIn.isLessThanOrEqualTo(0) ||
     reserveIn.isLessThanOrEqualTo(0) ||
     reserveOut.isLessThanOrEqualTo(0)
-  )
-    return new BigNumber(0);
+  ) return new BigNumber(0);
   const amountInWithFee = amountIn.multipliedBy(997);
   const numerator = amountInWithFee.multipliedBy(reserveOut);
   const denominator = reserveIn.multipliedBy(1000).plus(amountInWithFee);
@@ -94,24 +92,23 @@ export const getFromAmount = (
   amountOut: BigNumber,
   reserveIn: BigNumber,
   reserveOut: BigNumber,
-  decimals = 6,
+  decimals = 6
 ) => {
   if (
     amountOut.isLessThanOrEqualTo(0) ||
     reserveIn.isLessThanOrEqualTo(0) ||
     reserveOut.isLessThanOrEqualTo(0)
-  )
-    return new BigNumber(0);
+  ) return new BigNumber(0);
   if (amountOut.isGreaterThan(reserveOut)) return reserveOut;
   const numerator = reserveIn.multipliedBy(amountOut).multipliedBy(1000);
   const denominator = reserveOut.minus(amountOut).multipliedBy(997);
-  return numerator.dividedBy(denominator).plus(Math.pow(10, 0 - decimals));
+  return numerator.dividedBy(denominator).plus(10 ** 0 - decimals);
 };
 
 export const getBuyAndAddLPAmount = (
   eth: BigNumber,
   ethReserve: BigNumber,
-  beanReserve: BigNumber,
+  beanReserve: BigNumber
 ) => {
   const zeroBN = new BigNumber(0);
   const fee = new BigNumber(0.997);

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 import { MIN_BALANCE } from '../../constants';
@@ -24,7 +25,7 @@ export default function EthInputField(props) {
     ? balance.minus(MIN_BALANCE)
     : new BigNumber(0);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     if (event.target.value === undefined || event.target.value === '') {
       props.handleChange(new BigNumber(-1));
     } else {
@@ -39,7 +40,7 @@ export default function EthInputField(props) {
   }for ${props
     .updateExpectedPrice(
       props.sellEth !== undefined ? props.sellEth : props.value,
-      props.buyBeans,
+      props.buyBeans
     )
     .toFixed(2)} Each`;
 
@@ -64,7 +65,7 @@ EthInputField.defaultProps = {
   buyBeans: new BigNumber(0),
   claim: false,
   claimableBalance: new BigNumber(0),
-  handleChange: (value: BigNumber) => {},
-  updateExpectedPrice: (a, b) => {},
+  handleChange: () => {},
+  updateExpectedPrice: () => {},
   value: new BigNumber(-1),
 };

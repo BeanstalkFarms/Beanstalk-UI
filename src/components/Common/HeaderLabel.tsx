@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { QuestionModule } from './index';
@@ -5,7 +6,7 @@ import { chainId } from '../../util';
 
 export default function HeaderLabel(props) {
   const backgroundColor = chainId === 1 ? '#627264' : '#7A2343';
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     container: {
       backgroundColor: backgroundColor,
       borderRadius: '15px',

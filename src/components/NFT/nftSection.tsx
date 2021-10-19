@@ -35,13 +35,13 @@ export default function NftSection(props) {
         rowsPerPage={10}
         style={{ width: 'auto', maxWidth: '450px' }}
         title="Top 10 Sows"
-      />,
+      />
     );
   } else {
     sectionsInfo.push(
       <Box style={{ width: 'auto', maxWidth: '450px', margin: '20px 0' }}>
         There are no Sows this Season yet.
-      </Box>,
+      </Box>
     );
   }
 
@@ -59,7 +59,7 @@ export default function NftSection(props) {
         rowsPerPage={10}
         style={{ width: 'auto', maxWidth: '450px' }}
         title="All BeaNFTs"
-      />,
+      />
     );
   }
 
@@ -78,11 +78,11 @@ export default function NftSection(props) {
         rowsPerPage={10}
         style={{ width: 'auto', maxWidth: '450px' }}
         title="Your BeaNFTs"
-      />,
+      />
     );
     sectionTitlesInfo.push('YOURS');
     sectionTitlesDescription.push(
-      'This tab displays all of your sow transactions that have yielded a BeaNFT. This includes both minted and unminted BeaNFTs.',
+      'This tab displays all of your sow transactions that have yielded a BeaNFT. This includes both minted and unminted BeaNFTs.'
     );
   }
 

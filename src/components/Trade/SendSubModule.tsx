@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js';
 import React, { useState } from 'react';
+import BigNumber from 'bignumber.js';
 import { BEAN } from '../../constants';
 import { isAddress, MinBN, TrimBN } from '../../util';
 import { AddressInputField, CryptoAsset, TokenInputField } from '../Common';
@@ -8,11 +8,12 @@ export default function SendSubModule(props) {
   const [snappedToAddress, setSnappedToAddress] = useState(false);
   const [walletText, setWalletText] = useState('');
 
-  function fromValueUpdated(newFromNumber) {
+  const fromValueUpdated = (newFromNumber) => {
     const fromNumber = MinBN(newFromNumber, props.maxFromBeanVal);
     props.setFromBeanValue(TrimBN(fromNumber, BEAN.decimals));
-  }
-  const handleFromChange = event => {
+  };
+
+  const handleFromChange = (event) => {
     if (event.target.value) {
       fromValueUpdated(new BigNumber(event.target.value));
     } else {
@@ -32,8 +33,8 @@ export default function SendSubModule(props) {
     if (newToAddress.length === 42) {
       setWalletText(
         `${newToAddress.substring(0, 6)}...${newToAddress.substring(
-          newToAddress.length - 4,
-        )}`,
+          newToAddress.length - 4
+        )}`
       );
       setSnappedToAddress(true);
       props.setIsValidAddress(await isAddress(newToAddress));
@@ -43,7 +44,7 @@ export default function SendSubModule(props) {
     props.setToAddress(newToAddress);
   }
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     if (event.target.value) {
       toAddressUpdated(event.target.value);
     } else {

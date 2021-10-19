@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Hidden, Box } from '@material-ui/core';
 import { BEAN } from '../../constants';
 import { displayBN, displayFullBN, TokenLabel } from '../../util';
@@ -211,7 +211,7 @@ export default function BalanceModule(props) {
                 lpActive < 0
                   ? `${displayFullBN(
                       props.beanLPTotal[0],
-                      BEAN.decimals,
+                      BEAN.decimals
                     )} Beans/${displayFullBN(props.beanLPTotal[1])} ETH`
                   : ''
               }
@@ -224,10 +224,10 @@ export default function BalanceModule(props) {
                   setActive={setLPActive}
                   silo={props.lpSiloBalance}
                   title={`${TokenLabel(CryptoAsset.Bean)}/${TokenLabel(
-                    CryptoAsset.Ethereum,
+                    CryptoAsset.Ethereum
                   )}`}
                   total={`${displayBN(props.beanLPTotal[0])}/${displayBN(
-                    props.beanLPTotal[1],
+                    props.beanLPTotal[1]
                   )}`}
                   transit={props.lpTransitBalance}
                 />

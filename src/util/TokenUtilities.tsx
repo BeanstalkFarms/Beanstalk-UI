@@ -23,29 +23,29 @@ const MAX_UINT256 =
 export enum CryptoAsset {
   Bean = 0,
   Ethereum,
-  LP,
+  LP
 }
 export enum SiloAsset {
   Stalk = 3,
   Seed,
   Bean,
-  LP,
+  LP
 }
 export enum TransitAsset {
   Bean = 7,
-  LP,
+  LP
 }
 export enum FarmAsset {
-  Pods = 9,
+  Pods = 9
 }
 export enum ClaimableAsset {
   Bean = 10,
   LP,
   Ethereum,
-  Stalk,
+  Stalk
 }
 export enum UniswapAsset {
-  Bean = 14,
+  Bean = 14
 }
 export type Token =
   | CryptoAsset
@@ -58,34 +58,16 @@ export type Token =
 export const transferBeans = async (
   to: string,
   amount: BigNumber,
-  callback,
+  callback
 ) => {
   tokenContract(BEAN)
     .transfer(to, amount)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
-};
-
-export const approveUniswapBean = async callback => {
-  approveToken(BEAN, account, UNISWAP_V2_ROUTER, MAX_UINT256, callback);
-};
-
-export const approveBeanstalkBean = async callback => {
-  approveToken(BEAN, account, BEANSTALK.addr, MAX_UINT256, callback);
-};
-
-export const approveBeanstalkLP = async callback => {
-  approveToken(
-    UNI_V2_ETH_BEAN_LP,
-    account,
-    BEANSTALK.addr,
-    MAX_UINT256,
-    callback,
-  );
 };
 
 export const approveToken = async (
@@ -93,16 +75,34 @@ export const approveToken = async (
   address: String,
   spender: String,
   amount: String,
-  callback: (number) => void,
+  callback: (number) => void
 ) => {
   tokenContract(token)
     .approve(spender, amount)
-    .then(response => {
+    .then((response) => {
       callback(1);
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         callback(2);
       });
     });
+};
+
+export const approveUniswapBean = async (callback) => {
+  approveToken(BEAN, account, UNISWAP_V2_ROUTER, MAX_UINT256, callback);
+};
+
+export const approveBeanstalkBean = async (callback) => {
+  approveToken(BEAN, account, BEANSTALK.addr, MAX_UINT256, callback);
+};
+
+export const approveBeanstalkLP = async (callback) => {
+  approveToken(
+    UNI_V2_ETH_BEAN_LP,
+    account,
+    BEANSTALK.addr,
+    MAX_UINT256,
+    callback
+  );
 };
 
 export function TokenLabel(tokenType: Token): string {
@@ -137,6 +137,8 @@ export function TokenLabel(tokenType: Token): string {
       return 'Grown Stalk';
     case UniswapAsset.Bean:
       return 'Pooled Beans';
+    default:
+      return '';
   }
 }
 
@@ -168,6 +170,8 @@ export function TokenImage(tokenType: Token): string {
 
     case FarmAsset.Pods:
       return PodLogo;
+    default:
+      return '';
   }
 }
 
@@ -190,7 +194,7 @@ export function TrimBN(bn: BigNumber, decimals: number): BigNumber {
   const decimalsToTrim =
     decimalsFound < decimals ? 0 : decimalsFound - decimals;
   return new BigNumber(
-    numberString.substr(0, numberString.length - decimalsToTrim),
+    numberString.substr(0, numberString.length - decimalsToTrim)
   );
 }
 
@@ -200,14 +204,10 @@ export function displayBN(bn: BigNumber) {
   if (bn.isLessThanOrEqualTo(1e-8)) return '<.00000001';
   if (bn.isLessThanOrEqualTo(1e-3)) return TrimBN(bn, 8).toFixed();
 
-  if (bn.isGreaterThanOrEqualTo(1e12))
-    return `${TrimBN(bn.dividedBy(1e12), 4)}T`; /* Trillions */
-  if (bn.isGreaterThanOrEqualTo(1e9))
-    return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
-  if (bn.isGreaterThanOrEqualTo(1e6))
-    return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */
-  if (bn.isGreaterThanOrEqualTo(1e3))
-    return `${TrimBN(bn.dividedBy(1e3), 2)}K`; /* Thousands */
+  if (bn.isGreaterThanOrEqualTo(1e12)) return `${TrimBN(bn.dividedBy(1e12), 4)}T`; /* Trillions */
+  if (bn.isGreaterThanOrEqualTo(1e9)) return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
+  if (bn.isGreaterThanOrEqualTo(1e6)) return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */
+  if (bn.isGreaterThanOrEqualTo(1e3)) return `${TrimBN(bn.dividedBy(1e3), 2)}K`; /* Thousands */
 
   const decimals = bn.isGreaterThan(10) ? 2 : bn.isGreaterThan(1) ? 3 : 4;
   return TrimBN(bn, decimals).toFixed();
@@ -221,7 +221,7 @@ export function displayFullBN(bn: BigNumber, maxDecimals: number = 18) {
 
 export function MinBNs(array): BigNumber {
   return array.reduce((prev, curr) =>
-    prev.isLessThanOrEqualTo(curr) ? prev : curr,
+    (prev.isLessThanOrEqualTo(curr) ? prev : curr)
   );
 }
 
@@ -241,7 +241,7 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
 
 export function toBaseUnitBN(
   rawAmt: string | number | BigNumber,
-  decimals: number,
+  decimals: number
 ): BigNumber {
   const raw = new BigNumber(rawAmt);
   const base = new BigNumber(10);
@@ -251,7 +251,7 @@ export function toBaseUnitBN(
 
 export function toStringBaseUnitBN(
   rawAmt: string | number | BigNumber,
-  decimals: number,
+  decimals: number
 ): BigNumber {
   const raw = new BigNumber(rawAmt);
   const base = new BigNumber(10);
@@ -261,7 +261,7 @@ export function toStringBaseUnitBN(
 
 export function toTokenUnitsBN(
   tokenAmt: string | number | BigNumber,
-  decimals: number,
+  decimals: number
 ): BigNumber {
   const amt = new BigNumber(tokenAmt);
   const digits = new BigNumber(10).pow(new BigNumber(decimals));

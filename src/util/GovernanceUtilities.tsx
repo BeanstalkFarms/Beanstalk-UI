@@ -3,9 +3,9 @@ import { beanstalkContract, txCallback } from './index';
 export const vote = async (bip, callback) => {
   beanstalkContract()
     .vote(bip)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -14,9 +14,9 @@ export const vote = async (bip, callback) => {
 export const unvote = async (bip, callback) => {
   beanstalkContract()
     .unvote(bip)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });

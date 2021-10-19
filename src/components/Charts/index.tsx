@@ -37,6 +37,42 @@ export default function Charts(props) {
   const isMobile: boolean = width <= 550;
   const marginTop = props.marginTop == null ? '-80px' : props.marginTop;
 
+  async function loadUniswapCharts() {
+    const [dayData, hourData, beanDayData, beanHourData] = await Promise.all([
+      dayUniswapQuery(),
+      hourUniswapQuery(),
+      dayBeanQuery(),
+      hourBeanQuery(),
+    ]);
+    const price = [
+      beanHourData.map((d) => ({ x: d.x, y: d.price })),
+      beanDayData.map((d) => ({ x: d.x, y: d.price })),
+    ];
+    const volume = [
+      hourData.map((d) => ({ x: d.x, y: d.volume })),
+      dayData.map((d) => ({ x: d.x, y: d.volume })),
+    ];
+    const liquidity = [
+      hourData.map((d) => ({ x: d.x, y: d.liquidity })),
+      dayData.map((d) => ({ x: d.x, y: d.liquidity })),
+    ];
+    const supply = [
+      beanHourData.map((d) => ({ x: d.x, y: d.totalSupply })),
+      beanDayData.map((d) => ({ x: d.x, y: d.totalSupply })),
+    ];
+    const marketCap = [
+      beanHourData.map((d) => ({ x: d.x, y: d.totalSupplyUSD })),
+      beanDayData.map((d) => ({ x: d.x, y: d.totalSupplyUSD })),
+    ];
+    setChartData({
+      price: price,
+      volume: volume,
+      liquidity: liquidity,
+      marketCap: marketCap,
+      supply: supply,
+    });
+  }
+
   useEffect(() => {
     loadUniswapCharts();
     window.addEventListener('resize', handleWindowSizeChange);
@@ -122,40 +158,4 @@ export default function Charts(props) {
       </BaseModule>
     </ContentSection>
   );
-
-  async function loadUniswapCharts() {
-    const [dayData, hourData, beanDayData, beanHourData] = await Promise.all([
-      dayUniswapQuery(),
-      hourUniswapQuery(),
-      dayBeanQuery(),
-      hourBeanQuery(),
-    ]);
-    const price = [
-      beanHourData.map(d => ({ x: d.x, y: d.price })),
-      beanDayData.map(d => ({ x: d.x, y: d.price })),
-    ];
-    const volume = [
-      hourData.map(d => ({ x: d.x, y: d.volume })),
-      dayData.map(d => ({ x: d.x, y: d.volume })),
-    ];
-    const liquidity = [
-      hourData.map(d => ({ x: d.x, y: d.liquidity })),
-      dayData.map(d => ({ x: d.x, y: d.liquidity })),
-    ];
-    const supply = [
-      beanHourData.map(d => ({ x: d.x, y: d.totalSupply })),
-      beanDayData.map(d => ({ x: d.x, y: d.totalSupply })),
-    ];
-    const marketCap = [
-      beanHourData.map(d => ({ x: d.x, y: d.totalSupplyUSD })),
-      beanDayData.map(d => ({ x: d.x, y: d.totalSupplyUSD })),
-    ];
-    setChartData({
-      price: price,
-      volume: volume,
-      liquidity: liquidity,
-      marketCap: marketCap,
-      supply: supply,
-    });
-  }
 }

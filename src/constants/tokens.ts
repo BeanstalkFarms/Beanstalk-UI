@@ -15,7 +15,7 @@ export const BEANSTALK = {
   decimals: 6,
 };
 
-export let UNI_V2_ETH_BEAN_LP = {
+export const UNI_V2_ETH_BEAN_LP = {
   addr: '0x87898263B6C5BABe34b4ec53F22d98430b91e371', // Mainnet
   // addr: '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db', // Ropsten
   decimals: 18,
@@ -48,13 +48,13 @@ export const STALK = {
   decimals: 10,
 };
 
-export let WETH = {
+export const WETH = {
   addr: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // Mainnet
   // addr: '0xc778417E063141139Fce010982780140Aa0cD5Ab', // Ropsten
   decimals: 18,
 };
 
-export let UNI_V2_USDC_ETH_LP = {
+export const UNI_V2_USDC_ETH_LP = {
   addr: '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc', // Mainnet
   // addr: '0x681A4164703351d6AceBA9D7038b573b444d3353', // Ropsten
   decimals: 18,

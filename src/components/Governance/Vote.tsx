@@ -20,7 +20,7 @@ import { QuestionModule } from '../Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 export default function Vote(props) {
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     inputModule: {
       backgroundColor: '#F5FAFF',
       borderRadius: '25px',
@@ -85,7 +85,7 @@ export default function Vote(props) {
     const percentForNewStalk = percentForStalk(newStalk, props.totalRoots);
     const percentForPrevStalk = percentForStalk(
       props.stalkBips[bip],
-      props.totalRoots,
+      props.totalRoots
     );
     row.push(props.votedBips[bip]);
     row.push(
@@ -95,7 +95,7 @@ export default function Vote(props) {
           value={Math.max(percentForNewStalk, percentForPrevStalk)}
           voting={!props.votedBips[bip]}
         />
-      </Box>,
+      </Box>
     );
     dp.push(row);
     return dp;
@@ -160,7 +160,7 @@ export default function Vote(props) {
             <TableBody>
               {displayBips.map((bip, index) => (
                 <TableRow
-                  key={index}
+                  key={`table_row_${index}`} // eslint-disable-line
                   className={selected === index ? classes.rowSelected : null}
                   onClick={() => setSelected(index)}
                   style={{ cursor: 'pointer' }}

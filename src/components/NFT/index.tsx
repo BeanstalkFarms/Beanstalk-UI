@@ -48,7 +48,7 @@ export default function NFTs(props) {
       const [ownedIds, tradedIds] = await getMintedNFTs();
       const un = [];
       const cn = [];
-      for (let i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i += 1) {
         if (ownedIds.includes(data[i].id)) {
           if (!tradedIds.includes(data[i].id)) {
             cn.push(data[i]);
@@ -62,14 +62,14 @@ export default function NFTs(props) {
       }
       setUnclaimedNFTs(un);
       setClaimedNFTs(cn);
-      listenForNFTTransfers(getNFTs);
+      listenForNFTTransfers(getNFTs); // eslint-disable-line
     }
     async function getNFTs() {
       fetch(`${NFT_LINK}?account=${(await GetWalletAddress()).toLowerCase()}`)
-        .then(response => response.json())
-        .then(data => {
-          data.forEach(d => {
-            d.id = parseInt(d._id.$numberInt);
+        .then((response) => response.json())
+        .then((data) => {
+          data.forEach((d) => {
+            d.id = parseInt(d._id.$numberInt, 10);
             delete d._id;
           });
           checkMints(data);
@@ -87,10 +87,12 @@ export default function NFTs(props) {
     if (nfts[0].id !== GENESIS_NFT.id) {
       nfts.unshift(GENESIS_NFT);
     }
-  } catch {}
+  } catch (error) {
+    console.error('e:', error);
+  }
 
-  let userNFTs = unclaimedNFTs.concat(claimedNFTs).map(u => u.id);
-  userNFTs = nfts.filter(n => userNFTs.includes(n.id));
+  let userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u.id);
+  userNFTs = nfts.filter((n) => userNFTs.includes(n.id));
 
   return (
     <ContentSection

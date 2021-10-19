@@ -6,27 +6,27 @@ import {
   txCallback,
 } from './index';
 
-export const mintNFT = async (account, nftId, ipfsHash, signature) => {
+export const mintNFT = async (_account, nftId, ipfsHash, signature) => {
   beaNFTContract()
-    .mint(account, nftId, ipfsHash, signature)
-    .then(response => {
-      response.wait().then(receipt => {
+    .mint(_account, nftId, ipfsHash, signature)
+    .then((response) => {
+      response.wait().then(() => {
         txCallback();
       });
     });
 };
 
-export const mintAllNFTs = async (account, nftId, ipfsHash, signature) => {
+export const mintAllNFTs = async (_account, nftId, ipfsHash, signature) => {
   beaNFTContract()
-    .batchMint(account, nftId, ipfsHash, signature)
-    .then(response => {
-      response.wait().then(receipt => {
+    .batchMint(_account, nftId, ipfsHash, signature)
+    .then((response) => {
+      response.wait().then(() => {
         txCallback();
       });
     });
 };
 
-export const isMinted = async nftId => {
+export const isMinted = async (nftId) => {
   try {
     await beaNFTContractReadOnly().methods.ownerOf(new BigNumber(nftId)).call();
     return true;
@@ -45,20 +45,20 @@ export const getMintedNFTs = async () => {
     filter: { from: account },
     fromBlock: 0,
   });
-  const ownedIds = toTransfers.map(t => parseInt(t.returnValues.tokenId));
-  const tradedIds = fromTransfers.map(t => parseInt(t.returnValues.tokenId));
+  const ownedIds = toTransfers.map((t) => parseInt(t.returnValues.tokenId, 10));
+  const tradedIds = fromTransfers.map((t) => parseInt(t.returnValues.tokenId, 10));
   return [ownedIds, tradedIds];
 };
 
-export const listenForNFTTransfers = async callback => {
+export const listenForNFTTransfers = async (callback) => {
   const beaNFT = beaNFTContractReadOnly();
   beaNFT.events.allEvents(
     {
       fromBlack: 'latest',
       filter: { to: account },
     },
-    (error, event) => {
+    () => {
       callback();
-    },
+    }
   );
 };

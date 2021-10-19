@@ -6,7 +6,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { makeStyles } from '@material-ui/styles';
 
 export default function AddressInputField(props) {
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     inputText: {
       fontFamily: 'Lucida Console',
       fontSize: 'calc(15px + 1vmin)',
@@ -60,7 +60,7 @@ export default function AddressInputField(props) {
         disabled={props.handleChange === undefined}
         value={props.address}
         onChange={props.handleChange}
-        onKeyDown={e => false && e.preventDefault()}
+        onKeyDown={(e) => false && e.preventDefault()}
         fullWidth
         InputProps={{
           inputProps: {

@@ -14,13 +14,13 @@ const IGNORED_EVENTS = new Set([
   'Transfer',
 ]);
 
-const benchmarkStart = operation => {
+const benchmarkStart = (operation) => {
   console.log(`LOADING ${operation}`);
   return Date.now();
 };
 const benchmarkEnd = (operation, startTime) => {
   console.log(
-    `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`,
+    `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
   );
 };
 
@@ -32,8 +32,7 @@ const newEventHashes = new Set();
 export async function initializeEventListener(
   callback,
   updatePrices,
-  updateTotals,
-  setContractEvents,
+  updateTotals
 ) {
   const startTime = benchmarkStart('EVENT LISTENER');
 
@@ -107,6 +106,8 @@ export async function initializeEventListener(
       fromBlock: 0,
     }),
   ]);
+
+  // eslint-disable-next-line
   let allEvents = [].concat.apply([], accountEvents);
 
   benchmarkEnd('EVENT LISTENER (BEANSTALK)', startTime);
@@ -129,7 +130,7 @@ export async function initializeEventListener(
       lastPriceRefresh = new Date().getTime();
     }
   });
-  usdcPair.events.Swap({ fromBlack: 'latest' }, (error, event) => {
+  usdcPair.events.Swap({ fromBlack: 'latest' }, () => {
     if (new Date().getTime() - lastPriceRefresh > 5000) {
       console.log('UPDATING PRICES!');
       updatePrices();
@@ -173,7 +174,7 @@ export function parseWithdrawals(withdrawals, index: BigNumber) {
   let transit = new BigNumber(0);
   const transitWithdrawals = {};
   const receivableWithdrawals = {};
-  Object.keys(withdrawals).forEach(s => {
+  Object.keys(withdrawals).forEach((s) => {
     if (new BigNumber(s).isLessThanOrEqualTo(index)) {
       receivable = receivable.plus(withdrawals[s]);
       receivableWithdrawals[s] = withdrawals[s];
@@ -189,28 +190,28 @@ export function addRewardedCrates(
   crates,
   season,
   rewardedBeans,
-  rewardedStalk,
+  rewardedStalk
 ) {
   if (rewardedBeans.isEqualTo(0)) return crates;
   const rewardedSeasons = rewardedStalk
     .dividedBy(rewardedBeans.multipliedBy(0.0002))
     .integerValue(BigNumber.ROUND_DOWN);
   rewardedStalk = rewardedStalk.minus(
-    rewardedSeasons.multipliedBy(rewardedBeans).multipliedBy(0.0002),
+    rewardedSeasons.multipliedBy(rewardedBeans).multipliedBy(0.0002)
   );
   BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
   const previousSeasonBeans = new BigNumber(
-    rewardedStalk.dividedBy(0.0002).toFixed(6),
+    rewardedStalk.dividedBy(0.0002).toFixed(6)
   );
   const seasonBeans = new BigNumber(
-    rewardedBeans.minus(previousSeasonBeans).toFixed(6),
+    rewardedBeans.minus(previousSeasonBeans).toFixed(6)
   );
   BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_HALF_UP });
-  const ds = parseInt(season.minus(rewardedSeasons));
+  const ds = parseInt(season.minus(rewardedSeasons), 10);
   crates[ds] =
     crates[ds] === undefined ? seasonBeans : crates[ds].plus(seasonBeans);
   if (previousSeasonBeans.isGreaterThan(0)) {
-    const pds = parseInt(season.minus(rewardedSeasons).minus(1));
+    const pds = parseInt(season.minus(rewardedSeasons).minus(1), 10);
     crates[pds] =
       crates[pds] === undefined
         ? previousSeasonBeans
@@ -224,7 +225,7 @@ export function parsePlots(plots, index: BigNumber) {
   let harvestablePods = new BigNumber(0);
   const unharvestablePlots = {};
   const harvestablePlots = {};
-  Object.keys(plots).forEach(p => {
+  Object.keys(plots).forEach((p) => {
     if (plots[p].plus(p).isLessThanOrEqualTo(index)) {
       harvestablePods = harvestablePods.plus(plots[p]);
       harvestablePlots[p] = plots[p];
@@ -233,7 +234,7 @@ export function parsePlots(plots, index: BigNumber) {
       pods = pods.plus(plots[p].minus(index.minus(p)));
       harvestablePlots[p] = index.minus(p);
       unharvestablePlots[index.minus(p).plus(p)] = plots[p].minus(
-        index.minus(p),
+        index.minus(p)
       );
     } else {
       pods = pods.plus(plots[p]);

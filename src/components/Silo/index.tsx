@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, Box } from '@material-ui/core';
 import { MEDIUM_INTEREST_LINK } from '../../constants';
 import { ContentSection } from '../Common';

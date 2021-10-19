@@ -41,7 +41,7 @@ export default function CircularProgressWithLabel(props) {
         thickness={0.5}
         variant="determinate"
         value={100}
-      />,
+      />
     );
     circles.push(
       <CircularProgress
@@ -49,7 +49,7 @@ export default function CircularProgressWithLabel(props) {
         style={{ position: 'absolute', color: color, transform: rotation }}
         value={displayLowNumber}
         variant="determinate"
-      />,
+      />
     );
     circles.push(
       <CircularProgress
@@ -58,7 +58,7 @@ export default function CircularProgressWithLabel(props) {
         thickness={7}
         value={(7 * 100) / 360}
         variant="determinate"
-      />,
+      />
     );
     circles.push(
       <CircularProgress
@@ -67,7 +67,7 @@ export default function CircularProgressWithLabel(props) {
         thickness={7}
         value={(7 * 100) / 360}
         variant="determinate"
-      />,
+      />
     );
   }
 

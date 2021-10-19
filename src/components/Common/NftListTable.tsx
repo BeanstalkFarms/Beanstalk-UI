@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js';
 import React from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Link,
   Table,
@@ -16,17 +16,9 @@ import {
   BASE_ETHERSCAN_ADDR_LINK,
   BASE_ETHERSCAN_TX_LINK,
   DIAMONDS_LINK,
-} from '../../constants';
-import { displayBN, displayFullBN } from '../../util';
+} from 'constants/index';
+import { displayBN, displayFullBN } from 'util';
 import { FormatTooltip } from '.';
-
-export default function NftListTable(props) {
-  return (
-    <Box style={props.style}>
-      <BasicTable {...props} />
-    </Box>
-  );
-}
 
 const useStyles = makeStyles({
   table: {
@@ -52,7 +44,7 @@ const useStyles = makeStyles({
 //   return `${displayBN(balance[0])} ${TokenLabel(CryptoAsset.Bean)}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`
 // }
 
-const BasicTable = props => {
+const BasicTable = (props) => {
   const classes = useStyles();
 
   const { rowsPerPage } = props;
@@ -66,7 +58,7 @@ const BasicTable = props => {
         <Table className={classes.table} size="small">
           <TableHead>
             <TableRow key="NFT List">
-              {titles.map(t => (
+              {titles.map((t) => (
                 <TableCell
                   key={t}
                   align="center"
@@ -81,9 +73,9 @@ const BasicTable = props => {
             {Object.keys(props.crates)
               .slice(
                 props.page * rowsPerPage,
-                props.page * rowsPerPage + rowsPerPage,
+                props.page * rowsPerPage + rowsPerPage
               )
-              .map(index => (
+              .map((index) => ( // eslint-disable-line
                 <TableRow key={index}>
                   {props.indexType === 'time' ? (
                     <TableCell
@@ -110,7 +102,7 @@ const BasicTable = props => {
                       <FormatTooltip
                         placement="right"
                         title={`${displayFullBN(
-                          new BigNumber(props.crates[index].beans),
+                          new BigNumber(props.crates[index].beans)
                         )} Beans`}
                       >
                         <span>
@@ -130,9 +122,9 @@ const BasicTable = props => {
                         <span>
                           {`${props.crates[index].txn.substring(
                             0,
-                            6,
+                            6
                           )}...${props.crates[index].txn.substring(
-                            props.crates[index].txn.length - 4,
+                            props.crates[index].txn.length - 4
                           )}`}
                         </span>
                       </Link>
@@ -155,9 +147,9 @@ const BasicTable = props => {
                         <span>
                           {`${props.crates[index].account.substring(
                             0,
-                            6,
+                            6
                           )}...${props.crates[index].account.substring(
-                            props.crates[index].account.length - 4,
+                            props.crates[index].account.length - 4
                           )}`}
                         </span>
                       </Link>
@@ -177,9 +169,9 @@ const BasicTable = props => {
           page={props.page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[]}
-          labelDisplayedRows={({ from, to, count }) =>
+          labelDisplayedRows={({ from, count: c }) =>
             `${Math.ceil(from / rowsPerPage)}-${
-              count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+              c !== -1 ? Math.ceil(c / rowsPerPage) : 0
             }`
           }
         />
@@ -187,6 +179,14 @@ const BasicTable = props => {
     </Box>
   );
 };
+
+export default function NftListTable(props) {
+  return (
+    <Box style={props.style}>
+      <BasicTable {...props} />
+    </Box>
+  );
+}
 
 NftListTable.defaultProps = {
   crates: {},

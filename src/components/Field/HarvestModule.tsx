@@ -53,12 +53,12 @@ export const HarvestModule = forwardRef((props, ref) => {
       if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
 
       harvest(
-        Object.keys(props.harvestablePlots).map(key =>
-          toStringBaseUnitBN(new BigNumber(key), BEAN.decimals),
+        Object.keys(props.harvestablePlots).map((key) =>
+          toStringBaseUnitBN(new BigNumber(key), BEAN.decimals)
         ),
         () => {
-          fromValueUpdated(new BigNumber(-1));
-        },
+          console.log('success');
+        }
       );
     },
   }));

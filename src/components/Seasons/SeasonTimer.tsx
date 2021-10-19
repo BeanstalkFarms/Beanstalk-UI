@@ -1,8 +1,9 @@
+import React from 'react';
 import { HeaderLabelWithTimer } from '../Common';
 import { timeToString } from '../../util';
 
 export default function SeasonTimer(props) {
-  function display(time) {
+  const display = (time) => {
     let timeDifference;
     let title;
     let description;
@@ -19,7 +20,7 @@ export default function SeasonTimer(props) {
     }
 
     return [title, timeToString(timeDifference), description];
-  }
+  };
 
   return <HeaderLabelWithTimer display={display} time={props.time} />;
 }

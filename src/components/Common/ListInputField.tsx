@@ -1,3 +1,4 @@
+import React from 'react';
 import BigNumber from 'bignumber.js';
 import {
   FormControl,
@@ -10,7 +11,7 @@ import { makeStyles } from '@material-ui/styles';
 import { displayBN } from '../../util';
 
 export default function ListInputField(props) {
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     inputText: {
       borderRadius: '25px',
       fontSize: 'calc(6px + 1.5vmin)',
@@ -76,10 +77,10 @@ export default function ListInputField(props) {
           {Object.keys(props.items).length > 0
             ? Object.keys(props.items)
                 .sort((a, b) => a - b)
-                .map(index => (
+                .map((index) => (
                   <option key={index} value={index} index={index.toString()}>
                     {`Place in Line: ${displayBN(
-                      new BigNumber(index - props.index),
+                      new BigNumber(index - props.index)
                     )}`}
                     &nbsp;{' | '}&nbsp;
                     {` Pods: ${displayBN(props.items[index])}`}

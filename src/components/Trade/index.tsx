@@ -1,3 +1,4 @@
+import React from 'react';
 import { ContentSection, Grid, HeaderLabel } from '../Common';
 import TradeModule from './TradeModule';
 import LastCrossTimer from './LastCrossTimer';

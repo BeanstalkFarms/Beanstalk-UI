@@ -38,7 +38,7 @@ export default function SettingsFormModule(props) {
 
   const [showSlippage, setShowSlippage] = useState(
     props.hasSlippage &&
-      (!props.showUnitModule || props.settings.mode !== SwapMode.Bean),
+      (!props.showUnitModule || props.settings.mode !== SwapMode.Bean)
   );
 
   const rightDrawerItems = [
@@ -48,7 +48,7 @@ export default function SettingsFormModule(props) {
         <SwitchModule
           description="Toggle to also Deposit Circulating LP Tokens."
           label="Use LP"
-          setValue={value =>
+          setValue={(value) =>
             props.setSettings({ ...props.settings, useLP: value })
           }
           value={props.settings.useLP}
@@ -61,7 +61,7 @@ export default function SettingsFormModule(props) {
         <SwitchModule
           description="Toggle to Claim and use Claimable assets in the transaction."
           label="Claim"
-          setValue={value =>
+          setValue={(value) =>
             props.setSettings({ ...props.settings, claim: value })
           }
           value={props.settings.claim}
@@ -75,9 +75,8 @@ export default function SettingsFormModule(props) {
           disabled={props.disableConvertible}
           description="Toggle to convert Deposited Beans into Deposited LP Tokens."
           label="Convert"
-          setValue={value => {
-            if (props.settings.mode !== SwapMode.BeanEthereum)
-              props.handleMode(SwapMode.BeanEthereum);
+          setValue={(value) => {
+            if (props.settings.mode !== SwapMode.BeanEthereum) props.handleMode(SwapMode.BeanEthereum);
             props.setSettings({
               ...props.settings,
               mode: SwapMode.BeanEthereum,
@@ -99,7 +98,7 @@ export default function SettingsFormModule(props) {
           description="Toggle to remove the Beans and ETH from the liquidity pool. By default this is toggled on."
           label="Remove LP"
           margin="-50px 0px 0px 20px"
-          setValue={value =>
+          setValue={(value) =>
             props.setSettings({ ...props.settings, removeLP: value })
           }
           value={props.settings.removeLP}
@@ -110,7 +109,7 @@ export default function SettingsFormModule(props) {
       visible: showSlippage && props.hasSlippage,
       component: () => (
         <SlippageModule
-          setSlippage={value =>
+          setSlippage={(value) =>
             props.setSettings({ ...props.settings, slippage: value })
           }
           slippage={props.settings.slippage}
@@ -121,7 +120,7 @@ export default function SettingsFormModule(props) {
 
   const rightDrawerVisibleItems = rightDrawerItems.reduce(
     (hasVisible, item) => hasVisible || item.visible,
-    false,
+    false
   );
 
   const rightDrawer = rightDrawerVisibleItems ? (
@@ -136,7 +135,7 @@ export default function SettingsFormModule(props) {
     <UnitSelectionModule
       beanEthereumSwap={props.showBeanEthereumSwap}
       lp={props.showLP}
-      setValue={value => {
+      setValue={(value) => {
         setShowSlippage(props.hasSlippage && value !== SwapMode.Bean);
         props.handleMode(value);
         props.setSettings({ ...props.settings, mode: value });
@@ -165,7 +164,7 @@ export default function SettingsFormModule(props) {
         onClick={() => {
           const shouldExpand = settingsStyle.display === 'none';
           setSettingsStyle(
-            shouldExpand ? { display: 'block' } : { display: 'none' },
+            shouldExpand ? { display: 'block' } : { display: 'none' }
           );
         }}
         style={{ height: '44px', width: '44px', marginTop: '-8px' }}
@@ -185,7 +184,7 @@ export default function SettingsFormModule(props) {
 }
 
 SettingsFormModule.defaultProps = {
-  handleMode: value => {},
+  handleMode: () => {},
   hasClaimable: false,
   hasConvertible: false,
   hasRemoveLP: false,

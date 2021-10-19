@@ -1,3 +1,4 @@
+import React from 'react';
 import { HeaderLabel } from './index';
 
 export default function HeaderLabelWithTimer(props) {
@@ -14,5 +15,5 @@ export default function HeaderLabelWithTimer(props) {
 }
 
 HeaderLabelWithTimer.defaultProps = {
-  display: v => ['', '', ''],
+  display: () => ['', '', ''],
 };

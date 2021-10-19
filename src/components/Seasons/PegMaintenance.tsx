@@ -81,7 +81,7 @@ function Stats(props) {
         <StatBalance
           gridWidth={gridWidth}
           style={
-            isNaN(props.four.balance) ? { fontFamily: 'Futura-Pt-Book' } : null
+            isNaN(props.four.balance) ? { fontFamily: 'Futura-Pt-Book' } : null // eslint-disable-line
           }
           {...props.four}
         />
@@ -122,14 +122,12 @@ export default function PegMaintenance(props) {
   if (deltaDemand.isGreaterThanOrEqualTo(DELTA_POD_DEMAND_UPPER_BOUND)) {
     caseId += 2;
   } else if (deltaDemand.isGreaterThanOrEqualTo(DELTA_POD_DEMAND_LOWER_BOUND)) {
-    if (props.lastSowTime.isEqualTo(MAX_UINT32) || !props.didSowBelowMin)
-      caseId += 1;
+    if (props.lastSowTime.isEqualTo(MAX_UINT32) || !props.didSowBelowMin) caseId += 1;
     else if (props.didSowFaster) caseId += 2;
   }
 
   let deltaWeather = new BigNumber(PEG_WEATHER_CASES[caseId]);
-  if (props.weather.plus(deltaWeather).isLessThanOrEqualTo(0))
-    deltaWeather = props.weather.minus(1);
+  if (props.weather.plus(deltaWeather).isLessThanOrEqualTo(0)) deltaWeather = props.weather.minus(1);
 
   const currentBeans = props.beanReserve
     .multipliedBy(props.ethReserve)
@@ -142,14 +140,11 @@ export default function PegMaintenance(props) {
 
   let newBeans = new BigNumber(0);
   let newSoil = new BigNumber(0);
-  if (currentBeans.isLessThan(targetBeans))
-    newBeans = targetBeans.minus(currentBeans);
-  else if (targetBeans.isLessThan(currentBeans))
-    newSoil = currentBeans.minus(targetBeans);
+  if (currentBeans.isLessThan(targetBeans)) newBeans = targetBeans.minus(currentBeans);
+  else if (targetBeans.isLessThan(currentBeans)) newSoil = currentBeans.minus(targetBeans);
 
   const minTotalSoil = props.totalBeans.multipliedBy(SOIL_MIN_RATIO_CAP);
-  if (props.soil.isLessThan(minTotalSoil))
-    newSoil = MaxBN(minTotalSoil.minus(props.soil), newSoil);
+  if (props.soil.isLessThan(minTotalSoil)) newSoil = MaxBN(minTotalSoil.minus(props.soil), newSoil);
   const maxTotalSoil = props.totalBeans.multipliedBy(SOIL_MAX_RATIO_CAP);
 
   if (

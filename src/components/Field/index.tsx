@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from '@material-ui/core';
 import { displayBN } from '../../util';
 import { MEDIUM_INTEREST_LINK } from '../../constants';
@@ -48,7 +49,8 @@ export default function Field(props) {
         </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
-            description="Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any number of Beans up to the Available Soil in exchange for Pods."
+            description="Soil is the number of Beans that Beanstalk is currently willing to borrow.
+            Anyone can lend any number of Beans up to the Available Soil in exchange for Pods."
             title="Available Soil"
             value={displayBN(props.soil)}
           />

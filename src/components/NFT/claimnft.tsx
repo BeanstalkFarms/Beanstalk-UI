@@ -45,11 +45,11 @@ export default function ClaimNFT(props) {
         rowsPerPage={1}
         style={{ width: 'auto', maxWidth: '450px' }}
         title="Unminted BeaNFTs"
-      />,
+      />
     );
     sectionTitlesInfo.push('UNMINTED');
     sectionTitlesDescription.push(
-      'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',
+      'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.'
     );
   }
   if (claimedNfts !== undefined && Object.keys(claimedNfts).length > 0) {
@@ -66,11 +66,11 @@ export default function ClaimNFT(props) {
         rowsPerPage={1}
         style={{ width: 'auto', maxWidth: '450px' }}
         title="Minted BeaNFTs"
-      />,
+      />
     );
     sectionTitlesInfo.push('MINTED');
     sectionTitlesDescription.push(
-      'Use this tab to view all the BeaNFTs you own but have already minted.',
+      'Use this tab to view all the BeaNFTs you own but have already minted.'
     );
   }
 
@@ -100,10 +100,10 @@ export default function ClaimNFT(props) {
       color="white"
       description={props.buttonDescription}
       handleClick={() => {
-        const accounts = nfts.map(u => u.account);
-        const ids = nfts.map(u => u.id);
-        const hashes = nfts.map(u => u.metadataIpfsHash);
-        const signatures = nfts.map(u => u.signature);
+        const accounts = nfts.map((u) => u.account);
+        const ids = nfts.map((u) => u.id);
+        const hashes = nfts.map((u) => u.metadataIpfsHash);
+        const signatures = nfts.map((u) => u.signature);
         mintAllNFTs(accounts, ids, hashes, signatures);
       }}
       margin="-13px 7px 0 0"

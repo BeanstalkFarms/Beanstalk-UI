@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Grid, Link } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import TelegramIcon from '@material-ui/icons/Telegram';

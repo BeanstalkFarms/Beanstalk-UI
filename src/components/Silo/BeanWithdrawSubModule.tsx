@@ -47,25 +47,14 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
   }
   */
 
-  function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, props.maxFromBeanVal);
-    const newFromBeanValue = TrimBN(fromNumber, BEAN.decimals);
-    setFromBeanValue(newFromBeanValue);
-    setFromStalkValue(TrimBN(getStalkRemoved(fromNumber), STALK.decimals));
-    setFromSeedsValue(
-      TrimBN(fromNumber.multipliedBy(BEAN_TO_SEEDS), SEEDS.decimals),
-    );
-    props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0));
-  }
-
-  const getStalkRemoved = beans => {
+  const getStalkRemoved = (beans) => {
     let beansRemoved = new BigNumber(0);
     let stalkRemoved = new BigNumber(0);
     const crates = [];
     const amounts = [];
     Object.keys(props.crates)
-      .sort((a, b) => parseInt(b) - parseInt(a))
-      .some(key => {
+      .sort((a, b) => parseInt(b, 10) - parseInt(a, 10))
+      .some((key) => {
         const crateBeansRemoved = beansRemoved
           .plus(props.crates[key])
           .isLessThanOrEqualTo(beans)
@@ -76,7 +65,7 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
         stalkRemoved = stalkRemoved.plus(
           crateBeansRemoved
             .multipliedBy(props.season.minus(key))
-            .multipliedBy(0.0002),
+            .multipliedBy(0.0002)
         );
         crates.push(key);
         amounts.push(toStringBaseUnitBN(crateBeansRemoved, BEAN.decimals));
@@ -86,7 +75,18 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
     return stalkRemoved;
   };
 
-  const handleFromChange = event => {
+  function fromValueUpdated(newFromNumber) {
+    const fromNumber = MinBN(newFromNumber, props.maxFromBeanVal);
+    const newFromBeanValue = TrimBN(fromNumber, BEAN.decimals);
+    setFromBeanValue(newFromBeanValue);
+    setFromStalkValue(TrimBN(getStalkRemoved(fromNumber), STALK.decimals));
+    setFromSeedsValue(
+      TrimBN(fromNumber.multipliedBy(BEAN_TO_SEEDS), SEEDS.decimals)
+    );
+    props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0));
+  }
+
+  const handleFromChange = (event) => {
     if (event.target.value) {
       fromValueUpdated(new BigNumber(event.target.value));
     } else {
@@ -192,8 +192,7 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
         fromBeanValue.isLessThanOrEqualTo(0) ||
         withdrawParams.crates.length === 0 ||
         withdrawParams.amounts.length === 0
-      )
-        return;
+      ) return;
 
       if (props.settings.claim) {
         claimAndWithdrawBeans(
@@ -202,7 +201,7 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
           props.claimable,
           () => {
             fromValueUpdated(new BigNumber(-1));
-          },
+          }
         );
       } else {
         withdrawBeans(withdrawParams.crates, withdrawParams.amounts, () => {

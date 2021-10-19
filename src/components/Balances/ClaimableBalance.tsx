@@ -1,3 +1,4 @@
+import React from 'react';
 import { claim, updateSilo } from '../../util';
 import {
   ClaimableAsset,

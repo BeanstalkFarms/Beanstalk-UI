@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Box, AppBar, Button, Link, Tab, Tabs } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 
@@ -8,7 +8,7 @@ import { FormatTooltip, QuestionModule } from './index';
 
 export default function BaseModule(props) {
   const s = props.size === 'small';
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     inputModule: {
       backgroundColor: '#F5FAFF',
       borderRadius: '25px',
@@ -84,7 +84,7 @@ export default function BaseModule(props) {
     };
   }
 
-  const allowanceCallback = transactionState => {
+  const allowanceCallback = (transactionState) => {
     switch (transactionState) {
       case 1:
         props.setAllowance(new BigNumber(-1));
@@ -96,6 +96,8 @@ export default function BaseModule(props) {
         if (props.allowance.isEqualTo(-1)) {
           props.setAllowance(0);
         }
+        break;
+      default:
         break;
     }
   };
@@ -168,10 +170,10 @@ export default function BaseModule(props) {
           To use this module, send an Approval by clicking the Approve button
           above.
           <br />
-          <Link
+          <Link // eslint-disable-line
             style={{ color: 'green' }}
             href=""
-            onClick={event => {
+            onClick={(event) => {
               event.preventDefault();
               props.resetForm();
             }}

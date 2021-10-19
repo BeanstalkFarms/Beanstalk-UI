@@ -22,14 +22,6 @@ import {
 } from '../../util';
 import { FormatTooltip, QuestionModule } from '.';
 
-export default function ListTable(props) {
-  return (
-    <Box style={props.style}>
-      <BasicTable {...props} />
-    </Box>
-  );
-}
-
 const useStyles = makeStyles({
   table: {
     minWidth: 200,
@@ -59,11 +51,11 @@ const claimableStyle = {
 
 function displayLP(balance) {
   return `${displayBN(balance[0])} ${TokenLabel(CryptoAsset.Bean)}/${displayBN(
-    balance[1],
+    balance[1]
   )} ${TokenLabel(CryptoAsset.Ethereum)}`;
 }
 
-const BasicTable = props => {
+const BasicTable = (props) => {
   const classes = useStyles();
 
   const { rowsPerPage } = props;
@@ -78,7 +70,7 @@ const BasicTable = props => {
   if (props.asset === SiloAsset.Bean || props.asset === SiloAsset.LP) {
     titles.push('Stalk');
     if (props.seedCrates === undefined) {
-      stalkCrates = Object.keys(props.crates).reduce((crates, k, index) => {
+      stalkCrates = Object.keys(props.crates).reduce((crates, k) => {
         crates[k] = props.season
           .minus(k)
           .multipliedBy(props.crates[k])
@@ -87,7 +79,7 @@ const BasicTable = props => {
         return crates;
       }, {});
     } else {
-      stalkCrates = Object.keys(props.seedCrates).reduce((crates, k, index) => {
+      stalkCrates = Object.keys(props.seedCrates).reduce((crates, k) => {
         crates[k] = props.season
           .minus(k)
           .multipliedBy(props.seedCrates[k])
@@ -114,7 +106,7 @@ const BasicTable = props => {
     if (props.asset === SiloAsset.Bean) {
       claimWord = 'Farmable';
       claimDescription = `Farmable ${TokenLabel(
-        props.asset,
+        props.asset
       )} are deposited in a specific Season the next time you interact with the Silo.`;
     }
     claimableRow = (
@@ -146,7 +138,7 @@ const BasicTable = props => {
               props.isLP
                 ? displayLP(props.poolForLPRatio(props.claimableBalance))
                 : `${displayFullBN(props.claimableBalance)} ${TokenLabel(
-                    props.asset,
+                    props.asset
                   )}`
             }
           >
@@ -162,7 +154,7 @@ const BasicTable = props => {
             <FormatTooltip
               placement="right"
               title={`${displayFullBN(props.claimableStalk)} ${TokenLabel(
-                SiloAsset.Stalk,
+                SiloAsset.Stalk
               )}`}
             >
               <span>{displayBN(props.claimableStalk)}</span>
@@ -181,7 +173,7 @@ const BasicTable = props => {
         <Table className={classes.table} size="small">
           <TableHead>
             <TableRow key={claimWord}>
-              {titles.map(t => (
+              {titles.map((t) => (
                 <TableCell
                   key={t}
                   align="center"
@@ -202,9 +194,9 @@ const BasicTable = props => {
             )
               .slice(
                 props.page * rowsPerPage,
-                props.page * rowsPerPage + rowsPerPage,
+                props.page * rowsPerPage + rowsPerPage
               )
-              .map(season => (
+              .map((season) => (
                 <TableRow key={season}>
                   <TableCell
                     align="center"
@@ -222,10 +214,10 @@ const BasicTable = props => {
                       title={
                         props.isLP
                           ? displayLP(
-                              props.poolForLPRatio(props.crates[season]),
+                              props.poolForLPRatio(props.crates[season])
                             )
                           : `${displayFullBN(
-                              props.crates[season],
+                              props.crates[season]
                             )} ${TokenLabel(props.asset)}`
                       }
                     >
@@ -237,7 +229,7 @@ const BasicTable = props => {
                       <FormatTooltip
                         placement="right"
                         title={`${displayFullBN(
-                          stalkCrates[season],
+                          stalkCrates[season]
                         )} ${TokenLabel(SiloAsset.Stalk)}`}
                       >
                         <span>{displayBN(stalkCrates[season])}</span>
@@ -249,7 +241,7 @@ const BasicTable = props => {
                       <FormatTooltip
                         placement="right"
                         title={`${displayFullBN(
-                          props.seedCrates[season],
+                          props.seedCrates[season]
                         )} ${TokenLabel(SiloAsset.Seed)}`}
                       >
                         <span>{displayBN(props.seedCrates[season])}</span>
@@ -270,7 +262,7 @@ const BasicTable = props => {
           page={props.page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[]}
-          labelDisplayedRows={({ from, to, count }) =>
+          labelDisplayedRows={({ from, count }) =>
             `${Math.ceil(from / rowsPerPage)}-${
               count !== -1 ? Math.ceil(count / rowsPerPage) : 0
             }`
@@ -280,6 +272,14 @@ const BasicTable = props => {
     </Box>
   );
 };
+
+export default function ListTable(props) {
+  return (
+    <Box style={props.style}>
+      <BasicTable {...props} />
+    </Box>
+  );
+}
 
 ListTable.defaultProps = {
   crates: {},

@@ -51,7 +51,7 @@ export default function BalanceChart(props) {
           data={data}
           height={140}
           width={140}
-          labels={({ datum }) => null}
+          labels={() => null}
           titleComponent={
             props.asset === CryptoAsset.Bean ? (
               <ChartLabel style={[{ fontSize: 20 }, { fontSize: 14 }]} />
@@ -85,7 +85,7 @@ export default function BalanceChart(props) {
                   {
                     target: 'data',
                     mutation: balance.isGreaterThan(0)
-                      ? p => {
+                      ? (p) => {
                           props.setActive(p.index);
                         }
                       : null,

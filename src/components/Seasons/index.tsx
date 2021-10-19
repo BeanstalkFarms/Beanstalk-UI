@@ -9,9 +9,9 @@ import SeasonTimer from './SeasonTimer';
 
 export default function Seasons(props) {
   const nextSeasonTime = props.start.plus(
-    props.season.plus(1).multipliedBy(props.period),
+    props.season.plus(1).multipliedBy(props.period)
   );
-  const timeUntilSunrise = deadline => parseInt(deadline) - Date.now() / 1e3;
+  const timeUntilSunrise = (deadline) => parseInt(deadline, 10) - Date.now() / 1e3;
 
   const timer = useRef();
   const [time, setTime] = useState(timeUntilSunrise(nextSeasonTime));
@@ -68,7 +68,9 @@ export default function Seasons(props) {
           style={{ maxWidth: '300px', padding: '12px' }}
         >
           <HeaderLabel
-            description="Seasons are the timekeeping mechanism of Beanstalk. Every Season is approximately 1 hour. Each Season begins when the Sunrise function is called on the Ethereum blockchain. The Sunrise function can be called by anyone at the top of each hour."
+            description="Seasons are the timekeeping mechanism of Beanstalk. Every Season is approximately 1 hour.
+            Each Season begins when the Sunrise function is called on the Ethereum blockchain.
+            The Sunrise function can be called by anyone at the top of each hour."
             title="Current Season"
             value={props.season.isNegative() ? '---' : String(props.season)}
           />

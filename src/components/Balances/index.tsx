@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 import { UNISWAP_BASE_LP } from '../../constants';
@@ -106,7 +106,7 @@ export default function Balances(props) {
         {props.rootsBalance.isEqualTo(0) ? (
           <Box style={{ width: '130%', marginLeft: '-15%' }}>
             You have not updated your Silo account since the last BIP has
-            passed. Please click 'Farm' to update your Silo.
+            passed. Please click &apos;Farm&apos; to update your Silo.
           </Box>
         ) : null}
       </Grid>

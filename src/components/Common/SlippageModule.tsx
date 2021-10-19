@@ -6,7 +6,7 @@ import { BASE_SLIPPAGE, SLIPPAGE_THRESHOLD } from '../../constants';
 import { QuestionModule } from '.';
 
 export default function SlippageModule(props) {
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     inputText: {
       textAlign: 'right',
       fontSize: '16px',
@@ -49,10 +49,10 @@ export default function SlippageModule(props) {
             : new BigNumber(1).minus(props.slippage).multipliedBy(100)
         }
         style={{ margin: '0 auto', width: '90%' }}
-        onChange={e => {
+        onChange={(e) => {
           function setSlippagePercentage(newPercentage: BigNumber) {
             props.setSlippage(
-              new BigNumber(100).minus(newPercentage).multipliedBy(0.01),
+              new BigNumber(100).minus(newPercentage).multipliedBy(0.01)
             );
           }
           if (e.target.value) {
@@ -80,8 +80,8 @@ export default function SlippageModule(props) {
             setIsFieldEmpty(true);
           }
         }}
-        onWheel={e => e.target.blur()}
-        onKeyDown={e =>
+        onWheel={(e) => e.target.blur()}
+        onKeyDown={(e) =>
           (e.key === 'e' || e.key === '+' || e.key === '-') &&
           e.preventDefault()
         }

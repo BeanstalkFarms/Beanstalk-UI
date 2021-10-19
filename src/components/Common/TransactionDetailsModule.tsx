@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function TransactionDetailsModule(props) {
   const leftTransactionStyle = {
     display: 'inline-block',
@@ -27,12 +29,12 @@ export default function TransactionDetailsModule(props) {
     r.push(
       <span key={`${i}-left`} style={leftTransactionStyle}>
         {key}
-      </span>,
+      </span>
     );
     r.push(
       <span key={`${i}-right`} style={rightTransactionStyle}>
         {props.fields[key]}
-      </span>,
+      </span>
     );
     return r;
   }, []);

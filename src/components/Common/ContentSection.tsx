@@ -1,3 +1,4 @@
+import React from 'react';
 import { Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { TitleLabel } from './index';

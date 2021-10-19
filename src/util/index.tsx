@@ -36,13 +36,15 @@ const beaNFTAbi = require('../constants/abi/BeaNFT.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 
-export const tokenContract = token =>
+export const tokenContract = (token) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
-export const tokenContractReadOnly = token =>
+
+export const tokenContractReadOnly = (token) =>
   new web3.eth.Contract(beanAbi, token.addr);
 
 export const beanstalkContract = () =>
   new ethers.Contract(BEANSTALK.addr, beanstalkAbi, web3Signer);
+
 export const beanstalkContractReadOnly = () =>
   new web3.eth.Contract(beanstalkAbi, BEANSTALK.addr);
 
@@ -51,13 +53,21 @@ export const beaNFTContract = () =>
 export const beaNFTContractReadOnly = () =>
   new web3.eth.Contract(beaNFTAbi, BEANFT.addr);
 
-export const pairContract = pair =>
+export const pairContract = (pair) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
-export const pairContractReadOnly = pair =>
+export const pairContractReadOnly = (pair) =>
   new web3.eth.Contract(uniswapPairAbi, pair.addr);
 
 export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
+
+async function initializeMetaMaskListeners() {
+  const changeHandler = () => {
+    window.location.reload();
+  };
+  ethereum.on('accountsChanged', changeHandler);
+  ethereum.on('chainChanged', changeHandler);
+}
 
 export async function initialize(): Promise<void> {
   if (!ethereum) {
@@ -83,7 +93,7 @@ export async function initialize(): Promise<void> {
           web3Signer.getChainId(),
         ]);
         account = hexAccount;
-        chainId = parseInt(chainIdentifier);
+        chainId = parseInt(chainIdentifier, 10);
         if (chainId !== 1 && chainId !== 3) {
           metamaskFailure = 3;
           return false;
@@ -103,14 +113,6 @@ export async function initialize(): Promise<void> {
   }
   await initializing;
   return true;
-}
-
-async function initializeMetaMaskListeners() {
-  const changeHandler = accounts => {
-    window.location.reload();
-  };
-  ethereum.on('accountsChanged', changeHandler);
-  ethereum.on('chainChanged', changeHandler);
 }
 
 export function initializeCallback(callback) {

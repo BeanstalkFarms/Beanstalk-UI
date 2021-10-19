@@ -41,21 +41,21 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
     const buyBeans = getToAmount(
       newFromEthNumber,
       props.ethReserve,
-      props.beanReserve,
+      props.beanReserve
     );
     setBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
     setFromEthValue(TrimBN(newFromEthNumber, ETH.decimals));
     setFromBeanValue(TrimBN(newFromNumber, BEAN.decimals));
     const depositedBeans = MaxBN(buyBeans, new BigNumber(0)).plus(
-      MaxBN(newFromNumber, new BigNumber(0)),
+      MaxBN(newFromNumber, new BigNumber(0))
     );
     const newToStalkValue = TrimBN(
       depositedBeans.multipliedBy(props.beanToStalk),
-      STALK.decimals,
+      STALK.decimals
     );
     setToStalkValue(newToStalkValue);
     setToSeedsValue(
-      TrimBN(depositedBeans.multipliedBy(BEAN_TO_SEEDS), SEEDS.decimals),
+      TrimBN(depositedBeans.multipliedBy(BEAN_TO_SEEDS), SEEDS.decimals)
     );
     props.setIsFormDisabled(newToStalkValue.isLessThanOrEqualTo(0));
   }
@@ -68,7 +68,7 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
       balance={props.beanBalance}
       claim={props.settings.claim}
       claimableBalance={props.beanClaimableBalance}
-      handleChange={v => {
+      handleChange={(v) => {
         fromValueUpdated(v, fromEthValue);
       }}
       token={CryptoAsset.Bean}
@@ -83,7 +83,7 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
       buyBeans={buyBeanValue}
       claim={props.settings.claim}
       claimableBalance={props.claimableEthBalance}
-      handleChange={v => fromValueUpdated(fromBeanValue, v)}
+      handleChange={(v) => fromValueUpdated(fromBeanValue, v)}
       mode={props.settings.mode}
       sellEth={fromEthValue}
       updateExpectedPrice={props.updateExpectedPrice}
@@ -114,7 +114,7 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
       mint
       token={SiloAsset.Bean}
       value={MaxBN(buyBeanValue, new BigNumber(0)).plus(
-        MaxBN(fromBeanValue, new BigNumber(0)),
+        MaxBN(fromBeanValue, new BigNumber(0))
       )}
     />
   );
@@ -171,12 +171,12 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
       if (fromEthValue.isGreaterThan(0)) {
         const beans = MaxBN(
           toBaseUnitBN(fromBeanValue, BEAN.decimals),
-          new BigNumber(0),
+          new BigNumber(0)
         ).toString();
         const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
         const buyBeans = toStringBaseUnitBN(
           buyBeanValue.multipliedBy(props.settings.slippage),
-          BEAN.decimals,
+          BEAN.decimals
         );
         buyAndDepositBeans(beans, buyBeans, eth, claimable, () => {
           fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
@@ -187,7 +187,7 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
           claimable,
           () => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-          },
+          }
         );
       }
     },

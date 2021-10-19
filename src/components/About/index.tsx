@@ -5,8 +5,8 @@ import {
   HOW_TO_MOBILE_PATH,
   INTRO_TO_PATH,
   WHITEPAPER,
-} from '../../constants';
-import { ContentSection, Grid } from '../Common';
+} from 'constants/index';
+import { ContentSection, Grid } from 'components/Common';
 import { SvgCloudIcon } from './SvgCloudIcon';
 
 export default function About(props) {
@@ -38,10 +38,10 @@ export default function About(props) {
               </Link>
             </Grid>
             <Grid item lg={3} md={3} sm={4} xs={6} style={cloudStyle}>
-              <Link
+              <Link // eslint-disable-line
                 href=""
                 color="inherit"
-                onClick={event => {
+                onClick={(event) => {
                   event.preventDefault();
                   const howToPath =
                     window.innerWidth < 600 ? HOW_TO_MOBILE_PATH : HOW_TO_PATH;

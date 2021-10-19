@@ -1,6 +1,7 @@
+import React from 'react';
 import { Box } from '@material-ui/core';
+import Footer from 'components/About/Footer';
 import { chainId } from '../../util';
-import Footer from '../About/Footer';
 import background from '../../img/cloud-background.png';
 import SunIcon from '../../img/Sun.svg';
 

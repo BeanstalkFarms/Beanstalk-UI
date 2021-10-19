@@ -19,10 +19,14 @@ export default function SiloLPModule(props) {
     mode: null,
     slippage: new BigNumber(BASE_SLIPPAGE),
   });
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = useState(0);
+  const [isFormDisabled, setIsFormDisabled] = useState(true);
+  const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   const sectionTitles = ['Deposit', 'Withdraw'];
+
   const sectionTitlesDescription = [
+    // eslint-disable-next-line
     'Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.',
     'Use this sub-tab to withdraw LP Tokens from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
   ];
@@ -31,12 +35,6 @@ export default function SiloLPModule(props) {
     'View all your current LP Token Withdrawals in this table.',
   ];
 
-  const handleTabChange = (event, newSection) => {
-    if (newSection !== section) {
-      setSection(newSection);
-      setIsFormDisabled(true);
-    }
-  };
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
     setSectionInfo(newSectionInfo);
     setPage(newPageZero);
@@ -46,25 +44,20 @@ export default function SiloLPModule(props) {
   };
 
   if (settings.mode === null) {
-    if (props.lpBalance.isGreaterThan(0))
-      setSettings(p => ({ ...p, mode: SwapMode.LP }));
+    if (props.lpBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.LP }));
     else if (
       props.beanBalance.isGreaterThan(0) &&
       props.ethBalance.isGreaterThan(0)
-    )
-      setSettings(p => ({ ...p, mode: SwapMode.BeanEthereum }));
-    else if (props.beanBalance.isGreaterThan(0))
-      setSettings(p => ({ ...p, mode: SwapMode.Bean }));
-    else if (props.ethBalance.isGreaterThan(0))
-      setSettings(p => ({ ...p, mode: SwapMode.Ethereum }));
-    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0))
-      setSettings(p => ({ ...p, mode: SwapMode.Ethereum }));
+    ) setSettings((p) => ({ ...p, mode: SwapMode.BeanEthereum }));
+    else if (props.beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
+    else if (props.ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
   }
 
   const depositRef = useRef<any>();
   const withdrawRef = useRef<any>();
   const claimRef = useRef<any>();
-  function handleForm() {
+  const handleForm = () => {
     switch (section) {
       case 0:
         depositRef.current.handleForm();
@@ -78,8 +71,14 @@ export default function SiloLPModule(props) {
       default:
         break;
     }
-  }
-  const [isFormDisabled, setIsFormDisabled] = useState(true);
+  };
+
+  const handleTabChange = (event, newSection) => {
+    if (newSection !== section) {
+      setSection(newSection);
+      setIsFormDisabled(true);
+    }
+  };
   const sections = [
     <LPDepositSubModule
       beanBalance={props.beanBalance}
@@ -137,11 +136,11 @@ export default function SiloLPModule(props) {
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
         setSection={setSection}
-      />,
+      />
     );
     sectionTitles.push('Claim');
     sectionTitlesDescription.push(
-      'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.',
+      'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.'
     );
   }
   if (section > sectionTitles.length - 1) setSection(0);
@@ -165,7 +164,7 @@ export default function SiloLPModule(props) {
         season={props.season}
         seedCrates={props.lpSeedDeposits}
         title="Deposits"
-      />,
+      />
     );
     sectionTitlesInfo.push('LP Deposits');
   }
@@ -188,7 +187,7 @@ export default function SiloLPModule(props) {
         page={page}
         poolForLPRatio={props.poolForLPRatio}
         title="Withdrawals"
-      />,
+      />
     );
     sectionTitlesInfo.push('LP Withdrawals');
   }
@@ -207,7 +206,7 @@ export default function SiloLPModule(props) {
           onClick={() => {
             const shouldExpand = listTablesStyle.display === 'none';
             setListTablesStyle(
-              shouldExpand ? { display: 'block' } : { display: 'none' },
+              shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
           style={{ height: '44px', width: '44px', marginTop: '-8px' }}
@@ -217,7 +216,6 @@ export default function SiloLPModule(props) {
       </Box>
     ) : null;
 
-  const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
   const showListTables =
     sectionsInfo.length > 0 ? (
       <Box style={{ ...listTablesStyle, marginTop: '61px' }}>

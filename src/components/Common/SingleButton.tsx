@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { QuestionModule } from './index';
@@ -5,7 +6,7 @@ import { QuestionModule } from './index';
 export default function SingleButton(props) {
   const maxWidth = props.size === 'small' ? '200px' : '300px';
 
-  const classes = makeStyles(theme => ({
+  const classes = makeStyles(() => ({
     button: {
       backgroundColor: props.backgroundColor,
       borderRadius: '15px',

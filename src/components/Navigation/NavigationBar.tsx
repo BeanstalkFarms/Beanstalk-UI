@@ -74,7 +74,7 @@ export default function NavigationBar(props) {
   const anchorRef = React.useRef<any>(null);
   const [open, setOpen] = React.useState(false);
   const handleToggle = () => {
-    setOpen(prevOpen => !prevOpen);
+    setOpen((prevOpen) => !prevOpen);
   };
   const handleClose = () => {
     setOpen(false);
@@ -93,7 +93,7 @@ export default function NavigationBar(props) {
       body.offsetHeight,
       html.clientHeight,
       html.scrollHeight,
-      html.offsetHeight,
+      html.offsetHeight
     );
     const windowBottom = windowHeight + window.pageYOffset;
     setIsScrolledToBottom(windowBottom >= docHeight);
@@ -109,10 +109,10 @@ export default function NavigationBar(props) {
     };
   }, []);
 
-  const linkItemStyle = path =>
-    path === 'governance' || path === 'nft'
+  const linkItemStyle = (path) =>
+    (path === 'governance' || path === 'nft'
       ? { color: 'rgb(14, 136, 55)' }
-      : null;
+      : null);
 
   const mobileNavigation = (
     <Box className="NavigationBarHamburger">

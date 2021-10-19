@@ -6,13 +6,13 @@ import { BEANSTALK_NFT_SUBGRAPH_API_LINK } from '../constants';
 const SowQuery = `
 query sows($season: String) {
   sows(
-    	where: {
-        season: $season
-      }
-      orderBy: beans,
-      orderDirection: desc,
-      first: 10
-    )  {
+    where: {
+      season: $season
+    }
+    orderBy: beans,
+    orderDirection: desc,
+    first: 10
+  ) {
     id
     beans
     season {
@@ -69,7 +69,7 @@ export async function beanNFTQuery() {
   let nfts = data.data.beanNfts.reduce((ns, s) => {
     const nft = {};
     nft.account = s.account;
-    nft.id = parseInt(s.id);
+    nft.id = parseInt(s.id, 10);
     nft.txn = s.txn;
     ns.push(nft);
     return ns;

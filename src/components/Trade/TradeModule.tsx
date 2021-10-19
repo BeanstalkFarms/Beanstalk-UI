@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js';
 import React, { useState } from 'react';
+import BigNumber from 'bignumber.js';
 import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from '../../constants';
 import {
   approveUniswapBean,
@@ -19,11 +19,6 @@ export default function TradeModule(props) {
     'Use this tab to trade against the BEAN:ETH Uniswap pool directly on the bean.money website.',
     'Use this tab to send Beans to another Ethereum address.',
   ];
-  const handleTabChange = (event, newSection) => {
-    handleSwapCallback();
-    setToAddress('');
-    setSection(newSection);
-  };
 
   /* Swap Sub-Module state */
 
@@ -36,7 +31,7 @@ export default function TradeModule(props) {
   const fromToken = orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
   const toToken = !orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
   const ethToBean = new BigNumber(
-    props.beanReserve.dividedBy(props.ethReserve),
+    props.beanReserve.dividedBy(props.ethReserve)
   );
   const beanToEth = new BigNumber(1).dividedBy(ethToBean);
   const conversionFactor = orderIndex ? ethToBean : beanToEth;
@@ -51,7 +46,13 @@ export default function TradeModule(props) {
     setToValue(new BigNumber(-1));
   }
 
-  function handleForm() {
+  const handleTabChange = (event, newSection) => {
+    handleSwapCallback();
+    setToAddress('');
+    setSection(newSection);
+  };
+
+  const handleForm = () => {
     if (section === 0) {
       const minimumToAmount = toValue.multipliedBy(settings.slippage);
 
@@ -60,13 +61,13 @@ export default function TradeModule(props) {
           buyBeans(
             toStringBaseUnitBN(fromValue, ETH.decimals),
             toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
-            handleSwapCallback,
+            handleSwapCallback
           );
         } else {
           sellBeans(
             toStringBaseUnitBN(fromValue, BEAN.decimals),
             toStringBaseUnitBN(minimumToAmount, ETH.decimals),
-            handleSwapCallback,
+            handleSwapCallback
           );
         }
       }
@@ -75,11 +76,11 @@ export default function TradeModule(props) {
         transferBeans(
           toAddress,
           toStringBaseUnitBN(fromValue, BEAN.decimals),
-          handleSwapCallback,
+          handleSwapCallback
         );
       }
     }
-  }
+  };
 
   const disabled =
     section === 0

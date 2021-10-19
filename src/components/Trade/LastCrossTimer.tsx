@@ -21,13 +21,11 @@ export default function LastCrossTimer(props) {
     // eslint-disable-next-line
   }, [time, props.lastCross]);
 
-  function display(time) {
-    return [
-      'Time Since $1 Crossed',
-      time === 0 ? '-' : timeToString(time),
-      'This is the time elapsed since the TWAP last crossed the peg.',
-    ];
-  }
+  const display = (t) => [
+    'Time Since $1 Crossed',
+    t === 0 ? '-' : timeToString(t),
+    'This is the time elapsed since the TWAP last crossed the peg.',
+  ];
 
   return <HeaderLabelWithTimer display={display} time={time} />;
 }

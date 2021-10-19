@@ -9,7 +9,7 @@ export {
   FarmAsset,
   SiloAsset,
   TransitAsset,
-  UniswapAsset,
+  UniswapAsset
 } from '../../util';
 
 export { default as AddressInputField } from './AddressInputField';
@@ -46,9 +46,9 @@ export const FormatTooltip = withStyles((theme: Theme) => ({
     boxShadow: theme.shadows[1],
     fontSize: 12,
     fontFamily: 'Futura-Pt-Book',
-    width: props => props.width,
+    width: (props) => props.width,
     maxWidth: '345px',
-    margin: props => props.margin,
+    margin: (props) => props.margin,
   },
 }))(Tooltip);
 

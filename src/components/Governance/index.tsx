@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, Box } from '@material-ui/core';
 import { WHITEPAPER } from '../../constants';
 import { ContentSection, Grid } from '../Common';
@@ -28,7 +29,7 @@ export default function Governance(props) {
   }, {});
   const seasonBips = activeBips.reduce((sBips, bip) => {
     sBips[bip] = props.bips[bip].period.minus(
-      props.season.minus(props.bips[bip].start),
+      props.season.minus(props.bips[bip].start)
     );
     return sBips;
   }, {});

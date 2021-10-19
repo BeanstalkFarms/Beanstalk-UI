@@ -15,14 +15,6 @@ import { BASE_IPFS_LINK, BASE_OPENSEA_LINK } from '../../constants';
 import { SingleButton } from '.';
 import { mintNFT } from '../../util';
 
-export default function NftPicTable(props) {
-  return (
-    <Box style={props.style}>
-      <BasicTable {...props} />
-    </Box>
-  );
-}
-
 const useStyles = makeStyles({
   table: {
     minWidth: 200,
@@ -44,13 +36,13 @@ const useStyles = makeStyles({
   },
 });
 
-const BasicTable = props => {
+const BasicTable = (props) => {
   const classes = useStyles();
 
   const { rowsPerPage } = props;
 
-  const showButton = i =>
-    Object.keys(props.crates).length > 0 && props.canClaimNFT ? (
+  const showButton = (i) =>
+    (Object.keys(props.crates).length > 0 && props.canClaimNFT ? (
       <SingleButton
         backgroundColor="#3B3B3B"
         color="white"
@@ -68,7 +60,7 @@ const BasicTable = props => {
         width="50%"
         widthTooltip="150px"
       />
-    ) : null;
+    ) : null);
 
   return (
     <Box>
@@ -78,9 +70,9 @@ const BasicTable = props => {
             {Object.keys(props.crates)
               .slice(
                 props.page * rowsPerPage,
-                props.page * rowsPerPage + rowsPerPage,
+                props.page * rowsPerPage + rowsPerPage
               )
-              .map(index => (
+              .map((index) => (
                 <TableRow key="User BeaNFT List">
                   <TableCell
                     align="center"
@@ -90,7 +82,7 @@ const BasicTable = props => {
                   >
                     <Image
                       unoptimized
-                      loader={({ src }) =>
+                      loader={() =>
                         `${BASE_IPFS_LINK}${props.crates[index].imageIpfsHash}`
                       }
                       src={`${BASE_IPFS_LINK}${props.crates[index].imageIpfsHash}`}
@@ -103,9 +95,9 @@ const BasicTable = props => {
             {Object.keys(props.crates)
               .slice(
                 props.page * rowsPerPage,
-                props.page * rowsPerPage + rowsPerPage,
+                props.page * rowsPerPage + rowsPerPage
               )
-              .map(index => (
+              .map((index) => (
                 <TableRow key={index}>
                   <TableCell
                     align="center"
@@ -135,9 +127,9 @@ const BasicTable = props => {
                         <span>
                           {`${props.crates[index].metadataIpfsHash.substring(
                             0,
-                            6,
+                            6
                           )}...${props.crates[index].metadataIpfsHash.substring(
-                            props.crates[index].metadataIpfsHash.length - 4,
+                            props.crates[index].metadataIpfsHash.length - 4
                           )}`}
                         </span>
                       </Link>
@@ -160,7 +152,7 @@ const BasicTable = props => {
           page={props.page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[]}
-          labelDisplayedRows={({ from, to, count }) =>
+          labelDisplayedRows={({ from, count }) =>
             `${Math.ceil(from / rowsPerPage)}-${
               count !== -1 ? Math.ceil(count / rowsPerPage) : 0
             }`
@@ -170,6 +162,14 @@ const BasicTable = props => {
     </Box>
   );
 };
+
+export default function NftPicTable(props) {
+  return (
+    <Box style={props.style}>
+      <BasicTable {...props} />
+    </Box>
+  );
+}
 
 NftPicTable.defaultProps = {
   crates: {},

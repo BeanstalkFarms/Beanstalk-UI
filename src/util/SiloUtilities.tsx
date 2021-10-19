@@ -5,9 +5,9 @@ export const depositBeans = async (amount, claimable, callback) => {
   (claimable
     ? beanstalkContract().claimAndDepositBeans(amount, claimable)
     : beanstalkContract().depositBeans(amount)
-  ).then(response => {
+  ).then((response) => {
     callback();
-    response.wait().then(receipt => {
+    response.wait().then(() => {
       txCallback();
     });
   });
@@ -17,13 +17,13 @@ export const claimAndWithdrawBeans = async (
   crates,
   amounts,
   claimable,
-  callback,
+  callback
 ) => {
   beanstalkContract()
     .claimAndWithdrawBeans(crates, amounts, claimable)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -32,9 +32,9 @@ export const claimAndWithdrawBeans = async (
 export const withdrawBeans = async (crates, amounts, callback) => {
   beanstalkContract()
     .withdrawBeans(crates, amounts)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -43,9 +43,9 @@ export const withdrawBeans = async (crates, amounts, callback) => {
 export const claimBeans = async (withdrawals, callback) => {
   beanstalkContract()
     .claimBeans(withdrawals)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -55,9 +55,9 @@ export const depositLP = async (amount, claimable, callback) => {
   (claimable
     ? beanstalkContract().claimAndDepositLP(amount, claimable)
     : beanstalkContract().depositLP(amount)
-  ).then(response => {
+  ).then((response) => {
     callback();
-    response.wait().then(receipt => {
+    response.wait().then(() => {
       txCallback();
     });
   });
@@ -70,7 +70,7 @@ export const addAndDepositLP = async (
   ethAmount: BigNumber,
   addLP,
   claimable,
-  callback,
+  callback
 ) => {
   (claimable
     ? beanstalkContract().claimAddAndDepositLP(
@@ -79,18 +79,18 @@ export const addAndDepositLP = async (
         buyEthAmount,
         addLP,
         claimable,
-        { value: ethAmount },
+        { value: ethAmount }
       )
     : beanstalkContract().addAndDepositLP(
         lp,
         buyBeanAmount,
         buyEthAmount,
         addLP,
-        { value: ethAmount },
+        { value: ethAmount }
       )
-  ).then(response => {
+  ).then((response) => {
     callback();
-    response.wait().then(receipt => {
+    response.wait().then(() => {
       txCallback();
     });
   });
@@ -103,7 +103,7 @@ export const convertAddAndDepositLP = async (
   crates,
   amounts,
   claimable,
-  callback,
+  callback
 ) => {
   (claimable
     ? beanstalkContract().claimConvertAddAndDepositLP(
@@ -112,14 +112,14 @@ export const convertAddAndDepositLP = async (
         crates,
         amounts,
         claimable,
-        { value: ethAmount },
+        { value: ethAmount }
       )
     : beanstalkContract().convertAddAndDepositLP(lp, addLP, crates, amounts, {
         value: ethAmount,
       })
-  ).then(response => {
+  ).then((response) => {
     callback();
-    response.wait().then(receipt => {
+    response.wait().then(() => {
       txCallback();
     });
   });
@@ -128,9 +128,9 @@ export const convertAddAndDepositLP = async (
 export const withdrawLP = async (crates, amounts, callback) => {
   beanstalkContract()
     .withdrawLP(crates, amounts)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -140,13 +140,13 @@ export const claimAndWithdrawLP = async (
   crates,
   amounts,
   claimable,
-  callback,
+  callback
 ) => {
   beanstalkContract()
     .claimAndWithdrawLP(crates, amounts, claimable)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -156,13 +156,13 @@ export const removeAndClaimLP = async (
   withdrawals,
   minBeanAmount,
   minEthAmount,
-  callback,
+  callback
 ) => {
   beanstalkContract()
     .removeAndClaimLP(withdrawals, minBeanAmount, minEthAmount)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -171,19 +171,19 @@ export const removeAndClaimLP = async (
 export const claimLP = async (withdrawals, callback) => {
   beanstalkContract()
     .claimLP(withdrawals)
-    .then(response => {
+    .then((response) => {
       callback();
-      response.wait().then(receipt => {
+      response.wait().then(() => {
         txCallback();
       });
     });
 };
 
-export const claim = async claimable => {
+export const claim = async (claimable) => {
   beanstalkContract()
     .claim(claimable)
-    .then(response => {
-      response.wait().then(receipt => {
+    .then((response) => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -192,8 +192,8 @@ export const claim = async claimable => {
 export const updateSilo = async () => {
   beanstalkContract()
     .updateSilo(account)
-    .then(response => {
-      response.wait().then(receipt => {
+    .then((response) => {
+      response.wait().then(() => {
         txCallback();
       });
     });
@@ -204,21 +204,21 @@ export const buyAndDepositBeans = async (
   buyBeanAmount,
   ethAmount,
   claimable,
-  callback,
+  callback
 ) => {
   (claimable
     ? beanstalkContract().claimBuyAndDepositBeans(
         amount,
         buyBeanAmount,
         claimable,
-        { value: ethAmount },
+        { value: ethAmount }
       )
     : beanstalkContract().buyAndDepositBeans(amount, buyBeanAmount, {
         value: ethAmount,
       })
-  ).then(response => {
+  ).then((response) => {
     callback();
-    response.wait().then(receipt => {
+    response.wait().then(() => {
       txCallback();
     });
   });

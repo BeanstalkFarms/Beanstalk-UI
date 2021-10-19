@@ -1,3 +1,4 @@
+import React from 'react';
 import { Box } from '@material-ui/core';
 import { displayFullBN, TokenLabel } from '../../util';
 import { FormatTooltip } from './index';
@@ -14,7 +15,7 @@ export default function BalanceField(props) {
         {props.content !== undefined ? (
           props.content
         ) : (
-          <Box style={style}>{props.balance}</Box>
+          <Box style={props.style}>{props.balance}</Box>
         )}
       </span>
     </FormatTooltip>

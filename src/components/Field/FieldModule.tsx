@@ -12,7 +12,9 @@ import { SendPlotModule } from './SendPlotModule';
 export default function FieldModule(props) {
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = useState(0);
+  const [isFormDisabled, setIsFormDisabled] = useState(true);
+  const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   const [settings, setSettings] = useState({
     claim: false,
@@ -43,18 +45,15 @@ export default function FieldModule(props) {
   };
 
   if (settings.mode === null) {
-    if (props.beanBalance.isGreaterThan(0))
-      setSettings(p => ({ ...p, mode: SwapMode.Bean }));
-    else if (props.ethBalance.isGreaterThan(0))
-      setSettings(p => ({ ...p, mode: SwapMode.Ethereum }));
-    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0))
-      setSettings(p => ({ ...p, mode: SwapMode.Ethereum }));
+    if (props.beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
+    else if (props.ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
   }
 
   const sowRef = useRef<any>();
   const sendRef = useRef<any>();
   const harvestRef = useRef<any>();
-  function handleForm() {
+  const handleForm = () => {
     switch (section) {
       case 0:
         sowRef.current.handleForm();
@@ -68,9 +67,8 @@ export default function FieldModule(props) {
       default:
         break;
     }
-  }
+  };
 
-  const [isFormDisabled, setIsFormDisabled] = useState(true);
   const sections = [
     <SowModule
       key={0}
@@ -101,11 +99,11 @@ export default function FieldModule(props) {
         ref={harvestRef}
         setIsFormDisabled={setIsFormDisabled}
         setSection={setSection}
-      />,
+      />
     );
     sectionTitles.push('Harvest');
     sectionTitlesDescription.push(
-      'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.',
+      'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.'
     );
   }
   if (Object.keys(props.plots).length > 0) {
@@ -128,11 +126,11 @@ export default function FieldModule(props) {
         setToAddress={setToAddress}
         setSection={setSection}
         toAddress={toAddress}
-      />,
+      />
     );
     sectionTitles.push('Send');
     sectionTitlesDescription.push(
-      'Use this tab to send Plots to another Ethereum address.',
+      'Use this tab to send Plots to another Ethereum address.'
     );
   }
   if (section > sectionTitles.length - 1) setSection(0);
@@ -156,7 +154,7 @@ export default function FieldModule(props) {
         index={parseFloat(props.harvestableIndex)}
         page={page}
         title="Plots"
-      />,
+      />
     );
     sectionTitlesInfo.push('Plots');
   }
@@ -175,7 +173,7 @@ export default function FieldModule(props) {
           onClick={() => {
             const shouldExpand = listTablesStyle.display === 'none';
             setListTablesStyle(
-              shouldExpand ? { display: 'block' } : { display: 'none' },
+              shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
           style={{ height: '44px', width: '44px', marginTop: '-8px' }}
@@ -185,7 +183,6 @@ export default function FieldModule(props) {
       </Box>
     ) : null;
 
-  const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
   const showListTables =
     sectionsInfo.length > 0 ? (
       <Box style={{ ...listTablesStyle, marginTop: '61px' }}>
@@ -194,7 +191,8 @@ export default function FieldModule(props) {
           section={sectionInfo}
           sectionTitles={sectionTitlesInfo}
           sectionTitlesDescription={[
-            'A Plot of Pods is created everytime Beans are Sown. Plots have a place in the Pod Line based on the order they were created. As Pods are harvested, your Plots will automatically advance in line. Entire Plots and sections of Plots can be transferred using the Send tab of the Field module.',
+            // eslint-disable-next-line
+            "A Plot of Pods is created everytime Beans are Sown. Plots have a place in the Pod Line based on the order they were created. As Pods are harvested, your Plots will automatically advance in line. Entire Plots and sections of Plots can be transferred using the Send tab of the Field module.",
           ]}
           showButton={false}
         >
