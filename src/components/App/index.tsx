@@ -562,9 +562,10 @@ export default function App() {
             event.returnValues.beans,
             BEAN.decimals,
           );
-          const plots = event.returnValues.plots.slice().sort();
-          plots.forEach(s => {
-            const index = parseInt(s) / 1e6;
+          let plots = event.returnValues.plots.slice().map((p) => parseInt(p)/1e6)
+          plots = plots.sort((a,b) => a-b)
+
+          plots.forEach(index => {
             if (beansClaimed.isLessThan(userPlots[index])) {
               const partialIndex = beansClaimed.plus(index);
               userPlots = {

@@ -83,12 +83,14 @@ export default function NFTs(props) {
     (String(props.season) - BEGINNING_NFT_SEASON - 1) * NFTS_PER_SEASON;
   const remainingNFTs = TOTAL_NFTS - mintedNFTs;
 
-  try {
-    if (nfts[0].id !== GENESIS_NFT.id) {
-      nfts.unshift(GENESIS_NFT);
+  if (nfts.length > 0) {
+    try {
+      if (nfts[0].id !== GENESIS_NFT.id) {
+        nfts.unshift(GENESIS_NFT);
+      }
+    } catch (error) {
+      console.error('e:', error);
     }
-  } catch (error) {
-    console.error('e:', error);
   }
 
   let userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u.id);

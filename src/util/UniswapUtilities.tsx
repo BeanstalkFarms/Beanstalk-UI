@@ -102,7 +102,7 @@ export const getFromAmount = (
   if (amountOut.isGreaterThan(reserveOut)) return reserveOut;
   const numerator = reserveIn.multipliedBy(amountOut).multipliedBy(1000);
   const denominator = reserveOut.minus(amountOut).multipliedBy(997);
-  return numerator.dividedBy(denominator).plus(10 ** 0 - decimals);
+  return numerator.dividedBy(denominator).plus(10 ** (0 - decimals));
 };
 
 export const getBuyAndAddLPAmount = (

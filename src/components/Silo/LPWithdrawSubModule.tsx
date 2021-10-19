@@ -1,9 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import {
-  ExpandMore as ExpandMoreIcon,
-  Box,
-} from '@material-ui/icons/ExpandMore';
+import { Box } from '@material-ui/core';
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import {
   SEEDS,
   STALK,

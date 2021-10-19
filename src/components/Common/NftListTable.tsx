@@ -17,7 +17,7 @@ import {
   BASE_ETHERSCAN_TX_LINK,
   DIAMONDS_LINK,
 } from 'constants/index';
-import { displayBN, displayFullBN } from 'util';
+import { displayBN, displayFullBN } from '../../util';
 import { FormatTooltip } from '.';
 
 const useStyles = makeStyles({

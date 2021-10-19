@@ -59,7 +59,7 @@ export const SowModule = forwardRef((props, ref) => {
     );
     BigNumber.set({ DECIMAL_PLACES: 18 });
     setBuyBeanValue(buyBeans);
-    setFromEthValue(TrimBN(newFromEthValue, 6));
+    setFromEthValue(newFromEthValue);
     const sowedBeans = MaxBN(buyBeans, new BigNumber(0)).plus(
       MaxBN(newFromValue, new BigNumber(0))
     );
