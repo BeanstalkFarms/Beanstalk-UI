@@ -27,7 +27,7 @@ export default function NftSection(props) {
     sectionsInfo.push(
       <NftListTable
         indexType="time"
-        crates={props.sows}
+        nftList={props.sows}
         colTitles={['Rank', 'Time', 'Beans', 'Address']}
         description="N/A"
         handleChange={handlePageChange}
@@ -51,7 +51,7 @@ export default function NftSection(props) {
     sectionsInfo.push(
       <NftListTable
         indexType="number"
-        crates={props.nfts}
+        nftList={props.nfts}
         colTitles={['ID', 'Tx Hash', 'Address']}
         description="N/A"
         handleChange={handlePageChange}
@@ -70,7 +70,7 @@ export default function NftSection(props) {
       <NftListTable
         indexType="number"
         assetType="nft"
-        crates={props.userNFTs}
+        nftList={props.userNFTs}
         colTitles={['ID', 'Transaction Hash']}
         description="A list of your collection of BeaNFTs."
         handleChange={handlePageChange}

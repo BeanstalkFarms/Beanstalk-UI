@@ -70,7 +70,7 @@ const BasicTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.keys(props.crates)
+            {Object.keys(props.nftList)
               .slice(
                 props.page * rowsPerPage,
                 props.page * rowsPerPage + rowsPerPage
@@ -94,62 +94,62 @@ const BasicTable = (props) => {
                     scope="index"
                   >
                     {props.indexType === 'time'
-                      ? props.crates[index].timeSinceSunrise
-                      : props.crates[index].id}
+                      ? props.nftList[index].timeSinceSunrise
+                      : props.nftList[index].id}
                   </TableCell>
-                  {props.crates[index].beans !== undefined ? (
+                  {props.nftList[index].beans !== undefined ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
                       <FormatTooltip
                         placement="right"
                         title={`${displayFullBN(
-                          new BigNumber(props.crates[index].beans)
+                          new BigNumber(props.nftList[index].beans)
                         )} Beans`}
                       >
                         <span>
-                          {displayBN(new BigNumber(props.crates[index].beans))}
+                          {displayBN(new BigNumber(props.nftList[index].beans))}
                         </span>
                       </FormatTooltip>
                     </TableCell>
                   ) : null}
-                  {props.crates[index].txn !== undefined &&
-                  props.crates[index].txn.length > 2 ? (
+                  {props.nftList[index].txn !== undefined &&
+                  props.nftList[index].txn.length > 2 ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
                       <Link
-                        href={`${BASE_ETHERSCAN_TX_LINK}${props.crates[index].txn}`}
+                        href={`${BASE_ETHERSCAN_TX_LINK}${props.nftList[index].txn}`}
                         color="inherit"
                         target="blank"
                       >
                         <span>
-                          {`${props.crates[index].txn.substring(
+                          {`${props.nftList[index].txn.substring(
                             0,
                             6
-                          )}...${props.crates[index].txn.substring(
-                            props.crates[index].txn.length - 4
+                          )}...${props.nftList[index].txn.substring(
+                            props.nftList[index].txn.length - 4
                           )}`}
                         </span>
                       </Link>
                     </TableCell>
-                  ) : props.crates[index].txn !== undefined ? (
+                  ) : props.nftList[index].txn !== undefined ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
                       <Link href={DIAMONDS_LINK} color="inherit" target="blank">
-                        <span>{`${props.crates[index].txn}`}</span>
+                        <span>{`${props.nftList[index].txn}`}</span>
                       </Link>
                     </TableCell>
                   ) : null}
-                  {props.crates[index].account !== undefined &&
+                  {props.nftList[index].account !== undefined &&
                   props.assetType !== 'nft' ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
                       <Link
-                        href={`${BASE_ETHERSCAN_ADDR_LINK}${props.crates[index].account}`}
+                        href={`${BASE_ETHERSCAN_ADDR_LINK}${props.nftList[index].account}`}
                         color="inherit"
                         target="blank"
                       >
                         <span>
-                          {`${props.crates[index].account.substring(
+                          {`${props.nftList[index].account.substring(
                             0,
                             6
-                          )}...${props.crates[index].account.substring(
-                            props.crates[index].account.length - 4
+                          )}...${props.nftList[index].account.substring(
+                            props.nftList[index].account.length - 4
                           )}`}
                         </span>
                       </Link>
@@ -160,11 +160,11 @@ const BasicTable = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      {Object.keys(props.crates).length > rowsPerPage ? (
+      {Object.keys(props.nftList).length > rowsPerPage ? (
         <TablePagination
           className={classes.pagination}
           component="div"
-          count={Object.keys(props.crates).length}
+          count={Object.keys(props.nftList).length}
           onPageChange={props.handleChange}
           page={props.page}
           rowsPerPage={rowsPerPage}
@@ -189,7 +189,7 @@ export default function NftListTable(props) {
 }
 
 NftListTable.defaultProps = {
-  crates: {},
+  nftList: {},
   index: 0,
   page: 0,
   resetPage: 0,

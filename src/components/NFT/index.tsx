@@ -132,27 +132,17 @@ export default function NFTs(props) {
           </Grid>
         </Grid>
       </Grid>
-
       <NftSection
         sows={sows}
         nfts={nfts}
         userNFTs={userNFTs}
         {...props}
       />
-
       <ClaimNFT
         buttonDescription="Use this button to Mint all your Mintable BeaNFTs."
         claimTitle="MINT ALL"
         claimedNfts={claimedNFTs}
         nfts={unclaimedNFTs}
-        {...props}
-      />
-
-      <ClaimNFT
-        buttonDescription="Use this button to Mint all your Mintable BeaNFTs."
-        claimTitle="MINT ALL"
-        nfts={unclaimedNFTs}
-        claimedNfts={claimedNFTs}
         {...props}
       />
     </ContentSection>

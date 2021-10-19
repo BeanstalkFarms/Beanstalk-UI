@@ -37,7 +37,7 @@ export default function ClaimNFT(props) {
         indexType="number"
         assetType="nft"
         canClaimNFT={canClaimNFT}
-        crates={nfts}
+        nftList={nfts}
         colTitles={['ID', 'Transaction Hash']}
         description="A list of your collection of BeaNFTs"
         handleChange={handlePageChange}
@@ -58,7 +58,7 @@ export default function ClaimNFT(props) {
         indexType="number"
         assetType="nft"
         claimed
-        crates={claimedNfts}
+        nftList={claimedNfts}
         colTitles={['ID', 'Transaction Hash']}
         description="A list of your collection of BeaNFTs"
         handleChange={handlePageChange}

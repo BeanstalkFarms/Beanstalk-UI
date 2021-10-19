@@ -42,14 +42,14 @@ const BasicTable = (props) => {
   const { rowsPerPage } = props;
 
   const showButton = (i) =>
-    (Object.keys(props.crates).length > 0 && props.canClaimNFT ? (
+    (Object.keys(props.nftList).length > 0 && props.canClaimNFT ? (
       <SingleButton
         backgroundColor="#3B3B3B"
         color="white"
         description="Use this button to Mint only the individual BeaNFT currently being displayed."
         fontSize="15px"
         handleClick={() => {
-          const nft = props.crates[i];
+          const nft = props.nftList[i];
           mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature);
         }}
         height="30px"
@@ -67,7 +67,7 @@ const BasicTable = (props) => {
       <TableContainer>
         <Table className={classes.table} size="small">
           <TableBody>
-            {Object.keys(props.crates)
+            {Object.keys(props.nftList)
               .slice(
                 props.page * rowsPerPage,
                 props.page * rowsPerPage + rowsPerPage
@@ -83,16 +83,16 @@ const BasicTable = (props) => {
                     <Image
                       unoptimized
                       loader={() =>
-                        `${BASE_IPFS_LINK}${props.crates[index].imageIpfsHash}`
+                        `${BASE_IPFS_LINK}${props.nftList[index].imageIpfsHash}`
                       }
-                      src={`${BASE_IPFS_LINK}${props.crates[index].imageIpfsHash}`}
+                      src={`${BASE_IPFS_LINK}${props.nftList[index].imageIpfsHash}`}
                       width="290px"
                       height="290px"
                     />
                   </TableCell>
                 </TableRow>
               ))}
-            {Object.keys(props.crates)
+            {Object.keys(props.nftList)
               .slice(
                 props.page * rowsPerPage,
                 props.page * rowsPerPage + rowsPerPage
@@ -108,28 +108,28 @@ const BasicTable = (props) => {
                     <Box>
                       {props.claimed ? (
                         <Link
-                          href={`${BASE_OPENSEA_LINK}/${props.crates[index].id}`}
+                          href={`${BASE_OPENSEA_LINK}/${props.nftList[index].id}`}
                           color="inherit"
                           target="blank"
                         >
-                          {`ID: ${props.crates[index].id}`}
+                          {`ID: ${props.nftList[index].id}`}
                         </Link>
                       ) : (
-                        `ID: ${props.crates[index].id}`
+                        `ID: ${props.nftList[index].id}`
                       )}
                       <br />
                       <span>{'Metadata: '}</span>
                       <Link
-                        href={`${BASE_IPFS_LINK}${props.crates[index].metadataIpfsHash}`}
+                        href={`${BASE_IPFS_LINK}${props.nftList[index].metadataIpfsHash}`}
                         color="inherit"
                         target="blank"
                       >
                         <span>
-                          {`${props.crates[index].metadataIpfsHash.substring(
+                          {`${props.nftList[index].metadataIpfsHash.substring(
                             0,
                             6
-                          )}...${props.crates[index].metadataIpfsHash.substring(
-                            props.crates[index].metadataIpfsHash.length - 4
+                          )}...${props.nftList[index].metadataIpfsHash.substring(
+                            props.nftList[index].metadataIpfsHash.length - 4
                           )}`}
                         </span>
                       </Link>
@@ -143,11 +143,11 @@ const BasicTable = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      {Object.keys(props.crates).length > rowsPerPage ? (
+      {Object.keys(props.nftList).length > rowsPerPage ? (
         <TablePagination
           className={classes.pagination}
           component="div"
-          count={Object.keys(props.crates).length}
+          count={Object.keys(props.nftList).length}
           onPageChange={props.handleChange}
           page={props.page}
           rowsPerPage={rowsPerPage}
@@ -172,7 +172,7 @@ export default function NftPicTable(props) {
 }
 
 NftPicTable.defaultProps = {
-  crates: {},
+  nftList: {},
   index: 0,
   page: 0,
   resetPage: 0,
