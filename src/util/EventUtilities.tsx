@@ -109,6 +109,11 @@ export async function initializeEventListener(
 
   // eslint-disable-next-line
   let allEvents = [].concat.apply([], accountEvents);
+  allEvents.sort((a, b) => {
+    const diff = a.blockNumber - b.blockNumber;
+    if (diff !== 0) return diff;
+    return a.logIndex - b.logIndex;
+  });
 
   benchmarkEnd('EVENT LISTENER (BEANSTALK)', startTime);
 
