@@ -72,8 +72,6 @@ export default function SiloCharts(props) {
     loadBeanstalkData();
   }, []);
 
-  console.log(chartData.depositedBeans);
-
   return (
     <Charts {...props} mainTitle="Silo" charts={charts} />
   );
