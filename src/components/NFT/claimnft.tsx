@@ -7,9 +7,9 @@ export default function ClaimNFT(props) {
   const [page, setPage] = React.useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
 
-  const headderStyle = {
+  const headerStyle = {
     fontFamily: 'Futura-PT-Book',
-    fontSize: '24px',
+    fontSize: '20px',
     marginTop: '40px',
     padding: '5px',
     width: '100%',
@@ -120,7 +120,7 @@ export default function ClaimNFT(props) {
 
   const showSection =
     canClaimNFT || claimedNfts.length > 0 ? (
-      <Box style={headderStyle}>YOUR BeaNFTs: {ownedBeaNFTS}</Box>
+      <Box style={headerStyle}>YOUR BeaNFTs: {ownedBeaNFTS}</Box>
     ) : null;
 
   return (
