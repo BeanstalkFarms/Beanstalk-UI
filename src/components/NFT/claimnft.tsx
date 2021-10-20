@@ -116,9 +116,11 @@ export default function ClaimNFT(props) {
     />
   ) : null;
 
+  const ownedBeaNFTS = nfts.length + claimedNfts.length;
+
   const showSection =
     canClaimNFT || claimedNfts.length > 0 ? (
-      <Box style={headderStyle}>YOUR BeaNFTs</Box>
+      <Box style={headderStyle}>YOUR BeaNFTs: {ownedBeaNFTS}</Box>
     ) : null;
 
   return (
