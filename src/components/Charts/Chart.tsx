@@ -53,11 +53,6 @@ export function Chart(props) {
   const dataMode = useDataMode ? props.dataMode : 'hr';
   let data = dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
 
-  if (props.title === 'Silo Deposited Beans') {
-    console.log(props.title);
-    console.log(data);
-  }
-
   if (props.timeMode === 'week') {
     data = data.filter((d) => {
       const date = new Date();

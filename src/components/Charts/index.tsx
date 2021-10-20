@@ -2,6 +2,7 @@ import React from 'react';
 import { ContentSection } from '../Common';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
+import FieldCharts from './FieldCharts';
 
 export default function Charts(props) {
   const marginTop = props.marginTop == null ? '-80px' : props.marginTop;
@@ -14,7 +15,7 @@ export default function Charts(props) {
     >
       <BeanCharts />
       <SiloCharts />
-      <SiloCharts />
+      <FieldCharts />
     </ContentSection>
   );
 }
