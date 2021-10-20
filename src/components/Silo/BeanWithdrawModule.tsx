@@ -239,9 +239,13 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           }
         );
       } else {
-        withdrawBeans(withdrawParams.crates, withdrawParams.amounts, () => {
-          fromValueUpdated(new BigNumber(-1));
-        });
+        withdrawBeans(
+          withdrawParams.crates,
+          withdrawParams.amounts,
+          () => {
+            fromValueUpdated(new BigNumber(-1));
+          }
+        );
       }
     },
   }));

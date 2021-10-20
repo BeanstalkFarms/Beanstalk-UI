@@ -229,9 +229,15 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
-        buyAndDepositBeans(beans, buyBeans, eth, claimable, () => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-        });
+        buyAndDepositBeans(
+          beans,
+          buyBeans,
+          eth,
+          claimable,
+          () => {
+            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          }
+        );
       } else {
         depositBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),

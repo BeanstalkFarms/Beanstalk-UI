@@ -315,6 +315,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
   }
 
   const details = [];
+
+  // Claimable transaction details
+
   if (props.settings.claim) {
     details.push(
       <ClaimTextModule
@@ -334,6 +337,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
       />
     );
   }
+
+  // Eth Mode transaction details
+
   if (
     props.settings.mode === SwapMode.Ethereum ||
     (props.settings.mode === SwapMode.BeanEthereumSwap &&
@@ -365,6 +371,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
       )} LP Tokens.`
     );
   }
+
+  // Bean Mode transaction details
+
   if (
     props.settings.mode === SwapMode.Bean ||
     (props.settings.mode === SwapMode.BeanEthereumSwap &&
@@ -393,6 +402,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
     )} LP Tokens.`
   );
   }
+
+  // Circulating LP Mode transaction details
+
   if (props.settings.mode === SwapMode.LP) {
     details.push(
       <TransactionTextModule
@@ -417,6 +429,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
     )} LP Tokens.`
   );
   }
+
+  // Bean + Eth Mode transaction details
+
   if (props.settings.mode === SwapMode.BeanEthereum) {
     details.push(
       `Add ${displayLP(
