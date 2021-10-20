@@ -55,3 +55,6 @@ export const BEANSTALK_UNI_SUBGRAPH_API_LINK =
   'https://api.studio.thegraph.com/query/6727/beanstalk-uniswap/v0.0.9';
 export const BEANSTALK_NFT_SUBGRAPH_API_LINK =
   'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.2';
+
+export const BEANSTALK_SUBGRAPH_API_LINK =
+  'https://api.studio.thegraph.com/query/6727/beanstalk/v1.1.2';
