@@ -31,6 +31,9 @@ export function TimeSelector(props) {
       <ToggleButton style={toggleButtonStyle} value="week">
         week
       </ToggleButton>
+      <ToggleButton style={toggleButtonStyle} value="month">
+        month
+      </ToggleButton>
       <ToggleButton style={toggleButtonStyle} value="all">
         all{' '}
       </ToggleButton>
