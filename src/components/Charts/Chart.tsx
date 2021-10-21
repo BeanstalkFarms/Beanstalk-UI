@@ -117,11 +117,13 @@ export function Chart(props) {
     <Box className="AppBar-shadow" style={chartStyle}>
       {useDataMode ? <DataSelector
         size={props.size}
+        isMobile={props.isMobile}
         setValue={props.setDataMode}
         value={dataMode}
       /> : null}
       <TimeSelector
         size={props.size}
+        isMobile={props.isMobile}
         setValue={props.setTimeMode}
         value={props.timeMode}
         dataMode={dataMode}

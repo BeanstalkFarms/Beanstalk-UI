@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Charts from './Charts';
 import { hourUniswapQuery, dayUniswapQuery, dayBeanQuery, hourBeanQuery } from '../../graph';
 
-export default function BeanCharts(props) {
+export default function BeanCharts() {
   const [chartData, setChartData] = useState({
     price: [[], []],
     liquidity: [[], []],
@@ -26,6 +26,7 @@ export default function BeanCharts(props) {
       },
       {
           title: 'Market Cap',
+          shortTitle: 'M. Cap',
           data: chartData.marketCap,
       },
       {
@@ -72,6 +73,6 @@ export default function BeanCharts(props) {
   }, []);
 
   return (
-    <Charts {...props} mainTitle="Bean" charts={charts} />
+    <Charts mainTitle="Bean" charts={charts} />
   );
 }
