@@ -1,24 +1,10 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { BEANSTALK_SUBGRAPH_API_LINK } from '../constants';
 
-const LastCrossQuery = `
-{
-  beans(first: 1) {
-    lastCross
-  }
-}`;
-
 const client = new ApolloClient({
   uri: BEANSTALK_SUBGRAPH_API_LINK,
   cache: new InMemoryCache(),
 });
-
-export async function lastCrossQuery() {
-  const data = await client.query({
-    query: gql(LastCrossQuery),
-  });
-  return data.data.beans[0].lastCross;
-}
 
 const SeasonQuery = `
 query seasons($first: Int, $skip: Int) {

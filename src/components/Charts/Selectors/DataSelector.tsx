@@ -3,14 +3,21 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 export function DataSelector(props) {
-  const toggleStyle = {
+  const toggleStyle = !props.isMobile ? {
     position: 'absolute',
     top: '10px',
     left: '25px',
+  } : {
+    position: 'absolute',
+    top: '8px',
+    left: '10px',
   };
-  const toggleButtonStyle = {
+  const toggleButtonStyle = !props.isMobile ? {
     padding: '5px',
     minWidth: '42px',
+  } : {
+    padding: '2px',
+    minWidth: '32px',
   };
 
   const change = (event, value) => {
@@ -29,10 +36,10 @@ export function DataSelector(props) {
       variant="contained"
     >
       <ToggleButton style={toggleButtonStyle} value="hr">
-        hr
+        {props.isMobile ? 'h' : 'hr'}
       </ToggleButton>
       <ToggleButton style={toggleButtonStyle} value="day">
-        day
+        {props.isMobile ? 'd' : 'day'}
       </ToggleButton>
     </ToggleButtonGroup>
   );

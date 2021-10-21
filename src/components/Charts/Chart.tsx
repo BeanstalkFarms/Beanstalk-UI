@@ -51,6 +51,8 @@ export function Chart(props) {
 
   const useDataMode = props.data.length > 1;
   const dataMode = useDataMode ? props.dataMode : 'hr';
+  console.log(props.title);
+  console.log(props.data);
   let data = dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
 
   if (props.timeMode === 'week') {
@@ -117,11 +119,13 @@ export function Chart(props) {
     <Box className="AppBar-shadow" style={chartStyle}>
       {useDataMode ? <DataSelector
         size={props.size}
+        isMobile={props.isMobile}
         setValue={props.setDataMode}
         value={dataMode}
       /> : null}
       <TimeSelector
         size={props.size}
+        isMobile={props.isMobile}
         setValue={props.setTimeMode}
         value={props.timeMode}
         dataMode={dataMode}

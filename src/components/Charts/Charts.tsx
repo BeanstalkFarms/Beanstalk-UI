@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BaseModule } from '../Common';
+import { BaseModule, ContentTitle } from '../Common';
 import { Chart } from './Chart';
 
 export default function Charts(props) {
@@ -29,20 +29,33 @@ export default function Charts(props) {
   };
 
   const isMobile: boolean = (width <= 550);
-  const sections = props.charts.map((c) => (<Chart data={c.data} isMobile={isMobile} key={c.title} title={`${props.mainTitle} ${c.title}`} {...c.props} {...modeProps} {...props} />));
+  const sections = props.charts.map((c) => (<Chart data={c.data} isMobile={isMobile} key={c.title} title={`${c.title}`} {...c.props} {...modeProps} {...props} />));
   const baseStyle = isMobile ? { width: '100vw', paddingLeft: 0, paddingRight: 0 } : null;
 
+  const titles = props.charts.map((c) => {
+    if (isMobile && c.shortTitle !== undefined) return c.shortTitle;
+    return c.title;
+  });
+
   return (
-    <BaseModule
-      handleTabChange={(event, newSection) => { setSection(newSection); }}
-      removeBackground
-      section={section}
-      sectionTitles={props.charts.map((c) => c.title)}
-      showButton={false}
-      size="small"
-      style={baseStyle}
-      >
-      {sections[section]}
-    </BaseModule>
+    <>
+      <ContentTitle
+        id="Bean Charts"
+        title={props.mainTitle}
+        size="20px"
+        style={{ minHeight: '0', maxWidth: '1000px' }}
+      />
+      <BaseModule
+        handleTabChange={(event, newSection) => { setSection(newSection); }}
+        removeBackground
+        section={section}
+        sectionTitles={titles}
+        showButton={false}
+        size="small"
+        style={baseStyle}
+        >
+        {sections[section]}
+      </BaseModule>
+    </>
   );
 }
