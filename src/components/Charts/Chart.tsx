@@ -13,7 +13,7 @@ import { DataSelector, TimeSelector } from './Selectors';
 import { QuestionModule } from '../Common';
 
 export function Chart(props) {
-  const n = props.size === 'medium';
+  const n = !props.isMobile;
   const chartStyle = {
     borderRadius: '25px',
     padding: '10px',
@@ -49,12 +49,20 @@ export function Chart(props) {
     yAccessor: (d) => d.y,
   };
 
-  let data = props.dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
+  const useDataMode = props.data.length > 1;
+  const dataMode = useDataMode ? props.dataMode : 'hr';
+  let data = dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
 
   if (props.timeMode === 'week') {
     data = data.filter((d) => {
       const date = new Date();
       date.setDate(date.getDate() - 7);
+      return d.x > date;
+    });
+  } else if (props.timeMode === 'month') {
+    data = data.filter((d) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() - 1);
       return d.x > date;
     });
   }
@@ -107,21 +115,23 @@ export function Chart(props) {
 
   return (
     <Box className="AppBar-shadow" style={chartStyle}>
-      <DataSelector
+      {useDataMode ? <DataSelector
         size={props.size}
+        isMobile={props.isMobile}
         setValue={props.setDataMode}
-        value={props.dataMode}
-      />
+        value={dataMode}
+      /> : null}
       <TimeSelector
         size={props.size}
+        isMobile={props.isMobile}
         setValue={props.setTimeMode}
         value={props.timeMode}
-        dataMode={props.dataMode}
+        dataMode={dataMode}
       />
       <span style={titleStyle}>
         {props.title}
         <QuestionModule
-          description={`This is the historical Bean ${props.title} chart.`}
+          description={`This is the historical ${props.title} chart.`}
           margin="-6px 0 0 2px"
         />
       </span>
