@@ -2,8 +2,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import ReactDOM from 'react-dom';
+import { Provider as StateProvider } from 'react-redux';
 import { CssBaseline, Box } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
+import store from '../../state';
 import BeanLogo from '../../img/bean-logo.svg';
 import { lastCrossQuery } from '../../graph';
 import { BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from '../../constants';
@@ -831,12 +833,14 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <StateProvider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
 
-      <Box className="App">
-        <Main>{app}</Main>
-      </Box>
-    </ThemeProvider>
+        <Box className="App">
+          <Main>{app}</Main>
+        </Box>
+      </ThemeProvider>
+    </StateProvider>
   );
 }
