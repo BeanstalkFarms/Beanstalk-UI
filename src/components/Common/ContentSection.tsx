@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { TitleLabel } from './index';
+import { ContentTitle } from './index';
 
 export default function ContentSection(props) {
   const classes = makeStyles({
@@ -14,18 +14,6 @@ export default function ContentSection(props) {
     },
   })();
 
-  function renderTitle() {
-    if (props.title !== undefined) {
-      return (
-        <Box className={classes.sectionTitle}>
-          <TitleLabel size={props.size} textTransform={props.textTransform}>
-            {props.title}
-          </TitleLabel>
-        </Box>
-      );
-    }
-  }
-
   return (
     <Box id={props.id} className="AppContent" style={props.style}>
       <Grid
@@ -34,7 +22,7 @@ export default function ContentSection(props) {
         className={classes.appSection}
         justifyContent="center"
       >
-        {renderTitle()}
+        <ContentTitle {...props} />
         {props.children}
       </Grid>
     </Box>

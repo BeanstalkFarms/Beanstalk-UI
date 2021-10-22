@@ -171,11 +171,19 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
   /* Transaction Details, settings and text */
 
-  const fullP = toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId) ?
+  const plotText = toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId) ?
     `You will send the full plot of ${toPlotEndIndex} pods.`
     : toPlotEndIndex.isEqualTo(fromPlotIndex)
     ? 'Invalid transfer amount'
     : `You will send a partial plot with pods from index ${fromPlotIndex} to index ${toPlotEndIndex}.`;
+
+  const sendText = toPlotEndIndex.toFixed() !== 'NaN' ?
+    <Box style={{ display: 'inline-block', width: '100%' }}>
+      <span>
+        {plotText}
+      </span>
+    </Box>
+    : null;
 
   function transactionDetails() {
     if (toPlotEndIndex.isLessThanOrEqualTo(0)) return;
@@ -186,11 +194,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
           <Box style={{ marginRight: '5px' }}>{fromIndexField}</Box>
           <Box style={{ marginLeft: '5px' }}>{fromIndexEndField}</Box>
         </Box>
-        <Box style={{ display: 'inline-block', width: '100%' }}>
-          <span>
-            {fullP}
-          </span>
-        </Box>
+        {sendText}
         <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
           <span>
             WARNING: Beanstalk doesn&apos;t currently support a market for

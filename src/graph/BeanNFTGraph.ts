@@ -75,7 +75,7 @@ export async function beanNFTQuery() {
   const data = d1.data.beanNfts.concat(d2.data.beanNfts);
   let nfts = data.reduce((ns, s) => {
     const nft = {};
-    nft.account = s.account;
+  nft.account = s.account;
     nft.id = parseInt(s.id, 10);
     nft.txn = s.txn;
     ns.push(nft);
