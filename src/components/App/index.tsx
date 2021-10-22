@@ -496,6 +496,7 @@ export default function App() {
                   if (s !== endIndex) {
                     const s2 = s + parseInt(event.returnValues.pods) / 1e6;
                     userPlots[s2] = (new BigNumber(endIndex)).minus(new BigNumber(s2));
+                    if (userPlots[s2].isEqualTo(0)) delete userPlots[s2];
                   }
                   found = true;
                 }

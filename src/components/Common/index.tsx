@@ -27,6 +27,7 @@ export { default as InputFieldPlus } from './InputFieldPlus';
 export { default as ListTable } from './ListTable';
 export { default as NftListTable } from './NftListTable';
 export { default as NftPicTable } from './NftPicTable';
+export { default as PlotInputField } from './PlotInputField';
 export { default as QuestionModule } from './QuestionModule';
 export { default as SettingsFormModule } from './SettingsFormModule';
 export { default as SingleButton } from './SingleButton';
