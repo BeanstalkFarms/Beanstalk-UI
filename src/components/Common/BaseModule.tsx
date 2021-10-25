@@ -245,7 +245,7 @@ export default function BaseModule(props) {
               {moduleContent}
             </form>
           ) : (
-            <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
+            <span style={{ padding: s ? '0px' : '0px 10px' }}>{moduleContent}</span>
           )}
         </AppBar>
       ) : props.sectionTitles.length === 1 && props.normalBox ? (

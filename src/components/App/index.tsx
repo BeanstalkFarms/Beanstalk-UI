@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { CssBaseline, Box } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import BeanLogo from '../../img/bean-logo.svg';
-import { lastCrossQuery } from '../../graph';
+import { lastCrossQuery, apyQuery } from '../../graph';
 import { BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from '../../constants';
 import {
   addRewardedCrates,
@@ -55,6 +55,7 @@ export default function App() {
           {...prices}
           {...totalBalance}
           {...userBalance}
+          beansPerSeason={beansPerSeason}
         />
       ),
     },
@@ -73,6 +74,7 @@ export default function App() {
           {...prices}
           {...userBalance}
           {...weather}
+          beansPerSeason={beansPerSeason}
         />
       ),
     },
@@ -235,6 +237,8 @@ export default function App() {
     totalSeeds: initBN,
     totalPods: initBN,
     totalRoots: initBN,
+    harvestableBeansPerSeason7: initBN,
+    harvestableBeansPerSeason30: initBN,
   });
   const [season, setSeason] = useState({
     season: initBN,
@@ -267,6 +271,12 @@ export default function App() {
   });
 
   const [lastCross, setLastCross] = useState(0)
+  const [beansPerSeason, setBeansPerSeason] = useState({
+    'farmableWeek': 0,
+    'farmableMonth': 0,
+    'harvestableWeek': 0,
+    'harvestableMonth': 0,
+  })
   const [bips, setBips] = useState([])
   const [hasActiveBIP, setHasActiveBIP] = useState(false)
   const [contractEvents, setContractEvents] = useState([])
@@ -724,6 +734,7 @@ export default function App() {
       const startTime = benchmarkStart('TOTALS');
       const batch = createLedgerBatch();
       const totalBalancePromises = getTotalBalances(batch);
+
       batch.execute();
 
       const [bipInfo, totalBalances] = await Promise.all([
@@ -761,7 +772,7 @@ export default function App() {
             updateBalanceState();
           });
         });
-        const [balanceInitializers, eventInitializer, lastCrossInitializer] =
+        const [balanceInitializers, eventInitializer, lastCrossInitializer, apyInitializer] =
           await Promise.all([
             updateAllBalances(),
             initializeEventListener(
@@ -771,12 +782,15 @@ export default function App() {
               setContractEvents,
             ),
             lastCrossQuery(),
+            apyQuery(),
           ]);
+        console.log(apyInitializer);
         ReactDOM.unstable_batchedUpdates(() => {
           const [updateBalanceState, eventParsingParameters] =
             balanceInitializers;
           updateBalanceState();
           setLastCross(lastCrossInitializer);
+          setBeansPerSeason(apyInitializer)
           processEvents(eventInitializer, eventParsingParameters);
           setInitialized(true);
         });
