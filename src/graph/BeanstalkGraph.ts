@@ -6,6 +6,25 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const APYQuery = `
+{
+    seasons(
+       orderBy: timestamp,
+       orderDirection: desc,
+       where: {
+           timestamp_gt: 0
+       },
+       first: 1
+ ) {
+       id
+       farmableBeansPerSeason7
+       farmableBeansPerSeason30
+       harvestableBeansPerSeason7
+       harvestableBeansPerSeason30
+  }
+ }
+ `;
+
 const SeasonQuery = `
 query seasons($first: Int, $skip: Int) {
     seasons(
@@ -51,16 +70,16 @@ query seasons($first: Int, $skip: Int) {
        reinvestedSopEth
        stalk
        seeds
-       cumulativeBeansPerLP
-       beansPerSeason7
-       beansPerSeason30
+       cumulativeFarmableBeansPerLP
+       farmableBeansPerSeason7
+       farmableBeansPerSeason30
        boughtBeans
        newBoughtBeans
-       newBoughtBeansEth
+       newBoughtBeansETH
        newBoughtBeansUSD
        soldBeans
        newSoldBeans
-       newSoldBeansEth
+       newSoldBeansETH
        newSoldBeansUSD
        harvestedPods
        numberOfSowers
@@ -75,10 +94,10 @@ function roundTo4Digits(num) {
 }
 
 function querySeasons(first: Number, skip: Number): Promise {
-    return client.query({
-        query: gql(SeasonQuery),
-        variables: { first: first, skip: skip },
-});
+  return client.query({
+      query: gql(SeasonQuery),
+      variables: { first: first, skip: skip },
+  });
 }
 
 export async function beanstalkQuery() {
@@ -96,4 +115,17 @@ export async function beanstalkQuery() {
         return season;
     }, []);
     return seasons;
+}
+
+export async function apyQuery() {
+  const apyData = await client.query({
+    query: gql(APYQuery),
+  });
+  const bps = apyData.data.seasons[0];
+  return {
+    farmableWeek: parseFloat(bps.farmableBeansPerSeason7),
+    farmableMonth: parseFloat(bps.farmableBeansPerSeason30),
+    harvestableWeek: parseFloat(bps.harvestableBeansPerSeason7),
+    harvestableMonth: parseFloat(bps.harvestableBeansPerSeason30),
+  };
 }

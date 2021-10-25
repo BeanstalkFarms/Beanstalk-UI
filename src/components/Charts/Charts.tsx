@@ -42,7 +42,7 @@ export default function Charts(props) {
       <ContentTitle
         id="Bean Charts"
         title={props.mainTitle}
-        size="20px"
+        size="18px"
         style={{ minHeight: '0', maxWidth: '1000px' }}
       />
       <BaseModule

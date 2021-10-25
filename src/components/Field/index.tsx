@@ -18,6 +18,10 @@ export default function Field(props) {
     maxWidth: '300px',
   };
 
+  // const apy = props.beansPerSeason.harvestableWeek * 8760;
+
+  const tth = props.unripenedPods.dividedBy(props.beansPerSeason.harvestableWeek);
+  const apy = props.weather.multipliedBy(8760).dividedBy(tth);
   return (
     <ContentSection id="field" title="Field">
       <Grid container item xs={12} spacing={3} justifyContent="center">
@@ -84,6 +88,24 @@ export default function Field(props) {
             description="The total Harvested Pods over all Seasons is the amount of debt Beanstalk has paid off thus far."
             title="Pods Harvested"
             value={displayBN(props.harvestableIndex)}
+          />
+        </Grid>
+      </Grid>
+      <Grid container item xs={12} spacing={3} justifyContent="center">
+        <Grid item sm={6} xs={12} style={headerLabelStyle}>
+          <HeaderLabel
+            balanceDescription={`${apy.toFixed(2)}% APY`}
+            description="The Weather is the interest rate for sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean sown."
+            title="Pod APY"
+            value={`${apy.toFixed(0)}%`}
+          />
+        </Grid>
+        <Grid item sm={6} xs={12} style={headerLabelStyle}>
+          <HeaderLabel
+            balanceDescription={`${tth.toFixed(2)} Seasons`}
+            description="The total Harvested Pods over all Seasons is the amount of debt Beanstalk has paid off thus far."
+            title="Seasons to Pod Clearence"
+            value={tth.toFixed(0)}
           />
         </Grid>
       </Grid>

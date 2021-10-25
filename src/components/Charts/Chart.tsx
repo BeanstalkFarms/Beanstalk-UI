@@ -73,15 +73,18 @@ export function Chart(props) {
           `${d.toDateString().split(' ')[1]} ${d.getDate()}, ${d.getHours()}:00`
       : (d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`;
 
-  const xAxisTickFormatter = (d) => {
-    if (d > 1000000) return `${(d / 1000000).toFixed(2).toLocaleString('en-US')}m`;
-    else if (d > 1000) return `${(d / 1000).toLocaleString('en-US')}k`; // eslint-disable-line
-    else return `${d === 0 ? d : d.toFixed(2)}`;
+  const yAxisTickFormatter = (d) => {
+    if (props.title === 'Price') return d.toFixed(2);
+    if (d >= 1000000) return `${(d / 1000000).toLocaleString('en-US')}m`;
+    if (d >= 10000) return `${(d / 1000).toLocaleString('en-US')}k`;
+    if (d >= 1) return `${(d).toLocaleString('en-US')}`;
+    if (d >= 0.1) return `${d === 0 ? d : d.toFixed(2)}`;
+    return `${d}`;
   };
 
   const chartMargin = (
     n
-      ? { top: 30, right: 60, bottom: 50, left: 65 }
+      ? { top: 30, right: 60, bottom: 50, left: 70 }
       : { top: 10, right: 20, bottom: 40, left: 65 }
   );
 
@@ -158,7 +161,7 @@ export function Chart(props) {
                 {tooltipData.datumByKey[props.title].key}
               </Box>
               <Box style={{ marginTop: '5px' }}>
-                {`${props.usd ? '$' : ''}${accessors
+                {`${props.unit !== undefined ? props.unit : ''}${accessors
                   .yAccessor(tooltipData.datumByKey[props.title].datum)
                   .toLocaleString('en-US')}`}
               </Box>
@@ -180,10 +183,10 @@ export function Chart(props) {
         <AnimatedAxis
           numTicks={6}
           tickLength={n ? 7 : 3}
-          label={`${props.title}${props.usd ? ' ($)' : ''}`}
+          label={`${props.title}${props.unit !== undefined ? ` (${props.unit})` : ''}`}
           labelOffset={35}
           orientation="left"
-          tickFormat={xAxisTickFormatter}
+          tickFormat={yAxisTickFormatter}
         />
         <AnimatedGrid strokeDasharray={2} columns={false} numTicks={6} />
         {getLineForTitle(props.title, data)}
@@ -193,5 +196,5 @@ export function Chart(props) {
 }
 
 Chart.defaultProps = {
-  usd: true,
+  unit: undefined,
 };

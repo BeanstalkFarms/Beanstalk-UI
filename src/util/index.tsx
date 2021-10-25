@@ -18,6 +18,7 @@ export * from './TimeUtilities';
 export * from './UniswapUtilities';
 export * from './TimeUtilities';
 export * from './BeaNFTUtilities';
+export * from './APYUtilities';
 
 let ethereum;
 export let initializing;

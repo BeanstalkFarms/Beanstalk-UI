@@ -15,6 +15,9 @@ export default function BeanCharts() {
       {
           title: 'Price',
           data: chartData.price,
+          props: {
+              unit: '$',
+          },
       },
       {
           title: 'Volume',
@@ -32,9 +35,6 @@ export default function BeanCharts() {
       {
           title: 'Supply',
           data: chartData.supply,
-          props: {
-              usd: false,
-          },
       },
   ];
 

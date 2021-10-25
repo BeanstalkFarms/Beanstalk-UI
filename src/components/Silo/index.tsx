@@ -1,11 +1,22 @@
 import React from 'react';
 import { Link, Box } from '@material-ui/core';
 import { MEDIUM_INTEREST_LINK } from '../../constants';
-import { ContentSection } from '../Common';
+import {
+  ContentSection,
+  Grid,
+  HeaderLabel,
+} from '../Common';
 import TabbedSilo from './TabbedSilo';
+import { getAPYs } from '../../util';
 
 export default function Silo(props) {
   const { innerWidth: width } = window;
+
+  const headerLabelStyle = {
+    maxWidth: '300px',
+  };
+
+const [beanAPY, lpAPY] = getAPYs(props.beansPerSeason.farmableWeek, parseFloat(props.totalStalk), parseFloat(props.totalSeeds));
 
   return (
     <ContentSection id="silo" title="Silo">
@@ -31,6 +42,25 @@ export default function Silo(props) {
         </Link>
         .
       </Box>
+
+      <Grid container item xs={12} spacing={3} justifyContent="center">
+        <Grid item sm={6} xs={12} style={headerLabelStyle}>
+          <HeaderLabel
+            balanceDescription={`${lpAPY.toFixed(2)}%`}
+            description="The Estimated APY based on the past 7 day average."
+            title="LP APY"
+            value={`${lpAPY.toFixed(0)}%`}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} style={headerLabelStyle}>
+          <HeaderLabel
+            balanceDescription={`${beanAPY.toFixed(2)}%`}
+            description="The Estimated APY based on the past 7 day average."
+            title="Bean APY"
+            value={`${beanAPY.toFixed(0)}%`}
+          />
+        </Grid>
+      </Grid>
       <TabbedSilo {...props} />
     </ContentSection>
   );
