@@ -97,7 +97,7 @@ export function Chart(props) {
 
   const chartMargin = (
     n
-      ? { top: 30, right: 60, bottom: 30, left: 70 }
+      ? { top: 30, right: 60, bottom: 60, left: 70 }
       : { top: 10, right: 20, bottom: 50, left: 65 }
   );
 
