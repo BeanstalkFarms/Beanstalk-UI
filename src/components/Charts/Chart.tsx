@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import {
-  AnimatedAxis, // any of these can be non-animated equivalents
-  AnimatedGrid,
+  Axis, // any of these can be non-animated equivalents
+  Grid,
   XYChart,
   Tooltip,
   AnimatedAreaSeries,
@@ -10,31 +10,18 @@ import {
   buildChartTheme,
 } from '@visx/xychart';
 import { DataSelector, TimeSelector } from './Selectors';
-import { QuestionModule } from '../Common';
+import BeanLogo from '../../img/bean-logo.svg';
 
 export function Chart(props) {
   const n = !props.isMobile;
   const chartStyle = {
     borderRadius: '25px',
     padding: '10px',
+    paddingTop: `${n ? '30px' : '40px'}`,
     fontFamily: 'Futura-Pt-Book',
-    marginTop: '30px',
     position: 'relative',
     height: `${n ? '370px' : '240px'}`,
     backgroundColor: '#F5FAFF',
-  };
-  const lineStyle = {
-    backgroundColor: 'primary',
-    color: 'primary',
-    margin: '10px 8px',
-  };
-  const titleStyle = {
-    width: '100%',
-    display: 'inline-block',
-    textAlign: 'center',
-    marginTop: '5px',
-    fontFamily: 'Futura-Pt-Book',
-    fontSize: n ? '20px' : '15px',
   };
   const theme = buildChartTheme({
     backgroundColor: '#F5FAFF',
@@ -52,6 +39,29 @@ export function Chart(props) {
   const useDataMode = props.data.length > 1;
   const dataMode = useDataMode ? props.dataMode : 'hr';
   let data = dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
+
+  if (data.length === 0) {
+    const loadingStyle = {
+      borderRadius: '25px',
+      padding: `${n ? '135px' : '60px'}`,
+      fontFamily: 'Futura-Pt-Book',
+      position: 'relative',
+      height: `${n ? '370px' : '240px'}`,
+      backgroundColor: '#F5FAFF',
+    };
+    return (
+      <Box style={loadingStyle}>
+        <Box className="Loading-logo">
+          <img
+            style={{ verticalAlign: 'middle' }}
+            height="100px"
+            src={BeanLogo}
+            alt="bean.money"
+          />
+        </Box>
+      </Box>
+    );
+  }
 
   if (props.timeMode === 'week') {
     data = data.filter((d) => {
@@ -117,7 +127,7 @@ export function Chart(props) {
   }
 
   return (
-    <Box className="AppBar-shadow" style={chartStyle}>
+    <Box style={chartStyle}>
       {useDataMode ? <DataSelector
         size={props.size}
         isMobile={props.isMobile}
@@ -131,17 +141,9 @@ export function Chart(props) {
         value={props.timeMode}
         dataMode={dataMode}
       />
-      <span style={titleStyle}>
-        {props.title}
-        <QuestionModule
-          description={`This is the historical ${props.title} chart.`}
-          margin="-6px 0 0 2px"
-        />
-      </span>
-      <hr style={lineStyle} />
       <XYChart
         theme={theme}
-        height={n ? 300 : 170}
+        height={n ? 330 : 200}
         margin={chartMargin}
         xScale={{ type: 'time' }}
         yScale={{ type: 'linear', zero: false, nice: true }}
@@ -173,14 +175,14 @@ export function Chart(props) {
             </Box>
           )}
         />
-        <AnimatedAxis
+        <Axis
           label="Time"
           orientation="bottom"
           tickLength={n ? 7 : 3}
           numTicks={props.timeMode === 'week' ? 7 : 7}
           tickFormat={(d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`}
         />
-        <AnimatedAxis
+        <Axis
           numTicks={6}
           tickLength={n ? 7 : 3}
           label={`${props.title}${props.unit !== undefined ? ` (${props.unit})` : ''}`}
@@ -188,7 +190,7 @@ export function Chart(props) {
           orientation="left"
           tickFormat={yAxisTickFormatter}
         />
-        <AnimatedGrid strokeDasharray={2} columns={false} numTicks={6} />
+        <Grid strokeDasharray={2} columns={false} numTicks={6} />
         {getLineForTitle(props.title, data)}
       </XYChart>
     </Box>

@@ -14,6 +14,7 @@ export default function BeanCharts() {
   const charts = [
       {
           title: 'Price',
+          description: 'This is the current price at the end of every hour/day.',
           data: chartData.price,
           props: {
               unit: '$',
@@ -21,19 +22,23 @@ export default function BeanCharts() {
       },
       {
           title: 'Volume',
+          description: 'This is the USD volume in the BEAN:ETH pool at the end of every hour/day.',
           data: chartData.volume,
       },
       {
           title: 'Liquidity',
+          description: 'This is the USD value of the BEAN:ETH pool at the end of every hour/day.',
           data: chartData.liquidity,
       },
       {
           title: 'Market Cap',
           shortTitle: 'M. Cap',
+          description: 'This is the USD value of the total Bean supply at the end of every hour/day.',
           data: chartData.marketCap,
       },
       {
           title: 'Supply',
+          description: 'This is the total Bean supply at the end of every hour/day.',
           data: chartData.supply,
       },
   ];

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BaseModule, ContentTitle } from '../Common';
+import { BaseModule } from '../Common';
 import { Chart } from './Chart';
 
 export default function Charts(props) {
@@ -21,6 +21,10 @@ export default function Charts(props) {
     };
   }, []);
 
+  if (props.charts.length === 0) {
+    return null;
+  }
+
   const modeProps = {
     dataMode: dataMode,
     timeMode: timeMode,
@@ -28,34 +32,33 @@ export default function Charts(props) {
     setTimeMode: setTimeMode,
   };
 
-  const isMobile: boolean = (width <= 650);
+  const isMobile: boolean = (width <= 768);
   const sections = props.charts.map((c) => (<Chart data={c.data} isMobile={isMobile} key={c.title} title={`${c.title}`} {...c.props} {...modeProps} {...props} />));
-  const baseStyle = isMobile ? { width: '100vw', paddingLeft: 0, paddingRight: 0 } : null;
+  const baseStyle = isMobile ? { width: '100%', paddingLeft: 0, paddingRight: 0 } : null;
 
   const titles = props.charts.map((c) => {
+    if (width < 520 && c.xShortTitle !== undefined) return c.xShortTitle;
     if (isMobile && c.shortTitle !== undefined) return c.shortTitle;
+    if (c.tabTitle !== undefined) return c.tabTitle;
     return c.title;
   });
 
+  const descriptions = props.charts[0].description !== undefined ?
+    props.charts.map((c) => c.description) :
+    undefined;
+
   return (
-    <>
-      <ContentTitle
-        id="Bean Charts"
-        title={props.mainTitle}
-        size="18px"
-        style={{ minHeight: '0', maxWidth: '1000px' }}
-      />
-      <BaseModule
-        handleTabChange={(event, newSection) => { setSection(newSection); }}
-        removeBackground
-        section={section}
-        sectionTitles={titles}
-        showButton={false}
-        size="small"
-        style={baseStyle}
-        >
-        {sections[section]}
-      </BaseModule>
-    </>
+    <BaseModule
+      handleTabChange={(event, newSection) => { setSection(newSection); }}
+      section={section}
+      sectionTitles={titles}
+      showButton={false}
+      size="small"
+      marginTop="20px"
+      sectionTitlesDescription={descriptions}
+      style={baseStyle}
+      >
+      {sections[section]}
+    </BaseModule>
   );
 }

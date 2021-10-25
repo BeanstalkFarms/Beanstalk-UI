@@ -40,6 +40,7 @@ export { default as TokenOutputField } from './TokenOutputField';
 export { default as TokenTypeImageModule } from './TokenTypeImageModule';
 export { default as TransactionDetailsModule } from './TransactionDetailsModule';
 export { default as UnitSelectionModule } from './UnitSelectionModule';
+export { default as TabImageModule } from './TabImageModule';
 
 export const FormatTooltip = withStyles((theme: Theme) => ({
   tooltip: {
