@@ -147,7 +147,8 @@ export const BeanDepositModule = forwardRef((props, ref) => {
     );
   }
   if (props.settings.mode === SwapMode.Ethereum ||
-        (props.settings.mode === SwapMode.BeanEthereum && toBuyBeanValue.isGreaterThan(0))
+      (props.settings.mode === SwapMode.BeanEthereum &&
+        toBuyBeanValue.isGreaterThan(0))
     ) {
     details.push(
       <TransactionTextModule
@@ -163,10 +164,14 @@ export const BeanDepositModule = forwardRef((props, ref) => {
       />
     );
   }
-  details.push(`Deposit ${displayBN(MaxBN(
+  const beanOutput = MaxBN(
     toBuyBeanValue,
     new BigNumber(0)
-  ).plus(MaxBN(fromBeanValue, new BigNumber(0))))} Beans in the Silo.`);
+  ).plus(MaxBN(fromBeanValue, new BigNumber(0)));
+
+  details.push(`Deposit ${displayBN(beanOutput)}
+    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo.`
+  );
   details.push(`Immediately receive ${displayBN(
     new BigNumber(toStalkValue)
   )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds.`);

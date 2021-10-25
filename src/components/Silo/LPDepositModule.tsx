@@ -309,9 +309,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
 
   function displayLP(beanInput, ethInput) {
     return (
-      `${displayBN(beanInput)} ${TokenLabel(
-        CryptoAsset.Bean
-      )} and ${displayBN(ethInput)} ${TokenLabel(CryptoAsset.Ethereum)}`
+      `${displayBN(beanInput)}
+      ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
+      ${TokenLabel(CryptoAsset.Ethereum)}`
     );
   }
 
