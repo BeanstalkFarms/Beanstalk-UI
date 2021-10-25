@@ -17,6 +17,26 @@ export default function Silo(props) {
   };
 
 const [beanAPY, lpAPY] = getAPYs(props.beansPerSeason.farmableWeek, parseFloat(props.totalStalk), parseFloat(props.totalSeeds));
+let apyField = (
+  <Grid container item xs={12} spacing={3} justifyContent="center">
+    <Grid item sm={6} xs={12} style={headerLabelStyle}>
+      <HeaderLabel
+        balanceDescription={`${lpAPY.toFixed(2)}%`}
+        description="The Estimated APY based on the past 7 day average."
+        title="LP APY"
+        value={`${lpAPY.toFixed(0)}%`}
+      />
+    </Grid>
+    <Grid item xs={12} sm={6} style={headerLabelStyle}>
+      <HeaderLabel
+        balanceDescription={`${beanAPY.toFixed(2)}%`}
+        description="The Estimated APY based on the past 7 day average."
+        title="Bean APY"
+        value={`${beanAPY.toFixed(0)}%`}
+      />
+    </Grid>
+  </Grid>);
+  apyField = null;
 
   return (
     <ContentSection id="silo" title="Silo">
@@ -42,25 +62,7 @@ const [beanAPY, lpAPY] = getAPYs(props.beansPerSeason.farmableWeek, parseFloat(p
         </Link>
         .
       </Box>
-
-      <Grid container item xs={12} spacing={3} justifyContent="center">
-        <Grid item sm={6} xs={12} style={headerLabelStyle}>
-          <HeaderLabel
-            balanceDescription={`${lpAPY.toFixed(2)}%`}
-            description="The Estimated APY based on the past 7 day average."
-            title="LP APY"
-            value={`${lpAPY.toFixed(0)}%`}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} style={headerLabelStyle}>
-          <HeaderLabel
-            balanceDescription={`${beanAPY.toFixed(2)}%`}
-            description="The Estimated APY based on the past 7 day average."
-            title="Bean APY"
-            value={`${beanAPY.toFixed(0)}%`}
-          />
-        </Grid>
-      </Grid>
+      {apyField}
       <TabbedSilo {...props} />
     </ContentSection>
   );
