@@ -26,9 +26,9 @@ export default function Charts(props) {
       style={{ minHeight: '600px', maxWidth: '1000px', marginTop: marginTop }}
     >
       <hr />
-      <BeanCharts />
       <SiloCharts data={chartData} />
       <FieldCharts data={chartData} />
+      <BeanCharts />
     </ContentSection>
   );
 }
