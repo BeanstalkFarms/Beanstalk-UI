@@ -43,6 +43,7 @@ export default function Charts(props) {
     <FieldCharts data={chartData} />,
     <SiloCharts data={chartData} />,
   ];
+
   return (
     <ContentSection
       id="charts"

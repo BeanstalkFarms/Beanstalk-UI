@@ -20,7 +20,7 @@ export function Chart(props) {
     paddingTop: `${n ? '30px' : '40px'}`,
     fontFamily: 'Futura-Pt-Book',
     position: 'relative',
-    height: `${n ? '370px' : '240px'}`,
+    height: `${n ? '370px' : '250px'}`,
     backgroundColor: '#F5FAFF',
   };
   const theme = buildChartTheme({
@@ -77,6 +77,9 @@ export function Chart(props) {
     });
   }
 
+  let xTicks = 7;
+  if (props.timeMode === 'all ' && props.isMobile) xTicks = 2;
+
   const toolTipFormatter =
     props.dataMode === 'hr'
       ? (d) =>
@@ -94,9 +97,17 @@ export function Chart(props) {
 
   const chartMargin = (
     n
-      ? { top: 30, right: 60, bottom: 50, left: 70 }
-      : { top: 10, right: 20, bottom: 40, left: 65 }
+      ? { top: 30, right: 60, bottom: 30, left: 70 }
+      : { top: 10, right: 20, bottom: 50, left: 65 }
   );
+
+  const frontUnit = props.unit !== undefined &&
+                  props.unit !== '%' ?
+                  props.unit : '';
+
+  const backUnit = props.unit !== undefined &&
+                  props.unit === '%' ?
+                  props.unit : '';
 
   function getLineForTitle(_title, _data) {
     if (_title === 'Price') {
@@ -143,7 +154,7 @@ export function Chart(props) {
       />
       <XYChart
         theme={theme}
-        height={n ? 330 : 200}
+        height={n ? 330 : 210}
         margin={chartMargin}
         xScale={{ type: 'time' }}
         yScale={{ type: 'linear', zero: false, nice: true }}
@@ -163,9 +174,10 @@ export function Chart(props) {
                 {tooltipData.datumByKey[props.title].key}
               </Box>
               <Box style={{ marginTop: '5px' }}>
-                {`${props.unit !== undefined ? props.unit : ''}${accessors
+                {`${frontUnit}${accessors
                   .yAccessor(tooltipData.datumByKey[props.title].datum)
-                  .toLocaleString('en-US')}`}
+                  .toLocaleString('en-US')}
+                  ${backUnit}`}
               </Box>
               <Box style={{ marginTop: '5px', color: '#777777' }}>
                 {toolTipFormatter(
@@ -178,8 +190,8 @@ export function Chart(props) {
         <Axis
           label="Time"
           orientation="bottom"
-          tickLength={n ? 7 : 3}
-          numTicks={props.timeMode === 'week' ? 7 : 7}
+          tickLength={xTicks}
+          numTicks={n ? 7 : 3}
           tickFormat={(d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`}
         />
         <Axis

@@ -4,7 +4,7 @@ import Charts from './Charts';
 export default function FieldCharts(props) {
   const charts = [
     {
-        title: 'Real Rate Of Return',
+        title: 'Real Rate of Return',
         tabTitle: 'RRoR',
         description: 'This is the current total Real Rate of Return by Season. Real Rate of Return is defined as RRoR = (1 + W) / TWAP.',
         data: [props.data.map((d) => ({ x: d.x, y: (1 + d.weather) / d.price }))],
@@ -27,20 +27,20 @@ export default function FieldCharts(props) {
     },
     {
         title: 'Sown Beans',
-        tabTitle: 'Sown',
+        tabTitle: 'SOWN',
         description: 'This is the current total Sown Beans by Season.',
         data: [props.data.map((d) => ({ x: d.x, y: d.sownBeans }))],
     },
     {
         title: 'Harvested Pods',
-        tabTitle: 'Harvested',
-        xShortTitle: 'Harv.',
+        tabTitle: 'HARVESTED',
+        shortTitle: 'Harv.',
         description: 'This is the current total Harvested Pods by Season.',
         data: [props.data.map((d) => ({ x: d.x, y: d.harvestedPods }))],
     },
     {
         title: 'Unique Sowers',
-        tabTitle: 'Sowers',
+        tabTitle: 'SOWERS',
         description: 'This is the current total unique Sowers by Season.',
         data: [props.data.map((d) => ({ x: d.x, y: d.numberOfSowers }))],
     },

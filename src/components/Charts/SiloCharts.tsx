@@ -19,9 +19,6 @@ export default function SiloCharts(props) {
             description="This is the current total Withdrawn Beans by Season."
         />,
           data: [props.data.map((d) => ({ x: d.x, y: d.withdrawnBeans }))],
-          props: {
-              usd: false,
-          },
       },
       {
           title: 'Deposited LP',
@@ -40,6 +37,7 @@ export default function SiloCharts(props) {
           data: [props.data.map((d) => ({ x: d.x, y: d.withdrawnLP }))],
       },
       {
+          title: 'Stalk',
           tabTitle: <TabImageModule
             token={SiloAsset.Stalk}
             description="This is the current total Stalk by Season."
@@ -47,6 +45,7 @@ export default function SiloCharts(props) {
           data: [props.data.map((d) => ({ x: d.x, y: d.stalk }))],
       },
       {
+        title: 'Seeds',
           tabTitle: <TabImageModule
             token={SiloAsset.Seed}
             description="This is the current total Seeds by Season."

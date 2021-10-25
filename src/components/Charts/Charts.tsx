@@ -37,10 +37,9 @@ export default function Charts(props) {
   const baseStyle = isMobile ? { width: '100%', paddingLeft: 0, paddingRight: 0 } : null;
 
   const titles = props.charts.map((c) => {
-    if (width < 520 && c.xShortTitle !== undefined) return c.xShortTitle;
-    if (isMobile && c.shortTitle !== undefined) return c.shortTitle;
+    if (width < 520 && c.xShortTitle !== undefined) return c.shortTitle.toUpperCase();
     if (c.tabTitle !== undefined) return c.tabTitle;
-    return c.title;
+    return c.title.toUpperCase();
   });
 
   const descriptions = props.charts[0].description !== undefined ?
@@ -57,6 +56,7 @@ export default function Charts(props) {
       marginTop="20px"
       sectionTitlesDescription={descriptions}
       style={baseStyle}
+      textTransform="None"
       >
       {sections[section]}
     </BaseModule>

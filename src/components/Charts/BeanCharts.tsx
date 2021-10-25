@@ -22,11 +22,13 @@ export default function BeanCharts() {
       },
       {
           title: 'Volume',
+          shortTitle: 'Vol.',
           description: 'This is the USD volume in the BEAN:ETH pool at the end of every hour/day.',
           data: chartData.volume,
       },
       {
           title: 'Liquidity',
+          shortTitle: 'Liq.',
           description: 'This is the USD value of the BEAN:ETH pool at the end of every hour/day.',
           data: chartData.liquidity,
       },
