@@ -99,7 +99,7 @@ export default function Field(props) {
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
-            balanceDescription={`${displayFullBN(props.weather)}% Weather`}
+            balanceDescription={`${props.weather}% Weather`}
             description="The Weather is the interest rate for sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean sown."
             title="Weather"
             value={`${props.weather.toFixed()}%`}

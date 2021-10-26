@@ -1,13 +1,19 @@
 import React, { Fragment } from 'react';
-import { Box, AppBar, Button, Link, Tab, Tabs } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-
+import {
+  AppBar,
+  Box,
+  Button,
+  Link,
+  Tab,
+  Tabs,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
-import { FormatTooltip, QuestionModule } from './index';
+import { FormatTooltip, QuestionModule } from '.';
 
 export default function BaseModule(props) {
-  const s = props.size === 'small';
+  const s = props.size === 'small' || window.innerWidth < 450;
   const classes = makeStyles(() => ({
     inputModule: {
       backgroundColor: '#F5FAFF',

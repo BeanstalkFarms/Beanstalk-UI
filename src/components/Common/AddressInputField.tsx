@@ -1,9 +1,14 @@
 import React from 'react';
-import { Button, InputAdornment, TextField, Box } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  InputAdornment,
+  TextField,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { makeStyles } from '@material-ui/styles';
 
 export default function AddressInputField(props) {
   const classes = makeStyles(() => ({
@@ -50,7 +55,6 @@ export default function AddressInputField(props) {
   return (
     <Box>
       <Box style={smallLabels}>Recipient Address</Box>
-
       <TextField
         className="TextField-rounded"
         placeholder="0x00000"

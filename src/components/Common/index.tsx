@@ -1,4 +1,4 @@
-import { withStyles, Theme } from '@material-ui/styles';
+import { Theme, withStyles } from '@material-ui/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 
 export { Grid } from '@material-ui/core';
@@ -19,6 +19,7 @@ export { default as ListInputField } from './ListInputField';
 export { default as BaseModule } from './BaseModule';
 export { default as ContentTitle } from './ContentTitle';
 export { default as ContentSection } from './ContentSection';
+export { default as ClaimTextModule } from './ClaimTextModule';
 export { default as DataBalanceModule } from './DataBalanceModule';
 export { default as EthInputField } from './EthInputField';
 export { default as FrontrunText } from './FrontrunText';
@@ -33,6 +34,7 @@ export { default as QuestionModule } from './QuestionModule';
 export { default as SettingsFormModule } from './SettingsFormModule';
 export { default as SingleButton } from './SingleButton';
 export { default as SlippageModule } from './SlippageModule';
+export { default as SwapTransactionDetailsModule } from './SwapTransactionDetailsModule';
 export { default as SwitchModule } from './SwitchModule';
 export { default as TitleLabel } from './TitleLabel';
 export { default as TokenBalanceModule } from './TokenBalanceModule';
@@ -40,6 +42,7 @@ export { default as TokenInputField } from './TokenInputField';
 export { default as TokenOutputField } from './TokenOutputField';
 export { default as TokenTypeImageModule } from './TokenTypeImageModule';
 export { default as TransactionDetailsModule } from './TransactionDetailsModule';
+export { default as TransactionTextModule } from './TransactionTextModule';
 export { default as UnitSelectionModule } from './UnitSelectionModule';
 export { default as TabImageModule } from './TabImageModule';
 

@@ -13,7 +13,12 @@ import {
   SOIL_MAX_RATIO_CAP,
   SOIL_MIN_RATIO_CAP,
 } from '../../constants';
-import { displayBN, displayFullBN, MaxBN, TrimBN } from '../../util';
+import {
+  displayBN,
+  displayFullBN,
+  MaxBN,
+  TrimBN,
+} from '../../util';
 import { DataBalanceModule, Grid, QuestionModule } from '../Common';
 
 // const cases = [3,1,0,0,-1,-3,-3,0,3,1,0,0,-1,-3,-3,0,3,3,1,0,0,0,-1,0,3,3,1,0,1,0,-1,0]

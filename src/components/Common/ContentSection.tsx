@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { ContentTitle } from './index';
+import { ContentTitle } from '.';
 
 export default function ContentSection(props) {
   const classes = makeStyles({

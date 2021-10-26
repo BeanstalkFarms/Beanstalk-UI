@@ -1,8 +1,15 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { BEAN, UNI_V2_ETH_BEAN_LP } from '../../constants';
-import { claimLP, removeAndClaimLP, TrimBN } from '../../util';
+import {
+  claimLP,
+  displayBN,
+  removeAndClaimLP,
+  TokenLabel,
+  TrimBN,
+} from '../../util';
 import {
   ClaimableAsset,
   CryptoAsset,
@@ -11,7 +18,7 @@ import {
   TokenOutputField,
 } from '../Common';
 
-export const LPClaimSubModule = forwardRef((props, ref) => {
+export const LPClaimModule = forwardRef((props, ref) => {
   const [settings, setSettings] = useState({ removeLP: false });
   props.setIsFormDisabled(props.maxFromLPVal.isLessThanOrEqualTo(0));
 
@@ -51,6 +58,14 @@ export const LPClaimSubModule = forwardRef((props, ref) => {
 
   /* Transaction Details, settings and text */
 
+  function displayLP(balance) {
+    return (
+      `${displayBN(balance[0])} ${TokenLabel(
+        CryptoAsset.Bean
+      )} and ${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`
+    );
+  }
+
   const showSettings = (
     <SettingsFormModule
       hasRemoveLP
@@ -72,6 +87,19 @@ export const LPClaimSubModule = forwardRef((props, ref) => {
             <Box style={{ marginRight: '5px' }}>{toLPBeanField}</Box>
             <Box style={{ marginLeft: '5px' }}>{toLPEthField}</Box>
           </Box>
+          <Box style={{ display: 'inline-block', width: '100%' }}>
+            <span>
+              {`You will claim ${displayBN(
+                new BigNumber(props.maxFromLPVal)
+              )} LP Tokens from the Silo.`}
+            </span>
+            <br />
+            <span>
+              {`You will remove ${displayLP(
+                props.poolForLPRatio(props.maxFromLPVal)
+              )} LP Tokens from the BEAN:ETH LP pool and receive .`}
+            </span>
+          </Box>
         </>
       );
     }
@@ -84,6 +112,13 @@ export const LPClaimSubModule = forwardRef((props, ref) => {
         />
         <Box style={{ display: 'inline-block', width: '100%' }}>
           {toLPField}
+        </Box>
+        <Box style={{ display: 'inline-block', width: '100%' }}>
+          <span>
+            {`You will claim ${displayBN(
+              new BigNumber(props.maxFromLPVal)
+            )} LP Tokens from the Silo.`}
+          </span>
         </Box>
       </>
     );

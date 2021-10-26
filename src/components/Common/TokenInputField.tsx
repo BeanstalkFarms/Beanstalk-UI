@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { Button, InputAdornment, TextField, Box } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  InputAdornment,
+  TextField,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import {
   CryptoAsset,
@@ -8,7 +13,7 @@ import {
   displayFullBN,
   TokenLabel,
 } from '../../util';
-import { FormatTooltip, TokenTypeImageModule } from './index';
+import { FormatTooltip, TokenTypeImageModule } from '.';
 
 export default function TokenInputField(props) {
   const [displayValue, setDisplayValue] = useState('');
@@ -107,7 +112,7 @@ export default function TokenInputField(props) {
         variant="outlined"
         size="medium"
         type="number"
-        disabled={props.handleChange === undefined}
+        disabled={props.handleChange === undefined || props.locked}
         value={
           props.value.isNegative()
             ? ''
@@ -145,6 +150,7 @@ export default function TokenInputField(props) {
 TokenInputField.defaultProps = {
   action: 'Deposit',
   hidden: false,
+  locked: false,
   maxval: 0,
   token: 'Beans',
 };

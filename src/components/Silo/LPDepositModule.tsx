@@ -19,6 +19,7 @@ import {
   addAndDepositLP,
   convertAddAndDepositLP,
   depositLP,
+  displayBN,
   getBuyAndAddLPAmount,
   getFromAmount,
   lpForPool,
@@ -26,26 +27,30 @@ import {
   MinBN,
   SwapMode,
   tokenForLP,
+  TokenLabel,
   toStringBaseUnitBN,
   toTokenUnitsBN,
   TrimBN,
 } from '../../util';
 import {
   CryptoAsset,
+  ClaimTextModule,
   EthInputField,
   FrontrunText,
   InputFieldPlus,
   SettingsFormModule,
   SiloAsset,
   TokenOutputField,
+  TransactionTextModule,
+  TransactionDetailsModule,
 } from '../Common';
 
-export const LPDepositSubModule = forwardRef((props, ref) => {
+export const LPDepositModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(0));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(0));
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(0));
-  const [toSellBeansValue, setToSellBeansValue] = useState(new BigNumber(0));
-  const [toBuyBeansValue, setToBuyBeansValue] = useState(new BigNumber(0));
+  const [toSellBeanValue, setToSellBeanValue] = useState(new BigNumber(0));
+  const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
   const [toSellEthValue, setToSellEthValue] = useState(new BigNumber(0));
   const [toBuyEthValue, setToBuyEthValue] = useState(new BigNumber(0));
   const [toSiloLPValue, setToSiloLPValue] = useState(new BigNumber(0));
@@ -64,13 +69,13 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
     ) {
       // eslint-disable-next-line
       unstable_batchedUpdates(() => {
-        setToBuyBeansValue(new BigNumber(0));
-        setToSellEthValue(new BigNumber(0));
-        setFromEthValue(new BigNumber(-1));
         setFromBeanValue(new BigNumber(-1));
+        setFromEthValue(new BigNumber(-1));
         setFromLPValue(new BigNumber(-1));
+        setToBuyBeanValue(new BigNumber(0));
         setToBuyEthValue(new BigNumber(0));
-        setToSellBeansValue(new BigNumber(0));
+        setToSellBeanValue(new BigNumber(0));
+        setToSellEthValue(new BigNumber(0));
         setToSiloLPValue(new BigNumber(0));
         setToStalkValue(new BigNumber(0));
         setToSeedsValue(new BigNumber(0));
@@ -149,7 +154,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
         ETH.decimals
       );
       fromEtherNumber = newFromEthNumber;
-      setToBuyBeansValue(buyNumber);
+      setToBuyBeanValue(buyNumber);
       setToSellEthValue(sellNumber);
       setFromEthValue(TrimBN(fromEtherNumber, ETH.decimals));
       setFromBeanValue(fromNumber);
@@ -174,7 +179,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       );
       fromNumber = newFromNumber;
       setToBuyEthValue(buyNumber);
-      setToSellBeansValue(sellNumber);
+      setToSellBeanValue(sellNumber);
       setFromEthValue(fromEtherNumber);
       setFromBeanValue(TrimBN(fromNumber, BEAN.decimals));
       fromNumber = fromNumber.minus(sellNumber);
@@ -245,7 +250,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
           fromLPValue
         )
       }
-      sellToken={toSellBeansValue}
+      sellToken={toSellBeanValue}
       updateExpectedPrice={props.updateExpectedPrice}
       value={TrimBN(fromBeanValue, BEAN.decimals)}
       visible={props.settings.mode < 2}
@@ -267,7 +272,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
   const fromEthField = (
     <EthInputField
       balance={props.ethBalance}
-      buyBeans={toBuyBeansValue}
+      buyBeans={toBuyBeanValue}
       claim={props.settings.claim}
       claimableBalance={props.claimableEthBalance}
       handleChange={(v) => fromValueUpdated(maxBeans, v, fromLPValue)}
@@ -301,6 +306,138 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
+  function displayLP(beanInput, ethInput) {
+    return (
+      `${displayBN(beanInput)} ${TokenLabel(
+        CryptoAsset.Bean
+      )} and ${displayBN(ethInput)} ${TokenLabel(CryptoAsset.Ethereum)}`
+    );
+  }
+
+  const details = [];
+  if (props.settings.claim) {
+    details.push(
+      <ClaimTextModule
+        key="claim"
+        balance={
+          props.claimableEthBalance
+            .plus(props.beanReceivableBalance)
+            .plus(props.lpReceivableBalance)
+            .plus(props.harvestablePodBalance)
+        }
+        claim={props.settings.claim}
+        mode={props.settings.mode}
+        claimableEthBalance={props.claimableEthBalance}
+        beanReceivableBalance={props.beanReceivableBalance}
+        lpReceivableBalance={props.lpReceivableBalance}
+        harvestablePodBalance={props.harvestablePodBalance}
+      />
+    );
+  }
+  if (
+    props.settings.mode === SwapMode.Ethereum ||
+    (props.settings.mode === SwapMode.BeanEthereumSwap &&
+      toBuyBeanValue.isGreaterThan(0))
+  ) {
+    details.push(
+      <TransactionTextModule
+        key="buy"
+        balance={toBuyBeanValue}
+        buyBeans={toBuyBeanValue}
+        claim={props.settings.claim}
+        claimableBalance={props.claimableEthBalance}
+        mode={props.settings.mode}
+        sellEth={toSellEthValue}
+        updateExpectedPrice={props.updateExpectedPrice}
+        value={TrimBN(fromEthValue, 9)}
+      />
+    );
+    details.push(
+      `Add ${displayLP(
+        MaxBN(fromBeanValue, new BigNumber(0)).plus(
+          MaxBN(toBuyBeanValue, new BigNumber(0))
+        ),
+        MaxBN(fromEthValue, new BigNumber(0)).minus(
+          MaxBN(toSellEthValue, new BigNumber(0))
+        )
+      )} to the BEAN:ETH pool in exchange for ${displayBN(
+        new BigNumber(toSiloLPValue)
+      )} LP Tokens.`
+    );
+  }
+  if (
+    props.settings.mode === SwapMode.Bean ||
+    (props.settings.mode === SwapMode.BeanEthereumSwap &&
+      toBuyEthValue.isGreaterThan(0))
+  ) {
+    details.push(
+      <TransactionTextModule
+        balance={props.beanBalance.plus(convertibleBeans)}
+        buyEth={toBuyEthValue}
+        claim={props.settings.claim}
+        claimableBalance={props.maxFromClaimableVal}
+        mode={props.settings.mode}
+        sellToken={toSellBeanValue}
+        updateExpectedPrice={props.updateExpectedPrice}
+        value={TrimBN(fromBeanValue, BEAN.decimals)}
+      />
+    );
+  details.push(
+    `Add ${displayLP(
+      MaxBN(fromBeanValue, new BigNumber(0)).minus(
+        MaxBN(toSellBeanValue, new BigNumber(0))
+      ),
+      MaxBN(fromEthValue, toBuyEthValue)
+    )} to the BEAN:ETH pool in exchange for ${displayBN(
+      new BigNumber(toSiloLPValue)
+    )} LP Tokens.`
+  );
+  }
+  if (props.settings.mode === SwapMode.LP) {
+    details.push(
+      <TransactionTextModule
+        balance={props.beanBalance.plus(convertibleBeans)}
+        buyEth={toBuyEthValue}
+        claim={props.settings.claim}
+        claimableBalance={props.maxFromClaimableVal}
+        mode={props.settings.mode}
+        sellToken={toSellBeanValue}
+        updateExpectedPrice={props.updateExpectedPrice}
+        value={TrimBN(fromBeanValue, BEAN.decimals)}
+      />
+    );
+  details.push(
+    `Add ${displayLP(
+      MaxBN(fromBeanValue, new BigNumber(0)).minus(
+        MaxBN(toSellBeanValue, new BigNumber(0))
+      ),
+      MaxBN(fromEthValue, toBuyEthValue)
+    )} to the BEAN:ETH pool in exchange for ${displayBN(
+      new BigNumber(toSiloLPValue)
+    )} LP Tokens.`
+  );
+  }
+  if (props.settings.mode === SwapMode.BeanEthereum) {
+    details.push(
+      `Add ${displayLP(
+        MaxBN(fromBeanValue, new BigNumber(0)),
+        MaxBN(fromEthValue, new BigNumber(0))
+      )} to the BEAN:ETH pool in exchange for ${displayBN(
+        new BigNumber(toSiloLPValue)
+      )} LP Tokens.`
+    );
+  }
+
+  details.push(
+    `Deposit ${displayBN(
+      new BigNumber(toSiloLPValue)
+    )} LP Tokens in the Silo.`
+  );
+  details.push(
+    `Immediately receive ${displayBN(
+      new BigNumber(toStalkValue)
+    )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds.`
+  );
 
   const resetFields = () => {
     fromValueUpdated(new BigNumber(-1), new BigNumber(-1), new BigNumber(-1));
@@ -337,6 +474,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
         <Box style={{ display: 'inline-block', width: '100%' }}>
           {toSiloLPField}
         </Box>
+        <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%' }}>
           <span>
             {`You will gain ${toStalkValue
@@ -384,13 +522,13 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
           );
         } else {
           const beans = fromBeanValue
-            .plus(toBuyBeansValue)
-            .minus(toSellBeansValue);
+            .plus(toBuyBeanValue)
+            .minus(toSellBeanValue);
           const buyEth = MaxBN(toBuyEthValue, new BigNumber(0));
           const eth = fromEthValue.plus(buyEth).minus(toSellEthValue);
           addAndDepositLP(
             toStringBaseUnitBN(lp, ETH.decimals),
-            toStringBaseUnitBN(toBuyBeansValue, BEAN.decimals),
+            toStringBaseUnitBN(toBuyBeanValue, BEAN.decimals),
             toStringBaseUnitBN(buyEth, ETH.decimals),
             toStringBaseUnitBN(fromEthValue, ETH.decimals),
             [

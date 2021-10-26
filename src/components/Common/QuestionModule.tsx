@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import { FormatTooltip } from './index';
+import { FormatTooltip } from '.';
 
 export default function QuestionModule(props) {
   const questionStyle = {
@@ -27,8 +27,12 @@ export default function QuestionModule(props) {
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
       >
-        <HelpOutlineIcon style={{ fontSize: '8px' }} width="100%" />
+        <HelpOutlineIcon style={{ fontSize: props.fontSize }} width="100%" />
       </FormatTooltip>
     </Box>
   );
 }
+
+QuestionModule.defaultProps = {
+  fontSize: '8px',
+};

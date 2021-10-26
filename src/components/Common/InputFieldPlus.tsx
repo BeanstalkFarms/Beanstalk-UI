@@ -1,16 +1,9 @@
 import React, { useEffect } from 'react';
-import { Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-import { CryptoAsset, displayBN, MinBN } from '../../util';
-import { TokenInputField } from './index';
+import { CryptoAsset, MinBN } from '../../util';
+import { TokenInputField } from '.';
 
 export default function InputFieldPlus(props) {
-  const textStyle = {
-    fontSize: '12px',
-    fontFamily: 'Futura-PT',
-    marginTop: '-10px',
-  };
-
   const balance = props.balance.plus(props.claim ? props.claimableBalance : 0);
 
   const isClaimEnabled = props.claim;
@@ -50,26 +43,7 @@ export default function InputFieldPlus(props) {
     />
   );
 
-  const textTransaction =
-    props.sellToken !== undefined
-      ? `Buying About ${displayBN(
-          props.buyEth
-        )} ETH with ${props.sellToken.toFixed(3)} Beans for ${props
-          .updateExpectedPrice(
-            props.buyEth.multipliedBy(-1),
-            props.sellToken.multipliedBy(-1)
-          )
-          .toFixed(2)} Each`
-      : '';
-
-  return (
-    <>
-      {tokenInputField}
-      {props.buyEth.isGreaterThan(0) ? (
-        <Box style={textStyle}>{textTransaction}</Box>
-      ) : null}
-    </>
-  );
+  return (<>{tokenInputField}</>);
 }
 
 InputFieldPlus.defaultProps = {

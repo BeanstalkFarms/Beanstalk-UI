@@ -1,8 +1,9 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
+import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { BEAN } from '../../constants';
-import { TrimBN, claimBeans } from '../../util';
+import { claimBeans, TrimBN, displayBN } from '../../util';
 import {
   ClaimableAsset,
   CryptoAsset,
@@ -10,16 +11,16 @@ import {
   TokenOutputField,
 } from '../Common';
 
-export const BeanClaimSubModule = forwardRef((props, ref) => {
-  props.setIsFormDisabled(props.maxFromBeansVal.isLessThanOrEqualTo(0));
+export const BeanClaimModule = forwardRef((props, ref) => {
+  props.setIsFormDisabled(props.maxFromBeanVal.isLessThanOrEqualTo(0));
 
   /* Input Fields */
 
-  const fromBeansField = (
+  const fromBeanField = (
     <TokenInputField
-      balance={props.maxFromBeansVal}
+      balance={props.maxFromBeanVal}
       token={ClaimableAsset.Bean}
-      value={TrimBN(props.maxFromBeansVal, BEAN.decimals)}
+      value={TrimBN(props.maxFromBeanVal, BEAN.decimals)}
     />
   );
 
@@ -29,14 +30,14 @@ export const BeanClaimSubModule = forwardRef((props, ref) => {
     <TokenOutputField
       mint
       token={CryptoAsset.Bean}
-      value={TrimBN(props.maxFromBeansVal, BEAN.decimals)}
+      value={TrimBN(props.maxFromBeanVal, BEAN.decimals)}
     />
   );
 
   /* Transaction Details, settings and text */
 
   function transactionDetails() {
-    if (props.maxFromBeansVal.isLessThanOrEqualTo(0)) return null;
+    if (props.maxFromBeanVal.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
@@ -44,8 +45,13 @@ export const BeanClaimSubModule = forwardRef((props, ref) => {
           color="primary"
           style={{ marginBottom: '-14px', width: '100%' }}
         />
+        <Box style={{ display: 'inline-block', width: '100%' }}>{toBeanField}</Box>
         <Box style={{ display: 'inline-block', width: '100%' }}>
-          {toBeanField}
+          <span>
+            {`Claim ${displayBN(
+              new BigNumber(props.maxFromBeanVal)
+            )} Beans from the Silo.`}
+          </span>
         </Box>
       </>
     );
@@ -53,7 +59,7 @@ export const BeanClaimSubModule = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (props.maxFromBeansVal.isLessThanOrEqualTo(0)) return;
+      if (props.maxFromBeanVal.isLessThanOrEqualTo(0)) return;
 
       claimBeans(Object.keys(props.crates), () => {});
     },
@@ -61,7 +67,7 @@ export const BeanClaimSubModule = forwardRef((props, ref) => {
 
   return (
     <>
-      {fromBeansField}
+      {fromBeanField}
       {transactionDetails()}
     </>
   );

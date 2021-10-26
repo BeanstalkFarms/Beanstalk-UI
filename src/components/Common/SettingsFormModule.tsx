@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { IconButton, Box } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { SwapMode } from '../../util';
-import { SlippageModule, SwitchModule, UnitSelectionModule } from './index';
+import { SlippageModule, SwitchModule, UnitSelectionModule } from '.';
 
 export default function SettingsFormModule(props) {
   const rightSettingStyle = {
@@ -76,7 +76,9 @@ export default function SettingsFormModule(props) {
           description="Toggle to convert Deposited Beans into Deposited LP Tokens."
           label="Convert"
           setValue={(value) => {
-            if (props.settings.mode !== SwapMode.BeanEthereum) props.handleMode(SwapMode.BeanEthereum);
+            if (props.settings.mode !== SwapMode.BeanEthereum) {
+              props.handleMode(SwapMode.BeanEthereum);
+            }
             props.setSettings({
               ...props.settings,
               mode: SwapMode.BeanEthereum,

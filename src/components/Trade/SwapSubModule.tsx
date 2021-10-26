@@ -15,8 +15,8 @@ import {
 import {
   FrontrunText,
   SettingsFormModule,
+  SwapTransactionDetailsModule,
   TokenInputField,
-  TransactionDetailsModule,
 } from '../Common';
 
 export default function SwapSubModule(props) {
@@ -156,37 +156,38 @@ export default function SwapSubModule(props) {
     : props.fromValue.multipliedBy(props.beanPrice).multipliedBy(LP_FEE);
 
   const textTransaction = props.orderIndex
-    ? `You will buy ~${displayBN(
+    ? `Buy ${displayBN(
         props.toValue.multipliedBy(props.settings.slippage)
       )} ${TokenLabel(props.toToken)} with ${props.fromValue.toFixed(
         3
       )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
         2
       )} each.`
-    : `You will sell ~${displayBN(props.fromValue)} ${TokenLabel(
-        props.fromToken
-      )} for about ${props.toValue.toFixed(3)} ${TokenLabel(
-        props.toToken
-      )} for ${expectedBeanPrice.toFixed(2)} each.`;
+    : `Buy ${props.toValue.toFixed(
+        3
+      )} ${TokenLabel(props.toToken)} with ${displayBN(
+        props.fromValue
+      )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
+        2
+      )} each.`;
 
   function transactionDetails() {
-    if (props.toValue.isGreaterThan(0)) {
-      return (
-        <>
-          <Box style={{ fontFamily: 'Futura-PT-Book' }}>{textTransaction}</Box>
-          <TransactionDetailsModule
-            fields={{
-              'Minimum Received': `${props.toValue
-                .multipliedBy(props.settings.slippage)
-                .toFixed(4)} ${TokenLabel(props.toToken)}`,
-              'Expected Price': `$ ${expectedBeanPrice.toFixed(4)}`,
-              'LP Fee': `0.3% ($${fee.toFixed(2)})`,
-            }}
-          />
-        </>
-      );
-    }
-    return null;
+    if (props.toValue.isLessThanOrEqualTo(0)) return null;
+
+    return (
+      <>
+        <Box style={{ fontFamily: 'Futura-PT-Book' }}>{textTransaction}</Box>
+        <SwapTransactionDetailsModule
+          fields={{
+            'Minimum Received': `${props.toValue
+              .multipliedBy(props.settings.slippage)
+              .toFixed(4)} ${TokenLabel(props.toToken)}`,
+            'Expected Price': `$ ${expectedBeanPrice.toFixed(4)}`,
+            'LP Fee': `0.3% ($${fee.toFixed(2)})`,
+          }}
+        />
+      </>
+    );
   }
 
   return (

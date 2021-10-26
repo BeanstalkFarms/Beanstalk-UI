@@ -1,11 +1,11 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import {
+  Box,
   FormControl,
   InputLabel,
   OutlinedInput,
   Select,
-  Box,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { displayBN } from '../../util';
@@ -36,7 +36,6 @@ export default function ListInputField(props) {
     fontFamily: 'Futura-PT-Book',
     fontSize: 'calc(9px + 0.7vmin)',
     marginLeft: '13px',
-    // marginTop: '-5px',
     textAlign: 'left' as const,
     textTransform: 'uppercase' as const,
     width: 'calc(100% - 13px)',

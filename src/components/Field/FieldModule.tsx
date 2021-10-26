@@ -4,7 +4,12 @@ import { IconButton, Box } from '@material-ui/core';
 import ListIcon from '@material-ui/icons/List';
 import { BASE_SLIPPAGE } from '../../constants';
 import { approveBeanstalkBean, SwapMode } from '../../util';
-import { CryptoAsset, BaseModule, FarmAsset, ListTable } from '../Common';
+import {
+  BaseModule,
+  CryptoAsset,
+  FarmAsset,
+  ListTable,
+} from '../Common';
 import { SowModule } from './SowModule';
 import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
@@ -26,7 +31,10 @@ export default function FieldModule(props) {
   const [isValidAddress, setIsValidAddress] = useState(false);
 
   const sectionTitles = ['Sow', 'Send'];
-  const sectionTitlesDescription = ['Use this tab to sow Beans in the Field in exchange for Pods.', 'Use this tab to send Plots to another Ethereum address.'];
+  const sectionTitlesDescription = [
+    'Use this tab to sow Beans in the Field in exchange for Pods.',
+    'Use this tab to send Plots to another Ethereum address.',
+  ];
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
@@ -43,9 +51,13 @@ export default function FieldModule(props) {
   };
 
   if (settings.mode === null) {
-    if (props.beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
-    else if (props.ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    if (props.beanBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
+    } else if (props.ethBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    } else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    }
   }
 
   const sowRef = useRef<any>();
@@ -73,12 +85,15 @@ export default function FieldModule(props) {
       unripenedPods={props.unripenedPods}
       beanBalance={props.beanBalance}
       beanClaimableBalance={props.beanClaimableBalance}
+      beanReceivableBalance={props.beanReceivableBalance}
       beanReserve={props.beanReserve}
       claimable={props.claimable}
       claimableEthBalance={props.claimableEthBalance}
       ethBalance={props.ethBalance}
       ethReserve={props.ethReserve}
       hasClaimable={props.hasClaimable}
+      harvestablePodBalance={props.harvestablePodBalance}
+      lpReceivableBalance={props.lpReceivableBalance}
       ref={sowRef}
       setIsFormDisabled={setIsFormDisabled}
       setSettings={setSettings}
@@ -90,7 +105,11 @@ export default function FieldModule(props) {
     <SendPlotModule
       key={1}
       plots={props.plots}
-      hasPlots={props.plots !== undefined && (Object.keys(props.plots).length > 0 || props.harvestablePodBalance.isGreaterThan(0))}
+      hasPlots={
+        props.plots !== undefined &&
+        (Object.keys(props.plots).length > 0 ||
+          props.harvestablePodBalance.isGreaterThan(0))
+      }
       index={parseFloat(props.harvestableIndex)}
       fromAddress={props.address}
       fromToken={CryptoAsset.Bean}

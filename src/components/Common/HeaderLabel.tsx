@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { FormatTooltip, QuestionModule } from './index';
 import { chainId } from '../../util';
+import { FormatTooltip, QuestionModule } from '.';
 
 export default function HeaderLabel(props) {
   const backgroundColor = chainId === 1 ? '#627264' : '#7A2343';
