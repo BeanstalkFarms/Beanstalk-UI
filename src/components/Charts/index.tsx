@@ -34,8 +34,8 @@ export default function Charts(props) {
   const titles = ['Bean', 'Field', 'Silo'];
   const descriptions = [
     'Use this tab to view charts with information about the BEAN token.',
-    'Use this tab to view charts with information about the Silo.',
     'Use this tab to view charts with information about the Field.',
+    'Use this tab to view charts with information about the Silo.',
   ];
 
   const sections = [

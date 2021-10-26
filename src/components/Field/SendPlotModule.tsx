@@ -172,10 +172,10 @@ export const SendPlotModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   const plotText = toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId) ?
-    `You will send the full plot of ${toPlotEndIndex} pods.`
+    `You will send the full Plot of ${toPlotEndIndex.toFixed()} Pods.`
     : toPlotEndIndex.isEqualTo(fromPlotIndex)
     ? 'Invalid transfer amount'
-    : `You will send a partial plot with pods from index ${fromPlotIndex} to index ${toPlotEndIndex}.`;
+    : `You will send a partial Plot with Pods from index ${fromPlotIndex} to index ${toPlotEndIndex.toFixed()}.`;
 
   const sendText = toPlotEndIndex.toFixed() !== 'NaN' ?
     <Box style={{ display: 'inline-block', width: '100%' }}>
