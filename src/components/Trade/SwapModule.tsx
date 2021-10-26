@@ -19,7 +19,7 @@ import {
   TokenInputField,
 } from '../Common';
 
-export default function SwapSubModule(props) {
+export default function SwapModule(props) {
   const fromValueUpdated = (newFromNumber) => {
     if (newFromNumber.isLessThan(0)) {
       props.setFromValue(new BigNumber(-1));

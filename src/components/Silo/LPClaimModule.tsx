@@ -20,7 +20,7 @@ import {
 } from '../Common';
 
 export const LPClaimModule = forwardRef((props, ref) => {
-  const [settings, setSettings] = useState({ removeLP: false });
+  const [settings, setSettings] = useState({ removeLP: true });
   props.setIsFormDisabled(props.maxFromLPVal.isLessThanOrEqualTo(0));
 
   /* Input Fields */
