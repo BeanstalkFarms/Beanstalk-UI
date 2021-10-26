@@ -4,7 +4,6 @@ import { displayBN } from '../../util';
 export default function ClaimTextModule(props) {
   const claimTextList = [];
   let claimText = '';
-  console.log(claimTextList);
 
   if (props.claimableEthBalance.isGreaterThan(0)) {
     claimTextList.push(
@@ -33,7 +32,7 @@ export default function ClaimTextModule(props) {
     /* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
     for (let i = 0; i < claimTextList.length; i++) {
       if (i === claimTextList.length - 1) {
-        claimText += `and ${claimTextList[i]}. `;
+        claimText += `and ${claimTextList[i]} `;
       } else {
         claimText += `${claimTextList[i]}, `;
       }
@@ -41,7 +40,7 @@ export default function ClaimTextModule(props) {
   }
 
   if (props.claim) {
-    return `Claim ${claimText}`;
+    return `- Claim ${claimText}`;
   } return null;
 }
 

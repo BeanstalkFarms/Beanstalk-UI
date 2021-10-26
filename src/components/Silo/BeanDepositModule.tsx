@@ -126,6 +126,7 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
+
   const details = [];
   if (props.settings.claim) {
     details.push(
@@ -169,12 +170,12 @@ export const BeanDepositModule = forwardRef((props, ref) => {
     new BigNumber(0)
   ).plus(MaxBN(fromBeanValue, new BigNumber(0)));
 
-  details.push(`Deposit ${displayBN(beanOutput)}
-    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo.`
+  details.push(`- Deposit ${displayBN(beanOutput)}
+    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`
   );
-  details.push(`Immediately receive ${displayBN(
+  details.push(`- Immediately receive ${displayBN(
     new BigNumber(toStalkValue)
-  )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds.`);
+  )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
   const frontrunTextField =
     props.settings.mode !== SwapMode.Bean &&
@@ -207,7 +208,7 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           {toSiloBeanField}
         </Box>
         <TransactionDetailsModule fields={details} />
-        <Box style={{ display: 'inline-block', width: '100%' }}>
+        <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
           <span>
             {`You will gain ${toStalkValue
               .dividedBy(props.totalStalk)

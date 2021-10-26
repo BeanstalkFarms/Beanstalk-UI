@@ -148,6 +148,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
+
   const details = [];
   if (props.settings.claim) {
     details.push(
@@ -170,12 +171,12 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   }
   const beanOutput = new BigNumber(fromBeanValue);
 
-  details.push(`Withdraw ${displayBN(beanOutput)}
-    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} from the Silo.`
+  details.push(`- Withdraw ${displayBN(beanOutput)}
+    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} from the Silo`
   );
-  details.push(`Immediately burn ${displayBN(
+  details.push(`- Immediately burn ${displayBN(
     new BigNumber(toStalkValue)
-  )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds.`);
+  )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
   const unvoteTextField = props.locked ? (
     <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
@@ -207,7 +208,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           {toTransitBeanField}
         </Box>
         <TransactionDetailsModule fields={details} />
-        <Box style={{ display: 'inline-block', width: '100%', color: 'black' }}>
+        <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
           <span>
             {`You will lose ${toStalkValue
               .dividedBy(props.totalStalk)
@@ -215,7 +216,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
               .toFixed(3)}% ownership of Beanstalk.`}
           </span>
           <br />
-          <span style={{ color: 'red' }}>
+          <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
             WARNING: Your Withdrawal will be frozen for 24 full Seasons.
           </span>
         </Box>

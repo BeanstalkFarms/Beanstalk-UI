@@ -36,11 +36,12 @@ export const BeanClaimModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
+
   const details = [];
   details.push(
-    `Claim ${displayBN(
+    `- Claim ${displayBN(
       new BigNumber(props.maxFromBeanVal)
-    )} Beans from the Silo.`
+    )} Beans from the Silo`
   );
 
   function transactionDetails() {

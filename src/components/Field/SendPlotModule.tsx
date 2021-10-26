@@ -126,8 +126,6 @@ export const SendPlotModule = forwardRef((props, ref) => {
     fromIndexValueUpdated(MinBN(fromPlotIndex, new BigNumber(0)), plotEndId);
   };
 
-  console.log();
-
   /* Input Fields */
 
   const toAddressField = (
@@ -196,7 +194,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
       </span>
     );
     details.push(`- Send ${firstText === '' ? 'all' : ''}
-      ${displayBN(toPlotEndIndex)} Pods ${secondText} the Plot.`
+      ${displayBN(toPlotEndIndex)} Pods ${secondText} the Plot`
     );
   }
 
@@ -214,7 +212,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
   }
 
   if (toPlotEndIndex.isEqualTo(fromPlotIndex)) {
-    details = [<span style={{ color: 'red' }}>Invalid transfer amount</span>];
+    details = [<span style={{ color: 'red' }}>- Invalid transfer amount</span>];
     }
 
   function transactionDetails() {

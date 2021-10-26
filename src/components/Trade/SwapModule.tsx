@@ -162,21 +162,23 @@ export default function SwapModule(props) {
         3
       )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
         2
-      )} each.`
+      )} each`
     : `Buy ${props.toValue.toFixed(
         3
       )} ${TokenLabel(props.toToken)} with ${displayBN(
         props.fromValue
       )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
         2
-      )} each.`;
+      )} each`;
 
   function transactionDetails() {
-    if (props.toValue.isLessThanOrEqualTo(0)) return null;
+    if (props.toValue.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
-        <Box style={{ fontFamily: 'Futura-PT-Book' }}>{textTransaction}</Box>
+        <Box style={{ fontFamily: 'Futura-PT-Book', fontSize: 'calc(9px + 0.5vmin)' }}>
+          {textTransaction}
+        </Box>
         <SwapTransactionDetailsModule
           fields={{
             'Minimum Received': `${props.toValue

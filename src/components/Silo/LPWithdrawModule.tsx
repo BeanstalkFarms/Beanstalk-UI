@@ -96,16 +96,6 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     return [stalkRemoved, seedsRemoved];
   };
 
-  // function fromValueUpdated(newFromNumber) {
-  //   const fromNumber = MinBN(newFromNumber, props.maxFromLPVal)
-  //   const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals)
-  //   setFromLPValue(newFromLPValue)
-  //   const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber)
-  //   setToStalkValue(TrimBN(stalkRemoved, STALK.decimals))
-  //   setToSeedsValue(TrimBN(seedsRemoved, SEEDS.decimals))
-  //   props.setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0))
-  // }
-
   function fromValueUpdated(newFromNumber) {
     const fromNumber = MinBN(newFromNumber, props.maxFromLPVal);
     const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals);
@@ -175,6 +165,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
+
   const details = [];
   if (props.settings.claim) {
     details.push(
@@ -196,12 +187,12 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     );
   }
   details.push(
-    `Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo.`
+    `- Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
   );
   details.push(
-    `Immediately burn ${displayBN(
+    `- Immediately burn ${displayBN(
       new BigNumber(toStalkValue)
-    )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds.`
+    )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`
   );
 
   const unvoteTextField = props.locked ? (
@@ -218,7 +209,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     />
   ) : null;
   function transactionDetails() {
-    if (fromLPValue.isLessThanOrEqualTo(0) || props.locked) return null;
+    if (fromLPValue.isLessThanOrEqualTo(0) || props.locked) return;
 
     return (
       <>
@@ -234,7 +225,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
           {toTransitLPField}
         </Box>
         <TransactionDetailsModule fields={details} />
-        <Box style={{ display: 'inline-block', width: '100%' }}>
+        <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
           <span>
             {`You will lose ${toStalkValue
               .dividedBy(props.totalStalk)

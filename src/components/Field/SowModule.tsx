@@ -121,6 +121,7 @@ export const SowModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
+
   const details = [];
   if (props.settings.claim) {
     details.push(
@@ -165,17 +166,17 @@ export const SowModule = forwardRef((props, ref) => {
 
   if (toBuyBeanValue.plus(fromBeanValue).isEqualTo(props.soil)) {
     details.push(`- Sow maximum Soil ${displayBN(beanOutput)}
-      ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather.`
+      ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather`
     );
   } else {
     details.push(`- Sow ${displayBN(beanOutput)}
-      ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather.`
+      ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather`
     );
   }
 
   details.push(`- Receive ${displayBN(toPodValue)} Pods at #${displayBN(
     props.unripenedPods
-  )} in the Pod line.`);
+  )} in the Pod line`);
 
   const noSoilTextField = props.soil.isEqualTo(0) ? (
     <Box style={{ marginTop: '-2px', fontFamily: 'Futura-PT-Book' }}>
@@ -197,7 +198,7 @@ export const SowModule = forwardRef((props, ref) => {
     />
   );
   function transactionDetails() {
-    if (toPodValue.isLessThanOrEqualTo(0)) return null;
+    if (toPodValue.isLessThanOrEqualTo(0)) return;
 
     return (
       <>

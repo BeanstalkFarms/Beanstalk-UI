@@ -42,9 +42,9 @@ export const HarvestModule = forwardRef((props, ref) => {
 
   /* Transaction Details, settings and text */
   const details = [];
-  details.push(`- Harvest ${displayBN(props.harvestablePodBalance)} Pods.`);
+  details.push(`- Harvest ${displayBN(props.harvestablePodBalance)} Pods`);
   details.push(`- Immediately receive ${displayBN(
-    props.harvestablePodBalance)} Beans.`
+    props.harvestablePodBalance)} Beans`
   );
 
   function transactionDetails() {

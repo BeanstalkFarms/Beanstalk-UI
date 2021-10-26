@@ -8,7 +8,7 @@ export default function TransactionDetailsModule(props) {
     border: '1px solid black' as const,
     borderRadius: '15px',
     color: 'black',
-    fontSize: 'calc(9px + 0.7vmin)',
+    fontSize: 'calc(9px + 0.5vmin)',
     marginBottom: '5px',
     marginTop: '10px',
     marginLeft: '5%',

@@ -112,6 +112,19 @@ export default function SendModule(props) {
       </a>.
     </span>
   );
+  // const textTransaction = (
+  //   <span>
+  //     {`Send ${displayBN(props.fromBeanValue)}
+  //     ${props.fromBeanValue.isEqualTo(1) ? 'Bean' : 'Beans'} to `}
+  //     <a
+  //       href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
+  //       color="inherit"
+  //       target="blank"
+  //     >
+  //       {`${walletText}`}
+  //     </a>.
+  //   </span>
+  // );
 
   function transactionDetails() {
     if (props.fromBeanValue.isLessThanOrEqualTo(0)
