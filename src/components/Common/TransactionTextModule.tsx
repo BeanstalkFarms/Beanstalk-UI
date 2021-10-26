@@ -16,7 +16,7 @@ export default function TransactionTextModule(props) {
         )} ${props.sellToken.isEqualTo(1) ? 'Bean' : 'Beans'} for $${props.updateExpectedPrice(
           props.buyEth.multipliedBy(-1),
           props.sellToken.multipliedBy(-1)
-        ).toFixed(2)} each`
+        ).toFixed(4)} each`
       );
 
       return (
@@ -45,7 +45,7 @@ export default function TransactionTextModule(props) {
           ? props.sellEth
           : props.value,
         props.buyBeans
-      ).toFixed(2)} each`
+      ).toFixed(4)} each`
     );
 
     return (

@@ -161,14 +161,14 @@ export default function SwapModule(props) {
       )} ${TokenLabel(props.toToken)} with ${props.fromValue.toFixed(
         3
       )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
-        2
+        4
       )} each`
     : `Buy ${props.toValue.toFixed(
         3
       )} ${TokenLabel(props.toToken)} with ${displayBN(
         props.fromValue
       )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
-        2
+        4
       )} each`;
 
   function transactionDetails() {
