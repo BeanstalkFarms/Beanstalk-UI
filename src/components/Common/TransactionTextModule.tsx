@@ -11,12 +11,12 @@ export default function TransactionTextModule(props) {
   if (!(props.mode === SwapMode.Ethereum || props.mode === SwapMode.BeanEthereum)) {
     if (props.sellToken !== undefined) {
       const textTransaction = (
-        `Buy ~${displayBN(props.buyEth)} ETH with ${props.sellToken.toFixed(
+        `- Buy ${displayBN(props.buyEth)} ETH with ${props.sellToken.toFixed(
           3
-        )} Beans for $${props.updateExpectedPrice(
+        )} ${props.sellToken.isEqualTo(1) ? 'Bean' : 'Beans'} for $${props.updateExpectedPrice(
           props.buyEth.multipliedBy(-1),
           props.sellToken.multipliedBy(-1)
-        ).toFixed(2)} each.`
+        ).toFixed(4)} each`
       );
 
       return (
@@ -36,7 +36,8 @@ export default function TransactionTextModule(props) {
     props.mode === SwapMode.BeanEthereum
   ) {
     const textTransaction = (
-      `Buy ${displayBN(props.buyBeans)} Beans ${props.sellEth !== undefined
+      `- Buy ${displayBN(props.buyBeans)}
+      ${props.buyBeans.isEqualTo(1) ? 'Bean' : 'Beans'} ${props.sellEth !== undefined
         ? `with ${props.sellEth.toFixed(3)} ETH `
         : null
       }for $${props.updateExpectedPrice(
@@ -44,7 +45,7 @@ export default function TransactionTextModule(props) {
           ? props.sellEth
           : props.value,
         props.buyBeans
-      ).toFixed(2)} each.`
+      ).toFixed(4)} each`
     );
 
     return (

@@ -6,13 +6,13 @@ export default function FrontrunText() {
   const linkStyle = {
     color: 'red',
     fontFamily: 'Futura-PT-Book',
-    fontSize: '12px',
+    fontSize: 'calc(9px + 0.5vmin)',
     marginTop: '-9px',
   };
   const textStyle = {
     color: 'red',
     fontFamily: 'Futura-PT-Book',
-    fontSize: '12px',
+    fontSize: 'calc(9px + 0.5vmin)',
     marginTop: '-4px',
   };
 
