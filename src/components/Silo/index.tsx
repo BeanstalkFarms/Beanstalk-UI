@@ -17,12 +17,12 @@ export default function Silo(props) {
   };
 
 const [beanAPY, lpAPY] = getAPYs(props.beansPerSeason.farmableWeek, parseFloat(props.totalStalk), parseFloat(props.totalSeeds));
-let apyField = (
+const apyField = (
   <Grid container item xs={12} spacing={3} justifyContent="center">
     <Grid item sm={6} xs={12} style={headerLabelStyle}>
       <HeaderLabel
         balanceDescription={`${lpAPY.toFixed(2)}%`}
-        description="The Estimated APY based on the past 7 day average."
+        description="The LP APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity."
         title="LP APY"
         value={`${lpAPY.toFixed(0)}%`}
       />
@@ -30,14 +30,12 @@ let apyField = (
     <Grid item xs={12} sm={6} style={headerLabelStyle}>
       <HeaderLabel
         balanceDescription={`${beanAPY.toFixed(2)}%`}
-        description="The Estimated APY based on the past 7 day average."
+        description="The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity."
         title="Bean APY"
         value={`${beanAPY.toFixed(0)}%`}
       />
     </Grid>
   </Grid>);
-  apyField = null;
-
   return (
     <ContentSection id="silo" title="Silo">
       <Box
