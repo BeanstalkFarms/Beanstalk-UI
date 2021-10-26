@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Box } from '@material-ui/core';
-import { MEDIUM_INTEREST_LINK } from '../../constants';
+import { APY_CALCULATION, MEDIUM_INTEREST_LINK } from '../../constants';
 import {
   ContentSection,
   Grid,
@@ -22,7 +22,7 @@ const apyField = (
     <Grid item sm={6} xs={12} style={headerLabelStyle}>
       <HeaderLabel
         balanceDescription={`${lpAPY.toFixed(2)}%`}
-        description="The LP APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity."
+        description={<span>The LP APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
         title="LP APY"
         value={`${lpAPY.toFixed(0)}%`}
       />
@@ -30,7 +30,7 @@ const apyField = (
     <Grid item xs={12} sm={6} style={headerLabelStyle}>
       <HeaderLabel
         balanceDescription={`${beanAPY.toFixed(2)}%`}
-        description="The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity."
+        description={<span>The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
         title="Bean APY"
         value={`${beanAPY.toFixed(0)}%`}
       />

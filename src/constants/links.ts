@@ -20,6 +20,7 @@ export const TELEGRAM_LINK = 'https://t.me/joinchat/OdWoJSyPVsRhYzgx';
 export const TWITTER_LINK = 'https://twitter.com/BeanstalkFarms';
 
 /* Path Links */
+export const APY_CALCULATION = '/About/APY-Calculations.html';
 export const HOW_TO_PATH = '/About/How-To.html';
 export const HOW_TO_MOBILE_PATH = '/About/How-To-Mobile.html';
 export const INTRO_TO_PATH = '/About/Intro-to-Beanstalk.html';
