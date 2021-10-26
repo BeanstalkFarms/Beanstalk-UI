@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { Box } from '@material-ui/core';
 import { BASE_ETHERSCAN_ADDR_LINK, BEAN } from '../../constants';
 import {
   displayBN,
@@ -14,7 +15,7 @@ import {
   TransactionDetailsModule,
 } from '../Common';
 
-export default function SendSubModule(props) {
+export default function SendModule(props) {
   const [snappedToAddress, setSnappedToAddress] = useState(false);
   const [walletText, setWalletText] = useState('');
 
@@ -100,14 +101,15 @@ export default function SendSubModule(props) {
   const details = [];
   details.push(
     <span>
-      {`- Send ${displayBN(props.fromBeanValue)} Beans to`}
+      {`- Send ${displayBN(props.fromBeanValue)}
+      ${props.fromBeanValue.isEqualTo(1) ? 'Bean' : 'Beans'} to `}
       <a
         href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
         color="inherit"
         target="blank"
       >
         {`${walletText}`}
-      </a>`.`
+      </a>.
     </span>
   );
 
@@ -115,11 +117,16 @@ export default function SendSubModule(props) {
     if (props.fromBeanValue.isLessThanOrEqualTo(0)
       || props.toAddress.length !== 42
       || props.isValidAddress !== true
-    ) return null;
+    ) return;
 
     return (
       <>
         <TransactionDetailsModule fields={details} />
+        <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
+          <span>
+            WARNING: You are sending Beans to another wallet and will no longer own them.
+          </span>
+        </Box>
       </>
     );
   }
