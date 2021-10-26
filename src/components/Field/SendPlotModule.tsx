@@ -177,33 +177,43 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
   /* Transaction Details, settings and text */
 
-  const details = [];
-  const plotText = toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId) ?
-    `- Send the full plot of ${displayBN(toPlotEndIndex)} pods.`
-    : toPlotEndIndex.isEqualTo(fromPlotIndex)
-    ? <span style={{ color: 'red' }}>Invalid transfer amount</span>
-    : `- Send a partial plot with ${displayBN(toPlotEndIndex.minus(fromPlotIndex))} pods from index ${fromPlotIndex} to index ${toPlotEndIndex}.`;
+  let details = [];
 
-  const sendText = (
-    <span>{`- Send Plot #${displayBN(
+  function displaySendPlot(firstText, secondText) {
+    details.push(
+      <span>{`- Send ${firstText}Plot #${displayBN(
       new BigNumber(plotId - props.index).plus(fromPlotIndex)
-    )} to `}
-      <a
-        href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
-        color="inherit"
-        target="blank"
-      >
-        {`${walletText}`}
-      </a>.
-    </span>
-  );
-
-  if (toPlotEndIndex.toFixed() !== 'NaN') {
-    if (!toPlotEndIndex.isEqualTo(fromPlotIndex)) {
-      details.push(sendText);
-    }
-    details.push(plotText);
+      )} to `}
+        <a
+          href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
+          color="inherit"
+          target="blank"
+        >
+          {`${walletText}`}
+        </a>.
+      </span>
+    );
+    details.push(`- Send ${firstText === '' ? 'all' : ''}
+      ${displayBN(toPlotEndIndex)} Pods ${secondText} the Plot.`
+    );
   }
+
+  if (toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId)) { // full plot
+    displaySendPlot('', 'in');
+  } else if (fromPlotIndex.isEqualTo(0)) { // front of plot
+    displaySendPlot('part of ', 'from the front of');
+  } else if (toPlotEndIndex.isEqualTo(plotEndId)) { // back of plot
+    displaySendPlot('part of ', 'from the end of');
+  } else if (
+    !toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId) &&
+    !fromPlotIndex.isEqualTo(0)
+  ) { // middle of plot
+    displaySendPlot('part of ', 'in the middle of');
+  }
+
+  if (toPlotEndIndex.isEqualTo(fromPlotIndex)) {
+    details = [<span style={{ color: 'red' }}>Invalid transfer amount</span>];
+    }
 
   function transactionDetails() {
     if (toPlotEndIndex.isLessThanOrEqualTo(0)) return;
