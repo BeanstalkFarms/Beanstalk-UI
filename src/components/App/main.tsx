@@ -14,6 +14,7 @@ export default function Main(props) {
     backgroundPosition: '0px 0px, 1px 0px',
     backgroundRepeat: 'repeat-x, repeat-x',
     boxShadow: 'none',
+    zIndex: 2,
     backgroundSize: 'contain, contain',
     height: '85px',
     width: '100%',

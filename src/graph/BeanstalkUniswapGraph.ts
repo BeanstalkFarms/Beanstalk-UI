@@ -22,6 +22,20 @@ export async function lastCrossQuery() {
   return data.data.beans[0].lastCross;
 }
 
+const PriceQuery = `
+{
+  beans(first: 1) {
+    price
+  }
+}`;
+
+export async function priceQuery() {
+  const data = await client.query({
+    query: gql(PriceQuery),
+  });
+  return parseFloat(data.data.beans[0].price);
+}
+
 const HourBeanQuery = `
   {
     hourDatas(

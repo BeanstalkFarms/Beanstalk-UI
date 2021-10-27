@@ -47,7 +47,7 @@ export default function Charts(props) {
   return (
     <ContentSection
       id="charts"
-      title="Charts"
+      title={props.title}
       size="20px"
       style={{ minHeight: '600px', maxWidth: '1000px', marginTop: marginTop }}
     >
@@ -66,3 +66,6 @@ export default function Charts(props) {
     </ContentSection>
   );
 }
+Charts.defaultProps = {
+  title: 'Charts',
+};

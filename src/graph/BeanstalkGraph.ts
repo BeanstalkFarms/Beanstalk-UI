@@ -44,43 +44,14 @@ query seasons($first: Int, $skip: Int) {
        newPods
        pods
        harvestableBeans
-       newDepositedBeans
-       newRemovedBeans
-       newWithdrawnBeans
        depositedBeans
        withdrawnBeans
-       claimableBeans
-       budgetBeans
-       pooledBeans
        beans
-       pooledEth
        lp
        depositedLP
-       newRemovedLP
-       newDepositedLP
        withdrawnLP
-       claimableLP
-       newWithdrawnLP
-       newFarmableBeans
-       newHarvestablePods
-       newSopEth
-       sopEth
-       cumulativeSopEth
-       claimedSopEth
-       reinvestedSopEth
        stalk
        seeds
-       cumulativeFarmableBeansPerLP
-       farmableBeansPerSeason7
-       farmableBeansPerSeason30
-       boughtBeans
-       newBoughtBeans
-       newBoughtBeansETH
-       newBoughtBeansUSD
-       soldBeans
-       newSoldBeans
-       newSoldBeansETH
-       newSoldBeansUSD
        harvestedPods
        numberOfSowers
        numberOfSows
