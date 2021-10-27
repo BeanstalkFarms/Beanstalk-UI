@@ -2,10 +2,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import ReactDOM from 'react-dom';
-import { Provider as StateProvider } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { CssBaseline, Box } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
-import store from '../../state';
+import store from 'state';
+import { updateBeanstalkBeanAllowance, updateBeanstalkLPAllowance, updateUniswapBeanAllowance } from 'state/allowances/actions';
 import BeanLogo from '../../img/bean-logo.svg';
 import { lastCrossQuery, apyQuery } from '../../graph';
 import { BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from '../../constants';
@@ -52,8 +53,6 @@ export default function App() {
           season={season.season}
           totalLP={totalBalance.totalLP}
           updateExpectedPrice={updateExpectedPrice}
-          {...allowances}
-          {...allowanceHandlers}
           {...prices}
           {...totalBalance}
           {...userBalance}
@@ -71,8 +70,6 @@ export default function App() {
           ethReserve={prices.ethReserve}
           unripenedPods={totalBalance.totalPods}
           updateExpectedPrice={updateExpectedPrice}
-          {...allowances}
-          {...allowanceHandlers}
           {...prices}
           {...userBalance}
           {...weather}
@@ -88,8 +85,6 @@ export default function App() {
           key="trade"
           lastCross={lastCross}
           poolForLPRatio={poolForLPRatio}
-          {...allowances}
-          {...allowanceHandlers}
           {...prices}
           {...totalBalance}
           {...userBalance}
@@ -121,8 +116,6 @@ export default function App() {
           ethReserve={prices.ethReserve}
           unripenedPods={totalBalance.totalPods}
           updateExpectedPrice={updateExpectedPrice}
-          {...allowances}
-          {...allowanceHandlers}
           {...prices}
           {...totalBalance}
           {...season}
@@ -141,7 +134,7 @@ export default function App() {
   BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
   const initBN = new BigNumber(-1);
   const zeroBN = new BigNumber(0);
-
+  const dispatch = useDispatch();
   const [initialized, setInitialized] = useState(false);
   const [metamaskFailure, setMetamaskFailure] = useState(-1);
 
@@ -162,33 +155,6 @@ export default function App() {
       totalBalance.totalLP,
     );
   };
-
-  const allowanceHandlers = {
-    setUniswapBeanAllowance: allowance => {
-      setAllowances(prevAllowances => ({
-        ...prevAllowances,
-        uniswapBeanAllowance: allowance,
-      }));
-    },
-    setBeanstalkBeanAllowance: allowance => {
-      setAllowances(prevAllowances => ({
-        ...prevAllowances,
-        beanstalkBeanAllowance: allowance,
-      }));
-    },
-    setBeanstalkLPAllowance: allowance => {
-      setAllowances(prevAllowances => ({
-        ...prevAllowances,
-        beanstalkLPAllowance: allowance,
-      }));
-    },
-  };
-
-  const [allowances, setAllowances] = useState({
-    uniswapBeanAllowance: zeroBN,
-    beanstalkBeanAllowance: zeroBN,
-    beanstalkLPAllowance: zeroBN,
-  });
   const [userBalance, setUserBalance] = useState({
     ethBalance: initBN,
     claimableEthBalance: initBN,
@@ -335,11 +301,10 @@ export default function App() {
         reserve.multipliedBy(BASE_SLIPPAGE).toFixed(0),
       );
 
-      setAllowances({
-        uniswapBeanAllowance,
-        beanstalkBeanAllowance,
-        beanstalkLPAllowance,
-      });
+      dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
+      dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
+      dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
+
       setUserBalance(prev => ({
         ...prev,
         claimableEthBalance,
@@ -848,14 +813,12 @@ export default function App() {
   }
 
   return (
-    <StateProvider store={store}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
 
-        <Box className="App">
-          <Main>{app}</Main>
-        </Box>
-      </ThemeProvider>
-    </StateProvider>
+      <Box className="App">
+        <Main>{app}</Main>
+      </Box>
+    </ThemeProvider>
   );
 }

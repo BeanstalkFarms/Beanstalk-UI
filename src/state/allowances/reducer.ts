@@ -13,9 +13,9 @@ export interface AllowanceState {
 }
 
 export const initialState: AllowanceState = {
-  beanstalkLPAllowance: new BigNumber(0),
-  beanstalkBeanAllowance: new BigNumber(0),
   uniswapBeanAllowance: new BigNumber(0),
+  beanstalkBeanAllowance: new BigNumber(0),
+  beanstalkLPAllowance: new BigNumber(0),
 };
 
 export default createReducer(initialState, (builder) =>
