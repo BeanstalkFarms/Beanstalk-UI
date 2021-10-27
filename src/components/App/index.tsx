@@ -786,7 +786,6 @@ export default function App() {
             lastCrossQuery(),
             apyQuery(),
           ]);
-        console.log(apyInitializer);
         ReactDOM.unstable_batchedUpdates(() => {
           const [updateBalanceState, eventParsingParameters] =
             balanceInitializers;
