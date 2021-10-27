@@ -1,7 +1,10 @@
 import React, { useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@material-ui/core';
-import ListIcon from '@material-ui/icons/List';
+import { AppState } from 'state';
+import { List as ListIcon } from '@material-ui/icons';
+import { updateBeanstalkBeanAllowance, updateBeanstalkLPAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, LPBEAN_TO_STALK } from '../../constants';
 import { approveBeanstalkBean, approveBeanstalkLP, SwapMode } from '../../util';
 import { ListTable, BaseModule, SiloAsset, TransitAsset } from '../Common';
@@ -10,6 +13,9 @@ import { LPDepositSubModule } from './LPDepositSubModule';
 import { LPWithdrawSubModule } from './LPWithdrawSubModule';
 
 export default function SiloLPModule(props) {
+  const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<AppState, AppState['allowances']>(
+    (state) => state.allowances
+  );
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [settings, setSettings] = useState({
@@ -232,21 +238,21 @@ export default function SiloLPModule(props) {
     ) : null;
 
   let allowance = new BigNumber(1);
-  let setAllowance = props.setBeanstalkBeanAllowance;
+  let setAllowance = updateBeanstalkBeanAllowance;
   let handleApprove = approveBeanstalkBean;
   if (
     settings.mode === SwapMode.Bean ||
     settings.mode === SwapMode.BeanEthereum
   ) {
-    allowance = props.beanstalkBeanAllowance;
+    allowance = beanstalkBeanAllowance;
     if (allowance.isGreaterThan(0) && settings.useLP) {
-      allowance = props.beanstalkLPAllowance;
-      setAllowance = props.setBeanstalkLPAllowance;
+      allowance = beanstalkLPAllowance;
+      setAllowance = updateBeanstalkLPAllowance;
       handleApprove = approveBeanstalkLP;
     }
   } else if (settings.mode === SwapMode.LP) {
-    allowance = props.beanstalkLPAllowance;
-    setAllowance = props.setBeanstalkLPAllowance;
+    allowance = beanstalkLPAllowance;
+    setAllowance = updateBeanstalkLPAllowance;
     handleApprove = approveBeanstalkLP;
   }
 
