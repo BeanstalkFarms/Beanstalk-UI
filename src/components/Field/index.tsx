@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from '@material-ui/core';
 import { displayBN, displayFullBN } from '../../util';
-import { MEDIUM_INTEREST_LINK } from '../../constants';
+import { APY_CALCULATION, MEDIUM_INTEREST_LINK } from '../../constants';
 import BeanLogo from '../../img/bean-bold-logo.svg';
 import {
   BaseModule,
@@ -17,6 +17,32 @@ export default function Field(props) {
   const headerLabelStyle = {
     maxWidth: '300px',
   };
+
+  // const apy = props.beansPerSeason.harvestableWeek * 8760;
+
+  const tth = props.unripenedPods.dividedBy(props.beansPerSeason.harvestableWeek);
+  const apy = props.weather.multipliedBy(8760).dividedBy(tth);
+
+  const apyField = (
+    <Grid container item xs={12} spacing={3} justifyContent="center">
+      <Grid item sm={6} xs={12} style={headerLabelStyle}>
+        <HeaderLabel
+          balanceDescription={`${apy.toFixed(2)}% APY`}
+          description={<span>The Pod APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
+          title="Pod APY"
+          value={`${apy.toFixed(0)}%`}
+        />
+      </Grid>
+      <Grid item sm={6} xs={12} style={headerLabelStyle}>
+        <HeaderLabel
+          balanceDescription={`${tth.toFixed(2)} Seasons`}
+          description={<span>The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
+          title="Seasons to Pod Clearence"
+          value={tth.toFixed(0)}
+        />
+      </Grid>
+    </Grid>
+  );
 
   return (
     <ContentSection id="field" title="Field">
@@ -50,6 +76,7 @@ export default function Field(props) {
               Read More
             </Link>
             .
+            <span>The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For more information, <a target="blank" href="/About/APY-Calculations.html">click here</a></span>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
@@ -87,7 +114,7 @@ export default function Field(props) {
           />
         </Grid>
       </Grid>
-
+      {apyField}
       <Grid
         container
         item

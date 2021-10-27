@@ -20,6 +20,7 @@ export const TELEGRAM_LINK = 'https://t.me/joinchat/OdWoJSyPVsRhYzgx';
 export const TWITTER_LINK = 'https://twitter.com/BeanstalkFarms';
 
 /* Path Links */
+export const APY_CALCULATION = '/About/APY-Calculations.html';
 export const HOW_TO_PATH = '/About/How-To.html';
 export const HOW_TO_MOBILE_PATH = '/About/How-To-Mobile.html';
 export const INTRO_TO_PATH = '/About/Intro-to-Beanstalk.html';
@@ -54,4 +55,7 @@ export const UNI_V2_SUBGRAPH_API_LINK =
 export const BEANSTALK_UNI_SUBGRAPH_API_LINK =
   'https://api.studio.thegraph.com/query/6727/beanstalk-uniswap/v0.0.9';
 export const BEANSTALK_NFT_SUBGRAPH_API_LINK =
-  'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.0';
+  'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.2';
+
+export const BEANSTALK_SUBGRAPH_API_LINK =
+  'https://api.studio.thegraph.com/query/6727/beanstalk/v1.1.6';

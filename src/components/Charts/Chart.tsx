@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import {
-  AnimatedAxis, // any of these can be non-animated equivalents
-  AnimatedGrid,
+  Axis, // any of these can be non-animated equivalents
+  Grid,
   XYChart,
   Tooltip,
   AnimatedAreaSeries,
@@ -10,31 +10,18 @@ import {
   buildChartTheme,
 } from '@visx/xychart';
 import { DataSelector, TimeSelector } from './Selectors';
-import { QuestionModule } from '../Common';
+import BeanLogo from '../../img/bean-logo.svg';
 
 export function Chart(props) {
-  const n = props.size === 'medium';
+  const n = !props.isMobile;
   const chartStyle = {
     borderRadius: '25px',
     padding: '10px',
+    paddingTop: `${n ? '30px' : '40px'}`,
     fontFamily: 'Futura-Pt-Book',
-    marginTop: '30px',
     position: 'relative',
-    height: `${n ? '370px' : '240px'}`,
+    height: `${n ? '370px' : '250px'}`,
     backgroundColor: '#F5FAFF',
-  };
-  const lineStyle = {
-    backgroundColor: 'primary',
-    color: 'primary',
-    margin: '10px 8px',
-  };
-  const titleStyle = {
-    width: '100%',
-    display: 'inline-block',
-    textAlign: 'center',
-    marginTop: '5px',
-    fontFamily: 'Futura-Pt-Book',
-    fontSize: n ? '20px' : '15px',
   };
   const theme = buildChartTheme({
     backgroundColor: '#F5FAFF',
@@ -49,7 +36,32 @@ export function Chart(props) {
     yAccessor: (d) => d.y,
   };
 
-  let data = props.dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
+  const useDataMode = props.data.length > 1;
+  const dataMode = useDataMode ? props.dataMode : 'hr';
+  let data = dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
+
+  if (data.length === 0) {
+    const loadingStyle = {
+      borderRadius: '25px',
+      padding: `${n ? '135px' : '60px'}`,
+      fontFamily: 'Futura-Pt-Book',
+      position: 'relative',
+      height: `${n ? '370px' : '240px'}`,
+      backgroundColor: '#F5FAFF',
+    };
+    return (
+      <Box style={loadingStyle}>
+        <Box className="Loading-logo">
+          <img
+            style={{ verticalAlign: 'middle' }}
+            height="100px"
+            src={BeanLogo}
+            alt="bean.money"
+          />
+        </Box>
+      </Box>
+    );
+  }
 
   if (props.timeMode === 'week') {
     data = data.filter((d) => {
@@ -57,7 +69,16 @@ export function Chart(props) {
       date.setDate(date.getDate() - 7);
       return d.x > date;
     });
+  } else if (props.timeMode === 'month') {
+    data = data.filter((d) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() - 1);
+      return d.x > date;
+    });
   }
+
+  let xTicks = 7;
+  if (props.timeMode === 'all ' && props.isMobile) xTicks = 2;
 
   const toolTipFormatter =
     props.dataMode === 'hr'
@@ -65,17 +86,28 @@ export function Chart(props) {
           `${d.toDateString().split(' ')[1]} ${d.getDate()}, ${d.getHours()}:00`
       : (d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`;
 
-  const xAxisTickFormatter = (d) => {
-    if (d > 1000000) return `${(d / 1000000).toFixed(2).toLocaleString('en-US')}m`;
-    else if (d > 1000) return `${(d / 1000).toLocaleString('en-US')}k`; // eslint-disable-line
-    else return `${d === 0 ? d : d.toFixed(2)}`;
+  const yAxisTickFormatter = (d) => {
+    if (props.title === 'Price') return d.toFixed(2);
+    if (d >= 1000000) return `${(d / 1000000).toLocaleString('en-US')}m`;
+    if (d >= 10000) return `${(d / 1000).toLocaleString('en-US')}k`;
+    if (d >= 1) return `${(d).toLocaleString('en-US')}`;
+    if (d >= 0.1) return `${d === 0 ? d : d.toFixed(2)}`;
+    return `${d}`;
   };
 
   const chartMargin = (
     n
-      ? { top: 30, right: 60, bottom: 50, left: 65 }
-      : { top: 10, right: 20, bottom: 40, left: 65 }
+      ? { top: 30, right: 60, bottom: 60, left: 70 }
+      : { top: 10, right: 20, bottom: 50, left: 65 }
   );
+
+  const frontUnit = props.unit !== undefined &&
+                  props.unit !== '%' ?
+                  props.unit : '';
+
+  const backUnit = props.unit !== undefined &&
+                  props.unit === '%' ?
+                  props.unit : '';
 
   function getLineForTitle(_title, _data) {
     if (_title === 'Price') {
@@ -106,29 +138,23 @@ export function Chart(props) {
   }
 
   return (
-    <Box className="AppBar-shadow" style={chartStyle}>
-      <DataSelector
+    <Box style={chartStyle}>
+      {useDataMode ? <DataSelector
         size={props.size}
+        isMobile={props.isMobile}
         setValue={props.setDataMode}
-        value={props.dataMode}
-      />
+        value={dataMode}
+      /> : null}
       <TimeSelector
         size={props.size}
+        isMobile={props.isMobile}
         setValue={props.setTimeMode}
         value={props.timeMode}
-        dataMode={props.dataMode}
+        dataMode={dataMode}
       />
-      <span style={titleStyle}>
-        {props.title}
-        <QuestionModule
-          description={`This is the historical Bean ${props.title} chart.`}
-          margin="-6px 0 0 2px"
-        />
-      </span>
-      <hr style={lineStyle} />
       <XYChart
         theme={theme}
-        height={n ? 300 : 170}
+        height={n ? 330 : 210}
         margin={chartMargin}
         xScale={{ type: 'time' }}
         yScale={{ type: 'linear', zero: false, nice: true }}
@@ -148,9 +174,10 @@ export function Chart(props) {
                 {tooltipData.datumByKey[props.title].key}
               </Box>
               <Box style={{ marginTop: '5px' }}>
-                {`${props.usd ? '$' : ''}${accessors
+                {`${frontUnit}${accessors
                   .yAccessor(tooltipData.datumByKey[props.title].datum)
-                  .toLocaleString('en-US')}`}
+                  .toLocaleString('en-US')}
+                  ${backUnit}`}
               </Box>
               <Box style={{ marginTop: '5px', color: '#777777' }}>
                 {toolTipFormatter(
@@ -160,22 +187,22 @@ export function Chart(props) {
             </Box>
           )}
         />
-        <AnimatedAxis
+        <Axis
           label="Time"
           orientation="bottom"
-          tickLength={n ? 7 : 3}
-          numTicks={props.timeMode === 'week' ? 7 : 7}
+          tickLength={xTicks}
+          numTicks={n ? 7 : 3}
           tickFormat={(d) => `${d.toDateString().split(' ')[1]} ${d.getDate()}`}
         />
-        <AnimatedAxis
+        <Axis
           numTicks={6}
           tickLength={n ? 7 : 3}
-          label={`${props.title}${props.usd ? ' ($)' : ''}`}
+          label={`${props.title}${props.unit !== undefined ? ` (${props.unit})` : ''}`}
           labelOffset={35}
           orientation="left"
-          tickFormat={xAxisTickFormatter}
+          tickFormat={yAxisTickFormatter}
         />
-        <AnimatedGrid strokeDasharray={2} columns={false} numTicks={6} />
+        <Grid strokeDasharray={2} columns={false} numTicks={6} />
         {getLineForTitle(props.title, data)}
       </XYChart>
     </Box>
@@ -183,5 +210,5 @@ export function Chart(props) {
 }
 
 Chart.defaultProps = {
-  usd: true,
+  unit: undefined,
 };

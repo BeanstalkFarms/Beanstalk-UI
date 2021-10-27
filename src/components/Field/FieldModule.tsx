@@ -95,6 +95,7 @@ export default function FieldModule(props) {
       fromAddress={props.address}
       fromToken={CryptoAsset.Bean}
       ref={sendRef}
+      isFormDisabled={isFormDisabled}
       setIsFormDisabled={setIsFormDisabled}
       isValidAddress={isValidAddress}
       setIsValidAddress={setIsValidAddress}

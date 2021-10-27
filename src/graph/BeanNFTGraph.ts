@@ -71,11 +71,11 @@ function queryNfts(first: Number, skip: Number): Promise {
 }
 
 export async function beanNFTQuery() {
-  const [d1, d2] = await Promise.all([queryNfts(1000, 0), queryNfts(1000, 1000)]);
+  const [d1, d2] = await Promise.all([queryNfts(1000, 0), queryNfts(1000, 1000), queryNfts(1000, 2000)]);
   const data = d1.data.beanNfts.concat(d2.data.beanNfts);
   let nfts = data.reduce((ns, s) => {
     const nft = {};
-    nft.account = s.account;
+  nft.account = s.account;
     nft.id = parseInt(s.id, 10);
     nft.txn = s.txn;
     ns.push(nft);

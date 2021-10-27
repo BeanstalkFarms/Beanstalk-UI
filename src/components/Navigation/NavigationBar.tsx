@@ -110,7 +110,7 @@ export default function NavigationBar(props) {
   }, []);
 
   const linkItemStyle = (path) =>
-    (path === 'governance' || path === 'nft'
+    (path === 'governance'
       ? { color: 'rgb(14, 136, 55)' }
       : null);
 

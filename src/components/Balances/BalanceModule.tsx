@@ -253,9 +253,7 @@ export default function BalanceModule(props) {
           <Grid item sm={6} xs={12}>
             <DataBalanceModule
               balance={`$${displayBN(props.topLeft)}`}
-              balanceDescription={`$${displayFullBN(props.topLeft)} ${
-                props.strings.topLeft
-              }`}
+              balanceDescription={`$${displayFullBN(props.topLeft)} USD`}
               description={props.description.topLeft}
               margin="0 0 6px 10px"
               placement="top-start"

@@ -17,6 +17,7 @@ export { default as AddressInputField } from './AddressInputField';
 export { default as BalanceField } from './BalanceField';
 export { default as ListInputField } from './ListInputField';
 export { default as BaseModule } from './BaseModule';
+export { default as ContentTitle } from './ContentTitle';
 export { default as ContentSection } from './ContentSection';
 export { default as DataBalanceModule } from './DataBalanceModule';
 export { default as EthInputField } from './EthInputField';
@@ -27,6 +28,7 @@ export { default as InputFieldPlus } from './InputFieldPlus';
 export { default as ListTable } from './ListTable';
 export { default as NftListTable } from './NftListTable';
 export { default as NftPicTable } from './NftPicTable';
+export { default as PlotInputField } from './PlotInputField';
 export { default as QuestionModule } from './QuestionModule';
 export { default as SettingsFormModule } from './SettingsFormModule';
 export { default as SingleButton } from './SingleButton';
@@ -39,6 +41,7 @@ export { default as TokenOutputField } from './TokenOutputField';
 export { default as TokenTypeImageModule } from './TokenTypeImageModule';
 export { default as TransactionDetailsModule } from './TransactionDetailsModule';
 export { default as UnitSelectionModule } from './UnitSelectionModule';
+export { default as TabImageModule } from './TabImageModule';
 
 export const FormatTooltip = withStyles((theme: Theme) => ({
   tooltip: {
