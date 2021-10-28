@@ -58,10 +58,10 @@ export default function Footer(props) {
       fill: theme.footer,
     };
   const linkStyle = {
-    padding: '18px 15px 0 0',
+    padding: '28px 15px 0 0',
   };
   const closeStyle = {
-    padding: '18px 7px 0 0',
+    padding: '28px 7px 0 0',
   };
   const siloStyle = {
     bottom: '51px',
