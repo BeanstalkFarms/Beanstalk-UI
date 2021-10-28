@@ -105,8 +105,9 @@ export default function Footer(props) {
     };
   const tombstoneStyle = width > 650 ?
     {
-      bottom: '47px',
+      bottom: '44px',
       height: '5vw',
+      maxHeight: '100px',
       left: '60%',
       minHeight: '55px',
       position: 'fixed',
