@@ -240,7 +240,7 @@ export default function BalanceModule(props) {
   );
 
   return (
-    <Grid container justifyContent="center" style={{ padding: props.padding }}>
+    <Grid container justifyContent="center" style={{ padding: props.padding, backgroundColor: theme.module.background }}>
       <Grid
         container
         style={{
