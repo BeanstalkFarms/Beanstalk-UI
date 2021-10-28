@@ -20,16 +20,16 @@ export const TELEGRAM_LINK = 'https://t.me/joinchat/OdWoJSyPVsRhYzgx';
 export const TWITTER_LINK = 'https://twitter.com/BeanstalkFarms';
 
 /* Path Links */
-export const APY_CALCULATION = '/About/APY.html';
-export const HOW_TO_PATH = '/About/How-To.html';
-export const HOW_TO_MOBILE_PATH = '/About/How-To-Mobile.html';
-export const INTRO_TO_PATH = '/About/Intro-to-Beanstalk.html';
-export const WHITEPAPER = '/About/beanstalk.pdf';
+export const APY_CALCULATION = '/docs/APY.html';
+export const HOW_TO_PATH = '/docs/How-To.html';
+export const HOW_TO_MOBILE_PATH = '/docs/How-To-Mobile.html';
+export const INTRO_TO_PATH = '/docs/Intro-to-Beanstalk.html';
+export const WHITEPAPER = '/docs/beanstalk.pdf';
 
 /* Metamask Links */
 export const METAMASK_LINK = 'https://metamask.io/download';
 export const HOW_TO_MM_PATH =
-  '/About/How-To.html#connect-your-metamask-wallet-to-beanstalk';
+  '/docs/How-To.html#connect-your-metamask-wallet-to-beanstalk';
 
 /* Base Links */
 export const BASE_ETHERSCAN_TX_LINK = 'https://etherscan.io/tx/';
@@ -57,5 +57,7 @@ export const BEANSTALK_UNI_SUBGRAPH_API_LINK =
 export const BEANSTALK_NFT_SUBGRAPH_API_LINK =
   'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.2';
 
+// export const BEANSTALK_SUBGRAPH_API_LINK =
+//   'https://api.studio.thegraph.com/query/6727/beanstalk/v1.1.6';
 export const BEANSTALK_SUBGRAPH_API_LINK =
-  'https://api.studio.thegraph.com/query/6727/beanstalk/v1.1.6';
+'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/0x925753106fcdb6d2f30c3db295328a0a1c5fd1d1-0';

@@ -4,6 +4,9 @@ import { initialize, metamaskFailure } from '../../util';
 import { METAMASK_LINK, HOW_TO_MM_PATH } from '../../constants';
 import { SvgCloudIcon } from '../About/SvgCloudIcon';
 import About from '../About';
+import Charts from '../Charts';
+import { ContentSection } from '../Common';
+import { NavigationBar } from '../Navigation';
 
 export default function MetamasklessModule() {
   const connectMetaStyle = {
@@ -57,9 +60,26 @@ export default function MetamasklessModule() {
     );
   }
 
+  const navMappings = [
+    {
+      path: 'about',
+      title: 'ABOUT',
+    },
+    {
+      path: 'analytics',
+      title: 'ANALYTICS',
+    },
+  ];
+
   return (
-    <Box style={{ position: 'relative' }}>
-      <About defaultSection={metamaskModule} />
-    </Box>
+    <>
+      <NavigationBar links={navMappings} showWallet={false} />
+      <Box className="App" style={{ position: 'relative' }}>
+        <About defaultSection={metamaskModule} />
+        <ContentSection id="analytics" title="Charts">
+          <Charts title="" />
+        </ContentSection>
+      </Box>
+    </>
   );
 }

@@ -36,7 +36,7 @@ export default function Field(props) {
       <Grid item sm={6} xs={12} style={headerLabelStyle}>
         <HeaderLabel
           balanceDescription={`${tth.toFixed(2)} Seasons`}
-          description={<span>The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
+          description={<span>The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate Seasons to Pod Clearance, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
           title="Seasons to Pod Clearance"
           value={tth.toFixed(0)}
         />
@@ -76,7 +76,6 @@ export default function Field(props) {
               Read More
             </Link>
             .
-            <span>The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For more information, <a target="blank" href={APY_CALCULATION}>click here</a></span>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
