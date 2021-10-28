@@ -1,11 +1,7 @@
 import React from 'react';
 import { Link, Box } from '@material-ui/core';
 import { APY_CALCULATION, MEDIUM_INTEREST_LINK } from '../../constants';
-import {
-  ContentSection,
-  Grid,
-  HeaderLabel,
-} from '../Common';
+import { ContentSection, Grid, HeaderLabel } from '../Common';
 import TabbedSilo from './TabbedSilo';
 import { getAPYs } from '../../util';
 
@@ -16,26 +12,51 @@ export default function Silo(props) {
     maxWidth: '300px',
   };
 
-const [beanAPY, lpAPY] = getAPYs(props.beansPerSeason.farmableWeek, parseFloat(props.totalStalk), parseFloat(props.totalSeeds));
-const apyField = (
-  <Grid container item xs={12} spacing={3} justifyContent="center">
-    <Grid item sm={6} xs={12} style={headerLabelStyle}>
-      <HeaderLabel
-        balanceDescription={`${lpAPY.toFixed(2)}%`}
-        description={<span>The LP APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
-        title="LP APY"
-        value={`${lpAPY.toFixed(0)}%`}
-      />
+  const [beanAPY, lpAPY] = getAPYs(
+    props.beansPerSeason.farmableWeek,
+    parseFloat(props.totalStalk),
+    parseFloat(props.totalSeeds)
+  );
+  const apyField = (
+    <Grid container item xs={12} spacing={3} justifyContent="center">
+      <Grid item sm={6} xs={12} style={headerLabelStyle}>
+        <HeaderLabel
+          balanceDescription={`${lpAPY.toFixed(2)}%`}
+          description={
+            <span>
+              The LP APY is a rough estimate based on a liquidity weighted
+              average of Beans minted over the previous 168 Seasons normalized
+              to the current liquidity. For the complete formulas used to
+              calculate APY,{' '}
+              <a target="blank" href={APY_CALCULATION}>
+                click here
+              </a>
+            </span>
+          }
+          title="LP APY"
+          value={`${lpAPY.toFixed(0)}%`}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6} style={headerLabelStyle}>
+        <HeaderLabel
+          balanceDescription={`${beanAPY.toFixed(2)}%`}
+          description={
+            <span>
+              The Bean APY is a rough estimate based on a liquidity weighted
+              average of Beans minted over the previous 168 Seasons normalized
+              to the current liquidity. For the complete formulas used to
+              calculate APY,{' '}
+              <a target="blank" href={APY_CALCULATION}>
+                click here
+              </a>
+            </span>
+          }
+          title="Bean APY"
+          value={`${beanAPY.toFixed(0)}%`}
+        />
+      </Grid>
     </Grid>
-    <Grid item xs={12} sm={6} style={headerLabelStyle}>
-      <HeaderLabel
-        balanceDescription={`${beanAPY.toFixed(2)}%`}
-        description={<span>The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
-        title="Bean APY"
-        value={`${beanAPY.toFixed(0)}%`}
-      />
-    </Grid>
-  </Grid>);
+  );
   return (
     <ContentSection id="silo" title="Silo">
       <Box
