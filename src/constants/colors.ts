@@ -2,6 +2,14 @@ import cloud from '../img/cloud-background.png';
 import darkCloud from '../img/dark/cloud-background-dark.png';
 import darkSun from '../img/dark/Sun.svg';
 import sun from '../img/Sun.svg';
+import darkGround from '../img/dark/ground.png';
+import ground from '../img/ground.png';
+import darkBarn from '../img/dark/Barn.svg';
+import barn from '../img/Barn.svg';
+import darkSilo from '../img/dark/Silo.svg';
+import silo from '../img/Silo.svg';
+import bean from '../img/bean-bold-logo.svg';
+import beanWhite from '../img/bean-white-logo.svg';
 
 const normalTheme = {
     name: 'main',
@@ -11,7 +19,7 @@ const normalTheme = {
     accentText: 'white',
     border: 'rgba(224, 224, 224, 1)',
     text: 'black',
-    backgrounText: 'black',
+    backgroundText: 'black',
     linkColor: '#3B3B3B',
     footer: '#000000',
     module: {
@@ -22,6 +30,10 @@ const normalTheme = {
     cloud: cloud,
     sun: sun,
     sunHeight: '10vw',
+    ground: ground,
+    barn: barn,
+    silo: silo,
+    bean: bean,
 };
 
 export const ropstenTheme = {
@@ -50,6 +62,10 @@ export const spookyTheme = {
     cloud: darkCloud,
     sun: darkSun,
     sunHeight: '15vw',
+    ground: darkGround,
+    barn: darkBarn,
+    silo: darkSilo,
+    bean: beanWhite,
 };
 
 export const theme = spookyTheme;

@@ -48,7 +48,7 @@ const useStyles = makeStyles({
 
 const claimableStyle = {
   fontFamily: 'Futura-PT',
-  color: theme.accentText,
+  color: 'white',
   fontWeight: 'bold',
   width: '33%',
   borderColor: theme.accentColor,

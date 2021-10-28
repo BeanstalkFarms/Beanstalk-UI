@@ -31,7 +31,7 @@ export default function ContentSection(props) {
       {props.descriptionLinks.map((l) => (
         <span key={l.text}>
           {' '}
-          <Link style={{ color: theme.linkColor }} key={l.text} href={l.href} target="blank">
+          <Link style={{ color: theme.backgroundText }} key={l.text} href={l.href} target="blank">
             {l.text}
           </Link>
           .

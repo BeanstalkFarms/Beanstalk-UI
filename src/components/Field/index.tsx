@@ -1,7 +1,6 @@
 import React from 'react';
 import { displayBN, displayFullBN } from '../../util';
-import { APY_CALCULATION, MEDIUM_INTEREST_LINK } from '../../constants';
-import BeanLogo from '../../img/bean-bold-logo.svg';
+import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
 import {
   BaseModule,
   ContentSection,
@@ -59,7 +58,7 @@ export default function Field(props) {
           padding: '0 0 4px 0',
         }}
         height="17px"
-        src={BeanLogo}
+        src={theme.bean}
         alt="Beans"
       />
       1 each on a FIFO basis.

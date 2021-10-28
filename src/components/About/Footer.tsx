@@ -9,16 +9,12 @@ import { ReactComponent as CoinGeckoIcon } from '../../img/coingecko-icon.svg';
 import { ReactComponent as CoinMarketCapIcon } from '../../img/coinmarketcap-icon.svg';
 import { ReactComponent as DiscordIcon } from '../../img/discord-icon.svg';
 import { ReactComponent as EtherscanIcon } from '../../img/etherscan-logo.svg';
-import ground from '../../img/dark/ground.png';
+// import ground from '../../img/dark/ground.png';
 // import ground from '../../img/ground-tall.png';
 import { ReactComponent as MediumIcon } from '../../img/medium-icon.svg';
 import { ReactComponent as OpenSeaIcon } from '../../img/opensea-icon.svg';
 // import reddit from '../../img/reddit-icon.svg'
 import { ReactComponent as UniswapIcon } from '../../img/uniswap-logo-black.svg';
-import BarnIcon from '../../img/dark/Barn.svg';
-// import BarnIcon from '../../img/Barn.svg';
-import SiloIcon from '../../img/dark/Silo.svg';
-// import SiloIcon from '../../img/Silo.svg';
 
 import PumpkinIcon from '../../img/dark/pumpkin-dark.svg';
 import FenceIcon from '../../img/dark/fence-dark.svg';
@@ -44,7 +40,7 @@ export default function Footer(props) {
   const classes = makeStyles({
     fixedGround: {
       backgroundColor: 'transparent',
-      backgroundImage: `url(${ground})`,
+      backgroundImage: `url(${theme.ground})`,
       backgroundPosition: '0% 0%',
       backgroundRepeat: 'repeat',
       backgroundSize: 'contain',
@@ -64,10 +60,10 @@ export default function Footer(props) {
       fill: theme.footer,
     };
   const linkStyle = {
-    padding: '10px 15px 0 0',
+    padding: '18px 15px 0 0',
   };
   const closeStyle = {
-    padding: '10px 7px 0 0',
+    padding: '18px 7px 0 0',
   };
   const siloStyle = {
     bottom: '51px',
@@ -119,8 +115,8 @@ export default function Footer(props) {
 
   return (
     <>
-      <img alt="Silo Icon" src={SiloIcon} style={siloStyle} />
-      <img alt="Barn Icon" src={BarnIcon} style={barnStyle} />
+      <img alt="Silo Icon" src={theme.silo} style={siloStyle} />
+      <img alt="Barn Icon" src={theme.barn} style={barnStyle} />
       {spookyImg}
       <Grid container className={classes.fixedGround} justifyContent="center">
         <Grid item style={closeStyle}>
