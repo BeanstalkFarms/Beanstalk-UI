@@ -6,8 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CssBaseline, Box } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import store from 'state';
-import { updateBeanstalkBeanAllowance, updateBeanstalkLPAllowance, updateUniswapBeanAllowance } from 'state/allowances/actions';
+import {
+  updateBeanstalkBeanAllowance,
+  updateBeanstalkLPAllowance,
+  updateUniswapBeanAllowance
+} from 'state/allowances/actions';
 import { setUserBalance } from 'state/userBalance/actions';
+import { setTotalBalance } from 'state/totalBalance/actions';
 import { AppState } from 'state';
 import BeanLogo from '../../img/bean-logo.svg';
 import { lastCrossQuery, apyQuery } from '../../graph';
@@ -29,26 +34,29 @@ import {
   toBaseUnitBN,
   toTokenUnitsBN,
   account
-} from '../../util'
-import About from '../About'
-import Analytics from '../Analytics'
-import Field from '../Field'
-import MetamasklessModule from './MetamasklessModule'
-import { NavigationBar } from '../Navigation'
-import NFTs from '../NFT'
-import Silo from '../Silo'
-import theme from './theme'
-import Trade from '../Trade'
+} from '../../util';
+import About from '../About';
+import Analytics from '../Analytics';
+import Field from '../Field';
+import MetamasklessModule from './MetamasklessModule';
+import { NavigationBar } from '../Navigation';
+import NFTs from '../NFT';
+import Silo from '../Silo';
+import theme from './theme';
+import Trade from '../Trade';
 
-import Main from './main.tsx'
-import './App.css'
+import Main from './main.tsx';
+import './App.css';
 
 export default function App() {
   const initBN = new BigNumber(-1);
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
   const userBalance = useSelector<AppState, AppState['userBalance']>(
-    (state) => state.userBalance
+    state => state.userBalance
+  );
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    state => state.totalBalance
   );
 
   const defaultNavMapping = [
@@ -67,7 +75,7 @@ export default function App() {
           {...userBalance}
           beansPerSeason={beansPerSeason}
         />
-      ),
+      )
     },
     {
       path: 'field',
@@ -84,7 +92,7 @@ export default function App() {
           {...weather}
           beansPerSeason={beansPerSeason}
         />
-      ),
+      )
     },
     {
       path: 'trade',
@@ -98,15 +106,19 @@ export default function App() {
           {...totalBalance}
           {...userBalance}
         />
-      ),
+      )
     },
     {
       path: 'nft',
       title: 'BeaNFTs',
       component: () => (
         <NFTs
-          key='beanft'
-          {...prices} {...totalBalance} {...season} {...userBalance} {...weather}
+          key="beanft"
+          {...prices}
+          {...totalBalance}
+          {...season}
+          {...userBalance}
+          {...weather}
         />
       )
     },
@@ -131,13 +143,13 @@ export default function App() {
           {...userBalance}
           {...weather}
         />
-      ),
+      )
     },
     {
       path: 'about',
       title: 'ABOUT',
-      component: () => <About key="about" />,
-    },
+      component: () => <About key="about" />
+    }
   ];
 
   BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
@@ -159,30 +171,15 @@ export default function App() {
       amount,
       prices.beanReserve,
       prices.ethReserve,
-      totalBalance.totalLP,
+      totalBalance.totalLP
     );
   };
 
-  const [totalBalance, setTotalBalance] = useState({
-    totalBeans: initBN,
-    totalSiloBeans: initBN,
-    totalTransitBeans: initBN,
-    totalBudgetBeans: initBN,
-    totalLP: initBN,
-    totalSiloLP: initBN,
-    totalTransitLP: initBN,
-    totalStalk: initBN,
-    totalSeeds: initBN,
-    totalPods: initBN,
-    totalRoots: initBN,
-    harvestableBeansPerSeason7: initBN,
-    harvestableBeansPerSeason30: initBN,
-  });
   const [season, setSeason] = useState({
     season: initBN,
     timestamp: initBN,
     start: initBN,
-    period: initBN,
+    period: initBN
   });
   const [weather, setWeather] = useState({
     didSowBelowMin: false,
@@ -196,7 +193,7 @@ export default function App() {
     harvestableIndex: initBN,
     weather: initBN,
     raining: false,
-    rainStart: initBN,
+    rainStart: initBN
   });
 
   const [prices, setPrices] = useState({
@@ -205,19 +202,19 @@ export default function App() {
     ethReserve: initBN,
     beanReserve: initBN,
     beanTWAPPrice: initBN,
-    usdcTWAPPrice: initBN,
+    usdcTWAPPrice: initBN
   });
 
-  const [lastCross, setLastCross] = useState(0)
+  const [lastCross, setLastCross] = useState(0);
   const [beansPerSeason, setBeansPerSeason] = useState({
-    'farmableWeek': 0,
-    'farmableMonth': 0,
-    'harvestableWeek': 0,
-    'harvestableMonth': 0,
-  })
-  const [bips, setBips] = useState([])
-  const [hasActiveBIP, setHasActiveBIP] = useState(false)
-  const [contractEvents, setContractEvents] = useState([])
+    farmableWeek: 0,
+    farmableMonth: 0,
+    harvestableWeek: 0,
+    harvestableMonth: 0
+  });
+  const [bips, setBips] = useState([]);
+  const [hasActiveBIP, setHasActiveBIP] = useState(false);
+  const [contractEvents, setContractEvents] = useState([]);
 
   const eventParsingParametersRef = useRef([]);
   eventParsingParametersRef.current = [
@@ -228,7 +225,7 @@ export default function App() {
     userBalance.grownStalkBalance,
     userBalance.claimableEthBalance,
     prices.beanReserve,
-    prices.ethReserve,
+    prices.ethReserve
   ];
 
   const benchmarkStart = operation => {
@@ -237,7 +234,7 @@ export default function App() {
   };
   const benchmarkEnd = (operation, startTime) => {
     console.log(
-      `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`,
+      `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
     );
   };
 
@@ -248,7 +245,7 @@ export default function App() {
       accountBalances,
       ethBalance,
       lpReserves,
-      currentSeason,
+      currentSeason
     ) {
       const [
         uniswapBeanAllowance,
@@ -263,62 +260,94 @@ export default function App() {
         farmableBeanBalance,
         farmableStalkBalance,
         grownStalkBalance,
-        rootsBalance,
+        rootsBalance
       ] = accountBalances;
       const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       const lockedSeasons = lockedUntil.minus(currentSeason);
       const minReceivables = lpReserves.map(reserve =>
-        reserve.multipliedBy(BASE_SLIPPAGE).toFixed(0),
+        reserve.multipliedBy(BASE_SLIPPAGE).toFixed(0)
       );
 
       dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
 
-      dispatch(setUserBalance({
-        claimableEthBalance,
-        ethBalance,
-        beanBalance,
-        lpBalance,
-        seedBalance,
-        stalkBalance,
-        locked,
-        lockedSeasons,
-        farmableBeanBalance,
-        farmableStalkBalance,
-        grownStalkBalance,
-        rootsBalance,
-        claimable: [
-          userBalance.claimable[0],
-          userBalance.claimable[1],
-          userBalance.claimable[2],
-          userBalance.claimable[3],
-          userBalance.claimable[4],
-          minReceivables[0],
-          minReceivables[1],
-        ],
-      }));
+      dispatch(
+        setUserBalance({
+          claimableEthBalance,
+          ethBalance,
+          beanBalance,
+          lpBalance,
+          seedBalance,
+          stalkBalance,
+          locked,
+          lockedSeasons,
+          farmableBeanBalance,
+          farmableStalkBalance,
+          grownStalkBalance,
+          rootsBalance,
+          claimable: [
+            userBalance.claimable[0],
+            userBalance.claimable[1],
+            userBalance.claimable[2],
+            userBalance.claimable[3],
+            userBalance.claimable[4],
+            minReceivables[0],
+            minReceivables[1]
+          ]
+        })
+      );
     }
 
     function processTotalBalances(totalBalances, bipInfo) {
       const [
-        totalBeans, totalLP, totalSeeds, totalStalk,
-        totalSiloBeans, totalSiloLP, totalTransitBeans, totalTransitLP,
-        soil, podIndex, harvestableIndex, totalRoots, weather, rain, season,
-        develpomentBudget, marketingBudget
-      ] = totalBalances
-      const totalBudgetBeans = develpomentBudget.plus(marketingBudget)
-      const [bips, hasActiveBIP] = bipInfo
-      const totalPods = podIndex.minus(harvestableIndex)
-      setTotalBalance(prev => ({
-        ...prev, totalBeans: totalBeans, totalBudgetBeans, totalLP, totalSiloBeans, totalSiloLP,
-        totalTransitBeans, totalTransitLP, totalSeeds, totalStalk, totalPods, totalRoots
-      }))
-      setWeather(prev => ({...prev, ...weather, ...rain, harvestableIndex, soil}))
-      setBips(bips)
-      setHasActiveBIP(hasActiveBIP)
-      setSeason(season)
-      return season.season
+        totalBeans,
+        totalLP,
+        totalSeeds,
+        totalStalk,
+        totalSiloBeans,
+        totalSiloLP,
+        totalTransitBeans,
+        totalTransitLP,
+        soil,
+        podIndex,
+        harvestableIndex,
+        totalRoots,
+        weather,
+        rain,
+        season,
+        develpomentBudget,
+        marketingBudget
+      ] = totalBalances;
+      const totalBudgetBeans = develpomentBudget.plus(marketingBudget);
+      const [bips, hasActiveBIP] = bipInfo;
+      const totalPods = podIndex.minus(harvestableIndex);
+      dispatch(
+        setTotalBalance({
+          totalBeans,
+          totalBudgetBeans,
+          totalLP,
+          totalSiloBeans,
+          totalSiloLP,
+          totalTransitBeans,
+          totalTransitLP,
+          totalSeeds,
+          totalStalk,
+          totalPods,
+          totalRoots
+        })
+      );
+      setWeather(prev => ({
+        ...prev,
+        ...weather,
+        ...rain,
+        harvestableIndex,
+        soil
+      }));
+      setBips(bips);
+      setHasActiveBIP(hasActiveBIP);
+      setSeason(season);
+      return season.season;
     }
 
     function lpReservesForTokenReserves(tokenReserves, token0) {
@@ -352,7 +381,7 @@ export default function App() {
         ethReserve,
         beanReserve,
         beanTWAPPrice: twapPrices[0],
-        usdcTWAPPrice: twapPrices[1],
+        usdcTWAPPrice: twapPrices[1]
       }));
       return [beanReserve, ethReserve];
     }
@@ -373,28 +402,28 @@ export default function App() {
           const s = parseInt(event.returnValues.season);
           const beans = toTokenUnitsBN(
             new BigNumber(event.returnValues.beans),
-            BEAN.decimals,
+            BEAN.decimals
           );
           userBeanDeposits = {
             ...userBeanDeposits,
             [s]:
               userBeanDeposits[s] !== undefined
                 ? userBeanDeposits[s].plus(beans)
-                : beans,
+                : beans
           };
           if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
         } else if (event.event === 'BeanRemove') {
           event.returnValues.crates.forEach((s, i) => {
             const beans = toTokenUnitsBN(
               event.returnValues.crateBeans[i],
-              BEAN.decimals,
+              BEAN.decimals
             );
             userBeanDeposits = {
               ...userBeanDeposits,
               [s]:
                 userBeanDeposits[s] !== undefined
                   ? userBeanDeposits[s].minus(beans)
-                  : beans,
+                  : beans
             };
             if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
           });
@@ -402,14 +431,14 @@ export default function App() {
           const s = parseInt(event.returnValues.season);
           const beans = toTokenUnitsBN(
             new BigNumber(event.returnValues.beans),
-            BEAN.decimals,
+            BEAN.decimals
           );
           beanWithdrawals = {
             ...beanWithdrawals,
             [s]:
               beanWithdrawals[s] !== undefined
                 ? beanWithdrawals[s].plus(beans)
-                : beans,
+                : beans
           };
         } else if (event.event === 'Sow') {
           const s = parseInt(event.returnValues.index) / 1e6;
@@ -419,7 +448,7 @@ export default function App() {
             const s = parseInt(event.returnValues.id) / 1e6;
             userPlots[s] = toTokenUnitsBN(
               event.returnValues.pods,
-              BEAN.decimals,
+              BEAN.decimals
             );
           } else {
             const s = parseInt(event.returnValues.id) / 1e6;
@@ -441,7 +470,9 @@ export default function App() {
                   userPlots[startIndex] = new BigNumber(s - startIndex);
                   if (s !== endIndex) {
                     const s2 = s + parseInt(event.returnValues.pods) / 1e6;
-                    userPlots[s2] = (new BigNumber(endIndex)).minus(new BigNumber(s2));
+                    userPlots[s2] = new BigNumber(endIndex).minus(
+                      new BigNumber(s2)
+                    );
                     if (userPlots[s2].isEqualTo(0)) delete userPlots[s2];
                   }
                   found = true;
@@ -454,40 +485,40 @@ export default function App() {
           const s = parseInt(event.returnValues.season);
           const lp = toTokenUnitsBN(
             new BigNumber(event.returnValues.lp),
-            UNI_V2_ETH_BEAN_LP.decimals,
+            UNI_V2_ETH_BEAN_LP.decimals
           );
           const seeds = toTokenUnitsBN(
             new BigNumber(event.returnValues.seeds),
-            BEAN.decimals,
+            BEAN.decimals
           );
           userLPDeposits = {
             ...userLPDeposits,
             [s]:
-              userLPDeposits[s] !== undefined ? userLPDeposits[s].plus(lp) : lp,
+              userLPDeposits[s] !== undefined ? userLPDeposits[s].plus(lp) : lp
           };
           userLPSeedDeposits = {
             ...userLPSeedDeposits,
             [s]:
               userLPSeedDeposits[s] !== undefined
                 ? userLPSeedDeposits[s].plus(seeds)
-                : seeds,
+                : seeds
           };
         } else if (event.event === 'LPRemove') {
           event.returnValues.crates.forEach((s, i) => {
             const lp = toTokenUnitsBN(
               event.returnValues.crateLP[i],
-              UNI_V2_ETH_BEAN_LP.decimals,
+              UNI_V2_ETH_BEAN_LP.decimals
             );
             const seeds = userLPSeedDeposits[s]
               .multipliedBy(lp)
               .dividedBy(userLPDeposits[s]);
             userLPDeposits = {
               ...userLPDeposits,
-              [s]: userLPDeposits[s].minus(lp),
+              [s]: userLPDeposits[s].minus(lp)
             };
             userLPSeedDeposits = {
               ...userLPSeedDeposits,
-              [s]: userLPSeedDeposits[s].minus(seeds),
+              [s]: userLPSeedDeposits[s].minus(seeds)
             };
             if (userLPDeposits[s].isEqualTo(0)) delete userLPDeposits[s];
             if (userLPSeedDeposits[s].isEqualTo(0))
@@ -497,27 +528,28 @@ export default function App() {
           const s = parseInt(event.returnValues.season);
           const lp = toTokenUnitsBN(
             new BigNumber(event.returnValues.lp),
-            UNI_V2_ETH_BEAN_LP.decimals,
+            UNI_V2_ETH_BEAN_LP.decimals
           );
           lpWithdrawals = {
             ...lpWithdrawals,
-            [s]:
-              lpWithdrawals[s] !== undefined ? lpWithdrawals[s].plus(lp) : lp,
+            [s]: lpWithdrawals[s] !== undefined ? lpWithdrawals[s].plus(lp) : lp
           };
         } else if (event.event === 'Harvest') {
           let beansClaimed = toTokenUnitsBN(
             event.returnValues.beans,
-            BEAN.decimals,
+            BEAN.decimals
           );
-          let plots = event.returnValues.plots.slice().map((p) => parseInt(p)/1e6)
-          plots = plots.sort((a,b) => a-b)
+          let plots = event.returnValues.plots
+            .slice()
+            .map(p => parseInt(p) / 1e6);
+          plots = plots.sort((a, b) => a - b);
 
           plots.forEach(index => {
             if (beansClaimed.isLessThan(userPlots[index])) {
               const partialIndex = beansClaimed.plus(index);
               userPlots = {
                 ...userPlots,
-                [partialIndex]: userPlots[index].minus(beansClaimed),
+                [partialIndex]: userPlots[index].minus(beansClaimed)
               };
             } else {
               beansClaimed = beansClaimed.minus(userPlots[index]);
@@ -526,7 +558,7 @@ export default function App() {
           });
         } else if (event.event === 'BeanClaim') {
           event.returnValues.withdrawals.forEach(
-            s => delete beanWithdrawals[s],
+            s => delete beanWithdrawals[s]
           );
         } else if (event.event === 'LPClaim') {
           event.returnValues.withdrawals.forEach(s => delete lpWithdrawals[s]);
@@ -547,11 +579,11 @@ export default function App() {
       userBeanDeposits = addRewardedCrates(userBeanDeposits, s, fb, fs);
       const beanDepositsBalance = Object.values(userBeanDeposits).reduce(
         (a, c) => a.plus(c),
-        zeroBN,
+        zeroBN
       );
       const lpDepositsBalance = Object.values(userLPDeposits).reduce(
         (a, c) => a.plus(c),
-        zeroBN,
+        zeroBN
       );
       const [podBalance, harvestablePodBalance, plots, harvestablePlots] =
         parsePlots(userPlots, hi);
@@ -559,60 +591,64 @@ export default function App() {
         beanTransitBalance,
         beanReceivableBalance,
         userBeanWithdrawals,
-        userBeanReceivableCrates,
+        userBeanReceivableCrates
       ] = parseWithdrawals(beanWithdrawals, s);
       const [
         lpTransitBalance,
         lpReceivableBalance,
         userLPWithdrawals,
-        userLPReceivableCrates,
+        userLPReceivableCrates
       ] = parseWithdrawals(lpWithdrawals, s);
       const minReceivables = [br, er].map(reserve =>
-        reserve.multipliedBy(BASE_SLIPPAGE).toFixed(0),
+        reserve.multipliedBy(BASE_SLIPPAGE).toFixed(0)
       );
       const claimable = [
         Object.keys(userBeanReceivableCrates).map(b => b.toString()),
         Object.keys(userLPReceivableCrates).map(b => b.toString()),
         Object.keys(harvestablePlots).map(b =>
-          toBaseUnitBN(b, BEAN.decimals).toString(),
+          toBaseUnitBN(b, BEAN.decimals).toString()
         ),
         ce.isGreaterThan(0),
         true,
         minReceivables[0],
-        minReceivables[1],
+        minReceivables[1]
       ];
 
-      dispatch(setUserBalance({
-        beanSiloBalance: beanDepositsBalance,
-        podBalance: podBalance,
-        harvestablePodBalance: harvestablePodBalance,
-        beanTransitBalance: beanTransitBalance,
-        beanReceivableBalance: beanReceivableBalance,
-        lpTransitBalance: lpTransitBalance,
-        lpReceivableBalance: lpReceivableBalance,
-        lpSiloBalance: lpDepositsBalance,
-        plots: plots,
-        harvestablePlots: harvestablePlots,
-        beanDeposits: userBeanDeposits,
-        lpDeposits: userLPDeposits,
-        lpSeedDeposits: userLPSeedDeposits,
-        beanWithdrawals: userBeanWithdrawals,
-        beanReceivableCrates: userBeanReceivableCrates,
-        lpWithdrawals: userLPWithdrawals,
-        lpReceivableCrates: userLPReceivableCrates,
-        votedBips: votedBips,
-        beanClaimableBalance: beanReceivableBalance.plus(harvestablePodBalance),
-        hasClaimable: beanReceivableBalance
-          .plus(harvestablePodBalance)
-          .plus(lpReceivableBalance)
-          .plus(ce)
-          .isGreaterThan(0),
-        claimable: claimable,
-        rawBeanDeposits: rawBeanDeposits,
-        farmableBeanBalance: fb,
-        farmableStalkBalance: fs,
-        grownStalkBalance: gs,
-      }));
+      dispatch(
+        setUserBalance({
+          beanSiloBalance: beanDepositsBalance,
+          podBalance: podBalance,
+          harvestablePodBalance: harvestablePodBalance,
+          beanTransitBalance: beanTransitBalance,
+          beanReceivableBalance: beanReceivableBalance,
+          lpTransitBalance: lpTransitBalance,
+          lpReceivableBalance: lpReceivableBalance,
+          lpSiloBalance: lpDepositsBalance,
+          plots: plots,
+          harvestablePlots: harvestablePlots,
+          beanDeposits: userBeanDeposits,
+          lpDeposits: userLPDeposits,
+          lpSeedDeposits: userLPSeedDeposits,
+          beanWithdrawals: userBeanWithdrawals,
+          beanReceivableCrates: userBeanReceivableCrates,
+          lpWithdrawals: userLPWithdrawals,
+          lpReceivableCrates: userLPReceivableCrates,
+          votedBips: votedBips,
+          beanClaimableBalance: beanReceivableBalance.plus(
+            harvestablePodBalance
+          ),
+          hasClaimable: beanReceivableBalance
+            .plus(harvestablePodBalance)
+            .plus(lpReceivableBalance)
+            .plus(ce)
+            .isGreaterThan(0),
+          claimable: claimable,
+          rawBeanDeposits: rawBeanDeposits,
+          farmableBeanBalance: fb,
+          farmableStalkBalance: fs,
+          grownStalkBalance: gs
+        })
+      );
 
       benchmarkEnd('EVENT PROCESSOR', startTime);
     }
@@ -631,13 +667,13 @@ export default function App() {
           getEtherBalance(),
           accountBalancePromises,
           totalBalancePromises,
-          pricePromises,
+          pricePromises
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
 
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
         prices[1],
-        prices[2],
+        prices[2]
       ); /* tokenReserves, token0 */
       const eventParsingParameters = [
         totalBalances[14].season /* season */,
@@ -647,7 +683,7 @@ export default function App() {
         accountBalances[11] /* grownStalkBalance */,
         accountBalances[3] /* claimableEthBalance */,
         beanReserve,
-        ethReserve,
+        ethReserve
       ];
 
       return [
@@ -658,10 +694,10 @@ export default function App() {
             accountBalances,
             ethBalance,
             lpReserves,
-            currentSeason,
+            currentSeason
           );
         },
-        eventParsingParameters,
+        eventParsingParameters
       ];
     }
 
@@ -674,7 +710,7 @@ export default function App() {
 
       const [bipInfo, totalBalances] = await Promise.all([
         getBips(),
-        totalBalancePromises,
+        totalBalancePromises
       ]);
       ReactDOM.unstable_batchedUpdates(() => {
         processTotalBalances(totalBalances, bipInfo);
@@ -707,24 +743,28 @@ export default function App() {
             updateBalanceState();
           });
         });
-        const [balanceInitializers, eventInitializer, lastCrossInitializer, apyInitializer] =
-          await Promise.all([
-            updateAllBalances(),
-            initializeEventListener(
-              processEvents,
-              updatePrices,
-              updateTotals,
-              setContractEvents,
-            ),
-            lastCrossQuery(),
-            apyQuery(),
-          ]);
+        const [
+          balanceInitializers,
+          eventInitializer,
+          lastCrossInitializer,
+          apyInitializer
+        ] = await Promise.all([
+          updateAllBalances(),
+          initializeEventListener(
+            processEvents,
+            updatePrices,
+            updateTotals,
+            setContractEvents
+          ),
+          lastCrossQuery(),
+          apyQuery()
+        ]);
         ReactDOM.unstable_batchedUpdates(() => {
           const [updateBalanceState, eventParsingParameters] =
             balanceInitializers;
           updateBalanceState();
           setLastCross(lastCrossInitializer);
-          setBeansPerSeason(apyInitializer)
+          setBeansPerSeason(apyInitializer);
           processEvents(eventInitializer, eventParsingParameters);
           setInitialized(true);
         });
@@ -761,7 +801,11 @@ export default function App() {
   } else {
     const navMapping = [...defaultNavMapping];
     if (hasActiveBIP) {
-      navMapping.splice(5, 0, {path: 'governance', title: 'BIPs', component: () => <></>})
+      navMapping.splice(5, 0, {
+        path: 'governance',
+        title: 'BIPs',
+        component: () => <></>
+      });
     }
     app = (
       <>

@@ -2,6 +2,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { save, load } from 'redux-localstorage-simple';
 import allowances from './allowances/reducer';
 import userBalance from './userBalance/reducer';
+import totalBalance from './totalBalance/reducer';
 
 const PERSISTED_KEYS: string[] = [];
 
@@ -9,6 +10,7 @@ const store = configureStore({
   reducer: {
     allowances,
     userBalance,
+    totalBalance,
   },
   middleware: [
     ...getDefaultMiddleware({
