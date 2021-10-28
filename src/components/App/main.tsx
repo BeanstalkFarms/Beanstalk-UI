@@ -19,9 +19,9 @@ export default function Main(props) {
     marginBottom: '-85px',
   };
   const sunStyle = {
-    height: '15vw',
+    height: theme.sunHeight,
     left: 20,
-    maxHeight: '125px',
+    minHeight: '150px',
     position: 'fixed',
     top: 100,
     zIndex: -1,

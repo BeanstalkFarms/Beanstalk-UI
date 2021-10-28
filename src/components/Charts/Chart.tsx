@@ -22,10 +22,10 @@ export function Chart(props) {
     fontFamily: 'Futura-Pt-Book',
     position: 'relative',
     height: `${n ? '370px' : '250px'}`,
-    backgroundColor: colorTheme.background,
+    backgroundColor: colorTheme.module.foreground,
   };
   const theme = buildChartTheme({
-    backgroundColor: colorTheme.background,
+    backgroundColor: colorTheme.module.foreground,
     colors: ['#444444', '#888888'],
     gridColor: '#99AB91',
     gridColorDark: '#99AB91',

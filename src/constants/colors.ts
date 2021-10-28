@@ -1,6 +1,7 @@
 import cloud from '../img/cloud-background.png';
 import darkCloud from '../img/dark/cloud-background-dark.png';
 import darkSun from '../img/dark/Sun.svg';
+import sun from '../img/Sun.svg';
 
 const normalTheme = {
     name: 'main',
@@ -12,13 +13,15 @@ const normalTheme = {
     text: 'black',
     backgrounText: 'black',
     linkColor: '#3B3B3B',
+    footer: '#000000',
     module: {
         foreground: '#FFFFFF',
         background: '#F5FAFF',
         metaBackground: 'rgba(238 238 238 / 85%)',
     },
     cloud: cloud,
-    sun: '../../img/Sun.svg',
+    sun: sun,
+    sunHeight: '10vw',
 };
 
 export const ropstenTheme = {
@@ -35,8 +38,10 @@ export const spookyTheme = {
     backgroundText: 'white',
     primary: '#FF7F00',
     accentColor: '#3B3B3B',
-    secondary: '#b85f00',
+    accentText: '#091F35',
+    secondary: '#FF7F00',
     linkColor: '#9F9F9F',
+    footer: '#FF7F00',
     module: {
         foreground: '#B4DCEA',
         background: '#96CEE0',
@@ -44,6 +49,7 @@ export const spookyTheme = {
     },
     cloud: darkCloud,
     sun: darkSun,
+    sunHeight: '15vw',
 };
 
 export const theme = spookyTheme;

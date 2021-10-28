@@ -58,17 +58,11 @@ export default function Footer(props) {
   })();
   const width = window.innerWidth;
 
-  const logoStyle = theme.name === 'spooky' ?
-    {
+  const logoStyle = {
       height: '25px',
       width: '25px',
-      fill: '#F9B20F',
-    }
-    : {
-        height: '25px',
-        width: '25px',
-        fill: 'black',
-      };
+      fill: theme.footer,
+    };
   const linkStyle = {
     padding: '10px 15px 0 0',
   };
