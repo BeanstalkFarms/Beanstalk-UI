@@ -2,11 +2,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import ReactDOM from 'react-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CssBaseline, Box } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import store from 'state';
 import { updateBeanstalkBeanAllowance, updateBeanstalkLPAllowance, updateUniswapBeanAllowance } from 'state/allowances/actions';
+import { setUserBalance } from 'state/userBalance/actions';
 import BeanLogo from '../../img/bean-logo.svg';
 import { lastCrossQuery, apyQuery } from '../../graph';
 import { BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from '../../constants';
@@ -155,43 +156,9 @@ export default function App() {
       totalBalance.totalLP,
     );
   };
-  const [userBalance, setUserBalance] = useState({
-    ethBalance: initBN,
-    claimableEthBalance: initBN,
-    beanBalance: initBN,
-    beanSiloBalance: initBN,
-    beanReceivableBalance: initBN,
-    beanTransitBalance: initBN,
-    lpBalance: initBN,
-    lpSiloBalance: initBN,
-    lpTransitBalance: initBN,
-    lpReceivableBalance: initBN,
-    stalkBalance: initBN,
-    seedBalance: initBN,
-    podBalance: initBN,
-    harvestablePodBalance: initBN,
-    harvestableBalance: initBN,
-    beanDeposits: {},
-    rawBeanDeposits: {},
-    beanWithdrawals: {},
-    beanReceivableCrates: {},
-    lpDeposits: {},
-    lpSeedDeposits: {},
-    lpWithdrawals: {},
-    lpReceivableCrates: {},
-    plots: {},
-    harvestablePlots: {},
-    votedBips: new Set(),
-    locked: false,
-    lockedSeasons: initBN,
-    beanClaimableBalance: initBN,
-    claimable: [[], [], [], false, false, '0', '0'],
-    hasClaimable: false,
-    farmableStalkBalance: initBN,
-    farmableBeanBalance: initBN,
-    grownStalkBalance: initBN,
-    rootsBalance: initBN,
-  });
+  const userBalance = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
 
   const [totalBalance, setTotalBalance] = useState({
     totalBeans: initBN,
@@ -305,8 +272,7 @@ export default function App() {
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
 
-      setUserBalance(prev => ({
-        ...prev,
+      dispatch(setUserBalance({
         claimableEthBalance,
         ethBalance,
         beanBalance,
@@ -613,7 +579,7 @@ export default function App() {
         minReceivables[1],
       ];
 
-      setUserBalance(prevUserBalance => ({
+      dispatch(setUserBalance({
         ...prevUserBalance,
         beanSiloBalance: beanDepositsBalance,
         podBalance: podBalance,
