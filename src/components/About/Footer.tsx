@@ -9,8 +9,6 @@ import { ReactComponent as CoinGeckoIcon } from '../../img/coingecko-icon.svg';
 import { ReactComponent as CoinMarketCapIcon } from '../../img/coinmarketcap-icon.svg';
 import { ReactComponent as DiscordIcon } from '../../img/discord-icon.svg';
 import { ReactComponent as EtherscanIcon } from '../../img/etherscan-logo.svg';
-// import ground from '../../img/dark/ground.png';
-// import ground from '../../img/ground-tall.png';
 import { ReactComponent as MediumIcon } from '../../img/medium-icon.svg';
 import { ReactComponent as OpenSeaIcon } from '../../img/opensea-icon.svg';
 // import reddit from '../../img/reddit-icon.svg'
@@ -43,10 +41,10 @@ export default function Footer(props) {
       backgroundImage: `url(${theme.ground})`,
       backgroundPosition: '0% 0%',
       backgroundRepeat: 'repeat',
-      backgroundSize: 'contain',
+      backgroundSize: theme.groundSize,
       display: 'flex',
       alignContent: 'space-around',
-      height: '60px',
+      height: theme.groundHeight,
       zIndex: 1000000,
       position: 'fixed',
       bottom: '0px',
@@ -86,6 +84,18 @@ export default function Footer(props) {
       bottom: '51px',
       height: '5vw',
       left: '80%',
+      minHeight: '75px',
+      position: 'fixed',
+      zIndex: -1,
+    }
+    : {
+      display: 'none',
+    };
+  const rightPumpkinStyle = width > 850 ?
+    {
+      bottom: '51px',
+      height: '3vw',
+      left: 'calc(80% + 4.4vw)',
       minHeight: '55px',
       position: 'fixed',
       zIndex: -1,
@@ -108,8 +118,9 @@ export default function Footer(props) {
 
   const spookyImg = theme.name === 'spooky' ?
     <>
-    <img alt="Barn Icon" src={TombstoneIcon} style={tombstoneStyle} />
-    <img alt="Barn Icon" src={PumpkinIcon} style={pumpkinStyle} />
+    <img alt="Tombstone Icon" src={TombstoneIcon} style={tombstoneStyle} />
+    <img alt="Pumkpin Icon" src={PumpkinIcon} style={pumpkinStyle} />
+    <img alt="Pumkpin Icon" src={PumpkinIcon} style={rightPumpkinStyle} />
     </>
     : null;
 
