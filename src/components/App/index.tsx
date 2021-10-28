@@ -8,6 +8,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import store from 'state';
 import { updateBeanstalkBeanAllowance, updateBeanstalkLPAllowance, updateUniswapBeanAllowance } from 'state/allowances/actions';
 import { setUserBalance } from 'state/userBalance/actions';
+import { AppState } from 'state';
 import BeanLogo from '../../img/bean-logo.svg';
 import { lastCrossQuery, apyQuery } from '../../graph';
 import { BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from '../../constants';
@@ -43,6 +44,13 @@ import Main from './main.tsx'
 import './App.css'
 
 export default function App() {
+  const initBN = new BigNumber(-1);
+  const zeroBN = new BigNumber(0);
+  const dispatch = useDispatch();
+  const userBalance = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
   const defaultNavMapping = [
     {
       path: 'silo',
@@ -133,9 +141,7 @@ export default function App() {
   ];
 
   BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
-  const initBN = new BigNumber(-1);
-  const zeroBN = new BigNumber(0);
-  const dispatch = useDispatch();
+
   const [initialized, setInitialized] = useState(false);
   const [metamaskFailure, setMetamaskFailure] = useState(-1);
 
@@ -156,9 +162,6 @@ export default function App() {
       totalBalance.totalLP,
     );
   };
-  const userBalance = useSelector<AppState, AppState['userBalance']>(
-    (state) => state.userBalance
-  );
 
   const [totalBalance, setTotalBalance] = useState({
     totalBeans: initBN,
@@ -286,11 +289,11 @@ export default function App() {
         grownStalkBalance,
         rootsBalance,
         claimable: [
-          prev.claimable[0],
-          prev.claimable[1],
-          prev.claimable[2],
-          prev.claimable[3],
-          prev.claimable[4],
+          userBalance.claimable[0],
+          userBalance.claimable[1],
+          userBalance.claimable[2],
+          userBalance.claimable[3],
+          userBalance.claimable[4],
           minReceivables[0],
           minReceivables[1],
         ],
@@ -580,7 +583,6 @@ export default function App() {
       ];
 
       dispatch(setUserBalance({
-        ...prevUserBalance,
         beanSiloBalance: beanDepositsBalance,
         podBalance: podBalance,
         harvestablePodBalance: harvestablePodBalance,
