@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Hidden, Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-import { BEAN } from '../../constants';
+import { BEAN, theme } from '../../constants';
 import { displayBN, displayFullBN, TokenLabel } from '../../util';
 import {
   BudgetAsset,
@@ -244,7 +244,7 @@ export default function BalanceModule(props) {
       <Grid
         container
         style={{
-          backgroundColor: 'white',
+          backgroundColor: theme.module.foreground,
           borderRadius: '25px',
           textAlign: 'left',
         }}
@@ -294,7 +294,7 @@ export default function BalanceModule(props) {
       <span style={spanStyle}>Beans</span>
       <Grid
         container
-        style={{ backgroundColor: 'white', borderRadius: '25px' }}
+        style={{ backgroundColor: theme.module.foreground, borderRadius: '25px' }}
       >
         <Grid container item sm={6} xs={12} style={containerGridStyle}>
           <Grid item xs={12}>
@@ -328,7 +328,7 @@ export default function BalanceModule(props) {
       <span style={spanStyle}>LP</span>
       <Grid
         container
-        style={{ backgroundColor: 'white', borderRadius: '25px' }}
+        style={{ backgroundColor: theme.module.foreground, borderRadius: '25px' }}
       >
         <Grid container item sm={6} xs={12} style={containerGridStyle}>
           <Grid item xs={12}>
@@ -364,7 +364,7 @@ export default function BalanceModule(props) {
       <Grid
         container
         style={{
-          backgroundColor: 'white',
+          backgroundColor: theme.module.foreground,
           borderRadius: '25px',
           marginTop: '20px',
         }}

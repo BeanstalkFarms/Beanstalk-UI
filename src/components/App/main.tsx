@@ -1,16 +1,13 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import Footer from 'components/About/Footer';
-import { chainId } from '../../util';
-import background from '../../img/cloud-background.png';
-import SunIcon from '../../img/Sun.svg';
-
 import './index.tsx';
+import { theme } from '../../constants';
 
 export default function Main(props) {
   const navCloudStyle = {
     backgroundColor: 'transparent',
-    backgroundImage: `url(${background}), url(${background})`,
+    backgroundImage: `url(${theme.cloud}), url(${theme.cloud})`,
     backgroundPosition: '0px 0px, 1px 0px',
     backgroundRepeat: 'repeat-x, repeat-x',
     boxShadow: 'none',
@@ -32,9 +29,9 @@ export default function Main(props) {
 
   return (
     <>
-      <Box className="BeanstalkBG" name={`Chain${chainId}`} />
+      <Box className="BeanstalkBG" name={theme.name} />
       <Box>
-        <img alt="Sun Icon" src={SunIcon} style={sunStyle} />
+        <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
         <Box style={navCloudStyle} />
         {props.children}
         <Footer />

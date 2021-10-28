@@ -16,6 +16,7 @@ import {
   ETH,
   UNI_V2_ETH_BEAN_LP,
   WITHDRAWAL_FROZEN,
+  theme,
 } from '../../constants';
 import {
   chainId,
@@ -107,6 +108,7 @@ export default function WalletModule(props) {
     width: '365px',
     maxHeight: '395px',
     overflow: 'scroll',
+    backgroundColor: theme.background,
   });
 
   const [walletText, setWalletText] = useState('Wallet');
@@ -713,7 +715,7 @@ export default function WalletModule(props) {
                       </Button>
                     ))}
                   </Box>
-                  <Box style={{ zIndex: '0', paddingTop: '0px' }}>
+                  <Box style={{ backgroundColor: theme.background, zIndex: '0', paddingTop: '0px' }}>
                     {walletPages[walletPage]}
                   </Box>
                 </MenuList>

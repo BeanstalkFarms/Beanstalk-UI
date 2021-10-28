@@ -19,10 +19,10 @@ import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-scroll';
 import BeanLogo from '../../img/bean-logo.svg';
-import background from '../../img/cloud-background.png';
 import { chainId } from '../../util';
 import WalletModule from './WalletModule';
 import { priceQuery } from '../../graph';
+import { theme } from '../../constants';
 
 export default function NavigationBar(props) {
   const [price, setPrice] = useState(0);
@@ -31,7 +31,7 @@ export default function NavigationBar(props) {
     fixedNav: {
       zIndex: '10000',
       backgroundColor: 'transparent',
-      backgroundImage: `url(${background}), url(${background})`,
+      backgroundImage: `url(${theme.cloud}), url(${theme.cloud})`,
       backgroundPosition: '0px 0px, 1px 0px',
       backgroundRepeat: 'repeat-x, repeat-x',
       backgroundSize: 'contain, contain',

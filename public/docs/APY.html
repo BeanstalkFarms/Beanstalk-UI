@@ -31,7 +31,8 @@
     background-color: #DAF2FF;
   }
 </style>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body class="stackedit">
@@ -101,24 +102,24 @@
     <p>\(APY^{Silo}_x\) is calculated from the estimated number of Beans owned in a year (\(\hat{b}_{t+8760}\)) by using a sequence from the current Season \(t\) to \(t+8760\).</p>
     <p>In order to calculate \(\hat{b}_{t+8760}\), first initialize the sequence with:</p>
     $$
-    \hat{C}_{t} = C_t \\
+    \displaylines{\hat{C}_{t} = C_t \\
     \hat{K}_{t} = K_t \\
     \hat{b}_{t} = x \\
-    \hat{k}_{t} = 1 \\
+    \hat{k}_{t} = 1}
     $$
     <p>Then, iterate through the following sequence for \(i \in\{u | u \in  \mathbb{N}, t < u \leq t+8760\)}:</p>
     $$
-    \hat{S_{i}} = \hat{S}_{i-1} + 2\bar{n}^f \\
+    \displaylines{\hat{S_{i}} = \hat{S}_{i-1} + 2\bar{n}^f \\
     \hat{b_{i}} = \hat{b}_{i-1} + \bar{n}^f\frac{\hat{k}_{i-1}}{\hat{K}_{i-1}} \\
     \hat{k}_{i} = \hat{k}_{i-1} + \bar{n}^f\frac{\hat{k}_{i-1}}{\hat{K}_{i-1}} + \frac{1}{5000} \hat{b}_{i-1} \\
-    \hat{K}_{i-1} = \hat{K}_{i} + \bar{n}^h + \frac{1}{10000}\hat{S}_{i-1}
+    \hat{K}_{i-1} = \hat{K}_{i} + \bar{n}^h + \frac{1}{10000}\hat{S}_{i-1}}
     $$
     <p>Therefore, the we define \(APY^{Silo}_x\) for a given \(x\) and \(\hat{b}_{t+8760}\) as:</p>
     $$
     APY^{Silo}_x = \frac{\hat{b}_{t+8760} - \hat{b}_t}{100}
     $$
     <h2 id="pod-apy">Pod APY</h2>
-    <p>The 7-day APY for sowing Beans in the Field (\(APY^{Pod}\)) is determined by the estimated Seasons to Pod Clearance (\(\hat{Z}_f\)). </p>
+    <p>The 7-day APY for sowing Beans in the Field (\(APY^{Pod}\)) is determined by the estimated Seasons Until Pod Clearance (\(\hat{Z}_f\)). </p>
     <p>The Pod APY calculations make the following assumptions:</p>
     <ul>
       <li>No liquidity is added or removed from the BEAN:ETH pool; and</li>

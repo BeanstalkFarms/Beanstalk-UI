@@ -2,6 +2,7 @@ import React from 'react';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { TitleLabel } from './index';
+import { theme } from '../../constants';
 
 export default function ContentTitle(props) {
     const classes = makeStyles({
@@ -15,7 +16,7 @@ export default function ContentTitle(props) {
     })();
     return (
       <Box className={classes.sectionTitle}>
-        <TitleLabel size={props.size} textTransform={props.textTransform}>
+        <TitleLabel style={{ color: theme.backgroundText }} size={props.size} textTransform={props.textTransform}>
           {props.title}
         </TitleLabel>
       </Box>

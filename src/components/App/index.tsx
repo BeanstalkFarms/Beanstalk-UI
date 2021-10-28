@@ -259,7 +259,7 @@ export default function App() {
     weather: initBN,
     raining: false,
     rainStart: initBN,
-  });
+  });``
 
   const [prices, setPrices] = useState({
     beanPrice: initBN,
@@ -271,12 +271,14 @@ export default function App() {
   });
 
   const [lastCross, setLastCross] = useState(0)
+
   const [beansPerSeason, setBeansPerSeason] = useState({
-    'farmableWeek': 0,
-    'farmableMonth': 0,
-    'harvestableWeek': 0,
-    'harvestableMonth': 0,
+    farmableWeek: 0,
+    farmableMonth: 0,
+    harvestableWeek: 0,
+    harvestableMonth: 0,
   })
+
   const [bips, setBips] = useState([])
   const [hasActiveBIP, setHasActiveBIP] = useState(false)
   const [contractEvents, setContractEvents] = useState([])

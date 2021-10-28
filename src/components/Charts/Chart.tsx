@@ -11,6 +11,7 @@ import {
 } from '@visx/xychart';
 import { DataSelector, TimeSelector } from './Selectors';
 import BeanLogo from '../../img/bean-logo.svg';
+import { theme as colorTheme } from '../../constants';
 
 export function Chart(props) {
   const n = !props.isMobile;
@@ -21,10 +22,10 @@ export function Chart(props) {
     fontFamily: 'Futura-Pt-Book',
     position: 'relative',
     height: `${n ? '370px' : '250px'}`,
-    backgroundColor: '#F5FAFF',
+    backgroundColor: colorTheme.background,
   };
   const theme = buildChartTheme({
-    backgroundColor: '#F5FAFF',
+    backgroundColor: colorTheme.background,
     colors: ['#444444', '#888888'],
     gridColor: '#99AB91',
     gridColorDark: '#99AB91',
@@ -47,7 +48,7 @@ export function Chart(props) {
       fontFamily: 'Futura-Pt-Book',
       position: 'relative',
       height: `${n ? '370px' : '240px'}`,
-      backgroundColor: '#F5FAFF',
+      backgroundColor: colorTheme.module.background,
     };
     return (
       <Box style={loadingStyle}>

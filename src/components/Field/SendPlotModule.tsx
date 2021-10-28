@@ -118,8 +118,6 @@ export const SendPlotModule = forwardRef((props, ref) => {
     fromIndexValueUpdated(MinBN(fromPlotIndex, new BigNumber(0)), plotEndId);
   };
 
-  console.log();
-
   /* Input Fields */
 
   const toAddressField = (

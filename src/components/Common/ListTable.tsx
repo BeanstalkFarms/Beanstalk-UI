@@ -21,6 +21,7 @@ import {
   TransitAsset,
 } from '../../util';
 import { FormatTooltip, QuestionModule } from '.';
+import { theme } from '../../constants';
 
 const useStyles = makeStyles({
   table: {
@@ -35,18 +36,22 @@ const useStyles = makeStyles({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
+    color: theme.text,
   },
   lucidaStyle: {
     fontFamily: 'Lucida Console',
     fontSize: '11px',
+    color: theme.text,
+    borderColor: theme.accentColor,
   },
 });
 
 const claimableStyle = {
   fontFamily: 'Futura-PT',
-  color: 'white',
+  color: theme.accentText,
   fontWeight: 'bold',
   width: '33%',
+  borderColor: theme.accentColor,
 };
 
 function displayLP(balance) {
@@ -110,7 +115,7 @@ const BasicTable = (props) => {
       )} are deposited in a specific Season the next time you interact with the Silo.`;
     }
     claimableRow = (
-      <TableRow style={{ backgroundColor: '#0E8837' }}>
+      <TableRow style={{ backgroundColor: theme.primary }}>
         <TableCell
           align="center"
           component="th"
@@ -177,7 +182,7 @@ const BasicTable = (props) => {
                 <TableCell
                   key={t}
                   align="center"
-                  style={{ fontFamily: 'Futura-PT', width: '33%' }}
+                  style={{ fontFamily: 'Futura-PT', width: '33%', color: theme.text, borderColor: theme.accentColor }}
                 >
                   {t}
                 </TableCell>

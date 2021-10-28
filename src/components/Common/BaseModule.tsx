@@ -1,26 +1,26 @@
 import React, { Fragment } from 'react';
 import { Box, AppBar, Button, Link, Tab, Tabs } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-
 import { makeStyles } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
-import { FormatTooltip, QuestionModule } from './index';
+import { Line, FormatTooltip, QuestionModule } from './index';
+import { theme } from '../../constants';
 
 export default function BaseModule(props) {
   const s = props.size === 'small';
   const classes = makeStyles(() => ({
     inputModule: {
-      backgroundColor: '#F5FAFF',
+      backgroundColor: theme.module.background,
       borderRadius: '25px',
-      color: 'black',
+      color: theme.text,
       marginTop: props.marginTop,
       padding: '10px',
     },
     metaModule: {
-      backgroundColor: 'rgba(238 238 238 / 85%)',
+      backgroundColor: theme.module.metaBackground,
       borderRadius: '25px',
       boxShadow: 'none',
-      color: 'black',
+      color: theme.backgroundText,
       marginTop: '16px',
       padding: '10px 16px 30px 16px',
     },
@@ -30,6 +30,7 @@ export default function BaseModule(props) {
       minWidth: '44px',
       textTransform: props.textTransform,
       borderRadius: '15px',
+      color: props.removeBackground ? theme.backgroundText : theme.text,
     },
     singleSection: {
       fontFamily: 'Futura-Pt-Book',
@@ -53,7 +54,7 @@ export default function BaseModule(props) {
       display: 'flex',
       justifyContent: 'center',
       '& > span': {
-        backgroundColor: '#627264',
+        backgroundColor: theme.secondary,
         borderRadius: '3.5px',
         height: '7px',
         marginTop: '-8px',
@@ -65,7 +66,7 @@ export default function BaseModule(props) {
       backgroundColor: 'transparent',
     },
     moduleContent: {
-      backgroundColor: '#F5FAFF',
+      backgroundColor: theme.module.background,
       height: '100%',
       left: '0',
       opacity: '50%',
@@ -201,11 +202,9 @@ export default function BaseModule(props) {
                 ? { indicator: classes.indicator }
                 : { indicator: classes.noIndicator }
             }
-            indicatorColor="primary"
             onChange={props.handleTabChange}
             style={{ width: '100%', borderRadius: '15px' }}
             TabIndicatorProps={{ children: <span /> }}
-            textColor="primary"
             value={props.section}
             variant="fullWidth"
           >
@@ -228,15 +227,12 @@ export default function BaseModule(props) {
                     sectionTitle
                   )
                 }
-                style={{ color: 'black' }}
                 {...a11yProps(index)}
               />
             ))}
           </Tabs>
-          <hr
+          <Line
             style={{
-              color: 'primary',
-              backgroundColor: 'primary',
               margin: '4px 8px',
             }}
           />
@@ -245,7 +241,7 @@ export default function BaseModule(props) {
               {moduleContent}
             </form>
           ) : (
-            <span style={{ padding: s ? '0px' : '0px 10px' }}>{moduleContent}</span>
+            <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
           )}
         </AppBar>
       ) : props.sectionTitles.length === 1 && props.normalBox ? (
@@ -271,10 +267,8 @@ export default function BaseModule(props) {
               props.sectionTitles[0]
             )}
           </span>
-          <hr
+          <Line
             style={{
-              color: 'primary',
-              backgroundColor: 'primary',
               margin: '4px 8px',
             }}
           />

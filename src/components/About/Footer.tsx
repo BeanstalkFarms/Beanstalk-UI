@@ -23,6 +23,7 @@ import SiloIcon from '../../img/dark/Silo.svg';
 import PumpkinIcon from '../../img/dark/pumpkin-dark.svg';
 import FenceIcon from '../../img/dark/fence-dark.svg';
 import TombstoneIcon from '../../img/dark/tombstone-dark.svg';
+import { theme } from '../../constants';
 
 import {
   BEAN_TOKEN_LINK,
@@ -56,9 +57,8 @@ export default function Footer(props) {
     },
   })();
   const width = window.innerWidth;
-  const theme = 'light'
 
-  const logoStyle = theme === 'dark' ?
+  const logoStyle = theme.name === 'spooky' ?
     {
       height: '25px',
       width: '25px',
@@ -116,7 +116,7 @@ export default function Footer(props) {
       display: 'none',
     };
 
-  const spookyImg = theme === 'dark' ?
+  const spookyImg = theme.name === 'spooky' ?
     <>
     <img alt="Barn Icon" src={TombstoneIcon} style={tombstoneStyle} />
     <img alt="Barn Icon" src={PumpkinIcon} style={pumpkinStyle} />
