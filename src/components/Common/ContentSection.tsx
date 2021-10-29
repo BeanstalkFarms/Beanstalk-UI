@@ -20,7 +20,7 @@ export default function ContentSection(props) {
   const descriptionSection = props.description !== undefined ?
   (
     <Box
-      className="section-description"
+      className={`section-description-${theme.name}`}
       style={
         width > 500
           ? { maxWidth: '550px', margin: '20px 0 0 0', padding: '12px', color: theme.backgroundText }
