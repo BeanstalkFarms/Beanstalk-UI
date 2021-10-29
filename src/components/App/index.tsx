@@ -13,6 +13,18 @@ import {
 } from 'state/allowances/actions';
 import { setUserBalance } from 'state/userBalance/actions';
 import { setTotalBalance } from 'state/totalBalance/actions';
+import { setSeason } from 'state/season/actions';
+import { setWeather } from 'state/weather/actions';
+import { setPrices } from 'state/prices/actions';
+import { setBeansPerSeason } from 'state/beansPerSeason/actions';
+import {
+  setInitialized,
+  setMetamaskFailure,
+  setLastCross,
+  setBips,
+  setHasActiveBIP,
+  setContractEvents
+} from 'state/general/actions';
 import { AppState } from 'state';
 import BeanLogo from '../../img/bean-logo.svg';
 import { lastCrossQuery, apyQuery } from '../../graph';
@@ -58,6 +70,27 @@ export default function App() {
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     state => state.totalBalance
   );
+  const season = useSelector<AppState, AppState['season']>(
+    state => state.season
+  );
+  const weather = useSelector<AppState, AppState['weather']>(
+    state => state.weather
+  );
+  const prices = useSelector<AppState, AppState['prices']>(
+    state => state.prices
+  );
+  const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
+    state => state.beansPerSeason
+  );
+
+  const {
+    initialized,
+    metamaskFailure,
+    lastCross,
+    bips,
+    hasActiveBIP,
+    contractEvents
+  } = useSelector<AppState, AppState['general']>(state => state.general);
 
   const defaultNavMapping = [
     {
@@ -154,9 +187,6 @@ export default function App() {
 
   BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
-  const [initialized, setInitialized] = useState(false);
-  const [metamaskFailure, setMetamaskFailure] = useState(-1);
-
   const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
     const endPrice = prices.ethReserve
       .plus(sellEth)
@@ -174,47 +204,6 @@ export default function App() {
       totalBalance.totalLP
     );
   };
-
-  const [season, setSeason] = useState({
-    season: initBN,
-    timestamp: initBN,
-    start: initBN,
-    period: initBN
-  });
-  const [weather, setWeather] = useState({
-    didSowBelowMin: false,
-    didSowFaster: false,
-    lastDSoil: initBN,
-    lastSoilPercent: initBN,
-    lastSowTime: initBN,
-    nextSowTime: initBN,
-    startSoil: initBN,
-    soil: initBN,
-    harvestableIndex: initBN,
-    weather: initBN,
-    raining: false,
-    rainStart: initBN
-  });
-
-  const [prices, setPrices] = useState({
-    beanPrice: initBN,
-    usdcPrice: initBN,
-    ethReserve: initBN,
-    beanReserve: initBN,
-    beanTWAPPrice: initBN,
-    usdcTWAPPrice: initBN
-  });
-
-  const [lastCross, setLastCross] = useState(0);
-  const [beansPerSeason, setBeansPerSeason] = useState({
-    farmableWeek: 0,
-    farmableMonth: 0,
-    harvestableWeek: 0,
-    harvestableMonth: 0
-  });
-  const [bips, setBips] = useState([]);
-  const [hasActiveBIP, setHasActiveBIP] = useState(false);
-  const [contractEvents, setContractEvents] = useState([]);
 
   const eventParsingParametersRef = useRef([]);
   eventParsingParametersRef.current = [
@@ -337,16 +326,17 @@ export default function App() {
           totalRoots
         })
       );
-      setWeather(prev => ({
-        ...prev,
-        ...weather,
-        ...rain,
-        harvestableIndex,
-        soil
-      }));
-      setBips(bips);
-      setHasActiveBIP(hasActiveBIP);
-      setSeason(season);
+      dispatch(
+        setWeather({
+          ...weather,
+          ...rain,
+          harvestableIndex,
+          soil
+        })
+      );
+      dispatch(setBips(bips));
+      dispatch(setHasActiveBIP(hasActiveBIP));
+      dispatch(setSeason(season));
       return season.season;
     }
 
@@ -374,15 +364,16 @@ export default function App() {
       const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
 
-      setPrices(prev => ({
-        ...prev,
-        beanPrice,
-        usdcPrice,
-        ethReserve,
-        beanReserve,
-        beanTWAPPrice: twapPrices[0],
-        usdcTWAPPrice: twapPrices[1]
-      }));
+      dispatch(
+        setPrices({
+          beanPrice,
+          usdcPrice,
+          ethReserve,
+          beanReserve,
+          beanTWAPPrice: twapPrices[0],
+          usdcTWAPPrice: twapPrices[1]
+        })
+      );
       return [beanReserve, ethReserve];
     }
 
@@ -568,7 +559,7 @@ export default function App() {
           votedBips.delete(event.returnValues.bip);
         }
       });
-      setContractEvents(events);
+      dispatch(setContractEvents(events));
 
       const [s, hi, fb, fs, gs, ce, br, er] =
         eventParsingParameters !== undefined
@@ -763,14 +754,14 @@ export default function App() {
           const [updateBalanceState, eventParsingParameters] =
             balanceInitializers;
           updateBalanceState();
-          setLastCross(lastCrossInitializer);
-          setBeansPerSeason(apyInitializer);
+          dispatch(setLastCross(lastCrossInitializer));
+          dispatch(setBeansPerSeason(apyInitializer));
           processEvents(eventInitializer, eventParsingParameters);
-          setInitialized(true);
+          dispatch(setInitialized(true));
         });
         benchmarkEnd('**WEBSITE**', startTime);
       } else {
-        setMetamaskFailure(true);
+        dispatch(setMetamaskFailure(true));
       }
     }
 

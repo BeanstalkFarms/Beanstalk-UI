@@ -1,6 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { BigNumber } from 'bignumber.js';
 
-export const setTotalBalance = createAction<BigNumber>(
+export const setTotalBalance = createAction<Object>(
   'totalBalance/setTotalBalance'
 );
