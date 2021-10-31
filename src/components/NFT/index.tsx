@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Box } from '@material-ui/core';
 import {
   MEDIUM_NFT_LINK,
   NFT_LINK,
@@ -53,19 +52,28 @@ export default function NFTs(props) {
     getNFTs();
   }, [props.season]);
 
+  const description = (
+    <>
+      BeaNFT Genesis Collection is a series of up to 2067 Bean NFTs which
+      could only be minted by participating in Beanstalk during Seasons
+      1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out
+      the full collection on
+    </>
+  );
+
+  const descriptionLinks = [
+    {
+      href: `${OPENSEA_LINK}`,
+      text: 'OpenSea',
+    },
+    {
+      href: `${MEDIUM_NFT_LINK}`,
+      text: 'Read More',
+    },
+  ];
+
   return (
-    <ContentSection id="nft" title="BeaNFTs" textTransform="none" style={{ minHeight: '100px' }}>
-      <Box
-        className="section-description"
-        style={{ width: '370px', margin: '20px 0 0 0', padding: '12px' }}
-      >
-        BeaNFT Genesis Collection is a series of up to 2067 Bean NFTs which
-        could only be minted by participating in Beanstalk during Seasons
-        1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out
-        the full collection on
-        {' '}<Link href={OPENSEA_LINK} target="blank">OpenSea</Link>.
-        {' '}<Link href={MEDIUM_NFT_LINK} target="blank">Read More</Link>.
-      </Box>
+    <ContentSection id="nft" title="BeaNFTs" textTransform="none" style={{ minHeight: '100px' }} description={description} descriptionLinks={descriptionLinks}>
       <ClaimNFT
         buttonDescription="Use this button to Mint all your Mintable BeaNFTs."
         claimTitle="MINT ALL"

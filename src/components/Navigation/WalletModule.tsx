@@ -16,6 +16,7 @@ import {
   ETH,
   UNI_V2_ETH_BEAN_LP,
   WITHDRAWAL_FROZEN,
+  theme,
 } from '../../constants';
 import {
   chainId,
@@ -98,7 +99,7 @@ export default function WalletModule(props) {
     padding: '5px',
     whiteSpace: 'normal',
     fontSize: 'small',
-    borderBottom: '1px solid #ccc',
+    borderBottom: `1px solid ${theme.module.foreground}`,
   };
   const [walletListStyle, setWalletListStyle] = useState({
     position: 'absolute',
@@ -107,6 +108,7 @@ export default function WalletModule(props) {
     width: '365px',
     maxHeight: '395px',
     overflow: 'scroll',
+    backgroundColor: theme.module.foreground,
   });
 
   const [walletText, setWalletText] = useState('Wallet');
@@ -163,8 +165,7 @@ export default function WalletModule(props) {
           if (event.event === 'BeanRemove' || event.event === 'LPRemove') {
             return;
           }
-          event.timestamp = timestampsByBlockNumber[event.blockNumber];
-          filteredEvents.push(event);
+          filteredEvents.push({ ...event, timestamp: timestampsByBlockNumber[event.blockNumber] });
         });
         filteredEvents.sort((a, b) => {
           const blockDiff = b.blockNumber - a.blockNumber;
@@ -545,7 +546,7 @@ export default function WalletModule(props) {
   const [transactionPage, setTransactionPage] = useState(-1);
   const walletEventsDisplay = (
     <>
-      <Box style={{ zIndex: '1', width: '100%', height: '40px' }}>
+      <Box style={{ zIndex: '1', width: '100%', height: '40px', backgroundColor: theme.module.background }}>
         {walletSubtitles.map((title, index) => (
           <Button
             key={`transaction_page_${index}`} // eslint-disable-line
@@ -558,7 +559,7 @@ export default function WalletModule(props) {
               document.getElementById('wallet-list-paper').scrollTop = 0;
             }}
             style={{
-              borderBottom: '1px solid #efefef',
+              borderBottom: `1px solid ${theme.module.background}`,
               borderRadius: '0px',
               height: '100%',
               width: `calc(100% / ${walletSubtitles.length})`,
@@ -567,7 +568,7 @@ export default function WalletModule(props) {
               padding: '5px',
               cursor: 'pointer',
               textTransform: 'none',
-              backgroundColor: transactionPage === index ? '#EFF7FF' : 'white',
+              backgroundColor: theme.module.foreground,
               textAlign: 'center',
               fontFamily: 'Futura-PT-Book',
             }}
@@ -681,6 +682,7 @@ export default function WalletModule(props) {
                       height: '40px',
                       position: 'sticky',
                       top: '0px',
+                      backgroundColor: theme.module.background,
                     }}
                   >
                     {walletTitles.map((title, index) => (
@@ -694,7 +696,7 @@ export default function WalletModule(props) {
                           ).scrollTop = 0;
                         }}
                         style={{
-                          borderBottom: '2px solid #efefef',
+                          borderBottom: `2px solid ${theme.module.background}`,
                           borderRadius: '0px',
                           height: '100%',
                           width: `calc(100% / ${walletTitles.length})`,
@@ -703,8 +705,7 @@ export default function WalletModule(props) {
                           padding: '5px',
                           cursor: 'pointer',
                           textTransform: 'none',
-                          backgroundColor:
-                            index !== walletPage ? 'white' : '#EFF7FF',
+                          backgroundColor: theme.module.background,
                           textAlign: 'center',
                           fontFamily: 'Futura-PT-Book',
                         }}
@@ -713,7 +714,7 @@ export default function WalletModule(props) {
                       </Button>
                     ))}
                   </Box>
-                  <Box style={{ zIndex: '0', paddingTop: '0px' }}>
+                  <Box style={{ backgroundColor: theme.module.background, zIndex: '0', paddingTop: '0px' }}>
                     {walletPages[walletPage]}
                   </Box>
                 </MenuList>

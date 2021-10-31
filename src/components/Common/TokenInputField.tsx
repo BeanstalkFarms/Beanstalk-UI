@@ -8,12 +8,12 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import {
   CryptoAsset,
-  chainId,
   displayBN,
   displayFullBN,
   TokenLabel,
 } from '../../util';
-import { FormatTooltip, TokenTypeImageModule } from '.';
+import { FormatTooltip, TokenTypeImageModule } from './index';
+import { theme } from '../../constants';
 
 export default function TokenInputField(props) {
   const [displayValue, setDisplayValue] = useState('');
@@ -23,6 +23,7 @@ export default function TokenInputField(props) {
       fontSize: 'calc(15px + 1vmin)',
       fontFamily: 'Lucida Console',
       fontWeight: '400',
+      color: theme.text,
     },
   }))();
 
@@ -45,9 +46,9 @@ export default function TokenInputField(props) {
     textAlign: 'right' as const,
   };
   const maxStyle = {
-    backgroundColor: chainId === 3 ? '#FF4A8D' : '#0E8837',
+    backgroundColor: theme.primary,
     borderRadius: '30px',
-    color: 'white',
+    color: theme.accentText,
     fontSize: '13px',
     fontFamily: 'Futura-PT-Book',
     height: '25px',

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { CryptoAsset, MinBN } from '../../util';
-import { TokenInputField } from '.';
+import { TokenInputField } from './index';
 
 export default function InputFieldPlus(props) {
   const balance = props.balance.plus(props.claim ? props.claimableBalance : 0);

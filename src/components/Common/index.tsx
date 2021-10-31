@@ -45,6 +45,7 @@ export { default as TransactionDetailsModule } from './TransactionDetailsModule'
 export { default as TransactionTextModule } from './TransactionTextModule';
 export { default as UnitSelectionModule } from './UnitSelectionModule';
 export { default as TabImageModule } from './TabImageModule';
+export { default as Line } from './Line';
 
 export const FormatTooltip = withStyles((theme: Theme) => ({
   tooltip: {

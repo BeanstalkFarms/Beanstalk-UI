@@ -1,8 +1,6 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { BEANSTALK_UNI_SUBGRAPH_API_LINK } from '../constants';
 
-// const APIURL = 'https://api.studio.thegraph.com/query/6727/beanstalk-uniswap/v0.0.9'
-
 const LastCrossQuery = `
 {
   beans(first: 1) {
@@ -20,6 +18,20 @@ export async function lastCrossQuery() {
     query: gql(LastCrossQuery),
   });
   return data.data.beans[0].lastCross;
+}
+
+const PriceQuery = `
+{
+  beans(first: 1) {
+    price
+  }
+}`;
+
+export async function priceQuery() {
+  const data = await client.query({
+    query: gql(PriceQuery),
+  });
+  return parseFloat(data.data.beans[0].price);
 }
 
 const HourBeanQuery = `

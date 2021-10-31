@@ -7,7 +7,7 @@ import {
   displayFullBN,
   TokenLabel,
 } from '../../util';
-import { DataBalanceModule, TokenTypeImageModule } from '.';
+import { DataBalanceModule, TokenTypeImageModule } from './index';
 
 export default function TokenBalanceModule(props) {
   const style = {

@@ -1,18 +1,18 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { chainId } from '../../util';
-import { FormatTooltip, QuestionModule } from '.';
+import { FormatTooltip, QuestionModule } from './index';
+// import { chainId } from '../../util';
+import { theme } from '../../constants';
 
 export default function HeaderLabel(props) {
-  const backgroundColor = chainId === 1 ? '#627264' : '#7A2343';
   const classes = makeStyles(() => ({
     container: {
-      backgroundColor: backgroundColor,
+      backgroundColor: theme.secondary,
       borderRadius: '15px',
       boxShadow:
         '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-      color: 'white',
+      color: theme.accentText,
       display: 'flex',
       fontSize: '16px',
       margin: '-8px',

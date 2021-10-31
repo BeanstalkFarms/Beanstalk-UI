@@ -44,43 +44,14 @@ query seasons($first: Int, $skip: Int) {
        newPods
        pods
        harvestableBeans
-       newDepositedBeans
-       newRemovedBeans
-       newWithdrawnBeans
        depositedBeans
        withdrawnBeans
-       claimableBeans
-       budgetBeans
-       pooledBeans
        beans
-       pooledEth
        lp
        depositedLP
-       newRemovedLP
-       newDepositedLP
        withdrawnLP
-       claimableLP
-       newWithdrawnLP
-       newFarmableBeans
-       newHarvestablePods
-       newSopEth
-       sopEth
-       cumulativeSopEth
-       claimedSopEth
-       reinvestedSopEth
        stalk
        seeds
-       cumulativeFarmableBeansPerLP
-       farmableBeansPerSeason7
-       farmableBeansPerSeason30
-       boughtBeans
-       newBoughtBeans
-       newBoughtBeansETH
-       newBoughtBeansUSD
-       soldBeans
-       newSoldBeans
-       newSoldBeansETH
-       newSoldBeansUSD
        harvestedPods
        numberOfSowers
        numberOfSows
@@ -101,8 +72,8 @@ function querySeasons(first: Number, skip: Number): Promise {
 }
 
 export async function beanstalkQuery() {
-    const [d1, d2] = await Promise.all([querySeasons(1000, 0), querySeasons(1000, 1000)]);
-    const data = d1.data.seasons.concat(d2.data.seasons);
+    const [d1, d2, d3] = await Promise.all([querySeasons(1000, 0), querySeasons(1000, 1000), querySeasons(1000, 2000)]);
+    const data = d1.data.seasons.concat(d2.data.seasons).concat(d3.data.seasons);
     const seasons = data.map((s) => {
         const season = {};
         Object.keys(s).forEach((key) => {

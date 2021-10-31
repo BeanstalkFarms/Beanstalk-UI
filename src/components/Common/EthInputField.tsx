@@ -1,12 +1,8 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { MIN_BALANCE } from '../../constants';
-import {
-  CryptoAsset,
-  MinBN,
-  SwapMode,
-} from '../../util';
-import { TokenInputField } from '.';
+import { CryptoAsset, MinBN, SwapMode } from '../../util';
+import { TokenInputField } from './index';
 
 export default function EthInputField(props) {
   if (

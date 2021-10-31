@@ -19,16 +19,19 @@ import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-scroll';
 import BeanLogo from '../../img/bean-logo.svg';
-import background from '../../img/cloud-background.png';
 import { chainId } from '../../util';
 import WalletModule from './WalletModule';
+import { priceQuery } from '../../graph';
+import { theme } from '../../constants';
 
 export default function NavigationBar(props) {
+  const [price, setPrice] = useState(0);
+
   const classes = makeStyles({
     fixedNav: {
       zIndex: '10000',
       backgroundColor: 'transparent',
-      backgroundImage: `url(${background}), url(${background})`,
+      backgroundImage: `url(${theme.cloud}), url(${theme.cloud})`,
       backgroundPosition: '0px 0px, 1px 0px',
       backgroundRepeat: 'repeat-x, repeat-x',
       backgroundSize: 'contain, contain',
@@ -70,6 +73,14 @@ export default function NavigationBar(props) {
       paddingLeft: '15px',
     },
   })();
+
+  useEffect(() => {
+    async function getPrice() {
+      setPrice(await priceQuery());
+    }
+
+    getPrice();
+  }, []);
 
   const anchorRef = React.useRef<any>(null);
   const [open, setOpen] = React.useState(false);
@@ -121,9 +132,11 @@ export default function NavigationBar(props) {
         aria-labelledby="main navigation"
         className={classes.navDisplayFlex}
       >
-        <ListItem>
-          <WalletModule {...props} />
-        </ListItem>
+        {props.showWallet ?
+          <ListItem>
+            <WalletModule {...props} />
+          </ListItem>
+        : null}
       </List>
       <Button
         ref={anchorRef}
@@ -199,7 +212,7 @@ export default function NavigationBar(props) {
             duration={450}
             activeClass={isScrolledToBottom ? null : classes.activeLinkText}
             className={
-              path === 'about' && isScrolledToBottom
+              path === props.links[props.links.length - 1].path && isScrolledToBottom
                 ? classes.activeAboutLinkText
                 : classes.linkPadding
             }
@@ -210,9 +223,11 @@ export default function NavigationBar(props) {
           </Link>
         </ListItem>
       ))}
-      <ListItem>
-        <WalletModule {...props} />
-      </ListItem>
+      {props.showWallet ?
+        <ListItem>
+          <WalletModule {...props} />
+        </ListItem>
+      : null}
     </List>
   );
 
@@ -223,11 +238,22 @@ export default function NavigationBar(props) {
             'invert(62%) sepia(71%) saturate(5742%) hue-rotate(312deg) brightness(103%) contrast(101%)',
         }
       : null;
-  const currentBeanPrice = (
-    <Box className={classes.currentPriceStyle}>
-      {`$${props.beanPrice.toFixed(4)}`}
-    </Box>
-  );
+
+  let currentBeanPrice = null;
+  if (props.beanPrice !== undefined) {
+    currentBeanPrice = (
+      <Box className={classes.currentPriceStyle}>
+        {`$${props.beanPrice.toFixed(4)}`}
+      </Box>
+    );
+  } else if (price > 0) {
+    currentBeanPrice = (
+      <Box className={classes.currentPriceStyle}>
+        {`$${price.toFixed(4)}`}
+      </Box>
+    );
+  }
+
   const beanLogo = (
     <IconButton edge="start" color="inherit" className="App-logo">
       <img
@@ -252,3 +278,7 @@ export default function NavigationBar(props) {
     </AppBar>
   );
 }
+NavigationBar.defaultProps = {
+  links: [],
+  showWallet: true,
+};

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+// import React from 'react';
 import { Box } from '@material-ui/core';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import { FormatTooltip } from '.';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { FormatTooltip } from './index';
 
 export default function QuestionModule(props) {
+  const { innerWidth: width } = window;
   const questionStyle = {
     display: 'inline-block',
     margin: props.margin,
@@ -13,22 +16,38 @@ export default function QuestionModule(props) {
 
   const [show, setShow] = useState(false);
 
+  const handleTooltipClose = () => {
+    setShow(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setShow(true);
+  };
+  const timer = width < 500 ?
+    5000
+    : 1000;
+
   return (
     <Box style={questionStyle}>
-      <FormatTooltip
-        margin={props.marginTooltip}
-        placement={
-          props.placement !== undefined ? props.placement : 'top-start'
-        }
-        title={props.description}
-        width={props.widthTooltip}
-        disableHoverListener
-        open={show}
-        onMouseEnter={() => setShow(true)}
-        onMouseLeave={() => setShow(false)}
-      >
-        <HelpOutlineIcon style={{ fontSize: props.fontSize }} width="100%" />
-      </FormatTooltip>
+      <ClickAwayListener onClickAway={handleTooltipClose}>
+        <FormatTooltip
+          margin={props.marginTooltip}
+          placement={
+            props.placement !== undefined ? props.placement : 'top-start'
+          }
+          title={props.description}
+          width={props.widthTooltip}
+          onClose={handleTooltipClose}
+          disableFocusListener
+          interactive
+          open={show}
+          leaveDelay={timer}
+          onMouseEnter={handleTooltipOpen}
+          onMouseLeave={handleTooltipClose}
+        >
+          <HelpOutlineIcon style={{ fontSize: '8px' }} width="100%" onClick={handleTooltipOpen} />
+        </FormatTooltip>
+      </ClickAwayListener>
     </Box>
   );
 }

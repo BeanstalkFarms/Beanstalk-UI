@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeaderLabel } from '.';
+import { HeaderLabel } from './index';
 
 export default function HeaderLabelWithTimer(props) {
   const [title, value, description, balanceDescription] = props.display(props.time);

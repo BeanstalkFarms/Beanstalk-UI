@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import { FormatTooltip, QuestionModule } from '.';
+import { FormatTooltip, QuestionModule } from './index';
 
 export default function DataBalanceModule(props) {
   const spanContent = (

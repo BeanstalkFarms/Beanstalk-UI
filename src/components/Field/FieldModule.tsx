@@ -1,7 +1,10 @@
 import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@material-ui/core';
 import ListIcon from '@material-ui/icons/List';
+import { AppState } from 'state';
+import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from '../../constants';
 import { approveBeanstalkBean, SwapMode } from '../../util';
 import {
@@ -15,6 +18,9 @@ import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
 
 export default function FieldModule(props) {
+  const { beanstalkBeanAllowance } = useSelector<AppState, AppState['allowances']>(
+    (state) => state.allowances
+  );
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [page, setPage] = useState(0);
@@ -208,7 +214,7 @@ export default function FieldModule(props) {
     (settings.mode === SwapMode.Bean ||
       settings.mode === SwapMode.BeanEthereum) &&
     section === 0
-      ? props.beanstalkBeanAllowance
+      ? beanstalkBeanAllowance
       : new BigNumber(1);
 
   return (
@@ -227,7 +233,7 @@ export default function FieldModule(props) {
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={props.setBeanstalkBeanAllowance}
+        setAllowance={updateBeanstalkBeanAllowance}
       >
         {sections[section]}
         {showListTablesIcon}

@@ -1,8 +1,6 @@
 import React from 'react';
-import { Link } from '@material-ui/core';
 import { displayBN, displayFullBN } from '../../util';
-import { MEDIUM_INTEREST_LINK } from '../../constants';
-import BeanLogo from '../../img/bean-bold-logo.svg';
+import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
 import {
   BaseModule,
   ContentSection,
@@ -23,12 +21,12 @@ export default function Field(props) {
   const tth = props.unripenedPods.dividedBy(props.beansPerSeason.harvestableWeek);
   const apy = props.weather.multipliedBy(8760).dividedBy(tth);
 
-  let apyField = (
+  const apyField = (
     <Grid container item xs={12} spacing={3} justifyContent="center">
       <Grid item sm={6} xs={12} style={headerLabelStyle}>
         <HeaderLabel
           balanceDescription={`${apy.toFixed(2)}% APY`}
-          description="The Weather is the interest rate for sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean sown."
+          description={<span>The Pod APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
           title="Pod APY"
           value={`${apy.toFixed(0)}%`}
         />
@@ -36,49 +34,47 @@ export default function Field(props) {
       <Grid item sm={6} xs={12} style={headerLabelStyle}>
         <HeaderLabel
           balanceDescription={`${tth.toFixed(2)} Seasons`}
-          description="The total Harvested Pods over all Seasons is the amount of debt Beanstalk has paid off thus far."
-          title="Seasons to Pod Clearence"
+          description={<span>The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate Seasons to Pod Clearance, <a target="blank" href={APY_CALCULATION}>click here</a></span>}
+          title="Seasons to Pod Clearance"
           value={tth.toFixed(0)}
         />
       </Grid>
     </Grid>
   );
-  apyField = null;
+
+  const description =
+  (
+    <>
+      The Field is the Beanstalk credit facility. Anyone can lend Beans to
+      Beanstalk anytime there is Available Soil by sowing Beans in the
+      Field in exchange for Pods. Pods are the debt asset of Beanstalk.
+      The Weather during the Season Beans are sown determines the number
+      of Pods received for each Bean sown. When the Bean supply increases,
+      Pods become redeemable for &nbsp;
+      <img
+        style={{
+          verticalAlign: 'middle',
+          marginRight: '-1.5px',
+          padding: '0 0 4px 0',
+        }}
+        height="17px"
+        src={theme.bean}
+        alt="Beans"
+      />
+      1 each on a FIFO basis.
+    </>
+  );
+
+  const descriptionLinks = [
+    {
+      href: `${MEDIUM_INTEREST_LINK}#0b33`,
+      text: 'Read More',
+    },
+  ];
 
   return (
-    <ContentSection id="field" title="Field">
+    <ContentSection id="field" title="Field" description={description} descriptionLinks={descriptionLinks}>
       <Grid container item xs={12} spacing={3} justifyContent="center">
-        <Grid container item xs={12} spacing={3} justifyContent="center">
-          <Grid
-            className="section-description"
-            item
-            xs={12}
-            sm={12}
-            style={{ maxWidth: '500px', margin: '20px 0', padding: '12px' }}
-          >
-            The Field is the Beanstalk credit facility. Anyone can lend Beans to
-            Beanstalk anytime there is Available Soil by sowing Beans in the
-            Field in exchange for Pods. Pods are the debt asset of Beanstalk.
-            The Weather during the Season Beans are sown determines the number
-            of Pods received for each Bean sown. When the Bean supply increases,
-            Pods become redeemable for &nbsp;
-            <img
-              style={{
-                verticalAlign: 'middle',
-                marginRight: '-1.5px',
-                padding: '0 0 4px 0',
-              }}
-              height="17px"
-              src={BeanLogo}
-              alt="Beans"
-            />
-            1 each on a FIFO basis.{' '}
-            <Link href={`${MEDIUM_INTEREST_LINK}#0b33`} target="blank">
-              Read More
-            </Link>
-            .
-          </Grid>
-        </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
             balanceDescription={`${displayFullBN(props.soil)} Soil`}

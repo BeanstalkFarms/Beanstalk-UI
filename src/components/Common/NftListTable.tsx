@@ -18,7 +18,7 @@ import {
   DIAMONDS_LINK,
 } from 'constants/index';
 import { displayBN, displayFullBN } from '../../util';
-import { FormatTooltip } from '.';
+import { FormatTooltip } from './index';
 
 const useStyles = makeStyles({
   table: {

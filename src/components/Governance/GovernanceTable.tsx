@@ -17,13 +17,14 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {
   bipsList,
+  theme,
   GOVERNANCE_EMERGENCY_PERIOD,
   GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR,
   GOVERNANCE_EMERGENCY_THRESHOLD_NUMERATOR,
   GOVERNANCE_EXPIRATION,
 } from '../../constants';
 import { percentForStalk } from '../../util';
-import { QuestionModule } from '../Common';
+import { Line, QuestionModule } from '../Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 const useStyles = makeStyles({
@@ -51,9 +52,9 @@ const useStyles = makeStyles({
     fontFamily: 'Futura-PT-Book',
   },
   inputModule: {
-    backgroundColor: '#F5FAFF',
+    backgroundColor: theme.module.background,
     borderRadius: '25px',
-    color: 'black',
+    color: theme.text,
     marginTop: '18px',
     maxWidth: '800px',
     padding: '10px 10px 20px 10px',
@@ -95,7 +96,7 @@ const Row = (props) => {
   return (
     <>
       <TableRow id={`bip-${bip[0]}`}>
-        <TableCell style={{ padding: '5px' }}>
+        <TableCell style={{ padding: '5px', borderColor: theme.accentColor }}>
           <IconButton
             id={`open-bip-${bip[0]}`}
             aria-label="expand row"
@@ -115,7 +116,7 @@ const Row = (props) => {
             align="center"
             component="th"
             scope="bip"
-            style={{ fontFamily: 'Futura-PT-Book', fontSize: '18px' }}
+            style={{ fontFamily: 'Futura-PT-Book', fontSize: '18px', borderColor: theme.accentColor }}
           >
             {bipIndex === 3 ? (
               <CircularProgressWithLabel value={bipValue} />
@@ -128,7 +129,7 @@ const Row = (props) => {
       <TableRow>
         <TableCell
           colSpan={6}
-          style={{ fontFamily: 'Futura-Pt-Book', padding: '0px' }}
+          style={{ fontFamily: 'Futura-Pt-Book', padding: '0px', borderColor: theme.accentColor }}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
             {summaryBips(open, bip)}
@@ -204,10 +205,8 @@ const BipTable = (props) => {
             margin="-12px 0 0 2px"
           />
         </span>
-        <hr
+        <Line
           style={{
-            backgroundColor: 'primary',
-            color: 'primary',
             margin: '10px 8px',
           }}
         />
@@ -215,13 +214,13 @@ const BipTable = (props) => {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell size="small" style={{ width: '10px' }} />
+                <TableCell size="small" style={{ width: '10px', borderBottom: `2px solid ${theme.accentColor}` }} />
                 {titles.map((t) => (
                   <TableCell
                     key={t}
                     align="center"
                     size="small"
-                    style={{ fontFamily: 'Futura-PT-Book', fontSize: '16px' }}
+                    style={{ fontFamily: 'Futura-PT-Book', fontSize: '16px', borderBottom: `2px solid ${theme.accentColor}` }}
                   >
                     {t}
                   </TableCell>

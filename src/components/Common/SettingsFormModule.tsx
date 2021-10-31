@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { IconButton, Box } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { SwapMode } from '../../util';
-import { SlippageModule, SwitchModule, UnitSelectionModule } from '.';
+import { SlippageModule, SwitchModule, UnitSelectionModule } from './index';
 
 export default function SettingsFormModule(props) {
   const rightSettingStyle = {

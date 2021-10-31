@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
+import { updateUniswapBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from '../../constants';
 import {
   approveUniswapBean,
@@ -40,6 +43,9 @@ export default function TradeModule(props) {
 
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
+  const { uniswapBeanAllowance } = useSelector<AppState, AppState['allowances']>(
+    (state) => state.allowances
+  );
 
   function handleSwapCallback() {
     setFromValue(new BigNumber(-1));
@@ -142,7 +148,7 @@ export default function TradeModule(props) {
       allowance={
         section > 0 || orderIndex
           ? new BigNumber(1)
-          : props.uniswapBeanAllowance
+          : uniswapBeanAllowance
       }
       isDisabled={disabled}
       resetForm={() => {
@@ -151,7 +157,7 @@ export default function TradeModule(props) {
       section={section}
       sectionTitles={sectionTitles}
       sectionTitlesDescription={sectionTitlesDescription}
-      setAllowance={props.setUniswapBeanAllowance}
+      setAllowance={updateUniswapBeanAllowance}
       handleApprove={approveUniswapBean}
       handleForm={handleForm}
       handleTabChange={handleTabChange}

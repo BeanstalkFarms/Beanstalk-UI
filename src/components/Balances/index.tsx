@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-import { UNISWAP_BASE_LP } from '../../constants';
+import { UNISWAP_BASE_LP, theme } from '../../constants';
 import {
+  Line,
   BaseModule,
   ContentSection,
   ClaimableAsset,
@@ -19,7 +20,7 @@ export default function Balances(props) {
   const balanceStyle = {
     borderRadius: '25px',
     color: 'primary',
-    backgroundColor: '#F5FAFF',
+    backgroundColor: theme.module.background,
     padding: '10px',
   };
   const divStyle = {
@@ -27,11 +28,6 @@ export default function Balances(props) {
     fontFamily: 'Futura-Pt-Book',
     marginTop: '13px',
     textTransform: 'uppercase',
-  };
-  const lineStyle = {
-    color: 'primary',
-    backgroundColor: 'primary',
-    margin: '14px 4px 8px 4px',
   };
 
   const sectionTitles = ['My Balances', 'Beanstalk'];
@@ -207,7 +203,7 @@ export default function Balances(props) {
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
           <Box className="AppBar-shadow" style={balanceStyle}>
             <Box style={divStyle}>My Balances </Box>
-            <hr style={lineStyle} />
+            <Line />
             {myBalancesSection}
           </Box>
         </Grid>
@@ -215,7 +211,7 @@ export default function Balances(props) {
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
           <Box className="AppBar-shadow" style={balanceStyle}>
             <Box style={divStyle}>Beanstalk</Box>
-            <hr style={lineStyle} />
+            <Line />
             {totalBalancesSection}
           </Box>
         </Grid>
