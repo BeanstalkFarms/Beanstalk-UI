@@ -30,6 +30,7 @@ export default function BaseModule({
   widthTooltip,
   marginTooltip,
   margin,
+  showButton,
 }) {
   const dispatch = useDispatch();
   const s = size === 'small';
@@ -153,9 +154,9 @@ export default function BaseModule({
     buttonHandler = null;
   }
 
-  let showButton;
+  let actionButton;
   if (showButton) {
-    showButton = (
+    actionButton = (
       <FormatTooltip
         placement="top"
         margin="0 0 0 7px"
@@ -189,7 +190,7 @@ export default function BaseModule({
           <Box className={classes.moduleContent} />
         ) : null}
       </Box>
-      {showButton}
+      {actionButton}
       {allowance.isEqualTo(0) ? (
         <span>
           To use this module, send an Approval by clicking the Approve button
