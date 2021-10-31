@@ -4,18 +4,21 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import TelegramIcon from '@material-ui/icons/Telegram';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import { makeStyles } from '@material-ui/styles';
-import coingecko from '../../img/coingecko-icon.svg';
-import coinmarketcap from '../../img/coinmarketcap-icon.svg';
-import discord from '../../img/discord-icon.svg';
-import etherscan from '../../img/etherscan-logo.svg';
-// import ground from '../../img/ground.png'
-import ground from '../../img/ground-tall.png';
-import medium from '../../img/medium-icon.svg';
-import opensea from '../../img/opensea-icon.svg';
+import { ReactComponent as BeanIcon } from '../../img/bean-logo.svg';
+import { ReactComponent as CoinGeckoIcon } from '../../img/coingecko-icon.svg';
+import { ReactComponent as CoinMarketCapIcon } from '../../img/coinmarketcap-icon.svg';
+import { ReactComponent as DiscordIcon } from '../../img/discord-icon.svg';
+import { ReactComponent as EtherscanIcon } from '../../img/etherscan-logo.svg';
+import { ReactComponent as MediumIcon } from '../../img/medium-icon.svg';
+import { ReactComponent as OpenSeaIcon } from '../../img/opensea-icon.svg';
 // import reddit from '../../img/reddit-icon.svg'
-import uniswap from '../../img/uniswap-logo-black.svg';
-import BarnIcon from '../../img/Barn.svg';
-import SiloIcon from '../../img/Silo.svg';
+import { ReactComponent as UniswapIcon } from '../../img/uniswap-logo-black.svg';
+
+import PumpkinIcon from '../../img/dark/pumpkin-dark.svg';
+import FenceIcon from '../../img/dark/fence-dark.svg';
+import TombstoneIcon from '../../img/dark/tombstone-dark.svg';
+import { theme } from '../../constants';
+
 import {
   BEAN_TOKEN_LINK,
   COINGECKO_LINK,
@@ -30,41 +33,35 @@ import {
   TWITTER_LINK,
   UNISWAP_CONTRACT_LINK,
 } from '../../constants';
-import { CryptoAsset, TokenTypeImageModule } from '../Common';
 
 export default function Footer(props) {
   const classes = makeStyles({
     fixedGround: {
       backgroundColor: 'transparent',
-      backgroundImage: `url(${ground})`,
+      backgroundImage: `url(${theme.ground})`,
       backgroundPosition: '0% 0%',
       backgroundRepeat: 'repeat',
-      backgroundSize: 'contain',
+      backgroundSize: theme.groundSize,
       display: 'flex',
       alignContent: 'space-around',
-      height: '60px',
+      height: theme.groundHeight,
       zIndex: 1000000,
       position: 'fixed',
       bottom: '0px',
     },
   })();
+  const width = window.innerWidth;
 
   const logoStyle = {
-    height: '25px',
-    width: '25px',
-  };
-  // const uniswapStyle = {
-  //   height: '25px',
-  //   width: '30px',
-  // }
+      height: '25px',
+      width: '25px',
+      fill: theme.footer,
+    };
   const linkStyle = {
-    padding: '10px 15px 0 0',
+    padding: '28px 15px 0 0',
   };
-  const twitterStyle = {
-    padding: '10px 12px 0 0',
-  };
-  const beanStyle = {
-    padding: '10px 7px 0 0',
+  const closeStyle = {
+    padding: '28px 7px 0 0',
   };
   const siloStyle = {
     bottom: '51px',
@@ -82,74 +79,114 @@ export default function Footer(props) {
     position: 'fixed',
     zIndex: -1,
   };
+  const pumpkinStyle = width > 650 ?
+    {
+      bottom: '51px',
+      height: '5vw',
+      left: '80%',
+      minHeight: '75px',
+      position: 'fixed',
+      zIndex: -1,
+    }
+    : {
+      display: 'none',
+    };
+  const rightPumpkinStyle = width > 850 ?
+    {
+      bottom: '51px',
+      height: '3vw',
+      left: 'calc(80% + 4.4vw)',
+      minHeight: '55px',
+      position: 'fixed',
+      zIndex: -1,
+    }
+    : {
+      display: 'none',
+    };
+  const tombstoneStyle = width > 650 ?
+    {
+      bottom: '44px',
+      height: '5vw',
+      maxHeight: '100px',
+      left: '60%',
+      minHeight: '55px',
+      position: 'fixed',
+      zIndex: -1,
+    }
+    : {
+      display: 'none',
+    };
 
-  const width = window.innerWidth;
+  const spookyImg = theme.name === 'spooky' ?
+    <>
+    <img alt="Tombstone Icon" src={TombstoneIcon} style={tombstoneStyle} />
+    <img alt="Pumkpin Icon" src={PumpkinIcon} style={pumpkinStyle} />
+    <img alt="Pumkpin Icon" src={PumpkinIcon} style={rightPumpkinStyle} />
+    </>
+    : null;
 
   return (
     <>
-      <img alt="Silo Icon" src={SiloIcon} style={siloStyle} />
-      <img alt="Barn Icon" src={BarnIcon} style={barnStyle} />
+      <img alt="Silo Icon" src={theme.silo} style={siloStyle} />
+      <img alt="Barn Icon" src={theme.barn} style={barnStyle} />
+      {spookyImg}
       <Grid container className={classes.fixedGround} justifyContent="center">
-        <Grid item style={twitterStyle}>
+        <Grid item style={closeStyle}>
           <Link href={TWITTER_LINK} color="inherit" target="blank">
-            <TwitterIcon />
+            <TwitterIcon style={logoStyle} />
           </Link>
         </Grid>
         <Grid item style={linkStyle}>
           <Link href={TELEGRAM_LINK} color="inherit" target="blank">
-            <TelegramIcon />
+            <TelegramIcon style={logoStyle} />
           </Link>
         </Grid>
         <Grid item style={linkStyle}>
           <Link href={DISCORD_LINK} color="inherit" target="blank">
-            <img alt="Discord Logo" src={discord} style={logoStyle} />
+            <DiscordIcon style={logoStyle} />
           </Link>
         </Grid>
         <Grid item style={linkStyle}>
           <Link href={MEDIUM_LINK} color="inherit" target="blank">
-            <img alt="Medium Logo" src={medium} style={logoStyle} />
+            <MediumIcon style={logoStyle} />
           </Link>
         </Grid>
         <Grid item style={linkStyle}>
           <Link href={OPENSEA_LINK} color="inherit" target="blank">
-            <img alt="OpenSea Logo" src={opensea} style={logoStyle} />
+            <OpenSeaIcon style={logoStyle} />
           </Link>
         </Grid>
         <Grid item style={linkStyle}>
           <Link href={COINMARKETCAP_LINK} color="inherit" target="blank">
-            <img
-              alt="CoinMarketCap Logo"
-              src={coinmarketcap}
-              style={logoStyle}
-            />
+            <CoinMarketCapIcon style={logoStyle} />
           </Link>
         </Grid>
         {width > 500 ? (
           <Grid item style={linkStyle}>
             <Link href={COINGECKO_LINK} color="inherit" target="blank">
-              <img alt="CoinGecko Logo" src={coingecko} style={logoStyle} />
+              <CoinGeckoIcon style={logoStyle} />
             </Link>
           </Grid>
         ) : null}
-        <Grid item style={linkStyle}>
+        <Grid item style={closeStyle}>
           <Link href={GITHUB_LINK} color="inherit" target="blank">
-            <GitHubIcon />
+            <GitHubIcon style={logoStyle} />
           </Link>
         </Grid>
-        <Grid item style={beanStyle}>
+        <Grid item style={closeStyle}>
           <Link href={BEAN_TOKEN_LINK} color="inherit" target="blank">
-            <TokenTypeImageModule style={logoStyle} token={CryptoAsset.Bean} />
+            <BeanIcon style={logoStyle} />
           </Link>
         </Grid>
         <Grid item style={linkStyle}>
           <Link href={SILO_CONTRACT_LINK} color="inherit" target="blank">
-            <img alt="Etherscan Logo" src={etherscan} style={logoStyle} />
+            <EtherscanIcon style={logoStyle} />
           </Link>
         </Grid>
         {width > 500 ? (
           <Grid item style={linkStyle}>
             <Link href={UNISWAP_CONTRACT_LINK} color="inherit" target="blank">
-              <img alt="Uniswap Logo" src={uniswap} style={logoStyle} />
+              <UniswapIcon style={logoStyle} />
             </Link>
           </Grid>
         ) : null}

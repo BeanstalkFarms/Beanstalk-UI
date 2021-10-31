@@ -12,12 +12,16 @@
   margin-bottom: '60px';
 }
 
-.BeanstalkBG[name="Chain1"] {
+.BeanstalkBG[name="main"] {
   background-image: url('../../img/beanstalk-background.svg');
 }
 
-.BeanstalkBG[name="Chain3"] {
+.BeanstalkBG[name="ropsten"] {
   background-image: url('../../img/beanstalk-background-ropsten.svg');
+}
+
+.BeanstalkBG[name="spooky"] {
+  background-image: url('../../img/dark/beanstalk-background.svg');
 }
 
 .BeanstalkBG {
@@ -128,8 +132,13 @@
 }
 
 @media screen and (max-width: 700px) {
-  .section-description {
+  .section-description-main {
     background-color: rgb(245, 250, 255, 0.8);
+    border-radius: 25px;
+    box-shadow: 0px 1px 2px -1px rgb(0 0 0 / 20%),0px 2px 3px 0px rgb(0 0 0 / 14%),0px 1px 5px 0px rgb(0 0 0 / 12%);
+  }
+  .section-description-spooky {
+    background-color: rgb(9, 25, 53, 0.8);
     border-radius: 25px;
     box-shadow: 0px 1px 2px -1px rgb(0 0 0 / 20%),0px 2px 3px 0px rgb(0 0 0 / 14%),0px 1px 5px 0px rgb(0 0 0 / 12%);
   }

@@ -11,7 +11,7 @@ import {
   Box,
 } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/styles';
-import { BASE_IPFS_LINK, BASE_OPENSEA_LINK } from '../../constants';
+import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from '../../constants';
 import { SingleButton } from '.';
 import { mintNFT } from '../../util';
 
@@ -33,6 +33,7 @@ const useStyles = makeStyles({
     fontFamily: 'Lucida Console',
     fontSize: '11px',
     alignItems: 'left',
+    borderColor: theme.accentColor,
   },
 });
 

@@ -1,15 +1,17 @@
 import React from 'react';
-import { Link, Box } from '@material-ui/core';
-import { APY_CALCULATION, MEDIUM_INTEREST_LINK } from '../../constants';
-import { ContentSection, Grid, HeaderLabel } from '../Common';
+import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
+import {
+  ContentSection,
+  Grid,
+  HeaderLabel,
+} from '../Common';
 import TabbedSilo from './TabbedSilo';
 import { getAPYs } from '../../util';
 
 export default function Silo(props) {
-  const { innerWidth: width } = window;
-
   const headerLabelStyle = {
     maxWidth: '300px',
+    color: theme.text,
   };
 
   const [beanAPY, lpAPY] = getAPYs(
@@ -55,32 +57,30 @@ export default function Silo(props) {
           value={`${beanAPY.toFixed(0)}%`}
         />
       </Grid>
-    </Grid>
-  );
+    </Grid>);
+
+  const description =
+  `
+    The Silo is the Beanstalk DAO. Silo Members earn passive interest during
+    Bean supply increases. Anyone can become a Silo Member by depositing
+    Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module
+    below in exchange for Stalk and Seeds. The Stalk token entitles holders
+    to passive interest in the form of a share of future Bean mints, and the
+    right to propose and vote on BIPs. The Seed token yields .0001 Stalk
+    every Season. No action is ever required of Silo Members. All Stalk and
+    Seeds associated with a Deposit are forfeited upon withdrawal. All
+    Withdrawals are frozen for 24 full Seasons.
+  `;
+
+  const descriptionLinks = [
+    {
+      href: `${MEDIUM_INTEREST_LINK}#8b79`,
+      text: 'Read More',
+    },
+  ];
+
   return (
-    <ContentSection id="silo" title="Silo">
-      <Box
-        className="section-description"
-        style={
-          width > 500
-            ? { maxWidth: '550px', margin: '20px 0 0 0', padding: '12px' }
-            : { width: width - 64, margin: '20px 0', padding: '12px' }
-        }
-      >
-        The Silo is the Beanstalk DAO. Silo Members earn passive interest during
-        Bean supply increases. Anyone can become a Silo Member by depositing
-        Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module
-        below in exchange for Stalk and Seeds. The Stalk token entitles holders
-        to passive interest in the form of a share of future Bean mints, and the
-        right to propose and vote on BIPs. The Seed token yields .0001 Stalk
-        every Season. No action is ever required of Silo Members. All Stalk and
-        Seeds associated with a Deposit are forfeited upon withdrawal. All
-        Withdrawals are frozen for 24 full Seasons.{' '}
-        <Link href={`${MEDIUM_INTEREST_LINK}#8b79`} target="blank">
-          Read More
-        </Link>
-        .
-      </Box>
+    <ContentSection id="silo" title="Silo" descriptionLinks={descriptionLinks} description={description}>
       {apyField}
       <TabbedSilo {...props} />
     </ContentSection>

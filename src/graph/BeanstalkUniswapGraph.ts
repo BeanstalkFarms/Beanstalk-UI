@@ -1,8 +1,6 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { BEANSTALK_UNI_SUBGRAPH_API_LINK } from '../constants';
 
-// const APIURL = 'https://api.studio.thegraph.com/query/6727/beanstalk-uniswap/v0.0.9'
-
 const LastCrossQuery = `
 {
   beans(first: 1) {

@@ -12,14 +12,15 @@ import {
   POD_RATE_UPPER_BOUND,
   SOIL_MAX_RATIO_CAP,
   SOIL_MIN_RATIO_CAP,
+  theme,
 } from '../../constants';
 import { displayBN, displayFullBN, MaxBN, TrimBN } from '../../util';
-import { DataBalanceModule, Grid, QuestionModule } from '../Common';
+import { Line, DataBalanceModule, Grid, QuestionModule } from '../Common';
 
 // const cases = [3,1,0,0,-1,-3,-3,0,3,1,0,0,-1,-3,-3,0,3,3,1,0,0,0,-1,0,3,3,1,0,1,0,-1,0]
 
 const gridStyle = {
-  backgroundColor: 'white',
+  backgroundColor: theme.module.foreground,
   borderRadius: '25px',
   marginBottom: '12px',
   padding: '10px 10px 4px 10px',
@@ -34,14 +35,12 @@ const spanStyle = {
   width: '100%',
 };
 const lineStyle = {
-  backgroundColor: 'primary',
-  color: 'primary',
   margin: '10px 8px',
 };
 const pegMaintenanceStyle = {
   borderRadius: '25px',
-  color: 'primary',
-  backgroundColor: '#F5FAFF',
+  color: theme.accentColor,
+  backgroundColor: theme.module.background,
   padding: '10px',
   fontFamily: 'Futura-Pt-Book',
   marginTop: '15px',
@@ -72,7 +71,7 @@ function Stats(props) {
     <Grid container justifyContent="center" style={gridStyle}>
       <span style={spanStyle}>
         {props.title}
-        <hr />
+        <Line style={{ marign: '0px' }} />
       </span>
       <StatBalance gridWidth={gridWidth} {...props.one} />
       <StatBalance gridWidth={gridWidth} {...props.two} />
@@ -272,7 +271,7 @@ export default function PegMaintenance(props) {
               margin="-6px 0 0 2px"
             />
           </span>
-          <hr style={lineStyle} />
+          <Line style={lineStyle} />
           <Stats {...nextSeasonStats} />
           <Stats {...currentSeasonStats} />
         </Box>

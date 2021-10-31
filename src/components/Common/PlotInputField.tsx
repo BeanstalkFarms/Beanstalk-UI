@@ -6,7 +6,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { chainId } from '../../util';
+import { theme } from '../../constants';
 
 export default function PlotInputField(props) {
   const [displayValue, setDisplayValue] = useState('');
@@ -32,9 +32,9 @@ export default function PlotInputField(props) {
     textTransform: 'uppercase' as const,
   };
   const maxStyle = {
-    backgroundColor: chainId === 3 ? '#FF4A8D' : '#0E8837',
+    backgroundColor: theme.primary,
     borderRadius: '30px',
-    color: 'white',
+    color: theme.accentText,
     fontSize: '13px',
     fontFamily: 'Futura-PT-Book',
     height: '25px',

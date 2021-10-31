@@ -16,7 +16,7 @@ import { Link } from 'react-scroll';
 import InfoIcon from '@material-ui/icons/Info';
 import CheckIcon from '@material-ui/icons/Check';
 import { percentForStalk, vote, unvote } from '../../util';
-import { QuestionModule } from '../Common';
+import { Line, QuestionModule } from '../Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 export default function Vote(props) {
@@ -111,10 +111,8 @@ export default function Vote(props) {
             margin="-6px 0 0 2px"
           />
         </span>
-        <hr
+        <Line
           style={{
-            backgroundColor: 'primary',
-            color: 'primary',
             margin: '10px 8px',
           }}
         />
