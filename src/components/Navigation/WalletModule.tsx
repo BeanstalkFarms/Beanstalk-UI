@@ -165,8 +165,7 @@ export default function WalletModule(props) {
           if (event.event === 'BeanRemove' || event.event === 'LPRemove') {
             return;
           }
-          event.timestamp = timestampsByBlockNumber[event.blockNumber];
-          filteredEvents.push(event);
+          filteredEvents.push({ ...event, timestamp: timestampsByBlockNumber[event.blockNumber] });
         });
         filteredEvents.sort((a, b) => {
           const blockDiff = b.blockNumber - a.blockNumber;

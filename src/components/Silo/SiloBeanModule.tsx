@@ -1,7 +1,10 @@
 import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@material-ui/core';
-import ListIcon from '@material-ui/icons/List';
+import { List as ListIcon } from '@material-ui/icons';
+import { AppState } from 'state';
+import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN_TO_STALK } from '../../constants';
 import { approveBeanstalkBean, SwapMode } from '../../util';
 import { BaseModule, ListTable, SiloAsset, TransitAsset } from '../Common';
@@ -10,6 +13,9 @@ import { BeanDepositSubModule } from './BeanDepositSubModule';
 import { BeanWithdrawSubModule } from './BeanWithdrawSubModule';
 
 export default function SiloBeanModule(props) {
+  const { beanstalkBeanAllowance } = useSelector<AppState, AppState['allowances']>(
+    (state) => state.allowances
+  );
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [settings, setSettings] = useState({
@@ -216,7 +222,7 @@ export default function SiloBeanModule(props) {
     (settings.mode === SwapMode.Bean ||
       settings.mode === SwapMode.BeanEthereum) &&
     section === 0
-      ? props.beanstalkBeanAllowance
+      ? beanstalkBeanAllowance
       : new BigNumber(1);
 
   return (
@@ -237,7 +243,7 @@ export default function SiloBeanModule(props) {
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={props.setBeanstalkBeanAllowance}
+        setAllowance={updateBeanstalkBeanAllowance}
       >
         {sections[section]}
         {showListTablesIcon}

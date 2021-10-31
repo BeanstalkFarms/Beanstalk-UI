@@ -34,7 +34,10 @@
     "token-amount": "^0.3.0",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1",
-    "web3": "^1.5.2"
+    "web3": "^1.5.2",
+    "@reduxjs/toolkit": "^1.5.0",
+    "react-redux": "^7.2.2",
+    "redux-localstorage-simple": "^2.3.1"
   },
   "scripts": {
     "start": "react-scripts --max_old_space_size=4096 start",
@@ -77,6 +80,7 @@
     "@types/react-scrollspy": "^3.3.3",
     "@typescript-eslint/eslint-plugin": "4.13.0",
     "@typescript-eslint/parser": "4.13.0",
+    "@types/react-redux": "^7.1.11",
     "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "18.2.1",
