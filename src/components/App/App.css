@@ -191,6 +191,16 @@
   max-width: 580px;
   justify-content: center;
 }
+.claimTextField-header {
+  width: 100px;
+  text-align: left;
+  font-size: 14px;
+}
+.claimTextField-content {
+  width: 55px;
+  text-align: right;
+  font-size: 14px;
+}
 
 /* For large screens */
 
@@ -248,6 +258,12 @@
     width: 44%;
     padding-right: 20px;
   }
+  .claimTextField-header {
+    width: 85px;
+  }
+  .claimTextField-content {
+    width: 50px;
+  }
 }
 
 @media screen and (max-width: 475px) {
@@ -256,6 +272,16 @@
   }
   .TokenBalanceModule-content {
     width: 44%;
+  }
+  .claimTextField-header {
+    width: 80px;
+    /* text-align: center; */
+    font-size: 13px;
+  }
+  .claimTextField-content {
+    width: 45px;
+    /* text-align: center; */
+    font-size: 13px;
   }
 }
 
@@ -276,6 +302,14 @@
     font-size: 12px;
   }
   .TokenBalanceModule-content {
+    font-size: 12px;
+  }
+  .claimTextField-header {
+    width: 65px;
+    font-size: 12px;
+  }
+  .claimTextField-content {
+    width: 35px;
     font-size: 12px;
   }
 }

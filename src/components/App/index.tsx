@@ -142,20 +142,6 @@ export default function App() {
       )
     },
     {
-      path: 'nft',
-      title: 'BeaNFTs',
-      component: () => (
-        <NFTs
-          key="beanft"
-          {...prices}
-          {...totalBalance}
-          {...season}
-          {...userBalance}
-          {...weather}
-        />
-      )
-    },
-    {
       path: 'analytics',
       title: 'ANALYTICS',
       component: () => (
@@ -170,6 +156,20 @@ export default function App() {
           ethReserve={prices.ethReserve}
           unripenedPods={totalBalance.totalPods}
           updateExpectedPrice={updateExpectedPrice}
+          {...prices}
+          {...totalBalance}
+          {...season}
+          {...userBalance}
+          {...weather}
+        />
+      )
+    },
+    {
+      path: 'nft',
+      title: 'BeaNFTs',
+      component: () => (
+        <NFTs
+          key="beanft"
           {...prices}
           {...totalBalance}
           {...season}
@@ -792,7 +792,7 @@ export default function App() {
   } else {
     const navMapping = [...defaultNavMapping];
     if (hasActiveBIP) {
-      navMapping.splice(5, 0, {
+      navMapping.splice(4, 0, {
         path: 'governance',
         title: 'BIPs',
         component: () => <></>

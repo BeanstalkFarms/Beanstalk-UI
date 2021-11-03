@@ -168,6 +168,12 @@ export function TrimBN(bn: BigNumber, decimals: number): BigNumber {
   );
 }
 
+export function displayFullBN(bn: BigNumber, maxDecimals: number = 18) {
+  return bn
+    .toNumber()
+    .toLocaleString('en-US', { maximumFractionDigits: maxDecimals });
+}
+
 export function displayBN(bn: BigNumber) {
   if (bn === undefined || bn.isLessThan(new BigNumber(0))) return '0';
   if (bn.isEqualTo(0)) return '0';
@@ -177,16 +183,11 @@ export function displayBN(bn: BigNumber) {
   if (bn.isGreaterThanOrEqualTo(1e12)) return `${TrimBN(bn.dividedBy(1e12), 4)}T`; /* Trillions */
   if (bn.isGreaterThanOrEqualTo(1e9)) return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
   if (bn.isGreaterThanOrEqualTo(1e6)) return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */
-  if (bn.isGreaterThanOrEqualTo(1e3)) return `${TrimBN(bn.dividedBy(1e3), 2)}K`; /* Thousands */
+  if (bn.isGreaterThanOrEqualTo(1e4)) return `${TrimBN(bn.dividedBy(1e3), 2)}K`; /* Thousands */
+  if (bn.isGreaterThanOrEqualTo(1e3)) return displayFullBN(bn, 0); /* Small Thousands */
 
   const decimals = bn.isGreaterThan(10) ? 2 : bn.isGreaterThan(1) ? 3 : 4;
   return TrimBN(bn, decimals).toFixed();
-}
-
-export function displayFullBN(bn: BigNumber, maxDecimals: number = 18) {
-  return bn
-    .toNumber()
-    .toLocaleString('en-US', { maximumFractionDigits: maxDecimals });
 }
 
 export function MinBNs(array): BigNumber {
