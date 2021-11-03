@@ -28,7 +28,7 @@ import {
 import { AppState } from 'state';
 import BeanLogo from '../../img/bean-logo.svg';
 import { lastCrossQuery, apyQuery } from '../../graph';
-import { BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from '../../constants';
+import { theme as colorTheme, BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from '../../constants';
 import {
   addRewardedCrates,
   createLedgerBatch,
@@ -56,7 +56,6 @@ import NFTs from '../NFT';
 import Silo from '../Silo';
 import theme from './theme';
 import Trade from '../Trade';
-
 import Main from './main.tsx';
 import './App.css';
 
@@ -82,6 +81,8 @@ export default function App() {
   const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
     state => state.beansPerSeason
   );
+
+  document.body.style.backgroundColor = colorTheme.bodyColor;
 
   const {
     initialized,
@@ -722,6 +723,12 @@ export default function App() {
       benchmarkEnd('PRICES', startTime);
     }
 
+    async function getLastCross() {
+      const lastCrossInitializer = await lastCrossQuery();
+      dispatch(setLastCross(lastCrossInitializer));
+
+    }
+
     async function start() {
       let startTime = benchmarkStart('*INIT*');
       if (await initialize()) {
@@ -737,7 +744,6 @@ export default function App() {
         const [
           balanceInitializers,
           eventInitializer,
-          lastCrossInitializer,
           apyInitializer
         ] = await Promise.all([
           updateAllBalances(),
@@ -747,14 +753,12 @@ export default function App() {
             updateTotals,
             setContractEvents
           ),
-          lastCrossQuery(),
           apyQuery()
         ]);
         ReactDOM.unstable_batchedUpdates(() => {
           const [updateBalanceState, eventParsingParameters] =
             balanceInitializers;
           updateBalanceState();
-          dispatch(setLastCross(lastCrossInitializer));
           dispatch(setBeansPerSeason(apyInitializer));
           processEvents(eventInitializer, eventParsingParameters);
           dispatch(setInitialized(true));
@@ -766,6 +770,7 @@ export default function App() {
     }
 
     start();
+    getLastCross();
 
     // eslint-disable-next-line
   }, []);

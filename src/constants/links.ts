@@ -52,8 +52,8 @@ export const NFT_LINK =
 /* Subgraph Links */
 export const UNI_V2_SUBGRAPH_API_LINK =
   'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2';
-export const BEANSTALK_UNI_SUBGRAPH_API_LINK =
-  'https://api.studio.thegraph.com/query/6727/bean/v0.0.9';
+export const BEAN_SUBGRAPH_API_LINK =
+  'https://api.studio.thegraph.com/query/6727/bean/v0.0.10';
 export const BEANSTALK_NFT_SUBGRAPH_API_LINK =
   'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.2';
 

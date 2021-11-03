@@ -9,6 +9,7 @@ export default function BeanCharts() {
     volume: [[], []],
     marketCap: [[], []],
     supply: [[], []],
+    crosses: [[], []],
   });
 
   const charts = [
@@ -43,6 +44,11 @@ export default function BeanCharts() {
           description: 'This is the total Bean supply at the end of every hour/day.',
           data: chartData.supply,
       },
+      {
+          title: 'Crosses',
+          description: 'This is the total number of times that the price of Bean has crossed its peg at the end of every hour/day.',
+          data: chartData.crosses,
+      },
   ];
 
   async function loadUniswapCharts() {
@@ -72,7 +78,11 @@ export default function BeanCharts() {
       beanHourData.map((d) => ({ x: d.x, y: d.totalSupplyUSD })),
       beanDayData.map((d) => ({ x: d.x, y: d.totalSupplyUSD })),
     ];
-    setChartData({ price: price, volume: volume, liquidity: liquidity, marketCap: marketCap, supply: supply });
+    const crosses = [
+      beanHourData.map((d) => ({ x: d.x, y: d.crosses })),
+      beanDayData.map((d) => ({ x: d.x, y: d.crosses })),
+    ];
+    setChartData({ price: price, volume: volume, liquidity: liquidity, marketCap: marketCap, supply: supply, crosses: crosses });
   }
 
   useEffect(() => {

@@ -39,7 +39,7 @@ const lineStyle = {
 };
 const pegMaintenanceStyle = {
   borderRadius: '25px',
-  color: theme.accentColor,
+  color: theme.text,
   backgroundColor: theme.module.background,
   padding: '10px',
   fontFamily: 'Futura-Pt-Book',

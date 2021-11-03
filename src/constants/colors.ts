@@ -16,6 +16,7 @@ const normalTheme = {
     primary: '#0E8837',
     secondary: '#627264',
     accentColor: '#9A9A9A',
+    bodyBackground: '#DAF2FF',
     accentText: 'white',
     border: 'rgba(224, 224, 224, 1)',
     text: 'black',
@@ -32,7 +33,8 @@ const normalTheme = {
     sunHeight: '10vw',
     ground: ground,
     groundSize: 'contain',
-    groundHeight: '60px',
+    groundHeight: '53px',
+    footerPadding: '18px 15px 0 0',
     barn: barn,
     silo: silo,
     bean: bean,
@@ -50,6 +52,7 @@ export const spookyTheme = {
     name: 'spooky',
     text: 'black',
     backgroundText: 'white',
+    bodyBackground: '#096A9F',
     primary: '#FF7F00',
     accentColor: '#3B3B3B',
     accentText: '#091F35',
@@ -67,9 +70,16 @@ export const spookyTheme = {
     ground: darkGround,
     groundSize: 'contain 100px',
     groundHeight: '82px',
+    footerPadding: '28px 15px 0 0',
     barn: darkBarn,
     silo: darkSilo,
     bean: beanWhite,
 };
 
-export const theme = spookyTheme;
+export let theme = normalTheme;
+
+export function changeTheme(t: String) {
+    if (t === 'ropsten') theme = ropstenTheme;
+    else if (t === 'spooky') theme = spookyTheme;
+    else theme = normalTheme;
+}

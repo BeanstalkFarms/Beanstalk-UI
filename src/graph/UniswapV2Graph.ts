@@ -53,23 +53,27 @@ function roundTo4Digits(num) {
 }
 
 export async function dayUniswapQuery() {
-  const data = await client.query({
-    query: gql(DayPoolQuery),
-  });
-  const dates = data.data.tokenDayDatas.reduce((acc, d) => {
-    const date = new Date();
-    date.setTime(d.date * 1000);
-    // date = `${date.getMonth() + 1}/${date.getDate()}`
-    acc.push({
-      x: date,
-      liquidity: roundTo4Digits(parseFloat(d.totalLiquidityUSD) * 2),
-      volume: roundTo4Digits(parseFloat(d.dailyVolumeUSD)),
+  try {
+    const data = await client.query({
+      query: gql(DayPoolQuery),
     });
-    return acc;
-  }, []);
-  dates.pop();
-  dates.pop();
-  return dates.reverse();
+    const dates = data.data.tokenDayDatas.reduce((acc, d) => {
+      const date = new Date();
+      date.setTime(d.date * 1000);
+      // date = `${date.getMonth() + 1}/${date.getDate()}`
+      acc.push({
+        x: date,
+        liquidity: roundTo4Digits(parseFloat(d.totalLiquidityUSD) * 2),
+        volume: roundTo4Digits(parseFloat(d.dailyVolumeUSD)),
+      });
+      return acc;
+    }, []);
+    dates.pop();
+    dates.pop();
+    return dates.reverse();
+  } catch {
+    return [];
+  }
 }
 
 export async function hourUniswapQuery() {

@@ -63,7 +63,7 @@ export const UNI_V2_USDC_ETH_LP = {
   decimals: 18,
 };
 
-export function changeNetwork(chainId) {
+export function changeAddresses(chainId) {
   if (chainId === 1) {
     UNI_V2_USDC_ETH_LP.addr = '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc';
     WETH.addr = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';

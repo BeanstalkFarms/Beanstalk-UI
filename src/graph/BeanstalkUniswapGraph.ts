@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { BEANSTALK_UNI_SUBGRAPH_API_LINK } from '../constants';
+import { BEAN_SUBGRAPH_API_LINK } from '../constants';
 
 const LastCrossQuery = `
 {
@@ -9,15 +9,20 @@ const LastCrossQuery = `
 }`;
 
 const client = new ApolloClient({
-  uri: BEANSTALK_UNI_SUBGRAPH_API_LINK,
+  uri: BEAN_SUBGRAPH_API_LINK,
   cache: new InMemoryCache(),
 });
 
 export async function lastCrossQuery() {
-  const data = await client.query({
-    query: gql(LastCrossQuery),
-  });
-  return data.data.beans[0].lastCross;
+  try {
+    const data = await client.query({
+      query: gql(LastCrossQuery),
+    });
+    return data.data.beans[0].lastCross;
+  } catch (error) {
+    console.error('error fetching last cross.');
+    return 0;
+  }
 }
 
 const PriceQuery = `
@@ -28,23 +33,30 @@ const PriceQuery = `
 }`;
 
 export async function priceQuery() {
-  const data = await client.query({
-    query: gql(PriceQuery),
-  });
-  return parseFloat(data.data.beans[0].price);
+  try {
+    const data = await client.query({
+      query: gql(PriceQuery),
+    });
+    return parseFloat(data.data.beans[0].price);
+  } catch (error) {
+    console.log('error fetching price.');
+    return 0;
+  }
 }
 
 const HourBeanQuery = `
-  {
-    hourDatas(
+query hourDatas($first: Int, $skip: Int) {
+  hourDatas(
+      skip: $skip
+      first: $first,
       orderBy: hourTimestamp,
       orderDirection: desc,
-      first: 1000
     ) {
       id
       hourTimestamp
       totalSupply
       totalSupplyUSD
+      crosses
       price
     }
   }
@@ -61,6 +73,7 @@ const DayBeanQuery = `
       dayTimestamp
       totalSupply
       totalSupplyUSD
+      crosses
       price
     }
   }
@@ -70,41 +83,57 @@ function roundTo4Digits(num) {
   return parseFloat(num.toFixed(4));
 }
 
-export async function hourBeanQuery() {
-  const data = await client.query({
-    query: gql(HourBeanQuery),
+function queryHourData(first: Number, skip: Number): Promise {
+  return client.query({
+      query: gql(HourBeanQuery),
+      variables: { first: first, skip: skip },
   });
-  const dates = data.data.hourDatas.reduce((acc, d) => {
-    const date = new Date();
-    date.setTime(d.hourTimestamp * 1000);
-    acc.push({
-      x: date,
-      totalSupply: roundTo4Digits(parseFloat(d.totalSupply)),
-      totalSupplyUSD: roundTo4Digits(parseFloat(d.totalSupplyUSD)),
-      price: roundTo4Digits(parseFloat(d.price)),
-    });
-    return acc;
-  }, []);
-  dates.splice(dates.length - 16, 16);
-  return dates.reverse();
+}
+
+export async function hourBeanQuery() {
+  try {
+    const [d1, d2, d3] = await Promise.all([queryHourData(1000, 0), queryHourData(1000, 1000), queryHourData(1000, 2000)]);
+    const data = d1.data.hourDatas.concat(d2.data.hourDatas).concat(d3.data.hourDatas);
+    const dates = data.reduce((acc, d) => {
+      const date = new Date();
+      date.setTime(d.hourTimestamp * 1000);
+      acc.push({
+        x: date,
+        totalSupply: roundTo4Digits(parseFloat(d.totalSupply)),
+        totalSupplyUSD: roundTo4Digits(parseFloat(d.totalSupplyUSD)),
+        price: roundTo4Digits(parseFloat(d.price)),
+        crosses: parseInt(d.crosses, 10),
+      });
+      return acc;
+    }, []);
+    dates.splice(dates.length - 1, 1);
+    return dates.reverse();
+  } catch (error) {
+    console.error('error fetching hour data.');
+    return [];
+  }
 }
 
 export async function dayBeanQuery() {
-  const data = await client.query({
-    query: gql(DayBeanQuery),
-  });
-  const dates = data.data.dayDatas.reduce((acc, d) => {
-    const date = new Date();
-    date.setTime(d.dayTimestamp * 1000);
-    acc.push({
-      x: date,
-      totalSupply: roundTo4Digits(parseFloat(d.totalSupply)),
-      totalSupplyUSD: roundTo4Digits(parseFloat(d.totalSupplyUSD)),
-      price: roundTo4Digits(parseFloat(d.price)),
+  try {
+    const data = await client.query({
+      query: gql(DayBeanQuery),
     });
-    return acc;
-  }, []);
-  dates.pop();
-  dates.pop();
-  return dates.reverse();
+    const dates = data.data.dayDatas.reduce((acc, d) => {
+      const date = new Date();
+      date.setTime(d.dayTimestamp * 1000);
+      acc.push({
+        x: date,
+        totalSupply: roundTo4Digits(parseFloat(d.totalSupply)),
+        totalSupplyUSD: roundTo4Digits(parseFloat(d.totalSupplyUSD)),
+        price: roundTo4Digits(parseFloat(d.price)),
+        crosses: parseInt(d.crosses, 10),
+      });
+      return acc;
+    }, []);
+    return dates.reverse();
+  } catch (error) {
+    console.error('error fetching day data.');
+    return [];
+  }
 }
