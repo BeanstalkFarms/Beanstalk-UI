@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { Hidden, Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 import { BEAN, theme } from '../../constants';
-import { displayBN, displayFullBN, TokenLabel } from '../../util';
+import {
+  displayBN,
+  displayFullBN,
+  TokenLabel,
+  TrimBN,
+} from '../../util';
 import {
   BudgetAsset,
   ClaimableAsset,
@@ -69,13 +74,13 @@ export default function BalanceModule(props) {
       .plus(props.lpTransitBalance)
       .plus(props.lpReceivableBalance)
   );
-  const balance = props.beanReceivableBalance.plus(props.harvestablePodBalance);
+  const claimableBalance = props.beanReceivableBalance.plus(props.harvestablePodBalance);
 
   /* Show Claimables */
 
   const claimableBeansSection = (
     <ToggleTokenBalanceModule
-      balance={balance}
+      balance={claimableBalance}
       balanceColor={beanActive === 4 ? color.claimable : null}
       description={props.description.claimableBeanBalance}
       title={`Claimable ${props.showTokenName ? 'Beans' : ''}`}
@@ -163,7 +168,7 @@ export default function BalanceModule(props) {
               <Box>
                 <BalanceChart
                   asset={CryptoAsset.Bean}
-                  claimable={balance}
+                  claimable={claimableBalance}
                   budget={props.budgetBalance}
                   circulating={props.beanBalance}
                   pool={props.beanReserveTotal}
@@ -399,7 +404,7 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
-              balance={props.ethBalance}
+              balance={props.ethBalance.isLessThan(0.0003) ? TrimBN(props.ethBalance, 6) : props.ethBalance}
               description={props.description.ethBalance}
               margin={props.margin}
               placement="bottom"
