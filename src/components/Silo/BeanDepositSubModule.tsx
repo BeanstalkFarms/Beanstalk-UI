@@ -154,7 +154,7 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
         <Box style={{ display: 'inline-block', width: '100%' }}>
           <span>
             {`You will gain ${toStalkValue
-              .dividedBy(props.totalStalk)
+              .dividedBy(props.totalStalk.plus(toStalkValue))
               .multipliedBy(100)
               .toFixed(3)}% ownership of Beanstalk.`}
           </span>
