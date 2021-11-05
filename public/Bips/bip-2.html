@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BIP-2</title>
   <link rel="stylesheet" href="bipStyle.css" />
-  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body class="stackedit">
@@ -18,7 +19,7 @@
 </ul>
 <h3 id="problem">Problem:</h3>
 <p>The current structure of harvest and claim transactions is potentially inefficient from a tax perspective in instances where the funds are immediately redeposited or resown in Beanstalk. Currently, in any harvest or claim, the assets harvested or claimed are first sent to the transacting wallet, and then sent back to Beanstalk. A member of the Beanstalk community with an accounting background suggested this could potentially be viewed as a taxable event.</p>
-<p>The current Weather Changes are suboptimal for the current state of Beanstalk. In general, the Weather Changes are set in a conservative nature: Beanstalk would prefer to regularly pay a higher than necessary interest rate to attract creditors in a timely manner than regularly offer too low of an interest rate, fail to attract creditors, and enter a negative feedback loop. Now, as the price has once again started to oscillate more closely around $1 even with a higher than optimal debt level, it is an appropriate time for Beanstalk to be slightly more aggressive in lowering the Weather when there is steady or increasing demand for Soil with P > 1.</p>
+<p>The current Weather Changes are suboptimal for the current state of Beanstalk. In general, the Weather Changes are set in a conservative nature: Beanstalk would prefer to regularly pay a higher than necessary interest rate to attract creditors in a timely manner than regularly offer too low of an interest rate, fail to attract creditors, and enter a negative feedback loop. Now, as the price has once again started to oscillate more closely around $1 even with a higher than optimal debt level, it is an appropriate time for Beanstalk to be slightly more aggressive in lowering the Weather when there is steady or increasing demand for Soil with \(P > 1\).</p>
 <h3 id="proposed-solution">Proposed Solution:</h3>
 <p>We propose modifications to Beanstalk so that Beans from harvests and claims that are immediately reinvested into Beanstalk no longer touch the transacting wallet.</p>
 <p>We propose the following adjustments to the Beanstalk Weather Changes in the cases when \(P > 1\) and \(R^{D^*} < R^D\):</p>
