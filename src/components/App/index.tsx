@@ -100,6 +100,7 @@ export default function App() {
       component: () => (
         <Silo
           key="silo"
+          beansPerSeason={beansPerSeason}
           poolForLPRatio={poolForLPRatio}
           season={season.season}
           totalLP={totalBalance.totalLP}
@@ -107,7 +108,6 @@ export default function App() {
           {...prices}
           {...totalBalance}
           {...userBalance}
-          beansPerSeason={beansPerSeason}
         />
       )
     },
@@ -117,14 +117,15 @@ export default function App() {
       component: () => (
         <Field
           key="field"
+          beansPerSeason={beansPerSeason}
           beanReserve={prices.beanReserve}
           ethReserve={prices.ethReserve}
+          poolForLPRatio={poolForLPRatio}
           unripenedPods={totalBalance.totalPods}
           updateExpectedPrice={updateExpectedPrice}
           {...prices}
           {...userBalance}
           {...weather}
-          beansPerSeason={beansPerSeason}
         />
       )
     },

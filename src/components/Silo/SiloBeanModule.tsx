@@ -6,8 +6,13 @@ import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN_TO_STALK } from '../../constants';
-import { approveBeanstalkBean, SwapMode } from '../../util';
-import { BaseModule, ListTable, SiloAsset, TransitAsset } from '../Common';
+import { approveBeanstalkBean, MaxBN, SwapMode } from '../../util';
+import {
+  BaseModule,
+  ListTable,
+  SiloAsset,
+  TransitAsset,
+} from '../Common';
 import { BeanClaimSubModule } from './BeanClaimSubModule';
 import { BeanDepositSubModule } from './BeanDepositSubModule';
 import { BeanWithdrawSubModule } from './BeanWithdrawSubModule';
@@ -76,12 +81,21 @@ export default function SiloBeanModule(props) {
         break;
     }
   };
+  let claimLPBeans = new BigNumber(0);
+  if (props.lpReceivableBalance.isGreaterThan(0)) {
+    claimLPBeans = props.poolForLPRatio(props.lpReceivableBalance)[0];
+    const minLPBeans = MaxBN(
+      claimLPBeans.multipliedBy(1 - BASE_SLIPPAGE),
+      new BigNumber(0.25)
+    );
+    claimLPBeans = MaxBN(claimLPBeans.minus(minLPBeans), new BigNumber(0));
+  }
 
   const sections = [
     <BeanDepositSubModule
       key={0}
       beanBalance={props.beanBalance}
-      beanClaimableBalance={props.beanClaimableBalance}
+      beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
       beanReserve={props.beanReserve}
       beanToStalk={BEAN_TO_STALK}
       claimable={props.claimable}

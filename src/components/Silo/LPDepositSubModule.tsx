@@ -222,8 +222,8 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
   const convertibleBeans =
     props.settings.convert && props.settings.mode === SwapMode.BeanEthereum
       ? props.maxFromBeanSiloVal
-      : 0;
-  const claimableBeans = props.settings.claim ? props.maxFromClaimableVal : 0;
+      : new BigNumber(0);
+  const claimableBeans = props.settings.claim ? props.beanClaimableBalance : new BigNumber(0);
   const maxBeans = props.beanBalance
     .plus(convertibleBeans)
     .plus(claimableBeans);
@@ -235,7 +235,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       balance={props.beanBalance.plus(convertibleBeans)}
       buyEth={toBuyEthValue}
       claim={props.settings.claim}
-      claimableBalance={props.maxFromClaimableVal}
+      claimableBalance={props.beanClaimableBalance}
       handleChange={(v) =>
         fromValueUpdated(
           v,

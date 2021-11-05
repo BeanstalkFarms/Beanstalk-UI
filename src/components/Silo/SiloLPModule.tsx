@@ -6,8 +6,18 @@ import { AppState } from 'state';
 import { List as ListIcon } from '@material-ui/icons';
 import { updateBeanstalkBeanAllowance, updateBeanstalkLPAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, LPBEAN_TO_STALK } from '../../constants';
-import { approveBeanstalkBean, approveBeanstalkLP, SwapMode } from '../../util';
-import { ListTable, BaseModule, SiloAsset, TransitAsset } from '../Common';
+import {
+  approveBeanstalkBean,
+  approveBeanstalkLP,
+  MaxBN,
+  SwapMode,
+} from '../../util';
+import {
+  BaseModule,
+  ListTable,
+  SiloAsset,
+  TransitAsset,
+} from '../Common';
 import { LPClaimSubModule } from './LPClaimSubModule';
 import { LPDepositSubModule } from './LPDepositSubModule';
 import { LPWithdrawSubModule } from './LPWithdrawSubModule';
@@ -85,6 +95,16 @@ export default function SiloLPModule(props) {
       setIsFormDisabled(true);
     }
   };
+  let claimLPBeans = new BigNumber(0);
+  if (props.lpReceivableBalance.isGreaterThan(0)) {
+    claimLPBeans = props.poolForLPRatio(props.lpReceivableBalance)[0];
+    const minLPBeans = MaxBN(
+      claimLPBeans.multipliedBy(1 - BASE_SLIPPAGE),
+      new BigNumber(0.25)
+    );
+    claimLPBeans = MaxBN(claimLPBeans.minus(minLPBeans), new BigNumber(0));
+  }
+
   const sections = [
     <LPDepositSubModule
       beanBalance={props.beanBalance}
@@ -101,7 +121,7 @@ export default function SiloLPModule(props) {
       lpBalance={props.lpBalance}
       updateExpectedPrice={props.updateExpectedPrice}
       maxFromBeanSiloVal={props.beanSiloBalance}
-      maxFromClaimableVal={props.beanClaimableBalance}
+      beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
       poolForLPRatio={props.poolForLPRatio}
       ref={depositRef}
       season={props.season}
@@ -117,7 +137,6 @@ export default function SiloLPModule(props) {
       crates={props.lpDeposits}
       hasClaimable={props.hasClaimable}
       locked={section === 1 && props.locked}
-      maxFromClaimableVal={props.beanClaimableBalance}
       maxFromLPVal={props.lpSiloBalance}
       maxFromSeedsVal={props.seedBalance}
       maxFromStalkVal={props.stalkBalance}
