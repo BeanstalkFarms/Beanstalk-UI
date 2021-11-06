@@ -16,13 +16,14 @@ import { Link } from 'react-scroll';
 import InfoIcon from '@material-ui/icons/Info';
 import CheckIcon from '@material-ui/icons/Check';
 import { percentForStalk, vote, unvote } from '../../util';
+import { theme } from '../../constants';
 import { Line, QuestionModule } from '../Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 export default function Vote(props) {
   const classes = makeStyles(() => ({
     inputModule: {
-      backgroundColor: '#F5FAFF',
+      backgroundColor: theme.module.background,
       borderRadius: '25px',
       color: 'black',
       marginTop: '18px',
@@ -52,7 +53,7 @@ export default function Vote(props) {
       fontFamily: 'Futura-PT-Book',
     },
     table: {
-      backgroundColor: '#F5FAFF',
+      backgroundColor: theme.module.background,
       margin: '8px',
       width: 'auto',
     },
@@ -60,7 +61,7 @@ export default function Vote(props) {
       fontFamily: 'Futura-Pt',
     },
     rowSelected: {
-      backgroundColor: '#DAF2FF',
+      backgroundColor: theme.voteSelect,
     },
   }))();
 

@@ -30,6 +30,7 @@ export default function Main(props) {
   return (
     <>
       <Box className="BeanstalkBG" name={theme.name} />
+      <Box className="BeanstalkMT" name={theme.name} style={{ top: '35vh' }} />
       <Box>
         <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
         <Box style={navCloudStyle} />

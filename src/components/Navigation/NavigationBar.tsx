@@ -257,6 +257,8 @@ export default function NavigationBar(props) {
   const beanLogo = (
     <IconButton edge="start" color="inherit" className="App-logo">
       <img
+        className="svg"
+        name={theme.name}
         style={beanLogoFilter}
         height="36px"
         src={BeanLogo}

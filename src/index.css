@@ -17,7 +17,10 @@ html, body {height: 100%;}
 
 body {
   position: relative;
-  background-color: #DAF2FF !important;
+  background-color: #FFF3D1 !important;
+  /* background-color: #DAF2FF !important;  /* original theme */
+  /* background-color: #096A9F !important;  /* halloween theme */
+  /* background-color: #FFF3D1 !important;  /* fall theme */
   margin: 0;
   font-family: 'Futura-PT', 'Futura-PT-Book';
   -webkit-font-smoothing: antialiased;
