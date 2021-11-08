@@ -8,6 +8,14 @@ import Vote from './Vote';
 export default function Governance(props) {
   const [isHidden, setIsHidden] = React.useState(false);
 
+  // Get Item from LocalStorage or isHidden === false
+  React.useEffect(() => {
+    const isHiddenInLocalStorage = JSON.parse(localStorage.getItem('isHidden') || 'false');
+    if (isHidden !== isHiddenInLocalStorage) {
+      setIsHidden(isHiddenInLocalStorage);
+    }
+  }, [isHidden]);
+
   if (props.bips === undefined || props.bips.length === 0) return null;
 
   const activeBipStyle = {
@@ -18,7 +26,7 @@ export default function Governance(props) {
   };
 
   const classes = makeStyles(() => ({
-    formButton: {
+    hideButton: {
       borderRadius: '15px',
       fontFamily: 'Futura-Pt-Book',
       fontSize: 'calc(12px + 1vmin)',
@@ -64,15 +72,16 @@ export default function Governance(props) {
     );
 
   const buttonHandler = () => {
+    localStorage.setItem('isHidden', JSON.stringify(!isHidden));
     setIsHidden(!isHidden);
   };
 
   const hideButton = (
     <Button
-      className={classes.formButton}
+      className={classes.hideButton}
       color="primary"
       onClick={buttonHandler}
-      variant="contained"
+      variant="text"
     >
       {isHidden ? 'SHOW' : 'HIDE'}
     </Button>
@@ -90,8 +99,7 @@ export default function Governance(props) {
       <Link href={`${WHITEPAPER}#governance`} target="blank">
         Read More
       </Link>
-      .
-      {hideButton}
+      .{hideButton}
     </>
   );
 
@@ -106,28 +114,27 @@ export default function Governance(props) {
       <Grid container item xs={12} spacing={3} justifyContent="center">
         {isHidden ? (
           <></>
-          ) : (
-            <Grid
-              container
-              item
-              sm={12}
-              xs={12}
-              alignItems="flex-start"
-              justifyContent="center"
-              style={{ minHeight: '200px' }}
+        ) : (
+          <Grid
+            container
+            item
+            sm={12}
+            xs={12}
+            alignItems="flex-start"
+            justifyContent="center"
+            style={{ minHeight: '200px' }}
           >
-              <Grid item xs={12}>
-                {voteField}
-              </Grid>
-              <Grid item xs={12}>
-                <GovernanceTable
-                  {...props}
-                  style={{ maxWidth: '745px', margin: '0 auto' }}
-              />
-              </Grid>
+            <Grid item xs={12}>
+              {voteField}
             </Grid>
-          )
-        }
+            <Grid item xs={12}>
+              <GovernanceTable
+                {...props}
+                style={{ maxWidth: '745px', margin: '0 auto' }}
+              />
+            </Grid>
+          </Grid>
+        )}
       </Grid>
     </ContentSection>
   );
