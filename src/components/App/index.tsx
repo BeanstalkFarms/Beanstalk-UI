@@ -26,7 +26,6 @@ import {
   setContractEvents
 } from 'state/general/actions';
 import { AppState } from 'state';
-import BeanLogo from '../../img/bean-logo.svg';
 import { lastCrossQuery, apyQuery } from '../../graph';
 import { theme as colorTheme, BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from '../../constants';
 import {
@@ -57,6 +56,7 @@ import Silo from '../Silo';
 import theme from './theme';
 import Trade from '../Trade';
 import Main from './main.tsx';
+import LoadingBean from './LoadingBean.tsx';
 import './App.css';
 
 export default function App() {
@@ -781,20 +781,7 @@ export default function App() {
     app = <MetamasklessModule />;
   } else if (!initialized) {
     const { innerHeight: height } = window;
-    app = (
-      <Box style={{ height: height - 60, overflow: 'hidden' }}>
-        <Box style={{ marginTop: height / 2 - 125 }}>
-          <Box className="Loading-logo">
-            <img
-              style={{ verticalAlign: 'middle' }}
-              height="250px"
-              src={BeanLogo}
-              alt="bean.money"
-            />
-          </Box>
-        </Box>
-      </Box>
-    );
+    app = (<LoadingBean />);
   } else {
     const navMapping = [...defaultNavMapping];
     if (hasActiveBIP) {

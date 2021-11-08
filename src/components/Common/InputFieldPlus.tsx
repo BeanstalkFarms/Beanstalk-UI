@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 import { CryptoAsset, displayBN, MinBN } from '../../util';
+import { BASE_SLIPPAGE } from '../../constants';
 import { TokenInputField } from './index';
 
 export default function InputFieldPlus(props) {
@@ -11,7 +12,15 @@ export default function InputFieldPlus(props) {
     marginTop: '-10px',
   };
 
-  const balance = props.balance.plus(props.claim ? props.claimableBalance : 0);
+  const balance = props.balance.plus(props.claim ? props.claimableBalance : new BigNumber(0));
+
+  const minLPBeans = props.beanLPClaimableBalance.isGreaterThan(0) ?
+    props.beanLPClaimableBalance.multipliedBy(1 - BASE_SLIPPAGE)
+    : new BigNumber(0);
+
+  const maxBalance = minLPBeans.isGreaterThan(1)
+    ? balance.minus(minLPBeans)
+    : balance.minus(props.beanLPClaimableBalance);
 
   const isClaimEnabled = props.claim;
   const parentChangeHandler = props.handleChange;
@@ -36,7 +45,7 @@ export default function InputFieldPlus(props) {
     }
   };
 
-  const maxHandler = () => props.handleChange(balance);
+  const maxHandler = () => props.handleChange(maxBalance);
 
   const tokenInputField = (
     <TokenInputField
@@ -74,6 +83,7 @@ export default function InputFieldPlus(props) {
 
 InputFieldPlus.defaultProps = {
   balance: new BigNumber(-1),
+  beanLPClaimableBalance: new BigNumber(0),
   claim: false,
   claimableBalance: new BigNumber(0),
   buyEth: new BigNumber(0),

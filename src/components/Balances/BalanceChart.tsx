@@ -21,7 +21,7 @@ export default function BalanceChart(props) {
     '#CCEBC5',
     '#DECBE4',
     '#FBB4AE',
-    '#E5D8BD',
+    '#C5AC77',
     '#DEDBDB',
     '#FED9A6',
   ];

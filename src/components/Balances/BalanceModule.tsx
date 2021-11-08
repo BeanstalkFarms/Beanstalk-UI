@@ -26,7 +26,7 @@ export default function BalanceModule(props) {
   const color = {
     circulating: '#B3CDE3',
     pool: '#FBB4AE',
-    claimable: '#E5D8BD',
+    claimable: '#C5AC77',
     silo: '#CCEBC5',
     transit: '#DECBE4',
     budget: '#FED9A6',

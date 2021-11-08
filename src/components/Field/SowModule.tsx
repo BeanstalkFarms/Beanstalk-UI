@@ -82,6 +82,7 @@ export const SowModule = forwardRef((props, ref) => {
       balance={props.beanBalance}
       claim={props.settings.claim}
       claimableBalance={props.beanClaimableBalance}
+      beanLPClaimableBalance={props.beanLPClaimableBalance}
       handleChange={(v) => {
         fromValueUpdated(v, fromEthValue);
       }}

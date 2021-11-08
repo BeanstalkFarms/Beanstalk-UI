@@ -3,11 +3,12 @@ import BigNumber from 'bignumber.js';
 import { IconButton, Box } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { SwapMode } from '../../util';
+import { theme } from '../../constants';
 import { SlippageModule, SwitchModule, UnitSelectionModule } from './index';
 
 export default function SettingsFormModule(props) {
   const rightSettingStyle = {
-    backgroundColor: '#F5FAFF',
+    backgroundColor: theme.module.background,
     borderRadius: '0 10px 10px 0',
     bottom: '0px',
     boxShadow:
@@ -21,7 +22,7 @@ export default function SettingsFormModule(props) {
     zIndex: '-1',
   };
   const bottomSettingStyle = {
-    backgroundColor: '#F5FAFF',
+    backgroundColor: theme.module.background,
     borderRadius: '0 0 10px 10px',
     bottom: '-76px',
     boxShadow:
