@@ -3,15 +3,23 @@ import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { BEAN } from '../../constants';
-import { harvest, toStringBaseUnitBN, TrimBN } from '../../util';
+import {
+  displayBN,
+  harvest,
+  toStringBaseUnitBN,
+  TrimBN,
+} from '../../util';
 import {
   CryptoAsset,
   FarmAsset,
   TokenInputField,
   TokenOutputField,
+  TransactionDetailsModule,
 } from '../Common';
 
 export const HarvestModule = forwardRef((props, ref) => {
+  props.setIsFormDisabled(props.harvestablePodBalance.isLessThanOrEqualTo(0));
+
   /* Input Fields */
 
   const fromPodField = (
@@ -32,8 +40,15 @@ export const HarvestModule = forwardRef((props, ref) => {
     />
   );
 
+  /* Transaction Details, settings and text */
+  const details = [];
+  details.push(`- Harvest ${displayBN(props.harvestablePodBalance)} Pods.`);
+  details.push(`- Immediately receive ${displayBN(
+    props.harvestablePodBalance)} Beans.`
+  );
+
   function transactionDetails() {
-    if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return null;
+    if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
@@ -44,6 +59,7 @@ export const HarvestModule = forwardRef((props, ref) => {
         <Box style={{ display: 'inline-block', width: '100%' }}>
           {toBeanField}
         </Box>
+        <TransactionDetailsModule fields={details} />
       </>
     );
   }

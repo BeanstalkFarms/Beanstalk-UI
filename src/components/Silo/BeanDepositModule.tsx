@@ -13,6 +13,7 @@ import {
 import {
   buyAndDepositBeans,
   depositBeans,
+  displayBN,
   getToAmount,
   MaxBN,
   SwapMode,
@@ -22,20 +23,23 @@ import {
 } from '../../util';
 import {
   CryptoAsset,
+  ClaimTextModule,
   EthInputField,
   FrontrunText,
   InputFieldPlus,
   SettingsFormModule,
   SiloAsset,
   TokenOutputField,
+  TransactionTextModule,
+  TransactionDetailsModule,
 } from '../Common';
 
-export const BeanDepositSubModule = forwardRef((props, ref) => {
+export const BeanDepositModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
-  const [buyBeanValue, setBuyBeanValue] = useState(new BigNumber(0));
-  const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
+  const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
+  const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
 
   function fromValueUpdated(newFromNumber, newFromEthNumber) {
     const buyBeans = getToAmount(
@@ -43,7 +47,7 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
       props.ethReserve,
       props.beanReserve
     );
-    setBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
+    setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
     setFromEthValue(TrimBN(newFromEthNumber, ETH.decimals));
     setFromBeanValue(TrimBN(newFromNumber, BEAN.decimals));
     const depositedBeans = MaxBN(buyBeans, new BigNumber(0)).plus(
@@ -62,7 +66,7 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
 
   /* Input Fields */
 
-  const beanField = (
+  const fromBeanField = (
     <InputFieldPlus
       key={0}
       balance={props.beanBalance}
@@ -77,14 +81,16 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
       visible={props.settings.mode !== SwapMode.Ethereum}
     />
   );
-  const ethField = (
+  const fromEthField = (
     <EthInputField
       key={1}
       balance={props.ethBalance}
-      buyBeans={buyBeanValue}
+      buyBeans={toBuyBeanValue}
       claim={props.settings.claim}
       claimableBalance={props.claimableEthBalance}
-      handleChange={(v) => fromValueUpdated(fromBeanValue, v)}
+      handleChange={(v) => {
+        fromValueUpdated(fromBeanValue, v);
+      }}
       mode={props.settings.mode}
       sellEth={fromEthValue}
       updateExpectedPrice={props.updateExpectedPrice}
@@ -114,13 +120,63 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
     <TokenOutputField
       mint
       token={SiloAsset.Bean}
-      value={MaxBN(buyBeanValue, new BigNumber(0)).plus(
+      value={MaxBN(toBuyBeanValue, new BigNumber(0)).plus(
         MaxBN(fromBeanValue, new BigNumber(0))
       )}
     />
   );
 
   /* Transaction Details, settings and text */
+
+  const details = [];
+  if (props.settings.claim) {
+    details.push(
+      <ClaimTextModule
+        key="claim"
+        balance={
+          props.claimableEthBalance
+            .plus(props.beanReceivableBalance)
+            .plus(props.lpReceivableBalance)
+            .plus(props.harvestablePodBalance)
+        }
+        claim={props.settings.claim}
+        mode={props.settings.mode}
+        claimableEthBalance={props.claimableEthBalance}
+        beanReceivableBalance={props.beanReceivableBalance}
+        lpReceivableBalance={props.lpReceivableBalance}
+        harvestablePodBalance={props.harvestablePodBalance}
+      />
+    );
+  }
+  if (props.settings.mode === SwapMode.Ethereum ||
+      (props.settings.mode === SwapMode.BeanEthereum &&
+        toBuyBeanValue.isGreaterThan(0))
+    ) {
+    details.push(
+      <TransactionTextModule
+        key="buy"
+        balance={toBuyBeanValue}
+        buyBeans={toBuyBeanValue}
+        claim={props.settings.claim}
+        claimableBalance={props.claimableEthBalance}
+        mode={props.settings.mode}
+        sellEth={fromEthValue}
+        updateExpectedPrice={props.updateExpectedPrice}
+        value={TrimBN(fromEthValue, 9)}
+      />
+    );
+  }
+  const beanOutput = MaxBN(
+    toBuyBeanValue,
+    new BigNumber(0)
+  ).plus(MaxBN(fromBeanValue, new BigNumber(0)));
+
+  details.push(`- Deposit ${displayBN(beanOutput)}
+    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`
+  );
+  details.push(`- Immediately receive ${displayBN(
+    new BigNumber(toStalkValue)
+  )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
   const frontrunTextField =
     props.settings.mode !== SwapMode.Bean &&
@@ -137,7 +193,7 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
     />
   );
   function transactionDetails() {
-    if (toStalkValue.isLessThanOrEqualTo(0)) return null;
+    if (toStalkValue.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
@@ -152,10 +208,11 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
         <Box style={{ display: 'inline-block', width: '100%' }}>
           {toSiloBeanField}
         </Box>
-        <Box style={{ display: 'inline-block', width: '100%' }}>
+        <TransactionDetailsModule fields={details} />
+        <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
           <span>
             {`You will gain ${toStalkValue
-              .dividedBy(props.totalStalk.plus(toStalkValue))
+              .dividedBy(props.totalStalk)
               .multipliedBy(100)
               .toFixed(3)}% ownership of Beanstalk.`}
           </span>
@@ -166,7 +223,7 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (toStalkValue.isZero() || toStalkValue.isNegative()) return;
+      if (toStalkValue.isLessThanOrEqualTo(0)) return;
 
       const claimable = props.settings.claim ? props.claimable : null;
       if (fromEthValue.isGreaterThan(0)) {
@@ -176,12 +233,18 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
         ).toString();
         const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
         const buyBeans = toStringBaseUnitBN(
-          buyBeanValue.multipliedBy(props.settings.slippage),
+          toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
-        buyAndDepositBeans(beans, buyBeans, eth, claimable, () => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-        });
+        buyAndDepositBeans(
+          beans,
+          buyBeans,
+          eth,
+          claimable,
+          () => {
+            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          }
+        );
       } else {
         depositBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
@@ -196,8 +259,8 @@ export const BeanDepositSubModule = forwardRef((props, ref) => {
 
   return (
     <>
-      {beanField}
-      {ethField}
+      {fromBeanField}
+      {fromEthField}
       {transactionDetails()}
       {frontrunTextField}
       {showSettings}

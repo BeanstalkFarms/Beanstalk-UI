@@ -77,7 +77,9 @@ export default function SettingsFormModule(props) {
           description="Toggle to convert Deposited Beans into Deposited LP Tokens."
           label="Convert"
           setValue={(value) => {
-            if (props.settings.mode !== SwapMode.BeanEthereum) props.handleMode(SwapMode.BeanEthereum);
+            if (props.settings.mode !== SwapMode.BeanEthereum) {
+              props.handleMode(SwapMode.BeanEthereum);
+            }
             props.setSettings({
               ...props.settings,
               mode: SwapMode.BeanEthereum,

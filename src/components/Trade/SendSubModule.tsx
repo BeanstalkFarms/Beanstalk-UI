@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { BEAN } from '../../constants';
-import { isAddress, MinBN, TrimBN } from '../../util';
-import { AddressInputField, CryptoAsset, TokenInputField } from '../Common';
+import { BASE_ETHERSCAN_ADDR_LINK, BEAN } from '../../constants';
+import {
+  displayBN,
+  isAddress,
+  MinBN,
+  TrimBN,
+} from '../../util';
+import {
+  AddressInputField,
+  CryptoAsset,
+  TokenInputField,
+  TransactionDetailsModule,
+} from '../Common';
 
 export default function SendSubModule(props) {
   const [snappedToAddress, setSnappedToAddress] = useState(false);
@@ -85,10 +95,40 @@ export default function SendSubModule(props) {
     />
   );
 
+  /* Transaction Details, settings and text */
+
+  const details = [];
+  details.push(
+    <span>
+      {`- Send ${displayBN(props.fromBeanValue)} Beans to`}
+      <a
+        href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
+        color="inherit"
+        target="blank"
+      >
+        {`${walletText}`}
+      </a>`.`
+    </span>
+  );
+
+  function transactionDetails() {
+    if (props.fromBeanValue.isLessThanOrEqualTo(0)
+      || props.toAddress.length !== 42
+      || props.isValidAddress !== true
+    ) return null;
+
+    return (
+      <>
+        <TransactionDetailsModule fields={details} />
+      </>
+    );
+  }
+
   return (
     <>
       {toAddressField}
       {fromBeanField}
+      {transactionDetails()}
     </>
   );
 }

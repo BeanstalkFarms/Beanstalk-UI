@@ -14,8 +14,18 @@ import {
   SOIL_MIN_RATIO_CAP,
   theme,
 } from '../../constants';
-import { displayBN, displayFullBN, MaxBN, TrimBN } from '../../util';
-import { Line, DataBalanceModule, Grid, QuestionModule } from '../Common';
+import {
+  displayBN,
+  displayFullBN,
+  MaxBN,
+  TrimBN,
+} from '../../util';
+import {
+  DataBalanceModule,
+  Grid,
+  Line,
+  QuestionModule,
+} from '../Common';
 
 // const cases = [3,1,0,0,-1,-3,-3,0,3,1,0,0,-1,-3,-3,0,3,3,1,0,0,0,-1,0,3,3,1,0,1,0,-1,0]
 

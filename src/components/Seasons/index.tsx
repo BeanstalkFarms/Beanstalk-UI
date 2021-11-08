@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import sunriseIcon from '../../img/black-sun.svg';
 import { sunrise, chainId } from '../../util';
 
-import { ContentSection, Grid, HeaderLabel, SingleButton } from '../Common';
+import {
+  ContentSection,
+  Grid,
+  HeaderLabel,
+  SingleButton,
+} from '../Common';
 import PegMaintenance from './PegMaintenance';
 import SeasonReward from './SeasonReward';
 import SeasonTimer from './SeasonTimer';

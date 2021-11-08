@@ -51,3 +51,7 @@ export default function QuestionModule(props) {
     </Box>
   );
 }
+
+QuestionModule.defaultProps = {
+  fontSize: '8px',
+};
