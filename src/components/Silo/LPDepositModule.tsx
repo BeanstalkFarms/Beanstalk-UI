@@ -25,6 +25,7 @@ import {
   lpForPool,
   MaxBN,
   MinBN,
+  smallDecimalPercent,
   SwapMode,
   tokenForLP,
   TokenLabel,
@@ -227,8 +228,8 @@ export const LPDepositModule = forwardRef((props, ref) => {
   const convertibleBeans =
     props.settings.convert && props.settings.mode === SwapMode.BeanEthereum
       ? props.maxFromBeanSiloVal
-      : 0;
-  const claimableBeans = props.settings.claim ? props.maxFromClaimableVal : 0;
+      : new BigNumber(0);
+  const claimableBeans = props.settings.claim ? props.beanClaimableBalance : new BigNumber(0);
   const maxBeans = props.beanBalance
     .plus(convertibleBeans)
     .plus(claimableBeans);
@@ -240,7 +241,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
       balance={props.beanBalance.plus(convertibleBeans)}
       buyEth={toBuyEthValue}
       claim={props.settings.claim}
-      claimableBalance={props.maxFromClaimableVal}
+      claimableBalance={props.beanClaimableBalance}
       beanLPClaimableBalance={props.beanLPClaimableBalance}
       handleChange={(v) =>
         fromValueUpdated(
@@ -388,7 +389,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
         balance={props.beanBalance.plus(convertibleBeans)}
         buyEth={toBuyEthValue}
         claim={props.settings.claim}
-        claimableBalance={props.maxFromClaimableVal}
+        claimableBalance={props.beanClaimableBalance}
         mode={props.settings.mode}
         sellToken={toSellBeanValue}
         updateExpectedPrice={props.updateExpectedPrice}
@@ -435,7 +436,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
     )} LP Tokens in the Silo`
   );
   details.push(
-    `- Immediately receive ${displayBN(
+    `- Receive ${displayBN(
       new BigNumber(toStalkValue)
     )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`
   );
@@ -459,6 +460,10 @@ export const LPDepositModule = forwardRef((props, ref) => {
       showLP={props.lpBalance.isGreaterThan(0)}
     />
   );
+  const stalkChangePercent = toStalkValue
+    .dividedBy(props.totalStalk.plus(toStalkValue))
+    .multipliedBy(100);
+
   function transactionDetails() {
     if (toStalkValue.isLessThanOrEqualTo(0)) return;
 
@@ -478,10 +483,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
         <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
           <span>
-            {`You will gain ${toStalkValue
-              .dividedBy(props.totalStalk)
-              .multipliedBy(100)
-              .toFixed(3)}% ownership of Beanstalk.`}
+            {`You will gain ${smallDecimalPercent(stalkChangePercent)}% ownership of Beanstalk.`}
           </span>
         </Box>
       </>

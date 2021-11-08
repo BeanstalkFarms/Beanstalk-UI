@@ -27,7 +27,7 @@ export default function ClaimTextModule(props) {
   }
 
   if (claimTextList.length === 1) {
-    claimText = `${claimTextList[0]}.`;
+    claimText = `${claimTextList[0]}`;
   } else {
     /* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
     for (let i = 0; i < claimTextList.length; i++) {

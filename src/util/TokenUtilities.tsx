@@ -190,6 +190,13 @@ export function displayBN(bn: BigNumber) {
   return TrimBN(bn, decimals).toFixed();
 }
 
+export function smallDecimalPercent(bn: BigNumber) {
+  if (bn.isLessThanOrEqualTo(1e-5)) return '<.00001';
+  if (bn.isLessThanOrEqualTo(1e-4)) return bn.toFixed(5);
+  if (bn.isLessThanOrEqualTo(1e-3)) return bn.toFixed(4);
+  return bn.toFixed(3);
+}
+
 export function MinBNs(array): BigNumber {
   return array.reduce((prev, curr) =>
     (prev.isLessThanOrEqualTo(curr) ? prev : curr)

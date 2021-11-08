@@ -11,7 +11,7 @@ export default function InputFieldPlus(props) {
     props.beanLPClaimableBalance.multipliedBy(1 - BASE_SLIPPAGE)
     : new BigNumber(0);
 
-  const maxBalance = minLPBeans.isGreaterThan(1)
+  const maxBalance = minLPBeans.isGreaterThan(0.5)
     ? balance.minus(minLPBeans)
     : balance.minus(props.beanLPClaimableBalance);
 

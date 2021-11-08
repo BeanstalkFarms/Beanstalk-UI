@@ -16,6 +16,7 @@ import {
   displayBN,
   getToAmount,
   MaxBN,
+  smallDecimalPercent,
   SwapMode,
   toBaseUnitBN,
   toStringBaseUnitBN,
@@ -174,7 +175,7 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   details.push(`- Deposit ${displayBN(beanOutput)}
     ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`
   );
-  details.push(`- Immediately receive ${displayBN(
+  details.push(`- Receive ${displayBN(
     new BigNumber(toStalkValue)
   )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
@@ -192,6 +193,10 @@ export const BeanDepositModule = forwardRef((props, ref) => {
       hasSlippage
     />
   );
+  const stalkChangePercent = toStalkValue
+    .dividedBy(props.totalStalk.plus(toStalkValue))
+    .multipliedBy(100);
+
   function transactionDetails() {
     if (toStalkValue.isLessThanOrEqualTo(0)) return;
 
@@ -211,10 +216,7 @@ export const BeanDepositModule = forwardRef((props, ref) => {
         <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
           <span>
-            {`You will gain ${toStalkValue
-              .dividedBy(props.totalStalk)
-              .multipliedBy(100)
-              .toFixed(3)}% ownership of Beanstalk.`}
+            {`You will gain ${smallDecimalPercent(stalkChangePercent)}% ownership of Beanstalk.`}
           </span>
         </Box>
       </>

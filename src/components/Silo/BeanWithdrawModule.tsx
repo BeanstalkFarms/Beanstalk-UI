@@ -8,6 +8,7 @@ import {
   displayBN,
   MinBN,
   MinBNs,
+  smallDecimalPercent,
   toStringBaseUnitBN,
   TrimBN,
   withdrawBeans,
@@ -174,7 +175,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   details.push(`- Withdraw ${displayBN(beanOutput)}
     ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} from the Silo`
   );
-  details.push(`- Immediately burn ${displayBN(
+  details.push(`- Burn ${displayBN(
     new BigNumber(toStalkValue)
   )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
@@ -191,6 +192,10 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
       settings={props.settings}
     />
   ) : null;
+  const stalkChangePercent = toStalkValue
+    .dividedBy(props.totalStalk)
+    .multipliedBy(100);
+
   function transactionDetails() {
     if (fromBeanValue.isLessThanOrEqualTo(0) || props.locked) return;
 
@@ -210,10 +215,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
         <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
           <span>
-            {`You will lose ${toStalkValue
-              .dividedBy(props.totalStalk)
-              .multipliedBy(100)
-              .toFixed(3)}% ownership of Beanstalk.`}
+            {`You will forfeit ${smallDecimalPercent(stalkChangePercent)}% ownership of Beanstalk.`}
           </span>
           <br />
           <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>

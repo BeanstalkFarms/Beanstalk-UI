@@ -109,10 +109,10 @@
     $$
     <p>Then, iterate through the following sequence for \(i \in\{u | u \in  \mathbb{N}, t < u \leq t+8760\)}:</p>
     $$
-    \displaylines{\hat{S_{i}} = \hat{S}_{i-1} + 2\bar{n}^f \\
+    \displaylines{\hat{C_{i}} = \hat{C}_{i-1} + 2\bar{n}^f \\
     \hat{b_{i}} = \hat{b}_{i-1} + \bar{n}^f\frac{\hat{k}_{i-1}}{\hat{K}_{i-1}} \\
     \hat{k}_{i} = \hat{k}_{i-1} + \bar{n}^f\frac{\hat{k}_{i-1}}{\hat{K}_{i-1}} + \frac{1}{5000} \hat{b}_{i-1} \\
-    \hat{K}_{i-1} = \hat{K}_{i} + \bar{n}^h + \frac{1}{10000}\hat{S}_{i-1}}
+    \hat{K}_{i} = \hat{K}_{i-1} + \bar{n}^f + \frac{1}{10000}\hat{C}_{i-1}}
     $$
     <p>Therefore, the we define \(APY^{Silo}_x\) for a given \(x\) and \(\hat{b}_{t+8760}\) as:</p>
     $$
@@ -133,7 +133,7 @@
 
     <p>We define \(\hat{Z}_f\) as:</p>
     $$
-    \hat{Z}_f = \frac{D+w}{\bar{n}^h}
+    \hat{Z}_f = \frac{D+1+w}{\bar{n}^h}
     $$
     <p>Therefore, we define \(APY^{Pod}\) as:</p>
     $$

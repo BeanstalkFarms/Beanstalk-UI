@@ -25,13 +25,13 @@ export default function TransactionDetailsModule(props) {
     fontFamily: 'Futura-PT-Book',
     fontSize: '13px',
     textTransform: 'none',
-    width: '110px',
+    width: '160px',
     textDecorationLine: 'underline',
   };
 
   const buttonText = showTx
-    ? 'Hide Tx Details'
-    : 'Show Tx Details';
+    ? 'Hide Transaction Details'
+    : 'Show Transaction Details';
 
   const showTxField = showTx ? (
     <Box style={transactionStyle}>

@@ -13,6 +13,7 @@ import {
   displayBN,
   MinBN,
   MinBNs,
+  smallDecimalPercent,
   toStringBaseUnitBN,
   TrimBN,
   withdrawLP,
@@ -190,7 +191,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     `- Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
   );
   details.push(
-    `- Immediately burn ${displayBN(
+    `- Burn ${displayBN(
       new BigNumber(toStalkValue)
     )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`
   );
@@ -208,6 +209,10 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       settings={props.settings}
     />
   ) : null;
+  const stalkChangePercent = toStalkValue
+    .dividedBy(props.totalStalk)
+    .multipliedBy(100);
+
   function transactionDetails() {
     if (fromLPValue.isLessThanOrEqualTo(0) || props.locked) return;
 
@@ -227,10 +232,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
         <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
           <span>
-            {`You will lose ${toStalkValue
-              .dividedBy(props.totalStalk)
-              .multipliedBy(100)
-              .toFixed(3)}% ownership of Beanstalk.`}
+            {`You will forfeit ${smallDecimalPercent(stalkChangePercent)}% ownership of Beanstalk.`}
           </span>
           <br />
           <span style={{ color: 'red' }}>
