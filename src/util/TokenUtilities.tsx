@@ -184,7 +184,7 @@ export function displayBN(bn: BigNumber) {
   if (bn.isGreaterThanOrEqualTo(1e9)) return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
   if (bn.isGreaterThanOrEqualTo(1e6)) return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */
   // if (bn.isGreaterThanOrEqualTo(1e3)) return `${TrimBN(bn.dividedBy(1e3), 2)}K`; /* Thousands */
-  if (bn.isGreaterThanOrEqualTo(1e3)) return `${displayFullBN(bn, 0)}`; /* Small Thousands */
+  // if (bn.isGreaterThanOrEqualTo(1e3)) return `${displayFullBN(bn, 0)}`; /* Small Thousands */
 
   const decimals = bn.isGreaterThan(10) ? 2 : bn.isGreaterThan(1) ? 3 : 4;
   return TrimBN(bn, decimals).toFixed();
