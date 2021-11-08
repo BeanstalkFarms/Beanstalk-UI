@@ -8,8 +8,9 @@ function getRandomInt(max: number) {
 export default function FallingLeaves() {
     const width = window.innerWidth;
 
-    function createLeaf() {
+    function createLeaf(i: number) {
       return (<i
+        key={`${i}`}
         className={`${Math.random() < 0.5 ? 'l1' : 'l2'}`}
         style={
           {
@@ -20,7 +21,7 @@ export default function FallingLeaves() {
         }
       />);
     }
-    const leaves = Array(Math.floor(width / 50)).fill(0).map(() => createLeaf());
+    const leaves = Array(Math.floor(width / 50)).fill(0).map((_, i) => createLeaf(i));
 
   return (
     <div id="leaves">
