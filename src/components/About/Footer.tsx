@@ -14,11 +14,14 @@ import { ReactComponent as OpenSeaIcon } from '../../img/opensea-icon.svg';
 // import reddit from '../../img/reddit-icon.svg'
 import { ReactComponent as UniswapIcon } from '../../img/uniswap-logo-black.svg';
 
+// halloween assets
 import PumpkinIcon from '../../img/dark/pumpkin-dark.svg';
 import TombstoneIcon from '../../img/dark/tombstone-dark.svg';
 
+// fall assets
 import TurkeyIcon from '../../img/fall/turkey.svg';
 import FenceIcon from '../../img/fall/fence-fall.svg';
+import fallGround from '../../img/fall/ground-grass.png';
 import { theme } from '../../constants';
 
 import {
@@ -51,6 +54,19 @@ export default function Footer(props) {
       position: 'fixed',
       bottom: '0px',
     },
+    topGround: {
+      backgroundColor: 'transparent',
+      backgroundImage: `url(${fallGround})`,
+      backgroundPosition: '0% 0%',
+      backgroundRepeat: 'repeat',
+      backgroundSize: theme.groundSize,
+      display: theme.groundGrass,
+      alignContent: 'space-around',
+      height: theme.groundHeight,
+      zIndex: -2,
+      position: 'fixed',
+      bottom: '14px',
+    },
   })();
   const width = window.innerWidth;
 
@@ -64,14 +80,6 @@ export default function Footer(props) {
   };
   const closeStyle = {
     padding: theme.footerPadding,
-  };
-  const siloStyle = {
-    bottom: theme.groundItemHeight,
-    height: '15vw',
-    left: 22,
-    minHeight: '155px',
-    position: 'fixed',
-    zIndex: -1,
   };
   const barnStyle = {
     bottom: theme.groundItemHeight,
@@ -150,7 +158,7 @@ export default function Footer(props) {
 
   return (
     <>
-      <img alt="Silo Icon" src={theme.silo} style={siloStyle} />
+      <Grid container className={classes.topGround} justifyContent="center" />
       <img alt="Barn Icon" src={theme.barn} style={barnStyle} />
       {spookyImg}
       {fallImg}

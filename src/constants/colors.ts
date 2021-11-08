@@ -7,14 +7,9 @@ import fallSun from '../img/fall/Sun.svg';
 import ground from '../img/ground.png';
 import darkGround from '../img/dark/ground.png';
 import fallGround from '../img/fall/ground.png';
-// import fallGround from '../img/fall/trial2.png';
-// import fallGround from '../img/fall/trial1.svg';
 import barn from '../img/Barn.svg';
 import darkBarn from '../img/dark/Barn.svg';
-import fallBarn from '../img/fall/barn-fall.svg';
-import silo from '../img/Silo.svg';
-import darkSilo from '../img/dark/Silo.svg';
-import fallSilo from '../img/fall/Silo.svg';
+import fallBarn from '../img/fall/Barn.svg';
 import bean from '../img/bean-bold-logo.svg';
 import beanWhite from '../img/bean-white-logo.svg';
 
@@ -31,6 +26,9 @@ const normalTheme = {
     linkColor: '#3B3B3B',
     footer: '#000000',
     voteSelect: '#DAF2FF',
+    activeSection: 'rgb(14, 136, 55)',
+    navSelection: '#61dafb38',
+    menuColor: 'white',
     module: {
         foreground: '#FFFFFF',
         background: '#F5FAFF',
@@ -44,9 +42,9 @@ const normalTheme = {
     groundSize: 'contain',
     groundHeight: '53px',
     groundItemHeight: '51px',
+    groundGrass: 'none',
     footerPadding: '18px 15px 0 0',
     barn: barn,
-    silo: silo,
     bean: bean,
 };
 
@@ -70,6 +68,7 @@ export const spookyTheme = {
     linkColor: '#9F9F9F',
     footer: '#FF7F00',
     voteSelect: '#091F35',
+    // menuColor: '#FFDDAD',
     module: {
         foreground: '#B4DCEA',
         background: '#96CEE0',
@@ -84,7 +83,6 @@ export const spookyTheme = {
     groundHeight: '82px',
     footerPadding: '28px 15px 0 0',
     barn: darkBarn,
-    silo: darkSilo,
     bean: beanWhite,
 };
 
@@ -101,6 +99,9 @@ export const fallTheme = {
     footer: '#BE4417',
     // voteSelect: '#C29B71',
     voteSelect: '#FFDE97',
+    activeSection: '#BE4417',
+    navSelection: '#FFF3D1',
+    menuColor: '#FFDDAD',
     module: {
         foreground: '#FFE5AD',
         background: '#FFF3D1',
@@ -113,9 +114,9 @@ export const fallTheme = {
     ground: fallGround,
     groundSize: 'contain',
     groundHeight: '82px',
-    groundItemHeight: '69px',
+    groundItemHeight: '81px',
+    groundGrass: 'flex',
     barn: fallBarn,
-    silo: fallSilo,
     bean: beanWhite,
 };
 
