@@ -20,8 +20,8 @@ import {
   TokenLabel,
   TransitAsset,
 } from '../../util';
-import { FormatTooltip, QuestionModule } from '.';
 import { theme } from '../../constants';
+import { FormatTooltip, QuestionModule } from './index';
 
 const useStyles = makeStyles({
   table: {

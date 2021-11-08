@@ -109,7 +109,7 @@ export default function SendModule(props) {
         target="blank"
       >
         {`${walletText}`}
-      </a>.
+      </a>
     </span>
   );
 

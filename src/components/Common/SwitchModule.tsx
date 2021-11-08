@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControlLabel, Switch, Box } from '@material-ui/core';
+import { Box, FormControlLabel, Switch } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import { QuestionModule } from '.';
 

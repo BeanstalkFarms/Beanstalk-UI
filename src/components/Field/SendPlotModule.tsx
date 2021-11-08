@@ -190,7 +190,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
           target="blank"
         >
           {`${walletText}`}
-        </a>.
+        </a>
       </span>
     );
     details.push(`- Send ${firstText === '' ? 'all' : ''}

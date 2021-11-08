@@ -12,8 +12,8 @@ import {
 } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/styles';
 import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from '../../constants';
-import { SingleButton } from '.';
 import { mintNFT } from '../../util';
+import { SingleButton } from './index';
 
 const useStyles = makeStyles({
   table: {
