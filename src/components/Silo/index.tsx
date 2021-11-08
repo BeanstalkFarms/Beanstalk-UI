@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import { AppState } from 'state';
 import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
 import {
@@ -12,8 +11,6 @@ import TabbedSilo from './TabbedSilo';
 import { getAPYs } from '../../util';
 
 export default function Silo() {
-  const zeroBN = new BigNumber(0);
-
   const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
@@ -21,14 +18,6 @@ export default function Silo() {
   const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
-
-  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
-    const endPrice = prices.ethReserve
-      .plus(sellEth)
-      .dividedBy(prices.beanReserve.minus(buyBeans))
-      .dividedBy(prices.usdcPrice);
-    return prices.beanPrice.plus(endPrice).dividedBy(2);
-  };
 
   const headerLabelStyle = {
     maxWidth: '300px',

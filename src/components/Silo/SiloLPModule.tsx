@@ -4,33 +4,73 @@ import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@material-ui/core';
 import { AppState } from 'state';
 import { List as ListIcon } from '@material-ui/icons';
-import { updateBeanstalkBeanAllowance, updateBeanstalkLPAllowance } from 'state/allowances/actions';
+import {
+  updateBeanstalkBeanAllowance,
+  updateBeanstalkLPAllowance,
+} from 'state/allowances/actions';
 import { BASE_SLIPPAGE, LPBEAN_TO_STALK } from '../../constants';
 import {
   approveBeanstalkBean,
   approveBeanstalkLP,
   MaxBN,
   SwapMode,
-  poolForLP
+  poolForLP,
 } from '../../util';
-import {
-  BaseModule,
-  ListTable,
-  SiloAsset,
-  TransitAsset,
-} from '../Common';
+import { BaseModule, ListTable, SiloAsset, TransitAsset } from '../Common';
 import { LPClaimSubModule } from './LPClaimSubModule';
 import { LPDepositSubModule } from './LPDepositSubModule';
 import { LPWithdrawSubModule } from './LPWithdrawSubModule';
 
 export default function SiloLPModule() {
-  const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<AppState, AppState['allowances']>(
-    (state) => state.allowances
-  );
+  const zeroBN = new BigNumber(-1);
+  const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
+    AppState,
+    AppState['allowances']
+  >((state) => state.allowances);
 
-  const { lpBalance, beanBalance, ethBalance, lpReceivableBalance } = useSelector<AppState, AppState['userBalance']>(
+  const {
+    lpBalance,
+    beanBalance,
+    ethBalance,
+    lpReceivableBalance,
+    beanDeposits,
+    claimable,
+    claimableEthBalance,
+    hasClaimable,
+    beanSiloBalance,
+    beanClaimableBalance,
+    lpDeposits,
+    locked,
+    lpSiloBalance,
+    seedBalance,
+    stalkBalance,
+    lpSeedDeposits,
+    lpReceivableCrates,
+    lpWithdrawals,
+    lockedSeasons,
+  } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
+
+  const prices = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
+  const season = useSelector<AppState, AppState['season']>(
+    (state) => state.season
+  );
+
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
+    const endPrice = prices.ethReserve
+      .plus(sellEth)
+      .dividedBy(prices.beanReserve.minus(buyBeans))
+      .dividedBy(prices.usdcPrice);
+    return prices.beanPrice.plus(endPrice).dividedBy(2);
+  };
 
   const poolForLPRatio = (amount: BigNumber) => {
     if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
@@ -76,14 +116,17 @@ export default function SiloLPModule() {
   };
 
   if (settings.mode === null) {
-    if (lpBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.LP }));
-    else if (
-      beanBalance.isGreaterThan(0) &&
-      ethBalance.isGreaterThan(0)
-    ) setSettings((p) => ({ ...p, mode: SwapMode.BeanEthereum }));
-    else if (beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
-    else if (ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    else if (beanBalance.isEqualTo(0) && ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    if (lpBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.LP }));
+    } else if (beanBalance.isGreaterThan(0) && ethBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.BeanEthereum }));
+    } else if (beanBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
+    } else if (ethBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    } else if (beanBalance.isEqualTo(0) && ethBalance.isEqualTo(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    }
   }
 
   const depositRef = useRef<any>();
@@ -123,57 +166,57 @@ export default function SiloLPModule() {
 
   const sections = [
     <LPDepositSubModule
-      beanBalance={props.beanBalance}
-      beanCrates={props.beanDeposits}
-      beanReserve={props.beanReserve}
-      beanToEth={props.ethReserve.dividedBy(props.beanReserve)}
+      beanBalance={beanBalance}
+      beanCrates={beanDeposits}
+      beanReserve={prices.beanReserve}
+      beanToEth={prices.ethReserve.dividedBy(prices.beanReserve)}
       beanToStalk={LPBEAN_TO_STALK}
-      claimable={props.claimable}
-      claimableEthBalance={props.claimableEthBalance}
-      ethBalance={props.ethBalance}
-      ethReserve={props.ethReserve}
-      ethToBean={props.beanReserve.dividedBy(props.ethReserve)}
-      hasClaimable={props.hasClaimable}
-      lpBalance={props.lpBalance}
-      updateExpectedPrice={props.updateExpectedPrice}
-      maxFromBeanSiloVal={props.beanSiloBalance}
-      beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
-      poolForLPRatio={props.poolForLPRatio}
+      claimable={claimable}
+      claimableEthBalance={claimableEthBalance}
+      ethBalance={ethBalance}
+      ethReserve={prices.ethReserve}
+      ethToBean={prices.beanReserve.dividedBy(prices.ethReserve)}
+      hasClaimable={hasClaimable}
+      lpBalance={lpBalance}
+      updateExpectedPrice={updateExpectedPrice}
+      maxFromBeanSiloVal={beanSiloBalance}
+      beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
+      poolForLPRatio={poolForLPRatio}
       ref={depositRef}
-      season={props.season}
+      season={season}
       setIsFormDisabled={setIsFormDisabled}
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalLP={props.totalLP}
-      totalStalk={props.totalStalk}
+      totalLP={totalBalance.totalLP}
+      totalStalk={totalBalance.totalStalk}
     />,
     <LPWithdrawSubModule
-      claimable={props.claimable}
-      crates={props.lpDeposits}
-      hasClaimable={props.hasClaimable}
-      locked={section === 1 && props.locked}
-      maxFromLPVal={props.lpSiloBalance}
-      maxFromSeedsVal={props.seedBalance}
-      maxFromStalkVal={props.stalkBalance}
-      poolForLPRatio={props.poolForLPRatio}
+      claimable={claimable}
+      crates={lpDeposits}
+      hasClaimable={hasClaimable}
+      locked={section === 1 && locked}
+      maxFromLPVal={lpSiloBalance}
+      maxFromSeedsVal={seedBalance}
+      maxFromStalkVal={stalkBalance}
+      poolForLPRatio={poolForLPRatio}
       ref={withdrawRef}
-      season={props.season}
-      seedCrates={props.lpSeedDeposits}
+      season={season}
+      seedCrates={lpSeedDeposits}
       setIsFormDisabled={setIsFormDisabled}
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalLP={props.totalLP}
-      totalStalk={props.totalStalk}
+      totalLP={totalBalance.totalLP}
+      totalStalk={totalBalance.totalStalk}
     />,
   ];
-  if (props.lpReceivableBalance.isGreaterThan(0)) {
+  if (lpReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <LPClaimSubModule
-        crates={props.lpReceivableCrates}
-        maxFromLPVal={props.lpReceivableBalance}
-        poolForLPRatio={props.poolForLPRatio}
+        crates={lpReceivableCrates}
+        maxFromLPVal={lpReceivableBalance}
+        poolForLPRatio={poolForLPRatio}
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
         setSection={setSection}
@@ -188,45 +231,41 @@ export default function SiloLPModule() {
 
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
-  if (
-    props.lpDeposits !== undefined &&
-    Object.keys(props.lpDeposits).length > 0
-  ) {
+  if (lpDeposits !== undefined && Object.keys(lpDeposits).length > 0) {
     sectionsInfo.push(
       <ListTable
         asset={SiloAsset.LP}
-        crates={props.lpDeposits}
+        crates={lpDeposits}
         description="LP Deposits Will Appear Here"
         handleChange={handlePageChange}
         indexTitle="Season"
         isLP
         page={page}
-        poolForLPRatio={props.poolForLPRatio}
-        season={props.season}
-        seedCrates={props.lpSeedDeposits}
+        poolForLPRatio={poolForLPRatio}
+        season={season}
+        seedCrates={lpSeedDeposits}
         title="Deposits"
       />
     );
     sectionTitlesInfo.push('LP Deposits');
   }
   if (
-    (props.lpWithdrawals !== undefined &&
-      Object.keys(props.lpWithdrawals).length > 0) ||
-    props.lpReceivableBalance.isGreaterThan(0)
+    (lpWithdrawals !== undefined && Object.keys(lpWithdrawals).length > 0) ||
+    lpReceivableBalance.isGreaterThan(0)
   ) {
     sectionsInfo.push(
       <ListTable
         asset={TransitAsset.LP}
-        crates={props.lpWithdrawals}
-        claimableBalance={props.lpReceivableBalance}
-        claimableCrates={props.lpReceivableCrates}
+        crates={lpWithdrawals}
+        claimableBalance={lpReceivableBalance}
+        claimableCrates={lpReceivableCrates}
         description="Bean Withdrawals Will Appear Here"
         handleChange={handlePageChange}
-        index={props.season}
+        index={season}
         indexTitle="Seasons to Arrival"
         isLP
         page={page}
-        poolForLPRatio={props.poolForLPRatio}
+        poolForLPRatio={poolForLPRatio}
         title="Withdrawals"
       />
     );
@@ -303,8 +342,8 @@ export default function SiloLPModule() {
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
-        locked={section === 1 && props.locked}
-        lockedSeasons={props.lockedSeasons}
+        locked={section === 1 && locked}
+        lockedSeasons={lockedSeasons}
         mode={settings.mode}
         section={section}
         sectionTitles={sectionTitles}
