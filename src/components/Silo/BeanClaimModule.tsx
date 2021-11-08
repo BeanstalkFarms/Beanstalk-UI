@@ -3,12 +3,13 @@ import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { BEAN } from '../../constants';
-import { claimBeans, TrimBN, displayBN } from '../../util';
+import { claimBeans, displayBN, TrimBN } from '../../util';
 import {
   ClaimableAsset,
   CryptoAsset,
   TokenInputField,
   TokenOutputField,
+  TransactionDetailsModule,
 } from '../Common';
 
 export const BeanClaimModule = forwardRef((props, ref) => {
@@ -35,6 +36,12 @@ export const BeanClaimModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
+  const details = [];
+  details.push(
+    `Claim ${displayBN(
+      new BigNumber(props.maxFromBeanVal)
+    )} Beans from the Silo.`
+  );
 
   function transactionDetails() {
     if (props.maxFromBeanVal.isLessThanOrEqualTo(0)) return;
@@ -45,14 +52,10 @@ export const BeanClaimModule = forwardRef((props, ref) => {
           color="primary"
           style={{ marginBottom: '-14px', width: '100%' }}
         />
-        <Box style={{ display: 'inline-block', width: '100%' }}>{toBeanField}</Box>
         <Box style={{ display: 'inline-block', width: '100%' }}>
-          <span>
-            {`Claim ${displayBN(
-              new BigNumber(props.maxFromBeanVal)
-            )} Beans from the Silo.`}
-          </span>
+          {toBeanField}
         </Box>
+        <TransactionDetailsModule fields={details} />
       </>
     );
   }
