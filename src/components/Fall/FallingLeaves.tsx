@@ -14,13 +14,13 @@ export default function FallingLeaves() {
         style={
           {
             left: `${getRandomInt(width)}px`,
-            animationDuration: `${getRandomInt(40) + 10}s, ${getRandomInt(6) + 3}s`,
+            animationDuration: `${getRandomInt(60) + 10}s, ${getRandomInt(10) + 3}s`,
             animationDelay: `${getRandomInt(30)}s`,
           }
         }
       />);
     }
-    const leaves = Array(Math.floor(width / 30)).fill(0).map(() => createLeaf());
+    const leaves = Array(Math.floor(width / 50)).fill(0).map(() => createLeaf());
 
   return (
     <div id="leaves">
