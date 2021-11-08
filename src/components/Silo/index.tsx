@@ -1,4 +1,7 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import BigNumber from 'bignumber.js';
+import { AppState } from 'state';
 import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
 import {
   ContentSection,
@@ -8,16 +11,34 @@ import {
 import TabbedSilo from './TabbedSilo';
 import { getAPYs } from '../../util';
 
-export default function Silo(props) {
+export default function Silo() {
+  const zeroBN = new BigNumber(0);
+
+  const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
+    (state) => state.beansPerSeason
+  );
+
+  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
+    const endPrice = prices.ethReserve
+      .plus(sellEth)
+      .dividedBy(prices.beanReserve.minus(buyBeans))
+      .dividedBy(prices.usdcPrice);
+    return prices.beanPrice.plus(endPrice).dividedBy(2);
+  };
+
   const headerLabelStyle = {
     maxWidth: '300px',
     color: theme.text,
   };
 
   const [beanAPY, lpAPY] = getAPYs(
-    props.beansPerSeason.farmableWeek,
-    parseFloat(props.totalStalk),
-    parseFloat(props.totalSeeds)
+    beansPerSeason.farmableWeek,
+    parseFloat(totalStalk),
+    parseFloat(totalSeeds)
   );
   const apyField = (
     <Grid container item xs={12} spacing={3} justifyContent="center">
@@ -82,7 +103,7 @@ export default function Silo(props) {
   return (
     <ContentSection id="silo" title="Silo" descriptionLinks={descriptionLinks} description={description}>
       {apyField}
-      <TabbedSilo {...props} />
+      <TabbedSilo />
     </ContentSection>
   );
 }

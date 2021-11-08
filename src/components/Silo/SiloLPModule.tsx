@@ -11,6 +11,7 @@ import {
   approveBeanstalkLP,
   MaxBN,
   SwapMode,
+  poolForLP
 } from '../../util';
 import {
   BaseModule,
@@ -22,10 +23,25 @@ import { LPClaimSubModule } from './LPClaimSubModule';
 import { LPDepositSubModule } from './LPDepositSubModule';
 import { LPWithdrawSubModule } from './LPWithdrawSubModule';
 
-export default function SiloLPModule(props) {
+export default function SiloLPModule() {
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<AppState, AppState['allowances']>(
     (state) => state.allowances
   );
+
+  const { lpBalance, beanBalance, ethBalance, lpReceivableBalance } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
+  const poolForLPRatio = (amount: BigNumber) => {
+    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    return poolForLP(
+      amount,
+      prices.beanReserve,
+      prices.ethReserve,
+      totalBalance.totalLP
+    );
+  };
+
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [settings, setSettings] = useState({
@@ -60,14 +76,14 @@ export default function SiloLPModule(props) {
   };
 
   if (settings.mode === null) {
-    if (props.lpBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.LP }));
+    if (lpBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.LP }));
     else if (
-      props.beanBalance.isGreaterThan(0) &&
-      props.ethBalance.isGreaterThan(0)
+      beanBalance.isGreaterThan(0) &&
+      ethBalance.isGreaterThan(0)
     ) setSettings((p) => ({ ...p, mode: SwapMode.BeanEthereum }));
-    else if (props.beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
-    else if (props.ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    else if (beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
+    else if (ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    else if (beanBalance.isEqualTo(0) && ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
   }
 
   const depositRef = useRef<any>();
@@ -96,8 +112,8 @@ export default function SiloLPModule(props) {
     }
   };
   let claimLPBeans = new BigNumber(0);
-  if (props.lpReceivableBalance.isGreaterThan(0)) {
-    claimLPBeans = props.poolForLPRatio(props.lpReceivableBalance)[0];
+  if (lpReceivableBalance.isGreaterThan(0)) {
+    claimLPBeans = poolForLPRatio(lpReceivableBalance)[0];
     const minLPBeans = MaxBN(
       claimLPBeans.multipliedBy(1 - BASE_SLIPPAGE),
       new BigNumber(0.25)
