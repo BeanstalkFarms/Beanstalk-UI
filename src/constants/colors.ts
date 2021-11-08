@@ -89,8 +89,8 @@ export const spookyTheme = {
 export const fallTheme = {
     ...normalTheme,
     name: 'fall',
-    text: '#5e3c0f',
-    backgroundText: '#5e3c0f',
+    text: 'black',
+    backgroundText: 'black',
     primary: '#E9983C',
     accentColor: '#815925',
     accentText: '#FFFFFF',

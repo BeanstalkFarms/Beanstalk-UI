@@ -33,7 +33,7 @@ export default function Main(props) {
       <Box className="BeanstalkBG" name={theme.name} />
       <Box className="BeanstalkMT" name={theme.name} style={{ top: '35vh' }} />
       <Box>
-        <FallingLeaves />
+        {theme.name === 'fall' ? <FallingLeaves /> : null}
         <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
         <Box style={navCloudStyle} />
         {props.children}

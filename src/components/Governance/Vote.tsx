@@ -48,9 +48,13 @@ export default function Vote(props) {
     },
     cell: {
       fontFamily: 'Futura-PT',
+      borderColor: theme.accentColor,
+      color: theme.accentColor,
     },
     cellTitle: {
       fontFamily: 'Futura-PT-Book',
+      borderColor: theme.accentColor,
+      color: theme.accentColor,
     },
     table: {
       backgroundColor: theme.module.background,
