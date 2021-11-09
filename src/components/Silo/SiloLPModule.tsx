@@ -12,7 +12,6 @@ import { BASE_SLIPPAGE, LPBEAN_TO_STALK } from '../../constants';
 import {
   approveBeanstalkBean,
   approveBeanstalkLP,
-  MaxBN,
   SwapMode,
   poolForLP,
 } from '../../util';
@@ -154,15 +153,9 @@ export default function SiloLPModule() {
       setIsFormDisabled(true);
     }
   };
-  let claimLPBeans = new BigNumber(0);
-  if (lpReceivableBalance.isGreaterThan(0)) {
-    claimLPBeans = poolForLPRatio(lpReceivableBalance)[0];
-    const minLPBeans = MaxBN(
-      claimLPBeans.multipliedBy(1 - BASE_SLIPPAGE),
-      new BigNumber(0.25)
-    );
-    claimLPBeans = MaxBN(claimLPBeans.minus(minLPBeans), new BigNumber(0));
-  }
+  const claimLPBeans = lpReceivableBalance.isGreaterThan(0) ?
+    poolForLPRatio(lpReceivableBalance)[0]
+    : new BigNumber(0);
 
   const sections = [
     <LPDepositSubModule
@@ -182,6 +175,7 @@ export default function SiloLPModule() {
       maxFromBeanSiloVal={beanSiloBalance}
       beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
       poolForLPRatio={poolForLPRatio}
+      beanLPClaimableBalance={claimLPBeans}
       ref={depositRef}
       season={season}
       setIsFormDisabled={setIsFormDisabled}

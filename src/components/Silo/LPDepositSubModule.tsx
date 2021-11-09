@@ -236,6 +236,7 @@ export const LPDepositSubModule = forwardRef((props, ref) => {
       buyEth={toBuyEthValue}
       claim={props.settings.claim}
       claimableBalance={props.beanClaimableBalance}
+      beanLPClaimableBalance={props.beanLPClaimableBalance}
       handleChange={(v) =>
         fromValueUpdated(
           v,

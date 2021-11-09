@@ -61,10 +61,10 @@ export default function NavigationBar(props) {
       textDecoration: 'none',
     },
     activeLinkText: {
-      backgroundColor: '#61dafb38',
+      backgroundColor: theme.navSelection,
     },
     activeAboutLinkText: {
-      backgroundColor: '#61dafb38',
+      backgroundColor: theme.navSelection,
       borderRadius: '16px',
       padding: '12px 18px',
       textDecoration: 'none',
@@ -125,7 +125,7 @@ export default function NavigationBar(props) {
 
   const linkItemStyle = (path) =>
     (path === 'governance'
-      ? { color: 'rgb(14, 136, 55)' }
+      ? { color: theme.activeSection }
       : null);
 
   const mobileNavigation = (
@@ -161,6 +161,7 @@ export default function NavigationBar(props) {
           <Grow
             {...TransitionProps}
             style={{
+              backgroundColor: theme.menuColor,
               transformOrigin:
                 placement === 'bottom' ? 'center top' : 'center bottom',
             }}
@@ -255,6 +256,8 @@ export default function NavigationBar(props) {
   const beanLogo = (
     <IconButton edge="start" color="inherit" className="App-logo">
       <img
+        className="svg"
+        name={theme.name}
         style={beanLogoFilter}
         height="36px"
         src={BeanLogo}

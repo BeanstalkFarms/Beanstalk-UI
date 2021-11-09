@@ -54,6 +54,8 @@ export function Chart(props) {
       <Box style={loadingStyle}>
         <Box className="Loading-logo">
           <img
+            className="svg"
+            name={colorTheme.name}
             style={{ verticalAlign: 'middle' }}
             height="100px"
             src={BeanLogo}

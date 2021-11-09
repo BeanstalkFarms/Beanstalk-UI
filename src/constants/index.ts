@@ -9,6 +9,6 @@ export * from './colors';
 
 export function changeNetwork(chainId) {
     changeAddresses(chainId);
-    if (chainId === 1) changeTheme('normal');
+    if (chainId === 1) changeTheme('fall');
     if (chainId === 3) changeTheme('ropsten');
 }

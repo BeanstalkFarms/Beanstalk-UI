@@ -6,7 +6,7 @@ import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN_TO_STALK } from '../../constants';
-import { approveBeanstalkBean, MaxBN, SwapMode, poolForLP } from '../../util';
+import { approveBeanstalkBean, SwapMode, poolForLP } from '../../util';
 import {
   BaseModule,
   ListTable,
@@ -137,15 +137,9 @@ export default function SiloBeanModule() {
         break;
     }
   };
-  let claimLPBeans = new BigNumber(0);
-  if (lpReceivableBalance.isGreaterThan(0)) {
-    claimLPBeans = poolForLPRatio(lpReceivableBalance)[0];
-    const minLPBeans = MaxBN(
-      claimLPBeans.multipliedBy(1 - BASE_SLIPPAGE),
-      new BigNumber(0.25)
-    );
-    claimLPBeans = MaxBN(claimLPBeans.minus(minLPBeans), new BigNumber(0));
-  }
+  const claimLPBeans = lpReceivableBalance.isGreaterThan(0) ?
+    poolForLPRatio(lpReceivableBalance)[0]
+    : new BigNumber(0);
 
   const sections = [
     <BeanDepositSubModule
@@ -153,6 +147,7 @@ export default function SiloBeanModule() {
       beanBalance={beanBalance}
       beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
       beanReserve={prices.beanReserve}
+      beanLPClaimableBalance={claimLPBeans}
       beanToStalk={BEAN_TO_STALK}
       claimable={claimable}
       claimableEthBalance={claimableEthBalance}

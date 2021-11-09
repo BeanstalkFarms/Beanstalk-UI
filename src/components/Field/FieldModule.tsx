@@ -6,7 +6,7 @@ import ListIcon from '@material-ui/icons/List';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from '../../constants';
-import { approveBeanstalkBean, MaxBN, SwapMode } from '../../util';
+import { approveBeanstalkBean, SwapMode } from '../../util';
 import {
   BaseModule,
   CryptoAsset,
@@ -78,15 +78,9 @@ export default function FieldModule(props) {
     }
   };
 
-  let claimLPBeans = new BigNumber(0);
-  if (props.lpReceivableBalance.isGreaterThan(0)) {
-    claimLPBeans = props.poolForLPRatio(props.lpReceivableBalance)[0];
-    const minLPBeans = MaxBN(
-      claimLPBeans.multipliedBy(1 - BASE_SLIPPAGE),
-      new BigNumber(0.25)
-    );
-    claimLPBeans = MaxBN(claimLPBeans.minus(minLPBeans), new BigNumber(0));
-  }
+  const claimLPBeans = props.lpReceivableBalance.isGreaterThan(0) ?
+    props.poolForLPRatio(props.lpReceivableBalance)[0]
+    : new BigNumber(0);
 
   const sections = [
     <SowModule
@@ -94,6 +88,7 @@ export default function FieldModule(props) {
       unripenedPods={props.unripenedPods}
       beanBalance={props.beanBalance}
       beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
+      beanLPClaimableBalance={claimLPBeans}
       beanReserve={props.beanReserve}
       claimable={props.claimable}
       claimableEthBalance={props.claimableEthBalance}

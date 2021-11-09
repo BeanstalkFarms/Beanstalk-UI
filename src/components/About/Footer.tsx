@@ -14,9 +14,14 @@ import { ReactComponent as OpenSeaIcon } from '../../img/opensea-icon.svg';
 // import reddit from '../../img/reddit-icon.svg'
 import { ReactComponent as UniswapIcon } from '../../img/uniswap-logo-black.svg';
 
+// halloween assets
 import PumpkinIcon from '../../img/dark/pumpkin-dark.svg';
-import FenceIcon from '../../img/dark/fence-dark.svg';
 import TombstoneIcon from '../../img/dark/tombstone-dark.svg';
+
+// fall assets
+import TurkeyIcon from '../../img/fall/turkey.svg';
+import FenceIcon from '../../img/fall/fence-fall.svg';
+import fallGround from '../../img/fall/ground-grass.png';
 import { theme } from '../../constants';
 
 import {
@@ -49,6 +54,19 @@ export default function Footer(props) {
       position: 'fixed',
       bottom: '0px',
     },
+    topGround: {
+      backgroundColor: 'transparent',
+      backgroundImage: `url(${fallGround})`,
+      backgroundPosition: '0% 0%',
+      backgroundRepeat: 'repeat',
+      backgroundSize: theme.groundSize,
+      display: theme.groundGrass,
+      alignContent: 'space-around',
+      height: theme.groundHeight,
+      zIndex: -2,
+      position: 'fixed',
+      bottom: '14px',
+    },
   })();
   const width = window.innerWidth;
 
@@ -63,25 +81,17 @@ export default function Footer(props) {
   const closeStyle = {
     padding: theme.footerPadding,
   };
-  const siloStyle = {
-    bottom: '51px',
-    height: '15vw',
-    left: 22,
-    minHeight: '155px',
-    position: 'fixed',
-    zIndex: -1,
-  };
   const barnStyle = {
-    bottom: '51px',
+    bottom: theme.groundItemHeight,
     height: '15vw',
     left: 10,
     minHeight: '135px',
     position: 'fixed',
     zIndex: -1,
   };
-  const pumpkinStyle = width > 650 ?
+  const itemStyle = width > 650 ?
     {
-      bottom: '51px',
+      bottom: theme.groundItemHeight,
       height: '5vw',
       left: '80%',
       minHeight: '75px',
@@ -91,9 +101,9 @@ export default function Footer(props) {
     : {
       display: 'none',
     };
-  const rightPumpkinStyle = width > 850 ?
+  const rightItemStyle = width > 850 ?
     {
-      bottom: '51px',
+      bottom: theme.groundItemHeight,
       height: '3vw',
       left: 'calc(80% + 4.4vw)',
       minHeight: '55px',
@@ -116,20 +126,42 @@ export default function Footer(props) {
     : {
       display: 'none',
     };
+    const miscStyle = width > 650 ?
+      {
+        bottom: theme.groundItemHeight,
+        height: '5vw',
+        maxHeight: '100px',
+        left: '60%',
+        minHeight: '55px',
+        position: 'fixed',
+        zIndex: -1,
+      }
+      : {
+        display: 'none',
+      };
 
   const spookyImg = theme.name === 'spooky' ?
     <>
-    <img alt="Tombstone Icon" src={TombstoneIcon} style={tombstoneStyle} />
-    <img alt="Pumkpin Icon" src={PumpkinIcon} style={pumpkinStyle} />
-    <img alt="Pumkpin Icon" src={PumpkinIcon} style={rightPumpkinStyle} />
+      <img alt="Tombstone Icon" src={TombstoneIcon} style={tombstoneStyle} />
+      <img alt="Pumkpin Icon" src={PumpkinIcon} style={itemStyle} />
+      <img alt="Pumkpin Icon" src={PumpkinIcon} style={rightItemStyle} />
+    </>
+    : null;
+
+  const fallImg = theme.name === 'fall' ?
+    <>
+      <img alt="Fence Icon" src={FenceIcon} style={miscStyle} />
+      <img alt="Turkey Icon" src={TurkeyIcon} style={itemStyle} />
+      <img alt="Turkey Icon" src={TurkeyIcon} style={rightItemStyle} />
     </>
     : null;
 
   return (
     <>
-      <img alt="Silo Icon" src={theme.silo} style={siloStyle} />
+      <Grid container className={classes.topGround} justifyContent="center" />
       <img alt="Barn Icon" src={theme.barn} style={barnStyle} />
       {spookyImg}
+      {fallImg}
       <Grid container className={classes.fixedGround} justifyContent="center">
         <Grid item style={closeStyle}>
           <Link href={TWITTER_LINK} color="inherit" target="blank">
