@@ -1,13 +1,8 @@
 import React from 'react';
 import { claim, updateSilo } from '../../util';
-import {
-  ClaimableAsset,
-  Grid,
-  SingleButton,
-  TokenBalanceModule,
-} from '../Common';
+import { ClaimableAsset, Grid, SingleButton } from '../Common';
 
-export default function ClaimableBalance(props) {
+export default function ClaimButton(props) {
   const showButton = (
     <Grid container item xs={12}>
       <Grid
@@ -41,34 +36,16 @@ export default function ClaimableBalance(props) {
     </Grid>
   );
 
-  if (props.userClaimable && props.balance.isGreaterThan(0)) {
-    return (
-      <Grid container item justifyContent="center">
-        <Grid container item xs={12} justifyContent="center">
-          <Grid item sm={9} xs={10}>
-            <TokenBalanceModule
-              balance={props.balance}
-              claimPadding
-              description={props.description}
-              token={props.asset}
-              widthTooltip={props.widthTooltip}
-            />
-          </Grid>
-        </Grid>
-        {showButton}
-      </Grid>
-    );
-  }
   return (
-    <Grid container item justifyContent="center">
+    <Grid container item>
+      {props.children}
       {showButton}
     </Grid>
   );
 }
 
-ClaimableBalance.defaultProps = {
+ClaimButton.defaultProps = {
   margin: 'inherit',
-  userClaimable: 0,
   claimTitle: 'Claim',
   buttonDescription: 'Claim all Withdrawals, Harvestable Pods and ETH',
 };

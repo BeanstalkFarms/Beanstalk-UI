@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import {
+  Box,
   Link,
   Table,
   TableBody,
@@ -8,12 +9,11 @@ import {
   TableContainer,
   TablePagination,
   TableRow,
-  Box,
 } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/styles';
 import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from '../../constants';
-import { SingleButton } from '.';
 import { mintNFT } from '../../util';
+import { SingleButton } from './index';
 
 const useStyles = makeStyles({
   table: {

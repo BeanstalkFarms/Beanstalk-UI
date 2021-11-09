@@ -1,9 +1,12 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 import { MIN_BALANCE } from '../../constants';
-import { displayBN, CryptoAsset, MinBN, SwapMode } from '../../util';
-import { TokenInputField } from './index';
+import {
+  CryptoAsset,
+  MinBN,
+  SwapMode,
+} from '../../util';
+import { TokenInputField } from '.';
 
 export default function EthInputField(props) {
   if (
@@ -13,12 +16,7 @@ export default function EthInputField(props) {
     return null;
   }
 
-  const textStyle = {
-    // fontSize: '12px',
-    fontFamily: 'Futura-PT-Book',
-    marginTop: '-5px',
-  };
-
+  // const balance = props.balance
   const { balance } = props;
 
   const maxBalance = balance.isGreaterThan(MIN_BALANCE)
@@ -35,15 +33,6 @@ export default function EthInputField(props) {
 
   const maxHandler = () => props.handleChange(maxBalance);
 
-  const textTransaction = `Buying About ${displayBN(props.buyBeans)} Beans ${
-    props.sellEth !== undefined ? `with ${props.sellEth.toFixed(3)} ETH ` : null
-  }for ${props
-    .updateExpectedPrice(
-      props.sellEth !== undefined ? props.sellEth : props.value,
-      props.buyBeans
-    )
-    .toFixed(2)} Each`;
-
   return (
     <>
       <TokenInputField
@@ -53,11 +42,8 @@ export default function EthInputField(props) {
         token={CryptoAsset.Ethereum}
         value={props.value}
       />
-      {props.buyBeans.isGreaterThan(0) ? (
-        <Box style={textStyle}>{textTransaction}</Box>
-      ) : null}
     </>
-  );
+ );
 }
 
 EthInputField.defaultProps = {
