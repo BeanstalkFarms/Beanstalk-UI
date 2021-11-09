@@ -11,7 +11,8 @@ export default function Seasons(props) {
   const nextSeasonTime = props.start.plus(
     props.season.plus(1).multipliedBy(props.period)
   );
-  const timeUntilSunrise = (deadline) => parseInt(deadline, 10) - Date.now() / 1e3;
+  const timeUntilSunrise = (deadline) =>
+    parseInt(deadline, 10) - Date.now() / 1e3;
 
   const timer = useRef();
   const [time, setTime] = useState(timeUntilSunrise(nextSeasonTime));
@@ -57,7 +58,7 @@ export default function Seasons(props) {
       id="seasons"
       title="Seasons"
       size="20px"
-      style={{ minHeight: '600px' }}
+      style={{ minHeight: '600px', marginBottom: '40px' }}
     >
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid

@@ -63,6 +63,7 @@ import Silo from '../Silo';
 import theme from './theme';
 import Trade from '../Trade';
 import Main from './main.tsx';
+import Governance from '../Governance';
 import LoadingBean from './LoadingBean.tsx';
 import './App.css';
 
@@ -102,24 +103,20 @@ export default function App() {
 
   const defaultNavMapping = [
     {
-      path: 'silo',
-      title: 'SILO',
-    },
-    {
-      path: 'field',
-      title: 'FIELD',
-    },
-    {
-      path: 'trade',
-      title: 'TRADE',
-    },
-    {
-      path: 'nft',
-      title: 'BeaNFTs',
+      path: 'farm',
+      title: 'FARM',
     },
     {
       path: 'analytics',
       title: 'ANALYTICS',
+    },
+    {
+      path: 'dao',
+      title: 'DAO',
+    },
+    {
+      path: 'nft',
+      title: 'BeaNFTs',
     },
     {
       path: 'about',
@@ -720,16 +717,9 @@ export default function App() {
     app = <MetamasklessModule />;
   } else if (!initialized) {
     const { innerHeight: height } = window;
-    app = (<LoadingBean />);
+    app = <LoadingBean />;
   } else {
     const navMapping = [...defaultNavMapping];
-    if (hasActiveBIP) {
-      navMapping.splice(5, 0, {
-        path: 'governance',
-        title: 'BIPs',
-        component: () => <></>,
-      });
-    }
     app = (
       <>
         <NavigationBar
@@ -742,44 +732,32 @@ export default function App() {
         />
         <Switch>
           <Route exact path="/">
-            <Redirect to="/silo"/>
+            <Redirect to="/silo" />
           </Route>
-          <Route exact path="/silo">
-            <Silo />
-          </Route>
-          <Route exact path="/field">
-            <Field
-              key="field"
-              beansPerSeason={beansPerSeason}
-              beanReserve={prices.beanReserve}
-              ethReserve={prices.ethReserve}
-              poolForLPRatio={poolForLPRatio}
-              unripenedPods={totalBalance.totalPods}
-              updateExpectedPrice={updateExpectedPrice}
-              {...prices}
-              {...userBalance}
-              {...weather}
-            />
-          </Route>
-          <Route exact path="/trade">
-            <Trade
-              key="trade"
-              lastCross={lastCross}
-              poolForLPRatio={poolForLPRatio}
-              {...prices}
-              {...totalBalance}
-              {...userBalance}
-            />
-          </Route>
-          <Route exact path="/nft">
-            <NFTs
-              key="beanft"
-              {...prices}
-              {...totalBalance}
-              {...season}
-              {...userBalance}
-              {...weather}
-            />
+          <Route exact path="/farm">
+            <>
+              <Silo />
+              <Field
+                key="field"
+                beansPerSeason={beansPerSeason}
+                beanReserve={prices.beanReserve}
+                ethReserve={prices.ethReserve}
+                poolForLPRatio={poolForLPRatio}
+                unripenedPods={totalBalance.totalPods}
+                updateExpectedPrice={updateExpectedPrice}
+                {...prices}
+                {...userBalance}
+                {...weather}
+              />
+              <Trade
+                key="trade"
+                lastCross={lastCross}
+                poolForLPRatio={poolForLPRatio}
+                {...prices}
+                {...totalBalance}
+                {...userBalance}
+              />
+            </>
           </Route>
           <Route exact path="/analytics">
             <Analytics
@@ -793,6 +771,26 @@ export default function App() {
               ethReserve={prices.ethReserve}
               unripenedPods={totalBalance.totalPods}
               updateExpectedPrice={updateExpectedPrice}
+              {...prices}
+              {...totalBalance}
+              {...season}
+              {...userBalance}
+              {...weather}
+            />
+          </Route>
+          <Route exact path="/dao">
+            <Governance
+              key="governance"
+              bips={bips}
+              season={season.season}
+              totalRoots={totalBalance.totalRoots}
+              userRoots={userBalance.rootsBalance}
+              votedBips={userBalance.votedBips}
+            />
+          </Route>
+          <Route exact path="/nft">
+            <NFTs
+              key="beanft"
               {...prices}
               {...totalBalance}
               {...season}

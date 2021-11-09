@@ -3,7 +3,6 @@ import { ContentSection } from '../Common';
 import Balances from '../Balances';
 import Charts from '../Charts';
 import Seasons from '../Seasons';
-import Governance from '../Governance';
 
 export default function Analytics(props) {
   return (
@@ -13,14 +12,6 @@ export default function Analytics(props) {
         <Charts />
         <Seasons {...props} />
       </ContentSection>
-      <Governance
-        key="governance"
-        bips={props.bips}
-        season={props.season}
-        totalRoots={props.totalRoots}
-        userRoots={props.userRoots}
-        votedBips={props.votedBips}
-    />
     </>
   );
 }
