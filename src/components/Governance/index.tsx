@@ -1,20 +1,36 @@
 import React from 'react';
 import { Link, Box, Button, makeStyles } from '@material-ui/core';
-import { WHITEPAPER } from '../../constants';
-import { ContentSection, Grid } from '../Common';
+import { setHideShowState } from 'state/hideShowHandler/actions';
+import { AppState } from 'state';
+import { useDispatch, useSelector } from 'react-redux';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
+import { ContentSection, Grid } from '../Common';
+import { WHITEPAPER } from '../../constants';
 
 export default function Governance(props) {
-  const [isHidden, setIsHidden] = React.useState(false);
+  const dispatch = useDispatch();
 
-  // Get Item from LocalStorage or isHidden === false
+  const hideShowState = useSelector<AppState, AppState['hideShowHandler']>(
+    (state) => state.hideShowHandler
+  );
+
+  // Get Item from LocalStorage or hideShowState.isGovernanceHidden === false
   React.useEffect(() => {
-    const isHiddenInLocalStorage = JSON.parse(localStorage.getItem('isHidden') || 'false');
-    if (isHidden !== isHiddenInLocalStorage) {
-      setIsHidden(isHiddenInLocalStorage);
+    console.log('state', hideShowState.isGovernanceHidden);
+    const isHiddenInLocalStorage = JSON.parse(
+      localStorage.getItem('isGovernanceHidden') || 'false'
+    );
+
+    if (hideShowState.isGovernanceHidden !== isHiddenInLocalStorage) {
+      dispatch(
+        setHideShowState({
+          isGovernanceHidden: isHiddenInLocalStorage,
+        })
+      );
     }
-  }, [isHidden]);
+  // eslint-disable-next-line
+  }, [hideShowState.isGovernanceHidden]);
 
   if (props.bips === undefined || props.bips.length === 0) return null;
 
@@ -72,8 +88,16 @@ export default function Governance(props) {
     );
 
   const buttonHandler = () => {
-    localStorage.setItem('isHidden', JSON.stringify(!isHidden));
-    setIsHidden(!isHidden);
+    localStorage.setItem(
+      'isGovernanceHidden',
+      JSON.stringify(!hideShowState.isGovernanceHidden)
+    );
+    dispatch(
+      setHideShowState({
+        isGovernanceHidden: !hideShowState.isGovernanceHidden,
+      })
+    );
+    console.log('click', hideShowState.isGovernanceHidden);
   };
 
   const hideButton = (
@@ -83,11 +107,11 @@ export default function Governance(props) {
       onClick={buttonHandler}
       variant="text"
     >
-      {isHidden ? 'SHOW' : 'HIDE'}
+      {hideShowState.isGovernanceHidden ? 'SHOW' : 'HIDE'}
     </Button>
   );
 
-  const description = isHidden ? (
+  const description = hideShowState.isGovernanceHidden ? (
     <>{hideButton}</>
   ) : (
     <>
@@ -112,7 +136,7 @@ export default function Governance(props) {
       description={description}
     >
       <Grid container item xs={12} spacing={3} justifyContent="center">
-        {isHidden ? (
+        {hideShowState.isGovernanceHidden ? (
           <></>
         ) : (
           <Grid

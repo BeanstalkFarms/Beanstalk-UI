@@ -14,9 +14,10 @@ export default function ContentTitle(props) {
           width: props.width,
         },
     })();
+
     return (
       <Box className={classes.sectionTitle}>
-        <TitleLabel style={{ color: theme.backgroundText }} size={props.size} textTransform={props.textTransform}>
+        <TitleLabel style={{ color: theme.backgroundText, cursor: 'pointer' }} size={props.size} textTransform={props.textTransform}>
           {props.title}
         </TitleLabel>
       </Box>
