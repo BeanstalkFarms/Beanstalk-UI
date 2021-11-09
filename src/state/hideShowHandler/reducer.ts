@@ -1,12 +1,24 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { setHideShowState } from './actions';
 
+const isHiddenInLocalStorage = JSON.parse(
+  localStorage.getItem('isHidden') || 'false'
+);
+console.log('isHiddenInLocalStorage', isHiddenInLocalStorage);
 export interface hideShowState {
-    isGovernanceHidden: Boolean;
+  silo: Boolean;
+  field: Boolean;
+  trade: Boolean;
+  nft: Boolean;
+  governance: Boolean;
 }
 
 export const initialState: hideShowState = {
-  isGovernanceHidden: false,
+  governance: isHiddenInLocalStorage.governance,
+  trade: isHiddenInLocalStorage.trade,
+  nft: isHiddenInLocalStorage.nft,
+  silo: isHiddenInLocalStorage.silo,
+  field: isHiddenInLocalStorage.field,
 };
 
 export default createReducer(initialState, (builder) =>

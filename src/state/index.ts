@@ -30,8 +30,6 @@ const store = configureStore({
   ],
 });
 
-console.log('store', store);
-
 export default store;
 
 export type AppState = ReturnType<typeof store.getState>;

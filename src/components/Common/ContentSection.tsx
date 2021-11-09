@@ -1,10 +1,19 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { setHideShowState } from 'state/hideShowHandler/actions';
+import { AppState } from 'state';
 import { ContentTitle } from './index';
 import { theme } from '../../constants';
 
 export default function ContentSection(props) {
+  const dispatch = useDispatch();
+
+  const hideShowState = useSelector<AppState, AppState['hideShowHandler']>(
+    (state) => state.hideShowHandler
+  );
+
   const classes = makeStyles({
     appSection: {
       padding: props.padding,
@@ -15,6 +24,15 @@ export default function ContentSection(props) {
       color: theme.backgroundText,
     },
   })();
+
+  const handleHideShowSection = (id) => {
+    console.log('id', id);
+    dispatch(
+      setHideShowState({
+        [id]: !hideShowState[id],
+      })
+    );
+  };
 
   const { innerWidth: width } = window;
   const descriptionSection = props.description !== undefined ?
@@ -49,7 +67,9 @@ export default function ContentSection(props) {
         className={classes.appSection}
         justifyContent="center"
       >
-        <ContentTitle {...props} />
+        <Box onClick={() => { handleHideShowSection(props.id); }}>
+          <ContentTitle {...props} />
+        </Box>
         {descriptionSection}
         {props.children}
       </Grid>

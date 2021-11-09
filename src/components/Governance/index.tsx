@@ -15,23 +15,6 @@ export default function Governance(props) {
     (state) => state.hideShowHandler
   );
 
-  // Get Item from LocalStorage or hideShowState.isGovernanceHidden === false
-  React.useEffect(() => {
-    console.log('state', hideShowState.isGovernanceHidden);
-    const isHiddenInLocalStorage = JSON.parse(
-      localStorage.getItem('isGovernanceHidden') || 'false'
-    );
-
-    if (hideShowState.isGovernanceHidden !== isHiddenInLocalStorage) {
-      dispatch(
-        setHideShowState({
-          isGovernanceHidden: isHiddenInLocalStorage,
-        })
-      );
-    }
-  // eslint-disable-next-line
-  }, [hideShowState.isGovernanceHidden]);
-
   if (props.bips === undefined || props.bips.length === 0) return null;
 
   const activeBipStyle = {
@@ -88,16 +71,11 @@ export default function Governance(props) {
     );
 
   const buttonHandler = () => {
-    localStorage.setItem(
-      'isGovernanceHidden',
-      JSON.stringify(!hideShowState.isGovernanceHidden)
-    );
     dispatch(
       setHideShowState({
-        isGovernanceHidden: !hideShowState.isGovernanceHidden,
+        governance: !hideShowState.governance,
       })
     );
-    console.log('click', hideShowState.isGovernanceHidden);
   };
 
   const hideButton = (
@@ -107,11 +85,11 @@ export default function Governance(props) {
       onClick={buttonHandler}
       variant="text"
     >
-      {hideShowState.isGovernanceHidden ? 'SHOW' : 'HIDE'}
+      {hideShowState.governance ? 'SHOW' : 'HIDE'}
     </Button>
   );
 
-  const description = hideShowState.isGovernanceHidden ? (
+  const description = hideShowState.governance ? (
     <>{hideButton}</>
   ) : (
     <>
@@ -136,7 +114,7 @@ export default function Governance(props) {
       description={description}
     >
       <Grid container item xs={12} spacing={3} justifyContent="center">
-        {hideShowState.isGovernanceHidden ? (
+        {hideShowState.governance ? (
           <></>
         ) : (
           <Grid
