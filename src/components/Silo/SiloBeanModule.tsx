@@ -48,7 +48,7 @@ export default function SiloBeanModule() {
   );
 
   const season = useSelector<AppState, AppState['season']>(
-    (state) => state.season
+    (state) => state.season.season
   );
 
   const prices = useSelector<AppState, AppState['prices']>(

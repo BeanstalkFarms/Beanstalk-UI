@@ -56,7 +56,7 @@ export default function SiloLPModule() {
   );
 
   const season = useSelector<AppState, AppState['season']>(
-    (state) => state.season
+    (state) => state.season.season
   );
 
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
