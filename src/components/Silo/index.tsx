@@ -15,7 +15,7 @@ export default function Silo() {
     (state) => state.totalBalance
   );
 
-  const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
+  const { farmableWeek } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
 
@@ -25,7 +25,7 @@ export default function Silo() {
   };
 
   const [beanAPY, lpAPY] = getAPYs(
-    beansPerSeason.farmableWeek,
+    farmableWeek,
     parseFloat(totalStalk),
     parseFloat(totalSeeds)
   );
