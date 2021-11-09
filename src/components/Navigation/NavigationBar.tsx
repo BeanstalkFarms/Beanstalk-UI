@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import {
   AppBar,
   Button,
@@ -17,7 +18,6 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Link } from 'react-scroll';
 import BeanLogo from '../../img/bean-logo.svg';
 import { chainId } from '../../util';
 import WalletModule from './WalletModule';
@@ -57,6 +57,8 @@ export default function NavigationBar(props) {
     linkPadding: {
       borderRadius: '16px',
       padding: '12px 18px',
+      color: 'black',
+      textDecoration: 'none',
     },
     activeLinkText: {
       backgroundColor: '#61dafb38',
@@ -65,6 +67,7 @@ export default function NavigationBar(props) {
       backgroundColor: '#61dafb38',
       borderRadius: '16px',
       padding: '12px 18px',
+      textDecoration: 'none',
     },
     currentPriceStyle: {
       color: 'black',
@@ -172,17 +175,13 @@ export default function NavigationBar(props) {
                       className={classes.linkText}
                       style={linkItemStyle(path)}
                     >
-                      <Link
-                        duration={450}
+                      <NavLink
                         to={path}
-                        onClick={handleClose}
-                        activeClass={classes.activeLinkText}
+                        activeClassName={classes.activeLinkText}
                         className={classes.linkPadding}
-                        spy
-                        smooth
                       >
                         {title}
-                      </Link>
+                      </NavLink>
                     </MenuItem>
                   ))}
                 </MenuList>
@@ -207,10 +206,9 @@ export default function NavigationBar(props) {
           className={classes.linkText}
           style={linkItemStyle(path)}
         >
-          <Link
+          <NavLink
             to={path}
-            duration={450}
-            activeClass={isScrolledToBottom ? null : classes.activeLinkText}
+            activeClassName={classes.activeLinkText}
             className={
               path === props.links[props.links.length - 1].path && isScrolledToBottom
                 ? classes.activeAboutLinkText
@@ -220,7 +218,7 @@ export default function NavigationBar(props) {
             smooth
           >
             {title}
-          </Link>
+          </NavLink>
         </ListItem>
       ))}
       {props.showWallet ?

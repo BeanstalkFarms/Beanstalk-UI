@@ -6,7 +6,7 @@ import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN_TO_STALK } from '../../constants';
-import { approveBeanstalkBean, MaxBN, SwapMode } from '../../util';
+import { approveBeanstalkBean, MaxBN, SwapMode, poolForLP } from '../../util';
 import {
   BaseModule,
   ListTable,
@@ -17,10 +17,48 @@ import { BeanClaimSubModule } from './BeanClaimSubModule';
 import { BeanDepositSubModule } from './BeanDepositSubModule';
 import { BeanWithdrawSubModule } from './BeanWithdrawSubModule';
 
-export default function SiloBeanModule(props) {
+export default function SiloBeanModule() {
+  const zeroBN = new BigNumber(-1);
   const { beanstalkBeanAllowance } = useSelector<AppState, AppState['allowances']>(
     (state) => state.allowances
   );
+
+  const {
+    beanBalance,
+    ethBalance,
+    lpReceivableBalance,
+    beanDeposits,
+    claimable,
+    claimableEthBalance,
+    hasClaimable,
+    beanSiloBalance,
+    beanClaimableBalance,
+    locked,
+    seedBalance,
+    stalkBalance,
+    lockedSeasons,
+    beanReceivableBalance,
+    beanReceivableCrates,
+    farmableBeanBalance,
+    farmableStalkBalance,
+    rawBeanDeposits,
+    beanWithdrawals,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
+  const season = useSelector<AppState, AppState['season']>(
+    (state) => state.season
+  );
+
+  const prices = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [settings, setSettings] = useState({
@@ -31,6 +69,16 @@ export default function SiloBeanModule(props) {
   const [page, setPage] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
+
+  const poolForLPRatio = (amount: BigNumber) => {
+    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    return poolForLP(
+      amount,
+      prices.beanReserve,
+      prices.ethReserve,
+      totalBalance.totalLP
+    );
+  };
 
   const sectionTitles = ['Deposit', 'Withdraw'];
   const sectionTitlesDescription = [
@@ -58,10 +106,18 @@ export default function SiloBeanModule(props) {
   };
 
   if (settings.mode === null) {
-    if (props.beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
-    else if (props.ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    if (beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
+    else if (ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    else if (beanBalance.isEqualTo(0) && ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
   }
+
+  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
+    const endPrice = prices.ethReserve
+      .plus(sellEth)
+      .dividedBy(prices.beanReserve.minus(buyBeans))
+      .dividedBy(prices.usdcPrice);
+    return prices.beanPrice.plus(endPrice).dividedBy(2);
+  };
 
   const depositRef = useRef<any>();
   const withdrawRef = useRef<any>();
@@ -82,8 +138,8 @@ export default function SiloBeanModule(props) {
     }
   };
   let claimLPBeans = new BigNumber(0);
-  if (props.lpReceivableBalance.isGreaterThan(0)) {
-    claimLPBeans = props.poolForLPRatio(props.lpReceivableBalance)[0];
+  if (lpReceivableBalance.isGreaterThan(0)) {
+    claimLPBeans = poolForLPRatio(lpReceivableBalance)[0];
     const minLPBeans = MaxBN(
       claimLPBeans.multipliedBy(1 - BASE_SLIPPAGE),
       new BigNumber(0.25)
@@ -94,47 +150,47 @@ export default function SiloBeanModule(props) {
   const sections = [
     <BeanDepositSubModule
       key={0}
-      beanBalance={props.beanBalance}
-      beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
-      beanReserve={props.beanReserve}
+      beanBalance={beanBalance}
+      beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
+      beanReserve={prices.beanReserve}
       beanToStalk={BEAN_TO_STALK}
-      claimable={props.claimable}
-      claimableEthBalance={props.claimableEthBalance}
-      ethBalance={props.ethBalance}
-      ethReserve={props.ethReserve}
-      hasClaimable={props.hasClaimable}
+      claimable={claimable}
+      claimableEthBalance={claimableEthBalance}
+      ethBalance={ethBalance}
+      ethReserve={prices.ethReserve}
+      hasClaimable={hasClaimable}
       ref={depositRef}
       setIsFormDisabled={setIsFormDisabled}
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalStalk={props.totalStalk}
-      updateExpectedPrice={props.updateExpectedPrice}
+      totalStalk={totalBalance.totalStalk}
+      updateExpectedPrice={updateExpectedPrice}
     />,
     <BeanWithdrawSubModule
       key={1}
-      claimable={props.claimable}
-      crates={props.beanDeposits}
-      hasClaimable={props.hasClaimable}
-      locked={section === 1 && props.locked}
-      maxFromBeanVal={props.beanSiloBalance}
-      maxFromSeedsVal={props.seedBalance}
-      maxFromStalkVal={props.stalkBalance}
+      claimable={claimable}
+      crates={beanDeposits}
+      hasClaimable={hasClaimable}
+      locked={section === 1 && locked}
+      maxFromBeanVal={beanSiloBalance}
+      maxFromSeedsVal={seedBalance}
+      maxFromStalkVal={stalkBalance}
       ref={withdrawRef}
-      season={props.season}
+      season={season}
       setIsFormDisabled={setIsFormDisabled}
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalStalk={props.totalStalk}
+      totalStalk={totalBalance.totalStalk}
     />,
   ];
-  if (props.beanReceivableBalance.isGreaterThan(0)) {
+  if (beanReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <BeanClaimSubModule
         key={2}
-        crates={props.beanReceivableCrates}
-        maxFromBeansVal={props.beanReceivableBalance}
+        crates={beanReceivableCrates}
+        maxFromBeansVal={beanReceivableBalance}
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
         setSection={setSection}
@@ -150,41 +206,41 @@ export default function SiloBeanModule(props) {
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
   if (
-    props.beanDeposits !== undefined &&
-    Object.keys(props.beanDeposits).length > 0
+    beanDeposits !== undefined &&
+    Object.keys(beanDeposits).length > 0
   ) {
     sectionsInfo.push(
       <ListTable
         asset={SiloAsset.Bean}
         description="Bean Deposits Will Appear Here"
-        claimableBalance={props.farmableBeanBalance}
-        claimableStalk={props.farmableStalkBalance.plus(
-          props.farmableBeanBalance
+        claimableBalance={farmableBeanBalance}
+        claimableStalk={farmableStalkBalance.plus(
+          farmableBeanBalance
         )}
-        crates={props.rawBeanDeposits}
+        crates={rawBeanDeposits}
         handleChange={handlePageChange}
         indexTitle="Season"
         page={page}
-        season={props.season}
+        season={season}
         title="Deposits"
       />
     );
     sectionTitlesInfo.push('Bean Deposits');
   }
   if (
-    (props.beanWithdrawals !== undefined &&
-      Object.keys(props.beanWithdrawals).length > 0) ||
-    props.beanReceivableBalance.isGreaterThan(0)
+    (beanWithdrawals !== undefined &&
+      Object.keys(beanWithdrawals).length > 0) ||
+    beanReceivableBalance.isGreaterThan(0)
   ) {
     sectionsInfo.push(
       <ListTable
         asset={TransitAsset.Bean}
-        crates={props.beanWithdrawals}
-        claimableBalance={props.beanReceivableBalance}
-        claimableCrates={props.beanReceivableCrates}
+        crates={beanWithdrawals}
+        claimableBalance={beanReceivableBalance}
+        claimableCrates={beanReceivableCrates}
         description="Bean Withdrawals Will Appear Here"
         handleChange={handlePageChange}
-        index={props.season}
+        index={season}
         indexTitle="Seasons to Arrival"
         page={page}
         title="Withdrawals"
@@ -251,8 +307,8 @@ export default function SiloBeanModule(props) {
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
-        locked={section === 1 && props.locked}
-        lockedSeasons={props.lockedSeasons}
+        locked={section === 1 && locked}
+        lockedSeasons={lockedSeasons}
         mode={settings.mode}
         section={section}
         sectionTitles={sectionTitles}

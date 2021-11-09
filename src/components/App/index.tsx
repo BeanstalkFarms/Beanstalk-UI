@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import ReactDOM from 'react-dom';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CssBaseline, Box } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
@@ -104,93 +104,26 @@ export default function App() {
     {
       path: 'silo',
       title: 'SILO',
-      component: () => (
-        <Silo
-          key="silo"
-          beansPerSeason={beansPerSeason}
-          poolForLPRatio={poolForLPRatio}
-          season={season.season}
-          totalLP={totalBalance.totalLP}
-          updateExpectedPrice={updateExpectedPrice}
-          {...prices}
-          {...totalBalance}
-          {...userBalance}
-        />
-      ),
     },
     {
       path: 'field',
       title: 'FIELD',
-      component: () => (
-        <Field
-          key="field"
-          beansPerSeason={beansPerSeason}
-          beanReserve={prices.beanReserve}
-          ethReserve={prices.ethReserve}
-          poolForLPRatio={poolForLPRatio}
-          unripenedPods={totalBalance.totalPods}
-          updateExpectedPrice={updateExpectedPrice}
-          {...prices}
-          {...userBalance}
-          {...weather}
-        />
-      ),
     },
     {
       path: 'trade',
       title: 'TRADE',
-      component: () => (
-        <Trade
-          key="trade"
-          lastCross={lastCross}
-          poolForLPRatio={poolForLPRatio}
-          {...prices}
-          {...totalBalance}
-          {...userBalance}
-        />
-      ),
     },
     {
       path: 'nft',
       title: 'BeaNFTs',
-      component: () => (
-        <NFTs
-          key="beanft"
-          {...prices}
-          {...totalBalance}
-          {...season}
-          {...userBalance}
-          {...weather}
-        />
-      ),
     },
     {
       path: 'analytics',
       title: 'ANALYTICS',
-      component: () => (
-        <Analytics
-          key="analytics"
-          bips={bips}
-          hasActiveBIP={hasActiveBIP}
-          poolForLPRatio={poolForLPRatio}
-          userRoots={userBalance.rootsBalance}
-          votedBips={userBalance.votedBips}
-          beanReserve={prices.beanReserve}
-          ethReserve={prices.ethReserve}
-          unripenedPods={totalBalance.totalPods}
-          updateExpectedPrice={updateExpectedPrice}
-          {...prices}
-          {...totalBalance}
-          {...season}
-          {...userBalance}
-          {...weather}
-        />
-      ),
     },
     {
       path: 'about',
       title: 'ABOUT',
-      component: () => <About key="about" />,
     },
   ];
 
@@ -822,27 +755,78 @@ export default function App() {
         />
         <Switch>
           <Route exact path="/">
-            {navMapping.map((navItem, index) => (
-              <Box key={index}>{navItem.component()}</Box>
-            ))}
+            <Redirect to="/silo"/>
           </Route>
           <Route exact path="/silo">
             <Silo />
+          </Route>
+          <Route exact path="/field">
+            <Field
+              key="field"
+              beansPerSeason={beansPerSeason}
+              beanReserve={prices.beanReserve}
+              ethReserve={prices.ethReserve}
+              poolForLPRatio={poolForLPRatio}
+              unripenedPods={totalBalance.totalPods}
+              updateExpectedPrice={updateExpectedPrice}
+              {...prices}
+              {...userBalance}
+              {...weather}
+            />
+          </Route>
+          <Route exact path="/trade">
+            <Trade
+              key="trade"
+              lastCross={lastCross}
+              poolForLPRatio={poolForLPRatio}
+              {...prices}
+              {...totalBalance}
+              {...userBalance}
+            />
+          </Route>
+          <Route exact path="/nft">
+            <NFTs
+              key="beanft"
+              {...prices}
+              {...totalBalance}
+              {...season}
+              {...userBalance}
+              {...weather}
+            />
+          </Route>
+          <Route exact path="/analytics">
+            <Analytics
+              key="analytics"
+              bips={bips}
+              hasActiveBIP={hasActiveBIP}
+              poolForLPRatio={poolForLPRatio}
+              userRoots={userBalance.rootsBalance}
+              votedBips={userBalance.votedBips}
+              beanReserve={prices.beanReserve}
+              ethReserve={prices.ethReserve}
+              unripenedPods={totalBalance.totalPods}
+              updateExpectedPrice={updateExpectedPrice}
+              {...prices}
+              {...totalBalance}
+              {...season}
+              {...userBalance}
+              {...weather}
+            />
+          </Route>
+          <Route exact path="/about">
+            <About key="about" />
           </Route>
         </Switch>
       </>
     );
   }
 
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
       <Box className="App">
-        <Main>
-          { app }
-        </Main>
+        <Main>{app}</Main>
       </Box>
     </ThemeProvider>
   );
