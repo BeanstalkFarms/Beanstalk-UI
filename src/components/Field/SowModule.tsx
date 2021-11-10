@@ -166,16 +166,16 @@ export const SowModule = forwardRef((props, ref) => {
     .plus(MaxBN(fromBeanValue, new BigNumber(0)));
 
   if (toBuyBeanValue.plus(fromBeanValue).isEqualTo(props.soil)) {
-    details.push(`- Sow maximum Soil ${displayBN(beanOutput)}
+    details.push(`Sow maximum Soil ${displayBN(beanOutput)}
       ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather`
     );
   } else {
-    details.push(`- Sow ${displayBN(beanOutput)}
+    details.push(`Sow ${displayBN(beanOutput)}
       ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather`
     );
   }
 
-  details.push(`- Receive ${displayBN(toPodValue)} Pods at #${displayBN(
+  details.push(`Receive ${displayBN(toPodValue)} Pods at #${displayBN(
     props.unripenedPods
   )} in the Pod line`);
 

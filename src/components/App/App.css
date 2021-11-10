@@ -240,6 +240,12 @@
     max-width: 480px;
     justify-content: center;
   }
+  .claimTextField-header {
+    font-size: 13px;
+  }
+  .claimTextField-content {
+    font-size: 13px;
+  }
 }
 
 /* For medium screens */
@@ -264,6 +270,12 @@
     right: 0px;
     padding-right: 15px;
   }
+  .claimTextField-header {
+    font-size: 13px;
+  }
+  .claimTextField-content {
+    font-size: 13px;
+  }
 }
 
 /* For small screens */
@@ -284,7 +296,7 @@
     padding-right: 20px;
   }
   .claimTextField-header {
-    width: 85px;
+    margin-left: -10px;
   }
   .claimTextField-content {
     width: 50px;
@@ -299,14 +311,11 @@
     width: 44%;
   }
   .claimTextField-header {
-    width: 80px;
-    /* text-align: center; */
-    font-size: 13px;
+    font-size: 12px;
   }
   .claimTextField-content {
     width: 45px;
-    /* text-align: center; */
-    font-size: 13px;
+    font-size: 12px;
   }
 }
 
@@ -330,12 +339,13 @@
     font-size: 12px;
   }
   .claimTextField-header {
-    width: 65px;
-    font-size: 12px;
+    font-size: 11px;
+    margin-bottom: 1px;
   }
   .claimTextField-content {
     width: 35px;
-    font-size: 12px;
+    font-size: 11px;
+    margin-bottom: 1px;
   }
 }
 

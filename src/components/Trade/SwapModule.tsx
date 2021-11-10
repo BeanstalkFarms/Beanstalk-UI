@@ -159,12 +159,12 @@ export default function SwapModule(props) {
     ? `Buy ${displayBN(
         props.toValue.multipliedBy(props.settings.slippage)
       )} ${TokenLabel(props.toToken)} with ${props.fromValue.toFixed(
-        3
+        4
       )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
         4
       )} each`
     : `Buy ${props.toValue.toFixed(
-        3
+        4
       )} ${TokenLabel(props.toToken)} with ${displayBN(
         props.fromValue
       )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(

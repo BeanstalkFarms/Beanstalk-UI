@@ -363,14 +363,17 @@ export const LPDepositModule = forwardRef((props, ref) => {
       />
     );
     details.push(
-      `- Add ${displayLP(
+      `Add ${displayLP(
         MaxBN(fromBeanValue, new BigNumber(0)).plus(
           MaxBN(toBuyBeanValue, new BigNumber(0))
         ),
         MaxBN(fromEthValue, new BigNumber(0)).minus(
           MaxBN(toSellEthValue, new BigNumber(0))
         )
-      )} to the BEAN:ETH pool in exchange for ${displayBN(
+      )} to the BEAN:ETH pool`
+    );
+    details.push(
+      `Receive ${displayBN(
         new BigNumber(toSiloLPValue.minus(MaxBN(fromLPValue, new BigNumber(0))))
       )} LP Tokens`
     );
@@ -397,12 +400,15 @@ export const LPDepositModule = forwardRef((props, ref) => {
       />
     );
     details.push(
-      `- Add ${displayLP(
+      `Add ${displayLP(
         MaxBN(fromBeanValue, new BigNumber(0)).minus(
           MaxBN(toSellBeanValue, new BigNumber(0))
         ),
         MaxBN(fromEthValue, toBuyEthValue)
-      )} to the BEAN:ETH pool in exchange for ${displayBN(
+      )} to the BEAN:ETH pool`
+    );
+    details.push(
+      `Receive ${displayBN(
         new BigNumber(toSiloLPValue.minus(MaxBN(fromLPValue, new BigNumber(0))))
       )} LP Tokens`
     );
@@ -421,22 +427,25 @@ export const LPDepositModule = forwardRef((props, ref) => {
     fromEthValue.isGreaterThan(0)
   ) {
     details.push(
-      `- Add ${displayLP(
+      `Add ${displayLP(
         MaxBN(fromBeanValue, new BigNumber(0)),
         MaxBN(fromEthValue, new BigNumber(0))
-      )} to the BEAN:ETH pool in exchange for ${displayBN(
+      )} to the BEAN:ETH pool`
+    );
+    details.push(
+      `Receive ${displayBN(
         new BigNumber(toSiloLPValue.minus(MaxBN(fromLPValue, new BigNumber(0))))
       )} LP Tokens`
     );
   }
 
   details.push(
-    `- Deposit ${displayBN(
+    `Deposit ${displayBN(
       new BigNumber(toSiloLPValue).plus(MinBN(fromLPValue, new BigNumber(0)))
     )} LP Tokens in the Silo`
   );
   details.push(
-    `- Receive ${displayBN(
+    `Receive ${displayBN(
       new BigNumber(toStalkValue)
     )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`
   );

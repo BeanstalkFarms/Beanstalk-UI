@@ -172,10 +172,10 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   }
   const beanOutput = new BigNumber(fromBeanValue);
 
-  details.push(`- Withdraw ${displayBN(beanOutput)}
+  details.push(`Withdraw ${displayBN(beanOutput)}
     ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} from the Silo`
   );
-  details.push(`- Burn ${displayBN(
+  details.push(`Burn ${displayBN(
     new BigNumber(toStalkValue)
   )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 

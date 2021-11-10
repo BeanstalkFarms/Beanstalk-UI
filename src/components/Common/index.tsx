@@ -138,6 +138,7 @@ export const claimableStrings = {
   eth: 'Claimable ETH includes total Claimable ETH from LP Withdrawals and/or Seasons of Plenty.',
   farmableBeans: 'Farmable Beans are deposited in a specific season the next time you interact with the Silo.',
   farmableStalk: 'Farmable Stalk are deposited in a specific season the next time you interact with the Silo.',
+  farmableSeeds: 'Farmable Seeds are deposited in a specific season the next time you interact with the Silo.',
   grownStalk: 'Stalk grown from previously claimed Seeds that does not earn interest until it is farmed.',
   farm: 'Stalk grown from previously claimed Seeds does not earn interest until it is farmed. Use this button to farm Grown Stalk.',
 };

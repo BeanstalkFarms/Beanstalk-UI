@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
-import { BASE_ETHERSCAN_ADDR_LINK, BEAN } from '../../constants';
+import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from '../../constants';
 import {
   displayBN,
   isAddress,
@@ -101,12 +101,12 @@ export default function SendModule(props) {
   const details = [];
   details.push(
     <span>
-      {`- Send ${displayBN(props.fromBeanValue)}
+      {`Send ${displayBN(props.fromBeanValue)}
       ${props.fromBeanValue.isEqualTo(1) ? 'Bean' : 'Beans'} to `}
       <a
         href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
-        color="inherit"
         target="blank"
+        style={{ color: theme.backgroundText }}
       >
         {`${walletText}`}
       </a>

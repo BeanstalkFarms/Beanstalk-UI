@@ -7,8 +7,10 @@ import {
   ClaimableAsset,
   claimableStrings,
   ContentSection,
+  CryptoAsset,
   Grid,
   Line,
+  SiloAsset,
   totalDescriptions,
   totalStrings,
   walletDescriptions,
@@ -76,7 +78,16 @@ export default function Balances(props) {
     <Grid container item xs={12} justifyContent="center" style={{ marginTop: '20px' }} />
   );
 
-  const claimable = userTotalClaimable.isGreaterThan(0) ? (
+  const isFarmableStalk = (
+    props.grownStalkBalance.isGreaterThan(0) &&
+    props.farmableStalkBalance.isGreaterThan(0)
+  );
+  const isFarmableBeans = (
+    props.grownStalkBalance.isGreaterThan(0) ||
+    props.farmableBeanBalance.isGreaterThan(0)
+  );
+
+  const claimableSection = userTotalClaimable.isGreaterThan(0) ? (
     <Grid container item xs={6} justifyContent="center" style={{ alignItems: 'flex-end' }}>
       <ClaimButton
         asset={ClaimableAsset.Ethereum}
@@ -88,46 +99,49 @@ export default function Balances(props) {
           <Grid container item xs={12} justifyContent="center" style={{ fontWeight: 'bold', marginBottom: '5px' }}>
             Claimable
           </Grid>
-          {props.grownStalkBalance.isGreaterThan(0) && props.farmableStalkBalance.isGreaterThan(0) ?
+          {isFarmableStalk && ethClaimable.isGreaterThan(0) ?
             spaceTop
-            : null
+            : isFarmableStalk ?
+              <Grid container item xs={12} justifyContent="center" style={{ marginTop: '30px' }} />
+              : null
           }
           {beanClaimable.isGreaterThan(0) ?
             <ClaimBalance
               balance={beanClaimable}
-              userClaimable={beanClaimable.isGreaterThan(0)}
               description={claimableStrings.beans}
-              claimable={props.claimable}
               title="Beans"
+              token={CryptoAsset.Bean}
+              userClaimable={beanClaimable.isGreaterThan(0)}
               {...props}
             />
-            : (props.grownStalkBalance.isGreaterThan(0) ||
-              props.farmableBeanBalance.isGreaterThan(0)) ?
+            : isFarmableBeans ?
                 spaceTop
                 : null
           }
           {ethClaimable.isGreaterThan(0) ?
             <ClaimBalance
               balance={ethClaimable}
-              userClaimable={ethClaimable.isGreaterThan(0)}
               description={claimableStrings.eth}
-              claimable={props.claimable}
               title="ETH"
+              token={CryptoAsset.Ethereum}
+              userClaimable={ethClaimable.isGreaterThan(0)}
               {...props}
             />
-            : (props.grownStalkBalance.isGreaterThan(0) ||
-              props.farmableBeanBalance.isGreaterThan(0)) ?
+            : isFarmableBeans ?
                 spaceTop
                 : null
+          }
+          {ethClaimable.isGreaterThan(0) ?
+            spaceTop
+            : <Grid container item xs={12} justifyContent="center" style={{ marginTop: '10px' }} />
           }
         </Grid>
       </ClaimButton>
     </Grid>
   ) : null;
 
-  const farmable =
-    props.grownStalkBalance.isGreaterThan(0) ||
-    props.farmableBeanBalance.isGreaterThan(0) ||
+  const farmableSection =
+    isFarmableBeans ||
     (props.stalkBalance.isGreaterThan(0) && props.rootsBalance.isEqualTo(0)) ? (
       <Grid container item xs={6} justifyContent="center" style={{ alignItems: 'flex-end' }}>
         <ClaimButton
@@ -139,51 +153,67 @@ export default function Balances(props) {
           }
           buttonDescription="Farm Beans, Seeds and Stalk."
           claimTitle="FARM"
-          description={claimableStrings.farm}
           claimable={props.grownStalkBalance}
+          description={claimableStrings.farm}
           userClaimable={props.grownStalkBalance.isGreaterThan(0)}
           widthTooltip="230px"
           {...props}
         >
-          <Grid container item xs={12} justifyContent="center" style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Farmable
+          <Grid container item>
+            <Grid container item xs={12} justifyContent="center" style={{ fontWeight: 'bold', marginBottom: '5px' }}>
+              Farmable
+            </Grid>
+            {props.farmableBeanBalance.isGreaterThan(0) ?
+              <ClaimBalance
+                balance={props.farmableBeanBalance}
+                description={claimableStrings.farmableBeans}
+                title="Beans"
+                token={CryptoAsset.Bean}
+                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
+                {...props}
+              />
+              : spaceTop
+            }
+            {props.farmableBeanBalance.plus(props.farmableStalkBalance) ?
+              <ClaimBalance
+                balance={props.farmableBeanBalance.plus(props.farmableStalkBalance)}
+                title="Stalk"
+                description={claimableStrings.farmableStalk}
+                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
+                token={SiloAsset.Stalk}
+                {...props}
+              />
+              : spaceTop
+            }
+            {props.farmableBeanBalance.isGreaterThan(0) ?
+              <ClaimBalance
+                balance={props.farmableBeanBalance.multipliedBy(2)}
+                title="Seeds"
+                description={claimableStrings.farmableSeeds}
+                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
+                token={SiloAsset.Seed}
+                {...props}
+              />
+              : spaceTop
+            }
+            {props.grownStalkBalance.isGreaterThan(0) ?
+              <ClaimBalance
+                title="Grown Stalk"
+                balance={props.grownStalkBalance}
+                description={claimableStrings.grownStalk}
+                userClaimable={props.grownStalkBalance.isGreaterThan(0)}
+                token={ClaimableAsset.Stalk}
+                {...props}
+              />
+              : spaceTop
+            }
+            {props.rootsBalance.isEqualTo(0) ? (
+              <Box style={{ width: '130%', marginLeft: '-15%' }}>
+                You have not updated your Silo account since the last BIP has
+                passed. Please click &apos;Farm&apos; to update your Silo.
+              </Box>
+            ) : null}
           </Grid>
-          {props.farmableBeanBalance.isGreaterThan(0) ?
-            <ClaimBalance
-              balance={props.farmableBeanBalance}
-              title="Beans"
-              description={claimableStrings.farmableBeans}
-              userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
-              {...props}
-            />
-            : spaceTop
-          }
-          {props.farmableBeanBalance.plus(props.farmableStalkBalance) ?
-            <ClaimBalance
-              balance={props.farmableBeanBalance.plus(props.farmableStalkBalance)}
-              title="Stalk"
-              description={claimableStrings.farmableStalk}
-              userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
-              {...props}
-            />
-            : spaceTop
-          }
-          {props.grownStalkBalance.isGreaterThan(0) ?
-            <ClaimBalance
-              title="Grown Stalk"
-              balance={props.grownStalkBalance}
-              description={claimableStrings.grownStalk}
-              userClaimable={props.grownStalkBalance.isGreaterThan(0)}
-              {...props}
-            />
-            : spaceTop
-          }
-          {props.rootsBalance.isEqualTo(0) ? (
-            <Box style={{ width: '130%', marginLeft: '-15%' }}>
-              You have not updated your Silo account since the last BIP has
-              passed. Please click &apos;Farm&apos; to update your Silo.
-            </Box>
-          ) : null}
         </ClaimButton>
       </Grid>
     ) : null;
@@ -199,8 +229,8 @@ export default function Balances(props) {
         {...props}
       />
       <Grid container item justifyContent="center" style={{ alignItems: 'flex-end' }}>
-        {claimable}
-        {farmable}
+        {claimableSection}
+        {farmableSection}
       </Grid>
     </>
   );
@@ -245,7 +275,7 @@ export default function Balances(props) {
         topRight={poolMarketCap}
         beanLPTotal={poolBeansAndEth}
         poolForLPRatio={props.poolForLPRatio}
-    />
+      />
     </>
   );
 

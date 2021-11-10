@@ -1,28 +1,34 @@
 import BigNumber from 'bignumber.js';
 import { displayBN } from '../../util';
 
-export default function ClaimTextModule(props) {
+export default function ClaimTextModule({
+  claim,
+  claimableEthBalance,
+  lpReceivableBalance,
+  beanReceivableBalance,
+  harvestablePodBalance,
+}) {
   const claimTextList = [];
   let claimText = '';
 
-  if (props.claimableEthBalance.isGreaterThan(0)) {
+  if (claimableEthBalance.isGreaterThan(0)) {
     claimTextList.push(
-      `${props.claimableEthBalance.toFixed(3)} ETH`
+      `${claimableEthBalance.toFixed(3)} ETH`
     );
   }
-  if (props.lpReceivableBalance.isGreaterThan(0)) {
+  if (lpReceivableBalance.isGreaterThan(0)) {
     claimTextList.push(
-      `${displayBN(props.lpReceivableBalance)} LP Tokens`
+      `${displayBN(lpReceivableBalance)} LP Tokens`
     );
   }
-  if (props.beanReceivableBalance.isGreaterThan(0)) {
+  if (beanReceivableBalance.isGreaterThan(0)) {
     claimTextList.push(
-      `${displayBN(props.beanReceivableBalance)} Beans`
+      `${displayBN(beanReceivableBalance)} Beans`
     );
   }
-  if (props.harvestablePodBalance.isGreaterThan(0)) {
+  if (harvestablePodBalance.isGreaterThan(0)) {
     claimTextList.push(
-      `${displayBN(props.harvestablePodBalance)} Pods`
+      `${displayBN(harvestablePodBalance)} Pods`
     );
   }
 
@@ -39,8 +45,8 @@ export default function ClaimTextModule(props) {
     }
   }
 
-  if (props.claim) {
-    return `- Claim ${claimText}`;
+  if (claim) {
+    return `Claim ${claimText}`;
   } return null;
 }
 

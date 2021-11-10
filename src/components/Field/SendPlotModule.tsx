@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
-import { BASE_ETHERSCAN_ADDR_LINK, BEAN } from '../../constants';
+import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from '../../constants';
 import {
   displayBN,
   isAddress,
@@ -181,19 +181,19 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
   function displaySendPlot(firstText, secondText) {
     details.push(
-      <span>{`- Send ${firstText}Plot #${displayBN(
+      <span>{`Send ${firstText}Plot #${displayBN(
       new BigNumber(plotId - props.index).plus(fromPlotIndex)
       )} to `}
         <a
           href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
-          color="inherit"
           target="blank"
+          style={{ color: theme.backgroundText }}
         >
           {`${walletText}`}
         </a>
       </span>
     );
-    details.push(`- Send ${firstText === '' ? 'all' : ''}
+    details.push(`Send ${firstText === '' ? 'all' : ''}
       ${displayBN(toPlotEndIndex)} Pods ${secondText} the Plot`
     );
   }
@@ -212,7 +212,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
   }
 
   if (toPlotEndIndex.isEqualTo(fromPlotIndex)) {
-    details = [<span style={{ color: 'red' }}>- Invalid transfer amount</span>];
+    details = [<span style={{ color: 'red' }}>Invalid transfer amount</span>];
     }
 
   function transactionDetails() {
@@ -227,8 +227,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
         <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
           <span>
-            WARNING: Beanstalk doesn&apos;t currently support a market for
-            buying and selling Plots. Use at your own risk.
+            WARNING: There is currently no decentralized market for buying and selling Plots. Send Plots at your own risk.
           </span>
         </Box>
       </>
