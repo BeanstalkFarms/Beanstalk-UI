@@ -16,7 +16,7 @@ export default function ContentTitle(props) {
     })();
 
     return (
-      <Box className={classes.sectionTitle}>
+      <Box onClick={props.onClick} className={classes.sectionTitle}>
         <TitleLabel style={{ color: theme.backgroundText, cursor: 'pointer' }} size={props.size} textTransform={props.textTransform}>
           {props.title}
         </TitleLabel>

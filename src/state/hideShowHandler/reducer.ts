@@ -6,19 +6,27 @@ const isHiddenInLocalStorage = JSON.parse(
 );
 console.log('isHiddenInLocalStorage', isHiddenInLocalStorage);
 export interface hideShowState {
-  silo: Boolean;
+  about: Boolean;
+  analytics: Boolean;
+  balances: Boolean;
+  charts: Boolean;
   field: Boolean;
-  trade: Boolean;
-  nft: Boolean;
   governance: Boolean;
+  nft: Boolean;
+  silo: Boolean;
+  trade: Boolean;
 }
 
 export const initialState: hideShowState = {
+  about: isHiddenInLocalStorage.about,
+  analytics: isHiddenInLocalStorage.analytics,
+  balances: isHiddenInLocalStorage.balances,
+  charts: isHiddenInLocalStorage.charts,
+  field: isHiddenInLocalStorage.field,
   governance: isHiddenInLocalStorage.governance,
-  trade: isHiddenInLocalStorage.trade,
   nft: isHiddenInLocalStorage.nft,
   silo: isHiddenInLocalStorage.silo,
-  field: isHiddenInLocalStorage.field,
+  trade: isHiddenInLocalStorage.trade,
 };
 
 export default createReducer(initialState, (builder) =>

@@ -57,7 +57,6 @@ export default function Seasons(props) {
       id="seasons"
       title="Seasons"
       size="20px"
-      style={{ minHeight: '600px' }}
     >
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid

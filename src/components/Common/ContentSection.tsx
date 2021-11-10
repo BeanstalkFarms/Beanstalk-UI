@@ -26,7 +26,6 @@ export default function ContentSection(props) {
   })();
 
   const handleHideShowSection = (id) => {
-    console.log('id', id);
     dispatch(
       setHideShowState({
         [id]: !hideShowState[id],
@@ -35,29 +34,45 @@ export default function ContentSection(props) {
   };
 
   const { innerWidth: width } = window;
-  const descriptionSection = props.description !== undefined ?
-  (
-    <Box
-      className={`section-description-${theme.name}`}
-      style={
-        width > 500
-          ? { maxWidth: '550px', margin: '20px 0 0 0', padding: '12px', color: theme.backgroundText }
-          : { width: width - 64, margin: '20px 0', padding: '12px', color: theme.backgroundText }
-      }
-    >
-      {props.description}
-      {props.descriptionLinks.map((l) => (
-        <span key={l.text}>
-          {' '}
-          <Link style={{ color: theme.backgroundText }} key={l.text} href={l.href} target="blank">
-            {l.text}
-          </Link>
-          .
-        </span>
-      ))}
-    </Box>
-    )
-  : null;
+  const descriptionSection =
+    props.description !== undefined ? (
+      <Box
+        className={`section-description-${theme.name}`}
+        style={
+          width > 500
+            ? {
+                maxWidth: '550px',
+                margin: '20px 0 0 0',
+                padding: '12px',
+                color: theme.backgroundText,
+              }
+            : {
+                width: width - 64,
+                margin: '20px 0',
+                padding: '12px',
+                color: theme.backgroundText,
+              }
+        }
+      >
+        {props.description}
+        {props.descriptionLinks.map((l) => (
+          <span key={l.text}>
+            {' '}
+            <Link
+              style={{ color: theme.backgroundText }}
+              key={l.text}
+              href={l.href}
+              target="blank"
+            >
+              {l.text}
+            </Link>
+            .
+          </span>
+        ))}
+      </Box>
+    ) : null;
+
+  const shouldShow = !!hideShowState[props.id];
 
   return (
     <Box id={props.id} className="AppContent" style={props.style}>
@@ -67,11 +82,14 @@ export default function ContentSection(props) {
         className={classes.appSection}
         justifyContent="center"
       >
-        <Box onClick={() => { handleHideShowSection(props.id); }}>
-          <ContentTitle {...props} />
-        </Box>
-        {descriptionSection}
-        {props.children}
+        <ContentTitle
+          onClick={() => {
+            console.log('props.id', props.id);
+            handleHideShowSection(props.id);
+          }}
+          {...props} />
+        {shouldShow ? descriptionSection : null}
+        {shouldShow ? props.children : null}
       </Grid>
     </Box>
   );
@@ -79,7 +97,6 @@ export default function ContentSection(props) {
 
 ContentSection.defaultProps = {
   descriptionLinks: [],
-  padding: '60px 30px',
-  marginTop: '-28px',
   width: '100%',
+  minHeight: '0px',
 };

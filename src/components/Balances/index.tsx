@@ -177,7 +177,6 @@ export default function Balances(props) {
       id="balances"
       title="Balances"
       size="20px"
-      style={{ marginTop: '-80px' }}
     >
       <Box className="BalanceSection-mobile">
         <BaseModule

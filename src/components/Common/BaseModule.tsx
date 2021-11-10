@@ -328,7 +328,7 @@ BaseModule.defaultProps = {
   showButton: true,
   removeBackground: false,
   marginTop: '44px',
-  margin: '-12px 0 0 0px',
+  margin: '0 0 0 0px',
   normalBox: true,
   textTransform: 'uppercase',
 };
