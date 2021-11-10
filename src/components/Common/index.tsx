@@ -1,4 +1,4 @@
-import { withStyles, Theme } from '@material-ui/styles';
+import { Theme, withStyles } from '@material-ui/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 
 export { Grid } from '@material-ui/core';
@@ -19,6 +19,7 @@ export { default as ListInputField } from './ListInputField';
 export { default as BaseModule } from './BaseModule';
 export { default as ContentTitle } from './ContentTitle';
 export { default as ContentSection } from './ContentSection';
+export { default as ClaimTextModule } from './ClaimTextModule';
 export { default as DataBalanceModule } from './DataBalanceModule';
 export { default as EthInputField } from './EthInputField';
 export { default as FrontrunText } from './FrontrunText';
@@ -33,6 +34,7 @@ export { default as QuestionModule } from './QuestionModule';
 export { default as SettingsFormModule } from './SettingsFormModule';
 export { default as SingleButton } from './SingleButton';
 export { default as SlippageModule } from './SlippageModule';
+export { default as SwapTransactionDetailsModule } from './SwapTransactionDetailsModule';
 export { default as SwitchModule } from './SwitchModule';
 export { default as TitleLabel } from './TitleLabel';
 export { default as TokenBalanceModule } from './TokenBalanceModule';
@@ -40,6 +42,7 @@ export { default as TokenInputField } from './TokenInputField';
 export { default as TokenOutputField } from './TokenOutputField';
 export { default as TokenTypeImageModule } from './TokenTypeImageModule';
 export { default as TransactionDetailsModule } from './TransactionDetailsModule';
+export { default as TransactionTextModule } from './TransactionTextModule';
 export { default as UnitSelectionModule } from './UnitSelectionModule';
 export { default as TabImageModule } from './TabImageModule';
 export { default as Line } from './Line';
@@ -59,7 +62,7 @@ export const FormatTooltip = withStyles((theme: Theme) => ({
 
 FormatTooltip.defaultProps = {
   margin: '0 0 0 20px',
-  width: 'auto',
+  // width: 'auto',
 };
 
 export const walletDescriptions = {
@@ -81,6 +84,8 @@ export const walletDescriptions = {
     'These are your total Claimable LP Tokens which are from Withdrawals. For more information on your Claimable LP Token Withdrawals, look in the Silo module.',
   claimableEthBalance:
     'These are your total Claimable ETH which are from Seasons of Plenty.',
+  farmableBeanBalance:
+    '',
   stalkBalance:
     'This is your total Stalk Balance. Stalk are the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo.',
   seedBalance:
@@ -127,4 +132,12 @@ export const walletStrings = {
 export const totalStrings = {
   topLeft: 'USD',
   topRight: 'USD',
+};
+export const claimableStrings = {
+  beans: 'Claimable Beans includes you total Claimable Beans from Pod Harvests, Bean Withdrawals and/or LP Withdrawals.',
+  eth: 'Claimable ETH includes total Claimable ETH from LP Withdrawals and/or Seasons of Plenty.',
+  farmableBeans: 'Farmable Beans are deposited in a specific season the next time you interact with the Silo.',
+  farmableStalk: 'Farmable Stalk are deposited in a specific season the next time you interact with the Silo.',
+  grownStalk: 'Stalk grown from previously claimed Seeds that does not earn interest until it is farmed.',
+  farm: 'Stalk grown from previously claimed Seeds does not earn interest until it is farmed. Use this button to farm Grown Stalk.',
 };

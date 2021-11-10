@@ -16,9 +16,9 @@ import {
   poolForLP,
 } from '../../util';
 import { BaseModule, ListTable, SiloAsset, TransitAsset } from '../Common';
-import { LPClaimSubModule } from './LPClaimSubModule';
-import { LPDepositSubModule } from './LPDepositSubModule';
-import { LPWithdrawSubModule } from './LPWithdrawSubModule';
+import { LPDepositModule } from './LPDepositModule';
+import { LPWithdrawModule } from './LPWithdrawModule';
+import { LPClaimModule } from './LPClaimModule';
 
 export default function SiloLPModule() {
   const zeroBN = new BigNumber(-1);
@@ -47,6 +47,8 @@ export default function SiloLPModule() {
     lpReceivableCrates,
     lpWithdrawals,
     lockedSeasons,
+    harvestablePodBalance,
+    beanReceivableBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -146,21 +148,22 @@ export default function SiloLPModule() {
         break;
     }
   };
-
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
       setSection(newSection);
       setIsFormDisabled(true);
     }
   };
-  const claimLPBeans = lpReceivableBalance.isGreaterThan(0) ?
-    poolForLPRatio(lpReceivableBalance)[0]
+  const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
+    ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
 
   const sections = [
-    <LPDepositSubModule
+    <LPDepositModule
+      key={0}
       beanBalance={beanBalance}
       beanCrates={beanDeposits}
+      beanReceivableBalance={beanReceivableBalance}
       beanReserve={prices.beanReserve}
       beanToEth={prices.ethReserve.dividedBy(prices.beanReserve)}
       beanToStalk={LPBEAN_TO_STALK}
@@ -169,12 +172,13 @@ export default function SiloLPModule() {
       ethBalance={ethBalance}
       ethReserve={prices.ethReserve}
       ethToBean={prices.beanReserve.dividedBy(prices.ethReserve)}
+      harvestablePodBalance={harvestablePodBalance}
       hasClaimable={hasClaimable}
       lpBalance={lpBalance}
+      lpReceivableBalance={lpReceivableBalance}
       updateExpectedPrice={updateExpectedPrice}
       maxFromBeanSiloVal={beanSiloBalance}
       beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
-      poolForLPRatio={poolForLPRatio}
       beanLPClaimableBalance={claimLPBeans}
       ref={depositRef}
       season={season}
@@ -185,14 +189,19 @@ export default function SiloLPModule() {
       totalLP={totalBalance.totalLP}
       totalStalk={totalBalance.totalStalk}
     />,
-    <LPWithdrawSubModule
+    <LPWithdrawModule
+      key={1}
+      beanReceivableBalance={beanReceivableBalance}
       claimable={claimable}
+      claimableEthBalance={claimableEthBalance}
       crates={lpDeposits}
+      harvestablePodBalance={harvestablePodBalance}
       hasClaimable={hasClaimable}
+      lpReceivableBalance={lpReceivableBalance}
       locked={section === 1 && locked}
       maxFromLPVal={lpSiloBalance}
-      maxFromSeedsVal={seedBalance}
-      maxFromStalkVal={stalkBalance}
+      maxToSeedsVal={seedBalance}
+      maxToStalkVal={stalkBalance}
       poolForLPRatio={poolForLPRatio}
       ref={withdrawRef}
       season={season}
@@ -207,7 +216,9 @@ export default function SiloLPModule() {
   ];
   if (lpReceivableBalance.isGreaterThan(0)) {
     sections.push(
-      <LPClaimSubModule
+      <LPClaimModule
+        key={2}
+        // claimableEthBalance={claimableEthBalance}
         crates={lpReceivableCrates}
         maxFromLPVal={lpReceivableBalance}
         poolForLPRatio={poolForLPRatio}

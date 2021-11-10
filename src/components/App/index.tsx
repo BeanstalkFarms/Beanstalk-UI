@@ -732,7 +732,7 @@ export default function App() {
         />
         <Switch>
           <Route exact path="/">
-            <Redirect to="/silo" />
+            <Redirect to="/farm" />
           </Route>
           <Route exact path="/farm">
             <>

@@ -1,8 +1,9 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
-import { BEAN } from '../../constants';
+import { BASE_ETHERSCAN_ADDR_LINK, BEAN } from '../../constants';
 import {
+  displayBN,
   isAddress,
   toStringBaseUnitBN,
   MaxBN,
@@ -10,7 +11,12 @@ import {
   transferPlot,
   TrimBN,
 } from '../../util';
-import { AddressInputField, PlotInputField, ListInputField } from '../Common';
+import {
+  AddressInputField,
+  ListInputField,
+  PlotInputField,
+  TransactionDetailsModule,
+} from '../Common';
 
 export const SendPlotModule = forwardRef((props, ref) => {
   const [plotId, setPlotId] = useState(new BigNumber(-1));
@@ -33,14 +39,16 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
   const handleFromChange = (event) => {
     if (event.target.value) {
-      fromValueUpdated(new BigNumber(props.plots[event.target.value])); // gives you the value at the selected plot pod value
-      setPlotId(event.target.value); // plot id
+      fromValueUpdated(new BigNumber(props.plots[event.target.value]));
+      setPlotId(event.target.value);
       setFromPlotIndex(new BigNumber(0)); // reset plot start index
       if (props.plots[event.target.value] === undefined) {
         props.setIsFormDisabled(true);
+        // fromValueUpdated(new BigNumber(-1));
       }
     } else {
       fromValueUpdated(new BigNumber(-1));
+      props.setIsFormDisabled(true);
     }
   };
 
@@ -169,19 +177,43 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
   /* Transaction Details, settings and text */
 
-  const plotText = toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId) ?
-    `You will send the full Plot of ${toPlotEndIndex.toFixed()} Pods.`
-    : toPlotEndIndex.isEqualTo(fromPlotIndex)
-    ? 'Invalid transfer amount'
-    : `You will send a partial Plot with Pods from index ${fromPlotIndex} to index ${toPlotEndIndex.toFixed()}.`;
+  let details = [];
 
-  const sendText = toPlotEndIndex.toFixed() !== 'NaN' ?
-    <Box style={{ display: 'inline-block', width: '100%' }}>
-      <span>
-        {plotText}
+  function displaySendPlot(firstText, secondText) {
+    details.push(
+      <span>{`- Send ${firstText}Plot #${displayBN(
+      new BigNumber(plotId - props.index).plus(fromPlotIndex)
+      )} to `}
+        <a
+          href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
+          color="inherit"
+          target="blank"
+        >
+          {`${walletText}`}
+        </a>
       </span>
-    </Box>
-    : null;
+    );
+    details.push(`- Send ${firstText === '' ? 'all' : ''}
+      ${displayBN(toPlotEndIndex)} Pods ${secondText} the Plot`
+    );
+  }
+
+  if (toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId)) { // full plot
+    displaySendPlot('', 'in');
+  } else if (fromPlotIndex.isEqualTo(0)) { // front of plot
+    displaySendPlot('part of ', 'from the front of');
+  } else if (toPlotEndIndex.isEqualTo(plotEndId)) { // back of plot
+    displaySendPlot('part of ', 'from the end of');
+  } else if (
+    !toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId) &&
+    !fromPlotIndex.isEqualTo(0)
+  ) { // middle of plot
+    displaySendPlot('part of ', 'in the middle of');
+  }
+
+  if (toPlotEndIndex.isEqualTo(fromPlotIndex)) {
+    details = [<span style={{ color: 'red' }}>- Invalid transfer amount</span>];
+    }
 
   function transactionDetails() {
     if (toPlotEndIndex.isLessThanOrEqualTo(0)) return;
@@ -192,7 +224,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
           <Box style={{ marginRight: '5px' }}>{fromIndexField}</Box>
           <Box style={{ marginLeft: '5px' }}>{fromIndexEndField}</Box>
         </Box>
-        {sendText}
+        <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
           <span>
             WARNING: Beanstalk doesn&apos;t currently support a market for

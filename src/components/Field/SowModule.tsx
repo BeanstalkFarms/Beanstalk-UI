@@ -18,6 +18,7 @@ import {
 } from '../../util';
 
 import {
+  ClaimTextModule,
   CryptoAsset,
   EthInputField,
   FarmAsset,
@@ -25,12 +26,14 @@ import {
   InputFieldPlus,
   SettingsFormModule,
   TokenOutputField,
+  TransactionDetailsModule,
+  TransactionTextModule,
 } from '../Common';
 
 export const SowModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
-  const [buyBeanValue, setBuyBeanValue] = useState(new BigNumber(0));
+  const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
   const [toPodValue, setToPodValue] = useState(new BigNumber(0));
 
   const claimableFromVal = props.settings.claim
@@ -58,7 +61,7 @@ export const SowModule = forwardRef((props, ref) => {
       props.beanReserve
     );
     BigNumber.set({ DECIMAL_PLACES: 18 });
-    setBuyBeanValue(buyBeans);
+    setToBuyBeanValue(buyBeans);
     setFromEthValue(newFromEthValue);
     const sowedBeans = MaxBN(buyBeans, new BigNumber(0)).plus(
       MaxBN(newFromValue, new BigNumber(0))
@@ -95,7 +98,7 @@ export const SowModule = forwardRef((props, ref) => {
     <EthInputField
       key={1}
       balance={props.ethBalance}
-      buyBeans={buyBeanValue}
+      buyBeans={toBuyBeanValue}
       claim={props.settings.claim}
       claimableBalance={props.claimableEthBalance}
       handleChange={(v) => fromValueUpdated(fromBeanValue, v)}
@@ -113,7 +116,6 @@ export const SowModule = forwardRef((props, ref) => {
       key="pods"
       token={FarmAsset.Pods}
       value={toPodValue}
-      // value={MaxBN(buyBeanValue, new BigNumber(0)).plus(MaxBN(fromBeanValue, new BigNumber(0)))}
       decimals={BEAN.decimals}
       mint
     />
@@ -121,23 +123,62 @@ export const SowModule = forwardRef((props, ref) => {
 
   /* Transaction Details, settings and text */
 
-  const weatherText = buyBeanValue.plus(fromBeanValue).isEqualTo(props.soil)
-    ? `Sowing Maximum Soil With ${props.weather.toFixed()}% Weather.`
-    : `Sowing With ${props.weather.toFixed()}% Weather.`;
-  const podLineText = `The Plot will be placed ${displayBN(
+  const details = [];
+  if (props.settings.claim) {
+    details.push(
+      <ClaimTextModule
+        key="claim"
+        balance={
+          props.claimableEthBalance
+            .plus(props.beanReceivableBalance)
+            .plus(props.lpReceivableBalance)
+            .plus(props.harvestablePodBalance)
+        }
+        claim={props.settings.claim}
+        mode={props.settings.mode}
+        claimableEthBalance={props.claimableEthBalance}
+        beanReceivableBalance={props.beanReceivableBalance}
+        lpReceivableBalance={props.lpReceivableBalance}
+        harvestablePodBalance={props.harvestablePodBalance}
+      />
+    );
+  }
+  if (props.settings.mode === SwapMode.Ethereum ||
+        (props.settings.mode === SwapMode.BeanEthereum &&
+          toBuyBeanValue.isGreaterThan(0)
+        )
+      ) {
+    details.push(
+      <TransactionTextModule
+        key="buy"
+        balance={toBuyBeanValue}
+        buyBeans={toBuyBeanValue}
+        claim={props.settings.claim}
+        claimableBalance={props.claimableEthBalance}
+        mode={props.settings.mode}
+        sellEth={fromEthValue}
+        updateExpectedPrice={props.updateExpectedPrice}
+        value={TrimBN(fromEthValue, 9)}
+      />
+    );
+  }
+  const beanOutput = MaxBN(toBuyBeanValue, new BigNumber(0))
+    .plus(MaxBN(fromBeanValue, new BigNumber(0)));
+
+  if (toBuyBeanValue.plus(fromBeanValue).isEqualTo(props.soil)) {
+    details.push(`- Sow maximum Soil ${displayBN(beanOutput)}
+      ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather`
+    );
+  } else {
+    details.push(`- Sow ${displayBN(beanOutput)}
+      ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather`
+    );
+  }
+
+  details.push(`- Receive ${displayBN(toPodValue)} Pods at #${displayBN(
     props.unripenedPods
-  )} in the Pod Line.`;
-  const sowTextField = [
-    <Box
-      key="Weather"
-      style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}
-    >
-      {weatherText}
-    </Box>,
-    <Box key="PodLine" style={{ fontFamily: 'Futura-PT-Book' }}>
-      {podLineText}
-    </Box>,
-  ];
+  )} in the Pod line`);
+
   const noSoilTextField = props.soil.isEqualTo(0) ? (
     <Box style={{ marginTop: '-2px', fontFamily: 'Futura-PT-Book' }}>
       Currently No Soil
@@ -158,7 +199,7 @@ export const SowModule = forwardRef((props, ref) => {
     />
   );
   function transactionDetails() {
-    if (toPodValue.isLessThanOrEqualTo(0)) return null;
+    if (toPodValue.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
@@ -167,7 +208,7 @@ export const SowModule = forwardRef((props, ref) => {
           style={{ marginBottom: '-14px', width: '100%' }}
         />
         {toPodField}
-        {sowTextField}
+        <TransactionDetailsModule fields={details} />
       </>
     );
   }
@@ -184,7 +225,7 @@ export const SowModule = forwardRef((props, ref) => {
         ).toString();
         const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
         const buyBeans = toStringBaseUnitBN(
-          buyBeanValue.multipliedBy(props.settings.slippage),
+          toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
         buyAndSowBeans(beans, buyBeans, eth, claimable, () => {

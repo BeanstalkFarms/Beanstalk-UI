@@ -94,39 +94,12 @@ export default function NavigationBar(props) {
     setOpen(false);
   };
 
-  const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
-  function handleScroll() {
-    const windowHeight =
-      'innerHeight' in window
-        ? window.innerHeight
-        : document.documentElement.offsetHeight;
-    const { body } = document;
-    const html = document.documentElement;
-    const docHeight = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
-    const windowBottom = windowHeight + window.pageYOffset;
-    setIsScrolledToBottom(windowBottom >= docHeight);
-    localStorage.setItem('scrollPosition', window.pageYOffset);
-  }
-  useEffect(() => {
-    const scrollY = localStorage.getItem('scrollPosition');
-    if (scrollY !== undefined) window.scrollTo(0, scrollY);
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const linkItemStyle = (path) =>
-    (path === 'governance'
-      ? { color: theme.activeSection }
-      : null);
+  const linkItemStyle = (path) => {
+    if (path === 'governance') {
+      return { color: theme.activeSection };
+    }
+    return null;
+  };
 
   const mobileNavigation = (
     <Box className="NavigationBarHamburger">
@@ -135,11 +108,11 @@ export default function NavigationBar(props) {
         aria-labelledby="main navigation"
         className={classes.navDisplayFlex}
       >
-        {props.showWallet ?
+        {props.showWallet ? (
           <ListItem>
             <WalletModule {...props} />
           </ListItem>
-        : null}
+        ) : null}
       </List>
       <Button
         ref={anchorRef}
@@ -210,11 +183,7 @@ export default function NavigationBar(props) {
           <NavLink
             to={path}
             activeClassName={classes.activeLinkText}
-            className={
-              path === props.links[props.links.length - 1].path && isScrolledToBottom
-                ? classes.activeAboutLinkText
-                : classes.linkPadding
-            }
+            className={classes.linkPadding}
             spy
             smooth
           >
@@ -222,11 +191,11 @@ export default function NavigationBar(props) {
           </NavLink>
         </ListItem>
       ))}
-      {props.showWallet ?
+      {props.showWallet ? (
         <ListItem>
           <WalletModule {...props} />
         </ListItem>
-      : null}
+      ) : null}
     </List>
   );
 
@@ -247,9 +216,7 @@ export default function NavigationBar(props) {
     );
   } else if (price > 0) {
     currentBeanPrice = (
-      <Box className={classes.currentPriceStyle}>
-        {`$${price.toFixed(4)}`}
-      </Box>
+      <Box className={classes.currentPriceStyle}>{`$${price.toFixed(4)}`}</Box>
     );
   }
 
