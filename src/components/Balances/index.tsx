@@ -256,6 +256,7 @@ export default function Balances(props) {
       id="balances"
       title="Balances"
       size="20px"
+      style={{ paddingTop: '60px' }}
     >
       <Box className="BalanceSection-mobile">
         <BaseModule

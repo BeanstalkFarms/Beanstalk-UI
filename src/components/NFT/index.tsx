@@ -73,7 +73,7 @@ export default function NFTs(props) {
   ];
 
   return (
-    <ContentSection id="nft" title="BeaNFTs" textTransform="none" style={{ minHeight: '100px' }} description={description} descriptionLinks={descriptionLinks}>
+    <ContentSection id="nft" title="BeaNFTs" textTransform="none" description={description} descriptionLinks={descriptionLinks}>
       <ClaimNFT
         buttonDescription="Use this button to Mint all your Mintable BeaNFTs."
         claimTitle="MINT ALL"

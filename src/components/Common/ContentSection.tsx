@@ -6,7 +6,6 @@ import { setHideShowState } from 'state/hideShowHandler/actions';
 import { AppState } from 'state';
 import { ContentTitle } from './index';
 import { theme } from '../../constants';
-import { ContentTitle } from './index';
 
 export default function ContentSection(props) {
   const dispatch = useDispatch();
