@@ -69,7 +69,7 @@ export const LPClaimModule = forwardRef((props, ref) => {
 
   const details = [];
   details.push(
-    `- Claim ${displayBN(
+    `Claim ${displayBN(
       new BigNumber(props.maxFromLPVal)
     )} LP Tokens from the Silo`
   );
@@ -87,7 +87,7 @@ export const LPClaimModule = forwardRef((props, ref) => {
   function transactionDetails() {
     if (settings.removeLP) {
       details.push(
-        `- Remove ${displayBN(
+        `Remove ${displayBN(
           props.maxFromLPVal
         )} LP Tokens from the BEAN:ETH LP pool and receive ${displayLP(
           props.poolForLPRatio(props.maxFromLPVal)
