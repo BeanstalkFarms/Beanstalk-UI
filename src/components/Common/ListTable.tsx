@@ -1,6 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -8,7 +9,6 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Box,
 } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -20,8 +20,8 @@ import {
   TokenLabel,
   TransitAsset,
 } from '../../util';
-import { FormatTooltip, QuestionModule } from '.';
 import { theme } from '../../constants';
+import { FormatTooltip, QuestionModule } from './index';
 
 const useStyles = makeStyles({
   table: {

@@ -5,24 +5,28 @@ import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { BEAN, BEAN_TO_SEEDS, SEEDS, STALK } from '../../constants';
 import {
   claimAndWithdrawBeans,
+  displayBN,
   MinBN,
   MinBNs,
+  smallDecimalPercent,
   toStringBaseUnitBN,
   TrimBN,
   withdrawBeans,
 } from '../../util';
 import {
+  ClaimTextModule,
   SettingsFormModule,
   SiloAsset,
   TokenInputField,
   TokenOutputField,
+  TransactionDetailsModule,
   TransitAsset,
 } from '../Common';
 
-export const BeanWithdrawSubModule = forwardRef((props, ref) => {
-  const [fromStalkValue, setFromStalkValue] = useState(new BigNumber(0));
-  const [fromSeedsValue, setFromSeedsValue] = useState(new BigNumber(0));
+export const BeanWithdrawModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
+  const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
+  const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
   const [withdrawParams, setWithdrawParams] = useState({
     crates: [],
     amounts: [],
@@ -79,8 +83,8 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
     const fromNumber = MinBN(newFromNumber, props.maxFromBeanVal);
     const newFromBeanValue = TrimBN(fromNumber, BEAN.decimals);
     setFromBeanValue(newFromBeanValue);
-    setFromStalkValue(TrimBN(getStalkRemoved(fromNumber), STALK.decimals));
-    setFromSeedsValue(
+    setToStalkValue(TrimBN(getStalkRemoved(fromNumber), STALK.decimals));
+    setToSeedsValue(
       TrimBN(fromNumber.multipliedBy(BEAN_TO_SEEDS), SEEDS.decimals)
     );
     props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0));
@@ -95,11 +99,15 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
   };
   const maxHandler = () => {
     const minMaxFromVal = MinBNs([
-      props.maxFromStalkVal.multipliedBy(props.stalkToBean),
-      props.maxFromSeedsVal.multipliedBy(props.seedsToBean),
+      props.maxToSeedsVal.multipliedBy(props.seedsToBean),
+      props.maxToStalkVal.multipliedBy(props.stalkToBean),
       props.maxFromBeanVal,
     ]);
-    fromValueUpdated(minMaxFromVal);
+    if (props.locked) {
+      fromValueUpdated(new BigNumber(-1));
+    } else {
+      fromValueUpdated(minMaxFromVal);
+    }
   };
 
   /* Input Fields */
@@ -110,6 +118,7 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
       claim={props.settings.claim}
       claimableBalance={props.beanClaimableBalance}
       handleChange={handleFromChange}
+      locked={props.locked || props.maxFromBeanVal.isLessThanOrEqualTo(0)}
       maxHandler={maxHandler}
       setValue={setFromBeanValue}
       token={SiloAsset.Bean}
@@ -124,7 +133,7 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
       burn
       decimals={4}
       token={SiloAsset.Stalk}
-      value={fromStalkValue}
+      value={toStalkValue}
     />
   );
   const toBurnSeedsField = (
@@ -132,7 +141,7 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
       burn
       decimals={4}
       token={SiloAsset.Seed}
-      value={fromSeedsValue}
+      value={toSeedsValue}
     />
   );
   const toTransitBeanField = (
@@ -140,6 +149,35 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
+
+  const details = [];
+  if (props.settings.claim) {
+    details.push(
+      <ClaimTextModule
+        key="claim"
+        balance={
+          props.claimableEthBalance
+            .plus(props.beanReceivableBalance)
+            .plus(props.lpReceivableBalance)
+            .plus(props.harvestablePodBalance)
+        }
+        claim={props.settings.claim}
+        mode={props.settings.mode}
+        claimableEthBalance={props.claimableEthBalance}
+        beanReceivableBalance={props.beanReceivableBalance}
+        lpReceivableBalance={props.lpReceivableBalance}
+        harvestablePodBalance={props.harvestablePodBalance}
+      />
+    );
+  }
+  const beanOutput = new BigNumber(fromBeanValue);
+
+  details.push(`- Withdraw ${displayBN(beanOutput)}
+    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} from the Silo`
+  );
+  details.push(`- Burn ${displayBN(
+    new BigNumber(toStalkValue)
+  )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
   const unvoteTextField = props.locked ? (
     <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
@@ -154,8 +192,12 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
       settings={props.settings}
     />
   ) : null;
+  const stalkChangePercent = toStalkValue
+    .dividedBy(props.totalStalk)
+    .multipliedBy(100);
+
   function transactionDetails() {
-    if (fromBeanValue.isLessThanOrEqualTo(0)) return null;
+    if (fromBeanValue.isLessThanOrEqualTo(0) || props.locked) return;
 
     return (
       <>
@@ -170,15 +212,13 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
         <Box style={{ display: 'inline-block', width: '100%' }}>
           {toTransitBeanField}
         </Box>
-        <Box style={{ display: 'inline-block', width: '100%', color: 'black' }}>
+        <TransactionDetailsModule fields={details} />
+        <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
           <span>
-            {`You will lose ${fromStalkValue
-              .dividedBy(props.totalStalk)
-              .multipliedBy(100)
-              .toFixed(3)}% ownership of Beanstalk.`}
+            {`You will forfeit ${smallDecimalPercent(stalkChangePercent)}% ownership of Beanstalk.`}
           </span>
           <br />
-          <span style={{ color: 'red' }}>
+          <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
             WARNING: Your Withdrawal will be frozen for 24 full Seasons.
           </span>
         </Box>
@@ -204,9 +244,13 @@ export const BeanWithdrawSubModule = forwardRef((props, ref) => {
           }
         );
       } else {
-        withdrawBeans(withdrawParams.crates, withdrawParams.amounts, () => {
-          fromValueUpdated(new BigNumber(-1));
-        });
+        withdrawBeans(
+          withdrawParams.crates,
+          withdrawParams.amounts,
+          () => {
+            fromValueUpdated(new BigNumber(-1));
+          }
+        );
       }
     },
   }));

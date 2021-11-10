@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { BEAN } from '../../constants';
-import { isAddress, MinBN, TrimBN } from '../../util';
-import { AddressInputField, CryptoAsset, TokenInputField } from '../Common';
+import { Box } from '@material-ui/core';
+import { BASE_ETHERSCAN_ADDR_LINK, BEAN } from '../../constants';
+import {
+  displayBN,
+  isAddress,
+  MinBN,
+  TrimBN,
+} from '../../util';
+import {
+  AddressInputField,
+  CryptoAsset,
+  TokenInputField,
+  TransactionDetailsModule,
+} from '../Common';
 
-export default function SendSubModule(props) {
+export default function SendModule(props) {
   const [snappedToAddress, setSnappedToAddress] = useState(false);
   const [walletText, setWalletText] = useState('');
 
@@ -85,10 +96,46 @@ export default function SendSubModule(props) {
     />
   );
 
+  /* Transaction Details, settings and text */
+
+  const details = [];
+  details.push(
+    <span>
+      {`- Send ${displayBN(props.fromBeanValue)}
+      ${props.fromBeanValue.isEqualTo(1) ? 'Bean' : 'Beans'} to `}
+      <a
+        href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
+        color="inherit"
+        target="blank"
+      >
+        {`${walletText}`}
+      </a>
+    </span>
+  );
+
+  function transactionDetails() {
+    if (props.fromBeanValue.isLessThanOrEqualTo(0)
+      || props.toAddress.length !== 42
+      || props.isValidAddress !== true
+    ) return;
+
+    return (
+      <>
+        <TransactionDetailsModule fields={details} />
+        <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
+          <span>
+            WARNING: You are sending Beans to another wallet and will no longer own them.
+          </span>
+        </Box>
+      </>
+    );
+  }
+
   return (
     <>
       {toAddressField}
       {fromBeanField}
+      {transactionDetails()}
     </>
   );
 }

@@ -12,8 +12,8 @@ import {
   transferBeans,
 } from '../../util';
 import { BaseModule, CryptoAsset } from '../Common';
-import SendSubModule from './SendSubModule';
-import SwapSubModule from './SwapSubModule';
+import SendModule from './SendModule';
+import SwapModule from './SwapModule';
 
 export default function TradeModule(props) {
   const [section, setSection] = useState(0);
@@ -96,7 +96,7 @@ export default function TradeModule(props) {
         isValidAddress !== true;
 
   const sections = [
-    <SwapSubModule
+    <SwapModule
       orderIndex={orderIndex}
       setOrderIndex={setOrderIndex}
       fromValue={fromValue}
@@ -130,7 +130,7 @@ export default function TradeModule(props) {
       settings={settings}
       setSettings={setSettings}
     />,
-    <SendSubModule
+    <SendModule
       toAddress={toAddress}
       setToAddress={setToAddress}
       fromAddress={props.address}

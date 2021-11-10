@@ -1,10 +1,17 @@
 import React, { Fragment } from 'react';
-import { Box, AppBar, Button, Link, Tab, Tabs } from '@material-ui/core';
+import {
+  AppBar,
+  Box,
+  Button,
+  Link,
+  Tab,
+  Tabs,
+} from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
-import { Line, FormatTooltip, QuestionModule } from './index';
+import { FormatTooltip, Line, QuestionModule } from './index';
 import { theme } from '../../constants';
 
 export default function BaseModule({
@@ -33,7 +40,7 @@ export default function BaseModule({
   showButton,
 }) {
   const dispatch = useDispatch();
-  const s = size === 'small';
+  const s = size === 'small' || window.innerWidth < 450;
   const classes = makeStyles(() => ({
     inputModule: {
       backgroundColor: theme.module.background,

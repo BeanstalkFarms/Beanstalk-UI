@@ -17,9 +17,9 @@ import {
   SiloAsset,
   TransitAsset,
 } from '../Common';
-import { LPClaimSubModule } from './LPClaimSubModule';
-import { LPDepositSubModule } from './LPDepositSubModule';
-import { LPWithdrawSubModule } from './LPWithdrawSubModule';
+import { LPClaimModule } from './LPClaimModule';
+import { LPDepositModule } from './LPDepositModule';
+import { LPWithdrawModule } from './LPWithdrawModule';
 
 export default function SiloLPModule(props) {
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<AppState, AppState['allowances']>(
@@ -63,10 +63,15 @@ export default function SiloLPModule(props) {
     else if (
       props.beanBalance.isGreaterThan(0) &&
       props.ethBalance.isGreaterThan(0)
-    ) setSettings((p) => ({ ...p, mode: SwapMode.BeanEthereum }));
-    else if (props.beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
-    else if (props.ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    ) {
+      setSettings((p) => ({ ...p, mode: SwapMode.BeanEthereum }));
+    } else if (props.beanBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
+    } else if (props.ethBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    } else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    }
   }
 
   const depositRef = useRef<any>();
@@ -87,7 +92,6 @@ export default function SiloLPModule(props) {
         break;
     }
   };
-
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
       setSection(newSection);
@@ -99,9 +103,11 @@ export default function SiloLPModule(props) {
     : new BigNumber(0);
 
   const sections = [
-    <LPDepositSubModule
+    <LPDepositModule
+      key={0}
       beanBalance={props.beanBalance}
       beanCrates={props.beanDeposits}
+      beanReceivableBalance={props.beanReceivableBalance}
       beanReserve={props.beanReserve}
       beanToEth={props.ethReserve.dividedBy(props.beanReserve)}
       beanToStalk={LPBEAN_TO_STALK}
@@ -110,8 +116,10 @@ export default function SiloLPModule(props) {
       ethBalance={props.ethBalance}
       ethReserve={props.ethReserve}
       ethToBean={props.beanReserve.dividedBy(props.ethReserve)}
+      harvestablePodBalance={props.harvestablePodBalance}
       hasClaimable={props.hasClaimable}
       lpBalance={props.lpBalance}
+      lpReceivableBalance={props.lpReceivableBalance}
       updateExpectedPrice={props.updateExpectedPrice}
       maxFromBeanSiloVal={props.beanSiloBalance}
       beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
@@ -126,14 +134,19 @@ export default function SiloLPModule(props) {
       totalLP={props.totalLP}
       totalStalk={props.totalStalk}
     />,
-    <LPWithdrawSubModule
+    <LPWithdrawModule
+      key={1}
+      beanReceivableBalance={props.beanReceivableBalance}
       claimable={props.claimable}
+      claimableEthBalance={props.claimableEthBalance}
       crates={props.lpDeposits}
+      harvestablePodBalance={props.harvestablePodBalance}
       hasClaimable={props.hasClaimable}
+      lpReceivableBalance={props.lpReceivableBalance}
       locked={section === 1 && props.locked}
       maxFromLPVal={props.lpSiloBalance}
-      maxFromSeedsVal={props.seedBalance}
-      maxFromStalkVal={props.stalkBalance}
+      maxToSeedsVal={props.seedBalance}
+      maxToStalkVal={props.stalkBalance}
       poolForLPRatio={props.poolForLPRatio}
       ref={withdrawRef}
       season={props.season}
@@ -148,7 +161,9 @@ export default function SiloLPModule(props) {
   ];
   if (props.lpReceivableBalance.isGreaterThan(0)) {
     sections.push(
-      <LPClaimSubModule
+      <LPClaimModule
+        key={2}
+        // claimableEthBalance={props.claimableEthBalance}
         crates={props.lpReceivableCrates}
         maxFromLPVal={props.lpReceivableBalance}
         poolForLPRatio={props.poolForLPRatio}

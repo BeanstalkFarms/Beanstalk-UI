@@ -1,6 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import {
+  Box,
   Link,
   Table,
   TableBody,
@@ -9,7 +10,6 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Box,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -18,7 +18,7 @@ import {
   DIAMONDS_LINK,
 } from 'constants/index';
 import { displayBN, displayFullBN } from '../../util';
-import { FormatTooltip } from '.';
+import { FormatTooltip } from './index';
 
 const useStyles = makeStyles({
   table: {

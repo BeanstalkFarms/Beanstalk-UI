@@ -13,9 +13,9 @@ import {
   SiloAsset,
   TransitAsset,
 } from '../Common';
-import { BeanClaimSubModule } from './BeanClaimSubModule';
-import { BeanDepositSubModule } from './BeanDepositSubModule';
-import { BeanWithdrawSubModule } from './BeanWithdrawSubModule';
+import { BeanClaimModule } from './BeanClaimModule';
+import { BeanDepositModule } from './BeanDepositModule';
+import { BeanWithdrawModule } from './BeanWithdrawModule';
 
 export default function SiloBeanModule(props) {
   const { beanstalkBeanAllowance } = useSelector<AppState, AppState['allowances']>(
@@ -58,9 +58,13 @@ export default function SiloBeanModule(props) {
   };
 
   if (settings.mode === null) {
-    if (props.beanBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
-    else if (props.ethBalance.isGreaterThan(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    if (props.beanBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
+    } else if (props.ethBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    } else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
+    }
   }
 
   const depositRef = useRef<any>();
@@ -86,7 +90,7 @@ export default function SiloBeanModule(props) {
     : new BigNumber(0);
 
   const sections = [
-    <BeanDepositSubModule
+    <BeanDepositModule
       key={0}
       beanBalance={props.beanBalance}
       beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
@@ -98,6 +102,8 @@ export default function SiloBeanModule(props) {
       ethBalance={props.ethBalance}
       ethReserve={props.ethReserve}
       hasClaimable={props.hasClaimable}
+      harvestablePodBalance={props.harvestablePodBalance}
+      lpReceivableBalance={props.lpReceivableBalance}
       ref={depositRef}
       setIsFormDisabled={setIsFormDisabled}
       setSection={setSection}
@@ -106,15 +112,20 @@ export default function SiloBeanModule(props) {
       totalStalk={props.totalStalk}
       updateExpectedPrice={props.updateExpectedPrice}
     />,
-    <BeanWithdrawSubModule
+    <BeanWithdrawModule
       key={1}
+      beanReceivableBalance={props.beanReceivableBalance}
+      beanClaimableBalance={props.beanClaimableBalance}
       claimable={props.claimable}
+      claimableEthBalance={props.claimableEthBalance}
       crates={props.beanDeposits}
       hasClaimable={props.hasClaimable}
+      harvestablePodBalance={props.harvestablePodBalance}
+      lpReceivableBalance={props.lpReceivableBalance}
       locked={section === 1 && props.locked}
       maxFromBeanVal={props.beanSiloBalance}
-      maxFromSeedsVal={props.seedBalance}
-      maxFromStalkVal={props.stalkBalance}
+      maxToSeedsVal={props.seedBalance}
+      maxToStalkVal={props.stalkBalance}
       ref={withdrawRef}
       season={props.season}
       setIsFormDisabled={setIsFormDisabled}
@@ -126,10 +137,10 @@ export default function SiloBeanModule(props) {
   ];
   if (props.beanReceivableBalance.isGreaterThan(0)) {
     sections.push(
-      <BeanClaimSubModule
+      <BeanClaimModule
         key={2}
         crates={props.beanReceivableCrates}
-        maxFromBeansVal={props.beanReceivableBalance}
+        maxFromBeanVal={props.beanReceivableBalance}
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
         setSection={setSection}
@@ -245,7 +256,7 @@ export default function SiloBeanModule(props) {
         handleApprove={approveBeanstalkBean}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
-        isDisabled={isFormDisabled}
+        isDisabled={isFormDisabled && (isFormDisabled || (section === 1 && props.locked))}
         locked={section === 1 && props.locked}
         lockedSeasons={props.lockedSeasons}
         mode={settings.mode}
