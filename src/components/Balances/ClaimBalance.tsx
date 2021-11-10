@@ -8,6 +8,7 @@ export default function ClaimBalance({
   balance,
   balanceColor,
   description,
+  height,
   title,
   token,
   width,
@@ -22,16 +23,11 @@ export default function ClaimBalance({
   };
   const imageStyle = {
     display: 'inline-block',
-    height: '15px',
+    height: height,
     marginBottom: '-2px',
     marginLeft: '0px',
   };
-  const beanImageStyle = {
-    display: 'inline-block',
-    height: '13px',
-    marginBottom: '-2px',
-    marginLeft: '0px',
-  };
+
   const displayBalance = balance.isLessThan(0.0001) && token === CryptoAsset.Ethereum ?
     smallDecimalPercent(balance)
     : displayBN(balance);
@@ -61,9 +57,9 @@ export default function ClaimBalance({
                   {displayBalance}
                 </h5>
                 <TokenTypeImageModule
-                  style={token === CryptoAsset.Bean ? beanImageStyle : imageStyle}
+                  style={imageStyle}
                   token={token}
-                  left={token === CryptoAsset.Bean ? '3px' : '0px'}
+                  left={height !== '15px' ? '2px' : '0px'}
                 />
               </Box>
             </FormatTooltip>
@@ -77,4 +73,5 @@ export default function ClaimBalance({
 ClaimBalance.defaultProps = {
   title: 'undefined',
   width: 'calc(55px + 2vw)',
+  height: '15px',
 };

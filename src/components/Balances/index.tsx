@@ -109,6 +109,7 @@ export default function Balances(props) {
             <ClaimBalance
               balance={beanClaimable}
               description={claimableStrings.beans}
+              height="13px"
               title="Beans"
               token={CryptoAsset.Bean}
               userClaimable={beanClaimable.isGreaterThan(0)}
@@ -167,6 +168,7 @@ export default function Balances(props) {
               <ClaimBalance
                 balance={props.farmableBeanBalance}
                 description={claimableStrings.farmableBeans}
+                height="13px"
                 title="Beans"
                 token={CryptoAsset.Bean}
                 userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
@@ -177,10 +179,10 @@ export default function Balances(props) {
             {props.farmableBeanBalance.plus(props.farmableStalkBalance) ?
               <ClaimBalance
                 balance={props.farmableBeanBalance.plus(props.farmableStalkBalance)}
-                title="Stalk"
                 description={claimableStrings.farmableStalk}
-                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
+                title="Stalk"
                 token={SiloAsset.Stalk}
+                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
                 {...props}
               />
               : spaceTop
@@ -188,21 +190,22 @@ export default function Balances(props) {
             {props.farmableBeanBalance.isGreaterThan(0) ?
               <ClaimBalance
                 balance={props.farmableBeanBalance.multipliedBy(2)}
-                title="Seeds"
                 description={claimableStrings.farmableSeeds}
-                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
+                height="17px"
+                title="Seeds"
                 token={SiloAsset.Seed}
+                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
                 {...props}
               />
               : spaceTop
             }
             {props.grownStalkBalance.isGreaterThan(0) ?
               <ClaimBalance
-                title="Grown Stalk"
                 balance={props.grownStalkBalance}
                 description={claimableStrings.grownStalk}
-                userClaimable={props.grownStalkBalance.isGreaterThan(0)}
+                title="Grown Stalk"
                 token={ClaimableAsset.Stalk}
+                userClaimable={props.grownStalkBalance.isGreaterThan(0)}
                 {...props}
               />
               : spaceTop
