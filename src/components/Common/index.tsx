@@ -136,9 +136,9 @@ export const totalStrings = {
 export const claimableStrings = {
   beans: 'Claimable Beans is the sum of harvestable Pods, claimable Bean withdrawals, and Beans under claimable LP withdrawals. Use the Claim button to claim all Claimable Beans and Claimable ETH.',
   eth: 'Claimable ETH is the sum of ETH under claimable LP Withdrawals and from Seasons of Plenty. Use the Claim button to claim all Claimable Beans and Claimable ETH.',
-  farmableBeans: 'Farmable Beans are deposited in a specific season the next time you interact with the Silo based on your proportion of Farmable Beans to Farmable Stalk. Use the Farm button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
-  farmableStalk: 'Farmable Stalk are currently earning Farmable Beans. Farmable Stalk are deposited in a specific season the next time you interact with the Silo based on your proportion of Farmable Beans to Farmable Stalk. Use the Farm button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
-  farmableSeeds: 'Farmable Seeds are currently yielding Farmable Stalk. Once farmed, Farmable Seeds yield Grown Stalk instead of Farmable Stalk. Farmable Seeds are deposited in a specific season the next time you interact with the Silo based on your proportion of Farmable Beans to Farmable Stalk. Use the Farm button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
-  grownStalk: 'Grown Stalk are currently not earning Farmable Beans. Once farmed, Grown Stalk earn Farmable Beans. Use the Farm button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
+  farmableBeans: 'Farmable Beans are deposited in a specific season the next time you interact with the Silo based on your proportion of Farmable Beans to Farmable Stalk. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
+  farmableStalk: 'Farmable Stalk are earn Farmable Beans. Farmable Stalk are deposited in a specific season the next time you interact with the Silo based on your proportion of Farmable Beans to Farmable Stalk. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
+  farmableSeeds: 'Farmable Seeds are yield Farmable Stalk. Once farmed, Farmable Seeds yield Grown Stalk instead of Farmable Stalk. Farmable Seeds are deposited in a specific season the next time you interact with the Silo based on your proportion of Farmable Beans to Farmable Stalk. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
+  grownStalk: 'Grown Stalk do not earn Farmable Beans. Once farmed, Grown Stalk earn Farmable Beans. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
   farm: 'Use this button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
 };
