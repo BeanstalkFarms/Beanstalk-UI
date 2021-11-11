@@ -5,25 +5,23 @@ import { BASE_SLIPPAGE } from '../../constants';
 import { TokenInputField } from './index';
 
 export default function InputFieldPlus(props) {
-  const balance = props.balance.plus(props.claim ? props.claimableBalance : new BigNumber(0));
+  const inputBalance = props.balance.plus(props.claim ? props.claimableBalance : new BigNumber(0));
 
-  const minLPBeans = props.beanLPClaimableBalance.isGreaterThan(0) ?
+  const minLPBeans = props.beanLPClaimableBalance.isGreaterThan(0) && props.claim ?
     props.beanLPClaimableBalance.multipliedBy(1 - BASE_SLIPPAGE)
     : new BigNumber(0);
 
-  const maxBalance = minLPBeans.isGreaterThan(0.5)
-    ? balance.minus(minLPBeans)
-    : balance.minus(props.beanLPClaimableBalance);
+  const maxBalance = inputBalance.minus(minLPBeans);
 
   const isClaimEnabled = props.claim;
   const parentChangeHandler = props.handleChange;
   const { value } = props;
 
   useEffect(() => {
-    if (value.isGreaterThan(balance)) {
-      parentChangeHandler(balance);
+    if (value.isGreaterThan(inputBalance)) {
+      parentChangeHandler(inputBalance);
     }
-  }, [balance, isClaimEnabled, value, parentChangeHandler]);
+  }, [inputBalance, isClaimEnabled, value, parentChangeHandler]);
 
   if (!props.visible) {
     if (props.value.isGreaterThan(0)) props.handleChange(new BigNumber(-1));
@@ -34,7 +32,7 @@ export default function InputFieldPlus(props) {
     if (event.target.value === undefined || event.target.value === '') {
       props.handleChange(new BigNumber(-1));
     } else {
-      props.handleChange(MinBN(balance, new BigNumber(event.target.value)));
+      props.handleChange(MinBN(inputBalance, new BigNumber(event.target.value)));
     }
   };
 
@@ -42,7 +40,7 @@ export default function InputFieldPlus(props) {
 
   const tokenInputField = (
     <TokenInputField
-      balance={balance}
+      balance={inputBalance}
       isLP={props.isLP}
       handleChange={handleChange}
       maxHandler={maxHandler}

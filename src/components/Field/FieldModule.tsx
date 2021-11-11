@@ -89,11 +89,20 @@ export default function FieldModule(props) {
     props.poolForLPRatio(props.lpReceivableBalance)[0]
     : new BigNumber(0);
 
+  const beanClaimable = props.beanReceivableBalance
+    .plus(props.harvestablePodBalance)
+    .plus(props.poolForLPRatio(props.lpReceivableBalance)[0]);
+
+  const ethClaimable = props.claimableEthBalance
+    .plus(props.poolForLPRatio(props.lpReceivableBalance)[1]);
+
   const sections = [
     <SowModule
       key={0}
       unripenedPods={props.unripenedPods}
       beanBalance={props.beanBalance}
+      beanClaimable={beanClaimable}
+      ethClaimable={ethClaimable}
       beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
       beanLPClaimableBalance={claimLPBeans}
       beanReserve={props.beanReserve}

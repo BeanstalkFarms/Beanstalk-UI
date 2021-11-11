@@ -89,9 +89,18 @@ export default function SiloBeanModule(props) {
     props.poolForLPRatio(props.lpReceivableBalance)[0]
     : new BigNumber(0);
 
+  const beanClaimable = props.beanReceivableBalance
+    .plus(props.harvestablePodBalance)
+    .plus(props.poolForLPRatio(props.lpReceivableBalance)[0]);
+
+  const ethClaimable = props.claimableEthBalance
+    .plus(props.poolForLPRatio(props.lpReceivableBalance)[1]);
+
   const sections = [
     <BeanDepositModule
       key={0}
+      beanClaimable={beanClaimable}
+      ethClaimable={ethClaimable}
       beanBalance={props.beanBalance}
       beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
       beanLPClaimableBalance={claimLPBeans}
@@ -114,6 +123,8 @@ export default function SiloBeanModule(props) {
     />,
     <BeanWithdrawModule
       key={1}
+      beanClaimable={beanClaimable}
+      ethClaimable={ethClaimable}
       beanReceivableBalance={props.beanReceivableBalance}
       beanClaimableBalance={props.beanClaimableBalance}
       claimable={props.claimable}

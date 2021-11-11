@@ -28,7 +28,7 @@ export default function ClaimBalance({
     marginLeft: '0px',
   };
 
-  const displayBalance = balance.isLessThan(0.0001) && token === CryptoAsset.Ethereum ?
+  const displayBalance = balance.isLessThan(0.001) && token === CryptoAsset.Ethereum ?
     smallDecimalPercent(balance)
     : displayBN(balance);
 
@@ -68,6 +68,7 @@ export default function ClaimBalance({
       </Grid>
     );
   }
+  return null;
 }
 
 ClaimBalance.defaultProps = {

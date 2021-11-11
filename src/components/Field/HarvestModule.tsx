@@ -43,9 +43,7 @@ export const HarvestModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
   const details = [];
   details.push(`Harvest ${displayBN(props.harvestablePodBalance)} Pods`);
-  details.push(`Receive ${displayBN(
-    props.harvestablePodBalance)} Beans`
-  );
+  details.push(`Receive ${displayBN(props.harvestablePodBalance)} Beans`);
 
   function transactionDetails() {
     if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;

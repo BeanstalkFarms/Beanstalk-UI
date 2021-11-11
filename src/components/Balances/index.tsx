@@ -10,7 +10,6 @@ import {
   CryptoAsset,
   Grid,
   Line,
-  SiloAsset,
   totalDescriptions,
   totalStrings,
   walletDescriptions,
@@ -75,13 +74,9 @@ export default function Balances(props) {
   const userTotalClaimable = beanClaimable.plus(ethClaimable);
 
   const spaceTop = (
-    <Grid container item xs={12} justifyContent="center" style={{ marginTop: '20px' }} />
+    <Grid container item xs={12} justifyContent="center" style={{ marginTop: '10px' }} />
   );
 
-  const isFarmableStalk = (
-    props.grownStalkBalance.isGreaterThan(0) &&
-    props.farmableStalkBalance.isGreaterThan(0)
-  );
   const isFarmableBeans = (
     props.grownStalkBalance.isGreaterThan(0) ||
     props.farmableBeanBalance.isGreaterThan(0)
@@ -99,12 +94,6 @@ export default function Balances(props) {
           <Grid container item xs={12} justifyContent="center" style={{ fontWeight: 'bold', marginBottom: '5px' }}>
             Claimable
           </Grid>
-          {isFarmableStalk && ethClaimable.isGreaterThan(0) ?
-            spaceTop
-            : isFarmableStalk ?
-              <Grid container item xs={12} justifyContent="center" style={{ marginTop: '30px' }} />
-              : null
-          }
           {beanClaimable.isGreaterThan(0) ?
             <ClaimBalance
               balance={beanClaimable}
@@ -115,9 +104,7 @@ export default function Balances(props) {
               userClaimable={beanClaimable.isGreaterThan(0)}
               {...props}
             />
-            : isFarmableBeans ?
-                spaceTop
-                : null
+            : null
           }
           {ethClaimable.isGreaterThan(0) ?
             <ClaimBalance
@@ -128,13 +115,7 @@ export default function Balances(props) {
               userClaimable={ethClaimable.isGreaterThan(0)}
               {...props}
             />
-            : isFarmableBeans ?
-                spaceTop
-                : null
-          }
-          {ethClaimable.isGreaterThan(0) ?
-            spaceTop
-            : <Grid container item xs={12} justifyContent="center" style={{ marginTop: '10px' }} />
+            : null
           }
         </Grid>
       </ClaimButton>
@@ -164,40 +145,9 @@ export default function Balances(props) {
             <Grid container item xs={12} justifyContent="center" style={{ fontWeight: 'bold', marginBottom: '5px' }}>
               Farmable
             </Grid>
-            {props.farmableBeanBalance.isGreaterThan(0) ?
-              <ClaimBalance
-                balance={props.farmableBeanBalance}
-                description={claimableStrings.farmableBeans}
-                height="13px"
-                title="Beans"
-                token={CryptoAsset.Bean}
-                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
-                {...props}
-              />
-              : spaceTop
-            }
-            {props.farmableBeanBalance.plus(props.farmableStalkBalance) ?
-              <ClaimBalance
-                balance={props.farmableBeanBalance.plus(props.farmableStalkBalance)}
-                description={claimableStrings.farmableStalk}
-                title="Stalk"
-                token={SiloAsset.Stalk}
-                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
-                {...props}
-              />
-              : spaceTop
-            }
-            {props.farmableBeanBalance.isGreaterThan(0) ?
-              <ClaimBalance
-                balance={props.farmableBeanBalance.multipliedBy(2)}
-                description={claimableStrings.farmableSeeds}
-                height="17px"
-                title="Seeds"
-                token={SiloAsset.Seed}
-                userClaimable={props.farmableBeanBalance.isGreaterThan(0)}
-                {...props}
-              />
-              : spaceTop
+            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0) ?
+              spaceTop
+              : null
             }
             {props.grownStalkBalance.isGreaterThan(0) ?
               <ClaimBalance
@@ -208,7 +158,11 @@ export default function Balances(props) {
                 userClaimable={props.grownStalkBalance.isGreaterThan(0)}
                 {...props}
               />
-              : spaceTop
+              : null
+            }
+            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0) ?
+              spaceTop
+              : null
             }
             {props.rootsBalance.isEqualTo(0) ? (
               <Box style={{ width: '130%', marginLeft: '-15%' }}>

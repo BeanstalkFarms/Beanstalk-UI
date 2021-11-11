@@ -172,18 +172,11 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     details.push(
       <ClaimTextModule
         key="claim"
-        balance={
-          props.claimableEthBalance
-            .plus(props.beanReceivableBalance)
-            .plus(props.lpReceivableBalance)
-            .plus(props.harvestablePodBalance)
-        }
+        balance={props.beanClaimable.plus(props.ethClaimable)}
         claim={props.settings.claim}
         mode={props.settings.mode}
-        claimableEthBalance={props.claimableEthBalance}
-        beanReceivableBalance={props.beanReceivableBalance}
-        lpReceivableBalance={props.lpReceivableBalance}
-        harvestablePodBalance={props.harvestablePodBalance}
+        beanClaimable={props.beanClaimable}
+        ethClaimable={props.ethClaimable}
       />
     );
   }

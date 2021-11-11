@@ -277,15 +277,15 @@ export default function App() {
           farmableStalkBalance,
           grownStalkBalance,
           rootsBalance,
-          claimable: [
-            userBalance.claimable[0],
-            userBalance.claimable[1],
-            userBalance.claimable[2],
-            userBalance.claimable[3],
-            userBalance.claimable[4],
-            minReceivables[0],
-            minReceivables[1]
-          ]
+          // claimable: [
+          //   userBalance.claimable[0],
+          //   userBalance.claimable[1],
+          //   userBalance.claimable[2],
+          //   userBalance.claimable[3],
+          //   userBalance.claimable[4],
+          //   minReceivables[0],
+          //   minReceivables[1]
+          // ]
         })
       );
     }

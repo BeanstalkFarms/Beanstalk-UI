@@ -1,34 +1,26 @@
 import BigNumber from 'bignumber.js';
-import { displayBN } from '../../util';
+import { displayBN, smallDecimalPercent } from '../../util';
 
 export default function ClaimTextModule({
   claim,
-  claimableEthBalance,
-  lpReceivableBalance,
-  beanReceivableBalance,
-  harvestablePodBalance,
+  beanClaimable,
+  ethClaimable,
 }) {
   const claimTextList = [];
   let claimText = '';
 
-  if (claimableEthBalance.isGreaterThan(0)) {
+  const displayEthBalance = ethClaimable.isLessThan(0.0001) ?
+    smallDecimalPercent(ethClaimable)
+    : displayBN(ethClaimable);
+
+  if (beanClaimable.isGreaterThan(0)) {
     claimTextList.push(
-      `${claimableEthBalance.toFixed(3)} ETH`
+      `${displayBN(beanClaimable)} Beans`
     );
   }
-  if (lpReceivableBalance.isGreaterThan(0)) {
+  if (ethClaimable.isGreaterThan(0)) {
     claimTextList.push(
-      `${displayBN(lpReceivableBalance)} LP Tokens`
-    );
-  }
-  if (beanReceivableBalance.isGreaterThan(0)) {
-    claimTextList.push(
-      `${displayBN(beanReceivableBalance)} Beans`
-    );
-  }
-  if (harvestablePodBalance.isGreaterThan(0)) {
-    claimTextList.push(
-      `${displayBN(harvestablePodBalance)} Pods`
+      `${displayEthBalance} ETH`
     );
   }
 
@@ -52,8 +44,6 @@ export default function ClaimTextModule({
 
 ClaimTextModule.defaultProps = {
   claim: false,
-  claimableEthBalance: new BigNumber(-1),
-  beanReceivableBalance: new BigNumber(-1),
-  lpReceivableBalance: new BigNumber(-1),
-  harvestablePodBalance: new BigNumber(-1),
+  beanClaimable: new BigNumber(-1),
+  ethClaimable: new BigNumber(-1),
 };
