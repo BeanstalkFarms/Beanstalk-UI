@@ -29,7 +29,7 @@ export default function Governance(props) {
   }, {});
   const seasonBips = activeBips.reduce((sBips, bip) => {
     sBips[bip] = props.bips[bip].period.minus(
-      props.season.minus(props.bips[bip].start)
+      props.season.minus(props.bips[bip].start).minus(1)
     );
     return sBips;
   }, {});

@@ -167,7 +167,7 @@ const BipTable = (props) => {
           .isLessThanOrEqualTo(props.season)
       ) {
         tb.status = 'Failed';
-      } else if (bip.start.plus(bip.period).isLessThanOrEqualTo(props.season)) {
+      } else if (bip.start.plus(bip.period).isLessThan(props.season)) {
         tb.status = voteProportion.isGreaterThan(0.5) ? 'Commitable' : 'Failed';
       } else if (
         bip.timestamp
@@ -181,7 +181,7 @@ const BipTable = (props) => {
         tb.status = 'Emergency Committable';
       } else {
         tb.status = `${bip.period.minus(
-          props.season.minus(bip.start)
+          props.season.minus(bip.start).minus(1)
         )} Seasons Remaining`;
       }
       tb.voted = percentForStalk(
