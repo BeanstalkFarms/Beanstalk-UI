@@ -13,6 +13,7 @@ export interface hideShowState {
   governance: Boolean;
   nft: Boolean;
   silo: Boolean;
+  seasons: Boolean;
   trade: Boolean;
   descriptions: {
     silo: Boolean;
@@ -32,6 +33,7 @@ export const initialState: hideShowState = {
   governance: isHiddenInLocalStorage.governance || true,
   nft: isHiddenInLocalStorage.nft || true,
   silo: isHiddenInLocalStorage.silo || true,
+  seasons: isHiddenInLocalStorage.seasons || true,
   trade: isHiddenInLocalStorage.trade || true,
   descriptions: {
     silo: isHiddenInLocalStorage?.descriptions?.silo || true,

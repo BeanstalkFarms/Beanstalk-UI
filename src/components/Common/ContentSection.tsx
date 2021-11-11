@@ -7,7 +7,7 @@ import { AppState } from 'state';
 import { ContentTitle } from './index';
 import { theme } from '../../constants';
 
-export default function ContentSection({ padding?, marginTop?, width?, description?, descriptionLinks?, style?, id?, children?, title?, size?, textTransform? }) {
+export default function ContentSection({ padding, marginTop, width, description, descriptionLinks, style, id, children, title, size, textTransform }) {
   const dispatch = useDispatch();
 
   const hideShowState = useSelector<AppState, AppState['hideShowHandler']>(
@@ -53,12 +53,13 @@ export default function ContentSection({ padding?, marginTop?, width?, descripti
     );
   };
 
+  const { innerWidth } = window;
   const descriptionSection =
     description !== undefined ? (
       <Box
         className={`section-description-${theme.name}`}
         style={
-          width > 500
+          innerWidth > 500
             ? {
               maxWidth: '550px',
               margin: '20px 0 0 0',
@@ -66,7 +67,7 @@ export default function ContentSection({ padding?, marginTop?, width?, descripti
               color: theme.backgroundText,
             }
             : {
-              width: width - 64,
+              width: innerWidth - 64,
               margin: '20px 0',
               padding: '12px',
               color: theme.backgroundText,
@@ -98,14 +99,13 @@ export default function ContentSection({ padding?, marginTop?, width?, descripti
           onClick={() => handleHideShowDescription(id)}
           variant="text"
           size="small"
-          >
+        >
           {hideShowState.descriptions[id] ? 'HIDE' : 'SHOW'}
         </Button>
       </Box>
     ) : null;
 
   const shouldShow = !!hideShowState[id];
-
   return (
     <Box id={id} className="AppContent" style={style}>
       <Grid
