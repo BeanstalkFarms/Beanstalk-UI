@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Grid, Box, Button } from '@material-ui/core';
+import { Link, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { setHideShowState } from 'state/hideShowHandler/actions';
 import { AppState } from 'state';
@@ -27,8 +27,7 @@ export default function ContentSection({ padding, marginTop, width, description,
       borderRadius: '12px',
       fontFamily: 'Futura-Pt-Book',
       fontSize: 'calc(10px + 1vmin)',
-      height: '10px',
-      width: '100px',
+      cursor: 'pointer',
     },
   })();
 
@@ -93,15 +92,10 @@ export default function ContentSection({ padding, marginTop, width, description,
             ))}
           </>
         ) : (null)}
-        <Button
-          className={classes.hideButton}
-          color="primary"
-          onClick={() => handleHideShowDescription(id)}
-          variant="text"
-          size="small"
-        >
-          {hideShowState.descriptions[id] ? 'HIDE' : 'SHOW'}
-        </Button>
+
+        <span className={classes.hideButton} role="button" tabIndex={0} aria-pressed="false" onClick={() => handleHideShowDescription(id)} onKeyDown={() => handleHideShowDescription(id)}>
+          {hideShowState.descriptions[id] ? ' Hide' : 'Show'}
+        </span>
       </Box>
     ) : null;
 
