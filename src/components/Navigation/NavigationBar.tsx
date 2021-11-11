@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
   AppBar,
   Button,
@@ -18,14 +19,41 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
+import { AppState } from 'state';
 import BeanLogo from '../../img/bean-logo.svg';
 import { chainId } from '../../util';
 import WalletModule from './WalletModule';
 import { priceQuery } from '../../graph';
 import { theme } from '../../constants';
 
+const defaultNavMapping = [
+  {
+    path: 'farm',
+    title: 'FARM',
+  },
+  {
+    path: 'analytics',
+    title: 'ANALYTICS',
+  },
+  {
+    path: 'dao',
+    title: 'DAO',
+  },
+  {
+    path: 'nft',
+    title: 'BeaNFTs',
+  },
+  {
+    path: 'about',
+    title: 'ABOUT',
+  },
+];
+
 export default function NavigationBar(props) {
   const [price, setPrice] = useState(0);
+  const { beanPrice } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
 
   const classes = makeStyles({
     fixedNav: {
@@ -142,7 +170,7 @@ export default function NavigationBar(props) {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow">
-                  {props.links.map(({ title, path }) => (
+                  {defaultNavMapping.map(({ title, path }) => (
                     <MenuItem
                       key={path}
                       button
@@ -173,7 +201,7 @@ export default function NavigationBar(props) {
       aria-labelledby="main navigation"
       className="NavigationBar"
     >
-      {props.links.map(({ title, path }) => (
+      {defaultNavMapping.map(({ title, path }) => (
         <ListItem
           key={path}
           button
@@ -208,10 +236,10 @@ export default function NavigationBar(props) {
       : null;
 
   let currentBeanPrice = null;
-  if (props.beanPrice !== undefined) {
+  if (beanPrice !== undefined) {
     currentBeanPrice = (
       <Box className={classes.currentPriceStyle}>
-        {`$${props.beanPrice.toFixed(4)}`}
+        {`$${beanPrice.toFixed(4)}`}
       </Box>
     );
   } else if (price > 0) {

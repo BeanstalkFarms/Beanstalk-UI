@@ -101,29 +101,6 @@ export default function App() {
     contractEvents,
   } = useSelector<AppState, AppState['general']>((state) => state.general);
 
-  const defaultNavMapping = [
-    {
-      path: 'farm',
-      title: 'FARM',
-    },
-    {
-      path: 'analytics',
-      title: 'ANALYTICS',
-    },
-    {
-      path: 'dao',
-      title: 'DAO',
-    },
-    {
-      path: 'nft',
-      title: 'BeaNFTs',
-    },
-    {
-      path: 'about',
-      title: 'ABOUT',
-    },
-  ];
-
   BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
   const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
@@ -719,17 +696,9 @@ export default function App() {
     const { innerHeight: height } = window;
     app = <LoadingBean />;
   } else {
-    const navMapping = [...defaultNavMapping];
     app = (
       <>
-        <NavigationBar
-          links={navMapping}
-          beanPrice={prices.beanPrice}
-          events={contractEvents}
-          poolForLPRatio={poolForLPRatio}
-          {...totalBalance}
-          {...userBalance}
-        />
+        <NavigationBar events={contractEvents} />
         <Switch>
           <Route exact path="/">
             <Redirect to="/farm" />
@@ -737,66 +706,18 @@ export default function App() {
           <Route exact path="/farm">
             <>
               <Silo />
-              <Field
-                key="field"
-                beansPerSeason={beansPerSeason}
-                beanReserve={prices.beanReserve}
-                ethReserve={prices.ethReserve}
-                poolForLPRatio={poolForLPRatio}
-                unripenedPods={totalBalance.totalPods}
-                updateExpectedPrice={updateExpectedPrice}
-                {...prices}
-                {...userBalance}
-                {...weather}
-              />
-              <Trade
-                key="trade"
-                lastCross={lastCross}
-                poolForLPRatio={poolForLPRatio}
-                {...prices}
-                {...totalBalance}
-                {...userBalance}
-              />
+              <Field />
+              <Trade />
             </>
           </Route>
           <Route exact path="/analytics">
-            <Analytics
-              key="analytics"
-              bips={bips}
-              hasActiveBIP={hasActiveBIP}
-              poolForLPRatio={poolForLPRatio}
-              userRoots={userBalance.rootsBalance}
-              votedBips={userBalance.votedBips}
-              beanReserve={prices.beanReserve}
-              ethReserve={prices.ethReserve}
-              unripenedPods={totalBalance.totalPods}
-              updateExpectedPrice={updateExpectedPrice}
-              {...prices}
-              {...totalBalance}
-              {...season}
-              {...userBalance}
-              {...weather}
-            />
+            <Analytics />
           </Route>
           <Route exact path="/dao">
-            <Governance
-              key="governance"
-              bips={bips}
-              season={season.season}
-              totalRoots={totalBalance.totalRoots}
-              userRoots={userBalance.rootsBalance}
-              votedBips={userBalance.votedBips}
-            />
+            <Governance />
           </Route>
           <Route exact path="/nft">
-            <NFTs
-              key="beanft"
-              {...prices}
-              {...totalBalance}
-              {...season}
-              {...userBalance}
-              {...weather}
-            />
+            <NFTs />
           </Route>
           <Route exact path="/about">
             <About key="about" />
