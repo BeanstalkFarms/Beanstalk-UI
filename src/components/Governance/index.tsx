@@ -106,7 +106,7 @@ export default function Governance() {
             <GovernanceTable
               bips={bips}
               season={season}
-              totalRoots={rootsBalance}
+              totalRoots={totalRoots}
               style={{ maxWidth: '745px', margin: '0 auto' }}
             />
           </Grid>
