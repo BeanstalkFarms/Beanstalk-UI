@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import {
   Button,
   ClickAwayListener,
@@ -11,6 +12,7 @@ import {
   Box,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { AppState } from 'state';
 import {
   BEAN,
   ETH,
@@ -24,6 +26,7 @@ import {
   getBlockTimestamp,
   GetWalletAddress,
   toTokenUnitsBN,
+  poolForLP,
 } from '../../util';
 import {
   ClaimableAsset,
@@ -36,6 +39,43 @@ import {
   walletStrings,
 } from '../Common';
 import BalanceModule from '../Balances/BalanceModule';
+
+const tokenImageStyle = {
+  height: '15px',
+  float: 'right',
+  margin: '0px 8px 0px 4px',
+};
+const eventTitleStyle = {
+  display: 'inline-block',
+  maxWidth: '60',
+  fontFamily: 'Futura-PT-Book',
+  fontSize: '14px',
+};
+const timestampStyle = {
+  width: '100%',
+  fontFamily: 'Futura-PT-Book',
+  fontSize: '13px',
+  color: 'gray',
+  fontStyle: 'normal',
+};
+const eventAmountStyle = {
+  display: 'inline-block',
+  marginTop: '10px',
+  height: '100%',
+  width: '40%',
+  fontFamily: 'Lucida Console',
+  fontSize: '12px',
+  textAlign: 'right',
+  float: 'right',
+  paddingRight: '3%',
+};
+const menuItemStyle = {
+  minHeight: '44px',
+  padding: '5px',
+  whiteSpace: 'normal',
+  fontSize: 'small',
+  borderBottom: `1px solid ${theme.module.foreground}`,
+};
 
 export default function WalletModule(props) {
   const classes = makeStyles({
@@ -65,42 +105,32 @@ export default function WalletModule(props) {
     },
   })();
 
-  const tokenImageStyle = {
-    height: '15px',
-    float: 'right',
-    margin: '0px 8px 0px 4px',
-  };
-  const eventTitleStyle = {
-    display: 'inline-block',
-    maxWidth: '60',
-    fontFamily: 'Futura-PT-Book',
-    fontSize: '14px',
-  };
-  const timestampStyle = {
-    width: '100%',
-    fontFamily: 'Futura-PT-Book',
-    fontSize: '13px',
-    color: 'gray',
-    fontStyle: 'normal',
-  };
-  const eventAmountStyle = {
-    display: 'inline-block',
-    marginTop: '10px',
-    height: '100%',
-    width: '40%',
-    fontFamily: 'Lucida Console',
-    fontSize: '12px',
-    textAlign: 'right',
-    float: 'right',
-    paddingRight: '3%',
-  };
-  const menuItemStyle = {
-    minHeight: '44px',
-    padding: '5px',
-    whiteSpace: 'normal',
-    fontSize: 'small',
-    borderBottom: `1px solid ${theme.module.foreground}`,
-  };
+  const zeroBN = new BigNumber(-1);
+  const {
+    lpBalance,
+    lpSiloBalance,
+    lpTransitBalance,
+    lpReceivableBalance,
+    beanBalance,
+    beanSiloBalance,
+    beanTransitBalance,
+    beanReceivableBalance,
+    harvestablePodBalance,
+    stalkBalance,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
+  const { beanPrice, beanReserve, ethReserve } = useSelector<
+    AppState,
+    AppState['prices']
+  >((state) => state.prices);
+
+  const { totalLP, totalStalk } = useSelector<
+    AppState,
+    AppState['totalBalance']
+  >((state) => state.totalBalance);
+
   const [walletListStyle, setWalletListStyle] = useState({
     position: 'absolute',
     right: '-120px',
@@ -126,6 +156,11 @@ export default function WalletModule(props) {
   };
 
   const [walletEvents, setWalletEvents] = useState([]);
+
+  const poolForLPRatio = (amount: BigNumber) => {
+    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    return poolForLP(amount, beanReserve, ethReserve, totalLP);
+  };
 
   useEffect(() => {
     async function handleWallet() {
@@ -165,7 +200,10 @@ export default function WalletModule(props) {
           if (event.event === 'BeanRemove' || event.event === 'LPRemove') {
             return;
           }
-          filteredEvents.push({ ...event, timestamp: timestampsByBlockNumber[event.blockNumber] });
+          filteredEvents.push({
+            ...event,
+            timestamp: timestampsByBlockNumber[event.blockNumber],
+          });
         });
         filteredEvents.sort((a, b) => {
           const blockDiff = b.blockNumber - a.blockNumber;
@@ -183,7 +221,8 @@ export default function WalletModule(props) {
               : `s ${season.min}-${season.max}`;
           }
           function flushPendingAmounts() {
-            for (const type in pendingAmountsPerType) { // eslint-disable-line
+            // eslint-disable-next-line
+            for (const type in pendingAmountsPerType) {
               const batchedEvent = {};
               switch (type) {
                 case 'BeanDeposit': {
@@ -546,7 +585,14 @@ export default function WalletModule(props) {
   const [transactionPage, setTransactionPage] = useState(-1);
   const walletEventsDisplay = (
     <>
-      <Box style={{ zIndex: '1', width: '100%', height: '40px', backgroundColor: theme.module.background }}>
+      <Box
+        style={{
+          zIndex: '1',
+          width: '100%',
+          height: '40px',
+          backgroundColor: theme.module.background,
+        }}
+      >
         {walletSubtitles.map((title, index) => (
           <Button
             key={`transaction_page_${index}`} // eslint-disable-line
@@ -584,9 +630,18 @@ export default function WalletModule(props) {
               event.event
             );
           }
-          if (transactionPage === 1) return ['EtherClaim', 'Swap'].includes(event.event);
-          if (transactionPage === 2) return ['LPDeposit', 'LPWithdraw', 'LPClaim'].includes(event.event);
-          if (transactionPage === 3) return ['Sow', 'Harvest'].includes(event.event);
+          if (transactionPage === 1) {
+            return ['EtherClaim', 'Swap'].includes(event.event);
+          }
+
+          if (transactionPage === 2) {
+            return ['LPDeposit', 'LPWithdraw', 'LPClaim'].includes(event.event);
+          }
+
+          if (transactionPage === 3) {
+            return ['Sow', 'Harvest'].includes(event.event);
+          }
+
           if (transactionPage === 4) {
             return ['Vote', 'Unvote', 'Proposal', 'Incentivization'].includes(
               event.event
@@ -610,20 +665,20 @@ export default function WalletModule(props) {
     </>
   );
 
-  const userLP = props.lpBalance
-    .plus(props.lpSiloBalance)
-    .plus(props.lpTransitBalance)
-    .plus(props.lpReceivableBalance);
-  const userBeans = props.beanBalance
-    .plus(props.beanSiloBalance)
-    .plus(props.beanTransitBalance)
-    .plus(props.beanReceivableBalance)
-    .plus(props.harvestablePodBalance);
-  const userBeansAndEth = props.poolForLPRatio(userLP);
+  const userLP = lpBalance
+    .plus(lpSiloBalance)
+    .plus(lpTransitBalance)
+    .plus(lpReceivableBalance);
+  const userBeans = beanBalance
+    .plus(beanSiloBalance)
+    .plus(beanTransitBalance)
+    .plus(beanReceivableBalance)
+    .plus(harvestablePodBalance);
+  const userBeansAndEth = poolForLPRatio(userLP);
   const userLPBeans = userBeansAndEth[0].multipliedBy(2);
   const userBalanceInDollars = userBeans
     .plus(userLPBeans)
-    .multipliedBy(props.beanPrice);
+    .multipliedBy(beanPrice);
 
   const myBalancesSection = (
     <>
@@ -631,15 +686,13 @@ export default function WalletModule(props) {
         description={walletDescriptions}
         strings={walletStrings}
         topLeft={userBalanceInDollars}
-        topRight={props.stalkBalance
-          .dividedBy(props.totalStalk)
-          .multipliedBy(100)}
+        topRight={stalkBalance.dividedBy(totalStalk).multipliedBy(100)}
         beanReserveTotal={new BigNumber(0)}
         beanLPTotal={userBeansAndEth}
         padding="4px 0 0 0"
+        poolForLPRatio={poolForLPRatio}
         showTokenName={false}
         chartMargin="0 0 0 10px"
-        {...props}
       />
     </>
   );
@@ -714,7 +767,13 @@ export default function WalletModule(props) {
                       </Button>
                     ))}
                   </Box>
-                  <Box style={{ backgroundColor: theme.module.background, zIndex: '0', paddingTop: '0px' }}>
+                  <Box
+                    style={{
+                      backgroundColor: theme.module.background,
+                      zIndex: '0',
+                      paddingTop: '0px',
+                    }}
+                  >
                     {walletPages[walletPage]}
                   </Box>
                 </MenuList>

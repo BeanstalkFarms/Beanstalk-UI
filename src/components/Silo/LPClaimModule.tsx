@@ -60,11 +60,9 @@ export const LPClaimModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   function displayLP(balance) {
-    return (
-      `${displayBN(balance[0])} ${TokenLabel(
-        CryptoAsset.Bean
-      )} and ${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`
-    );
+    return `${displayBN(balance[0])} ${TokenLabel(
+      CryptoAsset.Bean
+    )} and ${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
   const details = [];

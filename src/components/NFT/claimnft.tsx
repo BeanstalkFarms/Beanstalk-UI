@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
 import { mintAllNFTs } from '../../util/index';
-import { ContentTitle, BaseModule, Grid, NftPicTable, SingleButton } from '../Common';
+import {
+  ContentTitle,
+  BaseModule,
+  Grid,
+  NftPicTable,
+  SingleButton,
+} from '../Common';
 
 export default function ClaimNFT(props) {
   const [page, setPage] = React.useState(0);
@@ -120,7 +126,10 @@ export default function ClaimNFT(props) {
 
   const showSection =
     canClaimNFT || claimedNfts.length > 0 ? (
-      <ContentTitle style={headerStyle} title={`YOUR BeaNFTs: ${ownedBeaNFTS}`} />
+      <ContentTitle
+        style={headerStyle}
+        title={`YOUR BeaNFTs: ${ownedBeaNFTS}`}
+      />
     ) : null;
 
   return (

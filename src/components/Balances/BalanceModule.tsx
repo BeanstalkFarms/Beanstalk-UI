@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Hidden, Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
+import { AppState } from 'state';
 import { BEAN, theme } from '../../constants';
-import {
-  displayBN,
-  displayFullBN,
-  TokenLabel,
-  TrimBN,
-} from '../../util';
+import { displayBN, displayFullBN, TokenLabel, TrimBN } from '../../util';
 import {
   BudgetAsset,
   ClaimableAsset,
@@ -24,57 +21,70 @@ import {
 import BalanceChart from './BalanceChart';
 import ToggleTokenBalanceModule from './ToggleTokenBalanceModule';
 
+const color = {
+  circulating: '#B3CDE3',
+  pool: '#FBB4AE',
+  claimable: '#C5AC77',
+  silo: '#CCEBC5',
+  transit: '#DECBE4',
+  budget: '#FED9A6',
+};
+const containerGridStyle = {
+  minHeight: '110px',
+  padding: '4px 4px',
+  width: '50%',
+};
+const containerGridHorizontalStyle = {
+  padding: '4px 4px',
+};
+const spanStyle = {
+  display: 'inline-block',
+  fontFamily: 'Futura-Pt-Book',
+  fontWeight: 'bold',
+  margin: '5px 0 5px 15px',
+  textAlign: 'left',
+  width: '100%',
+};
+const smallGridStyle = {
+  fontWeight: 'bold',
+  fontFamily: 'Futura-Pt-Book',
+  marginTop: '-5px',
+  padding: '0 4px 4px 4px',
+};
 export default function BalanceModule(props) {
   const [beanActive, setBeanActive] = useState(-1);
   const [lpActive, setLPActive] = useState(-1);
 
-  const color = {
-    circulating: '#B3CDE3',
-    pool: '#FBB4AE',
-    claimable: '#C5AC77',
-    silo: '#CCEBC5',
-    transit: '#DECBE4',
-    budget: '#FED9A6',
-  };
-  const containerGridStyle = {
-    minHeight: '110px',
-    padding: '4px 4px',
-    width: '50%',
-  };
-  const containerGridHorizontalStyle = {
-    padding: '4px 4px',
-  };
-  const spanStyle = {
-    display: 'inline-block',
-    fontFamily: 'Futura-Pt-Book',
-    fontWeight: 'bold',
-    margin: '5px 0 5px 15px',
-    textAlign: 'left',
-    width: '100%',
-  };
-  const smallGridStyle = {
-    fontWeight: 'bold',
-    fontFamily: 'Futura-Pt-Book',
-    marginTop: '-5px',
-    padding: '0 4px 4px 4px',
-  };
+  const {
+    lpBalance,
+    lpSiloBalance,
+    lpTransitBalance,
+    lpReceivableBalance,
+    beanBalance,
+    beanSiloBalance,
+    beanTransitBalance,
+    beanReceivableBalance,
+    harvestablePodBalance,
+    stalkBalance,
+    seedBalance,
+    ethBalance,
+    podBalance,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
 
-  const beanTotals = (
-    props.beanBalance
-      .plus(props.beanSiloBalance)
-      .plus(props.beanTransitBalance)
-      .plus(props.beanReceivableBalance)
-      .plus(props.harvestablePodBalance)
-      .plus(props.budgetBalance)
-      .plus(props.beanReserveTotal)
-  );
-  const lpTotals = (
-    props.lpBalance
-      .plus(props.lpSiloBalance)
-      .plus(props.lpTransitBalance)
-      .plus(props.lpReceivableBalance)
-  );
-  const claimableBalance = props.beanReceivableBalance.plus(props.harvestablePodBalance);
+  const beanTotals = beanBalance
+    .plus(beanSiloBalance)
+    .plus(beanTransitBalance)
+    .plus(beanReceivableBalance)
+    .plus(harvestablePodBalance)
+    .plus(props.budgetBalance)
+    .plus(props.beanReserveTotal);
+  const lpTotals = lpBalance
+    .plus(lpSiloBalance)
+    .plus(lpTransitBalance)
+    .plus(lpReceivableBalance);
+  const claimableBalance = beanReceivableBalance.plus(harvestablePodBalance);
 
   /* Show Claimables */
 
@@ -99,7 +109,7 @@ export default function BalanceModule(props) {
   );
   const claimableLPSection = (
     <ToggleTokenBalanceModule
-      balance={props.lpReceivableBalance}
+      balance={lpReceivableBalance}
       balanceColor={lpActive === 4 ? color.claimable : null}
       description={props.description.claimablelpBalance}
       isLP
@@ -127,7 +137,7 @@ export default function BalanceModule(props) {
   );
   const lpTransitSection = (
     <ToggleTokenBalanceModule
-      balance={props.lpTransitBalance}
+      balance={lpTransitBalance}
       balanceColor={lpActive === 2 ? color.transit : null}
       description={props.description.lpTransitBalance}
       isLP
@@ -170,13 +180,13 @@ export default function BalanceModule(props) {
                   asset={CryptoAsset.Bean}
                   claimable={claimableBalance}
                   budget={props.budgetBalance}
-                  circulating={props.beanBalance}
+                  circulating={beanBalance}
                   pool={props.beanReserveTotal}
-                  silo={props.beanSiloBalance}
+                  silo={beanSiloBalance}
                   setActive={setBeanActive}
                   title="Beans"
                   total={displayBN(beanTotals)}
-                  transit={props.beanTransitBalance}
+                  transit={beanTransitBalance}
                 />
               </Box>
             </FormatTooltip>
@@ -224,10 +234,10 @@ export default function BalanceModule(props) {
               <Box>
                 <BalanceChart
                   asset={CryptoAsset.LP}
-                  claimable={props.lpReceivableBalance}
-                  circulating={props.lpBalance}
+                  claimable={lpReceivableBalance}
+                  circulating={lpBalance}
                   setActive={setLPActive}
-                  silo={props.lpSiloBalance}
+                  silo={lpSiloBalance}
                   title={`${TokenLabel(CryptoAsset.Bean)}/${TokenLabel(
                     CryptoAsset.Ethereum
                   )}`}
@@ -245,7 +255,14 @@ export default function BalanceModule(props) {
   );
 
   return (
-    <Grid container justifyContent="center" style={{ padding: props.padding, backgroundColor: theme.module.background }}>
+    <Grid
+      container
+      justifyContent="center"
+      style={{
+        padding: props.padding,
+        backgroundColor: theme.module.background,
+      }}
+    >
       <Grid
         container
         style={{
@@ -299,12 +316,15 @@ export default function BalanceModule(props) {
       <span style={spanStyle}>Beans</span>
       <Grid
         container
-        style={{ backgroundColor: theme.module.foreground, borderRadius: '25px' }}
+        style={{
+          backgroundColor: theme.module.foreground,
+          borderRadius: '25px',
+        }}
       >
         <Grid container item sm={6} xs={12} style={containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
-              balance={props.beanBalance}
+              balance={beanBalance}
               balanceColor={beanActive === 0 ? color.circulating : null}
               description={props.description.beanBalance}
               swerve
@@ -314,7 +334,7 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item xs={12}>
             <TokenBalanceModule
-              balance={props.beanSiloBalance}
+              balance={beanSiloBalance}
               balanceColor={beanActive === 1 ? color.silo : null}
               description={props.description.beanSiloBalance}
               swerve
@@ -333,12 +353,15 @@ export default function BalanceModule(props) {
       <span style={spanStyle}>LP</span>
       <Grid
         container
-        style={{ backgroundColor: theme.module.foreground, borderRadius: '25px' }}
+        style={{
+          backgroundColor: theme.module.foreground,
+          borderRadius: '25px',
+        }}
       >
         <Grid container item sm={6} xs={12} style={containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
-              balance={props.lpBalance}
+              balance={lpBalance}
               balanceColor={lpActive === 0 ? color.circulating : null}
               description={props.description.lpBalance}
               isLP
@@ -350,7 +373,7 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item xs={12}>
             <TokenBalanceModule
-              balance={props.lpSiloBalance}
+              balance={lpSiloBalance}
               balanceColor={lpActive === 1 ? color.silo : null}
               description={props.description.lpSiloBalance}
               isLP
@@ -377,7 +400,7 @@ export default function BalanceModule(props) {
         <Grid container item xs={12} style={containerGridHorizontalStyle}>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
-              balance={props.stalkBalance}
+              balance={stalkBalance}
               description={props.description.stalkBalance}
               margin={props.margin}
               placement="bottom"
@@ -386,7 +409,7 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
-              balance={props.seedBalance}
+              balance={seedBalance}
               description={props.description.seedBalance}
               margin={props.margin}
               placement="bottom"
@@ -395,7 +418,7 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
-              balance={props.podBalance}
+              balance={podBalance}
               description={props.description.podBalance}
               margin={props.margin}
               placement="bottom"
@@ -404,7 +427,11 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
-              balance={props.ethBalance.isLessThan(0.0003) ? TrimBN(props.ethBalance, 6) : props.ethBalance}
+              balance={
+                ethBalance.isLessThan(0.0003)
+                  ? TrimBN(ethBalance, 6)
+                  : ethBalance
+              }
               description={props.description.ethBalance}
               margin={props.margin}
               placement="bottom"

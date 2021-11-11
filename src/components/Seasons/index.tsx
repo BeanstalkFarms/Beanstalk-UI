@@ -1,22 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import sunriseIcon from '../../img/black-sun.svg';
 import { sunrise, chainId } from '../../util';
 
-import {
-  ContentSection,
-  Grid,
-  HeaderLabel,
-  SingleButton,
-} from '../Common';
+import { ContentSection, Grid, HeaderLabel, SingleButton } from '../Common';
 import PegMaintenance from './PegMaintenance';
 import SeasonReward from './SeasonReward';
 import SeasonTimer from './SeasonTimer';
 
-export default function Seasons(props) {
-  const nextSeasonTime = props.start.plus(
-    props.season.plus(1).multipliedBy(props.period)
+export default function Seasons() {
+  const { season, period, start } = useSelector<AppState, AppState['season']>(
+    (state) => state.season
   );
-  const timeUntilSunrise = (deadline) => parseInt(deadline, 10) - Date.now() / 1e3;
+  const nextSeasonTime = start.plus(season.plus(1).multipliedBy(period));
+  const timeUntilSunrise = (deadline) =>
+    parseInt(deadline, 10) - Date.now() / 1e3;
 
   const timer = useRef();
   const [time, setTime] = useState(timeUntilSunrise(nextSeasonTime));
@@ -62,7 +61,7 @@ export default function Seasons(props) {
       id="seasons"
       title="Seasons"
       size="20px"
-      style={{ minHeight: '600px' }}
+      style={{ minHeight: '600px', marginBottom: '40px' }}
     >
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid
@@ -77,7 +76,7 @@ export default function Seasons(props) {
             Each Season begins when the Sunrise function is called on the Ethereum blockchain.
             The Sunrise function can be called by anyone at the top of each hour."
             title="Current Season"
-            value={props.season.isNegative() ? '---' : String(props.season)}
+            value={season.isNegative() ? '---' : String(season)}
           />
         </Grid>
         <Grid
@@ -108,7 +107,7 @@ export default function Seasons(props) {
         style={{ padding: '0px', marginTop: '12px' }}
         justifyContent="center"
       >
-        <PegMaintenance {...props} />
+        <PegMaintenance />
       </Grid>
     </ContentSection>
   );

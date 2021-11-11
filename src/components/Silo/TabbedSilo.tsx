@@ -3,7 +3,7 @@ import { BaseModule, Grid } from '../Common';
 import SiloBeanModule from './SiloBeanModule';
 import SiloLPModule from './SiloLPModule';
 
-export default function TabbedSilo(props) {
+export default function TabbedSilo() {
   const { innerWidth: width } = window;
 
   const [section, setSection] = useState(0);
@@ -12,7 +12,7 @@ export default function TabbedSilo(props) {
     'Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.',
     'Use this tab to deposit, withdraw, and claim Beans to and from the Silo.',
   ];
-  const sections = [<SiloLPModule {...props} />, <SiloBeanModule {...props} />];
+  const sections = [<SiloLPModule />, <SiloBeanModule />];
 
   return (
     <Grid
