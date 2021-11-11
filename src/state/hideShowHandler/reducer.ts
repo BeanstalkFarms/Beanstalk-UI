@@ -2,9 +2,8 @@ import { createReducer } from '@reduxjs/toolkit';
 import { setHideShowState } from './actions';
 
 const isHiddenInLocalStorage = JSON.parse(
-  localStorage.getItem('isHidden') || 'false'
+  localStorage.getItem('isHidden') || 'true'
 );
-console.log('isHiddenInLocalStorage', isHiddenInLocalStorage);
 export interface hideShowState {
   about: Boolean;
   analytics: Boolean;
@@ -15,18 +14,32 @@ export interface hideShowState {
   nft: Boolean;
   silo: Boolean;
   trade: Boolean;
+  descriptions: {
+    silo: Boolean;
+    field: Boolean;
+    trade: Boolean;
+    nft: Boolean;
+    governance: Boolean;
+  }
 }
 
 export const initialState: hideShowState = {
-  about: isHiddenInLocalStorage.about,
-  analytics: isHiddenInLocalStorage.analytics,
-  balances: isHiddenInLocalStorage.balances,
-  charts: isHiddenInLocalStorage.charts,
-  field: isHiddenInLocalStorage.field,
-  governance: isHiddenInLocalStorage.governance,
-  nft: isHiddenInLocalStorage.nft,
-  silo: isHiddenInLocalStorage.silo,
-  trade: isHiddenInLocalStorage.trade,
+  about: isHiddenInLocalStorage.about || true,
+  analytics: isHiddenInLocalStorage.analytics || true,
+  balances: isHiddenInLocalStorage.balances || true,
+  charts: isHiddenInLocalStorage.charts || true,
+  field: isHiddenInLocalStorage.field || true,
+  governance: isHiddenInLocalStorage.governance || true,
+  nft: isHiddenInLocalStorage.nft || true,
+  silo: isHiddenInLocalStorage.silo || true,
+  trade: isHiddenInLocalStorage.trade || true,
+  descriptions: {
+    silo: isHiddenInLocalStorage?.descriptions?.silo || true,
+    field: isHiddenInLocalStorage?.descriptions?.field || true,
+    trade: isHiddenInLocalStorage?.descriptions?.trade || true,
+    nft: isHiddenInLocalStorage?.descriptions?.nft || true,
+    governance: isHiddenInLocalStorage?.descriptions?.governance || true,
+  },
 };
 
 export default createReducer(initialState, (builder) =>
