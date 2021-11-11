@@ -81,9 +81,7 @@ export default function App() {
   const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
     state => state.beansPerSeason
   );
-  const hideShowState = useSelector<AppState, AppState['hideShowHandler']>(
-    state => state.hideShowHandler
-  );
+
 
   document.body.style.backgroundColor = colorTheme.bodyColor;
 
@@ -778,13 +776,6 @@ export default function App() {
 
     // eslint-disable-next-line
   }, []);
-
-  React.useEffect(() => {
-    localStorage.setItem(
-      'isHidden',
-      JSON.stringify(hideShowState)
-    );
-  }, [hideShowState]);
 
   let app;
   if (metamaskFailure > -1) {

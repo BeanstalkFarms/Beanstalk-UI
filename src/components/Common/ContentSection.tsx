@@ -1,18 +1,12 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { setHideShowState } from 'state/hideShowHandler/actions';
-import { AppState } from 'state';
 import { ContentTitle } from './index';
 import { theme } from '../../constants';
 
 export default function ContentSection({ padding, marginTop, width, description, descriptionLinks, style, id, children, title, size, textTransform }) {
-  const dispatch = useDispatch();
-
-  const hideShowState = useSelector<AppState, AppState['hideShowHandler']>(
-    (state) => state.hideShowHandler
-  );
+  const [shouldDisplaySection, setshouldDisplaySection] = React.useState(true);
+  const [shouldDisplayDescription, setshouldDisplayDescription] = React.useState(true);
 
   const classes = makeStyles({
     appSection: {
@@ -31,24 +25,25 @@ export default function ContentSection({ padding, marginTop, width, description,
     },
   })();
 
-  const handleHideShowSection = (sectionID: string): void => {
-    dispatch(
-      setHideShowState({
-        [sectionID]: !hideShowState[sectionID],
-      })
+  React.useEffect(() => {
+    // on initialize fetch is_hidden variable or default to false. if is_hidden set shouldDisplay to false
+    if (JSON.parse(localStorage.getItem(`is_${id}_hidden`) || 'false')) setshouldDisplaySection(false);
+    if (JSON.parse(localStorage.getItem(`is_${id}_description_hidden`) || 'false')) setshouldDisplayDescription(false);
+  }, [id]);
+
+  const handleisSectionHiddenSection = (): void => {
+    setshouldDisplaySection(!shouldDisplaySection);
+    localStorage.setItem(
+      `is_${id}_hidden`,
+      JSON.stringify(shouldDisplaySection)
     );
   };
 
-  const handleHideShowDescription = (sectionID: string): void => {
-    dispatch(
-      setHideShowState({
-        ...hideShowState,
-        descriptions: {
-          ...hideShowState.descriptions,
-          [sectionID]: !hideShowState.descriptions[sectionID],
-        },
-      }
-      )
+  const handleisSectionHiddenDescription = (): void => {
+    setshouldDisplayDescription(!shouldDisplayDescription);
+    localStorage.setItem(
+      `is_${id}_description_hidden`,
+      JSON.stringify(shouldDisplayDescription)
     );
   };
 
@@ -73,7 +68,7 @@ export default function ContentSection({ padding, marginTop, width, description,
             }
         }
       >
-        {hideShowState.descriptions[id] ? (
+        {shouldDisplayDescription ? (
           <>
             {description}
             {descriptionLinks.map((l) => (
@@ -93,13 +88,12 @@ export default function ContentSection({ padding, marginTop, width, description,
           </>
         ) : (null)}
 
-        <span className={classes.hideButton} role="button" tabIndex={0} aria-pressed="false" onClick={() => handleHideShowDescription(id)} onKeyDown={() => handleHideShowDescription(id)}>
-          {hideShowState.descriptions[id] ? ' Hide' : 'Show'}
+        <span className={classes.hideButton} role="button" tabIndex={0} aria-pressed="false" onClick={() => handleisSectionHiddenDescription()} onKeyDown={() => {}}>
+          {shouldDisplayDescription ? ' Hide' : 'Show'}
         </span>
       </Box>
     ) : null;
 
-  const shouldShow = !!hideShowState[id];
   return (
     <Box id={id} className="AppContent" style={style}>
       <Grid
@@ -110,7 +104,7 @@ export default function ContentSection({ padding, marginTop, width, description,
       >
         <ContentTitle
           onClick={() => {
-            handleHideShowSection(id);
+            handleisSectionHiddenSection();
           }}
           padding={padding}
           marginTop={marginTop}
@@ -119,8 +113,8 @@ export default function ContentSection({ padding, marginTop, width, description,
           size={size}
           textTransform={textTransform}
         />
-        {shouldShow ? descriptionSection : null}
-        {shouldShow ? children : null}
+        {shouldDisplaySection ? descriptionSection : null}
+        {shouldDisplaySection ? children : null}
       </Grid>
     </Box>
   );
