@@ -24,7 +24,7 @@ export default function QuestionModule(props) {
     setShow(true);
   };
   const timer = width < 500 ?
-    5000
+    4000
     : 1000;
 
   return (

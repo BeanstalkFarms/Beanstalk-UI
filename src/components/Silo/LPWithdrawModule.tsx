@@ -188,10 +188,10 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     );
   }
   details.push(
-    `- Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
+    `Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
   );
   details.push(
-    `- Burn ${displayBN(
+    `Burn ${displayBN(
       new BigNumber(toStalkValue)
     )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`
   );
