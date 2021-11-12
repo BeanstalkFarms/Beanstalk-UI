@@ -77,7 +77,6 @@ export default function BalanceModule(props) {
       description={props.description.claimableBeanBalance}
       title={`Claimable ${props.showTokenName ? 'Beans' : ''}`}
       token={ClaimableAsset.Bean}
-      poolForLPRatio={props.poolForLPRatio}
     />
   );
 
@@ -88,7 +87,6 @@ export default function BalanceModule(props) {
       description={props.description.budgetBalance}
       title={`Budget ${props.showTokenName ? 'Beans' : ''}`}
       token={BudgetAsset.Bean}
-      poolForLPRatio={props.poolForLPRatio}
     />
   );
   const claimableLPSection = (
