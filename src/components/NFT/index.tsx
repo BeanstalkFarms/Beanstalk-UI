@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { MEDIUM_NFT_LINK, NFT_LINK, OPENSEA_LINK } from '../../constants';
-import { listenForNFTTransfers, GetWalletAddress, getMintedNFTs } from '../../util';
+import {
+  listenForNFTTransfers,
+  GetWalletAddress,
+  getMintedNFTs,
+} from '../../util';
 
 import { ContentSection } from '../Common';
 import ClaimNFT from './claimnft';
@@ -72,11 +76,11 @@ export default function NFTs() {
   return (
     <ContentSection
       id="nft"
-      description={description}
-      descriptionLinks={descriptionLinks}
       title="BeaNFTs"
       textTransform="none"
       style={{ minHeight: '100px' }}
+      description={description}
+      descriptionLinks={descriptionLinks}
     >
       <ClaimNFT
         buttonDescription="Use this button to Mint all your Mintable BeaNFTs."

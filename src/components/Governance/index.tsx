@@ -2,10 +2,10 @@ import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { Link, Box } from '@material-ui/core';
-import GovernanceTable from './GovernanceTable';
-import Vote from './Vote';
 import { ContentSection, Grid } from '../Common';
 import { WHITEPAPER } from '../../constants';
+import GovernanceTable from './GovernanceTable';
+import Vote from './Vote';
 
 export default function Governance() {
   const { bips } = useSelector<AppState, AppState['general']>(

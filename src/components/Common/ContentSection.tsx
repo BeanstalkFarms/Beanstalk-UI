@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link, Grid, Box } from '@material-ui/core';
+import { Box, Link, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { ContentTitle } from './index';
 import { theme } from '../../constants';
+import { ContentTitle } from './index';
 
 export default function ContentSection({
   description,

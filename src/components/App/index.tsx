@@ -90,7 +90,6 @@ export default function App() {
     (state) => state.beansPerSeason
   );
 
-
   document.body.style.backgroundColor = colorTheme.bodyColor;
 
   const {
@@ -689,13 +688,11 @@ export default function App() {
 
     // eslint-disable-next-line
   }, []);
-  console.log(initialized);
 
   let app;
   if (metamaskFailure > -1) {
     app = <MetamasklessModule />;
   } else if (!initialized) {
-    // const { innerHeight: height } = window;
     app = <LoadingBean />;
   } else {
     app = (
