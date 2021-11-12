@@ -172,10 +172,10 @@ export const BeanDepositModule = forwardRef((props, ref) => {
     new BigNumber(0)
   ).plus(MaxBN(fromBeanValue, new BigNumber(0)));
 
-  details.push(`- Deposit ${displayBN(beanOutput)}
+  details.push(`Deposit ${displayBN(beanOutput)}
     ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`
   );
-  details.push(`- Receive ${displayBN(
+  details.push(`Receive ${displayBN(
     new BigNumber(toStalkValue)
   )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 

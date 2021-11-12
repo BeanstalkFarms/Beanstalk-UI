@@ -39,7 +39,7 @@ export const BeanClaimModule = forwardRef((props, ref) => {
 
   const details = [];
   details.push(
-    `- Claim ${displayBN(
+    `Claim ${displayBN(
       new BigNumber(props.maxFromBeanVal)
     )} Beans from the Silo`
   );

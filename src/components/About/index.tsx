@@ -32,7 +32,7 @@ export default function About(props) {
         style={showLandingPage ? { minHeight: '99vh' } : sectionContentStyle}
         title={showLandingPage ? 'Beanstalk' : 'About'}
       >
-        <Box style={{ minHeight: '510px', width: '100%' }}>
+        <Box style={{ minHeight: '510px', width: '100%', marginTop: '20px' }}>
           {props.defaultSection}
           <Grid container style={cloudDivStyle}>
             <Grid item lg={3} md={3} sm={4} xs={6} style={cloudStyle}>

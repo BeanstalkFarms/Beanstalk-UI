@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Button } from '@material-ui/core';
 
-export default function TransactionDetailsModule(props) {
+export default function TransactionDetailsModule({
+  fields,
+}) {
   const [showTx, setShowTx] = useState(false);
 
   const transactionStyle = {
@@ -35,9 +37,9 @@ export default function TransactionDetailsModule(props) {
 
   const showTxField = showTx ? (
     <Box style={transactionStyle}>
-      {Object.keys(props.fields).map((key) => (
+      {Object.keys(fields).map((key, index) => (
         <Box key={`${key}`} style={rowStyle}>
-          {props.fields[key]}
+          {`${index + 1}. `}{fields[key]}
         </Box>
       ))}
     </Box>

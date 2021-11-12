@@ -58,6 +58,7 @@ const useStyles = makeStyles({
     marginTop: '18px',
     maxWidth: '800px',
     padding: '10px 10px 20px 10px',
+    marginBottom: '80px',
   },
 });
 
@@ -116,7 +117,11 @@ const Row = (props) => {
             align="center"
             component="th"
             scope="bip"
-            style={{ fontFamily: 'Futura-PT-Book', fontSize: '18px', borderColor: theme.accentColor }}
+            style={{
+              fontFamily: 'Futura-PT-Book',
+              fontSize: '18px',
+              borderColor: theme.accentColor,
+            }}
           >
             {bipIndex === 3 ? (
               <CircularProgressWithLabel value={bipValue} />
@@ -129,7 +134,11 @@ const Row = (props) => {
       <TableRow>
         <TableCell
           colSpan={6}
-          style={{ fontFamily: 'Futura-Pt-Book', padding: '0px', borderColor: theme.accentColor }}
+          style={{
+            fontFamily: 'Futura-Pt-Book',
+            padding: '0px',
+            borderColor: theme.accentColor,
+          }}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
             {summaryBips(open, bip)}
@@ -214,13 +223,23 @@ const BipTable = (props) => {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell size="small" style={{ width: '10px', borderBottom: `2px solid ${theme.accentColor}` }} />
+                <TableCell
+                  size="small"
+                  style={{
+                    width: '10px',
+                    borderBottom: `2px solid ${theme.accentColor}`,
+                  }}
+                />
                 {titles.map((t) => (
                   <TableCell
                     key={t}
                     align="center"
                     size="small"
-                    style={{ fontFamily: 'Futura-PT-Book', fontSize: '16px', borderBottom: `2px solid ${theme.accentColor}` }}
+                    style={{
+                      fontFamily: 'Futura-PT-Book',
+                      fontSize: '16px',
+                      borderBottom: `2px solid ${theme.accentColor}`,
+                    }}
                   >
                     {t}
                   </TableCell>

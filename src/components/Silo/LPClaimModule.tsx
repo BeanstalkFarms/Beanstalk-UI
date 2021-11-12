@@ -60,16 +60,14 @@ export const LPClaimModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   function displayLP(balance) {
-    return (
-      `${displayBN(balance[0])} ${TokenLabel(
-        CryptoAsset.Bean
-      )} and ${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`
-    );
+    return `${displayBN(balance[0])} ${TokenLabel(
+      CryptoAsset.Bean
+    )} and ${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
   const details = [];
   details.push(
-    `- Claim ${displayBN(
+    `Claim ${displayBN(
       new BigNumber(props.maxFromLPVal)
     )} LP Tokens from the Silo`
   );
@@ -87,9 +85,12 @@ export const LPClaimModule = forwardRef((props, ref) => {
   function transactionDetails() {
     if (settings.removeLP) {
       details.push(
-        `- Remove ${displayBN(
+        `Remove ${displayBN(
           props.maxFromLPVal
-        )} LP Tokens from the BEAN:ETH LP pool and receive ${displayLP(
+        )} LP Tokens from the BEAN:ETH LP pool`
+      );
+      details.push(
+        `Receive ${displayLP(
           props.poolForLPRatio(props.maxFromLPVal)
         )}`
       );
