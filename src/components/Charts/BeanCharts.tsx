@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Charts from './Charts';
 import { hourUniswapQuery, dayUniswapQuery, dayBeanQuery, hourBeanQuery } from '../../graph';
+import useIsMounted from '../../util/hooks/isMounted';
 
 export default function BeanCharts() {
+  const isMounted = useIsMounted();
+
   const [chartData, setChartData] = useState({
     price: [[], []],
     liquidity: [[], []],
@@ -82,11 +85,12 @@ export default function BeanCharts() {
       beanHourData.map((d) => ({ x: d.x, y: d.crosses })),
       beanDayData.map((d) => ({ x: d.x, y: d.crosses })),
     ];
-    setChartData({ price: price, volume: volume, liquidity: liquidity, marketCap: marketCap, supply: supply, crosses: crosses });
+    if (isMounted.current) setChartData({ price: price, volume: volume, liquidity: liquidity, marketCap: marketCap, supply: supply, crosses: crosses });
   }
 
   useEffect(() => {
     loadUniswapCharts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
