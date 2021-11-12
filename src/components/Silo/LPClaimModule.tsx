@@ -87,7 +87,10 @@ export const LPClaimModule = forwardRef((props, ref) => {
       details.push(
         `Remove ${displayBN(
           props.maxFromLPVal
-        )} LP Tokens from the BEAN:ETH LP pool and receive ${displayLP(
+        )} LP Tokens from the BEAN:ETH LP pool`
+      );
+      details.push(
+        `Receive ${displayLP(
           props.poolForLPRatio(props.maxFromLPVal)
         )}`
       );

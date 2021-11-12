@@ -176,7 +176,7 @@ export default function Vote(props) {
                       isDynamic
                       offset={-210}
                       smooth
-                      spy
+                      // spy
                       to={`bip-${bip[0]}`}
                     >
                       <IconButton

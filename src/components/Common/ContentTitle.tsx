@@ -4,7 +4,15 @@ import { makeStyles } from '@material-ui/styles';
 import { TitleLabel } from './index';
 import { theme } from '../../constants';
 
-export default function ContentTitle({ padding, marginTop, width, title, size, textTransform, onClick }) {
+export default function ContentTitle({
+  marginTop,
+  onClick,
+  padding,
+  size,
+  title,
+  textTransform,
+  width,
+}) {
   const classes = makeStyles({
     appSection: {
       padding: padding,
@@ -17,7 +25,11 @@ export default function ContentTitle({ padding, marginTop, width, title, size, t
 
   return (
     <Box onClick={onClick} className={classes.sectionTitle}>
-      <TitleLabel style={{ color: theme.backgroundText, cursor: 'pointer' }} size={size} textTransform={textTransform}>
+      <TitleLabel
+        style={{ color: theme.backgroundText, cursor: 'pointer' }}
+        size={size}
+        textTransform={textTransform}
+      >
         {title}
       </TitleLabel>
     </Box>

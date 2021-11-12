@@ -689,12 +689,13 @@ export default function App() {
 
     // eslint-disable-next-line
   }, []);
+  console.log(initialized);
 
   let app;
   if (metamaskFailure > -1) {
     app = <MetamasklessModule />;
   } else if (!initialized) {
-    const { innerHeight: height } = window;
+    // const { innerHeight: height } = window;
     app = <LoadingBean />;
   } else {
     app = (
@@ -711,7 +712,7 @@ export default function App() {
               <Trade />
             </>
           </Route>
-          <Route exact path="/analytics">
+          <Route exact path="/analytics" component={LoadingBean}>
             <Analytics />
           </Route>
           <Route exact path="/dao">

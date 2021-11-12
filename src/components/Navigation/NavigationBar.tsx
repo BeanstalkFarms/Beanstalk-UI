@@ -112,6 +112,10 @@ export default function NavigationBar(props) {
 
     getPrice();
   }, []);
+  // async function getTestPrice() {
+  //   console.log(await priceQuery());
+  //   setPrice(await priceQuery());
+  // }
 
   const anchorRef = React.useRef<any>(null);
   const [open, setOpen] = React.useState(false);
@@ -236,7 +240,7 @@ export default function NavigationBar(props) {
       : null;
 
   let currentBeanPrice = null;
-  if (beanPrice !== undefined) {
+  if (beanPrice !== undefined && beanPrice > 0) {
     currentBeanPrice = (
       <Box className={classes.currentPriceStyle}>
         {`$${beanPrice.toFixed(4)}`}

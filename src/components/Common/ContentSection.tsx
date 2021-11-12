@@ -4,7 +4,19 @@ import { makeStyles } from '@material-ui/styles';
 import { ContentTitle } from './index';
 import { theme } from '../../constants';
 
-export default function ContentSection({ padding, marginTop, width, description, descriptionLinks, style, id, children, title, size, textTransform }) {
+export default function ContentSection({
+  description,
+  descriptionLinks,
+  children,
+  id,
+  marginTop,
+  padding,
+  size,
+  style,
+  textTransform,
+  title,
+  width,
+}) {
   const [shouldDisplaySection, setshouldDisplaySection] = React.useState(true);
   const [shouldDisplayDescription, setshouldDisplayDescription] = React.useState(true);
 
@@ -20,15 +32,21 @@ export default function ContentSection({ padding, marginTop, width, description,
     hideButton: {
       borderRadius: '12px',
       fontFamily: 'Futura-Pt-Book',
-      fontSize: 'calc(10px + 1vmin)',
       cursor: 'pointer',
+      '&:hover': {
+        textDecoration: 'underline',
+      },
     },
   })();
 
   React.useEffect(() => {
     // on initialize fetch is_hidden variable or default to false. if is_hidden set shouldDisplay to false
-    if (JSON.parse(localStorage.getItem(`is_${id}_hidden`) || 'false')) setshouldDisplaySection(false);
-    if (JSON.parse(localStorage.getItem(`is_${id}_description_hidden`) || 'false')) setshouldDisplayDescription(false);
+    if (JSON.parse(localStorage.getItem(`is_${id}_hidden`) || 'false')) {
+      setshouldDisplaySection(false);
+    }
+    if (JSON.parse(localStorage.getItem(`is_${id}_description_hidden`) || 'false')) {
+      setshouldDisplayDescription(false);
+    }
   }, [id]);
 
   const handleisSectionHiddenSection = (): void => {
@@ -51,18 +69,18 @@ export default function ContentSection({ padding, marginTop, width, description,
   const descriptionSection =
     description !== undefined ? (
       <Box
-        className={`section-description-${theme.name}`}
+        className={shouldDisplayDescription ? `section-description-${theme.name}` : ''}
         style={
           innerWidth > 500
             ? {
               maxWidth: '550px',
-              margin: '20px 0 0 0',
+              margin: '0px 0 10px 0',
               padding: '12px',
               color: theme.backgroundText,
             }
             : {
               width: innerWidth - 64,
-              margin: '20px 0',
+              margin: '0 0 10px 0',
               padding: '12px',
               color: theme.backgroundText,
             }
@@ -88,9 +106,16 @@ export default function ContentSection({ padding, marginTop, width, description,
           </>
         ) : (null)}
 
-        <span className={classes.hideButton} role="button" tabIndex={0} aria-pressed="false" onClick={() => handleisSectionHiddenDescription()} onKeyDown={() => {}}>
+        <Box
+          className={classes.hideButton}
+          role="button"
+          tabIndex={0}
+          aria-pressed="false"
+          onClick={() => handleisSectionHiddenDescription()}
+          onKeyDown={() => {}}
+        >
           {shouldDisplayDescription ? ' Hide' : 'Show'}
-        </span>
+        </Box>
       </Box>
     ) : null;
 

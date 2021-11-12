@@ -25,7 +25,7 @@ export default function Governance() {
     AppState['userBalance']
   >((state) => state.userBalance);
 
-  if (bips === undefined || bips.length === 0) return null;
+  if (bips === undefined || bips.length === 0) return;
 
   const activeBipStyle = {
     fontFamily: 'Futura-PT-Book',

@@ -7,7 +7,7 @@ import prices from './prices/reducer';
 import weather from './weather/reducer';
 import beansPerSeason from './beansPerSeason/reducer';
 import general from './general/reducer';
-import hideShowHandler from './hideShowHandler/reducer';
+// import hideShowHandler from './hideShowHandler/reducer';
 
 const store = configureStore({
   reducer: {
@@ -19,7 +19,7 @@ const store = configureStore({
     prices,
     beansPerSeason,
     general,
-    hideShowHandler,
+    // hideShowHandler,
   },
   middleware: [
     ...getDefaultMiddleware({
