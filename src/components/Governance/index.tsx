@@ -1,12 +1,31 @@
 import React from 'react';
+import { AppState } from 'state';
+import { useSelector } from 'react-redux';
 import { Link, Box } from '@material-ui/core';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
 import { ContentSection, Grid } from '../Common';
 import { WHITEPAPER } from '../../constants';
 
-export default function Governance(props) {
-  if (props.bips === undefined || props.bips.length === 0) return null;
+export default function Governance() {
+  const { bips } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+
+  const { season } = useSelector<AppState, AppState['season']>(
+    (state) => state.season
+  );
+
+  const { totalRoots } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const { rootsBalance, votedBips } = useSelector<
+    AppState,
+    AppState['userBalance']
+  >((state) => state.userBalance);
+
+  if (bips === undefined || bips.length === 0) return null;
 
   const activeBipStyle = {
     fontFamily: 'Futura-PT-Book',
@@ -15,22 +34,20 @@ export default function Governance(props) {
     width: '100%',
   };
 
-  const activeBips = props.bips.reduce((aBips, bip) => {
+  const activeBips = bips.reduce((aBips, bip) => {
     if (bip.active) aBips.push(bip.id.toString());
     return aBips;
   }, []);
-  const votedBips = activeBips.reduce((vBips, bip) => {
-    vBips[bip] = props.votedBips.has(bip);
+  const _votedBips = activeBips.reduce((vBips, bip) => {
+    vBips[bip] = votedBips.has(bip);
     return vBips;
   }, {});
   const stalkBips = activeBips.reduce((sBips, bip) => {
-    sBips[bip] = props.bips[bip].roots;
+    sBips[bip] = bips[bip].roots;
     return sBips;
   }, {});
   const seasonBips = activeBips.reduce((sBips, bip) => {
-    sBips[bip] = props.bips[bip].period.minus(
-      props.season.minus(props.bips[bip].start)
-    );
+    sBips[bip] = bips[bip].period.minus(season.minus(bips[bip].start));
     return sBips;
   }, {});
 
@@ -41,9 +58,9 @@ export default function Governance(props) {
           bips={activeBips}
           seasonBips={seasonBips}
           stalkBips={stalkBips}
-          totalRoots={props.totalRoots}
-          userRoots={props.userRoots}
-          votedBips={votedBips}
+          totalRoots={totalRoots}
+          userRoots={rootsBalance}
+          votedBips={_votedBips}
         />
       </Grid>
     ) : (
@@ -86,7 +103,9 @@ export default function Governance(props) {
           </Grid>
           <Grid item xs={12}>
             <GovernanceTable
-              {...props}
+              bips={bips}
+              season={season}
+              totalRoots={totalRoots}
               style={{ maxWidth: '745px', margin: '0 auto' }}
             />
           </Grid>

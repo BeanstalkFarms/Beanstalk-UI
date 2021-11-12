@@ -1,6 +1,8 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import {
   BEAN,
   DELTA_POD_DEMAND_LOWER_BOUND,
@@ -14,18 +16,8 @@ import {
   SOIL_MIN_RATIO_CAP,
   theme,
 } from '../../constants';
-import {
-  displayBN,
-  displayFullBN,
-  MaxBN,
-  TrimBN,
-} from '../../util';
-import {
-  DataBalanceModule,
-  Grid,
-  Line,
-  QuestionModule,
-} from '../Common';
+import { displayBN, displayFullBN, MaxBN, TrimBN } from '../../util';
+import { DataBalanceModule, Grid, Line, QuestionModule } from '../Common';
 
 // const cases = [3,1,0,0,-1,-3,-3,0,3,1,0,0,-1,-3,-3,0,3,3,1,0,0,0,-1,0,3,3,1,0,1,0,-1,0]
 
@@ -99,20 +91,46 @@ function Stats(props) {
   );
 }
 
-export default function PegMaintenance(props) {
-  const price = props.beanTWAPPrice.dividedBy(props.usdcTWAPPrice);
-  const podRate = props.totalPods.dividedBy(props.totalBeans).multipliedBy(100);
-  const deltaSoil = props.startSoil.minus(props.soil);
+export default function PegMaintenance() {
+  const { beanTWAPPrice, usdcTWAPPrice, beanReserve, ethReserve } = useSelector<
+    AppState,
+    AppState['prices']
+  >((state) => state.prices);
+
+  const { totalPods, totalBeans } = useSelector<
+    AppState,
+    AppState['totalBalance']
+  >((state) => state.totalBalance);
+
+  const { season } = useSelector<AppState, AppState['season']>(
+    (state) => state.season
+  );
+
+  const {
+    startSoil,
+    soil,
+    lastDSoil,
+    lastSowTime,
+    didSowBelowMin,
+    didSowFaster,
+    weather,
+    raining,
+    rainStart,
+  } = useSelector<AppState, AppState['weather']>((state) => state.weather);
+
+  const price = beanTWAPPrice.dividedBy(usdcTWAPPrice);
+  const podRate = totalPods.dividedBy(totalBeans).multipliedBy(100);
+  const deltaSoil = startSoil.minus(soil);
   // const deltaDemand = (
   //   deltaSoil.isEqualTo(0)
   //     ? new BigNumber(0)
-  //     : props.lastDSoil.isEqualTo(0)
+  //     : lastDSoil.isEqualTo(0)
   //       ? new BigNumber(100000)
-  //       : deltaSoil.dividedBy(props.lastDSoil)
+  //       : deltaSoil.dividedBy(lastDSoil)
   // )
   const deltaDemand = !deltaSoil.isEqualTo(0)
-    ? !props.lastDSoil.isEqualTo(0)
-      ? deltaSoil.dividedBy(props.lastDSoil)
+    ? !lastDSoil.isEqualTo(0)
+      ? deltaSoil.dividedBy(lastDSoil)
       : new BigNumber(100000)
     : new BigNumber(0);
 
@@ -131,46 +149,53 @@ export default function PegMaintenance(props) {
   if (deltaDemand.isGreaterThanOrEqualTo(DELTA_POD_DEMAND_UPPER_BOUND)) {
     caseId += 2;
   } else if (deltaDemand.isGreaterThanOrEqualTo(DELTA_POD_DEMAND_LOWER_BOUND)) {
-    if (props.lastSowTime.isEqualTo(MAX_UINT32) || !props.didSowBelowMin) caseId += 1;
-    else if (props.didSowFaster) caseId += 2;
+    if (lastSowTime.isEqualTo(MAX_UINT32) || !didSowBelowMin) caseId += 1;
+    else if (didSowFaster) caseId += 2;
   }
 
   let deltaWeather = new BigNumber(PEG_WEATHER_CASES[caseId]);
-  if (props.weather.plus(deltaWeather).isLessThanOrEqualTo(0)) deltaWeather = props.weather.minus(1);
+  if (weather.plus(deltaWeather).isLessThanOrEqualTo(0)) {
+    deltaWeather = weather.minus(1);
+  }
 
-  const currentBeans = props.beanReserve
-    .multipliedBy(props.ethReserve)
-    .dividedBy(props.beanTWAPPrice)
+  const currentBeans = beanReserve
+    .multipliedBy(ethReserve)
+    .dividedBy(beanTWAPPrice)
     .sqrt();
-  const targetBeans = props.beanReserve
-    .multipliedBy(props.ethReserve)
-    .dividedBy(props.usdcTWAPPrice)
+  const targetBeans = beanReserve
+    .multipliedBy(ethReserve)
+    .dividedBy(usdcTWAPPrice)
     .sqrt();
 
   let newBeans = new BigNumber(0);
   let newSoil = new BigNumber(0);
-  if (currentBeans.isLessThan(targetBeans)) newBeans = targetBeans.minus(currentBeans);
-  else if (targetBeans.isLessThan(currentBeans)) newSoil = currentBeans.minus(targetBeans);
-
-  const minTotalSoil = props.totalBeans.multipliedBy(SOIL_MIN_RATIO_CAP);
-  if (props.soil.isLessThan(minTotalSoil)) newSoil = MaxBN(minTotalSoil.minus(props.soil), newSoil);
-  const maxTotalSoil = props.totalBeans.multipliedBy(SOIL_MAX_RATIO_CAP);
-
-  if (
-    props.soil.isGreaterThan(maxTotalSoil) &&
-    props.soil.plus(newSoil).isGreaterThan(maxTotalSoil)
-  ) {
-    newSoil = props.soil.minus(maxTotalSoil);
-  } else if (props.soil.plus(newSoil).isGreaterThan(maxTotalSoil)) {
-    newSoil = maxTotalSoil.minus(props.soil);
+  if (currentBeans.isLessThan(targetBeans)) {
+    newBeans = targetBeans.minus(currentBeans);
+  } else if (targetBeans.isLessThan(currentBeans)) {
+    newSoil = currentBeans.minus(targetBeans);
   }
 
-  const rainingSeasons = props.season.minus(props.rainStart);
+  const minTotalSoil = totalBeans.multipliedBy(SOIL_MIN_RATIO_CAP);
+  if (soil.isLessThan(minTotalSoil)) {
+    newSoil = MaxBN(minTotalSoil.minus(soil), newSoil);
+  }
+  const maxTotalSoil = totalBeans.multipliedBy(SOIL_MAX_RATIO_CAP);
+
+  if (
+    soil.isGreaterThan(maxTotalSoil) &&
+    soil.plus(newSoil).isGreaterThan(maxTotalSoil)
+  ) {
+    newSoil = soil.minus(maxTotalSoil);
+  } else if (soil.plus(newSoil).isGreaterThan(maxTotalSoil)) {
+    newSoil = maxTotalSoil.minus(soil);
+  }
+
+  const rainingSeasons = season.minus(rainStart);
   const rainNextSeason = caseId > 3 && caseId < 8;
   let rainForecast;
-  if (props.raining && rainNextSeason) rainForecast = 'More Showers';
+  if (raining && rainNextSeason) rainForecast = 'More Showers';
   else if (rainNextSeason) rainForecast = 'Start';
-  else if (props.raining) rainForecast = 'Stop';
+  else if (raining) rainForecast = 'Stop';
   else rainForecast = 'Sun';
   newBeans = TrimBN(newBeans, BEAN.decimals);
   newSoil = TrimBN(newSoil, BEAN.decimals);
@@ -197,12 +222,12 @@ export default function PegMaintenance(props) {
     },
     three: {
       title: 'Weather Forecast',
-      balance: `${props.weather.plus(deltaWeather)}%`,
+      balance: `${weather.plus(deltaWeather)}%`,
       description:
         'The Weather Forecast predicts the expected Weather next Season based on the current TWAP, Pod Rate, and Delta Demand.',
       balanceDescription:
         deltaWeather !== 0
-          ? `${props.weather.plus(deltaWeather).toString()}% Weather`
+          ? `${weather.plus(deltaWeather).toString()}% Weather`
           : undefined,
       placement: 'bottom',
     },
@@ -237,7 +262,7 @@ export default function PegMaintenance(props) {
     three: {
       title: 'Delta Demand',
       balance:
-        props.lastDSoil.isEqualTo(0) && deltaSoil.isGreaterThan(0) ? (
+        lastDSoil.isEqualTo(0) && deltaSoil.isGreaterThan(0) ? (
           <span>
             <span style={{ fontSize: '19px' }}>&#8734;</span>%
           </span>
@@ -247,13 +272,13 @@ export default function PegMaintenance(props) {
       description:
         'Delta Demand is the rate of change in demand for Pods over the past two Seasons. Delta Demand is computed as Beans sown this Season / Beans sown last Season.',
       balanceDescription:
-        props.lastDSoil.isEqualTo(0) || deltaSoil.isGreaterThan(0)
+        lastDSoil.isEqualTo(0) || deltaSoil.isGreaterThan(0)
           ? undefined
           : `${displayBN(deltaDemand)}% Change in Demand`,
       placement: 'bottom',
     },
   };
-  if (props.raining) {
+  if (raining) {
     currentSeasonStats.four = {
       title: 'Seasons of Rain',
       balance: displayBN(rainingSeasons.plus(1)),

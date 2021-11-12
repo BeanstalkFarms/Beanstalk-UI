@@ -1,8 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { BigNumber } from 'bignumber.js';
-import {
-  setWeather,
-} from './actions';
+import { setWeather } from './actions';
 
 export interface WeatherState {
   didSowBelowMin: Boolean;
@@ -35,11 +33,10 @@ export const initialState: WeatherState = {
 };
 
 export default createReducer(initialState, (builder) =>
-  builder
-    .addCase(setWeather, (state, { payload }) => {
-      Object.keys(payload).map((key) => {
-        state[key] = payload[key];
-        return state[key];
-      });
-    })
+  builder.addCase(setWeather, (state, { payload }) => {
+    Object.keys(payload).map((key) => {
+      state[key] = payload[key];
+      return state[key];
+    });
+  })
 );

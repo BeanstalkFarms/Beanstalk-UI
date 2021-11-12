@@ -191,10 +191,10 @@ export function displayBN(bn: BigNumber) {
 }
 
 export function smallDecimalPercent(bn: BigNumber) {
-  if (bn.isLessThanOrEqualTo(1e-5)) return '<.00001';
-  if (bn.isLessThanOrEqualTo(1e-4)) return bn.toFixed(5);
+  if (bn.isLessThanOrEqualTo(1e-4)) return '<.0001';
+  // if (bn.isLessThanOrEqualTo(1e-4)) return bn.toFixed(5);
   if (bn.isLessThanOrEqualTo(1e-3)) return bn.toFixed(4);
-  return bn.toFixed(3);
+  return TrimBN(bn, 3).toFixed();
 }
 
 export function MinBNs(array): BigNumber {
