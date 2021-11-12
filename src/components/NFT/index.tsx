@@ -4,11 +4,7 @@ import {
   NFT_LINK,
   OPENSEA_LINK,
 } from '../../constants';
-import {
-  listenForNFTTransfers,
-  GetWalletAddress,
-  getMintedNFTs,
-} from '../../util';
+import { listenForNFTTransfers, GetWalletAddress, getMintedNFTs } from '../../util';
 
 import { ContentSection } from '../Common';
 import ClaimNFT from './claimnft';
@@ -73,7 +69,13 @@ export default function NFTs(props) {
   ];
 
   return (
-    <ContentSection id="nft" title="BeaNFTs" textTransform="none" description={description} descriptionLinks={descriptionLinks}>
+    <ContentSection
+      id="nft"
+      description={description}
+      descriptionLinks={descriptionLinks}
+      title="BeaNFTs"
+      textTransform="none"
+    >
       <ClaimNFT
         buttonDescription="Use this button to Mint all your Mintable BeaNFTs."
         claimTitle="MINT ALL"

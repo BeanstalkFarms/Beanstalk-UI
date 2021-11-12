@@ -57,6 +57,14 @@ export default function Seasons(props) {
       </Grid>
     ) : null;
 
+    const seasonDescription =
+    `
+    Seasons are the timekeeping mechanism of Beanstalk. Every Season is
+    approximately 1 hour. Each Season begins when the Sunrise function is
+    called on the Ethereum blockchain. The Sunrise function can be called by
+    anyone at the top of each hour.
+    `;
+
   return (
     <ContentSection
       id="seasons"
@@ -72,9 +80,7 @@ export default function Seasons(props) {
           style={{ maxWidth: '300px', padding: '12px' }}
         >
           <HeaderLabel
-            description="Seasons are the timekeeping mechanism of Beanstalk. Every Season is approximately 1 hour.
-            Each Season begins when the Sunrise function is called on the Ethereum blockchain.
-            The Sunrise function can be called by anyone at the top of each hour."
+            description={seasonDescription}
             title="Current Season"
             value={props.season.isNegative() ? '---' : String(props.season)}
           />

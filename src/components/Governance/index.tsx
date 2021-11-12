@@ -6,7 +6,7 @@ import { ContentSection, Grid } from '../Common';
 import { WHITEPAPER } from '../../constants';
 
 export default function Governance(props) {
-  if (props.bips === undefined || props.bips.length === 0) return null;
+  if (props.bips === undefined || props.bips.length === 0) return;
 
   const activeBipStyle = {
     fontFamily: 'Futura-PT-Book',
@@ -86,8 +86,8 @@ export default function Governance(props) {
           </Grid>
           <Grid item xs={12}>
             <GovernanceTable
-              {...props}
               style={{ maxWidth: '745px', margin: '0 auto' }}
+              {...props}
             />
           </Grid>
         </Grid>
