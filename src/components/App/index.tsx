@@ -709,7 +709,7 @@ export default function App() {
               <Trade />
             </>
           </Route>
-          <Route exact path="/analytics" component={LoadingBean}>
+          <Route exact path="/analytics">
             <Analytics />
           </Route>
           <Route exact path="/dao">

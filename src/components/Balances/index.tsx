@@ -313,7 +313,7 @@ export default function Balances() {
         topLeft={userBalanceInDollars}
         topRight={rootsBalance.dividedBy(totalRoots).multipliedBy(100)}
         beanLPTotal={userBeansAndEth}
-        poolForLPRatio={poolForLPRatio}// start here added
+        poolForLPRatio={poolForLPRatio}
         beanBalance={beanBalance}
         beanSiloBalance={beanSiloBalance}
         beanTransitBalance={beanTransitBalance}

@@ -74,7 +74,7 @@ export default function ContentSection({
           innerWidth > 500
             ? {
               maxWidth: '550px',
-              margin: '0px 0 10px 0',
+              margin: '0 0 10px 0',
               padding: '12px',
               color: theme.backgroundText,
             }
