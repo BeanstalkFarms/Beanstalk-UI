@@ -42,7 +42,7 @@ export default function FieldModule() {
     (state) => state.prices
   );
 
-  const { weather, soil } = useSelector<AppState, AppState['weather']>(
+  const { weather, soil, harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
 
@@ -163,7 +163,7 @@ export default function FieldModule() {
         (Object.keys(plots).length > 0 ||
           harvestablePodBalance.isGreaterThan(0))
       }
-      index={parseFloat(weather.harvestableIndex)}
+      index={parseFloat(harvestableIndex)}
       fromAddress=""
       fromToken={CryptoAsset.Bean}
       ref={sendRef}
@@ -209,7 +209,7 @@ export default function FieldModule() {
         description="Sown Plots will show up here."
         handleChange={handlePageChange}
         indexTitle="Place in Line"
-        index={parseFloat(weather.harvestableIndex)}
+        index={parseFloat(harvestableIndex)}
         page={page}
         title="Plots"
       />

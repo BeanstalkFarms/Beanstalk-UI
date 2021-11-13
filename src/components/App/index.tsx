@@ -693,7 +693,6 @@ export default function App() {
   if (metamaskFailure > -1) {
     app = <MetamasklessModule />;
   } else if (!initialized) {
-    const { innerHeight: height } = window;
     app = <LoadingBean />;
   } else {
     app = (

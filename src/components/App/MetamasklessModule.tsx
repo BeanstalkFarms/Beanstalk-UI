@@ -76,7 +76,7 @@ export default function MetamasklessModule() {
       <NavigationBar links={navMappings} showWallet={false} />
       <Box className="App" style={{ position: 'relative' }}>
         <About defaultSection={metamaskModule} />
-        <ContentSection id="analytics" title="Charts">
+        <ContentSection id="analytics" title="Charts" style={{ marginBottom: '100px' }}>
           <Charts title="" />
         </ContentSection>
       </Box>

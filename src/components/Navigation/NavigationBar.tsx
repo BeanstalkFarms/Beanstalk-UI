@@ -236,7 +236,7 @@ export default function NavigationBar(props) {
       : null;
 
   let currentBeanPrice = null;
-  if (beanPrice !== undefined) {
+  if (beanPrice !== undefined && beanPrice > 0) {
     currentBeanPrice = (
       <Box className={classes.currentPriceStyle}>
         {`$${beanPrice.toFixed(4)}`}

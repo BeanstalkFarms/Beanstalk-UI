@@ -295,7 +295,7 @@ export default function PegMaintenance() {
       spacing={3}
       alignItems="center"
       justifyContent="center"
-      style={{ maxWidth: '1145px' }}
+      style={{ maxWidth: '1145px', marginBottom: '100px' }}
     >
       <Grid item md={8} sm={12} xs={12}>
         <Box className="AppBar-shadow" style={pegMaintenanceStyle}>
