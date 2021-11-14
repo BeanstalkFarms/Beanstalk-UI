@@ -15,7 +15,21 @@ import { BaseModule, CryptoAsset } from '../Common';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
 
-export default function TradeModule(props) {
+export default function TradeModule() {
+  const { uniswapBeanAllowance } = useSelector<
+    AppState,
+    AppState['allowances']
+  >((state) => state.allowances);
+
+  const { beanReserve, ethReserve, usdcPrice, beanPrice } = useSelector<
+    AppState,
+    AppState['prices']
+  >((state) => state.prices);
+
+  const { beanBalance, ethBalance } = useSelector<
+    AppState,
+    AppState['userBalance']
+  >((state) => state.userBalance);
   const [section, setSection] = useState(0);
   const sectionTitles = ['Swap', 'Send'];
   const sectionTitlesDescription = [
@@ -33,9 +47,7 @@ export default function TradeModule(props) {
   const [toValue, setToValue] = useState(new BigNumber(-1));
   const fromToken = orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
   const toToken = !orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
-  const ethToBean = new BigNumber(
-    props.beanReserve.dividedBy(props.ethReserve)
-  );
+  const ethToBean = new BigNumber(beanReserve.dividedBy(ethReserve));
   const beanToEth = new BigNumber(1).dividedBy(ethToBean);
   const conversionFactor = orderIndex ? ethToBean : beanToEth;
 
@@ -43,9 +55,6 @@ export default function TradeModule(props) {
 
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
-  const { uniswapBeanAllowance } = useSelector<AppState, AppState['allowances']>(
-    (state) => state.allowances
-  );
 
   function handleSwapCallback() {
     setFromValue(new BigNumber(-1));
@@ -103,27 +112,19 @@ export default function TradeModule(props) {
       setFromValue={setFromValue}
       toValue={toValue}
       setToValue={setToValue}
-      balance={
-        fromToken === CryptoAsset.Ethereum
-          ? props.ethBalance
-          : props.beanBalance
-      }
-      toBalance={
-        fromToken === CryptoAsset.Ethereum
-          ? props.beanBalance
-          : props.ethBalance
-      }
+      balance={fromToken === CryptoAsset.Ethereum ? ethBalance : beanBalance}
+      toBalance={fromToken === CryptoAsset.Ethereum ? beanBalance : ethBalance}
       maxFromVal={
         fromToken === CryptoAsset.Ethereum
-          ? props.ethBalance.isGreaterThan(MIN_BALANCE)
-            ? props.ethBalance.minus(MIN_BALANCE)
+          ? ethBalance.isGreaterThan(MIN_BALANCE)
+            ? ethBalance.minus(MIN_BALANCE)
             : new BigNumber(-1)
-          : props.beanBalance
+          : beanBalance
       }
-      beanReserve={props.beanReserve}
-      ethReserve={props.ethReserve}
-      usdcPrice={props.usdcPrice}
-      beanPrice={props.beanPrice}
+      beanReserve={beanReserve}
+      ethReserve={ethReserve}
+      usdcPrice={usdcPrice}
+      beanPrice={beanPrice}
       fromToken={fromToken}
       toToken={toToken}
       conversionFactor={conversionFactor}
@@ -133,12 +134,12 @@ export default function TradeModule(props) {
     <SendModule
       toAddress={toAddress}
       setToAddress={setToAddress}
-      fromAddress={props.address}
+      fromAddress=""
       fromBeanValue={fromValue}
       isValidAddress={isValidAddress}
       setIsValidAddress={setIsValidAddress}
       setFromBeanValue={setFromValue}
-      maxFromBeanVal={props.beanBalance}
+      maxFromBeanVal={beanBalance}
       fromToken={CryptoAsset.Bean}
     />,
   ];
@@ -146,9 +147,7 @@ export default function TradeModule(props) {
   return (
     <BaseModule
       allowance={
-        section > 0 || orderIndex
-          ? new BigNumber(1)
-          : uniswapBeanAllowance
+        section > 0 || orderIndex ? new BigNumber(1) : uniswapBeanAllowance
       }
       isDisabled={disabled}
       resetForm={() => {

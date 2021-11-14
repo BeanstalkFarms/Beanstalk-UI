@@ -6,26 +6,70 @@ import ListIcon from '@material-ui/icons/List';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from '../../constants';
-import { approveBeanstalkBean, SwapMode } from '../../util';
-import {
-  BaseModule,
-  CryptoAsset,
-  FarmAsset,
-  ListTable,
-} from '../Common';
+import { approveBeanstalkBean, SwapMode, poolForLP } from '../../util';
+import { BaseModule, CryptoAsset, FarmAsset, ListTable } from '../Common';
 import { SowModule } from './SowModule';
 import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
 
-export default function FieldModule(props) {
-  const { beanstalkBeanAllowance } = useSelector<AppState, AppState['allowances']>(
-    (state) => state.allowances
+export default function FieldModule() {
+  const zeroBN = new BigNumber(-1);
+  const { beanstalkBeanAllowance } = useSelector<
+    AppState,
+    AppState['allowances']
+  >((state) => state.allowances);
+
+  const {
+    beanBalance,
+    ethBalance,
+    lpReceivableBalance,
+    beanClaimableBalance,
+    beanReceivableBalance,
+    claimable,
+    claimableEthBalance,
+    harvestablePodBalance,
+    hasClaimable,
+    plots,
+    harvestablePlots,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
   );
+
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const prices = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
+  const { weather, soil, harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
+
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [page, setPage] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
+
+  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
+    const endPrice = prices.ethReserve
+      .plus(sellEth)
+      .dividedBy(prices.beanReserve.minus(buyBeans))
+      .dividedBy(prices.usdcPrice);
+    return prices.beanPrice.plus(endPrice).dividedBy(2);
+  };
+
+  const poolForLPRatio = (amount: BigNumber) => {
+    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    return poolForLP(
+      amount,
+      prices.beanReserve,
+      prices.ethReserve,
+      totalBalance.totalLP
+    );
+  };
 
   const [settings, setSettings] = useState({
     claim: false,
@@ -57,11 +101,11 @@ export default function FieldModule(props) {
   };
 
   if (settings.mode === null) {
-    if (props.beanBalance.isGreaterThan(0)) {
+    if (beanBalance.isGreaterThan(0)) {
       setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
-    } else if (props.ethBalance.isGreaterThan(0)) {
+    } else if (ethBalance.isGreaterThan(0)) {
       setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    } else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) {
+    } else if (beanBalance.isEqualTo(0) && ethBalance.isEqualTo(0)) {
       setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
     }
   }
@@ -85,52 +129,52 @@ export default function FieldModule(props) {
     }
   };
 
-  const claimLPBeans = props.lpReceivableBalance.isGreaterThan(0) ?
-    props.poolForLPRatio(props.lpReceivableBalance)[0]
+  const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
+    ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
 
-  const beanClaimable = props.beanReceivableBalance
-    .plus(props.harvestablePodBalance)
-    .plus(props.poolForLPRatio(props.lpReceivableBalance)[0]);
+  const beanClaimable = beanReceivableBalance
+    .plus(harvestablePodBalance)
+    .plus(poolForLPRatio(lpReceivableBalance)[0]);
 
-  const ethClaimable = props.claimableEthBalance
-    .plus(props.poolForLPRatio(props.lpReceivableBalance)[1]);
+  const ethClaimable = claimableEthBalance
+    .plus(poolForLPRatio(lpReceivableBalance)[1]);
 
   const sections = [
     <SowModule
       key={0}
-      unripenedPods={props.unripenedPods}
-      beanBalance={props.beanBalance}
+      unripenedPods={totalBalance.totalPods}
+      beanBalance={beanBalance}
+      beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
       beanClaimable={beanClaimable}
       ethClaimable={ethClaimable}
-      beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
       beanLPClaimableBalance={claimLPBeans}
-      beanReserve={props.beanReserve}
-      claimable={props.claimable}
-      claimableEthBalance={props.claimableEthBalance}
-      ethBalance={props.ethBalance}
-      ethReserve={props.ethReserve}
-      hasClaimable={props.hasClaimable}
-      harvestablePodBalance={props.harvestablePodBalance}
-      lpReceivableBalance={props.lpReceivableBalance}
+      beanReserve={prices.beanReserve}
+      claimable={claimable}
+      claimableEthBalance={claimableEthBalance}
+      ethBalance={ethBalance}
+      ethReserve={prices.ethReserve}
+      hasClaimable={hasClaimable}
+      harvestablePodBalance={harvestablePodBalance}
+      lpReceivableBalance={lpReceivableBalance}
       ref={sowRef}
       setIsFormDisabled={setIsFormDisabled}
       setSettings={setSettings}
       settings={settings}
-      soil={props.soil}
-      updateExpectedPrice={props.updateExpectedPrice}
-      weather={props.weather}
+      soil={soil}
+      updateExpectedPrice={updateExpectedPrice}
+      weather={weather}
     />,
     <SendPlotModule
       key={1}
-      plots={props.plots}
+      plots={plots}
       hasPlots={
-        props.plots !== undefined &&
-        (Object.keys(props.plots).length > 0 ||
-          props.harvestablePodBalance.isGreaterThan(0))
+        plots !== undefined &&
+        (Object.keys(plots).length > 0 ||
+          harvestablePodBalance.isGreaterThan(0))
       }
-      index={parseFloat(props.harvestableIndex)}
-      fromAddress={props.address}
+      index={parseFloat(harvestableIndex)}
+      fromAddress=""
       fromToken={CryptoAsset.Bean}
       ref={sendRef}
       isFormDisabled={isFormDisabled}
@@ -140,40 +184,42 @@ export default function FieldModule(props) {
       setToAddress={setToAddress}
       setSection={setSection}
       toAddress={toAddress}
-    />];
-  if (props.harvestablePodBalance.isGreaterThan(0)) {
+    />,
+  ];
+  if (harvestablePodBalance.isGreaterThan(0)) {
     sections.push(
       <HarvestModule
         key={2}
-        harvestablePlots={props.harvestablePlots}
-        harvestablePodBalance={props.harvestablePodBalance}
+        harvestablePlots={harvestablePlots}
+        harvestablePodBalance={harvestablePodBalance}
         ref={harvestRef}
         setIsFormDisabled={setIsFormDisabled}
         setSection={setSection}
       />
     );
     sectionTitles.push('Harvest');
-    sectionTitlesDescription.push('Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.');
+    sectionTitlesDescription.push(
+      'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.'
+    );
   }
   if (section > sectionTitles.length - 1) setSection(0);
 
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
   if (
-    props.plots !== undefined &&
-    (Object.keys(props.plots).length > 0 ||
-      props.harvestablePodBalance.isGreaterThan(0))
+    plots !== undefined &&
+    (Object.keys(plots).length > 0 || harvestablePodBalance.isGreaterThan(0))
   ) {
     sectionsInfo.push(
       <ListTable
         asset={FarmAsset.Pods}
-        claimableBalance={props.harvestablePodBalance}
-        claimableCrates={props.harvestablePlots}
-        crates={props.plots}
+        claimableBalance={harvestablePodBalance}
+        claimableCrates={harvestablePlots}
+        crates={plots}
         description="Sown Plots will show up here."
         handleChange={handlePageChange}
         indexTitle="Place in Line"
-        index={parseFloat(props.harvestableIndex)}
+        index={parseFloat(harvestableIndex)}
         page={page}
         title="Plots"
       />
@@ -214,7 +260,7 @@ export default function FieldModule(props) {
           sectionTitles={sectionTitlesInfo}
           sectionTitlesDescription={[
             // eslint-disable-next-line
-            "A Plot of Pods is created everytime Beans are Sown. Plots have a place in the Pod Line based on the order they were created. As Pods are harvested, your Plots will automatically advance in line. Entire Plots and sections of Plots can be transferred using the Send tab of the Field module.",
+            'A Plot of Pods is created everytime Beans are Sown. Plots have a place in the Pod Line based on the order they were created. As Pods are harvested, your Plots will automatically advance in line. Entire Plots and sections of Plots can be transferred using the Send tab of the Field module.',
           ]}
           showButton={false}
         >

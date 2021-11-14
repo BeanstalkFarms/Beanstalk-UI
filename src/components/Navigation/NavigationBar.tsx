@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
   AppBar,
   Button,
@@ -17,15 +19,41 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Link } from 'react-scroll';
+import { AppState } from 'state';
 import BeanLogo from '../../img/bean-logo.svg';
 import { chainId } from '../../util';
 import WalletModule from './WalletModule';
 import { priceQuery } from '../../graph';
 import { theme } from '../../constants';
 
+const defaultNavMapping = [
+  {
+    path: 'farm',
+    title: 'FARM',
+  },
+  {
+    path: 'analytics',
+    title: 'ANALYTICS',
+  },
+  {
+    path: 'dao',
+    title: 'DAO',
+  },
+  {
+    path: 'nft',
+    title: 'BeaNFTs',
+  },
+  {
+    path: 'about',
+    title: 'ABOUT',
+  },
+];
+
 export default function NavigationBar(props) {
   const [price, setPrice] = useState(0);
+  const { beanPrice } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
 
   const classes = makeStyles({
     fixedNav: {
@@ -57,6 +85,8 @@ export default function NavigationBar(props) {
     linkPadding: {
       borderRadius: '16px',
       padding: '12px 18px',
+      color: 'black',
+      textDecoration: 'none',
     },
     activeLinkText: {
       backgroundColor: theme.navSelection,
@@ -65,6 +95,7 @@ export default function NavigationBar(props) {
       backgroundColor: theme.navSelection,
       borderRadius: '16px',
       padding: '12px 18px',
+      textDecoration: 'none',
     },
     currentPriceStyle: {
       color: 'black',
@@ -91,39 +122,12 @@ export default function NavigationBar(props) {
     setOpen(false);
   };
 
-  const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
-  function handleScroll() {
-    const windowHeight =
-      'innerHeight' in window
-        ? window.innerHeight
-        : document.documentElement.offsetHeight;
-    const { body } = document;
-    const html = document.documentElement;
-    const docHeight = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
-    const windowBottom = windowHeight + window.pageYOffset;
-    setIsScrolledToBottom(windowBottom >= docHeight);
-    localStorage.setItem('scrollPosition', window.pageYOffset);
-  }
-  useEffect(() => {
-    const scrollY = localStorage.getItem('scrollPosition');
-    if (scrollY !== undefined) window.scrollTo(0, scrollY);
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const linkItemStyle = (path) =>
-    (path === 'governance'
-      ? { color: theme.activeSection }
-      : null);
+  const linkItemStyle = (path) => {
+    if (path === 'governance') {
+      return { color: theme.activeSection };
+    }
+    return null;
+  };
 
   const mobileNavigation = (
     <Box className="NavigationBarHamburger">
@@ -132,11 +136,11 @@ export default function NavigationBar(props) {
         aria-labelledby="main navigation"
         className={classes.navDisplayFlex}
       >
-        {props.showWallet ?
+        {props.showWallet ? (
           <ListItem>
             <WalletModule {...props} />
           </ListItem>
-        : null}
+        ) : null}
       </List>
       <Button
         ref={anchorRef}
@@ -166,24 +170,20 @@ export default function NavigationBar(props) {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow">
-                  {props.links.map(({ title, path }) => (
+                  {defaultNavMapping.map(({ title, path }) => (
                     <MenuItem
                       key={path}
                       button
                       className={classes.linkText}
                       style={linkItemStyle(path)}
                     >
-                      <Link
-                        duration={450}
+                      <NavLink
                         to={path}
-                        onClick={handleClose}
-                        activeClass={classes.activeLinkText}
+                        activeClassName={classes.activeLinkText}
                         className={classes.linkPadding}
-                        spy
-                        smooth
                       >
                         {title}
-                      </Link>
+                      </NavLink>
                     </MenuItem>
                   ))}
                 </MenuList>
@@ -201,34 +201,29 @@ export default function NavigationBar(props) {
       aria-labelledby="main navigation"
       className="NavigationBar"
     >
-      {props.links.map(({ title, path }) => (
+      {defaultNavMapping.map(({ title, path }) => (
         <ListItem
           key={path}
           button
           className={classes.linkText}
           style={linkItemStyle(path)}
         >
-          <Link
+          <NavLink
             to={path}
-            duration={450}
-            activeClass={isScrolledToBottom ? null : classes.activeLinkText}
-            className={
-              path === props.links[props.links.length - 1].path && isScrolledToBottom
-                ? classes.activeAboutLinkText
-                : classes.linkPadding
-            }
+            activeClassName={classes.activeLinkText}
+            className={classes.linkPadding}
             spy
             smooth
           >
             {title}
-          </Link>
+          </NavLink>
         </ListItem>
       ))}
-      {props.showWallet ?
+      {props.showWallet ? (
         <ListItem>
           <WalletModule {...props} />
         </ListItem>
-      : null}
+      ) : null}
     </List>
   );
 
@@ -241,17 +236,15 @@ export default function NavigationBar(props) {
       : null;
 
   let currentBeanPrice = null;
-  if (props.beanPrice !== undefined) {
+  if (beanPrice !== undefined && beanPrice > 0) {
     currentBeanPrice = (
       <Box className={classes.currentPriceStyle}>
-        {`$${props.beanPrice.toFixed(4)}`}
+        {`$${beanPrice.toFixed(4)}`}
       </Box>
     );
   } else if (price > 0) {
     currentBeanPrice = (
-      <Box className={classes.currentPriceStyle}>
-        {`$${price.toFixed(4)}`}
-      </Box>
+      <Box className={classes.currentPriceStyle}>{`$${price.toFixed(4)}`}</Box>
     );
   }
 

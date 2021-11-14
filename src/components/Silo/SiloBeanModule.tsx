@@ -6,21 +6,56 @@ import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN_TO_STALK } from '../../constants';
-import { approveBeanstalkBean, SwapMode } from '../../util';
-import {
-  BaseModule,
-  ListTable,
-  SiloAsset,
-  TransitAsset,
-} from '../Common';
+import { approveBeanstalkBean, SwapMode, poolForLP } from '../../util';
+import { BaseModule, ListTable, SiloAsset, TransitAsset } from '../Common';
 import { BeanClaimModule } from './BeanClaimModule';
 import { BeanDepositModule } from './BeanDepositModule';
 import { BeanWithdrawModule } from './BeanWithdrawModule';
 
-export default function SiloBeanModule(props) {
-  const { beanstalkBeanAllowance } = useSelector<AppState, AppState['allowances']>(
-    (state) => state.allowances
+export default function SiloBeanModule() {
+  const zeroBN = new BigNumber(-1);
+  const { beanstalkBeanAllowance } = useSelector<
+    AppState,
+    AppState['allowances']
+  >((state) => state.allowances);
+
+  const {
+    beanBalance,
+    ethBalance,
+    lpReceivableBalance,
+    beanDeposits,
+    claimable,
+    claimableEthBalance,
+    hasClaimable,
+    beanSiloBalance,
+    beanClaimableBalance,
+    locked,
+    seedBalance,
+    stalkBalance,
+    lockedSeasons,
+    beanReceivableBalance,
+    beanReceivableCrates,
+    farmableBeanBalance,
+    farmableStalkBalance,
+    rawBeanDeposits,
+    beanWithdrawals,
+    harvestablePodBalance,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
   );
+
+  const season = useSelector<AppState, AppState['season']>(
+    (state) => state.season.season
+  );
+
+  const prices = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [settings, setSettings] = useState({
@@ -31,6 +66,16 @@ export default function SiloBeanModule(props) {
   const [page, setPage] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
+
+  const poolForLPRatio = (amount: BigNumber) => {
+    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    return poolForLP(
+      amount,
+      prices.beanReserve,
+      prices.ethReserve,
+      totalBalance.totalLP
+    );
+  };
 
   const sectionTitles = ['Deposit', 'Withdraw'];
   const sectionTitlesDescription = [
@@ -58,14 +103,22 @@ export default function SiloBeanModule(props) {
   };
 
   if (settings.mode === null) {
-    if (props.beanBalance.isGreaterThan(0)) {
+    if (beanBalance.isGreaterThan(0)) {
       setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
-    } else if (props.ethBalance.isGreaterThan(0)) {
+    } else if (ethBalance.isGreaterThan(0)) {
       setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    } else if (props.beanBalance.isEqualTo(0) && props.ethBalance.isEqualTo(0)) {
+    } else if (beanBalance.isEqualTo(0) && ethBalance.isEqualTo(0)) {
       setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
     }
   }
+
+  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
+    const endPrice = prices.ethReserve
+      .plus(sellEth)
+      .dividedBy(prices.beanReserve.minus(buyBeans))
+      .dividedBy(prices.usdcPrice);
+    return prices.beanPrice.plus(endPrice).dividedBy(2);
+  };
 
   const depositRef = useRef<any>();
   const withdrawRef = useRef<any>();
@@ -85,73 +138,73 @@ export default function SiloBeanModule(props) {
         break;
     }
   };
-  const claimLPBeans = props.lpReceivableBalance.isGreaterThan(0) ?
-    props.poolForLPRatio(props.lpReceivableBalance)[0]
+  const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
+    ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
 
-  const beanClaimable = props.beanReceivableBalance
-    .plus(props.harvestablePodBalance)
-    .plus(props.poolForLPRatio(props.lpReceivableBalance)[0]);
+  const beanClaimable = beanReceivableBalance
+    .plus(harvestablePodBalance)
+    .plus(poolForLPRatio(lpReceivableBalance)[0]);
 
-  const ethClaimable = props.claimableEthBalance
-    .plus(props.poolForLPRatio(props.lpReceivableBalance)[1]);
+  const ethClaimable = claimableEthBalance
+    .plus(poolForLPRatio(lpReceivableBalance)[1]);
 
   const sections = [
     <BeanDepositModule
       key={0}
+      beanBalance={beanBalance}
+      beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
+      beanReserve={prices.beanReserve}
       beanClaimable={beanClaimable}
       ethClaimable={ethClaimable}
-      beanBalance={props.beanBalance}
-      beanClaimableBalance={props.beanClaimableBalance.plus(claimLPBeans)}
       beanLPClaimableBalance={claimLPBeans}
-      beanReserve={props.beanReserve}
       beanToStalk={BEAN_TO_STALK}
-      claimable={props.claimable}
-      claimableEthBalance={props.claimableEthBalance}
-      ethBalance={props.ethBalance}
-      ethReserve={props.ethReserve}
-      hasClaimable={props.hasClaimable}
-      harvestablePodBalance={props.harvestablePodBalance}
-      lpReceivableBalance={props.lpReceivableBalance}
+      claimable={claimable}
+      claimableEthBalance={claimableEthBalance}
+      ethBalance={ethBalance}
+      ethReserve={prices.ethReserve}
+      hasClaimable={hasClaimable}
+      harvestablePodBalance={harvestablePodBalance}
+      lpReceivableBalance={lpReceivableBalance}
       ref={depositRef}
       setIsFormDisabled={setIsFormDisabled}
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalStalk={props.totalStalk}
-      updateExpectedPrice={props.updateExpectedPrice}
+      totalStalk={totalBalance.totalStalk}
+      updateExpectedPrice={updateExpectedPrice}
     />,
     <BeanWithdrawModule
       key={1}
       beanClaimable={beanClaimable}
       ethClaimable={ethClaimable}
-      beanReceivableBalance={props.beanReceivableBalance}
-      beanClaimableBalance={props.beanClaimableBalance}
-      claimable={props.claimable}
-      claimableEthBalance={props.claimableEthBalance}
-      crates={props.beanDeposits}
-      hasClaimable={props.hasClaimable}
-      harvestablePodBalance={props.harvestablePodBalance}
-      lpReceivableBalance={props.lpReceivableBalance}
-      locked={section === 1 && props.locked}
-      maxFromBeanVal={props.beanSiloBalance}
-      maxToSeedsVal={props.seedBalance}
-      maxToStalkVal={props.stalkBalance}
+      beanReceivableBalance={beanReceivableBalance}
+      beanClaimableBalance={beanClaimableBalance}
+      claimable={claimable}
+      claimableEthBalance={claimableEthBalance}
+      crates={beanDeposits}
+      hasClaimable={hasClaimable}
+      harvestablePodBalance={harvestablePodBalance}
+      lpReceivableBalance={lpReceivableBalance}
+      locked={section === 1 && locked}
+      maxFromBeanVal={beanSiloBalance}
+      maxToSeedsVal={seedBalance}
+      maxToStalkVal={stalkBalance}
       ref={withdrawRef}
-      season={props.season}
+      season={season}
       setIsFormDisabled={setIsFormDisabled}
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalStalk={props.totalStalk}
+      totalStalk={totalBalance.totalStalk}
     />,
   ];
-  if (props.beanReceivableBalance.isGreaterThan(0)) {
+  if (beanReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <BeanClaimModule
         key={2}
-        crates={props.beanReceivableCrates}
-        maxFromBeanVal={props.beanReceivableBalance}
+        crates={beanReceivableCrates}
+        maxFromBeansVal={beanReceivableBalance}
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
         setSection={setSection}
@@ -166,42 +219,37 @@ export default function SiloBeanModule(props) {
 
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
-  if (
-    props.beanDeposits !== undefined &&
-    Object.keys(props.beanDeposits).length > 0
-  ) {
+  if (beanDeposits !== undefined && Object.keys(beanDeposits).length > 0) {
     sectionsInfo.push(
       <ListTable
         asset={SiloAsset.Bean}
         description="Bean Deposits Will Appear Here"
-        claimableBalance={props.farmableBeanBalance}
-        claimableStalk={props.farmableStalkBalance.plus(
-          props.farmableBeanBalance
-        )}
-        crates={props.rawBeanDeposits}
+        claimableBalance={farmableBeanBalance}
+        claimableStalk={farmableStalkBalance.plus(farmableBeanBalance)}
+        crates={rawBeanDeposits}
         handleChange={handlePageChange}
         indexTitle="Season"
         page={page}
-        season={props.season}
+        season={season}
         title="Deposits"
       />
     );
     sectionTitlesInfo.push('Bean Deposits');
   }
   if (
-    (props.beanWithdrawals !== undefined &&
-      Object.keys(props.beanWithdrawals).length > 0) ||
-    props.beanReceivableBalance.isGreaterThan(0)
+    (beanWithdrawals !== undefined &&
+      Object.keys(beanWithdrawals).length > 0) ||
+    beanReceivableBalance.isGreaterThan(0)
   ) {
     sectionsInfo.push(
       <ListTable
         asset={TransitAsset.Bean}
-        crates={props.beanWithdrawals}
-        claimableBalance={props.beanReceivableBalance}
-        claimableCrates={props.beanReceivableCrates}
+        crates={beanWithdrawals}
+        claimableBalance={beanReceivableBalance}
+        claimableCrates={beanReceivableCrates}
         description="Bean Withdrawals Will Appear Here"
         handleChange={handlePageChange}
-        index={props.season}
+        index={season}
         indexTitle="Seasons to Arrival"
         page={page}
         title="Withdrawals"
@@ -267,9 +315,11 @@ export default function SiloBeanModule(props) {
         handleApprove={approveBeanstalkBean}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
-        isDisabled={isFormDisabled && (isFormDisabled || (section === 1 && props.locked))}
-        locked={section === 1 && props.locked}
-        lockedSeasons={props.lockedSeasons}
+        isDisabled={
+          isFormDisabled && (isFormDisabled || (section === 1 && locked))
+        }
+        locked={section === 1 && locked}
+        lockedSeasons={lockedSeasons}
         mode={settings.mode}
         section={section}
         sectionTitles={sectionTitles}

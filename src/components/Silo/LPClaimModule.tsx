@@ -60,11 +60,9 @@ export const LPClaimModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   function displayLP(balance) {
-    return (
-      `${displayBN(balance[0])} ${TokenLabel(
-        CryptoAsset.Bean
-      )} and ${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`
-    );
+    return `${displayBN(balance[0])} ${TokenLabel(
+      CryptoAsset.Bean
+    )} and ${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
   const details = [];
@@ -89,7 +87,10 @@ export const LPClaimModule = forwardRef((props, ref) => {
       details.push(
         `Remove ${displayBN(
           props.maxFromLPVal
-        )} LP Tokens from the BEAN:ETH LP pool and receive ${displayLP(
+        )} LP Tokens from the BEAN:ETH LP pool`
+      );
+      details.push(
+        `Receive ${displayLP(
           props.poolForLPRatio(props.maxFromLPVal)
         )}`
       );
