@@ -17,7 +17,6 @@ export default function ContentSection({
   title,
   width,
 }) {
-  const [shouldDisplaySection, setshouldDisplaySection] = React.useState(true);
   const [shouldDisplayDescription, setshouldDisplayDescription] = React.useState(true);
 
   const classes = makeStyles({
@@ -41,21 +40,11 @@ export default function ContentSection({
 
   React.useEffect(() => {
     // on initialize fetch is_hidden variable or default to false. if is_hidden set shouldDisplay to false
-    if (JSON.parse(localStorage.getItem(`is_${id}_hidden`) || 'false')) {
-      setshouldDisplaySection(false);
-    }
+
     if (JSON.parse(localStorage.getItem(`is_${id}_description_hidden`) || 'false')) {
       setshouldDisplayDescription(false);
     }
   }, [id]);
-
-  const handleisSectionHiddenSection = (): void => {
-    setshouldDisplaySection(!shouldDisplaySection);
-    localStorage.setItem(
-      `is_${id}_hidden`,
-      JSON.stringify(shouldDisplaySection)
-    );
-  };
 
   const handleisSectionHiddenDescription = (): void => {
     setshouldDisplayDescription(!shouldDisplayDescription);
@@ -128,9 +117,6 @@ export default function ContentSection({
         justifyContent="center"
       >
         <ContentTitle
-          onClick={() => {
-            handleisSectionHiddenSection();
-          }}
           padding={padding}
           marginTop={marginTop}
           width={width}
@@ -138,8 +124,8 @@ export default function ContentSection({
           size={size}
           textTransform={textTransform}
         />
-        {shouldDisplaySection ? descriptionSection : null}
-        {shouldDisplaySection ? children : null}
+        {descriptionSection}
+        {children}
       </Grid>
     </Box>
   );

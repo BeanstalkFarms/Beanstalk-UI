@@ -6,7 +6,6 @@ import { theme } from '../../constants';
 
 export default function ContentTitle({
   marginTop,
-  onClick,
   padding,
   size,
   title,
@@ -24,9 +23,9 @@ export default function ContentTitle({
   })();
 
   return (
-    <Box onClick={onClick} className={classes.sectionTitle}>
+    <Box className={classes.sectionTitle}>
       <TitleLabel
-        style={{ color: theme.backgroundText, cursor: 'pointer' }}
+        style={{ color: theme.backgroundText }}
         size={size}
         textTransform={textTransform}
       >
