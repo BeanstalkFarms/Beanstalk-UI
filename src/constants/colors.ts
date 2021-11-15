@@ -117,7 +117,7 @@ export const fallTheme = {
     groundItemHeight: '81px',
     groundGrass: 'flex',
     barn: fallBarn,
-    bean: beanWhite,
+    bean: bean,
 };
 
 export let theme = fallTheme;

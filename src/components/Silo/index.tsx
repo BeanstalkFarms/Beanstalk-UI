@@ -6,6 +6,7 @@ import {
   ContentSection,
   Grid,
   HeaderLabel,
+  siloStrings,
 } from '../Common';
 import TabbedSilo from './TabbedSilo';
 import { getAPYs } from '../../util';
@@ -36,10 +37,7 @@ export default function Silo() {
           balanceDescription={`${lpAPY.toFixed(2)}%`}
           description={
             <span>
-              The LP APY is a rough estimate based on a liquidity weighted
-              average of Beans minted over the previous 168 Seasons normalized
-              to the current liquidity. For the complete formulas used to
-              calculate APY,{' '}
+              {siloStrings.lpAPY}{' '}
               <a target="blank" href={APY_CALCULATION}>
                 click here
               </a>
@@ -54,10 +52,7 @@ export default function Silo() {
           balanceDescription={`${beanAPY.toFixed(2)}%`}
           description={
             <span>
-              The Bean APY is a rough estimate based on a liquidity weighted
-              average of Beans minted over the previous 168 Seasons normalized
-              to the current liquidity. For the complete formulas used to
-              calculate APY,{' '}
+              {siloStrings.beanAPY}{' '}
               <a target="blank" href={APY_CALCULATION}>
                 click here
               </a>
@@ -69,19 +64,6 @@ export default function Silo() {
       </Grid>
     </Grid>);
 
-  const description =
-  `
-    The Silo is the Beanstalk DAO. Silo Members earn passive interest during
-    Bean supply increases. Anyone can become a Silo Member by depositing
-    Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module
-    below in exchange for Stalk and Seeds. The Stalk token entitles holders
-    to passive interest in the form of a share of future Bean mints, and the
-    right to propose and vote on BIPs. The Seed token yields .0001 Stalk
-    every Season. No action is ever required of Silo Members. All Stalk and
-    Seeds associated with a Deposit are forfeited upon withdrawal. All
-    Withdrawals are frozen for 24 full Seasons.
-  `;
-
   const descriptionLinks = [
     {
       href: `${MEDIUM_INTEREST_LINK}#8b79`,
@@ -90,7 +72,12 @@ export default function Silo() {
   ];
 
   return (
-    <ContentSection id="silo" title="Silo" descriptionLinks={descriptionLinks} description={description}>
+    <ContentSection
+      id="silo"
+      title="Silo"
+      descriptionLinks={descriptionLinks}
+      description={siloStrings.siloDescription}
+    >
       {apyField}
       <TabbedSilo />
     </ContentSection>

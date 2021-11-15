@@ -17,6 +17,7 @@ import {
   ClaimTextModule,
   SettingsFormModule,
   SiloAsset,
+  siloStrings,
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
@@ -212,7 +213,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           </span>
           <br />
           <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
-            WARNING: Your Withdrawal will be frozen for 24 full Seasons.
+            {siloStrings.withdrawWarning}
           </span>
         </Box>
       </>

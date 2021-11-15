@@ -15,6 +15,7 @@ import {
   AddressInputField,
   ListInputField,
   PlotInputField,
+  fieldStrings,
   TransactionDetailsModule,
 } from '../Common';
 
@@ -227,7 +228,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
         <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
           <span>
-            WARNING: There is currently no decentralized market for buying and selling Plots. Send Plots at your own risk.
+            {fieldStrings.sendPlotWarning}
           </span>
         </Box>
       </>

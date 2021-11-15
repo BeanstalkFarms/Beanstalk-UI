@@ -33,18 +33,30 @@ export default function Charts(props) {
   };
 
   const isMobile: boolean = (width <= 768);
-  const sections = props.charts.map((c) => (<Chart data={c.data} isMobile={isMobile} key={c.title} title={`${c.title}`} {...c.props} {...modeProps} {...props} />));
-  const baseStyle = isMobile ? { width: '100%', paddingLeft: 0, paddingRight: 0 } : null;
+  const sections = props.charts.map((c) => (
+    <Chart
+      data={c.data}
+      isMobile={isMobile}
+      key={c.title}
+      title={`${c.title}`}
+      {...c.props}
+      {...modeProps}
+      {...props}
+    />
+  ));
+  const baseStyle = isMobile ?
+    { width: '100%', paddingLeft: 0, paddingRight: 0 }
+    : null;
 
   const titles = props.charts.map((c) => {
-    if (width < 520 && c.xShortTitle !== undefined) return c.shortTitle.toUpperCase();
+    if (width < 520 && c.shortTitle !== undefined) return c.shortTitle.toUpperCase();
     if (c.tabTitle !== undefined) return c.tabTitle;
     return c.title.toUpperCase();
   });
 
   const descriptions = props.charts[0].description !== undefined ?
-    props.charts.map((c) => c.description) :
-    undefined;
+    props.charts.map((c) => c.description)
+    : undefined;
 
   return (
     <BaseModule
@@ -57,6 +69,7 @@ export default function Charts(props) {
       sectionTitlesDescription={descriptions}
       style={baseStyle}
       textTransform="None"
+      textTabSize={isMobile ? '11px' : undefined}
       >
       {sections[section]}
     </BaseModule>

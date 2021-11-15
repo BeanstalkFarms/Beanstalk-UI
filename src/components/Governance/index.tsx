@@ -2,7 +2,7 @@ import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { Link, Box } from '@material-ui/core';
-import { ContentSection, Grid } from '../Common';
+import { ContentSection, Grid, governanceStrings } from '../Common';
 import { WHITEPAPER } from '../../constants';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
@@ -71,11 +71,7 @@ export default function Governance() {
 
   const description = (
     <>
-      Beanstalk is upgraded in a decentralized fashion through Beanstalk
-      Improvement Proposals (BIPs). Anyone with more than .1% of the total
-      outstanding Stalk can propose a BIP. Any Stalk holder can vote for a BIP.
-      BIPs can be committed in as little as 24 Seasons with a 2/3 supermajority,
-      or after 168 Seasons with a 1/2 majority.{' '}
+      {governanceStrings.governanceDescription}{' '}
       <Link href={`${WHITEPAPER}#governance`} target="blank">
         Read More
       </Link>

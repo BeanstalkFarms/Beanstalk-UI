@@ -11,7 +11,7 @@ import {
   toStringBaseUnitBN,
   transferBeans,
 } from '../../util';
-import { BaseModule, CryptoAsset } from '../Common';
+import { BaseModule, CryptoAsset, tradeStrings } from '../Common';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
 
@@ -33,8 +33,8 @@ export default function TradeModule() {
   const [section, setSection] = useState(0);
   const sectionTitles = ['Swap', 'Send'];
   const sectionTitlesDescription = [
-    'Use this tab to trade against the BEAN:ETH Uniswap pool directly on the bean.money website.',
-    'Use this tab to send Beans to another Ethereum address.',
+    tradeStrings.swap,
+    tradeStrings.send,
   ];
 
   /* Swap Sub-Module state */

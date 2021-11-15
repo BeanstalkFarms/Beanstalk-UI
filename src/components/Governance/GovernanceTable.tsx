@@ -24,7 +24,7 @@ import {
   GOVERNANCE_EXPIRATION,
 } from '../../constants';
 import { percentForStalk } from '../../util';
-import { Line, QuestionModule } from '../Common';
+import { Line, QuestionModule, governanceStrings } from '../Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 const useStyles = makeStyles({
@@ -210,7 +210,7 @@ const BipTable = (props) => {
         <span className={classes.title}>
           BIPs
           <QuestionModule
-            description="Below is a complete list of all historical BIPs."
+            description={governanceStrings.bips}
             margin="-12px 0 0 2px"
           />
         </span>

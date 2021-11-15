@@ -34,6 +34,7 @@ export default function BaseModule({
   removeBackground,
   handleTabChange,
   sectionTitlesDescription,
+  textTabSize,
   widthTooltip,
   marginTooltip,
   margin,
@@ -59,7 +60,7 @@ export default function BaseModule({
     },
     sectionTab: {
       fontFamily: 'Futura-Pt-Book',
-      fontSize: s ? '14px' : '18px',
+      fontSize: s ? textTabSize : '18px',
       minWidth: '44px',
       textTransform: textTransform,
       borderRadius: '15px',
@@ -338,4 +339,5 @@ BaseModule.defaultProps = {
   margin: '-12px 0 0 0px',
   normalBox: true,
   textTransform: 'uppercase',
+  textTabSize: '12.5px',
 };

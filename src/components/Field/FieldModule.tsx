@@ -7,7 +7,7 @@ import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from '../../constants';
 import { approveBeanstalkBean, SwapMode, poolForLP } from '../../util';
-import { BaseModule, CryptoAsset, FarmAsset, ListTable } from '../Common';
+import { BaseModule, CryptoAsset, FarmAsset, ListTable, fieldStrings } from '../Common';
 import { SowModule } from './SowModule';
 import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
@@ -82,8 +82,8 @@ export default function FieldModule() {
 
   const sectionTitles = ['Sow', 'Send'];
   const sectionTitlesDescription = [
-    'Use this tab to sow Beans in the Field in exchange for Pods.',
-    'Use this tab to send Plots to another Ethereum address.',
+    fieldStrings.sow,
+    fieldStrings.sendPlot,
   ];
 
   const handleTabChange = (event, newSection) => {
@@ -198,9 +198,7 @@ export default function FieldModule() {
       />
     );
     sectionTitles.push('Harvest');
-    sectionTitlesDescription.push(
-      'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.'
-    );
+    sectionTitlesDescription.push(fieldStrings.harvest);
   }
   if (section > sectionTitles.length - 1) setSection(0);
 

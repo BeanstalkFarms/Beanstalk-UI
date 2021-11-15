@@ -17,7 +17,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import CheckIcon from '@material-ui/icons/Check';
 import { percentForStalk, vote, unvote } from '../../util';
 import { theme } from '../../constants';
-import { Line, QuestionModule } from '../Common';
+import { Line, QuestionModule, governanceStrings } from '../Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 export default function Vote(props) {
@@ -110,7 +110,7 @@ export default function Vote(props) {
         <span className={classes.title}>
           Active BIPs
           <QuestionModule
-            description="Active Beanstalk Improvement Proposals currently being voted on."
+            description={governanceStrings.activeBips}
             margin="-6px 0 0 2px"
           />
         </span>

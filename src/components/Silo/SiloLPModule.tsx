@@ -8,20 +8,25 @@ import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
 } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, LPBEAN_TO_STALK } from '../../constants';
+import { BASE_SLIPPAGE, LPBEAN_TO_STALK, zeroBN } from '../../constants';
 import {
   approveBeanstalkBean,
   approveBeanstalkLP,
   SwapMode,
   poolForLP,
 } from '../../util';
-import { BaseModule, ListTable, SiloAsset, TransitAsset } from '../Common';
+import {
+  BaseModule,
+  ListTable,
+  SiloAsset,
+  siloStrings,
+  TransitAsset,
+} from '../Common';
 import { LPDepositModule } from './LPDepositModule';
 import { LPWithdrawModule } from './LPWithdrawModule';
 import { LPClaimModule } from './LPClaimModule';
 
 export default function SiloLPModule() {
-  const zeroBN = new BigNumber(-1);
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -99,13 +104,12 @@ export default function SiloLPModule() {
   const sectionTitles = ['Deposit', 'Withdraw'];
 
   const sectionTitlesDescription = [
-    // eslint-disable-next-line
-    'Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.',
-    'Use this sub-tab to withdraw LP Tokens from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
+    siloStrings.lpDeposit,
+    siloStrings.lpWithdraw,
   ];
   const sectionTitlesInfoDescription = [
-    'View all your current LP Token Deposits in this table.',
-    'View all your current LP Token Withdrawals in this table.',
+    siloStrings.lpDepositsTable,
+    siloStrings.lpWithdrawalsTable,
   ];
 
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
@@ -239,9 +243,7 @@ export default function SiloLPModule() {
       />
     );
     sectionTitles.push('Claim');
-    sectionTitlesDescription.push(
-      'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.'
-    );
+    sectionTitlesDescription.push(siloStrings.lpClaim);
   }
   if (section > sectionTitles.length - 1) setSection(0);
 
@@ -252,7 +254,6 @@ export default function SiloLPModule() {
       <ListTable
         asset={SiloAsset.LP}
         crates={lpDeposits}
-        description="LP Deposits Will Appear Here"
         handleChange={handlePageChange}
         indexTitle="Season"
         isLP
@@ -260,7 +261,6 @@ export default function SiloLPModule() {
         poolForLPRatio={poolForLPRatio}
         season={season}
         seedCrates={lpSeedDeposits}
-        title="Deposits"
       />
     );
     sectionTitlesInfo.push('LP Deposits');
@@ -275,14 +275,12 @@ export default function SiloLPModule() {
         crates={lpWithdrawals}
         claimableBalance={lpReceivableBalance}
         claimableCrates={lpReceivableCrates}
-        description="Bean Withdrawals Will Appear Here"
         handleChange={handlePageChange}
         index={season}
         indexTitle="Seasons to Arrival"
         isLP
         page={page}
         poolForLPRatio={poolForLPRatio}
-        title="Withdrawals"
       />
     );
     sectionTitlesInfo.push('LP Withdrawals');
