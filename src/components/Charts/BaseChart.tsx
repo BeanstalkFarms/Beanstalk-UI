@@ -1,6 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { createChart } from 'lightweight-charts';
+import { createChart, IChartApi } from 'lightweight-charts';
 import equal from 'fast-deep-equal';
+import { BaseModule } from 'components/Common';
+import { theme } from '../../constants';
 
 const addSeriesFunctions = {
   candlestick: 'addCandlestickSeries',
@@ -38,22 +41,21 @@ const darkTheme = {
 
 const lightTheme = {
   layout: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.module.background,
     lineColor: '#2B2B43',
     textColor: '#191919',
   },
   grid: {
     vertLines: {
-      color: '#e1ecf2',
+      color: theme.text,
     },
     horzLines: {
-      color: '#e1ecf2',
+      color: theme.text,
     },
   },
 };
 
-const isObject = (item) =>
-  item && typeof item === 'object' && !Array.isArray(item);
+const isObject = (item) => item && typeof item === 'object' && !Array.isArray(item);
 
 const mergeDeep = (target, source) => {
   const output = { ...target };
@@ -69,160 +71,83 @@ const mergeDeep = (target, source) => {
   return output;
 };
 
-class ChartWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.chartDiv = React.createRef();
-    this.legendDiv = React.createRef();
-    this.chart = null;
-    this.series = [];
-    this.legends = [];
-  }
+const sectionTitles = ['Chart'];
 
-  componentDidMount() {
-    this.chart = createChart(this.chartDiv.current);
-    this.handleUpdateChart();
-    this.resizeHandler();
-  }
+function usePrevious(value) {
+  const ref = React.useRef<any>();
+  React.useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
 
-  componentDidUpdate(prevProps) {
-    if (!this.props.autoWidth && !this.props.autoHeight) { window.removeEventListener('resize', this.resizeHandler); }
-    if (
-      !equal(
-        [
-          prevProps.onCrosshairMove,
-          prevProps.onTimeRangeMove,
-          prevProps.onClick,
-        ],
-        [
-          this.props.onCrosshairMove,
-          this.props.onTimeRangeMove,
-          this.props.onClick,
-        ]
-      )
-    ) { this.unsubscribeEvents(prevProps); }
-    if (
-      !equal(
-        [
-          prevProps.options,
-          prevProps.darkTheme,
-          prevProps.candlestickSeries,
-          prevProps.lineSeries,
-          prevProps.areaSeries,
-          prevProps.barSeries,
-          prevProps.histogramSeries,
-        ],
-        [
-          this.props.options,
-          this.props.darkTheme,
-          this.props.candlestickSeries,
-          this.props.lineSeries,
-          this.props.areaSeries,
-          this.props.barSeries,
-          this.props.histogramSeries,
-        ]
-      )
-    ) {
-      this.removeSeries();
-      this.handleUpdateChart();
-    } else if (
-      prevProps.from !== this.props.from ||
-      prevProps.to !== this.props.to
-    ) { this.handleTimeRange(); }
-  }
+const BaseChart = (props) => {
+  const prevProps = usePrevious(props);
+  const chartDiv = React.useRef<any>();
+  const legendDiv = React.useRef<any>();
 
-  resizeHandler = () => {
+  const [chart, setChart] = React.useState<IChartApi>();
+  const [series, setSeries] = React.useState<any>([]);
+  const [legends, setLegends] = React.useState<any>([]);
+
+  console.log('props', props);
+  console.log('prevProps', prevProps);
+
+  const resizeHandler = () => {
     const width =
-      this.props.autoWidth &&
-      this.chartDiv.current &&
-      this.chartDiv.current.parentNode.clientWidth;
+      props.autoWidth &&
+      chartDiv.current &&
+      chartDiv.current.parentNode.clientWidth;
     const height =
-      this.props.autoHeight && this.chartDiv.current
-        ? this.chartDiv.current.parentNode.clientHeight
-        : this.props.height || 500;
-    this.chart.resize(width, height);
+      props.autoHeight && chartDiv.current
+        ? chartDiv.current.parentNode.clientHeight
+        : props.height || 500;
+    chart?.resize(width, height);
+  };
+  const unsubscribeEvents = (previousProps) => {
+    chart?.unsubscribeClick(previousProps.onClick);
+    chart?.unsubscribeCrosshairMove(previousProps.onCrosshairMove);
+    chart?.timeScale().unsubscribeVisibleTimeRangeChange(previousProps.onTimeRangeMove);
   };
 
-  removeSeries = () => {
-    this.series.forEach((serie) => this.chart.removeSeries(serie));
-    this.series = [];
+  const handleMainLegend = () => {
+    if (legendDiv.current) {
+      const row = document.createElement('div');
+      row.innerText = props.legend;
+      legendDiv.current.appendChild(row);
+    }
   };
-
-  addSeries = (serie, type) => {
-    const func = addSeriesFunctions[type];
-    const color =
-      (serie.options && serie.options.color) ||
-      colors[this.series.length % colors.length];
-    const series = this.chart[func]({
-      color,
-      ...serie.options,
-    });
-    const data = this.handleLinearInterpolation(
-      serie.data,
-      serie.linearInterpolation
-    );
-    series.setData(data);
-    if (serie.markers) series.setMarkers(serie.markers);
-    if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
-    if (serie.legend) this.addLegend(series, color, serie.legend);
-    return series;
+  const addLegend = (newSeries, color, title) => {
+    const toPush = { newSeries, color, title };
+    setLegends({ ...legends, toPush });
   };
-
-  handleSeries = () => {
-    const series = this.series;
-    const props = this.props;
-    props.candlestickSeries &&
-      props.candlestickSeries.forEach((serie) => {
-        series.push(this.addSeries(serie, 'candlestick'));
+  const handleLegends = (param) => {
+    const div = legendDiv.current;
+    if (param.time && div && legends.length) {
+      div.innerHTML = '';
+      legends.forEach(({ newSeries, color, title }) => {
+        let price = param.seriesPrices.get(newSeries);
+        if (price !== undefined) {
+          if (typeof price === 'object') {
+            color =
+              price.open < price.close
+                ? 'rgba(0, 150, 136, 0.8)'
+                : 'rgba(255,82,82, 0.8)';
+            price = `O: ${price.open}, H: ${price.high}, L: ${price.low}, C: ${price.close}`;
+          }
+          const row = document.createElement('div');
+          row.innerText = `${title} `;
+          const priceElem = document.createElement('span');
+          priceElem.style.color = color;
+          priceElem.innerText = ` ${price}`;
+          row.appendChild(priceElem);
+          div.appendChild(row);
+        }
       });
-
-    props.lineSeries &&
-      props.lineSeries.forEach((serie) => {
-        series.push(this.addSeries(serie, 'line'));
-      });
-
-    props.areaSeries &&
-      props.areaSeries.forEach((serie) => {
-        series.push(this.addSeries(serie, 'area'));
-      });
-
-    props.barSeries &&
-      props.barSeries.forEach((serie) => {
-        series.push(this.addSeries(serie, 'bar'));
-      });
-
-    props.histogramSeries &&
-      props.histogramSeries.forEach((serie) => {
-        series.push(this.addSeries(serie, 'histogram'));
-      });
+    }
   };
 
-  unsubscribeEvents = (prevProps) => {
-    const chart = this.chart;
-    chart.unsubscribeClick(prevProps.onClick);
-    chart.unsubscribeCrosshairMove(prevProps.onCrosshairMove);
-    chart.timeScale().unsubscribeVisibleTimeRangeChange(prevProps.onTimeRangeMove);
-  };
-
-  handleEvents = () => {
-    const chart = this.chart;
-    const props = this.props;
-    props.onClick && chart.subscribeClick(props.onClick);
-    props.onCrosshairMove &&
-      chart.subscribeCrosshairMove(props.onCrosshairMove);
-    props.onTimeRangeMove &&
-      chart.timeScale().subscribeVisibleTimeRangeChange(props.onTimeRangeMove);
-
-    // handle legend dynamical change
-    chart.subscribeCrosshairMove(this.handleLegends);
-  };
-
-  handleTimeRange = () => {
-    const { from, to } = this.props;
-    from && to && this.chart.timeScale().setVisibleRange({ from, to });
-  };
-
-  handleLinearInterpolation = (data, candleTime) => {
+  const handleLinearInterpolation = (data, candleTime) => {
     if (!candleTime || data.length < 2 || !data[0].value) return data;
     const first = data[0].time;
     const last = data[data.length - 1].time;
@@ -250,12 +175,81 @@ class ChartWrapper extends React.Component {
     // return only the valid values
     return newData.filter((x) => x);
   };
+  const addSeries = (serie, type) => {
+    const func = addSeriesFunctions[type];
+    const color =
+      (serie.options && serie.options.color) ||
+      colors[series.length % colors.length];
 
-  handleUpdateChart = () => {
-    window.removeEventListener('resize', this.resizeHandler);
-    const { chart, chartDiv } = this;
-    const props = this.props;
-    let options = this.props.darkTheme ? darkTheme : lightTheme;
+    if (chart) {
+      setSeries(chart[func]({
+        color,
+        ...serie.options,
+      }));
+    }
+
+    const data = handleLinearInterpolation(
+      serie.data,
+      serie.linearInterpolation
+    );
+
+    series.setData(data);
+
+    if (serie.markers) series.setMarkers(serie.markers);
+    if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
+    if (serie.legend) addLegend(series, color, serie.legend);
+
+    return series;
+  };
+  const handleSeries = () => {
+    props.candlestickSeries &&
+      props.candlestickSeries.forEach((serie) => {
+        series.push(addSeries(serie, 'candlestick'));
+      });
+
+    props.lineSeries &&
+      props.lineSeries.forEach((serie) => {
+        series.push(addSeries(serie, 'line'));
+      });
+
+    props.areaSeries &&
+      props.areaSeries.forEach((serie) => {
+        series.push(addSeries(serie, 'area'));
+      });
+
+    props.barSeries &&
+      props.barSeries.forEach((serie) => {
+        series.push(addSeries(serie, 'bar'));
+      });
+
+    props.histogramSeries &&
+      props.histogramSeries.forEach((serie) => {
+        series.push(addSeries(serie, 'histogram'));
+      });
+  };
+  const removeSeries = () => {
+    series.forEach((serie) => chart?.removeSeries(serie));
+    setSeries([]);
+  };
+
+  const handleEvents = () => {
+    props.onClick && chart?.subscribeClick(props.onClick);
+    props.onCrosshairMove &&
+      chart?.subscribeCrosshairMove(props.onCrosshairMove);
+    props.onTimeRangeMove &&
+      chart?.timeScale().subscribeVisibleTimeRangeChange(props.onTimeRangeMove);
+
+    // handle legend dynamical change
+    chart?.subscribeCrosshairMove(handleLegends);
+  };
+  const handleTimeRange = () => {
+    const { from, to } = props;
+    from && to && chart?.timeScale().setVisibleRange({ from, to });
+  };
+  const handleUpdateChart = () => {
+    window.removeEventListener('resize', resizeHandler);
+    let options = props.darkTheme ? darkTheme : lightTheme;
+
     options = mergeDeep(options, {
       width: props.autoWidth
         ? chartDiv.current.parentNode.clientWidth
@@ -265,79 +259,104 @@ class ChartWrapper extends React.Component {
         : props.height || 500,
       ...props.options,
     });
-    chart.applyOptions(options);
-    if (this.legendDiv.current) this.legendDiv.current.innerHTML = '';
-    this.legends = [];
-    if (this.props.legend) this.handleMainLegend();
 
-    this.handleSeries();
-    this.handleEvents();
-    this.handleTimeRange();
+    chart?.applyOptions(options);
 
-    if (props.autoWidth || props.autoHeight)
-    // resize the chart with the window
-    // eslint-disable-next-line brace-style
-    { window.addEventListener('resize', this.resizeHandler); }
-  };
+    if (legendDiv.current) legendDiv.current.innerHTML = '';
+    setLegends([]);
+    if (props.legend) handleMainLegend();
 
-  addLegend = (series, color, title) => {
-    this.legends.push({ series, color, title });
-  };
+    handleSeries();
+    handleEvents();
+    handleTimeRange();
 
-  handleLegends = (param) => {
-    const div = this.legendDiv.current;
-    if (param.time && div && this.legends.length) {
-      div.innerHTML = '';
-      this.legends.forEach(({ series, color, title }) => {
-        let price = param.seriesPrices.get(series);
-        if (price !== undefined) {
-          if (typeof price === 'object') {
-            color =
-              price.open < price.close
-                ? 'rgba(0, 150, 136, 0.8)'
-                : 'rgba(255,82,82, 0.8)';
-            price = `O: ${price.open}, H: ${price.high}, L: ${price.low}, C: ${price.close}`;
-          }
-          const row = document.createElement('div');
-          row.innerText = `${title} `;
-          const priceElem = document.createElement('span');
-          priceElem.style.color = color;
-          priceElem.innerText = ` ${price}`;
-          row.appendChild(priceElem);
-          div.appendChild(row);
-        }
-      });
+    if (props.autoWidth || props.autoHeight) {
+      // resize the chart with the window
+      window.addEventListener('resize', resizeHandler);
     }
   };
 
-  handleMainLegend = () => {
-    if (this.legendDiv.current) {
-      const row = document.createElement('div');
-      row.innerText = this.props.legend;
-      this.legendDiv.current.appendChild(row);
+  React.useEffect(() => {
+    setChart(createChart(chartDiv.current));
+  }, []);
+
+  React.useEffect(() => {
+    // ComponentDidUpdate
+    if (!props.autoWidth && !props.autoHeight) { window.removeEventListener('resize', resizeHandler); }
+    if (prevProps) {
+      if (
+        !equal(
+          [
+            prevProps.onCrosshairMove,
+            prevProps.onTimeRangeMove,
+            prevProps.onClick,
+          ],
+          [
+            props.onCrosshairMove,
+            props.onTimeRangeMove,
+            props.onClick,
+          ]
+        )
+      ) { unsubscribeEvents(prevProps); }
+      if (
+        !equal(
+          [
+            prevProps.options,
+            prevProps.darkTheme,
+            prevProps.candlestickSeries,
+            prevProps.lineSeries,
+            prevProps.areaSeries,
+            prevProps.barSeries,
+            prevProps.histogramSeries,
+          ],
+          [
+            props.options,
+            props.darkTheme,
+            props.candlestickSeries,
+            props.lineSeries,
+            props.areaSeries,
+            props.barSeries,
+            props.histogramSeries,
+          ]
+        )
+      ) {
+        removeSeries();
+        handleUpdateChart();
+      } else if (prevProps.from !== props.from || prevProps.to !== props.to) {
+        handleTimeRange();
+      }
     }
-  };
+  }, [prevProps]);
 
-  render() {
-    const color = this.props.darkTheme
-      ? darkTheme.layout.textColor
-      : lightTheme.layout.textColor;
+  const color = props.darkTheme
+    ? darkTheme.layout.textColor
+    : lightTheme.layout.textColor;
 
-    return (
-      <div ref={this.chartDiv} style={{ position: 'relative' }}>
-        <div
-          ref={this.legendDiv}
-          style={{
-            position: 'absolute',
-            zIndex: 2,
-            color,
-            padding: 10,
-          }}
-        />
-      </div>
-    );
-  }
-}
+  console.log(chartDiv);
 
-export default ChartWrapper;
+  return (
+    <div ref={chartDiv} style={{ position: 'relative' }}>
+      <div
+        ref={legendDiv}
+        style={{
+          position: 'absolute',
+          zIndex: 2,
+          color,
+          padding: 10,
+        }}
+      />
+    </div>
+  );
+};
+
+const ChartWrapper = (props) => (
+  <BaseModule
+    handleForm={() => { }}
+    sectionTitles={sectionTitles}
+    showButton={false}
+  >
+    <BaseChart {...props} />
+  </BaseModule>
+);
 export * from 'lightweight-charts';
+export default ChartWrapper;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { ContentSection } from '../Common';
 import BaseChart from '../Charts/BaseChart';
-import Balances from '../Balances';
-import Charts from '../Charts';
-import Seasons from '../Seasons';
+// import Balances from '../Balances';
+// import Charts from '../Charts';
+// import Seasons from '../Seasons';
 
 export default function Analytics() {
   const state = {
@@ -73,9 +73,9 @@ export default function Analytics() {
     <>
       <ContentSection id="analytics" title="Analytics">
         <BaseChart options={state.option} lineSeries={state.lineSeries} candlestickSeries={state.candlestickSeries} autoWidth height={320} />
-        <Balances />
+        {/* <Balances />
         <Charts />
-        <Seasons />
+        <Seasons /> */}
       </ContentSection>
     </>
   );
