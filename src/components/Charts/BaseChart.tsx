@@ -1,111 +1,343 @@
-import React, { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import { BaseModule, ContentSection } from '../Common';
+import React from 'react';
+import { createChart } from 'lightweight-charts';
+import equal from 'fast-deep-equal';
 
-export default function BaseChart(props) {
-  const marginTop = props.marginTop == null ? '-80px' : props.marginTop;
-  const [section, setSection] = useState(0);
-  const [width, setWidth] = useState<number>(window.innerWidth);
-  const [data, setData] = useState<any>({
-    labels: [],
-    datasets: [],
-  });
-  const [labels, setLabels] = useState<any>(['0']);
-  const [datasets, setDataSets] = useState<any>([]);
+const addSeriesFunctions = {
+  candlestick: 'addCandlestickSeries',
+  line: 'addLineSeries',
+  area: 'addAreaSeries',
+  bar: 'addBarSeries',
+  histogram: 'addHistogramSeries',
+};
 
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
+const colors = [
+  '#008FFB',
+  '#00E396',
+  '#FEB019',
+  '#FF4560',
+  '#775DD0',
+  '#F86624',
+  '#A5978B',
+];
+
+const darkTheme = {
+  layout: {
+    backgroundColor: '#131722',
+    lineColor: '#2B2B43',
+    textColor: '#D9D9D9',
+  },
+  grid: {
+    vertLines: {
+      color: '#363c4e',
+    },
+    horzLines: {
+      color: '#363c4e',
+    },
+  },
+};
+
+const lightTheme = {
+  layout: {
+    backgroundColor: '#FFFFFF',
+    lineColor: '#2B2B43',
+    textColor: '#191919',
+  },
+  grid: {
+    vertLines: {
+      color: '#e1ecf2',
+    },
+    horzLines: {
+      color: '#e1ecf2',
+    },
+  },
+};
+
+const isObject = (item) =>
+  item && typeof item === 'object' && !Array.isArray(item);
+
+const mergeDeep = (target, source) => {
+  const output = { ...target };
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach((key) => {
+      if (isObject(source[key])) {
+        if (!(key in target)) { Object.assign(output, { [key]: source[key] }); } else output[key] = mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
+  }
+  return output;
+};
+
+class ChartWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.chartDiv = React.createRef();
+    this.legendDiv = React.createRef();
+    this.chart = null;
+    this.series = [];
+    this.legends = [];
   }
 
-  const isMobile: boolean = (width <= 758);
-  const baseStyle = isMobile ? { width: '100vw', paddingLeft: 0, paddingRight: 0 } : null;
+  componentDidMount() {
+    this.chart = createChart(this.chartDiv.current);
+    this.handleUpdateChart();
+    this.resizeHandler();
+  }
 
-  useEffect(() => {
-    setLabels(['1', '2', '3', '4', '5', '6']);
-    setDataSets([{
-      label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
-      fill: false,
-      backgroundColor: 'rgb(255,255,255)',
-      borderColor: 'rgba(255, 99, 132)',
-    },
-    ]);
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
-  }, []);
+  componentDidUpdate(prevProps) {
+    if (!this.props.autoWidth && !this.props.autoHeight) { window.removeEventListener('resize', this.resizeHandler); }
+    if (
+      !equal(
+        [
+          prevProps.onCrosshairMove,
+          prevProps.onTimeRangeMove,
+          prevProps.onClick,
+        ],
+        [
+          this.props.onCrosshairMove,
+          this.props.onTimeRangeMove,
+          this.props.onClick,
+        ]
+      )
+    ) { this.unsubscribeEvents(prevProps); }
+    if (
+      !equal(
+        [
+          prevProps.options,
+          prevProps.darkTheme,
+          prevProps.candlestickSeries,
+          prevProps.lineSeries,
+          prevProps.areaSeries,
+          prevProps.barSeries,
+          prevProps.histogramSeries,
+        ],
+        [
+          this.props.options,
+          this.props.darkTheme,
+          this.props.candlestickSeries,
+          this.props.lineSeries,
+          this.props.areaSeries,
+          this.props.barSeries,
+          this.props.histogramSeries,
+        ]
+      )
+    ) {
+      this.removeSeries();
+      this.handleUpdateChart();
+    } else if (
+      prevProps.from !== this.props.from ||
+      prevProps.to !== this.props.to
+    ) { this.handleTimeRange(); }
+  }
 
-  useEffect(() => {
-    setData({
-      labels: labels,
-      datasets: datasets,
+  resizeHandler = () => {
+    const width =
+      this.props.autoWidth &&
+      this.chartDiv.current &&
+      this.chartDiv.current.parentNode.clientWidth;
+    const height =
+      this.props.autoHeight && this.chartDiv.current
+        ? this.chartDiv.current.parentNode.clientHeight
+        : this.props.height || 500;
+    this.chart.resize(width, height);
+  };
+
+  removeSeries = () => {
+    this.series.forEach((serie) => this.chart.removeSeries(serie));
+    this.series = [];
+  };
+
+  addSeries = (serie, type) => {
+    const func = addSeriesFunctions[type];
+    const color =
+      (serie.options && serie.options.color) ||
+      colors[this.series.length % colors.length];
+    const series = this.chart[func]({
+      color,
+      ...serie.options,
     });
-  }, [labels, datasets]);
-
-  const addData = () => {
-    const newData = {
-      label: '# of times x does y',
-      data: [12, 19, 3, 5, 2, 3].reverse(),
-      fill: false,
-      backgroundColor: 'rgb(255,255,255)',
-      borderColor: 'rgba(0, 255, 255)',
-    };
-    setData({ ...data, datasets: [...data.datasets, newData] });
-  };
-  const addChartLabel = () => {
-    const newLabel = Math.floor(Math.random() * 100);
-    setLabels([...labels, newLabel.toString()]);
-  };
-  const removeData = () => {
-    setData({ ...data, datasets: data.datasets.slice(0, data.datasets.length - 1) });
+    const data = this.handleLinearInterpolation(
+      serie.data,
+      serie.linearInterpolation
+    );
+    series.setData(data);
+    if (serie.markers) series.setMarkers(serie.markers);
+    if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
+    if (serie.legend) this.addLegend(series, color, serie.legend);
+    return series;
   };
 
-  const options = {
-    redraw: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
+  handleSeries = () => {
+    const series = this.series;
+    const props = this.props;
+    props.candlestickSeries &&
+      props.candlestickSeries.forEach((serie) => {
+        series.push(this.addSeries(serie, 'candlestick'));
+      });
+
+    props.lineSeries &&
+      props.lineSeries.forEach((serie) => {
+        series.push(this.addSeries(serie, 'line'));
+      });
+
+    props.areaSeries &&
+      props.areaSeries.forEach((serie) => {
+        series.push(this.addSeries(serie, 'area'));
+      });
+
+    props.barSeries &&
+      props.barSeries.forEach((serie) => {
+        series.push(this.addSeries(serie, 'bar'));
+      });
+
+    props.histogramSeries &&
+      props.histogramSeries.forEach((serie) => {
+        series.push(this.addSeries(serie, 'histogram'));
+      });
   };
 
-  const titles = ['Bean'];
-  const descriptions = [
-    'Use this tab to view charts with information about the BEAN token.',
-    'Use this tab to view charts with information about the Field.',
-    'Use this tab to view charts with information about the Silo.',
-  ];
-  console.log(data);
-  const sections = [
-    <Line data={data} options={options} />,
-  ];
+  unsubscribeEvents = (prevProps) => {
+    const chart = this.chart;
+    chart.unsubscribeClick(prevProps.onClick);
+    chart.unsubscribeCrosshairMove(prevProps.onCrosshairMove);
+    chart.timeScale().unsubscribeVisibleTimeRangeChange(prevProps.onTimeRangeMove);
+  };
 
-  return (
-    <ContentSection
-      id="charts"
-      title={props.title}
-      size="20px"
-      style={{ minHeight: '600px', maxWidth: '1000px', marginTop: marginTop }}
-    >
-      <BaseModule
-        handleTabChange={(event, newSection) => { setSection(newSection); }}
-        removeBackground
-        section={section}
-        sectionTitlesDescription={descriptions}
-        size={isMobile ? 'small' : 'medium'}
-        sectionTitles={titles}
-        showButton={false}
-        style={baseStyle}
-      >
-        {sections[section]}
-        <button type="button" onClick={() => addData()}>Add Data</button>
-        <button type="button" onClick={() => addChartLabel()}>Add Chart Label</button>
-        <button type="button" onClick={() => removeData()}>Remove Data</button>
-      </BaseModule>
-    </ContentSection>
-  );
+  handleEvents = () => {
+    const chart = this.chart;
+    const props = this.props;
+    props.onClick && chart.subscribeClick(props.onClick);
+    props.onCrosshairMove &&
+      chart.subscribeCrosshairMove(props.onCrosshairMove);
+    props.onTimeRangeMove &&
+      chart.timeScale().subscribeVisibleTimeRangeChange(props.onTimeRangeMove);
+
+    // handle legend dynamical change
+    chart.subscribeCrosshairMove(this.handleLegends);
+  };
+
+  handleTimeRange = () => {
+    const { from, to } = this.props;
+    from && to && this.chart.timeScale().setVisibleRange({ from, to });
+  };
+
+  handleLinearInterpolation = (data, candleTime) => {
+    if (!candleTime || data.length < 2 || !data[0].value) return data;
+    const first = data[0].time;
+    const last = data[data.length - 1].time;
+    const newData = new Array(Math.floor((last - first) / candleTime));
+    newData[0] = data[0];
+    const index = 1;
+    for (let i = 1; i < data.length; i += 1) {
+      newData[index + 1] = data[i];
+      const prevTime = data[i - 1].time;
+      const prevValue = data[i - 1].value;
+      const { time, value } = data[i];
+      for (
+        let interTime = prevTime;
+        interTime < time - candleTime;
+        interTime += candleTime
+      ) {
+        // interValue get from the Taylor-Young formula
+        const interValue =
+          prevValue +
+          (interTime - prevTime) *
+          ((value - prevValue) / (time - prevTime));
+        newData[index + 1] = { time: interTime, value: interValue };
+      }
+    }
+    // return only the valid values
+    return newData.filter((x) => x);
+  };
+
+  handleUpdateChart = () => {
+    window.removeEventListener('resize', this.resizeHandler);
+    const { chart, chartDiv } = this;
+    const props = this.props;
+    let options = this.props.darkTheme ? darkTheme : lightTheme;
+    options = mergeDeep(options, {
+      width: props.autoWidth
+        ? chartDiv.current.parentNode.clientWidth
+        : props.width,
+      height: props.autoHeight
+        ? chartDiv.current.parentNode.clientHeight
+        : props.height || 500,
+      ...props.options,
+    });
+    chart.applyOptions(options);
+    if (this.legendDiv.current) this.legendDiv.current.innerHTML = '';
+    this.legends = [];
+    if (this.props.legend) this.handleMainLegend();
+
+    this.handleSeries();
+    this.handleEvents();
+    this.handleTimeRange();
+
+    if (props.autoWidth || props.autoHeight)
+    // resize the chart with the window
+    // eslint-disable-next-line brace-style
+    { window.addEventListener('resize', this.resizeHandler); }
+  };
+
+  addLegend = (series, color, title) => {
+    this.legends.push({ series, color, title });
+  };
+
+  handleLegends = (param) => {
+    const div = this.legendDiv.current;
+    if (param.time && div && this.legends.length) {
+      div.innerHTML = '';
+      this.legends.forEach(({ series, color, title }) => {
+        let price = param.seriesPrices.get(series);
+        if (price !== undefined) {
+          if (typeof price === 'object') {
+            color =
+              price.open < price.close
+                ? 'rgba(0, 150, 136, 0.8)'
+                : 'rgba(255,82,82, 0.8)';
+            price = `O: ${price.open}, H: ${price.high}, L: ${price.low}, C: ${price.close}`;
+          }
+          const row = document.createElement('div');
+          row.innerText = `${title} `;
+          const priceElem = document.createElement('span');
+          priceElem.style.color = color;
+          priceElem.innerText = ` ${price}`;
+          row.appendChild(priceElem);
+          div.appendChild(row);
+        }
+      });
+    }
+  };
+
+  handleMainLegend = () => {
+    if (this.legendDiv.current) {
+      const row = document.createElement('div');
+      row.innerText = this.props.legend;
+      this.legendDiv.current.appendChild(row);
+    }
+  };
+
+  render() {
+    const color = this.props.darkTheme
+      ? darkTheme.layout.textColor
+      : lightTheme.layout.textColor;
+
+    return (
+      <div ref={this.chartDiv} style={{ position: 'relative' }}>
+        <div
+          ref={this.legendDiv}
+          style={{
+            position: 'absolute',
+            zIndex: 2,
+            color,
+            padding: 10,
+          }}
+        />
+      </div>
+    );
+  }
 }
-BaseChart.defaultProps = {
-  title: 'Charts',
-};
+
+export default ChartWrapper;
+export * from 'lightweight-charts';
