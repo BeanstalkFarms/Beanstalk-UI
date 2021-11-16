@@ -42,7 +42,7 @@ export default function Field() {
             </span>
           }
           title="Pod APY"
-          value={`${apy.toFixed(0)}%`}
+          value={`${apy.toFixed(0) === '0' ? '–' : apy.toFixed(0)}%`}
         />
       </Grid>
       <Grid item sm={6} xs={12} style={headerLabelStyle}>
@@ -57,7 +57,7 @@ export default function Field() {
             </span>
           }
           title="Seasons to Pod Clearance"
-          value={tth.toFixed(0)}
+          value={tth.toFixed(0) === 'Infinity' ? '–' : tth.toFixed(0)}
         />
       </Grid>
     </Grid>
