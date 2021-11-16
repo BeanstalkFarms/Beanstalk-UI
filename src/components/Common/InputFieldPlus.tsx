@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
-import { CryptoAsset, MinBN } from '../../util';
-import { BASE_SLIPPAGE } from '../../constants';
+import { CryptoAsset, MinBN } from 'util/index';
+import { BASE_SLIPPAGE } from 'constants/index';
 import { TokenInputField } from './index';
 
 export default function InputFieldPlus(props) {
-  const inputBalance = props.balance.plus(props.claim ? props.claimableBalance : new BigNumber(0));
+  const inputBalance = props.balance.plus(
+    props.claim ? props.claimableBalance : new BigNumber(0)
+  );
 
-  const minLPBeans = props.beanLPClaimableBalance.isGreaterThan(0) && props.claim ?
-    props.beanLPClaimableBalance.multipliedBy(1 - BASE_SLIPPAGE)
-    : new BigNumber(0);
+  const minLPBeans =
+    props.beanLPClaimableBalance.isGreaterThan(0) && props.claim
+      ? props.beanLPClaimableBalance.multipliedBy(1 - BASE_SLIPPAGE)
+      : new BigNumber(0);
 
   const maxBalance = inputBalance.minus(minLPBeans);
 
@@ -32,7 +35,9 @@ export default function InputFieldPlus(props) {
     if (event.target.value === undefined || event.target.value === '') {
       props.handleChange(new BigNumber(-1));
     } else {
-      props.handleChange(MinBN(inputBalance, new BigNumber(event.target.value)));
+      props.handleChange(
+        MinBN(inputBalance, new BigNumber(event.target.value))
+      );
     }
   };
 
@@ -50,7 +55,7 @@ export default function InputFieldPlus(props) {
     />
   );
 
-  return (<>{tokenInputField}</>);
+  return <>{tokenInputField}</>;
 }
 
 InputFieldPlus.defaultProps = {

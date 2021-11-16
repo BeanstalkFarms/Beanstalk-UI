@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import Footer from 'components/About/Footer';
+import { FallingLeaves } from 'components/Fall';
+import { theme } from 'constants/index';
 import './index.tsx';
-import { theme } from '../../constants';
-import { FallingLeaves } from '../Fall';
 
 export default function Main(props) {
   const navCloudStyle = {

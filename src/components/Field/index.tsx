@@ -1,9 +1,15 @@
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { displayBN, displayFullBN } from '../../util';
-import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
-import { BaseModule, ContentSection, Grid, HeaderLabel, fieldStrings } from '../Common';
+import { displayBN, displayFullBN } from 'util/index';
+import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from 'constants/index';
+import {
+  BaseModule,
+  ContentSection,
+  Grid,
+  HeaderLabel,
+  fieldStrings,
+} from 'components/Common';
 import FieldModule from './FieldModule';
 
 export default function Field() {

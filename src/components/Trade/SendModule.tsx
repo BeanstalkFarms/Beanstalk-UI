@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
-import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from '../../constants';
-import {
-  displayBN,
-  isAddress,
-  MinBN,
-  TrimBN,
-} from '../../util';
+import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from 'constants/index';
+import { displayBN, isAddress, MinBN, TrimBN } from 'util/index';
 import {
   AddressInputField,
   CryptoAsset,
   TokenInputField,
   TransactionDetailsModule,
-} from '../Common';
+} from 'components/Common';
 
 export default function SendModule(props) {
   const [snappedToAddress, setSnappedToAddress] = useState(false);
@@ -114,17 +109,21 @@ export default function SendModule(props) {
   );
 
   function transactionDetails() {
-    if (props.fromBeanValue.isLessThanOrEqualTo(0)
-      || props.toAddress.length !== 42
-      || props.isValidAddress !== true
-    ) return;
+    if (
+      props.fromBeanValue.isLessThanOrEqualTo(0) ||
+      props.toAddress.length !== 42 ||
+      props.isValidAddress !== true
+    ) {
+      return;
+    }
 
     return (
       <>
         <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
           <span>
-            WARNING: You are sending Beans to another wallet and will no longer own them.
+            WARNING: You are sending Beans to another wallet and will no longer
+            own them.
           </span>
         </Box>
       </>

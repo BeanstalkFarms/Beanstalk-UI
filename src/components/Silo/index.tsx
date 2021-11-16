@@ -1,20 +1,21 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
+import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
   ContentSection,
   Grid,
   HeaderLabel,
   siloStrings,
-} from '../Common';
+} from 'components/Common';
+import { getAPYs } from 'util/index';
 import TabbedSilo from './TabbedSilo';
-import { getAPYs } from '../../util';
 
 export default function Silo() {
-  const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
-    (state) => state.totalBalance
-  );
+  const { totalStalk, totalSeeds } = useSelector<
+    AppState,
+    AppState['totalBalance']
+  >((state) => state.totalBalance);
 
   const { farmableWeek } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
@@ -62,7 +63,8 @@ export default function Silo() {
           value={`${beanAPY.toFixed(0)}%`}
         />
       </Grid>
-    </Grid>);
+    </Grid>
+  );
 
   const descriptionLinks = [
     {

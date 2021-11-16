@@ -8,20 +8,20 @@ import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
 } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, LPBEAN_TO_STALK, zeroBN } from '../../constants';
+import { BASE_SLIPPAGE, LPBEAN_TO_STALK, zeroBN } from 'constants/index';
 import {
   approveBeanstalkBean,
   approveBeanstalkLP,
   SwapMode,
   poolForLP,
-} from '../../util';
+} from 'util/index';
 import {
   BaseModule,
   ListTable,
   SiloAsset,
   siloStrings,
   TransitAsset,
-} from '../Common';
+} from 'components/Common';
 import { LPDepositModule } from './LPDepositModule';
 import { LPWithdrawModule } from './LPWithdrawModule';
 import { LPClaimModule } from './LPClaimModule';
@@ -166,8 +166,9 @@ export default function SiloLPModule() {
     .plus(harvestablePodBalance)
     .plus(poolForLPRatio(lpReceivableBalance)[0]);
 
-  const ethClaimable = claimableEthBalance
-    .plus(poolForLPRatio(lpReceivableBalance)[1]);
+  const ethClaimable = claimableEthBalance.plus(
+    poolForLPRatio(lpReceivableBalance)[1]
+  );
 
   const sections = [
     <LPDepositModule

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Grid, Button, Link, Box } from '@material-ui/core';
-import { initialize, metamaskFailure } from '../../util';
-import { METAMASK_LINK, HOW_TO_MM_PATH } from '../../constants';
-import { SvgCloudIcon } from '../About/SvgCloudIcon';
-import About from '../About';
-import Charts from '../Charts';
-import { ContentSection } from '../Common';
-import { NavigationBar } from '../Navigation';
+import { initialize, metamaskFailure } from 'util/index';
+import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
+import { SvgCloudIcon } from 'components/About/SvgCloudIcon';
+import About from 'components/About';
+import Charts from 'components/Charts';
+import { ContentSection } from 'components/Common';
+import { NavigationBar } from 'components/Navigation';
 
 export default function MetamasklessModule() {
   const connectMetaStyle = {
@@ -76,7 +76,11 @@ export default function MetamasklessModule() {
       <NavigationBar links={navMappings} showWallet={false} />
       <Box className="App" style={{ position: 'relative' }}>
         <About defaultSection={metamaskModule} />
-        <ContentSection id="analytics" title="Charts" style={{ marginBottom: '100px' }}>
+        <ContentSection
+          id="analytics"
+          title="Charts"
+          style={{ marginBottom: '100px' }}
+        >
           <Charts title="" />
         </ContentSection>
       </Box>

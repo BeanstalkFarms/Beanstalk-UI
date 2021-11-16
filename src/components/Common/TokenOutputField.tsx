@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, InputAdornment, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { TrimBN, TokenLabel } from '../../util';
+import { TrimBN, TokenLabel } from 'util/index';
 import { TokenTypeImageModule } from '.';
 
 export default function TokenOutputField(props) {

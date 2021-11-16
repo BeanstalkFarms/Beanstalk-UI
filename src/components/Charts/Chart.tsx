@@ -9,9 +9,9 @@ import {
   AnimatedLineSeries,
   buildChartTheme,
 } from '@visx/xychart';
+import BeanLogo from 'img/bean-logo.svg';
+import { theme as colorTheme } from 'constants/index';
 import { DataSelector, TimeSelector } from './Selectors';
-import BeanLogo from '../../img/bean-logo.svg';
-import { theme as colorTheme } from '../../constants';
 
 export function Chart(props) {
   const n = !props.isMobile;
@@ -93,24 +93,20 @@ export function Chart(props) {
     if (props.title === 'Price') return d.toFixed(2);
     if (d >= 1000000) return `${(d / 1000000).toLocaleString('en-US')}m`;
     if (d >= 10000) return `${(d / 1000).toLocaleString('en-US')}k`;
-    if (d >= 1) return `${(d).toLocaleString('en-US')}`;
+    if (d >= 1) return `${d.toLocaleString('en-US')}`;
     if (d >= 0.1) return `${d === 0 ? d : d.toFixed(2)}`;
     return `${d}`;
   };
 
-  const chartMargin = (
-    n
-      ? { top: 30, right: 60, bottom: 60, left: 70 }
-      : { top: 10, right: 20, bottom: 50, left: 65 }
-  );
+  const chartMargin = n
+    ? { top: 30, right: 60, bottom: 60, left: 70 }
+    : { top: 10, right: 20, bottom: 50, left: 65 };
 
-  const frontUnit = props.unit !== undefined &&
-                  props.unit !== '%' ?
-                  props.unit : '';
+  const frontUnit =
+    props.unit !== undefined && props.unit !== '%' ? props.unit : '';
 
-  const backUnit = props.unit !== undefined &&
-                  props.unit === '%' ?
-                  props.unit : '';
+  const backUnit =
+    props.unit !== undefined && props.unit === '%' ? props.unit : '';
 
   function getLineForTitle(_title, _data) {
     if (_title === 'Price') {
@@ -142,12 +138,14 @@ export function Chart(props) {
 
   return (
     <Box style={chartStyle}>
-      {useDataMode ? <DataSelector
-        size={props.size}
-        isMobile={props.isMobile}
-        setValue={props.setDataMode}
-        value={dataMode}
-      /> : null}
+      {useDataMode ? (
+        <DataSelector
+          size={props.size}
+          isMobile={props.isMobile}
+          setValue={props.setDataMode}
+          value={dataMode}
+        />
+      ) : null}
       <TimeSelector
         size={props.size}
         isMobile={props.isMobile}
@@ -200,7 +198,9 @@ export function Chart(props) {
         <Axis
           numTicks={6}
           tickLength={n ? 7 : 3}
-          label={`${props.title}${props.unit !== undefined ? ` (${props.unit})` : ''}`}
+          label={`${props.title}${
+            props.unit !== undefined ? ` (${props.unit})` : ''
+          }`}
           labelOffset={35}
           orientation="left"
           tickFormat={yAxisTickFormatter}

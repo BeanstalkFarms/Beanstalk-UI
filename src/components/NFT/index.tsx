@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { MEDIUM_NFT_LINK, NFT_LINK, OPENSEA_LINK } from '../../constants';
+import { MEDIUM_NFT_LINK, NFT_LINK, OPENSEA_LINK } from 'constants/index';
 import {
   listenForNFTTransfers,
   GetWalletAddress,
   getMintedNFTs,
-} from '../../util';
+} from 'util/index';
 
-import { ContentSection } from '../Common';
+import { ContentSection } from 'components/Common';
 import ClaimNFT from './claimnft';
 
 export default function NFTs() {

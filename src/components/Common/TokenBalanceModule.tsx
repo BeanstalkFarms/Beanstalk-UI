@@ -1,12 +1,7 @@
 import React, { Fragment } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
-import {
-  CryptoAsset,
-  displayBN,
-  displayFullBN,
-  TokenLabel,
-} from '../../util';
+import { CryptoAsset, displayBN, displayFullBN, TokenLabel } from 'util/index';
 import { DataBalanceModule, TokenTypeImageModule } from '.';
 
 export default function TokenBalanceModule(props) {

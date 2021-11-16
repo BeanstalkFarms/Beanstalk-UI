@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { BEANSTALK_SUBGRAPH_API_LINK } from '../constants';
+import { BEANSTALK_SUBGRAPH_API_LINK } from 'constants/index';
 
 const client = new ApolloClient({
   uri: BEANSTALK_SUBGRAPH_API_LINK,
@@ -66,26 +66,30 @@ function roundTo4Digits(num) {
 
 function querySeasons(first: Number, skip: Number): Promise {
   return client.query({
-      query: gql(SeasonQuery),
-      variables: { first: first, skip: skip },
+    query: gql(SeasonQuery),
+    variables: { first: first, skip: skip },
   });
 }
 
 export async function beanstalkQuery() {
-    const [d1, d2, d3] = await Promise.all([querySeasons(1000, 0), querySeasons(1000, 1000), querySeasons(1000, 2000)]);
-    const data = d1.data.seasons.concat(d2.data.seasons).concat(d3.data.seasons);
-    const seasons = data.map((s) => {
-        const season = {};
-        Object.keys(s).forEach((key) => {
-            season[key] = roundTo4Digits(parseFloat(s[key]));
-        });
-        season.id = parseInt(s.id, 10);
-        const date = new Date();
-        date.setTime(s.timestamp * 1000);
-        season.x = date;
-        return season;
-    }, []);
-    return seasons;
+  const [d1, d2, d3] = await Promise.all([
+    querySeasons(1000, 0),
+    querySeasons(1000, 1000),
+    querySeasons(1000, 2000),
+  ]);
+  const data = d1.data.seasons.concat(d2.data.seasons).concat(d3.data.seasons);
+  const seasons = data.map((s) => {
+    const season = {};
+    Object.keys(s).forEach((key) => {
+      season[key] = roundTo4Digits(parseFloat(s[key]));
+    });
+    season.id = parseInt(s.id, 10);
+    const date = new Date();
+    date.setTime(s.timestamp * 1000);
+    season.x = date;
+    return season;
+  }, []);
+  return seasons;
 }
 
 export async function apyQuery() {

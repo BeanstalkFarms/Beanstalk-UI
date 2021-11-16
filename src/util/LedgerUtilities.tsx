@@ -9,7 +9,7 @@ import {
   UNI_V2_ETH_BEAN_LP,
   UNI_V2_USDC_ETH_LP,
   UNISWAP_V2_ROUTER,
-} from '../constants';
+} from 'constants/index';
 import {
   account,
   beanstalkContractReadOnly,
@@ -191,7 +191,10 @@ export const getPrices = async (batch) => {
     [lpContract.methods.token0(), identityResult],
     [
       beanstalk.methods.getTWAPPrices(),
-      (prices) => [toTokenUnitsBN(prices[0], 18), toTokenUnitsBN(prices[1], 18)],
+      (prices) => [
+        toTokenUnitsBN(prices[0], 18),
+        toTokenUnitsBN(prices[1], 18),
+      ],
     ],
   ]);
 };

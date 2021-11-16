@@ -1,6 +1,6 @@
 import React from 'react';
-import { claim, updateSilo } from '../../util';
-import { ClaimableAsset, Grid, SingleButton } from '../Common';
+import { claim, updateSilo } from 'util/index';
+import { ClaimableAsset, Grid, SingleButton } from 'components/Common';
 
 export default function ClaimButton(props) {
   const showButton = (

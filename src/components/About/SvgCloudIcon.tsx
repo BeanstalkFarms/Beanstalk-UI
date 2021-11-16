@@ -1,5 +1,5 @@
 import React from 'react';
-import { theme } from '../../constants';
+import { theme } from 'constants/index';
 
 export const SvgCloudIcon = ({
   height = '200px',

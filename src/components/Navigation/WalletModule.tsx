@@ -19,7 +19,7 @@ import {
   UNI_V2_ETH_BEAN_LP,
   WITHDRAWAL_FROZEN,
   theme,
-} from '../../constants';
+} from 'constants/index';
 import {
   chainId,
   displayBN,
@@ -27,7 +27,7 @@ import {
   GetWalletAddress,
   toTokenUnitsBN,
   poolForLP,
-} from '../../util';
+} from 'util/index';
 import {
   ClaimableAsset,
   CryptoAsset,
@@ -37,8 +37,8 @@ import {
   TransitAsset,
   walletDescriptions,
   walletStrings,
-} from '../Common';
-import BalanceModule from '../Balances/BalanceModule';
+} from 'components/Common';
+import BalanceModule from 'components/Balances/BalanceModule';
 
 const tokenImageStyle = {
   height: '15px',

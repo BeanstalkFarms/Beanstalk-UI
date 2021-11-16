@@ -2,7 +2,7 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { IconButton, Box } from '@material-ui/core';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
-import { BEAN, ETH, LP_FEE, SLIPPAGE_THRESHOLD } from '../../constants';
+import { BEAN, ETH, LP_FEE, SLIPPAGE_THRESHOLD } from 'constants/index';
 import {
   displayBN,
   getFromAmount,
@@ -11,13 +11,13 @@ import {
   MinBNs,
   TokenLabel,
   TrimBN,
-} from '../../util';
+} from 'util/index';
 import {
   FrontrunText,
   SettingsFormModule,
   SwapTransactionDetailsModule,
   TokenInputField,
-} from '../Common';
+} from 'components/Common';
 
 export default function SwapModule(props) {
   const fromValueUpdated = (newFromNumber) => {
@@ -163,20 +163,23 @@ export default function SwapModule(props) {
       )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
         4
       )} each`
-    : `Buy ${props.toValue.toFixed(
-        4
-      )} ${TokenLabel(props.toToken)} with ${displayBN(
-        props.fromValue
-      )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
-        4
-      )} each`;
+    : `Buy ${props.toValue.toFixed(4)} ${TokenLabel(
+        props.toToken
+      )} with ${displayBN(props.fromValue)} ${TokenLabel(
+        props.fromToken
+      )} for ${expectedBeanPrice.toFixed(4)} each`;
 
   function transactionDetails() {
     if (props.toValue.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
-        <Box style={{ fontFamily: 'Futura-PT-Book', fontSize: 'calc(9px + 0.5vmin)' }}>
+        <Box
+          style={{
+            fontFamily: 'Futura-PT-Book',
+            fontSize: 'calc(9px + 0.5vmin)',
+          }}
+        >
           {textTransaction}
         </Box>
         <SwapTransactionDetailsModule

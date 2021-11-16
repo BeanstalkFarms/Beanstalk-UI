@@ -2,7 +2,7 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { BEAN, ETH, SLIPPAGE_THRESHOLD } from '../../constants';
+import { BEAN, ETH, SLIPPAGE_THRESHOLD } from 'constants/index';
 import {
   displayBN,
   buyAndSowBeans,
@@ -15,7 +15,7 @@ import {
   toBaseUnitBN,
   toStringBaseUnitBN,
   TrimBN,
-} from '../../util';
+} from 'util/index';
 
 import {
   ClaimTextModule,
@@ -28,7 +28,7 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
   TransactionTextModule,
-} from '../Common';
+} from 'components/Common';
 
 export const SowModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -136,11 +136,11 @@ export const SowModule = forwardRef((props, ref) => {
       />
     );
   }
-  if (props.settings.mode === SwapMode.Ethereum ||
-        (props.settings.mode === SwapMode.BeanEthereum &&
-          toBuyBeanValue.isGreaterThan(0)
-        )
-      ) {
+  if (
+    props.settings.mode === SwapMode.Ethereum ||
+    (props.settings.mode === SwapMode.BeanEthereum &&
+      toBuyBeanValue.isGreaterThan(0))
+  ) {
     details.push(
       <TransactionTextModule
         key="buy"
@@ -155,22 +155,27 @@ export const SowModule = forwardRef((props, ref) => {
       />
     );
   }
-  const beanOutput = MaxBN(toBuyBeanValue, new BigNumber(0))
-    .plus(MaxBN(fromBeanValue, new BigNumber(0)));
+  const beanOutput = MaxBN(toBuyBeanValue, new BigNumber(0)).plus(
+    MaxBN(fromBeanValue, new BigNumber(0))
+  );
 
   if (toBuyBeanValue.plus(fromBeanValue).isEqualTo(props.soil)) {
     details.push(`Sow maximum Soil ${displayBN(beanOutput)}
-      ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather`
-    );
+      ${
+        beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'
+      } with ${props.weather.toFixed()}% Weather`);
   } else {
     details.push(`Sow ${displayBN(beanOutput)}
-      ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} with ${props.weather.toFixed()}% Weather`
-    );
+      ${
+        beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'
+      } with ${props.weather.toFixed()}% Weather`);
   }
 
-  details.push(`Receive ${displayBN(toPodValue)} Pods at #${displayBN(
-    props.unripenedPods
-  )} in the Pod line`);
+  details.push(
+    `Receive ${displayBN(toPodValue)} Pods at #${displayBN(
+      props.unripenedPods
+    )} in the Pod line`
+  );
 
   const noSoilTextField = props.soil.isEqualTo(0) ? (
     <Box style={{ marginTop: '-2px', fontFamily: 'Futura-PT-Book' }}>

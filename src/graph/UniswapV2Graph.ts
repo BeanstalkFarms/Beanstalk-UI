@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { UNI_V2_SUBGRAPH_API_LINK } from '../constants';
+import { UNI_V2_SUBGRAPH_API_LINK } from 'constants/index';
 
 // const APIURL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2'
 

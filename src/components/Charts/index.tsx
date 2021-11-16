@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { BaseModule, ContentSection } from '../Common';
+import { BaseModule, ContentSection } from 'components/Common';
+import { beanstalkQuery } from 'graph/index';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
 import FieldCharts from './FieldCharts';
-import { beanstalkQuery } from '../../graph';
 
 export default function Charts(props) {
   const marginTop = props.marginTop == null ? '0px' : props.marginTop;
@@ -21,8 +21,10 @@ export default function Charts(props) {
     setWidth(window.innerWidth);
   }
 
-  const isMobile: boolean = (width <= 758);
-  const baseStyle = isMobile ? { width: '100vw', paddingLeft: 0, paddingRight: 0 } : null;
+  const isMobile: boolean = width <= 758;
+  const baseStyle = isMobile
+    ? { width: '100vw', paddingLeft: 0, paddingRight: 0 }
+    : null;
 
   useEffect(() => {
     loadBeanstalkData();
@@ -52,7 +54,9 @@ export default function Charts(props) {
       style={{ maxWidth: '1000px', marginTop: marginTop }}
     >
       <BaseModule
-        handleTabChange={(event, newSection) => { setSection(newSection); }}
+        handleTabChange={(event, newSection) => {
+          setSection(newSection);
+        }}
         removeBackground
         section={section}
         sectionTitlesDescription={descriptions}

@@ -2,14 +2,14 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
-import { BEAN, UNI_V2_ETH_BEAN_LP } from '../../constants';
+import { BEAN, UNI_V2_ETH_BEAN_LP } from 'constants/index';
 import {
   claimLP,
   displayBN,
   removeAndClaimLP,
   TokenLabel,
   TrimBN,
-} from '../../util';
+} from 'util/index';
 import {
   ClaimableAsset,
   CryptoAsset,
@@ -17,7 +17,7 @@ import {
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
-} from '../Common';
+} from 'components/Common';
 
 export const LPClaimModule = forwardRef((props, ref) => {
   const [settings, setSettings] = useState({ removeLP: true });
@@ -90,9 +90,7 @@ export const LPClaimModule = forwardRef((props, ref) => {
         )} LP Tokens from the BEAN:ETH LP pool`
       );
       details.push(
-        `Receive ${displayLP(
-          props.poolForLPRatio(props.maxFromLPVal)
-        )}`
+        `Receive ${displayLP(props.poolForLPRatio(props.maxFromLPVal))}`
       );
 
       return (

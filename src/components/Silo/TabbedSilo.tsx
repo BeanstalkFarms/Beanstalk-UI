@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BaseModule, Grid } from '../Common';
+import { BaseModule, Grid } from 'components/Common';
 import SiloBeanModule from './SiloBeanModule';
 import SiloLPModule from './SiloLPModule';
 

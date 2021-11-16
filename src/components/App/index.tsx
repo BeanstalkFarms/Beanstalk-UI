@@ -27,14 +27,14 @@ import {
   setContractEvents,
 } from 'state/general/actions';
 import { AppState } from 'state';
-import { lastCrossQuery, apyQuery } from '../../graph';
+import { lastCrossQuery, apyQuery } from 'graph/index';
 import {
   theme as colorTheme,
   BASE_SLIPPAGE,
   BEAN,
   UNI_V2_ETH_BEAN_LP,
   WETH,
-} from '../../constants';
+} from 'constants/index';
 import {
   addRewardedCrates,
   createLedgerBatch,
@@ -52,18 +52,18 @@ import {
   toBaseUnitBN,
   toTokenUnitsBN,
   account,
-} from '../../util';
-import About from '../About';
-import Analytics from '../Analytics';
-import Field from '../Field';
+} from 'util/index';
+import About from 'components/About';
+import Analytics from 'components/Analytics';
+import Field from 'components/Field';
+import { NavigationBar } from 'components/Navigation';
+import NFTs from 'components/NFT';
+import Silo from 'components/Silo';
+import Trade from 'components/Trade';
+import Governance from 'components/Governance';
 import MetamasklessModule from './MetamasklessModule';
-import { NavigationBar } from '../Navigation';
-import NFTs from '../NFT';
-import Silo from '../Silo';
-import theme from './theme';
-import Trade from '../Trade';
 import Main from './main.tsx';
-import Governance from '../Governance';
+import theme from './theme';
 import LoadingBean from './LoadingBean.tsx';
 import './App.css';
 
@@ -85,9 +85,6 @@ export default function App() {
   );
   const prices = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
-  );
-  const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
-    (state) => state.beansPerSeason
   );
 
   document.body.style.backgroundColor = colorTheme.bodyColor;
@@ -191,15 +188,6 @@ export default function App() {
           farmableStalkBalance,
           grownStalkBalance,
           rootsBalance,
-          // claimable: [
-          //   userBalance.claimable[0],
-          //   userBalance.claimable[1],
-          //   userBalance.claimable[2],
-          //   userBalance.claimable[3],
-          //   userBalance.claimable[4],
-          //   minReceivables[0],
-          //   minReceivables[1]
-          // ]
         })
       );
     }

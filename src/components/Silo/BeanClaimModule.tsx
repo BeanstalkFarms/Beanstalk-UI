@@ -2,15 +2,15 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
-import { BEAN } from '../../constants';
-import { claimBeans, displayBN, TrimBN } from '../../util';
+import { BEAN } from 'constants/index';
+import { claimBeans, displayBN, TrimBN } from 'util/index';
 import {
   ClaimableAsset,
   CryptoAsset,
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
-} from '../Common';
+} from 'components/Common';
 
 export const BeanClaimModule = forwardRef((props, ref) => {
   props.setIsFormDisabled(props.maxFromBeanVal.isLessThanOrEqualTo(0));

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { ChartDonut, ChartLabel } from '@patternfly/react-charts';
-import { CryptoAsset } from '../Common';
+import { CryptoAsset } from 'components/Common';
 
 export default function BalanceChart(props) {
   const chartSizeStyle = {
@@ -26,24 +26,22 @@ export default function BalanceChart(props) {
     '#FED9A6',
   ];
 
-  const balance = (
-    props.circulating
-      .plus(props.silo)
-      .plus(props.transit)
-      .plus(props.pool === undefined ? 0 : props.pool)
-      .plus(props.claimable)
-      .plus(props.budget === undefined ? 0 : props.budget)
-  );
+  const balance = props.circulating
+    .plus(props.silo)
+    .plus(props.transit)
+    .plus(props.pool === undefined ? 0 : props.pool)
+    .plus(props.claimable)
+    .plus(props.budget === undefined ? 0 : props.budget);
 
   const data =
     balance.isGreaterThan(0) || balance === undefined
       ? [
-         { x: 'Circulating', y: props.circulating, fill: colors[0] },
-         { x: 'Silo', y: props.silo, fill: colors[1] },
-         { x: 'Transit', y: props.transit, fill: colors[2] },
-         { x: 'Pool', y: props.pool, fill: colors[3] },
-         { x: 'Claimable', y: props.claimable, fill: colors[4] },
-         { x: 'Budget', y: props.budget, fill: colors[6] },
+          { x: 'Circulating', y: props.circulating, fill: colors[0] },
+          { x: 'Silo', y: props.silo, fill: colors[1] },
+          { x: 'Transit', y: props.transit, fill: colors[2] },
+          { x: 'Pool', y: props.pool, fill: colors[3] },
+          { x: 'Claimable', y: props.claimable, fill: colors[4] },
+          { x: 'Budget', y: props.budget, fill: colors[6] },
         ]
       : [{ x: 'Empty', y: 100, fill: colors[5] }];
 

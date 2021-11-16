@@ -1,9 +1,9 @@
 import React from 'react';
-import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { Link, Box } from '@material-ui/core';
-import { ContentSection, Grid, governanceStrings } from '../Common';
-import { WHITEPAPER } from '../../constants';
+import { AppState } from 'state';
+import { ContentSection, Grid, governanceStrings } from 'components/Common';
+import { WHITEPAPER } from 'constants/index';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
 
@@ -47,9 +47,7 @@ export default function Governance() {
     return sBips;
   }, {});
   const seasonBips = activeBips.reduce((sBips, bip) => {
-    sBips[bip] = bips[bip].period.minus(
-      season.minus(bips[bip].start).minus(1)
-    );
+    sBips[bip] = bips[bip].period.minus(season.minus(bips[bip].start).minus(1));
     return sBips;
   }, {});
 
