@@ -72,35 +72,47 @@ function querySeasons(first: Number, skip: Number): Promise {
 }
 
 export async function beanstalkQuery() {
-  const [d1, d2, d3] = await Promise.all([
-    querySeasons(1000, 0),
-    querySeasons(1000, 1000),
-    querySeasons(1000, 2000),
-  ]);
-  const data = d1.data.seasons.concat(d2.data.seasons).concat(d3.data.seasons);
-  const seasons = data.map((s) => {
-    const season = {};
-    Object.keys(s).forEach((key) => {
-      season[key] = roundTo4Digits(parseFloat(s[key]));
-    });
-    season.id = parseInt(s.id, 10);
-    const date = new Date();
-    date.setTime(s.timestamp * 1000);
-    season.x = date;
-    return season;
-  }, []);
-  return seasons;
+  try {
+    const [d1, d2, d3] = await Promise.all([
+      querySeasons(1000, 0),
+      querySeasons(1000, 1000),
+      querySeasons(1000, 2000),
+    ]);
+    const data = d1.data.seasons
+      .concat(d2.data.seasons)
+      .concat(d3.data.seasons);
+    const seasons = data.map((s) => {
+      const season = {};
+      Object.keys(s).forEach((key) => {
+        season[key] = roundTo4Digits(parseFloat(s[key]));
+      });
+      season.id = parseInt(s.id, 10);
+      const date = new Date();
+      date.setTime(s.timestamp * 1000);
+      season.x = date;
+      return season;
+    }, []);
+    return seasons;
+  } catch (error) {
+    console.error('error fetching Beanstalk data.');
+    return [];
+  }
 }
 
 export async function apyQuery() {
-  const apyData = await client.query({
-    query: gql(APYQuery),
-  });
-  const bps = apyData.data.seasons[0];
-  return {
-    farmableWeek: parseFloat(bps.farmableBeansPerSeason7),
-    farmableMonth: parseFloat(bps.farmableBeansPerSeason30),
-    harvestableWeek: parseFloat(bps.harvestableBeansPerSeason7),
-    harvestableMonth: parseFloat(bps.harvestableBeansPerSeason30),
-  };
+  try {
+    const apyData = await client.query({
+      query: gql(APYQuery),
+    });
+    const bps = apyData.data.seasons[0];
+    return {
+      farmableWeek: parseFloat(bps.farmableBeansPerSeason7),
+      farmableMonth: parseFloat(bps.farmableBeansPerSeason30),
+      harvestableWeek: parseFloat(bps.harvestableBeansPerSeason7),
+      harvestableMonth: parseFloat(bps.harvestableBeansPerSeason30),
+    };
+  } catch (error) {
+    console.error('error fetching Beanstalk data.');
+    return {};
+  }
 }

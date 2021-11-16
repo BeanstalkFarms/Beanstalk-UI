@@ -45,7 +45,7 @@ export default function Silo() {
             </span>
           }
           title="LP APY"
-          value={`${lpAPY.toFixed(0)}%`}
+          value={`${lpAPY.toFixed(0) === '0' ? '–' : lpAPY.toFixed(0)}%`}
         />
       </Grid>
       <Grid item xs={12} sm={6} style={headerLabelStyle}>
@@ -60,7 +60,7 @@ export default function Silo() {
             </span>
           }
           title="Bean APY"
-          value={`${beanAPY.toFixed(0)}%`}
+          value={`${beanAPY.toFixed(0) === '0' ? '–' : beanAPY.toFixed(0)}%`}
         />
       </Grid>
     </Grid>

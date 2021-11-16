@@ -485,6 +485,7 @@ export default function App() {
       );
       const [podBalance, harvestablePodBalance, plots, harvestablePlots] =
         parsePlots(userPlots, hi);
+
       const [
         beanTransitBalance,
         beanReceivableBalance,
@@ -634,6 +635,10 @@ export default function App() {
       dispatch(setLastCross(lastCrossInitializer));
     }
 
+    async function getAPYs() {
+      dispatch(setBeansPerSeason(await apyQuery()));
+    }
+
     async function start() {
       let startTime = benchmarkStart('*INIT*');
       if (await initialize()) {
@@ -646,22 +651,21 @@ export default function App() {
             updateBalanceState();
           });
         });
-        const [balanceInitializers, eventInitializer, apyInitializer] =
-          await Promise.all([
-            updateAllBalances(),
-            initializeEventListener(
-              processEvents,
-              updatePrices,
-              updateTotals,
-              setContractEvents
-            ),
-            apyQuery(),
-          ]);
+        const [
+          balanceInitializers,
+          eventInitializer
+        ] = await Promise.all([
+          updateAllBalances(),
+          initializeEventListener(
+            processEvents,
+            updatePrices,
+            updateTotals
+          ),
+        ]);
         ReactDOM.unstable_batchedUpdates(() => {
           const [updateBalanceState, eventParsingParameters] =
             balanceInitializers;
           updateBalanceState();
-          dispatch(setBeansPerSeason(apyInitializer));
           processEvents(eventInitializer, eventParsingParameters);
           dispatch(setInitialized(true));
         });
@@ -673,6 +677,7 @@ export default function App() {
 
     start();
     getLastCross();
+    getAPYs();
 
     // eslint-disable-next-line
   }, []);
