@@ -3,103 +3,62 @@ import React from 'react';
 import { createChart, IChartApi } from 'lightweight-charts';
 import equal from 'fast-deep-equal';
 import { BaseModule } from 'components/Common';
+import usePrevious from 'util/hooks/usePrevious';
+import { mergeDeep } from 'util/AnalyticsUtilities';
 import { theme } from '../../constants';
 
-const addSeriesFunctions = {
-  candlestick: 'addCandlestickSeries',
-  line: 'addLineSeries',
-  area: 'addAreaSeries',
-  bar: 'addBarSeries',
-  histogram: 'addHistogramSeries',
-};
-
-const colors = [
-  '#008FFB',
-  '#00E396',
-  '#FEB019',
-  '#FF4560',
-  '#775DD0',
-  '#F86624',
-  '#A5978B',
-];
-
-const darkTheme = {
-  layout: {
-    backgroundColor: '#131722',
-    lineColor: '#2B2B43',
-    textColor: '#D9D9D9',
-  },
-  grid: {
-    vertLines: {
-      color: '#363c4e',
-    },
-    horzLines: {
-      color: '#363c4e',
-    },
-  },
-};
-
-const lightTheme = {
-  layout: {
-    backgroundColor: theme.module.background,
-    lineColor: '#2B2B43',
-    textColor: '#191919',
-  },
-  grid: {
-    vertLines: {
-      color: theme.text,
-    },
-    horzLines: {
-      color: theme.text,
-    },
-  },
-};
-
-const isObject = (item) => item && typeof item === 'object' && !Array.isArray(item);
-
-const mergeDeep = (target, source) => {
-  const output = { ...target };
-  if (isObject(target) && isObject(source)) {
-    Object.keys(source).forEach((key) => {
-      if (isObject(source[key])) {
-        if (!(key in target)) { Object.assign(output, { [key]: source[key] }); } else output[key] = mergeDeep(target[key], source[key]);
-      } else {
-        Object.assign(output, { [key]: source[key] });
-      }
-    });
-  }
-  return output;
-};
-
-const sectionTitles = ['Chart'];
-
-function usePrevious(value) {
-  const ref = React.useRef<any>();
-  React.useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
-
 const BaseChart = (props) => {
+  const {
+    autoWidth,
+    autoHeight,
+    height,
+    width,
+    legend,
+    candlestickSeries,
+    lineSeries,
+    areaSeries,
+    barSeries,
+    histogramSeries,
+    onClick,
+    onCrosshairMove,
+    onTimeRangeMove,
+    darkTheme,
+    backgroundTheme,
+    colors,
+    options,
+    from,
+    to,
+  } = props;
   const prevProps = usePrevious(props);
-  const chartDiv = React.createRef<any>();
-  const legendDiv = React.createRef<any>();
+  const chartDiv = React.useRef<any>();
+  const legendDiv = React.useRef<any>();
   const [series, setSeries] = React.useState<any>([]);
   const [legends, setLegends] = React.useState<any>([]);
   let chart: IChartApi;
 
+  const { customDarkTheme, lightTheme } = backgroundTheme;
+
+  const addSeriesFunctions = {
+    candlestick: 'addCandlestickSeries',
+    line: 'addLineSeries',
+    area: 'addAreaSeries',
+    bar: 'addBarSeries',
+    histogram: 'addHistogramSeries',
+  };
+
   const resizeHandler = () => {
-    const width =
-      props.autoWidth &&
+    const newWidth =
+      autoWidth &&
       chartDiv.current &&
       chartDiv.current.parentNode.clientWidth;
-    const height =
-      props.autoHeight && chartDiv.current
+    const newHeight =
+      autoHeight && chartDiv.current
         ? chartDiv.current.parentNode.clientHeight
-        : props.height || 500;
-    chart?.resize(width, height);
+        : height || 500;
+
+    chart?.resize(newWidth, newHeight);
   };
+
   const unsubscribeEvents = (previousProps) => {
     chart?.unsubscribeClick(previousProps.onClick);
     chart?.unsubscribeCrosshairMove(previousProps.onCrosshairMove);
@@ -109,7 +68,7 @@ const BaseChart = (props) => {
   const handleMainLegend = () => {
     if (legendDiv.current) {
       const row = document.createElement('div');
-      row.innerText = props.legend;
+      row.innerText = legend;
       legendDiv.current.appendChild(row);
     }
   };
@@ -193,28 +152,28 @@ const BaseChart = (props) => {
     return mySeries;
   };
   const handleSeries = () => {
-    props.candlestickSeries &&
-      props.candlestickSeries.forEach((serie) => {
+    candlestickSeries &&
+      candlestickSeries.forEach((serie) => {
         setSeries([...series, addSeries(serie, 'candlestick')]);
       });
 
-    props.lineSeries &&
-      props.lineSeries.forEach((serie) => {
+    lineSeries &&
+      lineSeries.forEach((serie) => {
         setSeries([...series, addSeries(serie, 'line')]);
       });
 
-    props.areaSeries &&
-      props.areaSeries.forEach((serie) => {
+    areaSeries &&
+      areaSeries.forEach((serie) => {
         setSeries([...series, addSeries(serie, 'area')]);
       });
 
-    props.barSeries &&
-      props.barSeries.forEach((serie) => {
+    barSeries &&
+      barSeries.forEach((serie) => {
         setSeries([...series, addSeries(serie, 'bar')]);
       });
 
-    props.histogramSeries &&
-      props.histogramSeries.forEach((serie) => {
+    histogramSeries &&
+      histogramSeries.forEach((serie) => {
         series.push(addSeries(serie, 'histogram'));
       });
   };
@@ -224,43 +183,42 @@ const BaseChart = (props) => {
   };
 
   const handleEvents = () => {
-    props.onClick && chart?.subscribeClick(props.onClick);
-    props.onCrosshairMove &&
-      chart?.subscribeCrosshairMove(props.onCrosshairMove);
-    props.onTimeRangeMove &&
-      chart?.timeScale().subscribeVisibleTimeRangeChange(props.onTimeRangeMove);
+    onClick && chart?.subscribeClick(onClick);
+    onCrosshairMove &&
+      chart?.subscribeCrosshairMove(onCrosshairMove);
+    onTimeRangeMove &&
+      chart?.timeScale().subscribeVisibleTimeRangeChange(onTimeRangeMove);
 
     // handle legend dynamical change
     chart?.subscribeCrosshairMove(handleLegends);
   };
   const handleTimeRange = () => {
-    const { from, to } = props;
     from && to && chart?.timeScale().setVisibleRange({ from, to });
   };
   const handleUpdateChart = () => {
     window.removeEventListener('resize', resizeHandler);
-    let options = props.darkTheme ? darkTheme : lightTheme;
+    let customOptions = darkTheme ? customDarkTheme : lightTheme;
 
-    options = mergeDeep(options, {
-      width: props.autoWidth
+    customOptions = mergeDeep(customOptions, {
+      width: autoWidth
         ? chartDiv.current.parentNode.clientWidth
-        : props.width,
-      height: props.autoHeight
+        : width,
+      height: autoHeight
         ? chartDiv.current.parentNode.clientHeight
-        : props.height || 500,
-      ...props.options,
+        : height || 500,
+      ...options,
     });
 
-    chart?.applyOptions(options);
+    chart?.applyOptions(customOptions);
 
     if (legendDiv.current) legendDiv.current.innerHTML = '';
     setLegends([]);
-    if (props.legend) handleMainLegend();
+    if (legend) handleMainLegend();
     handleSeries();
     handleEvents();
     handleTimeRange();
 
-    if (props.autoWidth || props.autoHeight) {
+    if (autoWidth || autoHeight) {
       // resize the chart with the window
       window.addEventListener('resize', resizeHandler);
     }
@@ -274,7 +232,7 @@ const BaseChart = (props) => {
 
   React.useEffect(() => {
     // ComponentDidUpdate
-    if (!props.autoWidth && !props.autoHeight) { window.removeEventListener('resize', resizeHandler); }
+    if (!autoWidth && !autoHeight) { window.removeEventListener('resize', resizeHandler); }
     if (prevProps) {
       if (
         !equal(
@@ -284,9 +242,9 @@ const BaseChart = (props) => {
             prevProps.onClick,
           ],
           [
-            props.onCrosshairMove,
-            props.onTimeRangeMove,
-            props.onClick,
+            onCrosshairMove,
+            onTimeRangeMove,
+            onClick,
           ]
         )
       ) { unsubscribeEvents(prevProps); }
@@ -302,26 +260,26 @@ const BaseChart = (props) => {
             prevProps.histogramSeries,
           ],
           [
-            props.options,
-            props.darkTheme,
-            props.candlestickSeries,
-            props.lineSeries,
-            props.areaSeries,
-            props.barSeries,
-            props.histogramSeries,
+            options,
+            darkTheme,
+            candlestickSeries,
+            lineSeries,
+            areaSeries,
+            barSeries,
+            histogramSeries,
           ]
         )
       ) {
         removeSeries();
         handleUpdateChart();
-      } else if (prevProps.from !== props.from || prevProps.to !== props.to) {
+      } else if (prevProps.from !== from || prevProps.to !== to) {
         handleTimeRange();
       }
     }
   }, [prevProps]);
 
-  const color = props.darkTheme
-    ? darkTheme.layout.textColor
+  const color = darkTheme
+    ? customDarkTheme.layout.textColor
     : lightTheme.layout.textColor;
 
   return (
@@ -339,14 +297,59 @@ const BaseChart = (props) => {
   );
 };
 
-const ChartWrapper = (props) => (
-  <BaseModule
-    handleForm={() => { }}
-    sectionTitles={sectionTitles}
-    showButton={false}
-  >
-    <BaseChart {...props} />
-  </BaseModule>
-);
+const ChartWrapper = (props) => {
+  const sectionTitles = ['Chart'];
+
+  const customDarkTheme = {
+    layout: {
+      backgroundColor: '#131722',
+      lineColor: '#2B2B43',
+      textColor: '#D9D9D9',
+    },
+    grid: {
+      vertLines: {
+        color: '#363c4e',
+      },
+      horzLines: {
+        color: '#363c4e',
+      },
+    },
+  };
+
+  const lightTheme = {
+    layout: {
+      backgroundColor: theme.module.background,
+      lineColor: '#2B2B43',
+      textColor: '#191919',
+    },
+    grid: {
+      vertLines: {
+        color: theme.text,
+      },
+      horzLines: {
+        color: theme.text,
+      },
+    },
+  };
+  const colors = [
+    '#008FFB',
+    '#00E396',
+    '#FEB019',
+    '#FF4560',
+    '#775DD0',
+    '#F86624',
+    '#A5978B',
+  ];
+
+  return (
+    <BaseModule
+      handleForm={() => { }}
+      sectionTitles={sectionTitles}
+      showButton={false}
+    >
+      <BaseChart {...props} colors={colors} backgroundTheme={{ customDarkTheme, lightTheme }} />
+    </BaseModule>
+  );
+};
 export * from 'lightweight-charts';
 export default ChartWrapper;
