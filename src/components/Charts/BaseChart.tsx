@@ -83,15 +83,11 @@ function usePrevious(value) {
 
 const BaseChart = (props) => {
   const prevProps = usePrevious(props);
-  const chartDiv = React.useRef<any>();
-  const legendDiv = React.useRef<any>();
-
-  const [chart, setChart] = React.useState<IChartApi>();
+  const chartDiv = React.createRef<any>();
+  const legendDiv = React.createRef<any>();
   const [series, setSeries] = React.useState<any>([]);
   const [legends, setLegends] = React.useState<any>([]);
-
-  console.log('props', props);
-  console.log('prevProps', prevProps);
+  let chart: IChartApi;
 
   const resizeHandler = () => {
     const width =
@@ -181,45 +177,40 @@ const BaseChart = (props) => {
       (serie.options && serie.options.color) ||
       colors[series.length % colors.length];
 
-    if (chart) {
-      setSeries(chart[func]({
-        color,
-        ...serie.options,
-      }));
-    }
-
+    const mySeries = chart[func]({
+      color,
+      ...serie.options,
+    });
     const data = handleLinearInterpolation(
       serie.data,
       serie.linearInterpolation
     );
-
-    series.setData(data);
+    mySeries.setData(data);
 
     if (serie.markers) series.setMarkers(serie.markers);
     if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
     if (serie.legend) addLegend(series, color, serie.legend);
-
-    return series;
+    return mySeries;
   };
   const handleSeries = () => {
     props.candlestickSeries &&
       props.candlestickSeries.forEach((serie) => {
-        series.push(addSeries(serie, 'candlestick'));
+        setSeries([...series, addSeries(serie, 'candlestick')]);
       });
 
     props.lineSeries &&
       props.lineSeries.forEach((serie) => {
-        series.push(addSeries(serie, 'line'));
+        setSeries([...series, addSeries(serie, 'line')]);
       });
 
     props.areaSeries &&
       props.areaSeries.forEach((serie) => {
-        series.push(addSeries(serie, 'area'));
+        setSeries([...series, addSeries(serie, 'area')]);
       });
 
     props.barSeries &&
       props.barSeries.forEach((serie) => {
-        series.push(addSeries(serie, 'bar'));
+        setSeries([...series, addSeries(serie, 'bar')]);
       });
 
     props.histogramSeries &&
@@ -265,7 +256,6 @@ const BaseChart = (props) => {
     if (legendDiv.current) legendDiv.current.innerHTML = '';
     setLegends([]);
     if (props.legend) handleMainLegend();
-
     handleSeries();
     handleEvents();
     handleTimeRange();
@@ -277,7 +267,9 @@ const BaseChart = (props) => {
   };
 
   React.useEffect(() => {
-    setChart(createChart(chartDiv.current));
+    chart = createChart(chartDiv.current);
+    handleUpdateChart();
+    resizeHandler();
   }, []);
 
   React.useEffect(() => {
@@ -331,8 +323,6 @@ const BaseChart = (props) => {
   const color = props.darkTheme
     ? darkTheme.layout.textColor
     : lightTheme.layout.textColor;
-
-  console.log(chartDiv);
 
   return (
     <div ref={chartDiv} style={{ position: 'relative' }}>
