@@ -83,7 +83,7 @@ export default function TokenInputField(props) {
     )}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
-  const balanceContent = props.isLP
+  const balanceContent = props.isLP && props.poolForLPRatio !== undefined
     ? displayLP(props.poolForLPRatio(props.balance))
     : `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`;
 
@@ -154,4 +154,5 @@ TokenInputField.defaultProps = {
   locked: false,
   maxval: 0,
   token: 'Beans',
+  poolForLPRatio: undefined,
 };

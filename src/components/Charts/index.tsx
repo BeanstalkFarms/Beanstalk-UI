@@ -6,7 +6,7 @@ import FieldCharts from './FieldCharts';
 import { beanstalkQuery } from '../../graph';
 
 export default function Charts(props) {
-  const marginTop = props.marginTop == null ? '-80px' : props.marginTop;
+  const marginTop = props.marginTop == null ? '0px' : props.marginTop;
   const [chartData, setChartData] = useState([]);
   const [section, setSection] = useState(0);
 
@@ -49,7 +49,7 @@ export default function Charts(props) {
       id="charts"
       title={props.title}
       size="20px"
-      style={{ minHeight: '600px', maxWidth: '1000px', marginTop: marginTop }}
+      style={{ maxWidth: '1000px', marginTop: marginTop }}
     >
       <BaseModule
         handleTabChange={(event, newSection) => { setSection(newSection); }}

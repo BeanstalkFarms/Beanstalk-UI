@@ -2,8 +2,8 @@ import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { Link, Box } from '@material-ui/core';
-import { WHITEPAPER } from '../../constants';
 import { ContentSection, Grid } from '../Common';
+import { WHITEPAPER } from '../../constants';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
 
@@ -25,7 +25,7 @@ export default function Governance() {
     AppState['userBalance']
   >((state) => state.userBalance);
 
-  if (bips === undefined || bips.length === 0) return null;
+  if (bips === undefined || bips.length === 0) return;
 
   const activeBipStyle = {
     fontFamily: 'Futura-PT-Book',
@@ -86,7 +86,6 @@ export default function Governance() {
       id="governance"
       title="Governance"
       size="20px"
-      style={{ minHeight: '600px' }}
       description={description}
     >
       <Grid container item xs={12} spacing={3} justifyContent="center">

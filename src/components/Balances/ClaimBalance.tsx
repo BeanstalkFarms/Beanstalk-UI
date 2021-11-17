@@ -1,7 +1,18 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import { CryptoAsset, displayBN, displayFullBN, smallDecimalPercent, TokenLabel } from '../../util';
-import { FormatTooltip, Grid, TokenTypeImageModule, QuestionModule } from '../Common';
+import {
+  CryptoAsset,
+  displayBN,
+  displayFullBN,
+  smallDecimalPercent,
+  TokenLabel,
+} from '../../util';
+import {
+  FormatTooltip,
+  Grid,
+  TokenTypeImageModule,
+  QuestionModule,
+} from '../Common';
 
 export default function ClaimBalance({
   asset,

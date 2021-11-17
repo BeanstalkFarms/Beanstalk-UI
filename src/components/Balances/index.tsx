@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { AppState } from 'state';
 import { poolForLP } from '../../util';
-import { UNISWAP_BASE_LP, theme, zeroBN } from '../../constants';
+import { UNISWAP_BASE_LP, theme } from '../../constants';
 import {
   BaseModule,
   ClaimableAsset,
@@ -29,7 +29,7 @@ const balanceStyle = {
   backgroundColor: theme.module.background,
   padding: '10px',
 };
-const divStyle = {
+const boxStyle = {
   fontSize: '18px',
   fontFamily: 'Futura-Pt-Book',
   marginTop: '13px',
@@ -46,14 +46,17 @@ export default function Balances() {
     beanReceivableBalance,
     beanTransitBalance,
     beanSiloBalance,
-    claimableEthBalance,
     harvestablePodBalance,
     grownStalkBalance,
     farmableStalkBalance,
     farmableBeanBalance,
     stalkBalance,
+    seedBalance,
     rootsBalance,
     claimable,
+    claimableEthBalance,
+    ethBalance,
+    podBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -80,7 +83,7 @@ export default function Balances() {
   >((state) => state.prices);
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(0), new BigNumber(0)];
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 
@@ -311,6 +314,19 @@ export default function Balances() {
         topRight={rootsBalance.dividedBy(totalRoots).multipliedBy(100)}
         beanLPTotal={userBeansAndEth}
         poolForLPRatio={poolForLPRatio}
+        beanBalance={beanBalance}
+        beanSiloBalance={beanSiloBalance}
+        beanTransitBalance={beanTransitBalance}
+        beanReceivableBalance={beanReceivableBalance}
+        harvestablePodBalance={harvestablePodBalance}
+        lpBalance={lpBalance}
+        lpSiloBalance={lpSiloBalance}
+        lpTransitBalance={lpTransitBalance}
+        lpReceivableBalance={lpReceivableBalance}
+        stalkBalance={stalkBalance}
+        seedBalance={seedBalance}
+        ethBalance={ethBalance}
+        podBalance={podBalance}
       />
       <Grid
         container
@@ -354,7 +370,6 @@ export default function Balances() {
         beanReceivableBalance={new BigNumber(0)}
         harvestablePodBalance={new BigNumber(0)}
         lpReceivableBalance={new BigNumber(0)}
-        claimableEthBalance={new BigNumber(0)}
         beanReserveTotal={beanReserve}
         ethBalance={ethReserve}
         stalkBalance={totalStalk}
@@ -375,7 +390,7 @@ export default function Balances() {
       id="balances"
       title="Balances"
       size="20px"
-      style={{ marginTop: '-80px' }}
+      style={{ paddingTop: '60px' }}
     >
       <Box className="BalanceSection-mobile">
         <BaseModule
@@ -400,7 +415,7 @@ export default function Balances() {
       >
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
           <Box className="AppBar-shadow" style={balanceStyle}>
-            <Box style={divStyle}>My Balances </Box>
+            <Box style={boxStyle}>My Balances </Box>
             <Line />
             {myBalancesSection}
           </Box>
@@ -408,7 +423,7 @@ export default function Balances() {
 
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
           <Box className="AppBar-shadow" style={balanceStyle}>
-            <Box style={divStyle}>Beanstalk</Box>
+            <Box style={boxStyle}>Beanstalk</Box>
             <Line />
             {totalBalancesSection}
           </Box>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { Hidden, Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-import { AppState } from 'state';
+// import { AppState } from 'state';
 import { BEAN, theme } from '../../constants';
 import { displayBN, displayFullBN, TokenLabel, TrimBN } from '../../util';
 import {
@@ -55,36 +55,18 @@ export default function BalanceModule(props) {
   const [beanActive, setBeanActive] = useState(-1);
   const [lpActive, setLPActive] = useState(-1);
 
-  const {
-    lpBalance,
-    lpSiloBalance,
-    lpTransitBalance,
-    lpReceivableBalance,
-    beanBalance,
-    beanSiloBalance,
-    beanTransitBalance,
-    beanReceivableBalance,
-    harvestablePodBalance,
-    stalkBalance,
-    seedBalance,
-    ethBalance,
-    podBalance,
-  } = useSelector<AppState, AppState['userBalance']>(
-    (state) => state.userBalance
-  );
-
-  const beanTotals = beanBalance
-    .plus(beanSiloBalance)
-    .plus(beanTransitBalance)
-    .plus(beanReceivableBalance)
-    .plus(harvestablePodBalance)
+  const beanTotals = props.beanBalance
+    .plus(props.beanSiloBalance)
+    .plus(props.beanTransitBalance)
+    .plus(props.beanReceivableBalance)
+    .plus(props.harvestablePodBalance)
     .plus(props.budgetBalance)
     .plus(props.beanReserveTotal);
-  const lpTotals = lpBalance
-    .plus(lpSiloBalance)
-    .plus(lpTransitBalance)
-    .plus(lpReceivableBalance);
-  const claimableBalance = beanReceivableBalance.plus(harvestablePodBalance);
+  const lpTotals = props.lpBalance
+    .plus(props.lpSiloBalance)
+    .plus(props.lpTransitBalance)
+    .plus(props.lpReceivableBalance);
+  const claimableBalance = props.beanReceivableBalance.plus(props.harvestablePodBalance);
 
   /* Show Claimables */
 
@@ -109,7 +91,7 @@ export default function BalanceModule(props) {
   );
   const claimableLPSection = (
     <ToggleTokenBalanceModule
-      balance={lpReceivableBalance}
+      balance={props.lpReceivableBalance}
       balanceColor={lpActive === 4 ? color.claimable : null}
       description={props.description.claimablelpBalance}
       isLP
@@ -137,7 +119,7 @@ export default function BalanceModule(props) {
   );
   const lpTransitSection = (
     <ToggleTokenBalanceModule
-      balance={lpTransitBalance}
+      balance={props.lpTransitBalance}
       balanceColor={lpActive === 2 ? color.transit : null}
       description={props.description.lpTransitBalance}
       isLP
@@ -180,13 +162,13 @@ export default function BalanceModule(props) {
                   asset={CryptoAsset.Bean}
                   claimable={claimableBalance}
                   budget={props.budgetBalance}
-                  circulating={beanBalance}
+                  circulating={props.beanBalance}
                   pool={props.beanReserveTotal}
-                  silo={beanSiloBalance}
+                  silo={props.beanSiloBalance}
                   setActive={setBeanActive}
                   title="Beans"
                   total={displayBN(beanTotals)}
-                  transit={beanTransitBalance}
+                  transit={props.beanTransitBalance}
                 />
               </Box>
             </FormatTooltip>
@@ -234,10 +216,10 @@ export default function BalanceModule(props) {
               <Box>
                 <BalanceChart
                   asset={CryptoAsset.LP}
-                  claimable={lpReceivableBalance}
-                  circulating={lpBalance}
+                  claimable={props.lpReceivableBalance}
+                  circulating={props.lpBalance}
                   setActive={setLPActive}
-                  silo={lpSiloBalance}
+                  silo={props.lpSiloBalance}
                   title={`${TokenLabel(CryptoAsset.Bean)}/${TokenLabel(
                     CryptoAsset.Ethereum
                   )}`}
@@ -324,7 +306,7 @@ export default function BalanceModule(props) {
         <Grid container item sm={6} xs={12} style={containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
-              balance={beanBalance}
+              balance={props.beanBalance}
               balanceColor={beanActive === 0 ? color.circulating : null}
               description={props.description.beanBalance}
               swerve
@@ -334,7 +316,7 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item xs={12}>
             <TokenBalanceModule
-              balance={beanSiloBalance}
+              balance={props.beanSiloBalance}
               balanceColor={beanActive === 1 ? color.silo : null}
               description={props.description.beanSiloBalance}
               swerve
@@ -361,7 +343,7 @@ export default function BalanceModule(props) {
         <Grid container item sm={6} xs={12} style={containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
-              balance={lpBalance}
+              balance={props.lpBalance}
               balanceColor={lpActive === 0 ? color.circulating : null}
               description={props.description.lpBalance}
               isLP
@@ -373,7 +355,7 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item xs={12}>
             <TokenBalanceModule
-              balance={lpSiloBalance}
+              balance={props.lpSiloBalance}
               balanceColor={lpActive === 1 ? color.silo : null}
               description={props.description.lpSiloBalance}
               isLP
@@ -400,7 +382,7 @@ export default function BalanceModule(props) {
         <Grid container item xs={12} style={containerGridHorizontalStyle}>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
-              balance={stalkBalance}
+              balance={props.stalkBalance}
               description={props.description.stalkBalance}
               margin={props.margin}
               placement="bottom"
@@ -409,7 +391,7 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
-              balance={seedBalance}
+              balance={props.seedBalance}
               description={props.description.seedBalance}
               margin={props.margin}
               placement="bottom"
@@ -418,7 +400,7 @@ export default function BalanceModule(props) {
           </Grid>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
-              balance={podBalance}
+              balance={props.podBalance}
               description={props.description.podBalance}
               margin={props.margin}
               placement="bottom"
@@ -428,9 +410,9 @@ export default function BalanceModule(props) {
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
               balance={
-                ethBalance.isLessThan(0.0003)
-                  ? TrimBN(ethBalance, 6)
-                  : ethBalance
+                props.ethBalance.isLessThan(0.0003)
+                  ? TrimBN(props.ethBalance, 6)
+                  : props.ethBalance
               }
               description={props.description.ethBalance}
               margin={props.margin}
@@ -451,4 +433,5 @@ BalanceModule.defaultProps = {
   showTokenName: true,
   budgetBalance: new BigNumber(0),
   beanReserveTotal: new BigNumber(0),
+  poolForLPRatio: undefined,
 };

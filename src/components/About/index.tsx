@@ -13,11 +13,14 @@ export default function About(props) {
   const cloudDivStyle = {
     display: 'inline-flex',
     justifyContent: 'center',
-    margin: '80px 0',
     width: '100%',
   };
   const cloudStyle = {
     maxWidth: '400px',
+  };
+  const sectionContentStyle = {
+    ...props.style,
+    marginBottom: '200px',
   };
 
   const showLandingPage = props.defaultSection !== undefined;
@@ -26,10 +29,10 @@ export default function About(props) {
     <>
       <ContentSection
         id="about"
-        style={showLandingPage ? { minHeight: '99vh' } : props.style}
+        style={showLandingPage ? { minHeight: '99vh' } : sectionContentStyle}
         title={showLandingPage ? 'Beanstalk' : 'About'}
       >
-        <Box style={{ minHeight: '510px', width: '100%' }}>
+        <Box style={{ minHeight: '510px', width: '100%', marginTop: '20px' }}>
           {props.defaultSection}
           <Grid container style={cloudDivStyle}>
             <Grid item lg={3} md={3} sm={4} xs={6} style={cloudStyle}>
