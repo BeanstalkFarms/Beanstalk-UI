@@ -117,6 +117,9 @@ export default function WalletModule(props) {
     beanReceivableBalance,
     harvestablePodBalance,
     stalkBalance,
+    seedBalance,
+    ethBalance,
+    podBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -689,9 +692,22 @@ export default function WalletModule(props) {
         topRight={stalkBalance.dividedBy(totalStalk).multipliedBy(100)}
         beanReserveTotal={new BigNumber(0)}
         beanLPTotal={userBeansAndEth}
-        padding="4px 0 0 0"
         poolForLPRatio={poolForLPRatio}
+        beanBalance={beanBalance}
+        beanSiloBalance={beanSiloBalance}
+        beanTransitBalance={beanTransitBalance}
+        beanReceivableBalance={beanReceivableBalance}
+        harvestablePodBalance={harvestablePodBalance}
+        lpBalance={lpBalance}
+        lpSiloBalance={lpSiloBalance}
+        lpTransitBalance={lpTransitBalance}
+        lpReceivableBalance={lpReceivableBalance}
+        stalkBalance={stalkBalance}
+        seedBalance={seedBalance}
+        ethBalance={ethBalance}
+        podBalance={podBalance}
         showTokenName={false}
+        padding="4px 0 0 0"
         chartMargin="0 0 0 10px"
       />
     </>
