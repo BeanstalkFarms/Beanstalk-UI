@@ -212,8 +212,8 @@ export default function NavigationBar(props) {
             to={path}
             activeClassName={classes.activeLinkText}
             className={classes.linkPadding}
-            spy
-            smooth
+            spy="true"
+            smooth="true"
           >
             {title}
           </NavLink>
