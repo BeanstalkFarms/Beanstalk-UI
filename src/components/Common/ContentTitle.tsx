@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { theme } from 'constants/index';
 import { TitleLabel } from './index';
-import { theme } from '../../constants';
 
 export default function ContentTitle({
   marginTop,

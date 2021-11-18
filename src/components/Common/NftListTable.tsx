@@ -17,7 +17,7 @@ import {
   BASE_ETHERSCAN_TX_LINK,
   DIAMONDS_LINK,
 } from 'constants/index';
-import { displayBN, displayFullBN } from '../../util';
+import { displayBN, displayFullBN } from 'util/index';
 import { FormatTooltip } from './index';
 
 const useStyles = makeStyles({
@@ -39,10 +39,6 @@ const useStyles = makeStyles({
     fontSize: '11px',
   },
 });
-
-// function displayLP(balance) {
-//   return `${displayBN(balance[0])} ${TokenLabel(CryptoAsset.Bean)}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`
-// }
 
 const BasicTable = (props) => {
   const classes = useStyles();
@@ -75,7 +71,8 @@ const BasicTable = (props) => {
                 props.page * rowsPerPage,
                 props.page * rowsPerPage + rowsPerPage
               )
-              .map((index) => ( // eslint-disable-line
+              // eslint-disable-next-line
+              .map((index) => (
                 <TableRow key={index}>
                   {props.indexType === 'time' ? (
                     <TableCell

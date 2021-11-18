@@ -1,18 +1,11 @@
 import React, { Fragment } from 'react';
-import {
-  AppBar,
-  Box,
-  Button,
-  Link,
-  Tab,
-  Tabs,
-} from '@material-ui/core';
+import { AppBar, Box, Button, Link, Tab, Tabs } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@material-ui/styles';
-import LockIcon from '@material-ui/icons/Lock';
+import { Lock as LockIcon } from '@material-ui/icons';
+import { theme } from 'constants/index';
 import { FormatTooltip, Line, QuestionModule } from './index';
-import { theme } from '../../constants';
 
 export default function BaseModule({
   size,

@@ -1,8 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayFullBN } from '../../util';
-import { ContentSection, Grid, HeaderLabel, tradeStrings } from '../Common';
+import { displayFullBN } from 'util/index';
+import {
+  ContentSection,
+  Grid,
+  HeaderLabel,
+  tradeStrings,
+} from 'components/Common';
 import TradeModule from './TradeModule';
 import LastCrossTimer from './LastCrossTimer';
 
@@ -16,7 +21,11 @@ export default function Trade() {
   );
 
   return (
-    <ContentSection id="trade" title="Trade" description={tradeStrings.tradeDescription}>
+    <ContentSection
+      id="trade"
+      title="Trade"
+      description={tradeStrings.tradeDescription}
+    >
       <Grid container item xs={12} sm={12} spacing={3} justifyContent="center">
         <Grid item xs={12} sm={6} style={{ maxWidth: '300px' }}>
           <HeaderLabel

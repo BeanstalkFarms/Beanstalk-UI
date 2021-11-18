@@ -1,28 +1,28 @@
 /* eslint-disable */
 import { Grid, Link } from '@material-ui/core';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import TelegramIcon from '@material-ui/icons/Telegram';
-import TwitterIcon from '@material-ui/icons/Twitter';
+import {
+  GitHub as GitHubIcon,
+  Telegram as TelegramIcon,
+  Twitter as TwitterIcon,
+} from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
-import { ReactComponent as BeanIcon } from '../../img/bean-logo.svg';
-import { ReactComponent as CoinGeckoIcon } from '../../img/coingecko-icon.svg';
-import { ReactComponent as CoinMarketCapIcon } from '../../img/coinmarketcap-icon.svg';
-import { ReactComponent as DiscordIcon } from '../../img/discord-icon.svg';
-import { ReactComponent as EtherscanIcon } from '../../img/etherscan-logo.svg';
-import { ReactComponent as MediumIcon } from '../../img/medium-icon.svg';
-import { ReactComponent as OpenSeaIcon } from '../../img/opensea-icon.svg';
-// import reddit from '../../img/reddit-icon.svg'
-import { ReactComponent as UniswapIcon } from '../../img/uniswap-logo-black.svg';
+import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
+import { ReactComponent as CoinGeckoIcon } from 'img/coingecko-icon.svg';
+import { ReactComponent as CoinMarketCapIcon } from 'img/coinmarketcap-icon.svg';
+import { ReactComponent as DiscordIcon } from 'img/discord-icon.svg';
+import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
+import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
+import { ReactComponent as OpenSeaIcon } from 'img/opensea-icon.svg';
+import { ReactComponent as UniswapIcon } from 'img/uniswap-logo-black.svg';
 
 // halloween assets
-import PumpkinIcon from '../../img/dark/pumpkin-dark.svg';
-import TombstoneIcon from '../../img/dark/tombstone-dark.svg';
+import PumpkinIcon from 'img/dark/pumpkin-dark.svg';
+import TombstoneIcon from 'img/dark/tombstone-dark.svg';
 
 // fall assets
-import TurkeyIcon from '../../img/fall/turkey.svg';
-import FenceIcon from '../../img/fall/fence-fall.svg';
-import fallGround from '../../img/fall/ground-grass.png';
-import { theme } from '../../constants';
+import TurkeyIcon from 'img/fall/turkey.svg';
+import FenceIcon from 'img/fall/fence-fall.svg';
+import fallGround from 'img/fall/ground-grass.png';
 
 import {
   BEAN_TOKEN_LINK,
@@ -33,11 +33,11 @@ import {
   MEDIUM_LINK,
   OPENSEA_LINK,
   SILO_CONTRACT_LINK,
-  // REDDIT_LINK,
   TELEGRAM_LINK,
   TWITTER_LINK,
   UNISWAP_CONTRACT_LINK,
-} from '../../constants';
+  theme,
+} from 'constants/index';
 
 export default function Footer(props) {
   const classes = makeStyles({
@@ -71,10 +71,10 @@ export default function Footer(props) {
   const width = window.innerWidth;
 
   const logoStyle = {
-      height: '25px',
-      width: '25px',
-      fill: theme.footer,
-    };
+    height: '25px',
+    width: '25px',
+    fill: theme.footer,
+  };
   const linkStyle = {
     padding: theme.footerPadding,
   };
@@ -89,72 +89,78 @@ export default function Footer(props) {
     position: 'fixed',
     zIndex: -1,
   };
-  const itemStyle = width > 650 ?
-    {
-      bottom: theme.groundItemHeight,
-      height: '5vw',
-      left: '80%',
-      minHeight: '75px',
-      position: 'fixed',
-      zIndex: -1,
-    }
-    : {
-      display: 'none',
-    };
-  const rightItemStyle = width > 850 ?
-    {
-      bottom: theme.groundItemHeight,
-      height: '3vw',
-      left: 'calc(80% + 4.4vw)',
-      minHeight: '55px',
-      position: 'fixed',
-      zIndex: -1,
-    }
-    : {
-      display: 'none',
-    };
-  const tombstoneStyle = width > 650 ?
-    {
-      bottom: '44px',
-      height: '5vw',
-      maxHeight: '100px',
-      left: '60%',
-      minHeight: '55px',
-      position: 'fixed',
-      zIndex: -1,
-    }
-    : {
-      display: 'none',
-    };
-    const miscStyle = width > 650 ?
-      {
-        bottom: theme.groundItemHeight,
-        height: '5vw',
-        maxHeight: '100px',
-        left: '60%',
-        minHeight: '55px',
-        position: 'fixed',
-        zIndex: -1,
-      }
+  const itemStyle =
+    width > 650
+      ? {
+          bottom: theme.groundItemHeight,
+          height: '5vw',
+          left: '80%',
+          minHeight: '75px',
+          position: 'fixed',
+          zIndex: -1,
+        }
       : {
-        display: 'none',
-      };
+          display: 'none',
+        };
+  const rightItemStyle =
+    width > 850
+      ? {
+          bottom: theme.groundItemHeight,
+          height: '3vw',
+          left: 'calc(80% + 4.4vw)',
+          minHeight: '55px',
+          position: 'fixed',
+          zIndex: -1,
+        }
+      : {
+          display: 'none',
+        };
+  const tombstoneStyle =
+    width > 650
+      ? {
+          bottom: '44px',
+          height: '5vw',
+          maxHeight: '100px',
+          left: '60%',
+          minHeight: '55px',
+          position: 'fixed',
+          zIndex: -1,
+        }
+      : {
+          display: 'none',
+        };
+  const miscStyle =
+    width > 650
+      ? {
+          bottom: theme.groundItemHeight,
+          height: '5vw',
+          maxHeight: '100px',
+          left: '60%',
+          minHeight: '55px',
+          position: 'fixed',
+          zIndex: -1,
+        }
+      : {
+          display: 'none',
+        };
 
-  const spookyImg = theme.name === 'spooky' ?
-    <>
-      <img alt="Tombstone Icon" src={TombstoneIcon} style={tombstoneStyle} />
-      <img alt="Pumkpin Icon" src={PumpkinIcon} style={itemStyle} />
-      <img alt="Pumkpin Icon" src={PumpkinIcon} style={rightItemStyle} />
-    </>
-    : null;
+  const spookyImg =
+    theme.name === 'spooky' ? (
+      <>
+        <img alt="Tombstone Icon" src={TombstoneIcon} style={tombstoneStyle} />
+        <img alt="Pumkpin Icon" src={PumpkinIcon} style={itemStyle} />
+        <img alt="Pumkpin Icon" src={PumpkinIcon} style={rightItemStyle} />
+      </>
+    ) : null;
 
-  const fallImg = theme.name === 'fall' ?
-    <>
-      <img alt="Fence Icon" src={FenceIcon} style={miscStyle} />
-      <img alt="Turkey Icon" src={TurkeyIcon} style={itemStyle} />
-      <img alt="Turkey Icon" src={TurkeyIcon} style={rightItemStyle} />
-    </>
-    : null;
+  const fallImg =
+    theme.name === 'fall' ? (
+      <>
+        <img alt="Fence Icon" src={FenceIcon} style={miscStyle} />
+        <img alt="Turkey Icon" src={TurkeyIcon} style={itemStyle} />
+        <img alt="Turkey Icon" src={TurkeyIcon} style={rightItemStyle} />
+      </>
+    ) : null;
 
   return (
     <>

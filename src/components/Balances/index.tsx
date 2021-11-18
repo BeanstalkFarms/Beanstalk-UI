@@ -3,8 +3,8 @@ import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { AppState } from 'state';
-import { poolForLP } from '../../util';
-import { UNISWAP_BASE_LP, theme } from '../../constants';
+import { poolForLP } from 'util/index';
+import { UNISWAP_BASE_LP, theme } from 'constants/index';
 import {
   BaseModule,
   ClaimableAsset,
@@ -81,7 +81,9 @@ export default function Balances() {
   >((state) => state.prices);
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(0), new BigNumber(0)];
+    if (amount.isLessThanOrEqualTo(0)) {
+      return [new BigNumber(0), new BigNumber(0)];
+    }
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 
@@ -127,13 +129,17 @@ export default function Balances() {
   const userTotalClaimable = beanClaimable.plus(ethClaimable);
 
   const spaceTop = (
-    <Grid container item xs={12} justifyContent="center" style={{ marginTop: '10px' }} />
+    <Grid
+      container
+      item
+      xs={12}
+      justifyContent="center"
+      style={{ marginTop: '10px' }}
+    />
   );
 
-  const isFarmableBeans = (
-    grownStalkBalance.isGreaterThan(0) ||
-    farmableBeanBalance.isGreaterThan(0)
-  );
+  const isFarmableBeans =
+    grownStalkBalance.isGreaterThan(0) || farmableBeanBalance.isGreaterThan(0);
 
   const claimableSection = userTotalClaimable.isGreaterThan(0) ? (
     <Grid
@@ -158,7 +164,7 @@ export default function Balances() {
           >
             Claimable
           </Grid>
-          {beanClaimable.isGreaterThan(0) ?
+          {beanClaimable.isGreaterThan(0) ? (
             <ClaimBalance
               balance={beanClaimable}
               description={claimableStrings.beans}
@@ -167,9 +173,8 @@ export default function Balances() {
               token={CryptoAsset.Bean}
               userClaimable={beanClaimable.isGreaterThan(0)}
             />
-            : null
-          }
-          {ethClaimable.isGreaterThan(0) ?
+          ) : null}
+          {ethClaimable.isGreaterThan(0) ? (
             <ClaimBalance
               balance={ethClaimable}
               description={claimableStrings.eth}
@@ -177,8 +182,7 @@ export default function Balances() {
               token={CryptoAsset.Ethereum}
               userClaimable={ethClaimable.isGreaterThan(0)}
             />
-            : null
-          }
+          ) : null}
         </Grid>
       </ClaimButton>
     </Grid>
@@ -216,11 +220,10 @@ export default function Balances() {
             >
               Farmable
             </Grid>
-            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0) ?
-              spaceTop
-              : null
-            }
-            {grownStalkBalance.isGreaterThan(0) ?
+            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
+              ? spaceTop
+              : null}
+            {grownStalkBalance.isGreaterThan(0) ? (
               <ClaimBalance
                 balance={grownStalkBalance}
                 description={claimableStrings.grownStalk}
@@ -228,12 +231,10 @@ export default function Balances() {
                 token={ClaimableAsset.Stalk}
                 userClaimable={grownStalkBalance.isGreaterThan(0)}
               />
-              : null
-            }
-            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0) ?
-              spaceTop
-              : null
-            }
+            ) : null}
+            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
+              ? spaceTop
+              : null}
             {rootsBalance.isEqualTo(0) ? (
               <Box style={{ width: '130%', marginLeft: '-15%' }}>
                 You have not updated your Silo account since the last BIP has

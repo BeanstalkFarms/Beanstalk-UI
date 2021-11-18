@@ -19,8 +19,8 @@ import {
   SiloAsset,
   TokenLabel,
   TransitAsset,
-} from '../../util';
-import { theme } from '../../constants';
+} from 'util/index';
+import { theme } from 'constants/index';
 import { FormatTooltip, QuestionModule } from './index';
 
 const useStyles = makeStyles({
@@ -185,11 +185,7 @@ const BasicTable = (props) => {
           <TableHead>
             <TableRow key={claimWord}>
               {titles.map((t) => (
-                <TableCell
-                  key={t}
-                  align="center"
-                  style={titleStyle}
-                >
+                <TableCell key={t} align="center" style={titleStyle}>
                   {t}
                 </TableCell>
               ))}

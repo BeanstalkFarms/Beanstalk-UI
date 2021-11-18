@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
-import { mintAllNFTs } from '../../util/index';
+import { mintAllNFTs } from 'util/index';
 import {
   ContentTitle,
   BaseModule,
   Grid,
   NftPicTable,
   SingleButton,
-} from '../Common';
+} from 'components/Common';
 
 export default function ClaimNFT(props) {
   const [page, setPage] = React.useState(0);

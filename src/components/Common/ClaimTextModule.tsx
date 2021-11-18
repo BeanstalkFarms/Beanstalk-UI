@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { displayBN, smallDecimalPercent } from '../../util';
+import { displayBN, smallDecimalPercent } from 'util/index';
 
 export default function ClaimTextModule({
   claim,
@@ -9,19 +9,15 @@ export default function ClaimTextModule({
   const claimTextList = [];
   let claimText = '';
 
-  const displayEthBalance = ethClaimable.isLessThan(0.0001) ?
-    smallDecimalPercent(ethClaimable)
+  const displayEthBalance = ethClaimable.isLessThan(0.0001)
+    ? smallDecimalPercent(ethClaimable)
     : displayBN(ethClaimable);
 
   if (beanClaimable.isGreaterThan(0)) {
-    claimTextList.push(
-      `${displayBN(beanClaimable)} Beans`
-    );
+    claimTextList.push(`${displayBN(beanClaimable)} Beans`);
   }
   if (ethClaimable.isGreaterThan(0)) {
-    claimTextList.push(
-      `${displayEthBalance} ETH`
-    );
+    claimTextList.push(`${displayEthBalance} ETH`);
   }
 
   if (claimTextList.length === 1) {
@@ -39,7 +35,8 @@ export default function ClaimTextModule({
 
   if (claim) {
     return `Claim ${claimText}`;
-  } return null;
+  }
+  return null;
 }
 
 ClaimTextModule.defaultProps = {

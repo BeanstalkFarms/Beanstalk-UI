@@ -1,11 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import { MIN_BALANCE } from '../../constants';
-import {
-  CryptoAsset,
-  MinBN,
-  SwapMode,
-} from '../../util';
+import { MIN_BALANCE } from 'constants/index';
+import { CryptoAsset, MinBN, SwapMode } from 'util/index';
 import { TokenInputField } from '.';
 
 export default function EthInputField(props) {
@@ -43,7 +39,7 @@ export default function EthInputField(props) {
         value={props.value}
       />
     </>
- );
+  );
 }
 
 EthInputField.defaultProps = {

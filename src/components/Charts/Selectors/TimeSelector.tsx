@@ -1,24 +1,27 @@
 import React from 'react';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
 export function TimeSelector(props) {
-  const toggleStyle = !props.isMobile ? {
-    position: 'absolute',
-    top: '10px',
-    right: '25px',
-  } : {
-    position: 'absolute',
-    top: '8px',
-    right: '10px',
-  };
-  const toggleButtonStyle = !props.isMobile ? {
-    padding: '5px',
-    minWidth: '42px',
-  } : {
-    padding: '2px',
-    minWidth: '32px',
-  };
+  const toggleStyle = !props.isMobile
+    ? {
+        position: 'absolute',
+        top: '10px',
+        right: '25px',
+      }
+    : {
+        position: 'absolute',
+        top: '8px',
+        right: '10px',
+      };
+  const toggleButtonStyle = !props.isMobile
+    ? {
+        padding: '5px',
+        minWidth: '42px',
+      }
+    : {
+        padding: '2px',
+        minWidth: '32px',
+      };
 
   const change = (event, value) => {
     if (value !== null) props.setValue(value);

@@ -5,9 +5,15 @@ import { IconButton, Box } from '@material-ui/core';
 import ListIcon from '@material-ui/icons/List';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE } from '../../constants';
-import { approveBeanstalkBean, SwapMode, poolForLP } from '../../util';
-import { BaseModule, CryptoAsset, FarmAsset, ListTable, fieldStrings } from '../Common';
+import { BASE_SLIPPAGE } from 'constants/index';
+import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
+import {
+  BaseModule,
+  CryptoAsset,
+  FarmAsset,
+  ListTable,
+  fieldStrings,
+} from 'components/Common';
 import { SowModule } from './SowModule';
 import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
@@ -43,9 +49,10 @@ export default function FieldModule() {
     (state) => state.prices
   );
 
-  const { weather, soil, harvestableIndex } = useSelector<AppState, AppState['weather']>(
-    (state) => state.weather
-  );
+  const { weather, soil, harvestableIndex } = useSelector<
+    AppState,
+    AppState['weather']
+  >((state) => state.weather);
 
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
@@ -81,10 +88,7 @@ export default function FieldModule() {
   const [isValidAddress, setIsValidAddress] = useState(false);
 
   const sectionTitles = ['Sow', 'Send'];
-  const sectionTitlesDescription = [
-    fieldStrings.sow,
-    fieldStrings.sendPlot,
-  ];
+  const sectionTitlesDescription = [fieldStrings.sow, fieldStrings.sendPlot];
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
@@ -137,8 +141,9 @@ export default function FieldModule() {
     .plus(harvestablePodBalance)
     .plus(poolForLPRatio(lpReceivableBalance)[0]);
 
-  const ethClaimable = claimableEthBalance
-    .plus(poolForLPRatio(lpReceivableBalance)[1]);
+  const ethClaimable = claimableEthBalance.plus(
+    poolForLPRatio(lpReceivableBalance)[1]
+  );
 
   const sections = [
     <SowModule

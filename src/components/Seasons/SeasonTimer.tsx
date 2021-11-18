@@ -1,6 +1,6 @@
 import React from 'react';
-import { HeaderLabelWithTimer } from '../Common';
-import { timeToString, timeToStringDetailed } from '../../util';
+import { HeaderLabelWithTimer } from 'components/Common';
+import { timeToString, timeToStringDetailed } from 'util/index';
 
 export default function SeasonTimer(props) {
   const display = (time) => {
@@ -19,7 +19,12 @@ export default function SeasonTimer(props) {
         'This is the time until the next Sunrise function can be called at the top of the hour.';
     }
 
-    return [title, timeToString(timeDifference), description, timeToStringDetailed(timeDifference)];
+    return [
+      title,
+      timeToString(timeDifference),
+      description,
+      timeToStringDetailed(timeDifference),
+    ];
   };
 
   return <HeaderLabelWithTimer display={display} time={props.time} />;

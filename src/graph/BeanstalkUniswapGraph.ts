@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { BEAN_SUBGRAPH_API_LINK } from '../constants';
+import { BEAN_SUBGRAPH_API_LINK } from 'constants/index';
 
 const LastCrossQuery = `
 {
@@ -85,15 +85,21 @@ function roundTo4Digits(num) {
 
 function queryHourData(first: Number, skip: Number): Promise {
   return client.query({
-      query: gql(HourBeanQuery),
-      variables: { first: first, skip: skip },
+    query: gql(HourBeanQuery),
+    variables: { first: first, skip: skip },
   });
 }
 
 export async function hourBeanQuery() {
   try {
-    const [d1, d2, d3] = await Promise.all([queryHourData(1000, 0), queryHourData(1000, 1000), queryHourData(1000, 2000)]);
-    const data = d1.data.hourDatas.concat(d2.data.hourDatas).concat(d3.data.hourDatas);
+    const [d1, d2, d3] = await Promise.all([
+      queryHourData(1000, 0),
+      queryHourData(1000, 1000),
+      queryHourData(1000, 2000),
+    ]);
+    const data = d1.data.hourDatas
+      .concat(d2.data.hourDatas)
+      .concat(d3.data.hourDatas);
     const dates = data.reduce((acc, d) => {
       const date = new Date();
       date.setTime(d.hourTimestamp * 1000);

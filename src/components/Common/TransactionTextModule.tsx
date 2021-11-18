@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { displayBN, SwapMode } from '../../util';
+import { displayBN, SwapMode } from 'util/index';
 
 export default function TransactionTextModule({
   buyBeans,
@@ -12,37 +12,27 @@ export default function TransactionTextModule({
 }) {
   if (!(mode === SwapMode.Ethereum || mode === SwapMode.BeanEthereum)) {
     if (sellToken !== undefined && buyEth.isGreaterThan(0)) {
-      return (
-        `Buy ${displayBN(buyEth)} ETH with ${sellToken.toFixed(
-          3
-        )} ${sellToken.isEqualTo(1) ? 'Bean' : 'Beans'} for $${updateExpectedPrice(
-          buyEth.multipliedBy(-1),
-          sellToken.multipliedBy(-1)
-        ).toFixed(4)} each`
-      );
+      return `Buy ${displayBN(buyEth)} ETH with ${sellToken.toFixed(3)} ${
+        sellToken.isEqualTo(1) ? 'Bean' : 'Beans'
+      } for $${updateExpectedPrice(
+        buyEth.multipliedBy(-1),
+        sellToken.multipliedBy(-1)
+      ).toFixed(4)} each`;
     }
     return '';
   }
 
-  if (
-    mode === SwapMode.Ethereum ||
-    mode === SwapMode.BeanEthereum
-  ) {
+  if (mode === SwapMode.Ethereum || mode === SwapMode.BeanEthereum) {
     if (buyBeans.isGreaterThan(0)) {
-      return (
-        `Buy ${displayBN(buyBeans)}
-        ${buyBeans.isEqualTo(1) ? 'Bean' : 'Beans'} ${sellEth !== undefined
-          ? `with ${sellEth.toFixed(4)} ETH `
-          : null
-        }for $${updateExpectedPrice(
-          sellEth !== undefined
-            ? sellEth
-            : value,
-          buyBeans
-        ).toFixed(4)} each`
-      );
+      return `Buy ${displayBN(buyBeans)}
+        ${buyBeans.isEqualTo(1) ? 'Bean' : 'Beans'} ${
+        sellEth !== undefined ? `with ${sellEth.toFixed(4)} ETH ` : null
+      }for $${updateExpectedPrice(
+        sellEth !== undefined ? sellEth : value,
+        buyBeans
+      ).toFixed(4)} each`;
     }
-  return '';
+    return '';
   }
 }
 

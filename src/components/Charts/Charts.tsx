@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BaseModule } from '../Common';
+import { BaseModule } from 'components/Common';
 import { Chart } from './Chart';
 
 export default function Charts(props) {
@@ -32,7 +32,7 @@ export default function Charts(props) {
     setTimeMode: setTimeMode,
   };
 
-  const isMobile: boolean = (width <= 768);
+  const isMobile: boolean = width <= 768;
   const sections = props.charts.map((c) => (
     <Chart
       data={c.data}
@@ -44,23 +44,30 @@ export default function Charts(props) {
       {...props}
     />
   ));
-  const baseStyle = isMobile ?
-    { width: '100%', paddingLeft: 0, paddingRight: 0 }
+  const baseStyle = isMobile
+    ? { width: '100%', paddingLeft: 0, paddingRight: 0 }
     : null;
 
   const titles = props.charts.map((c) => {
-    if (width < 520 && c.shortTitle !== undefined) return c.shortTitle.toUpperCase();
-    if (c.tabTitle !== undefined) return c.tabTitle;
+    if (width < 520 && c.shortTitle !== undefined) {
+      return c.shortTitle.toUpperCase();
+    }
+    if (c.tabTitle !== undefined) {
+      return c.tabTitle;
+    }
     return c.title.toUpperCase();
   });
 
-  const descriptions = props.charts[0].description !== undefined ?
-    props.charts.map((c) => c.description)
-    : undefined;
+  const descriptions =
+    props.charts[0].description !== undefined
+      ? props.charts.map((c) => c.description)
+      : undefined;
 
   return (
     <BaseModule
-      handleTabChange={(event, newSection) => { setSection(newSection); }}
+      handleTabChange={(event, newSection) => {
+        setSection(newSection);
+      }}
       section={section}
       sectionTitles={titles}
       showButton={false}
@@ -70,7 +77,7 @@ export default function Charts(props) {
       style={baseStyle}
       textTransform="None"
       textTabSize={isMobile ? '11px' : undefined}
-      >
+    >
       {sections[section]}
     </BaseModule>
   );

@@ -20,11 +20,11 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AppState } from 'state';
-import BeanLogo from '../../img/bean-logo.svg';
-import { chainId } from '../../util';
+import { chainId } from 'util/index';
+import { priceQuery } from 'graph/index';
+import { theme } from 'constants/index';
+import BeanLogo from 'img/bean-logo.svg';
 import WalletModule from './WalletModule';
-import { priceQuery } from '../../graph';
-import { theme } from '../../constants';
 
 const defaultNavMapping = [
   {
@@ -212,8 +212,8 @@ export default function NavigationBar(props) {
             to={path}
             activeClassName={classes.activeLinkText}
             className={classes.linkPadding}
-            spy
-            smooth
+            spy="true"
+            smooth="true"
           >
             {title}
           </NavLink>

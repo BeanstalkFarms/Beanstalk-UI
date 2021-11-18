@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { BEAN, WETH } from '../constants';
+import { BEAN, WETH } from 'constants/index';
 import { account, MinBN, txCallback, uniswapRouterContract } from './index';
 
 const DEADLINE_FROM_NOW = 60 * 15;
@@ -10,7 +10,7 @@ export enum SwapMode {
   BeanEthereum,
   Ethereum,
   LP,
-  BeanEthereumSwap
+  BeanEthereumSwap,
 }
 
 export const buyBeans = async (amountIn, amountOutMin, callback) => {
@@ -56,7 +56,9 @@ export const poolForLP = (amount, reserve1, reserve2, totalLP) => {
     reserve1.isLessThanOrEqualTo(0) ||
     reserve2.isLessThanOrEqualTo(0) ||
     totalLP.isLessThanOrEqualTo(0)
-  ) return [new BigNumber(0), new BigNumber(0)];
+  ) {
+    return [new BigNumber(0), new BigNumber(0)];
+  }
   return [
     tokenForLP(amount, reserve1, totalLP),
     tokenForLP(amount, reserve2, totalLP),
@@ -81,7 +83,9 @@ export const getToAmount = (
     amountIn.isLessThanOrEqualTo(0) ||
     reserveIn.isLessThanOrEqualTo(0) ||
     reserveOut.isLessThanOrEqualTo(0)
-  ) return new BigNumber(0);
+  ) {
+    return new BigNumber(0);
+  }
   const amountInWithFee = amountIn.multipliedBy(997);
   const numerator = amountInWithFee.multipliedBy(reserveOut);
   const denominator = reserveIn.multipliedBy(1000).plus(amountInWithFee);
@@ -98,7 +102,9 @@ export const getFromAmount = (
     amountOut.isLessThanOrEqualTo(0) ||
     reserveIn.isLessThanOrEqualTo(0) ||
     reserveOut.isLessThanOrEqualTo(0)
-  ) return new BigNumber(0);
+  ) {
+    return new BigNumber(0);
+  }
   if (amountOut.isGreaterThan(reserveOut)) return reserveOut;
   const numerator = reserveIn.multipliedBy(amountOut).multipliedBy(1000);
   const denominator = reserveOut.minus(amountOut).multipliedBy(997);

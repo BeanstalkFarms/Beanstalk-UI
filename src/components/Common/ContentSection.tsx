@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Link, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { theme } from '../../constants';
+import { theme } from 'constants/index';
 import { ContentTitle } from './index';
 
 export default function ContentSection({
@@ -17,7 +17,8 @@ export default function ContentSection({
   title,
   width,
 }) {
-  const [shouldDisplayDescription, setshouldDisplayDescription] = React.useState(true);
+  const [shouldDisplayDescription, setshouldDisplayDescription] =
+    React.useState(true);
 
   const classes = makeStyles({
     appSection: {
@@ -41,7 +42,9 @@ export default function ContentSection({
   React.useEffect(() => {
     // on initialize fetch is_hidden variable or default to false. if is_hidden set shouldDisplay to false
 
-    if (JSON.parse(localStorage.getItem(`is_${id}_description_hidden`) || 'false')) {
+    if (
+      JSON.parse(localStorage.getItem(`is_${id}_description_hidden`) || 'false')
+    ) {
       setshouldDisplayDescription(false);
     }
   }, [id]);
@@ -58,21 +61,23 @@ export default function ContentSection({
   const descriptionSection =
     description !== undefined ? (
       <Box
-        className={shouldDisplayDescription ? `section-description-${theme.name}` : ''}
+        className={
+          shouldDisplayDescription ? `section-description-${theme.name}` : ''
+        }
         style={
           innerWidth > 500
             ? {
-              maxWidth: '550px',
-              margin: '0 0 10px 0',
-              padding: '12px',
-              color: theme.backgroundText,
-            }
+                maxWidth: '550px',
+                margin: '0 0 10px 0',
+                padding: '12px',
+                color: theme.backgroundText,
+              }
             : {
-              width: innerWidth - 64,
-              margin: '0 0 10px 0',
-              padding: '12px',
-              color: theme.backgroundText,
-            }
+                width: innerWidth - 64,
+                margin: '0 0 10px 0',
+                padding: '12px',
+                color: theme.backgroundText,
+              }
         }
       >
         {shouldDisplayDescription ? (
@@ -93,7 +98,7 @@ export default function ContentSection({
               </span>
             ))}
           </>
-        ) : (null)}
+        ) : null}
 
         <Box
           className={classes.hideButton}

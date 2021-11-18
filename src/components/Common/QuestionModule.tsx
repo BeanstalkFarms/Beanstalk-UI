@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import React from 'react';
 import { Box } from '@material-ui/core';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -23,9 +22,7 @@ export default function QuestionModule(props) {
   const handleTooltipOpen = () => {
     setShow(true);
   };
-  const timer = width < 500 ?
-    4000
-    : 1000;
+  const timer = width < 500 ? 4000 : 1000;
 
   return (
     <Box style={questionStyle}>
@@ -45,7 +42,11 @@ export default function QuestionModule(props) {
           onMouseEnter={handleTooltipOpen}
           onMouseLeave={handleTooltipClose}
         >
-          <HelpOutlineIcon style={{ fontSize: '8px' }} width="100%" onClick={handleTooltipOpen} />
+          <HelpOutlineIcon
+            style={{ fontSize: '8px' }}
+            width="100%"
+            onClick={handleTooltipOpen}
+          />
         </FormatTooltip>
       </ClickAwayListener>
     </Box>

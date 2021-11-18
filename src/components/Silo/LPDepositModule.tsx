@@ -14,7 +14,7 @@ import {
   SLIPPAGE_THRESHOLD,
   STALK,
   UNI_V2_ETH_BEAN_LP,
-} from '../../constants';
+} from 'constants/index';
 import {
   addAndDepositLP,
   convertAddAndDepositLP,
@@ -32,7 +32,7 @@ import {
   toStringBaseUnitBN,
   toTokenUnitsBN,
   TrimBN,
-} from '../../util';
+} from 'util/index';
 import {
   CryptoAsset,
   ClaimTextModule,
@@ -44,7 +44,7 @@ import {
   TokenOutputField,
   TransactionTextModule,
   TransactionDetailsModule,
-} from '../Common';
+} from 'components/Common';
 
 export const LPDepositModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(0));
@@ -134,7 +134,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
       fromEtherNumber = fromNumber.multipliedBy(props.beanToEth);
       newFromEthNumber = newFromEthNumber.minus(fromEtherNumber);
       if (props.settings.mode === SwapMode.BeanEthereum) {
-        setFromBeanValue(MaxBN(TrimBN(fromNumber, BEAN.decimals), new BigNumber(0)));
+        setFromBeanValue(
+          MaxBN(TrimBN(fromNumber, BEAN.decimals), new BigNumber(0))
+        );
         setFromEthValue(TrimBN(fromEtherNumber, ETH.decimals));
       }
     }
@@ -157,7 +159,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
       fromEtherNumber = newFromEthNumber;
       setToBuyBeanValue(buyNumber);
       setToSellEthValue(sellNumber);
-      setFromEthValue(MaxBN(TrimBN(fromEtherNumber, ETH.decimals), new BigNumber(0)));
+      setFromEthValue(
+        MaxBN(TrimBN(fromEtherNumber, ETH.decimals), new BigNumber(0))
+      );
       setFromBeanValue(fromNumber);
       fromEtherNumber = newFromEthNumber.minus(sellNumber);
       fromNumber = fromNumber.plus(buyNumber);
@@ -229,7 +233,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
     props.settings.convert && props.settings.mode === SwapMode.BeanEthereum
       ? props.maxFromBeanSiloVal
       : new BigNumber(0);
-  const claimableBeans = props.settings.claim ? props.beanClaimableBalance : new BigNumber(0);
+  const claimableBeans = props.settings.claim
+    ? props.beanClaimableBalance
+    : new BigNumber(0);
   const maxBeans = props.beanBalance
     .plus(convertibleBeans)
     .plus(claimableBeans);
@@ -310,11 +316,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   function displayLP(beanInput, ethInput) {
-    return (
-      `${displayBN(beanInput)}
+    return `${displayBN(beanInput)}
       ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
-      ${TokenLabel(CryptoAsset.Ethereum)}`
-    );
+      ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
   /* Transaction Details, settings and text */
@@ -337,8 +341,8 @@ export const LPDepositModule = forwardRef((props, ref) => {
 
   if (
     (props.settings.mode === SwapMode.Ethereum ||
-    (props.settings.mode === SwapMode.BeanEthereumSwap &&
-      toBuyBeanValue.isGreaterThan(0))) &&
+      (props.settings.mode === SwapMode.BeanEthereumSwap &&
+        toBuyBeanValue.isGreaterThan(0))) &&
     fromEthValue.isGreaterThan(0)
   ) {
     details.push(
@@ -375,8 +379,8 @@ export const LPDepositModule = forwardRef((props, ref) => {
 
   if (
     (props.settings.mode === SwapMode.Bean ||
-    (props.settings.mode === SwapMode.BeanEthereumSwap &&
-      toBuyEthValue.isGreaterThan(0))) &&
+      (props.settings.mode === SwapMode.BeanEthereumSwap &&
+        toBuyEthValue.isGreaterThan(0))) &&
     fromBeanValue.isGreaterThan(0)
   ) {
     details.push(
@@ -437,9 +441,9 @@ export const LPDepositModule = forwardRef((props, ref) => {
     )} LP Tokens in the Silo`
   );
   details.push(
-    `Receive ${displayBN(
-      new BigNumber(toStalkValue)
-    )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`
+    `Receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
+      new BigNumber(toSeedsValue)
+    )} Seeds`
   );
 
   const resetFields = () => {
@@ -482,9 +486,17 @@ export const LPDepositModule = forwardRef((props, ref) => {
           {toSiloLPField}
         </Box>
         <TransactionDetailsModule fields={details} />
-        <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
+        <Box
+          style={{
+            display: 'inline-block',
+            width: '100%',
+            fontSize: 'calc(9px + 0.5vmin)',
+          }}
+        >
           <span>
-            {`You will gain ${smallDecimalPercent(stalkChangePercent)}% ownership of Beanstalk.`}
+            {`You will gain ${smallDecimalPercent(
+              stalkChangePercent
+            )}% ownership of Beanstalk.`}
           </span>
         </Box>
       </>

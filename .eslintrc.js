@@ -60,7 +60,7 @@ module.exports = {
       {
         arrays: 'always-multiline',
         imports: 'always-multiline',
-        exports: 'never',
+        exports: 'always-multiline',
         functions: 'never',
         objects: 'always-multiline',
       },

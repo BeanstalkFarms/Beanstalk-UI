@@ -5,15 +5,15 @@ import { IconButton, Box } from '@material-ui/core';
 import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, BEAN_TO_STALK, zeroBN } from '../../constants';
-import { approveBeanstalkBean, SwapMode, poolForLP } from '../../util';
+import { BASE_SLIPPAGE, BEAN_TO_STALK, zeroBN } from 'constants/index';
+import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
 import {
   BaseModule,
   ListTable,
   SiloAsset,
   siloStrings,
   TransitAsset,
-} from '../Common';
+} from 'components/Common';
 import { BeanClaimModule } from './BeanClaimModule';
 import { BeanDepositModule } from './BeanDepositModule';
 import { BeanWithdrawModule } from './BeanWithdrawModule';
@@ -151,8 +151,9 @@ export default function SiloBeanModule() {
     .plus(harvestablePodBalance)
     .plus(poolForLPRatio(lpReceivableBalance)[0]);
 
-  const ethClaimable = claimableEthBalance
-    .plus(poolForLPRatio(lpReceivableBalance)[1]);
+  const ethClaimable = claimableEthBalance.plus(
+    poolForLPRatio(lpReceivableBalance)[1]
+  );
 
   const sections = [
     <BeanDepositModule

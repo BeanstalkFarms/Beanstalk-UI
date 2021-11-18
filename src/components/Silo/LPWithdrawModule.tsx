@@ -7,7 +7,7 @@ import {
   STALK,
   LPBEANS_TO_SEEDS,
   UNI_V2_ETH_BEAN_LP,
-} from '../../constants';
+} from 'constants/index';
 import {
   claimAndWithdrawLP,
   displayBN,
@@ -17,7 +17,7 @@ import {
   toStringBaseUnitBN,
   TrimBN,
   withdrawLP,
-} from '../../util';
+} from 'util/index';
 import {
   ClaimTextModule,
   SettingsFormModule,
@@ -27,7 +27,7 @@ import {
   TokenOutputField,
   TransitAsset,
   TransactionDetailsModule,
-} from '../Common';
+} from 'components/Common';
 
 export const LPWithdrawModule = forwardRef((props, ref) => {
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
@@ -185,9 +185,9 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     `Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
   );
   details.push(
-    `Burn ${displayBN(
-      new BigNumber(toStalkValue)
-    )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`
+    `Burn ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
+      new BigNumber(toSeedsValue)
+    )} Seeds`
   );
 
   const unvoteTextField = props.locked ? (
@@ -224,14 +224,20 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
           {toTransitLPField}
         </Box>
         <TransactionDetailsModule fields={details} />
-        <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
+        <Box
+          style={{
+            display: 'inline-block',
+            width: '100%',
+            fontSize: 'calc(9px + 0.5vmin)',
+          }}
+        >
           <span>
-            {`You will forfeit ${smallDecimalPercent(stalkChangePercent)}% ownership of Beanstalk.`}
+            {`You will forfeit ${smallDecimalPercent(
+              stalkChangePercent
+            )}% ownership of Beanstalk.`}
           </span>
           <br />
-          <span style={{ color: 'red' }}>
-            {siloStrings.withdrawWarning}
-          </span>
+          <span style={{ color: 'red' }}>{siloStrings.withdrawWarning}</span>
         </Box>
       </>
     );
@@ -243,7 +249,9 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
         fromLPValue.isLessThanOrEqualTo(0) ||
         withdrawParams.crates.length === 0 ||
         withdrawParams.amounts.length === 0
-      ) return;
+      ) {
+        return;
+      }
 
       if (props.settings.claim) {
         claimAndWithdrawLP(

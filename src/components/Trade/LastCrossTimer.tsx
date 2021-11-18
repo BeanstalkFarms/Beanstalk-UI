@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { HeaderLabelWithTimer } from '../Common';
-import { timeToString, timeToStringDetailed } from '../../util';
+import { HeaderLabelWithTimer } from 'components/Common';
+import { timeToString, timeToStringDetailed } from 'util/index';
 
 export default function LastCrossTimer(props) {
   const timeSinceCross = () => {

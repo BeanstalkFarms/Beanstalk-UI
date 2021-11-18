@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import sunriseIcon from '../../img/black-sun.svg';
-import { sunrise, chainId } from '../../util';
+import sunriseIcon from 'img/black-sun.svg';
+import { sunrise, chainId } from 'util/index';
 
-import { ContentSection, Grid, HeaderLabel, SingleButton } from '../Common';
+import {
+  ContentSection,
+  Grid,
+  HeaderLabel,
+  SingleButton,
+} from 'components/Common';
 import PegMaintenance from './PegMaintenance';
 import SeasonReward from './SeasonReward';
 import SeasonTimer from './SeasonTimer';
@@ -56,8 +61,7 @@ export default function Seasons() {
       </Grid>
     ) : null;
 
-    const seasonDescription =
-    `
+  const seasonDescription = `
     Seasons are the timekeeping mechanism of Beanstalk. Every Season is
     approximately 1 hour. Each Season begins when the Sunrise function is
     called on the Ethereum blockchain. The Sunrise function can be called by
@@ -65,11 +69,7 @@ export default function Seasons() {
     `;
 
   return (
-    <ContentSection
-      id="seasons"
-      title="Seasons"
-      size="20px"
-    >
+    <ContentSection id="seasons" title="Seasons" size="20px">
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid
           item

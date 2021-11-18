@@ -22,9 +22,9 @@ import {
   GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR,
   GOVERNANCE_EMERGENCY_THRESHOLD_NUMERATOR,
   GOVERNANCE_EXPIRATION,
-} from '../../constants';
-import { percentForStalk } from '../../util';
-import { Line, QuestionModule, governanceStrings } from '../Common';
+} from 'constants/index';
+import { percentForStalk } from 'util/index';
+import { Line, QuestionModule, governanceStrings } from 'components/Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 const useStyles = makeStyles({

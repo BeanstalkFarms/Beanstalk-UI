@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  InputAdornment,
-  TextField,
-} from '@material-ui/core';
+import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { theme } from '../../constants';
+import { theme } from 'constants/index';
 
 export default function PlotInputField(props) {
   const [displayValue, setDisplayValue] = useState('');
@@ -46,21 +41,25 @@ export default function PlotInputField(props) {
     props.handleChange(event);
   };
 
-  let endAdornment = props.maxHandler !== undefined ?
-    <InputAdornment position="end">
-      <Button onClick={props.maxHandler} style={maxStyle}>
-        Max
-      </Button>
-    </InputAdornment>
-  : null;
+  let endAdornment =
+    props.maxHandler !== undefined ? (
+      <InputAdornment position="end">
+        <Button onClick={props.maxHandler} style={maxStyle}>
+          Max
+        </Button>
+      </InputAdornment>
+    ) : null;
 
-  endAdornment = props.minHandler !== undefined ?
-    <InputAdornment position="end">
-      <Button onClick={props.minHandler} style={maxStyle}>
-        Min
-      </Button>
-    </InputAdornment>
-  : endAdornment;
+  endAdornment =
+    props.minHandler !== undefined ? (
+      <InputAdornment position="end">
+        <Button onClick={props.minHandler} style={maxStyle}>
+          Min
+        </Button>
+      </InputAdornment>
+    ) : (
+      endAdornment
+    );
 
   if (props.hidden) return null;
 
