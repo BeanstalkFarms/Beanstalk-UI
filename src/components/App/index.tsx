@@ -2,11 +2,10 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { CssBaseline, Box } from '@material-ui/core';
+import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import Updater from 'state/userBalance/updater';
 import { AppState } from 'state';
-import { theme as colorTheme } from 'constants/index';
 import About from 'components/About';
 import Analytics from 'components/Analytics';
 import Field from 'components/Field';
@@ -22,8 +21,6 @@ import LoadingBean from './LoadingBean.tsx';
 import './App.css';
 
 export default function App() {
-  document.body.style.backgroundColor = colorTheme.bodyColor;
-
   const { initialized, metamaskFailure, contractEvents } = useSelector<
     AppState,
     AppState['general']
@@ -72,9 +69,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Updater />
-      <Box className="App">
-        <Main>{app}</Main>
-      </Box>
+      <Main>{app}</Main>
     </ThemeProvider>
   );
 }
