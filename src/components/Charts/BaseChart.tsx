@@ -45,7 +45,6 @@ const BaseChart = (props) => {
     bar: 'addBarSeries',
     histogram: 'addHistogramSeries',
   };
-
   const resizeHandler = () => {
     const newWidth =
       autoWidth &&
@@ -54,15 +53,9 @@ const BaseChart = (props) => {
     const newHeight =
       autoHeight && chartDiv.current
         ? chartDiv.current.parentNode.clientHeight
-        : height || 500;
+        : height;
 
     chart?.resize(newWidth, newHeight);
-  };
-
-  const unsubscribeEvents = (previousProps) => {
-    chart?.unsubscribeClick(previousProps.onClick);
-    chart?.unsubscribeCrosshairMove(previousProps.onCrosshairMove);
-    chart?.timeScale().unsubscribeVisibleTimeRangeChange(previousProps.onTimeRangeMove);
   };
 
   const handleMainLegend = () => {
@@ -136,10 +129,13 @@ const BaseChart = (props) => {
       (serie.options && serie.options.color) ||
       colors[series.length % colors.length];
 
-    const mySeries = chart[func]({
-      color,
-      ...serie.options,
-    });
+    let mySeries;
+    if (chart) {
+      mySeries = chart[func]({
+        color,
+        ...serie.options,
+      });
+    }
     const data = handleLinearInterpolation(
       serie.data,
       serie.linearInterpolation
@@ -148,7 +144,9 @@ const BaseChart = (props) => {
 
     if (serie.markers) series.setMarkers(serie.markers);
     if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
-    if (serie.legend) addLegend(series, color, serie.legend);
+    if (serie.legend) {
+      addLegend(series, color, serie.legend);
+    }
     return mySeries;
   };
   const handleSeries = () => {
@@ -177,10 +175,13 @@ const BaseChart = (props) => {
         series.push(addSeries(serie, 'histogram'));
       });
   };
-  const removeSeries = () => {
-    series.forEach((serie) => chart?.removeSeries(serie));
-    setSeries([]);
-  };
+  // const removeSeries = () => {
+  //   series.forEach((serie) => {
+  //     const result = chart?.removeSeries(serie);
+  //     return result;
+  //   });
+  //   setSeries([]);
+  // };
 
   const handleEvents = () => {
     onClick && chart?.subscribeClick(onClick);
@@ -192,9 +193,17 @@ const BaseChart = (props) => {
     // handle legend dynamical change
     chart?.subscribeCrosshairMove(handleLegends);
   };
-  const handleTimeRange = () => {
-    from && to && chart?.timeScale().setVisibleRange({ from, to });
+  const unsubscribeEvents = (previousProps) => {
+    chart?.unsubscribeClick(previousProps.onClick);
+    chart?.unsubscribeCrosshairMove(previousProps.onCrosshairMove);
+    chart?.timeScale().unsubscribeVisibleTimeRangeChange(previousProps.onTimeRangeMove);
   };
+
+  const handleTimeRange = () => {
+    // from && to && chart?.timeScale().setVisibleRange({ from, to });
+    chart?.timeScale().fitContent();
+  };
+
   const handleUpdateChart = () => {
     window.removeEventListener('resize', resizeHandler);
     let customOptions = darkTheme ? customDarkTheme : lightTheme;
@@ -205,7 +214,7 @@ const BaseChart = (props) => {
         : width,
       height: autoHeight
         ? chartDiv.current.parentNode.clientHeight
-        : height || 500,
+        : height,
       ...options,
     });
 
@@ -270,7 +279,7 @@ const BaseChart = (props) => {
           ]
         )
       ) {
-        removeSeries();
+        // removeSeries();
         handleUpdateChart();
       } else if (prevProps.from !== from || prevProps.to !== to) {
         handleTimeRange();
