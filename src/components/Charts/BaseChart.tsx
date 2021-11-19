@@ -5,15 +5,17 @@ import equal from 'fast-deep-equal';
 import { BaseModule } from 'components/Common';
 import usePrevious from 'util/hooks/usePrevious';
 import { mergeDeep } from 'util/AnalyticsUtilities';
+import { makeStyles } from '@material-ui/styles';
+import { Button } from '@material-ui/core';
 import { theme } from '../../constants';
 
 const BaseChart = (props) => {
+  console.log(props);
   const {
     autoWidth,
     autoHeight,
     height,
     width,
-    legend,
     candlestickSeries,
     lineSeries,
     areaSeries,
@@ -29,12 +31,11 @@ const BaseChart = (props) => {
     options,
     from,
     to,
+    fitAll,
   } = props;
   const prevProps = usePrevious(props);
   const chartDiv = React.useRef<any>();
-  const legendDiv = React.useRef<any>();
   const [series, setSeries] = React.useState<any>([]);
-  const [legends, setLegends] = React.useState<any>([]);
   let chart: IChartApi;
 
   const { customDarkTheme, lightTheme } = backgroundTheme;
@@ -58,43 +59,6 @@ const BaseChart = (props) => {
         : height;
 
     chart?.resize(newWidth, newHeight);
-  };
-
-  const handleMainLegend = () => {
-    if (legendDiv.current) {
-      const row = document.createElement('div');
-      row.innerText = legend;
-      legendDiv.current.appendChild(row);
-    }
-  };
-  const addLegend = (newSeries, color, title) => {
-    const toPush = { newSeries, color, title };
-    setLegends({ ...legends, toPush });
-  };
-  const handleLegends = (param) => {
-    const div = legendDiv.current;
-    if (param.time && div && legends.length) {
-      div.innerHTML = '';
-      legends.forEach(({ newSeries, color, title }) => {
-        let price = param.seriesPrices.get(newSeries);
-        if (price !== undefined) {
-          if (typeof price === 'object') {
-            color =
-              price.open < price.close
-                ? 'rgba(0, 150, 136, 0.8)'
-                : 'rgba(255,82,82, 0.8)';
-            price = `O: ${price.open}, H: ${price.high}, L: ${price.low}, C: ${price.close}`;
-          }
-          const row = document.createElement('div');
-          row.innerText = `${title} `;
-          const priceElem = document.createElement('span');
-          priceElem.style.color = color;
-          priceElem.innerText = ` ${price}`;
-          row.appendChild(priceElem);
-          div.appendChild(row);
-        }
-      });
-    }
   };
 
   const handleLinearInterpolation = (data, candleTime) => {
@@ -142,12 +106,8 @@ const BaseChart = (props) => {
         serie.linearInterpolation
       );
       mySeries.setData(data);
-
       if (serie.markers) series.setMarkers(serie.markers);
       if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
-      if (serie.legend) {
-        addLegend(series, color, serie.legend);
-      }
       if (serie.basevalue) {
         series.setBaseValue(serie.basevalue);
       }
@@ -198,9 +158,6 @@ const BaseChart = (props) => {
       chart?.subscribeCrosshairMove(onCrosshairMove);
     onTimeRangeMove &&
       chart?.timeScale().subscribeVisibleTimeRangeChange(onTimeRangeMove);
-
-    // handle legend dynamical change
-    chart?.subscribeCrosshairMove(handleLegends);
   };
   const unsubscribeEvents = (previousProps) => {
     chart?.unsubscribeClick(previousProps.onClick);
@@ -209,8 +166,16 @@ const BaseChart = (props) => {
   };
 
   const handleTimeRange = () => {
+    console.log('handle from to', from, to, fitAll);
+    const visibleRange = chart?.timeScale().getVisibleRange();
+    console.log(visibleRange);
+
+    function onIndexRangeChanged(newRange) {
+      console.log('newRange', newRange);
+    }
+    fitAll ? chart?.timeScale().fitContent() :
     from && to && chart?.timeScale().setVisibleRange({ from, to });
-    // chart?.timeScale().fitContent();
+    chart?.timeScale().subscribeVisibleTimeRangeChange(onIndexRangeChanged);
   };
 
   const handleUpdateChart = () => {
@@ -229,9 +194,6 @@ const BaseChart = (props) => {
 
     chart?.applyOptions(customOptions);
 
-    if (legendDiv.current) legendDiv.current.innerHTML = '';
-    setLegends([]);
-    if (legend) handleMainLegend();
     handleSeries();
     handleEvents();
     handleTimeRange();
@@ -291,31 +253,21 @@ const BaseChart = (props) => {
         // removeSeries();
         handleUpdateChart();
       } else if (prevProps.from !== from || prevProps.to !== to) {
+        console.log('here', prevProps.from, from, prevProps.to, to);
         handleTimeRange();
       }
     }
   }, [prevProps]);
 
-  const color = darkTheme
-    ? customDarkTheme.layout.textColor
-    : lightTheme.layout.textColor;
-
   return (
-    <div ref={chartDiv} style={{ position: 'relative' }}>
-      <div
-        ref={legendDiv}
-        style={{
-          position: 'absolute',
-          zIndex: 2,
-          color,
-          padding: 10,
-        }}
-      />
-    </div>
+    <div ref={chartDiv} style={{ position: 'relative' }} />
   );
 };
 
 const ChartWrapper = (props) => {
+  const [from, setFrom] = React.useState<number>();
+  const [all, setAll] = React.useState<boolean>(false);
+
   const sectionTitles = ['Chart'];
 
   const customDarkTheme = {
@@ -333,7 +285,6 @@ const ChartWrapper = (props) => {
       },
     },
   };
-
   const lightTheme = {
     layout: {
       backgroundColor: theme.module.background,
@@ -359,13 +310,72 @@ const ChartWrapper = (props) => {
     '#A5978B',
   ];
 
+  const classes = makeStyles({
+    timeRangeBtn: {
+      borderRadius: '12px',
+      fontFamily: 'Futura-Pt-Book',
+      fontSize: 'calc(10px + 1vmin)',
+      height: '10px',
+      width: '100px',
+      cursor: 'pointer',
+    },
+  })();
+
+  const setDateRange = (daysToSubtract: number): void => {
+    const dateOffset = (24 * 60 * 60 * 1000) * daysToSubtract;
+    setFrom(new Date(new Date().getTime() - dateOffset).getTime() / 1000);
+  };
+
+  const timeRangeSelectButtons = () => {
+    const timeRangeButtons = [
+      {
+        label: '1d',
+        value: 1,
+      },
+      {
+        label: '1w',
+        value: 7,
+      },
+      {
+        label: '1m',
+        value: 30,
+      },
+    ];
+    return (
+      <>
+        {timeRangeButtons.map((button) => (
+          <Button
+            className={classes.timeRangeBtn}
+            key={button.value}
+            onClick={() => setDateRange(button.value)}
+          >
+            {button.label}
+          </Button>))}
+        <Button
+          className={classes.timeRangeBtn}
+          key="All"
+          onClick={() => setAll(!all)}
+        >
+          All
+        </Button>
+      </>
+    );
+  };
+
+  React.useEffect(() => {
+    setDateRange(4);
+  }, []);
+
+  const to = new Date().getTime() / 1000;
+
   return (
     <BaseModule
       handleForm={() => { }}
       sectionTitles={sectionTitles}
       showButton={false}
     >
-      <BaseChart {...props} colors={colors} backgroundTheme={{ customDarkTheme, lightTheme }} />
+      <BaseChart {...props} from={from} to={to} fitAll={all} colors={colors} backgroundTheme={{ customDarkTheme, lightTheme }} />
+      {timeRangeSelectButtons()}
     </BaseModule>
   );
 };
