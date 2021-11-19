@@ -19,6 +19,7 @@ const BaseChart = (props) => {
     areaSeries,
     barSeries,
     histogramSeries,
+    baselineSeries,
     onClick,
     onCrosshairMove,
     onTimeRangeMove,
@@ -44,6 +45,7 @@ const BaseChart = (props) => {
     area: 'addAreaSeries',
     bar: 'addBarSeries',
     histogram: 'addHistogramSeries',
+    baseline: 'addBaselineSeries',
   };
   const resizeHandler = () => {
     const newWidth =
@@ -128,24 +130,27 @@ const BaseChart = (props) => {
     const color =
       (serie.options && serie.options.color) ||
       colors[series.length % colors.length];
-
     let mySeries;
+
     if (chart) {
       mySeries = chart[func]({
         color,
         ...serie.options,
       });
-    }
-    const data = handleLinearInterpolation(
-      serie.data,
-      serie.linearInterpolation
-    );
-    mySeries.setData(data);
+      const data = handleLinearInterpolation(
+        serie.data,
+        serie.linearInterpolation
+      );
+      mySeries.setData(data);
 
-    if (serie.markers) series.setMarkers(serie.markers);
-    if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
-    if (serie.legend) {
-      addLegend(series, color, serie.legend);
+      if (serie.markers) series.setMarkers(serie.markers);
+      if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
+      if (serie.legend) {
+        addLegend(series, color, serie.legend);
+      }
+      if (serie.basevalue) {
+        series.setBaseValue(serie.basevalue);
+      }
     }
     return mySeries;
   };
@@ -173,6 +178,10 @@ const BaseChart = (props) => {
     histogramSeries &&
       histogramSeries.forEach((serie) => {
         series.push(addSeries(serie, 'histogram'));
+      });
+    baselineSeries &&
+      baselineSeries.forEach((serie) => {
+        setSeries([...series, addSeries(serie, 'baseline')]);
       });
   };
   // const removeSeries = () => {

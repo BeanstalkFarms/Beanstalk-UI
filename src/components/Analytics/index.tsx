@@ -4,7 +4,7 @@ import BaseChart from '../Charts/BaseChart';
 import Balances from '../Balances';
 import Charts from '../Charts';
 import Seasons from '../Seasons';
-import { dayBeanQuery } from '../../graph';
+import { hourBeanQuery } from '../../graph';
 
 export default function Analytics() {
   const [chartData, setChartData] = React.useState<any>([{ data: [{ time: '', value: 0 }] }]);
@@ -20,11 +20,11 @@ export default function Analytics() {
       crosshair: {
         horzLine: {
           visible: false,
-          labelVisible: false,
+          labelVisible: true,
         },
         vertLine: {
           visible: true,
-          labelVisible: false,
+          labelVisible: true,
         },
       },
       timeScale: {
@@ -32,16 +32,17 @@ export default function Analytics() {
         barSpacing: 3,
         fixLeftEdge: true,
         lockVisibleTimeRangeOnResize: true,
-        rightBarStaysOnScroll: true,
+        rightBarStaysOnScroll: false,
         borderVisible: false,
         borderColor: '#fff000',
         visible: true,
         timeVisible: true,
         secondsVisible: false,
-        tickMarkFormatter: (time) => {
-          const date = new Date(time.year, time.month, time.day);
-          return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-        },
+      },
+      priceFormat: {
+        type: 'price',
+        precision: 6,
+        minMove: 0.000001,
       },
       priceScale: {
         title: 'Price',
@@ -53,27 +54,41 @@ export default function Analytics() {
           minValue: 0,
           maxValue: 3,
         },
-        autoscaleInfoProvider: () => ({
-          priceRange: {
-            minValue: 3,
-            maxValue: 0,
-          },
-        }),
         borderColor: '#555ffd',
         scaleMargins: {
           top: 0.30,
           bottom: 0.25,
         },
       },
+      baseline: {
+        topFillColor1: 'rgba(21, 146, 230, 0.4)',
+        topFillColor2: 'rgba(21, 255, 70, 0.3)',
+        bottomFillColor1: 'rgba(21, 255, 70, 0.3)',
+        bottomFillColor2: 'rgba(21, 146, 230, 0.4)',
+        topLineColor: 'rgba(21, 146, 230, 1)',
+        lineStyle: 0,
+        lineWidth: 3,
+        crosshairMarkerVisible: true,
+        crosshairMarkerRadius: 3,
+        crosshairMarkerBorderColor: 'rgb(255, 255, 255, 1)',
+        crosshairMarkerBackgroundColor: 'rgb(34, 150, 243, 1)',
+        baseValue: {
+          type: 'price',
+          price: 1,
+        },
+      },
     },
   };
 
   const loadUniswapCharts = async () => {
-    const [beanDayQuery] = await Promise.all([
-      dayBeanQuery(),
+    const [beanHourQuery] = await Promise.all([
+      hourBeanQuery(),
     ]);
-    const price = beanDayQuery.map((d) => ({ time: d.x.toISOString('YYYY-MM-DD'), value: d.price }));
-    setChartData([{ data: price }]);
+    const price = beanHourQuery.map((d) => ({ time: (d.x.getTime() / 1000), value: d.price }));
+    setChartData([{
+      data: price,
+      options: state.options.baseline,
+    }]);
   };
 
   React.useEffect(() => {
@@ -84,7 +99,7 @@ export default function Analytics() {
   return (
     <>
       <ContentSection id="analytics" title="Analytics">
-        {chartData[0].data?.length > 1 ? (<BaseChart options={state.options} lineSeries={chartData} autoWidth height={320} />) : <>...loading</>}
+        {chartData[0].data?.length > 1 ? (<BaseChart options={state.options} baselineSeries={chartData} autoWidth height={320} />) : <>...loading</>}
         <Balances />
         <Charts />
         <Seasons />
