@@ -39,11 +39,6 @@ export default function Analytics() {
         timeVisible: true,
         secondsVisible: false,
       },
-      priceFormat: {
-        type: 'price',
-        precision: 6,
-        minMove: 0.000001,
-      },
       priceScale: {
         title: 'Price',
         position: 'right',
@@ -76,6 +71,11 @@ export default function Analytics() {
           type: 'price',
           price: 1,
         },
+        priceFormat: {
+          type: 'price',
+          precision: 3,
+          minMove: 0.001,
+        },
       },
     },
   };
@@ -96,10 +96,21 @@ export default function Analytics() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const getDateRange = () => {
+    const dateOffset = (24 * 60 * 60 * 1000) * 4;
+    const todayTimestamp = new Date();
+    const threeDaysBefore = new Date(todayTimestamp.getTime() - dateOffset);
+    const from = threeDaysBefore.getTime() / 1000;
+    const to = todayTimestamp.getTime() / 1000;
+    return { from, to };
+  };
+
+  const { from, to } = getDateRange();
+
   return (
     <>
       <ContentSection id="analytics" title="Analytics">
-        {chartData[0].data?.length > 1 ? (<BaseChart options={state.options} baselineSeries={chartData} autoWidth height={320} />) : <>...loading</>}
+        {chartData[0].data?.length > 1 ? (<BaseChart options={state.options} from={from} to={to} baselineSeries={chartData} autoWidth height={300} />) : <>...loading</>}
         <Balances />
         <Charts />
         <Seasons />

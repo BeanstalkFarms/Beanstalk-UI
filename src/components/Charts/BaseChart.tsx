@@ -209,8 +209,8 @@ const BaseChart = (props) => {
   };
 
   const handleTimeRange = () => {
-    // from && to && chart?.timeScale().setVisibleRange({ from, to });
-    chart?.timeScale().fitContent();
+    from && to && chart?.timeScale().setVisibleRange({ from, to });
+    // chart?.timeScale().fitContent();
   };
 
   const handleUpdateChart = () => {
