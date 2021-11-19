@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BaseModule, ContentSection } from 'components/Common';
+import { BaseModule, chartStrings, ContentSection } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
@@ -35,9 +35,9 @@ export default function Charts(props) {
   }, []);
   const titles = ['Bean', 'Field', 'Silo'];
   const descriptions = [
-    'Use this tab to view charts with information about the BEAN token.',
-    'Use this tab to view charts with information about the Field.',
-    'Use this tab to view charts with information about the Silo.',
+    chartStrings.bean,
+    chartStrings.field,
+    chartStrings.silo,
   ];
 
   const sections = [

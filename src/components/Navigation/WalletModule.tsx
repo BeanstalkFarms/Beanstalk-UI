@@ -35,8 +35,8 @@ import {
   SiloAsset,
   TokenTypeImageModule,
   TransitAsset,
-  walletDescriptions,
   walletStrings,
+  walletTopStrings,
 } from 'components/Common';
 import BalanceModule from 'components/Balances/BalanceModule';
 
@@ -686,8 +686,8 @@ export default function WalletModule(props) {
   const myBalancesSection = (
     <>
       <BalanceModule
-        description={walletDescriptions}
-        strings={walletStrings}
+        description={walletStrings}
+        strings={walletTopStrings}
         topLeft={userBalanceInDollars}
         topRight={stalkBalance.dividedBy(totalStalk).multipliedBy(100)}
         beanReserveTotal={new BigNumber(0)}

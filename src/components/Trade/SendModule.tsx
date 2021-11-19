@@ -7,6 +7,7 @@ import {
   AddressInputField,
   CryptoAsset,
   TokenInputField,
+  tradeStrings,
   TransactionDetailsModule,
 } from 'components/Common';
 
@@ -122,8 +123,7 @@ export default function SendModule(props) {
         <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
           <span>
-            WARNING: You are sending Beans to another wallet and will no longer
-            own them.
+            {tradeStrings.sendWarning}
           </span>
         </Box>
       </>

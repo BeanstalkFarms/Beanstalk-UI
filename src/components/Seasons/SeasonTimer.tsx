@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeaderLabelWithTimer } from 'components/Common';
+import { HeaderLabelWithTimer, seasonStrings } from 'components/Common';
 import { timeToString, timeToStringDetailed } from 'util/index';
 
 export default function SeasonTimer(props) {
@@ -10,13 +10,11 @@ export default function SeasonTimer(props) {
     if (time <= 0) {
       timeDifference = -time;
       title = 'Sunrise Overdue By';
-      description =
-        'This is the time elapsed since the Sunrise function could be called.';
+      description = seasonStrings.sunriseOverdue;
     } else {
       timeDifference = time;
       title = 'Next Sunrise';
-      description =
-        'This is the time until the next Sunrise function can be called at the top of the hour.';
+      description = seasonStrings.nextSunrise;
     }
 
     return [

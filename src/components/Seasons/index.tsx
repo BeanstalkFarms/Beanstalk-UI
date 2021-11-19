@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import sunriseIcon from 'img/black-sun.svg';
 import { sunrise, chainId } from 'util/index';
-
 import {
   ContentSection,
   Grid,
   HeaderLabel,
+  seasonStrings,
   SingleButton,
 } from 'components/Common';
 import PegMaintenance from './PegMaintenance';
@@ -37,7 +37,7 @@ export default function Seasons() {
   const advanceButton =
     time <= 0 && chainId === 3 ? (
       <SingleButton
-        description="Advance the Season by calling the Sunrise function"
+        description={seasonStrings.advance}
         handleClick={() => {
           sunrise();
         }}
@@ -61,13 +61,6 @@ export default function Seasons() {
       </Grid>
     ) : null;
 
-  const seasonDescription = `
-    Seasons are the timekeeping mechanism of Beanstalk. Every Season is
-    approximately 1 hour. Each Season begins when the Sunrise function is
-    called on the Ethereum blockchain. The Sunrise function can be called by
-    anyone at the top of each hour.
-    `;
-
   return (
     <ContentSection id="seasons" title="Seasons" size="20px">
       <Grid container item xs={12} spacing={3} justifyContent="center">
@@ -79,7 +72,7 @@ export default function Seasons() {
           style={{ maxWidth: '300px', padding: '12px' }}
         >
           <HeaderLabel
-            description={seasonDescription}
+            description={seasonStrings.season}
             title="Current Season"
             value={season.isNegative() ? '---' : String(season)}
           />

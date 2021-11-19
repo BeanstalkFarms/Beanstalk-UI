@@ -13,10 +13,10 @@ import {
   CryptoAsset,
   Grid,
   Line,
-  totalDescriptions,
   totalStrings,
-  walletDescriptions,
+  totalTopStrings,
   walletStrings,
+  walletTopStrings,
 } from '../Common';
 import ClaimBalance from './ClaimBalance';
 import ClaimButton from './ClaimButton';
@@ -249,8 +249,8 @@ export default function Balances() {
   const myBalancesSection = (
     <>
       <BalanceModule
-        description={walletDescriptions}
-        strings={walletStrings}
+        description={walletStrings}
+        strings={walletTopStrings}
         topLeft={userBalanceInDollars}
         topRight={rootsBalance.dividedBy(totalRoots).multipliedBy(100)}
         beanLPTotal={userBeansAndEth}
@@ -283,8 +283,8 @@ export default function Balances() {
   const totalBalancesSection = (
     <>
       <BalanceModule
-        description={totalDescriptions}
-        strings={totalStrings}
+        description={totalStrings}
+        strings={totalTopStrings}
         beanBalance={
           totalBeans.isGreaterThan(0)
             ? totalBeans

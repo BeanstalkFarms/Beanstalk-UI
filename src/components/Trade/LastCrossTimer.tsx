@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { HeaderLabelWithTimer } from 'components/Common';
+import { HeaderLabelWithTimer, tradeStrings } from 'components/Common';
 import { timeToString, timeToStringDetailed } from 'util/index';
 
 export default function LastCrossTimer(props) {
@@ -24,7 +24,7 @@ export default function LastCrossTimer(props) {
   const display = (_time) => [
     'Time Since $1 Crossed',
     _time === 0 ? '-' : timeToString(_time),
-    'This is the time elapsed since the price last crossed the peg.',
+    tradeStrings.timeSinceCross,
     _time === 0 ? '-' : timeToStringDetailed(_time),
   ];
 

@@ -6,6 +6,7 @@ import {
   hourBeanQuery,
 } from 'graph/index';
 import useIsMounted from 'util/hooks/isMounted';
+import { beanChartStrings } from 'components/Common';
 import Charts from './Charts';
 
 export default function BeanCharts() {
@@ -23,7 +24,7 @@ export default function BeanCharts() {
   const charts = [
     {
       title: 'Price',
-      description: 'This is the current price at the end of every hour/day.',
+      description: beanChartStrings.price,
       data: chartData.price,
       props: {
         unit: '$',
@@ -32,34 +33,29 @@ export default function BeanCharts() {
     {
       title: 'Volume',
       shortTitle: 'Vol.',
-      description:
-        'This is the USD volume in the BEAN:ETH pool at the end of every hour/day.',
+      description: beanChartStrings.volume,
       data: chartData.volume,
     },
     {
       title: 'Liquidity',
       shortTitle: 'Liq.',
-      description:
-        'This is the USD value of the BEAN:ETH pool at the end of every hour/day.',
+      description: beanChartStrings.liquidity,
       data: chartData.liquidity,
     },
     {
       title: 'Market Cap',
       shortTitle: 'M. Cap',
-      description:
-        'This is the USD value of the total Bean supply at the end of every hour/day.',
+      description: beanChartStrings.marketcap,
       data: chartData.marketCap,
     },
     {
       title: 'Supply',
-      description:
-        'This is the total Bean supply at the end of every hour/day.',
+      description: beanChartStrings.supply,
       data: chartData.supply,
     },
     {
       title: 'Crosses',
-      description:
-        'This is the total number of times that the price of Bean has crossed its peg at the end of every hour/day.',
+      description: beanChartStrings.crosses,
       data: chartData.crosses,
     },
   ];

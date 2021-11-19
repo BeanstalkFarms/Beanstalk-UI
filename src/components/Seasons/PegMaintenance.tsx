@@ -24,8 +24,6 @@ import {
   QuestionModule,
 } from 'components/Common';
 
-// const cases = [3,1,0,0,-1,-3,-3,0,3,1,0,0,-1,-3,-3,0,3,3,1,0,0,0,-1,0,3,3,1,0,1,0,-1,0]
-
 const gridStyle = {
   backgroundColor: theme.module.foreground,
   borderRadius: '25px',

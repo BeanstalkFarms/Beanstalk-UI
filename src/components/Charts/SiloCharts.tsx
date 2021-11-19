@@ -1,5 +1,10 @@
 import React from 'react';
-import { TabImageModule, SiloAsset, TransitAsset } from 'components/Common';
+import {
+  SiloAsset,
+  siloChartStrings,
+  TabImageModule,
+  TransitAsset,
+} from 'components/Common';
 import Charts from './Charts';
 
 export default function SiloCharts(props) {
@@ -8,7 +13,7 @@ export default function SiloCharts(props) {
       tabTitle: (
         <TabImageModule
           token={SiloAsset.Bean}
-          description="This is the current total Deposited Beans by Season."
+          description={siloChartStrings.depositedBeans}
         />
       ),
       title: 'Deposited Beans',
@@ -19,7 +24,7 @@ export default function SiloCharts(props) {
       tabTitle: (
         <TabImageModule
           token={TransitAsset.Bean}
-          description="This is the current total Withdrawn Beans by Season."
+          description={siloChartStrings.withdrawnBeans}
         />
       ),
       data: [props.data.map((d) => ({ x: d.x, y: d.withdrawnBeans }))],
@@ -29,7 +34,7 @@ export default function SiloCharts(props) {
       tabTitle: (
         <TabImageModule
           token={SiloAsset.LP}
-          description="This is the current total Deposited LP Tokens by Season."
+          description={siloChartStrings.depositedLP}
         />
       ),
       data: [props.data.map((d) => ({ x: d.x, y: d.depositedLP }))],
@@ -39,7 +44,7 @@ export default function SiloCharts(props) {
       tabTitle: (
         <TabImageModule
           token={TransitAsset.LP}
-          description="This is the current total Withdrawn LP Tokens by Season."
+          description={siloChartStrings.withdrawnLP}
         />
       ),
       data: [props.data.map((d) => ({ x: d.x, y: d.withdrawnLP }))],
@@ -49,7 +54,7 @@ export default function SiloCharts(props) {
       tabTitle: (
         <TabImageModule
           token={SiloAsset.Stalk}
-          description="This is the current total Stalk by Season."
+          description={siloChartStrings.stalk}
         />
       ),
       data: [props.data.map((d) => ({ x: d.x, y: d.stalk }))],
@@ -59,7 +64,7 @@ export default function SiloCharts(props) {
       tabTitle: (
         <TabImageModule
           token={SiloAsset.Seed}
-          description="This is the current total Seeds by Season."
+          description={siloChartStrings.seeds}
         />
       ),
       data: [props.data.map((d) => ({ x: d.x, y: d.seeds }))],

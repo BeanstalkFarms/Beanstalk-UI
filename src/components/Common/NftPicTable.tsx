@@ -13,7 +13,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from 'constants/index';
 import { mintNFT } from 'util/index';
-import { SingleButton } from './index';
+import { beanftStrings, SingleButton } from './index';
 
 const useStyles = makeStyles({
   table: {
@@ -48,7 +48,7 @@ const BasicTable = (props) => {
         <SingleButton
           backgroundColor="#3B3B3B"
           color="white"
-          description="Use this button to Mint only the individual BeaNFT currently being displayed."
+          description={beanftStrings.singleMint}
           fontSize="15px"
           handleClick={() => {
             const nft = props.nftList[i];
