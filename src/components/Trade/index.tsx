@@ -44,7 +44,7 @@ export default function Trade() {
         item
         xs={10}
         sm={8}
-        style={{ maxWidth: '500px', minHeight: '545px' }}
+        style={{ maxWidth: '500px', minHeight: '645px' }}
       >
         <TradeModule />
       </Grid>

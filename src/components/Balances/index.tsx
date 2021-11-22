@@ -331,7 +331,7 @@ export default function Balances() {
       id="balances"
       title="Balances"
       size="20px"
-      style={{ paddingTop: '60px' }}
+      style={{ paddingTop: '30px' }}
     >
       <Box className="BalanceSection-mobile">
         <BaseModule

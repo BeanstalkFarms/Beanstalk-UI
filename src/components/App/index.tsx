@@ -9,6 +9,7 @@ import { AppState } from 'state';
 import About from 'components/About';
 import Analytics from 'components/Analytics';
 import Field from 'components/Field';
+import Fundraiser from 'components/Fundraiser';
 import { NavigationBar } from 'components/Navigation';
 import NFTs from 'components/NFT';
 import Silo from 'components/Silo';
@@ -50,6 +51,9 @@ export default function App() {
           </Route>
           <Route exact path="/analytics">
             <Analytics />
+          </Route>
+          <Route exact path="/fundraiser">
+            <Fundraiser />
           </Route>
           <Route exact path="/dao">
             <Governance />

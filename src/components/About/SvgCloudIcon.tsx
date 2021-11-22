@@ -2,8 +2,9 @@ import React from 'react';
 import { theme } from 'constants/index';
 
 export const SvgCloudIcon = ({
-  height = '200px',
-  width = '200px',
+
+  height = window.innerWidth > 600 ? '200px' : '150px',
+  width = window.innerWidth > 600 ? '200px' : '150px',
   text = '',
   ...props
 }: React.SVGProps<SVGSVGElement>) => (
@@ -13,6 +14,7 @@ export const SvgCloudIcon = ({
     height={height}
     viewBox="0 0 420 450"
     fill="none"
+    preserveAspectRatio="none"
     {...props}
   >
     <path
