@@ -46,10 +46,14 @@ export default function Fundraiser(props) {
       );
     })
   );
+  const activeFundraiser = false;
 
-  return (
-    <ContentSection id="fund" title="Fundraiser" description={fundraiserStrings.fundsDescription}>
-      {funds}
-    </ContentSection>
-  );
+  if (activeFundraiser) {
+    return (
+      <ContentSection id="fund" title="Fundraiser" description={fundraiserStrings.fundsDescription}>
+        {funds}
+      </ContentSection>
+    );
+  }
+  return null;
 }

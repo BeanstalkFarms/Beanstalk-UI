@@ -35,10 +35,6 @@ const defaultNavMapping = [
     title: 'ANALYTICS',
   },
   {
-    path: 'fundraiser',
-    title: 'FUNDRAISER',
-  },
-  {
     path: 'dao',
     title: 'DAO',
   },
@@ -122,10 +118,26 @@ export default function NavigationBar(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const activeBips = bips[bips.length - 1].active;
+  let hasActiveBIP = false;
+  try {
+    hasActiveBIP = bips[bips.length - 1].active;
+  } catch (error) {
+    return false;
+  }
+
+  // temporary fix/hide for WIP Fundraiser page
+
+  const navMapping = [...defaultNavMapping];
+  const hasActiveFundraiser = false;
+  if (hasActiveFundraiser) {
+    navMapping.splice(3, 0, {
+      path: 'fundraiser',
+      title: 'FUNDRAISER',
+    });
+  }
 
   const linkItemStyle = (path) => {
-    if ((path === 'dao' && activeBips !== undefined) || path === 'fundraiser') {
+    if ((path === 'dao' && hasActiveBIP !== false) || path === 'fundraiser') {
       return { color: theme.activeSection };
     }
     return null;
@@ -172,7 +184,7 @@ export default function NavigationBar(props) {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow">
-                  {defaultNavMapping.map(({ title, path }) => (
+                  {navMapping.map(({ title, path }) => (
                     <MenuItem
                       key={path}
                       button
@@ -204,7 +216,7 @@ export default function NavigationBar(props) {
       aria-labelledby="main navigation"
       className="NavigationBar"
     >
-      {defaultNavMapping.map(({ title, path }) => (
+      {navMapping.map(({ title, path }) => (
         <ListItem
           key={path}
           button
