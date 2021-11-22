@@ -15,6 +15,7 @@ import SiloIcon from 'img/silo-icon.svg';
 import StalkLogo from 'img/stalk-logo.svg';
 import TransitIcon from 'img/transit-icon.svg';
 import UniswapIcon from 'img/uniswap-icon.svg';
+import USDCLogo from 'img/usdc-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
 import { account, txCallback, tokenContract } from './index';
 
@@ -25,31 +26,32 @@ export enum CryptoAsset {
   Bean = 0,
   Ethereum,
   LP,
+  USDC,
 }
 export enum SiloAsset {
-  Stalk = 3,
+  Stalk = 4,
   Seed,
   Bean,
   LP,
 }
 export enum TransitAsset {
-  Bean = 7,
+  Bean = 8,
   LP,
 }
 export enum FarmAsset {
-  Pods = 9,
+  Pods = 10,
 }
 export enum ClaimableAsset {
-  Bean = 10,
+  Bean = 11,
   LP,
   Ethereum,
   Stalk,
 }
 export enum UniswapAsset {
-  Bean = 14,
+  Bean = 15,
 }
 export enum BudgetAsset {
-  Bean = 15,
+  Bean = 16,
 }
 export type Token =
   | CryptoAsset
@@ -118,6 +120,8 @@ export function TokenLabel(tokenType: Token): string {
       return 'ETH';
     case CryptoAsset.LP:
       return 'LP';
+    case CryptoAsset.USDC:
+      return 'USDC';
     case SiloAsset.Stalk:
       return 'Stalk';
     case SiloAsset.Seed:
@@ -178,18 +182,21 @@ export function TokenImage(tokenType: Token): string {
 
     case FarmAsset.Pods:
       return PodLogo;
+
+    case CryptoAsset.USDC:
+      return USDCLogo;
     default:
       return '';
   }
 }
 
 export function TokenTypeImage(tokenType: Token): string {
-  if (tokenType < 5 || tokenType === 9) return null;
-  if (tokenType < 7) return SiloIcon;
-  if (tokenType < 9) return TransitIcon;
-  if (tokenType < 14) return ClaimableIcon;
-  if (tokenType < 15) return UniswapIcon;
-  if (tokenType < 16) return BudgetIcon;
+  if (tokenType < 6 || tokenType === 10) return null;
+  if (tokenType < 8) return SiloIcon;
+  if (tokenType < 10) return TransitIcon;
+  if (tokenType < 15) return ClaimableIcon;
+  if (tokenType < 16) return UniswapIcon;
+  if (tokenType < 17) return BudgetIcon;
 }
 
 export function TrimBN(bn: BigNumber, decimals: number): BigNumber {

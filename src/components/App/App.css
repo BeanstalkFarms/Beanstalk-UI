@@ -116,6 +116,9 @@
 .svg[name="fall"] {
   filter: invert(72%) sepia(52%) saturate(2707%) hue-rotate(336deg) brightness(85%) contrast(90%); /* fall color */
 }
+.svg[name="ropsten"] {
+  filter: invert(62%) sepia(71%) saturate(5742%) hue-rotate(312deg) brightness(103%) contrast(101%);
+}
 
 @media (prefers-reduced-motion: no-preference) {
   /* .App-logo {

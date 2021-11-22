@@ -20,7 +20,6 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AppState } from 'state';
-import { chainId } from 'util/index';
 import { priceQuery } from 'graph/index';
 import { theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
@@ -55,6 +54,10 @@ export default function NavigationBar(props) {
     (state) => state.prices
   );
 
+  const { bips } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+
   const classes = makeStyles({
     fixedNav: {
       zIndex: '10000',
@@ -77,25 +80,19 @@ export default function NavigationBar(props) {
       color: 'black',
       fontFamily: 'Futura-PT-Book',
       fontSize: '15px',
-      margin: '4px',
+      margin: '8px 4px',
       padding: '0px !important',
       textDecoration: 'none',
       // textTransform: 'uppercase'
     },
     linkPadding: {
       borderRadius: '16px',
-      padding: '12px 18px',
+      padding: '8px 8px',
       color: 'black',
       textDecoration: 'none',
     },
     activeLinkText: {
       backgroundColor: theme.navSelection,
-    },
-    activeAboutLinkText: {
-      backgroundColor: theme.navSelection,
-      borderRadius: '16px',
-      padding: '12px 18px',
-      textDecoration: 'none',
     },
     currentPriceStyle: {
       color: 'black',
@@ -121,9 +118,26 @@ export default function NavigationBar(props) {
   const handleClose = () => {
     setOpen(false);
   };
+  let hasActiveBIP = false;
+  try {
+    hasActiveBIP = bips[bips.length - 1].active;
+  } catch (error) {
+    return false;
+  }
+
+  // temporary fix/hide for WIP Fundraiser page
+
+  const navMapping = [...defaultNavMapping];
+  const hasActiveFundraiser = false;
+  if (hasActiveFundraiser) {
+    navMapping.splice(3, 0, {
+      path: 'fundraiser',
+      title: 'FUNDRAISER',
+    });
+  }
 
   const linkItemStyle = (path) => {
-    if (path === 'governance') {
+    if ((path === 'dao' && hasActiveBIP !== false) || path === 'fundraiser') {
       return { color: theme.activeSection };
     }
     return null;
@@ -170,7 +184,7 @@ export default function NavigationBar(props) {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow">
-                  {defaultNavMapping.map(({ title, path }) => (
+                  {navMapping.map(({ title, path }) => (
                     <MenuItem
                       key={path}
                       button
@@ -181,6 +195,7 @@ export default function NavigationBar(props) {
                         to={path}
                         activeClassName={classes.activeLinkText}
                         className={classes.linkPadding}
+                        style={linkItemStyle(path)}
                       >
                         {title}
                       </NavLink>
@@ -201,7 +216,7 @@ export default function NavigationBar(props) {
       aria-labelledby="main navigation"
       className="NavigationBar"
     >
-      {defaultNavMapping.map(({ title, path }) => (
+      {navMapping.map(({ title, path }) => (
         <ListItem
           key={path}
           button
@@ -214,6 +229,7 @@ export default function NavigationBar(props) {
             className={classes.linkPadding}
             spy="true"
             smooth="true"
+            style={linkItemStyle(path)}
           >
             {title}
           </NavLink>
@@ -226,14 +242,6 @@ export default function NavigationBar(props) {
       ) : null}
     </List>
   );
-
-  const beanLogoFilter =
-    chainId === 3
-      ? {
-          filter:
-            'invert(62%) sepia(71%) saturate(5742%) hue-rotate(312deg) brightness(103%) contrast(101%)',
-        }
-      : null;
 
   let currentBeanPrice = null;
   if (beanPrice !== undefined && beanPrice > 0) {
@@ -253,7 +261,6 @@ export default function NavigationBar(props) {
       <img
         className="svg"
         name={theme.name}
-        style={beanLogoFilter}
         height="36px"
         src={BeanLogo}
         alt="bean.money"

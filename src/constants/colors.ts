@@ -67,7 +67,7 @@ export const spookyTheme = {
   secondary: '#FF7F00',
   linkColor: '#9F9F9F',
   footer: '#FF7F00',
-  voteSelect: '#091F35',
+  voteSelect: '#B4DCEA',
   // menuColor: '#FFDDAD',
   module: {
     foreground: '#B4DCEA',
@@ -91,6 +91,7 @@ export const fallTheme = {
   name: 'fall',
   text: 'black',
   backgroundText: 'black',
+  bodyBackground: '#FFF3D1',
   primary: '#E9983C',
   accentColor: '#815925',
   accentText: '#FFFFFF',

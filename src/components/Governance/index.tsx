@@ -2,8 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, Box } from '@material-ui/core';
 import { AppState } from 'state';
-import { ContentSection, Grid, governanceStrings } from 'components/Common';
-import { WHITEPAPER } from 'constants/index';
+import { ContentSection, governanceStrings, Grid } from 'components/Common';
+import { theme, WHITEPAPER } from 'constants/index';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
 
@@ -70,7 +70,7 @@ export default function Governance() {
   const description = (
     <>
       {governanceStrings.governanceDescription}{' '}
-      <Link href={`${WHITEPAPER}#governance`} target="blank">
+      <Link href={`${WHITEPAPER}#governance`} target="blank" style={{ color: theme.backgroundText }}>
         Read More
       </Link>
       .
