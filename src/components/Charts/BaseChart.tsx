@@ -10,7 +10,6 @@ import { Button } from '@material-ui/core';
 import { theme } from '../../constants';
 
 const BaseChart = (props) => {
-  console.log(props);
   const {
     autoWidth,
     autoHeight,
@@ -36,8 +35,7 @@ const BaseChart = (props) => {
   const prevProps = usePrevious(props);
   const chartDiv = React.useRef<any>();
   const [series, setSeries] = React.useState<any>([]);
-  let chart: IChartApi;
-
+  const [chart, setChart] = React.useState<IChartApi>();
   const { customDarkTheme, lightTheme } = backgroundTheme;
 
   const addSeriesFunctions = {
@@ -166,20 +164,17 @@ const BaseChart = (props) => {
   };
 
   const handleTimeRange = () => {
-    console.log('handle from to', from, to, fitAll);
-    const visibleRange = chart?.timeScale().getVisibleRange();
-    console.log(visibleRange);
-
-    function onIndexRangeChanged(newRange) {
-      console.log('newRange', newRange);
+    if (from && to && chart) {
+      if (fitAll) {
+        chart.timeScale().resetTimeScale();
+        chart.timeScale().fitContent();
+      } else {
+        chart.timeScale().setVisibleRange({ from, to });
+      }
     }
-    fitAll ? chart?.timeScale().fitContent() :
-    from && to && chart?.timeScale().setVisibleRange({ from, to });
-    chart?.timeScale().subscribeVisibleTimeRangeChange(onIndexRangeChanged);
   };
 
   const handleUpdateChart = () => {
-    window.removeEventListener('resize', resizeHandler);
     let customOptions = darkTheme ? customDarkTheme : lightTheme;
 
     customOptions = mergeDeep(customOptions, {
@@ -205,59 +200,84 @@ const BaseChart = (props) => {
   };
 
   React.useEffect(() => {
-    chart = createChart(chartDiv.current);
-    handleUpdateChart();
-    resizeHandler();
+    const newChart = createChart(chartDiv.current);
+    setChart(newChart);
   }, []);
 
   React.useEffect(() => {
-    // ComponentDidUpdate
-    if (!autoWidth && !autoHeight) { window.removeEventListener('resize', resizeHandler); }
-    if (prevProps) {
-      if (
-        !equal(
-          [
-            prevProps.onCrosshairMove,
-            prevProps.onTimeRangeMove,
-            prevProps.onClick,
-          ],
-          [
-            onCrosshairMove,
-            onTimeRangeMove,
-            onClick,
-          ]
-        )
-      ) { unsubscribeEvents(prevProps); }
-      if (
-        !equal(
-          [
-            prevProps.options,
-            prevProps.darkTheme,
-            prevProps.candlestickSeries,
-            prevProps.lineSeries,
-            prevProps.areaSeries,
-            prevProps.barSeries,
-            prevProps.histogramSeries,
-          ],
-          [
-            options,
-            darkTheme,
-            candlestickSeries,
-            lineSeries,
-            areaSeries,
-            barSeries,
-            histogramSeries,
-          ]
-        )
-      ) {
-        // removeSeries();
-        handleUpdateChart();
-      } else if (prevProps.from !== from || prevProps.to !== to) {
-        console.log('here', prevProps.from, from, prevProps.to, to);
-        handleTimeRange();
-      }
+    if (chart) {
+      handleUpdateChart();
+      resizeHandler();
     }
-  }, [prevProps]);
+  }, [chart]);
+
+  React.useEffect(() => {
+    !autoWidth && !autoHeight &&
+      window.removeEventListener('resize', resizeHandler);
+  }, [autoWidth, autoHeight]);
+
+  React.useEffect(() => {
+    prevProps && !equal(
+      [
+        prevProps.onCrosshairMove,
+        prevProps.onTimeRangeMove,
+        prevProps.onClick,
+      ],
+      [
+        onCrosshairMove,
+        onTimeRangeMove,
+        onClick,
+      ]
+    ) && unsubscribeEvents(prevProps);
+  }, [prevProps?.onCrosshairMove, prevProps?.onClick, prevProps?.onTimeRangeMove, onCrosshairMove, onTimeRangeMove, onClick]);
+
+  React.useEffect(() => {
+    if (
+      prevProps && !equal(
+        [
+          prevProps.options,
+          prevProps.darkTheme,
+          prevProps.candlestickSeries,
+          prevProps.lineSeries,
+          prevProps.areaSeries,
+          prevProps.barSeries,
+          prevProps.histogramSeries,
+        ],
+        [
+          options,
+          darkTheme,
+          candlestickSeries,
+          lineSeries,
+          areaSeries,
+          barSeries,
+          histogramSeries,
+        ]
+      )
+    ) {
+      handleUpdateChart();
+    }
+  }, [
+    prevProps?.options,
+    prevProps?.darkTheme,
+    prevProps?.candlestickSeries,
+    prevProps?.lineSeries,
+    prevProps?.areaSeries,
+    prevProps?.barSeries,
+    prevProps?.histogramSeries,
+    options,
+    darkTheme,
+    candlestickSeries,
+    lineSeries,
+    areaSeries,
+    barSeries,
+    histogramSeries]);
+
+  React.useEffect(() => {
+    if (!prevProps) return;
+    if (prevProps.from !== from || prevProps.to !== to) {
+      handleTimeRange();
+    }
+  }, [prevProps?.from, prevProps?.to, from, to]);
 
   return (
     <div ref={chartDiv} style={{ position: 'relative' }} />
@@ -266,7 +286,7 @@ const BaseChart = (props) => {
 
 const ChartWrapper = (props) => {
   const [from, setFrom] = React.useState<number>();
-  const [all, setAll] = React.useState<boolean>(false);
+  const [fitAll, setFitAll] = React.useState<boolean>(false);
 
   const sectionTitles = ['Chart'];
 
@@ -321,9 +341,15 @@ const ChartWrapper = (props) => {
     },
   })();
 
-  const setDateRange = (daysToSubtract: number): void => {
-    const dateOffset = (24 * 60 * 60 * 1000) * daysToSubtract;
-    setFrom(new Date(new Date().getTime() - dateOffset).getTime() / 1000);
+  const setDateRange = (daysToSubtract: number | string): void => {
+    if (daysToSubtract === 'all') {
+      setFitAll(true);
+    } else {
+      setFitAll(false);
+      const dateOffset = (24 * 60 * 60 * 1000) * daysToSubtract;
+      const newFrom = new Date(new Date().getTime() - dateOffset).getTime() / 1000;
+      setFrom(newFrom);
+    }
   };
 
   const timeRangeSelectButtons = () => {
@@ -340,6 +366,10 @@ const ChartWrapper = (props) => {
         label: '1m',
         value: 30,
       },
+      {
+        label: 'All Time',
+        value: 'all',
+      },
     ];
     return (
       <>
@@ -347,17 +377,12 @@ const ChartWrapper = (props) => {
           <Button
             className={classes.timeRangeBtn}
             key={button.value}
-            onClick={() => setDateRange(button.value)}
+            onClick={() => {
+              setDateRange(button.value);
+            }}
           >
             {button.label}
           </Button>))}
-        <Button
-          className={classes.timeRangeBtn}
-          key="All"
-          onClick={() => setAll(!all)}
-        >
-          All
-        </Button>
       </>
     );
   };
@@ -366,7 +391,7 @@ const ChartWrapper = (props) => {
     setDateRange(4);
   }, []);
 
-  const to = new Date().getTime() / 1000;
+  const to = new Date().getTime() / 1000; // current timestamp
 
   return (
     <BaseModule
@@ -374,7 +399,7 @@ const ChartWrapper = (props) => {
       sectionTitles={sectionTitles}
       showButton={false}
     >
-      <BaseChart {...props} from={from} to={to} fitAll={all} colors={colors} backgroundTheme={{ customDarkTheme, lightTheme }} />
+      <BaseChart {...props} from={from} to={to} fitAll={fitAll} colors={colors} backgroundTheme={{ customDarkTheme, lightTheme }} />
       {timeRangeSelectButtons()}
     </BaseModule>
   );
