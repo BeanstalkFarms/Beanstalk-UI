@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, CircularProgress, Typography } from '@material-ui/core';
-import { FormatTooltip } from '../Common';
+import { FormatTooltip } from 'components/Common';
 
 export default function CircularProgressWithLabel(props) {
   const showBlip =

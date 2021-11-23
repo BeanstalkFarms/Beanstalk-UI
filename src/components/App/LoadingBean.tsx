@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React from 'react';
 import { Box } from '@material-ui/core';
-import BeanLogo from '../../img/bean-logo.svg';
+import BeanLogo from 'img/bean-logo.svg';
+import { theme } from 'constants/index';
 import './index.tsx';
-import { theme } from '../../constants';
 
 export default function LoadingBean() {
   const { innerHeight: height } = window;

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { MEDIUM_NFT_LINK, NFT_LINK, OPENSEA_LINK } from '../../constants';
+import { MEDIUM_NFT_LINK, NFT_LINK, OPENSEA_LINK } from 'constants/index';
 import {
   listenForNFTTransfers,
   GetWalletAddress,
   getMintedNFTs,
-} from '../../util';
-
-import { ContentSection } from '../Common';
+} from 'util/index';
+import { beanftStrings, ContentSection } from 'components/Common';
 import ClaimNFT from './claimnft';
 
 export default function NFTs() {
@@ -53,15 +52,6 @@ export default function NFTs() {
     getNFTs();
   }, [season]);
 
-  const description = (
-    <>
-      BeaNFT Genesis Collection is a series of up to 2067 Bean NFTs which could
-      only be minted by participating in Beanstalk during Seasons 1200 – 1800.
-      The top 10 Sows each Season were awarded a BeaNFT. Check out the full
-      collection on
-    </>
-  );
-
   const descriptionLinks = [
     {
       href: `${OPENSEA_LINK}`,
@@ -79,11 +69,11 @@ export default function NFTs() {
       title="BeaNFTs"
       textTransform="none"
       style={{ minHeight: '100px' }}
-      description={description}
+      description={beanftStrings.beanftDescription}
       descriptionLinks={descriptionLinks}
     >
       <ClaimNFT
-        buttonDescription="Use this button to Mint all your Mintable BeaNFTs."
+        buttonDescription={beanftStrings.mintAll}
         claimTitle="MINT ALL"
         claimedNfts={claimedNFTs}
         nfts={unclaimedNFTs}

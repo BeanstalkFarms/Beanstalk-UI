@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  InputAdornment,
-  TextField,
-} from '@material-ui/core';
+import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import {
-  CryptoAsset,
-  displayBN,
-  displayFullBN,
-  TokenLabel,
-} from '../../util';
+import { CryptoAsset, displayBN, displayFullBN, TokenLabel } from 'util/index';
+import { theme } from 'constants/index';
 import { FormatTooltip, TokenTypeImageModule } from './index';
-import { theme } from '../../constants';
 
 export default function TokenInputField(props) {
   const [displayValue, setDisplayValue] = useState('');
@@ -83,9 +73,10 @@ export default function TokenInputField(props) {
     )}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
-  const balanceContent = props.isLP && props.poolForLPRatio !== undefined
-    ? displayLP(props.poolForLPRatio(props.balance))
-    : `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`;
+  const balanceContent =
+    props.isLP && props.poolForLPRatio !== undefined
+      ? displayLP(props.poolForLPRatio(props.balance))
+      : `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`;
 
   const endAdornment = (
     <InputAdornment position="end">

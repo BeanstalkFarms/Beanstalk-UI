@@ -4,36 +4,77 @@ import {
   BEANSTALK,
   UNI_V2_ETH_BEAN_LP,
   UNISWAP_V2_ROUTER,
-} from '../constants';
-import BeanLogo from '../img/bean-logo.svg';
-import ClaimableIcon from '../img/claimable-icon.svg';
-import EthereumLogo from '../img/eth-logo.svg';
-import LPLogo from '../img/lp-logo.svg';
-import PodLogo from '../img/pod-logo.svg';
-import SeedLogo from '../img/seed-logo.svg';
-import SiloIcon from '../img/silo-icon.svg';
-import StalkLogo from '../img/stalk-logo.svg';
-import TransitIcon from '../img/transit-icon.svg';
-import UniswapIcon from '../img/uniswap-icon.svg';
-import BudgetIcon from '../img/treasury-icon.svg';
+} from 'constants/index';
+import BeanLogo from 'img/bean-logo.svg';
+import ClaimableIcon from 'img/claimable-icon.svg';
+import EthereumLogo from 'img/eth-logo.svg';
+import LPLogo from 'img/lp-logo.svg';
+import PodLogo from 'img/pod-logo.svg';
+import SeedLogo from 'img/seed-logo.svg';
+import SiloIcon from 'img/silo-icon.svg';
+import StalkLogo from 'img/stalk-logo.svg';
+import TransitIcon from 'img/transit-icon.svg';
+import UniswapIcon from 'img/uniswap-icon.svg';
+import USDCLogo from 'img/usdc-logo.svg';
+import BudgetIcon from 'img/treasury-icon.svg';
 import { account, txCallback, tokenContract } from './index';
 
-const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+const MAX_UINT256 =
+  '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
-export enum CryptoAsset { Bean = 0, Ethereum, LP }
-export enum SiloAsset { Stalk = 3, Seed, Bean, LP }
-export enum TransitAsset { Bean = 7, LP }
-export enum FarmAsset { Pods = 9 }
-export enum ClaimableAsset { Bean = 10, LP, Ethereum, Stalk }
-export enum UniswapAsset { Bean = 14 }
-export enum BudgetAsset { Bean = 15 }
-export type Token = CryptoAsset | SiloAsset | FarmAsset | ClaimableAsset | TransitAsset | UniswapAsset | BudgetAsset
+export enum CryptoAsset {
+  Bean = 0,
+  Ethereum,
+  LP,
+  USDC,
+}
+export enum SiloAsset {
+  Stalk = 4,
+  Seed,
+  Bean,
+  LP,
+}
+export enum TransitAsset {
+  Bean = 8,
+  LP,
+}
+export enum FarmAsset {
+  Pods = 10,
+}
+export enum ClaimableAsset {
+  Bean = 11,
+  LP,
+  Ethereum,
+  Stalk,
+}
+export enum UniswapAsset {
+  Bean = 15,
+}
+export enum BudgetAsset {
+  Bean = 16,
+}
+export type Token =
+  | CryptoAsset
+  | SiloAsset
+  | FarmAsset
+  | ClaimableAsset
+  | TransitAsset
+  | UniswapAsset
+  | BudgetAsset;
 
-export const transferBeans = async (to: string, amount: BigNumber, callback) => {
-  tokenContract(BEAN).transfer(to, amount).then((response) => {
-    callback();
-    response.wait().then(() => { txCallback(); });
-  });
+export const transferBeans = async (
+  to: string,
+  amount: BigNumber,
+  callback
+) => {
+  tokenContract(BEAN)
+    .transfer(to, amount)
+    .then((response) => {
+      callback();
+      response.wait().then(() => {
+        txCallback();
+      });
+    });
 };
 
 export const approveToken = async (
@@ -79,6 +120,8 @@ export function TokenLabel(tokenType: Token): string {
       return 'ETH';
     case CryptoAsset.LP:
       return 'LP';
+    case CryptoAsset.USDC:
+      return 'USDC';
     case SiloAsset.Stalk:
       return 'Stalk';
     case SiloAsset.Seed:
@@ -118,7 +161,7 @@ export function TokenImage(tokenType: Token): string {
     case TransitAsset.Bean:
     case UniswapAsset.Bean:
     case BudgetAsset.Bean:
-        return BeanLogo;
+      return BeanLogo;
 
     case ClaimableAsset.Ethereum:
     case CryptoAsset.Ethereum:
@@ -139,18 +182,21 @@ export function TokenImage(tokenType: Token): string {
 
     case FarmAsset.Pods:
       return PodLogo;
+
+    case CryptoAsset.USDC:
+      return USDCLogo;
     default:
       return '';
   }
 }
 
 export function TokenTypeImage(tokenType: Token): string {
-  if (tokenType < 5 || tokenType === 9) return null;
-  if (tokenType < 7) return SiloIcon;
-  if (tokenType < 9) return TransitIcon;
-  if (tokenType < 14) return ClaimableIcon;
-  if (tokenType < 15) return UniswapIcon;
-  if (tokenType < 16) return BudgetIcon;
+  if (tokenType < 6 || tokenType === 10) return null;
+  if (tokenType < 8) return SiloIcon;
+  if (tokenType < 10) return TransitIcon;
+  if (tokenType < 15) return ClaimableIcon;
+  if (tokenType < 16) return UniswapIcon;
+  if (tokenType < 17) return BudgetIcon;
 }
 
 export function TrimBN(bn: BigNumber, decimals: number): BigNumber {
@@ -175,16 +221,31 @@ export function displayFullBN(bn: BigNumber, maxDecimals: number = 18) {
 }
 
 export function displayBN(bn: BigNumber) {
-  if (bn === undefined || bn.isLessThan(new BigNumber(0))) return '0';
-  if (bn.isEqualTo(0)) return '0';
-  if (bn.isLessThanOrEqualTo(1e-8)) return '<.00000001';
-  if (bn.isLessThanOrEqualTo(1e-3)) return TrimBN(bn, 8).toFixed();
+  if (bn === undefined || bn.isLessThan(new BigNumber(0))) {
+    return '0';
+  }
+  if (bn.isEqualTo(0)) {
+    return '0';
+  }
+  if (bn.isLessThanOrEqualTo(1e-8)) {
+    return '<.00000001';
+  }
+  if (bn.isLessThanOrEqualTo(1e-3)) {
+    return TrimBN(bn, 8).toFixed();
+  }
 
-  if (bn.isGreaterThanOrEqualTo(1e12)) return `${TrimBN(bn.dividedBy(1e12), 4)}T`; /* Trillions */
-  if (bn.isGreaterThanOrEqualTo(1e9)) return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
-  if (bn.isGreaterThanOrEqualTo(1e6)) return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */
-  // if (bn.isGreaterThanOrEqualTo(1e3)) return `${TrimBN(bn.dividedBy(1e3), 2)}K`; /* Thousands */
-  if (bn.isGreaterThanOrEqualTo(1e3)) return `${displayFullBN(bn, 0)}`; /* Small Thousands */
+  if (bn.isGreaterThanOrEqualTo(1e12)) {
+    return `${TrimBN(bn.dividedBy(1e12), 4)}T`; /* Trillions */
+  }
+  if (bn.isGreaterThanOrEqualTo(1e9)) {
+    return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
+  }
+  if (bn.isGreaterThanOrEqualTo(1e6)) {
+    return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */
+  }
+  if (bn.isGreaterThanOrEqualTo(1e3)) {
+    return `${displayFullBN(bn, 0)}`; /* Small Thousands */
+  }
 
   const decimals = bn.isGreaterThan(10) ? 2 : bn.isGreaterThan(1) ? 3 : 4;
   return TrimBN(bn, decimals).toFixed();
@@ -198,9 +259,12 @@ export function smallDecimalPercent(bn: BigNumber) {
 }
 
 export function MinBNs(array): BigNumber {
-  return array.reduce((prev, curr) =>
-    (prev.isLessThanOrEqualTo(curr) ? prev : curr)
-  );
+  return array.reduce((prev, curr) => {
+    if (prev.isLessThanOrEqualTo(curr)) {
+      return prev;
+    }
+    return curr;
+  });
 }
 
 export function MaxBNs(array): BigNumber {

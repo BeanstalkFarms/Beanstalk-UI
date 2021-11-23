@@ -6,13 +6,13 @@ import {
   displayFullBN,
   smallDecimalPercent,
   TokenLabel,
-} from '../../util';
+} from 'util/index';
 import {
   FormatTooltip,
   Grid,
   TokenTypeImageModule,
   QuestionModule,
-} from '../Common';
+} from 'components/Common';
 
 export default function ClaimBalance({
   asset,
@@ -39,9 +39,10 @@ export default function ClaimBalance({
     marginLeft: '0px',
   };
 
-  const displayBalance = balance.isLessThan(0.0001) && token === CryptoAsset.Ethereum ?
-    smallDecimalPercent(balance)
-    : displayBN(balance);
+  const displayBalance =
+    balance.isLessThan(0.001) && token === CryptoAsset.Ethereum
+      ? smallDecimalPercent(balance)
+      : displayBN(balance);
 
   if (balance.isGreaterThan(0)) {
     return (
@@ -61,12 +62,15 @@ export default function ClaimBalance({
             <FormatTooltip
               margin="0 0 6px 10px"
               placement="top-start"
-              title={`${displayFullBN(balance)} ${asset !== undefined ? TokenLabel(asset) : title}`}
+              title={`${displayFullBN(balance)} ${
+                asset !== undefined ? TokenLabel(asset) : title
+              }`}
             >
-              <Box className="claimTextField-content" style={{ margin: '0 0 0 5px' }}>
-                <h5 style={style}>
-                  {displayBalance}
-                </h5>
+              <Box
+                className="claimTextField-content"
+                style={{ margin: '0 0 0 5px' }}
+              >
+                <h5 style={style}>{displayBalance}</h5>
                 <TokenTypeImageModule
                   style={imageStyle}
                   token={token}
@@ -79,6 +83,7 @@ export default function ClaimBalance({
       </Grid>
     );
   }
+  return null;
 }
 
 ClaimBalance.defaultProps = {

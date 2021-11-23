@@ -5,15 +5,20 @@ import { IconButton, Box } from '@material-ui/core';
 import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, BEAN_TO_STALK } from '../../constants';
-import { approveBeanstalkBean, SwapMode, poolForLP } from '../../util';
-import { BaseModule, ListTable, SiloAsset, TransitAsset } from '../Common';
+import { BASE_SLIPPAGE, BEAN_TO_STALK, zeroBN } from 'constants/index';
+import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
+import {
+  BaseModule,
+  ListTable,
+  SiloAsset,
+  siloStrings,
+  TransitAsset,
+} from 'components/Common';
 import { BeanClaimModule } from './BeanClaimModule';
 import { BeanDepositModule } from './BeanDepositModule';
 import { BeanWithdrawModule } from './BeanWithdrawModule';
 
 export default function SiloBeanModule() {
-  const zeroBN = new BigNumber(-1);
   const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -79,12 +84,12 @@ export default function SiloBeanModule() {
 
   const sectionTitles = ['Deposit', 'Withdraw'];
   const sectionTitlesDescription = [
-    'Use this sub-tab to deposit Beans to the Silo. You can toggle the settings to deposit from Beans, ETH, or both.',
-    'Use this sub-tab to withdraw Beans from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
+    siloStrings.beanDeposit,
+    siloStrings.beanWithdraw,
   ];
   const sectionTitlesInfoDescription = [
-    'View all your current Bean Deposits in this table.',
-    'View all your current Bean Withdrawals in this table.',
+    siloStrings.beanDepositsTable,
+    siloStrings.beanWithdrawalsTable,
   ];
 
   const handleTabChange = (event, newSection) => {
@@ -142,12 +147,22 @@ export default function SiloBeanModule() {
     ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
 
+  const beanClaimable = beanReceivableBalance
+    .plus(harvestablePodBalance)
+    .plus(poolForLPRatio(lpReceivableBalance)[0]);
+
+  const ethClaimable = claimableEthBalance.plus(
+    poolForLPRatio(lpReceivableBalance)[1]
+  );
+
   const sections = [
     <BeanDepositModule
       key={0}
       beanBalance={beanBalance}
       beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
       beanReserve={prices.beanReserve}
+      beanClaimable={beanClaimable}
+      ethClaimable={ethClaimable}
       beanLPClaimableBalance={claimLPBeans}
       beanToStalk={BEAN_TO_STALK}
       claimable={claimable}
@@ -167,6 +182,8 @@ export default function SiloBeanModule() {
     />,
     <BeanWithdrawModule
       key={1}
+      beanClaimable={beanClaimable}
+      ethClaimable={ethClaimable}
       beanReceivableBalance={beanReceivableBalance}
       beanClaimableBalance={beanClaimableBalance}
       claimable={claimable}
@@ -200,9 +217,7 @@ export default function SiloBeanModule() {
       />
     );
     sectionTitles.push('Claim');
-    sectionTitlesDescription.push(
-      'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.'
-    );
+    sectionTitlesDescription.push(siloStrings.beanClaim);
   }
   if (section > sectionTitles.length - 1) setSection(0);
 
@@ -212,7 +227,6 @@ export default function SiloBeanModule() {
     sectionsInfo.push(
       <ListTable
         asset={SiloAsset.Bean}
-        description="Bean Deposits Will Appear Here"
         claimableBalance={farmableBeanBalance}
         claimableStalk={farmableStalkBalance.plus(farmableBeanBalance)}
         crates={rawBeanDeposits}
@@ -220,7 +234,6 @@ export default function SiloBeanModule() {
         indexTitle="Season"
         page={page}
         season={season}
-        title="Deposits"
       />
     );
     sectionTitlesInfo.push('Bean Deposits');
@@ -236,12 +249,10 @@ export default function SiloBeanModule() {
         crates={beanWithdrawals}
         claimableBalance={beanReceivableBalance}
         claimableCrates={beanReceivableCrates}
-        description="Bean Withdrawals Will Appear Here"
         handleChange={handlePageChange}
         index={season}
         indexTitle="Seasons to Arrival"
         page={page}
-        title="Withdrawals"
       />
     );
     sectionTitlesInfo.push('Bean Withdrawals');

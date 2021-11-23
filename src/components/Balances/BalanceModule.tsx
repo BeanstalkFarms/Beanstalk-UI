@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-// import { useSelector } from 'react-redux';
 import { Hidden, Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-// import { AppState } from 'state';
-import { BEAN, theme } from '../../constants';
-import { displayBN, displayFullBN, TokenLabel, TrimBN } from '../../util';
+import { BEAN, theme } from 'constants/index';
+import { displayBN, displayFullBN, TokenLabel, TrimBN } from 'util/index';
 import {
   BudgetAsset,
   ClaimableAsset,
@@ -17,7 +15,7 @@ import {
   TokenBalanceModule,
   TransitAsset,
   UniswapAsset,
-} from '../Common';
+} from 'components/Common';
 import BalanceChart from './BalanceChart';
 import ToggleTokenBalanceModule from './ToggleTokenBalanceModule';
 
@@ -433,5 +431,4 @@ BalanceModule.defaultProps = {
   showTokenName: true,
   budgetBalance: new BigNumber(0),
   beanReserveTotal: new BigNumber(0),
-  poolForLPRatio: undefined,
 };

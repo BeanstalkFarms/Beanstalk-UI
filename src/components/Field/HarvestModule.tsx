@@ -2,20 +2,15 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { BEAN } from '../../constants';
-import {
-  displayBN,
-  harvest,
-  toStringBaseUnitBN,
-  TrimBN,
-} from '../../util';
+import { BEAN } from 'constants/index';
+import { displayBN, harvest, toStringBaseUnitBN, TrimBN } from 'util/index';
 import {
   CryptoAsset,
   FarmAsset,
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
-} from '../Common';
+} from 'components/Common';
 
 export const HarvestModule = forwardRef((props, ref) => {
   props.setIsFormDisabled(props.harvestablePodBalance.isLessThanOrEqualTo(0));
@@ -43,9 +38,7 @@ export const HarvestModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
   const details = [];
   details.push(`Harvest ${displayBN(props.harvestablePodBalance)} Pods`);
-  details.push(`Receive ${displayBN(
-    props.harvestablePodBalance)} Beans`
-  );
+  details.push(`Receive ${displayBN(props.harvestablePodBalance)} Beans`);
 
   function transactionDetails() {
     if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
@@ -68,9 +61,12 @@ export const HarvestModule = forwardRef((props, ref) => {
     handleForm() {
       if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
 
-      harvest(Object.keys(props.harvestablePlots).map((key) => (
-        toStringBaseUnitBN(new BigNumber(key), BEAN.decimals)
-      )), () => {});
+      harvest(
+        Object.keys(props.harvestablePlots).map((key) =>
+          toStringBaseUnitBN(new BigNumber(key), BEAN.decimals)
+        ),
+        () => {}
+      );
     },
   }));
 

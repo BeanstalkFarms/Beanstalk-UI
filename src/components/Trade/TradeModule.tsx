@@ -3,15 +3,15 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { updateUniswapBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from '../../constants';
+import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 import {
   approveUniswapBean,
   buyBeans,
   sellBeans,
   toStringBaseUnitBN,
   transferBeans,
-} from '../../util';
-import { BaseModule, CryptoAsset } from '../Common';
+} from 'util/index';
+import { BaseModule, CryptoAsset, tradeStrings } from 'components/Common';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
 
@@ -32,10 +32,7 @@ export default function TradeModule() {
   >((state) => state.userBalance);
   const [section, setSection] = useState(0);
   const sectionTitles = ['Swap', 'Send'];
-  const sectionTitlesDescription = [
-    'Use this tab to trade against the BEAN:ETH Uniswap pool directly on the bean.money website.',
-    'Use this tab to send Beans to another Ethereum address.',
-  ];
+  const sectionTitlesDescription = [tradeStrings.swap, tradeStrings.send];
 
   /* Swap Sub-Module state */
 

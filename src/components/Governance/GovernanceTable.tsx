@@ -22,9 +22,9 @@ import {
   GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR,
   GOVERNANCE_EMERGENCY_THRESHOLD_NUMERATOR,
   GOVERNANCE_EXPIRATION,
-} from '../../constants';
-import { percentForStalk } from '../../util';
-import { Line, QuestionModule } from '../Common';
+} from 'constants/index';
+import { percentForStalk } from 'util/index';
+import { Line, QuestionModule, governanceStrings } from 'components/Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 const useStyles = makeStyles({
@@ -176,7 +176,7 @@ const BipTable = (props) => {
           .isLessThanOrEqualTo(props.season)
       ) {
         tb.status = 'Failed';
-      } else if (bip.start.plus(bip.period).isLessThanOrEqualTo(props.season)) {
+      } else if (bip.start.plus(bip.period).isLessThan(props.season)) {
         tb.status = voteProportion.isGreaterThan(0.5) ? 'Commitable' : 'Failed';
       } else if (
         bip.timestamp
@@ -190,7 +190,7 @@ const BipTable = (props) => {
         tb.status = 'Emergency Committable';
       } else {
         tb.status = `${bip.period.minus(
-          props.season.minus(bip.start)
+          props.season.minus(bip.start).minus(1)
         )} Seasons Remaining`;
       }
       tb.voted = percentForStalk(
@@ -210,7 +210,7 @@ const BipTable = (props) => {
         <span className={classes.title}>
           BIPs
           <QuestionModule
-            description="Below is a complete list of all historical BIPs."
+            description={governanceStrings.bips}
             margin="-12px 0 0 2px"
           />
         </span>

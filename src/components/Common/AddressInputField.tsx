@@ -1,14 +1,11 @@
 import React from 'react';
-import {
-  Box,
-  Button,
-  InputAdornment,
-  TextField,
-} from '@material-ui/core';
+import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import CheckIcon from '@material-ui/icons/Check';
-import ClearIcon from '@material-ui/icons/Clear';
-import CancelIcon from '@material-ui/icons/Cancel';
+import {
+  Check as CheckIcon,
+  Clear as ClearIcon,
+  Cancel as CancelIcon,
+} from '@material-ui/icons';
 
 export default function AddressInputField(props) {
   const classes = makeStyles(() => ({

@@ -11,9 +11,9 @@ import {
   TableRow,
 } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/styles';
-import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from '../../constants';
-import { mintNFT } from '../../util';
-import { SingleButton } from './index';
+import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from 'constants/index';
+import { mintNFT } from 'util/index';
+import { beanftStrings, SingleButton } from './index';
 
 const useStyles = makeStyles({
   table: {
@@ -42,26 +42,30 @@ const BasicTable = (props) => {
 
   const { rowsPerPage } = props;
 
-  const showButton = (i) =>
-    (Object.keys(props.nftList).length > 0 && props.canClaimNFT ? (
-      <SingleButton
-        backgroundColor="#3B3B3B"
-        color="white"
-        description="Use this button to Mint only the individual BeaNFT currently being displayed."
-        fontSize="15px"
-        handleClick={() => {
-          const nft = props.nftList[i];
-          mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature);
-        }}
-        height="30px"
-        margin="-10px 7px 0 0"
-        marginTooltip="0 0 -5px 20px"
-        size="small"
-        title="Mint One"
-        width="50%"
-        widthTooltip="150px"
-      />
-    ) : null);
+  const showButton = (i) => {
+    if (Object.keys(props.nftList).length > 0 && props.canClaimNFT) {
+      return (
+        <SingleButton
+          backgroundColor="#3B3B3B"
+          color="white"
+          description={beanftStrings.singleMint}
+          fontSize="15px"
+          handleClick={() => {
+            const nft = props.nftList[i];
+            mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature);
+          }}
+          height="30px"
+          margin="-10px 7px 0 0"
+          marginTooltip="0 0 -5px 20px"
+          size="small"
+          title="Mint One"
+          width="50%"
+          widthTooltip="150px"
+        />
+      );
+    }
+    return null;
+  };
 
   return (
     <Box>
@@ -129,7 +133,9 @@ const BasicTable = (props) => {
                           {`${props.nftList[index].metadataIpfsHash.substring(
                             0,
                             6
-                          )}...${props.nftList[index].metadataIpfsHash.substring(
+                          )}...${props.nftList[
+                            index
+                          ].metadataIpfsHash.substring(
                             props.nftList[index].metadataIpfsHash.length - 4
                           )}`}
                         </span>

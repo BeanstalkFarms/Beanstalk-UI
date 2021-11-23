@@ -1,4 +1,5 @@
 import React from 'react';
+import { fieldChartStrings } from 'components/Common';
 import Charts from './Charts';
 
 export default function FieldCharts(props) {
@@ -6,7 +7,7 @@ export default function FieldCharts(props) {
     {
         title: 'Real Rate of Return',
         tabTitle: 'RRoR',
-        description: 'This is the current total Real Rate of Return by Season. Real Rate of Return is defined as RRoR = (1 + W) / TWAP.',
+        description: fieldChartStrings.rror,
         data: [props.data.map((d) => ({ x: d.x, y: (1 + d.weather) / d.price }))],
         props: {
             unit: '%',
@@ -14,7 +15,7 @@ export default function FieldCharts(props) {
     },
     {
         title: 'Weather',
-        description: 'This is the current Weather by Season.',
+        description: fieldChartStrings.weather,
         data: [props.data.map((d) => ({ x: d.x, y: d.weather }))],
         props: {
             unit: '%',
@@ -22,26 +23,26 @@ export default function FieldCharts(props) {
     },
     {
         title: 'Pods',
-        description: 'This is the current Unharvestable Pods by Season.',
+        description: fieldChartStrings.pods,
         data: [props.data.map((d) => ({ x: d.x, y: d.pods }))],
     },
     {
         title: 'Sown Beans',
         tabTitle: 'SOWN',
-        description: 'This is the current total Sown Beans by Season.',
+        description: fieldChartStrings.sown,
         data: [props.data.map((d) => ({ x: d.x, y: d.sownBeans }))],
     },
     {
         title: 'Harvested Pods',
         tabTitle: 'HARVESTED',
         shortTitle: 'Harv.',
-        description: 'This is the current total Harvested Pods by Season.',
+        description: fieldChartStrings.harvested,
         data: [props.data.map((d) => ({ x: d.x, y: d.harvestedPods }))],
     },
     {
         title: 'Unique Sowers',
         tabTitle: 'SOWERS',
-        description: 'This is the current total unique Sowers by Season.',
+        description: fieldChartStrings.sowers,
         data: [props.data.map((d) => ({ x: d.x, y: d.numberOfSowers }))],
     },
   ];

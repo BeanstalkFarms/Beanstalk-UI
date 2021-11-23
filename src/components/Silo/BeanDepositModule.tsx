@@ -9,7 +9,7 @@ import {
   SEEDS,
   SLIPPAGE_THRESHOLD,
   STALK,
-} from '../../constants';
+} from 'constants/index';
 import {
   buyAndDepositBeans,
   depositBeans,
@@ -21,7 +21,7 @@ import {
   toBaseUnitBN,
   toStringBaseUnitBN,
   TrimBN,
-} from '../../util';
+} from 'util/index';
 import {
   CryptoAsset,
   ClaimTextModule,
@@ -33,7 +33,7 @@ import {
   TokenOutputField,
   TransactionTextModule,
   TransactionDetailsModule,
-} from '../Common';
+} from 'components/Common';
 
 export const BeanDepositModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -134,25 +134,19 @@ export const BeanDepositModule = forwardRef((props, ref) => {
     details.push(
       <ClaimTextModule
         key="claim"
-        balance={
-          props.claimableEthBalance
-            .plus(props.beanReceivableBalance)
-            .plus(props.lpReceivableBalance)
-            .plus(props.harvestablePodBalance)
-        }
+        balance={props.beanClaimable.plus(props.ethClaimable)}
         claim={props.settings.claim}
         mode={props.settings.mode}
-        claimableEthBalance={props.claimableEthBalance}
-        beanReceivableBalance={props.beanReceivableBalance}
-        lpReceivableBalance={props.lpReceivableBalance}
-        harvestablePodBalance={props.harvestablePodBalance}
+        beanClaimable={props.beanClaimable}
+        ethClaimable={props.ethClaimable}
       />
     );
   }
-  if (props.settings.mode === SwapMode.Ethereum ||
-      (props.settings.mode === SwapMode.BeanEthereum &&
-        toBuyBeanValue.isGreaterThan(0))
-    ) {
+  if (
+    props.settings.mode === SwapMode.Ethereum ||
+    (props.settings.mode === SwapMode.BeanEthereum &&
+      toBuyBeanValue.isGreaterThan(0))
+  ) {
     details.push(
       <TransactionTextModule
         key="buy"
@@ -167,17 +161,17 @@ export const BeanDepositModule = forwardRef((props, ref) => {
       />
     );
   }
-  const beanOutput = MaxBN(
-    toBuyBeanValue,
-    new BigNumber(0)
-  ).plus(MaxBN(fromBeanValue, new BigNumber(0)));
+  const beanOutput = MaxBN(toBuyBeanValue, new BigNumber(0)).plus(
+    MaxBN(fromBeanValue, new BigNumber(0))
+  );
 
   details.push(`Deposit ${displayBN(beanOutput)}
-    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`
+    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`);
+  details.push(
+    `Receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
+      new BigNumber(toSeedsValue)
+    )} Seeds`
   );
-  details.push(`Receive ${displayBN(
-    new BigNumber(toStalkValue)
-  )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
   const frontrunTextField =
     props.settings.mode !== SwapMode.Bean &&
@@ -214,9 +208,17 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           {toSiloBeanField}
         </Box>
         <TransactionDetailsModule fields={details} />
-        <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
+        <Box
+          style={{
+            display: 'inline-block',
+            width: '100%',
+            fontSize: 'calc(9px + 0.5vmin)',
+          }}
+        >
           <span>
-            {`You will gain ${smallDecimalPercent(stalkChangePercent)}% ownership of Beanstalk.`}
+            {`You will gain ${smallDecimalPercent(
+              stalkChangePercent
+            )}% ownership of Beanstalk.`}
           </span>
         </Box>
       </>
@@ -238,15 +240,9 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
-        buyAndDepositBeans(
-          beans,
-          buyBeans,
-          eth,
-          claimable,
-          () => {
-            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-          }
-        );
+        buyAndDepositBeans(beans, buyBeans, eth, claimable, () => {
+          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+        });
       } else {
         depositBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),

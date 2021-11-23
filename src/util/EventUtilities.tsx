@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from '../constants';
+import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from 'constants/index';
 import {
   account,
   beanstalkContractReadOnly,
