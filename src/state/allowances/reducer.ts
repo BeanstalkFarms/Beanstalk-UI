@@ -4,18 +4,21 @@ import {
   updateBeanstalkBeanAllowance,
   updateUniswapBeanAllowance,
   updateBeanstalkLPAllowance,
+  updateUniswapUSDCAllowance,
 } from './actions';
 
 export interface AllowanceState {
   uniswapBeanAllowance: BigNumber;
   beanstalkBeanAllowance: BigNumber;
   beanstalkLPAllowance: BigNumber;
+  uniswapUSDCAllowance: BigNumber;
 }
 
 export const initialState: AllowanceState = {
   uniswapBeanAllowance: new BigNumber(0),
   beanstalkBeanAllowance: new BigNumber(0),
   beanstalkLPAllowance: new BigNumber(0),
+  uniswapUSDCAllowance: new BigNumber(0),
 };
 
 export default createReducer(initialState, (builder) =>
@@ -28,5 +31,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateBeanstalkLPAllowance, (state, { payload }) => {
       state.beanstalkLPAllowance = payload;
+    })
+    .addCase(updateUniswapUSDCAllowance, (state, { payload }) => {
+      state.uniswapUSDCAllowance = payload;
     })
 );

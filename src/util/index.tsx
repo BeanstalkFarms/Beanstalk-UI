@@ -4,6 +4,7 @@ import {
   BEANFT,
   BEANSTALK,
   UNISWAP_V2_ROUTER,
+  USDC,
   changeNetwork,
 } from 'constants/index';
 
@@ -36,6 +37,7 @@ const beanstalkAbi = require('../constants/abi/Beanstalk.json');
 const beaNFTAbi = require('../constants/abi/BeaNFT.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
+const uniswapUSDCAbi = require('../constants/abi/USDC.json');
 
 export const tokenContract = (token) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
@@ -61,6 +63,11 @@ export const pairContractReadOnly = (pair) =>
 
 export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
+
+export const usdcContract = () =>
+  new ethers.Contract(USDC.addr, uniswapUSDCAbi, web3Signer);
+export const usdcContractReadOnly = () =>
+  new web3.eth.Contract(uniswapUSDCAbi, USDC.addr);
 
 async function initializeMetaMaskListeners() {
   const changeHandler = () => {

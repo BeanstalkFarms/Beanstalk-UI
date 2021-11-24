@@ -128,7 +128,7 @@ export default function NavigationBar(props) {
   // temporary fix/hide for WIP Fundraiser page
 
   const navMapping = [...defaultNavMapping];
-  const hasActiveFundraiser = false;
+  const hasActiveFundraiser = true;
   if (hasActiveFundraiser) {
     navMapping.splice(3, 0, {
       path: 'fundraiser',

@@ -8,7 +8,7 @@ import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
 } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, LPBEAN_TO_STALK, zeroBN } from 'constants/index';
+import { BASE_SLIPPAGE, LPBEAN_TO_STALK } from 'constants/index';
 import {
   approveBeanstalkBean,
   approveBeanstalkLP,
@@ -79,7 +79,7 @@ export default function SiloLPModule() {
   };
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(
       amount,
       prices.beanReserve,
@@ -112,6 +112,19 @@ export default function SiloLPModule() {
     siloStrings.lpWithdrawalsTable,
   ];
 
+  const handleTabChange = (event, newSection) => {
+    if (newSection !== section) {
+      setSection(newSection);
+      setIsFormDisabled(true);
+      setSettings({
+        claim: false,
+        convert: false,
+        useLP: false,
+        mode: null,
+        slippage: new BigNumber(BASE_SLIPPAGE),
+      });
+    }
+  };
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
     setSectionInfo(newSectionInfo);
     setPage(newPageZero);
@@ -152,12 +165,7 @@ export default function SiloLPModule() {
         break;
     }
   };
-  const handleTabChange = (event, newSection) => {
-    if (newSection !== section) {
-      setSection(newSection);
-      setIsFormDisabled(true);
-    }
-  };
+
   const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
     ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);

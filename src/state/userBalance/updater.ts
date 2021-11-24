@@ -6,6 +6,7 @@ import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
   updateUniswapBeanAllowance,
+  updateUniswapUSDCAllowance,
 } from 'state/allowances/actions';
 import { setUserBalance } from 'state/userBalance/actions';
 import { setTotalBalance } from 'state/totalBalance/actions';
@@ -92,6 +93,7 @@ export default function Updater() {
         uniswapBeanAllowance,
         beanstalkBeanAllowance,
         beanstalkLPAllowance,
+        uniswapUSDCAllowance,
         claimableEthBalance,
         beanBalance,
         lpBalance,
@@ -108,6 +110,7 @@ export default function Updater() {
       dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
+      dispatch(updateUniswapUSDCAllowance(uniswapUSDCAllowance));
 
       dispatch(
         setUserBalance({
@@ -511,9 +514,9 @@ export default function Updater() {
       const eventParsingParameters = [
         totalBalances[14].season /* season */,
         totalBalances[10] /* harvestableIndex */,
-        accountBalances[9] /* farmableBeanBalance */,
-        accountBalances[10] /* grownStalkBalance */,
-        accountBalances[3] /* claimableEthBalance */,
+        accountBalances[10] /* farmableBeanBalance */,
+        accountBalances[11] /* grownStalkBalance */,
+        accountBalances[4] /* claimableEthBalance */,
         beanReserve,
         ethReserve,
       ];

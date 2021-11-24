@@ -65,4 +65,5 @@ export const GENESIS_NFT = {
   id: 0,
   txn: '💎',
 }; /* Diamonds */
-export const zeroBN = new BigNumber(-1);
+export const zeroBN = new BigNumber(0);
+export const newBN = new BigNumber(-1);

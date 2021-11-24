@@ -4,6 +4,7 @@ import {
   BEANSTALK,
   UNI_V2_ETH_BEAN_LP,
   UNISWAP_V2_ROUTER,
+  USDC,
 } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import ClaimableIcon from 'img/claimable-icon.svg';
@@ -26,7 +27,7 @@ export enum CryptoAsset {
   Bean = 0,
   Ethereum,
   LP,
-  USDC,
+  usdc,
 }
 export enum SiloAsset {
   Stalk = 4,
@@ -112,6 +113,10 @@ export const approveBeanstalkLP = async (callback) => {
   );
 };
 
+export const approveUniswapUSDC = async (callback) => {
+  approveToken(USDC, account, USDC.addr, MAX_UINT256, callback);
+};
+
 export function TokenLabel(tokenType: Token): string {
   switch (tokenType) {
     case CryptoAsset.Bean:
@@ -120,7 +125,7 @@ export function TokenLabel(tokenType: Token): string {
       return 'ETH';
     case CryptoAsset.LP:
       return 'LP';
-    case CryptoAsset.USDC:
+    case CryptoAsset.usdc:
       return 'USDC';
     case SiloAsset.Stalk:
       return 'Stalk';
@@ -183,7 +188,7 @@ export function TokenImage(tokenType: Token): string {
     case FarmAsset.Pods:
       return PodLogo;
 
-    case CryptoAsset.USDC:
+    case CryptoAsset.usdc:
       return USDCLogo;
     default:
       return '';

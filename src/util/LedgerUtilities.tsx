@@ -9,6 +9,7 @@ import {
   UNI_V2_ETH_BEAN_LP,
   UNI_V2_USDC_ETH_LP,
   UNISWAP_V2_ROUTER,
+  USDC,
 } from 'constants/index';
 import {
   account,
@@ -16,6 +17,7 @@ import {
   initializing,
   pairContractReadOnly,
   tokenContractReadOnly,
+  usdcContractReadOnly,
   toTokenUnitsBN,
   web3,
 } from './index';
@@ -57,11 +59,13 @@ export const getAccountBalances = async (batch) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
+  const usdc = usdcContractReadOnly();
 
   return makeBatchedPromises(batch, [
     [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
     [bean.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
     [lp.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
+    [usdc.methods.allowance(account, USDC.addr), bigNumberResult],
     [beanstalk.methods.balanceOfEth(account), tokenResult(ETH)],
     [bean.methods.balanceOf(account), tokenResult(BEAN)],
     [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
@@ -71,6 +75,7 @@ export const getAccountBalances = async (batch) => {
     [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEANSTALK)],
     [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
     [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
+    [usdc.methods.balanceOf(account), tokenResult(USDC)],
   ]);
 };
 /* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */

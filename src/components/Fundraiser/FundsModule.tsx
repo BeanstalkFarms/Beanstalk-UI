@@ -2,15 +2,21 @@ import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
-import { approveBeanstalkBean, displayBN, displayFullBN, TokenLabel } from '../../util';
+import { updateUniswapUSDCAllowance } from 'state/allowances/actions';
+import { approveUniswapUSDC, displayBN, displayFullBN, TokenLabel } from '../../util';
 // import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
 import { BaseModule, ContentSection, Grid, HeaderLabel } from '../Common';
 import { SowAuditModule } from './SowAuditModule';
 
 export default function FundsModule(props) {
-  const { beanstalkBeanAllowance } = useSelector<AppState, AppState['allowances']>(
+  const { uniswapUSDCAllowance } = useSelector<AppState, AppState['allowances']>(
     (state) => state.allowances
+  );
+
+  const {
+    usdcBalance,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
   );
 
   const { weather, soil } = useSelector<
@@ -51,7 +57,7 @@ export default function FundsModule(props) {
 
   const allowance =
     section === 0
-      ? beanstalkBeanAllowance
+      ? uniswapUSDCAllowance
       : new BigNumber(1);
 
   return (
@@ -92,19 +98,21 @@ export default function FundsModule(props) {
         >
           <BaseModule
             allowance={allowance}
-            handleApprove={approveBeanstalkBean}
+            handleApprove={approveUniswapUSDC}
             handleForm={handleForm}
             handleTabChange={handleTabChange}
-            isDisabled={isFormDisabled}
+            isDisabled={isFormDisabled || props.fundsRemaining.isEqualTo(0)}
             marginTop="14px"
             section={section}
             sectionTitles={sectionTitles}
             sectionTitlesDescription={sectionTitlesDescription}
-            setAllowance={updateBeanstalkBeanAllowance}
+            setAllowance={updateUniswapUSDCAllowance}
+            singleReset
           >
             <SowAuditModule
+              key={0}
               asset={props.asset}
-              tokenBalance={props.tokenBalance}
+              tokenBalance={usdcBalance}
               fundsRemaining={props.fundsRemaining}
               unripenedPods={props.unripenedPods}
               ref={sowTokenRef}
