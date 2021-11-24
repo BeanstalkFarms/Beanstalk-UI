@@ -41,7 +41,6 @@ export default function SiloBeanModule() {
     beanReceivableBalance,
     beanReceivableCrates,
     farmableBeanBalance,
-    farmableStalkBalance,
     rawBeanDeposits,
     beanWithdrawals,
     harvestablePodBalance,
@@ -228,7 +227,7 @@ export default function SiloBeanModule() {
       <ListTable
         asset={SiloAsset.Bean}
         claimableBalance={farmableBeanBalance}
-        claimableStalk={farmableStalkBalance.plus(farmableBeanBalance)}
+        claimableStalk={farmableBeanBalance}
         crates={rawBeanDeposits}
         handleChange={handlePageChange}
         indexTitle="Season"

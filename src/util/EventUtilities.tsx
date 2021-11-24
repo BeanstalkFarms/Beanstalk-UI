@@ -194,34 +194,12 @@ export function parseWithdrawals(withdrawals, index: BigNumber) {
 export function addRewardedCrates(
   crates,
   season,
-  rewardedBeans,
-  rewardedStalk
+  rewardedBeans
 ) {
   if (rewardedBeans.isEqualTo(0)) return crates;
-  const rewardedSeasons = rewardedStalk
-    .dividedBy(rewardedBeans.multipliedBy(0.0002))
-    .integerValue(BigNumber.ROUND_DOWN);
-  rewardedStalk = rewardedStalk.minus(
-    rewardedSeasons.multipliedBy(rewardedBeans).multipliedBy(0.0002)
-  );
-  BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
-  const previousSeasonBeans = new BigNumber(
-    rewardedStalk.dividedBy(0.0002).toFixed(6)
-  );
-  const seasonBeans = new BigNumber(
-    rewardedBeans.minus(previousSeasonBeans).toFixed(6)
-  );
-  BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_HALF_UP });
-  const ds = parseInt(season.minus(rewardedSeasons), 10);
+  const ds = parseInt(season, 10);
   crates[ds] =
-    crates[ds] === undefined ? seasonBeans : crates[ds].plus(seasonBeans);
-  if (previousSeasonBeans.isGreaterThan(0)) {
-    const pds = parseInt(season.minus(rewardedSeasons).minus(1), 10);
-    crates[pds] =
-      crates[pds] === undefined
-        ? previousSeasonBeans
-        : crates[pds].plus(previousSeasonBeans);
-  }
+    crates[ds] === undefined ? rewardedBeans : crates[ds].plus(rewardedBeans);
   return crates;
 }
 
