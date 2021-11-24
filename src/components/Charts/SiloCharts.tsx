@@ -5,7 +5,8 @@ import {
   TabImageModule,
   TransitAsset,
 } from 'components/Common';
-import Charts from './Charts';
+
+import BaseChart from './BaseChart';
 
 export default function SiloCharts(props) {
   const charts = [
@@ -71,5 +72,5 @@ export default function SiloCharts(props) {
     },
   ];
 
-  return <Charts mainTitle="Silo" charts={charts} />;
+  return <BaseChart mainTitle="Silo" charts={charts} />;
 }

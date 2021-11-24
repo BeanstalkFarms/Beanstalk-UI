@@ -15,11 +15,12 @@ export default function Charts(props) {
   }
 
   useEffect(() => {
+    console.log('charts', props.charts);
     window.addEventListener('resize', handleWindowSizeChange);
     return () => {
       window.removeEventListener('resize', handleWindowSizeChange);
     };
-  }, []);
+  }, [props.charts]);
 
   if (props.charts.length === 0) {
     return null;
@@ -33,8 +34,9 @@ export default function Charts(props) {
   };
 
   const isMobile: boolean = width <= 768;
-  const sections = props.charts.map((c) => (
-    <Chart
+  const sections = props.charts.map((c) => {
+    console.log('c', c);
+    return (<Chart
       data={c.data}
       isMobile={isMobile}
       key={c.title}
@@ -42,8 +44,9 @@ export default function Charts(props) {
       {...c.props}
       {...modeProps}
       {...props}
-    />
-  ));
+    />);
+  });
+
   const baseStyle = isMobile
     ? { width: '100%', paddingLeft: 0, paddingRight: 0 }
     : null;

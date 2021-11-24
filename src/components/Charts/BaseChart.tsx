@@ -2,13 +2,12 @@
 import React from 'react';
 import { createChart, IChartApi } from 'lightweight-charts';
 import equal from 'fast-deep-equal';
-import { BaseModule } from 'components/Common';
 import usePrevious from 'util/hooks/usePrevious';
 import { mergeDeep } from 'util/AnalyticsUtilities';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 import { theme } from '../../constants';
-import BaseLabels from './BaseLabel';
+// import BaseLabels from './BaseLabel';
 
 const BaseChart = (props) => {
   const {
@@ -165,13 +164,17 @@ const BaseChart = (props) => {
   };
 
   const handleTimeRange = () => {
-    if (from && to && chart) {
-      if (fitAll) {
-        chart.timeScale().resetTimeScale();
-        chart.timeScale().fitContent();
-      } else {
-        chart.timeScale().setVisibleRange({ from, to });
+    try {
+      if (from && to && chart) {
+        if (fitAll) {
+          chart.timeScale().resetTimeScale();
+          chart.timeScale().fitContent();
+        } else {
+          chart.timeScale().setVisibleRange({ from, to });
+        }
       }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -289,7 +292,85 @@ const ChartWrapper = (props) => {
   const [from, setFrom] = React.useState<number>();
   const [fitAll, setFitAll] = React.useState<boolean>(false);
 
-  const sectionTitles = ['Chart'];
+  const state = {
+    options: {
+      alignLabels: false,
+      grid: {
+        vertLines: {
+          visible: false,
+        },
+      },
+      crosshair: {
+        horzLine: {
+          visible: false,
+          labelVisible: true,
+        },
+        vertLine: {
+          visible: true,
+          labelVisible: true,
+        },
+      },
+      timeScale: {
+        rightOffset: 12,
+        barSpacing: 3,
+        fixLeftEdge: true,
+        lockVisibleTimeRangeOnResize: true,
+        rightBarStaysOnScroll: false,
+        borderVisible: false,
+        borderColor: '#fff000',
+        visible: true,
+        timeVisible: true,
+        secondsVisible: false,
+      },
+      priceScale: {
+        title: 'Price',
+        position: 'right',
+        autoScale: true,
+        drawTicks: true,
+        PriceLineSource: 'LastVisible',
+        priceRange: {
+          minValue: 0,
+          maxValue: 3,
+        },
+        borderColor: '#555ffd',
+        scaleMargins: {
+          top: 0.30,
+          bottom: 0.25,
+        },
+      },
+      baseline: {
+        topFillColor1: 'rgba(21, 146, 230, 0.4)',
+        topFillColor2: 'rgba(21, 255, 70, 0.3)',
+        bottomFillColor1: 'rgba(21, 255, 70, 0.3)',
+        bottomFillColor2: 'rgba(21, 146, 230, 0.4)',
+        topLineColor: 'rgba(21, 146, 230, 1)',
+        lineStyle: 0,
+        lineWidth: 3,
+        crosshairMarkerVisible: true,
+        crosshairMarkerRadius: 3,
+        crosshairMarkerBorderColor: 'rgb(255, 255, 255, 1)',
+        crosshairMarkerBackgroundColor: 'rgb(34, 150, 243, 1)',
+        baseValue: {
+          type: 'price',
+          price: 1,
+        },
+        priceFormat: {
+          type: 'price',
+          precision: 3,
+          minMove: 0.001,
+        },
+        legend: {
+          color: 'rgba(255, 0, 255, 100)',
+          title: 'Baseline Price',
+        },
+      },
+    },
+  };
+
+  React.useEffect(() => {
+    console.log('props', props);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const customDarkTheme = {
     layout: {
@@ -393,17 +474,25 @@ const ChartWrapper = (props) => {
   }, []);
 
   const to = new Date().getTime() / 1000; // current timestamp
+  console.log('props from wrapper', props);
 
   return (
-    <BaseModule
-      handleForm={() => { }}
-      sectionTitles={sectionTitles}
-      showButton={false}
-    >
-      <BaseChart {...props} from={from} to={to} fitAll={fitAll} colors={colors} backgroundTheme={{ customDarkTheme, lightTheme }} />
+    <>
+      <BaseChart
+        {...props}
+        // baselineSeries={chartData}
+        autoWidth
+        height={300}
+        options={state.options}
+        from={from}
+        to={to}
+        fitAll={fitAll}
+        colors={colors}
+        backgroundTheme={{ customDarkTheme, lightTheme }} />
+      ...loading
       {timeRangeSelectButtons()}
-      <BaseLabels labels={['abc', 'def']} />
-    </BaseModule>
+      {/* <BaseLabels labels={['abc', 'def']} /> */}
+    </>
   );
 };
 export * from 'lightweight-charts';
