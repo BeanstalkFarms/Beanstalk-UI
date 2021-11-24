@@ -8,6 +8,7 @@ import { mergeDeep } from 'util/AnalyticsUtilities';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 import { theme } from '../../constants';
+import BaseLabels from './BaseLabel';
 
 const BaseChart = (props) => {
   const {
@@ -401,6 +402,7 @@ const ChartWrapper = (props) => {
     >
       <BaseChart {...props} from={from} to={to} fitAll={fitAll} colors={colors} backgroundTheme={{ customDarkTheme, lightTheme }} />
       {timeRangeSelectButtons()}
+      <BaseLabels labels={['abc', 'def']} />
     </BaseModule>
   );
 };
