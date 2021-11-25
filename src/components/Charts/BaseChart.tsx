@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { createChart, IChartApi } from 'lightweight-charts';
+import { createChart, IChartApi, MouseEventHandler, TimeRangeChangeEventHandler } from 'lightweight-charts';
 import equal from 'fast-deep-equal';
 import usePrevious from 'util/hooks/usePrevious';
 import { mergeDeep } from 'util/AnalyticsUtilities';
@@ -9,7 +9,7 @@ import { Button } from '@material-ui/core';
 import { theme } from '../../constants';
 import BaseLabels from './BaseLabel';
 
-const BaseChart = (props) => {
+const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: any; charts: any; colors: any; darkTheme: any; fitAll: any; from: any; height: any; onClick: any; onCrosshairMove: any; onTimeRangeMove: any; options: any; to: any; timeScale: any; width: any; }) => {
   const {
     autoHeight,
     autoWidth,
@@ -25,6 +25,7 @@ const BaseChart = (props) => {
     onTimeRangeMove,
     options,
     to,
+    timeScale,
     width,
   } = props;
   const prevProps = usePrevious(props);
@@ -54,7 +55,7 @@ const BaseChart = (props) => {
     chart?.resize(newWidth, newHeight);
   };
 
-  const handleLinearInterpolation = (data, candleTime) => {
+  const handleLinearInterpolation = (data: string | any[], candleTime: number) => {
     if (!candleTime || data.length < 2 || !data[0].value) return data;
     const first = data[0].time;
     const last = data[data.length - 1].time;
@@ -94,68 +95,100 @@ const BaseChart = (props) => {
         color,
         ...serie.options,
       });
+      console.log('timescale', timeScale);
+      const scaledData = timeScale === 'hour' ? serie.data[0] : serie.data[1];
       const data = handleLinearInterpolation(
-        serie.data[0],
+        scaledData,
         serie.linearInterpolation
       );
-      console.log('data', data);
       mySeries.setData(data);
       if (serie.markers) series.setMarkers(serie.markers);
       if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
       if (serie.basevalue) {
-        series.setBaseValue(serie.basevalue);
+        mySeries.setBaseValue(serie.basevalue);
       }
     }
     return mySeries;
   };
   const handleSeries = () => {
-    // map c => switch (c.type) { case 'candlestick': return 'candlestick'; }
-    // const candlestickSeries = charts.filter((c) => c.type === 'candlestick');
-    // if (candlestickSeries[0].data?.length > 0) {
-    //   candlestickSeries[0].data?.forEach((serie) => {
-    //     setSeries([...series, addSeries(serie, 'candlestick')]);
-    //   });
-    // }
+    const candlestickSeries = [{
+      data: [
+        [
+          { time: new Date('2021-10-19').getTime() / 1000, open: 180.34, high: 180.99, low: 178.57, close: 179.85 },
+          { time: new Date('2021-10-22').getTime() / 1000, open: 180.82, high: 181.40, low: 177.56, close: 178.75 },
+          { time: new Date('2021-10-23').getTime() / 1000, open: 175.77, high: 179.49, low: 175.44, close: 178.53 },
+          { time: new Date('2021-10-24').getTime() / 1000, open: 178.58, high: 182.37, low: 176.31, close: 176.97 },
+          { time: new Date('2021-10-25').getTime() / 1000, open: 177.52, high: 180.50, low: 176.83, close: 179.07 },
+          { time: new Date('2021-10-26').getTime() / 1000, open: 176.88, high: 177.34, low: 170.91, close: 172.23 },
+          { time: new Date('2021-10-29').getTime() / 1000, open: 173.74, high: 175.99, low: 170.95, close: 173.20 },
+          { time: new Date('2021-10-30').getTime() / 1000, open: 173.16, high: 176.43, low: 172.64, close: 176.24 },
+          { time: new Date('2021-10-31').getTime() / 1000, open: 177.98, high: 178.85, low: 175.59, close: 175.88 },
+          { time: new Date('2021-11-01').getTime() / 1000, open: 176.84, high: 180.86, low: 175.90, close: 180.46 },
+          { time: new Date('2021-11-02').getTime() / 1000, open: 182.47, high: 183.01, low: 177.39, close: 179.93 },
+          { time: new Date('2021-11-05').getTime() / 1000, open: 181.02, high: 182.41, low: 179.30, close: 182.19 },
+        ],
+        [
+          { time: new Date('2021-11-02').getTime() / 1000, open: 182.47, high: 183.01, low: 177.39, close: 179.93 },
+          { time: new Date('2021-11-05').getTime() / 1000, open: 181.02, high: 182.41, low: 179.30, close: 182.19 },
+          { time: new Date('2021-11-07').getTime() / 1000, open: 176.84, high: 180.86, low: 175.90, close: 180.46 },
+        ],
+      ],
+    }];
+    if (candlestickSeries.length > 0 && candlestickSeries[0].data?.length > 0) {
+      candlestickSeries.forEach((serie) => {
+        setSeries([...series, addSeries(serie, 'candlestick')]);
+      });
+    }
     // const lineSeries = charts.filter((c) => c.type === 'line');
     // console.log('lineSeries', lineSeries);
-    // lineSeries[0].data?.length > 0 &&
-    //   lineSeries[0].data.forEach((serie) => {
+    // if (lineSeries.length > 0 && lineSeries[0].data?.length > 0) {
+    //   lineSeries.forEach((serie) => {
     //     setSeries([...series, addSeries(serie, 'line')]);
     //   });
+    // }
     // const areaSeries = charts.filter((c) => c.type === 'area');
     // console.log('areaSeries', areaSeries);
-    // areaSeries[0].data?.length > 0 &&
-    //   areaSeries[0].data.forEach((serie) => {
+    // if (areaSeries.length > 0 && areaSeries[0].data?.length > 0) {
+    //   areaSeries.forEach((serie) => {
     //     setSeries([...series, addSeries(serie, 'area')]);
     //   });
+    // }
     // const barSeries = charts.filter((c) => c.type === 'bar');
     // console.log('barSeries', barSeries);
-    // barSeries[0].data?.length > 0 &&
-    //   barSeries[0].data.forEach((serie) => {
+    // if (barSeries.length > 0 && barSeries[0].data?.length > 0) {
+    //   barSeries.forEach((serie) => {
     //     setSeries([...series, addSeries(serie, 'bar')]);
     //   });
+    // }
     // const histogramSeries = charts.filter((c) => c.type === 'histogram');
     // console.log('histogramSeries', histogramSeries);
-    // histogramSeries[0].data?.length > 0 &&
-    //   histogramSeries[0].data.forEach((serie) => {
+    // if (histogramSeries.length > 0 && histogramSeries[0].data?.length > 0) {
+    //   histogramSeries.forEach((serie) => {
     //     series.push(addSeries(serie, 'histogram'));
     //   });
-    const baselineSeries = charts.filter((c) => c.type === 'baseline');
-    if (baselineSeries[0].data?.length > 0) {
-      baselineSeries.forEach((serie) => {
+    // }
+    const baselineSeries = charts.filter((c: { type: string; }) => c.type === 'baseline');
+    if (baselineSeries.length > 0 && baselineSeries[0].data?.length > 0) {
+      baselineSeries.forEach((serie: { options: any; }) => {
+        const newSerie = addSeries(serie, 'baseline');
+        console.log(newSerie);
         serie.options = options.baseline;
-        setSeries([...series, addSeries(serie, 'baseline')]);
+        setSeries([...series, newSerie]);
       });
     }
   };
 
-  // const removeSeries = () => {
-  //   series.forEach((serie) => {
-  //     const result = chart?.removeSeries(serie);
-  //     return result;
-  //   });
-  //   setSeries([]);
-  // };
+  const removeSeries = () => {
+    console.log('remove chart');
+    try {
+      series.forEach((serie) => {
+        console.log('serie', serie);
+        if (serie) chart?.removeSeries({ ...serie });
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const handleEvents = () => {
     onClick && chart?.subscribeClick(onClick);
@@ -164,7 +197,7 @@ const BaseChart = (props) => {
     onTimeRangeMove &&
       chart?.timeScale().subscribeVisibleTimeRangeChange(onTimeRangeMove);
   };
-  const unsubscribeEvents = (previousProps) => {
+  const unsubscribeEvents = (previousProps: { onClick: MouseEventHandler; onCrosshairMove: MouseEventHandler; onTimeRangeMove: TimeRangeChangeEventHandler; }) => {
     chart?.unsubscribeClick(previousProps.onClick);
     chart?.unsubscribeCrosshairMove(previousProps.onCrosshairMove);
     chart?.timeScale().unsubscribeVisibleTimeRangeChange(previousProps.onTimeRangeMove);
@@ -200,7 +233,7 @@ const BaseChart = (props) => {
 
     chart?.applyOptions(customOptions);
 
-    if (charts) handleSeries();
+    handleSeries();
     handleEvents();
     handleTimeRange();
 
@@ -244,28 +277,12 @@ const BaseChart = (props) => {
 
   React.useEffect(() => {
     if (
-      prevProps && !equal(
-        [
-          prevProps.options,
-          prevProps.darkTheme,
-          prevProps.charts,
-        ],
-        [
-          options,
-          darkTheme,
-          charts,
-        ]
-      )
+      prevProps && !equal([prevProps.charts, prevProps.options], [charts, options])
     ) {
+      removeSeries();
       handleUpdateChart();
     }
-  }, [
-    prevProps?.options,
-    prevProps?.darkTheme,
-    prevProps?.charts,
-    options,
-    darkTheme,
-    charts]);
+  }, [prevProps?.charts, charts, prevProps?.options, options]);
 
   React.useEffect(() => {
     if (!prevProps) return;
@@ -279,12 +296,10 @@ const BaseChart = (props) => {
   );
 };
 
-const ChartWrapper = (props) => {
+const ChartWrapper = (props: any) => {
   const [from, setFrom] = React.useState<number>();
   const [fitAll, setFitAll] = React.useState<boolean>(false);
-  const [dateScale, setDateScale] = React.useState<string>('hourly');
-  // const [priceData, setPriceData] = React.useState<any>([]);
-  const [chartsData, setChartsData] = React.useState<any>([]);
+  const [dateScale, setDateScale] = React.useState<string>('hour');
   const state = {
     options: {
       alignLabels: false,
@@ -325,7 +340,7 @@ const ChartWrapper = (props) => {
           minValue: 0,
           maxValue: 3,
         },
-        borderColor: '#555ffd',
+        borderColor: '#ffff',
         scaleMargins: {
           top: 0.30,
           bottom: 0.25,
@@ -359,13 +374,6 @@ const ChartWrapper = (props) => {
       },
     },
   };
-  React.useEffect(() => {
-    if (props.charts) {
-      console.log('dateScale', chartsData, dateScale);
-      setChartsData(props.charts);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const customDarkTheme = {
     layout: {
@@ -497,12 +505,6 @@ const ChartWrapper = (props) => {
 
   const to = new Date().getTime() / 1000; // current timestamp
 
-  // React.useEffect(() => {
-  //   if (chartsData) {
-  //     console.log('chartsData', chartsData);
-  //   }
-  // }, [chartsData]);
-
   return (
     <>
       {timeScaleSelectButtons()}
@@ -516,6 +518,7 @@ const ChartWrapper = (props) => {
         to={to}
         fitAll={fitAll}
         colors={colors}
+        timeScale={dateScale}
         backgroundTheme={{ customDarkTheme, lightTheme }}
       />
       <BaseLabels labels={['abc', 'def']} />
