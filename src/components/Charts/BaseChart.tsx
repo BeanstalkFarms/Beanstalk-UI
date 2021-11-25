@@ -111,34 +111,34 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
     return mySeries;
   };
   const handleSeries = () => {
-    const candlestickSeries = [{
-      data: [
-        [
-          { time: new Date('2021-10-19').getTime() / 1000, open: 180.34, high: 180.99, low: 178.57, close: 179.85 },
-          { time: new Date('2021-10-22').getTime() / 1000, open: 180.82, high: 181.40, low: 177.56, close: 178.75 },
-          { time: new Date('2021-10-23').getTime() / 1000, open: 175.77, high: 179.49, low: 175.44, close: 178.53 },
-          { time: new Date('2021-10-24').getTime() / 1000, open: 178.58, high: 182.37, low: 176.31, close: 176.97 },
-          { time: new Date('2021-10-25').getTime() / 1000, open: 177.52, high: 180.50, low: 176.83, close: 179.07 },
-          { time: new Date('2021-10-26').getTime() / 1000, open: 176.88, high: 177.34, low: 170.91, close: 172.23 },
-          { time: new Date('2021-10-29').getTime() / 1000, open: 173.74, high: 175.99, low: 170.95, close: 173.20 },
-          { time: new Date('2021-10-30').getTime() / 1000, open: 173.16, high: 176.43, low: 172.64, close: 176.24 },
-          { time: new Date('2021-10-31').getTime() / 1000, open: 177.98, high: 178.85, low: 175.59, close: 175.88 },
-          { time: new Date('2021-11-01').getTime() / 1000, open: 176.84, high: 180.86, low: 175.90, close: 180.46 },
-          { time: new Date('2021-11-02').getTime() / 1000, open: 182.47, high: 183.01, low: 177.39, close: 179.93 },
-          { time: new Date('2021-11-05').getTime() / 1000, open: 181.02, high: 182.41, low: 179.30, close: 182.19 },
-        ],
-        [
-          { time: new Date('2021-11-02').getTime() / 1000, open: 182.47, high: 183.01, low: 177.39, close: 179.93 },
-          { time: new Date('2021-11-05').getTime() / 1000, open: 181.02, high: 182.41, low: 179.30, close: 182.19 },
-          { time: new Date('2021-11-07').getTime() / 1000, open: 176.84, high: 180.86, low: 175.90, close: 180.46 },
-        ],
-      ],
-    }];
-    if (candlestickSeries.length > 0 && candlestickSeries[0].data?.length > 0) {
-      candlestickSeries.forEach((serie) => {
-        setSeries([...series, addSeries(serie, 'candlestick')]);
-      });
-    }
+    // const candlestickSeries = [{
+    //   data: [
+    //     [
+    //       { time: new Date('2021-10-19').getTime() / 1000, open: 180.34, high: 180.99, low: 178.57, close: 179.85 },
+    //       { time: new Date('2021-10-22').getTime() / 1000, open: 180.82, high: 181.40, low: 177.56, close: 178.75 },
+    //       { time: new Date('2021-10-23').getTime() / 1000, open: 175.77, high: 179.49, low: 175.44, close: 178.53 },
+    //       { time: new Date('2021-10-24').getTime() / 1000, open: 178.58, high: 182.37, low: 176.31, close: 176.97 },
+    //       { time: new Date('2021-10-25').getTime() / 1000, open: 177.52, high: 180.50, low: 176.83, close: 179.07 },
+    //       { time: new Date('2021-10-26').getTime() / 1000, open: 176.88, high: 177.34, low: 170.91, close: 172.23 },
+    //       { time: new Date('2021-10-29').getTime() / 1000, open: 173.74, high: 175.99, low: 170.95, close: 173.20 },
+    //       { time: new Date('2021-10-30').getTime() / 1000, open: 173.16, high: 176.43, low: 172.64, close: 176.24 },
+    //       { time: new Date('2021-10-31').getTime() / 1000, open: 177.98, high: 178.85, low: 175.59, close: 175.88 },
+    //       { time: new Date('2021-11-01').getTime() / 1000, open: 176.84, high: 180.86, low: 175.90, close: 180.46 },
+    //       { time: new Date('2021-11-02').getTime() / 1000, open: 182.47, high: 183.01, low: 177.39, close: 179.93 },
+    //       { time: new Date('2021-11-05').getTime() / 1000, open: 181.02, high: 182.41, low: 179.30, close: 182.19 },
+    //     ],
+    //     [
+    //       { time: new Date('2021-11-02').getTime() / 1000, open: 182.47, high: 183.01, low: 177.39, close: 179.93 },
+    //       { time: new Date('2021-11-05').getTime() / 1000, open: 181.02, high: 182.41, low: 179.30, close: 182.19 },
+    //       { time: new Date('2021-11-07').getTime() / 1000, open: 176.84, high: 180.86, low: 175.90, close: 180.46 },
+    //     ],
+    //   ],
+    // }];
+    // if (candlestickSeries.length > 0 && candlestickSeries[0].data?.length > 0) {
+    //   candlestickSeries.forEach((serie) => {
+    //     setSeries([...series, addSeries(serie, 'candlestick')]);
+    //   });
+    // }
     // const lineSeries = charts.filter((c) => c.type === 'line');
     // console.log('lineSeries', lineSeries);
     // if (lineSeries.length > 0 && lineSeries[0].data?.length > 0) {
@@ -179,11 +179,14 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
   };
 
   const removeSeries = () => {
-    console.log('remove chart');
+    console.log('remove chart', series);
     try {
       series.forEach((serie) => {
-        console.log('serie', serie);
-        if (serie) chart?.removeSeries({ ...serie });
+        if (serie) chart?.removeSeries(serie);
+        const index = series.indexOf(serie);
+        if (index > -1) {
+          setSeries({ ...series.splice(index, 1) });
+        }
       });
     } catch (e) {
       console.log(e);
