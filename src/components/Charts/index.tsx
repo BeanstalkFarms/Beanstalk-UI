@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { BaseModule, chartStrings, ContentSection } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
@@ -46,7 +47,6 @@ export default function Charts(props) {
     // <FieldCharts data={chartData} />,
     // <SiloCharts data={chartData} />,
   ];
-  console.log('beanstal', chartData);
 
   return (
     <ContentSection
@@ -68,10 +68,6 @@ export default function Charts(props) {
         style={baseStyle}
       >
         {sections[section]}
-        <BaseChart
-          autoWidth
-          height={300}
-        />
       </BaseModule>
     </ContentSection>
   );

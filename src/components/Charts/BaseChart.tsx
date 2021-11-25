@@ -7,30 +7,25 @@ import { mergeDeep } from 'util/AnalyticsUtilities';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 import { theme } from '../../constants';
-// import BaseLabels from './BaseLabel';
+import BaseLabels from './BaseLabel';
 
 const BaseChart = (props) => {
   const {
-    autoWidth,
     autoHeight,
+    autoWidth,
+    backgroundTheme,
+    charts,
+    colors,
+    darkTheme,
+    fitAll,
+    from,
     height,
-    width,
-    candlestickSeries,
-    lineSeries,
-    areaSeries,
-    barSeries,
-    histogramSeries,
-    baselineSeries,
     onClick,
     onCrosshairMove,
     onTimeRangeMove,
-    darkTheme,
-    backgroundTheme,
-    colors,
     options,
-    from,
     to,
-    fitAll,
+    width,
   } = props;
   const prevProps = usePrevious(props);
   const chartDiv = React.useRef<any>();
@@ -100,9 +95,10 @@ const BaseChart = (props) => {
         ...serie.options,
       });
       const data = handleLinearInterpolation(
-        serie.data,
+        serie.data[0],
         serie.linearInterpolation
       );
+      console.log('data', data);
       mySeries.setData(data);
       if (serie.markers) series.setMarkers(serie.markers);
       if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
@@ -113,35 +109,46 @@ const BaseChart = (props) => {
     return mySeries;
   };
   const handleSeries = () => {
-    candlestickSeries &&
-      candlestickSeries.forEach((serie) => {
-        setSeries([...series, addSeries(serie, 'candlestick')]);
-      });
-
-    lineSeries &&
-      lineSeries.forEach((serie) => {
-        setSeries([...series, addSeries(serie, 'line')]);
-      });
-
-    areaSeries &&
-      areaSeries.forEach((serie) => {
-        setSeries([...series, addSeries(serie, 'area')]);
-      });
-
-    barSeries &&
-      barSeries.forEach((serie) => {
-        setSeries([...series, addSeries(serie, 'bar')]);
-      });
-
-    histogramSeries &&
-      histogramSeries.forEach((serie) => {
-        series.push(addSeries(serie, 'histogram'));
-      });
-    baselineSeries &&
+    // map c => switch (c.type) { case 'candlestick': return 'candlestick'; }
+    // const candlestickSeries = charts.filter((c) => c.type === 'candlestick');
+    // if (candlestickSeries[0].data?.length > 0) {
+    //   candlestickSeries[0].data?.forEach((serie) => {
+    //     setSeries([...series, addSeries(serie, 'candlestick')]);
+    //   });
+    // }
+    // const lineSeries = charts.filter((c) => c.type === 'line');
+    // console.log('lineSeries', lineSeries);
+    // lineSeries[0].data?.length > 0 &&
+    //   lineSeries[0].data.forEach((serie) => {
+    //     setSeries([...series, addSeries(serie, 'line')]);
+    //   });
+    // const areaSeries = charts.filter((c) => c.type === 'area');
+    // console.log('areaSeries', areaSeries);
+    // areaSeries[0].data?.length > 0 &&
+    //   areaSeries[0].data.forEach((serie) => {
+    //     setSeries([...series, addSeries(serie, 'area')]);
+    //   });
+    // const barSeries = charts.filter((c) => c.type === 'bar');
+    // console.log('barSeries', barSeries);
+    // barSeries[0].data?.length > 0 &&
+    //   barSeries[0].data.forEach((serie) => {
+    //     setSeries([...series, addSeries(serie, 'bar')]);
+    //   });
+    // const histogramSeries = charts.filter((c) => c.type === 'histogram');
+    // console.log('histogramSeries', histogramSeries);
+    // histogramSeries[0].data?.length > 0 &&
+    //   histogramSeries[0].data.forEach((serie) => {
+    //     series.push(addSeries(serie, 'histogram'));
+    //   });
+    const baselineSeries = charts.filter((c) => c.type === 'baseline');
+    if (baselineSeries[0].data?.length > 0) {
       baselineSeries.forEach((serie) => {
+        serie.options = options.baseline;
         setSeries([...series, addSeries(serie, 'baseline')]);
       });
+    }
   };
+
   // const removeSeries = () => {
   //   series.forEach((serie) => {
   //     const result = chart?.removeSeries(serie);
@@ -193,7 +200,7 @@ const BaseChart = (props) => {
 
     chart?.applyOptions(customOptions);
 
-    handleSeries();
+    if (charts) handleSeries();
     handleEvents();
     handleTimeRange();
 
@@ -241,20 +248,12 @@ const BaseChart = (props) => {
         [
           prevProps.options,
           prevProps.darkTheme,
-          prevProps.candlestickSeries,
-          prevProps.lineSeries,
-          prevProps.areaSeries,
-          prevProps.barSeries,
-          prevProps.histogramSeries,
+          prevProps.charts,
         ],
         [
           options,
           darkTheme,
-          candlestickSeries,
-          lineSeries,
-          areaSeries,
-          barSeries,
-          histogramSeries,
+          charts,
         ]
       )
     ) {
@@ -263,18 +262,10 @@ const BaseChart = (props) => {
   }, [
     prevProps?.options,
     prevProps?.darkTheme,
-    prevProps?.candlestickSeries,
-    prevProps?.lineSeries,
-    prevProps?.areaSeries,
-    prevProps?.barSeries,
-    prevProps?.histogramSeries,
+    prevProps?.charts,
     options,
     darkTheme,
-    candlestickSeries,
-    lineSeries,
-    areaSeries,
-    barSeries,
-    histogramSeries]);
+    charts]);
 
   React.useEffect(() => {
     if (!prevProps) return;
@@ -291,7 +282,9 @@ const BaseChart = (props) => {
 const ChartWrapper = (props) => {
   const [from, setFrom] = React.useState<number>();
   const [fitAll, setFitAll] = React.useState<boolean>(false);
-
+  const [dateScale, setDateScale] = React.useState<string>('hourly');
+  // const [priceData, setPriceData] = React.useState<any>([]);
+  const [chartsData, setChartsData] = React.useState<any>([]);
   const state = {
     options: {
       alignLabels: false,
@@ -366,9 +359,11 @@ const ChartWrapper = (props) => {
       },
     },
   };
-
   React.useEffect(() => {
-    console.log('props', props);
+    if (props.charts) {
+      console.log('dateScale', chartsData, dateScale);
+      setChartsData(props.charts);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -469,18 +464,51 @@ const ChartWrapper = (props) => {
     );
   };
 
+  const timeScaleSelectButtons = () => {
+    const timeRangeButtons = [
+      {
+        label: 'Hour',
+        value: 'hour',
+      },
+      {
+        label: 'Day',
+        value: 'day',
+      },
+    ];
+    return (
+      <>
+        {timeRangeButtons.map((button) => (
+          <Button
+            className={classes.timeRangeBtn}
+            key={button.value}
+            onClick={() => {
+              setDateScale(button.value);
+            }}
+          >
+            {button.label}
+          </Button>))}
+      </>
+    );
+  };
+
   React.useEffect(() => {
     setDateRange(4);
   }, []);
 
   const to = new Date().getTime() / 1000; // current timestamp
-  console.log('props from wrapper', props);
+
+  // React.useEffect(() => {
+  //   if (chartsData) {
+  //     console.log('chartsData', chartsData);
+  //   }
+  // }, [chartsData]);
 
   return (
     <>
+      {timeScaleSelectButtons()}
       <BaseChart
         {...props}
-        // baselineSeries={chartData}
+        // baselineSeries={chartsData}
         autoWidth
         height={300}
         options={state.options}
@@ -488,10 +516,10 @@ const ChartWrapper = (props) => {
         to={to}
         fitAll={fitAll}
         colors={colors}
-        backgroundTheme={{ customDarkTheme, lightTheme }} />
-      ...loading
+        backgroundTheme={{ customDarkTheme, lightTheme }}
+      />
+      <BaseLabels labels={['abc', 'def']} />
       {timeRangeSelectButtons()}
-      {/* <BaseLabels labels={['abc', 'def']} /> */}
     </>
   );
 };

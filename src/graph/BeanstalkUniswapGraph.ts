@@ -1,5 +1,6 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { BEAN_SUBGRAPH_API_LINK } from 'constants/index';
+import mock from './mock.json';
 
 const LastCrossQuery = `
 {
@@ -44,23 +45,7 @@ export async function priceQuery() {
   }
 }
 
-const HourBeanQuery = `
-query hourDatas($first: Int, $skip: Int) {
-  hourDatas(
-      skip: $skip
-      first: $first,
-      orderBy: hourTimestamp,
-      orderDirection: desc,
-    ) {
-      id
-      hourTimestamp
-      totalSupply
-      totalSupplyUSD
-      crosses
-      price
-    }
-  }
-`;
+const HourBeanQuery = () => mock;
 
 const DayBeanQuery = `
   {
@@ -83,23 +68,10 @@ function roundTo4Digits(num) {
   return parseFloat(num.toFixed(4));
 }
 
-function queryHourData(first: Number, skip: Number): Promise {
-  return client.query({
-    query: gql(HourBeanQuery),
-    variables: { first: first, skip: skip },
-  });
-}
-
 export async function hourBeanQuery() {
   try {
-    const [d1, d2, d3] = await Promise.all([
-      queryHourData(1000, 0),
-      queryHourData(1000, 1000),
-      queryHourData(1000, 2000),
-    ]);
-    const data = d1.data.hourDatas
-      .concat(d2.data.hourDatas)
-      .concat(d3.data.hourDatas);
+    const d1 = HourBeanQuery();
+    const data = d1.data.hourDatas;
     const dates = data.reduce((acc, d) => {
       const date = new Date();
       date.setTime(d.hourTimestamp * 1000);

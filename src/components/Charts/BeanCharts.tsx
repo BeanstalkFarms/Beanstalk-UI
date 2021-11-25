@@ -29,34 +29,40 @@ export default function BeanCharts() {
       props: {
         unit: '$',
       },
+      type: 'baseline',
     },
     {
       title: 'Volume',
       shortTitle: 'Vol.',
       description: beanChartStrings.volume,
       data: chartData.volume,
+      type: 'line',
     },
     {
       title: 'Liquidity',
       shortTitle: 'Liq.',
       description: beanChartStrings.liquidity,
       data: chartData.liquidity,
+      type: 'line',
     },
     {
       title: 'Market Cap',
       shortTitle: 'M. Cap',
       description: beanChartStrings.marketcap,
       data: chartData.marketCap,
+      type: 'area',
     },
     {
       title: 'Supply',
       description: beanChartStrings.supply,
       data: chartData.supply,
+      type: 'bar',
     },
     {
       title: 'Crosses',
       description: beanChartStrings.crosses,
       data: chartData.crosses,
+      type: 'histogram',
     },
   ];
 
@@ -68,28 +74,28 @@ export default function BeanCharts() {
       hourBeanQuery(),
     ]);
     const price = [
-      beanHourData.map((d) => ({ x: d.x, y: d.price })),
-      beanDayData.map((d) => ({ x: d.x, y: d.price })),
+      beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.price })),
+      beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.price })),
     ];
     const volume = [
-      hourData.map((d) => ({ x: d.x, y: d.volume })),
-      dayData.map((d) => ({ x: d.x, y: d.volume })),
+      hourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.volume })),
+      dayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.volume })),
     ];
     const liquidity = [
-      hourData.map((d) => ({ x: d.x, y: d.liquidity })),
-      dayData.map((d) => ({ x: d.x, y: d.liquidity })),
+      hourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.liquidity })),
+      dayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.liquidity })),
     ];
     const supply = [
-      beanHourData.map((d) => ({ x: d.x, y: d.totalSupply })),
-      beanDayData.map((d) => ({ x: d.x, y: d.totalSupply })),
+      beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupply })),
+      beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupply })),
     ];
     const marketCap = [
-      beanHourData.map((d) => ({ x: d.x, y: d.totalSupplyUSD })),
-      beanDayData.map((d) => ({ x: d.x, y: d.totalSupplyUSD })),
+      beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupplyUSD })),
+      beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupplyUSD })),
     ];
     const crosses = [
-      beanHourData.map((d) => ({ x: d.x, y: d.crosses })),
-      beanDayData.map((d) => ({ x: d.x, y: d.crosses })),
+      beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.crosses })),
+      beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.crosses })),
     ];
     if (isMounted.current) {
       setChartData({
@@ -108,5 +114,5 @@ export default function BeanCharts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <Charts mainTitle="Bean" charts={charts} />;
+  return chartData.price[0].length > 0 ? <Charts mainTitle="Bean" charts={charts} /> : <>...loading</>;
 }

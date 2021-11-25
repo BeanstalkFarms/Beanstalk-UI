@@ -12,6 +12,7 @@ export default function BaseModule({
   allowance,
   setAllowance,
   marginTop,
+  marginBottom,
   textTransform,
   sectionTitles,
   locked,
@@ -41,6 +42,7 @@ export default function BaseModule({
       borderRadius: '25px',
       color: theme.text,
       marginTop: marginTop,
+      marginBottom: marginBottom,
       padding: '10px',
     },
     metaModule: {

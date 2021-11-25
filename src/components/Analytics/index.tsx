@@ -8,7 +8,6 @@ export default function Analytics() {
   return (
     <>
       <ContentSection id="analytics" title="Analytics">
-        <>...loading</>
         {/* {chartData[0].data?.length > 1 ? (<BaseChart options={state.options} baselineSeries={chartData} autoWidth height={300} />) :} */
         /* <Balances />
         <Seasons />
