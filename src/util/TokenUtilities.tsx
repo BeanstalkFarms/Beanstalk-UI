@@ -3,6 +3,7 @@ import {
   BEAN,
   BEANSTALK,
   UNI_V2_ETH_BEAN_LP,
+  UNI_V2_USDC_ETH_LP,
   UNISWAP_V2_ROUTER,
   USDC,
 } from 'constants/index';
@@ -114,7 +115,7 @@ export const approveBeanstalkLP = async (callback) => {
 };
 
 export const approveUniswapUSDC = async (callback) => {
-  approveToken(USDC, account, USDC.addr, MAX_UINT256, callback);
+  approveToken(USDC, account, UNI_V2_USDC_ETH_LP.addr, MAX_UINT256, callback);
 };
 
 export function TokenLabel(tokenType: Token): string {

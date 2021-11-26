@@ -31,6 +31,7 @@ import {
   getAccountBalances,
   getBips,
   getEtherBalance,
+  getUSDCBalance,
   getPrices,
   getTotalBalances,
   initialize,
@@ -103,6 +104,7 @@ export default function Updater() {
         farmableBeanBalance,
         grownStalkBalance,
         rootsBalance,
+        usdcBalance,
       ] = accountBalances;
       const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       const lockedSeasons = lockedUntil.minus(currentSeason);
@@ -125,6 +127,7 @@ export default function Updater() {
           farmableBeanBalance,
           grownStalkBalance,
           rootsBalance,
+          usdcBalance,
         })
       );
     }
@@ -497,13 +500,14 @@ export default function Updater() {
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const [bipInfo, ethBalance, accountBalances, totalBalances, _prices] =
+      const [bipInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance] =
         await Promise.all([
           getBips(),
           getEtherBalance(),
           accountBalancePromises,
           totalBalancePromises,
           pricePromises,
+          getUSDCBalance(),
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
 
@@ -529,7 +533,8 @@ export default function Updater() {
             accountBalances,
             ethBalance,
             lpReserves,
-            currentSeason
+            currentSeason,
+            usdcBalance
           );
         },
         eventParsingParameters,
