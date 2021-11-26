@@ -125,7 +125,6 @@ export const FundModule = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      console.log(ref);
       if (toPodValue.isLessThanOrEqualTo(0)) return;
       fund(
         props.id,

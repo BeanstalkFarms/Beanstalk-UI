@@ -16,10 +16,9 @@ export default function FundraiserModule({
   id,
   minHeight,
 }) {
-  // const { uniswapUSDCAllowance } = useSelector<AppState, AppState['allowances']>(
-  //   (state) => state.allowances
-  // );
-  const beanstalkUSDCAllowance = new BigNumber(1);
+  const { beanstalkUSDCAllowance } = useSelector<AppState, AppState['allowances']>(
+    (state) => state.allowances
+  );
 
   const {
     usdcBalance,

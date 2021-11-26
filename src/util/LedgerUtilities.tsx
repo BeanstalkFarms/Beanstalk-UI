@@ -17,7 +17,6 @@ import {
   initializing,
   pairContractReadOnly,
   tokenContractReadOnly,
-  usdcContractReadOnly,
   toTokenUnitsBN,
   web3,
 } from './index';
@@ -49,6 +48,10 @@ export async function getEtherBalance() {
   return tokenResult(ETH)(await web3.eth.getBalance(account));
 }
 
+export async function getUSDCBalance() {
+  return tokenResult(USDC)(await web3.eth.getBalance(account));
+}
+
 export async function getBlockTimestamp(blockNumber) {
   await initializing;
   return (await web3.eth.getBlock(blockNumber)).timestamp;
@@ -59,7 +62,7 @@ export const getAccountBalances = async (batch) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
-  const usdc = usdcContractReadOnly();
+  const usdc = tokenContractReadOnly(USDC);
 
   return makeBatchedPromises(batch, [
     [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],

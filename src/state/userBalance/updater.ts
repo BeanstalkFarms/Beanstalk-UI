@@ -34,6 +34,7 @@ import {
   getBips,
   getFundraisers,
   getEtherBalance,
+  getUSDCBalance,
   getPrices,
   getTotalBalances,
   initialize,
@@ -96,7 +97,7 @@ export default function Updater() {
         uniswapBeanAllowance,
         beanstalkBeanAllowance,
         beanstalkLPAllowance,
-        uniswapUSDCAllowance,
+        beanstalkUSDCAllowance,
         claimableEthBalance,
         beanBalance,
         lpBalance,
@@ -106,6 +107,7 @@ export default function Updater() {
         farmableBeanBalance,
         grownStalkBalance,
         rootsBalance,
+        usdcBalance,
       ] = accountBalances;
       const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       const lockedSeasons = lockedUntil.minus(currentSeason);
@@ -113,7 +115,7 @@ export default function Updater() {
       dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
-      dispatch(updateBeanstalkUSDCAllowance(uniswapUSDCAllowance));
+      dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));
 
       dispatch(
         setUserBalance({
@@ -128,6 +130,7 @@ export default function Updater() {
           farmableBeanBalance,
           grownStalkBalance,
           rootsBalance,
+          usdcBalance,
         })
       );
     }
@@ -503,7 +506,7 @@ export default function Updater() {
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices] =
+      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance] =
         await Promise.all([
           getBips(),
           getFundraisers(),
@@ -511,6 +514,7 @@ export default function Updater() {
           accountBalancePromises,
           totalBalancePromises,
           pricePromises,
+          getUSDCBalance(),
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
@@ -535,7 +539,8 @@ export default function Updater() {
             accountBalances,
             ethBalance,
             lpReserves,
-            currentSeason
+            currentSeason,
+            usdcBalance
           );
         },
         eventParsingParameters,
