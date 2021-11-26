@@ -6,6 +6,8 @@ import {
   setBips,
   setHasActiveBIP,
   setContractEvents,
+  setHasActiveFundraiser,
+  setFundraisers,
 } from './actions';
 
 export interface GeneralState {
@@ -14,6 +16,8 @@ export interface GeneralState {
   lastCross: Number;
   bips: Array;
   hasActiveBIP: Boolean;
+  fundraisers: Array;
+  hasActiveFundraiser: Boolean;
   contractEvents: Array;
 }
 
@@ -42,6 +46,12 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setHasActiveBIP, (state, { payload }) => {
       state.hasActiveBIP = payload;
+    })
+    .addCase(setFundraisers, (state, { payload }) => {
+      state.fundraisers = payload;
+    })
+    .addCase(setHasActiveFundraiser, (state, { payload }) => {
+      state.hasActiveFundraiser = payload;
     })
     .addCase(setContractEvents, (state, { payload }) => {
       state.contractEvents = payload;

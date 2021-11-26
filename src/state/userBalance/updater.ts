@@ -6,7 +6,7 @@ import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
   updateUniswapBeanAllowance,
-  updateUniswapUSDCAllowance,
+  updateBeanstalkUSDCAllowance,
 } from 'state/allowances/actions';
 import { setUserBalance } from 'state/userBalance/actions';
 import { setTotalBalance } from 'state/totalBalance/actions';
@@ -20,6 +20,8 @@ import {
   setLastCross,
   setBips,
   setHasActiveBIP,
+  setFundraisers,
+  setHasActiveFundraiser,
   setContractEvents,
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery } from 'graph/index';
@@ -30,6 +32,7 @@ import {
   createLedgerBatch,
   getAccountBalances,
   getBips,
+  getFundraisers,
   getEtherBalance,
   getPrices,
   getTotalBalances,
@@ -110,7 +113,7 @@ export default function Updater() {
       dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
-      dispatch(updateUniswapUSDCAllowance(uniswapUSDCAllowance));
+      dispatch(updateBeanstalkUSDCAllowance(uniswapUSDCAllowance));
 
       dispatch(
         setUserBalance({
@@ -129,7 +132,7 @@ export default function Updater() {
       );
     }
 
-    function processTotalBalances(totalBalances, bipInfo) {
+    function processTotalBalances(totalBalances, bipInfo, fundraiserInfo) {
       const [
         totalBeans,
         totalLP,
@@ -151,6 +154,7 @@ export default function Updater() {
       ] = totalBalances;
       const totalBudgetBeans = develpomentBudget.plus(marketingBudget);
       const [bips, hasActiveBIP] = bipInfo;
+      const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
       const totalPods = podIndex.minus(harvestableIndex);
       dispatch(
         setTotalBalance({
@@ -177,6 +181,8 @@ export default function Updater() {
       );
       dispatch(setBips(bips));
       dispatch(setHasActiveBIP(hasActiveBIP));
+      dispatch(setFundraisers(fundraisers));
+      dispatch(setHasActiveFundraiser(hasActiveFundraiser));
       dispatch(setSeason(_season));
       return _season.season;
     }
@@ -497,16 +503,16 @@ export default function Updater() {
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const [bipInfo, ethBalance, accountBalances, totalBalances, _prices] =
+      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices] =
         await Promise.all([
           getBips(),
+          getFundraisers(),
           getEtherBalance(),
           accountBalancePromises,
           totalBalancePromises,
           pricePromises,
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
-
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
         _prices[1],
         _prices[2]
@@ -523,7 +529,7 @@ export default function Updater() {
 
       return [
         () => {
-          const currentSeason = processTotalBalances(totalBalances, bipInfo);
+          const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
           const lpReserves = processPrices(_prices);
           processAccountBalances(
             accountBalances,
@@ -543,12 +549,13 @@ export default function Updater() {
 
       batch.execute();
 
-      const [bipInfo, totalBalances] = await Promise.all([
+      const [bipInfo, fundraiserInfo, totalBalances] = await Promise.all([
         getBips(),
+        getFundraisers(),
         totalBalancePromises,
       ]);
       ReactDOM.unstable_batchedUpdates(() => {
-        processTotalBalances(totalBalances, bipInfo);
+        processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
       });
       benchmarkEnd('TOTALS', startTime);
     }

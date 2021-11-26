@@ -20,6 +20,7 @@ export * from './UniswapUtilities';
 export * from './TimeUtilities';
 export * from './BeaNFTUtilities';
 export * from './APYUtilities';
+export * from './FundraiserUtilities';
 
 let ethereum;
 export let initializing;
@@ -100,7 +101,6 @@ export async function initialize(): Promise<void> {
           web3Signer.getAddress(),
           web3Signer.getChainId(),
         ]);
-        account = hexAccount;
         chainId = parseInt(chainIdentifier, 10);
         if (chainId !== 1 && chainId !== 3) {
           metamaskFailure = 3;

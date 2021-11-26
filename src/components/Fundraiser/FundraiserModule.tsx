@@ -2,27 +2,30 @@ import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { updateUniswapUSDCAllowance } from 'state/allowances/actions';
-import { approveUniswapUSDC, displayBN, displayFullBN, TokenLabel } from '../../util';
+import { updateBeanstalkUSDCAllowance } from 'state/allowances/actions';
+import { approveBeanstalkUSDC, displayBN, displayFullBN, TokenLabel, CryptoAsset } from '../../util';
 // import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
 import { BaseModule, ContentSection, Grid, HeaderLabel } from '../Common';
-import { SowAuditModule } from './SowAuditModule';
+import { FundModule } from './FundModule';
 
-export default function FundsModule(props) {
-  const { uniswapUSDCAllowance } = useSelector<AppState, AppState['allowances']>(
-    (state) => state.allowances
-  );
+export default function FundraiserModule({
+  remaining,
+  total,
+  description,
+  title,
+  id,
+  minHeight,
+}) {
+  // const { uniswapUSDCAllowance } = useSelector<AppState, AppState['allowances']>(
+  //   (state) => state.allowances
+  // );
+  const beanstalkUSDCAllowance = new BigNumber(1);
 
   const {
     usdcBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-
-  const { weather, soil } = useSelector<
-    AppState,
-    AppState['weather']
-  >((state) => state.weather);
 
   const [section, setSection] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
@@ -34,7 +37,7 @@ export default function FundsModule(props) {
 
   const sectionTitles = ['Fund'];
   const sectionTitlesDescription = [
-    `Use this tab to Fund the audit by sowing ${TokenLabel(props.asset)} in the Field in exchange for Pods.`,
+  `Use this tab to Fund the audit by sowing ${TokenLabel(CryptoAsset.Usdc)} in the Field in exchange for Pods.`,
   ];
 
   const handleTabChange = (event, newSection) => {
@@ -57,26 +60,28 @@ export default function FundsModule(props) {
 
   const allowance =
     section === 0
-      ? uniswapUSDCAllowance
+      ? beanstalkUSDCAllowance
       : new BigNumber(1);
 
+  const fundPercent = total.minus(remaining).dividedBy(total).multipliedBy(100);
+
   return (
-    <ContentSection id={props.title} title={props.title} description={props.description} style={{ paddingTop: '0px' }}>
+    <ContentSection id={title} title={title} description={description} style={{ paddingTop: '0px' }}>
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
-            balanceDescription={`${displayFullBN(props.fundsRemaining)} ${TokenLabel(props.asset)}`}
-            description={`The amount of remaining ${TokenLabel(props.asset)} needed to fund the audit`}
+            balanceDescription={`${displayFullBN(remaining)} ${TokenLabel(CryptoAsset.Usdc)}`}
+            description={`The amount of remaining ${TokenLabel(CryptoAsset.Usdc)} needed to fund the audit`}
             title="Remaining USDC"
-            value={displayBN(props.fundsRemaining)}
+            value={displayBN(remaining)}
           />
         </Grid>
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
-            balanceDescription={`${displayFullBN(props.fundPercent)}%`}
-            description={`The amount of remaining ${TokenLabel(props.asset)} needed to fund the audit`}
+            balanceDescription={`${displayFullBN(fundPercent)}%`}
+            description={`The amount of remaining ${TokenLabel(CryptoAsset.Usdc)} needed to fund the audit`}
             title="Fund %"
-            value={`${(props.fundPercent).toFixed(2)}%`}
+            value={`${(fundPercent).toFixed(2)}%`}
           />
         </Grid>
       </Grid>
@@ -88,7 +93,7 @@ export default function FundsModule(props) {
         className="SiloSection"
         alignItems="flex-start"
         justifyContent="center"
-        style={{ minHeight: props.minHeight, height: '100%' }}
+        style={{ minHeight: minHeight, height: '100%' }}
       >
         <Grid
           item
@@ -98,28 +103,25 @@ export default function FundsModule(props) {
         >
           <BaseModule
             allowance={allowance}
-            handleApprove={approveUniswapUSDC}
+            handleApprove={approveBeanstalkUSDC}
             handleForm={handleForm}
             handleTabChange={handleTabChange}
-            isDisabled={isFormDisabled || props.fundsRemaining.isEqualTo(0)}
+            isDisabled={isFormDisabled || remaining.isEqualTo(0)}
             marginTop="14px"
             section={section}
             sectionTitles={sectionTitles}
             sectionTitlesDescription={sectionTitlesDescription}
-            setAllowance={updateUniswapUSDCAllowance}
+            setAllowance={updateBeanstalkUSDCAllowance}
             singleReset
           >
-            <SowAuditModule
-              key={0}
-              asset={props.asset}
+            <FundModule
+              key={id}
+              id={id}
+              asset={CryptoAsset.Usdc}
               tokenBalance={usdcBalance}
-              fundsRemaining={props.fundsRemaining}
-              unripenedPods={props.unripenedPods}
+              fundsRemaining={remaining}
               ref={sowTokenRef}
               setIsFormDisabled={setIsFormDisabled}
-              soil={soil}
-              weather={weather}
-              {...props}
             />
           </BaseModule>
         </Grid>
@@ -128,6 +130,6 @@ export default function FundsModule(props) {
   );
 }
 
-FundsModule.defaultProps = {
+FundraiserModule.defaultProps = {
   minHeight: '400px',
 };

@@ -65,7 +65,7 @@ export const getAccountBalances = async (batch) => {
     [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
     [bean.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
     [lp.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
-    [usdc.methods.allowance(account, USDC.addr), bigNumberResult],
+    [usdc.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
     [beanstalk.methods.balanceOfEth(account), tokenResult(ETH)],
     [bean.methods.balanceOf(account), tokenResult(BEAN)],
     [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
@@ -170,6 +170,28 @@ export const getBips = async () => {
     bips[parseInt(id, 10)].active = true;
   });
   return [bips, hasActiveBIP];
+};
+
+/* TODO: batch BIP detail ledger reads */
+export const getFundraisers = async () => {
+  const beanstalk = beanstalkContractReadOnly();
+  let hasActiveFundraiser = false;
+  const numberOfFundraisers = bigNumberResult(
+    await beanstalk.methods.numberOfFundraisers().call()
+  );
+  const fundraisers = [];
+  for (let i = new BigNumber(0); i.isLessThan(numberOfFundraisers); i = i.plus(1)) {
+    const fundraiser = await beanstalk.methods.fundraiser(i.toString()).call();
+    const fundraiserDict = {
+      id: i,
+      remaining: toTokenUnitsBN(fundraiser.remaining, USDC.decimals),
+      total: toTokenUnitsBN(fundraiser.total, USDC.decimals),
+      token: fundraiser.token,
+    };
+    if (fundraiserDict.remaining.isGreaterThan(0)) hasActiveFundraiser = true;
+    fundraisers.push(fundraiserDict);
+  }
+  return [fundraisers, hasActiveFundraiser];
 };
 
 export const getPrices = async (batch) => {

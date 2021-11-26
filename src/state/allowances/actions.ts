@@ -13,6 +13,6 @@ export const updateBeanstalkLPAllowance = createAction<BigNumber>(
   'allowances/updateBeanstalkLPAllowance'
 );
 
-export const updateUniswapUSDCAllowance = createAction<BigNumber>(
-  'allowances/updateUniswapUSDCAllowance'
+export const updateBeanstalkUSDCAllowance = createAction<BigNumber>(
+  'allowances/updateBeanstalkUSDCAllowance'
 );

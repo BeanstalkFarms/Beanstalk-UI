@@ -27,7 +27,7 @@ export enum CryptoAsset {
   Bean = 0,
   Ethereum,
   LP,
-  usdc,
+  Usdc,
 }
 export enum SiloAsset {
   Stalk = 4,
@@ -113,8 +113,8 @@ export const approveBeanstalkLP = async (callback) => {
   );
 };
 
-export const approveUniswapUSDC = async (callback) => {
-  approveToken(USDC, account, USDC.addr, MAX_UINT256, callback);
+export const approveBeanstalkUSDC = async (callback) => {
+  approveToken(USDC, account, BEANSTALK.addr, MAX_UINT256, callback);
 };
 
 export function TokenLabel(tokenType: Token): string {
@@ -125,7 +125,7 @@ export function TokenLabel(tokenType: Token): string {
       return 'ETH';
     case CryptoAsset.LP:
       return 'LP';
-    case CryptoAsset.usdc:
+    case CryptoAsset.Usdc:
       return 'USDC';
     case SiloAsset.Stalk:
       return 'Stalk';
@@ -188,7 +188,7 @@ export function TokenImage(tokenType: Token): string {
     case FarmAsset.Pods:
       return PodLogo;
 
-    case CryptoAsset.usdc:
+    case CryptoAsset.Usdc:
       return USDCLogo;
     default:
       return '';

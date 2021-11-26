@@ -1,13 +1,15 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { Box } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { BEAN } from '../../constants';
+import { USDC, BEAN } from '../../constants';
 import {
   displayBN,
   MaxBN,
   MinBNs,
-  sowBeans,
+  fund,
   toStringBaseUnitBN,
   TokenLabel,
   TrimBN,
@@ -19,23 +21,33 @@ import {
   TransactionDetailsModule,
 } from '../Common';
 
-export const SowAuditModule = forwardRef((props, ref) => {
+export const FundModule = forwardRef((props, ref) => {
   const [fromTokenValue, setFromTokenValue] = useState(new BigNumber(-1));
   const [toPodValue, setToPodValue] = useState(new BigNumber(0));
 
+  const { weather, soil } = useSelector<
+    AppState,
+    AppState['weather']
+  >((state) => state.weather);
+
+  const {
+    totalPods,
+  } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
   const maxFromVal = props.tokenBalance;
   const maxTokenVal = props.fundsRemaining;
-  const maxToVal = props.soil;
 
   function fromValueUpdated(newFromNumber) {
-    const newFromValue = MinBNs([newFromNumber, maxFromVal, maxToVal, maxTokenVal]);
+    const newFromValue = MinBNs([newFromNumber, maxFromVal, maxTokenVal]);
     setFromTokenValue(TrimBN(newFromValue, 6));
     BigNumber.set({ DECIMAL_PLACES: 18 });
     const sowedBeans = MaxBN(newFromValue, new BigNumber(0));
     setToPodValue(
       TrimBN(
         sowedBeans.multipliedBy(
-          new BigNumber(1).plus(props.weather.dividedBy(100))
+          new BigNumber(1).plus(weather.dividedBy(100))
         ),
         6
       )
@@ -74,22 +86,19 @@ export const SowAuditModule = forwardRef((props, ref) => {
   const details = [];
   const beanOutput = MaxBN(fromTokenValue, new BigNumber(0));
 
-  if (fromTokenValue.isEqualTo(props.soil)) {
-    details.push(`Sow maximum Soil ${displayBN(beanOutput)} ${TokenLabel(props.asset)} with ${props.weather.toFixed()}% Weather`
-    );
-  } else if (fromTokenValue.isEqualTo(props.fundsRemaining)) {
-    details.push(`Sow the remaining ${displayBN(beanOutput)} ${TokenLabel(props.asset)} with ${props.weather.toFixed()}% Weather`
+  if (fromTokenValue.isEqualTo(props.fundsRemaining)) {
+    details.push(`Sow the remaining ${displayBN(beanOutput)} ${TokenLabel(props.asset)} with ${weather.toFixed()}% Weather`
     );
   } else {
-    details.push(`Sow ${displayBN(beanOutput)} ${TokenLabel(props.asset)} with ${props.weather.toFixed()}% Weather`
+    details.push(`Sow ${displayBN(beanOutput)} ${TokenLabel(props.asset)} with ${weather.toFixed()}% Weather`
     );
   }
 
   details.push(`Receive ${displayBN(toPodValue)} Pods at #${displayBN(
-    props.unripenedPods
+    totalPods
   )} in the Pod line`);
 
-  const noSoilTextField = props.soil.isEqualTo(0) ? (
+  const noSoilTextField = soil.isEqualTo(0) ? (
     <Box style={{ marginTop: '-2px', fontFamily: 'Futura-PT-Book' }}>
       Currently No Soil
     </Box>
@@ -118,11 +127,9 @@ export const SowAuditModule = forwardRef((props, ref) => {
     handleForm() {
       console.log(ref);
       if (toPodValue.isLessThanOrEqualTo(0)) return;
-
-      const claimable = props.settings.claim ? props.claimable : null;
-      sowBeans(
-        toStringBaseUnitBN(fromTokenValue, BEAN.decimals),
-        claimable,
+      fund(
+        props.id,
+        toStringBaseUnitBN(fromTokenValue, USDC.decimals),
         () => {
           fromValueUpdated(new BigNumber(-1));
         }
