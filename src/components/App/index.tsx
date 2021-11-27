@@ -14,11 +14,12 @@ import { NavigationBar } from 'components/Navigation';
 import NFTs from 'components/NFT';
 import Silo from 'components/Silo';
 import Trade from 'components/Trade';
+import Marketplace from 'components/Marketplace';
 import Governance from 'components/Governance';
 import MetamasklessModule from './MetamasklessModule';
-import Main from './main.tsx';
+import Main from './main';
 import theme from './theme';
-import LoadingBean from './LoadingBean.tsx';
+import LoadingBean from './LoadingBean';
 import './App.css';
 
 export default function App() {
@@ -42,27 +43,30 @@ export default function App() {
           <Route exact path="/">
             <Redirect to="/farm" />
           </Route>
-          <Route exact path="/farm">
+          <Route path="/farm">
             <>
               <Silo />
               <Field />
               <Trade />
             </>
           </Route>
-          <Route exact path="/analytics">
+          <Route path="/analytics">
             <Analytics />
           </Route>
-          <Route exact path="/fundraiser">
+          <Route path="/fundraiser">
             <Fundraiser />
           </Route>
-          <Route exact path="/dao">
+          <Route path="/dao">
             <Governance />
           </Route>
-          <Route exact path="/nft">
+          <Route path="/nft">
             <NFTs />
           </Route>
-          <Route exact path="/about">
+          <Route path="/about">
             <About key="about" />
+          </Route>
+          <Route path="/marketplace">
+            <Marketplace key="marketplace" />
           </Route>
         </Switch>
       </>

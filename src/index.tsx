@@ -1,19 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Provider as StateProvider } from 'react-redux';
 import store from 'state';
 import App from './components/App';
+import Marketplace from './components/Marketplace';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <Router>
       <StateProvider store={store}>
-        <App />
+        <Switch>
+          <Route path="/">
+            <App />
+          </Route>
+          <Route path="/marketplace">
+            <Marketplace />
+          </Route>
+        </Switch>
       </StateProvider>
-    </BrowserRouter>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
