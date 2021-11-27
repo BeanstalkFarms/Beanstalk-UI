@@ -39,6 +39,10 @@ const defaultNavMapping = [
     title: 'DAO',
   },
   {
+  path: 'fundraiser',
+  title: 'FUNDRAISER',
+},
+  {
     path: 'nft',
     title: 'BeaNFTs',
   },
@@ -55,6 +59,10 @@ export default function NavigationBar(props) {
   );
 
   const { bips } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+
+  const { hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
@@ -125,19 +133,10 @@ export default function NavigationBar(props) {
     return false;
   }
 
-  // temporary fix/hide for WIP Fundraiser page
-
-  const navMapping = [...defaultNavMapping];
-  const hasActiveFundraiser = true;
-  if (hasActiveFundraiser) {
-    navMapping.splice(3, 0, {
-      path: 'fundraiser',
-      title: 'FUNDRAISER',
-    });
-  }
-
   const linkItemStyle = (path) => {
-    if ((path === 'dao' && hasActiveBIP !== false) || path === 'fundraiser') {
+    if (
+      (path === 'dao' && hasActiveBIP !== false) ||
+      (path === 'fundraiser' && hasActiveFundraiser !== false)) {
       return { color: theme.activeSection };
     }
     return null;
@@ -184,7 +183,7 @@ export default function NavigationBar(props) {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow">
-                  {navMapping.map(({ title, path }) => (
+                  {defaultNavMapping.map(({ title, path }) => (
                     <MenuItem
                       key={path}
                       button
@@ -216,7 +215,7 @@ export default function NavigationBar(props) {
       aria-labelledby="main navigation"
       className="NavigationBar"
     >
-      {navMapping.map(({ title, path }) => (
+      {defaultNavMapping.map(({ title, path }) => (
         <ListItem
           key={path}
           button
