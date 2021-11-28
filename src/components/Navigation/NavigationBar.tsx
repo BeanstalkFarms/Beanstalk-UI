@@ -43,6 +43,10 @@ const defaultNavMapping = [
     title: 'BeaNFTs',
   },
   {
+    path: 'Marketplace',
+    title: 'MARKETPLACE',
+  },
+  {
     path: 'about',
     title: 'ABOUT',
   },
