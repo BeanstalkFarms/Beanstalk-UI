@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-  // hourUniswapQuery,
-  // dayUniswapQuery,
+  hourUniswapQuery,
+  dayUniswapQuery,
   dayBeanQuery,
   hourBeanQuery,
 } from 'graph/index';
@@ -67,37 +67,44 @@ export default function BeanCharts() {
   ];
 
   async function loadUniswapCharts() {
-    const [beanHourData, beanDayData] = await Promise.all([
-      hourBeanQuery(),
+    const [dayData, hourData, beanDayData, beanHourData] = await Promise.all([
+      dayUniswapQuery(),
+      hourUniswapQuery(),
       dayBeanQuery(),
+      hourBeanQuery(),
     ]);
     const price = [
       beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.price })),
       beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.price })),
     ];
-    // const volume = [
-    //   hourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.volume })),
-    //   dayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.volume })),
-    // ];
-    // const liquidity = [
-    //   hourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.liquidity })),
-    //   dayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.liquidity })),
-    // ];
-    // const supply = [
-    //   beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupply })),
-    //   beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupply })),
-    // ];
-    // const marketCap = [
-    //   beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupplyUSD })),
-    //   beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupplyUSD })),
-    // ];
-    // const crosses = [
-    //   beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.crosses })),
-    //   beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.crosses })),
-    // ];
+    const volume = [
+      hourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.volume })),
+      dayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.volume })),
+    ];
+    const liquidity = [
+      hourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.liquidity })),
+      dayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.liquidity })),
+    ];
+    const supply = [
+      beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupply })),
+      beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupply })),
+    ];
+    const marketCap = [
+      beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupplyUSD })),
+      beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.totalSupplyUSD })),
+    ];
+    const crosses = [
+      beanHourData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.crosses })),
+      beanDayData.map((d) => ({ time: (d.x.getTime() / 1000), value: d.crosses })),
+    ];
     if (isMounted.current) {
       setChartData({
         price: price,
+        volume: volume,
+        liquidity: liquidity,
+        marketCap: marketCap,
+        supply: supply,
+        crosses: crosses,
       });
     }
   }

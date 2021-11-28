@@ -4,8 +4,8 @@ import { BaseModule, chartStrings, ContentSection } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
 import BaseChart from './BaseChart';
 import BeanCharts from './BeanCharts';
-// import SiloCharts from './SiloCharts';
-// import FieldCharts from './FieldCharts';
+import SiloCharts from './SiloCharts';
+import FieldCharts from './FieldCharts';
 
 export default function Charts(props) {
   const marginTop = props.marginTop == null ? '0px' : props.marginTop;
@@ -44,8 +44,8 @@ export default function Charts(props) {
   ];
   const sections = [
     <BeanCharts />,
-    // <FieldCharts data={chartData} />,
-    // <SiloCharts data={chartData} />,
+    <FieldCharts data={chartData} />,
+    <SiloCharts data={chartData} />,
   ];
 
   return (

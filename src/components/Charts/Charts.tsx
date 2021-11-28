@@ -3,7 +3,6 @@ import { BaseModule } from 'components/Common';
 import BaseChart from './BaseChart';
 
 export default function Charts(props) {
-  console.log('props.charts', props.charts);
   const [section, setSection] = useState(0);
   const [dataMode, setDataMode] = useState('hr');
   const [timeMode, setTimeMode] = useState('week');
@@ -32,14 +31,15 @@ export default function Charts(props) {
   };
 
   const isMobile: boolean = width <= 768;
-  const sections = props.charts.map((c) => (<BaseChart
-    data={c.data}
-    isMobile={isMobile}
-    key={c.title}
-    title={`${c.title}`}
-    {...c.props}
-    {...modeProps}
-    {...props}
+  const sections = props.charts.map((c) => (
+    <BaseChart
+      data={c.data}
+      isMobile={isMobile}
+      key={c.title}
+      title={`${c.title}`}
+      {...c.props}
+      {...modeProps}
+      {...props}
     />));
 
   const baseStyle = isMobile
@@ -76,13 +76,7 @@ export default function Charts(props) {
       style={baseStyle}
       textTransform="None"
       textTabSize={isMobile ? '11px' : undefined}
-      setAllowance={undefined}
-      handleApprove={undefined}
-      handleForm={undefined}
-      lockedSeasons={undefined}
-      resetForm={undefined}
-      widthTooltip={undefined}
-      marginTooltip={undefined}>
+    >
       {sections[section]}
     </BaseModule>
   );
