@@ -32,6 +32,7 @@ export default function Marketplace() {
               }
             </table>
           </div>
+          <Button onPress={() => alert('buy')}>Sell</Button>
         </div>
       </div>
     );
