@@ -3,8 +3,14 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { updateBeanstalkUSDCAllowance } from 'state/allowances/actions';
-import { approveBeanstalkUSDC, displayBN, displayFullBN, TokenLabel, CryptoAsset } from '../../util';
-// import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
+import {
+  approveBeanstalkUSDC,
+  displayBN,
+  displayFullBN,
+  TokenLabel,
+  CryptoAsset,
+} from '../../util';
+// import { MEDIUM_INTEREST_LINK, theme } from '../../constants';
 import { BaseModule, ContentSection, Grid, HeaderLabel } from '../Common';
 import { FundModule } from './FundModule';
 
