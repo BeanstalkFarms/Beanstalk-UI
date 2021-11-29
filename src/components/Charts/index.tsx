@@ -53,7 +53,7 @@ export default function Charts(props) {
       id="charts"
       title={props.title}
       size="20px"
-      style={{ maxWidth: '1000px', marginTop: marginTop }}
+      style={{ maxWidth: '1000px', marginTop: marginTop, paddingTop: '0px' }}
     >
       <BaseModule
         handleTabChange={(event, newSection) => {

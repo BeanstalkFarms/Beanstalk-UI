@@ -6,6 +6,7 @@ import usePrevious from 'util/hooks/usePrevious';
 import { mergeDeep } from 'util/AnalyticsUtilities';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
+import LoadingBean from 'components/App/LoadingBean';
 import { theme } from '../../constants';
 import BaseLabels from './BaseLabel';
 
@@ -480,25 +481,28 @@ const ChartWrapper = (props: any) => {
   React.useEffect(() => {
     setDateRange(4);
     setDateScale('hour');
+    console.log('props', props);
   }, []);
 
   const to = new Date().getTime() / 1000; // current timestamp
-
+  // check if array is empty
+  const hasData = props.charts.map((chart) => chart.data[0].length > 0 && chart.data[1].length > 0).reduce((a, b) => a || b, false);
   return (
     <>
       {timeScaleSelectButtons()}
-      <BaseChart
-        {...props}
-        autoWidth
-        height={300}
-        options={state.options}
-        from={from}
-        to={to}
-        fitAll={fitAll}
-        colors={colors}
-        timeScale={dateScale}
-        backgroundTheme={{ customDarkTheme, lightTheme }}
-      />
+      {hasData ? (
+        <BaseChart
+          {...props}
+          autoWidth
+          height={300}
+          options={state.options}
+          from={from}
+          to={to}
+          fitAll={fitAll}
+          colors={colors}
+          timeScale={dateScale}
+          backgroundTheme={{ customDarkTheme, lightTheme }}
+        />) : (<LoadingBean />)}
       <BaseLabels labels={['abc', 'def']} />
       {timeRangeSelectButtons()}
     </>

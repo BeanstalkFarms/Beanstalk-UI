@@ -33,7 +33,6 @@ export default function Charts(props) {
   const isMobile: boolean = width <= 768;
   const sections = props.charts.map((c) => (
     <BaseChart
-      data={c.data}
       isMobile={isMobile}
       key={c.title}
       title={`${c.title}`}

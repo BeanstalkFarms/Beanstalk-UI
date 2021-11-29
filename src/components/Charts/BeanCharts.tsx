@@ -7,6 +7,7 @@ import {
 } from 'graph/index';
 import useIsMounted from 'util/hooks/isMounted';
 import { beanChartStrings } from 'components/Common';
+// import LoadingBean from 'components/App/LoadingBean';
 import Charts from './Charts';
 
 export default function BeanCharts() {
@@ -114,5 +115,5 @@ export default function BeanCharts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return chartData.price[0].length > 0 ? <Charts mainTitle="Bean" charts={charts} /> : <>...loading</>;
+  return <Charts mainTitle="Bean" charts={charts} />;
 }
