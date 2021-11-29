@@ -37,6 +37,7 @@ export default function Charts(props) {
       isMobile={isMobile}
       key={c.title}
       title={`${c.title}`}
+      type={c.type}
       {...c.props}
       {...modeProps}
       {...props}

@@ -5,7 +5,7 @@ import equal from 'fast-deep-equal';
 import usePrevious from 'util/hooks/usePrevious';
 import { mergeDeep } from 'util/AnalyticsUtilities';
 
-const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: any; charts: any; colors: any; darkTheme: any; fitAll: any; from: any; height: any; onClick: any; onCrosshairMove: any; onTimeRangeMove: any; options: any; to: any; timeScale: any; width: any; }) => {
+const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: any; charts: any; colors: any; darkTheme: any; fitAll: any; from: any; height: any; onClick: any; onCrosshairMove: any; onTimeRangeMove: any; options: any; to: any; timeScale: any; width: any; data: any; type: any; }) => {
     const {
         autoHeight,
         autoWidth,
@@ -24,6 +24,7 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
         timeScale,
         width,
         data,
+        type,
     } = props;
     const prevProps = usePrevious(props);
     const chartDiv = React.useRef<any>();
@@ -80,8 +81,8 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
         // return only the valid values
         return newData.filter((x) => x);
     };
-    const addSeries = (serie, type) => {
-        const func = addSeriesFunctions[type];
+    const addSeries = (serie, serieType) => {
+        const func = addSeriesFunctions[serieType];
         const color =
             (serie.options && serie.options.color) ||
             colors[series.length % colors.length];
@@ -105,43 +106,31 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
         return mySeries;
     };
     const handleSeries = () => {
-        const candlestickSeries = charts.filter((c) => c.type === 'line');
-        if (candlestickSeries.length > 0 && candlestickSeries[0].data?.length > 0) {
-            candlestickSeries.forEach((serie) => {
-                setSeries([...series, addSeries(serie, 'candlestick')]);
-            });
-        }
-        const lineSeries = charts.filter((c) => c.type === 'line');
-        if (lineSeries.length > 0 && lineSeries[0].data?.length > 0) {
-            lineSeries.forEach((serie) => {
-                setSeries([...series, addSeries(serie, 'line')]);
-            });
-        }
-        const areaSeries = charts.filter((c) => c.type === 'area');
-        if (areaSeries.length > 0 && areaSeries[0].data?.length > 0) {
-            areaSeries.forEach((serie) => {
-                setSeries([...series, addSeries(serie, 'area')]);
-            });
-        }
-        const barSeries = charts.filter((c) => c.type === 'bar');
-        if (barSeries.length > 0 && barSeries[0].data?.length > 0) {
-            barSeries.forEach((serie) => {
-                setSeries([...series, addSeries(serie, 'bar')]);
-            });
-        }
-        const histogramSeries = charts.filter((c) => c.type === 'histogram');
-        if (histogramSeries.length > 0 && histogramSeries[0].data?.length > 0) {
-            histogramSeries.forEach((serie) => {
-                series.push(addSeries(serie, 'histogram'));
-            });
-        }
-        const baselineSeries = charts.filter((c: { type: string; }) => c.type === 'baseline');
-        if (baselineSeries.length > 0 && baselineSeries[0].data?.length > 0) {
-            baselineSeries.forEach((serie: { options: any; }) => {
-                const newSerie = addSeries(serie, 'baseline');
-                serie.options = options.baseline;
+        console.log('type', data, props);
+        switch (type) {
+            case 'candlestick':
+                setSeries([...series, addSeries(data, 'candlestick')]);
+                break;
+            case 'line':
+                setSeries([...series, addSeries(data, 'line')]);
+                break;
+            case 'area':
+                setSeries([...series, addSeries(data, 'area')]);
+                break;
+            case 'bar':
+                setSeries([...series, addSeries(data, 'bar')]);
+                break;
+            case 'histogram':
+                setSeries([...series, addSeries(data, 'histogram')]);
+                break;
+            case 'baseline': {
+                const newSerie = addSeries(data, 'baseline');
+                newSerie.options = options.baseline;
                 setSeries([...series, newSerie]);
-            });
+                break;
+            }
+            default:
+                break;
         }
     };
 
