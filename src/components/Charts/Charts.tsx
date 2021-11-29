@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BaseModule } from 'components/Common';
-import BaseChart from './BaseChart';
+import BeanChart from './BeanChart';
 
 export default function Charts(props) {
   const [section, setSection] = useState(0);
@@ -32,7 +32,7 @@ export default function Charts(props) {
 
   const isMobile: boolean = width <= 768;
   const sections = props.charts.map((c) => (
-    <BaseChart
+    <BeanChart
       isMobile={isMobile}
       key={c.title}
       title={`${c.title}`}

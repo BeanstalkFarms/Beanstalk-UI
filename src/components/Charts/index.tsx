@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { BaseModule, chartStrings, ContentSection } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
-import BaseChart from './BaseChart';
+import BaseChart from './BeanChart';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
 import FieldCharts from './FieldCharts';

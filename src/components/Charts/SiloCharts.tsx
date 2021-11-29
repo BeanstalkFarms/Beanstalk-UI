@@ -6,7 +6,7 @@ import {
   TransitAsset,
 } from 'components/Common';
 
-import BaseChart from './BaseChart';
+import Charts from './Charts';
 
 export default function SiloCharts(props) {
   const charts = [
@@ -72,5 +72,5 @@ export default function SiloCharts(props) {
     },
   ];
 
-  return <BaseChart mainTitle="Silo" charts={charts} />;
+  return <Charts mainTitle="Silo" charts={charts} />;
 }
