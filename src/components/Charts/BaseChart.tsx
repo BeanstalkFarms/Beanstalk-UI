@@ -23,6 +23,7 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
         to,
         timeScale,
         width,
+        data,
     } = props;
     const prevProps = usePrevious(props);
     const chartDiv = React.useRef<any>();
@@ -51,18 +52,18 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
         chart?.resize(newWidth, newHeight);
     };
 
-    const handleLinearInterpolation = (data: string | any[], candleTime: number) => {
-        if (!candleTime || data.length < 2 || !data[0].value) return data;
-        const first = data[0].time;
-        const last = data[data.length - 1].time;
+    const handleLinearInterpolation = (serieData: string | any[], candleTime: number) => {
+        if (!candleTime || serieData.length < 2 || !serieData[0].value) return serieData;
+        const first = serieData[0].time;
+        const last = serieData[serieData.length - 1].time;
         const newData = new Array(Math.floor((last - first) / candleTime));
-        newData[0] = data[0];
+        newData[0] = serieData[0];
         const index = 1;
-        for (let i = 1; i < data.length; i += 1) {
-            newData[index + 1] = data[i];
-            const prevTime = data[i - 1].time;
-            const prevValue = data[i - 1].value;
-            const { time, value } = data[i];
+        for (let i = 1; i < serieData.length; i += 1) {
+            newData[index + 1] = serieData[i];
+            const prevTime = serieData[i - 1].time;
+            const prevValue = serieData[i - 1].value;
+            const { time, value } = serieData[i];
             for (
                 let interTime = prevTime;
                 interTime < time - candleTime;
@@ -90,12 +91,11 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
                 color,
                 ...serie.options,
             });
-            const scaledData = timeScale === 'hour' ? serie.data[0] : serie.data[1];
-            const data = handleLinearInterpolation(
-                scaledData,
+            const interpolatedData = handleLinearInterpolation(
+                data,
                 serie.linearInterpolation
             );
-            mySeries.setData(data);
+            mySeries.setData(interpolatedData);
             if (serie.markers) series.setMarkers(serie.markers);
             if (serie.priceLines) { serie.priceLines.forEach((line) => series.createPriceLine(line)); }
             if (serie.basevalue) {
@@ -105,36 +105,36 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
         return mySeries;
     };
     const handleSeries = () => {
-        // const candlestickSeries = charts.filter((c) => c.type === 'line');
-        // if (candlestickSeries.length > 0 && candlestickSeries[0].data?.length > 0) {
-        //   candlestickSeries.forEach((serie) => {
-        //     setSeries([...series, addSeries(serie, 'candlestick')]);
-        //   });
-        // }
-        // const lineSeries = charts.filter((c) => c.type === 'line');
-        // if (lineSeries.length > 0 && lineSeries[0].data?.length > 0) {
-        //   lineSeries.forEach((serie) => {
-        //     setSeries([...series, addSeries(serie, 'line')]);
-        //   });
-        // }
-        // const areaSeries = charts.filter((c) => c.type === 'area');
-        // if (areaSeries.length > 0 && areaSeries[0].data?.length > 0) {
-        //   areaSeries.forEach((serie) => {
-        //     setSeries([...series, addSeries(serie, 'area')]);
-        //   });
-        // }
-        // const barSeries = charts.filter((c) => c.type === 'bar');
-        // if (barSeries.length > 0 && barSeries[0].data?.length > 0) {
-        //   barSeries.forEach((serie) => {
-        //     setSeries([...series, addSeries(serie, 'bar')]);
-        //   });
-        // }
-        // const histogramSeries = charts.filter((c) => c.type === 'histogram');
-        // if (histogramSeries.length > 0 && histogramSeries[0].data?.length > 0) {
-        //   histogramSeries.forEach((serie) => {
-        //     series.push(addSeries(serie, 'histogram'));
-        //   });
-        // }
+        const candlestickSeries = charts.filter((c) => c.type === 'line');
+        if (candlestickSeries.length > 0 && candlestickSeries[0].data?.length > 0) {
+            candlestickSeries.forEach((serie) => {
+                setSeries([...series, addSeries(serie, 'candlestick')]);
+            });
+        }
+        const lineSeries = charts.filter((c) => c.type === 'line');
+        if (lineSeries.length > 0 && lineSeries[0].data?.length > 0) {
+            lineSeries.forEach((serie) => {
+                setSeries([...series, addSeries(serie, 'line')]);
+            });
+        }
+        const areaSeries = charts.filter((c) => c.type === 'area');
+        if (areaSeries.length > 0 && areaSeries[0].data?.length > 0) {
+            areaSeries.forEach((serie) => {
+                setSeries([...series, addSeries(serie, 'area')]);
+            });
+        }
+        const barSeries = charts.filter((c) => c.type === 'bar');
+        if (barSeries.length > 0 && barSeries[0].data?.length > 0) {
+            barSeries.forEach((serie) => {
+                setSeries([...series, addSeries(serie, 'bar')]);
+            });
+        }
+        const histogramSeries = charts.filter((c) => c.type === 'histogram');
+        if (histogramSeries.length > 0 && histogramSeries[0].data?.length > 0) {
+            histogramSeries.forEach((serie) => {
+                series.push(addSeries(serie, 'histogram'));
+            });
+        }
         const baselineSeries = charts.filter((c: { type: string; }) => c.type === 'baseline');
         if (baselineSeries.length > 0 && baselineSeries[0].data?.length > 0) {
             baselineSeries.forEach((serie: { options: any; }) => {
@@ -265,9 +265,7 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
         }
     }, [prevProps?.from, prevProps?.to, from, to]);
 
-    return (
-      <div ref={chartDiv} style={{ position: 'relative' }} />
-    );
+    return (<div ref={chartDiv} style={{ position: 'relative' }} />);
 };
 
 export default BaseChart;

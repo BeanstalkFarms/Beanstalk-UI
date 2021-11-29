@@ -1,15 +1,14 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Button, Box } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { theme as colorTheme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import BaseLabels from './BaseLabel';
 import BaseChart from './BaseChart';
+import { DataSelector, TimeSelector } from './Selectors';
 
 const BeanChart = (props: any) => {
   const [from, setFrom] = React.useState<number>();
   const [fitAll, setFitAll] = React.useState<boolean>(false);
-  const [dateScale, setDateScale] = React.useState<string>();
   const state = {
     options: {
       alignLabels: false,
@@ -125,101 +124,39 @@ const BeanChart = (props: any) => {
     '#A5978B',
   ];
 
-  const classes = makeStyles({
-    timeRangeBtn: {
-      borderRadius: '12px',
-      fontFamily: 'Futura-Pt-Book',
-      fontSize: 'calc(10px + 1vmin)',
-      height: '10px',
-      width: '100px',
-      cursor: 'pointer',
-    },
-  })();
-
-  const setDateRange = (daysToSubtract: number | string): void => {
-    if (daysToSubtract === 'all') {
+  const setDateRange = (timeMode: string): void => {
+    if (timeMode === 'all') {
       setFitAll(true);
     } else {
       setFitAll(false);
+      const daysToSubtract = timeMode === 'week' ? 7 : timeMode === 'month' ? 30 : 365;
       const dateOffset = (24 * 60 * 60 * 1000) * daysToSubtract;
       const newFrom = new Date(new Date().getTime() - dateOffset).getTime() / 1000;
       setFrom(newFrom);
     }
   };
 
-  const timeRangeSelectButtons = () => {
-    const timeRangeButtons = [
-      {
-        label: '1d',
-        value: 1,
-      },
-      {
-        label: '1w',
-        value: 7,
-      },
-      {
-        label: '1m',
-        value: 30,
-      },
-      {
-        label: 'All Time',
-        value: 'all',
-      },
-    ];
-    return (
-      <>
-        {timeRangeButtons.map((button) => (
-          <Button
-            className={classes.timeRangeBtn}
-            key={button.value}
-            onClick={() => {
-              setDateRange(button.value);
-            }}
-          >
-            {button.label}
-          </Button>))}
-      </>
-    );
-  };
-
-  const timeScaleSelectButtons = () => {
-    const timeRangeButtons = [
-      {
-        label: 'Hour',
-        value: 'hour',
-      },
-      {
-        label: 'Day',
-        value: 'day',
-      },
-    ];
-    return (
-      <>
-        {timeRangeButtons.map((button) => (
-          <Button
-            className={classes.timeRangeBtn}
-            key={button.value}
-            onClick={() => {
-              setDateScale(button.value);
-            }}
-          >
-            {button.label}
-          </Button>))}
-      </>
-    );
-  };
-
   React.useEffect(() => {
-    setDateRange(4);
-    setDateScale('hour');
-  }, []);
+    setDateRange(props.timeMode);
+  }, [props.timeMode]);
 
-  const hasData = props.charts?.map((chart) => chart.data[0]?.length > 0 && chart.data[1]?.length > 0).reduce((a, b) => a || b, false);
   const n = !props.isMobile;
   const to = new Date().getTime() / 1000; // current timestamp
+  const useDataMode = props.data.length > 1;
+  const dataMode = useDataMode ? props.dataMode : 'hr';
+  const data = dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
 
-  console.log('hasData', hasData);
-  if (!hasData) {
+  const chartStyle = {
+    borderRadius: '25px',
+    padding: '10px',
+    paddingTop: `${n ? '30px' : '40px'}`,
+    fontFamily: 'Futura-Pt-Book',
+    position: 'relative',
+    height: `${n ? '370px' : '250px'}`,
+    backgroundColor: colorTheme.module.foreground,
+  };
+
+  if (data.length === 0) {
     const loadingStyle = {
       borderRadius: '25px',
       padding: `${n ? '135px' : '60px'}`,
@@ -244,8 +181,23 @@ const BeanChart = (props: any) => {
   }
 
   return (
-    <>
-      {timeScaleSelectButtons()}
+    <Box style={chartStyle}>
+      {useDataMode ? (
+        <DataSelector
+          size={props.size}
+          isMobile={props.isMobile}
+          setValue={props.setDataMode}
+          value={dataMode}
+        />
+      ) : null}
+      <TimeSelector
+        size={props.size}
+        isMobile={props.isMobile}
+        setValue={props.setTimeMode}
+        value={props.timeMode}
+        dataMode={dataMode}
+      />
+      <hr />
       <BaseChart
         {...props}
         autoWidth
@@ -255,12 +207,11 @@ const BeanChart = (props: any) => {
         to={to}
         fitAll={fitAll}
         colors={colors}
-        timeScale={dateScale}
+        data={data}
         backgroundTheme={{ customDarkTheme, lightTheme }}
       />
       <BaseLabels labels={['abc', 'def']} />
-      {timeRangeSelectButtons()}
-    </>
+    </Box>
   );
 };
 export default BeanChart;

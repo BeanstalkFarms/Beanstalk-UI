@@ -33,6 +33,7 @@ export default function Charts(props) {
   const isMobile: boolean = width <= 768;
   const sections = props.charts.map((c) => (
     <BeanChart
+      data={c.data}
       isMobile={isMobile}
       key={c.title}
       title={`${c.title}`}
@@ -40,7 +41,6 @@ export default function Charts(props) {
       {...modeProps}
       {...props}
     />));
-
   const baseStyle = isMobile
     ? { width: '100%', paddingLeft: 0, paddingRight: 0 }
     : null;
