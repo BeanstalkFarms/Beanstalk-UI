@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { fundsList } from 'constants/index';
-import { ContentSection, fundraiserStrings } from '../Common';
+import { ContentSection, fundraiserStrings, Grid } from '../Common';
 import FundraiserModule from './FundraiserModule';
 import FundraiserTable from './FundraiserTable';
 
@@ -42,12 +42,18 @@ export default function Fundraiser(props) {
 
   return (
     <ContentSection id="fund" title="Fundraiser" description={fundraiserStrings.fundsDescription}>
-      {hasActiveFundraiser ? activeFundraisers : null}
-      <FundraiserTable
-        fundraisers={historicalFundraisers}
-        fundraisersInfo={historicalFundraisersInfo}
-        style={{ maxWidth: '745px', margin: '0 auto' }}
-      />
+      <Grid container item>
+        <Grid item xs={12}>
+          {hasActiveFundraiser ? activeFundraisers : null}
+        </Grid>
+        <Grid item xs={12}>
+          <FundraiserTable
+            fundraisers={fundraisers}
+            fundraisersInfo={fundsList}
+            style={{ maxWidth: '745px', margin: '0 auto' }}
+          />
+        </Grid>
+      </Grid>
     </ContentSection>
   );
 }

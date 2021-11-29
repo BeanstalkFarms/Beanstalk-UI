@@ -39,10 +39,6 @@ const defaultNavMapping = [
     title: 'DAO',
   },
   {
-  path: 'fundraiser',
-  title: 'FUNDRAISER',
-},
-  {
     path: 'nft',
     title: 'BeaNFTs',
   },
@@ -133,6 +129,14 @@ export default function NavigationBar(props) {
     return false;
   }
 
+  const navMapping = [...defaultNavMapping];
+  if (hasActiveFundraiser) {
+    navMapping.splice(3, 0, {
+      path: 'fundraiser',
+      title: 'FUNDRAISER',
+    });
+  }
+
   const linkItemStyle = (path) => {
     if (
       (path === 'dao' && hasActiveBIP !== false) ||
@@ -183,7 +187,7 @@ export default function NavigationBar(props) {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow">
-                  {defaultNavMapping.map(({ title, path }) => (
+                  {navMapping.map(({ title, path }) => (
                     <MenuItem
                       key={path}
                       button
@@ -215,7 +219,7 @@ export default function NavigationBar(props) {
       aria-labelledby="main navigation"
       className="NavigationBar"
     >
-      {defaultNavMapping.map(({ title, path }) => (
+      {navMapping.map(({ title, path }) => (
         <ListItem
           key={path}
           button

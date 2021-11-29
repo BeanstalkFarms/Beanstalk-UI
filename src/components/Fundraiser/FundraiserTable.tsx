@@ -20,6 +20,7 @@ import {
   theme,
 } from 'constants/index';
 import { Line, QuestionModule, fundraiserStrings } from 'components/Common';
+import CircularProgressWithLabel from 'components/Governance/CircularProgressWithLabel';
 
 const useStyles = makeStyles({
   table: {
@@ -111,7 +112,11 @@ const Row = (props) => {
               borderColor: theme.accentColor,
             }}
           >
-            {fundValue}
+            {fundIndex === 4 ? (
+              <CircularProgressWithLabel value={fundValue} />
+            ) : (
+              fundValue
+            )}
           </TableCell>
         ))}
       </TableRow>
@@ -142,7 +147,7 @@ const FundTable = (props) => {
     setPage(newPage);
   };
 
-  const titles = ['Fundraiser', 'Title', 'Type', 'Amount'];
+  const titles = ['Fundraiser', 'Title', 'Type', 'Amount', 'Remaining'];
   const tableFunds = props.fundraisers
     .reduce((funds, fund) => {
       const fundID = fund.id;
@@ -153,8 +158,17 @@ const FundTable = (props) => {
         type: fundAdds.type,
         amount: `${fund.total.toFixed()} ${fundAdds.token}`,
       };
+      if (fund.remaining.isGreaterThan(0)) {
+        tb.remaining = fund.remaining
+          .dividedBy(fund.total)
+          .multipliedBy(100)
+          .decimalPlaces(2)
+          .toNumber();
+      } else {
+        tb.remaining = fund.remaining;
+      }
 
-      funds.push([tb.FUND, tb.title, tb.type, tb.amount]);
+      funds.push([tb.FUND, tb.title, tb.type, tb.amount, tb.remaining]);
       return funds;
     }, [])
     .reverse();
