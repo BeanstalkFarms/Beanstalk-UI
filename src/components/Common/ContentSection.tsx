@@ -16,7 +16,6 @@ export default function ContentSection({
   textTransform,
   title,
   width,
-  textAlign,
 }) {
   const [shouldDisplayDescription, setshouldDisplayDescription] =
     React.useState(true);
@@ -72,14 +71,12 @@ export default function ContentSection({
                 margin: '0 0 10px 0',
                 padding: '12px',
                 color: theme.backgroundText,
-                textAlign: textAlign,
               }
             : {
                 width: innerWidth - 64,
                 margin: '0 0 10px 0',
                 padding: '12px',
                 color: theme.backgroundText,
-                textAlign: textAlign,
               }
         }
       >
@@ -144,5 +141,4 @@ ContentSection.defaultProps = {
   padding: '30px 15px',
   width: '100%',
   minHeight: '0px',
-  textAlign: 'center',
 };

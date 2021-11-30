@@ -64,6 +64,7 @@ export default function Updater() {
     season.season,
     weather.harvestableIndex,
     userBalance.farmableBeanBalance,
+    userBalance.farmableStalkBalance,
     userBalance.grownStalkBalance,
     userBalance.claimableEthBalance,
     prices.beanReserve,
@@ -99,6 +100,7 @@ export default function Updater() {
         stalkBalance,
         lockedUntil,
         farmableBeanBalance,
+        farmableStalkBalance,
         grownStalkBalance,
         rootsBalance,
       ] = accountBalances;
@@ -120,6 +122,7 @@ export default function Updater() {
           locked,
           lockedSeasons,
           farmableBeanBalance,
+          farmableStalkBalance,
           grownStalkBalance,
           rootsBalance,
         })
@@ -403,13 +406,13 @@ export default function Updater() {
       });
       dispatch(setContractEvents(events));
 
-      const [s, hi, fb, gs, ce, br, er] =
+      const [s, hi, fb, fs, gs, ce, br, er] =
         eventParsingParameters !== undefined
           ? eventParsingParameters
           : eventParsingParametersRef.current;
 
       const rawBeanDeposits = { ...userBeanDeposits };
-      userBeanDeposits = addRewardedCrates(userBeanDeposits, s, fb);
+      userBeanDeposits = addRewardedCrates(userBeanDeposits, s, fb, fs);
       const beanDepositsBalance = Object.values(userBeanDeposits).reduce(
         (a, c) => a.plus(c),
         zeroBN
@@ -479,6 +482,7 @@ export default function Updater() {
           claimable: claimable,
           rawBeanDeposits: rawBeanDeposits,
           farmableBeanBalance: fb,
+          farmableStalkBalance: fs,
           grownStalkBalance: gs,
         })
       );
@@ -512,7 +516,8 @@ export default function Updater() {
         totalBalances[14].season /* season */,
         totalBalances[10] /* harvestableIndex */,
         accountBalances[9] /* farmableBeanBalance */,
-        accountBalances[10] /* grownStalkBalance */,
+        accountBalances[10] /* farmableStalkBalance */,
+        accountBalances[11] /* grownStalkBalance */,
         accountBalances[3] /* claimableEthBalance */,
         beanReserve,
         ethReserve,

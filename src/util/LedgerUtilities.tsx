@@ -69,6 +69,7 @@ export const getAccountBalances = async (batch) => {
     [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
     [beanstalk.methods.lockedUntil(account), bigNumberResult],
     [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEANSTALK)],
+    [beanstalk.methods.balanceOfFarmableStalk(account), tokenResult(STALK)],
     [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
     [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
   ]);
