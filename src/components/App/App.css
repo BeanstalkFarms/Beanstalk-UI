@@ -100,7 +100,7 @@
   display: none;
 }
 
-@media screen and (max-width: 770px) {
+@media screen and (max-width: 940px) {
   .NavigationBar {
     display: none;
   }
