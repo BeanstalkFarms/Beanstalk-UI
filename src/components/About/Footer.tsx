@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/styles';
 import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
 import { ReactComponent as CoinGeckoIcon } from 'img/coingecko-icon.svg';
 import { ReactComponent as CoinMarketCapIcon } from 'img/coinmarketcap-icon.svg';
+import { ReactComponent as CommonwealthIcon } from 'img/commonwealth-icon.svg';
 import { ReactComponent as DiscordIcon } from 'img/discord-icon.svg';
 import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
 import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
@@ -21,6 +22,7 @@ import {
   BEAN_TOKEN_LINK,
   COINGECKO_LINK,
   COINMARKETCAP_LINK,
+  COMMONWEALTH_LINK,
   DISCORD_LINK,
   GITHUB_LINK,
   MEDIUM_LINK,
@@ -93,8 +95,13 @@ export default function Footer() {
           <EtherscanIcon style={logoStyle} />
         </LogoLinks>
         {width > 500 ? (
-          <LogoLinks link={UNISWAP_CONTRACT_LINK}>
+          <LogoLinks close link={UNISWAP_CONTRACT_LINK} paddingRight="5px">
             <UniswapIcon style={logoStyle} />
+          </LogoLinks>
+        ) : null}
+        {width > 500 ? (
+          <LogoLinks link={COMMONWEALTH_LINK}>
+            <CommonwealthIcon style={logoStyle} />
           </LogoLinks>
         ) : null}
       </Grid>

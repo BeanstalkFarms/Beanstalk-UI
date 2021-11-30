@@ -9,6 +9,7 @@ export const UNISWAP_CONTRACT_LINK =
 export const COINGECKO_LINK = 'https://www.coingecko.com/en/coins/bean';
 export const COINMARKETCAP_LINK =
   'https://coinmarketcap.com/currencies/beanstalk/';
+export const COMMONWEALTH_LINK = 'https://commonwealth.im/beanstalk/';
 export const DISCORD_LINK = 'https://discord.gg/y4cJNv5DTM';
 export const GITHUB_LINK = 'https://github.com/BeanstalkFarms/Beanstalk';
 export const MEDIUM_LINK = 'https://medium.com/@BeanstalkFarms';

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIP-6</title>
+  <link rel="stylesheet" href="bipStyle.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="bip-5-omnisca-audit">BIP-6: Soil Efficiency</h1>
+<h3 id="summary">Summary:</h3>
+<ul>
+  <li>Change the Minimum Soil Rate to factor in the Weather and Pods harvested at the start of the Season.</li>
+  <li>Change the Maximum Soil Rate to factor in the Weather.</li>
+  <li>Have the Soil decrease by the time weighted average shortage of Beans in the BEAN:ETH pool over the previous Season.</li>
+</ul>
+<h3 id="problem">Problem:</h3>
+<p>Currently, the Available Soil is at or below the Minimum Soil Rate every Season. Based on the current Weather (~2000%+) and current Minimum Soil Rate (.1%), Beanstalk is willing to issue Pods worth more than 2% of the total Bean supply every hour. While the Pod Rate has started to decrease slightly, when there is excess demand for Soil and Beans, Beanstalk should be deleveraging faster than it currently is. This is indicative that the Minimum Soil Rate is implemented in a suboptimal way: they do not currently factor in the Weather or Pods being Harvested.</p>
+<!-- <p>Having observed the behavior of lenders during the previous few weeks, it is evident that scarcity of Soil is a large driver of demand for Soil: As Soil started to diminish, there was a race for Soil. Increasing the scarcity of Soil should further improve the efficiency of the Soil market. When the TWAP > 1 for a Season, the Soil does not decrease even though Beanstalk may not need to attract as many lenders as when TWAP < 1.</p> -->
+<h3 id="proposed-solution">Proposed Solution:</h3>
+<p>Change the Minimum Soil Rate to factor in the Weather and Pods harvested at the start of the Season. The Maximum Soil rate will factor in the Weather and the Soil will decrease by the time weighted average shortage of Beans in the BEAN:ETH pool over the previous Season.</p>
+<p>In practice, this will increase the scarcity of Soil, which should further improve when efficiency of the Soil market. When the TWAP > 1 for a Season, the Soil will decrease since Beanstalk may not need to attract as many lenders as when TWAP < 1.</p>
+<!-- <ul class="columns">
+  <li>If P > 1:</li>
+  <ul>
+    <li>soil = soil - beansAbovePeg</li>
+    <li>minSoil = newHarvestable / (1 + w/100)</li>
+    <li>maxSoil = (totalSupply * 0.25)</li>
+    </br>
+    <li>soil = max(soil, minSoil)</li>
+    <li>soil = min(soil, maxSoil)</li>
+  </ul>
+  <li>If P < 1:</li>
+  <ul>
+    <li>soil = soil + beansBelowPeg</li>
+    <li>maxSoil = (totalSupply * 0.25)</li>
+    </br>
+    <li>soil = min(soil, maxSoil)</li>
+    </br>
+  </ul>
+</ul> -->
+<h3 id="payment">Economic Rationale:</h3>
+<!-- <p>By setting the Soil so that in instances where 100% of Soil is Sown, the Pod Line stays the same length, it creates 2 positive effects. Therefore, Beanstalk will maintain the same amount of debt, while increasing the supply. This will cause the Pod Rate to decrease quickly during instances where there is excess demand for Soil, but in a way that does not allow Beanstalk to easily run out of outstanding debt, except in the instance of a Season of Plenty.</p> -->
+<p>By setting the Soil so that in instances where 100% of Soil is Sown, the Pod Line stays the same length, it creates 2 positive effects. Therefore, Beanstalk will maintain the same amount of debt, while increasing the supply. During instances where there is excess demand for Soil, the Pod Rate will decrease quicker in a way that does not allow Beanstalk to easily run out of outstanding debt, except in the instance of a Season of Plenty.</p>
+<p>By decreasing the outstanding Soil when P > 1, there is more likely to be an efficient market for Soil when P < 1 because it is no longer a reasonable expectation that there will be excess Soil when P > 1. A more efficient Soil market will lower the Weather Beanstalk has to pay over time, and improve the ability of Beanstalk to regularly cross the Bean price over its Peg.</p>
+<h3>To see the full GitHub submission, <a href="https://github.com/BeanstalkFarms/Beanstalk/pull/11" target="break">click here</a>.</h3>
+</div>
+</body>
+
+</html>

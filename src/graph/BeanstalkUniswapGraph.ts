@@ -56,7 +56,7 @@ query hourDatas($first: Int, $skip: Int) {
       hourTimestamp
       totalSupply
       totalSupplyUSD
-      crosses
+      totalCrosses
       price
     }
   }
@@ -73,7 +73,7 @@ const DayBeanQuery = `
       dayTimestamp
       totalSupply
       totalSupplyUSD
-      crosses
+      totalCrosses
       price
     }
   }
@@ -108,7 +108,7 @@ export async function hourBeanQuery() {
         totalSupply: roundTo4Digits(parseFloat(d.totalSupply)),
         totalSupplyUSD: roundTo4Digits(parseFloat(d.totalSupplyUSD)),
         price: roundTo4Digits(parseFloat(d.price)),
-        crosses: parseInt(d.crosses, 10),
+        totalCrosses: parseInt(d.totalCrosses, 10),
       });
       return acc;
     }, []);
@@ -133,7 +133,7 @@ export async function dayBeanQuery() {
         totalSupply: roundTo4Digits(parseFloat(d.totalSupply)),
         totalSupplyUSD: roundTo4Digits(parseFloat(d.totalSupplyUSD)),
         price: roundTo4Digits(parseFloat(d.price)),
-        crosses: parseInt(d.crosses, 10),
+        totalCrosses: parseInt(d.totalCrosses, 10),
       });
       return acc;
     }, []);
