@@ -1,4 +1,13 @@
 import BigNumber from 'bignumber.js';
+import { ChainId, WETH as _WETH } from '@uniswap/sdk';
+
+export const FORTMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY;
+export const PORTIS_KEY = process.env.REACT_APP_PORTIS_KEY;
+export const RPC_URL = process.env.REACT_APP_NETWORK_URL;
+export const BSC_RPC_URL = 'https://bsc-dataseed.binance.org/';
+export const APP_URL = 'https://bean.money';
+export const CONTACT_EMAIL = 'dev@bean.money';
+export const APP_NAME = 'Bean Money';
 
 /* Governance */
 export const BASE_COMMIT_INCENTIVE = 1e8; /* 100 beans */
@@ -42,8 +51,8 @@ export const DELTA_POD_DEMAND_UPPER_BOUND = 1.02; /* 102% */
 export const STEADY_SOW_TIME = 60; /* 60 seconds */
 export const RAIN_TIME = 24; /* 24 Seasons */
 export const PEG_WEATHER_CASES = [
-  3, 1, 0, 0, -1, -3, -3, 0, 3, 1, 0, 0, -1, -3, -3, 0, 3, 3, 1, 0, 0, -1, -3, 0,
-  3, 3, 1, 0, 1, -1, -3, 0,
+  3, 1, 0, 0, -1, -3, -3, 0, 3, 1, 0, 0, -1, -3, -3, 0, 3, 3, 1, 0, 0, -1, -3,
+  0, 3, 3, 1, 0, 1, -1, -3, 0,
 ]; /* Peg Maintenance Weather Cases */
 
 /* Website Settings */
@@ -66,3 +75,126 @@ export const GENESIS_NFT = {
   txn: '💎',
 }; /* Diamonds */
 export const zeroBN = new BigNumber(-1);
+
+export const wallets = () => [
+  { walletName: 'metamask', preferred: true },
+  {
+    walletName: 'walletConnect',
+    preferred: true,
+    rpc: {
+      1: RPC_URL,
+      4: RPC_URL,
+      56: BSC_RPC_URL,
+    },
+  },
+];
+
+export const BUSD = {
+  id: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+  address: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+  decimals: 18,
+  symbol: 'BUSD',
+  name: 'Binance USD',
+};
+
+export const WMATIC = {
+  id: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+  address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+  decimals: 18,
+  symbol: 'WMATIC',
+  name: 'Wrapped Matic',
+};
+
+export const WBNB = {
+  id: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+  address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+  decimals: 18,
+  symbol: 'WBNB',
+  name: 'Wrapped BNB',
+};
+
+export const WETH = {
+  [ChainId.MAINNET]: {
+    id: _WETH[ChainId.MAINNET].address,
+    address: _WETH[ChainId.MAINNET].address,
+    decimals: 18,
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+  },
+  [ChainId.RINKEBY]: {
+    id: '0x227dA5Feb8b55E1dF54322026149A6b4eAC0b295', // _WETH[ChainId.RINKEBY].address,
+    address: '0x227dA5Feb8b55E1dF54322026149A6b4eAC0b295', // _WETH[ChainId.RINKEBY].address,
+    decimals: 18,
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+  },
+  [ChainId.ROPSTEN]: {
+    id: _WETH[ChainId.ROPSTEN].address,
+    address: _WETH[ChainId.ROPSTEN].address,
+    decimals: 18,
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+  },
+  [ChainId.GÖRLI]: {
+    id: _WETH[ChainId.GÖRLI].address,
+    address: _WETH[ChainId.GÖRLI].address,
+    decimals: 18,
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+  },
+  [ChainId.KOVAN]: {
+    id: _WETH[ChainId.KOVAN].address,
+    address: _WETH[ChainId.KOVAN].address,
+    decimals: 18,
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+  },
+  56: WBNB,
+  137: WMATIC,
+};
+
+export const DAI = {
+  [ChainId.MAINNET]: {
+    id: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    decimals: 18,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+  },
+  [ChainId.RINKEBY]: {
+    id: '0xfEb940BAfD4a552BAeBE86f56d6D31E4DCd95e53',
+    address: '0xfEb940BAfD4a552BAeBE86f56d6D31E4DCd95e53',
+    decimals: 18,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+  },
+  [ChainId.ROPSTEN]: {
+    id: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    decimals: 18,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+  },
+  [ChainId.GÖRLI]: {
+    id: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    decimals: 18,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+  },
+  [ChainId.KOVAN]: {
+    id: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    decimals: 18,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+  },
+  56: BUSD,
+  137: {
+    id: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+    address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+    decimals: 18,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+  },
+};

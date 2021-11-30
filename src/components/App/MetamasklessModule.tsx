@@ -1,14 +1,17 @@
 import React from 'react';
 import { Grid, Button, Link, Box } from '@material-ui/core';
-import { initialize, metamaskFailure } from 'util/index';
+import { metamaskFailure } from 'util/index';
 import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
 import { SvgCloudIcon } from 'components/About/SvgCloudIcon';
 import About from 'components/About';
 import Charts from 'components/Charts';
 import { ContentSection } from 'components/Common';
 import { NavigationBar } from 'components/Navigation';
+import { useWeb3 } from 'state/application/hooks';
 
 export default function MetamasklessModule() {
+  const { onboard } = useWeb3();
+
   const connectMetaStyle = {
     fontFamily: 'Futura-PT-Book',
     fontSize: '18px',
@@ -47,9 +50,7 @@ export default function MetamasklessModule() {
         <Grid item xs={12}>
           <Button
             color="primary"
-            onClick={async () => {
-              if (await initialize()) window.location.reload();
-            }}
+            onClick={onboard?.walletSelect}
             style={connectMetaStyle}
             variant="contained"
           >
