@@ -175,7 +175,7 @@ function TablePaginationActions(props) {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={classes.pagination}>
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
@@ -310,7 +310,7 @@ const BipTable = (props) => {
           </Table>
         </TableContainer>
         {Object.keys(tableBips).length > rowsPerPage ? (
-          <div>
+          <div className={classes.pagination}>
             <TablePagination
               component="div"
               count={Object.keys(tableBips).length}
