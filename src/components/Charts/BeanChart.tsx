@@ -41,7 +41,7 @@ const BeanChart = (props: any) => {
       },
       priceScale: {
         title: 'Price',
-        position: 'right',
+        position: 'left',
         autoScale: true,
         drawTicks: true,
         PriceLineSource: 'LastVisible',
@@ -56,17 +56,6 @@ const BeanChart = (props: any) => {
         },
       },
       baseline: {
-        // topFillColor1: 'rgba(21, 146, 230, 0.4)',
-        // topFillColor2: 'rgba(21, 255, 70, 0.3)',
-        // bottomFillColor1: 'rgba(21, 255, 70, 0.3)',
-        // bottomFillColor2: 'rgba(21, 146, 230, 0.4)',
-        // topLineColor: 'rgba(21, 146, 230, 1)',
-        lineStyle: 0,
-        lineWidth: 3,
-        crosshairMarkerVisible: true,
-        crosshairMarkerRadius: 3,
-        crosshairMarkerBorderColor: 'rgb(255, 255, 255, 1)',
-        crosshairMarkerBackgroundColor: 'rgb(34, 150, 243, 1)',
         baseValue: {
           type: 'price',
           price: 1,
@@ -97,7 +86,7 @@ const BeanChart = (props: any) => {
   };
   const lightTheme = {
     layout: {
-      backgroundColor: colorTheme.module.background,
+      backgroundColor: colorTheme.module.foreground,
       lineColor: '#2B2B43',
       textColor: '#191919',
     },
@@ -193,7 +182,7 @@ const BeanChart = (props: any) => {
         value={props.timeMode}
         dataMode={dataMode}
       />
-      <hr />
+      <hr style={{ marginTop: '20px' }} />
       <BaseChart
         {...props}
         autoWidth

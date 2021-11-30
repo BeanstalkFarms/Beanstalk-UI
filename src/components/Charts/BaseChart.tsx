@@ -106,7 +106,6 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
         return mySeries;
     };
     const handleSeries = () => {
-        console.log('type', data, props);
         switch (type) {
             case 'candlestick':
                 setSeries([...series, addSeries(data, 'candlestick')]);
@@ -135,15 +134,11 @@ const BaseChart = (props: { autoHeight: any; autoWidth: any; backgroundTheme: an
     };
 
     const removeSeries = () => {
-        console.log('series', series);
         try {
             series.forEach((serie) => {
-                console.log('serie', serie);
                 if (serie) chart?.removeSeries(serie);
                 const index = series.indexOf(serie);
-                console.log('index', index);
                 const newSeries = series.splice(index, 1);
-                console.log('newSeries', series.splice(index, 1));
                 if (index > -1) {
                     setSeries({ newSeries });
                 }
