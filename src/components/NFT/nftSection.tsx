@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
-import { BaseModule, NftListTable } from '../Common';
+import { BaseModule } from 'components/Common';
+import NftListTable from './NftListTable';
 
 export default function NftSection(props) {
   const [page, setPage] = React.useState(0);

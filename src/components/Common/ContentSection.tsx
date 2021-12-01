@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Link, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { theme } from '../../constants';
+import { theme } from 'constants/index';
 import { ContentTitle } from './index';
 
 export default function ContentSection({
@@ -16,9 +16,10 @@ export default function ContentSection({
   textTransform,
   title,
   width,
+  textAlign,
 }) {
-  const [shouldDisplaySection, setshouldDisplaySection] = React.useState(true);
-  const [shouldDisplayDescription, setshouldDisplayDescription] = React.useState(true);
+  const [shouldDisplayDescription, setshouldDisplayDescription] =
+    React.useState(true);
 
   const classes = makeStyles({
     appSection: {
@@ -41,21 +42,13 @@ export default function ContentSection({
 
   React.useEffect(() => {
     // on initialize fetch is_hidden variable or default to false. if is_hidden set shouldDisplay to false
-    if (JSON.parse(localStorage.getItem(`is_${id}_hidden`) || 'false')) {
-      setshouldDisplaySection(false);
-    }
-    if (JSON.parse(localStorage.getItem(`is_${id}_description_hidden`) || 'false')) {
+
+    if (
+      JSON.parse(localStorage.getItem(`is_${id}_description_hidden`) || 'false')
+    ) {
       setshouldDisplayDescription(false);
     }
   }, [id]);
-
-  const handleisSectionHiddenSection = (): void => {
-    setshouldDisplaySection(!shouldDisplaySection);
-    localStorage.setItem(
-      `is_${id}_hidden`,
-      JSON.stringify(shouldDisplaySection)
-    );
-  };
 
   const handleisSectionHiddenDescription = (): void => {
     setshouldDisplayDescription(!shouldDisplayDescription);
@@ -69,21 +62,25 @@ export default function ContentSection({
   const descriptionSection =
     description !== undefined ? (
       <Box
-        className={shouldDisplayDescription ? `section-description-${theme.name}` : ''}
+        className={
+          shouldDisplayDescription ? `section-description-${theme.name}` : ''
+        }
         style={
           innerWidth > 500
             ? {
-              maxWidth: '550px',
-              margin: '0 0 10px 0',
-              padding: '12px',
-              color: theme.backgroundText,
-            }
+                maxWidth: '550px',
+                margin: '0 0 10px 0',
+                padding: '12px',
+                color: theme.backgroundText,
+                textAlign: textAlign,
+              }
             : {
-              width: innerWidth - 64,
-              margin: '0 0 10px 0',
-              padding: '12px',
-              color: theme.backgroundText,
-            }
+                width: innerWidth - 64,
+                margin: '0 0 10px 0',
+                padding: '12px',
+                color: theme.backgroundText,
+                textAlign: textAlign,
+              }
         }
       >
         {shouldDisplayDescription ? (
@@ -104,7 +101,7 @@ export default function ContentSection({
               </span>
             ))}
           </>
-        ) : (null)}
+        ) : null}
 
         <Box
           className={classes.hideButton}
@@ -128,9 +125,6 @@ export default function ContentSection({
         justifyContent="center"
       >
         <ContentTitle
-          onClick={() => {
-            handleisSectionHiddenSection();
-          }}
           padding={padding}
           marginTop={marginTop}
           width={width}
@@ -138,8 +132,8 @@ export default function ContentSection({
           size={size}
           textTransform={textTransform}
         />
-        {shouldDisplaySection ? descriptionSection : null}
-        {shouldDisplaySection ? children : null}
+        {descriptionSection}
+        {children}
       </Grid>
     </Box>
   );
@@ -150,4 +144,5 @@ ContentSection.defaultProps = {
   padding: '30px 15px',
   width: '100%',
   minHeight: '0px',
+  textAlign: 'center',
 };

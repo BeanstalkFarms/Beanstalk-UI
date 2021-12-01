@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import {
   Box,
   Link,
@@ -10,10 +10,11 @@ import {
   TablePagination,
   TableRow,
 } from '@material-ui/core/';
+import Image from 'material-ui-image';
 import { makeStyles } from '@material-ui/styles';
-import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from '../../constants';
-import { mintNFT } from '../../util';
-import { SingleButton } from './index';
+import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from 'constants/index';
+import { mintNFT } from 'util/index';
+import { beanftStrings, SingleButton, TablePageSelect } from 'components/Common';
 
 const useStyles = makeStyles({
   table: {
@@ -42,26 +43,30 @@ const BasicTable = (props) => {
 
   const { rowsPerPage } = props;
 
-  const showButton = (i) =>
-    (Object.keys(props.nftList).length > 0 && props.canClaimNFT ? (
-      <SingleButton
-        backgroundColor="#3B3B3B"
-        color="white"
-        description="Use this button to Mint only the individual BeaNFT currently being displayed."
-        fontSize="15px"
-        handleClick={() => {
-          const nft = props.nftList[i];
-          mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature);
-        }}
-        height="30px"
-        margin="-10px 7px 0 0"
-        marginTooltip="0 0 -5px 20px"
-        size="small"
-        title="Mint One"
-        width="50%"
-        widthTooltip="150px"
-      />
-    ) : null);
+  const showButton = (i) => {
+    if (Object.keys(props.nftList).length > 0 && props.canClaimNFT) {
+      return (
+        <SingleButton
+          backgroundColor="#3B3B3B"
+          color="white"
+          description={beanftStrings.singleMint}
+          fontSize="15px"
+          handleClick={() => {
+            const nft = props.nftList[i];
+            mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature);
+          }}
+          height="30px"
+          margin="-10px 7px 0 0"
+          marginTooltip="0 0 -5px 20px"
+          size="small"
+          title="Mint One"
+          width="50%"
+          widthTooltip="150px"
+        />
+      );
+    }
+    return null;
+  };
 
   return (
     <Box>
@@ -82,10 +87,7 @@ const BasicTable = (props) => {
                     scope="index"
                   >
                     <Image
-                      unoptimized
-                      loader={() =>
-                        `${BASE_IPFS_LINK}${props.nftList[index].imageIpfsHash}`
-                      }
+                      unoptimized="true"
                       src={`${BASE_IPFS_LINK}${props.nftList[index].imageIpfsHash}`}
                       width="290px"
                       height="290px"
@@ -129,7 +131,9 @@ const BasicTable = (props) => {
                           {`${props.nftList[index].metadataIpfsHash.substring(
                             0,
                             6
-                          )}...${props.nftList[index].metadataIpfsHash.substring(
+                          )}...${props.nftList[
+                            index
+                          ].metadataIpfsHash.substring(
                             props.nftList[index].metadataIpfsHash.length - 4
                           )}`}
                         </span>
@@ -145,20 +149,23 @@ const BasicTable = (props) => {
         </Table>
       </TableContainer>
       {Object.keys(props.nftList).length > rowsPerPage ? (
-        <TablePagination
-          className={classes.pagination}
-          component="div"
-          count={Object.keys(props.nftList).length}
-          onPageChange={props.handleChange}
-          page={props.page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[]}
-          labelDisplayedRows={({ from, count }) =>
-            `${Math.ceil(from / rowsPerPage)}-${
-              count !== -1 ? Math.ceil(count / rowsPerPage) : 0
-            }`
-          }
-        />
+        <div className={classes.pagination}>
+          <TablePagination
+            className={classes.pagination}
+            component="div"
+            count={Object.keys(props.nftList).length}
+            onPageChange={props.handleChange}
+            page={props.page}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[]}
+            labelDisplayedRows={({ from, count }) =>
+              `${Math.ceil(from / rowsPerPage)}-${
+                count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+              }`
+            }
+            ActionsComponent={TablePageSelect}
+          />
+        </div>
       ) : null}
     </Box>
   );

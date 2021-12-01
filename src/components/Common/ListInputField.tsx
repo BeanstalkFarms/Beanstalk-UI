@@ -8,7 +8,7 @@ import {
   Select,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { displayBN } from '../../util';
+import { displayBN } from 'util/index';
 
 export default function ListInputField(props) {
   const classes = makeStyles(() => ({

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
-import { mintAllNFTs } from '../../util/index';
+import { mintAllNFTs } from 'util/index';
 import {
+  beanftStrings,
   ContentTitle,
   BaseModule,
   Grid,
-  NftPicTable,
   SingleButton,
-} from '../Common';
+} from 'components/Common';
+import NftPicTable from './NftPicTable';
 
 export default function ClaimNFT(props) {
   const [page, setPage] = React.useState(0);
@@ -54,9 +55,7 @@ export default function ClaimNFT(props) {
       />
     );
     sectionTitlesInfo.push('UNMINTED');
-    sectionTitlesDescription.push(
-      'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.'
-    );
+    sectionTitlesDescription.push(beanftStrings.unminted);
   }
   if (claimedNfts !== undefined && Object.keys(claimedNfts).length > 0) {
     sectionsInfo.push(
@@ -75,9 +74,7 @@ export default function ClaimNFT(props) {
       />
     );
     sectionTitlesInfo.push('MINTED');
-    sectionTitlesDescription.push(
-      'Use this tab to view all the BeaNFTs you own but have already minted.'
-    );
+    sectionTitlesDescription.push(beanftStrings.minted);
   }
 
   // Table Wrapper
@@ -151,7 +148,7 @@ export default function ClaimNFT(props) {
         item
         justifyContent="center"
         alignItems="flex-start"
-        style={{ marginBottom: '20px' }}
+        style={{ marginBottom: '100px' }}
       >
         {showButton}
       </Grid>

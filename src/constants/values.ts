@@ -42,8 +42,8 @@ export const DELTA_POD_DEMAND_UPPER_BOUND = 1.02; /* 102% */
 export const STEADY_SOW_TIME = 60; /* 60 seconds */
 export const RAIN_TIME = 24; /* 24 Seasons */
 export const PEG_WEATHER_CASES = [
-  3, 1, 0, 0, -1, -3, -3, 0, 3, 1, 0, 0, -1, -3, -3, 0, 3, 3, 1, 0, 0, 0, -1, 0,
-  3, 3, 1, 0, 1, 0, -1, 0,
+  3, 1, 0, 0, -1, -3, -3, 0, 3, 1, 0, 0, -1, -3, -3, 0, 3, 3, 1, 0, 0, -1, -3, 0,
+  3, 3, 1, 0, 1, -1, -3, 0,
 ]; /* Peg Maintenance Weather Cases */
 
 /* Website Settings */
@@ -65,4 +65,5 @@ export const GENESIS_NFT = {
   id: 0,
   txn: '💎',
 }; /* Diamonds */
-export const zeroBN = new BigNumber(-1);
+export const zeroBN = new BigNumber(0);
+export const newBN = new BigNumber(-1);

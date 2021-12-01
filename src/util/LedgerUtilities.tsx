@@ -9,7 +9,8 @@ import {
   UNI_V2_ETH_BEAN_LP,
   UNI_V2_USDC_ETH_LP,
   UNISWAP_V2_ROUTER,
-} from '../constants';
+  USDC,
+} from 'constants/index';
 import {
   account,
   beanstalkContractReadOnly,
@@ -47,6 +48,10 @@ export async function getEtherBalance() {
   return tokenResult(ETH)(await web3.eth.getBalance(account));
 }
 
+export async function getUSDCBalance() {
+  return tokenResult(USDC)(await web3.eth.getBalance(account));
+}
+
 export async function getBlockTimestamp(blockNumber) {
   await initializing;
   return (await web3.eth.getBlock(blockNumber)).timestamp;
@@ -57,11 +62,13 @@ export const getAccountBalances = async (batch) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
+  const usdc = tokenContractReadOnly(USDC);
 
   return makeBatchedPromises(batch, [
     [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
     [bean.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
     [lp.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
+    [usdc.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
     [beanstalk.methods.balanceOfEth(account), tokenResult(ETH)],
     [bean.methods.balanceOf(account), tokenResult(BEAN)],
     [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
@@ -69,9 +76,9 @@ export const getAccountBalances = async (batch) => {
     [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
     [beanstalk.methods.lockedUntil(account), bigNumberResult],
     [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEANSTALK)],
-    [beanstalk.methods.balanceOfFarmableStalk(account), tokenResult(STALK)],
     [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
     [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
+    [usdc.methods.balanceOf(account), tokenResult(USDC)],
   ]);
 };
 /* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
@@ -168,6 +175,28 @@ export const getBips = async () => {
   return [bips, hasActiveBIP];
 };
 
+/* TODO: batch BIP detail ledger reads */
+export const getFundraisers = async () => {
+  const beanstalk = beanstalkContractReadOnly();
+  let hasActiveFundraiser = false;
+  const numberOfFundraisers = bigNumberResult(
+    await beanstalk.methods.numberOfFundraisers().call()
+  );
+  const fundraisers = [];
+  for (let i = new BigNumber(0); i.isLessThan(numberOfFundraisers); i = i.plus(1)) {
+    const fundraiser = await beanstalk.methods.fundraiser(i.toString()).call();
+    const fundraiserDict = {
+      id: i,
+      remaining: toTokenUnitsBN(fundraiser.remaining, USDC.decimals),
+      total: toTokenUnitsBN(fundraiser.total, USDC.decimals),
+      token: fundraiser.token,
+    };
+    if (fundraiserDict.remaining.isGreaterThan(0)) hasActiveFundraiser = true;
+    fundraisers.push(fundraiserDict);
+  }
+  return [fundraisers, hasActiveFundraiser];
+};
+
 export const getPrices = async (batch) => {
   const beanstalk = beanstalkContractReadOnly();
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
@@ -191,7 +220,10 @@ export const getPrices = async (batch) => {
     [lpContract.methods.token0(), identityResult],
     [
       beanstalk.methods.getTWAPPrices(),
-      (prices) => [toTokenUnitsBN(prices[0], 18), toTokenUnitsBN(prices[1], 18)],
+      (prices) => [
+        toTokenUnitsBN(prices[0], 18),
+        toTokenUnitsBN(prices[1], 18),
+      ],
     ],
   ]);
 };

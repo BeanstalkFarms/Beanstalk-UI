@@ -3,8 +3,8 @@ import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { AppState } from 'state';
-import { poolForLP } from '../../util';
-import { UNISWAP_BASE_LP, theme } from '../../constants';
+import { poolForLP } from 'util/index';
+import { UNISWAP_BASE_LP, theme } from 'constants/index';
 import {
   BaseModule,
   ClaimableAsset,
@@ -13,11 +13,10 @@ import {
   CryptoAsset,
   Grid,
   Line,
-  SiloAsset,
-  totalDescriptions,
   totalStrings,
-  walletDescriptions,
+  totalTopStrings,
   walletStrings,
+  walletTopStrings,
 } from '../Common';
 import ClaimBalance from './ClaimBalance';
 import ClaimButton from './ClaimButton';
@@ -48,7 +47,6 @@ export default function Balances() {
     beanSiloBalance,
     harvestablePodBalance,
     grownStalkBalance,
-    farmableStalkBalance,
     farmableBeanBalance,
     stalkBalance,
     seedBalance,
@@ -83,7 +81,9 @@ export default function Balances() {
   >((state) => state.prices);
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(0), new BigNumber(0)];
+    if (amount.isLessThanOrEqualTo(0)) {
+      return [new BigNumber(0), new BigNumber(0)];
+    }
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 
@@ -134,12 +134,10 @@ export default function Balances() {
       item
       xs={12}
       justifyContent="center"
-      style={{ marginTop: '20px' }}
+      style={{ marginTop: '10px' }}
     />
   );
 
-  const isFarmableStalk =
-    grownStalkBalance.isGreaterThan(0) && farmableStalkBalance.isGreaterThan(0);
   const isFarmableBeans =
     grownStalkBalance.isGreaterThan(0) || farmableBeanBalance.isGreaterThan(0);
 
@@ -166,17 +164,6 @@ export default function Balances() {
           >
             Claimable
           </Grid>
-          {isFarmableStalk && ethClaimable.isGreaterThan(0) ? (
-            spaceTop
-          ) : isFarmableStalk ? (
-            <Grid
-              container
-              item
-              xs={12}
-              justifyContent="center"
-              style={{ marginTop: '30px' }}
-            />
-          ) : null}
           {beanClaimable.isGreaterThan(0) ? (
             <ClaimBalance
               balance={beanClaimable}
@@ -186,8 +173,6 @@ export default function Balances() {
               token={CryptoAsset.Bean}
               userClaimable={beanClaimable.isGreaterThan(0)}
             />
-          ) : isFarmableBeans ? (
-            spaceTop
           ) : null}
           {ethClaimable.isGreaterThan(0) ? (
             <ClaimBalance
@@ -197,20 +182,7 @@ export default function Balances() {
               token={CryptoAsset.Ethereum}
               userClaimable={ethClaimable.isGreaterThan(0)}
             />
-          ) : isFarmableBeans ? (
-            spaceTop
           ) : null}
-          {ethClaimable.isGreaterThan(0) ? (
-            spaceTop
-          ) : (
-            <Grid
-              container
-              item
-              xs={12}
-              justifyContent="center"
-              style={{ marginTop: '10px' }}
-            />
-          )}
         </Grid>
       </ClaimButton>
     </Grid>
@@ -248,41 +220,9 @@ export default function Balances() {
             >
               Farmable
             </Grid>
-            {farmableBeanBalance.isGreaterThan(0) ? (
-              <ClaimBalance
-                balance={farmableBeanBalance}
-                description={claimableStrings.farmableBeans}
-                height="13px"
-                title="Beans"
-                token={CryptoAsset.Bean}
-                userClaimable={farmableBeanBalance.isGreaterThan(0)}
-              />
-            ) : (
-              spaceTop
-            )}
-            {farmableBeanBalance.plus(farmableStalkBalance) ? (
-              <ClaimBalance
-                balance={farmableBeanBalance.plus(farmableStalkBalance)}
-                description={claimableStrings.farmableStalk}
-                title="Stalk"
-                token={SiloAsset.Stalk}
-                userClaimable={farmableBeanBalance.isGreaterThan(0)}
-              />
-            ) : (
-              spaceTop
-            )}
-            {farmableBeanBalance.isGreaterThan(0) ? (
-              <ClaimBalance
-                balance={farmableBeanBalance.multipliedBy(2)}
-                description={claimableStrings.farmableSeeds}
-                height="17px"
-                title="Seeds"
-                token={SiloAsset.Seed}
-                userClaimable={farmableBeanBalance.isGreaterThan(0)}
-              />
-            ) : (
-              spaceTop
-            )}
+            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
+              ? spaceTop
+              : null}
             {grownStalkBalance.isGreaterThan(0) ? (
               <ClaimBalance
                 balance={grownStalkBalance}
@@ -291,9 +231,10 @@ export default function Balances() {
                 token={ClaimableAsset.Stalk}
                 userClaimable={grownStalkBalance.isGreaterThan(0)}
               />
-            ) : (
-              spaceTop
-            )}
+            ) : null}
+            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
+              ? spaceTop
+              : null}
             {rootsBalance.isEqualTo(0) ? (
               <Box style={{ width: '130%', marginLeft: '-15%' }}>
                 You have not updated your Silo account since the last BIP has
@@ -308,8 +249,8 @@ export default function Balances() {
   const myBalancesSection = (
     <>
       <BalanceModule
-        description={walletDescriptions}
-        strings={walletStrings}
+        description={walletStrings}
+        strings={walletTopStrings}
         topLeft={userBalanceInDollars}
         topRight={rootsBalance.dividedBy(totalRoots).multipliedBy(100)}
         beanLPTotal={userBeansAndEth}
@@ -342,8 +283,8 @@ export default function Balances() {
   const totalBalancesSection = (
     <>
       <BalanceModule
-        description={totalDescriptions}
-        strings={totalStrings}
+        description={totalStrings}
+        strings={totalTopStrings}
         beanBalance={
           totalBeans.isGreaterThan(0)
             ? totalBeans
@@ -390,7 +331,7 @@ export default function Balances() {
       id="balances"
       title="Balances"
       size="20px"
-      style={{ paddingTop: '60px' }}
+      style={{ paddingTop: '30px' }}
     >
       <Box className="BalanceSection-mobile">
         <BaseModule

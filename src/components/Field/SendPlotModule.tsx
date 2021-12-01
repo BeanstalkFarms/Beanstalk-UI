@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
-import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from '../../constants';
+import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from 'constants/index';
 import {
   displayBN,
   isAddress,
@@ -10,13 +10,14 @@ import {
   MinBN,
   transferPlot,
   TrimBN,
-} from '../../util';
+} from 'util/index';
 import {
   AddressInputField,
   ListInputField,
   PlotInputField,
+  fieldStrings,
   TransactionDetailsModule,
-} from '../Common';
+} from 'components/Common';
 
 export const SendPlotModule = forwardRef((props, ref) => {
   const [plotId, setPlotId] = useState(new BigNumber(-1));
@@ -181,9 +182,10 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
   function displaySendPlot(firstText, secondText) {
     details.push(
-      <span>{`Send ${firstText}Plot #${displayBN(
-      new BigNumber(plotId - props.index).plus(fromPlotIndex)
-      )} to `}
+      <span>
+        {`Send ${firstText}Plot #${displayBN(
+          new BigNumber(plotId - props.index).plus(fromPlotIndex)
+        )} to `}
         <a
           href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
           target="blank"
@@ -194,41 +196,48 @@ export const SendPlotModule = forwardRef((props, ref) => {
       </span>
     );
     details.push(`Send ${firstText === '' ? 'all' : ''}
-      ${displayBN(toPlotEndIndex)} Pods ${secondText} the Plot`
-    );
+      ${displayBN(toPlotEndIndex)} Pods ${secondText} the Plot`);
   }
 
-  if (toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId)) { // full plot
+  if (toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId)) {
+    // full plot
     displaySendPlot('', 'in');
-  } else if (fromPlotIndex.isEqualTo(0)) { // front of plot
+  } else if (fromPlotIndex.isEqualTo(0)) {
+    // front of plot
     displaySendPlot('part of ', 'from the front of');
-  } else if (toPlotEndIndex.isEqualTo(plotEndId)) { // back of plot
+  } else if (toPlotEndIndex.isEqualTo(plotEndId)) {
+    // back of plot
     displaySendPlot('part of ', 'from the end of');
   } else if (
     !toPlotEndIndex.minus(fromPlotIndex).isEqualTo(plotEndId) &&
     !fromPlotIndex.isEqualTo(0)
-  ) { // middle of plot
+  ) {
+    // middle of plot
     displaySendPlot('part of ', 'in the middle of');
   }
 
   if (toPlotEndIndex.isEqualTo(fromPlotIndex)) {
     details = [<span style={{ color: 'red' }}>Invalid transfer amount</span>];
-    }
+  }
 
   function transactionDetails() {
     if (toPlotEndIndex.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
-        <Box style={width > 500 ? { display: 'inline-flex' } : { display: 'inline-block' }}>
+        <Box
+          style={
+            width > 500
+              ? { display: 'inline-flex' }
+              : { display: 'inline-block' }
+          }
+        >
           <Box style={{ marginRight: '5px' }}>{fromIndexField}</Box>
           <Box style={{ marginLeft: '5px' }}>{fromIndexEndField}</Box>
         </Box>
         <TransactionDetailsModule fields={details} />
         <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
-          <span>
-            WARNING: There is currently no decentralized market for buying and selling Plots. Send Plots at your own risk.
-          </span>
+          <span>{fieldStrings.sendPlotWarning}</span>
         </Box>
       </>
     );

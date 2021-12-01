@@ -3,7 +3,7 @@
   src: url('../font/FuturaPTBook.otf');
 }
 blockquote, dl, ol, p, pre, ul {
-  margin: 0.33em 0;
+  margin: 0.3em 0;
 }
 ol ol, ol ul, ul ol, ul ul {
   margin: 0;
@@ -14,9 +14,14 @@ ul {
   -webkit-columns: 1;
   -moz-columns: 1;
 }
+ul.columns {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}
 
 h1, h2, h3, h4, h5, h6 {
-  padding-top: 15px;
+  padding-top: 13px;
   padding-bottom: 5px;
   margin: 0em 0;
   line-height: 0.33em;
@@ -30,13 +35,13 @@ h2:after {
   border-bottom: 1px solid hsla(0, 0%, 50%, 0.33);
 }
 h1 {
-  font-size: 18px;
+  font-size: 15px;
   margin: 0em 0;
-  padding-top: 10px;
+  padding-top: 5px;
   line-height: 1.33em;
 }
 h2 {
-  font-size: 18px;
+  font-size: 15px;
   margin: 0.55em 0;
 }
 .stackedit {

@@ -19,7 +19,7 @@ import {
   UNI_V2_ETH_BEAN_LP,
   WITHDRAWAL_FROZEN,
   theme,
-} from '../../constants';
+} from 'constants/index';
 import {
   chainId,
   displayBN,
@@ -27,7 +27,7 @@ import {
   GetWalletAddress,
   toTokenUnitsBN,
   poolForLP,
-} from '../../util';
+} from 'util/index';
 import {
   ClaimableAsset,
   CryptoAsset,
@@ -35,10 +35,10 @@ import {
   SiloAsset,
   TokenTypeImageModule,
   TransitAsset,
-  walletDescriptions,
   walletStrings,
-} from '../Common';
-import BalanceModule from '../Balances/BalanceModule';
+  walletTopStrings,
+} from 'components/Common';
+import BalanceModule from 'components/Balances/BalanceModule';
 
 const tokenImageStyle = {
   height: '15px',
@@ -105,7 +105,6 @@ export default function WalletModule(props) {
     },
   })();
 
-  const zeroBN = new BigNumber(-1);
   const {
     lpBalance,
     lpSiloBalance,
@@ -117,6 +116,9 @@ export default function WalletModule(props) {
     beanReceivableBalance,
     harvestablePodBalance,
     stalkBalance,
+    seedBalance,
+    ethBalance,
+    podBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -158,7 +160,7 @@ export default function WalletModule(props) {
   const [walletEvents, setWalletEvents] = useState([]);
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 
@@ -683,15 +685,28 @@ export default function WalletModule(props) {
   const myBalancesSection = (
     <>
       <BalanceModule
-        description={walletDescriptions}
-        strings={walletStrings}
+        description={walletStrings}
+        strings={walletTopStrings}
         topLeft={userBalanceInDollars}
         topRight={stalkBalance.dividedBy(totalStalk).multipliedBy(100)}
         beanReserveTotal={new BigNumber(0)}
         beanLPTotal={userBeansAndEth}
-        padding="4px 0 0 0"
         poolForLPRatio={poolForLPRatio}
+        beanBalance={beanBalance}
+        beanSiloBalance={beanSiloBalance}
+        beanTransitBalance={beanTransitBalance}
+        beanReceivableBalance={beanReceivableBalance}
+        harvestablePodBalance={harvestablePodBalance}
+        lpBalance={lpBalance}
+        lpSiloBalance={lpSiloBalance}
+        lpTransitBalance={lpTransitBalance}
+        lpReceivableBalance={lpReceivableBalance}
+        stalkBalance={stalkBalance}
+        seedBalance={seedBalance}
+        ethBalance={ethBalance}
+        podBalance={podBalance}
         showTokenName={false}
+        padding="4px 0 0 0"
         chartMargin="0 0 0 10px"
       />
     </>

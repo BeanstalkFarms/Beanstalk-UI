@@ -2,7 +2,7 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
-import { BEAN, BEAN_TO_SEEDS, SEEDS, STALK } from '../../constants';
+import { BEAN, BEAN_TO_SEEDS, SEEDS, STALK } from 'constants/index';
 import {
   claimAndWithdrawBeans,
   displayBN,
@@ -12,16 +12,17 @@ import {
   toStringBaseUnitBN,
   TrimBN,
   withdrawBeans,
-} from '../../util';
+} from 'util/index';
 import {
   ClaimTextModule,
   SettingsFormModule,
   SiloAsset,
+  siloStrings,
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
   TransitAsset,
-} from '../Common';
+} from 'components/Common';
 
 export const BeanWithdrawModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -155,29 +156,23 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
     details.push(
       <ClaimTextModule
         key="claim"
-        balance={
-          props.claimableEthBalance
-            .plus(props.beanReceivableBalance)
-            .plus(props.lpReceivableBalance)
-            .plus(props.harvestablePodBalance)
-        }
+        balance={props.beanClaimable.plus(props.ethClaimable)}
         claim={props.settings.claim}
         mode={props.settings.mode}
-        claimableEthBalance={props.claimableEthBalance}
-        beanReceivableBalance={props.beanReceivableBalance}
-        lpReceivableBalance={props.lpReceivableBalance}
-        harvestablePodBalance={props.harvestablePodBalance}
+        beanClaimable={props.beanClaimable}
+        ethClaimable={props.ethClaimable}
       />
     );
   }
   const beanOutput = new BigNumber(fromBeanValue);
 
   details.push(`Withdraw ${displayBN(beanOutput)}
-    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} from the Silo`
+    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} from the Silo`);
+  details.push(
+    `Burn ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
+      new BigNumber(toSeedsValue)
+    )} Seeds`
   );
-  details.push(`Burn ${displayBN(
-    new BigNumber(toStalkValue)
-  )} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
   const unvoteTextField = props.locked ? (
     <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
@@ -213,13 +208,21 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           {toTransitBeanField}
         </Box>
         <TransactionDetailsModule fields={details} />
-        <Box style={{ display: 'inline-block', width: '100%', fontSize: 'calc(9px + 0.5vmin)' }}>
+        <Box
+          style={{
+            display: 'inline-block',
+            width: '100%',
+            fontSize: 'calc(9px + 0.5vmin)',
+          }}
+        >
           <span>
-            {`You will forfeit ${smallDecimalPercent(stalkChangePercent)}% ownership of Beanstalk.`}
+            {`You will forfeit ${smallDecimalPercent(
+              stalkChangePercent
+            )}% ownership of Beanstalk.`}
           </span>
           <br />
           <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
-            WARNING: Your Withdrawal will be frozen for 24 full Seasons.
+            {siloStrings.withdrawWarning}
           </span>
         </Box>
       </>
@@ -232,7 +235,9 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
         fromBeanValue.isLessThanOrEqualTo(0) ||
         withdrawParams.crates.length === 0 ||
         withdrawParams.amounts.length === 0
-      ) return;
+      ) {
+        return;
+      }
 
       if (props.settings.claim) {
         claimAndWithdrawBeans(
@@ -244,13 +249,9 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           }
         );
       } else {
-        withdrawBeans(
-          withdrawParams.crates,
-          withdrawParams.amounts,
-          () => {
-            fromValueUpdated(new BigNumber(-1));
-          }
-        );
+        withdrawBeans(withdrawParams.crates, withdrawParams.amounts, () => {
+          fromValueUpdated(new BigNumber(-1));
+        });
       }
     },
   }));

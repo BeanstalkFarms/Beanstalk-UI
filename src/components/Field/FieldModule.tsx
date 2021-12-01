@@ -5,15 +5,21 @@ import { IconButton, Box } from '@material-ui/core';
 import ListIcon from '@material-ui/icons/List';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE } from '../../constants';
-import { approveBeanstalkBean, SwapMode, poolForLP } from '../../util';
-import { BaseModule, CryptoAsset, FarmAsset, ListTable } from '../Common';
+import { BASE_SLIPPAGE } from 'constants/index';
+import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
+import {
+  BaseModule,
+  CryptoAsset,
+  FarmAsset,
+  ListTable,
+  fieldStrings,
+} from 'components/Common';
 import { SowModule } from './SowModule';
 import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
 
 export default function FieldModule() {
-  const zeroBN = new BigNumber(-1);
+  const newBN = new BigNumber(-1);
   const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -24,6 +30,7 @@ export default function FieldModule() {
     ethBalance,
     lpReceivableBalance,
     beanClaimableBalance,
+    beanReceivableBalance,
     claimable,
     claimableEthBalance,
     harvestablePodBalance,
@@ -42,9 +49,10 @@ export default function FieldModule() {
     (state) => state.prices
   );
 
-  const { weather, soil, harvestableIndex } = useSelector<AppState, AppState['weather']>(
-    (state) => state.weather
-  );
+  const { weather, soil, harvestableIndex } = useSelector<
+    AppState,
+    AppState['weather']
+  >((state) => state.weather);
 
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
@@ -61,7 +69,7 @@ export default function FieldModule() {
   };
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    if (amount.isLessThanOrEqualTo(0)) return [newBN, newBN];
     return poolForLP(
       amount,
       prices.beanReserve,
@@ -80,10 +88,7 @@ export default function FieldModule() {
   const [isValidAddress, setIsValidAddress] = useState(false);
 
   const sectionTitles = ['Sow', 'Send'];
-  const sectionTitlesDescription = [
-    'Use this tab to sow Beans in the Field in exchange for Pods.',
-    'Use this tab to send Plots to another Ethereum address.',
-  ];
+  const sectionTitlesDescription = [fieldStrings.sow, fieldStrings.sendPlot];
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
@@ -132,12 +137,22 @@ export default function FieldModule() {
     ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
 
+  const beanClaimable = beanReceivableBalance
+    .plus(harvestablePodBalance)
+    .plus(poolForLPRatio(lpReceivableBalance)[0]);
+
+  const ethClaimable = claimableEthBalance.plus(
+    poolForLPRatio(lpReceivableBalance)[1]
+  );
+
   const sections = [
     <SowModule
       key={0}
       unripenedPods={totalBalance.totalPods}
       beanBalance={beanBalance}
       beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
+      beanClaimable={beanClaimable}
+      ethClaimable={ethClaimable}
       beanLPClaimableBalance={claimLPBeans}
       beanReserve={prices.beanReserve}
       claimable={claimable}
@@ -188,9 +203,7 @@ export default function FieldModule() {
       />
     );
     sectionTitles.push('Harvest');
-    sectionTitlesDescription.push(
-      'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.'
-    );
+    sectionTitlesDescription.push(fieldStrings.harvest);
   }
   if (section > sectionTitles.length - 1) setSection(0);
 

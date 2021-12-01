@@ -1,8 +1,8 @@
 import { Theme, withStyles } from '@material-ui/styles';
-import Tooltip from '@material-ui/core/Tooltip';
+import { Tooltip } from '@material-ui/core';
 
 export { Grid } from '@material-ui/core';
-export type { Token } from '../../util';
+export type { Token } from 'util/index';
 export {
   BudgetAsset,
   ClaimableAsset,
@@ -10,8 +10,8 @@ export {
   FarmAsset,
   SiloAsset,
   TransitAsset,
-  UniswapAsset
-} from '../../util';
+  UniswapAsset,
+} from 'util/index';
 
 export { default as AddressInputField } from './AddressInputField';
 export { default as BalanceField } from './BalanceField';
@@ -27,8 +27,6 @@ export { default as HeaderLabel } from './HeaderLabel';
 export { default as HeaderLabelWithTimer } from './HeaderLabelWithTimer';
 export { default as InputFieldPlus } from './InputFieldPlus';
 export { default as ListTable } from './ListTable';
-export { default as NftListTable } from './NftListTable';
-export { default as NftPicTable } from './NftPicTable';
 export { default as PlotInputField } from './PlotInputField';
 export { default as QuestionModule } from './QuestionModule';
 export { default as SettingsFormModule } from './SettingsFormModule';
@@ -36,6 +34,7 @@ export { default as SingleButton } from './SingleButton';
 export { default as SlippageModule } from './SlippageModule';
 export { default as SwapTransactionDetailsModule } from './SwapTransactionDetailsModule';
 export { default as SwitchModule } from './SwitchModule';
+export { default as TablePageSelect } from './TablePageSelect';
 export { default as TitleLabel } from './TitleLabel';
 export { default as TokenBalanceModule } from './TokenBalanceModule';
 export { default as TokenInputField } from './TokenInputField';
@@ -65,7 +64,7 @@ FormatTooltip.defaultProps = {
   // width: 'auto',
 };
 
-export const walletDescriptions = {
+export const walletStrings = {
   beanBalance:
     'Circulating Beans are in your wallet. Circulating Beans do not earn interest. You can Deposit Beans in the Silo or Sow Beans in the Field to start earning interest on your Beans.',
   lpBalance:
@@ -84,8 +83,6 @@ export const walletDescriptions = {
     'These are your total Claimable LP Tokens which are from Withdrawals. For more information on your Claimable LP Token Withdrawals, look in the Silo module.',
   claimableEthBalance:
     'These are your total Claimable ETH which are from Seasons of Plenty.',
-  farmableBeanBalance:
-    '',
   stalkBalance:
     'This is your total Stalk Balance. Stalk are the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo.',
   seedBalance:
@@ -100,9 +97,10 @@ export const walletDescriptions = {
     'Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk.',
   topRightTitle: 'Ownership',
 };
-export const totalDescriptions = {
+export const totalStrings = {
   beanBalance: 'This is the number of Beans not in the Silo or Withdrawals.',
-  budgetBalance: 'This is the number of Beans in the Marketing and Development Budgets.',
+  budgetBalance:
+    'This is the number of Beans in the Marketing and Development Budgets.',
   lpBalance: 'This is the number of LP Tokens not in the Silo or Withdrawals.',
   beanSiloBalance:
     'This is the number of Beans currently Deposited in the Silo.',
@@ -125,20 +123,127 @@ export const totalDescriptions = {
   topRight: 'This is the current USD value of the BEAN:ETH liquidity pool.',
   topRightTitle: 'Pool Value',
 };
-export const walletStrings = {
+export const walletTopStrings = {
   topLeft: 'Beans',
   topRight: 'Ownership',
 };
-export const totalStrings = {
+export const totalTopStrings = {
   topLeft: 'USD',
   topRight: 'USD',
 };
 export const claimableStrings = {
-  beans: 'Claimable Beans is the sum of harvestable Pods, claimable Bean withdrawals, and Beans under claimable LP withdrawals. Use the Claim button to claim all Claimable Beans and Claimable ETH.',
+  beans:
+    'Claimable Beans is the sum of harvestable Pods, claimable Bean withdrawals, and Beans under claimable LP withdrawals. Use the Claim button to claim all Claimable Beans and Claimable ETH.',
   eth: 'Claimable ETH is the sum of ETH under claimable LP Withdrawals and from Seasons of Plenty. Use the Claim button to claim all Claimable Beans and Claimable ETH.',
-  farmableBeans: 'Farmable Beans are deposited in a specific season the next time you interact with the Silo based on your proportion of Farmable Beans to Farmable Stalk. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
-  farmableStalk: 'Farmable Stalk are earn Farmable Beans. Farmable Stalk are deposited in a specific season the next time you interact with the Silo based on your proportion of Farmable Beans to Farmable Stalk. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
-  farmableSeeds: 'Farmable Seeds are yield Farmable Stalk. Once farmed, Farmable Seeds yield Grown Stalk instead of Farmable Stalk. Farmable Seeds are deposited in a specific season the next time you interact with the Silo based on your proportion of Farmable Beans to Farmable Stalk. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
-  grownStalk: 'Grown Stalk do not earn Farmable Beans. Once farmed, Grown Stalk earn Farmable Beans. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
+  grownStalk:
+    'Grown Stalk do not earn Farmable Beans. Once farmed, Grown Stalk earn Farmable Beans. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
   farm: 'Use this button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
+};
+export const siloStrings = {
+  beanDeposit:
+    'Use this sub-tab to deposit Beans to the Silo. You can toggle the settings to deposit from Beans, ETH, or both.',
+  beanWithdraw:
+    'Use this sub-tab to withdraw Beans from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
+  beanClaim: 'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.',
+  beanDepositsTable: 'View all your current Bean Deposits in this table.',
+  beanWithdrawalsTable: 'View all your current Bean Withdrawals in this table.',
+  beanAPY:
+    'The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
+  lpDeposit:
+    'Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.',
+  lpWithdraw:
+    'Use this sub-tab to withdraw LP Tokens from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
+  lpClaim: 'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.',
+  lpDepositsTable: 'View all your current LP Token Deposits in this table.',
+  lpWithdrawalsTable:
+    'View all your current LP Token Withdrawals in this table.',
+  lpAPY:
+    'The LP APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
+  siloDescription:
+    'The Silo is the Beanstalk DAO. Silo Members earn passive interest during Bean supply increases. Anyone can become a Silo Member by depositing Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module below in exchange for Stalk and Seeds. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. The Seed token yields .0001 Stalk every Season. No action is ever required of Silo Members. All Stalk and Seeds associated with a Deposit are forfeited upon withdrawal. All Withdrawals are frozen for 24 full Seasons.',
+  withdrawWarning:
+    'WARNING: Your Withdrawal will be frozen for 24 full Seasons.',
+};
+export const fieldStrings = {
+  sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',
+  sendPlot: 'Use this tab to send Plots to another Ethereum address.',
+  harvest:
+    'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.',
+  sendPlotWarning:
+    'WARNING: There is currently no decentralized market for buying and selling Plots. Send Plots at your own risk.',
+  availableSoil:
+    'Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any number of Beans up to the Available Soil in exchange for Pods.',
+  podLine:
+    'The Pod Line is the total number of Unharvestable Pods. This is the amount of debt Beanstalk has outstanding.',
+  weather:
+    'The Weather is the interest rate for sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean sown.',
+  podsHarvested:
+    'The total Harvested Pods over all Seasons is the amount of debt Beanstalk has paid off thus far.',
+  podAPY:
+    'The Pod APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
+  seasonsToPodClearance:
+    'The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate Seasons to Pod Clearance,',
+};
+export const tradeStrings = {
+  swap: 'Use this tab to trade against the BEAN:ETH Uniswap pool directly on the bean.money website.',
+  send: 'Use this tab to send Beans to another Ethereum address.',
+  sendWarning: 'WARNING: You are sending Beans to another wallet and will no longer own them.',
+  price: 'This is the live Bean price on Uniswap.',
+  tradeDescription:
+    'Anyone can buy and sell Beans on Uniswap directly through the bean.money website. To buy and deposit or buy and sow in a single transaction from ETH, use the Silo and Field modules, respectively.',
+  timeSinceCross: 'This is the time elapsed since the price last crossed the peg.',
+};
+export const seasonStrings = {
+  advance: 'Advance the Season by calling the Sunrise function',
+  reward: 'Beans Rewarded for Calling the Sunrise Function Right Now',
+  season: 'Seasons are the timekeeping mechanism of Beanstalk. Every Season is approximately 1 hour. Each Season begins when the Sunrise function is called on the Ethereum blockchain. The Sunrise function can be called by anyone at the top of each hour.',
+  sunriseOverdue: 'This is the time elapsed since the Sunrise function could be called.',
+  nextSunrise: 'This is the time until the next Sunrise function can be called at the top of the hour.',
+};
+export const governanceStrings = {
+  bips: 'Below is a complete list of all historical BIPs.',
+  activeBips:
+    'Active Beanstalk Improvement Proposals currently being voted on.',
+  governanceDescription:
+    'Beanstalk is upgraded in a decentralized fashion through Beanstalk Improvement Proposals (BIPs). Anyone with more than .1% of the total outstanding Stalk can propose a BIP. Any Stalk holder can vote for a BIP. BIPs can be committed in as little as 24 Seasons with a 2/3 supermajority, or after 168 Seasons with a 1/2 majority.',
+};
+export const beanftStrings = {
+  beanftDescription: 'BeaNFT Genesis Collection is a series of up to 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
+  mintAll: 'Use this button to Mint all your Mintable BeaNFTs.',
+  minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
+  singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',
+  unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',
+};
+export const chartStrings = {
+  bean: 'Use this tab to view charts with information about the BEAN token.',
+  field: 'Use this tab to view charts with information about the Field.',
+  silo: 'Use this tab to view charts with information about the Silo.',
+};
+export const beanChartStrings = {
+  price: 'This is the current price at the end of every hour/day.',
+  volume: 'This is the USD volume in the BEAN:ETH pool at the end of every hour/day.',
+  liquidity: 'This is the USD value of the BEAN:ETH pool at the end of every hour/day.',
+  marketcap: 'This is the USD value of the total Bean supply at the end of every hour/day.',
+  supply: 'This is the total Bean supply at the end of every hour/day.',
+  crosses: 'This is the total number of times that the price of Bean has crossed its peg at the end of every hour/day.',
+};
+export const fieldChartStrings = {
+  rror: 'This is the current total Real Rate of Return by Season. Real Rate of Return is defined as RRoR = (1 + W) / TWAP.',
+  weather: 'This is the current Weather by Season.',
+  pods: 'This is the current Unharvestable Pods by Season.',
+  sown: 'This is the current total Sown Beans by Season.',
+  harvested: 'This is the current total Harvested Pods by Season.',
+  sowers: 'This is the current total unique Sowers by Season.',
+};
+export const siloChartStrings = {
+  depositedBeans: 'This is the current total Deposited Beans by Season.',
+  withdrawnBeans: 'This is the current total Withdrawn Beans by Season.',
+  depositedLP: 'This is the current total Deposited LP Tokens by Season.',
+  withdrawnLP: 'This is the current total Withdrawn LP Tokens by Season.',
+  stalk: 'This is the current total Stalk by Season.',
+  seeds: 'This is the current total Seeds by Season.',
+};
+export const fundraiserStrings = {
+  fundsDescription: 'With the passing of BIP-4, Beanstalk will establish Fundraisers. Fundraisers will first mint a pre-defined number of Beans. Then, any farmer can participate in the Fundraiser and will be able to convert the desired stablecoin for Beans at a 1:1 rate. The Beans will then be immediately sown. Once the fundraiser has reached its goal, the funds will be forwarded to the payment address.',
+  fundsTableDescription: 'Below is a complete list of all historical Fundraisers.',
 };

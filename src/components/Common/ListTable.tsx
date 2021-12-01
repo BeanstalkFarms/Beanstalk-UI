@@ -19,9 +19,9 @@ import {
   SiloAsset,
   TokenLabel,
   TransitAsset,
-} from '../../util';
-import { theme } from '../../constants';
-import { FormatTooltip, QuestionModule } from './index';
+} from 'util/index';
+import { theme } from 'constants/index';
+import { FormatTooltip, TablePageSelect, QuestionModule } from './index';
 
 const useStyles = makeStyles({
   table: {
@@ -34,24 +34,30 @@ const useStyles = makeStyles({
   },
   pagination: {
     alignItems: 'center',
+    color: theme.text,
     display: 'flex',
     justifyContent: 'center',
-    color: theme.text,
   },
   lucidaStyle: {
+    borderColor: theme.accentColor,
+    color: theme.text,
     fontFamily: 'Lucida Console',
     fontSize: '11px',
-    color: theme.text,
-    borderColor: theme.accentColor,
   },
 });
 
 const claimableStyle = {
-  fontFamily: 'Futura-PT',
+  borderColor: theme.accentColor,
   color: 'white',
+  fontFamily: 'Futura-PT',
   fontWeight: 'bold',
   width: '33%',
+};
+const titleStyle = {
   borderColor: theme.accentColor,
+  color: theme.text,
+  fontFamily: 'Futura-PT',
+  width: '33%',
 };
 
 function displayLP(balance) {
@@ -179,11 +185,7 @@ const BasicTable = (props) => {
           <TableHead>
             <TableRow key={claimWord}>
               {titles.map((t) => (
-                <TableCell
-                  key={t}
-                  align="center"
-                  style={{ fontFamily: 'Futura-PT', width: '33%', color: theme.text, borderColor: theme.accentColor }}
-                >
+                <TableCell key={t} align="center" style={titleStyle}>
                   {t}
                 </TableCell>
               ))}
@@ -272,6 +274,7 @@ const BasicTable = (props) => {
               count !== -1 ? Math.ceil(count / rowsPerPage) : 0
             }`
           }
+          ActionsComponent={TablePageSelect}
         />
       ) : null}
     </Box>

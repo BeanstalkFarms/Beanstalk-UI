@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import { displayFullBN, TokenLabel } from '../../util';
+import { displayFullBN, TokenLabel } from 'util/index';
 import { FormatTooltip } from '.';
 
 export default function BalanceField(props) {

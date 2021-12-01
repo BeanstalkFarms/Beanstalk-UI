@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Box } from '@material-ui/core';
-import { SLIPPAGE_LINK } from '../../constants';
+import { SLIPPAGE_LINK } from 'constants/index';
 
 export default function FrontrunText() {
   const linkStyle = {

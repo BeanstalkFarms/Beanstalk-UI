@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { IconButton, Box } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
-import { SwapMode } from '../../util';
-import { theme } from '../../constants';
+import { SwapMode } from 'util/index';
+import { theme } from 'constants/index';
 import { SlippageModule, SwitchModule, UnitSelectionModule } from './index';
 
 export default function SettingsFormModule(props) {
@@ -142,7 +142,7 @@ export default function SettingsFormModule(props) {
         setShowSlippage(props.hasSlippage && value !== SwapMode.Bean);
         props.handleMode(value);
         props.setSettings({ ...props.settings, mode: value });
-        setSettingsStyle({ display: 'none' });
+        // setSettingsStyle({ display: 'none' });
       }}
       value={props.settings.mode}
     />

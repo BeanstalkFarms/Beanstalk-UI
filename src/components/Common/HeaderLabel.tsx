@@ -1,9 +1,8 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { theme } from 'constants/index';
 import { FormatTooltip, QuestionModule } from './index';
-// import { chainId } from '../../util';
-import { theme } from '../../constants';
 
 export default function HeaderLabel(props) {
   const classes = makeStyles(() => ({
@@ -33,16 +32,15 @@ export default function HeaderLabel(props) {
     },
   }))();
 
-  const questionTooltip = (
-    props.description !== undefined
-      ? <QuestionModule
-          description={props.description}
-          margin={props.margin}
-          marginTooltip={props.marginTooltip}
-          placement={props.placement}
-        />
-      : undefined
-  );
+  const questionTooltip =
+    props.description !== undefined ? (
+      <QuestionModule
+        description={props.description}
+        margin={props.margin}
+        marginTooltip={props.marginTooltip}
+        placement={props.placement}
+      />
+    ) : undefined;
   const balanceTooltip =
     props.balanceDescription !== undefined ? (
       <FormatTooltip
@@ -62,9 +60,7 @@ export default function HeaderLabel(props) {
         {props.title}
         {questionTooltip}
       </Box>
-      <Box className={classes.value}>
-        {balanceTooltip}
-      </Box>
+      <Box className={classes.value}>{balanceTooltip}</Box>
     </Box>
   );
 }

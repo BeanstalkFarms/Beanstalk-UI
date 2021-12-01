@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import {
+  hourUniswapQuery,
+  dayUniswapQuery,
+  dayBeanQuery,
+  hourBeanQuery,
+} from 'graph/index';
+import useIsMounted from 'util/hooks/isMounted';
+import { beanChartStrings } from 'components/Common';
 import Charts from './Charts';
-import { hourUniswapQuery, dayUniswapQuery, dayBeanQuery, hourBeanQuery } from '../../graph';
-import useIsMounted from '../../util/hooks/isMounted';
 
 export default function BeanCharts() {
   const isMounted = useIsMounted();
@@ -16,42 +22,42 @@ export default function BeanCharts() {
   });
 
   const charts = [
-      {
-          title: 'Price',
-          description: 'This is the current price at the end of every hour/day.',
-          data: chartData.price,
-          props: {
-              unit: '$',
-          },
+    {
+      title: 'Price',
+      description: beanChartStrings.price,
+      data: chartData.price,
+      props: {
+        unit: '$',
       },
-      {
-          title: 'Volume',
-          shortTitle: 'Vol.',
-          description: 'This is the USD volume in the BEAN:ETH pool at the end of every hour/day.',
-          data: chartData.volume,
-      },
-      {
-          title: 'Liquidity',
-          shortTitle: 'Liq.',
-          description: 'This is the USD value of the BEAN:ETH pool at the end of every hour/day.',
-          data: chartData.liquidity,
-      },
-      {
-          title: 'Market Cap',
-          shortTitle: 'M. Cap',
-          description: 'This is the USD value of the total Bean supply at the end of every hour/day.',
-          data: chartData.marketCap,
-      },
-      {
-          title: 'Supply',
-          description: 'This is the total Bean supply at the end of every hour/day.',
-          data: chartData.supply,
-      },
-      {
-          title: 'Crosses',
-          description: 'This is the total number of times that the price of Bean has crossed its peg at the end of every hour/day.',
-          data: chartData.crosses,
-      },
+    },
+    {
+      title: 'Volume',
+      shortTitle: 'Vol.',
+      description: beanChartStrings.volume,
+      data: chartData.volume,
+    },
+    {
+      title: 'Liquidity',
+      shortTitle: 'Liq.',
+      description: beanChartStrings.liquidity,
+      data: chartData.liquidity,
+    },
+    {
+      title: 'Market Cap',
+      shortTitle: 'M. Cap',
+      description: beanChartStrings.marketcap,
+      data: chartData.marketCap,
+    },
+    {
+      title: 'Supply',
+      description: beanChartStrings.supply,
+      data: chartData.supply,
+    },
+    {
+      title: 'Crosses',
+      description: beanChartStrings.crosses,
+      data: chartData.crosses,
+    },
   ];
 
   async function loadUniswapCharts() {
@@ -85,15 +91,22 @@ export default function BeanCharts() {
       beanHourData.map((d) => ({ x: d.x, y: d.crosses })),
       beanDayData.map((d) => ({ x: d.x, y: d.crosses })),
     ];
-    if (isMounted.current) setChartData({ price: price, volume: volume, liquidity: liquidity, marketCap: marketCap, supply: supply, crosses: crosses });
+    if (isMounted.current) {
+      setChartData({
+        price: price,
+        volume: volume,
+        liquidity: liquidity,
+        marketCap: marketCap,
+        supply: supply,
+        crosses: crosses,
+      });
+    }
   }
 
   useEffect(() => {
     loadUniswapCharts();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <Charts mainTitle="Bean" charts={charts} />
-  );
+  return <Charts mainTitle="Bean" charts={charts} />;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import { TokenImage, TokenLabel, TokenTypeImage } from '../../util';
+import { TokenImage, TokenLabel, TokenTypeImage } from 'util/index';
 import { QuestionModule } from './index';
 
 export default function TabImageModule(props) {

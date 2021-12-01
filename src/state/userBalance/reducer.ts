@@ -36,10 +36,10 @@ export interface UserBalanceState {
   beanClaimableBalance: BigNumber;
   claimable: Array;
   hasClaimable: Boolean;
-  farmableStalkBalance: BigNumber;
   farmableBeanBalance: BigNumber;
   grownStalkBalance: BigNumber;
   rootsBalance: BigNumber;
+  usdcBalance: BigNumber;
 }
 
 export const initialState: UserBalanceState = {
@@ -74,10 +74,10 @@ export const initialState: UserBalanceState = {
   beanClaimableBalance: new BigNumber(-1),
   claimable: [[], [], [], false, false, '0', '0'],
   hasClaimable: false,
-  farmableStalkBalance: new BigNumber(-1),
   farmableBeanBalance: new BigNumber(-1),
   grownStalkBalance: new BigNumber(-1),
   rootsBalance: new BigNumber(-1),
+  usdcBalance: new BigNumber(-1),
 };
 
 export default createReducer(initialState, (builder) =>

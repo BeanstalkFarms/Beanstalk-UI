@@ -3,6 +3,7 @@ import { changeTheme } from './colors';
 
 export * from './bips';
 export * from './links';
+export * from './funds';
 export * from './tokens';
 export * from './values';
 export * from './colors';

@@ -1,9 +1,15 @@
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { displayBN, displayFullBN } from '../../util';
-import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from '../../constants';
-import { BaseModule, ContentSection, Grid, HeaderLabel } from '../Common';
+import { displayBN, displayFullBN } from 'util/index';
+import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from 'constants/index';
+import {
+  BaseModule,
+  ContentSection,
+  Grid,
+  HeaderLabel,
+  fieldStrings,
+} from 'components/Common';
 import FieldModule from './FieldModule';
 
 export default function Field() {
@@ -35,17 +41,14 @@ export default function Field() {
           balanceDescription={`${apy.toFixed(2)}% APY`}
           description={
             <span>
-              The Pod APY is a rough estimate based on a liquidity weighted
-              average of Beans minted over the previous 168 Seasons normalized
-              to the current liquidity. For the complete formulas used to
-              calculate APY,{' '}
+              {fieldStrings.podAPY}{' '}
               <a target="blank" href={APY_CALCULATION}>
                 click here
               </a>
             </span>
           }
           title="Pod APY"
-          value={`${apy.toFixed(0)}%`}
+          value={`${apy.toFixed(0) === '0' ? '–' : apy.toFixed(0)}%`}
         />
       </Grid>
       <Grid item sm={6} xs={12} style={headerLabelStyle}>
@@ -53,17 +56,14 @@ export default function Field() {
           balanceDescription={`${tth.toFixed(2)} Seasons`}
           description={
             <span>
-              The Seasons to Pod Clearance is a rough estimate based on a
-              liquidity weighted average of Beans minted over the previous 168
-              Seasons normalized to the current liquidity. For the complete
-              formulas used to calculate Seasons to Pod Clearance,{' '}
+              {fieldStrings.seasonsToPodClearance}{' '}
               <a target="blank" href={APY_CALCULATION}>
                 click here
               </a>
             </span>
           }
           title="Seasons to Pod Clearance"
-          value={tth.toFixed(0)}
+          value={tth.toFixed(0) === 'Infinity' ? '–' : tth.toFixed(0)}
         />
       </Grid>
     </Grid>
@@ -109,7 +109,7 @@ export default function Field() {
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
             balanceDescription={`${displayFullBN(weather.soil)} Soil`}
-            description="Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any number of Beans up to the Available Soil in exchange for Pods."
+            description={fieldStrings.availableSoil}
             title="Available Soil"
             value={displayBN(weather.soil)}
           />
@@ -119,7 +119,7 @@ export default function Field() {
             balanceDescription={`${displayFullBN(
               totalBalance.totalPods
             )} Unharvestable Pods`}
-            description="The Pod Line is the total number of Unharvestable Pods. This is the amount of debt Beanstalk has outstanding."
+            description={fieldStrings.podLine}
             title="Pod Line"
             value={displayBN(totalBalance.totalPods)}
           />
@@ -129,7 +129,7 @@ export default function Field() {
         <Grid item sm={6} xs={12} style={headerLabelStyle}>
           <HeaderLabel
             balanceDescription={`${weather.weather}% Weather`}
-            description="The Weather is the interest rate for sowing Beans. For a given Weather w, you receive w + 1 Pods for each Bean sown."
+            description={fieldStrings.weather}
             title="Weather"
             value={`${weather.weather.toFixed()}%`}
           />
@@ -139,7 +139,7 @@ export default function Field() {
             balanceDescription={`${displayFullBN(
               weather.harvestableIndex
             )} Harvested Pods`}
-            description="The total Harvested Pods over all Seasons is the amount of debt Beanstalk has paid off thus far."
+            description={fieldStrings.podsHarvested}
             title="Pods Harvested"
             value={displayBN(weather.harvestableIndex)}
           />
