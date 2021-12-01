@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import {
   Box,
   Link,
@@ -10,6 +10,7 @@ import {
   TablePagination,
   TableRow,
 } from '@material-ui/core/';
+import Image from 'material-ui-image';
 import { makeStyles } from '@material-ui/styles';
 import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from 'constants/index';
 import { mintNFT } from 'util/index';
@@ -86,10 +87,7 @@ const BasicTable = (props) => {
                     scope="index"
                   >
                     <Image
-                      unoptimized
-                      loader={() =>
-                        `${BASE_IPFS_LINK}${props.nftList[index].imageIpfsHash}`
-                      }
+                      unoptimized="true"
                       src={`${BASE_IPFS_LINK}${props.nftList[index].imageIpfsHash}`}
                       width="290px"
                       height="290px"
