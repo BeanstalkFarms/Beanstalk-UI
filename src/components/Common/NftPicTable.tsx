@@ -13,7 +13,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from 'constants/index';
 import { mintNFT } from 'util/index';
-import { beanftStrings, SingleButton } from './index';
+import { beanftStrings, SingleButton, TablePageSelect } from './index';
 
 const useStyles = makeStyles({
   table: {
@@ -164,6 +164,7 @@ const BasicTable = (props) => {
               count !== -1 ? Math.ceil(count / rowsPerPage) : 0
             }`
           }
+          ActionsComponent={TablePageSelect}
         />
       ) : null}
     </Box>

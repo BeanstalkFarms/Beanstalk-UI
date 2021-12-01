@@ -36,6 +36,7 @@ export { default as SingleButton } from './SingleButton';
 export { default as SlippageModule } from './SlippageModule';
 export { default as SwapTransactionDetailsModule } from './SwapTransactionDetailsModule';
 export { default as SwitchModule } from './SwitchModule';
+export { default as TablePageSelect } from './TablePageSelect';
 export { default as TitleLabel } from './TitleLabel';
 export { default as TokenBalanceModule } from './TokenBalanceModule';
 export { default as TokenInputField } from './TokenInputField';
