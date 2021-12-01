@@ -13,7 +13,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from 'constants/index';
 import { mintNFT } from 'util/index';
-import { beanftStrings, SingleButton } from './index';
+import { beanftStrings, SingleButton, TablePageSelect } from 'components/Common';
 
 const useStyles = makeStyles({
   table: {
@@ -151,20 +151,23 @@ const BasicTable = (props) => {
         </Table>
       </TableContainer>
       {Object.keys(props.nftList).length > rowsPerPage ? (
-        <TablePagination
-          className={classes.pagination}
-          component="div"
-          count={Object.keys(props.nftList).length}
-          onPageChange={props.handleChange}
-          page={props.page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[]}
-          labelDisplayedRows={({ from, count }) =>
-            `${Math.ceil(from / rowsPerPage)}-${
-              count !== -1 ? Math.ceil(count / rowsPerPage) : 0
-            }`
-          }
-        />
+        <div className={classes.pagination}>
+          <TablePagination
+            className={classes.pagination}
+            component="div"
+            count={Object.keys(props.nftList).length}
+            onPageChange={props.handleChange}
+            page={props.page}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[]}
+            labelDisplayedRows={({ from, count }) =>
+              `${Math.ceil(from / rowsPerPage)}-${
+                count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+              }`
+            }
+            ActionsComponent={TablePageSelect}
+          />
+        </div>
       ) : null}
     </Box>
   );

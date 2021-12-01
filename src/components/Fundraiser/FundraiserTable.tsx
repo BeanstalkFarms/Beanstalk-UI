@@ -19,7 +19,7 @@ import {
   fundsList,
   theme,
 } from 'constants/index';
-import { Line, QuestionModule, fundraiserStrings } from 'components/Common';
+import { Line, QuestionModule, fundraiserStrings, TablePageSelect } from 'components/Common';
 import CircularProgressWithLabel from 'components/Governance/CircularProgressWithLabel';
 
 const useStyles = makeStyles({
@@ -225,15 +225,18 @@ const FundTable = (props) => {
           </Table>
         </TableContainer>
         {Object.keys(tableFunds).length > rowsPerPage ? (
-          <TablePagination
-            component="div"
-            count={Object.keys(tableFunds).length}
-            className={classes.pagination}
-            onPageChange={handleChangePage}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[]}
-          />
+          <div className={classes.pagination}>
+            <TablePagination
+              component="div"
+              count={Object.keys(tableFunds).length}
+              className={classes.pagination}
+              onPageChange={handleChangePage}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[]}
+              ActionsComponent={TablePageSelect}
+            />
+          </div>
         ) : null}
       </AppBar>
     );

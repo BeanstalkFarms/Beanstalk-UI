@@ -24,7 +24,12 @@ import {
   GOVERNANCE_EXPIRATION,
 } from 'constants/index';
 import { percentForStalk } from 'util/index';
-import { Line, QuestionModule, governanceStrings } from 'components/Common';
+import {
+  governanceStrings,
+  Line,
+  TablePageSelect,
+  QuestionModule,
+} from 'components/Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 const useStyles = makeStyles({
@@ -256,15 +261,18 @@ const BipTable = (props) => {
           </Table>
         </TableContainer>
         {Object.keys(tableBips).length > rowsPerPage ? (
-          <TablePagination
-            component="div"
-            count={Object.keys(tableBips).length}
-            className={classes.pagination}
-            onPageChange={handleChangePage}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[]}
-          />
+          <div className={classes.pagination}>
+            <TablePagination
+              component="div"
+              count={Object.keys(tableBips).length}
+              className={classes.pagination}
+              onPageChange={handleChangePage}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[]}
+              ActionsComponent={TablePageSelect}
+            />
+          </div>
         ) : null}
       </AppBar>
     );

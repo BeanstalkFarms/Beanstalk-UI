@@ -6,9 +6,9 @@ import {
   ContentTitle,
   BaseModule,
   Grid,
-  NftPicTable,
   SingleButton,
 } from 'components/Common';
+import NftPicTable from './NftPicTable';
 
 export default function ClaimNFT(props) {
   const [page, setPage] = React.useState(0);
