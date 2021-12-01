@@ -58,6 +58,10 @@ export default function NavigationBar(props) {
     (state) => state.general
   );
 
+  const { hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+
   const classes = makeStyles({
     fixedNav: {
       zIndex: '10000',
@@ -125,10 +129,7 @@ export default function NavigationBar(props) {
     return false;
   }
 
-  // temporary fix/hide for WIP Fundraiser page
-
   const navMapping = [...defaultNavMapping];
-  const hasActiveFundraiser = false;
   if (hasActiveFundraiser) {
     navMapping.splice(3, 0, {
       path: 'fundraiser',
@@ -137,7 +138,9 @@ export default function NavigationBar(props) {
   }
 
   const linkItemStyle = (path) => {
-    if ((path === 'dao' && hasActiveBIP !== false) || path === 'fundraiser') {
+    if (
+      (path === 'dao' && hasActiveBIP !== false) ||
+      (path === 'fundraiser' && hasActiveFundraiser !== false)) {
       return { color: theme.activeSection };
     }
     return null;

@@ -18,7 +18,7 @@ import {
   DIAMONDS_LINK,
 } from 'constants/index';
 import { displayBN, displayFullBN } from 'util/index';
-import { FormatTooltip } from './index';
+import { FormatTooltip, TablePageSelect } from 'components/Common';
 
 const useStyles = makeStyles({
   table: {
@@ -171,6 +171,7 @@ const BasicTable = (props) => {
               c !== -1 ? Math.ceil(c / rowsPerPage) : 0
             }`
           }
+          ActionsComponent={TablePageSelect}
         />
       ) : null}
     </Box>

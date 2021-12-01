@@ -5,7 +5,7 @@ import { IconButton, Box } from '@material-ui/core';
 import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, BEAN_TO_STALK, zeroBN } from 'constants/index';
+import { BASE_SLIPPAGE, BEAN_TO_STALK } from 'constants/index';
 import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
 import {
   BaseModule,
@@ -72,7 +72,7 @@ export default function SiloBeanModule() {
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(
       amount,
       prices.beanReserve,
@@ -95,9 +95,13 @@ export default function SiloBeanModule() {
     if (newSection !== section) {
       setSection(newSection);
       setIsFormDisabled(true);
+      setSettings({
+        claim: false,
+        mode: null,
+        slippage: new BigNumber(BASE_SLIPPAGE),
+      });
     }
   };
-
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
     setSectionInfo(newSectionInfo);
     setPage(newPageZero);
@@ -142,6 +146,7 @@ export default function SiloBeanModule() {
         break;
     }
   };
+
   const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
     ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
@@ -209,7 +214,7 @@ export default function SiloBeanModule() {
       <BeanClaimModule
         key={2}
         crates={beanReceivableCrates}
-        maxFromBeansVal={beanReceivableBalance}
+        maxFromBeanVal={beanReceivableBalance}
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
         setSection={setSection}

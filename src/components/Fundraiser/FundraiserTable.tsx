@@ -16,21 +16,11 @@ import { makeStyles } from '@material-ui/styles';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {
-  bipsList,
+  fundsList,
   theme,
-  GOVERNANCE_EMERGENCY_PERIOD,
-  GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR,
-  GOVERNANCE_EMERGENCY_THRESHOLD_NUMERATOR,
-  GOVERNANCE_EXPIRATION,
 } from 'constants/index';
-import { percentForStalk } from 'util/index';
-import {
-  governanceStrings,
-  Line,
-  TablePageSelect,
-  QuestionModule,
-} from 'components/Common';
-import CircularProgressWithLabel from './CircularProgressWithLabel';
+import { Line, QuestionModule, fundraiserStrings, TablePageSelect } from 'components/Common';
+import CircularProgressWithLabel from 'components/Governance/CircularProgressWithLabel';
 
 const useStyles = makeStyles({
   table: {
@@ -50,12 +40,6 @@ const useStyles = makeStyles({
     textAlign: 'center',
     width: '100%',
   },
-  cell: {
-    fontFamily: 'Futura-PT',
-  },
-  cellTitle: {
-    fontFamily: 'Futura-PT-Book',
-  },
   inputModule: {
     backgroundColor: theme.module.background,
     borderRadius: '25px',
@@ -67,28 +51,28 @@ const useStyles = makeStyles({
   },
 });
 
-function summaryBips(open, bip) {
+function summaryFunds(open, fund) {
   if (open) {
-    const bipID = parseInt(bip[0], 10);
-    if (bipsList.length > bipID) {
-      if (Object.keys(bipsList).length > parseInt(bip[0], 10)) {
+    const fundID = parseInt(fund[0], 10);
+    if (fundsList.length > fundID) {
+      if (Object.keys(fundsList).length > fundID && fundsList[fundID].path !== undefined) {
         return (
           <iframe
-            src={bipsList[bipID].path}
+            src={fundsList[fundID].path}
             style={{ border: 'none' }}
-            title={`BIP-${bipID}`}
+            title={`FUND-${fundID}`}
             width="100%"
-            height="465px"
+            height="340px"
           />
         );
       }
       return (
         <iframe
-          src="/BIPs/bip-default.html"
+          src="/Funds/fund-default.html"
           style={{ border: 'none' }}
-          title="BIP-default"
+          title="fund-default"
           width="100%"
-          height="30px"
+          height="50px"
         />
       );
     }
@@ -96,42 +80,42 @@ function summaryBips(open, bip) {
 }
 
 const Row = (props) => {
-  const { bip } = props;
+  const { fund } = props;
   const [open, setOpen] = React.useState(false);
 
   return (
     <>
-      <TableRow id={`bip-${bip[0]}`}>
+      <TableRow id={`fund-${fund[0]}`}>
         <TableCell style={{ padding: '5px', borderColor: theme.accentColor }}>
           <IconButton
-            id={`open-bip-${bip[0]}`}
+            id={`open-fund-${fund[0]}`}
             aria-label="expand row"
             onClick={() => setOpen(!open)}
             size="small"
           >
             {open ? (
-              <KeyboardArrowUpIcon id={`bip-${bip[0]}-open`} />
+              <KeyboardArrowUpIcon id={`fund-${fund[0]}-open`} />
             ) : (
               <KeyboardArrowDownIcon />
             )}
           </IconButton>
         </TableCell>
-        {Object.values(bip).map((bipValue, bipIndex) => (
+        {Object.values(fund).map((fundValue, fundIndex) => (
           <TableCell
-            key={`bip_table_cell_${bipIndex}`} // eslint-disable-line
+            key={`fund_table_cell_${fundIndex}`} // eslint-disable-line
             align="center"
             component="th"
-            scope="bip"
+            scope="fund"
             style={{
               fontFamily: 'Futura-PT-Book',
               fontSize: '18px',
               borderColor: theme.accentColor,
             }}
           >
-            {bipIndex === 3 ? (
-              <CircularProgressWithLabel value={bipValue} />
+            {fundIndex === 4 ? (
+              <CircularProgressWithLabel value={fundValue} />
             ) : (
-              bipValue
+              fundValue
             )}
           </TableCell>
         ))}
@@ -146,7 +130,7 @@ const Row = (props) => {
           }}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
-            {summaryBips(open, bip)}
+            {summaryFunds(open, fund)}
           </Collapse>
         </TableCell>
       </TableRow>
@@ -154,7 +138,7 @@ const Row = (props) => {
   );
 };
 
-const BipTable = (props) => {
+const FundTable = (props) => {
   const classes = useStyles();
 
   const [page, setPage] = useState(0);
@@ -163,59 +147,39 @@ const BipTable = (props) => {
     setPage(newPage);
   };
 
-  const titles = ['BIP', 'Title', 'Status', '% Voted'];
-  const tableBips = props.bips
-    .reduce((bips, bip) => {
-      const voteProportion = bip.roots.dividedBy(props.totalRoots);
-      const bipID = bip.id;
+  const titles = ['Fundraiser', 'Title', 'Type', 'Amount', 'Remaining'];
+  const tableFunds = props.fundraisers
+    .reduce((funds, fund) => {
+      const fundID = fund.id;
+      const fundAdds = props.fundraisersInfo[fundID];
       const tb = {
-        BIP: bipID.toString(),
-        title: bipsList.length > bipID ? bipsList[bipID].title : `BIP-${bipID}`,
+        FUND: fundID.toString(),
+        title: fundAdds.name,
+        type: fundAdds.type,
+        amount: `${fund.total.toFixed()} ${fundAdds.token}`,
       };
-      if (bip.executed) {
-        tb.status = 'Commited';
-      } else if (
-        bip.start
-          .plus(bip.period)
-          .plus(GOVERNANCE_EXPIRATION)
-          .isLessThanOrEqualTo(props.season)
-      ) {
-        tb.status = 'Failed';
-      } else if (bip.start.plus(bip.period).isLessThan(props.season)) {
-        tb.status = voteProportion.isGreaterThan(0.5) ? 'Commitable' : 'Failed';
-      } else if (
-        bip.timestamp
-          .plus(GOVERNANCE_EMERGENCY_PERIOD)
-          .isLessThanOrEqualTo(new Date().getTime() / 1000) &&
-        voteProportion.isGreaterThanOrEqualTo(
-          GOVERNANCE_EMERGENCY_THRESHOLD_NUMERATOR /
-            GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR
-        )
-      ) {
-        tb.status = 'Emergency Committable';
+      if (fund.remaining.isGreaterThan(0)) {
+        tb.remaining = fund.remaining
+          .dividedBy(fund.total)
+          .multipliedBy(100)
+          .decimalPlaces(2)
+          .toNumber();
       } else {
-        tb.status = `${bip.period.minus(
-          props.season.minus(bip.start).minus(1)
-        )} Seasons Remaining`;
+        tb.remaining = fund.remaining;
       }
-      tb.voted = percentForStalk(
-        bip.roots,
-        bip.endTotalRoots.isGreaterThan(0)
-          ? bip.endTotalRoots
-          : props.totalRoots
-      );
-      bips.push([tb.BIP, tb.title, tb.status, tb.voted]);
-      return bips;
+
+      funds.push([tb.FUND, tb.title, tb.type, tb.amount, tb.remaining]);
+      return funds;
     }, [])
     .reverse();
 
-  if (tableBips !== undefined) {
+  if (tableFunds !== undefined) {
     return (
       <AppBar className={classes.inputModule} position="static">
         <span className={classes.title}>
-          BIPs
+          Fundraisers
           <QuestionModule
-            description={governanceStrings.bips}
+            description={fundraiserStrings.fundsTableDescription}
             margin="-12px 0 0 2px"
           />
         </span>
@@ -252,19 +216,19 @@ const BipTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tableBips
+              {tableFunds
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((bip, index) => (
-                  <Row key={`bip_row_${index}`} bip={bip} /> // eslint-disable-line
+                .map((fund, index) => (
+                  <Row key={`fund_row_${index}`} fund={fund} /> // eslint-disable-line
                 ))}
             </TableBody>
           </Table>
         </TableContainer>
-        {Object.keys(tableBips).length > rowsPerPage ? (
+        {Object.keys(tableFunds).length > rowsPerPage ? (
           <div className={classes.pagination}>
             <TablePagination
               component="div"
-              count={Object.keys(tableBips).length}
+              count={Object.keys(tableFunds).length}
               className={classes.pagination}
               onPageChange={handleChangePage}
               page={page}
@@ -281,18 +245,18 @@ const BipTable = (props) => {
 };
 
 /**
- * The description will be manually added by the bip proposer via merge request when a bip is submitted.
+ * The description will be manually added by the bip proposer via merge request when a bip is submitted for a Fundraiser.
  *
- * To Submit a New BIP:
- * (1) Fill out template HTML from '/public/BIPs/BIP-template.html'
- * (2) Add a new bip path to the bipsList object in '/src/constants/bips.js'
+ * To Submit a New Fundraiser:
+ * (1) Fill out template HTML from '/public/Funds/Fund-template.html'
+ * (2) Add a new fund path to the fundsList object in '/src/constants/funds.js'
  * (3) Submit a merge request on github: https://github.com/BeanstalkFarms/Beanstalk
  */
 
-export default function GovernanceTable(props) {
+export default function FundraiserTable(props) {
   return (
     <Box style={props.style}>
-      <BipTable {...props} />
+      <FundTable {...props} />
     </Box>
   );
 }

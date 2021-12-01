@@ -4,6 +4,7 @@ import { Link, Box } from '@material-ui/core';
 import { AppState } from 'state';
 import { ContentSection, governanceStrings, Grid } from 'components/Common';
 import { theme, WHITEPAPER } from 'constants/index';
+import Fundraiser from '../Fundraiser';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
 
@@ -24,6 +25,10 @@ export default function Governance() {
     AppState,
     AppState['userBalance']
   >((state) => state.userBalance);
+
+  const { hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   if (bips === undefined || bips.length === 0) return;
 
@@ -77,6 +82,10 @@ export default function Governance() {
     </>
   );
 
+  const fundraiserTable = !hasActiveFundraiser ?
+    <Fundraiser />
+    : null;
+
   return (
     <ContentSection
       id="governance"
@@ -106,6 +115,7 @@ export default function Governance() {
             />
           </Grid>
         </Grid>
+        {fundraiserTable}
       </Grid>
     </ContentSection>
   );

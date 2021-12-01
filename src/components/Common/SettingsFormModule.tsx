@@ -142,7 +142,7 @@ export default function SettingsFormModule(props) {
         setShowSlippage(props.hasSlippage && value !== SwapMode.Bean);
         props.handleMode(value);
         props.setSettings({ ...props.settings, mode: value });
-        setSettingsStyle({ display: 'none' });
+        // setSettingsStyle({ display: 'none' });
       }}
       value={props.settings.mode}
     />

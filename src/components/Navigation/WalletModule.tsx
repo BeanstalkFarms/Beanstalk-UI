@@ -105,7 +105,6 @@ export default function WalletModule(props) {
     },
   })();
 
-  const zeroBN = new BigNumber(-1);
   const {
     lpBalance,
     lpSiloBalance,
@@ -161,7 +160,7 @@ export default function WalletModule(props) {
   const [walletEvents, setWalletEvents] = useState([]);
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 

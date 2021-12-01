@@ -21,7 +21,7 @@ import {
   TransitAsset,
 } from 'util/index';
 import { theme } from 'constants/index';
-import { FormatTooltip, QuestionModule } from './index';
+import { FormatTooltip, TablePageSelect, QuestionModule } from './index';
 
 const useStyles = makeStyles({
   table: {
@@ -274,6 +274,7 @@ const BasicTable = (props) => {
               count !== -1 ? Math.ceil(count / rowsPerPage) : 0
             }`
           }
+          ActionsComponent={TablePageSelect}
         />
       ) : null}
     </Box>

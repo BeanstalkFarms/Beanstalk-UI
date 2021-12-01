@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { BEAN, WETH } from 'constants/index';
+import { BEAN, WETH, zeroBN } from 'constants/index';
 import { account, MinBN, txCallback, uniswapRouterContract } from './index';
 
 const DEADLINE_FROM_NOW = 60 * 15;
@@ -116,7 +116,6 @@ export const getBuyAndAddLPAmount = (
   ethReserve: BigNumber,
   beanReserve: BigNumber
 ) => {
-  const zeroBN = new BigNumber(0);
   const fee = new BigNumber(0.997);
   const c = eth
     .multipliedBy(fee)

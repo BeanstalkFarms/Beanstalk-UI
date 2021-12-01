@@ -27,8 +27,6 @@ export { default as HeaderLabel } from './HeaderLabel';
 export { default as HeaderLabelWithTimer } from './HeaderLabelWithTimer';
 export { default as InputFieldPlus } from './InputFieldPlus';
 export { default as ListTable } from './ListTable';
-export { default as NftListTable } from './NftListTable';
-export { default as NftPicTable } from './NftPicTable';
 export { default as PlotInputField } from './PlotInputField';
 export { default as QuestionModule } from './QuestionModule';
 export { default as SettingsFormModule } from './SettingsFormModule';
@@ -36,6 +34,7 @@ export { default as SingleButton } from './SingleButton';
 export { default as SlippageModule } from './SlippageModule';
 export { default as SwapTransactionDetailsModule } from './SwapTransactionDetailsModule';
 export { default as SwitchModule } from './SwitchModule';
+export { default as TablePageSelect } from './TablePageSelect';
 export { default as TitleLabel } from './TitleLabel';
 export { default as TokenBalanceModule } from './TokenBalanceModule';
 export { default as TokenInputField } from './TokenInputField';
@@ -246,4 +245,5 @@ export const siloChartStrings = {
 };
 export const fundraiserStrings = {
   fundsDescription: 'With the passing of BIP-4, Beanstalk will establish Fundraisers. Fundraisers will first mint a pre-defined number of Beans. Then, any farmer can participate in the Fundraiser and will be able to convert the desired stablecoin for Beans at a 1:1 rate. The Beans will then be immediately sown. Once the fundraiser has reached its goal, the funds will be forwarded to the payment address.',
+  fundsTableDescription: 'Below is a complete list of all historical Fundraisers.',
 };

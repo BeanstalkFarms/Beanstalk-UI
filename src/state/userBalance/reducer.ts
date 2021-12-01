@@ -39,6 +39,7 @@ export interface UserBalanceState {
   farmableBeanBalance: BigNumber;
   grownStalkBalance: BigNumber;
   rootsBalance: BigNumber;
+  usdcBalance: BigNumber;
 }
 
 export const initialState: UserBalanceState = {
@@ -76,6 +77,7 @@ export const initialState: UserBalanceState = {
   farmableBeanBalance: new BigNumber(-1),
   grownStalkBalance: new BigNumber(-1),
   rootsBalance: new BigNumber(-1),
+  usdcBalance: new BigNumber(-1),
 };
 
 export default createReducer(initialState, (builder) =>
