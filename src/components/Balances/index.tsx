@@ -329,9 +329,6 @@ export default function Balances() {
   return (
     <ContentSection
       id="balances"
-      title="Balances"
-      size="20px"
-      style={{ paddingTop: '30px' }}
     >
       <Box className="BalanceSection-mobile">
         <BaseModule
@@ -352,7 +349,6 @@ export default function Balances() {
         spacing={8}
         justifyContent="center"
         alignItems="flex-start"
-        style={{ marginTop: '8px' }}
       >
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
           <Box className="AppBar-shadow" style={balanceStyle}>

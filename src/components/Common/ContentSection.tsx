@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Link, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { theme } from 'constants/index';
-import { ContentTitle } from './index';
 
 export default function ContentSection({
   description,
@@ -11,10 +10,7 @@ export default function ContentSection({
   id,
   marginTop,
   padding,
-  size,
   style,
-  textTransform,
-  title,
   width,
   textAlign,
 }) {
@@ -124,14 +120,6 @@ export default function ContentSection({
         className={classes.appSection}
         justifyContent="center"
       >
-        <ContentTitle
-          padding={padding}
-          marginTop={marginTop}
-          width={width}
-          title={title}
-          size={size}
-          textTransform={textTransform}
-        />
         {descriptionSection}
         {children}
       </Grid>
@@ -141,7 +129,7 @@ export default function ContentSection({
 
 ContentSection.defaultProps = {
   descriptionLinks: [],
-  padding: '30px 15px',
+  padding: '10px 15px',
   width: '100%',
   minHeight: '0px',
   textAlign: 'center',

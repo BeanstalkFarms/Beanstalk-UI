@@ -7,14 +7,9 @@ import { ThemeProvider } from '@material-ui/styles';
 import Updater from 'state/userBalance/updater';
 import { AppState } from 'state';
 import About from 'components/About';
-import Analytics from 'components/Analytics';
-import Field from 'components/Field';
 import Fundraiser from 'components/Fundraiser';
 import { NavigationBar } from 'components/Navigation';
-import NFTs from 'components/NFT';
-import Silo from 'components/Silo';
-import Trade from 'components/Trade';
-import Governance from 'components/Governance';
+import { Farm, Analytics, DAO, BeaNFT } from 'Pages';
 import MetamasklessModule from './MetamasklessModule';
 import Main from './main.tsx';
 import theme from './theme';
@@ -43,11 +38,7 @@ export default function App() {
             <Redirect to="/farm" />
           </Route>
           <Route exact path="/farm">
-            <>
-              <Silo />
-              <Field />
-              <Trade />
-            </>
+            <Farm />
           </Route>
           <Route exact path="/analytics">
             <Analytics />
@@ -56,10 +47,10 @@ export default function App() {
             <Fundraiser />
           </Route>
           <Route exact path="/dao">
-            <Governance />
+            <DAO />
           </Route>
           <Route exact path="/nft">
-            <NFTs />
+            <BeaNFT />
           </Route>
           <Route exact path="/about">
             <About key="about" />
