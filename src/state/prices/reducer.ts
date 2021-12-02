@@ -9,10 +9,11 @@ export interface PriceState {
   beanReserve: BigNumber;
   beanTWAPPrice: BigNumber;
   usdcTWAPPrice: BigNumber;
-  gasPrice: {
+  ethPrices: {
     fast: BigNumber;
     propose: BigNumber;
     safe: BigNumber;
+    ethPrice: BigNumber;
   };
 }
 
@@ -23,10 +24,11 @@ export const initialState: PriceState = {
   beanReserve: new BigNumber(-1),
   beanTWAPPrice: new BigNumber(-1),
   usdcTWAPPrice: new BigNumber(-1),
-  gasPrice: {
+  ethPrices: {
     fast: new BigNumber(-1),
     propose: new BigNumber(-1),
     safe: new BigNumber(-1),
+    ethPrice: new BigNumber(-1),
   },
 };
 

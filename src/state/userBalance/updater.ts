@@ -45,7 +45,7 @@ import {
   toBaseUnitBN,
   toTokenUnitsBN,
   account,
-  getEthGasPrice,
+  getEthPrices,
 } from 'util/index';
 
 export default function Updater() {
@@ -206,7 +206,7 @@ export default function Updater() {
         tokenReserves,
         token0,
         twapPrices,
-        gasPrice,
+        ethPrices,
       ] = _prices;
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
       const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
@@ -227,7 +227,7 @@ export default function Updater() {
           beanReserve,
           beanTWAPPrice: twapPrices[0],
           usdcTWAPPrice: twapPrices[1],
-          gasPrice,
+          ethPrices,
         })
       );
       return [beanReserve, ethReserve];
@@ -536,11 +536,11 @@ export default function Updater() {
         beanReserve,
         ethReserve,
       ];
-      const gasPrice = await getEthGasPrice();
+      const ethPrices = await getEthPrices();
       return [
         () => {
           const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
-          const lpReserves = processPrices([..._prices, gasPrice]);
+          const lpReserves = processPrices([..._prices, ethPrices]);
           processAccountBalances(
             accountBalances,
             ethBalance,
@@ -578,9 +578,9 @@ export default function Updater() {
       batch.execute();
 
       const _prices = await pricePromises;
-      const gasPrice = await getEthGasPrice();
+      const ethPrices = await getEthPrices();
       ReactDOM.unstable_batchedUpdates(() => {
-        processPrices([..._prices, gasPrice]);
+        processPrices([..._prices, ethPrices]);
       });
       benchmarkEnd('PRICES', startTime);
     }

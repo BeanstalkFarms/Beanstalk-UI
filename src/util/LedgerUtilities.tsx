@@ -52,15 +52,25 @@ export async function getUSDCBalance() {
   return tokenResult(USDC)(await web3.eth.getBalance(account));
 }
 
-export async function getEthGasPrice() {
-  const gasPrice = await fetch('https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=NU3WFYG5RBQHP6KIJKWVGCKAHK9PFUAC8D')
+export async function getEthPrices() {
+  try {
+    const API_KEY = 'NU3WFYG5RBQHP6KIJKWVGCKAHK9PFUAC8D';
+    const ethPrice = await fetch(`https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${API_KEY}`)
+      .then((response) => response.json())
+      .then((res) => ({
+        ethUsd: res.result.ethusd,
+      }));
+    return await fetch(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${API_KEY}`)
       .then((response) => response.json())
       .then((gas) => ({
         safe: gas.result.FastGasPrice,
         propose: gas.result.SafeGasPrice,
         fast: gas.result.ProposeGasPrice,
+        ethPrice: ethPrice.ethUsd,
       }));
-  return gasPrice;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export async function getBlockTimestamp(blockNumber) {
