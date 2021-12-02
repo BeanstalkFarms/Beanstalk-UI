@@ -7,8 +7,9 @@ export default function LogoLinks(props) {
     padding: theme.footerPadding,
   };
   const closeStyle = {
-    padding: theme.footerPadding,
+    padding: props.padding !== undefined ? props.padding : theme.footerPadding,
     paddingRight: props.paddingRight,
+    paddingTop: props.paddingTop,
   };
 
   return (
@@ -25,4 +26,5 @@ export default function LogoLinks(props) {
 LogoLinks.defaultProps = {
   close: false,
   paddingRight: '7px',
+  paddingTop: '18px',
 };
