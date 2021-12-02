@@ -123,13 +123,23 @@ export default function NavigationBar(props) {
   }, []);
 
   const anchorRef = React.useRef<any>(null);
+  const pricesAnchorRef = React.useRef<any>(null);
   const [open, setOpen] = React.useState(false);
+  const [pricesOpen, setPricesOpen] = React.useState(false);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handlePricesToggle = () => {
+    setPricesOpen((prevOpen) => !prevOpen);
+  };
+  const handlePricesClose = () => {
+    setPricesOpen(false);
+  };
+
   let hasActiveBIP = false;
   try {
     hasActiveBIP = bips[bips.length - 1].active;
@@ -153,7 +163,73 @@ export default function NavigationBar(props) {
     }
     return null;
   };
+  let currentBeanPrice = null;
+  if (beanPrice !== undefined && beanPrice > 0) {
+    currentBeanPrice = (
+      <Box className={classes.currentPriceStyle}>
+        {`$${beanPrice.toFixed(4)}`}
+      </Box>
+    );
+  } else if (price > 0) {
+    currentBeanPrice = (
+      <Box className={classes.currentPriceStyle}>{`$${price.toFixed(4)}`}</Box>
+    );
+  }
 
+  const beanLogo = (
+    <IconButton edge="start" color="inherit" className="App-logo">
+      <img
+        className="svg"
+        name={theme.name}
+        height="36px"
+        src={BeanLogo}
+        alt="bean.money"
+      />
+      {currentBeanPrice}
+    </IconButton>
+  );
+
+  let ethGasPrice = null;
+  if (ethPrices?.safe ?? ethPrices?.fast ?? ethPrices?.propose) {
+    ethGasPrice = (
+      <Box className={classes.priceStyles}>
+        {`${ethPrices.propose}`}
+      </Box>
+    );
+  }
+  const ethGasPriceLogo = (
+    <IconButton edge="start" className="App-priceLogo">
+      <img
+        name={theme.name}
+        color="black"
+        height="24px"
+        src={GasPump}
+        alt="gas price"
+      />
+      {ethGasPrice}
+    </IconButton>
+  );
+
+  let ethPrice = null;
+  if (ethPrices?.ethPrice) {
+    ethPrice = (
+      <Box className={classes.priceStyles}>
+        {`${ethPrices.ethPrice}`}
+      </Box>
+    );
+  }
+  const ethPriceLogo = (
+    <IconButton edge="start" className="App-priceLogo">
+      <img
+        name={theme.name}
+        color="black"
+        height="24px"
+        src={EthLogo}
+        alt="gas price"
+      />
+      {ethPrice}
+    </IconButton>
+  );
   const mobileNavigation = (
     <Box className="NavigationBarHamburger">
       <List
@@ -220,6 +296,46 @@ export default function NavigationBar(props) {
       </Popper>
     </Box>
   );
+  const mobilePricesNav = (
+    <Box className="NavigationBarHamburger">
+      <Button
+        ref={pricesAnchorRef}
+        style={{ height: '97%' }}
+        aria-controls={pricesOpen ? 'menu-list-grow' : undefined}
+        aria-haspopup="true"
+        onClick={handlePricesToggle}
+      >
+        {beanLogo}
+      </Button>
+      <Popper
+        open={pricesOpen}
+        anchorEl={pricesAnchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              backgroundColor: theme.menuColor,
+              transformOrigin:
+                placement === 'bottom' ? 'center top' : 'center bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handlePricesClose}>
+                <MenuList autoFocusItem={pricesOpen} id="menu-list-grow" style={{ display: 'grid' }}>
+                  {ethPriceLogo}
+                  {ethGasPriceLogo}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </Box>
+  );
 
   const desktopNavigation = (
     <List
@@ -253,84 +369,24 @@ export default function NavigationBar(props) {
       ) : null}
     </List>
   );
-
-  let currentBeanPrice = null;
-  if (beanPrice !== undefined && beanPrice > 0) {
-    currentBeanPrice = (
-      <Box className={classes.currentPriceStyle}>
-        {`$${beanPrice.toFixed(4)}`}
-      </Box>
-    );
-  } else if (price > 0) {
-    currentBeanPrice = (
-      <Box className={classes.currentPriceStyle}>{`$${price.toFixed(4)}`}</Box>
-    );
-  }
-
-  const beanLogo = (
-    <IconButton edge="start" color="inherit" className="App-logo">
-      <img
-        className="svg"
-        name={theme.name}
-        height="36px"
-        src={BeanLogo}
-        alt="bean.money"
-      />
-      {currentBeanPrice}
-    </IconButton>
-  );
-
-  let ethGasPrice = null;
-  if (ethPrices?.safe ?? ethPrices?.fast ?? ethPrices?.propose) {
-    ethGasPrice = (
-      <Box className={classes.priceStyles}>
-        {`${ethPrices.propose}`}
-      </Box>
-    );
-  }
-  const ethGasPriceLogo = (
-    <IconButton edge="start" className="App-gasPrice">
-      <img
-        name={theme.name}
-        color="black"
-        height="24px"
-        src={GasPump}
-        alt="gas price"
-      />
-      {ethGasPrice}
-    </IconButton>
-  );
-
-  let ethPrice = null;
-  if (ethPrices?.ethPrice) {
-    ethPrice = (
-      <Box className={classes.priceStyles}>
-        {`${ethPrices.ethPrice}`}
-      </Box>
-    );
-  }
-  const ethPriceLogo = (
-    <IconButton edge="start" className="App-ethPrice">
-      <img
-        name={theme.name}
-        color="black"
-        height="24px"
-        src={EthLogo}
-        alt="gas price"
-      />
-      {ethPrice}
-    </IconButton>
+  const desktopPricesNav = (
+    <List
+      component="nav"
+      aria-labelledby="main navigation"
+      className="NavigationBar"
+    >
+      {beanLogo}
+      {ethPriceLogo}
+      {ethGasPriceLogo}
+    </List>
   );
 
   return (
     <AppBar className={classes.fixedNav}>
       <Toolbar>
         <Container className={classes.navDisplayFlex}>
-          <div>
-            {beanLogo}
-            {ethPriceLogo}
-            {ethGasPriceLogo}
-          </div>
+          {mobilePricesNav}
+          {desktopPricesNav}
           {mobileNavigation}
           {desktopNavigation}
         </Container>
