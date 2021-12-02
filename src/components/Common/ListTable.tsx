@@ -116,9 +116,7 @@ const BasicTable = (props) => {
     }
     if (props.asset === SiloAsset.Bean) {
       claimWord = 'Farmable';
-      claimDescription = `Farmable ${TokenLabel(
-        props.asset
-      )} are deposited in a specific Season the next time you interact with the Silo.`;
+      claimDescription = `Farmable Beans automatically receive Stalk. Farbable Beans receive Seeds and are deposited in a specific Season the next time you interact with the Silo.`;
     }
     claimableRow = (
       <TableRow style={{ backgroundColor: theme.primary }}>
