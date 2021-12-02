@@ -45,6 +45,7 @@ import {
   toBaseUnitBN,
   toTokenUnitsBN,
   account,
+  getEthGasPrice,
 } from 'util/index';
 
 export default function Updater() {
@@ -200,8 +201,13 @@ export default function Updater() {
       return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
     }
     function processPrices(_prices) {
-      const [referenceTokenReserves, tokenReserves, token0, twapPrices] =
-        _prices;
+      const [
+        referenceTokenReserves,
+        tokenReserves,
+        token0,
+        twapPrices,
+        gasPrice,
+      ] = _prices;
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
       const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
         lpReservesForTokenReserves(tokenReserves, token0);
@@ -213,7 +219,6 @@ export default function Updater() {
         .dividedBy(usdcMultiple);
       const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
-
       dispatch(
         setPrices({
           beanPrice,
@@ -222,6 +227,7 @@ export default function Updater() {
           beanReserve,
           beanTWAPPrice: twapPrices[0],
           usdcTWAPPrice: twapPrices[1],
+          gasPrice,
         })
       );
       return [beanReserve, ethReserve];
@@ -530,11 +536,15 @@ export default function Updater() {
         beanReserve,
         ethReserve,
       ];
-
+      const gasPrice = await getEthGasPrice().then((gas) => ({
+        safe: gas.result.FastGasPrice,
+        propose: gas.result.SafeGasPrice,
+        fast: gas.result.ProposeGasPrice,
+      }));
       return [
         () => {
           const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
-          const lpReserves = processPrices(_prices);
+          const lpReserves = processPrices([..._prices, gasPrice]);
           processAccountBalances(
             accountBalances,
             ethBalance,
@@ -572,8 +582,13 @@ export default function Updater() {
       batch.execute();
 
       const _prices = await pricePromises;
+      const gasPrice = await getEthGasPrice().then((gas) => ({
+        safe: gas.result.FastGasPrice,
+        propose: gas.result.SafeGasPrice,
+        fast: gas.result.ProposeGasPrice,
+      }));
       ReactDOM.unstable_batchedUpdates(() => {
-        processPrices(_prices);
+        processPrices([..._prices, gasPrice]);
       });
       benchmarkEnd('PRICES', startTime);
     }

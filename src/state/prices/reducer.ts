@@ -1,8 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { BigNumber } from 'bignumber.js';
-import {
-  setPrices,
-} from './actions';
+import { setPrices } from './actions';
 
 export interface PriceState {
   beanPrice: BigNumber;
@@ -11,6 +9,11 @@ export interface PriceState {
   beanReserve: BigNumber;
   beanTWAPPrice: BigNumber;
   usdcTWAPPrice: BigNumber;
+  gasPrice: {
+    fast: BigNumber;
+    propose: BigNumber;
+    safe: BigNumber;
+  };
 }
 
 export const initialState: PriceState = {
@@ -20,6 +23,11 @@ export const initialState: PriceState = {
   beanReserve: new BigNumber(-1),
   beanTWAPPrice: new BigNumber(-1),
   usdcTWAPPrice: new BigNumber(-1),
+  gasPrice: {
+    fast: new BigNumber(-1),
+    propose: new BigNumber(-1),
+    safe: new BigNumber(-1),
+  },
 };
 
 export default createReducer(initialState, (builder) =>

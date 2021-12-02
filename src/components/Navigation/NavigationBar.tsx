@@ -50,7 +50,7 @@ const defaultNavMapping = [
 
 export default function NavigationBar(props) {
   const [price, setPrice] = useState(0);
-  const { beanPrice } = useSelector<AppState, AppState['prices']>(
+  const { beanPrice, gasPrice } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
@@ -103,6 +103,12 @@ export default function NavigationBar(props) {
       fontFamily: 'Futura-PT-Book',
       fontSize: '15px',
       paddingLeft: '15px',
+    },
+    gasPriceStyle: {
+      color: 'black',
+      fontFamily: 'Futura-PT-Book',
+      fontSize: '12px',
+      paddingLeft: '12px',
     },
   })();
 
@@ -259,6 +265,16 @@ export default function NavigationBar(props) {
     );
   }
 
+  let ethGasPrice = null;
+  // console.log('gasPrice', gasPrice.fast, gasPrice.safe, gasPrice.propose);
+  if (gasPrice?.safe ?? gasPrice?.fast ?? gasPrice?.propose) {
+    ethGasPrice = (
+      <Box className={classes.gasPriceStyle}>
+        {`⚡️: ${gasPrice.fast} 🚶: ${gasPrice.propose} 🐢: ${gasPrice.safe}`}
+      </Box>
+    );
+  }
+
   const beanLogo = (
     <IconButton edge="start" color="inherit" className="App-logo">
       <img
@@ -269,6 +285,7 @@ export default function NavigationBar(props) {
         alt="bean.money"
       />
       {currentBeanPrice}
+      {ethGasPrice}
     </IconButton>
   );
 
