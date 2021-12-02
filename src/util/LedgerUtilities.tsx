@@ -54,7 +54,12 @@ export async function getUSDCBalance() {
 
 export async function getEthGasPrice() {
   const gasPrice = await fetch('https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=NU3WFYG5RBQHP6KIJKWVGCKAHK9PFUAC8D')
-    .then((response) => response.json()).then((data) => data);
+      .then((response) => response.json())
+      .then((gas) => ({
+        safe: gas.result.FastGasPrice,
+        propose: gas.result.SafeGasPrice,
+        fast: gas.result.ProposeGasPrice,
+      }));
   return gasPrice;
 }
 

@@ -536,11 +536,7 @@ export default function Updater() {
         beanReserve,
         ethReserve,
       ];
-      const gasPrice = await getEthGasPrice().then((gas) => ({
-        safe: gas.result.FastGasPrice,
-        propose: gas.result.SafeGasPrice,
-        fast: gas.result.ProposeGasPrice,
-      }));
+      const gasPrice = await getEthGasPrice();
       return [
         () => {
           const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
@@ -582,11 +578,7 @@ export default function Updater() {
       batch.execute();
 
       const _prices = await pricePromises;
-      const gasPrice = await getEthGasPrice().then((gas) => ({
-        safe: gas.result.FastGasPrice,
-        propose: gas.result.SafeGasPrice,
-        fast: gas.result.ProposeGasPrice,
-      }));
+      const gasPrice = await getEthGasPrice();
       ReactDOM.unstable_batchedUpdates(() => {
         processPrices([..._prices, gasPrice]);
       });

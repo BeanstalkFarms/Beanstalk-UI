@@ -266,7 +266,6 @@ export default function NavigationBar(props) {
   }
 
   let ethGasPrice = null;
-  // console.log('gasPrice', gasPrice.fast, gasPrice.safe, gasPrice.propose);
   if (gasPrice?.safe ?? gasPrice?.fast ?? gasPrice?.propose) {
     ethGasPrice = (
       <Box className={classes.gasPriceStyle}>
