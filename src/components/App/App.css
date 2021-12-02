@@ -112,6 +112,10 @@
 .App-logo {
   pointer-events: none;
 }
+.App-gasPrice {
+  pointer-events: none;
+  color: black;
+}
 
 .svg[name="fall"] {
   filter: invert(72%) sepia(52%) saturate(2707%) hue-rotate(336deg) brightness(85%) contrast(90%); /* fall color */

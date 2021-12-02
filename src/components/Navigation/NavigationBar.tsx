@@ -23,6 +23,8 @@ import { AppState } from 'state';
 import { priceQuery } from 'graph/index';
 import { theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
+import GasPump from 'img/gas-pump.svg';
+import EthLogo from 'img/eth-logo.svg';
 import WalletModule from './WalletModule';
 
 const defaultNavMapping = [
@@ -50,7 +52,7 @@ const defaultNavMapping = [
 
 export default function NavigationBar(props) {
   const [price, setPrice] = useState(0);
-  const { beanPrice } = useSelector<AppState, AppState['prices']>(
+  const { beanPrice, ethPrices } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
@@ -104,11 +106,11 @@ export default function NavigationBar(props) {
       fontSize: '15px',
       paddingLeft: '15px',
     },
-    gasPriceStyle: {
+    priceStyles: {
       color: 'black',
       fontFamily: 'Futura-PT-Book',
-      fontSize: '12px',
-      paddingLeft: '12px',
+      fontSize: '15px',
+      paddingLeft: '15px',
     },
   })();
 
@@ -278,11 +280,57 @@ export default function NavigationBar(props) {
     </IconButton>
   );
 
+  let ethGasPrice = null;
+  if (ethPrices?.safe ?? ethPrices?.fast ?? ethPrices?.propose) {
+    ethGasPrice = (
+      <Box className={classes.priceStyles}>
+        {`${ethPrices.propose}`}
+      </Box>
+    );
+  }
+  const ethGasPriceLogo = (
+    <IconButton edge="start" className="App-gasPrice">
+      <img
+        name={theme.name}
+        color="black"
+        height="24px"
+        src={GasPump}
+        alt="gas price"
+      />
+      {ethGasPrice}
+    </IconButton>
+  );
+
+  let ethPrice = null;
+  if (ethPrices?.ethPrice) {
+    ethPrice = (
+      <Box className={classes.priceStyles}>
+        {`${ethPrices.ethPrice}`}
+      </Box>
+    );
+  }
+  const ethPriceLogo = (
+    <IconButton edge="start" className="App-ethPrice">
+      <img
+        name={theme.name}
+        color="black"
+        height="24px"
+        src={EthLogo}
+        alt="gas price"
+      />
+      {ethPrice}
+    </IconButton>
+  );
+
   return (
     <AppBar className={classes.fixedNav}>
       <Toolbar>
         <Container className={classes.navDisplayFlex}>
-          {beanLogo}
+          <div>
+            {beanLogo}
+            {ethPriceLogo}
+            {ethGasPriceLogo}
+          </div>
           {mobileNavigation}
           {desktopNavigation}
         </Container>
