@@ -40,13 +40,8 @@ const normalTheme = {
   sunHeight: '10vw',
   ground: ground,
   groundSize: 'contain',
-<<<<<<< HEAD
   groundHeight: '82px',
   groundItemHeight: '82px',
-=======
-  groundHeight: '53px',
-  groundItemHeight: '51px',
->>>>>>> master
   groundGrass: 'none',
   footerPadding: '18px 15px 0 0',
   barn: barn,
