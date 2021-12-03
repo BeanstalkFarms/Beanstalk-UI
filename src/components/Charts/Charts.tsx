@@ -46,7 +46,7 @@ export default function Charts(props) {
   ));
   const baseStyle = isMobile
     ? { width: '100%', paddingLeft: 0, paddingRight: 0 }
-    : null;
+    : { margin: 'auto' };
 
   const titles = props.charts.map((c) => {
     if (width < 520 && c.shortTitle !== undefined) {

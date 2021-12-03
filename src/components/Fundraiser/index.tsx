@@ -44,7 +44,7 @@ export default function Fundraiser(props) {
     <ContentSection id="fund" title="Fundraiser" description={fundraiserStrings.fundsDescription}>
       <Grid container item>
         <Grid item xs={12}>
-          {!hasActiveFundraiser ? activeFundraisers : null}
+          {hasActiveFundraiser ? activeFundraisers : null}
         </Grid>
         <Grid item xs={12}>
           <FundraiserTable
