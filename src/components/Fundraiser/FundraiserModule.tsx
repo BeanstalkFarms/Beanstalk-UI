@@ -11,11 +11,7 @@ import {
   CryptoAsset,
 } from '../../util';
 // import { MEDIUM_INTEREST_LINK, theme } from '../../constants';
-<<<<<<< HEAD
 import { BaseModule, ContentSection, ContentTitle, Grid, HeaderLabel } from '../Common';
-=======
-import { BaseModule, ContentSection, Grid, HeaderLabel } from '../Common';
->>>>>>> master
 import { FundModule } from './FundModule';
 
 export default function FundraiserModule({
@@ -75,12 +71,8 @@ export default function FundraiserModule({
   const fundPercent = total.minus(remaining).dividedBy(total).multipliedBy(100);
 
   return (
-<<<<<<< HEAD
     <ContentSection id={title} description={description} style={{ paddingTop: '0px', width: '100%' }}>
       <ContentTitle title={title} />
-=======
-    <ContentSection id={title} title={title} description={description} style={{ paddingTop: '0px' }}>
->>>>>>> master
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel
