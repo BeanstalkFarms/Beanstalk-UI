@@ -64,21 +64,21 @@ export default function Charts(props) {
       : undefined;
 
   return (
-      <BaseModule
-        handleTabChange={(event, newSection) => {
-          setSection(newSection);
-        }}
-        section={section}
-        sectionTitles={titles}
-        showButton={false}
-        size="small"
-        marginTop="20px"
-        sectionTitlesDescription={descriptions}
-        style={baseStyle}
-        textTransform="None"
-        textTabSize={isMobile ? '11px' : undefined}
-      >
-        {sections[section]}
-      </BaseModule>
+    <BaseModule
+      handleTabChange={(event, newSection) => {
+        setSection(newSection);
+      }}
+      section={section}
+      sectionTitles={titles}
+      showButton={false}
+      size="small"
+      marginTop="20px"
+      sectionTitlesDescription={descriptions}
+      style={baseStyle}
+      textTransform="None"
+      textTabSize={isMobile ? '11px' : undefined}
+    >
+      {sections[section]}
+    </BaseModule>
   );
 }

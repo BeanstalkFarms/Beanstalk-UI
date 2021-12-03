@@ -19,7 +19,7 @@ export default function Fundraiser(props) {
     const fundraiser = fundraisers[id];
     const fundraiserInfo = fundsList[id];
 
-    if (fundraiser.remaining.isGreaterThanOrEqualTo(0)) {
+    if (fundraiser.remaining.isGreaterThan(0)) {
       activeFundraisers.push(
         <FundraiserModule
           key={id}
@@ -44,7 +44,7 @@ export default function Fundraiser(props) {
     <ContentSection id="fund" title="Fundraiser" description={fundraiserStrings.fundsDescription}>
       <Grid container item>
         <Grid item xs={12}>
-          {!hasActiveFundraiser ? activeFundraisers : null}
+          {hasActiveFundraiser ? activeFundraisers : null}
         </Grid>
         <Grid item xs={12}>
           <FundraiserTable
