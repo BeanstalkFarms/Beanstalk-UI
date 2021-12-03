@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BIP-6</title>
   <link rel="stylesheet" href="bipStyle.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body class="stackedit">
@@ -13,7 +15,7 @@
 <h3 id="summary">Summary:</h3>
 <ul>
   <li>- Change the Minimum Soil Rate to factor in the Weather and Pods harvested at the start of the Season.</li>
-  <li>Have the Soil decrease by the time weighted average shortage of Beans in the BEAN:ETH pool over the previous Season ($\Delta \bar{b}_{t-1}$).</li>
+  <li>Have the Soil decrease by the time weighted average shortage of Beans in the BEAN:ETH pool over the previous Season (\(\Delta \bar{b}_{t-1}\)).</li>
 </ul>
 <h3 id="problem">Problem:</h3>
 <p>Currently, the Available Soil is at or below the Minimum Soil Rate every Season. Based on the current Weather (~2000%+) and current Minimum Soil Rate (.1%), Beanstalk is willing to issue Pods worth more than 2% of the total Bean supply every hour. While the Pod Rate has started to decrease slightly, when there is excess demand for Soil and Beans, Beanstalk should be deleveraging faster than it currently is. This is indicative that the Minimum Soil Rate is implemented in a suboptimal way: they do not currently factor in the Weather or Pods being Harvested.</p>
@@ -23,7 +25,7 @@
 <h3 id="payment">Economic Rationale:</h3>
 <p>By setting the Soil so that in instances where 100% of Soil is Sown, the Pod Line stays the same length, it creates 2 positive effects. Therefore, Beanstalk will maintain the same amount of debt, while increasing the supply. During instances where there is excess demand for Soil, the Pod Rate will decrease quicker in a way that does not allow Beanstalk to easily run out of outstanding debt, except in the instance of a Season of Plenty.</p>
 <p>By decreasing the outstanding Soil when P > 1, there is more likely to be an efficient market for Soil when P < 1 because it is no longer a reasonable expectation that there will be excess Soil when P > 1. A more efficient Soil market will lower the Weather Beanstalk has to pay over time, and improve the ability of Beanstalk to regularly cross the Bean price over its Peg.</p>
-<h3>To see the full GitHub submission, <a href="https://github.com/BeanstalkFarms/Beanstalk/pull/11" target="break">click here</a>.</h3>
+<h3>To see the full GitHub submission, <a href="https://github.com/BeanstalkFarms/Beanstalk/pull/14" target="break">click here</a>.</h3>
 </div>
 </body>
 
