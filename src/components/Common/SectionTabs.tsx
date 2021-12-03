@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { theme as colors } from 'constants/index';
 import { Tab, Tabs } from '@material-ui/core';
 
@@ -8,6 +8,19 @@ export default function SectionTabs({
     sectionTitles,
   }) {
   const tabHeight = '48px';
+
+  const [width, setWidth] = useState<number>(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
 
   const tabsStyle = {
     margin: 'auto',
@@ -37,7 +50,7 @@ export default function SectionTabs({
       zIndex: 100,
       minHeight: '38px',
       height: '48px',
-      fontSize: '18px',
+      fontSize: width < 425 ? '12px' : (width < 600 ? '14px' : '18px'),
   };
 
   const handleChange = (event, newValue) => {
