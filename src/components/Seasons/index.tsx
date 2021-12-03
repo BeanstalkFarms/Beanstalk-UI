@@ -63,7 +63,11 @@ export default function Seasons() {
 
   return (
     <ContentSection id="seasons" title="Seasons" size="20px">
+<<<<<<< HEAD
+      <Grid style={{ marginTop: '0' }} container item xs={12} spacing={3} justifyContent="center">
+=======
       <Grid container item xs={12} spacing={3} justifyContent="center">
+>>>>>>> master
         <Grid
           item
           md={5}

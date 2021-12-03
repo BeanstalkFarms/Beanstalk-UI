@@ -15,17 +15,24 @@ import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
 import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
 import { ReactComponent as OpenSeaIcon } from 'img/opensea-icon.svg';
 import { ReactComponent as UniswapIcon } from 'img/uniswap-logo-black.svg';
+<<<<<<< HEAD
+import { ReactComponent as NetlifyIcon } from 'img/netlify-icon.svg';
+=======
+>>>>>>> master
 import ThemeBackground from 'components/Themes'
 import LogoLinks from './LogoLinks';
 
 import {
   BEAN_TOKEN_LINK,
+  CODE_OF_CONDUCT_LINK,
   COINGECKO_LINK,
   COINMARKETCAP_LINK,
   COMMONWEALTH_LINK,
   DISCORD_LINK,
   GITHUB_LINK,
+  LICENSE_LINK,
   MEDIUM_LINK,
+  NETLIFY_LINK,
   OPENSEA_LINK,
   SILO_CONTRACT_LINK,
   TELEGRAM_LINK,
@@ -62,6 +69,12 @@ export default function Footer() {
     <>
       <ThemeBackground />
       <Grid container className={classes.fixedGround} justifyContent="center">
+<<<<<<< HEAD
+        <LogoLinks close link={NETLIFY_LINK}>
+          <NetlifyIcon style={logoStyle} />
+        </LogoLinks>
+=======
+>>>>>>> master
         <LogoLinks close link={TWITTER_LINK}>
           <TwitterIcon style={logoStyle} />
         </LogoLinks>
@@ -74,6 +87,31 @@ export default function Footer() {
         <LogoLinks link={MEDIUM_LINK}>
           <MediumIcon style={logoStyle} />
         </LogoLinks>
+<<<<<<< HEAD
+        {width > 390 ? (
+          <LogoLinks close link={OPENSEA_LINK} paddingRight="10px">
+            <OpenSeaIcon style={logoStyle} />
+          </LogoLinks>
+        ) : null}
+        <LogoLinks link={COINMARKETCAP_LINK}>
+          <CoinMarketCapIcon style={logoStyle} />
+        </LogoLinks>
+        {width > 500 ? (
+          <LogoLinks link={COINGECKO_LINK}>
+            <CoinGeckoIcon style={logoStyle} />
+          </LogoLinks>
+        ) : null}
+        <LogoLinks close link={GITHUB_LINK}>
+          <GitHubIcon style={logoStyle} />
+        </LogoLinks>
+        <LogoLinks close link={BEAN_TOKEN_LINK}>
+          <BeanIcon style={logoStyle} />
+        </LogoLinks>
+        <LogoLinks close link={SILO_CONTRACT_LINK}>
+          <EtherscanIcon style={logoStyle} />
+        </LogoLinks>
+        {width > 500 ? (
+=======
         <LogoLinks close link={OPENSEA_LINK} paddingRight="10px">
           <OpenSeaIcon style={logoStyle} />
         </LogoLinks>
@@ -95,6 +133,7 @@ export default function Footer() {
           <EtherscanIcon style={logoStyle} />
         </LogoLinks>
         {width > 500 ? (
+>>>>>>> master
           <LogoLinks close link={UNISWAP_CONTRACT_LINK} paddingRight="5px">
             <UniswapIcon style={logoStyle} />
           </LogoLinks>
@@ -104,6 +143,14 @@ export default function Footer() {
             <CommonwealthIcon style={logoStyle} />
           </LogoLinks>
         ) : null}
+        <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
+          <LogoLinks close link={LICENSE_LINK} paddingTop="0px">
+            {'MIT License'}
+          </LogoLinks>
+          <LogoLinks close link={CODE_OF_CONDUCT_LINK} paddingTop="0px">
+            {'Code of Conduct'}
+          </LogoLinks>
+        </Grid>
       </Grid>
     </>
   );

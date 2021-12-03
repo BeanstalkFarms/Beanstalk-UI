@@ -19,6 +19,9 @@ export const OPENSEA_LINK = 'https://opensea.io/collection/beanft-genesis';
 export const REDDIT_LINK = 'https://www.reddit.com/r/BeanstalkProtocol/';
 export const TELEGRAM_LINK = 'https://t.me/joinchat/OdWoJSyPVsRhYzgx';
 export const TWITTER_LINK = 'https://twitter.com/BeanstalkFarms';
+export const LICENSE_LINK = 'https://github.com/BeanstalkFarms/Beanstalk/blob/master/LICENSE.txt';
+export const CODE_OF_CONDUCT_LINK = 'https://github.com/BeanstalkFarms/Beanstalk/blob/master/CODE_OF_CONDUCT.md';
+export const NETLIFY_LINK = 'https://www.netlify.com/';
 
 /* Path Links */
 export const APY_CALCULATION = '/docs/APY.html';

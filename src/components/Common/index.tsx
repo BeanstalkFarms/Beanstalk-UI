@@ -45,6 +45,7 @@ export { default as TransactionTextModule } from './TransactionTextModule';
 export { default as UnitSelectionModule } from './UnitSelectionModule';
 export { default as TabImageModule } from './TabImageModule';
 export { default as Line } from './Line';
+export { default as SectionTabs } from './SectionTabs';
 
 export const FormatTooltip = withStyles((theme: Theme) => ({
   tooltip: {
@@ -201,7 +202,11 @@ export const seasonStrings = {
   nextSunrise: 'This is the time until the next Sunrise function can be called at the top of the hour.',
 };
 export const governanceStrings = {
+<<<<<<< HEAD
+  bips: 'Below is a complete list of all BIPs.',
+=======
   bips: 'Below is a complete list of all historical BIPs.',
+>>>>>>> master
   activeBips:
     'Active Beanstalk Improvement Proposals currently being voted on.',
   governanceDescription:
@@ -243,7 +248,17 @@ export const siloChartStrings = {
   stalk: 'This is the current total Stalk by Season.',
   seeds: 'This is the current total Seeds by Season.',
 };
+<<<<<<< HEAD
+export const claimStrings = {
+  harvestable: 'Harvestable Pods can be redeemed for 1 Bean each, at any time.',
+  farmable: 'Farmable Beans automatically receive Stalk. Farbable Beans receive Seeds and are deposited in a specific Season the next time you interact with the Silo.',
+};
+export const fundraiserStrings = {
+  fundsDescription: 'Fundraisers allow Beanstalk to raise a pre-defined amount of another stablecoin in order to pay for things like audits. Each fundraiser allows anyone to exchange the desired stablecoin, up to the amount specified in the Fundraiser, for Beans at a price of $1.00. All Beans will be Sown and the corresponding amount of Pods will be sent to the wallet that contributed to the Fundraiser. Any excess funds beyond the Fundraiser amount, or of a different currency, will not receive Sown Beans.',
+  fundsTableDescription: 'Below is a complete list of all Fundraisers.',
+=======
 export const fundraiserStrings = {
   fundsDescription: 'With the passing of BIP-4, Beanstalk will establish Fundraisers. Fundraisers will first mint a pre-defined number of Beans. Then, any farmer can participate in the Fundraiser and will be able to convert the desired stablecoin for Beans at a 1:1 rate. The Beans will then be immediately sown. Once the fundraiser has reached its goal, the funds will be forwarded to the payment address.',
   fundsTableDescription: 'Below is a complete list of all historical Fundraisers.',
+>>>>>>> master
 };

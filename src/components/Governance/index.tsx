@@ -2,7 +2,11 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, Box } from '@material-ui/core';
 import { AppState } from 'state';
+<<<<<<< HEAD
+import { ContentSection, ContentTitle, governanceStrings, Grid } from 'components/Common';
+=======
 import { ContentSection, governanceStrings, Grid } from 'components/Common';
+>>>>>>> master
 import { theme, WHITEPAPER } from 'constants/index';
 import Fundraiser from '../Fundraiser';
 import GovernanceTable from './GovernanceTable';
@@ -83,7 +87,14 @@ export default function Governance() {
   );
 
   const fundraiserTable = !hasActiveFundraiser ?
+<<<<<<< HEAD
+    <>
+      <ContentTitle title="Fundraisers" />
+      <Fundraiser />
+    </>
+=======
     <Fundraiser />
+>>>>>>> master
     : null;
 
   return (
