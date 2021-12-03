@@ -329,6 +329,8 @@ export default function Balances() {
   return (
     <ContentSection
       id="balances"
+      title="Balances"
+      size="20px"
     >
       <Box className="BalanceSection-mobile">
         <BaseModule

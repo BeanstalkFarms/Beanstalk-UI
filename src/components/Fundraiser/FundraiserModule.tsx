@@ -10,7 +10,6 @@ import {
   TokenLabel,
   CryptoAsset,
 } from '../../util';
-// import { MEDIUM_INTEREST_LINK, theme } from '../../constants';
 import { BaseModule, ContentSection, ContentTitle, Grid, HeaderLabel } from '../Common';
 import { FundModule } from './FundModule';
 

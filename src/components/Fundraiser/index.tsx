@@ -19,7 +19,7 @@ export default function Fundraiser(props) {
     const fundraiser = fundraisers[id];
     const fundraiserInfo = fundsList[id];
 
-    if (fundraiser.remaining.isGreaterThanOrEqualTo(0)) {
+    if (fundraiser.remaining.isGreaterThan(0)) {
       activeFundraisers.push(
         <FundraiserModule
           key={id}
