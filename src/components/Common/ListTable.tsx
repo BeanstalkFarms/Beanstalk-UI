@@ -21,12 +21,16 @@ import {
   TransitAsset,
 } from 'util/index';
 import { theme } from 'constants/index';
+<<<<<<< HEAD
 import {
   claimStrings,
   FormatTooltip,
   TablePageSelect,
   QuestionModule,
 } from './index';
+=======
+import { FormatTooltip, TablePageSelect, QuestionModule } from './index';
+>>>>>>> master
 
 const useStyles = makeStyles({
   table: {

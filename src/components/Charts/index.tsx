@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { Grid } from '@material-ui/core';
+=======
+>>>>>>> master
 import { BaseModule, chartStrings, ContentSection } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
 import BeanCharts from './BeanCharts';
@@ -48,12 +51,32 @@ export default function Charts(props) {
   ];
 
   return (
+<<<<<<< HEAD
     <Grid style={{ margin: 'auto' }} container item xs={12} justifyContent="center">
       <ContentSection
         id="charts"
         title={props.title}
         size="20px"
         style={{ maxWidth: '1000px', marginTop: marginTop }}
+=======
+    <ContentSection
+      id="charts"
+      title={props.title}
+      size="20px"
+      style={{ maxWidth: '1000px', marginTop: marginTop }}
+    >
+      <BaseModule
+        handleTabChange={(event, newSection) => {
+          setSection(newSection);
+        }}
+        removeBackground
+        section={section}
+        sectionTitlesDescription={descriptions}
+        size={isMobile ? 'small' : 'medium'}
+        sectionTitles={titles}
+        showButton={false}
+        style={baseStyle}
+>>>>>>> master
       >
         <BaseModule
           handleTabChange={(event, newSection) => {

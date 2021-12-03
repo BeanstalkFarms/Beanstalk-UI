@@ -329,6 +329,12 @@ export default function Balances() {
   return (
     <ContentSection
       id="balances"
+<<<<<<< HEAD
+=======
+      title="Balances"
+      size="20px"
+      style={{ paddingTop: '30px' }}
+>>>>>>> master
     >
       <Box className="BalanceSection-mobile">
         <BaseModule
