@@ -71,68 +71,70 @@ export default function FundraiserModule({
   const fundPercent = total.minus(remaining).dividedBy(total).multipliedBy(100);
 
   return (
-    <ContentSection id={title} description={description} style={{ paddingTop: '0px', width: '100%' }}>
+    <>
       <ContentTitle title={title} />
-      <Grid container item xs={12} spacing={3} justifyContent="center">
-        <Grid item xs={12} sm={6} style={headerLabelStyle}>
-          <HeaderLabel
-            balanceDescription={`${displayFullBN(remaining)} ${TokenLabel(CryptoAsset.Usdc)}`}
-            description={`The amount of remaining ${TokenLabel(CryptoAsset.Usdc)} needed to fund the audit`}
-            title="Remaining USDC"
-            value={displayBN(remaining)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} style={headerLabelStyle}>
-          <HeaderLabel
-            balanceDescription={`${displayFullBN(fundPercent)}%`}
-            description={`The amount of remaining ${TokenLabel(CryptoAsset.Usdc)} needed to fund the audit`}
-            title="Fund %"
-            value={`${(fundPercent).toFixed(2)}%`}
-          />
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        item
-        xs={12}
-        spacing={2}
-        className="SiloSection"
-        alignItems="flex-start"
-        justifyContent="center"
-        style={{ minHeight: minHeight, height: '100%' }}
-      >
-        <Grid
-          item
-          md={6}
-          sm={12}
-          style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
-        >
-          <BaseModule
-            allowance={allowance}
-            handleApprove={approveBeanstalkUSDC}
-            handleForm={handleForm}
-            handleTabChange={handleTabChange}
-            isDisabled={isFormDisabled || remaining.isEqualTo(0)}
-            marginTop="14px"
-            section={section}
-            sectionTitles={sectionTitles}
-            sectionTitlesDescription={sectionTitlesDescription}
-            setAllowance={updateBeanstalkUSDCAllowance}
-            singleReset
-          >
-            <FundModule
-              key={id}
-              id={id}
-              asset={CryptoAsset.Usdc}
-              tokenBalance={usdcBalance}
-              fundsRemaining={remaining}
-              ref={sowTokenRef}
-              setIsFormDisabled={setIsFormDisabled}
+      <ContentSection id={title} description={description} style={{ paddingTop: '0px', width: '100%' }}>
+        <Grid container item xs={12} spacing={3} justifyContent="center">
+          <Grid item xs={12} sm={6} style={headerLabelStyle}>
+            <HeaderLabel
+              balanceDescription={`${displayFullBN(remaining)} ${TokenLabel(CryptoAsset.Usdc)}`}
+              description={`The amount of remaining ${TokenLabel(CryptoAsset.Usdc)} needed to fund the audit`}
+              title="Remaining USDC"
+              value={displayBN(remaining)}
             />
-          </BaseModule>
+          </Grid>
+          <Grid item xs={12} sm={6} style={headerLabelStyle}>
+            <HeaderLabel
+              balanceDescription={`${displayFullBN(fundPercent)}%`}
+              description={`The amount of remaining ${TokenLabel(CryptoAsset.Usdc)} needed to fund the audit`}
+              title="Fund %"
+              value={`${(fundPercent).toFixed(2)}%`}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-    </ContentSection>
+        <Grid
+          container
+          item
+          xs={12}
+          spacing={2}
+          className="SiloSection"
+          alignItems="flex-start"
+          justifyContent="center"
+          style={{ minHeight: minHeight, height: '100%' }}
+        >
+          <Grid
+            item
+            md={6}
+            sm={12}
+            style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
+          >
+            <BaseModule
+              allowance={allowance}
+              handleApprove={approveBeanstalkUSDC}
+              handleForm={handleForm}
+              handleTabChange={handleTabChange}
+              isDisabled={isFormDisabled || remaining.isEqualTo(0)}
+              marginTop="14px"
+              section={section}
+              sectionTitles={sectionTitles}
+              sectionTitlesDescription={sectionTitlesDescription}
+              setAllowance={updateBeanstalkUSDCAllowance}
+              singleReset
+            >
+              <FundModule
+                key={id}
+                id={id}
+                asset={CryptoAsset.Usdc}
+                tokenBalance={usdcBalance}
+                fundsRemaining={remaining}
+                ref={sowTokenRef}
+                setIsFormDisabled={setIsFormDisabled}
+              />
+            </BaseModule>
+          </Grid>
+        </Grid>
+      </ContentSection>
+    </>
   );
 }
 
