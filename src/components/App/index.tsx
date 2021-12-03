@@ -6,10 +6,8 @@ import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import Updater from 'state/userBalance/updater';
 import { AppState } from 'state';
-import About from 'components/About';
-import Fundraiser from 'components/Fundraiser';
 import { NavigationBar } from 'components/Navigation';
-import { Farm, Analytics, DAO, BeaNFT } from 'Pages';
+import { Farm, Analytics, DAO, BeaNFT, AboutPage, FundraiserPage } from 'Pages';
 import MetamasklessModule from './MetamasklessModule';
 import Main from './main.tsx';
 import theme from './theme';
@@ -44,7 +42,7 @@ export default function App() {
             <Analytics />
           </Route>
           <Route exact path="/fundraiser">
-            <Fundraiser />
+            <FundraiserPage />
           </Route>
           <Route exact path="/dao">
             <DAO />
@@ -53,7 +51,7 @@ export default function App() {
             <BeaNFT />
           </Route>
           <Route exact path="/about">
-            <About key="about" />
+            <AboutPage key="about" />
           </Route>
         </Switch>
       </>
