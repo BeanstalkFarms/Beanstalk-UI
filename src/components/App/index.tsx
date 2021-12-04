@@ -16,7 +16,7 @@ import {
   FundraiserPage,
   MetamasklessPage,
 } from 'Pages';
-        
+
 import Main from './main.tsx';
 import theme from './theme';
 import LoadingBean from './LoadingBean.tsx';
