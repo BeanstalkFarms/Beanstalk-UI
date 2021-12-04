@@ -234,7 +234,11 @@ const FundTable = (props) => {
               page={page}
               rowsPerPage={rowsPerPage}
               rowsPerPageOptions={[]}
-              ActionsComponent={TablePageSelect}
+              ActionsComponent={
+                Object.keys(tableFunds).length > (rowsPerPage * 2)
+                  ? TablePageSelect
+                  : undefined
+              }
             />
           </div>
         ) : null}

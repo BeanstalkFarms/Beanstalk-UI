@@ -8,6 +8,7 @@ import Silo from 'components/Silo';
 export default function Farm() {
   const sectionTitles = ['Silo', 'Field', 'Trade', 'Balances'];
   const sections = [<Silo />, <Field />, <Trade />, <Balances />];
+
   return (
     <Page sections={sections} sectionTitles={sectionTitles} />
   );

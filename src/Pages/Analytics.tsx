@@ -7,6 +7,7 @@ import Balances from 'components/Balances';
 export default function Analytics() {
   const sectionTitles = ['Charts', 'Seasons', 'Balances'];
   const sections = [<Charts />, <Seasons />, <Balances />];
+
   return (
     <Page sections={sections} sectionTitles={sectionTitles} />
   );
