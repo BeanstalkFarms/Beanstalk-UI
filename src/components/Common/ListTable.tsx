@@ -276,7 +276,11 @@ const BasicTable = (props) => {
               count !== -1 ? Math.ceil(count / rowsPerPage) : 0
             }`
           }
-          ActionsComponent={TablePageSelect}
+          ActionsComponent={
+            Object.keys(props.crates).length > (rowsPerPage * 2)
+              ? TablePageSelect
+              : undefined
+          }
         />
       ) : null}
     </Box>

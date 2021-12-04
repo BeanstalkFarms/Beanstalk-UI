@@ -87,8 +87,9 @@ export default function Balances() {
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 
+  const showFirst = window.location.pathname === '/analytics' ? 1 : 0;
   const sectionTitles = ['My Balances', 'Beanstalk'];
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(showFirst);
   const handleTabChange = (event, newSection) => {
     setSection(newSection);
   };

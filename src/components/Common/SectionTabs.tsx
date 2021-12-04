@@ -48,8 +48,10 @@ export default function SectionTabs({
   const tabStyle = {
       minWidth: 0,
       zIndex: 100,
+      borderRadius: '10px',
+      margin: '5px 0 10px 0',
       minHeight: '38px',
-      height: '48px',
+      padding: '0 6px',
       fontSize: width < 425 ? '12px' : (width < 600 ? '14px' : '18px'),
   };
 

@@ -270,7 +270,11 @@ const BipTable = (props) => {
               page={page}
               rowsPerPage={rowsPerPage}
               rowsPerPageOptions={[]}
-              ActionsComponent={TablePageSelect}
+              ActionsComponent={
+                Object.keys(tableBips).length > (rowsPerPage * 2)
+                  ? TablePageSelect
+                  : undefined
+              }
             />
           </div>
         ) : null}

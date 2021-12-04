@@ -6,6 +6,7 @@ import Charts from 'components/Charts';
 export default function MetamasklessPage() {
   const sectionTitles = ['About', 'Charts'];
   const sections = [<MetamasklessModule />, <Charts />];
+
   return (
     <Page sections={sections} sectionTitles={sectionTitles} />
   );
