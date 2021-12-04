@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   AppBar,
   Collapse,
@@ -147,7 +148,7 @@ const FundTable = (props) => {
     setPage(newPage);
   };
 
-  const titles = ['Fundraiser', 'Title', 'Type', 'Amount', 'Remaining'];
+  const titles = ['Fundraiser', 'Title', 'Type', 'Amount', 'Funded'];
   const tableFunds = props.fundraisers
     .reduce((funds, fund) => {
       const fundID = fund.id;
@@ -159,16 +160,19 @@ const FundTable = (props) => {
         amount: `${fund.total.toFixed()} ${fundAdds.token}`,
       };
       if (fund.remaining.isGreaterThan(0)) {
-        tb.remaining = fund.remaining
-          .dividedBy(fund.total)
+        tb.funded = (new BigNumber(1))
+          .minus(fund.remaining.dividedBy(fund.total))
           .multipliedBy(100)
           .decimalPlaces(2)
           .toNumber();
       } else {
-        tb.remaining = fund.remaining;
+        tb.funded = (new BigNumber(1))
+          .multipliedBy(100)
+          .decimalPlaces(2)
+          .toNumber();
       }
 
-      funds.push([tb.FUND, tb.title, tb.type, tb.amount, tb.remaining]);
+      funds.push([tb.FUND, tb.title, tb.type, tb.amount, tb.funded]);
       return funds;
     }, [])
     .reverse();

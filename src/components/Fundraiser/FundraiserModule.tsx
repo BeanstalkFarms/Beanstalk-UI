@@ -86,8 +86,8 @@ export default function FundraiserModule({
           <Grid item xs={12} sm={6} style={headerLabelStyle}>
             <HeaderLabel
               balanceDescription={`${displayFullBN(fundPercent)}%`}
-              description={`The amount of remaining ${TokenLabel(CryptoAsset.Usdc)} needed to fund the audit`}
-              title="Fund %"
+              description="The percent of the Fundraiser that has been funded."
+              title="Funded"
               value={`${(fundPercent).toFixed(2)}%`}
             />
           </Grid>

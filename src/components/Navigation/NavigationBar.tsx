@@ -54,7 +54,7 @@ export default function NavigationBar(props) {
     (state) => state.prices
   );
 
-  const { bips } = useSelector<AppState, AppState['general']>(
+  const { hasActiveBIP } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
@@ -122,12 +122,6 @@ export default function NavigationBar(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  let hasActiveBIP = false;
-  try {
-    hasActiveBIP = bips[bips.length - 1].active;
-  } catch (error) {
-    return false;
-  }
 
   const navMapping = [...defaultNavMapping];
   if (hasActiveFundraiser) {
