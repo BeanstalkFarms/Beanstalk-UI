@@ -6,23 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BIP-6</title>
   <link rel="stylesheet" href="bipStyle.css" />
-<<<<<<< HEAD
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-=======
->>>>>>> master
 </head>
 
 <body class="stackedit">
   <div class="stackedit__html"><h1 id="bip-5-omnisca-audit">BIP-6: Soil Efficiency</h1>
 <h3 id="summary">Summary:</h3>
 <ul>
-  <li>- Change the Minimum Soil Rate to factor in the Weather and Pods harvested at the start of the Season.</li>
-<<<<<<< HEAD
+  <li>Change the Minimum Soil Rate to factor in the Weather and Pods harvested at the start of the Season.</li>
   <li>Have the Soil decrease by the time weighted average shortage of Beans in the BEAN:ETH pool over the previous Season (\(\Delta \bar{b}_{t-1}\)).</li>
-=======
-  <li>Have the Soil decrease by the time weighted average shortage of Beans in the BEAN:ETH pool over the previous Season ($\Delta \bar{b}_{t-1}$).</li>
->>>>>>> master
 </ul>
 <h3 id="problem">Problem:</h3>
 <p>Currently, the Available Soil is at or below the Minimum Soil Rate every Season. Based on the current Weather (~2000%+) and current Minimum Soil Rate (.1%), Beanstalk is willing to issue Pods worth more than 2% of the total Bean supply every hour. While the Pod Rate has started to decrease slightly, when there is excess demand for Soil and Beans, Beanstalk should be deleveraging faster than it currently is. This is indicative that the Minimum Soil Rate is implemented in a suboptimal way: they do not currently factor in the Weather or Pods being Harvested.</p>
