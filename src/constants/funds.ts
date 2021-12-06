@@ -8,7 +8,7 @@ export const fundsList = [
   },
   {
     path: '/Funds/fund-1.html',
-    name: 'Omnisca',
+    name: 'Omniscia',
     description: 'The proceeds of this Fundraiser will pay for Omniscia to audit Beanstalk, as proposed in BIP-5.',
     type: 'Audit',
     token: 'USDC',
