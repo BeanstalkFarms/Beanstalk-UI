@@ -5,13 +5,13 @@ const Plots = ({ plots }) => (
   <>
     {
       plots.map((plot: any) => (
-        <tr>
+        <tr key={plot.expiresIn}>
           <td>{plot.placeInLine}</td>
           <td>{plot.pricePerPod}</td>
           <td>{plot.amountPods}</td>
           <td>{plot.expiresIn}</td>
           <td>
-            <Button onPress={() => alert('buy')}>BUY</Button>
+            <Button onClick={() => alert('buy')}>BUY</Button>
           </td>
         </tr>
       ))

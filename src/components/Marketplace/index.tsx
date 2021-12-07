@@ -4,8 +4,9 @@ import Plots from '../Plots';
 import Pagination from '../Pagination';
 
 export default function Marketplace() {
-    const [plots] = React.useState([{ placeInLine: 1200430000, pricePerPod: 0.21, amountPods: 1200430, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000434000, pricePerPod: 0.21, amountPods: 12004340, expiresIn: 1300000 }]);
+    const [plots, setPlots] = React.useState([{ placeInLine: 1200430000, pricePerPod: 0.21, amountPods: 1200430, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000434000, pricePerPod: 0.21, amountPods: 12004340, expiresIn: 1300000 }]);
     const [loading, setLoading] = React.useState(false);
+    const [order, setOrder] = React.useState(false);
     const [showModal, setShowModal] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(1);
     const [plotsPerPage] = React.useState(4);
@@ -28,7 +29,7 @@ export default function Marketplace() {
       console.log('connect to metamask');
     };
 
-    const setPlots = (pods) => {
+    const setPlotToSell = (pods) => {
       showSellModal();
       console.log(pods);
     };
@@ -55,12 +56,61 @@ export default function Marketplace() {
       </div>
     );
 
+    const OrderByPlace = () => {
+      const sortPlots = [...plots];
+      if (order) {
+        sortPlots.sort((a, b) => b.placeInLine - a.placeInLine);
+        setOrder(false);
+      } else {
+        sortPlots.sort((a, b) => a.placeInLine - b.placeInLine);
+        setOrder(true);
+      }
+
+      setPlots(sortPlots);
+    };
+
+    const OrderByPods = () => {
+      const sortPlots = [...plots];
+      if (order) {
+        sortPlots.sort((a, b) => b.amountPods - a.amountPods);
+        setOrder(false);
+      } else {
+        sortPlots.sort((a, b) => a.amountPods - b.amountPods);
+        setOrder(true);
+      }
+      setPlots(sortPlots);
+    };
+
+    const OrderByPrice = () => {
+      const sortPlots = [...plots];
+      if (order) {
+        sortPlots.sort((a, b) => b.pricePerPod - a.pricePerPod);
+        setOrder(false);
+      } else {
+        sortPlots.sort((a, b) => a.pricePerPod - b.pricePerPod);
+        setOrder(true);
+      }
+      setPlots(sortPlots);
+    };
+
+    const OrderExpireDate = () => {
+      const sortPlots = [...plots];
+      if (order) {
+        sortPlots.sort((a, b) => b.expiresIn - a.expiresIn);
+        setOrder(false);
+      } else {
+        sortPlots.sort((a, b) => a.expiresIn - b.expiresIn);
+        setOrder(true);
+      }
+      setPlots(sortPlots);
+    };
+
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     React.useEffect(() => {
       setLoading(false);
       setShowModal(false);
-    }, []);
+    }, [plots, setPlots]);
 
     return (
       <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -69,7 +119,7 @@ export default function Marketplace() {
             <p>My Plots</p>
           </div>
           <div>
-            <table>
+            <table cellPadding={0} cellSpacing={0}>
               <tr>
                 <th>Place in Line</th>
                 <th>Price Per Pod</th>
@@ -84,7 +134,7 @@ export default function Marketplace() {
                       <td>{plot.amountPods}</td>
                       <td>{plot.expiresIn}</td>
                       <td>
-                        <Button onClick={() => setPlots(plot.amountPods)}>SELL</Button>
+                        <Button onClick={() => setPlotToSell(plot.amountPods)}>SELL</Button>
                       </td>
                     </tr>
                   ))
@@ -98,12 +148,12 @@ export default function Marketplace() {
             <p>Plots</p>
           </div>
           <div>
-            <table>
+            <table cellPadding={0} cellSpacing={0}>
               <tr>
-                <th>Place in Line</th>
-                <th>Price Per Pod</th>
-                <th>Amount of pods</th>
-                <th>Expires In</th>
+                <th><Button onClick={() => OrderByPlace()}>Place in Line</Button></th>
+                <th><Button onClick={() => OrderByPrice()}>Price Per Pod</Button></th>
+                <th><Button onClick={() => OrderByPods()}>Amount of pods</Button></th>
+                <th><Button onClick={() => OrderExpireDate()}>Expires In</Button></th>
               </tr>
               {
                 loading ?
