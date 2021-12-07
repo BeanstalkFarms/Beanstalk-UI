@@ -4,6 +4,7 @@ import { AppState } from 'state';
 import { displayFullBN } from 'util/index';
 import {
   ContentSection,
+  ContentDropdown,
   Grid,
   HeaderLabel,
   tradeStrings,
@@ -24,8 +25,13 @@ export default function Trade() {
     <ContentSection
       id="trade"
       title="Trade"
-      description={tradeStrings.tradeDescription}
     >
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={tradeStrings.tradeDescription}
+          descriptionTitle="How do I Trade?"
+        />
+      </Grid>
       <Grid container item xs={12} sm={12} spacing={3} justifyContent="center">
         <Grid item xs={12} sm={6} style={{ maxWidth: '300px' }}>
           <HeaderLabel

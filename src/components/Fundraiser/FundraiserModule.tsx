@@ -10,8 +10,14 @@ import {
   TokenLabel,
   CryptoAsset,
 } from '../../util';
-// import { MEDIUM_INTEREST_LINK, theme } from '../../constants';
-import { BaseModule, ContentSection, ContentTitle, Grid, HeaderLabel } from '../Common';
+import {
+  BaseModule,
+  ContentDropdown,
+  ContentSection,
+  ContentTitle,
+  Grid,
+  HeaderLabel,
+} from '../Common';
 import { FundModule } from './FundModule';
 
 export default function FundraiserModule({
@@ -42,7 +48,7 @@ export default function FundraiserModule({
 
   const sectionTitles = ['Fund'];
   const sectionTitlesDescription = [
-  `Use this tab to Fund the audit by sowing ${TokenLabel(CryptoAsset.Usdc)} in the Field in exchange for Pods.`,
+    `Use this tab to Fund the audit by sowing ${TokenLabel(CryptoAsset.Usdc)} in the Field in exchange for Pods.`,
   ];
 
   const handleTabChange = (event, newSection) => {
@@ -73,7 +79,13 @@ export default function FundraiserModule({
   return (
     <>
       <ContentTitle title={title} />
-      <ContentSection id={title} description={description} style={{ paddingTop: '0px', width: '100%' }}>
+      <ContentSection id={title} style={{ paddingTop: '0px', width: '100%' }}>
+        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+          <ContentDropdown
+            description={description}
+            descriptionTitle="What is this Fund?"
+          />
+        </Grid>
         <Grid container item xs={12} spacing={3} justifyContent="center">
           <Grid item xs={12} sm={6} style={headerLabelStyle}>
             <HeaderLabel

@@ -15,22 +15,18 @@
 .BeanstalkBG[name="main"] {
   background-image: url('../../img/beanstalk-background.svg');
 }
-
 .BeanstalkBG[name="ropsten"] {
   background-image: url('../../img/beanstalk-background-ropsten.svg');
 }
-
 .BeanstalkBG[name="spooky"] {
   background-image: url('../../img/dark/beanstalk-background.svg');
 }
-
 .BeanstalkBG[name="fall"] {
   background-image: url('../../img/fall/beanstalk-background.svg');
 }
-.BeanstalkMT[name="fall"] {
-  background-image: url('../../img/fall/Mountain.svg');
+.BeanstalkBG[name="winter"] {
+  background-image: url('../../img/winter/Beanstalk.svg');
 }
-
 .BeanstalkBG {
   background-repeat: no-repeat;
   background-size: contain;
@@ -42,12 +38,45 @@
   height: 100%;
   z-index: -10;
 }
+
+.BeanstalkMT[name="fall"] {
+  background-image: url('../../img/fall/Mountain.svg');
+}
+.BeanstalkMT[name="winter"] {
+  background-image: url('../../img/winter/background.svg');
+}
+.BeanstalkMT[name="ropsten"] {
+  background-image: url('../../img/main/Background.svg');
+}
 .BeanstalkMT[name="fall"] {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: 100%;
   position: fixed;
   width: 100%;
+  height: 100%;
+  z-index: -100;
+}
+.BeanstalkMT[name="winter"] {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 100%;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+}
+
+.BeanstalkSky[name="winter"] {
+  background-image: url('../../img/winter/Stars.svg');
+}
+.BeanstalkSky[name="winter"] {
+  background-repeat: repeat;
+  background-size: contain;
+  background-position: 100%;
+  position: fixed;
+  width: 100%;
+  min-width: 600px;
   height: 100%;
   z-index: -100;
 }
@@ -112,11 +141,15 @@
   pointer-events: none;
 }
 
+
+.svg[name="ropsten"] {
+  filter: invert(62%) sepia(71%) saturate(5742%) hue-rotate(312deg) brightness(103%) contrast(101%);
+}
 .svg[name="fall"] {
   filter: invert(72%) sepia(52%) saturate(2707%) hue-rotate(336deg) brightness(85%) contrast(90%); /* fall color */
 }
-.svg[name="ropsten"] {
-  filter: invert(62%) sepia(71%) saturate(5742%) hue-rotate(312deg) brightness(103%) contrast(101%);
+.svg[name="winter"] {
+  filter: invert(23%) sepia(12%) saturate(2340%) hue-rotate(153deg) brightness(93%) contrast(91%);
 }
 
 @media (prefers-reduced-motion: no-preference) {

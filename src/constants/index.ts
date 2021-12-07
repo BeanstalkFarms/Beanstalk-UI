@@ -10,6 +10,6 @@ export * from './colors';
 
 export function changeNetwork(chainId) {
     changeAddresses(chainId);
-    if (chainId === 1) changeTheme('fall');
+    if (chainId === 1) changeTheme('winter');
     if (chainId === 3) changeTheme('ropsten');
 }

@@ -17,6 +17,7 @@ export { default as AddressInputField } from './AddressInputField';
 export { default as BalanceField } from './BalanceField';
 export { default as ListInputField } from './ListInputField';
 export { default as BaseModule } from './BaseModule';
+export { default as ContentDropdown } from './ContentDropdown';
 export { default as ContentTitle } from './ContentTitle';
 export { default as ContentSection } from './ContentSection';
 export { default as ClaimTextModule } from './ClaimTextModule';
@@ -141,6 +142,7 @@ export const claimableStrings = {
   farm: 'Use this button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
 };
 export const siloStrings = {
+  beanDescription: 'Use this tab to deposit, withdraw, and claim Beans to and from the Silo.',
   beanDeposit:
     'Use this sub-tab to deposit Beans to the Silo. You can toggle the settings to deposit from Beans, ETH, or both.',
   beanWithdraw:
@@ -150,6 +152,7 @@ export const siloStrings = {
   beanWithdrawalsTable: 'View all your current Bean Withdrawals in this table.',
   beanAPY:
     'The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
+  lpDescription: 'Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.',
   lpDeposit:
     'Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.',
   lpWithdraw:

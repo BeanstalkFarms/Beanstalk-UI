@@ -16,25 +16,26 @@ export default function Main(props) {
     boxShadow: 'none',
     zIndex: 2,
     backgroundSize: 'contain, contain',
-    height: '85px',
+    height: '100px',
     width: '100%',
     position: 'fixed',
     marginBottom: '-85px',
   };
   const sunStyle = {
     height: theme.sunHeight,
-    left: 20,
+    left: theme.sunLeftPosition,
     minHeight: '150px',
     position: 'fixed',
     top: 100,
-    zIndex: -1,
+    zIndex: -11,
   };
 
   return (
     <>
       <Box className="App">
         <Box className="BeanstalkBG" name={theme.name} />
-        <Box className="BeanstalkMT" name={theme.name} style={{ top: '35vh' }} />
+        <Box className="BeanstalkMT" name={theme.name} style={{ top: '25vh' }} />
+        <Box className="BeanstalkSky" name={theme.name} />
         <Box>
           {theme.name === 'fall' ? <FallingLeaves /> : null}
           <img alt="Sun Icon" src={theme.sun} style={sunStyle} />

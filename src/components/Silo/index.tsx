@@ -7,6 +7,7 @@ import {
   Grid,
   HeaderLabel,
   siloStrings,
+  ContentDropdown,
 } from 'components/Common';
 import { getAPYs } from 'util/index';
 import TabbedSilo from './TabbedSilo';
@@ -74,15 +75,22 @@ export default function Silo() {
   ];
 
   return (
-    <ContentSection
-      id="silo"
-      title="Silo"
-      descriptionLinks={descriptionLinks}
-      description={siloStrings.siloDescription}
-    >
-      {apyField}
-      <TabbedSilo />
-    </ContentSection>
+    <>
+      <ContentSection
+        id="silo"
+        title="Silo"
+      >
+        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+          <ContentDropdown
+            description={siloStrings.siloDescription}
+            descriptionTitle="What is the Silo?"
+            descriptionLinks={descriptionLinks}
+          />
+        </Grid>
+        {apyField}
+        <TabbedSilo />
+      </ContentSection>
+    </>
   );
 }
 

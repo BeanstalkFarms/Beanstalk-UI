@@ -5,6 +5,7 @@ import { displayBN, displayFullBN } from 'util/index';
 import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
   BaseModule,
+  ContentDropdown,
   ContentSection,
   Grid,
   HeaderLabel,
@@ -102,9 +103,14 @@ export default function Field() {
     <ContentSection
       id="field"
       title="Field"
-      description={description}
-      descriptionLinks={descriptionLinks}
     >
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={description}
+          descriptionTitle="What is the Field?"
+          descriptionLinks={descriptionLinks}
+        />
+      </Grid>
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid item xs={12} sm={6} style={headerLabelStyle}>
           <HeaderLabel

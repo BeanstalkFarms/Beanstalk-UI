@@ -1,8 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { fundsList } from 'constants/index';
-import { ContentSection, fundraiserStrings, Grid } from '../Common';
+import { fundsList, FUNDRAISER_LINK } from 'constants/index';
+import {
+  ContentDropdown,
+  ContentSection,
+  fundraiserStrings,
+  Grid,
+} from '../Common';
 import FundraiserModule from './FundraiserModule';
 import FundraiserTable from './FundraiserTable';
 
@@ -40,8 +45,22 @@ export default function Fundraiser(props) {
       return null;
   });
 
+  const descriptionLinks = [
+    {
+      href: `${FUNDRAISER_LINK}`,
+      text: 'Read More',
+    },
+  ];
+
   return (
-    <ContentSection id="fund" title="Fundraiser" description={fundraiserStrings.fundsDescription}>
+    <ContentSection id="fund" title="Fundraiser">
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={fundraiserStrings.fundsDescription}
+          descriptionTitle="What are Fundraisers?"
+          descriptionLinks={descriptionLinks}
+        />
+      </Grid>
       <Grid container item>
         <Grid item xs={12}>
           {hasActiveFundraiser ? activeFundraisers : null}
