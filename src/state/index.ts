@@ -7,9 +7,11 @@ import prices from './prices/reducer';
 import weather from './weather/reducer';
 import beansPerSeason from './beansPerSeason/reducer';
 import general from './general/reducer';
+import application from './application/reducer';
 
 const store = configureStore({
   reducer: {
+    application,
     allowances,
     userBalance,
     totalBalance,

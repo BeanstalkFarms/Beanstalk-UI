@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import Updater from 'state/userBalance/updater';
+import ApplicationUpdater from 'state/application/updater';
 import { AppState } from 'state';
 import { NavigationBar } from 'components/Navigation';
 import {
@@ -75,6 +76,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Updater />
+      <ApplicationUpdater />
       <Main>{app}</Main>
     </ThemeProvider>
   );
