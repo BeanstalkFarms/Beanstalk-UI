@@ -4,16 +4,16 @@ import Plots from '../Plots';
 import Pagination from '../Pagination';
 
 export default function Marketplace() {
-    const [plots] = React.useState([{ placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }]);
+    const [plots] = React.useState([{ placeInLine: 1200430000, pricePerPod: 0.21, amountPods: 1200430, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000434000, pricePerPod: 0.21, amountPods: 12004340, expiresIn: 1300000 }]);
     const [loading, setLoading] = React.useState(false);
     const [showModal, setShowModal] = React.useState(false);
-    const [currentPage] = React.useState(1);
+    const [currentPage, setCurrentPage] = React.useState(1);
     const [plotsPerPage] = React.useState(4);
     const [plotPrice, setPlotPrice] = React.useState(0);
     const [pricePerPodInput, setPricePerPodInput] = React.useState(0);
     const indexOffLastPost = currentPage * plotsPerPage;
     const indexOfFirstPost = indexOffLastPost - plotsPerPage;
-    const CurrentPlots = plots.slice(indexOfFirstPost, indexOffLastPost);
+    const currentPlots = plots.slice(indexOfFirstPost, indexOffLastPost);
 
     const showSellModal = () => {
       setShowModal(!showModal);
@@ -54,6 +54,8 @@ export default function Marketplace() {
         </div>
       </div>
     );
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     React.useEffect(() => {
       setLoading(false);
@@ -107,12 +109,12 @@ export default function Marketplace() {
                 loading ?
                   <div>loading</div>
                   :
-                  <Plots plots={CurrentPlots} loading={loading} />
+                  <Plots plots={currentPlots} loading={loading} />
               }
             </table>
           </div>
           <div>
-            <Pagination plotsPerPage={plotsPerPage} totalPlots={plots.length} />
+            <Pagination plotsPerPage={plotsPerPage} totalPlots={plots.length} paginate={paginate} />
           </div>
         </div>
         {
