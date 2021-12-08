@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
 import {
@@ -25,7 +25,6 @@ import {
   setContractEvents,
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery } from 'graph/index';
-import { AppState } from 'state';
 import { BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
 import {
   addRewardedCrates,
@@ -46,23 +45,19 @@ import {
   toTokenUnitsBN,
   account,
 } from 'util/index';
+import { useSeason } from 'state/season/hooks';
+import { useWeather } from 'state/weather/hooks';
+import { usePrices } from 'state/prices/hooks';
+import { useUserBalance } from './hooks';
 
 export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
 
-  const userBalance = useSelector<AppState, AppState['userBalance']>(
-    (state) => state.userBalance
-  );
-  const season = useSelector<AppState, AppState['season']>(
-    (state) => state.season
-  );
-  const weather = useSelector<AppState, AppState['weather']>(
-    (state) => state.weather
-  );
-  const prices = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
+  const userBalance = useUserBalance();
+  const season = useSeason();
+  const weather = useWeather();
+  const prices = usePrices();
 
   const eventParsingParametersRef = useRef([]);
   eventParsingParametersRef.current = [
@@ -506,16 +501,23 @@ export default function Updater() {
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance] =
-        await Promise.all([
-          getBips(),
-          getFundraisers(),
-          getEtherBalance(),
-          accountBalancePromises,
-          totalBalancePromises,
-          pricePromises,
-          getUSDCBalance(),
-        ]);
+      const [
+        bipInfo,
+        fundraiserInfo,
+        ethBalance,
+        accountBalances,
+        totalBalances,
+        _prices,
+        usdcBalance,
+      ] = await Promise.all([
+        getBips(),
+        getFundraisers(),
+        getEtherBalance(),
+        accountBalancePromises,
+        totalBalancePromises,
+        pricePromises,
+        getUSDCBalance(),
+      ]);
       benchmarkEnd('ALL BALANCES', startTime);
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
         _prices[1],
@@ -533,7 +535,11 @@ export default function Updater() {
 
       return [
         () => {
-          const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
+          const currentSeason = processTotalBalances(
+            totalBalances,
+            bipInfo,
+            fundraiserInfo
+          );
           const lpReserves = processPrices(_prices);
           processAccountBalances(
             accountBalances,
