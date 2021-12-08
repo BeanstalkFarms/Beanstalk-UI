@@ -32,19 +32,13 @@ export default function App() {
   BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
   let app;
-  if (metamaskFailure > -1) {
-    app = (
-      <>
-        <NavigationBar events={contractEvents} />
-        <MetamasklessPage />
-      </>
-    );
-  } else if (!initialized) {
+  if (!initialized && metamaskFailure <= -1) {
     app = <LoadingBean />;
   } else {
     app = (
       <>
         <NavigationBar events={contractEvents} />
+        {metamaskFailure > -1 && <MetamasklessPage />}
         <Switch>
           <Route exact path="/">
             <Redirect to="/farm" />
