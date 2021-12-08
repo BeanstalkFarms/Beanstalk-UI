@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import { updateUniswapBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 import {
@@ -12,25 +10,21 @@ import {
   transferBeans,
 } from 'util/index';
 import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
+import { useSigner } from 'state/application/hooks';
+import { usePrices } from 'state/prices/hooks';
+import { useAllowances } from 'state/allowances/hooks';
+import { useUserBalance } from 'state/userBalance/hooks';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
 
 export default function TradeModule() {
-  const { uniswapBeanAllowance } = useSelector<
-    AppState,
-    AppState['allowances']
-  >((state) => state.allowances);
+  const { uniswapBeanAllowance } = useAllowances();
 
-  const { beanReserve, ethReserve, usdcPrice, beanPrice } = useSelector<
-    AppState,
-    AppState['prices']
-  >((state) => state.prices);
+  const { beanReserve, ethReserve, usdcPrice, beanPrice } = usePrices();
 
-  const { beanBalance, ethBalance } = useSelector<
-    AppState,
-    AppState['userBalance']
-  >((state) => state.userBalance);
+  const { beanBalance, ethBalance } = useUserBalance();
   const [section, setSection] = useState(0);
+  const signer = useSigner();
   const sectionTitles = ['Swap', 'Send'];
   const sectionTitlesDescription = [tradeStrings.swap, tradeStrings.send];
 
@@ -88,7 +82,8 @@ export default function TradeModule() {
         transferBeans(
           toAddress,
           toStringBaseUnitBN(fromValue, BEAN.decimals),
-          handleSwapCallback
+          handleSwapCallback,
+          signer
         );
       }
     }

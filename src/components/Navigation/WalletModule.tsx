@@ -24,7 +24,6 @@ import {
   chainId,
   displayBN,
   getBlockTimestamp,
-  GetWalletAddress,
   toTokenUnitsBN,
   poolForLP,
 } from 'util/index';
@@ -39,6 +38,7 @@ import {
   walletTopStrings,
 } from 'components/Common';
 import BalanceModule from 'components/Balances/BalanceModule';
+import { useAccount, useEthereum } from 'state/application/hooks';
 
 const tokenImageStyle = {
   height: '15px',
@@ -146,6 +146,8 @@ export default function WalletModule(props) {
 
   const [walletText, setWalletText] = useState('Wallet');
   const anchorRefWallet = React.useRef<any>(null);
+  const ethereum = useEthereum();
+  const account = useAccount();
   const [openWallet, setOpenWallet] = React.useState(false);
   const handleToggleWallet = () => {
     setWalletListStyle((prev) => ({
@@ -161,23 +163,23 @@ export default function WalletModule(props) {
   const [walletEvents, setWalletEvents] = useState([]);
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
+    if (amount.isLessThanOrEqualTo(0)) {
+      return [new BigNumber(-1), new BigNumber(-1)];
+    }
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 
   useEffect(() => {
-    async function handleWallet() {
-      GetWalletAddress().then((accountHex) => {
-        if (accountHex !== undefined) {
-          const accountDisplay = `${accountHex.substr(
-            0,
-            6
-          )}...${accountHex.substr(accountHex.length - 4, 4)}`;
-          setWalletText(accountDisplay);
-        } else {
-          console.log('Please Install Metamask!');
-        }
-      });
+    function handleWallet() {
+      if (account !== undefined) {
+        const accountDisplay = `${account.substr(0, 6)}...${account.substr(
+          account.length - 4,
+          4
+        )}`;
+        setWalletText(accountDisplay);
+      } else {
+        console.log('Please Install Metamask!');
+      }
     }
 
     async function buildWalletEvents() {
@@ -185,7 +187,8 @@ export default function WalletModule(props) {
       props.events.forEach((event) => {
         if (timestampPromisesByBlockNumber[event.blockNumber] === undefined) {
           timestampPromisesByBlockNumber[event.blockNumber] = getBlockTimestamp(
-            event.blockNumber
+            event.blockNumber,
+            ethereum
           );
         }
       });
@@ -331,7 +334,7 @@ export default function WalletModule(props) {
     }
     handleWallet();
     buildWalletEvents();
-  }, [props.events]);
+  }, [props.events, ethereum, account]);
 
   function displayEvent(event) {
     const inOutDisplay = (inBN, inToken, outBN, outToken) => (

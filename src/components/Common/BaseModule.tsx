@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js';
 import { makeStyles } from '@material-ui/styles';
 import { Lock as LockIcon } from '@material-ui/icons';
 import { theme } from 'constants/index';
+import { useSigner } from 'state/application/hooks';
 import { FormatTooltip, Line, QuestionModule } from './index';
 
 export default function BaseModule({
@@ -35,6 +36,7 @@ export default function BaseModule({
   singleReset,
 }) {
   const dispatch = useDispatch();
+  const signer = useSigner();
   const s = size === 'small' || window.innerWidth < 450;
   const classes = makeStyles(() => ({
     inputModule: {
@@ -132,7 +134,7 @@ export default function BaseModule({
   };
 
   const approveHandler = () => {
-    handleApprove(allowanceCallback);
+    handleApprove(allowanceCallback, signer);
   };
 
   let buttonLabel;
@@ -184,21 +186,22 @@ export default function BaseModule({
   } else {
     <></>;
   }
-  const resetLink = singleReset !== true ?
-    <>
-      <br />
-      <Link // eslint-disable-line
-        style={{ color: 'green' }}
-        href=""
-        onClick={(event) => {
-          event.preventDefault();
-          resetForm();
-        }}
-      >
-        Reset Defaults
-      </Link>
-    </>
-    : null;
+  const resetLink =
+    singleReset !== true ? (
+      <>
+        <br />
+        <Link // eslint-disable-line
+          style={{ color: 'green' }}
+          href=""
+          onClick={(event) => {
+            event.preventDefault();
+            resetForm();
+          }}
+        >
+          Reset Defaults
+        </Link>
+      </>
+    ) : null;
 
   const moduleContent = (
     <>

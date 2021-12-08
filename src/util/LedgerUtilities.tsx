@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
 import {
   DEVELOPMENT_BUDGET,
   MARKETING_BUDGET,
@@ -18,11 +19,11 @@ import {
   pairContractReadOnly,
   tokenContractReadOnly,
   toTokenUnitsBN,
-  web3,
 } from './index';
 
 /* Client is responsible for calling execute() */
-export const createLedgerBatch = () => new web3.BatchRequest();
+export const createLedgerBatch = (_ethereum) =>
+  new Web3(_ethereum).BatchRequest();
 
 const makeBatchedPromises = (batch, promisesAndResultHandlers) => {
   const batchedPromises = promisesAndResultHandlers.map(
@@ -44,17 +45,17 @@ const bigNumberResult = (result) => new BigNumber(result);
 const tokenResult = (token) => (result) =>
   toTokenUnitsBN(new BigNumber(result), token.decimals);
 
-export async function getEtherBalance() {
-  return tokenResult(ETH)(await web3.eth.getBalance(account));
+export async function getEtherBalance(_ethereum) {
+  return tokenResult(ETH)(await new Web3(_ethereum).eth.getBalance(account));
 }
 
-export async function getUSDCBalance() {
-  return tokenResult(USDC)(await web3.eth.getBalance(account));
+export async function getUSDCBalance(_ethereum) {
+  return tokenResult(USDC)(await new Web3(_ethereum).eth.getBalance(account));
 }
 
-export async function getBlockTimestamp(blockNumber) {
+export async function getBlockTimestamp(blockNumber, _ethereum) {
   await initializing;
-  return (await web3.eth.getBlock(blockNumber)).timestamp;
+  return (await new Web3(_ethereum).eth.getBlock(blockNumber)).timestamp;
 }
 
 /* Batched Getters */
@@ -65,20 +66,20 @@ export const getAccountBalances = async (batch) => {
   const usdc = tokenContractReadOnly(USDC);
 
   return makeBatchedPromises(batch, [
-    [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
-    [bean.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
-    [lp.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
-    [usdc.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
-    [beanstalk.methods.balanceOfEth(account), tokenResult(ETH)],
-    [bean.methods.balanceOf(account), tokenResult(BEAN)],
-    [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [beanstalk.methods.balanceOfSeeds(account), tokenResult(BEANSTALK)],
-    [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
-    [beanstalk.methods.lockedUntil(account), bigNumberResult],
-    [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEANSTALK)],
-    [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
-    [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
-    [usdc.methods.balanceOf(account), tokenResult(USDC)],
+    [bean.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
+    [bean.allowance(account, BEANSTALK.addr), bigNumberResult],
+    [lp.allowance(account, BEANSTALK.addr), bigNumberResult],
+    [usdc.allowance(account, BEANSTALK.addr), bigNumberResult],
+    [beanstalk.balanceOfEth(account), tokenResult(ETH)],
+    [bean.balanceOf(account), tokenResult(BEAN)],
+    [lp.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
+    [beanstalk.balanceOfSeeds(account), tokenResult(BEANSTALK)],
+    [beanstalk.balanceOfStalk(account), tokenResult(STALK)],
+    [beanstalk.lockedUntil(account), bigNumberResult],
+    [beanstalk.balanceOfFarmableBeans(account), tokenResult(BEANSTALK)],
+    [beanstalk.balanceOfGrownStalk(account), tokenResult(STALK)],
+    [beanstalk.balanceOfRoots(account), bigNumberResult],
+    [usdc.balanceOf(account), tokenResult(USDC)],
   ]);
 };
 /* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
@@ -89,20 +90,20 @@ export const getTotalBalances = async (batch) => {
   const beanstalk = beanstalkContractReadOnly();
 
   return makeBatchedPromises(batch, [
-    [bean.methods.totalSupply(), tokenResult(BEAN)],
-    [lp.methods.totalSupply(), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [beanstalk.methods.totalSeeds(), tokenResult(BEANSTALK)],
-    [beanstalk.methods.totalStalk(), tokenResult(STALK)],
-    [beanstalk.methods.totalDepositedBeans(), tokenResult(BEAN)],
-    [beanstalk.methods.totalDepositedLP(), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [beanstalk.methods.totalWithdrawnBeans(), tokenResult(BEAN)],
-    [beanstalk.methods.totalWithdrawnLP(), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [beanstalk.methods.totalSoil(), tokenResult(BEANSTALK)],
-    [beanstalk.methods.podIndex(), tokenResult(BEANSTALK)],
-    [beanstalk.methods.harvestableIndex(), tokenResult(BEANSTALK)],
-    [beanstalk.methods.totalRoots(), bigNumberResult],
+    [bean.totalSupply(), tokenResult(BEAN)],
+    [lp.totalSupply(), tokenResult(UNI_V2_ETH_BEAN_LP)],
+    [beanstalk.totalSeeds(), tokenResult(BEANSTALK)],
+    [beanstalk.totalStalk(), tokenResult(STALK)],
+    [beanstalk.totalDepositedBeans(), tokenResult(BEAN)],
+    [beanstalk.totalDepositedLP(), tokenResult(UNI_V2_ETH_BEAN_LP)],
+    [beanstalk.totalWithdrawnBeans(), tokenResult(BEAN)],
+    [beanstalk.totalWithdrawnLP(), tokenResult(UNI_V2_ETH_BEAN_LP)],
+    [beanstalk.totalSoil(), tokenResult(BEANSTALK)],
+    [beanstalk.podIndex(), tokenResult(BEANSTALK)],
+    [beanstalk.harvestableIndex(), tokenResult(BEANSTALK)],
+    [beanstalk.totalRoots(), bigNumberResult],
     [
-      beanstalk.methods.weather(),
+      beanstalk.weather(),
       (stringWeather) => ({
         didSowBelowMin: stringWeather.didSowBelowMin,
         didSowFaster: stringWeather.didSowFaster,
@@ -115,14 +116,14 @@ export const getTotalBalances = async (batch) => {
       }),
     ],
     [
-      beanstalk.methods.rain(),
+      beanstalk.rain(),
       (stringRain) => ({
         raining: stringRain.raining,
         rainStart: bigNumberResult(stringRain.start),
       }),
     ],
     [
-      beanstalk.methods.time(),
+      beanstalk.time(),
       (time) => ({
         season: bigNumberResult(time.current),
         start: bigNumberResult(time.start),
@@ -130,23 +131,21 @@ export const getTotalBalances = async (batch) => {
         timestamp: bigNumberResult(time.timestamp),
       }),
     ],
-    [bean.methods.balanceOf(DEVELOPMENT_BUDGET), tokenResult(BEAN)],
-    [bean.methods.balanceOf(MARKETING_BUDGET), tokenResult(BEAN)],
+    [bean.balanceOf(DEVELOPMENT_BUDGET), tokenResult(BEAN)],
+    [bean.balanceOf(MARKETING_BUDGET), tokenResult(BEAN)],
   ]);
 };
 
 /* TODO: batch BIP detail ledger reads */
 export const getBips = async () => {
   const beanstalk = beanstalkContractReadOnly();
-  const numberOfBips = bigNumberResult(
-    await beanstalk.methods.numberOfBips().call()
-  );
+  const numberOfBips = bigNumberResult(await beanstalk.numberOfBips());
   const bips = [];
   for (let i = new BigNumber(0); i.isLessThan(numberOfBips); i = i.plus(1)) {
-    const bip = await beanstalk.methods.bip(i.toString()).call();
+    const bip = await beanstalk.bip(i.toString());
     const bipRoots =
       bip.endTotalRoots.toString() === '0'
-        ? await beanstalk.methods.rootsFor(i.toString()).call()
+        ? await beanstalk.rootsFor(i.toString())
         : bip.roots;
     const bipDict = {
       id: i,
@@ -167,7 +166,7 @@ export const getBips = async () => {
   }
 
   let hasActiveBIP = false;
-  const activeBips = await beanstalk.methods.activeBips().call();
+  const activeBips = await beanstalk.activeBips();
   activeBips.forEach((id) => {
     hasActiveBIP = true;
     bips[parseInt(id, 10)].active = true;
@@ -180,11 +179,15 @@ export const getFundraisers = async () => {
   const beanstalk = beanstalkContractReadOnly();
   let hasActiveFundraiser = false;
   const numberOfFundraisers = bigNumberResult(
-    await beanstalk.methods.numberOfFundraisers().call()
+    await beanstalk.numberOfFundraisers()
   );
   const fundraisers = [];
-  for (let i = new BigNumber(0); i.isLessThan(numberOfFundraisers); i = i.plus(1)) {
-    const fundraiser = await beanstalk.methods.fundraiser(i.toString()).call();
+  for (
+    let i = new BigNumber(0);
+    i.isLessThan(numberOfFundraisers);
+    i = i.plus(1)
+  ) {
+    const fundraiser = await beanstalk.fundraiser(i.toString());
     const fundraiserDict = {
       id: i,
       remaining: toTokenUnitsBN(fundraiser.remaining, USDC.decimals),
@@ -204,22 +207,22 @@ export const getPrices = async (batch) => {
 
   return makeBatchedPromises(batch, [
     [
-      referenceLPContract.methods.getReserves(),
+      referenceLPContract.getReserves(),
       (reserves) => [
         bigNumberResult(reserves._reserve0),
         bigNumberResult(reserves._reserve1),
       ],
     ],
     [
-      lpContract.methods.getReserves(),
+      lpContract.getReserves(),
       (reserves) => [
         bigNumberResult(reserves._reserve0),
         bigNumberResult(reserves._reserve1),
       ],
     ],
-    [lpContract.methods.token0(), identityResult],
+    [lpContract.token0(), identityResult],
     [
-      beanstalk.methods.getTWAPPrices(),
+      beanstalk.getTWAPPrices(),
       (prices) => [
         toTokenUnitsBN(prices[0], 18),
         toTokenUnitsBN(prices[1], 18),

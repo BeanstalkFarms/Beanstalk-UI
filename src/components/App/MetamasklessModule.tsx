@@ -47,7 +47,9 @@ export default function MetamasklessModule() {
         <Grid item xs={12}>
           <Button
             color="primary"
-            onClick={onboard?.walletSelect}
+            onClick={() => {
+              onboard?.walletSelect();
+            }}
             style={connectMetaStyle}
             variant="contained"
           >

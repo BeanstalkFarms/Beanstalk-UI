@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { ethers } from 'ethers';
 import { useSelector, useDispatch } from 'react-redux';
 import { API as NotifyAPI } from 'bnc-notify';
 
@@ -11,6 +12,18 @@ export function useBlockNumber(): number | undefined {
 
 export function useNotify(): NotifyAPI {
   return useSelector((state: AppState) => state.application.notify);
+}
+
+export function useAccount(): string {
+  return useSelector((state: AppState) => state.application.account);
+}
+
+export function useEthereum(): any {
+  return useSelector((state: AppState) => state.application.ethereum);
+}
+
+export function useSigner(): ethers.Signer {
+  return useSelector((state: AppState) => state.application.signer);
 }
 
 export function useDisconnect() {

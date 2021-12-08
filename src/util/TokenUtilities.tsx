@@ -66,9 +66,10 @@ export type Token =
 export const transferBeans = async (
   to: string,
   amount: BigNumber,
-  callback
+  callback,
+  signer
 ) => {
-  tokenContract(BEAN)
+  tokenContract(BEAN, signer)
     .transfer(to, amount)
     .then((response) => {
       callback();
@@ -83,9 +84,10 @@ export const approveToken = async (
   address: String,
   spender: String,
   amount: String,
-  callback: (number) => void
+  callback: (number) => void,
+  signer
 ) => {
-  tokenContract(token)
+  tokenContract(token, signer)
     .approve(spender, amount)
     .then((response) => {
       callback(1);
@@ -95,26 +97,27 @@ export const approveToken = async (
     });
 };
 
-export const approveUniswapBean = async (callback) => {
-  approveToken(BEAN, account, UNISWAP_V2_ROUTER, MAX_UINT256, callback);
+export const approveUniswapBean = async (callback, signer) => {
+  approveToken(BEAN, account, UNISWAP_V2_ROUTER, MAX_UINT256, callback, signer);
 };
 
-export const approveBeanstalkBean = async (callback) => {
-  approveToken(BEAN, account, BEANSTALK.addr, MAX_UINT256, callback);
+export const approveBeanstalkBean = async (callback, signer) => {
+  approveToken(BEAN, account, BEANSTALK.addr, MAX_UINT256, callback, signer);
 };
 
-export const approveBeanstalkLP = async (callback) => {
+export const approveBeanstalkLP = async (callback, signer) => {
   approveToken(
     UNI_V2_ETH_BEAN_LP,
     account,
     BEANSTALK.addr,
     MAX_UINT256,
-    callback
+    callback,
+    signer
   );
 };
 
-export const approveBeanstalkUSDC = async (callback) => {
-  approveToken(USDC, account, BEANSTALK.addr, MAX_UINT256, callback);
+export const approveBeanstalkUSDC = async (callback, signer) => {
+  approveToken(USDC, account, BEANSTALK.addr, MAX_UINT256, callback, signer);
 };
 
 export function TokenLabel(tokenType: Token): string {
