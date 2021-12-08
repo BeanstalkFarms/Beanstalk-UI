@@ -15,7 +15,6 @@ import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
 import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
 import { ReactComponent as OpenSeaIcon } from 'img/opensea-icon.svg';
 import { ReactComponent as UniswapIcon } from 'img/uniswap-logo-black.svg';
-import { ReactComponent as NetlifyIcon } from 'img/netlify-icon.svg';
 import ThemeBackground from 'components/Themes'
 import LogoLinks from './LogoLinks';
 
@@ -66,9 +65,6 @@ export default function Footer() {
     <>
       <ThemeBackground />
       <Grid container className={classes.fixedGround} justifyContent="center">
-        <LogoLinks close link={NETLIFY_LINK}>
-          <NetlifyIcon style={logoStyle} />
-        </LogoLinks>
         <LogoLinks close link={TWITTER_LINK}>
           <TwitterIcon style={logoStyle} />
         </LogoLinks>
@@ -81,11 +77,9 @@ export default function Footer() {
         <LogoLinks link={MEDIUM_LINK}>
           <MediumIcon style={logoStyle} />
         </LogoLinks>
-        {width > 390 ? (
-          <LogoLinks close link={OPENSEA_LINK} paddingRight="10px">
-            <OpenSeaIcon style={logoStyle} />
-          </LogoLinks>
-        ) : null}
+        <LogoLinks close link={OPENSEA_LINK} paddingRight="10px">
+          <OpenSeaIcon style={logoStyle} />
+        </LogoLinks>
         <LogoLinks link={COINMARKETCAP_LINK}>
           <CoinMarketCapIcon style={logoStyle} />
         </LogoLinks>
@@ -100,9 +94,11 @@ export default function Footer() {
         <LogoLinks close link={BEAN_TOKEN_LINK}>
           <BeanIcon style={logoStyle} />
         </LogoLinks>
-        <LogoLinks close link={SILO_CONTRACT_LINK}>
-          <EtherscanIcon style={logoStyle} />
-        </LogoLinks>
+        {width > 390 ? (
+          <LogoLinks close link={SILO_CONTRACT_LINK}>
+            <EtherscanIcon style={logoStyle} />
+          </LogoLinks>
+        ) : null}
         {width > 500 ? (
           <LogoLinks close link={UNISWAP_CONTRACT_LINK} paddingRight="5px">
             <UniswapIcon style={logoStyle} />
@@ -114,11 +110,20 @@ export default function Footer() {
           </LogoLinks>
         ) : null}
         <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
-          <LogoLinks close link={LICENSE_LINK} paddingTop="0px">
-            {'MIT License'}
+          <LogoLinks close link={NETLIFY_LINK} paddingTop="0px" color={theme.footer}>
+            <span style={{ color: theme.footer, fontSize: '12px', margin: '0 5px' }}>
+              {'This site is powered by Netlify'}
+            </span>
           </LogoLinks>
-          <LogoLinks close link={CODE_OF_CONDUCT_LINK} paddingTop="0px">
-            {'Code of Conduct'}
+          <LogoLinks close link={LICENSE_LINK} paddingTop="0px" color={theme.footer}>
+            <span style={{ color: theme.footer, fontSize: '12px', margin: '0 5px' }}>
+              {'MIT License'}
+            </span>
+          </LogoLinks>
+          <LogoLinks close link={CODE_OF_CONDUCT_LINK} paddingTop="0px" color={theme.footer}>
+            <span style={{ color: theme.footer, fontSize: '12px', margin: '0 5px' }}>
+              {'Code of Conduct'}
+            </span>
           </LogoLinks>
         </Grid>
       </Grid>

@@ -97,6 +97,10 @@ export async function initialize(): Promise<void> {
         account = hexAccount;
         chainId = parseInt(chainIdentifier, 10);
         if (chainId !== 1 && chainId !== 3) {
+          ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x1' }],
+          });
           metamaskFailure = 3;
           return false;
         }

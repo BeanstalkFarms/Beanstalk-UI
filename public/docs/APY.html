@@ -71,9 +71,9 @@
     $$
     \bar{n}^f = \Lambda_t \frac{1}{u} \sum_{i=t-u}^t \frac{n^f_i}{\Lambda_i}
     $$
-    <p>To calculate the 7-day APYs, \(u\) is 168 as there are 168 Seasons in a week.</p>
+    <p>To calculate the 30-day APYs, \(u\) is 720 as there are 720 Seasons in 30 days.</p>
     <h2 id="deposit-apy">Deposit APY</h2>
-    <p>The 7-day APY for depositing Beans or LP into the Silo (\(APY^{Silo}_x\)) is determined by the value of 1 newly Deposited Bean or 1 newly Deposited LP (by Bean-denomated value) in 8760 Seasons (1 year).</p>
+    <p>The 30-day APY for depositing Beans or LP into the Silo (\(APY^{Silo}_x\)) is determined by the value of 1 newly Deposited Bean or 1 newly Deposited LP (by Bean-denomated value) in 8760 Seasons (1 year).</p>
     <p>The Deposit APY calculations make the following assumptions:</p>
     <ul>
       <li>No new Beans/LP are Deposited into or Withdrawn from the Silo;</li>
@@ -119,7 +119,7 @@
     APY^{Silo}_x = \frac{\hat{b}_{t+8760} - \hat{b}_t}{100}
     $$
     <h2 id="pod-apy">Pod APY</h2>
-    <p>The 7-day APY for sowing Beans in the Field (\(APY^{Pod}\)) is determined by the estimated Seasons Until Pod Clearance (\(\hat{Z}_f\)). </p>
+    <p>The 30-day APY for sowing Beans in the Field (\(APY^{Pod}\)) is determined by the estimated Seasons Until Pod Clearance (\(\hat{Z}_f\)). </p>
     <p>The Pod APY calculations make the following assumptions:</p>
     <ul>
       <li>No liquidity is added or removed from the BEAN:ETH pool; and</li>
