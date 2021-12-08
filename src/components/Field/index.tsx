@@ -31,7 +31,7 @@ export default function Field() {
     maxWidth: '300px',
   };
 
-  const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableWeek);
+  const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
   const apy = weather.weather.multipliedBy(8760).dividedBy(tth);
 
   const apyField = (
