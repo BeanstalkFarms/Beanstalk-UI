@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Box } from '@material-ui/core';
+import Snowfall from 'react-snowfall';
 import Footer from 'components/About/Footer';
 import { FallingLeaves } from 'components/Fall';
 import { theme } from 'constants/index';
@@ -30,12 +31,45 @@ export default function Main(props) {
     zIndex: -11,
   };
 
+  const increment = (c) => {
+    if (c === 5) {
+      return c - 4;
+    }
+    return c + 1;
+  };
+
+  const timer = useRef();
+  const [count, setCount] = useState(increment(1));
+
+  useEffect(() => {
+    timer.current = window.setInterval(() => {
+      setCount(increment(count));
+    }, 1000);
+    return () => {
+      window.clearInterval(timer.current);
+    };
+  }, [count]);
+
+  function switchBeanstalk(t) {
+    if (theme.name === 'winter') {
+      return (
+        <Box className={`BG${t}`} name={theme.name} />
+      );
+    }
+    return <Box className="BeanstalkBG" name={theme.name} />;
+  }
+
   return (
     <>
       <Box className="App">
-        <Box className="BeanstalkBG" name={theme.name} />
-        <Box className="BeanstalkMT" name={theme.name} style={{ top: '25vh' }} />
+        {switchBeanstalk(count)}
+        <Box className="BeanstalkMT" name={theme.name} style={{ top: 'calc(28vh - 2vw)' }} />
         <Box className="BeanstalkSky" name={theme.name} />
+        <Snowfall
+          snowflakeCount={120}
+          speed={[0, 0.5]}
+          wind={[-0.5, 0.5]}
+        />
         <Box>
           {theme.name === 'fall' ? <FallingLeaves /> : null}
           <img alt="Sun Icon" src={theme.sun} style={sunStyle} />

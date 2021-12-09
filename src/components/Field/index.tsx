@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { displayBN, displayFullBN } from 'util/index';
@@ -8,7 +8,7 @@ import {
   ContentDropdown,
   ContentSection,
   Grid,
-  HeaderLabel,
+  HeaderLabelList,
   fieldStrings,
 } from 'components/Common';
 import FieldModule from './FieldModule';
@@ -26,49 +26,33 @@ export default function Field() {
     (state) => state.beansPerSeason
   );
 
-  const { innerWidth: width } = window;
+  const [width, setWidth] = useState<number>(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
 
   const headerLabelStyle = {
     maxWidth: '300px',
   };
+  const containerStyle = {
+    backgroundColor: theme.secondary,
+    borderRadius: '15px',
+    boxShadow:
+      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    width: width > 606 ? '600px' : '300px',
+    padding: '0px',
+  };
 
-  const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableWeek);
+  const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
   const apy = weather.weather.multipliedBy(8760).dividedBy(tth);
-
-  const apyField = (
-    <Grid container item xs={12} spacing={3} justifyContent="center">
-      <Grid item sm={6} xs={12} style={headerLabelStyle}>
-        <HeaderLabel
-          balanceDescription={`${apy.toFixed(2)}% APY`}
-          description={
-            <span>
-              {fieldStrings.podAPY}{' '}
-              <a target="blank" href={APY_CALCULATION}>
-                click here
-              </a>
-            </span>
-          }
-          title="Pod APY"
-          value={`${apy.toFixed(0) === '0' ? '–' : apy.toFixed(0)}%`}
-        />
-      </Grid>
-      <Grid item sm={6} xs={12} style={headerLabelStyle}>
-        <HeaderLabel
-          balanceDescription={`${tth.toFixed(2)} Seasons`}
-          description={
-            <span>
-              {fieldStrings.seasonsToPodClearance}{' '}
-              <a target="blank" href={APY_CALCULATION}>
-                click here
-              </a>
-            </span>
-          }
-          title="Seasons to Pod Clearance"
-          value={tth.toFixed(0) === 'Infinity' ? '–' : tth.toFixed(0)}
-        />
-      </Grid>
-    </Grid>
-  );
 
   const description = (
     <>
@@ -99,6 +83,67 @@ export default function Field() {
     },
   ];
 
+  const leftHeader = (
+    <HeaderLabelList
+      balanceDescription={[
+        `${displayFullBN(weather.soil)} Soil`,
+        `${weather.weather}% Weather`,
+        `${apy.toFixed(2)}% APY`,
+      ]}
+      description={[
+        fieldStrings.availableSoil,
+        fieldStrings.weather,
+        <span>
+          {fieldStrings.podAPY}{' '}
+          <a target="blank" href={APY_CALCULATION}>
+            click here
+          </a>
+        </span>,
+      ]}
+      title={[
+        'Available Soil',
+        'Weather',
+        'Pod APY',
+      ]}
+      value={[
+        displayBN(weather.soil),
+        `${weather.weather.toFixed()}%`,
+        `${apy.toFixed(0) === '0' ? '–' : apy.toFixed(0)}%`,
+      ]}
+      container={false}
+    />
+  );
+  const rightHeader = (
+    <HeaderLabelList
+      balanceDescription={[
+        `${displayFullBN(totalBalance.totalPods)} Unharvestable Pods`,
+        `${displayFullBN(weather.harvestableIndex)} Harvested Pods`,
+        `${tth.toFixed(2)} Seasons`,
+      ]}
+      description={[
+        fieldStrings.podLine,
+        fieldStrings.podsHarvested,
+        <span>
+          {fieldStrings.seasonsToPodClearance}{' '}
+          <a target="blank" href={APY_CALCULATION}>
+            click here
+          </a>
+        </span>,
+      ]}
+      title={[
+        'Pod Line',
+        'Pods Harvested',
+        'Seasons to Pod Clearance',
+      ]}
+      value={[
+        displayBN(totalBalance.totalPods),
+        displayBN(weather.harvestableIndex),
+        `${tth.toFixed(0) === 'Infinity' ? '–' : tth.toFixed(0)}`,
+      ]}
+      container={false}
+    />
+  );
+
   return (
     <ContentSection
       id="field"
@@ -111,47 +156,14 @@ export default function Field() {
           descriptionLinks={descriptionLinks}
         />
       </Grid>
-      <Grid container item xs={12} spacing={3} justifyContent="center">
-        <Grid item xs={12} sm={6} style={headerLabelStyle}>
-          <HeaderLabel
-            balanceDescription={`${displayFullBN(weather.soil)} Soil`}
-            description={fieldStrings.availableSoil}
-            title="Available Soil"
-            value={displayBN(weather.soil)}
-          />
+      <Grid container item justifyContent="center" style={containerStyle}>
+        <Grid item md={12} lg={6} style={headerLabelStyle}>
+          {leftHeader}
         </Grid>
-        <Grid item sm={6} xs={12} style={headerLabelStyle}>
-          <HeaderLabel
-            balanceDescription={`${displayFullBN(
-              totalBalance.totalPods
-            )} Unharvestable Pods`}
-            description={fieldStrings.podLine}
-            title="Pod Line"
-            value={displayBN(totalBalance.totalPods)}
-          />
+        <Grid item md={12} lg={6} style={headerLabelStyle}>
+          {rightHeader}
         </Grid>
       </Grid>
-      <Grid container item xs={12} spacing={3} justifyContent="center">
-        <Grid item sm={6} xs={12} style={headerLabelStyle}>
-          <HeaderLabel
-            balanceDescription={`${weather.weather}% Weather`}
-            description={fieldStrings.weather}
-            title="Weather"
-            value={`${weather.weather.toFixed()}%`}
-          />
-        </Grid>
-        <Grid item sm={6} xs={12} style={headerLabelStyle}>
-          <HeaderLabel
-            balanceDescription={`${displayFullBN(
-              weather.harvestableIndex
-            )} Harvested Pods`}
-            description={fieldStrings.podsHarvested}
-            title="Pods Harvested"
-            value={displayBN(weather.harvestableIndex)}
-          />
-        </Grid>
-      </Grid>
-      {apyField}
       <Grid
         container
         item

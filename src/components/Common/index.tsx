@@ -25,6 +25,7 @@ export { default as DataBalanceModule } from './DataBalanceModule';
 export { default as EthInputField } from './EthInputField';
 export { default as FrontrunText } from './FrontrunText';
 export { default as HeaderLabel } from './HeaderLabel';
+export { default as HeaderLabelList } from './HeaderLabelList';
 export { default as HeaderLabelWithTimer } from './HeaderLabelWithTimer';
 export { default as InputFieldPlus } from './InputFieldPlus';
 export { default as ListTable } from './ListTable';
@@ -151,7 +152,7 @@ export const siloStrings = {
   beanDepositsTable: 'View all your current Bean Deposits in this table.',
   beanWithdrawalsTable: 'View all your current Bean Withdrawals in this table.',
   beanAPY:
-    'The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
+    'The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
   lpDescription: 'Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.',
   lpDeposit:
     'Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.',
@@ -162,7 +163,7 @@ export const siloStrings = {
   lpWithdrawalsTable:
     'View all your current LP Token Withdrawals in this table.',
   lpAPY:
-    'The LP APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
+    'The LP APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
   siloDescription:
     'The Silo is the Beanstalk DAO. Silo Members earn passive interest during Bean supply increases. Anyone can become a Silo Member by depositing Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module below in exchange for Stalk and Seeds. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. The Seed token yields .0001 Stalk every Season. No action is ever required of Silo Members. All Stalk and Seeds associated with a Deposit are forfeited upon withdrawal. All Withdrawals are frozen for 24 full Seasons.',
   withdrawWarning:
@@ -184,9 +185,9 @@ export const fieldStrings = {
   podsHarvested:
     'The total Harvested Pods over all Seasons is the amount of debt Beanstalk has paid off thus far.',
   podAPY:
-    'The Pod APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
+    'The Pod APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
   seasonsToPodClearance:
-    'The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 168 Seasons normalized to the current liquidity. For the complete formulas used to calculate Seasons to Pod Clearance,',
+    'The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate Seasons to Pod Clearance,',
 };
 export const tradeStrings = {
   swap: 'Use this tab to trade against the BEAN:ETH Uniswap pool directly on the bean.money website.',
@@ -203,6 +204,17 @@ export const seasonStrings = {
   season: 'Seasons are the timekeeping mechanism of Beanstalk. Every Season is approximately 1 hour. Each Season begins when the Sunrise function is called on the Ethereum blockchain. The Sunrise function can be called by anyone at the top of each hour.',
   sunriseOverdue: 'This is the time elapsed since the Sunrise function could be called.',
   nextSunrise: 'This is the time until the next Sunrise function can be called at the top of the hour.',
+};
+export const pegStrings = {
+  newBeans: 'This is the number of new Beans expected to be minted at the beginning of next Season based on the current TWAP.',
+  newSoil: 'This is the number of new Soil expected to be minted at the beginning of next Season based on the current TWAP.',
+  weather: 'The Weather Forecast predicts the expected Weather next Season based on the current TWAP, Pod Rate, and Delta Demand.',
+  rainForecast: 'The Rain Forecast predicts whether it is expected to Rain next Season or not. It is expected to Rain if TWAP > 1 and Pod Rate < 5%.',
+  price: 'This is the time weighted average Bean price during the course of the current Season.',
+  podRate: 'This is the total Unharvestable Pods as a percent of total Bean supply. The Pod Rate is the Beanstalk debt level relative to the current Bean supply.',
+  deltaDemand: 'Delta Demand is the rate of change in demand for Pods over the past two Seasons. Delta Demand is computed as Beans sown this Season / Beans sown last Season.',
+  rain: 'This is the number of consecutive Seasons it has been Raining for.',
+  pegDescription: 'Beanstalk incentivizes peg maintenance by providing financial incentivies to individuals. When the TWAP < 1, Beanstalk can raise the Weather and Soil in order to incentivize individuals to Sow. When TWAP > 1, Beanstalk will mint Beans and distribute to the Field and the Silo. These are a few of the peg maintenance tools available to Beanstalk.',
 };
 export const governanceStrings = {
   bips: 'Below is a complete list of all BIPs.',

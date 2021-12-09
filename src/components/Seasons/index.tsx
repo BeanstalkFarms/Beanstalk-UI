@@ -4,9 +4,11 @@ import { AppState } from 'state';
 import sunriseIcon from 'img/black-sun.svg';
 import { sunrise, chainId } from 'util/index';
 import {
+  ContentDropdown,
   ContentSection,
   Grid,
-  HeaderLabel,
+  HeaderLabelList,
+  pegStrings,
   seasonStrings,
   SingleButton,
 } from 'components/Common';
@@ -36,68 +38,71 @@ export default function Seasons() {
 
   const advanceButton =
     time <= 0 && chainId === 3 ? (
-      <SingleButton
-        description={seasonStrings.advance}
-        handleClick={() => {
-          sunrise();
-        }}
-        icon={sunriseIcon}
-        margin="-13px 7px 0 0"
-        size="small"
-        title="Sunrise"
-      />
-    ) : null;
-
-  const sunriseStats =
-    time <= 0 ? (
       <Grid
         item
         md={5}
         sm={6}
         xs={12}
-        style={{ maxWidth: '300px', padding: '12px' }}
+        style={{ maxWidth: '300px', padding: '0px' }}
       >
-        <SeasonReward time={time} />
+        <SingleButton
+          description={seasonStrings.advance}
+          handleClick={() => {
+            sunrise();
+          }}
+          icon={sunriseIcon}
+          margin="-13px 7px 0 0"
+          size="small"
+          title="Sunrise"
+        />
       </Grid>
     ) : null;
+
+  const [stTitle, stValue, stDescription, stBalanceDescription] =
+    SeasonTimer(nextSeasonTime);
+
+  const [srTitle, srValue, srDescription, srBalanceDescription] =
+    SeasonReward(nextSeasonTime);
 
   return (
-    <ContentSection id="seasons" title="Seasons" size="20px">
-      <Grid style={{ marginTop: '0' }} container item xs={12} spacing={3} justifyContent="center">
+    <ContentSection id="seasons" title="Seasons">
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={pegStrings.pegDescription}
+          descriptionTitle="What is Peg Maintenance?"
+        />
+      </Grid>
+      <Grid style={{ paddingTop: '10px' }} container item xs={12} spacing={3} justifyContent="center">
         <Grid
           item
-          md={5}
-          sm={6}
           xs={12}
-          style={{ maxWidth: '300px', padding: '12px' }}
+          style={{ maxWidth: '300px', padding: '0px' }}
         >
-          <HeaderLabel
-            description={seasonStrings.season}
-            title="Current Season"
-            value={season.isNegative() ? '---' : String(season)}
+          <HeaderLabelList
+            description={[
+              seasonStrings.season,
+              stDescription,
+              srDescription,
+            ]}
+            balanceDescription={[
+              `${season.isNegative() ? '---' : String(season)}`,
+              stBalanceDescription,
+              srBalanceDescription,
+            ]}
+            title={[
+              'Current Season',
+              stTitle,
+              srTitle,
+            ]}
+            value={[
+              `${season.isNegative() ? '---' : String(season)}`,
+              stValue,
+              srValue,
+            ]}
           />
         </Grid>
-        <Grid
-          item
-          md={5}
-          sm={6}
-          xs={12}
-          style={{ maxWidth: '300px', padding: '12px' }}
-        >
-          <SeasonTimer time={time} />
-        </Grid>
-        {sunriseStats}
       </Grid>
-      <Grid
-        item
-        md={5}
-        sm={6}
-        xs={12}
-        style={{ maxWidth: '300px', padding: '12px' }}
-      >
-        {advanceButton}
-      </Grid>
-
+      {advanceButton}
       <Grid
         container
         item

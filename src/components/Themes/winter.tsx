@@ -25,9 +25,9 @@ export default function mainUpgrade(props) {
 
   const barnStyle = {
     bottom: theme.groundItemHeight,
-    height: '12vw',
+    height: '16vw',
     left: 10,
-    minHeight: '135px',
+    minHeight: '95px',
     position: 'fixed',
     zIndex: -1,
   };
@@ -35,9 +35,9 @@ export default function mainUpgrade(props) {
     width > 750
       ? {
           bottom: '72px',
-          // height: '6vw',
-          maxHeight: '70px',
-          left: 'calc(70px + 3vw)',
+          height: '6vw',
+          maxHeight: '120px',
+          left: 'calc(65px + 5vw)',
           minHeight: '5px',
           position: 'fixed',
           zIndex: -1,

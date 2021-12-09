@@ -9,16 +9,15 @@ import { theme } from 'constants/index';
 
 const Accordion = withStyles({
   root: {
-    width: '400px',
+    maxWidth: '400px',
+    minWidth: '300px',
+    width: '60vw',
     boxShadow: 'none',
-    backgroundColor: theme.primary,
     '&:not(:last-child)': {
       borderBottom: 0,
-      backgroundColor: theme.primary,
     },
     '&:before': {
       display: 'none',
-      backgroundColor: theme.primary,
     },
     '&$expanded': {
       margin: 'auto',
@@ -29,19 +28,17 @@ const Accordion = withStyles({
 
 const AccordionSummary = withStyles({
   root: {
-    backgroundColor: theme.primary,
+    backgroundColor: theme.secondary,
     marginBottom: -1,
     borderRadius: '15px',
     minHeight: 56,
     '&$expanded': {
       minHeight: 56,
-      borderRadius: '15px 15px 0 0',
     },
   },
   content: {
     '&$expanded': {
       margin: '12px 0',
-      borderRadius: '15px',
     },
   },
   expanded: {},
@@ -49,7 +46,7 @@ const AccordionSummary = withStyles({
 
 const AccordionDetails = withStyles(() => ({
   root: {
-    backgroundColor: theme.primary,
+    backgroundColor: theme.secondary,
     borderRadius: '0 0 15px 15px',
   },
 }))(MuiAccordionDetails);
@@ -65,6 +62,7 @@ export default function ContentDropdown({
     },
     topContainer: {
       backgroundColor: 'transparent',
+      boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
     },
     heading: {
       fontSize: '16px',
@@ -92,6 +90,7 @@ export default function ContentDropdown({
         expanded={expanded === 'event'}
         onChange={handleChange('event')}
         className={classes.topContainer}
+        style={{ backgroundColor: theme.secondary, borderRadius: '15px' }}
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon style={{ color: theme.accentText }} />}

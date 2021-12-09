@@ -63,7 +63,7 @@ export default function SectionTabs({
       minWidth: 0,
       zIndex: 100,
       borderRadius: '10px',
-      margin: '5px 0 10px 0',
+      margin: '5px 0 5px 0',
       minHeight: '38px',
       padding: '0 6px',
       fontSize: width < 425 ? '12px' : (width < 600 ? '14px' : '18px'),

@@ -18,6 +18,10 @@ export default function HeaderLabel(props) {
       padding: '4px 4px',
       textTransform: 'none',
     },
+    subContainer: {
+      display: 'flex',
+      borderRadius: '15px 15px 0 0',
+    },
     title: {
       fontFamily: 'Futura-PT-Book',
       padding: '10px',
@@ -55,7 +59,13 @@ export default function HeaderLabel(props) {
     );
 
   return (
-    <Box className={classes.container}>
+    <Box
+      className={
+        props.container === undefined
+          ? classes.container
+          : classes.subContainer
+      }
+    >
       <Box className={classes.title}>
         {props.title}
         {questionTooltip}

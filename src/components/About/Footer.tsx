@@ -112,7 +112,7 @@ export default function Footer() {
         <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
           <LogoLinks close link={NETLIFY_LINK} paddingTop="0px" color={theme.footer}>
             <span style={{ color: theme.footer, fontSize: '12px', margin: '0 5px' }}>
-              {'Powered by Netlify'}
+              {'This site is powered by Netlify'}
             </span>
           </LogoLinks>
           <LogoLinks close link={LICENSE_LINK} paddingTop="0px" color={theme.footer}>

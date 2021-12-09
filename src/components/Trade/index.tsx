@@ -2,11 +2,12 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayFullBN } from 'util/index';
+import { theme } from 'constants/index';
 import {
-  ContentSection,
   ContentDropdown,
+  ContentSection,
   Grid,
-  HeaderLabel,
+  HeaderLabelList,
   tradeStrings,
 } from 'components/Common';
 import TradeModule from './TradeModule';
@@ -21,6 +22,14 @@ export default function Trade() {
     (state) => state.general
   );
 
+  const headerLabelStyle = {
+    maxWidth: '300px',
+    color: theme.text,
+  };
+
+  const [lcTitle, lcValue, lcDescription, lcBalanceDescription] =
+    LastCrossTimer(lastCross);
+
   return (
     <ContentSection
       id="trade"
@@ -32,28 +41,28 @@ export default function Trade() {
           descriptionTitle="How do I Trade?"
         />
       </Grid>
-      <Grid container item xs={12} sm={12} spacing={3} justifyContent="center">
-        <Grid item xs={12} sm={6} style={{ maxWidth: '300px' }}>
-          <HeaderLabel
-            description={tradeStrings.price}
-            balanceDescription={`$${displayFullBN(beanPrice)}`}
-            title="Current Bean Price"
-            value={`$${beanPrice.toFixed(4)}`}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} style={{ maxWidth: '300px' }}>
-          <LastCrossTimer lastCross={lastCross} />
-        </Grid>
+      <Grid container xs={12} justifyContent="center" style={headerLabelStyle}>
+        <HeaderLabelList
+          description={[
+            tradeStrings.price,
+            lcDescription,
+          ]}
+          balanceDescription={[
+            `$${displayFullBN(beanPrice)}`,
+            lcBalanceDescription,
+          ]}
+          title={[
+            'Current Bean Price',
+            lcTitle,
+          ]}
+          value={[
+            `$${beanPrice.toFixed(4)}`,
+            lcValue,
+          ]}
+        />
       </Grid>
 
-      <Grid
-        item
-        xs={10}
-        sm={8}
-        style={{ maxWidth: '500px', minHeight: '645px' }}
-      >
-        <TradeModule />
-      </Grid>
+      <TradeModule />
     </ContentSection>
   );
 }
