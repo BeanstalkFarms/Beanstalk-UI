@@ -70,6 +70,7 @@ export default function Main(props) {
           snowflakeCount={200}
           speed={[0, 0.5]}
           wind={[-0.5, 0.5]}
+          style={{ position: 'fixed' }}
         />
         <Box>
           {theme.name === 'fall' ? <FallingLeaves /> : null}

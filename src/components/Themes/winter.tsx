@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import SnowmanIcon from 'img/winter/Snowman.svg';
 import land from 'img/winter/land.svg';
+import Barn1 from 'img/winter/Barn-1.svg';
+import Barn2 from 'img/winter/Barn-2.svg';
+import Barn3 from 'img/winter/Barn-3.svg';
+import Barn4 from 'img/winter/Barn-4.svg';
+import Barn5 from 'img/winter/Barn-5.svg';
 import { theme } from 'constants/index';
 
-export default function mainUpgrade(props) {
+export default function Winter(props) {
   const classes = makeStyles({
     topGround: {
       backgroundColor: 'transparent',
@@ -46,10 +51,43 @@ export default function mainUpgrade(props) {
           display: 'none',
         };
 
+  const imgUrl = [
+    Barn1,
+    Barn2,
+    Barn3,
+    Barn4,
+    Barn5,
+  ];
+
+  const increment = (c) => {
+    if (c === 5) {
+      return c - 4;
+    }
+    return c + 1;
+  };
+
+  const timer = useRef();
+  const [count, setCount] = useState(increment(1));
+
+  useEffect(() => {
+    timer.current = window.setInterval(() => {
+      setCount(increment(count));
+    }, 1000);
+    return () => {
+      window.clearInterval(timer.current);
+    };
+  }, [count]);
+
+  function SwitchBarn(t) {
+    return (
+      <img alt="Barn Icon" src={imgUrl[t - 1]} style={barnStyle} />
+    );
+  }
+
   return (
     <>
       <Grid container className={classes.topGround} justifyContent="center" />
-      <img alt="Barn Icon" src={theme.barn} style={barnStyle} />
+      {SwitchBarn(count)}
       <img alt="Snowman Icon" src={SnowmanIcon} style={miscStyle} />
       {props.children}
     </>
