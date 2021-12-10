@@ -20,6 +20,7 @@ export default function ContentSection({
   const classes = makeStyles({
     appSection: {
       padding: padding,
+      margin: '0px',
     },
     sectionTitle: {
       marginTop: marginTop,
@@ -129,7 +130,7 @@ export default function ContentSection({
 
 ContentSection.defaultProps = {
   descriptionLinks: [],
-  padding: '10px 15px',
+  padding: '0px 0px',
   width: '100%',
   minHeight: '0px',
   textAlign: 'center',

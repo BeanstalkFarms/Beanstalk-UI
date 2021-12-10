@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { HeaderLabelWithTimer, tradeStrings } from 'components/Common';
+import { useEffect, useState, useRef } from 'react';
+import { tradeStrings } from 'components/Common';
 import { timeToString, timeToStringDetailed } from 'util/index';
 
-export default function LastCrossTimer(props) {
+export default function LastCrossTimer(lc) {
   const timeSinceCross = () => {
-    if (props.lastCross === 0) return 0;
-    return Date.now() / 1e3 - props.lastCross;
+    if (lc === 0) return 0;
+    return Date.now() / 1e3 - lc;
   };
 
   const timer = useRef();
@@ -19,7 +19,7 @@ export default function LastCrossTimer(props) {
       window.clearInterval(timer.current);
     };
     // eslint-disable-next-line
-  }, [time, props.lastCross]);
+  }, [time, lc]);
 
   const display = (_time) => [
     'Time Since $1 Crossed',
@@ -28,5 +28,5 @@ export default function LastCrossTimer(props) {
     _time === 0 ? '-' : timeToStringDetailed(_time),
   ];
 
-  return <HeaderLabelWithTimer display={display} time={time} />;
+  return display(time);
 }
