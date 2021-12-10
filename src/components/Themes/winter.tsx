@@ -9,6 +9,7 @@ import Barn3 from 'img/winter/Barn-3.svg';
 import Barn4 from 'img/winter/Barn-4.svg';
 import Barn5 from 'img/winter/Barn-5.svg';
 import { theme } from 'constants/index';
+import 'components/App/App.css';
 
 export default function Winter(props) {
   const classes = makeStyles({
