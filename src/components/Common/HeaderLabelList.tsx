@@ -17,7 +17,7 @@ export default function HeaderLabelList(props) {
       fontSize: '16px',
       padding: '8px',
       textTransform: 'none',
-      width: '300px',
+      width: props.width,
     },
   }))();
 
@@ -40,4 +40,5 @@ export default function HeaderLabelList(props) {
 
 HeaderLabelList.defaultProps = {
   container: true,
+  width: '250px',
 };

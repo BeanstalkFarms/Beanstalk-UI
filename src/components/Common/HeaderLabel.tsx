@@ -24,15 +24,15 @@ export default function HeaderLabel(props) {
     },
     title: {
       fontFamily: 'Futura-PT-Book',
-      padding: '10px',
+      padding: '5px',
       textAlign: 'left',
-      width: '67%',
+      width: '60%',
     },
     value: {
       fontFamily: 'Lucida Console',
-      padding: '10px',
+      padding: '5px',
       textAlign: 'right',
-      width: '33%',
+      width: '40%',
     },
   }))();
 
@@ -52,7 +52,7 @@ export default function HeaderLabel(props) {
         placement="top"
         title={props.balanceDescription}
       >
-        <span>{props.value}</span>
+        <span style={{ backgroundColor: '#C4C4C44D', padding: '5px', borderRadius: '6px' }}>{props.value}</span>
       </FormatTooltip>
     ) : (
       props.value

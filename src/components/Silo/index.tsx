@@ -62,6 +62,7 @@ export default function Silo() {
           `${lpAPY.toFixed(0) === '0' ? '–' : lpAPY.toFixed(0)}%`,
           `${beanAPY.toFixed(0) === '0' ? '–' : beanAPY.toFixed(0)}%`,
         ]}
+        width="300px"
       />
     </Grid>
   );

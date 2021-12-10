@@ -59,6 +59,7 @@ export default function Trade() {
             `$${beanPrice.toFixed(4)}`,
             lcValue,
           ]}
+          width="300px"
         />
       </Grid>
 
