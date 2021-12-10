@@ -42,6 +42,8 @@ export const BASE_ETHERSCAN_ADDR_LINK = 'https://etherscan.io/address/';
 /* Informational Links */
 export const MEDIUM_INTEREST_LINK =
   'https://medium.com/@BeanstalkFarms/earn-interest-from-beanstalk-just-the-basics-165a8cc5fecd';
+export const FUNDRAISER_LINK =
+  'https://github.com/BeanstalkFarms/Beanstalk/blob/master/bips/bip-4.md';
 export const SLIPPAGE_LINK =
   'https://coinmarketcap.com/alexandria/glossary/slippage';
 export const DIAMONDS_LINK = 'https://eips.ethereum.org/EIPS/eip-2535';
