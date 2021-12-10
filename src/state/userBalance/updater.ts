@@ -218,6 +218,27 @@ export default function Updater() {
     async function processEvents(events, eventParsingParameters) {
       const startTime = benchmarkStart('EVENT PROCESSOR');
 
+      type Listing = {
+        listerAddress: string;
+        // not sure what to call index that does not subtract harvested pods
+        objectiveIndex: number;
+        pricePerPod: number;
+        expiresIn: number;
+        intialAmount: number;
+        amountSold: number;
+      };
+
+      type BuyOffer = {
+        listerAddress: string;
+        maxPlaceInLine: number;
+        initialAmountToBuy: number;
+        pricePerPod: number;
+        amountBought: number;
+      };
+
+      let listings: Listing[] = [];
+      let offers: BuyOffer[] = [];
+      
       let userLPSeedDeposits = {};
       let userLPDeposits = {};
       let lpWithdrawals = {};
