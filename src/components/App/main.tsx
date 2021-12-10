@@ -5,6 +5,7 @@ import Footer from 'components/About/Footer';
 import { FallingLeaves } from 'components/Fall';
 import { theme } from 'constants/index';
 import './index.tsx';
+import './App.css';
 
 export default function Main(props) {
   document.body.style.backgroundColor = theme.bodyBackground;
@@ -66,7 +67,7 @@ export default function Main(props) {
         <Box className="BeanstalkMT" name={theme.name} style={{ top: 'calc(28vh - 2vw)' }} />
         <Box className="BeanstalkSky" name={theme.name} />
         <Snowfall
-          snowflakeCount={120}
+          snowflakeCount={200}
           speed={[0, 0.5]}
           wind={[-0.5, 0.5]}
         />

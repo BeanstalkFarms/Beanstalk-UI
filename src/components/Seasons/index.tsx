@@ -59,10 +59,10 @@ export default function Seasons() {
     ) : null;
 
   const [stTitle, stValue, stDescription, stBalanceDescription] =
-    SeasonTimer(nextSeasonTime);
+    SeasonTimer(time);
 
   const [srTitle, srValue, srDescription, srBalanceDescription] =
-    SeasonReward(nextSeasonTime);
+    SeasonReward(time);
 
   return (
     <ContentSection id="seasons" title="Seasons">
