@@ -11,7 +11,7 @@ import {
   toStringBaseUnitBN,
   transferBeans,
 } from 'util/index';
-import { BaseModule, CryptoAsset, tradeStrings } from 'components/Common';
+import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
 
@@ -142,23 +142,33 @@ export default function TradeModule() {
   ];
 
   return (
-    <BaseModule
-      allowance={
-        section > 0 || orderIndex ? new BigNumber(1) : uniswapBeanAllowance
-      }
-      isDisabled={disabled}
-      resetForm={() => {
-        setOrderIndex(1);
-      }}
-      section={section}
-      sectionTitles={sectionTitles}
-      sectionTitlesDescription={sectionTitlesDescription}
-      setAllowance={updateUniswapBeanAllowance}
-      handleApprove={approveUniswapBean}
-      handleForm={handleForm}
-      handleTabChange={handleTabChange}
-    >
-      {sections[section]}
-    </BaseModule>
+    <Grid container item xs={12} justifyContent="center">
+      <Grid
+        item
+        xs={9}
+        sm={8}
+        style={{ maxWidth: '500px', minHeight: '645px' }}
+      >
+        <BaseModule
+          allowance={
+            section > 0 || orderIndex ? new BigNumber(1) : uniswapBeanAllowance
+          }
+          isDisabled={disabled}
+          resetForm={() => {
+            setOrderIndex(1);
+          }}
+          section={section}
+          sectionTitles={sectionTitles}
+          sectionTitlesDescription={sectionTitlesDescription}
+          setAllowance={updateUniswapBeanAllowance}
+          handleApprove={approveUniswapBean}
+          handleForm={handleForm}
+          handleTabChange={handleTabChange}
+          marginTop="16px"
+        >
+          {sections[section]}
+        </BaseModule>
+      </Grid>
+    </Grid>
   );
 }

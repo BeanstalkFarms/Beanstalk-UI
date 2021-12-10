@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
+  ContentDropdown,
   ContentSection,
   Grid,
-  HeaderLabel,
   siloStrings,
+  HeaderLabelList,
 } from 'components/Common';
 import { getAPYs } from 'util/index';
 import TabbedSilo from './TabbedSilo';
@@ -24,6 +25,7 @@ export default function Silo() {
   const headerLabelStyle = {
     maxWidth: '300px',
     color: theme.text,
+    padding: '0px',
   };
 
   const [beanAPY, lpAPY] = getAPYs(
@@ -32,37 +34,36 @@ export default function Silo() {
     parseFloat(totalSeeds)
   );
   const apyField = (
-    <Grid container item xs={12} spacing={3} justifyContent="center">
-      <Grid item sm={6} xs={12} style={headerLabelStyle}>
-        <HeaderLabel
-          balanceDescription={`${lpAPY.toFixed(2)}%`}
-          description={
-            <span>
-              {siloStrings.lpAPY}{' '}
-              <a target="blank" href={APY_CALCULATION}>
-                click here
-              </a>
-            </span>
-          }
-          title="LP APY"
-          value={`${lpAPY.toFixed(0) === '0' ? '–' : lpAPY.toFixed(0)}%`}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} style={headerLabelStyle}>
-        <HeaderLabel
-          balanceDescription={`${beanAPY.toFixed(2)}%`}
-          description={
-            <span>
-              {siloStrings.beanAPY}{' '}
-              <a target="blank" href={APY_CALCULATION}>
-                click here
-              </a>
-            </span>
-          }
-          title="Bean APY"
-          value={`${beanAPY.toFixed(0) === '0' ? '–' : beanAPY.toFixed(0)}%`}
-        />
-      </Grid>
+    <Grid container item xs={12} justifyContent="center" style={headerLabelStyle}>
+      <HeaderLabelList
+        balanceDescription={[
+          `${lpAPY.toFixed(2)}%`,
+          `${beanAPY.toFixed(2)}%`,
+        ]}
+        description={[
+          <span>
+            {siloStrings.lpAPY}{' '}
+            <a target="blank" href={APY_CALCULATION}>
+              click here
+            </a>
+          </span>,
+          <span>
+            {siloStrings.beanAPY}{' '}
+            <a target="blank" href={APY_CALCULATION}>
+              click here
+            </a>
+          </span>,
+        ]}
+        title={[
+          'LP APY',
+          'Bean APY',
+        ]}
+        value={[
+          `${lpAPY.toFixed(0) === '0' ? '–' : lpAPY.toFixed(0)}%`,
+          `${beanAPY.toFixed(0) === '0' ? '–' : beanAPY.toFixed(0)}%`,
+        ]}
+        width="300px"
+      />
     </Grid>
   );
 
@@ -74,15 +75,22 @@ export default function Silo() {
   ];
 
   return (
-    <ContentSection
-      id="silo"
-      title="Silo"
-      descriptionLinks={descriptionLinks}
-      description={siloStrings.siloDescription}
-    >
-      {apyField}
-      <TabbedSilo />
-    </ContentSection>
+    <>
+      <ContentSection
+        id="silo"
+        title="Silo"
+      >
+        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+          <ContentDropdown
+            description={siloStrings.siloDescription}
+            descriptionTitle="What is the Silo?"
+            descriptionLinks={descriptionLinks}
+          />
+        </Grid>
+        {apyField}
+        <TabbedSilo />
+      </ContentSection>
+    </>
   );
 }
 

@@ -21,6 +21,7 @@ import {
   DataBalanceModule,
   Grid,
   Line,
+  pegStrings,
   QuestionModule,
 } from 'components/Common';
 
@@ -48,7 +49,7 @@ const pegMaintenanceStyle = {
   backgroundColor: theme.module.background,
   padding: '10px',
   fontFamily: 'Futura-Pt-Book',
-  marginTop: '15px',
+  marginTop: '24px',
 };
 const pegMaintenanceSpanStyle = {
   width: '100%',
@@ -207,8 +208,7 @@ export default function PegMaintenance() {
     one: {
       title: 'New Beans',
       balance: displayBN(newBeans),
-      description:
-        'This is the number of new Beans expected to be minted at the beginning of next Season based on the current TWAP.',
+      description: pegStrings.newBeans,
       balanceDescription:
         newBeans > 0 ? `${displayFullBN(newBeans)} Beans` : undefined,
       placement: 'bottom',
@@ -216,8 +216,7 @@ export default function PegMaintenance() {
     two: {
       title: 'New Soil',
       balance: displayBN(newSoil, true),
-      description:
-        'This is the number of new Soil expected to be minted at the beginning of next Season based on the current TWAP.',
+      description: pegStrings.newSoil,
       balanceDescription:
         newSoil !== 0 ? `${displayFullBN(newSoil)} Soil` : undefined,
       placement: 'bottom',
@@ -225,8 +224,7 @@ export default function PegMaintenance() {
     three: {
       title: 'Weather Forecast',
       balance: `${weather.plus(deltaWeather)}%`,
-      description:
-        'The Weather Forecast predicts the expected Weather next Season based on the current TWAP, Pod Rate, and Delta Demand.',
+      description: pegStrings.weather,
       balanceDescription:
         deltaWeather !== 0
           ? `${weather.plus(deltaWeather).toString()}% Weather`
@@ -236,8 +234,7 @@ export default function PegMaintenance() {
     four: {
       title: 'Rain Forecast',
       balance: rainForecast,
-      description:
-        'The Rain Forecast predicts whether it is expected to Rain next Season or not. It is expected to Rain if TWAP > 1 and Pod Rate < 5%.',
+      description: pegStrings.rainForecast,
     },
   };
 
@@ -246,16 +243,14 @@ export default function PegMaintenance() {
     one: {
       title: 'Price',
       balance: `$${price.toFixed(4)}`,
-      description:
-        'This is the time weighted average Bean price during the course of the current Season.',
+      description: pegStrings.price,
       balanceDescription: `$${displayFullBN(price)} Price`,
       placement: 'bottom',
     },
     two: {
       title: 'Pod Rate',
       balance: `${displayBN(podRate)}%`,
-      description:
-        'This is the total Unharvestable Pods as a percent of total Bean supply. The Pod Rate is the Beanstalk debt level relative to the current Bean supply.',
+      description: pegStrings.podRate,
       balanceDescription: podRate.isGreaterThan(0)
         ? `${displayFullBN(podRate)}% Pod Rate`
         : undefined,
@@ -271,8 +266,7 @@ export default function PegMaintenance() {
         ) : (
           `${deltaDemand.multipliedBy(100).toFixed(2)}%`
         ),
-      description:
-        'Delta Demand is the rate of change in demand for Pods over the past two Seasons. Delta Demand is computed as Beans sown this Season / Beans sown last Season.',
+      description: pegStrings.deltaDemand,
       balanceDescription:
         lastDSoil.isEqualTo(0) || deltaSoil.isGreaterThan(0)
           ? undefined
@@ -284,8 +278,7 @@ export default function PegMaintenance() {
     currentSeasonStats.four = {
       title: 'Seasons of Rain',
       balance: displayBN(rainingSeasons.plus(1)),
-      description:
-        'This is the number of consecutive Seasons it has been Raining for.',
+      description: pegStrings.rain,
     };
   }
 
@@ -304,7 +297,7 @@ export default function PegMaintenance() {
           <span style={pegMaintenanceSpanStyle}>
             Peg Maintenance
             <QuestionModule
-              description="Below are the primary datapoints of the state of Beanstalk."
+              description={pegStrings.pegTableDescription}
               margin="-6px 0 0 2px"
             />
           </span>

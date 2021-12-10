@@ -36,6 +36,7 @@ const useStyles = makeStyles({
   table: {
     margin: '9px',
     width: 'auto',
+    backgroundColor: theme.module.background,
   },
   pagination: {
     alignItems: 'center',

@@ -27,6 +27,7 @@ const useStyles = makeStyles({
   table: {
     margin: '9px',
     width: 'auto',
+    backgroundColor: theme.module.background,
   },
   pagination: {
     alignItems: 'center',
@@ -63,7 +64,7 @@ function summaryFunds(open, fund) {
             style={{ border: 'none' }}
             title={`FUND-${fundID}`}
             width="100%"
-            height="340px"
+            height="230px"
           />
         );
       }

@@ -1,9 +1,8 @@
-import React from 'react';
 import BigNumber from 'bignumber.js';
-import { HeaderLabelWithTimer, seasonStrings } from 'components/Common';
+import { seasonStrings } from 'components/Common';
 import { displayFullBN } from 'util/index';
 
-export default function SeasonReward(props) {
+export default function SeasonReward(t) {
   const display = (time) => {
     const title = 'Season Reward';
     const description = seasonStrings.reward;
@@ -15,6 +14,7 @@ export default function SeasonReward(props) {
       `${displayFullBN(new BigNumber(beans))} Beans`,
     ];
   };
+  if (t > 0) return [null];
 
-  return <HeaderLabelWithTimer display={display} time={props.time} />;
+  return display(t);
 }

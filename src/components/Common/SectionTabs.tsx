@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { theme as colors } from 'constants/index';
 import { Tab, Tabs } from '@material-ui/core';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 
 export default function SectionTabs({
     setSection,
@@ -22,6 +23,18 @@ export default function SectionTabs({
     };
   }, []);
 
+  const theme = createTheme({
+    overrides: {
+      MuiTab: {
+        root: {
+          '&$selected': {
+            color: colors.accentText,
+          },
+        },
+      },
+    },
+  });
+
   const tabsStyle = {
     margin: 'auto',
     height: tabHeight,
@@ -42,6 +55,7 @@ export default function SectionTabs({
       margin: '5px 0px',
       height: '38px',
       boxShadow: '0px 1.5px 2px rgba(0, 0, 0, 0.4)',
+      color: 'white',
     },
   };
 
@@ -49,28 +63,31 @@ export default function SectionTabs({
       minWidth: 0,
       zIndex: 100,
       borderRadius: '10px',
-      margin: '5px 0 10px 0',
+      margin: '5px 0 5px 0',
       minHeight: '38px',
       padding: '0 6px',
       fontSize: width < 425 ? '12px' : (width < 600 ? '14px' : '18px'),
+      fontFamily: 'Futura-PT-Book',
   };
 
   const handleChange = (event, newValue) => {
     setSection(newValue);
   };
 
-  const tabs = sectionTitles.map((s) => (<Tab style={tabStyle} label={s} />));
+  const tabs = sectionTitles.map((s, i) => (<Tab key={i} style={tabStyle} label={s} />));
 
   return (
-    <Tabs
-      TabIndicatorProps={tabProps}
-      style={tabsStyle}
-      value={section}
-      variant="fullWidth"
-      onChange={handleChange}
-      centered
-    >
-      {tabs}
-    </Tabs>
+    <MuiThemeProvider theme={theme}>
+      <Tabs
+        TabIndicatorProps={tabProps}
+        style={tabsStyle}
+        value={section}
+        variant="fullWidth"
+        onChange={handleChange}
+        centered
+      >
+        {tabs}
+      </Tabs>
+    </MuiThemeProvider>
   );
 }
