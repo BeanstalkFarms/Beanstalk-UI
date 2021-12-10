@@ -40,14 +40,14 @@ export default function Field() {
   }, []);
 
   const headerLabelStyle = {
-    maxWidth: '300px',
+    maxWidth: '250px',
   };
   const containerStyle = {
     backgroundColor: theme.secondary,
     borderRadius: '15px',
     boxShadow:
       '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-    width: width > 606 ? '600px' : '300px',
+    width: width > 606 ? '500px' : '250px',
     padding: '0px',
   };
 
@@ -133,7 +133,7 @@ export default function Field() {
       title={[
         'Pod Line',
         'Pods Harvested',
-        'Seasons to Pod Clearance',
+        'Pod Clearance',
       ]}
       value={[
         displayBN(totalBalance.totalPods),

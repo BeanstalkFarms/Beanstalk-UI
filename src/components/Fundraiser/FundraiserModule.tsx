@@ -105,6 +105,7 @@ export default function FundraiserModule({
               displayBN(remaining),
               `${(fundPercent).toFixed(2)}%`,
             ]}
+            width="300px"
           />
         </Grid>
         <Grid

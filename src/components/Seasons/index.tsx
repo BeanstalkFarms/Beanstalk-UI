@@ -99,6 +99,7 @@ export default function Seasons() {
               stValue,
               srValue,
             ]}
+            width="300px"
           />
         </Grid>
       </Grid>
