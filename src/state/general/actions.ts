@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
+import { Listing } from 'state/userBalance/updater';
 
 export const setInitialized = createAction<Boolean>(
   'general/setInitialized'
@@ -18,6 +19,10 @@ export const setBips = createAction<Array>(
 
 export const setContractEvents = createAction<Array>(
   'general/setContractEvents'
+);
+
+export const setMarketplaceListings = createAction<Listing[]>(
+  'general/setMarketplaceListings'
 );
 
 export const setHasActiveBIP = createAction<Boolean>(

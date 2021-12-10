@@ -20,6 +20,7 @@ import {
   setBips,
   setHasActiveBIP,
   setContractEvents,
+  // setMarketplaceListings,
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery } from 'graph/index';
 import { AppState } from 'state';
@@ -42,6 +43,25 @@ import {
   account,
 } from 'util/index';
 
+export type Listing = {
+  listerAddress: string;
+  // not sure what to call index that does not subtract harvested pods
+  objectiveIndex: number;
+  pricePerPod: number;
+  expiresIn: number;
+  intialAmount: number;
+  amountSold: number;
+  status: string;
+};
+
+export type BuyOffer = {
+  listerAddress: string;
+  maxPlaceInLine: number;
+  initialAmountToBuy: number;
+  pricePerPod: number;
+  amountBought: number;
+  status: string;
+};
 export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
@@ -218,27 +238,9 @@ export default function Updater() {
     async function processEvents(events, eventParsingParameters) {
       const startTime = benchmarkStart('EVENT PROCESSOR');
 
-      type Listing = {
-        listerAddress: string;
-        // not sure what to call index that does not subtract harvested pods
-        objectiveIndex: number;
-        pricePerPod: number;
-        expiresIn: number;
-        intialAmount: number;
-        amountSold: number;
-      };
+      const listings: Listing[] = [];
+      const buyOffers: BuyOffer[] = [];
 
-      type BuyOffer = {
-        listerAddress: string;
-        maxPlaceInLine: number;
-        initialAmountToBuy: number;
-        pricePerPod: number;
-        amountBought: number;
-      };
-
-      let listings: Listing[] = [];
-      let offers: BuyOffer[] = [];
-      
       let userLPSeedDeposits = {};
       let userLPDeposits = {};
       let lpWithdrawals = {};
@@ -247,6 +249,20 @@ export default function Updater() {
       let beanWithdrawals = {};
       const votedBips = new Set();
 
+      /** New events from Plot Marketplace:
+       * ListingCreated
+       * ListingCancelled
+       * BuyOfferCreated
+       * BuyOfferCancelled
+       * BuyOfferAccepted
+      */
+
+     // TODO: PlotTransfer will now need to update listing data too
+     // will need to split up listings into two listings if listing not fully purchased
+     // set state accordingly and adjust index
+
+     // TODO: all event handling logic needs to exist not filtered on address for individual listings and buy offers
+     // but full marketplace since, should not be filtering based on address for these events but grabbing them all
       events.forEach((event) => {
         if (event.event === 'BeanDeposit') {
           const s = parseInt(event.returnValues.season, 10);
@@ -424,6 +440,9 @@ export default function Updater() {
       });
       dispatch(setContractEvents(events));
 
+      // TODO: marketplaceListings = grab all chain listing event data for current active listings
+      // dispatch(setMarketplaceListings(marketplaceListings));
+
       const [s, hi, fb, gs, ce, br, er] =
         eventParsingParameters !== undefined
           ? eventParsingParameters
@@ -501,6 +520,8 @@ export default function Updater() {
           rawBeanDeposits: rawBeanDeposits,
           farmableBeanBalance: fb,
           grownStalkBalance: gs,
+          listings: listings,
+          buyOffers: buyOffers,
         })
       );
 
@@ -522,6 +543,7 @@ export default function Updater() {
           accountBalancePromises,
           totalBalancePromises,
           pricePromises,
+          // getListings()
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
 
