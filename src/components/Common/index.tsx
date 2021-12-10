@@ -215,6 +215,7 @@ export const pegStrings = {
   deltaDemand: 'Delta Demand is the rate of change in demand for Pods over the past two Seasons. Delta Demand is computed as Beans sown this Season / Beans sown last Season.',
   rain: 'This is the number of consecutive Seasons it has been Raining for.',
   pegDescription: 'Beanstalk incentivizes peg maintenance by providing financial incentivies to individuals. When the TWAP < 1, Beanstalk can raise the Weather and Soil in order to incentivize individuals to Sow. When TWAP > 1, Beanstalk will mint Beans and distribute to the Field and the Silo. These are a few of the peg maintenance tools available to Beanstalk.',
+  pegTableDescription: 'Below are the primary datapoints of the state of Beanstalk.',
 };
 export const governanceStrings = {
   bips: 'Below is a complete list of all BIPs.',

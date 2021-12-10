@@ -138,8 +138,9 @@ export default function WalletModule(props) {
     right: '-120px',
     top: '1px',
     width: '365px',
-    maxHeight: '395px',
-    overflow: 'scroll',
+    maxHeight: '50vw',
+    overflowX: 'hidden',
+    overFlowY: 'auto',
     backgroundColor: theme.module.foreground,
   });
 

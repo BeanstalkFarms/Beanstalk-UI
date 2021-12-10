@@ -84,7 +84,7 @@ export default function NavigationBar(props) {
       backgroundRepeat: 'repeat-x, repeat-x',
       backgroundSize: width > 1000 ? 'contain, contain' : 'cover',
       boxShadow: 'none',
-      height: '100px',
+      height: '90px',
       position: 'fixed',
       width: '100%',
     },

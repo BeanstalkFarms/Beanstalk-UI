@@ -18,7 +18,7 @@ export default function Main(props) {
     boxShadow: 'none',
     zIndex: 2,
     backgroundSize: 'contain, contain',
-    height: '100px',
+    height: '90px',
     width: '100%',
     position: 'fixed',
     marginBottom: '-85px',

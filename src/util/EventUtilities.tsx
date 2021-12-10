@@ -161,6 +161,8 @@ export async function initializeEventListener(
     } else if (event.event === 'Sunrise') {
       callback(allEvents);
       txCallback();
+      console.log('-------UPDATING TOTALS!');
+      updateTotals();
       lastTotalsRefresh = new Date().getTime();
       lastPriceRefresh = new Date().getTime();
     } else if (new Date().getTime() - lastTotalsRefresh > 5000) {

@@ -16,7 +16,7 @@ import {
   SOIL_MIN_RATIO_CAP,
   theme,
 } from 'constants/index';
-import { displayBN, displayFullBN, MaxBN, TrimBN } from 'util/index';
+import { displayBN, displayFullBN, TrimBN } from 'util/index';
 import {
   DataBalanceModule,
   Grid,
@@ -172,26 +172,25 @@ export default function PegMaintenance() {
     .sqrt();
 
   let newBeans = new BigNumber(0);
-  let newSoil = new BigNumber(0);
+  let newSoil = currentBeans.minus(targetBeans);
+
+  if (newSoil.isLessThan(0)) newSoil = newSoil.dividedBy(2);
+
   if (currentBeans.isLessThan(targetBeans)) {
     newBeans = targetBeans.minus(currentBeans);
-  } else if (targetBeans.isLessThan(currentBeans)) {
-    newSoil = currentBeans.minus(targetBeans);
   }
 
-  const minTotalSoil = totalBeans.multipliedBy(SOIL_MIN_RATIO_CAP);
-  if (soil.isLessThan(minTotalSoil)) {
-    newSoil = MaxBN(minTotalSoil.minus(soil), newSoil);
+  const minTotalSoil = newBeans.dividedBy(weather.dividedBy(50).plus(2));
+  totalBeans.multipliedBy(SOIL_MIN_RATIO_CAP);
+
+  if (soil.plus(newSoil).isLessThan(minTotalSoil)) {
+    newSoil = minTotalSoil.minus(soil);
   }
+
   const maxTotalSoil = totalBeans.multipliedBy(SOIL_MAX_RATIO_CAP);
 
-  if (
-    soil.isGreaterThan(maxTotalSoil) &&
-    soil.plus(newSoil).isGreaterThan(maxTotalSoil)
-  ) {
+  if (soil.plus(newSoil).isGreaterThan(maxTotalSoil)) {
     newSoil = soil.minus(maxTotalSoil);
-  } else if (soil.plus(newSoil).isGreaterThan(maxTotalSoil)) {
-    newSoil = maxTotalSoil.minus(soil);
   }
 
   const rainingSeasons = season.minus(rainStart);
@@ -216,10 +215,10 @@ export default function PegMaintenance() {
     },
     two: {
       title: 'New Soil',
-      balance: displayBN(newSoil),
+      balance: displayBN(newSoil, true),
       description: pegStrings.newSoil,
       balanceDescription:
-        newSoil > 0 ? `${displayFullBN(newSoil)} Soil` : undefined,
+        newSoil !== 0 ? `${displayFullBN(newSoil)} Soil` : undefined,
       placement: 'bottom',
     },
     three: {
@@ -298,7 +297,7 @@ export default function PegMaintenance() {
           <span style={pegMaintenanceSpanStyle}>
             Peg Maintenance
             <QuestionModule
-              description="Below are the primary datapoints of the state of Beanstalk."
+              description={pegStrings.pegTableDescription}
               margin="-6px 0 0 2px"
             />
           </span>
