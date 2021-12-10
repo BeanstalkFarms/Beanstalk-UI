@@ -10,8 +10,14 @@ import {
   TokenLabel,
   CryptoAsset,
 } from '../../util';
-// import { MEDIUM_INTEREST_LINK, theme } from '../../constants';
-import { BaseModule, ContentSection, ContentTitle, Grid, HeaderLabel } from '../Common';
+import {
+  BaseModule,
+  ContentDropdown,
+  ContentSection,
+  ContentTitle,
+  Grid,
+  HeaderLabelList,
+} from '../Common';
 import { FundModule } from './FundModule';
 
 export default function FundraiserModule({
@@ -38,11 +44,12 @@ export default function FundraiserModule({
   const { innerWidth: width } = window;
   const headerLabelStyle = {
     maxWidth: '300px',
+    padding: '0px',
   };
 
   const sectionTitles = ['Fund'];
   const sectionTitlesDescription = [
-  `Use this tab to Fund the audit by sowing ${TokenLabel(CryptoAsset.Usdc)} in the Field in exchange for Pods.`,
+    `Use this tab to Fund the audit by sowing ${TokenLabel(CryptoAsset.Usdc)} in the Field in exchange for Pods.`,
   ];
 
   const handleTabChange = (event, newSection) => {
@@ -73,24 +80,33 @@ export default function FundraiserModule({
   return (
     <>
       <ContentTitle title={title} />
-      <ContentSection id={title} description={description} style={{ paddingTop: '0px', width: '100%' }}>
-        <Grid container item xs={12} spacing={3} justifyContent="center">
-          <Grid item xs={12} sm={6} style={headerLabelStyle}>
-            <HeaderLabel
-              balanceDescription={`${displayFullBN(remaining)} ${TokenLabel(CryptoAsset.Usdc)}`}
-              description={`The amount of remaining ${TokenLabel(CryptoAsset.Usdc)} needed to fund the audit`}
-              title="Remaining USDC"
-              value={displayBN(remaining)}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} style={headerLabelStyle}>
-            <HeaderLabel
-              balanceDescription={`${displayFullBN(fundPercent)}%`}
-              description="The percent of the Fundraiser that has been funded."
-              title="Funded"
-              value={`${(fundPercent).toFixed(2)}%`}
-            />
-          </Grid>
+      <ContentSection id={title} style={{ paddingTop: '10px', width: '100%' }}>
+        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+          <ContentDropdown
+            description={description}
+            descriptionTitle="What is this Fundraiser?"
+          />
+        </Grid>
+        <Grid container item xs={12} justifyContent="center" style={headerLabelStyle}>
+          <HeaderLabelList
+            balanceDescription={[
+              `${displayFullBN(remaining)} ${TokenLabel(CryptoAsset.Usdc)}`,
+              `${displayFullBN(fundPercent)}%`,
+            ]}
+            description={[
+              `The amount of remaining ${TokenLabel(CryptoAsset.Usdc)} needed to fund the audit`,
+              'The percent of the Fundraiser that has been funded.',
+            ]}
+            title={[
+              'Remaining USDC',
+              'Funded',
+            ]}
+            value={[
+              displayBN(remaining),
+              `${(fundPercent).toFixed(2)}%`,
+            ]}
+            width="300px"
+          />
         </Grid>
         <Grid
           container
@@ -114,7 +130,7 @@ export default function FundraiserModule({
               handleForm={handleForm}
               handleTabChange={handleTabChange}
               isDisabled={isFormDisabled || remaining.isEqualTo(0)}
-              marginTop="14px"
+              marginTop="16px"
               section={section}
               sectionTitles={sectionTitles}
               sectionTitlesDescription={sectionTitlesDescription}

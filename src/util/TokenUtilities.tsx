@@ -246,6 +246,9 @@ export function displayBN(bn: BigNumber, allowNegative: Boolean = false) {
   if (bn.isGreaterThanOrEqualTo(1e9)) {
     return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
   }
+  if (bn.isGreaterThanOrEqualTo(1e8)) {
+    return `${TrimBN(bn.dividedBy(1e6), 1)}M`; /* Millions */
+  }
   if (bn.isGreaterThanOrEqualTo(1e6)) {
     return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */
   }
