@@ -7,7 +7,6 @@ export default function SeasonReward(t) {
     const title = 'Season Reward';
     const description = seasonStrings.reward;
     const beans = 100 * 1.01 ** Math.min(-time, 300);
-    console.log(`beans ${beans}`);
     return [
       title,
       beans.toFixed(),
