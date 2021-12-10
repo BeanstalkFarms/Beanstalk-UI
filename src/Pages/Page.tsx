@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
-import { SectionTabs, ContentTitle } from 'components/Common';
+import { ContentTitle, SectionTabs } from 'components/Common';
+import About from 'components/About';
 
 export default function Page({
     sections,
@@ -15,12 +16,24 @@ export default function Page({
   };
 
   const titleSection = sections.length > 1 ?
-    (<SectionTabs setSection={setSection} section={section} sectionTitles={sectionTitles} />) :
-    (<ContentTitle title={sectionTitles[0]} />);
+    (
+      <SectionTabs
+        setSection={setSection}
+        section={section}
+        sectionTitles={sectionTitles}
+      />
+    ) : (<ContentTitle title={sectionTitles[0]} />);
+
   return (
-    <Box style={pageStyle}>
-      {titleSection}
-      {sections[section]}
-    </Box>
+    <>
+      <Box style={pageStyle}>
+        {titleSection}
+        {sections[section]}
+      </Box>
+      {window.location.pathname !== '/about' ?
+        <About />
+        : null
+      }
+    </>
   );
 }

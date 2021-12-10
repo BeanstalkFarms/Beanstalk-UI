@@ -20,6 +20,7 @@ export default function ContentSection({
   const classes = makeStyles({
     appSection: {
       padding: padding,
+      margin: '0px',
     },
     sectionTitle: {
       marginTop: marginTop,
@@ -65,14 +66,14 @@ export default function ContentSection({
           innerWidth > 500
             ? {
                 maxWidth: '550px',
-                margin: '0 0 10px 0',
+                margin: '10px 0 10px 0',
                 padding: '12px',
                 color: theme.backgroundText,
                 textAlign: textAlign,
               }
             : {
                 width: innerWidth - 64,
-                margin: '0 0 10px 0',
+                margin: '10px 0 10px 0',
                 padding: '12px',
                 color: theme.backgroundText,
                 textAlign: textAlign,
@@ -129,7 +130,7 @@ export default function ContentSection({
 
 ContentSection.defaultProps = {
   descriptionLinks: [],
-  padding: '10px 15px',
+  padding: '0px 0px',
   width: '100%',
   minHeight: '0px',
   textAlign: 'center',

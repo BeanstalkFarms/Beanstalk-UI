@@ -7,7 +7,7 @@ import {
   GetWalletAddress,
   getMintedNFTs,
 } from 'util/index';
-import { beanftStrings, ContentSection } from 'components/Common';
+import { beanftStrings, ContentSection, ContentDropdown, Grid } from 'components/Common';
 import ClaimNFT from './claimnft';
 
 export default function NFTs() {
@@ -69,9 +69,14 @@ export default function NFTs() {
       title="BeaNFTs"
       textTransform="none"
       style={{ minHeight: '100px' }}
-      description={beanftStrings.beanftDescription}
-      descriptionLinks={descriptionLinks}
     >
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={beanftStrings.beanftDescription}
+          descriptionTitle="What are BeaNFTs?"
+          descriptionLinks={descriptionLinks}
+        />
+      </Grid>
       <ClaimNFT
         buttonDescription={beanftStrings.mintAll}
         claimTitle="MINT ALL"

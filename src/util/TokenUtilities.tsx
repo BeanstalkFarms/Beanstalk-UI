@@ -225,9 +225,10 @@ export function displayFullBN(bn: BigNumber, maxDecimals: number = 18) {
     .toLocaleString('en-US', { maximumFractionDigits: maxDecimals });
 }
 
-export function displayBN(bn: BigNumber) {
-  if (bn === undefined || bn.isLessThan(new BigNumber(0))) {
-    return '0';
+export function displayBN(bn: BigNumber, allowNegative: Boolean = false) {
+  if (bn === undefined) return '0';
+  if (bn.isLessThan(new BigNumber(0))) {
+    return allowNegative ? `-${displayBN(bn.multipliedBy(-1))}` : '0';
   }
   if (bn.isEqualTo(0)) {
     return '0';
@@ -244,6 +245,9 @@ export function displayBN(bn: BigNumber) {
   }
   if (bn.isGreaterThanOrEqualTo(1e9)) {
     return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
+  }
+  if (bn.isGreaterThanOrEqualTo(1e8)) {
+    return `${TrimBN(bn.dividedBy(1e6), 1)}M`; /* Millions */
   }
   if (bn.isGreaterThanOrEqualTo(1e6)) {
     return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */

@@ -1,9 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link, Box } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { AppState } from 'state';
-import { ContentSection, ContentTitle, governanceStrings, Grid } from 'components/Common';
-import { theme, WHITEPAPER } from 'constants/index';
+import {
+  ContentDropdown,
+  ContentSection,
+  ContentTitle,
+  governanceStrings,
+  Grid,
+} from 'components/Common';
+import { WHITEPAPER } from 'constants/index';
 import Fundraiser from '../Fundraiser';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
@@ -72,15 +78,12 @@ export default function Governance() {
       <Box style={activeBipStyle}>No Active BIPs</Box>
     );
 
-  const description = (
-    <>
-      {governanceStrings.governanceDescription}{' '}
-      <Link href={`${WHITEPAPER}#governance`} target="blank" style={{ color: theme.backgroundText }}>
-        Read More
-      </Link>
-      .
-    </>
-  );
+  const descriptionLinks = [
+    {
+      href: `${WHITEPAPER}#governance`,
+      text: 'Read More',
+    },
+  ];
 
   const fundraiserTable = !hasActiveFundraiser ?
     <>
@@ -93,9 +96,14 @@ export default function Governance() {
     <ContentSection
       id="governance"
       title="Governance"
-      size="20px"
-      description={description}
     >
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={governanceStrings.governanceDescription}
+          descriptionTitle="How do I participate in Governance?"
+          descriptionLinks={descriptionLinks}
+        />
+      </Grid>
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid
           container

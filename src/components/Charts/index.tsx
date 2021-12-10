@@ -24,8 +24,8 @@ export default function Charts(props) {
 
   const isMobile: boolean = width <= 758;
   const baseStyle = isMobile
-    ? { width: '100vw', paddingLeft: 0, paddingRight: 0 }
-    : null;
+    ? { width: '95%', paddingLeft: 0, paddingRight: 0 }
+    : { width: '95%' };
 
   useEffect(() => {
     loadBeanstalkData();

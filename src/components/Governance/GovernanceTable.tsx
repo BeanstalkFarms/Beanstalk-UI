@@ -36,6 +36,7 @@ const useStyles = makeStyles({
   table: {
     margin: '9px',
     width: 'auto',
+    backgroundColor: theme.module.background,
   },
   pagination: {
     alignItems: 'center',
@@ -270,7 +271,11 @@ const BipTable = (props) => {
               page={page}
               rowsPerPage={rowsPerPage}
               rowsPerPageOptions={[]}
-              ActionsComponent={TablePageSelect}
+              ActionsComponent={
+                Object.keys(tableBips).length > (rowsPerPage * 2)
+                  ? TablePageSelect
+                  : undefined
+              }
             />
           </div>
         ) : null}

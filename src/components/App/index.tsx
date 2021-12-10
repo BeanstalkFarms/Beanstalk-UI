@@ -7,8 +7,16 @@ import { ThemeProvider } from '@material-ui/styles';
 import Updater from 'state/userBalance/updater';
 import { AppState } from 'state';
 import { NavigationBar } from 'components/Navigation';
-import { Farm, Analytics, DAO, BeaNFT, AboutPage, FundraiserPage } from 'Pages';
-import MetamasklessModule from './MetamasklessModule';
+import {
+  Farm,
+  Analytics,
+  DAO,
+  BeaNFT,
+  AboutPage,
+  FundraiserPage,
+  MetamasklessPage,
+} from 'Pages';
+
 import Main from './main.tsx';
 import theme from './theme';
 import LoadingBean from './LoadingBean.tsx';
@@ -24,7 +32,12 @@ export default function App() {
 
   let app;
   if (metamaskFailure > -1) {
-    app = <MetamasklessModule />;
+    app = (
+      <>
+        <NavigationBar events={contractEvents} />
+        <MetamasklessPage />
+      </>
+    );
   } else if (!initialized) {
     app = <LoadingBean />;
   } else {
