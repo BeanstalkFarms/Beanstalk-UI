@@ -214,7 +214,7 @@ export const pegStrings = {
   podRate: 'This is the total Unharvestable Pods as a percent of total Bean supply. The Pod Rate is the Beanstalk debt level relative to the current Bean supply.',
   deltaDemand: 'Delta Demand is the rate of change in demand for Pods over the past two Seasons. Delta Demand is computed as Beans sown this Season / Beans sown last Season.',
   rain: 'This is the number of consecutive Seasons it has been Raining for.',
-  pegDescription: 'Beanstalk incentivizes peg maintenance by providing financial incentivies to individuals. When the TWAP < 1, Beanstalk can raise the Weather and Soil in order to incentivize individuals to Sow. When TWAP > 1, Beanstalk will mint Beans and distribute to the Field and the Silo. These are a few of the peg maintenance tools available to Beanstalk.',
+  pegDescription: 'Every Season, Beanstalk adjusts the Bean supply, Soil supply and Weather based on the Price, Pod Rate, and Demand for Soil. If the Price is above $1 and the Pod Rate is less than 5%, it starts to Rain.',
   pegTableDescription: 'Below are the primary datapoints of the state of Beanstalk.',
 };
 export const governanceStrings = {
@@ -222,10 +222,10 @@ export const governanceStrings = {
   activeBips:
     'Active Beanstalk Improvement Proposals currently being voted on.',
   governanceDescription:
-    'Beanstalk is upgraded in a decentralized fashion through Beanstalk Improvement Proposals (BIPs). Anyone with more than .1% of the total outstanding Stalk can propose a BIP. Any Stalk holder can vote for a BIP. BIPs can be committed in as little as 24 Seasons with a 2/3 supermajority, or after 168 Seasons with a 1/2 majority.',
+    'Beanstalk is upgraded in a decentralized fashion through Beanstalk Improvement Proposals (BIPs). Any Stalk holder can vote for a BIP. Anyone with more than .1% of the total outstanding Stalk can propose a BIP. BIPs can be committed in as little as 24 Seasons with a 2/3 supermajority, or after 168 Seasons with a 1/2 majority.',
 };
 export const beanftStrings = {
-  beanftDescription: 'BeaNFT Genesis Collection is a series of up to 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
+  beanftDescription: 'BeaNFT Genesis Collection is a series of 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
   mintAll: 'Use this button to Mint all your Mintable BeaNFTs.',
   minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
   singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',

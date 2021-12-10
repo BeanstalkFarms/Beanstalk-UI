@@ -84,7 +84,7 @@ export default function FundraiserModule({
         <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
           <ContentDropdown
             description={description}
-            descriptionTitle="What is this Fund?"
+            descriptionTitle="What is this Fundraiser?"
           />
         </Grid>
         <Grid container item xs={12} justifyContent="center" style={headerLabelStyle}>
