@@ -10,6 +10,8 @@ import './App.css';
 export default function Main(props) {
   document.body.style.backgroundColor = theme.bodyBackground;
 
+  const width = window.innerWidth;
+
   const navCloudStyle = {
     backgroundColor: 'transparent',
     backgroundImage: `url(${theme.cloud}), url(${theme.cloud})`,
@@ -60,10 +62,14 @@ export default function Main(props) {
     return <Box className="BeanstalkBG" name={theme.name} />;
   }
 
+  const mobileDisplay = width > 500
+    ? (switchBeanstalk(count))
+    : <Box className="BeanstalkBG" name={theme.name} />;
+
   return (
     <>
       <Box className="App">
-        {switchBeanstalk(count)}
+        {mobileDisplay}
         <Box className="BeanstalkMT" name={theme.name} style={{ top: 'calc(28vh - 2vw)' }} />
         <Box className="BeanstalkSky" name={theme.name} />
         <Snowfall

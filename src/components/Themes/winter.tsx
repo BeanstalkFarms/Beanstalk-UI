@@ -84,11 +84,14 @@ export default function Winter(props) {
       <img alt="Barn Icon" src={imgUrl[t - 1]} style={barnStyle} />
     );
   }
+  const mobileDisplay = width > 500
+    ? (SwitchBarn(count))
+    : <img alt="Barn Icon" src={Barn1} style={barnStyle} />;
 
   return (
     <>
       <Grid container className={classes.topGround} justifyContent="center" />
-      {SwitchBarn(count)}
+      {mobileDisplay}
       <img alt="Snowman Icon" src={SnowmanIcon} style={miscStyle} />
       {props.children}
     </>

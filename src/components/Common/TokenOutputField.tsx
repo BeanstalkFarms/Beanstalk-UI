@@ -31,7 +31,9 @@ export default function TokenOutputField(props) {
     width: '20px',
   };
 
-  const tokenLabel = TokenLabel(props.token);
+  const tokenLabel = props.title !== undefined
+    ? props.title
+    : TokenLabel(props.token);
   const endAdornment = (
     <InputAdornment position="end">
       <TokenTypeImageModule style={tokenStyle} token={props.token} />
