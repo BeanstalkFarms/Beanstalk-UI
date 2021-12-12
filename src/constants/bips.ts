@@ -6,4 +6,5 @@ export const bipsList = [
   { path: '/Bips/bip-4.html', title: 'Trail of Bits Audit and FundraiserFacet' },
   { path: '/Bips/bip-5.html', title: 'Omniscia Audit' },
   { path: '/Bips/bip-6.html', title: 'Soil Efficiency' },
+  { path: '/Bips/bip-7.html', title: 'Expanded Convert' },
 ];
