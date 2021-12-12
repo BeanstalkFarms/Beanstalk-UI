@@ -9,7 +9,6 @@ import './App.css';
 
 export default function Main(props) {
   document.body.style.backgroundColor = theme.bodyBackground;
-  const width = window.innerWidth;
 
   const navCloudStyle = {
     backgroundColor: 'transparent',
@@ -44,12 +43,16 @@ export default function Main(props) {
   const [count, setCount] = useState(increment(1));
 
   useEffect(() => {
-    timer.current = window.setInterval(() => {
-      setCount(increment(count));
-    }, 1500);
-    return () => {
-      window.clearInterval(timer.current);
-    };
+    const width = window.innerWidth;
+    const desktopUser = width > 500;
+    if (desktopUser) {
+      timer.current = window.setInterval(() => {
+        setCount(increment(count));
+      }, 1500);
+      return () => {
+        window.clearInterval(timer.current);
+      };
+    }
   }, [count]);
 
   function switchBeanstalk(t) {
@@ -60,14 +63,10 @@ export default function Main(props) {
     }
     return <Box className="BeanstalkBG" name={theme.name} />;
   }
-  const mobileDisplay = width > 500
-    ? (switchBeanstalk(count))
-    : <Box className="BeanstalkBG" name={theme.name} />;
-
   return (
     <>
       <Box className="App">
-        {mobileDisplay}
+        {switchBeanstalk(count)}
         <Box className="BeanstalkMT" name={theme.name} style={{ top: 'calc(28vh - 2vw)' }} />
         <Box className="BeanstalkSky" name={theme.name} />
         <Snowfall
