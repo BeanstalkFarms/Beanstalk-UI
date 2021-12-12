@@ -12,28 +12,19 @@ import {
   UNI_V2_ETH_BEAN_LP,
 } from 'constants/index';
 import {
-  displayBN,
-  MaxBN,
   MinBN,
   MinBNs,
-  smallDecimalPercent,
   toStringBaseUnitBN,
   TrimBN,
-  TokenLabel,
-  withdrawLP,
   poolForLP,
   // maxLPToPeg,
-  // convertDepositedLP,
+  convertDepositedLP,
 } from 'util/index';
 import {
-  CryptoAsset,
   SettingsFormModule,
   SiloAsset,
-  siloStrings,
   TokenInputField,
   TokenOutputField,
-  // TransactionTextModule,
-  TransactionDetailsModule,
 } from 'components/Common';
 
 export const ConvertLPModule = forwardRef((props, ref) => {
@@ -41,19 +32,15 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
   const [toBeanValue, setToBeanValue] = useState(new BigNumber(0));
-  const [withdrawParams, setWithdrawParams] = useState({
+  const [convertParams, setConvertParams] = useState({
     crates: [],
     amounts: [],
   });
 
   const {
-    // beanSiloBalance,
     lpDeposits,
     // beanDeposits,
-    locked,
     lpSiloBalance,
-    seedBalance,
-    stalkBalance,
     lpSeedDeposits,
     // lockedSeasons,
   } = useSelector<AppState, AppState['userBalance']>(
@@ -143,7 +130,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
         return lpRemoved.isEqualTo(beans);
       });
     BigNumber.set({ DECIMAL_PLACES: 18 });
-    setWithdrawParams({ crates, amounts });
+    setConvertParams({ crates, amounts });
     return [stalkRemoved, seedsRemoved];
   };
 
@@ -167,11 +154,9 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   };
   const maxHandler = () => {
     const minMaxFromVal = MinBNs([
-      stalkBalance.multipliedBy(props.stalkToLP),
-      seedBalance.multipliedBy(props.seedsToLP),
       lpSiloBalance,
     ]);
-    if (locked || prices.beanPrice.isGreaterThan(1)) {
+    if (prices.beanPrice.isGreaterThan(1)) {
       fromValueUpdated(new BigNumber(-1));
     } else {
       fromValueUpdated(minMaxFromVal);
@@ -185,7 +170,6 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       balance={lpSiloBalance}
       handleChange={handleFromChange}
       isLP
-      locked={locked || prices.beanPrice.isGreaterThan(1)}
       maxHandler={maxHandler}
       poolForLPRatio={poolForLPRatio}
       setValue={setFromLPValue}
@@ -219,54 +203,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       value={toBeanValue}
     />
   );
-  function displayLP(beanInput, ethInput) {
-    return `${displayBN(beanInput)}
-      ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
-      ${TokenLabel(CryptoAsset.Ethereum)}`;
-  }
-  console.log(poolForLPRatio(fromLPValue)[1].toFixed());
 
-  /* Transaction Details, settings and text */
-
-  const details = [];
-  details.push(
-    `Convert ${displayBN(new BigNumber(fromLPValue))} LP Tokens in the Silo`
-  );
-  details.push(
-    `Receive ${displayLP(
-      MaxBN(poolForLPRatio(fromLPValue)[0], new BigNumber(0)),
-      MaxBN(poolForLPRatio(fromLPValue)[1], new BigNumber(0))
-    )} from converting`
-  );
-  // details.push(
-  //   <TransactionTextModule
-  //     key="buy"
-  //     balance={poolForLPRatio(fromLPValue)[0]}
-  //     buyBeans={poolForLPRatio(fromLPValue)[0]}
-  //     // claim={props.settings.claim}
-  //     // claimableBalance={props.claimableEthBalance}
-  //     mode={props.settings.mode}
-  //     // sellEth={toSellEthValue}
-  //     updateExpectedPrice={props.updateExpectedPrice}
-  //     value={TrimBN(poolForLPRatio(fromLPValue)[1], 9)}
-  //   />
-  // );
-  // details.push(
-  //   `Deposit ${displayBN(
-  //     new BigNumber(toSiloLPValue).plus(MinBN(fromLPValue, new BigNumber(0)))
-  //   )} Beans in the Silo`
-  // );
-  details.push(
-    `Burn ${displayBN(
-      new BigNumber(toSeedsValue)
-    )} Seeds during conversion`
-  );
-
-  const unvoteTextField = locked ? (
-    <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
-      Unvote Active BIPs to Withdraw
-    </Box>
-  ) : null;
   const showSettings = (
     <SettingsFormModule
       // handleMode={resetFields}
@@ -276,12 +213,9 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       showUnitModule={false}
     />
   );
-  const stalkChangePercent = toStalkValue
-    .dividedBy(totalBalance.totalStalk)
-    .multipliedBy(100);
 
   function transactionDetails() {
-    if (fromLPValue.isLessThanOrEqualTo(0) || locked) return;
+    if (fromLPValue.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
@@ -296,22 +230,6 @@ export const ConvertLPModule = forwardRef((props, ref) => {
         <Box style={{ display: 'inline-block', width: '100%' }}>
           {toTransitLPField}
         </Box>
-        <TransactionDetailsModule fields={details} />
-        <Box
-          style={{
-            display: 'inline-block',
-            width: '100%',
-            fontSize: 'calc(9px + 0.5vmin)',
-          }}
-        >
-          <span>
-            {`You will forfeit ${smallDecimalPercent(
-              stalkChangePercent
-            )}% ownership of Beanstalk.`}
-          </span>
-          <br />
-          <span style={{ color: 'red' }}>{siloStrings.withdrawWarning}</span>
-        </Box>
       </>
     );
   }
@@ -320,40 +238,21 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     handleForm() {
       if (
         fromLPValue.isLessThanOrEqualTo(0) ||
-        withdrawParams.crates.length === 0 ||
-        withdrawParams.amounts.length === 0
+        convertParams.crates.length === 0 ||
+        convertParams.amounts.length === 0
       ) {
         return;
       }
 
-      withdrawLP(withdrawParams.crates, withdrawParams.amounts, () => {
+      convertDepositedLP(toStringBaseUnitBN(fromLPValue, UNI_V2_ETH_BEAN_LP.decimals), '0', convertParams.crates, convertParams.amounts, () => {
         fromValueUpdated(new BigNumber(-1));
       });
-      // const lp = MaxBN(fromLPValue, new BigNumber(0));
-      // const minBeans = MaxBN(
-      //   MinBN(beanSiloBalance,
-      //     maxLPToPeg(
-      //       fromLPValue,
-      //       prices.beanReserve,
-      //       prices.ethReserve,
-      //       totalBalance.totalLP
-      //     );
-      //   ), new BigNumber(0));
-
-      // convertDepositedLP(
-      //   toStringBaseUnitBN(lp, ETH.decimals),
-      //   toStringBaseUnitBN(minBeans, BEAN.decimals),
-      //   beanConvertParams.crates,
-      //   beanConvertParams.amounts,
-      //   () => resetFields()
-      // );
     },
   }));
 
   return (
     <>
       {fromLPField}
-      {unvoteTextField}
       {transactionDetails()}
       {showSettings}
     </>
