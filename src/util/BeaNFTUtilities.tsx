@@ -1,10 +1,5 @@
 import BigNumber from 'bignumber.js';
-import {
-  account,
-  beaNFTContract,
-  beaNFTContractReadOnly,
-  txCallback,
-} from './index';
+import { beaNFTContract, beaNFTContractReadOnly, txCallback } from './index';
 
 export const mintNFT = async (_account, nftId, ipfsHash, signature) => {
   beaNFTContract()
@@ -35,7 +30,7 @@ export const isMinted = async (nftId) => {
   }
 };
 
-export const getMintedNFTs = async () => {
+export const getMintedNFTs = async (account) => {
   const beaNFT = beaNFTContractReadOnly();
   const toTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { to: account },
@@ -52,7 +47,7 @@ export const getMintedNFTs = async () => {
   return [ownedIds, tradedIds];
 };
 
-export const listenForNFTTransfers = async (callback) => {
+export const listenForNFTTransfers = async (callback, account) => {
   const beaNFT = beaNFTContractReadOnly();
   beaNFT.events.allEvents(
     {

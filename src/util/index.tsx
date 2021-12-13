@@ -18,7 +18,6 @@ export * from './FundraiserUtilities';
 
 export let initializing;
 export let web3: Web3;
-export let account: String;
 export let txCallback = null;
 export const metamaskFailure = -1;
 export const chainId = 1;

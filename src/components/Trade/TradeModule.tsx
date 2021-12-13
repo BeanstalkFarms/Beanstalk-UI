@@ -10,7 +10,7 @@ import {
   transferBeans,
 } from 'util/index';
 import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
-import { useSigner } from 'state/application/hooks';
+import { useSigner, useAccount } from 'state/application/hooks';
 import { usePrices } from 'state/prices/hooks';
 import { useAllowances } from 'state/allowances/hooks';
 import { useUserBalance } from 'state/userBalance/hooks';
@@ -25,6 +25,7 @@ export default function TradeModule() {
   const { beanBalance, ethBalance } = useUserBalance();
   const [section, setSection] = useState(0);
   const signer = useSigner();
+  const account = useAccount();
   const sectionTitles = ['Swap', 'Send'];
   const sectionTitlesDescription = [tradeStrings.swap, tradeStrings.send];
 
@@ -67,12 +68,14 @@ export default function TradeModule() {
           buyBeans(
             toStringBaseUnitBN(fromValue, ETH.decimals),
             toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
+            account,
             handleSwapCallback
           );
         } else {
           sellBeans(
             toStringBaseUnitBN(fromValue, BEAN.decimals),
             toStringBaseUnitBN(minimumToAmount, ETH.decimals),
+            account,
             handleSwapCallback
           );
         }

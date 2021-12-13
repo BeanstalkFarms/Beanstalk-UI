@@ -1,8 +1,10 @@
 import React from 'react';
 import { claim, updateSilo } from 'util/index';
 import { ClaimableAsset, Grid, SingleButton } from 'components/Common';
+import { useAccount } from 'state/application/hooks';
 
 export default function ClaimButton(props) {
+  const account = useAccount();
   const showButton = (
     <Grid container item xs={12}>
       <Grid
@@ -22,7 +24,7 @@ export default function ClaimButton(props) {
                   claim(props.claimable);
                 }
               : () => {
-                  updateSilo(props.claimable);
+                  updateSilo(account);
                 }
           }
           margin="-13px 7px 0 0"

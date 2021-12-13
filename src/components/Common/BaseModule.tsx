@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { makeStyles } from '@material-ui/styles';
 import { Lock as LockIcon } from '@material-ui/icons';
 import { theme } from 'constants/index';
-import { useSigner } from 'state/application/hooks';
+import { useSigner, useAccount } from 'state/application/hooks';
 import { FormatTooltip, Line, QuestionModule } from './index';
 
 export default function BaseModule({
@@ -37,6 +37,7 @@ export default function BaseModule({
 }) {
   const dispatch = useDispatch();
   const signer = useSigner();
+  const account = useAccount();
   const s = size === 'small' || window.innerWidth < 450;
   const classes = makeStyles(() => ({
     inputModule: {
@@ -134,7 +135,7 @@ export default function BaseModule({
   };
 
   const approveHandler = () => {
-    handleApprove(allowanceCallback, signer);
+    handleApprove(allowanceCallback, signer, account);
   };
 
   let buttonLabel;

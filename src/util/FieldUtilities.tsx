@@ -1,4 +1,4 @@
-import { beanstalkContract, txCallback, account } from './index';
+import { beanstalkContract, txCallback } from './index';
 
 export const sowBeans = async (amount, claimable, callback) => {
   (claimable
@@ -48,7 +48,14 @@ export const harvest = async (plots, callback) => {
     });
 };
 
-export const transferPlot = async (recipient, index, start, end, callback) => {
+export const transferPlot = async (
+  recipient,
+  index,
+  start,
+  end,
+  account,
+  callback
+) => {
   beanstalkContract()
     .transferPlot(account, recipient, index, start, end)
     .then((response) => {

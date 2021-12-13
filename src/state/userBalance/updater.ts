@@ -36,7 +36,6 @@ import {
   getUSDCBalance,
   getPrices,
   getTotalBalances,
-  initializeCallback,
   initializeEventListener,
   parseWithdrawals,
   parsePlots,
@@ -487,7 +486,7 @@ export default function Updater() {
   const updateAllBalances = async () => {
     const startTime = benchmarkStart('ALL BALANCES');
     const batch = createLedgerBatch(ethereum);
-    const accountBalancePromises = getAccountBalances(batch);
+    const accountBalancePromises = getAccountBalances(account, batch);
     const totalBalancePromises = getTotalBalances(batch);
     const pricePromises = getPrices(batch);
     batch.execute();
@@ -503,11 +502,11 @@ export default function Updater() {
     ] = await Promise.all([
       getBips(),
       getFundraisers(),
-      getEtherBalance(ethereum),
+      getEtherBalance(account, ethereum),
       accountBalancePromises,
       totalBalancePromises,
       pricePromises,
-      getUSDCBalance(ethereum),
+      getUSDCBalance(account, ethereum),
     ]);
     benchmarkEnd('ALL BALANCES', startTime);
     const [beanReserve, ethReserve] = lpReservesForTokenReserves(
@@ -587,24 +586,23 @@ export default function Updater() {
   useEffect(() => {
     async function start() {
       let startTime = benchmarkStart('*INIT*');
+      console.log('----------', account);
       if (account) {
         benchmarkEnd('*INIT*', startTime);
         startTime = benchmarkStart('**WEBSITE**');
 
-        initializeCallback(async () => {
-          const [updateBalanceState] = await updateAllBalances();
-          ReactDOM.unstable_batchedUpdates(() => {
-            updateBalanceState();
-          });
+        const [updateBalanceState] = await updateAllBalances();
+        ReactDOM.unstable_batchedUpdates(() => {
+          updateBalanceState();
         });
         const [balanceInitializers, eventInitializer] = await Promise.all([
           updateAllBalances(),
           initializeEventListener(processEvents, updatePrices, updateTotals),
         ]);
         ReactDOM.unstable_batchedUpdates(() => {
-          const [updateBalanceState, eventParsingParameters] =
+          const [updateAllBalanceState, eventParsingParameters] =
             balanceInitializers;
-          updateBalanceState();
+          updateAllBalanceState();
           processEvents(eventInitializer, eventParsingParameters);
           dispatch(setInitialized(true));
         });

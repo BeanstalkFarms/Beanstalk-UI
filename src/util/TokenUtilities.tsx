@@ -18,7 +18,7 @@ import TransitIcon from 'img/transit-icon.svg';
 import UniswapIcon from 'img/uniswap-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
-import { account, txCallback, tokenContract } from './index';
+import { txCallback, tokenContract } from './index';
 
 const MAX_UINT256 =
   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
@@ -97,15 +97,15 @@ export const approveToken = async (
     });
 };
 
-export const approveUniswapBean = async (callback, signer) => {
+export const approveUniswapBean = async (callback, signer, account) => {
   approveToken(BEAN, account, UNISWAP_V2_ROUTER, MAX_UINT256, callback, signer);
 };
 
-export const approveBeanstalkBean = async (callback, signer) => {
+export const approveBeanstalkBean = async (callback, signer, account) => {
   approveToken(BEAN, account, BEANSTALK.addr, MAX_UINT256, callback, signer);
 };
 
-export const approveBeanstalkLP = async (callback, signer) => {
+export const approveBeanstalkLP = async (callback, signer, account) => {
   approveToken(
     UNI_V2_ETH_BEAN_LP,
     account,
@@ -116,7 +116,7 @@ export const approveBeanstalkLP = async (callback, signer) => {
   );
 };
 
-export const approveBeanstalkUSDC = async (callback, signer) => {
+export const approveBeanstalkUSDC = async (callback, signer, account) => {
   approveToken(USDC, account, BEANSTALK.addr, MAX_UINT256, callback, signer);
 };
 

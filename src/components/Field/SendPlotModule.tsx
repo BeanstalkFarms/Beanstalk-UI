@@ -18,6 +18,7 @@ import {
   fieldStrings,
   TransactionDetailsModule,
 } from 'components/Common';
+import { useAccount } from 'state/application/hooks';
 
 export const SendPlotModule = forwardRef((props, ref) => {
   const [plotId, setPlotId] = useState(new BigNumber(-1));
@@ -27,6 +28,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
   const [snappedToAddress, setSnappedToAddress] = useState(false);
   const [walletText, setWalletText] = useState('');
+  const account = useAccount();
 
   const width = window.innerWidth;
 
@@ -251,7 +253,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
         const startPlot = toStringBaseUnitBN(fromPlotIndex, BEAN.decimals);
         const endPlot = toStringBaseUnitBN(toPlotEndIndex, BEAN.decimals);
         const id = toStringBaseUnitBN(plotId, BEAN.decimals);
-        transferPlot(props.toAddress, id, startPlot, endPlot, () => {
+        transferPlot(account, props.toAddress, id, startPlot, endPlot, () => {
           fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
         });
       } else {

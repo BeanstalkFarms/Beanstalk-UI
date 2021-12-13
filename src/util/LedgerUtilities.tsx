@@ -13,7 +13,6 @@ import {
   USDC,
 } from 'constants/index';
 import {
-  account,
   beanstalkContractReadOnly,
   initializing,
   pairContractReadOnly,
@@ -45,11 +44,11 @@ const bigNumberResult = (result) => new BigNumber(result);
 const tokenResult = (token) => (result) =>
   toTokenUnitsBN(new BigNumber(result), token.decimals);
 
-export async function getEtherBalance(_ethereum) {
+export async function getEtherBalance(account, _ethereum) {
   return tokenResult(ETH)(await new Web3(_ethereum).eth.getBalance(account));
 }
 
-export async function getUSDCBalance(_ethereum) {
+export async function getUSDCBalance(account, _ethereum) {
   return tokenResult(USDC)(await new Web3(_ethereum).eth.getBalance(account));
 }
 
@@ -59,7 +58,7 @@ export async function getBlockTimestamp(blockNumber, _ethereum) {
 }
 
 /* Batched Getters */
-export const getAccountBalances = async (batch) => {
+export const getAccountBalances = async (account, batch) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();

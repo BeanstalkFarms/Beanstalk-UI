@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { account, beanstalkContract, txCallback } from './index';
+import { beanstalkContract, txCallback } from './index';
 
 export const depositBeans = async (amount, claimable, callback) => {
   (claimable
@@ -189,7 +189,7 @@ export const claim = async (claimable) => {
     });
 };
 
-export const updateSilo = async () => {
+export const updateSilo = async (account) => {
   beanstalkContract()
     .updateSilo(account)
     .then((response) => {

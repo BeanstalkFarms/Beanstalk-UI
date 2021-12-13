@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from 'constants/index';
 import {
-  account,
   beanstalkContractReadOnly,
   pairContractReadOnly,
   txCallback,
@@ -32,7 +31,8 @@ const newEventHashes = new Set();
 export async function initializeEventListener(
   callback,
   updatePrices,
-  updateTotals
+  updateTotals,
+  account
 ) {
   const startTime = benchmarkStart('EVENT LISTENER');
 
@@ -193,23 +193,20 @@ export function parseWithdrawals(withdrawals, index: BigNumber) {
   return [transit, receivable, transitWithdrawals, receivableWithdrawals];
 }
 
-export function addRewardedCrates(
-  crates,
-  season,
-  rewardedBeans
-) {
+export function addRewardedCrates(crates, season, rewardedBeans) {
   if (rewardedBeans.isEqualTo(0)) return crates;
   const ds = parseInt(season, 10);
-  const isTopCrate = crates[ds] !== undefined
-    ? crates[ds].isEqualTo(new BigNumber(rewardedBeans))
-    : false;
+  const isTopCrate =
+    crates[ds] !== undefined
+      ? crates[ds].isEqualTo(new BigNumber(rewardedBeans))
+      : false;
 
   crates[ds] =
     crates[ds] === undefined
       ? rewardedBeans
       : isTopCrate
-        ? crates[ds]
-        : crates[ds].plus(rewardedBeans);
+      ? crates[ds]
+      : crates[ds].plus(rewardedBeans);
   return crates;
 }
 
