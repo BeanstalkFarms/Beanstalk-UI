@@ -226,16 +226,16 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   );
 
   const stalkText = toStalkValue.isGreaterThan(0) ?
-  `Recieve ${displayBN(toStalkValue)} Stalk` :
+  `Receive ${displayBN(toStalkValue)} Stalk` :
   `Burn ${displayBN(toStalkValue.abs())} Stalk`;
 
   const seedText = toSeedsValue.isGreaterThan(0) ?
-    `and recieve ${displayBN(toSeedsValue)} Seeds` :
-    `and burn ${displayBN(toSeedsValue.abs())} Seeds`;
+    `and ${toStalkValue.isGreaterThan(0) ? '' : 'receive'} ${displayBN(toSeedsValue)} Seeds` :
+    `and ${toStalkValue.isGreaterThan(0) ? 'burn' : ''} ${displayBN(toSeedsValue.abs())} Seeds`;
 
   const details = [
     `Remove ${displayBN(fromLPValue)} LP from to the BEAN:ETH pool`,
-    `Recieve ${displayLP(beansRemoved, ethRemoved)} from the BEAN:ETH pool`,
+    `Receive ${displayLP(beansRemoved, ethRemoved)} from the BEAN:ETH pool`,
     <TransactionTextModule
       key="buy"
       sellEth={ethRemoved}
