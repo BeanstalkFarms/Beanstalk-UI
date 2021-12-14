@@ -62,6 +62,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     beanReserve,
     ethReserve,
     beanPrice,
+    usdcPrice,
     lpToPeg,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
@@ -86,6 +87,14 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
       ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
+
+  const updateExpectedPrice = (sellEth: BigNumber, boughtBeans: BigNumber) => {
+    const endPrice = ethReserve
+      .plus(sellEth)
+      .dividedBy(beanReserve.minus(boughtBeans))
+      .dividedBy(usdcPrice);
+    return beanPrice.plus(endPrice).dividedBy(2);
+  };
 
   const getStalkAndSeedsRemoved = (beans) => {
     let lpRemoved = new BigNumber(0);
@@ -231,7 +240,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       key="buy"
       sellEth={ethRemoved}
       buyBeans={buyBeans}
-      updateExpectedPrice={props.updateExpectedPrice}
+      updateExpectedPrice={updateExpectedPrice}
       mode={SwapMode.Ethereum}
     />,
     `${stalkText} ${seedText}`,
