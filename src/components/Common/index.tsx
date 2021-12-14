@@ -153,7 +153,7 @@ export const siloStrings = {
   beanWithdrawalsTable: 'View all your current Bean Withdrawals in this table.',
   beanAPY:
     'The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
-  convert: 'Use this sub-tab to convert Deposited Beans to Deposited LP when P>1 and convert Deposited LP to Deposited Beans when P<1.',
+  convert: 'Use this tab to convert Deposited Beans to Deposited LP Tokens when P > 1 and convert Deposited LP Tokens to Deposited Beans when P < 1.',
     lpDescription: 'Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.',
   lpDeposit:
     'Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.',
