@@ -200,7 +200,7 @@ export default function Updater() {
       return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
     }
     function processPrices(_prices) {
-      const [referenceTokenReserves, tokenReserves, token0, twapPrices] =
+      const [referenceTokenReserves, tokenReserves, token0, twapPrices, beansToPeg, lpToPeg] =
         _prices;
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
       const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
@@ -222,6 +222,8 @@ export default function Updater() {
           beanReserve,
           beanTWAPPrice: twapPrices[0],
           usdcTWAPPrice: twapPrices[1],
+          beansToPeg,
+          lpToPeg,
         })
       );
       return [beanReserve, ethReserve];

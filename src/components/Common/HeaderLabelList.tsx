@@ -24,7 +24,7 @@ export default function HeaderLabelList(props) {
   return (
     <Grid container className={classes.container}>
       {props.title.filter((x) => x !== null).map((item, index) => (
-        <Grid item xs={12}>
+        <Grid key={index} item xs={12}>
           <HeaderLabel
             balanceDescription={props.balanceDescription[index]}
             description={props.description[index]}
