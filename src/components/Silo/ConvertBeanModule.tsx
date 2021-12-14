@@ -209,7 +209,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
 
   const priceText = beansToPeg.isLessThanOrEqualTo(0) ? (
     <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
-      Price must be greater than $1 to convert from Beans to LP.
+      The price must be greater than $1 to convert from Deposited Beans to Deposited LP Tokens.
     </Box>
   ) : null;
 
