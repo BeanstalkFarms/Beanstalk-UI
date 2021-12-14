@@ -208,33 +208,19 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     </Box>
   ) : null;
 
-  const details = [];
-
-  details.push(
+  const details = [
     <TransactionTextModule
       key="sell"
       buyEth={toAddEth}
       sellToken={toSellBeans}
       updateExpectedPrice={props.updateExpectedPrice}
-    />
-  );
-  details.push(
+    />,
     `Add ${displayLP(MaxBN(toAddBeans, new BigNumber(0)),
-          MaxBN(toAddEth, new BigNumber(0))
-          )} to the BEAN:ETH pool`
-  );
-  details.push(
-    `Receive ${displayBN(toLPValue
-    )} LP Tokens`
-  );
-
-  details.push(
-    `Convert ${displayBN(fromBeanValue)} Deposited Beans to ${displayBN(toLPValue)} Deposited LP`
-  );
-
-  details.push(
-    `Receive ${displayBN(toSeedsValue)} Seeds.`
-  );
+      MaxBN(toAddEth, new BigNumber(0))
+    )} to the BEAN:ETH pool`,
+    `Receive ${displayBN(toLPValue)} LP Tokens`,
+    `Receive ${displayBN(toSeedsValue)} Seeds.`,
+  ];
 
   function transactionDetails() {
     if (fromBeanValue.isLessThanOrEqualTo(0) || locked) return;
@@ -281,8 +267,8 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   return (
     <>
       {fromBeanField}
-      {priceText}
       {transactionDetails()}
+      {priceText}
       {showSettings}
     </>
   );

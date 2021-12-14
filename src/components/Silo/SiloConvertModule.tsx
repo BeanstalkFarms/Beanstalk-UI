@@ -33,9 +33,7 @@ export default function SiloConvertModule() {
   const {
     lpDeposits,
     beanDeposits,
-    locked,
     lpSeedDeposits,
-    lockedSeasons,
     farmableBeanBalance,
     rawBeanDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
@@ -263,8 +261,6 @@ export default function SiloConvertModule() {
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
-        locked={section === 1 && locked}
-        lockedSeasons={lockedSeasons}
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
