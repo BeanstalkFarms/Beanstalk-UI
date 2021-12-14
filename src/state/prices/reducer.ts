@@ -11,6 +11,8 @@ export interface PriceState {
   beanReserve: BigNumber;
   beanTWAPPrice: BigNumber;
   usdcTWAPPrice: BigNumber;
+  beansToPeg: BigNumber;
+  lpToPeg: BigNumber;
 }
 
 export const initialState: PriceState = {
@@ -20,6 +22,8 @@ export const initialState: PriceState = {
   beanReserve: new BigNumber(-1),
   beanTWAPPrice: new BigNumber(-1),
   usdcTWAPPrice: new BigNumber(-1),
+  beansToPeg: new BigNumber(-1),
+  lpToPeg: new BigNumber(-1),
 };
 
 export default createReducer(initialState, (builder) =>

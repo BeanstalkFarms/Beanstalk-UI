@@ -69,7 +69,7 @@ export function changeAddresses(chainId) {
     WETH.addr = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
     UNI_V2_ETH_BEAN_LP.addr = '0x87898263B6C5BABe34b4ec53F22d98430b91e371';
     USDC.addr = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
-  } else if (chainId === 3) {
+  } else if (chainId === 3 || chainId === 1337) {
     UNI_V2_USDC_ETH_LP.addr = '0x681A4164703351d6AceBA9D7038b573b444d3353';
     WETH.addr = '0xc778417E063141139Fce010982780140Aa0cD5Ab';
     UNI_V2_ETH_BEAN_LP.addr = '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db';

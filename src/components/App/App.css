@@ -27,33 +27,7 @@
 .BeanstalkBG[name="winter"] {
   background-image: url('../../img/winter/beanstalk-background-1.svg');
 }
-.BG1 {
-  background-image: url('../../img/winter/beanstalk-background-1.svg');
-}
-.BG2 {
-  background-image: url('../../img/winter/beanstalk-background-2.svg');
-}
-.BG3 {
-  background-image: url('../../img/winter/beanstalk-background-3.svg');
-}
-.BG4 {
-  background-image: url('../../img/winter/beanstalk-background-4.svg');
-}
-.BG5 {
-  background-image: url('../../img/winter/beanstalk-background-5.svg');
-}
 .BeanstalkBG {
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: 96%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -10;
-}
-.BG1, .BG2, .BG3, .BG4, .BG5 {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: 96%;

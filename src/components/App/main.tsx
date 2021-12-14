@@ -1,11 +1,46 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Box } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import Snowfall from 'react-snowfall';
 import Footer from 'components/About/Footer';
 import { FallingLeaves } from 'components/Fall';
 import { theme } from 'constants/index';
 import './index.tsx';
-import './App.css';
+import 'components/Themes/winterApp.css';
+
+function BarnBeanstalk() {
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+
+  const increment = (c) => (c) % 5 + 1;
+
+  const timer = useRef();
+  const [count, setCount] = useState(increment(1));
+
+  useEffect(() => {
+    if (width > 500 && theme.name === 'winter') {
+      timer.current = window.setInterval(() => {
+        setCount(increment(count));
+      }, 750);
+      return () => {
+        window.clearInterval(timer.current);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count]);
+
+  if (theme.name === 'winter') {
+    return (
+      <>
+        <Box className={`BG${count}`} name={theme.name} />
+        <Box className={`B${count}`} name={theme.name} />
+      </>
+    );
+  }
+  return <Box className="BeanstalkBG" name={theme.name} />;
+}
 
 export default function Main(props) {
   document.body.style.backgroundColor = theme.bodyBackground;
@@ -32,49 +67,21 @@ export default function Main(props) {
     zIndex: -101,
   };
 
-  const increment = (c) => {
-    if (c === 5) {
-      return c - 4;
-    }
-    return c + 1;
-  };
-
-  const timer = useRef();
-  const [count, setCount] = useState(increment(1));
-
-  useEffect(() => {
-    const width = window.innerWidth;
-    const desktopUser = width > 500;
-    if (desktopUser) {
-      timer.current = window.setInterval(() => {
-        setCount(increment(count));
-      }, 1500);
-      return () => {
-        window.clearInterval(timer.current);
-      };
-    }
-  }, [count]);
-
-  function switchBeanstalk(t) {
-    if (theme.name === 'winter') {
-      return (
-        <Box className={`BG${t}`} name={theme.name} />
-      );
-    }
-    return <Box className="BeanstalkBG" name={theme.name} />;
-  }
   return (
     <>
       <Box className="App">
-        {switchBeanstalk(count)}
+        <BarnBeanstalk />
         <Box className="BeanstalkMT" name={theme.name} style={{ top: 'calc(28vh - 2vw)' }} />
         <Box className="BeanstalkSky" name={theme.name} />
-        <Snowfall
-          snowflakeCount={200}
-          speed={[0, 0.5]}
-          wind={[-0.5, 0.5]}
-          style={{ position: 'fixed' }}
-        />
+        {theme.name === 'winter'
+          ? <Snowfall
+              snowflakeCount={200}
+              speed={[0, 0.5]}
+              wind={[-0.5, 0.5]}
+              style={{ position: 'fixed' }}
+            />
+          : null
+        }
         <Box>
           {theme.name === 'fall' ? <FallingLeaves /> : null}
           <img alt="Sun Icon" src={theme.sun} style={sunStyle} />

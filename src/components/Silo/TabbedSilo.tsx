@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import { BaseModule, Grid, siloStrings } from 'components/Common';
 import SiloBeanModule from './SiloBeanModule';
 import SiloLPModule from './SiloLPModule';
+import SiloConvertModule from './SiloConvertModule';
 
 export default function TabbedSilo() {
   const { innerWidth: width } = window;
 
   const [section, setSection] = useState(0);
-  const sectionTitles = ['LP', 'Beans'];
+  const sectionTitles = ['LP', 'Beans', 'Convert'];
   const sectionTitlesDescription = [
     siloStrings.lpDescription,
     siloStrings.beanDescription,
+    siloStrings.convert,
   ];
-  const sections = [<SiloLPModule />, <SiloBeanModule />];
+  const sections = [<SiloLPModule />, <SiloBeanModule />, <SiloConvertModule />];
 
   return (
     <Grid
