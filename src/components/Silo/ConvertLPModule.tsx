@@ -8,6 +8,7 @@ import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import {
   SEEDS,
   STALK,
+  BEAN,
   LPBEANS_TO_SEEDS,
   BEAN_TO_SEEDS,
   UNI_V2_ETH_BEAN_LP,
@@ -265,7 +266,11 @@ export const ConvertLPModule = forwardRef((props, ref) => {
         return;
       }
 
-      convertDepositedLP(toStringBaseUnitBN(fromLPValue, UNI_V2_ETH_BEAN_LP.decimals), '0', convertParams.crates, convertParams.amounts, () => {
+      convertDepositedLP(
+        toStringBaseUnitBN(fromLPValue, UNI_V2_ETH_BEAN_LP.decimals),
+        toStringBaseUnitBN(toBeanValue.multipliedBy(props.settings.slippage), BEAN.decimals),
+        convertParams.crates,
+        convertParams.amounts, () => {
         fromValueUpdated(new BigNumber(-1));
       });
     },
