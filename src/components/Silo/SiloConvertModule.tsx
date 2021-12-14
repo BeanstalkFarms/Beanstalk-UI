@@ -75,16 +75,15 @@ export default function SiloConvertModule() {
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
-  // const sectionTitles = ['Convert LP', 'Convert Beans'];
-  const sectionTitles = [];
+  const sectionTitles = ['Convert LP', 'Convert Beans'];
 
   const sectionTitlesDescription = [
-    siloStrings.lpDeposit,
-    siloStrings.lpWithdraw,
+    siloStrings.convertLPDeposit,
+    siloStrings.convertBeanDeposit,
   ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
-    siloStrings.lpWithdrawalsTable,
+    siloStrings.beanDepositsTable,
   ];
 
   const handleTabChange = (event, newSection) => {
@@ -132,8 +131,6 @@ export default function SiloConvertModule() {
       settings={settings}
     />
   );
-  sectionTitles.push('Convert LP');
-  sectionTitlesDescription.push(siloStrings.lpClaim);
   // }
   // if (prices.beanPrice.isGreaterThan(1)) {
   sections.push(
@@ -146,8 +143,6 @@ export default function SiloConvertModule() {
       settings={settings}
     />
   );
-  sectionTitles.push('Convert Beans');
-  sectionTitlesDescription.push(siloStrings.lpClaim);
   // }
   if (section > sectionTitles.length - 1) setSection(0);
 
