@@ -169,6 +169,8 @@ export const siloStrings = {
     'The Silo is the Beanstalk DAO. Silo Members earn passive interest during Bean supply increases. Anyone can become a Silo Member by depositing Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module below in exchange for Stalk and Seeds. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. The Seed token yields .0001 Stalk every Season. No action is ever required of Silo Members. All Stalk and Seeds associated with a Deposit are forfeited upon withdrawal. All Withdrawals are frozen for 24 full Seasons.',
   withdrawWarning:
     'WARNING: Your Withdrawal will be frozen for 24 full Seasons.',
+  convertLPDeposit: 'Use this sub-tab to convert Deposited LP to Deposited Beans when P < 1',
+  convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited LP when P > 1',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',
