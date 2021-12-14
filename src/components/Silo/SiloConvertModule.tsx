@@ -33,9 +33,7 @@ export default function SiloConvertModule() {
   const {
     lpDeposits,
     beanDeposits,
-    locked,
     lpSeedDeposits,
-    lockedSeasons,
     farmableBeanBalance,
     rawBeanDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
@@ -53,14 +51,6 @@ export default function SiloConvertModule() {
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-
-  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
-    const endPrice = prices.ethReserve
-      .plus(sellEth)
-      .dividedBy(prices.beanReserve.minus(buyBeans))
-      .dividedBy(prices.usdcPrice);
-    return prices.beanPrice.plus(endPrice).dividedBy(2);
-  };
 
   const poolForLPRatio = (amount: BigNumber) => {
     if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
@@ -130,7 +120,6 @@ export default function SiloConvertModule() {
   sections.push(
     <ConvertLPModule
       key={0}
-      updateExpectedPrice={updateExpectedPrice}
       ref={lpRef}
       setIsFormDisabled={setIsFormDisabled}
       poolForLPRatio={poolForLPRatio}
@@ -146,7 +135,6 @@ export default function SiloConvertModule() {
   sections.push(
     <ConvertBeanModule
       key={1}
-      updateExpectedPrice={updateExpectedPrice}
       ref={beanRef}
       setIsFormDisabled={setIsFormDisabled}
       setSection={setSection}
@@ -263,8 +251,6 @@ export default function SiloConvertModule() {
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
-        locked={section === 1 && locked}
-        lockedSeasons={lockedSeasons}
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}

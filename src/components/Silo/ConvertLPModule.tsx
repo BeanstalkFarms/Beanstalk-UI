@@ -62,6 +62,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     beanReserve,
     ethReserve,
     beanPrice,
+    usdcPrice,
     lpToPeg,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
@@ -86,6 +87,14 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
       ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
+
+  const updateExpectedPrice = (sellEth: BigNumber, boughtBeans: BigNumber) => {
+    const endPrice = ethReserve
+      .plus(sellEth)
+      .dividedBy(beanReserve.minus(boughtBeans))
+      .dividedBy(usdcPrice);
+    return beanPrice.plus(endPrice).dividedBy(2);
+  };
 
   const getStalkAndSeedsRemoved = (beans) => {
     let lpRemoved = new BigNumber(0);
@@ -145,7 +154,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       setToSeedsValue(TrimBN(netSeeds, SEEDS.decimals));
     });
 
-    props.setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0));
+    props.setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0) || lpToPeg.isLessThanOrEqualTo(0));
   }
 
   const handleFromChange = (event) => {
@@ -174,7 +183,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       poolForLPRatio={poolForLPRatio}
       setValue={setFromLPValue}
       token={SiloAsset.LP}
-      value={TrimBN(fromLPValue, 9)}
+      value={TrimBN(fromLPValue, 18)}
     />
   );
 
@@ -216,6 +225,14 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     />
   );
 
+  const stalkText = toStalkValue.isGreaterThan(0) ?
+  `Recieve ${displayBN(toStalkValue)} Stalk` :
+  `Burn ${displayBN(toStalkValue)} Stalk`;
+
+  const seedText = toSeedsValue.isGreaterThan(0) ?
+    `and recieve ${displayBN(toSeedsValue)} Seeds` :
+    `and burn ${displayBN(toSeedsValue.abs())} Seeds`;
+
   const details = [
     `Remove ${displayBN(fromLPValue)} LP from to the BEAN:ETH pool`,
     `Recieve ${displayLP(beansRemoved, ethRemoved)} from the BEAN:ETH pool`,
@@ -223,10 +240,10 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       key="buy"
       sellEth={ethRemoved}
       buyBeans={buyBeans}
-      updateExpectedPrice={props.updateExpectedPrice}
+      updateExpectedPrice={updateExpectedPrice}
       mode={SwapMode.Ethereum}
     />,
-    `Convert ${displayBN(fromLPValue)} Deposited LP to ${displayBN(toBeanValue)} Deposited Beans`,
+    `${stalkText} ${seedText}`,
   ];
 
   const priceText = lpToPeg.isLessThanOrEqualTo(0) ? (
@@ -279,8 +296,8 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   return (
     <>
       {fromLPField}
-      {priceText}
       {transactionDetails()}
+      {priceText}
       {showSettings}
     </>
   );

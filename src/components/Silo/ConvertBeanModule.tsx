@@ -44,8 +44,6 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     beanDeposits,
     locked,
     // lpSiloBalance,
-    seedBalance,
-    stalkBalance,
     // lpSeedDeposits,
     // lockedSeasons,
   } = useSelector<AppState, AppState['userBalance']>(
@@ -66,6 +64,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     beanReserve,
     ethReserve,
     beanPrice,
+    usdcPrice,
     beansToPeg,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
@@ -76,6 +75,18 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
       ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
+
+  const updateExpectedPrice = (buyEth: BigNumber, sellBeans: BigNumber) => {
+    const endPrice = ethReserve
+      .minus(buyEth.abs())
+      .dividedBy(beanReserve.plus(sellBeans.abs()))
+      .dividedBy(usdcPrice);
+    console.log(`${buyEth}`);
+    console.log(`${sellBeans}`);
+    console.log(`${beanPrice}`);
+    console.log(`${endPrice}`);
+    return beanPrice.plus(endPrice).dividedBy(2);
+  };
 
   const getStalkRemoved = (beans) => {
     let beansRemoved = new BigNumber(0);
@@ -106,6 +117,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   };
 
   function fromValueUpdated(newFromNumber) {
+    console.log(`${beansToPeg}`);
     const fromNumber = MinBNs([newFromNumber, beanSiloBalance, beansToPeg]);
     const newFromBeanValue = TrimBN(fromNumber, BEAN.decimals);
     getStalkRemoved(newFromBeanValue);
@@ -130,7 +142,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       setToSellBeans(swapBeans);
     });
 
-    props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0));
+    props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0) || beansToPeg.isLessThanOrEqualTo(0));
   }
 
   const handleFromChange = (event) => {
@@ -141,15 +153,10 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     }
   };
   const maxHandler = () => {
-    const minMaxFromVal = MinBNs([
-      seedBalance.multipliedBy(props.seedsToBean),
-      stalkBalance.multipliedBy(props.stalkToBean),
-      beanSiloBalance,
-    ]);
     if (locked || beanPrice.isLessThan(1)) {
       fromValueUpdated(new BigNumber(-1));
     } else {
-      fromValueUpdated(minMaxFromVal);
+      fromValueUpdated(beanSiloBalance);
     }
   };
 
@@ -208,33 +215,19 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     </Box>
   ) : null;
 
-  const details = [];
-
-  details.push(
+  const details = [
     <TransactionTextModule
       key="sell"
       buyEth={toAddEth}
       sellToken={toSellBeans}
-      updateExpectedPrice={props.updateExpectedPrice}
-    />
-  );
-  details.push(
+      updateExpectedPrice={updateExpectedPrice}
+    />,
     `Add ${displayLP(MaxBN(toAddBeans, new BigNumber(0)),
-          MaxBN(toAddEth, new BigNumber(0))
-          )} to the BEAN:ETH pool`
-  );
-  details.push(
-    `Receive ${displayBN(toLPValue
-    )} LP Tokens`
-  );
-
-  details.push(
-    `Convert ${displayBN(fromBeanValue)} Deposited Beans to ${displayBN(toLPValue)} Deposited LP`
-  );
-
-  details.push(
-    `Receive ${displayBN(toSeedsValue)} Seeds.`
-  );
+      MaxBN(toAddEth, new BigNumber(0))
+    )} to the BEAN:ETH pool`,
+    `Receive ${displayBN(toLPValue)} LP Tokens`,
+    `Receive ${displayBN(toSeedsValue)} Seeds.`,
+  ];
 
   function transactionDetails() {
     if (fromBeanValue.isLessThanOrEqualTo(0) || locked) return;
@@ -281,8 +274,8 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   return (
     <>
       {fromBeanField}
-      {priceText}
       {transactionDetails()}
+      {priceText}
       {showSettings}
     </>
   );
