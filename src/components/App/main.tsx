@@ -64,7 +64,7 @@ export default function Main(props) {
     minHeight: '150px',
     position: 'fixed',
     top: 100,
-    zIndex: -11,
+    zIndex: -101,
   };
 
   return (

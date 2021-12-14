@@ -58,7 +58,7 @@
   z-index: -100;
 }
 .BeanstalkMT[name="winter"] {
-  background-repeat: no-repeat;
+  background-repeat: repeat-x;
   background-size: contain;
   background-position: 100%;
   position: fixed;
@@ -78,7 +78,7 @@
   width: 100%;
   min-width: 600px;
   height: 100%;
-  z-index: -100;
+  z-index: -102;
 }
 
 @media screen and (max-width: 599px) {
