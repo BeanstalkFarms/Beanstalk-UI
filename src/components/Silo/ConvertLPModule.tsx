@@ -227,7 +227,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
 
   const stalkText = toStalkValue.isGreaterThan(0) ?
   `Recieve ${displayBN(toStalkValue)} Stalk` :
-  `Burn ${displayBN(toStalkValue)} Stalk`;
+  `Burn ${displayBN(toStalkValue.abs())} Stalk`;
 
   const seedText = toSeedsValue.isGreaterThan(0) ?
     `and recieve ${displayBN(toSeedsValue)} Seeds` :

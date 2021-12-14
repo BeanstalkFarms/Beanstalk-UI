@@ -16,6 +16,7 @@ import {
   MaxBN,
   displayBN,
   TokenLabel,
+  calculateMaxBeansToPeg,
 } from 'util/index';
 import {
   SettingsFormModule,
@@ -70,6 +71,8 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     (state) => state.prices
   );
 
+  const maxBeansToPeg = calculateMaxBeansToPeg(beansToPeg, beanReserve, ethReserve);
+
   function displayLP(beanInput, ethInput) {
     return `${displayBN(beanInput)}
       ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
@@ -81,10 +84,6 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       .minus(buyEth.abs())
       .dividedBy(beanReserve.plus(sellBeans.abs()))
       .dividedBy(usdcPrice);
-    console.log(`${buyEth}`);
-    console.log(`${sellBeans}`);
-    console.log(`${beanPrice}`);
-    console.log(`${endPrice}`);
     return beanPrice.plus(endPrice).dividedBy(2);
   };
 
@@ -117,8 +116,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   };
 
   function fromValueUpdated(newFromNumber) {
-    console.log(`${beansToPeg}`);
-    const fromNumber = MinBNs([newFromNumber, beanSiloBalance, beansToPeg]);
+    const fromNumber = MinBNs([newFromNumber, beanSiloBalance, maxBeansToPeg]);
     const newFromBeanValue = TrimBN(fromNumber, BEAN.decimals);
     getStalkRemoved(newFromBeanValue);
     const {
@@ -142,7 +140,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       setToSellBeans(swapBeans);
     });
 
-    props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0) || beansToPeg.isLessThanOrEqualTo(0));
+    props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0) || maxBeansToPeg.isLessThanOrEqualTo(0));
   }
 
   const handleFromChange = (event) => {

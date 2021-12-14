@@ -169,6 +169,18 @@ export const calculateBeansToLP = (
     };
 };
 
+export const calculateMaxBeansToPeg = (
+  beansToPeg: BigNumber,
+  beanReserve: BigNumber,
+  ethReserve: BigNumber
+) => {
+  const ethBought = getToAmount(beansToPeg, beanReserve, ethReserve);
+  const newBeanReserve = beanReserve.plus(beansToPeg);
+  const newEthReserve = ethReserve.multipliedBy(beanReserve).dividedBy(newBeanReserve);
+  const beansToAdd = ethBought.multipliedBy(newBeanReserve).dividedBy(newEthReserve);
+  return beansToPeg.plus(beansToAdd);
+};
+
 export const calculateLPToBeans = (
   lp: BigNumber,
   beanReserve: BigNumber,
