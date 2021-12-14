@@ -1,29 +1,39 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { AppState } from 'state';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
-import { BEAN, BEAN_TO_SEEDS } from 'constants/index';
+import { BEAN, BEAN_TO_SEEDS, UNI_V2_ETH_BEAN_LP } from 'constants/index';
 
 import {
-  MinBN,
   MinBNs,
   toStringBaseUnitBN,
   TrimBN,
   convertDepositedBeans,
+  calculateBeansToLP,
+  MaxBN,
+  displayBN,
+  TokenLabel,
 } from 'util/index';
 import {
   SettingsFormModule,
   SiloAsset,
   TokenInputField,
   TokenOutputField,
+  TransactionDetailsModule,
+  TransactionTextModule,
+  CryptoAsset,
 } from 'components/Common';
 
 export const ConvertBeanModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
-  // const [toLPValue, setToLPValue] = useState(new BigNumber(0));
+  const [toLPValue, setToLPValue] = useState(new BigNumber(0));
+  const [toAddBeans, setToAddBeans] = useState(new BigNumber(0));
+  const [toAddEth, setToAddEth] = useState(new BigNumber(0));
+  const [toSellBeans, setToSellBeans] = useState(new BigNumber(0));
   const [convertParams, setConvertParams] = useState({
     crates: [],
     amounts: [],
@@ -42,13 +52,30 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     (state) => state.userBalance
   );
 
-  const prices = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
-
   const season = useSelector<AppState, AppState['season']>(
     (state) => state.season.season
   );
+
+  const {
+    totalLP,
+  } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const {
+    beanReserve,
+    ethReserve,
+    beanPrice,
+    beansToPeg,
+  } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
+  function displayLP(beanInput, ethInput) {
+    return `${displayBN(beanInput)}
+      ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
+      ${TokenLabel(CryptoAsset.Ethereum)}`;
+  }
 
   const getStalkRemoved = (beans) => {
     let beansRemoved = new BigNumber(0);
@@ -79,11 +106,30 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   };
 
   function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, beanSiloBalance);
+    const fromNumber = MinBNs([newFromNumber, beanSiloBalance, beansToPeg]);
     const newFromBeanValue = TrimBN(fromNumber, BEAN.decimals);
     getStalkRemoved(newFromBeanValue);
-    setFromBeanValue(newFromBeanValue);
-    setToSeedsValue(newFromBeanValue.multipliedBy(BEAN_TO_SEEDS));
+    const {
+      swapBeans,
+      addEth,
+      addBeans,
+      lp,
+    } = calculateBeansToLP(
+      newFromBeanValue,
+      beanReserve,
+      ethReserve,
+      totalLP
+    );
+
+    ReactDOM.unstable_batchedUpdates(() => {
+      setFromBeanValue(newFromBeanValue);
+      setToSeedsValue(newFromBeanValue.multipliedBy(BEAN_TO_SEEDS));
+      setToLPValue(lp);
+      setToAddBeans(addBeans);
+      setToAddEth(addEth);
+      setToSellBeans(swapBeans);
+    });
+
     props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0));
   }
 
@@ -100,7 +146,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       stalkBalance.multipliedBy(props.stalkToBean),
       beanSiloBalance,
     ]);
-    if (locked || prices.beanPrice.isLessThan(1)) {
+    if (locked || beanPrice.isLessThan(1)) {
       fromValueUpdated(new BigNumber(-1));
     } else {
       fromValueUpdated(minMaxFromVal);
@@ -112,7 +158,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     <TokenInputField
       balance={beanSiloBalance}
       handleChange={handleFromChange}
-      locked={locked || prices.beanPrice.isLessThan(1)}
+      locked={locked || beanPrice.isLessThan(1)}
       maxHandler={maxHandler}
       setValue={setFromBeanValue}
       token={SiloAsset.Bean}
@@ -140,8 +186,9 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   const toMintDepositedLPField = (
     <TokenOutputField
       mint
+      decimals={9}
       token={SiloAsset.LP}
-      value={fromBeanValue}
+      value={toLPValue}
     />
   );
 
@@ -153,6 +200,40 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       showUnitModule={false}
       hasSlippage
     />
+  );
+
+  const priceText = beansToPeg.isLessThanOrEqualTo(0) ? (
+    <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
+      Price must be greater than $1 to convert from Beans to LP.
+    </Box>
+  ) : null;
+
+  const details = [];
+
+  details.push(
+    <TransactionTextModule
+      key="sell"
+      buyEth={toAddEth}
+      sellToken={toSellBeans}
+      updateExpectedPrice={props.updateExpectedPrice}
+    />
+  );
+  details.push(
+    `Add ${displayLP(MaxBN(toAddBeans, new BigNumber(0)),
+          MaxBN(toAddEth, new BigNumber(0))
+          )} to the BEAN:ETH pool`
+  );
+  details.push(
+    `Receive ${displayBN(toLPValue
+    )} LP Tokens`
+  );
+
+  details.push(
+    `Convert ${displayBN(fromBeanValue)} Deposited Beans to ${displayBN(toLPValue)} Deposited LP`
+  );
+
+  details.push(
+    `Receive ${displayBN(toSeedsValue)} Seeds.`
   );
 
   function transactionDetails() {
@@ -171,6 +252,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
         <Box style={{ display: 'inline-block', width: '100%' }}>
           <Box style={{ marginLeft: '5px' }}>{toMintDepositedLPField}</Box>
         </Box>
+        <TransactionDetailsModule fields={details} />
       </>
     );
   }
@@ -186,7 +268,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       }
       convertDepositedBeans(
         toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
-        '0',
+        toStringBaseUnitBN(toLPValue.multipliedBy(props.settings.slippage), UNI_V2_ETH_BEAN_LP.decimals),
         convertParams.crates,
         convertParams.amounts,
         () => {
@@ -199,6 +281,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   return (
     <>
       {fromBeanField}
+      {priceText}
       {transactionDetails()}
       {showSettings}
     </>

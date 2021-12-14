@@ -39,4 +39,5 @@ export default function TransactionTextModule({
 TransactionTextModule.defaultProps = {
   buyBeans: new BigNumber(0),
   buyEth: new BigNumber(0),
+  mode: SwapMode.Bean,
 };

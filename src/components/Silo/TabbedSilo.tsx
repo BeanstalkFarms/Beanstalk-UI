@@ -12,7 +12,7 @@ export default function TabbedSilo() {
   const sectionTitlesDescription = [
     siloStrings.lpDescription,
     siloStrings.beanDescription,
-    'lol',
+    siloStrings.convert,
   ];
   const sections = [<SiloLPModule />, <SiloBeanModule />, <SiloConvertModule />];
 

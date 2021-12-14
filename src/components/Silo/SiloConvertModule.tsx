@@ -146,7 +146,7 @@ export default function SiloConvertModule() {
   sections.push(
     <ConvertBeanModule
       key={1}
-      poolForLPRatio={poolForLPRatio}
+      updateExpectedPrice={updateExpectedPrice}
       ref={beanRef}
       setIsFormDisabled={setIsFormDisabled}
       setSection={setSection}

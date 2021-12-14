@@ -225,5 +225,13 @@ export const getPrices = async (batch) => {
         toTokenUnitsBN(prices[1], 18),
       ],
     ],
+    [
+      beanstalk.methods.beansToPeg(),
+      (lp) => toTokenUnitsBN(lp, 6),
+    ],
+    [
+      beanstalk.methods.lpToPeg(),
+      (lp) => toTokenUnitsBN(lp, 18),
+    ],
   ]);
 };

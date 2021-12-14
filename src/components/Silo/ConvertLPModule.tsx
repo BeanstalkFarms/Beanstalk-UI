@@ -1,4 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
@@ -8,23 +9,29 @@ import {
   SEEDS,
   STALK,
   LPBEANS_TO_SEEDS,
-  // LPBEAN_TO_STALK,
+  BEAN_TO_SEEDS,
   UNI_V2_ETH_BEAN_LP,
 } from 'constants/index';
 import {
-  MinBN,
   MinBNs,
   toStringBaseUnitBN,
   TrimBN,
   poolForLP,
+  getToAmount,
   // maxLPToPeg,
   convertDepositedLP,
+  displayBN,
+  TokenLabel,
+  SwapMode,
 } from 'util/index';
 import {
   SettingsFormModule,
   SiloAsset,
   TokenInputField,
   TokenOutputField,
+  TransactionDetailsModule,
+  TransactionTextModule,
+  CryptoAsset,
 } from 'components/Common';
 
 export const ConvertLPModule = forwardRef((props, ref) => {
@@ -32,6 +39,9 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
   const [toBeanValue, setToBeanValue] = useState(new BigNumber(0));
+  const [ethRemoved, setEthRemoved] = useState(new BigNumber(0));
+  const [beansRemoved, setBeansRemoved] = useState(new BigNumber(0));
+  const [buyBeans, setBuyBeans] = useState(new BigNumber(0));
   const [convertParams, setConvertParams] = useState({
     crates: [],
     amounts: [],
@@ -47,61 +57,44 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     (state) => state.userBalance
   );
 
-  const prices = useSelector<AppState, AppState['prices']>(
+  const {
+    beanReserve,
+    ethReserve,
+    beanPrice,
+    lpToPeg,
+  } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
-  const season = useSelector<AppState, AppState['season']>(
-    (state) => state.season.season
-  );
-
-  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+  const { totalLP } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
 
-  /* function maxLPs(stalk: BugNumber) {
-    var stalkRemoved = new BigNumber(0)
-    var beans = new BigNumber(0)
-    Object.keys(props.crates).sort((a,b) => parseInt(a) - parseInt(b)).forEach(key => {
-      let stalkPerLP = (new BigNumber(10000)).plus(props.season.minus(key)).multipliedBy(5)
-      const stalkLeft = stalk.minus(stalkRemoved)
-      if (stalkPerLP.multipliedBy(props.crates[key]).isGreaterThanOrEqualTo(stalkLeft)) {
-        stalkRemoved = stalkRemoved.plus(stalkPerLP.multipliedBy(props.crates[key]))
-        beans = beans.plus(props.crates[key])
-        if (stalkRemoved.isEqualTo(stalk)) return
-      } else {
-        beans = beans.plus(TrimBN(stalkLeft.dividedBy(stalkPerLP),18))
-        return
-      }
-    })
-    return beans
-  }
-  */
-  // const beanToEth = prices.ethReserve.dividedBy(prices.beanReserve);
-  // const ethToBean = prices.beanReserve.dividedBy(prices.ethReserve);
-
-  // beanReserve={prices.beanReserve}
-  // beanToStalk={LPBEAN_TO_STALK}
-  // ethReserve={prices.ethReserve}
   const poolForLPRatio = (amount: BigNumber) => {
     if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(
       amount,
-      prices.beanReserve,
-      prices.ethReserve,
-      totalBalance.totalLP
+      beanReserve,
+      ethReserve,
+      totalLP
     );
   };
 
+  function displayLP(beanInput, ethInput) {
+    return `${displayBN(beanInput)}
+      ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
+      ${TokenLabel(CryptoAsset.Ethereum)}`;
+  }
+
   const getStalkAndSeedsRemoved = (beans) => {
     let lpRemoved = new BigNumber(0);
-    let stalkRemoved = new BigNumber(0);
     let seedsRemoved = new BigNumber(0);
     const crates = [];
     const amounts = [];
     BigNumber.set({ DECIMAL_PLACES: 6 });
+
     Object.keys(lpDeposits)
-      .sort((a, b) => parseInt(b, 10) - parseInt(a, 10))
+    .sort((a, b) => parseFloat(lpSeedDeposits[a].dividedBy(lpDeposits[a]), 10) - parseInt(lpSeedDeposits[b].dividedBy(lpDeposits[b]), 10))
       .some((key) => {
         const crateLPsRemoved = lpRemoved
           .plus(lpDeposits[key])
@@ -113,16 +106,6 @@ export const ConvertLPModule = forwardRef((props, ref) => {
           .dividedBy(lpDeposits[key]);
         lpRemoved = lpRemoved.plus(crateLPsRemoved);
         seedsRemoved = seedsRemoved.plus(crateSeedsRemoved);
-        BigNumber.set({ DECIMAL_PLACES: 10 });
-        stalkRemoved = stalkRemoved.plus(
-          crateSeedsRemoved.dividedBy(LPBEANS_TO_SEEDS)
-        );
-        stalkRemoved = stalkRemoved.plus(
-          crateSeedsRemoved
-            .multipliedBy(season.minus(key))
-            .multipliedBy(0.00001)
-        );
-        BigNumber.set({ DECIMAL_PLACES: 6 });
         crates.push(key);
         amounts.push(
           toStringBaseUnitBN(crateLPsRemoved, UNI_V2_ETH_BEAN_LP.decimals)
@@ -131,17 +114,36 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       });
     BigNumber.set({ DECIMAL_PLACES: 18 });
     setConvertParams({ crates, amounts });
-    return [stalkRemoved, seedsRemoved];
+    return [seedsRemoved.dividedBy(LPBEANS_TO_SEEDS), seedsRemoved];
   };
 
   function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, lpSiloBalance);
+    const fromNumber = MinBNs([newFromNumber, lpSiloBalance, lpToPeg]);
     const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals);
-    setToBeanValue(poolForLPRatio(fromNumber)[0].multipliedBy(2));
     setFromLPValue(newFromLPValue);
     const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber);
-    setToStalkValue(TrimBN(stalkRemoved, STALK.decimals));
-    setToSeedsValue(TrimBN(seedsRemoved, SEEDS.decimals));
+
+    const toBeansRemoved = fromNumber.multipliedBy(beanReserve).dividedBy(totalLP);
+    const toEthRemoved = fromNumber.multipliedBy(ethReserve).dividedBy(totalLP);
+    const toBuyBeans = getToAmount(
+      toEthRemoved,
+      ethReserve.minus(toEthRemoved),
+      beanReserve.minus(toBeansRemoved)
+    );
+    const beans = toBeansRemoved.plus(toBuyBeans);
+
+    const netStalk = beans.minus(stalkRemoved);
+    const netSeeds = beans.multipliedBy(BEAN_TO_SEEDS).minus(seedsRemoved);
+
+    ReactDOM.unstable_batchedUpdates(() => {
+      setBeansRemoved(toBeansRemoved);
+      setEthRemoved(toEthRemoved);
+      setBuyBeans(toBuyBeans);
+      setToBeanValue(beans);
+      setToStalkValue(TrimBN(netStalk, STALK.decimals));
+      setToSeedsValue(TrimBN(netSeeds, SEEDS.decimals));
+    });
+
     props.setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0));
   }
 
@@ -153,13 +155,10 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     }
   };
   const maxHandler = () => {
-    const minMaxFromVal = MinBNs([
-      lpSiloBalance,
-    ]);
-    if (prices.beanPrice.isGreaterThan(1)) {
+    if (beanPrice.isGreaterThan(1)) {
       fromValueUpdated(new BigNumber(-1));
     } else {
-      fromValueUpdated(minMaxFromVal);
+      fromValueUpdated(lpSiloBalance);
     }
   };
 
@@ -180,23 +179,25 @@ export const ConvertLPModule = forwardRef((props, ref) => {
 
   /* Output Fields */
 
-  const toBurnStalkField = (
+  const toStalkField = (
     <TokenOutputField
-      burn
+      burn={toStalkValue.isLessThan(0)}
+      mint={toStalkValue.isGreaterThan(0)}
       decimals={4}
       token={SiloAsset.Stalk}
-      value={toStalkValue}
+      value={toStalkValue.abs()}
     />
   );
-  const toBurnSeedsField = (
+  const toSeedsField = (
     <TokenOutputField
-      burn
+      burn={toSeedsValue.isLessThan(0)}
+      mint={toSeedsValue.isGreaterThan(0)}
       decimals={4}
       token={SiloAsset.Seed}
-      value={toSeedsValue}
+      value={toSeedsValue.abs()}
     />
   );
-  const toTransitLPField = (
+  const toDepositedBeansField = (
     <TokenOutputField
       mint
       token={SiloAsset.Bean}
@@ -214,6 +215,25 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     />
   );
 
+  const details = [
+    `Remove ${displayBN(fromLPValue)} LP from to the BEAN:ETH pool`,
+    `Recieve ${displayLP(beansRemoved, ethRemoved)} from the BEAN:ETH pool`,
+    <TransactionTextModule
+      key="buy"
+      sellEth={ethRemoved}
+      buyBeans={buyBeans}
+      updateExpectedPrice={props.updateExpectedPrice}
+      mode={SwapMode.Ethereum}
+    />,
+    `Convert ${displayBN(fromLPValue)} Deposited LP to ${displayBN(toBeanValue)} Deposited Beans`,
+  ];
+
+  const priceText = lpToPeg.isLessThanOrEqualTo(0) ? (
+    <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
+      Price must be less than $1 to convert from LP to Beans.
+    </Box>
+  ) : null;
+
   function transactionDetails() {
     if (fromLPValue.isLessThanOrEqualTo(0)) return;
 
@@ -224,12 +244,13 @@ export const ConvertLPModule = forwardRef((props, ref) => {
           style={{ marginBottom: '-14px', width: '100%' }}
         />
         <Box style={{ display: 'inline-flex' }}>
-          <Box style={{ marginRight: '5px' }}>{toBurnStalkField}</Box>
-          <Box style={{ marginLeft: '5px' }}>{toBurnSeedsField}</Box>
+          <Box style={{ marginRight: '5px' }}>{toStalkField}</Box>
+          <Box style={{ marginLeft: '5px' }}>{toSeedsField}</Box>
         </Box>
         <Box style={{ display: 'inline-block', width: '100%' }}>
-          {toTransitLPField}
+          {toDepositedBeansField}
         </Box>
+        <TransactionDetailsModule fields={details} />
       </>
     );
   }
@@ -253,6 +274,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   return (
     <>
       {fromLPField}
+      {priceText}
       {transactionDetails()}
       {showSettings}
     </>
