@@ -153,7 +153,7 @@ export const siloStrings = {
   beanWithdrawalsTable: 'View all your current Bean Withdrawals in this table.',
   beanAPY:
     'The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
-  convert: 'Use this tab to convert Deposited Beans to Deposited LP Tokens when P > 1 and convert Deposited LP Tokens to Deposited Beans when P < 1.',
+  convert: 'Use this tab to convert Deposited Beans to Deposited LP Tokens when P > $1 and convert Deposited LP Tokens to Deposited Beans when P < $1.',
     lpDescription: 'Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.',
   lpDeposit:
     'Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.',
@@ -169,8 +169,8 @@ export const siloStrings = {
     'The Silo is the Beanstalk DAO. Silo Members earn passive interest during Bean supply increases. Anyone can become a Silo Member by depositing Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module below in exchange for Stalk and Seeds. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. The Seed token yields .0001 Stalk every Season. No action is ever required of Silo Members. All Stalk and Seeds associated with a Deposit are forfeited upon withdrawal. All Withdrawals are frozen for 24 full Seasons.',
   withdrawWarning:
     'WARNING: Your Withdrawal will be frozen for 24 full Seasons.',
-  convertLPDeposit: 'Use this sub-tab to convert Deposited LP to Deposited Beans when P < 1',
-  convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited LP when P > 1',
+  convertLPDeposit: 'Use this sub-tab to convert Deposited LP Tokens to Deposited Beans when P < $1.',
+  convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited LP Tokens when P > $1.',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',
