@@ -40,7 +40,11 @@ export default function SiloConvertModule() {
     (state) => state.userBalance
   );
 
-  const prices = useSelector<AppState, AppState['prices']>(
+  const {
+    beanReserve,
+    ethReserve,
+    beanPrice,
+  } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
@@ -56,13 +60,13 @@ export default function SiloConvertModule() {
     if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(
       amount,
-      prices.beanReserve,
-      prices.ethReserve,
+      beanReserve,
+      ethReserve,
       totalBalance.totalLP
     );
   };
 
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(+beanPrice.isGreaterThanOrEqualTo(1));
   const [sectionInfo, setSectionInfo] = useState(0);
   const [settings, setSettings] = useState({
     slippage: new BigNumber(BASE_SLIPPAGE),
