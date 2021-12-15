@@ -11,6 +11,7 @@ import {
   TableRow,
   Box,
 } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import { Link } from 'react-scroll';
 import InfoIcon from '@material-ui/icons/Info';
@@ -18,9 +19,18 @@ import CheckIcon from '@material-ui/icons/Check';
 import { percentForStalk, vote, unvote } from 'util/index';
 import { theme } from 'constants/index';
 import { Line, QuestionModule, governanceStrings } from 'components/Common';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 export default function Vote(props) {
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
+
   const classes = makeStyles(() => ({
     inputModule: {
       backgroundColor: theme.module.background,
@@ -72,9 +82,29 @@ export default function Vote(props) {
   const buttonHandler = () => {
     const bip = props.bips[selected];
     if (props.votedBips[bip]) {
-      unvote(bip.toString(), () => {});
+      const transactionNumber = latestTransactionNumber + 1;
+      dispatch(
+        addTransaction({
+          transactionNumber,
+          description: `Unvoting ${bip} bip`,
+          state: State.PENDING,
+        })
+      );
+      unvote(bip.toString(), () => {
+        dispatch(completeTransaction(transactionNumber));
+      });
     } else {
-      vote(bip.toString(), () => {});
+      const transactionNumber = latestTransactionNumber + 1;
+      dispatch(
+        addTransaction({
+          transactionNumber,
+          description: `Voting ${bip} bip`,
+          state: State.PENDING,
+        })
+      );
+      vote(bip.toString(), () => {
+        dispatch(completeTransaction(transactionNumber));
+      });
     }
   };
 

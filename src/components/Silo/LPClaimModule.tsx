@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { BEAN, UNI_V2_ETH_BEAN_LP } from 'constants/index';
 import {
@@ -18,10 +19,18 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
 } from 'components/Common';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 
 export const LPClaimModule = forwardRef((props, ref) => {
   const [settings, setSettings] = useState({ removeLP: true });
   props.setIsFormDisabled(props.maxFromLPVal.isLessThanOrEqualTo(0));
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
 
   /* Input Fields */
 
@@ -127,9 +136,29 @@ export const LPClaimModule = forwardRef((props, ref) => {
       if (props.maxFromLPVal.isLessThanOrEqualTo(0)) return;
 
       if (settings.removeLP) {
-        removeAndClaimLP(Object.keys(props.crates), '0', '0', () => {});
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: 'Remove and claiming LP beans...',
+            state: State.PENDING,
+          })
+        );
+        removeAndClaimLP(Object.keys(props.crates), '0', '0', () => {
+          dispatch(completeTransaction(transactionNumber));
+        });
       } else {
-        claimLP(Object.keys(props.crates), () => {});
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: 'Claiming LP beans...',
+            state: State.PENDING,
+          })
+        );
+        claimLP(Object.keys(props.crates), () => {
+          dispatch(completeTransaction(transactionNumber));
+        });
       }
     },
   }));

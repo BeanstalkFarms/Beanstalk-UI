@@ -1,5 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { useDispatch } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import {
@@ -34,6 +35,12 @@ import {
   TransactionTextModule,
   TransactionDetailsModule,
 } from 'components/Common';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 
 export const BeanDepositModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -41,6 +48,8 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
 
   function fromValueUpdated(newFromNumber, newFromEthNumber) {
     const buyBeans = getToAmount(
@@ -240,14 +249,32 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: `Depositing ${toBuyBeanValue} beans...`,
+            state: State.PENDING,
+          })
+        );
         buyAndDepositBeans(beans, buyBeans, eth, claimable, () => {
+          dispatch(completeTransaction(transactionNumber));
           fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
         });
       } else {
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: `Depositing ${fromBeanValue} beans...`,
+            state: State.PENDING,
+          })
+        );
         depositBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimable,
           () => {
+            dispatch(completeTransaction(transactionNumber));
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
           }
         );

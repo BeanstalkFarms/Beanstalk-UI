@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { unstable_batchedUpdates } from 'react-dom'; // eslint-disable-line
+import { useDispatch } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import {
@@ -45,6 +46,12 @@ import {
   TransactionTextModule,
   TransactionDetailsModule,
 } from 'components/Common';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 
 export const LPDepositModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(0));
@@ -61,6 +68,8 @@ export const LPDepositModule = forwardRef((props, ref) => {
     crates: [],
     amounts: [],
   });
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
 
   function fromValueUpdated(newFromNumber, newFromEthNumber, newFromLPNumber) {
     if (
@@ -513,10 +522,27 @@ export const LPDepositModule = forwardRef((props, ref) => {
         const claimable = props.settings.claim ? props.claimable : null;
         const lp = MaxBN(fromLPValue, new BigNumber(0));
         if (props.settings.mode === SwapMode.LP && lp.isGreaterThan(0)) {
-          depositLP(toStringBaseUnitBN(lp, ETH.decimals), claimable, () =>
-            resetFields()
+          const transactionNumber = latestTransactionNumber + 1;
+          dispatch(
+            addTransaction({
+              transactionNumber,
+              description: `Depositing ${lp} LP beans...`,
+              state: State.PENDING,
+            })
           );
+          depositLP(toStringBaseUnitBN(lp, ETH.decimals), claimable, () => {
+            dispatch(completeTransaction(transactionNumber));
+            resetFields();
+          });
         } else if (props.settings.convert) {
+          const transactionNumber = latestTransactionNumber + 1;
+          dispatch(
+            addTransaction({
+              transactionNumber,
+              description: `Convert and depositing ${lp} LP beans...`,
+              state: State.PENDING,
+            })
+          );
           convertAddAndDepositLP(
             toStringBaseUnitBN(lp, ETH.decimals),
             toStringBaseUnitBN(fromEthValue, ETH.decimals),
@@ -534,7 +560,10 @@ export const LPDepositModule = forwardRef((props, ref) => {
             beanConvertParams.crates,
             beanConvertParams.amounts,
             claimable,
-            () => resetFields()
+            () => {
+              dispatch(completeTransaction(transactionNumber));
+              resetFields();
+            }
           );
         } else {
           const beans = fromBeanValue
@@ -542,6 +571,14 @@ export const LPDepositModule = forwardRef((props, ref) => {
             .minus(toSellBeanValue);
           const buyEth = MaxBN(toBuyEthValue, new BigNumber(0));
           const eth = fromEthValue.plus(buyEth).minus(toSellEthValue);
+          const transactionNumber = latestTransactionNumber + 1;
+          dispatch(
+            addTransaction({
+              transactionNumber,
+              description: `Add and depositing ${lp} LP beans...`,
+              state: State.PENDING,
+            })
+          );
           addAndDepositLP(
             toStringBaseUnitBN(lp, ETH.decimals),
             toStringBaseUnitBN(toBuyBeanValue, BEAN.decimals),
@@ -559,7 +596,10 @@ export const LPDepositModule = forwardRef((props, ref) => {
               ),
             ],
             claimable,
-            () => resetFields()
+            () => {
+              dispatch(completeTransaction(transactionNumber));
+              resetFields();
+            }
           );
         }
       }

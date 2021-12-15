@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from 'state';
 import { updateUniswapBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
@@ -12,6 +12,12 @@ import {
   transferBeans,
 } from 'util/index';
 import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
 
@@ -52,8 +58,13 @@ export default function TradeModule() {
 
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
 
-  function handleSwapCallback() {
+  function handleSwapCallback(transactionNumber = null) {
+    if (!transactionNumber) {
+      dispatch(completeTransaction(transactionNumber));
+    }
     setFromValue(new BigNumber(-1));
     setToValue(new BigNumber(-1));
   }
@@ -70,25 +81,52 @@ export default function TradeModule() {
 
       if (toValue.isGreaterThan(0)) {
         if (fromToken === CryptoAsset.Ethereum) {
+          const transactionNumber = latestTransactionNumber + 1;
+          dispatch(
+            addTransaction({
+              transactionNumber,
+              description: `Buying ${fromValue} beans`,
+              state: State.PENDING,
+            })
+          );
+
           buyBeans(
             toStringBaseUnitBN(fromValue, ETH.decimals),
             toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
-            handleSwapCallback
+            () => handleSwapCallback(transactionNumber)
           );
         } else {
+          const transactionNumber = latestTransactionNumber + 1;
+          dispatch(
+            addTransaction({
+              transactionNumber,
+              description: `Selling ${fromValue} beans`,
+              state: State.PENDING,
+            })
+          );
+
           sellBeans(
             toStringBaseUnitBN(fromValue, BEAN.decimals),
             toStringBaseUnitBN(minimumToAmount, ETH.decimals),
-            handleSwapCallback
+            () => handleSwapCallback(transactionNumber)
           );
         }
       }
     } else if (section === 1) {
       if (fromValue.isGreaterThan(0)) {
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: `Transfering ${fromValue} beans to ${toAddress}`,
+            state: State.PENDING,
+          })
+        );
+
         transferBeans(
           toAddress,
           toStringBaseUnitBN(fromValue, BEAN.decimals),
-          handleSwapCallback
+          () => handleSwapCallback(transactionNumber)
         );
       }
     }

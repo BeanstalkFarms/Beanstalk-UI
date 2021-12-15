@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { AppState } from 'state';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
@@ -34,6 +34,12 @@ import {
   TransactionTextModule,
   CryptoAsset,
 } from 'components/Common';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 
 export const ConvertLPModule = forwardRef((props, ref) => {
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
@@ -47,6 +53,8 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     crates: [],
     amounts: [],
   });
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
 
   const {
     lpDeposits,
@@ -58,28 +66,18 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     (state) => state.userBalance
   );
 
-  const {
-    beanReserve,
-    ethReserve,
-    beanPrice,
-    usdcPrice,
-    lpToPeg,
-  } = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
+  const { beanReserve, ethReserve, beanPrice, usdcPrice, lpToPeg } =
+    useSelector<AppState, AppState['prices']>((state) => state.prices);
 
   const { totalLP } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
-    return poolForLP(
-      amount,
-      beanReserve,
-      ethReserve,
-      totalLP
-    );
+    if (amount.isLessThanOrEqualTo(0)) {
+      return [new BigNumber(-1), new BigNumber(-1)];
+    }
+    return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 
   function displayLP(beanInput, ethInput) {
@@ -104,7 +102,11 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     BigNumber.set({ DECIMAL_PLACES: 6 });
 
     Object.keys(lpDeposits)
-    .sort((a, b) => parseFloat(lpSeedDeposits[a].dividedBy(lpDeposits[a]), 10) - parseInt(lpSeedDeposits[b].dividedBy(lpDeposits[b]), 10))
+      .sort(
+        (a, b) =>
+          parseFloat(lpSeedDeposits[a].dividedBy(lpDeposits[a]), 10) -
+          parseInt(lpSeedDeposits[b].dividedBy(lpDeposits[b]), 10)
+      )
       .some((key) => {
         const crateLPsRemoved = lpRemoved
           .plus(lpDeposits[key])
@@ -133,7 +135,9 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     setFromLPValue(newFromLPValue);
     const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber);
 
-    const toBeansRemoved = fromNumber.multipliedBy(beanReserve).dividedBy(totalLP);
+    const toBeansRemoved = fromNumber
+      .multipliedBy(beanReserve)
+      .dividedBy(totalLP);
     const toEthRemoved = fromNumber.multipliedBy(ethReserve).dividedBy(totalLP);
     const toBuyBeans = getToAmount(
       toEthRemoved,
@@ -154,7 +158,9 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       setToSeedsValue(TrimBN(netSeeds, SEEDS.decimals));
     });
 
-    props.setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0) || lpToPeg.isLessThanOrEqualTo(0));
+    props.setIsFormDisabled(
+      newFromLPValue.isLessThanOrEqualTo(0) || lpToPeg.isLessThanOrEqualTo(0)
+    );
   }
 
   const handleFromChange = (event) => {
@@ -208,11 +214,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     />
   );
   const toDepositedBeansField = (
-    <TokenOutputField
-      mint
-      token={SiloAsset.Bean}
-      value={toBeanValue}
-    />
+    <TokenOutputField mint token={SiloAsset.Bean} value={toBeanValue} />
   );
 
   const showSettings = (
@@ -225,13 +227,17 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     />
   );
 
-  const stalkText = toStalkValue.isGreaterThan(0) ?
-  `Receive ${displayBN(toStalkValue)} Stalk` :
-  `Burn ${displayBN(toStalkValue.abs())} Stalk`;
+  const stalkText = toStalkValue.isGreaterThan(0)
+    ? `Receive ${displayBN(toStalkValue)} Stalk`
+    : `Burn ${displayBN(toStalkValue.abs())} Stalk`;
 
-  const seedText = toSeedsValue.isGreaterThan(0) ?
-    `and ${toStalkValue.isGreaterThan(0) ? '' : 'receive'} ${displayBN(toSeedsValue)} Seeds` :
-    `and ${toStalkValue.isGreaterThan(0) ? 'burn' : ''} ${displayBN(toSeedsValue.abs())} Seeds`;
+  const seedText = toSeedsValue.isGreaterThan(0)
+    ? `and ${toStalkValue.isGreaterThan(0) ? '' : 'receive'} ${displayBN(
+        toSeedsValue
+      )} Seeds`
+    : `and ${toStalkValue.isGreaterThan(0) ? 'burn' : ''} ${displayBN(
+        toSeedsValue.abs()
+      )} Seeds`;
 
   const details = [
     `Remove ${displayBN(fromLPValue)} LP from to the BEAN:ETH pool`,
@@ -283,13 +289,28 @@ export const ConvertLPModule = forwardRef((props, ref) => {
         return;
       }
 
+      const transactionNumber = latestTransactionNumber + 1;
+      dispatch(
+        addTransaction({
+          transactionNumber,
+          description: `Converting deposited ${toBeanValue} beans...`,
+          state: State.PENDING,
+        })
+      );
+
       convertDepositedLP(
         toStringBaseUnitBN(fromLPValue, UNI_V2_ETH_BEAN_LP.decimals),
-        toStringBaseUnitBN(toBeanValue.multipliedBy(props.settings.slippage), BEAN.decimals),
+        toStringBaseUnitBN(
+          toBeanValue.multipliedBy(props.settings.slippage),
+          BEAN.decimals
+        ),
         convertParams.crates,
-        convertParams.amounts, () => {
-        fromValueUpdated(new BigNumber(-1));
-      });
+        convertParams.amounts,
+        () => {
+          dispatch(completeTransaction(transactionNumber));
+          fromValueUpdated(new BigNumber(-1));
+        }
+      );
     },
   }));
 

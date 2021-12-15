@@ -2,6 +2,7 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { useDispatch } from 'react-redux';
 import { BEAN, BEAN_TO_SEEDS, SEEDS, STALK } from 'constants/index';
 import {
   claimAndWithdrawBeans,
@@ -23,6 +24,12 @@ import {
   TransactionDetailsModule,
   TransitAsset,
 } from 'components/Common';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 
 export const BeanWithdrawModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -32,6 +39,8 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
     crates: [],
     amounts: [],
   });
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
 
   /* function maxBeans(stalk: BugNumber) {
     var stalkRemoved = new BigNumber(0)
@@ -240,16 +249,34 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
       }
 
       if (props.settings.claim) {
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: `Claim and withdrawing ${withdrawParams.amounts} beans...`,
+            state: State.PENDING,
+          })
+        );
         claimAndWithdrawBeans(
           withdrawParams.crates,
           withdrawParams.amounts,
           props.claimable,
           () => {
+            dispatch(completeTransaction(transactionNumber));
             fromValueUpdated(new BigNumber(-1));
           }
         );
       } else {
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: `Withdrawing ${withdrawParams.amounts} beans...`,
+            state: State.PENDING,
+          })
+        );
         withdrawBeans(withdrawParams.crates, withdrawParams.amounts, () => {
+          dispatch(completeTransaction(transactionNumber));
           fromValueUpdated(new BigNumber(-1));
         });
       }

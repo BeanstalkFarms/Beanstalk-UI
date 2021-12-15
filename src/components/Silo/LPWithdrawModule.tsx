@@ -1,5 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { useDispatch } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import {
@@ -28,6 +29,12 @@ import {
   TransitAsset,
   TransactionDetailsModule,
 } from 'components/Common';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 
 export const LPWithdrawModule = forwardRef((props, ref) => {
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
@@ -37,6 +44,8 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     crates: [],
     amounts: [],
   });
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
 
   /* function maxLPs(stalk: BugNumber) {
     var stalkRemoved = new BigNumber(0)
@@ -254,16 +263,36 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       }
 
       if (props.settings.claim) {
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: `Claim and withdrawing ${withdrawParams.amounts} LP beans...`,
+            state: State.PENDING,
+          })
+        );
+
         claimAndWithdrawLP(
           withdrawParams.crates,
           withdrawParams.amounts,
           props.claimable,
           () => {
+            dispatch(completeTransaction(transactionNumber));
             fromValueUpdated(new BigNumber(-1));
           }
         );
       } else {
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: `Withdrawing ${withdrawParams.amounts} LP beans...`,
+            state: State.PENDING,
+          })
+        );
+
         withdrawLP(withdrawParams.crates, withdrawParams.amounts, () => {
+          dispatch(completeTransaction(transactionNumber));
           fromValueUpdated(new BigNumber(-1));
         });
       }

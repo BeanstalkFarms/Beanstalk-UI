@@ -1,9 +1,15 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { Box } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 import { USDC, BEAN } from '../../constants';
 import {
   displayBN,
@@ -24,15 +30,14 @@ import {
 export const FundModule = forwardRef((props, ref) => {
   const [fromTokenValue, setFromTokenValue] = useState(new BigNumber(-1));
   const [toPodValue, setToPodValue] = useState(new BigNumber(0));
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
 
-  const { weather, soil } = useSelector<
-    AppState,
-    AppState['weather']
-  >((state) => state.weather);
+  const { weather, soil } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
 
-  const {
-    totalPods,
-  } = useSelector<AppState, AppState['totalBalance']>(
+  const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
 
@@ -46,9 +51,7 @@ export const FundModule = forwardRef((props, ref) => {
     const sowedBeans = MaxBN(newFromValue, new BigNumber(0));
     setToPodValue(
       TrimBN(
-        sowedBeans.multipliedBy(
-          new BigNumber(1).plus(weather.dividedBy(100))
-        ),
+        sowedBeans.multipliedBy(new BigNumber(1).plus(weather.dividedBy(100))),
         6
       )
     );
@@ -87,16 +90,24 @@ export const FundModule = forwardRef((props, ref) => {
   const beanOutput = MaxBN(fromTokenValue, new BigNumber(0));
 
   if (fromTokenValue.isEqualTo(props.fundsRemaining)) {
-    details.push(`Sow the remaining ${displayBN(beanOutput)} ${TokenLabel(props.asset)} with ${weather.toFixed()}% Weather`
+    details.push(
+      `Sow the remaining ${displayBN(beanOutput)} ${TokenLabel(
+        props.asset
+      )} with ${weather.toFixed()}% Weather`
     );
   } else {
-    details.push(`Sow ${displayBN(beanOutput)} ${TokenLabel(props.asset)} with ${weather.toFixed()}% Weather`
+    details.push(
+      `Sow ${displayBN(beanOutput)} ${TokenLabel(
+        props.asset
+      )} with ${weather.toFixed()}% Weather`
     );
   }
 
-  details.push(`Receive ${displayBN(toPodValue)} Pods at #${displayBN(
-    totalPods
-  )} in the Pod line`);
+  details.push(
+    `Receive ${displayBN(toPodValue)} Pods at #${displayBN(
+      totalPods
+    )} in the Pod line`
+  );
 
   const noSoilTextField = soil.isEqualTo(0) ? (
     <Box style={{ marginTop: '-2px', fontFamily: 'Futura-PT-Book' }}>
@@ -126,13 +137,22 @@ export const FundModule = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (toPodValue.isLessThanOrEqualTo(0)) return;
-      fund(
-        props.id,
-        toStringBaseUnitBN(fromTokenValue, USDC.decimals),
-        () => {
-          fromValueUpdated(new BigNumber(-1));
-        }
+      const transactionNumber = latestTransactionNumber + 1;
+      dispatch(
+        addTransaction({
+          transactionNumber,
+          description: `funding ${toStringBaseUnitBN(
+            fromTokenValue,
+            USDC.decimals
+          )} beans`,
+          state: State.PENDING,
+        })
       );
+
+      fund(props.id, toStringBaseUnitBN(fromTokenValue, USDC.decimals), () => {
+        dispatch(completeTransaction(transactionNumber));
+        fromValueUpdated(new BigNumber(-1));
+      });
     },
   }));
 

@@ -9,6 +9,10 @@ import {
   setHasActiveFundraiser,
   setFundraisers,
   setWidth,
+  addTransaction,
+  completeTransaction,
+  Transaction,
+  State,
 } from './actions';
 
 export interface GeneralState {
@@ -20,6 +24,7 @@ export interface GeneralState {
   fundraisers: Array;
   hasActiveFundraiser: Boolean;
   contractEvents: Array;
+  transactions: Array<Transaction>;
   width: Number;
 }
 
@@ -30,6 +35,7 @@ export const initialState: GeneralState = {
   bips: [],
   hasActiveBIP: false,
   contractEvents: [],
+  transactions: [],
   width: window.innerWidth,
 };
 
@@ -61,5 +67,25 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setWidth, (state, { payload }) => {
       state.width = payload;
+    })
+    .addCase(addTransaction, (state, { payload }) => {
+      state.transactions = [...state.transactions, payload];
+    })
+    .addCase(completeTransaction, (state, { payload }) => {
+      const index = state.transactions.findIndex(
+        (trans) => trans.transactionNumber === payload
+      );
+      if (index >= 0) {
+        const newTransaction = {
+          ...state.transactions[index],
+          state: State.DONE,
+        };
+
+        state.transactions = [
+          ...state.transactions.slice(0, index),
+          newTransaction,
+          ...state.transactions.slice(index + 1),
+        ];
+      }
     })
 );

@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from 'constants/index';
 import {
   displayBN,
@@ -18,6 +19,12 @@ import {
   fieldStrings,
   TransactionDetailsModule,
 } from 'components/Common';
+import { useLatestTransactionNumber } from 'state/general/hooks';
+import {
+  addTransaction,
+  completeTransaction,
+  State,
+} from 'state/general/actions';
 
 export const SendPlotModule = forwardRef((props, ref) => {
   const [plotId, setPlotId] = useState(new BigNumber(-1));
@@ -27,6 +34,8 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
   const [snappedToAddress, setSnappedToAddress] = useState(false);
   const [walletText, setWalletText] = useState('');
+  const dispatch = useDispatch();
+  const latestTransactionNumber = useLatestTransactionNumber();
 
   const width = window.innerWidth;
 
@@ -251,7 +260,17 @@ export const SendPlotModule = forwardRef((props, ref) => {
         const startPlot = toStringBaseUnitBN(fromPlotIndex, BEAN.decimals);
         const endPlot = toStringBaseUnitBN(toPlotEndIndex, BEAN.decimals);
         const id = toStringBaseUnitBN(plotId, BEAN.decimals);
+        const transactionNumber = latestTransactionNumber + 1;
+        dispatch(
+          addTransaction({
+            transactionNumber,
+            description: `Sending plot from ${startPlot} to ${endPlot} on ${props.toAddress}`,
+            state: State.PENDING,
+          })
+        );
+
         transferPlot(props.toAddress, id, startPlot, endPlot, () => {
+          dispatch(completeTransaction(transactionNumber));
           fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
         });
       } else {
