@@ -23,7 +23,7 @@ function BarnBeanstalk() {
     if (width > 500 && theme.name === 'winter') {
       timer.current = window.setInterval(() => {
         setCount(increment(count));
-      }, 750);
+      }, 1750);
       return () => {
         window.clearInterval(timer.current);
       };
