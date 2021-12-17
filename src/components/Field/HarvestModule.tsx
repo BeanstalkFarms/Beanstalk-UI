@@ -18,13 +18,20 @@ import {
   completeTransaction,
   State,
 } from 'state/general/actions';
+import { UserBalanceState } from 'state/userBalance/reducer';
 
-export const HarvestModule = forwardRef((props, ref) => {
+type HarvestModuleProps = {
+  setIsFormDisabled: Function;
+  harvestablePodBalance: UserBalanceState['harvestablePodBalance'];
+  harvestablePlots: UserBalanceState['harvestablePlots'];
+}
+
+export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
   props.setIsFormDisabled(props.harvestablePodBalance.isLessThanOrEqualTo(0));
   const dispatch = useDispatch();
   const latestTransactionNumber = useLatestTransactionNumber();
-  /* Input Fields */
 
+  /* Input Fields */
   const fromPodField = (
     <TokenInputField
       balance={props.harvestablePodBalance}
@@ -34,7 +41,6 @@ export const HarvestModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toBeanField = (
     <TokenOutputField
       mint
@@ -44,9 +50,10 @@ export const HarvestModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-  const details = [];
-  details.push(`Harvest ${displayBN(props.harvestablePodBalance)} Pods`);
-  details.push(`Receive ${displayBN(props.harvestablePodBalance)} Beans`);
+  const details = [
+    `Harvest ${displayBN(props.harvestablePodBalance)} Pods`,
+    `Receive ${displayBN(props.harvestablePodBalance)} Beans`,
+  ];
 
   function transactionDetails() {
     if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
@@ -68,7 +75,6 @@ export const HarvestModule = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
-
       const transactionNumber = latestTransactionNumber + 1;
       dispatch(
         addTransaction({

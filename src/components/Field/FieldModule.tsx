@@ -20,6 +20,8 @@ import { SendPlotModule } from './SendPlotModule';
 
 export default function FieldModule() {
   const newBN = new BigNumber(-1);
+
+  /* App state */
   const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -54,6 +56,7 @@ export default function FieldModule() {
     AppState['weather']
   >((state) => state.weather);
 
+  /* Local state */
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [page, setPage] = useState(0);
