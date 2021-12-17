@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
   setMarketplaceListings,
+  setMarketplaceBuyOffers,
 } from './actions';
 
 export type Listing = {
@@ -25,15 +26,20 @@ export type BuyOffer = {
 
 export interface MarketplaceState {
   listings: Listing[];
+  buyOffers: BuyOffer[];
 }
 
 export const initialState: MarketplaceState = {
   listings: [],
+  buyOffers: [],
 };
 
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(setMarketplaceListings, (state, { payload }) => {
       state.listings = payload;
+    })
+    .addCase(setMarketplaceBuyOffers, (state, { payload }) => {
+      state.buyOffers = payload;
     })
 );

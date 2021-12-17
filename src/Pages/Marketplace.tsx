@@ -7,10 +7,11 @@ import Pagination from '../components/Pagination';
 import Updater from '../state/marketplace/updater';
 
 export default function Marketplace() {
-  const { listings } = useSelector<AppState, AppState['marketplace']>(
+  // TODO: hook this up
+  const { listings, buyOffers } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
-  console.log('listings:', listings);
+  console.log('got listings, buyOffers:', listings, buyOffers);
 
     const [plots, setPlots] = React.useState([{ placeInLine: 1200430000, pricePerPod: 0.21, amountPods: 1200430, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000000, pricePerPod: 0.21, amountPods: 12000, expiresIn: 1300000 }, { placeInLine: 12000434000, pricePerPod: 0.21, amountPods: 12004340, expiresIn: 1300000 }]);
     const [loading, setLoading] = React.useState(false);

@@ -6,6 +6,7 @@ import {
 import orderBy from 'lodash/orderBy';
 
 // mock global events for marketplace
+// TODO: hook this up to real contract events
 const MOCK_EVENTS = [
   {
     event: 'ListingCreated',
@@ -32,6 +33,32 @@ const MOCK_EVENTS = [
     returnValues: {
       account: '0xaaa',
       index: 0,
+    },
+  },
+  {
+    event: 'BuyOfferCreated',
+    returnValues: {
+      account: '0xaaa',
+      index: 100000,
+      amount: 10000,
+      pricePerPod: 0.95,
+      maxPlaceInLine: 123123,
+    },
+  },
+  {
+    event: 'BuyOfferCreated',
+    returnValues: {
+      account: '0xaaa',
+      index: 300000,
+      amount: 10000,
+      pricePerPod: 0.95,
+      maxPlaceInLine: 123123,
+    },
+  },
+  {
+    event: 'BuyOfferCancelled',
+    returnValues: {
+      index: 300000,
     },
   },
 ];
