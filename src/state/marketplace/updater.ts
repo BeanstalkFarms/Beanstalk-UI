@@ -25,7 +25,7 @@ const MOCK_EVENTS = [
       index: 1000000,
       pricePerPod: 0.99,
       expiry: 123123123,
-      amount: 123123,
+      amount: 1000,
     },
   },
   {
@@ -61,6 +61,27 @@ const MOCK_EVENTS = [
       index: 300000,
     },
   },
+  {
+    event: 'ListingFilled',
+    returnValues: {
+      buyer: '0xccc',
+      seller: '0xaaa',
+      index: 1000000,
+      pricePerPod: 0.99,
+      amount: 500,
+    },
+  },
+  {
+    event: 'ListingFilled',
+    returnValues: {
+      buyer: '0xccc',
+      seller: '0xaaa',
+      index: 1000500,
+      pricePerPod: 0.99,
+      amount: 500,
+    },
+  },
+
 ];
 
 function processEvents(events) {
@@ -79,6 +100,22 @@ function processEvents(events) {
       };
     } else if (event.event === 'ListingCancelled') {
       delete listings[event.returnValues.index];
+    } else if (event.event === 'ListingFilled') {
+      const { index, amount } = event.returnValues;
+      // Move current listing's index up by |amount|
+      const currentListing = listings[index];
+      delete listings[index];
+      const newIndex = index + amount;
+      listings[newIndex] = currentListing;
+
+      // Check whether current listing is sold or not
+      const isSold = currentListing.initialAmount - currentListing.amountSold - amount === 0;
+      if (isSold) {
+        listings[newIndex].status = 'sold';
+      }
+
+      // Bump up |amountSold| for this listing
+      listings[newIndex].amountSold += amount;
     } else if (event.event === 'BuyOfferCreated') {
       buyOffers[event.returnValues.index] = {
         listerAddress: event.returnValues.account,
@@ -90,11 +127,30 @@ function processEvents(events) {
       };
     } else if (event.event === 'BuyOfferCancelled') {
       delete buyOffers[event.returnValues.index];
+    } else if (event.event === 'BuyOfferAccepted') {
+      const { index, amount } = event.returnValues;
+
+      // Move current offer's index up by |amount|
+      const currentBuyOffer = buyOffer[index];
+      delete buyOffers[index];
+      const newIndex = index + amount;
+      buyOffers[newIndex] = currentBuyOffer;
+
+      // Check whether current offer is sold or not
+      const isSold = currentBuyOffer.initialAmountToBuy - currentListing.amountBought - amount === 0;
+      if (isSold) {
+        buyOffers[newIndex].status = 'sold';
+      }
+
+      // Bump up |amountBought| for this offer
+      listings[newIndex].amountBought += amount;
     }
   }
 
   const finalListings = orderBy(Object.values(listings), 'objectiveIndex', 'asc');
   const finalBuyOffers = orderBy(Object.values(buyOffers), 'maxPlaceInLine', 'asc');
+
+  // TODO: set expired listings here
   return {
     listings: finalListings,
     buyOffers: finalBuyOffers,
