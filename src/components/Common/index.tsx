@@ -265,7 +265,7 @@ export const siloChartStrings = {
 };
 export const claimStrings = {
   harvestable: 'Harvestable Pods can be redeemed for 1 Bean each, at any time.',
-  farmable: 'Farmable Beans automatically receive Stalk. Farbable Beans receive Seeds and are deposited in a specific Season the next time you interact with the Silo.',
+  farmable: 'Farmable Beans automatically receive Stalk. Farmable Beans receive Seeds and are deposited in a specific Season the next time you interact with the Silo.',
 };
 export const fundraiserStrings = {
   fundsDescription: 'Fundraisers allow Beanstalk to raise a pre-defined amount of another stablecoin in order to pay for things like audits. Each fundraiser allows anyone to exchange the desired stablecoin, up to the amount specified in the Fundraiser, for Beans at a price of $1.00. All Beans will be Sown and the corresponding amount of Pods will be sent to the wallet that contributed to the Fundraiser. Any excess funds beyond the Fundraiser amount, or of a different currency, will not receive Sown Beans.',
