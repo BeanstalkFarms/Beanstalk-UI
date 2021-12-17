@@ -6,3 +6,4 @@ export { default as BeaNFT } from './BeaNFT';
 export { default as AboutPage } from './AboutPage';
 export { default as FundraiserPage } from './FundraiserPage';
 export { default as MetamasklessPage } from './MetamasklessPage';
+export { default as Marketplace } from './Marketplace';
