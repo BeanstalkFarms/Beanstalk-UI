@@ -1,5 +1,4 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { Listing } from 'state/userBalance/updater';
 import {
   setInitialized,
   setMetamaskFailure,
@@ -7,7 +6,6 @@ import {
   setBips,
   setHasActiveBIP,
   setContractEvents,
-  setMarketplaceListings,
   setHasActiveFundraiser,
   setFundraisers,
   setWidth,
@@ -22,7 +20,6 @@ export interface GeneralState {
   fundraisers: Array;
   hasActiveFundraiser: Boolean;
   contractEvents: Array;
-  marketplaceListings: Listing[];
   width: Number;
 }
 
@@ -33,7 +30,6 @@ export const initialState: GeneralState = {
   bips: [],
   hasActiveBIP: false,
   contractEvents: [],
-  marketplaceListings: [],
   width: window.innerWidth,
 };
 
@@ -62,9 +58,6 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setContractEvents, (state, { payload }) => {
       state.contractEvents = payload;
-    })
-    .addCase(setMarketplaceListings, (state, { payload }) => {
-      state.marketplaceListings = payload;
     })
     .addCase(setWidth, (state, { payload }) => {
       state.width = payload;

@@ -23,7 +23,6 @@ import {
   setFundraisers,
   setHasActiveFundraiser,
   setContractEvents,
-  // setMarketplaceListings,
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery } from 'graph/index';
 import { AppState } from 'state';
@@ -48,25 +47,6 @@ import {
   account,
 } from 'util/index';
 
-export type Listing = {
-  listerAddress: string;
-  // not sure what to call index that does not subtract harvested pods
-  objectiveIndex: number;
-  pricePerPod: number;
-  expiresIn: number;
-  intialAmount: number;
-  amountSold: number;
-  status: string;
-};
-
-export type BuyOffer = {
-  listerAddress: string;
-  maxPlaceInLine: number;
-  initialAmountToBuy: number;
-  pricePerPod: number;
-  amountBought: number;
-  status: string;
-};
 export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
@@ -251,9 +231,6 @@ export default function Updater() {
 
     async function processEvents(events, eventParsingParameters) {
       const startTime = benchmarkStart('EVENT PROCESSOR');
-
-      const listings: Listing[] = [];
-      const buyOffers: BuyOffer[] = [];
 
       let userLPSeedDeposits = {};
       let userLPDeposits = {};
@@ -454,9 +431,6 @@ export default function Updater() {
       });
       dispatch(setContractEvents(events));
 
-      // TODO: marketplaceListings = grab all chain listing event data for current active listings
-      // dispatch(setMarketplaceListings(marketplaceListings));
-
       const [s, hi, fb, gs, ce, br, er] =
         eventParsingParameters !== undefined
           ? eventParsingParameters
@@ -534,8 +508,8 @@ export default function Updater() {
           rawBeanDeposits: rawBeanDeposits,
           farmableBeanBalance: fb,
           grownStalkBalance: gs,
-          listings: listings,
-          buyOffers: buyOffers,
+          // listings: listings,
+          // buyOffers: buyOffers,
         })
       );
 
