@@ -37,6 +37,6 @@ export default createReducer(initialState, (builder) =>
   builder
     .addCase(setMarketplaceListings, (state, { payload }) => {
       state.listings = payload.listings;
-      state.buyOffers = payload;
+      state.buyOffers = payload.buyOffers;
     })
 );

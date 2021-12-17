@@ -74,9 +74,21 @@ function processEvents(events) {
         pricePerPod: event.returnValues.pricePerPod,
         expiresIn: event.returnValues.expiry,
         initialAmount: event.returnValues.amount,
+        status: 'hi',
       };
     } else if (event.event === 'ListingCancelled') {
       delete listings[event.returnValues.index];
+    } else if (event.event === 'BuyOfferCreated') {
+      buyOffers[event.returnValues.index] = {
+        listerAddress: event.returnValues.account,
+        maxPlaceInLine: event.returnValues.account,
+        initialAmountToBuy: event.returnValues.account,
+        pricePerPod: event.returnValues.account,
+        amountBought: event.returnValues.account,
+        status: 'hi',
+      };
+    } else if (event.event === 'BuyOfferCancelled') {
+      delete buyOffers[event.returnValues.index];
     }
   }
 
