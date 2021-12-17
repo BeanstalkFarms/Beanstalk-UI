@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { MEDIUM_NFT_LINK, NFT_LINK, OPENSEA_LINK } from 'constants/index';
+import { MEDIUM_NFT_LINK, OPENSEA_LINK } from 'constants/index';
 import {
   listenForNFTTransfers,
   GetWalletAddress,
   getMintedNFTs,
 } from 'util/index';
 import { beanftStrings, ContentSection, ContentDropdown, Grid } from 'components/Common';
+import { loadNFTs } from 'graph';
 import ClaimNFT from './claimnft';
 
 export default function NFTs() {
@@ -39,15 +40,8 @@ export default function NFTs() {
       listenForNFTTransfers(getNFTs); // eslint-disable-line
     }
     async function getNFTs() {
-      fetch(`${NFT_LINK}?account=${(await GetWalletAddress()).toLowerCase()}`)
-        .then((response) => response.json())
-        .then((data) => {
-          data.forEach((d) => {
-            d.id = parseInt(d._id.$numberInt, 10);
-            delete d._id;
-          });
-          checkMints(data);
-        });
+      const data = await loadNFTs((await GetWalletAddress()).toLowerCase());
+      checkMints(data);
     }
     getNFTs();
   }, [season]);
