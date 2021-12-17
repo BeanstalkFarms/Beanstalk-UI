@@ -16,6 +16,7 @@ import {
   AboutPage,
   FundraiserPage,
   MetamasklessPage,
+  Marketplace,
 } from 'Pages';
 
 import Main from './main.tsx';
@@ -68,18 +69,6 @@ export default function App() {
           <Route path="/analytics">
             <Analytics />
           </Route>
-          <Route path="/fundraiser">
-            <Fundraiser />
-          </Route>
-          <Route path="/dao">
-            <Governance />
-          </Route>
-          <Route path="/nft">
-            <NFTs />
-          </Route>
-          <Route path="/about">
-            <About key="about" />
-          </Route>
           <Route exact path="/fundraiser">
             <FundraiserPage />
           </Route>
@@ -92,7 +81,7 @@ export default function App() {
           <Route exact path="/about">
             <AboutPage key="about" />
           </Route>
-          <Route path="/marketplace">
+          <Route exact path="/marketplace">
             <Marketplace key="marketplace" />
           </Route>
         </Switch>
