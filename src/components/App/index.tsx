@@ -79,6 +79,7 @@ export default function App() {
           </Route>
           <Route path="/about">
             <About key="about" />
+          </Route>
           <Route exact path="/fundraiser">
             <FundraiserPage />
           </Route>

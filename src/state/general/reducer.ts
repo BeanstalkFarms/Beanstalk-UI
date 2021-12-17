@@ -65,6 +65,7 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setMarketplaceListings, (state, { payload }) => {
       state.marketplaceListings = payload;
+    })
     .addCase(setWidth, (state, { payload }) => {
       state.width = payload;
     })
