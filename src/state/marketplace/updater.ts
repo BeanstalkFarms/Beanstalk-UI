@@ -65,6 +65,7 @@ const MOCK_EVENTS = [
 
 function processEvents(events) {
   const listings = {};
+  const buyOffers = {};
   for (const event of events) {
     if (event.event === 'ListingCreated') {
       listings[event.returnValues.index] = {
@@ -80,8 +81,10 @@ function processEvents(events) {
   }
 
   const finalListings = orderBy(Object.values(listings), 'objectiveIndex', 'asc');
+  const finalBuyOffers = orderBy(Object.values(buyOffers), 'maxPlaceInLine', 'asc');
   return {
     listings: finalListings,
+    buyOffers: finalBuyOffers,
   };
 }
 
@@ -90,8 +93,12 @@ export default function Updater() {
   useEffect(() => {
     const {
       listings,
+      buyOffers,
     } = processEvents(MOCK_EVENTS);
-    dispatch(setMarketplaceListings(listings));
+    dispatch(setMarketplaceListings({
+      listings,
+      buyOffers,
+    }));
 
     // eslint-disable-next-line
   }, []);
