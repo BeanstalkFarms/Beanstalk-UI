@@ -1,0 +1,53 @@
+.BG1 {
+  background-image: url('../../img/winter/beanstalk-background-1.svg');
+}
+.BG2 {
+  background-image: url('../../img/winter/beanstalk-background-2.svg');
+}
+.BG3 {
+  background-image: url('../../img/winter/beanstalk-background-3.svg');
+}
+.BG4 {
+  background-image: url('../../img/winter/beanstalk-background-4.svg');
+}
+.BG5 {
+  background-image: url('../../img/winter/beanstalk-background-5.svg');
+}
+
+.B1 {
+  background-image: url('../../img/winter/Barn-1.svg');
+}
+.B2 {
+  background-image: url('../../img/winter/Barn-2.svg');
+}
+.B3 {
+  background-image: url('../../img/winter/Barn-3.svg');
+}
+.B4 {
+  background-image: url('../../img/winter/Barn-4.svg');
+}
+.B5 {
+  background-image: url('../../img/winter/Barn-5.svg');
+}
+.BG1, .BG2, .BG3, .BG4, .BG5 {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 96%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -10;
+}
+.B1, .B2, .B3, .B4, .B5 {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 10px;
+  bottom: 65px;
+  height: 16vw;
+  width: 100%;
+  min-height: 95px;
+  position: fixed;
+  z-index: -1;
+}

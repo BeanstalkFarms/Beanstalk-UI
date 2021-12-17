@@ -19,7 +19,7 @@ import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
 
 export default function FieldModule() {
-  const zeroBN = new BigNumber(-1);
+  const newBN = new BigNumber(-1);
   const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -69,7 +69,7 @@ export default function FieldModule() {
   };
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    if (amount.isLessThanOrEqualTo(0)) return [newBN, newBN];
     return poolForLP(
       amount,
       prices.beanReserve,

@@ -161,6 +161,8 @@ export async function initializeEventListener(
     } else if (event.event === 'Sunrise') {
       callback(allEvents);
       txCallback();
+      console.log('-------UPDATING TOTALS!');
+      updateTotals();
       lastTotalsRefresh = new Date().getTime();
       lastPriceRefresh = new Date().getTime();
     } else if (new Date().getTime() - lastTotalsRefresh > 5000) {
@@ -198,8 +200,16 @@ export function addRewardedCrates(
 ) {
   if (rewardedBeans.isEqualTo(0)) return crates;
   const ds = parseInt(season, 10);
+  const isTopCrate = crates[ds] !== undefined
+    ? crates[ds].isEqualTo(new BigNumber(rewardedBeans))
+    : false;
+
   crates[ds] =
-    crates[ds] === undefined ? rewardedBeans : crates[ds].plus(rewardedBeans);
+    crates[ds] === undefined
+      ? rewardedBeans
+      : isTopCrate
+        ? crates[ds]
+        : crates[ds].plus(rewardedBeans);
   return crates;
 }
 

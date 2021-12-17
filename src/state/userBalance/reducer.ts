@@ -42,6 +42,7 @@ export interface UserBalanceState {
   rootsBalance: BigNumber;
   listings: Listing[];
   buyOffers: BuyOffer[];
+  usdcBalance: BigNumber;
 }
 
 export const initialState: UserBalanceState = {
@@ -81,6 +82,7 @@ export const initialState: UserBalanceState = {
   rootsBalance: new BigNumber(-1),
   listings: [],
   buyOffers: [],
+  usdcBalance: new BigNumber(-1),
 };
 
 export default createReducer(initialState, (builder) =>

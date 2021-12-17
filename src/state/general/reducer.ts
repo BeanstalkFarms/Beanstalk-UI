@@ -8,6 +8,9 @@ import {
   setHasActiveBIP,
   setContractEvents,
   setMarketplaceListings,
+  setHasActiveFundraiser,
+  setFundraisers,
+  setWidth,
 } from './actions';
 
 export interface GeneralState {
@@ -16,9 +19,11 @@ export interface GeneralState {
   lastCross: Number;
   bips: Array;
   hasActiveBIP: Boolean;
+  fundraisers: Array;
+  hasActiveFundraiser: Boolean;
   contractEvents: Array;
   marketplaceListings: Listing[];
-
+  width: Number;
 }
 
 export const initialState: GeneralState = {
@@ -29,6 +34,7 @@ export const initialState: GeneralState = {
   hasActiveBIP: false,
   contractEvents: [],
   marketplaceListings: [],
+  width: window.innerWidth,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -48,10 +54,18 @@ export default createReducer(initialState, (builder) =>
     .addCase(setHasActiveBIP, (state, { payload }) => {
       state.hasActiveBIP = payload;
     })
+    .addCase(setFundraisers, (state, { payload }) => {
+      state.fundraisers = payload;
+    })
+    .addCase(setHasActiveFundraiser, (state, { payload }) => {
+      state.hasActiveFundraiser = payload;
+    })
     .addCase(setContractEvents, (state, { payload }) => {
       state.contractEvents = payload;
     })
     .addCase(setMarketplaceListings, (state, { payload }) => {
       state.marketplaceListings = payload;
+    .addCase(setWidth, (state, { payload }) => {
+      state.width = payload;
     })
 );

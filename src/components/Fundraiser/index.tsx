@@ -1,59 +1,78 @@
 import React from 'react';
-import BigNumber from 'bignumber.js';
-import { fundsList } from 'constants/index';
-import { ContentSection, fundraiserStrings } from '../Common';
-import FundsModule from './FundsModule';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
+import { fundsList, FUNDRAISER_LINK } from 'constants/index';
+import {
+  ContentDropdown,
+  ContentSection,
+  fundraiserStrings,
+  Grid,
+} from '../Common';
+import FundraiserModule from './FundraiserModule';
+import FundraiserTable from './FundraiserTable';
 
 export default function Fundraiser(props) {
-  // const { innerWidth: width } = window;
-  // const descriptionLinks = [
-  //   {
-  //     href: `${MEDIUM_INTEREST_LINK}#0b33`,
-  //     text: 'Read More',
-  //   },
-  // ];
+  const { fundraisers, hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
-  const funds = (
-    Object.keys(fundsList).map((id, item) => {
-      const masterList = fundsList[item];
-      const fundsRequired = new BigNumber(masterList.total);
-      const fundsRemaining = new BigNumber(10); // remainaing usdc balance for audit
-      const tokenBalance = new BigNumber(100); // user balance
+  const activeFundraisers = [];
+  const historicalFundraisers = [];
+  const historicalFundraisersInfo = [];
 
-      const fundPercent = fundsRemaining.dividedBy(fundsRequired).multipliedBy(100);
-      // console.log(masterList.total);
-      // console.log(masterList.token);
-      // console.log(masterList.tokenNum);
-      // console.log(masterList.address);
-      // console.log(masterList.fundsAddress);
-      // console.log(masterList.name);
-      // console.log(masterList.description);
-      return (
-        <FundsModule
-          key={item}
-          fundsRemaining={fundsRemaining}
-          fundsRequired={fundsRequired}
-          address={masterList.address}
-          fundsAddress={masterList.fundsAddress}
-          tokenBalance={tokenBalance} // user balance
-          fundPercent={fundPercent}
-          description={masterList.description}
-          title={masterList.name}
-          asset={masterList.tokenNum}
-          minHeight={fundsList.length - 1 === item ? '600px' : undefined}
+  Object.keys(fundraisers).map((id) => {
+    const fundraiser = fundraisers[id];
+    const fundraiserInfo = fundsList[id];
+
+    if (fundraiser.remaining.isGreaterThan(0)) {
+      activeFundraisers.push(
+        <FundraiserModule
+          key={id}
+          id={id}
+          remaining={fundraiser.remaining}
+          total={fundraiser.total}
+          token={fundraiser.token}
+          description={fundraiserInfo.description}
+          title={fundraiserInfo.name}
+          minHeight={fundsList.length - 1 === id ? '600px' : undefined}
           {...props}
         />
       );
-    })
-  );
-  const activeFundraiser = false;
+      return activeFundraisers;
+    }
+      historicalFundraisers.push(fundraiser);
+      historicalFundraisersInfo.push(fundraiserInfo);
+      return null;
+  });
 
-  if (activeFundraiser) {
-    return (
-      <ContentSection id="fund" title="Fundraiser" description={fundraiserStrings.fundsDescription}>
-        {funds}
-      </ContentSection>
-    );
-  }
-  return null;
+  const descriptionLinks = [
+    {
+      href: `${FUNDRAISER_LINK}`,
+      text: 'Read More',
+    },
+  ];
+
+  return (
+    <ContentSection id="fund" title="Fundraiser">
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={fundraiserStrings.fundsDescription}
+          descriptionTitle="What are Fundraisers?"
+          descriptionLinks={descriptionLinks}
+        />
+      </Grid>
+      <Grid container item>
+        <Grid item xs={12}>
+          {hasActiveFundraiser ? activeFundraisers : null}
+        </Grid>
+        <Grid item xs={12}>
+          <FundraiserTable
+            fundraisers={fundraisers}
+            fundraisersInfo={fundsList}
+            style={{ maxWidth: '745px', margin: '0 auto' }}
+          />
+        </Grid>
+      </Grid>
+    </ContentSection>
+  );
 }

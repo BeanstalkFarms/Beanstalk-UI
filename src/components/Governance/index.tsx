@@ -1,9 +1,16 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link, Box } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { AppState } from 'state';
-import { ContentSection, governanceStrings, Grid } from 'components/Common';
-import { theme, WHITEPAPER } from 'constants/index';
+import {
+  ContentDropdown,
+  ContentSection,
+  ContentTitle,
+  governanceStrings,
+  Grid,
+} from 'components/Common';
+import { WHITEPAPER } from 'constants/index';
+import Fundraiser from '../Fundraiser';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
 
@@ -24,6 +31,10 @@ export default function Governance() {
     AppState,
     AppState['userBalance']
   >((state) => state.userBalance);
+
+  const { hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   if (bips === undefined || bips.length === 0) return;
 
@@ -67,23 +78,32 @@ export default function Governance() {
       <Box style={activeBipStyle}>No Active BIPs</Box>
     );
 
-  const description = (
+  const descriptionLinks = [
+    {
+      href: `${WHITEPAPER}#governance`,
+      text: 'Read More',
+    },
+  ];
+
+  const fundraiserTable = !hasActiveFundraiser ?
     <>
-      {governanceStrings.governanceDescription}{' '}
-      <Link href={`${WHITEPAPER}#governance`} target="blank" style={{ color: theme.backgroundText }}>
-        Read More
-      </Link>
-      .
+      <ContentTitle title="Fundraisers" />
+      <Fundraiser />
     </>
-  );
+    : null;
 
   return (
     <ContentSection
       id="governance"
       title="Governance"
-      size="20px"
-      description={description}
     >
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={governanceStrings.governanceDescription}
+          descriptionTitle="How do I participate in Governance?"
+          descriptionLinks={descriptionLinks}
+        />
+      </Grid>
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid
           container
@@ -106,6 +126,7 @@ export default function Governance() {
             />
           </Grid>
         </Grid>
+        {fundraiserTable}
       </Grid>
     </ContentSection>
   );

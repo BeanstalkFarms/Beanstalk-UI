@@ -58,9 +58,22 @@ export default function NavigationBar(props) {
     (state) => state.prices
   );
 
-  const { bips } = useSelector<AppState, AppState['general']>(
+  const { hasActiveBIP, hasActiveFundraiser, width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+
+  // const [width, setWidth] = useState<number>(window.innerWidth);
+  //
+  // function handleWindowSizeChange() {
+  //   setWidth(window.innerWidth);
+  // }
+  //
+  // useEffect(() => {
+  //   window.addEventListener('resize', handleWindowSizeChange);
+  //   return () => {
+  //     window.removeEventListener('resize', handleWindowSizeChange);
+  //   };
+  // }, []);
 
   const classes = makeStyles({
     fixedNav: {
@@ -69,9 +82,9 @@ export default function NavigationBar(props) {
       backgroundImage: `url(${theme.cloud}), url(${theme.cloud})`,
       backgroundPosition: '0px 0px, 1px 0px',
       backgroundRepeat: 'repeat-x, repeat-x',
-      backgroundSize: 'contain, contain',
+      backgroundSize: width > 1000 ? 'contain, contain' : 'cover',
       boxShadow: 'none',
-      height: '85px',
+      height: '90px',
       position: 'fixed',
       width: '100%',
     },
@@ -122,17 +135,8 @@ export default function NavigationBar(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  let hasActiveBIP = false;
-  try {
-    hasActiveBIP = bips[bips.length - 1].active;
-  } catch (error) {
-    return false;
-  }
-
-  // temporary fix/hide for WIP Fundraiser page
 
   const navMapping = [...defaultNavMapping];
-  const hasActiveFundraiser = false;
   if (hasActiveFundraiser) {
     navMapping.splice(3, 0, {
       path: 'fundraiser',
@@ -141,7 +145,9 @@ export default function NavigationBar(props) {
   }
 
   const linkItemStyle = (path) => {
-    if ((path === 'dao' && hasActiveBIP !== false) || path === 'fundraiser') {
+    if (
+      (path === 'dao' && hasActiveBIP !== false) ||
+      (path === 'fundraiser' && hasActiveFundraiser !== false)) {
       return { color: theme.activeSection };
     }
     return null;
@@ -156,7 +162,7 @@ export default function NavigationBar(props) {
       >
         {props.showWallet ? (
           <ListItem>
-            <WalletModule {...props} />
+            <WalletModule />
           </ListItem>
         ) : null}
       </List>
@@ -241,7 +247,7 @@ export default function NavigationBar(props) {
       ))}
       {props.showWallet ? (
         <ListItem>
-          <WalletModule {...props} />
+          <WalletModule />
         </ListItem>
       ) : null}
     </List>

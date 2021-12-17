@@ -21,7 +21,12 @@ import {
   TransitAsset,
 } from 'util/index';
 import { theme } from 'constants/index';
-import { FormatTooltip, QuestionModule } from './index';
+import {
+  claimStrings,
+  FormatTooltip,
+  TablePageSelect,
+  QuestionModule,
+} from './index';
 
 const useStyles = makeStyles({
   table: {
@@ -111,14 +116,11 @@ const BasicTable = (props) => {
   ) {
     if (props.asset === FarmAsset.Pods) {
       claimWord = 'Harvestable';
-      claimDescription =
-        'Harvestable Pods can be redeemed for 1 Bean each, at any time.';
+      claimDescription = claimStrings.harvestable;
     }
     if (props.asset === SiloAsset.Bean) {
       claimWord = 'Farmable';
-      claimDescription = `Farmable ${TokenLabel(
-        props.asset
-      )} are deposited in a specific Season the next time you interact with the Silo.`;
+      claimDescription = claimStrings.farmable;
     }
     claimableRow = (
       <TableRow style={{ backgroundColor: theme.primary }}>
@@ -273,6 +275,11 @@ const BasicTable = (props) => {
             `${Math.ceil(from / rowsPerPage)}-${
               count !== -1 ? Math.ceil(count / rowsPerPage) : 0
             }`
+          }
+          ActionsComponent={
+            Object.keys(props.crates).length > (rowsPerPage * 2)
+              ? TablePageSelect
+              : undefined
           }
         />
       ) : null}

@@ -6,9 +6,12 @@ import {
   Twitter as TwitterIcon,
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
 import { ReactComponent as CoinGeckoIcon } from 'img/coingecko-icon.svg';
 import { ReactComponent as CoinMarketCapIcon } from 'img/coinmarketcap-icon.svg';
+import { ReactComponent as CommonwealthIcon } from 'img/commonwealth-icon.svg';
 import { ReactComponent as DiscordIcon } from 'img/discord-icon.svg';
 import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
 import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
@@ -19,11 +22,15 @@ import LogoLinks from './LogoLinks';
 
 import {
   BEAN_TOKEN_LINK,
+  CODE_OF_CONDUCT_LINK,
   COINGECKO_LINK,
   COINMARKETCAP_LINK,
+  COMMONWEALTH_LINK,
   DISCORD_LINK,
   GITHUB_LINK,
+  LICENSE_LINK,
   MEDIUM_LINK,
+  NETLIFY_LINK,
   OPENSEA_LINK,
   SILO_CONTRACT_LINK,
   TELEGRAM_LINK,
@@ -48,7 +55,9 @@ export default function Footer() {
       bottom: '0px',
     },
   })();
-  const width = window.innerWidth;
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   const logoStyle = {
     height: '25px',
@@ -92,11 +101,33 @@ export default function Footer() {
         <LogoLinks close link={SILO_CONTRACT_LINK}>
           <EtherscanIcon style={logoStyle} />
         </LogoLinks>
-        {width > 500 ? (
-          <LogoLinks link={UNISWAP_CONTRACT_LINK}>
+        {width > 400 ? (
+          <LogoLinks close link={UNISWAP_CONTRACT_LINK} paddingRight="5px">
             <UniswapIcon style={logoStyle} />
           </LogoLinks>
         ) : null}
+        {width > 500 ? (
+          <LogoLinks link={COMMONWEALTH_LINK}>
+            <CommonwealthIcon style={logoStyle} />
+          </LogoLinks>
+        ) : null}
+        <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
+          <LogoLinks close link={NETLIFY_LINK} paddingTop="0px" color={theme.footer}>
+            <span style={{ color: theme.footer, fontSize: '12px', margin: '0 5px' }}>
+              {'This site is powered by Netlify'}
+            </span>
+          </LogoLinks>
+          <LogoLinks close link={LICENSE_LINK} paddingTop="0px" color={theme.footer}>
+            <span style={{ color: theme.footer, fontSize: '12px', margin: '0 5px' }}>
+              {'MIT License'}
+            </span>
+          </LogoLinks>
+          <LogoLinks close link={CODE_OF_CONDUCT_LINK} paddingTop="0px" color={theme.footer}>
+            <span style={{ color: theme.footer, fontSize: '12px', margin: '0 5px' }}>
+              {'Code of Conduct'}
+            </span>
+          </LogoLinks>
+        </Grid>
       </Grid>
     </>
   );

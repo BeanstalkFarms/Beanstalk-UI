@@ -32,6 +32,7 @@ export default function BaseModule({
   marginTooltip,
   margin,
   showButton,
+  singleReset,
 }) {
   const dispatch = useDispatch();
   const s = size === 'small' || window.innerWidth < 450;
@@ -70,7 +71,7 @@ export default function BaseModule({
     formButton: {
       borderRadius: '15px',
       fontFamily: 'Futura-Pt-Book',
-      fontSize: 'calc(12px + 1vmin)',
+      fontSize: 'calc(10px + 1vmin)',
       height: '44px',
       margin: '12px 12px',
       width: '64%',
@@ -183,6 +184,21 @@ export default function BaseModule({
   } else {
     <></>;
   }
+  const resetLink = singleReset !== true ?
+    <>
+      <br />
+      <Link // eslint-disable-line
+        style={{ color: 'green' }}
+        href=""
+        onClick={(event) => {
+          event.preventDefault();
+          resetForm();
+        }}
+      >
+        Reset Defaults
+      </Link>
+    </>
+    : null;
 
   const moduleContent = (
     <>
@@ -197,17 +213,7 @@ export default function BaseModule({
         <span>
           To use this module, send an Approval by clicking the Approve button
           above.
-          <br />
-          <Link // eslint-disable-line
-            style={{ color: 'green' }}
-            href=""
-            onClick={(event) => {
-              event.preventDefault();
-              resetForm();
-            }}
-          >
-            Reset Defaults
-          </Link>
+          {resetLink}
         </span>
       ) : null}
     </>
@@ -333,4 +339,5 @@ BaseModule.defaultProps = {
   normalBox: true,
   textTransform: 'uppercase',
   textTabSize: '12.5px',
+  singleReset: false,
 };

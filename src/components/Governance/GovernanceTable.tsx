@@ -24,13 +24,19 @@ import {
   GOVERNANCE_EXPIRATION,
 } from 'constants/index';
 import { percentForStalk } from 'util/index';
-import { Line, QuestionModule, governanceStrings } from 'components/Common';
+import {
+  governanceStrings,
+  Line,
+  TablePageSelect,
+  QuestionModule,
+} from 'components/Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 const useStyles = makeStyles({
   table: {
     margin: '9px',
     width: 'auto',
+    backgroundColor: theme.module.background,
   },
   pagination: {
     alignItems: 'center',
@@ -73,7 +79,7 @@ function summaryBips(open, bip) {
             style={{ border: 'none' }}
             title={`BIP-${bipID}`}
             width="100%"
-            height="460px"
+            height="465px"
           />
         );
       }
@@ -256,15 +262,22 @@ const BipTable = (props) => {
           </Table>
         </TableContainer>
         {Object.keys(tableBips).length > rowsPerPage ? (
-          <TablePagination
-            component="div"
-            count={Object.keys(tableBips).length}
-            className={classes.pagination}
-            onPageChange={handleChangePage}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[]}
-          />
+          <div className={classes.pagination}>
+            <TablePagination
+              component="div"
+              count={Object.keys(tableBips).length}
+              className={classes.pagination}
+              onPageChange={handleChangePage}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[]}
+              ActionsComponent={
+                Object.keys(tableBips).length > (rowsPerPage * 2)
+                  ? TablePageSelect
+                  : undefined
+              }
+            />
+          </div>
         ) : null}
       </AppBar>
     );
