@@ -22,6 +22,7 @@ export * from './APYUtilities';
 export * from './FundraiserUtilities';
 
 let ethereum;
+let connectedToMetamask;
 export let initializing;
 export let web3: Web3;
 export let account: String;
@@ -71,25 +72,38 @@ async function initializeMetaMaskListeners() {
   ethereum.on('chainChanged', changeHandler);
 }
 
-export async function initialize(): Promise<void> {
+export async function initialize(): Promise<boolean> {
   if (!ethereum) {
     try {
       ethereum = (window as any).ethereum;
+      console.log('ethereum after window.ethereum', ethereum);
       if (!ethereum) {
         metamaskFailure = 0;
+        console.log('metamask failure 0');
         return false;
       }
       if (!ethereum.isMetaMask) {
+        console.log('metamask failure 1');
         metamaskFailure = 1;
         return false;
       }
       ethereum.request({ method: 'eth_requestAccounts' });
       if (ethereum && web3 === undefined) {
         web3Provider = new ethers.providers.Web3Provider(ethereum);
+        // Check if user is connected to Metamask
+        const acctsRes = await web3Provider.listAccounts();
+        connectedToMetamask = !!acctsRes.length;
         web3Signer = web3Provider.getSigner();
-
         web3 = new Web3(ethereum);
         initializeMetaMaskListeners();
+        if (!connectedToMetamask) {
+          web3Provider = new ethers.providers.InfuraProvider(
+            'homestead',
+            '98af15ca2ef14d32aea6d9d2cb6ece22'
+          );
+          chainId = 1;
+          return true;
+        }
         const [hexAccount, chainIdentifier] = await Promise.all([
           web3Signer.getAddress(),
           web3Signer.getChainId(),

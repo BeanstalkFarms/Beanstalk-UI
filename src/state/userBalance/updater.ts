@@ -200,8 +200,14 @@ export default function Updater() {
       return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
     }
     function processPrices(_prices) {
-      const [referenceTokenReserves, tokenReserves, token0, twapPrices, beansToPeg, lpToPeg] =
-        _prices;
+      const [
+        referenceTokenReserves,
+        tokenReserves,
+        token0,
+        twapPrices,
+        beansToPeg,
+        lpToPeg,
+      ] = _prices;
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
       const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
         lpReservesForTokenReserves(tokenReserves, token0);
@@ -503,21 +509,31 @@ export default function Updater() {
     async function updateAllBalances() {
       const startTime = benchmarkStart('ALL BALANCES');
       const batch = createLedgerBatch();
-      const accountBalancePromises = getAccountBalances(batch);
+      let accountBalancePromises;
+      if (account) {
+        accountBalancePromises = await getAccountBalances(batch);
+      }
       const totalBalancePromises = getTotalBalances(batch);
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance] =
-        await Promise.all([
-          getBips(),
-          getFundraisers(),
-          getEtherBalance(),
-          accountBalancePromises,
-          totalBalancePromises,
-          pricePromises,
-          getUSDCBalance(),
-        ]);
+      const [
+        bipInfo,
+        fundraiserInfo,
+        ethBalance,
+        accountBalances,
+        totalBalances,
+        _prices,
+        usdcBalance,
+      ] = await Promise.all([
+        getBips(),
+        getFundraisers(),
+        account ? getEtherBalance() : undefined,
+        accountBalancePromises,
+        totalBalancePromises,
+        pricePromises,
+        account ? getUSDCBalance() : undefined,
+      ]);
       benchmarkEnd('ALL BALANCES', startTime);
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
         _prices[1],
@@ -535,7 +551,11 @@ export default function Updater() {
 
       return [
         () => {
-          const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
+          const currentSeason = processTotalBalances(
+            totalBalances,
+            bipInfo,
+            fundraiserInfo
+          );
           const lpReserves = processPrices(_prices);
           processAccountBalances(
             accountBalances,
