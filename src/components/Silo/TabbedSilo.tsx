@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { BaseModule, Grid } from 'components/Common';
+import { BaseModule, Grid, siloStrings } from 'components/Common';
 import SiloBeanModule from './SiloBeanModule';
 import SiloLPModule from './SiloLPModule';
+import SiloConvertModule from './SiloConvertModule';
 
 export default function TabbedSilo() {
   const { innerWidth: width } = window;
 
   const [section, setSection] = useState(0);
-  const sectionTitles = ['LP', 'Beans'];
+  const sectionTitles = ['LP', 'Beans', 'Convert'];
   const sectionTitlesDescription = [
-    'Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.',
-    'Use this tab to deposit, withdraw, and claim Beans to and from the Silo.',
+    siloStrings.lpDescription,
+    siloStrings.beanDescription,
+    siloStrings.convert,
   ];
-  const sections = [<SiloLPModule />, <SiloBeanModule />];
+  const sections = [<SiloLPModule />, <SiloBeanModule />, <SiloConvertModule />];
 
   return (
     <Grid

@@ -7,6 +7,7 @@ import prices from './prices/reducer';
 import weather from './weather/reducer';
 import beansPerSeason from './beansPerSeason/reducer';
 import general from './general/reducer';
+import marketplace from './marketplace/reducer';
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     prices,
     beansPerSeason,
     general,
+    marketplace,
   },
   middleware: [
     ...getDefaultMiddleware({

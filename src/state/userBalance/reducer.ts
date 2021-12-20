@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import {
   setUserBalance,
 } from './actions';
+import { Listing, BuyOffer } from './updater';
 
 export interface UserBalanceState {
   ethBalance: BigNumber;
@@ -39,6 +40,9 @@ export interface UserBalanceState {
   farmableBeanBalance: BigNumber;
   grownStalkBalance: BigNumber;
   rootsBalance: BigNumber;
+  listings: Listing[];
+  buyOffers: BuyOffer[];
+  usdcBalance: BigNumber;
 }
 
 export const initialState: UserBalanceState = {
@@ -76,6 +80,9 @@ export const initialState: UserBalanceState = {
   farmableBeanBalance: new BigNumber(-1),
   grownStalkBalance: new BigNumber(-1),
   rootsBalance: new BigNumber(-1),
+  listings: [],
+  buyOffers: [],
+  usdcBalance: new BigNumber(-1),
 };
 
 export default createReducer(initialState, (builder) =>

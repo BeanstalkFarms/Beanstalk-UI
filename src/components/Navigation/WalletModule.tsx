@@ -77,7 +77,7 @@ const menuItemStyle = {
   borderBottom: `1px solid ${theme.module.foreground}`,
 };
 
-export default function WalletModule(props) {
+export default function WalletModule() {
   const classes = makeStyles({
     walletButton: {
       textDecoration: 'none',
@@ -105,7 +105,6 @@ export default function WalletModule(props) {
     },
   })();
 
-  const zeroBN = new BigNumber(-1);
   const {
     lpBalance,
     lpSiloBalance,
@@ -134,13 +133,18 @@ export default function WalletModule(props) {
     AppState['totalBalance']
   >((state) => state.totalBalance);
 
+  const { contractEvents, width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+
   const [walletListStyle, setWalletListStyle] = useState({
     position: 'absolute',
     right: '-120px',
     top: '1px',
     width: '365px',
-    maxHeight: '395px',
-    overflow: 'scroll',
+    maxHeight: '50vw',
+    overflowX: 'hidden',
+    overFlowY: 'auto',
     backgroundColor: theme.module.foreground,
   });
 
@@ -150,7 +154,7 @@ export default function WalletModule(props) {
   const handleToggleWallet = () => {
     setWalletListStyle((prev) => ({
       ...prev,
-      right: window.innerWidth < 600 ? '-170px' : '-120px',
+      right: width < 600 ? '-170px' : '-120px',
     }));
     setOpenWallet((prevOpen) => !prevOpen);
   };
@@ -161,7 +165,7 @@ export default function WalletModule(props) {
   const [walletEvents, setWalletEvents] = useState([]);
 
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [zeroBN, zeroBN];
+    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 
@@ -182,7 +186,7 @@ export default function WalletModule(props) {
 
     async function buildWalletEvents() {
       const timestampPromisesByBlockNumber = {};
-      props.events.forEach((event) => {
+      contractEvents.forEach((event) => {
         if (timestampPromisesByBlockNumber[event.blockNumber] === undefined) {
           timestampPromisesByBlockNumber[event.blockNumber] = getBlockTimestamp(
             event.blockNumber
@@ -199,7 +203,7 @@ export default function WalletModule(props) {
         });
 
         const filteredEvents = [];
-        props.events.forEach((event) => {
+        contractEvents.forEach((event) => {
           if (event.event === 'BeanRemove' || event.event === 'LPRemove') {
             return;
           }
@@ -331,7 +335,7 @@ export default function WalletModule(props) {
     }
     handleWallet();
     buildWalletEvents();
-  }, [props.events]);
+  }, [contractEvents]);
 
   function displayEvent(event) {
     const inOutDisplay = (inBN, inToken, outBN, outToken) => (

@@ -9,6 +9,7 @@ export const UNISWAP_CONTRACT_LINK =
 export const COINGECKO_LINK = 'https://www.coingecko.com/en/coins/bean';
 export const COINMARKETCAP_LINK =
   'https://coinmarketcap.com/currencies/beanstalk/';
+export const COMMONWEALTH_LINK = 'https://commonwealth.im/beanstalk/';
 export const DISCORD_LINK = 'https://discord.gg/y4cJNv5DTM';
 export const GITHUB_LINK = 'https://github.com/BeanstalkFarms/Beanstalk';
 export const MEDIUM_LINK = 'https://medium.com/@BeanstalkFarms';
@@ -18,6 +19,9 @@ export const OPENSEA_LINK = 'https://opensea.io/collection/beanft-genesis';
 export const REDDIT_LINK = 'https://www.reddit.com/r/BeanstalkProtocol/';
 export const TELEGRAM_LINK = 'https://t.me/joinchat/OdWoJSyPVsRhYzgx';
 export const TWITTER_LINK = 'https://twitter.com/BeanstalkFarms';
+export const LICENSE_LINK = 'https://github.com/BeanstalkFarms/Beanstalk/blob/master/LICENSE.txt';
+export const CODE_OF_CONDUCT_LINK = 'https://github.com/BeanstalkFarms/Beanstalk/blob/master/CODE_OF_CONDUCT.md';
+export const NETLIFY_LINK = 'https://www.netlify.com/';
 
 /* Path Links */
 export const APY_CALCULATION = '/docs/APY.html';
@@ -38,6 +42,8 @@ export const BASE_ETHERSCAN_ADDR_LINK = 'https://etherscan.io/address/';
 /* Informational Links */
 export const MEDIUM_INTEREST_LINK =
   'https://medium.com/@BeanstalkFarms/earn-interest-from-beanstalk-just-the-basics-165a8cc5fecd';
+export const FUNDRAISER_LINK =
+  'https://github.com/BeanstalkFarms/Beanstalk/blob/master/bips/bip-4.md';
 export const SLIPPAGE_LINK =
   'https://coinmarketcap.com/alexandria/glossary/slippage';
 export const DIAMONDS_LINK = 'https://eips.ethereum.org/EIPS/eip-2535';
@@ -53,7 +59,7 @@ export const NFT_LINK =
 export const UNI_V2_SUBGRAPH_API_LINK =
   'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2';
 export const BEAN_SUBGRAPH_API_LINK =
-  'https://api.studio.thegraph.com/query/6727/bean/v0.0.10';
+  'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/0x925753106fcdb6d2f30c3db295328a0a1c5fd1d1-1';
 export const BEANSTALK_NFT_SUBGRAPH_API_LINK =
   'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.2';
 

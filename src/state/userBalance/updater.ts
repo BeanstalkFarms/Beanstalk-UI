@@ -6,6 +6,7 @@ import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
   updateUniswapBeanAllowance,
+  updateBeanstalkUSDCAllowance,
 } from 'state/allowances/actions';
 import { setUserBalance } from 'state/userBalance/actions';
 import { setTotalBalance } from 'state/totalBalance/actions';
@@ -19,6 +20,8 @@ import {
   setLastCross,
   setBips,
   setHasActiveBIP,
+  setFundraisers,
+  setHasActiveFundraiser,
   setContractEvents,
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery } from 'graph/index';
@@ -29,7 +32,9 @@ import {
   createLedgerBatch,
   getAccountBalances,
   getBips,
+  getFundraisers,
   getEtherBalance,
+  getUSDCBalance,
   getPrices,
   getTotalBalances,
   initialize,
@@ -92,6 +97,7 @@ export default function Updater() {
         uniswapBeanAllowance,
         beanstalkBeanAllowance,
         beanstalkLPAllowance,
+        beanstalkUSDCAllowance,
         claimableEthBalance,
         beanBalance,
         lpBalance,
@@ -101,6 +107,7 @@ export default function Updater() {
         farmableBeanBalance,
         grownStalkBalance,
         rootsBalance,
+        usdcBalance,
       ] = accountBalances;
       const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       const lockedSeasons = lockedUntil.minus(currentSeason);
@@ -108,6 +115,7 @@ export default function Updater() {
       dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
+      dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));
 
       dispatch(
         setUserBalance({
@@ -122,11 +130,12 @@ export default function Updater() {
           farmableBeanBalance,
           grownStalkBalance,
           rootsBalance,
+          usdcBalance,
         })
       );
     }
 
-    function processTotalBalances(totalBalances, bipInfo) {
+    function processTotalBalances(totalBalances, bipInfo, fundraiserInfo) {
       const [
         totalBeans,
         totalLP,
@@ -148,6 +157,7 @@ export default function Updater() {
       ] = totalBalances;
       const totalBudgetBeans = develpomentBudget.plus(marketingBudget);
       const [bips, hasActiveBIP] = bipInfo;
+      const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
       const totalPods = podIndex.minus(harvestableIndex);
       dispatch(
         setTotalBalance({
@@ -174,6 +184,8 @@ export default function Updater() {
       );
       dispatch(setBips(bips));
       dispatch(setHasActiveBIP(hasActiveBIP));
+      dispatch(setFundraisers(fundraisers));
+      dispatch(setHasActiveFundraiser(hasActiveFundraiser));
       dispatch(setSeason(_season));
       return _season.season;
     }
@@ -188,7 +200,7 @@ export default function Updater() {
       return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
     }
     function processPrices(_prices) {
-      const [referenceTokenReserves, tokenReserves, token0, twapPrices] =
+      const [referenceTokenReserves, tokenReserves, token0, twapPrices, beansToPeg, lpToPeg] =
         _prices;
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
       const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
@@ -210,6 +222,8 @@ export default function Updater() {
           beanReserve,
           beanTWAPPrice: twapPrices[0],
           usdcTWAPPrice: twapPrices[1],
+          beansToPeg,
+          lpToPeg,
         })
       );
       return [beanReserve, ethReserve];
@@ -226,6 +240,20 @@ export default function Updater() {
       let beanWithdrawals = {};
       const votedBips = new Set();
 
+      /** New events from Plot Marketplace:
+       * ListingCreated
+       * ListingCancelled
+       * BuyOfferCreated
+       * BuyOfferCancelled
+       * BuyOfferAccepted
+      */
+
+     // TODO: PlotTransfer will now need to update listing data too
+     // will need to split up listings into two listings if listing not fully purchased
+     // set state accordingly and adjust index
+
+     // TODO: all event handling logic needs to exist not filtered on address for individual listings and buy offers
+     // but full marketplace since, should not be filtering based on address for these events but grabbing them all
       events.forEach((event) => {
         if (event.event === 'BeanDeposit') {
           const s = parseInt(event.returnValues.season, 10);
@@ -480,6 +508,8 @@ export default function Updater() {
           rawBeanDeposits: rawBeanDeposits,
           farmableBeanBalance: fb,
           grownStalkBalance: gs,
+          // listings: listings,
+          // buyOffers: buyOffers,
         })
       );
 
@@ -494,16 +524,18 @@ export default function Updater() {
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const [bipInfo, ethBalance, accountBalances, totalBalances, _prices] =
+      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance] =
         await Promise.all([
           getBips(),
+          getFundraisers(),
           getEtherBalance(),
           accountBalancePromises,
           totalBalancePromises,
           pricePromises,
+          // getListings()
+          getUSDCBalance(),
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
-
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
         _prices[1],
         _prices[2]
@@ -511,22 +543,23 @@ export default function Updater() {
       const eventParsingParameters = [
         totalBalances[14].season /* season */,
         totalBalances[10] /* harvestableIndex */,
-        accountBalances[9] /* farmableBeanBalance */,
-        accountBalances[10] /* grownStalkBalance */,
-        accountBalances[3] /* claimableEthBalance */,
+        accountBalances[10] /* farmableBeanBalance */,
+        accountBalances[11] /* grownStalkBalance */,
+        accountBalances[4] /* claimableEthBalance */,
         beanReserve,
         ethReserve,
       ];
 
       return [
         () => {
-          const currentSeason = processTotalBalances(totalBalances, bipInfo);
+          const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
           const lpReserves = processPrices(_prices);
           processAccountBalances(
             accountBalances,
             ethBalance,
             lpReserves,
-            currentSeason
+            currentSeason,
+            usdcBalance
           );
         },
         eventParsingParameters,
@@ -540,12 +573,13 @@ export default function Updater() {
 
       batch.execute();
 
-      const [bipInfo, totalBalances] = await Promise.all([
+      const [bipInfo, fundraiserInfo, totalBalances] = await Promise.all([
         getBips(),
+        getFundraisers(),
         totalBalancePromises,
       ]);
       ReactDOM.unstable_batchedUpdates(() => {
-        processTotalBalances(totalBalances, bipInfo);
+        processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
       });
       benchmarkEnd('TOTALS', startTime);
     }

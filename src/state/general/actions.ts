@@ -23,3 +23,15 @@ export const setContractEvents = createAction<Array>(
 export const setHasActiveBIP = createAction<Boolean>(
   'general/setHasActiveBIP'
 );
+
+export const setFundraisers = createAction<Array>(
+  'general/setFundraisers'
+);
+
+export const setHasActiveFundraiser = createAction<Boolean>(
+  'general/setHasActiveFundraiser'
+);
+
+export const setWidth = createAction<Number>(
+  'general/setWidth'
+);

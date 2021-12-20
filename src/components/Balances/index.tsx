@@ -87,8 +87,9 @@ export default function Balances() {
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
 
+  const showFirst = window.location.pathname === '/analytics' ? 1 : 0;
   const sectionTitles = ['My Balances', 'Beanstalk'];
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(showFirst);
   const handleTabChange = (event, newSection) => {
     setSection(newSection);
   };
@@ -329,9 +330,6 @@ export default function Balances() {
   return (
     <ContentSection
       id="balances"
-      title="Balances"
-      size="20px"
-      style={{ paddingTop: '30px' }}
     >
       <Box className="BalanceSection-mobile">
         <BaseModule
@@ -352,7 +350,6 @@ export default function Balances() {
         spacing={8}
         justifyContent="center"
         alignItems="flex-start"
-        style={{ marginTop: '8px' }}
       >
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
           <Box className="AppBar-shadow" style={balanceStyle}>

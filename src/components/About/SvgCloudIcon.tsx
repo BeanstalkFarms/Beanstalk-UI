@@ -2,7 +2,6 @@ import React from 'react';
 import { theme } from 'constants/index';
 
 export const SvgCloudIcon = ({
-
   height = window.innerWidth > 600 ? '200px' : '150px',
   width = window.innerWidth > 600 ? '200px' : '150px',
   text = '',

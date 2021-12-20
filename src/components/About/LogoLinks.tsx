@@ -5,10 +5,13 @@ import { theme } from 'constants/index';
 export default function LogoLinks(props) {
   const linkStyle = {
     padding: theme.footerPadding,
+    color: props.color,
   };
   const closeStyle = {
-    padding: theme.footerPadding,
+    padding: props.padding !== undefined ? props.padding : theme.footerPadding,
     paddingRight: props.paddingRight,
+    paddingTop: props.paddingTop,
+    color: props.color,
   };
 
   return (
@@ -25,4 +28,6 @@ export default function LogoLinks(props) {
 LogoLinks.defaultProps = {
   close: false,
   paddingRight: '7px',
+  paddingTop: '28px',
+  color: 'inherit',
 };

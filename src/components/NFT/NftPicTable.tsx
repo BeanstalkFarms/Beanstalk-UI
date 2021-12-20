@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import {
   Box,
   Link,
@@ -10,10 +10,11 @@ import {
   TablePagination,
   TableRow,
 } from '@material-ui/core/';
+import Image from 'material-ui-image';
 import { makeStyles } from '@material-ui/styles';
 import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from 'constants/index';
 import { mintNFT } from 'util/index';
-import { beanftStrings, SingleButton } from './index';
+import { beanftStrings, SingleButton, TablePageSelect } from 'components/Common';
 
 const useStyles = makeStyles({
   table: {
@@ -86,10 +87,7 @@ const BasicTable = (props) => {
                     scope="index"
                   >
                     <Image
-                      unoptimized
-                      loader={() =>
-                        `${BASE_IPFS_LINK}${props.nftList[index].imageIpfsHash}`
-                      }
+                      unoptimized="true"
                       src={`${BASE_IPFS_LINK}${props.nftList[index].imageIpfsHash}`}
                       width="290px"
                       height="290px"
@@ -151,20 +149,23 @@ const BasicTable = (props) => {
         </Table>
       </TableContainer>
       {Object.keys(props.nftList).length > rowsPerPage ? (
-        <TablePagination
-          className={classes.pagination}
-          component="div"
-          count={Object.keys(props.nftList).length}
-          onPageChange={props.handleChange}
-          page={props.page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[]}
-          labelDisplayedRows={({ from, count }) =>
-            `${Math.ceil(from / rowsPerPage)}-${
-              count !== -1 ? Math.ceil(count / rowsPerPage) : 0
-            }`
-          }
-        />
+        <div className={classes.pagination}>
+          <TablePagination
+            className={classes.pagination}
+            component="div"
+            count={Object.keys(props.nftList).length}
+            onPageChange={props.handleChange}
+            page={props.page}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[]}
+            labelDisplayedRows={({ from, count }) =>
+              `${Math.ceil(from / rowsPerPage)}-${
+                count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+              }`
+            }
+            ActionsComponent={TablePageSelect}
+          />
+        </div>
       ) : null}
     </Box>
   );

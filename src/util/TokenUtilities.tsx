@@ -4,6 +4,7 @@ import {
   BEANSTALK,
   UNI_V2_ETH_BEAN_LP,
   UNISWAP_V2_ROUTER,
+  USDC,
 } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import ClaimableIcon from 'img/claimable-icon.svg';
@@ -26,7 +27,7 @@ export enum CryptoAsset {
   Bean = 0,
   Ethereum,
   LP,
-  USDC,
+  Usdc,
 }
 export enum SiloAsset {
   Stalk = 4,
@@ -112,6 +113,10 @@ export const approveBeanstalkLP = async (callback) => {
   );
 };
 
+export const approveBeanstalkUSDC = async (callback) => {
+  approveToken(USDC, account, BEANSTALK.addr, MAX_UINT256, callback);
+};
+
 export function TokenLabel(tokenType: Token): string {
   switch (tokenType) {
     case CryptoAsset.Bean:
@@ -120,7 +125,7 @@ export function TokenLabel(tokenType: Token): string {
       return 'ETH';
     case CryptoAsset.LP:
       return 'LP';
-    case CryptoAsset.USDC:
+    case CryptoAsset.Usdc:
       return 'USDC';
     case SiloAsset.Stalk:
       return 'Stalk';
@@ -183,7 +188,7 @@ export function TokenImage(tokenType: Token): string {
     case FarmAsset.Pods:
       return PodLogo;
 
-    case CryptoAsset.USDC:
+    case CryptoAsset.Usdc:
       return USDCLogo;
     default:
       return '';
@@ -220,9 +225,10 @@ export function displayFullBN(bn: BigNumber, maxDecimals: number = 18) {
     .toLocaleString('en-US', { maximumFractionDigits: maxDecimals });
 }
 
-export function displayBN(bn: BigNumber) {
-  if (bn === undefined || bn.isLessThan(new BigNumber(0))) {
-    return '0';
+export function displayBN(bn: BigNumber, allowNegative: Boolean = false) {
+  if (bn === undefined) return '0';
+  if (bn.isLessThan(new BigNumber(0))) {
+    return allowNegative ? `-${displayBN(bn.multipliedBy(-1))}` : '0';
   }
   if (bn.isEqualTo(0)) {
     return '0';
@@ -239,6 +245,9 @@ export function displayBN(bn: BigNumber) {
   }
   if (bn.isGreaterThanOrEqualTo(1e9)) {
     return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
+  }
+  if (bn.isGreaterThanOrEqualTo(1e8)) {
+    return `${TrimBN(bn.dividedBy(1e6), 1)}M`; /* Millions */
   }
   if (bn.isGreaterThanOrEqualTo(1e6)) {
     return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */

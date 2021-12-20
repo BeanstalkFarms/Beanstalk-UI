@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { BEAN, WETH } from 'constants/index';
+import { BEAN, WETH, zeroBN } from 'constants/index';
 import { account, MinBN, txCallback, uniswapRouterContract } from './index';
 
 const DEADLINE_FROM_NOW = 60 * 15;
@@ -116,7 +116,6 @@ export const getBuyAndAddLPAmount = (
   ethReserve: BigNumber,
   beanReserve: BigNumber
 ) => {
-  const zeroBN = new BigNumber(0);
   const fee = new BigNumber(0.997);
   const c = eth
     .multipliedBy(fee)
@@ -144,4 +143,65 @@ export const getBuyAndAddLPAmount = (
     .isLessThanOrEqualTo(estBeans.minus(beans2).absoluteValue())
     ? beans1
     : beans2;
+};
+
+export const calculateBeansToLP = (
+  beans: BigNumber,
+  beanReserve: BigNumber,
+  ethReserve: BigNumber,
+  totalLP: BigNumber
+  ) => {
+    let c = beanReserve.multipliedBy(
+      beans.multipliedBy(3988000).plus(beanReserve.multipliedBy(3988009))
+    );
+    c = c.sqrt();
+    const swapBeans = c.minus(beanReserve.multipliedBy(1997)).dividedBy(1994);
+    const addEth = getToAmount(swapBeans, beanReserve, ethReserve);
+
+    const newBeanReserve = beanReserve.plus(swapBeans);
+    const addBeans = beans.minus(swapBeans);
+    const lp = addBeans.multipliedBy(totalLP).dividedBy(newBeanReserve);
+    return {
+      swapBeans,
+      addEth,
+      addBeans,
+      lp,
+    };
+};
+
+export const calculateMaxBeansToPeg = (
+  beansToPeg: BigNumber,
+  beanReserve: BigNumber,
+  ethReserve: BigNumber
+) => {
+  const ethBought = getToAmount(beansToPeg, beanReserve, ethReserve);
+  const newBeanReserve = beanReserve.plus(beansToPeg);
+  const newEthReserve = ethReserve.multipliedBy(beanReserve).dividedBy(newBeanReserve);
+  const beansToAdd = ethBought.multipliedBy(newBeanReserve).dividedBy(newEthReserve);
+  return beansToPeg.plus(beansToAdd);
+};
+
+export const calculateLPToBeans = (
+  lp: BigNumber,
+  beanReserve: BigNumber,
+  ethReserve: BigNumber,
+  totalLP: BigNumber
+) => {
+  const beansRemoved = lp.multipliedBy(beanReserve).dividedBy(totalLP);
+  const ethRemoved = lp.multipliedBy(ethReserve).dividedBy(totalLP);
+
+  const newBeanReserve = beanReserve.minus(beansRemoved);
+  const newEthReserve = ethReserve.minus(ethRemoved);
+
+  const beansBought = getToAmount(ethRemoved, ethReserve, beanReserve);
+
+  const beans = beansRemoved.plus(beansBought);
+  return {
+    newBeanReserve,
+    newEthReserve,
+    beansRemoved,
+    ethRemoved,
+    beansBought,
+    beans,
+  };
 };
