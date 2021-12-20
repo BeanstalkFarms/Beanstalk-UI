@@ -11,6 +11,7 @@ export default function Marketplace() {
     const [order, setOrder] = React.useState(false);
     const [showFilter, setShowFilter] = React.useState(false);
     const [showModal, setShowModal] = React.useState(false);
+    const [showBuyModal, setShowBuyModal] = React.useState(false);
     const [currentPage, setCurrentPage] = React.useState(1);
     const [plotsPerPage] = React.useState(4);
     const [plotPrice, setPlotPrice] = React.useState(0);
@@ -34,6 +35,10 @@ export default function Marketplace() {
       setShowModal(!showModal);
     };
 
+    const showModalToBuy = () => {
+      setShowBuyModal(!showBuyModal);
+    };
+
     const handleChange = (event) => {
       setPricePerPodInput(event.target.value);
       setPlotPrice(0);
@@ -45,6 +50,11 @@ export default function Marketplace() {
 
     const setPlotToSell = (pods) => {
       showSellModal();
+      console.log(pods);
+    };
+
+    const setPlotToBuy = (pods) => {
+      showModalToBuy();
       console.log(pods);
     };
 
@@ -197,7 +207,7 @@ export default function Marketplace() {
             </table>
           </div>
           <div>
-            <Button onClick={() => console.log('buy')}>BUY</Button>
+            <Button onClick={() => setPlotToBuy(0)}>BUY</Button>
           </div>
           <div>
             <Pagination handleRadioChange={handleRadioChange} plotsPerPage={plotsPerPage} totalPlots={plots.length} paginate={paginate} />
@@ -206,6 +216,14 @@ export default function Marketplace() {
         <>
           {
             showModal ?
+              <SellModal />
+              :
+              null
+          }
+        </>
+        <>
+          {
+            showBuyModal ?
               <SellModal />
               :
               null
