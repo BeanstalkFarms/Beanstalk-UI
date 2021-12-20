@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import BigNumber from 'bignumber.js';
+import { AppState } from 'state';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   setMarketplaceListings,
 } from 'state/marketplace/actions';
@@ -12,53 +14,53 @@ const MOCK_EVENTS = [
     event: 'ListingCreated',
     returnValues: {
       account: '0xaaa',
-      index: 0,
-      pricePerPod: 0.98,
-      expiry: 123123123,
-      amount: 123123,
+      index: new BigNumber(0),
+      pricePerPod: new BigNumber(0.98),
+      expiry: new BigNumber(123123123),
+      amount: new BigNumber(123123),
     },
   },
   {
     event: 'ListingCreated',
     returnValues: {
       account: '0xbbb',
-      index: 1000000,
-      pricePerPod: 0.99,
-      expiry: 123123123,
-      amount: 1000,
+      index: new BigNumber(1000000),
+      pricePerPod: new BigNumber(0.99),
+      expiry: new BigNumber(123123123),
+      amount: new BigNumber(1000),
     },
   },
   {
     event: 'ListingCancelled',
     returnValues: {
       account: '0xaaa',
-      index: 0,
+      index: new BigNumber(0),
     },
   },
   {
     event: 'BuyOfferCreated',
     returnValues: {
       account: '0xaaa',
-      index: 100000,
-      amount: 10000,
-      pricePerPod: 0.95,
-      maxPlaceInLine: 123123,
+      index: new BigNumber(100000),
+      amount: new BigNumber(10000),
+      pricePerPod: new BigNumber(0.95),
+      maxPlaceInLine: new BigNumber(123123),
     },
   },
   {
     event: 'BuyOfferCreated',
     returnValues: {
       account: '0xaaa',
-      index: 300000,
-      amount: 10000,
-      pricePerPod: 0.95,
-      maxPlaceInLine: 123123,
+      index: new BigNumber(300000),
+      amount: new BigNumber(10000),
+      pricePerPod: new BigNumber(0.95),
+      maxPlaceInLine: new BigNumber(123123),
     },
   },
   {
     event: 'BuyOfferCancelled',
     returnValues: {
-      index: 300000,
+      index: new BigNumber(300000),
     },
   },
   {
@@ -66,9 +68,9 @@ const MOCK_EVENTS = [
     returnValues: {
       buyer: '0xccc',
       seller: '0xaaa',
-      index: 1000000,
-      pricePerPod: 0.99,
-      amount: 500,
+      index: new BigNumber(1000000),
+      pricePerPod: new BigNumber(0.99),
+      amount: new BigNumber(500),
     },
   },
   {
@@ -76,15 +78,14 @@ const MOCK_EVENTS = [
     returnValues: {
       buyer: '0xccc',
       seller: '0xaaa',
-      index: 1000500,
-      pricePerPod: 0.99,
-      amount: 500,
+      index: new BigNumber(1000500),
+      pricePerPod: new BigNumber(0.99),
+      amount: new BigNumber(500),
     },
   },
-
 ];
 
-function processEvents(events) {
+function processEvents(events, harvestableIndex) {
   const listings = {};
   const buyOffers = {};
   for (const event of events) {
@@ -95,7 +96,7 @@ function processEvents(events) {
         pricePerPod: event.returnValues.pricePerPod,
         expiresIn: event.returnValues.expiry,
         initialAmount: event.returnValues.amount,
-        amountSold: 0,
+        amountSold: new BigNumber(0),
         status: 'active',
       };
     } else if (event.event === 'ListingCancelled') {
@@ -103,48 +104,67 @@ function processEvents(events) {
     } else if (event.event === 'ListingFilled') {
       const { index, amount } = event.returnValues;
       // Move current listing's index up by |amount|
-      const currentListing = listings[index];
-      delete listings[index];
-      const newIndex = index + amount;
-      listings[newIndex] = currentListing;
+      const prevKey = index.toString();
+      const currentListing = listings[prevKey];
+      delete listings[prevKey];
+      const newKey = index.plus(amount).toString();
+      listings[newKey] = currentListing;
 
       // Check whether current listing is sold or not
-      const isSold = currentListing.initialAmount - currentListing.amountSold - amount === 0;
+      const isSold = currentListing.initialAmount.minus(currentListing.amountSold).minus(amount).isEqualTo(0);
       if (isSold) {
-        listings[newIndex].status = 'sold';
+        listings[newKey].status = 'sold';
       }
 
       // Bump up |amountSold| for this listing
-      listings[newIndex].amountSold += amount;
+      listings[newKey].amountSold = listings[newKey].amountSold.plus(amount);
     } else if (event.event === 'BuyOfferCreated') {
       buyOffers[event.returnValues.index] = {
         listerAddress: event.returnValues.account,
         maxPlaceInLine: event.returnValues.index,
         initialAmountToBuy: event.returnValues.amount,
         pricePerPod: event.returnValues.pricePerPod,
-        amountBought: 0,
+        amountBought: new BigNumber(0),
         status: 'active',
       };
     } else if (event.event === 'BuyOfferCancelled') {
       delete buyOffers[event.returnValues.index];
     } else if (event.event === 'BuyOfferAccepted') {
       const { index, amount } = event.returnValues;
+      const key = index.toString();
 
       // Check whether current offer is sold or not
-      const isFilled = currentBuyOffer.initialAmountToBuy - currentListing.amountBought - amount === 0;
+      const buyOffer = buyOffers[key];
+      const isFilled = buyOffer.initialAmountToBuy.minus(buyOffer.amountBought).minus(amount).isEqualTo(0);
       if (isFilled) {
         buyOffers[index].status = 'filled';
       }
 
       // Bump up |amountBought| for this offer
-      buyOffers[index].amountBought += amount;
+      buyOffers[key].amountBought = buyOffers[key].amountBought.plus(amount);
     }
   }
 
-  const finalListings = orderBy(Object.values(listings), 'objectiveIndex', 'asc');
-  const finalBuyOffers = orderBy(Object.values(buyOffers), 'maxPlaceInLine', 'asc');
+  // Finally, order listings and offers by their index and also mark any that have expired.
+  const finalListings = orderBy(Object.values(listings), 'objectiveIndex', 'asc').map((listing) => {
+    if (listing.expiry.isLessThanOrEqualTo(harvestableIndex)) {
+      return {
+        ...listing,
+        status: 'expired',
+      };
+    }
+    return listing;
+  });
+  const finalBuyOffers = orderBy(Object.values(buyOffers), 'maxPlaceInLine', 'asc').map((buyOffer) => {
+    if (buyOffer.maxPlaceInLine.isLessThanOrEqualTo(harvestableIndex)) {
+      return {
+        ...buyOffer,
+        status: 'expired',
+      };
+    }
+    return buyOffer;
+  });
 
-  // TODO: set expired listings here
   return {
     listings: finalListings,
     buyOffers: finalBuyOffers,
@@ -153,18 +173,26 @@ function processEvents(events) {
 
 export default function Updater() {
   const dispatch = useDispatch();
+
+  const { harvestableIndex } = useSelector<
+    AppState,
+    AppState['weather']
+  >((state) => state.weather);
+
   useEffect(() => {
-    const {
-      listings,
-      buyOffers,
-    } = processEvents(MOCK_EVENTS);
-    dispatch(setMarketplaceListings({
-      listings,
-      buyOffers,
-    }));
+    if (harvestableIndex != null) {
+      const {
+        listings,
+        buyOffers,
+      } = processEvents(MOCK_EVENTS, harvestableIndex);
+      dispatch(setMarketplaceListings({
+        listings,
+        buyOffers,
+      }));
+    }
 
     // eslint-disable-next-line
-  }, []);
+  }, [harvestableIndex]);
 
   return null;
 }

@@ -1,18 +1,14 @@
 import React from 'react';
-<<<<<<< HEAD:src/components/Marketplace/index.tsx
 import { Button, Box, TextField } from '@material-ui/core';
-import Plots from '../Plots';
-import SellPlots from '../SellPlots';
-import Pagination from '../Pagination';
-import DropDown from '../DropDown';
-=======
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { Button } from '@material-ui/core';
+
 import Plots from '../components/Plots';
+import SellPlots from '../components/SellPlots';
 import Pagination from '../components/Pagination';
+import DropDown from '../components/DropDown';
+
 import Updater from '../state/marketplace/updater';
->>>>>>> eb1295ba917e1c6382e993ca55390b7f48d2ebb9:src/Pages/Marketplace.tsx
 
 export default function Marketplace() {
   // TODO: hook this up
@@ -214,7 +210,6 @@ export default function Marketplace() {
           <div>
             <Button onClick={() => console.log('buy')}>BUY</Button>
           </div>
-<<<<<<< HEAD:src/components/Marketplace/index.tsx
           <div>
             <Pagination handleRadioChange={handleRadioChange} plotsPerPage={plotsPerPage} totalPlots={plots.length} paginate={paginate} />
           </div>
@@ -227,16 +222,7 @@ export default function Marketplace() {
               null
           }
         </>
-=======
-        </div>
-        {
-          showModal ?
-            <SellModal />
-            :
-            null
-        }
         <Updater />
->>>>>>> eb1295ba917e1c6382e993ca55390b7f48d2ebb9:src/Pages/Marketplace.tsx
       </div>
     );
 }
