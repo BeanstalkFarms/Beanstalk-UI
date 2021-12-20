@@ -277,8 +277,10 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
           withdrawParams.amounts,
           props.claimable,
           () => {
-            dispatch(completeTransaction(transactionNumber));
             fromValueUpdated(new BigNumber(-1));
+          },
+          () => {
+            dispatch(completeTransaction(transactionNumber));
           }
         );
       } else {
@@ -291,10 +293,16 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
           })
         );
 
-        withdrawLP(withdrawParams.crates, withdrawParams.amounts, () => {
-          dispatch(completeTransaction(transactionNumber));
-          fromValueUpdated(new BigNumber(-1));
-        });
+        withdrawLP(
+          withdrawParams.crates,
+          withdrawParams.amounts,
+          () => {
+            fromValueUpdated(new BigNumber(-1));
+          },
+          () => {
+            dispatch(completeTransaction(transactionNumber));
+          }
+        );
       }
     },
   }));

@@ -17,47 +17,62 @@ export const claimAndWithdrawBeans = async (
   crates,
   amounts,
   claimable,
-  callback
+  callback,
+  completeCallBack
 ) => {
   beanstalkContract()
     .claimAndWithdrawBeans(crates, amounts, claimable)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
 };
 
-export const withdrawBeans = async (crates, amounts, callback) => {
+export const withdrawBeans = async (
+  crates,
+  amounts,
+  callback,
+  completeCallBack
+) => {
   beanstalkContract()
     .withdrawBeans(crates, amounts)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
 };
 
-export const claimBeans = async (withdrawals, callback) => {
+export const claimBeans = async (withdrawals, callback, completeCallBack) => {
   beanstalkContract()
     .claimBeans(withdrawals)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
 };
 
-export const depositLP = async (amount, claimable, callback) => {
+export const depositLP = async (
+  amount,
+  claimable,
+  callback,
+  completeCallBack
+) => {
   (claimable
     ? beanstalkContract().claimAndDepositLP(amount, claimable)
     : beanstalkContract().depositLP(amount)
   ).then((response) => {
     callback();
     response.wait().then(() => {
+      completeCallBack();
       txCallback();
     });
   });
@@ -70,7 +85,8 @@ export const addAndDepositLP = async (
   ethAmount: BigNumber,
   addLP,
   claimable,
-  callback
+  callback,
+  completeCallBack
 ) => {
   (claimable
     ? beanstalkContract().claimAddAndDepositLP(
@@ -91,6 +107,7 @@ export const addAndDepositLP = async (
   ).then((response) => {
     callback();
     response.wait().then(() => {
+      completeCallBack();
       txCallback();
     });
   });
@@ -103,7 +120,8 @@ export const convertAddAndDepositLP = async (
   crates,
   amounts,
   claimable,
-  callback
+  callback,
+  completeCallBack
 ) => {
   (claimable
     ? beanstalkContract().claimConvertAddAndDepositLP(
@@ -120,17 +138,24 @@ export const convertAddAndDepositLP = async (
   ).then((response) => {
     callback();
     response.wait().then(() => {
+      completeCallBack();
       txCallback();
     });
   });
 };
 
-export const withdrawLP = async (crates, amounts, callback) => {
+export const withdrawLP = async (
+  crates,
+  amounts,
+  callback,
+  completeCallBack
+) => {
   beanstalkContract()
     .withdrawLP(crates, amounts)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
@@ -140,13 +165,15 @@ export const claimAndWithdrawLP = async (
   crates,
   amounts,
   claimable,
-  callback
+  callback,
+  completeCallBack
 ) => {
   beanstalkContract()
     .claimAndWithdrawLP(crates, amounts, claimable)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
@@ -156,44 +183,49 @@ export const removeAndClaimLP = async (
   withdrawals,
   minBeanAmount,
   minEthAmount,
-  callback
+  callback,
+  completeCallBack
 ) => {
   beanstalkContract()
     .removeAndClaimLP(withdrawals, minBeanAmount, minEthAmount)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
 };
 
-export const claimLP = async (withdrawals, callback) => {
+export const claimLP = async (withdrawals, callback, completeCallBack) => {
   beanstalkContract()
     .claimLP(withdrawals)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
 };
 
-export const claim = async (claimable) => {
+export const claim = async (claimable, completeCallBack) => {
   beanstalkContract()
     .claim(claimable)
     .then((response) => {
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
 };
 
-export const updateSilo = async () => {
+export const updateSilo = async (completeCallBack) => {
   beanstalkContract()
     .updateSilo(account)
     .then((response) => {
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
@@ -204,7 +236,8 @@ export const buyAndDepositBeans = async (
   buyBeanAmount,
   ethAmount,
   claimable,
-  callback
+  callback,
+  completeCallback
 ) => {
   (claimable
     ? beanstalkContract().claimBuyAndDepositBeans(
@@ -219,28 +252,45 @@ export const buyAndDepositBeans = async (
   ).then((response) => {
     callback();
     response.wait().then(() => {
+      completeCallback();
       txCallback();
     });
   });
 };
 
-export const convertDepositedBeans = async (beans, minLP, crates, amounts, callback) => {
+export const convertDepositedBeans = async (
+  beans,
+  minLP,
+  crates,
+  amounts,
+  callback,
+  completeCallback
+) => {
   beanstalkContract()
     .convertDepositedBeans(beans, minLP, crates, amounts)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallback();
         txCallback();
       });
     });
 };
 
-export const convertDepositedLP = async (lp, minBeans, crates, amounts, callback) => {
+export const convertDepositedLP = async (
+  lp,
+  minBeans,
+  crates,
+  amounts,
+  callback,
+  completeCallback
+) => {
   beanstalkContract()
     .convertDepositedLP(lp, minBeans, crates, amounts)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallback();
         txCallback();
       });
     });

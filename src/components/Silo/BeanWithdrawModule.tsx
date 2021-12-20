@@ -262,8 +262,10 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           withdrawParams.amounts,
           props.claimable,
           () => {
-            dispatch(completeTransaction(transactionNumber));
             fromValueUpdated(new BigNumber(-1));
+          },
+          () => {
+            dispatch(completeTransaction(transactionNumber));
           }
         );
       } else {
@@ -275,10 +277,16 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
             state: State.PENDING,
           })
         );
-        withdrawBeans(withdrawParams.crates, withdrawParams.amounts, () => {
-          dispatch(completeTransaction(transactionNumber));
-          fromValueUpdated(new BigNumber(-1));
-        });
+        withdrawBeans(
+          withdrawParams.crates,
+          withdrawParams.amounts,
+          () => {
+            fromValueUpdated(new BigNumber(-1));
+          },
+          () => {
+            dispatch(completeTransaction(transactionNumber));
+          }
+        );
       }
     },
   }));

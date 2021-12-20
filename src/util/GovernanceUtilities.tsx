@@ -1,22 +1,24 @@
 import { beanstalkContract, txCallback } from './index';
 
-export const vote = async (bip, callback) => {
+export const vote = async (bip, callback, completeCallback) => {
   beanstalkContract()
     .vote(bip)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallback();
         txCallback();
       });
     });
 };
 
-export const unvote = async (bip, callback) => {
+export const unvote = async (bip, callback, completeCallBack) => {
   beanstalkContract()
     .unvote(bip)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });

@@ -149,10 +149,16 @@ export const FundModule = forwardRef((props, ref) => {
         })
       );
 
-      fund(props.id, toStringBaseUnitBN(fromTokenValue, USDC.decimals), () => {
-        dispatch(completeTransaction(transactionNumber));
-        fromValueUpdated(new BigNumber(-1));
-      });
+      fund(
+        props.id,
+        toStringBaseUnitBN(fromTokenValue, USDC.decimals),
+        () => {
+          fromValueUpdated(new BigNumber(-1));
+        },
+        () => {
+          dispatch(completeTransaction(transactionNumber));
+        }
+      );
     },
   }));
 

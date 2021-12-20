@@ -257,10 +257,18 @@ export const BeanDepositModule = forwardRef((props, ref) => {
             state: State.PENDING,
           })
         );
-        buyAndDepositBeans(beans, buyBeans, eth, claimable, () => {
-          dispatch(completeTransaction(transactionNumber));
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-        });
+        buyAndDepositBeans(
+          beans,
+          buyBeans,
+          eth,
+          claimable,
+          () => {
+            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          },
+          () => {
+            dispatch(completeTransaction(transactionNumber));
+          }
+        );
       } else {
         const transactionNumber = latestTransactionNumber + 1;
         dispatch(
@@ -274,8 +282,10 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimable,
           () => {
-            dispatch(completeTransaction(transactionNumber));
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          },
+          () => {
+            dispatch(completeTransaction(transactionNumber));
           }
         );
       }

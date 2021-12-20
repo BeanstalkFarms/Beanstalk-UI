@@ -307,8 +307,10 @@ export const ConvertLPModule = forwardRef((props, ref) => {
         convertParams.crates,
         convertParams.amounts,
         () => {
-          dispatch(completeTransaction(transactionNumber));
           fromValueUpdated(new BigNumber(-1));
+        },
+        () => {
+          dispatch(completeTransaction(transactionNumber));
         }
       );
     },

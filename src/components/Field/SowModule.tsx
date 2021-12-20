@@ -243,18 +243,28 @@ export const SowModule = forwardRef((props, ref) => {
             state: State.PENDING,
           })
         );
-        buyAndSowBeans(beans, buyBeans, eth, claimable, () => {
-          dispatch(completeTransaction(transactionNumber));
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-        });
+        buyAndSowBeans(
+          beans,
+          buyBeans,
+          eth,
+          claimable,
+          () => {
+            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          },
+          () => {
+            dispatch(completeTransaction(transactionNumber));
+          }
+        );
       } else {
         const transactionNumber = latestTransactionNumber + 1;
         sowBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimable,
           () => {
-            dispatch(completeTransaction(transactionNumber));
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          },
+          () => {
+            dispatch(completeTransaction(transactionNumber));
           }
         );
       }

@@ -93,7 +93,10 @@ export default function TradeModule() {
           buyBeans(
             toStringBaseUnitBN(fromValue, ETH.decimals),
             toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
-            () => handleSwapCallback(transactionNumber)
+            () => {},
+            () => {
+              handleSwapCallback(transactionNumber);
+            }
           );
         } else {
           const transactionNumber = latestTransactionNumber + 1;
@@ -108,7 +111,10 @@ export default function TradeModule() {
           sellBeans(
             toStringBaseUnitBN(fromValue, BEAN.decimals),
             toStringBaseUnitBN(minimumToAmount, ETH.decimals),
-            () => handleSwapCallback(transactionNumber)
+            () => {},
+            () => {
+              handleSwapCallback(transactionNumber);
+            }
           );
         }
       }

@@ -82,9 +82,13 @@ export const BeanClaimModule = forwardRef((props, ref) => {
         })
       );
 
-      claimBeans(Object.keys(props.crates), () => {
-        dispatch(completeTransaction(transactionNumber));
-      });
+      claimBeans(
+        Object.keys(props.crates),
+        () => {},
+        () => {
+          dispatch(completeTransaction(transactionNumber));
+        }
+      );
     },
   }));
 

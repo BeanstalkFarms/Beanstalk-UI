@@ -90,9 +90,13 @@ export default function Vote(props) {
           state: State.PENDING,
         })
       );
-      unvote(bip.toString(), () => {
-        dispatch(completeTransaction(transactionNumber));
-      });
+      unvote(
+        bip.toString(),
+        () => {},
+        () => {
+          dispatch(completeTransaction(transactionNumber));
+        }
+      );
     } else {
       const transactionNumber = latestTransactionNumber + 1;
       dispatch(
@@ -102,9 +106,13 @@ export default function Vote(props) {
           state: State.PENDING,
         })
       );
-      vote(bip.toString(), () => {
-        dispatch(completeTransaction(transactionNumber));
-      });
+      vote(
+        bip.toString(),
+        () => {},
+        () => {
+          dispatch(completeTransaction(transactionNumber));
+        }
+      );
     }
   };
 

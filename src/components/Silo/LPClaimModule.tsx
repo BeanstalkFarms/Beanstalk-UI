@@ -144,9 +144,15 @@ export const LPClaimModule = forwardRef((props, ref) => {
             state: State.PENDING,
           })
         );
-        removeAndClaimLP(Object.keys(props.crates), '0', '0', () => {
-          dispatch(completeTransaction(transactionNumber));
-        });
+        removeAndClaimLP(
+          Object.keys(props.crates),
+          '0',
+          '0',
+          () => {},
+          () => {
+            dispatch(completeTransaction(transactionNumber));
+          }
+        );
       } else {
         const transactionNumber = latestTransactionNumber + 1;
         dispatch(
@@ -156,9 +162,13 @@ export const LPClaimModule = forwardRef((props, ref) => {
             state: State.PENDING,
           })
         );
-        claimLP(Object.keys(props.crates), () => {
-          dispatch(completeTransaction(transactionNumber));
-        });
+        claimLP(
+          Object.keys(props.crates),
+          () => {},
+          () => {
+            dispatch(completeTransaction(transactionNumber));
+          }
+        );
       }
     },
   }));

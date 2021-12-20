@@ -530,10 +530,16 @@ export const LPDepositModule = forwardRef((props, ref) => {
               state: State.PENDING,
             })
           );
-          depositLP(toStringBaseUnitBN(lp, ETH.decimals), claimable, () => {
-            dispatch(completeTransaction(transactionNumber));
-            resetFields();
-          });
+          depositLP(
+            toStringBaseUnitBN(lp, ETH.decimals),
+            claimable,
+            () => {
+              resetFields();
+            },
+            () => {
+              dispatch(completeTransaction(transactionNumber));
+            }
+          );
         } else if (props.settings.convert) {
           const transactionNumber = latestTransactionNumber + 1;
           dispatch(
@@ -561,8 +567,10 @@ export const LPDepositModule = forwardRef((props, ref) => {
             beanConvertParams.amounts,
             claimable,
             () => {
-              dispatch(completeTransaction(transactionNumber));
               resetFields();
+            },
+            () => {
+              dispatch(completeTransaction(transactionNumber));
             }
           );
         } else {
@@ -597,8 +605,10 @@ export const LPDepositModule = forwardRef((props, ref) => {
             ],
             claimable,
             () => {
-              dispatch(completeTransaction(transactionNumber));
               resetFields();
+            },
+            () => {
+              dispatch(completeTransaction(transactionNumber));
             }
           );
         }

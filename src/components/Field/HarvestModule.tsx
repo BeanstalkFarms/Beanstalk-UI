@@ -24,7 +24,7 @@ type HarvestModuleProps = {
   setIsFormDisabled: Function;
   harvestablePodBalance: UserBalanceState['harvestablePodBalance'];
   harvestablePlots: UserBalanceState['harvestablePlots'];
-}
+};
 
 export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
   props.setIsFormDisabled(props.harvestablePodBalance.isLessThanOrEqualTo(0));
@@ -87,6 +87,7 @@ export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
         Object.keys(props.harvestablePlots).map((key) =>
           toStringBaseUnitBN(new BigNumber(key), BEAN.decimals)
         ),
+        () => {},
         () => {
           dispatch(completeTransaction(transactionNumber));
         }

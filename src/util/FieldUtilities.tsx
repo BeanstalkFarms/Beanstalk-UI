@@ -1,12 +1,18 @@
 import { beanstalkContract, txCallback, account } from './index';
 
-export const sowBeans = async (amount, claimable, callback) => {
+export const sowBeans = async (
+  amount,
+  claimable,
+  callback,
+  completeCallBack
+) => {
   (claimable
     ? beanstalkContract().claimAndSowBeans(amount, claimable)
     : beanstalkContract().sowBeans(amount)
   ).then((response) => {
     callback();
     response.wait().then(() => {
+      completeCallBack();
       txCallback();
     });
   });
@@ -17,7 +23,8 @@ export const buyAndSowBeans = async (
   buyBeanAmount,
   ethAmount,
   claimable,
-  callback
+  callback,
+  completeCallBack
 ) => {
   (claimable
     ? beanstalkContract().claimBuyAndSowBeans(
@@ -32,28 +39,38 @@ export const buyAndSowBeans = async (
   ).then((response) => {
     callback();
     response.wait().then(() => {
+      completeCallBack();
       txCallback();
     });
   });
 };
 
-export const harvest = async (plots, callback) => {
+export const harvest = async (plots, callback, completeCallBack) => {
   beanstalkContract()
     .harvest(plots)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });
 };
 
-export const transferPlot = async (recipient, index, start, end, callback) => {
+export const transferPlot = async (
+  recipient,
+  index,
+  start,
+  end,
+  callback,
+  completeCallBack
+) => {
   beanstalkContract()
     .transferPlot(account, recipient, index, start, end)
     .then((response) => {
       callback();
       response.wait().then(() => {
+        completeCallBack();
         txCallback();
       });
     });

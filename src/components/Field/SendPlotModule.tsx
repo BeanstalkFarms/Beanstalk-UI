@@ -269,10 +269,18 @@ export const SendPlotModule = forwardRef((props, ref) => {
           })
         );
 
-        transferPlot(props.toAddress, id, startPlot, endPlot, () => {
-          dispatch(completeTransaction(transactionNumber));
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-        });
+        transferPlot(
+          props.toAddress,
+          id,
+          startPlot,
+          endPlot,
+          () => {
+            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          },
+          () => {
+            dispatch(completeTransaction(transactionNumber));
+          }
+        );
       } else {
         fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
       }
