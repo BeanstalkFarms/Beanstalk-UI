@@ -130,20 +130,14 @@ function processEvents(events) {
     } else if (event.event === 'BuyOfferAccepted') {
       const { index, amount } = event.returnValues;
 
-      // Move current offer's index up by |amount|
-      const currentBuyOffer = buyOffer[index];
-      delete buyOffers[index];
-      const newIndex = index + amount;
-      buyOffers[newIndex] = currentBuyOffer;
-
       // Check whether current offer is sold or not
-      const isSold = currentBuyOffer.initialAmountToBuy - currentListing.amountBought - amount === 0;
-      if (isSold) {
-        buyOffers[newIndex].status = 'sold';
+      const isFilled = currentBuyOffer.initialAmountToBuy - currentListing.amountBought - amount === 0;
+      if (isFilled) {
+        buyOffers[index].status = 'filled';
       }
 
       // Bump up |amountBought| for this offer
-      listings[newIndex].amountBought += amount;
+      buyOffers[index].amountBought += amount;
     }
   }
 
