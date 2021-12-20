@@ -94,7 +94,7 @@ function processEvents(events, harvestableIndex) {
         listerAddress: event.returnValues.account,
         objectiveIndex: event.returnValues.index,
         pricePerPod: event.returnValues.pricePerPod,
-        expiresIn: event.returnValues.expiry,
+        expiry: event.returnValues.expiry,
         initialAmount: event.returnValues.amount,
         amountSold: new BigNumber(0),
         status: 'active',
