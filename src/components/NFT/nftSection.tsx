@@ -12,7 +12,7 @@ import NftListTable from './NftListTable';
 export default function NftSection({
   acctTxs,
   topTxs,
-  userNFTs,
+  numNFTs,
   remainingNFTs,
 }) {
   const [page, setPage] = React.useState(0);
@@ -139,7 +139,7 @@ export default function NftSection({
         >
           <span>{'Your BeaNFTs:  '}</span>
           <span style={{ fontSize: '30px' }}>
-            &nbsp; {userNFTs.length} &nbsp;
+            &nbsp; {numNFTs} &nbsp;
           </span>
         </Grid>
         <Grid

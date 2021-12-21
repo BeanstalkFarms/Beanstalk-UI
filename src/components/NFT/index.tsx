@@ -2,6 +2,7 @@ import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { Link } from '@material-ui/core';
+import NFTUpdater from 'state/nfts/updater';
 import {
   MEDIUM_NFT_LINK,
   OPENSEA_LINK,
@@ -22,7 +23,7 @@ export default function NFTs() {
   const { season } = useSelector<AppState, AppState['season']>(
     (state) => state.season
   );
-  const { unclaimedNFTs, claimedNFTs, accountNFTs } = useSelector<AppState, AppState['nfts']>(
+  const { unclaimedNFTs, claimedNFTs, accountNFTs, numNFTs } = useSelector<AppState, AppState['nfts']>(
     (state) => state.nfts
   );
 
@@ -49,34 +50,37 @@ export default function NFTs() {
       </span>
     </>
   );
-  const userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u.id);
+  // const userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u.id);
   const remainingNFTs = TOTAL_NFTS -
     (String(season) - BEGINNING_NFT_SEASON) * NFTS_PER_SEASON;
 
   return (
-    <ContentSection
-      id="nft"
-      title="BeaNFTs"
-      textTransform="none"
-      style={{ minHeight: '100px' }}
-    >
-      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-        <ContentDropdown
-          description={description}
-          descriptionTitle="What are BeaNFTs?"
+    <>
+      <NFTUpdater />
+      <ContentSection
+        id="nft"
+        title="BeaNFTs"
+        textTransform="none"
+        style={{ minHeight: '100px' }}
+      >
+        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+          <ContentDropdown
+            description={description}
+            descriptionTitle="What are BeaNFTs?"
+          />
+        </Grid>
+        <NftSection
+          remainingNFTs={remainingNFTs}
+          numNFTs={numNFTs}
+          topTxs={accountNFTs}
+          acctTxs={claimedNFTs}
         />
-      </Grid>
-      <NftSection
-        remainingNFTs={remainingNFTs}
-        userNFTs={userNFTs}
-        topTxs={accountNFTs}
-        acctTxs={claimedNFTs}
-      />
-      <ClaimNFT
-        buttonDescription={beanftStrings.mintAll}
-        claimedNfts={claimedNFTs}
-        nfts={unclaimedNFTs}
-      />
-    </ContentSection>
+        <ClaimNFT
+          buttonDescription={beanftStrings.mintAll}
+          claimedNfts={claimedNFTs}
+          nfts={unclaimedNFTs}
+        />
+      </ContentSection>
+    </>
   );
 }

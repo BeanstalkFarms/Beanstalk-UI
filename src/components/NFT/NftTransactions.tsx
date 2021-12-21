@@ -13,11 +13,11 @@ export default function NftTransactions() {
   const { season } = useSelector<AppState, AppState['season']>(
     (state) => state.season
   );
-  const { unclaimedNFTs, claimedNFTs, accountNFTs } = useSelector<AppState, AppState['nfts']>(
+  const { claimedNFTs, accountNFTs, numNFTs } = useSelector<AppState, AppState['nfts']>(
     (state) => state.nfts
   );
 
-  const userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u.id);
+  // const userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u.id);
   const remainingNFTs = TOTAL_NFTS -
     (String(season) - BEGINNING_NFT_SEASON) * NFTS_PER_SEASON;
 
@@ -30,7 +30,7 @@ export default function NftTransactions() {
     >
       <NftSection
         remainingNFTs={remainingNFTs}
-        userNFTs={userNFTs}
+        numNFTs={numNFTs}
         topTxs={accountNFTs}
         acctTxs={claimedNFTs}
       />

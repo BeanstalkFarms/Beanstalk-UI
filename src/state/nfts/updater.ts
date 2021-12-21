@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactDOM from 'react-dom';
 import {
   setUnclaimedNFTs,
   setClaimedNFTs,
@@ -13,7 +12,6 @@ import {
   listenForNFTTransfers,
   GetWalletAddress,
   getMintedNFTs,
-  account,
 } from 'util/index';
 
 export default function NFTUpdater() {
@@ -21,9 +19,6 @@ export default function NFTUpdater() {
 
   const season = useSelector<AppState, AppState['season']>(
     (state) => state.season
-  );
-  const { initialized } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
   );
 
   useEffect(() => {
@@ -53,9 +48,7 @@ export default function NFTUpdater() {
       listenForNFTTransfers(getNFTs); // eslint-disable-line
     }
     async function getNFTs(acct) {
-      const [act] = await Promise.all([account]);
-      console.log(acct === act.toLowerCase());
-      const data = await loadNFTs(act.toLowerCase());
+      const data = await loadNFTs(acct.toLowerCase());
       checkMints(data);
     }
     async function loadAccountsData() {
@@ -66,16 +59,10 @@ export default function NFTUpdater() {
     }
 
     async function start() {
-      const [acct, init] = await Promise.all([
-        GetWalletAddress(),
-        initialized,
-      ]);
-      if (init) {
-        ReactDOM.unstable_batchedUpdates(() => {
-          getNFTs(acct);
-          loadAccountsData();
-        });
-      }
+      GetWalletAddress().then((result) => {
+        getNFTs(result.toLowerCase());
+      });
+      loadAccountsData();
     }
 
     start();
