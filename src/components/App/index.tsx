@@ -60,21 +60,42 @@ export default function App() {
         <NavigationBar />
         <Switch>
           <Route exact path="/">
-            <Redirect to="/farm" />
+            <Redirect to="/farm/silo" />
           </Route>
           <Route exact path="/farm">
-            <Farm />
+            <Redirect to="/farm/silo" />
+          </Route>
+          <Route exact path="/farm/silo">
+            <Farm sectionNumber={0} />
+          </Route>
+          <Route exact path="/farm/field">
+            <Farm sectionNumber={1} />
+          </Route>
+          <Route exact path="/farm/trade">
+            <Farm sectionNumber={2} />
+          </Route>
+          <Route exact path="/farm/balances">
+            <Farm sectionNumber={3} />
           </Route>
           <Route exact path="/analytics">
-            <Analytics />
+            <Redirect to="/analytics/charts" />
+          </Route>
+          <Route exact path="/analytics/charts">
+            <Analytics sectionNumber={0} />
+          </Route>
+          <Route exact path="/analytics/seasons">
+            <Analytics sectionNumber={1} />
+          </Route>
+          <Route exact path="/analytics/balances">
+            <Analytics sectionNumber={2} />
           </Route>
           <Route exact path="/fundraiser">
             <FundraiserPage />
           </Route>
-          <Route exact path="/dao">
+          <Route exact path="/governance">
             <DAO />
           </Route>
-          <Route exact path="/nft">
+          <Route exact path="/beanft">
             <BeaNFT />
           </Route>
           <Route exact path="/about">

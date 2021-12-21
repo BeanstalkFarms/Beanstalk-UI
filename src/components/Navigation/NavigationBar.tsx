@@ -35,11 +35,11 @@ const defaultNavMapping = [
     title: 'ANALYTICS',
   },
   {
-    path: 'dao',
+    path: 'governance',
     title: 'DAO',
   },
   {
-    path: 'nft',
+    path: 'beanft',
     title: 'BeaNFTs',
   },
   {
@@ -185,7 +185,7 @@ export default function NavigationBar(props) {
                       style={linkItemStyle(path)}
                     >
                       <NavLink
-                        to={path}
+                        to={`/${path}`}
                         activeClassName={classes.activeLinkText}
                         className={classes.linkPadding}
                         style={linkItemStyle(path)}
@@ -217,7 +217,7 @@ export default function NavigationBar(props) {
           style={linkItemStyle(path)}
         >
           <NavLink
-            to={path}
+            to={`/${path}`}
             activeClassName={classes.activeLinkText}
             className={classes.linkPadding}
             spy="true"

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import { ContentTitle, SectionTabs } from 'components/Common';
 import About from 'components/About';
@@ -6,8 +7,14 @@ import About from 'components/About';
 export default function Page({
     sections,
     sectionTitles,
+    sectionNumber = 0,
   }) {
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(sectionNumber);
+  const history = useHistory();
+
+  useEffect(() => {
+    history.push(`${sectionTitles[section].toLowerCase()}`);
+  });
 
   const pageStyle = {
       marginTop: '100px',
@@ -30,6 +37,7 @@ export default function Page({
         {titleSection}
         {sections[section]}
       </Box>
+
       {window.location.pathname !== '/about' ?
         <About />
         : null
