@@ -229,10 +229,13 @@ export const governanceStrings = {
 };
 export const beanftStrings = {
   beanftDescription: 'BeaNFT Genesis Collection is a series of 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
+  beanftWinterDescription: 'BeaNFT Winter Collection is a the second round of BeaNFTs. 2,000 BeaNFTs will be minted by participating in Beanstalk during Seasons 3200-3800. The top 5 sow or silo of LP or beans each season will be awarded a BeaNFT. Check out the Genesis Collection on',
   mintAll: 'Use this button to Mint all your Mintable BeaNFTs.',
   minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
   singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',
   unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',
+  topTxn: 'This tab displays the top 5 transactions of the current Season.',
+  topAcct: 'This tab displays all previously created BeaNFTs Winter Eddition. This includes minted and unminted BeaNFTs.',
 };
 export const chartStrings = {
   bean: 'Use this tab to view charts with information about the BEAN token.',

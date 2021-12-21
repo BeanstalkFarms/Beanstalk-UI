@@ -15,7 +15,6 @@ import { makeStyles } from '@material-ui/styles';
 import {
   BASE_ETHERSCAN_ADDR_LINK,
   BASE_ETHERSCAN_TX_LINK,
-  DIAMONDS_LINK,
 } from 'constants/index';
 import { displayBN, displayFullBN } from 'util/index';
 import { FormatTooltip, TablePageSelect } from 'components/Common';
@@ -40,21 +39,25 @@ const useStyles = makeStyles({
   },
 });
 
-const BasicTable = (props) => {
+export default function NftListTable({
+  colTitles,
+  handleChange,
+  indexType,
+  nftList,
+  page,
+  rowsPerPage,
+  style,
+}) {
   const classes = useStyles();
-
-  const { rowsPerPage } = props;
-
-  const titles = props.colTitles;
   let count = 0;
 
   return (
-    <Box>
+    <Box style={style}>
       <TableContainer>
         <Table className={classes.table} size="small">
           <TableHead>
             <TableRow key="NFT List">
-              {titles.map((t) => (
+              {colTitles.map((t) => (
                 <TableCell
                   key={t}
                   align="center"
@@ -66,15 +69,15 @@ const BasicTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.keys(props.nftList)
+            {Object.keys(nftList)
               .slice(
-                props.page * rowsPerPage,
-                props.page * rowsPerPage + rowsPerPage
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
               )
               // eslint-disable-next-line
               .map((index) => (
                 <TableRow key={index}>
-                  {props.indexType === 'time' ? (
+                  {indexType === 'transactions' ? (
                     <TableCell
                       align="center"
                       className={classes.lucidaStyle}
@@ -84,69 +87,78 @@ const BasicTable = (props) => {
                       {`${(count += 1)}`}
                     </TableCell>
                   ) : null}
-                  <TableCell
-                    align="center"
-                    className={classes.lucidaStyle}
-                    component="th"
-                    scope="index"
-                  >
-                    {props.indexType === 'time'
-                      ? props.nftList[index].timeSinceSunrise
-                      : props.nftList[index].id}
-                  </TableCell>
-                  {props.nftList[index].beans !== undefined ? (
+                  {indexType === 'transactions' ? (
+                    <TableCell align="center" className={classes.lucidaStyle}>
+                      {nftList[index].timeSinceSunrise}
+                    </TableCell>
+                  ) : null}
+                  {indexType === 'accounts' ? (
+                    <TableCell align="center" className={classes.lucidaStyle}>
+                      {nftList[index].nfts}
+                    </TableCell>
+                  ) : null}
+                  {nftList[index].beans !== undefined &&
+                  indexType === 'transactions' ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
                       <FormatTooltip
                         placement="right"
                         title={`${displayFullBN(
-                          new BigNumber(props.nftList[index].beans)
+                          new BigNumber(nftList[index].beans)
                         )} Beans`}
                       >
                         <span>
-                          {displayBN(new BigNumber(props.nftList[index].beans))}
+                          {displayBN(new BigNumber(nftList[index].beans))}
                         </span>
                       </FormatTooltip>
                     </TableCell>
                   ) : null}
-                  {props.nftList[index].txn !== undefined &&
-                  props.nftList[index].txn.length > 2 ? (
+                  {nftList[index].beansInvested !== undefined &&
+                  indexType === 'accounts' ? (
+                    <TableCell align="center" className={classes.lucidaStyle}>
+                      <FormatTooltip
+                        placement="right"
+                        title={`${displayFullBN(
+                          new BigNumber(nftList[index].beansInvested)
+                        )} Beans`}
+                      >
+                        <span>
+                          {displayBN(new BigNumber(nftList[index].beansInvested))}
+                        </span>
+                      </FormatTooltip>
+                    </TableCell>
+                  ) : null}
+                  {nftList[index].txn !== undefined &&
+                  indexType === 'transactions' ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
                       <Link
-                        href={`${BASE_ETHERSCAN_TX_LINK}${props.nftList[index].txn}`}
+                        href={`${BASE_ETHERSCAN_TX_LINK}${nftList[index].txn}`}
                         color="inherit"
                         target="blank"
                       >
                         <span>
-                          {`${props.nftList[index].txn.substring(
+                          {`${nftList[index].txn.substring(
                             0,
                             6
-                          )}...${props.nftList[index].txn.substring(
-                            props.nftList[index].txn.length - 4
+                          )}...${nftList[index].txn.substring(
+                            nftList[index].txn.length - 4
                           )}`}
                         </span>
                       </Link>
                     </TableCell>
-                  ) : props.nftList[index].txn !== undefined ? (
-                    <TableCell align="center" className={classes.lucidaStyle}>
-                      <Link href={DIAMONDS_LINK} color="inherit" target="blank">
-                        <span>{`${props.nftList[index].txn}`}</span>
-                      </Link>
-                    </TableCell>
                   ) : null}
-                  {props.nftList[index].account !== undefined &&
-                  props.assetType !== 'nft' ? (
+                  {nftList[index].account !== undefined ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
                       <Link
-                        href={`${BASE_ETHERSCAN_ADDR_LINK}${props.nftList[index].account}`}
+                        href={`${BASE_ETHERSCAN_ADDR_LINK}${nftList[index].account}`}
                         color="inherit"
                         target="blank"
                       >
                         <span>
-                          {`${props.nftList[index].account.substring(
+                          {`${nftList[index].account.substring(
                             0,
                             6
-                          )}...${props.nftList[index].account.substring(
-                            props.nftList[index].account.length - 4
+                          )}...${nftList[index].account.substring(
+                            nftList[index].account.length - 4
                           )}`}
                         </span>
                       </Link>
@@ -157,13 +169,13 @@ const BasicTable = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      {Object.keys(props.nftList).length > rowsPerPage ? (
+      {Object.keys(nftList).length > rowsPerPage ? (
         <TablePagination
           className={classes.pagination}
           component="div"
-          count={Object.keys(props.nftList).length}
-          onPageChange={props.handleChange}
-          page={props.page}
+          count={Object.keys(nftList).length}
+          onPageChange={handleChange}
+          page={page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[]}
           labelDisplayedRows={({ from, count: c }) =>
@@ -176,20 +188,10 @@ const BasicTable = (props) => {
       ) : null}
     </Box>
   );
-};
-
-export default function NftListTable(props) {
-  return (
-    <Box style={props.style}>
-      <BasicTable {...props} />
-    </Box>
-  );
 }
 
 NftListTable.defaultProps = {
   nftList: {},
-  index: 0,
   page: 0,
-  resetPage: 0,
   rowsPerPage: 5,
 };

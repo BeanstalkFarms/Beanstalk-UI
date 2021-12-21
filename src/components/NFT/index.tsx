@@ -1,61 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { MEDIUM_NFT_LINK, OPENSEA_LINK } from 'constants/index';
+import { Link } from '@material-ui/core';
 import {
-  listenForNFTTransfers,
-  GetWalletAddress,
-  getMintedNFTs,
-} from 'util/index';
-import { beanftStrings, ContentSection, ContentDropdown, Grid } from 'components/Common';
-import { loadNFTs } from 'graph';
+  MEDIUM_NFT_LINK,
+  OPENSEA_LINK,
+  TOTAL_NFTS,
+  BEGINNING_NFT_SEASON,
+  NFTS_PER_SEASON,
+} from 'constants/index';
+import {
+  beanftStrings,
+  ContentSection,
+  ContentDropdown,
+  Grid,
+} from 'components/Common';
 import ClaimNFT from './claimnft';
+import NftSection from './nftSection';
 
 export default function NFTs() {
   const { season } = useSelector<AppState, AppState['season']>(
     (state) => state.season
   );
-  const [unclaimedNFTs, setUnclaimedNFTs] = useState([]);
-  const [claimedNFTs, setClaimedNFTs] = useState([]);
+  const { unclaimedNFTs, claimedNFTs, accountNFTs } = useSelector<AppState, AppState['nfts']>(
+    (state) => state.nfts
+  );
 
-  useEffect(() => {
-    async function checkMints(data) {
-      const [ownedIds, tradedIds] = await getMintedNFTs();
-      const un = [];
-      const cn = [];
-      for (let i = 0; i < data.length; i += 1) {
-        if (ownedIds.includes(data[i].id)) {
-          if (!tradedIds.includes(data[i].id)) {
-            cn.push(data[i]);
-          } else {
-            const idx = tradedIds.indexOf(data[i].id);
-            tradedIds.splice(idx, 1);
-          }
-        } else {
-          un.push(data[i]);
-        }
-      }
-      setUnclaimedNFTs(un);
-      setClaimedNFTs(cn);
-      listenForNFTTransfers(getNFTs); // eslint-disable-line
-    }
-    async function getNFTs() {
-      const data = await loadNFTs((await GetWalletAddress()).toLowerCase());
-      checkMints(data);
-    }
-    getNFTs();
-  }, [season]);
-
-  const descriptionLinks = [
-    {
-      href: `${OPENSEA_LINK}`,
-      text: 'OpenSea',
-    },
-    {
-      href: `${MEDIUM_NFT_LINK}`,
-      text: 'Read More',
-    },
-  ];
+  const description = (
+    <>
+      <span style={{ display: 'flex' }}>
+        To date, there have been two NFT projects build on Beanstalk - the
+        BeaNFT Genesis Collection and now the BeaNFT Winter Collection.
+      </span>
+      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Genesis collection: </span>
+      <span>
+        The BeaNFT Genesis collection is a series of 2067 BeaNFTs which could only
+        be minted by participating in Beanstalk during Seasons 1200 – 1800.{' '}
+        <Link href={OPENSEA_LINK} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
+        <Link href={MEDIUM_NFT_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+      </span>
+      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter collection: </span>
+      <span>
+        The BeaNFT Winter Collection is a the second round of BeaNFTs. 2,000 BeaNFTs will
+        be minted by participating in Beanstalk during Seasons 3200-3800. The top 5
+        sow or silo of LP or beans each season will be awarded a BeaNFT.{' '}
+        <Link href={OPENSEA_LINK} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
+        <Link href={MEDIUM_NFT_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+      </span>
+    </>
+  );
+  const userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u.id);
+  const remainingNFTs = TOTAL_NFTS -
+    (String(season) - BEGINNING_NFT_SEASON) * NFTS_PER_SEASON;
 
   return (
     <ContentSection
@@ -66,14 +62,18 @@ export default function NFTs() {
     >
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown
-          description={beanftStrings.beanftDescription}
+          description={description}
           descriptionTitle="What are BeaNFTs?"
-          descriptionLinks={descriptionLinks}
         />
       </Grid>
+      <NftSection
+        remainingNFTs={remainingNFTs}
+        userNFTs={userNFTs}
+        topTxs={accountNFTs}
+        acctTxs={claimedNFTs}
+      />
       <ClaimNFT
         buttonDescription={beanftStrings.mintAll}
-        claimTitle="MINT ALL"
         claimedNfts={claimedNFTs}
         nfts={unclaimedNFTs}
       />

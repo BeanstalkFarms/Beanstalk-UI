@@ -57,9 +57,9 @@ export const MAX_UINT32 = 4294967295;
 export const UNISWAP_V2_ROUTER = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
 
 /* NFTs */
-export const TOTAL_NFTS = 5999;
-export const BEGINNING_NFT_SEASON = 1200;
-export const NFTS_PER_SEASON = 10;
+export const TOTAL_NFTS = 2000;
+export const BEGINNING_NFT_SEASON = 3200;
+export const NFTS_PER_SEASON = 5;
 export const GENESIS_NFT = {
   account: '0x02491D37984764d39b99e4077649dcD349221a62',
   id: 0,
