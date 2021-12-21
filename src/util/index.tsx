@@ -97,12 +97,15 @@ export async function initialize(): Promise<boolean> {
         web3 = new Web3(ethereum);
         initializeMetaMaskListeners();
         if (!connectedToMetamask) {
+          console.log(
+            'not connected to metamask, create infuraprovider and set metamask failure'
+          );
           web3Provider = new ethers.providers.InfuraProvider(
             'homestead',
             '98af15ca2ef14d32aea6d9d2cb6ece22'
           );
-          chainId = 1;
-          return true;
+          metamaskFailure = 2;
+          return false;
         }
         const [hexAccount, chainIdentifier] = await Promise.all([
           web3Signer.getAddress(),

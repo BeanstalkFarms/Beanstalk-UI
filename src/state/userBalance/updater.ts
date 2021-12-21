@@ -506,13 +506,44 @@ export default function Updater() {
       benchmarkEnd('EVENT PROCESSOR', startTime);
     }
 
+    async function updateTotalBalances() {
+      const startTime = benchmarkStart('ALL BALANCES');
+      const batch = createLedgerBatch();
+      const totalBalancePromises = getTotalBalances(batch);
+      const pricePromises = getPrices(batch);
+      batch.execute();
+
+      const [bipInfo, fundraiserInfo, totalBalances, _prices] =
+        await Promise.all([
+          getBips(),
+          getFundraisers(),
+          totalBalancePromises,
+          pricePromises,
+        ]);
+      benchmarkEnd('ALL BALANCES', startTime);
+      const [beanReserve, ethReserve] = lpReservesForTokenReserves(
+        _prices[1],
+        _prices[2]
+      ); /* tokenReserves, token0 */
+      const eventParsingParameters = [
+        totalBalances[14].season /* season */,
+        totalBalances[10] /* harvestableIndex */,
+        beanReserve,
+        ethReserve,
+      ];
+
+      return [
+        () => {
+          processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
+        },
+        eventParsingParameters,
+      ];
+    }
+
     async function updateAllBalances() {
       const startTime = benchmarkStart('ALL BALANCES');
       const batch = createLedgerBatch();
-      let accountBalancePromises;
-      if (account) {
-        accountBalancePromises = await getAccountBalances(batch);
-      }
+      const accountBalancePromises = getAccountBalances(batch);
       const totalBalancePromises = getTotalBalances(batch);
       const pricePromises = getPrices(batch);
       batch.execute();
@@ -528,11 +559,11 @@ export default function Updater() {
       ] = await Promise.all([
         getBips(),
         getFundraisers(),
-        account ? getEtherBalance() : undefined,
+        getEtherBalance(),
         accountBalancePromises,
         totalBalancePromises,
         pricePromises,
-        account ? getUSDCBalance() : undefined,
+        getUSDCBalance(),
       ]);
       benchmarkEnd('ALL BALANCES', startTime);
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
@@ -611,31 +642,39 @@ export default function Updater() {
 
     async function start() {
       let startTime = benchmarkStart('*INIT*');
+      let updateBalances: Function;
+      let dispatchMetamaskError: Function | null;
       if (await initialize()) {
-        benchmarkEnd('*INIT*', startTime);
-        startTime = benchmarkStart('**WEBSITE**');
-
-        initializeCallback(async () => {
-          const [updateBalanceState] = await updateAllBalances();
-          ReactDOM.unstable_batchedUpdates(() => {
-            updateBalanceState();
-          });
-        });
-        const [balanceInitializers, eventInitializer] = await Promise.all([
-          updateAllBalances(),
-          initializeEventListener(processEvents, updatePrices, updateTotals),
-        ]);
-        ReactDOM.unstable_batchedUpdates(() => {
-          const [updateBalanceState, eventParsingParameters] =
-            balanceInitializers;
-          updateBalanceState();
-          processEvents(eventInitializer, eventParsingParameters);
-          dispatch(setInitialized(true));
-        });
-        benchmarkEnd('**WEBSITE**', startTime);
+        // Metamask is connected, updateAllBalances
+        updateBalances = updateAllBalances;
       } else {
-        dispatch(setMetamaskFailure(true));
+        // Metamask is not connected, only updateTotalBalances
+        updateBalances = updateTotalBalances;
+        dispatchMetamaskError = () => dispatch(setMetamaskFailure(2));
       }
+
+      benchmarkEnd('*INIT*', startTime);
+      startTime = benchmarkStart('**WEBSITE**');
+
+      initializeCallback(async () => {
+        const [updateBalanceState] = await updateBalances();
+        ReactDOM.unstable_batchedUpdates(() => {
+          updateBalanceState();
+        });
+      });
+      const [balanceInitializers, eventInitializer] = await Promise.all([
+        updateBalances(),
+        initializeEventListener(processEvents, updatePrices, updateTotals),
+      ]);
+      ReactDOM.unstable_batchedUpdates(() => {
+        const [updateBalanceState, eventParsingParameters] =
+          balanceInitializers;
+        updateBalanceState();
+        processEvents(eventInitializer, eventParsingParameters);
+        dispatch(setInitialized(true));
+        if (dispatchMetamaskError) dispatchMetamaskError();
+      });
+      benchmarkEnd('**WEBSITE**', startTime);
     }
 
     start();
