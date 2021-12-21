@@ -42,7 +42,6 @@ const useStyles = makeStyles({
 export default function NftListTable({
   colTitles,
   handleChange,
-  indexType,
   nftList,
   page,
   rowsPerPage,
@@ -77,75 +76,14 @@ export default function NftListTable({
               // eslint-disable-next-line
               .map((index) => (
                 <TableRow key={index}>
-                  {indexType === 'transactions' ? (
-                    <TableCell
-                      align="center"
-                      className={classes.lucidaStyle}
-                      component="th"
-                      scope="index"
-                    >
-                      {`${(count += 1)}`}
-                    </TableCell>
-                  ) : null}
-                  {indexType === 'transactions' ? (
-                    <TableCell align="center" className={classes.lucidaStyle}>
-                      {nftList[index].timeSinceSunrise}
-                    </TableCell>
-                  ) : null}
-                  {indexType === 'accounts' ? (
-                    <TableCell align="center" className={classes.lucidaStyle}>
-                      {nftList[index].nfts}
-                    </TableCell>
-                  ) : null}
-                  {nftList[index].beans !== undefined &&
-                  indexType === 'transactions' ? (
-                    <TableCell align="center" className={classes.lucidaStyle}>
-                      <FormatTooltip
-                        placement="right"
-                        title={`${displayFullBN(
-                          new BigNumber(nftList[index].beans)
-                        )} Beans`}
-                      >
-                        <span>
-                          {displayBN(new BigNumber(nftList[index].beans))}
-                        </span>
-                      </FormatTooltip>
-                    </TableCell>
-                  ) : null}
-                  {nftList[index].investedBeans !== undefined &&
-                  indexType === 'accounts' ? (
-                    <TableCell align="center" className={classes.lucidaStyle}>
-                      <FormatTooltip
-                        placement="right"
-                        title={`${displayFullBN(
-                          new BigNumber(nftList[index].investedBeans)
-                        )} Beans`}
-                      >
-                        <span>
-                          {displayBN(new BigNumber(nftList[index].investedBeans))}
-                        </span>
-                      </FormatTooltip>
-                    </TableCell>
-                  ) : null}
-                  {nftList[index].txn !== undefined &&
-                  indexType === 'transactions' ? (
-                    <TableCell align="center" className={classes.lucidaStyle}>
-                      <Link
-                        href={`${BASE_ETHERSCAN_TX_LINK}${nftList[index].txn}`}
-                        color="inherit"
-                        target="blank"
-                      >
-                        <span>
-                          {`${nftList[index].txn.substring(
-                            0,
-                            6
-                          )}...${nftList[index].txn.substring(
-                            nftList[index].txn.length - 4
-                          )}`}
-                        </span>
-                      </Link>
-                    </TableCell>
-                  ) : null}
+                  <TableCell
+                    align="center"
+                    className={classes.lucidaStyle}
+                    component="th"
+                    scope="index"
+                  >
+                    {`${(count += 1)}`}
+                  </TableCell>
                   {nftList[index].account !== undefined ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
                       <Link
@@ -164,6 +102,27 @@ export default function NftListTable({
                       </Link>
                     </TableCell>
                   ) : null}
+                  <TableCell align="center" className={classes.lucidaStyle}>
+                    <Link
+                      href={`${BASE_ETHERSCAN_TX_LINK}${nftList[index].txn}`}
+                      color="inherit"
+                      target="blank"
+                    >
+                      {nftList[index].type}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="center" className={classes.lucidaStyle}>
+                    <FormatTooltip
+                      placement="right"
+                      title={`${displayFullBN(
+                        new BigNumber(nftList[index].beans)
+                      )} Beans`}
+                    >
+                      <span>
+                        {displayBN(new BigNumber(nftList[index].beans))}
+                      </span>
+                    </FormatTooltip>
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>

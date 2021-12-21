@@ -24,9 +24,6 @@ query winterNFTs($season: String) {
   investments(
     orderBy: beans,
     orderDirection: desc,
-    where: {
-      season: $season
-    },
     first: 5
   ) {
     id
@@ -74,7 +71,8 @@ export async function queryWinterNFTs(): Promise {
     const investment = {};
     investment.account = i.user.id;
     investment.beans = i.beans;
-    investment.timeSinceSunrise = i.type;
+    investment.type = i.type;
+    investment.txn = i.txn;
     return investment;
   });
 

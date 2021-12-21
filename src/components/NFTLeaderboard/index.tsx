@@ -13,7 +13,7 @@ import NftListTable from './NftListTable';
 import NftAccountsListTable from './NftAccountsListTable';
 import WinterNftStatsHeader from './WinterNftStatsHeader';
 
-export default function NftLeaderboardSection() {
+export default function NftLeaderboard() {
   const [page, setPage] = React.useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
 
@@ -46,9 +46,8 @@ export default function NftLeaderboardSection() {
   if (investmentNFTs.length > 0) {
     sectionsInfo.push(
       <NftListTable
-        indexType="transactions"
         nftList={investmentNFTs}
-        colTitles={['Rank', 'Type', 'Beans', 'Address']}
+        colTitles={['Rank', 'Address', 'Type', 'Beans']}
         handleChange={handlePageChange}
         page={page}
         style={{ width: '100%' }}
