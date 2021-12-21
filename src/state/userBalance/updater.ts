@@ -50,12 +50,12 @@ import { UserBalanceState } from './reducer';
 
 
 /* Utility functions */
-const benchmarkStart = (operation) => {
+const benchmarkStart = (operation: string) => {
   console.log(`LOADING ${operation}`);
   return Date.now();
 };
 
-const benchmarkEnd = (operation, startTime) => {
+const benchmarkEnd = (operation: string, startTime: number) => {
   console.log(
     `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
   );
@@ -99,7 +99,6 @@ export default function Updater() {
 
   //
   useEffect(() => {
-
     /**
      * 
      * @param accountBalances 
@@ -142,8 +141,8 @@ export default function Updater() {
 
       dispatch(
         setUserBalance({
-          claimableEthBalance,
           ethBalance,
+          claimableEthBalance,
           beanBalance,
           lpBalance,
           seedBalance,
@@ -535,9 +534,8 @@ export default function Updater() {
           lpWithdrawals: userLPWithdrawals,
           lpReceivableCrates: userLPReceivableCrates,
           votedBips: votedBips,
-          beanClaimableBalance: beanReceivableBalance.plus(
-            harvestablePodBalance
-          ),
+          beanClaimableBalance: beanReceivableBalance
+            .plus(harvestablePodBalance),
           hasClaimable: beanReceivableBalance
             .plus(harvestablePodBalance)
             .plus(lpReceivableBalance)
@@ -597,12 +595,16 @@ export default function Updater() {
      */
     async function updateAllBalances() {
       const startTime = benchmarkStart('ALL BALANCES');
+
+      // Prepare batched promises;
+      // This combines multiple calls to the chain to prevent spamming [verify this]
       const batch = createLedgerBatch();
       const accountBalancePromises = getAccountBalances(batch);
       const totalBalancePromises = getTotalBalances(batch);
       const pricePromises = getPrices(batch);
       batch.execute();
 
+      // Execute all loading promises
       const [
         bipInfo,
         fundraiserInfo,
@@ -620,11 +622,14 @@ export default function Updater() {
         pricePromises,
         getUSDCBalance(),
       ]);
+
       benchmarkEnd('ALL BALANCES', startTime);
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
         _prices[1],
         _prices[2]
       ); /* tokenReserves, token0 */
+
+      //
       const eventParsingParameters = [
         totalBalances[14].season /* season */,
         totalBalances[10] /* harvestableIndex */,
@@ -708,17 +713,22 @@ export default function Updater() {
     }
 
     /**
-     * 
+     * Entry point for acquiring all necessary website data.
      */
     async function start() {
       let startTime = benchmarkStart('*INIT*');
       let updateBalances: Function;
       let dispatchMetamaskError: Function | null;
-      if (await initialize()) {
+
+      // Choose what balances to load depending on
+      // wallet connection availability. If a wallet
+      // isn't connected, we cannot load user balances.
+      const isWalletConnected = await initialize();
+      if (isWalletConnected) {
         // Metamask is connected, updateAllBalances
         updateBalances = updateAllBalances;
       } else {
-        // Metamask is not connected, only updateTotalBalances
+        // Metamask is NOT connected, only updateTotalBalances
         updateBalances = updateTotalBalances;
         dispatchMetamaskError = () => dispatch(setMetamaskFailure(2));
       }
@@ -726,16 +736,21 @@ export default function Updater() {
       benchmarkEnd('*INIT*', startTime);
       startTime = benchmarkStart('**WEBSITE**');
 
+      //
       initializeCallback(async () => {
         const [updateBalanceState] = await updateBalances();
         ReactDOM.unstable_batchedUpdates(() => {
           updateBalanceState();
         });
       });
+
+      //
       const [balanceInitializers, eventInitializer] = await Promise.all([
         updateBalances(),
         initializeEventListener(processEvents, updatePrices, updateTotals),
       ]);
+      
+      //
       ReactDOM.unstable_batchedUpdates(() => {
         const [updateBalanceState, eventParsingParameters] =
           balanceInitializers;
@@ -744,6 +759,8 @@ export default function Updater() {
         dispatch(setInitialized(true));
         if (dispatchMetamaskError) dispatchMetamaskError();
       });
+
+      //
       benchmarkEnd('**WEBSITE**', startTime);
     }
 

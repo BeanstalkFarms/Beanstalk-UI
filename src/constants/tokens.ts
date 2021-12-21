@@ -3,7 +3,7 @@ export const MARKETING_BUDGET = '0xAA420e97534aB55637957e868b658193b112A551';
 
 // FIXME: best name I could think of here was "metadata"
 export type TokenMetadata = {
-  addr?: string;
+  addr: string;
   decimals: number;
   symbol?: string;
 }
@@ -48,7 +48,7 @@ export const USDC : TokenMetadata = {
   symbol: 'USDC',
 };
 
-export const ETH : TokenMetadata = {
+export const ETH : Partial<TokenMetadata> = {
   decimals: 18,
   symbol: 'ETH',
 };

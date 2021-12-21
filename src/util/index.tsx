@@ -22,8 +22,8 @@ export * from './APYUtilities';
 export * from './FundraiserUtilities';
 
 let ethereum;
-let connectedToMetamask;
-export let initializing;
+let connectedToMetamask : boolean = false;
+export let initializing; // QUESTION: I can't find anywhere this is set. What does it do?
 export let web3: Web3;
 export let account: String;
 export let txCallback = null;
@@ -72,6 +72,10 @@ async function initializeMetaMaskListeners() {
   ethereum.on('chainChanged', changeHandler);
 }
 
+/**
+ * 
+ * @returns 
+ */
 export async function initialize(): Promise<boolean> {
   if (!ethereum) {
     try {
@@ -134,6 +138,9 @@ export async function initialize(): Promise<boolean> {
   return true;
 }
 
+/**
+ * 
+ */
 export async function switchToMainnet() {
   await ethereum.request({
     method: 'wallet_switchEthereumChain',
@@ -142,14 +149,27 @@ export async function switchToMainnet() {
   window.location.reload();
 }
 
+/**
+ * 
+ * @param callback 
+ */
 export function initializeCallback(callback) {
   txCallback = callback;
 }
 
-export async function isAddress(a) {
+/**
+ * 
+ * @param a 
+ * @returns 
+ */
+export async function isAddress(a: string) {
   return ethers.utils.isAddress(a);
 }
 
+/**
+ * 
+ * @returns 
+ */
 export async function GetWalletAddress(): Promise<String | undefined> {
   await initializing;
   return account;
