@@ -10,6 +10,7 @@ import {
   UNI_V2_USDC_ETH_LP,
   UNISWAP_V2_ROUTER,
   USDC,
+  TokenMetadata
 } from 'constants/index';
 import {
   account,
@@ -21,15 +22,27 @@ import {
   web3,
 } from './index';
 
-/* Client is responsible for calling execute() */
-export const createLedgerBatch = () => new web3.BatchRequest();
+// FIXME: experimenting with type importing from web3.
+// import { Contract } from "web3-eth-contract";
+// import { Method } from 'web3-core-method';
+import { BatchRequest } from 'web3-core';
 
-const makeBatchedPromises = (batch, promisesAndResultHandlers) => {
+/* Client is responsible for calling execute() */
+export const createLedgerBatch : () => BatchRequest = () => new web3.BatchRequest();
+
+
+/**
+ * 
+ */
+const makeBatchedPromises = (
+  batch: BatchRequest,
+  promisesAndResultHandlers: [any, (result: any) => any][]   // FIXME: figure out how to import type for Contract.myMethod
+) => {
   const batchedPromises = promisesAndResultHandlers.map(
     (methodAndHandler) =>
       new Promise((resolve, reject) => {
         batch.add(
-          methodAndHandler[0].call.request({}, 'latest', (error, result) => {
+          methodAndHandler[0].call.request({}, 'latest', (error: any, result: any) => {
             if (result !== undefined) resolve(methodAndHandler[1](result));
             else reject(error);
           })
@@ -39,26 +52,41 @@ const makeBatchedPromises = (batch, promisesAndResultHandlers) => {
   return Promise.all(batchedPromises);
 };
 
-const identityResult = (result) => result;
-const bigNumberResult = (result) => new BigNumber(result);
-const tokenResult = (token) => (result) =>
+/** Result functions **/
+const identityResult = (result: any) => result;
+const bigNumberResult = (result: number) => new BigNumber(result);
+const tokenResult = (token: TokenMetadata) => (result: any) =>
   toTokenUnitsBN(new BigNumber(result), token.decimals);
 
+
+/**
+ * 
+ * @returns 
+ */
 export async function getEtherBalance() {
   return tokenResult(ETH)(await web3.eth.getBalance(account));
 }
 
+/**
+ * 
+ * @returns 
+ */
 export async function getUSDCBalance() {
   return tokenResult(USDC)(await web3.eth.getBalance(account));
 }
 
+/**
+ * 
+ * @param blockNumber 
+ * @returns 
+ */
 export async function getBlockTimestamp(blockNumber) {
   await initializing;
   return (await web3.eth.getBlock(blockNumber)).timestamp;
 }
 
 /* Batched Getters */
-export const getAccountBalances = async (batch) => {
+export const getAccountBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();

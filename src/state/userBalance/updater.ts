@@ -46,7 +46,27 @@ import {
   toTokenUnitsBN,
   account,
 } from 'util/index';
+import { UserBalanceState } from './reducer';
 
+
+/* Utility functions */
+const benchmarkStart = (operation) => {
+  console.log(`LOADING ${operation}`);
+  return Date.now();
+};
+
+const benchmarkEnd = (operation, startTime) => {
+  console.log(
+    `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
+  );
+};
+
+/**
+ * Updater is an empty React component that handles updating
+ * of balances in Redux state.
+ * ---------------------------------------------------------
+ * @returns null
+ */
 export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
@@ -64,6 +84,7 @@ export default function Updater() {
     (state) => state.prices
   );
 
+  // TODO: explain what's going on here
   const eventParsingParametersRef = useRef([]);
   eventParsingParametersRef.current = [
     season.season,
@@ -75,18 +96,17 @@ export default function Updater() {
     prices.ethReserve,
   ];
 
-  const benchmarkStart = (operation) => {
-    console.log(`LOADING ${operation}`);
-    return Date.now();
-  };
 
-  const benchmarkEnd = (operation, startTime) => {
-    console.log(
-      `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
-    );
-  };
-
+  //
   useEffect(() => {
+
+    /**
+     * 
+     * @param accountBalances 
+     * @param ethBalance 
+     * @param lpReserves 
+     * @param currentSeason 
+     */
     function processAccountBalances(
       accountBalances,
       ethBalance,
@@ -94,20 +114,23 @@ export default function Updater() {
       currentSeason
     ) {
       const [
+        // AllowanceState
         uniswapBeanAllowance,
         beanstalkBeanAllowance,
         beanstalkLPAllowance,
         beanstalkUSDCAllowance,
+        // Partial<UserBalanceState>
         claimableEthBalance,
         beanBalance,
         lpBalance,
         seedBalance,
         stalkBalance,
-        lockedUntil,
         farmableBeanBalance,
         grownStalkBalance,
         rootsBalance,
         usdcBalance,
+        // Unknown
+        lockedUntil,
       ] = accountBalances;
       const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       const lockedSeasons = lockedUntil.minus(currentSeason);
@@ -131,10 +154,17 @@ export default function Updater() {
           grownStalkBalance,
           rootsBalance,
           usdcBalance,
-        })
+        } as Partial<UserBalanceState>)
       );
     }
 
+    /**
+     * 
+     * @param totalBalances 
+     * @param bipInfo 
+     * @param fundraiserInfo 
+     * @returns 
+     */
     function processTotalBalances(totalBalances, bipInfo, fundraiserInfo) {
       const [
         totalBeans,
@@ -190,6 +220,12 @@ export default function Updater() {
       return _season.season;
     }
 
+    /**
+     * 
+     * @param tokenReserves 
+     * @param token0 
+     * @returns 
+     */
     function lpReservesForTokenReserves(tokenReserves, token0) {
       const rawBeanReserve =
         token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
@@ -199,6 +235,12 @@ export default function Updater() {
       const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
       return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
     }
+
+    /**
+     * 
+     * @param _prices 
+     * @returns 
+     */
     function processPrices(_prices) {
       const [
         referenceTokenReserves,
@@ -235,6 +277,11 @@ export default function Updater() {
       return [beanReserve, ethReserve];
     }
 
+    /**
+     * 
+     * @param events 
+     * @param eventParsingParameters 
+     */
     async function processEvents(events, eventParsingParameters) {
       const startTime = benchmarkStart('EVENT PROCESSOR');
 
@@ -506,6 +553,10 @@ export default function Updater() {
       benchmarkEnd('EVENT PROCESSOR', startTime);
     }
 
+    /**
+     * 
+     * @returns 
+     */
     async function updateTotalBalances() {
       const startTime = benchmarkStart('ALL BALANCES');
       const batch = createLedgerBatch();
@@ -540,6 +591,10 @@ export default function Updater() {
       ];
     }
 
+    /**
+     * 
+     * @returns 
+     */
     async function updateAllBalances() {
       const startTime = benchmarkStart('ALL BALANCES');
       const batch = createLedgerBatch();
@@ -600,6 +655,9 @@ export default function Updater() {
       ];
     }
 
+    /**
+     * 
+     */
     async function updateTotals() {
       const startTime = benchmarkStart('TOTALS');
       const batch = createLedgerBatch();
@@ -618,6 +676,9 @@ export default function Updater() {
       benchmarkEnd('TOTALS', startTime);
     }
 
+    /**
+     * 
+     */
     async function updatePrices() {
       const startTime = benchmarkStart('PRICES');
       const batch = createLedgerBatch();
@@ -631,15 +692,24 @@ export default function Updater() {
       benchmarkEnd('PRICES', startTime);
     }
 
+    /**
+     * 
+     */
     async function getLastCross() {
       const lastCrossInitializer = await lastCrossQuery();
       dispatch(setLastCross(lastCrossInitializer));
     }
 
+    /**
+     * 
+     */
     async function getAPYs() {
       dispatch(setBeansPerSeason(await apyQuery()));
     }
 
+    /**
+     * 
+     */
     async function start() {
       let startTime = benchmarkStart('*INIT*');
       let updateBalances: Function;
@@ -677,11 +747,11 @@ export default function Updater() {
       benchmarkEnd('**WEBSITE**', startTime);
     }
 
+    // Run all async functions
     start();
     getLastCross();
     getAPYs();
 
-    // eslint-disable-next-line
   }, []);
 
   return null;
