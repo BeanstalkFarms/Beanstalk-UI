@@ -2,13 +2,9 @@ import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { Link } from '@material-ui/core';
-import NFTUpdater from 'state/nfts/updater';
 import {
   MEDIUM_NFT_LINK,
   OPENSEA_LINK,
-  TOTAL_NFTS,
-  BEGINNING_NFT_SEASON,
-  NFTS_PER_SEASON,
 } from 'constants/index';
 import {
   beanftStrings,
@@ -17,13 +13,10 @@ import {
   Grid,
 } from 'components/Common';
 import ClaimNFT from './claimnft';
-import NftSection from './nftSection';
+import NftStatsHeader from './NftStatsHeader';
 
 export default function NFTs() {
-  const { season } = useSelector<AppState, AppState['season']>(
-    (state) => state.season
-  );
-  const { unclaimedNFTs, claimedNFTs, accountNFTs, numNFTs } = useSelector<AppState, AppState['nfts']>(
+  const { unclaimedNFTs, claimedNFTs } = useSelector<AppState, AppState['nfts']>(
     (state) => state.nfts
   );
 
@@ -50,13 +43,9 @@ export default function NFTs() {
       </span>
     </>
   );
-  // const userNFTs = unclaimedNFTs.concat(claimedNFTs).map((u) => u.id);
-  const remainingNFTs = TOTAL_NFTS -
-    (String(season) - BEGINNING_NFT_SEASON) * NFTS_PER_SEASON;
 
   return (
     <>
-      <NFTUpdater />
       <ContentSection
         id="nft"
         title="BeaNFTs"
@@ -69,12 +58,7 @@ export default function NFTs() {
             descriptionTitle="What are BeaNFTs?"
           />
         </Grid>
-        <NftSection
-          remainingNFTs={remainingNFTs}
-          numNFTs={numNFTs}
-          topTxs={accountNFTs}
-          acctTxs={claimedNFTs}
-        />
+        <NftStatsHeader />
         <ClaimNFT
           buttonDescription={beanftStrings.mintAll}
           claimedNfts={claimedNFTs}

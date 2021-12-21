@@ -1,29 +1,26 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   setUnclaimedNFTs,
   setClaimedNFTs,
-  setAccountNFTs,
-  setNumNFTs,
+  setNFTs,
 } from 'state/nfts/actions';
-import { beanNFTSowQuery, loadNFTs } from 'graph';
-import { AppState } from 'state';
+import {
+  queryWinterNFTs,
+  loadNFTs,
+  queryAccountNFTStats,
+} from 'graph';
 import {
   listenForNFTTransfers,
-  GetWalletAddress,
+  metamaskFailure,
+  account,
   getMintedNFTs,
 } from 'util/index';
 
 export default function NFTUpdater() {
   const dispatch = useDispatch();
 
-  const season = useSelector<AppState, AppState['season']>(
-    (state) => state.season
-  );
-
   useEffect(() => {
-    let count = 0;
-
     async function checkMints(data) {
       const [ownedIds, tradedIds] = await getMintedNFTs();
       const un = [];
@@ -32,37 +29,40 @@ export default function NFTUpdater() {
         if (ownedIds.includes(data[i].id)) {
           if (!tradedIds.includes(data[i].id)) {
             cn.push(data[i]);
-            count += 1;
           } else {
             const idx = tradedIds.indexOf(data[i].id);
             tradedIds.splice(idx, 1);
           }
         } else {
           un.push(data[i]);
-          count += 1;
         }
       }
       dispatch(setUnclaimedNFTs(un));
       dispatch(setClaimedNFTs(cn));
-      dispatch(setNumNFTs(count));
-      listenForNFTTransfers(getNFTs); // eslint-disable-line
+      listenForNFTTransfers(loadAccountNFTs); // eslint-disable-line
     }
-    async function getNFTs(acct) {
-      const data = await loadNFTs(acct.toLowerCase());
+    async function loadAccountNFTs() {
+      const data = await loadNFTs(account.toLowerCase());
       checkMints(data);
     }
-    async function loadAccountsData() {
-      const [a] = await Promise.all([
-        beanNFTSowQuery(season.toString()),
-      ]);
-      dispatch(setAccountNFTs(a));
+
+    async function loadAccountNFTStats() {
+      const data = await queryAccountNFTStats(account.toLowerCase());
+      dispatch(setNFTs(data));
+    }
+    async function loadWinterNFTs() {
+      const n = await queryWinterNFTs();
+      dispatch(setNFTs(n));
     }
 
     async function start() {
-      GetWalletAddress().then((result) => {
-        getNFTs(result.toLowerCase());
-      });
-      loadAccountsData();
+      if (!account && metamaskFailure === -1) {
+        setTimeout(() => start(), 100);
+      } else if (account) {
+        loadAccountNFTs();
+        loadAccountNFTStats();
+      }
+      loadWinterNFTs();
     }
 
     start();

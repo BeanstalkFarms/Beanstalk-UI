@@ -1,11 +1,11 @@
 import React from 'react';
 import { Page } from 'Pages/index';
 import NFTs from 'components/NFT';
-import NftTransactions from 'components/NFT/NftTransactions';
+import NftLeaderboardSection from 'components/NFT/NftLeaderboardSection';
 
 export default function DAO() {
-  const sectionTitles = ['BeaNFT', 'Leaderboards'];
-  const sections = [<NFTs />, <NftTransactions />];
+  const sectionTitles = ['BeaNFT', 'Earn NFTs'];
+  const sections = [<NFTs />, <NftLeaderboardSection />];
 
   return (
     <Page sections={sections} sectionTitles={sectionTitles} textTransform="none" />

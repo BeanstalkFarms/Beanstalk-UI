@@ -112,17 +112,17 @@ export default function NftListTable({
                       </FormatTooltip>
                     </TableCell>
                   ) : null}
-                  {nftList[index].beansInvested !== undefined &&
+                  {nftList[index].investedBeans !== undefined &&
                   indexType === 'accounts' ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
                       <FormatTooltip
                         placement="right"
                         title={`${displayFullBN(
-                          new BigNumber(nftList[index].beansInvested)
+                          new BigNumber(nftList[index].investedBeans)
                         )} Beans`}
                       >
                         <span>
-                          {displayBN(new BigNumber(nftList[index].beansInvested))}
+                          {displayBN(new BigNumber(nftList[index].investedBeans))}
                         </span>
                       </FormatTooltip>
                     </TableCell>

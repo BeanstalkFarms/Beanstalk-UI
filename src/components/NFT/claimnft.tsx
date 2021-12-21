@@ -3,7 +3,6 @@ import { Box, Grid } from '@material-ui/core';
 import { mintAllNFTs } from 'util/index';
 import {
   beanftStrings,
-  ContentTitle,
   BaseModule,
   SingleButton,
 } from 'components/Common';
@@ -16,14 +15,6 @@ export default function ClaimNFT({
 }) {
   const [page, setPage] = React.useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
-
-  const headerStyle = {
-    fontFamily: 'Futura-PT-Book',
-    fontSize: '20px',
-    marginTop: '40px',
-    padding: '5px',
-    width: '100%',
-  };
 
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
     setSectionInfo(newSectionInfo);
@@ -110,20 +101,8 @@ export default function ClaimNFT({
     />
   ) : null;
 
-  const ownedBeaNFTS = nfts.length + claimedNfts.length;
-
-  const showSection =
-    canClaimNFT || claimedNfts.length > 0 ? (
-      <ContentTitle
-        style={headerStyle}
-        title={`YOUR BeaNFTs: ${ownedBeaNFTS}`}
-        textTransform="none"
-      />
-    ) : null;
-
   return (
     <Grid container justifyContent="center">
-      {showSection}
       <Grid container item xs={6} style={{ width: '50%' }}>
         <Grid
           container

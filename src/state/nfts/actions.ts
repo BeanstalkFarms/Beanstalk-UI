@@ -12,6 +12,10 @@ export const setAccountNFTs = createAction<Array>(
   'nfts/setAccountNFTs'
 );
 
-export const setNumNFTs = createAction<Number>(
-  'nfts/setNumNFTs'
+export const setInvestmentNFTs = createAction<Array>(
+  'nfts/setInvestmentNFTs'
+);
+
+export const setNFTs = createAction<Number>(
+  'nfts/setNFTs'
 );

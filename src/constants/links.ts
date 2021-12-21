@@ -62,7 +62,8 @@ export const BEAN_SUBGRAPH_API_LINK =
   'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/0x925753106fcdb6d2f30c3db295328a0a1c5fd1d1-1';
 export const BEANSTALK_NFT_SUBGRAPH_API_LINK =
   'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.2';
-
+export const WINTER_NFT_SUBGRAPH_API_LINK =
+  'https://api.studio.thegraph.com/query/6727/winterbeanft/v0.0.7';
 // export const BEANSTALK_SUBGRAPH_API_LINK =
 //   'https://api.studio.thegraph.com/query/6727/beanstalk/v1.1.6';
 export const BEANSTALK_SUBGRAPH_API_LINK =

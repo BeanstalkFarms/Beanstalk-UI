@@ -3,21 +3,36 @@ import {
   setUnclaimedNFTs,
   setClaimedNFTs,
   setAccountNFTs,
-  setNumNFTs,
+  setInvestmentNFTs,
+  setNFTs,
 } from './actions';
 
 export interface NftState {
   unclaimedNFTs: Array;
   claimedNFTs: Array;
   accountNFTs: Array;
-  numNFTs: Number;
+  investmentNFTs: Array;
+  totalNFTs: Number,
+  genesisNFTs: Number;
+  winterNFTs: Number;
+  mintedNFTs: Array;
+  unmintedNFTs: Number;
+  earnedNFTs: Number;
+  investedBeans: Number;
 }
 
 export const initialState: NftState = {
   unclaimedNFTs: [],
   claimedNFTs: [],
   accountNFTs: [],
-  numNFTs: 0,
+  investmentNFTs: [],
+  totalNFTs: 0,
+  genesisNFTs: 0,
+  winterNFTs: 0,
+  mintedNFTs: [],
+  unmintedNFTs: 0,
+  earnedNFTs: 0,
+  investedBeans: 0,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -31,7 +46,13 @@ export default createReducer(initialState, (builder) =>
     .addCase(setAccountNFTs, (state, { payload }) => {
       state.accountNFTs = payload;
     })
-    .addCase(setNumNFTs, (state, { payload }) => {
-      state.numNFTs = payload;
+    .addCase(setInvestmentNFTs, (state, { payload }) => {
+      state.investmentNFTs = payload;
+    })
+    .addCase(setNFTs, (state, { payload }) => {
+      Object.keys(payload).map((key) => {
+        state[key] = payload[key];
+        return state[key];
+      });
     })
 );
