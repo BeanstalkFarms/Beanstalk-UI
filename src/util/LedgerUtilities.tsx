@@ -21,8 +21,10 @@ import {
 } from './index';
 
 /* Client is responsible for calling execute() */
-export const createLedgerBatch = (_ethereum) =>
-  new Web3(_ethereum).BatchRequest();
+export const createLedgerBatch = (_ethereum) => {
+  const web3 = new Web3(_ethereum);
+  return new web3.BatchRequest();
+};
 
 const makeBatchedPromises = (batch, promisesAndResultHandlers) => {
   const batchedPromises = promisesAndResultHandlers.map(
@@ -58,11 +60,12 @@ export async function getBlockTimestamp(blockNumber, _ethereum) {
 }
 
 /* Batched Getters */
-export const getAccountBalances = async (account, batch) => {
-  const bean = tokenContractReadOnly(BEAN);
-  const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
-  const beanstalk = beanstalkContractReadOnly();
-  const usdc = tokenContractReadOnly(USDC);
+export const getAccountBalances = async (account, batch, _ethereum) => {
+  const web3 = new Web3(_ethereum);
+  const bean = tokenContractReadOnly(BEAN, web3);
+  const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP, web3);
+  const beanstalk = beanstalkContractReadOnly(web3);
+  const usdc = tokenContractReadOnly(USDC, web3);
 
   return makeBatchedPromises(batch, [
     [bean.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
@@ -83,7 +86,8 @@ export const getAccountBalances = async (account, batch) => {
 };
 /* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
 
-export const getTotalBalances = async (batch) => {
+export const getTotalBalances = async (batch, _ethereum) => {
+  const web3 = new Web3(_ethereum);
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
@@ -136,8 +140,9 @@ export const getTotalBalances = async (batch) => {
 };
 
 /* TODO: batch BIP detail ledger reads */
-export const getBips = async () => {
-  const beanstalk = beanstalkContractReadOnly();
+export const getBips = async (_ethereum) => {
+  const web3 = new Web3(_ethereum);
+  const beanstalk = beanstalkContractReadOnly(web3);
   const numberOfBips = bigNumberResult(await beanstalk.numberOfBips());
   const bips = [];
   for (let i = new BigNumber(0); i.isLessThan(numberOfBips); i = i.plus(1)) {
@@ -174,8 +179,9 @@ export const getBips = async () => {
 };
 
 /* TODO: batch BIP detail ledger reads */
-export const getFundraisers = async () => {
-  const beanstalk = beanstalkContractReadOnly();
+export const getFundraisers = async (_ethereum) => {
+  const web3 = new Web3(_ethereum);
+  const beanstalk = beanstalkContractReadOnly(web3);
   let hasActiveFundraiser = false;
   const numberOfFundraisers = bigNumberResult(
     await beanstalk.numberOfFundraisers()
@@ -199,8 +205,9 @@ export const getFundraisers = async () => {
   return [fundraisers, hasActiveFundraiser];
 };
 
-export const getPrices = async (batch) => {
-  const beanstalk = beanstalkContractReadOnly();
+export const getPrices = async (batch, _ethereum) => {
+  const web3 = new Web3(_ethereum);
+  const beanstalk = beanstalkContractReadOnly(web3);
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
 
@@ -227,13 +234,7 @@ export const getPrices = async (batch) => {
         toTokenUnitsBN(prices[1], 18),
       ],
     ],
-    [
-      beanstalk.methods.beansToPeg(),
-      (lp) => toTokenUnitsBN(lp, 6),
-    ],
-    [
-      beanstalk.methods.lpToPeg(),
-      (lp) => toTokenUnitsBN(lp, 18),
-    ],
+    [beanstalk.beansToPeg(), (lp) => toTokenUnitsBN(lp, 6)],
+    [beanstalk.lpToPeg(), (lp) => toTokenUnitsBN(lp, 18)],
   ]);
 };

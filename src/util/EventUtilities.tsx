@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from 'constants/index';
+import Web3 from 'web3';
 import {
   beanstalkContractReadOnly,
   pairContractReadOnly,
@@ -32,13 +33,14 @@ export async function initializeEventListener(
   callback,
   updatePrices,
   updateTotals,
-  account
+  account,
+  _ethereum
 ) {
   const startTime = benchmarkStart('EVENT LISTENER');
-
-  const beanstalk = beanstalkContractReadOnly();
-  const beanPair = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
-  const usdcPair = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
+  const web3 = new Web3(_ethereum);
+  const beanstalk = beanstalkContractReadOnly(web3);
+  const beanPair = pairContractReadOnly(UNI_V2_ETH_BEAN_LP, web3);
+  const usdcPair = pairContractReadOnly(UNI_V2_USDC_ETH_LP, web3);
 
   const accountEvents = await Promise.all([
     beanstalk.getPastEvents('BeanDeposit', {

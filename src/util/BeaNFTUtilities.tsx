@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import Web from 'web3';
 import { beaNFTContract, beaNFTContractReadOnly, txCallback } from './index';
 
 export const mintNFT = async (_account, nftId, ipfsHash, signature) => {
@@ -21,17 +22,19 @@ export const mintAllNFTs = async (_account, nftId, ipfsHash, signature) => {
     });
 };
 
-export const isMinted = async (nftId) => {
+export const isMinted = async (nftId, _ethereum) => {
+  const web3 = new Web3(_ethereum);
   try {
-    await beaNFTContractReadOnly().ownerOf(new BigNumber(nftId));
+    await beaNFTContractReadOnly(web3).ownerOf(new BigNumber(nftId));
     return true;
   } catch {
     return false;
   }
 };
 
-export const getMintedNFTs = async (account) => {
-  const beaNFT = beaNFTContractReadOnly();
+export const getMintedNFTs = async (account, _ethereum) => {
+  const web3 = new Web3(_ethereum);
+  const beaNFT = beaNFTContractReadOnly(web3);
   const toTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { to: account },
     fromBlock: 0,
@@ -47,8 +50,9 @@ export const getMintedNFTs = async (account) => {
   return [ownedIds, tradedIds];
 };
 
-export const listenForNFTTransfers = async (callback, account) => {
-  const beaNFT = beaNFTContractReadOnly();
+export const listenForNFTTransfers = async (callback, account, _ethereum) => {
+  const web3 = new Web3(_ethereum);
+  const beaNFT = beaNFTContractReadOnly(web3);
   beaNFT.events.allEvents(
     {
       fromBlack: 'latest',

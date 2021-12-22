@@ -31,24 +31,24 @@ const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 export const tokenContract = (token, signer) =>
   new ethers.Contract(token.addr, beanAbi, signer);
 
-export const tokenContractReadOnly = (token) =>
-  new ethers.Contract(beanAbi, token.addr);
+export const tokenContractReadOnly = (token, web3) =>
+  new web3.eth.Contract(beanAbi, token.addr);
 
 export const beanstalkContract = (signer) =>
   new ethers.Contract(BEANSTALK.addr, beanstalkAbi, signer);
 
-export const beanstalkContractReadOnly = () =>
-  new ethers.Contract(beanstalkAbi, BEANSTALK.addr);
+export const beanstalkContractReadOnly = (web3) =>
+  new web3.eth.Contract(beanstalkAbi, BEANSTALK.addr);
 
 export const beaNFTContract = (signer) =>
   new ethers.Contract(BEANFT.addr, beaNFTAbi, signer);
-export const beaNFTContractReadOnly = () =>
-  new ethers.Contract(beaNFTAbi, BEANFT.addr);
+export const beaNFTContractReadOnly = (web3) =>
+  new web3.eth.Contract(beaNFTAbi, BEANFT.addr);
 
 export const pairContract = (pair, signer) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, signer);
-export const pairContractReadOnly = (pair) =>
-  new ethers.Contract(uniswapPairAbi, pair.addr);
+export const pairContractReadOnly = (pair, web3) =>
+  new web3.eth.Contract(uniswapPairAbi, pair.addr);
 
 export const uniswapRouterContract = (signer) =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, signer);
