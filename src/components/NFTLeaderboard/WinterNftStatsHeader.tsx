@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import {
   TOTAL_NFTS,
 } from 'constants/index';
-import { HeaderLabelList } from 'components/Common';
+import { beanftWinterStrings, HeaderLabelList } from 'components/Common';
 
 export default function WinterNftStatsHeader() {
     const { totalNFTs, earnedNFTs, investedBeans } = useSelector<AppState, AppState['nfts']>(
@@ -21,9 +21,9 @@ export default function WinterNftStatsHeader() {
           remainingNFTs,
         ]}
         description={[
-          'The number of Winter BeaNFTs you have earned during the Winter BeaNFT event.',
-          'The amount of Beans you have invested during the Winter BeaNFT event.',
-          'The number of remaining Winter BeaNFTs in the Winter BeaNFT event.',
+          beanftWinterStrings.earnedNFTs,
+          beanftWinterStrings.investedBeans,
+          beanftWinterStrings.remainingNFTs,
         ]}
         title={[
           'Your Winter BeaNFTs',

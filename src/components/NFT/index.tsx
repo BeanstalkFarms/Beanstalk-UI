@@ -3,7 +3,8 @@ import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { Link } from '@material-ui/core';
 import {
-  MEDIUM_NFT_LINK,
+  MEDIUM_NFT_GENESIS_LINK,
+  MEDIUM_NFT_WINTER_LINK,
   OPENSEA_LINK,
 } from 'constants/index';
 import {
@@ -26,20 +27,20 @@ export default function NFTs() {
         To date, there have been two NFT projects build on Beanstalk - the
         BeaNFT Genesis Collection and now the BeaNFT Winter Collection.
       </span>
-      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Genesis collection: </span>
+      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Genesis Collection: </span>
       <span>
         The BeaNFT Genesis collection is a series of 2067 BeaNFTs which could only
         be minted by participating in Beanstalk during Seasons 1200 – 1800.{' '}
         <Link href={OPENSEA_LINK} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
-        <Link href={MEDIUM_NFT_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+        <Link href={MEDIUM_NFT_GENESIS_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
       </span>
-      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter collection: </span>
+      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter Collection: </span>
       <span>
-        The BeaNFT Winter Collection is a the second round of BeaNFTs. 2,000 BeaNFTs will
-        be minted by participating in Beanstalk during Seasons 3200-3800. The top 5
-        sow or silo of LP or beans each season will be awarded a BeaNFT.{' '}
-        <Link href={OPENSEA_LINK} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
-        <Link href={MEDIUM_NFT_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+        The BeaNFT Winter Collection is a the second round of BeaNFTs. Up to 2,000
+        BeaNFTs will be minted by participating in Beanstalk during Seasons 3300-3900.
+        The top 5 largest bean-denominated investments each Season (across the Silo
+        and Field) will be awarded one of the 2,000 Winter BeaNFTs.{' '}
+        <Link href={MEDIUM_NFT_WINTER_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
       </span>
     </>
   );

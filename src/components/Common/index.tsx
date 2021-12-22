@@ -228,14 +228,23 @@ export const governanceStrings = {
     'Beanstalk is upgraded in a decentralized fashion through Beanstalk Improvement Proposals (BIPs). Any Stalk holder can vote for a BIP. Anyone with more than .1% of the total outstanding Stalk can propose a BIP. BIPs can be committed in as little as 24 Seasons with a 2/3 supermajority, or after 168 Seasons with a 1/2 majority.',
 };
 export const beanftStrings = {
-  beanftDescription: 'BeaNFT Genesis Collection is a series of 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
-  beanftWinterDescription: 'BeaNFT Winter Collection is a the second round of BeaNFTs. 2,000 BeaNFTs will be minted by participating in Beanstalk during Seasons 3200-3800. The top 5 sow or silo of LP or beans each season will be awarded a BeaNFT. Check out the Genesis Collection on',
+  beanftDescription:
+    'BeaNFT Genesis Collection is a series of 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
   mintAll: 'Use this button to Mint all your Mintable BeaNFTs.',
   minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
   singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',
   unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',
+  genesisNFTs: 'The total minted and unminted Genesis BeaNFTs that you own.',
+  winterNFTs: 'The total minted and unminted Winter BeaNFTs that you own.',
+};
+export const beanftWinterStrings = {
+  beanftDescription:
+    'The BeaNFT Winter Collection is a the second round of BeaNFTs. Up to 2,000 BeaNFTs will be minted by participating in Beanstalk during Seasons 3300-3900. The top 5 largest bean-denominated investments each Season (across the Silo and Field) will be awarded one of the 2,000 Winter BeaNFTs.',
   topTxn: 'This tab displays the top 5 transactions of the current Season.',
-  topAcct: 'This tab displays all previously created BeaNFTs Winter Eddition. This includes minted and unminted BeaNFTs.',
+  topAcct: 'This tab displays all previously created BeaNFTs Winter Collection. This includes minted and unminted BeaNFTs.',
+  earnedNFTs: 'The number of Winter BeaNFTs you have earned during the Winter BeaNFT event.',
+  investedBeans: 'The amount of Beans you have invested during the Winter BeaNFT event.',
+  remainingNFTs: 'The number of remaining Winter BeaNFTs in the Winter BeaNFT event.',
 };
 export const chartStrings = {
   bean: 'Use this tab to view charts with information about the BEAN token.',

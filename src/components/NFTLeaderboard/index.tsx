@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 import { Box, Grid } from '@material-ui/core';
 import {
   BaseModule,
-  beanftStrings,
+  beanftWinterStrings,
   ContentDropdown,
   ContentSection,
 } from 'components/Common';
-import { MEDIUM_NFT_LINK, OPENSEA_LINK } from 'constants/index';
+import { MEDIUM_NFT_WINTER_LINK } from 'constants/index';
 import NftListTable from './NftListTable';
 import NftAccountsListTable from './NftAccountsListTable';
 import WinterNftStatsHeader from './WinterNftStatsHeader';
@@ -31,8 +31,8 @@ export default function NftLeaderboard() {
 
   const sectionTitlesInfo = ['TOP TXs', 'TOP ACCT'];
   const sectionTitlesDescription = [
-    beanftStrings.topTxn,
-    beanftStrings.topAcct,
+    beanftWinterStrings.topTxn,
+    beanftWinterStrings.topAcct,
   ];
 
   // create Top Transactions table
@@ -89,11 +89,7 @@ export default function NftLeaderboard() {
 
   const descriptionLinks = [
     {
-      href: `${OPENSEA_LINK}`,
-      text: 'OpenSea',
-    },
-    {
-      href: `${MEDIUM_NFT_LINK}`,
+      href: `${MEDIUM_NFT_WINTER_LINK}`,
       text: 'Read More',
     },
   ];
@@ -104,8 +100,8 @@ export default function NftLeaderboard() {
     >
       <Grid container justifyContent="center" style={{ margin: '20px 0px', zIndex: 100 }}>
         <ContentDropdown
-          description={beanftStrings.beanftWinterDescription}
-          descriptionTitle="What is the BeaNFT Winter Edition?"
+          description={beanftWinterStrings.beanftDescription}
+          descriptionTitle="What is the BeaNFT Winter Collection?"
           descriptionLinks={descriptionLinks}
         />
       </Grid>

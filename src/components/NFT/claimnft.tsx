@@ -61,7 +61,6 @@ export default function ClaimNFT({
   }
 
   // Table Wrapper
-
   const showListTables =
     sectionsInfo.length > 0 ? (
       <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '360px' }}>
@@ -79,7 +78,6 @@ export default function ClaimNFT({
     ) : null;
 
   // Claim all Unminted BeaNFTs Button
-
   const showButton = canClaimNFT ? (
     <SingleButton
       backgroundColor="#3B3B3B"
