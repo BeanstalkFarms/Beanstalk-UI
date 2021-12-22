@@ -65,7 +65,7 @@ export default function NavigationBar(props) {
       backgroundImage: `url(${theme.cloud}), url(${theme.cloud})`,
       backgroundPosition: '0px 0px, 1px 0px',
       backgroundRepeat: 'repeat-x, repeat-x',
-      backgroundSize: width > 1000 ? 'contain, contain' : 'cover',
+      backgroundSize: width > 900 ? 'contain, contain' : 'cover',
       boxShadow: 'none',
       height: '90px',
       position: 'fixed',

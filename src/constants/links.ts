@@ -13,8 +13,6 @@ export const COMMONWEALTH_LINK = 'https://commonwealth.im/beanstalk/';
 export const DISCORD_LINK = 'https://discord.gg/y4cJNv5DTM';
 export const GITHUB_LINK = 'https://github.com/BeanstalkFarms/Beanstalk';
 export const MEDIUM_LINK = 'https://medium.com/@BeanstalkFarms';
-export const MEDIUM_NFT_LINK =
-  'https://medium.com/@BeanstalkFarms/the-beanft-genesis-edition-ee6fdadc9124';
 export const OPENSEA_LINK = 'https://opensea.io/collection/beanft-genesis';
 export const REDDIT_LINK = 'https://www.reddit.com/r/BeanstalkProtocol/';
 export const TELEGRAM_LINK = 'https://t.me/joinchat/OdWoJSyPVsRhYzgx';
@@ -54,6 +52,10 @@ export const BASE_OPENSEA_LINK =
   'https://opensea.io/assets/0xa755a670aaf1fecef2bea56115e65e03f7722a79';
 export const NFT_LINK =
   'https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/beanft-orstw/service/beanApi/incoming_webhook/getNFTs';
+export const MEDIUM_NFT_GENESIS_LINK =
+  'https://medium.com/@BeanstalkFarms/the-beanft-genesis-edition-ee6fdadc9124';
+export const MEDIUM_NFT_WINTER_LINK =
+  'https://medium.com/@BeanstalkFarms/the-beanft-winter-collection-dec60c0f60c0';
 
 /* Subgraph Links */
 export const UNI_V2_SUBGRAPH_API_LINK =
@@ -62,9 +64,11 @@ export const BEAN_SUBGRAPH_API_LINK =
   'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/0x925753106fcdb6d2f30c3db295328a0a1c5fd1d1-1';
 export const BEANSTALK_NFT_SUBGRAPH_API_LINK =
   'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.2';
-
+export const WINTER_NFT_SUBGRAPH_API_LINK =
+  'https://api.studio.thegraph.com/query/6727/winterbeanft/v0.0.8';
+// export const BEANSTALK_SUBGRAPH_API_LINK =
+//   'https://api.studio.thegraph.com/query/6727/beanstalk/v1.1.6';
 export const BEANSTALK_SUBGRAPH_API_LINK =
 'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/0x925753106fcdb6d2f30c3db295328a0a1c5fd1d1-0';
-
 export const SOIL_SUBGRAPH_API_LINK =
 'https://api.studio.thegraph.com/query/6727/beanstalk/1.1.10';
