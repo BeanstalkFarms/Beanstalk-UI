@@ -41,7 +41,7 @@ export default function Trade() {
           descriptionTitle="How do I Trade?"
         />
       </Grid>
-      <Grid container xs={12} justifyContent="center" style={headerLabelStyle}>
+      <Grid container item xs={12} justifyContent="center" style={headerLabelStyle}>
         <HeaderLabelList
           description={[
             tradeStrings.price,

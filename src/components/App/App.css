@@ -87,6 +87,12 @@
   }
 }
 
+@media screen and (max-width: 425px) {
+  .MuiTab-root {
+    padding: 6px !important;
+  }
+}
+
 .BalanceSection-mobile {
     display: none !important;
 }
