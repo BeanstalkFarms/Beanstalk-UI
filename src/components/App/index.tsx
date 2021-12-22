@@ -6,6 +6,7 @@ import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import Updater from 'state/userBalance/updater';
 import ApplicationUpdater from 'state/application/updater';
+import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
 import { NavigationBar } from 'components/Navigation';
@@ -91,6 +92,7 @@ export default function App() {
       <CssBaseline />
       <Updater />
       <ApplicationUpdater />
+      <NFTUpdater />
       <Main>{app}</Main>
     </ThemeProvider>
   );
