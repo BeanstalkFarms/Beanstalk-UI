@@ -166,100 +166,97 @@ export default function Updater() {
         totalStalk,
         totalPods,
         totalRoots,
-        _weather,
-        rain,
-        _season,
-        develpomentBudget,
-        marketingBudget,
-      ] = totalBalances;
-      const totalBudgetBeans = develpomentBudget.plus(marketingBudget);
-      const [bips, hasActiveBIP] = bipInfo;
-      const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
-      const totalPods = podIndex.minus(harvestableIndex);
-      dispatch(
-        setTotalBalance({
-          totalBeans,
-          totalBudgetBeans,
-          totalLP,
-          totalSiloBeans,
-          totalSiloLP,
-          totalTransitBeans,
-          totalTransitLP,
-          totalSeeds,
-          totalStalk,
-          totalPods,
-          totalRoots,
-        })
-      );
-      dispatch(
-        setWeather({
-          ..._weather,
-          ...rain,
-          harvestableIndex,
-          soil,
-        })
-      );
-      dispatch(setBips(bips));
-      dispatch(setHasActiveBIP(hasActiveBIP));
-      dispatch(setFundraisers(fundraisers));
-      dispatch(setHasActiveFundraiser(hasActiveFundraiser));
-      dispatch(setSeason(_season));
-      return _season.season;
-    }
+      })
+    );
+    dispatch(
+      setWeather({
+        ..._weather,
+        ...rain,
+        harvestableIndex,
+        soil,
+      })
+    );
+    dispatch(setBips(bips));
+    dispatch(setHasActiveBIP(hasActiveBIP));
+    dispatch(setFundraisers(fundraisers));
+    dispatch(setHasActiveFundraiser(hasActiveFundraiser));
+    dispatch(setSeason(_season));
+    return _season.season;
+  }
 
-    function lpReservesForTokenReserves(tokenReserves, token0) {
-      const rawBeanReserve =
-        token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
-      const rawEthReserve =
-        token0 !== BEAN.addr ? tokenReserves[0] : tokenReserves[1];
-      const beanReserve = toTokenUnitsBN(rawBeanReserve, BEAN.decimals);
-      const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
-      return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
-    }
-    function processPrices(_prices) {
-      const [referenceTokenReserves, tokenReserves, token0, twapPrices, beansToPeg, lpToPeg] =
-        _prices;
-      const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
-      const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
-        lpReservesForTokenReserves(tokenReserves, token0);
-      const beanEthPrice = rawEthReserve
-        .dividedBy(rawBeanReserve)
-        .dividedBy(usdcMultiple);
-      const usdcEthPrice = referenceTokenReserves[1]
-        .dividedBy(referenceTokenReserves[0])
-        .dividedBy(usdcMultiple);
-      const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
-      const usdcPrice = usdcEthPrice;
+  function lpReservesForTokenReserves(tokenReserves, token0) {
+    const rawBeanReserve =
+      token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
+    const rawEthReserve =
+      token0 !== BEAN.addr ? tokenReserves[0] : tokenReserves[1];
+    const beanReserve = toTokenUnitsBN(rawBeanReserve, BEAN.decimals);
+    const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
+    return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
+  }
+  function processPrices(_prices) {
+    const [
+      referenceTokenReserves,
+      tokenReserves,
+      token0,
+      twapPrices,
+      beansToPeg,
+      lpToPeg,
+    ] = _prices;
+    const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
+    const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
+      lpReservesForTokenReserves(tokenReserves, token0);
+    const beanEthPrice = rawEthReserve
+      .dividedBy(rawBeanReserve)
+      .dividedBy(usdcMultiple);
+    const usdcEthPrice = referenceTokenReserves[1]
+      .dividedBy(referenceTokenReserves[0])
+      .dividedBy(usdcMultiple);
+    const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
+    const usdcPrice = usdcEthPrice;
 
-      dispatch(
-        setPrices({
-          beanPrice,
-          usdcPrice,
-          ethReserve,
-          beanReserve,
-          beanTWAPPrice: twapPrices[0],
-          usdcTWAPPrice: twapPrices[1],
-          beansToPeg,
-          lpToPeg,
-        })
-      );
-      return [beanReserve, ethReserve];
-    }
+    dispatch(
+      setPrices({
+        beanPrice,
+        usdcPrice,
+        ethReserve,
+        beanReserve,
+        beanTWAPPrice: twapPrices[0],
+        usdcTWAPPrice: twapPrices[1],
+        beansToPeg,
+        lpToPeg,
+      })
+    );
+    return [beanReserve, ethReserve];
+  }
 
-    async function processEvents(events, eventParsingParameters) {
-      const startTime = benchmarkStart('EVENT PROCESSOR');
+  async function processEvents(events, eventParsingParameters) {
+    const startTime = benchmarkStart('EVENT PROCESSOR');
 
-      let userLPSeedDeposits = {};
-      let userLPDeposits = {};
-      let lpWithdrawals = {};
-      let userPlots = {};
-      let userBeanDeposits = {};
-      let beanWithdrawals = {};
-      const votedBips = new Set();
+    let userLPSeedDeposits = {};
+    let userLPDeposits = {};
+    let lpWithdrawals = {};
+    let userPlots = {};
+    let userBeanDeposits = {};
+    let beanWithdrawals = {};
+    const votedBips = new Set();
 
-      events.forEach((event) => {
-        if (event.event === 'BeanDeposit') {
-          const s = parseInt(event.returnValues.season, 10);
+    events.forEach((event) => {
+      if (event.event === 'BeanDeposit') {
+        const s = parseInt(event.returnValues.season, 10);
+        const beans = toTokenUnitsBN(
+          new BigNumber(event.returnValues.beans),
+          BEAN.decimals
+        );
+        userBeanDeposits = {
+          ...userBeanDeposits,
+          [s]:
+            userBeanDeposits[s] !== undefined
+              ? userBeanDeposits[s].plus(beans)
+              : beans,
+        };
+        if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
+      } else if (event.event === 'BeanRemove') {
+        event.returnValues.crates.forEach((s, i) => {
           const beans = toTokenUnitsBN(
             event.returnValues.crateBeans[i],
             BEAN.decimals
