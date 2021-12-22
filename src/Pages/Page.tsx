@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Box } from '@material-ui/core';
 import { ContentTitle, SectionTabs } from 'components/Common';
-import About from 'components/About';
 
 export default function Page({
     sections,
     sectionTitles,
+    textTransform,
   }) {
   const [section, setSection] = useState(0);
 
@@ -22,7 +22,7 @@ export default function Page({
         section={section}
         sectionTitles={sectionTitles}
       />
-    ) : (<ContentTitle title={sectionTitles[0]} />);
+    ) : (<ContentTitle title={sectionTitles[0]} textTransform={textTransform} />);
 
   return (
     <>
@@ -30,10 +30,6 @@ export default function Page({
         {titleSection}
         {sections[section]}
       </Box>
-      {window.location.pathname !== '/about' ?
-        <About />
-        : null
-      }
     </>
   );
 }

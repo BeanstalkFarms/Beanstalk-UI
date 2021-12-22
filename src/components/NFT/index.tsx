@@ -1,82 +1,68 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { MEDIUM_NFT_LINK, OPENSEA_LINK } from 'constants/index';
+import { Link } from '@material-ui/core';
 import {
-  listenForNFTTransfers,
-  GetWalletAddress,
-  getMintedNFTs,
-} from 'util/index';
-import { beanftStrings, ContentSection, ContentDropdown, Grid } from 'components/Common';
-import { loadNFTs } from 'graph';
+  MEDIUM_NFT_GENESIS_LINK,
+  MEDIUM_NFT_WINTER_LINK,
+  OPENSEA_LINK,
+} from 'constants/index';
+import {
+  beanftStrings,
+  ContentSection,
+  ContentDropdown,
+  Grid,
+} from 'components/Common';
 import ClaimNFT from './claimnft';
+import NftStatsHeader from './NftStatsHeader';
 
 export default function NFTs() {
-  const { season } = useSelector<AppState, AppState['season']>(
-    (state) => state.season
+  const { unclaimedNFTs, claimedNFTs } = useSelector<AppState, AppState['nfts']>(
+    (state) => state.nfts
   );
-  const [unclaimedNFTs, setUnclaimedNFTs] = useState([]);
-  const [claimedNFTs, setClaimedNFTs] = useState([]);
 
-  useEffect(() => {
-    async function checkMints(data) {
-      const [ownedIds, tradedIds] = await getMintedNFTs();
-      const un = [];
-      const cn = [];
-      for (let i = 0; i < data.length; i += 1) {
-        if (ownedIds.includes(data[i].id)) {
-          if (!tradedIds.includes(data[i].id)) {
-            cn.push(data[i]);
-          } else {
-            const idx = tradedIds.indexOf(data[i].id);
-            tradedIds.splice(idx, 1);
-          }
-        } else {
-          un.push(data[i]);
-        }
-      }
-      setUnclaimedNFTs(un);
-      setClaimedNFTs(cn);
-      listenForNFTTransfers(getNFTs); // eslint-disable-line
-    }
-    async function getNFTs() {
-      const data = await loadNFTs((await GetWalletAddress()).toLowerCase());
-      checkMints(data);
-    }
-    getNFTs();
-  }, [season]);
-
-  const descriptionLinks = [
-    {
-      href: `${OPENSEA_LINK}`,
-      text: 'OpenSea',
-    },
-    {
-      href: `${MEDIUM_NFT_LINK}`,
-      text: 'Read More',
-    },
-  ];
+  const description = (
+    <>
+      <span style={{ display: 'flex' }}>
+        To date, there have been two NFT projects build on Beanstalk - the
+        BeaNFT Genesis Collection and now the BeaNFT Winter Collection.
+      </span>
+      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Genesis Collection: </span>
+      <span>
+        The BeaNFT Genesis collection is a series of 2067 BeaNFTs which could only
+        be minted by participating in Beanstalk during Seasons 1200 – 1800.{' '}
+        <Link href={OPENSEA_LINK} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
+        <Link href={MEDIUM_NFT_GENESIS_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+      </span>
+      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter Collection: </span>
+      <span>
+        The BeaNFT Winter Collection is the second minting event for BeaNFTs. From Season 3300 to 3900, up to 2,000 BeaNFTs can be earned by participating in Beanstalk. The top 5 largest bean-denominated investments each Season (across the Silo and Field) will be awarded one of the 2,000 Winter BeaNFTs, until there are none left.{' '}
+        <Link href={MEDIUM_NFT_WINTER_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+      </span>
+    </>
+  );
 
   return (
-    <ContentSection
-      id="nft"
-      title="BeaNFTs"
-      textTransform="none"
-      style={{ minHeight: '100px' }}
-    >
-      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-        <ContentDropdown
-          description={beanftStrings.beanftDescription}
-          descriptionTitle="What are BeaNFTs?"
-          descriptionLinks={descriptionLinks}
+    <>
+      <ContentSection
+        id="nft"
+        title="BeaNFTs"
+        textTransform="none"
+        style={{ minHeight: '100px' }}
+      >
+        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+          <ContentDropdown
+            description={description}
+            descriptionTitle="What are BeaNFTs?"
+          />
+        </Grid>
+        <NftStatsHeader />
+        <ClaimNFT
+          buttonDescription={beanftStrings.mintAll}
+          claimedNfts={claimedNFTs}
+          nfts={unclaimedNFTs}
         />
-      </Grid>
-      <ClaimNFT
-        buttonDescription={beanftStrings.mintAll}
-        claimTitle="MINT ALL"
-        claimedNfts={claimedNFTs}
-        nfts={unclaimedNFTs}
-      />
-    </ContentSection>
+      </ContentSection>
+    </>
   );
 }

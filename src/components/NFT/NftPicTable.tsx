@@ -1,5 +1,4 @@
 import React from 'react';
-// import Image from 'next/image';
 import {
   Box,
   Link,
@@ -9,12 +8,16 @@ import {
   TableContainer,
   TablePagination,
   TableRow,
-} from '@material-ui/core/';
+} from '@material-ui/core';
 import Image from 'material-ui-image';
 import { makeStyles } from '@material-ui/styles';
-import { theme, BASE_IPFS_LINK, BASE_OPENSEA_LINK } from 'constants/index';
+import { BASE_IPFS_LINK, BASE_OPENSEA_LINK, theme } from 'constants/index';
 import { mintNFT } from 'util/index';
-import { beanftStrings, SingleButton, TablePageSelect } from 'components/Common';
+import {
+  beanftStrings,
+  SingleButton,
+  TablePageSelect,
+} from 'components/Common';
 
 const useStyles = makeStyles({
   table: {
@@ -38,13 +41,19 @@ const useStyles = makeStyles({
   },
 });
 
-const BasicTable = (props) => {
+export default function NftPicTable({
+  canClaimNFT,
+  claimed,
+  handleChange,
+  nftList,
+  page,
+  rowsPerPage,
+  style,
+}) {
   const classes = useStyles();
 
-  const { rowsPerPage } = props;
-
   const showButton = (i) => {
-    if (Object.keys(props.nftList).length > 0 && props.canClaimNFT) {
+    if (Object.keys(nftList).length > 0 && canClaimNFT) {
       return (
         <SingleButton
           backgroundColor="#3B3B3B"
@@ -52,7 +61,7 @@ const BasicTable = (props) => {
           description={beanftStrings.singleMint}
           fontSize="15px"
           handleClick={() => {
-            const nft = props.nftList[i];
+            const nft = nftList[i];
             mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature);
           }}
           height="30px"
@@ -69,39 +78,37 @@ const BasicTable = (props) => {
   };
 
   return (
-    <Box>
+    <Box style={style}>
       <TableContainer>
         <Table className={classes.table} size="small">
           <TableBody>
-            {Object.keys(props.nftList)
+            {Object.keys(nftList)
               .slice(
-                props.page * rowsPerPage,
-                props.page * rowsPerPage + rowsPerPage
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
               )
               .map((index) => (
-                <TableRow key="User BeaNFT List">
+                <TableRow key={`user-${index}`}>
                   <TableCell
                     align="center"
                     className={classes.lucidaStyle}
-                    component="th"
-                    scope="index"
                   >
                     <Image
                       unoptimized="true"
-                      src={`${BASE_IPFS_LINK}${props.nftList[index].imageIpfsHash}`}
-                      width="290px"
-                      height="290px"
+                      src={`${BASE_IPFS_LINK}${nftList[index].imageIpfsHash}`}
+                      width="90px"
+                      height="90px"
                     />
                   </TableCell>
                 </TableRow>
               ))}
-            {Object.keys(props.nftList)
+            {Object.keys(nftList)
               .slice(
-                props.page * rowsPerPage,
-                props.page * rowsPerPage + rowsPerPage
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
               )
               .map((index) => (
-                <TableRow key={index}>
+                <TableRow key={`user-row2-${index}`}>
                   <TableCell
                     align="center"
                     className={classes.lucidaStyle}
@@ -109,32 +116,35 @@ const BasicTable = (props) => {
                     scope="index"
                   >
                     <Box>
-                      {props.claimed ? (
-                        <Link
-                          href={`${BASE_OPENSEA_LINK}/${props.nftList[index].id}`}
-                          color="inherit"
-                          target="blank"
-                        >
-                          {`ID: ${props.nftList[index].id}`}
-                        </Link>
+                      {claimed ? (
+                        <>
+                          <span>{'ID: '}</span>
+                          <Link
+                            href={`${BASE_OPENSEA_LINK}/${nftList[index].id}`}
+                            color="inherit"
+                            target="blank"
+                          >
+                            {`${nftList[index].id}`}
+                          </Link>
+                        </>
                       ) : (
-                        `ID: ${props.nftList[index].id}`
+                        `ID: ${nftList[index].id}`
                       )}
                       <br />
                       <span>{'Metadata: '}</span>
                       <Link
-                        href={`${BASE_IPFS_LINK}${props.nftList[index].metadataIpfsHash}`}
+                        href={`${BASE_IPFS_LINK}${nftList[index].metadataIpfsHash}`}
                         color="inherit"
                         target="blank"
                       >
                         <span>
-                          {`${props.nftList[index].metadataIpfsHash.substring(
+                          {`${nftList[index].metadataIpfsHash.substring(
                             0,
                             6
-                          )}...${props.nftList[
+                          )}...${nftList[
                             index
                           ].metadataIpfsHash.substring(
-                            props.nftList[index].metadataIpfsHash.length - 4
+                            nftList[index].metadataIpfsHash.length - 4
                           )}`}
                         </span>
                       </Link>
@@ -148,14 +158,14 @@ const BasicTable = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-      {Object.keys(props.nftList).length > rowsPerPage ? (
+      {Object.keys(nftList).length > rowsPerPage ? (
         <div className={classes.pagination}>
           <TablePagination
             className={classes.pagination}
             component="div"
-            count={Object.keys(props.nftList).length}
-            onPageChange={props.handleChange}
-            page={props.page}
+            count={Object.keys(nftList).length}
+            onPageChange={handleChange}
+            page={page}
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={[]}
             labelDisplayedRows={({ from, count }) =>
@@ -169,20 +179,10 @@ const BasicTable = (props) => {
       ) : null}
     </Box>
   );
-};
-
-export default function NftPicTable(props) {
-  return (
-    <Box style={props.style}>
-      <BasicTable {...props} />
-    </Box>
-  );
 }
 
 NftPicTable.defaultProps = {
   nftList: {},
-  index: 0,
   page: 0,
-  resetPage: 0,
-  rowsPerPage: 5,
+  rowsPerPage: 1,
 };

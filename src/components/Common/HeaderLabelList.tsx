@@ -7,6 +7,7 @@ import { HeaderLabel } from './index';
 export default function HeaderLabelList(props) {
   const classes = makeStyles(() => ({
     container: {
+      margin: 'auto',
       backgroundColor: theme.secondary,
       borderRadius: '15px',
       boxShadow: props.container
