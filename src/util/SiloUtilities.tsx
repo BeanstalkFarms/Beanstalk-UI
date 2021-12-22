@@ -1,13 +1,19 @@
 import BigNumber from 'bignumber.js';
 import { account, beanstalkContract, txCallback } from './index';
 
-export const depositBeans = async (amount, claimable, callback) => {
+export const depositBeans = async (
+  amount,
+  claimable,
+  callback,
+  completeCallback
+) => {
   (claimable
     ? beanstalkContract().claimAndDepositBeans(amount, claimable)
     : beanstalkContract().depositBeans(amount)
   ).then((response) => {
     callback();
     response.wait().then(() => {
+      completeCallback();
       txCallback();
     });
   });
