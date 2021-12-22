@@ -21,7 +21,6 @@ import {
   theme,
 } from 'constants/index';
 import {
-  chainId,
   displayBN,
   getBlockTimestamp,
   toTokenUnitsBN,
@@ -38,7 +37,7 @@ import {
   walletTopStrings,
 } from 'components/Common';
 import BalanceModule from 'components/Balances/BalanceModule';
-import { useAccount, useEthereum } from 'state/application/hooks';
+import { useAccount, useChainId, useEthereum } from 'state/application/hooks';
 
 const tokenImageStyle = {
   height: '15px',
@@ -78,6 +77,7 @@ const menuItemStyle = {
 };
 
 export default function WalletModule() {
+  const chainId = useChainId();
   const classes = makeStyles({
     walletButton: {
       textDecoration: 'none',

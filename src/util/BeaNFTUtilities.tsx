@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import Web from 'web3';
+import Web3 from 'web3';
 import { beaNFTContract, beaNFTContractReadOnly, txCallback } from './index';
 
 export const mintNFT = async (_account, nftId, ipfsHash, signature) => {

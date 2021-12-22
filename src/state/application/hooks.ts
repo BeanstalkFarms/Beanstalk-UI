@@ -56,3 +56,7 @@ export function useWeb3() {
 
   return state;
 }
+
+export function useChainId(): string {
+  return useSelector((state: AppState) => state.application.chainId);
+}

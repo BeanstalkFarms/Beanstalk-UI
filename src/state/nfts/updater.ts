@@ -1,21 +1,22 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUnclaimedNFTs, setClaimedNFTs, setNFTs } from 'state/nfts/actions';
 import { queryWinterNFTs, loadNFTs, queryAccountNFTStats } from 'graph';
-import {
-  listenForNFTTransfers,
-  metamaskFailure,
-  getMintedNFTs,
-} from 'util/index';
-import { useAccount } from 'state/application/hooks';
+import { listenForNFTTransfers, getMintedNFTs } from 'util/index';
+import { useAccount, useEthereum } from 'state/application/hooks';
+import { AppState } from 'state';
 
 export default function NFTUpdater() {
   const dispatch = useDispatch();
   const account = useAccount();
+  const ethereum = useEthereum();
+  const { metamaskFailure } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   useEffect(() => {
     async function checkMints(data) {
-      const [ownedIds, tradedIds] = await getMintedNFTs();
+      const [ownedIds, tradedIds] = await getMintedNFTs(account, ethereum);
       const un = [];
       const cn = [];
       for (let i = 0; i < data.length; i += 1) {
@@ -32,7 +33,7 @@ export default function NFTUpdater() {
       }
       dispatch(setUnclaimedNFTs(un));
       dispatch(setClaimedNFTs(cn));
-      listenForNFTTransfers(loadAccountNFTs); // eslint-disable-line
+      listenForNFTTransfers(loadAccountNFTs, account, ethereum); // eslint-disable-line
     }
     async function loadAccountNFTs() {
       const data = await loadNFTs(account.toLowerCase());

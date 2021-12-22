@@ -54,9 +54,8 @@ export default function NavigationBar(props) {
     (state) => state.prices
   );
 
-  const { hasActiveBIP, hasActiveFundraiser, width, metamaskFailure } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
+  const { hasActiveBIP, hasActiveFundraiser, width, metamaskFailure } =
+    useSelector<AppState, AppState['general']>((state) => state.general);
 
   const classes = makeStyles({
     fixedNav: {
@@ -130,7 +129,8 @@ export default function NavigationBar(props) {
   const linkItemStyle = (path) => {
     if (
       (path === 'dao' && hasActiveBIP !== false) ||
-      (path === 'fundraiser' && hasActiveFundraiser !== false)) {
+      (path === 'fundraiser' && hasActiveFundraiser !== false)
+    ) {
       return { color: theme.activeSection };
     }
     return null;
@@ -262,12 +262,13 @@ export default function NavigationBar(props) {
     </IconButton>
   );
 
-  const connectedNav = metamaskFailure <= -1 ?
-    <>
-      {mobileNavigation}
-      {desktopNavigation}
-    </>
-    : null;
+  const connectedNav =
+    metamaskFailure <= -1 ? (
+      <>
+        {mobileNavigation}
+        {desktopNavigation}
+      </>
+    ) : null;
 
   return (
     <AppBar className={classes.fixedNav}>

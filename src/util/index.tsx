@@ -1,4 +1,3 @@
-import Web3 from 'web3';
 import { ethers } from 'ethers';
 import { BEANFT, BEANSTALK, UNISWAP_V2_ROUTER } from 'constants/index';
 
@@ -17,10 +16,7 @@ export * from './APYUtilities';
 export * from './FundraiserUtilities';
 
 export let initializing;
-export let web3: Web3;
 export let txCallback = null;
-export const metamaskFailure = -1;
-export const chainId = 1;
 
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');

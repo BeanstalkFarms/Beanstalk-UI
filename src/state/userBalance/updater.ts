@@ -45,7 +45,7 @@ import {
 import { useSeason } from 'state/season/hooks';
 import { useWeather } from 'state/weather/hooks';
 import { usePrices } from 'state/prices/hooks';
-import { useAccount, useEthereum, useSigner } from 'state/application/hooks';
+import { useAccount, useEthereum } from 'state/application/hooks';
 import { useUserBalance } from './hooks';
 
 export default function Updater() {
@@ -58,7 +58,6 @@ export default function Updater() {
   const prices = usePrices();
   const account = useAccount();
   const ethereum = useEthereum();
-  const signer = useSigner();
 
   const eventParsingParametersRef = useRef([]);
   eventParsingParametersRef.current = [
@@ -496,9 +495,9 @@ export default function Updater() {
   const updateAllBalances = async () => {
     const startTime = benchmarkStart('ALL BALANCES');
     const batch = createLedgerBatch(ethereum);
-    const accountBalancePromises = getAccountBalances(account, batch);
-    const totalBalancePromises = getTotalBalances(batch);
-    const pricePromises = getPrices(batch, signer);
+    const accountBalancePromises = getAccountBalances(account, batch, ethereum);
+    const totalBalancePromises = getTotalBalances(batch, ethereum);
+    const pricePromises = getPrices(batch, ethereum);
     batch.execute();
 
     const [
@@ -510,8 +509,8 @@ export default function Updater() {
       _prices,
       usdcBalance,
     ] = await Promise.all([
-      getBips(signer),
-      getFundraisers(signer),
+      getBips(ethereum),
+      getFundraisers(ethereum),
       getEtherBalance(account, ethereum),
       accountBalancePromises,
       totalBalancePromises,
@@ -556,13 +555,13 @@ export default function Updater() {
   const updateTotals = async () => {
     const startTime = benchmarkStart('TOTALS');
     const batch = createLedgerBatch(ethereum);
-    const totalBalancePromises = getTotalBalances(batch);
+    const totalBalancePromises = getTotalBalances(batch, ethereum);
 
     batch.execute();
 
     const [bipInfo, fundraiserInfo, totalBalances] = await Promise.all([
-      getBips(signer),
-      getFundraisers(signer),
+      getBips(ethereum),
+      getFundraisers(ethereum),
       totalBalancePromises,
     ]);
     ReactDOM.unstable_batchedUpdates(() => {
@@ -574,7 +573,7 @@ export default function Updater() {
   async function updatePrices() {
     const startTime = benchmarkStart('PRICES');
     const batch = createLedgerBatch(ethereum);
-    const pricePromises = getPrices(batch, signer);
+    const pricePromises = getPrices(batch, ethereum);
     batch.execute();
 
     const _prices = await pricePromises;
@@ -596,7 +595,6 @@ export default function Updater() {
   useEffect(() => {
     async function start() {
       let startTime = benchmarkStart('*INIT*');
-      console.log('----------', account);
       if (account) {
         benchmarkEnd('*INIT*', startTime);
         startTime = benchmarkStart('**WEBSITE**');
@@ -607,7 +605,13 @@ export default function Updater() {
         });
         const [balanceInitializers, eventInitializer] = await Promise.all([
           updateAllBalances(),
-          initializeEventListener(processEvents, updatePrices, updateTotals),
+          initializeEventListener(
+            processEvents,
+            updatePrices,
+            updateTotals,
+            account,
+            ethereum
+          ),
         ]);
         ReactDOM.unstable_batchedUpdates(() => {
           const [updateAllBalanceState, eventParsingParameters] =
@@ -618,7 +622,7 @@ export default function Updater() {
         });
         benchmarkEnd('**WEBSITE**', startTime);
       } else {
-        dispatch(setMetamaskFailure(true));
+        dispatch(setMetamaskFailure(-1));
       }
     }
 

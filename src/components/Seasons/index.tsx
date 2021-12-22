@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import sunriseIcon from 'img/black-sun.svg';
-import { sunrise, chainId } from 'util/index';
+import { sunrise } from 'util/index';
 import {
   ContentDropdown,
   ContentSection,
@@ -12,11 +12,13 @@ import {
   seasonStrings,
   SingleButton,
 } from 'components/Common';
+import { useChainId } from 'state/application/hooks';
 import PegMaintenance from './PegMaintenance';
 import SeasonReward from './SeasonReward';
 import SeasonTimer from './SeasonTimer';
 
 export default function Seasons() {
+  const chainId = useChainId();
   const { season, period, start } = useSelector<AppState, AppState['season']>(
     (state) => state.season
   );
@@ -72,28 +74,23 @@ export default function Seasons() {
           descriptionTitle="What is Peg Maintenance?"
         />
       </Grid>
-      <Grid style={{ paddingTop: '10px' }} container item xs={12} spacing={3} justifyContent="center">
-        <Grid
-          item
-          xs={12}
-          style={{ maxWidth: '300px', padding: '0px' }}
-        >
+      <Grid
+        style={{ paddingTop: '10px' }}
+        container
+        item
+        xs={12}
+        spacing={3}
+        justifyContent="center"
+      >
+        <Grid item xs={12} style={{ maxWidth: '300px', padding: '0px' }}>
           <HeaderLabelList
-            description={[
-              seasonStrings.season,
-              stDescription,
-              srDescription,
-            ]}
+            description={[seasonStrings.season, stDescription, srDescription]}
             balanceDescription={[
               `${season.isNegative() ? '---' : String(season)}`,
               stBalanceDescription,
               srBalanceDescription,
             ]}
-            title={[
-              'Current Season',
-              stTitle,
-              srTitle,
-            ]}
+            title={['Current Season', stTitle, srTitle]}
             value={[
               `${season.isNegative() ? '---' : String(season)}`,
               stValue,

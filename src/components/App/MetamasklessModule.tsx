@@ -1,14 +1,19 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Grid, Button, Link } from '@material-ui/core';
-import { metamaskFailure, switchToMainnet } from 'util/index';
+import { switchToMainnet } from 'util/index';
 import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
 import { SvgCloudIcon } from 'components/About/SvgCloudIcon';
 import About from 'components/About';
 import { useEthereum, useWeb3 } from 'state/application/hooks';
+import { AppState } from 'state';
 
 export default function MetamasklessModule() {
   const { onboard } = useWeb3();
   const ethereum = useEthereum();
+  const { metamaskFailure } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   const connectMetaStyle = {
     fontFamily: 'Futura-PT-Book',
