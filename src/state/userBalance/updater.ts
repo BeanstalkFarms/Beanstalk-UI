@@ -60,6 +60,8 @@ const benchmarkEnd = (operation: string, startTime: number) => {
   );
 };
 
+const zeroBN = new BigNumber(0);
+
 /**
  * Updater is an empty React component that handles updating
  * of balances in Redux state.
@@ -67,7 +69,6 @@ const benchmarkEnd = (operation: string, startTime: number) => {
  * @returns null
  */
 export default function Updater() {
-  const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
 
   const userBalance = useSelector<AppState, AppState['userBalance']>(
@@ -766,6 +767,10 @@ export default function Updater() {
     start();
     getLastCross();
     getAPYs();
+
+    // The below disables an eslint error asking
+    // to include `dispatch` in the dependency array.
+    // eslint-disable-next-line
   }, []);
 
   return null;

@@ -5,6 +5,7 @@ import {
   BEANSTALK,
   UNISWAP_V2_ROUTER,
   changeNetwork,
+  TokenMetadata,
 } from 'constants/index';
 
 export * from './EventUtilities';
@@ -23,31 +24,33 @@ export * from './FundraiserUtilities';
 
 let ethereum;
 let connectedToMetamask : boolean = false;
+
+/* Globals */
 export let initializing; // QUESTION: I can't find anywhere this is set. What does it do?
 export let web3: Web3;
 export let account: String;
-export let txCallback = null;
+export let txCallback : Function | null = null;
 export let metamaskFailure = -1;
 export let chainId = 1;
 
 export let web3Provider;
 export let web3Signer;
 
+/* ABIs */
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');
 const beaNFTAbi = require('../constants/abi/BeaNFT.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 
-export const tokenContract = (token) =>
+/* Contract Helpers */
+export const tokenContract = (token: TokenMetadata) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
-
-export const tokenContractReadOnly = (token) =>
+export const tokenContractReadOnly = (token: TokenMetadata) =>
   new web3.eth.Contract(beanAbi, token.addr);
 
 export const beanstalkContract = () =>
   new ethers.Contract(BEANSTALK.addr, beanstalkAbi, web3Signer);
-
 export const beanstalkContractReadOnly = () =>
   new web3.eth.Contract(beanstalkAbi, BEANSTALK.addr);
 
@@ -56,14 +59,15 @@ export const beaNFTContract = () =>
 export const beaNFTContractReadOnly = () =>
   new web3.eth.Contract(beaNFTAbi, BEANFT.addr);
 
-export const pairContract = (pair) =>
+export const pairContract = (pair: TokenMetadata) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
-export const pairContractReadOnly = (pair) =>
+export const pairContractReadOnly = (pair: TokenMetadata) =>
   new web3.eth.Contract(uniswapPairAbi, pair.addr);
 
 export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
 
+/* Listen for Metamask changes */
 async function initializeMetaMaskListeners() {
   const changeHandler = () => {
     window.location.reload();
@@ -72,10 +76,6 @@ async function initializeMetaMaskListeners() {
   ethereum.on('chainChanged', changeHandler);
 }
 
-/**
- * 
- * @returns 
- */
 export async function initialize(): Promise<boolean> {
   if (!ethereum) {
     try {
@@ -138,9 +138,7 @@ export async function initialize(): Promise<boolean> {
   return true;
 }
 
-/**
- * 
- */
+//
 export async function switchToMainnet() {
   await ethereum.request({
     method: 'wallet_switchEthereumChain',
@@ -149,27 +147,17 @@ export async function switchToMainnet() {
   window.location.reload();
 }
 
-/**
- * 
- * @param callback 
- */
-export function initializeCallback(callback) {
+//
+export function initializeCallback(callback: Function) {
   txCallback = callback;
 }
 
-/**
- * 
- * @param a 
- * @returns 
- */
+//
 export async function isAddress(a: string) {
   return ethers.utils.isAddress(a);
 }
 
-/**
- * 
- * @returns 
- */
+//
 export async function GetWalletAddress(): Promise<String | undefined> {
   await initializing;
   return account;

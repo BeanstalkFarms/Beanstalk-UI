@@ -70,10 +70,6 @@ export const UNI_V2_USDC_ETH_LP : TokenMetadata = {
   decimals: 18,
 };
 
-/**
- * 
- * @param chainId 
- */
 export function changeAddresses(chainId: number) {
   if (chainId === 1) {
     UNI_V2_USDC_ETH_LP.addr = '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc';
