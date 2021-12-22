@@ -338,7 +338,7 @@ export default function WalletModule() {
     }
     handleWallet();
     buildWalletEvents();
-  }, [props.events, ethereum, account, contractEvents]);
+  }, [ethereum, account, contractEvents]);
 
   function displayEvent(event) {
     const inOutDisplay = (inBN, inToken, outBN, outToken) => (

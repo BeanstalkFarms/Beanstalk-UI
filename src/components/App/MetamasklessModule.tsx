@@ -1,13 +1,14 @@
 import React from 'react';
 import { Grid, Button, Link } from '@material-ui/core';
-import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
+import { metamaskFailure, switchToMainnet } from 'util/index';
 import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
 import { SvgCloudIcon } from 'components/About/SvgCloudIcon';
 import About from 'components/About';
-import { useWeb3 } from 'state/application/hooks';
+import { useEthereum, useWeb3 } from 'state/application/hooks';
 
 export default function MetamasklessModule() {
   const { onboard } = useWeb3();
+  const ethereum = useEthereum();
 
   const connectMetaStyle = {
     fontFamily: 'Futura-PT-Book',
@@ -33,11 +34,12 @@ export default function MetamasklessModule() {
       <Grid item xs={12}>
         <SvgCloudIcon
           onClick={async () => {
-            switchToMainnet();
+            switchToMainnet(ethereum);
           }}
           style={{ cursor: 'pointer' }}
           color="white"
-          text="Switch to Mainnet" />
+          text="Switch to Mainnet"
+        />
       </Grid>
     );
   } else {

@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { MEDIUM_NFT_LINK, OPENSEA_LINK } from 'constants/index';
+import { listenForNFTTransfers, getMintedNFTs } from 'util/index';
 import {
-  listenForNFTTransfers,
-  GetWalletAddress,
-  getMintedNFTs,
-} from 'util/index';
-import { beanftStrings, ContentSection, ContentDropdown, Grid } from 'components/Common';
+  beanftStrings,
+  ContentSection,
+  ContentDropdown,
+  Grid,
+} from 'components/Common';
+import { useAccount } from 'state/application/hooks';
 import { loadNFTs } from 'graph';
 import ClaimNFT from './claimnft';
 
@@ -41,7 +43,7 @@ export default function NFTs() {
       listenForNFTTransfers(getNFTs); // eslint-disable-line
     }
     async function getNFTs() {
-      const data = await loadNFTs((account).toLowerCase());
+      const data = await loadNFTs(account.toLowerCase());
       checkMints(data);
     }
     getNFTs();
