@@ -36,10 +36,7 @@ export default function NFTs() {
       </span>
       <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter Collection: </span>
       <span>
-        The BeaNFT Winter Collection is a the second round of BeaNFTs. Up to 2,000
-        BeaNFTs will be minted by participating in Beanstalk during Seasons 3300-3900.
-        The top 5 largest bean-denominated investments each Season (across the Silo
-        and Field) will be awarded one of the 2,000 Winter BeaNFTs.{' '}
+        The BeaNFT Winter Collection is the second minting event for BeaNFTs. From Season 3300 to 3900, up to 2,000 BeaNFTs can be earned by participating in Beanstalk. The top 5 largest bean-denominated investments each Season (across the Silo and Field) will be awarded one of the 2,000 Winter BeaNFTs, until there are none left.{' '}
         <Link href={MEDIUM_NFT_WINTER_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
       </span>
     </>

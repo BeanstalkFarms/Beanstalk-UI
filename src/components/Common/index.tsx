@@ -239,12 +239,12 @@ export const beanftStrings = {
 };
 export const beanftWinterStrings = {
   beanftDescription:
-    'The BeaNFT Winter Collection is a the second round of BeaNFTs. Up to 2,000 BeaNFTs will be minted by participating in Beanstalk during Seasons 3300-3900. The top 5 largest bean-denominated investments each Season (across the Silo and Field) will be awarded one of the 2,000 Winter BeaNFTs.',
-  topTxn: 'This tab displays the top 5 transactions of the current Season.',
-  topAcct: 'This tab displays all previously created BeaNFTs Winter Collection. This includes minted and unminted BeaNFTs.',
+    'The BeaNFT Winter Collection is the second minting event for BeaNFTs. From Season 3300 to 3900, up to 2,000 BeaNFTs can be earned by participating in Beanstalk. The top 5 largest bean-denominated investments each Season (across the Silo and Field) will be awarded one of the 2,000 Winter BeaNFTs, until there are none left.',
+  topTxn: 'This tab displays the top 5 Deposits or Sows during the current Season by Bean-denominated value.',
+  topAcct: 'This tab displays all previously earned Winter Collection BeaNFTs, both minted and unminted.',
   earnedNFTs: 'The number of Winter BeaNFTs you have earned during the Winter BeaNFT event.',
-  investedBeans: 'The amount of Beans you have invested during the Winter BeaNFT event.',
-  remainingNFTs: 'The number of remaining Winter BeaNFTs in the Winter BeaNFT event.',
+  investedBeans: 'The Bean-denominated total value you have Sown or Deposited during the Winter BeaNFT event.',
+  remainingNFTs: 'The number of remaining unearned Winter BeaNFTs in the Winter BeaNFT event.',
 };
 export const chartStrings = {
   bean: 'Use this tab to view charts with information about the BEAN token.',
