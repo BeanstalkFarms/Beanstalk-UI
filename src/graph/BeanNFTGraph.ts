@@ -24,7 +24,10 @@ query winterNFTs($season: String) {
   investments(
     orderBy: beans,
     orderDirection: desc,
-    first: 5
+    first: 5,
+    where: {
+      season: $season
+    }
   ) {
     id
     beans
