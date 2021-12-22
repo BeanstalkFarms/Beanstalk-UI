@@ -10,7 +10,7 @@ export const sowBeans = async (
     ? beanstalkContract().claimAndSowBeans(amount, claimable)
     : beanstalkContract().sowBeans(amount)
   ).then((response) => {
-    callback();
+    callback(response.hash);
     response.wait().then(() => {
       completeCallBack();
       txCallback();
@@ -37,7 +37,7 @@ export const buyAndSowBeans = async (
         value: ethAmount,
       })
   ).then((response) => {
-    callback();
+    callback(response.hash);
     response.wait().then(() => {
       completeCallBack();
       txCallback();
@@ -49,7 +49,7 @@ export const harvest = async (plots, callback, completeCallBack) => {
   beanstalkContract()
     .harvest(plots)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallBack();
         txCallback();
@@ -68,7 +68,7 @@ export const transferPlot = async (
   beanstalkContract()
     .transferPlot(account, recipient, index, start, end)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallBack();
         txCallback();

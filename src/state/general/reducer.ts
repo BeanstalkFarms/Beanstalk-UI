@@ -13,6 +13,7 @@ import {
   completeTransaction,
   Transaction,
   State,
+  updateTransactionHash,
 } from './actions';
 
 export interface GeneralState {
@@ -70,6 +71,23 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(addTransaction, (state, { payload }) => {
       state.transactions = [...state.transactions, payload];
+    })
+    .addCase(updateTransactionHash, (state, { payload }) => {
+      const index = state.transactions.findIndex(
+        (trans) => trans.transactionNumber === payload.transactionNumber
+      );
+      if (index >= 0) {
+        const newTransaction = {
+          ...state.transactions[index],
+          transactionHash: payload.transactionHash,
+        };
+
+        state.transactions = [
+          ...state.transactions.slice(0, index),
+          newTransaction,
+          ...state.transactions.slice(index + 1),
+        ];
+      }
     })
     .addCase(completeTransaction, (state, { payload }) => {
       const index = state.transactions.findIndex(

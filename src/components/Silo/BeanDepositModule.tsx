@@ -40,6 +40,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 
 export const BeanDepositModule = forwardRef((props, ref) => {
@@ -262,8 +263,14 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           buyBeans,
           eth,
           claimable,
-          () => {
+          (transactionHash) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
           },
           () => {
             dispatch(completeTransaction(transactionNumber));
@@ -281,8 +288,14 @@ export const BeanDepositModule = forwardRef((props, ref) => {
         depositBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimable,
-          () => {
+          (transactionHash) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
           },
           () => {
             dispatch(completeTransaction(transactionNumber));

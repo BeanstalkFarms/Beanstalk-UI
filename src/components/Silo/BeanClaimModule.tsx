@@ -17,6 +17,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 
 export const BeanClaimModule = forwardRef((props, ref) => {
@@ -84,7 +85,14 @@ export const BeanClaimModule = forwardRef((props, ref) => {
 
       claimBeans(
         Object.keys(props.crates),
-        () => {},
+        (transactionHash) => {
+          dispatch(
+            updateTransactionHash({
+              transactionNumber,
+              transactionHash,
+            })
+          );
+        },
         () => {
           dispatch(completeTransaction(transactionNumber));
         }

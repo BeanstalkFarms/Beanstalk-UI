@@ -17,6 +17,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
@@ -111,7 +112,14 @@ export default function TradeModule() {
           sellBeans(
             toStringBaseUnitBN(fromValue, BEAN.decimals),
             toStringBaseUnitBN(minimumToAmount, ETH.decimals),
-            () => {},
+            (transactionHash) => {
+              dispatch(
+                updateTransactionHash({
+                  transactionNumber,
+                  transactionHash,
+                })
+              );
+            },
             () => {
               handleSwapCallback(transactionNumber);
             }
@@ -132,6 +140,14 @@ export default function TradeModule() {
         transferBeans(
           toAddress,
           toStringBaseUnitBN(fromValue, BEAN.decimals),
+          (transactionHash) => {
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
+          },
           () => handleSwapCallback(transactionNumber)
         );
       }

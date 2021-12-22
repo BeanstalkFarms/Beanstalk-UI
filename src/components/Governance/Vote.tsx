@@ -24,6 +24,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
@@ -92,7 +93,14 @@ export default function Vote(props) {
       );
       unvote(
         bip.toString(),
-        () => {},
+        (transactionHash) => {
+          dispatch(
+            updateTransactionHash({
+              transactionNumber,
+              transactionHash,
+            })
+          );
+        },
         () => {
           dispatch(completeTransaction(transactionNumber));
         }
@@ -108,7 +116,14 @@ export default function Vote(props) {
       );
       vote(
         bip.toString(),
-        () => {},
+        (transactionHash) => {
+          dispatch(
+            updateTransactionHash({
+              transactionNumber,
+              transactionHash,
+            })
+          );
+        },
         () => {
           dispatch(completeTransaction(transactionNumber));
         }

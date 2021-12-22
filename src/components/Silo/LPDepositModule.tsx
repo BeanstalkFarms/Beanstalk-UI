@@ -51,6 +51,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 
 export const LPDepositModule = forwardRef((props, ref) => {
@@ -533,8 +534,14 @@ export const LPDepositModule = forwardRef((props, ref) => {
           depositLP(
             toStringBaseUnitBN(lp, ETH.decimals),
             claimable,
-            () => {
+            (transactionHash) => {
               resetFields();
+              dispatch(
+                updateTransactionHash({
+                  transactionNumber,
+                  transactionHash,
+                })
+              );
             },
             () => {
               dispatch(completeTransaction(transactionNumber));
@@ -566,8 +573,14 @@ export const LPDepositModule = forwardRef((props, ref) => {
             beanConvertParams.crates,
             beanConvertParams.amounts,
             claimable,
-            () => {
+            (transactionHash) => {
               resetFields();
+              dispatch(
+                updateTransactionHash({
+                  transactionNumber,
+                  transactionHash,
+                })
+              );
             },
             () => {
               dispatch(completeTransaction(transactionNumber));
@@ -604,8 +617,14 @@ export const LPDepositModule = forwardRef((props, ref) => {
               ),
             ],
             claimable,
-            () => {
+            (transactionHash) => {
               resetFields();
+              dispatch(
+                updateTransactionHash({
+                  transactionNumber,
+                  transactionHash,
+                })
+              );
             },
             () => {
               dispatch(completeTransaction(transactionNumber));

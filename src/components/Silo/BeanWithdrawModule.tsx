@@ -29,6 +29,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 
 export const BeanWithdrawModule = forwardRef((props, ref) => {
@@ -261,8 +262,14 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           withdrawParams.crates,
           withdrawParams.amounts,
           props.claimable,
-          () => {
+          (transactionHash) => {
             fromValueUpdated(new BigNumber(-1));
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
           },
           () => {
             dispatch(completeTransaction(transactionNumber));
@@ -280,8 +287,14 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
         withdrawBeans(
           withdrawParams.crates,
           withdrawParams.amounts,
-          () => {
+          (transactionHash) => {
             fromValueUpdated(new BigNumber(-1));
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
           },
           () => {
             dispatch(completeTransaction(transactionNumber));

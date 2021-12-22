@@ -24,6 +24,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 
 export const SendPlotModule = forwardRef((props, ref) => {
@@ -274,8 +275,14 @@ export const SendPlotModule = forwardRef((props, ref) => {
           id,
           startPlot,
           endPlot,
-          () => {
+          (transactionHash) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
           },
           () => {
             dispatch(completeTransaction(transactionNumber));

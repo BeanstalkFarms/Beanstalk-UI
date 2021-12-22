@@ -11,7 +11,7 @@ export const depositBeans = async (
     ? beanstalkContract().claimAndDepositBeans(amount, claimable)
     : beanstalkContract().depositBeans(amount)
   ).then((response) => {
-    callback();
+    callback(response.hash);
     response.wait().then(() => {
       completeCallback();
       txCallback();
@@ -29,7 +29,7 @@ export const claimAndWithdrawBeans = async (
   beanstalkContract()
     .claimAndWithdrawBeans(crates, amounts, claimable)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallBack();
         txCallback();
@@ -46,7 +46,7 @@ export const withdrawBeans = async (
   beanstalkContract()
     .withdrawBeans(crates, amounts)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallBack();
         txCallback();
@@ -58,7 +58,7 @@ export const claimBeans = async (withdrawals, callback, completeCallBack) => {
   beanstalkContract()
     .claimBeans(withdrawals)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallBack();
         txCallback();
@@ -76,7 +76,7 @@ export const depositLP = async (
     ? beanstalkContract().claimAndDepositLP(amount, claimable)
     : beanstalkContract().depositLP(amount)
   ).then((response) => {
-    callback();
+    callback(response.hash);
     response.wait().then(() => {
       completeCallBack();
       txCallback();
@@ -111,7 +111,7 @@ export const addAndDepositLP = async (
         { value: ethAmount }
       )
   ).then((response) => {
-    callback();
+    callback(response.hash);
     response.wait().then(() => {
       completeCallBack();
       txCallback();
@@ -142,7 +142,7 @@ export const convertAddAndDepositLP = async (
         value: ethAmount,
       })
   ).then((response) => {
-    callback();
+    callback(response.hash);
     response.wait().then(() => {
       completeCallBack();
       txCallback();
@@ -159,7 +159,7 @@ export const withdrawLP = async (
   beanstalkContract()
     .withdrawLP(crates, amounts)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallBack();
         txCallback();
@@ -177,7 +177,7 @@ export const claimAndWithdrawLP = async (
   beanstalkContract()
     .claimAndWithdrawLP(crates, amounts, claimable)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallBack();
         txCallback();
@@ -195,7 +195,7 @@ export const removeAndClaimLP = async (
   beanstalkContract()
     .removeAndClaimLP(withdrawals, minBeanAmount, minEthAmount)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallBack();
         txCallback();
@@ -207,7 +207,7 @@ export const claimLP = async (withdrawals, callback, completeCallBack) => {
   beanstalkContract()
     .claimLP(withdrawals)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallBack();
         txCallback();
@@ -256,7 +256,7 @@ export const buyAndDepositBeans = async (
         value: ethAmount,
       })
   ).then((response) => {
-    callback();
+    callback(response.hash);
     response.wait().then(() => {
       completeCallback();
       txCallback();
@@ -275,7 +275,7 @@ export const convertDepositedBeans = async (
   beanstalkContract()
     .convertDepositedBeans(beans, minLP, crates, amounts)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallback();
         txCallback();
@@ -294,7 +294,7 @@ export const convertDepositedLP = async (
   beanstalkContract()
     .convertDepositedLP(lp, minBeans, crates, amounts)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         completeCallback();
         txCallback();

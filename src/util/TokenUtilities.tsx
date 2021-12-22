@@ -66,13 +66,15 @@ export type Token =
 export const transferBeans = async (
   to: string,
   amount: BigNumber,
-  callback
+  callback,
+  completeCallback
 ) => {
   tokenContract(BEAN)
     .transfer(to, amount)
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
+        completeCallback();
         txCallback();
       });
     });
@@ -83,13 +85,15 @@ export const approveToken = async (
   address: String,
   spender: String,
   amount: String,
-  callback: (number) => void
+  callback: (number) => void,
+  completeCallback
 ) => {
   tokenContract(token)
     .approve(spender, amount)
     .then((response) => {
       callback(1);
       response.wait().then(() => {
+        completeCallback();
         callback(2);
       });
     });

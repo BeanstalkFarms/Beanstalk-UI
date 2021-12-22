@@ -24,6 +24,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 
 export const LPClaimModule = forwardRef((props, ref) => {
@@ -148,7 +149,14 @@ export const LPClaimModule = forwardRef((props, ref) => {
           Object.keys(props.crates),
           '0',
           '0',
-          () => {},
+          (transactionHash) => {
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
+          },
           () => {
             dispatch(completeTransaction(transactionNumber));
           }
@@ -164,7 +172,14 @@ export const LPClaimModule = forwardRef((props, ref) => {
         );
         claimLP(
           Object.keys(props.crates),
-          () => {},
+          (transactionHash) => {
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
+          },
           () => {
             dispatch(completeTransaction(transactionNumber));
           }

@@ -23,7 +23,7 @@ export const buyBeans = async (amountIn, amountOutMin, callback) => {
       { value: amountIn }
     )
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         txCallback();
       });
@@ -40,7 +40,7 @@ export const sellBeans = async (amountIn, amountOutMin, callback) => {
       createDeadline()
     )
     .then((response) => {
-      callback();
+      callback(response.hash);
       response.wait().then(() => {
         txCallback();
       });
@@ -150,23 +150,23 @@ export const calculateBeansToLP = (
   beanReserve: BigNumber,
   ethReserve: BigNumber,
   totalLP: BigNumber
-  ) => {
-    let c = beanReserve.multipliedBy(
-      beans.multipliedBy(3988000).plus(beanReserve.multipliedBy(3988009))
-    );
-    c = c.sqrt();
-    const swapBeans = c.minus(beanReserve.multipliedBy(1997)).dividedBy(1994);
-    const addEth = getToAmount(swapBeans, beanReserve, ethReserve);
+) => {
+  let c = beanReserve.multipliedBy(
+    beans.multipliedBy(3988000).plus(beanReserve.multipliedBy(3988009))
+  );
+  c = c.sqrt();
+  const swapBeans = c.minus(beanReserve.multipliedBy(1997)).dividedBy(1994);
+  const addEth = getToAmount(swapBeans, beanReserve, ethReserve);
 
-    const newBeanReserve = beanReserve.plus(swapBeans);
-    const addBeans = beans.minus(swapBeans);
-    const lp = addBeans.multipliedBy(totalLP).dividedBy(newBeanReserve);
-    return {
-      swapBeans,
-      addEth,
-      addBeans,
-      lp,
-    };
+  const newBeanReserve = beanReserve.plus(swapBeans);
+  const addBeans = beans.minus(swapBeans);
+  const lp = addBeans.multipliedBy(totalLP).dividedBy(newBeanReserve);
+  return {
+    swapBeans,
+    addEth,
+    addBeans,
+    lp,
+  };
 };
 
 export const calculateMaxBeansToPeg = (
@@ -176,8 +176,12 @@ export const calculateMaxBeansToPeg = (
 ) => {
   const ethBought = getToAmount(beansToPeg, beanReserve, ethReserve);
   const newBeanReserve = beanReserve.plus(beansToPeg);
-  const newEthReserve = ethReserve.multipliedBy(beanReserve).dividedBy(newBeanReserve);
-  const beansToAdd = ethBought.multipliedBy(newBeanReserve).dividedBy(newEthReserve);
+  const newEthReserve = ethReserve
+    .multipliedBy(beanReserve)
+    .dividedBy(newBeanReserve);
+  const beansToAdd = ethBought
+    .multipliedBy(newBeanReserve)
+    .dividedBy(newEthReserve);
   return beansToPeg.plus(beansToAdd);
 };
 

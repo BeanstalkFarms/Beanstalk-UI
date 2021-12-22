@@ -9,6 +9,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 import { USDC, BEAN } from '../../constants';
 import {
@@ -152,8 +153,14 @@ export const FundModule = forwardRef((props, ref) => {
       fund(
         props.id,
         toStringBaseUnitBN(fromTokenValue, USDC.decimals),
-        () => {
+        (transactionHash) => {
           fromValueUpdated(new BigNumber(-1));
+          dispatch(
+            updateTransactionHash({
+              transactionNumber,
+              transactionHash,
+            })
+          );
         },
         () => {
           dispatch(completeTransaction(transactionNumber));

@@ -17,6 +17,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 import { UserBalanceState } from 'state/userBalance/reducer';
 
@@ -87,7 +88,14 @@ export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
         Object.keys(props.harvestablePlots).map((key) =>
           toStringBaseUnitBN(new BigNumber(key), BEAN.decimals)
         ),
-        () => {},
+        (transactionHash) => {
+          dispatch(
+            updateTransactionHash({
+              transactionNumber,
+              transactionHash,
+            })
+          );
+        },
         () => {
           dispatch(completeTransaction(transactionNumber));
         }

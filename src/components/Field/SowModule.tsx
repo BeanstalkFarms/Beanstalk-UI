@@ -35,6 +35,7 @@ import {
   addTransaction,
   completeTransaction,
   State,
+  updateTransactionHash,
 } from 'state/general/actions';
 
 export const SowModule = forwardRef((props, ref) => {
@@ -248,8 +249,14 @@ export const SowModule = forwardRef((props, ref) => {
           buyBeans,
           eth,
           claimable,
-          () => {
+          (transactionHash) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
           },
           () => {
             dispatch(completeTransaction(transactionNumber));
@@ -260,8 +267,14 @@ export const SowModule = forwardRef((props, ref) => {
         sowBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimable,
-          () => {
+          (transactionHash) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            dispatch(
+              updateTransactionHash({
+                transactionNumber,
+                transactionHash,
+              })
+            );
           },
           () => {
             dispatch(completeTransaction(transactionNumber));
