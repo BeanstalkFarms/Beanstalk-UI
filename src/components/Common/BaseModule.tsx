@@ -74,7 +74,7 @@ export default function BaseModule({
     formButton: {
       borderRadius: '15px',
       fontFamily: 'Futura-Pt-Book',
-      fontSize: 'calc(12px + 1vmin)',
+      fontSize: 'calc(10px + 1vmin)',
       height: '44px',
       margin: '12px 12px',
       width: '64%',

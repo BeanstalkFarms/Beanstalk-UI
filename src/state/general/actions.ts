@@ -31,3 +31,7 @@ export const setFundraisers = createAction<Array>(
 export const setHasActiveFundraiser = createAction<Boolean>(
   'general/setHasActiveFundraiser'
 );
+
+export const setWidth = createAction<Number>(
+  'general/setWidth'
+);

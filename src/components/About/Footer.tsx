@@ -6,6 +6,8 @@ import {
   Twitter as TwitterIcon,
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
 import { ReactComponent as CoinGeckoIcon } from 'img/coingecko-icon.svg';
 import { ReactComponent as CoinMarketCapIcon } from 'img/coinmarketcap-icon.svg';
@@ -53,7 +55,9 @@ export default function Footer() {
       bottom: '0px',
     },
   })();
-  const width = window.innerWidth;
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   const logoStyle = {
     height: '25px',
@@ -94,12 +98,10 @@ export default function Footer() {
         <LogoLinks close link={BEAN_TOKEN_LINK}>
           <BeanIcon style={logoStyle} />
         </LogoLinks>
-        {width > 390 ? (
-          <LogoLinks close link={SILO_CONTRACT_LINK}>
-            <EtherscanIcon style={logoStyle} />
-          </LogoLinks>
-        ) : null}
-        {width > 500 ? (
+        <LogoLinks close link={SILO_CONTRACT_LINK}>
+          <EtherscanIcon style={logoStyle} />
+        </LogoLinks>
+        {width > 400 ? (
           <LogoLinks close link={UNISWAP_CONTRACT_LINK} paddingRight="5px">
             <UniswapIcon style={logoStyle} />
           </LogoLinks>

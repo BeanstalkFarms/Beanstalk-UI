@@ -153,7 +153,8 @@ export const siloStrings = {
   beanWithdrawalsTable: 'View all your current Bean Withdrawals in this table.',
   beanAPY:
     'The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
-  lpDescription: 'Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.',
+  convert: 'Use this tab to convert Deposited Beans to Deposited LP Tokens when P > $1 and convert Deposited LP Tokens to Deposited Beans when P < $1.',
+    lpDescription: 'Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.',
   lpDeposit:
     'Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.',
   lpWithdraw:
@@ -168,6 +169,8 @@ export const siloStrings = {
     'The Silo is the Beanstalk DAO. Silo Members earn passive interest during Bean supply increases. Anyone can become a Silo Member by depositing Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module below in exchange for Stalk and Seeds. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. The Seed token yields .0001 Stalk every Season. No action is ever required of Silo Members. All Stalk and Seeds associated with a Deposit are forfeited upon withdrawal. All Withdrawals are frozen for 24 full Seasons.',
   withdrawWarning:
     'WARNING: Your Withdrawal will be frozen for 24 full Seasons.',
+  convertLPDeposit: 'Use this sub-tab to convert Deposited LP Tokens to Deposited Beans when P < $1.',
+  convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited LP Tokens when P > $1.',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',
@@ -249,6 +252,7 @@ export const fieldChartStrings = {
   weather: 'This is the current Weather by Season.',
   pods: 'This is the current Unharvestable Pods by Season.',
   sown: 'This is the current total Sown Beans by Season.',
+  soil: 'This is the current Soil by Season.',
   harvested: 'This is the current total Harvested Pods by Season.',
   sowers: 'This is the current total unique Sowers by Season.',
 };
@@ -262,7 +266,7 @@ export const siloChartStrings = {
 };
 export const claimStrings = {
   harvestable: 'Harvestable Pods can be redeemed for 1 Bean each, at any time.',
-  farmable: 'Farmable Beans automatically receive Stalk. Farbable Beans receive Seeds and are deposited in a specific Season the next time you interact with the Silo.',
+  farmable: 'Farmable Beans automatically receive Stalk. Farmable Beans receive Seeds and are deposited in a specific Season the next time you interact with the Silo.',
 };
 export const fundraiserStrings = {
   fundsDescription: 'Fundraisers allow Beanstalk to raise a pre-defined amount of another stablecoin in order to pay for things like audits. Each fundraiser allows anyone to exchange the desired stablecoin, up to the amount specified in the Fundraiser, for Beans at a price of $1.00. All Beans will be Sown and the corresponding amount of Pods will be sent to the wallet that contributed to the Fundraiser. Any excess funds beyond the Fundraiser amount, or of a different currency, will not receive Sown Beans.',

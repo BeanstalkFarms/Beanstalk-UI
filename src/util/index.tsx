@@ -53,6 +53,14 @@ export const pairContractReadOnly = (pair) =>
 export const uniswapRouterContract = (signer) =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, signer);
 
+export async function switchToMainnet() {
+  await ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: '0x1' }],
+  });
+  window.location.reload();
+}
+
 export function initializeCallback(callback) {
   txCallback = callback;
 }

@@ -8,6 +8,7 @@ import {
   setContractEvents,
   setHasActiveFundraiser,
   setFundraisers,
+  setWidth,
 } from './actions';
 
 export interface GeneralState {
@@ -19,6 +20,7 @@ export interface GeneralState {
   fundraisers: Array;
   hasActiveFundraiser: Boolean;
   contractEvents: Array;
+  width: Number;
 }
 
 export const initialState: GeneralState = {
@@ -28,6 +30,7 @@ export const initialState: GeneralState = {
   bips: [],
   hasActiveBIP: false,
   contractEvents: [],
+  width: window.innerWidth,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -55,5 +58,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setContractEvents, (state, { payload }) => {
       state.contractEvents = payload;
+    })
+    .addCase(setWidth, (state, { payload }) => {
+      state.width = payload;
     })
 );

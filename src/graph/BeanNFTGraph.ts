@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { BEANSTALK_NFT_SUBGRAPH_API_LINK } from 'constants/index';
-
+import * as nftData from 'json/accounts.json';
 // const APIURL = 'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.0'
 
 const SowQuery = `
@@ -86,5 +86,15 @@ export async function beanNFTQuery() {
     return ns;
   }, []);
   nfts = nfts.sort((a, b) => a.id - b.id);
+  return nfts;
+}
+
+export async function loadNFTs(account) {
+  if (!nftData.default[account]) return [];
+  const nfts = nftData.default[account];
+  nfts.map((n) => {
+    n.id = parseInt(n.id, 10);
+    return n;
+  });
   return nfts;
 }

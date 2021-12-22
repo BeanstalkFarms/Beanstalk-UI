@@ -223,3 +223,25 @@ export const buyAndDepositBeans = async (
     });
   });
 };
+
+export const convertDepositedBeans = async (beans, minLP, crates, amounts, callback) => {
+  beanstalkContract()
+    .convertDepositedBeans(beans, minLP, crates, amounts)
+    .then((response) => {
+      callback();
+      response.wait().then(() => {
+        txCallback();
+      });
+    });
+};
+
+export const convertDepositedLP = async (lp, minBeans, crates, amounts, callback) => {
+  beanstalkContract()
+    .convertDepositedLP(lp, minBeans, crates, amounts)
+    .then((response) => {
+      callback();
+      response.wait().then(() => {
+        txCallback();
+      });
+    });
+};

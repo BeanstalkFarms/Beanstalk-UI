@@ -54,26 +54,9 @@ export default function NavigationBar(props) {
     (state) => state.prices
   );
 
-  const { hasActiveBIP } = useSelector<AppState, AppState['general']>(
+  const { hasActiveBIP, hasActiveFundraiser, width, metamaskFailure } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-
-  const { hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
-
-  const [width, setWidth] = useState<number>(window.innerWidth);
-
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
-  }, []);
 
   const classes = makeStyles({
     fixedNav: {
@@ -162,7 +145,7 @@ export default function NavigationBar(props) {
       >
         {props.showWallet ? (
           <ListItem>
-            <WalletModule {...props} />
+            <WalletModule />
           </ListItem>
         ) : null}
       </List>
@@ -247,7 +230,7 @@ export default function NavigationBar(props) {
       ))}
       {props.showWallet ? (
         <ListItem>
-          <WalletModule {...props} />
+          <WalletModule />
         </ListItem>
       ) : null}
     </List>
@@ -279,13 +262,19 @@ export default function NavigationBar(props) {
     </IconButton>
   );
 
+  const connectedNav = metamaskFailure <= -1 ?
+    <>
+      {mobileNavigation}
+      {desktopNavigation}
+    </>
+    : null;
+
   return (
     <AppBar className={classes.fixedNav}>
       <Toolbar>
         <Container className={classes.navDisplayFlex}>
           {beanLogo}
-          {mobileNavigation}
-          {desktopNavigation}
+          {connectedNav}
         </Container>
       </Toolbar>
     </AppBar>
