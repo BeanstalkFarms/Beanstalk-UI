@@ -117,13 +117,16 @@ export default function NftPicTable({
                   >
                     <Box>
                       {claimed ? (
-                        <Link
-                          href={`${BASE_OPENSEA_LINK}/${nftList[index].id}`}
-                          color="inherit"
-                          target="blank"
-                        >
-                          {`ID: ${nftList[index].id}`}
-                        </Link>
+                        <>
+                          <span>{'ID: '}</span>
+                          <Link
+                            href={`${BASE_OPENSEA_LINK}/${nftList[index].id}`}
+                            color="inherit"
+                            target="blank"
+                          >
+                            {`${nftList[index].id}`}
+                          </Link>
+                        </>
                       ) : (
                         `ID: ${nftList[index].id}`
                       )}

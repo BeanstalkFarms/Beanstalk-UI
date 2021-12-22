@@ -36,7 +36,6 @@ export default function NftLeaderboard() {
   ];
 
   // create Top Transactions table
-
   const sectionsInfo = [];
   const noTxBox = (
     <Box style={{ width: 'auto', maxWidth: '450px', margin: '20px 0' }}>
@@ -72,10 +71,9 @@ export default function NftLeaderboard() {
   }
 
   // Table Wrapper with tabs
-
   const showListTables =
     sectionsInfo.length > 0 ? (
-      <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '370px' }}>
+      <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '360px' }}>
         <BaseModule
           handleTabChange={handleTabInfoChange}
           section={sectionInfo}

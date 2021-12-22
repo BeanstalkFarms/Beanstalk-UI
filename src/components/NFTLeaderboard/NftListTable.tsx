@@ -35,7 +35,8 @@ const useStyles = makeStyles({
   },
   lucidaStyle: {
     fontFamily: 'Lucida Console',
-    fontSize: '11px',
+    fontSize: '10px',
+    padding: '6px 6px',
   },
 });
 
@@ -48,6 +49,13 @@ export default function NftListTable({
   style,
 }) {
   const classes = useStyles();
+
+  const cellStyle = {
+    fontFamily: 'Futura-PT',
+    padding: '6px 6px',
+    width: `${100 / colTitles.length - 1}%`,
+  };
+
   let count = 0;
 
   return (
@@ -60,7 +68,7 @@ export default function NftListTable({
                 <TableCell
                   key={t}
                   align="center"
-                  style={{ fontFamily: 'Futura-PT', width: '33%' }}
+                  style={cellStyle}
                 >
                   {t}
                 </TableCell>

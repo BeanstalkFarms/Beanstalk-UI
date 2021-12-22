@@ -64,7 +64,7 @@ export default function ClaimNFT({
 
   const showListTables =
     sectionsInfo.length > 0 ? (
-      <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '370px' }}>
+      <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '360px' }}>
         <BaseModule
           handleTabChange={handleTabInfoChange}
           section={sectionInfo}
