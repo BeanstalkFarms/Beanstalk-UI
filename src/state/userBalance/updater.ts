@@ -513,6 +513,7 @@ export default function Updater() {
       const pricePromises = getPrices(batch);
       batch.execute();
 
+      console.log('after batch execute in updatetotalbalances');
       const [bipInfo, fundraiserInfo, totalBalances, _prices] =
         await Promise.all([
           getBips(),
@@ -541,13 +542,14 @@ export default function Updater() {
     }
 
     async function updateAllBalances() {
+      console.log('inside updateAllBalances');
       const startTime = benchmarkStart('ALL BALANCES');
       const batch = createLedgerBatch();
       const accountBalancePromises = getAccountBalances(batch);
       const totalBalancePromises = getTotalBalances(batch);
       const pricePromises = getPrices(batch);
       batch.execute();
-
+      console.log('after batch.execute');
       const [
         bipInfo,
         fundraiserInfo,
@@ -643,14 +645,15 @@ export default function Updater() {
     async function start() {
       let startTime = benchmarkStart('*INIT*');
       let updateBalances: Function;
-      let dispatchMetamaskError: Function | null;
       if (await initialize()) {
         // Metamask is connected, updateAllBalances
+        console.log('updating all balances...');
         updateBalances = updateAllBalances;
       } else {
         // Metamask is not connected, only updateTotalBalances
+        console.log('updating total balances');
         updateBalances = updateTotalBalances;
-        dispatchMetamaskError = () => dispatch(setMetamaskFailure(2));
+        dispatch(setMetamaskFailure(2));
       }
 
       benchmarkEnd('*INIT*', startTime);
@@ -658,6 +661,7 @@ export default function Updater() {
 
       initializeCallback(async () => {
         const [updateBalanceState] = await updateBalances();
+        console.log('inside initialize cllback callback');
         ReactDOM.unstable_batchedUpdates(() => {
           updateBalanceState();
         });
@@ -672,7 +676,6 @@ export default function Updater() {
         updateBalanceState();
         processEvents(eventInitializer, eventParsingParameters);
         dispatch(setInitialized(true));
-        if (dispatchMetamaskError) dispatchMetamaskError();
       });
       benchmarkEnd('**WEBSITE**', startTime);
     }

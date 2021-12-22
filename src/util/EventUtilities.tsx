@@ -193,23 +193,20 @@ export function parseWithdrawals(withdrawals, index: BigNumber) {
   return [transit, receivable, transitWithdrawals, receivableWithdrawals];
 }
 
-export function addRewardedCrates(
-  crates,
-  season,
-  rewardedBeans
-) {
+export function addRewardedCrates(crates, season, rewardedBeans) {
   if (rewardedBeans.isEqualTo(0)) return crates;
   const ds = parseInt(season, 10);
-  const isTopCrate = crates[ds] !== undefined
-    ? crates[ds].isEqualTo(new BigNumber(rewardedBeans))
-    : false;
+  const isTopCrate =
+    crates[ds] !== undefined
+      ? crates[ds].isEqualTo(new BigNumber(rewardedBeans))
+      : false;
 
   crates[ds] =
     crates[ds] === undefined
       ? rewardedBeans
       : isTopCrate
-        ? crates[ds]
-        : crates[ds].plus(rewardedBeans);
+      ? crates[ds]
+      : crates[ds].plus(rewardedBeans);
   return crates;
 }
 
