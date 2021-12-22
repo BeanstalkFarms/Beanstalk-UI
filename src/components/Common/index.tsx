@@ -264,6 +264,7 @@ export const fieldChartStrings = {
   weather: 'This is the current Weather by Season.',
   pods: 'This is the current Unharvestable Pods by Season.',
   sown: 'This is the current total Sown Beans by Season.',
+  soil: 'This is the current Soil by Season.',
   harvested: 'This is the current total Harvested Pods by Season.',
   sowers: 'This is the current total unique Sowers by Season.',
 };
