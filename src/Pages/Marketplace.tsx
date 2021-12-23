@@ -1,5 +1,5 @@
 // @ts-nocheck
-import BigNumber from 'bignumber.js';
+// import BigNumber from 'bignumber.js';
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
@@ -40,6 +40,7 @@ export default function Marketplace() {
   console.log('got listings, buyOffers:', listings, buyOffers);
   console.log('got plots:', plots);
 
+  console.log(harvestableIndex);
   const hasPlots = Object.keys(plots).length > 0;
   return (
     <div style={{ width: '100%', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -80,9 +81,9 @@ export default function Marketplace() {
             {Object.keys(plots)
               .sort((a, b) => a - b)
               .map((index) => (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr' }}>
-                  <p>{displayBN(new BigNumber(harvestableIndex - index))}</p>
-                  <p>{displayBN(plots[index])}</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+                  <p>{displayBN(harvestableIndex.minus(index))}</p>
+                  <p>{plots[index]}</p>
                   <button type="button">List for sale</button>
                 </div>
               ))
