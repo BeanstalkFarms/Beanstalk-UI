@@ -78,6 +78,9 @@ export default function App() {
           <Route exact path="/farm/balances">
             <Farm sectionNumber={3} />
           </Route>
+          <Route exact path="/farm/beanfts">
+            <Farm sectionNumber={4} />
+          </Route>
           <Route exact path="/analytics">
             <Redirect to="/analytics/charts" />
           </Route>
