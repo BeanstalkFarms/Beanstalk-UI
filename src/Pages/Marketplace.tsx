@@ -20,6 +20,9 @@ import Updater from '../state/marketplace/updater';
  *
  * 2. Figure out better UI for this
  *    - Hook it up with better logic for default/min/max values
+ *    - Also hook it up with metamask eth balance, etc
+ *
+ * 3. Hook it up to actual contract events
  */
 
 function SellPlotModal({

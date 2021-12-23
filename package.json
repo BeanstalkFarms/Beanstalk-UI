@@ -25,6 +25,7 @@
     "bignumber.js": "^9.0.1",
     "ethers": "^5.4.6",
     "graphql": "^15.5.3",
+    "lodash": "^4.17.21",
     "material-ui-image": "^3.3.2",
     "mime": "^1.6.0",
     "react": "^17.0.2",
