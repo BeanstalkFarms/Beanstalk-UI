@@ -1,6 +1,7 @@
 // @ts-nocheck
 // import BigNumber from 'bignumber.js';
 import React, { useState } from 'react';
+import Box from '@mui/material/Box';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { displayBN } from 'util/index';
@@ -13,12 +14,32 @@ function SellPlotModal({
   maxPods,
   onClose,
 }) {
+  const [amount, setAmount] = useState(maxPods);
   return (
     <Modal
       open={plotIndex != null}
       onClose={onClose}
     >
-      <p>hi {maxPods}</p>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
+        <h2>List your plot for sale</h2>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <p>Max number of pods: {maxPods}</p>
+          <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
+          <button type="button" style={{ marginTop: 12 }}>Submit</button>
+        </div>
+      </Box>
     </Modal>
   );
 }
@@ -135,11 +156,13 @@ export default function Marketplace() {
           ))}
         </div>
       </div>
-      <SellPlotModal
-        plotIndex={plotToSell}
-        maxPods={plots && plots[plotToSell]}
-        onClose={() => setPlotToSell(null)}
-      />
+      { plotToSell && (
+        <SellPlotModal
+          plotIndex={plotToSell}
+          maxPods={plots && plots[plotToSell]}
+          onClose={() => setPlotToSell(null)}
+        />
+      ) }
       <Updater />
     </div>
   );
