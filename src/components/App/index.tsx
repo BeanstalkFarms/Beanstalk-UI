@@ -96,8 +96,14 @@ export default function App() {
           <Route exact path="/governance">
             <DAO />
           </Route>
-          <Route exact path="/beanft">
-            <BeaNFT />
+          <Route exact path="/beanfts">
+            <Redirect to="/beanfts/beanft" />
+          </Route>
+          <Route exact path="/beanfts/beanft">
+            <BeaNFT sectionNumber={0} />
+          </Route>
+          <Route exact path="/beanfts/earnnfts">
+            <BeaNFT sectionNumber={1} />
           </Route>
           <Route exact path="/about">
             <AboutPage key="about" />

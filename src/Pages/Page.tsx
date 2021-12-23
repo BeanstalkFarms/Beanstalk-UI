@@ -13,7 +13,7 @@ export default function Page({
   const history = useHistory();
 
   useEffect(() => {
-    history.push(`${sectionTitles[section].toLowerCase()}`);
+    history.push(`${sectionTitles[section].toLowerCase().replace(/ /g, '')}`);
   });
 
   const pageStyle = {

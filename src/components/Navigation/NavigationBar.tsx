@@ -39,7 +39,7 @@ const defaultNavMapping = [
     title: 'DAO',
   },
   {
-    path: 'beanft',
+    path: 'beanfts',
     title: 'BeaNFTs',
   },
   {
