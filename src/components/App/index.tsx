@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import Updater from 'state/userBalance/updater';
+import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
 import { NavigationBar } from 'components/Navigation';
@@ -111,6 +112,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Updater />
+      <NFTUpdater />
       <Main>{app}</Main>
     </ThemeProvider>
   );

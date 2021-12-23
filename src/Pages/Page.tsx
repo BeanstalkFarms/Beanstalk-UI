@@ -6,6 +6,7 @@ import { ContentTitle, SectionTabs } from 'components/Common';
 export default function Page({
     sections,
     sectionTitles,
+    textTransform,
     sectionNumber = 0,
   }) {
   const [section, setSection] = useState(sectionNumber);
@@ -28,7 +29,7 @@ export default function Page({
         section={section}
         sectionTitles={sectionTitles}
       />
-    ) : (<ContentTitle title={sectionTitles[0]} />);
+    ) : (<ContentTitle title={sectionTitles[0]} textTransform={textTransform} />);
 
   return (
     <>
