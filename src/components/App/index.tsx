@@ -101,6 +101,7 @@ export default function App() {
           <Route exact path="/about">
             <AboutPage key="about" />
           </Route>
+          <Redirect to="/farm/silo" />
         </Switch>
       </>
     );
