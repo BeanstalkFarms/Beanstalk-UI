@@ -595,7 +595,7 @@ export default function Updater() {
   useEffect(() => {
     async function start() {
       let startTime = benchmarkStart('*INIT*');
-      if (account) {
+      if (account !== '') {
         benchmarkEnd('*INIT*', startTime);
         startTime = benchmarkStart('**WEBSITE**');
 
@@ -622,7 +622,7 @@ export default function Updater() {
         });
         benchmarkEnd('**WEBSITE**', startTime);
       } else {
-        dispatch(setMetamaskFailure(-1));
+        dispatch(setMetamaskFailure(2));
       }
     }
 

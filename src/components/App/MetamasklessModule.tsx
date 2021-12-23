@@ -52,7 +52,7 @@ export default function MetamasklessModule() {
       <Grid container item xs={12}>
         <Grid item xs={12} style={{ minHeight: '150px' }}>
           <Link href={HOW_TO_MM_PATH} color="inherit" target="blank">
-            <SvgCloudIcon color="white" text="Connect Metamask" />
+            <SvgCloudIcon color="white" text="Connect Wallet" />
           </Link>
         </Grid>
         <Grid item xs={12}>
@@ -64,7 +64,7 @@ export default function MetamasklessModule() {
             style={connectMetaStyle}
             variant="contained"
           >
-            Connect Metamask
+            Connect Wallet
           </Button>
         </Grid>
       </Grid>

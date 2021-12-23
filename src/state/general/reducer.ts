@@ -25,7 +25,7 @@ export interface GeneralState {
 
 export const initialState: GeneralState = {
   initialized: false,
-  metamaskFailure: -1,
+  metamaskFailure: 2,
   lastCross: 0,
   bips: [],
   hasActiveBIP: false,

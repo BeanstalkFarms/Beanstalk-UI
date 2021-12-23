@@ -8,6 +8,7 @@ import { ethers } from 'ethers';
 import { get } from 'lodash';
 import { useDebounce, useIsWindowVisible } from 'hooks';
 import { AppState } from 'state';
+import { setMetamaskFailure } from 'state/general/actions';
 
 import { wallets, WETH, WBNB, DAI, WMATIC } from '../../constants';
 
@@ -158,14 +159,8 @@ export default function Updater(): null {
           if (walletAvailable) {
             const _web3 = new ethers.providers.Web3Provider(_wallet.provider);
 
-            if (window.localStorage) {
-              window.localStorage.setItem(
-                'selectedWallet',
-                _wallet.name as any
-              );
-            }
-
             dispatch(setWeb3Settings({ wallet: _wallet, web3: _web3 }));
+            dispatch(setMetamaskFailure(-1));
           } else {
             dispatch(
               setWeb3Settings({
@@ -199,20 +194,6 @@ export default function Updater(): null {
     baseToken,
     comparisonToken,
   ]);
-
-  useEffect(() => {
-    const previouslySelectedWallet = window.localStorage
-      ? window.localStorage.getItem('selectedWallet')
-      : undefined;
-
-    if (
-      previouslySelectedWallet &&
-      _onboard &&
-      !['WalletLink', 'Coinbase'].includes(previouslySelectedWallet)
-    ) {
-      _onboard.walletSelect(previouslySelectedWallet);
-    }
-  }, [_onboard, dispatch, web3]);
 
   return null;
 }
