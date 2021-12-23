@@ -15,6 +15,13 @@ function SellPlotModal({
   onClose,
 }) {
   const [amount, setAmount] = useState(maxPods);
+  const [pricePerPod, setPricePerPod] = useState(1);
+  const [expiry, setExpiry] = useState(1000000);
+  const onClick = () => {
+    // TODO: list plot for sale
+    console.log('List plot for sale:', plotIndex, pricePerPod, expiry, amount);
+    onClose();
+  };
   return (
     <Modal
       open={plotIndex != null}
@@ -36,8 +43,19 @@ function SellPlotModal({
         <h2>List your plot for sale</h2>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <p>Max number of pods: {maxPods}</p>
-          <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
-          <button type="button" style={{ marginTop: 12 }}>Submit</button>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <p>Amount to sell</p>
+            <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <p>Price per pod</p>
+            <input type="number" value={pricePerPod} onChange={(e) => setPricePerPod(e.target.value)} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <p>Expires in</p>
+            <input type="number" value={expiry} onChange={(e) => setExpiry(e.target.value)} />
+          </div>
+          <button type="button" style={{ marginTop: 12 }} onClick={onClick}>Submit</button>
         </div>
       </Box>
     </Modal>
@@ -77,7 +95,6 @@ export default function Marketplace() {
   console.log('got listings, buyOffers:', listings, buyOffers);
   console.log('got plots:', plots);
 
-  console.log(harvestableIndex);
   const hasPlots = Object.keys(plots).length > 0;
   return (
     <div style={{ width: '100%', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
