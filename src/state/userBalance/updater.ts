@@ -16,7 +16,6 @@ import { setPrices } from 'state/prices/actions';
 import { setBeansPerSeason } from 'state/beansPerSeason/actions';
 import {
   setInitialized,
-  setMetamaskFailure,
   setLastCross,
   setBips,
   setHasActiveBIP,
@@ -621,8 +620,6 @@ export default function Updater() {
           dispatch(setInitialized(true));
         });
         benchmarkEnd('**WEBSITE**', startTime);
-      } else {
-        dispatch(setMetamaskFailure(2));
       }
     }
 

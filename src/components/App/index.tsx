@@ -19,6 +19,7 @@ import {
   FundraiserPage,
   MetamasklessPage,
 } from 'Pages';
+import { useAccount } from 'state/application/hooks';
 
 import Main from './main.tsx';
 import theme from './theme';
@@ -26,10 +27,10 @@ import LoadingBean from './LoadingBean.tsx';
 import './App.css';
 
 export default function App() {
-  const { initialized, metamaskFailure } = useSelector<
-    AppState,
-    AppState['general']
-  >((state) => state.general);
+  const { initialized } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+  const account = useAccount();
   const dispatch = useDispatch();
 
   BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
@@ -47,7 +48,7 @@ export default function App() {
   }, [dispatch]);
 
   let app;
-  if (metamaskFailure > -1) {
+  if (account === '') {
     app = (
       <>
         <NavigationBar />

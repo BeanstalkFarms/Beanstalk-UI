@@ -20,6 +20,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AppState } from 'state';
+import { useAccount } from 'state/application/hooks';
 import { priceQuery } from 'graph/index';
 import { theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
@@ -54,8 +55,11 @@ export default function NavigationBar(props) {
     (state) => state.prices
   );
 
-  const { hasActiveBIP, hasActiveFundraiser, width, metamaskFailure } =
-    useSelector<AppState, AppState['general']>((state) => state.general);
+  const { hasActiveBIP, hasActiveFundraiser, width } = useSelector<
+    AppState,
+    AppState['general']
+  >((state) => state.general);
+  const account = useAccount();
 
   const classes = makeStyles({
     fixedNav: {
@@ -263,7 +267,7 @@ export default function NavigationBar(props) {
   );
 
   const connectedNav =
-    metamaskFailure <= -1 ? (
+    account !== '' ? (
       <>
         {mobileNavigation}
         {desktopNavigation}

@@ -8,7 +8,6 @@ import { ethers } from 'ethers';
 import { get } from 'lodash';
 import { useDebounce, useIsWindowVisible } from 'hooks';
 import { AppState } from 'state';
-import { setMetamaskFailure } from 'state/general/actions';
 
 import { wallets, WETH, WBNB, DAI, WMATIC } from '../../constants';
 
@@ -160,7 +159,6 @@ export default function Updater(): null {
             const _web3 = new ethers.providers.Web3Provider(_wallet.provider);
 
             dispatch(setWeb3Settings({ wallet: _wallet, web3: _web3 }));
-            dispatch(setMetamaskFailure(-1));
           } else {
             dispatch(
               setWeb3Settings({

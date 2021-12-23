@@ -1,18 +1,14 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setUnclaimedNFTs, setClaimedNFTs, setNFTs } from 'state/nfts/actions';
 import { queryWinterNFTs, loadNFTs, queryAccountNFTStats } from 'graph';
 import { listenForNFTTransfers, getMintedNFTs } from 'util/index';
 import { useAccount, useEthereum } from 'state/application/hooks';
-import { AppState } from 'state';
 
 export default function NFTUpdater() {
   const dispatch = useDispatch();
   const account = useAccount();
   const ethereum = useEthereum();
-  const { metamaskFailure } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
 
   useEffect(() => {
     async function checkMints(data) {
@@ -50,7 +46,7 @@ export default function NFTUpdater() {
     }
 
     async function start() {
-      if (!account && metamaskFailure === -1) {
+      if (!account) {
         setTimeout(() => start(), 100);
       } else if (account) {
         loadAccountNFTs();

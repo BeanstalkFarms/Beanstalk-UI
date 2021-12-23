@@ -1,19 +1,21 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Grid, Button, Link } from '@material-ui/core';
 import { switchToMainnet } from 'util/index';
 import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
 import { SvgCloudIcon } from 'components/About/SvgCloudIcon';
 import About from 'components/About';
-import { useEthereum, useWeb3 } from 'state/application/hooks';
-import { AppState } from 'state';
+import {
+  useAccount,
+  useChainId,
+  useEthereum,
+  useWeb3,
+} from 'state/application/hooks';
 
 export default function MetamasklessModule() {
   const { onboard } = useWeb3();
   const ethereum = useEthereum();
-  const { metamaskFailure } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
+  const chainId = useChainId();
+  const account = useAccount();
 
   const connectMetaStyle = {
     fontFamily: 'Futura-PT-Book',
@@ -26,7 +28,7 @@ export default function MetamasklessModule() {
     width: 'auto',
   };
   let metamaskModule;
-  if (metamaskFailure === 0 || metamaskFailure === 1) {
+  if (!ethereum) {
     metamaskModule = (
       <Grid item xs={12}>
         <Link href={METAMASK_LINK} target="blank" color="inherit">
@@ -34,7 +36,7 @@ export default function MetamasklessModule() {
         </Link>
       </Grid>
     );
-  } else if (metamaskFailure === 3) {
+  } else if (account !== '' && chainId !== 1) {
     metamaskModule = (
       <Grid item xs={12}>
         <SvgCloudIcon
