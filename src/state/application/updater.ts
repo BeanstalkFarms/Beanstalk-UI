@@ -158,6 +158,13 @@ export default function Updater(): null {
           if (walletAvailable) {
             const _web3 = new ethers.providers.Web3Provider(_wallet.provider);
 
+            if (window.localStorage) {
+              window.localStorage.setItem(
+                'selectedWallet',
+                _wallet.name as any
+              );
+            }
+
             dispatch(setWeb3Settings({ wallet: _wallet, web3: _web3 }));
           } else {
             dispatch(
@@ -192,6 +199,20 @@ export default function Updater(): null {
     baseToken,
     comparisonToken,
   ]);
+
+  useEffect(() => {
+    const previouslySelectedWallet = window.localStorage
+      ? window.localStorage.getItem('selectedWallet')
+      : undefined;
+
+    if (
+      previouslySelectedWallet &&
+      _onboard &&
+      !['WalletLink', 'Coinbase'].includes(previouslySelectedWallet)
+    ) {
+      _onboard.walletSelect(previouslySelectedWallet);
+    }
+  }, [_onboard, dispatch, web3]);
 
   return null;
 }
