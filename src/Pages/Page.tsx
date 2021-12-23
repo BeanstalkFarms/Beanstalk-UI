@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import { ContentTitle, SectionTabs } from 'components/Common';
-import About from 'components/About';
 
 export default function Page({
     sections,
@@ -37,11 +36,6 @@ export default function Page({
         {titleSection}
         {sections[section]}
       </Box>
-
-      {window.location.pathname !== '/about' ?
-        <About />
-        : null
-      }
     </>
   );
 }
