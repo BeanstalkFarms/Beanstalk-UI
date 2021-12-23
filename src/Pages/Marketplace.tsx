@@ -42,7 +42,7 @@ export default function Marketplace() {
         {/* Offers */}
         <h1 style={{ fontSize: 24 }}>Buy Offers</h1>
         <div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr' }}>
             <p>Buyer</p>
             <p>Amount</p>
             <p>Price / pod</p>
@@ -50,11 +50,10 @@ export default function Marketplace() {
             <p>Status</p>
           </div>
           {buyOffers.map((buyOffer) => (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr' }}>
               <p>{buyOffer.listerAddress}</p>
-              <p>{buyOffer.initialAmountToBuy.minus(buyOffer.amountBought.toString()}</p>
+              <p>{buyOffer.initialAmountToBuy.minus(buyOffer.amountBought).toString()}</p>
               <p>{buyOffer.pricePerPod.toString()}</p>
-              <p>{buyOffer.maxPlaceInLine.toString()}</p>
               <p>{buyOffer.maxPlaceInLine.toString()}</p>
               <p>{buyOffer.status}</p>
             </div>
