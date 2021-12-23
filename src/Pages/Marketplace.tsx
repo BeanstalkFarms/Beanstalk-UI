@@ -1,7 +1,9 @@
 // @ts-nocheck
+import BigNumber from 'bignumber.js';
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
+import { displayBN } from 'util/index';
 
 import Updater from '../state/marketplace/updater';
 
@@ -10,8 +12,35 @@ export default function Marketplace() {
   const { listings, buyOffers } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
-  console.log('got listings, buyOffers:', listings, buyOffers);
+  const { harvestableIndex } = useSelector<
+    AppState,
+    AppState['weather']
+  >((state) => state.weather);
+  /*
+  const {
+    // beanBalance,
+    // ethBalance,
+    // lpReceivableBalance,
+    // beanClaimableBalance,
+    // beanReceivableBalance,
+    // claimable,
+    // claimableEthBalance,
+    // harvestablePodBalance,
+    // hasClaimable,
+    plots,
+    // harvestablePlots,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+   */
+  const plots = {
+    10000000: 185799,
+  };
 
+  console.log('got listings, buyOffers:', listings, buyOffers);
+  console.log('got plots:', plots);
+
+  const hasPlots = Object.keys(plots).length > 0;
   return (
     <div style={{ width: '100%', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{ background: 'lightgray', maxWidth: 960, marginTop: 128 }}>
@@ -38,7 +67,31 @@ export default function Marketplace() {
           ))}
         </div>
       </div>
-      <div style={{ background: 'lightgray', maxWidth: 960, marginTop: 128 }}>
+      { hasPlots && (
+        <div style={{ background: 'lightgray', maxWidth: 960, marginTop: 64 }}>
+          {/* Your plots */}
+          <h1 style={{ fontSize: 24 }}>Sell your plots</h1>
+          <div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+              <p>Place in Line</p>
+              <p>Pods</p>
+              <div />
+            </div>
+            {Object.keys(plots)
+              .sort((a, b) => a - b)
+              .map((index) => (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr' }}>
+                  <p>{displayBN(new BigNumber(harvestableIndex - index))}</p>
+                  <p>{displayBN(plots[index])}</p>
+                  <button type="button">List for sale</button>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      )}
+
+      <div style={{ background: 'lightgray', maxWidth: 960, marginTop: 64 }}>
         {/* Offers */}
         <h1 style={{ fontSize: 24 }}>Buy Offers</h1>
         <div>
