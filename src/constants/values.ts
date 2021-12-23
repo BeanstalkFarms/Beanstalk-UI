@@ -1,8 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { ChainId, WETH as _WETH } from '@uniswap/sdk';
 
-export const FORTMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY;
-export const PORTIS_KEY = process.env.REACT_APP_PORTIS_KEY;
 export const RPC_URL = process.env.REACT_APP_NETWORK_URL;
 export const BSC_RPC_URL = 'https://bsc-dataseed.binance.org/';
 export const APP_URL = 'https://bean.money';
