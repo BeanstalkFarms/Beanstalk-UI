@@ -1,14 +1,30 @@
 // @ts-nocheck
 // import BigNumber from 'bignumber.js';
-import React from 'react';
+import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { displayBN } from 'util/index';
+import Modal from '@mui/material/Modal';
 
 import Updater from '../state/marketplace/updater';
 
+function SellPlotModal({
+  plotIndex,
+  maxPods,
+  onClose,
+}) {
+  return (
+    <Modal
+      open={plotIndex != null}
+      onClose={onClose}
+    >
+      <p>hi {maxPods}</p>
+    </Modal>
+  );
+}
+
 export default function Marketplace() {
-  // TODO: hook this up
+  const [plotToSell, setPlotToSell] = useState(null);
   const { listings, buyOffers } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
@@ -84,7 +100,12 @@ export default function Marketplace() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
                   <p>{displayBN(harvestableIndex.minus(index))}</p>
                   <p>{plots[index]}</p>
-                  <button type="button">List for sale</button>
+                  <button
+                    type="button"
+                    onClick={() => setPlotToSell(index)}
+                  >
+                    List for sale
+                  </button>
                 </div>
               ))
             }
@@ -114,6 +135,11 @@ export default function Marketplace() {
           ))}
         </div>
       </div>
+      <SellPlotModal
+        plotIndex={plotToSell}
+        maxPods={plots && plots[plotToSell]}
+        onClose={() => setPlotToSell(null)}
+      />
       <Updater />
     </div>
   );
