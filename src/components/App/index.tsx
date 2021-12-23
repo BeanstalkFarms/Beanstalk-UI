@@ -48,19 +48,13 @@ export default function App() {
   }, [dispatch]);
 
   let app;
-  if (account === '') {
-    app = (
-      <>
-        <NavigationBar />
-        <MetamasklessPage />
-      </>
-    );
-  } else if (!initialized) {
+  if (account !== '' && !initialized) {
     app = <LoadingBean />;
   } else {
     app = (
       <>
         <NavigationBar />
+        {account === '' && <MetamasklessPage />}
         <Switch>
           <Route exact path="/">
             <Redirect to="/farm" />
