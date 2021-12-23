@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { fieldChartStrings } from 'components/Common';
+import { soilQuery } from 'graph/index';
 import Charts from './Charts';
 
 export default function FieldCharts(props) {
+  const [soilData, setSoilData] = useState([]);
+
+  async function loadSoilData() {
+    const beanstalkData = await soilQuery();
+    setSoilData(beanstalkData);
+  }
+
+  useEffect(() => {
+    loadSoilData();
+  }, []);
+
   const charts = [
     {
         title: 'Real Rate of Return',
@@ -25,6 +37,11 @@ export default function FieldCharts(props) {
         title: 'Pods',
         description: fieldChartStrings.pods,
         data: [props.data.map((d) => ({ x: d.x, y: d.pods }))],
+    },
+    {
+        title: 'Soil',
+        description: fieldChartStrings.soil,
+        data: [soilData.map((d) => ({ x: d.x, y: d.soil }))],
     },
     {
         title: 'Sown Beans',

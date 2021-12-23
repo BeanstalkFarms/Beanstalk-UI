@@ -228,11 +228,23 @@ export const governanceStrings = {
     'Beanstalk is upgraded in a decentralized fashion through Beanstalk Improvement Proposals (BIPs). Any Stalk holder can vote for a BIP. Anyone with more than .1% of the total outstanding Stalk can propose a BIP. BIPs can be committed in as little as 24 Seasons with a 2/3 supermajority, or after 168 Seasons with a 1/2 majority.',
 };
 export const beanftStrings = {
-  beanftDescription: 'BeaNFT Genesis Collection is a series of 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
+  beanftDescription:
+    'BeaNFT Genesis Collection is a series of 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
   mintAll: 'Use this button to Mint all your Mintable BeaNFTs.',
   minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
   singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',
   unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',
+  genesisNFTs: 'The total minted and unminted Genesis BeaNFTs that you own.',
+  winterNFTs: 'The total minted and unminted Winter BeaNFTs that you own.',
+};
+export const beanftWinterStrings = {
+  beanftDescription:
+    'The BeaNFT Winter Collection is the second minting event for BeaNFTs. From Season 3300 to 3900, up to 2,000 BeaNFTs can be earned by participating in Beanstalk. The top 5 largest bean-denominated investments each Season (across the Silo and Field) will be awarded one of the 2,000 Winter BeaNFTs, until there are none left.',
+  topTxn: 'This tab displays the top 5 Deposits or Sows during the current Season by Bean-denominated value.',
+  topAcct: 'This tab displays all previously earned Winter Collection BeaNFTs, both minted and unminted.',
+  earnedNFTs: 'The number of Winter BeaNFTs you have earned during the Winter BeaNFT event.',
+  investedBeans: 'The Bean-denominated total value you have Sown or Deposited during the Winter BeaNFT event.',
+  remainingNFTs: 'The number of remaining unearned Winter BeaNFTs in the Winter BeaNFT event.',
 };
 export const chartStrings = {
   bean: 'Use this tab to view charts with information about the BEAN token.',
@@ -252,6 +264,7 @@ export const fieldChartStrings = {
   weather: 'This is the current Weather by Season.',
   pods: 'This is the current Unharvestable Pods by Season.',
   sown: 'This is the current total Sown Beans by Season.',
+  soil: 'This is the current Soil by Season.',
   harvested: 'This is the current total Harvested Pods by Season.',
   sowers: 'This is the current total unique Sowers by Season.',
 };
@@ -265,7 +278,7 @@ export const siloChartStrings = {
 };
 export const claimStrings = {
   harvestable: 'Harvestable Pods can be redeemed for 1 Bean each, at any time.',
-  farmable: 'Farmable Beans automatically receive Stalk. Farbable Beans receive Seeds and are deposited in a specific Season the next time you interact with the Silo.',
+  farmable: 'Farmable Beans automatically receive Stalk. Farmable Beans receive Seeds and are deposited in a specific Season the next time you interact with the Silo.',
 };
 export const fundraiserStrings = {
   fundsDescription: 'Fundraisers allow Beanstalk to raise a pre-defined amount of another stablecoin in order to pay for things like audits. Each fundraiser allows anyone to exchange the desired stablecoin, up to the amount specified in the Fundraiser, for Beans at a price of $1.00. All Beans will be Sown and the corresponding amount of Pods will be sent to the wallet that contributed to the Fundraiser. Any excess funds beyond the Fundraiser amount, or of a different currency, will not receive Sown Beans.',

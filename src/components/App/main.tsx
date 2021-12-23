@@ -23,7 +23,7 @@ function BarnBeanstalk() {
     if (width > 500 && theme.name === 'winter') {
       timer.current = window.setInterval(() => {
         setCount(increment(count));
-      }, 750);
+      }, 1750);
       return () => {
         window.clearInterval(timer.current);
       };
@@ -45,6 +45,10 @@ function BarnBeanstalk() {
 export default function Main(props) {
   document.body.style.backgroundColor = theme.bodyBackground;
 
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+
   const navCloudStyle = {
     backgroundColor: 'transparent',
     backgroundImage: `url(${theme.cloud}), url(${theme.cloud})`,
@@ -52,7 +56,7 @@ export default function Main(props) {
     backgroundRepeat: 'repeat-x, repeat-x',
     boxShadow: 'none',
     zIndex: 2,
-    backgroundSize: 'contain, contain',
+    backgroundSize: width > 900 ? 'contain, contain' : 'cover',
     height: '90px',
     width: '100%',
     position: 'fixed',

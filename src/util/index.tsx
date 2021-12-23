@@ -117,6 +117,14 @@ export async function initialize(): Promise<void> {
   return true;
 }
 
+export async function switchToMainnet() {
+  await ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: '0x1' }],
+  });
+  window.location.reload();
+}
+
 export function initializeCallback(callback) {
   txCallback = callback;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Button, Link } from '@material-ui/core';
-import { initialize, metamaskFailure } from 'util/index';
+import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
 import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
 import { SvgCloudIcon } from 'components/About/SvgCloudIcon';
 import About from 'components/About';
@@ -28,9 +28,13 @@ export default function MetamasklessModule() {
   } else if (metamaskFailure === 3) {
     metamaskModule = (
       <Grid item xs={12}>
-        <Link href={HOW_TO_MM_PATH} target="blank" color="inherit">
-          <SvgCloudIcon color="white" text="Change Network" />
-        </Link>
+        <SvgCloudIcon
+          onClick={async () => {
+            switchToMainnet();
+          }}
+          style={{ cursor: 'pointer' }}
+          color="white"
+          text="Switch to Mainnet" />
       </Grid>
     );
   } else {

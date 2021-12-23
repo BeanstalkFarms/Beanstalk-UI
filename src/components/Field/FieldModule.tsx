@@ -139,7 +139,7 @@ export default function FieldModule() {
 
   const beanClaimable = beanReceivableBalance
     .plus(harvestablePodBalance)
-    .plus(poolForLPRatio(lpReceivableBalance)[0]);
+    .plus(claimLPBeans);
 
   const ethClaimable = claimableEthBalance.plus(
     poolForLPRatio(lpReceivableBalance)[1]
