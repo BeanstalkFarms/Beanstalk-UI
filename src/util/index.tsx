@@ -65,13 +65,13 @@ export const uniswapRouterContract = () =>
 
 async function initializeMetaMaskListeners() {
   const changeHandler = () => {
-    window.location.reload();
+    window.location.replace(window.location.origin);
   };
   ethereum.on('accountsChanged', changeHandler);
   ethereum.on('chainChanged', changeHandler);
 }
 
-export async function initialize(): Promise<void> {
+export async function initialize(): Promise<boolean> {
   if (!ethereum) {
     try {
       ethereum = (window as any).ethereum;
@@ -118,11 +118,15 @@ export async function initialize(): Promise<void> {
 }
 
 export async function switchToMainnet() {
-  await ethereum.request({
-    method: 'wallet_switchEthereumChain',
-    params: [{ chainId: '0x1' }],
-  });
-  window.location.reload();
+  try {
+    await ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x1' }],
+    });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function initializeCallback(callback) {

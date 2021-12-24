@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import { ContentTitle, SectionTabs } from 'components/Common';
 
@@ -6,8 +7,14 @@ export default function Page({
     sections,
     sectionTitles,
     textTransform,
+    sectionNumber = 0,
   }) {
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(sectionNumber);
+  const history = useHistory();
+
+  useEffect(() => {
+    history.push(`${sectionTitles[section].toLowerCase().replace(/ /g, '')}`);
+  });
 
   const pageStyle = {
       marginTop: '100px',
