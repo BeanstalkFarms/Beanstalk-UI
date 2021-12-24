@@ -11,10 +11,10 @@ import { AppState } from 'state';
 // import { NavigationBar } from 'components/Navigation';
 import NavigationSidebar from 'components/Navigation/NavigationSidebar';
 import {
-  Farm,
-  Analytics,
-  DAO,
-  BeaNFT,
+  FarmPage,
+  AnalyticsPage,
+  DAOPage,
+  BeaNFTPage,
   AboutPage,
   FundraiserPage,
   MetamasklessPage,
@@ -24,6 +24,7 @@ import Wrapper from './Wrapper';
 import theme from './theme';
 import LoadingBean from './LoadingBean';
 import './App.css';
+import Silo from 'Pages/SiloPage';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -61,52 +62,53 @@ export default function App() {
         {/* <NavigationBar /> */}
         <Switch>
           <Route exact path="/">
-            <Redirect to="/farm/silo" />
+            <Redirect to="/silo" />
           </Route>
           <Route exact path="/farm">
-            <Redirect to="/farm/silo" />
+            <Redirect to="/silo" />
           </Route>
-          <Route exact path="/farm/silo">
-            <Farm sectionNumber={0} />
+          <Route exact path="/silo">
+            <Silo />
+            {/* <Farm sectionNumber={0} /> */}
           </Route>
           <Route exact path="/farm/field">
-            <Farm sectionNumber={1} />
+            <FarmPage sectionNumber={1} />
           </Route>
           <Route exact path="/farm/trade">
-            <Farm sectionNumber={2} />
+            <FarmPage sectionNumber={2} />
           </Route>
           <Route exact path="/farm/balances">
-            <Farm sectionNumber={3} />
+            <FarmPage sectionNumber={3} />
           </Route>
           <Route exact path="/farm/beanfts">
-            <Farm sectionNumber={4} />
+            <FarmPage sectionNumber={4} />
           </Route>
           <Route exact path="/analytics">
             <Redirect to="/analytics/charts" />
           </Route>
           <Route exact path="/analytics/charts">
-            <Analytics sectionNumber={0} />
+            <AnalyticsPage sectionNumber={0} />
           </Route>
           <Route exact path="/analytics/seasons">
-            <Analytics sectionNumber={1} />
+            <AnalyticsPage sectionNumber={1} />
           </Route>
           <Route exact path="/analytics/balances">
-            <Analytics sectionNumber={2} />
+            <AnalyticsPage sectionNumber={2} />
           </Route>
           <Route exact path="/fundraiser">
             <FundraiserPage />
           </Route>
           <Route exact path="/governance">
-            <DAO />
+            <DAOPage />
           </Route>
           <Route exact path="/beanfts">
             <Redirect to="/beanfts/beanft" />
           </Route>
           <Route exact path="/beanfts/beanft">
-            <BeaNFT sectionNumber={0} />
+            <BeaNFTPage sectionNumber={0} />
           </Route>
           <Route exact path="/beanfts/earnnfts">
-            <BeaNFT sectionNumber={1} />
+            <BeaNFTPage sectionNumber={1} />
           </Route>
           <Route exact path="/about">
             <AboutPage key="about" />

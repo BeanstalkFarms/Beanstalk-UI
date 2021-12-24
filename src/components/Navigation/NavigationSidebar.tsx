@@ -36,12 +36,12 @@ import WalletModule from './WalletModule';
 const NAVIGATION_MAP = {
   farm: [
     {
-      path: 'farm/silo',
+      path: 'silo',
       title: 'Silo',
       desc: 'Earn interest and governance rights'
     },
     {
-      path: 'farm/field',
+      path: 'field',
       title: 'Field',
       desc: 'Help stabilize Beanstalk',
     },
@@ -145,9 +145,6 @@ export default function NavigationSidebar() {
   const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
-    (state) => state.beansPerSeason
-  );
   const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
@@ -162,13 +159,13 @@ export default function NavigationSidebar() {
   const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
   const fieldAPY = weather.weather.multipliedBy(8760).dividedBy(tth);
   const [beanAPY, lpAPY] = getAPYs(
-    farmableMonth,
+    beansPerSeason.farmableMonth,
     parseFloat(totalStalk),
     parseFloat(totalSeeds)
   );
   const badgeDataByPath : { [key: string] : string | null } = {
-    'farm/silo': beanAPY && beanAPY > 0 ? `${beanAPY.toFixed(0)}%` : null,
-    'farm/field': fieldAPY && fieldAPY > 0 ? `${fieldAPY.toFixed(0)}%` : null,
+    'silo': beanAPY && beanAPY > 0 ? `${beanAPY.toFixed(0)}%` : null,
+    'field': fieldAPY && fieldAPY > 0 ? `${fieldAPY.toFixed(0)}%` : null,
   }
 
   //
