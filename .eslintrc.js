@@ -40,6 +40,7 @@ module.exports = {
       functions: 'never',
       objects: 'always-multiline',
     }],
+    'space-infix-ops': 'warn',
     'quotes': ['warn', 'single'],
     'no-multiple-empty-lines': 'warn',
     'jsx-quotes': ['error', 'prefer-double'],

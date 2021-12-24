@@ -148,14 +148,27 @@ export default function NavigationSidebar() {
   const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
+  const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
+    (state) => state.beansPerSeason
+  );
+  const weather = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+  
+  //
+  const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
+  const fieldAPY = weather.weather.multipliedBy(8760).dividedBy(tth);
   const [beanAPY, lpAPY] = getAPYs(
     farmableMonth,
     parseFloat(totalStalk),
     parseFloat(totalSeeds)
   );
-
-  const badgeDataByPath = {
-    'farm/silo': beanAPY ? `${beanAPY.toFixed(0)}%` : ``
+  const badgeDataByPath : { [key: string] : string | null } = {
+    'farm/silo': beanAPY && beanAPY > 0 ? `${beanAPY.toFixed(0)}%` : null,
+    'farm/field': fieldAPY && fieldAPY > 0 ? `${fieldAPY.toFixed(0)}%` : null,
   }
 
   //
@@ -186,7 +199,7 @@ export default function NavigationSidebar() {
       <ListItem button style={{ display: "block" }}>
         <Box className={classes.NavLinkHeader}>
           <span className={classes.NavLinkTitle} style={{ marginRight: 8 }}>{item.title}</span>
-          {(item.path in badgeDataByPath) && (
+          {!!badgeDataByPath[item.path] && (
             <span className={classes.Badge}>
               {badgeDataByPath[item.path]}
             </span>
