@@ -17,9 +17,9 @@ export default function Page({
   });
 
   const pageStyle = {
-      marginTop: '100px',
-      width: '100vw',
-      marginBottom: '100px',
+    // marginTop: '100px',
+    // width: '100vw',
+    // marginBottom: '100px',
   };
 
   const titleSection = sections.length > 1 ? (

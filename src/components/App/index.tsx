@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { CssBaseline } from '@material-ui/core';
+import { Box, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import Updater from 'state/userBalance/updater';
 import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
-import { NavigationBar } from 'components/Navigation';
+// import { NavigationBar } from 'components/Navigation';
+import NavigationSidebar from 'components/Navigation/NavigationSidebar';
 import {
   Farm,
   Analytics,
@@ -19,24 +20,23 @@ import {
   MetamasklessPage,
 } from 'Pages';
 
-import Main from './Main';
+import Wrapper from './Wrapper';
 import theme from './theme';
 import LoadingBean from './LoadingBean';
 import './App.css';
 
+BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
+
 export default function App() {
-  const { initialized, metamaskFailure } = useSelector<
-    AppState,
-    AppState['general']
-  >((state) => state.general);
   const dispatch = useDispatch();
+  const { initialized, metamaskFailure } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
-  BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
-
-  function handleWindowSizeChange() {
-    dispatch(setWidth(window.innerWidth));
-  }
-
+  // HANDLE WINDOW SIZE CHANGE
+  // Used throughout the app to show/hide components and
+  // control elements of the theme.
+  const handleWindowSizeChange = () => dispatch(setWidth(window.innerWidth));
   useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);
     return () => {
@@ -49,7 +49,7 @@ export default function App() {
   if (metamaskFailure > -1) {
     app = (
       <>
-        <NavigationBar />
+        {/* <NavigationBar /> */}
         <MetamasklessPage />
       </>
     );
@@ -57,8 +57,8 @@ export default function App() {
     app = <LoadingBean />;
   } else {
     app = (
-      <>
-        <NavigationBar />
+      <div>
+        {/* <NavigationBar /> */}
         <Switch>
           <Route exact path="/">
             <Redirect to="/farm/silo" />
@@ -113,18 +113,35 @@ export default function App() {
           </Route>
           <Redirect to="/farm/silo" />
         </Switch>
-      </>
+      </div>
     );
   }
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {/* UPDATERS */}
       <Updater />
       <NFTUpdater />
-      <Main>
-        {app}
-      </Main>
+      {/* CONTENT */}
+      <Wrapper>
+        <Box sx={{ display: 'flex' }}>
+          <NavigationSidebar />
+          <Box
+            component="main"
+            sx={{ flexGrow: 1 }}
+          >
+            {app}
+          </Box>
+        </Box>
+      </Wrapper>
     </ThemeProvider>
   );
 }
+
+/* <div style={{ display: "flex", flexDirection: "row" }}>
+<NavigationSidebar />
+<div>
+  {app}
+</div>
+</div> */

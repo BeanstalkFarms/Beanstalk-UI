@@ -434,3 +434,8 @@ input[type=number] {
 .Settings-drawer {
   transition: right 0.5s;
 }
+
+/* */
+.Sidebar {
+  background-color: white;
+}

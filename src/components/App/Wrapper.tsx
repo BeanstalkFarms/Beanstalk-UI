@@ -64,9 +64,16 @@ export default function Main(props) {
       {/* Barn (bottom left corner) */}
       <Barn />
       {/* "mountain" in background */}
-      <Box className="BeanstalkMT" name={theme.name} style={{ top: 'calc(28vh - 2vw)' }} />
+      <Box
+        className="BeanstalkMT"
+        name={theme.name}
+        style={{ top: 'calc(28vh - 2vw)' }} 
+      />
       {/* Sky */}
-      <Box className="BeanstalkSky" name={theme.name} />
+      <Box
+        className="BeanstalkSky"
+        name={theme.name}
+      />
       {/* Effects */}
       {theme.name === 'winter' ? (
         <Snowfall
@@ -83,7 +90,7 @@ export default function Main(props) {
       <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
       <Box>
         {props.children}
-        <Footer />
+        {/* <Footer /> */}
       </Box>
     </Box>
   );

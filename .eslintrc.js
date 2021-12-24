@@ -32,7 +32,8 @@ module.exports = {
   //
   rules: {
     'max-classes-per-file': 0,
-    quotes: ['error', 'single'],
+    'quotes': ['warn', 'single'],
+    'no-multiple-empty-lines': 'warn',
     'jsx-quotes': ['error', 'prefer-double'],
     'react/jsx-filename-extension': [
       2,
@@ -50,6 +51,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': [
       'warn'
     ],
+    'no-trailing-spaces': 'warn',
     'react/jsx-props-no-spreading': 0,
     'jsx-a11y/label-has-associated-control': 0,
     'consistent-return': 0, // enable this one
