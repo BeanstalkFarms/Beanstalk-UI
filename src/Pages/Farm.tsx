@@ -11,6 +11,10 @@ export default function Farm(props) {
   const sections = [<Silo />, <Field />, <Trade />, <Balances />, <NFTLeaderboard />];
 
   return (
-    <Page sections={sections} sectionTitles={sectionTitles} sectionNumber={props.sectionNumber} />
+    <Page
+      sections={sections}
+      sectionTitles={sectionTitles}
+      sectionNumber={props.sectionNumber}
+    />
   );
 }

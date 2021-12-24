@@ -12,27 +12,26 @@ import {
 import { getAPYs } from 'util/index';
 import TabbedSilo from './TabbedSilo';
 
-export default function Silo() {
-  const { totalStalk, totalSeeds } = useSelector<
-    AppState,
-    AppState['totalBalance']
-  >((state) => state.totalBalance);
+const headerLabelStyle = {
+  maxWidth: '300px',
+  color: theme.text,
+  padding: '0px',
+};
 
+export default function Silo() {
+  // Fetch and calculate APYs
+  const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
   const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
-
-  const headerLabelStyle = {
-    maxWidth: '300px',
-    color: theme.text,
-    padding: '0px',
-  };
-
   const [beanAPY, lpAPY] = getAPYs(
     farmableMonth,
     parseFloat(totalStalk),
     parseFloat(totalSeeds)
   );
+
   const apyField = (
     <Grid container item xs={12} justifyContent="center" style={headerLabelStyle}>
       <HeaderLabelList

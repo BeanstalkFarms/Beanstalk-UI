@@ -17,39 +17,66 @@ import {
   Toolbar,
   Box,
   Drawer,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
 } from '@material-ui/core';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+
 import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
+import { getAPYs } from 'util/index';
 import { AppState } from 'state';
 import { priceQuery } from 'graph/index';
 // import { theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import WalletModule from './WalletModule';
 
-const defaultNavMapping = [
-  {
-    path: 'farm',
-    title: 'FARM',
-  },
-  {
-    path: 'analytics',
-    title: 'ANALYTICS',
-  },
-  {
-    path: 'governance',
-    title: 'DAO',
-  },
-  {
-    path: 'beanfts',
-    title: 'BeaNFTs',
-  },
-  {
-    path: 'about',
-    title: 'ABOUT',
-  },
-];
+const NAVIGATION_MAP = {
+  farm: [
+    {
+      path: 'farm/silo',
+      title: 'Silo',
+      desc: 'Earn interest and governance rights'
+    },
+    {
+      path: 'farm/field',
+      title: 'Field',
+      desc: 'Help stabilize Beanstalk',
+    },
+    {
+      path: 'farm/trade',
+      title: 'Trade',
+      desc: 'Buy and sell Beans'
+    },
+    {
+      path: 'governance',
+      title: 'DAO',
+      desc: 'Vote on the future of Beanstalk'
+    }
+  ],
+  more: [
+    {
+      path: 'analytics',
+      title: 'Analytics'
+    },
+    {
+      path: 'fundraiser',
+      title: 'Fundraiser'
+    },
+    {
+      path: 'beanfts',
+      title: 'BeaNFTs'
+    },
+    {
+      path: 'about',
+      title: 'About'
+    },
+  ]
+}
 
-const drawerWidth = 200;
+const drawerWidth = 300;
 
 //
 const useStyles = makeStyles((theme) => ({
@@ -63,22 +90,117 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    fontFamily: "Futura"
   },
   drawerPaper: {
     width: drawerWidth,
   },
-  // necessary for content to be below app bar
-  // toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    // backgroundColor: theme.palette.background.default,
-    // padding: theme.spacing(3),
   },
+  currentPriceStyle: {},
+  NavSubheader: {
+    fontFamily: "Futura",
+    lineHeight: '24px'
+  },
+  Badge: {
+    backgroundColor: '#41616C',
+    color: '#fff',
+    fontSize: 11.5,
+    padding: '2px 5px',
+    borderRadius: 4
+  },
+  NavLinkHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  NavLinkTitle: {
+    fontWeight: "bold",
+    fontSize: 17,
+  },
+  NavLink: {
+    color: 'inherit',
+    textDecoration: 'none'
+  }
 }));
 
 
 export default function NavigationSidebar() {
   const classes = useStyles();
+
+  // Fetch data: PRICE
+  const [price, setPrice] = useState(0);
+  const { beanPrice } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+  useEffect(() => {
+    async function getPrice() {
+      setPrice(await priceQuery());
+    }
+    getPrice();
+  }, []);
+
+  // Fetch data: APYs
+  const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+  const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
+    (state) => state.beansPerSeason
+  );
+  const [beanAPY, lpAPY] = getAPYs(
+    farmableMonth,
+    parseFloat(totalStalk),
+    parseFloat(totalSeeds)
+  );
+
+  const badgeDataByPath = {
+    'farm/silo': beanAPY ? `${beanAPY.toFixed(0)}%` : ``
+  }
+
+  //
+  let currentBeanPrice = null;
+  if (beanPrice !== undefined && beanPrice.isGreaterThan(0)) {
+    currentBeanPrice = (
+      <Box className={classes.currentPriceStyle}>
+        {`$${beanPrice.toFixed(4)}`}
+      </Box>
+    );
+  } else if (price > 0) {
+    currentBeanPrice = (
+      <Box className={classes.currentPriceStyle}>
+        {`$${price.toFixed(4)}`}
+      </Box>
+    );
+  }
+
+  //
+  const NavItem = ({ item }: { item: any }) => (
+    <NavLink
+      key={item.path}
+      to={`/${item.path}`}
+      spy="true"
+      smooth="true"
+      className={classes.NavLink}
+    >
+      <ListItem button style={{ display: "block" }}>
+        <Box className={classes.NavLinkHeader}>
+          <span className={classes.NavLinkTitle} style={{ marginRight: 8 }}>{item.title}</span>
+          {(item.path in badgeDataByPath) && (
+            <span className={classes.Badge}>
+              {badgeDataByPath[item.path]}
+            </span>
+          )}
+        </Box>
+        {item.desc && (
+          <Box flex>
+            <span>{item.desc}</span>
+          </Box>
+        )}
+      </ListItem>
+    </NavLink>
+  )
+
   return (
     <Drawer
       className={classes.drawer}
@@ -88,28 +210,35 @@ export default function NavigationSidebar() {
       }}
       anchor="left"
     >
-      <Toolbar />
-      Sidebar
-      {/* <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+      <Box className="App-logo" p={2}>
+        <img
+          className="svg"
+          height="36px"
+          src={BeanLogo}
+          alt="bean.money"
+        />
+        <span style={{ fontSize: 14 }}>
+          {currentBeanPrice}
+        </span>
+      </Box>
+      {/**
+        * Farm section */}
+      <List subheader={
+        <ListSubheader component="div" className={classes.NavSubheader} id="nested-list-subheader">
+          FARM
+        </ListSubheader>
+      }>
+        {NAVIGATION_MAP.farm.map((item: any, index: number) => <NavItem item={item} />)}
       </List>
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List> */}
+      {/**
+        * More section */}
+      <List subheader={
+        <ListSubheader component="div" className={classes.NavSubheader} id="nested-list-subheader">
+          MORE
+        </ListSubheader>
+      }>
+        {NAVIGATION_MAP.more.map((item: any, index: number) => <NavItem item={item} />)}
+      </List>
     </Drawer>
   );
 }
