@@ -9,7 +9,8 @@ module.exports = {
     page: 'readonly',
     JSX: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb'],
+  // https://typescript-eslint.io/docs/linting/
+  root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -18,7 +19,17 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest'],
+  plugins: [
+    'react', 
+    'react-hooks', 
+    '@typescript-eslint', 
+    'jest'
+  ],
+  extends: [
+    'plugin:react/recommended', 
+    'airbnb'
+  ],
+  //
   rules: {
     'max-classes-per-file': 0,
     quotes: ['error', 'single'],
@@ -36,7 +47,9 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'error',
     'import/prefer-default-export': 0,
     'no-unused-vars': 0,
-    '@typescript-eslint/no-unused-vars': ['error'],
+    '@typescript-eslint/no-unused-vars': [
+      'warn'
+    ],
     'react/jsx-props-no-spreading': 0,
     'jsx-a11y/label-has-associated-control': 0,
     'consistent-return': 0, // enable this one
