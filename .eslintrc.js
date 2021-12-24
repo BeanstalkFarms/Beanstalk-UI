@@ -48,6 +48,7 @@ module.exports = {
     'jsx-quotes': ['error', 'prefer-double'],
     'react/jsx-curly-brace-presence': 'warn',
     'eol-last': 'warn',
+    'key-spacing': 'warn',
     // Space efficiency
     'no-trailing-spaces': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn'],

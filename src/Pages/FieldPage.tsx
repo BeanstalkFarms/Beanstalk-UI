@@ -1,10 +1,10 @@
 import React from 'react';
 import { Page } from 'Pages/index';
-import Silo from 'components/Silo';
+import Field from 'components/Field';
 
 export default function Farm(props) {
-  const sectionTitles = ['Silo'];
-  const sections = [<Silo />];
+  const sectionTitles = ['Field'];
+  const sections = [<Field />];
 
   return (
     <Page

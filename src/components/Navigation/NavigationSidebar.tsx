@@ -36,12 +36,12 @@ import WalletModule from './WalletModule';
 const NAVIGATION_MAP = {
   farm: [
     {
-      path: 'silo',
+      path: 'farm/silo',
       title: 'Silo',
       desc: 'Earn interest and governance rights'
     },
     {
-      path: 'field',
+      path: 'farm/field',
       title: 'Field',
       desc: 'Help stabilize Beanstalk',
     },
@@ -171,8 +171,8 @@ export default function NavigationSidebar() {
   );
   
   const badgeDataByPath : { [key: string] : string | null } = {
-    'silo':  initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
-    'field': initialized && fieldAPY ? `${fieldAPY.toFixed(0)}%` : null,
+    'farm/silo': initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
+    'farm/field': initialized && fieldAPY ? `${fieldAPY.toFixed(0)}%` : null,
   }
 
   //

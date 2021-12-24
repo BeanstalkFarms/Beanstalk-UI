@@ -8,23 +8,27 @@ import Updater from 'state/userBalance/updater';
 import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
-// import { NavigationBar } from 'components/Navigation';
 import NavigationSidebar from 'components/Navigation/NavigationSidebar';
 import {
+  //
+  MetamasklessPage,
+  //
   FarmPage,
-  AnalyticsPage,
+  SiloPage,
+  FieldPage,
+  TradePage,
   DAOPage,
+  //
+  AnalyticsPage,
+  FundraiserPage,
   BeaNFTPage,
   AboutPage,
-  FundraiserPage,
-  MetamasklessPage,
 } from 'Pages';
 
 import Wrapper from './Wrapper';
 import theme from './theme';
 import LoadingBean from './LoadingBean';
 import './App.css';
-import Silo from 'Pages/SiloPage';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -61,21 +65,25 @@ export default function App() {
       <div>
         {/* <NavigationBar /> */}
         <Switch>
+          {/* Redirects */}
           <Route exact path="/">
-            <Redirect to="/silo" />
+            <Redirect to="/farm/silo" />
           </Route>
           <Route exact path="/farm">
             <Redirect to="/silo" />
           </Route>
-          <Route exact path="/silo">
-            <Silo />
+          {/* Farm */}
+          <Route exact path="/farm/silo">
+            <SiloPage />
             {/* <Farm sectionNumber={0} /> */}
           </Route>
           <Route exact path="/farm/field">
-            <FarmPage sectionNumber={1} />
+            <FieldPage />
+            {/* <FarmPage sectionNumber={1} /> */}
           </Route>
           <Route exact path="/farm/trade">
-            <FarmPage sectionNumber={2} />
+            <TradePage />
+            {/* <FarmPage sectionNumber={2} /> */}
           </Route>
           <Route exact path="/farm/balances">
             <FarmPage sectionNumber={3} />
@@ -83,6 +91,7 @@ export default function App() {
           <Route exact path="/farm/beanfts">
             <FarmPage sectionNumber={4} />
           </Route>
+          {/* More */}
           <Route exact path="/analytics">
             <Redirect to="/analytics/charts" />
           </Route>
@@ -113,6 +122,7 @@ export default function App() {
           <Route exact path="/about">
             <AboutPage key="about" />
           </Route>
+          {/* If nothing matches, go to the Silo */}
           <Redirect to="/farm/silo" />
         </Switch>
       </div>
