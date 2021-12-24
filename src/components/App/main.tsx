@@ -50,23 +50,6 @@ function Barn() {
 export default function Main(props) {
   document.body.style.backgroundColor = theme.bodyBackground;
 
-  const { width } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
-
-  const navCloudStyle = {
-    backgroundColor: 'transparent',
-    backgroundImage: `url(${theme.cloud}), url(${theme.cloud})`,
-    backgroundPosition: '0px 0px, 1px 0px',
-    backgroundRepeat: 'repeat-x, repeat-x',
-    boxShadow: 'none',
-    zIndex: 2,
-    backgroundSize: width > 900 ? 'contain, contain' : 'cover',
-    height: '90px',
-    width: '100%',
-    position: 'fixed',
-    marginBottom: '-85px',
-  };
   const sunStyle = {
     height: theme.sunHeight,
     left: theme.sunLeftPosition,
@@ -99,7 +82,6 @@ export default function Main(props) {
       {/* Sun (top left corner) */}
       <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
       <Box>
-        <Box style={navCloudStyle} />
         {props.children}
         <Footer />
       </Box>
