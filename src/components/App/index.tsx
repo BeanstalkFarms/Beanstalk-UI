@@ -19,9 +19,9 @@ import {
   MetamasklessPage,
 } from 'Pages';
 
-import Main from './main.tsx';
+import Main from './Main';
 import theme from './theme';
-import LoadingBean from './LoadingBean.tsx';
+import LoadingBean from './LoadingBean';
 import './App.css';
 
 export default function App() {
@@ -122,7 +122,9 @@ export default function App() {
       <CssBaseline />
       <Updater />
       <NFTUpdater />
-      <Main>{app}</Main>
+      <Main>
+        {app}
+      </Main>
     </ThemeProvider>
   );
 }

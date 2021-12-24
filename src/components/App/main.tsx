@@ -1,24 +1,24 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import Snowfall from 'react-snowfall';
+import { AppState } from 'state';
 import Footer from 'components/About/Footer';
 import { FallingLeaves } from 'components/Fall';
 import { theme } from 'constants/index';
 import './index.tsx';
 import 'components/Themes/winterApp.css';
 
-function BarnBeanstalk() {
+function Barn() {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
-  const increment = (c) => (c) % 5 + 1;
-
-  const timer = useRef();
+  // This rotates between 0 and 5 every 1.75s
+  // to create a "flashing lights" effect on the barn.
+  const increment = (c: number) => c % 5 + 1;
+  const timer = useRef<number | undefined>();
   const [count, setCount] = useState(increment(1));
-
   useEffect(() => {
     if (width > 500 && theme.name === 'winter') {
       timer.current = window.setInterval(() => {
@@ -31,6 +31,7 @@ function BarnBeanstalk() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
 
+  // Show the winter-themed barn with flashing lights.
   if (theme.name === 'winter') {
     return (
       <>
@@ -39,7 +40,11 @@ function BarnBeanstalk() {
       </>
     );
   }
-  return <Box className="BeanstalkBG" name={theme.name} />;
+
+  // Show the typical Beanstalk background.
+  return (
+    <Box className="BeanstalkBG" name={theme.name} />
+  );
 }
 
 export default function Main(props) {
@@ -72,28 +77,32 @@ export default function Main(props) {
   };
 
   return (
-    <>
-      <Box className="App">
-        <BarnBeanstalk />
-        <Box className="BeanstalkMT" name={theme.name} style={{ top: 'calc(28vh - 2vw)' }} />
-        <Box className="BeanstalkSky" name={theme.name} />
-        {theme.name === 'winter'
-          ? <Snowfall
-              snowflakeCount={200}
-              speed={[0, 0.5]}
-              wind={[-0.5, 0.5]}
-              style={{ position: 'fixed' }}
-            />
-          : null
-        }
-        <Box>
-          {theme.name === 'fall' ? <FallingLeaves /> : null}
-          <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
-          <Box style={navCloudStyle} />
-          {props.children}
-          <Footer />
-        </Box>
+    <Box className="App">
+      {/* Barn (bottom left corner) */}
+      <Barn />
+      {/* "mountain" in background */}
+      <Box className="BeanstalkMT" name={theme.name} style={{ top: 'calc(28vh - 2vw)' }} />
+      {/* Sky */}
+      <Box className="BeanstalkSky" name={theme.name} />
+      {/* Effects */}
+      {theme.name === 'winter' ? (
+        <Snowfall
+          snowflakeCount={200}
+          speed={[0, 0.5]}
+          wind={[-0.5, 0.5]}
+          style={{ position: 'fixed' }}
+        />
+      ) : null}
+      {theme.name === 'fall' ? (
+        <FallingLeaves />
+      ) : null}
+      {/* Sun (top left corner) */}
+      <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
+      <Box>
+        <Box style={navCloudStyle} />
+        {props.children}
+        <Footer />
       </Box>
-    </>
+    </Box>
   );
 }

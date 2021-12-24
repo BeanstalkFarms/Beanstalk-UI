@@ -48,6 +48,13 @@ const defaultNavMapping = [
   },
 ];
 
+//
+// type NavigationBarProps = {
+//   showWallet?: boolean;
+// }
+
+// FIXME:
+// - Why are there two separate calls for `price` and `beanPrice`?
 export default function NavigationBar(props) {
   const [price, setPrice] = useState(0);
   const { beanPrice } = useSelector<AppState, AppState['prices']>(
@@ -106,7 +113,6 @@ export default function NavigationBar(props) {
     async function getPrice() {
       setPrice(await priceQuery());
     }
-
     getPrice();
   }, []);
 
@@ -237,7 +243,7 @@ export default function NavigationBar(props) {
   );
 
   let currentBeanPrice = null;
-  if (beanPrice !== undefined && beanPrice > 0) {
+  if (beanPrice !== undefined && beanPrice.isGreaterThan(0)) {
     currentBeanPrice = (
       <Box className={classes.currentPriceStyle}>
         {`$${beanPrice.toFixed(4)}`}
@@ -245,7 +251,9 @@ export default function NavigationBar(props) {
     );
   } else if (price > 0) {
     currentBeanPrice = (
-      <Box className={classes.currentPriceStyle}>{`$${price.toFixed(4)}`}</Box>
+      <Box className={classes.currentPriceStyle}>
+        {`$${price.toFixed(4)}`}
+      </Box>
     );
   }
 
@@ -280,6 +288,7 @@ export default function NavigationBar(props) {
     </AppBar>
   );
 }
+
 NavigationBar.defaultProps = {
   links: [],
   showWallet: true,
