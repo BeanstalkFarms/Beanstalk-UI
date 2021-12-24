@@ -154,18 +154,25 @@ export default function NavigationSidebar() {
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
+  const initialized = useSelector<AppState, AppState['general']['initialized']>(
+    (state) => state.general.initialized
+  );
   
-  //
+  // Calculate APYs.
+  // FIXME: these calcs should be done during fetching and not within
+  // each respective component. Certain calculations (like fieldAPY)
+  // should require that all necessary dependencies be loaded before running calculation.
   const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
-  const fieldAPY = weather.weather.multipliedBy(8760).dividedBy(tth);
+  const fieldAPY = beansPerSeason.harvestableMonth > 0 ? weather.weather.multipliedBy(8760).dividedBy(tth) : null;
   const [beanAPY, lpAPY] = getAPYs(
     beansPerSeason.farmableMonth,
     parseFloat(totalStalk),
     parseFloat(totalSeeds)
   );
+  
   const badgeDataByPath : { [key: string] : string | null } = {
-    'silo': beanAPY && beanAPY > 0 ? `${beanAPY.toFixed(0)}%` : null,
-    'field': fieldAPY && fieldAPY > 0 ? `${fieldAPY.toFixed(0)}%` : null,
+    'silo':  initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
+    'field': initialized && fieldAPY ? `${fieldAPY.toFixed(0)}%` : null,
   }
 
   //
