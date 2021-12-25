@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { displayBN, displayFullBN } from 'util/index';

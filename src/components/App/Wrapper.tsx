@@ -3,7 +3,6 @@ import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import Snowfall from 'react-snowfall';
 import { AppState } from 'state';
-import Footer from 'components/About/Footer';
 import { FallingLeaves } from 'components/Fall';
 import { theme } from 'constants/index';
 import './index.tsx';
@@ -47,7 +46,7 @@ function Barn() {
   );
 }
 
-export default function Main(props) {
+export default function Main() {
   document.body.style.backgroundColor = theme.bodyBackground;
 
   const sunStyle = {
@@ -67,7 +66,7 @@ export default function Main(props) {
       <Box
         className="BeanstalkMT"
         name={theme.name}
-        style={{ top: 'calc(28vh - 2vw)' }} 
+        style={{ top: 'calc(28vh - 2vw)' }}
       />
       {/* Sky */}
       <Box

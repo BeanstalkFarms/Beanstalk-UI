@@ -3,7 +3,7 @@ import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import PlantsIcon from 'img/main/Planted.svg';
 import FenceIcon from 'img/main/Fence.svg';
-import ground from 'img/main/land.png';
+import ground from 'img/main/land.svg';
 import { theme } from 'constants/index';
 
 export default function mainUpgrade(props) {

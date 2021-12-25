@@ -2,37 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  AppBar,
-  Button,
-  ClickAwayListener,
-  Container,
-  Grow,
-  IconButton,
   List,
   ListItem,
-  MenuList,
-  MenuItem,
-  Paper,
-  Popper,
-  Toolbar,
   Box,
   Drawer,
-  ListItemIcon,
-  ListItemText,
   ListSubheader,
-  SwipeableDrawer,
 } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-
 import { makeStyles } from '@material-ui/styles';
-import MenuIcon from '@material-ui/icons/Menu';
+
 import { getAPYs } from 'util/index';
 import { AppState } from 'state';
 import { priceQuery } from 'graph/index';
 import { theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
-import WalletModule from './WalletModule';
 import { setDrawerOpen } from 'state/general/actions';
 
 const NAVIGATION_MAP = {
@@ -40,7 +22,7 @@ const NAVIGATION_MAP = {
     {
       path: 'farm/silo',
       title: 'Silo',
-      desc: 'Earn interest and governance rights'
+      desc: 'Earn interest and governance rights',
     },
     {
       path: 'farm/field',
@@ -50,33 +32,33 @@ const NAVIGATION_MAP = {
     {
       path: 'farm/trade',
       title: 'Trade',
-      desc: 'Buy and sell Beans'
+      desc: 'Buy and sell Beans',
     },
     {
       path: 'governance',
       title: 'DAO',
-      desc: 'Vote on the future of Beanstalk'
-    }
+      desc: 'Vote on the future of Beanstalk',
+    },
   ],
   more: [
     {
       path: 'analytics',
-      title: 'Analytics'
+      title: 'Analytics',
     },
     {
       path: 'fundraiser',
-      title: 'Fundraiser'
+      title: 'Fundraiser',
     },
     {
       path: 'beanfts',
-      title: 'BeaNFTs'
+      title: 'BeaNFTs',
     },
     {
       path: 'about',
-      title: 'About'
+      title: 'About',
     },
-  ]
-}
+  ],
+};
 
 //
 const drawerWidth = 280;
@@ -92,7 +74,7 @@ const useStyles = makeStyles({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    fontFamily: "Futura"
+    fontFamily: 'Futura',
   },
   drawerPaper: {
     width: drawerWidth,
@@ -103,29 +85,29 @@ const useStyles = makeStyles({
   currentPriceStyle: {},
   //
   NavSubheader: {
-    fontFamily: "Futura",
-    lineHeight: '24px'
+    fontFamily: 'Futura',
+    lineHeight: '24px',
   },
   Badge: {
     backgroundColor: '#41616C',
     color: '#fff',
     fontSize: 11.5,
     padding: '2px 5px',
-    borderRadius: 4
+    borderRadius: 4,
   },
   NavLinkHeader: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   NavLinkTitle: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 17,
   },
   NavLink: {
     color: 'inherit',
-    textDecoration: 'none'
-  }
+    textDecoration: 'none',
+  },
 });
 
 export default function NavigationSidebar() {
@@ -160,25 +142,25 @@ export default function NavigationSidebar() {
   const { initialized, drawerOpen, width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-  
+
   // Calculate APYs.
   // FIXME: these calcs should be done during fetching and not within
   // each respective component. Certain calculations (like fieldAPY)
   // should require that all necessary dependencies be loaded before running calculation.
   const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
   const fieldAPY = beansPerSeason.harvestableMonth > 0 ? weather.weather.multipliedBy(8760).dividedBy(tth) : null;
-  const [beanAPY, lpAPY] = getAPYs(
+  const [beanAPY] = getAPYs(
     beansPerSeason.farmableMonth,
     parseFloat(totalStalk),
     parseFloat(totalSeeds)
   );
-  
+
   const badgeDataByPath : { [key: string] : string | null } = {
     'farm/silo': initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
     'farm/field': initialized && fieldAPY ? `${fieldAPY.toFixed(0)}%` : null,
-    'fundraiser': 'Omniscia',
-    'beanfts': 'Winter'
-  }
+    fundraiser: 'Omniscia',
+    beanfts: 'Winter',
+  };
 
   //
   let currentBeanPrice = null;
@@ -199,13 +181,12 @@ export default function NavigationSidebar() {
   //
   const NavItem = ({ item }: { item: any }) => (
     <NavLink
-      key={item.path}
       to={`/${item.path}`}
       spy="true"
       smooth="true"
       className={classes.NavLink}
     >
-      <ListItem button style={{ display: "block" }}>
+      <ListItem button style={{ display: 'block' }}>
         <Box className={classes.NavLinkHeader}>
           <span className={classes.NavLinkTitle} style={{ marginRight: 8 }}>{item.title}</span>
           {!!badgeDataByPath[item.path] && (
@@ -221,7 +202,7 @@ export default function NavigationSidebar() {
         )}
       </ListItem>
     </NavLink>
-  )
+  );
 
   const drawerContent = (
     <>
@@ -244,7 +225,7 @@ export default function NavigationSidebar() {
           FARM
         </ListSubheader>
       }>
-        {NAVIGATION_MAP.farm.map((item: any, index: number) => <NavItem item={item} />)}
+        {NAVIGATION_MAP.farm.map((item: any) => <NavItem item={item} key={item.path} />)}
       </List>
       {/**
         * More section */}
@@ -253,10 +234,10 @@ export default function NavigationSidebar() {
           MORE
         </ListSubheader>
       }>
-        {NAVIGATION_MAP.more.map((item: any, index: number) => <NavItem item={item} />)}
+        {NAVIGATION_MAP.more.map((item: any) => <NavItem item={item} key={item.path} />)}
       </List>
     </>
-  )
+  );
 
   return (
     <>
@@ -270,6 +251,6 @@ export default function NavigationSidebar() {
       >
         {drawerContent}
       </Drawer>
-    </>   
+    </>
   );
 }

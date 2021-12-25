@@ -12,7 +12,7 @@ export default function TitleLabel(props) {
       margin: props.margin || '0',
       padding: props.padding || '5px',
       textTransform: props.textTransform,
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     },
   }))();
 

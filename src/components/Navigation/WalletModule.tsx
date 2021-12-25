@@ -97,41 +97,37 @@ const useStyles = makeStyles({
     //   backgroundColor: '#61dafb38',
     // },
   },
-})
+});
 
 // FIXME: these should be refactored into real components
 // and have typescript types applied
-const inOutDisplay = (inBN, inToken, outBN, outToken) => {
-  return (
-    <>
-      <span style={{
+const inOutDisplay = (inBN, inToken, outBN, outToken) => (
+  <>
+    <span style={{
         color: 'green',
         display: 'block',
         marginTop: '-7px',
         width: '100%',
       }}>
-        {`+${displayBN(outBN)}`}{' '}
-        <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
-      </span>
-      <span style={{
+      {`+${displayBN(outBN)}`}{' '}
+      <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
+    </span>
+    <span style={{
         color: 'red',
         display: 'block',
         width: '100%',
       }}>
-        {`-${displayBN(inBN)}`}{' '}
-        <TokenTypeImageModule style={tokenImageStyle} token={inToken} />
-      </span>
-    </>
-  )
-};
-const outDisplay = (outBN, outToken) => {
-  return (
-    <>
-      <span style={{ color: 'green' }}>{`+${displayBN(outBN)}`}</span>
-      <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
-    </>
+      {`-${displayBN(inBN)}`}{' '}
+      <TokenTypeImageModule style={tokenImageStyle} token={inToken} />
+    </span>
+  </>
   );
-}
+const outDisplay = (outBN, outToken) => (
+  <>
+    <span style={{ color: 'green' }}>{`+${displayBN(outBN)}`}</span>
+    <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
+  </>
+  );
 
 /**
  *

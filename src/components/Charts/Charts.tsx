@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { BaseModule } from 'components/Common';
-import { Chart } from './Chart';
 import { AppState } from 'state';
+import { Chart } from './Chart';
 
 export default function Charts(props) {
   const [section, setSection] = useState(0);

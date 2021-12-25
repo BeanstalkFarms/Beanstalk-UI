@@ -4,10 +4,10 @@ import { useSelector } from 'react-redux';
 
 import { BaseModule, chartStrings, ContentSection } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
+import { AppState } from 'state';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
 import FieldCharts from './FieldCharts';
-import { AppState } from 'state';
 
 export default function Charts(props) {
   //
@@ -16,7 +16,7 @@ export default function Charts(props) {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
- 
+
   //
   useEffect(() => {
     async function loadBeanstalkData() {
@@ -47,7 +47,7 @@ export default function Charts(props) {
 
   //
   return (
-    <Grid style={{ margin: 'auto',  }} container item xs={12} justifyContent="center">
+    <Grid style={{ margin: 'auto' }} container item xs={12} justifyContent="center">
       <ContentSection
         id="charts"
         title={props.title}

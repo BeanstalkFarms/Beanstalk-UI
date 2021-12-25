@@ -9,6 +9,7 @@ import Updater from 'state/userBalance/updater';
 import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
+import Footer from 'components/About/Footer';
 import { NavigationBar, NavigationSidebar } from 'components/Navigation';
 
 import {
@@ -31,7 +32,6 @@ import Wrapper from './Wrapper';
 import theme from './theme';
 import LoadingBean from './LoadingBean';
 import './App.css';
-import Footer from 'components/About/Footer';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
