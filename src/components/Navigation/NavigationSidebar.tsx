@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,11 +8,11 @@ import {
   Drawer,
   ListSubheader,
 } from '@material-ui/core';
+import BigNumber from 'bignumber.js';
 import { makeStyles } from '@material-ui/styles';
 
 import { getAPYs } from 'util/index';
 import { AppState } from 'state';
-import { priceQuery } from 'graph/index';
 import { theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
@@ -108,25 +108,50 @@ const useStyles = makeStyles({
     color: 'inherit',
     textDecoration: 'none',
   },
+  //
+  metrics: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'end'
+  },
+  metric: {
+    fontSize: 13,
+    marginTop: 3
+  },
+  metricLabel: {
+    fontWeight: 'bold',
+    letterSpacing: '0.5px',
+    color: '#555'
+  },
+  metricValue: {
+    // color: '#777'
+  }
 });
+
+const Metric = ({ label, value }) => {
+  const classes = useStyles();
+  return (
+    <Box className={classes.metric}>
+      <span className={classes.metricLabel}>{label}</span> <span className={classes.metricValue}>{value}</span>
+    </Box>
+  )
+}
 
 export default function NavigationSidebar() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
   // Fetch data: PRICE
-  const [price, setPrice] = useState(0);
-  const { beanPrice } = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
-  useEffect(() => {
-    async function getPrice() {
-      setPrice(await priceQuery());
-    }
-    getPrice();
-  }, []);
+  // const [price, setPrice] = useState(0);
+  // useEffect(() => {
+  //   async function getPrice() {
+  //     setPrice(await priceQuery());
+  //   }
+  //   getPrice();
+  // }, []);
 
-  // Fetch data: APYs
+  // Grab state
   const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
@@ -136,7 +161,10 @@ export default function NavigationSidebar() {
   const weather = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
-  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+  const { beanPrice, ethPrices } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+  const { totalPods, totalBeans } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
   const { initialized, drawerOpen, width } = useSelector<AppState, AppState['general']>(
@@ -147,13 +175,17 @@ export default function NavigationSidebar() {
   // FIXME: these calcs should be done during fetching and not within
   // each respective component. Certain calculations (like fieldAPY)
   // should require that all necessary dependencies be loaded before running calculation.
-  const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
+  const tth = totalPods.dividedBy(beansPerSeason.harvestableMonth);
   const fieldAPY = beansPerSeason.harvestableMonth > 0 ? weather.weather.multipliedBy(8760).dividedBy(tth) : null;
   const [beanAPY] = getAPYs(
     beansPerSeason.farmableMonth,
     parseFloat(totalStalk),
     parseFloat(totalSeeds)
   );
+
+  const marketCap = totalBeans.isGreaterThan(0)
+    ? totalBeans.multipliedBy(beanPrice)
+    : new BigNumber(0);
 
   const badgeDataByPath : { [key: string] : string | null } = {
     'farm/silo': initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
@@ -170,13 +202,13 @@ export default function NavigationSidebar() {
         {`$${beanPrice.toFixed(4)}`}
       </Box>
     );
-  } else if (price > 0) {
+  } /*else if (price > 0) {
     currentBeanPrice = (
       <Box className={classes.currentPriceStyle}>
         {`$${price.toFixed(4)}`}
       </Box>
     );
-  }
+  }*/
 
   //
   const NavItem = ({ item }: { item: any }) => (
@@ -236,6 +268,11 @@ export default function NavigationSidebar() {
       }>
         {NAVIGATION_MAP.more.map((item: any) => <NavItem item={item} key={item.path} />)}
       </List>
+      <Box p={2} className={classes.metrics}>
+        <Metric label={"Mkt. Cap"} value={`$${marketCap.dividedBy(10**6).toFixed(1)}M`} />
+        <Metric label={"ETH"} value={`$${ethPrices.ethPrice}`} />
+        <Metric label={"Gas"} value={`${ethPrices.propose} gwei`} />
+      </Box>
     </>
   );
 

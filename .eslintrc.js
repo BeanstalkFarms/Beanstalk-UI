@@ -52,6 +52,7 @@ module.exports = {
     'no-multi-spaces': 'warn',
     'react/jsx-boolean-value': 'warn',
     'react/jsx-props-no-multi-spaces': 'warn',
+    'spaced-comment': 'warn',
     // Space efficiency
     'arrow-body-style': 'warn',
     'no-trailing-spaces': 'warn',
