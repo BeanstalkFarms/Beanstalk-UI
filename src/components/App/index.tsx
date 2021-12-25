@@ -31,6 +31,7 @@ import Wrapper from './Wrapper';
 import theme from './theme';
 import LoadingBean from './LoadingBean';
 import './App.css';
+import Footer from 'components/About/Footer';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -145,6 +146,7 @@ export default function App() {
           <Box component="main" sx={{ flex: 1 }}>
             <NavigationBar />
             {app}
+            <Footer />
           </Box>
         </Box>
       </Box>
