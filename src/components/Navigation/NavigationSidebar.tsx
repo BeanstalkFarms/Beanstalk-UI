@@ -113,20 +113,20 @@ const useStyles = makeStyles({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'end'
+    justifyContent: 'end',
   },
   metric: {
     fontSize: 13,
-    marginTop: 3
+    marginTop: 3,
   },
   metricLabel: {
     fontWeight: 'bold',
     letterSpacing: '0.5px',
-    color: '#555'
+    color: '#555',
   },
   metricValue: {
     // color: '#777'
-  }
+  },
 });
 
 const Metric = ({ label, value }) => {
@@ -135,8 +135,8 @@ const Metric = ({ label, value }) => {
     <Box className={classes.metric}>
       <span className={classes.metricLabel}>{label}</span> <span className={classes.metricValue}>{value}</span>
     </Box>
-  )
-}
+  );
+};
 
 export default function NavigationSidebar() {
   const dispatch = useDispatch();
@@ -202,13 +202,13 @@ export default function NavigationSidebar() {
         {`$${beanPrice.toFixed(4)}`}
       </Box>
     );
-  } /*else if (price > 0) {
+  } /* else if (price > 0) {
     currentBeanPrice = (
       <Box className={classes.currentPriceStyle}>
         {`$${price.toFixed(4)}`}
       </Box>
     );
-  }*/
+  } */
 
   //
   const NavItem = ({ item }: { item: any }) => (
@@ -269,9 +269,9 @@ export default function NavigationSidebar() {
         {NAVIGATION_MAP.more.map((item: any) => <NavItem item={item} key={item.path} />)}
       </List>
       <Box p={2} className={classes.metrics}>
-        <Metric label={"Mkt. Cap"} value={`$${marketCap.dividedBy(10**6).toFixed(1)}M`} />
-        <Metric label={"ETH"} value={`$${ethPrices.ethPrice}`} />
-        <Metric label={"Gas"} value={`${ethPrices.propose} gwei`} />
+        <Metric label="Mkt. Cap" value={`$${marketCap.dividedBy(10 ** 6).toFixed(1)}M`} />
+        <Metric label="ETH" value={`$${ethPrices.ethPrice}`} />
+        <Metric label="Gas" value={`${ethPrices.propose} gwei`} />
       </Box>
     </>
   );

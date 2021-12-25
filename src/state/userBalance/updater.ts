@@ -204,7 +204,7 @@ export default function Updater() {
       return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
     }
 
-    // 
+    //
     function processPrices(_prices) {
       const [
         referenceTokenReserves,
@@ -213,7 +213,7 @@ export default function Updater() {
         twapPrices,
         beansToPeg,
         lpToPeg,
-        ethPrices
+        ethPrices,
       ] = _prices;
 
       //
@@ -236,6 +236,8 @@ export default function Updater() {
           usdcPrice,
           ethReserve,
           beanReserve,
+          beansToPeg,
+          lpToPeg,
           beanTWAPPrice: twapPrices[0],
           usdcTWAPPrice: twapPrices[1],
           ethPrices,
@@ -553,7 +555,7 @@ export default function Updater() {
           const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
           const lpReserves = processPrices([
             ..._prices,
-            ethPrices
+            ethPrices,
           ]);
           processAccountBalances(
             accountBalances,
