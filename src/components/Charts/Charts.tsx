@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
 import { BaseModule } from 'components/Common';
 import { Chart } from './Chart';
+import { AppState } from 'state';
 
 export default function Charts(props) {
   const [section, setSection] = useState(0);
 
   const [dataMode, setDataMode] = useState('hr');
   const [timeMode, setTimeMode] = useState('week');
-
-  const [width, setWidth] = useState<number>(window.innerWidth);
-
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
-  }, []);
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   if (props.charts.length === 0) {
     return null;
