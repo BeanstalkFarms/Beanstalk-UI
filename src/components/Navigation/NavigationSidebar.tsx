@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AppBar,
   Button,
@@ -20,6 +20,7 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
+  SwipeableDrawer,
 } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
@@ -29,9 +30,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { getAPYs } from 'util/index';
 import { AppState } from 'state';
 import { priceQuery } from 'graph/index';
-// import { theme } from 'constants/index';
+import { theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import WalletModule from './WalletModule';
+import { setDrawerOpen } from 'state/general/actions';
 
 const NAVIGATION_MAP = {
   farm: [
@@ -76,10 +78,9 @@ const NAVIGATION_MAP = {
   ]
 }
 
-const drawerWidth = 300;
-
 //
-const useStyles = makeStyles((theme) => ({
+const drawerWidth = 280;
+const useStyles = makeStyles({
   root: {
     display: 'flex',
   },
@@ -87,6 +88,7 @@ const useStyles = makeStyles((theme) => ({
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
   },
+  //
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -99,6 +101,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   currentPriceStyle: {},
+  //
   NavSubheader: {
     fontFamily: "Futura",
     lineHeight: '24px'
@@ -123,10 +126,10 @@ const useStyles = makeStyles((theme) => ({
     color: 'inherit',
     textDecoration: 'none'
   }
-}));
-
+});
 
 export default function NavigationSidebar() {
+  const dispatch = useDispatch();
   const classes = useStyles();
 
   // Fetch data: PRICE
@@ -154,8 +157,8 @@ export default function NavigationSidebar() {
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const initialized = useSelector<AppState, AppState['general']['initialized']>(
-    (state) => state.general.initialized
+  const { initialized, drawerOpen, width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
   );
   
   // Calculate APYs.
@@ -220,18 +223,12 @@ export default function NavigationSidebar() {
     </NavLink>
   )
 
-  return (
-    <Drawer
-      className={classes.drawer}
-      variant="permanent"
-      classes={{
-        paper: classes.drawerPaper,
-      }}
-      anchor="left"
-    >
+  const drawerContent = (
+    <>
       <Box className="App-logo" p={2}>
         <img
           className="svg"
+          name={theme.name}
           height="36px"
           src={BeanLogo}
           alt="bean.money"
@@ -258,6 +255,21 @@ export default function NavigationSidebar() {
       }>
         {NAVIGATION_MAP.more.map((item: any, index: number) => <NavItem item={item} />)}
       </List>
-    </Drawer>
+    </>
+  )
+
+  return (
+    <>
+      <Drawer
+        className={classes.drawer}
+        variant={width < 800 ? 'temporary' : 'permanent'}
+        classes={{ paper: classes.drawerPaper }}
+        anchor="left"
+        open={width < 800 && drawerOpen}
+        onClose={width < 800 ? () => dispatch(setDrawerOpen(!drawerOpen)) : undefined}
+      >
+        {drawerContent}
+      </Drawer>
+    </>   
   );
 }

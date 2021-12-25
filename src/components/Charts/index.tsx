@@ -29,8 +29,8 @@ export default function Charts(props) {
   //
   const isMobile: boolean = width <= 758;
   const baseStyle = isMobile
-    ? { width: '95%', paddingLeft: 0, paddingRight: 0 }
-    : { width: '95%' };
+    ? { paddingLeft: 0, paddingRight: 0 }
+    : { minWidth: 800 };
 
   //
   const titles = ['Bean', 'Field', 'Silo'];
@@ -47,7 +47,7 @@ export default function Charts(props) {
 
   //
   return (
-    <Grid style={{ margin: 'auto' }} container item xs={12} justifyContent="center">
+    <Grid style={{ margin: 'auto',  }} container item xs={12} justifyContent="center">
       <ContentSection
         id="charts"
         title={props.title}

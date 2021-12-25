@@ -49,7 +49,11 @@ module.exports = {
     'react/jsx-curly-brace-presence': 'warn',
     'eol-last': 'warn',
     'key-spacing': 'warn',
+    'no-multi-spaces': 'warn',
+    'react/jsx-boolean-value': 'warn',
+    'react/jsx-props-no-multi-spaces': 'warn',
     // Space efficiency
+    'arrow-body-style': 'warn',
     'no-trailing-spaces': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn'],
     // Other (to categorize)

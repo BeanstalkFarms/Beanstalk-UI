@@ -35,3 +35,7 @@ export const setHasActiveFundraiser = createAction<Boolean>(
 export const setWidth = createAction<Number>(
   'general/setWidth'
 );
+
+export const setDrawerOpen = createAction<boolean>(
+  'general/setDrawerOpen'
+);

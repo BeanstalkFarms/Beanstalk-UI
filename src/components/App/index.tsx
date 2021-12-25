@@ -4,11 +4,13 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
+
 import Updater from 'state/userBalance/updater';
 import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
-import NavigationSidebar from 'components/Navigation/NavigationSidebar';
+import { NavigationBar, NavigationSidebar } from 'components/Navigation';
+
 import {
   //
   MetamasklessPage,
@@ -141,6 +143,7 @@ export default function App() {
         <Box sx={{ display: 'flex' }}>
           <NavigationSidebar />
           <Box component="main" sx={{ flex: 1 }}>
+            <NavigationBar />
             {app}
           </Box>
         </Box>
