@@ -173,6 +173,8 @@ export default function NavigationSidebar() {
   const badgeDataByPath : { [key: string] : string | null } = {
     'farm/silo': initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
     'farm/field': initialized && fieldAPY ? `${fieldAPY.toFixed(0)}%` : null,
+    'fundraiser': 'Omniscia',
+    'beanfts': 'Winter'
   }
 
   //

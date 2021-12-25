@@ -136,24 +136,15 @@ export default function App() {
       <Updater />
       <NFTUpdater />
       {/* CONTENT */}
-      <Wrapper>
+      <Box className="App">
+        <Wrapper />
         <Box sx={{ display: 'flex' }}>
           <NavigationSidebar />
-          <Box
-            component="main"
-            sx={{ flexGrow: 1 }}
-          >
+          <Box component="main" sx={{ flex: 1 }}>
             {app}
           </Box>
         </Box>
-      </Wrapper>
+      </Box>
     </ThemeProvider>
   );
 }
-
-/* <div style={{ display: "flex", flexDirection: "row" }}>
-<NavigationSidebar />
-<div>
-  {app}
-</div>
-</div> */

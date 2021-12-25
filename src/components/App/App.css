@@ -1,15 +1,6 @@
 .App {
-  /* text-align: center; */
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  opacity: 1.5;
-  overflow-x: hidden;
-  /* width: 98vw; */
+  width: 100%;
   font-family: Futura-PT-Book, !important;
-  /* z-index: 1; */
-  overflow: hidden;
-  /* margin-bottom: '60px'; */
 }
 
 .BeanstalkBG[name="main"] {

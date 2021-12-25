@@ -9,6 +9,10 @@ export default function AnalyticsPage(props) {
   const sections = [<Charts />, <Seasons />, <Balances />];
 
   return (
-    <Page sections={sections} sectionTitles={sectionTitles} sectionNumber={props.sectionNumber} />
+    <Page
+      sections={sections}
+      sectionTitles={sectionTitles}
+      sectionNumber={props.sectionNumber}
+    />
   );
 }

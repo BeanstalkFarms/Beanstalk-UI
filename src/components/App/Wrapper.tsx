@@ -88,10 +88,6 @@ export default function Main(props) {
       ) : null}
       {/* Sun (top left corner) */}
       <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
-      <Box>
-        {props.children}
-        {/* <Footer /> */}
-      </Box>
     </Box>
   );
 }

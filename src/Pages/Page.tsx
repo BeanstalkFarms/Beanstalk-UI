@@ -20,6 +20,7 @@ export default function Page({
     // marginTop: '100px',
     // width: '100vw',
     // marginBottom: '100px',
+    width: '100%',
     textAlign: 'center'
   };
 
