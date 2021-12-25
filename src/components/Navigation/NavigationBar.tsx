@@ -120,7 +120,7 @@ export default function NavigationBar(props) {
   );
   const toggleDrawerOpen = () => dispatch(setDrawerOpen(!drawerOpen))
   return (
-    <AppBar className={classes.appBar} position="static">
+    <AppBar className={classes.appBar} position="fixed">
       <Toolbar className={classes.toolbar}>
         {width < 800 ? (
           <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen}>

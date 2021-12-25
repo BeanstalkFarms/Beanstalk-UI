@@ -17,13 +17,12 @@ export default function Page({
   });
 
   const pageStyle = {
-    // marginTop: '100px',
-    // width: '100vw',
-    // marginBottom: '100px',
     width: '100%',
     textAlign: 'center'
   };
 
+  // If multiple sections are provided, show a tab selector.
+  // Otherwise, show a basic title component.
   const titleSection = sections.length > 1 ? (
     <SectionTabs
       setSection={setSection}

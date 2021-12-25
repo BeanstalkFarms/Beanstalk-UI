@@ -19,15 +19,15 @@ export default function ContentTitle({
     sectionTitle: {
       marginTop: marginTop,
       width: width,
-    },
+    }
   })();
 
   return (
     <Box className={classes.sectionTitle}>
       <TitleLabel
-        style={{ color: theme.backgroundText }}
         size={size}
         textTransform={textTransform}
+        className={classes.sectionTitleText}
       >
         {title}
       </TitleLabel>
