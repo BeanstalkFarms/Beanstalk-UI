@@ -63,6 +63,10 @@ export const GENESIS_NFT = {
   account: '0x02491D37984764d39b99e4077649dcD349221a62',
   id: 0,
   txn: '💎',
-}; /* Diamonds */
+};
+export const PARSE_API_KEY = 'MLpZllgINkSrNFn4XySbgx2r4bzAv95zlzEofKWJ';
+export const PARSE_APP_ID = 'PxgBC714lswdUeAU9taADj9Bl39JY7QEEGkTHk99';
+
+/* Diamonds */
 export const zeroBN = new BigNumber(0);
 export const newBN = new BigNumber(-1);

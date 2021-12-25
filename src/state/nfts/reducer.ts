@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
+  setUnclaimedWinterNFTs,
   setUnclaimedNFTs,
   setClaimedNFTs,
   setAccountNFTs,
@@ -8,6 +9,7 @@ import {
 } from './actions';
 
 export interface NftState {
+  unclaimedWinterNFTs: Array;
   unclaimedNFTs: Array;
   claimedNFTs: Array;
   accountNFTs: Array;
@@ -22,6 +24,7 @@ export interface NftState {
 }
 
 export const initialState: NftState = {
+  unclaimedWinterNFTs: [],
   unclaimedNFTs: [],
   claimedNFTs: [],
   accountNFTs: [],
@@ -37,6 +40,9 @@ export const initialState: NftState = {
 
 export default createReducer(initialState, (builder) =>
   builder
+    .addCase(setUnclaimedWinterNFTs, (state, { payload }) => {
+      state.unclaimedWinterNFTs = payload;
+    })
     .addCase(setUnclaimedNFTs, (state, { payload }) => {
       state.unclaimedNFTs = payload;
     })

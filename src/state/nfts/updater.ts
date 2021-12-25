@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
+  setUnclaimedWinterNFTs,
   setUnclaimedNFTs,
   setClaimedNFTs,
   setNFTs,
@@ -8,6 +9,7 @@ import {
 import {
   queryWinterNFTs,
   loadNFTs,
+  loadWinterNFTs,
   queryAccountNFTStats,
 } from 'graph';
 import {
@@ -46,11 +48,16 @@ export default function NFTUpdater() {
       checkMints(data);
     }
 
+    async function loadWinterAccountNFTs() {
+      const winterData = await loadWinterNFTs('0x19c5bad4354e9a78a1ca0235af29b9eacf54ff2b');
+      dispatch(setUnclaimedWinterNFTs(winterData));
+    }
+
     async function loadAccountNFTStats() {
       const data = await queryAccountNFTStats(account.toLowerCase());
       dispatch(setNFTs(data));
     }
-    async function loadWinterNFTs() {
+    async function loadNftLeaderboard() {
       const n = await queryWinterNFTs();
       dispatch(setNFTs(n));
     }
@@ -60,9 +67,10 @@ export default function NFTUpdater() {
         setTimeout(() => start(), 100);
       } else if (account) {
         loadAccountNFTs();
+        loadWinterAccountNFTs();
         loadAccountNFTStats();
       }
-      loadWinterNFTs();
+      loadNftLeaderboard();
     }
 
     start();
