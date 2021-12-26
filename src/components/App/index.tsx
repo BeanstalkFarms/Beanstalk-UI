@@ -145,7 +145,7 @@ export default function App() {
           <NavigationSidebar />
           <Box component="main" sx={{ flex: 1, position: 'relative' }}>
             <NavigationBar />
-            {app}
+            <LoadingBean />
             <Footer />
           </Box>
         </Box>
