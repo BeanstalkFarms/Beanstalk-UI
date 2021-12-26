@@ -269,7 +269,7 @@ export default function NavigationSidebar() {
         {NAVIGATION_MAP.more.map((item: any) => <NavItem item={item} key={item.path} />)}
       </List>
       <Box p={2} className={classes.metrics}>
-        <Metric label="Mkt. Cap" value={marketCap && `$${marketCap.dividedBy(10 ** 6).toFixed(1)}M`} />
+        <Metric label="Mkt. Cap" value={marketCap && marketCap.isGreaterThan(0) && `$${marketCap.dividedBy(10 ** 6).toFixed(1)}M`} />
         <Metric label="ETH" value={ethPrices && ethPrices.ethPrice && ethPrices.ethPrice > 0 && `$${ethPrices.ethPrice}`} />
         <Metric label="Gas" value={ethPrices && ethPrices.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} />
       </Box>
