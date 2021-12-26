@@ -143,7 +143,7 @@ export default function App() {
         <Wrapper />
         <Box sx={{ display: 'flex' }}>
           <NavigationSidebar />
-          <Box component="main" sx={{ flex: 1 }}>
+          <Box component="main" sx={{ flex: 1, position: 'relative' }}>
             <NavigationBar />
             {app}
             <Footer />

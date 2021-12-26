@@ -749,6 +749,7 @@ export default function WalletModule() {
       <Popper
         open={openWallet}
         anchorEl={anchorRefWallet.current}
+        // placement="bottom-end"
         role={undefined}
         transition
         disablePortal
@@ -764,7 +765,6 @@ export default function WalletModule() {
                 >
                   <Box
                     style={{
-                      zIndex: '1',
                       width: '100%',
                       height: '40px',
                       position: 'sticky',
@@ -772,15 +772,14 @@ export default function WalletModule() {
                       backgroundColor: theme.module.background,
                     }}
                   >
+                    {/* Tab buttons ("My Balances", "Transactions") */}
                     {walletTitles.map((title, index) => (
                       <Button
                         key={`wallet_button_${index}`} // eslint-disable-line
                         onClick={() => {
                           setWalletPage(index);
                           setTransactionPage(-1);
-                          document.getElementById(
-                            'wallet-list-paper'
-                          ).scrollTop = 0;
+                          document.getElementById('wallet-list-paper').scrollTop = 0;
                         }}
                         style={{
                           borderBottom: `2px solid ${theme.module.background}`,
@@ -801,10 +800,10 @@ export default function WalletModule() {
                       </Button>
                     ))}
                   </Box>
+                  {/* Content (depends on selected tab) */}
                   <Box
                     style={{
                       backgroundColor: theme.module.background,
-                      zIndex: '0',
                       paddingTop: '0px',
                     }}
                   >

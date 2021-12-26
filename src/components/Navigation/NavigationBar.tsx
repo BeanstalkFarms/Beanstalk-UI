@@ -14,8 +14,11 @@ import WalletModule from './WalletModule';
 
 const useStyles = makeStyles({
   appBar: {
-    backgroundColor: 'transparent',
+    zIndex: 9999, // float over everything
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    backdropFilter: 'blur(2px)',
     boxShadow: 'none',
+    marginBottom: 12
   },
   menuIcon: {
     color: '#fff',
@@ -37,7 +40,7 @@ export default function NavigationBar() {
   );
   const toggleDrawerOpen = () => dispatch(setDrawerOpen(!drawerOpen));
   return (
-    <AppBar className={classes.appBar} position="fixed">
+    <AppBar className={classes.appBar} position="sticky">
       <Toolbar className={classes.toolbar}>
         {width < 800 ? (
           <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen}>
