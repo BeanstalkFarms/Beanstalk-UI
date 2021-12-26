@@ -18,7 +18,7 @@ const useStyles = makeStyles({
     backgroundColor: 'rgba(255,255,255,0.1)',
     backdropFilter: 'blur(2px)',
     boxShadow: 'none',
-    marginBottom: 12
+    marginBottom: 12,
   },
   menuIcon: {
     color: '#fff',

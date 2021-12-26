@@ -30,7 +30,7 @@ export default function Charts(props) {
   const isMobile: boolean = width <= 758;
   const baseStyle = isMobile
     ? { paddingLeft: 0, paddingRight: 0 }
-    : { minWidth: 800 };
+    : { minWidth: 700 };
 
   //
   const titles = ['Bean', 'Field', 'Silo'];
