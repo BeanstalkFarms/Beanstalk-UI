@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { AppState } from 'state';
+import { useSelector } from 'react-redux';
 import { Box, Grid } from '@material-ui/core';
 import { mintAllNFTs } from 'util/index';
 import {
@@ -10,9 +12,11 @@ import NftPicTable from './NftPicTable';
 
 export default function ClaimNFT({
   buttonDescription,
-  claimedNfts,
-  nfts,
 }) {
+  const { unclaimedWinterNFTs, unclaimedNFTs, claimedNFTs } = useSelector<AppState, AppState['nfts']>(
+    (state) => state.nfts
+  );
+
   const [page, setPage] = React.useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
 
@@ -24,18 +28,33 @@ export default function ClaimNFT({
     setPage(newPage);
   };
 
-  const canClaimNFT = nfts.length > 0;
+  const canClaimNFT = unclaimedNFTs.length > 0;
 
   const sectionsInfo = [];
   const sectionTitlesInfo = [];
   const sectionTitlesDescription = [];
 
+  // create Unminted Winter NFTs tab
+  if (unclaimedWinterNFTs !== undefined && Object.keys(unclaimedWinterNFTs).length > 0) {
+    sectionsInfo.push(
+      <NftPicTable
+        canClaimNFT={false}
+        nftList={unclaimedWinterNFTs}
+        handleChange={handlePageChange}
+        page={page}
+        style={{ width: 'auto', maxWidth: '450px' }}
+      />
+    );
+    sectionTitlesInfo.push('WINTER');
+    sectionTitlesDescription.push(beanftStrings.winter);
+  }
+
   // create Unminted NFTs tab
-  if (nfts !== undefined && Object.keys(nfts).length > 0 && canClaimNFT) {
+  if (unclaimedNFTs !== undefined && Object.keys(unclaimedNFTs).length > 0 && canClaimNFT) {
     sectionsInfo.push(
       <NftPicTable
         canClaimNFT={canClaimNFT}
-        nftList={nfts}
+        nftList={unclaimedNFTs}
         handleChange={handlePageChange}
         page={page}
         style={{ width: 'auto', maxWidth: '450px' }}
@@ -46,11 +65,11 @@ export default function ClaimNFT({
   }
 
   // create Minted NFTs tab
-  if (claimedNfts !== undefined && Object.keys(claimedNfts).length > 0) {
+  if (claimedNFTs !== undefined && Object.keys(claimedNFTs).length > 0) {
     sectionsInfo.push(
       <NftPicTable
         claimed
-        nftList={claimedNfts}
+        nftList={claimedNFTs}
         handleChange={handlePageChange}
         page={page}
         style={{ width: 'auto', maxWidth: '450px' }}
@@ -84,10 +103,10 @@ export default function ClaimNFT({
       color="white"
       description={buttonDescription}
       handleClick={() => {
-        const accounts = nfts.map((u) => u.account);
-        const ids = nfts.map((u) => u.id);
-        const hashes = nfts.map((u) => u.metadataIpfsHash);
-        const signatures = nfts.map((u) => u.signature);
+        const accounts = unclaimedNFTs.map((u) => u.account);
+        const ids = unclaimedNFTs.map((u) => u.id);
+        const hashes = unclaimedNFTs.map((u) => u.metadataIpfsHash);
+        const signatures = unclaimedNFTs.map((u) => u.signature);
         mintAllNFTs(accounts, ids, hashes, signatures);
       }}
       margin="-13px 7px 0 0"
