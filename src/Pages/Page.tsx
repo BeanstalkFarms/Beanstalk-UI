@@ -19,6 +19,7 @@ export default function Page({
   const pageStyle = {
     width: '100%',
     textAlign: 'center',
+    paddingBottom: 80,
   };
 
   // If multiple sections are provided, show a tab selector.

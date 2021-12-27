@@ -55,11 +55,10 @@ export async function getUSDCBalance() {
 export async function getEthPrices() {
   try {
     // FIXME
-    const API_KEY = 'NU3WFYG5RBQHP6KIJKWVGCKAHK9PFUAC8D';
-    const ethPrice = await fetch(`https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${API_KEY}`)
+    const ethPrice = await fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=stats&action=ethprice')
       .then((response) => response.json())
       .then((res) => res.result.ethusd);
-    const gas = await fetch(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${API_KEY}`)
+    const gas = await fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=gastracker&action=gasoracle')
       .then((response) => response.json())
       .then((res) => ({
         safe: res.result.FastGasPrice,
