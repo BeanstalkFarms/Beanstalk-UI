@@ -121,7 +121,7 @@ const useStyles = makeStyles({
     marginTop: 3,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   metricLabel: {
     fontWeight: 'bold',
@@ -129,7 +129,7 @@ const useStyles = makeStyles({
     color: '#555',
   },
   metricValue: {
-    color: '#555'
+    color: '#555',
   },
 });
 
