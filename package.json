@@ -1,8 +1,47 @@
 {
-  "name": "bean-io",
+  "name": "beanstalk",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://theunfriendlygiant.github.io/",
+  "homepage": "https://bean.money",
+  "scripts": {
+    "start": "react-scripts --max_old_space_size=4096 start",
+    "build": "react-scripts --max_old_space_size=4096 build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md,js}\"",
+    "lint": "eslint \"src/**/**/*.ts{,x}\""
+  },
+  "lint-staged": {
+    "*.{ts,tsx,json}": "prettier --write"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@apollo/client": "^3.4.10",
     "@emotion/react": "^11.7.0",
@@ -43,42 +82,6 @@
     "web-vitals": "^1.0.1",
     "web3": "^1.5.2"
   },
-  "scripts": {
-    "start": "react-scripts --max_old_space_size=4096 start",
-    "build": "react-scripts --max_old_space_size=4096 build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "format": "prettier --write \"**/*.{ts,tsx,json,md,js}\"",
-    "lint": "eslint \"src/**/**/*.ts{,x}\""
-  },
-  "lint-staged": {
-    "*.{ts,tsx,json}": "prettier --write"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -106,6 +109,10 @@
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.0",
-    "pretty-quick": "^3.1.0"
+    "pretty-quick": "^3.1.0",
+    "react-error-overlay": "6.0.9"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   }
 }
