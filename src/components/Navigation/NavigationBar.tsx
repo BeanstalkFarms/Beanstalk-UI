@@ -19,7 +19,6 @@ const useStyles = makeStyles({
     boxShadow: 'none',
     marginBottom: 12,
     fontFamily: 'Futura',
-    // zIndex: 9990, // place above content but below
   },
   menuIconContain: {
     display: 'flex',
@@ -36,8 +35,6 @@ const useStyles = makeStyles({
   },
 });
 
-// FIXME:
-// - Why are there two separate calls for `price` and `beanPrice`?
 export default function NavigationBar() {
   const dispatch = useDispatch();
   const classes = useStyles();

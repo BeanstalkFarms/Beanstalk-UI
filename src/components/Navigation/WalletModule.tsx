@@ -363,6 +363,15 @@ function DisplayEvent({ event }) {
   );
 }
 
+const walletListStyle = {
+  width: 365,
+  marginTop: 2,
+  overflow: 'hidden',
+};
+
+/**
+ *
+ */
 export default function WalletModule() {
   const classes = useStyles();
 
@@ -395,25 +404,10 @@ export default function WalletModule() {
   );
 
   // Local state
-  const [walletListStyle, setWalletListStyle] = useState({
-    position: 'absolute',
-    right: '-120px',
-    top: '1px',
-    width: '365px',
-    maxHeight: '50vw',
-    overflowX: 'hidden',
-    overFlowY: 'auto',
-    backgroundColor: theme.module.foreground,
-  });
-
   const [walletText, setWalletText] = useState('Wallet');
   const anchorRefWallet = React.useRef<any>(null);
   const [openWallet, setOpenWallet] = React.useState(false);
   const handleToggleWallet = () => {
-    setWalletListStyle((prev) => ({
-      ...prev,
-      right: width < 600 ? '-170px' : '-120px',
-    }));
     setOpenWallet((prevOpen) => !prevOpen);
   };
   const handleCloseWallet = () => {
@@ -752,6 +746,7 @@ export default function WalletModule() {
         role={undefined}
         transition
         disablePortal
+        placement="bottom-end"
       >
         {({ TransitionProps }) => (
           <Grow {...TransitionProps} style={{ transformOrigin: 'center top' }}>
