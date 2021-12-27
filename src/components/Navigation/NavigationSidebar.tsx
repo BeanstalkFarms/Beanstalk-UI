@@ -75,6 +75,8 @@ const useStyles = makeStyles({
     width: drawerWidth,
     flexShrink: 0,
     fontFamily: 'Futura',
+    // position: 'relative',
+    // zIndex: 9999, // above everything, including header bar
   },
   drawerPaper: {
     width: drawerWidth,
@@ -218,7 +220,7 @@ export default function NavigationSidebar() {
           )}
         </Box>
         {item.desc && (
-          <Box flex>
+          <Box>
             <span>{item.desc}</span>
           </Box>
         )}
@@ -270,17 +272,15 @@ export default function NavigationSidebar() {
   );
 
   return (
-    <>
-      <Drawer
-        variant={width < 800 ? 'temporary' : 'permanent'}
-        className={classes.drawer}
-        classes={{ paper: classes.drawerPaper }}
-        anchor="left"
-        open={width < 800 && drawerOpen}
-        onClose={width < 800 ? () => dispatch(setDrawerOpen(!drawerOpen)) : undefined}
-      >
-        {drawerContent}
-      </Drawer>
-    </>
+    <Drawer
+      variant={width < 800 ? 'temporary' : 'permanent'}
+      className={classes.drawer}
+      classes={{ paper: classes.drawerPaper }}
+      anchor="left"
+      open={width < 800 && drawerOpen}
+      onClose={width < 800 ? () => dispatch(setDrawerOpen(!drawerOpen)) : undefined}
+    >
+      {drawerContent}
+    </Drawer>
   );
 }

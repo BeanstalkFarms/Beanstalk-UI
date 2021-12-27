@@ -19,6 +19,7 @@ const useStyles = makeStyles({
     boxShadow: 'none',
     marginBottom: 12,
     fontFamily: 'Futura',
+    // zIndex: 9990, // place above content but below
   },
   menuIconContain: {
     display: 'flex',

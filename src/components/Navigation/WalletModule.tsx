@@ -749,7 +749,6 @@ export default function WalletModule() {
       <Popper
         open={openWallet}
         anchorEl={anchorRefWallet.current}
-        // placement="bottom-end"
         role={undefined}
         transition
         disablePortal
