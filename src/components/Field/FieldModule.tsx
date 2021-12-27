@@ -207,6 +207,7 @@ export default function FieldModule() {
   }
   if (section > sectionTitles.length - 1) setSection(0);
 
+  //
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
   if (

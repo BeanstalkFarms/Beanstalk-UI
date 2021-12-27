@@ -16,7 +16,7 @@ import {
 } from 'components/Common';
 import { BeanDepositModule } from '../Silo/BeanDepositModule';
 
-export default function SiloBeanModule() {
+export default function MarketplaceBuyModule() {
   const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
