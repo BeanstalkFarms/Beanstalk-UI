@@ -399,7 +399,7 @@ export default function WalletModule() {
   const { totalLP, totalStalk } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { contractEvents, width } = useSelector<AppState, AppState['general']>(
+  const { contractEvents } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
