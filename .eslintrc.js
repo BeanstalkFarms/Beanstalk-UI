@@ -20,6 +20,7 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest'],
   rules: {
+    '@typescript-eslint/no-unused-vars': 'warn',
     'max-classes-per-file': 0,
     quotes: ['error', 'single'],
     'jsx-quotes': ['error', 'prefer-double'],
