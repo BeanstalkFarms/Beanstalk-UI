@@ -119,6 +119,9 @@ const useStyles = makeStyles({
   metric: {
     fontSize: 13,
     marginTop: 3,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   metricLabel: {
     fontWeight: 'bold',
@@ -126,7 +129,7 @@ const useStyles = makeStyles({
     color: '#555',
   },
   metricValue: {
-    // color: '#777'
+    color: '#555'
   },
 });
 
@@ -134,7 +137,8 @@ const Metric = ({ label, value }) => {
   const classes = useStyles();
   return (
     <Box className={classes.metric}>
-      <span className={classes.metricLabel}>{label}</span> <span className={classes.metricValue}>{value || '—'}</span>
+      <span className={classes.metricLabel}>{label}</span>
+      <span className={classes.metricValue}>{value || '—'}</span>
     </Box>
   );
 };
@@ -270,9 +274,12 @@ export default function NavigationSidebar() {
         {NAVIGATION_MAP.more.map((item: any) => <NavItem item={item} key={item.path} />)}
       </List>
       <Box p={2} className={classes.metrics}>
-        <Metric label="Mkt. Cap" value={marketCap && marketCap.isGreaterThan(0) && `$${marketCap.dividedBy(10 ** 6).toFixed(1)}M`} />
-        <Metric label="ETH" value={ethPrices && ethPrices.ethPrice && ethPrices.ethPrice > 0 && `$${ethPrices.ethPrice}`} />
-        <Metric label="Gas" value={ethPrices && ethPrices.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} />
+        <Metric label="Mkt. Cap" value={marketCap?.isGreaterThan(0) && `$${marketCap.dividedBy(10 ** 6).toFixed(1)}M`} />
+        <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${totalPods.dividedBy(10 ** 6).toFixed(1)}M`} />
+        <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${weather.harvestableIndex.dividedBy(10 ** 6).toFixed(1)}M`} />
+        <Metric label="Weather" value={weather?.weather?.isGreaterThan(0) && `${weather.weather.toFixed(0)}%`} />
+        <Metric label="ETH" value={ethPrices?.ethPrice && ethPrices.ethPrice > 0 && `$${ethPrices.ethPrice}`} />
+        <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} />
       </Box>
     </>
   );
