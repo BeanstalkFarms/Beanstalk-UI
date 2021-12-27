@@ -1,31 +1,26 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
-import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from 'constants/index';
+import { BEAN } from 'constants/index';
 import {
   displayBN,
-  isAddress,
-  toStringBaseUnitBN,
+  // toStringBaseUnitBN,
   MaxBN,
   MinBN,
-  transferPlot,
   TrimBN,
 } from 'util/index';
 import {
-  AddressInputField,
   ListInputField,
   PlotInputField,
-  fieldStrings,
+  TokenInputField,
   TransactionDetailsModule,
 } from 'components/Common';
 
-export const SendPlotModule = forwardRef((props, ref) => {
+export const PlotSellModule = forwardRef((props, ref) => {
   const [plotId, setPlotId] = useState(new BigNumber(-1));
   const [plotEndId, setPlotEndId] = useState(new BigNumber(-1));
   const [fromPlotIndex, setFromPlotIndex] = useState(new BigNumber(-1));
   const [toPlotEndIndex, setToPlotEndIndex] = useState(new BigNumber(-1));
-  const [snappedToAddress, setSnappedToAddress] = useState(false);
-  const [walletText, setWalletText] = useState('');
 
   const width = window.innerWidth;
 
@@ -77,40 +72,34 @@ export const SendPlotModule = forwardRef((props, ref) => {
     }
   };
 
-  /* Handlers: Address change and update */
-  async function toAddressUpdated(newToAddress: string) {
-    if (snappedToAddress) {
-      fromValueUpdated(new BigNumber(-1));
-      props.setToAddress('');
-      setWalletText('');
-      setSnappedToAddress(false);
-      return;
-    }
+  const handlePriceChange = () => {};
+  const priceValueUpdated = (newPriceNumber: BigNumber) => {
+    console.log(newPriceNumber);
+    // const fromReserve = props.orderIndex ? props.ethReserve : props.beanReserve;
+    // const toReserve = props.orderIndex ? props.beanReserve : props.ethReserve;
+    // const toNumber = MinBN(newToNumber, toReserve);
+    // const proposedNewFromValue = getFromAmount(
+    //   toNumber,
+    //   fromReserve,
+    //   toReserve,
+    //   props.orderIndex ? ETH.decimals : BEAN.decimals
+    // );
+    // if (proposedNewFromValue.isGreaterThan(props.maxFromVal)) {
+    //   fromValueUpdated(props.maxFromVal);
+    // } else {
+    //   props.setFromValue(
+    //     TrimBN(
+    //       proposedNewFromValue,
+    //       props.orderIndex ? ETH.decimals : BEAN.decimals
+    //     )
+    //   );
+    //   props.setToValue(
+    //     TrimBN(toNumber, props.orderIndex ? BEAN.decimals : ETH.decimals)
+    //   );
+    // }
+  };
 
-    if (newToAddress.length === 42) {
-      setWalletText(
-        `${newToAddress.substring(0, 6)}...${newToAddress.substring(
-          newToAddress.length - 4
-        )}`
-      );
-      setSnappedToAddress(true);
-      props.setIsValidAddress(await isAddress(newToAddress));
-    } else {
-      setWalletText('');
-      props.setIsFormDisabled(true);
-    }
-    props.setToAddress(newToAddress);
-  }
-  const handleChange = (event) => {
-    if (event.target.value) {
-      toAddressUpdated(event.target.value);
-    } else {
-      toAddressUpdated('');
-    }
-  };
-  const clearHandler = () => {
-    toAddressUpdated(walletText);
-  };
+  /* Handlers: Address change and update */
   const maxHandler = () => {
     fromIndexValueUpdated(fromPlotIndex, plotEndId);
   };
@@ -119,28 +108,23 @@ export const SendPlotModule = forwardRef((props, ref) => {
   };
 
   /* Input Fields */
-  const toAddressField = (
-    <AddressInputField
-      address={walletText}
-      setAddress={setWalletText}
-      handleChange={handleChange}
-      marginTop={window.innerWidth > 400 ? '8px' : '7px'}
-      snapped={snappedToAddress}
-      handleClear={clearHandler}
-      isValidAddress={props.isValidAddress}
-    />
-  );
   const fromPlotField = (
     <ListInputField
-      hidden={
-        props.toAddress.length !== 42 ||
-        walletText === '' ||
-        props.isValidAddress !== true
-      }
+      label="Select Plot to Sell"
       index={props.index}
       items={props.plots}
       marginBottom={props.hasPlots === true ? '0px' : '-7px'}
       handleChange={handleFromChange}
+    />
+  );
+  const priceField = (
+    <TokenInputField
+      label="Price per Pod"
+      value={TrimBN(props.toValue, BEAN.decimals)}
+      setValue={priceValueUpdated}
+      handleChange={handlePriceChange}
+      // token={props.toToken}
+      balance={new BigNumber(0)}
     />
   );
   const fromIndexField = (
@@ -174,13 +158,6 @@ export const SendPlotModule = forwardRef((props, ref) => {
         {`Send ${firstText}Plot #${displayBN(
           new BigNumber(plotId - props.index).plus(fromPlotIndex)
         )} to `}
-        <a
-          href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
-          target="blank"
-          style={{ color: theme.backgroundText }}
-        >
-          {`${walletText}`}
-        </a>
       </span>
     );
     details.push(`Send ${firstText === '' ? 'all' : ''}
@@ -224,9 +201,6 @@ export const SendPlotModule = forwardRef((props, ref) => {
         <TransactionDetailsModule
           fields={details}
         />
-        <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
-          <span>{fieldStrings.sendPlotWarning}</span>
-        </Box>
       </>
     );
   }
@@ -234,24 +208,14 @@ export const SendPlotModule = forwardRef((props, ref) => {
   /* */
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (toPlotEndIndex.isLessThanOrEqualTo(0)) return;
-      if (toPlotEndIndex.isGreaterThan(0)) {
-        const startPlot = toStringBaseUnitBN(fromPlotIndex, BEAN.decimals);
-        const endPlot = toStringBaseUnitBN(toPlotEndIndex, BEAN.decimals);
-        const id = toStringBaseUnitBN(plotId, BEAN.decimals);
-        transferPlot(props.toAddress, id, startPlot, endPlot, () => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-        });
-      } else {
-        fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-      }
+      console.log('Nothing here yet');
     },
   }));
 
   return (
     <>
-      {toAddressField}
       {fromPlotField}
+      {priceField}
       <TransactionDetails />
     </>
   );

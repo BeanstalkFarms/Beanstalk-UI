@@ -45,7 +45,7 @@ export default function ListInputField(props) {
 
   return (
     <Box style={{ margin: '8px 0' }}>
-      <Box style={smallLabels}>Select Plot to Transfer</Box>
+      <Box style={smallLabels}>{props.label}</Box>
       <FormControl
         variant="outlined"
         size="medium"
@@ -95,4 +95,5 @@ export default function ListInputField(props) {
 ListInputField.defaultProps = {
   hidden: false,
   marginBottom: '-7px',
+  label: 'Select Plot to Transfer',
 };

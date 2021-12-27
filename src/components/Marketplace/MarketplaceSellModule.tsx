@@ -8,13 +8,14 @@ import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
 } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, LPBEAN_TO_STALK } from 'constants/index';
+import { BASE_SLIPPAGE } from 'constants/index';
 import {
   approveBeanstalkBean,
   approveBeanstalkLP,
   SwapMode,
-  poolForLP,
+  // poolForLP,
   FarmAsset,
+  CryptoAsset,
 } from 'util/index';
 import {
   BaseModule,
@@ -23,9 +24,10 @@ import {
   siloStrings,
   // TransitAsset,
 } from 'components/Common';
-import { LPDepositModule } from '../Silo/LPDepositModule';
-import { LPWithdrawModule } from '../Silo/LPWithdrawModule';
-import { LPClaimModule } from '../Silo/LPClaimModule';
+// import { LPDepositModule } from '../Silo/LPDepositModule';
+import { PlotSellModule } from './PlotSellModule';
+// import { LPWithdrawModule } from '../Silo/LPWithdrawModule';
+// import { LPClaimModule } from '../Silo/LPClaimModule';
 
 export default function MarketplaceSellModule() {
   // Global state
@@ -33,24 +35,24 @@ export default function MarketplaceSellModule() {
     lpBalance,
     beanBalance,
     ethBalance,
-    lpReceivableBalance,
-    beanDeposits,
-    claimable,
-    claimableEthBalance,
-    hasClaimable,
-    beanSiloBalance,
-    beanClaimableBalance,
-    lpDeposits,
+    // lpReceivableBalance,
+    // beanDeposits,
+    // claimable,
+    // claimableEthBalance,
+    // hasClaimable,
+    // beanSiloBalance,
+    // beanClaimableBalance,
+    // lpDeposits,
     locked,
-    lpSiloBalance,
-    seedBalance,
-    stalkBalance,
-    lpSeedDeposits,
-    lpReceivableCrates,
+    // lpSiloBalance,
+    // seedBalance,
+    // stalkBalance,
+    // lpSeedDeposits,
+    // lpReceivableCrates,
     // lpWithdrawals,
     lockedSeasons,
     harvestablePodBalance,
-    beanReceivableBalance,
+    // beanReceivableBalance,
     plots,
     harvestablePlots,
   } = useSelector<AppState, AppState['userBalance']>(
@@ -59,15 +61,15 @@ export default function MarketplaceSellModule() {
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<AppState, AppState['allowances']>(
     (state) => state.allowances
   );
-  const prices = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
-  const season = useSelector<AppState, AppState['season']>(
-    (state) => state.season.season
-  );
-  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
-    (state) => state.totalBalance
-  );
+  // const prices = useSelector<AppState, AppState['prices']>(
+  //   (state) => state.prices
+  // );
+  // const season = useSelector<AppState, AppState['season']>(
+  //   (state) => state.season.season
+  // );
+  // const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+  //   (state) => state.totalBalance
+  // );
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
@@ -87,22 +89,22 @@ export default function MarketplaceSellModule() {
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   // Handlers
-  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
-    const endPrice = prices.ethReserve
-      .plus(sellEth)
-      .dividedBy(prices.beanReserve.minus(buyBeans))
-      .dividedBy(prices.usdcPrice);
-    return prices.beanPrice.plus(endPrice).dividedBy(2);
-  };
-  const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
-    return poolForLP(
-      amount,
-      prices.beanReserve,
-      prices.ethReserve,
-      totalBalance.totalLP
-    );
-  };
+  // const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
+  //   const endPrice = prices.ethReserve
+  //     .plus(sellEth)
+  //     .dividedBy(prices.beanReserve.minus(buyBeans))
+  //     .dividedBy(prices.usdcPrice);
+  //   return prices.beanPrice.plus(endPrice).dividedBy(2);
+  // };
+  // const poolForLPRatio = (amount: BigNumber) => {
+  //   if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
+  //   return poolForLP(
+  //     amount,
+  //     prices.beanReserve,
+  //     prices.ethReserve,
+  //     totalBalance.totalLP
+  //   );
+  // };
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
       setSection(newSection);
@@ -157,108 +159,51 @@ export default function MarketplaceSellModule() {
     }
   }
 
-  const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
-    ? poolForLPRatio(lpReceivableBalance)[0]
-    : new BigNumber(0);
+  // const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
+  //   ? poolForLPRatio(lpReceivableBalance)[0]
+  //   : new BigNumber(0);
+  // const beanClaimable = beanReceivableBalance
+  //   .plus(harvestablePodBalance)
+  //   .plus(poolForLPRatio(lpReceivableBalance)[0]);
+  // const ethClaimable = claimableEthBalance.plus(
+  //   poolForLPRatio(lpReceivableBalance)[1]
+  // );
 
-  const beanClaimable = beanReceivableBalance
-    .plus(harvestablePodBalance)
-    .plus(poolForLPRatio(lpReceivableBalance)[0]);
-
-  const ethClaimable = claimableEthBalance.plus(
-    poolForLPRatio(lpReceivableBalance)[1]
-  );
-
-  // Primary section
-  const sectionTitles = ['Deposit', 'Withdraw'];
+  // Primary section:
+  // Sell a Plot
+  const sectionTitles = ['Sell Plot'];
   const sectionTitlesDescription = [
-    siloStrings.lpDeposit,
-    siloStrings.lpWithdraw,
+    siloStrings.lpDeposit, // FIXME
   ];
-  // const sectionTitlesInfoDescription = [
-  //   siloStrings.lpDepositsTable,
-  //   siloStrings.lpWithdrawalsTable,
-  // ];
 
+  const sendRef = useRef<any>();
+  const [toAddress, setToAddress] = useState('');
+  const [isValidAddress, setIsValidAddress] = useState(false);
   const sections = [
-    <LPDepositModule
+    <PlotSellModule
       key={0}
-      beanClaimable={beanClaimable}
-      ethClaimable={ethClaimable}
-      beanBalance={beanBalance}
-      beanCrates={beanDeposits}
-      beanReceivableBalance={beanReceivableBalance}
-      beanReserve={prices.beanReserve}
-      beanToEth={prices.ethReserve.dividedBy(prices.beanReserve)}
-      beanToStalk={LPBEAN_TO_STALK}
-      claimable={claimable}
-      claimableEthBalance={claimableEthBalance}
-      ethBalance={ethBalance}
-      ethReserve={prices.ethReserve}
-      ethToBean={prices.beanReserve.dividedBy(prices.ethReserve)}
-      harvestablePodBalance={harvestablePodBalance}
-      hasClaimable={hasClaimable}
-      lpBalance={lpBalance}
-      lpReceivableBalance={lpReceivableBalance}
-      updateExpectedPrice={updateExpectedPrice}
-      maxFromBeanSiloVal={beanSiloBalance}
-      beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
-      beanLPClaimableBalance={claimLPBeans}
-      ref={depositRef}
-      season={season}
+      plots={plots}
+      hasPlots={
+        plots !== undefined &&
+        (Object.keys(plots).length > 0 ||
+          harvestablePodBalance.isGreaterThan(0))
+      }
+      index={parseFloat(harvestableIndex)}
+      fromAddress=""
+      fromToken={CryptoAsset.Bean}
+      ref={sendRef}
+      // Shared state
+      isFormDisabled={isFormDisabled}
       setIsFormDisabled={setIsFormDisabled}
+      isValidAddress={isValidAddress}
+      setIsValidAddress={setIsValidAddress}
+      toAddress={toAddress}
+      setToAddress={setToAddress}
       setSection={setSection}
-      setSettings={setSettings}
-      settings={settings}
-      totalLP={totalBalance.totalLP}
-      totalStalk={totalBalance.totalStalk}
-    />,
-    <LPWithdrawModule
-      key={1}
-      beanClaimable={beanClaimable}
-      ethClaimable={ethClaimable}
-      beanReceivableBalance={beanReceivableBalance}
-      claimable={claimable}
-      claimableEthBalance={claimableEthBalance}
-      crates={lpDeposits}
-      harvestablePodBalance={harvestablePodBalance}
-      hasClaimable={hasClaimable}
-      lpReceivableBalance={lpReceivableBalance}
-      locked={section === 1 && locked}
-      maxFromLPVal={lpSiloBalance}
-      maxToSeedsVal={seedBalance}
-      maxToStalkVal={stalkBalance}
-      poolForLPRatio={poolForLPRatio}
-      ref={withdrawRef}
-      season={season}
-      seedCrates={lpSeedDeposits}
-      setIsFormDisabled={setIsFormDisabled}
-      setSection={setSection}
-      setSettings={setSettings}
-      settings={settings}
-      totalLP={totalBalance.totalLP}
-      totalStalk={totalBalance.totalStalk}
     />,
   ];
-  if (lpReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <LPClaimModule
-        key={2}
-        // claimableEthBalance={claimableEthBalance}
-        crates={lpReceivableCrates}
-        maxFromLPVal={lpReceivableBalance}
-        poolForLPRatio={poolForLPRatio}
-        ref={claimRef}
-        setIsFormDisabled={setIsFormDisabled}
-        setSection={setSection}
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(siloStrings.lpClaim);
-  }
-  if (section > sectionTitles.length - 1) setSection(0);
 
-  // Bottom section
+  // Bottom section:
   // List of plots
   const sectionTitlesInfo = [];
   const sectionsInfo = [];

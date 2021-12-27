@@ -50,7 +50,7 @@ export default function TokenInputField(props) {
     width: '20px',
   };
 
-  const tokenLabel = TokenLabel(props.token);
+  const label = props.label || TokenLabel(props.token);
 
   function maxButton() {
     if (props.maxHandler !== undefined) {
@@ -90,7 +90,7 @@ export default function TokenInputField(props) {
   return (
     <Box style={{ margin: '8px 0' }}>
       <Box style={smallLabels}>
-        <Box style={leftStyle}>{tokenLabel}</Box>
+        <Box style={leftStyle}>{label}</Box>
         <FormatTooltip placement="right" title={balanceContent}>
           <Box style={rightStyle}>
             &nbsp;{`Balance: ${displayBN(props.balance)}`}
@@ -140,6 +140,7 @@ export default function TokenInputField(props) {
 }
 
 TokenInputField.defaultProps = {
+  label: null,
   action: 'Deposit',
   hidden: false,
   locked: false,
