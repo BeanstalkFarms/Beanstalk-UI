@@ -147,15 +147,6 @@ export default function NavigationSidebar() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  // Fetch data: PRICE
-  // const [price, setPrice] = useState(0);
-  // useEffect(() => {
-  //   async function getPrice() {
-  //     setPrice(await priceQuery());
-  //   }
-  //   getPrice();
-  // }, []);
-
   // Grab state
   const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
@@ -207,13 +198,7 @@ export default function NavigationSidebar() {
         {`$${beanPrice.toFixed(4)}`}
       </Box>
     );
-  } /* else if (price > 0) {
-    currentBeanPrice = (
-      <Box className={classes.currentPriceStyle}>
-        {`$${price.toFixed(4)}`}
-      </Box>
-    );
-  } */
+  }
 
   //
   const NavItem = ({ item }: { item: any }) => (
@@ -287,8 +272,8 @@ export default function NavigationSidebar() {
   return (
     <>
       <Drawer
-        className={classes.drawer}
         variant={width < 800 ? 'temporary' : 'permanent'}
+        className={classes.drawer}
         classes={{ paper: classes.drawerPaper }}
         anchor="left"
         open={width < 800 && drawerOpen}

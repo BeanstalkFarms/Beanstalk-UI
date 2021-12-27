@@ -27,10 +27,10 @@ export default function Charts(props) {
   }, []);
 
   //
-  const isMobile: boolean = width <= 758;
-  const baseStyle = isMobile
-    ? { paddingLeft: 0, paddingRight: 0 }
-    : { minWidth: 700 };
+  const isMobile: boolean = width <= 850;
+  // const baseStyle = isMobile
+  //   ? { paddingLeft: 0, paddingRight: 0 }
+  //   : {  }; // minWidth: 600
 
   //
   const titles = ['Bean', 'Field', 'Silo'];
@@ -47,13 +47,20 @@ export default function Charts(props) {
 
   //
   return (
-    <Grid style={{ margin: 'auto' }} container item xs={12} justifyContent="center">
+    <Grid
+      style={{ margin: 'auto', width: '100%' }}
+      container
+      item
+      md={10}
+      sm={10}
+      xs={10}
+      justifyContent="center">
       <ContentSection
         id="charts"
         title={props.title}
         size="20px"
         style={{
-          maxWidth: '1000px',
+          width: '100%',
           marginTop: props.marginTop || 0,
         }}
       >
@@ -67,7 +74,9 @@ export default function Charts(props) {
           size={isMobile ? 'small' : 'medium'}
           sectionTitles={titles}
           showButton={false}
-          style={baseStyle}
+          style={{
+            width: '100%',
+          }}
         >
           {sections[section]}
         </BaseModule>

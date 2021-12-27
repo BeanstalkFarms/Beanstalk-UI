@@ -14,7 +14,6 @@ import WalletModule from './WalletModule';
 
 const useStyles = makeStyles({
   appBar: {
-    zIndex: 9999, // float over everything
     backgroundColor: 'rgba(255,255,255,0.1)',
     backdropFilter: 'blur(2px)',
     boxShadow: 'none',

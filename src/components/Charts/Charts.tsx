@@ -48,7 +48,9 @@ export default function Charts(props) {
     if (c.tabTitle !== undefined) {
       return c.tabTitle;
     }
-    return c.title.toUpperCase();
+    return (
+      <span>{c.title.toUpperCase()}</span>
+    );
   });
 
   const descriptions =
