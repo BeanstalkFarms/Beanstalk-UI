@@ -18,6 +18,12 @@ const useStyles = makeStyles({
     backdropFilter: 'blur(2px)',
     boxShadow: 'none',
     marginBottom: 12,
+    fontFamily: 'Futura',
+  },
+  menuIconContain: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   menuIcon: {
     color: '#fff',
@@ -37,14 +43,22 @@ export default function NavigationBar() {
   const { drawerOpen, width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+  const { beanPrice } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
   const toggleDrawerOpen = () => dispatch(setDrawerOpen(!drawerOpen));
   return (
     <AppBar className={classes.appBar} position="sticky">
       <Toolbar className={classes.toolbar}>
         {width < 800 ? (
-          <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen}>
-            <MenuIcon className={classes.menuIcon} />
-          </IconButton>
+          <Box className={classes.menuIconContain}>
+            <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen}>
+              <MenuIcon className={classes.menuIcon} />
+            </IconButton>
+            {beanPrice && (
+              <Box style={{ fontSize: 13, lineHeight: '13px' }}>${beanPrice.toFixed(4)}</Box>
+            )}
+          </Box>
         ) : <Box />}
         <Box>
           <WalletModule />
