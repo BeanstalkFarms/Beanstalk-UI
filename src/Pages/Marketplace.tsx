@@ -59,7 +59,7 @@ export default function Marketplace() {
 
   const hasPlots = Object.keys(plots).length > 0;
   return (
-    <div style={{ paddingTop: 150 }}>
+    <div>
       <TabbedMarketplace />
       <Updater />
     </div>
