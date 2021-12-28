@@ -14,6 +14,7 @@ import {
 import {
   AddressInputField,
   ListInputField,
+  TokenInputField,
   PlotInputField,
   fieldStrings,
   TransactionDetailsModule,
@@ -22,6 +23,7 @@ import {
 export const CreateListingModule = forwardRef((props, ref) => {
   const [plotId, setPlotId] = useState(new BigNumber(-1));
   const [plotEndId, setPlotEndId] = useState(new BigNumber(-1));
+  const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
   const [fromPlotIndex, setFromPlotIndex] = useState(new BigNumber(-1));
   const [toPlotEndIndex, setToPlotEndIndex] = useState(new BigNumber(-1));
 
@@ -85,6 +87,21 @@ export const CreateListingModule = forwardRef((props, ref) => {
       label="Select plot to sell"
     />
   );
+  const priceField = (
+    <TokenInputField
+      label="Price per Pod"
+      handleChange={(e) => {
+        const newPricePerPodValue = new BigNumber(e.target.value)
+        // Price can't be created than 1
+        if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
+          setPricePerPodValue(new BigNumber(0.999999))
+          return
+        }
+        setPricePerPodValue(newPricePerPodValue)
+      }}
+      value={TrimBN(pricePerPodValue, 6)}
+    />
+  );
   const fromIndexField = (
     <PlotInputField
       key={0}
@@ -111,6 +128,7 @@ export const CreateListingModule = forwardRef((props, ref) => {
   return (
     <>
       {fromPlotField}
+      {priceField}
     </>
   );
 });
