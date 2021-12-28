@@ -22,7 +22,7 @@ function Offer({ offer, setOffer }) {
         {offer.maxPlaceInLine.toString()}
       </TableCell>
       <TableCell align="center">
-        {offer.maxPlaceInLine.pricePerPod.toString()}
+        {offer.pricePerPod.toString()}
       </TableCell>
       <TableCell align="center">
         {offer.initialAmountToBuy.minus(offer.amountBought).toString()}
