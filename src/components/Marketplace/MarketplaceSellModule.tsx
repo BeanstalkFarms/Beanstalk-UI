@@ -59,8 +59,17 @@ export default function MarketplaceSellModule() {
   ];
 
   const sections = [
-    <Offers />,
-    <CreateListingModule />,
+    <Offers
+    />,
+    <CreateListingModule
+      plots={plots}
+      hasPlots={
+        plots !== undefined &&
+        (Object.keys(plots).length > 0 ||
+          harvestablePodBalance.isGreaterThan(0))
+      }
+      index={parseFloat(harvestableIndex)}
+    />,
   ];
 
   // Render

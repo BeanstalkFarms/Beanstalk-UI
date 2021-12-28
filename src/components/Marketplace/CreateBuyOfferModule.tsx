@@ -1,4 +1,4 @@
-import React, { useEffect, forwardRef, useImperativeHandle, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box, Button } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
@@ -33,7 +33,7 @@ import {
   TransactionDetailsModule,
 } from 'components/Common';
 
-export const CreateBuyOfferModule = forwardRef((props, ref) => {
+export const CreateBuyOfferModule = (props) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
@@ -134,4 +134,4 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
       {maxPlaceInLineField}
     </>
   );
-});
+};
