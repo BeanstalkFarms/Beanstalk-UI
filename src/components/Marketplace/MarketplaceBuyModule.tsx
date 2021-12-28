@@ -114,6 +114,7 @@ export default function MarketplaceBuyModule() {
         handleTabChange={(e, value) => {
           setSection(value)
         }}
+        showButton={section === 0}
       >
         {sections[section]}
       </BaseModule>
