@@ -13,18 +13,17 @@ import {
   approveBeanstalkBean,
   approveBeanstalkLP,
   SwapMode,
-  // poolForLP,
   FarmAsset,
   CryptoAsset,
 } from 'util/index';
 import {
   BaseModule,
   ListTable,
-  // SiloAsset,
   siloStrings,
-  // TransitAsset,
 } from 'components/Common';
 import { PlotSellModule } from './PlotSellModule';
+import Offers from './Offers';
+import CreateListingModule from './CreateListingModule';
 
 export default function MarketplaceSellModule() {
   // Global state
@@ -60,8 +59,8 @@ export default function MarketplaceSellModule() {
   ];
 
   const sections = [
-    <div />,
-    <div />,
+    <Offers />,
+    <CreateListingModule />,
   ];
 
   // Render
