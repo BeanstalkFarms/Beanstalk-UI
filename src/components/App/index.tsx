@@ -15,7 +15,7 @@ import { NavigationBar, NavigationSidebar } from 'components/Navigation';
 import {
   //
   MetamasklessPage,
-  Marketplace,
+  MarketplacePage,
   //
   FarmPage,
   SiloPage,
@@ -78,7 +78,7 @@ export default function App() {
             <Redirect to="/silo" />
           </Route>
           <Route path="/analytics">
-            <Analytics />
+            <AnalyticsPage />
           </Route>
           {/* Farm */}
           <Route exact path="/farm/silo">
@@ -128,7 +128,7 @@ export default function App() {
             <AboutPage key="about" />
           </Route>
           <Route exact path="/marketplace">
-            <Marketplace key="marketplace" />
+            <MarketplacePage key="marketplace" />
           </Route>
           {/* If nothing matches, go to the Silo */}
           <Redirect to="/farm/silo" />
