@@ -15,6 +15,7 @@ import {
   TransitAsset,
 } from 'components/Common';
 import { CreateBuyOfferModule } from './CreateBuyOfferModule';
+import Listings from './Listings';
 
 export default function MarketplaceBuyModule() {
   const [buyOffer, setBuyOffer] = useState(null);
@@ -99,6 +100,7 @@ export default function MarketplaceBuyModule() {
       setSection={setSection}
       updateExpectedPrice={updateExpectedPrice}
     />,
+    <Listings />,
   ];
 
   return (
