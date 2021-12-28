@@ -58,11 +58,6 @@ export default function MarketplaceBuyModule() {
 
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
-  const [settings, setSettings] = useState({
-    claim: false,
-    mode: null,
-    slippage: new BigNumber(BASE_SLIPPAGE),
-  });
   const [page, setPage] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
@@ -86,20 +81,6 @@ export default function MarketplaceBuyModule() {
   const sectionTitlesInfoDescription = [
     siloStrings.beanDepositsTable,
   ];
-
-  const handlePageChange = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  if (settings.mode === null) {
-    if (beanBalance.isGreaterThan(0)) {
-      setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
-    } else if (ethBalance.isGreaterThan(0)) {
-      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    } else if (beanBalance.isEqualTo(0) && ethBalance.isEqualTo(0)) {
-      setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
-    }
-  }
 
   const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
     const endPrice = prices.ethReserve
@@ -143,78 +124,20 @@ export default function MarketplaceBuyModule() {
       lpReceivableBalance={lpReceivableBalance}
       setBuyOffer={setBuyOffer}
       setSection={setSection}
-      setSettings={setSettings}
-      settings={settings}
       updateExpectedPrice={updateExpectedPrice}
     />,
   ];
 
-  //
-  const sectionTitlesInfo = [];
-  const sectionsInfo = [];
-  if (beanDeposits !== undefined && Object.keys(beanDeposits).length > 0) {
-    sectionsInfo.push(
-      <ListTable
-        asset={SiloAsset.Bean}
-        claimableBalance={farmableBeanBalance}
-        claimableStalk={farmableBeanBalance}
-        crates={rawBeanDeposits}
-        handleChange={handlePageChange}
-        indexTitle="Season"
-        page={page}
-        season={season}
-      />
-    );
-    sectionTitlesInfo.push(
-      'Bean Deposits'
-    );
-  }
-
-  //
-  if (
-    (beanWithdrawals !== undefined &&
-      Object.keys(beanWithdrawals).length > 0) ||
-    beanReceivableBalance.isGreaterThan(0)
-  ) {
-    sectionsInfo.push(
-      <ListTable
-        asset={TransitAsset.Bean}
-        crates={beanWithdrawals}
-        claimableBalance={beanReceivableBalance}
-        claimableCrates={beanReceivableCrates}
-        handleChange={handlePageChange}
-        index={season}
-        indexTitle="Seasons to Arrival"
-        page={page}
-      />
-    );
-    sectionTitlesInfo.push('Bean Withdrawals');
-  }
-
-  const allowance =
-    (settings.mode === SwapMode.Bean ||
-      settings.mode === SwapMode.BeanEthereum) &&
-    section === 0
-      ? beanstalkBeanAllowance
-      : new BigNumber(1);
-
-  //
   return (
     <>
       <BaseModule
         style={{ marginTop: '20px' }}
-        allowance={allowance}
-        resetForm={() => {
-          setSettings({ ...settings, mode: SwapMode.Ethereum });
-        }}
         handleApprove={approveBeanstalkBean}
         handleForm={onCreate}
         isDisabled={buyOffer == null}
-        mode={settings.mode}
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkBeanAllowance}
       >
         {sections[section]}
       </BaseModule>

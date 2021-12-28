@@ -71,15 +71,11 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
     <InputFieldPlus
       key={0}
       balance={props.beanBalance}
-      claim={props.settings.claim}
-      claimableBalance={props.beanClaimableBalance}
-      beanLPClaimableBalance={props.beanLPClaimableBalance}
       handleChange={(v) => {
         fromValueUpdated(v, fromEthValue);
       }}
       token={CryptoAsset.Bean}
       value={fromBeanValue}
-      visible={props.settings.mode !== SwapMode.Ethereum}
     />
   );
   const fromEthField = (
@@ -87,12 +83,9 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
       key={1}
       balance={props.ethBalance}
       buyBeans={toBuyBeanValue}
-      claim={props.settings.claim}
-      claimableBalance={props.claimableEthBalance}
       handleChange={(v) => {
         fromValueUpdated(fromBeanValue, v);
       }}
-      mode={props.settings.mode}
       sellEth={fromEthValue}
       updateExpectedPrice={props.updateExpectedPrice}
       value={TrimBN(fromEthValue, 9)}
