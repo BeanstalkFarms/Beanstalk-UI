@@ -23,6 +23,7 @@ import {
   CryptoAsset,
   ClaimTextModule,
   EthInputField,
+  TokenInputField,
   FrontrunText,
   InputFieldPlus,
   SettingsFormModule,
@@ -35,7 +36,9 @@ import {
 export const CreateBuyOfferModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
+  const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
+  console.log('price per pod:', pricePerPodValue);
 
   function fromValueUpdated(newFromNumber, newFromEthNumber) {
     const buyBeans = getToAmount(
@@ -46,9 +49,6 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
     setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
     setFromEthValue(TrimBN(newFromEthNumber, ETH.decimals));
     setFromBeanValue(TrimBN(newFromNumber, BEAN.decimals));
-    const depositedBeans = MaxBN(buyBeans, new BigNumber(0)).plus(
-      MaxBN(newFromNumber, new BigNumber(0))
-    );
   }
 
   /* Input Fields */
@@ -84,9 +84,27 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
       value={TrimBN(fromEthValue, 9)}
     />
   );
+  const pricePerPodField = (
+    <TokenInputField
+      key={2}
+      label="Price per pod"
+      handleChange={(e) => {
+        const newPricePerPodValue = new BigNumber(e.target.value)
+        // Price can't be created than 1
+        if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
+          setPricePerPodValue(new BigNumber(1))
+          return
+        }
+        setPricePerPodValue(new BigNumber(e.target.value))
+      }}
+      value={TrimBN(pricePerPodValue, 6)}
+      balance={new BigNumber(0)}
+    />
+  );
+  console.log('eth:', fromEthValue.toString())
+  console.log('price per pod:', pricePerPodValue.toString())
 
   /* Transaction Details, settings and text */
-
   const details = [];
   if (props.settings.claim) {
     details.push(
@@ -126,84 +144,11 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
   details.push(`Deposit ${displayBN(beanOutput)}
     ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`);
 
-  const frontrunTextField =
-    props.settings.mode !== SwapMode.Bean &&
-    props.settings.slippage.isLessThanOrEqualTo(SLIPPAGE_THRESHOLD) ? (
-      <FrontrunText />
-    ) : null;
-  const showSettings = (
-    <SettingsFormModule
-      setSettings={props.setSettings}
-      settings={props.settings}
-      handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
-      hasClaimable={props.hasClaimable}
-      hasSlippage
-    />
-  );
-  function transactionDetails() {
-    return (
-      <>
-        <ExpandMoreIcon
-          color="primary"
-          style={{ marginBottom: '-14px', width: '100%' }}
-        />
-        <Box style={{ display: 'inline-flex' }}>
-          <p>hi</p>
-        </Box>
-        <Box style={{ display: 'inline-block', width: '100%' }}>
-          <p>hi</p>
-        </Box>
-        <TransactionDetailsModule fields={details} />
-        <Box
-          style={{
-            display: 'inline-block',
-            width: '100%',
-            fontSize: 'calc(9px + 0.5vmin)',
-          }}
-        >
-          <span>
-            hi
-          </span>
-        </Box>
-      </>
-    );
-  }
-
-  useImperativeHandle(ref, () => ({
-    handleForm() {
-      const claimable = props.settings.claim ? props.claimable : null;
-      if (fromEthValue.isGreaterThan(0)) {
-        const beans = MaxBN(
-          toBaseUnitBN(fromBeanValue, BEAN.decimals),
-          new BigNumber(0)
-        ).toString();
-        const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
-        const buyBeans = toStringBaseUnitBN(
-          toBuyBeanValue.multipliedBy(props.settings.slippage),
-          BEAN.decimals
-        );
-        buyAndDepositBeans(beans, buyBeans, eth, claimable, () => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-        });
-      } else {
-        depositBeans(
-          toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
-          claimable,
-          () => {
-            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-          }
-        );
-      }
-    },
-  }));
-
   return (
     <>
       {fromBeanField}
       {fromEthField}
-      {transactionDetails()}
-      {frontrunTextField}
-      {showSettings}
+      {pricePerPodField}
     </>
   );
 });
