@@ -14,6 +14,7 @@ import {
   Transaction,
   State,
   updateTransactionHash,
+  setDrawerOpen,
 } from './actions';
 
 export interface GeneralState {
@@ -27,6 +28,7 @@ export interface GeneralState {
   contractEvents: Array;
   transactions: Array<Transaction>;
   width: Number;
+  drawerOpen: boolean;
 }
 
 export const initialState: GeneralState = {
@@ -38,6 +40,7 @@ export const initialState: GeneralState = {
   contractEvents: [],
   transactions: [],
   width: window.innerWidth,
+  drawerOpen: false,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -105,5 +108,8 @@ export default createReducer(initialState, (builder) =>
           ...state.transactions.slice(index + 1),
         ];
       }
+    })
+    .addCase(setDrawerOpen, (state, { payload }) => {
+      state.drawerOpen = payload;
     })
 );

@@ -47,3 +47,7 @@ export const completeTransaction = createAction<Number>(
 export const updateTransactionHash = createAction<any>(
   'general/updateTransactionHash'
 );
+
+export const setDrawerOpen = createAction<boolean>(
+  'general/setDrawerOpen'
+);

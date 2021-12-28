@@ -40,6 +40,10 @@ import {
 } from 'constants/index';
 
 export default function Footer() {
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+
   const classes = makeStyles({
     fixedGround: {
       backgroundColor: 'transparent',
@@ -50,14 +54,13 @@ export default function Footer() {
       display: 'flex',
       alignContent: 'space-around',
       height: theme.groundHeight,
-      zIndex: 1000000,
+      // zIndex: 1000000,
       position: 'fixed',
-      bottom: '0px',
+      bottom: 0,
+      left: 0,
+      paddingLeft: width < 800 ? 0 : 300
     },
   })();
-  const { width } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
 
   const logoStyle = {
     height: '25px',

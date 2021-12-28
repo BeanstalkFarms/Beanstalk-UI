@@ -1,8 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { BigNumber } from 'bignumber.js';
-import {
-  setPrices,
-} from './actions';
+import { setPrices } from './actions';
 
 export interface PriceState {
   beanPrice: BigNumber;
@@ -13,6 +11,12 @@ export interface PriceState {
   usdcTWAPPrice: BigNumber;
   beansToPeg: BigNumber;
   lpToPeg: BigNumber;
+  ethPrices: {
+    fast: BigNumber;
+    propose: BigNumber;
+    safe: BigNumber;
+    ethPrice: BigNumber;
+  };
 }
 
 export const initialState: PriceState = {
@@ -24,14 +28,22 @@ export const initialState: PriceState = {
   usdcTWAPPrice: new BigNumber(-1),
   beansToPeg: new BigNumber(-1),
   lpToPeg: new BigNumber(-1),
+  ethPrices: {
+    fast: new BigNumber(-1),
+    propose: new BigNumber(-1),
+    safe: new BigNumber(-1),
+    ethPrice: new BigNumber(-1),
+  },
 };
 
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(setPrices, (state, { payload }) => {
-      Object.keys(payload).map((key) => {
+      // Shallow update of PriceState
+      // Use .map instead of for..in because
+      // linting doesn't like the latter for some reason
+      Object.keys(payload).forEach((key) => {
         state[key] = payload[key];
-        return state[key];
       });
     })
 );

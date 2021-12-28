@@ -1,22 +1,13 @@
 .App {
-  text-align: center;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  opacity: 1.5;
-  overflow-x: hidden;
-  width: 98vw;
-  font-family: Futura-PT-Book;
-  z-index: 1;
-  overflow: hidden;
-  margin-bottom: '60px';
+  width: 100%;
+  font-family: Futura-PT-Book, !important;
 }
 
 .BeanstalkBG[name="main"] {
-  background-image: url('../../img/beanstalk-background.svg');
+  background-image: url('../../img/main/beanstalk.svg');
 }
 .BeanstalkBG[name="ropsten"] {
-  background-image: url('../../img/beanstalk-background-ropsten.svg');
+  background-image: url('../../img/main/beanstalk-ropsten.svg');
 }
 .BeanstalkBG[name="spooky"] {
   background-image: url('../../img/dark/beanstalk-background.svg');
@@ -38,32 +29,76 @@
   height: 100%;
   z-index: -10;
 }
+.Barn[name="main"] {
+  background-image: url('../../img/main/Barn.svg');
+}
+.Barn[name="ropsten"] {
+  background-image: url('../../img/main/Barn.svg');
+}
+.Barn[name="spooky"] {
+  background-image: url('../../img/dark/Barn.svg');
+}
+.Barn[name="fall"] {
+  background-image: url('../../img/fall/Barn.svg');
+}
+.Barn[name="winter"] {
+  background-image: url('../../img/winter/Barn.svg');
+}
+.Barn {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 10px;
+  bottom: 65px;
+  height: 16vw;
+  width: 100%;
+  min-height: 95px;
+  position: fixed;
+  z-index: -1;
+}
 
+.BeanstalkMT[name="main"] {
+  background-image: url('../../img/main/background.svg');
+}
+.BeanstalkMT[name="ropsten"] {
+  background-image: url('../../img/main/background-ropsten.svg');
+}
 .BeanstalkMT[name="fall"] {
   background-image: url('../../img/fall/Mountain.svg');
 }
 .BeanstalkMT[name="winter"] {
   background-image: url('../../img/winter/background.svg');
 }
-.BeanstalkMT[name="ropsten"] {
-  background-image: url('../../img/main/Background.svg');
-}
 .BeanstalkMT[name="fall"] {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: 100%;
   position: fixed;
+  top: calc(28vh - 2vw);
   width: 100%;
   height: 100%;
   z-index: -100;
+}
+.BeanstalkMT[name="spooky"] {
+  display: none;
 }
 .BeanstalkMT[name="winter"] {
   background-repeat: repeat-x;
   background-size: contain;
   background-position: 100%;
   position: fixed;
+  top: calc(28vh - 2vw);
   width: 100%;
   height: 100%;
+  z-index: -100;
+}
+.BeanstalkMT {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 100%;
+  position: fixed;
+  top: calc(28vh - 2vw);
+  width: 100%;
+  height: 105%;
   z-index: -100;
 }
 
@@ -97,7 +132,7 @@
     display: none !important;
 }
 
-@media screen and (max-width: 1065px) {
+@media screen and (max-width: 1200px) {
   .BalanceSection {
     display: none !important;
   }
@@ -112,9 +147,9 @@
 }
 
 .AppContent {
-  min-height: 300px;
-  width: 100vw;
-  position: relative;
+  /* min-height: 300px; */
+  /* width: 100vw; */
+  /* position: relative; */
   display: flex;
   font-family: Futura-PT-Book;
 }
@@ -145,17 +180,27 @@
 
 .App-logo {
   pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.App-priceLogo {
+  pointer-events: none;
+  color: black;
 }
 
 
 .svg[name="ropsten"] {
   filter: invert(62%) sepia(71%) saturate(5742%) hue-rotate(312deg) brightness(103%) contrast(101%);
 }
+.svg[name="spooky"] {
+  filter: invert(62%) sepia(48%) saturate(5985%) hue-rotate(2deg) brightness(105%) contrast(103%); /* spooky color */
+}
 .svg[name="fall"] {
   filter: invert(72%) sepia(52%) saturate(2707%) hue-rotate(336deg) brightness(85%) contrast(90%); /* fall color */
 }
 .svg[name="winter"] {
-  filter: invert(23%) sepia(12%) saturate(2340%) hue-rotate(153deg) brightness(93%) contrast(91%);
+  filter: invert(23%) sepia(12%) saturate(2340%) hue-rotate(153deg) brightness(93%) contrast(91%); /* winter color */
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -433,4 +478,9 @@ input[type=number] {
 
 .Settings-drawer {
   transition: right 0.5s;
+}
+
+/* */
+.Sidebar {
+  background-color: white;
 }

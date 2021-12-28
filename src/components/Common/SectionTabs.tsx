@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { AppState } from 'state';
 import { theme as colors } from 'constants/index';
+import { useSelector } from 'react-redux';
 import { Tab, Tabs } from '@material-ui/core';
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 
@@ -10,18 +12,9 @@ export default function SectionTabs({
   }) {
   const tabHeight = '48px';
 
-  const [width, setWidth] = useState<number>(window.innerWidth);
-
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
-  }, []);
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   const theme = createTheme({
     overrides: {
@@ -40,7 +33,7 @@ export default function SectionTabs({
     height: tabHeight,
     minHeight: tabHeight,
     maxWidth: `${Math.max(sectionTitles.length * 120, 300)}px`,
-    width: '80%',
+    width: width < 550 ? '95%' : '80%',
     backgroundColor: colors.module.background,
     padding: '0 5px',
     borderRadius: '10px',
