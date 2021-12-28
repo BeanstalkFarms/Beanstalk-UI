@@ -60,8 +60,8 @@ export default function MarketplaceBuyModule() {
   const [section, setSection] = useState(0);
 
   const sectionTitles = [
-    'Create Buy Offer',
     'Listings',
+    'Make Offer',
   ];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit,
@@ -85,6 +85,7 @@ export default function MarketplaceBuyModule() {
   };
 
   const sections = [
+    <Listings />,
     <CreateBuyOfferModule
       key={0}
       beanBalance={beanBalance}
@@ -100,7 +101,6 @@ export default function MarketplaceBuyModule() {
       setSection={setSection}
       updateExpectedPrice={updateExpectedPrice}
     />,
-    <Listings />,
   ];
 
   return (
@@ -116,7 +116,7 @@ export default function MarketplaceBuyModule() {
         handleTabChange={(e, value) => {
           setSection(value)
         }}
-        showButton={section === 0}
+        showButton={section === 1}
       >
         {sections[section]}
       </BaseModule>
