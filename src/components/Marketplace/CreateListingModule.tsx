@@ -75,7 +75,6 @@ export const CreateListingModule = forwardRef((props, ref) => {
     fromIndexValueUpdated(MinBN(fromPlotIndex, new BigNumber(0)), plotEndId);
   };
 
-  console.log('got plots:', props.plots)
   /* Input Fields */
   const fromPlotField = (
     <ListInputField
@@ -83,6 +82,7 @@ export const CreateListingModule = forwardRef((props, ref) => {
       items={props.plots ? props.plots : {}}
       marginBottom={props.hasPlots === true ? '0px' : '-7px'}
       handleChange={handleFromChange}
+      label="Select plot to sell"
     />
   );
   const fromIndexField = (
