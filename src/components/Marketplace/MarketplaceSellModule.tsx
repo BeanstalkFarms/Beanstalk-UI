@@ -53,7 +53,7 @@ export default function MarketplaceSellModule() {
     setSection(newSection)
   };
 
-  const sectionTitles = ['Buy Offers', 'Sell Plot'];
+  const sectionTitles = ['Offers', 'Sell Plot'];
   const sectionTitlesDescription = [
     siloStrings.lpDeposit, // FIXME
     siloStrings.lpDeposit, // FIXME
@@ -75,6 +75,7 @@ export default function MarketplaceSellModule() {
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
+        showButton={section === 1}
       >
         {sections[section]}
       </BaseModule>
