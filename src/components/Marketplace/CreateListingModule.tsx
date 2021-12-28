@@ -55,13 +55,6 @@ export const CreateListingModule = forwardRef((props, ref) => {
       fromValueUpdated(new BigNumber(-1));
     }
   };
-  const handleFromIndexChange = (event) => {
-    if (event.target.value) {
-      fromIndexValueUpdated(event.target.value, toPlotEndIndex);
-    } else {
-      fromIndexValueUpdated(new BigNumber(0), toPlotEndIndex);
-    }
-  };
   const handleFromIndexEndChange = (event) => {
     if (event.target.value) {
       fromIndexValueUpdated(fromPlotIndex, event.target.value);
@@ -102,24 +95,13 @@ export const CreateListingModule = forwardRef((props, ref) => {
       value={TrimBN(pricePerPodValue, 6)}
     />
   );
-  const fromIndexField = (
-    <PlotInputField
-      key={0}
-      hidden={props.isFormDisabled && !fromPlotIndex.isEqualTo(toPlotEndIndex)}
-      balance={plotEndId}
-      handleChange={handleFromIndexChange}
-      label="Start Index"
-      value={new BigNumber(fromPlotIndex)}
-      minHandler={minHandler}
-    />
-  );
   const fromIndexEndField = (
     <PlotInputField
       key={0}
       hidden={props.isFormDisabled && !fromPlotIndex.isEqualTo(toPlotEndIndex)}
       balance={plotEndId}
       handleChange={handleFromIndexEndChange}
-      label="End Index"
+      label="Amount"
       value={toPlotEndIndex}
       maxHandler={maxHandler}
     />
@@ -129,6 +111,7 @@ export const CreateListingModule = forwardRef((props, ref) => {
     <>
       {fromPlotField}
       {priceField}
+      {fromIndexEndField}
     </>
   );
 });
