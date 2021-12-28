@@ -191,6 +191,8 @@ export const fieldStrings = {
     'The Pod APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
   seasonsToPodClearance:
     'The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate Seasons to Pod Clearance,',
+  plotTable:
+    'A Plot of Pods is created everytime Beans are Sown. Plots have a place in the Pod Line based on the order they were created. As Pods are harvested, your Plots will automatically advance in line. Entire Plots and sections of Plots can be transferred using the Send tab of the Field module.',
 };
 export const tradeStrings = {
   swap: 'Use this tab to trade against the BEAN:ETH Uniswap pool directly on the bean.money website.',

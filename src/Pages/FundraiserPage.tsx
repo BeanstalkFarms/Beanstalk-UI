@@ -7,6 +7,9 @@ export default function FundraiserPage() {
   const sections = [<Fundraiser />];
 
   return (
-    <Page sections={sections} sectionTitles={sectionTitles} />
+    <Page
+      sections={sections}
+      sectionTitles={sectionTitles}
+    />
   );
 }

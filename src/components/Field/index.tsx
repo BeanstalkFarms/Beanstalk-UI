@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { displayBN, displayFullBN } from 'util/index';
@@ -17,28 +17,17 @@ export default function Field() {
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-
   const weather = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
-
   const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
-  const [width, setWidth] = useState<number>(window.innerWidth);
-
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
-  }, []);
-
+  //
   const headerLabelStyle = {
     maxWidth: '250px',
   };
@@ -51,6 +40,7 @@ export default function Field() {
     padding: '0px',
   };
 
+  //
   const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
   const apy = weather.weather.multipliedBy(8760).dividedBy(tth);
 
@@ -172,7 +162,10 @@ export default function Field() {
         className="SiloSection"
         alignItems="flex-start"
         justifyContent="center"
-        style={{ minHeight: '550px', height: '100%' }}
+        style={{
+          minHeight: '550px',
+          // height: '100%'
+        }}
       >
         <Grid
           item

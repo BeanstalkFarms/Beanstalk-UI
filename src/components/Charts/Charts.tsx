@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import { BaseModule } from 'components/Common';
+import { AppState } from 'state';
 import { Chart } from './Chart';
 
 export default function Charts(props) {
@@ -7,19 +10,9 @@ export default function Charts(props) {
 
   const [dataMode, setDataMode] = useState('hr');
   const [timeMode, setTimeMode] = useState('week');
-
-  const [width, setWidth] = useState<number>(window.innerWidth);
-
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
-  }, []);
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   if (props.charts.length === 0) {
     return null;
@@ -55,7 +48,9 @@ export default function Charts(props) {
     if (c.tabTitle !== undefined) {
       return c.tabTitle;
     }
-    return c.title.toUpperCase();
+    return (
+      <span>{c.title.toUpperCase()}</span>
+    );
   });
 
   const descriptions =

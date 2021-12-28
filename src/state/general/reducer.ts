@@ -9,6 +9,7 @@ import {
   setHasActiveFundraiser,
   setFundraisers,
   setWidth,
+  setDrawerOpen,
 } from './actions';
 
 export interface GeneralState {
@@ -21,6 +22,7 @@ export interface GeneralState {
   hasActiveFundraiser: Boolean;
   contractEvents: Array;
   width: Number;
+  drawerOpen: boolean;
 }
 
 export const initialState: GeneralState = {
@@ -31,6 +33,7 @@ export const initialState: GeneralState = {
   hasActiveBIP: false,
   contractEvents: [],
   width: window.innerWidth,
+  drawerOpen: false,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -61,5 +64,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setWidth, (state, { payload }) => {
       state.width = payload;
+    })
+    .addCase(setDrawerOpen, (state, { payload }) => {
+      state.drawerOpen = payload;
     })
 );

@@ -4,11 +4,15 @@ import Charts from 'components/Charts';
 import Seasons from 'components/Seasons';
 import Balances from 'components/Balances';
 
-export default function Analytics(props) {
+export default function AnalyticsPage(props) {
   const sectionTitles = ['Charts', 'Seasons', 'Balances'];
   const sections = [<Charts />, <Seasons />, <Balances />];
 
   return (
-    <Page sections={sections} sectionTitles={sectionTitles} sectionNumber={props.sectionNumber} />
+    <Page
+      sections={sections}
+      sectionTitles={sectionTitles}
+      sectionNumber={props.sectionNumber}
+    />
   );
 }

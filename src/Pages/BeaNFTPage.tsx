@@ -8,6 +8,11 @@ export default function DAO(props) {
   const sections = [<NFTs />, <NFTLeaderboard />];
 
   return (
-    <Page sections={sections} sectionTitles={sectionTitles} textTransform="none" sectionNumber={props.sectionNumber} />
+    <Page
+      sections={sections}
+      sectionTitles={sectionTitles}
+      textTransform="none"
+      sectionNumber={props.sectionNumber}
+    />
   );
 }

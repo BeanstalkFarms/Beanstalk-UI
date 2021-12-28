@@ -1,6 +1,8 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import TurkeyIcon from 'img/fall/turkey.svg';
 import FenceIcon from 'img/fall/fence-fall.svg';
 import fallGround from 'img/fall/ground-grass.png';
@@ -22,16 +24,10 @@ export default function Fall(props) {
       bottom: '14px',
     },
   })();
-  const width = window.innerWidth;
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
-  const barnStyle = {
-    bottom: theme.groundItemHeight,
-    height: '15vw',
-    left: 10,
-    minHeight: '135px',
-    position: 'fixed',
-    zIndex: -1,
-  };
   const itemStyle =
     width > 650
       ? {
@@ -76,7 +72,6 @@ export default function Fall(props) {
   return (
     <>
       <Grid container className={classes.topGround} justifyContent="center" />
-      <img alt="Barn Icon" src={theme.barn} style={barnStyle} />
       <img alt="Fence Icon" src={FenceIcon} style={miscStyle} />
       <img alt="Turkey Icon" src={TurkeyIcon} style={itemStyle} />
       <img alt="Turkey Icon" src={TurkeyIcon} style={rightItemStyle} />
