@@ -17,7 +17,7 @@ import {
 import { CreateBuyOfferModule } from './CreateBuyOfferModule';
 
 export default function MarketplaceBuyModule() {
-  const [canCreateBuyOffer, setCanCreateBuyOffer] = useState(false)
+  const [buyOffer, setBuyOffer] = useState(null);
   const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -110,7 +110,7 @@ export default function MarketplaceBuyModule() {
   };
 
   const onCreate = () => {
-    console.log('oh shit');
+    console.log('submit buy offer here:', buyOffer);
   };
 
   const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
@@ -141,7 +141,7 @@ export default function MarketplaceBuyModule() {
       hasClaimable={hasClaimable}
       harvestablePodBalance={harvestablePodBalance}
       lpReceivableBalance={lpReceivableBalance}
-      setCanCreateBuyOffer={setCanCreateBuyOffer}
+      setBuyOffer={setBuyOffer}
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
@@ -209,7 +209,7 @@ export default function MarketplaceBuyModule() {
         }}
         handleApprove={approveBeanstalkBean}
         handleForm={onCreate}
-        isDisabled={!canCreateBuyOffer}
+        isDisabled={buyOffer == null}
         mode={settings.mode}
         section={section}
         sectionTitles={sectionTitles}

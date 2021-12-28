@@ -40,12 +40,19 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
   const [maxPlaceInLineValue, setMaxPlaceInLineValue] = useState(new BigNumber(-1));
 
-  const { setCanCreateBuyOffer } = props;
+  const { setBuyOffer } = props;
   useEffect(() => {
-    console.log('new:', fromBeanValue.toString(), fromEthValue.toString(), toBuyBeanValue.toString(), pricePerPodValue.toString(), maxPlaceInLineValue.toString());
     const canBuy = toBuyBeanValue.isGreaterThan(0) && pricePerPodValue.isGreaterThan(0) && pricePerPodValue.isLessThan(1) && maxPlaceInLineValue.isLessThan(10000000) && maxPlaceInLineValue.isGreaterThan(0)
-    setCanCreateBuyOffer(canBuy);
-  }, [setCanCreateBuyOffer, fromBeanValue, fromEthValue, toBuyBeanValue, pricePerPodValue, maxPlaceInLineValue]);
+    if (canBuy) {
+      setBuyOffer({
+        pricePerPod: pricePerPodValue,
+        buyBeanAmount: toBuyBeanValue,
+        maxPlaceInLine: maxPlaceInLineValue,
+      })
+    } else {
+      setBuyOffer(null);
+    }
+  }, [setBuyOffer, fromBeanValue, fromEthValue, toBuyBeanValue, pricePerPodValue, maxPlaceInLineValue]);
 
   function fromValueUpdated(newFromNumber, newFromEthNumber) {
     const buyBeans = getToAmount(
