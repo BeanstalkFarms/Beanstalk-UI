@@ -24,10 +24,7 @@ import {
   siloStrings,
   // TransitAsset,
 } from 'components/Common';
-// import { LPDepositModule } from '../Silo/LPDepositModule';
 import { PlotSellModule } from './PlotSellModule';
-// import { LPWithdrawModule } from '../Silo/LPWithdrawModule';
-// import { LPClaimModule } from '../Silo/LPClaimModule';
 
 export default function MarketplaceSellModule() {
   // Global state
@@ -35,24 +32,9 @@ export default function MarketplaceSellModule() {
     lpBalance,
     beanBalance,
     ethBalance,
-    // lpReceivableBalance,
-    // beanDeposits,
-    // claimable,
-    // claimableEthBalance,
-    // hasClaimable,
-    // beanSiloBalance,
-    // beanClaimableBalance,
-    // lpDeposits,
     locked,
-    // lpSiloBalance,
-    // seedBalance,
-    // stalkBalance,
-    // lpSeedDeposits,
-    // lpReceivableCrates,
-    // lpWithdrawals,
     lockedSeasons,
     harvestablePodBalance,
-    // beanReceivableBalance,
     plots,
     harvestablePlots,
   } = useSelector<AppState, AppState['userBalance']>(
@@ -61,15 +43,6 @@ export default function MarketplaceSellModule() {
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<AppState, AppState['allowances']>(
     (state) => state.allowances
   );
-  // const prices = useSelector<AppState, AppState['prices']>(
-  //   (state) => state.prices
-  // );
-  // const season = useSelector<AppState, AppState['season']>(
-  //   (state) => state.season.season
-  // );
-  // const totalBalance = useSelector<AppState, AppState['totalBalance']>(
-  //   (state) => state.totalBalance
-  // );
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
@@ -89,22 +62,6 @@ export default function MarketplaceSellModule() {
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   // Handlers
-  // const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
-  //   const endPrice = prices.ethReserve
-  //     .plus(sellEth)
-  //     .dividedBy(prices.beanReserve.minus(buyBeans))
-  //     .dividedBy(prices.usdcPrice);
-  //   return prices.beanPrice.plus(endPrice).dividedBy(2);
-  // };
-  // const poolForLPRatio = (amount: BigNumber) => {
-  //   if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
-  //   return poolForLP(
-  //     amount,
-  //     prices.beanReserve,
-  //     prices.ethReserve,
-  //     totalBalance.totalLP
-  //   );
-  // };
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
       setSection(newSection);
