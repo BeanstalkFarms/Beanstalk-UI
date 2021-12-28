@@ -1,19 +1,22 @@
 import cloud from 'img/cloud-background.png';
 import darkCloud from 'img/dark/cloud-background-dark.png';
 import fallCloud from 'img/fall/cloud-background-fall.png';
-import winterCloud from 'img/main/cloud-background-winter.png';
+import mainCloud from 'img/main/cloud-navbar.png';
 import sun from 'img/Sun.svg';
 import darkSun from 'img/dark/Sun.svg';
 import fallSun from 'img/fall/Sun.svg';
 import winterSun from 'img/winter/Sun.svg';
+import mainSun from 'img/main/Sun.svg';
 import ground from 'img/ground.png';
 import darkGround from 'img/dark/ground.png';
 import fallGround from 'img/fall/ground.png';
 import winterGround from 'img/winter/ground.png';
+import mainGround from 'img/main/ground.png';
 import barn from 'img/Barn.svg';
 import darkBarn from 'img/dark/Barn.svg';
 import fallBarn from 'img/fall/Barn.svg';
 import winterBarn from 'img/winter/Barn.svg';
+import mainBarn from 'img/main/Barn.svg';
 import bean from 'img/bean-bold-logo.svg';
 import beanWhite from 'img/bean-white-logo.svg';
 
@@ -55,8 +58,46 @@ const normalTheme = {
   bean: bean,
 };
 
+const mainTheme = {
+  name: 'main',
+  primary: '#0E8837',
+  secondary: '#627264',
+  accentColor: '#9A9A9A',
+  bodyBackground: '#DAF2FF',
+  accentText: 'white',
+  border: 'rgba(224, 224, 224, 1)',
+  text: 'black',
+  backgroundText: 'black',
+  linkColor: '#3B3B3B',
+  footer: '#000000',
+  voteSelect: '#DAF2FF',
+  activeSection: 'rgb(14, 136, 55)',
+  navSelection: '#61dafb38',
+  menuColor: 'white',
+  module: {
+    foreground: '#FFFFFF',
+    background: '#F5FAFF',
+    metaBackground: 'rgba(238 238 238 / 85%)',
+  },
+  cloud: mainCloud,
+  cloudColor: '#F5FAFF',
+  sun: mainSun,
+  sunHeight: '10vw',
+  sunLeftPosition: 20,
+  ground: mainGround,
+  groundSize: 'cover',
+  groundHeight: '82px',
+  groundItemHeight: '82px',
+  groundGrass: 'none',
+  barnHeight: '82px',
+  landHeight: '82px',
+  footerPadding: '28px 15px 0 0',
+  barn: mainBarn,
+  bean: bean,
+};
+
 export const ropstenTheme = {
-  ...normalTheme,
+  ...mainTheme,
   name: 'ropsten',
   primary: '#FF4A8D',
   secondary: '#7A2343',
@@ -152,7 +193,7 @@ export const winterTheme = {
     background: '#F5FAFF',
     metaBackground: 'rgba(238 238 238 / 85%)',
   },
-  cloud: winterCloud,
+  cloud: mainCloud,
   cloudColor: 'white',
   sun: winterSun,
   // sunHeight: '15vw',
@@ -176,5 +217,6 @@ export function changeTheme(t: String) {
   else if (t === 'spooky') theme = spookyTheme;
   else if (t === 'fall') theme = fallTheme;
   else if (t === 'winter') theme = winterTheme;
+  else if (t === 'main') theme = mainTheme;
   else theme = normalTheme;
 }
