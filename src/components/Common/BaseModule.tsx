@@ -75,7 +75,7 @@ export default function BaseModule({
       height: '44px',
       margin: '12px 12px',
       width: '64%',
-      maxWidth: '200px',
+      maxWidth: '240px',
     },
     indicator: {
       backgroundColor: 'transparent',

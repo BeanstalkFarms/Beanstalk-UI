@@ -5,7 +5,7 @@ import { IconButton, Box } from '@material-ui/core';
 import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, BEAN_TO_STALK } from 'constants/index';
+import { BASE_SLIPPAGE } from 'constants/index';
 import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
 import {
   BaseModule,
@@ -14,7 +14,7 @@ import {
   siloStrings,
   TransitAsset,
 } from 'components/Common';
-import { BeanDepositModule } from '../Silo/BeanDepositModule';
+import { CreateBuyOfferModule } from './CreateBuyOfferModule';
 
 export default function MarketplaceBuyModule() {
   const { beanstalkBeanAllowance } = useSelector<
@@ -30,11 +30,8 @@ export default function MarketplaceBuyModule() {
     claimable,
     claimableEthBalance,
     hasClaimable,
-    // beanSiloBalance,
     beanClaimableBalance,
     locked,
-    // seedBalance,
-    // stalkBalance,
     lockedSeasons,
     beanReceivableBalance,
     beanReceivableCrates,
@@ -158,7 +155,7 @@ export default function MarketplaceBuyModule() {
   );
 
   const sections = [
-    <BeanDepositModule
+    <CreateBuyOfferModule
       key={0}
       beanBalance={beanBalance}
       beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
@@ -166,7 +163,6 @@ export default function MarketplaceBuyModule() {
       beanClaimable={beanClaimable}
       ethClaimable={ethClaimable}
       beanLPClaimableBalance={claimLPBeans}
-      beanToStalk={BEAN_TO_STALK}
       claimable={claimable}
       claimableEthBalance={claimableEthBalance}
       ethBalance={ethBalance}
@@ -179,7 +175,6 @@ export default function MarketplaceBuyModule() {
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalStalk={totalBalance.totalStalk}
       updateExpectedPrice={updateExpectedPrice}
     />,
   ];
@@ -298,7 +293,6 @@ export default function MarketplaceBuyModule() {
         setAllowance={updateBeanstalkBeanAllowance}
       >
         {sections[section]}
-        {showListTablesIcon}
       </BaseModule>
       {showListTables}
     </>
