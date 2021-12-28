@@ -9,7 +9,8 @@ module.exports = {
     page: 'readonly',
     JSX: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb'],
+  // https://typescript-eslint.io/docs/linting/
+  root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -18,18 +19,49 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest'],
+  plugins: [
+    'react', 
+    'react-hooks', 
+    '@typescript-eslint', 
+    'jest'
+  ],
+  extends: [
+    'plugin:react/recommended', 
+    'airbnb'
+  ],
+  //
   rules: {
-    '@typescript-eslint/no-unused-vars': 'warn',
-    'max-classes-per-file': 0,
-    quotes: ['error', 'single'],
+    // Stylistic
+    'semi': 'warn',
+    'comma-dangle': ['warn', {
+      arrays: 'always-multiline',
+      imports: 'always-multiline',
+      exports: 'always-multiline',
+      functions: 'never',
+      objects: 'always-multiline',
+    }],
+    'quote-props': 'warn',
+    'import/order': 'warn',
+    'space-infix-ops': 'warn',
+    'quotes': ['warn', 'single'],
+    'no-multiple-empty-lines': 'warn',
     'jsx-quotes': ['error', 'prefer-double'],
-    'react/jsx-filename-extension': [
-      2,
-      {
-        extensions: ['.ts', '.tsx'],
-      },
-    ],
+    'react/jsx-curly-brace-presence': 'warn',
+    'eol-last': 'warn',
+    'key-spacing': 'warn',
+    'no-multi-spaces': 'warn',
+    'react/jsx-boolean-value': 'warn',
+    'react/jsx-props-no-multi-spaces': 'warn',
+    'spaced-comment': 'warn',
+    // Space efficiency
+    'arrow-body-style': 'warn',
+    'no-trailing-spaces': 'warn',
+    '@typescript-eslint/no-unused-vars': ['warn'],
+    // Other (to categorize)
+    'max-classes-per-file': 0,
+    'react/jsx-filename-extension': ['error', {
+      extensions: ['.ts', '.tsx'],
+    }],
     'no-continue': 0,
     'import/extensions': 0,
     'newline-per-chained-call': 0,
@@ -37,10 +69,9 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'error',
     'import/prefer-default-export': 0,
     'no-unused-vars': 0,
-    '@typescript-eslint/no-unused-vars': ['error'],
     'react/jsx-props-no-spreading': 0,
     'jsx-a11y/label-has-associated-control': 0,
-    'consistent-return': 0, // enable this one
+    'consistent-return': 0,
     'linebreak-style': 0,
     'no-param-reassign': 0,
     'no-unused-expressions': [
@@ -56,21 +87,12 @@ module.exports = {
     'operator-linebreak': 0,
     'import/no-mutable-exports': 0,
     'no-underscore-dangle': 0,
-    'comma-dangle': [
-      'error',
-      {
-        arrays: 'always-multiline',
-        imports: 'always-multiline',
-        exports: 'always-multiline',
-        functions: 'never',
-        objects: 'always-multiline',
-      },
-    ],
+    // 
     'import/no-extraneous-dependencies': 0,
     'implicit-arrow-linebreak': 0,
     'object-curly-newline': 0,
     'function-paren-newline': 0,
-    indent: 0,
+    'indent': 0,
     'react/prop-types': 0,
     'prefer-destructuring': 0,
     'react/destructuring-assignment': 0,

@@ -47,7 +47,7 @@ export const SLIPPAGE_LINK =
 export const DIAMONDS_LINK = 'https://eips.ethereum.org/EIPS/eip-2535';
 
 /* NFT Links */
-export const BASE_IPFS_LINK = 'https://gateway.pinata.cloud/ipfs/';
+export const BASE_IPFS_LINK = 'https://ipfs.io/ipfs/';
 export const BASE_OPENSEA_LINK =
   'https://opensea.io/assets/0xa755a670aaf1fecef2bea56115e65e03f7722a79';
 export const NFT_LINK =

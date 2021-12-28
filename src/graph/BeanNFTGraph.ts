@@ -1,7 +1,11 @@
+import Parse from 'parse/dist/parse.min.js';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { WINTER_NFT_SUBGRAPH_API_LINK } from 'constants/index';
+import { PARSE_APP_ID, PARSE_API_KEY, WINTER_NFT_SUBGRAPH_API_LINK } from 'constants/index';
 import * as nftData from 'json/accounts.json';
 // const APIURL = 'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.0'
+
+Parse.initialize(PARSE_APP_ID, PARSE_API_KEY);
+Parse.serverURL = 'https://parseapi.back4app.com/';
 
 const client = new ApolloClient({
   uri: WINTER_NFT_SUBGRAPH_API_LINK,
@@ -124,6 +128,21 @@ export async function queryAccountNFTStats(account) {
       return {};
   }
   return user;
+}
+
+export async function loadWinterNFTs(account) {
+  const nftQuery = new Parse.Query('NFT');
+  const data = await nftQuery.contains('account', account.toLowerCase()).findAll();
+  return data.map((d) => {
+    const j = d.toJSON();
+    return {
+      id: j.nftId,
+      account: j.account,
+      imageIpfsHash: j.imageIpfsHash,
+      metadataIpfsHash: j.metadataIpfsHash,
+      signature: j.signature,
+    };
+  });
 }
 
 export async function loadNFTs(account) {

@@ -124,7 +124,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
       address={walletText}
       setAddress={setWalletText}
       handleChange={handleChange}
-      marginTop={window.innerWidth > 400 ? '8px' : '7px'}
+      marginTop="0px"
       snapped={snappedToAddress}
       handleClear={clearHandler}
       isValidAddress={props.isValidAddress}
