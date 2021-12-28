@@ -54,13 +54,34 @@ export default function Listings() {
   if (listings.length === 0) {
     return <div>No listings.</div>
   }
+  const buy = () => {
+    console.log('buy listing')
+  }
   return (
     <>
       <Modal
         open={currentListing != null}
         onClose={() => setCurrentListing(null)}
       >
-        <div>hi</div>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <h2>Buy this plot</h2>
+          <p style={{ width: '100%', wordBreak: 'break-all' }}>{JSON.stringify(currentListing)}</p>
+          <Button>
+            Buy
+          </Button>
+        </Box>
       </Modal>
       <TableContainer>
         <Table size="small">
