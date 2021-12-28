@@ -34,24 +34,47 @@ function Barn() {
   if (theme.name === 'winter') {
     return (
       <>
-        <Box className={`BG${count}`} name={theme.name} />
-        <Box className={`B${count}`} name={theme.name} />
+        <Box
+          className={`BG${count}`}
+          name={theme.name}
+        />
+        <Box
+          className={`B${count}`}
+          name={theme.name}
+          style={width < 800 ? { left: '0px' } : { left: '280px' }}
+        />
       </>
     );
   }
 
   // Show the typical Beanstalk background.
   return (
-    <Box className="BeanstalkBG" name={theme.name} />
+    <>
+      <Box
+        className="BeanstalkBG"
+        name={theme.name}
+      />
+      <Box
+        className="Barn"
+        name={theme.name}
+        style={width < 800
+          ? { bottom: theme.barnHeight, left: '0px' }
+          : { bottom: theme.barnHeight, left: '280px' }
+        }
+      />
+    </>
   );
 }
 
 export default function Main() {
   document.body.style.backgroundColor = theme.bodyBackground;
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   const sunStyle = {
     height: theme.sunHeight,
-    left: theme.sunLeftPosition,
+    left: width < 800 ? theme.sunLeftPosition : '300px',
     minHeight: '150px',
     position: 'fixed',
     top: 100,
@@ -66,7 +89,7 @@ export default function Main() {
       <Box
         className="BeanstalkMT"
         name={theme.name}
-        style={{ top: 'calc(28vh - 2vw)' }}
+        style={width < 800 ? { left: '0px' } : { left: '280px' }}
       />
       {/* Sky */}
       <Box

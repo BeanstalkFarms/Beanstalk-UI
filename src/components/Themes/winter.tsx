@@ -33,7 +33,7 @@ export default function Winter(props) {
           bottom: '72px',
           height: '6vw',
           maxHeight: '120px',
-          left: 'calc(65px + 5vw)',
+          width: 'calc(65px + 20vw)',
           minHeight: '5px',
           position: 'fixed',
           zIndex: -1,

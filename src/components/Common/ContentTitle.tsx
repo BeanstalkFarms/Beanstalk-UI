@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { theme } from 'constants/index';
 import { TitleLabel } from './index';
 
 export default function ContentTitle({
@@ -18,6 +19,9 @@ export default function ContentTitle({
     sectionTitle: {
       marginTop: marginTop,
       width: width,
+    },
+    sectionTitleText: {
+      color: theme.backgroundText,
     },
   })();
 

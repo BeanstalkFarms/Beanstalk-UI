@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AppState } from 'state';
 import { setDrawerOpen } from 'state/general/actions';
+import { theme } from 'constants/index';
 import WalletModule from './WalletModule';
 
 const useStyles = makeStyles({
@@ -26,7 +27,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   menuIcon: {
-    color: '#fff',
+    color: theme.accentText,
   },
   toolbar: {
     display: 'flex',
@@ -45,16 +46,28 @@ export default function NavigationBar() {
     (state) => state.prices
   );
   const toggleDrawerOpen = () => dispatch(setDrawerOpen(!drawerOpen));
+
+  const priceStyle = {
+    fontSize: 13,
+    lineHeight: '13px',
+    color: theme.backgroundText,
+    marginLeft: '10px',
+  };
+
   return (
     <AppBar className={classes.appBar} position="sticky">
       <Toolbar className={classes.toolbar}>
         {width < 800 ? (
           <Box className={classes.menuIconContain}>
-            <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen}>
+            <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen} style={{ backgroundColor: theme.secondary }}>
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
             {beanPrice && (
-              <Box style={{ fontSize: 13, lineHeight: '13px' }}>${beanPrice.toFixed(4)}</Box>
+              <Box
+                style={priceStyle}
+              >
+                ${beanPrice.toFixed(4)}
+              </Box>
             )}
           </Box>
         ) : <Box />}

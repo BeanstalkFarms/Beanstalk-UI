@@ -84,18 +84,14 @@ const menuItemStyle = {
 const useStyles = makeStyles({
   walletButton: {
     textDecoration: 'none',
-    // borderRadius: '12px',
-    // color: 'white',
+    color: theme.accentText,
     textTransform: 'none',
     fontFamily: 'Futura-PT-Book',
     fontWeight: 'bold',
-    // fontSize: '16px',
-    // padding: '5px 8px',
-    // marginLeft: '8px',
-    // backgroundColor: '#fff',
-    // '&:hover': {
-    //   backgroundColor: '#61dafb38',
-    // },
+    backgroundColor: theme.secondary,
+    '&:hover': {
+      backgroundColor: theme.activeSection,
+    },
   },
 });
 

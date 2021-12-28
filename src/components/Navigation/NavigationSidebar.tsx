@@ -92,8 +92,8 @@ const useStyles = makeStyles({
     backgroundColor: '#fff',
   },
   Badge: {
-    backgroundColor: '#41616C',
-    color: '#fff',
+    backgroundColor: theme.secondary,
+    color: theme.accentText,
     fontSize: 11.5,
     padding: '2px 5px',
     borderRadius: 4,

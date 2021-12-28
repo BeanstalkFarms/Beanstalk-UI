@@ -29,6 +29,32 @@
   height: 100%;
   z-index: -10;
 }
+.Barn[name="main"] {
+  background-image: url('../../img/Barn.svg');
+}
+.Barn[name="ropsten"] {
+  background-image: url('../../img/Barn.svg');
+}
+.Barn[name="spooky"] {
+  background-image: url('../../img/dark/Barn.svg');
+}
+.Barn[name="fall"] {
+  background-image: url('../../img/fall/Barn.svg');
+}
+.Barn[name="winter"] {
+  background-image: url('../../img/winter/Barn.svg');
+}
+.Barn {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 10px;
+  bottom: 65px;
+  height: 16vw;
+  width: 100%;
+  min-height: 95px;
+  position: fixed;
+  z-index: -1;
+}
 
 .BeanstalkMT[name="fall"] {
   background-image: url('../../img/fall/Mountain.svg');
@@ -44,6 +70,7 @@
   background-size: contain;
   background-position: 100%;
   position: fixed;
+  top: calc(28vh - 2vw);
   width: 100%;
   height: 100%;
   z-index: -100;
@@ -53,6 +80,7 @@
   background-size: contain;
   background-position: 100%;
   position: fixed;
+  top: calc(28vh - 2vw);
   width: 100%;
   height: 100%;
   z-index: -100;
@@ -88,7 +116,7 @@
     display: none !important;
 }
 
-@media screen and (max-width: 1065px) {
+@media screen and (max-width: 1200px) {
   .BalanceSection {
     display: none !important;
   }
@@ -149,11 +177,14 @@
 .svg[name="ropsten"] {
   filter: invert(62%) sepia(71%) saturate(5742%) hue-rotate(312deg) brightness(103%) contrast(101%);
 }
+.svg[name="spooky"] {
+  filter: invert(62%) sepia(48%) saturate(5985%) hue-rotate(2deg) brightness(105%) contrast(103%); /* spooky color */
+}
 .svg[name="fall"] {
   filter: invert(72%) sepia(52%) saturate(2707%) hue-rotate(336deg) brightness(85%) contrast(90%); /* fall color */
 }
 .svg[name="winter"] {
-  filter: invert(23%) sepia(12%) saturate(2340%) hue-rotate(153deg) brightness(93%) contrast(91%);
+  filter: invert(23%) sepia(12%) saturate(2340%) hue-rotate(153deg) brightness(93%) contrast(91%); /* winter color */
 }
 
 @media (prefers-reduced-motion: no-preference) {

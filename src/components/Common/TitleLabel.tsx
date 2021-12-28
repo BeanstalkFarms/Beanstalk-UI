@@ -6,7 +6,6 @@ export default function TitleLabel(props) {
   const classes = makeStyles(() => ({
     label: {
       borderRadius: '15px',
-      color: '#fff',
       fontFamily: 'Futura-PT-Book',
       fontSize: props.size || '24px',
       margin: props.margin || '0',
