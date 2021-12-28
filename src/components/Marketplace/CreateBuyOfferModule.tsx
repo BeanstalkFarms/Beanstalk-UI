@@ -89,6 +89,7 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
       sellEth={fromEthValue}
       updateExpectedPrice={props.updateExpectedPrice}
       value={TrimBN(fromEthValue, 9)}
+      mode={SwapMode.BeanEthereum}
     />
   );
   const pricePerPodField = (
@@ -128,7 +129,6 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
 
   return (
     <>
-      {fromBeanField}
       {fromEthField}
       {pricePerPodField}
       {maxPlaceInLineField}
