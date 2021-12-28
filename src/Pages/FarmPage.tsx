@@ -6,7 +6,7 @@ import Balances from 'components/Balances';
 import Silo from 'components/Silo';
 import NFTLeaderboard from 'components/NFTLeaderboard';
 
-export default function Farm(props) {
+export default function FarmPage(props) {
   const sectionTitles = ['Silo', 'Field', 'Trade', 'Balances', 'BeaNFTs'];
   const sections = [<Silo />, <Field />, <Trade />, <Balances />, <NFTLeaderboard />];
 

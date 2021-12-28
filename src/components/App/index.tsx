@@ -78,15 +78,12 @@ export default function App() {
           {/* Farm */}
           <Route exact path="/farm/silo">
             <SiloPage />
-            {/* <Farm sectionNumber={0} /> */}
           </Route>
           <Route exact path="/farm/field">
             <FieldPage />
-            {/* <FarmPage sectionNumber={1} /> */}
           </Route>
           <Route exact path="/farm/trade">
             <TradePage />
-            {/* <FarmPage sectionNumber={2} /> */}
           </Route>
           <Route exact path="/farm/balances">
             <FarmPage sectionNumber={3} />
