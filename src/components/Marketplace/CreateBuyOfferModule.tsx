@@ -99,7 +99,7 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
         const newPricePerPodValue = new BigNumber(e.target.value)
         // Price can't be created than 1
         if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
-          setPricePerPodValue(new BigNumber(1))
+          setPricePerPodValue(new BigNumber(0.999999))
           return
         }
         setPricePerPodValue(newPricePerPodValue)

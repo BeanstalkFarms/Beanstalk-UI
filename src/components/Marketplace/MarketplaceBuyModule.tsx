@@ -109,23 +109,8 @@ export default function MarketplaceBuyModule() {
     return prices.beanPrice.plus(endPrice).dividedBy(2);
   };
 
-  const depositRef = useRef<any>();
-  const withdrawRef = useRef<any>();
-  const claimRef = useRef<any>();
-  const handleForm = () => {
-    switch (section) {
-      case 0:
-        depositRef.current.handleForm();
-        break;
-      case 1:
-        withdrawRef.current.handleForm();
-        break;
-      case 2:
-        claimRef.current.handleForm();
-        break;
-      default:
-        break;
-    }
+  const onCreate = () => {
+    console.log('oh shit');
   };
 
   const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
@@ -156,7 +141,6 @@ export default function MarketplaceBuyModule() {
       hasClaimable={hasClaimable}
       harvestablePodBalance={harvestablePodBalance}
       lpReceivableBalance={lpReceivableBalance}
-      ref={depositRef}
       setCanCreateBuyOffer={setCanCreateBuyOffer}
       setSection={setSection}
       setSettings={setSettings}
@@ -224,7 +208,7 @@ export default function MarketplaceBuyModule() {
           setSettings({ ...settings, mode: SwapMode.Ethereum });
         }}
         handleApprove={approveBeanstalkBean}
-        handleForm={handleForm}
+        handleForm={onCreate}
         isDisabled={!canCreateBuyOffer}
         mode={settings.mode}
         section={section}
