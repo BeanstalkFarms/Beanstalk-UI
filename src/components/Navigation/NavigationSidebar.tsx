@@ -35,6 +35,11 @@ const NAVIGATION_MAP = {
       desc: 'Buy and sell Beans',
     },
     {
+      path: 'marketplace',
+      title: 'Marketplace',
+      desc: 'Buy and sell pods',
+    },
+    {
       path: 'governance',
       title: 'DAO',
       desc: 'Vote on the future of Beanstalk',
