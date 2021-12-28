@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { useEffect, forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
@@ -36,9 +36,16 @@ import {
 export const CreateBuyOfferModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
-  const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
-  console.log('price per pod:', pricePerPodValue);
+  const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
+  const [maxPlaceInLineValue, setMaxPlaceInLineValue] = useState(new BigNumber(-1));
+
+  const { setCanCreateBuyOffer } = props;
+  useEffect(() => {
+    console.log('new:', fromBeanValue.toString(), fromEthValue.toString(), toBuyBeanValue.toString(), pricePerPodValue.toString(), maxPlaceInLineValue.toString());
+    const canBuy = toBuyBeanValue.isGreaterThan(0) && pricePerPodValue.isGreaterThan(0) && pricePerPodValue.isLessThan(1) && maxPlaceInLineValue.isLessThan(10000000) && maxPlaceInLineValue.isGreaterThan(0)
+    setCanCreateBuyOffer(canBuy);
+  }, [setCanCreateBuyOffer, fromBeanValue, fromEthValue, toBuyBeanValue, pricePerPodValue, maxPlaceInLineValue]);
 
   function fromValueUpdated(newFromNumber, newFromEthNumber) {
     const buyBeans = getToAmount(
@@ -95,60 +102,36 @@ export const CreateBuyOfferModule = forwardRef((props, ref) => {
           setPricePerPodValue(new BigNumber(1))
           return
         }
-        setPricePerPodValue(new BigNumber(e.target.value))
+        setPricePerPodValue(newPricePerPodValue)
       }}
       value={TrimBN(pricePerPodValue, 6)}
-      balance={new BigNumber(0)}
     />
   );
-  console.log('eth:', fromEthValue.toString())
-  console.log('price per pod:', pricePerPodValue.toString())
-
-  /* Transaction Details, settings and text */
-  const details = [];
-  if (props.settings.claim) {
-    details.push(
-      <ClaimTextModule
-        key="claim"
-        balance={props.beanClaimable.plus(props.ethClaimable)}
-        claim={props.settings.claim}
-        mode={props.settings.mode}
-        beanClaimable={props.beanClaimable}
-        ethClaimable={props.ethClaimable}
-      />
-    );
-  }
-  if (
-    props.settings.mode === SwapMode.Ethereum ||
-    (props.settings.mode === SwapMode.BeanEthereum &&
-      toBuyBeanValue.isGreaterThan(0))
-  ) {
-    details.push(
-      <TransactionTextModule
-        key="buy"
-        balance={toBuyBeanValue}
-        buyBeans={toBuyBeanValue}
-        claim={props.settings.claim}
-        claimableBalance={props.claimableEthBalance}
-        mode={props.settings.mode}
-        sellEth={fromEthValue}
-        updateExpectedPrice={props.updateExpectedPrice}
-        value={TrimBN(fromEthValue, 9)}
-      />
-    );
-  }
-  const beanOutput = MaxBN(toBuyBeanValue, new BigNumber(0)).plus(
-    MaxBN(fromBeanValue, new BigNumber(0))
+  const maxPlaceInLineField = (
+    <TokenInputField
+      key={3}
+      label="Max Place In Line"
+      handleChange={(e) => {
+        const newMaxPlaceInLineValue = new BigNumber(e.target.value)
+        // Line can't be greater than current pod line
+        // TODO: mock data, fix this (should be pod line - number of pods)
+        if (newMaxPlaceInLineValue.isGreaterThanOrEqualTo(1000000)) {
+          setMaxPlaceInLineValue(new BigNumber(1000000))
+          return
+        }
+        setMaxPlaceInLineValue(newMaxPlaceInLineValue)
+      }}
+      value={maxPlaceInLineValue}
+      placeholder="1000000"
+    />
   );
-
-  details.push(`Deposit ${displayBN(beanOutput)}
-    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`);
 
   return (
     <>
       {fromBeanField}
       {fromEthField}
       {pricePerPodField}
+      {maxPlaceInLineField}
     </>
   );
 });

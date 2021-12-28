@@ -73,10 +73,12 @@ export default function TokenInputField(props) {
     )}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
-  const balanceContent =
-    props.isLP && props.poolForLPRatio !== undefined
+  let balanceContent = null
+  if (props.balance) {
+    balanceContent = props.isLP && props.poolForLPRatio !== undefined
       ? displayLP(props.poolForLPRatio(props.balance))
       : `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`;
+  }
 
   const endAdornment = (
     <InputAdornment position="end">
@@ -91,16 +93,18 @@ export default function TokenInputField(props) {
     <Box style={{ margin: '8px 0' }}>
       <Box style={smallLabels}>
         <Box style={leftStyle}>{label}</Box>
-        <FormatTooltip placement="right" title={balanceContent}>
-          <Box style={rightStyle}>
-            &nbsp;{`Balance: ${displayBN(props.balance)}`}
-          </Box>
-        </FormatTooltip>
+        { props.balance && (
+          <FormatTooltip placement="right" title={balanceContent}>
+            <Box style={rightStyle}>
+              &nbsp;{`Balance: ${displayBN(props.balance)}`}
+            </Box>
+          </FormatTooltip>
+        ) }
       </Box>
 
       <TextField
         className="TextField-rounded"
-        placeholder="0.0000"
+        placeholder={props.placeholder || "0.0000"}
         variant="outlined"
         size="medium"
         type="number"

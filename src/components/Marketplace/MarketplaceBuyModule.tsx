@@ -17,6 +17,7 @@ import {
 import { CreateBuyOfferModule } from './CreateBuyOfferModule';
 
 export default function MarketplaceBuyModule() {
+  const [canCreateBuyOffer, setCanCreateBuyOffer] = useState(false)
   const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -86,21 +87,6 @@ export default function MarketplaceBuyModule() {
     siloStrings.beanDepositsTable,
   ];
 
-  const handleTabChange = (event, newSection) => {
-    if (newSection !== section) {
-      setSection(newSection);
-      setIsFormDisabled(true);
-      setSettings({
-        claim: false,
-        mode: null,
-        slippage: new BigNumber(BASE_SLIPPAGE),
-      });
-    }
-  };
-  const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
-    setSectionInfo(newSectionInfo);
-    setPage(newPageZero);
-  };
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -171,7 +157,7 @@ export default function MarketplaceBuyModule() {
       harvestablePodBalance={harvestablePodBalance}
       lpReceivableBalance={lpReceivableBalance}
       ref={depositRef}
-      setIsFormDisabled={setIsFormDisabled}
+      setCanCreateBuyOffer={setCanCreateBuyOffer}
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
@@ -221,47 +207,6 @@ export default function MarketplaceBuyModule() {
     sectionTitlesInfo.push('Bean Withdrawals');
   }
 
-  //
-  const showListTablesIcon =
-    sectionsInfo.length > 0 ? (
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
-      >
-        <IconButton
-          color="primary"
-          onClick={() => {
-            const shouldExpand = listTablesStyle.display === 'none';
-            setListTablesStyle(
-              shouldExpand ? { display: 'block' } : { display: 'none' }
-            );
-          }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
-        >
-          <ListIcon />
-        </IconButton>
-      </Box>
-    ) : null;
-
-  const showListTables =
-    sectionsInfo.length > 0 ? (
-      <Box style={{ ...listTablesStyle, marginTop: '61px' }}>
-        <BaseModule
-          handleTabChange={handleTabInfoChange}
-          section={sectionInfo}
-          sectionTitles={sectionTitlesInfo}
-          sectionTitlesDescription={sectionTitlesInfoDescription}
-          showButton={false}
-        >
-          {sectionsInfo[sectionInfo]}
-        </BaseModule>
-      </Box>
-    ) : null;
-
-  //
   const allowance =
     (settings.mode === SwapMode.Bean ||
       settings.mode === SwapMode.BeanEthereum) &&
@@ -280,12 +225,7 @@ export default function MarketplaceBuyModule() {
         }}
         handleApprove={approveBeanstalkBean}
         handleForm={handleForm}
-        handleTabChange={handleTabChange}
-        isDisabled={
-          isFormDisabled && (isFormDisabled || (section === 1 && locked))
-        }
-        locked={section === 1 && locked}
-        lockedSeasons={lockedSeasons}
+        isDisabled={!canCreateBuyOffer}
         mode={settings.mode}
         section={section}
         sectionTitles={sectionTitles}
@@ -294,7 +234,6 @@ export default function MarketplaceBuyModule() {
       >
         {sections[section]}
       </BaseModule>
-      {showListTables}
     </>
   );
 }
