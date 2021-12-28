@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import {
@@ -10,10 +10,11 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Button,
+  Modal,
 } from '@material-ui/core';
 
-
-function Listing({ listing }) {
+function Listing({ listing, setListing }) {
   return (
     <TableRow>
       <TableCell align="center">
@@ -26,7 +27,13 @@ function Listing({ listing }) {
         {listing.initialAmount.minus(listing.amountSold).toString()}
       </TableCell>
       <TableCell align="center">
-        Buy
+        <Button
+          onClick={() => {
+            setListing(listing)
+          }}
+        >
+          Buy
+        </Button>
       </TableCell>
     </TableRow>
   )
@@ -36,6 +43,7 @@ export default function Listings() {
   const { listings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
+  const [currentListing, setCurrentListing] = useState(null)
   const { harvestableIndex } = useSelector<
     AppState,
     AppState['weather']
@@ -47,25 +55,33 @@ export default function Listings() {
     return <div>No listings.</div>
   }
   return (
-    <TableContainer>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">
-              Place in line
-            </TableCell>
-            <TableCell align="center">
-              Price per pod
-            </TableCell>
-            <TableCell align="center">
-              Amount
-            </TableCell>
-            <TableCell align="center" />
-          </TableRow>
-        </TableHead>
-        {listings.map((listing) => <Listing key={listing.objectiveIndex} listing={listing} />)}
-      </Table>
-    </TableContainer>
+    <>
+      <Modal
+        open={currentListing != null}
+        onClose={() => setCurrentListing(null)}
+      >
+        <div>hi</div>
+      </Modal>
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">
+                Place in line
+              </TableCell>
+              <TableCell align="center">
+                Price per pod
+              </TableCell>
+              <TableCell align="center">
+                Amount
+              </TableCell>
+              <TableCell align="center" />
+            </TableRow>
+          </TableHead>
+          {listings.map((listing) => <Listing key={listing.objectiveIndex} listing={listing} setListing={setCurrentListing} />)}
+        </Table>
+      </TableContainer>
+    </>
   )
 }
 
