@@ -76,6 +76,7 @@ export default function Listings() {
             p: 4,
           }}
         >
+          {/* TODO: need to make this a better input (like swap inputs, be able to use beans / eth / max out, etc) */}
           <h2>Buy this plot</h2>
           <p style={{ width: '100%', wordBreak: 'break-all' }}>{JSON.stringify(currentListing)}</p>
           <Button>
