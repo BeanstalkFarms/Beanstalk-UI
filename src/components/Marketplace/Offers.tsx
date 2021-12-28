@@ -15,16 +15,17 @@ import {
 } from '@material-ui/core';
 
 function Offer({ offer, setOffer }) {
+  console.log('got offer', offer)
   return (
     <TableRow>
       <TableCell align="center">
-        1
+        {offer.maxPlaceInLine.toString()}
       </TableCell>
       <TableCell align="center">
-        2
+        {offer.maxPlaceInLine.pricePerPod.toString()}
       </TableCell>
       <TableCell align="center">
-        3
+        {offer.initialAmountToBuy.minus(offer.amountBought).toString()}
       </TableCell>
       <TableCell align="center">
         <Button
