@@ -11,6 +11,7 @@ import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
 import Footer from 'components/About/Footer';
 import { NavigationBar, NavigationSidebar } from 'components/Navigation';
+import Alerts from 'components/Common/PendingTransaction';
 
 import {
   //
@@ -37,9 +38,10 @@ BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
 export default function App() {
   const dispatch = useDispatch();
-  const { initialized, metamaskFailure } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
+  const { initialized, metamaskFailure } = useSelector<
+    AppState,
+    AppState['general']
+  >((state) => state.general);
 
   // HANDLE WINDOW SIZE CHANGE
   // Used throughout the app to show/hide components and
@@ -125,6 +127,7 @@ export default function App() {
           {/* If nothing matches, go to the Silo */}
           <Redirect to="/farm/silo" />
         </Switch>
+        <Alerts />
       </div>
     );
   }
