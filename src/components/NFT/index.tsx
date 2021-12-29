@@ -1,6 +1,4 @@
 import React from 'react';
-import { AppState } from 'state';
-import { useSelector } from 'react-redux';
 import { Link } from '@material-ui/core';
 import {
   MEDIUM_NFT_GENESIS_LINK,
@@ -85,8 +83,6 @@ export default function NFTs() {
         <NftStatsHeader />
         <ClaimNFT
           buttonDescription={beanftStrings.mintAll}
-          claimedNfts={claimedNFTs}
-          nfts={unclaimedNFTs}
         />
       </ContentSection>
     </>

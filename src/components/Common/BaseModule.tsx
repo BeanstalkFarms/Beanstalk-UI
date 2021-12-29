@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { AppBar, Box, Button, Link, Tab, Tabs } from '@material-ui/core';
+import { Box, Button, Link, Tab, Tabs } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@material-ui/styles';
@@ -226,12 +226,12 @@ export default function BaseModule({
   return (
     <>
       {normalBox && sectionTitles.length > 1 ? (
-        <AppBar
+        <Box
           style={style}
           className={
             removeBackground ? classes.metaModule : classes.inputModule
           }
-          position="static"
+          boxShadow={3}
         >
           <Tabs
             classes={
@@ -278,16 +278,17 @@ export default function BaseModule({
               {moduleContent}
             </form>
           ) : (
-            <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
+            moduleContent
+            // <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
           )}
-        </AppBar>
+        </Box>
       ) : sectionTitles.length === 1 && normalBox ? (
-        <AppBar
+        <Box
           style={style}
           className={
             removeBackground ? classes.metaModule : classes.inputModule
           }
-          position="static"
+          boxShadow={3}
         >
           <span className={classes.singleSection}>
             {sectionTitlesDescription !== undefined ? (
@@ -314,19 +315,21 @@ export default function BaseModule({
               {moduleContent}
             </form>
           ) : (
-            <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
+            moduleContent
+            // <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
           )}
-        </AppBar>
+        </Box>
       ) : (
-        <AppBar
+        <Box
           style={style}
           className={
             removeBackground ? classes.metaModule : classes.inputModule
           }
-          position="static"
+          boxShadow={3}
         >
-          <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
-        </AppBar>
+          {moduleContent}
+          {/* <span style={{ padding: '0px 10px' }}>{moduleContent}</span> */}
+        </Box>
       )}
     </>
   );

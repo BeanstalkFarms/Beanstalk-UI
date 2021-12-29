@@ -7,6 +7,9 @@ export default function AboutPage() {
   const sections = [<About />];
 
   return (
-    <Page sections={sections} sectionTitles={sectionTitles} />
+    <Page
+      sections={sections}
+      sectionTitles={sectionTitles}
+    />
   );
 }

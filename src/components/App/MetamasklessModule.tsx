@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Grid, Button, Link } from '@material-ui/core';
 import { switchToMainnet } from 'util/index';
 import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
@@ -27,6 +28,7 @@ export default function MetamasklessModule() {
     top: 'calc(50% - 23px)',
     width: 'auto',
   };
+  const history = useHistory();
   let metamaskModule;
   if (!ethereum) {
     metamaskModule = (
@@ -41,7 +43,10 @@ export default function MetamasklessModule() {
       <Grid item xs={12}>
         <SvgCloudIcon
           onClick={async () => {
-            switchToMainnet(ethereum);
+            const switchSuccessful = await switchToMainnet();
+            if (switchSuccessful) {
+              history.push('/');
+            }
           }}
           style={{ cursor: 'pointer' }}
           color="white"

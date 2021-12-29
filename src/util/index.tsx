@@ -49,12 +49,58 @@ export const pairContractReadOnly = (pair, web3) =>
 export const uniswapRouterContract = (signer) =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, signer);
 
-export async function switchToMainnet(ethereum) {
-  await ethereum.request({
-    method: 'wallet_switchEthereumChain',
-    params: [{ chainId: '0x1' }],
-  });
-  window.location.reload();
+async function initializeMetaMaskListeners() {
+  const changeHandler = () => {
+    window.location.replace(window.location.origin);
+  };
+  ethereum.on('accountsChanged', changeHandler);
+  ethereum.on('chainChanged', changeHandler);
+}
+
+export async function initialize(): Promise<boolean> {
+  if (!ethereum) {
+    try {
+      ethereum = (window as any).ethereum;
+      if (!ethereum) {
+        metamaskFailure = 0;
+        return false;
+      }
+      if (!ethereum.isMetaMask) {
+        metamaskFailure = 1;
+        return false;
+      }
+      ethereum.request({ method: 'eth_requestAccounts' });
+      if (ethereum && web3 === undefined) {
+        web3Provider = new ethers.providers.Web3Provider(ethereum);
+        web3Signer = web3Provider.getSigner();
+
+        web3 = new Web3(ethereum);
+        initializeMetaMaskListeners();
+        const [hexAccount, chainIdentifier] = await Promise.all([
+          web3Signer.getAddress(),
+          web3Signer.getChainId(),
+        ]);
+        account = hexAccount;
+        chainId = parseInt(chainIdentifier, 10);
+        if (chainId !== 1 && chainId !== 3) {
+          metamaskFailure = 3;
+          return false;
+        }
+        changeNetwork(chainId);
+        if (account === undefined) {
+          metamaskFailure = 2;
+          return false;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      metamaskFailure = 2;
+      return false;
+    }
+    return true;
+  }
+  await initializing;
+  return true;
 }
 
 export function initializeCallback(callback) {

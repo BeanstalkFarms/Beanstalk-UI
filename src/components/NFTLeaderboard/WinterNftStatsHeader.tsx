@@ -32,7 +32,7 @@ export default function WinterNftStatsHeader() {
         ]}
         value={[
           earnedNFTs,
-          investedBeans,
+          Math.floor(investedBeans),
           remainingNFTs,
         ]}
         width="300px"

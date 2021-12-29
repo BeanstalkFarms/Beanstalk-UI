@@ -108,5 +108,10 @@ export default function BeanCharts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <Charts mainTitle="Bean" charts={charts} />;
+  return (
+    <Charts
+      mainTitle="Bean"
+      charts={charts}
+    />
+  );
 }

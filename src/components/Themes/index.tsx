@@ -3,7 +3,8 @@ import { theme } from 'constants/index';
 import Fall from './fall';
 import Spooky from './spooky';
 import Winter from './winter';
-import Main from './main';
+// import Main from './main';
+import MainUpgrade from './mainUpgrade';
 
 export default function ThemeBackground() {
   let selectTheme = null;
@@ -14,7 +15,7 @@ export default function ThemeBackground() {
     selectTheme = <Spooky />;
   } else if (theme.name === 'winter') {
     selectTheme = <Winter />;
-  } else selectTheme = <Main />;
+  } else selectTheme = <MainUpgrade />;
 
   return selectTheme;
 }

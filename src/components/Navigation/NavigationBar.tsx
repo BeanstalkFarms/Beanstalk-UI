@@ -1,19 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AppBar,
-  Button,
-  ClickAwayListener,
-  Container,
-  Grow,
   IconButton,
-  List,
-  ListItem,
-  MenuList,
-  MenuItem,
-  Paper,
-  Popper,
   Toolbar,
   Box,
 } from '@material-ui/core';
@@ -22,38 +11,43 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { AppState } from 'state';
 import { useAccount } from 'state/application/hooks';
 import { priceQuery } from 'graph/index';
+import { setDrawerOpen } from 'state/general/actions';
 import { theme } from 'constants/index';
-import BeanLogo from 'img/bean-logo.svg';
 import WalletModule from './WalletModule';
 
-const defaultNavMapping = [
-  {
-    path: 'farm',
-    title: 'FARM',
+const useStyles = makeStyles({
+  appBar: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    backdropFilter: 'blur(2px)',
+    boxShadow: 'none',
+    marginBottom: 12,
+    fontFamily: 'Futura',
   },
-  {
-    path: 'analytics',
-    title: 'ANALYTICS',
+  menuIconContain: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  {
-    path: 'dao',
-    title: 'DAO',
+  menuIcon: {
+    color: theme.accentText,
   },
-  {
-    path: 'nft',
-    title: 'BeaNFTs',
+  toolbar: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  {
-    path: 'about',
-    title: 'ABOUT',
-  },
-];
+});
 
-export default function NavigationBar(props) {
-  const [price, setPrice] = useState(0);
+export default function NavigationBar() {
+  const dispatch = useDispatch();
+  const classes = useStyles();
+  const { drawerOpen, width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
   const { beanPrice } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
+  const toggleDrawerOpen = () => dispatch(setDrawerOpen(!drawerOpen));
 
   const { hasActiveBIP, hasActiveFundraiser, width } = useSelector<
     AppState,
@@ -274,17 +268,38 @@ export default function NavigationBar(props) {
       </>
     ) : null;
 
+  const priceStyle = {
+    fontSize: 13,
+    lineHeight: '13px',
+    color: theme.backgroundText,
+    marginLeft: '10px',
+  };
+
   return (
-    <AppBar className={classes.fixedNav}>
-      <Toolbar>
-        <Container className={classes.navDisplayFlex}>
-          {beanLogo}
-          {connectedNav}
-        </Container>
+    <AppBar className={classes.appBar} position="sticky">
+      <Toolbar className={classes.toolbar}>
+        {width < 800 ? (
+          <Box className={classes.menuIconContain}>
+            <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen} style={{ backgroundColor: theme.secondary }}>
+              <MenuIcon className={classes.menuIcon} />
+            </IconButton>
+            {beanPrice && (
+              <Box
+                style={priceStyle}
+              >
+                ${beanPrice.toFixed(4)}
+              </Box>
+            )}
+          </Box>
+        ) : <Box />}
+        <Box>
+          <WalletModule />
+        </Box>
       </Toolbar>
     </AppBar>
   );
 }
+
 NavigationBar.defaultProps = {
   links: [],
   showWallet: true,

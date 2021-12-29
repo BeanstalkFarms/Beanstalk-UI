@@ -40,6 +40,8 @@ import {
   parsePlots,
   toBaseUnitBN,
   toTokenUnitsBN,
+  account,
+  getEthPrices,
 } from 'util/index';
 import { useSeason } from 'state/season/hooks';
 import { useWeather } from 'state/weather/hooks';
@@ -80,38 +82,19 @@ export default function Updater() {
     );
   };
 
-  function processAccountBalances(
-    accountBalances,
-    ethBalance,
-    lpReserves,
-    currentSeason
-  ) {
-    const [
-      uniswapBeanAllowance,
-      beanstalkBeanAllowance,
-      beanstalkLPAllowance,
-      beanstalkUSDCAllowance,
-      claimableEthBalance,
-      beanBalance,
-      lpBalance,
-      seedBalance,
-      stalkBalance,
-      lockedUntil,
-      farmableBeanBalance,
-      grownStalkBalance,
-      rootsBalance,
-      usdcBalance,
-    ] = accountBalances;
-    const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
-    const lockedSeasons = lockedUntil.minus(currentSeason);
-
-    dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
-    dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
-    dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
-    dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));
-
-    dispatch(
-      setUserBalance({
+  useEffect(() => {
+    //
+    function processAccountBalances(
+      accountBalances,
+      ethBalance,
+      lpReserves,
+      currentSeason
+    ) {
+      const [
+        uniswapBeanAllowance,
+        beanstalkBeanAllowance,
+        beanstalkLPAllowance,
+        beanstalkUSDCAllowance,
         claimableEthBalance,
         ethBalance,
         beanBalance,
@@ -124,36 +107,36 @@ export default function Updater() {
         grownStalkBalance,
         rootsBalance,
         usdcBalance,
-      })
-    );
-  }
+      ] = accountBalances;
+      const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
+      const lockedSeasons = lockedUntil.minus(currentSeason);
 
-  function processTotalBalances(totalBalances, bipInfo, fundraiserInfo) {
-    const [
-      totalBeans,
-      totalLP,
-      totalSeeds,
-      totalStalk,
-      totalSiloBeans,
-      totalSiloLP,
-      totalTransitBeans,
-      totalTransitLP,
-      soil,
-      podIndex,
-      harvestableIndex,
-      totalRoots,
-      _weather,
-      rain,
-      _season,
-      develpomentBudget,
-      marketingBudget,
-    ] = totalBalances;
-    const totalBudgetBeans = develpomentBudget.plus(marketingBudget);
-    const [bips, hasActiveBIP] = bipInfo;
-    const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
-    const totalPods = podIndex.minus(harvestableIndex);
-    dispatch(
-      setTotalBalance({
+      dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
+      dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
+      dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
+      dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));
+
+      dispatch(
+        setUserBalance({
+          claimableEthBalance,
+          ethBalance,
+          beanBalance,
+          lpBalance,
+          seedBalance,
+          stalkBalance,
+          locked,
+          lockedSeasons,
+          farmableBeanBalance,
+          grownStalkBalance,
+          rootsBalance,
+          usdcBalance,
+        })
+      );
+    }
+
+    //
+    function processTotalBalances(totalBalances, bipInfo, fundraiserInfo) {
+      const [
         totalBeans,
         totalBudgetBeans,
         totalLP,
@@ -165,97 +148,114 @@ export default function Updater() {
         totalStalk,
         totalPods,
         totalRoots,
-      })
-    );
-    dispatch(
-      setWeather({
-        ..._weather,
-        ...rain,
-        harvestableIndex,
-        soil,
-      })
-    );
-    dispatch(setBips(bips));
-    dispatch(setHasActiveBIP(hasActiveBIP));
-    dispatch(setFundraisers(fundraisers));
-    dispatch(setHasActiveFundraiser(hasActiveFundraiser));
-    dispatch(setSeason(_season));
-    return _season.season;
-  }
+        _weather,
+        rain,
+        _season,
+        develpomentBudget,
+        marketingBudget,
+      ] = totalBalances;
+      const totalBudgetBeans = develpomentBudget.plus(marketingBudget);
+      const [bips, hasActiveBIP] = bipInfo;
+      const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
+      const totalPods = podIndex.minus(harvestableIndex);
+      dispatch(
+        setTotalBalance({
+          totalBeans,
+          totalBudgetBeans,
+          totalLP,
+          totalSiloBeans,
+          totalSiloLP,
+          totalTransitBeans,
+          totalTransitLP,
+          totalSeeds,
+          totalStalk,
+          totalPods,
+          totalRoots,
+        })
+      );
+      dispatch(
+        setWeather({
+          ..._weather,
+          ...rain,
+          harvestableIndex,
+          soil,
+        })
+      );
+      dispatch(setBips(bips));
+      dispatch(setHasActiveBIP(hasActiveBIP));
+      dispatch(setFundraisers(fundraisers));
+      dispatch(setHasActiveFundraiser(hasActiveFundraiser));
+      dispatch(setSeason(_season));
+      return _season.season;
+    }
 
-  function lpReservesForTokenReserves(tokenReserves, token0) {
-    const rawBeanReserve =
-      token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
-    const rawEthReserve =
-      token0 !== BEAN.addr ? tokenReserves[0] : tokenReserves[1];
-    const beanReserve = toTokenUnitsBN(rawBeanReserve, BEAN.decimals);
-    const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
-    return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
-  }
-  function processPrices(_prices) {
-    const [
-      referenceTokenReserves,
-      tokenReserves,
-      token0,
-      twapPrices,
-      beansToPeg,
-      lpToPeg,
-    ] = _prices;
-    const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
-    const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
-      lpReservesForTokenReserves(tokenReserves, token0);
-    const beanEthPrice = rawEthReserve
-      .dividedBy(rawBeanReserve)
-      .dividedBy(usdcMultiple);
-    const usdcEthPrice = referenceTokenReserves[1]
-      .dividedBy(referenceTokenReserves[0])
-      .dividedBy(usdcMultiple);
-    const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
-    const usdcPrice = usdcEthPrice;
+    //
+    function lpReservesForTokenReserves(tokenReserves, token0) {
+      const rawBeanReserve =
+        token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
+      const rawEthReserve =
+        token0 !== BEAN.addr ? tokenReserves[0] : tokenReserves[1];
+      const beanReserve = toTokenUnitsBN(rawBeanReserve, BEAN.decimals);
+      const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
+      return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
+    }
 
-    dispatch(
-      setPrices({
-        beanPrice,
-        usdcPrice,
-        ethReserve,
-        beanReserve,
-        beanTWAPPrice: twapPrices[0],
-        usdcTWAPPrice: twapPrices[1],
+    //
+    function processPrices(_prices) {
+      const [
+        referenceTokenReserves,
+        tokenReserves,
+        token0,
+        twapPrices,
         beansToPeg,
         lpToPeg,
-      })
-    );
-    return [beanReserve, ethReserve];
-  }
+        ethPrices,
+      ] = _prices;
 
-  async function processEvents(events, eventParsingParameters) {
-    const startTime = benchmarkStart('EVENT PROCESSOR');
+      //
+      const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
+      const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
+        lpReservesForTokenReserves(tokenReserves, token0);
+      const beanEthPrice = rawEthReserve
+        .dividedBy(rawBeanReserve)
+        .dividedBy(usdcMultiple);
+      const usdcEthPrice = referenceTokenReserves[1]
+        .dividedBy(referenceTokenReserves[0])
+        .dividedBy(usdcMultiple);
+      const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
+      const usdcPrice = usdcEthPrice;
 
-    let userLPSeedDeposits = {};
-    let userLPDeposits = {};
-    let lpWithdrawals = {};
-    let userPlots = {};
-    let userBeanDeposits = {};
-    let beanWithdrawals = {};
-    const votedBips = new Set();
+      //
+      dispatch(
+        setPrices({
+          beanPrice,
+          usdcPrice,
+          ethReserve,
+          beanReserve,
+          beansToPeg,
+          lpToPeg,
+          beanTWAPPrice: twapPrices[0],
+          usdcTWAPPrice: twapPrices[1],
+          ethPrices,
+        })
+      );
+      return [beanReserve, ethReserve];
+    }
 
-    events.forEach((event) => {
-      if (event.event === 'BeanDeposit') {
-        const s = parseInt(event.returnValues.season, 10);
-        const beans = toTokenUnitsBN(
-          new BigNumber(event.returnValues.beans),
-          BEAN.decimals
-        );
-        userBeanDeposits = {
-          ...userBeanDeposits,
-          [s]:
-            userBeanDeposits[s] !== undefined
-              ? userBeanDeposits[s].plus(beans)
-              : beans,
-        };
-        if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
-      } else if (event.event === 'BeanRemove') {
-        event.returnValues.crates.forEach((s, i) => {
+    async function processEvents(events, eventParsingParameters) {
+      const startTime = benchmarkStart('EVENT PROCESSOR');
+
+      let userLPSeedDeposits = {};
+      let userLPDeposits = {};
+      let lpWithdrawals = {};
+      let userPlots = {};
+      let userBeanDeposits = {};
+      let beanWithdrawals = {};
+      const votedBips = new Set();
+
+      events.forEach((event) => {
+        if (event.event === 'BeanDeposit') {
+          const s = parseInt(event.returnValues.season, 10);
           const beans = toTokenUnitsBN(
             event.returnValues.crateBeans[i],
             BEAN.decimals
@@ -488,8 +488,57 @@ export default function Updater() {
       })
     );
 
-    benchmarkEnd('EVENT PROCESSOR', startTime);
-  }
+    async function updateAllBalances() {
+      const startTime = benchmarkStart('ALL BALANCES');
+      const batch = createLedgerBatch();
+      const accountBalancePromises = getAccountBalances(batch);
+      const totalBalancePromises = getTotalBalances(batch);
+      const pricePromises = getPrices(batch);
+      batch.execute();
+
+      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance] =
+        await Promise.all([
+          getBips(),
+          getFundraisers(),
+          getEtherBalance(),
+          accountBalancePromises,
+          totalBalancePromises,
+          pricePromises,
+          getUSDCBalance(),
+        ]);
+      benchmarkEnd('ALL BALANCES', startTime);
+      const [beanReserve, ethReserve] = lpReservesForTokenReserves(
+        _prices[1],
+        _prices[2]
+      ); /* tokenReserves, token0 */
+      const eventParsingParameters = [
+        totalBalances[14].season /* season */,
+        totalBalances[10] /* harvestableIndex */,
+        accountBalances[10] /* farmableBeanBalance */,
+        accountBalances[11] /* grownStalkBalance */,
+        accountBalances[4] /* claimableEthBalance */,
+        beanReserve,
+        ethReserve,
+      ];
+      const ethPrices = await getEthPrices();
+      return [
+        () => {
+          const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
+          const lpReserves = processPrices([
+            ..._prices,
+            ethPrices,
+          ]);
+          processAccountBalances(
+            accountBalances,
+            ethBalance,
+            lpReserves,
+            currentSeason,
+            usdcBalance
+          );
+        },
+        eventParsingParameters,
+      ];
+    }
 
   const updateAllBalances = async () => {
     const startTime = benchmarkStart('ALL BALANCES');
@@ -499,57 +548,19 @@ export default function Updater() {
     const pricePromises = getPrices(batch, ethereum);
     batch.execute();
 
-    const [
-      bipInfo,
-      fundraiserInfo,
-      ethBalance,
-      accountBalances,
-      totalBalances,
-      _prices,
-      usdcBalance,
-    ] = await Promise.all([
-      getBips(ethereum),
-      getFundraisers(ethereum),
-      getEtherBalance(account, ethereum),
-      accountBalancePromises,
-      totalBalancePromises,
-      pricePromises,
-      getUSDCBalance(account, ethereum),
-    ]);
-    benchmarkEnd('ALL BALANCES', startTime);
-    const [beanReserve, ethReserve] = lpReservesForTokenReserves(
-      _prices[1],
-      _prices[2]
-    ); /* tokenReserves, token0 */
-    const eventParsingParameters = [
-      totalBalances[14].season /* season */,
-      totalBalances[10] /* harvestableIndex */,
-      accountBalances[10] /* farmableBeanBalance */,
-      accountBalances[11] /* grownStalkBalance */,
-      accountBalances[4] /* claimableEthBalance */,
-      beanReserve,
-      ethReserve,
-    ];
+    async function updatePrices() {
+      const startTime = benchmarkStart('PRICES');
+      const batch = createLedgerBatch();
+      const pricePromises = getPrices(batch);
+      batch.execute();
 
-    return [
-      () => {
-        const currentSeason = processTotalBalances(
-          totalBalances,
-          bipInfo,
-          fundraiserInfo
-        );
-        const lpReserves = processPrices(_prices);
-        processAccountBalances(
-          accountBalances,
-          ethBalance,
-          lpReserves,
-          currentSeason,
-          usdcBalance
-        );
-      },
-      eventParsingParameters,
-    ];
-  };
+      const _prices = await pricePromises;
+      const ethPrices = await getEthPrices();
+      ReactDOM.unstable_batchedUpdates(() => {
+        processPrices([..._prices, ethPrices]);
+      });
+      benchmarkEnd('PRICES', startTime);
+    }
 
   const updateTotals = async () => {
     const startTime = benchmarkStart('TOTALS');
