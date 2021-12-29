@@ -12,9 +12,9 @@ export function useLatestTransactionNumber(): Number {
 }
 
 export function useTransactions(): Transaction[] {
-  const transcations = useSelector(
-    (state: AppState) => state.general.transcations
+  const transactions = useSelector(
+    (state: AppState) => state.general.transactions
   );
 
-  return transcations;
+  return transactions;
 }
