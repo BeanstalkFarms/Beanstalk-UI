@@ -209,6 +209,7 @@ export default function NavigationSidebar() {
       spy="true"
       smooth="true"
       className={classes.NavLink}
+      onClick={() => dispatch(setDrawerOpen(false))}
     >
       <ListItem button style={{ display: 'block' }}>
         <Box className={classes.NavLinkHeader}>
