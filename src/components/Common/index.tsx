@@ -40,6 +40,7 @@ export { default as TablePageSelect } from './TablePageSelect';
 export { default as TitleLabel } from './TitleLabel';
 export { default as TokenBalanceModule } from './TokenBalanceModule';
 export { default as TokenInputField } from './TokenInputField';
+export { default as TradeTokenInputField } from './TradeTokenInputField';
 export { default as TokenOutputField } from './TokenOutputField';
 export { default as TokenTypeImageModule } from './TokenTypeImageModule';
 export { default as TransactionDetailsModule } from './TransactionDetailsModule';
