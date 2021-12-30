@@ -27,7 +27,7 @@ export default function Field() {
     (state) => state.general
   );
 
-  //
+  // ""
   const headerLabelStyle = {
     maxWidth: '250px',
   };
@@ -135,17 +135,8 @@ export default function Field() {
   );
 
   return (
-    <ContentSection
-      id="field"
-      title="Field"
-    >
-      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-        <ContentDropdown
-          description={description}
-          descriptionTitle="What is the Field?"
-          descriptionLinks={descriptionLinks}
-        />
-      </Grid>
+    <ContentSection id="field" title="Field">
+      {/* Field "Analytics" displayed at the top of the page */}
       <Grid container item justifyContent="center" style={containerStyle}>
         <Grid item md={12} lg={6} style={headerLabelStyle}>
           {leftHeader}
@@ -154,6 +145,7 @@ export default function Field() {
           {rightHeader}
         </Grid>
       </Grid>
+      {/* Content */}
       <Grid
         container
         item
@@ -180,6 +172,14 @@ export default function Field() {
             <FieldModule />
           </BaseModule>
         </Grid>
+      </Grid>
+      {/* Help Dropdown */}
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={description}
+          descriptionTitle="What is the Field?"
+          descriptionLinks={descriptionLinks}
+        />
       </Grid>
     </ContentSection>
   );
