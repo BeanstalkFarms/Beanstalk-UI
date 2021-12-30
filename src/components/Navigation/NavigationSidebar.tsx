@@ -135,8 +135,9 @@ const useStyles = makeStyles({
   },
 });
 
-const Metric = ({ label, value }) => {
+const Metric = ({ label, value, hideIfNull=false }) => {
   const classes = useStyles();
+  if (hideIfNull && !value) return null;
   return (
     <Box className={classes.metric}>
       <span className={classes.metricLabel}>{label}</span>
@@ -159,7 +160,7 @@ export default function NavigationSidebar() {
   const weather = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
-  const { beanPrice, ethPrices } = useSelector<AppState, AppState['prices']>(
+  const { beanPrice, ethPrices, usdcPrice } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
   const { totalPods, totalBeans } = useSelector<AppState, AppState['totalBalance']>(
@@ -266,8 +267,9 @@ export default function NavigationSidebar() {
         <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${totalPods.dividedBy(10 ** 6).toFixed(1)}M`} />
         <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${weather.harvestableIndex.dividedBy(10 ** 6).toFixed(1)}M`} />
         <Metric label="Weather" value={weather?.weather?.isGreaterThan(0) && `${weather.weather.toFixed(0)}%`} />
-        <Metric label="ETH" value={ethPrices?.ethPrice && ethPrices.ethPrice > 0 && `$${ethPrices.ethPrice}`} />
-        <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} />
+        {/* <Metric label="ETH" value={ethPrices?.ethPrice && ethPrices.ethPrice > 0 && `$${ethPrices.ethPrice}`} hideIfNull /> */}
+        <Metric label="ETH" value={usdcPrice && usdcPrice > 0 && `$${(1/usdcPrice).toFixed(2)}`} hideIfNull />
+        <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} hideIfNull />
       </Box>
     </>
   );
