@@ -135,7 +135,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Metric = ({ label, value, hideIfNull=false }) => {
+const Metric = ({ label, value, hideIfNull = false }) => {
   const classes = useStyles();
   if (hideIfNull && !value) return null;
   return (
@@ -268,7 +268,7 @@ export default function NavigationSidebar() {
         <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${weather.harvestableIndex.dividedBy(10 ** 6).toFixed(1)}M`} hideIfNull />
         <Metric label="Weather" value={weather?.weather?.isGreaterThan(0) && `${weather.weather.toFixed(0)}%`} hideIfNull />
         {/* <Metric label="ETH" value={ethPrices?.ethPrice && ethPrices.ethPrice > 0 && `$${ethPrices.ethPrice}`} hideIfNull /> */}
-        <Metric label="ETH" value={usdcPrice && usdcPrice > 0 && `$${(1/usdcPrice).toFixed(2)}`} hideIfNull />
+        <Metric label="ETH" value={usdcPrice && usdcPrice > 0 && `$${(1 / usdcPrice).toFixed(2)}`} hideIfNull />
         <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} hideIfNull />
       </Box>
     </>

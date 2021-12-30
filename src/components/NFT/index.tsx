@@ -48,8 +48,8 @@ export default function NFTs() {
         id="nft"
         title="BeaNFTs"
         textTransform="none"
-        style={{ 
-          paddingTop: 20 // FIXME
+        style={{
+          paddingTop: 20, // FIXME
         }}
       >
         <NftStatsHeader />
