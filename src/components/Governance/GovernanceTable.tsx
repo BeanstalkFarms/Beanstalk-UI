@@ -79,7 +79,7 @@ function summaryBips(open, bip) {
             style={{ border: 'none' }}
             title={`BIP-${bipID}`}
             width="100%"
-            height="470px"
+            height="490px"
           />
         );
       }
