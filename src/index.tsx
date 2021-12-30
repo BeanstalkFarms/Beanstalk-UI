@@ -6,10 +6,12 @@ import store from 'state';
 import App from './components/App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import ScrollToTop from 'components/Common/ScrollToTop';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <StateProvider store={store}>
         <App />
       </StateProvider>
