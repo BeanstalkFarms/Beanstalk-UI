@@ -162,10 +162,6 @@ export default function Field() {
         className="SiloSection"
         alignItems="flex-start"
         justifyContent="center"
-        style={{
-          minHeight: '550px',
-          // height: '100%'
-        }}
       >
         <Grid
           item
