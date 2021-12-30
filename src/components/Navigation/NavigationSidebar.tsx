@@ -263,10 +263,10 @@ export default function NavigationSidebar() {
         {NAVIGATION_MAP.more.map((item: any) => <NavItem item={item} key={item.path} />)}
       </List>
       <Box p={2} className={classes.metrics}>
-        <Metric label="Mkt. Cap" value={marketCap?.isGreaterThan(0) && `$${marketCap.dividedBy(10 ** 6).toFixed(1)}M`} />
-        <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${totalPods.dividedBy(10 ** 6).toFixed(1)}M`} />
-        <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${weather.harvestableIndex.dividedBy(10 ** 6).toFixed(1)}M`} />
-        <Metric label="Weather" value={weather?.weather?.isGreaterThan(0) && `${weather.weather.toFixed(0)}%`} />
+        <Metric label="Mkt. Cap" value={marketCap?.isGreaterThan(0) && `$${marketCap.dividedBy(10 ** 6).toFixed(1)}M`} hideIfNull />
+        <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${totalPods.dividedBy(10 ** 6).toFixed(1)}M`} hideIfNull />
+        <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${weather.harvestableIndex.dividedBy(10 ** 6).toFixed(1)}M`} hideIfNull />
+        <Metric label="Weather" value={weather?.weather?.isGreaterThan(0) && `${weather.weather.toFixed(0)}%`} hideIfNull />
         {/* <Metric label="ETH" value={ethPrices?.ethPrice && ethPrices.ethPrice > 0 && `$${ethPrices.ethPrice}`} hideIfNull /> */}
         <Metric label="ETH" value={usdcPrice && usdcPrice > 0 && `$${(1/usdcPrice).toFixed(2)}`} hideIfNull />
         <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} hideIfNull />
