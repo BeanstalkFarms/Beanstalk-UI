@@ -17,6 +17,8 @@ import StalkLogo from 'img/stalk-logo.svg';
 import TransitIcon from 'img/transit-icon.svg';
 import UniswapIcon from 'img/uniswap-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
+import DAILogo from 'img/dai-logo.svg';
+import USDTLogo from 'img/usdt-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
 import { account, txCallback, tokenContract } from './index';
 
@@ -28,31 +30,33 @@ export enum CryptoAsset {
   Ethereum,
   LP,
   Usdc,
+  Dai,
+  Usdt,
 }
 export enum SiloAsset {
-  Stalk = 4,
+  Stalk = 6,
   Seed,
   Bean,
   LP,
 }
 export enum TransitAsset {
-  Bean = 8,
+  Bean = 10,
   LP,
 }
 export enum FarmAsset {
-  Pods = 10,
+  Pods = 12,
 }
 export enum ClaimableAsset {
-  Bean = 11,
+  Bean = 13,
   LP,
   Ethereum,
   Stalk,
 }
 export enum UniswapAsset {
-  Bean = 15,
+  Bean = 17,
 }
 export enum BudgetAsset {
-  Bean = 16,
+  Bean = 18,
 }
 export type Token =
   | CryptoAsset
@@ -120,13 +124,17 @@ export const approveBeanstalkUSDC = async (callback) => {
 export function TokenLabel(tokenType: Token): string {
   switch (tokenType) {
     case CryptoAsset.Bean:
-      return 'Beans';
+      return 'BEAN';
     case CryptoAsset.Ethereum:
       return 'ETH';
     case CryptoAsset.LP:
       return 'LP';
     case CryptoAsset.Usdc:
       return 'USDC';
+    case CryptoAsset.Dai:
+      return 'DAI';
+    case CryptoAsset.Usdt:
+      return 'USDT';
     case SiloAsset.Stalk:
       return 'Stalk';
     case SiloAsset.Seed:
@@ -190,18 +198,24 @@ export function TokenImage(tokenType: Token): string {
 
     case CryptoAsset.Usdc:
       return USDCLogo;
+
+    case CryptoAsset.Dai:
+      return DAILogo;
+
+    case CryptoAsset.Usdt:
+      return USDTLogo;
     default:
       return '';
   }
 }
 
 export function TokenTypeImage(tokenType: Token): string {
-  if (tokenType < 6 || tokenType === 10) return null;
-  if (tokenType < 8) return SiloIcon;
-  if (tokenType < 10) return TransitIcon;
-  if (tokenType < 15) return ClaimableIcon;
-  if (tokenType < 16) return UniswapIcon;
-  if (tokenType < 17) return BudgetIcon;
+  if (tokenType < 8 || tokenType === 12) return null;
+  if (tokenType < 10) return SiloIcon;
+  if (tokenType < 12) return TransitIcon;
+  if (tokenType < 17) return ClaimableIcon;
+  if (tokenType < 18) return UniswapIcon;
+  if (tokenType < 19) return BudgetIcon;
 }
 
 export function TrimBN(bn: BigNumber, decimals: number): BigNumber {

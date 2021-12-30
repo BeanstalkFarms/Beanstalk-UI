@@ -10,6 +10,7 @@ import {
   sellBeans,
   toStringBaseUnitBN,
   transferBeans,
+  TokenLabel,
 } from 'util/index';
 import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
 import SendModule from './SendModule';
@@ -21,7 +22,7 @@ export default function TradeModule() {
     AppState['allowances']
   >((state) => state.allowances);
 
-  const { beanReserve, ethReserve, usdcPrice, beanPrice } = useSelector<
+  const { beanReserve, ethReserve, usdcPrice, beanPrice, ethPrices } = useSelector<
     AppState,
     AppState['prices']
   >((state) => state.prices);
@@ -35,20 +36,28 @@ export default function TradeModule() {
   const sectionTitlesDescription = [tradeStrings.swap, tradeStrings.send];
 
   /* Swap Sub-Module state */
-
   const [orderIndex, setOrderIndex] = useState(true);
   const [settings, setSettings] = useState({
     slippage: new BigNumber(BASE_SLIPPAGE),
   });
   const [fromValue, setFromValue] = useState(new BigNumber(-1));
   const [toValue, setToValue] = useState(new BigNumber(-1));
-  const fromToken = orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
-  const toToken = !orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
+  const [fromToken, setFromToken] = useState(CryptoAsset.Ethereum); // default fromToken
+  const [toToken, setToToken] = useState(CryptoAsset.Bean); // default toToken
   const ethToBean = new BigNumber(beanReserve.dividedBy(ethReserve));
   const beanToEth = new BigNumber(1).dividedBy(ethToBean);
   const conversionFactor = orderIndex ? ethToBean : beanToEth;
 
   /* Send Sub-Module state */
+  const tokenList = ([
+    { label: TokenLabel(CryptoAsset.Bean), token: CryptoAsset.Bean, price: beanPrice, reserve: beanReserve, balance: beanBalance, decimals: BEAN.decimals, approve: uniswapBeanAllowance },
+    { label: TokenLabel(CryptoAsset.Ethereum), token: CryptoAsset.Ethereum, price: ethPrices, reserve: ethReserve, balance: ethBalance, decimals: ETH.decimals, approve: new BigNumber(1) },
+    { label: TokenLabel(CryptoAsset.Usdc), token: CryptoAsset.Usdc, price: beanPrice, reserve: beanReserve, balance: beanBalance, decimals: BEAN.decimals, approve: uniswapBeanAllowance },
+    { label: TokenLabel(CryptoAsset.Dai), token: CryptoAsset.Dai, price: beanPrice, reserve: beanReserve, balance: beanBalance, decimals: BEAN.decimals, approve: uniswapBeanAllowance },
+    { label: TokenLabel(CryptoAsset.Usdt), token: CryptoAsset.Usdt, price: beanPrice, reserve: beanReserve, balance: beanBalance, decimals: BEAN.decimals, approve: uniswapBeanAllowance },
+  ]); // temporary
+  const inputToken = tokenList[Object.keys(tokenList).filter((t) => tokenList[t].token === fromToken)];
+  const outputToken = tokenList[Object.keys(tokenList).filter((t) => tokenList[t].token === toToken)];
 
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
@@ -103,27 +112,30 @@ export default function TradeModule() {
 
   const sections = [
     <SwapModule
+      inputToken={inputToken}
+      outputToken={outputToken}
+      tokenList={tokenList}
       orderIndex={orderIndex}
       setOrderIndex={setOrderIndex}
       fromValue={fromValue}
       setFromValue={setFromValue}
       toValue={toValue}
       setToValue={setToValue}
-      balance={fromToken === CryptoAsset.Ethereum ? ethBalance : beanBalance}
-      toBalance={fromToken === CryptoAsset.Ethereum ? beanBalance : ethBalance}
+      balance={inputToken.balance}
+      toBalance={outputToken.balance}
       maxFromVal={
-        fromToken === CryptoAsset.Ethereum
-          ? ethBalance.isGreaterThan(MIN_BALANCE)
-            ? ethBalance.minus(MIN_BALANCE)
+        inputToken.token === CryptoAsset.Ethereum
+          ? inputToken.balance.isGreaterThan(MIN_BALANCE)
+            ? inputToken.balance.minus(MIN_BALANCE)
             : new BigNumber(-1)
-          : beanBalance
+          : inputToken.balance
       }
       beanReserve={beanReserve}
       ethReserve={ethReserve}
       usdcPrice={usdcPrice}
       beanPrice={beanPrice}
-      fromToken={fromToken}
-      toToken={toToken}
+      setFromToken={setFromToken}
+      setToToken={setToToken}
       conversionFactor={conversionFactor}
       settings={settings}
       setSettings={setSettings}
@@ -151,11 +163,13 @@ export default function TradeModule() {
       >
         <BaseModule
           allowance={
-            section > 0 || orderIndex ? new BigNumber(1) : uniswapBeanAllowance
+            section > 0 ? new BigNumber(1) : inputToken.allowance
           }
           isDisabled={disabled}
           resetForm={() => {
             setOrderIndex(1);
+            setFromToken(CryptoAsset.Ethereum);
+            setToToken(CryptoAsset.Bean);
           }}
           section={section}
           sectionTitles={sectionTitles}

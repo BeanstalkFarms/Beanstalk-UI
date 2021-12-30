@@ -1,41 +1,53 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { IconButton, Box } from '@material-ui/core';
-import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
-import { BEAN, ETH, LP_FEE, SLIPPAGE_THRESHOLD } from 'constants/index';
+import { ReactComponent as UpDownIcon } from 'img/updown-icon.svg';
+import { LP_FEE, SLIPPAGE_THRESHOLD, theme } from 'constants/index';
 import {
   displayBN,
   getFromAmount,
   getToAmount,
   MinBN,
   MinBNs,
-  TokenLabel,
   TrimBN,
 } from 'util/index';
 import {
   FrontrunText,
   SettingsFormModule,
   SwapTransactionDetailsModule,
-  TokenInputField,
+  TradeTokenInputField,
 } from 'components/Common';
 
-export default function SwapModule(props) {
+export default function SwapModule({
+  tokenList,
+  inputToken,
+  outputToken,
+  setToToken,
+  setFromToken,
+  orderIndex,
+  setOrderIndex,
+  beanReserve,
+  ethReserve,
+  maxFromVal,
+  usdcPrice,
+  beanPrice,
+  settings,
+  setSettings,
+  fromValue,
+  setFromValue,
+  toValue,
+  setToValue,
+}) {
   const fromValueUpdated = (newFromNumber) => {
     if (newFromNumber.isLessThan(0)) {
-      props.setFromValue(new BigNumber(-1));
-      props.setToValue(new BigNumber(-1));
+      setFromValue(new BigNumber(-1));
+      setToValue(new BigNumber(-1));
     }
-    const fromReserve = props.orderIndex ? props.ethReserve : props.beanReserve;
-    const fromNumber = MinBNs([newFromNumber, props.balance, fromReserve]);
-    const toReserve = !props.orderIndex ? props.ethReserve : props.beanReserve;
-    const newToValue = getToAmount(fromNumber, fromReserve, toReserve);
+    const fromNumber = MinBNs([newFromNumber, inputToken.balance, inputToken.reserve]);
+    const newToValue = getToAmount(fromNumber, inputToken.reserve, outputToken.reserve);
 
-    props.setFromValue(
-      TrimBN(fromNumber, props.orderIndex ? ETH.decimals : BEAN.decimals)
-    );
-    props.setToValue(
-      TrimBN(newToValue, props.orderIndex ? BEAN.decimals : ETH.decimals)
-    );
+    setFromValue(TrimBN(fromNumber, inputToken.decimals));
+    setToValue(TrimBN(newToValue, outputToken.decimals));
   };
 
   const handleFromChange = (event) => {
@@ -45,38 +57,44 @@ export default function SwapModule(props) {
       fromValueUpdated(new BigNumber(-1));
     }
   };
+  const handleFromTokenChange = (event) => {
+    if (event !== outputToken.token) {
+      setFromToken(event);
+    } else {
+      setToToken(inputToken.token);
+      setFromToken(outputToken.token);
+    }
+  };
 
-  const getExpectedBeanPrice = (fromValue, toValue) => {
-    const [estbeanReserve, estethReserve] = props.orderIndex
-      ? [props.beanReserve.minus(toValue), props.ethReserve.plus(fromValue)]
-      : [props.beanReserve.plus(fromValue), props.ethReserve.minus(toValue)];
+  const getExpectedBeanPrice = (fromVal, toVal) => {
+    const [estbeanReserve, estethReserve] = orderIndex
+      ? [beanReserve.minus(toVal), ethReserve.plus(fromVal)]
+      : [beanReserve.plus(fromVal), ethReserve.minus(toVal)];
     const endPrice = estethReserve
       .dividedBy(estbeanReserve)
-      .dividedBy(props.usdcPrice);
-    return props.beanPrice.plus(endPrice).dividedBy(2);
+      .dividedBy(usdcPrice);
+    return beanPrice.plus(endPrice).dividedBy(2);
   };
 
   const toValueUpdated = (newToNumber) => {
-    const fromReserve = props.orderIndex ? props.ethReserve : props.beanReserve;
-    const toReserve = props.orderIndex ? props.beanReserve : props.ethReserve;
-    const toNumber = MinBN(newToNumber, toReserve);
+    const toNumber = MinBN(newToNumber, outputToken.reserve);
     const proposedNewFromValue = getFromAmount(
       toNumber,
-      fromReserve,
-      toReserve,
-      props.orderIndex ? ETH.decimals : BEAN.decimals
+      inputToken.reserve,
+      outputToken.reserve,
+      inputToken.decimals
     );
-    if (proposedNewFromValue.isGreaterThan(props.maxFromVal)) {
-      fromValueUpdated(props.maxFromVal);
+    if (proposedNewFromValue.isGreaterThan(maxFromVal)) {
+      fromValueUpdated(maxFromVal);
     } else {
-      props.setFromValue(
+      setFromValue(
         TrimBN(
           proposedNewFromValue,
-          props.orderIndex ? ETH.decimals : BEAN.decimals
+          inputToken.decimals
         )
       );
-      props.setToValue(
-        TrimBN(toNumber, props.orderIndex ? BEAN.decimals : ETH.decimals)
+      setToValue(
+        TrimBN(toNumber, outputToken.decimals)
       );
     }
   };
@@ -88,89 +106,105 @@ export default function SwapModule(props) {
       toValueUpdated(new BigNumber(-1));
     }
   };
-
-  const maxHandler = () => {
-    fromValueUpdated(props.maxFromVal);
+  const handleToTokenChange = (event) => {
+    if (event !== inputToken.token) {
+      setToToken(event);
+      setFromValue(new BigNumber(-1));
+      setToValue(new BigNumber(-1));
+    } else {
+      setFromToken(outputToken.token);
+      setToToken(inputToken.token);
+    }
   };
 
   /* Input Fields */
 
   const fromField = (
-    <TokenInputField
-      value={TrimBN(props.fromValue, props.orderIndex ? 9 : BEAN.decimals)}
+    <TradeTokenInputField
+      value={TrimBN(fromValue, inputToken.decimals > 9 ? 9 : inputToken.decimals)}
       setValue={fromValueUpdated}
       handleChange={handleFromChange}
-      token={props.fromToken}
-      balance={props.balance}
-      maxHandler={maxHandler}
+      tokenHandler={handleFromTokenChange}
+      token={inputToken.token}
+      balance={inputToken.balance}
+      maxHandler={() => {
+        fromValueUpdated(maxFromVal);
+      }}
+      tokenList={tokenList}
     />
   );
   const toField = (
-    <TokenInputField
-      value={TrimBN(props.toValue, props.orderIndex ? BEAN.decimals : 9)}
+    <TradeTokenInputField
+      value={TrimBN(toValue, outputToken.decimals > 9 ? 9 : outputToken.decimals)}
       setValue={toValueUpdated}
       handleChange={handleToChange}
-      token={props.toToken}
-      balance={props.toBalance}
+      tokenHandler={handleToTokenChange}
+      token={outputToken.token}
+      balance={outputToken.balance}
+      tokenList={tokenList}
     />
   );
 
-  /* Switch Fields */
-
+  /* Switch Tokens Field */
   const switchField = (
     <IconButton
       onClick={() => {
-        props.setFromValue(new BigNumber(-1));
-        props.setToValue(new BigNumber(-1));
-        props.setOrderIndex(!props.orderIndex);
+        setFromValue(new BigNumber(-1));
+        setToValue(new BigNumber(-1));
+        setOrderIndex(!orderIndex);
+        setFromToken(outputToken.token);
+        setToToken(inputToken.token);
       }}
-      style={{ marginTop: '-6px', marginBottom: '-24px' }}
+      style={{
+        backgroundColor: '#D8DCDF',
+        border: `5px solid ${theme.module.background}`,
+        margin: '-50px 0',
+        padding: '6px',
+      }}
       color="primary"
     >
-      <UnfoldMoreIcon />
+      {/* make separate component with class for onHover styling */}
+      <UpDownIcon style={{ width: '60%' }} />
     </IconButton>
   );
 
   /* Transaction Details, settings and text */
-
-  const frontrunTextField = props.settings.slippage.isLessThanOrEqualTo(
+  const frontrunTextField = settings.slippage.isLessThanOrEqualTo(
     SLIPPAGE_THRESHOLD
   ) ? (
     <FrontrunText />
   ) : null;
   const showSettings = (
     <SettingsFormModule
-      settings={props.settings}
-      setSettings={props.setSettings}
+      settings={settings}
+      setSettings={setSettings}
       showUnitModule={false}
       hasSlippage
     />
   );
 
   const expectedBeanPrice = getExpectedBeanPrice(
-    props.fromValue,
-    props.toValue
+    fromValue,
+    toValue
   );
-  const fee = props.orderIndex
-    ? props.fromValue.dividedBy(props.usdcPrice).multipliedBy(LP_FEE)
-    : props.fromValue.multipliedBy(props.beanPrice).multipliedBy(LP_FEE);
+  const fee = orderIndex
+    ? fromValue.dividedBy(usdcPrice).multipliedBy(LP_FEE)
+    : fromValue.multipliedBy(beanPrice).multipliedBy(LP_FEE);
 
-  const textTransaction = props.orderIndex
+  const textTransaction = orderIndex
     ? `Buy ${displayBN(
-        props.toValue.multipliedBy(props.settings.slippage)
-      )} ${TokenLabel(props.toToken)} with ${props.fromValue.toFixed(
+        toValue.multipliedBy(settings.slippage)
+      )} ${outputToken.label} with ${fromValue.toFixed(
         4
-      )} ${TokenLabel(props.fromToken)} for ${expectedBeanPrice.toFixed(
+      )} ${inputToken.label} for ${expectedBeanPrice.toFixed(
         4
       )} each`
-    : `Buy ${props.toValue.toFixed(4)} ${TokenLabel(
-        props.toToken
-      )} with ${displayBN(props.fromValue)} ${TokenLabel(
-        props.fromToken
-      )} for ${expectedBeanPrice.toFixed(4)} each`;
+    : `Buy ${toValue.toFixed(4)} ${outputToken.label} with ${displayBN(
+        fromValue
+      )} ${inputToken.label} for ${expectedBeanPrice.toFixed(4)} each`;
 
   function transactionDetails() {
-    if (props.toValue.isLessThanOrEqualTo(0)) return;
+    if (toValue.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
@@ -184,9 +218,9 @@ export default function SwapModule(props) {
         </Box>
         <SwapTransactionDetailsModule
           fields={{
-            'Minimum Received': `${props.toValue
-              .multipliedBy(props.settings.slippage)
-              .toFixed(4)} ${TokenLabel(props.toToken)}`,
+            'Minimum Received': `${toValue
+              .multipliedBy(settings.slippage)
+              .toFixed(4)} ${outputToken.label}`,
             'Expected Price': `$ ${expectedBeanPrice.toFixed(4)}`,
             'LP Fee': `0.3% ($${fee.toFixed(2)})`,
           }}
