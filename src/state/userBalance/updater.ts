@@ -38,7 +38,7 @@ import {
   getPrices,
   getTotalBalances,
   initialize,
-  initializeCallback,
+  addCallback,
   initializeEventListener,
   parseWithdrawals,
   parsePlots,
@@ -616,7 +616,7 @@ export default function Updater() {
         benchmarkEnd('*INIT*', startTime);
         startTime = benchmarkStart('**WEBSITE**');
 
-        initializeCallback(async () => {
+        addCallback(async () => {
           const [updateBalanceState] = await updateAllBalances();
           ReactDOM.unstable_batchedUpdates(() => {
             updateBalanceState();

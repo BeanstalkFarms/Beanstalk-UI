@@ -10,6 +10,7 @@ import {
   UNI_V2_USDC_ETH_LP,
   UNISWAP_V2_ROUTER,
   USDC,
+  supportedERC20Tokens,
 } from 'constants/index';
 import {
   account,
@@ -17,6 +18,7 @@ import {
   initializing,
   pairContractReadOnly,
   tokenContractReadOnly,
+  tokenV2ContractReadOnly,
   toTokenUnitsBN,
   web3,
 } from './index';
@@ -88,9 +90,9 @@ export const getAccountBalances = async (batch) => {
 
   return makeBatchedPromises(batch, [
     [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
-    [bean.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
-    [lp.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
-    [usdc.methods.allowance(account, BEANSTALK.addr), bigNumberResult],
+    [bean.methods.allowance(account, BEANSTALK), bigNumberResult],
+    [lp.methods.allowance(account, BEANSTALK), bigNumberResult],
+    [usdc.methods.allowance(account, BEANSTALK), bigNumberResult],
     [beanstalk.methods.balanceOfEth(account), tokenResult(ETH)],
     [bean.methods.balanceOf(account), tokenResult(BEAN)],
     [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
@@ -104,6 +106,9 @@ export const getAccountBalances = async (batch) => {
   ]);
 };
 /* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
+
+export const getTokenBalances = async (batch) =>
+  makeBatchedPromises(batch, supportedERC20Tokens.map((t) => [tokenV2ContractReadOnly(t).methods.balanceOf(account), tokenResult(t)]));
 
 export const getTotalBalances = async (batch) => {
   const bean = tokenContractReadOnly(BEAN);

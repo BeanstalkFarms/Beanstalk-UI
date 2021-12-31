@@ -104,21 +104,21 @@ export const approveUniswapBean = async (callback) => {
 };
 
 export const approveBeanstalkBean = async (callback) => {
-  approveToken(BEAN, account, BEANSTALK.addr, MAX_UINT256, callback);
+  approveToken(BEAN, account, BEANSTALK, MAX_UINT256, callback);
 };
 
 export const approveBeanstalkLP = async (callback) => {
   approveToken(
     UNI_V2_ETH_BEAN_LP,
     account,
-    BEANSTALK.addr,
+    BEANSTALK,
     MAX_UINT256,
     callback
   );
 };
 
 export const approveBeanstalkUSDC = async (callback) => {
-  approveToken(USDC, account, BEANSTALK.addr, MAX_UINT256, callback);
+  approveToken(USDC, account, BEANSTALK, MAX_UINT256, callback);
 };
 
 export function TokenLabel(tokenType: Token): string {

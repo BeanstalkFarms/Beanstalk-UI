@@ -6,6 +6,7 @@ import { Box, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 
 import Updater from 'state/userBalance/updater';
+import TokenUpdater from 'state/tokenBalance/updater';
 import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
@@ -134,6 +135,7 @@ export default function App() {
       <CssBaseline />
       {/* UPDATERS */}
       <Updater />
+      <TokenUpdater />
       <NFTUpdater />
       {/* CONTENT */}
       <Box className="App">

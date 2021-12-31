@@ -25,12 +25,16 @@ let ethereum;
 export let initializing;
 export let web3: Web3;
 export let account: String;
-export let txCallback = null;
+export const txCallbacks: [() => void] = [];
 export let metamaskFailure = -1;
 export let chainId = 1;
 
 export let web3Provider;
 export let web3Signer;
+
+export const txCallback = () => {
+  txCallbacks.forEach((callback) => callback());
+};
 
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');
@@ -44,16 +48,19 @@ export const tokenContract = (token) =>
 export const tokenContractReadOnly = (token) =>
   new web3.eth.Contract(beanAbi, token.addr);
 
+export const tokenV2ContractReadOnly = (token) =>
+  new web3.eth.Contract(beanAbi, token.address);
+
 export const beanstalkContract = () =>
-  new ethers.Contract(BEANSTALK.addr, beanstalkAbi, web3Signer);
+  new ethers.Contract(BEANSTALK, beanstalkAbi, web3Signer);
 
 export const beanstalkContractReadOnly = () =>
-  new web3.eth.Contract(beanstalkAbi, BEANSTALK.addr);
+  new web3.eth.Contract(beanstalkAbi, BEANSTALK);
 
 export const beaNFTContract = () =>
-  new ethers.Contract(BEANFT.addr, beaNFTAbi, web3Signer);
+  new ethers.Contract(BEANFT, beaNFTAbi, web3Signer);
 export const beaNFTContractReadOnly = () =>
-  new web3.eth.Contract(beaNFTAbi, BEANFT.addr);
+  new web3.eth.Contract(beaNFTAbi, BEANFT);
 
 export const pairContract = (pair) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
@@ -129,8 +136,8 @@ export async function switchToMainnet() {
   }
 }
 
-export function initializeCallback(callback) {
-  txCallback = callback;
+export function addCallback(callback) {
+  txCallbacks.push(callback);
 }
 
 export async function isAddress(a) {
