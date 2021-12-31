@@ -26,7 +26,6 @@ import {
   FundraiserPage,
   BeaNFTPage,
   AboutPage,
-  //
 } from 'Pages';
 
 import Wrapper from './Wrapper';

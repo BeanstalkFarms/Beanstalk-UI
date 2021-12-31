@@ -75,6 +75,8 @@ export default function Silo() {
 
   return (
     <ContentSection id="silo" title="Silo">
+      {apyField}
+      <TabbedSilo />
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown
           description={siloStrings.siloDescription}
@@ -82,8 +84,6 @@ export default function Silo() {
           descriptionLinks={descriptionLinks}
         />
       </Grid>
-      {apyField}
-      <TabbedSilo />
     </ContentSection>
   );
 }
