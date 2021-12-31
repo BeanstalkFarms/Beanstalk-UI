@@ -17,7 +17,6 @@ export default function Updater(): null {
   const dispatch = useDispatch();
   const location = useLocation();
   const windowVisible = useIsWindowVisible();
-
   const {
     onboard: _onboard,
     chainId,
@@ -29,6 +28,17 @@ export default function Updater(): null {
     (state) => state.application
   );
 
+  /* Local state */
+  const [state, setState] = useState<{
+    blockNumber: number | null;
+    hasRequestedAccounts: boolean;
+  }>({
+    blockNumber: null,
+    hasRequestedAccounts: false,
+  });
+
+  /* */
+  const baseToken = DAI[chainId || ChainId.MAINNET];
   const comparisonToken = useMemo(() => {
     switch (chainId) {
       case 56:
@@ -41,16 +51,8 @@ export default function Updater(): null {
         return WETH[chainId ?? ChainId.MAINNET] as any;
     }
   }, [chainId]);
-  const baseToken = DAI[chainId || ChainId.MAINNET];
 
-  const [state, setState] = useState<{
-    blockNumber: number | null;
-    hasRequestedAccounts: boolean;
-  }>({
-    blockNumber: null,
-    hasRequestedAccounts: false,
-  });
-
+  /* */
   const blockNumberCallback = useCallback(
     (_blockNumber: number) => {
       setState((s) => ({ ...s, blockNumber: _blockNumber }));
@@ -58,6 +60,7 @@ export default function Updater(): null {
     [setState]
   );
 
+  /* */
   useEffect(() => {
     if (!web3 || !chainId || !windowVisible) return undefined;
 
@@ -77,9 +80,7 @@ export default function Updater(): null {
 
     web3.on('block', blockNumberCallback);
 
-    return () => {
-      web3.removeListener('block', blockNumberCallback);
-    };
+    return () => { web3.removeListener('block', blockNumberCallback); };
   }, [
     dispatch,
     chainId,
@@ -89,14 +90,17 @@ export default function Updater(): null {
     windowVisible,
   ]);
 
+  /* */
   const debouncedState = useDebounce(state, 100);
 
+  /* */
   useEffect(() => {
     if (!debouncedState.blockNumber || !windowVisible) return;
 
     dispatch(updateBlockNumber(debouncedState.blockNumber));
   }, [windowVisible, dispatch, debouncedState.blockNumber]);
 
+  /* */
   useEffect(() => {
     if (!web3 || state.hasRequestedAccounts) return;
 
@@ -104,39 +108,45 @@ export default function Updater(): null {
 
     const ethereum = (window as any).ethereum;
 
-    const handleGetAccountAndContracts = async (
-      _web3: ethers.providers.Web3Provider
-    ) => {
+    //
+    const handleGetAccountAndContracts = async (_web3: ethers.providers.Web3Provider) => {
       const _signer = _web3.getSigner();
       const network = await _web3.getNetwork();
       const _chainId = network.chainId;
 
-      dispatch(setWeb3Settings({ signer: _signer, chainId: _chainId }));
+      dispatch(setWeb3Settings({
+        signer: _signer,
+        chainId: _chainId
+      }));
     };
 
+    //
     ethereum?.request({ method: 'eth_requestAccounts' }).then(() => {
       handleGetAccountAndContracts(web3).catch((e) => console.error(e));
 
-      dispatch(setWeb3Settings({ ethereum }));
+      dispatch(setWeb3Settings({
+        ethereum
+      }));
     });
 
+    //
     ethereum?.on('accountsChanged', async () => {
       handleGetAccountAndContracts(web3).catch((e) => console.error(e));
 
-      if (
-        ['marketplace', 'account'].includes(
-          get(location.pathname.split('/'), 1)
-        )
-      ) {
+      if (['marketplace', 'account'].includes(
+        get(location.pathname.split('/'), 1)
+      )) {
         document.location.reload();
       }
     });
 
+    //
     ethereum?.on('chainChanged', () => {
       document.location.reload();
     });
   }, [web3, location, signer, contracts, state.hasRequestedAccounts, dispatch]);
 
+  /* */
   useEffect(() => {
     if (_onboard) return;
 
@@ -200,6 +210,7 @@ export default function Updater(): null {
     comparisonToken,
   ]);
 
+  /* */
   useEffect(() => {
     const previouslySelectedWallet = window.localStorage
       ? window.localStorage.getItem('selectedWallet')
