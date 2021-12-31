@@ -15,6 +15,7 @@ import {
   TransitAsset,
 } from 'components/Common';
 import { CreateBuyOfferModule } from './CreateBuyOfferModule';
+import Graph from './GraphModule';
 import Listings from './Listings';
 
 export default function MarketplaceBuyModule() {
@@ -59,10 +60,7 @@ export default function MarketplaceBuyModule() {
 
   const [section, setSection] = useState(0);
 
-  const sectionTitles = [
-    'Listings',
-    'Make Offer',
-  ];
+  const sectionTitles = ['Listings', 'Make Offer'];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit,
     siloStrings.beanDeposit,
@@ -105,6 +103,7 @@ export default function MarketplaceBuyModule() {
 
   return (
     <>
+      <Graph />
       <BaseModule
         style={{ marginTop: '20px' }}
         handleApprove={approveBeanstalkBean}
@@ -114,7 +113,7 @@ export default function MarketplaceBuyModule() {
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
         handleTabChange={(e, value) => {
-          setSection(value)
+          setSection(value);
         }}
         showButton={section === 1}
       >
