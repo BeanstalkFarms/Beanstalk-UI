@@ -104,6 +104,15 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
       amountSold: 1000,
       status: 'yo',
     },
+    {
+      listerAddress: 'yo',
+      objectiveIndex: 20e6,
+      pricePerPod: 0.7,
+      expiresIn: 100,
+      intialAmount: 600,
+      amountSold: 600,
+      status: 'yo',
+    },
   ]);
 
   const maxPlaceInLine = Math.max(...listings.map((l) => l.objectiveIndex));
