@@ -3,12 +3,10 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { approveBeanstalkBean, beanstalkContract, SwapMode } from 'util/index';
-import {
-  BaseModule,
-  siloStrings,
-} from 'components/Common';
+import { BaseModule, siloStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
 import { CreateBuyOfferModule } from './CreateBuyOfferModule';
+import Graph from './GraphModule';
 import Listings from './Listings';
 
 export default function MarketplaceBuyModule() {
@@ -32,10 +30,7 @@ export default function MarketplaceBuyModule() {
 
   const [section, setSection] = useState(0);
 
-  const sectionTitles = [
-    'Pod Listings',
-    'Make Offer',
-  ];
+  const sectionTitles = ['Listings', 'Make Offer'];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit,
     siloStrings.beanDeposit,
@@ -71,7 +66,8 @@ export default function MarketplaceBuyModule() {
       buyBeanAmount.times(10 ** 6).toString(),
       {
         value: fromEthValue.times(10 ** 18).toFixed(),
-      });
+      }
+    );
     console.log('res:', res);
   };
 
@@ -105,6 +101,7 @@ export default function MarketplaceBuyModule() {
 
   return (
     <>
+      <Graph />
       <BaseModule
         style={{ marginTop: '20px' }}
         handleApprove={approveBeanstalkBean}
