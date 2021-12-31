@@ -1,5 +1,9 @@
 import { createAction } from '@reduxjs/toolkit';
 
+export const setUnclaimedWinterNFTs = createAction<Array>(
+  'nfts/setUnclaimedWinterNFTs'
+);
+
 export const setUnclaimedNFTs = createAction<Array>(
   'nfts/setUnclaimedNFTs'
 );

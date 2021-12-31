@@ -236,6 +236,7 @@ export const beanftStrings = {
   minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
   singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',
   unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',
+  winter: 'Use this tab to view all the Winter BeaNFTs you own. Winter BeaNFTs are not available for minting yet, but will be soon. However, the NFT image and metadata are already stored on the IPFS.',
   genesisNFTs: 'The total minted and unminted Genesis BeaNFTs that you own.',
   winterNFTs: 'The total minted and unminted Winter BeaNFTs that you own.',
 };

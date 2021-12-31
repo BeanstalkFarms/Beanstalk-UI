@@ -1,6 +1,4 @@
 import React from 'react';
-import { AppState } from 'state';
-import { useSelector } from 'react-redux';
 import { Link } from '@material-ui/core';
 import {
   MEDIUM_NFT_GENESIS_LINK,
@@ -17,10 +15,6 @@ import ClaimNFT from './claimnft';
 import NftStatsHeader from './NftStatsHeader';
 
 export default function NFTs() {
-  const { unclaimedNFTs, claimedNFTs } = useSelector<AppState, AppState['nfts']>(
-    (state) => state.nfts
-  );
-
   const description = (
     <>
       <span style={{ display: 'flex' }}>
@@ -55,8 +49,6 @@ export default function NFTs() {
         <NftStatsHeader />
         <ClaimNFT
           buttonDescription={beanftStrings.mintAll}
-          claimedNfts={claimedNFTs}
-          nfts={unclaimedNFTs}
         />
         <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
           <ContentDropdown
