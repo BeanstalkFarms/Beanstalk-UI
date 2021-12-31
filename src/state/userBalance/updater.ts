@@ -45,6 +45,7 @@ import {
   toBaseUnitBN,
   toTokenUnitsBN,
   account,
+  getEthPrices,
 } from 'util/index';
 
 export default function Updater() {
@@ -87,6 +88,7 @@ export default function Updater() {
   };
 
   useEffect(() => {
+    //
     function processAccountBalances(
       accountBalances,
       ethBalance,
@@ -135,6 +137,7 @@ export default function Updater() {
       );
     }
 
+    //
     function processTotalBalances(totalBalances, bipInfo, fundraiserInfo) {
       const [
         totalBeans,
@@ -190,6 +193,7 @@ export default function Updater() {
       return _season.season;
     }
 
+    //
     function lpReservesForTokenReserves(tokenReserves, token0) {
       const rawBeanReserve =
         token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
@@ -199,9 +203,20 @@ export default function Updater() {
       const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
       return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
     }
+
+    //
     function processPrices(_prices) {
-      const [referenceTokenReserves, tokenReserves, token0, twapPrices, beansToPeg, lpToPeg] =
-        _prices;
+      const [
+        referenceTokenReserves,
+        tokenReserves,
+        token0,
+        twapPrices,
+        beansToPeg,
+        lpToPeg,
+        ethPrices,
+      ] = _prices;
+
+      //
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
       const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
         lpReservesForTokenReserves(tokenReserves, token0);
@@ -214,16 +229,18 @@ export default function Updater() {
       const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
 
+      //
       dispatch(
         setPrices({
           beanPrice,
           usdcPrice,
           ethReserve,
           beanReserve,
-          beanTWAPPrice: twapPrices[0],
-          usdcTWAPPrice: twapPrices[1],
           beansToPeg,
           lpToPeg,
+          beanTWAPPrice: twapPrices[0],
+          usdcTWAPPrice: twapPrices[1],
+          ethPrices,
         })
       );
       return [beanReserve, ethReserve];
@@ -532,11 +549,14 @@ export default function Updater() {
         beanReserve,
         ethReserve,
       ];
-
+      const ethPrices = await getEthPrices();
       return [
         () => {
           const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
-          const lpReserves = processPrices(_prices);
+          const lpReserves = processPrices([
+            ..._prices,
+            ethPrices,
+          ]);
           processAccountBalances(
             accountBalances,
             ethBalance,
@@ -574,8 +594,9 @@ export default function Updater() {
       batch.execute();
 
       const _prices = await pricePromises;
+      const ethPrices = await getEthPrices();
       ReactDOM.unstable_batchedUpdates(() => {
-        processPrices(_prices);
+        processPrices([..._prices, ethPrices]);
       });
       benchmarkEnd('PRICES', startTime);
     }

@@ -1,59 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+
 import { BaseModule, chartStrings, ContentSection } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
+import { AppState } from 'state';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
 import FieldCharts from './FieldCharts';
 
 export default function Charts(props) {
-  const marginTop = props.marginTop == null ? '0px' : props.marginTop;
+  //
   const [chartData, setChartData] = useState([]);
   const [section, setSection] = useState(0);
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
-  async function loadBeanstalkData() {
-    const beanstalkData = await beanstalkQuery();
-    setChartData(beanstalkData);
-  }
-
-  const [width, setWidth] = useState<number>(window.innerWidth);
-
-  function handleWindowSizeChange() {
-    setWidth(window.innerWidth);
-  }
-
-  const isMobile: boolean = width <= 758;
-  const baseStyle = isMobile
-    ? { width: '95%', paddingLeft: 0, paddingRight: 0 }
-    : { width: '95%' };
-
+  //
   useEffect(() => {
+    async function loadBeanstalkData() {
+      const beanstalkData = await beanstalkQuery();
+      setChartData(beanstalkData);
+    }
     loadBeanstalkData();
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
   }, []);
+
+  //
+  const isMobile: boolean = width <= 850;
+  // const baseStyle = isMobile
+  //   ? { paddingLeft: 0, paddingRight: 0 }
+  //   : {  }; // minWidth: 600
+
+  //
   const titles = ['Bean', 'Field', 'Silo'];
   const descriptions = [
     chartStrings.bean,
     chartStrings.field,
     chartStrings.silo,
   ];
-
   const sections = [
     <BeanCharts />,
     <FieldCharts data={chartData} />,
     <SiloCharts data={chartData} />,
   ];
 
+  //
   return (
-    <Grid style={{ margin: 'auto' }} container item xs={12} justifyContent="center">
+    <Grid
+      style={{ margin: 'auto', width: '100%' }}
+      container
+      item
+      md={10}
+      sm={10}
+      xs={10}
+      justifyContent="center">
       <ContentSection
         id="charts"
         title={props.title}
         size="20px"
-        style={{ maxWidth: '1000px', marginTop: marginTop }}
+        style={{
+          width: '100%',
+          marginTop: props.marginTop || 0,
+        }}
       >
         <BaseModule
           handleTabChange={(event, newSection) => {
@@ -65,7 +74,9 @@ export default function Charts(props) {
           size={isMobile ? 'small' : 'medium'}
           sectionTitles={titles}
           showButton={false}
-          style={baseStyle}
+          style={{
+            width: '100%',
+          }}
         >
           {sections[section]}
         </BaseModule>
@@ -73,6 +84,7 @@ export default function Charts(props) {
     </Grid>
   );
 }
+
 Charts.defaultProps = {
   title: 'Charts',
 };

@@ -7,6 +7,9 @@ export default function DAO() {
   const sections = [<Governance />];
 
   return (
-    <Page sections={sections} sectionTitles={sectionTitles} />
+    <Page
+      sections={sections}
+      sectionTitles={sectionTitles}
+    />
   );
 }

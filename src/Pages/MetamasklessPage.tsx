@@ -8,6 +8,9 @@ export default function MetamasklessPage() {
   const sections = [<MetamasklessModule />, <Charts />];
 
   return (
-    <Page sections={sections} sectionTitles={sectionTitles} />
+    <Page
+      sections={sections}
+      sectionTitles={sectionTitles}
+    />
   );
 }

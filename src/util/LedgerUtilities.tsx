@@ -52,6 +52,28 @@ export async function getUSDCBalance() {
   return tokenResult(USDC)(await web3.eth.getBalance(account));
 }
 
+export async function getEthPrices() {
+  try {
+    // FIXME
+    const ethPrice = await fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=stats&action=ethprice')
+      .then((response) => response.json())
+      .then((res) => res.result.ethusd);
+    const gas = await fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=gastracker&action=gasoracle')
+      .then((response) => response.json())
+      .then((res) => ({
+        safe: res.result.FastGasPrice,
+        propose: res.result.SafeGasPrice,
+        fast: res.result.ProposeGasPrice,
+      }));
+    return {
+      ...gas,
+      ethPrice,
+    };
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export async function getBlockTimestamp(blockNumber) {
   await initializing;
   return (await web3.eth.getBlock(blockNumber)).timestamp;
@@ -203,6 +225,7 @@ export const getPrices = async (batch) => {
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
 
   return makeBatchedPromises(batch, [
+    // referenceTokenReserves
     [
       referenceLPContract.methods.getReserves(),
       (reserves) => [
@@ -210,6 +233,7 @@ export const getPrices = async (batch) => {
         bigNumberResult(reserves._reserve1),
       ],
     ],
+    // tokenReserves
     [
       lpContract.methods.getReserves(),
       (reserves) => [
@@ -217,7 +241,12 @@ export const getPrices = async (batch) => {
         bigNumberResult(reserves._reserve1),
       ],
     ],
-    [lpContract.methods.token0(), identityResult],
+    // token0
+    [
+      lpContract.methods.token0(),
+      identityResult,
+    ],
+    // twapPrices
     [
       beanstalk.methods.getTWAPPrices(),
       (prices) => [
@@ -225,10 +254,12 @@ export const getPrices = async (batch) => {
         toTokenUnitsBN(prices[1], 18),
       ],
     ],
+    // beansToPeg
     [
       beanstalk.methods.beansToPeg(),
       (lp) => toTokenUnitsBN(lp, 6),
     ],
+    // lpToPeg
     [
       beanstalk.methods.lpToPeg(),
       (lp) => toTokenUnitsBN(lp, 18),

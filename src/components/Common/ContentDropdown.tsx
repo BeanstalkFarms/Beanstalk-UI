@@ -58,7 +58,7 @@ export default function ContentDropdown({
 }) {
   const classes = makeStyles(() => ({
     root: {
-      width: '300px',
+      // width: '300px',
     },
     topContainer: {
       backgroundColor: 'transparent',
@@ -96,6 +96,7 @@ export default function ContentDropdown({
           expandIcon={<ExpandMoreIcon style={{ color: theme.accentText }} />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
+          style={{ backgroundColor: theme.secondary }}
         >
           <Typography className={classes.heading}>
             {descriptionTitle}
