@@ -66,8 +66,6 @@ export async function getEtherBalance() {
 export async function getUSDCBalance() {
   return tokenResult(USDC)(await web3.eth.getBalance(account));
 }
-<<<<<<< HEAD
-=======
 
 export async function getEthPrices() {
   try {
@@ -91,7 +89,6 @@ export async function getEthPrices() {
   }
 }
 
->>>>>>> dev
 export async function getBlockTimestamp(blockNumber) {
   await initializing;
   return (await web3.eth.getBlock(blockNumber)).timestamp;
