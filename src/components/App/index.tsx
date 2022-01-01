@@ -2,40 +2,49 @@ import React, { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { CssBaseline } from '@material-ui/core';
+import { Box, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
+
 import Updater from 'state/userBalance/updater';
+import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
-import { NavigationBar } from 'components/Navigation';
+import Footer from 'components/About/Footer';
+import { NavigationBar, NavigationSidebar } from 'components/Navigation';
+
 import {
-  Farm,
-  Analytics,
-  DAO,
-  BeaNFT,
-  AboutPage,
-  FundraiserPage,
+  //
   MetamasklessPage,
+  //
+  FarmPage,
+  SiloPage,
+  FieldPage,
+  TradePage,
+  DAOPage,
+  //
+  AnalyticsPage,
+  FundraiserPage,
+  BeaNFTPage,
+  AboutPage,
 } from 'Pages';
 
-import Main from './main.tsx';
+import Wrapper from './Wrapper';
 import theme from './theme';
-import LoadingBean from './LoadingBean.tsx';
+import LoadingBean from './LoadingBean';
 import './App.css';
 
+BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
+
 export default function App() {
-  const { initialized, metamaskFailure } = useSelector<
-    AppState,
-    AppState['general']
-  >((state) => state.general);
   const dispatch = useDispatch();
+  const { initialized, metamaskFailure } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
-  BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
-
-  function handleWindowSizeChange() {
-    dispatch(setWidth(window.innerWidth));
-  }
-
+  // HANDLE WINDOW SIZE CHANGE
+  // Used throughout the app to show/hide components and
+  // control elements of the theme.
+  const handleWindowSizeChange = () => dispatch(setWidth(window.innerWidth));
   useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);
     return () => {
@@ -48,7 +57,7 @@ export default function App() {
   if (metamaskFailure > -1) {
     app = (
       <>
-        <NavigationBar />
+        {/* <NavigationBar /> */}
         <MetamasklessPage />
       </>
     );
@@ -56,40 +65,88 @@ export default function App() {
     app = <LoadingBean />;
   } else {
     app = (
-      <>
-        <NavigationBar />
+      <div>
+        {/* <NavigationBar /> */}
         <Switch>
+          {/* Redirects */}
           <Route exact path="/">
-            <Redirect to="/farm" />
+            <Redirect to="/farm/silo" />
           </Route>
           <Route exact path="/farm">
-            <Farm />
+            <Redirect to="/silo" />
           </Route>
+          {/* Farm */}
+          <Route exact path="/farm/silo">
+            <SiloPage />
+          </Route>
+          <Route exact path="/farm/field">
+            <FieldPage />
+          </Route>
+          <Route exact path="/farm/trade">
+            <TradePage />
+          </Route>
+          <Route exact path="/farm/balances">
+            <FarmPage sectionNumber={3} />
+          </Route>
+          <Route exact path="/farm/beanfts">
+            <FarmPage sectionNumber={4} />
+          </Route>
+          {/* More */}
           <Route exact path="/analytics">
-            <Analytics />
+            <Redirect to="/analytics/charts" />
+          </Route>
+          <Route exact path="/analytics/charts">
+            <AnalyticsPage sectionNumber={0} />
+          </Route>
+          <Route exact path="/analytics/seasons">
+            <AnalyticsPage sectionNumber={1} />
+          </Route>
+          <Route exact path="/analytics/balances">
+            <AnalyticsPage sectionNumber={2} />
           </Route>
           <Route exact path="/fundraiser">
             <FundraiserPage />
           </Route>
-          <Route exact path="/dao">
-            <DAO />
+          <Route exact path="/governance">
+            <DAOPage />
           </Route>
-          <Route exact path="/nft">
-            <BeaNFT />
+          <Route exact path="/beanfts">
+            <Redirect to="/beanfts/beanft" />
+          </Route>
+          <Route exact path="/beanfts/beanft">
+            <BeaNFTPage sectionNumber={0} />
+          </Route>
+          <Route exact path="/beanfts/earnnfts">
+            <BeaNFTPage sectionNumber={1} />
           </Route>
           <Route exact path="/about">
             <AboutPage key="about" />
           </Route>
+          {/* If nothing matches, go to the Silo */}
+          <Redirect to="/farm/silo" />
         </Switch>
-      </>
+      </div>
     );
   }
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {/* UPDATERS */}
       <Updater />
-      <Main>{app}</Main>
+      <NFTUpdater />
+      {/* CONTENT */}
+      <Box className="App">
+        <Wrapper />
+        <Box sx={{ display: 'flex' }}>
+          <NavigationSidebar />
+          <Box component="main" sx={{ flex: 1, position: 'relative' }}>
+            <NavigationBar />
+            {app}
+            <Footer />
+          </Box>
+        </Box>
+      </Box>
     </ThemeProvider>
   );
 }

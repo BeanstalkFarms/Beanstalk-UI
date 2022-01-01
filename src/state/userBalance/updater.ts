@@ -45,6 +45,7 @@ import {
   toBaseUnitBN,
   toTokenUnitsBN,
   account,
+  getEthPrices,
 } from 'util/index';
 import { UserBalanceState } from './reducer';
 
@@ -260,16 +261,18 @@ export default function Updater() {
       const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
 
+      //
       dispatch(
         setPrices({
           beanPrice,
           usdcPrice,
           ethReserve,
           beanReserve,
-          beanTWAPPrice: twapPrices[0],
-          usdcTWAPPrice: twapPrices[1],
           beansToPeg,
           lpToPeg,
+          beanTWAPPrice: twapPrices[0],
+          usdcTWAPPrice: twapPrices[1],
+          ethPrices,
         })
       );
       return [beanReserve, ethReserve];
@@ -642,7 +645,7 @@ export default function Updater() {
         beanReserve,
         ethReserve,
       ];
-
+      const ethPrices = await getEthPrices();
       return [
         () => {
           const currentSeason = processTotalBalances(
@@ -694,8 +697,9 @@ export default function Updater() {
       batch.execute();
 
       const _prices = await pricePromises;
+      const ethPrices = await getEthPrices();
       ReactDOM.unstable_batchedUpdates(() => {
-        processPrices(_prices);
+        processPrices([..._prices, ethPrices]);
       });
       benchmarkEnd('PRICES', startTime);
     }

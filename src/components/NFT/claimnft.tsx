@@ -1,28 +1,24 @@
 import React, { useState } from 'react';
-import { Box } from '@material-ui/core';
+import { AppState } from 'state';
+import { useSelector } from 'react-redux';
+import { Box, Grid } from '@material-ui/core';
 import { mintAllNFTs } from 'util/index';
 import {
   beanftStrings,
-  ContentTitle,
   BaseModule,
-  Grid,
   SingleButton,
 } from 'components/Common';
 import NftPicTable from './NftPicTable';
 
-export default function ClaimNFT(props) {
+export default function ClaimNFT({
+  buttonDescription,
+}) {
+  const { unclaimedWinterNFTs, unclaimedNFTs, claimedNFTs } = useSelector<AppState, AppState['nfts']>(
+    (state) => state.nfts
+  );
+
   const [page, setPage] = React.useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
-
-  const headerStyle = {
-    fontFamily: 'Futura-PT-Book',
-    fontSize: '20px',
-    marginTop: '40px',
-    padding: '5px',
-    width: '100%',
-  };
-
-  const [nfts, claimedNfts] = [props.nfts, props.claimedNfts];
 
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
     setSectionInfo(newSectionInfo);
@@ -32,45 +28,51 @@ export default function ClaimNFT(props) {
     setPage(newPage);
   };
 
-  const canClaimNFT = nfts.length > 0;
+  const canClaimNFT = unclaimedNFTs.length > 0;
 
+  const sectionsInfo = [];
   const sectionTitlesInfo = [];
   const sectionTitlesDescription = [];
 
-  const sectionsInfo = [];
-  if (nfts !== undefined && Object.keys(nfts).length > 0 && canClaimNFT) {
+  // create Unminted Winter NFTs tab
+  if (unclaimedWinterNFTs !== undefined && Object.keys(unclaimedWinterNFTs).length > 0) {
     sectionsInfo.push(
       <NftPicTable
-        indexType="number"
-        assetType="nft"
-        canClaimNFT={canClaimNFT}
-        nftList={nfts}
-        colTitles={['ID', 'Transaction Hash']}
-        description="A list of your collection of BeaNFTs"
+        canClaimNFT={false}
+        nftList={unclaimedWinterNFTs}
         handleChange={handlePageChange}
         page={page}
-        rowsPerPage={1}
         style={{ width: 'auto', maxWidth: '450px' }}
-        title="Unminted BeaNFTs"
+      />
+    );
+    sectionTitlesInfo.push('WINTER');
+    sectionTitlesDescription.push(beanftStrings.winter);
+  }
+
+  // create Unminted NFTs tab
+  if (unclaimedNFTs !== undefined && Object.keys(unclaimedNFTs).length > 0 && canClaimNFT) {
+    sectionsInfo.push(
+      <NftPicTable
+        canClaimNFT={canClaimNFT}
+        nftList={unclaimedNFTs}
+        handleChange={handlePageChange}
+        page={page}
+        style={{ width: 'auto', maxWidth: '450px' }}
       />
     );
     sectionTitlesInfo.push('UNMINTED');
     sectionTitlesDescription.push(beanftStrings.unminted);
   }
-  if (claimedNfts !== undefined && Object.keys(claimedNfts).length > 0) {
+
+  // create Minted NFTs tab
+  if (claimedNFTs !== undefined && Object.keys(claimedNFTs).length > 0) {
     sectionsInfo.push(
       <NftPicTable
-        indexType="number"
-        assetType="nft"
         claimed
-        nftList={claimedNfts}
-        colTitles={['ID', 'Transaction Hash']}
-        description="A list of your collection of BeaNFTs"
+        nftList={claimedNFTs}
         handleChange={handlePageChange}
         page={page}
-        rowsPerPage={1}
         style={{ width: 'auto', maxWidth: '450px' }}
-        title="Minted BeaNFTs"
       />
     );
     sectionTitlesInfo.push('MINTED');
@@ -78,10 +80,9 @@ export default function ClaimNFT(props) {
   }
 
   // Table Wrapper
-
   const showListTables =
     sectionsInfo.length > 0 ? (
-      <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '370px' }}>
+      <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '360px' }}>
         <BaseModule
           handleTabChange={handleTabInfoChange}
           section={sectionInfo}
@@ -95,43 +96,30 @@ export default function ClaimNFT(props) {
       </Box>
     ) : null;
 
-  // Claim all Unclaimed BeaNFTs Button
-
+  // Claim all Unminted BeaNFTs Button
   const showButton = canClaimNFT ? (
     <SingleButton
       backgroundColor="#3B3B3B"
       color="white"
-      description={props.buttonDescription}
+      description={buttonDescription}
       handleClick={() => {
-        const accounts = nfts.map((u) => u.account);
-        const ids = nfts.map((u) => u.id);
-        const hashes = nfts.map((u) => u.metadataIpfsHash);
-        const signatures = nfts.map((u) => u.signature);
+        const accounts = unclaimedNFTs.map((u) => u.account);
+        const ids = unclaimedNFTs.map((u) => u.id);
+        const hashes = unclaimedNFTs.map((u) => u.metadataIpfsHash);
+        const signatures = unclaimedNFTs.map((u) => u.signature);
         mintAllNFTs(accounts, ids, hashes, signatures);
       }}
       margin="-13px 7px 0 0"
       marginTooltip="0 0 -5px 20px"
       size="small"
-      title={props.claimTitle}
+      title="Mint All"
       width="80%"
       widthTooltip="150px"
-      textTransform="none"
     />
   ) : null;
 
-  const ownedBeaNFTS = nfts.length + claimedNfts.length;
-
-  const showSection =
-    canClaimNFT || claimedNfts.length > 0 ? (
-      <ContentTitle
-        style={headerStyle}
-        title={`YOUR BeaNFTs: ${ownedBeaNFTS}`}
-      />
-    ) : null;
-
   return (
     <Grid container justifyContent="center">
-      {showSection}
       <Grid container item xs={6} style={{ width: '50%' }}>
         <Grid
           container
@@ -148,7 +136,7 @@ export default function ClaimNFT(props) {
         item
         justifyContent="center"
         alignItems="flex-start"
-        style={{ marginBottom: '100px' }}
+        // style={{ marginBottom: '100px' }}
       >
         {showButton}
       </Grid>

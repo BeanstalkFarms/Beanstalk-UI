@@ -12,6 +12,8 @@ import {
   Box,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
+
 import { AppState } from 'state';
 import {
   BEAN,
@@ -40,6 +42,7 @@ import {
 } from 'components/Common';
 import BalanceModule from 'components/Balances/BalanceModule';
 
+//
 const tokenImageStyle = {
   height: '15px',
   float: 'right',
@@ -77,34 +80,298 @@ const menuItemStyle = {
   borderBottom: `1px solid ${theme.module.foreground}`,
 };
 
-export default function WalletModule() {
-  const classes = makeStyles({
-    walletButton: {
-      textDecoration: 'none',
-      borderRadius: '12px',
-      color: 'black',
-      textTransform: 'none',
-      fontFamily: 'Futura-PT-Book',
-      fontSize: '16px',
-      padding: '5px 8px',
-      marginLeft: '8px',
-      '&:hover': {
-        backgroundColor: '#61dafb38',
-      },
+//
+const useStyles = makeStyles({
+  walletButton: {
+    textDecoration: 'none',
+    color: theme.accentText,
+    textTransform: 'none',
+    fontFamily: 'Futura-PT-Book',
+    fontWeight: 'bold',
+    backgroundColor: theme.secondary,
+    '&:hover': {
+      backgroundColor: theme.activeSection,
     },
-    greenStyle: {
-      color: 'green',
-      display: 'block',
-      marginTop: '-7px',
-      width: '100%',
-    },
-    redStyle: {
-      color: 'red',
-      display: 'block',
-      width: '100%',
-    },
-  })();
+  },
+});
 
+// FIXME: these should be refactored into real components
+// and have typescript types applied
+const inOutDisplay = (inBN, inToken, outBN, outToken) => (
+  <>
+    <span style={{
+        color: 'green',
+        display: 'block',
+        marginTop: '-7px',
+        width: '100%',
+      }}>
+      {`+${displayBN(outBN)}`}{' '}
+      <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
+    </span>
+    <span style={{
+        color: 'red',
+        display: 'block',
+        width: '100%',
+      }}>
+      {`-${displayBN(inBN)}`}{' '}
+      <TokenTypeImageModule style={tokenImageStyle} token={inToken} />
+    </span>
+  </>
+  );
+const outDisplay = (outBN, outToken) => (
+  <>
+    <span style={{ color: 'green' }}>{`+${displayBN(outBN)}`}</span>
+    <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
+  </>
+  );
+
+/**
+ *
+ */
+function DisplayEvent({ event }) {
+  let eventTitle = `Event Name: ${event.event}`;
+  let eventAmount;
+  switch (event.event) {
+    case 'BeanDeposit': {
+      const s = event.returnValues.season;
+      const beans = toTokenUnitsBN(
+        new BigNumber(event.returnValues.beans),
+        BEAN.decimals
+      );
+      eventTitle = `Bean Deposit (Season${s})`;
+      eventAmount = outDisplay(beans, SiloAsset.Bean);
+      break;
+    }
+    case 'BeanClaim': {
+      const beans = toTokenUnitsBN(
+        new BigNumber(event.returnValues.beans),
+        BEAN.decimals
+      );
+
+      eventTitle = 'Bean Claim';
+      eventAmount = inOutDisplay(
+        beans,
+        ClaimableAsset.Bean,
+        beans,
+        CryptoAsset.Bean
+      );
+      break;
+    }
+    case 'BeanWithdraw': {
+      const s = parseInt(event.returnValues.season, 10);
+      const beans = toTokenUnitsBN(
+        new BigNumber(event.returnValues.beans),
+        BEAN.decimals
+      );
+
+      eventTitle = `Bean Withdrawal (Season ${s - WITHDRAWAL_FROZEN})`;
+      eventAmount = inOutDisplay(
+        beans,
+        SiloAsset.Bean,
+        beans,
+        TransitAsset.Bean
+      );
+      break;
+    }
+    case 'Sow': {
+      const pods = toTokenUnitsBN(event.returnValues.pods, BEAN.decimals);
+
+      if (event.returnValues.beans !== undefined) {
+        const beans = toTokenUnitsBN(event.returnValues.beans, BEAN.decimals);
+        const weather = pods
+          .dividedBy(beans)
+          .minus(new BigNumber(1))
+          .multipliedBy(100)
+          .toFixed(0);
+
+        eventTitle = `Bean Sow (${weather}% Weather)`;
+        eventAmount = inOutDisplay(
+          beans,
+          CryptoAsset.Bean,
+          pods,
+          FarmAsset.Pods
+        );
+      } else {
+        eventTitle = 'Bean Sow';
+        eventAmount = (
+          <>
+            <span style={{ color: 'green' }}>{displayBN(pods)}</span>
+            <TokenTypeImageModule
+              style={tokenImageStyle}
+              token={FarmAsset.Pods}
+            />
+          </>
+        );
+      }
+      break;
+    }
+    case 'Harvest': {
+      const beans = toTokenUnitsBN(
+        new BigNumber(event.returnValues.beans),
+        BEAN.decimals
+      );
+
+      eventTitle = 'Pod Harvest';
+      eventAmount = inOutDisplay(
+        beans,
+        FarmAsset.Pods,
+        beans,
+        CryptoAsset.Bean
+      );
+      break;
+    }
+    case 'LPDeposit': {
+      const s = event.returnValues.season;
+      const lp = toTokenUnitsBN(
+        new BigNumber(event.returnValues.lp),
+        UNI_V2_ETH_BEAN_LP.decimals
+      );
+
+      eventTitle = `LP Deposit (Season${s})`;
+      eventAmount = outDisplay(lp, SiloAsset.LP);
+      break;
+    }
+    case 'LPClaim': {
+      const lp = toTokenUnitsBN(
+        new BigNumber(event.returnValues.lp),
+        UNI_V2_ETH_BEAN_LP.decimals
+      );
+
+      eventTitle = 'LP Claim';
+      eventAmount = inOutDisplay(lp, ClaimableAsset.LP, lp, CryptoAsset.LP);
+      break;
+    }
+    case 'LPWithdraw': {
+      const s = parseInt(event.returnValues.season, 10);
+      const lp = toTokenUnitsBN(
+        new BigNumber(event.returnValues.lp),
+        UNI_V2_ETH_BEAN_LP.decimals
+      );
+
+      eventTitle = `LP Withdrawal (Season ${s - WITHDRAWAL_FROZEN})`;
+      eventAmount = inOutDisplay(lp, SiloAsset.LP, lp, TransitAsset.LP);
+      break;
+    }
+    case 'Proposal': {
+      eventTitle = 'BIP Proposal';
+      eventAmount = (
+        <span style={{ fontFamily: 'Futura-PT-Book' }}>
+          {`BIP ${event.returnValues.bip}`}
+        </span>
+      );
+      break;
+    }
+    case 'Vote': {
+      eventTitle = 'BIP Vote';
+      eventAmount = (
+        <span style={{ color: 'green', fontFamily: 'Futura-PT-Book' }}>
+          {`BIP ${event.returnValues.bip}`}
+        </span>
+      );
+      break;
+    }
+    case 'Unvote': {
+      eventTitle = 'BIP Unvote';
+      eventAmount = (
+        <span style={{ color: 'red', fontFamily: 'Futura-PT-Book' }}>
+          {`BIP ${event.returnValues.bip}`}
+        </span>
+      );
+      break;
+    }
+    case 'Incentivization': {
+      const beanReward = toTokenUnitsBN(
+        new BigNumber(event.returnValues.beans),
+        BEAN.decimals
+      );
+
+      eventTitle = 'Sunrise Reward';
+      eventAmount = outDisplay(beanReward, CryptoAsset.Bean);
+      break;
+    }
+    case 'Swap': {
+      if (event.returnValues.amount0In !== '0') {
+        const swapFrom = toTokenUnitsBN(
+          new BigNumber(event.returnValues.amount0In),
+          ETH.decimals
+        );
+        const swapTo = toTokenUnitsBN(
+          new BigNumber(event.returnValues.amount1Out),
+          BEAN.decimals
+        );
+
+        eventTitle = 'ETH to Bean Swap';
+        eventAmount = inOutDisplay(
+          swapFrom,
+          CryptoAsset.Ethereum,
+          swapTo,
+          CryptoAsset.BEAN
+        );
+      } else if (event.returnValues.amount1In !== '0') {
+        const swapFrom = toTokenUnitsBN(
+          new BigNumber(event.returnValues.amount1In),
+          BEAN.decimals
+        );
+        const swapTo = toTokenUnitsBN(
+          new BigNumber(event.returnValues.amount0Out),
+          ETH.decimals
+        );
+
+        eventTitle = 'Bean to ETH Swap';
+        eventAmount = inOutDisplay(
+          swapFrom,
+          CryptoAsset.BEAN,
+          swapTo,
+          CryptoAsset.Ethereum
+        );
+      }
+      break;
+    }
+    case 'EtherClaim': {
+      const ethReward = toTokenUnitsBN(
+        new BigNumber(event.returnValues.ethereum),
+        ETH.decimals
+      );
+
+      eventTitle = 'ETH Claim';
+      eventAmount = outDisplay(ethReward, CryptoAsset.Ethereum);
+      break;
+    }
+    default:
+      break;
+  }
+
+  const date = new Date(event.timestamp * 1e3);
+  const dateString = date.toLocaleDateString('en-US');
+  const timeString = date.toLocaleTimeString('en-US');
+
+  return (
+    <Box style={{ width: '100%', paddingLeft: '3px' }}>
+      <Box style={{ width: '100%' }}>
+        <Box style={eventTitleStyle}>
+          {eventTitle}
+          <br />
+          <Box style={timestampStyle}>{`${dateString} ${timeString}`}</Box>
+        </Box>
+        <Box style={eventAmountStyle}>{eventAmount}</Box>
+      </Box>
+    </Box>
+  );
+}
+
+const walletListStyle = {
+  width: 365,
+  marginTop: 2,
+  overflow: 'hidden',
+};
+
+/**
+ *
+ */
+export default function WalletModule() {
+  const classes = useStyles();
+
+  // State selectors
   const {
     lpBalance,
     lpSiloBalance,
@@ -122,40 +389,21 @@ export default function WalletModule() {
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-
-  const { beanPrice, beanReserve, ethReserve } = useSelector<
-    AppState,
-    AppState['prices']
-  >((state) => state.prices);
-
-  const { totalLP, totalStalk } = useSelector<
-    AppState,
-    AppState['totalBalance']
-  >((state) => state.totalBalance);
-
-  const { contractEvents, width } = useSelector<AppState, AppState['general']>(
+  const { beanPrice, beanReserve, ethReserve } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+  const { totalLP, totalStalk } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+  const { contractEvents } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
-  const [walletListStyle, setWalletListStyle] = useState({
-    position: 'absolute',
-    right: '-120px',
-    top: '1px',
-    width: '365px',
-    maxHeight: '50vw',
-    overflowX: 'hidden',
-    overFlowY: 'auto',
-    backgroundColor: theme.module.foreground,
-  });
-
+  // Local state
   const [walletText, setWalletText] = useState('Wallet');
   const anchorRefWallet = React.useRef<any>(null);
   const [openWallet, setOpenWallet] = React.useState(false);
   const handleToggleWallet = () => {
-    setWalletListStyle((prev) => ({
-      ...prev,
-      right: width < 600 ? '-170px' : '-120px',
-    }));
     setOpenWallet((prevOpen) => !prevOpen);
   };
   const handleCloseWallet = () => {
@@ -337,257 +585,7 @@ export default function WalletModule() {
     buildWalletEvents();
   }, [contractEvents]);
 
-  function displayEvent(event) {
-    const inOutDisplay = (inBN, inToken, outBN, outToken) => (
-      <>
-        <span className={classes.greenStyle}>
-          {`+${displayBN(outBN)}`}{' '}
-          <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
-        </span>
-        <span className={classes.redStyle}>
-          {`-${displayBN(inBN)}`}{' '}
-          <TokenTypeImageModule style={tokenImageStyle} token={inToken} />
-        </span>
-      </>
-    );
-    const outDisplay = (outBN, outToken) => (
-      <>
-        <span style={{ color: 'green' }}>{`+${displayBN(outBN)}`}</span>
-        <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
-      </>
-    );
-
-    let eventTitle = `Event Name: ${event.event}`;
-    let eventAmount;
-    switch (event.event) {
-      case 'BeanDeposit': {
-        const s = event.returnValues.season;
-        const beans = toTokenUnitsBN(
-          new BigNumber(event.returnValues.beans),
-          BEAN.decimals
-        );
-
-        eventTitle = `Bean Deposit (Season${s})`;
-        eventAmount = outDisplay(beans, SiloAsset.Bean);
-        break;
-      }
-      case 'BeanClaim': {
-        const beans = toTokenUnitsBN(
-          new BigNumber(event.returnValues.beans),
-          BEAN.decimals
-        );
-
-        eventTitle = 'Bean Claim';
-        eventAmount = inOutDisplay(
-          beans,
-          ClaimableAsset.Bean,
-          beans,
-          CryptoAsset.Bean
-        );
-        break;
-      }
-      case 'BeanWithdraw': {
-        const s = parseInt(event.returnValues.season, 10);
-        const beans = toTokenUnitsBN(
-          new BigNumber(event.returnValues.beans),
-          BEAN.decimals
-        );
-
-        eventTitle = `Bean Withdrawal (Season ${s - WITHDRAWAL_FROZEN})`;
-        eventAmount = inOutDisplay(
-          beans,
-          SiloAsset.Bean,
-          beans,
-          TransitAsset.Bean
-        );
-        break;
-      }
-      case 'Sow': {
-        const pods = toTokenUnitsBN(event.returnValues.pods, BEAN.decimals);
-
-        if (event.returnValues.beans !== undefined) {
-          const beans = toTokenUnitsBN(event.returnValues.beans, BEAN.decimals);
-          const weather = pods
-            .dividedBy(beans)
-            .minus(new BigNumber(1))
-            .multipliedBy(100)
-            .toFixed(0);
-
-          eventTitle = `Bean Sow (${weather}% Weather)`;
-          eventAmount = inOutDisplay(
-            beans,
-            CryptoAsset.Bean,
-            pods,
-            FarmAsset.Pods
-          );
-        } else {
-          eventTitle = 'Bean Sow';
-          eventAmount = (
-            <>
-              <span style={{ color: 'green' }}>{displayBN(pods)}</span>
-              <TokenTypeImageModule
-                style={tokenImageStyle}
-                token={FarmAsset.Pods}
-              />
-            </>
-          );
-        }
-        break;
-      }
-      case 'Harvest': {
-        const beans = toTokenUnitsBN(
-          new BigNumber(event.returnValues.beans),
-          BEAN.decimals
-        );
-
-        eventTitle = 'Pod Harvest';
-        eventAmount = inOutDisplay(
-          beans,
-          FarmAsset.Pods,
-          beans,
-          CryptoAsset.Bean
-        );
-        break;
-      }
-      case 'LPDeposit': {
-        const s = event.returnValues.season;
-        const lp = toTokenUnitsBN(
-          new BigNumber(event.returnValues.lp),
-          UNI_V2_ETH_BEAN_LP.decimals
-        );
-
-        eventTitle = `LP Deposit (Season${s})`;
-        eventAmount = outDisplay(lp, SiloAsset.LP);
-        break;
-      }
-      case 'LPClaim': {
-        const lp = toTokenUnitsBN(
-          new BigNumber(event.returnValues.lp),
-          UNI_V2_ETH_BEAN_LP.decimals
-        );
-
-        eventTitle = 'LP Claim';
-        eventAmount = inOutDisplay(lp, ClaimableAsset.LP, lp, CryptoAsset.LP);
-        break;
-      }
-      case 'LPWithdraw': {
-        const s = parseInt(event.returnValues.season, 10);
-        const lp = toTokenUnitsBN(
-          new BigNumber(event.returnValues.lp),
-          UNI_V2_ETH_BEAN_LP.decimals
-        );
-
-        eventTitle = `LP Withdrawal (Season ${s - WITHDRAWAL_FROZEN})`;
-        eventAmount = inOutDisplay(lp, SiloAsset.LP, lp, TransitAsset.LP);
-        break;
-      }
-      case 'Proposal': {
-        eventTitle = 'BIP Proposal';
-        eventAmount = (
-          <span style={{ fontFamily: 'Futura-PT-Book' }}>
-            {`BIP ${event.returnValues.bip}`}
-          </span>
-        );
-        break;
-      }
-      case 'Vote': {
-        eventTitle = 'BIP Vote';
-        eventAmount = (
-          <span style={{ color: 'green', fontFamily: 'Futura-PT-Book' }}>
-            {`BIP ${event.returnValues.bip}`}
-          </span>
-        );
-        break;
-      }
-      case 'Unvote': {
-        eventTitle = 'BIP Unvote';
-        eventAmount = (
-          <span style={{ color: 'red', fontFamily: 'Futura-PT-Book' }}>
-            {`BIP ${event.returnValues.bip}`}
-          </span>
-        );
-        break;
-      }
-      case 'Incentivization': {
-        const beanReward = toTokenUnitsBN(
-          new BigNumber(event.returnValues.beans),
-          BEAN.decimals
-        );
-
-        eventTitle = 'Sunrise Reward';
-        eventAmount = outDisplay(beanReward, CryptoAsset.Bean);
-        break;
-      }
-      case 'Swap': {
-        if (event.returnValues.amount0In !== '0') {
-          const swapFrom = toTokenUnitsBN(
-            new BigNumber(event.returnValues.amount0In),
-            ETH.decimals
-          );
-          const swapTo = toTokenUnitsBN(
-            new BigNumber(event.returnValues.amount1Out),
-            BEAN.decimals
-          );
-
-          eventTitle = 'ETH to Bean Swap';
-          eventAmount = inOutDisplay(
-            swapFrom,
-            CryptoAsset.Ethereum,
-            swapTo,
-            CryptoAsset.BEAN
-          );
-        } else if (event.returnValues.amount1In !== '0') {
-          const swapFrom = toTokenUnitsBN(
-            new BigNumber(event.returnValues.amount1In),
-            BEAN.decimals
-          );
-          const swapTo = toTokenUnitsBN(
-            new BigNumber(event.returnValues.amount0Out),
-            ETH.decimals
-          );
-
-          eventTitle = 'Bean to ETH Swap';
-          eventAmount = inOutDisplay(
-            swapFrom,
-            CryptoAsset.BEAN,
-            swapTo,
-            CryptoAsset.Ethereum
-          );
-        }
-        break;
-      }
-      case 'EtherClaim': {
-        const ethReward = toTokenUnitsBN(
-          new BigNumber(event.returnValues.ethereum),
-          ETH.decimals
-        );
-
-        eventTitle = 'ETH Claim';
-        eventAmount = outDisplay(ethReward, CryptoAsset.Ethereum);
-        break;
-      }
-      default:
-        break;
-    }
-
-    const date = new Date(event.timestamp * 1e3);
-    const dateString = date.toLocaleDateString('en-US');
-    const timeString = date.toLocaleTimeString('en-US');
-
-    return (
-      <Box style={{ width: '100%', paddingLeft: '3px' }}>
-        <Box style={{ width: '100%' }}>
-          <Box style={eventTitleStyle}>
-            {eventTitle}
-            <br />
-            <Box style={timestampStyle}>{`${dateString} ${timeString}`}</Box>
-          </Box>
-          <Box style={eventAmountStyle}>{eventAmount}</Box>
-        </Box>
-      </Box>
-    );
-  }
-
+  //
   const walletSubtitles = ['Bean', 'ETH', 'LP', 'Field', 'Other'];
   const [transactionPage, setTransactionPage] = useState(-1);
   const walletEventsDisplay = (
@@ -665,13 +663,14 @@ export default function WalletModule() {
               style={menuItemStyle}
               key={`menu_item_${index}`} // eslint-disable-line
             >
-              {displayEvent(event)}
+              <DisplayEvent event={event} />
             </MenuItem>
           );
         })}
     </>
   );
 
+  //
   const userLP = lpBalance
     .plus(lpSiloBalance)
     .plus(lpTransitBalance)
@@ -687,6 +686,7 @@ export default function WalletModule() {
     .plus(userLPBeans)
     .multipliedBy(beanPrice);
 
+  //
   const myBalancesSection = (
     <>
       <BalanceModule
@@ -717,18 +717,22 @@ export default function WalletModule() {
     </>
   );
 
+  //
   const [walletPage, setWalletPage] = useState(0);
   const walletTitles = ['My Balances', 'Transactions'];
   const walletPages = [myBalancesSection, walletEventsDisplay];
 
+  //
   return (
     <>
       <Button
+        variant="contained"
         onClick={() => handleToggleWallet()}
         className={classes.walletButton}
         ref={anchorRefWallet}
         aria-controls={openWallet ? 'wallet-list-grow' : undefined}
         aria-haspopup="true"
+        startIcon={<AccountBalanceWalletOutlinedIcon />}
       >
         {walletText}
       </Button>
@@ -738,6 +742,7 @@ export default function WalletModule() {
         role={undefined}
         transition
         disablePortal
+        placement="bottom-end"
       >
         {({ TransitionProps }) => (
           <Grow {...TransitionProps} style={{ transformOrigin: 'center top' }}>
@@ -750,7 +755,6 @@ export default function WalletModule() {
                 >
                   <Box
                     style={{
-                      zIndex: '1',
                       width: '100%',
                       height: '40px',
                       position: 'sticky',
@@ -758,15 +762,14 @@ export default function WalletModule() {
                       backgroundColor: theme.module.background,
                     }}
                   >
+                    {/* Tab buttons ("My Balances", "Transactions") */}
                     {walletTitles.map((title, index) => (
                       <Button
                         key={`wallet_button_${index}`} // eslint-disable-line
                         onClick={() => {
                           setWalletPage(index);
                           setTransactionPage(-1);
-                          document.getElementById(
-                            'wallet-list-paper'
-                          ).scrollTop = 0;
+                          document.getElementById('wallet-list-paper').scrollTop = 0;
                         }}
                         style={{
                           borderBottom: `2px solid ${theme.module.background}`,
@@ -787,10 +790,10 @@ export default function WalletModule() {
                       </Button>
                     ))}
                   </Box>
+                  {/* Content (depends on selected tab) */}
                   <Box
                     style={{
                       backgroundColor: theme.module.background,
-                      zIndex: '0',
                       paddingTop: '0px',
                     }}
                   >

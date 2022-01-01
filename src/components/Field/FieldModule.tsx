@@ -139,7 +139,7 @@ export default function FieldModule() {
 
   const beanClaimable = beanReceivableBalance
     .plus(harvestablePodBalance)
-    .plus(poolForLPRatio(lpReceivableBalance)[0]);
+    .plus(claimLPBeans);
 
   const ethClaimable = claimableEthBalance.plus(
     poolForLPRatio(lpReceivableBalance)[1]
@@ -261,10 +261,7 @@ export default function FieldModule() {
           handleTabChange={handleTabInfoChange}
           section={sectionInfo}
           sectionTitles={sectionTitlesInfo}
-          sectionTitlesDescription={[
-            // eslint-disable-next-line
-            'A Plot of Pods is created everytime Beans are Sown. Plots have a place in the Pod Line based on the order they were created. As Pods are harvested, your Plots will automatically advance in line. Entire Plots and sections of Plots can be transferred using the Send tab of the Field module.',
-          ]}
+          sectionTitlesDescription={[fieldStrings.plotTable]}
           showButton={false}
         >
           {sectionsInfo[sectionInfo]}

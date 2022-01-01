@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Grid, Button, Link } from '@material-ui/core';
 import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
 import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
@@ -16,6 +17,7 @@ export default function MetamasklessModule() {
     top: 'calc(50% - 23px)',
     width: 'auto',
   };
+  const history = useHistory();
   let metamaskModule;
   if (metamaskFailure === 0 || metamaskFailure === 1) {
     metamaskModule = (
@@ -30,7 +32,10 @@ export default function MetamasklessModule() {
       <Grid item xs={12}>
         <SvgCloudIcon
           onClick={async () => {
-            switchToMainnet();
+            const switchSuccessful = await switchToMainnet();
+            if (switchSuccessful) {
+              history.push('/');
+            }
           }}
           style={{ cursor: 'pointer' }}
           color="white"
@@ -49,7 +54,10 @@ export default function MetamasklessModule() {
           <Button
             color="primary"
             onClick={async () => {
-              if (await initialize()) window.location.reload();
+              const initialized = await initialize();
+              if (initialized) {
+                history.push('/');
+              }
             }}
             style={connectMetaStyle}
             variant="contained"

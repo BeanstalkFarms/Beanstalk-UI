@@ -1,28 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import { ContentTitle, SectionTabs } from 'components/Common';
-import About from 'components/About';
 
 export default function Page({
-    sections,
-    sectionTitles,
-  }) {
-  const [section, setSection] = useState(0);
+  sections,
+  sectionTitles,
+  textTransform,
+  sectionNumber = 0,
+}) {
+  const [section, setSection] = useState(sectionNumber);
+  const history = useHistory();
+
+  useEffect(() => {
+    history.push(`${sectionTitles[section].toLowerCase().replace(/ /g, '')}`);
+  });
 
   const pageStyle = {
-      marginTop: '100px',
-      width: '100vw',
-      marginBottom: '100px',
+    width: '100%',
+    textAlign: 'center',
+    paddingBottom: 80,
   };
 
-  const titleSection = sections.length > 1 ?
-    (
-      <SectionTabs
-        setSection={setSection}
-        section={section}
-        sectionTitles={sectionTitles}
-      />
-    ) : (<ContentTitle title={sectionTitles[0]} />);
+  // If multiple sections are provided, show a tab selector.
+  // Otherwise, show a basic title component.
+  const titleSection = sections.length > 1 ? (
+    <SectionTabs
+      setSection={setSection}
+      section={section}
+      sectionTitles={sectionTitles}
+    />
+  ) : (
+    <ContentTitle
+      title={sectionTitles[0]}
+      textTransform={textTransform}
+    />
+  );
 
   return (
     <>
@@ -30,10 +43,6 @@ export default function Page({
         {titleSection}
         {sections[section]}
       </Box>
-      {window.location.pathname !== '/about' ?
-        <About />
-        : null
-      }
     </>
   );
 }
