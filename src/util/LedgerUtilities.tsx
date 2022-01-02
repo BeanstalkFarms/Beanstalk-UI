@@ -96,15 +96,14 @@ export const getAccountBalances = async (batch) => {
     [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
     [beanstalk.methods.balanceOfSeeds(account), tokenResult(BEANSTALK)],
     [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
-    [beanstalk.methods.lockedUntil(account), bigNumberResult],
+    [beanstalk.methods.votedUntil(account), bigNumberResult],
     [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEANSTALK)],
     [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
     [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
     [usdc.methods.balanceOf(account), tokenResult(USDC)],
+    [beanstalk.methods.wrappedBeans(account), tokenResult(BEAN)],
   ]);
 };
-/* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
-
 export const getTotalBalances = async (batch) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);

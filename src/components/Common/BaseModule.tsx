@@ -140,15 +140,6 @@ export default function BaseModule({
   if (allowance.isEqualTo(0)) {
     buttonLabel = 'APPROVE';
     buttonHandler = approveHandler;
-  } else if (locked) {
-    buttonLabel = (
-      <>
-        <LockIcon />
-        <Box style={{ style: 'inline-block' }}>
-          {`${lockedSeasons} seasons`}
-        </Box>
-      </>
-    );
   } else if (allowance.isGreaterThan(0)) {
     buttonLabel = sectionTitles[section];
     buttonHandler = handleForm;
@@ -171,7 +162,7 @@ export default function BaseModule({
             color="primary"
             disabled={
               buttonLabel !== 'APPROVE' &&
-              (buttonHandler === null || isDisabled || locked)
+              (buttonHandler === null || isDisabled)
             }
             onClick={buttonHandler}
             variant="contained"

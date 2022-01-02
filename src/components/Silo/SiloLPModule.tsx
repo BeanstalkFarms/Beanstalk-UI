@@ -44,7 +44,6 @@ export default function SiloLPModule() {
     beanSiloBalance,
     beanClaimableBalance,
     lpDeposits,
-    locked,
     lpSiloBalance,
     seedBalance,
     stalkBalance,
@@ -54,6 +53,7 @@ export default function SiloLPModule() {
     lockedSeasons,
     harvestablePodBalance,
     beanReceivableBalance,
+    beanWrappedBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -171,6 +171,7 @@ export default function SiloLPModule() {
     : new BigNumber(0);
 
   const beanClaimable = beanReceivableBalance
+    .plus(beanWrappedBalance)
     .plus(harvestablePodBalance)
     .plus(poolForLPRatio(lpReceivableBalance)[0]);
 
@@ -222,7 +223,6 @@ export default function SiloLPModule() {
       harvestablePodBalance={harvestablePodBalance}
       hasClaimable={hasClaimable}
       lpReceivableBalance={lpReceivableBalance}
-      locked={section === 1 && locked}
       maxFromLPVal={lpSiloBalance}
       maxToSeedsVal={seedBalance}
       maxToStalkVal={stalkBalance}
@@ -365,7 +365,6 @@ export default function SiloLPModule() {
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
-        locked={section === 1 && locked}
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
         section={section}

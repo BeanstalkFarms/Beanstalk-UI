@@ -43,6 +43,12 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   const {
     beanSiloBalance,
     beanDeposits,
+<<<<<<< HEAD
+=======
+    // lpSiloBalance,
+    // lpSeedDeposits,
+    // lockedSeasons,
+>>>>>>> 7e9622b (bip-9)
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );

@@ -44,6 +44,7 @@ export default function Balances() {
     beanBalance,
     beanReceivableBalance,
     beanTransitBalance,
+    beanWrappedBalance,
     beanSiloBalance,
     harvestablePodBalance,
     grownStalkBalance,
@@ -101,8 +102,10 @@ export default function Balances() {
   const userBeans = beanBalance
     .plus(beanSiloBalance)
     .plus(beanTransitBalance)
+    .plus(beanWrappedBalance)
     .plus(beanReceivableBalance)
-    .plus(harvestablePodBalance);
+    .plus(harvestablePodBalance)
+    .plus(beanWrappedBalance);
 
   const userBeansAndEth = poolForLPRatio(userLP);
   const poolBeansAndEth = poolForLPRatio(totalLP);
@@ -121,6 +124,7 @@ export default function Balances() {
 
   const beanClaimable = beanReceivableBalance
     .plus(harvestablePodBalance)
+    .plus(beanWrappedBalance)
     .plus(poolForLPRatio(lpReceivableBalance)[0]);
 
   const ethClaimable = claimableEthBalance.plus(
@@ -261,6 +265,7 @@ export default function Balances() {
         beanTransitBalance={beanTransitBalance}
         beanReceivableBalance={beanReceivableBalance}
         harvestablePodBalance={harvestablePodBalance}
+        beanWrappedBalance={beanWrappedBalance}
         lpBalance={lpBalance}
         lpSiloBalance={lpSiloBalance}
         lpTransitBalance={lpTransitBalance}

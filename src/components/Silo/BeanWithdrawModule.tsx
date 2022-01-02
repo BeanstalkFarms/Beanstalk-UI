@@ -119,7 +119,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
       claim={props.settings.claim}
       claimableBalance={props.beanClaimableBalance}
       handleChange={handleFromChange}
-      locked={props.locked || props.maxFromBeanVal.isLessThanOrEqualTo(0)}
+      locked={props.maxFromBeanVal.isLessThanOrEqualTo(0)}
       maxHandler={maxHandler}
       setValue={setFromBeanValue}
       token={SiloAsset.Bean}

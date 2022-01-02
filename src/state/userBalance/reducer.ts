@@ -11,6 +11,7 @@ export interface UserBalanceState {
   beanSiloBalance: BigNumber;
   beanReceivableBalance: BigNumber;
   beanTransitBalance: BigNumber;
+  beanWrappedBalance: BigNumber;
   lpBalance: BigNumber;
   lpSiloBalance: BigNumber;
   lpTransitBalance: BigNumber;
@@ -49,6 +50,7 @@ export const initialState: UserBalanceState = {
   beanSiloBalance: new BigNumber(-1),
   beanReceivableBalance: new BigNumber(-1),
   beanTransitBalance: new BigNumber(-1),
+  beanWrappedBalance: new BigNumber(-1),
   lpBalance: new BigNumber(-1),
   lpSiloBalance: new BigNumber(-1),
   lpTransitBalance: new BigNumber(-1),

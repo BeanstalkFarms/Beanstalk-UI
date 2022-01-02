@@ -179,14 +179,24 @@ export const claimLP = async (withdrawals, callback) => {
     });
 };
 
-export const claim = async (claimable) => {
-  beanstalkContract()
-    .claim(claimable)
-    .then((response) => {
-      response.wait().then(() => {
-        txCallback();
+export const claim = async (claimable, toWallet = false, wrappedBeans = '0') => {
+  if (wrappedBeans === '0') {
+    beanstalkContract()
+      .claim([...claimable, toWallet])
+      .then((response) => {
+        response.wait().then(() => {
+          txCallback();
+        });
       });
-    });
+  } else {
+    beanstalkContract()
+      .claimAndUnwrapBeans([...claimable, toWallet], wrappedBeans)
+      .then((response) => {
+        response.wait().then(() => {
+          txCallback();
+        });
+      });
+  }
 };
 
 export const updateSilo = async () => {
