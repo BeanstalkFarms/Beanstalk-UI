@@ -7,7 +7,7 @@ import { BEAN } from 'constants/index';
 
 export default function ClaimButton(props) {
   const {
-    beanWrappedBalance
+    beanWrappedBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );

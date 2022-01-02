@@ -12,8 +12,6 @@ import {
   PEG_WEATHER_CASES,
   POD_RATE_LOWER_BOUND,
   POD_RATE_UPPER_BOUND,
-  SOIL_MAX_RATIO_CAP,
-  SOIL_MIN_RATIO_CAP,
   theme,
 } from 'constants/index';
 import { displayBN, displayFullBN, TrimBN } from 'util/index';

@@ -3,7 +3,6 @@ import { Box, Button, Link, Tab, Tabs } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@material-ui/styles';
-import { Lock as LockIcon } from '@material-ui/icons';
 import { theme } from 'constants/index';
 import { FormatTooltip, Line, QuestionModule } from './index';
 
@@ -17,7 +16,6 @@ export default function BaseModule({
   locked,
   handleApprove,
   handleForm,
-  lockedSeasons,
   section,
   isDisabled,
   children,
