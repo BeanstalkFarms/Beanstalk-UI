@@ -431,5 +431,6 @@ BalanceModule.defaultProps = {
   padding: '10px',
   showTokenName: true,
   budgetBalance: new BigNumber(0),
+  beanWrappedBalance: new BigNumber(0),
   beanReserveTotal: new BigNumber(0),
 };

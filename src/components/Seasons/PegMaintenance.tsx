@@ -101,7 +101,7 @@ export default function PegMaintenance() {
     AppState['prices']
   >((state) => state.prices);
 
-  const { totalPods, totalBeans } = useSelector<
+  const { totalPods, totalBeans, totalLP, totalSiloLP, totalTransitLP } = useSelector<
     AppState,
     AppState['totalBalance']
   >((state) => state.totalBalance);
@@ -172,26 +172,20 @@ export default function PegMaintenance() {
     .sqrt();
 
   let newBeans = new BigNumber(0);
-  let newSoil = currentBeans.minus(targetBeans);
-
-  if (newSoil.isLessThan(0)) newSoil = newSoil.dividedBy(2);
+  let newSoil = new BigNumber(0);
 
   if (currentBeans.isLessThan(targetBeans)) {
     newBeans = targetBeans.minus(currentBeans);
+    newBeans = newBeans.multipliedBy(totalSiloLP.plus(totalTransitLP)).dividedBy(totalLP);
+    newSoil = newBeans.dividedBy(weather.dividedBy(50).plus(2));
+  } else {
+    newSoil = currentBeans.minus(targetBeans);
   }
 
-  const minTotalSoil = newBeans.dividedBy(weather.dividedBy(50).plus(2));
-  totalBeans.multipliedBy(SOIL_MIN_RATIO_CAP);
+  newSoil = newSoil.minus(soil);
 
-  if (soil.plus(newSoil).isLessThan(minTotalSoil)) {
-    newSoil = minTotalSoil.minus(soil);
-  }
-
-  const maxTotalSoil = totalBeans.multipliedBy(SOIL_MAX_RATIO_CAP);
-
-  if (soil.plus(newSoil).isGreaterThan(maxTotalSoil)) {
-    newSoil = soil.minus(maxTotalSoil);
-  }
+  newBeans = TrimBN(newBeans, BEAN.decimals);
+  newSoil = TrimBN(newSoil, BEAN.decimals, true);
 
   const rainingSeasons = season.minus(rainStart);
   const rainNextSeason = caseId > 3 && caseId < 8;
@@ -200,8 +194,6 @@ export default function PegMaintenance() {
   else if (rainNextSeason) rainForecast = 'Start';
   else if (raining) rainForecast = 'Stop';
   else rainForecast = 'Sun';
-  newBeans = TrimBN(newBeans, BEAN.decimals);
-  newSoil = TrimBN(newSoil, BEAN.decimals);
 
   const nextSeasonStats = {
     title: 'Next Season',
@@ -210,7 +202,7 @@ export default function PegMaintenance() {
       balance: displayBN(newBeans),
       description: pegStrings.newBeans,
       balanceDescription:
-        newBeans > 0 ? `${displayFullBN(newBeans)} Beans` : undefined,
+        newBeans.isGreaterThan(0) ? `${displayFullBN(newBeans)} Beans` : undefined,
       placement: 'bottom',
     },
     two: {
@@ -218,7 +210,7 @@ export default function PegMaintenance() {
       balance: displayBN(newSoil, true),
       description: pegStrings.newSoil,
       balanceDescription:
-        newSoil !== 0 ? `${displayFullBN(newSoil)} Soil` : undefined,
+        newSoil.isEqualTo(0) ? undefined : `${displayFullBN(newSoil)} Soil`,
       placement: 'bottom',
     },
     three: {
