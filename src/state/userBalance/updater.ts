@@ -248,7 +248,10 @@ export default function Updater() {
         twapPrices,
         beansToPeg,
         lpToPeg,
+        ethPrices,
       ] = _prices;
+
+      //
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
       const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
         lpReservesForTokenReserves(tokenReserves, token0);
@@ -648,12 +651,11 @@ export default function Updater() {
       const ethPrices = await getEthPrices();
       return [
         () => {
-          const currentSeason = processTotalBalances(
-            totalBalances,
-            bipInfo,
-            fundraiserInfo
-          );
-          const lpReserves = processPrices(_prices);
+          const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
+          const lpReserves = processPrices([
+            ..._prices,
+            ethPrices,
+          ]);
           processAccountBalances(
             accountBalances,
             ethBalance,
