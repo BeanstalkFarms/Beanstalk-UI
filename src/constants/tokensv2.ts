@@ -63,5 +63,14 @@ export const Tether = new Token(
   USDTLogo
 );
 
-export const supportedTokens = [Eth, Weth, Bean, Weth, Usdc, Dai, Tether];
-export const supportedERC20Tokens = [Weth, Bean, Weth, Usdc, Dai, Tether];
+export const Crv3 = new Token(
+  '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490',
+  1,
+  18,
+  '3 Curve',
+  '3CRV'
+  // TO DO: Add 3Curve logo
+);
+
+export const supportedTokens = [Eth, Weth, Bean, Weth, Usdc, Dai, Tether, Crv3];
+export const supportedERC20Tokens = [Weth, Bean, Weth, Usdc, Dai, Tether, Crv3];
