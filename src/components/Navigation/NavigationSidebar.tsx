@@ -107,8 +107,8 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   NavLinkTitle: {
-    fontFamily: 'Futura, Helvetica Neue',
-    fontWeight: 'bold',
+    fontFamily: 'Futura, Helvetica',
+    fontWeight: '800',
     fontSize: 17,
   },
   NavLink: {
