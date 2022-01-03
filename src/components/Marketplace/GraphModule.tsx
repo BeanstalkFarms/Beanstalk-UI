@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { useTooltip, Tooltip } from '@visx/tooltip';
@@ -75,48 +76,65 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
     (state) => state.marketplace
   );
 
-  // Note: this is temporary test data
-  listings = listings.concat([
-    {
-      listerAddress: 'yo',
-      objectiveIndex: 1.5e6,
-      pricePerPod: 0.99,
-      expiresIn: 100,
-      intialAmount: 1,
-      amountSold: 1,
-      status: 'yo',
-    },
-    {
-      listerAddress: 'yo',
-      objectiveIndex: 5e6,
-      pricePerPod: 1.0,
-      expiresIn: 100,
-      intialAmount: 1,
-      amountSold: 1,
-      status: 'yo',
-    },
-    {
-      listerAddress: 'yo',
-      objectiveIndex: 40e6,
-      pricePerPod: 0.4,
-      expiresIn: 100,
-      intialAmount: 1000,
-      amountSold: 1000,
-      status: 'yo',
-    },
-    {
-      listerAddress: 'yo',
-      objectiveIndex: 20e6,
-      pricePerPod: 0.7,
-      expiresIn: 100,
-      intialAmount: 600,
-      amountSold: 600,
-      status: 'yo',
-    },
-  ]);
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
 
-  const maxPlaceInLine = Math.max(...listings.map((l) => l.objectiveIndex));
-  const maxPlotSize = Math.max(...listings.map((l) => l.amountSold));
+  // Note: this is temporary test data overriding the real data
+  listings = [
+    {
+      listerAddress: 'yo',
+      objectiveIndex: harvestableIndex.plus(new BigNumber(1e6)),
+      pricePerPod: new BigNumber(0.95),
+      expiry: new BigNumber(100),
+      initialAmount: new BigNumber(1000),
+      amountSold: new BigNumber(0),
+      status: 'yo',
+    },
+    {
+      listerAddress: 'yo',
+      objectiveIndex: harvestableIndex.plus(new BigNumber(1.5e6)),
+      pricePerPod: new BigNumber(0.99),
+      expiry: new BigNumber(100),
+      initialAmount: new BigNumber(1),
+      amountSold: new BigNumber(0),
+      status: 'yo',
+    },
+    {
+      listerAddress: 'yo',
+      objectiveIndex: harvestableIndex.plus(new BigNumber(5e6)),
+      pricePerPod: new BigNumber(1.0),
+      expiry: new BigNumber(100),
+      initialAmount: new BigNumber(1),
+      amountSold: new BigNumber(0),
+      status: 'yo',
+    },
+    {
+      listerAddress: 'yo',
+      objectiveIndex: harvestableIndex.plus(new BigNumber(40e6)),
+      pricePerPod: new BigNumber(0.4),
+      expiry: new BigNumber(100),
+      initialAmount: new BigNumber(1000),
+      amountSold: new BigNumber(0),
+      status: 'yo',
+    },
+    {
+      listerAddress: 'yo',
+      objectiveIndex: harvestableIndex.plus(new BigNumber(20e6)),
+      pricePerPod: new BigNumber(0.7),
+      expiry: new BigNumber(100),
+      initialAmount: new BigNumber(600),
+      amountSold: new BigNumber(0),
+      status: 'yo',
+    },
+  ];
+
+  const maxPlaceInLine = Math.max(
+    ...listings.map((l) => l.objectiveIndex.minus(harvestableIndex).toNumber())
+  );
+  const maxPlotSize = Math.max(
+    ...listings.map((l) => l.initialAmount.minus(l.amountSold).toNumber())
+  );
 
   // Set max x value to be 1M or max place in line with some buffer
   const xDomain = [0, Math.max(maxPlaceInLine * 1.1, 1e6)];
@@ -147,9 +165,14 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
   });
 
   const circlePositions = listings.map((listing) => ({
-    x: xScale(listing.objectiveIndex) + leftAxisWidth,
-    y: yScale(listing.pricePerPod),
-    radius: calculateCircleRadius(listing.amountSold, maxPlotSize),
+    x:
+      xScale(listing.objectiveIndex.minus(harvestableIndex).toNumber()) +
+      leftAxisWidth,
+    y: yScale(listing.pricePerPod.toNumber()),
+    radius: calculateCircleRadius(
+      listing.initialAmount.minus(listing.amountSold).toNumber(),
+      maxPlotSize
+    ),
   }));
 
   const circles = circlePositions.map((coordinate, i) => (
@@ -209,11 +232,15 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
           left={leftAxisWidth}
           labelOffset={40}
           numTicks={10}
-          tickComponent={(props) => (
-            <Text {...props} fontFamily="Futura-Pt-Book">
-              {props.formattedValue}
-            </Text>
-          )}
+          tickComponent={(props) => {
+            const { formattedValue, ...renderProps } = props;
+
+            return (
+              <Text {...renderProps} fontFamily="Futura-Pt-Book">
+                {formattedValue}
+              </Text>
+            );
+          }}
           hideZero
         />
         <AxisBottom
@@ -228,11 +255,15 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
           top={graphHeight - bottomAxisHeight}
           left={leftAxisWidth}
           numTicks={10}
-          tickComponent={(props) => (
-            <Text {...props} fontFamily="Futura-Pt-Book">
-              {props.formattedValue}
-            </Text>
-          )}
+          tickComponent={(props) => {
+            const { formattedValue, ...renderProps } = props;
+
+            return (
+              <Text {...renderProps} fontFamily="Futura-Pt-Book">
+                {formattedValue}
+              </Text>
+            );
+          }}
           hideZero
         />
       </svg>
@@ -258,6 +289,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
             <GraphTooltip
               listing={listings[tooltipData]}
               onBuyClick={() => console.log('buy clicked')}
+              harvestableIndex={harvestableIndex}
             />
           </Tooltip>
         )}

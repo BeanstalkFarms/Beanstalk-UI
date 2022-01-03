@@ -1,15 +1,18 @@
 import React from 'react';
+import BigNumber from 'bignumber.js';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { displayBN, displayFullBN } from 'util/index';
 import { Listing } from 'state/marketplace/reducer';
 
 type GraphTooltipProps = {
   listing: Listing;
+  harvestableIndex: BigNumber;
   onBuyClick: (listing: Listing) => void;
 };
 
 export const GraphTooltip = (props: GraphTooltipProps) => {
-  const { listing, onBuyClick } = props;
+  const { listing, harvestableIndex, onBuyClick } = props;
 
   const classes = makeStyles(() => ({
     formButton: {
@@ -38,24 +41,22 @@ export const GraphTooltip = (props: GraphTooltipProps) => {
       <div className={classes.tooltipDetailRow}>
         <span style={{ fontWeight: 'bold' }}>Price per pod</span>
         <div className={classes.tooltipDetailPill}>
-          <span>${listing.pricePerPod.toFixed(2)}</span>
+          <span>${displayFullBN(listing.pricePerPod, 2)}</span>
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
         <span style={{ fontWeight: 'bold' }}>Plot Size</span>
         <div className={classes.tooltipDetailPill}>
-          <span>{listing.amountSold.toLocaleString('en-US')}</span>
+          <span>
+            {displayBN(listing.initialAmount.minus(listing.amountSold))}
+          </span>
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Total Price</span>
+        <span style={{ fontWeight: 'bold' }}>Place In Line</span>
         <div className={classes.tooltipDetailPill}>
           <span>
-            $
-            {(listing.amountSold * listing.pricePerPod).toLocaleString(
-              'en-US',
-              { maximumFractionDigits: 2 }
-            )}
+            {displayBN(listing.objectiveIndex.minus(harvestableIndex))}
           </span>
         </div>
       </div>
