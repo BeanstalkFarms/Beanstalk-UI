@@ -1,16 +1,15 @@
 import { createReducer } from '@reduxjs/toolkit';
-import {
-  setMarketplaceListings,
-} from './actions';
+import BigNumber from 'bignumber.js';
+import { setMarketplaceListings } from './actions';
 
 export type Listing = {
   listerAddress: string;
   // not sure what to call index that does not subtract harvested pods
-  objectiveIndex: number;
-  pricePerPod: number;
-  expiresIn: number;
-  intialAmount: number;
-  amountSold: number;
+  objectiveIndex: BigNumber;
+  pricePerPod: BigNumber;
+  expiry: BigNumber;
+  initialAmount: BigNumber;
+  amountSold: BigNumber;
   status: string;
 };
 
@@ -34,9 +33,8 @@ export const initialState: MarketplaceState = {
 };
 
 export default createReducer(initialState, (builder) =>
-  builder
-    .addCase(setMarketplaceListings, (state, { payload }) => {
-      state.listings = payload.listings;
-      state.buyOffers = payload.buyOffers;
-    })
+  builder.addCase(setMarketplaceListings, (state, { payload }) => {
+    state.listings = payload.listings;
+    state.buyOffers = payload.buyOffers;
+  })
 );
