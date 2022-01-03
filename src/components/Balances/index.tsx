@@ -104,8 +104,7 @@ export default function Balances() {
     .plus(beanTransitBalance)
     .plus(beanWrappedBalance)
     .plus(beanReceivableBalance)
-    .plus(harvestablePodBalance)
-    .plus(beanWrappedBalance);
+    .plus(harvestablePodBalance);
 
   const userBeansAndEth = poolForLPRatio(userLP);
   const poolBeansAndEth = poolForLPRatio(totalLP);
