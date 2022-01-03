@@ -39,6 +39,11 @@ const NAVIGATION_MAP = {
       title: 'DAO',
       desc: 'Vote on the future of Beanstalk',
     },
+    {
+      path: 'balance',
+      title: 'Balance',
+      desc: 'View Beanstalk balances',
+    },
   ],
   more: [
     {
@@ -46,8 +51,8 @@ const NAVIGATION_MAP = {
       title: 'Analytics',
     },
     {
-      path: 'fundraiser',
-      title: 'Fundraiser',
+      path: 'pegmaintenance',
+      title: 'Peg Maintenance',
     },
     {
       path: 'beanfts',
