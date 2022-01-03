@@ -1,36 +1,17 @@
-import React, { useEffect, useImperativeHandle, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box, Button } from '@material-ui/core';
-import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import {
   BEAN,
   ETH,
-  SLIPPAGE_THRESHOLD,
 } from 'constants/index';
 import {
-  buyAndDepositBeans,
-  depositBeans,
-  displayBN,
   getToAmount,
-  MaxBN,
-  smallDecimalPercent,
   SwapMode,
-  toBaseUnitBN,
-  toStringBaseUnitBN,
   TrimBN,
 } from 'util/index';
 import {
-  CryptoAsset,
-  ClaimTextModule,
   EthInputField,
   TokenInputField,
-  FrontrunText,
-  InputFieldPlus,
-  SettingsFormModule,
-  SiloAsset,
-  TokenOutputField,
-  TransactionTextModule,
-  TransactionDetailsModule,
 } from 'components/Common';
 
 export const CreateBuyOfferModule = (props) => {
@@ -66,18 +47,6 @@ export const CreateBuyOfferModule = (props) => {
   }
 
   /* Input Fields */
-
-  const fromBeanField = (
-    <InputFieldPlus
-      key={0}
-      balance={props.beanBalance}
-      handleChange={(v) => {
-        fromValueUpdated(v, fromEthValue);
-      }}
-      token={CryptoAsset.Bean}
-      value={fromBeanValue}
-    />
-  );
   const fromEthField = (
     <EthInputField
       key={1}

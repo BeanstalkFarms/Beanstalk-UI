@@ -1,8 +1,6 @@
 // @ts-nocheck
 // import BigNumber from 'bignumber.js';
-import React, { useState } from 'react';
-import { AppState } from 'state';
-import { useSelector } from 'react-redux';
+import React from 'react';
 
 import TabbedMarketplace from '../components/Marketplace/TabbedMarketplace';
 import Updater from '../state/marketplace/updater';
