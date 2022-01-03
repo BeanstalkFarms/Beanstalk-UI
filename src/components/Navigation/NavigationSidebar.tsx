@@ -51,7 +51,7 @@ const NAVIGATION_MAP = {
       title: 'Analytics',
     },
     {
-      path: 'pegmaintenance',
+      path: 'peg',
       title: 'Peg Maintenance',
     },
     {

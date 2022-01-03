@@ -10,6 +10,7 @@ export default function PegMaintenancePage() {
     <Page
       sections={sections}
       sectionTitles={sectionTitles}
+      routeTitle={'peg'}
     />
   );
 }
