@@ -4,11 +4,9 @@ import { useSelector } from 'react-redux';
 import {
   Box,
   Table,
-  TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   Button,
   Modal,
@@ -45,10 +43,6 @@ export default function Offers() {
     (state) => state.marketplace
   );
   const [currentOffer, setCurrentOffer] = useState(null);
-  const { harvestableIndex } = useSelector<
-    AppState,
-    AppState['weather']
-  >((state) => state.weather);
   if (offers == null) {
     return <div>Loading...</div>;
   }
@@ -80,7 +74,7 @@ export default function Offers() {
           {/* TODO: need to make this a better input (like swap inputs, be able to use beans / eth / max out, etc) */}
           <h2>Sell this plot</h2>
           <p style={{ width: '100%', wordBreak: 'break-all' }}>{JSON.stringify(currentOffer)}</p>
-          <Button>
+          <Button onPress={sell}>
             Sell
           </Button>
         </Box>

@@ -1,60 +1,32 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { IconButton, Box } from '@material-ui/core';
-import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
-import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE } from 'constants/index';
-import { approveBeanstalkBean, SwapMode } from 'util/index';
+import { approveBeanstalkBean } from 'util/index';
 import {
   BaseModule,
-  ListTable,
-  SiloAsset,
   siloStrings,
-  TransitAsset,
 } from 'components/Common';
 import { CreateBuyOfferModule } from './CreateBuyOfferModule';
 import Listings from './Listings';
 
 export default function MarketplaceBuyModule() {
   const [buyOffer, setBuyOffer] = useState(null);
-  const { beanstalkBeanAllowance } = useSelector<
-    AppState,
-    AppState['allowances']
-  >((state) => state.allowances);
 
   const {
     beanBalance,
     ethBalance,
     lpReceivableBalance,
-    beanDeposits,
     claimable,
     claimableEthBalance,
     hasClaimable,
-    beanClaimableBalance,
-    locked,
-    lockedSeasons,
-    beanReceivableBalance,
-    beanReceivableCrates,
-    farmableBeanBalance,
-    rawBeanDeposits,
-    beanWithdrawals,
     harvestablePodBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
 
-  const season = useSelector<AppState, AppState['season']>(
-    (state) => state.season.season
-  );
-
   const prices = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
-  );
-
-  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
-    (state) => state.totalBalance
   );
 
   const [section, setSection] = useState(0);
@@ -66,10 +38,6 @@ export default function MarketplaceBuyModule() {
   const sectionTitlesDescription = [
     siloStrings.beanDeposit,
     siloStrings.beanDeposit,
-  ];
-  const sectionTitlesInfoDescription = [
-    siloStrings.beanDepositsTable,
-    siloStrings.beanDepositsTable,
   ];
 
   const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {

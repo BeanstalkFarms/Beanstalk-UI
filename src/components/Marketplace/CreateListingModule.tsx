@@ -1,33 +1,22 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
-import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from 'constants/index';
+import { BEAN } from 'constants/index';
 import {
-  displayBN,
-  isAddress,
-  toStringBaseUnitBN,
   MaxBN,
   MinBN,
-  transferPlot,
   TrimBN,
 } from 'util/index';
 import {
-  AddressInputField,
   ListInputField,
   TokenInputField,
   PlotInputField,
-  fieldStrings,
-  TransactionDetailsModule,
 } from 'components/Common';
 
-export const CreateListingModule = forwardRef((props, ref) => {
-  const [plotId, setPlotId] = useState(new BigNumber(-1));
+export const CreateListingModule = (props) => {
   const [plotEndId, setPlotEndId] = useState(new BigNumber(-1));
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
   const [fromPlotIndex, setFromPlotIndex] = useState(new BigNumber(-1));
   const [toPlotEndIndex, setToPlotEndIndex] = useState(new BigNumber(-1));
-
-  const width = window.innerWidth;
 
   /* Handlers: Plot change and update */
   function fromValueUpdated(newFromNumber: BigNumber) {
@@ -49,7 +38,6 @@ export const CreateListingModule = forwardRef((props, ref) => {
   const handleFromChange = (event) => {
     if (event.target.value) {
       fromValueUpdated(new BigNumber(props.plots[event.target.value]));
-      setPlotId(event.target.value);
       setFromPlotIndex(new BigNumber(0)); // reset plot start index
     } else {
       fromValueUpdated(new BigNumber(-1));
@@ -65,9 +53,6 @@ export const CreateListingModule = forwardRef((props, ref) => {
 
   const maxHandler = () => {
     fromIndexValueUpdated(fromPlotIndex, plotEndId);
-  };
-  const minHandler = () => {
-    fromIndexValueUpdated(MinBN(fromPlotIndex, new BigNumber(0)), plotEndId);
   };
 
   /* Input Fields */
@@ -114,6 +99,6 @@ export const CreateListingModule = forwardRef((props, ref) => {
       {fromIndexEndField}
     </>
   );
-});
+};
 
 export default CreateListingModule;

@@ -1,41 +1,18 @@
-import React, { useRef, useState } from 'react';
-import BigNumber from 'bignumber.js';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { IconButton, Box } from '@material-ui/core';
 import { AppState } from 'state';
-import { List as ListIcon } from '@material-ui/icons';
-import {
-  updateBeanstalkBeanAllowance,
-  updateBeanstalkLPAllowance,
-} from 'state/allowances/actions';
-import { BASE_SLIPPAGE } from 'constants/index';
-import {
-  approveBeanstalkBean,
-  approveBeanstalkLP,
-  SwapMode,
-  FarmAsset,
-  CryptoAsset,
-} from 'util/index';
 import {
   BaseModule,
-  ListTable,
   siloStrings,
 } from 'components/Common';
-import { PlotSellModule } from './PlotSellModule';
 import Offers from './Offers';
 import CreateListingModule from './CreateListingModule';
 
 export default function MarketplaceSellModule() {
   // Global state
   const {
-    lpBalance,
-    beanBalance,
-    ethBalance,
-    locked,
-    lockedSeasons,
     harvestablePodBalance,
     plots,
-    harvestablePlots,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -45,7 +22,6 @@ export default function MarketplaceSellModule() {
 
   // Local state
   const [section, setSection] = useState(0);
-  const [sectionInfo, setSectionInfo] = useState(0);
 
   // Handlers
   const handleTabChange = (event, newSection) => {
