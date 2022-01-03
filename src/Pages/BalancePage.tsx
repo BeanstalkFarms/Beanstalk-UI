@@ -1,10 +1,10 @@
 import React from 'react';
 import { Page } from 'Pages/index';
-import Charts from 'components/Charts';
+import Balances from 'components/Balances';
 
-export default function AnalyticsPage() {
-  const sectionTitles = ['Analytics'];
-  const sections = [<Charts />];
+export default function DAO() {
+  const sectionTitles = ['Balance'];
+  const sections = [<Balances />];
 
   return (
     <Page

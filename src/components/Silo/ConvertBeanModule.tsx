@@ -43,10 +43,6 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   const {
     beanSiloBalance,
     beanDeposits,
-    locked,
-    // lpSiloBalance,
-    // lpSeedDeposits,
-    // lockedSeasons,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -151,7 +147,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     }
   };
   const maxHandler = () => {
-    if (locked || beanPrice.isLessThan(1)) {
+    if (beanPrice.isLessThan(1)) {
       fromValueUpdated(new BigNumber(-1));
     } else {
       fromValueUpdated(beanSiloBalance);
@@ -163,7 +159,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     <TokenInputField
       balance={beanSiloBalance}
       handleChange={handleFromChange}
-      locked={locked || beanPrice.isLessThan(1)}
+      locked={beanPrice.isLessThan(1)}
       maxHandler={maxHandler}
       setValue={setFromBeanValue}
       token={SiloAsset.Bean}
@@ -228,7 +224,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   ];
 
   function transactionDetails() {
-    if (fromBeanValue.isLessThanOrEqualTo(0) || locked) return;
+    if (fromBeanValue.isLessThanOrEqualTo(0)) return;
 
     return (
       <>
