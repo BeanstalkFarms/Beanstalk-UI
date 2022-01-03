@@ -66,8 +66,6 @@ export async function queryWinterNFTs(): Promise {
     query: gql(StateQuery),
   });
 
-  console.log(data);
-
   const season = data.data.states[0].season;
   const totalNFTs = data.data.states[0].nfts;
 
