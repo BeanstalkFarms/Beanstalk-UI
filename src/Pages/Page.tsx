@@ -6,6 +6,7 @@ import { ContentTitle, SectionTabs } from 'components/Common';
 export default function Page({
   sections,
   sectionTitles,
+  routeTitle,
   textTransform,
   sectionNumber = 0,
 }) {
@@ -13,7 +14,7 @@ export default function Page({
   const history = useHistory();
 
   useEffect(() => {
-    history.push(`${sectionTitles[section].toLowerCase().replace(/ /g, '')}`);
+    history.push(`${(!routeTitle ? sectionTitles[section] : routeTitle).toLowerCase().replace(/ /g, '')}`);
   });
 
   const pageStyle = {
