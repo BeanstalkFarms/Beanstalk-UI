@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import {
@@ -29,34 +29,34 @@ function Listing({ listing, setListing }) {
       <TableCell align="center">
         <Button
           onClick={() => {
-            setListing(listing)
+            setListing(listing);
           }}
         >
           Buy
         </Button>
       </TableCell>
     </TableRow>
-  )
+  );
 }
 
 export default function Listings() {
   const { listings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
-  const [currentListing, setCurrentListing] = useState(null)
+  const [currentListing, setCurrentListing] = useState(null);
   const { harvestableIndex } = useSelector<
     AppState,
     AppState['weather']
   >((state) => state.weather);
   if (listings == null) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
   if (listings.length === 0) {
-    return <div>No listings.</div>
+    return <div>No listings.</div>;
   }
   const buy = () => {
-    console.log('buy listing')
-  }
+    console.log('buy listing');
+  };
   return (
     <>
       <Modal
@@ -104,7 +104,5 @@ export default function Listings() {
         </Table>
       </TableContainer>
     </>
-  )
+  );
 }
-
-

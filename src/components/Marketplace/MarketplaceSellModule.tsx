@@ -49,7 +49,7 @@ export default function MarketplaceSellModule() {
 
   // Handlers
   const handleTabChange = (event, newSection) => {
-    setSection(newSection)
+    setSection(newSection);
   };
 
   const sectionTitles = ['Offers', 'Sell Plot'];

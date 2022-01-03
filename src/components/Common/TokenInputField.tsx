@@ -73,7 +73,7 @@ export default function TokenInputField(props) {
     )}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
-  let balanceContent = null
+  let balanceContent = null;
   if (props.balance) {
     balanceContent = props.isLP && props.poolForLPRatio !== undefined
       ? displayLP(props.poolForLPRatio(props.balance))
@@ -104,7 +104,7 @@ export default function TokenInputField(props) {
 
       <TextField
         className="TextField-rounded"
-        placeholder={props.placeholder || "0.0000"}
+        placeholder={props.placeholder || '0.0000'}
         variant="outlined"
         size="medium"
         type="number"

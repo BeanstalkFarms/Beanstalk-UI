@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import {
@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 
 function Offer({ offer, setOffer }) {
-  console.log('got offer', offer)
+  console.log('got offer', offer);
   return (
     <TableRow>
       <TableCell align="center">
@@ -30,34 +30,34 @@ function Offer({ offer, setOffer }) {
       <TableCell align="center">
         <Button
           onClick={() => {
-            setOffer(offer)
+            setOffer(offer);
           }}
         >
           Sell
         </Button>
       </TableCell>
     </TableRow>
-  )
+  );
 }
 
 export default function Offers() {
   const { buyOffers: offers } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
-  const [currentOffer, setCurrentOffer] = useState(null)
+  const [currentOffer, setCurrentOffer] = useState(null);
   const { harvestableIndex } = useSelector<
     AppState,
     AppState['weather']
   >((state) => state.weather);
   if (offers == null) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
   if (offers.length === 0) {
-    return <div>No offers.</div>
+    return <div>No offers.</div>;
   }
   const sell = () => {
-    console.log('sell')
-  }
+    console.log('sell');
+  };
   return (
     <>
       <Modal
@@ -105,7 +105,5 @@ export default function Offers() {
         </Table>
       </TableContainer>
     </>
-  )
+  );
 }
-
-

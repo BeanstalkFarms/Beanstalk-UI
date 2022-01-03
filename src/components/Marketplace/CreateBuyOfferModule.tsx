@@ -42,13 +42,13 @@ export const CreateBuyOfferModule = (props) => {
 
   const { setBuyOffer } = props;
   useEffect(() => {
-    const canBuy = toBuyBeanValue.isGreaterThan(0) && pricePerPodValue.isGreaterThan(0) && pricePerPodValue.isLessThan(1) && maxPlaceInLineValue.isLessThan(10000000) && maxPlaceInLineValue.isGreaterThan(0)
+    const canBuy = toBuyBeanValue.isGreaterThan(0) && pricePerPodValue.isGreaterThan(0) && pricePerPodValue.isLessThan(1) && maxPlaceInLineValue.isLessThan(10000000) && maxPlaceInLineValue.isGreaterThan(0);
     if (canBuy) {
       setBuyOffer({
         pricePerPod: pricePerPodValue,
         buyBeanAmount: toBuyBeanValue,
         maxPlaceInLine: maxPlaceInLineValue,
-      })
+      });
     } else {
       setBuyOffer(null);
     }
@@ -97,13 +97,13 @@ export const CreateBuyOfferModule = (props) => {
       key={2}
       label="Price per pod"
       handleChange={(e) => {
-        const newPricePerPodValue = new BigNumber(e.target.value)
+        const newPricePerPodValue = new BigNumber(e.target.value);
         // Price can't be created than 1
         if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
-          setPricePerPodValue(new BigNumber(0.999999))
-          return
+          setPricePerPodValue(new BigNumber(0.999999));
+          return;
         }
-        setPricePerPodValue(newPricePerPodValue)
+        setPricePerPodValue(newPricePerPodValue);
       }}
       value={TrimBN(pricePerPodValue, 6)}
     />
@@ -113,14 +113,14 @@ export const CreateBuyOfferModule = (props) => {
       key={3}
       label="Max Place In Line"
       handleChange={(e) => {
-        const newMaxPlaceInLineValue = new BigNumber(e.target.value)
+        const newMaxPlaceInLineValue = new BigNumber(e.target.value);
         // Line can't be greater than current pod line
         // TODO: mock data, fix this (should be pod line - number of pods)
         if (newMaxPlaceInLineValue.isGreaterThanOrEqualTo(1000000)) {
-          setMaxPlaceInLineValue(new BigNumber(1000000))
-          return
+          setMaxPlaceInLineValue(new BigNumber(1000000));
+          return;
         }
-        setMaxPlaceInLineValue(newMaxPlaceInLineValue)
+        setMaxPlaceInLineValue(newMaxPlaceInLineValue);
       }}
       value={maxPlaceInLineValue}
       placeholder="1000000"

@@ -114,7 +114,7 @@ export default function MarketplaceBuyModule() {
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
         handleTabChange={(e, value) => {
-          setSection(value)
+          setSection(value);
         }}
         showButton={section === 1}
       >

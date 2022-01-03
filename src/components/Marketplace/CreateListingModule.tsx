@@ -84,13 +84,13 @@ export const CreateListingModule = forwardRef((props, ref) => {
     <TokenInputField
       label="Price per Pod"
       handleChange={(e) => {
-        const newPricePerPodValue = new BigNumber(e.target.value)
+        const newPricePerPodValue = new BigNumber(e.target.value);
         // Price can't be created than 1
         if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
-          setPricePerPodValue(new BigNumber(0.999999))
-          return
+          setPricePerPodValue(new BigNumber(0.999999));
+          return;
         }
-        setPricePerPodValue(newPricePerPodValue)
+        setPricePerPodValue(newPricePerPodValue);
       }}
       value={TrimBN(pricePerPodValue, 6)}
     />
