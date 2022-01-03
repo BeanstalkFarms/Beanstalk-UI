@@ -80,8 +80,6 @@ const useStyles = makeStyles({
     width: drawerWidth,
     flexShrink: 0,
     fontFamily: 'Futura',
-    // position: 'relative',
-    // zIndex: 9999, // above everything, including header bar
   },
   drawerPaper: {
     width: drawerWidth,
@@ -109,6 +107,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   NavLinkTitle: {
+    fontFamily: 'Futura',
     fontWeight: 'bold',
     fontSize: 17,
   },

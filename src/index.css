@@ -15,7 +15,14 @@
 
 @font-face {
   font-family: 'Futura';
-  src: url('./font/Futura.ttf');
+  src: url('./font/Futura-Medium.ttf');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Futura';
+  src: url('./font/Futura-Bold.ttf');
+  font-weight: bold;
 }
 
 html, body {height: 100%;}
