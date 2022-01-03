@@ -121,11 +121,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       props.maxToSeedsVal.multipliedBy(props.seedsToLP),
       props.maxFromLPVal,
     ]);
-    if (props.locked) {
-      fromValueUpdated(new BigNumber(-1));
-    } else {
-      fromValueUpdated(minMaxFromVal);
-    }
+    fromValueUpdated(minMaxFromVal);
   };
 
   /* Input Fields */
@@ -135,7 +131,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       balance={props.maxFromLPVal}
       handleChange={handleFromChange}
       isLP
-      locked={props.locked || props.maxFromLPVal.isLessThanOrEqualTo(0)}
+      locked={props.maxFromLPVal.isLessThanOrEqualTo(0)}
       maxHandler={maxHandler}
       poolForLPRatio={props.poolForLPRatio}
       setValue={setFromLPValue}

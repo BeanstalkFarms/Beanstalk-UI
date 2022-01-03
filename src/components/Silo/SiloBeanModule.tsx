@@ -34,11 +34,11 @@ export default function SiloBeanModule() {
     hasClaimable,
     beanSiloBalance,
     beanClaimableBalance,
-    locked,
     seedBalance,
     stalkBalance,
     lockedSeasons,
     beanReceivableBalance,
+    beanWrappedBalance,
     beanReceivableCrates,
     farmableBeanBalance,
     rawBeanDeposits,
@@ -152,6 +152,7 @@ export default function SiloBeanModule() {
     : new BigNumber(0);
 
   const beanClaimable = beanReceivableBalance
+    .plus(beanWrappedBalance)
     .plus(harvestablePodBalance)
     .plus(poolForLPRatio(lpReceivableBalance)[0]);
 
@@ -196,7 +197,6 @@ export default function SiloBeanModule() {
       hasClaimable={hasClaimable}
       harvestablePodBalance={harvestablePodBalance}
       lpReceivableBalance={lpReceivableBalance}
-      locked={section === 1 && locked}
       maxFromBeanVal={beanSiloBalance}
       maxToSeedsVal={seedBalance}
       maxToStalkVal={stalkBalance}
@@ -320,9 +320,8 @@ export default function SiloBeanModule() {
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={
-          isFormDisabled && (isFormDisabled || (section === 1 && locked))
+          isFormDisabled && (isFormDisabled)
         }
-        locked={section === 1 && locked}
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
         section={section}
