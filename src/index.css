@@ -13,6 +13,11 @@
   src: url('./font/LucidaConsoleRegular.ttf');
 }
 
+@font-face {
+  font-family: 'Futura';
+  src: url('./font/Futura.ttf');
+}
+
 html, body {height: 100%;}
 
 body {
