@@ -3,7 +3,7 @@ import { Page } from 'Pages/index';
 import Balances from 'components/Balances';
 
 export default function DAO() {
-  const sectionTitles = ['Balance'];
+  const sectionTitles = ['Balances'];
   const sections = [<Balances />];
 
   return (

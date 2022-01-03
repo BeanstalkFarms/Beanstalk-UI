@@ -40,8 +40,8 @@ const NAVIGATION_MAP = {
       desc: 'Vote on the future of Beanstalk',
     },
     {
-      path: 'balance',
-      title: 'Balance',
+      path: 'balances',
+      title: 'Balances',
       desc: 'View Beanstalk balances',
     },
   ],

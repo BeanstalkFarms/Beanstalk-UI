@@ -26,7 +26,7 @@ import {
   FundraiserPage,
   BeaNFTPage,
   AboutPage,
-  BalancePage,
+  BalancesPage,
   PegMaintenancePage,
 } from 'Pages';
 
@@ -106,8 +106,8 @@ export default function App() {
           <Route exact path="/governance">
             <DAOPage />
           </Route>
-          <Route exact path="/balance">
-            <BalancePage />
+          <Route exact path="/balances">
+            <BalancesPage />
           </Route>
           <Route exact path="/beanfts">
             <Redirect to="/beanfts/beanft" />

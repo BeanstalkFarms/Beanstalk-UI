@@ -8,7 +8,7 @@ export { default as SiloPage } from './SiloPage';
 export { default as FieldPage } from './FieldPage';
 export { default as TradePage } from './TradePage';
 export { default as DAOPage } from './DAOPage';
-export { default as BalancePage } from './BalancePage';
+export { default as BalancesPage } from './BalancesPage';
 export { default as PegMaintenancePage } from './PegMaintenancePage';
 
 // More
