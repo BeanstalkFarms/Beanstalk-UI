@@ -39,6 +39,11 @@ const NAVIGATION_MAP = {
       title: 'DAO',
       desc: 'Vote on the future of Beanstalk',
     },
+    {
+      path: 'balances',
+      title: 'Balances',
+      desc: 'View Beanstalk balances',
+    },
   ],
   more: [
     {
@@ -46,8 +51,8 @@ const NAVIGATION_MAP = {
       title: 'Analytics',
     },
     {
-      path: 'fundraiser',
-      title: 'Fundraiser',
+      path: 'peg',
+      title: 'Peg Maintenance',
     },
     {
       path: 'beanfts',
@@ -75,8 +80,6 @@ const useStyles = makeStyles({
     width: drawerWidth,
     flexShrink: 0,
     fontFamily: 'Futura',
-    // position: 'relative',
-    // zIndex: 9999, // above everything, including header bar
   },
   drawerPaper: {
     width: drawerWidth,
@@ -104,7 +107,8 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   NavLinkTitle: {
-    fontWeight: 'bold',
+    fontFamily: 'Futura, Helvetica',
+    fontWeight: '800',
     fontSize: 17,
   },
   NavLink: {
