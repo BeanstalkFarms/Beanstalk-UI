@@ -12,6 +12,7 @@ export default function TitleLabel(props) {
       padding: props.padding || '5px',
       textTransform: props.textTransform,
       fontWeight: 'bold',
+      color: 'white', // HOTFIX
     },
   }))();
 

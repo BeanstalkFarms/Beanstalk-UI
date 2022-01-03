@@ -35,12 +35,6 @@ export default function Trade() {
       id="trade"
       title="Trade"
     >
-      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-        <ContentDropdown
-          description={tradeStrings.tradeDescription}
-          descriptionTitle="How do I Trade?"
-        />
-      </Grid>
       <Grid container item xs={12} justifyContent="center" style={headerLabelStyle}>
         <HeaderLabelList
           description={[
@@ -62,8 +56,13 @@ export default function Trade() {
           width="300px"
         />
       </Grid>
-
       <TradeModule />
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={tradeStrings.tradeDescription}
+          descriptionTitle="How do I Trade?"
+        />
+      </Grid>
     </ContentSection>
   );
 }

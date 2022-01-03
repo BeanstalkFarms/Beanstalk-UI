@@ -58,7 +58,7 @@ export default function ContentDropdown({
 }) {
   const classes = makeStyles(() => ({
     root: {
-      width: '300px',
+      // width: '300px',
     },
     topContainer: {
       backgroundColor: 'transparent',

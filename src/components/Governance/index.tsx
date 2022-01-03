@@ -97,13 +97,6 @@ export default function Governance() {
       id="governance"
       title="Governance"
     >
-      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-        <ContentDropdown
-          description={governanceStrings.governanceDescription}
-          descriptionTitle="How do I participate in Governance?"
-          descriptionLinks={descriptionLinks}
-        />
-      </Grid>
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid
           container
@@ -127,6 +120,13 @@ export default function Governance() {
           </Grid>
         </Grid>
         {fundraiserTable}
+      </Grid>
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={governanceStrings.governanceDescription}
+          descriptionTitle="How do I participate in Governance?"
+          descriptionLinks={descriptionLinks}
+        />
       </Grid>
     </ContentSection>
   );

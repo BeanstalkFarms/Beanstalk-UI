@@ -18,11 +18,7 @@ export default function About(props) {
   const cloudStyle = {
     maxWidth: '400px',
   };
-  const sectionContentStyle = {
-    ...props.style,
-    marginBottom: '200px',
-  };
-
+  const sectionContentStyle = props.style;
   const showLandingPage = props.defaultSection !== undefined;
 
   return (

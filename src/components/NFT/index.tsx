@@ -42,18 +42,20 @@ export default function NFTs() {
         id="nft"
         title="BeaNFTs"
         textTransform="none"
-        style={{ minHeight: '100px' }}
+        style={{
+          paddingTop: 20, // FIXME
+        }}
       >
+        <NftStatsHeader />
+        <ClaimNFT
+          buttonDescription={beanftStrings.mintAll}
+        />
         <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
           <ContentDropdown
             description={description}
             descriptionTitle="What are BeaNFTs?"
           />
         </Grid>
-        <NftStatsHeader />
-        <ClaimNFT
-          buttonDescription={beanftStrings.mintAll}
-        />
       </ContentSection>
     </>
   );

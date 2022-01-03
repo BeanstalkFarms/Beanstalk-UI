@@ -136,7 +136,7 @@ export default function ClaimNFT({
         item
         justifyContent="center"
         alignItems="flex-start"
-        style={{ marginBottom: '100px' }}
+        // style={{ marginBottom: '100px' }}
       >
         {showButton}
       </Grid>
