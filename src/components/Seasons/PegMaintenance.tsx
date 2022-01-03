@@ -178,6 +178,7 @@ export default function PegMaintenance() {
     newSoil = newBeans.dividedBy(weather.dividedBy(50).plus(2));
   } else {
     newSoil = currentBeans.minus(targetBeans);
+    newSoil = newSoil.multipliedBy(totalSiloLP.plus(totalTransitLP)).dividedBy(totalLP);
   }
 
   newSoil = newSoil.minus(soil);
