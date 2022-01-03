@@ -97,7 +97,7 @@ export default function App() {
           <Route exact path="/analytics">
             <AnalyticsPage />
           </Route>
-          <Route exact path="/pegmaintenance">
+          <Route exact path="/peg">
             <PegMaintenancePage />
           </Route>
           <Route exact path="/fundraiser">
