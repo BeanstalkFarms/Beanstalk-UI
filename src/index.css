@@ -15,13 +15,13 @@
 
 @font-face {
   font-family: 'Futura';
-  src: url('./font/Futura-Medium.ttf');
+  src: local('Futura') url(./font/Futura-Medium.ttf) format('ttf');
   font-weight: normal;
 }
 
 @font-face {
   font-family: 'Futura';
-  src: url('./font/Futura-Bold.ttf');
+  src: local('Futura') url(./font/Futura-Bold.ttf) format('ttf');
   font-weight: bold;
 }
 
