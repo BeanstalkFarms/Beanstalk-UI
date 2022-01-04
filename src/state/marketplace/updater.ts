@@ -10,7 +10,6 @@ import {
   beanstalkContractReadOnly,
 } from 'util/index';
 
-
 // mock global events for marketplace
 // TODO: hook this up to real contract events
 const MOCK_EVENTS = [
@@ -193,8 +192,8 @@ export default function Updater() {
           beanstalk.getPastEvents('BuyOfferCreated'),
           beanstalk.getPastEvents('BuyOfferCancelled'),
           beanstalk.getPastEvents('ListingFilled'),
-        ],
-      )
+        ]
+      );
       // eslint-disable-next-line
       let marketplaceEvents = [].concat.apply([], events);
       marketplaceEvents.sort((a, b) => {
@@ -203,7 +202,7 @@ export default function Updater() {
         return a.logIndex - b.logIndex;
       });
 
-      console.log('events:', marketplaceEvents)
+      console.log('events:', marketplaceEvents);
 
       const {
         listings,
@@ -213,7 +212,7 @@ export default function Updater() {
         listings,
         buyOffers,
       }));
-    }
+    };
 
     if (harvestableIndex != null) {
       fetchMarketplaceListings();
