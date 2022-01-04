@@ -32,7 +32,7 @@ export default function MarketplaceBuyModule() {
   const [section, setSection] = useState(0);
 
   const sectionTitles = [
-    'Listings',
+    'Pod Listings',
     'Make Offer',
   ];
   const sectionTitlesDescription = [

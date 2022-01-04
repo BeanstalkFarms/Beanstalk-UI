@@ -35,8 +35,8 @@ const NAVIGATION_MAP = {
       desc: 'Buy and sell Beans',
     },
     {
-      path: 'marketplace',
-      title: 'Marketplace',
+      path: 'market',
+      title: 'Market',
       desc: 'Buy and sell Pods',
     },
     {

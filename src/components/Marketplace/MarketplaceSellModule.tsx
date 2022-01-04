@@ -28,7 +28,7 @@ export default function MarketplaceSellModule() {
     setSection(newSection);
   };
 
-  const sectionTitles = ['Offers', 'Sell Plot'];
+  const sectionTitles = ['Pod Orders', 'Sell Plot'];
   const sectionTitlesDescription = [
     siloStrings.lpDeposit, // FIXME
     siloStrings.lpDeposit, // FIXME

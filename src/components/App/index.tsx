@@ -125,7 +125,7 @@ export default function App() {
           <Route exact path="/about">
             <AboutPage key="about" />
           </Route>
-          <Route exact path="/marketplace">
+          <Route exact path="/market">
             <MarketplacePage key="marketplace" />
           </Route>
           {/* If nothing matches, go to the Silo */}
