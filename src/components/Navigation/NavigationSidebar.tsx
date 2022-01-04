@@ -7,15 +7,17 @@ import {
   Box,
   Drawer,
   ListSubheader,
+  CircularProgress,
 } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@material-ui/styles';
 
-import { getAPYs } from 'util/index';
+// import { getAPYs } from 'util/index';
 import { AppState } from 'state';
 import { theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
+import { percentForStalk } from 'util/index';
 
 const NAVIGATION_MAP = {
   farm: [
@@ -27,7 +29,7 @@ const NAVIGATION_MAP = {
     {
       path: 'farm/field',
       title: 'Field',
-      desc: 'Help stabilize Beanstalk',
+      desc: 'Lend to Beanstalk',
     },
     {
       path: 'farm/trade',
@@ -100,6 +102,7 @@ const useStyles = makeStyles({
     fontSize: 11.5,
     padding: '2px 5px',
     borderRadius: 4,
+    marginRight: 4,
   },
   NavLinkHeader: {
     display: 'flex',
@@ -115,7 +118,7 @@ const useStyles = makeStyles({
     color: 'inherit',
     textDecoration: 'none',
   },
-  //
+  // Metrics
   metrics: {
     display: 'flex',
     flex: 1,
@@ -137,6 +140,26 @@ const useStyles = makeStyles({
   metricValue: {
     color: '#555',
   },
+  // BIP Progress
+  bipBadgeContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  progressContain: {
+    width: 16,
+    position: 'relative',
+  },
+  progressBackground: {
+    position: 'absolute',
+    top: -5,
+    left: 0,
+  },
+  progressPrimary: {
+    position: 'absolute',
+    top: -5,
+    left: 0,
+  },
 });
 
 const Metric = ({ label, value, hideIfNull = false }) => {
@@ -150,52 +173,101 @@ const Metric = ({ label, value, hideIfNull = false }) => {
   );
 };
 
+const BIPBadge = ({ bip, voted }) => {
+  const classes = useStyles();
+  return (
+    <Box component="span" className={classes.bipBadgeContainer}>
+      <Box className={classes.progressContain}>
+        <CircularProgress
+          key="blackground"
+          size={10}
+          style={{ opacity: 0.3 }}
+          className={classes.progressBackground}
+          color="inherit"
+          thickness={8}
+          variant="determinate"
+          value={100}
+        />
+        <CircularProgress
+          key="primary"
+          size={10}
+          className={classes.progressPrimary}
+          color="inherit"
+          thickness={8}
+          variant="determinate"
+          value={voted}
+        />
+      </Box>
+      <span>
+        BIP-{bip.id.toString()}
+      </span>
+    </Box>
+  );
+};
+
 export default function NavigationSidebar() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
   // Grab state
-  const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
-    (state) => state.totalBalance
-  );
-  const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
-    (state) => state.beansPerSeason
-  );
+  // const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
+  //   (state) => state.totalBalance
+  // );
+  // const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
+  //   (state) => state.beansPerSeason
+  // );
   const weather = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
   const { beanPrice, ethPrices, usdcPrice } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
-  const { totalPods, totalBeans } = useSelector<AppState, AppState['totalBalance']>(
+  const { totalPods, totalBeans, totalRoots } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { initialized, drawerOpen, width } = useSelector<AppState, AppState['general']>(
+  const { initialized, drawerOpen, width, bips } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+
+  const activeBips = bips.reduce((aBips, bip) => {
+    if (bip.active) {
+      const voted = percentForStalk(
+        bip.roots,
+        bip.endTotalRoots.isGreaterThan(0)
+          ? bip.endTotalRoots
+          : totalRoots
+      );
+      aBips.push(<BIPBadge bip={bip} voted={voted} />);
+    }
+    return aBips;
+  }, []);
 
   // Calculate APYs.
   // FIXME: these calcs should be done during fetching and not within
   // each respective component. Certain calculations (like fieldAPY)
   // should require that all necessary dependencies be loaded before running calculation.
-  const tth = totalPods.dividedBy(beansPerSeason.harvestableMonth);
-  const fieldAPY = beansPerSeason.harvestableMonth > 0 ? weather.weather.multipliedBy(8760).dividedBy(tth) : null;
-  const [beanAPY] = getAPYs(
-    beansPerSeason.farmableMonth,
-    parseFloat(totalStalk),
-    parseFloat(totalSeeds)
-  );
+  // const tth = totalPods.dividedBy(beansPerSeason.harvestableMonth);
+  // const fieldAPY = beansPerSeason.harvestableMonth > 0 ? weather.weather.multipliedBy(8760).dividedBy(tth) : null;
+  // const [beanAPY] = getAPYs(
+  //   beansPerSeason.farmableMonth,
+  //   parseFloat(totalStalk),
+  //   parseFloat(totalSeeds)
+  // );
 
   const marketCap = totalBeans.isGreaterThan(0)
     ? totalBeans.multipliedBy(beanPrice)
     : new BigNumber(0);
 
   const badgeDataByPath : { [key: string] : string | null } = {
-    'farm/silo': initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
-    'farm/field': initialized && fieldAPY ? `${fieldAPY.toFixed(0)}%` : null,
+    // 'farm/silo': initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
+    // 'farm/field': initialized && fieldAPY ? `${fieldAPY.toFixed(0)}%` : null,
+    'farm/field': initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
     fundraiser: 'Omniscia',
     beanfts: 'Winter',
   };
+  if (activeBips.length > 0) {
+    badgeDataByPath.governance = activeBips;
+  }
 
   //
   let currentBeanPrice = null;
@@ -220,9 +292,13 @@ export default function NavigationSidebar() {
         <Box className={classes.NavLinkHeader}>
           <span className={classes.NavLinkTitle} style={{ marginRight: 8 }}>{item.title}</span>
           {!!badgeDataByPath[item.path] && (
-            <span className={classes.Badge}>
-              {badgeDataByPath[item.path]}
-            </span>
+            Array.isArray(badgeDataByPath[item.path]) ? (
+              badgeDataByPath[item.path].map((val, index) => (
+                <span key={index} className={classes.Badge}>{val}</span>
+              ))
+            ) : (
+              <span className={classes.Badge}>{badgeDataByPath[item.path]}</span>
+            )
           )}
         </Box>
         {item.desc && (
