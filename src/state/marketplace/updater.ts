@@ -12,7 +12,7 @@ import {
 
 // mock global events for marketplace
 // TODO: hook this up to real contract events
-// @ts-ignore
+// eslint-disable-next-line
 const MOCK_EVENTS = [
   {
     event: 'ListingCreated',
