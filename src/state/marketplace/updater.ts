@@ -6,6 +6,10 @@ import {
   setMarketplaceListings,
 } from 'state/marketplace/actions';
 import orderBy from 'lodash/orderBy';
+import {
+  beanstalkContractReadOnly,
+} from 'util/index';
+
 
 // mock global events for marketplace
 // TODO: hook this up to real contract events
@@ -180,15 +184,39 @@ export default function Updater() {
   >((state) => state.weather);
 
   useEffect(() => {
-    if (harvestableIndex != null) {
+    const fetchMarketplaceListings = async () => {
+      const beanstalk = beanstalkContractReadOnly();
+      const events = await Promise.all(
+        [
+          beanstalk.getPastEvents('ListingCreated'),
+          beanstalk.getPastEvents('ListingCancelled'),
+          beanstalk.getPastEvents('BuyOfferCreated'),
+          beanstalk.getPastEvents('BuyOfferCancelled'),
+          beanstalk.getPastEvents('ListingFilled'),
+        ],
+      )
+      // eslint-disable-next-line
+      let marketplaceEvents = [].concat.apply([], events);
+      marketplaceEvents.sort((a, b) => {
+        const diff = a.blockNumber - b.blockNumber;
+        if (diff !== 0) return diff;
+        return a.logIndex - b.logIndex;
+      });
+
+      console.log('events:', marketplaceEvents)
+
       const {
         listings,
         buyOffers,
-      } = processEvents(MOCK_EVENTS, harvestableIndex);
+      } = processEvents(marketplaceEvents, harvestableIndex);
       dispatch(setMarketplaceListings({
         listings,
         buyOffers,
       }));
+    }
+
+    if (harvestableIndex != null) {
+      fetchMarketplaceListings();
     }
 
     // eslint-disable-next-line
