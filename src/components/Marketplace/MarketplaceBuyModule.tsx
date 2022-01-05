@@ -58,10 +58,10 @@ export default function MarketplaceBuyModule() {
       fromBeanValue,
       fromEthValue,
     } = buyOffer;
-    console.log(prices)
-    console.log('buy bean amount:', buyBeanAmount.toString())
-    console.log('from eth value:', fromEthValue.toString())
-    console.log('from bean value:', fromBeanValue.toString())
+    console.log(prices);
+    console.log('buy bean amount:', buyBeanAmount.toString());
+    console.log('from eth value:', fromEthValue.toString());
+    console.log('from bean value:', fromBeanValue.toString());
     // This assumes eth right now
     const res = await beanstalk.buyBeansAndListBuyOffer(
       maxPlaceInLine.toString(),
@@ -69,7 +69,7 @@ export default function MarketplaceBuyModule() {
       0,
       buyBeanAmount.times(10 ** 6).toString(),
       {
-        value: fromEthValue.times(10 ** 18).toFixed()
+        value: fromEthValue.times(10 ** 18).toFixed(),
       });
     console.log('res:', res);
   };

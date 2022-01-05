@@ -188,11 +188,21 @@ export default function Updater() {
       const beanstalk = beanstalkContractReadOnly();
       const events = await Promise.all(
         [
-          beanstalk.getPastEvents('ListingCreated'),
-          beanstalk.getPastEvents('ListingCancelled'),
-          beanstalk.getPastEvents('BuyOfferCreated'),
-          beanstalk.getPastEvents('BuyOfferCancelled'),
-          beanstalk.getPastEvents('ListingFilled'),
+          beanstalk.getPastEvents('ListingCreated', {
+            fromBlock: 0,
+          }),
+          beanstalk.getPastEvents('ListingCancelled', {
+            fromBlock: 0,
+          }),
+          beanstalk.getPastEvents('BuyOfferCreated', {
+            fromBlock: 0,
+          }),
+          beanstalk.getPastEvents('BuyOfferCancelled', {
+            fromBlock: 0,
+          }),
+          beanstalk.getPastEvents('ListingFilled', {
+            fromBlock: 0,
+          }),
         ]
       );
       // eslint-disable-next-line
