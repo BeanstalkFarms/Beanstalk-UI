@@ -5,10 +5,13 @@ import {
   BaseModule,
   siloStrings,
 } from 'components/Common';
+import { beanstalkContract } from 'util/index';
 import Offers from './Offers';
 import CreateListingModule from './CreateListingModule';
 
 export default function MarketplaceSellModule() {
+  const [sellOffer, setSellOffer] = useState(null);
+
   // Global state
   const {
     harvestablePodBalance,
@@ -34,6 +37,31 @@ export default function MarketplaceSellModule() {
     siloStrings.lpDeposit, // FIXME
   ];
 
+  // TODO: need to handle beans / beans + eth
+  const onCreate = async () => {
+    const beanstalk = beanstalkContract();
+    const {
+      pricePerPod,
+      plotEndId,
+      fromPlotIndex,
+      toPlotEndIndex,
+    } = sellOffer;
+
+    // This only supports eth right now
+    const index = 1;
+    const expiry = 1000;
+    const amount = 1000;
+    const res = await beanstalk.listPlot(
+      index,
+      pricePerPod.times(10 ** 6).toString(),
+      expiry,
+      amount,
+    );
+    console.log('res:', res);
+  };
+
+  console.log(sellOffer)
+
   const sections = [
     <Offers
     />,
@@ -45,6 +73,7 @@ export default function MarketplaceSellModule() {
           harvestablePodBalance.isGreaterThan(0))
       }
       index={parseFloat(harvestableIndex)}
+      setSellOffer={setSellOffer}
     />,
   ];
 
@@ -53,7 +82,7 @@ export default function MarketplaceSellModule() {
     <>
       <BaseModule
         style={{ marginTop: '20px' }}
-        handleForm={() => {}}
+        handleForm={onCreate}
         handleTabChange={handleTabChange}
         isDisabled={false}
         section={section}

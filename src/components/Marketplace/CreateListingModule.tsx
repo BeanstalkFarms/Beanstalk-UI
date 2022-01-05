@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { BEAN } from 'constants/index';
 import {
@@ -17,6 +17,21 @@ export const CreateListingModule = (props) => {
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
   const [fromPlotIndex, setFromPlotIndex] = useState(new BigNumber(-1));
   const [toPlotEndIndex, setToPlotEndIndex] = useState(new BigNumber(-1));
+
+  const { setSellOffer } = props;
+  useEffect(() => {
+    const canSell = plotEndId.isGreaterThan(0) && pricePerPodValue.isLessThan(1)
+    if (canSell) {
+      setSellOffer({
+        pricePerPod: pricePerPodValue,
+        plotEndId,
+        fromPlotIndex,
+        toPlotEndIndex,
+      });
+    } else {
+      setSellOffer(null);
+    }
+  }, [setSellOffer, plotEndId, pricePerPodValue, fromPlotIndex, toPlotEndIndex]);
 
   /* Handlers: Plot change and update */
   function fromValueUpdated(newFromNumber: BigNumber) {
