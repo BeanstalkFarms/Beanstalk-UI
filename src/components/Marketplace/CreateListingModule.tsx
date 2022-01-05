@@ -63,6 +63,7 @@ export const CreateListingModule = (props) => {
       marginBottom={props.hasPlots === true ? '0px' : '-7px'}
       handleChange={handleFromChange}
       label="Select plot to sell"
+      type="sell"
     />
   );
   const priceField = (
