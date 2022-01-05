@@ -96,10 +96,10 @@ function processEvents(events, harvestableIndex) {
     if (event.event === 'ListingCreated') {
       listings[event.returnValues.index] = {
         listerAddress: event.returnValues.account,
-        objectiveIndex: event.returnValues.index,
-        pricePerPod: event.returnValues.pricePerPod,
-        expiry: event.returnValues.expiry,
-        initialAmount: event.returnValues.amount,
+        objectiveIndex: new BigNumber(event.returnValues.index),
+        pricePerPod: new BigNumber(event.returnValues.pricePerPod),
+        expiry: new BigNumber(event.returnValues.expiry),
+        initialAmount: new BigNumber(event.returnValues.amount),
         amountSold: new BigNumber(0),
         status: 'active',
       };
@@ -111,7 +111,7 @@ function processEvents(events, harvestableIndex) {
       const prevKey = index.toString();
       const currentListing = listings[prevKey];
       delete listings[prevKey];
-      const newKey = index.plus(amount).toString();
+      const newKey = new BigNumber(index).plus(amount).toString();
       listings[newKey] = currentListing;
 
       // Check whether current listing is sold or not
@@ -125,9 +125,9 @@ function processEvents(events, harvestableIndex) {
     } else if (event.event === 'BuyOfferCreated') {
       buyOffers[event.returnValues.index] = {
         listerAddress: event.returnValues.account,
-        maxPlaceInLine: event.returnValues.index,
-        initialAmountToBuy: event.returnValues.amount,
-        pricePerPod: event.returnValues.pricePerPod,
+        maxPlaceInLine: new BigNumber(event.returnValues.index),
+        initialAmountToBuy: new BigNumber(event.returnValues.amount),
+        pricePerPod: new BigNumber(event.returnValues.pricePerPod),
         amountBought: new BigNumber(0),
         status: 'active',
       };
@@ -135,7 +135,7 @@ function processEvents(events, harvestableIndex) {
       delete buyOffers[event.returnValues.index];
     } else if (event.event === 'BuyOfferAccepted') {
       const { index, amount } = event.returnValues;
-      const key = index.toString();
+      const key = index;
 
       // Check whether current offer is sold or not
       const buyOffer = buyOffers[key];
