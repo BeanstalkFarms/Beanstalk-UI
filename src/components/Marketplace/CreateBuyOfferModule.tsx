@@ -217,16 +217,13 @@ export const CreateBuyOfferModule = (props) => {
       {fromEthField}
       {pricePerPodField}
       {maxPlaceInLineField}
-<<<<<<< HEAD
       {expiryField}
-=======
       <SettingsFormModule
         setSettings={props.setSettings}
         settings={props.settings}
         handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
         hasClaimable={props.hasClaimable}
       />
->>>>>>> b22d607042eaae1db6fcffe0a1d6ed3db54ebf71
     </>
   );
 };
