@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import {
@@ -11,6 +11,7 @@ import {
   Button,
   Modal,
 } from '@material-ui/core';
+import { GetWalletAddress } from 'util/index';
 
 function Offer({ offer, setOffer }) {
   console.log('got offer', offer);
@@ -39,11 +40,21 @@ function Offer({ offer, setOffer }) {
 }
 
 export default function Offers() {
+  const [walletAddress, setWalletAddress] = useState(null)
   const { buyOffers: offers } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
   const [currentOffer, setCurrentOffer] = useState(null);
-  if (offers == null) {
+
+  useEffect(() => {
+    const init = async () => {
+      const addr = await GetWalletAddress();
+      setWalletAddress(addr);
+    }
+    init()
+  }, [])
+
+  if (offers == null || walletAddress == null) {
     return <div>Loading...</div>;
   }
   if (offers.length === 0) {
@@ -52,6 +63,15 @@ export default function Offers() {
   const sell = () => {
     console.log('sell');
   };
+
+  console.log(walletAddress)
+  const myOffers = offers.filter((offer) =>  {
+    return offer.listerAddress === walletAddress;
+  });
+  const otherOffers = offers.filter((offer) => {
+    return offer.listerAddress !== walletAddress;
+  });
+
   return (
     <>
       <Modal
@@ -79,6 +99,32 @@ export default function Offers() {
           </Button>
         </Box>
       </Modal>
+
+      {myOffers.length > 0 && (
+        <>
+          <h2>Your Offers</h2>
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">
+                    Place in line
+                  </TableCell>
+                  <TableCell align="center">
+                    Price per pod
+                  </TableCell>
+                  <TableCell align="center">
+                    Amount
+                  </TableCell>
+                  <TableCell align="center" />
+                </TableRow>
+              </TableHead>
+              {offers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} />)}
+            </Table>
+          </TableContainer>
+        </>
+      ) }
+      <h2>All Offers</h2>
       <TableContainer>
         <Table size="small">
           <TableHead>
@@ -95,7 +141,7 @@ export default function Offers() {
               <TableCell align="center" />
             </TableRow>
           </TableHead>
-          {offers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} />)}
+          {otherOffers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} />)}
         </Table>
       </TableContainer>
     </>

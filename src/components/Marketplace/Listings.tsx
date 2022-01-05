@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import {
@@ -11,6 +11,7 @@ import {
   Button,
   Modal,
 } from '@material-ui/core';
+import { GetWalletAddress } from 'util/index';
 
 function Listing({ listing, setListing }) {
   return (
@@ -38,11 +39,21 @@ function Listing({ listing, setListing }) {
 }
 
 export default function Listings() {
+  const [walletAddress, setWalletAddress] = useState(null)
   const { listings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
   const [currentListing, setCurrentListing] = useState(null);
-  if (listings == null) {
+
+  useEffect(() => {
+    const init = async () => {
+      const addr = await GetWalletAddress();
+      setWalletAddress(addr);
+    }
+    init()
+  }, [])
+
+  if (listings == null || walletAddress == null) {
     return <div>Loading...</div>;
   }
   if (listings.length === 0) {
@@ -51,6 +62,13 @@ export default function Listings() {
   const buy = () => {
     console.log('buy listing');
   };
+  console.log('listings:', listings)
+  const myListings = listings.filter((listing) =>  {
+    return listing.listerAddress === walletAddress;
+  });
+  const otherListings = listings.filter((listing) => {
+    return listing.listerAddress !== walletAddress;
+  });
   return (
     <>
       <Modal
@@ -78,6 +96,31 @@ export default function Listings() {
           </Button>
         </Box>
       </Modal>
+      {myListings.length > 0 && (
+        <>
+          <h2>Your Listings</h2>
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">
+                    Place in line
+                  </TableCell>
+                  <TableCell align="center">
+                    Price per pod
+                  </TableCell>
+                  <TableCell align="center">
+                    Amount
+                  </TableCell>
+                  <TableCell align="center" />
+                </TableRow>
+              </TableHead>
+              {myListings.map((listing) => <Listing key={listing.objectiveIndex} listing={listing} setListing={setCurrentListing} />)}
+            </Table>
+          </TableContainer>
+        </>
+      ) }
+      <h2>All Listings</h2>
       <TableContainer>
         <Table size="small">
           <TableHead>
@@ -94,7 +137,7 @@ export default function Listings() {
               <TableCell align="center" />
             </TableRow>
           </TableHead>
-          {listings.map((listing) => <Listing key={listing.objectiveIndex} listing={listing} setListing={setCurrentListing} />)}
+          {otherListings.map((listing) => <Listing key={listing.objectiveIndex} listing={listing} setListing={setCurrentListing} />)}
         </Table>
       </TableContainer>
     </>
