@@ -13,8 +13,8 @@ import {
 } from '@material-ui/core';
 import { GetWalletAddress } from 'util/index';
 
-function Offer({ offer, setOffer }) {
-  console.log('got offer', offer);
+function Offer({ offer, setOffer, isMine }) {
+  console.log('is mine:', isMine)
   return (
     <TableRow>
       <TableCell align="center">
@@ -23,18 +23,40 @@ function Offer({ offer, setOffer }) {
       <TableCell align="center">
         {offer.pricePerPod.div(10 ** 6).toString()}
       </TableCell>
-      <TableCell align="center">
-        {offer.initialAmountToBuy.minus(offer.amountBought).div(10 ** 6).toString()}
-      </TableCell>
-      <TableCell align="center">
-        <Button
-          onClick={() => {
-            setOffer(offer);
-          }}
-        >
-          Sell
-        </Button>
-      </TableCell>
+      { isMine ? (
+        <>
+          <TableCell align="center">
+            {offer.initialAmountToBuy.div(10 ** 6).toString()}
+          </TableCell>
+          <TableCell align="center">
+            {offer.amountBought.div(10 ** 6).toString()}
+          </TableCell>
+          <TableCell align="center">
+            <Button
+              onClick={() => {
+                console.log('cancel listing')
+              }}
+            >
+              Cancel
+            </Button>
+          </TableCell>
+        </>
+      ) : (
+        <>
+          <TableCell align="center">
+            {offer.initialAmountToBuy.minus(offer.amountBought).div(10 ** 6).toString()}
+          </TableCell>
+          <TableCell align="center">
+            <Button
+              onClick={() => {
+                setOffer(offer);
+              }}
+            >
+              Sell
+            </Button>
+          </TableCell>
+        </>
+      ) }
     </TableRow>
   );
 }
@@ -64,7 +86,6 @@ export default function Offers() {
     console.log('sell');
   };
 
-  console.log(walletAddress)
   const myOffers = offers.filter((offer) =>  {
     return offer.listerAddress === walletAddress;
   });
@@ -102,7 +123,7 @@ export default function Offers() {
 
       {myOffers.length > 0 && (
         <>
-          <h2>Your Offers</h2>
+          <h2 style={{ marginLeft: 12 }}>Your Offers</h2>
           <TableContainer>
             <Table size="small">
               <TableHead>
@@ -114,17 +135,20 @@ export default function Offers() {
                     Price per pod
                   </TableCell>
                   <TableCell align="center">
-                    Amount
+                    Initial Amount
+                  </TableCell>
+                  <TableCell align="center">
+                    Amount Filled
                   </TableCell>
                   <TableCell align="center" />
                 </TableRow>
               </TableHead>
-              {offers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} />)}
+              {offers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} isMine />)}
             </Table>
           </TableContainer>
         </>
       ) }
-      <h2>All Offers</h2>
+      <h2 style={{ marginLeft: 12 }}>All Offers</h2>
       <TableContainer>
         <Table size="small">
           <TableHead>
