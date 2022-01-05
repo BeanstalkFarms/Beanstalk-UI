@@ -204,6 +204,7 @@ export function TokenTypeImage(tokenType: Token): string {
   if (tokenType < 17) return BudgetIcon;
 }
 
+/** Trim a BigNumber to a set number of decimals. */
 export function TrimBN(bn: BigNumber, decimals: number, allowNegative: boolean = false): BigNumber {
   if (typeof bn !== 'object') return new BigNumber(bn);
 
@@ -211,9 +212,12 @@ export function TrimBN(bn: BigNumber, decimals: number, allowNegative: boolean =
   const decimalComponents = numberString.split('.');
   if ((bn.isLessThan(0) && !allowNegative) || decimalComponents.length < 2) return bn;
 
+  // If too many decimals are provided, trim them.
+  // If there aren't enough decimals, do nothing.
+  // 1.123456 => [1, 123456]
   const decimalsFound = decimalComponents[1].length;
-  const decimalsToTrim =
-    decimalsFound < decimals ? 0 : decimalsFound - decimals;
+  const decimalsToTrim = decimalsFound < decimals ? 0 : decimalsFound - decimals;
+
   return new BigNumber(
     numberString.substr(0, numberString.length - decimalsToTrim)
   );

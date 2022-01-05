@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { approveBeanstalkBean, beanstalkContract } from 'util/index';
+import { approveBeanstalkBean, beanstalkContract, SwapMode } from 'util/index';
 import {
   BaseModule,
   siloStrings,
 } from 'components/Common';
+import { BASE_SLIPPAGE } from 'constants/index';
 import { CreateBuyOfferModule } from './CreateBuyOfferModule';
 import Listings from './Listings';
 
@@ -74,6 +75,12 @@ export default function MarketplaceBuyModule() {
     console.log('res:', res);
   };
 
+  const [settings, setSettings] = useState({
+    claim: false,
+    mode: SwapMode.Ethereum,
+    slippage: new BigNumber(BASE_SLIPPAGE),
+  });
+
   const sections = [
     <Listings />,
     <CreateBuyOfferModule
@@ -90,6 +97,9 @@ export default function MarketplaceBuyModule() {
       setBuyOffer={setBuyOffer}
       setSection={setSection}
       updateExpectedPrice={updateExpectedPrice}
+      //
+      settings={settings}
+      setSettings={setSettings}
     />,
   ];
 

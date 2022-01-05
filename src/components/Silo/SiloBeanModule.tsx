@@ -160,6 +160,7 @@ export default function SiloBeanModule() {
     poolForLPRatio(lpReceivableBalance)[1]
   );
 
+  /* */
   const sections = [
     <BeanDepositModule
       key={0}
@@ -209,6 +210,8 @@ export default function SiloBeanModule() {
       totalStalk={totalBalance.totalStalk}
     />,
   ];
+
+  /* */
   if (beanReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <BeanClaimModule
@@ -225,6 +228,7 @@ export default function SiloBeanModule() {
   }
   if (section > sectionTitles.length - 1) setSection(0);
 
+  /* */
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
   if (beanDeposits !== undefined && Object.keys(beanDeposits).length > 0) {
@@ -262,6 +266,7 @@ export default function SiloBeanModule() {
     sectionTitlesInfo.push('Bean Withdrawals');
   }
 
+  /* */
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
       <Box
@@ -308,6 +313,7 @@ export default function SiloBeanModule() {
       ? beanstalkBeanAllowance
       : new BigNumber(1);
 
+  /* */
   return (
     <>
       <BaseModule
