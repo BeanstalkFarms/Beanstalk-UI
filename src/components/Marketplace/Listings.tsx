@@ -16,13 +16,13 @@ function Listing({ listing, setListing }) {
   return (
     <TableRow>
       <TableCell align="center">
-        {listing.objectiveIndex.toString()}
+        {listing.objectiveIndex.div(10 ** 6).toString()}
       </TableCell>
       <TableCell align="center">
-        {listing.pricePerPod.toString()}
+        {listing.pricePerPod.div(10 ** 6).toString()}
       </TableCell>
       <TableCell align="center">
-        {listing.initialAmount.minus(listing.amountSold).toString()}
+        {listing.initialAmount.minus(listing.amountSold).div(10 ** 6).toString()}
       </TableCell>
       <TableCell align="center">
         <Button
