@@ -264,7 +264,6 @@ export default function BaseModule({
             </form>
           ) : (
             moduleContent
-            // <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
           )}
         </Box>
       ) : sectionTitles.length === 1 && normalBox ? (
@@ -301,7 +300,6 @@ export default function BaseModule({
             </form>
           ) : (
             moduleContent
-            // <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
           )}
         </Box>
       ) : (
@@ -313,7 +311,6 @@ export default function BaseModule({
           boxShadow={3}
         >
           {moduleContent}
-          {/* <span style={{ padding: '0px 10px' }}>{moduleContent}</span> */}
         </Box>
       )}
     </>

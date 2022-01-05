@@ -13,7 +13,10 @@ import {
   TrimBN,
 } from 'util/index';
 import {
+  CryptoAsset,
   EthInputField,
+  InputFieldPlus,
+  SettingsFormModule,
   TokenInputField,
 } from 'components/Common';
 
@@ -48,6 +51,8 @@ export const CreateBuyOfferModule = (props) => {
 
 
   const { setBuyOffer } = props;
+
+  //
   useEffect(() => {
     const canBuy = toBuyBeanValue.isGreaterThan(0) &&
     pricePerPodValue.isGreaterThan(0) &&
@@ -66,38 +71,70 @@ export const CreateBuyOfferModule = (props) => {
     } else {
       setBuyOffer(null);
     }
-  }, [setBuyOffer, fromBeanValue, fromEthValue, toBuyBeanValue, pricePerPodValue, maxPlaceInLineValue, expiryValue]);
+  }, [
+    setBuyOffer,
+    fromBeanValue,
+    fromEthValue,
+    toBuyBeanValue,
+    pricePerPodValue,
+    maxPlaceInLineValue,
+    expiryValue,
+  ]);
 
-  function fromValueUpdated(newFromNumber, newFromEthNumber) {
+  /**  */
+  function fromValueUpdated(newFromBeanNumber, newFromEthNumber) {
     const buyBeans = getToAmount(
       newFromEthNumber,
       props.ethReserve,
       props.beanReserve
     );
-    setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
-    setFromEthValue(TrimBN(newFromEthNumber, ETH.decimals));
-    setFromBeanValue(TrimBN(newFromNumber, BEAN.decimals));
+    setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals)); //
+    setFromEthValue(TrimBN(newFromEthNumber, ETH.decimals)); //
+    setFromBeanValue(TrimBN(newFromBeanNumber, BEAN.decimals)); //
   }
 
   /* Input Fields */
+  const fromBeanField = (
+    <InputFieldPlus
+      key={0}
+      // Current values
+      value={fromBeanValue}
+      balance={props.beanBalance}
+      claimableBalance={props.beanClaimableBalance}
+      beanLPClaimableBalance={props.beanLPClaimableBalance}
+      // Handlers
+      handleChange={(newFromBeanNumber: BigNumber) => {
+        // The user set a new amount of Beans.
+        fromValueUpdated(newFromBeanNumber, fromEthValue);
+      }}
+      token={CryptoAsset.Bean}
+      // Settings
+      claim={props.settings.claim}
+      visible={props.settings.mode !== SwapMode.Ethereum} // should be visible if mode = Bean | BeanEthereum
+    />
+  );
   const fromEthField = (
     <EthInputField
       key={1}
+      // Current values
       balance={props.ethBalance}
       buyBeans={toBuyBeanValue}
-      handleChange={(v) => {
-        fromValueUpdated(fromBeanValue, v);
-      }}
-      sellEth={fromEthValue}
-      updateExpectedPrice={props.updateExpectedPrice}
       value={TrimBN(fromEthValue, 9)}
-      mode={SwapMode.BeanEthereum}
+      sellEth={fromEthValue}
+      // Handlers
+      handleChange={(newFromEthNumber: BigNumber) => {
+        fromValueUpdated(fromBeanValue, newFromEthNumber);
+      }}
+      updateExpectedPrice={props.updateExpectedPrice}
+      // Settings
+      mode={props.settings.mode} // will auto-disable if mode == SwapMode.Bean
     />
   );
   const pricePerPodField = (
     <TokenInputField
       key={2}
       label="Price per pod"
+      token={CryptoAsset.Bean}
       handleChange={(e) => {
         const newPricePerPodValue = new BigNumber(e.target.value);
         // Price can't be created than 1
@@ -176,10 +213,20 @@ export const CreateBuyOfferModule = (props) => {
 
   return (
     <>
+      {fromBeanField}
       {fromEthField}
       {pricePerPodField}
       {maxPlaceInLineField}
+<<<<<<< HEAD
       {expiryField}
+=======
+      <SettingsFormModule
+        setSettings={props.setSettings}
+        settings={props.settings}
+        handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
+        hasClaimable={props.hasClaimable}
+      />
+>>>>>>> b22d607042eaae1db6fcffe0a1d6ed3db54ebf71
     </>
   );
 };

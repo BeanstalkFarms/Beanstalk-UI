@@ -5,14 +5,15 @@ import { CryptoAsset, MinBN, SwapMode } from 'util/index';
 import { TokenInputField } from '.';
 
 export default function EthInputField(props) {
+  // Hide the EthInputField if not using an Ethereum-based swap mode.
   if (
     !(props.mode === SwapMode.Ethereum || props.mode === SwapMode.BeanEthereum)
   ) {
+    // TODO: what is the purpos eof this line?
     if (props.value.isGreaterThan(0)) props.handleChange(new BigNumber(-1));
     return null;
   }
 
-  // const balance = props.balance
   const { balance } = props;
 
   const maxBalance = balance.isGreaterThan(MIN_BALANCE)
