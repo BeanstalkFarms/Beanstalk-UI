@@ -42,6 +42,7 @@ export default function ListInputField(props) {
   };
 
   if (props.hidden) return null;
+  console.log('got props:', props)
 
   return (
     <Box style={{ margin: '8px 0' }}>
@@ -69,9 +70,9 @@ export default function ListInputField(props) {
           }
         >
           {Object.keys(props.items).length > 0 ? (
-            <option value="default">Select Plot to transfer</option>
+            <option value="default">Select Plot to {props.type}</option>
           ) : (
-            <option>You have no Plots available to transfer</option>
+            <option>You have no Plots available to {props.type}</option>
           )}
           {Object.keys(props.items).length > 0
             ? Object.keys(props.items)
@@ -96,4 +97,5 @@ ListInputField.defaultProps = {
   hidden: false,
   marginBottom: '-7px',
   label: 'Select Plot to Transfer',
+  type: 'transfer',
 };
