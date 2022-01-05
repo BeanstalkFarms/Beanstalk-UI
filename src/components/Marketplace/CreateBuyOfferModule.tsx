@@ -27,6 +27,8 @@ export const CreateBuyOfferModule = (props) => {
     if (canBuy) {
       setBuyOffer({
         pricePerPod: pricePerPodValue,
+        fromEthValue,
+        fromBeanValue,
         buyBeanAmount: toBuyBeanValue,
         maxPlaceInLine: maxPlaceInLineValue,
       });

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { approveBeanstalkBean } from 'util/index';
+import { approveBeanstalkBean, beanstalkContract } from 'util/index';
 import {
   BaseModule,
   siloStrings,
@@ -48,8 +48,30 @@ export default function MarketplaceBuyModule() {
     return prices.beanPrice.plus(endPrice).dividedBy(2);
   };
 
-  const onCreate = () => {
-    console.log('submit buy offer here:', buyOffer);
+  // TODO: need to handle beans / beans + eth
+  const onCreate = async () => {
+    const beanstalk = beanstalkContract();
+    const {
+      maxPlaceInLine,
+      pricePerPod,
+      buyBeanAmount,
+      fromBeanValue,
+      fromEthValue,
+    } = buyOffer;
+    console.log(prices)
+    console.log('buy bean amount:', buyBeanAmount.toString())
+    console.log('from eth value:', fromEthValue.toString())
+    console.log('from bean value:', fromBeanValue.toString())
+    // This assumes eth right now
+    const res = await beanstalk.buyBeansAndListBuyOffer(
+      maxPlaceInLine.toString(),
+      pricePerPod.times(10 ** 6).toString(),
+      0,
+      buyBeanAmount.times(10 ** 6).toString(),
+      {
+        value: fromEthValue.times(10 ** 18).toFixed()
+      });
+    console.log('res:', res);
   };
 
   const sections = [
