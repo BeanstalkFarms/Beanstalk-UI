@@ -381,6 +381,7 @@ export default function WalletModule() {
     beanSiloBalance,
     beanTransitBalance,
     beanReceivableBalance,
+    beanWrappedBalance,
     harvestablePodBalance,
     stalkBalance,
     seedBalance,
@@ -679,6 +680,7 @@ export default function WalletModule() {
     .plus(beanSiloBalance)
     .plus(beanTransitBalance)
     .plus(beanReceivableBalance)
+    .plus(beanWrappedBalance)
     .plus(harvestablePodBalance);
   const userBeansAndEth = poolForLPRatio(userLP);
   const userLPBeans = userBeansAndEth[0].multipliedBy(2);
@@ -701,6 +703,7 @@ export default function WalletModule() {
         beanSiloBalance={beanSiloBalance}
         beanTransitBalance={beanTransitBalance}
         beanReceivableBalance={beanReceivableBalance}
+        beanWrappedBalance={beanWrappedBalance}
         harvestablePodBalance={harvestablePodBalance}
         lpBalance={lpBalance}
         lpSiloBalance={lpSiloBalance}

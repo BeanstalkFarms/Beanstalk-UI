@@ -31,6 +31,7 @@ export default function FieldModule() {
     lpReceivableBalance,
     beanClaimableBalance,
     beanReceivableBalance,
+    beanWrappedBalance,
     claimable,
     claimableEthBalance,
     harvestablePodBalance,
@@ -139,6 +140,7 @@ export default function FieldModule() {
 
   const beanClaimable = beanReceivableBalance
     .plus(harvestablePodBalance)
+    .plus(beanWrappedBalance)
     .plus(claimLPBeans);
 
   const ethClaimable = claimableEthBalance.plus(
