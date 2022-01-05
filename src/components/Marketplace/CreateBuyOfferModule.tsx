@@ -26,7 +26,6 @@ export const CreateBuyOfferModule = (props) => {
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
   const [maxPlaceInLineValue, setMaxPlaceInLineValue] = useState(new BigNumber(-1));
-  const [expiryValue, setExpiryValue] = useState(new BigNumber(-1));
 
   const classes = makeStyles(() => ({
     inputText: {
@@ -57,14 +56,12 @@ export const CreateBuyOfferModule = (props) => {
     const canBuy = toBuyBeanValue.isGreaterThan(0) &&
     pricePerPodValue.isGreaterThan(0) &&
     pricePerPodValue.isLessThan(1) &&
-    maxPlaceInLineValue.isGreaterThan(0) &&
-    expiryValue.isGreaterThan(0);
+    maxPlaceInLineValue.isGreaterThan(0);
     if (canBuy) {
       setBuyOffer({
         pricePerPod: pricePerPodValue,
         fromEthValue,
         fromBeanValue,
-        expiry: expiryValue,
         buyBeanAmount: toBuyBeanValue,
         maxPlaceInLine: maxPlaceInLineValue,
       });
@@ -78,7 +75,6 @@ export const CreateBuyOfferModule = (props) => {
     toBuyBeanValue,
     pricePerPodValue,
     maxPlaceInLineValue,
-    expiryValue,
   ]);
 
   /**  */
@@ -165,51 +161,6 @@ export const CreateBuyOfferModule = (props) => {
       placeholder="1000000"
     />
   );
-  const expiryField = (
-    <Box style={{ margin: '8px 0' }}>
-      <Box style={smallLabels}>
-        <Box style={leftStyle}>Expiry</Box>
-      </Box>
-      <TextField
-        className="TextField-rounded"
-        placeholder="50000000"
-        variant="outlined"
-        size="medium"
-        type="number"
-        value={
-          expiryValue.isNegative()
-          ? ''
-          : (expiryValue.length > 1 &&
-            expiryValue.replaceAll('0', '').length === 0) ||
-          (props.value.toFixed() === '0' && expiryValue === '') ||
-          (expiryValue.indexOf('.') > -1 &&
-            expiryValue.lastIndexOf('0') === expiryValue.length - 1)
-          ? expiryValue
-          : props.value.toFixed()
-        }
-        onChange={(e) => {
-          console.log('got target: value:', e.target.value);
-          setExpiryValue(new BigNumber(e.target.value))
-        }}
-        onWheel={(e) => e.target.blur()}
-        onKeyDown={(e) =>
-        (e.key === 'e' || e.key === '+' || e.key === '-') &&
-          e.preventDefault()
-        }
-        fullWidth
-        InputProps={{
-          inputProps: {
-            min: 0.0,
-              step: 1.0,
-              inputMode: 'decimal',
-          },
-          classes: {
-            input: classes.inputText,
-          }
-          }}
-      />
-    </Box>
-  )
 
   return (
     <>
@@ -217,7 +168,6 @@ export const CreateBuyOfferModule = (props) => {
       {fromEthField}
       {pricePerPodField}
       {maxPlaceInLineField}
-      {expiryField}
       <SettingsFormModule
         setSettings={props.setSettings}
         settings={props.settings}

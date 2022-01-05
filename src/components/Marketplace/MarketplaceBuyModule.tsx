@@ -58,7 +58,6 @@ export default function MarketplaceBuyModule() {
       buyBeanAmount,
       fromBeanValue,
       fromEthValue,
-      expiry,
     } = buyOffer;
     console.log(prices);
     console.log('buy bean amount:', buyBeanAmount.toString());
@@ -68,7 +67,7 @@ export default function MarketplaceBuyModule() {
     const res = await beanstalk.buyBeansAndListBuyOffer(
       maxPlaceInLine.toString(),
       pricePerPod.times(10 ** 6).toString(),
-      expiry.toString(),
+      0,
       buyBeanAmount.times(10 ** 6).toString(),
       {
         value: fromEthValue.times(10 ** 18).toFixed(),
