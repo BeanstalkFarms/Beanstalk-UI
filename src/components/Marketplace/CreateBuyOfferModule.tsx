@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 import {
-  theme,
   BEAN,
   ETH,
 } from 'constants/index';
@@ -26,27 +23,6 @@ export const CreateBuyOfferModule = (props) => {
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
   const [maxPlaceInLineValue, setMaxPlaceInLineValue] = useState(new BigNumber(-1));
-
-  const classes = makeStyles(() => ({
-    inputText: {
-      fontSize: 'calc(15px + 1vmin)',
-      fontFamily: 'Lucida Console',
-      fontWeight: '400',
-      color: theme.text,
-    },
-  }))();
-  const smallLabels = {
-    fontSize: 'calc(9px + 0.7vmin)',
-    fontFamily: 'Futura-PT',
-  };
-  const leftStyle = {
-    display: 'inline-block',
-    float: 'left',
-    fontFamily: 'Futura-PT-Book',
-    marginLeft: '13px',
-    textAlign: 'left' as const,
-    textTransform: 'uppercase' as const,
-  };
 
   const { setBuyOffer } = props;
 

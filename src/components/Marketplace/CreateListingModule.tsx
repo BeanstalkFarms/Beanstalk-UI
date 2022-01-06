@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { BEAN } from 'constants/index';
 import {
-  MaxBN,
-  MinBN,
   TrimBN,
 } from 'util/index';
 import {

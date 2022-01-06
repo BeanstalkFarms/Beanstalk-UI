@@ -11,7 +11,7 @@ import {
   Button,
   Modal,
 } from '@material-ui/core';
-import { beanstalkContract, GetWalletAddress } from 'util/index';
+import { GetWalletAddress } from 'util/index';
 
 function Listing({ listing, setListing, isMine }) {
   return (
