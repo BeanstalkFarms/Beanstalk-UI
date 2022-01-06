@@ -30,8 +30,6 @@ export default function FieldModule() {
     ethBalance,
     lpReceivableBalance,
     beanClaimableBalance,
-    beanReceivableBalance,
-    beanWrappedBalance,
     claimable,
     claimableEthBalance,
     harvestablePodBalance,
@@ -138,11 +136,6 @@ export default function FieldModule() {
     ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
 
-  const beanClaimable = beanReceivableBalance
-    .plus(harvestablePodBalance)
-    .plus(beanWrappedBalance)
-    .plus(claimLPBeans);
-
   const ethClaimable = claimableEthBalance.plus(
     poolForLPRatio(lpReceivableBalance)[1]
   );
@@ -153,7 +146,6 @@ export default function FieldModule() {
       unripenedPods={totalBalance.totalPods}
       beanBalance={beanBalance}
       beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
-      beanClaimable={beanClaimable}
       ethClaimable={ethClaimable}
       beanLPClaimableBalance={claimLPBeans}
       beanReserve={prices.beanReserve}

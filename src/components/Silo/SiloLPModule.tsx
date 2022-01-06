@@ -53,7 +53,6 @@ export default function SiloLPModule() {
     lockedSeasons,
     harvestablePodBalance,
     beanReceivableBalance,
-    beanWrappedBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -170,11 +169,6 @@ export default function SiloLPModule() {
     ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
 
-  const beanClaimable = beanReceivableBalance
-    .plus(beanWrappedBalance)
-    .plus(harvestablePodBalance)
-    .plus(poolForLPRatio(lpReceivableBalance)[0]);
-
   const ethClaimable = claimableEthBalance.plus(
     poolForLPRatio(lpReceivableBalance)[1]
   );
@@ -182,7 +176,6 @@ export default function SiloLPModule() {
   const sections = [
     <LPDepositModule
       key={0}
-      beanClaimable={beanClaimable}
       ethClaimable={ethClaimable}
       beanBalance={beanBalance}
       beanCrates={beanDeposits}
@@ -214,7 +207,6 @@ export default function SiloLPModule() {
     />,
     <LPWithdrawModule
       key={1}
-      beanClaimable={beanClaimable}
       ethClaimable={ethClaimable}
       beanReceivableBalance={beanReceivableBalance}
       claimable={claimable}

@@ -19,7 +19,7 @@ import {
   withdrawLP,
 } from 'util/index';
 import {
-  ClaimTextModule,
+  // ClaimTextModule,
   SettingsFormModule,
   SiloAsset,
   siloStrings,
@@ -165,18 +165,19 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   const details = [];
-  if (props.settings.claim) {
-    details.push(
-      <ClaimTextModule
-        key="claim"
-        balance={props.beanClaimable.plus(props.ethClaimable)}
-        claim={props.settings.claim}
-        mode={props.settings.mode}
-        beanClaimable={props.beanClaimable}
-        ethClaimable={props.ethClaimable}
-      />
-    );
-  }
+  // Hiding for partial claim
+  // if (props.settings.claim) {
+  //   details.push(
+  //     <ClaimTextModule
+  //       key="claim"
+  //       balance={props.beanClaimable.plus(props.ethClaimable)}
+  //       claim={props.settings.claim}
+  //       mode={props.settings.mode}
+  //       beanClaimable={props.beanClaimable}
+  //       ethClaimable={props.ethClaimable}
+  //     />
+  //   );
+  // }
   details.push(
     `Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
   );

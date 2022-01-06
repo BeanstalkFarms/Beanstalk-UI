@@ -14,7 +14,7 @@ import {
   withdrawBeans,
 } from 'util/index';
 import {
-  ClaimTextModule,
+  // ClaimTextModule,
   SettingsFormModule,
   SiloAsset,
   siloStrings,
@@ -152,18 +152,20 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   const details = [];
-  if (props.settings.claim) {
-    details.push(
-      <ClaimTextModule
-        key="claim"
-        balance={props.beanClaimable.plus(props.ethClaimable)}
-        claim={props.settings.claim}
-        mode={props.settings.mode}
-        beanClaimable={props.beanClaimable}
-        ethClaimable={props.ethClaimable}
-      />
-    );
-  }
+  // Hiding for partial claim
+  // if (props.settings.claim) {
+  //   details.push(
+  //     <ClaimTextModule
+  //       key="claim"
+  //       balance={props.beanClaimableBalance.plus(props.ethClaimable)}
+  //       claim={props.settings.claim}
+  //       mode={props.settings.mode}
+  //       beanClaimable={props.beanClaimableBalance}
+  //       ethClaimable={props.ethClaimable}
+  //     />
+  //   );
+  // }
+
   const beanOutput = new BigNumber(fromBeanValue);
 
   details.push(`Withdraw ${displayBN(beanOutput)}
