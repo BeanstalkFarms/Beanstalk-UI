@@ -22,18 +22,37 @@ function Listing({ listing, setListing, isMine }) {
       <TableCell align="center">
         {listing.pricePerPod.div(10 ** 6).toString()}
       </TableCell>
-      <TableCell align="center">
-        {listing.initialAmount.minus(listing.amountSold).div(10 ** 6).toString()}
-      </TableCell>
-      <TableCell align="center">
-        <Button
-          onClick={() => {
-            setListing(listing);
-          }}
-        >
-          Buy
-        </Button>
-      </TableCell>
+      { isMine ? (
+        <>
+          <TableCell align="center">
+            {listing.initialAmount.div(10 ** 6).toString()}
+          </TableCell>
+          <TableCell align="center">
+            {listing.amountSold.div(10 ** 6).toString()}
+          </TableCell>
+          <TableCell align="center">
+            <Button
+              onClick={() => console.log('cancel')}
+            >
+              Cancel
+            </Button>
+          </TableCell>
+        </>
+
+      ) : (
+        <>
+          <TableCell align="center">
+            {listing.initialAmount.minus(listing.amountSold).div(10 ** 6).toString()}
+          </TableCell>
+          <TableCell align="center">
+            <Button
+              onClick={() => setListing(listing)}
+            >
+              Buy
+            </Button>
+          </TableCell>
+        </>
+      ) }
     </TableRow>
   );
 }
@@ -110,7 +129,10 @@ export default function Listings() {
                     Price per pod
                   </TableCell>
                   <TableCell align="center">
-                    Amount
+                    Initial Amount
+                  </TableCell>
+                  <TableCell align="center">
+                    Amount Filled
                   </TableCell>
                   <TableCell align="center" />
                 </TableRow>
