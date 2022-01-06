@@ -123,8 +123,6 @@ function processEvents(events, harvestableIndex) {
       // Bump up |amountSold| for this listing
       listings[newKey].amountSold = listings[newKey].amountSold.plus(amount);
     } else if (event.event === 'BuyOfferCreated') {
-      console.log('got buy offer acc:', event.returnValues.account);
-      console.log('got buy offer ind:', event.returnValues.index);
       buyOffers[event.returnValues.index] = {
         listerAddress: event.returnValues.account,
         index: new BigNumber(event.returnValues.index),
