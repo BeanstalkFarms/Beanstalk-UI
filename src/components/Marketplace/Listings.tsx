@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { GetWalletAddress } from 'util/index';
 
-function Listing({ listing, setListing }) {
+function Listing({ listing, setListing, isMine }) {
   return (
     <TableRow>
       <TableCell align="center">
@@ -98,7 +98,7 @@ export default function Listings() {
       </Modal>
       {myListings.length > 0 && (
         <>
-          <h2>Your Listings</h2>
+          <h2 style={{ marginLeft: 12 }}>Your Listings</h2>
           <TableContainer>
             <Table size="small">
               <TableHead>
@@ -115,12 +115,19 @@ export default function Listings() {
                   <TableCell align="center" />
                 </TableRow>
               </TableHead>
-              {myListings.map((listing) => <Listing key={listing.objectiveIndex} listing={listing} setListing={setCurrentListing} />)}
+              {myListings.map((listing) => (
+                <Listing
+                  key={listing.objectiveIndex}
+                  listing={listing}
+                  setListing={setCurrentListing}
+                  isMine
+                />
+              ))}
             </Table>
           </TableContainer>
         </>
       ) }
-      <h2>All Listings</h2>
+      <h2 style={{ marginLeft: 12 }}>All Listings</h2>
       <TableContainer>
         <Table size="small">
           <TableHead>

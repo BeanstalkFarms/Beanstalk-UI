@@ -36,15 +36,6 @@ export default function MarketplaceSellModule() {
     siloStrings.lpDeposit, // FIXME
     siloStrings.lpDeposit, // FIXME
   ];
-  if (sellOffer) {
-    const {
-      index,
-      pricePerPod,
-      amount,
-    } = sellOffer;
-    console.log('current sell offer:', index.toString(), pricePerPod.toString(), amount.toString())
-  }
-
 
   // This only supports eth right now
   // TODO: need to handle beans / beans + eth
@@ -62,7 +53,7 @@ export default function MarketplaceSellModule() {
       index.times(10 ** 6).toString(),
       pricePerPod.times(10 ** 6).toString(),
       expiry,
-      amount.toString(),
+      amount.times(10 ** 6).toString(),
     );
     console.log('res:', res);
   };
