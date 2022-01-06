@@ -10,6 +10,9 @@ import {
   TableRow,
   Button,
   Modal,
+  Popover,
+  Typography,
+  Slider
 } from '@material-ui/core';
 import { GetWalletAddress } from 'util/index';
 
@@ -63,6 +66,31 @@ export default function Listings() {
     (state) => state.marketplace
   );
   const [currentListing, setCurrentListing] = useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+
+const [priceFilters, setPriceFilters] = useState<number[]>([0, 999999]);
+
+const [priceSliderText, setPriceSliderText] = useState<string>("");
+
+
+  const handlePriceFilter = (event, newPriceFilters) => {
+    setPriceFilters(newPriceFilters);
+  };
+
+  const openPopover = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const applyFilters = () => {
+    handleClose();
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   useEffect(() => {
     const init = async () => {
@@ -84,6 +112,7 @@ export default function Listings() {
   console.log('listings:', listings);
   const myListings = listings.filter((listing) => listing.listerAddress === walletAddress);
   const otherListings = listings.filter((listing) => listing.listerAddress !== walletAddress);
+
   return (
     <>
       <Modal
@@ -114,6 +143,45 @@ export default function Listings() {
       {myListings.length > 0 && (
         <>
           <h2 style={{ marginLeft: 12 }}>Your Listings</h2>
+          <Button aria-describedby={id} variant="contained" onClick={openPopover}>
+            Filter
+          </Button>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
+            <Box
+              sx={{
+            top: '50%',
+            left: '50%',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+              <h2>Price Per Pod</h2>
+              <Slider
+                getAriaLabel={() => 'Price Per Pod'}
+                value={priceFilters}
+                // getAriaValueText={priceSliderText}
+                valueLabelDisplay="auto"
+                onChange={handlePriceFilter}
+                min={0}
+                max={1000000}
+              />
+              <Button onClick={applyFilters}>
+                Apply Filter
+              </Button>
+            </Box>
+          </Popover>
           <TableContainer>
             <Table size="small">
               <TableHead>
