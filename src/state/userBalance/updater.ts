@@ -155,10 +155,13 @@ export default function Updater() {
         _weather,
         rain,
         _season,
-        develpomentBudget,
-        marketingBudget,
+        // Automate this:
+        budget0,
+        budget1,
+        budget2,
+        budget3,
       ] = totalBalances;
-      const totalBudgetBeans = develpomentBudget.plus(marketingBudget);
+      const totalBudgetBeans = budget0.plus(budget1).plus(budget2).plus(budget3);
       const [bips, hasActiveBIP] = bipInfo;
       const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
       const totalPods = podIndex.minus(harvestableIndex);
