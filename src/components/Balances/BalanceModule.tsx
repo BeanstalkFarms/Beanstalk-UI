@@ -57,6 +57,7 @@ export default function BalanceModule(props) {
     .plus(props.beanSiloBalance)
     .plus(props.beanTransitBalance)
     .plus(props.beanReceivableBalance)
+    .plus(props.beanWrappedBalance)
     .plus(props.harvestablePodBalance)
     .plus(props.budgetBalance)
     .plus(props.beanReserveTotal);
@@ -64,7 +65,7 @@ export default function BalanceModule(props) {
     .plus(props.lpSiloBalance)
     .plus(props.lpTransitBalance)
     .plus(props.lpReceivableBalance);
-  const claimableBalance = props.beanReceivableBalance.plus(props.harvestablePodBalance);
+  const claimableBalance = props.beanReceivableBalance.plus(props.harvestablePodBalance).plus(props.beanWrappedBalance);
 
   /* Show Claimables */
 
@@ -430,5 +431,6 @@ BalanceModule.defaultProps = {
   padding: '10px',
   showTokenName: true,
   budgetBalance: new BigNumber(0),
+  beanWrappedBalance: new BigNumber(0),
   beanReserveTotal: new BigNumber(0),
 };

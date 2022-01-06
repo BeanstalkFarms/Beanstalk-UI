@@ -72,6 +72,7 @@ export default function Updater() {
     userBalance.farmableBeanBalance,
     userBalance.grownStalkBalance,
     userBalance.claimableEthBalance,
+    userBalance.beanClaimableBalance,
     prices.beanReserve,
     prices.ethReserve,
   ];
@@ -110,6 +111,7 @@ export default function Updater() {
         grownStalkBalance,
         rootsBalance,
         usdcBalance,
+        beanWrappedBalance,
       ] = accountBalances;
       const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       const lockedSeasons = lockedUntil.minus(currentSeason);
@@ -133,6 +135,7 @@ export default function Updater() {
           grownStalkBalance,
           rootsBalance,
           usdcBalance,
+          beanWrappedBalance,
         })
       );
     }
@@ -437,7 +440,7 @@ export default function Updater() {
       });
       dispatch(setContractEvents(events));
 
-      const [s, hi, fb, gs, ce, br, er] =
+      const [s, hi, fb, gs, ce, cb, br, er] =
         eventParsingParameters !== undefined
           ? eventParsingParameters
           : eventParsingParametersRef.current;
@@ -504,10 +507,11 @@ export default function Updater() {
           votedBips: votedBips,
           beanClaimableBalance: beanReceivableBalance.plus(
             harvestablePodBalance
-          ),
+          ).plus(cb),
           hasClaimable: beanReceivableBalance
             .plus(harvestablePodBalance)
             .plus(lpReceivableBalance)
+            .plus(cb)
             .plus(ce)
             .isGreaterThan(0),
           claimable: claimable,
@@ -549,6 +553,7 @@ export default function Updater() {
         accountBalances[10] /* farmableBeanBalance */,
         accountBalances[11] /* grownStalkBalance */,
         accountBalances[4] /* claimableEthBalance */,
+        accountBalances[14], /* wrappedBeans */
         beanReserve,
         ethReserve,
       ];

@@ -16,6 +16,7 @@ import {
   displayBN,
   getToAmount,
   MaxBN,
+  MinBN,
   smallDecimalPercent,
   SwapMode,
   toBaseUnitBN,
@@ -131,13 +132,14 @@ export const BeanDepositModule = forwardRef((props, ref) => {
 
   const details = [];
   if (props.settings.claim) {
+    const claimedBeans = MinBN(fromBeanValue, props.beanClaimableBalance);
     details.push(
       <ClaimTextModule
         key="claim"
-        balance={props.beanClaimable.plus(props.ethClaimable)}
+        balance={claimedBeans.plus(props.ethClaimable)}
         claim={props.settings.claim}
         mode={props.settings.mode}
-        beanClaimable={props.beanClaimable}
+        beanClaimable={claimedBeans}
         ethClaimable={props.ethClaimable}
       />
     );
