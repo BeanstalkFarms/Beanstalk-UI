@@ -6,8 +6,7 @@ import BigNumber from 'bignumber.js';
 import { BatchRequest } from 'web3-core';
 
 import {
-  DEVELOPMENT_BUDGET,
-  MARKETING_BUDGET,
+  BUDGETS,
   BEAN,
   BEANSTALK,
   ETH,
@@ -167,8 +166,11 @@ export const getTotalBalances = async (batch: BatchRequest) => {
         timestamp: bigNumberResult(time.timestamp),
       }),
     ], /* 14 */
-    [bean.methods.balanceOf(DEVELOPMENT_BUDGET), tokenResult(BEAN)], /* 15 */
-    [bean.methods.balanceOf(MARKETING_BUDGET), tokenResult(BEAN)], /* 16 */
+    // TO DO: Automate this:
+    [bean.methods.balanceOf(BUDGETS[0]), tokenResult(BEAN)], /* 15 */
+    [bean.methods.balanceOf(BUDGETS[1]), tokenResult(BEAN)], /* 16 */
+    [bean.methods.balanceOf(BUDGETS[2]), tokenResult(BEAN)], /* 15 */
+    [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)], /* 16 */
   ]);
 };
 
