@@ -22,11 +22,13 @@ type CirclePosition = {
 const MIN_RADIUS = 3;
 const MAX_RADIUS = 20;
 // Calculates a circle radius between MIN_RADIUS and MAX_RADIUS based on the given plotSize
+// Uses log-scale stretching to give relative scale among large maxPlotSize values
 const calculateCircleRadius = (
   plotSize: number,
   maxPlotSize: number
 ): number => {
-  const ratio = plotSize / maxPlotSize;
+  const logPlotSize = Math.log(plotSize) > 0 ? Math.log(plotSize) : 0;
+  const ratio = logPlotSize / Math.log(maxPlotSize);
   return MIN_RADIUS + (MAX_RADIUS - MIN_RADIUS) * ratio;
 };
 
@@ -87,7 +89,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
       objectiveIndex: harvestableIndex.plus(new BigNumber(1e6)),
       pricePerPod: new BigNumber(0.95),
       expiry: new BigNumber(100),
-      initialAmount: new BigNumber(1000),
+      initialAmount: new BigNumber(1e6),
       amountSold: new BigNumber(0),
       status: 'yo',
     },
@@ -102,10 +104,19 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
     },
     {
       listerAddress: 'yo',
-      objectiveIndex: harvestableIndex.plus(new BigNumber(5e6)),
-      pricePerPod: new BigNumber(1.0),
+      objectiveIndex: harvestableIndex.plus(new BigNumber(20e6)),
+      pricePerPod: new BigNumber(0.7),
       expiry: new BigNumber(100),
-      initialAmount: new BigNumber(1),
+      initialAmount: new BigNumber(100000),
+      amountSold: new BigNumber(0),
+      status: 'yo',
+    },
+    {
+      listerAddress: 'yo',
+      objectiveIndex: harvestableIndex.plus(new BigNumber(37e6)),
+      pricePerPod: new BigNumber(0.4),
+      expiry: new BigNumber(100),
+      initialAmount: new BigNumber(2e6),
       amountSold: new BigNumber(0),
       status: 'yo',
     },
@@ -114,16 +125,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
       objectiveIndex: harvestableIndex.plus(new BigNumber(40e6)),
       pricePerPod: new BigNumber(0.4),
       expiry: new BigNumber(100),
-      initialAmount: new BigNumber(1000),
-      amountSold: new BigNumber(0),
-      status: 'yo',
-    },
-    {
-      listerAddress: 'yo',
-      objectiveIndex: harvestableIndex.plus(new BigNumber(20e6)),
-      pricePerPod: new BigNumber(0.7),
-      expiry: new BigNumber(100),
-      initialAmount: new BigNumber(600),
+      initialAmount: new BigNumber(2e6),
       amountSold: new BigNumber(0),
       status: 'yo',
     },
