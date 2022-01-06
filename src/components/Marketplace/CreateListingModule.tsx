@@ -20,7 +20,7 @@ export const CreateListingModule = (props) => {
   const { setSellOffer } = props;
   useEffect(() => {
     // TODO: rest
-    const canSell = pricePerPodValue.isLessThan(1)
+    const canSell = pricePerPodValue.isLessThan(1);
     if (canSell) {
       setSellOffer({
         index,
@@ -72,7 +72,7 @@ export const CreateListingModule = (props) => {
     <PlotInputField
       key={0}
       handleChange={(e) => {
-        setAmount(new BigNumber(e.target.value))
+        setAmount(new BigNumber(e.target.value));
       }}
       label="Amount"
       value={amount}

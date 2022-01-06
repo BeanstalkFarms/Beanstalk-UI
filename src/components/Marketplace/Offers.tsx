@@ -34,7 +34,7 @@ function Offer({ offer, setOffer, isMine }) {
             <Button
               onClick={async () => {
                 const beanstalk = beanstalkContract();
-                await beanstalk.cancelBuyOffer(offer.index.toString())
+                await beanstalk.cancelBuyOffer(offer.index.toString());
               }}
             >
               Cancel
@@ -62,7 +62,7 @@ function Offer({ offer, setOffer, isMine }) {
 }
 
 export default function Offers() {
-  const [walletAddress, setWalletAddress] = useState(null)
+  const [walletAddress, setWalletAddress] = useState(null);
   const { buyOffers: offers } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
@@ -72,9 +72,9 @@ export default function Offers() {
     const init = async () => {
       const addr = await GetWalletAddress();
       setWalletAddress(addr);
-    }
-    init()
-  }, [])
+    };
+    init();
+  }, []);
 
   if (offers == null || walletAddress == null) {
     return <div>Loading...</div>;
@@ -86,12 +86,8 @@ export default function Offers() {
     console.log('sell');
   };
 
-  const myOffers = offers.filter((offer) =>  {
-    return offer.listerAddress === walletAddress;
-  });
-  const otherOffers = offers.filter((offer) => {
-    return offer.listerAddress !== walletAddress;
-  });
+  const myOffers = offers.filter((offer) => offer.listerAddress === walletAddress);
+  const otherOffers = offers.filter((offer) => offer.listerAddress !== walletAddress);
 
   return (
     <>

@@ -53,7 +53,7 @@ export default function MarketplaceSellModule() {
       index.times(10 ** 6).toString(),
       pricePerPod.times(10 ** 6).toString(),
       expiry,
-      amount.times(10 ** 6).toString(),
+      amount.times(10 ** 6).toString()
     );
     console.log('res:', res);
   };

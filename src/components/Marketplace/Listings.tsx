@@ -58,7 +58,7 @@ function Listing({ listing, setListing, isMine }) {
 }
 
 export default function Listings() {
-  const [walletAddress, setWalletAddress] = useState(null)
+  const [walletAddress, setWalletAddress] = useState(null);
   const { listings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
@@ -68,9 +68,9 @@ export default function Listings() {
     const init = async () => {
       const addr = await GetWalletAddress();
       setWalletAddress(addr);
-    }
-    init()
-  }, [])
+    };
+    init();
+  }, []);
 
   if (listings == null || walletAddress == null) {
     return <div>Loading...</div>;
@@ -81,13 +81,9 @@ export default function Listings() {
   const buy = () => {
     console.log('buy listing');
   };
-  console.log('listings:', listings)
-  const myListings = listings.filter((listing) =>  {
-    return listing.listerAddress === walletAddress;
-  });
-  const otherListings = listings.filter((listing) => {
-    return listing.listerAddress !== walletAddress;
-  });
+  console.log('listings:', listings);
+  const myListings = listings.filter((listing) => listing.listerAddress === walletAddress);
+  const otherListings = listings.filter((listing) => listing.listerAddress !== walletAddress);
   return (
     <>
       <Modal

@@ -3,9 +3,8 @@ import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/index';
 import { theme } from 'constants/index';
-import { FormatTooltip, TokenTypeImageModule } from './index';
 import BigNumber from 'bignumber.js';
-
+import { FormatTooltip, TokenTypeImageModule } from './index';
 
 const smallLabels = {
   fontSize: 'calc(9px + 0.7vmin)',
@@ -48,7 +47,6 @@ const useStyles = makeStyles({
     color: theme.text,
   },
 });
-
 
 interface TokenInputFieldProps {
   maxHandler?: Function;
@@ -105,13 +103,13 @@ export default function TokenInputField(props) {
   /* */
   let value;
   if (props.value.isNegative()) {
-    value = ''
+    value = '';
   } else {
     const useDisplayValue = (
       // Display value is all zeroes
       (displayValue.length > 1 && displayValue.replaceAll('0', '').length === 0)
       // Provided value is zero and displayValue is not set (the user hasn't yet modified the input)
-      || (props.value.toFixed() === '0' && displayValue === '') 
+      || (props.value.toFixed() === '0' && displayValue === '')
       // The display value has a decimal and ends with a zero
       || (displayValue.indexOf('.') > -1 && displayValue.lastIndexOf('0') === displayValue.length - 1)
     );

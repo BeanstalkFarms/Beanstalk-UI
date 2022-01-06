@@ -48,7 +48,6 @@ export const CreateBuyOfferModule = (props) => {
     textTransform: 'uppercase' as const,
   };
 
-
   const { setBuyOffer } = props;
 
   //
