@@ -41,19 +41,16 @@ export default function MarketplaceSellModule() {
   const onCreate = async () => {
     const beanstalk = beanstalkContract();
     const {
+      index,
       pricePerPod,
-      plotEndId,
-      fromPlotIndex,
-      toPlotEndIndex,
+      amount,
     } = sellOffer;
+    console.log('got index:', index.toString(), pricePerPod.toString(), amount.toString())
 
     // This only supports eth right now
-    const index = 1;
     const expiry = 1000;
-    const amount = 1000;
-    console.log('index:', index, expiry, amount, pricePerPod, plotEndId.toString())
     const res = await beanstalk.listPlot(
-      index,
+      index.toString(),
       pricePerPod.times(10 ** 6).toString(),
       expiry,
       amount,

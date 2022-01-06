@@ -20,12 +20,13 @@ export const CreateListingModule = (props) => {
   const { setSellOffer } = props;
   console.log(props.plots)
   useEffect(() => {
+    // TODO: rest
     const canSell = pricePerPodValue.isLessThan(1)
     if (canSell) {
       setSellOffer({
         index,
         pricePerPod: pricePerPodValue,
-        amount: 0,
+        amount,
       });
     } else {
       setSellOffer(null);
