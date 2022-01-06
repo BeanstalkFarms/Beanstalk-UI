@@ -35,8 +35,7 @@ function Offer({ offer, setOffer, isMine }) {
             <Button
               onClick={async () => {
                 const beanstalk = beanstalkContract();
-                console.log('trying to cancel index:', offer.maxPlaceInLine.toString())
-                await beanstalk.cancelListing(offer.maxPlaceInLine.toString())
+                await beanstalk.cancelBuyOffer(offer.index.toString())
               }}
             >
               Cancel

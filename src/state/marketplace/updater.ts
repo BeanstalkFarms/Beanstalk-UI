@@ -124,9 +124,10 @@ function processEvents(events, harvestableIndex) {
       listings[newKey].amountSold = listings[newKey].amountSold.plus(amount);
     } else if (event.event === 'BuyOfferCreated') {
       console.log('got buy offer acc:', event.returnValues.account)
-      console.log('got buy offer ind:', event.returnValues.maxPlaceInLine)
-      buyOffers[event.returnValues.maxPlaceInLine] = {
+      console.log('got buy offer ind:', event.returnValues.index)
+      buyOffers[event.returnValues.index] = {
         listerAddress: event.returnValues.account,
+        index: new BigNumber(event.returnValues.index),
         maxPlaceInLine: new BigNumber(event.returnValues.maxPlaceInLine),
         initialAmountToBuy: new BigNumber(event.returnValues.amount),
         pricePerPod: new BigNumber(event.returnValues.pricePerPod),
@@ -134,10 +135,10 @@ function processEvents(events, harvestableIndex) {
         status: 'active',
       };
     } else if (event.event === 'BuyOfferCancelled') {
-      delete buyOffers[event.returnValues.maxPlaceInLine];
+      delete buyOffers[event.returnValues.index];
     } else if (event.event === 'BuyOfferAccepted') {
-      const { maxPlaceInLine, amount } = event.returnValues;
-      const key = maxPlaceInLine;
+      const { index, amount } = event.returnValues;
+      const key = index;
 
       // Check whether current offer is sold or not
       const buyOffer = buyOffers[key];
