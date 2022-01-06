@@ -14,7 +14,6 @@ import {
 import { beanstalkContract, GetWalletAddress } from 'util/index';
 
 function Offer({ offer, setOffer, isMine }) {
-  console.log('offer:', offer)
   return (
     <TableRow>
       <TableCell align="center">
