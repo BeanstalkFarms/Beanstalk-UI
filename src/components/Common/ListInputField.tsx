@@ -42,7 +42,6 @@ export default function ListInputField(props) {
   };
 
   if (props.hidden) return null;
-  console.log('got props:', props)
 
   return (
     <Box style={{ margin: '8px 0' }}>

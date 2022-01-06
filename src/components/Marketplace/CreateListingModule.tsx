@@ -18,7 +18,6 @@ export const CreateListingModule = (props) => {
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
 
   const { setSellOffer } = props;
-  console.log(props.plots)
   useEffect(() => {
     // TODO: rest
     const canSell = pricePerPodValue.isLessThan(1)
@@ -31,7 +30,7 @@ export const CreateListingModule = (props) => {
     } else {
       setSellOffer(null);
     }
-  }, [index, setSellOffer, pricePerPodValue]);
+  }, [index, setSellOffer, pricePerPodValue, amount]);
 
   const handlePlotChange = (event) => {
     setIndex(new BigNumber(event.target.value));

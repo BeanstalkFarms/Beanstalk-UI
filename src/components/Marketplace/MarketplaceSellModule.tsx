@@ -36,7 +36,17 @@ export default function MarketplaceSellModule() {
     siloStrings.lpDeposit, // FIXME
     siloStrings.lpDeposit, // FIXME
   ];
+  if (sellOffer) {
+    const {
+      index,
+      pricePerPod,
+      amount,
+    } = sellOffer;
+    console.log('current sell offer:', index.toString(), pricePerPod.toString(), amount.toString())
+  }
 
+
+  // This only supports eth right now
   // TODO: need to handle beans / beans + eth
   const onCreate = async () => {
     const beanstalk = beanstalkContract();
@@ -45,15 +55,14 @@ export default function MarketplaceSellModule() {
       pricePerPod,
       amount,
     } = sellOffer;
-    console.log('got index:', index.toString(), pricePerPod.toString(), amount.toString())
 
-    // This only supports eth right now
-    const expiry = 1000;
+    // TODO: fix expiry
+    const expiry = '733593518241';
     const res = await beanstalk.listPlot(
-      index.toString(),
+      index.times(10 ** 6).toString(),
       pricePerPod.times(10 ** 6).toString(),
       expiry,
-      amount,
+      amount.toString(),
     );
     console.log('res:', res);
   };
