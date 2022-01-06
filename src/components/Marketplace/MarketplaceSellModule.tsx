@@ -51,6 +51,7 @@ export default function MarketplaceSellModule() {
     const index = 1;
     const expiry = 1000;
     const amount = 1000;
+    console.log('index:', index, expiry, amount, pricePerPod, plotEndId.toString())
     const res = await beanstalk.listPlot(
       index,
       pricePerPod.times(10 ** 6).toString(),
@@ -59,8 +60,6 @@ export default function MarketplaceSellModule() {
     );
     console.log('res:', res);
   };
-
-  console.log(sellOffer)
 
   const sections = [
     <Offers
@@ -84,7 +83,7 @@ export default function MarketplaceSellModule() {
         style={{ marginTop: '20px' }}
         handleForm={onCreate}
         handleTabChange={handleTabChange}
-        isDisabled={false}
+        isDisabled={sellOffer == null}
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}

@@ -13,61 +13,33 @@ import {
 } from 'components/Common';
 
 export const CreateListingModule = (props) => {
-  const [plotEndId, setPlotEndId] = useState(new BigNumber(-1));
+  const [index, setIndex] = useState(new BigNumber(-1));
+  const [amount, setAmount] = useState(new BigNumber(-1));
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
-  const [fromPlotIndex, setFromPlotIndex] = useState(new BigNumber(-1));
-  const [toPlotEndIndex, setToPlotEndIndex] = useState(new BigNumber(-1));
 
   const { setSellOffer } = props;
+  console.log(props.plots)
   useEffect(() => {
-    const canSell = plotEndId.isGreaterThan(0) && pricePerPodValue.isLessThan(1)
+    const canSell = pricePerPodValue.isLessThan(1)
     if (canSell) {
       setSellOffer({
+        index,
         pricePerPod: pricePerPodValue,
-        plotEndId,
-        fromPlotIndex,
-        toPlotEndIndex,
+        amount: 0,
       });
     } else {
       setSellOffer(null);
     }
-  }, [setSellOffer, plotEndId, pricePerPodValue, fromPlotIndex, toPlotEndIndex]);
+  }, [index, setSellOffer, pricePerPodValue]);
 
-  /* Handlers: Plot change and update */
-  function fromValueUpdated(newFromNumber: BigNumber) {
-    setPlotEndId(TrimBN(newFromNumber, BEAN.decimals)); // set plot max pod size
-    setToPlotEndIndex(TrimBN(newFromNumber, BEAN.decimals));
-  }
-  function fromIndexValueUpdated(newFromIndexNumber: BigNumber, newToIndexNumber: BigNumber) {
-    const newFromIndexValue = MinBN(
-      new BigNumber(newFromIndexNumber),
-      plotEndId
-    );
-    const newToEndIndexValue = MaxBN(
-      newFromIndexValue,
-      MinBN(new BigNumber(newToIndexNumber), plotEndId)
-    );
-    setFromPlotIndex(TrimBN(newFromIndexValue, BEAN.decimals));
-    setToPlotEndIndex(TrimBN(newToEndIndexValue, BEAN.decimals));
-  }
-  const handleFromChange = (event) => {
-    if (event.target.value) {
-      fromValueUpdated(new BigNumber(props.plots[event.target.value]));
-      setFromPlotIndex(new BigNumber(0)); // reset plot start index
-    } else {
-      fromValueUpdated(new BigNumber(-1));
-    }
+  const handlePlotChange = (event) => {
+    setIndex(new BigNumber(event.target.value));
+    setAmount(new BigNumber(props.plots[event.target.value]));
   };
-  const handleFromIndexEndChange = (event) => {
-    if (event.target.value) {
-      fromIndexValueUpdated(fromPlotIndex, event.target.value);
-    } else {
-      fromIndexValueUpdated(fromPlotIndex, plotEndId);
-    }
-  };
-
   const maxHandler = () => {
-    fromIndexValueUpdated(fromPlotIndex, plotEndId);
+    if (index != null) {
+      setAmount(new BigNumber(props.plots[index.toString()]));
+    }
   };
 
   /* Input Fields */
@@ -76,7 +48,7 @@ export const CreateListingModule = (props) => {
       index={props.index}
       items={props.plots ? props.plots : {}}
       marginBottom={props.hasPlots === true ? '0px' : '-7px'}
-      handleChange={handleFromChange}
+      handleChange={handlePlotChange}
       label="Select plot to sell"
       type="sell"
     />
@@ -96,14 +68,14 @@ export const CreateListingModule = (props) => {
       value={TrimBN(pricePerPodValue, 6)}
     />
   );
-  const fromIndexEndField = (
+  const amountField = (
     <PlotInputField
       key={0}
-      hidden={props.isFormDisabled && !fromPlotIndex.isEqualTo(toPlotEndIndex)}
-      balance={plotEndId}
-      handleChange={handleFromIndexEndChange}
+      handleChange={(e) => {
+        setAmount(new BigNumber(e.target.value))
+      }}
       label="Amount"
-      value={toPlotEndIndex}
+      value={amount}
       maxHandler={maxHandler}
     />
   );
@@ -112,7 +84,7 @@ export const CreateListingModule = (props) => {
     <>
       {fromPlotField}
       {priceField}
-      {fromIndexEndField}
+      {amountField}
     </>
   );
 };
