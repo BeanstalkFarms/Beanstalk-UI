@@ -10,6 +10,7 @@ import {
   getToAmount,
   MaxBN,
   MinBNs,
+  MinBN,
   sowBeans,
   SwapMode,
   toBaseUnitBN,
@@ -124,14 +125,15 @@ export const SowModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   const details = [];
+  const claimedBeans = MinBN(fromBeanValue, props.beanClaimableBalance);
   if (props.settings.claim) {
     details.push(
       <ClaimTextModule
         key="claim"
-        balance={props.beanClaimable.plus(props.ethClaimable)}
+        balance={claimedBeans.plus(props.ethClaimable)}
         claim={props.settings.claim}
         mode={props.settings.mode}
-        beanClaimable={props.beanClaimable}
+        beanClaimable={claimedBeans}
         ethClaimable={props.ethClaimable}
       />
     );
