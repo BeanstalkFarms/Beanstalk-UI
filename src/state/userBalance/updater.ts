@@ -287,6 +287,7 @@ export default function Updater() {
      * @param eventParsingParameters
      */
     async function processEvents(events, eventParsingParameters) {
+      if (!account) return;
       const startTime = benchmarkStart('EVENT PROCESSOR');
 
       let userLPSeedDeposits = {};

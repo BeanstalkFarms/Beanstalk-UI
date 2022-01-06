@@ -40,72 +40,78 @@ export async function initializeEventListener(
   const beanPair = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const usdcPair = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
 
-  const accountEvents = await Promise.all([
-    beanstalk.getPastEvents('BeanDeposit', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('BeanRemove', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('BeanWithdraw', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('LPDeposit', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('LPRemove', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('LPWithdraw', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('Sow', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('Harvest', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('BeanClaim', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('LPClaim', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('Proposal', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('Vote', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('Unvote', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('EtherClaim', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('PlotTransfer', {
-      filter: { from: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('PlotTransfer', {
-      filter: { to: account },
-      fromBlock: 0,
-    }),
-  ]);
+  let accountEvents = [];
+  let lowercaseAccount = '';
+
+  if (account) {
+    lowercaseAccount = account.toLowerCase();
+    accountEvents = await Promise.all([
+      beanstalk.getPastEvents('BeanDeposit', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('BeanRemove', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('BeanWithdraw', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('LPDeposit', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('LPRemove', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('LPWithdraw', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('Sow', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('Harvest', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('BeanClaim', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('LPClaim', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('Proposal', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('Vote', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('Unvote', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('EtherClaim', {
+        filter: { account: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('PlotTransfer', {
+        filter: { from: account },
+        fromBlock: 0,
+      }),
+      beanstalk.getPastEvents('PlotTransfer', {
+        filter: { to: account },
+        fromBlock: 0,
+      }),
+    ]);
+  }
 
   // eslint-disable-next-line
   let allEvents = [].concat.apply([], accountEvents);
@@ -128,7 +134,7 @@ export async function initializeEventListener(
     if (
       new Date().getTime() - lastPriceRefresh > 5000 &&
       (event.returnValues.to === undefined ||
-        event.returnValues.to.toLowerCase() !== account.toLowerCase())
+        event.returnValues.to.toLowerCase() !== lowercaseAccount)
     ) {
       console.log('UPDATING PRICES!');
       updatePrices();
@@ -154,7 +160,7 @@ export async function initializeEventListener(
 
     if (
       event.returnValues.account !== undefined &&
-      event.returnValues.account.toLowerCase() === account.toLowerCase()
+      event.returnValues.account.toLowerCase() === lowercaseAccount
     ) {
       allEvents = [...allEvents, event];
       callback(allEvents);
