@@ -11,10 +11,10 @@ import {
   Button,
   Modal,
 } from '@material-ui/core';
-import { GetWalletAddress } from 'util/index';
+import { beanstalkContract, GetWalletAddress } from 'util/index';
 
 function Offer({ offer, setOffer, isMine }) {
-  console.log('is mine:', isMine)
+  console.log('offer:', offer)
   return (
     <TableRow>
       <TableCell align="center">
@@ -33,8 +33,10 @@ function Offer({ offer, setOffer, isMine }) {
           </TableCell>
           <TableCell align="center">
             <Button
-              onClick={() => {
-                console.log('cancel listing')
+              onClick={async () => {
+                const beanstalk = beanstalkContract();
+                console.log('trying to cancel index:', offer.maxPlaceInLine.toString())
+                await beanstalk.cancelListing(offer.maxPlaceInLine.toString())
               }}
             >
               Cancel
