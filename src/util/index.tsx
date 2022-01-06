@@ -96,7 +96,7 @@ export async function initialize(): Promise<boolean> {
         ]);
         account = hexAccount;
         chainId = parseInt(chainIdentifier, 10);
-        if (chainId !== 1 && chainId !== 3) {
+        if (chainId !== 1 && chainId !== 3 && chainId !== 1337) {
           metamaskFailure = 3;
           return false;
         }
