@@ -14,7 +14,7 @@ import {
   Typography,
   Slider
 } from '@material-ui/core';
-import { GetWalletAddress } from 'util/index';
+import { beanstalkContract, GetWalletAddress } from 'util/index';
 
 function Listing({ listing, setListing, isMine }) {
   return (
@@ -35,7 +35,10 @@ function Listing({ listing, setListing, isMine }) {
           </TableCell>
           <TableCell align="center">
             <Button
-              onClick={() => console.log('cancel')}
+              onClick={async () => {
+                const beanstalk = beanstalkContract();
+                await beanstalk.cancelListing(listing.objectiveIndex.toString());
+              }}
             >
               Cancel
             </Button>
