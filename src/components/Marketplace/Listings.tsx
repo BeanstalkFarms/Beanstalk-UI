@@ -27,7 +27,7 @@ function Listing({ listing, setListing, isMine }) {
       <TableCell align="center">
         {listing.pricePerPod.div(10 ** 6).toString()}
       </TableCell>
-      { isMine ? (
+      {isMine ? (
         <>
           <TableCell align="center">
             {listing.initialAmount.div(10 ** 6).toString()}
@@ -39,28 +39,28 @@ function Listing({ listing, setListing, isMine }) {
             <Button
               onClick={async () => {
                 const beanstalk = beanstalkContract();
-                await beanstalk.cancelListing(listing.objectiveIndex.toString());
+                await beanstalk.cancelListing(
+                  listing.objectiveIndex.toString()
+                );
               }}
             >
               Cancel
             </Button>
           </TableCell>
         </>
-
       ) : (
         <>
           <TableCell align="center">
-            {listing.initialAmount.minus(listing.amountSold).div(10 ** 6).toString()}
+            {listing.initialAmount
+              .minus(listing.amountSold)
+              .div(10 ** 6)
+              .toString()}
           </TableCell>
           <TableCell align="center">
-            <Button
-              onClick={() => setListing(listing)}
-            >
-              Buy
-            </Button>
+            <Button onClick={() => setListing(listing)}>Buy</Button>
           </TableCell>
         </>
-      ) }
+      )}
     </TableRow>
   );
 }
@@ -71,22 +71,20 @@ export default function Listings() {
     (state) => state.marketplace
   );
 
-  const {
-    totalPods,
-  } = useSelector<AppState, AppState['totalBalance']>(
+  const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
 
-  const {
-    harvestableIndex,
-  } = useSelector<AppState, AppState['weather']>(
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
 
-
-
-  const myListings = listings.filter((listing) => listing.listerAddress === walletAddress);
-  const otherListings = listings.filter((listing) => listing.listerAddress !== walletAddress);
+  const myListings = listings.filter(
+    (listing) => listing.listerAddress === walletAddress
+  );
+  const otherListings = listings.filter(
+    (listing) => listing.listerAddress !== walletAddress
+  );
 
   const marketplaceListings = useRef(otherListings);
   const [currentListing, setCurrentListing] = useState(null);
@@ -96,32 +94,39 @@ export default function Listings() {
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
 
   const placesInLine = [0, totalPods.toNumber()];
-  const placesInLineBN = [0, new BigNumber(totalPods.toNumber()).multipliedBy(10**6)];
+  const placesInLineBN = [
+    0,
+    new BigNumber(totalPods.toNumber()).multipliedBy(10 ** 6),
+  ];
 
+  const [placeInLineFilters, setPlaceInLineFilters] =
+    useState<number[]>(placesInLineBN);
 
-  const [placeInLineFilters, setPlaceInLineFilters] = useState<number[]>(placesInLineBN);
- 
-  const [tempPlaceInLineFilters, setTempPlaceInLineFilters] = useState<number[]>(placesInLine);
+  const [tempPlaceInLineFilters, setTempPlaceInLineFilters] =
+    useState<number[]>(placesInLine);
 
-useMemo(() => {
-  marketplaceListings.current = (_.filter(otherListings, (listing) => {
-                  return listing.pricePerPod > (priceFilters[0] * 1000000)
-                  && listing.pricePerPod < (priceFilters[1] * 1000000)
-                  && (listing.objectiveIndex.minus(harvestableIndex.multipliedBy(10**6))).gt(new BigNumber(placeInLineFilters[0]))
-                  && (listing.objectiveIndex.minus(harvestableIndex.multipliedBy(10**6))).lt(new BigNumber(placeInLineFilters[1]));
-  }
-                              ));
+  useMemo(() => {
+    marketplaceListings.current = _.filter(otherListings, (listing) => (
+        listing.pricePerPod > priceFilters[0] * 1000000 &&
+        listing.pricePerPod < priceFilters[1] * 1000000 &&
+        listing.objectiveIndex
+          .minus(harvestableIndex.multipliedBy(10 ** 6))
+          .gt(new BigNumber(placeInLineFilters[0])) &&
+        listing.objectiveIndex
+          .minus(harvestableIndex.multipliedBy(10 ** 6))
+          .lt(new BigNumber(placeInLineFilters[1]))
+      ));
 
-  return () => {
-    // cleanup listings
-  };
-}, [otherListings, priceFilters, placeInLineFilters, harvestableIndex]);
+    return () => {
+      // cleanup listings
+    };
+  }, [otherListings, priceFilters, placeInLineFilters, harvestableIndex]);
 
   const handlePriceFilter = (event, newValue) => {
     setTempPriceFilters(newValue);
   };
   const handlePlaceInLineFilter = (event, newValue) => {
-    console.log('handlePlaceInLineFilter', 'newValue', newValue)
+    console.log('handlePlaceInLineFilter', 'newValue', newValue);
     setTempPlaceInLineFilters(newValue);
   };
 
@@ -137,7 +142,10 @@ useMemo(() => {
   const applyFilters = () => {
     handleClose();
     setPriceFilters(tempPriceFilters);
-    setPlaceInLineFilters([new BigNumber(tempPlaceInLineFilters[0]).multipliedBy(10**6), new BigNumber(tempPlaceInLineFilters[1]).multipliedBy(10**6)]);
+    setPlaceInLineFilters([
+      new BigNumber(tempPlaceInLineFilters[0]).multipliedBy(10 ** 6),
+      new BigNumber(tempPlaceInLineFilters[1]).multipliedBy(10 ** 6),
+    ]);
   };
 
   useEffect(() => {
@@ -180,87 +188,23 @@ useMemo(() => {
         >
           {/* TODO: need to make this a better input (like swap inputs, be able to use beans / eth / max out, etc) */}
           <h2>Buy this plot</h2>
-          <p style={{ width: '100%', wordBreak: 'break-all' }}>{JSON.stringify(currentListing)}</p>
-          <Button onPress={buy}>
-            Buy
-          </Button>
+          <p style={{ width: '100%', wordBreak: 'break-all' }}>
+            {JSON.stringify(currentListing)}
+          </p>
+          <Button onPress={buy}>Buy</Button>
         </Box>
       </Modal>
       {myListings.length > 0 && (
         <>
           <h2 style={{ marginLeft: 12 }}>Your Listings</h2>
-          <Button aria-describedby={id} variant="contained" onClick={openPopover}>
-            Filter
-          </Button>
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={popoverEl}
-            onClose={handleClose}
-            anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        >
-            <Box
-              sx={{
-            top: '50%',
-            left: '50%',
-            width: 400,
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-              <h3>Price Per Pod</h3>
-              <Slider
-                value={tempPriceFilters}
-                valueLabelDisplay="on"
-                onChange={handlePriceFilter}
-                step={0.01}
-                min={0}
-                max={1}
-              />
-              <h3>Place In Line</h3>
-              <Slider
-                value={tempPlaceInLineFilters}
-                valueLabelFormat={(value: number) => {
-                  const units = ['', 'K', 'M', 'B'];
-                  let unitIndex = 0;
-                  let scaledValue = value;
-                  while (scaledValue >= 1000 && unitIndex < units.length - 1) {
-                    unitIndex += 1;
-                    scaledValue /= 1000;
-                  }
-                  return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
-                }}
-                valueLabelDisplay="on"
-                onChange={handlePlaceInLineFilter}
-                min={0}
-                max={totalPods.toNumber()}
-              />
-              <Button onClick={applyFilters}>
-                Apply Filter
-              </Button>
-            </Box>
-          </Popover>
           <TableContainer>
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">
-                    Place in line
-                  </TableCell>
-                  <TableCell align="center">
-                    Price per pod
-                  </TableCell>
-                  <TableCell align="center">
-                    Initial Amount
-                  </TableCell>
-                  <TableCell align="center">
-                    Amount Filled
-                  </TableCell>
+                  <TableCell align="center">Place in line</TableCell>
+                  <TableCell align="center">Price per pod</TableCell>
+                  <TableCell align="center">Initial Amount</TableCell>
+                  <TableCell align="center">Amount Filled</TableCell>
                   <TableCell align="center" />
                 </TableRow>
               </TableHead>
@@ -275,25 +219,83 @@ useMemo(() => {
             </Table>
           </TableContainer>
         </>
-      ) }
+      )}
       <h2 style={{ marginLeft: 12 }}>All Listings</h2>
+      <Button
+        aria-describedby={id}
+        variant="contained"
+        onClick={openPopover}
+          >
+        Filter
+      </Button>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={popoverEl}
+        onClose={handleClose}
+        anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+          >
+        <Box
+          sx={{
+                top: '50%',
+                left: '50%',
+                width: 400,
+                bgcolor: 'background.paper',
+                border: '2px solid #000',
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+          <h3>Price Per Pod</h3>
+          <Slider
+            value={tempPriceFilters}
+            valueLabelDisplay="on"
+            onChange={handlePriceFilter}
+            step={0.01}
+            min={0}
+            max={1}
+              />
+          <h3>Place In Line</h3>
+          <Slider
+            value={tempPlaceInLineFilters}
+            valueLabelFormat={(value: number) => {
+                  const units = ['', 'K', 'M', 'B'];
+                  let unitIndex = 0;
+                  let scaledValue = value;
+                  while (scaledValue >= 1000 && unitIndex < units.length - 1) {
+                    unitIndex += 1;
+                    scaledValue /= 1000;
+                  }
+                  return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
+                }}
+            valueLabelDisplay="on"
+            onChange={handlePlaceInLineFilter}
+            min={0}
+            max={totalPods.toNumber()}
+              />
+          <Button onClick={applyFilters}>Apply Filter</Button>
+        </Box>
+      </Popover>
       <TableContainer>
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="center">
-                Place in line
-              </TableCell>
-              <TableCell align="center">
-                Price per pod
-              </TableCell>
-              <TableCell align="center">
-                Amount
-              </TableCell>
+              <TableCell align="center">Place in line</TableCell>
+              <TableCell align="center">Price per pod</TableCell>
+              <TableCell align="center">Amount</TableCell>
               <TableCell align="center" />
             </TableRow>
           </TableHead>
-          {marketplaceListings.current.map((listing) => <Listing key={listing.objectiveIndex} listing={listing} setListing={setCurrentListing} />)}
+          {marketplaceListings.current.map((listing) => (
+            <Listing
+              key={listing.objectiveIndex}
+              listing={listing}
+              setListing={setCurrentListing}
+            />
+          ))}
         </Table>
       </TableContainer>
     </>
