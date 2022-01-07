@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import {
@@ -12,9 +12,11 @@ import {
   Modal,
   Popover,
   Typography,
-  Slider
+  Slider,
 } from '@material-ui/core';
 import { beanstalkContract, GetWalletAddress } from 'util/index';
+import _ from 'lodash';
+import BigNumber from 'bignumber.js';
 
 function Listing({ listing, setListing, isMine }) {
   return (
@@ -68,32 +70,75 @@ export default function Listings() {
   const { listings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
+
+  const {
+    totalPods,
+  } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const {
+    harvestableIndex,
+  } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
+
+
+
+  const myListings = listings.filter((listing) => listing.listerAddress === walletAddress);
+  const otherListings = listings.filter((listing) => listing.listerAddress !== walletAddress);
+
+  const marketplaceListings = useRef(otherListings);
   const [currentListing, setCurrentListing] = useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [popoverEl, setPopoverEl] = React.useState(null);
+
+  const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
+  const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
+
+  const placesInLine = [0, totalPods.toNumber()];
+  const placesInLineBN = [0, new BigNumber(totalPods.toNumber()).multipliedBy(10**6)];
 
 
-const [priceFilters, setPriceFilters] = useState<number[]>([0, 999999]);
+  const [placeInLineFilters, setPlaceInLineFilters] = useState<number[]>(placesInLineBN);
+ 
+  const [tempPlaceInLineFilters, setTempPlaceInLineFilters] = useState<number[]>(placesInLine);
 
-const [priceSliderText, setPriceSliderText] = useState<string>("");
+useMemo(() => {
+  marketplaceListings.current = (_.filter(otherListings, (listing) => {
+                  return listing.pricePerPod > (priceFilters[0] * 1000000)
+                  && listing.pricePerPod < (priceFilters[1] * 1000000)
+                  && (listing.objectiveIndex.minus(harvestableIndex.multipliedBy(10**6))).gt(new BigNumber(placeInLineFilters[0]))
+                  && (listing.objectiveIndex.minus(harvestableIndex.multipliedBy(10**6))).lt(new BigNumber(placeInLineFilters[1]));
+  }
+                              ));
 
+  return () => {
+    // cleanup listings
+  };
+}, [otherListings, priceFilters, placeInLineFilters, harvestableIndex]);
 
-  const handlePriceFilter = (event, newPriceFilters) => {
-    setPriceFilters(newPriceFilters);
+  const handlePriceFilter = (event, newValue) => {
+    setTempPriceFilters(newValue);
+  };
+  const handlePlaceInLineFilter = (event, newValue) => {
+    console.log('handlePlaceInLineFilter', 'newValue', newValue)
+    setTempPlaceInLineFilters(newValue);
   };
 
   const openPopover = (event) => {
-    setAnchorEl(event.currentTarget);
+    setPopoverEl(event.currentTarget);
   };
-
   const handleClose = () => {
-    setAnchorEl(null);
+    setPopoverEl(null);
   };
+  const open = Boolean(popoverEl);
+  const id = open ? 'simple-popover' : undefined;
+
   const applyFilters = () => {
     handleClose();
+    setPriceFilters(tempPriceFilters);
+    setPlaceInLineFilters([new BigNumber(tempPlaceInLineFilters[0]).multipliedBy(10**6), new BigNumber(tempPlaceInLineFilters[1]).multipliedBy(10**6)]);
   };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
   useEffect(() => {
     const init = async () => {
@@ -113,8 +158,6 @@ const [priceSliderText, setPriceSliderText] = useState<string>("");
     console.log('buy listing');
   };
   console.log('listings:', listings);
-  const myListings = listings.filter((listing) => listing.listerAddress === walletAddress);
-  const otherListings = listings.filter((listing) => listing.listerAddress !== walletAddress);
 
   return (
     <>
@@ -152,7 +195,7 @@ const [priceSliderText, setPriceSliderText] = useState<string>("");
           <Popover
             id={id}
             open={open}
-            anchorEl={anchorEl}
+            anchorEl={popoverEl}
             onClose={handleClose}
             anchorOrigin={{
             vertical: 'bottom',
@@ -170,15 +213,32 @@ const [priceSliderText, setPriceSliderText] = useState<string>("");
             p: 4,
           }}
         >
-              <h2>Price Per Pod</h2>
+              <h3>Price Per Pod</h3>
               <Slider
-                getAriaLabel={() => 'Price Per Pod'}
-                value={priceFilters}
-                // getAriaValueText={priceSliderText}
-                valueLabelDisplay="auto"
+                value={tempPriceFilters}
+                valueLabelDisplay="on"
                 onChange={handlePriceFilter}
+                step={0.01}
                 min={0}
-                max={1000000}
+                max={1}
+              />
+              <h3>Place In Line</h3>
+              <Slider
+                value={tempPlaceInLineFilters}
+                valueLabelFormat={(value: number) => {
+                  const units = ['', 'K', 'M', 'B'];
+                  let unitIndex = 0;
+                  let scaledValue = value;
+                  while (scaledValue >= 1000 && unitIndex < units.length - 1) {
+                    unitIndex += 1;
+                    scaledValue /= 1000;
+                  }
+                  return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
+                }}
+                valueLabelDisplay="on"
+                onChange={handlePlaceInLineFilter}
+                min={0}
+                max={totalPods.toNumber()}
               />
               <Button onClick={applyFilters}>
                 Apply Filter
@@ -233,7 +293,7 @@ const [priceSliderText, setPriceSliderText] = useState<string>("");
               <TableCell align="center" />
             </TableRow>
           </TableHead>
-          {otherListings.map((listing) => <Listing key={listing.objectiveIndex} listing={listing} setListing={setCurrentListing} />)}
+          {marketplaceListings.current.map((listing) => <Listing key={listing.objectiveIndex} listing={listing} setListing={setCurrentListing} />)}
         </Table>
       </TableContainer>
     </>
