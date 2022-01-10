@@ -27,7 +27,8 @@ import {
   FundraiserPage,
   BeaNFTPage,
   AboutPage,
-  //
+  BalancesPage,
+  PegMaintenancePage,
 } from 'Pages';
 
 import Wrapper from './Wrapper';
@@ -96,22 +97,19 @@ export default function App() {
           </Route>
           {/* More */}
           <Route exact path="/analytics">
-            <Redirect to="/analytics/charts" />
+            <AnalyticsPage />
           </Route>
-          <Route exact path="/analytics/charts">
-            <AnalyticsPage sectionNumber={0} />
-          </Route>
-          <Route exact path="/analytics/seasons">
-            <AnalyticsPage sectionNumber={1} />
-          </Route>
-          <Route exact path="/analytics/balances">
-            <AnalyticsPage sectionNumber={2} />
+          <Route exact path="/peg">
+            <PegMaintenancePage />
           </Route>
           <Route exact path="/fundraiser">
             <FundraiserPage />
           </Route>
           <Route exact path="/governance">
             <DAOPage />
+          </Route>
+          <Route exact path="/balances">
+            <BalancesPage />
           </Route>
           <Route exact path="/beanfts">
             <Redirect to="/beanfts/beanft" />

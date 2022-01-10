@@ -7,4 +7,6 @@ export const bipsList = [
   { path: '/Bips/bip-5.html', title: 'Omniscia Audit' },
   { path: '/Bips/bip-6.html', title: 'Soil Efficiency' },
   { path: '/Bips/bip-7.html', title: 'Expanded Convert' },
+  { path: '/Bips/bip-8.html', title: 'Beanstalk Q1 Budget' },
+  { path: '/Bips/bip-9.html', title: 'Various Efficiency Improvements' },
 ];

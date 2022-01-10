@@ -1,8 +1,16 @@
 import React from 'react';
-import { claim, updateSilo } from 'util/index';
+import { claim, updateSilo, toStringBaseUnitBN } from 'util/index';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { ClaimableAsset, Grid, SingleButton } from 'components/Common';
+import { BEAN } from 'constants/index';
 
 export default function ClaimButton(props) {
+  const {
+    beanWrappedBalance,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
   const showButton = (
     <Grid container item xs={12}>
       <Grid
@@ -19,7 +27,7 @@ export default function ClaimButton(props) {
           handleClick={
             props.asset === ClaimableAsset.Ethereum
               ? () => {
-                  claim(props.claimable);
+                  claim(props.claimable, true, toStringBaseUnitBN(beanWrappedBalance, BEAN.decimals));
                 }
               : () => {
                   updateSilo(props.claimable);

@@ -58,10 +58,8 @@ export const ConvertLPModule = forwardRef((props, ref) => {
 
   const {
     lpDeposits,
-    // beanDeposits,
     lpSiloBalance,
     lpSeedDeposits,
-    // lockedSeasons,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );

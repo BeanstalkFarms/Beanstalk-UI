@@ -62,7 +62,7 @@ export default function NavigationBar() {
             <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen} style={{ backgroundColor: theme.secondary }}>
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
-            {beanPrice && (
+            {beanPrice && beanPrice.isGreaterThan(0) && (
               <Box
                 style={priceStyle}
               >

@@ -215,15 +215,26 @@ export const claimLP = async (withdrawals, callback, completeCallBack) => {
     });
 };
 
-export const claim = async (claimable, completeCallBack) => {
-  beanstalkContract()
-    .claim(claimable)
-    .then((response) => {
-      response.wait().then(() => {
-        completeCallBack();
-        txCallback();
+export const claim = async (claimable, completeCallBack, toWallet = false, wrappedBeans = '0') => {
+  if (wrappedBeans === '0') {
+    beanstalkContract()
+      .claim([...claimable, toWallet])
+      .then((response) => {
+        response.wait().then(() => {
+          completeCallBack();
+          txCallback();
+        });
       });
-    });
+  } else {
+    beanstalkContract()
+      .claimAndUnwrapBeans([...claimable, toWallet], wrappedBeans)
+      .then((response) => {
+        response.wait().then(() => {
+          completeCallBack();
+          txCallback();
+        });
+      });
+  }
 };
 
 export const updateSilo = async (completeCallBack) => {

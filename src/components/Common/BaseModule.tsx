@@ -3,7 +3,6 @@ import { Box, Button, Link, Tab, Tabs } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@material-ui/styles';
-import { Lock as LockIcon } from '@material-ui/icons';
 import { theme } from 'constants/index';
 import { FormatTooltip, Line, QuestionModule } from './index';
 
@@ -17,7 +16,6 @@ export default function BaseModule({
   locked,
   handleApprove,
   handleForm,
-  lockedSeasons,
   section,
   isDisabled,
   children,
@@ -140,15 +138,6 @@ export default function BaseModule({
   if (allowance.isEqualTo(0)) {
     buttonLabel = 'APPROVE';
     buttonHandler = approveHandler;
-  } else if (locked) {
-    buttonLabel = (
-      <>
-        <LockIcon />
-        <Box style={{ style: 'inline-block' }}>
-          {`${lockedSeasons} seasons`}
-        </Box>
-      </>
-    );
   } else if (allowance.isGreaterThan(0)) {
     buttonLabel = sectionTitles[section];
     buttonHandler = handleForm;
@@ -171,7 +160,7 @@ export default function BaseModule({
             color="primary"
             disabled={
               buttonLabel !== 'APPROVE' &&
-              (buttonHandler === null || isDisabled || locked)
+              (buttonHandler === null || isDisabled)
             }
             onClick={buttonHandler}
             variant="contained"

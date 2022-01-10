@@ -18,6 +18,7 @@ export default function ContentTitle({
     },
     sectionTitle: {
       marginTop: marginTop,
+      marginBottom: 10, // HOTFIX
       width: width,
     },
     sectionTitleText: {

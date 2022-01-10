@@ -207,7 +207,7 @@ export default function TradeModule() {
         item
         xs={9}
         sm={8}
-        style={{ maxWidth: '500px', minHeight: '645px' }}
+        style={{ maxWidth: '500px' }}
       >
         <BaseModule
           allowance={

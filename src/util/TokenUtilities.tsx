@@ -208,12 +208,12 @@ export function TokenTypeImage(tokenType: Token): string {
   if (tokenType < 17) return BudgetIcon;
 }
 
-export function TrimBN(bn: BigNumber, decimals: number): BigNumber {
+export function TrimBN(bn: BigNumber, decimals: number, allowNegative: boolean = false): BigNumber {
   if (typeof bn !== 'object') return new BigNumber(bn);
 
   const numberString = bn.toString();
   const decimalComponents = numberString.split('.');
-  if (bn.isLessThan(0) || decimalComponents.length < 2) return bn;
+  if ((bn.isLessThan(0) && !allowNegative) || decimalComponents.length < 2) return bn;
 
   const decimalsFound = decimalComponents[1].length;
   const decimalsToTrim =

@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js';
 import {
-  DEVELOPMENT_BUDGET,
-  MARKETING_BUDGET,
+  BUDGETS,
   BEAN,
   BEANSTALK,
   ETH,
@@ -96,15 +95,14 @@ export const getAccountBalances = async (batch) => {
     [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
     [beanstalk.methods.balanceOfSeeds(account), tokenResult(BEANSTALK)],
     [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
-    [beanstalk.methods.lockedUntil(account), bigNumberResult],
+    [beanstalk.methods.votedUntil(account), bigNumberResult],
     [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEANSTALK)],
     [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
     [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
     [usdc.methods.balanceOf(account), tokenResult(USDC)],
+    [beanstalk.methods.wrappedBeans(account), tokenResult(BEAN)],
   ]);
 };
-/* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
-
 export const getTotalBalances = async (batch) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
@@ -152,8 +150,11 @@ export const getTotalBalances = async (batch) => {
         timestamp: bigNumberResult(time.timestamp),
       }),
     ],
-    [bean.methods.balanceOf(DEVELOPMENT_BUDGET), tokenResult(BEAN)],
-    [bean.methods.balanceOf(MARKETING_BUDGET), tokenResult(BEAN)],
+    // TO DO: Automate this:
+    [bean.methods.balanceOf(BUDGETS[0]), tokenResult(BEAN)],
+    [bean.methods.balanceOf(BUDGETS[1]), tokenResult(BEAN)],
+    [bean.methods.balanceOf(BUDGETS[2]), tokenResult(BEAN)],
+    [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)],
   ]);
 };
 
