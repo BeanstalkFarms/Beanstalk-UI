@@ -45,10 +45,10 @@ export default function MarketplaceSellModule() {
       index,
       pricePerPod,
       amount,
+      expiresIn
     } = sellOffer;
 
-    // TODO: fix expiry
-    const expiry = '733593518241';
+    const expiry = (expiresIn.times(10 ** 6).plus(harvestableIndex.times(10 ** 6))).toString();
     const res = await beanstalk.listPlot(
       index.times(10 ** 6).toString(),
       pricePerPod.times(10 ** 6).toString(),

@@ -36,7 +36,7 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
         <>
           <TableCell align="center">
             {`${displayBN(listing.amountSold.div(10 ** 6))} / ${displayBN(listing.initialAmount.div(10 ** 6))}`}
-            <CircularProgress variant="determinate" value={(listing.amountSold.div(10 ** 6).dividedBy(listing.initialAmount.div(10 ** 6))).toNumber() * 100} />
+            {listing.amountSold > 0 && <CircularProgress variant="determinate" value={(listing.amountSold.div(10 ** 6).dividedBy(listing.initialAmount.div(10 ** 6))).toNumber() * 100} />}
 
           </TableCell>
           <TableCell align="center">

@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import {
-  TrimBN,
-} from 'util/index';
+import { TrimBN } from 'util/index';
 import {
   ListInputField,
   TokenInputField,
   PlotInputField,
 } from 'components/Common';
+import { AppState } from 'state';
+import { useSelector } from 'react-redux';
 
 export const CreateListingModule = (props) => {
+  const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
+
   const [index, setIndex] = useState(new BigNumber(-1));
   const [amount, setAmount] = useState(new BigNumber(-1));
+  const [expiresIn, setExpiresIn] = useState(new BigNumber(-1));
+
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
 
   const { setSellOffer } = props;
@@ -23,11 +33,12 @@ export const CreateListingModule = (props) => {
         index,
         pricePerPod: pricePerPodValue,
         amount,
+        expiresIn,
       });
     } else {
       setSellOffer(null);
     }
-  }, [index, setSellOffer, pricePerPodValue, amount]);
+  }, [index, setSellOffer, pricePerPodValue, amount, expiresIn]);
 
   const handlePlotChange = (event) => {
     setIndex(new BigNumber(event.target.value));
@@ -65,6 +76,37 @@ export const CreateListingModule = (props) => {
       value={TrimBN(pricePerPodValue, 6)}
     />
   );
+
+  const expiresInField = (
+    <>
+      <TokenInputField
+        label="Expires In"
+        handleChange={(e) => {
+          const newExpiresinValue = new BigNumber(e.target.value);
+          console.log('index', index.toNumber());
+          console.log('newExpiresinValue', newExpiresinValue.toNumber());
+          console.log('harvestableIndex', harvestableIndex.toNumber());
+
+          // Price can't be created than 1
+          if (
+            index != null &&
+            newExpiresinValue.isGreaterThanOrEqualTo(index.minus(harvestableIndex))
+          ) {
+            setExpiresIn(index.minus(harvestableIndex));
+          } else {
+            setExpiresIn(newExpiresinValue);
+          }
+        }}
+        value={TrimBN(expiresIn, 6)}
+        maxHandler={() => {
+          if (index != null) {
+            setExpiresIn(index.minus(harvestableIndex));
+          }
+        }}
+      />
+      <h2>This will expire</h2>
+    </>
+  );
   const amountField = (
     <PlotInputField
       key={0}
@@ -82,6 +124,7 @@ export const CreateListingModule = (props) => {
       {fromPlotField}
       {priceField}
       {amountField}
+      {expiresInField}
     </>
   );
 };
