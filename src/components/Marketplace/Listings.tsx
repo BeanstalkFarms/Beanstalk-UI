@@ -13,36 +13,31 @@ import {
   Popover,
   Typography,
   Slider,
-  CircularProgress
+  CircularProgress,
 } from '@material-ui/core';
-import { beanstalkContract, GetWalletAddress } from 'util/index';
+import { beanstalkContract, GetWalletAddress, displayBN } from 'util/index';
 import _ from 'lodash';
 import BigNumber from 'bignumber.js';
+import { BuyListingModal } from './BuyListingModal';
 
 function Listing({ listing, harvestableIndex, setListing, isMine }) {
   return (
     <TableRow>
       <TableCell align="center">
-        {/* TODO STYLE TO NORMALIZE  */}
-        {((listing.objectiveIndex.div(10 ** 6)).minus(new BigNumber(harvestableIndex))).toString()}
+        {displayBN((listing.objectiveIndex.div(10 ** 6)).minus(new BigNumber(harvestableIndex)))}
       </TableCell>
       <TableCell align="center">
-        {/* TODO STYLE TO NORMALIZE  */}
-        {((listing.expiry.div(10 ** 6)).minus(new BigNumber(harvestableIndex))).toString()}
+        {displayBN((listing.expiry.div(10 ** 6)).minus(new BigNumber(harvestableIndex)))}
       </TableCell>
       <TableCell align="center">
-        {listing.pricePerPod.div(10 ** 6).toString()}
+        {displayBN(listing.pricePerPod.div(10 ** 6))}
       </TableCell>
       {isMine ? (
         <>
           <TableCell align="center">
-            {`${listing.amountSold.div(10 ** 6).toString()} / ${listing.initialAmount.div(10 ** 6).toString()}`}
+            {`${displayBN(listing.amountSold.div(10 ** 6))} / ${displayBN(listing.initialAmount.div(10 ** 6))}`}
             <CircularProgress variant="determinate" value={(listing.amountSold.div(10 ** 6).dividedBy(listing.initialAmount.div(10 ** 6))).toNumber() * 100} />
 
-
-          </TableCell>
-          <TableCell align="center">
-            {listing.amountSold.div(10 ** 6).toString()}
           </TableCell>
           <TableCell align="center">
             <Button
@@ -60,10 +55,9 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
       ) : (
         <>
           <TableCell align="center">
-            {listing.initialAmount
+            {displayBN(listing.initialAmount
               .minus(listing.amountSold)
-              .div(10 ** 6)
-              .toString()}
+              .div(10 ** 6))}
           </TableCell>
           <TableCell align="center">
             <Button onClick={() => setListing(listing)}>Buy</Button>
@@ -171,38 +165,12 @@ export default function Listings() {
   if (listings.length === 0) {
     return <div>No listings.</div>;
   }
-  const buy = () => {
-    console.log('buy listing');
-  };
-  console.log('listings:', listings);
-
   return (
     <>
-      <Modal
-        open={currentListing != null}
-        onClose={() => setCurrentListing(null)}
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          {/* TODO: need to make this a better input (like swap inputs, be able to use beans / eth / max out, etc) */}
-          <h2>Buy this plot</h2>
-          <p style={{ width: '100%', wordBreak: 'break-all' }}>
-            {JSON.stringify(currentListing)}
-          </p>
-          <Button onPress={buy}>Buy</Button>
-        </Box>
-      </Modal>
+      <BuyListingModal
+        listing={currentListing}
+        setCurrentListing={setCurrentListing}
+         />
       {myListings.length > 0 && (
         <>
           <h2 style={{ marginLeft: 12 }}>Your Listings</h2>
