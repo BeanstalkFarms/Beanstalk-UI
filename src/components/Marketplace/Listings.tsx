@@ -13,16 +13,22 @@ import {
   Popover,
   Typography,
   Slider,
+  CircularProgress
 } from '@material-ui/core';
 import { beanstalkContract, GetWalletAddress } from 'util/index';
 import _ from 'lodash';
 import BigNumber from 'bignumber.js';
 
-function Listing({ listing, setListing, isMine }) {
+function Listing({ listing, harvestableIndex, setListing, isMine }) {
   return (
     <TableRow>
       <TableCell align="center">
-        {listing.objectiveIndex.div(10 ** 6).toString()}
+        {/* TODO STYLE TO NORMALIZE  */}
+        {((listing.objectiveIndex.div(10 ** 6)).minus(new BigNumber(harvestableIndex))).toString()}
+      </TableCell>
+      <TableCell align="center">
+        {/* TODO STYLE TO NORMALIZE  */}
+        {((listing.expiry.div(10 ** 6)).minus(new BigNumber(harvestableIndex))).toString()}
       </TableCell>
       <TableCell align="center">
         {listing.pricePerPod.div(10 ** 6).toString()}
@@ -30,7 +36,10 @@ function Listing({ listing, setListing, isMine }) {
       {isMine ? (
         <>
           <TableCell align="center">
-            {listing.initialAmount.div(10 ** 6).toString()}
+            {`${listing.amountSold.div(10 ** 6).toString()} / ${listing.initialAmount.div(10 ** 6).toString()}`}
+            <CircularProgress variant="determinate" value={(listing.amountSold.div(10 ** 6).dividedBy(listing.initialAmount.div(10 ** 6))).toNumber() * 100} />
+
+
           </TableCell>
           <TableCell align="center">
             {listing.amountSold.div(10 ** 6).toString()}
@@ -100,7 +109,7 @@ export default function Listings() {
   ];
 
   const [placeInLineFilters, setPlaceInLineFilters] =
-    useState<number[]>(placesInLineBN);
+    useState<BigNumber[]>(placesInLineBN);
 
   const [tempPlaceInLineFilters, setTempPlaceInLineFilters] =
     useState<number[]>(placesInLine);
@@ -202,15 +211,16 @@ export default function Listings() {
               <TableHead>
                 <TableRow>
                   <TableCell align="center">Place in line</TableCell>
+                  <TableCell align="center">Expires In</TableCell>
                   <TableCell align="center">Price per pod</TableCell>
-                  <TableCell align="center">Initial Amount</TableCell>
                   <TableCell align="center">Amount Filled</TableCell>
                   <TableCell align="center" />
                 </TableRow>
               </TableHead>
               {myListings.map((listing) => (
                 <Listing
-                  key={listing.objectiveIndex}
+                  key={listing.objectiveIndex - harvestableIndex}
+                  harvestableIndex={harvestableIndex}
                   listing={listing}
                   setListing={setCurrentListing}
                   isMine
@@ -221,13 +231,22 @@ export default function Listings() {
         </>
       )}
       <h2 style={{ marginLeft: 12 }}>All Listings</h2>
-      <Button
-        aria-describedby={id}
-        variant="contained"
-        onClick={openPopover}
+      <Box
+        sx={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            p: '4',
+          }}
+        >
+        <Button
+          aria-describedby={id}
+          variant="contained"
+          onClick={openPopover}
           >
-        Filter
-      </Button>
+          Filter
+        </Button>
+      </Box>
+
       <Popover
         id={id}
         open={open}
@@ -284,6 +303,7 @@ export default function Listings() {
           <TableHead>
             <TableRow>
               <TableCell align="center">Place in line</TableCell>
+              <TableCell align="center">Expires In</TableCell>
               <TableCell align="center">Price per pod</TableCell>
               <TableCell align="center">Amount</TableCell>
               <TableCell align="center" />
@@ -291,7 +311,8 @@ export default function Listings() {
           </TableHead>
           {marketplaceListings.current.map((listing) => (
             <Listing
-              key={listing.objectiveIndex}
+              key={listing.objectiveIndex - harvestableIndex}
+              harvestableIndex={harvestableIndex}
               listing={listing}
               setListing={setCurrentListing}
             />
