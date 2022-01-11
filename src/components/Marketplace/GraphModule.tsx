@@ -9,6 +9,7 @@ import { withParentSize } from '@visx/responsive';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
+import { Zoom } from '@visx/zoom';
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
 import { GraphTooltip } from './GraphTooltip';
@@ -56,6 +57,24 @@ const findPointInCircles = (
     ...foundPositions.map((index) => positions[index].radius)
   );
   return foundPositions.find((index) => positions[index].radius === minRadius);
+};
+
+const rescaleYWithZoom = (scale, zoom) => {
+  const newDomain = scale.range().map((r) => {
+    return scale.invert(
+      (r - zoom.transformMatrix.translateY) / zoom.transformMatrix.scaleY
+    );
+  });
+  return scale.copy().domain(newDomain);
+};
+
+const rescaleXWithZoom = (scale, zoom) => {
+  const newDomain = scale.range().map((r) => {
+    return scale.invert(
+      (r - zoom.transformMatrix.translateX) / zoom.transformMatrix.scaleX
+    );
+  });
+  return scale.copy().domain(newDomain);
 };
 
 interface GraphContentProps {
@@ -214,87 +233,130 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
 
   return (
     <>
-      <svg width={parentWidth} height={graphHeight} ref={svgRef}>
-        <rect
-          width={parentWidth}
-          height={graphHeight}
-          fill="transparent"
-          onMouseMove={handleMouseMove}
-          onTouchMove={handleMouseMove}
-        />
-        {circles}
-        <AxisLeft
-          scale={scaleLinear({
-            domain: yDomain,
-            range: [graphHeight - bottomAxisHeight, topVerticalPadding],
-          })}
-          tickFormat={(d) => `$${d.toFixed(2)}`}
-          label="Price Per Pod"
-          labelProps={{ fontFamily: 'Futura-Pt-Book', textAnchor: 'middle' }}
-          left={leftAxisWidth}
-          labelOffset={40}
-          numTicks={10}
-          tickComponent={(props) => {
-            const { formattedValue, ...renderProps } = props;
+      <Zoom<SVGSVGElement>
+        width={parentWidth}
+        height={graphHeight}
+        scaleXMin={1 / 2}
+        scaleXMax={4}
+        scaleYMin={1 / 2}
+        scaleYMax={4}
+      >
+        {(zoom) => {
+          console.log({ zoom });
 
-            return (
-              <Text {...renderProps} fontFamily="Futura-Pt-Book">
-                {formattedValue}
-              </Text>
-            );
-          }}
-          hideZero
-        />
-        <AxisBottom
-          scale={scaleLinear({
-            domain: xDomain,
-            range: [0, parentWidth - leftAxisWidth - rightHorizontalPadding],
-          })}
-          tickFormat={(d) => `${d / 1e6}M`}
-          label="Place In Line"
-          labelProps={{ fontFamily: 'Futura-Pt-Book', textAnchor: 'middle' }}
-          labelOffset={20}
-          top={graphHeight - bottomAxisHeight}
-          left={leftAxisWidth}
-          numTicks={10}
-          tickComponent={(props) => {
-            const { formattedValue, ...renderProps } = props;
+          return (
+            <div style={{ position: 'relative' }}>
+              <svg
+                width={parentWidth}
+                height={graphHeight}
+                ref={zoom.containerRef}
+                style={{
+                  cursor: zoom.isDragging ? 'grabbing' : 'grab',
+                  touchAction: 'none',
+                }}
+              >
+                <rect
+                  width={parentWidth}
+                  height={graphHeight}
+                  fill="transparent"
+                  onMouseMove={handleMouseMove}
+                  onTouchMove={handleMouseMove}
+                />
+                <g transform={zoom.toString()}>{circles}</g>
+                <rect
+                  width={parentWidth}
+                  height={graphHeight}
+                  fill="transparent"
+                  onTouchStart={zoom.dragStart}
+                  onTouchMove={zoom.dragMove}
+                  onTouchEnd={zoom.dragEnd}
+                  onMouseDown={zoom.dragStart}
+                  onMouseMove={zoom.dragMove}
+                  onMouseUp={zoom.dragEnd}
+                  onMouseLeave={() => {
+                    if (zoom.isDragging) zoom.dragEnd();
+                  }}
+                  onDoubleClick={(event) => {
+                    const point = localPoint(event) || { x: 0, y: 0 };
+                    zoom.scale({ scaleX: 1.1, scaleY: 1.1, point });
+                  }}
+                />
+                <AxisLeft
+                  scale={rescaleYWithZoom(yScale, zoom)}
+                  tickFormat={(d) => `$${d.toFixed(2)}`}
+                  label="Price Per Pod"
+                  labelProps={{
+                    fontFamily: 'Futura-Pt-Book',
+                    textAnchor: 'middle',
+                  }}
+                  left={leftAxisWidth}
+                  labelOffset={40}
+                  numTicks={10}
+                  tickComponent={(props) => {
+                    const { formattedValue, ...renderProps } = props;
 
-            return (
-              <Text {...renderProps} fontFamily="Futura-Pt-Book">
-                {formattedValue}
-              </Text>
-            );
-          }}
-          hideZero
-        />
-      </svg>
-      {tooltipOpen &&
-        typeof tooltipData === 'number' &&
-        tooltipLeft != null &&
-        tooltipTop != null && (
-          <Tooltip
-            offsetLeft={0}
-            offsetTop={0}
-            left={tooltipLeft}
-            top={tooltipTop}
-            style={{
-              backgroundColor: '#f7d186',
-              border: '2px solid #c8ab74',
-              boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
-              padding: '0.3rem 0.5rem',
-              borderRadius: 10,
-              pointerEvents: 'auto',
-            }}
-            applyPositionStyle
-          >
-            <GraphTooltip
-              listing={listings[tooltipData]}
-              onBuyClick={() => console.log('buy clicked')}
-              harvestableIndex={harvestableIndex}
-            />
-          </Tooltip>
-        )}
+                    return (
+                      <Text {...renderProps} fontFamily="Futura-Pt-Book">
+                        {formattedValue}
+                      </Text>
+                    );
+                  }}
+                  hideZero
+                />
+                <AxisBottom
+                  scale={rescaleXWithZoom(xScale, zoom)}
+                  tickFormat={(d) => `${d / 1e6}M`}
+                  label="Place In Line"
+                  labelProps={{
+                    fontFamily: 'Futura-Pt-Book',
+                    textAnchor: 'middle',
+                  }}
+                  labelOffset={20}
+                  top={graphHeight - bottomAxisHeight}
+                  left={leftAxisWidth}
+                  numTicks={10}
+                  tickComponent={(props) => {
+                    const { formattedValue, ...renderProps } = props;
+
+                    return (
+                      <Text {...renderProps} fontFamily="Futura-Pt-Book">
+                        {formattedValue}
+                      </Text>
+                    );
+                  }}
+                  hideZero
+                />
+              </svg>
+              {tooltipOpen &&
+                typeof tooltipData === 'number' &&
+                tooltipLeft != null &&
+                tooltipTop != null && (
+                  <Tooltip
+                    offsetLeft={0}
+                    offsetTop={0}
+                    left={tooltipLeft}
+                    top={tooltipTop}
+                    style={{
+                      backgroundColor: '#f7d186',
+                      border: '2px solid #c8ab74',
+                      boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
+                      padding: '0.3rem 0.5rem',
+                      borderRadius: 10,
+                      pointerEvents: 'auto',
+                    }}
+                    applyPositionStyle
+                  >
+                    <GraphTooltip
+                      listing={listings[tooltipData]}
+                      onBuyClick={() => console.log('buy clicked')}
+                      harvestableIndex={harvestableIndex}
+                    />
+                  </Tooltip>
+                )}
+            </div>
+          );
+        }}
+      </Zoom>
     </>
   );
 };
