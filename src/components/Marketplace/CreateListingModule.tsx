@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { TrimBN } from 'util/index';
+import { TrimBN, displayBN } from 'util/index';
+
 import {
   ListInputField,
   TokenInputField,
@@ -104,7 +105,8 @@ export const CreateListingModule = (props) => {
           }
         }}
       />
-      <h2>This will expire</h2>
+      {expiresIn.isGreaterThanOrEqualTo(0) && amount.isGreaterThanOrEqualTo(0) && pricePerPodValue.isGreaterThanOrEqualTo(0)
+       && <h3>You are about to list {displayBN(amount)} pods from plot at index {displayBN(index)} for {TrimBN(pricePerPodValue, 6).toString()} beans per pod. If fully sold, you will receive {displayBN(amount.multipliedBy(pricePerPodValue))} beans. This plot will expire when {displayBN(expiresIn)} more pods have been harvested, or when the total amount of pods harvested is {displayBN(expiresIn.plus(harvestableIndex))}</h3>}
     </>
   );
   const amountField = (
@@ -125,6 +127,7 @@ export const CreateListingModule = (props) => {
       {priceField}
       {amountField}
       {expiresInField}
+
     </>
   );
 };
