@@ -20,6 +20,7 @@ export * from './TimeUtilities';
 export * from './BeaNFTUtilities';
 export * from './APYUtilities';
 export * from './FundraiserUtilities';
+export * from './MarketUtilities';
 
 let ethereum;
 export let initializing;
