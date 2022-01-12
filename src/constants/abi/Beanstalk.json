@@ -896,7 +896,7 @@
                 "type": "address"
             },
             {
-                "indexed": true,
+                "indexed": false,
                 "internalType": "uint256",
                 "name": "index",
                 "type": "uint256"

@@ -214,8 +214,6 @@ export default function Updater() {
         return a.logIndex - b.logIndex;
       });
 
-      console.log('events:', marketplaceEvents);
-
       const {
         listings,
         buyOffers,
