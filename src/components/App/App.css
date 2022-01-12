@@ -466,6 +466,10 @@
   }
 }
 
+.filterButton:hover, .filterButton:focus, .filterButton:active {
+  background-color: #292929 !important;
+}
+
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

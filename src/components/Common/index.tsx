@@ -48,6 +48,7 @@ export { default as UnitSelectionModule } from './UnitSelectionModule';
 export { default as TabImageModule } from './TabImageModule';
 export { default as Line } from './Line';
 export { default as SectionTabs } from './SectionTabs';
+export { default as BalanceTableCell } from './BalanceTableCell';
 
 export const FormatTooltip = withStyles((theme: Theme) => ({
   tooltip: {

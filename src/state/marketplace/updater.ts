@@ -8,7 +8,9 @@ import {
 import orderBy from 'lodash/orderBy';
 import {
   beanstalkContractReadOnly,
+  toTokenUnitsBN,
 } from 'util/index';
+import { BEAN } from 'constants/index';
 
 // mock global events for marketplace
 // TODO: hook this up to real contract events
@@ -96,10 +98,11 @@ function processEvents(events, harvestableIndex) {
     if (event.event === 'ListingCreated') {
       listings[event.returnValues.index] = {
         listerAddress: event.returnValues.account,
-        objectiveIndex: new BigNumber(event.returnValues.index),
-        pricePerPod: new BigNumber(event.returnValues.pricePerPod),
-        expiry: new BigNumber(event.returnValues.expiry),
-        initialAmount: new BigNumber(event.returnValues.amount),
+        objectiveIndex: toTokenUnitsBN(new BigNumber(event.returnValues.index), BEAN.decimals),
+        pricePerPod: toTokenUnitsBN(new BigNumber(event.returnValues.pricePerPod), BEAN.decimals),
+        expiry: toTokenUnitsBN(new BigNumber(event.returnValues.expiry), BEAN.decimals),
+        initialAmount: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
+        amount: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
         amountSold: new BigNumber(0),
         status: 'active',
       };
@@ -107,6 +110,7 @@ function processEvents(events, harvestableIndex) {
       delete listings[event.returnValues.index];
     } else if (event.event === 'ListingFilled') {
       const { index, amount } = event.returnValues;
+      const amountBN = toTokenUnitsBN(amount, BEAN.decimals);
       // Move current listing's index up by |amount|
       const prevKey = index.toString();
       const currentListing = listings[prevKey];
@@ -115,20 +119,22 @@ function processEvents(events, harvestableIndex) {
       listings[newKey] = currentListing;
 
       // Check whether current listing is sold or not
-      const isSold = currentListing.initialAmount.minus(currentListing.amountSold).minus(amount).isEqualTo(0);
+      const isSold = currentListing.initialAmount.minus(currentListing.amountSold).minus(amountBN).isEqualTo(0);
       if (isSold) {
         listings[newKey].status = 'sold';
       }
 
       // Bump up |amountSold| for this listing
-      listings[newKey].amountSold = listings[newKey].amountSold.plus(amount);
+      listings[newKey].amountSold = listings[newKey].amountSold.plus(amountBN);
+      listings[newKey].amount = currentListing.initialAmount.minus(currentListing.amountSold).minus(amountBN);
     } else if (event.event === 'BuyOfferCreated') {
       buyOffers[event.returnValues.index] = {
         listerAddress: event.returnValues.account,
-        index: new BigNumber(event.returnValues.index),
-        maxPlaceInLine: new BigNumber(event.returnValues.maxPlaceInLine),
-        initialAmountToBuy: new BigNumber(event.returnValues.amount),
-        pricePerPod: new BigNumber(event.returnValues.pricePerPod),
+        index: toTokenUnitsBN(new BigNumber(event.returnValues.index), BEAN.decimals),
+        maxPlaceInLine: toTokenUnitsBN(new BigNumber(event.returnValues.maxPlaceInLine), BEAN.decimals),
+        initialAmountToBuy: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
+        amount: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
+        pricePerPod: toTokenUnitsBN(new BigNumber(event.returnValues.pricePerPod), BEAN.decimals),
         amountBought: new BigNumber(0),
         status: 'active',
       };
@@ -136,17 +142,19 @@ function processEvents(events, harvestableIndex) {
       delete buyOffers[event.returnValues.index];
     } else if (event.event === 'BuyOfferAccepted') {
       const { index, amount } = event.returnValues;
+      const amountBN = toTokenUnitsBN(amount, BEAN.decimals);
       const key = index;
 
       // Check whether current offer is sold or not
       const buyOffer = buyOffers[key];
-      const isFilled = buyOffer.initialAmountToBuy.minus(buyOffer.amountBought).minus(amount).isEqualTo(0);
+      const isFilled = buyOffer.initialAmountToBuy.minus(buyOffer.amountBought).minus(amountBN).isEqualTo(0);
       if (isFilled) {
         buyOffers[key].status = 'filled';
       }
 
       // Bump up |amountBought| for this offer
-      buyOffers[key].amountBought = buyOffers[key].amountBought.plus(amount);
+      buyOffers[key].amountBought = buyOffers[key].amountBought.plus(amountBN);
+      buyOffers[key].amount = buyOffer.initialAmountToBuy.minus(buyOffer.amountBought).minus(amountBN);
     }
   }
 
