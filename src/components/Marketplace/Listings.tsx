@@ -2,65 +2,136 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import {
+  CloseOutlined as CancelIcon,
+  ShoppingCartOutlined as ShoppingCartIcon,
+  FilterListRounded as FilterIcon,
+} from '@material-ui/icons';
+import {
   Box,
   Table,
   TableCell,
   TableContainer,
+  TableBody,
   TableHead,
   TableRow,
   Button,
-  Modal,
+  IconButton,
   Popover,
-  Typography,
   Slider,
   CircularProgress,
 } from '@material-ui/core';
-import { beanstalkContract, GetWalletAddress, displayBN } from 'util/index';
+import { theme, BEAN } from 'constants/index';
+import { makeStyles } from '@material-ui/styles';
+import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN } from 'util/index';
 import _ from 'lodash';
 import BigNumber from 'bignumber.js';
+import { BalanceTableCell } from 'components/Common';
 import { BuyListingModal } from './BuyListingModal';
 
+const useStyles = makeStyles({
+  table: {
+    minWidth: 200,
+    '& .MuiTableCell-root': {},
+    '& .MuiTableCell-head': {
+      alignItems: 'center',
+      fontFamily: 'Futura',
+    },
+    '& .MuiTableCell-sizeSmall': {
+      padding: '6px 12px 6px 12px',
+    },
+  },
+  tableSmall: {
+    minWidth: 200,
+    '& .MuiTableCell-root': {},
+    '& .MuiTableCell-head': {
+      alignItems: 'center',
+      fontFamily: 'Futura',
+    },
+    '& .MuiTableCell-sizeSmall': {
+      padding: '6px 1px 6px 1px',
+    },
+  },
+  lucidaStyle: {
+    color: theme.text,
+    fontFamily: 'Lucida Console',
+    fontSize: '11px',
+  },
+  titleStyle: {
+    display: 'inline-block',
+    fontSize: '24px',
+    textAlign: 'center',
+    fontFamily: 'Futura-PT',
+    marginTop: '13px',
+    width: '100%',
+  },
+  filterButtonStyle: {
+    display: 'inline-block',
+  },
+  buttonStyle: {
+    color: 'white',
+    backgroundColor: theme.linkColor,
+  },
+});
+
 function Listing({ listing, harvestableIndex, setListing, isMine }) {
+  const classes = useStyles();
   return (
     <TableRow>
-      <TableCell align="center">
-        {displayBN((listing.objectiveIndex.div(10 ** 6)).minus(new BigNumber(harvestableIndex)))}
-      </TableCell>
-      <TableCell align="center">
-        {displayBN((listing.expiry.div(10 ** 6)).minus(new BigNumber(harvestableIndex)))}
-      </TableCell>
-      <TableCell align="center">
-        {displayBN(listing.pricePerPod.div(10 ** 6))}
-      </TableCell>
+      <BalanceTableCell
+        className={classes.lucidaStyle}
+        balance={listing.objectiveIndex.minus(harvestableIndex)}
+        label="Pods"
+      />
+      <BalanceTableCell
+        className={classes.lucidaStyle}
+        balance={(listing.expiry).minus(new BigNumber(harvestableIndex))}
+        label="Pods"
+      />
+      <BalanceTableCell
+        className={classes.lucidaStyle}
+        balance={listing.pricePerPod}
+        label="Beans"
+      />
       {isMine ? (
         <>
-          <TableCell align="center">
-            {`${displayBN(listing.amountSold.div(10 ** 6))} / ${displayBN(listing.initialAmount.div(10 ** 6))}`}
-            {listing.amountSold > 0 && <CircularProgress variant="determinate" value={(listing.amountSold.div(10 ** 6).dividedBy(listing.initialAmount.div(10 ** 6))).toNumber() * 100} />}
-
+          <TableCell className={classes.lucidaStyle} align="right">
+            {`${displayBN(listing.amountSold)} / ${displayBN(listing.initialAmount)}`}
+            {listing.amountSold > 0 && <CircularProgress variant="determinate" value={(listing.amountSold.dividedBy(listing.initialAmount)).toNumber() * 100} />}
           </TableCell>
           <TableCell align="center">
-            <Button
+            <IconButton
               onClick={async () => {
                 const beanstalk = beanstalkContract();
                 await beanstalk.cancelListing(
-                  listing.objectiveIndex.toString()
+                  toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals)
                 );
               }}
+              style={{
+                color: theme.linkColor,
+               }}
+              size="small"
             >
-              Cancel
-            </Button>
+              <CancelIcon />
+            </IconButton>
           </TableCell>
         </>
       ) : (
         <>
-          <TableCell align="center">
-            {displayBN(listing.initialAmount
+          <BalanceTableCell
+            className={classes.lucidaStyle}
+            balance={listing.initialAmount
               .minus(listing.amountSold)
-              .div(10 ** 6))}
-          </TableCell>
+            }
+            label="Beans"
+          />
           <TableCell align="center">
-            <Button onClick={() => setListing(listing)}>Buy</Button>
+            <IconButton
+              onClick={() => setListing(listing)}
+              style={{ color: theme.linkColor }}
+              size="small"
+            >
+              <ShoppingCartIcon />
+            </IconButton>
           </TableCell>
         </>
       )}
@@ -69,6 +140,7 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
 }
 
 export default function Listings() {
+  const classes = useStyles();
   const [walletAddress, setWalletAddress] = useState(null);
   const { listings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
@@ -80,6 +152,10 @@ export default function Listings() {
 
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
+  );
+
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
   );
 
   const myListings = listings.filter(
@@ -99,7 +175,7 @@ export default function Listings() {
   const placesInLine = [0, totalPods.toNumber()];
   const placesInLineBN = [
     0,
-    new BigNumber(totalPods.toNumber()).multipliedBy(10 ** 6),
+    new BigNumber(totalPods.toNumber()),
   ];
 
   const [placeInLineFilters, setPlaceInLineFilters] =
@@ -110,13 +186,13 @@ export default function Listings() {
 
   useMemo(() => {
     marketplaceListings.current = _.filter(otherListings, (listing) => (
-        listing.pricePerPod > priceFilters[0] * 1000000 &&
-        listing.pricePerPod < priceFilters[1] * 1000000 &&
+        listing.pricePerPod > priceFilters[0] &&
+        listing.pricePerPod < priceFilters[1] &&
         listing.objectiveIndex
-          .minus(harvestableIndex.multipliedBy(10 ** 6))
+          .minus(harvestableIndex)
           .gt(new BigNumber(placeInLineFilters[0])) &&
         listing.objectiveIndex
-          .minus(harvestableIndex.multipliedBy(10 ** 6))
+          .minus(harvestableIndex)
           .lt(new BigNumber(placeInLineFilters[1]))
       ));
 
@@ -127,10 +203,14 @@ export default function Listings() {
 
   const handlePriceFilter = (event, newValue) => {
     setTempPriceFilters(newValue);
+    setPriceFilters(newValue);
   };
   const handlePlaceInLineFilter = (event, newValue) => {
-    console.log('handlePlaceInLineFilter', 'newValue', newValue);
     setTempPlaceInLineFilters(newValue);
+    setPlaceInLineFilters([
+      new BigNumber(tempPlaceInLineFilters[0]),
+      new BigNumber(tempPlaceInLineFilters[1]),
+    ]);
   };
 
   const openPopover = (event) => {
@@ -146,8 +226,8 @@ export default function Listings() {
     handleClose();
     setPriceFilters(tempPriceFilters);
     setPlaceInLineFilters([
-      new BigNumber(tempPlaceInLineFilters[0]).multipliedBy(10 ** 6),
-      new BigNumber(tempPlaceInLineFilters[1]).multipliedBy(10 ** 6),
+      new BigNumber(tempPlaceInLineFilters[0]),
+      new BigNumber(tempPlaceInLineFilters[1]),
     ]);
   };
 
@@ -173,46 +253,52 @@ export default function Listings() {
          />
       {myListings.length > 0 && (
         <>
-          <h2 style={{ marginLeft: 12 }}>Your Listings</h2>
+          <h2 className={classes.titleStyle}>Your Listings</h2>
           <TableContainer>
-            <Table size="small">
+            <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">Place in line</TableCell>
-                  <TableCell align="center">Expires In</TableCell>
-                  <TableCell align="center">Price per pod</TableCell>
-                  <TableCell align="center">Amount Filled</TableCell>
-                  <TableCell align="center" />
+                  <TableCell align="right">Place in line</TableCell>
+                  <TableCell align="right">Expiry</TableCell>
+                  <TableCell align="right">Price</TableCell>
+                  <TableCell align="right">Filled</TableCell>
+                  <TableCell align="center">Cancel</TableCell>
                 </TableRow>
               </TableHead>
-              {myListings.map((listing) => (
-                <Listing
-                  key={listing.objectiveIndex - harvestableIndex}
-                  harvestableIndex={harvestableIndex}
-                  listing={listing}
-                  setListing={setCurrentListing}
-                  isMine
-                />
-              ))}
+              <TableBody>
+                {myListings.map((listing) => (
+                  <Listing
+                    key={listing.objectiveIndex - harvestableIndex}
+                    harvestableIndex={harvestableIndex}
+                    listing={listing}
+                    setListing={setCurrentListing}
+                    isMine
+                  />
+                ))}
+              </TableBody>
             </Table>
           </TableContainer>
         </>
       )}
-      <h2 style={{ marginLeft: 12 }}>All Listings</h2>
-      <Box
-        sx={{
+      <Box style={{ position: 'relative' }}>
+        <h2 className={classes.titleStyle}>All Listings</h2>
+        <IconButton
+          className={`${classes.filterButtonStyle} filterButton`}
+          style={{
+            color: 'white',
+            backgroundColor: theme.iconButtonColor,
             justifyContent: 'center',
             alignItems: 'center',
-            p: '4',
+            position: 'absolute',
+            right: '25px',
+            padding: '6px',
+            top: '20%',
           }}
-        >
-        <Button
-          aria-describedby={id}
-          variant="contained"
+          size="small"
           onClick={openPopover}
-          >
-          Filter
-        </Button>
+        >
+          <FilterIcon />
+        </IconButton>
       </Box>
 
       <Popover
@@ -267,24 +353,26 @@ export default function Listings() {
         </Box>
       </Popover>
       <TableContainer>
-        <Table size="small">
+        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Place in line</TableCell>
-              <TableCell align="center">Expires In</TableCell>
-              <TableCell align="center">Price per pod</TableCell>
-              <TableCell align="center">Amount</TableCell>
-              <TableCell align="center" />
+              <TableCell align="right">Place in line</TableCell>
+              <TableCell align="right">Expiry</TableCell>
+              <TableCell align="right">Price</TableCell>
+              <TableCell align="right">Amount</TableCell>
+              <TableCell align="center">Buy</TableCell>
             </TableRow>
           </TableHead>
-          {marketplaceListings.current.map((listing) => (
-            <Listing
-              key={listing.objectiveIndex - harvestableIndex}
-              harvestableIndex={harvestableIndex}
-              listing={listing}
-              setListing={setCurrentListing}
-            />
-          ))}
+          <TableBody>
+            {marketplaceListings.current.map((listing) => (
+              <Listing
+                key={listing.objectiveIndex - harvestableIndex}
+                harvestableIndex={harvestableIndex}
+                listing={listing}
+                setListing={setCurrentListing}
+              />
+            ))}
+          </TableBody>
         </Table>
       </TableContainer>
     </>
