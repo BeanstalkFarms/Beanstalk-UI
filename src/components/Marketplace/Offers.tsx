@@ -44,7 +44,7 @@ function Offer({ offer, setOffer, isMine }) {
       ) : (
         <>
           <TableCell align="center">
-            {offer.initialAmountToBuy.minus(offer.amountBought).div(10 ** 6).toString()}
+            {offer.initialAmountToBuy.minus(offer.amountBought).toString()}
           </TableCell>
           <TableCell align="center">
             <Button
