@@ -10,10 +10,6 @@ import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 
 export const CreateListingModule = (props) => {
-  const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
-    (state) => state.totalBalance
-  );
-
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );

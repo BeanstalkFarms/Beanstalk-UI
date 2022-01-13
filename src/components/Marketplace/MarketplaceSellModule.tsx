@@ -45,7 +45,7 @@ export default function MarketplaceSellModule() {
       index,
       pricePerPod,
       amount,
-      expiresIn
+      expiresIn,
     } = sellOffer;
 
     const expiry = (expiresIn.times(10 ** 6).plus(harvestableIndex.times(10 ** 6))).toString();
