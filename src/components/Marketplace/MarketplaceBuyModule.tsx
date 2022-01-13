@@ -65,7 +65,7 @@ export default function MarketplaceBuyModule() {
     console.log('from bean value:', fromBeanValue.toString());
     // This assumes eth right now
     const res = await beanstalk.buyBeansAndListBuyOffer(
-      maxPlaceInLine.toString(),
+      maxPlaceInLine.times(10 ** 6).toString(),
       pricePerPod.times(10 ** 6).toString(),
       0,
       buyBeanAmount.times(10 ** 6).toString(),

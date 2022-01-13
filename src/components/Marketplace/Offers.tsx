@@ -17,18 +17,18 @@ function Offer({ offer, setOffer, isMine }) {
   return (
     <TableRow>
       <TableCell align="center">
-        {offer.maxPlaceInLine.div(10 ** 6).toString()}
+        {offer.maxPlaceInLine.toString()}
       </TableCell>
       <TableCell align="center">
-        {offer.pricePerPod.div(10 ** 6).toString()}
+        {offer.pricePerPod.toString()}
       </TableCell>
       { isMine ? (
         <>
           <TableCell align="center">
-            {offer.initialAmountToBuy.div(10 ** 6).toString()}
+            {offer.initialAmountToBuy.toString()}
           </TableCell>
           <TableCell align="center">
-            {offer.amountBought.div(10 ** 6).toString()}
+            {offer.amountBought.toString()}
           </TableCell>
           <TableCell align="center">
             <Button
