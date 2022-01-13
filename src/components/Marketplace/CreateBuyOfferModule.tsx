@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
+import { unstable_batchedUpdates } from 'react-dom'; // eslint-disable-line
 import { AppState } from 'state';
 import { Box } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -15,6 +16,10 @@ import {
   MaxBN,
   SwapMode,
   TrimBN,
+  toBaseUnitBN,
+  toStringBaseUnitBN,
+  buyBeansAndListBuyOffer,
+  listBuyOffer,
 } from 'util/index';
 import {
   ClaimTextModule,
@@ -30,15 +35,14 @@ import {
   TransactionTextModule,
 } from 'components/Common';
 
-export const CreateBuyOfferModule = ({
-  poolForLPRatio,
-  setBuyOffer,
-  settings,
-  setSettings,
+export const CreateBuyOfferModule = forwardRef(({
   isFormDisabled,
   setIsFormDisabled,
+  settings,
+  setSettings,
+  poolForLPRatio,
   updateExpectedPrice,
-}) => {
+}, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
@@ -49,6 +53,7 @@ export const CreateBuyOfferModule = ({
   const {
     beanBalance,
     beanClaimableBalance,
+    claimable,
     claimableEthBalance,
     lpReceivableBalance,
     ethBalance,
@@ -64,41 +69,25 @@ export const CreateBuyOfferModule = ({
   const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const isDisabled = () => {
-    if (
-      !maxPlaceInLineValue.isGreaterThan(0) ||
-      toPodValue.isLessThanOrEqualTo(0) ||
-      maxPlaceInLineValue.isLessThan(toPodValue)
-    ) {
-      setIsFormDisabled(true);
-    } else {
-      setIsFormDisabled(false);
-    }
-  };
 
-  //
   useEffect(() => {
-    if (!isFormDisabled) {
-      isDisabled();
-      setBuyOffer({
-        pricePerPod: pricePerPodValue,
-        fromEthValue,
-        fromBeanValue,
-        buyBeanAmount: toBuyBeanValue,
-        maxPlaceInLine: maxPlaceInLineValue,
-      });
-    } else {
-      isDisabled();
-      setBuyOffer(null);
-    }
+    const isDisabled = () => {
+      if (
+        !maxPlaceInLineValue.isGreaterThan(0) ||
+        toPodValue.isLessThanOrEqualTo(0) ||
+        maxPlaceInLineValue.isLessThan(toPodValue)
+      ) {
+        setIsFormDisabled(true);
+      } else {
+        setIsFormDisabled(false);
+      }
+    };
+
+    isDisabled();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    setBuyOffer,
-    fromBeanValue,
-    fromEthValue,
-    toBuyBeanValue,
-    pricePerPodValue,
     maxPlaceInLineValue,
+    toPodValue,
     isFormDisabled,
   ]);
 
@@ -145,13 +134,12 @@ export const CreateBuyOfferModule = ({
     );
   };
 
-  const handleSliderChange = (v) => {
-    setMaxPlaceInLineValue(new BigNumber(v));
-  };
-
   // TODO: needs to be optimized for more efficient rerendering
   const handleInputChange = (event) => {
-    const newMaxPlaceInLineValue = event.target.value !== '' ? new BigNumber(event.target.value) : new BigNumber(0);
+    const newMaxPlaceInLineValue = event.target.value !== ''
+      ? new BigNumber(event.target.value)
+      : new BigNumber(0);
+
     if (
       newMaxPlaceInLineValue.isGreaterThanOrEqualTo(totalPods) ||
       toPodValue.isGreaterThanOrEqualTo(totalPods)
@@ -170,7 +158,9 @@ export const CreateBuyOfferModule = ({
         balance={totalPods}
         label="Buy Range"
         handleChange={handleInputChange}
-        handleSlider={handleSliderChange}
+        handleSlider={(v) => {
+          setMaxPlaceInLineValue(new BigNumber(v));
+        }}
         placeholder={totalPods.toFixed()}
         value={TrimBN(maxPlaceInLineValue, 6)}
         range
@@ -231,33 +221,12 @@ export const CreateBuyOfferModule = ({
   );
 
   /* Transaction Details, settings and text */
-  const frontrunTextField =
-    settings.mode !== SwapMode.Bean &&
-    settings.slippage.isLessThanOrEqualTo(SLIPPAGE_THRESHOLD) ? (
-      <FrontrunText />
-    ) : null;
-  const showSettings = (
-    <SettingsFormModule
-      handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
-      hasClaimable={hasClaimable}
-      hasSlippage
-      setSettings={setSettings}
-      settings={settings}
-    />
-  );
-  const rangeWarning = maxPlaceInLineValue.isLessThan(toPodValue)
-    ? (
-      <>
-        <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
-          WARNING: The Buy Range is too small to make an offer or there aren&apos;t enough availble Pods in the market.
-        </span>
-        <br />
-      </>
-      )
-    : null;
-
-  const beanClaimable = MaxBN(poolForLPRatio(lpReceivableBalance)[0], new BigNumber(0)).plus(beanClaimableBalance);
-  const ethClaimable = MaxBN(poolForLPRatio(lpReceivableBalance)[1], new BigNumber(0)).plus(claimableEthBalance);
+  const beanClaimable = MaxBN(
+    poolForLPRatio(lpReceivableBalance)[0], new BigNumber(0)
+  ).plus(beanClaimableBalance);
+  const ethClaimable = MaxBN(
+    poolForLPRatio(lpReceivableBalance)[1], new BigNumber(0)
+  ).plus(claimableEthBalance);
 
   const details = [];
   if (settings.claim) {
@@ -292,7 +261,8 @@ export const CreateBuyOfferModule = ({
   details.push(
     `Place a buy offer for ${displayBN(
       toPodValue
-    )} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at ${pricePerPodValue.toFixed(2)} price per Pod`
+    )} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at
+    ${pricePerPodValue.toFixed(2)} price per Pod`
   );
   details.push(
     `${displayBN(toBuyBeanValue.plus(MaxBN(fromBeanValue, new BigNumber(0))))} Beans
@@ -301,6 +271,41 @@ export const CreateBuyOfferModule = ({
   details.push(
     `Your offer will expire after ${displayBN(maxPlaceInLineValue)} Pods are harvested from the Pod line`
   );
+
+  const rangeWarning = maxPlaceInLineValue.isLessThan(toPodValue)
+    ? (
+      <>
+        <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
+          WARNING: The Buy Range is too small to make an offer or there aren&apos;t enough availble Pods in the market.
+        </span>
+        <br />
+      </>
+      )
+    : null;
+  const frontrunTextField =
+    settings.mode !== SwapMode.Bean &&
+    settings.slippage.isLessThanOrEqualTo(SLIPPAGE_THRESHOLD) ? (
+      <FrontrunText />
+    ) : null;
+  const showSettings = (
+    <SettingsFormModule
+      handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
+      hasClaimable={hasClaimable}
+      hasSlippage
+      setSettings={setSettings}
+      settings={settings}
+    />
+  );
+
+  const resetFields = () => {
+    // eslint-disable-next-line
+    unstable_batchedUpdates(() => {
+      fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+      setPricePerPodValue(new BigNumber(-1));
+      setMaxPlaceInLineValue(new BigNumber(-1));
+      setToPodValue(new BigNumber(-1));
+    });
+  };
 
   function transactionDetails() {
     if (isFormDisabled) return null;
@@ -328,6 +333,46 @@ export const CreateBuyOfferModule = ({
     );
   }
 
+  useImperativeHandle(ref, () => ({
+    handleForm() {
+      if (toPodValue.isLessThanOrEqualTo(0)) return;
+
+      const claimabl = settings.claim ? claimable : null;
+      if (fromEthValue.isGreaterThan(0)) {
+        const beans = MaxBN(
+          toBaseUnitBN(fromBeanValue, BEAN.decimals),
+          new BigNumber(0)
+        ).toString();
+        const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
+        const buyBeans = toStringBaseUnitBN(
+          toBuyBeanValue.multipliedBy(settings.slippage),
+          BEAN.decimals
+        );
+        buyBeansAndListBuyOffer(
+          toStringBaseUnitBN(maxPlaceInLineValue, BEAN.decimals),
+          toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
+          beans,
+          buyBeans,
+          eth,
+          claimabl,
+          () => {
+            resetFields();
+          }
+        );
+      } else {
+        listBuyOffer(
+          toStringBaseUnitBN(maxPlaceInLineValue, BEAN.decimals),
+          toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
+          toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
+          claimabl,
+          () => {
+            resetFields();
+          }
+        );
+      }
+    },
+  }));
+
   return (
     <>
       {maxPlaceInLineField}
@@ -340,4 +385,4 @@ export const CreateBuyOfferModule = ({
       {showSettings}
     </>
   );
-};
+});

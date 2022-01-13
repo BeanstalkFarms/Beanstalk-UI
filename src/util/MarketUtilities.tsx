@@ -1,12 +1,8 @@
 import { beanstalkContract, txCallback } from './index';
 
 export const buyListing = async (index, from, amount, claimable, callback) => {
-  console.log(index);
-  console.log(from);
-  console.log(amount);
-  console.log(claimable);
   (claimable
-    ? beanstalkContract().claimAndBuyListing(index, from, amount, claimable)
+    ? beanstalkContract().claimBeansAndBuyListing(index, from, amount, claimable)
     : beanstalkContract().buyListing(index, from, amount)
   ).then((response) => {
     callback();
@@ -37,6 +33,51 @@ export const buyBeansAndBuyListing = async (
     : beanstalkContract().buyBeansAndBuyListing(
       index,
       from,
+      amount,
+      buyBeanAmount,
+      { value: ethAmount }
+    )
+  ).then((response) => {
+    callback();
+    response.wait().then(() => {
+      txCallback();
+    });
+  });
+};
+
+export const listBuyOffer = async (maxPlaceInLine, price, amount, claimable, callback) => {
+  (claimable
+    ? beanstalkContract().claimBeansAndListBuyOffer(maxPlaceInLine, price, amount, claimable)
+    : beanstalkContract().listBuyOffer(maxPlaceInLine, price, amount)
+  ).then((response) => {
+    callback();
+    response.wait().then(() => {
+      txCallback();
+    });
+  });
+};
+
+export const buyBeansAndListBuyOffer = async (
+  maxPlaceInLine,
+  price,
+  amount,
+  buyBeanAmount,
+  ethAmount,
+  claimable,
+  callback
+) => {
+  (claimable
+    ? beanstalkContract().claimAndBuyBeansAndListBuyOffer(
+        maxPlaceInLine,
+        price,
+        amount,
+        buyBeanAmount,
+        claimable,
+        { value: ethAmount }
+      )
+    : beanstalkContract().buyBeansAndListBuyOffer(
+      maxPlaceInLine,
+      price,
       amount,
       buyBeanAmount,
       { value: ethAmount }

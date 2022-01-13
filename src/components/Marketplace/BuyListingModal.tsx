@@ -306,8 +306,8 @@ export const BuyListingModal = ({ listing, setCurrentListing }) => {
           <hr />
           {fromBeanField}
           {fromEthField}
-          {showSettings}
           {buyPods.isGreaterThan(0) ? <TransactionDetailsModule fields={details} /> : null}
+          {showSettings}
         </BaseModule>
       </Modal>);
 };

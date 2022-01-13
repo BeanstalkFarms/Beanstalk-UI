@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
   approveBeanstalkBean,
-  beanstalkContract,
   SwapMode,
+
   poolForLP,
 } from 'util/index';
 import { BaseModule, siloStrings } from 'components/Common';
@@ -14,7 +14,6 @@ import { CreateBuyOfferModule } from './CreateBuyOfferModule';
 import Listings from './Listings';
 
 export default function MarketplaceBuyModule() {
-  const [buyOffer, setBuyOffer] = useState(null);
   const [section, setSection] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [settings, setSettings] = useState({
@@ -65,41 +64,32 @@ export default function MarketplaceBuyModule() {
     );
   };
 
-  // TODO: need to handle beans / beans + eth
-  const onCreate = async () => {
-    const beanstalk = beanstalkContract();
-    const {
-      pricePerPod,
-      buyBeanAmount,
-      fromBeanValue,
-      fromEthValue,
-      maxPlaceInLine,
-    } = buyOffer;
-    console.log('buy bean amount:', buyBeanAmount.toString());
-    console.log('from eth value:', fromEthValue.toString());
-    console.log('from bean value:', fromBeanValue.toString());
-    // This assumes eth right now
-    const res = await beanstalk.buyBeansAndListBuyOffer(
-      maxPlaceInLine.toString(),
-      pricePerPod.times(10 ** 6).toString(),
-      0,
-      buyBeanAmount.times(10 ** 6).toString(),
-      {
-        value: fromEthValue.times(10 ** 18).toFixed(),
-      });
-    console.log('res:', res);
+  // Note: Can send ref to listings
+  const buyListingRef = useRef<any>();
+  const buyOfferRef = useRef<any>();
+  const handleForm = () => {
+    switch (section) {
+      case 0:
+        buyListingRef.current.handleForm();
+        break;
+      case 1:
+        buyOfferRef.current.handleForm();
+        break;
+      default:
+        break;
+    }
   };
 
   const sections = [
     <Listings />,
     <CreateBuyOfferModule
-      poolForLPRatio={poolForLPRatio}
-      setBuyOffer={setBuyOffer}
-      updateExpectedPrice={updateExpectedPrice}
-      settings={settings}
-      setSettings={setSettings}
+      ref={buyOfferRef}
       isFormDisabled={isFormDisabled}
       setIsFormDisabled={setIsFormDisabled}
+      settings={settings}
+      setSettings={setSettings}
+      poolForLPRatio={poolForLPRatio}
+      updateExpectedPrice={updateExpectedPrice}
     />,
   ];
 
@@ -108,7 +98,7 @@ export default function MarketplaceBuyModule() {
       <BaseModule
         marginTop="20px"
         handleApprove={approveBeanstalkBean}
-        handleForm={onCreate}
+        handleForm={handleForm}
         isDisabled={isFormDisabled}
         section={section}
         sectionTitles={sectionTitles}
