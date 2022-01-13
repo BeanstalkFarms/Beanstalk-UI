@@ -88,6 +88,7 @@ export default function Offers() {
 
   const myOffers = offers.filter((offer) => offer.listerAddress === walletAddress);
   const otherOffers = offers.filter((offer) => offer.listerAddress !== walletAddress);
+  console.log('my offers:', myOffers)
 
   return (
     <>
@@ -139,7 +140,7 @@ export default function Offers() {
                   <TableCell align="center" />
                 </TableRow>
               </TableHead>
-              {offers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} isMine />)}
+              {myOffers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} isMine />)}
             </Table>
           </TableContainer>
         </>
