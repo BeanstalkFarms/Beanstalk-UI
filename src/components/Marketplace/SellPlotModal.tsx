@@ -1,20 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
+import BigNumber from 'bignumber.js';
 import {
   Modal,
 } from '@material-ui/core';
-import { BaseModule, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
+import { FarmAsset, TrimBN, getToAmount, getFromAmount, poolForLP, CryptoAsset, SwapMode, MinBN, displayBN, MaxBN, toBaseUnitBN, toStringBaseUnitBN, buyListing, buyBeansAndBuyListing } from 'util/index';
+import { BaseModule, TokenInputField, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
 
 export default function SellPlotModal({
   currentOffer,
   onClose,
 }) {
-    const { width } = useSelector<AppState, AppState['general']>(
-      (state) => state.general
-    );
+  const [amount, setAmount] = useState(new BigNumber(0));
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
-    const leftMargin = width < 800 ? 0 : 120;
+  const leftMargin = width < 800 ? 0 : 120;
+  if (currentOffer == null) {
+    return null
+  }
   return (
     <Modal
       open={currentOffer != null}
@@ -37,7 +43,29 @@ export default function SellPlotModal({
         marginTop="0px"
         handleForm={() => {}}
       >
-        <p>hi</p>
+        <div>
+          <p>Max place in line</p>
+          <p>{currentOffer.maxPlaceInLine.toFixed()}</p>
+        </div>
+        <div>
+          <p>Price per pod</p>
+          <p>{currentOffer.pricePerPod.toFixed()}</p>
+        </div>
+        <TokenInputField
+          key={2}
+          label="Amount"
+          token={CryptoAsset.Bean}
+          handleChange={(e) => {
+            const newAmount = new BigNumber(e.target.value);
+            // Price can't be created than 1
+            if (newAmount.isGreaterThanOrEqualTo(1)) {
+              setAmount(currentOffer.amount);
+              return;
+            }
+            setAmount(newAmount);
+          }}
+          value={TrimBN(amount, 6)}
+        />
       </BaseModule>
     </Modal>
   );

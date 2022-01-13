@@ -99,7 +99,7 @@ export default function Offers() {
               <TableHead>
                 <TableRow>
                   <TableCell align="center">
-                    Place in line
+                    Max place in line
                   </TableCell>
                   <TableCell align="center">
                     Price per pod
@@ -124,7 +124,7 @@ export default function Offers() {
           <TableHead>
             <TableRow>
               <TableCell align="center">
-                Place in line
+                Max place in line
               </TableCell>
               <TableCell align="center">
                 Price per pod
