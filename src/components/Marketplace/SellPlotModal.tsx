@@ -5,8 +5,8 @@ import BigNumber from 'bignumber.js';
 import {
   Modal,
 } from '@material-ui/core';
-import { FarmAsset, TrimBN, getToAmount, getFromAmount, poolForLP, CryptoAsset, SwapMode, MinBN, displayBN, MaxBN, toBaseUnitBN, toStringBaseUnitBN, buyListing, buyBeansAndBuyListing, beanstalkContract } from 'util/index';
-import { BaseModule, ListInputField, TokenInputField, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
+import { TrimBN, CryptoAsset, beanstalkContract } from 'util/index';
+import { BaseModule, ListInputField, TokenInputField } from 'components/Common';
 
 export default function SellPlotModal({
   currentOffer,
@@ -27,59 +27,53 @@ export default function SellPlotModal({
     (state) => state.userBalance
   );
 
-
   const leftMargin = width < 800 ? 0 : 120;
   if (currentOffer == null) {
-    return null
+    return null;
   }
 
   const handlePlotChange = (event) => {
     if (event.target.value === 'default') {
       setIndex(new BigNumber(-1));
       setAmount(new BigNumber(0));
-      return
+      return;
     }
     const newIndex = new BigNumber(event.target.value);
     setIndex(newIndex);
-    const maxAmountCanSell = newIndex.gt(-1) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[newIndex])) : new BigNumber(0)
+    const maxAmountCanSell = newIndex.gt(-1) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[newIndex])) : new BigNumber(0);
     setAmount(maxAmountCanSell);
   };
 
   const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
-    const harvestIndex = harvestableIndex.times(10 ** 6)
-    const plotObjectiveIndex = new BigNumber(plotIndex).times(10 ** 6)
-    return plotObjectiveIndex.minus(harvestIndex).lt(currentOffer.maxPlaceInLine.times(10 ** 6))
-  })
-  const validPlots = validPlotIndices.reduce((prev, curr) => {
-    return {
+    const harvestIndex = harvestableIndex.times(10 ** 6);
+    const plotObjectiveIndex = new BigNumber(plotIndex).times(10 ** 6);
+    return plotObjectiveIndex.minus(harvestIndex).lt(currentOffer.maxPlaceInLine.times(10 ** 6));
+  });
+  const validPlots = validPlotIndices.reduce((prev, curr) => (
+    {
       ...prev,
       [curr]: plots[curr],
     }
-  }, {})
+  ), {});
 
   const handleForm = async () => {
-    const beanstalk = beanstalkContract()
+    const beanstalk = beanstalkContract();
 
-    console.log('selling:')
-    const finalIndex = index.times(10 ** 6)
-    console.log('index:', finalIndex.toString());
+    const finalIndex = index.times(10 ** 6);
     const end = finalIndex.plus(new BigNumber(plots[index]).times(10 ** 6));
-    const finalAmount = amount.times(10 ** 6)
+    const finalAmount = amount.times(10 ** 6);
     const sellFromIndex = end.minus(finalAmount);
-    console.log('sell from index:', sellFromIndex.toString());
     const buyOfferIndex = currentOffer.index;
-    console.log('buy offer index:', buyOfferIndex.toString())
-    console.log('amount:', finalAmount.toString())
     await beanstalk.sellToBuyOffer(
       finalIndex.toFixed(),
       sellFromIndex.toFixed(),
       buyOfferIndex.toFixed(),
-      finalAmount.toFixed(),
+      finalAmount.toFixed()
     );
-  }
+  };
 
   // Max amount that you can sell
-  const maxAmountCanSell = index.gt(0) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[index])) : new BigNumber(0)
+  const maxAmountCanSell = index.gt(0) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[index])) : new BigNumber(0);
 
   return (
     <Modal
