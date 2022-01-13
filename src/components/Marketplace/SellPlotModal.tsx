@@ -6,21 +6,49 @@ import {
   Modal,
 } from '@material-ui/core';
 import { FarmAsset, TrimBN, getToAmount, getFromAmount, poolForLP, CryptoAsset, SwapMode, MinBN, displayBN, MaxBN, toBaseUnitBN, toStringBaseUnitBN, buyListing, buyBeansAndBuyListing } from 'util/index';
-import { BaseModule, TokenInputField, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
+import { BaseModule, ListInputField, TokenInputField, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
 
 export default function SellPlotModal({
   currentOffer,
   onClose,
 }) {
+  const [index, setIndex] = useState(new BigNumber(-1));
   const [amount, setAmount] = useState(new BigNumber(0));
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
+
+  const {
+    plots,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
 
   const leftMargin = width < 800 ? 0 : 120;
   if (currentOffer == null) {
     return null
   }
+
+  const handlePlotChange = (event) => {
+    setIndex(new BigNumber(event.target.value));
+    setAmount(new BigNumber(plots[event.target.value]));
+  };
+
+  const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
+    const harvestIndex = harvestableIndex.times(10 ** 6)
+    const plotObjectiveIndex = new BigNumber(plotIndex).times(10 ** 6)
+    return plotObjectiveIndex.minus(harvestIndex).lt(currentOffer.maxPlaceInLine.times(10 ** 6))
+  })
+  const validPlots = validPlotIndices.reduce((prev, curr) => {
+    return {
+      ...prev,
+      [curr]: plots[curr],
+    }
+  }, {})
   return (
     <Modal
       open={currentOffer != null}
@@ -51,6 +79,13 @@ export default function SellPlotModal({
           <p>Price per pod</p>
           <p>{currentOffer.pricePerPod.toFixed()}</p>
         </div>
+        <ListInputField
+          index={parseFloat(harvestableIndex)}
+          items={validPlots}
+          handleChange={handlePlotChange}
+          label="Select plot to sell"
+          type="sell"
+        />
         <TokenInputField
           key={2}
           label="Amount"
