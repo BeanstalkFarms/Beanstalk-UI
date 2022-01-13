@@ -185,7 +185,8 @@ export default function Listings() {
     useState<number[]>(placesInLine);
 
   useMemo(() => {
-    marketplaceListings.current = _.filter(otherListings, (listing) => (
+    marketplaceListings.current = _.filter(otherListings, (listing) => {
+      return (
         listing.pricePerPod > priceFilters[0] &&
         listing.pricePerPod < priceFilters[1] &&
         listing.objectiveIndex
@@ -193,8 +194,12 @@ export default function Listings() {
           .gt(new BigNumber(placeInLineFilters[0])) &&
         listing.objectiveIndex
           .minus(harvestableIndex)
-          .lt(new BigNumber(placeInLineFilters[1]))
-      ));
+          .lt(new BigNumber(placeInLineFilters[1])) &&
+        listing.expiry
+          .minus(harvestableIndex)
+          .gt(new BigNumber(0))
+      );
+    });
 
     return () => {
       // cleanup listings
