@@ -34,8 +34,15 @@ export default function SellPlotModal({
   }
 
   const handlePlotChange = (event) => {
-    setIndex(new BigNumber(event.target.value));
-    setAmount(new BigNumber(plots[event.target.value]));
+    if (event.target.value === 'default') {
+      setIndex(new BigNumber(-1));
+      setAmount(new BigNumber(0));
+      return
+    }
+    const newIndex = new BigNumber(event.target.value);
+    setIndex(newIndex);
+    const maxAmountCanSell = newIndex.gt(-1) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[newIndex])) : new BigNumber(0)
+    setAmount(maxAmountCanSell);
   };
 
   const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
@@ -49,6 +56,14 @@ export default function SellPlotModal({
       [curr]: plots[curr],
     }
   }, {})
+
+  const handleForm = () => {
+    console.log('ayy')
+  }
+
+  // Max amount that you can sell
+  const maxAmountCanSell = index.gt(0) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[index])) : new BigNumber(0)
+
   return (
     <Modal
       open={currentOffer != null}
@@ -69,7 +84,7 @@ export default function SellPlotModal({
         sectionTitles={['Sell Plot']}
         size="small"
         marginTop="0px"
-        handleForm={() => {}}
+        handleForm={handleForm}
       >
         <div>
           <p>Max place in line</p>
@@ -78,6 +93,10 @@ export default function SellPlotModal({
         <div>
           <p>Price per pod</p>
           <p>{currentOffer.pricePerPod.toFixed()}</p>
+        </div>
+        <div>
+          <p>Amount available to sell</p>
+          <p>{currentOffer.amount.toFixed()}</p>
         </div>
         <ListInputField
           index={parseFloat(harvestableIndex)}
@@ -90,6 +109,7 @@ export default function SellPlotModal({
           key={2}
           label="Amount"
           token={CryptoAsset.Bean}
+          maxHandler={() => setAmount(maxAmountCanSell)}
           handleChange={(e) => {
             const newAmount = new BigNumber(e.target.value);
             // Price can't be created than 1
