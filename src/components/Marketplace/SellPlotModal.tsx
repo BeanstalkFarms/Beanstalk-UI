@@ -1,40 +1,47 @@
 import React from 'react'
+import { AppState } from 'state';
+import { useSelector } from 'react-redux';
 import {
   Box,
   Button,
   Modal,
 } from '@material-ui/core';
+import { BaseModule, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
 
 export default function SellPlotModal({
   currentOffer,
   onClose,
   onSell,
 }) {
+    const { width } = useSelector<AppState, AppState['general']>(
+      (state) => state.general
+    );
+
+    const leftMargin = width < 800 ? 0 : 120;
   return (
     <Modal
       open={currentOffer != null}
       onClose={onClose}
     >
-      <Box
-        sx={{
+      <BaseModule
+        style={{
           position: 'absolute',
           top: '50%',
+          marginTop: '-40px',
+          width: '400px',
           left: '50%',
+          marginLeft: `${leftMargin}px`,
+          textAlign: 'center',
           transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          border: '2px solid #000',
-          boxShadow: 24,
-          p: 4,
         }}
+        section={0}
+        sectionTitles={['Sell Plot']}
+        size="small"
+        marginTop="0px"
+        handleForm={() => {}}
       >
-        {/* TODO: need to make this a better input (like swap inputs, be able to use beans / eth / max out, etc) */}
-        <h2>Sell this plot</h2>
-        <p style={{ width: '100%', wordBreak: 'break-all' }}>{JSON.stringify(currentOffer)}</p>
-        <Button onPress={onSell}>
-          Sell
-        </Button>
-      </Box>
+        <p>hi</p>
+      </BaseModule>
     </Modal>
   )
 }
