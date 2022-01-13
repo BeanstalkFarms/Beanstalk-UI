@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { approveBeanstalkBean, beanstalkContract, SwapMode } from 'util/index';
+import { approveBeanstalkBean, SwapMode } from 'util/index';
 import {
   BaseModule,
   siloStrings,

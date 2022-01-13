@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import {
-  Box,
-  Button,
   Modal,
 } from '@material-ui/core';
 import { BaseModule, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
@@ -11,7 +9,6 @@ import { BaseModule, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFor
 export default function SellPlotModal({
   currentOffer,
   onClose,
-  onSell,
 }) {
     const { width } = useSelector<AppState, AppState['general']>(
       (state) => state.general
@@ -43,5 +40,5 @@ export default function SellPlotModal({
         <p>hi</p>
       </BaseModule>
     </Modal>
-  )
+  );
 }

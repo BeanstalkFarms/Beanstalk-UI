@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import {
-  Box,
   Table,
   TableCell,
   TableContainer,
@@ -10,7 +9,7 @@ import {
   TableRow,
   Button,
 } from '@material-ui/core';
-import SellPlotModal from 'components/Marketplace/SellPlotModal'
+import SellPlotModal from 'components/Marketplace/SellPlotModal';
 import { beanstalkContract, GetWalletAddress } from 'util/index';
 
 function Offer({ offer, setOffer, isMine }) {
@@ -82,20 +81,15 @@ export default function Offers() {
   if (offers.length === 0) {
     return <div>No offers.</div>;
   }
-  const sell = () => {
-    console.log('sell');
-  };
 
   const myOffers = offers.filter((offer) => offer.listerAddress === walletAddress);
   const otherOffers = offers.filter((offer) => offer.listerAddress !== walletAddress);
-  console.log('my offers:', myOffers)
 
   return (
     <>
       <SellPlotModal
         currentOffer={currentOffer}
         onClose={() => setCurrentOffer(null)}
-        onSell={sell}
       />
       {myOffers.length > 0 && (
         <>
