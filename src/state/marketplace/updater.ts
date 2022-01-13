@@ -130,7 +130,7 @@ function processEvents(events, harvestableIndex) {
     } else if (event.event === 'BuyOfferCreated') {
       buyOffers[event.returnValues.index] = {
         listerAddress: event.returnValues.account,
-        index: toTokenUnitsBN(new BigNumber(event.returnValues.index), BEAN.decimals),
+        index: new BigNumber(event.returnValues.index),
         maxPlaceInLine: toTokenUnitsBN(new BigNumber(event.returnValues.maxPlaceInLine), BEAN.decimals),
         initialAmountToBuy: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
         amount: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),

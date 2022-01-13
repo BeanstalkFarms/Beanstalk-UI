@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import {
   Modal,
 } from '@material-ui/core';
-import { FarmAsset, TrimBN, getToAmount, getFromAmount, poolForLP, CryptoAsset, SwapMode, MinBN, displayBN, MaxBN, toBaseUnitBN, toStringBaseUnitBN, buyListing, buyBeansAndBuyListing } from 'util/index';
+import { FarmAsset, TrimBN, getToAmount, getFromAmount, poolForLP, CryptoAsset, SwapMode, MinBN, displayBN, MaxBN, toBaseUnitBN, toStringBaseUnitBN, buyListing, buyBeansAndBuyListing, beanstalkContract } from 'util/index';
 import { BaseModule, ListInputField, TokenInputField, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
 
 export default function SellPlotModal({
@@ -57,8 +57,25 @@ export default function SellPlotModal({
     }
   }, {})
 
-  const handleForm = () => {
-    console.log('ayy')
+  const handleForm = async () => {
+    const beanstalk = beanstalkContract()
+
+    console.log('selling:')
+    const finalIndex = index.times(10 ** 6)
+    console.log('index:', finalIndex.toString());
+    const end = finalIndex.plus(new BigNumber(plots[index]).times(10 ** 6));
+    const finalAmount = amount.times(10 ** 6)
+    const sellFromIndex = end.minus(finalAmount);
+    console.log('sell from index:', sellFromIndex.toString());
+    const buyOfferIndex = currentOffer.index;
+    console.log('buy offer index:', buyOfferIndex.toString())
+    console.log('amount:', finalAmount.toString())
+    await beanstalk.sellToBuyOffer(
+      finalIndex.toFixed(),
+      sellFromIndex.toFixed(),
+      buyOfferIndex.toFixed(),
+      finalAmount.toFixed(),
+    );
   }
 
   // Max amount that you can sell
