@@ -9,8 +9,8 @@ import {
   TableHead,
   TableRow,
   Button,
-  Modal,
 } from '@material-ui/core';
+import SellPlotModal from 'components/Marketplace/SellPlotModal'
 import { beanstalkContract, GetWalletAddress } from 'util/index';
 
 function Offer({ offer, setOffer, isMine }) {
@@ -92,32 +92,11 @@ export default function Offers() {
 
   return (
     <>
-      <Modal
-        open={currentOffer != null}
+      <SellPlotModal
+        currentOffer={currentOffer}
         onClose={() => setCurrentOffer(null)}
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          {/* TODO: need to make this a better input (like swap inputs, be able to use beans / eth / max out, etc) */}
-          <h2>Sell this plot</h2>
-          <p style={{ width: '100%', wordBreak: 'break-all' }}>{JSON.stringify(currentOffer)}</p>
-          <Button onPress={sell}>
-            Sell
-          </Button>
-        </Box>
-      </Modal>
-
+        onSell={sell}
+      />
       {myOffers.length > 0 && (
         <>
           <h2 style={{ marginLeft: 12 }}>Your Offers</h2>
