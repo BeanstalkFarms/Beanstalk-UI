@@ -49,32 +49,6 @@ export default function MarketplaceBuyModule() {
     return prices.beanPrice.plus(endPrice).dividedBy(2);
   };
 
-  // TODO: need to handle beans / beans + eth
-  const onCreate = async () => {
-    const beanstalk = beanstalkContract();
-    const {
-      maxPlaceInLine,
-      pricePerPod,
-      buyBeanAmount,
-      fromBeanValue,
-      fromEthValue,
-    } = buyOffer;
-    console.log(prices);
-    console.log('buy bean amount:', buyBeanAmount.toString());
-    console.log('from eth value:', fromEthValue.toString());
-    console.log('from bean value:', fromBeanValue.toString());
-    // This assumes eth right now
-    const res = await beanstalk.buyBeansAndListBuyOffer(
-      maxPlaceInLine.times(10 ** 6).toString(),
-      pricePerPod.times(10 ** 6).toString(),
-      0,
-      buyBeanAmount.times(10 ** 6).toString(),
-      {
-        value: fromEthValue.times(10 ** 18).toFixed(),
-      });
-    console.log('res:', res);
-  };
-
   const [settings, setSettings] = useState({
     claim: false,
     mode: SwapMode.Ethereum,
@@ -108,7 +82,6 @@ export default function MarketplaceBuyModule() {
       <BaseModule
         style={{ marginTop: '20px' }}
         handleApprove={approveBeanstalkBean}
-        handleForm={onCreate}
         isDisabled={buyOffer == null}
         section={section}
         sectionTitles={sectionTitles}
