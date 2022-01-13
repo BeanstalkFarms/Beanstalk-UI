@@ -112,9 +112,8 @@ export default function SellPlotModal({
           maxHandler={() => setAmount(maxAmountCanSell)}
           handleChange={(e) => {
             const newAmount = new BigNumber(e.target.value);
-            // Price can't be created than 1
-            if (newAmount.isGreaterThanOrEqualTo(1)) {
-              setAmount(currentOffer.amount);
+            if (newAmount.isGreaterThanOrEqualTo(maxAmountCanSell)) {
+              setAmount(maxAmountCanSell);
               return;
             }
             setAmount(newAmount);
