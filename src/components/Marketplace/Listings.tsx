@@ -186,15 +186,18 @@ export default function Listings() {
 
   useMemo(() => {
     marketplaceListings.current = _.filter(otherListings, (listing) => (
-        listing.pricePerPod > priceFilters[0] &&
-        listing.pricePerPod < priceFilters[1] &&
-        listing.objectiveIndex
-          .minus(harvestableIndex)
-          .gt(new BigNumber(placeInLineFilters[0])) &&
-        listing.objectiveIndex
-          .minus(harvestableIndex)
-          .lt(new BigNumber(placeInLineFilters[1]))
-      ));
+      listing.pricePerPod > priceFilters[0] &&
+      listing.pricePerPod < priceFilters[1] &&
+      listing.objectiveIndex
+        .minus(harvestableIndex)
+        .gt(new BigNumber(placeInLineFilters[0])) &&
+      listing.objectiveIndex
+        .minus(harvestableIndex)
+        .lt(new BigNumber(placeInLineFilters[1])) &&
+      listing.expiry
+        .minus(harvestableIndex)
+        .gt(new BigNumber(0))
+    ));
 
     return () => {
       // cleanup listings

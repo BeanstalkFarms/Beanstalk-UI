@@ -21,6 +21,7 @@ export default function Page({
     width: '100%',
     textAlign: 'center',
     paddingBottom: 80,
+    fontFamily: 'Futura-PT-Book',
   };
 
   // If multiple sections are provided, show a tab selector.

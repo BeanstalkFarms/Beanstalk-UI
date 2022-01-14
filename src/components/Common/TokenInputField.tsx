@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
+import { Box, Button, InputAdornment, Slider, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { CryptoAsset, displayBN, displayFullBN, TokenLabel } from 'util/index';
 import { theme } from 'constants/index';
@@ -66,6 +66,10 @@ export default function TokenInputField(props) {
     setDisplayValue(event.target.value);
     props.handleChange(event);
   };
+  const handleSlider = (event, newEvent) => {
+    setDisplayValue(newEvent.toString());
+    props.handleSlider(newEvent);
+  };
 
   function displayLP(balance) {
     return `${displayBN(balance[0])} ${TokenLabel(
@@ -86,6 +90,43 @@ export default function TokenInputField(props) {
       <TokenTypeImageModule style={tokenTypeImageStyle} token={props.token} />
     </InputAdornment>
   );
+  const startAdornment = props.range ? (
+    <InputAdornment position="start">
+      <span style={{ fontSize: 'calc(14px + 1vmin)', fontFamily: 'Lucida Console', display: 'flex' }}>
+        0&nbsp;-
+      </span>
+    </InputAdornment>
+  ) : null;
+  const marks = props.range ? [
+    {
+      value: 0,
+    },
+    {
+      value: props.balance.multipliedBy(1 / 4),
+    },
+    {
+      value: props.balance.multipliedBy(1 / 2),
+    },
+    {
+      value: props.balance.multipliedBy(3 / 4),
+    },
+    {
+      value: props.balance,
+    },
+  ] : null;
+  const showSlider = props.range ? (
+    <Box style={{ padding: '0 10px' }}>
+      <Slider
+        value={props.value.toNumber()}
+        onChange={handleSlider}
+        aria-labelledby="input-slider"
+        min={0}
+        step={10000}
+        max={props.balance.toNumber()}
+        marks={marks}
+      />
+    </Box>
+  ) : null;
 
   if (props.hidden) return null;
 
@@ -93,14 +134,15 @@ export default function TokenInputField(props) {
     <Box style={{ margin: '8px 0' }}>
       <Box style={smallLabels}>
         <Box style={leftStyle}>{label}</Box>
-        { props.balance && (
+        {props.balance && !props.range && (
           <FormatTooltip placement="right" title={balanceContent}>
             <Box style={rightStyle}>
               &nbsp;{`Balance: ${displayBN(props.balance)}`}
             </Box>
           </FormatTooltip>
-        ) }
+        )}
       </Box>
+      {showSlider}
 
       <TextField
         className="TextField-rounded"
@@ -109,6 +151,7 @@ export default function TokenInputField(props) {
         size="medium"
         type="number"
         disabled={props.handleChange === undefined || props.locked}
+        error={props.error}
         value={
           props.value.isNegative()
             ? ''
@@ -137,6 +180,7 @@ export default function TokenInputField(props) {
             input: classes.inputText,
           },
           endAdornment,
+          startAdornment,
         }}
       />
     </Box>

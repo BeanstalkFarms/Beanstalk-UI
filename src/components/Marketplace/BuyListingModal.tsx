@@ -245,7 +245,7 @@ export const BuyListingModal = ({ listing, setCurrentListing }) => {
     }
     details.push(`Buying ${displayBN(buyPods)} Pods at ${displayBN(listing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for ${displayBN(listing.pricePerPod)} Beans each`);
 
-    function handleForm() {
+    const handleForm = () => {
       if (buyPods.isLessThanOrEqualTo(0)) return;
 
       const claimabl = settings.claim ? claimable : null;
@@ -280,7 +280,7 @@ export const BuyListingModal = ({ listing, setCurrentListing }) => {
           }
         );
       }
-    }
+    };
 
     return (
       <Modal open={listing != null} onClose={() => { setCurrentListing(null); toValueUpdated(new BigNumber(0)); }}>
@@ -306,8 +306,8 @@ export const BuyListingModal = ({ listing, setCurrentListing }) => {
           <hr />
           {fromBeanField}
           {fromEthField}
-          {showSettings}
           {buyPods.isGreaterThan(0) ? <TransactionDetailsModule fields={details} /> : null}
+          {showSettings}
         </BaseModule>
       </Modal>);
 };
