@@ -21,57 +21,13 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import { theme, BEAN } from 'constants/index';
-import { makeStyles } from '@material-ui/styles';
 import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN } from 'util/index';
 import _ from 'lodash';
 import BigNumber from 'bignumber.js';
 import { BalanceTableCell } from 'components/Common';
 import { BuyListingModal } from './BuyListingModal';
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 200,
-    '& .MuiTableCell-root': {},
-    '& .MuiTableCell-head': {
-      alignItems: 'center',
-      fontFamily: 'Futura',
-    },
-    '& .MuiTableCell-sizeSmall': {
-      padding: '6px 12px 6px 12px',
-    },
-  },
-  tableSmall: {
-    minWidth: 200,
-    '& .MuiTableCell-root': {},
-    '& .MuiTableCell-head': {
-      alignItems: 'center',
-      fontFamily: 'Futura',
-    },
-    '& .MuiTableCell-sizeSmall': {
-      padding: '6px 1px 6px 1px',
-    },
-  },
-  lucidaStyle: {
-    color: theme.text,
-    fontFamily: 'Lucida Console',
-    fontSize: '11px',
-  },
-  titleStyle: {
-    display: 'inline-block',
-    fontSize: '24px',
-    textAlign: 'center',
-    fontFamily: 'Futura-PT',
-    marginTop: '13px',
-    width: '100%',
-  },
-  filterButtonStyle: {
-    display: 'inline-block',
-  },
-  buttonStyle: {
-    color: 'white',
-    backgroundColor: theme.linkColor,
-  },
-});
+import { useStyles } from './TableStyles';
 
 function Listing({ listing, harvestableIndex, setListing, isMine }) {
   const classes = useStyles();
@@ -79,18 +35,18 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
     <TableRow>
       <BalanceTableCell
         className={classes.lucidaStyle}
-        balance={listing.objectiveIndex.minus(harvestableIndex)}
         label="Place in line"
+        balance={listing.objectiveIndex.minus(harvestableIndex)}
       />
       <BalanceTableCell
         className={classes.lucidaStyle}
-        balance={(listing.expiry).minus(new BigNumber(harvestableIndex))}
         label="Expiry"
+        balance={(listing.expiry).minus(new BigNumber(harvestableIndex))}
       />
       <BalanceTableCell
         className={classes.lucidaStyle}
-        balance={listing.pricePerPod}
         label="Beans per pod"
+        balance={listing.pricePerPod}
       />
       {isMine ? (
         <>
@@ -251,7 +207,7 @@ export default function Listings() {
       <BuyListingModal
         listing={currentListing}
         setCurrentListing={setCurrentListing}
-         />
+      />
       {myListings.length > 0 && (
         <>
           <h2 className={classes.titleStyle}>Your Listings</h2>
@@ -301,28 +257,24 @@ export default function Listings() {
           <FilterIcon />
         </IconButton>
       </Box>
-
       <Popover
         id={id}
         open={open}
         anchorEl={popoverEl}
         onClose={handleClose}
         anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-          >
-        <Box
-          sx={{
-                top: '50%',
-                left: '50%',
-                width: 400,
-                bgcolor: 'background.paper',
-                border: '2px solid #000',
-                boxShadow: 24,
-                p: 4,
-              }}
-            >
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}>
+        <Box sx={{
+          top: '50%',
+          left: '50%',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        }}>
           <h3>Price Per Pod</h3>
           <Slider
             value={tempPriceFilters}
@@ -331,7 +283,7 @@ export default function Listings() {
             step={0.01}
             min={0}
             max={1}
-              />
+          />
           <h3>Place In Line</h3>
           <Slider
             value={tempPlaceInLineFilters}
@@ -349,7 +301,7 @@ export default function Listings() {
             onChange={handlePlaceInLineFilter}
             min={0}
             max={totalPods.toNumber()}
-              />
+          />
           <Button onClick={applyFilters}>Apply Filter</Button>
         </Box>
       </Popover>
