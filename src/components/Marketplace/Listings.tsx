@@ -80,17 +80,17 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
       <BalanceTableCell
         className={classes.lucidaStyle}
         balance={listing.objectiveIndex.minus(harvestableIndex)}
-        label="Pods"
+        label="Place in line"
       />
       <BalanceTableCell
         className={classes.lucidaStyle}
         balance={(listing.expiry).minus(new BigNumber(harvestableIndex))}
-        label="Pods"
+        label="Expiry"
       />
       <BalanceTableCell
         className={classes.lucidaStyle}
         balance={listing.pricePerPod}
-        label="Beans"
+        label="Beans per pod"
       />
       {isMine ? (
         <>
@@ -119,10 +119,8 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
         <>
           <BalanceTableCell
             className={classes.lucidaStyle}
-            balance={listing.initialAmount
-              .minus(listing.amountSold)
-            }
-            label="Beans"
+            balance={listing.initialAmount.minus(listing.amountSold)}
+            label="Pods"
           />
           <TableCell align="center">
             <IconButton
