@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { Link } from '@material-ui/core';
 import {
   MEDIUM_NFT_GENESIS_LINK,
@@ -11,10 +13,20 @@ import {
   ContentDropdown,
   Grid,
 } from 'components/Common';
+import { mintAllAccountNFTs, mintAllNFTs } from 'util/index';
 import ClaimNFT from './claimnft';
 import NftStatsHeader from './NftStatsHeader';
 
 export default function NFTs() {
+  const {
+    unclaimedWinterNFTs,
+    claimedWinterNFTs,
+    unclaimedNFTs,
+    claimedNFTs,
+  } = useSelector<AppState, AppState['nfts']>(
+    (state) => state.nfts
+  );
+
   const description = (
     <>
       <span style={{ display: 'flex' }}>
@@ -47,9 +59,39 @@ export default function NFTs() {
         }}
       >
         <NftStatsHeader />
-        <ClaimNFT
-          buttonDescription={beanftStrings.mintAll}
-        />
+        <Grid container>
+          <Grid item xl={2} lg={1} md={0} />
+          <Grid item xl={6} lg={5} md={6} xs={12}>
+            <ClaimNFT
+              buttonDescription={beanftStrings.mintAll}
+              claimedNFTs={claimedNFTs}
+              unclaimedNFTs={unclaimedNFTs}
+              title="Genesis"
+              mintable
+              mintAll={() => {
+                const accounts = unclaimedNFTs.map((u) => u.account);
+                const ids = unclaimedNFTs.map((u) => u.id);
+                const hashes = unclaimedNFTs.map((u) => u.metadataIpfsHash);
+                const signatures = unclaimedNFTs.map((u) => u.signature);
+                mintAllNFTs(accounts, ids, hashes, signatures);
+              }}
+            />
+          </Grid>
+          <Grid item lg={5} md={6} xs={12}>
+            <ClaimNFT
+              buttonDescription={beanftStrings.mintAll}
+              claimedNFTs={claimedWinterNFTs}
+              unclaimedNFTs={unclaimedWinterNFTs}
+              title="Winter"
+              mintable={false}
+              mintAll={() => {
+                const ids = unclaimedWinterNFTs.map((u) => u.id);
+                const signatures = unclaimedWinterNFTs.map((u) => u.signature2);
+                mintAllAccountNFTs(ids, signatures);
+              }}
+            />
+          </Grid>
+        </Grid>
         <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
           <ContentDropdown
             description={description}

@@ -4,6 +4,7 @@ import {
   setUnclaimedNFTs,
   setClaimedNFTs,
   setAccountNFTs,
+  setClaimedWinterNFTs,
   setInvestmentNFTs,
   setNFTs,
 } from './actions';
@@ -11,6 +12,7 @@ import {
 export interface NftState {
   unclaimedWinterNFTs: Array;
   unclaimedNFTs: Array;
+  claimedWinterNFTs: Array;
   claimedNFTs: Array;
   accountNFTs: Array;
   investmentNFTs: Array;
@@ -26,6 +28,7 @@ export interface NftState {
 export const initialState: NftState = {
   unclaimedWinterNFTs: [],
   unclaimedNFTs: [],
+  claimedWinterNFTs: [],
   claimedNFTs: [],
   accountNFTs: [],
   investmentNFTs: [],
@@ -45,6 +48,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setUnclaimedNFTs, (state, { payload }) => {
       state.unclaimedNFTs = payload;
+    })
+    .addCase(setClaimedWinterNFTs, (state, { payload }) => {
+      state.claimedWinterNFTs = payload;
     })
     .addCase(setClaimedNFTs, (state, { payload }) => {
       state.claimedNFTs = payload;
