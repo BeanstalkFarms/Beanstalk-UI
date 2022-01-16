@@ -21,11 +21,12 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import { theme, BEAN } from 'constants/index';
-import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN } from 'util/index';
+import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN, TokenImage, FarmAsset } from 'util/index';
 import _ from 'lodash';
 import BigNumber from 'bignumber.js';
 import { BalanceTableCell } from 'components/Common';
 import { BuyListingModal } from './BuyListingModal';
+import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
 
 import { useStyles } from './TableStyles';
 
@@ -47,6 +48,7 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
         className={classes.lucidaStyle}
         label="Beans per pod"
         balance={listing.pricePerPod}
+        icon={<BeanIcon className={classes.beanIcon} />}
       />
       {isMine ? (
         <>
@@ -77,6 +79,7 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
             className={classes.lucidaStyle}
             balance={listing.initialAmount.minus(listing.amountSold)}
             label="Pods"
+            icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
           />
           <TableCell align="center">
             <IconButton

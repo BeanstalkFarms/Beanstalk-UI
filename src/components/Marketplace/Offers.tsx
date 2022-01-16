@@ -8,11 +8,18 @@ import {
   TableHead,
   TableRow,
   Button,
+  IconButton,
 } from '@material-ui/core';
+import { theme, BEAN } from 'constants/index';
 import SellPlotModal from 'components/Marketplace/SellPlotModal';
 import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress, TokenImage } from 'util/index';
 import { BalanceTableCell } from 'components/Common';
 import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
+import {
+  CloseOutlined as CancelIcon,
+  ShoppingCartOutlined as ShoppingCartIcon,
+  FilterListRounded as FilterIcon,
+} from '@material-ui/icons';
 
 import { useStyles } from './TableStyles';
 
@@ -42,6 +49,7 @@ function Offer({ offer, setOffer, isMine }) {
             className={classes.lucidaStyle}
             label="Pods Offered"
             balance={offer.initialAmountToBuy}
+            icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
           />
           {/* Amount filled so far */}
           <BalanceTableCell
@@ -54,22 +62,35 @@ function Offer({ offer, setOffer, isMine }) {
           </BalanceTableCell>
           {/* Cancel this offer */}
           <TableCell align="center">
-            <Button
+            <IconButton
               onClick={async () => {
                 const beanstalk = beanstalkContract();
                 await beanstalk.cancelBuyOffer(offer.index.toString());
               }}
+              style={{
+                color: theme.linkColor,
+              }}
+              size="small"
             >
-              Cancel
-            </Button>
+              <CancelIcon />
+            </IconButton>
           </TableCell>
         </>
       ) : (
         <>
+          {/* # of pods in this offer */}
+          <BalanceTableCell
+            className={classes.lucidaStyle}
+            label="Pods Offered"
+            balance={offer.initialAmountToBuy}
+            icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
+          >
+            {displayBN(offer.initialAmountToBuy)}
+          </BalanceTableCell>
           {/* # of pods remaining in this offer */}
           <BalanceTableCell
             className={classes.lucidaStyle}
-            label="Pods"
+            label="Pods Available"
             balance={offer.initialAmountToBuy.minus(offer.amountBought)}
             icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
           >
@@ -77,13 +98,17 @@ function Offer({ offer, setOffer, isMine }) {
           </BalanceTableCell>
           {/* Sell into this offer */}
           <TableCell align="center">
-            <Button
+            <IconButton
               onClick={() => {
                 setOffer(offer);
               }}
+              style={{
+                color: theme.linkColor,
+              }}
+              size="small"
             >
-              Sell
-            </Button>
+              <ShoppingCartIcon />
+            </IconButton>
           </TableCell>
         </>
       ) }
@@ -133,19 +158,21 @@ export default function Offers() {
             <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">
+                  <TableCell align="right">
                     Max place in line
                   </TableCell>
-                  <TableCell align="center">
-                    Price per pod
+                  <TableCell align="right">
+                    Price
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="right">
                     Pods Offered
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="right" style={{ width: 100 }}>
                     Pods Sold
                   </TableCell>
-                  <TableCell align="center" />
+                  <TableCell align="center" style={{ width: 60 }}>
+                    Cancel
+                  </TableCell>
                 </TableRow>
               </TableHead>
               {myOffers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} isMine />)}
@@ -153,15 +180,26 @@ export default function Offers() {
           </TableContainer>
         </>
       ) }
-      <h2 style={{ marginLeft: 12 }}>All Offers</h2>
+      <h2 style={{ marginLeft: 12 }}>Offers</h2>
       <TableContainer>
         <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="right">Max place in line</TableCell>
-              <TableCell align="right">Price per pod</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="center">Buy</TableCell>
+              <TableCell align="right">
+                Max place in line
+              </TableCell>
+              <TableCell align="right">
+                Price
+              </TableCell>
+              <TableCell align="right">
+                Pods Offered
+              </TableCell>
+              <TableCell align="right" style={{ width: 100 }}>
+                Pods Avail.
+              </TableCell>
+              <TableCell align="center" style={{ width: 60 }}>
+                Sell
+              </TableCell>
             </TableRow>
           </TableHead>
           {otherOffers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} />)}

@@ -31,8 +31,8 @@ export default function MarketplaceBuyModule() {
   );
 
   const sectionTitles = [
-    'Pod Listings',
-    'Make Offer',
+    'Buy Now',
+    'Create Bid',
   ];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit, // TODO
