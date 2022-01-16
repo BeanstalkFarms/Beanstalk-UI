@@ -16,6 +16,10 @@ export const mintNFT = async (_account, nftId, ipfsHash, signature) => {
     });
 };
 
+export const mintNFT2 = async (_account, nftId, signature) => {
+  console.log(_account, nftId, signature);
+};
+
 export const mintAllNFTs = async (_account, nftId, ipfsHash, signature) => {
   beaNFTContract()
     .batchMint(_account, nftId, ipfsHash, signature)
@@ -26,6 +30,10 @@ export const mintAllNFTs = async (_account, nftId, ipfsHash, signature) => {
     });
 };
 
+export const mintAllAccountNFTs = async (nftIds, signatures) => {
+  console.log(account, nftIds, signatures);
+};
+
 export const isMinted = async (nftId) => {
   try {
     await beaNFTContractReadOnly().methods.ownerOf(new BigNumber(nftId)).call();
@@ -34,6 +42,8 @@ export const isMinted = async (nftId) => {
     return false;
   }
 };
+
+export const getMintedWinterNFTs = async () => [[], []];
 
 export const getMintedNFTs = async () => {
   const beaNFT = beaNFTContractReadOnly();
