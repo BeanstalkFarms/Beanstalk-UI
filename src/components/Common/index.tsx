@@ -120,10 +120,10 @@ export const totalStrings = {
     'This is the total number of Unharvestable Pods. This is the outstanding debt of Beanstalk.',
   ethBalance: 'This is the number of Ethereum in the BEAN:ETH liquidity pool.',
   beanReserveTotal:
-    'This is the number of Beans in the BEAN:ETH liquidity pool.',
+    'This is the number of Beans in the BEAN:ETH and the BEAN:3CRV liquidity pool.',
   topLeft: 'This is the current USD value of all Beans.',
   topLeftTitle: 'Market Cap',
-  topRight: 'This is the current USD value of the BEAN:ETH liquidity pool.',
+  topRight: 'This is the current USD value of the BEAN:ETH and BEAN:3CRV liquidity pool.',
   topRightTitle: 'Pool Value',
 };
 export const walletTopStrings = {

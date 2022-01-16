@@ -684,9 +684,11 @@ export default function WalletModule() {
     .plus(harvestablePodBalance);
   const userBeansAndEth = poolForLPRatio(userLP);
   const userLPBeans = userBeansAndEth[0].multipliedBy(2);
-  const userBalanceInDollars = userBeans
-    .plus(userLPBeans)
-    .multipliedBy(beanPrice);
+  const userBalanceInDollars = beanPrice.isGreaterThan(0)
+    ? userBeans
+      .plus(userLPBeans)
+      .multipliedBy(beanPrice)
+    : new BigNumber(0);
 
   //
   const myBalancesSection = (

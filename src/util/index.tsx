@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import {
   BEANFT,
   BEANSTALK,
+  CURVE,
   UNISWAP_V2_ROUTER,
   changeNetwork,
 } from 'constants/index';
@@ -37,6 +38,7 @@ const beanstalkAbi = require('../constants/abi/Beanstalk.json');
 const beaNFTAbi = require('../constants/abi/BeaNFT.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
+const curveMetaPoolAbi = require('../constants/abi/Bean3crvMetaPool.json');
 
 export const tokenContract = (token) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
@@ -62,6 +64,12 @@ export const pairContractReadOnly = (pair) =>
 
 export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
+
+// export const curveContract = () =>
+//   new ethers.Contract(CURVE.addr, curveMetaPoolAbi, web3Signer);
+
+export const curveContractReadOnly = () =>
+  new web3.eth.Contract(curveMetaPoolAbi, CURVE.addr);
 
 async function initializeMetaMaskListeners() {
   const changeHandler = () => {
