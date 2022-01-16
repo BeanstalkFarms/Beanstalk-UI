@@ -12,7 +12,7 @@ import {
 import Image from 'material-ui-image';
 import { makeStyles } from '@material-ui/styles';
 import { BASE_IPFS_LINK, BASE_OPENSEA_LINK, theme } from 'constants/index';
-import { mintNFT } from 'util/index';
+import { mintNFT, mintNFT2 } from 'util/index';
 import {
   beanftStrings,
   SingleButton,
@@ -62,7 +62,9 @@ export default function NftPicTable({
           fontSize="15px"
           handleClick={() => {
             const nft = nftList[i];
-            mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature);
+            nft.metadataIpfsHash ?
+              mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature) :
+              mintNFT2(nft.account, nft.id, nft.signature2);
           }}
           height="30px"
           margin="-10px 7px 0 0"
@@ -138,13 +140,13 @@ export default function NftPicTable({
                         target="blank"
                       >
                         <span>
-                          {`${nftList[index].metadataIpfsHash.substring(
+                          {`${nftList[index].imageIpfsHash.substring(
                             0,
                             6
                           )}...${nftList[
                             index
-                          ].metadataIpfsHash.substring(
-                            nftList[index].metadataIpfsHash.length - 4
+                          ].imageIpfsHash.substring(
+                            nftList[index].imageIpfsHash.length - 4
                           )}`}
                         </span>
                       </Link>

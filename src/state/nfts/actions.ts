@@ -12,6 +12,10 @@ export const setClaimedNFTs = createAction<Array>(
   'nfts/setClaimedNFTs'
 );
 
+export const setClaimedWinterNFTs = createAction<Array>(
+  'nfts/setClaimedWinterNFTs'
+);
+
 export const setAccountNFTs = createAction<Array>(
   'nfts/setAccountNFTs'
 );
