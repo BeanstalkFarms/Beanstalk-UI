@@ -133,9 +133,9 @@ export default function NftPicTable({
                         `ID: ${nftList[index].id}`
                       )}
                       <br />
-                      <span>{'Metadata: '}</span>
+                      <span>{'Image: '}</span>
                       <Link
-                        href={`${BASE_IPFS_LINK}${nftList[index].metadataIpfsHash}`}
+                        href={`${BASE_IPFS_LINK}${nftList[index].imageIpfsHash}`}
                         color="inherit"
                         target="blank"
                       >
