@@ -57,7 +57,7 @@ function Offer({ offer, setOffer, isMine }) {
             <Button
               onClick={async () => {
                 const beanstalk = beanstalkContract();
-                await beanstalk.cancelBuyOffer(offer.index.times(10 ** 6).toString());
+                await beanstalk.cancelBuyOffer(offer.index.toString());
               }}
             >
               Cancel
