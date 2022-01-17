@@ -13,7 +13,7 @@ import {
 import { theme, BEAN } from 'constants/index';
 import SellPlotModal from 'components/Marketplace/SellPlotModal';
 import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress, TokenImage } from 'util/index';
-import { BalanceTableCell } from 'components/Common';
+import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
 import {
   CloseOutlined as CancelIcon,
@@ -23,42 +23,36 @@ import {
 
 import { useStyles } from './TableStyles';
 
-function Offer({ offer, setOffer, isMine }) {
+function OfferRow({ offer, setOffer, isMine }) {
   const classes = useStyles();
-
   const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
   const pctSold = offer.amountBought.dividedBy(offer.initialAmountToBuy);
-
+  const explainer = `${isMine ? `You want` : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine)} in the pod line.`;
   return (
     <TableRow>
-      <BalanceTableCell
-        className={classes.lucidaStyle}
-        label="Max place in line"
-        balance={offer.maxPlaceInLine}
-      />
+      {/* Place in line */}
+      <TableCell className={classes.lucidaStyle}>
+        <span>0 — {displayBN(offer.maxPlaceInLine)}</span>
+        <QuestionModule description={explainer} style={{ marginLeft: 10 }} position="static" />
+      </TableCell>
+      {/* Price per pod */}
       <BalanceTableCell
         className={classes.lucidaStyle}
         label="Price per pod"
         balance={offer.pricePerPod}
         icon={<BeanIcon className={classes.beanIcon} />}
       />
-      { isMine ? (
+      {isMine ? (
         <>
-          {/* Amount total amount offered */}
-          <BalanceTableCell
-            className={classes.lucidaStyle}
-            label="Pods Offered"
-            balance={offer.initialAmountToBuy}
-            icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
-          />
           {/* Amount filled so far */}
+          {/* ({pctSold.toFixed()}%) */}
           <BalanceTableCell
             className={classes.lucidaStyle}
             label="Pods Sold"
             balance={offer.amountBought}
+            icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
           > 
-            {/* Show the percentage of this offer that has been sold so far. */}
-            {displayBN(offer.amountBought)} ({pctSold.toFixed()}%)
+            {displayBN(offer.amountBought)} / {displayBN(offer.initialAmountToBuy)}
           </BalanceTableCell>
           {/* Cancel this offer */}
           <TableCell align="center">
@@ -78,15 +72,6 @@ function Offer({ offer, setOffer, isMine }) {
         </>
       ) : (
         <>
-          {/* # of pods in this offer */}
-          <BalanceTableCell
-            className={classes.lucidaStyle}
-            label="Pods Offered"
-            balance={offer.initialAmountToBuy}
-            icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
-          >
-            {displayBN(offer.initialAmountToBuy)}
-          </BalanceTableCell>
           {/* # of pods remaining in this offer */}
           <BalanceTableCell
             className={classes.lucidaStyle}
@@ -116,7 +101,17 @@ function Offer({ offer, setOffer, isMine }) {
   );
 }
 
-export default function Offers() {
+type OffersProps = {
+  mode: "ALL" | "MINE";
+}
+
+/**
+ * Offers = "Offers to Buy"
+ * 
+ * FIXME: This really shouldn't be called Offers throughout the Beanstalk app,
+ * that word is ambiguous (offer to buy or offer to sell?)
+ */
+export default function Offers(props: OffersProps) {
   const classes = useStyles();
   const [walletAddress, setWalletAddress] = useState(null);
   const { buyOffers: offers } = useSelector<AppState, AppState['marketplace']>(
@@ -145,66 +140,69 @@ export default function Offers() {
   const myOffers = offers.filter((offer) => offer.listerAddress === walletAddress);
   const otherOffers = offers.filter((offer) => offer.listerAddress !== walletAddress);
 
+  //
+  let content;
+  if (props.mode === "MINE") {
+    if (myOffers.length > 0) {
+      content = (
+        <TableContainer>
+          <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">
+                  Place in line
+                </TableCell>
+                <TableCell align="right">
+                  Price
+                </TableCell>
+                <TableCell align="right">
+                  Pods Bought
+                </TableCell>
+                <TableCell align="center">
+                  Cancel
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            {myOffers.map((offer) => <OfferRow key={offer.index} offer={offer} setOffer={setCurrentOffer} isMine />)}
+          </Table>
+        </TableContainer>
+      );
+    } 
+  } else {
+    content = (
+      <>
+        <TableContainer>
+          <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">
+                  Place in line
+                </TableCell>
+                <TableCell align="right">
+                  Price
+                </TableCell>
+                <TableCell align="right">
+                  Pods Requested
+                </TableCell>
+                <TableCell align="center">
+                  Sell
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            {otherOffers.map((offer) => <OfferRow key={offer.index} offer={offer} setOffer={setCurrentOffer} />)}
+          </Table>
+        </TableContainer>
+      </>
+    )
+  }
+
   return (
     <>
       <SellPlotModal
         currentOffer={currentOffer}
         onClose={() => setCurrentOffer(null)}
       />
-      {myOffers.length > 0 && (
-        <>
-          <h2 style={{ marginLeft: 12 }}>Your Offers</h2>
-          <TableContainer>
-            <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="right">
-                    Max place in line
-                  </TableCell>
-                  <TableCell align="right">
-                    Price
-                  </TableCell>
-                  <TableCell align="right">
-                    Pods Offered
-                  </TableCell>
-                  <TableCell align="right" style={{ width: 100 }}>
-                    Pods Sold
-                  </TableCell>
-                  <TableCell align="center" style={{ width: 60 }}>
-                    Cancel
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              {myOffers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} isMine />)}
-            </Table>
-          </TableContainer>
-        </>
-      ) }
-      <h2 style={{ marginLeft: 12 }}>Offers</h2>
-      <TableContainer>
-        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="right">
-                Max place in line
-              </TableCell>
-              <TableCell align="right">
-                Price
-              </TableCell>
-              <TableCell align="right">
-                Pods Offered
-              </TableCell>
-              <TableCell align="right" style={{ width: 100 }}>
-                Pods Avail.
-              </TableCell>
-              <TableCell align="center" style={{ width: 60 }}>
-                Sell
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          {otherOffers.map((offer) => <Offer key={offer.index} offer={offer} setOffer={setCurrentOffer} />)}
-        </Table>
-      </TableContainer>
+      {content}
     </>
   );
 }

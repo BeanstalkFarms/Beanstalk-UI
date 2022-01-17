@@ -2,17 +2,20 @@ import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
+
 import {
   approveBeanstalkBean,
   SwapMode,
-
   poolForLP,
 } from 'util/index';
 import { BaseModule, siloStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
+
 import { CreateBuyOfferModule } from './CreateBuyOfferModule';
 import Listings from './Listings';
 
+
+//
 export default function MarketplaceBuyModule() {
   const [section, setSection] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
@@ -30,10 +33,8 @@ export default function MarketplaceBuyModule() {
     (state) => state.totalBalance
   );
 
-  const sectionTitles = [
-    'Buy Now',
-    'Create Bid',
-  ];
+  // Section setup
+  const sectionTitles = ['Buy Now', 'Create Bid'];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit, // TODO
     siloStrings.beanDeposit, // TODO
@@ -81,7 +82,7 @@ export default function MarketplaceBuyModule() {
   };
 
   const sections = [
-    <Listings />,
+    <Listings mode="ALL" />,
     <CreateBuyOfferModule
       ref={buyOfferRef}
       isFormDisabled={isFormDisabled}

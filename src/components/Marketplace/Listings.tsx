@@ -24,38 +24,55 @@ import { theme, BEAN } from 'constants/index';
 import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN, TokenImage, FarmAsset } from 'util/index';
 import _ from 'lodash';
 import BigNumber from 'bignumber.js';
-import { BalanceTableCell } from 'components/Common';
+import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { BuyListingModal } from './BuyListingModal';
 import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
 
 import { useStyles } from './TableStyles';
 
-function Listing({ listing, harvestableIndex, setListing, isMine }) {
+function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
   const classes = useStyles();
+  const relativeIndex = (listing.objectiveIndex).minus(harvestableIndex);
+  const relativeExpiry = (listing.expiry).minus(new BigNumber(harvestableIndex));
+  const amountRemaining = listing.initialAmount.minus(listing.amountSold)
+  const explainer = `${isMine ? `You want` : `${listing.listerAddress.slice(0, 6)} wants`} to sell ${displayBN(amountRemaining)} Pods at ${displayBN(relativeIndex)} in the pod line for ${displayBN(listing.pricePerPod)} Beans per Pod. If the pod line moves forward by ${displayBN(relativeExpiry)} Pods, this listing will automatically expire.`;
   return (
     <TableRow>
+      {/* Place in line */}
+      <TableCell
+        align="left"
+        className={classes.lucidaStyle}
+      >
+        {displayBN(relativeIndex)}
+        <QuestionModule description={explainer} style={{ marginLeft: 10 }} position="static" />
+      </TableCell>
+      {/* # of pods remaining to harvest before this offer to sell expires */}
       <BalanceTableCell
         className={classes.lucidaStyle}
-        label="Place in line"
-        balance={listing.objectiveIndex.minus(harvestableIndex)}
+        label={`- If the pod line moves forward ${displayBN(relativeExpiry)} Pods, this listing will automatically expire.`}
+        balance={new BigNumber(relativeExpiry)}
       />
+      {/* Price */}
       <BalanceTableCell
         className={classes.lucidaStyle}
-        label="Expiry"
-        balance={(listing.expiry).minus(new BigNumber(harvestableIndex))}
-      />
-      <BalanceTableCell
-        className={classes.lucidaStyle}
-        label="Beans per pod"
+        label="Beans per Pod"
         balance={listing.pricePerPod}
         icon={<BeanIcon className={classes.beanIcon} />}
       />
       {isMine ? (
         <>
-          <TableCell className={classes.lucidaStyle} align="right">
-            {`${displayBN(listing.amountSold)} / ${displayBN(listing.initialAmount)}`}
+          {/* Pods Filled */}
+          <TableCell  
+            className={classes.lucidaStyle}
+            align="right"  
+          >
+            <span>
+              {`${displayBN(listing.amountSold)} / ${displayBN(listing.initialAmount)}`}
+            </span>
+            <img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />
             {listing.amountSold > 0 && <CircularProgress variant="determinate" value={(listing.amountSold.dividedBy(listing.initialAmount)).toNumber() * 100} />}
           </TableCell>
+          {/* Cancel Button */}
           <TableCell align="center">
             <IconButton
               onClick={async () => {
@@ -75,12 +92,14 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
         </>
       ) : (
         <>
+          {/* Amount */}
           <BalanceTableCell
             className={classes.lucidaStyle}
-            balance={listing.initialAmount.minus(listing.amountSold)}
+            balance={amountRemaining}
             label="Pods"
             icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
           />
+          {/* Buy Button */}
           <TableCell align="center">
             <IconButton
               onClick={() => setListing(listing)}
@@ -96,7 +115,15 @@ function Listing({ listing, harvestableIndex, setListing, isMine }) {
   );
 }
 
-export default function Listings() {
+type ListingsProps = {
+  mode: "ALL" | "MINE";
+}
+
+/**
+ * A Listing = an Offer to Sell.
+ * A User can purchase the Pods in a Listing.
+ */
+export default function Listings(props: ListingsProps) {
   const classes = useStyles();
   const [walletAddress, setWalletAddress] = useState(null);
   const { listings } = useSelector<AppState, AppState['marketplace']>(
@@ -205,43 +232,43 @@ export default function Listings() {
   if (listings.length === 0) {
     return <div>No listings.</div>;
   }
+
+  if (props.mode === "MINE") {
+    return (
+      <TableContainer>
+        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">Place in line</TableCell>
+              <TableCell align="right">Expiry</TableCell>
+              <TableCell align="right">Price</TableCell>
+              <TableCell align="right">Pods Sold</TableCell>
+              <TableCell align="center">Cancel</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {myListings.map((listing) => (
+              <ListingRow
+                key={listing.objectiveIndex - harvestableIndex}
+                harvestableIndex={harvestableIndex}
+                listing={listing}
+                setListing={setCurrentListing}
+                isMine
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+  
   return (
     <>
       <BuyListingModal
         listing={currentListing}
         setCurrentListing={setCurrentListing}
       />
-      {myListings.length > 0 && (
-        <>
-          <h2 className={classes.titleStyle}>Your Listings</h2>
-          <TableContainer>
-            <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="right">Place in line</TableCell>
-                  <TableCell align="right">Expiry</TableCell>
-                  <TableCell align="right">Price</TableCell>
-                  <TableCell align="right">Filled</TableCell>
-                  <TableCell align="center">Cancel</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {myListings.map((listing) => (
-                  <Listing
-                    key={listing.objectiveIndex - harvestableIndex}
-                    harvestableIndex={harvestableIndex}
-                    listing={listing}
-                    setListing={setCurrentListing}
-                    isMine
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-      )}
       <Box style={{ position: 'relative' }}>
-        <h2 className={classes.titleStyle}>All Listings</h2>
         <IconButton
           className={`${classes.filterButtonStyle} filterButton`}
           style={{
@@ -312,7 +339,7 @@ export default function Listings() {
         <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="right">Place in line</TableCell>
+              <TableCell align="left">Place in line</TableCell>
               <TableCell align="right">Expiry</TableCell>
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Amount</TableCell>
@@ -321,7 +348,7 @@ export default function Listings() {
           </TableHead>
           <TableBody>
             {marketplaceListings.current.map((listing) => (
-              <Listing
+              <ListingRow
                 key={listing.objectiveIndex - harvestableIndex}
                 harvestableIndex={harvestableIndex}
                 listing={listing}
