@@ -44,12 +44,12 @@ export const useStyles = makeStyles({
     color: 'white',
     backgroundColor: theme.linkColor,
   },
-  beanIcon: {
-    width: 11,
-    height: 11,
-    verticalAlign: 'middle',
-    marginLeft: 1,
-    marginTop: -3,
-    opacity: 0.7,
-  }
+  // beanIcon: {
+  //   width: 11,
+  //   height: 11,
+  //   verticalAlign: 'middle',
+  //   marginLeft: 1,
+  //   marginTop: -3,
+  //   opacity: 0.7,
+  // }
 });

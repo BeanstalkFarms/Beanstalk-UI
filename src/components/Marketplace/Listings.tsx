@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
+import _ from 'lodash';
+import BigNumber from 'bignumber.js';
 import {
   CloseOutlined as CancelIcon,
   ShoppingCartOutlined as ShoppingCartIcon,
@@ -20,14 +22,12 @@ import {
   Slider,
   CircularProgress,
 } from '@material-ui/core';
+
 import { theme, BEAN } from 'constants/index';
-import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN, TokenImage, FarmAsset } from 'util/index';
-import _ from 'lodash';
-import BigNumber from 'bignumber.js';
+import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN, TokenImage, FarmAsset, CryptoAsset } from 'util/index';
+import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { BuyListingModal } from './BuyListingModal';
-import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
-
 import { useStyles } from './TableStyles';
 
 function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
@@ -57,7 +57,7 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
         className={classes.lucidaStyle}
         label="Beans per Pod"
         balance={listing.pricePerPod}
-        icon={<BeanIcon className={classes.beanIcon} />}
+        icon={<TokenIcon token={CryptoAsset.Bean} />}
       />
       {isMine ? (
         <>
@@ -97,7 +97,7 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
             className={classes.lucidaStyle}
             balance={amountRemaining}
             label="Pods"
-            icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
+            icon={<TokenIcon token={FarmAsset.Pods} />}
           />
           {/* Buy Button */}
           <TableCell align="center">

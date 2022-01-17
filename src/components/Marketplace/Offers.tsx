@@ -7,26 +7,25 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Button,
   IconButton,
 } from '@material-ui/core';
-import { theme, BEAN } from 'constants/index';
-import SellPlotModal from 'components/Marketplace/SellPlotModal';
-import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress, TokenImage } from 'util/index';
-import { BalanceTableCell, QuestionModule } from 'components/Common';
-import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
 import {
   CloseOutlined as CancelIcon,
   ShoppingCartOutlined as ShoppingCartIcon,
   FilterListRounded as FilterIcon,
 } from '@material-ui/icons';
 
+import { theme } from 'constants/index';
+import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress, TokenImage } from 'util/index';
+import SellPlotModal from 'components/Marketplace/SellPlotModal';
+import TokenIcon from 'components/Common/TokenIcon';
+import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { useStyles } from './TableStyles';
 
 function OfferRow({ offer, setOffer, isMine }) {
   const classes = useStyles();
   const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
-  const pctSold = offer.amountBought.dividedBy(offer.initialAmountToBuy);
+  // const pctSold = offer.amountBought.dividedBy(offer.initialAmountToBuy);
   const explainer = `${isMine ? `You want` : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine)} in the pod line.`;
   return (
     <TableRow>
@@ -40,7 +39,7 @@ function OfferRow({ offer, setOffer, isMine }) {
         className={classes.lucidaStyle}
         label="Price per pod"
         balance={offer.pricePerPod}
-        icon={<BeanIcon className={classes.beanIcon} />}
+        icon={<TokenIcon token={CryptoAsset.Bean} />}
       />
       {isMine ? (
         <>
@@ -50,7 +49,7 @@ function OfferRow({ offer, setOffer, isMine }) {
             className={classes.lucidaStyle}
             label="Pods Sold"
             balance={offer.amountBought}
-            icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
+            icon={<TokenIcon token={FarmAsset.Pods} />}
           > 
             {displayBN(offer.amountBought)} / {displayBN(offer.initialAmountToBuy)}
           </BalanceTableCell>
@@ -77,7 +76,7 @@ function OfferRow({ offer, setOffer, isMine }) {
             className={classes.lucidaStyle}
             label="Pods Available"
             balance={offer.initialAmountToBuy.minus(offer.amountBought)}
-            icon={<img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />}
+            icon={<TokenIcon token={FarmAsset.Pods} />}
           >
             {displayBN(numPodsLeft)}
           </BalanceTableCell>
