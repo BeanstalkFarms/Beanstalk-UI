@@ -97,7 +97,6 @@ export default function MarketplaceBuyModule() {
 
   return (
     <>
-      <Graph />
       <BaseModule
         marginTop="20px"
         handleApprove={approveBeanstalkBean}
@@ -111,6 +110,7 @@ export default function MarketplaceBuyModule() {
       >
         {sections[section]}
       </BaseModule>
+      <Graph />
     </>
   );
 }

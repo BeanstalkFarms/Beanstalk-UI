@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { Ref, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
@@ -9,10 +9,11 @@ import { withParentSize } from '@visx/responsive';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
-import { Zoom } from '@visx/zoom';
+import { Zoom, applyMatrixToPoint } from '@visx/zoom';
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
 import { GraphTooltip } from './GraphTooltip';
+import { TransformMatrix } from '@visx/zoom/lib/types';
 
 type CirclePosition = {
   x: number;
@@ -93,7 +94,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
   // Amount of right horizontal padding in between graph content and graph container
   const rightHorizontalPadding = 20;
 
-  let { listings } = useSelector<AppState, AppState['marketplace']>(
+  const { listings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
 
@@ -102,53 +103,53 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
   );
 
   // Note: this is temporary test data overriding the real data
-  listings = [
-    {
-      listerAddress: 'yo',
-      objectiveIndex: harvestableIndex.plus(new BigNumber(1e6)),
-      pricePerPod: new BigNumber(0.95),
-      expiry: new BigNumber(100),
-      initialAmount: new BigNumber(1e6),
-      amountSold: new BigNumber(0),
-      status: 'yo',
-    },
-    {
-      listerAddress: 'yo',
-      objectiveIndex: harvestableIndex.plus(new BigNumber(1.5e6)),
-      pricePerPod: new BigNumber(0.99),
-      expiry: new BigNumber(100),
-      initialAmount: new BigNumber(1),
-      amountSold: new BigNumber(0),
-      status: 'yo',
-    },
-    {
-      listerAddress: 'yo',
-      objectiveIndex: harvestableIndex.plus(new BigNumber(20e6)),
-      pricePerPod: new BigNumber(0.7),
-      expiry: new BigNumber(100),
-      initialAmount: new BigNumber(100000),
-      amountSold: new BigNumber(0),
-      status: 'yo',
-    },
-    {
-      listerAddress: 'yo',
-      objectiveIndex: harvestableIndex.plus(new BigNumber(37e6)),
-      pricePerPod: new BigNumber(0.4),
-      expiry: new BigNumber(100),
-      initialAmount: new BigNumber(2e6),
-      amountSold: new BigNumber(0),
-      status: 'yo',
-    },
-    {
-      listerAddress: 'yo',
-      objectiveIndex: harvestableIndex.plus(new BigNumber(40e6)),
-      pricePerPod: new BigNumber(0.4),
-      expiry: new BigNumber(100),
-      initialAmount: new BigNumber(2e6),
-      amountSold: new BigNumber(0),
-      status: 'yo',
-    },
-  ];
+  // listings = [
+  //   {
+  //     listerAddress: 'yo',
+  //     objectiveIndex: harvestableIndex.plus(new BigNumber(1e6)),
+  //     pricePerPod: new BigNumber(0.95),
+  //     expiry: new BigNumber(100),
+  //     initialAmount: new BigNumber(1e6),
+  //     amountSold: new BigNumber(0),
+  //     status: 'yo',
+  //   },
+  //   {
+  //     listerAddress: 'yo',
+  //     objectiveIndex: harvestableIndex.plus(new BigNumber(1.5e6)),
+  //     pricePerPod: new BigNumber(0.99),
+  //     expiry: new BigNumber(100),
+  //     initialAmount: new BigNumber(1),
+  //     amountSold: new BigNumber(0),
+  //     status: 'yo',
+  //   },
+  //   {
+  //     listerAddress: 'yo',
+  //     objectiveIndex: harvestableIndex.plus(new BigNumber(20e6)),
+  //     pricePerPod: new BigNumber(0.7),
+  //     expiry: new BigNumber(100),
+  //     initialAmount: new BigNumber(100000),
+  //     amountSold: new BigNumber(0),
+  //     status: 'yo',
+  //   },
+  //   {
+  //     listerAddress: 'yo',
+  //     objectiveIndex: harvestableIndex.plus(new BigNumber(37e6)),
+  //     pricePerPod: new BigNumber(0.4),
+  //     expiry: new BigNumber(100),
+  //     initialAmount: new BigNumber(2e6),
+  //     amountSold: new BigNumber(0),
+  //     status: 'yo',
+  //   },
+  //   {
+  //     listerAddress: 'yo',
+  //     objectiveIndex: harvestableIndex.plus(new BigNumber(40e6)),
+  //     pricePerPod: new BigNumber(0.4),
+  //     expiry: new BigNumber(100),
+  //     initialAmount: new BigNumber(2e6),
+  //     amountSold: new BigNumber(0),
+  //     status: 'yo',
+  //   },
+  // ];
 
   const maxPlaceInLine = Math.max(
     ...listings.map((l) => l.objectiveIndex.minus(harvestableIndex).toNumber())
@@ -231,19 +232,29 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
     }
   };
 
+  // This works to constrain at x=0 y=0 but it causes some weird
+  // mouse and zoom behavior.
+  // https://airbnb.io/visx/docs/zoom#Zoom_constrain
+  const constrain = (transformMatrix: TransformMatrix, prevTransformMatrix: TransformMatrix) => {
+    const min = applyMatrixToPoint(transformMatrix, { x: 0, y: 0 });
+    if (min.x > 0 || min.y < 0) {
+      return prevTransformMatrix;
+    }
+    return transformMatrix;
+  }
+
   return (
     <>
       <Zoom<SVGSVGElement>
         width={parentWidth}
         height={graphHeight}
+        constrain={constrain}
         scaleXMin={1 / 2}
         scaleXMax={4}
         scaleYMin={1 / 2}
         scaleYMax={4}
       >
         {(zoom) => {
-          console.log({ zoom });
-
           return (
             <div style={{ position: 'relative' }}>
               <svg
@@ -255,6 +266,8 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                   touchAction: 'none',
                 }}
               >
+                {/* Contains the entire chart (incl. axes and labels) 
+                    QUESITON*/}
                 <rect
                   width={parentWidth}
                   height={graphHeight}
@@ -263,15 +276,20 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                   onTouchMove={handleMouseMove}
                 />
                 <g transform={zoom.toString()}>{circles}</g>
+                {/* Contains the chart; this seems to be sitting over top of the other elems */}
                 <rect
                   width={parentWidth}
                   height={graphHeight}
                   fill="transparent"
+                  ref={svgRef}
                   onTouchStart={zoom.dragStart}
                   onTouchMove={zoom.dragMove}
                   onTouchEnd={zoom.dragEnd}
                   onMouseDown={zoom.dragStart}
-                  onMouseMove={zoom.dragMove}
+                  onMouseMove={(evt) => {
+                    zoom.dragMove(evt);
+                    handleMouseMove(evt);
+                  }}
                   onMouseUp={zoom.dragEnd}
                   onMouseLeave={() => {
                     if (zoom.isDragging) zoom.dragEnd();
@@ -281,6 +299,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                     zoom.scale({ scaleX: 1.1, scaleY: 1.1, point });
                   }}
                 />
+                {/* Y axis: Price per Pod */}
                 <AxisLeft
                   scale={rescaleYWithZoom(yScale, zoom)}
                   tickFormat={(d) => `$${d.toFixed(2)}`}
@@ -303,6 +322,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                   }}
                   hideZero
                 />
+                {/* X axis: Place in Line */}
                 <AxisBottom
                   scale={rescaleXWithZoom(xScale, zoom)}
                   tickFormat={(d) => `${d / 1e6}M`}
@@ -327,6 +347,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                   hideZero
                 />
               </svg>
+              {/* Tooltip Display */}
               {tooltipOpen &&
                 typeof tooltipData === 'number' &&
                 tooltipLeft != null &&
@@ -368,6 +389,7 @@ export default function Graph() {
     borderRadius: '25px',
     fontFamily: 'Futura-Pt-Book',
     backgroundColor: colorTheme.module.foreground,
+    marginTop: 20,
   };
 
   return (

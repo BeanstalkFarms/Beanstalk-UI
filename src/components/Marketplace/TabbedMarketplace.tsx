@@ -6,6 +6,7 @@ import MarketplaceBuyModule from './MarketplaceBuyModule';
 import MarketplaceSellModule from './MarketplaceSellModule';
 import Listings from './Listings';
 import Offers from './Offers';
+import GraphModule from './GraphModule';
 
 export default function TabbedSilo() {
   const { width } = useSelector<AppState, AppState['general']>(
@@ -84,6 +85,15 @@ export default function TabbedSilo() {
           >
             <Listings mode="MINE" />
           </BaseModule>
+          {/* Graph */}
+          {/* <BaseModule
+            marginTop="20px"
+            sectionTitles={[]}
+            sectionTitlesDescription={[]}
+            showButton={false}
+          >
+            <GraphModule />
+          </BaseModule> */}
         </BaseModule>
       </Grid>
     </Grid>
