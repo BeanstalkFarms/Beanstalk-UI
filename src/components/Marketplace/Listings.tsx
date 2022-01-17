@@ -322,15 +322,15 @@ export default function Listings(props: ListingsProps) {
             <Slider
               value={tempPlaceInLineFilters}
               valueLabelFormat={(value: number) => {
-                    const units = ['', 'K', 'M', 'B'];
-                    let unitIndex = 0;
-                    let scaledValue = value;
-                    while (scaledValue >= 1000 && unitIndex < units.length - 1) {
-                      unitIndex += 1;
-                      scaledValue /= 1000;
-                    }
-                    return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
-                  }}
+                const units = ['', 'K', 'M', 'B'];
+                let unitIndex = 0;
+                let scaledValue = value;
+                while (scaledValue >= 1000 && unitIndex < units.length - 1) {
+                  unitIndex += 1;
+                  scaledValue /= 1000;
+                }
+                return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
+              }}
               valueLabelDisplay="on"
               onChange={handlePlaceInLineFilter}
               min={0}

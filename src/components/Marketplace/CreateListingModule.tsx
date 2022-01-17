@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { TrimBN, displayBN } from 'util/index';
+// import { Box } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { AppState } from 'state';
+import { useSelector } from 'react-redux';
 
 import {
   ListInputField,
   TokenInputField,
   PlotInputField,
+  TransactionDetailsModule,
 } from 'components/Common';
-import { AppState } from 'state';
-import { useSelector } from 'react-redux';
+import { TrimBN, displayBN, CryptoAsset, FarmAsset } from 'util/index';
 
 export const CreateListingModule = (props) => {
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
@@ -61,6 +64,7 @@ export const CreateListingModule = (props) => {
   const priceField = (
     <TokenInputField
       label="Price per Pod"
+      token={CryptoAsset.Bean}
       handleChange={(e) => {
         const newPricePerPodValue = new BigNumber(e.target.value);
         // Price can't be created than 1
@@ -73,16 +77,26 @@ export const CreateListingModule = (props) => {
       value={TrimBN(pricePerPodValue, 6)}
     />
   );
-
+  const amountField = (
+    <TokenInputField
+      label="Amount"
+      token={FarmAsset.Pods}
+      handleChange={(e) => {
+        setAmount(new BigNumber(e.target.value));
+      }}
+      value={amount}
+      maxHandler={maxHandler}
+    />
+  );
   const expiresInField = (
     <>
-      <TokenInputField
+      <PlotInputField
         label="Expires In"
         handleChange={(e) => {
           const newExpiresinValue = new BigNumber(e.target.value);
-          console.log('index', index.toNumber());
-          console.log('newExpiresinValue', newExpiresinValue.toNumber());
-          console.log('harvestableIndex', harvestableIndex.toNumber());
+          // console.log('index', index.toNumber());
+          // console.log('newExpiresinValue', newExpiresinValue.toNumber());
+          // console.log('harvestableIndex', harvestableIndex.toNumber());
 
           // Price can't be created than 1
           if (
@@ -101,21 +115,80 @@ export const CreateListingModule = (props) => {
           }
         }}
       />
-      {expiresIn.isGreaterThanOrEqualTo(0) && amount.isGreaterThanOrEqualTo(0) && pricePerPodValue.isGreaterThanOrEqualTo(0)
-       && <h3>You are about to list {displayBN(amount)} pods from plot at index {displayBN(index)} for {TrimBN(pricePerPodValue, 6).toString()} beans per pod. If fully sold, you will receive {displayBN(amount.multipliedBy(pricePerPodValue))} beans. This plot will expire when {displayBN(expiresIn)} more pods have been harvested, or when the total amount of pods harvested is {displayBN(expiresIn.plus(harvestableIndex))}</h3>}
     </>
   );
-  const amountField = (
-    <PlotInputField
-      key={0}
-      handleChange={(e) => {
-        setAmount(new BigNumber(e.target.value));
-      }}
-      label="Amount"
-      value={amount}
-      maxHandler={maxHandler}
-    />
-  );
+
+  const details = [
+    `List ${displayBN(amount)} Pods from plot at index ${displayBN(index)} for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
+    `If fully sold, you will receive ${displayBN(amount.multipliedBy(pricePerPodValue))} Beans.`,
+    `This listing will expire when ${displayBN(expiresIn)} additional Pods have been harvested. The total amount of pods harvested at this time will be ${displayBN(expiresIn.plus(harvestableIndex))}.`,
+  ];
+  // if (settings.claim) {
+  //   details.push(
+  //     <ClaimTextModule
+  //       key="claim"
+  //       claim={settings.claim}
+  //       beanClaimable={beanClaimable}
+  //       ethClaimable={ethClaimable}
+  //     />
+  //   );
+  // }
+  // if (
+  //   settings.mode === SwapMode.Ethereum ||
+  //   (settings.mode === SwapMode.BeanEthereum &&
+  //     toBuyBeanValue.isGreaterThan(0))
+  // ) {
+  //   details.push(
+  //     <TransactionTextModule
+  //       key="buy"
+  //       balance={toBuyBeanValue}
+  //       buyBeans={toBuyBeanValue}
+  //       claim={settings.claim}
+  //       claimableBalance={ethClaimable}
+  //       mode={settings.mode}
+  //       sellEth={fromEthValue}
+  //       updateExpectedPrice={updateExpectedPrice}
+  //       value={TrimBN(fromEthValue, 9)}
+  //     />
+  //   );
+  // }
+  // details.push(
+  //   `Place a buy offer for ${displayBN(
+  //     toPodValue
+  //   )} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at
+  //   ${pricePerPodValue.toFixed(2)} price per Pod`
+  // );
+  // details.push(
+  //   `${displayBN(toBuyBeanValue.plus(MaxBN(fromBeanValue, new BigNumber(0))))} Beans
+  //   will be locked in the Marketplace to allow for order fulfillment.`
+  // );
+  // details.push(
+  //   `Your offer will expire after ${displayBN(maxPlaceInLineValue)} Pods are harvested from the Pod line`
+  // );
+
+  function transactionDetails() {
+    return (
+      <>
+        <ExpandMoreIcon
+          color="primary"
+          style={{ marginBottom: '-7px', width: '100%' }}
+        />
+        {/* {toPodField} */}
+        <TransactionDetailsModule fields={details} />
+        {/* <Box
+          style={{
+            display: 'inline-block',
+            width: '100%',
+            fontSize: 'calc(9px + 0.5vmin)',
+          }}
+        >
+          <span style={{ fontSize: 'calc(9px + 0.5vmin)' }}>
+            You can cancel the offer to return the locked Beans from the marketplace
+          </span>
+        </Box> */}
+      </>
+    );
+  }
 
   return (
     <>
@@ -123,7 +196,7 @@ export const CreateListingModule = (props) => {
       {priceField}
       {amountField}
       {expiresInField}
-
+      {transactionDetails()}
     </>
   );
 };
