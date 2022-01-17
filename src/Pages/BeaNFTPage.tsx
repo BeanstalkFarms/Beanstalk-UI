@@ -3,7 +3,7 @@ import { Page } from 'Pages/index';
 import NFTs from 'components/NFT';
 // import NFTLeaderboard from 'components/NFTLeaderboard';
 
-export default function DAO(props) {
+export default function DAO() {
   const sectionTitles = ['BeaNFT'];
   const sections = [<NFTs />];
 
