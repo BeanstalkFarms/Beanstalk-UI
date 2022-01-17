@@ -20,19 +20,19 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
-    'react', 
-    'react-hooks', 
-    '@typescript-eslint', 
-    'jest'
+    'react',
+    'react-hooks',
+    '@typescript-eslint',
+    'jest',
   ],
   extends: [
-    'plugin:react/recommended', 
-    'airbnb'
+    'plugin:react/recommended',
+    'airbnb',
   ],
   //
   rules: {
     // Stylistic
-    'semi': 'warn',
+    semi: 'warn',
     'comma-dangle': ['warn', {
       arrays: 'always-multiline',
       imports: 'always-multiline',
@@ -43,7 +43,7 @@ module.exports = {
     'quote-props': 'warn',
     'import/order': 'warn',
     'space-infix-ops': 'warn',
-    'quotes': ['warn', 'single'],
+    quotes: ['warn', 'single'],
     'no-multiple-empty-lines': 'warn',
     'jsx-quotes': ['error', 'prefer-double'],
     'react/jsx-curly-brace-presence': 'warn',
@@ -87,12 +87,12 @@ module.exports = {
     'operator-linebreak': 0,
     'import/no-mutable-exports': 0,
     'no-underscore-dangle': 0,
-    // 
+    //
     'import/no-extraneous-dependencies': 0,
     'implicit-arrow-linebreak': 0,
     'object-curly-newline': 0,
     'function-paren-newline': 0,
-    'indent': 0,
+    indent: 0,
     'react/prop-types': 0,
     'prefer-destructuring': 0,
     'react/destructuring-assignment': 0,

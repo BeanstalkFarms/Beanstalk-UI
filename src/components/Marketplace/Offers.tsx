@@ -12,11 +12,11 @@ import {
 import {
   CloseOutlined as CancelIcon,
   ShoppingCartOutlined as ShoppingCartIcon,
-  FilterListRounded as FilterIcon,
+  // FilterListRounded as FilterIcon,
 } from '@material-ui/icons';
 
 import { theme } from 'constants/index';
-import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress, TokenImage } from 'util/index';
+import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress } from 'util/index';
 import SellPlotModal from 'components/Marketplace/SellPlotModal';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
@@ -26,7 +26,7 @@ function OfferRow({ offer, setOffer, isMine }) {
   const classes = useStyles();
   const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
   // const pctSold = offer.amountBought.dividedBy(offer.initialAmountToBuy);
-  const explainer = `${isMine ? `You want` : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine)} in the pod line.`;
+  const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine)} in the pod line.`;
   return (
     <TableRow>
       {/* Place in line */}
@@ -50,7 +50,7 @@ function OfferRow({ offer, setOffer, isMine }) {
             label="Pods Sold"
             balance={offer.amountBought}
             icon={<TokenIcon token={FarmAsset.Pods} />}
-          > 
+          >
             {displayBN(offer.amountBought)} / {displayBN(offer.initialAmountToBuy)}
           </BalanceTableCell>
           {/* Cancel this offer */}
@@ -101,12 +101,12 @@ function OfferRow({ offer, setOffer, isMine }) {
 }
 
 type OffersProps = {
-  mode: "ALL" | "MINE";
+  mode: 'ALL' | 'MINE';
 }
 
 /**
  * Offers = "Offers to Buy"
- * 
+ *
  * FIXME: This really shouldn't be called Offers throughout the Beanstalk app,
  * that word is ambiguous (offer to buy or offer to sell?)
  */
@@ -141,7 +141,7 @@ export default function Offers(props: OffersProps) {
 
   //
   let content;
-  if (props.mode === "MINE") {
+  if (props.mode === 'MINE') {
     if (myOffers.length > 0) {
       content = (
         <TableContainer>
@@ -166,7 +166,7 @@ export default function Offers(props: OffersProps) {
           </Table>
         </TableContainer>
       );
-    } 
+    }
   } else {
     content = (
       <>
@@ -192,7 +192,7 @@ export default function Offers(props: OffersProps) {
           </Table>
         </TableContainer>
       </>
-    )
+    );
   }
 
   return (

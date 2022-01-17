@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
+
 import { BaseModule, Grid, siloStrings } from 'components/Common';
 import MarketplaceBuyModule from './MarketplaceBuyModule';
 import MarketplaceSellModule from './MarketplaceSellModule';
 import Listings from './Listings';
 import Offers from './Offers';
-import GraphModule from './GraphModule';
+// import GraphModule from './GraphModule';
 
 export default function TabbedSilo() {
   const { width } = useSelector<AppState, AppState['general']>(
@@ -71,7 +72,7 @@ export default function TabbedSilo() {
           <BaseModule
             marginTop="20px"
             sectionTitles={['My Bids']}
-            sectionTitlesDescription={[`Bids for Pods you're willing to buy on the Market`]}
+            sectionTitlesDescription={['Bids for Pods you\'re willing to buy on the Market']}
             showButton={false}
           >
             <Offers mode="MINE" />

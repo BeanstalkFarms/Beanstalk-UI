@@ -15,7 +15,6 @@ import { CreateBuyOfferModule } from './CreateBuyOfferModule';
 import Graph from './GraphModule';
 import Listings from './Listings';
 
-
 //
 export default function MarketplaceBuyModule() {
   const [section, setSection] = useState(0);

@@ -34,8 +34,8 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
   const classes = useStyles();
   const relativeIndex = (listing.objectiveIndex).minus(harvestableIndex);
   const relativeExpiry = (listing.expiry).minus(new BigNumber(harvestableIndex));
-  const amountRemaining = listing.initialAmount.minus(listing.amountSold)
-  const explainer = `${isMine ? `You want` : `${listing.listerAddress.slice(0, 6)} wants`} to sell ${displayBN(amountRemaining)} Pods at ${displayBN(relativeIndex)} in the pod line for ${displayBN(listing.pricePerPod)} Beans per Pod. If the pod line moves forward by ${displayBN(relativeExpiry)} Pods, this listing will automatically expire.`;
+  const amountRemaining = listing.initialAmount.minus(listing.amountSold);
+  const explainer = `${isMine ? 'You want' : `${listing.listerAddress.slice(0, 6)} wants`} to sell ${displayBN(amountRemaining)} Pods at ${displayBN(relativeIndex)} in the pod line for ${displayBN(listing.pricePerPod)} Beans per Pod. If the pod line moves forward by ${displayBN(relativeExpiry)} Pods, this listing will automatically expire.`;
   return (
     <TableRow>
       {/* Place in line */}
@@ -62,9 +62,9 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
       {isMine ? (
         <>
           {/* Pods Filled */}
-          <TableCell  
+          <TableCell
             className={classes.lucidaStyle}
-            align="right"  
+            align="right"
           >
             <span>
               {`${displayBN(listing.amountSold)} / ${displayBN(listing.initialAmount)}`}
@@ -116,7 +116,7 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
 }
 
 type ListingsProps = {
-  mode: "ALL" | "MINE";
+  mode: 'ALL' | 'MINE';
 }
 
 /**
@@ -233,7 +233,7 @@ export default function Listings(props: ListingsProps) {
     return <div>No listings.</div>;
   }
 
-  if (props.mode === "MINE") {
+  if (props.mode === 'MINE') {
     return (
       <TableContainer>
         <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
@@ -261,7 +261,7 @@ export default function Listings(props: ListingsProps) {
       </TableContainer>
     );
   }
-  
+
   return (
     <>
       <BuyListingModal

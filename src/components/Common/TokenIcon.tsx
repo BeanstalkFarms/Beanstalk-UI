@@ -1,6 +1,6 @@
 import React from 'react';
 import { TokenImage, Token, TokenLabel } from 'util/index';
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core';
 
 export const useStyles = makeStyles({
   tokenIcon: {
@@ -10,7 +10,7 @@ export const useStyles = makeStyles({
     marginLeft: 1,
     marginTop: -3,
     opacity: 0.7,
-  }
+  },
 });
 
 type TokenImageProps = {
@@ -32,4 +32,4 @@ export default function TokenIcon(props: TokenImageProps) {
 
 TokenIcon.defaultProps = {
   style: undefined,
-}
+};

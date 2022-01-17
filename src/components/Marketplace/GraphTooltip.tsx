@@ -43,7 +43,7 @@ export const GraphTooltip = (props: GraphTooltipProps) => {
         <span style={{ fontWeight: 'bold' }}>Price per pod</span>
         <div className={classes.tooltipDetailPill}>
           <span>
-            {displayFullBN(listing.pricePerPod, 2)} 
+            {displayFullBN(listing.pricePerPod, 2)}
           </span>
           <TokenIcon token={CryptoAsset.Bean} />
         </div>
