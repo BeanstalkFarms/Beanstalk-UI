@@ -12,6 +12,7 @@ import { BaseModule, siloStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
 
 import { CreateBuyOfferModule } from './CreateBuyOfferModule';
+import Graph from './GraphModule';
 import Listings from './Listings';
 
 
@@ -96,6 +97,7 @@ export default function MarketplaceBuyModule() {
 
   return (
     <>
+      <Graph />
       <BaseModule
         marginTop="20px"
         handleApprove={approveBeanstalkBean}

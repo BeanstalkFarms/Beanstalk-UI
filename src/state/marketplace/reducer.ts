@@ -35,9 +35,8 @@ export const initialState: MarketplaceState = {
 };
 
 export default createReducer(initialState, (builder) =>
-  builder
-    .addCase(setMarketplaceListings, (state, { payload }) => {
-      state.listings = payload.listings;
-      state.buyOffers = payload.buyOffers;
-    })
+  builder.addCase(setMarketplaceListings, (state, { payload }) => {
+    state.listings = payload.listings;
+    state.buyOffers = payload.buyOffers;
+  })
 );
