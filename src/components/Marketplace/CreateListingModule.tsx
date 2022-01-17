@@ -18,13 +18,20 @@ export const CreateListingModule = (props) => {
     (state) => state.weather
   );
 
+  /** The absolute index of the selected plot in line. */
   const [index, setIndex] = useState(new BigNumber(-1));
+  /** The amount of Pod listed from the plot. */
   const [amount, setAmount] = useState(new BigNumber(-1));
+  /** How far forward the Pod line needs to move before the offer expire. */
   const [expiresIn, setExpiresIn] = useState(new BigNumber(-1));
-
+  /** The price per pod. */
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
 
   const { setSellOffer } = props;
+
+  const selectedPlotPositionInLine = index.minus(harvestableIndex);
+
+  /**  */
   useEffect(() => {
     // TODO: rest
     const canSell = pricePerPodValue.isLessThan(1);
@@ -40,10 +47,13 @@ export const CreateListingModule = (props) => {
     }
   }, [index, setSellOffer, pricePerPodValue, amount, expiresIn]);
 
+  /** */
   const handlePlotChange = (event) => {
     setIndex(new BigNumber(event.target.value));
     setAmount(new BigNumber(props.plots[event.target.value]));
   };
+
+  /** */
   const maxHandler = () => {
     if (index != null) {
       setAmount(new BigNumber(props.plots[index.toString()]));
@@ -119,7 +129,7 @@ export const CreateListingModule = (props) => {
   );
 
   const details = [
-    `List ${displayBN(amount)} Pods from plot at index ${displayBN(index)} for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
+    `List ${displayBN(amount)} Pods from plot at position ${displayBN(selectedPlotPositionInLine)} in line for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
     `If fully sold, you will receive ${displayBN(amount.multipliedBy(pricePerPodValue))} Beans.`,
     `This listing will expire when ${displayBN(expiresIn)} additional Pods have been harvested. The total amount of pods harvested at this time will be ${displayBN(expiresIn.plus(harvestableIndex))}.`,
   ];
