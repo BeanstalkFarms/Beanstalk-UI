@@ -24,7 +24,7 @@ import {
 } from '@material-ui/core';
 
 import { theme, BEAN } from 'constants/index';
-import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN, TokenImage, FarmAsset, CryptoAsset } from 'util/index';
+import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { BuyListingModal } from './BuyListingModal';
@@ -69,7 +69,7 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
             <span>
               {`${displayBN(listing.amountSold)} / ${displayBN(listing.initialAmount)}`}
             </span>
-            <img alt="Pods" src={TokenImage(FarmAsset.Pods)} className={classes.beanIcon} />
+            <TokenIcon token={FarmAsset.Pods} />
             {listing.amountSold > 0 && <CircularProgress variant="determinate" value={(listing.amountSold.dividedBy(listing.initialAmount)).toNumber() * 100} />}
           </TableCell>
           {/* Cancel Button */}
@@ -233,32 +233,136 @@ export default function Listings(props: ListingsProps) {
     return <div>No listings.</div>;
   }
 
+  let content;
   if (props.mode === 'MINE') {
-    return (
-      <TableContainer>
-        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Place in line</TableCell>
-              <TableCell align="right">Expiry</TableCell>
-              <TableCell align="right">Price</TableCell>
-              <TableCell align="right">Pods Sold</TableCell>
-              <TableCell align="center">Cancel</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {myListings.map((listing) => (
-              <ListingRow
-                key={listing.objectiveIndex - harvestableIndex}
-                harvestableIndex={harvestableIndex}
-                listing={listing}
-                setListing={setCurrentListing}
-                isMine
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    if (myListings.length > 0) {
+      content = (
+        <TableContainer>
+          <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Place in line</TableCell>
+                <TableCell align="right">Expiry</TableCell>
+                <TableCell align="right">Price</TableCell>
+                <TableCell align="right">Pods Sold</TableCell>
+                <TableCell align="center">Cancel</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {myListings.map((listing) => (
+                <ListingRow
+                  key={listing.objectiveIndex - harvestableIndex}
+                  harvestableIndex={harvestableIndex}
+                  listing={listing}
+                  setListing={setCurrentListing}
+                  isMine
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      );
+    } else {
+      content = (
+        <div>
+          <h4 style={{ }}>No active listings</h4>
+        </div>
+      );
+    }
+  } else {
+    content = (
+      <>
+        <Box style={{ position: 'relative' }}>
+          <IconButton
+            className={`${classes.filterButtonStyle} filterButton`}
+            style={{
+              color: 'white',
+              backgroundColor: theme.iconButtonColor,
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              right: '25px',
+              padding: '6px',
+              top: '20%',
+            }}
+            size="small"
+            onClick={openPopover}
+          >
+            <FilterIcon />
+          </IconButton>
+        </Box>
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={popoverEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}>
+          <Box sx={{
+            top: '50%',
+            left: '50%',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}>
+            <h3>Price Per Pod</h3>
+            <Slider
+              value={tempPriceFilters}
+              valueLabelDisplay="on"
+              onChange={handlePriceFilter}
+              step={0.01}
+              min={0}
+              max={1}
+            />
+            <h3>Place In Line</h3>
+            <Slider
+              value={tempPlaceInLineFilters}
+              valueLabelFormat={(value: number) => {
+                    const units = ['', 'K', 'M', 'B'];
+                    let unitIndex = 0;
+                    let scaledValue = value;
+                    while (scaledValue >= 1000 && unitIndex < units.length - 1) {
+                      unitIndex += 1;
+                      scaledValue /= 1000;
+                    }
+                    return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
+                  }}
+              valueLabelDisplay="on"
+              onChange={handlePlaceInLineFilter}
+              min={0}
+              max={totalPods.toNumber()}
+            />
+            <Button onClick={applyFilters}>Apply Filter</Button>
+          </Box>
+        </Popover>
+        <TableContainer>
+          <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Place in line</TableCell>
+                <TableCell align="right">Expiry</TableCell>
+                <TableCell align="right">Price</TableCell>
+                <TableCell align="right">Amount</TableCell>
+                <TableCell align="center">Buy</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {marketplaceListings.current.map((listing) => (
+                <ListingRow
+                  key={listing.objectiveIndex - harvestableIndex}
+                  harvestableIndex={harvestableIndex}
+                  listing={listing}
+                  setListing={setCurrentListing}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </>
     );
   }
 
@@ -268,96 +372,7 @@ export default function Listings(props: ListingsProps) {
         listing={currentListing}
         setCurrentListing={setCurrentListing}
       />
-      <Box style={{ position: 'relative' }}>
-        <IconButton
-          className={`${classes.filterButtonStyle} filterButton`}
-          style={{
-            color: 'white',
-            backgroundColor: theme.iconButtonColor,
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'absolute',
-            right: '25px',
-            padding: '6px',
-            top: '20%',
-          }}
-          size="small"
-          onClick={openPopover}
-        >
-          <FilterIcon />
-        </IconButton>
-      </Box>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={popoverEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}>
-        <Box sx={{
-          top: '50%',
-          left: '50%',
-          width: 400,
-          bgcolor: 'background.paper',
-          border: '2px solid #000',
-          boxShadow: 24,
-          p: 4,
-        }}>
-          <h3>Price Per Pod</h3>
-          <Slider
-            value={tempPriceFilters}
-            valueLabelDisplay="on"
-            onChange={handlePriceFilter}
-            step={0.01}
-            min={0}
-            max={1}
-          />
-          <h3>Place In Line</h3>
-          <Slider
-            value={tempPlaceInLineFilters}
-            valueLabelFormat={(value: number) => {
-                  const units = ['', 'K', 'M', 'B'];
-                  let unitIndex = 0;
-                  let scaledValue = value;
-                  while (scaledValue >= 1000 && unitIndex < units.length - 1) {
-                    unitIndex += 1;
-                    scaledValue /= 1000;
-                  }
-                  return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
-                }}
-            valueLabelDisplay="on"
-            onChange={handlePlaceInLineFilter}
-            min={0}
-            max={totalPods.toNumber()}
-          />
-          <Button onClick={applyFilters}>Apply Filter</Button>
-        </Box>
-      </Popover>
-      <TableContainer>
-        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Place in line</TableCell>
-              <TableCell align="right">Expiry</TableCell>
-              <TableCell align="right">Price</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="center">Buy</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {marketplaceListings.current.map((listing) => (
-              <ListingRow
-                key={listing.objectiveIndex - harvestableIndex}
-                harvestableIndex={harvestableIndex}
-                listing={listing}
-                setListing={setCurrentListing}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {content}
     </>
   );
 }

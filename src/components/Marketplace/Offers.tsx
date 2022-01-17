@@ -166,6 +166,12 @@ export default function Offers(props: OffersProps) {
           </Table>
         </TableContainer>
       );
+    } else {
+      content = (
+        <div>
+          <h4 style={{ }}>No active bids</h4>
+        </div>
+      );
     }
   } else {
     content = (
