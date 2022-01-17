@@ -60,7 +60,7 @@ export default function NFTs() {
       >
         <NftStatsHeader />
         <Grid container>
-          <Grid item xl={2} lg={1} md={0} />
+          <Grid item xl={2} lg={1} md={false} />
           <Grid item xl={6} lg={5} md={6} xs={12}>
             <ClaimNFT
               buttonDescription={beanftStrings.mintAll}
