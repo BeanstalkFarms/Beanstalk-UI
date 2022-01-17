@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
-import { AppState } from 'state';
-import { useSelector } from 'react-redux';
-import { Box, Grid } from '@material-ui/core';
-import { mintAllNFTs } from 'util/index';
+import { Box, Link, Grid } from '@material-ui/core';
 import {
   beanftStrings,
   BaseModule,
   SingleButton,
+  ContentTitle,
 } from 'components/Common';
+import {
+  OPENSEA_LINK,
+  MEDIUM_NFT_WINTER_LINK,
+} from 'constants/index';
 import NftPicTable from './NftPicTable';
 
 export default function ClaimNFT({
+  title,
   buttonDescription,
+  unclaimedNFTs,
+  claimedNFTs,
+  mintAll,
+  mintable,
 }) {
-  const { unclaimedWinterNFTs, unclaimedNFTs, claimedNFTs } = useSelector<AppState, AppState['nfts']>(
-    (state) => state.nfts
-  );
-
   const [page, setPage] = React.useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
 
@@ -34,29 +37,15 @@ export default function ClaimNFT({
   const sectionTitlesInfo = [];
   const sectionTitlesDescription = [];
 
-  // create Unminted Winter NFTs tab
-  if (unclaimedWinterNFTs !== undefined && Object.keys(unclaimedWinterNFTs).length > 0) {
-    sectionsInfo.push(
-      <NftPicTable
-        canClaimNFT={false}
-        nftList={unclaimedWinterNFTs}
-        handleChange={handlePageChange}
-        page={page}
-        style={{ width: 'auto', maxWidth: '450px' }}
-      />
-    );
-    sectionTitlesInfo.push('WINTER');
-    sectionTitlesDescription.push(beanftStrings.winter);
-  }
-
   // create Unminted NFTs tab
   if (unclaimedNFTs !== undefined && Object.keys(unclaimedNFTs).length > 0 && canClaimNFT) {
     sectionsInfo.push(
       <NftPicTable
-        canClaimNFT={canClaimNFT}
+        canClaimNFT={canClaimNFT && mintable}
         nftList={unclaimedNFTs}
         handleChange={handlePageChange}
         page={page}
+        showButton={mintable}
         style={{ width: 'auto', maxWidth: '450px' }}
       />
     );
@@ -79,6 +68,17 @@ export default function ClaimNFT({
     sectionTitlesDescription.push(beanftStrings.minted);
   }
 
+  if (sectionsInfo.length === 0) {
+    sectionsInfo.push(
+      <>
+        <Box> You have no BeaNFTs.</Box>
+        <Link href={title === 'Genesis' ? OPENSEA_LINK : MEDIUM_NFT_WINTER_LINK} color="inherit" target="blank"> Buy BeaNFTs on OpenSea.</Link>
+      </>
+    );
+    sectionTitlesInfo.push('NFTs');
+    sectionTitlesDescription.push(beanftStrings.default);
+  }
+
   // Table Wrapper
   const showListTables =
     sectionsInfo.length > 0 ? (
@@ -89,6 +89,7 @@ export default function ClaimNFT({
           sectionTitles={sectionTitlesInfo}
           sectionTitlesDescription={sectionTitlesDescription}
           showButton={false}
+          style={{ width: '95%', marginLeft: '2.5%', marginTop: '0' }}
           textTransform="none"
         >
           {sectionsInfo[sectionInfo]}
@@ -97,18 +98,13 @@ export default function ClaimNFT({
     ) : null;
 
   // Claim all Unminted BeaNFTs Button
-  const showButton = canClaimNFT ? (
+  const showButton = canClaimNFT && mintable ? (
     <SingleButton
       backgroundColor="#3B3B3B"
       color="white"
+      isDisabled={!mintable}
       description={buttonDescription}
-      handleClick={() => {
-        const accounts = unclaimedNFTs.map((u) => u.account);
-        const ids = unclaimedNFTs.map((u) => u.id);
-        const hashes = unclaimedNFTs.map((u) => u.metadataIpfsHash);
-        const signatures = unclaimedNFTs.map((u) => u.signature);
-        mintAllNFTs(accounts, ids, hashes, signatures);
-      }}
+      handleClick={mintAll}
       margin="-13px 7px 0 0"
       marginTooltip="0 0 -5px 20px"
       size="small"
@@ -120,16 +116,15 @@ export default function ClaimNFT({
 
   return (
     <Grid container justifyContent="center">
-      <Grid container item xs={6} style={{ width: '50%' }}>
-        <Grid
-          container
-          item
-          justifyContent="center"
-          alignItems="flex-start"
-          style={{ marginBottom: '20px' }}
-        >
-          {showListTables}
-        </Grid>
+      <ContentTitle title={title} />
+      <Grid
+        container
+        item
+        justifyContent="center"
+        alignItems="flex-start"
+        style={{ marginBottom: '20px' }}
+      >
+        {showListTables}
       </Grid>
       <Grid
         container

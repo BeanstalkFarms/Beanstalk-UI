@@ -123,7 +123,7 @@ export const totalStrings = {
     'This is the number of Beans in the BEAN:ETH and the BEAN:3CRV liquidity pool.',
   topLeft: 'This is the current USD value of all Beans.',
   topLeftTitle: 'Market Cap',
-  topRight: 'This is the current USD value of the BEAN:ETH and BEAN:3CRV liquidity pool.',
+  topRight: 'This is the current USD value of the BEAN:ETH and the BEAN:3CRV liquidity pool.',
   topRightTitle: 'Pool Value',
 };
 export const walletTopStrings = {
@@ -233,6 +233,7 @@ export const beanftStrings = {
   beanftDescription:
     'BeaNFT Genesis Collection is a series of 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
   mintAll: 'Use this button to Mint all your Mintable BeaNFTs.',
+  default: 'This tab will display your BeaNFTs if you have any BeaNFTs associated with this event. If it is empty, you can purchase a BeaNFT on OpenSea.',
   minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
   singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',
   unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',

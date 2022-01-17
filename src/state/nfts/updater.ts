@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
-  setUnclaimedWinterNFTs,
   setUnclaimedNFTs,
   setClaimedNFTs,
+  setClaimedWinterNFTs,
+  setUnclaimedWinterNFTs,
   setNFTs,
 } from 'state/nfts/actions';
 import {
   queryWinterNFTs,
   loadNFTs,
-  loadWinterNFTs,
   queryAccountNFTStats,
 } from 'graph';
 import {
@@ -17,14 +17,15 @@ import {
   metamaskFailure,
   account,
   getMintedNFTs,
+  getMintedWinterNFTs,
 } from 'util/index';
 
 export default function NFTUpdater() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    async function checkMints(data) {
-      const [ownedIds, tradedIds] = await getMintedNFTs();
+    async function checkMints(data, getMinted, setUnclaimed, setClaimed) {
+      const [ownedIds, tradedIds] = await getMinted();
       const un = [];
       const cn = [];
       for (let i = 0; i < data.length; i += 1) {
@@ -39,18 +40,17 @@ export default function NFTUpdater() {
           un.push(data[i]);
         }
       }
-      dispatch(setUnclaimedNFTs(un));
-      dispatch(setClaimedNFTs(cn));
+      dispatch(setUnclaimed(un));
+      dispatch(setClaimed(cn));
       listenForNFTTransfers(loadAccountNFTs); // eslint-disable-line
     }
     async function loadAccountNFTs() {
-      const data = await loadNFTs(account.toLowerCase());
-      checkMints(data);
-    }
-
-    async function loadWinterAccountNFTs() {
-      const winterData = await loadWinterNFTs(account.toLowerCase());
-      dispatch(setUnclaimedWinterNFTs(winterData));
+      const {
+        genesis,
+        winter,
+      } = await loadNFTs(account.toLowerCase());
+      checkMints(genesis, getMintedNFTs, setUnclaimedNFTs, setClaimedNFTs);
+      checkMints(winter, getMintedWinterNFTs, setUnclaimedWinterNFTs, setClaimedWinterNFTs);
     }
 
     async function loadAccountNFTStats() {
@@ -67,7 +67,6 @@ export default function NFTUpdater() {
         setTimeout(() => start(), 100);
       } else if (account) {
         loadAccountNFTs();
-        loadWinterAccountNFTs();
         loadAccountNFTStats();
       }
       loadNftLeaderboard();
