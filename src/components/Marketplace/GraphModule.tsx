@@ -1,5 +1,4 @@
 import React, { Ref, useRef } from 'react';
-import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { useTooltip, Tooltip } from '@visx/tooltip';
@@ -187,10 +186,11 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
   });
 
   const circlePositions = listings.map((listing) => ({
-    x:
-      xScale(listing.objectiveIndex.minus(harvestableIndex).toNumber()) +
-      leftAxisWidth,
+    // x position is current place in line
+    x: xScale(listing.objectiveIndex.minus(harvestableIndex).toNumber()) + leftAxisWidth,
+    // y position is price per pod
     y: yScale(listing.pricePerPod.toNumber()),
+    // radius is plot size
     radius: calculateCircleRadius(
       listing.initialAmount.minus(listing.amountSold).toNumber(),
       maxPlotSize
@@ -267,7 +267,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                 }}
               >
                 {/* Contains the entire chart (incl. axes and labels) 
-                    QUESITON*/}
+                    QUESTION: why have this + the below <rect> both take up the full dims? */}
                 <rect
                   width={parentWidth}
                   height={graphHeight}
@@ -287,8 +287,8 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                   onTouchEnd={zoom.dragEnd}
                   onMouseDown={zoom.dragStart}
                   onMouseMove={(evt) => {
-                    zoom.dragMove(evt);
-                    handleMouseMove(evt);
+                    zoom.dragMove(evt); // handle zoom drag
+                    handleMouseMove(evt, svgRef); // handle hover event for tooltips
                   }}
                   onMouseUp={zoom.dragEnd}
                   onMouseLeave={() => {
@@ -313,7 +313,6 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                   numTicks={10}
                   tickComponent={(props) => {
                     const { formattedValue, ...renderProps } = props;
-
                     return (
                       <Text {...renderProps} fontFamily="Futura-Pt-Book">
                         {formattedValue}
@@ -337,7 +336,6 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                   numTicks={10}
                   tickComponent={(props) => {
                     const { formattedValue, ...renderProps } = props;
-
                     return (
                       <Text {...renderProps} fontFamily="Futura-Pt-Book">
                         {formattedValue}

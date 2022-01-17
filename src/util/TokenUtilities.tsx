@@ -23,6 +23,7 @@ import { account, txCallback, tokenContract } from './index';
 const MAX_UINT256 =
   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
+// ENUMS
 export enum CryptoAsset {
   Bean = 0,
   Ethereum,
@@ -54,6 +55,7 @@ export enum UniswapAsset {
 export enum BudgetAsset {
   Bean = 16,
 }
+
 export type Token =
   | CryptoAsset
   | SiloAsset
@@ -62,6 +64,8 @@ export type Token =
   | TransitAsset
   | UniswapAsset
   | BudgetAsset;
+
+// ---------------------------------
 
 export const transferBeans = async (
   to: string,

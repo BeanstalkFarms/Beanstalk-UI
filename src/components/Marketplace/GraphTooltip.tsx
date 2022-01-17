@@ -2,8 +2,9 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { displayBN, displayFullBN } from 'util/index';
+import { displayBN, displayFullBN, FarmAsset, CryptoAsset } from 'util/index';
 import { Listing } from 'state/marketplace/reducer';
+import TokenIcon from 'components/Common/TokenIcon';
 
 type GraphTooltipProps = {
   listing: Listing;
@@ -41,7 +42,10 @@ export const GraphTooltip = (props: GraphTooltipProps) => {
       <div className={classes.tooltipDetailRow}>
         <span style={{ fontWeight: 'bold' }}>Price per pod</span>
         <div className={classes.tooltipDetailPill}>
-          <span>${displayFullBN(listing.pricePerPod, 2)}</span>
+          <span>
+            {displayFullBN(listing.pricePerPod, 2)} 
+          </span>
+          <TokenIcon token={CryptoAsset.Bean} />
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
@@ -50,6 +54,7 @@ export const GraphTooltip = (props: GraphTooltipProps) => {
           <span>
             {displayBN(listing.initialAmount.minus(listing.amountSold))}
           </span>
+          <TokenIcon token={FarmAsset.Pods} />
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
