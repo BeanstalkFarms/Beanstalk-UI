@@ -7,17 +7,14 @@ import {
 } from 'components/Common';
 import { beanstalkContract } from 'util/index';
 
-import OffersTable from './Offers/OffersTable';
+import Offers from './Offers/Offers';
 import CreateListingModule from './Listings/CreateListingModule';
 
 export default function MarketplaceSellModule() {
   const [sellOffer, setSellOffer] = useState(null);
 
   // Global state
-  const {
-    harvestablePodBalance,
-    plots,
-  } = useSelector<AppState, AppState['userBalance']>(
+  const { harvestablePodBalance, plots } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
@@ -60,7 +57,8 @@ export default function MarketplaceSellModule() {
   };
 
   const sections = [
-    <OffersTable
+    <Offers
+      mode="ALL"
     />,
     <CreateListingModule
       plots={plots}

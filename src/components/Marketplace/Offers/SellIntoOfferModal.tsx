@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { TrimBN, beanstalkContract, displayBN, FarmAsset, SiloAsset } from 'util/index';
 import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule } from 'components/Common';
 import { BuyOffer } from 'state/marketplace/reducer';
+import OffersTable from './OffersTable';
 
 type SellIntoOfferModalProps = {
   currentOffer: BuyOffer;
@@ -139,7 +140,10 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
         marginTop="0px"
         handleForm={handleForm}
       >
-        <div>
+        <OffersTable
+          offers={[currentOffer]}
+        />
+        {/* <div>
           <p>Max place in line</p>
           <p>{currentOffer.maxPlaceInLine.toFixed()}</p>
         </div>
@@ -150,7 +154,7 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
         <div>
           <p>Amount available to sell</p>
           <p>{currentOffer.amount.toFixed()}</p>
-        </div>
+        </div> */}
         <PlotListInputField
           index={parseFloat(harvestableIndex)}
           items={validPlots}

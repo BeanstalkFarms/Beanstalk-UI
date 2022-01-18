@@ -23,14 +23,15 @@ import SellIntoOfferModal from 'components/Marketplace/Offers/SellIntoOfferModal
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { useStyles } from '../TableStyles';
+import OffersTable from './OffersTable';
 
 type OfferRowProps = {
   offer: BuyOffer;
-  setCurrentOffer: Function;
+  setOffer: Function;
   isMine: boolean;
 }
 
-function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
+function OfferRow({ offer, setOffer, isMine }: OfferRowProps) {
   const classes = useStyles();
 
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
@@ -105,21 +106,21 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           >
             {displayBN(numPodsLeft)}
           </BalanceTableCell>
-          {/* Sell into this offer; only show if we have */}
-          {setCurrentOffer && (
-            <TableCell align="center">
-              <IconButton
-                onClick={() => setCurrentOffer(offer)}
-                disabled={!canSell}
-                style={{
-                  color: canSell ? theme.linkColor : 'lightgray',
-                }}
-                size="small"
-              >
-                <ShoppingCartIcon />
-              </IconButton>
-            </TableCell>
-          )}
+          {/* Sell into this offer */}
+          <TableCell align="center">
+            <IconButton
+              onClick={() => {
+                setOffer(offer);
+              }}
+              disabled={!canSell}
+              style={{
+                color: canSell ? theme.linkColor : 'lightgray',
+              }}
+              size="small"
+            >
+              <ShoppingCartIcon />
+            </IconButton>
+          </TableCell>
         </>
       ) }
     </TableRow>
@@ -128,95 +129,51 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
 
 type OffersProps = {
   mode: 'ALL' | 'MINE';
-  setCurrentOffer?: Function;
-  offers: BuyOffer[];
 }
 
 /**
  * Offers ("Offers to Buy")
  */
 export default function Offers(props: OffersProps) {
-  const classes = useStyles();
-  const { width } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
+  const [walletAddress, setWalletAddress] = useState(null);
+  const [currentOffer, setCurrentOffer] = useState(null);
+  const { buyOffers: allOffers } = useSelector<AppState, AppState['marketplace']>(
+    (state) => state.marketplace
   );
 
-  if (!props.offers || props.offers.length === 0) {
-    return (
-      <div>
-        <h4 style={{ }}>No active bids</h4>
-      </div>
-    );
+  // FIXME: can we offload this to the main site initializer?
+  useEffect(() => {
+    const init = async () => {
+      const addr = await GetWalletAddress();
+      setWalletAddress(addr);
+    };
+    init();
+  }, []);
+
+  if (allOffers == null || walletAddress == null) {
+    return <div>Loading...</div>;
+  }
+  if (allOffers.length === 0) {
+    return <div>No offers.</div>;
   }
 
-  if (props.mode === 'MINE') {
-    return (
-      <TableContainer>
-        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">
-                Place in line
-              </TableCell>
-              <TableCell align="right">
-                Price
-              </TableCell>
-              <TableCell align="right">
-                Pods Bought
-              </TableCell>
-              <TableCell align="center">
-                Cancel
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          {props.offers.map((offer) => (
-            <OfferRow
-              key={offer.index}
-              offer={offer}
-              setCurrentOffer={props.setCurrentOffer}
-              isMine
-            />
-          ))}
-        </Table>
-      </TableContainer>
-    );
-  }
+  const offers = props.mode === 'MINE' ? (
+    allOffers.filter((offer) => offer.listerAddress === walletAddress)
+  ) : (
+    allOffers.filter((offer) => offer.listerAddress !== walletAddress)
+  )
 
   return (
     <>
-      <TableContainer>
-        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">
-                Place in line
-              </TableCell>
-              <TableCell align="right">
-                Price
-              </TableCell>
-              <TableCell align="right">
-                Pods Requested
-              </TableCell>
-              {props.setCurrentOffer && (
-                <TableCell align="center">
-                  Sell
-                </TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-          {props.offers.map((offer: BuyOffer) => (
-            <OfferRow
-              key={offer.index}
-              offer={offer}
-              setCurrentOffer={props.setCurrentOffer}
-            />
-          ))}
-        </Table>
-      </TableContainer>
+      <SellIntoOfferModal
+        currentOffer={currentOffer}
+        onClose={() => setCurrentOffer(null)}
+      />
+      <OffersTable
+        mode={props.mode}
+        offers={offers}
+        setCurrentOffer={setCurrentOffer}
+      />
     </>
   );
-}
-
-Offers.defaultProps = {
-  setCurrentOffer: undefined,
 }
