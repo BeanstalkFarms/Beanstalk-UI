@@ -5,14 +5,16 @@ import { AppState } from 'state';
 import { BaseModule, Grid, siloStrings } from 'components/Common';
 import MarketplaceBuyModule from './MarketplaceBuyModule';
 import MarketplaceSellModule from './MarketplaceSellModule';
-import ListingsTable from './Listings/ListingsTable';
+import Listings from './Listings/Listings';
 import Offers from './Offers/Offers';
 // import GraphModule from './GraphModule';
 
-export default function TabbedSilo() {
+export default function TabbedMarketplace() {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+
+  console.log(`Render: TabbedMarketplace`)
 
   const [section, setSection] = useState(0);
   const sectionTitles = ['Buy Pods', 'Sell Pods'];
@@ -70,33 +72,30 @@ export default function TabbedSilo() {
           showButton={false}
           removeBackground
         >
-          {/* My Bids (aka Offers) */}
+          {/**
+            * My Bids (aka Offers) */}
           <BaseModule
             marginTop="20px"
             sectionTitles={['My Bids']}
             sectionTitlesDescription={['Bids for Pods you\'re willing to buy on the Market']}
             showButton={false}
           >
-            <Offers mode="MINE" />
+            <Offers
+              mode="MINE"
+            />
           </BaseModule>
-          {/* My Listings */}
+          {/**
+            * My Listings */}
           <BaseModule
             marginTop="20px"
             sectionTitles={['My Listings']}
             sectionTitlesDescription={['Pods you have listed for sale on the Market']}
             showButton={false}
           >
-            <ListingsTable mode="MINE" />
+            <Listings
+              mode="MINE"
+            />
           </BaseModule>
-          {/* Graph */}
-          {/* <BaseModule
-            marginTop="20px"
-            sectionTitles={[]}
-            sectionTitlesDescription={[]}
-            showButton={false}
-          >
-            <GraphModule />
-          </BaseModule> */}
         </BaseModule>
       </Grid>
     </Grid>

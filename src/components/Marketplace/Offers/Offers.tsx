@@ -144,6 +144,7 @@ export default function Offers(props: OffersProps) {
   // FIXME: can we offload this to the main site initializer?
   useEffect(() => {
     const init = async () => {
+      console.log(`Offers: init`)
       const addr = await GetWalletAddress();
       setWalletAddress(addr);
     };

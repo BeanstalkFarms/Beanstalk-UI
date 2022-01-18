@@ -13,7 +13,7 @@ import { BASE_SLIPPAGE } from 'constants/index';
 
 import { CreateOfferModule } from './Offers/CreateOfferModule';
 import Graph from './GraphModule';
-import ListingsTable from './Listings/ListingsTable';
+import Listings from './Listings/Listings';
 
 //
 export default function MarketplaceBuyModule() {
@@ -82,7 +82,9 @@ export default function MarketplaceBuyModule() {
   };
 
   const sections = [
-    <ListingsTable mode="ALL" />,
+    <Listings
+      mode="ALL"
+    />,
     <CreateOfferModule
       ref={buyOfferRef}
       isFormDisabled={isFormDisabled}

@@ -169,7 +169,7 @@ export default function Offers(props: OffersProps) {
               </TableCell>
             </TableRow>
           </TableHead>
-          {props.offers.map((offer) => (
+          {props.offers.map((offer: BuyOffer) => (
             <OfferRow
               key={offer.index}
               offer={offer}
