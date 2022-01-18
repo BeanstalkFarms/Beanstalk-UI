@@ -43,11 +43,12 @@ function OfferRow({
   const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine.minus(harvestableIndex))} in the pod line.`;
 
   // filter out offers that have cleared the podline
+  const relativeMaxPlaceInLine = offer.maxPlaceInLine.minus(harvestableIndex);
   if (relativeMaxPlaceInLine.lt(0)) {
-    return null
+    return null;
   }
   // do we have any plots whose index is smaller than max place in line? if so then we can sell
-  const canSell = Object.keys(plots).some((index) => maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0))
+  const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
   return (
     <TableRow>
       {/* Place in line */}
