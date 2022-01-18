@@ -4,10 +4,7 @@ import {
   setMarketplaceListings,
 } from './actions';
 
-
-
 export type Listing = {
-  // not sure what to call index that does not subtract harvested pods
   /**
    * The absolute index in the Pod Line.
    * An example where the podLine is 50,000 but the objectiveIndex is 150,000:
@@ -28,7 +25,7 @@ export type Listing = {
   expiresIn: BigNumber;
   /**
    * The absolute position in line at which this listing expires.
-   * (harvestableIndex + expiresIn) 
+   * (harvestableIndex + expiresIn)
    */
   expiry: BigNumber;
   /**

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
@@ -17,9 +17,8 @@ import {
 
 import { BuyOffer } from 'state/marketplace/reducer';
 import { theme } from 'constants/index';
-import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress } from 'util/index';
+import { beanstalkContract, CryptoAsset, displayBN, FarmAsset } from 'util/index';
 
-import SellIntoOfferModal from 'components/Marketplace/Offers/SellIntoOfferModal';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { useStyles } from '../TableStyles';
@@ -33,22 +32,13 @@ type OfferRowProps = {
 function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
   const classes = useStyles();
 
-  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
-    (state) => state.weather
-  );
   const { plots } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
 
   // const pctSold = offer.amountBought.dividedBy(offer.initialAmountToBuy);
   const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
-  const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine.minus(harvestableIndex))} in the pod line.`;
-
-  // filter out offers that have cleared the podline
-  const relativeMaxPlaceInLine = offer.maxPlaceInLine.minus(harvestableIndex);
-  if (relativeMaxPlaceInLine.lt(0)) {
-    return null;
-  }
+  const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine)} in the pod line.`;
 
   // do we have any plots whose index is smaller than max place in line? if so then we can sell
   const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
@@ -56,7 +46,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
     <TableRow>
       {/* Place in line */}
       <TableCell className={classes.lucidaStyle}>
-        <span>0 — {displayBN(offer.maxPlaceInLine.minus(harvestableIndex))}</span>
+        <span>0 — {displayBN(offer.maxPlaceInLine)}</span>
         <QuestionModule description={explainer} style={{ marginLeft: 10 }} position="static" />
       </TableCell>
       {/* Price per pod */}
@@ -219,4 +209,4 @@ export default function Offers(props: OffersProps) {
 
 Offers.defaultProps = {
   setCurrentOffer: undefined,
-}
+};

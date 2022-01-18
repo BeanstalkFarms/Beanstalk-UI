@@ -4,32 +4,22 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import BigNumber from 'bignumber.js';
 import {
-  CloseOutlined as CancelIcon,
-  ShoppingCartOutlined as ShoppingCartIcon,
   FilterListRounded as FilterIcon,
 } from '@material-ui/icons';
 import {
   Box,
-  Table,
-  TableCell,
-  TableContainer,
-  TableBody,
-  TableHead,
-  TableRow,
   Button,
   IconButton,
   Popover,
   Slider,
-  CircularProgress,
 } from '@material-ui/core';
 
-import { theme, BEAN } from 'constants/index';
-import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset } from 'util/index';
-import TokenIcon from 'components/Common/TokenIcon';
-import { BalanceTableCell, QuestionModule } from 'components/Common';
+import { Listing } from 'state/marketplace/reducer';
+import { theme } from 'constants/index';
+import { GetWalletAddress } from 'util/index';
+
 import { BuyListingModal } from './BuyListingModal';
 import { useStyles } from '../TableStyles';
-import { Listing } from 'state/marketplace/reducer';
 import ListingsTable from './ListingsTable';
 
 type ListingsProps = {
@@ -54,17 +44,6 @@ export default function Listings(props: ListingsProps) {
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
-
-  // Pick listings from state depending on props.mode
-  // const listings = props.mode === 'MINE' ? (
-  //   allListings.filter(
-  //     (listing) => listing.listerAddress === walletAddress
-  //   )
-  // ) : (
-  //   allListings.filter(
-  //     (listing) => listing.listerAddress !== walletAddress
-  //   )
-  // )
 
   // Filter state
   const filteredListings = useRef<Listing[]>(allListings);
@@ -143,14 +122,12 @@ export default function Listings(props: ListingsProps) {
   // Setup
   useEffect(() => {
     const init = async () => {
-      console.log(`Listings: init`)
+      console.log('Listings: init');
       const addr = await GetWalletAddress();
       setWalletAddress(addr);
     };
     init();
   }, []);
-
-  console.log(`filteredListings`, filteredListings)
 
   if (filteredListings.current == null || walletAddress == null) {
     return <div>Loading...</div>;
@@ -230,7 +207,7 @@ export default function Listings(props: ListingsProps) {
         </Box>
       </Popover>
     </>
-  )
+  );
 
   //
   return (

@@ -1,35 +1,29 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import _ from 'lodash';
 import BigNumber from 'bignumber.js';
 import {
   CloseOutlined as CancelIcon,
   ShoppingCartOutlined as ShoppingCartIcon,
-  FilterListRounded as FilterIcon,
 } from '@material-ui/icons';
 import {
-  Box,
   Table,
   TableCell,
   TableContainer,
   TableBody,
   TableHead,
   TableRow,
-  Button,
   IconButton,
-  Popover,
-  Slider,
   CircularProgress,
 } from '@material-ui/core';
 
+import { Listing } from 'state/marketplace/reducer';
 import { theme, BEAN } from 'constants/index';
-import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset } from 'util/index';
+import { beanstalkContract, displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset } from 'util/index';
+
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
-import { BuyListingModal } from './BuyListingModal';
 import { useStyles } from '../TableStyles';
-import { Listing } from 'state/marketplace/reducer';
 
 function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
   const classes = useStyles();

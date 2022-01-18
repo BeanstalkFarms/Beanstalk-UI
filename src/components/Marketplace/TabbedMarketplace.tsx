@@ -14,8 +14,6 @@ export default function TabbedMarketplace() {
     (state) => state.general
   );
 
-  console.log(`Render: TabbedMarketplace`)
-
   const [section, setSection] = useState(0);
   const sectionTitles = ['Buy Pods', 'Sell Pods'];
   const sectionTitlesDescription = [
