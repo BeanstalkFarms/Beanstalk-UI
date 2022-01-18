@@ -14,6 +14,7 @@ import {
 import {
   account,
   beanstalkContractReadOnly,
+  bean3crvContractReadOnly,
   curveContractReadOnly,
   initializing,
   pairContractReadOnly,
@@ -227,6 +228,7 @@ export const getPrices = async (batch) => {
   const beanstalk = beanstalkContractReadOnly();
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
+  const bean3crvContract = bean3crvContractReadOnly();
   const curveContract = curveContractReadOnly();
 
   return makeBatchedPromises(batch, [
@@ -276,8 +278,16 @@ export const getPrices = async (batch) => {
     ],
     // Curve Bean price
     [
-      curveContract.methods.get_dy(0, 1, 1),
+      bean3crvContract.methods.get_dy(0, 1, 1),
       (price) => toTokenUnitsBN(price, 12),
+    ],
+    // Bean3Crv Balances
+    [
+      bean3crvContract.methods.get_balances(),
+      (prices) => [
+        toTokenUnitsBN(prices[0], 6),
+        toTokenUnitsBN(prices[1], 18),
+      ],
     ],
   ]);
 };

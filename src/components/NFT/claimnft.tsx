@@ -7,8 +7,8 @@ import {
   ContentTitle,
 } from 'components/Common';
 import {
-  OPENSEA_LINK,
-  MEDIUM_NFT_WINTER_LINK,
+  OPENSEA_LINK_GENESIS,
+  OPENSEA_LINK_COLLECTION,
 } from 'constants/index';
 import NftPicTable from './NftPicTable';
 
@@ -72,7 +72,7 @@ export default function ClaimNFT({
     sectionsInfo.push(
       <>
         <Box> You have no BeaNFTs.</Box>
-        <Link href={title === 'Genesis' ? OPENSEA_LINK : MEDIUM_NFT_WINTER_LINK} color="inherit" target="blank"> Buy BeaNFTs on OpenSea.</Link>
+        <Link href={title === 'Genesis' ? OPENSEA_LINK_GENESIS : OPENSEA_LINK_COLLECTION} color="inherit" target="blank"> Buy BeaNFTs on OpenSea.</Link>
       </>
     );
     sectionTitlesInfo.push('NFTs');

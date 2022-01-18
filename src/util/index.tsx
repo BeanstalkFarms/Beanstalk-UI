@@ -1,7 +1,8 @@
 import Web3 from 'web3';
 import { ethers } from 'ethers';
 import {
-  BEANFT,
+  BEANFTCOLLECTION,
+  BEANFTGENESIS,
   BEANSTALK,
   CURVE,
   UNISWAP_V2_ROUTER,
@@ -36,6 +37,7 @@ export let web3Signer;
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');
 const beaNFTAbi = require('../constants/abi/BeaNFT.json');
+const BeaNFTGenesisABI = require('../constants/abi/BeaNFTGenesis.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 const curveMetaPoolAbi = require('../constants/abi/Bean3crvMetaPool.json');
@@ -53,9 +55,14 @@ export const beanstalkContractReadOnly = () =>
   new web3.eth.Contract(beanstalkAbi, BEANSTALK.addr);
 
 export const beaNFTContract = () =>
-  new ethers.Contract(BEANFT.addr, beaNFTAbi, web3Signer);
+  new ethers.Contract(BEANFTCOLLECTION.addr, beaNFTAbi, web3Signer);
 export const beaNFTContractReadOnly = () =>
-  new web3.eth.Contract(beaNFTAbi, BEANFT.addr);
+  new web3.eth.Contract(beaNFTAbi, BEANFTCOLLECTION.addr);
+
+export const beaNFTGenesisContract = () =>
+  new ethers.Contract(BEANFTGENESIS.addr, BeaNFTGenesisABI, web3Signer);
+export const beaNFTGenesisContractReadOnly = () =>
+  new web3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS.addr);
 
 export const pairContract = (pair) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
@@ -68,8 +75,11 @@ export const uniswapRouterContract = () =>
 // export const curveContract = () =>
 //   new ethers.Contract(CURVE.addr, curveMetaPoolAbi, web3Signer);
 
-export const curveContractReadOnly = () =>
+export const bean3crvContractReadOnly = () =>
   new web3.eth.Contract(curveMetaPoolAbi, CURVE.addr);
+
+export const curveContractReadOnly = () =>
+  new web3.eth.Contract(curveMetaPoolAbi, CURVE.factory);
 
 async function initializeMetaMaskListeners() {
   const changeHandler = () => {
