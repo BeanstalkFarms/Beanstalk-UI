@@ -5,57 +5,57 @@ import { CryptoAsset, displayBN, displayFullBN, TokenLabel } from 'util/index';
 import { theme } from 'constants/index';
 import { FormatTooltip, TokenTypeImageModule } from './index';
 
-export default function TokenInputField(props) {
-  const [displayValue, setDisplayValue] = useState('');
-
-  const classes = makeStyles(() => ({
-    inputText: {
-      fontSize: 'calc(15px + 1vmin)',
-      fontFamily: 'Lucida Console',
-      fontWeight: '400',
-      color: theme.text,
-    },
-  }))();
-
-  const smallLabels = {
+const useStyles = makeStyles({
+  inputText: {
+    fontSize: 'calc(15px + 1vmin)',
+    fontFamily: 'Lucida Console',
+    fontWeight: '400',
+    color: theme.text,
+  },
+  smallLabels: {
     fontSize: 'calc(9px + 0.7vmin)',
     fontFamily: 'Futura-PT',
-  };
-  const leftStyle = {
+  },
+  leftStyle: {
     display: 'inline-block',
     float: 'left',
     fontFamily: 'Futura-PT-Book',
     marginLeft: '13px',
     textAlign: 'left' as const,
     textTransform: 'uppercase' as const,
-  };
-  const rightStyle = {
+  },
+  rightStyle: {
     display: 'inline-block',
     float: 'right',
     marginRight: '13px',
     textAlign: 'right' as const,
-  };
-  const maxStyle = {
-    backgroundColor: theme.primary,
-    borderRadius: '30px',
-    color: theme.accentText,
-    fontSize: '13px',
-    fontFamily: 'Futura-PT-Book',
-    height: '25px',
-    minWidth: '50px',
-  };
-  const tokenTypeImageStyle = {
-    height: '30px',
-    marginLeft: '5px',
-    width: '20px',
-  };
+  },
+});
 
+const maxStyle = {
+  backgroundColor: theme.primary,
+  borderRadius: '30px',
+  color: theme.accentText,
+  fontSize: '13px',
+  fontFamily: 'Futura-PT-Book',
+  height: '25px',
+  minWidth: '50px',
+};
+const tokenTypeImageStyle = {
+  height: '30px',
+  marginLeft: '5px',
+  width: '20px',
+};
+
+export default function TokenInputField(props) {
+  const [displayValue, setDisplayValue] = useState('');
+  const classes = useStyles();
   const label = props.label || TokenLabel(props.token);
 
   function maxButton() {
     if (props.maxHandler !== undefined) {
       return (
-        <Button onClick={props.maxHandler} style={maxStyle}>
+        <Button onClick={props.maxHandler} style={maxStyle} disabled={props.locked}>
           Max
         </Button>
       );
@@ -87,7 +87,10 @@ export default function TokenInputField(props) {
   const endAdornment = (
     <InputAdornment position="end">
       {maxButton()}
-      <TokenTypeImageModule style={tokenTypeImageStyle} token={props.token} />
+      <TokenTypeImageModule
+        style={tokenTypeImageStyle}
+        token={props.token}
+      />
     </InputAdornment>
   );
   const startAdornment = props.range ? (
@@ -132,11 +135,11 @@ export default function TokenInputField(props) {
 
   return (
     <Box style={{ margin: '8px 0' }}>
-      <Box style={smallLabels}>
-        <Box style={leftStyle}>{label}</Box>
+      <Box className={classes.smallLabels}>
+        <Box className={classes.leftStyle}>{label}</Box>
         {props.balance && !props.range && (
           <FormatTooltip placement="right" title={balanceContent}>
-            <Box style={rightStyle}>
+            <Box className={classes.rightStyle}>
               &nbsp;{`Balance: ${displayBN(props.balance)}`}
             </Box>
           </FormatTooltip>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@material-ui/core';
 import { TokenImage, TokenLabel, TokenTypeImage } from 'util/index';
 
-export default function TokenTypeImageModule({ left, style, token }) {
+export default function TokenTypeImageModule({ left, style, token, className }) {
   const tokenTypeStyle = {
     height: '100%',
     left: left,
@@ -17,7 +17,7 @@ export default function TokenTypeImageModule({ left, style, token }) {
   };
 
   return (
-    <Box style={{ ...style, position: 'relative' }}>
+    <Box style={{ ...style, position: 'relative' }} className={className}>
       <img
         alt={TokenLabel(token)}
         src={TokenImage(token)}
@@ -29,6 +29,7 @@ export default function TokenTypeImageModule({ left, style, token }) {
 }
 
 TokenTypeImageModule.defaultProps = {
-  style: { height: '20px' },
   left: '0px',
+  className: undefined,
+  style: { height: '20px' },
 };

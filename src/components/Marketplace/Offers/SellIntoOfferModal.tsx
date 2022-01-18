@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import {
+  Box,
   Modal,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -18,8 +19,11 @@ type SellIntoOfferModalProps = {
 }
 
 export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOfferModalProps) {
+  /** The selected Plot index. */
   const [index, setIndex] = useState(new BigNumber(-1));
+  /** The amount of Pods the User is willing to sell into this Offer */
   const [amount, setAmount] = useState(new BigNumber(0));
+
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
@@ -33,16 +37,22 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
   // Derived values
   const leftMargin = width < 800 ? 0 : 120;
 
+  // When the modal re-renders for a new offer,
+  // reset state.
+  useEffect(() => {
+    setIndex(new BigNumber(-1));
+    setAmount(new BigNumber(0));
+  }, [currentOffer]);
+
   // If no offer selected, exit
   if (currentOffer == null) {
     return null;
   }
 
-  //
+  // Filter my plots to show which ones I can sell
   const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
-    const harvestIndex = harvestableIndex;
     const plotObjectiveIndex = new BigNumber(plotIndex);
-    return plotObjectiveIndex.minus(harvestIndex).lt(currentOffer.maxPlaceInLine);
+    return plotObjectiveIndex.minus(harvestableIndex).lt(currentOffer.maxPlaceInLine);
   });
   const validPlots = validPlotIndices.reduce((prev, curr) => (
     {
@@ -51,7 +61,7 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
     }
   ), {});
 
-  //
+  // Get the maximimum amount the user can sell.
   const getMaxAmountCanSell = (selectedPlotIndex: BigNumber) => (
     selectedPlotIndex.gt(0)
       ? BigNumber.minimum(
@@ -61,7 +71,7 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
         // Ex. User A creates a Buy Offer with relatiive index 100,000.
         //     I have a plot at index 99,900 with 200 plots in it.
         //     Only 100 of these are eligible to sell.
-        (currentOffer.maxPlaceInLine.minus(harvestableIndex)).minus(plots[selectedPlotIndex]),
+        (currentOffer.maxPlaceInLine).minus(plots[selectedPlotIndex]),
         // The total number of pods in the seller's plot.
         plots[selectedPlotIndex]
       )
@@ -106,15 +116,13 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
   // Details
   const details : string[] = [];
   if (index && index.gt(0)) {
-    details.push(`Sell ${displayBN(amount)} Pods out of ${displayBN(plots[index])} from your plot at ${displayBN(index.minus(harvestableIndex))} in line.`);
+    details.push(`Sell ${displayBN(amount)} Pods out of ${displayBN(plots[index])} from your plot at place ${displayBN(index.minus(harvestableIndex))} in line.`);
     details.push(`Receive ${displayBN(beansReceived)} Beans.`);
     details.push('This sale will settle immediately.');
   }
   function transactionDetails() {
     return (
-      <>
-        <TransactionDetailsModule fields={details} />
-      </>
+      <TransactionDetailsModule fields={details} />
     );
   }
 
@@ -135,76 +143,72 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
           transform: 'translate(-50%, -50%)',
         }}
         section={0}
-        sectionTitles={['Sell Plot']}
+        sectionTitles={['Sell Pods']}
         size="small"
         marginTop="0px"
         handleForm={handleForm}
+        isDisabled={index.lt(0) || !amount || amount.lte(0)}
       >
+        {/**
+          * Show the offer we're selling into.
+          */}
         <OffersTable
+          mode="ALL"
           offers={[currentOffer]}
         />
-        {/* <div>
-          <p>Max place in line</p>
-          <p>{currentOffer.maxPlaceInLine.toFixed()}</p>
-        </div>
-        <div>
-          <p>Price per pod</p>
-          <p>{currentOffer.pricePerPod.toFixed()}</p>
-        </div>
-        <div>
-          <p>Amount available to sell</p>
-          <p>{currentOffer.amount.toFixed()}</p>
-        </div> */}
-        <PlotListInputField
-          index={parseFloat(harvestableIndex)}
-          items={validPlots}
-          handleChange={handlePlotChange}
-          label="Select plot"
-          type="sell"
-          descriptor="eligible"
-          style={{ marginBottom: 10 }}
-        />
-        <TokenInputField
-          key={2}
-          label="Number of Pods to Sell"
-          token={FarmAsset.Pods}
-          maxHandler={() => setAmount(maxAmountCanSell)}
-          handleChange={(e) => {
-            const newAmount = new BigNumber(e.target.value);
-            if (newAmount.isGreaterThanOrEqualTo(maxAmountCanSell)) {
-              setAmount(maxAmountCanSell);
-              return;
-            }
-            setAmount(newAmount);
-          }}
-          value={TrimBN(amount, 6)}
-        />
-        <ExpandMoreIcon
-          color="primary"
-          style={{ marginBottom: '-14px', width: '100%' }}
-        />
-        <TokenOutputField
-          title="Recieved Beans"
-          mint
-          token={SiloAsset.Bean}
-          value={beansReceived}
-        />
-        {/* <TokenInputField
-          key={2}
-          label="Amount"
-          token={CryptoAsset.Bean}
-          // maxHandler={() => setAmount(maxAmountCanSell)}
-          // handleChange={(e) => {
-          //   const newAmount = new BigNumber(e.target.value);
-          //   if (newAmount.isGreaterThanOrEqualTo(maxAmountCanSell)) {
-          //     setAmount(maxAmountCanSell);
-          //     return;
-          //   }
-          //   setAmount(newAmount);
-          // }}
-          // value={TrimBN(amount, 6)}
-        /> */}
-        {transactionDetails()}
+        <Box sx={{ marginTop: 20 }}>
+          {/**
+            * Input fields.
+            */}
+          <PlotListInputField
+            index={parseFloat(harvestableIndex)}
+            items={validPlots}
+            handleChange={handlePlotChange}
+            label="Select plot"
+            type="sell"
+            descriptor="eligible"
+          />
+          <div style={{ height: 5 }} />
+          <TokenInputField
+            key={2}
+            label="Number of Pods to Sell"
+            //
+            locked={!index || index.lt(0)}
+            token={FarmAsset.Pods}
+            //
+            value={TrimBN(amount, 6)}
+            maxHandler={() => setAmount(maxAmountCanSell)}
+            // balance={index.lt(0) ? null : maxAmountCanSell}
+            //
+            handleChange={(e) => {
+              const newAmount = new BigNumber(e.target.value || 0);
+              if (newAmount.isGreaterThanOrEqualTo(maxAmountCanSell)) {
+                setAmount(maxAmountCanSell);
+                return;
+              }
+              setAmount(newAmount);
+            }}
+            style={{ marginTop: 20 }}
+          />
+          {/**
+            * Outputs + Details
+            */}
+          {index.lt(0) ? null : (
+            <>
+              <ExpandMoreIcon
+                color="primary"
+                style={{ marginBottom: '-14px', width: '100%' }}
+              />
+              <TokenOutputField
+                title="Recieved Beans"
+                mint
+                token={SiloAsset.Bean}
+                value={beansReceived}
+              />
+              {transactionDetails()}
+            </>
+          )}
+        </Box>
       </BaseModule>
     </Modal>
   );
