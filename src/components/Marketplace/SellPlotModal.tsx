@@ -40,14 +40,15 @@ export default function SellPlotModal({
     }
     const newIndex = new BigNumber(event.target.value);
     setIndex(newIndex);
-    const maxAmountCanSell = newIndex.gt(-1) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[newIndex])) : new BigNumber(0);
+    console.log(plots[newIndex].toString())
+    const maxAmountCanSell = newIndex.gt(-1) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.minus(harvestableIndex).minus(plots[newIndex])) : new BigNumber(0);
     setAmount(maxAmountCanSell);
   };
 
   const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
-    const harvestIndex = harvestableIndex.times(10 ** 6);
-    const plotObjectiveIndex = new BigNumber(plotIndex).times(10 ** 6);
-    return plotObjectiveIndex.minus(harvestIndex).lt(currentOffer.maxPlaceInLine.times(10 ** 6));
+    const harvestIndex = harvestableIndex;
+    const plotObjectiveIndex = new BigNumber(plotIndex);
+    return plotObjectiveIndex.minus(harvestIndex).lt(currentOffer.maxPlaceInLine);
   });
   const validPlots = validPlotIndices.reduce((prev, curr) => (
     {
@@ -73,7 +74,7 @@ export default function SellPlotModal({
   };
 
   // Max amount that you can sell
-  const maxAmountCanSell = index.gt(0) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[index])) : new BigNumber(0);
+  const maxAmountCanSell = index.gt(0) ? BigNumber.minimum(currentOffer.amount, currentOffer.maxPlaceInLine.minus(harvestableIndex).minus(plots[index])) : new BigNumber(0);
 
   return (
     <Modal
