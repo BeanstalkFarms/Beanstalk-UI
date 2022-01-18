@@ -91,6 +91,7 @@ const MOCK_EVENTS = [
   },
 ];
 
+// FIXME: define type for Events
 function processEvents(events, harvestableIndex) {
   const listings = {};
   const buyOffers = {};

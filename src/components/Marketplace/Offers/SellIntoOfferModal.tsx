@@ -9,11 +9,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { TrimBN, beanstalkContract, displayBN, FarmAsset, SiloAsset } from 'util/index';
 import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule } from 'components/Common';
+import { BuyOffer } from 'state/marketplace/reducer';
 
-export default function SellIntoOfferModal({
-  currentOffer,
-  onClose,
-}) {
+type SellIntoOfferModalProps = {
+  currentOffer: BuyOffer;
+  onClose: Function;
+}
+
+export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOfferModalProps) {
   const [index, setIndex] = useState(new BigNumber(-1));
   const [amount, setAmount] = useState(new BigNumber(0));
   const { width } = useSelector<AppState, AppState['general']>(
@@ -65,8 +68,8 @@ export default function SellIntoOfferModal({
   );
 
   // Handle plot change
-  const handlePlotChange = (event) => {
-    if (event.target.value === 'default') {
+  const handlePlotChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event?.target?.value === 'default') {
       setIndex(new BigNumber(-1));
       setAmount(new BigNumber(0));
       return;

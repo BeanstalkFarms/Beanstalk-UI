@@ -15,30 +15,33 @@ import {
   ShoppingCartOutlined as ShoppingCartIcon,
 } from '@material-ui/icons';
 
+import { BuyOffer } from 'state/marketplace/reducer';
 import { theme } from 'constants/index';
 import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress } from 'util/index';
+
 import SellIntoOfferModal from 'components/Marketplace/Offers/SellIntoOfferModal';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { useStyles } from '../TableStyles';
 
-function OfferRow({
-  offer,
-  setOffer,
-  isMine,
-}) {
+type OfferRowProps = {
+  offer: BuyOffer;
+  setOffer: Function;
+  isMine: boolean;
+}
+
+function OfferRow({ offer, setOffer, isMine }: OfferRowProps) {
+  const classes = useStyles();
+
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
-  const {
-    plots,
-  } = useSelector<AppState, AppState['userBalance']>(
+  const { plots } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
 
-  const classes = useStyles();
-  const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
   // const pctSold = offer.amountBought.dividedBy(offer.initialAmountToBuy);
+  const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
   const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine.minus(harvestableIndex))} in the pod line.`;
 
   // filter out offers that have cleared the podline
@@ -46,6 +49,7 @@ function OfferRow({
   if (relativeMaxPlaceInLine.lt(0)) {
     return null;
   }
+
   // do we have any plots whose index is smaller than max place in line? if so then we can sell
   const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
   return (
@@ -127,22 +131,20 @@ type OffersProps = {
 }
 
 /**
- * Offers = "Offers to Buy"
- *
- * FIXME: This really shouldn't be called Offers throughout the Beanstalk app,
- * that word is ambiguous (offer to buy or offer to sell?)
+ * Offers ("Offers to Buy")
  */
 export default function Offers(props: OffersProps) {
   const classes = useStyles();
   const [walletAddress, setWalletAddress] = useState(null);
+  const [currentOffer, setCurrentOffer] = useState(null);
   const { buyOffers: offers } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-  const [currentOffer, setCurrentOffer] = useState(null);
 
+  // FIXME: can we offload this to the main site initializer?
   useEffect(() => {
     const init = async () => {
       const addr = await GetWalletAddress();
@@ -216,7 +218,13 @@ export default function Offers(props: OffersProps) {
                 </TableCell>
               </TableRow>
             </TableHead>
-            {otherOffers.map((offer) => <OfferRow key={offer.index} offer={offer} setOffer={setCurrentOffer} />)}
+            {otherOffers.map((offer) => (
+              <OfferRow
+                key={offer.index}
+                offer={offer}
+                setOffer={setCurrentOffer}
+              />
+            ))}
           </Table>
         </TableContainer>
       </>

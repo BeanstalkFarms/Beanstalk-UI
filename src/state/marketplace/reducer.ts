@@ -8,7 +8,7 @@ export type Listing = {
   listerAddress: string;
   // not sure what to call index that does not subtract harvested pods
   objectiveIndex: BigNumber;
-  pricePerPod: number;
+  pricePerPod: BigNumber;
   expiresIn: BigNumber;
   intialAmount: BigNumber;
   amountSold: BigNumber;
@@ -16,11 +16,12 @@ export type Listing = {
 };
 
 export type BuyOffer = {
+  index: BigNumber;
   listerAddress: string;
-  maxPlaceInLine: number;
-  initialAmountToBuy: number;
-  pricePerPod: number;
-  amountBought: number;
+  maxPlaceInLine: BigNumber;
+  initialAmountToBuy: BigNumber;
+  pricePerPod: BigNumber;
+  amountBought: BigNumber;
   status: string;
 };
 
