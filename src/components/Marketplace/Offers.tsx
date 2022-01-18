@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
+import BigNumber from 'bignumber.js';
 import {
   Table,
   TableCell,
@@ -22,11 +23,26 @@ import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { useStyles } from './TableStyles';
 
-function OfferRow({ offer, setOffer, isMine }) {
+function OfferRow({
+  offer,
+  setOffer,
+  isMine,
+}) {
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
+  const {
+    plots,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
   const classes = useStyles();
   const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
   // const pctSold = offer.amountBought.dividedBy(offer.initialAmountToBuy);
   const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine)} in the pod line.`;
+
+  const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[index]).gt(0))
   return (
     <TableRow>
       {/* Place in line */}
@@ -60,8 +76,9 @@ function OfferRow({ offer, setOffer, isMine }) {
                 const beanstalk = beanstalkContract();
                 await beanstalk.cancelBuyOffer(offer.index.toString());
               }}
+              disabled={!canSell}
               style={{
-                color: theme.linkColor,
+                color: canSell ? theme.linkColor : 'lightgray',
               }}
               size="small"
             >
@@ -87,9 +104,10 @@ function OfferRow({ offer, setOffer, isMine }) {
                 setOffer(offer);
               }}
               style={{
-                color: theme.linkColor,
+                color: 'lightgray',
               }}
               size="small"
+              disabled
             >
               <ShoppingCartIcon />
             </IconButton>
