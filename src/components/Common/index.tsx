@@ -15,7 +15,7 @@ export {
 
 export { default as AddressInputField } from './AddressInputField';
 export { default as BalanceField } from './BalanceField';
-export { default as ListInputField } from './ListInputField';
+export { default as PlotListInputField } from './PlotListInputField';
 export { default as BaseModule } from './BaseModule';
 export { default as ContentDropdown } from './ContentDropdown';
 export { default as ContentTitle } from './ContentTitle';

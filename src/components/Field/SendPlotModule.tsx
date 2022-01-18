@@ -13,7 +13,7 @@ import {
 } from 'util/index';
 import {
   AddressInputField,
-  ListInputField,
+  PlotListInputField,
   PlotInputField,
   fieldStrings,
   TransactionDetailsModule,
@@ -131,7 +131,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
     />
   );
   const fromPlotField = (
-    <ListInputField
+    <PlotListInputField
       hidden={
         props.toAddress.length !== 42 ||
         walletText === '' ||

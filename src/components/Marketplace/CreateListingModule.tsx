@@ -6,7 +6,7 @@ import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 
 import {
-  ListInputField,
+  PlotListInputField,
   TokenInputField,
   PlotInputField,
   TransactionDetailsModule,
@@ -62,7 +62,7 @@ export const CreateListingModule = (props) => {
 
   /* Input Fields */
   const fromPlotField = (
-    <ListInputField
+    <PlotListInputField
       index={props.index}
       items={props.plots ? props.plots : {}}
       marginBottom={props.hasPlots === true ? '0px' : '-7px'}
@@ -133,48 +133,6 @@ export const CreateListingModule = (props) => {
     `If fully sold, you will receive ${displayBN(amount.multipliedBy(pricePerPodValue))} Beans.`,
     `This listing will expire when ${displayBN(expiresIn)} additional Pods have been harvested. The total amount of pods harvested at this time will be ${displayBN(expiresIn.plus(harvestableIndex))}.`,
   ];
-  // if (settings.claim) {
-  //   details.push(
-  //     <ClaimTextModule
-  //       key="claim"
-  //       claim={settings.claim}
-  //       beanClaimable={beanClaimable}
-  //       ethClaimable={ethClaimable}
-  //     />
-  //   );
-  // }
-  // if (
-  //   settings.mode === SwapMode.Ethereum ||
-  //   (settings.mode === SwapMode.BeanEthereum &&
-  //     toBuyBeanValue.isGreaterThan(0))
-  // ) {
-  //   details.push(
-  //     <TransactionTextModule
-  //       key="buy"
-  //       balance={toBuyBeanValue}
-  //       buyBeans={toBuyBeanValue}
-  //       claim={settings.claim}
-  //       claimableBalance={ethClaimable}
-  //       mode={settings.mode}
-  //       sellEth={fromEthValue}
-  //       updateExpectedPrice={updateExpectedPrice}
-  //       value={TrimBN(fromEthValue, 9)}
-  //     />
-  //   );
-  // }
-  // details.push(
-  //   `Place a buy offer for ${displayBN(
-  //     toPodValue
-  //   )} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at
-  //   ${pricePerPodValue.toFixed(2)} price per Pod`
-  // );
-  // details.push(
-  //   `${displayBN(toBuyBeanValue.plus(MaxBN(fromBeanValue, new BigNumber(0))))} Beans
-  //   will be locked in the Marketplace to allow for order fulfillment.`
-  // );
-  // details.push(
-  //   `Your offer will expire after ${displayBN(maxPlaceInLineValue)} Pods are harvested from the Pod line`
-  // );
 
   function transactionDetails() {
     return (
@@ -183,19 +141,7 @@ export const CreateListingModule = (props) => {
           color="primary"
           style={{ marginBottom: '-7px', width: '100%' }}
         />
-        {/* {toPodField} */}
         <TransactionDetailsModule fields={details} />
-        {/* <Box
-          style={{
-            display: 'inline-block',
-            width: '100%',
-            fontSize: 'calc(9px + 0.5vmin)',
-          }}
-        >
-          <span style={{ fontSize: 'calc(9px + 0.5vmin)' }}>
-            You can cancel the offer to return the locked Beans from the marketplace
-          </span>
-        </Box> */}
       </>
     );
   }
