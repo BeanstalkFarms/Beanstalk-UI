@@ -2,6 +2,7 @@ import Web3 from 'web3';
 import { ethers } from 'ethers';
 import {
   BEANFT,
+  BEANFTGENESIS,
   BEANSTALK,
   UNISWAP_V2_ROUTER,
   changeNetwork,
@@ -35,6 +36,7 @@ export let web3Signer;
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');
 const beaNFTAbi = require('../constants/abi/BeaNFT.json');
+const BeaNFTGenesisABI = require('../constants/abi/BeaNFTGenesis.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 
@@ -54,6 +56,11 @@ export const beaNFTContract = () =>
   new ethers.Contract(BEANFT.addr, beaNFTAbi, web3Signer);
 export const beaNFTContractReadOnly = () =>
   new web3.eth.Contract(beaNFTAbi, BEANFT.addr);
+
+export const beaNFTGenesisContract = () =>
+  new ethers.Contract(BEANFTGENESIS.addr, BeaNFTGenesisABI, web3Signer);
+export const beaNFTGenesisContractReadOnly = () =>
+  new web3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS.addr);
 
 export const pairContract = (pair) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
