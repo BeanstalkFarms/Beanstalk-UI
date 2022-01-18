@@ -28,7 +28,7 @@ import { beanstalkContract, GetWalletAddress, displayBN, toStringBaseUnitBN, Far
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { BuyListingModal } from './BuyListingModal';
-import { useStyles } from './TableStyles';
+import { useStyles } from '../TableStyles';
 
 function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
   const classes = useStyles();

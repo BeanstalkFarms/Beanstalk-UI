@@ -5,8 +5,8 @@ import { AppState } from 'state';
 import { BaseModule, Grid, siloStrings } from 'components/Common';
 import MarketplaceBuyModule from './MarketplaceBuyModule';
 import MarketplaceSellModule from './MarketplaceSellModule';
-import Listings from './Listings';
-import Offers from './Offers';
+import Listings from './Listings/Listings';
+import Offers from './Offers/Offers';
 // import GraphModule from './GraphModule';
 
 export default function TabbedSilo() {

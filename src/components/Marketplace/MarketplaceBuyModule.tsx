@@ -11,9 +11,9 @@ import {
 import { BaseModule, siloStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
 
-import { CreateBuyOfferModule } from './CreateBuyOfferModule';
+import { CreateBuyOfferModule } from './Offers/CreateBuyOfferModule';
 import Graph from './GraphModule';
-import Listings from './Listings';
+import Listings from './Listings/Listings';
 
 //
 export default function MarketplaceBuyModule() {

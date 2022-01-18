@@ -6,8 +6,8 @@ import {
   siloStrings,
 } from 'components/Common';
 import { beanstalkContract } from 'util/index';
-import Offers from './Offers';
-import CreateListingModule from './CreateListingModule';
+import Offers from './Offers/Offers';
+import CreateListingModule from './Listings/CreateListingModule';
 
 export default function MarketplaceSellModule() {
   const [sellOffer, setSellOffer] = useState(null);

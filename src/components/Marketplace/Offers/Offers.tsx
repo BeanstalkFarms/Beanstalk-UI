@@ -18,10 +18,10 @@ import {
 
 import { theme } from 'constants/index';
 import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress } from 'util/index';
-import SellPlotModal from 'components/Marketplace/SellPlotModal';
+import SellPlotModal from 'components/Marketplace/Offers/SellPlotModal';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
-import { useStyles } from './TableStyles';
+import { useStyles } from '../TableStyles';
 
 function OfferRow({
   offer,
