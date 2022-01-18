@@ -12,7 +12,7 @@ import {
 import Image from 'material-ui-image';
 import { makeStyles } from '@material-ui/styles';
 import { BASE_IPFS_LINK, BASE_OPENSEA_LINK, theme } from 'constants/index';
-import { mintNFT, mintNFT2 } from 'util/index';
+import { mintNFT, mintGenesisNFT } from 'util/index';
 import {
   beanftStrings,
   SingleButton,
@@ -62,9 +62,9 @@ export default function NftPicTable({
           fontSize="15px"
           handleClick={() => {
             const nft = nftList[i];
-            nft.metadataIpfsHash ?
-              mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature) :
-              mintNFT2(nft.account, nft.id, nft.signature2);
+            nft.subcollection === 'Genesis' ?
+              mintGenesisNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature) :
+              mintNFT(nft.account, nft.id, nft.signature2);
           }}
           height="30px"
           margin="-10px 7px 0 0"

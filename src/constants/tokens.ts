@@ -5,11 +5,18 @@ export const BUDGETS = [
   '0x21DE18B6A8f78eDe6D16C50A167f6B222DC08DF7',
 ];
 
-export const BEANFT = {
+export const BEANFTGENESIS = {
   addr: '0xa755A670Aaf1FeCeF2bea56115E65e03F7722A79', // Mainnet
   decimals: 6,
   symbol: 'BEANFT',
 };
+
+export const BEANFT = {
+  addr: '0x459895483556daD32526eFa461F75E33E458d9E9', // Mainnet
+  decimals: 6,
+  symbol: 'BEANFT',
+};
+
 
 export const BEAN = {
   addr: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db', // Mainnet

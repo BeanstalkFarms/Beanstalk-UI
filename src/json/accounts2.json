@@ -1205,7 +1205,7 @@
             "id": 2817,
             "account": "0xd3c1e750b5664170f4af828145295b678bafd460",
             "signature2": "0x7a4afca990bdb70b45819b763371bc6836498ebe82ed341c0589ebdc5448f8841c8641e9b79ff85f82fcbb2aea96fe9eb7ead8b3531b455bc996e728e3554fc71b",
-            "imageIpfsHash": "bafybeifm4q56wt74vt4e26keij4pp2gbls4y7qfc7jlfwufm5fjcipy3om",
+            "imageIpfsHash": "bafkreidm55szoekjzwhqa2zpy3suo5pmt26e435kxprta2o335m74rh5ni",
             "subcollection": "Winter"
         }
     ],
@@ -8338,7 +8338,7 @@
             "id": 2809,
             "account": "0xabe78350f850924baff4b7139c17932d4c0560c5",
             "signature2": "0x9d6c4c25b0c2693a74d609aab7c616e1d1eb9063482a395745b5b472133dfb9d070ad13106e0d24d9568c3492dab384bd71306a5f72bc820c83abe312420bf341b",
-            "imageIpfsHash": "bafkreibj6dtkdknhqsj6xon35txrtnjwc7qlx2ro2swu5o2r6l65afdkse",
+            "imageIpfsHash": "bafkreihtvfnyh5fzuy7yzrek73xnqqm2rzgxoklvxg3af32yzc5nbrbynu",
             "subcollection": "Winter"
         }
     ],
@@ -8403,7 +8403,7 @@
             "id": 2813,
             "account": "0x01914d6e47657d6a7893f84fc84660dc5aec08b6",
             "signature2": "0xc80b8079459710281fc772e221494632b28930911d8a790a31e305bc00f279c23619f6c2f2077626deff0ee545436bdf7b758c3935281e8f23d29ab4df39c1f91b",
-            "imageIpfsHash": "bafkreif3p4puq4vfcdhqszobqczukzq6kk7smf4e7kxksxu4ykykuwtxzi",
+            "imageIpfsHash": "bafybeigvpqqy5lkm7mm34nfskcjrzdale3tefqyr3fguq2rduy3vea3xse",
             "subcollection": "Winter"
         }
     ],
@@ -9843,14 +9843,14 @@
             "id": 2804,
             "account": "0x15884abb6c5a8908294f25edf22b723bab36934f",
             "signature2": "0x1300799939adb9ce75993d742a89319a1d95d28c3b5057bb1fc63d7ec09ca41769dd3c7fc724e7f2d5bfa7679fbb6f93b60c756b2b15640a0a035fac12dc176b1b",
-            "imageIpfsHash": "bafybeibrwv3osknojwwao6koos2ftvf3mze2c3apy75gcztut53eaue7wa",
+            "imageIpfsHash": "bafybeihstsokju7j4ta2mpurul7fg6x4e5lz2jo2c7muffbn6qwbgay5yq",
             "subcollection": "Winter"
         },
         {
             "id": 2807,
             "account": "0x15884abb6c5a8908294f25edf22b723bab36934f",
             "signature2": "0x50dccaf9d6dbf13194fc8372c4ca77f77c36572af84b207afa208945435b332a6891b5ed6ba885932713a2b6b46cea294ebfa5775a86d70e11dd4fedd60c07d31c",
-            "imageIpfsHash": "bafkreig4ssulwewatff7ymb2vtuz3kthamw7zxp3j2agjbq33dxb5l3zf4",
+            "imageIpfsHash": "bafybeiffqb7gq5lnqgny5ou4lnyzlr562bh7hfo535sh3lp4v3ntyimc5u",
             "subcollection": "Winter"
         }
     ],
@@ -12284,14 +12284,14 @@
             "id": 2815,
             "account": "0xc3853c3a8fc9c454f59c9aed2fc6cfa1a41eb20e",
             "signature2": "0x57f7514ecf13c000225a62457f8389d168ba1b81e07e579870ef19f6ecac17df135e7587e7dd6fe0db98e2b912a8d7bd3760a4adbab546a3460ce939f65b8abb1c",
-            "imageIpfsHash": "bafybeide6rdjk5mxubiqlxrrqib2fknuq7mr74bbi5czlcyoip7hqnc5ha",
+            "imageIpfsHash": "bafybeig2tw7bxbbbs537tzfkp7acvrrzubsjq43sazkaaqe2bcce467tqi",
             "subcollection": "Winter"
         },
         {
             "id": 2816,
             "account": "0xc3853c3a8fc9c454f59c9aed2fc6cfa1a41eb20e",
             "signature2": "0xc5854ebc87c91fd4ca6182d1bc86f8dd24da9f123d3880da05787ba45e1594d54a7403a63582eb6047c95b4fca7adeed0e69a1340d0c42b856853a298b335e551b",
-            "imageIpfsHash": "bafybeigm6ze3kgbffvrt6o335ocgsjckdyyfczyd4vz7he2z7mmxkcqtvi",
+            "imageIpfsHash": "bafkreih5nqns6li3ztma2g4jhp3aqiqt6htw56nfrfiabmvjywbx2ipvmy",
             "subcollection": "Winter"
         }
     ],
@@ -16626,7 +16626,7 @@
             "id": 2795,
             "account": "0x925753106fcdb6d2f30c3db295328a0a1c5fd1d1",
             "signature2": "0x5a3723d9c38af280e8b9fd92800ec08d9940648cd9e9d84c808dbea6630c5c430bd3497b19ebc41ce9fd3a27058fce46f8fc7581df231560f0d3eaea177a1fb71b",
-            "imageIpfsHash": "bafkreievswlpzyvo2ynydkqcqqm6awjod7b2dl764pzi2yarrfqyfgm36q",
+            "imageIpfsHash": "bafkreicqznf4gk5q6tlanqs6wbkhoallp26b2opfwz5r4gijuvtfzywdc4",
             "subcollection": "Winter"
         }
     ],
@@ -21501,7 +21501,7 @@
             "id": 2811,
             "account": "0x4bf44e0c856d096b755d54ca1e9cfdc0115ed2e6",
             "signature2": "0xc1f61fe6d43429e9ee47d0564cda8ca30c9a69c83c2e3470dbe523a4aa79282041997e2055326e35b6d82b9ba5c2c6e225394076788972fcbab6e6da94c396591b",
-            "imageIpfsHash": "bafybeiavu2neakgpclrzad72x4drx4qhikzetdc2cyxn7n3joxsuzpnvhu",
+            "imageIpfsHash": "bafybeifvjm7s74roygkyw7vwors74kijrzh2xn5mdzcvfzrj5gnxvd3t44",
             "subcollection": "Winter"
         }
     ],
@@ -24748,7 +24748,7 @@
             "id": 2818,
             "account": "0xbad292dbb933aea623a3699621901a881e22ffac",
             "signature2": "0xdfdcb08114ef09a57db510d4ab70f2cd8c4a983663121f0d8abefc495917e8dc1966e54679b3c6ed88cec8c7a77994b813a33dd5f8bfba6856f29684490b66e21c",
-            "imageIpfsHash": "bafybeie5zqpcxng3iv25vfbizlkicn2l62bszkgo4qhov7gqxbhzfak24q",
+            "imageIpfsHash": "bafybeiamfhjdxacuxbji56lslkgf6yzsg2lhfdpv7tp5vifubzgydigunq",
             "subcollection": "Winter"
         }
     ],
@@ -24931,7 +24931,7 @@
             "id": 2796,
             "account": "0x8d5380a08b8010f14dc13fc1cff655152e30998a",
             "signature2": "0x141ce01b7e158942b1d93d1ed67d74f221014392e0022ce09698eb62203514127400e10650791e981fef6aa13d009bc6999bf2a2474be6fb33425f26b56043621c",
-            "imageIpfsHash": "bafkreifbtenn6sgokt5aivrkxlznaudggxdh45kd7zvnhxw5m7shbsdofm",
+            "imageIpfsHash": "bafybeicbzd773jj2pviqu2h3s3wornaz7qqeokqgpudhjynyvts4zblbu4",
             "subcollection": "Winter"
         }
     ],
@@ -24947,7 +24947,7 @@
             "id": 2799,
             "account": "0xc76b280880686397f7b95afc72b581b1a52e6bad",
             "signature2": "0x5d94133ecb7ff636098d84422bf701c6f221efb4b441efdfa174d07054e9c13d74e8fb6a647c1f45a6f1a780a912ee1f5457dfaa9c1aad0db16c548f26fa42471b",
-            "imageIpfsHash": "bafkreidjie5qjihn3w5aj6ldhbfr6zfdpysf67oklwb6aveuaxvdeyygui",
+            "imageIpfsHash": "bafkreiblwvwbxcpjrw3w4hjiwwbtrx7ssro6hpr7pttgfw7csxu7jaonjm",
             "subcollection": "Winter"
         }
     ],
@@ -24956,7 +24956,7 @@
             "id": 2798,
             "account": "0xad7d6831973483eec313f57e8dcb57f07aa7d7e0",
             "signature2": "0x5400d76296c995d74ad50f0dd5dea9cccabb52cac460516720552c5dcdd35d477389fcac8b68a36232338d6ac38e563f42c3782161e13c3678c43bcffd68b00f1c",
-            "imageIpfsHash": "bafybeifd5fgxecrw6e6l4vr2jdx4sftvkaumpk2xdxr2icy4aokm64vksm",
+            "imageIpfsHash": "bafybeifeukwnnvgh3jamc3gh2rdwjnavwu3whe2ujqyrhfp7aqhy7s4dba",
             "subcollection": "Winter"
         }
     ],
@@ -24974,7 +24974,7 @@
             "id": 2808,
             "account": "0xdb8d484c46ce6b0bd00f38a51b299eb129928ac0",
             "signature2": "0xb7cb94f4c3912c61e37ea9f7dffa943dacd00e2ec048f45e18107c2dd46f9b26345736499043030ba62522feb5346dae710ff0bfc7ff23ae717b86e8acca24751c",
-            "imageIpfsHash": "bafkreigb3p6vh3wsjxb4azn4o7fgpyrvvducycua5ataa7uwwikbllu25a",
+            "imageIpfsHash": "bafybeidmjogicmmayhxjp4xyd73u6j2kpq6jn22npju7re4cvscovumirm",
             "subcollection": "Winter"
         }
     ],
@@ -24983,7 +24983,7 @@
             "id": 2810,
             "account": "0xd56e3e325133efed6b1687c88571b8a91e517ab0",
             "signature2": "0xd514078ff4f5e15aefefe072b75e8f17ad3962a6269fe2c8fad4ff33b670f7d53b2f36e564a87eccbfd4c6f33a213ebc1532115f54bae17d3b51e1845f1135b51b",
-            "imageIpfsHash": "bafybeidgtvj5mlmjo3axpkpvq43n6wedzb3hmnkkkrzlnsjh3cqzlcqnc4",
+            "imageIpfsHash": "bafybeide32l4ycmmzrccggbwswq6cbt6zx3tkoi3h4zelirnoyqc3ltvwm",
             "subcollection": "Winter"
         }
     ],
@@ -24992,7 +24992,7 @@
             "id": 2812,
             "account": "0x7ccc734e367c8c3d85c8af7886721433a30bd8e8",
             "signature2": "0x9f410646705834658df488bff8c4370dfa8f5e1213804d9f863d4ebb2e3f983d1db68048b5672173d42cfd190b777632aea713031fbb61afd6e752a4ad5dee7e1c",
-            "imageIpfsHash": "bafkreihkhubz2bn3clvg5rzcvfe4h7awtssehjuccczzokgo47jsw7v3u4",
+            "imageIpfsHash": "bafkreiew3vevjplcojfb6iqly6fsyb4wpa26anekdboe4xpri2nbmgxzqa",
             "subcollection": "Winter"
         }
     ]

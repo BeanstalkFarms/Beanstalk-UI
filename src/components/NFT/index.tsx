@@ -83,7 +83,7 @@ export default function NFTs() {
               claimedNFTs={claimedWinterNFTs}
               unclaimedNFTs={unclaimedWinterNFTs}
               title="Winter"
-              mintable={false}
+              mintable
               mintAll={() => {
                 const ids = unclaimedWinterNFTs.map((u) => u.id);
                 const signatures = unclaimedWinterNFTs.map((u) => u.signature2);
