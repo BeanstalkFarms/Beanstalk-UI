@@ -5,8 +5,8 @@ import { AppState } from 'state';
 import { BaseModule, Grid, siloStrings } from 'components/Common';
 import MarketplaceBuyModule from './MarketplaceBuyModule';
 import MarketplaceSellModule from './MarketplaceSellModule';
-import Listings from './Listings/Listings';
-import Offers from './Offers/Offers';
+import ListingsTable from './Listings/ListingsTable';
+import OffersTable from './Offers/OffersTable';
 // import GraphModule from './GraphModule';
 
 export default function TabbedSilo() {
@@ -75,7 +75,7 @@ export default function TabbedSilo() {
             sectionTitlesDescription={['Bids for Pods you\'re willing to buy on the Market']}
             showButton={false}
           >
-            <Offers mode="MINE" />
+            <OffersTable mode="MINE" />
           </BaseModule>
           {/* My Listings */}
           <BaseModule
@@ -84,7 +84,7 @@ export default function TabbedSilo() {
             sectionTitlesDescription={['Pods you have listed for sale on the Market']}
             showButton={false}
           >
-            <Listings mode="MINE" />
+            <ListingsTable mode="MINE" />
           </BaseModule>
           {/* Graph */}
           {/* <BaseModule

@@ -6,7 +6,8 @@ import {
   siloStrings,
 } from 'components/Common';
 import { beanstalkContract } from 'util/index';
-import Offers from './Offers/Offers';
+
+import OffersTable from './Offers/OffersTable';
 import CreateListingModule from './Listings/CreateListingModule';
 
 export default function MarketplaceSellModule() {
@@ -59,7 +60,7 @@ export default function MarketplaceSellModule() {
   };
 
   const sections = [
-    <Offers
+    <OffersTable
     />,
     <CreateListingModule
       plots={plots}

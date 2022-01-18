@@ -35,7 +35,7 @@ import {
   TransactionTextModule,
 } from 'components/Common';
 
-export const CreateBuyOfferModule = forwardRef(({
+export const CreateOfferModule = forwardRef(({
   isFormDisabled,
   setIsFormDisabled,
   settings,

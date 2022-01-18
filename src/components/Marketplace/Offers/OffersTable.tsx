@@ -13,12 +13,11 @@ import {
 import {
   CloseOutlined as CancelIcon,
   ShoppingCartOutlined as ShoppingCartIcon,
-  // FilterListRounded as FilterIcon,
 } from '@material-ui/icons';
 
 import { theme } from 'constants/index';
 import { beanstalkContract, CryptoAsset, displayBN, FarmAsset, GetWalletAddress } from 'util/index';
-import SellPlotModal from 'components/Marketplace/Offers/SellPlotModal';
+import SellIntoOfferModal from 'components/Marketplace/Offers/SellIntoOfferModal';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { useStyles } from '../TableStyles';
@@ -226,7 +225,7 @@ export default function Offers(props: OffersProps) {
 
   return (
     <>
-      <SellPlotModal
+      <SellIntoOfferModal
         currentOffer={currentOffer}
         onClose={() => setCurrentOffer(null)}
       />

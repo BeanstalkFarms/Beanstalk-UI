@@ -10,7 +10,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { TrimBN, beanstalkContract, displayBN, FarmAsset, SiloAsset } from 'util/index';
 import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule } from 'components/Common';
 
-export default function SellPlotModal({
+export default function SellIntoOfferModal({
   currentOffer,
   onClose,
 }) {

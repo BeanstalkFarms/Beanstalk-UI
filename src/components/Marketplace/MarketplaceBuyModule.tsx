@@ -11,9 +11,9 @@ import {
 import { BaseModule, siloStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
 
-import { CreateBuyOfferModule } from './Offers/CreateBuyOfferModule';
+import { CreateOfferModule } from './Offers/CreateOfferModule';
 import Graph from './GraphModule';
-import Listings from './Listings/Listings';
+import ListingsTable from './Listings/ListingsTable';
 
 //
 export default function MarketplaceBuyModule() {
@@ -82,8 +82,8 @@ export default function MarketplaceBuyModule() {
   };
 
   const sections = [
-    <Listings mode="ALL" />,
-    <CreateBuyOfferModule
+    <ListingsTable mode="ALL" />,
+    <CreateOfferModule
       ref={buyOfferRef}
       isFormDisabled={isFormDisabled}
       setIsFormDisabled={setIsFormDisabled}

@@ -123,7 +123,7 @@ type ListingsProps = {
  * A Listing = an Offer to Sell.
  * A User can purchase the Pods in a Listing.
  */
-export default function Listings(props: ListingsProps) {
+export default function ListingsTable(props: ListingsProps) {
   const classes = useStyles();
   const [walletAddress, setWalletAddress] = useState(null);
   const { listings } = useSelector<AppState, AppState['marketplace']>(
