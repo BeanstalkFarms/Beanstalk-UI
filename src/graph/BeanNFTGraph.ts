@@ -147,10 +147,14 @@ export async function loadWinterNFTs(account) {
 }
 
 export async function loadNFTs(account) {
-  if (!nftData.default[account]) return [];
+  if (!nftData.default[account]) {
+    return {
+      genesis: [],
+      winter: [],
+    };
+  }
   const genesisNFTs = nftData.default[account].filter((n) => n.subcollection === 'Genesis');
   const winterNFTs = nftData.default[account].filter((n) => n.subcollection === 'Winter');
-  console.log(winterNFTs);
   return {
     genesis: genesisNFTs,
     winter: winterNFTs,

@@ -5,6 +5,7 @@ import { Link } from '@material-ui/core';
 import {
   MEDIUM_NFT_GENESIS_LINK,
   MEDIUM_NFT_WINTER_LINK,
+  OPENSEA_LINK_COLLECTION,
   OPENSEA_LINK,
 } from 'constants/index';
 import {
@@ -43,6 +44,7 @@ export default function NFTs() {
       <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter Collection: </span>
       <span>
         The BeaNFT Winter Collection is the second minting event for BeaNFTs. From Season 3300 to 3900, up to 2,000 BeaNFTs can be earned by participating in Beanstalk. The top 5 largest bean-denominated investments each Season (across the Silo and Field) will be awarded one of the 2,000 Winter BeaNFTs, until there are none left.{' '}
+        <Link href={OPENSEA_LINK_COLLECTION} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
         <Link href={MEDIUM_NFT_WINTER_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
       </span>
     </>
@@ -60,7 +62,7 @@ export default function NFTs() {
       >
         <NftStatsHeader />
         <Grid container>
-          <Grid item xl={2} lg={1} md={0} />
+          <Grid item xl={2} lg={1} md={false} />
           <Grid item xl={6} lg={5} md={6} xs={12}>
             <ClaimNFT
               buttonDescription={beanftStrings.mintAll}
@@ -83,7 +85,7 @@ export default function NFTs() {
               claimedNFTs={claimedWinterNFTs}
               unclaimedNFTs={unclaimedWinterNFTs}
               title="Winter"
-              mintable={false}
+              mintable
               mintAll={() => {
                 const ids = unclaimedWinterNFTs.map((u) => u.id);
                 const signatures = unclaimedWinterNFTs.map((u) => u.signature2);
