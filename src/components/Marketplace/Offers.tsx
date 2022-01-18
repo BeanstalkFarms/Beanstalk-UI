@@ -40,14 +40,19 @@ function OfferRow({
   const classes = useStyles();
   const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
   // const pctSold = offer.amountBought.dividedBy(offer.initialAmountToBuy);
-  const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine)} in the pod line.`;
+  const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine.minus(harvestableIndex))} in the pod line.`;
 
-  const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.times(10 ** 6).minus(harvestableIndex.times(10 ** 6)).minus(plots[index]).gt(0))
+  // filter out offers that have cleared the podline
+  if (relativeMaxPlaceInLine.lt(0)) {
+    return null
+  }
+  // do we have any plots whose index is smaller than max place in line? if so then we can sell
+  const canSell = Object.keys(plots).some((index) => maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0))
   return (
     <TableRow>
       {/* Place in line */}
       <TableCell className={classes.lucidaStyle}>
-        <span>0 — {displayBN(offer.maxPlaceInLine)}</span>
+        <span>0 — {displayBN(offer.maxPlaceInLine.minus(harvestableIndex))}</span>
         <QuestionModule description={explainer} style={{ marginLeft: 10 }} position="static" />
       </TableCell>
       {/* Price per pod */}
@@ -76,9 +81,8 @@ function OfferRow({
                 const beanstalk = beanstalkContract();
                 await beanstalk.cancelBuyOffer(offer.index.toString());
               }}
-              disabled={!canSell}
               style={{
-                color: canSell ? theme.linkColor : 'lightgray',
+                color: theme.linkColor,
               }}
               size="small"
             >
@@ -103,11 +107,11 @@ function OfferRow({
               onClick={() => {
                 setOffer(offer);
               }}
+              disabled={!canSell}
               style={{
-                color: 'lightgray',
+                color: canSell ? theme.linkColor : 'lightgray',
               }}
               size="small"
-              disabled
             >
               <ShoppingCartIcon />
             </IconButton>
