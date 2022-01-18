@@ -17,7 +17,6 @@ export const BEANFT = {
   symbol: 'BEANFT',
 };
 
-
 export const BEAN = {
   addr: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db', // Mainnet
   decimals: 6,
