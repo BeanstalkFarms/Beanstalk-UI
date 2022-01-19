@@ -25,7 +25,14 @@ import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule } from 'components/Common';
 import { useStyles } from '../TableStyles';
 
-function ListingRow({ listing, harvestableIndex, setListing, isMine }) {
+type ListingRowProps = {
+  listing: Listing;
+  harvestableIndex: AppState['weather']['harvestableIndex'];
+  setListing: Function;
+  isMine: boolean;
+}
+
+function ListingRow({ listing, harvestableIndex, setListing, isMine }: ListingRowProps) {
   const classes = useStyles();
   const relativeIndex = (listing.objectiveIndex).minus(harvestableIndex);
   const relativeExpiry = (listing.expiry).minus(new BigNumber(harvestableIndex));

@@ -12,20 +12,31 @@ import {
   IconButton,
   Popover,
   Slider,
+  withStyles,
 } from '@material-ui/core';
 
 import { Listing } from 'state/marketplace/reducer';
-import { theme } from 'constants/index';
-import { GetWalletAddress } from 'util/index';
+import { CryptoAsset, GetWalletAddress } from 'util/index';
+import TokenIcon from 'components/Common/TokenIcon';
 
 import { BuyListingModal } from './BuyListingModal';
 import { useStyles } from '../TableStyles';
 import ListingsTable from './ListingsTable';
 
+const StyledSlider = withStyles({
+  valueLabel: {
+    top: -22,
+    width: '50px',
+    '& *': {
+      background: 'transparent',
+      color: '#000',
+    },
+  },
+})(Slider);
+
 type ListingsProps = {
   mode: 'ALL' | 'MINE';
 }
-
 /**
  * A Listing = an Offer to Sell.
  * A User can purchase the Pods in a Listing.
@@ -132,25 +143,26 @@ export default function Listings(props: ListingsProps) {
   if (filteredListings.current == null || walletAddress == null) {
     return <div>Loading...</div>;
   }
-  if (filteredListings.current.length === 0) {
-    return <div>No listings.</div>;
-  }
 
   // Filters
   const filters = (
     <>
-      <Box style={{ position: 'relative' }}>
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        px: 1.3,
+      }}>
+        <span sx={{ fontWeight: 'bold' }}>Showing {filteredListings.current.length} listing{filteredListings.current.length !== 1 && 's'}</span>
         <IconButton
           className={`${classes.filterButtonStyle} filterButton`}
           style={{
-            color: 'white',
-            backgroundColor: theme.iconButtonColor,
+            // color: 'white',
+            // backgroundColor: theme.iconButtonColor,
             justifyContent: 'center',
             alignItems: 'center',
-            position: 'absolute',
-            right: '25px',
             padding: '6px',
-            top: '20%',
           }}
           size="small"
           onClick={openPopover}
@@ -163,47 +175,69 @@ export default function Listings(props: ListingsProps) {
         open={open}
         anchorEl={popoverEl}
         onClose={handleClose}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'center',
         }}>
         <Box sx={{
-          top: '50%',
-          left: '50%',
           width: 400,
           bgcolor: 'background.paper',
           border: '2px solid #000',
           boxShadow: 24,
-          p: 4,
+          p: 3,
         }}>
-          <h3>Price Per Pod</h3>
-          <Slider
-            value={tempPriceFilters}
-            valueLabelDisplay="on"
-            onChange={handlePriceFilter}
-            step={0.01}
-            min={0}
-            max={1}
-          />
+          <h3 style={{ marginTop: 0 }}>Price Per Pod</h3>
+          <Box sx={{ mt: 3, px: 0.75 }}>
+            <StyledSlider
+              value={tempPriceFilters}
+              valueLabelDisplay="on"
+              valueLabelFormat={(value: number) => (
+                <div style={{
+                  color: 'black',
+                  minWidth: 40, // prevent wrapping of bean onto newline
+                  textAlign: 'center',
+                  marginLeft: 10, // align vertically with placeInLine
+                }}>
+                  {value}<TokenIcon token={CryptoAsset.Bean} />
+                </div>
+              )}
+              onChange={handlePriceFilter}
+              step={0.01}
+              min={0}
+              max={1}
+            />
+          </Box>
           <h3>Place In Line</h3>
-          <Slider
-            value={tempPlaceInLineFilters}
-            valueLabelFormat={(value: number) => {
-              const units = ['', 'K', 'M', 'B'];
-              let unitIndex = 0;
-              let scaledValue = value;
-              while (scaledValue >= 1000 && unitIndex < units.length - 1) {
-                unitIndex += 1;
-                scaledValue /= 1000;
-              }
-              return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
-            }}
-            valueLabelDisplay="on"
-            onChange={handlePlaceInLineFilter}
-            min={0}
-            max={totalPods.toNumber()}
-          />
-          <Button onClick={applyFilters}>Apply Filter</Button>
+          <Box sx={{ mt: 3, mb: 3, px: 0.75 }}>
+            <StyledSlider
+              value={tempPlaceInLineFilters}
+              valueLabelDisplay="on"
+              valueLabelFormat={(value: number) => {
+                const units = ['', 'K', 'M', 'B'];
+                let unitIndex = 0;
+                let scaledValue = value;
+                while (scaledValue >= 1000 && unitIndex < units.length - 1) {
+                  unitIndex += 1;
+                  scaledValue /= 1000;
+                }
+                return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
+              }}
+              onChange={handlePlaceInLineFilter}
+              min={0}
+              max={totalPods.toNumber()}
+            />
+          </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={applyFilters}>
+            Apply Filter
+          </Button>
         </Box>
       </Popover>
     </>
@@ -216,7 +250,7 @@ export default function Listings(props: ListingsProps) {
         listing={currentListing}
         setCurrentListing={setCurrentListing}
       />
-      {filters}
+      <Box>{filters}</Box>
       <ListingsTable
         mode={props.mode}
         listings={filteredListings.current}
