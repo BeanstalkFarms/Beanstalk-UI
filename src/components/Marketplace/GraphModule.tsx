@@ -9,7 +9,7 @@ import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { Zoom, applyMatrixToPoint } from '@visx/zoom';
-import { TransformMatrix } from '@visx/zoom/lib/types';
+import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
 
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
@@ -158,13 +158,22 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
     />
   ));
 
-  const handleMouseMove = (event: React.MouseEvent | React.TouchEvent) => {
+  const handleMouseMove = (event: React.MouseEvent | React.TouchEvent, zoom: ProvidedZoom<SVGSVGElement>) => {
     if (!svgRef.current) return;
 
+    // This is the mouse position with respect to the 
+    // svg element, which doesn't change size.
     const point = localPoint(svgRef.current, event);
     if (!point) return;
 
-    const foundIndex = findPointInCircles(circlePositions, point);
+    // We use the current zoom to transform the current mouse coordinates
+    // into their "actual" position based on the zoom settings. For example,
+    // when zoomed all the way out the top left corner of the graph is (0, 0),
+    // but at higher zoom levels it will be some other non-zero value. This ensures
+    // that we can hover over circles correctly even when zoomed in.
+    const transformedPoint = zoom.applyInverseToPoint(point);
+
+    const foundIndex = findPointInCircles(circlePositions, transformedPoint);
     if (foundIndex !== undefined) {
       const coordinate = circlePositions[foundIndex];
 
@@ -183,11 +192,29 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
   // This works to constrain at x=0 y=0 but it causes some weird
   // mouse and zoom behavior.
   // https://airbnb.io/visx/docs/zoom#Zoom_constrain
-  const constrain = (transformMatrix: TransformMatrix, prevTransformMatrix: TransformMatrix) => {
-    const min = applyMatrixToPoint(transformMatrix, { x: 0, y: 0 });
-    if (min.x > 0 || min.y < 0) {
-      return prevTransformMatrix;
+  const constrain = (
+    transformMatrix: TransformMatrix,
+    // prevTransformMatrix: TransformMatrix
+  ) => {
+    const { scaleX, scaleY, translateX, translateY } = transformMatrix;
+    // Fix constrain scale
+    if (scaleX < 1) transformMatrix.scaleX = 1;
+    if (scaleY < 1) transformMatrix.scaleY = 1;
+    // Fix constrain translate [left, top] position
+    if (translateX > 0) transformMatrix.translateX = 0;
+    if (translateY > 0) transformMatrix.translateY = 0;
+    // Fix constrain translate [right, bottom] position
+    const max = applyMatrixToPoint(transformMatrix, {
+      x: parentWidth,
+      y: graphHeight
+    });
+    if (max.x < parentWidth) {
+      transformMatrix.translateX = translateX + Math.abs(max.x - parentWidth);
     }
+    if (max.y < graphHeight) {
+      transformMatrix.translateY = translateY + Math.abs(max.y - graphHeight);
+    }
+    // Return the matrix
     return transformMatrix;
   };
 
@@ -213,16 +240,16 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                 touchAction: 'none',
               }}
             >
+              <g transform={zoom.toString()}>
+                {circles}
+              </g>
               {/* Contains the entire chart (incl. axes and labels)
                   QUESTION: why have this + the below <rect> both take up the full dims? */}
               <rect
                 width={parentWidth}
                 height={graphHeight}
                 fill="transparent"
-                onMouseMove={handleMouseMove}
-                onTouchMove={handleMouseMove}
               />
-              <g transform={zoom.toString()}>{circles}</g>
               {/* Contains the chart; this seems to be sitting over top of the other elems */}
               <rect
                 width={parentWidth}
@@ -235,7 +262,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                 onMouseDown={zoom.dragStart}
                 onMouseMove={(evt) => {
                   zoom.dragMove(evt); // handle zoom drag
-                  handleMouseMove(evt, svgRef); // handle hover event for tooltips
+                  handleMouseMove(evt, zoom); // handle hover event for tooltips
                 }}
                 onMouseUp={zoom.dragEnd}
                 onMouseLeave={() => {
