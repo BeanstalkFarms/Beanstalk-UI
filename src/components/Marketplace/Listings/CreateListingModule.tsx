@@ -64,6 +64,7 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
     setIndex(newIndex);
     setAmount(newAmount);
     setExpiresIn(newIndex.minus(harvestableIndex));
+    setPricePerPodValue(new BigNumber(-1));
   };
 
   /** */
