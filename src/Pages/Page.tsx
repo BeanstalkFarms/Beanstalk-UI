@@ -9,6 +9,7 @@ export default function Page({
   routeTitle,
   textTransform,
   sectionNumber = 0,
+  hideTitles = false,
 }) {
   const [section, setSection] = useState(sectionNumber);
   const history = useHistory();
@@ -26,18 +27,20 @@ export default function Page({
 
   // If multiple sections are provided, show a tab selector.
   // Otherwise, show a basic title component.
-  const titleSection = sections.length > 1 ? (
-    <SectionTabs
-      setSection={setSection}
-      section={section}
-      sectionTitles={sectionTitles}
-    />
-  ) : (
-    <ContentTitle
-      title={sectionTitles[0]}
-      textTransform={textTransform}
-    />
-  );
+  const titleSection = !hideTitles ? (
+    sections.length > 1 ? (
+      <SectionTabs
+        setSection={setSection}
+        section={section}
+        sectionTitles={sectionTitles}
+      />
+    ) : (
+      <ContentTitle
+        title={sectionTitles[0]}
+        textTransform={textTransform}
+      />
+    )
+  ) : null;
 
   return (
     <>

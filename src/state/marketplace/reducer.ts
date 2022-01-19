@@ -6,7 +6,11 @@ import {
 
 export type Listing = {
   /**
-   * The absolute index in the Pod Line.
+   * The absolute index of the listed Plot in the Pod Line.
+   *
+   * Measured from the front, so the Listing contains all Pods between
+   * (objectiveIndex) and (objectiveIndex + initialAmount).
+   *
    * An example where the podLine is 50,000 but the objectiveIndex is 150,000:
    *    0         the first Pod issued
    *    100,000   harvestableIndex
@@ -25,7 +29,10 @@ export type Listing = {
   expiresIn: BigNumber;
   /**
    * The absolute position in line at which this listing expires.
-   * (harvestableIndex + expiresIn)
+   * (harvestableIndex + expiresIn).
+   *
+   * NOTE that the above harvestableIndex is the harvestableIndex
+   * at the toime of listing.
    */
   expiry: BigNumber;
   /**

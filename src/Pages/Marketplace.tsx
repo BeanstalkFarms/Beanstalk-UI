@@ -14,6 +14,7 @@ export default function Marketplace() {
       <Page
         sections={sections}
         sectionTitles={sectionTitles}
+        hideTitles
       />
       <Updater />
     </>
