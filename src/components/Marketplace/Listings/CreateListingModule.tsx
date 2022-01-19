@@ -13,7 +13,14 @@ import {
 } from 'components/Common';
 import { TrimBN, displayBN, CryptoAsset, FarmAsset } from 'util/index';
 
-export const CreateListingModule = (props) => {
+type CreateListingModuleProps = {
+  plots: AppState['userBalance']['plots'];
+  hasPlots: boolean;
+  index: any; // FIXME
+  setSellOffer: Function;
+}
+
+export const CreateListingModule = (props: CreateListingModuleProps) => {
   /** The absolute index of the selected plot in line. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The amount of Pod listed from the plot. */
@@ -31,10 +38,12 @@ export const CreateListingModule = (props) => {
   // destructed to avoid useEffect dependency error
   const { setSellOffer } = props;
   const selectedPlotPositionInLine = index.minus(harvestableIndex);
+  const amountInSelectedPlot = index ? new BigNumber(props.plots[index.toString()]) : new BigNumber(-1);
 
-  /**  */
+  // Whenever this form is updated, propagate changes back
+  // to MarketplaceSellModule.
   useEffect(() => {
-    // TODO: rest
+    // TODO: rest (???)
     const canSell = pricePerPodValue.isLessThan(1);
     if (canSell) {
       setSellOffer({
@@ -57,7 +66,7 @@ export const CreateListingModule = (props) => {
   /** */
   const maxHandler = () => {
     if (index != null) {
-      setAmount(new BigNumber(props.plots[index.toString()]));
+      setAmount(amountInSelectedPlot);
     }
   };
 
@@ -76,9 +85,9 @@ export const CreateListingModule = (props) => {
     <TokenInputField
       label="Price per Pod"
       token={CryptoAsset.Bean}
-      handleChange={(e) => {
-        const newPricePerPodValue = new BigNumber(e.target.value);
-        // Price can't be created than 1
+      handleChange={(event) => {
+        const newPricePerPodValue = new BigNumber(event.target.value);
+        // CONSTRAINT: Price can't be created than 1
         if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
           setPricePerPodValue(new BigNumber(0.999999));
           return;
@@ -92,8 +101,14 @@ export const CreateListingModule = (props) => {
     <TokenInputField
       label="Amount"
       token={FarmAsset.Pods}
-      handleChange={(e) => {
-        setAmount(new BigNumber(e.target.value));
+      handleChange={(event) => {
+        const v = new BigNumber(event.target.value);
+        // CONSTRAINT: Amount can't be greater than size of selected plot.
+        if (amountInSelectedPlot.lt(v)) {
+          setAmount(amountInSelectedPlot);
+          return;
+        }
+        setAmount(v);
       }}
       value={amount}
       maxHandler={maxHandler}

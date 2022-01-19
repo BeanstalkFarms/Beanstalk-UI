@@ -30,7 +30,7 @@ export interface UserBalanceState {
   lpSeedDeposits: Object;
   lpWithdrawals: Object;
   lpReceivableCrates: Object;
-  plots: Object;
+  plots: Object; // Bruh... FIXME
   harvestablePlots: Object;
   votedBips: Object;
   locked: Boolean;
