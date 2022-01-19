@@ -21,6 +21,11 @@ type CreateListingModuleProps = {
 }
 
 export const CreateListingModule = (props: CreateListingModuleProps) => {
+  //
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
+
   /** The absolute index of the selected plot in line. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The amount of Pod listed from the plot. */
@@ -29,11 +34,6 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
   const [expiresIn, setExpiresIn] = useState(new BigNumber(-1));
   /** The price per pod. */
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
-
-  //
-  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
-    (state) => state.weather
-  );
 
   // destructed to avoid useEffect dependency error
   const { setSellOffer } = props;
@@ -59,8 +59,11 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
 
   /** */
   const handlePlotChange = (event) => {
-    setIndex(new BigNumber(event.target.value));
-    setAmount(new BigNumber(props.plots[event.target.value]));
+    const newIndex = new BigNumber(event.target.value);
+    const newAmount = new BigNumber(props.plots[event.target.value]);
+    setIndex(newIndex);
+    setAmount(newAmount);
+    setExpiresIn(newIndex.minus(harvestableIndex));
   };
 
   /** */
