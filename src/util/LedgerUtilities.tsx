@@ -3,6 +3,7 @@ import {
   BUDGETS,
   BEAN,
   BEANSTALK,
+  CURVE,
   ETH,
   STALK,
   UNI_V2_ETH_BEAN_LP,
@@ -13,6 +14,8 @@ import {
 import {
   account,
   beanstalkContractReadOnly,
+  bean3crvContractReadOnly,
+  curveContractReadOnly,
   initializing,
   pairContractReadOnly,
   tokenContractReadOnly,
@@ -155,6 +158,7 @@ export const getTotalBalances = async (batch) => {
     [bean.methods.balanceOf(BUDGETS[1]), tokenResult(BEAN)],
     [bean.methods.balanceOf(BUDGETS[2]), tokenResult(BEAN)],
     [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)],
+    [bean.methods.balanceOf(CURVE.addr), tokenResult(BEAN)],
   ]);
 };
 
@@ -224,6 +228,8 @@ export const getPrices = async (batch) => {
   const beanstalk = beanstalkContractReadOnly();
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
+  const bean3crvContract = bean3crvContractReadOnly();
+  const curveContract = curveContractReadOnly();
 
   return makeBatchedPromises(batch, [
     // referenceTokenReserves
@@ -264,6 +270,24 @@ export const getPrices = async (batch) => {
     [
       beanstalk.methods.lpToPeg(),
       (lp) => toTokenUnitsBN(lp, 18),
+    ],
+    // Virtual Curve price
+    [
+      curveContract.methods.get_virtual_price(),
+      (price) => toTokenUnitsBN(price, 18),
+    ],
+    // Curve Bean price
+    [
+      bean3crvContract.methods.get_dy(0, 1, 1),
+      (price) => toTokenUnitsBN(price, 12),
+    ],
+    // Bean3Crv Balances
+    [
+      bean3crvContract.methods.get_balances(),
+      (prices) => [
+        toTokenUnitsBN(prices[0], 6),
+        toTokenUnitsBN(prices[1], 18),
+      ],
     ],
   ]);
 };

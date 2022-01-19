@@ -31,7 +31,7 @@ import {
   LICENSE_LINK,
   MEDIUM_LINK,
   NETLIFY_LINK,
-  OPENSEA_LINK,
+  OPENSEA_LINK_GENESIS,
   SILO_CONTRACT_LINK,
   TELEGRAM_LINK,
   TWITTER_LINK,
@@ -84,7 +84,7 @@ export default function Footer() {
         <LogoLinks link={MEDIUM_LINK}>
           <MediumIcon style={logoStyle} />
         </LogoLinks>
-        <LogoLinks close link={OPENSEA_LINK} paddingRight="10px">
+        <LogoLinks close link={OPENSEA_LINK_GENESIS} paddingRight="10px">
           <OpenSeaIcon style={logoStyle} />
         </LogoLinks>
         <LogoLinks link={COINMARKETCAP_LINK}>

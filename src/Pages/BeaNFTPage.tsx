@@ -1,8 +1,9 @@
 import React from 'react';
 import { Page } from 'Pages/index';
 import NFTs from 'components/NFT';
+// import NFTLeaderboard from 'components/NFTLeaderboard';
 
-export default function DAO(props) {
+export default function DAO() {
   const sectionTitles = ['BeaNFT'];
   const sections = [<NFTs />];
 
@@ -11,7 +12,7 @@ export default function DAO(props) {
       sections={sections}
       sectionTitles={sectionTitles}
       textTransform="none"
-      sectionNumber={props.sectionNumber}
+      routeTitle="beanfts"
     />
   );
 }

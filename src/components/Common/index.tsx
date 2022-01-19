@@ -71,19 +71,19 @@ export const walletStrings = {
   beanBalance:
     'Circulating Beans are in your wallet. Circulating Beans do not earn interest. You can Deposit Beans in the Silo or Sow Beans in the Field to start earning interest on your Beans.',
   lpBalance:
-    'Circulating LP Tokens are in your wallet. Circulating LP Tokens do not earn interest. You can Deposit LP Tokens in the Silo to start earning interest on your Beans. To remove your liquidity from the BEAN:ETH pool, go to Uniswap.',
+    'Circulating BEAN:ETH LP Tokens are in your wallet. Circulating BEAN:ETH LP Tokens do not earn interest. You can Deposit BEAN:ETH LP Tokens in the Silo to start earning interest on your Beans. To remove your liquidity from the BEAN:ETH pool, go to Uniswap.',
   beanSiloBalance:
     'These are your Beans which are Deposited in the Silo. This includes Beans you have been paid as interest on your Stalk holdings. For more information on your Deposited Beans, look in the Silo module.',
   lpSiloBalance:
-    'These are your LP Tokens which are Deposited in the Silo. For more information on your Deposited LP Tokens, look in the Silo module.',
+    'These are your BEAN:ETH LP Tokens which are Deposited in the Silo. For more information on your Deposited BEAN:ETH LP Tokens, look in the Silo module.',
   beanTransitBalance:
     'These are your total Beans which are in Unclaimable Withdrawals. Withdrawals become Claimable 24 Full Seasons after Withdrawal. For more information on your Withdrawn Beans, look in the Silo module.',
   lpTransitBalance:
-    'These are your total LP Tokens which are in Unclaimable Withdrawals. Withdrawals become Claimable 24 Full Seasons after Withdrawal. For more information on your Withdrawn LP Tokens, look in the Silo module.',
+    'These are your total BEAN:ETH LP Tokens which are in Unclaimable Withdrawals. Withdrawals become Claimable 24 Full Seasons after Withdrawal. For more information on your Withdrawn BEAN:ETH LP Tokens, look in the Silo module.',
   claimableBeanBalance:
     'These are your total Claimable Beans which are from Pod Harvests and Withdrawals. For more information on your Claimable Bean Withdrawals, look in the Silo module. For more information on your Harvestable Pods, look in the Field module.',
   claimablelpBalance:
-    'These are your total Claimable LP Tokens which are from Withdrawals. For more information on your Claimable LP Token Withdrawals, look in the Silo module.',
+    'These are your total Claimable BEAN:ETH LP Tokens which are from Withdrawals. For more information on your Claimable LP Token Withdrawals, look in the Silo module.',
   claimableEthBalance:
     'These are your total Claimable ETH which are from Seasons of Plenty.',
   stalkBalance:
@@ -94,7 +94,7 @@ export const walletStrings = {
     'This is your total Unharvestable Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, look in the Field module.',
   ethBalance: 'This is the ETH balance of your wallet.',
   topLeft:
-    'The Bean Balance is the total USD value of your Beans and LP Tokens. This total does not include your Pods or claimable ETH.',
+    'The Bean Balance is the total USD value of your Beans, BEAN:ETH LP Tokens. This total does not include your Pods or claimable ETH.',
   topLeftTitle: 'Bean Balance',
   topRight:
     'Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk.',
@@ -104,14 +104,14 @@ export const totalStrings = {
   beanBalance: 'This is the number of Beans not in the Silo or Withdrawals.',
   budgetBalance:
     'This is the number of Beans in the Marketing and Development Budgets.',
-  lpBalance: 'This is the number of LP Tokens not in the Silo or Withdrawals.',
+  lpBalance: 'This is the number of BEAN:ETH LP Tokens not in the Silo or Withdrawals.',
   beanSiloBalance:
     'This is the number of Beans currently Deposited in the Silo.',
-  lpSiloBalance: 'This is the number of LP Tokens Deposited in the Silo.',
+  lpSiloBalance: 'This is the number of BEAN:ETH LP Tokens Deposited in the Silo.',
   beanTransitBalance:
     'This is the number of Beans in Unclaimed Withdrawals. This includes both frozen and Claimable Bean Withdrawals.',
   lpTransitBalance:
-    'This is the number of LP Tokens in Unclaimed Withdrawals. This includes both frozen and Claimable LP Token Withdrawals.',
+    'This is the number of BEAN:ETH LP Tokens in Unclaimed Withdrawals. This includes both frozen and Claimable BEAN:ETH LP Token Withdrawals.',
   stalkBalance:
     'This is the total current number of Stalk. Stalk are the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Stalk is forfeited upon Withdrawal of Deposited assets from the Silo.',
   seedBalance:
@@ -120,10 +120,10 @@ export const totalStrings = {
     'This is the total number of Unharvestable Pods. This is the outstanding debt of Beanstalk.',
   ethBalance: 'This is the number of Ethereum in the BEAN:ETH liquidity pool.',
   beanReserveTotal:
-    'This is the number of Beans in the BEAN:ETH liquidity pool.',
+    'This is the number of Beans in the BEAN:ETH and the BEAN:3CRV liquidity pools.',
   topLeft: 'This is the current USD value of all Beans.',
   topLeftTitle: 'Market Cap',
-  topRight: 'This is the current USD value of the BEAN:ETH liquidity pool.',
+  topRight: 'This is the current USD value of the BEAN:ETH and the BEAN:3CRV liquidity pools.',
   topRightTitle: 'Pool Value',
 };
 export const walletTopStrings = {
@@ -148,18 +148,18 @@ export const siloStrings = {
     'Use this sub-tab to deposit Beans to the Silo. You can toggle the settings to deposit from Beans, ETH, or both.',
   beanWithdraw:
     'Use this sub-tab to withdraw Beans from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
-  beanClaim: 'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.',
+  beanClaim: 'Use this sub-tab to Claim Withrawn BEAN:ETH LP Tokens from the Silo.',
   beanDepositsTable: 'View all your current Bean Deposits in this table.',
   beanWithdrawalsTable: 'View all your current Bean Withdrawals in this table.',
   beanAPY:
     'The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
-  convert: 'Use this tab to convert Deposited Beans to Deposited LP Tokens when P > $1 and convert Deposited LP Tokens to Deposited Beans when P < $1.',
-    lpDescription: 'Use this tab to deposit, withdraw, and claim LP Tokens to and from the Silo.',
+  convert: 'Use this tab to convert Deposited Beans to Deposited BEAN:ETH LP Tokens when P > $1 and convert Deposited BEAN:ETH LP Tokens to Deposited Beans when P < $1.',
+    lpDescription: 'Use this tab to deposit, withdraw, and claim BEAN:ETH LP Tokens to and from the Silo.',
   lpDeposit:
-    'Use this sub-tab to deposit LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited LP Tokens.',
+    'Use this sub-tab to deposit BEAN:ETH LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited BEAN:ETH LP Tokens.',
   lpWithdraw:
-    'Use this sub-tab to withdraw LP Tokens from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
-  lpClaim: 'Use this sub-tab to Claim Withrawn LP Tokens from the Silo.',
+    'Use this sub-tab to withdraw BEAN:ETH LP Tokens from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
+  lpClaim: 'Use this sub-tab to Claim Withrawn BEAN:ETH LP Tokens from the Silo.',
   lpDepositsTable: 'View all your current LP Token Deposits in this table.',
   lpWithdrawalsTable:
     'View all your current LP Token Withdrawals in this table.',
@@ -169,8 +169,8 @@ export const siloStrings = {
     'The Silo is the Beanstalk DAO. Silo Members earn passive interest during Bean supply increases. Anyone can become a Silo Member by depositing Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module below in exchange for Stalk and Seeds. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. The Seed token yields .0001 Stalk every Season. No action is ever required of Silo Members. All Stalk and Seeds associated with a Deposit are forfeited upon withdrawal. All Withdrawals are frozen for 24 full Seasons.',
   withdrawWarning:
     'WARNING: Your Withdrawal will be frozen for 24 full Seasons.',
-  convertLPDeposit: 'Use this sub-tab to convert Deposited LP Tokens to Deposited Beans when P < $1.',
-  convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited LP Tokens when P > $1.',
+  convertLPDeposit: 'Use this sub-tab to convert Deposited BEAN:ETH LP Tokens to Deposited Beans when P < $1.',
+  convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited BEAN:ETH LP Tokens when P > $1.',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',
@@ -233,6 +233,7 @@ export const beanftStrings = {
   beanftDescription:
     'BeaNFT Genesis Collection is a series of 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',
   mintAll: 'Use this button to Mint all your Mintable BeaNFTs.',
+  default: 'This tab will display your BeaNFTs if you have any BeaNFTs associated with this event. If it is empty, you can purchase a BeaNFT on OpenSea.',
   minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
   singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',
   unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',
@@ -275,8 +276,8 @@ export const fieldChartStrings = {
 export const siloChartStrings = {
   depositedBeans: 'This is the current total Deposited Beans by Season.',
   withdrawnBeans: 'This is the current total Withdrawn Beans by Season.',
-  depositedLP: 'This is the current total Deposited LP Tokens by Season.',
-  withdrawnLP: 'This is the current total Withdrawn LP Tokens by Season.',
+  depositedLP: 'This is the current total Deposited BEAN:ETH LP Tokens by Season.',
+  withdrawnLP: 'This is the current total Withdrawn BEAN:ETH LP Tokens by Season.',
   stalk: 'This is the current total Stalk by Season.',
   seeds: 'This is the current total Seeds by Season.',
 };

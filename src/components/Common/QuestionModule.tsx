@@ -22,7 +22,7 @@ export default function QuestionModule(props) {
   const handleTooltipOpen = () => {
     setShow(true);
   };
-  const timer = width < 500 ? 4000 : 1000;
+  const timer = width < 500 ? 4000 : undefined;
 
   return (
     <Box style={questionStyle}>
