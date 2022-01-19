@@ -28,11 +28,16 @@ import { useStyles } from '../TableStyles';
 type ListingRowProps = {
   listing: Listing;
   harvestableIndex: AppState['weather']['harvestableIndex'];
-  setListing: Function;
+  setCurrentListing: Function;
   isMine: boolean;
 }
 
-function ListingRow({ listing, harvestableIndex, setListing, isMine }: ListingRowProps) {
+function ListingRow({
+  listing,
+  harvestableIndex,
+  setCurrentListing,
+  isMine
+}: ListingRowProps) {
   const classes = useStyles();
   const relativeIndex = (listing.objectiveIndex).minus(harvestableIndex);
   const relativeExpiry = (listing.expiry).minus(new BigNumber(harvestableIndex));
@@ -72,7 +77,12 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }: ListingRo
               {`${displayBN(listing.amountSold)} / ${displayBN(listing.initialAmount)}`}
             </span>
             <TokenIcon token={FarmAsset.Pods} />
-            {listing.amountSold > 0 && <CircularProgress variant="determinate" value={(listing.amountSold.dividedBy(listing.initialAmount)).toNumber() * 100} />}
+            {listing.amountSold > 0 && (
+              <CircularProgress
+                variant="determinate"
+                value={(listing.amountSold.dividedBy(listing.initialAmount)).toNumber() * 100} 
+              />
+            )}
           </TableCell>
           {/* Cancel Button */}
           <TableCell align="center">
@@ -85,7 +95,7 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }: ListingRo
               }}
               style={{
                 color: theme.linkColor,
-               }}
+              }}
               size="small"
             >
               <CancelIcon />
@@ -101,16 +111,20 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }: ListingRo
             label="Pods"
             icon={<TokenIcon token={FarmAsset.Pods} />}
           />
-          {/* Buy Button */}
-          <TableCell align="center">
-            <IconButton
-              onClick={() => setListing(listing)}
-              style={{ color: theme.linkColor }}
-              size="small"
-            >
-              <ShoppingCartIcon />
-            </IconButton>
-          </TableCell>
+          {/* Buy this listing; only show if handler is set */}
+          {setCurrentListing && (
+            <TableCell align="center">
+              <IconButton
+                onClick={() => setCurrentListing(listing)}
+                style={{
+                  color: theme.linkColor
+                }}
+                size="small"
+              >
+                <ShoppingCartIcon />
+              </IconButton>
+            </TableCell>
+          )}
         </>
       )}
     </TableRow>
@@ -120,6 +134,7 @@ function ListingRow({ listing, harvestableIndex, setListing, isMine }: ListingRo
 type ListingsTableProps = {
   mode: 'ALL' | 'MINE';
   listings: Listing[];
+  setCurrentListing?: Function;
   harvestableIndex: BigNumber;
 }
 
@@ -160,7 +175,7 @@ export default function ListingsTable(props: ListingsTableProps) {
                 key={listing.objectiveIndex - props.harvestableIndex}
                 harvestableIndex={props.harvestableIndex}
                 listing={listing}
-                setListing={props.setCurrentListing}
+                setCurrentListing={props.setCurrentListing}
                 isMine
               />
             ))}
@@ -171,31 +186,44 @@ export default function ListingsTable(props: ListingsTableProps) {
   }
 
   return (
-    <>
-      {/* REMOVED: FILTERS */}
-      <TableContainer>
-        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Place in line</TableCell>
-              <TableCell align="right">Expiry</TableCell>
-              <TableCell align="right">Price</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="center">Buy</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {props.listings.map((listing: Listing) => (
-              <ListingRow
-                key={listing.objectiveIndex - props.harvestableIndex}
-                harvestableIndex={props.harvestableIndex}
-                listing={listing}
-                setListing={props.setCurrentListing}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
+    <TableContainer>
+      <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell align="left">
+              Place in line
+            </TableCell>
+            <TableCell align="right">
+              Expiry
+            </TableCell>
+            <TableCell align="right">
+              Price
+            </TableCell>
+            <TableCell align="right">
+              Amount
+            </TableCell>
+            {props.setCurrentListing && (
+              <TableCell align="center">
+                Buy
+              </TableCell>
+            )}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {props.listings.map((listing: Listing) => (
+            <ListingRow
+              key={listing.objectiveIndex - props.harvestableIndex}
+              harvestableIndex={props.harvestableIndex}
+              listing={listing}
+              setCurrentListing={props.setCurrentListing}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
+
+ListingsTable.defaultProps = {
+  setCurrentListing: undefined,
+};

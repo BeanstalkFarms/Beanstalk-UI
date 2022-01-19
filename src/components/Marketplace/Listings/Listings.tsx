@@ -9,7 +9,7 @@ import { Listing } from 'state/marketplace/reducer';
 import { CryptoAsset, GetWalletAddress } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 
-import { BuyListingModal } from './BuyListingModal';
+import BuyListingModal from './BuyListingModal';
 import ListingsTable from './ListingsTable';
 import Filters, { StyledSlider } from '../Filters';
 
@@ -21,22 +21,22 @@ type ListingsProps = {
  * A User can purchase the Pods in a Listing.
  */
 export default function Listings(props: ListingsProps) {
+  /** */
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  /** */
+  const [currentListing, setCurrentListing] = useState<Listing | null>(null);
   const { listings: allListings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
-
   const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
 
   // Filter state
   const filteredListings = useRef<Listing[]>(allListings);
-  const [currentListing, setCurrentListing] = useState<null | Listing>(null);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
 
@@ -162,7 +162,7 @@ export default function Listings(props: ListingsProps) {
   return (
     <>
       <BuyListingModal
-        listing={currentListing}
+        currentListing={currentListing}
         setCurrentListing={setCurrentListing}
       />
       <Box>{filters}</Box>

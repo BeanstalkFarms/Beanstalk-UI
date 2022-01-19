@@ -31,17 +31,14 @@ type OfferRowProps = {
 
 function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
   const classes = useStyles();
-
   const { plots } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-
-  // const pctSold = offer.amountBought.dividedBy(offer.initialAmountToBuy);
   const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
   const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine)} in the pod line.`;
-
-  // do we have any plots whose index is smaller than max place in line? if so then we can sell
+  /** Do we have any plots whose index is smaller than max place in line? if so then we can sell */
   const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
+  
   return (
     <TableRow>
       {/* Place in line */}
@@ -59,7 +56,6 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
       {isMine ? (
         <>
           {/* Amount filled so far */}
-          {/* ({pctSold.toFixed()}%) */}
           <BalanceTableCell
             className={classes.lucidaStyle}
             label="Pods Sold"
@@ -95,7 +91,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           >
             {displayBN(numPodsLeft)}
           </BalanceTableCell>
-          {/* Sell into this offer; only show if we have */}
+          {/* Sell into this offer; only show if handler is set */}
           {setCurrentOffer && (
             <TableCell align="center">
               <IconButton
@@ -116,16 +112,16 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
   );
 }
 
-type OffersProps = {
+type OffersTableProps = {
   mode: 'ALL' | 'MINE';
-  setCurrentOffer?: Function;
   offers: BuyOffer[];
+  setCurrentOffer?: Function;
 }
 
 /**
  * Offers ("Offers to Buy")
  */
-export default function Offers(props: OffersProps) {
+export default function OffersTable(props: OffersTableProps) {
   const classes = useStyles();
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
@@ -207,6 +203,6 @@ export default function Offers(props: OffersProps) {
   );
 }
 
-Offers.defaultProps = {
+OffersTable.defaultProps = {
   setCurrentOffer: undefined,
 };

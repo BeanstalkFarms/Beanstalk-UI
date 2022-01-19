@@ -18,7 +18,10 @@ type SellIntoOfferModalProps = {
   onClose: Function;
 }
 
-export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOfferModalProps) {
+export default function SellIntoOfferModal({ 
+  currentOffer, 
+  onClose 
+}: SellIntoOfferModalProps) {
   /** The selected Plot index. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The amount of Pods the User is willing to sell into this Offer */
@@ -126,6 +129,12 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
     );
   }
 
+  const isDisabled = (
+    index.lt(0) 
+    || !amount 
+    || amount.lte(0)
+  )
+
   return (
     <Modal
       open={currentOffer != null}
@@ -147,7 +156,7 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
         size="small"
         marginTop="0px"
         handleForm={handleForm}
-        isDisabled={index.lt(0) || !amount || amount.lte(0)}
+        isDisabled={isDisabled}
       >
         {/**
           * Show the offer we're selling into.
