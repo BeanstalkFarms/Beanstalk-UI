@@ -109,7 +109,7 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
   );
 
   // Set max x value to be 1M or max place in line with some buffer
-  const xDomain = [0, Math.max(maxPlaceInLine * 1.1, 1e6)];
+  const xDomain = [0, Math.max(maxPlaceInLine * 1.1)];
   // Set max y value to be $1, price per pod should never exceed $1
   const yDomain = [0, 1];
 
@@ -192,6 +192,11 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
     }
   };
 
+  const scaleXMin = 1;
+  const scaleXMax = 4;
+  const scaleYMin = 1;
+  const scaleYMax = 4;
+  
   // This works to constrain at x=0 y=0 but it causes some weird
   // mouse and zoom behavior.
   // https://airbnb.io/visx/docs/zoom#Zoom_constrain
@@ -201,8 +206,13 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
   ) => {
     const { scaleX, scaleY, translateX, translateY } = transformMatrix;
     // Fix constrain scale
-    if (scaleX < 1) transformMatrix.scaleX = 1;
-    if (scaleY < 1) transformMatrix.scaleY = 1;
+    // if (scaleX < 1) transformMatrix.scaleX = 1;
+    // if (scaleY < 1) transformMatrix.scaleY = 1;
+    if (scaleX < scaleXMin) transformMatrix.scaleX = scaleXMin;
+    else if (scaleX > scaleXMax) transformMatrix.scaleX = scaleXMax;
+    if (scaleY < scaleYMin) transformMatrix.scaleY = scaleYMin;
+    else if (scaleY > scaleYMax) transformMatrix.scaleY = scaleYMax;
+
     // Fix constrain translate [left, top] position
     if (translateX > 0) transformMatrix.translateX = 0;
     if (translateY > 0) transformMatrix.translateY = 0;
@@ -271,10 +281,10 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
                 onMouseLeave={() => {
                   if (zoom.isDragging) zoom.dragEnd();
                 }}
-                onDoubleClick={(event) => {
-                  const point = localPoint(event) || { x: 0, y: 0 };
-                  zoom.scale({ scaleX: 1.1, scaleY: 1.1, point });
-                }}
+                // onDoubleClick={(event) => {
+                  // const point = localPoint(event) || { x: 0, y: 0 };
+                  // zoom.scale({ scaleX: 1.1, scaleY: 1.1, point });
+                // }}
               />
               {/* Y axis: Price per Pod */}
               <AxisLeft
@@ -301,7 +311,10 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
               {/* X axis: Place in Line */}
               <AxisBottom
                 scale={rescaleXWithZoom(xScale, zoom)}
-                tickFormat={(d) => `${d / 1e6}M`}
+                tickFormat={(d: number) => {
+                  if (d < 1e6) return `${d / 1e3}k`;
+                  return `${d / 1e6}M`;
+                }}
                 label="Place In Line"
                 labelProps={{
                   fontFamily: 'Futura-Pt-Book',
