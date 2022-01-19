@@ -36,7 +36,7 @@ body {
 }
 body::after{
    position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
-   content:
+   /* content:
     url('img/winter/beanstalk-background-1.svg')
     url('img/winter/beanstalk-background-2.svg')
     url('img/winter/beanstalk-background-3.svg')
@@ -46,7 +46,7 @@ body::after{
     url('img/winter/Barn-2.svg')
     url('img/winter/Barn-3.svg')
     url('img/winter/Barn-4.svg')
-    url('img/winter/Barn-5.svg');
+    url('img/winter/Barn-5.svg'); */
 }
 
 code {

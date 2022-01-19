@@ -7,6 +7,7 @@ export interface TotalBalanceState {
   totalSiloBeans: BigNumber;
   totalTransitBeans: BigNumber;
   totalBudgetBeans: BigNumber;
+  totalCurveBeans: BigNumber;
   totalLP: BigNumber;
   totalSiloLP: BigNumber;
   totalTransitLP: BigNumber;
@@ -23,6 +24,7 @@ export const initialState: TotalBalanceState = {
   totalSiloBeans: new BigNumber(-1),
   totalTransitBeans: new BigNumber(-1),
   totalBudgetBeans: new BigNumber(-1),
+  totalCurveBeans: new BigNumber(-1),
   totalLP: new BigNumber(-1),
   totalSiloLP: new BigNumber(-1),
   totalTransitLP: new BigNumber(-1),

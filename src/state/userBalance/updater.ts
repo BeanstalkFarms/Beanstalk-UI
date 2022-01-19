@@ -163,6 +163,7 @@ export default function Updater() {
         budget1,
         budget2,
         budget3,
+        totalCurveBeans,
       ] = totalBalances;
       const totalBudgetBeans = budget0.plus(budget1).plus(budget2).plus(budget3);
       const [bips, hasActiveBIP] = bipInfo;
@@ -172,6 +173,7 @@ export default function Updater() {
         setTotalBalance({
           totalBeans,
           totalBudgetBeans,
+          totalCurveBeans,
           totalLP,
           totalSiloBeans,
           totalSiloLP,
@@ -219,6 +221,9 @@ export default function Updater() {
         twapPrices,
         beansToPeg,
         lpToPeg,
+        curveVirtualPrice,
+        bean3crvPrice,
+        bean3crvReserve,
         ethPrices,
       ] = _prices;
 
@@ -246,6 +251,10 @@ export default function Updater() {
           lpToPeg,
           beanTWAPPrice: twapPrices[0],
           usdcTWAPPrice: twapPrices[1],
+          curveVirtualPrice,
+          bean3crvPrice,
+          bean3crvReserve: bean3crvReserve[0],
+          crvReserve: bean3crvReserve[1],
           ethPrices,
         })
       );
