@@ -123,17 +123,13 @@ export default function SellIntoOfferModal({
     details.push(`Receive ${displayBN(beansReceived)} Beans.`);
     details.push('This sale will settle immediately.');
   }
-  function transactionDetails() {
-    return (
-      <TransactionDetailsModule fields={details} />
-    );
-  }
 
+  //
   const isDisabled = (
     index.lt(0) 
     || !amount 
     || amount.lte(0)
-  )
+  );
 
   return (
     <Modal
@@ -214,7 +210,7 @@ export default function SellIntoOfferModal({
                 token={SiloAsset.Bean}
                 value={beansReceived}
               />
-              {transactionDetails()}
+              <TransactionDetailsModule fields={details} />
             </>
           )}
         </Box>

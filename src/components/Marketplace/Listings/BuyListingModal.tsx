@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
+import BigNumber from 'bignumber.js';
 import {
   Box,
   Modal,
 } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import { Listing } from 'state/marketplace/reducer';
 import { FarmAsset, TrimBN, getToAmount, getFromAmount, poolForLP, CryptoAsset, SwapMode, MinBN, displayBN, MaxBN, toBaseUnitBN, toStringBaseUnitBN, buyListing, buyBeansAndBuyListing } from 'util/index';
-import BigNumber from 'bignumber.js';
 import { BaseModule, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
 import { BEAN, ETH, BASE_SLIPPAGE } from 'constants/index';
+
 import ListingsTable from './ListingsTable';
-import { Listing } from 'state/marketplace/reducer';
 
 type BuyListingModalProps = {
   currentListing: Listing;
@@ -19,7 +22,7 @@ type BuyListingModalProps = {
 
 export default function BuyListingModal({
   currentListing,
-  setCurrentListing
+  setCurrentListing,
 }: BuyListingModalProps) {
   /** */
   const [buyPods, setBuyPods] = useState(new BigNumber(0));
@@ -126,7 +129,7 @@ export default function BuyListingModal({
     }
 
     setBuyPods(TrimBN(buyBeans.plus(fromBeans).dividedBy(currentListing.pricePerPod), BEAN.decimals));
-  }
+  };
   const fromValueUpdated = (newFromNumber, newFromEthNumber) => {
     const toBeans = currentListing.amount.multipliedBy(currentListing.pricePerPod);
 
@@ -149,7 +152,7 @@ export default function BuyListingModal({
     setFromEthValue(TrimBN(fromEth, ETH.decimals));
     setFromBeanValue(TrimBN(fromBeans, BEAN.decimals));
     setBuyPods(fromBeans.plus(buyBeans).dividedBy(currentListing.pricePerPod));
-  }
+  };
   const handleForm = () => {
     if (buyPods.isLessThanOrEqualTo(0)) return;
 
@@ -210,48 +213,6 @@ export default function BuyListingModal({
     }
   }
 
-  /* Input Fields */
-  const fromPodField = (
-    <InputFieldPlus
-      key={2}
-      balance={currentListing.amount}
-      token={FarmAsset.Pods}
-      value={TrimBN(buyPods, 6)}
-      handleChange={(v) => toValueUpdated(v)}
-    />
-  );
-  const fromBeanField = (
-    <InputFieldPlus
-      key={0}
-      balance={beanBalance}
-      claim={settings.claim}
-      claimableBalance={claimableBeans}
-      beanLPClaimableBalance={claimableLPBeans}
-      handleChange={(v) => {
-        fromValueUpdated(v, fromEthValue);
-      }}
-      token={CryptoAsset.Bean}
-      value={fromBeanValue}
-      visible={settings.mode !== SwapMode.Ethereum}
-    />
-  );
-  const fromEthField = (
-    <EthInputField
-      key={1}
-      balance={ethBalance}
-      buyBeans={toBuyBeanValue}
-      claim={settings.claim}
-      claimableBalance={claimableEthBalance}
-      handleChange={(v) => {
-        fromValueUpdated(fromBeanValue, v);
-      }}
-      mode={settings.mode}
-      sellEth={fromEthValue}
-      updateExpectedPrice={updateExpectedPrice}
-      value={TrimBN(fromEthValue, 9)}
-    />
-  );
-
   /* Settings */
   const showSettings = (
     <SettingsFormModule
@@ -293,11 +254,12 @@ export default function BuyListingModal({
       />
     );
   }
-  details.push(`Buying ${displayBN(buyPods)} Pods at ${displayBN(currentListing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for ${displayBN(currentListing.pricePerPod)} Beans each`);
+  details.push(`Buy ${displayBN(buyPods)} Pods at ${displayBN(currentListing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for ${displayBN(currentListing.pricePerPod)} Beans each`);
 
-  const isDisabled = (
-    false
-  )
+  const isReadyToSubmit = (
+    (fromBeanValue?.gt(0) || fromEthValue?.gt(0))
+    && buyPods.gt(0)
+  );
 
   return (
     <Modal
@@ -319,11 +281,11 @@ export default function BuyListingModal({
 
         }}
         section={0}
-        sectionTitles={['Buy Plot']}
+        sectionTitles={['Buy Pods']}
         size="small"
         marginTop="0px"
         handleForm={handleForm}
-        isDisabled={isDisabled}
+        isDisabled={!isReadyToSubmit}
       >
         <ListingsTable
           mode="ALL"
@@ -331,10 +293,56 @@ export default function BuyListingModal({
           listings={[currentListing]}
         />
         <Box sx={{ marginTop: 20 }}>
-          {fromPodField}
-          {fromBeanField}
-          {fromEthField}
-          {buyPods.isGreaterThan(0) ? <TransactionDetailsModule fields={details} /> : null}
+          {/*
+            * The number of pods to purchase from this Plot.
+            */}
+          <InputFieldPlus
+            key={0}
+            balance={beanBalance}
+            claim={settings.claim}
+            claimableBalance={claimableBeans}
+            beanLPClaimableBalance={claimableLPBeans}
+            handleChange={(v) => {
+              fromValueUpdated(v, fromEthValue);
+            }}
+            token={CryptoAsset.Bean}
+            value={fromBeanValue}
+            visible={settings.mode !== SwapMode.Ethereum}
+          />
+          <EthInputField
+            key={1}
+            balance={ethBalance}
+            buyBeans={toBuyBeanValue}
+            claim={settings.claim}
+            claimableBalance={claimableEthBalance}
+            handleChange={(v) => {
+              fromValueUpdated(fromBeanValue, v);
+            }}
+            mode={settings.mode}
+            sellEth={fromEthValue}
+            updateExpectedPrice={updateExpectedPrice}
+            value={TrimBN(fromEthValue, 9)}
+          />
+          <ExpandMoreIcon
+            color="primary"
+            style={{ marginBottom: '-14px', width: '100%' }}
+          />
+          {/*
+            * The number of pods to purchase from this Plot.
+            */}
+          <InputFieldPlus
+            key={2}
+            balanceLabel="Available"
+            balance={currentListing.amount}
+            token={FarmAsset.Pods}
+            value={TrimBN(buyPods, 6)}
+            handleChange={(v) => toValueUpdated(v)}
+          />
+          {buyPods.isGreaterThan(0) ? (
+            <TransactionDetailsModule
+              fields={details}
+            />
+          ) : null}
           {showSettings}
         </Box>
       </BaseModule>

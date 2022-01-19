@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Button, InputAdornment, Slider, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { CryptoAsset, displayBN, displayFullBN, TokenLabel } from 'util/index';
+import BigNumber from 'bignumber.js';
+
+import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/index';
 import { theme } from 'constants/index';
+
 import { FormatTooltip, TokenTypeImageModule } from './index';
 
 const useStyles = makeStyles({
@@ -47,7 +50,43 @@ const tokenTypeImageStyle = {
   width: '20px',
 };
 
-export default function TokenInputField(props) {
+export type TokenInputFieldProps = {
+  /** Input label */
+  label: string | null;
+  /** ??? */
+  // action: string;
+  /** Hide the entire input */
+  hidden?: boolean; // default false
+  /** Prevent interaction with input */
+  locked?: boolean; // default false
+  /** ??? */
+  // maxval: number;
+  /** Show the icon for this token to the right of the input */
+  token?: Token;
+  poolForLPRatio?: any;
+  /** */
+  balanceLabel?: string;
+  /** */
+  balance?: BigNumber;
+  range: boolean;
+  isLP: boolean;
+  // Handlers
+  /** */
+  maxHandler?: Function;
+  /** */
+  handleChange: Function;
+  /** */
+  handleSlider: Function;
+  // Input values
+  /** The numerical value stored in the Input */
+  value: BigNumber;
+  /** Input placeholder */
+  placeholder?: string;
+  /** Error */
+  error?: string;
+}
+
+export default function TokenInputField(props: TokenInputFieldProps) {
   const [displayValue, setDisplayValue] = useState('');
   const classes = useStyles();
   const label = props.label || TokenLabel(props.token);
@@ -55,7 +94,10 @@ export default function TokenInputField(props) {
   function maxButton() {
     if (props.maxHandler !== undefined) {
       return (
-        <Button onClick={props.maxHandler} style={maxStyle} disabled={props.locked}>
+        <Button
+          onClick={props.maxHandler}
+          style={maxStyle}
+          disabled={props.locked}>
           Max
         </Button>
       );
@@ -140,13 +182,12 @@ export default function TokenInputField(props) {
         {props.balance && !props.range && (
           <FormatTooltip placement="right" title={balanceContent}>
             <Box className={classes.rightStyle}>
-              &nbsp;{`Balance: ${displayBN(props.balance)}`}
+              &nbsp;{`${props.balanceLabel}: ${displayBN(props.balance)}`}
             </Box>
           </FormatTooltip>
         )}
       </Box>
       {showSlider}
-
       <TextField
         className="TextField-rounded"
         placeholder={props.placeholder || '0.0000'}
@@ -190,12 +231,18 @@ export default function TokenInputField(props) {
   );
 }
 
+// FIXME: reorganize to match about type def
+// FIXME: what are 'action' and 'maxval' for?
 TokenInputField.defaultProps = {
-  label: null,
-  action: 'Deposit',
+  // action: 'Deposit',
   hidden: false,
   locked: false,
-  maxval: 0,
+  // maxval: 0,
   token: 'Beans',
   poolForLPRatio: undefined,
+  balanceLabel: 'Balance',
+  balance: undefined,
+  maxHandler: undefined,
+  placeholder: undefined,
+  error: undefined,
 };

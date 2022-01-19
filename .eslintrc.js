@@ -29,21 +29,22 @@ module.exports = {
     'plugin:react/recommended',
     'airbnb',
   ],
-  //
   rules: {
-    // Stylistic
+    // -- Stylistic
     semi: 'warn',
-    'comma-dangle': ['warn', {
-      arrays: 'always-multiline',
-      imports: 'always-multiline',
-      exports: 'always-multiline',
-      functions: 'never',
-      objects: 'always-multiline',
-    }],
+    // 'comma-dangle': ['warn', {
+    //   arrays: 'always-multiline',
+    //   imports: 'always-multiline',
+    //   exports: 'always-multiline',
+    //   functions: 'never',
+    //   objects: 'always-multiline',
+    // }],
     'quote-props': 'warn',
     'import/order': 'warn',
     'space-infix-ops': 'warn',
-    quotes: ['warn', 'single'],
+    'quotes': ['warn', 'single'],
+    'no-trailing-spaces': 0,
+    'comma-dangle': 0,
     'no-multiple-empty-lines': 'warn',
     'jsx-quotes': ['error', 'prefer-double'],
     'react/jsx-curly-brace-presence': 'warn',
@@ -54,11 +55,10 @@ module.exports = {
     'react/jsx-props-no-multi-spaces': 'warn',
     'spaced-comment': 'warn',
     'keyword-spacing': 'warn',
-    // Space efficiency
+    // -- Space efficiency
     'arrow-body-style': 'warn',
-    'no-trailing-spaces': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn'],
-    // Other (to categorize)
+    // -- Other (to categorize)
     'max-classes-per-file': 0,
     'react/jsx-filename-extension': ['error', {
       extensions: ['.ts', '.tsx'],

@@ -36,7 +36,7 @@ function ListingRow({
   listing,
   harvestableIndex,
   setCurrentListing,
-  isMine
+  isMine,
 }: ListingRowProps) {
   const classes = useStyles();
   const relativeIndex = (listing.objectiveIndex).minus(harvestableIndex);
@@ -80,7 +80,7 @@ function ListingRow({
             {listing.amountSold > 0 && (
               <CircularProgress
                 variant="determinate"
-                value={(listing.amountSold.dividedBy(listing.initialAmount)).toNumber() * 100} 
+                value={(listing.amountSold.dividedBy(listing.initialAmount)).toNumber() * 100}
               />
             )}
           </TableCell>
@@ -117,7 +117,7 @@ function ListingRow({
               <IconButton
                 onClick={() => setCurrentListing(listing)}
                 style={{
-                  color: theme.linkColor
+                  color: theme.linkColor,
                 }}
                 size="small"
               >
