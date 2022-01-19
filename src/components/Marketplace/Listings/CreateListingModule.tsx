@@ -18,6 +18,7 @@ type CreateListingModuleProps = {
   hasPlots: boolean;
   index: any; // FIXME
   setSellOffer: Function;
+  readyToSubmit: boolean;
 }
 
 export const CreateListingModule = (props: CreateListingModuleProps) => {
@@ -44,7 +45,7 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
   // to MarketplaceSellModule.
   useEffect(() => {
     // TODO: rest (???)
-    const canSell = pricePerPodValue.isLessThan(1);
+    const canSell = pricePerPodValue.isLessThanOrEqualTo(1);
     if (canSell) {
       setSellOffer({
         index,
@@ -66,11 +67,46 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
     setExpiresIn(newIndex.minus(harvestableIndex));
     setPricePerPodValue(new BigNumber(-1));
   };
-
   /** */
-  const maxHandler = () => {
-    if (index != null) {
+  const handlePriceChange = (v) => {
+    let newPricePerPodValue = v.target.value !== ''
+      ? new BigNumber(v.target.value)
+      : new BigNumber(0);
+    // CONSTRAINT: Price can't be created than 1
+    if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
+      newPricePerPodValue = new BigNumber(1);
+    }
+    setPricePerPodValue(newPricePerPodValue);
+  };
+  /** */
+  const handlePodChange = (v) => {
+    const newToPodValue = v.target.value !== ''
+      ? new BigNumber(v.target.value)
+      : new BigNumber(0);
+    // CONSTRAINT: Amount can't be greater than size of selected plot.
+    if (amountInSelectedPlot.lt(newToPodValue)) {
       setAmount(amountInSelectedPlot);
+      return;
+    }
+    setAmount(newToPodValue);
+  };
+  /** */
+  const handleExpireChange = (v) => {
+    const newExpiresinValue = new BigNumber(v.target.value);
+    // console.log('index', index.toNumber());
+    // console.log('newExpiresinValue', newExpiresinValue.toNumber());
+    // console.log('harvestableIndex', harvestableIndex.toNumber());
+
+    // Price can't be created greater than 1
+    if (
+      index != null &&
+      newExpiresinValue.isGreaterThanOrEqualTo(index.minus(harvestableIndex))
+    ) {
+      console.log(newExpiresinValue.toFixed());
+      console.log(index.minus(harvestableIndex).toFixed());
+      setExpiresIn(index.minus(harvestableIndex));
+    } else {
+      setExpiresIn(newExpiresinValue);
     }
   };
 
@@ -89,15 +125,7 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
     <TokenInputField
       label="Price per Pod"
       token={CryptoAsset.Bean}
-      handleChange={(event) => {
-        const newPricePerPodValue = new BigNumber(event.target.value);
-        // CONSTRAINT: Price can't be created than 1
-        if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
-          setPricePerPodValue(new BigNumber(0.999999));
-          return;
-        }
-        setPricePerPodValue(newPricePerPodValue);
-      }}
+      handleChange={handlePriceChange}
       value={TrimBN(pricePerPodValue, 6)}
     />
   );
@@ -105,39 +133,20 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
     <TokenInputField
       label="Amount"
       token={FarmAsset.Pods}
-      handleChange={(event) => {
-        const v = new BigNumber(event.target.value);
-        // CONSTRAINT: Amount can't be greater than size of selected plot.
-        if (amountInSelectedPlot.lt(v)) {
-          setAmount(amountInSelectedPlot);
-          return;
-        }
-        setAmount(v);
-      }}
+      handleChange={handlePodChange}
       value={amount}
-      maxHandler={maxHandler}
+      maxHandler={() => {
+        if (index != null) {
+          setAmount(amountInSelectedPlot);
+        }
+      }}
     />
   );
   const expiresInField = (
     <>
       <PlotInputField
         label="Expires In"
-        handleChange={(e) => {
-          const newExpiresinValue = new BigNumber(e.target.value);
-          // console.log('index', index.toNumber());
-          // console.log('newExpiresinValue', newExpiresinValue.toNumber());
-          // console.log('harvestableIndex', harvestableIndex.toNumber());
-
-          // Price can't be created than 1
-          if (
-            index != null &&
-            newExpiresinValue.isGreaterThanOrEqualTo(index.minus(harvestableIndex))
-          ) {
-            setExpiresIn(index.minus(harvestableIndex));
-          } else {
-            setExpiresIn(newExpiresinValue);
-          }
-        }}
+        handleChange={handleExpireChange}
         value={TrimBN(expiresIn, 6)}
         maxHandler={() => {
           if (index != null) {
@@ -155,6 +164,8 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
   ];
 
   function transactionDetails() {
+    if (!props.readyToSubmit) return null;
+
     return (
       <>
         <ExpandMoreIcon

@@ -63,6 +63,13 @@ export default function MarketplaceSellModule() {
     );
     console.log('res:', res);
   };
+  // Require all inputs have values > 0 or >= 0.
+  const readyToSubmit = (
+    sellOffer?.index?.gte(0)
+    && sellOffer?.amount?.gt(0)
+    && sellOffer?.pricePerPod?.gt(0)
+    && sellOffer?.expiresIn?.gte(0)
+  );
 
   const sections = [
     <Offers
@@ -77,16 +84,9 @@ export default function MarketplaceSellModule() {
       }
       index={parseFloat(harvestableIndex)}
       setSellOffer={setSellOffer}
+      readyToSubmit={readyToSubmit}
     />,
   ];
-
-  // Require all inputs have values >= 0.
-  const readyToSubmit = (
-    sellOffer?.index?.gte(0)
-    && sellOffer?.amount?.gte(0)
-    && sellOffer?.pricePerPod?.gte(0)
-    && sellOffer?.expiresIn?.gte(0)
-  );
 
   // Render
   return (
