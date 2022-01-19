@@ -104,7 +104,7 @@ export default function Listings(props: ListingsProps) {
 
   // Filters
   const filters = (
-    <Filters title={`Showing ${filteredListings.current.length} listing${filteredListings.current.length !== 1 && 's'}`}>
+    <Filters title={`Showing ${filteredListings.current.length} listing${filteredListings.current.length !== 1 ? 's' : ''}`}>
       <>
         <h3 style={{ marginTop: 0 }}>Price Per Pod</h3>
         <Box sx={{ mt: 3, px: 0.75 }}>

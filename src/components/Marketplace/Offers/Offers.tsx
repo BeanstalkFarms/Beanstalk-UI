@@ -1,22 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { AppState } from 'state';
+import BigNumber from 'bignumber.js';
+import _ from 'lodash';
+import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
+
+import { BuyOffer } from 'state/marketplace/reducer';
 import { GetWalletAddress } from 'util/index';
+import { AppState } from 'state';
 
 import SellIntoOfferModal from 'components/Marketplace/Offers/SellIntoOfferModal';
 import OffersTable from './OffersTable';
-import { BuyOffer } from 'state/marketplace/reducer';
-import { Box, Button, IconButton, Popover, Slider } from '@material-ui/core';
-import BigNumber from 'bignumber.js';
-import _ from 'lodash';
-
-import {
-  FilterListRounded as FilterIcon,
-} from '@material-ui/icons';
-
-import { theme } from 'constants/index';
-
-import { useStyles } from '../TableStyles';
+import Filters, { StyledSlider } from '../Filters';
 
 type OffersProps = {
   mode: 'ALL' | 'MINE';
@@ -26,29 +20,19 @@ type OffersProps = {
  * Offers ("Offers to Buy")
  */
 export default function Offers(props: OffersProps) {
-  const classes = useStyles();
-
-  const [walletAddress, setWalletAddress] = useState(null);
-  const [currentOffer, setCurrentOffer] = useState(null);
   const { buyOffers: allOffers } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
-
-
   const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
 
-  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
-    (state) => state.weather
-  );
-
-
-
+  //
+  const [walletAddress, setWalletAddress] = useState(null);
+  const [currentOffer, setCurrentOffer] = useState(null);
 
   // Filter state
-  const filteredOffers= useRef<BuyOffer[]>(allOffers);
-  const [popoverEl, setPopoverEl] = React.useState<any>(null);
+  const filteredOffers = useRef<BuyOffer[]>(allOffers);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
 
@@ -95,25 +79,6 @@ export default function Offers(props: OffersProps) {
     ]);
   };
 
-  //
-  const openPopover = (event) => {
-    setPopoverEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setPopoverEl(null);
-  };
-  const open = Boolean(popoverEl);
-  const id = open ? 'simple-popover' : undefined;
-
-  const applyFilters = () => {
-    handleClose();
-    setPriceFilters(tempPriceFilters);
-    setPlaceInLineFilters([
-      new BigNumber(tempPlaceInLineFilters[0]),
-      new BigNumber(tempPlaceInLineFilters[1]),
-    ]);
-  };
-
   // Setup
   useEffect(() => {
     const init = async () => {
@@ -127,52 +92,17 @@ export default function Offers(props: OffersProps) {
   if (filteredOffers.current == null || walletAddress == null) {
     return <div>Loading...</div>;
   }
-  if (filteredOffers.current.length === 0) {
-    return <div>No listings.</div>;
-  }
+  // if (filteredOffers.current.length === 0) {
+  //   return <div>No listings.</div>;
+  // }
 
   // Filters
   const filters = (
-    <>
-      <Box style={{ position: 'relative' }}>
-        <IconButton
-          className={`${classes.filterButtonStyle} filterButton`}
-          style={{
-            color: 'white',
-            backgroundColor: theme.iconButtonColor,
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'absolute',
-            right: '25px',
-            padding: '6px',
-            top: '20%',
-          }}
-          size="small"
-          onClick={openPopover}
-        >
-          <FilterIcon />
-        </IconButton>
-      </Box>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={popoverEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}>
-        <Box sx={{
-          top: '50%',
-          left: '50%',
-          width: 400,
-          bgcolor: 'background.paper',
-          border: '2px solid #000',
-          boxShadow: 24,
-          p: 4,
-        }}>
-          <h3>Price Per Pod</h3>
-          <Slider
+    <Filters title={`Showing ${filteredOffers.current.length} offer${filteredOffers.current.length !== 1 ? 's' : ''}`}>
+      <>
+        <h3 style={{ marginTop: 0 }}>Price Per Pod</h3>
+        <Box sx={{ mt: 3, px: 0.75 }}>
+          <StyledSlider
             value={tempPriceFilters}
             valueLabelDisplay="on"
             onChange={handlePriceFilter}
@@ -180,8 +110,10 @@ export default function Offers(props: OffersProps) {
             min={0}
             max={1}
           />
-          <h3>Place In Line</h3>
-          <Slider
+        </Box>
+        <h3>Place In Line</h3>
+        <Box sx={{ mt: 3, px: 0.75 }}>
+          <StyledSlider
             value={tempPlaceInLineFilters}
             valueLabelFormat={(value: number) => {
               const units = ['', 'K', 'M', 'B'];
@@ -198,32 +130,15 @@ export default function Offers(props: OffersProps) {
             min={0}
             max={totalPods.toNumber()}
           />
-          <Button onClick={applyFilters}>Apply Filter</Button>
         </Box>
-      </Popover>
-    </>
+        {/* <Button onClick={applyFilters}>Apply Filter</Button> */}
+      </>
+    </Filters>
   );
-
-
 
   if (allOffers == null || walletAddress == null) {
     return <div>Loading...</div>;
   }
-  if (allOffers.length === 0) {
-    return <div>No offers.</div>;
-  }
-
-  const offers = props.mode === 'MINE' ? (
-    allOffers.filter((offer) => offer.listerAddress === walletAddress)
-  ) : (
-    allOffers.filter((offer) => offer.listerAddress !== walletAddress)
-  );
-
-
-  
-
-
-
 
   return (
     <>

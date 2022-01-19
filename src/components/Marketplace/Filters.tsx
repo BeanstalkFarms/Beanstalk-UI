@@ -19,13 +19,13 @@ export const StyledSlider = withStyles({
 export const StyledFilterButton = withStyles({
   root: {
     '&:hover': {
-      color: 'white',
+      // color: 'white',
     },
     '&:active': {
-      color: 'white',
+      // color: 'white',
     },
     '&:focus': {
-      color: 'white',
+      // color: 'white',
     },
   },
 })(IconButton);
@@ -59,7 +59,6 @@ export default function Filters({
       }}>
         <span>{title}</span>
         <StyledFilterButton
-          // className={`filterButton`}
           style={{
             justifyContent: 'center',
             alignItems: 'center',
