@@ -34,6 +34,20 @@ const StyledSlider = withStyles({
   },
 })(Slider);
 
+const StyledFilterButton = withStyles({
+  root: {
+    '&:hover': {
+      color: 'white',
+    },
+    '&:active': {
+      color: 'white',
+    },
+    '&:focus': {
+      color: 'white',
+    },
+  },
+})(IconButton);
+
 type ListingsProps = {
   mode: 'ALL' | 'MINE';
 }
@@ -154,12 +168,10 @@ export default function Listings(props: ListingsProps) {
         alignItems: 'center',
         px: 1.3,
       }}>
-        <span sx={{ fontWeight: 'bold' }}>Showing {filteredListings.current.length} listing{filteredListings.current.length !== 1 && 's'}</span>
-        <IconButton
+        <span>Showing {filteredListings.current.length} listing{filteredListings.current.length !== 1 && 's'}</span>
+        <StyledFilterButton
           className={`${classes.filterButtonStyle} filterButton`}
           style={{
-            // color: 'white',
-            // backgroundColor: theme.iconButtonColor,
             justifyContent: 'center',
             alignItems: 'center',
             padding: '6px',
@@ -168,7 +180,7 @@ export default function Listings(props: ListingsProps) {
           onClick={openPopover}
         >
           <FilterIcon />
-        </IconButton>
+        </StyledFilterButton>
       </Box>
       <Popover
         id={id}
