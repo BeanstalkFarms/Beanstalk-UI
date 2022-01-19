@@ -64,22 +64,22 @@ export default function Listings(props: ListingsProps) {
   // Handle changes in filters
   useMemo(() => {
     filteredListings.current = _.filter(allListings, (listing) => (
-      props.mode === 'MINE' ? (
+      (props.mode === 'MINE' ? (
         listing.listerAddress === walletAddress
       ) : (
         listing.listerAddress !== walletAddress
-      ) &&
+      )) &&
       listing.pricePerPod > priceFilters[0] &&
       listing.pricePerPod < priceFilters[1] &&
       listing.objectiveIndex
         .minus(harvestableIndex)
-        .gt(new BigNumber(placeInLineFilters[0])) &&
+        .gte(new BigNumber(placeInLineFilters[0])) &&
       listing.objectiveIndex
         .minus(harvestableIndex)
-        .lt(new BigNumber(placeInLineFilters[1])) &&
+        .lte(new BigNumber(placeInLineFilters[1])) &&
       listing.expiry
         .minus(harvestableIndex)
-        .gt(new BigNumber(0))
+        .gte(new BigNumber(0))
     ));
 
     return () => {
