@@ -168,33 +168,33 @@ export default function SellIntoOfferModal({ currentOffer, onClose }: SellIntoOf
             type="sell"
             descriptor="eligible"
           />
-          <div style={{ height: 5 }} />
-          <TokenInputField
-            key={2}
-            label="Number of Pods to Sell"
-            //
-            locked={!index || index.lt(0)}
-            token={FarmAsset.Pods}
-            //
-            value={TrimBN(amount, 6)}
-            maxHandler={() => setAmount(maxAmountCanSell)}
-            // balance={index.lt(0) ? null : maxAmountCanSell}
-            //
-            handleChange={(e) => {
-              const newAmount = new BigNumber(e.target.value || 0);
-              if (newAmount.isGreaterThanOrEqualTo(maxAmountCanSell)) {
-                setAmount(maxAmountCanSell);
-                return;
-              }
-              setAmount(newAmount);
-            }}
-            style={{ marginTop: 20 }}
-          />
-          {/**
-            * Outputs + Details
-            */}
           {index.lt(0) ? null : (
             <>
+              <div style={{ height: 5 }} />
+              <TokenInputField
+                key={2}
+                label="Number of Pods to Sell"
+                //
+                locked={!index || index.lt(0)}
+                token={FarmAsset.Pods}
+                //
+                value={TrimBN(amount, 6)}
+                maxHandler={() => setAmount(maxAmountCanSell)}
+                // balance={index.lt(0) ? null : maxAmountCanSell}
+                //
+                handleChange={(e) => {
+                  const newAmount = new BigNumber(e.target.value || 0);
+                  if (newAmount.isGreaterThanOrEqualTo(maxAmountCanSell)) {
+                    setAmount(maxAmountCanSell);
+                    return;
+                  }
+                  setAmount(newAmount);
+                }}
+                style={{ marginTop: 20 }}
+              />
+              {/**
+                * Outputs + Details
+                */}
               <ExpandMoreIcon
                 color="primary"
                 style={{ marginBottom: '-14px', width: '100%' }}

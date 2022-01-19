@@ -14,10 +14,6 @@ import {
 import { TrimBN, displayBN, CryptoAsset, FarmAsset } from 'util/index';
 
 export const CreateListingModule = (props) => {
-  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
-    (state) => state.weather
-  );
-
   /** The absolute index of the selected plot in line. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The amount of Pod listed from the plot. */
@@ -27,8 +23,13 @@ export const CreateListingModule = (props) => {
   /** The price per pod. */
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
 
-  const { setSellOffer } = props;
+  //
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
 
+  // destructed to avoid useEffect dependency error
+  const { setSellOffer } = props;
   const selectedPlotPositionInLine = index.minus(harvestableIndex);
 
   /**  */
@@ -149,10 +150,14 @@ export const CreateListingModule = (props) => {
   return (
     <>
       {fromPlotField}
-      {priceField}
-      {amountField}
-      {expiresInField}
-      {transactionDetails()}
+      {index.gte(0) ? (
+        <>
+          {priceField}
+          {amountField}
+          {expiresInField}
+          {transactionDetails()}
+        </>
+      ) : null}
     </>
   );
 };

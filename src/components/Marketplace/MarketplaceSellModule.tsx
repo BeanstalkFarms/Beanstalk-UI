@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+
 import { AppState } from 'state';
+import { Listing } from 'state/marketplace/reducer';
 import {
   BaseModule,
   siloStrings,
@@ -10,9 +12,14 @@ import { beanstalkContract } from 'util/index';
 import Offers from './Offers/Offers';
 import CreateListingModule from './Listings/CreateListingModule';
 
-export default function MarketplaceSellModule() {
-  const [sellOffer, setSellOffer] = useState(null);
+type SellOfferState = {
+  index: Listing['objectiveIndex'];
+  pricePerPod: Listing['pricePerPod'];
+  amount: Listing['initialAmount'];
+  expiresIn: Listing['expiresIn'];
+}
 
+export default function MarketplaceSellModule() {
   // Global state
   const { harvestablePodBalance, plots } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
@@ -22,7 +29,8 @@ export default function MarketplaceSellModule() {
   );
 
   // Local state
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState<number>(0);
+  const [sellOffer, setSellOffer] = useState<SellOfferState | null>(null);
 
   // Handlers
   const handleTabChange = (event, newSection) => {
@@ -72,18 +80,30 @@ export default function MarketplaceSellModule() {
     />,
   ];
 
+  // Require all inputs have values >= 0.
+  const readyToSubmit = (
+    sellOffer?.index?.gte(0)
+    && sellOffer?.amount?.gte(0)
+    && sellOffer?.pricePerPod?.gte(0)
+    && sellOffer?.expiresIn?.gte(0)
+  );
+
   // Render
   return (
     <>
       <BaseModule
+        // Styles
         style={{ marginTop: '20px' }}
+        // Handlers
         handleForm={onCreate}
         handleTabChange={handleTabChange}
-        isDisabled={sellOffer == null}
+        // Form setup
+        isDisabled={!readyToSubmit}
+        showButton={section === 1}
+        // Sections
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
-        showButton={section === 1}
       >
         {sections[section]}
       </BaseModule>

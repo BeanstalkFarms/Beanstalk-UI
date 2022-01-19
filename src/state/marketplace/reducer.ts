@@ -38,7 +38,7 @@ export type Listing = {
   /**
    * The total number of Pods to sell.
    */
-  intialAmount: BigNumber;
+  initialAmount: BigNumber;
   /**
    * The amount of Pods that have been bought from this Listing.
    * 0 < amountSold < initialAmount
