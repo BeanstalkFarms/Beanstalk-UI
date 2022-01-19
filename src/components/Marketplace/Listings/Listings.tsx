@@ -12,6 +12,7 @@ import TokenIcon from 'components/Common/TokenIcon';
 import BuyListingModal from './BuyListingModal';
 import ListingsTable from './ListingsTable';
 import Filters, { StyledSlider } from '../Filters';
+import GraphModule from '../GraphModule';
 
 type ListingsProps = {
   mode: 'ALL' | 'MINE';
@@ -172,6 +173,11 @@ export default function Listings(props: ListingsProps) {
         harvestableIndex={harvestableIndex}
         setCurrentListing={setCurrentListing}
       />
+      {props.mode === 'ALL' && (
+        <GraphModule
+          setCurrentListing={setCurrentListing}
+        />
+      )}
     </>
   );
 }

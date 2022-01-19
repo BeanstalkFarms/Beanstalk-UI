@@ -12,7 +12,7 @@ import { BaseModule, siloStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
 
 import { CreateOfferModule } from './Offers/CreateOfferModule';
-import Graph from './GraphModule';
+// import Graph from './GraphModule';
 import Listings from './Listings/Listings';
 
 //
@@ -111,7 +111,7 @@ export default function MarketplaceBuyModule() {
       >
         {sections[section]}
       </BaseModule>
-      <Graph />
+      {/* <Graph /> */}
     </>
   );
 }

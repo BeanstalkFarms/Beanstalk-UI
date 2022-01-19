@@ -74,14 +74,17 @@ const rescaleXWithZoom = (scale, zoom) => {
   return scale.copy().domain(newDomain);
 };
 
+// ---
+
 interface GraphContentProps {
   parentWidth?: number;
+  setCurrentListing: Function;
 }
 const defaultGraphContentProps = {
   parentWidth: undefined,
 };
 
-const GraphContent = ({ parentWidth }: GraphContentProps) => {
+const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => {
   const graphHeight = 350;
   const leftAxisWidth = 70;
   const bottomAxisHeight = 50;
@@ -341,7 +344,7 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
                 >
                   <GraphTooltip
                     listing={listings[tooltipData]}
-                    onBuyClick={() => console.log('buy clicked')}
+                    onBuyClick={() => setCurrentListing(listings[tooltipData])}
                     harvestableIndex={harvestableIndex}
                   />
                 </Tooltip>
@@ -355,17 +358,21 @@ const GraphContent = ({ parentWidth }: GraphContentProps) => {
 GraphContent.defaultProps = defaultGraphContentProps;
 const GraphWithParent = withParentSize(GraphContent);
 
-export default function Graph() {
-  const graphStyle = {
-    borderRadius: '25px',
-    fontFamily: 'Futura-Pt-Book',
-    backgroundColor: colorTheme.module.foreground,
-    marginTop: 20,
-  };
+// --
 
+const graphStyle = {
+  borderRadius: '25px',
+  fontFamily: 'Futura-Pt-Book',
+  backgroundColor: colorTheme.module.foreground,
+  marginTop: 20,
+};
+type GraphModuleProps = {
+  setCurrentListing: Function;
+}
+export default function GraphModule(props: GraphModuleProps) {
   return (
     <Box style={graphStyle}>
-      <GraphWithParent />
+      <GraphWithParent setCurrentListing={props.setCurrentListing} />
     </Box>
   );
 }
