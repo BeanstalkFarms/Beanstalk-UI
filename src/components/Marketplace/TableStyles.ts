@@ -37,19 +37,8 @@ export const useStyles = makeStyles({
     marginTop: '13px',
     width: '100%',
   },
-  filterButtonStyle: {
-    display: 'inline-block',
-  },
   buttonStyle: {
     color: 'white',
     backgroundColor: theme.linkColor,
   },
-  // beanIcon: {
-  //   width: 11,
-  //   height: 11,
-  //   verticalAlign: 'middle',
-  //   marginLeft: 1,
-  //   marginTop: -3,
-  //   opacity: 0.7,
-  // }
 });

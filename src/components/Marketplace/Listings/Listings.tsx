@@ -3,50 +3,15 @@ import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import BigNumber from 'bignumber.js';
-import {
-  FilterListRounded as FilterIcon,
-} from '@material-ui/icons';
-import {
-  Box,
-  Button,
-  IconButton,
-  Popover,
-  Slider,
-  withStyles,
-} from '@material-ui/core';
+import { Box } from '@material-ui/core';
 
 import { Listing } from 'state/marketplace/reducer';
 import { CryptoAsset, GetWalletAddress } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 
 import { BuyListingModal } from './BuyListingModal';
-import { useStyles } from '../TableStyles';
 import ListingsTable from './ListingsTable';
-
-const StyledSlider = withStyles({
-  valueLabel: {
-    top: -22,
-    width: '50px',
-    '& *': {
-      background: 'transparent',
-      color: '#000',
-    },
-  },
-})(Slider);
-
-const StyledFilterButton = withStyles({
-  root: {
-    '&:hover': {
-      color: 'white',
-    },
-    '&:active': {
-      color: 'white',
-    },
-    '&:focus': {
-      color: 'white',
-    },
-  },
-})(IconButton);
+import Filters, { StyledSlider } from '../Filters';
 
 type ListingsProps = {
   mode: 'ALL' | 'MINE';
@@ -56,7 +21,6 @@ type ListingsProps = {
  * A User can purchase the Pods in a Listing.
  */
 export default function Listings(props: ListingsProps) {
-  const classes = useStyles();
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const { listings: allListings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
@@ -73,7 +37,6 @@ export default function Listings(props: ListingsProps) {
   // Filter state
   const filteredListings = useRef<Listing[]>(allListings);
   const [currentListing, setCurrentListing] = useState<null | Listing>(null);
-  const [popoverEl, setPopoverEl] = React.useState<any>(null);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
 
@@ -125,25 +88,6 @@ export default function Listings(props: ListingsProps) {
     ]);
   };
 
-  //
-  const openPopover = (event) => {
-    setPopoverEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setPopoverEl(null);
-  };
-  const open = Boolean(popoverEl);
-  const id = open ? 'simple-popover' : undefined;
-
-  const applyFilters = () => {
-    handleClose();
-    setPriceFilters(tempPriceFilters);
-    setPlaceInLineFilters([
-      new BigNumber(tempPlaceInLineFilters[0]),
-      new BigNumber(tempPlaceInLineFilters[1]),
-    ]);
-  };
-
   // Setup
   useEffect(() => {
     const init = async () => {
@@ -160,99 +104,58 @@ export default function Listings(props: ListingsProps) {
 
   // Filters
   const filters = (
-    <>
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        px: 1.3,
-      }}>
-        <span>Showing {filteredListings.current.length} listing{filteredListings.current.length !== 1 && 's'}</span>
-        <StyledFilterButton
-          className={`${classes.filterButtonStyle} filterButton`}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '6px',
-          }}
-          size="small"
-          onClick={openPopover}
-        >
-          <FilterIcon />
-        </StyledFilterButton>
-      </Box>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={popoverEl}
-        onClose={handleClose}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}>
-        <Box sx={{
-          width: 400,
-          bgcolor: 'background.paper',
-          border: '2px solid #000',
-          boxShadow: 24,
-          p: 3,
-        }}>
-          <h3 style={{ marginTop: 0 }}>Price Per Pod</h3>
-          <Box sx={{ mt: 3, px: 0.75 }}>
-            <StyledSlider
-              value={tempPriceFilters}
-              valueLabelDisplay="on"
-              valueLabelFormat={(value: number) => (
-                <div style={{
-                  color: 'black',
-                  minWidth: 40, // prevent wrapping of bean onto newline
-                  textAlign: 'center',
-                  marginLeft: 10, // align vertically with placeInLine
-                }}>
-                  {value}<TokenIcon token={CryptoAsset.Bean} />
-                </div>
-              )}
-              onChange={handlePriceFilter}
-              step={0.01}
-              min={0}
-              max={1}
-            />
-          </Box>
-          <h3>Place In Line</h3>
-          <Box sx={{ mt: 3, mb: 3, px: 0.75 }}>
-            <StyledSlider
-              value={tempPlaceInLineFilters}
-              valueLabelDisplay="on"
-              valueLabelFormat={(value: number) => {
-                const units = ['', 'K', 'M', 'B'];
-                let unitIndex = 0;
-                let scaledValue = value;
-                while (scaledValue >= 1000 && unitIndex < units.length - 1) {
-                  unitIndex += 1;
-                  scaledValue /= 1000;
-                }
-                return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
-              }}
-              onChange={handlePlaceInLineFilter}
-              min={0}
-              max={totalPods.toNumber()}
-            />
-          </Box>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={applyFilters}>
-            Apply Filter
-          </Button>
+    <Filters title={`Showing ${filteredListings.current.length} listing${filteredListings.current.length !== 1 && 's'}`}>
+      <>
+        <h3 style={{ marginTop: 0 }}>Price Per Pod</h3>
+        <Box sx={{ mt: 3, px: 0.75 }}>
+          <StyledSlider
+            value={tempPriceFilters}
+            valueLabelDisplay="on"
+            valueLabelFormat={(value: number) => (
+              <div style={{
+                color: 'black',
+                minWidth: 40, // prevent wrapping of bean onto newline
+                textAlign: 'center',
+                marginLeft: 10, // align vertically with placeInLine
+              }}>
+                {value}<TokenIcon token={CryptoAsset.Bean} />
+              </div>
+            )}
+            onChange={handlePriceFilter}
+            step={0.01}
+            min={0}
+            max={1}
+          />
         </Box>
-      </Popover>
-    </>
+        <h3>Place In Line</h3>
+        <Box sx={{ mt: 3, px: 0.75 }}>
+          <StyledSlider
+            value={tempPlaceInLineFilters}
+            valueLabelDisplay="on"
+            valueLabelFormat={(value: number) => {
+              const units = ['', 'K', 'M', 'B'];
+              let unitIndex = 0;
+              let scaledValue = value;
+              while (scaledValue >= 1000 && unitIndex < units.length - 1) {
+                unitIndex += 1;
+                scaledValue /= 1000;
+              }
+              return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
+            }}
+            onChange={handlePlaceInLineFilter}
+            min={0}
+            max={totalPods.toNumber()}
+          />
+        </Box>
+        {/* <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={applyFilters}>
+          Apply Filter
+        </Button> */}
+      </>
+    </Filters>
   );
 
   //
