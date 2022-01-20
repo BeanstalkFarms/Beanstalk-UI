@@ -69,7 +69,9 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
         label="Beans per Pod"
         balance={offer.pricePerPod}
         icon={<TokenIcon token={CryptoAsset.Bean} />}
-      />
+      >
+        {offer.pricePerPod.toFixed(2)}
+      </BalanceTableCell>
       {isMine ? (
         <>
           {/* Amount filled so far */}

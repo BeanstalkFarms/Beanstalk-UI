@@ -83,7 +83,9 @@ function ListingRow({
         label="Beans per Pod"
         balance={listing.pricePerPod}
         icon={<TokenIcon token={CryptoAsset.Bean} />}
-      />
+      >
+        {listing.pricePerPod.toFixed(2)}
+      </BalanceTableCell>
       {isMine ? (
         <>
           {/* Pods Filled */}
