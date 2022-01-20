@@ -43,7 +43,18 @@ function ListingRow({
   const relativeIndex = (listing.objectiveIndex).minus(harvestableIndex);
   const relativeExpiry = (listing.expiry).minus(new BigNumber(harvestableIndex));
   const amountRemaining = listing.initialAmount.minus(listing.amountSold);
-  const explainer = `${isMine ? 'You want' : `${listing.listerAddress.slice(0, 6)} wants`} to sell ${displayBN(amountRemaining)} Pods at ${displayBN(relativeIndex)} in the pod line for ${displayBN(listing.pricePerPod)} Beans per Pod. If the pod line moves forward by ${displayBN(relativeExpiry)} Pods, this listing will automatically expire.`;
+  const explainer = (
+    <>
+      {isMine 
+        ? 'You want' 
+        : (
+          <>
+            <a href={`https://etherscan.io/address/${listing.listerAddress}`} target="_blank" rel="noreferrer">{listing.listerAddress.slice(0, 6)}</a> wants
+          </>
+        )
+      } to sell {displayBN(amountRemaining)} Pods at {displayBN(relativeIndex)} in the pod line for {displayBN(listing.pricePerPod)} Beans per Pod. If the pod line moves forward by {displayBN(relativeExpiry)} Pods, this listing will automatically expire.
+    </>
+  );
   return (
     <TableRow>
       {/* Place in line */}
@@ -52,7 +63,13 @@ function ListingRow({
         className={classes.lucidaStyle}
       >
         {displayBN(relativeIndex)}
-        <QuestionModule description={explainer} style={{ marginLeft: 10 }} position="static" />
+        <QuestionModule
+          description={explainer}
+          style={{ marginLeft: 10 }}
+          placement="right"
+          position="static"
+          widthTooltip={200}
+        />
       </TableCell>
       {/* # of pods remaining to harvest before this offer to sell expires */}
       <BalanceTableCell

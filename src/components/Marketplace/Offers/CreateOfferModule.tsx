@@ -259,17 +259,17 @@ export const CreateOfferModule = forwardRef(({
     );
   }
   details.push(
-    `Place a buy offer for ${displayBN(
+    `Place an offer to buy ${displayBN(
       toPodValue
-    )} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at
-    ${pricePerPodValue.toFixed(2)} price per Pod`
+    )} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at a price of 
+    ${pricePerPodValue.toFixed(2)} Beans per Pod`
   );
   details.push(
     `${displayBN(toBuyBeanValue.plus(MaxBN(fromBeanValue, new BigNumber(0))))} Beans
-    will be locked in the Marketplace to allow for order fulfillment.`
+    will be locked in the Marketplace to allow for order fulfillment`
   );
   details.push(
-    `Your offer will expire after ${displayBN(maxPlaceInLineValue)} Pods are harvested from the Pod line`
+    `Your offer will expire after ${displayBN(maxPlaceInLineValue)} more Pods are harvested from the Pod line`
   );
 
   const rangeWarning = maxPlaceInLineValue.isLessThan(toPodValue)

@@ -36,7 +36,17 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
     (state) => state.userBalance
   );
   const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
-  const explainer = `${isMine ? 'You want' : `${offer.listerAddress.slice(0, 6)} wants`} to buy ${displayBN(numPodsLeft)} Pods for ${displayBN(offer.pricePerPod)} Beans per Pod anywhere before ${displayBN(offer.maxPlaceInLine)} in the pod line.`;
+  const explainer = (
+    <>
+      {isMine 
+        ? 'You want' 
+        : (
+          <>
+            <a href={`https://etherscan.io/address/${offer.listerAddress}`} target="_blank" rel="noreferrer">{offer.listerAddress.slice(0, 6)}</a> wants
+          </>
+        )} to buy {displayBN(numPodsLeft)} Pods for {displayBN(offer.pricePerPod)} Beans per Pod anywhere before {displayBN(offer.maxPlaceInLine)} in the pod line.
+    </>
+  );
   /** Do we have any plots whose index is smaller than max place in line? if so then we can sell */
   const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
   
@@ -45,7 +55,13 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
       {/* Place in line */}
       <TableCell className={classes.lucidaStyle}>
         <span>0 — {displayBN(offer.maxPlaceInLine)}</span>
-        <QuestionModule description={explainer} style={{ marginLeft: 10 }} position="static" />
+        <QuestionModule
+          description={explainer}
+          style={{ marginLeft: 10 }}
+          placement="right"
+          position="static"
+          widthTooltip={200}
+        />
       </TableCell>
       {/* Price per pod */}
       <BalanceTableCell
