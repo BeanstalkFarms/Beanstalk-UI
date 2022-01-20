@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 // import { Box } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -21,7 +21,7 @@ type CreateListingModuleProps = {
   readyToSubmit: boolean;
 }
 
-export const CreateListingModule = (props: CreateListingModuleProps) => {
+export const CreateListingModule = forwardRef((props: CreateListingModuleProps, ref) => {
   //
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
@@ -165,7 +165,6 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
 
   function transactionDetails() {
     if (!props.readyToSubmit) return null;
-
     return (
       <>
         <ExpandMoreIcon
@@ -176,6 +175,25 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
       </>
     );
   }
+
+  // FIXME:
+  // This is required to allow resetting of the localized
+  // form state from MarketplaceSellModule which creates this
+  // component. For the sake of time I'm copying this design pattern
+  // from BeanDepositModule and the rest of the website; however, we
+  // need to redesign this system from scratch to avoid complicated prop-
+  // passing and use of imperative handles. For example, instead of
+  // having the form submission be handled by BaseModule, we should 
+  // probably incorporate it directly into each form so that local state
+  // can be managed appropriately. - Silo Chad
+  useImperativeHandle(ref, () => ({
+    resetForm() {
+      setIndex(new BigNumber(-1));
+      setAmount(new BigNumber(-1));
+      setExpiresIn(new BigNumber(-1));
+      setPricePerPodValue(new BigNumber(-1));
+    },
+  }));
 
   return (
     <>
@@ -190,6 +208,6 @@ export const CreateListingModule = (props: CreateListingModuleProps) => {
       ) : null}
     </>
   );
-};
+});
 
 export default CreateListingModule;

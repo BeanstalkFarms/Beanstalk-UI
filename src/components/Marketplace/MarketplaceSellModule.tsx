@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
 import { Listing } from 'state/marketplace/reducer';
 import {
   BaseModule,
-  siloStrings,
 } from 'components/Common';
 import { beanstalkContract } from 'util/index';
 
@@ -13,9 +12,13 @@ import Offers from './Offers/Offers';
 import CreateListingModule from './Listings/CreateListingModule';
 
 type SellOfferState = {
+  /** */
   index: Listing['objectiveIndex'];
+  /** */
   pricePerPod: Listing['pricePerPod'];
+  /** */
   amount: Listing['initialAmount'];
+  /** */
   expiresIn: Listing['expiresIn'];
 }
 
@@ -31,37 +34,37 @@ export default function MarketplaceSellModule() {
   // Local state
   const [section, setSection] = useState<number>(0);
   const [sellOffer, setSellOffer] = useState<SellOfferState | null>(null);
+  const createListingModuleRef = useRef<any>();
 
   // Handlers
   const handleTabChange = (event, newSection) => {
     setSection(newSection);
   };
 
+  // Sections
   const sectionTitles = ['Sell Now', 'Create Listing'];
   const sectionTitlesDescription = [
-    siloStrings.lpDeposit, // FIXME
-    siloStrings.lpDeposit, // FIXME
+    '',
+    '',
   ];
 
   // This only supports eth right now
   // TODO: need to handle beans / beans + eth
   const onCreate = async () => {
     const beanstalk = beanstalkContract();
-    const {
-      index,
-      pricePerPod,
-      amount,
-      expiresIn,
-    } = sellOffer;
-
+    const { index, pricePerPod, amount, expiresIn } = sellOffer;
     const expiry = (expiresIn.times(10 ** 6).plus(harvestableIndex.times(10 ** 6))).toString();
+    // Reset inputs
+    setSellOffer(null);
+    createListingModuleRef.current.resetForm();
+    // Send request
     const res = await beanstalk.listPlot(
       index.times(10 ** 6).toString(),
       pricePerPod.times(10 ** 6).toString(),
       expiry,
-      amount.times(10 ** 6).toString()
+      amount.times(10 ** 6).toString(),
     );
-    console.log('res:', res);
+    console.log('listPlot', res);
   };
   // Require all inputs have values > 0 or >= 0.
   const readyToSubmit = (
@@ -77,13 +80,14 @@ export default function MarketplaceSellModule() {
     />,
     <CreateListingModule
       plots={plots}
+      ref={createListingModuleRef}
       hasPlots={
         plots !== undefined &&
         (Object.keys(plots).length > 0 ||
           harvestablePodBalance.isGreaterThan(0))
       }
       index={parseFloat(harvestableIndex)}
-      setSellOffer={setSellOffer}
+      setSellOffer={setSellOffer} // FIXME: naming, should be listing
       readyToSubmit={readyToSubmit}
     />,
   ];
