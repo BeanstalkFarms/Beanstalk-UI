@@ -211,24 +211,21 @@ export default function OffersTable(props: OffersTableProps) {
           ))}
         </Table>
       </TableContainer>
-      <TablePagination
-        component="div"
-        count={props.offers.length}
-        onPageChange={(event, p) => setPage(p)}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[]}
-        labelDisplayedRows={({ from, count }) =>
-          `${Math.ceil(from / rowsPerPage)}-${
-            count !== -1 ? Math.ceil(count / rowsPerPage) : 0
-          }`
-        }
-        ActionsComponent={undefined
-          // Object.keys(props.crates).length > (rowsPerPage * 2)
-          //   ? TablePageSelect
-          //   : undefined
-        }
-      />
+      {props.setCurrentOffer && (
+        <TablePagination
+          component="div"
+          count={props.offers.length}
+          onPageChange={(event, p) => setPage(p)}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[]}
+          labelDisplayedRows={({ from, count }) =>
+            `${Math.ceil(from / rowsPerPage)}-${
+              count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+            }`
+          }
+        />
+      )}
     </>
   );
 }

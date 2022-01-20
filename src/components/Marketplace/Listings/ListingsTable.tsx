@@ -234,24 +234,21 @@ export default function ListingsTable(props: ListingsTableProps) {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        component="div"
-        count={props.listings.length}
-        onPageChange={(event, p) => setPage(p)}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[]}
-        labelDisplayedRows={({ from, count }) =>
-          `${Math.ceil(from / rowsPerPage)}-${
-            count !== -1 ? Math.ceil(count / rowsPerPage) : 0
-          }`
-        }
-        ActionsComponent={undefined
-          // Object.keys(props.crates).length > (rowsPerPage * 2)
-          //   ? TablePageSelect
-          //   : undefined
-        }
-      />
+      {props.setCurrentListing && (
+        <TablePagination
+          component="div"
+          count={props.listings.length}
+          onPageChange={(event, p) => setPage(p)}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[]}
+          labelDisplayedRows={({ from, count }) =>
+            `${Math.ceil(from / rowsPerPage)}-${
+              count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+            }`
+          }
+        />
+      )}
     </>
   );
 }
