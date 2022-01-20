@@ -66,7 +66,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
       {/* Price per pod */}
       <BalanceTableCell
         className={classes.lucidaStyle}
-        label="Price per pod"
+        label="Beans per Pod"
         balance={offer.pricePerPod}
         icon={<TokenIcon token={CryptoAsset.Bean} />}
       />
@@ -75,7 +75,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           {/* Amount filled so far */}
           <BalanceTableCell
             className={classes.lucidaStyle}
-            label="Pods Sold"
+            label="Pods Bought"
             balance={offer.amountBought}
             icon={<TokenIcon token={FarmAsset.Pods} />}
           >
@@ -102,7 +102,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           {/* # of pods remaining in this offer */}
           <BalanceTableCell
             className={classes.lucidaStyle}
-            label="Pods Available"
+            label="Pods Requested"
             balance={offer.initialAmountToBuy.minus(offer.amountBought)}
             icon={<TokenIcon token={FarmAsset.Pods} />}
           >
