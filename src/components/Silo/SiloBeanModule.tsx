@@ -228,7 +228,8 @@ export default function SiloBeanModule() {
   }
   if (section > sectionTitles.length - 1) setSection(0);
 
-  /* */
+  /* "Info" section == the BaseModule shown below the Deposit &
+     Withdraw tabs. Used to show bean deposits. */
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
   if (beanDeposits !== undefined && Object.keys(beanDeposits).length > 0) {

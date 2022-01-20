@@ -92,13 +92,10 @@ export default function Offers(props: OffersProps) {
   if (filteredOffers.current == null || walletAddress == null) {
     return <div>Loading...</div>;
   }
-  // if (filteredOffers.current.length === 0) {
-  //   return <div>No listings.</div>;
-  // }
 
   // Filters
   const filters = (
-    <Filters title={`Showing ${filteredOffers.current.length} offer${filteredOffers.current.length !== 1 ? 's' : ''}`}>
+    <Filters title={`${filteredOffers.current.length} offer${filteredOffers.current.length !== 1 ? 's' : ''}`}>
       <>
         <h3 style={{ marginTop: 0 }}>Price Per Pod</h3>
         <Box sx={{ mt: 3, px: 0.75 }}>

@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { TrimBN, beanstalkContract, displayBN, FarmAsset, SiloAsset } from 'util/index';
+import { TrimBN, beanstalkContract, displayBN, FarmAsset, CryptoAsset } from 'util/index';
 import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule } from 'components/Common';
 import { BuyOffer } from 'state/marketplace/reducer';
 import OffersTable from './OffersTable';
@@ -207,7 +207,7 @@ export default function SellIntoOfferModal({
               <TokenOutputField
                 title="Recieved Beans"
                 mint
-                token={SiloAsset.Bean}
+                token={CryptoAsset.Bean}
                 value={beansReceived}
               />
               <TransactionDetailsModule fields={details} />

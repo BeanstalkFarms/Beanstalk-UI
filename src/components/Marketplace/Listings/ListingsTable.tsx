@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
@@ -15,6 +15,7 @@ import {
   TableRow,
   IconButton,
   CircularProgress,
+  TablePagination,
 } from '@material-ui/core';
 
 import { Listing } from 'state/marketplace/reducer';
@@ -147,6 +148,8 @@ export default function ListingsTable(props: ListingsTableProps) {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+  /** */
+  const [page, setPage] = useState<number>(0);
 
   if (!props.listings || props.listings.length === 0) {
     return (
@@ -155,6 +158,15 @@ export default function ListingsTable(props: ListingsTableProps) {
       </div>
     );
   }
+
+  //
+  const rowsPerPage = 5;
+  const slicedItems = props.listings
+    .sort((a, b) => a.objectiveIndex - b.objectiveIndex)
+    .slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    );
 
   if (props.mode === 'MINE') {
     return (
@@ -170,7 +182,7 @@ export default function ListingsTable(props: ListingsTableProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.listings.map((listing: Listing) => (
+            {slicedItems.map((listing: Listing) => (
               <ListingRow
                 key={listing.objectiveIndex - props.harvestableIndex}
                 harvestableIndex={props.harvestableIndex}
@@ -186,41 +198,61 @@ export default function ListingsTable(props: ListingsTableProps) {
   }
 
   return (
-    <TableContainer>
-      <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell align="left">
-              Place in line
-            </TableCell>
-            <TableCell align="right">
-              Expiry
-            </TableCell>
-            <TableCell align="right">
-              Price
-            </TableCell>
-            <TableCell align="right">
-              Amount
-            </TableCell>
-            {props.setCurrentListing && (
-              <TableCell align="center">
-                Buy
+    <>
+      <TableContainer>
+        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">
+                Place in line
               </TableCell>
-            )}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.listings.map((listing: Listing) => (
-            <ListingRow
-              key={listing.objectiveIndex - props.harvestableIndex}
-              harvestableIndex={props.harvestableIndex}
-              listing={listing}
-              setCurrentListing={props.setCurrentListing}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+              <TableCell align="right">
+                Expiry
+              </TableCell>
+              <TableCell align="right">
+                Price
+              </TableCell>
+              <TableCell align="right">
+                Amount
+              </TableCell>
+              {props.setCurrentListing && (
+                <TableCell align="center">
+                  Buy
+                </TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {slicedItems.map((listing: Listing) => (
+              <ListingRow
+                key={listing.objectiveIndex - props.harvestableIndex}
+                harvestableIndex={props.harvestableIndex}
+                listing={listing}
+                setCurrentListing={props.setCurrentListing}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        component="div"
+        count={props.listings.length}
+        onPageChange={(event, p) => setPage(p)}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        rowsPerPageOptions={[]}
+        labelDisplayedRows={({ from, count }) =>
+          `${Math.ceil(from / rowsPerPage)}-${
+            count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+          }`
+        }
+        ActionsComponent={undefined
+          // Object.keys(props.crates).length > (rowsPerPage * 2)
+          //   ? TablePageSelect
+          //   : undefined
+        }
+      />
+    </>
   );
 }
 

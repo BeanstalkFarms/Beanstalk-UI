@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   IconButton,
+  TablePagination,
 } from '@material-ui/core';
 import {
   CloseOutlined as CancelIcon,
@@ -126,6 +127,8 @@ export default function OffersTable(props: OffersTableProps) {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+  /** */
+  const [page, setPage] = useState<number>(0);
 
   if (!props.offers || props.offers.length === 0) {
     return (
@@ -134,6 +137,15 @@ export default function OffersTable(props: OffersTableProps) {
       </div>
     );
   }
+
+  //
+  const rowsPerPage = 5;
+  const slicedItems = props.offers
+    .sort((a, b) => a.maxPlaceInLine - b.maxPlaceInLine)
+    .slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    );
 
   if (props.mode === 'MINE') {
     return (
@@ -155,7 +167,7 @@ export default function OffersTable(props: OffersTableProps) {
               </TableCell>
             </TableRow>
           </TableHead>
-          {props.offers.map((offer: BuyOffer) => (
+          {slicedItems.map((offer: BuyOffer) => (
             <OfferRow
               key={offer.index}
               offer={offer}
@@ -190,7 +202,7 @@ export default function OffersTable(props: OffersTableProps) {
               )}
             </TableRow>
           </TableHead>
-          {props.offers.map((offer: BuyOffer) => (
+          {slicedItems.map((offer: BuyOffer) => (
             <OfferRow
               key={offer.index}
               offer={offer}
@@ -199,6 +211,24 @@ export default function OffersTable(props: OffersTableProps) {
           ))}
         </Table>
       </TableContainer>
+      <TablePagination
+        component="div"
+        count={props.offers.length}
+        onPageChange={(event, p) => setPage(p)}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        rowsPerPageOptions={[]}
+        labelDisplayedRows={({ from, count }) =>
+          `${Math.ceil(from / rowsPerPage)}-${
+            count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+          }`
+        }
+        ActionsComponent={undefined
+          // Object.keys(props.crates).length > (rowsPerPage * 2)
+          //   ? TablePageSelect
+          //   : undefined
+        }
+      />
     </>
   );
 }

@@ -72,6 +72,8 @@ function displayLP(balance) {
   )} ${TokenLabel(CryptoAsset.Ethereum)}`;
 }
 
+// FIXME: Resolve this with the tables used in the Marketplace.
+// FIXME: types and code ceanup
 const BasicTable = (props) => {
   const classes = useStyles();
 
