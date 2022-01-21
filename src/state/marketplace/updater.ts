@@ -126,6 +126,7 @@ function processEvents(events, harvestableIndex) {
       }
 
       // Bump up |amountSold| for this listing
+      listings[newKey].objectiveIndex = toTokenUnitsBN(new BigNumber(index).plus(amount), BEAN.decimals);
       listings[newKey].amountSold = listings[newKey].amountSold.plus(amountBN);
       listings[newKey].amount = currentListing.initialAmount.minus(currentListing.amountSold).minus(amountBN);
     } else if (event.event === 'BuyOfferCreated') {
