@@ -25,7 +25,7 @@ export * from './MarketUtilities';
 let ethereum;
 export let initializing;
 export let web3: Web3;
-export let account: String;
+export let account: string;
 export let txCallback = null;
 export let metamaskFailure = -1;
 export let chainId = 1;
@@ -138,7 +138,7 @@ export async function isAddress(a) {
   return ethers.utils.isAddress(a);
 }
 
-export async function GetWalletAddress(): Promise<String | undefined> {
+export async function GetWalletAddress(): Promise<string | undefined> {
   await initializing;
   return account;
 }

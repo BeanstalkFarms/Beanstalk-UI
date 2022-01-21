@@ -37,6 +37,8 @@ export default function SellIntoOfferModal({
     (state) => state.userBalance
   );
 
+  // console.log(`index=${index}, amount=${amount}`)
+
   // Derived values
   const leftMargin = width < 800 ? 0 : 120;
 
@@ -90,24 +92,37 @@ export default function SellIntoOfferModal({
     }
     const newIndex = new BigNumber(event.target.value);
     const maxAmountCanSell = getMaxAmountCanSell(newIndex);
+    console.log(`SellIntoOfferModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${maxAmountCanSell}`);
     setIndex(newIndex);
     setAmount(maxAmountCanSell);
   };
 
   // Handle form submission
+  // Sell some or all pods from a plot the user owns into an
+  // existing buy offer.
   const handleForm = async () => {
     const beanstalk = beanstalkContract();
+
+    const plotKey = index.toString();
+    const plotToSellFrom = plots[plotKey];
+    console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
+
+    // 
     const finalIndex = index.times(10 ** 6);
-    const end = finalIndex.plus(new BigNumber(plots[index]).times(10 ** 6));
+    const end = finalIndex.plus(plotToSellFrom.times(10 ** 6));
     const finalAmount = amount.times(10 ** 6);
     const sellFromIndex = end.minus(finalAmount);
     const buyOfferIndex = currentOffer.index;
-    await beanstalk.sellToBuyOffer(
-      finalIndex.toFixed(),
-      sellFromIndex.toFixed(),
-      buyOfferIndex.toFixed(),
-      finalAmount.toFixed()
-    );
+
+    const params = [
+      finalIndex.toFixed(),     // uint256 plotIndex
+      sellFromIndex.toFixed(),  // uint256 sellFromIndex
+      buyOfferIndex.toFixed(),  // uint24 buyOfferIndex
+      finalAmount.toFixed()     // uint232 amount
+    ];
+    
+    console.log('SellIntoOfferModal: beanstalk.sellToBuyOffer', params);
+    await beanstalk.sellToBuyOffer(...params);
   };
 
   // Max amount that you can sell
