@@ -5,6 +5,7 @@ import {
 } from './actions';
 import { Listing, BuyOffer } from './updater';
 
+// export type Plots = ;
 export interface UserBalanceState {
   ethBalance: BigNumber;
   claimableEthBalance: BigNumber;
@@ -30,7 +31,8 @@ export interface UserBalanceState {
   lpSeedDeposits: Object;
   lpWithdrawals: Object;
   lpReceivableCrates: Object;
-  plots: Object; // Bruh... FIXME
+  /** Plots are keyed by plotIndex, value is size of the Plot in Pods. */
+  plots: { [plotIndex: string]: BigNumber };
   harvestablePlots: Object;
   votedBips: Object;
   locked: Boolean;

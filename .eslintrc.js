@@ -50,7 +50,7 @@ module.exports = {
     'react/jsx-curly-brace-presence': 'warn',
     'eol-last': 'warn',
     'key-spacing': 'warn',
-    'no-multi-spaces': 'warn',
+    'no-multi-spaces': 0,
     'react/jsx-boolean-value': 'warn',
     'react/jsx-props-no-multi-spaces': 'warn',
     'spaced-comment': 'warn',

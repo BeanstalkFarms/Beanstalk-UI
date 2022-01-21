@@ -199,13 +199,14 @@ export function TokenImage(tokenType: Token): string {
   }
 }
 
-export function TokenTypeImage(tokenType: Token): string {
+export function TokenTypeImage(tokenType: Token): string | null {
   if (tokenType < 6 || tokenType === 10) return null;
   if (tokenType < 8) return SiloIcon;
   if (tokenType < 10) return TransitIcon;
   if (tokenType < 15) return ClaimableIcon;
   if (tokenType < 16) return UniswapIcon;
   if (tokenType < 17) return BudgetIcon;
+  return null;
 }
 
 /** Trim a BigNumber to a set number of decimals. */
@@ -233,7 +234,7 @@ export function displayFullBN(bn: BigNumber, maxDecimals: number = 18) {
     .toLocaleString('en-US', { maximumFractionDigits: maxDecimals });
 }
 
-export function displayBN(bn: BigNumber, allowNegative: Boolean = false) {
+export function displayBN(bn: BigNumber, allowNegative: Boolean = false) : string {
   if (bn === undefined) return '0';
   if (bn.isLessThan(new BigNumber(0))) {
     return allowNegative ? `-${displayBN(bn.multipliedBy(-1))}` : '0';
@@ -311,7 +312,7 @@ export function toBaseUnitBN(
 export function toStringBaseUnitBN(
   rawAmt: string | number | BigNumber,
   decimals: number
-): BigNumber {
+): string {
   const raw = new BigNumber(rawAmt);
   const base = new BigNumber(10);
   const decimalsBN = new BigNumber(decimals);
