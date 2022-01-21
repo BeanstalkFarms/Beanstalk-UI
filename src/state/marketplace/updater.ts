@@ -142,21 +142,19 @@ function processEvents(events, harvestableIndex) {
       };
     } else if (event.event === 'BuyOfferCancelled') {
       delete buyOffers[event.returnValues.index];
-    } else if (event.event === 'BuyOfferAccepted') {
-      const { index, amount } = event.returnValues;
+    } else if (event.event === 'BuyOfferFilled') {
+      const { buyOfferIndex, amount } = event.returnValues;
       const amountBN = toTokenUnitsBN(amount, BEAN.decimals);
-      const key = index;
+      const key = buyOfferIndex;
 
       // Check whether current offer is sold or not
       const buyOffer = buyOffers[key];
-      const isFilled = buyOffer.initialAmountToBuy.minus(buyOffer.amountBought).minus(amountBN).isEqualTo(0);
-      if (isFilled) {
-        buyOffers[key].status = 'filled';
-      }
-
-      // Bump up |amountBought| for this offer
       buyOffers[key].amountBought = buyOffers[key].amountBought.plus(amountBN);
-      buyOffers[key].amount = buyOffer.initialAmountToBuy.minus(buyOffer.amountBought).minus(amountBN);
+      buyOffers[key].amount = buyOffer.initialAmountToBuy.minus(buyOffer.amountBought);
+      const isFilled = buyOffer.amount.isEqualTo(0);
+      if (isFilled) {
+        delete buyOffers[key];
+      }
     }
   }
 
@@ -170,15 +168,7 @@ function processEvents(events, harvestableIndex) {
     }
     return listing;
   });
-  const finalBuyOffers = orderBy(Object.values(buyOffers), 'maxPlaceInLine', 'asc').map((buyOffer) => {
-    if (buyOffer.maxPlaceInLine.isLessThanOrEqualTo(harvestableIndex)) {
-      return {
-        ...buyOffer,
-        status: 'expired',
-      };
-    }
-    return buyOffer;
-  });
+  const finalBuyOffers = Object.values(buyOffers);
 
   return {
     listings: finalListings,
@@ -197,6 +187,7 @@ export default function Updater() {
   useEffect(() => {
     const fetchMarketplaceListings = async () => {
       const beanstalk = beanstalkContractReadOnly();
+      // TODO: Change fromBlock: 0 to the block that BIP-10 is implemented.
       const events = await Promise.all(
         [
           beanstalk.getPastEvents('ListingCreated', {
@@ -214,6 +205,9 @@ export default function Updater() {
           beanstalk.getPastEvents('ListingFilled', {
             fromBlock: 0,
           }),
+          beanstalk.getPastEvents('BuyOfferFilled', {
+            fromBlock: 0,
+          })
         ]
       );
       // eslint-disable-next-line
