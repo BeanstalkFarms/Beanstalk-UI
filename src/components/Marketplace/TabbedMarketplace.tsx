@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 
-import { BaseModule, Grid, siloStrings } from 'components/Common';
+import { BaseModule, Grid, siloStrings, ListTable, FarmAsset } from 'components/Common';
 import MarketplaceBuyModule from './MarketplaceBuyModule';
 import MarketplaceSellModule from './MarketplaceSellModule';
 import Listings from './Listings/Listings';
@@ -13,8 +13,15 @@ export default function TabbedMarketplace() {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+  const { harvestablePodBalance, plots, harvestablePlots } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
 
   const [section, setSection] = useState(0);
+  const [page, setPage] = useState(0);
   const sectionTitles = ['Buy Pods', 'Sell Pods'];
   const sectionTitlesDescription = [
     siloStrings.lpDescription, // FIXME
@@ -92,6 +99,28 @@ export default function TabbedMarketplace() {
           >
             <Listings
               mode="MINE"
+            />
+          </BaseModule>
+          {/**
+            * My Plots */}
+          <BaseModule
+            marginTop="20px"
+            sectionTitles={['My Plots']}
+            sectionTitlesDescription={['']}
+            showButton={false}
+          >
+            <ListTable
+              asset={FarmAsset.Pods}
+              claimableBalance={harvestablePodBalance}
+              claimableCrates={harvestablePlots}
+              crates={plots}
+              description="Sown Plots will show up here."
+              indexTitle="Place in Line"
+              index={parseFloat(harvestableIndex)}
+              handleChange={(event, p: number) => setPage(p)}
+              page={page}
+              rowsPerPage={5}
+              title="Plots"
             />
           </BaseModule>
         </BaseModule>
