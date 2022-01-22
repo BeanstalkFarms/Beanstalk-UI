@@ -656,6 +656,8 @@ export default function Updater() {
             balanceInitializers;
           updateBalanceState();
           processEvents(eventInitializer, eventParsingParameters);
+
+          /** */
           dispatch(setInitialized(true));
         });
         benchmarkEnd('**WEBSITE**', startTime);

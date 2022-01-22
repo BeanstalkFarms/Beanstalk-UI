@@ -83,6 +83,7 @@ export default function MarketplaceSellModule() {
       mode="ALL"
     />,
     <CreateListingModule
+      harvestableIndex={parseFloat(harvestableIndex)}
       plots={plots}
       ref={createListingModuleRef}
       hasPlots={
@@ -90,7 +91,6 @@ export default function MarketplaceSellModule() {
         (Object.keys(plots).length > 0 ||
           harvestablePodBalance.isGreaterThan(0))
       }
-      index={parseFloat(harvestableIndex)}
       setListing={setListing} // FIXME: naming, should be listing
       readyToSubmit={readyToSubmit || false}
     />,

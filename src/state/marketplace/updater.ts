@@ -11,6 +11,7 @@ import {
   toTokenUnitsBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
+import { BuyOffer, Listing } from './reducer';
 
 // mock global events for marketplace
 // TODO: hook this up to real contract events
@@ -91,21 +92,46 @@ const MOCK_EVENTS = [
   },
 ];
 
+// TODO: figure out how to access the Ethers Event type, or
+// write our own. Perhaps something like this:
+//
+// type EthersEvent<A, B> = {
+//   event: A;
+//   returnValue: B;
+// }
+// type MarketplaceListingEvent = EthersEvent<
+//   'ListingCreated' | 'ListingCancelled' | 'ListingFilled',
+//   any
+// >;
+
 // FIXME: define type for Events
-function processEvents(events, harvestableIndex) {
-  const listings = {};
-  const buyOffers = {};
+function processEvents(events: any, harvestableIndex: BigNumber) {
+  const listings : { [key: string]: Listing } = {};
+  const buyOffers : { [key: string]: BuyOffer } = {};
   for (const event of events) {
     if (event.event === 'ListingCreated') {
       listings[event.returnValues.index] = {
-        listerAddress: event.returnValues.account,
-        objectiveIndex: toTokenUnitsBN(new BigNumber(event.returnValues.index), BEAN.decimals),
-        pricePerPod: toTokenUnitsBN(new BigNumber(event.returnValues.pricePerPod), BEAN.decimals),
-        expiry: toTokenUnitsBN(new BigNumber(event.returnValues.expiry), BEAN.decimals),
-        initialAmount: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
-        amount: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
-        amountSold: new BigNumber(0),
-        status: 'active',
+        // Lister
+        listerAddress:
+          event.returnValues.account,
+        // Plot Information  
+        objectiveIndex:
+          toTokenUnitsBN(new BigNumber(event.returnValues.index), BEAN.decimals),
+        // Listing Configuration
+        pricePerPod:
+          toTokenUnitsBN(new BigNumber(event.returnValues.pricePerPod), BEAN.decimals),
+        expiry:
+          toTokenUnitsBN(new BigNumber(event.returnValues.expiry), BEAN.decimals),
+        // Amounts
+        initialAmount:
+          toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
+        amount:
+          toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
+        amountSold:
+          new BigNumber(0),
+        // Status
+        status:
+          'active',
       };
     } else if (event.event === 'ListingCancelled') {
       delete listings[event.returnValues.index];
@@ -151,6 +177,7 @@ function processEvents(events, harvestableIndex) {
       const buyOffer = buyOffers[key];
       buyOffers[key].amountBought = buyOffers[key].amountBought.plus(amountBN);
       buyOffers[key].amount = buyOffer.initialAmountToBuy.minus(buyOffer.amountBought);
+
       const isFilled = buyOffer.amount.isEqualTo(0);
       if (isFilled) {
         delete buyOffers[key];

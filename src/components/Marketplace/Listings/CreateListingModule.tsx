@@ -11,20 +11,24 @@ import {
   PlotInputField,
   TransactionDetailsModule,
 } from 'components/Common';
-import { TrimBN, displayBN, CryptoAsset, FarmAsset } from 'util/index';
+import { TrimBN, displayBN, CryptoAsset, FarmAsset, GetWalletAddress } from 'util/index';
+import { Listing } from 'state/marketplace/reducer';
+import ListingsTable from './ListingsTable';
 
 type CreateListingModuleProps = {
+  // harvestableIndex: AppState['weather']['harvestableIndex'];
   plots: AppState['userBalance']['plots'];
   hasPlots: boolean;
-  index: any; // FIXME
   setListing: Function;
   readyToSubmit: boolean;
 }
 
 export const CreateListingModule = forwardRef((props: CreateListingModuleProps, ref) => {
-  //
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
+  );
+  const { listings: allListings } = useSelector<AppState, AppState['marketplace']>(
+    (state) => state.marketplace
   );
 
   /** The absolute index of the selected plot in line. */
@@ -36,8 +40,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   /** The price per pod. */
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
 
-  // destructed to avoid useEffect dependency error
-  const { setListing } = props;
+  const { setListing } = props; // Destructed to avoid useEffect dependency error
   const selectedPlotPositionInLine = index.minus(harvestableIndex);
   const amountInSelectedPlot = index ? new BigNumber(props.plots[index.toString()]) : new BigNumber(-1);
 
@@ -113,7 +116,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   /* Input Fields */
   const fromPlotField = (
     <PlotListInputField
-      index={props.index}
+      index={harvestableIndex}
       items={props.plots ? props.plots : {}}
       marginBottom={props.hasPlots === true ? '0px' : '-7px'}
       handleChange={handlePlotChange}
@@ -143,20 +146,61 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     />
   );
   const expiresInField = (
-    <>
-      <PlotInputField
-        label="Expires In"
-        handleChange={handleExpireChange}
-        value={TrimBN(expiresIn, 6)}
-        maxHandler={() => {
-          if (index != null) {
-            setExpiresIn(index.minus(harvestableIndex));
-          }
-        }}
-      />
-    </>
+    <PlotInputField
+      label="Expires In"
+      handleChange={handleExpireChange}
+      value={TrimBN(expiresIn, 6)}
+      maxHandler={() => {
+        if (index != null) {
+          setExpiresIn(index.minus(harvestableIndex));
+        }
+      }}
+    />
   );
 
+  /** 
+   * If this plot is already listed, show the user a notification
+   * that this action will update their prior listing.
+   * 
+   * FIXME: the below search is very slow and searches all listings instead of
+   * filtering down to only my listings. We should store "myListings" separately in state
+   * to narrow down the number of filter operations done here. I've implemented a quick-and-
+   * dirty version of this locally within the component, but let's move it elsewhere.
+   */
+  let alreadyListedNotification;
+  const [myListings, setMyListings] = useState<null | Listing[]>(null);
+  useEffect(() => {
+    (async () => {
+      const walletAddress = await GetWalletAddress();
+      setMyListings(
+        allListings
+          .filter((listing) => listing.listerAddress === walletAddress)
+      );
+    })();
+  }, [allListings]);
+  const existingListing = myListings ? myListings.find((listing) => listing.objectiveIndex.isEqualTo(index)) : null;
+  if (existingListing) {
+    alreadyListedNotification = (
+      <div style={{
+        border: '1px solid black' as const,
+        borderRadius: '15px',
+        color: 'black',
+        fontSize: 'calc(11px + 0.5vmin)',
+        padding: '12px',
+        width: '100%',
+      }}>
+        {'You\'ve already listed this Plot on the Marketplace. Resubmitting this form will update the previous listing.'}
+        <ListingsTable
+          mode="MINE"
+          enableControls={false}
+          listings={[existingListing]}
+          harvestableIndex={harvestableIndex}
+        />
+      </div>
+    );
+  }
+
+  /** Details */
   const details = [
     `List ${displayBN(amount)} Pods from plot at position ${displayBN(selectedPlotPositionInLine)} in line for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
     `If fully sold, you will receive ${displayBN(amount.multipliedBy(pricePerPodValue))} Beans.`,
@@ -203,6 +247,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
           {priceField}
           {amountField}
           {expiresInField}
+          {alreadyListedNotification}
           {transactionDetails()}
         </>
       ) : null}

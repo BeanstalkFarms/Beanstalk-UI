@@ -15,18 +15,27 @@ import ListingsTable from './ListingsTable';
 import Filters, { StyledSlider } from '../Filters';
 import GraphModule from '../GraphModule';
 
+const filterTitleStyle = {
+  display: 'inline',
+  marginTop: 0,
+  fontFamily: 'Futura-PT-Book',
+  fontSize: '20.8px',
+};
+
 type ListingsProps = {
   mode: 'ALL' | 'MINE';
 }
+
 /**
  * A Listing = an Offer to Sell.
  * A User can purchase the Pods in a Listing.
  */
 export default function Listings(props: ListingsProps) {
-  /** */
+  /** FIXME: is this somewhere in global state? */
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  /** */
+  /** The currently selected listing (used when buying pods). */
   const [currentListing, setCurrentListing] = useState<Listing | null>(null);
+
   const { listings: allListings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
@@ -36,13 +45,6 @@ export default function Listings(props: ListingsProps) {
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
-
-  const filterTitleStyle = {
-    display: 'inline',
-    marginTop: 0,
-    fontFamily: 'Futura-PT-Book',
-    fontSize: '20.8px',
-  };
 
   // Filter state
   const filteredListings = useRef<Listing[]>(allListings);
@@ -172,13 +174,6 @@ export default function Listings(props: ListingsProps) {
             max={totalPods.toNumber()}
           />
         </Box>
-        {/* <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={applyFilters}>
-          Apply Filter
-        </Button> */}
       </>
     </Filters>
   );

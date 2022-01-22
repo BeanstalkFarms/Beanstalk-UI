@@ -30,6 +30,7 @@ type ListingRowProps = {
   listing: Listing;
   harvestableIndex: AppState['weather']['harvestableIndex'];
   setCurrentListing: Function;
+  enableControls: boolean;
   isMine: boolean;
 }
 
@@ -37,6 +38,7 @@ function ListingRow({
   listing,
   harvestableIndex,
   setCurrentListing,
+  enableControls,
   isMine,
 }: ListingRowProps) {
   const classes = useStyles();
@@ -119,22 +121,24 @@ function ListingRow({
             )}
           </TableCell>
           {/* Cancel Button */}
-          <TableCell align="center">
-            <IconButton
-              onClick={async () => {
-                const beanstalk = beanstalkContract();
-                await beanstalk.cancelListing(
-                  toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals)
-                );
-              }}
-              style={{
-                color: theme.linkColor,
-              }}
-              size="small"
-            >
-              <CancelIcon />
-            </IconButton>
-          </TableCell>
+          {enableControls && (
+            <TableCell align="center">
+              <IconButton
+                onClick={async () => {
+                  const beanstalk = beanstalkContract();
+                  await beanstalk.cancelListing(
+                    toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals)
+                  );
+                }}
+                style={{
+                  color: theme.linkColor,
+                }}
+                size="small"
+              >
+                <CancelIcon />
+              </IconButton>
+            </TableCell>
+          )}
         </>
       ) : (
         <>
@@ -167,6 +171,7 @@ function ListingRow({
 
 type ListingsTableProps = {
   mode: 'ALL' | 'MINE';
+  enableControls?: boolean;
   listings: Listing[];
   setCurrentListing?: Function;
   harvestableIndex: BigNumber;
@@ -212,7 +217,9 @@ export default function ListingsTable(props: ListingsTableProps) {
                 <TableCell align="right">Expiry</TableCell>
                 <TableCell align="right">Price</TableCell>
                 <TableCell align="right">Pods Sold</TableCell>
-                <TableCell align="center">Cancel</TableCell>
+                {props.enableControls ? (
+                  <TableCell align="center">Cancel</TableCell>
+                ) : null}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -222,6 +229,7 @@ export default function ListingsTable(props: ListingsTableProps) {
                   harvestableIndex={props.harvestableIndex}
                   listing={listing}
                   setCurrentListing={props.setCurrentListing}
+                  enableControls={props.enableControls}
                   isMine
                 />
               ))}
@@ -310,5 +318,6 @@ export default function ListingsTable(props: ListingsTableProps) {
 }
 
 ListingsTable.defaultProps = {
+  enableControls: true,
   setCurrentListing: undefined,
 };

@@ -299,31 +299,55 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
   return bn2;
 }
 
-export function toBaseUnitBN(
+/**
+ * Convert a "raw amount" (decimal form) to "token amount" (integer form).
+ * This is what's stored in the contract.
+ *
+ * FIXME: 'base unit' naming?
+ * 
+ * @param rawAmt 
+ * @param decimals 
+ * @returns 
+ */
+ export function toBaseUnitBN(
   rawAmt: string | number | BigNumber,
   decimals: number
 ): BigNumber {
-  const raw = new BigNumber(rawAmt);
+  const amt = new BigNumber(rawAmt);
   const base = new BigNumber(10);
   const decimalsBN = new BigNumber(decimals);
-  return raw.multipliedBy(base.pow(decimalsBN)).integerValue();
+  const digits = base.pow(decimalsBN);
+  return amt.multipliedBy(digits).integerValue();
 }
 
-export function toStringBaseUnitBN(
+/**
+ * Convert a "token amount" (integer form) to "raw amount" (decimal form).
+ * This is typically what's displayed to users within the application.
+ * 
+ * @param tokenAmt BigNumber.Value
+ * @param decimals BigNumber.Value
+ * @returns BigNumber
+ */
+export function toTokenUnitsBN(
+  tokenAmt: string | number | BigNumber, // FIXME: use BigNumber.Value here?
+  decimals: number // FIXME: use BigNumber.Value here?
+): BigNumber {
+  const amt = new BigNumber(tokenAmt);
+  const base = new BigNumber(10);
+  const decimalsBN = new BigNumber(decimals);
+  const digits = base.pow(decimalsBN);
+  return amt.dividedBy(digits);
+}
+
+/**
+ * 
+ * @param rawAmt 
+ * @param decimals 
+ * @returns 
+ */
+ export function toStringBaseUnitBN(
   rawAmt: string | number | BigNumber,
   decimals: number
 ): string {
-  const raw = new BigNumber(rawAmt);
-  const base = new BigNumber(10);
-  const decimalsBN = new BigNumber(decimals);
-  return raw.multipliedBy(base.pow(decimalsBN)).integerValue().toString();
-}
-
-export function toTokenUnitsBN(
-  tokenAmt: string | number | BigNumber,
-  decimals: number
-): BigNumber {
-  const amt = new BigNumber(tokenAmt);
-  const digits = new BigNumber(10).pow(new BigNumber(decimals));
-  return amt.div(digits);
+  return toBaseUnitBN(rawAmt, decimals).toString();
 }
