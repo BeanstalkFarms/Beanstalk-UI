@@ -12,7 +12,7 @@ import { beanstalkContract } from 'util/index';
 import Offers from './Offers/Offers';
 import CreateListingModule from './Listings/CreateListingModule';
 
-type SellOfferState = {
+type ListingState = {
   /** */
   index: Listing['objectiveIndex'];
   /** */
@@ -32,9 +32,11 @@ export default function MarketplaceSellModule() {
     (state) => state.weather
   );
 
-  // Local state
+  /** Toggle sections: 'Sell Now' and 'Create Listing' */
   const [section, setSection] = useState<number>(0);
-  const [sellOffer, setSellOffer] = useState<SellOfferState | null>(null);
+  /** Stored form state when creating a listing. */
+  const [listing, setListing] = useState<ListingState | null>(null);
+  /** Ref to help with form submissions */
   const createListingModuleRef = useRef<any>();
 
   // Handlers
@@ -53,10 +55,10 @@ export default function MarketplaceSellModule() {
   // TODO: need to handle beans / beans + eth
   const onCreate = async () => {
     const beanstalk = beanstalkContract();
-    const { index, pricePerPod, amount, expiresIn } = sellOffer;
+    const { index, pricePerPod, amount, expiresIn } = listing;
     const expiry = (expiresIn.times(10 ** 6).plus(harvestableIndex.times(10 ** 6))).toString();
     // Reset inputs
-    setSellOffer(null);
+    setListing(null);
     createListingModuleRef.current.resetForm();
     // Send request
     const res = await beanstalk.listPlot(
@@ -67,12 +69,13 @@ export default function MarketplaceSellModule() {
     );
     console.log('listPlot', res);
   };
+
   // Require all inputs have values > 0 or >= 0.
   const readyToSubmit = (
-    sellOffer?.index?.gte(0)
-    && sellOffer?.amount?.gt(0)
-    && sellOffer?.pricePerPod?.gt(0)
-    && sellOffer?.expiresIn?.gte(0)
+    listing?.index?.gte(0)
+    && listing?.amount?.gt(0)
+    && listing?.pricePerPod?.gt(0)
+    && listing?.expiresIn?.gte(0)
   );
 
   const sections = [
@@ -88,12 +91,11 @@ export default function MarketplaceSellModule() {
           harvestablePodBalance.isGreaterThan(0))
       }
       index={parseFloat(harvestableIndex)}
-      setSellOffer={setSellOffer} // FIXME: naming, should be listing
-      readyToSubmit={readyToSubmit}
+      setListing={setListing} // FIXME: naming, should be listing
+      readyToSubmit={readyToSubmit || false}
     />,
   ];
 
-  // Render
   return (
     <>
       <BaseModule

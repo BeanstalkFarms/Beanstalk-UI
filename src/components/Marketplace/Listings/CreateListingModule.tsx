@@ -17,7 +17,7 @@ type CreateListingModuleProps = {
   plots: AppState['userBalance']['plots'];
   hasPlots: boolean;
   index: any; // FIXME
-  setSellOffer: Function;
+  setListing: Function;
   readyToSubmit: boolean;
 }
 
@@ -37,7 +37,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
 
   // destructed to avoid useEffect dependency error
-  const { setSellOffer } = props;
+  const { setListing } = props;
   const selectedPlotPositionInLine = index.minus(harvestableIndex);
   const amountInSelectedPlot = index ? new BigNumber(props.plots[index.toString()]) : new BigNumber(-1);
 
@@ -47,16 +47,16 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     // TODO: rest (???)
     const canSell = pricePerPodValue.isLessThanOrEqualTo(1);
     if (canSell) {
-      setSellOffer({
+      setListing({
         index,
         pricePerPod: pricePerPodValue,
         amount,
         expiresIn,
       });
     } else {
-      setSellOffer(null);
+      setListing(null);
     }
-  }, [index, setSellOffer, pricePerPodValue, amount, expiresIn]);
+  }, [index, setListing, pricePerPodValue, amount, expiresIn]);
 
   /** */
   const handlePlotChange = (event) => {
@@ -68,9 +68,9 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     setPricePerPodValue(new BigNumber(-1));
   };
   /** */
-  const handlePriceChange = (v) => {
-    let newPricePerPodValue = v.target.value !== ''
-      ? new BigNumber(v.target.value)
+  const handlePriceChange = (event) => {
+    let newPricePerPodValue = event.target.value !== ''
+      ? new BigNumber(event.target.value)
       : new BigNumber(0);
     // CONSTRAINT: Price can't be created than 1
     if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
@@ -79,9 +79,9 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     setPricePerPodValue(newPricePerPodValue);
   };
   /** */
-  const handlePodChange = (v) => {
-    const newToPodValue = v.target.value !== ''
-      ? new BigNumber(v.target.value)
+  const handlePodChange = (event) => {
+    const newToPodValue = event.target.value !== ''
+      ? new BigNumber(event.target.value)
       : new BigNumber(0);
     // CONSTRAINT: Amount can't be greater than size of selected plot.
     if (amountInSelectedPlot.lt(newToPodValue)) {
@@ -91,8 +91,8 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     setAmount(newToPodValue);
   };
   /** */
-  const handleExpireChange = (v) => {
-    const newExpiresinValue = new BigNumber(v.target.value);
+  const handleExpireChange = (event) => {
+    const newExpiresinValue = new BigNumber(event.target.value);
     // console.log('index', index.toNumber());
     // console.log('newExpiresinValue', newExpiresinValue.toNumber());
     // console.log('harvestableIndex', harvestableIndex.toNumber());
