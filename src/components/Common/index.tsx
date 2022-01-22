@@ -288,3 +288,16 @@ export const fundraiserStrings = {
   fundsDescription: 'Fundraisers allow Beanstalk to raise a pre-defined amount of another stablecoin in order to pay for things like audits. Each fundraiser allows anyone to exchange the desired stablecoin, up to the amount specified in the Fundraiser, for Beans at a price of $1.00. All Beans will be Sown and the corresponding amount of Pods will be sent to the wallet that contributed to the Fundraiser. Any excess funds beyond the Fundraiser amount, or of a different currency, will not receive Sown Beans.',
   fundsTableDescription: 'Below is a complete list of all Fundraisers.',
 };
+export const marketStrings = {
+  sellPods: 'Use this tab to Sell Pods on the Pod Marketplace.', // TODO
+  buyPods: 'Use this tab to Buy Pods on the Pod Marketplace.', // TODO
+  sell: 'Sell Pods from available offers using user plots.', // TODO
+  buy: 'Buy Pods from available listings.', // TODO
+  createListing: 'Use this tab to create a listing to Sell Pods on the Pod Marketplace.', // TODO
+  createOffer: 'Use this tab to create an offer to buy Pods on the Pod Marketplace.', // TODO
+};
+export const filterStrings = {
+  pricePerPod: 'Price per Pod sliding filter.', // TODO
+  placeInLine: 'Place in Line sliding filter.', // TODO
+  toggleValidOffers: 'Toggle for users to filter out plots that they can’t sell into.', // TODO
+};

@@ -22,7 +22,7 @@ export default function QuestionModule(props) {
   const handleTooltipOpen = () => {
     setShow(true);
   };
-  const timer = width < 500 ? 4000 : 1000;
+  const timer = width < 500 ? 3000 : 250;
 
   return (
     <Box style={questionStyle}>
@@ -43,7 +43,7 @@ export default function QuestionModule(props) {
           onMouseLeave={handleTooltipClose}
         >
           <HelpOutlineIcon
-            style={{ fontSize: '8px' }}
+            style={{ fontSize: props.fontSize }}
             width="100%"
             onClick={handleTooltipOpen}
           />

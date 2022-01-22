@@ -45,8 +45,8 @@ function ListingRow({
   const amountRemaining = listing.initialAmount.minus(listing.amountSold);
   const explainer = (
     <>
-      {isMine 
-        ? 'You want' 
+      {isMine
+        ? 'You want'
         : (
           <>
             <a href={`https://etherscan.io/address/${listing.listerAddress}`} target="_blank" rel="noreferrer">{listing.listerAddress.slice(0, 6)}</a> wants
@@ -69,6 +69,8 @@ function ListingRow({
           placement="right"
           position="static"
           widthTooltip={200}
+          fontSize="12px"
+          margin="-10px 0 0 10px"
         />
       </TableCell>
       {/* # of pods remaining to harvest before this offer to sell expires */}
@@ -184,7 +186,7 @@ export default function ListingsTable(props: ListingsTableProps) {
   if (!props.listings || props.listings.length === 0) {
     return (
       <div>
-        <h4 style={{ }}>No active listings</h4>
+        <h4 style={{ }}>No active listings given the current filters</h4>
       </div>
     );
   }
@@ -200,30 +202,50 @@ export default function ListingsTable(props: ListingsTableProps) {
 
   if (props.mode === 'MINE') {
     return (
-      <TableContainer>
-        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Place in line</TableCell>
-              <TableCell align="right">Expiry</TableCell>
-              <TableCell align="right">Price</TableCell>
-              <TableCell align="right">Pods Sold</TableCell>
-              <TableCell align="center">Cancel</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {slicedItems.map((listing: Listing) => (
-              <ListingRow
-                key={listing.objectiveIndex - props.harvestableIndex}
-                harvestableIndex={props.harvestableIndex}
-                listing={listing}
-                setCurrentListing={props.setCurrentListing}
-                isMine
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <>
+        <TableContainer>
+          <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Place in line</TableCell>
+                <TableCell align="right">Expiry</TableCell>
+                <TableCell align="right">Price</TableCell>
+                <TableCell align="right">Pods Sold</TableCell>
+                <TableCell align="center">Cancel</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {slicedItems.map((listing: Listing) => (
+                <ListingRow
+                  key={listing.objectiveIndex - props.harvestableIndex}
+                  harvestableIndex={props.harvestableIndex}
+                  listing={listing}
+                  setCurrentListing={props.setCurrentListing}
+                  isMine
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {/* display page button if user has more listings than rowsPerPage. */}
+        {Object.keys(props.listings).length > rowsPerPage
+          ? (
+            <TablePagination
+              component="div"
+              count={props.listings.length}
+              onPageChange={(event, p) => setPage(p)}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[]}
+              labelDisplayedRows={({ from, count }) =>
+                `${Math.ceil(from / rowsPerPage)}-${
+                  count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+                }`
+              }
+            />
+          )
+          : null}
+      </>
     );
   }
 
@@ -264,21 +286,24 @@ export default function ListingsTable(props: ListingsTableProps) {
           </TableBody>
         </Table>
       </TableContainer>
-      {props.setCurrentListing && (
-        <TablePagination
-          component="div"
-          count={props.listings.length}
-          onPageChange={(event, p) => setPage(p)}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[]}
-          labelDisplayedRows={({ from, count }) =>
-            `${Math.ceil(from / rowsPerPage)}-${
-              count !== -1 ? Math.ceil(count / rowsPerPage) : 0
-            }`
-          }
-        />
-      )}
+      {/* display page button if user has more listings than rowsPerPage. */}
+      {Object.keys(props.listings).length > rowsPerPage
+        ? (
+          <TablePagination
+            component="div"
+            count={props.listings.length}
+            onPageChange={(event, p) => setPage(p)}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[]}
+            labelDisplayedRows={({ from, count }) =>
+              `${Math.ceil(from / rowsPerPage)}-${
+                count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+              }`
+            }
+          />
+        )
+        : null}
     </>
   );
 }

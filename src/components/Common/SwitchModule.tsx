@@ -45,7 +45,7 @@ export default function SwitchModule(props) {
           checked={props.value}
           control={<GreenSwitch />}
           disabled={props.disabled}
-          label={props.label}
+          label={props.label ? props.label : null}
           onChange={changeHandler}
           style={{
             flexDirection: 'column-reverse',
@@ -53,11 +53,15 @@ export default function SwitchModule(props) {
             width: '100%',
           }}
         />
-        <QuestionModule
-          description={props.description}
-          margin={props.margin}
-          marginTooltip={props.marginTooltip}
-        />
+        {props.description
+          ? (
+            <QuestionModule
+              description={props.description}
+              margin={props.margin}
+              marginTooltip={props.marginTooltip}
+            />
+          )
+          : null}
       </Box>
     </Box>
   );

@@ -18,9 +18,9 @@ type SellIntoOfferModalProps = {
   onClose: Function;
 }
 
-export default function SellIntoOfferModal({ 
-  currentOffer, 
-  onClose 
+export default function SellIntoOfferModal({
+  currentOffer,
+  onClose
 }: SellIntoOfferModalProps) {
   /** The selected Plot index. */
   const [index, setIndex] = useState(new BigNumber(-1));
@@ -107,7 +107,7 @@ export default function SellIntoOfferModal({
     const plotToSellFrom = plots[plotKey];
     console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
 
-    // 
+    //
     const finalIndex = index.times(10 ** 6);
     const end = finalIndex.plus(plotToSellFrom.times(10 ** 6));
     const finalAmount = amount.times(10 ** 6);
@@ -120,7 +120,7 @@ export default function SellIntoOfferModal({
       buyOfferIndex.toFixed(),  // uint24 buyOfferIndex
       finalAmount.toFixed()     // uint232 amount
     ];
-    
+
     console.log('SellIntoOfferModal: beanstalk.sellToBuyOffer', params);
     await beanstalk.sellToBuyOffer(...params);
   };
@@ -141,8 +141,8 @@ export default function SellIntoOfferModal({
 
   //
   const isDisabled = (
-    index.lt(0) 
-    || !amount 
+    index.lt(0)
+    || !amount
     || amount.lte(0)
   );
 

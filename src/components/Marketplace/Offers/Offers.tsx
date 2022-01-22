@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { BuyOffer } from 'state/marketplace/reducer';
 import { GetWalletAddress } from 'util/index';
 import { AppState } from 'state';
+import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
 
 import SellIntoOfferModal from 'components/Marketplace/Offers/SellIntoOfferModal';
 import OffersTable from './OffersTable';
@@ -26,6 +27,18 @@ export default function Offers(props: OffersProps) {
   const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
+  const { plots } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+  const filterTitleStyle = {
+    display: 'inline',
+    marginTop: 0,
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '20.8px',
+  };
 
   //
   const [walletAddress, setWalletAddress] = useState(null);
@@ -35,6 +48,8 @@ export default function Offers(props: OffersProps) {
   const filteredOffers = useRef<BuyOffer[]>(allOffers);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
+  /** */
+  const [validOffers, setValidOffers] = useState<boolean>(false);
 
   const placesInLine = [0, totalPods.toNumber()];
   const placesInLineBN = [0, new BigNumber(totalPods.toNumber())];
@@ -61,10 +76,29 @@ export default function Offers(props: OffersProps) {
         .lte(new BigNumber(placeInLineFilters[1]))
     ));
 
+    // Filter offers the user cannot sell a plot into
+    filteredOffers.current = _.filter(filteredOffers.current, (offer) => {
+      let validPlots = [];
+      if (validOffers) {
+        const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
+          const plotObjectiveIndex = new BigNumber(plotIndex);
+          return plotObjectiveIndex.minus(harvestableIndex).lt(offer.maxPlaceInLine);
+        });
+        validPlots = validPlotIndices.reduce((prev, curr) => (
+          {
+            ...prev,
+            [curr]: plots[curr],
+          }
+        ), {});
+      }
+      return (Object.keys(validPlots).length > 0 === validOffers || !validOffers);
+    });
+
     return () => {
       // cleanup listings
     };
-  }, [allOffers, priceFilters, placeInLineFilters, props.mode, walletAddress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allOffers, priceFilters, placeInLineFilters, props.mode, walletAddress, validOffers]);
 
   //
   const handlePriceFilter = (event, newValue) => {
@@ -97,7 +131,32 @@ export default function Offers(props: OffersProps) {
   const filters = (
     <Filters title={`${filteredOffers.current.length} offer${filteredOffers.current.length !== 1 ? 's' : ''}`}>
       <>
-        <h3 style={{ marginTop: 0 }}>Price Per Pod</h3>
+        {/* Toggle for users to select to filter out plots they can't sell into  */}
+        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+          Offers you can Sell
+          <QuestionModule
+            description={filterStrings.toggleValidOffers}
+            margin="-10px 0px 0px 0px"
+            placement="right"
+          />
+        </Box>
+        <Box sx={{ mt: 3, px: 0.75 }} style={{ margin: '10px 0' }}>
+          <SwitchModule
+            setValue={(value) => {
+              setValidOffers(value);
+            }}
+            value={validOffers}
+          />
+        </Box>
+        {/* Price per Pod sliding filter  */}
+        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+          Price Per Pod
+          <QuestionModule
+            description={filterStrings.pricePerPod}
+            margin="-12px 0px 0px 2px"
+            placement="right"
+          />
+        </Box>
         <Box sx={{ mt: 3, px: 0.75 }}>
           <StyledSlider
             value={tempPriceFilters}
@@ -108,7 +167,15 @@ export default function Offers(props: OffersProps) {
             max={1}
           />
         </Box>
-        <h3>Place In Line</h3>
+        {/* Place in Line sliding filter  */}
+        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+          Place In Line
+          <QuestionModule
+            description={filterStrings.placeInLine}
+            margin="-10px 0px 0px 0px"
+            placement="right"
+          />
+        </Box>
         <Box sx={{ mt: 3, px: 0.75 }}>
           <StyledSlider
             value={tempPlaceInLineFilters}
@@ -148,6 +215,7 @@ export default function Offers(props: OffersProps) {
         mode={props.mode}
         offers={filteredOffers.current}
         setCurrentOffer={setCurrentOffer}
+        validOffers={validOffers}
       />
     </>
   );

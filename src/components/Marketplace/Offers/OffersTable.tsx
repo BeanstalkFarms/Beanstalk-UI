@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import BigNumber from 'bignumber.js';
+// import BigNumber from 'bignumber.js';
 import {
   Table,
   TableCell,
@@ -32,14 +32,14 @@ type OfferRowProps = {
 
 function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
   const classes = useStyles();
-  const { plots } = useSelector<AppState, AppState['userBalance']>(
-    (state) => state.userBalance
-  );
+  // const { plots } = useSelector<AppState, AppState['userBalance']>(
+  //   (state) => state.userBalance
+  // );
   const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
   const explainer = (
     <>
-      {isMine 
-        ? 'You want' 
+      {isMine
+        ? 'You want'
         : (
           <>
             <a href={`https://etherscan.io/address/${offer.listerAddress}`} target="_blank" rel="noreferrer">{offer.listerAddress.slice(0, 6)}</a> wants
@@ -48,8 +48,8 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
     </>
   );
   /** Do we have any plots whose index is smaller than max place in line? if so then we can sell */
-  const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
-  
+  // const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
+
   return (
     <TableRow>
       {/* Place in line */}
@@ -61,6 +61,8 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           placement="right"
           position="static"
           widthTooltip={200}
+          fontSize="12px"
+          margin="-10px 0 0 10px"
         />
       </TableCell>
       {/* Price per pod */}
@@ -115,9 +117,12 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
             <TableCell align="center">
               <IconButton
                 onClick={() => setCurrentOffer(offer)}
-                disabled={!canSell}
+                // disabled={!canSell}
+                // style={{
+                //   color: canSell ? theme.linkColor : 'lightgray',
+                // }}
                 style={{
-                  color: canSell ? theme.linkColor : 'lightgray',
+                  color: theme.linkColor,
                 }}
                 size="small"
               >
@@ -151,7 +156,7 @@ export default function OffersTable(props: OffersTableProps) {
   if (!props.offers || props.offers.length === 0) {
     return (
       <div>
-        <h4 style={{ }}>No active bids</h4>
+        <h4 style={{ }}>No active offers given the current filters</h4>
       </div>
     );
   }
@@ -167,34 +172,54 @@ export default function OffersTable(props: OffersTableProps) {
 
   if (props.mode === 'MINE') {
     return (
-      <TableContainer>
-        <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">
-                Place in line
-              </TableCell>
-              <TableCell align="right">
-                Price
-              </TableCell>
-              <TableCell align="right">
-                Pods Bought
-              </TableCell>
-              <TableCell align="center">
-                Cancel
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          {slicedItems.map((offer: BuyOffer) => (
-            <OfferRow
-              key={offer.index}
-              offer={offer}
-              setCurrentOffer={props.setCurrentOffer}
-              isMine
+      <>
+        <TableContainer>
+          <Table className={width > 500 ? classes.table : classes.tableSmall} size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">
+                  Place in line
+                </TableCell>
+                <TableCell align="right">
+                  Price
+                </TableCell>
+                <TableCell align="right">
+                  Pods Bought
+                </TableCell>
+                <TableCell align="center">
+                  Cancel
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            {slicedItems.map((offer: BuyOffer) => (
+              <OfferRow
+                key={offer.index}
+                offer={offer}
+                setCurrentOffer={props.setCurrentOffer}
+                isMine
+              />
+            ))}
+          </Table>
+        </TableContainer>
+        {/* display page button if user has more offers than rowsPerPage. */}
+        {Object.keys(props.offers).length > rowsPerPage
+          ? (
+            <TablePagination
+              component="div"
+              count={props.offers.length}
+              onPageChange={(event, p) => setPage(p)}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[]}
+              labelDisplayedRows={({ from, count }) =>
+                `${Math.ceil(from / rowsPerPage)}-${
+                  count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+                }`
+              }
             />
-          ))}
-        </Table>
-      </TableContainer>
+          )
+          : null}
+      </>
     );
   }
 
@@ -229,21 +254,24 @@ export default function OffersTable(props: OffersTableProps) {
           ))}
         </Table>
       </TableContainer>
-      {props.setCurrentOffer && (
-        <TablePagination
-          component="div"
-          count={props.offers.length}
-          onPageChange={(event, p) => setPage(p)}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[]}
-          labelDisplayedRows={({ from, count }) =>
-            `${Math.ceil(from / rowsPerPage)}-${
-              count !== -1 ? Math.ceil(count / rowsPerPage) : 0
-            }`
-          }
-        />
-      )}
+      {/* display page button if user has more offers than rowsPerPage. */}
+      {Object.keys(props.offers).length > rowsPerPage
+        ? (
+          <TablePagination
+            component="div"
+            count={props.offers.length}
+            onPageChange={(event, p) => setPage(p)}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[]}
+            labelDisplayedRows={({ from, count }) =>
+              `${Math.ceil(from / rowsPerPage)}-${
+                count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+              }`
+            }
+          />
+        )
+        : null}
     </>
   );
 }

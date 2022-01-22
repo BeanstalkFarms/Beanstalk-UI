@@ -8,7 +8,7 @@ import {
   SwapMode,
   poolForLP,
 } from 'util/index';
-import { BaseModule, siloStrings } from 'components/Common';
+import { BaseModule, marketStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
 
 import { CreateOfferModule } from './Offers/CreateOfferModule';
@@ -34,10 +34,10 @@ export default function MarketplaceBuyModule() {
   );
 
   // Section setup
-  const sectionTitles = ['Buy Now', 'Create Bid'];
+  const sectionTitles = ['Buy Now', 'Create Offer'];
   const sectionTitlesDescription = [
-    siloStrings.beanDeposit, // TODO
-    siloStrings.beanDeposit, // TODO
+    marketStrings.buy,
+    marketStrings.createOffer,
   ];
 
   const handleTabChange = (event, newSection) => {

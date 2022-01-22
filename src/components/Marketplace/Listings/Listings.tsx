@@ -8,6 +8,7 @@ import { Box } from '@material-ui/core';
 import { Listing } from 'state/marketplace/reducer';
 import { CryptoAsset, GetWalletAddress } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
+import { filterStrings, QuestionModule } from 'components/Common';
 
 import BuyListingModal from './BuyListingModal';
 import ListingsTable from './ListingsTable';
@@ -35,6 +36,13 @@ export default function Listings(props: ListingsProps) {
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
+
+  const filterTitleStyle = {
+    display: 'inline',
+    marginTop: 0,
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '20.8px',
+  };
 
   // Filter state
   const filteredListings = useRef<Listing[]>(allListings);
@@ -107,7 +115,15 @@ export default function Listings(props: ListingsProps) {
   const filters = (
     <Filters title={`${filteredListings.current.length} listing${filteredListings.current.length !== 1 ? 's' : ''}`}>
       <>
-        <h3 style={{ marginTop: 0 }}>Price Per Pod</h3>
+        {/* Price per Pod sliding filter  */}
+        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+          Price Per Pod
+          <QuestionModule
+            description={filterStrings.pricePerPod}
+            margin="-12px 0px 0px 2px"
+            placement="right"
+          />
+        </Box>
         <Box sx={{ mt: 3, px: 0.75 }}>
           <StyledSlider
             value={tempPriceFilters}
@@ -128,7 +144,15 @@ export default function Listings(props: ListingsProps) {
             max={1}
           />
         </Box>
-        <h3>Place In Line</h3>
+        {/* Place in Line sliding filter  */}
+        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+          Place In Line
+          <QuestionModule
+            description={filterStrings.placeInLine}
+            margin="-10px 0px 0px 0px"
+            placement="right"
+          />
+        </Box>
         <Box sx={{ mt: 3, px: 0.75 }}>
           <StyledSlider
             value={tempPlaceInLineFilters}

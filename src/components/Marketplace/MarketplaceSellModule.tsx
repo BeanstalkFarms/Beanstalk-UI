@@ -5,6 +5,7 @@ import { AppState } from 'state';
 import { Listing } from 'state/marketplace/reducer';
 import {
   BaseModule,
+  marketStrings,
 } from 'components/Common';
 import { beanstalkContract } from 'util/index';
 
@@ -44,8 +45,8 @@ export default function MarketplaceSellModule() {
   // Sections
   const sectionTitles = ['Sell Now', 'Create Listing'];
   const sectionTitlesDescription = [
-    '',
-    '',
+    marketStrings.sell,
+    marketStrings.createListing,
   ];
 
   // This only supports eth right now
