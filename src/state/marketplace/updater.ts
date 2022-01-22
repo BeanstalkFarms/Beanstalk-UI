@@ -108,6 +108,7 @@ const MOCK_EVENTS = [
 function processEvents(events: any, harvestableIndex: BigNumber) {
   const listings : { [key: string]: Listing } = {};
   const buyOffers : { [key: string]: BuyOffer } = {};
+  console.log('marketplace/updater: processEvents', events);
   for (const event of events) {
     if (event.event === 'ListingCreated') {
       listings[event.returnValues.index] = {

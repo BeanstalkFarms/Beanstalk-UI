@@ -1,6 +1,20 @@
 import { beanstalkContract, txCallback } from './index';
 
-export const buyListing = async (index, from, amount, claimable, callback) => {
+/**
+ * 
+ * @param index (string) index of the listing to buy
+ * @param from (string) wallet address that issued the listing
+ * @param amount (string) amount of Pods to buy from listing.
+ * @param claimable ?
+ * @param callback callback after response
+ */
+export const buyListing = async (
+  index: string,
+  from: string,
+  amount: string,
+  claimable: any, // FIXME
+  callback: Function
+) => {
   (claimable
     ? beanstalkContract().claimBeansAndBuyListing(index, from, amount, claimable)
     : beanstalkContract().buyListing(index, from, amount)
@@ -13,13 +27,13 @@ export const buyListing = async (index, from, amount, claimable, callback) => {
 };
 
 export const buyBeansAndBuyListing = async (
-  index,
-  from,
-  amount,
-  buyBeanAmount,
-  ethAmount,
-  claimable,
-  callback
+  index: string,
+  from: string,
+  amount: string,
+  buyBeanAmount: string,
+  ethAmount: string,
+  claimable: any,
+  callback: Function
 ) => {
   (claimable
     ? beanstalkContract().claimAndBuyBeansAndBuyListing(
@@ -45,7 +59,13 @@ export const buyBeansAndBuyListing = async (
   });
 };
 
-export const listBuyOffer = async (maxPlaceInLine, price, amount, claimable, callback) => {
+export const listBuyOffer = async (
+  maxPlaceInLine,
+  price,
+  amount,
+  claimable,
+  callback
+) => {
   (claimable
     ? beanstalkContract().claimBeansAndListBuyOffer(maxPlaceInLine, price, amount, claimable)
     : beanstalkContract().listBuyOffer(maxPlaceInLine, price, amount)

@@ -188,6 +188,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
         fontSize: 'calc(11px + 0.5vmin)',
         padding: '12px',
         width: '100%',
+        marginTop: 13
       }}>
         {'You\'ve already listed this Plot on the Marketplace. Resubmitting this form will update the previous listing.'}
         <ListingsTable

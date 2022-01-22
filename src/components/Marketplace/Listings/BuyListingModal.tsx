@@ -24,9 +24,9 @@ export default function BuyListingModal({
   currentListing,
   setCurrentListing,
 }: BuyListingModalProps) {
-  /** */
+  /** Number of Pods to buy */
   const [buyPods, setBuyPods] = useState(new BigNumber(0));
-  /** */
+  /** Number of beans to spend to aquire Pods */
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(0));
   /** */
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
@@ -71,7 +71,7 @@ export default function BuyListingModal({
   //
   if (currentListing == null) return null;
 
-  // Handlers
+  /* Handlers */
   const poolForLPRatio = (amount: BigNumber) => {
     if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(
@@ -88,7 +88,7 @@ export default function BuyListingModal({
       .dividedBy(usdcPrice);
     return beanPrice.plus(endPrice).dividedBy(2);
   };
-  const toValueUpdated = (newToPodsNumber) => {
+  const toValueUpdated = (newToPodsNumber: BigNumber) => {
     const fromBeansNumber = newToPodsNumber.multipliedBy(currentListing.pricePerPod);
     let buyBeans;
     let fromBeans;
@@ -123,16 +123,20 @@ export default function BuyListingModal({
       fromBeans = MinBN(fromBeansNumber.minus(buyBeans), beanBalance);
       setFromBeanValue(TrimBN(fromBeans, BEAN.decimals));
 
-      setSettings({ ...settings, mode: fromBeans.isGreaterThan(0) ? SwapMode.BeanEthereum : SwapMode.Ethereum });
+      setSettings({
+        ...settings,
+        mode: fromBeans.isGreaterThan(0) 
+          ? SwapMode.BeanEthereum 
+          : SwapMode.Ethereum 
+      });
       setFromEthValue(TrimBN(fromEth, ETH.decimals));
       setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
     }
 
     setBuyPods(TrimBN(buyBeans.plus(fromBeans).dividedBy(currentListing.pricePerPod), BEAN.decimals));
   };
-  const fromValueUpdated = (newFromNumber, newFromEthNumber) => {
+  const fromValueUpdated = (newFromNumber: BigNumber, newFromEthNumber: BigNumber) => {
     const toBeans = currentListing.amount.multipliedBy(currentListing.pricePerPod);
-
     const fromBeans = MinBN(toBeans, newFromNumber);
 
     let buyBeans = getToAmount(
@@ -154,10 +158,24 @@ export default function BuyListingModal({
     setBuyPods(fromBeans.plus(buyBeans).dividedBy(currentListing.pricePerPod));
   };
   const handleForm = () => {
+    const listingIndex = toStringBaseUnitBN(currentListing.objectiveIndex, BEAN.decimals);
+    console.log(`Buy Listing Modal: `, {
+      listingIndex,
+      fromEthValue,
+      buyPods,
+      currentListing,
+    })
+
     if (buyPods.isLessThanOrEqualTo(0)) return;
 
     const _claimable = settings.claim ? claimable : null;
+    const onComplete = () => {
+      // Reset form
+      fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+    }
+
     if (fromEthValue.isGreaterThan(0)) {
+      console.log(`Transaction will include ETH. Using buyBeansAndBuyListing`)
       const beans = MaxBN(
         toBaseUnitBN(fromBeanValue, BEAN.decimals),
         new BigNumber(0)
@@ -168,35 +186,30 @@ export default function BuyListingModal({
         BEAN.decimals
       );
       buyBeansAndBuyListing(
-        toStringBaseUnitBN(currentListing.objectiveIndex, BEAN.decimals),
+        listingIndex,
         currentListing.listerAddress,
         beans,
         buyBeans,
         eth,
         _claimable,
-        () => {
-        fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-      });
+        onComplete
+      );
     } else {
+      console.log(`Transaction will include just Beans. Using buyListing`)
       buyListing(
-        toStringBaseUnitBN(
-          currentListing.objectiveIndex,
-          BEAN.decimals
-        ),
+        listingIndex,
         currentListing.listerAddress,
         toStringBaseUnitBN(
           fromBeanValue,
           BEAN.decimals
         ),
         _claimable,
-        () => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-        }
+        onComplete
       );
     }
   };
 
-  // Derived values
+  /* Derived values */
   const leftMargin = width < 800 ? 0 : 120;
   const claimableLPBeans = lpReceivableBalance.isGreaterThan(0)
     ? poolForLPRatio(lpReceivableBalance)[0]
@@ -254,7 +267,9 @@ export default function BuyListingModal({
       />
     );
   }
-  details.push(`Buy ${displayBN(buyPods)} Pods at ${displayBN(currentListing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for ${displayBN(currentListing.pricePerPod)} Beans each`);
+  details.push(
+    `Buy ${displayBN(buyPods)} Pods at ${displayBN(currentListing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for ${displayBN(currentListing.pricePerPod)} Beans each`
+  );
 
   const isReadyToSubmit = (
     (fromBeanValue?.gt(0) || fromEthValue?.gt(0))
@@ -278,7 +293,6 @@ export default function BuyListingModal({
           marginLeft: `${leftMargin}px`,
           textAlign: 'center',
           transform: 'translate(-50%, -50%)',
-
         }}
         section={0}
         sectionTitles={['Buy Pods']}
@@ -302,8 +316,8 @@ export default function BuyListingModal({
             claim={settings.claim}
             claimableBalance={claimableBeans}
             beanLPClaimableBalance={claimableLPBeans}
-            handleChange={(v) => {
-              fromValueUpdated(v, fromEthValue);
+            handleChange={(event) => {
+              fromValueUpdated(event, fromEthValue);
             }}
             token={CryptoAsset.Bean}
             value={fromBeanValue}
@@ -315,8 +329,8 @@ export default function BuyListingModal({
             buyBeans={toBuyBeanValue}
             claim={settings.claim}
             claimableBalance={claimableEthBalance}
-            handleChange={(v) => {
-              fromValueUpdated(fromBeanValue, v);
+            handleChange={(event) => {
+              fromValueUpdated(fromBeanValue, event);
             }}
             mode={settings.mode}
             sellEth={fromEthValue}
@@ -336,7 +350,7 @@ export default function BuyListingModal({
             balance={currentListing.amount}
             token={FarmAsset.Pods}
             value={TrimBN(buyPods, 6)}
-            handleChange={(v) => toValueUpdated(v)}
+            handleChange={(event) => toValueUpdated(event)}
           />
           {buyPods.isGreaterThan(0) ? (
             <TransactionDetailsModule
