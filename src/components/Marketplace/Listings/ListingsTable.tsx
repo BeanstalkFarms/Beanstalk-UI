@@ -101,13 +101,14 @@ function ListingRow({
             <TokenIcon token={FarmAsset.Pods} />
             {listing.amountSold > 0 && (
               // TODO: add a tooltip when you hover over this
+              // TODO: move this to the front of the row?
               <CircularProgress
                 variant="determinate"
                 value={
                   // Cap this at 93; over 93 it just looks like a ring, hard to tell it's a
                   // progress bar!
                   Math.min(
-                    (listing.amountSold.dividedBy(listing.initialAmount)).toNumber() * 100,
+                    (listing.amountSold).dividedBy(listing.initialAmount).toNumber() * 100,
                     93
                   )
                 }

@@ -7,7 +7,6 @@ import MarketplaceBuyModule from './MarketplaceBuyModule';
 import MarketplaceSellModule from './MarketplaceSellModule';
 import Listings from './Listings/Listings';
 import Offers from './Offers/Offers';
-// import GraphModule from './GraphModule';
 
 export default function TabbedMarketplace() {
   const { width } = useSelector<AppState, AppState['general']>(
@@ -25,8 +24,8 @@ export default function TabbedMarketplace() {
   const [page, setPage] = useState(0);
   const sectionTitles = ['Buy Pods', 'Sell Pods'];
   const sectionTitlesDescription = [
-    marketStrings.buyPods, // FIXME
-    marketStrings.sellPods, // FIXME
+    marketStrings.buyPods,
+    marketStrings.sellPods,
   ];
   const sections = [<MarketplaceBuyModule />, <MarketplaceSellModule />];
 
@@ -116,7 +115,7 @@ export default function TabbedMarketplace() {
           handleTabChange={(event, newSection) => {
             setSection(newSection);
           }}
-          section={0}
+          section={section}
           sectionTitles={sectionTitles}
           sectionTitlesDescription={sectionTitlesDescription}
           showButton={false}
