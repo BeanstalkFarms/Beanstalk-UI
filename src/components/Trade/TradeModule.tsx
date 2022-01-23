@@ -122,28 +122,23 @@ export default function TradeModule() {
       }
     } else if (section === 1) {
       if (fromValue.isGreaterThan(0)) {
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: `Transfering ${fromValue} beans to ${toAddress}`,
-            state: TransactionState.PENDING,
-          })
-        );
+        const txToast = new TransactionToast({
+          loading: `Transfering ${fromValue} beans to ${toAddress}`,
+          success: `Sent ${fromValue} beans to ${toAddress}`,
+        });
 
         transferBeans(
           toAddress,
           toStringBaseUnitBN(fromValue, BEAN.decimals),
-          (transactionHash) => {
-            dispatch(
-              updateTransactionHash({
-                transactionNumber,
-                transactionHash,
-              })
-            );
-          },
-          () => handleSwapCallback(transactionNumber)
-        );
+          (response) => txToast.confirming(response),
+        )
+        .then((value) => {
+          handleSwapCallback();
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     }
   };
