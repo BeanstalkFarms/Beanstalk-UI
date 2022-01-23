@@ -1,32 +1,25 @@
-import { ContractTransaction } from 'ethers';
-import { beanstalkContract, txCallback, account } from './index';
+import { beanstalkContract, account } from './index';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 export const sowBeans = async (
   amount: string,
   claimable: string,
-  callback: Function,
-  completeCallBack: Function
-) => {
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
   (claimable
     ? beanstalkContract().claimAndSowBeans(amount, claimable)
     : beanstalkContract().sowBeans(amount)
-  ).then((response: ContractTransaction) => {
-    callback(response.hash);
-    response.wait().then(() => {
-      completeCallBack();
-      txCallback && txCallback();
-    });
-  });
-};
+  ),
+  { onResponse }
+);
 
 export const buyAndSowBeans = async (
   amount,
   buyBeanAmount,
   ethAmount,
   claimable,
-  callback,
-  completeCallBack
-) => {
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
   (claimable
     ? beanstalkContract().claimBuyAndSowBeans(
         amount,
@@ -37,46 +30,25 @@ export const buyAndSowBeans = async (
     : beanstalkContract().buyAndSowBeans(amount, buyBeanAmount, {
         value: ethAmount,
       })
-  ).then((response) => {
-    callback(response.hash);
-    response.wait().then(() => {
-      completeCallBack();
-      txCallback();
-    });
-  });
-};
+  ),
+  { onResponse }
+);
 
 export const harvest = async (
   plots,
-  callback,
-  completeCallBack
-) => {
-  beanstalkContract()
-    .harvest(plots)
-    .then((response) => {
-      callback(response.hash);
-      response.wait().then(() => {
-        completeCallBack();
-        txCallback();
-      });
-    });
-};
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract().harvest(plots),
+  { onResponse }
+);
 
 export const transferPlot = async (
   recipient,
   index,
   start,
   end,
-  callback,
-  completeCallBack
-) => {
-  beanstalkContract()
-    .transferPlot(account, recipient, index, start, end)
-    .then((response) => {
-      callback(response.hash);
-      response.wait().then(() => {
-        completeCallBack();
-        txCallback();
-      });
-    });
-};
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract().transferPlot(account, recipient, index, start, end),
+  { onResponse }
+);
