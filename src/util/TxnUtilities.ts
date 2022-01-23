@@ -40,8 +40,9 @@
       });
     });
  * ```
+ * Since this interface is consistent, we can abstract it across all calls.
  * 
- * Design
+ * Design:
  * - Each contract function (like `sowBeans` of `FieldUtilities`) returns a Promise.
  * - If the transaction is confirmed, this Promise resolves with `ethers.ContractReceipt`.
  * - If the transaction fails to confirm, the Promise rejects with `reason`.
@@ -57,7 +58,7 @@ export type TxnCallbacks = {
 }
 
 /**
- * 
+ * TODO: throw an error if the user rejects the request in Metamask/etc.
  * @param fn 
  * @param callbacks 
  */
@@ -85,6 +86,7 @@ export async function handleCallbacks(
         );
       })
       .catch((err) => {
+        // Received some sort of error.
         reject(err);
       });
   });
