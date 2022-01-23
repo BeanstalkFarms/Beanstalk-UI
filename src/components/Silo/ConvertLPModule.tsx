@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { AppState } from 'state';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
@@ -34,12 +34,7 @@ import {
   TransactionTextModule,
   CryptoAsset,
 } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-} from 'state/general/actions';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const ConvertLPModule = forwardRef((props, ref) => {
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
@@ -53,8 +48,6 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     crates: [],
     amounts: [],
   });
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
   const {
     lpDeposits,
@@ -177,7 +170,6 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   };
 
   /* Input Fields */
-
   const fromLPField = (
     <TokenInputField
       balance={lpSiloBalance}
@@ -192,7 +184,6 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toStalkField = (
     <TokenOutputField
       burn={toStalkValue.isLessThan(0)}
@@ -287,15 +278,13 @@ export const ConvertLPModule = forwardRef((props, ref) => {
         return;
       }
 
-      const transactionNumber = latestTransactionNumber + 1;
-      dispatch(
-        addTransaction({
-          transactionNumber,
-          description: `Converting deposited ${toBeanValue} beans...`,
-          state: TransactionState.PENDING,
-        })
-      );
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Converting ${displayBN(fromLPValue)} LP to Silo Beans`,
+        success: `Converted ${displayBN(fromLPValue)} LP to Silo Beans`,
+      });
 
+      // Execute
       convertDepositedLP(
         toStringBaseUnitBN(fromLPValue, UNI_V2_ETH_BEAN_LP.decimals),
         toStringBaseUnitBN(
@@ -304,13 +293,17 @@ export const ConvertLPModule = forwardRef((props, ref) => {
         ),
         convertParams.crates,
         convertParams.amounts,
-        () => {
+        (response) => {
           fromValueUpdated(new BigNumber(-1));
-        },
-        () => {
-          dispatch(completeTransaction(transactionNumber));
+          txToast.confirming(response);
         }
-      );
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 
