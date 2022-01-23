@@ -613,6 +613,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
             txToast.success(value);
           })
           .catch((err) => {
+            console.error(err);
             txToast.error(err);
           });
         }

@@ -27,6 +27,11 @@ type ToastMessages = {
   error?: string;
 }
 
+type MetamaskErrorObject = {
+  code: number;
+  message: string;
+}
+
 /**
  * A lightweight wrapper around react-hot-toast
  * to minimize repetitive Toast code when issuing transactions.
@@ -82,7 +87,32 @@ export default class TransactionToast {
     );
   }
 
-  error(error: any) {
-    toast.error(error.toString(), { id: this.toastId });
+  error(error: MetamaskErrorObject | Error | string) {
+    let msg;
+    if (typeof error === 'object') {
+      // lol @ this
+      if (error.message && error.message.substring(0, 8).toLowerCase() === 'metamask') {
+        switch ((error as MetamaskErrorObject).code) {
+          // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature. 
+          case 4001:
+            msg = 'You rejected the signature request.';
+            break;
+          // Unknown
+          default:
+            msg = 'An error occurred with Metamask';
+            break;
+        }
+      } else {
+        msg = error.message;
+      }
+    } else {
+      msg = error.toString();
+    }
+    toast.error(
+      msg, 
+      {
+        id: this.toastId,
+      }
+    );
   }
 }
