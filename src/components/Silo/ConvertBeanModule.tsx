@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { AppState } from 'state';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
@@ -27,12 +27,7 @@ import {
   TransactionTextModule,
   CryptoAsset,
 } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-} from 'state/general/actions';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const ConvertBeanModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -45,8 +40,6 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     crates: [],
     amounts: [],
   });
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
   const {
     beanSiloBalance,
@@ -254,15 +247,13 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       ) {
         return;
       }
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Converting ${displayBN(fromBeanValue)} Silo Beans to LP`,
+        success: `Converted ${displayBN(fromBeanValue)} Silo Beans to LP`,
+      });
 
-      const transactionNumber = latestTransactionNumber + 1;
-      dispatch(
-        addTransaction({
-          transactionNumber,
-          description: `Converting deposited ${fromBeanValue} beans...`,
-          state: TransactionState.PENDING,
-        })
-      );
+      // Execute
       convertDepositedBeans(
         toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
         toStringBaseUnitBN(
@@ -271,13 +262,17 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
         ),
         convertParams.crates,
         convertParams.amounts,
-        () => {
+        (response) => {
           fromValueUpdated(new BigNumber(-1));
-        },
-        () => {
-          dispatch(completeTransaction(transactionNumber));
+          txToast.confirming(response);
         }
-      );
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 
