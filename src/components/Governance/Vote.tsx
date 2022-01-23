@@ -11,27 +11,17 @@ import {
   TableRow,
   Box,
 } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import { Link } from 'react-scroll';
 import InfoIcon from '@material-ui/icons/Info';
 import CheckIcon from '@material-ui/icons/Check';
 import { percentForStalk, vote, unvote } from 'util/index';
 import { theme } from 'constants/index';
+import TransactionToast from 'components/Common/TransactionToast';
 import { Line, QuestionModule, governanceStrings } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-  updateTransactionHash,
-} from 'state/general/actions';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 export default function Vote(props) {
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
-
   const classes = makeStyles(() => ({
     inputModule: {
       backgroundColor: theme.module.background,
@@ -83,51 +73,45 @@ export default function Vote(props) {
   const buttonHandler = () => {
     const bip = props.bips[selected];
     if (props.votedBips[bip]) {
-      const transactionNumber = latestTransactionNumber + 1;
-      dispatch(
-        addTransaction({
-          transactionNumber,
-          description: `Unvoting ${bip} bip`,
-          state: TransactionState.PENDING,
-        })
-      );
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Unvoting for BIP ${bip}`,
+        success: 'Vote removed!',
+      });
+
+      // Execute
       unvote(
         bip.toString(),
-        (transactionHash) => {
-          dispatch(
-            updateTransactionHash({
-              transactionNumber,
-              transactionHash,
-            })
-          );
-        },
-        () => {
-          dispatch(completeTransaction(transactionNumber));
+        (response) => {
+          txToast.confirming(response);
         }
-      );
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     } else {
-      const transactionNumber = latestTransactionNumber + 1;
-      dispatch(
-        addTransaction({
-          transactionNumber,
-          description: `Voting ${bip} bip`,
-          state: TransactionState.PENDING,
-        })
-      );
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Voting for BIP ${bip}`,
+        success: 'Vote cast!',
+      });
+
+      // Execute
       vote(
         bip.toString(),
-        (transactionHash) => {
-          dispatch(
-            updateTransactionHash({
-              transactionNumber,
-              transactionHash,
-            })
-          );
-        },
-        () => {
-          dispatch(completeTransaction(transactionNumber));
+        (response) => {
+          txToast.confirming(response);
         }
-      );
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     }
   };
 
