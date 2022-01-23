@@ -66,7 +66,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     const newIndex = new BigNumber(event.target.value);
     const newAmount = new BigNumber(props.plots[event.target.value]);
     setIndex(newIndex);
-    setAmount(newAmount);
+    setAmount(TrimBN(newAmount, 6));
     setExpiresIn(newIndex.minus(harvestableIndex));
     setPricePerPodValue(new BigNumber(-1));
   };
@@ -137,7 +137,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       label="Amount"
       token={FarmAsset.Pods}
       handleChange={handlePodChange}
-      value={amount}
+      value={TrimBN(amount, 6)}
       maxHandler={() => {
         if (index != null) {
           setAmount(amountInSelectedPlot);
@@ -158,10 +158,10 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     />
   );
 
-  /** 
+  /**
    * If this plot is already listed, show the user a notification
    * that this action will update their prior listing.
-   * 
+   *
    * FIXME: the below search is very slow and searches all listings instead of
    * filtering down to only my listings. We should store "myListings" separately in state
    * to narrow down the number of filter operations done here. I've implemented a quick-and-
@@ -228,7 +228,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   // from BeanDepositModule and the rest of the website; however, we
   // need to redesign this system from scratch to avoid complicated prop-
   // passing and use of imperative handles. For example, instead of
-  // having the form submission be handled by BaseModule, we should 
+  // having the form submission be handled by BaseModule, we should
   // probably incorporate it directly into each form so that local state
   // can be managed appropriately. - Silo Chad
   useImperativeHandle(ref, () => ({

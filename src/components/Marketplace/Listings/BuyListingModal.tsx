@@ -9,9 +9,34 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { Listing } from 'state/marketplace/reducer';
-import { FarmAsset, TrimBN, getToAmount, getFromAmount, poolForLP, CryptoAsset, SwapMode, MinBN, displayBN, MaxBN, toBaseUnitBN, toStringBaseUnitBN, buyListing, buyBeansAndBuyListing } from 'util/index';
-import { BaseModule, ClaimTextModule, EthInputField, InputFieldPlus, SettingsFormModule, TransactionDetailsModule, TransactionTextModule } from 'components/Common';
-import { BEAN, ETH, BASE_SLIPPAGE } from 'constants/index';
+import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
+import {
+  FarmAsset,
+  TrimBN,
+  getToAmount,
+  getFromAmount,
+  poolForLP,
+  CryptoAsset,
+  SwapMode,
+  MinBN,
+  displayBN,
+  MaxBN,
+  toBaseUnitBN,
+  toStringBaseUnitBN,
+  buyListing,
+  buyBeansAndBuyListing,
+  approveBeanstalkBean,
+} from 'util/index';
+import {
+  BaseModule,
+  ClaimTextModule,
+  EthInputField,
+  InputFieldPlus,
+  SettingsFormModule,
+  TransactionDetailsModule,
+  TransactionTextModule,
+} from 'components/Common';
+import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 
 import ListingsTable from './ListingsTable';
 
@@ -67,8 +92,14 @@ export default function BuyListingModal({
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
+  const { beanstalkBeanAllowance } = useSelector<AppState, AppState['allowances']>(
+    (state) => state.allowances
+  );
 
-  //
+  const maxEthBalance = ethBalance.isGreaterThan(MIN_BALANCE)
+    ? ethBalance.minus(MIN_BALANCE)
+    : new BigNumber(0);
+
   if (currentListing == null) return null;
 
   /* Handlers */
@@ -101,13 +132,15 @@ export default function BuyListingModal({
         buyBeans,
         ethReserve,
         beanReserve
-      ), ethBalance);
+      ).dividedBy(settings.slippage), maxEthBalance);
 
-      buyBeans = getToAmount(
-        fromEth,
-        ethReserve,
-        beanReserve
-      );
+      if (fromEth.isEqualTo(maxEthBalance)) {
+        buyBeans = getToAmount(
+          fromEth.multipliedBy(settings.slippage),
+          ethReserve,
+          beanReserve
+        );
+      }
 
       setSettings({ ...settings, mode: fromEth.isGreaterThan(0) ? SwapMode.BeanEthereum : SwapMode.Bean });
       setFromEthValue(TrimBN(fromEth, ETH.decimals));
@@ -118,16 +151,25 @@ export default function BuyListingModal({
         buyBeans,
         ethReserve,
         beanReserve
-      ), ethBalance);
+      ).dividedBy(settings.slippage), maxEthBalance);
+
+      if (fromEth.isEqualTo(maxEthBalance)) {
+        buyBeans = getToAmount(
+          fromEth.multipliedBy(settings.slippage),
+          ethReserve,
+          beanReserve
+        );
+      }
 
       fromBeans = MinBN(fromBeansNumber.minus(buyBeans), beanBalance);
+
       setFromBeanValue(TrimBN(fromBeans, BEAN.decimals));
 
       setSettings({
         ...settings,
-        mode: fromBeans.isGreaterThan(0) 
-          ? SwapMode.BeanEthereum 
-          : SwapMode.Ethereum 
+        mode: fromBeans.isGreaterThan(0)
+          ? SwapMode.BeanEthereum
+          : SwapMode.Ethereum
       });
       setFromEthValue(TrimBN(fromEth, ETH.decimals));
       setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
@@ -140,7 +182,7 @@ export default function BuyListingModal({
     const fromBeans = MinBN(toBeans, newFromNumber);
 
     let buyBeans = getToAmount(
-      newFromEthNumber,
+      newFromEthNumber.multipliedBy(settings.slippage),
       ethReserve,
       beanReserve
     );
@@ -150,7 +192,7 @@ export default function BuyListingModal({
       buyBeans,
       ethReserve,
       beanReserve
-    );
+    ).dividedBy(settings.slippage);
 
     setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
     setFromEthValue(TrimBN(fromEth, ETH.decimals));
@@ -159,12 +201,6 @@ export default function BuyListingModal({
   };
   const handleForm = () => {
     const listingIndex = toStringBaseUnitBN(currentListing.objectiveIndex, BEAN.decimals);
-    console.log(`Buy Listing Modal: `, {
-      listingIndex,
-      fromEthValue,
-      buyPods,
-      currentListing,
-    })
 
     if (buyPods.isLessThanOrEqualTo(0)) return;
 
@@ -172,17 +208,17 @@ export default function BuyListingModal({
     const onComplete = () => {
       // Reset form
       fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-    }
+    };
 
     if (fromEthValue.isGreaterThan(0)) {
-      console.log(`Transaction will include ETH. Using buyBeansAndBuyListing`)
+      console.log('Transaction will include ETH. Using buyBeansAndBuyListing');
       const beans = MaxBN(
         toBaseUnitBN(fromBeanValue, BEAN.decimals),
         new BigNumber(0)
       ).toString();
       const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
       const buyBeans = toStringBaseUnitBN(
-        toBuyBeanValue.multipliedBy(settings.slippage),
+        toBuyBeanValue,
         BEAN.decimals
       );
       buyBeansAndBuyListing(
@@ -195,7 +231,7 @@ export default function BuyListingModal({
         onComplete
       );
     } else {
-      console.log(`Transaction will include just Beans. Using buyListing`)
+      console.log('Transaction will include just Beans. Using buyListing');
       buyListing(
         listingIndex,
         currentListing.listerAddress,
@@ -275,6 +311,11 @@ export default function BuyListingModal({
     (fromBeanValue?.gt(0) || fromEthValue?.gt(0))
     && buyPods.gt(0)
   );
+  const allowance =
+    (settings.mode === SwapMode.Bean ||
+      settings.mode === SwapMode.BeanEthereum)
+      ? beanstalkBeanAllowance
+      : new BigNumber(1);
 
   return (
     <Modal
@@ -294,6 +335,12 @@ export default function BuyListingModal({
           textAlign: 'center',
           transform: 'translate(-50%, -50%)',
         }}
+        resetForm={() => {
+          setSettings({ ...settings, mode: SwapMode.Ethereum });
+        }}
+        allowance={allowance}
+        setAllowance={updateBeanstalkBeanAllowance}
+        handleApprove={approveBeanstalkBean}
         section={0}
         sectionTitles={['Buy Pods']}
         size="small"

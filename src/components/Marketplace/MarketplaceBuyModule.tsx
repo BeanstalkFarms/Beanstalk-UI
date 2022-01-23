@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-
+import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import {
   approveBeanstalkBean,
   SwapMode,
@@ -17,29 +17,42 @@ import Listings from './Listings/Listings';
 
 //
 export default function MarketplaceBuyModule() {
+  // Global state
+  const {
+    beanPrice,
+    beanReserve,
+    ethReserve,
+    usdcPrice,
+  } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+  const { totalLP } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+  const { beanstalkBeanAllowance } = useSelector<
+    AppState,
+    AppState['allowances']
+  >((state) => state.allowances);
+
+  /** */
   const [section, setSection] = useState(0);
+  /** */
   const [isFormDisabled, setIsFormDisabled] = useState(true);
+  /** */
   const [settings, setSettings] = useState({
     claim: false,
     mode: SwapMode.Ethereum,
     slippage: new BigNumber(BASE_SLIPPAGE),
   });
 
-  const { beanPrice, beanReserve, ethReserve, usdcPrice } = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
-
-  const { totalLP } = useSelector<AppState, AppState['totalBalance']>(
-    (state) => state.totalBalance
-  );
-
-  // Section setup
+  // Sections
   const sectionTitles = ['Buy Now', 'Create Offer'];
   const sectionTitlesDescription = [
     marketStrings.buy,
     marketStrings.createOffer,
   ];
 
+  // Handlers
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
       setSection(newSection);
@@ -96,18 +109,34 @@ export default function MarketplaceBuyModule() {
     />,
   ];
 
+  const allowance =
+    (settings.mode === SwapMode.Bean ||
+      settings.mode === SwapMode.BeanEthereum) &&
+    section === 1
+      ? beanstalkBeanAllowance
+      : new BigNumber(1);
+
   return (
     <>
       <BaseModule
+        // Styles
         marginTop="20px"
+        // Handlers
         handleApprove={approveBeanstalkBean}
         handleForm={handleForm}
+        resetForm={() => {
+          setSettings({ ...settings, mode: SwapMode.Ethereum });
+        }}
+        handleTabChange={handleTabChange}
+        // Form setup
+        allowance={allowance}
+        setAllowance={updateBeanstalkBeanAllowance}
         isDisabled={isFormDisabled}
+        showButton={section === 1}
+        // Sections
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
-        showButton={section === 1}
-        handleTabChange={handleTabChange}
       >
         {sections[section]}
       </BaseModule>
