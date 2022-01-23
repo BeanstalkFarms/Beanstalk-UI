@@ -31,6 +31,7 @@ import {
   TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const BeanWithdrawModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -250,58 +251,51 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
       ) {
         return;
       }
-
       if (props.settings.claim) {
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: `Claim and withdrawing ${withdrawParams.amounts} beans...`,
-            state: TransactionState.PENDING,
-          })
-        );
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Claiming + withdrawing ${withdrawParams.amounts} Beans`,
+          success: `Claim + withdrawl complete!`,
+        });
+
+        // Execute
         claimAndWithdrawBeans(
           withdrawParams.crates,
           withdrawParams.amounts,
           props.claimable,
-          (transactionHash) => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1));
-            dispatch(
-              updateTransactionHash({
-                transactionNumber,
-                transactionHash,
-              })
-            );
+            txToast.confirming(response);
           },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
-          }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: `Withdrawing ${withdrawParams.amounts} beans...`,
-            state: TransactionState.PENDING,
-          })
-        );
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Withdrawing ${withdrawParams.amounts} Beans`,
+          success: `Withdrawl complete!`,
+        });
+
+        // Execute
         withdrawBeans(
           withdrawParams.crates,
           withdrawParams.amounts,
-          (transactionHash) => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1));
-            dispatch(
-              updateTransactionHash({
-                transactionNumber,
-                transactionHash,
-              })
-            );
+            txToast.confirming(response);
           },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
-          }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     },
   }));
