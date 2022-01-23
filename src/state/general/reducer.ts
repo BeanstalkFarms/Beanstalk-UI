@@ -73,7 +73,6 @@ export default createReducer(initialState, (builder) =>
       state.width = payload;
     })
     .addCase(addTransaction, (state, { payload }) => {
-      console.log(`addTransaction`, payload);
       state.transactions = [...state.transactions, payload];
     })
     .addCase(updateTransactionHash, (state, { payload }) => {
@@ -95,7 +94,7 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(completeTransaction, (state, { payload }) => {
       const index = state.transactions.findIndex(
-        (trans) => trans.transactionNumber === payload
+        (txn) => txn.transactionNumber === payload
       );
       if (index >= 0) {
         const newTransaction = {

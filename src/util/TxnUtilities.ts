@@ -49,7 +49,7 @@
  * 
  */
 
-import { ContractReceipt, ContractTransaction } from "ethers";
+import { ContractReceipt, ContractTransaction } from 'ethers';
 import { txCallback } from './index';
 
 export type TxnCallbacks = {
@@ -66,22 +66,26 @@ export async function handleCallbacks(
   callbacks: TxnCallbacks
 ) : Promise<ContractReceipt> {
   return new Promise((resolve, reject) => {
-    fn.then((response: ContractTransaction) => {
-      // Received a response. Our transaction is now pending.
-      // ContractTransaction contains useful info about the
-      // status of the transaction.
-      callbacks.onResponse(response);
-      response.wait().then(
-        // onfulfilled
-        (value: ContractReceipt) => {
-          resolve(value);
-          txCallback && txCallback();
-        },
-        // onrejected
-        (reason: any) => {
-          reject(reason);
-        }
-      )
-    });
+    fn
+      .then((response: ContractTransaction) => {
+        // Received a response. Our transaction is now pending.
+        // ContractTransaction contains useful info about the
+        // status of the transaction.
+        callbacks.onResponse(response);
+        response.wait().then(
+          // onfulfilled
+          (value: ContractReceipt) => {
+            resolve(value);
+            txCallback && txCallback();
+          },
+          // onrejected
+          (reason: any) => {
+            reject(reason);
+          }
+        );
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 }

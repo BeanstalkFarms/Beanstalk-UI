@@ -24,21 +24,17 @@ export enum SwapMode {
 export const buyBeans = async (
   amountIn: string,
   amountOutMin: string,
-  onResponse: TxnCallbacks['onResponse'],
-) => {
-  return handleCallbacks(
-    uniswapRouterContract().swapExactETHForTokens(
-      amountOutMin,
-      [WETH.addr, BEAN.addr],
-      account,
-      createDeadline(),
-      { value: amountIn }
-    ),
-    {
-      onResponse
-    }
-  );
-};
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  uniswapRouterContract().swapExactETHForTokens(
+    amountOutMin,
+    [WETH.addr, BEAN.addr],
+    account,
+    createDeadline(),
+    { value: amountIn }
+  ),
+  { onResponse }
+);
 
 /**
  * 

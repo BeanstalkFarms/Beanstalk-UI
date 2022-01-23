@@ -55,7 +55,7 @@ module.exports = {
     'spaced-comment': 'warn',
     // Space efficiency
     'arrow-body-style': 'warn',
-    'no-trailing-spaces': 'warn',
+    'no-trailing-spaces': 0,
     '@typescript-eslint/no-unused-vars': ['warn'],
     // Other (to categorize)
     'max-classes-per-file': 0,

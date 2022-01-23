@@ -11,9 +11,9 @@ export interface Transaction {
   /** */
   description: string;
   /** */
-  transactionHash: string;
-  /** */
   state: TransactionState;
+  /** */
+  transactionHash?: string;
 }
 
 export const setInitialized = createAction<Boolean>('general/setInitialized');
@@ -44,11 +44,14 @@ export const addTransaction = createAction<Transaction>(
   'general/addTransaction'
 );
 
-export const completeTransaction = createAction<Number>(
+export const completeTransaction = createAction<Transaction['transactionNumber']>(
   'general/completeTransaction'
 );
 
-export const updateTransactionHash = createAction<any>(
+export const updateTransactionHash = createAction<{
+  transactionNumber: Transaction['transactionNumber'],
+  transactionHash: Transaction['transactionHash'],
+}>(
   'general/updateTransactionHash'
 );
 

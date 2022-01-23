@@ -3,26 +3,33 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { useTransactions } from 'state/general/hooks';
 import { TransactionState, Transaction } from 'state/general/actions';
+import { chainId } from 'util/index';
 
 const useStyles = makeStyles(() =>
   createStyles({
     alert: {
-      alignItems: 'center',
       borderRadius: 10,
+      //
     },
+    inner: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
   })
 );
 
-const Alerts = () => {
+const PendingTransactions = () => {
   const classes = useStyles();
   const transactions = useTransactions();
 
   return (
     <>
-      {transactions &&
-        transactions.length > 0 &&
+      {transactions && transactions.length > 0 &&
         transactions.map((transaction: Transaction) => (
           <Snackbar
             key={transaction.transactionNumber}
@@ -33,14 +40,25 @@ const Alerts = () => {
             }}
           >
             <Alert
-              severity="warning"
+              severity="success"
+              icon={false}
               variant="filled"
-              style={{ minHeight: 80 }}
               classes={{ root: classes.alert }}
             >
-              <Typography component="span">
-                {transaction.description}
-              </Typography>
+              <div className={classes.inner}>
+                <CircularProgress
+                  size={20}
+                  thickness={6}
+                  style={{ marginRight: 8 }}
+                  color={'#ffffff'}
+                />
+                <Typography component="span">
+                  {transaction.description}
+                </Typography>
+              </div>
+              {transaction.transactionHash ? (
+                <a href={`https://${chainId === 3 ? 'ropsten.' : ''}etherscan.io/tx/${transaction.transactionHash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
+              ) : null}
             </Alert>
           </Snackbar>
         ))}
@@ -48,4 +66,4 @@ const Alerts = () => {
   );
 };
 
-export default Alerts;
+export default PendingTransactions;

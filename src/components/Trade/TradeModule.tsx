@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import BigNumber from 'bignumber.js';
 import { useSelector, useDispatch } from 'react-redux';
+
 import { AppState } from 'state';
 import { updateUniswapBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
@@ -11,7 +13,6 @@ import {
   toStringBaseUnitBN,
   transferBeans,
 } from 'util/index';
-import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
 import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
@@ -19,6 +20,9 @@ import {
   TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
+
+import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
+import Toast from 'components/Common/Toast';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
 
@@ -42,7 +46,6 @@ export default function TradeModule() {
   const sectionTitlesDescription = [tradeStrings.swap, tradeStrings.send];
 
   /* Swap Sub-Module state */
-
   const [orderIndex, setOrderIndex] = useState(true);
   const [settings, setSettings] = useState({
     slippage: new BigNumber(BASE_SLIPPAGE),
@@ -56,14 +59,13 @@ export default function TradeModule() {
   const conversionFactor = orderIndex ? ethToBean : beanToEth;
 
   /* Send Sub-Module state */
-
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
   const dispatch = useDispatch();
   const latestTransactionNumber = useLatestTransactionNumber();
 
-  function handleSwapCallback(transactionNumber = null) {
-    if (!transactionNumber) {
+  function handleSwapCallback(transactionNumber? : number) {
+    if (transactionNumber) {
       dispatch(completeTransaction(transactionNumber));
     }
     setFromValue(new BigNumber(-1));
@@ -82,28 +84,37 @@ export default function TradeModule() {
 
       if (toValue.isGreaterThan(0)) {
         if (fromToken === CryptoAsset.Ethereum) {
-          const transactionNumber = latestTransactionNumber + 1;
-
-          // 1. Prep UI.
-          dispatch(
-            addTransaction({
-              transactionNumber,
-              description: `Buying ${fromValue} beans`,
-              state: TransactionState.PENDING,
-            })
+          const toastId = toast.loading(
+            <Toast
+              desc={`Buying ${fromValue} Beans...`}
+            />
           );
 
-          // 2. Call contract.
           buyBeans(
             toStringBaseUnitBN(fromValue, ETH.decimals),
             toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
             (response) => {
-              console.log(`buyBeans: onResponse`, response)
-            },
-          ).then((value) => {
-            // 3. Transaction successful.
-            console.log(`buyBeans: completed`, value)
-            handleSwapCallback(transactionNumber);
+              toast.loading(
+                <Toast
+                  desc={`Buying ${fromValue} Beans`}
+                  hash={response.hash}
+                />, 
+                { id: toastId }
+              );
+            }
+          )
+          .then((value) => {
+            handleSwapCallback();
+            toast.success(
+              <Toast
+                desc={`Bought ${fromValue} Beans!`}
+                hash={value.transactionHash}
+              />, 
+              { id: toastId, duration: 5000 }
+            );
+          })
+          .catch((err) => {
+            toast.error(err, { id: toastId });
           });
         } else {
           const transactionNumber = latestTransactionNumber + 1;

@@ -1,4 +1,4 @@
-import { ContractTransaction, ethers } from 'ethers';
+import { ContractTransaction } from 'ethers';
 import { beanstalkContract, txCallback, account } from './index';
 
 export const sowBeans = async (
