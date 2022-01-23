@@ -1,7 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { Box } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-import { useDispatch } from 'react-redux';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { BEAN, ETH, SLIPPAGE_THRESHOLD } from 'constants/index';
 import {
@@ -31,21 +30,13 @@ import {
   TransactionDetailsModule,
   TransactionTextModule,
 } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-  updateTransactionHash,
-} from 'state/general/actions';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const SowModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
   const [toPodValue, setToPodValue] = useState(new BigNumber(0));
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
   const claimableFromVal = props.settings.claim
     ? props.beanClaimableBalance
@@ -229,6 +220,7 @@ export const SowModule = forwardRef((props, ref) => {
 
       const claimable = props.settings.claim ? props.claimable : null;
       if (fromEthValue.isGreaterThan(0)) {
+        // Contract Inputs
         const beans = MaxBN(
           toBaseUnitBN(fromBeanValue, BEAN.decimals),
           new BigNumber(0)
@@ -238,50 +230,52 @@ export const SowModule = forwardRef((props, ref) => {
           toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: `Sowing ${toBuyBeanValue} beans`,
-            state: TransactionState.PENDING,
-          })
-        );
+
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Buying and sowing ${toBuyBeanValue} Beans`,
+          success: `Sowed ${toBuyBeanValue} Beans`,
+        });
+
+        // Execute
         buyAndSowBeans(
           beans,
           buyBeans,
           eth,
           claimable,
-          (transactionHash) => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-            dispatch(
-              updateTransactionHash({
-                transactionNumber,
-                transactionHash,
-              })
-            );
-          },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
-        const transactionNumber = latestTransactionNumber + 1;
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Sowing ${fromBeanValue} Beans`,
+          success: `Sowed ${fromBeanValue} Beans`,
+        });
+
+        // Execute
         sowBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimable,
-          (transactionHash) => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-            dispatch(
-              updateTransactionHash({
-                transactionNumber,
-                transactionHash,
-              })
-            );
-          },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     },
   }));
