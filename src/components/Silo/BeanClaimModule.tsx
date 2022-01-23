@@ -19,6 +19,7 @@ import {
   TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const BeanClaimModule = forwardRef((props, ref) => {
   props.setIsFormDisabled(props.maxFromBeanVal.isLessThanOrEqualTo(0));
@@ -74,29 +75,23 @@ export const BeanClaimModule = forwardRef((props, ref) => {
     handleForm() {
       if (props.maxFromBeanVal.isLessThanOrEqualTo(0)) return;
 
-      const transactionNumber = latestTransactionNumber + 1;
-      dispatch(
-        addTransaction({
-          transactionNumber,
-          description: 'Claiming Beans...',
-          state: TransactionState.PENDING,
-        })
-      );
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Claiming Beans`,
+        success: `Claimed Beans`,
+      });
 
+      // Execute
       claimBeans(
         Object.keys(props.crates),
-        (transactionHash) => {
-          dispatch(
-            updateTransactionHash({
-              transactionNumber,
-              transactionHash,
-            })
-          );
-        },
-        () => {
-          dispatch(completeTransaction(transactionNumber));
-        }
-      );
+        (response) => txToast.confirming(response)
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 
