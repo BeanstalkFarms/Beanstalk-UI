@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { BEAN, WETH, zeroBN } from 'constants/index';
-import { account, MinBN, txCallback, uniswapRouterContract } from './index';
+import { account, MinBN, uniswapRouterContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 const DEADLINE_FROM_NOW = 60 * 15;
@@ -42,22 +42,20 @@ export const buyBeans = async (
  * @param amountOutMin 
  * @param callback 
  */
-export const sellBeans = async (amountIn, amountOutMin, callback) => {
-  await uniswapRouterContract()
-    .swapExactTokensForETH(
-      amountIn,
-      amountOutMin,
-      [BEAN.addr, WETH.addr],
-      account,
-      createDeadline()
-    )
-    .then((response) => {
-      callback(response.hash);
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
-};
+export const sellBeans = async (
+  amountIn: string,
+  amountOutMin: string,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  uniswapRouterContract().swapExactTokensForETH(
+    amountIn,
+    amountOutMin,
+    [BEAN.addr, WETH.addr],
+    account,
+    createDeadline()
+  ),
+  { onResponse }
+);
 
 export const tokenForLP = (amount, reserve, totalLP) =>
   amount.multipliedBy(reserve).dividedBy(totalLP);

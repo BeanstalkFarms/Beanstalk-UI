@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import toast from 'react-hot-toast';
 import BigNumber from 'bignumber.js';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -22,7 +21,7 @@ import {
 } from 'state/general/actions';
 
 import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
-import Toast from 'components/Common/Toast';
+import TransactionToast from 'components/Common/TransactionToast';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
 
@@ -84,63 +83,41 @@ export default function TradeModule() {
 
       if (toValue.isGreaterThan(0)) {
         if (fromToken === CryptoAsset.Ethereum) {
-          const toastId = toast.loading(
-            <Toast
-              desc={`Buying ${fromValue} Beans...`}
-            />
-          );
+          const txToast = new TransactionToast({
+            loading: `Buying ${fromValue} Beans`,
+            success: `Bought ${fromValue} Beans`,
+          });
 
           buyBeans(
             toStringBaseUnitBN(fromValue, ETH.decimals),
             toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
-            (response) => {
-              toast.loading(
-                <Toast
-                  desc={`Buying ${fromValue} Beans`}
-                  hash={response.hash}
-                />, 
-                { id: toastId }
-              );
-            }
+            (response) => txToast.confirming(response)
           )
           .then((value) => {
             handleSwapCallback();
-            toast.success(
-              <Toast
-                desc={`Bought ${fromValue} Beans!`}
-                hash={value.transactionHash}
-              />, 
-              { id: toastId, duration: 5000 }
-            );
+            txToast.success(value);
           })
           .catch((err) => {
-            toast.error(err, { id: toastId });
+            txToast.error(err);
           });
         } else {
-          const transactionNumber = latestTransactionNumber + 1;
-          dispatch(
-            addTransaction({
-              transactionNumber,
-              description: `Selling ${fromValue} beans`,
-              state: TransactionState.PENDING,
-            })
-          );
+          const txToast = new TransactionToast({
+            loading: `Selling ${fromValue} Beans`,
+            success: `Sold ${fromValue} Beans`,
+          });
 
           sellBeans(
             toStringBaseUnitBN(fromValue, BEAN.decimals),
             toStringBaseUnitBN(minimumToAmount, ETH.decimals),
-            (transactionHash) => {
-              dispatch(
-                updateTransactionHash({
-                  transactionNumber,
-                  transactionHash,
-                })
-              );
-            },
-            () => {
-              handleSwapCallback(transactionNumber);
-            }
-          );
+            (response) => txToast.confirming(response)
+          )
+          .then((value) => {
+            handleSwapCallback();
+            txToast.success(value);
+          })
+          .catch((err) => {
+            txToast.error(err);
+          });
         }
       }
     } else if (section === 1) {
