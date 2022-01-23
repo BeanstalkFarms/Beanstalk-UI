@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
 import { updateUniswapBeanAllowance } from 'state/allowances/actions';
@@ -12,13 +12,6 @@ import {
   toStringBaseUnitBN,
   transferBeans,
 } from 'util/index';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-  updateTransactionHash,
-} from 'state/general/actions';
 
 import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
@@ -60,13 +53,8 @@ export default function TradeModule() {
   /* Send Sub-Module state */
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
-  function handleSwapCallback(transactionNumber? : number) {
-    if (transactionNumber) {
-      dispatch(completeTransaction(transactionNumber));
-    }
+  function handleSwapCallback() {
     setFromValue(new BigNumber(-1));
     setToValue(new BigNumber(-1));
   }
@@ -130,7 +118,7 @@ export default function TradeModule() {
         transferBeans(
           toAddress,
           toStringBaseUnitBN(fromValue, BEAN.decimals),
-          (response) => txToast.confirming(response),
+          (response) => txToast.confirming(response)
         )
         .then((value) => {
           handleSwapCallback();

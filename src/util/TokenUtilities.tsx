@@ -18,7 +18,7 @@ import TransitIcon from 'img/transit-icon.svg';
 import UniswapIcon from 'img/uniswap-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
-import { account, txCallback, tokenContract } from './index';
+import { account, tokenContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 const MAX_UINT256 =

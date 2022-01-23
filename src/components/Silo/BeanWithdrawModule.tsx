@@ -2,7 +2,6 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
-import { useDispatch } from 'react-redux';
 import { BEAN, BEAN_TO_SEEDS, SEEDS, STALK } from 'constants/index';
 import {
   claimAndWithdrawBeans,
@@ -24,13 +23,6 @@ import {
   TransactionDetailsModule,
   TransitAsset,
 } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-  updateTransactionHash,
-} from 'state/general/actions';
 import TransactionToast from 'components/Common/TransactionToast';
 
 export const BeanWithdrawModule = forwardRef((props, ref) => {
@@ -41,8 +33,6 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
     crates: [],
     amounts: [],
   });
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
   /* function maxBeans(stalk: BugNumber) {
     var stalkRemoved = new BigNumber(0)
@@ -255,7 +245,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
         // Toast
         const txToast = new TransactionToast({
           loading: `Claiming + withdrawing ${withdrawParams.amounts} Beans`,
-          success: `Claim + withdrawl complete!`,
+          success: `Claim + withdrawl of ${withdrawParams.amounts} Beans complete!`,
         });
 
         // Execute
@@ -266,7 +256,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           (response) => {
             fromValueUpdated(new BigNumber(-1));
             txToast.confirming(response);
-          },
+          }
         )
         .then((value) => {
           txToast.success(value);
@@ -278,7 +268,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
         // Toast
         const txToast = new TransactionToast({
           loading: `Withdrawing ${withdrawParams.amounts} Beans`,
-          success: `Withdrawl complete!`,
+          success: `Withdrawl of ${withdrawParams.amounts} Beans complete!`,
         });
 
         // Execute
@@ -288,7 +278,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           (response) => {
             fromValueUpdated(new BigNumber(-1));
             txToast.confirming(response);
-          },
+          }
         )
         .then((value) => {
           txToast.success(value);

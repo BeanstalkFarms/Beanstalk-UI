@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { account, beanstalkContract, txCallback } from './index';
+import { account, beanstalkContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 export const depositBeans = async (
@@ -154,14 +154,14 @@ export const claim = async (
     ? beanstalkContract().claim([...claimable, toWallet])
     : beanstalkContract().claimAndUnwrapBeans([...claimable, toWallet], wrappedBeans)),
   { onResponse }
-)
+);
 
 export const updateSilo = async (
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   beanstalkContract().updateSilo(account),
   { onResponse }
-)
+);
 
 export const buyAndDepositBeans = async (
   amount,

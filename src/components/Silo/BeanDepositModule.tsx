@@ -1,6 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { useDispatch } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import {
@@ -36,13 +35,6 @@ import {
   TransactionTextModule,
   TransactionDetailsModule,
 } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-  updateTransactionHash,
-} from 'state/general/actions';
 import TransactionToast from 'components/Common/TransactionToast';
 
 export const BeanDepositModule = forwardRef((props, ref) => {
@@ -51,8 +43,6 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
   function fromValueUpdated(newFromNumber, newFromEthNumber) {
     const buyBeans = getToAmount(
@@ -270,7 +260,7 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           (response) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
             txToast.confirming(response);
-          },
+          }
         )
         .then((value) => {
           txToast.success(value);
@@ -291,7 +281,7 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           claimable,
           (response) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-            txToast.confirming(response)
+            txToast.confirming(response);
           }
         )
         .then((value) => {
