@@ -2,7 +2,6 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
-import { useDispatch } from 'react-redux';
 import { BEAN } from 'constants/index';
 import { claimBeans, displayBN, TrimBN } from 'util/index';
 import {
@@ -12,21 +11,12 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
 } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-  updateTransactionHash,
-} from 'state/general/actions';
 import TransactionToast from 'components/Common/TransactionToast';
 
 export const BeanClaimModule = forwardRef((props, ref) => {
   props.setIsFormDisabled(props.maxFromBeanVal.isLessThanOrEqualTo(0));
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
+  
   /* Input Fields */
-
   const fromBeanField = (
     <TokenInputField
       balance={props.maxFromBeanVal}
@@ -36,7 +26,6 @@ export const BeanClaimModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toBeanField = (
     <TokenOutputField
       mint
@@ -46,7 +35,6 @@ export const BeanClaimModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-
   const details = [];
   details.push(
     `Claim ${displayBN(
@@ -77,8 +65,8 @@ export const BeanClaimModule = forwardRef((props, ref) => {
 
       // Toast
       const txToast = new TransactionToast({
-        loading: `Claiming Beans`,
-        success: `Claimed Beans`,
+        loading: `Claiming ${props.maxFromBeanVal.toFixed(3)} Beans`,
+        success: `Claimed  ${props.maxFromBeanVal.toFixed(3)} Beans`,
       });
 
       // Execute
