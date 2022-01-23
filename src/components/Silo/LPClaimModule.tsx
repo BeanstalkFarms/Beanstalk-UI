@@ -1,7 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { BEAN, UNI_V2_ETH_BEAN_LP } from 'constants/index';
 import {
@@ -19,22 +18,13 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
 } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-  updateTransactionHash,
-} from 'state/general/actions';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const LPClaimModule = forwardRef((props, ref) => {
   const [settings, setSettings] = useState({ removeLP: true });
   props.setIsFormDisabled(props.maxFromLPVal.isLessThanOrEqualTo(0));
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
   /* Input Fields */
-
   const fromLPField = (
     <TokenInputField
       balance={props.maxFromLPVal}
@@ -46,7 +36,6 @@ export const LPClaimModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toLPField = (
     <TokenOutputField mint token={CryptoAsset.LP} value={props.maxFromLPVal} />
   );
@@ -137,53 +126,47 @@ export const LPClaimModule = forwardRef((props, ref) => {
       if (props.maxFromLPVal.isLessThanOrEqualTo(0)) return;
 
       if (settings.removeLP) {
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: 'Remove and claiming LP beans...',
-            state: TransactionState.PENDING,
-          })
-        );
+        // Toast
+        const txToast = new TransactionToast({
+          loading: 'Removing and claiming LP',
+          success: 'Removed and claimed LP',
+        });
+
+        // Execute
         removeAndClaimLP(
           Object.keys(props.crates),
           '0',
           '0',
-          (transactionHash) => {
-            dispatch(
-              updateTransactionHash({
-                transactionNumber,
-                transactionHash,
-              })
-            );
-          },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
+          (response) => {
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: 'Claiming LP beans...',
-            state: TransactionState.PENDING,
-          })
-        );
+        // Toast
+        const txToast = new TransactionToast({
+          loading: 'Claiming LP',
+          success: 'Claimed LP',
+        });
+
+        // Execute
         claimLP(
           Object.keys(props.crates),
-          (transactionHash) => {
-            dispatch(
-              updateTransactionHash({
-                transactionNumber,
-                transactionHash,
-              })
-            );
-          },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
+          (response) => {
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     },
   }));
