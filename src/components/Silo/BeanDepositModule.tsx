@@ -43,6 +43,7 @@ import {
   TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const BeanDepositModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -240,9 +241,10 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (toStalkValue.isLessThanOrEqualTo(0)) return;
-
       const claimable = props.settings.claim ? props.claimable : null;
+      
       if (fromEthValue.isGreaterThan(0)) {
+        // Contract Inputs
         const beans = MaxBN(
           toBaseUnitBN(fromBeanValue, BEAN.decimals),
           new BigNumber(0)
@@ -252,57 +254,52 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: `Depositing ${toBuyBeanValue} beans...`,
-            state: TransactionState.PENDING,
-          })
-        );
+
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Depositing ${toBuyBeanValue} Beans`,
+          success: `Deposited ${toBuyBeanValue} Beans`,
+        });
+
+        // Execute
         buyAndDepositBeans(
           beans,
           buyBeans,
           eth,
           claimable,
-          (transactionHash) => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-            dispatch(
-              updateTransactionHash({
-                transactionNumber,
-                transactionHash,
-              })
-            );
+            txToast.confirming(response);
           },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
-          }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: `Depositing ${fromBeanValue} beans...`,
-            state: TransactionState.PENDING,
-          })
-        );
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Depositing ${fromBeanValue} Beans`,
+          success: `Deposited ${fromBeanValue} Beans`,
+        });
+
+        // Execute
         depositBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimable,
-          (transactionHash) => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-            dispatch(
-              updateTransactionHash({
-                transactionNumber,
-                transactionHash,
-              })
-            );
-          },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
+            txToast.confirming(response)
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     },
   }));
