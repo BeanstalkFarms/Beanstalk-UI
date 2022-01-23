@@ -2,7 +2,6 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { useDispatch } from 'react-redux';
 import { BEAN } from 'constants/index';
 import { displayBN, harvest, toStringBaseUnitBN, TrimBN } from 'util/index';
 import {
@@ -12,14 +11,8 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
 } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-  updateTransactionHash,
-} from 'state/general/actions';
 import { UserBalanceState } from 'state/userBalance/reducer';
+import TransactionToast from 'components/Common/TransactionToast';
 
 type HarvestModuleProps = {
   setIsFormDisabled: Function;
@@ -29,8 +22,6 @@ type HarvestModuleProps = {
 
 export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
   props.setIsFormDisabled(props.harvestablePodBalance.isLessThanOrEqualTo(0));
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
   /* Input Fields */
   const fromPodField = (
@@ -76,31 +67,29 @@ export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
-      const transactionNumber = latestTransactionNumber + 1;
-      dispatch(
-        addTransaction({
-          transactionNumber,
-          description: 'Doing harvest',
-          state: TransactionState.PENDING,
-        })
-      );
+
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Harvesting ${displayBN(props.harvestablePodBalance)} Pods`,
+        success: `Harvested ${displayBN(props.harvestablePodBalance)} Pods`,
+      });
+
+      // Execute
       harvest(
         // plots
         Object.keys(props.harvestablePlots).map((key) =>
           toStringBaseUnitBN(new BigNumber(key), BEAN.decimals)
         ),
-        (transactionHash) => {
-          dispatch(
-            updateTransactionHash({
-              transactionNumber,
-              transactionHash,
-            })
-          );
-        },
-        () => {
-          dispatch(completeTransaction(transactionNumber));
+        (response) => {
+          txToast.confirming(response);
         }
-      );
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 
