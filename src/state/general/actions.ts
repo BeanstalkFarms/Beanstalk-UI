@@ -40,20 +40,21 @@ export const setHasActiveFundraiser = createAction<Boolean>(
 
 export const setWidth = createAction<Number>('general/setWidth');
 
-export const addTransaction = createAction<Transaction>(
-  'general/addTransaction'
-);
-
-export const completeTransaction = createAction<Transaction['transactionNumber']>(
-  'general/completeTransaction'
-);
-
-export const updateTransactionHash = createAction<{
-  transactionNumber: Transaction['transactionNumber'],
-  transactionHash: Transaction['transactionHash'],
-}>(
-  'general/updateTransactionHash'
-);
+// TEMPORARILY DEPRECATED - 1/23/2022
+// To be replaced or upgraded after form overhaul, Q1 2022.
+// ---
+// export const addTransaction = createAction<Transaction>(
+//   'general/addTransaction'
+// );
+// export const completeTransaction = createAction<Transaction['transactionNumber']>(
+//   'general/completeTransaction'
+// );
+// export const updateTransactionHash = createAction<{
+//   transactionNumber: Transaction['transactionNumber'],
+//   transactionHash: Transaction['transactionHash'],
+// }>(
+//   'general/updateTransactionHash'
+// );
 
 export const setDrawerOpen = createAction<boolean>(
   'general/setDrawerOpen'
