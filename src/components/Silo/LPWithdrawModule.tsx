@@ -1,6 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { useDispatch } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import {
@@ -29,12 +28,7 @@ import {
   TransitAsset,
   TransactionDetailsModule,
 } from 'components/Common';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-} from 'state/general/actions';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const LPWithdrawModule = forwardRef((props, ref) => {
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
@@ -44,8 +38,6 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     crates: [],
     amounts: [],
   });
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
   /* function maxLPs(stalk: BugNumber) {
     var stalkRemoved = new BigNumber(0)
@@ -260,46 +252,50 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       }
 
       if (props.settings.claim) {
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: `Claim and withdrawing ${withdrawParams.amounts} LP beans...`,
-            state: TransactionState.PENDING,
-          })
-        );
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Claiming and withdrawing ${withdrawParams.amounts} LP`,
+          success: `Claimed and withdrew ${withdrawParams.amounts} LP`,
+        });
 
+        // Execute
         claimAndWithdrawLP(
           withdrawParams.crates,
           withdrawParams.amounts,
           props.claimable,
-          () => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1));
-          },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
-        const transactionNumber = latestTransactionNumber + 1;
-        dispatch(
-          addTransaction({
-            transactionNumber,
-            description: `Withdrawing ${withdrawParams.amounts} LP beans...`,
-            state: TransactionState.PENDING,
-          })
-        );
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Withdrawing ${withdrawParams.amounts} LP`,
+          success: `Withdrew ${withdrawParams.amounts} LP`,
+        });
 
+        // Execute
         withdrawLP(
           withdrawParams.crates,
           withdrawParams.amounts,
-          () => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1));
-          },
-          () => {
-            dispatch(completeTransaction(transactionNumber));
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     },
   }));
