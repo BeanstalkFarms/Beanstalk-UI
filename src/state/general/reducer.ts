@@ -12,7 +12,7 @@ import {
   addTransaction,
   completeTransaction,
   Transaction,
-  State,
+  TransactionState,
   updateTransactionHash,
   setDrawerOpen,
 } from './actions';
@@ -73,6 +73,7 @@ export default createReducer(initialState, (builder) =>
       state.width = payload;
     })
     .addCase(addTransaction, (state, { payload }) => {
+      console.log(`addTransaction`, payload);
       state.transactions = [...state.transactions, payload];
     })
     .addCase(updateTransactionHash, (state, { payload }) => {
@@ -99,7 +100,7 @@ export default createReducer(initialState, (builder) =>
       if (index >= 0) {
         const newTransaction = {
           ...state.transactions[index],
-          state: State.DONE,
+          state: TransactionState.DONE,
         };
 
         state.transactions = [

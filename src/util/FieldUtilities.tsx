@@ -1,19 +1,20 @@
+import { ContractTransaction, ethers } from 'ethers';
 import { beanstalkContract, txCallback, account } from './index';
 
 export const sowBeans = async (
-  amount,
-  claimable,
-  callback,
-  completeCallBack
+  amount: string,
+  claimable: string,
+  callback: Function,
+  completeCallBack: Function
 ) => {
   (claimable
     ? beanstalkContract().claimAndSowBeans(amount, claimable)
     : beanstalkContract().sowBeans(amount)
-  ).then((response) => {
+  ).then((response: ContractTransaction) => {
     callback(response.hash);
     response.wait().then(() => {
       completeCallBack();
-      txCallback();
+      txCallback && txCallback();
     });
   });
 };
@@ -45,7 +46,11 @@ export const buyAndSowBeans = async (
   });
 };
 
-export const harvest = async (plots, callback, completeCallBack) => {
+export const harvest = async (
+  plots,
+  callback,
+  completeCallBack
+) => {
   beanstalkContract()
     .harvest(plots)
     .then((response) => {

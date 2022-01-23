@@ -28,7 +28,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 
@@ -257,7 +257,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: `Claim and withdrawing ${withdrawParams.amounts} beans...`,
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
         claimAndWithdrawBeans(
@@ -283,7 +283,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: `Withdrawing ${withdrawParams.amounts} beans...`,
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
         withdrawBeans(

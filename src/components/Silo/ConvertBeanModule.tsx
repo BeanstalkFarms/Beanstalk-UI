@@ -31,7 +31,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
 } from 'state/general/actions';
 
 export const ConvertBeanModule = forwardRef((props, ref) => {
@@ -260,7 +260,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
         addTransaction({
           transactionNumber,
           description: `Converting deposited ${fromBeanValue} beans...`,
-          state: State.PENDING,
+          state: TransactionState.PENDING,
         })
       );
       convertDepositedBeans(

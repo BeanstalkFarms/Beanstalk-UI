@@ -1,15 +1,19 @@
 import { createAction } from '@reduxjs/toolkit';
 
-export enum State {
+export enum TransactionState {
   PENDING,
   DONE,
 }
 
 export interface Transaction {
-  transactionNumber: Number;
-  description: String;
-  transactionHash: String;
-  state: State;
+  /** */
+  transactionNumber: number;
+  /** */
+  description: string;
+  /** */
+  transactionHash: string;
+  /** */
+  state: TransactionState;
 }
 
 export const setInitialized = createAction<Boolean>('general/setInitialized');

@@ -23,7 +23,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
@@ -88,7 +88,7 @@ export default function Vote(props) {
         addTransaction({
           transactionNumber,
           description: `Unvoting ${bip} bip`,
-          state: State.PENDING,
+          state: TransactionState.PENDING,
         })
       );
       unvote(
@@ -111,7 +111,7 @@ export default function Vote(props) {
         addTransaction({
           transactionNumber,
           description: `Voting ${bip} bip`,
-          state: State.PENDING,
+          state: TransactionState.PENDING,
         })
       );
       vote(

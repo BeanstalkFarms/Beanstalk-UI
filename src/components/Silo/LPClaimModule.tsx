@@ -23,7 +23,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 
@@ -142,7 +142,7 @@ export const LPClaimModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: 'Remove and claiming LP beans...',
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
         removeAndClaimLP(
@@ -167,7 +167,7 @@ export const LPClaimModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: 'Claiming LP beans...',
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
         claimLP(

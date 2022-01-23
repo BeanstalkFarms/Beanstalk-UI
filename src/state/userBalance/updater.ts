@@ -524,7 +524,7 @@ export default function Updater() {
       benchmarkEnd('EVENT PROCESSOR', startTime);
     }
 
-    async function updateAllBalances() {
+    async function updateAllBalances() : Promise<[Function, any]> {
       const startTime = benchmarkStart('ALL BALANCES');
       const batch = createLedgerBatch();
       const accountBalancePromises = getAccountBalances(batch);
@@ -558,6 +558,7 @@ export default function Updater() {
         ethReserve,
       ];
       const ethPrices = await getEthPrices();
+
       return [
         () => {
           const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
@@ -624,16 +625,22 @@ export default function Updater() {
         benchmarkEnd('*INIT*', startTime);
         startTime = benchmarkStart('**WEBSITE**');
 
+        // After each transaction, run this transaction callback.
+        // This refreshes all balances after we complete a txn.
         initializeCallback(async () => {
           const [updateBalanceState] = await updateAllBalances();
           ReactDOM.unstable_batchedUpdates(() => {
             updateBalanceState();
           });
         });
+
+        //
         const [balanceInitializers, eventInitializer] = await Promise.all([
           updateAllBalances(),
           initializeEventListener(processEvents, updatePrices, updateTotals),
         ]);
+
+        //
         ReactDOM.unstable_batchedUpdates(() => {
           const [updateBalanceState, eventParsingParameters] =
             balanceInitializers;

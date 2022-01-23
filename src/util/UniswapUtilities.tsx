@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { BEAN, WETH, zeroBN } from 'constants/index';
 import { account, MinBN, txCallback, uniswapRouterContract } from './index';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 const DEADLINE_FROM_NOW = 60 * 15;
 const createDeadline = () => Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
@@ -13,23 +14,38 @@ export enum SwapMode {
   BeanEthereumSwap,
 }
 
-export const buyBeans = async (amountIn, amountOutMin, callback) => {
-  await uniswapRouterContract()
-    .swapExactETHForTokens(
+/**
+ * 
+ * @param amountIn 
+ * @param amountOutMin 
+ * @param onResponse 
+ * @returns 
+ */
+export const buyBeans = async (
+  amountIn: string,
+  amountOutMin: string,
+  onResponse: TxnCallbacks['onResponse'],
+) => {
+  return handleCallbacks(
+    uniswapRouterContract().swapExactETHForTokens(
       amountOutMin,
       [WETH.addr, BEAN.addr],
       account,
       createDeadline(),
       { value: amountIn }
-    )
-    .then((response) => {
-      callback(response.hash);
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
+    ),
+    {
+      onResponse
+    }
+  );
 };
 
+/**
+ * 
+ * @param amountIn 
+ * @param amountOutMin 
+ * @param callback 
+ */
 export const sellBeans = async (amountIn, amountOutMin, callback) => {
   await uniswapRouterContract()
     .swapExactTokensForETH(

@@ -23,7 +23,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 
@@ -266,7 +266,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: `Sending plot from ${startPlot} to ${endPlot} on ${props.toAddress}`,
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
 

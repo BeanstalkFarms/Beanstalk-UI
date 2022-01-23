@@ -16,7 +16,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 import SendModule from './SendModule';
@@ -83,29 +83,35 @@ export default function TradeModule() {
       if (toValue.isGreaterThan(0)) {
         if (fromToken === CryptoAsset.Ethereum) {
           const transactionNumber = latestTransactionNumber + 1;
+
+          // 1. Prep UI.
           dispatch(
             addTransaction({
               transactionNumber,
               description: `Buying ${fromValue} beans`,
-              state: State.PENDING,
+              state: TransactionState.PENDING,
             })
           );
 
+          // 2. Call contract.
           buyBeans(
             toStringBaseUnitBN(fromValue, ETH.decimals),
             toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
-            () => {},
-            () => {
-              handleSwapCallback(transactionNumber);
-            }
-          );
+            (response) => {
+              console.log(`buyBeans: onResponse`, response)
+            },
+          ).then((value) => {
+            // 3. Transaction successful.
+            console.log(`buyBeans: completed`, value)
+            handleSwapCallback(transactionNumber);
+          });
         } else {
           const transactionNumber = latestTransactionNumber + 1;
           dispatch(
             addTransaction({
               transactionNumber,
               description: `Selling ${fromValue} beans`,
-              state: State.PENDING,
+              state: TransactionState.PENDING,
             })
           );
 
@@ -133,7 +139,7 @@ export default function TradeModule() {
           addTransaction({
             transactionNumber,
             description: `Transfering ${fromValue} beans to ${toAddress}`,
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
 

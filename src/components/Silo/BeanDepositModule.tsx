@@ -40,7 +40,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 
@@ -257,7 +257,7 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: `Depositing ${toBuyBeanValue} beans...`,
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
         buyAndDepositBeans(
@@ -284,7 +284,7 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: `Depositing ${fromBeanValue} beans...`,
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
         depositBeans(

@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import { useTransactions } from 'state/general/hooks';
-import { State, Transaction } from 'state/general/actions';
+import { TransactionState, Transaction } from 'state/general/actions';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -26,7 +26,7 @@ const Alerts = () => {
         transactions.map((transaction: Transaction) => (
           <Snackbar
             key={transaction.transactionNumber}
-            open={transaction.state === State.PENDING}
+            open={transaction.state === TransactionState.PENDING}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'right',

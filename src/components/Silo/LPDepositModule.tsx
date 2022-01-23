@@ -50,7 +50,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 
@@ -529,7 +529,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
             addTransaction({
               transactionNumber,
               description: `Depositing ${lp} LP beans...`,
-              state: State.PENDING,
+              state: TransactionState.PENDING,
             })
           );
           depositLP(
@@ -554,7 +554,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
             addTransaction({
               transactionNumber,
               description: `Convert and depositing ${lp} LP beans...`,
-              state: State.PENDING,
+              state: TransactionState.PENDING,
             })
           );
           convertAddAndDepositLP(
@@ -598,7 +598,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
             addTransaction({
               transactionNumber,
               description: `Add and depositing ${lp} LP beans...`,
-              state: State.PENDING,
+              state: TransactionState.PENDING,
             })
           );
           addAndDepositLP(

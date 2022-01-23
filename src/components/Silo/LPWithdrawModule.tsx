@@ -33,7 +33,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
 } from 'state/general/actions';
 
 export const LPWithdrawModule = forwardRef((props, ref) => {
@@ -265,7 +265,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: `Claim and withdrawing ${withdrawParams.amounts} LP beans...`,
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
 
@@ -286,7 +286,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: `Withdrawing ${withdrawParams.amounts} LP beans...`,
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
 

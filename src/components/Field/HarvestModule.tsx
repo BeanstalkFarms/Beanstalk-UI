@@ -16,7 +16,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 import { UserBalanceState } from 'state/userBalance/reducer';
@@ -81,10 +81,11 @@ export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
         addTransaction({
           transactionNumber,
           description: 'Doing harvest',
-          state: State.PENDING,
+          state: TransactionState.PENDING,
         })
       );
       harvest(
+        // plots
         Object.keys(props.harvestablePlots).map((key) =>
           toStringBaseUnitBN(new BigNumber(key), BEAN.decimals)
         ),

@@ -16,7 +16,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 
@@ -79,7 +79,7 @@ export const BeanClaimModule = forwardRef((props, ref) => {
         addTransaction({
           transactionNumber,
           description: 'Claiming Beans...',
-          state: State.PENDING,
+          state: TransactionState.PENDING,
         })
       );
 

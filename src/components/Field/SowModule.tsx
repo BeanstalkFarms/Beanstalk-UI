@@ -35,7 +35,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 
@@ -243,7 +243,7 @@ export const SowModule = forwardRef((props, ref) => {
           addTransaction({
             transactionNumber,
             description: `Sowing ${toBuyBeanValue} beans`,
-            state: State.PENDING,
+            state: TransactionState.PENDING,
           })
         );
         buyAndSowBeans(

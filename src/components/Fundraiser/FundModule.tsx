@@ -8,7 +8,7 @@ import { useLatestTransactionNumber } from 'state/general/hooks';
 import {
   addTransaction,
   completeTransaction,
-  State,
+  TransactionState,
   updateTransactionHash,
 } from 'state/general/actions';
 import { USDC, BEAN } from '../../constants';
@@ -146,7 +146,7 @@ export const FundModule = forwardRef((props, ref) => {
             fromTokenValue,
             USDC.decimals
           )} beans`,
-          state: State.PENDING,
+          state: TransactionState.PENDING,
         })
       );
 
