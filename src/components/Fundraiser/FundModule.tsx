@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import TransactionToast from 'components/Common/TransactionToast';
 import { USDC, BEAN } from '../../constants';
 import {
   displayBN,
@@ -20,7 +21,6 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
 } from '../Common';
-import TransactionToast from 'components/Common/TransactionToast';
 
 type FundModuleProps = {
   id: string;
@@ -150,7 +150,7 @@ export const FundModule = forwardRef((props : Partial<FundModuleProps>, ref) => 
         toStringBaseUnitBN(fromTokenValue, USDC.decimals),
         (response) => {
           fromValueUpdated(new BigNumber(-1));
-          txToast.confirming(response)
+          txToast.confirming(response);
         }
       )
       .then((value) => {
