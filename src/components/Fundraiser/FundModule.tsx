@@ -1,16 +1,9 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { Box } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { useLatestTransactionNumber } from 'state/general/hooks';
-import {
-  addTransaction,
-  completeTransaction,
-  TransactionState,
-  updateTransactionHash,
-} from 'state/general/actions';
 import { USDC, BEAN } from '../../constants';
 import {
   displayBN,
@@ -27,12 +20,15 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
 } from '../Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
-export const FundModule = forwardRef((props, ref) => {
+type FundModuleProps = {
+  id: string;
+}
+
+export const FundModule = forwardRef((props : Partial<FundModuleProps>, ref) => {
   const [fromTokenValue, setFromTokenValue] = useState(new BigNumber(-1));
   const [toPodValue, setToPodValue] = useState(new BigNumber(0));
-  const dispatch = useDispatch();
-  const latestTransactionNumber = useLatestTransactionNumber();
 
   const { weather, soil } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
@@ -138,34 +134,31 @@ export const FundModule = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (toPodValue.isLessThanOrEqualTo(0)) return;
-      const transactionNumber = latestTransactionNumber + 1;
-      dispatch(
-        addTransaction({
-          transactionNumber,
-          description: `funding ${toStringBaseUnitBN(
-            fromTokenValue,
-            USDC.decimals
-          )} beans`,
-          state: TransactionState.PENDING,
-        })
-      );
 
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Sowing ${toStringBaseUnitBN(
+          fromTokenValue,
+          USDC.decimals
+        )} beans for fundraiser...`,
+        success: 'Funding successful!',
+      });
+
+      // Execute
       fund(
         props.id,
         toStringBaseUnitBN(fromTokenValue, USDC.decimals),
-        (transactionHash) => {
+        (response) => {
           fromValueUpdated(new BigNumber(-1));
-          dispatch(
-            updateTransactionHash({
-              transactionNumber,
-              transactionHash,
-            })
-          );
-        },
-        () => {
-          dispatch(completeTransaction(transactionNumber));
+          txToast.confirming(response)
         }
-      );
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 
