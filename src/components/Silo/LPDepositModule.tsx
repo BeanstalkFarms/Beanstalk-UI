@@ -581,7 +581,6 @@ export const LPDepositModule = forwardRef((props, ref) => {
           const eth = fromEthValue.plus(buyEth).minus(toSellEthValue);
 
           // Toast
-          console.log(lp, fromLPValue)
           const txToast = new TransactionToast({
             loading: `Adding and depositing ${displayBN(toSiloLPValue)} LP`,
             success: `Added and deposited ${displayBN(toSiloLPValue)} LP`,

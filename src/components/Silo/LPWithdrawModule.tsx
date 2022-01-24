@@ -126,7 +126,6 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   };
 
   /* Input Fields */
-
   const fromLPField = (
     <TokenInputField
       balance={props.maxFromLPVal}
@@ -142,7 +141,6 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toBurnStalkField = (
     <TokenOutputField
       burn
@@ -254,8 +252,8 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       if (props.settings.claim) {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Claiming and withdrawing ${withdrawParams.amounts} LP`,
-          success: `Claimed and withdrew ${withdrawParams.amounts} LP`,
+          loading: `Claiming and withdrawing ${displayBN(fromLPValue)} LP`,
+          success: `Claimed and withdrew ${displayBN(fromLPValue)} LP`,
         });
 
         // Execute
@@ -277,8 +275,8 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       } else {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Withdrawing ${withdrawParams.amounts} LP`,
-          success: `Withdrew ${withdrawParams.amounts} LP`,
+          loading: `Withdrawing ${displayBN(fromLPValue)} LP`,
+          success: `Withdrew ${displayBN(fromLPValue)} LP`,
         });
 
         // Execute
