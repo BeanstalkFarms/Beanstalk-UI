@@ -8,6 +8,7 @@ import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 import {
   approveUniswapBean,
   buyBeans,
+  displayBN,
   sellBeans,
   toStringBaseUnitBN,
   transferBeans,
@@ -66,16 +67,19 @@ export default function TradeModule() {
   };
 
   const handleForm = () => {
+    // 0 = "Swap"
     if (section === 0) {
       const minimumToAmount = toValue.multipliedBy(settings.slippage);
-
       if (toValue.isGreaterThan(0)) {
+        // Buy Beans via Ethereum
         if (fromToken === CryptoAsset.Ethereum) {
+          // Toast
           const txToast = new TransactionToast({
-            loading: `Buying ${fromValue} Beans`,
-            success: `Bought ${fromValue} Beans`,
+            loading: `Buying ${displayBN(toValue)} Beans for ${displayBN(fromValue)} ETH`,
+            success: `Bought ${displayBN(toValue)} Beans`,
           });
 
+          // Execute
           buyBeans(
             toStringBaseUnitBN(fromValue, ETH.decimals),
             toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
@@ -89,11 +93,13 @@ export default function TradeModule() {
             txToast.error(err);
           });
         } else {
+          // Toast
           const txToast = new TransactionToast({
             loading: `Selling ${fromValue} Beans`,
             success: `Sold ${fromValue} Beans`,
           });
 
+          // Execute
           sellBeans(
             toStringBaseUnitBN(fromValue, BEAN.decimals),
             toStringBaseUnitBN(minimumToAmount, ETH.decimals),
@@ -108,13 +114,17 @@ export default function TradeModule() {
           });
         }
       }
-    } else if (section === 1) {
+    }
+    // 1 = "Send"
+    else if (section === 1) {
       if (fromValue.isGreaterThan(0)) {
+        // Toast
         const txToast = new TransactionToast({
-          loading: `Transfering ${fromValue} beans to ${toAddress}`,
-          success: `Sent ${fromValue} beans to ${toAddress}`,
+          loading: `Transfering ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
+          success: `Sent ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
         });
 
+        // Execute
         transferBeans(
           toAddress,
           toStringBaseUnitBN(fromValue, BEAN.decimals),

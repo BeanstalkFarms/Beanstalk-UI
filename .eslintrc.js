@@ -53,6 +53,7 @@ module.exports = {
     'react/jsx-boolean-value': 'warn',
     'react/jsx-props-no-multi-spaces': 'warn',
     'spaced-comment': 'warn',
+    'brace-style': 0,
     // Space efficiency
     'arrow-body-style': 'warn',
     'no-trailing-spaces': 0,
