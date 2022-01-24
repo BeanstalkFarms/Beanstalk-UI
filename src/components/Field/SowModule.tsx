@@ -233,8 +233,8 @@ export const SowModule = forwardRef((props, ref) => {
 
         // Toast
         const txToast = new TransactionToast({
-          loading: `Buying and sowing ${toBuyBeanValue} Beans`,
-          success: `Sowed ${toBuyBeanValue} Beans`,
+          loading: `Buying ${toBuyBeanValue} Beans and sowing for ${displayBN(toPodValue)} Pods`,
+          success: `Sowed ${toBuyBeanValue} Beans for ${displayBN(toPodValue)} Pods`,
         });
 
         // Execute

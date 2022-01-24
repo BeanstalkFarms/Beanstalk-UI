@@ -66,7 +66,7 @@ export const BeanClaimModule = forwardRef((props, ref) => {
       // Toast
       const txToast = new TransactionToast({
         loading: `Claiming ${props.maxFromBeanVal.toFixed(3)} Beans`,
-        success: `Claimed  ${props.maxFromBeanVal.toFixed(3)} Beans`,
+        success: `Claimed ${props.maxFromBeanVal.toFixed(3)} Beans`,
       });
 
       // Execute
