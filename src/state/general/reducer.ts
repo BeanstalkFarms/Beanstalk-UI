@@ -18,16 +18,59 @@ import {
 } from './actions';
 
 export interface GeneralState {
-  initialized: Boolean;
-  metamaskFailure: Number;
-  lastCross: Number;
+  /**
+   * While `false`, the Beanstalk app is still preparing data. 
+   * Show <LoadingBean />. See `components/App/index.tsx`.
+   * 
+   * Set to `true` after updating balances and parsing events in `userBalance/updater.ts`.
+   */
+  initialized: boolean;
+
+  /**
+   * FIXME: enum
+   */
+  metamaskFailure: number;
+
+  /**
+   * 
+   */
+  lastCross: number;
+
+  /**
+   * FIXME: define BIP type
+   */
   bips: Array;
-  hasActiveBIP: Boolean;
+
+  /**
+   * 
+   */
+  hasActiveBIP: boolean;
+
+  /**
+   * FIXME: define Fundraiser type
+   */
   fundraisers: Array;
-  hasActiveFundraiser: Boolean;
+  
+  /**
+   * 
+   */
+  hasActiveFundraiser: boolean;
+  
+  /**
+   * FIXME: define Contract Event type
+   */
   contractEvents: Array;
+  
   // transactions: Array<Transaction>;
-  width: Number;
+
+  /**
+   * The current width of the viewport.
+   */
+  width: number;
+
+  /**
+   * Sidebar drawer open/close state.
+   */
   drawerOpen: boolean;
 }
 
@@ -37,6 +80,8 @@ export const initialState: GeneralState = {
   lastCross: 0,
   bips: [],
   hasActiveBIP: false,
+  fundraisers: [],
+  hasActiveFundraiser: false,
   contractEvents: [],
   // transactions: [],
   width: window.innerWidth,

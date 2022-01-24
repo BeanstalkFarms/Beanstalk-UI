@@ -13,7 +13,7 @@ import {
 } from 'util/index';
 import {
   AddressInputField,
-  ListInputField,
+  PlotListInputField,
   PlotInputField,
   fieldStrings,
   TransactionDetailsModule,
@@ -25,20 +25,30 @@ export const SendPlotModule = forwardRef((props, ref) => {
   const [plotEndId, setPlotEndId] = useState(new BigNumber(-1));
   const [fromPlotIndex, setFromPlotIndex] = useState(new BigNumber(-1));
   const [toPlotEndIndex, setToPlotEndIndex] = useState(new BigNumber(-1));
-
   const [snappedToAddress, setSnappedToAddress] = useState(false);
   const [walletText, setWalletText] = useState('');
 
   const width = window.innerWidth;
 
-  // Plot handle change and update
-
-  function fromValueUpdated(newFromNumber) {
+  /* Handlers: Plot change and update */
+  function fromValueUpdated(newFromNumber: BigNumber) {
     setPlotEndId(TrimBN(newFromNumber, BEAN.decimals)); // set plot max pod size
     setToPlotEndIndex(TrimBN(newFromNumber, BEAN.decimals));
     props.setIsFormDisabled(newFromNumber.isLessThanOrEqualTo(0));
   }
-
+  function fromIndexValueUpdated(newFromIndexNumber: BigNumber, newToIndexNumber: BigNumber) {
+    const newFromIndexValue = MinBN(
+      new BigNumber(newFromIndexNumber),
+      plotEndId
+    );
+    const newToEndIndexValue = MaxBN(
+      newFromIndexValue,
+      MinBN(new BigNumber(newToIndexNumber), plotEndId)
+    );
+    props.setIsFormDisabled(newFromIndexValue.isEqualTo(newToEndIndexValue));
+    setFromPlotIndex(TrimBN(newFromIndexValue, BEAN.decimals));
+    setToPlotEndIndex(TrimBN(newToEndIndexValue, BEAN.decimals));
+  }
   const handleFromChange = (event) => {
     if (event.target.value) {
       fromValueUpdated(new BigNumber(props.plots[event.target.value]));
@@ -53,21 +63,6 @@ export const SendPlotModule = forwardRef((props, ref) => {
       props.setIsFormDisabled(true);
     }
   };
-
-  function fromIndexValueUpdated(newFromIndexNumber, newToIndexNumber) {
-    const newFromIndexValue = MinBN(
-      new BigNumber(newFromIndexNumber),
-      plotEndId
-    );
-    const newToEndIndexValue = MaxBN(
-      newFromIndexValue,
-      MinBN(new BigNumber(newToIndexNumber), plotEndId)
-    );
-    props.setIsFormDisabled(newFromIndexValue.isEqualTo(newToEndIndexValue));
-    setFromPlotIndex(TrimBN(newFromIndexValue, BEAN.decimals));
-    setToPlotEndIndex(TrimBN(newToEndIndexValue, BEAN.decimals));
-  }
-
   const handleFromIndexChange = (event) => {
     if (event.target.value) {
       fromIndexValueUpdated(event.target.value, toPlotEndIndex);
@@ -83,9 +78,8 @@ export const SendPlotModule = forwardRef((props, ref) => {
     }
   };
 
-  // Address handle change and update
-
-  async function toAddressUpdated(newToAddress) {
+  /* Handlers: Address change and update */
+  async function toAddressUpdated(newToAddress: string) {
     if (snappedToAddress) {
       fromValueUpdated(new BigNumber(-1));
       props.setToAddress('');
@@ -108,7 +102,6 @@ export const SendPlotModule = forwardRef((props, ref) => {
     }
     props.setToAddress(newToAddress);
   }
-
   const handleChange = (event) => {
     if (event.target.value) {
       toAddressUpdated(event.target.value);
@@ -116,11 +109,9 @@ export const SendPlotModule = forwardRef((props, ref) => {
       toAddressUpdated('');
     }
   };
-
   const clearHandler = () => {
     toAddressUpdated(walletText);
   };
-
   const maxHandler = () => {
     fromIndexValueUpdated(fromPlotIndex, plotEndId);
   };
@@ -129,7 +120,6 @@ export const SendPlotModule = forwardRef((props, ref) => {
   };
 
   /* Input Fields */
-
   const toAddressField = (
     <AddressInputField
       address={walletText}
@@ -142,7 +132,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
     />
   );
   const fromPlotField = (
-    <ListInputField
+    <PlotListInputField
       hidden={
         props.toAddress.length !== 42 ||
         walletText === '' ||
@@ -178,10 +168,8 @@ export const SendPlotModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-
   let details = [];
-
-  function displaySendPlot(firstText, secondText) {
+  function displaySendPlot(firstText: string, secondText: string) {
     details.push(
       <span>
         {`Send ${firstText}Plot #${displayBN(
@@ -221,22 +209,22 @@ export const SendPlotModule = forwardRef((props, ref) => {
     details = [<span style={{ color: 'red' }}>Invalid transfer amount</span>];
   }
 
-  function transactionDetails() {
-    if (toPlotEndIndex.isLessThanOrEqualTo(0)) return;
-
+  /* */
+  function TransactionDetails() {
+    if (toPlotEndIndex.isLessThanOrEqualTo(0)) return null;
     return (
       <>
-        <Box
-          style={
-            width > 500
-              ? { display: 'inline-flex' }
-              : { display: 'inline-block' }
-          }
-        >
+        <Box style={
+          width > 500
+            ? { display: 'inline-flex' }
+            : { display: 'inline-block' }
+        }>
           <Box style={{ marginRight: '5px' }}>{fromIndexField}</Box>
           <Box style={{ marginLeft: '5px' }}>{fromIndexEndField}</Box>
         </Box>
-        <TransactionDetailsModule fields={details} />
+        <TransactionDetailsModule
+          fields={details}
+        />
         <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
           <span>{fieldStrings.sendPlotWarning}</span>
         </Box>
@@ -244,10 +232,10 @@ export const SendPlotModule = forwardRef((props, ref) => {
     );
   }
 
+  /* */
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (toPlotEndIndex.isLessThanOrEqualTo(0)) return;
-
       if (toPlotEndIndex.isGreaterThan(0)) {
         // Contract Inputs
         const startPlot = toStringBaseUnitBN(fromPlotIndex, BEAN.decimals);
@@ -287,7 +275,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
     <>
       {toAddressField}
       {fromPlotField}
-      {transactionDetails()}
+      <TransactionDetails />
     </>
   );
 });

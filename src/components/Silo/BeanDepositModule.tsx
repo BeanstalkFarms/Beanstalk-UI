@@ -68,7 +68,6 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   }
 
   /* Input Fields */
-
   const fromBeanField = (
     <InputFieldPlus
       key={0}
@@ -102,7 +101,6 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toStalkField = (
     <TokenOutputField
       decimals={4}
@@ -130,7 +128,6 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-
   const details = [];
   if (props.settings.claim) {
     const claimedBeans = MinBN(fromBeanValue, props.beanClaimableBalance);
@@ -168,13 +165,8 @@ export const BeanDepositModule = forwardRef((props, ref) => {
     MaxBN(fromBeanValue, new BigNumber(0))
   );
 
-  details.push(`Deposit ${displayBN(beanOutput)}
-    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`);
-  details.push(
-    `Receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
-      new BigNumber(toSeedsValue)
-    )} Seeds`
-  );
+  details.push(`Deposit ${displayBN(beanOutput)} ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`);
+  details.push(`Receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
   const frontrunTextField =
     props.settings.mode !== SwapMode.Bean &&

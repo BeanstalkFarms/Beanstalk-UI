@@ -47,7 +47,9 @@ import {
   account,
   getEthPrices,
 } from 'util/index';
+import { UserBalanceState } from './reducer';
 
+//
 export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
@@ -258,11 +260,23 @@ export default function Updater() {
       let userLPSeedDeposits = {};
       let userLPDeposits = {};
       let lpWithdrawals = {};
-      let userPlots = {};
+      let userPlots : UserBalanceState['plots'] = {};
       let userBeanDeposits = {};
       let beanWithdrawals = {};
       const votedBips = new Set();
 
+      /** New events from Plot Marketplace:
+       * ListingCreated
+       * ListingCancelled
+       * BuyOfferCreated
+       * BuyOfferCancelled
+       * BuyOfferAccepted
+      */
+      // TODO: PlotTransfer will now need to update listing data too
+      // will need to split up listings into two listings if listing not fully purchased
+      // set state accordingly and adjust index
+      // TODO: all event handling logic needs to exist not filtered on address for individual listings and buy offers
+      // but full marketplace since, should not be filtering based on address for these events but grabbing them all
       events.forEach((event) => {
         if (event.event === 'BeanDeposit') {
           const s = parseInt(event.returnValues.season, 10);
@@ -308,7 +322,10 @@ export default function Updater() {
           };
         } else if (event.event === 'Sow') {
           const s = parseInt(event.returnValues.index, 10) / 1e6;
-          userPlots[s] = toTokenUnitsBN(event.returnValues.pods, BEAN.decimals);
+          userPlots[s] = toTokenUnitsBN(
+            event.returnValues.pods,
+            BEAN.decimals // QUESTION: why is this BEAN.decimals and not PODS? are they the same?
+          );
         } else if (event.event === 'PlotTransfer') {
           if (event.returnValues.to === account) {
             const s = parseInt(event.returnValues.id, 10) / 1e6;
@@ -518,6 +535,8 @@ export default function Updater() {
           rawBeanDeposits: rawBeanDeposits,
           farmableBeanBalance: fb,
           grownStalkBalance: gs,
+          // listings: listings,
+          // buyOffers: buyOffers,
         })
       );
 
@@ -540,6 +559,7 @@ export default function Updater() {
           accountBalancePromises,
           totalBalancePromises,
           pricePromises,
+          // getListings()
           getUSDCBalance(),
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
@@ -646,6 +666,8 @@ export default function Updater() {
             balanceInitializers;
           updateBalanceState();
           processEvents(eventInitializer, eventParsingParameters);
+
+          /** */
           dispatch(setInitialized(true));
         });
         benchmarkEnd('**WEBSITE**', startTime);
