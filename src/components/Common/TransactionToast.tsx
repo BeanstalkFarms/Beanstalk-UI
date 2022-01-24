@@ -1,11 +1,22 @@
 import React from 'react';
 import { ContractReceipt, ContractTransaction } from 'ethers';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { chainId } from 'util/index';
 
 export function ToastAlert({ desc, hash }: { desc: string, hash?: string }) {
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
+
+  // Shift toast by side nav bar width
+  const toastStyle = {
+    left: width < 800 ? 0 : 280,
+  };
+
   return (
-    <div>
+    <div style={toastStyle}>
       {desc}
       {hash && (
         <>
@@ -39,7 +50,7 @@ type MetamaskErrorObject = {
 export default class TransactionToast {
   /** */
   messages: ToastMessages;
-  
+
   /** */
   toastId: any;
 
@@ -62,10 +73,10 @@ export default class TransactionToast {
       <ToastAlert
         desc={this.messages.loading}
         hash={response.hash}
-      />, 
+      />,
       {
         id: this.toastId,
-      } 
+      }
     );
   }
 
@@ -79,7 +90,7 @@ export default class TransactionToast {
       <ToastAlert
         desc={this.messages.success}
         hash={value.transactionHash}
-      />, 
+      />,
       {
         id: this.toastId,
         duration: 5000,
@@ -93,7 +104,7 @@ export default class TransactionToast {
       // lol @ this
       if (error.message && error.message.substring(0, 8).toLowerCase() === 'metamask') {
         switch ((error as MetamaskErrorObject).code) {
-          // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature. 
+          // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature.
           case 4001:
             msg = 'You rejected the signature request.';
             break;
@@ -109,7 +120,7 @@ export default class TransactionToast {
       msg = error.toString();
     }
     toast.error(
-      msg, 
+      msg,
       {
         id: this.toastId,
       }

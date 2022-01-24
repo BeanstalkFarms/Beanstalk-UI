@@ -252,8 +252,8 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       if (props.settings.claim) {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Claiming and withdrawing ${displayBN(fromLPValue)} LP`,
-          success: `Claimed and withdrew ${displayBN(fromLPValue)} LP`,
+          loading: `Claiming and withdrawing ${displayBN(fromLPValue)} LP Tokens`,
+          success: `Claimed and withdrew ${displayBN(fromLPValue)} LP Tokens`,
         });
 
         // Execute
@@ -275,8 +275,8 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       } else {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Withdrawing ${displayBN(fromLPValue)} LP`,
-          success: `Withdrew ${displayBN(fromLPValue)} LP`,
+          loading: `Withdrawing ${displayBN(fromLPValue)} LP Tokens`,
+          success: `Withdrew ${displayBN(fromLPValue)} LP Tokens`,
         });
 
         // Execute

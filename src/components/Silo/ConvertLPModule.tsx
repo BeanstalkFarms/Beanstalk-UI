@@ -280,8 +280,8 @@ export const ConvertLPModule = forwardRef((props, ref) => {
 
       // Toast
       const txToast = new TransactionToast({
-        loading: `Converting ${displayBN(fromLPValue)} LP to Silo Beans`,
-        success: `Converted ${displayBN(fromLPValue)} LP to Silo Beans`,
+        loading: `Converting ${displayBN(fromLPValue)} LP Tokens to Silo Beans`,
+        success: `Converted ${displayBN(fromLPValue)} LP Tokens to Silo Beans`,
       });
 
       // Execute
