@@ -151,7 +151,19 @@ export default function App() {
           <Box component="main" sx={{ flex: 1, position: 'relative' }}>
             <NavigationBar />
             {app}
-            <Toaster />
+            <Toaster
+              // position="bottom-right"
+              containerStyle={{
+                left: 295, // this should be 300, something messed up
+                // top: -5
+                marginTop: -2,
+              }}
+              toastOptions={{
+                style: {
+                  maxWidth: 350
+                }
+              }}
+            />
             <Footer />
           </Box>
         </Box>
