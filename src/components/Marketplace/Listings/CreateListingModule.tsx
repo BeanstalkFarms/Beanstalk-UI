@@ -12,7 +12,8 @@ import {
   TransactionDetailsModule,
   TransactionToast,
 } from 'components/Common';
-import { TrimBN, displayBN, CryptoAsset, FarmAsset, GetWalletAddress, listPlot } from 'util/index';
+import { BEAN } from 'constants/index';
+import { TrimBN, displayBN, CryptoAsset, FarmAsset, GetWalletAddress, listPlot, toStringBaseUnitBN } from 'util/index';
 import { Listing } from 'state/marketplace/reducer';
 import ListingsTable from './ListingsTable';
 
@@ -27,7 +28,7 @@ type CreateListingModuleProps = {
 export const CreateListingModule = forwardRef((props: CreateListingModuleProps, ref) => {
   /** The absolute index of the selected plot in line. */
   const [index, setIndex] = useState(new BigNumber(-1));
-  /** The amount of Pod listed from the plot. */
+  /** The amount of Pods listed from the plot. */
   const [amount, setAmount] = useState(new BigNumber(-1));
   /** How far forward the Pod line needs to move before the offer expire. */
   const [expiresIn, setExpiresIn] = useState(new BigNumber(-1));
@@ -240,8 +241,6 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     //   setPricePerPodValue(new BigNumber(-1));
     // },
     handleForm() {
-      const expiry = (expiresIn.times(10 ** 6).plus(harvestableIndex.times(10 ** 6))).toString();
-          
       // Toast
       const txToast = new TransactionToast({
         loading: `Listing ${displayBN(amount)} Pods for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod`,
@@ -250,10 +249,10 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
 
       // Execute
       listPlot(
-        index.times(10 ** 6).toString(),
-        pricePerPodValue.times(10 ** 6).toString(),
-        expiry,
-        amount.times(10 ** 6).toString(),
+        toStringBaseUnitBN(index, BEAN.decimals),
+        toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
+        toStringBaseUnitBN(expiresIn.plus(harvestableIndex), BEAN.decimals), // expiry
+        toStringBaseUnitBN(amount, BEAN.decimals),
         (response) => {
           // Reset inputs
           setIndex(new BigNumber(-1));

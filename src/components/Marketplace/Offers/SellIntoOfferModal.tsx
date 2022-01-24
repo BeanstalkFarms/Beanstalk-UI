@@ -8,7 +8,8 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { TrimBN, displayBN, FarmAsset, CryptoAsset, sellToBuyOffer } from 'util/index';
+import { TrimBN, displayBN, FarmAsset, CryptoAsset, sellToBuyOffer, toStringBaseUnitBN } from 'util/index';
+import { BEAN } from 'constants/index';
 import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule, TransactionToast } from 'components/Common';
 import { BuyOffer } from 'state/marketplace/reducer';
 import OffersTable from './OffersTable';
@@ -112,16 +113,16 @@ export default function SellIntoOfferModal({
     console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
 
     // Contract Inputs
-    const finalIndex = index.times(10 ** 6);
-    const end = finalIndex.plus(plotToSellFrom.times(10 ** 6));
-    const finalAmount = amount.times(10 ** 6);
+    const finalIndex = index; // .times(10 ** 6);
+    const end = finalIndex.plus(plotToSellFrom); // .times(10 ** 6)
+    const finalAmount = amount; // .times(10 ** 6);
     const sellFromIndex = end.minus(finalAmount);
     const buyOfferIndex = currentOffer.index;
     const params = [
-      finalIndex.toFixed(),     // uint256 plotIndex
-      sellFromIndex.toFixed(),  // uint256 sellFromIndex
-      buyOfferIndex.toFixed(),  // uint24 buyOfferIndex
-      finalAmount.toFixed()     // uint232 amount
+      toStringBaseUnitBN(finalIndex, BEAN.decimals),     // uint256 plotIndex
+      toStringBaseUnitBN(sellFromIndex, BEAN.decimals),  // uint256 sellFromIndex
+      buyOfferIndex.toFixed(),                           // uint24 buyOfferIndex
+      toStringBaseUnitBN(finalAmount, BEAN.decimals)     // uint232 amount
     ];
 
     // Toast
@@ -141,12 +142,12 @@ export default function SellIntoOfferModal({
         txToast.confirming(response);
       }
     )
-      .then((value) => {
-        txToast.success(value);
-      })
-      .catch((err) => {
-        txToast.error(err);
-      });
+    .then((value) => {
+      txToast.success(value);
+    })
+    .catch((err) => {
+      txToast.error(err);
+    });
   };
 
   // Details

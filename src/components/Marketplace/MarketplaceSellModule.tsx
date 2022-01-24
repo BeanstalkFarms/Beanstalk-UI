@@ -48,41 +48,6 @@ export default function MarketplaceSellModule() {
     marketStrings.createListing,
   ];
 
-  // This only supports eth right now
-  // TODO: need to handle beans / beans + eth
-  // FIXME: this is inconsistent with the approach used in other modules.
-  // const onCreate = async () => {
-  //   if (!listing) return;
-  //   const { index, pricePerPod, amount, expiresIn } = listing;
-  //   const expiry = (expiresIn.times(10 ** 6).plus(harvestableIndex.times(10 ** 6))).toString();
-        
-  //   // Toast
-  //   const txToast = new TransactionToast({
-  //     loading: ``,
-  //     success: 'Listing placed!',
-  //   });
-
-  //   // Execute
-  //   listPlot(
-  //     index.times(10 ** 6).toString(),
-  //     pricePerPod.times(10 ** 6).toString(),
-  //     expiry,
-  //     amount.times(10 ** 6).toString(),
-  //     (response) => {
-  //       // Reset inputs
-  //       setListing(null);
-  //       createListingModuleRef.current.resetForm();
-  //       txToast.confirming(response);
-  //     }
-  //   )
-  //   .then((value) => {
-  //     txToast.success(value);
-  //   })
-  //   .catch((err) => {
-  //     txToast.error(err);
-  //   });
-  // };
-
   /** Ref to help with form submissions */
   const createListingModuleRef = useRef<any>();
   const handleForm = () => {
