@@ -36,14 +36,16 @@ import {
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
 
-export const CreateOfferModule = forwardRef(({
-  isFormDisabled,
-  setIsFormDisabled,
-  settings,
-  setSettings,
-  poolForLPRatio,
-  updateExpectedPrice,
-}, ref) => {
+type CreateOfferModuleProps = {
+  isFormDisabled: boolean;
+  setIsFormDisabled: Function;
+  settings: any; // FIXME
+  setSettings: Function;
+  poolForLPRatio: any; // FIXME
+  updateExpectedPrice: any; // FIXME
+}
+
+export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
@@ -78,9 +80,9 @@ export const CreateOfferModule = forwardRef(({
         toPodValue.isLessThanOrEqualTo(0) ||
         maxPlaceInLineValue.isLessThan(toPodValue)
       ) {
-        setIsFormDisabled(true);
+        props.setIsFormDisabled(true);
       } else {
-        setIsFormDisabled(false);
+        props.setIsFormDisabled(false);
       }
     };
 
@@ -89,7 +91,7 @@ export const CreateOfferModule = forwardRef(({
   }, [
     maxPlaceInLineValue,
     toPodValue,
-    isFormDisabled,
+    props.isFormDisabled,
   ]);
 
   function calculatePods(buyNumber, price) {
@@ -119,9 +121,9 @@ export const CreateOfferModule = forwardRef(({
     );
   }
 
-  const handlePriceChange = (v) => {
-    let newPricePerPodValue = v.target.value !== ''
-      ? new BigNumber(v.target.value)
+  const handlePriceChange = (event) => {
+    let newPricePerPodValue = event.target.value !== ''
+      ? new BigNumber(event.target.value)
       : new BigNumber(0);
 
     if (newPricePerPodValue.isGreaterThanOrEqualTo(1)) {
@@ -159,8 +161,8 @@ export const CreateOfferModule = forwardRef(({
         balance={totalPods}
         label="Buy Range"
         handleChange={handleInputChange}
-        handleSlider={(v) => {
-          setMaxPlaceInLineValue(new BigNumber(v));
+        handleSlider={(event) => {
+          setMaxPlaceInLineValue(new BigNumber(event));
         }}
         placeholder={totalPods.toFixed()}
         value={TrimBN(maxPlaceInLineValue, 6)}
@@ -188,11 +190,11 @@ export const CreateOfferModule = forwardRef(({
       key={0}
       balance={beanBalance}
       claimableBalance={beanClaimableBalance}
-      beanLPClaimableBalance={poolForLPRatio(lpReceivableBalance)[0]}
+      beanLPClaimableBalance={props.poolForLPRatio(lpReceivableBalance)[0]}
       token={CryptoAsset.Bean}
-      handleChange={(v) => fromValueUpdated(v, fromEthValue)}
-      claim={settings.claim}
-      visible={settings.mode !== SwapMode.Ethereum} // should be visible if mode = Bean | BeanEthereum
+      handleChange={(event) => fromValueUpdated(event, fromEthValue)}
+      claim={props.settings.claim}
+      visible={props.settings.mode !== SwapMode.Ethereum} // should be visible if mode = Bean | BeanEthereum
       value={TrimBN(fromBeanValue, 6)}
     />
   );
@@ -203,10 +205,10 @@ export const CreateOfferModule = forwardRef(({
       buyBeans={toBuyBeanValue}
       sellEth={fromEthValue}
       claimableBalance={claimableEthBalance}
-      handleChange={(v) => fromValueUpdated(fromBeanValue, v)}
-      mode={settings.mode} // will auto-disable if mode == SwapMode.Bean
-      claim={settings.claim}
-      updateExpectedPrice={updateExpectedPrice}
+      handleChange={(event) => fromValueUpdated(fromBeanValue, event)}
+      mode={props.settings.mode} // will auto-disable if mode == SwapMode.Bean
+      claim={props.settings.claim}
+      updateExpectedPrice={props.updateExpectedPrice}
       value={TrimBN(fromEthValue, 9)}
     />
   );
@@ -223,26 +225,26 @@ export const CreateOfferModule = forwardRef(({
 
   /* Transaction Details, settings and text */
   const beanClaimable = MaxBN(
-    poolForLPRatio(lpReceivableBalance)[0], new BigNumber(0)
+    props.poolForLPRatio(lpReceivableBalance)[0], new BigNumber(0)
   ).plus(beanClaimableBalance);
   const ethClaimable = MaxBN(
-    poolForLPRatio(lpReceivableBalance)[1], new BigNumber(0)
+    props.poolForLPRatio(lpReceivableBalance)[1], new BigNumber(0)
   ).plus(claimableEthBalance);
 
   const details = [];
-  if (settings.claim) {
+  if (props.settings.claim) {
     details.push(
       <ClaimTextModule
         key="claim"
-        claim={settings.claim}
+        claim={props.settings.claim}
         beanClaimable={beanClaimable}
         ethClaimable={ethClaimable}
       />
     );
   }
   if (
-    settings.mode === SwapMode.Ethereum ||
-    (settings.mode === SwapMode.BeanEthereum &&
+    props.settings.mode === SwapMode.Ethereum ||
+    (props.settings.mode === SwapMode.BeanEthereum &&
       toBuyBeanValue.isGreaterThan(0))
   ) {
     details.push(
@@ -250,11 +252,11 @@ export const CreateOfferModule = forwardRef(({
         key="buy"
         balance={toBuyBeanValue}
         buyBeans={toBuyBeanValue}
-        claim={settings.claim}
+        claim={props.settings.claim}
         claimableBalance={ethClaimable}
-        mode={settings.mode}
+        mode={props.settings.mode}
         sellEth={fromEthValue}
-        updateExpectedPrice={updateExpectedPrice}
+        updateExpectedPrice={props.updateExpectedPrice}
         value={TrimBN(fromEthValue, 9)}
       />
     );
@@ -284,8 +286,8 @@ export const CreateOfferModule = forwardRef(({
       )
     : null;
   const frontrunTextField =
-    settings.mode !== SwapMode.Bean &&
-    settings.slippage.isLessThanOrEqualTo(SLIPPAGE_THRESHOLD) ? (
+    props.settings.mode !== SwapMode.Bean &&
+    props.settings.slippage.isLessThanOrEqualTo(SLIPPAGE_THRESHOLD) ? (
       <FrontrunText />
     ) : null;
   const showSettings = (
@@ -293,8 +295,8 @@ export const CreateOfferModule = forwardRef(({
       handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
       hasClaimable={hasClaimable}
       hasSlippage
-      setSettings={setSettings}
-      settings={settings}
+      setSettings={props.setSettings}
+      settings={props.settings}
     />
   );
 
@@ -309,7 +311,7 @@ export const CreateOfferModule = forwardRef(({
   };
 
   function transactionDetails() {
-    if (isFormDisabled) return null;
+    if (props.isFormDisabled) return null;
 
     return (
       <>
@@ -338,7 +340,7 @@ export const CreateOfferModule = forwardRef(({
     handleForm() {
       if (toPodValue.isLessThanOrEqualTo(0)) return;
 
-      const claimabl = settings.claim ? claimable : null;
+      const claimabl = props.settings.claim ? claimable : null;
       if (fromEthValue.isGreaterThan(0)) {
         // Contract Inputs
         const beans = MaxBN(
@@ -347,7 +349,7 @@ export const CreateOfferModule = forwardRef(({
         ).toString();
         const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
         const buyBeans = toStringBaseUnitBN(
-          toBuyBeanValue.multipliedBy(settings.slippage),
+          toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
         

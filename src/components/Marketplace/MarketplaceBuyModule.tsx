@@ -80,15 +80,13 @@ export default function MarketplaceBuyModule() {
 
   // NOTE: Can send ref to listings
   // FIXME: buyListingRef isn't used
-  const buyListingRef = useRef<any>();
-  const buyOfferRef = useRef<any>();
+  const createOfferModuleRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
-        buyListingRef.current.handleForm();
         break;
       case 1:
-        buyOfferRef.current.handleForm();
+        createOfferModuleRef.current.handleForm();
         break;
       default:
         break;
@@ -100,7 +98,7 @@ export default function MarketplaceBuyModule() {
       mode="ALL"
     />,
     <CreateOfferModule
-      ref={buyOfferRef}
+      ref={createOfferModuleRef}
       isFormDisabled={isFormDisabled}
       setIsFormDisabled={setIsFormDisabled}
       settings={settings}
@@ -118,30 +116,27 @@ export default function MarketplaceBuyModule() {
       : new BigNumber(1);
 
   return (
-    <>
-      <BaseModule
-        // Styles
-        marginTop="20px"
-        // Handlers
-        handleApprove={approveBeanstalkBean}
-        handleForm={handleForm}
-        resetForm={() => {
-          setSettings({ ...settings, mode: SwapMode.Ethereum });
-        }}
-        handleTabChange={handleTabChange}
-        // Form setup
-        allowance={allowance}
-        setAllowance={updateBeanstalkBeanAllowance}
-        isDisabled={isFormDisabled}
-        showButton={section === 1}
-        // Sections
-        section={section}
-        sectionTitles={sectionTitles}
-        sectionTitlesDescription={sectionTitlesDescription}
-      >
-        {sections[section]}
-      </BaseModule>
-      {/* <Graph /> */}
-    </>
+    <BaseModule
+      // Styles
+      style={{ marginTop: '20px' }}
+      // Handlers
+      handleForm={handleForm}
+      handleApprove={approveBeanstalkBean}
+      resetForm={() => {
+        setSettings({ ...settings, mode: SwapMode.Ethereum });
+      }}
+      handleTabChange={handleTabChange}
+      // Form setup
+      allowance={allowance}
+      setAllowance={updateBeanstalkBeanAllowance}
+      isDisabled={isFormDisabled}
+      showButton={section === 1}
+      // Sections
+      section={section}
+      sectionTitles={sectionTitles}
+      sectionTitlesDescription={sectionTitlesDescription}
+    >
+      {sections[section]}
+    </BaseModule>
   );
 }

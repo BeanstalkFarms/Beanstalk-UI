@@ -10,8 +10,9 @@ import {
   TokenInputField,
   PlotInputField,
   TransactionDetailsModule,
+  TransactionToast,
 } from 'components/Common';
-import { TrimBN, displayBN, CryptoAsset, FarmAsset, GetWalletAddress } from 'util/index';
+import { TrimBN, displayBN, CryptoAsset, FarmAsset, GetWalletAddress, listPlot } from 'util/index';
 import { Listing } from 'state/marketplace/reducer';
 import ListingsTable from './ListingsTable';
 
@@ -24,13 +25,6 @@ type CreateListingModuleProps = {
 }
 
 export const CreateListingModule = forwardRef((props: CreateListingModuleProps, ref) => {
-  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
-    (state) => state.weather
-  );
-  const { listings: allListings } = useSelector<AppState, AppState['marketplace']>(
-    (state) => state.marketplace
-  );
-
   /** The absolute index of the selected plot in line. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The amount of Pod listed from the plot. */
@@ -39,6 +33,13 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const [expiresIn, setExpiresIn] = useState(new BigNumber(-1));
   /** The price per pod. */
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
+
+  const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
+    (state) => state.weather
+  );
+  const { listings: allListings } = useSelector<AppState, AppState['marketplace']>(
+    (state) => state.marketplace
+  );
 
   const { setListing } = props; // Destructed to avoid useEffect dependency error
   const selectedPlotPositionInLine = index.minus(harvestableIndex);
@@ -232,12 +233,45 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   // probably incorporate it directly into each form so that local state
   // can be managed appropriately. - Silo Chad
   useImperativeHandle(ref, () => ({
-    resetForm() {
-      setIndex(new BigNumber(-1));
-      setAmount(new BigNumber(-1));
-      setExpiresIn(new BigNumber(-1));
-      setPricePerPodValue(new BigNumber(-1));
-    },
+    // resetForm() {
+    //   setIndex(new BigNumber(-1));
+    //   setAmount(new BigNumber(-1));
+    //   setExpiresIn(new BigNumber(-1));
+    //   setPricePerPodValue(new BigNumber(-1));
+    // },
+    handleForm() {
+      const expiry = (expiresIn.times(10 ** 6).plus(harvestableIndex.times(10 ** 6))).toString();
+          
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Listing ${displayBN(amount)} Pods for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod`,
+        success: 'Listing placed',
+      });
+
+      // Execute
+      listPlot(
+        index.times(10 ** 6).toString(),
+        pricePerPodValue.times(10 ** 6).toString(),
+        expiry,
+        amount.times(10 ** 6).toString(),
+        (response) => {
+          // Reset inputs
+          setIndex(new BigNumber(-1));
+          setAmount(new BigNumber(-1));
+          setExpiresIn(new BigNumber(-1));
+          setPricePerPodValue(new BigNumber(-1));
+          setListing(null);
+          txToast.confirming(response);
+          // createListingModuleRef.current.resetForm();
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
+    }
   }));
 
   return (

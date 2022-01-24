@@ -7,7 +7,6 @@ import {
   BaseModule,
   marketStrings,
 } from 'components/Common';
-import { beanstalkContract } from 'util/index';
 
 import Offers from './Offers/Offers';
 import CreateListingModule from './Listings/CreateListingModule';
@@ -36,8 +35,6 @@ export default function MarketplaceSellModule() {
   const [section, setSection] = useState<number>(0);
   /** Stored form state when creating a listing. */
   const [listing, setListing] = useState<ListingState | null>(null);
-  /** Ref to help with form submissions */
-  const createListingModuleRef = useRef<any>();
 
   // Handlers
   const handleTabChange = (event, newSection) => {
@@ -53,21 +50,51 @@ export default function MarketplaceSellModule() {
 
   // This only supports eth right now
   // TODO: need to handle beans / beans + eth
-  const onCreate = async () => {
-    const beanstalk = beanstalkContract();
-    const { index, pricePerPod, amount, expiresIn } = listing;
-    const expiry = (expiresIn.times(10 ** 6).plus(harvestableIndex.times(10 ** 6))).toString();
-    // Reset inputs
-    setListing(null);
-    createListingModuleRef.current.resetForm();
-    // Send request
-    const res = await beanstalk.listPlot(
-      index.times(10 ** 6).toString(),
-      pricePerPod.times(10 ** 6).toString(),
-      expiry,
-      amount.times(10 ** 6).toString(),
-    );
-    console.log('listPlot', res);
+  // FIXME: this is inconsistent with the approach used in other modules.
+  // const onCreate = async () => {
+  //   if (!listing) return;
+  //   const { index, pricePerPod, amount, expiresIn } = listing;
+  //   const expiry = (expiresIn.times(10 ** 6).plus(harvestableIndex.times(10 ** 6))).toString();
+        
+  //   // Toast
+  //   const txToast = new TransactionToast({
+  //     loading: ``,
+  //     success: 'Listing placed!',
+  //   });
+
+  //   // Execute
+  //   listPlot(
+  //     index.times(10 ** 6).toString(),
+  //     pricePerPod.times(10 ** 6).toString(),
+  //     expiry,
+  //     amount.times(10 ** 6).toString(),
+  //     (response) => {
+  //       // Reset inputs
+  //       setListing(null);
+  //       createListingModuleRef.current.resetForm();
+  //       txToast.confirming(response);
+  //     }
+  //   )
+  //   .then((value) => {
+  //     txToast.success(value);
+  //   })
+  //   .catch((err) => {
+  //     txToast.error(err);
+  //   });
+  // };
+
+  /** Ref to help with form submissions */
+  const createListingModuleRef = useRef<any>();
+  const handleForm = () => {
+    switch (section) {
+      case 0:
+        break;
+      case 1:
+        createListingModuleRef.current.handleForm();
+        break;
+      default:
+        break;
+    }
   };
 
   // Require all inputs have values > 0 or >= 0.
@@ -83,9 +110,11 @@ export default function MarketplaceSellModule() {
       mode="ALL"
     />,
     <CreateListingModule
+      ref={createListingModuleRef}
+      // isFormDisabled={false}
+      // setIsFormDisabled
       harvestableIndex={parseFloat(harvestableIndex)}
       plots={plots}
-      ref={createListingModuleRef}
       hasPlots={
         plots !== undefined &&
         (Object.keys(plots).length > 0 ||
@@ -97,23 +126,23 @@ export default function MarketplaceSellModule() {
   ];
 
   return (
-    <>
-      <BaseModule
-        // Styles
-        style={{ marginTop: '20px' }}
-        // Handlers
-        handleForm={onCreate}
-        handleTabChange={handleTabChange}
-        // Form setup
-        isDisabled={!readyToSubmit}
-        showButton={section === 1}
-        // Sections
-        section={section}
-        sectionTitles={sectionTitles}
-        sectionTitlesDescription={sectionTitlesDescription}
-      >
-        {sections[section]}
-      </BaseModule>
-    </>
+    <BaseModule
+      // Styles
+      style={{ marginTop: '20px' }}
+      // Handlers
+      handleForm={handleForm}
+      handleApprove={undefined}
+      resetForm={undefined}
+      handleTabChange={handleTabChange}
+      // Form setup
+      isDisabled={!readyToSubmit}
+      showButton={section === 1}
+      // Sections
+      section={section}
+      sectionTitles={sectionTitles}
+      sectionTitlesDescription={sectionTitlesDescription}
+    >
+      {sections[section]}
+    </BaseModule>
   );
 }

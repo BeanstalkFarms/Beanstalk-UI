@@ -126,6 +126,15 @@ export const buyBeansAndListBuyOffer = async (
   { onResponse }
 );
 
+/**
+ * 
+ * @param finalIndex 
+ * @param sellFromIndex 
+ * @param buyOfferIndex 
+ * @param finalAmount 
+ * @param onResponse 
+ * @returns 
+ */
 export const sellToBuyOffer = async (
   finalIndex,
   sellFromIndex,
@@ -140,5 +149,21 @@ export const sellToBuyOffer = async (
       buyOfferIndex,
       finalAmount
     ),
+  { onResponse }
+);
+
+export const listPlot = async (
+  index: string,
+  pricePerPod: string,
+  expiry: string,
+  amount: string,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract().listPlot(
+    index,
+    pricePerPod,
+    expiry,
+    amount,
+  ),
   { onResponse }
 );
