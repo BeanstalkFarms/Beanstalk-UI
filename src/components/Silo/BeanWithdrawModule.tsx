@@ -244,8 +244,8 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
       if (props.settings.claim) {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Claiming + withdrawing ${withdrawParams.amounts} Beans`,
-          success: `Claim + withdrawl of ${withdrawParams.amounts} Beans complete!`,
+          loading: `Claiming + withdrawing ${displayBN(fromBeanValue)} Beans`,
+          success: `Claim + withdrawl of ${displayBN(fromBeanValue)} Beans complete!`,
         });
 
         // Execute
@@ -267,8 +267,8 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
       } else {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Withdrawing ${withdrawParams.amounts} Beans`,
-          success: `Withdrawl of ${withdrawParams.amounts} Beans complete!`,
+          loading: `Withdrawing ${displayBN(fromBeanValue)} Beans`,
+          success: `Withdrawl of ${displayBN(fromBeanValue)} Beans complete!`,
         });
 
         // Execute
