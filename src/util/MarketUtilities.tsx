@@ -125,3 +125,20 @@ export const buyBeansAndListBuyOffer = async (
   ),
   { onResponse }
 );
+
+export const sellToBuyOffer = async (
+  finalIndex,
+  sellFromIndex,
+  buyOfferIndex,
+  finalAmount,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract()
+    .sellToBuyOffer(
+      finalIndex,
+      sellFromIndex,
+      buyOfferIndex,
+      finalAmount
+    ),
+  { onResponse }
+);

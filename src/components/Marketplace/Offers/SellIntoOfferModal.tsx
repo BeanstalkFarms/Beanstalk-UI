@@ -8,8 +8,8 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { TrimBN, beanstalkContract, displayBN, FarmAsset, CryptoAsset } from 'util/index';
-import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule } from 'components/Common';
+import { TrimBN, displayBN, FarmAsset, CryptoAsset, sellToBuyOffer } from 'util/index';
+import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule, TransactionToast } from 'components/Common';
 import { BuyOffer } from 'state/marketplace/reducer';
 import OffersTable from './OffersTable';
 
@@ -83,6 +83,12 @@ export default function SellIntoOfferModal({
       : new BigNumber(0)
   );
 
+  // Max amount that you can sell
+  // currentOffer.maxPlaceInLine = the max place in line the buyer is willing to buy from
+  // (i.e. can only sell if plot is before this)
+  const maxAmountCanSell = getMaxAmountCanSell(index);
+  const beansReceived = amount.times(currentOffer.pricePerPod);
+
   // Handle plot change
   const handlePlotChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event?.target?.value === 'default') {
@@ -91,29 +97,26 @@ export default function SellIntoOfferModal({
       return;
     }
     const newIndex = new BigNumber(event.target.value);
-    const maxAmountCanSell = getMaxAmountCanSell(newIndex);
-    console.log(`SellIntoOfferModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${maxAmountCanSell}`);
+    const _max = getMaxAmountCanSell(newIndex);
+    console.log(`SellIntoOfferModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${_max}`);
     setIndex(newIndex);
-    setAmount(maxAmountCanSell);
+    setAmount(_max);
   };
 
   // Handle form submission
   // Sell some or all pods from a plot the user owns into an
   // existing buy offer.
   const handleForm = async () => {
-    const beanstalk = beanstalkContract();
-
     const plotKey = index.toString();
     const plotToSellFrom = plots[plotKey];
     console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
 
-    //
+    // Contract Inputs
     const finalIndex = index.times(10 ** 6);
     const end = finalIndex.plus(plotToSellFrom.times(10 ** 6));
     const finalAmount = amount.times(10 ** 6);
     const sellFromIndex = end.minus(finalAmount);
     const buyOfferIndex = currentOffer.index;
-
     const params = [
       finalIndex.toFixed(),     // uint256 plotIndex
       sellFromIndex.toFixed(),  // uint256 sellFromIndex
@@ -121,15 +124,30 @@ export default function SellIntoOfferModal({
       finalAmount.toFixed()     // uint232 amount
     ];
 
-    console.log('SellIntoOfferModal: beanstalk.sellToBuyOffer', params);
-    await beanstalk.sellToBuyOffer(...params);
-  };
+    // Toast
+    const txToast = new TransactionToast({
+      loading: `Selling ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
+      success: `Sold ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
+    });
 
-  // Max amount that you can sell
-  // currentOffer.maxPlaceInLine = the max place in line the buyer is willing to buy from
-  // (i.e. can only sell if plot is before this)
-  const maxAmountCanSell = getMaxAmountCanSell(index);
-  const beansReceived = amount.times(currentOffer.pricePerPod);
+    // Execute
+    console.log('SellIntoOfferModal: beanstalk.sellToBuyOffer', params);
+    sellToBuyOffer(
+      params[0],
+      params[1],
+      params[2],
+      params[3],
+      (response) => {
+        txToast.confirming(response);
+      }
+    )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
+  };
 
   // Details
   const details : string[] = [];
