@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
+import { Toaster } from 'react-hot-toast';
 
 import Updater from 'state/userBalance/updater';
 import NFTUpdater from 'state/nfts/updater';
@@ -40,9 +41,10 @@ BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
 export default function App() {
   const dispatch = useDispatch();
-  const { initialized, metamaskFailure } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
+  const { initialized, metamaskFailure } = useSelector<
+    AppState,
+    AppState['general']
+  >((state) => state.general);
 
   // HANDLE WINDOW SIZE CHANGE
   // Used throughout the app to show/hide components and
@@ -149,6 +151,7 @@ export default function App() {
           <Box component="main" sx={{ flex: 1, position: 'relative' }}>
             <NavigationBar />
             {app}
+            <Toaster />
             <Footer />
           </Box>
         </Box>

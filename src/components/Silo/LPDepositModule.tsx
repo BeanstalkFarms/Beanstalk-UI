@@ -45,6 +45,7 @@ import {
   TransactionTextModule,
   TransactionDetailsModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 function displayLP(beanInput: BigNumber, ethInput: BigNumber) {
   return `${displayBN(beanInput)}
@@ -323,13 +324,14 @@ export const LPDepositModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
   const details = [];
   if (props.settings.claim) {
+    const claimedBeans = MinBN(fromBeanValue, props.beanClaimableBalance);
     details.push(
       <ClaimTextModule
         key="claim"
-        balance={props.beanClaimable.plus(props.ethClaimable)}
+        balance={claimedBeans.plus(props.ethClaimable)}
         claim={props.settings.claim}
         mode={props.settings.mode}
-        beanClaimable={props.beanClaimable}
+        beanClaimable={claimedBeans}
         ethClaimable={props.ethClaimable}
       />
     );
@@ -503,10 +505,35 @@ export const LPDepositModule = forwardRef((props, ref) => {
         const claimable = props.settings.claim ? props.claimable : null;
         const lp = MaxBN(fromLPValue, new BigNumber(0));
         if (props.settings.mode === SwapMode.LP && lp.isGreaterThan(0)) {
-          depositLP(toStringBaseUnitBN(lp, ETH.decimals), claimable, () =>
-            resetFields()
-          );
+          // Toast
+          const txToast = new TransactionToast({
+            loading: `Depositing ${displayBN(toSiloLPValue)} LP`,
+            success: `Deposited ${displayBN(toSiloLPValue)} LP`,
+          });
+
+          // Execute
+          depositLP(
+            toStringBaseUnitBN(lp, ETH.decimals),
+            claimable,
+            (response) => {
+              resetFields();
+              txToast.confirming(response);
+            }
+          )
+          .then((value) => {
+            txToast.success(value);
+          })
+          .catch((err) => {
+            txToast.error(err);
+          });
         } else if (props.settings.convert) {
+          // Toast
+          const txToast = new TransactionToast({
+            loading: `Converting and depositing ${displayBN(toSiloLPValue)} LP`,
+            success: `Converted and deposited ${displayBN(toSiloLPValue)} LP`,
+          });
+
+          // Execute
           convertAddAndDepositLP(
             toStringBaseUnitBN(lp, ETH.decimals),
             toStringBaseUnitBN(fromEthValue, ETH.decimals),
@@ -524,14 +551,32 @@ export const LPDepositModule = forwardRef((props, ref) => {
             beanConvertParams.crates,
             beanConvertParams.amounts,
             claimable,
-            () => resetFields()
-          );
+            (response) => {
+              resetFields();
+              txToast.confirming(response);
+            }
+          )
+          .then((value) => {
+            txToast.success(value);
+          })
+          .catch((err) => {
+            txToast.error(err);
+          });
         } else {
+          // Contract inputs
           const beans = fromBeanValue
             .plus(toBuyBeanValue)
             .minus(toSellBeanValue);
           const buyEth = MaxBN(toBuyEthValue, new BigNumber(0));
           const eth = fromEthValue.plus(buyEth).minus(toSellEthValue);
+
+          // Toast
+          const txToast = new TransactionToast({
+            loading: `Adding and depositing ${displayBN(toSiloLPValue)} LP`,
+            success: `Added and deposited ${displayBN(toSiloLPValue)} LP`,
+          });
+
+          // Execute
           addAndDepositLP(
             toStringBaseUnitBN(lp, ETH.decimals),
             toStringBaseUnitBN(toBuyBeanValue, BEAN.decimals),
@@ -549,8 +594,18 @@ export const LPDepositModule = forwardRef((props, ref) => {
               ),
             ],
             claimable,
-            () => resetFields()
-          );
+            (response) => {
+              resetFields();
+              txToast.confirming(response);
+            }
+          )
+          .then((value) => {
+            txToast.success(value);
+          })
+          .catch((err) => {
+            console.error(err);
+            txToast.error(err);
+          });
         }
       }
     },

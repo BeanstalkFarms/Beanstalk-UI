@@ -14,7 +14,7 @@ import {
   withdrawBeans,
 } from 'util/index';
 import {
-  ClaimTextModule,
+  // ClaimTextModule,
   SettingsFormModule,
   SiloAsset,
   siloStrings,
@@ -23,6 +23,7 @@ import {
   TransactionDetailsModule,
   TransitAsset,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const BeanWithdrawModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -152,18 +153,20 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   const details = [];
-  if (props.settings.claim) {
-    details.push(
-      <ClaimTextModule
-        key="claim"
-        balance={props.beanClaimable.plus(props.ethClaimable)}
-        claim={props.settings.claim}
-        mode={props.settings.mode}
-        beanClaimable={props.beanClaimable}
-        ethClaimable={props.ethClaimable}
-      />
-    );
-  }
+  // Hiding for partial claim
+  // if (props.settings.claim) {
+  //   details.push(
+  //     <ClaimTextModule
+  //       key="claim"
+  //       balance={props.beanClaimableBalance.plus(props.ethClaimable)}
+  //       claim={props.settings.claim}
+  //       mode={props.settings.mode}
+  //       beanClaimable={props.beanClaimableBalance}
+  //       ethClaimable={props.ethClaimable}
+  //     />
+  //   );
+  // }
+
   const beanOutput = new BigNumber(fromBeanValue);
 
   details.push(`Withdraw ${displayBN(beanOutput)}
@@ -238,19 +241,50 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
       ) {
         return;
       }
-
       if (props.settings.claim) {
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Claiming + withdrawing ${displayBN(fromBeanValue)} Beans`,
+          success: `Claim + withdrawl of ${displayBN(fromBeanValue)} Beans complete!`,
+        });
+
+        // Execute
         claimAndWithdrawBeans(
           withdrawParams.crates,
           withdrawParams.amounts,
           props.claimable,
-          () => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1));
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
-        withdrawBeans(withdrawParams.crates, withdrawParams.amounts, () => {
-          fromValueUpdated(new BigNumber(-1));
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Withdrawing ${displayBN(fromBeanValue)} Beans`,
+          success: `Withdrawl of ${displayBN(fromBeanValue)} Beans complete!`,
+        });
+
+        // Execute
+        withdrawBeans(
+          withdrawParams.crates,
+          withdrawParams.amounts,
+          (response) => {
+            fromValueUpdated(new BigNumber(-1));
+            txToast.confirming(response);
+          }
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
         });
       }
     },

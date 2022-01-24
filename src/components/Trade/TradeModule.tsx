@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
+
 import { AppState } from 'state';
 import { updateUniswapBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 import {
   approveUniswapBean,
   buyBeans,
+  displayBN,
   sellBeans,
   toStringBaseUnitBN,
   transferBeans,
 } from 'util/index';
+
 import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 import SendModule from './SendModule';
 import SwapModule from './SwapModule';
 
@@ -35,7 +39,6 @@ export default function TradeModule() {
   const sectionTitlesDescription = [tradeStrings.swap, tradeStrings.send];
 
   /* Swap Sub-Module state */
-
   const [orderIndex, setOrderIndex] = useState(true);
   const [settings, setSettings] = useState({
     slippage: new BigNumber(BASE_SLIPPAGE),
@@ -49,7 +52,6 @@ export default function TradeModule() {
   const conversionFactor = orderIndex ? ethToBean : beanToEth;
 
   /* Send Sub-Module state */
-
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
 
@@ -65,31 +67,76 @@ export default function TradeModule() {
   };
 
   const handleForm = () => {
+    // 0 = "Swap"
     if (section === 0) {
       const minimumToAmount = toValue.multipliedBy(settings.slippage);
-
       if (toValue.isGreaterThan(0)) {
+        // Buy Beans via Ethereum
         if (fromToken === CryptoAsset.Ethereum) {
+          // Toast
+          const txToast = new TransactionToast({
+            loading: `Buying ${displayBN(toValue)} Beans for ${displayBN(fromValue)} ETH`,
+            success: `Bought ${displayBN(toValue)} Beans`,
+          });
+
+          // Execute
           buyBeans(
             toStringBaseUnitBN(fromValue, ETH.decimals),
             toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
-            handleSwapCallback
-          );
+            (response) => txToast.confirming(response)
+          )
+          .then((value) => {
+            handleSwapCallback();
+            txToast.success(value);
+          })
+          .catch((err) => {
+            txToast.error(err);
+          });
         } else {
+          // Toast
+          const txToast = new TransactionToast({
+            loading: `Selling ${fromValue} Beans`,
+            success: `Sold ${fromValue} Beans`,
+          });
+
+          // Execute
           sellBeans(
             toStringBaseUnitBN(fromValue, BEAN.decimals),
             toStringBaseUnitBN(minimumToAmount, ETH.decimals),
-            handleSwapCallback
-          );
+            (response) => txToast.confirming(response)
+          )
+          .then((value) => {
+            handleSwapCallback();
+            txToast.success(value);
+          })
+          .catch((err) => {
+            txToast.error(err);
+          });
         }
       }
-    } else if (section === 1) {
+    }
+    // 1 = "Send"
+    else if (section === 1) {
       if (fromValue.isGreaterThan(0)) {
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Transfering ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
+          success: `Sent ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
+        });
+
+        // Execute
         transferBeans(
           toAddress,
           toStringBaseUnitBN(fromValue, BEAN.decimals),
-          handleSwapCallback
-        );
+          (response) => txToast.confirming(response)
+        )
+        .then((value) => {
+          handleSwapCallback();
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     }
   };

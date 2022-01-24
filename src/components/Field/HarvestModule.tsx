@@ -11,12 +11,19 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
 } from 'components/Common';
+import { UserBalanceState } from 'state/userBalance/reducer';
+import TransactionToast from 'components/Common/TransactionToast';
 
-export const HarvestModule = forwardRef((props, ref) => {
+type HarvestModuleProps = {
+  setIsFormDisabled: Function;
+  harvestablePodBalance: UserBalanceState['harvestablePodBalance'];
+  harvestablePlots: UserBalanceState['harvestablePlots'];
+};
+
+export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
   props.setIsFormDisabled(props.harvestablePodBalance.isLessThanOrEqualTo(0));
 
   /* Input Fields */
-
   const fromPodField = (
     <TokenInputField
       balance={props.harvestablePodBalance}
@@ -26,7 +33,6 @@ export const HarvestModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toBeanField = (
     <TokenOutputField
       mint
@@ -36,9 +42,10 @@ export const HarvestModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-  const details = [];
-  details.push(`Harvest ${displayBN(props.harvestablePodBalance)} Pods`);
-  details.push(`Receive ${displayBN(props.harvestablePodBalance)} Beans`);
+  const details = [
+    `Harvest ${displayBN(props.harvestablePodBalance)} Pods`,
+    `Receive ${displayBN(props.harvestablePodBalance)} Beans`,
+  ];
 
   function transactionDetails() {
     if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
@@ -61,12 +68,28 @@ export const HarvestModule = forwardRef((props, ref) => {
     handleForm() {
       if (props.harvestablePodBalance.isLessThanOrEqualTo(0)) return;
 
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Harvesting ${displayBN(props.harvestablePodBalance)} Pods`,
+        success: `Harvested ${displayBN(props.harvestablePodBalance)} Pods`,
+      });
+
+      // Execute
       harvest(
+        // plots
         Object.keys(props.harvestablePlots).map((key) =>
           toStringBaseUnitBN(new BigNumber(key), BEAN.decimals)
         ),
-        () => {}
-      );
+        (response) => {
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 

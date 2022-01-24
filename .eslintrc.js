@@ -54,9 +54,11 @@ module.exports = {
     'react/jsx-boolean-value': 'warn',
     'react/jsx-props-no-multi-spaces': 'warn',
     'spaced-comment': 'warn',
+    'brace-style': 0,
     'keyword-spacing': 'warn',
-    // -- Space efficiency
+    // Space efficiency
     'arrow-body-style': 'warn',
+    'no-trailing-spaces': 0,
     '@typescript-eslint/no-unused-vars': ['warn'],
     // -- Other (to categorize)
     'max-classes-per-file': 0,

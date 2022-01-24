@@ -17,6 +17,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import CheckIcon from '@material-ui/icons/Check';
 import { percentForStalk, vote, unvote } from 'util/index';
 import { theme } from 'constants/index';
+import TransactionToast from 'components/Common/TransactionToast';
 import { Line, QuestionModule, governanceStrings } from 'components/Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
@@ -72,9 +73,45 @@ export default function Vote(props) {
   const buttonHandler = () => {
     const bip = props.bips[selected];
     if (props.votedBips[bip]) {
-      unvote(bip.toString(), () => {});
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Unvoting for BIP ${bip}`,
+        success: 'Vote removed!',
+      });
+
+      // Execute
+      unvote(
+        bip.toString(),
+        (response) => {
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     } else {
-      vote(bip.toString(), () => {});
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Voting for BIP ${bip}`,
+        success: 'Vote cast!',
+      });
+
+      // Execute
+      vote(
+        bip.toString(),
+        (response) => {
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     }
   };
 

@@ -18,6 +18,7 @@ import {
   fieldStrings,
   TransactionDetailsModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const SendPlotModule = forwardRef((props, ref) => {
   const [plotId, setPlotId] = useState(new BigNumber(-1));
@@ -236,11 +237,33 @@ export const SendPlotModule = forwardRef((props, ref) => {
     handleForm() {
       if (toPlotEndIndex.isLessThanOrEqualTo(0)) return;
       if (toPlotEndIndex.isGreaterThan(0)) {
+        // Contract Inputs
         const startPlot = toStringBaseUnitBN(fromPlotIndex, BEAN.decimals);
         const endPlot = toStringBaseUnitBN(toPlotEndIndex, BEAN.decimals);
         const id = toStringBaseUnitBN(plotId, BEAN.decimals);
-        transferPlot(props.toAddress, id, startPlot, endPlot, () => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+        
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Sending plot ${startPlot}-${endPlot} to ${props.toAddress}`,
+          success: `Sent plot ${startPlot}-${endPlot} to ${props.toAddress}`,
+        });
+  
+        // Execute
+        transferPlot(
+          props.toAddress,
+          id,
+          startPlot,
+          endPlot,
+          (response) => {
+            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            txToast.confirming(response);
+          }
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
         });
       } else {
         fromValueUpdated(new BigNumber(-1), new BigNumber(-1));

@@ -19,7 +19,7 @@ import {
   withdrawLP,
 } from 'util/index';
 import {
-  ClaimTextModule,
+  // ClaimTextModule,
   SettingsFormModule,
   SiloAsset,
   siloStrings,
@@ -28,6 +28,7 @@ import {
   TransitAsset,
   TransactionDetailsModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const LPWithdrawModule = forwardRef((props, ref) => {
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
@@ -125,7 +126,6 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   };
 
   /* Input Fields */
-
   const fromLPField = (
     <TokenInputField
       balance={props.maxFromLPVal}
@@ -141,7 +141,6 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toBurnStalkField = (
     <TokenOutputField
       burn
@@ -165,18 +164,19 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   const details = [];
-  if (props.settings.claim) {
-    details.push(
-      <ClaimTextModule
-        key="claim"
-        balance={props.beanClaimable.plus(props.ethClaimable)}
-        claim={props.settings.claim}
-        mode={props.settings.mode}
-        beanClaimable={props.beanClaimable}
-        ethClaimable={props.ethClaimable}
-      />
-    );
-  }
+  // Hiding for partial claim
+  // if (props.settings.claim) {
+  //   details.push(
+  //     <ClaimTextModule
+  //       key="claim"
+  //       balance={props.beanClaimable.plus(props.ethClaimable)}
+  //       claim={props.settings.claim}
+  //       mode={props.settings.mode}
+  //       beanClaimable={props.beanClaimable}
+  //       ethClaimable={props.ethClaimable}
+  //     />
+  //   );
+  // }
   details.push(
     `Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
   );
@@ -250,17 +250,49 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       }
 
       if (props.settings.claim) {
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Claiming and withdrawing ${displayBN(fromLPValue)} LP`,
+          success: `Claimed and withdrew ${displayBN(fromLPValue)} LP`,
+        });
+
+        // Execute
         claimAndWithdrawLP(
           withdrawParams.crates,
           withdrawParams.amounts,
           props.claimable,
-          () => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1));
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
-        withdrawLP(withdrawParams.crates, withdrawParams.amounts, () => {
-          fromValueUpdated(new BigNumber(-1));
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Withdrawing ${displayBN(fromLPValue)} LP`,
+          success: `Withdrew ${displayBN(fromLPValue)} LP`,
+        });
+
+        // Execute
+        withdrawLP(
+          withdrawParams.crates,
+          withdrawParams.amounts,
+          (response) => {
+            fromValueUpdated(new BigNumber(-1));
+            txToast.confirming(response);
+          }
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
         });
       }
     },

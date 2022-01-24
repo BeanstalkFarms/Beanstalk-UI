@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { BEAN, WETH, zeroBN } from 'constants/index';
-import { account, MinBN, txCallback, uniswapRouterContract } from './index';
+import { account, MinBN, uniswapRouterContract } from './index';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 const DEADLINE_FROM_NOW = 60 * 15;
 const createDeadline = () => Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
@@ -13,39 +14,48 @@ export enum SwapMode {
   BeanEthereumSwap,
 }
 
-export const buyBeans = async (amountIn, amountOutMin, callback) => {
-  await uniswapRouterContract()
-    .swapExactETHForTokens(
-      amountOutMin,
-      [WETH.addr, BEAN.addr],
-      account,
-      createDeadline(),
-      { value: amountIn }
-    )
-    .then((response) => {
-      callback();
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
-};
+/**
+ * 
+ * @param amountIn 
+ * @param amountOutMin 
+ * @param onResponse 
+ * @returns 
+ */
+export const buyBeans = async (
+  amountIn: string,
+  amountOutMin: string,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  uniswapRouterContract().swapExactETHForTokens(
+    amountOutMin,
+    [WETH.addr, BEAN.addr],
+    account,
+    createDeadline(),
+    { value: amountIn }
+  ),
+  { onResponse }
+);
 
-export const sellBeans = async (amountIn, amountOutMin, callback) => {
-  await uniswapRouterContract()
-    .swapExactTokensForETH(
-      amountIn,
-      amountOutMin,
-      [BEAN.addr, WETH.addr],
-      account,
-      createDeadline()
-    )
-    .then((response) => {
-      callback();
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
-};
+/**
+ * 
+ * @param amountIn 
+ * @param amountOutMin 
+ * @param callback 
+ */
+export const sellBeans = async (
+  amountIn: string,
+  amountOutMin: string,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  uniswapRouterContract().swapExactTokensForETH(
+    amountIn,
+    amountOutMin,
+    [BEAN.addr, WETH.addr],
+    account,
+    createDeadline()
+  ),
+  { onResponse }
+);
 
 export const tokenForLP = (amount, reserve, totalLP) =>
   amount.multipliedBy(reserve).dividedBy(totalLP);
@@ -151,23 +161,23 @@ export const calculateBeansToLP = (
   beanReserve: BigNumber,
   ethReserve: BigNumber,
   totalLP: BigNumber
-  ) => {
-    let c = beanReserve.multipliedBy(
-      beans.multipliedBy(3988000).plus(beanReserve.multipliedBy(3988009))
-    );
-    c = c.sqrt();
-    const swapBeans = c.minus(beanReserve.multipliedBy(1997)).dividedBy(1994);
-    const addEth = getToAmount(swapBeans, beanReserve, ethReserve);
+) => {
+  let c = beanReserve.multipliedBy(
+    beans.multipliedBy(3988000).plus(beanReserve.multipliedBy(3988009))
+  );
+  c = c.sqrt();
+  const swapBeans = c.minus(beanReserve.multipliedBy(1997)).dividedBy(1994);
+  const addEth = getToAmount(swapBeans, beanReserve, ethReserve);
 
-    const newBeanReserve = beanReserve.plus(swapBeans);
-    const addBeans = beans.minus(swapBeans);
-    const lp = addBeans.multipliedBy(totalLP).dividedBy(newBeanReserve);
-    return {
-      swapBeans,
-      addEth,
-      addBeans,
-      lp,
-    };
+  const newBeanReserve = beanReserve.plus(swapBeans);
+  const addBeans = beans.minus(swapBeans);
+  const lp = addBeans.multipliedBy(totalLP).dividedBy(newBeanReserve);
+  return {
+    swapBeans,
+    addEth,
+    addBeans,
+    lp,
+  };
 };
 
 export const calculateMaxBeansToPeg = (
@@ -177,8 +187,12 @@ export const calculateMaxBeansToPeg = (
 ) => {
   const ethBought = getToAmount(beansToPeg, beanReserve, ethReserve);
   const newBeanReserve = beanReserve.plus(beansToPeg);
-  const newEthReserve = ethReserve.multipliedBy(beanReserve).dividedBy(newBeanReserve);
-  const beansToAdd = ethBought.multipliedBy(newBeanReserve).dividedBy(newEthReserve);
+  const newEthReserve = ethReserve
+    .multipliedBy(beanReserve)
+    .dividedBy(newBeanReserve);
+  const beansToAdd = ethBought
+    .multipliedBy(newBeanReserve)
+    .dividedBy(newEthReserve);
   return beansToPeg.plus(beansToAdd);
 };
 

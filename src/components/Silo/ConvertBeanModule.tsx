@@ -27,6 +27,7 @@ import {
   TransactionTextModule,
   CryptoAsset,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const ConvertBeanModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -51,23 +52,18 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     (state) => state.season.season
   );
 
-  const {
-    totalLP,
-  } = useSelector<AppState, AppState['totalBalance']>(
+  const { totalLP } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
 
-  const {
-    beanReserve,
-    ethReserve,
-    beanPrice,
-    usdcPrice,
-    beansToPeg,
-  } = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
+  const { beanReserve, ethReserve, beanPrice, usdcPrice, beansToPeg } =
+    useSelector<AppState, AppState['prices']>((state) => state.prices);
 
-  const maxBeansToPeg = calculateMaxBeansToPeg(beansToPeg, beanReserve, ethReserve);
+  const maxBeansToPeg = calculateMaxBeansToPeg(
+    beansToPeg,
+    beanReserve,
+    ethReserve
+  );
 
   function displayLP(beanInput, ethInput) {
     return `${displayBN(beanInput)}
@@ -99,9 +95,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
         beansRemoved = beansRemoved.plus(crateBeansRemoved);
         stalkRemoved = stalkRemoved.plus(crateBeansRemoved);
         stalkRemoved = stalkRemoved.plus(
-          crateBeansRemoved
-            .multipliedBy(season.minus(key))
-            .multipliedBy(0.0002)
+          crateBeansRemoved.multipliedBy(season.minus(key)).multipliedBy(0.0002)
         );
         crates.push(key);
         amounts.push(toStringBaseUnitBN(crateBeansRemoved, BEAN.decimals));
@@ -115,12 +109,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
     const fromNumber = MinBNs([newFromNumber, beanSiloBalance, maxBeansToPeg]);
     const newFromBeanValue = TrimBN(fromNumber, BEAN.decimals);
     getStalkRemoved(newFromBeanValue);
-    const {
-      swapBeans,
-      addEth,
-      addBeans,
-      lp,
-    } = calculateBeansToLP(
+    const { swapBeans, addEth, addBeans, lp } = calculateBeansToLP(
       newFromBeanValue,
       beanReserve,
       ethReserve,
@@ -136,7 +125,10 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       setToSellBeans(swapBeans);
     });
 
-    props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0) || maxBeansToPeg.isLessThanOrEqualTo(0));
+    props.setIsFormDisabled(
+      newFromBeanValue.isLessThanOrEqualTo(0) ||
+        maxBeansToPeg.isLessThanOrEqualTo(0)
+    );
   }
 
   const handleFromChange = (event) => {
@@ -205,7 +197,8 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
 
   const priceText = beansToPeg.isLessThanOrEqualTo(0) ? (
     <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
-      P must be greater than $1 to convert Deposited Beans to Deposited LP Tokens.
+      P must be greater than $1 to convert Deposited Beans to Deposited LP
+      Tokens.
     </Box>
   ) : null;
 
@@ -216,7 +209,8 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       sellToken={toSellBeans}
       updateExpectedPrice={updateExpectedPrice}
     />,
-    `Add ${displayLP(MaxBN(toAddBeans, new BigNumber(0)),
+    `Add ${displayLP(
+      MaxBN(toAddBeans, new BigNumber(0)),
       MaxBN(toAddEth, new BigNumber(0))
     )} to the BEAN:ETH pool`,
     `Receive ${displayBN(toLPValue)} LP Tokens`,
@@ -253,15 +247,32 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       ) {
         return;
       }
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Converting ${displayBN(fromBeanValue)} Silo Beans to LP`,
+        success: `Converted ${displayBN(fromBeanValue)} Silo Beans to LP`,
+      });
+
+      // Execute
       convertDepositedBeans(
         toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
-        toStringBaseUnitBN(toLPValue.multipliedBy(props.settings.slippage), UNI_V2_ETH_BEAN_LP.decimals),
+        toStringBaseUnitBN(
+          toLPValue.multipliedBy(props.settings.slippage),
+          UNI_V2_ETH_BEAN_LP.decimals
+        ),
         convertParams.crates,
         convertParams.amounts,
-        () => {
+        (response) => {
           fromValueUpdated(new BigNumber(-1));
+          txToast.confirming(response);
         }
-      );
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 

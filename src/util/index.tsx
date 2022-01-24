@@ -24,9 +24,10 @@ export * from './MarketUtilities';
 
 let ethereum;
 export let initializing;
-export let web3: Web3;
-export let account: string;
-export let txCallback = null;
+/** txCallback is called after each successful request to the chain. */
+export let txCallback : Function | undefined;
+export let web3 : Web3;
+export let account : string;
 export let metamaskFailure = -1;
 export let chainId = 1;
 
@@ -97,7 +98,7 @@ export async function initialize(): Promise<boolean> {
         ]);
         account = hexAccount;
         chainId = parseInt(chainIdentifier, 10);
-        if (chainId !== 1 && chainId !== 3) {
+        if (chainId !== 1 && chainId !== 3 && chainId !== 1337) {
           metamaskFailure = 3;
           return false;
         }
@@ -130,7 +131,11 @@ export async function switchToMainnet() {
   }
 }
 
-export function initializeCallback(callback) {
+/**
+ * Defined as a function so we can update the "global" txCallback var
+ * from outside of this file.
+ */
+export function initializeCallback(callback: Function) {
   txCallback = callback;
 }
 

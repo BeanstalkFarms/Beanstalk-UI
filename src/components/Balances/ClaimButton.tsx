@@ -27,11 +27,16 @@ export default function ClaimButton(props) {
           handleClick={
             props.asset === ClaimableAsset.Ethereum
               ? () => {
-                  claim(props.claimable, true, toStringBaseUnitBN(beanWrappedBalance, BEAN.decimals));
-                }
+                claim(
+                  props.claimable,
+                  true,
+                  toStringBaseUnitBN(beanWrappedBalance, BEAN.decimals),
+                  () => {} // empty onResponse handler
+                );
+              }
               : () => {
-                  updateSilo(props.claimable);
-                }
+                updateSilo(props.claimable);
+              }
           }
           margin="-13px 7px 0 0"
           marginTooltip="0 0 -5px 20px"

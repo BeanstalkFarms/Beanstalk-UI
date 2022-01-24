@@ -18,7 +18,8 @@ import TransitIcon from 'img/transit-icon.svg';
 import UniswapIcon from 'img/uniswap-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
-import { account, txCallback, tokenContract } from './index';
+import { account, tokenContract } from './index';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 const MAX_UINT256 =
   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
@@ -65,35 +66,36 @@ export type Token =
   | UniswapAsset
   | BudgetAsset;
 
-// ---------------------------------
-
+/**
+ * 
+ * @param to 
+ * @param amount 
+ * @param onResponse 
+ * @returns 
+ */
 export const transferBeans = async (
   to: string,
-  amount: BigNumber,
-  callback
-) => {
-  tokenContract(BEAN)
-    .transfer(to, amount)
-    .then((response) => {
-      callback();
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
-};
+  amount: string,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  tokenContract(BEAN).transfer(to, amount),
+  { onResponse }
+);
 
 export const approveToken = async (
-  token,
+  token: string,
   address: String,
   spender: String,
   amount: String,
-  callback: (number) => void
+  callback: (number) => void,
+  completeCallback
 ) => {
   tokenContract(token)
     .approve(spender, amount)
     .then((response) => {
       callback(1);
       response.wait().then(() => {
+        completeCallback();
         callback(2);
       });
     });

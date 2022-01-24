@@ -38,7 +38,6 @@ export default function SiloBeanModule() {
     stalkBalance,
     lockedSeasons,
     beanReceivableBalance,
-    beanWrappedBalance,
     beanReceivableCrates,
     farmableBeanBalance,
     rawBeanDeposits,
@@ -151,11 +150,6 @@ export default function SiloBeanModule() {
     ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
 
-  const beanClaimable = beanReceivableBalance
-    .plus(beanWrappedBalance)
-    .plus(harvestablePodBalance)
-    .plus(poolForLPRatio(lpReceivableBalance)[0]);
-
   const ethClaimable = claimableEthBalance.plus(
     poolForLPRatio(lpReceivableBalance)[1]
   );
@@ -167,7 +161,6 @@ export default function SiloBeanModule() {
       beanBalance={beanBalance}
       beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
       beanReserve={prices.beanReserve}
-      beanClaimable={beanClaimable}
       ethClaimable={ethClaimable}
       beanLPClaimableBalance={claimLPBeans}
       beanToStalk={BEAN_TO_STALK}
@@ -188,7 +181,6 @@ export default function SiloBeanModule() {
     />,
     <BeanWithdrawModule
       key={1}
-      beanClaimable={beanClaimable}
       ethClaimable={ethClaimable}
       beanReceivableBalance={beanReceivableBalance}
       beanClaimableBalance={beanClaimableBalance}

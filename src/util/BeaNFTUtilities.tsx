@@ -46,7 +46,9 @@ export const getMintedNFTs = async () => {
     fromBlock: 0,
   });
   const ownedIds = toTransfers.map((t) => parseInt(t.returnValues.tokenId, 10));
-  const tradedIds = fromTransfers.map((t) => parseInt(t.returnValues.tokenId, 10));
+  const tradedIds = fromTransfers.map((t) =>
+    parseInt(t.returnValues.tokenId, 10)
+  );
   return [ownedIds, tradedIds];
 };
 

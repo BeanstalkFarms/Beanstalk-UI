@@ -10,6 +10,7 @@ import {
   getToAmount,
   MaxBN,
   MinBNs,
+  MinBN,
   sowBeans,
   SwapMode,
   toBaseUnitBN,
@@ -29,6 +30,7 @@ import {
   TransactionDetailsModule,
   TransactionTextModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const SowModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -124,14 +126,15 @@ export const SowModule = forwardRef((props, ref) => {
   /* Transaction Details, settings and text */
 
   const details = [];
+  const claimedBeans = MinBN(fromBeanValue, props.beanClaimableBalance);
   if (props.settings.claim) {
     details.push(
       <ClaimTextModule
         key="claim"
-        balance={props.beanClaimable.plus(props.ethClaimable)}
+        balance={claimedBeans.plus(props.ethClaimable)}
         claim={props.settings.claim}
         mode={props.settings.mode}
-        beanClaimable={props.beanClaimable}
+        beanClaimable={claimedBeans}
         ethClaimable={props.ethClaimable}
       />
     );
@@ -217,6 +220,7 @@ export const SowModule = forwardRef((props, ref) => {
 
       const claimable = props.settings.claim ? props.claimable : null;
       if (fromEthValue.isGreaterThan(0)) {
+        // Contract Inputs
         const beans = MaxBN(
           toBaseUnitBN(fromBeanValue, BEAN.decimals),
           new BigNumber(0)
@@ -226,17 +230,52 @@ export const SowModule = forwardRef((props, ref) => {
           toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
-        buyAndSowBeans(beans, buyBeans, eth, claimable, () => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Buying ${toBuyBeanValue} Beans and sowing for ${displayBN(toPodValue)} Pods`,
+          success: `Sowed ${toBuyBeanValue} Beans for ${displayBN(toPodValue)} Pods`,
+        });
+
+        // Execute
+        buyAndSowBeans(
+          beans,
+          buyBeans,
+          eth,
+          claimable,
+          (response) => {
+            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            txToast.confirming(response);
+          }
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
         });
       } else {
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Sowing ${fromBeanValue} Beans`,
+          success: `Sowed ${fromBeanValue} Beans`,
+        });
+
+        // Execute
         sowBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimable,
-          () => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     },
   }));
