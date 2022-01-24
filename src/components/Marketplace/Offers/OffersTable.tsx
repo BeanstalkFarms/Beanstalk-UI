@@ -18,10 +18,10 @@ import {
 
 import { BuyOffer } from 'state/marketplace/reducer';
 import { theme } from 'constants/index';
-import { beanstalkContract, CryptoAsset, displayBN, FarmAsset } from 'util/index';
+import { cancelBuyOffer, CryptoAsset, displayBN, FarmAsset } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
-import { BalanceTableCell, QuestionModule } from 'components/Common';
+import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/Common';
 import { useStyles } from '../TableStyles';
 
 type OfferRowProps = {
@@ -89,8 +89,23 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           <TableCell align="center">
             <IconButton
               onClick={async () => {
-                const beanstalk = beanstalkContract();
-                await beanstalk.cancelBuyOffer(offer.index.toString());
+                // Toast
+                const txToast = new TransactionToast({
+                  loading: `Cancelling buy offer for ${displayBN(numPodsLeft)} Pods at ${displayBN(offer.pricePerPod)} Beans per Pod`,
+                  success: 'Buy offer cancelled',
+                });
+
+                // Execute
+                cancelBuyOffer(
+                  offer.index.toString(),
+                  (response) => txToast.confirming(response),
+                )
+                .then((value) => {
+                  txToast.success(value);
+                })
+                .catch((err) => {
+                  txToast.error(err);
+                });
               }}
               style={{
                 color: theme.linkColor,

@@ -167,3 +167,19 @@ export const listPlot = async (
   ),
   { onResponse }
 );
+
+export const cancelListing = (
+  index: string,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract().cancelListing(index),
+  { onResponse }
+);
+
+export const cancelBuyOffer = (
+  index: string,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract().cancelBuyOffer(index),
+  { onResponse }
+);

@@ -20,10 +20,10 @@ import {
 
 import { Listing } from 'state/marketplace/reducer';
 import { theme, BEAN } from 'constants/index';
-import { beanstalkContract, displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset } from 'util/index';
+import { displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset, cancelListing } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
-import { BalanceTableCell, QuestionModule } from 'components/Common';
+import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/Common';
 import { useStyles } from '../TableStyles';
 
 type ListingRowProps = {
@@ -125,10 +125,23 @@ function ListingRow({
             <TableCell align="center">
               <IconButton
                 onClick={async () => {
-                  const beanstalk = beanstalkContract();
-                  await beanstalk.cancelListing(
-                    toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals)
-                  );
+                  // Toast
+                  const txToast = new TransactionToast({
+                    loading: `Cancelling listing with ${displayBN(amountRemaining)} Pods remaining at ${displayBN(relativeIndex)} in line`,
+                    success: 'Listing cancelled',
+                  });
+
+                  // Execute
+                  cancelListing(
+                    toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals),
+                    (response) => txToast.confirming(response),
+                  )
+                  .then((value) => {
+                    txToast.success(value);
+                  })
+                  .catch((err) => {
+                    txToast.error(err);
+                  });
                 }}
                 style={{
                   color: theme.linkColor,
