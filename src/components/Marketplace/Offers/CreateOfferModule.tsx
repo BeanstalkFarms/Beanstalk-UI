@@ -34,6 +34,7 @@ import {
   TransactionDetailsModule,
   TransactionTextModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const CreateOfferModule = forwardRef(({
   isFormDisabled,
@@ -339,6 +340,7 @@ export const CreateOfferModule = forwardRef(({
 
       const claimabl = settings.claim ? claimable : null;
       if (fromEthValue.isGreaterThan(0)) {
+        // Contract Inputs
         const beans = MaxBN(
           toBaseUnitBN(fromBeanValue, BEAN.decimals),
           new BigNumber(0)
@@ -348,6 +350,14 @@ export const CreateOfferModule = forwardRef(({
           toBuyBeanValue.multipliedBy(settings.slippage),
           BEAN.decimals
         );
+        
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Place an offer to buy ${displayBN(toPodValue)} Pods`,
+          success: 'Offer placed!',
+        });
+
+        // Execute
         buyBeansAndListBuyOffer(
           toStringBaseUnitBN(maxPlaceInLineValue, BEAN.decimals),
           toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
@@ -355,20 +365,41 @@ export const CreateOfferModule = forwardRef(({
           buyBeans,
           eth,
           claimabl,
-          () => {
+          (response) => {
             resetFields();
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Place an offer to buy ${displayBN(toPodValue)} Pods`,
+          success: 'Offer placed!',
+        });
+
+        // Execute
         listBuyOffer(
           toStringBaseUnitBN(maxPlaceInLineValue, BEAN.decimals),
           toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimabl,
-          () => {
+          (response) => {
             resetFields();
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     },
   }));

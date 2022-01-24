@@ -78,7 +78,8 @@ export default function MarketplaceBuyModule() {
     );
   };
 
-  // Note: Can send ref to listings
+  // NOTE: Can send ref to listings
+  // FIXME: buyListingRef isn't used
   const buyListingRef = useRef<any>();
   const buyOfferRef = useRef<any>();
   const handleForm = () => {
