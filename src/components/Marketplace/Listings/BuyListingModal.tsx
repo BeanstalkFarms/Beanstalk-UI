@@ -36,6 +36,7 @@ import {
   TransactionDetailsModule,
   TransactionTextModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 
 import ListingsTable from './ListingsTable';
@@ -200,18 +201,12 @@ export default function BuyListingModal({
     setBuyPods(fromBeans.plus(buyBeans).dividedBy(currentListing.pricePerPod));
   };
   const handleForm = () => {
-    const listingIndex = toStringBaseUnitBN(currentListing.objectiveIndex, BEAN.decimals);
-
     if (buyPods.isLessThanOrEqualTo(0)) return;
-
+    const listingIndex = toStringBaseUnitBN(currentListing.objectiveIndex, BEAN.decimals);
     const _claimable = settings.claim ? claimable : null;
-    const onComplete = () => {
-      // Reset form
-      fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-    };
 
     if (fromEthValue.isGreaterThan(0)) {
-      console.log('Transaction will include ETH. Using buyBeansAndBuyListing');
+      // Contract Inputs
       const beans = MaxBN(
         toBaseUnitBN(fromBeanValue, BEAN.decimals),
         new BigNumber(0)
@@ -221,6 +216,15 @@ export default function BuyListingModal({
         toBuyBeanValue,
         BEAN.decimals
       );
+      
+      // Toast
+      const detail = `${displayBN(buyPods)} Pods at ${displayBN(currentListing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for ${displayBN(currentListing.pricePerPod)} Beans each`;
+      const txToast = new TransactionToast({
+        loading: `Buying ${detail}`,
+        success: `Bought ${detail}`,
+      });
+
+      // Execute
       buyBeansAndBuyListing(
         listingIndex,
         currentListing.listerAddress,
@@ -228,10 +232,26 @@ export default function BuyListingModal({
         buyBeans,
         eth,
         _claimable,
-        onComplete
-      );
+        (response) => {
+          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     } else {
-      console.log('Transaction will include just Beans. Using buyListing');
+      // Toast
+      const detail = `${displayBN(buyPods)} Pods at ${displayBN(currentListing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue)} Beans for ${displayBN(currentListing.pricePerPod)} Beans each`;
+      const txToast = new TransactionToast({
+        loading: `Buying ${detail}`,
+        success: `Bought ${detail}`,
+      });
+
+      // Execute
       buyListing(
         listingIndex,
         currentListing.listerAddress,
@@ -240,8 +260,17 @@ export default function BuyListingModal({
           BEAN.decimals
         ),
         _claimable,
-        onComplete
-      );
+        (response) => {
+          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     }
   };
 

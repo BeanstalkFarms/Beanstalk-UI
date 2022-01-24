@@ -58,7 +58,7 @@ export type TxnCallbacks = {
 }
 
 /**
- * TODO: throw an error if the user rejects the request in Metamask/etc.
+ * 
  * @param fn 
  * @param callbacks 
  */

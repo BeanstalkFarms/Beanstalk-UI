@@ -1,4 +1,5 @@
-import { beanstalkContract, txCallback } from './index';
+import { beanstalkContract } from './index';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 /**
  * 
@@ -13,19 +14,26 @@ export const buyListing = async (
   from: string,
   amount: string,
   claimable: any, // FIXME
-  callback: Function
-) => {
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
   (claimable
     ? beanstalkContract().claimBeansAndBuyListing(index, from, amount, claimable)
     : beanstalkContract().buyListing(index, from, amount)
-  ).then((response) => {
-    callback();
-    response.wait().then(() => {
-      txCallback();
-    });
-  });
-};
+  ),
+  { onResponse }
+);
 
+/**
+ * 
+ * @param index 
+ * @param from 
+ * @param amount 
+ * @param buyBeanAmount 
+ * @param ethAmount 
+ * @param claimable 
+ * @param onResponse 
+ * @returns 
+ */
 export const buyBeansAndBuyListing = async (
   index: string,
   from: string,
@@ -33,8 +41,8 @@ export const buyBeansAndBuyListing = async (
   buyBeanAmount: string,
   ethAmount: string,
   claimable: any,
-  callback: Function
-) => {
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
   (claimable
     ? beanstalkContract().claimAndBuyBeansAndBuyListing(
         index,
@@ -51,32 +59,44 @@ export const buyBeansAndBuyListing = async (
       buyBeanAmount,
       { value: ethAmount }
     )
-  ).then((response) => {
-    callback();
-    response.wait().then(() => {
-      txCallback();
-    });
-  });
-};
+  ),
+  { onResponse }
+);
 
+/**
+ * 
+ * @param maxPlaceInLine 
+ * @param price 
+ * @param amount 
+ * @param claimable 
+ * @param onResponse 
+ * @returns 
+ */
 export const listBuyOffer = async (
   maxPlaceInLine,
   price,
   amount,
   claimable,
-  callback
-) => {
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
   (claimable
     ? beanstalkContract().claimBeansAndListBuyOffer(maxPlaceInLine, price, amount, claimable)
     : beanstalkContract().listBuyOffer(maxPlaceInLine, price, amount)
-  ).then((response) => {
-    callback();
-    response.wait().then(() => {
-      txCallback();
-    });
-  });
-};
+  ),
+  { onResponse }
+);
 
+/**
+ * 
+ * @param maxPlaceInLine 
+ * @param price 
+ * @param amount 
+ * @param buyBeanAmount 
+ * @param ethAmount 
+ * @param claimable 
+ * @param onResponse 
+ * @returns 
+ */
 export const buyBeansAndListBuyOffer = async (
   maxPlaceInLine,
   price,
@@ -84,8 +104,8 @@ export const buyBeansAndListBuyOffer = async (
   buyBeanAmount,
   ethAmount,
   claimable,
-  callback
-) => {
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
   (claimable
     ? beanstalkContract().claimAndBuyBeansAndListBuyOffer(
         maxPlaceInLine,
@@ -102,10 +122,6 @@ export const buyBeansAndListBuyOffer = async (
       buyBeanAmount,
       { value: ethAmount }
     )
-  ).then((response) => {
-    callback();
-    response.wait().then(() => {
-      txCallback();
-    });
-  });
-};
+  ),
+  { onResponse }
+);

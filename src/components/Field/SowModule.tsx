@@ -80,7 +80,6 @@ export const SowModule = forwardRef((props, ref) => {
   }
 
   /* Input Fields */
-
   const fromBeanField = (
     <InputFieldPlus
       key={0}
@@ -112,7 +111,6 @@ export const SowModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toPodField = (
     <TokenOutputField
       key="pods"
@@ -124,7 +122,6 @@ export const SowModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-
   const details = [];
   const claimedBeans = MinBN(fromBeanValue, props.beanClaimableBalance);
   if (props.settings.claim) {
