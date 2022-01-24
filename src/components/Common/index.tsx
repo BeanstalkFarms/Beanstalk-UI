@@ -49,6 +49,7 @@ export { default as TabImageModule } from './TabImageModule';
 export { default as Line } from './Line';
 export { default as SectionTabs } from './SectionTabs';
 export { default as BalanceTableCell } from './BalanceTableCell';
+export { default as TransactionToast } from './TransactionToast';
 
 export const FormatTooltip = withStyles((theme: Theme) => ({
   tooltip: {
