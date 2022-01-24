@@ -241,13 +241,13 @@ export const SendPlotModule = forwardRef((props, ref) => {
         const startPlot = toStringBaseUnitBN(fromPlotIndex, BEAN.decimals);
         const endPlot = toStringBaseUnitBN(toPlotEndIndex, BEAN.decimals);
         const id = toStringBaseUnitBN(plotId, BEAN.decimals);
-        
+
         // Toast
         const txToast = new TransactionToast({
-          loading: `Sending plot ${startPlot}-${endPlot} to ${props.toAddress}`,
-          success: `Sent plot ${startPlot}-${endPlot} to ${props.toAddress}`,
+          loading: `Sending plot ${startPlot}-${endPlot} to ${props.toAddress.substring(0, 6)}`,
+          success: `Sent plot ${startPlot}-${endPlot} to ${props.toAddress.substring(0, 6)}`,
         });
-  
+
         // Execute
         transferPlot(
           props.toAddress,

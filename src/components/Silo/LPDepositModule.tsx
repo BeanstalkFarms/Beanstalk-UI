@@ -507,8 +507,8 @@ export const LPDepositModule = forwardRef((props, ref) => {
         if (props.settings.mode === SwapMode.LP && lp.isGreaterThan(0)) {
           // Toast
           const txToast = new TransactionToast({
-            loading: `Depositing ${displayBN(toSiloLPValue)} LP`,
-            success: `Deposited ${displayBN(toSiloLPValue)} LP`,
+            loading: `Depositing ${displayBN(toSiloLPValue)} LP Tokens`,
+            success: `Deposited ${displayBN(toSiloLPValue)} LP Tokens`,
           });
 
           // Execute
@@ -529,8 +529,8 @@ export const LPDepositModule = forwardRef((props, ref) => {
         } else if (props.settings.convert) {
           // Toast
           const txToast = new TransactionToast({
-            loading: `Converting and depositing ${displayBN(toSiloLPValue)} LP`,
-            success: `Converted and deposited ${displayBN(toSiloLPValue)} LP`,
+            loading: `Converting and depositing ${displayBN(toSiloLPValue)} LP Tokens`,
+            success: `Converted and deposited ${displayBN(toSiloLPValue)} LP Tokens`,
           });
 
           // Execute
@@ -572,8 +572,8 @@ export const LPDepositModule = forwardRef((props, ref) => {
 
           // Toast
           const txToast = new TransactionToast({
-            loading: `Adding and depositing ${displayBN(toSiloLPValue)} LP`,
-            success: `Added and deposited ${displayBN(toSiloLPValue)} LP`,
+            loading: `Adding and depositing ${displayBN(toSiloLPValue)} LP Tokens`,
+            success: `Added and deposited ${displayBN(toSiloLPValue)} LP Tokens`,
           });
 
           // Execute

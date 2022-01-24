@@ -128,8 +128,8 @@ export const LPClaimModule = forwardRef((props, ref) => {
       if (settings.removeLP) {
         // Toast
         const txToast = new TransactionToast({
-          loading: 'Removing and claiming LP',
-          success: 'Removed and claimed LP',
+          loading: 'Removing and claiming LP Tokens',
+          success: 'Removed and claimed LP Tokens',
         });
 
         // Execute
@@ -150,8 +150,8 @@ export const LPClaimModule = forwardRef((props, ref) => {
       } else {
         // Toast
         const txToast = new TransactionToast({
-          loading: 'Claiming LP',
-          success: 'Claimed LP',
+          loading: 'Claiming LP Tokens',
+          success: 'Claimed LP Tokens',
         });
 
         // Execute
