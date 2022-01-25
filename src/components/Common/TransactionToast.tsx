@@ -1,8 +1,6 @@
 import React from 'react';
 import { ContractReceipt, ContractTransaction } from 'ethers';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import { chainId } from 'util/index';
 
 export function ToastAlert({ desc, hash }: { desc: string, hash?: string }) {

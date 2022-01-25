@@ -14,7 +14,7 @@ import {
   TableHead,
   TableRow,
   IconButton,
-  CircularProgress,
+  // CircularProgress,
   TablePagination,
 } from '@material-ui/core';
 
@@ -101,7 +101,10 @@ function ListingRow({
               {`${displayBN(listing.amountSold)} / ${displayBN(listing.initialAmount)}`}
             </span>
             <TokenIcon token={FarmAsset.Pods} />
-            {listing.amountSold > 0 && (
+            {/* Disabling the progress bar for now - it feels out of place next to the
+                the Pod icon, and since we already show listing.amountSold the user can easily
+                eyeball how much of their plot has sold. Will discuss a UI for this with the design team. -SC */}
+            {/* listing.amountSold > 0 && (
               // TODO: add a tooltip when you hover over this
               // TODO: move this to the front of the row?
               <CircularProgress
@@ -118,7 +121,7 @@ function ListingRow({
                 thickness={4}
                 style={{ opacity: 0.7, height: 10 }}
               />
-            )}
+              ) */}
           </TableCell>
           {/* Cancel Button */}
           {enableControls && (
