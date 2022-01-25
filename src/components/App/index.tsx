@@ -41,10 +41,7 @@ BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
 export default function App() {
   const dispatch = useDispatch();
-  const { initialized, metamaskFailure } = useSelector<
-    AppState,
-    AppState['general']
-  >((state) => state.general);
+  const { initialized, metamaskFailure, width } = useSelector<AppState, AppState['general']>((state) => state.general);
 
   // HANDLE WINDOW SIZE CHANGE
   // Used throughout the app to show/hide components and
@@ -152,10 +149,9 @@ export default function App() {
             <NavigationBar />
             {app}
             <Toaster
-              // position="bottom-right"
               containerStyle={{
-                left: 295, // this should be 300, something messed up
-                // top: -5
+                // Shift toast by side nav bar width
+                left: width < 800 ? 0 : 280,
                 marginTop: -2,
               }}
               toastOptions={{

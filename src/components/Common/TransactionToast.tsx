@@ -6,17 +6,8 @@ import { AppState } from 'state';
 import { chainId } from 'util/index';
 
 export function ToastAlert({ desc, hash }: { desc: string, hash?: string }) {
-  const { width } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
-
-  // Shift toast by side nav bar width
-  const toastStyle = {
-    left: width < 800 ? 0 : 280,
-  };
-
   return (
-    <div style={toastStyle}>
+    <div>
       {desc}
       {hash && (
         <>
