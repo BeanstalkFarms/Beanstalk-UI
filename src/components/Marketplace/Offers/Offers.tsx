@@ -15,15 +15,16 @@ import Filters, { StyledSlider } from '../Filters';
 
 type OffersProps = {
   mode: 'ALL' | 'MINE';
-}
+};
 
 /**
  * Offers ("Offers to Buy")
  */
 export default function Offers(props: OffersProps) {
-  const { buyOffers: allOffers } = useSelector<AppState, AppState['marketplace']>(
-    (state) => state.marketplace
-  );
+  const { buyOffers: allOffers } = useSelector<
+    AppState,
+    AppState['marketplace']
+  >((state) => state.marketplace);
   const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
@@ -62,19 +63,17 @@ export default function Offers(props: OffersProps) {
 
   // Handle changes in filters
   useMemo(() => {
-    filteredOffers.current = _.filter(allOffers, (offer) => (
-      (props.mode === 'MINE' ? (
-        offer.listerAddress === walletAddress
-      ) : (
-        offer.listerAddress !== walletAddress
-      )) &&
-      offer.pricePerPod.toNumber() > priceFilters[0] &&
-      offer.pricePerPod.toNumber() < priceFilters[1] &&
-      offer.maxPlaceInLine
-        .gte(new BigNumber(placeInLineFilters[0])) &&
-        offer.maxPlaceInLine
-        .lte(new BigNumber(placeInLineFilters[1]))
-    ));
+    filteredOffers.current = _.filter(
+      allOffers,
+      (offer) =>
+        (props.mode === 'MINE'
+          ? offer.listerAddress === walletAddress
+          : offer.listerAddress !== walletAddress) &&
+        offer.pricePerPod.toNumber() > priceFilters[0] &&
+        offer.pricePerPod.toNumber() < priceFilters[1] &&
+        offer.maxPlaceInLine.gte(new BigNumber(placeInLineFilters[0])) &&
+        offer.maxPlaceInLine.lte(new BigNumber(placeInLineFilters[1]))
+    );
 
     // Filter offers the user cannot sell a plot into
     filteredOffers.current = _.filter(filteredOffers.current, (offer) => {
@@ -82,23 +81,33 @@ export default function Offers(props: OffersProps) {
       if (validOffers) {
         const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
           const plotObjectiveIndex = new BigNumber(plotIndex);
-          return plotObjectiveIndex.minus(harvestableIndex).lt(offer.maxPlaceInLine);
+          return plotObjectiveIndex
+            .minus(harvestableIndex)
+            .lt(offer.maxPlaceInLine);
         });
-        validPlots = validPlotIndices.reduce((prev, curr) => (
-          {
+        validPlots = validPlotIndices.reduce(
+          (prev, curr) => ({
             ...prev,
             [curr]: plots[curr],
-          }
-        ), {});
+          }),
+          {}
+        );
       }
-      return (Object.keys(validPlots).length > 0 === validOffers || !validOffers);
+      return Object.keys(validPlots).length > 0 === validOffers || !validOffers;
     });
 
     return () => {
       // cleanup listings
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allOffers, priceFilters, placeInLineFilters, props.mode, walletAddress, validOffers]);
+  }, [
+    allOffers,
+    priceFilters,
+    placeInLineFilters,
+    props.mode,
+    walletAddress,
+    validOffers,
+  ]);
 
   //
   const handlePriceFilter = (event, newValue) => {
@@ -129,74 +138,80 @@ export default function Offers(props: OffersProps) {
 
   // Filters
   const filters = (
-    <Filters title={`${filteredOffers.current.length} offer${filteredOffers.current.length !== 1 ? 's' : ''}`}>
-      <>
-        {/* Toggle for users to select to filter out plots they can't sell into  */}
-        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
-          Offers you can Sell
-          <QuestionModule
-            description={filterStrings.toggleValidOffers}
-            margin="-10px 0px 0px 0px"
-            placement="right"
-          />
-        </Box>
-        <Box sx={{ mt: 3, px: 0.75 }} style={{ margin: '10px 0' }}>
-          <SwitchModule
-            setValue={(value) => {
-              setValidOffers(value);
-            }}
-            value={validOffers}
-          />
-        </Box>
-        {/* Price per Pod sliding filter  */}
-        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
-          Price Per Pod
-          <QuestionModule
-            description={filterStrings.pricePerPod}
-            margin="-12px 0px 0px 2px"
-            placement="right"
-          />
-        </Box>
-        <Box sx={{ mt: 3, px: 0.75 }}>
-          <StyledSlider
-            value={tempPriceFilters}
-            valueLabelDisplay="on"
-            onChange={handlePriceFilter}
-            step={0.01}
-            min={0}
-            max={1}
-          />
-        </Box>
-        {/* Place in Line sliding filter  */}
-        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
-          Place In Line
-          <QuestionModule
-            description={filterStrings.placeInLine}
-            margin="-10px 0px 0px 0px"
-            placement="right"
-          />
-        </Box>
-        <Box sx={{ mt: 3, px: 0.75 }}>
-          <StyledSlider
-            value={tempPlaceInLineFilters}
-            valueLabelFormat={(value: number) => {
-              const units = ['', 'K', 'M', 'B'];
-              let unitIndex = 0;
-              let scaledValue = value;
-              while (scaledValue >= 1000 && unitIndex < units.length - 1) {
-                unitIndex += 1;
-                scaledValue /= 1000;
-              }
-              return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
-            }}
-            valueLabelDisplay="on"
-            onChange={handlePlaceInLineFilter}
-            min={0}
-            max={totalPods.toNumber()}
-          />
-        </Box>
-        {/* <Button onClick={applyFilters}>Apply Filter</Button> */}
-      </>
+    <Filters
+      title={`${filteredOffers.current.length} offer${
+        filteredOffers.current.length !== 1 ? 's' : ''
+      }`}
+    >
+      {/* Toggle for users to select to filter out plots they can't sell into  */}
+      {props.mode !== 'MINE' && (
+        <>
+          <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+            Offers you can Sell to
+            <QuestionModule
+              description={filterStrings.toggleValidOffers}
+              margin="-10px 0px 0px 0px"
+              placement="right"
+            />
+          </Box>
+          <Box sx={{ mt: 3, px: 0.75 }} style={{ margin: '10px 0' }}>
+            <SwitchModule
+              setValue={(value) => {
+                setValidOffers(value);
+              }}
+              value={validOffers}
+            />
+          </Box>
+        </>
+      )}
+      {/* Price per Pod sliding filter  */}
+      <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+        Price Per Pod
+        <QuestionModule
+          description={filterStrings.pricePerPod}
+          margin="-12px 0px 0px 2px"
+          placement="right"
+        />
+      </Box>
+      <Box sx={{ mt: 3, px: 0.75 }}>
+        <StyledSlider
+          value={tempPriceFilters}
+          valueLabelDisplay="on"
+          onChange={handlePriceFilter}
+          step={0.01}
+          min={0}
+          max={1}
+        />
+      </Box>
+      {/* Place in Line sliding filter  */}
+      <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+        Place In Line
+        <QuestionModule
+          description={filterStrings.placeInLine}
+          margin="-10px 0px 0px 0px"
+          placement="right"
+        />
+      </Box>
+      <Box sx={{ mt: 3, px: 0.75 }}>
+        <StyledSlider
+          value={tempPlaceInLineFilters}
+          valueLabelFormat={(value: number) => {
+            const units = ['', 'K', 'M', 'B'];
+            let unitIndex = 0;
+            let scaledValue = value;
+            while (scaledValue >= 1000 && unitIndex < units.length - 1) {
+              unitIndex += 1;
+              scaledValue /= 1000;
+            }
+            return `${Math.trunc(scaledValue)}${units[unitIndex]}`;
+          }}
+          valueLabelDisplay="on"
+          onChange={handlePlaceInLineFilter}
+          min={0}
+          max={totalPods.toNumber()}
+        />
+      </Box>
+      {/* <Button onClick={applyFilters}>Apply Filter</Button> */}
     </Filters>
   );
 
