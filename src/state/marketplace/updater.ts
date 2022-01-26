@@ -115,7 +115,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         // Lister
         listerAddress:
           event.returnValues.account,
-        // Plot Information  
+        // Plot Information
         objectiveIndex:
           toTokenUnitsBN(new BigNumber(event.returnValues.index), BEAN.decimals),
         // Listing Configuration
@@ -146,16 +146,17 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       const newKey = new BigNumber(index).plus(amount).toString();
       listings[newKey] = currentListing;
 
-      // Check whether current listing is sold or not
-      const isSold = currentListing.initialAmount.minus(currentListing.amountSold).minus(amountBN).isEqualTo(0);
-      if (isSold) {
-        listings[newKey].status = 'sold';
-      }
-
       // Bump up |amountSold| for this listing
       listings[newKey].objectiveIndex = toTokenUnitsBN(new BigNumber(index).plus(amount), BEAN.decimals);
       listings[newKey].amountSold = listings[newKey].amountSold.plus(amountBN);
-      listings[newKey].amount = currentListing.initialAmount.minus(currentListing.amountSold).minus(amountBN);
+      listings[newKey].amount = currentListing.initialAmount.minus(listings[newKey].amountSold);
+
+      // Check whether current listing is sold or not
+      const isSold = listings[newKey].amount.isEqualTo(0);
+      if (isSold) {
+        listings[newKey].status = 'sold';
+        delete listings[newKey];
+      }
     } else if (event.event === 'BuyOfferCreated') {
       buyOffers[event.returnValues.index] = {
         listerAddress: event.returnValues.account,

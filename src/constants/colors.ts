@@ -213,7 +213,7 @@ export const winterTheme = {
   bean: beanWhite,
 };
 
-export let theme = winterTheme;
+export let theme = mainTheme;
 
 export function changeTheme(t: String) {
   if (t === 'ropsten') theme = ropstenTheme;

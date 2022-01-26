@@ -127,7 +127,8 @@ export default function TabbedMarketplace() {
       {/* Column: My Market */}
       <Grid
         item
-        md={6}
+        lg={6}
+        md={9}
         sm={12}
         style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
       >

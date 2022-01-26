@@ -126,7 +126,6 @@ export default function BuyListingModal({
     let fromBeans;
     if (settings.mode === SwapMode.Bean || settings.mode === SwapMode.BeanEthereum) {
       fromBeans = MinBN(fromBeansNumber, beanBalance);
-      setFromBeanValue(TrimBN(fromBeans, BEAN.decimals));
 
       buyBeans = fromBeansNumber.minus(fromBeans);
       const fromEth = MinBN(getFromAmount(
@@ -143,7 +142,12 @@ export default function BuyListingModal({
         );
       }
 
-      setSettings({ ...settings, mode: fromEth.isGreaterThan(0) ? SwapMode.BeanEthereum : SwapMode.Bean });
+      setSettings({
+        ...settings,
+        mode: fromEth.isGreaterThan(0)
+          ? SwapMode.BeanEthereum
+          : SwapMode.Bean
+      });
       setFromEthValue(TrimBN(fromEth, ETH.decimals));
       setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
     } else {
@@ -164,8 +168,6 @@ export default function BuyListingModal({
 
       fromBeans = MinBN(fromBeansNumber.minus(buyBeans), beanBalance);
 
-      setFromBeanValue(TrimBN(fromBeans, BEAN.decimals));
-
       setSettings({
         ...settings,
         mode: fromBeans.isGreaterThan(0)
@@ -176,6 +178,7 @@ export default function BuyListingModal({
       setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
     }
 
+    setFromBeanValue(TrimBN(fromBeans, BEAN.decimals));
     setBuyPods(TrimBN(buyBeans.plus(fromBeans).dividedBy(currentListing.pricePerPod), BEAN.decimals));
   };
   const fromValueUpdated = (newFromNumber: BigNumber, newFromEthNumber: BigNumber) => {
@@ -201,7 +204,7 @@ export default function BuyListingModal({
     setBuyPods(fromBeans.plus(buyBeans).dividedBy(currentListing.pricePerPod));
   };
   const handleForm = () => {
-    if (buyPods.isLessThanOrEqualTo(0)) return;
+    if (buyPods.isLessThanOrEqualTo(0)) return null;
     const listingIndex = toStringBaseUnitBN(currentListing.objectiveIndex, BEAN.decimals);
     const _claimable = settings.claim ? claimable : null;
 
@@ -216,9 +219,12 @@ export default function BuyListingModal({
         toBuyBeanValue,
         BEAN.decimals
       );
-      
+
       // Toast
-      const detail = `${displayBN(buyPods)} Pods at ${displayBN(currentListing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for ${displayBN(currentListing.pricePerPod)} Beans each`;
+      const detail = `${displayBN(buyPods)} Pods at ${displayBN(
+        currentListing.objectiveIndex.minus(harvestableIndex)
+      )} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for
+      ${displayBN(currentListing.pricePerPod)} Beans each`;
       const txToast = new TransactionToast({
         loading: `Buying ${detail}`,
         success: `Bought ${detail}`,
@@ -245,7 +251,11 @@ export default function BuyListingModal({
       });
     } else {
       // Toast
-      const detail = `${displayBN(buyPods)} Pods at ${displayBN(currentListing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue)} Beans for ${displayBN(currentListing.pricePerPod)} Beans each`;
+      const detail = `${displayBN(buyPods)} Pods at ${displayBN(
+        currentListing.objectiveIndex.minus(harvestableIndex)
+      )} in line with ${displayBN(fromBeanValue)} Beans for ${displayBN(
+        currentListing.pricePerPod
+      )} Beans each`;
       const txToast = new TransactionToast({
         loading: `Buying ${detail}`,
         success: `Bought ${detail}`,
@@ -291,6 +301,46 @@ export default function BuyListingModal({
     }
   }
 
+  // Input Fields
+  const fromBeanField = (
+    <InputFieldPlus
+      key={0}
+      balance={beanBalance}
+      claim={settings.claim}
+      claimableBalance={claimableBeans}
+      beanLPClaimableBalance={claimableLPBeans}
+      handleChange={(event) => fromValueUpdated(event, fromEthValue)}
+      token={CryptoAsset.Bean}
+      value={fromBeanValue}
+      visible={settings.mode !== SwapMode.Ethereum}
+    />
+  );
+  const fromEthField = (
+    <EthInputField
+      key={1}
+      balance={ethBalance}
+      buyBeans={toBuyBeanValue}
+      claim={settings.claim}
+      claimableBalance={claimableEthBalance}
+      handleChange={(event) => fromValueUpdated(fromBeanValue, event)}
+      mode={settings.mode}
+      sellEth={fromEthValue}
+      updateExpectedPrice={updateExpectedPrice}
+      value={TrimBN(fromEthValue, 9)}
+    />
+  );
+  // The number of pods to purchase from this Plot
+  const toPodField = (
+    <InputFieldPlus
+      key={2}
+      balanceLabel="Available"
+      balance={currentListing.amount}
+      token={FarmAsset.Pods}
+      value={TrimBN(buyPods, 6)}
+      handleChange={(event) => toValueUpdated(event)}
+    />
+  );
+
   /* Settings */
   const showSettings = (
     <SettingsFormModule
@@ -333,7 +383,10 @@ export default function BuyListingModal({
     );
   }
   details.push(
-    `Buy ${displayBN(buyPods)} Pods at ${displayBN(currentListing.objectiveIndex.minus(harvestableIndex))} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for ${displayBN(currentListing.pricePerPod)} Beans each`
+    `Buy ${displayBN(buyPods)} Pods at ${displayBN(
+      currentListing.objectiveIndex.minus(harvestableIndex)
+    )} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for
+    ${displayBN(currentListing.pricePerPod)} Beans each`
   );
 
   const isReadyToSubmit = (
@@ -345,6 +398,14 @@ export default function BuyListingModal({
       settings.mode === SwapMode.BeanEthereum)
       ? beanstalkBeanAllowance
       : new BigNumber(1);
+
+  function transactionDetails() {
+    if (buyPods.isLessThanOrEqualTo(0)) return null;
+
+    return (
+      <TransactionDetailsModule fields={details} />
+    );
+  }
 
   return (
     <Modal
@@ -383,56 +444,14 @@ export default function BuyListingModal({
           listings={[currentListing]}
         />
         <Box sx={{ marginTop: 20 }}>
-          {/*
-            * The number of pods to purchase from this Plot.
-            */}
-          <InputFieldPlus
-            key={0}
-            balance={beanBalance}
-            claim={settings.claim}
-            claimableBalance={claimableBeans}
-            beanLPClaimableBalance={claimableLPBeans}
-            handleChange={(event) => {
-              fromValueUpdated(event, fromEthValue);
-            }}
-            token={CryptoAsset.Bean}
-            value={fromBeanValue}
-            visible={settings.mode !== SwapMode.Ethereum}
-          />
-          <EthInputField
-            key={1}
-            balance={ethBalance}
-            buyBeans={toBuyBeanValue}
-            claim={settings.claim}
-            claimableBalance={claimableEthBalance}
-            handleChange={(event) => {
-              fromValueUpdated(fromBeanValue, event);
-            }}
-            mode={settings.mode}
-            sellEth={fromEthValue}
-            updateExpectedPrice={updateExpectedPrice}
-            value={TrimBN(fromEthValue, 9)}
-          />
+          {fromBeanField}
+          {fromEthField}
           <ExpandMoreIcon
             color="primary"
             style={{ marginBottom: '-14px', width: '100%' }}
           />
-          {/*
-            * The number of pods to purchase from this Plot.
-            */}
-          <InputFieldPlus
-            key={2}
-            balanceLabel="Available"
-            balance={currentListing.amount}
-            token={FarmAsset.Pods}
-            value={TrimBN(buyPods, 6)}
-            handleChange={(event) => toValueUpdated(event)}
-          />
-          {buyPods.isGreaterThan(0) ? (
-            <TransactionDetailsModule
-              fields={details}
-            />
-          ) : null}
+          {toPodField}
+          {transactionDetails()}
           {showSettings}
         </Box>
       </BaseModule>

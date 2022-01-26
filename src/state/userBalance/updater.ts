@@ -321,38 +321,51 @@ export default function Updater() {
                 : beans,
           };
         } else if (event.event === 'Sow') {
-          const s = parseInt(event.returnValues.index, 10) / 1e6;
+          const s = toTokenUnitsBN(
+            new BigNumber(event.returnValues.index),
+            BEAN.decimals
+          );
           userPlots[s] = toTokenUnitsBN(
             event.returnValues.pods,
             BEAN.decimals // QUESTION: why is this BEAN.decimals and not PODS? are they the same?
           );
         } else if (event.event === 'PlotTransfer') {
           if (event.returnValues.to === account) {
-            const s = parseInt(event.returnValues.id, 10) / 1e6;
+            const s = toTokenUnitsBN(
+              new BigNumber(event.returnValues.id),
+              BEAN.decimals
+            );
             userPlots[s] = toTokenUnitsBN(
               event.returnValues.pods,
               BEAN.decimals
             );
           } else {
-            const s = parseInt(event.returnValues.id, 10) / 1e6;
-            const pods = toTokenUnitsBN(event.returnValues.pods, BEAN.decimals);
+            const s = toTokenUnitsBN(
+              new BigNumber(event.returnValues.id),
+              BEAN.decimals
+            );
+            const pods = toTokenUnitsBN(
+              new BigNumber(event.returnValues.pods),
+              BEAN.decimals
+            );
             let i = 0;
             let found = false;
             if (userPlots[s] !== undefined) {
               if (!pods.isEqualTo(userPlots[s])) {
-                const newStartIndex =
-                  s + parseInt(event.returnValues.pods, 10) / 1e6;
+                const newStartIndex = s.plus(pods);
                 userPlots[newStartIndex] = userPlots[s].minus(pods);
               }
               delete userPlots[s];
             } else {
               while (found === false && i < Object.keys(userPlots).length) {
-                const startIndex = parseFloat(Object.keys(userPlots)[i]);
-                const endIndex = startIndex + parseFloat(userPlots[startIndex]);
-                if (startIndex <= s && endIndex >= s) {
-                  userPlots[startIndex] = new BigNumber(s - startIndex);
-                  if (s !== endIndex) {
-                    const s2 = s + parseInt(event.returnValues.pods, 10) / 1e6;
+                const startIndex = new BigNumber(Object.keys(userPlots)[i]);
+                const endIndex = new BigNumber(
+                  startIndex.plus(userPlots[startIndex])
+                );
+                if (startIndex.isLessThanOrEqualTo(s) && endIndex.isGreaterThanOrEqualTo(s)) {
+                  userPlots[startIndex] = new BigNumber(s.minus(startIndex));
+                  if (!s.isEqualTo(endIndex)) {
+                    const s2 = s.plus(pods);
                     userPlots[s2] = new BigNumber(endIndex).minus(
                       new BigNumber(s2)
                     );
@@ -426,8 +439,8 @@ export default function Updater() {
           );
           let plots = event.returnValues.plots
             .slice()
-            .map((p) => parseInt(p, 10) / 1e6);
-          plots = plots.sort((a, b) => a - b);
+            .map((p) => toTokenUnitsBN(p, BEAN.decimals));
+          plots = plots.sort((a, b) => a.minus(b));
 
           plots.forEach((index) => {
             if (beansClaimed.isLessThan(userPlots[index])) {
