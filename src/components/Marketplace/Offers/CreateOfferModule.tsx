@@ -33,6 +33,7 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
   TransactionTextModule,
+  marketStrings,
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
 
@@ -155,35 +156,32 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
 
   /* Input Fields */
   const maxPlaceInLineField = (
-    <>
-      <TokenInputField
-        key={3}
-        balance={totalPods}
-        label="Buy Range"
-        handleChange={handleInputChange}
-        handleSlider={(event) => {
-          setMaxPlaceInLineValue(new BigNumber(event));
-        }}
-        placeholder={totalPods.toFixed()}
-        value={TrimBN(maxPlaceInLineValue, 6)}
-        range
-        error={maxPlaceInLineValue.isLessThan(toPodValue)}
-      />
-    </>
+    <TokenInputField
+      key={3}
+      balance={totalPods}
+      label="Place in Pod Line"
+      description={marketStrings.placeInPodLine}
+      handleChange={handleInputChange}
+      handleSlider={(event) => {
+        setMaxPlaceInLineValue(new BigNumber(event));
+      }}
+      placeholder={totalPods.toFixed()}
+      value={TrimBN(maxPlaceInLineValue, 6)}
+      range
+      error={maxPlaceInLineValue.isLessThan(toPodValue)}
+    />
   );
 
   // TODO: Make field outlined red when user inputs price (given range) that is lower than the average of the marketplace average price
   const pricePerPodField = (
-    <>
-      <TokenInputField
-        key={2}
-        label="Price per pod"
-        token={CryptoAsset.Bean}
-        handleChange={handlePriceChange}
-        placeholder="0.50"
-        value={TrimBN(pricePerPodValue, 6)}
-      />
-    </>
+    <TokenInputField
+      key={2}
+      label="Price per pod"
+      token={CryptoAsset.Bean}
+      handleChange={handlePriceChange}
+      placeholder="0.50"
+      value={TrimBN(pricePerPodValue, 6)}
+    />
   );
   const fromBeanField = (
     <InputFieldPlus
@@ -264,7 +262,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
   details.push(
     `Place an offer to buy ${displayBN(
       toPodValue
-    )} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at a price of 
+    )} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at a price of
     ${pricePerPodValue.toFixed(2)} Beans per Pod`
   );
   details.push(
@@ -352,7 +350,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
           toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
-        
+
         // Toast
         const txToast = new TransactionToast({
           loading: `Place an offer to buy ${displayBN(toPodValue)} Pods`,

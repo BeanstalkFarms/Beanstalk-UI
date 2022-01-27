@@ -297,9 +297,22 @@ export const marketStrings = {
   buy: 'Buy Pods from available listings.', // TODO
   createListing: 'Use this tab to create a listing to Sell Pods on the Pod Marketplace.', // TODO
   createOffer: 'Use this tab to create an offer to buy Pods on the Pod Marketplace.', // TODO
+  placeInPodLine: 'This slider and input field represents the maximum place in line that the user is willing to buy Pods at given the specificed price per Pods.',
+  expiresIn: 'This input field represents the amount of Pods that need to be harvested before your listing will expire.',
+  myOffers: 'Bids for Pods you\'re willing to buy on the Market.',
+  myListings: 'Pods you have listed for sale on the Market.',
+  toWrapped: 'When your listing is filled, the Beans will be wrapped in the Silo for efficiency.',
+  toWallet: 'When your listing is filled, the Beans will be sent to your wallet. This introduces a potential tax and gas inefficiency.',
 };
 export const filterStrings = {
   pricePerPod: 'Price per Pod sliding filter.', // TODO
   placeInLine: 'Place in Line sliding filter.', // TODO
   toggleValidOffers: 'Toggle for users to filter out plots that they can’t sell into.', // TODO
+};
+export const settingsStrings = {
+  showLP: 'Toggle to also Deposit Circulating LP Tokens.',
+  hasClaimable: 'Toggle to Claim and use Claimable assets in the transaction.',
+  disableConvertible: 'Toggle to convert Deposited Beans into Deposited LP Tokens.',
+  hasRemoveLP: 'Toggle to remove the Beans and ETH from the liquidity pool. By default this is toggled on.',
+  isCreateListing: 'Toggle to select how users want to receive their Beans once their Pods are sold.',
 };

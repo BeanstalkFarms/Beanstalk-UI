@@ -29,21 +29,14 @@ export default function TabbedMarketplace() {
   ];
   const sections = [<MarketplaceBuyModule />, <MarketplaceSellModule />];
 
-  const subSectionTitles = [
-    'My Offers',
-    'My Listings',
-  ];
+  const subSectionTitles = ['My Offers', 'My Listings'];
   const subSectionTitlesDescription = [
-    'Bids for Pods you\'re willing to buy on the Market',
-    'Pods you have listed for sale on the Market',
+    marketStrings.myOffers,
+    marketStrings.myListings,
   ];
   const subSections = [
-    <Offers
-      mode="MINE"
-    />,
-    <Listings
-      mode="MINE"
-    />,
+    <Offers mode="MINE" />,
+    <Listings mode="MINE" />,
   ];
 
   const showMyMarketTables = (

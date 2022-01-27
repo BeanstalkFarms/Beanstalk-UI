@@ -1,20 +1,28 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 // import { Box } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-
+import { Listing } from 'state/marketplace/reducer';
+import { BEAN } from 'constants/index';
+import {
+  CryptoAsset,
+  displayBN,
+  FarmAsset,
+  GetWalletAddress,
+  listPlot,
+  toStringBaseUnitBN,
+  TrimBN,
+} from 'util/index';
 import {
   PlotListInputField,
   TokenInputField,
+  marketStrings,
   PlotInputField,
+  SettingsFormModule,
   TransactionDetailsModule,
   TransactionToast,
 } from 'components/Common';
-import { BEAN } from 'constants/index';
-import { TrimBN, displayBN, CryptoAsset, FarmAsset, GetWalletAddress, listPlot, toStringBaseUnitBN } from 'util/index';
-import { Listing } from 'state/marketplace/reducer';
 import ListingsTable from './ListingsTable';
 
 type CreateListingModuleProps = {
@@ -150,6 +158,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const expiresInField = (
     <PlotInputField
       label="Expires In"
+      description={marketStrings.expiresIn}
       handleChange={handleExpireChange}
       value={TrimBN(expiresIn, 6)}
       maxHandler={() => {
@@ -190,7 +199,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
         fontSize: 'calc(11px + 0.5vmin)',
         padding: '12px',
         width: '100%',
-        marginTop: 13
+        margin: '10px 0',
       }}>
         {'You\'ve already listed this Plot on the Marketplace. Resubmitting this form will update the previous listing.'}
         <ListingsTable
@@ -210,18 +219,30 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     `This listing will expire when ${displayBN(expiresIn)} additional Pods have been harvested. The total amount of pods harvested at this time will be ${displayBN(expiresIn.plus(harvestableIndex))}.`,
   ];
 
+  if (props.settings.toWallet) {
+    details.push(marketStrings.toWrapped);
+  } else {
+    details.push(marketStrings.toWallet);
+  }
+
   function transactionDetails() {
     if (!props.readyToSubmit) return null;
     return (
-      <>
-        <ExpandMoreIcon
-          color="primary"
-          style={{ marginBottom: '-7px', width: '100%' }}
-        />
-        <TransactionDetailsModule fields={details} />
-      </>
+      <TransactionDetailsModule fields={details} />
     );
   }
+
+  // Users select how they want to receive their Beans from their listed Plots once purchased
+  // FIXME:
+  // Once new pod marketplace contract is updated we will need to send in this variable
+  const showSettings = (
+    <SettingsFormModule
+      settings={props.settings}
+      setSettings={props.setSettings}
+      isCreateListing
+      showUnitModule={false}
+    />
+  );
 
   // FIXME:
   // This is required to allow resetting of the localized
@@ -285,6 +306,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
           {transactionDetails()}
         </>
       ) : null}
+      {showSettings}
     </>
   );
 });

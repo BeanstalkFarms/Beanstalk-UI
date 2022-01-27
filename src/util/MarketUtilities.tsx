@@ -2,7 +2,7 @@ import { beanstalkContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 /**
- * 
+ *
  * @param index (string) index of the listing to buy
  * @param from (string) wallet address that issued the listing
  * @param amount (string) amount of Pods to buy from listing.
@@ -17,22 +17,22 @@ export const buyListing = async (
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   (claimable
-    ? beanstalkContract().claimBeansAndBuyListing(index, from, amount, claimable)
+    ? beanstalkContract().claimAndBuyListing(index, from, amount, claimable)
     : beanstalkContract().buyListing(index, from, amount)
   ),
   { onResponse }
 );
 
 /**
- * 
- * @param index 
- * @param from 
- * @param amount 
- * @param buyBeanAmount 
- * @param ethAmount 
- * @param claimable 
- * @param onResponse 
- * @returns 
+ *
+ * @param index
+ * @param from
+ * @param amount
+ * @param buyBeanAmount
+ * @param ethAmount
+ * @param claimable
+ * @param onResponse
+ * @returns
  */
 export const buyBeansAndBuyListing = async (
   index: string,
@@ -64,13 +64,13 @@ export const buyBeansAndBuyListing = async (
 );
 
 /**
- * 
- * @param maxPlaceInLine 
- * @param price 
- * @param amount 
- * @param claimable 
- * @param onResponse 
- * @returns 
+ *
+ * @param maxPlaceInLine
+ * @param price
+ * @param amount
+ * @param claimable
+ * @param onResponse
+ * @returns
  */
 export const listBuyOffer = async (
   maxPlaceInLine,
@@ -87,15 +87,15 @@ export const listBuyOffer = async (
 );
 
 /**
- * 
- * @param maxPlaceInLine 
- * @param price 
- * @param amount 
- * @param buyBeanAmount 
- * @param ethAmount 
- * @param claimable 
- * @param onResponse 
- * @returns 
+ *
+ * @param maxPlaceInLine
+ * @param price
+ * @param amount
+ * @param buyBeanAmount
+ * @param ethAmount
+ * @param claimable
+ * @param onResponse
+ * @returns
  */
 export const buyBeansAndListBuyOffer = async (
   maxPlaceInLine,
@@ -127,13 +127,13 @@ export const buyBeansAndListBuyOffer = async (
 );
 
 /**
- * 
- * @param finalIndex 
- * @param sellFromIndex 
- * @param buyOfferIndex 
- * @param finalAmount 
- * @param onResponse 
- * @returns 
+ *
+ * @param finalIndex
+ * @param sellFromIndex
+ * @param buyOfferIndex
+ * @param finalAmount
+ * @param onResponse
+ * @returns
  */
 export const sellToBuyOffer = async (
   finalIndex,

@@ -36,6 +36,10 @@ export default function MarketplaceSellModule() {
   /** Stored form state when creating a listing. */
   const [listing, setListing] = useState<ListingState | null>(null);
 
+  const [settings, setSettings] = useState({
+    toWallet: false,
+  });
+
   // Handlers
   const handleTabChange = (event, newSection) => {
     setSection(newSection);
@@ -79,6 +83,8 @@ export default function MarketplaceSellModule() {
       // isFormDisabled={false}
       // setIsFormDisabled
       harvestableIndex={parseFloat(harvestableIndex)}
+      settings={settings}
+      setSettings={setSettings}
       plots={plots}
       hasPlots={
         plots !== undefined &&

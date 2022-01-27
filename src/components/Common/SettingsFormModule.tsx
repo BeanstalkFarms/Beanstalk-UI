@@ -4,7 +4,7 @@ import { IconButton, Box } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { SwapMode } from 'util/index';
 import { theme } from 'constants/index';
-import { SlippageModule, SwitchModule, UnitSelectionModule } from './index';
+import { settingsStrings, SlippageModule, SwitchModule, UnitSelectionModule } from './index';
 
 export default function SettingsFormModule(props) {
   const rightSettingStyle = {
@@ -47,7 +47,7 @@ export default function SettingsFormModule(props) {
       visible: props.showLP && props.settings.mode !== SwapMode.LP,
       component: () => (
         <SwitchModule
-          description="Toggle to also Deposit Circulating LP Tokens."
+          description={settingsStrings.showLP}
           label="Use LP"
           setValue={(value) =>
             props.setSettings({ ...props.settings, useLP: value })
@@ -60,7 +60,7 @@ export default function SettingsFormModule(props) {
       visible: props.hasClaimable,
       component: () => (
         <SwitchModule
-          description="Toggle to Claim and use Claimable assets in the transaction."
+          description={settingsStrings.hasClaimable}
           label="Claim"
           setValue={(value) =>
             props.setSettings({ ...props.settings, claim: value })
@@ -74,7 +74,7 @@ export default function SettingsFormModule(props) {
       component: () => (
         <SwitchModule
           disabled={props.disableConvertible}
-          description="Toggle to convert Deposited Beans into Deposited LP Tokens."
+          description={settingsStrings.disableConvertible}
           label="Convert"
           setValue={(value) => {
             if (props.settings.mode !== SwapMode.BeanEthereum) {
@@ -98,13 +98,27 @@ export default function SettingsFormModule(props) {
       visible: props.hasRemoveLP,
       component: () => (
         <SwitchModule
-          description="Toggle to remove the Beans and ETH from the liquidity pool. By default this is toggled on."
+          description={settingsStrings.hasRemoveLP}
           label="Remove LP"
           margin="-50px 0px 0px 20px"
           setValue={(value) =>
             props.setSettings({ ...props.settings, removeLP: value })
           }
           value={props.settings.removeLP}
+        />
+      ),
+    },
+    {
+      visible: props.isCreateListing,
+      component: () => (
+        <SwitchModule
+          description={settingsStrings.isCreateListing}
+          label="To Wallet"
+          margin="-50px 0px 0px 17px"
+          setValue={(value) =>
+            props.setSettings({ ...props.settings, toWallet: value })
+          }
+          value={props.settings.toWallet}
         />
       ),
     },

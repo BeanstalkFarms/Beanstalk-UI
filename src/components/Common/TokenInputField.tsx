@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/index';
 import { theme } from 'constants/index';
 
-import { FormatTooltip, TokenTypeImageModule } from './index';
+import { FormatTooltip, TokenTypeImageModule, QuestionModule } from './index';
 
 const useStyles = makeStyles({
   inputText: {
@@ -178,7 +178,21 @@ export default function TokenInputField(props: TokenInputFieldProps) {
   return (
     <Box style={{ margin: '8px 0' }}>
       <Box className={classes.smallLabels}>
-        <Box className={classes.leftStyle}>{label}</Box>
+        <Box className={classes.leftStyle}>
+          {props.description
+            ? (
+              <Box>
+                {label}
+                <QuestionModule
+                  description={props.description}
+                  margin="-10px 0 0 0"
+                  placement="right"
+                />
+              </Box>
+            )
+            : label
+          }
+        </Box>
         {props.balance && !props.range && (
           <FormatTooltip placement="right" title={balanceContent}>
             <Box className={classes.rightStyle}>
