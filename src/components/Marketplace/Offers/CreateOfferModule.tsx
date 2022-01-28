@@ -71,9 +71,9 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
   const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { listings } = useSelector<AppState, AppState['marketplace']>(
-    (state) => state.marketplace,
-  );
+  // const { listings } = useSelector<AppState, AppState['marketplace']>(
+  //   (state) => state.marketplace,
+  // );
 
   // Disable form when params are not properly established.
   useEffect(() => {
