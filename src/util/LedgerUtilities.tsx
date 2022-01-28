@@ -21,6 +21,7 @@ import {
   tokenContractReadOnly,
   toTokenUnitsBN,
   web3,
+  chainId,
 } from './index';
 
 /* Client is responsible for calling execute() */
@@ -231,7 +232,7 @@ export const getPrices = async (batch) => {
   const bean3crvContract = bean3crvContractReadOnly();
   const curveContract = curveContractReadOnly();
 
-  return makeBatchedPromises(batch, [
+  let batchCall = [
     // referenceTokenReserves
     [
       referenceLPContract.methods.getReserves(),
@@ -271,23 +272,50 @@ export const getPrices = async (batch) => {
       beanstalk.methods.lpToPeg(),
       (lp) => toTokenUnitsBN(lp, 18),
     ],
-    // Virtual Curve price
-    [
-      curveContract.methods.get_virtual_price(),
-      (price) => toTokenUnitsBN(price, 18),
-    ],
-    // Curve Bean price
-    [
-      bean3crvContract.methods.get_dy(0, 1, 1),
-      (price) => toTokenUnitsBN(price, 12),
-    ],
-    // Bean3Crv Balances
-    [
-      bean3crvContract.methods.get_balances(),
-      (prices) => [
-        toTokenUnitsBN(prices[0], 6),
-        toTokenUnitsBN(prices[1], 18),
-      ],
-    ],
-  ]);
+  ];
+  if (chainId === 1) {
+    console.log(1);
+    batchCall = batchCall.concat(
+      [
+        [
+          curveContract.methods.get_virtual_price(),
+          (price) => toTokenUnitsBN(price, 18),
+        ],
+        // Curve Bean price
+        [
+          bean3crvContract.methods.get_dy(0, 1, 1),
+          (price) => toTokenUnitsBN(price, 12),
+        ],
+        // Bean3Crv Balances
+        [
+          bean3crvContract.methods.get_balances(),
+          (prices) => [
+            toTokenUnitsBN(prices[0], 6),
+            toTokenUnitsBN(prices[1], 18),
+          ],
+        ],
+      ]
+    );
+  } else {
+    batchCall = batchCall.concat(
+      [
+        [
+          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
+          () => new BigNumber(0),
+        ],
+        // Curve Bean price
+        [
+          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
+          () => new BigNumber(0),
+        ],
+        // Bean3Crv Balances
+        [
+          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
+          () => [new BigNumber(0), new BigNumber(0)],
+        ],
+      ]
+    );
+  }
+  console.log(batchCall);
+  return makeBatchedPromises(batch, batchCall);
 };

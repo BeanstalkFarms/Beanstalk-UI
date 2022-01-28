@@ -2,7 +2,7 @@ import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { displayBN, displayFullBN } from 'util/index';
-import { APY_CALCULATION, MEDIUM_INTEREST_LINK, theme } from 'constants/index';
+import { MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
   BaseModule,
   ContentDropdown,
@@ -20,9 +20,9 @@ export default function Field() {
   const weather = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
-  const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
-    (state) => state.beansPerSeason
-  );
+  // const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
+  //   (state) => state.beansPerSeason
+  // );
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
@@ -40,9 +40,9 @@ export default function Field() {
     padding: '0px',
   };
 
-  //
-  const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
-  const apy = weather.weather.multipliedBy(8760).dividedBy(tth);
+  // Hiding for now as the numbers are misleading
+  // const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
+  // const apy = weather.weather.multipliedBy(8760).dividedBy(tth);
 
   const description = (
     <>
@@ -78,27 +78,27 @@ export default function Field() {
       balanceDescription={[
         `${displayFullBN(weather.soil)} Soil`,
         `${weather.weather}% Weather`,
-        `${apy.toFixed(2)}% APY`,
+        // `${apy.toFixed(2)}% APY`,
       ]}
       description={[
         fieldStrings.availableSoil,
         fieldStrings.weather,
-        <span>
-          {fieldStrings.podAPY}{' '}
-          <a target="blank" href={APY_CALCULATION}>
-            click here
-          </a>
-        </span>,
+        // <span>
+        //   {fieldStrings.podAPY}{' '}
+        //   <a target="blank" href={APY_CALCULATION}>
+        //     click here
+        //   </a>
+        // </span>,
       ]}
       title={[
         'Available Soil',
         'Weather',
-        'Pod APY',
+        // 'Pod APY',
       ]}
       value={[
         displayBN(weather.soil),
         `${weather.weather.toFixed()}%`,
-        `${apy.toFixed(0) === '0' ? '–' : apy.toFixed(0)}%`,
+        // `${apy.toFixed(0) === '0' ? '–' : apy.toFixed(0)}%`,
       ]}
       container={false}
     />
@@ -108,27 +108,27 @@ export default function Field() {
       balanceDescription={[
         `${displayFullBN(totalBalance.totalPods)} Unharvestable Pods`,
         `${displayFullBN(weather.harvestableIndex)} Harvested Pods`,
-        `${tth.toFixed(2)} Seasons`,
+        // `${tth.toFixed(2)} Seasons`,
       ]}
       description={[
         fieldStrings.podLine,
         fieldStrings.podsHarvested,
-        <span>
-          {fieldStrings.seasonsToPodClearance}{' '}
-          <a target="blank" href={APY_CALCULATION}>
-            click here
-          </a>
-        </span>,
+        // <span>
+        //   {fieldStrings.seasonsToPodClearance}{' '}
+        //   <a target="blank" href={APY_CALCULATION}>
+        //     click here
+        //   </a>
+        // </span>,
       ]}
       title={[
         'Pod Line',
         'Pods Harvested',
-        'Pod Clearance',
+        // 'Pod Clearance',
       ]}
       value={[
         displayBN(totalBalance.totalPods),
         displayBN(weather.harvestableIndex),
-        `${tth.toFixed(0) === 'Infinity' ? '–' : tth.toFixed(0)}`,
+        // `${tth.toFixed(0) === 'Infinity' ? '–' : tth.toFixed(0)}`,
       ]}
       container={false}
     />
