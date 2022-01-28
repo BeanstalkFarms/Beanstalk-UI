@@ -271,7 +271,7 @@ export default function NavigationSidebar() {
     beanfts: 'Winter',
   };
   if (activeBips.length > 0) {
-    badgeDataByPath.governance = activeBips;
+    badgeDataByPath.governance = activeBips.slice(0, 3);
   }
 
   //
