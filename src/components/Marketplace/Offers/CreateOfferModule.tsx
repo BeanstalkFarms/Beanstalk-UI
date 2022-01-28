@@ -65,15 +65,17 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-
   const { beanReserve, ethReserve } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
-
   const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
+  const { listings } = useSelector<AppState, AppState['marketplace']>(
+    (state) => state.marketplace,
+  );
 
+  // Disable form when params are not properly established.
   useEffect(() => {
     const isDisabled = () => {
       if (
@@ -95,6 +97,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
     props.isFormDisabled,
   ]);
 
+  //
   function calculatePods(buyNumber, price) {
     let podNumber = new BigNumber(0);
     if (price.isGreaterThan(1) || price.isLessThanOrEqualTo(0)) {
@@ -337,8 +340,41 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (toPodValue.isLessThanOrEqualTo(0)) return;
-
       const claimabl = props.settings.claim ? claimable : null;
+
+      // Check for an existing listing to sell into. We want to find the listing that is:
+      //    1. As close as possible to the front of the line.
+      //    2. Has a price <= pricePerPodValue (ideally minimized)
+      //
+      // What there is no one Listing below `pricePerPod` that could
+      // fill all of `amount` requested in this Offer?
+      //
+      // Consider: I want to buy 100 Pods at 0.50 Bean/Pod (implied 50 Bean spend). There are 
+      // two available listings:
+      //    a) 100 Pods at 0.40 Bean/Pod
+      //    b) 10 Pods at 0.20 Bean/Pod
+      //
+      // Options:
+      //    1. Suggest the best 1 listing with the best combination of `pricePerPod` and
+      //       `amount` that is available.
+      //          - I can buy all of Listing A immediately for (100 Pods)*0.40=40 Beans.
+      //            My Buy Offer is filled.
+      //          - I can buy all of Listing B immediately for (10 Pods)*0.2=2 Beans. 
+      //            My Buy Offer is NOT filled. I would need to re-issue and receive a new
+      //            prompt to Buy (presumably from Listing A since Listing B is exhausted).
+      //
+      //    2. Suggest the best N listings under `pricePerPod` until the user receives
+      //       the total number of Pods requested in the BuyOffer. This likely means
+      //       buying from at least 1 partial listing.
+      //          - I buy all of Listing B immediately for (10 Pods)*0.20=2 Beans. This
+      //            executes first because we want to lock in the lower price.
+      //          - I now need (100 Pods - 10 Pods) = 90 Pods, which are purchased from
+      //            Listing A) for (90 Pods)*0.4 = 36 Beans. Total price 38 Beans.
+      //          - Note that this would need to be executed in two separate transactions.
+      //
+      // 1/27/2022: going to pause here to move on to other market tasks, but will circle back. -SC
+
+      //
       if (fromEthValue.isGreaterThan(0)) {
         // Contract Inputs
         const beans = MaxBN(
