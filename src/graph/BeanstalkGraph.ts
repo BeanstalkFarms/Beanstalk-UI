@@ -35,7 +35,7 @@ query seasons($first: Int, $skip: Int) {
        where: {
            timestamp_gt: 0
        }
- ) { 
+ ) {
        id
        timestamp
        podIndex
@@ -56,7 +56,7 @@ query seasons($first: Int, $skip: Int) {
        numberOfSowers
        numberOfSows
        sownBeans
-  } 
+  }
  }
  `;
 
@@ -73,16 +73,19 @@ function querySeasons(first: Number, skip: Number): Promise {
 
 export async function beanstalkQuery() {
   try {
-    const [d1, d2, d3, d4] = await Promise.all([
+    // FIXME: Need a more efficient and scalable query
+    const [d1, d2, d3, d4, d5] = await Promise.all([
       querySeasons(1000, 0),
       querySeasons(1000, 1000),
       querySeasons(1000, 2000),
       querySeasons(1000, 3000),
+      querySeasons(1000, 4000),
     ]);
     const data = d1.data.seasons
       .concat(d2.data.seasons)
       .concat(d3.data.seasons)
-      .concat(d4.data.seasons);
+      .concat(d4.data.seasons)
+      .concat(d5.data.seasons);
     const seasons = data.map((s) => {
       const season = {};
       Object.keys(s).forEach((key) => {
