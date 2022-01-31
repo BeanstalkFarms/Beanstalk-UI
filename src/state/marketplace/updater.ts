@@ -104,6 +104,16 @@ const MOCK_EVENTS = [
 //   any
 // >;
 
+type PodListingCreatedEvent = {
+  account: string;
+  index: string;
+  start: string;
+  amount: string;
+  pricePerPod: string;
+  maxHarvestableIndex: string;
+  toWallet: boolean;
+}
+
 // FIXME: define type for Events
 function processEvents(events: any, harvestableIndex: BigNumber) {
   const listings : { [key: string]: Listing } = {};
@@ -111,28 +121,16 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
   console.log('marketplace/updater: processEvents', events);
   for (const event of events) {
     if (event.event === 'PodListingCreated') {
-      listings[event.returnValues.index] = {
-        // Lister
-        listerAddress:
-          event.returnValues.account,
-        // Plot Information
-        objectiveIndex:
-          toTokenUnitsBN(new BigNumber(event.returnValues.index), BEAN.decimals),
-        // Listing Configuration
-        pricePerPod:
-          toTokenUnitsBN(new BigNumber(event.returnValues.pricePerPod), BEAN.decimals),
-        maxHarvestableIndex:
-          toTokenUnitsBN(new BigNumber(event.returnValues.maxHarvestableIndex), BEAN.decimals),
-        // Amounts
-        initialAmount:
-          toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
-        amount:
-          toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
-        amountSold:
-          new BigNumber(0),
-        // Status
-        status:
-          'active',
+      let values = (event.returnValues as PodListingCreatedEvent);
+      listings[values.index] = {
+        listerAddress: values.account,
+        objectiveIndex: toTokenUnitsBN(new BigNumber(values.index), BEAN.decimals),
+        pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
+        maxHarvestableIndex: toTokenUnitsBN(new BigNumber(values.maxHarvestableIndex), BEAN.decimals),
+        initialAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
+        amount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
+        amountSold: new BigNumber(0),
+        status: 'active',
       };
     } else if (event.event === 'PodListingCancelled') {
       delete listings[event.returnValues.index];
