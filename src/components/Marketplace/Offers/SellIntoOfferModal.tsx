@@ -72,7 +72,7 @@ export default function SellIntoOfferModal({
     selectedPlotIndex.gt(0)
       ? BigNumber.minimum(
         // The total amount requested by the buyer
-        currentOffer.amount,
+        currentOffer.remainingAmount,
         // The number of pods in this plot that we can sell into the offer
         // Ex. User A creates a Buy Offer with relatiive index 100,000.
         //     I have a plot at index 99,900 with 200 plots in it.

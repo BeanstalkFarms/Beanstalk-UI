@@ -35,7 +35,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
   // const { plots } = useSelector<AppState, AppState['userBalance']>(
   //   (state) => state.userBalance
   // );
-  const numPodsLeft = offer.initialAmountToBuy.minus(offer.amountBought);
+  const numPodsLeft = offer.totalAmount.minus(offer.filledAmount);
   const explainer = (
     <>
       {isMine
@@ -80,10 +80,10 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           <BalanceTableCell
             className={classes.lucidaStyle}
             label="Pods Bought"
-            balance={offer.amountBought}
+            balance={offer.filledAmount}
             icon={<TokenIcon token={FarmAsset.Pods} />}
           >
-            {displayBN(offer.amountBought)} / {displayBN(offer.initialAmountToBuy)}
+            {displayBN(offer.filledAmount)} / {displayBN(offer.totalAmount)}
           </BalanceTableCell>
           {/* Cancel this offer */}
           <TableCell align="center">
@@ -122,7 +122,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           <BalanceTableCell
             className={classes.lucidaStyle}
             label="Pods Requested"
-            balance={offer.initialAmountToBuy.minus(offer.amountBought)}
+            balance={offer.totalAmount.minus(offer.filledAmount)}
             icon={<TokenIcon token={FarmAsset.Pods} />}
           >
             {displayBN(numPodsLeft)}

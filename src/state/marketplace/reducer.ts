@@ -52,13 +52,6 @@ export type PodListing = {
   totalAmount: BigNumber;
 
   /**
-   * The amount of Pods that have been bought from this Listing.
-   *
-   * `0 < amountSold < initialAmount`
-   */
-  filledAmount: BigNumber;
-
-  /**
    * The number of Pods left to sell.
    * When a Listing is created, `amount = initialAmount`.
    *
@@ -66,6 +59,13 @@ export type PodListing = {
    * `initialAmount > amount > 0`
    */
   remainingAmount: BigNumber;
+
+  /**
+   * The amount of Pods that have been bought from this Listing.
+   *
+   * `0 < amountSold < initialAmount`
+   */
+  filledAmount: BigNumber;
 
   /**
    * Listing status.
@@ -97,21 +97,14 @@ export type PodOrder = {
    */
   maxPlaceInLine: BigNumber;
 
-  // ---
+  // -- Amounts
 
   /**
    * The total number of Pods that can be sold to this BuyOffer.
    *
    * FIXME: "ToBuy" naming here; this differs from Listing.
    */
-  initialAmountToBuy: BigNumber;
-
-  /**
-   * The amount of Pods that have been sold to this BuyOffer.
-   *
-   * `0 < amountBought < initialAmountToBuy`
-   */
-  amountBought: BigNumber;
+  totalAmount: BigNumber;
 
   /**
    * The amount of Pods that can still be sold to this BuyOffer.
@@ -119,7 +112,14 @@ export type PodOrder = {
    * `amount = initialAmountToBuy - amountBought`
    * `initialAmountToBuy > amount > 0`
    */
-  amount: BigNumber;
+  remainingAmount: BigNumber;
+
+  /**
+   * The amount of Pods that have been sold to this BuyOffer.
+   *
+   * `0 < amountBought < initialAmountToBuy`
+   */
+  filledAmount: BigNumber;
 
   /**
    * Listing status.

@@ -181,10 +181,10 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         listerAddress: values.account,
         orderId: toTokenUnitsBN(new BigNumber(values.orderId), BEAN.decimals), // FIXME do we need to do this conversion?
         maxPlaceInLine: toTokenUnitsBN(new BigNumber(values.maxPlaceInLine), BEAN.decimals),
-        initialAmountToBuy: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
+        totalAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
-        amount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
-        amountBought: new BigNumber(0),
+        remainingAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
+        filledAmount: new BigNumber(0),
         status: 'active',
       };
     } else if (event.event === 'PodOrderCancelled') {
@@ -196,10 +196,10 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
 
       // Check whether current offer is sold or not
       const buyOffer = buyOffers[key];
-      buyOffers[key].amountBought = buyOffers[key].amountBought.plus(amountBN);
-      buyOffers[key].amount = buyOffer.initialAmountToBuy.minus(buyOffer.amountBought);
+      buyOffers[key].filledAmount = buyOffers[key].filledAmount.plus(amountBN);
+      buyOffers[key].remainingAmount = buyOffer.totalAmount.minus(buyOffer.filledAmount);
 
-      const isFilled = buyOffer.amount.isEqualTo(0);
+      const isFilled = buyOffer.remainingAmount.isEqualTo(0);
       if (isFilled) {
         delete buyOffers[key];
       }
