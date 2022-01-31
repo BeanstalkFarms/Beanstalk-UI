@@ -206,12 +206,12 @@ export default function BuyListingModal({
   const handleForm = () => {
     if (buyPods.isLessThanOrEqualTo(0)) return null;
     const listingIndex = toStringBaseUnitBN(currentListing.objectiveIndex, BEAN.decimals);
+    const pricePerPod = toStringBaseUnitBN(currentListing.pricePerPod, BEAN.decimals)
     const _claimable = settings.claim ? claimable : null;
 
     if (fromEthValue.isGreaterThan(0)) {
       // Contract Inputs
       const beanAmount = MaxBN(toBaseUnitBN(fromBeanValue, BEAN.decimals), new BigNumber(0)).toString();
-      const pricePerPod = toStringBaseUnitBN(currentListing.pricePerPod, BEAN.decimals)
       const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
       const buyBeanAmount = toStringBaseUnitBN(
         toBuyBeanValue,
@@ -261,17 +261,17 @@ export default function BuyListingModal({
       });
 
       // Execute
-      fillPodListing(
-        currentListing.listerAddress,
-        listingIndex,
-        "0", // FIXME: `start`
-        toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
-        _claimable,
-        (response) => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-          txToast.confirming(response);
-        }
-      )
+      fillPodListing({
+        from: currentListing.listerAddress,
+        index: listingIndex,
+        start: "0", // FIXME: `start`
+        beanAmount: toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
+        pricePerPod,
+        claimable: _claimable,
+      }, (response) => {
+        fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+        txToast.confirming(response);
+      })
       .then((value) => {
         txToast.success(value);
       })

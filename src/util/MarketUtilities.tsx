@@ -112,70 +112,75 @@ export const createPodListing = async (
  * @param onResponse 
  * @returns 
  */
-export const cancelPodListing = (
+type CancelPodListingParams = {
   index: string,
+}
+
+export const cancelPodListing = (
+  params: CancelPodListingParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().cancelListing(index),
+  beanstalkContract().cancelListing(
+    params.index
+  ),
   { onResponse }
 );
 
-/**
- * @param from The address of the Farmer that owns the Listing.
- * @param index The index of the Plot being listed.
- * @param start The start index within the Plot that msg.sender is buying from.
- * @param beanAmount The amount of Beans msg.sender is spending.
- * @param claimable The price per Pod msg.sender is paying
- * @param onResponse 
- * @returns 
- */
-export const fillPodListing = async (
-  from: string,
-  index: string,
-  start: string,
-  beanAmount: string,
+type FillPodListingParams = {
+  /** The address of the Farmer that owns the Listing. */
+  from: string;
+  /** The index of the Plot being listed. */
+  index: string;
+  /** The start index within the Plot that msg.sender is buying from. */
+  start: string;
+  /** The amount of Beans msg.sender is spending. */
+  beanAmount: string;
+  /** The price per Pod msg.sender is paying. */
+  pricePerPod: string;
+  /**  */
   claimable: any, // FIXME
+}
+
+export const fillPodListing = async (
+  params: FillPodListingParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
+  (params.claimable
     ? beanstalkContract().claimAndFillPodListing(
-      from,
-      index,
-      start,
-      beanAmount,
-      claimable
+      params.from,
+      params.index,
+      params.start,
+      params.beanAmount,
+      params.pricePerPod,
+      params.claimable
     )
     : beanstalkContract().fillPodListing(
-      from,
-      index,
-      start,
-      beanAmount
+      params.from,
+      params.index,
+      params.start,
+      params.beanAmount,
+      params.pricePerPod,
     )
   ),
   { onResponse }
 );
 
-/**
- * @param from 
- * @param index The index of the Plot being listed.
- * @param start The start index within the Plot that msg.sender is buying from.
- * @param beanAmount The amount of already owned Beans msg.sender is spending.
- * @param buyBeanAmount The amount of Beans to buy with ETH and use as payment
- * @param pricePerPod The price per Pod msg.sender is paying
- * @param claimable Allows Farmers to use claimable and wrapped Beans to purchase the listing
- * @param ethAmount The maximum amount of Eth to spend buying Beans. msg.value must be attached to the transaction.
- * @param onResponse 
- * @returns 
- */
 type BuyBeansAndFillPodListingParams = {
   /** The address of the Farmer that owns the Listing. */
   from: string;
+  /** The index of the Plot being listed. */
   index: string;
+  /** The start index within the Plot that msg.sender is buying from. */
   start: string;
+  /** The amount of already owned Beans msg.sender is spending. */
   beanAmount: string;
+  /** The amount of Beans to buy with ETH and use as payment */
   buyBeanAmount: string;
+  /** The price per Pod msg.sender is paying */
   pricePerPod: string;
+  /** Allows Farmers to use claimable and wrapped Beans to purchase the listing */
   claimable: any; // FIXME: should be typeof claimable | null
+  /** The maximum amount of Eth to spend buying Beans. msg.value must be attached to the transaction. */
   ethAmount: string;
 }
 

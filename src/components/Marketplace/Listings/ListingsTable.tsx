@@ -135,10 +135,11 @@ function ListingRow({
                   });
 
                   // Execute
-                  cancelPodListing(
-                    toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals),
-                    (response) => txToast.confirming(response),
-                  )
+                  cancelPodListing({
+                    index: toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals),
+                  }, (response) => {
+                    txToast.confirming(response)
+                  })
                   .then((value) => {
                     txToast.success(value);
                   })
