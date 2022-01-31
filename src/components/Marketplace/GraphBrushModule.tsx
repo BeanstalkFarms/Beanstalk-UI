@@ -29,7 +29,7 @@ const selectedBrushStyle = {
 // accessors
 const getDate = (d: AppleStock) => new Date(d.date);
 const getStockValue = (d: AppleStock) => d.close;
-const getIndex = (l: Listing) => l.objectiveIndex.toNumber();
+const getIndex = (l: Listing) => l.index.toNumber();
 const getPrice = (l: Listing) => l.pricePerPod.toNumber();
 
 export type BrushProps = {

@@ -40,7 +40,7 @@ export default function Graph2Module(props: GraphModuleProps) {
   );
 
   const maxPlaceInLine = Math.max(
-    ...listings.map((l) => l.objectiveIndex.minus(harvestableIndex).toNumber())
+    ...listings.map((l) => l.index.minus(harvestableIndex).toNumber())
   );
   const maxPlotSize = Math.max(
     ...listings.map((l) => l.initialAmount.minus(l.amountSold).toNumber())
@@ -78,7 +78,7 @@ export default function Graph2Module(props: GraphModuleProps) {
           data={listings}
           dataKey="listings"
           curve={}
-          xAccessor={(d) => d.objectiveIndex}
+          xAccessor={(d) => d.index}
           yAccessor={(d) => d.pricePerPod}
         />
         <Axis

@@ -70,10 +70,10 @@ export default function Listings(props: ListingsProps) {
       )) &&
       listing.pricePerPod > priceFilters[0] &&
       listing.pricePerPod < priceFilters[1] &&
-      listing.objectiveIndex
+      listing.index
         .minus(harvestableIndex)
         .gte(new BigNumber(placeInLineFilters[0])) &&
-      listing.objectiveIndex
+      listing.index
         .minus(harvestableIndex)
         .lte(new BigNumber(placeInLineFilters[1])) &&
       listing.maxHarvestableIndex

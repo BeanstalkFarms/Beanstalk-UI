@@ -102,7 +102,7 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
   );
 
   const maxPlaceInLine = Math.max(
-    ...listings.map((l) => l.objectiveIndex.minus(harvestableIndex).toNumber())
+    ...listings.map((l) => l.index.minus(harvestableIndex).toNumber())
   );
   const maxPlotSize = Math.max(
     ...listings.map((l) => l.initialAmount.minus(l.amountSold).toNumber())
@@ -138,7 +138,7 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
 
   const circlePositions = listings.map((listing) => ({
     // x position is current place in line
-    x: xScale(listing.objectiveIndex.minus(harvestableIndex).toNumber()) + leftAxisWidth,
+    x: xScale(listing.index.minus(harvestableIndex).toNumber()) + leftAxisWidth,
     // y position is price per pod
     y: yScale(listing.pricePerPod.toNumber()),
     // radius is plot size

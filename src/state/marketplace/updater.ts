@@ -124,7 +124,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       let values = (event.returnValues as PodListingCreatedEvent);
       listings[values.index] = {
         listerAddress: values.account,
-        objectiveIndex: toTokenUnitsBN(new BigNumber(values.index), BEAN.decimals),
+        index: toTokenUnitsBN(new BigNumber(values.index), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
         maxHarvestableIndex: toTokenUnitsBN(new BigNumber(values.maxHarvestableIndex), BEAN.decimals),
         initialAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
@@ -145,7 +145,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       listings[newKey] = currentListing;
 
       // Bump up |amountSold| for this listing
-      listings[newKey].objectiveIndex = toTokenUnitsBN(new BigNumber(index).plus(amount), BEAN.decimals);
+      listings[newKey].index = toTokenUnitsBN(new BigNumber(index).plus(amount), BEAN.decimals);
       listings[newKey].amountSold = listings[newKey].amountSold.plus(amountBN);
       listings[newKey].amount = currentListing.initialAmount.minus(listings[newKey].amountSold);
 

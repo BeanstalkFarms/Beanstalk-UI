@@ -42,7 +42,7 @@ function ListingRow({
   isMine,
 }: ListingRowProps) {
   const classes = useStyles();
-  const relativeIndex = (listing.objectiveIndex).minus(harvestableIndex);
+  const relativeIndex = (listing.index).minus(harvestableIndex);
   const relativeExpiry = (listing.maxHarvestableIndex).minus(new BigNumber(harvestableIndex));
   const amountRemaining = listing.initialAmount.minus(listing.amountSold);
   const explainer = (
@@ -136,7 +136,7 @@ function ListingRow({
 
                   // Execute
                   cancelPodListing({
-                    index: toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals),
+                    index: toStringBaseUnitBN(listing.index, BEAN.decimals),
                   }, (response) => {
                     txToast.confirming(response);
                   })
@@ -217,7 +217,7 @@ export default function ListingsTable(props: ListingsTableProps) {
   //
   const rowsPerPage = 5;
   const slicedItems = props.listings
-    .sort((a, b) => a.objectiveIndex - b.objectiveIndex)
+    .sort((a, b) => a.index - b.index)
     .slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
@@ -242,7 +242,7 @@ export default function ListingsTable(props: ListingsTableProps) {
             <TableBody>
               {slicedItems.map((listing: Listing) => (
                 <ListingRow
-                  key={listing.objectiveIndex - props.harvestableIndex}
+                  key={listing.index - props.harvestableIndex}
                   harvestableIndex={props.harvestableIndex}
                   listing={listing}
                   setCurrentListing={props.setCurrentListing}
@@ -303,7 +303,7 @@ export default function ListingsTable(props: ListingsTableProps) {
           <TableBody>
             {slicedItems.map((listing: Listing) => (
               <ListingRow
-                key={listing.objectiveIndex - props.harvestableIndex}
+                key={listing.index - props.harvestableIndex}
                 harvestableIndex={props.harvestableIndex}
                 listing={listing}
                 setCurrentListing={props.setCurrentListing}

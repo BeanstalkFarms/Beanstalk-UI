@@ -16,7 +16,7 @@ export type Listing = {
    *    100,000   harvestableIndex
    *    150,000   objectiveIndex
    */
-  objectiveIndex: BigNumber;
+  index: BigNumber;
 
   /**
    * Price per Pod, in Beans.

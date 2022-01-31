@@ -61,7 +61,7 @@ export const GraphTooltip = (props: GraphTooltipProps) => {
         <span style={{ fontWeight: 'bold' }}>Place In Line</span>
         <div className={classes.tooltipDetailPill}>
           <span>
-            {displayBN(listing.objectiveIndex.minus(harvestableIndex))}
+            {displayBN(listing.index.minus(harvestableIndex))}
           </span>
         </div>
       </div>

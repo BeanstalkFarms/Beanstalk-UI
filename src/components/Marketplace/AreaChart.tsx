@@ -62,7 +62,7 @@ export default function AreaChart({
       />
       <AreaClosed<Listing>
         data={data}
-        x={(d) => xScale(d.objectiveIndex.toNumber()) || 0}
+        x={(d) => xScale(d.index.toNumber()) || 0}
         y={(d) => yScale(d.pricePerPod.toNumber()) || 0}
         yScale={yScale}
         strokeWidth={1}

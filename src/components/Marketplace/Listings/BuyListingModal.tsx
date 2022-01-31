@@ -205,7 +205,7 @@ export default function BuyListingModal({
   };
   const handleForm = () => {
     if (buyPods.isLessThanOrEqualTo(0)) return null;
-    const listingIndex = toStringBaseUnitBN(currentListing.objectiveIndex, BEAN.decimals);
+    const listingIndex = toStringBaseUnitBN(currentListing.index, BEAN.decimals);
     const pricePerPod = toStringBaseUnitBN(currentListing.pricePerPod, BEAN.decimals);
     const _claimable = settings.claim ? claimable : null;
 
@@ -220,7 +220,7 @@ export default function BuyListingModal({
 
       // Toast
       const detail = `${displayBN(buyPods)} Pods at ${displayBN(
-        currentListing.objectiveIndex.minus(harvestableIndex)
+        currentListing.index.minus(harvestableIndex)
       )} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for
       ${displayBN(currentListing.pricePerPod)} Beans each`;
       const txToast = new TransactionToast({
@@ -251,7 +251,7 @@ export default function BuyListingModal({
     } else {
       // Toast
       const detail = `${displayBN(buyPods)} Pods at ${displayBN(
-        currentListing.objectiveIndex.minus(harvestableIndex)
+        currentListing.index.minus(harvestableIndex)
       )} in line with ${displayBN(fromBeanValue)} Beans for ${displayBN(
         currentListing.pricePerPod
       )} Beans each`;
@@ -381,7 +381,7 @@ export default function BuyListingModal({
   }
   details.push(
     `Buy ${displayBN(buyPods)} Pods at ${displayBN(
-      currentListing.objectiveIndex.minus(harvestableIndex)
+      currentListing.index.minus(harvestableIndex)
     )} in line with ${displayBN(fromBeanValue.plus(toBuyBeanValue))} Beans for
     ${displayBN(currentListing.pricePerPod)} Beans each`
   );

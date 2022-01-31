@@ -189,7 +189,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       );
     })();
   }, [allListings]);
-  const existingListing = myListings ? myListings.find((listing) => listing.objectiveIndex.isEqualTo(index)) : null;
+  const existingListing = myListings ? myListings.find((listing) => listing.index.isEqualTo(index)) : null;
   if (existingListing) {
     alreadyListedNotification = (
       <div style={{
