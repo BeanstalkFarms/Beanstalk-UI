@@ -9,7 +9,7 @@ import { GetWalletAddress } from 'util/index';
 import { AppState } from 'state';
 import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
 
-import SellIntoOfferModal from 'components/Marketplace/Offers/SellIntoOfferModal';
+import FillOrderModal from 'components/Marketplace/Offers/FillOrderModal';
 import OffersTable from './OffersTable';
 import Filters, { StyledSlider } from '../Filters';
 
@@ -221,7 +221,7 @@ export default function Orders(props: OrdersProps) {
 
   return (
     <>
-      <SellIntoOfferModal
+      <FillOrderModal
         currentOrder={currentOffer}
         onClose={() => setCurrentOffer(null)}
       />

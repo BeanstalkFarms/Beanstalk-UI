@@ -103,10 +103,12 @@ export default class TransactionToast {
             break;
         }
       } else {
-        msg = error.message;
+        console.error(error);
+        msg = 'An unknown error occurred.';
       }
     } else {
-      msg = error.toString();
+      console.error(error);
+      msg = 'An unknown error occurred.';
     }
     toast.error(
       msg,

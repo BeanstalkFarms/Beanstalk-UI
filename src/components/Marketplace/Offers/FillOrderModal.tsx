@@ -14,15 +14,15 @@ import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, Tran
 import { PodOrder } from 'state/marketplace/reducer';
 import OffersTable from './OffersTable';
 
-type SellIntoOfferModalProps = {
+type FillOrderModalProps = {
   currentOrder: PodOrder;
   onClose: Function;
 }
 
-export default function SellIntoOfferModal({
+export default function FillOrderModal({
   currentOrder,
   onClose
-}: SellIntoOfferModalProps) {
+}: FillOrderModalProps) {
   /** The selected Plot index. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The amount of Pods the User is willing to sell into this Offer */
@@ -117,16 +117,19 @@ export default function SellIntoOfferModal({
       loading: `Selling ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
       success: `Sold ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
     });
-    
-    // Execute
-    console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
-    fillPodOrder({
+
+    const params = {
       id: currentOrder.id, // FIXME is this conversion correct
       index: toStringBaseUnitBN(index, BEAN.decimals),
       start: toStringBaseUnitBN(start, BEAN.decimals),
       amount: toStringBaseUnitBN(amount, BEAN.decimals),
       toWallet: false, // FIXME
-    }, (response) => {
+    };
+    
+    // Execute
+    console.log(index.toString(), plotToSellFrom.toString(), amount.toString(), start);
+    console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`, params);
+    fillPodOrder(params, (response) => {
       txToast.confirming(response);
     })
     .then((value) => {
