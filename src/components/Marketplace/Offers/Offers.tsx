@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
-import { BuyOffer } from 'state/marketplace/reducer';
+import { PodOrder } from 'state/marketplace/reducer';
 import { GetWalletAddress } from 'util/index';
 import { AppState } from 'state';
 import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
@@ -46,7 +46,7 @@ export default function Offers(props: OffersProps) {
   const [currentOffer, setCurrentOffer] = useState(null);
 
   // Filter state
-  const filteredOffers = useRef<BuyOffer[]>(allOffers);
+  const filteredOffers = useRef<PodOrder[]>(allOffers);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
   /** */

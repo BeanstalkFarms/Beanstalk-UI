@@ -4,7 +4,7 @@ import { AreaClosed } from '@visx/shape';
 import { AxisLeft, AxisBottom, AxisScale } from '@visx/axis';
 import { LinearGradient } from '@visx/gradient';
 import { curveMonotoneX } from '@visx/curve';
-import { Listing } from 'state/marketplace/reducer';
+import { PodListing } from 'state/marketplace/reducer';
 
 // Initialize some variables
 const axisColor = '#fff';
@@ -37,7 +37,7 @@ export default function AreaChart({
   left,
   children,
 }: {
-  data: Listing[];
+  data: PodListing[];
   gradientColor: string;
   xScale: AxisScale<number>;
   yScale: AxisScale<number>;
@@ -60,7 +60,7 @@ export default function AreaChart({
         to={gradientColor}
         toOpacity={0.2}
       />
-      <AreaClosed<Listing>
+      <AreaClosed<PodListing>
         data={data}
         x={(d) => xScale(d.index.toNumber()) || 0}
         y={(d) => yScale(d.pricePerPod.toNumber()) || 0}

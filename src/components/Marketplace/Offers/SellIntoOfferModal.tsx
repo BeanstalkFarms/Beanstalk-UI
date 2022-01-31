@@ -11,11 +11,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { TrimBN, displayBN, FarmAsset, CryptoAsset, sellToBuyOffer, toStringBaseUnitBN } from 'util/index';
 import { BEAN } from 'constants/index';
 import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule, TransactionToast } from 'components/Common';
-import { BuyOffer } from 'state/marketplace/reducer';
+import { PodOrder } from 'state/marketplace/reducer';
 import OffersTable from './OffersTable';
 
 type SellIntoOfferModalProps = {
-  currentOffer: BuyOffer;
+  currentOffer: PodOrder;
   onClose: Function;
 }
 

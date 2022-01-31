@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
-import { Listing } from 'state/marketplace/reducer';
+import { PodListing } from 'state/marketplace/reducer';
 import {
   BaseModule,
   marketStrings,
@@ -13,13 +13,13 @@ import CreateListingModule from './Listings/CreateListingModule';
 
 type ListingState = {
   /** */
-  index: Listing['objectiveIndex'];
+  index: PodListing['objectiveIndex'];
   /** */
-  pricePerPod: Listing['pricePerPod'];
+  pricePerPod: PodListing['pricePerPod'];
   /** */
-  amount: Listing['initialAmount'];
+  amount: PodListing['initialAmount'];
   /** */
-  expiresIn: Listing['expiresIn'];
+  expiresIn: PodListing['expiresIn'];
 }
 
 export default function MarketplaceSellModule() {

@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { Listing } from 'state/marketplace/reducer';
+import { PodListing } from 'state/marketplace/reducer';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import {
   FarmAsset,
@@ -42,7 +42,7 @@ import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 import ListingsTable from './ListingsTable';
 
 type BuyListingModalProps = {
-  currentListing: Listing;
+  currentListing: PodListing;
   setCurrentListing: Function;
 }
 

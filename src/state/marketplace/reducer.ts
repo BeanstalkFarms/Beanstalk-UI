@@ -4,7 +4,7 @@ import {
   setMarketplaceListings,
 } from './actions';
 
-export type Listing = {
+export type PodListing = {
   /**
    * The address of the Farmer that owns the Listing.
    */
@@ -73,7 +73,7 @@ export type Listing = {
   status: string;
 };
 
-export type BuyOffer = {
+export type PodOrder = {
   /**
    * Wallet address
    */
@@ -94,6 +94,8 @@ export type BuyOffer = {
    * As the Pod Line moves, this value stays the same because new Pods meet the criteria.
    */
   maxPlaceInLine: BigNumber;
+
+  // ---
 
   /**
    * The total number of Pods that can be sold to this BuyOffer.
@@ -129,12 +131,12 @@ export interface MarketplaceState {
   /**
    *
    */
-  listings: Listing[];
+  listings: PodListing[];
 
   /**
    *
    */
-  buyOffers: BuyOffer[];
+  buyOffers: PodOrder[];
 }
 
 export const initialState: MarketplaceState = {

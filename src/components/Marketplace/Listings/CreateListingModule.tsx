@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 // import { Box } from '@material-ui/core';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { Listing } from 'state/marketplace/reducer';
+import { PodListing } from 'state/marketplace/reducer';
 import { BEAN } from 'constants/index';
 import {
   CryptoAsset,
@@ -179,7 +179,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
    * dirty version of this locally within the component, but let's move it elsewhere.
    */
   let alreadyListedNotification;
-  const [myListings, setMyListings] = useState<null | Listing[]>(null);
+  const [myListings, setMyListings] = useState<null | PodListing[]>(null);
   useEffect(() => {
     (async () => {
       const walletAddress = await GetWalletAddress();

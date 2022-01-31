@@ -5,7 +5,7 @@ import _ from 'lodash';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 
-import { Listing } from 'state/marketplace/reducer';
+import { PodListing } from 'state/marketplace/reducer';
 import { CryptoAsset, GetWalletAddress } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { filterStrings, QuestionModule } from 'components/Common';
@@ -34,7 +34,7 @@ export default function Listings(props: ListingsProps) {
   /** FIXME: is this somewhere in global state? */
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   /** The currently selected listing (used when buying pods). */
-  const [currentListing, setCurrentListing] = useState<Listing | null>(null);
+  const [currentListing, setCurrentListing] = useState<PodListing | null>(null);
 
   const { listings: allListings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
@@ -47,7 +47,7 @@ export default function Listings(props: ListingsProps) {
   );
 
   // Filter state
-  const filteredListings = useRef<Listing[]>(allListings);
+  const filteredListings = useRef<PodListing[]>(allListings);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
 

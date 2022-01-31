@@ -11,7 +11,7 @@ import {
   toTokenUnitsBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
-import { BuyOffer, Listing } from './reducer';
+import { PodOrder, PodListing } from './reducer';
 
 // mock global events for marketplace
 // TODO: hook this up to real contract events
@@ -131,8 +131,8 @@ type PodOrderCreatedEvent = {
 
 // FIXME: define type for Events
 function processEvents(events: any, harvestableIndex: BigNumber) {
-  const listings : { [key: string]: Listing } = {};
-  const buyOffers : { [key: string]: BuyOffer } = {};
+  const listings : { [key: string]: PodListing } = {};
+  const buyOffers : { [key: string]: PodOrder } = {};
   console.log('marketplace/updater: processEvents', events);
   for (const event of events) {
     if (event.event === 'PodListingCreated') {

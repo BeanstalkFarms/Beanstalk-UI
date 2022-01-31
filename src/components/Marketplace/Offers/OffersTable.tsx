@@ -16,7 +16,7 @@ import {
   ShoppingCartOutlined as ShoppingCartIcon,
 } from '@material-ui/icons';
 
-import { BuyOffer } from 'state/marketplace/reducer';
+import { PodOrder } from 'state/marketplace/reducer';
 import { theme } from 'constants/index';
 import { cancelPodOrder, CryptoAsset, displayBN, FarmAsset } from 'util/index';
 
@@ -25,7 +25,7 @@ import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/C
 import { useStyles } from '../TableStyles';
 
 type OfferRowProps = {
-  offer: BuyOffer;
+  offer: PodOrder;
   setCurrentOffer: Function;
   isMine: boolean;
 }
@@ -153,7 +153,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
 
 type OffersTableProps = {
   mode: 'ALL' | 'MINE';
-  offers: BuyOffer[];
+  offers: PodOrder[];
   setCurrentOffer?: Function;
 }
 
@@ -206,7 +206,7 @@ export default function OffersTable(props: OffersTableProps) {
                 </TableCell>
               </TableRow>
             </TableHead>
-            {slicedItems.map((offer: BuyOffer) => (
+            {slicedItems.map((offer: PodOrder) => (
               <OfferRow
                 key={offer.orderId}
                 offer={offer}
@@ -260,7 +260,7 @@ export default function OffersTable(props: OffersTableProps) {
               )}
             </TableRow>
           </TableHead>
-          {slicedItems.map((offer: BuyOffer) => (
+          {slicedItems.map((offer: PodOrder) => (
             <OfferRow
               key={offer.orderId}
               offer={offer}

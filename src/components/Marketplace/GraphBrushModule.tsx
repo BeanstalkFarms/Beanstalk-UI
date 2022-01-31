@@ -11,7 +11,7 @@ import { max, extent } from 'd3-array';
 import AreaChart from './AreaChart';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { Listing } from 'state/marketplace/reducer';
+import { PodListing } from 'state/marketplace/reducer';
 
 // Initialize some variables
 const brushMargin = { top: 10, bottom: 15, left: 50, right: 20 };
@@ -29,8 +29,8 @@ const selectedBrushStyle = {
 // accessors
 const getDate = (d: AppleStock) => new Date(d.date);
 const getStockValue = (d: AppleStock) => d.close;
-const getIndex = (l: Listing) => l.index.toNumber();
-const getPrice = (l: Listing) => l.pricePerPod.toNumber();
+const getIndex = (l: PodListing) => l.index.toNumber();
+const getPrice = (l: PodListing) => l.pricePerPod.toNumber();
 
 export type BrushProps = {
   width: number;

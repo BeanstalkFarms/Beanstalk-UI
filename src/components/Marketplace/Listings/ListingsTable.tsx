@@ -18,7 +18,7 @@ import {
   TablePagination,
 } from '@material-ui/core';
 
-import { Listing } from 'state/marketplace/reducer';
+import { PodListing } from 'state/marketplace/reducer';
 import { theme, BEAN } from 'constants/index';
 import { displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset, cancelPodListing } from 'util/index';
 
@@ -27,7 +27,7 @@ import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/C
 import { useStyles } from '../TableStyles';
 
 type ListingRowProps = {
-  listing: Listing;
+  listing: PodListing;
   harvestableIndex: AppState['weather']['harvestableIndex'];
   setCurrentListing: Function;
   enableControls: boolean;
@@ -189,7 +189,7 @@ function ListingRow({
 type ListingsTableProps = {
   mode: 'ALL' | 'MINE';
   enableControls?: boolean;
-  listings: Listing[];
+  listings: PodListing[];
   setCurrentListing?: Function;
   harvestableIndex: BigNumber;
 }
@@ -240,7 +240,7 @@ export default function ListingsTable(props: ListingsTableProps) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {slicedItems.map((listing: Listing) => (
+              {slicedItems.map((listing: PodListing) => (
                 <ListingRow
                   key={listing.index - props.harvestableIndex}
                   harvestableIndex={props.harvestableIndex}
@@ -301,7 +301,7 @@ export default function ListingsTable(props: ListingsTableProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {slicedItems.map((listing: Listing) => (
+            {slicedItems.map((listing: PodListing) => (
               <ListingRow
                 key={listing.index - props.harvestableIndex}
                 harvestableIndex={props.harvestableIndex}

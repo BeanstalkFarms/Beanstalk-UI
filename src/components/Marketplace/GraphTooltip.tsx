@@ -3,13 +3,13 @@ import BigNumber from 'bignumber.js';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { displayBN, displayFullBN, FarmAsset, CryptoAsset } from 'util/index';
-import { Listing } from 'state/marketplace/reducer';
+import { PodListing } from 'state/marketplace/reducer';
 import TokenIcon from 'components/Common/TokenIcon';
 
 type GraphTooltipProps = {
-  listing: Listing;
+  listing: PodListing;
   harvestableIndex: BigNumber;
-  onBuyClick: (listing: Listing) => void;
+  onBuyClick: (listing: PodListing) => void;
 };
 
 export const GraphTooltip = (props: GraphTooltipProps) => {
