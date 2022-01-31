@@ -8,23 +8,47 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { TrimBN, displayBN, FarmAsset, CryptoAsset, fillPodOrder, toStringBaseUnitBN } from 'util/index';
+import {
+  CryptoAsset,
+  displayBN,
+  FarmAsset,
+  fillPodOrder,
+  MaxBN,
+  MinBN,
+  TrimBN,
+  toStringBaseUnitBN,
+} from 'util/index';
 import { BEAN } from 'constants/index';
-import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule, TransactionToast } from 'components/Common';
+import {
+  BaseModule,
+  PlotInputField,
+  PlotListInputField,
+  SettingsFormModule,
+  TokenInputField,
+  TokenOutputField,
+  TransactionDetailsModule,
+  TransactionToast,
+} from 'components/Common';
 import { PodOrder } from 'state/marketplace/reducer';
 import OffersTable from './OffersTable';
 
 type SellIntoOfferModalProps = {
   currentOrder: PodOrder;
   onClose: Function;
+  settings: any; // FIXME
+  setSettings: Function;
 }
 
 export default function SellIntoOfferModal({
   currentOrder,
-  onClose
+  onClose,
+  settings,
+  setSettings
 }: SellIntoOfferModalProps) {
   /** The selected Plot index. */
   const [index, setIndex] = useState(new BigNumber(-1));
+  /** The selected Plot index. */
+  const [start, setStart] = useState(new BigNumber(-1));
   /** The amount of Pods the User is willing to sell into this Offer */
   const [amount, setAmount] = useState(new BigNumber(0));
 
@@ -85,16 +109,27 @@ export default function SellIntoOfferModal({
   );
 
   // Max amount that you can sell
-  // currentOffer.maxPlaceInLine = the max place in line the buyer is willing to buy from
+  // currentOrder.maxPlaceInLine = the max place in line the buyer is willing to buy from
   // (i.e. can only sell if plot is before this)
   const maxAmountCanSell = getMaxAmountCanSell(index);
   const beansReceived = amount.times(currentOrder.pricePerPod);
+
+  function fromIndexValueUpdated(newStartNumber: BigNumber, newAmountNumber: BigNumber) {
+    const newStartValue = MinBN(
+      new BigNumber(newStartNumber),
+      maxAmountCanSell
+    );
+    const newAmountValue = MinBN(new BigNumber(newAmountNumber), amount);
+    setStart(TrimBN(newStartValue, BEAN.decimals));
+    setAmount(TrimBN(newAmountValue, BEAN.decimals));
+  }
 
   // Handle plot change
   const handlePlotChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event?.target?.value === 'default') {
       setIndex(new BigNumber(-1));
       setAmount(new BigNumber(0));
+      setStart(new BigNumber(0));
       return;
     }
     const newIndex = new BigNumber(event.target.value);
@@ -102,7 +137,61 @@ export default function SellIntoOfferModal({
     console.log(`SellIntoOfferModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${_max}`);
     setIndex(newIndex);
     setAmount(_max);
+    setStart(new BigNumber(0));
   };
+  // Handle Pod change
+  const handlePodChange = (event) => {
+    const newAmount = new BigNumber(event.target.value || 0);
+    if (newAmount.isGreaterThanOrEqualTo(maxAmountCanSell)) {
+      setAmount(maxAmountCanSell);
+      return;
+    }
+    setAmount(newAmount);
+  }
+  // Handle start change
+  const handleStartChange = (event) => {
+    if (event.target.value) {
+      fromIndexValueUpdated(event.target.value, maxAmountCanSell);
+    } else {
+      fromIndexValueUpdated(new BigNumber(0), maxAmountCanSell);
+    }
+  };
+
+  const minMaxHandler = () => {
+    setAmount(maxAmountCanSell);
+    setStart(new BigNumber(0));
+  };
+  const errorAmount = maxAmountCanSell.minus(start).minus(amount).isLessThan(0);
+
+  /* Input Fields */
+  const plotField = (
+    <TokenInputField
+      key={2}
+      label="Number of Pods to Sell"
+      //
+      locked={!index || index.lt(0)}
+      token={FarmAsset.Pods}
+      //
+      value={TrimBN(amount, 6)}
+      maxHandler={minMaxHandler}
+      // balance={index.lt(0) ? null : maxAmountCanSell}
+      //
+      handleChange={handlePodChange}
+      style={{ marginTop: 20 }}
+    />
+  );
+  const startField = (
+    <PlotInputField
+      key={0}
+      // hidden={props.isFormDisabled && !start.isEqualTo(toPlotEndIndex)}
+      // balance={plotEndId}
+      handleChange={handleStartChange}
+      label="Start Index"
+      value={TrimBN(start, 6)}
+      minHandler={minMaxHandler}
+      error={errorAmount}
+    />
+  );
 
   // Handle form submission
   // Sell some or all pods from a plot the user owns into an
@@ -110,22 +199,31 @@ export default function SellIntoOfferModal({
   const handleForm = async () => {
     const plotKey = index.toString();
     const plotToSellFrom = plots[plotKey];
-    const start = index.plus(plotToSellFrom).minus(amount); // sell from the back of my plot
-    
+    console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
+
+    // Contract Inputs
+    const params = [
+      currentOrder.id,
+      toStringBaseUnitBN(index, BEAN.decimals),   // uint256 index
+      toStringBaseUnitBN(start, BEAN.decimals),   // uint256 start
+      toStringBaseUnitBN(amount, BEAN.decimals),  // uint256 amount
+      settings.toWallet,                          // uint24 toWallet
+    ];
+
     // Toast
     const txToast = new TransactionToast({
       loading: `Selling ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
       success: `Sold ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
     });
-    
+
     // Execute
-    console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
+    console.log('SellIntoOfferModal: beanstalk.fillPodOrder', params);
     fillPodOrder({
-      id: currentOrder.id, // FIXME is this conversion correct
-      index: toStringBaseUnitBN(index, BEAN.decimals),
-      start: toStringBaseUnitBN(start, BEAN.decimals),
-      amount: toStringBaseUnitBN(amount, BEAN.decimals),
-      toWallet: false, // FIXME
+      id: params[0],
+      index: params[1],
+      start: params[2],
+      amount: params[3],
+      toWallet: params[4]
     }, (response) => {
       txToast.confirming(response);
     })
@@ -150,6 +248,19 @@ export default function SellIntoOfferModal({
     index.lt(0)
     || !amount
     || amount.lte(0)
+    || errorAmount
+  );
+
+  // Users select how they want to receive their Beans from their listed Plots once purchased
+  // FIXME:
+  // Once new pod marketplace contract is updated we will need to send in this variable
+  const showSettings = (
+    <SettingsFormModule
+      settings={settings}
+      setSettings={setSettings}
+      isCreateListing
+      showUnitModule={false}
+    />
   );
 
   return (
@@ -197,27 +308,8 @@ export default function SellIntoOfferModal({
           {index.lt(0) ? null : (
             <>
               <div style={{ height: 5 }} />
-              <TokenInputField
-                key={2}
-                label="Number of Pods to Sell"
-                //
-                locked={!index || index.lt(0)}
-                token={FarmAsset.Pods}
-                //
-                value={TrimBN(amount, 6)}
-                maxHandler={() => setAmount(maxAmountCanSell)}
-                // balance={index.lt(0) ? null : maxAmountCanSell}
-                //
-                handleChange={(e) => {
-                  const newAmount = new BigNumber(e.target.value || 0);
-                  if (newAmount.isGreaterThanOrEqualTo(maxAmountCanSell)) {
-                    setAmount(maxAmountCanSell);
-                    return;
-                  }
-                  setAmount(newAmount);
-                }}
-                style={{ marginTop: 20 }}
-              />
+              {startField}
+              {plotField}
               {/**
                 * Outputs + Details
                 */}
@@ -235,6 +327,7 @@ export default function SellIntoOfferModal({
             </>
           )}
         </Box>
+        {showSettings}
       </BaseModule>
     </Modal>
   );

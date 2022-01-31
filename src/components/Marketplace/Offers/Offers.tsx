@@ -45,6 +45,11 @@ export default function Orders(props: OrdersProps) {
   const [walletAddress, setWalletAddress] = useState(null);
   const [currentOffer, setCurrentOffer] = useState(null);
 
+  //
+  const [settings, setSettings] = useState({
+    toWallet: false,
+  });
+
   // Filter state
   const filteredOffers = useRef<PodOrder[]>(allOffers);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
@@ -224,6 +229,8 @@ export default function Orders(props: OrdersProps) {
       <SellIntoOfferModal
         currentOrder={currentOffer}
         onClose={() => setCurrentOffer(null)}
+        settings={settings}
+        setSettings={setSettings}
       />
       {filters}
       <OffersTable

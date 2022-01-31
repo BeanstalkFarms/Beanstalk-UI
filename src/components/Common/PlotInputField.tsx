@@ -91,6 +91,7 @@ export default function PlotInputField(props) {
         size="medium"
         type="number"
         disabled={props.handleChange === undefined}
+        error={props.error}
         value={
           props.value.isNegative()
             ? ''
@@ -130,4 +131,5 @@ PlotInputField.defaultProps = {
   hidden: false,
   maxval: 0,
   label: 'Index',
+  error: undefined,
 };
