@@ -6,6 +6,11 @@ import {
 
 export type Listing = {
   /**
+   * The address of the Farmer that owns the Listing.
+   */
+  account: string;
+
+  /**
    * The absolute index of the listed Plot in the Pod Line.
    *
    * Measured from the front, so the Listing contains all Pods between
@@ -59,11 +64,6 @@ export type Listing = {
    * `initialAmount > amount > 0`
    */
   amount: BigNumber;
-
-  /**
-   * Wallet address
-   */
-  listerAddress: string;
 
   /**
    * Listing status.

@@ -185,7 +185,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       const walletAddress = await GetWalletAddress();
       setMyListings(
         allListings
-          .filter((listing) => listing.listerAddress === walletAddress)
+          .filter((listing) => listing.account === walletAddress)
       );
     })();
   }, [allListings]);

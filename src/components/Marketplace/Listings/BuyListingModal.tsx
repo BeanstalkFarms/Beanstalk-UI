@@ -230,7 +230,7 @@ export default function BuyListingModal({
 
       // Execute
       buyBeansAndFillPodListing({
-        from: currentListing.listerAddress,
+        from: currentListing.account,
         index: listingIndex,
         start: '0', // FIXME: start
         beanAmount: beanAmount,
@@ -262,7 +262,7 @@ export default function BuyListingModal({
 
       // Execute
       fillPodListing({
-        from: currentListing.listerAddress,
+        from: currentListing.account,
         index: listingIndex,
         start: '0', // FIXME: `start`
         beanAmount: toStringBaseUnitBN(fromBeanValue, BEAN.decimals),

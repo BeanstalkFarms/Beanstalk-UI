@@ -123,7 +123,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
     if (event.event === 'PodListingCreated') {
       let values = (event.returnValues as PodListingCreatedEvent);
       listings[values.index] = {
-        listerAddress: values.account,
+        account: values.account,
         index: toTokenUnitsBN(new BigNumber(values.index), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
         maxHarvestableIndex: toTokenUnitsBN(new BigNumber(values.maxHarvestableIndex), BEAN.decimals),

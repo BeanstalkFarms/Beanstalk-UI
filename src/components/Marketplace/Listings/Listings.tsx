@@ -64,9 +64,9 @@ export default function Listings(props: ListingsProps) {
   useMemo(() => {
     filteredListings.current = _.filter(allListings, (listing) => (
       (props.mode === 'MINE' ? (
-        listing.listerAddress === walletAddress
+        listing.account === walletAddress
       ) : (
-        listing.listerAddress !== walletAddress
+        listing.account !== walletAddress
       )) &&
       listing.pricePerPod > priceFilters[0] &&
       listing.pricePerPod < priceFilters[1] &&
