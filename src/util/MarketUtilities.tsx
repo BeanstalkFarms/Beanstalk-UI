@@ -155,31 +155,53 @@ export const fillPodListing = async (
   { onResponse }
 );
 
-// FIXME: needs-refactor
-export const buyBeansAndBuyListing = async (
-  index: string,
-  from: string,
-  amount: string,
-  buyBeanAmount: string,
-  ethAmount: string,
-  claimable: any,
+/**
+ * @param from 
+ * @param index The index of the Plot being listed.
+ * @param start The start index within the Plot that msg.sender is buying from.
+ * @param beanAmount The amount of already owned Beans msg.sender is spending.
+ * @param buyBeanAmount The amount of Beans to buy with ETH and use as payment
+ * @param pricePerPod The price per Pod msg.sender is paying
+ * @param claimable Allows Farmers to use claimable and wrapped Beans to purchase the listing
+ * @param ethAmount The maximum amount of Eth to spend buying Beans. msg.value must be attached to the transaction.
+ * @param onResponse 
+ * @returns 
+ */
+type BuyBeansAndFillPodListingParams = {
+  /** The address of the Farmer that owns the Listing. */
+  from: string;
+  index: string;
+  start: string;
+  beanAmount: string;
+  buyBeanAmount: string;
+  pricePerPod: string;
+  claimable: any; // FIXME: should be typeof claimable | null
+  ethAmount: string;
+}
+
+export const buyBeansAndFillPodListing = async (
+  params: BuyBeansAndFillPodListingParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
-    ? beanstalkContract().claimAndBuyBeansAndBuyListing(
-        index,
-        from,
-        amount,
-        buyBeanAmount,
-        claimable,
-        { value: ethAmount }
+  (params.claimable
+    ? beanstalkContract().claimBuyBeansAndFillPodListing(
+        params.from,
+        params.index,
+        params.start,
+        params.beanAmount,
+        params.buyBeanAmount,
+        params.pricePerPod,
+        params.claimable,
+        { value: params.ethAmount }
       )
-    : beanstalkContract().buyBeansAndBuyListing(
-      index,
-      from,
-      amount,
-      buyBeanAmount,
-      { value: ethAmount }
+    : beanstalkContract().buyBeansAndFillPodListing(
+      params.from,
+      params.index,
+      params.start,
+      params.beanAmount,
+      params.buyBeanAmount,
+      params.pricePerPod,
+      { value: params.ethAmount }
     )
   ),
   { onResponse }

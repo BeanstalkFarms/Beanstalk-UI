@@ -24,7 +24,7 @@ import {
   toBaseUnitBN,
   toStringBaseUnitBN,
   fillPodListing,
-  buyBeansAndBuyListing,
+  buyBeansAndFillPodListing,
   approveBeanstalkBean,
 } from 'util/index';
 import {
@@ -210,12 +210,10 @@ export default function BuyListingModal({
 
     if (fromEthValue.isGreaterThan(0)) {
       // Contract Inputs
-      const beans = MaxBN(
-        toBaseUnitBN(fromBeanValue, BEAN.decimals),
-        new BigNumber(0)
-      ).toString();
+      const beanAmount = MaxBN(toBaseUnitBN(fromBeanValue, BEAN.decimals), new BigNumber(0)).toString();
+      const pricePerPod = toStringBaseUnitBN(currentListing.pricePerPod, BEAN.decimals)
       const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
-      const buyBeans = toStringBaseUnitBN(
+      const buyBeanAmount = toStringBaseUnitBN(
         toBuyBeanValue,
         BEAN.decimals
       );
@@ -231,18 +229,19 @@ export default function BuyListingModal({
       });
 
       // Execute
-      buyBeansAndBuyListing(
-        listingIndex,
-        currentListing.listerAddress,
-        beans,
-        buyBeans,
-        eth,
-        _claimable,
-        (response) => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-          txToast.confirming(response);
-        }
-      )
+      buyBeansAndFillPodListing({
+        from: currentListing.listerAddress,
+        index: listingIndex,
+        start: "0", // FIXME: start
+        beanAmount: beanAmount,
+        buyBeanAmount: buyBeanAmount,
+        pricePerPod: pricePerPod,
+        claimable: _claimable,
+        ethAmount: eth
+      }, (response) => {
+        fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+        txToast.confirming(response);
+      })
       .then((value) => {
         txToast.success(value);
       })
