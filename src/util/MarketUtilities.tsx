@@ -138,14 +138,14 @@ export const fillPodListing = async (
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   (claimable
-    ? beanstalkContract().claimAndBuyListing(
+    ? beanstalkContract().claimAndFillPodListing(
       from,
       index,
       start,
       beanAmount,
       claimable
     )
-    : beanstalkContract().buyListing(
+    : beanstalkContract().fillPodListing(
       from,
       index,
       start,
