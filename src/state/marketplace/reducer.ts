@@ -85,15 +85,15 @@ export type BuyOffer = {
   orderId: BigNumber;
 
   /**
+   * The price per Pod, in Beans.
+   */
+  pricePerPod: BigNumber;
+
+  /**
    * The User is willing to buy any Pod that is before maxPlaceInLine at pricePerPod.
    * As the Pod Line moves, this value stays the same because new Pods meet the criteria.
    */
   maxPlaceInLine: BigNumber;
-
-  /**
-   * The price per Pod, in Beans.
-   */
-  pricePerPod: BigNumber;
 
   /**
    * The total number of Pods that can be sold to this BuyOffer.
