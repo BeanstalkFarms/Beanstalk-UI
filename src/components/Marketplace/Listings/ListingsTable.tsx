@@ -43,7 +43,7 @@ function ListingRow({
 }: ListingRowProps) {
   const classes = useStyles();
   const relativeIndex = (listing.objectiveIndex).minus(harvestableIndex);
-  const relativeExpiry = (listing.expiry).minus(new BigNumber(harvestableIndex));
+  const relativeExpiry = (listing.maxHarvestableIndex).minus(new BigNumber(harvestableIndex));
   const amountRemaining = listing.initialAmount.minus(listing.amountSold);
   const explainer = (
     <>

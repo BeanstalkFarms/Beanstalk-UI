@@ -18,34 +18,34 @@ import { BuyOffer, Listing } from './reducer';
 // eslint-disable-next-line
 const MOCK_EVENTS = [
   {
-    event: 'ListingCreated',
+    event: 'PodListingCreated',
     returnValues: {
       account: '0xaaa',
       index: new BigNumber(0),
       pricePerPod: new BigNumber(0.98),
-      expiry: new BigNumber(123123123),
+      maxHarvestableIndex: new BigNumber(123123123),
       amount: new BigNumber(123123),
     },
   },
   {
-    event: 'ListingCreated',
+    event: 'PodListingCreated',
     returnValues: {
       account: '0xbbb',
       index: new BigNumber(1000000),
       pricePerPod: new BigNumber(0.99),
-      expiry: new BigNumber(123123123),
+      maxHarvestableIndex: new BigNumber(123123123),
       amount: new BigNumber(1000),
     },
   },
   {
-    event: 'ListingCancelled',
+    event: 'PodListingCancelled',
     returnValues: {
       account: '0xaaa',
       index: new BigNumber(0),
     },
   },
   {
-    event: 'BuyOfferCreated',
+    event: 'PodOrderCreated',
     returnValues: {
       account: '0xaaa',
       index: new BigNumber(100000),
@@ -55,7 +55,7 @@ const MOCK_EVENTS = [
     },
   },
   {
-    event: 'BuyOfferCreated',
+    event: 'PodOrderCreated',
     returnValues: {
       account: '0xaaa',
       index: new BigNumber(300000),
@@ -65,13 +65,13 @@ const MOCK_EVENTS = [
     },
   },
   {
-    event: 'BuyOfferCancelled',
+    event: 'PodOrderCancelled',
     returnValues: {
       index: new BigNumber(300000),
     },
   },
   {
-    event: 'ListingFilled',
+    event: 'PodListingFilled',
     returnValues: {
       buyer: '0xccc',
       seller: '0xaaa',
@@ -81,7 +81,7 @@ const MOCK_EVENTS = [
     },
   },
   {
-    event: 'ListingFilled',
+    event: 'PodListingFilled',
     returnValues: {
       buyer: '0xccc',
       seller: '0xaaa',
@@ -110,7 +110,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
   const buyOffers : { [key: string]: BuyOffer } = {};
   console.log('marketplace/updater: processEvents', events);
   for (const event of events) {
-    if (event.event === 'ListingCreated') {
+    if (event.event === 'PodListingCreated') {
       listings[event.returnValues.index] = {
         // Lister
         listerAddress:
@@ -121,8 +121,8 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         // Listing Configuration
         pricePerPod:
           toTokenUnitsBN(new BigNumber(event.returnValues.pricePerPod), BEAN.decimals),
-        expiry:
-          toTokenUnitsBN(new BigNumber(event.returnValues.expiry), BEAN.decimals),
+        maxHarvestableIndex:
+          toTokenUnitsBN(new BigNumber(event.returnValues.maxHarvestableIndex), BEAN.decimals),
         // Amounts
         initialAmount:
           toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
@@ -134,9 +134,9 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         status:
           'active',
       };
-    } else if (event.event === 'ListingCancelled') {
+    } else if (event.event === 'PodListingCancelled') {
       delete listings[event.returnValues.index];
-    } else if (event.event === 'ListingFilled') {
+    } else if (event.event === 'PodListingFilled') {
       const { index, amount } = event.returnValues;
       const amountBN = toTokenUnitsBN(amount, BEAN.decimals);
       // Move current listing's index up by |amount|
@@ -157,20 +157,32 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         listings[newKey].status = 'sold';
         delete listings[newKey];
       }
-    } else if (event.event === 'BuyOfferCreated') {
+    } else if (event.event === 'PodOrderCreated') {
       buyOffers[event.returnValues.index] = {
-        listerAddress: event.returnValues.account,
-        index: new BigNumber(event.returnValues.index),
-        maxPlaceInLine: toTokenUnitsBN(new BigNumber(event.returnValues.maxPlaceInLine), BEAN.decimals),
-        initialAmountToBuy: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
-        amount: toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
-        pricePerPod: toTokenUnitsBN(new BigNumber(event.returnValues.pricePerPod), BEAN.decimals),
-        amountBought: new BigNumber(0),
-        status: 'active',
+        // Lister
+        listerAddress:
+          event.returnValues.account,
+        // Order Configuration
+        index:
+          new BigNumber(event.returnValues.index), // FIXME: now has orderId as variable -> some orders are currently undefined
+        maxPlaceInLine:
+          toTokenUnitsBN(new BigNumber(event.returnValues.maxPlaceInLine), BEAN.decimals),
+        initialAmountToBuy:
+          toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
+        pricePerPod:
+          toTokenUnitsBN(new BigNumber(event.returnValues.pricePerPod), BEAN.decimals),
+        // Amounts
+        amount:
+          toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
+        amountBought:
+          new BigNumber(0),
+        // Status
+        status:
+          'active',
       };
-    } else if (event.event === 'BuyOfferCancelled') {
+    } else if (event.event === 'PodOrderCancelled') {
       delete buyOffers[event.returnValues.index];
-    } else if (event.event === 'BuyOfferFilled') {
+    } else if (event.event === 'PodOrderFilled') {
       const { buyOfferIndex, amount } = event.returnValues;
       const amountBN = toTokenUnitsBN(amount, BEAN.decimals);
       const key = buyOfferIndex;
@@ -189,7 +201,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
 
   // Finally, order listings and offers by their index and also mark any that have expired.
   const finalListings = orderBy(Object.values(listings), 'objectiveIndex', 'asc').map((listing) => {
-    if (listing.expiry.isLessThanOrEqualTo(harvestableIndex)) {
+    if (listing.maxHarvestableIndex.isLessThanOrEqualTo(harvestableIndex)) {
       return {
         ...listing,
         status: 'expired',
@@ -219,22 +231,22 @@ export default function Updater() {
       // TODO: Change fromBlock: 0 to the block that BIP-10 is implemented.
       const events = await Promise.all(
         [
-          beanstalk.getPastEvents('ListingCreated', {
+          beanstalk.getPastEvents('PodListingCreated', {
             fromBlock: 0,
           }),
-          beanstalk.getPastEvents('ListingCancelled', {
+          beanstalk.getPastEvents('PodListingCancelled', {
             fromBlock: 0,
           }),
-          beanstalk.getPastEvents('BuyOfferCreated', {
+          beanstalk.getPastEvents('PodListingFilled', {
             fromBlock: 0,
           }),
-          beanstalk.getPastEvents('BuyOfferCancelled', {
+          beanstalk.getPastEvents('PodOrderCreated', {
             fromBlock: 0,
           }),
-          beanstalk.getPastEvents('ListingFilled', {
+          beanstalk.getPastEvents('PodOrderCancelled', {
             fromBlock: 0,
           }),
-          beanstalk.getPastEvents('BuyOfferFilled', {
+          beanstalk.getPastEvents('PodOrderFilled', {
             fromBlock: 0,
           })
         ]

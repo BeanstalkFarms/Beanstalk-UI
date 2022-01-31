@@ -26,7 +26,7 @@ export type Listing = {
   /**
    * The relative position in line at which this listing expires.
    * This is what the User defines. I.e. "100,000 in the Pod Line"
-   * On-chain, it is stored as `expiry`.
+   * On-chain, it is stored as `maxHarvestableIndex`.
    */
   expiresIn: BigNumber;
 
@@ -37,7 +37,7 @@ export type Listing = {
    * NOTE that the above harvestableIndex is the harvestableIndex
    * at the toime of listing.
    */
-  expiry: BigNumber;
+  maxHarvestableIndex: BigNumber;
 
   /**
    * The total number of Pods to sell.
@@ -46,7 +46,7 @@ export type Listing = {
 
   /**
    * The amount of Pods that have been bought from this Listing.
-   * 
+   *
    * `0 < amountSold < initialAmount`
    */
   amountSold: BigNumber;
@@ -67,7 +67,7 @@ export type Listing = {
 
   /**
    * Listing status.
-   * 
+   *
    * FIXME: make this an enum
    */
   status: string;
@@ -83,7 +83,7 @@ export type BuyOffer = {
    * As the Pod Line moves, this value stays the same because new Pods meet the criteria.
    */
   maxPlaceInLine: BigNumber;
-  
+
   /**
    * The price per Pod, in Beans.
    */
@@ -91,21 +91,21 @@ export type BuyOffer = {
 
   /**
    * The total number of Pods that can be sold to this BuyOffer.
-   * 
+   *
    * FIXME: "ToBuy" naming here; this differs from Listing.
    */
   initialAmountToBuy: BigNumber;
 
   /**
    * The amount of Pods that have been sold to this BuyOffer.
-   * 
+   *
    * `0 < amountBought < initialAmountToBuy`
    */
   amountBought: BigNumber;
 
   /**
    * The amount of Pods that can still be sold to this BuyOffer.
-   * 
+   *
    * `amount = initialAmountToBuy - amountBought`
    * `initialAmountToBuy > amount > 0`
    */
@@ -113,14 +113,14 @@ export type BuyOffer = {
 
   /**
    * Wallet address
-   * 
+   *
    * FIXME: naming. We also use "listerAddress" for Listings.
    */
   listerAddress: string;
 
   /**
    * Listing status.
-   * 
+   *
    * FIXME: make this an enum
    */
   status: string;
@@ -128,12 +128,12 @@ export type BuyOffer = {
 
 export interface MarketplaceState {
   /**
-   * 
+   *
    */
   listings: Listing[];
-  
+
   /**
-   * 
+   *
    */
   buyOffers: BuyOffer[];
 }

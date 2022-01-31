@@ -76,7 +76,7 @@ export default function Listings(props: ListingsProps) {
       listing.objectiveIndex
         .minus(harvestableIndex)
         .lte(new BigNumber(placeInLineFilters[1])) &&
-      listing.expiry
+      listing.maxHarvestableIndex
         .minus(harvestableIndex)
         .gte(new BigNumber(0))
     ));
