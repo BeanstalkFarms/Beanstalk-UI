@@ -23,7 +23,7 @@ import {
   MaxBN,
   toBaseUnitBN,
   toStringBaseUnitBN,
-  buyListing,
+  fillPodListing,
   buyBeansAndBuyListing,
   approveBeanstalkBean,
 } from 'util/index';
@@ -262,13 +262,11 @@ export default function BuyListingModal({
       });
 
       // Execute
-      buyListing(
-        listingIndex,
+      fillPodListing(
         currentListing.listerAddress,
-        toStringBaseUnitBN(
-          fromBeanValue,
-          BEAN.decimals
-        ),
+        listingIndex,
+        "0", // FIXME: `start`
+        toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
         _claimable,
         (response) => {
           fromValueUpdated(new BigNumber(-1), new BigNumber(-1));

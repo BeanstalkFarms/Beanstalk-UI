@@ -2,51 +2,6 @@ import { beanstalkContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 // FIXME: needs-refactor
-export const buyListing = async (
-  index: string,
-  from: string,
-  amount: string,
-  claimable: any, // FIXME
-  onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  (claimable
-    ? beanstalkContract().claimAndBuyListing(index, from, amount, claimable)
-    : beanstalkContract().buyListing(index, from, amount)
-  ),
-  { onResponse }
-);
-
-// FIXME: needs-refactor
-export const buyBeansAndBuyListing = async (
-  index: string,
-  from: string,
-  amount: string,
-  buyBeanAmount: string,
-  ethAmount: string,
-  claimable: any,
-  onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  (claimable
-    ? beanstalkContract().claimAndBuyBeansAndBuyListing(
-        index,
-        from,
-        amount,
-        buyBeanAmount,
-        claimable,
-        { value: ethAmount }
-      )
-    : beanstalkContract().buyBeansAndBuyListing(
-      index,
-      from,
-      amount,
-      buyBeanAmount,
-      { value: ethAmount }
-    )
-  ),
-  { onResponse }
-);
-
-// FIXME: needs-refactor
 export const sellToBuyOffer = async (
   finalIndex,
   sellFromIndex,
@@ -162,5 +117,70 @@ export const cancelPodListing = (
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   beanstalkContract().cancelListing(index),
+  { onResponse }
+);
+
+/**
+ * @param from The address of the Farmer that owns the Listing.
+ * @param index The index of the Plot being listed.
+ * @param start The start index within the Plot that msg.sender is buying from.
+ * @param beanAmount The amount of Beans msg.sender is spending.
+ * @param claimable The price per Pod msg.sender is paying
+ * @param onResponse 
+ * @returns 
+ */
+export const fillPodListing = async (
+  from: string,
+  index: string,
+  start: string,
+  beanAmount: string,
+  claimable: any, // FIXME
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  (claimable
+    ? beanstalkContract().claimAndBuyListing(
+      from,
+      index,
+      start,
+      beanAmount,
+      claimable
+    )
+    : beanstalkContract().buyListing(
+      from,
+      index,
+      start,
+      beanAmount
+    )
+  ),
+  { onResponse }
+);
+
+// FIXME: needs-refactor
+export const buyBeansAndBuyListing = async (
+  index: string,
+  from: string,
+  amount: string,
+  buyBeanAmount: string,
+  ethAmount: string,
+  claimable: any,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  (claimable
+    ? beanstalkContract().claimAndBuyBeansAndBuyListing(
+        index,
+        from,
+        amount,
+        buyBeanAmount,
+        claimable,
+        { value: ethAmount }
+      )
+    : beanstalkContract().buyBeansAndBuyListing(
+      index,
+      from,
+      amount,
+      buyBeanAmount,
+      { value: ethAmount }
+    )
+  ),
   { onResponse }
 );
