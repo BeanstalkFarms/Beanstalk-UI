@@ -110,7 +110,7 @@ export default function FillOrderModal({
   const handleForm = async () => {
     const plotKey = index.toString();
     const plotToSellFrom = plots[plotKey];
-    const start = index.plus(plotToSellFrom).minus(amount); // sell from the back of my plot
+    const start = plotToSellFrom.minus(amount); // sell from the back of my plot
     
     // Toast
     const txToast = new TransactionToast({
@@ -127,8 +127,8 @@ export default function FillOrderModal({
     };
     
     // Execute
-    console.log(index.toString(), plotToSellFrom.toString(), amount.toString(), start);
-    console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`, params);
+    // console.log(index.toString(), plotToSellFrom.toString(), amount.toString(), start);
+    // console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`, params);
     fillPodOrder(params, (response) => {
       txToast.confirming(response);
     })
