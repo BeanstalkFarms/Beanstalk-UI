@@ -13,14 +13,14 @@ import SellIntoOfferModal from 'components/Marketplace/Offers/SellIntoOfferModal
 import OffersTable from './OffersTable';
 import Filters, { StyledSlider } from '../Filters';
 
-type OffersProps = {
+type OrdersProps = {
   mode: 'ALL' | 'MINE';
 };
 
 /**
- * Offers ("Offers to Buy")
+ * Orders
  */
-export default function Offers(props: OffersProps) {
+export default function Orders(props: OrdersProps) {
   const { orders: allOffers } = useSelector<
     AppState,
     AppState['marketplace']
@@ -222,7 +222,7 @@ export default function Offers(props: OffersProps) {
   return (
     <>
       <SellIntoOfferModal
-        currentOffer={currentOffer}
+        currentOrder={currentOffer}
         onClose={() => setCurrentOffer(null)}
       />
       {filters}

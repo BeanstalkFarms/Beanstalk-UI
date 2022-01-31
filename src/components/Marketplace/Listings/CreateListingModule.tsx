@@ -37,7 +37,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   /** The absolute index of the selected plot in line. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The amount of Pods listed from the plot. */
-  const [amount, setAmount] = useState(new BigNumber(-1));
+  const [totalAmount, setTotalAmount] = useState(new BigNumber(-1));
   /** How far forward the Pod line needs to move before the offer expire. */
   const [expiresIn, setExpiresIn] = useState(new BigNumber(-1));
   /** The price per pod. */
@@ -60,23 +60,24 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     // TODO: rest (???)
     const canSell = pricePerPodValue.isLessThanOrEqualTo(1);
     if (canSell) {
+      console.log(index, pricePerPodValue, totalAmount, expiresIn);
       setListing({
         index,
         pricePerPod: pricePerPodValue,
-        amount,
+        totalAmount,
         expiresIn,
       });
     } else {
       setListing(null);
     }
-  }, [index, setListing, pricePerPodValue, amount, expiresIn]);
+  }, [index, setListing, pricePerPodValue, totalAmount, expiresIn]);
 
   /** */
   const handlePlotChange = (event) => {
     const newIndex = new BigNumber(event.target.value);
     const newAmount = new BigNumber(props.plots[event.target.value]);
     setIndex(newIndex);
-    setAmount(TrimBN(newAmount, 6));
+    setTotalAmount(TrimBN(newAmount, 6));
     setExpiresIn(newIndex.minus(harvestableIndex));
     setPricePerPodValue(new BigNumber(-1));
   };
@@ -98,10 +99,10 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       : new BigNumber(0);
     // CONSTRAINT: Amount can't be greater than size of selected plot.
     if (amountInSelectedPlot.lt(newToPodValue)) {
-      setAmount(amountInSelectedPlot);
+      setTotalAmount(amountInSelectedPlot);
       return;
     }
-    setAmount(newToPodValue);
+    setTotalAmount(newToPodValue);
   };
   /** */
   const handleExpireChange = (event) => {
@@ -147,10 +148,10 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       label="Amount"
       token={FarmAsset.Pods}
       handleChange={handlePodChange}
-      value={TrimBN(amount, 6)}
+      value={TrimBN(totalAmount, 6)}
       maxHandler={() => {
         if (index != null) {
-          setAmount(amountInSelectedPlot);
+          setTotalAmount(amountInSelectedPlot);
         }
       }}
     />
@@ -214,8 +215,8 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
 
   /** Details */
   const details = [
-    `List ${displayBN(amount)} Pods from plot at position ${displayBN(selectedPlotPositionInLine)} in line for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
-    `If fully sold, you will receive ${displayBN(amount.multipliedBy(pricePerPodValue))} Beans.`,
+    `List ${displayBN(totalAmount)} Pods from plot at position ${displayBN(selectedPlotPositionInLine)} in line for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
+    `If fully sold, you will receive ${displayBN(totalAmount.multipliedBy(pricePerPodValue))} Beans.`,
     `This listing will expire when ${displayBN(expiresIn)} additional Pods have been harvested. The total amount of pods harvested at this time will be ${displayBN(expiresIn.plus(harvestableIndex))}.`,
   ];
 
@@ -264,7 +265,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     handleForm() {
       // Toast
       const txToast = new TransactionToast({
-        loading: `Listing ${displayBN(amount)} Pods for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod`,
+        loading: `Listing ${displayBN(totalAmount)} Pods for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod`,
         success: 'Listing placed',
       });
 
@@ -272,14 +273,14 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       createPodListing({
         index: toStringBaseUnitBN(index, BEAN.decimals),
         start: '0', // FIXME: correct `start`
-        amount: toStringBaseUnitBN(amount, BEAN.decimals),
+        amount: toStringBaseUnitBN(totalAmount, BEAN.decimals),
         pricePerPod: toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
         maxHarvestableIndex: toStringBaseUnitBN(expiresIn.plus(harvestableIndex), BEAN.decimals),
         toWallet: false, // FIXME: correct `toWallet`
       }, (response) => {
         // Reset inputs
         setIndex(new BigNumber(-1));
-        setAmount(new BigNumber(-1));
+        setTotalAmount(new BigNumber(-1));
         setExpiresIn(new BigNumber(-1));
         setPricePerPodValue(new BigNumber(-1));
         setListing(null);

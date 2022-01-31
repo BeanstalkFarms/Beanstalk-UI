@@ -8,19 +8,19 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { TrimBN, displayBN, FarmAsset, CryptoAsset, sellToBuyOffer, toStringBaseUnitBN } from 'util/index';
+import { TrimBN, displayBN, FarmAsset, CryptoAsset, fillPodOrder, toStringBaseUnitBN } from 'util/index';
 import { BEAN } from 'constants/index';
 import { BaseModule, PlotListInputField, TokenInputField, TokenOutputField, TransactionDetailsModule, TransactionToast } from 'components/Common';
 import { PodOrder } from 'state/marketplace/reducer';
 import OffersTable from './OffersTable';
 
 type SellIntoOfferModalProps = {
-  currentOffer: PodOrder;
+  currentOrder: PodOrder;
   onClose: Function;
 }
 
 export default function SellIntoOfferModal({
-  currentOffer,
+  currentOrder,
   onClose
 }: SellIntoOfferModalProps) {
   /** The selected Plot index. */
@@ -48,17 +48,17 @@ export default function SellIntoOfferModal({
   useEffect(() => {
     setIndex(new BigNumber(-1));
     setAmount(new BigNumber(0));
-  }, [currentOffer]);
+  }, [currentOrder]);
 
   // If no offer selected, exit
-  if (currentOffer == null) {
+  if (currentOrder == null) {
     return null;
   }
 
   // Filter my plots to show which ones I can sell
   const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
     const plotObjectiveIndex = new BigNumber(plotIndex);
-    return plotObjectiveIndex.minus(harvestableIndex).lt(currentOffer.maxPlaceInLine);
+    return plotObjectiveIndex.minus(harvestableIndex).lt(currentOrder.maxPlaceInLine);
   });
   const validPlots = validPlotIndices.reduce((prev, curr) => (
     {
@@ -72,12 +72,12 @@ export default function SellIntoOfferModal({
     selectedPlotIndex.gt(0)
       ? BigNumber.minimum(
         // The total amount requested by the buyer
-        currentOffer.remainingAmount,
+        currentOrder.remainingAmount,
         // The number of pods in this plot that we can sell into the offer
         // Ex. User A creates a Buy Offer with relatiive index 100,000.
         //     I have a plot at index 99,900 with 200 plots in it.
         //     Only 100 of these are eligible to sell.
-        (currentOffer.maxPlaceInLine).minus(plots[selectedPlotIndex]),
+        (currentOrder.maxPlaceInLine).minus(plots[selectedPlotIndex]),
         // The total number of pods in the seller's plot.
         plots[selectedPlotIndex]
       )
@@ -88,7 +88,7 @@ export default function SellIntoOfferModal({
   // currentOffer.maxPlaceInLine = the max place in line the buyer is willing to buy from
   // (i.e. can only sell if plot is before this)
   const maxAmountCanSell = getMaxAmountCanSell(index);
-  const beansReceived = amount.times(currentOffer.pricePerPod);
+  const beansReceived = amount.times(currentOrder.pricePerPod);
 
   // Handle plot change
   const handlePlotChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,38 +110,25 @@ export default function SellIntoOfferModal({
   const handleForm = async () => {
     const plotKey = index.toString();
     const plotToSellFrom = plots[plotKey];
-    console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
-
-    // Contract Inputs
-    const finalIndex = index; // .times(10 ** 6);
-    const end = finalIndex.plus(plotToSellFrom); // .times(10 ** 6)
-    const finalAmount = amount; // .times(10 ** 6);
-    const sellFromIndex = end.minus(finalAmount);
-    const buyOfferIndex = currentOffer.id;
-    const params = [
-      toStringBaseUnitBN(finalIndex, BEAN.decimals),     // uint256 plotIndex
-      toStringBaseUnitBN(sellFromIndex, BEAN.decimals),  // uint256 sellFromIndex
-      buyOfferIndex.toFixed(),                           // uint24 buyOfferIndex
-      toStringBaseUnitBN(finalAmount, BEAN.decimals)     // uint232 amount
-    ];
-
+    const start = index.plus(plotToSellFrom).minus(amount); // sell from the back of my plot
+    
     // Toast
     const txToast = new TransactionToast({
       loading: `Selling ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
       success: `Sold ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
     });
-
+    
     // Execute
-    console.log('SellIntoOfferModal: beanstalk.sellToBuyOffer', params);
-    sellToBuyOffer(
-      params[0],
-      params[1],
-      params[2],
-      params[3],
-      (response) => {
-        txToast.confirming(response);
-      }
-    )
+    console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
+    fillPodOrder({
+      id: currentOrder.id.toFixed(), // FIXME is this conversion correct
+      index: toStringBaseUnitBN(index, BEAN.decimals),
+      start: toStringBaseUnitBN(start, BEAN.decimals),
+      amount: toStringBaseUnitBN(amount, BEAN.decimals),
+      toWallet: false, // FIXME
+    }, (response) => {
+      txToast.confirming(response);
+    })
     .then((value) => {
       txToast.success(value);
     })
@@ -167,7 +154,7 @@ export default function SellIntoOfferModal({
 
   return (
     <Modal
-      open={currentOffer != null}
+      open={currentOrder != null}
       onClose={onClose}
     >
       <BaseModule
@@ -193,7 +180,7 @@ export default function SellIntoOfferModal({
           */}
         <OffersTable
           mode="ALL"
-          offers={[currentOffer]}
+          offers={[currentOrder]}
         />
         <Box sx={{ marginTop: 20 }}>
           {/**

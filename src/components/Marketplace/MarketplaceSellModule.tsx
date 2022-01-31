@@ -8,7 +8,7 @@ import {
   marketStrings,
 } from 'components/Common';
 
-import Offers from './Offers/Offers';
+import Orders from './Offers/Offers';
 import CreateListingModule from './Listings/CreateListingModule';
 
 type PodListingState = {
@@ -75,7 +75,7 @@ export default function MarketplaceSellModule() {
   );
 
   const sections = [
-    <Offers
+    <Orders
       mode="ALL"
     />,
     <CreateListingModule

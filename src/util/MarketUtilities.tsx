@@ -133,21 +133,35 @@ export const buyBeansAndFillPodListing = async (
   ),
   { onResponse }
 );
-// FIXME: needs-refactor
-export const sellToBuyOffer = async (
-  finalIndex,
-  sellFromIndex,
-  buyOfferIndex,
-  finalAmount,
+
+type FillPodOrderParams = {
+  /** The id of the order being bought */
+  id: string;
+  /** The index of the plot that is being sold into the Pod Order */
+  index: string;
+  /** The start index of the Plot that is being sold. */
+  start: string;
+  /** The max Pod index msg.sender is willing to buy */
+  amount: string;
+  /** Used to signal whether msg.sender wants their Bean payment to go to their wallet or wrapped balance. */
+  toWallet: boolean;
+  // finalIndex,
+  // sellFromIndex,
+  // buyOfferIndex,
+  // finalAmount,
+}
+
+export const fillPodOrder = async (
+  params: FillPodOrderParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract()
-    .sellToBuyOffer(
-      finalIndex,
-      sellFromIndex,
-      buyOfferIndex,
-      finalAmount
-    ),
+  beanstalkContract().fillPodOrder(
+    params.id,
+    params.index,
+    params.start,
+    params.amount,
+    params.toWallet
+  ),
   { onResponse }
 );
 
