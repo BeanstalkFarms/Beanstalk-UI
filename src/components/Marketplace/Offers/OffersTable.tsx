@@ -18,7 +18,7 @@ import {
 
 import { BuyOffer } from 'state/marketplace/reducer';
 import { theme } from 'constants/index';
-import { cancelBuyOffer, CryptoAsset, displayBN, FarmAsset } from 'util/index';
+import { cancelPodOrder, CryptoAsset, displayBN, FarmAsset } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/Common';
@@ -96,10 +96,10 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
                 });
 
                 // Execute
-                cancelBuyOffer(
-                  offer.index.toString(),
-                  (response) => txToast.confirming(response),
-                )
+                cancelPodOrder({
+                  index: offer.index.toString(),
+                  toWallet: false, // FIXME
+                }, (response) => txToast.confirming(response))
                 .then((value) => {
                   txToast.success(value);
                 })

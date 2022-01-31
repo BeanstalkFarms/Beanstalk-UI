@@ -223,11 +223,20 @@ export const buyBeansAndCreatePodOrder = async (
   { onResponse }
 );
 
-// FIXME: needs-refactor
-export const cancelBuyOffer = (
-  index: string,
+type CancelPodOrderParams = {
+  /** The index of the Pod order being canceled. */
+  index: string;
+  /** Whether the remaining Beans in the order should be removed to msg.senders's wallet or wrapped balance. */
+  toWallet: boolean;
+}
+
+export const cancelPodOrder = (
+  params: CancelPodOrderParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().cancelBuyOffer(index),
+  beanstalkContract().cancelPodOrder(
+    params.index,
+    params.toWallet
+  ),
   { onResponse }
 );

@@ -18,7 +18,7 @@ import {
   TrimBN,
   toBaseUnitBN,
   toStringBaseUnitBN,
-  buyBeansAndListBuyOffer,
+  buyBeansAndCreatePodOrder,
   createPodOrder,
 } from 'util/index';
 import {
@@ -394,7 +394,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
         });
 
         // Execute
-        buyBeansAndListBuyOffer(
+        buyBeansAndCreatePodOrder(
           toStringBaseUnitBN(maxPlaceInLineValue, BEAN.decimals),
           toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
           beans,
