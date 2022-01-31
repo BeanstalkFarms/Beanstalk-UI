@@ -1,14 +1,7 @@
 import { beanstalkContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
-/**
- *
- * @param index (string) index of the listing to buy
- * @param from (string) wallet address that issued the listing
- * @param amount (string) amount of Pods to buy from listing.
- * @param claimable ?
- * @param callback callback after response
- */
+// FIXME: needs-refactor
 export const buyListing = async (
   index: string,
   from: string,
@@ -23,17 +16,7 @@ export const buyListing = async (
   { onResponse }
 );
 
-/**
- *
- * @param index
- * @param from
- * @param amount
- * @param buyBeanAmount
- * @param ethAmount
- * @param claimable
- * @param onResponse
- * @returns
- */
+// FIXME: needs-refactor
 export const buyBeansAndBuyListing = async (
   index: string,
   from: string,
@@ -63,15 +46,27 @@ export const buyBeansAndBuyListing = async (
   { onResponse }
 );
 
-/**
- *
- * @param maxPlaceInLine
- * @param price
- * @param amount
- * @param claimable
- * @param onResponse
- * @returns
- */
+// FIXME: needs-refactor
+export const sellToBuyOffer = async (
+  finalIndex,
+  sellFromIndex,
+  buyOfferIndex,
+  finalAmount,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract()
+    .sellToBuyOffer(
+      finalIndex,
+      sellFromIndex,
+      buyOfferIndex,
+      finalAmount
+    ),
+  { onResponse }
+);
+
+// -- ORDERS (prev. Buy Offers) -- //
+
+// FIXME: needs-refactor
 export const listBuyOffer = async (
   maxPlaceInLine,
   price,
@@ -86,17 +81,7 @@ export const listBuyOffer = async (
   { onResponse }
 );
 
-/**
- *
- * @param maxPlaceInLine
- * @param price
- * @param amount
- * @param buyBeanAmount
- * @param ethAmount
- * @param claimable
- * @param onResponse
- * @returns
- */
+// FIXME: needs-refactor
 export const buyBeansAndListBuyOffer = async (
   maxPlaceInLine,
   price,
@@ -126,32 +111,19 @@ export const buyBeansAndListBuyOffer = async (
   { onResponse }
 );
 
-/**
- *
- * @param finalIndex
- * @param sellFromIndex
- * @param buyOfferIndex
- * @param finalAmount
- * @param onResponse
- * @returns
- */
-export const sellToBuyOffer = async (
-  finalIndex,
-  sellFromIndex,
-  buyOfferIndex,
-  finalAmount,
+// FIXME: needs-refactor
+export const cancelBuyOffer = (
+  index: string,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract()
-    .sellToBuyOffer(
-      finalIndex,
-      sellFromIndex,
-      buyOfferIndex,
-      finalAmount
-    ),
+  beanstalkContract().cancelBuyOffer(index),
   { onResponse }
 );
 
+
+// -- LISTINGS -- //
+
+// FIXME: needs-refactor
 export const listPlot = async (
   index: string,
   pricePerPod: string,
@@ -168,18 +140,11 @@ export const listPlot = async (
   { onResponse }
 );
 
+// FIXME: needs-refactor
 export const cancelListing = (
   index: string,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   beanstalkContract().cancelListing(index),
-  { onResponse }
-);
-
-export const cancelBuyOffer = (
-  index: string,
-  onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  beanstalkContract().cancelBuyOffer(index),
   { onResponse }
 );
