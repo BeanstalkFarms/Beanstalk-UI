@@ -188,6 +188,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       podListings[newKey].remainingAmount = currentListing.totalAmount.minus(podListings[newKey].filledAmount);
 
       // Check whether current listing is sold or not
+      // FIXME: potential for roundoff error such that remainingAmount < 0?
       const isSold = podListings[newKey].remainingAmount.isEqualTo(0);
       if (isSold) {
         podListings[newKey].status = 'sold';
