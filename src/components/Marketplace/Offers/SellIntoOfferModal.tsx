@@ -117,7 +117,7 @@ export default function SellIntoOfferModal({
     const end = finalIndex.plus(plotToSellFrom); // .times(10 ** 6)
     const finalAmount = amount; // .times(10 ** 6);
     const sellFromIndex = end.minus(finalAmount);
-    const buyOfferIndex = currentOffer.orderId;
+    const buyOfferIndex = currentOffer.id;
     const params = [
       toStringBaseUnitBN(finalIndex, BEAN.decimals),     // uint256 plotIndex
       toStringBaseUnitBN(sellFromIndex, BEAN.decimals),  // uint256 sellFromIndex

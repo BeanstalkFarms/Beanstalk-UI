@@ -113,6 +113,10 @@ type PodListingCreatedEvent = {
   maxHarvestableIndex: string;
   toWallet: boolean;
 }
+type PodListingCancelledEvent = {
+  account: string;
+  index: string;
+}
 type PodListingFilledEvent = {
   from: string;
   to: string;
@@ -121,23 +125,36 @@ type PodListingFilledEvent = {
   amount: string;
 }
 
+//
 type PodOrderCreatedEvent = {
   account: string;
-  orderId: string;
+  id: string;
   amount: string;
   pricePerPod: string;
   maxPlaceInLine: string;
 }
+type PodOrderCancelledEvent = {
+  account: string;
+  id: string;
+}
+type PodOrderFilledEvent = {
+  from: string;
+  to: string;
+  id: string;
+  index: string;
+  start: string;
+  amount: string; 
+}
 
 // FIXME: define type for Events
 function processEvents(events: any, harvestableIndex: BigNumber) {
-  const listings : { [key: string]: PodListing } = {};
-  const buyOffers : { [key: string]: PodOrder } = {};
+  const podListings : { [key: string]: PodListing } = {};
+  const podOrders : { [key: string]: PodOrder } = {};
   console.log('marketplace/updater: processEvents', events);
   for (const event of events) {
     if (event.event === 'PodListingCreated') {
-      let values = (event.returnValues as PodListingCreatedEvent);
-      listings[values.index] = {
+      const values = (event.returnValues as PodListingCreatedEvent);
+      podListings[values.index] = {
         account: values.account,
         index: toTokenUnitsBN(new BigNumber(values.index), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
@@ -148,7 +165,8 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         status: 'active',
       };
     } else if (event.event === 'PodListingCancelled') {
-      delete listings[event.returnValues.index];
+      const values = (event.returnValues as PodListingCancelledEvent);
+      delete podListings[values.index];
     } else if (event.event === 'PodListingFilled') {
       const values = (event.returnValues as PodListingFilledEvent);
       const amountBN = toTokenUnitsBN(values.amount, BEAN.decimals);
@@ -158,28 +176,28 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       // this assumes we are selling from the front (such that, as a listing
       // is sold, the index increases).
       const prevKey = values.index.toString();
-      const currentListing = listings[prevKey];
-      delete listings[prevKey];
+      const currentListing = podListings[prevKey];
+      delete podListings[prevKey];
       const newIndex = new BigNumber(values.index).plus(values.amount);
       const newKey = newIndex.toString();
-      listings[newKey] = currentListing;
+      podListings[newKey] = currentListing;
 
       // Bump up |amountSold| for this listing
-      listings[newKey].index = toTokenUnitsBN(newIndex, BEAN.decimals);
-      listings[newKey].filledAmount = listings[newKey].filledAmount.plus(amountBN);
-      listings[newKey].remainingAmount = currentListing.totalAmount.minus(listings[newKey].filledAmount);
+      podListings[newKey].index = toTokenUnitsBN(newIndex, BEAN.decimals);
+      podListings[newKey].filledAmount = podListings[newKey].filledAmount.plus(amountBN);
+      podListings[newKey].remainingAmount = currentListing.totalAmount.minus(podListings[newKey].filledAmount);
 
       // Check whether current listing is sold or not
-      const isSold = listings[newKey].remainingAmount.isEqualTo(0);
+      const isSold = podListings[newKey].remainingAmount.isEqualTo(0);
       if (isSold) {
-        listings[newKey].status = 'sold';
-        delete listings[newKey];
+        podListings[newKey].status = 'sold';
+        delete podListings[newKey];
       }
     } else if (event.event === 'PodOrderCreated') {
       const values = (event.returnValues as PodOrderCreatedEvent);
-      buyOffers[values.orderId] = {
+      podOrders[values.id] = {
         account: values.account,
-        orderId: toTokenUnitsBN(new BigNumber(values.orderId), BEAN.decimals), // FIXME do we need to do this conversion?
+        id: toTokenUnitsBN(new BigNumber(values.id), BEAN.decimals), // FIXME do we need to do this conversion?
         maxPlaceInLine: toTokenUnitsBN(new BigNumber(values.maxPlaceInLine), BEAN.decimals),
         totalAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
@@ -188,26 +206,27 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         status: 'active',
       };
     } else if (event.event === 'PodOrderCancelled') {
-      delete buyOffers[event.returnValues.index];
+      const values = (event.returnValues as PodOrderCancelledEvent);
+      delete podOrders[values.id];
     } else if (event.event === 'PodOrderFilled') {
-      const { buyOfferIndex, amount } = event.returnValues;
-      const amountBN = toTokenUnitsBN(amount, BEAN.decimals);
-      const key = buyOfferIndex;
-
+      const values = (event.returnValues as PodOrderFilledEvent);
+      const amountBN = toTokenUnitsBN(values.amount, BEAN.decimals);
+      
       // Check whether current offer is sold or not
-      const buyOffer = buyOffers[key];
-      buyOffers[key].filledAmount = buyOffers[key].filledAmount.plus(amountBN);
-      buyOffers[key].remainingAmount = buyOffer.totalAmount.minus(buyOffer.filledAmount);
+      const key = values.id;
+      const buyOffer = podOrders[key];
+      podOrders[key].filledAmount = podOrders[key].filledAmount.plus(amountBN);
+      podOrders[key].remainingAmount = buyOffer.totalAmount.minus(buyOffer.filledAmount);
 
       const isFilled = buyOffer.remainingAmount.isEqualTo(0);
       if (isFilled) {
-        delete buyOffers[key];
+        delete podOrders[key];
       }
     }
   }
 
   // Finally, order listings and offers by their index and also mark any that have expired.
-  const finalListings = orderBy(Object.values(listings), 'objectiveIndex', 'asc').map((listing) => {
+  const finalListings = orderBy(Object.values(podListings), 'objectiveIndex', 'asc').map((listing) => {
     if (listing.maxHarvestableIndex.isLessThanOrEqualTo(harvestableIndex)) {
       return {
         ...listing,
@@ -216,7 +235,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
     }
     return listing;
   });
-  const finalBuyOffers = Object.values(buyOffers);
+  const finalBuyOffers = Object.values(podOrders);
 
   return {
     listings: finalListings,
