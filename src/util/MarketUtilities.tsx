@@ -1,80 +1,6 @@
 import { beanstalkContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
-// FIXME: needs-refactor
-export const sellToBuyOffer = async (
-  finalIndex,
-  sellFromIndex,
-  buyOfferIndex,
-  finalAmount,
-  onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  beanstalkContract()
-    .sellToBuyOffer(
-      finalIndex,
-      sellFromIndex,
-      buyOfferIndex,
-      finalAmount
-    ),
-  { onResponse }
-);
-
-// -- ORDERS (prev. Buy Offers) -- //
-
-// FIXME: needs-refactor
-export const listBuyOffer = async (
-  maxPlaceInLine,
-  price,
-  amount,
-  claimable,
-  onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  (claimable
-    ? beanstalkContract().claimBeansAndListBuyOffer(maxPlaceInLine, price, amount, claimable)
-    : beanstalkContract().listBuyOffer(maxPlaceInLine, price, amount)
-  ),
-  { onResponse }
-);
-
-// FIXME: needs-refactor
-export const buyBeansAndListBuyOffer = async (
-  maxPlaceInLine,
-  price,
-  amount,
-  buyBeanAmount,
-  ethAmount,
-  claimable,
-  onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  (claimable
-    ? beanstalkContract().claimAndBuyBeansAndListBuyOffer(
-        maxPlaceInLine,
-        price,
-        amount,
-        buyBeanAmount,
-        claimable,
-        { value: ethAmount }
-      )
-    : beanstalkContract().buyBeansAndListBuyOffer(
-      maxPlaceInLine,
-      price,
-      amount,
-      buyBeanAmount,
-      { value: ethAmount }
-    )
-  ),
-  { onResponse }
-);
-
-// FIXME: needs-refactor
-export const cancelBuyOffer = (
-  index: string,
-  onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  beanstalkContract().cancelBuyOffer(index),
-  { onResponse }
-);
-
 // -- LISTINGS -- //
 
 type CreatePodListingParams = {
@@ -205,5 +131,94 @@ export const buyBeansAndFillPodListing = async (
       { value: params.ethAmount }
     )
   ),
+  { onResponse }
+);
+// FIXME: needs-refactor
+export const sellToBuyOffer = async (
+  finalIndex,
+  sellFromIndex,
+  buyOfferIndex,
+  finalAmount,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract()
+    .sellToBuyOffer(
+      finalIndex,
+      sellFromIndex,
+      buyOfferIndex,
+      finalAmount
+    ),
+  { onResponse }
+);
+
+// -- ORDERS (prev. Buy Offers) -- //
+
+type CreatePodOrderParams = {
+  /** The amount of Beans msg.sender will spend up to in the Order */
+  beanAmount: string;
+  /** The price per Pod msg.sender is willing to pay */
+  pricePerPod: string;
+  /** The max Pod index msg.sender is willing to buy */
+  maxPlaceInLine: string;
+  /**  */
+  claimable?: any;
+}
+
+export const createPodOrder = async (
+  params: CreatePodOrderParams,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  (params.claimable
+    ? beanstalkContract().claimAndCreatePodOrder(
+      params.beanAmount, 
+      params.pricePerPod, 
+      params.maxPlaceInLine, 
+      params.claimable
+    )
+    : beanstalkContract().createPodOrder(
+      params.beanAmount,
+      params.pricePerPod,
+      params.maxPlaceInLine,
+    )
+  ),
+  { onResponse }
+);
+
+// FIXME: needs-refactor
+export const buyBeansAndListBuyOffer = async (
+  maxPlaceInLine,
+  price,
+  amount,
+  buyBeanAmount,
+  ethAmount,
+  claimable,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  (claimable
+    ? beanstalkContract().claimAndBuyBeansAndListBuyOffer(
+        maxPlaceInLine,
+        price,
+        amount,
+        buyBeanAmount,
+        claimable,
+        { value: ethAmount }
+      )
+    : beanstalkContract().buyBeansAndListBuyOffer(
+      maxPlaceInLine,
+      price,
+      amount,
+      buyBeanAmount,
+      { value: ethAmount }
+    )
+  ),
+  { onResponse }
+);
+
+// FIXME: needs-refactor
+export const cancelBuyOffer = (
+  index: string,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract().cancelBuyOffer(index),
   { onResponse }
 );

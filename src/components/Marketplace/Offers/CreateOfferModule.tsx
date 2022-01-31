@@ -19,7 +19,7 @@ import {
   toBaseUnitBN,
   toStringBaseUnitBN,
   buyBeansAndListBuyOffer,
-  listBuyOffer,
+  createPodOrder,
 } from 'util/index';
 import {
   ClaimTextModule,
@@ -340,7 +340,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (toPodValue.isLessThanOrEqualTo(0)) return;
-      const claimabl = props.settings.claim ? claimable : null;
+      const _claimable = props.settings.claim ? claimable : null;
 
       // Check for an existing listing to sell into. We want to find the listing that is:
       //    1. As close as possible to the front of the line.
@@ -400,7 +400,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
           beans,
           buyBeans,
           eth,
-          claimabl,
+          _claimable,
           (response) => {
             resetFields();
             txToast.confirming(response);
@@ -420,16 +420,15 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
         });
 
         // Execute
-        listBuyOffer(
-          toStringBaseUnitBN(maxPlaceInLineValue, BEAN.decimals),
-          toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
-          toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
-          claimabl,
-          (response) => {
-            resetFields();
-            txToast.confirming(response);
-          }
-        )
+        createPodOrder({
+          beanAmount: toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
+          pricePerPod: toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
+          maxPlaceInLine: toStringBaseUnitBN(maxPlaceInLineValue, BEAN.decimals),
+          claimable: _claimable,
+        }, (response) => {
+          resetFields();
+          txToast.confirming(response);
+        })
         .then((value) => {
           txToast.success(value);
         })
