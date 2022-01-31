@@ -56,11 +56,13 @@ module.exports = {
     'spaced-comment': 'warn',
     'brace-style': 0,
     'keyword-spacing': 'warn',
-    // Space efficiency
+    // -- Space efficiency
     'arrow-body-style': 'warn',
     'no-trailing-spaces': 0,
     '@typescript-eslint/no-unused-vars': ['warn'],
     // -- Other (to categorize)
+    'react/button-has-type': 0,
+    'react/require-default-props': 0,
     'max-classes-per-file': 0,
     'react/jsx-filename-extension': ['error', {
       extensions: ['.ts', '.tsx'],
