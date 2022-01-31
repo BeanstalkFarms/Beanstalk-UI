@@ -160,7 +160,7 @@ type CreatePodOrderParams = {
   pricePerPod: string;
   /** The max Pod index msg.sender is willing to buy */
   maxPlaceInLine: string;
-  /**  */
+  /** Allows Farmers to use claimable and wrapped Beans to use as payment in the Pod Order */
   claimable?: any;
 }
 
@@ -184,31 +184,40 @@ export const createPodOrder = async (
   { onResponse }
 );
 
-// FIXME: needs-refactor
-export const buyBeansAndListBuyOffer = async (
-  maxPlaceInLine,
-  price,
-  amount,
-  buyBeanAmount,
-  ethAmount,
-  claimable,
+type BuyBeansAndCreatePodOrderParams = {
+  /** The amount of Beans msg.sender will spend up to in the Order */
+  beanAmount: string;
+  /** The amount of Beans to buy with ETH and use as payment */
+  buyBeanAmount: string;
+  /** The price per Pod msg.sender is willing to pay */
+  pricePerPod: string;
+  /** The max Pod index msg.sender is willing to buy */
+  maxPlaceInLine: string;
+  /** Allows Farmers to use claimable and wrapped Beans to use as payment in the Pod Order */
+  claimable: any;
+  /** The maximum amount of Eth to spend buying Beans. msg.value must be attached to the transaction. */
+  ethAmount: string;
+}
+
+export const buyBeansAndCreatePodOrder = async (
+  params: BuyBeansAndCreatePodOrderParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
-    ? beanstalkContract().claimAndBuyBeansAndListBuyOffer(
-        maxPlaceInLine,
-        price,
-        amount,
-        buyBeanAmount,
-        claimable,
-        { value: ethAmount }
+  (params.claimable
+    ? beanstalkContract().claimBuyBeansAndCreatePodOrder(
+        params.beanAmount,
+        params.buyBeanAmount,
+        params.pricePerPod,
+        params.maxPlaceInLine,
+        params.claimable,
+        { value: params.ethAmount }
       )
-    : beanstalkContract().buyBeansAndListBuyOffer(
-      maxPlaceInLine,
-      price,
-      amount,
-      buyBeanAmount,
-      { value: ethAmount }
+    : beanstalkContract().buyBeansAndCreatePodOrder(
+      params.beanAmount,
+      params.buyBeanAmount,
+      params.pricePerPod,
+      params.maxPlaceInLine,
+      { value: params.ethAmount }
     )
   ),
   { onResponse }
