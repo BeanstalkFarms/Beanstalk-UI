@@ -21,7 +21,7 @@ type OffersProps = {
  * Offers ("Offers to Buy")
  */
 export default function Offers(props: OffersProps) {
-  const { buyOffers: allOffers } = useSelector<
+  const { orders: allOffers } = useSelector<
     AppState,
     AppState['marketplace']
   >((state) => state.marketplace);

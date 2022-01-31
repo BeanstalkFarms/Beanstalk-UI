@@ -30,9 +30,6 @@ export type PodListing = {
 
   /**
    * The absolute position in line at which this listing expires.
-   * (harvestableIndex + expiresIn).
-   *
-   * NOTE: the above harvestableIndex is a snapshot at the time of listing.
    */
   maxHarvestableIndex: BigNumber;
 
@@ -45,7 +42,6 @@ export type PodListing = {
 
   /**
    * The number of Pods left to sell.
-   * When a Listing is created, `amount = initialAmount`.
    *
    * `remainingAmount = totalAmount - filledAmount`
    * `totalAmount > remainingAmount > 0`
@@ -125,25 +121,18 @@ export type PodOrder = {
 };
 
 export interface MarketplaceState {
-  /**
-   *
-   */
   listings: PodListing[];
-
-  /**
-   *
-   */
-  buyOffers: PodOrder[];
+  orders: PodOrder[];
 }
 
 export const initialState: MarketplaceState = {
   listings: [],
-  buyOffers: [],
+  orders: [],
 };
 
 export default createReducer(initialState, (builder) =>
   builder.addCase(setMarketplaceListings, (state, { payload }) => {
     state.listings = payload.listings;
-    state.buyOffers = payload.buyOffers;
+    state.orders = payload.orders;
   })
 );

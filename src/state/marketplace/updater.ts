@@ -104,6 +104,7 @@ const MOCK_EVENTS = [
 //   any
 // >;
 
+//
 type PodListingCreatedEvent = {
   account: string;
   index: string;
@@ -227,7 +228,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
   }
 
   // Finally, order listings and offers by their index and also mark any that have expired.
-  const finalListings = orderBy(Object.values(podListings), 'objectiveIndex', 'asc').map((listing) => {
+  const finalPodListings = orderBy(Object.values(podListings), 'index', 'asc').map((listing) => {
     if (listing.maxHarvestableIndex.isLessThanOrEqualTo(harvestableIndex)) {
       return {
         ...listing,
@@ -236,11 +237,11 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
     }
     return listing;
   });
-  const finalBuyOffers = Object.values(podOrders);
+  const finalPodOrders = Object.values(podOrders);
 
   return {
-    listings: finalListings,
-    buyOffers: finalBuyOffers,
+    listings: finalPodListings,
+    orders: finalPodOrders,
   };
 }
 
@@ -288,11 +289,11 @@ export default function Updater() {
 
       const {
         listings,
-        buyOffers,
+        orders
       } = processEvents(marketplaceEvents, harvestableIndex);
       dispatch(setMarketplaceListings({
         listings,
-        buyOffers,
+        orders,
       }));
     };
 

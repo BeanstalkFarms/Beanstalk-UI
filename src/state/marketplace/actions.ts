@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
-import { Listing, BuyOffer } from 'state/marketplace/updater';
+import { MarketplaceState } from './reducer';
 
-export const setMarketplaceListings = createAction<{ listings: Listing[], buyOffers: BuyOffer[] }>(
+// FIXME: rename
+export const setMarketplaceListings = createAction<MarketplaceState>(
   'marketplace/setMarketplaceListings'
 );

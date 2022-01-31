@@ -11,15 +11,15 @@ import {
 import Offers from './Offers/Offers';
 import CreateListingModule from './Listings/CreateListingModule';
 
-type ListingState = {
+type PodListingState = {
   /** */
-  index: PodListing['objectiveIndex'];
+  index: PodListing['index'];
   /** */
   pricePerPod: PodListing['pricePerPod'];
   /** */
-  amount: PodListing['initialAmount'];
+  totalAmount: PodListing['totalAmount'];
   /** */
-  expiresIn: PodListing['expiresIn'];
+  expiresIn: PodListing['maxHarvestableIndex'];
 }
 
 export default function MarketplaceSellModule() {
@@ -34,7 +34,7 @@ export default function MarketplaceSellModule() {
   /** Toggle sections: 'Sell Now' and 'Create Listing' */
   const [section, setSection] = useState<number>(0);
   /** Stored form state when creating a listing. */
-  const [listing, setListing] = useState<ListingState | null>(null);
+  const [listing, setListing] = useState<PodListingState | null>(null);
 
   const [settings, setSettings] = useState({
     toWallet: false,
@@ -69,7 +69,7 @@ export default function MarketplaceSellModule() {
   // Require all inputs have values > 0 or >= 0.
   const readyToSubmit = (
     listing?.index?.gte(0)
-    && listing?.amount?.gt(0)
+    && listing?.totalAmount?.gt(0)
     && listing?.pricePerPod?.gt(0)
     && listing?.expiresIn?.gte(0)
   );
