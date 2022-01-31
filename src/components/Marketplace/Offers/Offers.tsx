@@ -67,8 +67,8 @@ export default function Offers(props: OffersProps) {
       allOffers,
       (offer) =>
         (props.mode === 'MINE'
-          ? offer.listerAddress === walletAddress
-          : offer.listerAddress !== walletAddress) &&
+          ? offer.account === walletAddress
+          : offer.account !== walletAddress) &&
         offer.pricePerPod.toNumber() > priceFilters[0] &&
         offer.pricePerPod.toNumber() < priceFilters[1] &&
         offer.maxPlaceInLine.gte(new BigNumber(placeInLineFilters[0])) &&

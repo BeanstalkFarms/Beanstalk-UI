@@ -42,7 +42,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
         ? 'You want'
         : (
           <>
-            <a href={`https://etherscan.io/address/${offer.listerAddress}`} target="_blank" rel="noreferrer">{offer.listerAddress.slice(0, 6)}</a> wants
+            <a href={`https://etherscan.io/address/${offer.account}`} target="_blank" rel="noreferrer">{offer.account.slice(0, 6)}</a> wants
           </>
         )} to buy {displayBN(numPodsLeft)} Pods for {displayBN(offer.pricePerPod)} Beans per Pod anywhere before {displayBN(offer.maxPlaceInLine)} in the pod line.
     </>
