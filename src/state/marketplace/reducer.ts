@@ -39,7 +39,7 @@ export type PodListing = {
   // -- Amounts
 
   /**
-   * The total number of Pods to sell.
+   * The total number of Pods to sell from the Plot.
    */
   totalAmount: BigNumber;
 
@@ -53,14 +53,14 @@ export type PodListing = {
   remainingAmount: BigNumber;
 
   /**
-   * The amount of Pods that have been bought from this PodListing.
+   * The number of Pods that have been bought from this PodListing.
    *
    * `0 < filledAmount < totalAmount`
    */
   filledAmount: BigNumber;
 
   /**
-   * Listing status.
+   * Pod Listing status.
    *
    * FIXME: make this an enum
    */
@@ -74,9 +74,12 @@ export type PodOrder = {
   account: string;
 
   /**
-   * Ordinal index of buy offer - 0, 1, 2...
+   * The id of the Pod Order. 
+   * 
+   * Computed by hashing the Farmer’s address and the previous block’s hash. In the case of a collisions,
+   * Beanstalk will hash the ID until there is no collision.
    */
-  orderId: BigNumber;
+  id: BigNumber;
 
   /**
    * The price per Pod, in Beans.
@@ -92,29 +95,29 @@ export type PodOrder = {
   // -- Amounts
 
   /**
-   * The total number of Pods that can be sold to this BuyOffer.
+   * The total number of Pods that can be sold to this PodOrder.
    *
    * FIXME: "ToBuy" naming here; this differs from Listing.
    */
   totalAmount: BigNumber;
 
   /**
-   * The amount of Pods that can still be sold to this BuyOffer.
+   * The number of Pods left to be sold to this PodOrder.
    *
-   * `amount = initialAmountToBuy - amountBought`
-   * `initialAmountToBuy > amount > 0`
+   * `remainingAmount = totalAmount - filledAmount`
+   * `totalAmount > remainingAmount > 0`
    */
   remainingAmount: BigNumber;
 
   /**
-   * The amount of Pods that have been sold to this BuyOffer.
+   * The number of Pods that have been sold to this PodOrder.
    *
-   * `0 < amountBought < initialAmountToBuy`
+   * `0 < filledAmount < totalAmount`
    */
   filledAmount: BigNumber;
 
   /**
-   * Listing status.
+   * Pod Order status.
    *
    * FIXME: make this an enum
    */
