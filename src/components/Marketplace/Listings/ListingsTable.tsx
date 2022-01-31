@@ -20,7 +20,7 @@ import {
 
 import { Listing } from 'state/marketplace/reducer';
 import { theme, BEAN } from 'constants/index';
-import { displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset, cancelListing } from 'util/index';
+import { displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset, cancelPodListing } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/Common';
@@ -135,7 +135,7 @@ function ListingRow({
                   });
 
                   // Execute
-                  cancelListing(
+                  cancelPodListing(
                     toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals),
                     (response) => txToast.confirming(response),
                   )

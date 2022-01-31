@@ -152,8 +152,12 @@ export const createPodListing = async (
   { onResponse }
 );
 
-// FIXME: needs-refactor
-export const cancelListing = (
+/**
+ * @param index The index of the Plot being canceled.
+ * @param onResponse 
+ * @returns 
+ */
+export const cancelPodListing = (
   index: string,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
