@@ -75,9 +75,15 @@ export type Listing = {
 
 export type BuyOffer = {
   /**
+   * Wallet address
+   */
+  listerAddress: string;
+
+  /**
    * Ordinal index of buy offer - 0, 1, 2...
    */
-  index: BigNumber;
+  orderId: BigNumber;
+
   /**
    * The User is willing to buy any Pod that is before maxPlaceInLine at pricePerPod.
    * As the Pod Line moves, this value stays the same because new Pods meet the criteria.
@@ -110,13 +116,6 @@ export type BuyOffer = {
    * `initialAmountToBuy > amount > 0`
    */
   amount: BigNumber;
-
-  /**
-   * Wallet address
-   *
-   * FIXME: naming. We also use "listerAddress" for Listings.
-   */
-  listerAddress: string;
 
   /**
    * Listing status.

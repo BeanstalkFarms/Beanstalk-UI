@@ -113,6 +113,21 @@ type PodListingCreatedEvent = {
   maxHarvestableIndex: string;
   toWallet: boolean;
 }
+type PodListingFilledEvent = {
+  from: string;
+  to: string;
+  index: string;
+  start: string;
+  amount: string;
+}
+
+type PodOrderCreatedEvent = {
+  account: string;
+  orderId: string;
+  amount: string;
+  pricePerPod: string;
+  maxPlaceInLine: string;
+}
 
 // FIXME: define type for Events
 function processEvents(events: any, harvestableIndex: BigNumber) {
@@ -135,17 +150,22 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
     } else if (event.event === 'PodListingCancelled') {
       delete listings[event.returnValues.index];
     } else if (event.event === 'PodListingFilled') {
-      const { index, amount } = event.returnValues;
-      const amountBN = toTokenUnitsBN(amount, BEAN.decimals);
+      const values = (event.returnValues as PodListingFilledEvent);
+      const amountBN = toTokenUnitsBN(values.amount, BEAN.decimals);
+
       // Move current listing's index up by |amount|
-      const prevKey = index.toString();
+      // FIXME: does this match the new marketplace behavior? Believe
+      // this assumes we are selling from the front (such that, as a listing
+      // is sold, the index increases).
+      const prevKey = values.index.toString();
       const currentListing = listings[prevKey];
       delete listings[prevKey];
-      const newKey = new BigNumber(index).plus(amount).toString();
+      const newIndex = new BigNumber(values.index).plus(values.amount);
+      const newKey = newIndex.toString();
       listings[newKey] = currentListing;
 
       // Bump up |amountSold| for this listing
-      listings[newKey].index = toTokenUnitsBN(new BigNumber(index).plus(amount), BEAN.decimals);
+      listings[newKey].index = toTokenUnitsBN(newIndex, BEAN.decimals);
       listings[newKey].amountSold = listings[newKey].amountSold.plus(amountBN);
       listings[newKey].amount = currentListing.initialAmount.minus(listings[newKey].amountSold);
 
@@ -156,27 +176,16 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         delete listings[newKey];
       }
     } else if (event.event === 'PodOrderCreated') {
-      buyOffers[event.returnValues.index] = {
-        // Lister
-        listerAddress:
-          event.returnValues.account,
-        // Order Configuration
-        index:
-          new BigNumber(event.returnValues.index), // FIXME: now has orderId as variable -> some orders are currently undefined
-        maxPlaceInLine:
-          toTokenUnitsBN(new BigNumber(event.returnValues.maxPlaceInLine), BEAN.decimals),
-        initialAmountToBuy:
-          toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
-        pricePerPod:
-          toTokenUnitsBN(new BigNumber(event.returnValues.pricePerPod), BEAN.decimals),
-        // Amounts
-        amount:
-          toTokenUnitsBN(new BigNumber(event.returnValues.amount), BEAN.decimals),
-        amountBought:
-          new BigNumber(0),
-        // Status
-        status:
-          'active',
+      const values = (event.returnValues as PodOrderCreatedEvent);
+      buyOffers[values.orderId] = {
+        listerAddress: values.account,
+        orderId: toTokenUnitsBN(new BigNumber(values.orderId), BEAN.decimals), // FIXME do we need to do this conversion?
+        maxPlaceInLine: toTokenUnitsBN(new BigNumber(values.maxPlaceInLine), BEAN.decimals),
+        initialAmountToBuy: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
+        pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
+        amount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
+        amountBought: new BigNumber(0),
+        status: 'active',
       };
     } else if (event.event === 'PodOrderCancelled') {
       delete buyOffers[event.returnValues.index];

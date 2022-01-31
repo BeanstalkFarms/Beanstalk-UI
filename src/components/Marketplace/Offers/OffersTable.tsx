@@ -97,7 +97,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
 
                 // Execute
                 cancelPodOrder({
-                  index: offer.index.toString(),
+                  index: offer.orderId.toString(),
                   toWallet: false, // FIXME
                 }, (response) => txToast.confirming(response))
                 .then((value) => {
@@ -208,7 +208,7 @@ export default function OffersTable(props: OffersTableProps) {
             </TableHead>
             {slicedItems.map((offer: BuyOffer) => (
               <OfferRow
-                key={offer.index}
+                key={offer.orderId}
                 offer={offer}
                 setCurrentOffer={props.setCurrentOffer}
                 isMine
@@ -262,7 +262,7 @@ export default function OffersTable(props: OffersTableProps) {
           </TableHead>
           {slicedItems.map((offer: BuyOffer) => (
             <OfferRow
-              key={offer.index}
+              key={offer.orderId}
               offer={offer}
               setCurrentOffer={props.setCurrentOffer}
             />
