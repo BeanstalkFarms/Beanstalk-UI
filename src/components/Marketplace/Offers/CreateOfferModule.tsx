@@ -384,7 +384,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
 
         // Toast
         const txToast = new TransactionToast({
-          loading: `Place an offer to buy ${displayBN(toPodValue)} Pods`,
+          loading: `Placing an offer to buy ${displayBN(toPodValue)} Pods`,
           success: 'Offer placed!',
         });
 
@@ -409,7 +409,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
       } else {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Place an offer to buy ${displayBN(toPodValue)} Pods`,
+          loading: `Placing an offer to buy ${displayBN(toPodValue)} Pods`,
           success: 'Offer placed!',
         });
 
