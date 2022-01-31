@@ -138,7 +138,7 @@ function ListingRow({
                   cancelPodListing({
                     index: toStringBaseUnitBN(listing.objectiveIndex, BEAN.decimals),
                   }, (response) => {
-                    txToast.confirming(response)
+                    txToast.confirming(response);
                   })
                   .then((value) => {
                     txToast.success(value);
