@@ -263,17 +263,12 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
     );
   }
   details.push(
-    `Place an offer to buy ${displayBN(
-      toPodValue
-    )} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at a price of
+    `Place an Order ${displayBN(toPodValue)} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at a price of
     ${pricePerPodValue.toFixed(2)} Beans per Pod`
   );
   details.push(
     `${displayBN(toBuyBeanValue.plus(MaxBN(fromBeanValue, new BigNumber(0))))} Beans
-    will be locked in the Marketplace to allow for order fulfillment`
-  );
-  details.push(
-    `Your offer will expire after ${displayBN(maxPlaceInLineValue)} more Pods are harvested from the Pod line`
+    will be locked in the Market to allow for order fulfillment`
   );
 
   const rangeWarning = maxPlaceInLineValue.isLessThan(toPodValue)
@@ -394,18 +389,17 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
         });
 
         // Execute
-        buyBeansAndCreatePodOrder(
-          toStringBaseUnitBN(maxPlaceInLineValue, BEAN.decimals),
-          toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
-          beans,
-          buyBeans,
-          eth,
-          _claimable,
-          (response) => {
-            resetFields();
-            txToast.confirming(response);
-          }
-        )
+        buyBeansAndCreatePodOrder({
+          beanAmount: beans,
+          buyBeanAmount: buyBeans,
+          pricePerPod: toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
+          maxPlaceInLine: toStringBaseUnitBN(maxPlaceInLineValue, BEAN.decimals),
+          claimable: _claimable,
+          ethAmount: eth,
+        }, (response) => {
+          resetFields();
+          txToast.confirming(response);
+        })
         .then((value) => {
           txToast.success(value);
         })
