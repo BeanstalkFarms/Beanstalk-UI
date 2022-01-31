@@ -13,7 +13,6 @@ import {
   displayBN,
   FarmAsset,
   fillPodOrder,
-  MaxBN,
   MinBN,
   TrimBN,
   toStringBaseUnitBN,
@@ -32,19 +31,19 @@ import {
 import { PodOrder } from 'state/marketplace/reducer';
 import OffersTable from './OffersTable';
 
-type SellIntoOfferModalProps = {
+type FillOrderModalProps = {
   currentOrder: PodOrder;
   onClose: Function;
   settings: any; // FIXME
   setSettings: Function;
 }
 
-export default function SellIntoOfferModal({
+export default function FillOrderModal({
   currentOrder,
   onClose,
   settings,
   setSettings
-}: SellIntoOfferModalProps) {
+}: FillOrderModalProps) {
   /** The selected Plot index. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The selected Plot index. */
@@ -147,7 +146,7 @@ export default function SellIntoOfferModal({
       return;
     }
     setAmount(newAmount);
-  }
+  };
   // Handle start change
   const handleStartChange = (event) => {
     if (event.target.value) {
@@ -197,34 +196,27 @@ export default function SellIntoOfferModal({
   // Sell some or all pods from a plot the user owns into an
   // existing buy offer.
   const handleForm = async () => {
-    const plotKey = index.toString();
-    const plotToSellFrom = plots[plotKey];
-    console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
-
-    // Contract Inputs
-    const params = [
-      currentOrder.id,
-      toStringBaseUnitBN(index, BEAN.decimals),   // uint256 index
-      toStringBaseUnitBN(start, BEAN.decimals),   // uint256 start
-      toStringBaseUnitBN(amount, BEAN.decimals),  // uint256 amount
-      settings.toWallet,                          // uint24 toWallet
-    ];
-
+    // const plotKey = index.toString();
+    // const plotToSellFrom = plots[plotKey];
     // Toast
     const txToast = new TransactionToast({
       loading: `Selling ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
       success: `Sold ${displayBN(amount)} Pods for ${displayBN(beansReceived)} Beans`,
     });
 
+    // Contract Inputs
+    const params = {
+      id: currentOrder.id,
+      index: toStringBaseUnitBN(index, BEAN.decimals),   // uint256 index
+      start: toStringBaseUnitBN(start, BEAN.decimals),   // uint256 start
+      amount: toStringBaseUnitBN(amount, BEAN.decimals),  // uint256 amount
+      toWallet: settings.toWallet,                          // uint24 toWallet
+    };
+
     // Execute
-    console.log('SellIntoOfferModal: beanstalk.fillPodOrder', params);
-    fillPodOrder({
-      id: params[0],
-      index: params[1],
-      start: params[2],
-      amount: params[3],
-      toWallet: params[4]
-    }, (response) => {
+    // console.log(index.toString(), plotToSellFrom.toString(), amount.toString(), start);
+    // console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`, params);
+    fillPodOrder(params, (response) => {
       txToast.confirming(response);
     })
     .then((value) => {

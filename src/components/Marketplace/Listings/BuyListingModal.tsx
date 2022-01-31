@@ -228,8 +228,8 @@ export default function BuyListingModal({
         success: `Bought ${detail}`,
       });
 
-      // Execute
-      buyBeansAndFillPodListing({
+      //
+      const params = {
         from: currentListing.account,
         index: listingIndex,
         start: '0', // FIXME: start
@@ -238,7 +238,11 @@ export default function BuyListingModal({
         pricePerPod: pricePerPod,
         claimable: _claimable,
         ethAmount: eth
-      }, (response) => {
+      };
+      // console.log('buyBeansAndFillPodListing`, params)
+
+      // Execute
+      buyBeansAndFillPodListing(params, (response) => {
         fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
         txToast.confirming(response);
       })
@@ -260,15 +264,19 @@ export default function BuyListingModal({
         success: `Bought ${detail}`,
       });
 
-      // Execute
-      fillPodListing({
+      //
+      const params = {
         from: currentListing.account,
         index: listingIndex,
-        start: '0', // FIXME: `start`
+        start: '0', // FIXME
         beanAmount: toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
-        pricePerPod,
+        pricePerPod: pricePerPod,
         claimable: _claimable,
-      }, (response) => {
+      };
+      // console.log(`buyBeansAndFillPodListing`, params)
+
+      // Execute
+      fillPodListing(params, (response) => {
         fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
         txToast.confirming(response);
       })

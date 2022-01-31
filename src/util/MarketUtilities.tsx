@@ -106,6 +106,9 @@ type BuyBeansAndFillPodListingParams = {
   ethAmount: string;
 }
 
+/**
+ * Buy Beans and then purchase Pods from the Market.
+ */
 export const buyBeansAndFillPodListing = async (
   params: BuyBeansAndFillPodListingParams,
   onResponse: TxnCallbacks['onResponse']
@@ -145,10 +148,6 @@ type FillPodOrderParams = {
   amount: string;
   /** Used to signal whether msg.sender wants their Bean payment to go to their wallet or wrapped balance. */
   toWallet: boolean;
-  // finalIndex,
-  // sellFromIndex,
-  // buyOfferIndex,
-  // finalAmount,
 }
 
 export const fillPodOrder = async (
