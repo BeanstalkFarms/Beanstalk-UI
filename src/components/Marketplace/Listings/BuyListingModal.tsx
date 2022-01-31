@@ -182,7 +182,7 @@ export default function BuyListingModal({
     setBuyPods(TrimBN(buyBeans.plus(fromBeans).dividedBy(currentListing.pricePerPod), BEAN.decimals));
   };
   const fromValueUpdated = (newFromNumber: BigNumber, newFromEthNumber: BigNumber) => {
-    const toBeans = currentListing.amount.multipliedBy(currentListing.pricePerPod);
+    const toBeans = currentListing.remainingAmount.multipliedBy(currentListing.pricePerPod);
     const fromBeans = MinBN(toBeans, newFromNumber);
 
     let buyBeans = getToAmount(
@@ -331,7 +331,7 @@ export default function BuyListingModal({
     <InputFieldPlus
       key={2}
       balanceLabel="Available"
-      balance={currentListing.amount}
+      balance={currentListing.remainingAmount}
       token={FarmAsset.Pods}
       value={TrimBN(buyPods, 6)}
       handleChange={(event) => toValueUpdated(event)}

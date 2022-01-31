@@ -142,9 +142,9 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         index: toTokenUnitsBN(new BigNumber(values.index), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
         maxHarvestableIndex: toTokenUnitsBN(new BigNumber(values.maxHarvestableIndex), BEAN.decimals),
-        initialAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
-        amount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
-        amountSold: new BigNumber(0),
+        totalAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
+        remainingAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
+        filledAmount: new BigNumber(0),
         status: 'active',
       };
     } else if (event.event === 'PodListingCancelled') {
@@ -166,11 +166,11 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
 
       // Bump up |amountSold| for this listing
       listings[newKey].index = toTokenUnitsBN(newIndex, BEAN.decimals);
-      listings[newKey].amountSold = listings[newKey].amountSold.plus(amountBN);
-      listings[newKey].amount = currentListing.initialAmount.minus(listings[newKey].amountSold);
+      listings[newKey].filledAmount = listings[newKey].filledAmount.plus(amountBN);
+      listings[newKey].remainingAmount = currentListing.totalAmount.minus(listings[newKey].filledAmount);
 
       // Check whether current listing is sold or not
-      const isSold = listings[newKey].amount.isEqualTo(0);
+      const isSold = listings[newKey].remainingAmount.isEqualTo(0);
       if (isSold) {
         listings[newKey].status = 'sold';
         delete listings[newKey];

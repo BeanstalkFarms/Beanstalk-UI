@@ -52,7 +52,7 @@ export const GraphTooltip = (props: GraphTooltipProps) => {
         <span style={{ fontWeight: 'bold' }}>Plot Size</span>
         <div className={classes.tooltipDetailPill}>
           <span>
-            {displayBN(listing.initialAmount.minus(listing.amountSold))}
+            {displayBN(listing.totalAmount.minus(listing.filledAmount))}
           </span>
           <TokenIcon token={FarmAsset.Pods} />
         </div>

@@ -43,7 +43,7 @@ export default function Graph2Module(props: GraphModuleProps) {
     ...listings.map((l) => l.index.minus(harvestableIndex).toNumber())
   );
   const maxPlotSize = Math.max(
-    ...listings.map((l) => l.initialAmount.minus(l.amountSold).toNumber())
+    ...listings.map((l) => l.totalAmount.minus(l.filledAmount).toNumber())
   );
 
   // Set max x value to be 1M or max place in line with some buffer

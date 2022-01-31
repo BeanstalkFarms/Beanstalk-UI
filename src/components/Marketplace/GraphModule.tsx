@@ -105,7 +105,7 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
     ...listings.map((l) => l.index.minus(harvestableIndex).toNumber())
   );
   const maxPlotSize = Math.max(
-    ...listings.map((l) => l.initialAmount.minus(l.amountSold).toNumber())
+    ...listings.map((l) => l.totalAmount.minus(l.filledAmount).toNumber())
   );
 
   // Set max x value to be 1M or max place in line with some buffer
@@ -143,7 +143,7 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
     y: yScale(listing.pricePerPod.toNumber()),
     // radius is plot size
     radius: calculateCircleRadius(
-      listing.initialAmount.minus(listing.amountSold).toNumber(),
+      listing.totalAmount.minus(listing.filledAmount).toNumber(),
       maxPlotSize
     ),
   }));

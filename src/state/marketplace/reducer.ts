@@ -44,17 +44,19 @@ export type PodListing = {
    */
   maxHarvestableIndex: BigNumber;
 
+  // -- Amounts
+
   /**
    * The total number of Pods to sell.
    */
-  initialAmount: BigNumber;
+  totalAmount: BigNumber;
 
   /**
    * The amount of Pods that have been bought from this Listing.
    *
    * `0 < amountSold < initialAmount`
    */
-  amountSold: BigNumber;
+  filledAmount: BigNumber;
 
   /**
    * The number of Pods left to sell.
@@ -63,7 +65,7 @@ export type PodListing = {
    * `amount = initialAmount - amountSold`
    * `initialAmount > amount > 0`
    */
-  amount: BigNumber;
+  remainingAmount: BigNumber;
 
   /**
    * Listing status.

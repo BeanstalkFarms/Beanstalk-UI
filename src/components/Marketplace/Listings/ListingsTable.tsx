@@ -44,7 +44,7 @@ function ListingRow({
   const classes = useStyles();
   const relativeIndex = (listing.index).minus(harvestableIndex);
   const relativeExpiry = (listing.maxHarvestableIndex).minus(new BigNumber(harvestableIndex));
-  const amountRemaining = listing.initialAmount.minus(listing.amountSold);
+  const amountRemaining = listing.totalAmount.minus(listing.filledAmount);
   const explainer = (
     <>
       {isMine
@@ -98,7 +98,7 @@ function ListingRow({
             align="right"
           >
             <span>
-              {`${displayBN(listing.amountSold)} / ${displayBN(listing.initialAmount)}`}
+              {`${displayBN(listing.filledAmount)} / ${displayBN(listing.totalAmount)}`}
             </span>
             <TokenIcon token={FarmAsset.Pods} />
             {/* Disabling the progress bar for now - it feels out of place next to the
