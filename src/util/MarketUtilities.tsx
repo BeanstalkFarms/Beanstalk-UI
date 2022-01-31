@@ -77,42 +77,38 @@ export const cancelBuyOffer = (
 
 // -- LISTINGS -- //
 
-/**
- * @param index The index of the Plot being listed.
- * @param start The start index within the Plot that the listing starts at.
- * @param pricePerPod The price in Beans that each Pod will be listed for. The price has 6 decimal precision.
- * @param maxHarvestableIndex The amount of total pods that need to be harvestable before the Plot expires.
- * @param amount The amount of Pods that will be contained within the listing.
- * @param toWallet Denotes whether msg.sender wants their Beans paid to their circulating wallet balance or to their claimable balance.
- * @param onResponse 
- * @returns 
- */
-export const createPodListing = async (
+type CreatePodListingParams = {
+  /** The index of the Plot being listed. */
   index: string,
+  /** The start index within the Plot that the listing starts at. */
   start: string,
+  /** The price in Beans that each Pod will be listed for. The price has 6 decimal precision. */
   pricePerPod: string,
+  /** The amount of total pods that need to be harvestable before the Plot expires. */
   maxHarvestableIndex: string,
+  /** The amount of Pods that will be contained within the listing. */
   amount: string,
+  /** Denotes whether msg.sender wants their Beans paid to their circulating wallet balance or to their claimable balance. */
   toWallet: boolean,
+}
+
+export const createPodListing = async (
+  params: CreatePodListingParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   beanstalkContract().createPodListing(
-    index,
-    start,
-    amount,
-    pricePerPod,
-    maxHarvestableIndex,
-    toWallet,
+    params.index,
+    params.start,
+    params.amount,
+    params.pricePerPod,
+    params.maxHarvestableIndex,
+    params.toWallet,
   ),
   { onResponse }
 );
 
-/**
- * @param index The index of the Plot being canceled.
- * @param onResponse 
- * @returns 
- */
 type CancelPodListingParams = {
+  /** The index of the Plot being canceled. */
   index: string,
 }
 

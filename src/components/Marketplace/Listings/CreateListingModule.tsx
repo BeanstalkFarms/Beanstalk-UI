@@ -269,23 +269,22 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       });
 
       // Execute
-      createPodListing(
-        toStringBaseUnitBN(index, BEAN.decimals),
-        '0', // FIXME: correct `start`
-        toStringBaseUnitBN(amount, BEAN.decimals),
-        toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
-        toStringBaseUnitBN(expiresIn.plus(harvestableIndex), BEAN.decimals), // FIXME: refactor -> `maxHarvestableIndex`
-        false, // FIXME: correct `toWallet`
-        (response) => {
-          // Reset inputs
-          setIndex(new BigNumber(-1));
-          setAmount(new BigNumber(-1));
-          setExpiresIn(new BigNumber(-1));
-          setPricePerPodValue(new BigNumber(-1));
-          setListing(null);
-          txToast.confirming(response);
-        }
-      )
+      createPodListing({
+        index: toStringBaseUnitBN(index, BEAN.decimals),
+        start: '0', // FIXME: correct `start`
+        amount: toStringBaseUnitBN(amount, BEAN.decimals),
+        pricePerPod: toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
+        maxHarvestableIndex: toStringBaseUnitBN(expiresIn.plus(harvestableIndex), BEAN.decimals),
+        toWallet: false, // FIXME: correct `toWallet`
+      }, (response) => {
+        // Reset inputs
+        setIndex(new BigNumber(-1));
+        setAmount(new BigNumber(-1));
+        setExpiresIn(new BigNumber(-1));
+        setPricePerPodValue(new BigNumber(-1));
+        setListing(null);
+        txToast.confirming(response);
+      })
       .then((value) => {
         txToast.success(value);
       })
