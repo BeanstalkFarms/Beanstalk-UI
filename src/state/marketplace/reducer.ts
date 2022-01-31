@@ -79,7 +79,7 @@ export type PodOrder = {
   /**
    * Wallet address
    */
-  listerAddress: string;
+  account: string;
 
   /**
    * Ordinal index of buy offer - 0, 1, 2...
