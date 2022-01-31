@@ -199,7 +199,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       const values = (event.returnValues as PodOrderCreatedEvent);
       podOrders[values.id] = {
         account: values.account,
-        id: toTokenUnitsBN(new BigNumber(values.id), BEAN.decimals), // FIXME do we need to do this conversion?
+        id: values.id.toString(),
         maxPlaceInLine: toTokenUnitsBN(new BigNumber(values.maxPlaceInLine), BEAN.decimals),
         totalAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),

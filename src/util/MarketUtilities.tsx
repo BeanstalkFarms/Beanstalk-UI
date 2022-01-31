@@ -42,7 +42,7 @@ export const cancelPodListing = (
   params: CancelPodListingParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().cancelListing(
+  beanstalkContract().cancelPodListing(
     params.index
   ),
   { onResponse }

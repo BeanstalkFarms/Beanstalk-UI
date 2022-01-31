@@ -121,7 +121,7 @@ export default function SellIntoOfferModal({
     // Execute
     console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`);
     fillPodOrder({
-      id: currentOrder.id.toFixed(), // FIXME is this conversion correct
+      id: currentOrder.id, // FIXME is this conversion correct
       index: toStringBaseUnitBN(index, BEAN.decimals),
       start: toStringBaseUnitBN(start, BEAN.decimals),
       amount: toStringBaseUnitBN(amount, BEAN.decimals),

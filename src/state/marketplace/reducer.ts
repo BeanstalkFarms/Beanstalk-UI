@@ -75,7 +75,7 @@ export type PodOrder = {
    * Computed by hashing the Farmer’s address and the previous block’s hash. In the case of a collisions,
    * Beanstalk will hash the ID until there is no collision.
    */
-  id: BigNumber;
+  id: string;
 
   /**
    * The price per Pod, in Beans.
