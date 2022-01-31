@@ -10,7 +10,7 @@ import {
   displayBN,
   FarmAsset,
   GetWalletAddress,
-  listPlot,
+  createPodListing,
   toStringBaseUnitBN,
   TrimBN,
 } from 'util/index';
@@ -269,11 +269,13 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       });
 
       // Execute
-      listPlot(
+      createPodListing(
         toStringBaseUnitBN(index, BEAN.decimals),
-        toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
-        toStringBaseUnitBN(expiresIn.plus(harvestableIndex), BEAN.decimals), // expiry
+        '0', // FIXME: correct `start`
         toStringBaseUnitBN(amount, BEAN.decimals),
+        toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
+        toStringBaseUnitBN(expiresIn.plus(harvestableIndex), BEAN.decimals), // FIXME: refactor -> `maxHarvestableIndex`
+        false, // FIXME: correct `toWallet`
         (response) => {
           // Reset inputs
           setIndex(new BigNumber(-1));
@@ -282,7 +284,6 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
           setPricePerPodValue(new BigNumber(-1));
           setListing(null);
           txToast.confirming(response);
-          // createListingModuleRef.current.resetForm();
         }
       )
       .then((value) => {
