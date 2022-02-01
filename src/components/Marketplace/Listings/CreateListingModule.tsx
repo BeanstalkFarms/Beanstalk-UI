@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { PodListing } from 'state/marketplace/reducer';
 import { BEAN } from 'constants/index';
 import {
+  MinBN,
   CryptoAsset,
   displayBN,
   FarmAsset,
@@ -36,6 +37,8 @@ type CreateListingModuleProps = {
 export const CreateListingModule = forwardRef((props: CreateListingModuleProps, ref) => {
   /** The absolute index of the selected plot in line. */
   const [index, setIndex] = useState(new BigNumber(-1));
+  /** The selected Plot index. */
+  const [start, setStart] = useState(new BigNumber(0));
   /** The amount of Pods listed from the plot. */
   const [totalAmount, setTotalAmount] = useState(new BigNumber(-1));
   /** How far forward the Pod line needs to move before the offer expire. */
@@ -72,6 +75,16 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     }
   }, [index, setListing, pricePerPodValue, totalAmount, expiresIn]);
 
+  function fromIndexValueUpdated(newStartNumber: BigNumber, newAmountNumber: BigNumber) {
+    const newStartValue = MinBN(
+      new BigNumber(newStartNumber),
+      amountInSelectedPlot
+    );
+    const newAmountValue = MinBN(new BigNumber(newAmountNumber), totalAmount);
+    setStart(TrimBN(newStartValue, BEAN.decimals));
+    setTotalAmount(TrimBN(newAmountValue, BEAN.decimals));
+  }
+
   /** */
   const handlePlotChange = (event) => {
     const newIndex = new BigNumber(event.target.value);
@@ -80,6 +93,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     setTotalAmount(TrimBN(newAmount, 6));
     setExpiresIn(newIndex.minus(harvestableIndex));
     setPricePerPodValue(new BigNumber(-1));
+    setStart(new BigNumber(0));
   };
   /** */
   const handlePriceChange = (event) => {
@@ -104,6 +118,14 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     }
     setTotalAmount(newToPodValue);
   };
+  // Handle start change
+  const handleStartChange = (event) => {
+    if (event.target.value) {
+      fromIndexValueUpdated(event.target.value, amountInSelectedPlot);
+    } else {
+      fromIndexValueUpdated(new BigNumber(0), amountInSelectedPlot);
+    }
+  };
   /** */
   const handleExpireChange = (event) => {
     const newExpiresinValue = new BigNumber(event.target.value);
@@ -124,6 +146,12 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     }
   };
 
+  const minMaxHandler = () => {
+    setTotalAmount(amountInSelectedPlot);
+    setStart(new BigNumber(0));
+  };
+  const errorAmount = amountInSelectedPlot.minus(start).minus(totalAmount).isLessThan(0);
+
   /* Input Fields */
   const fromPlotField = (
     <PlotListInputField
@@ -141,6 +169,16 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       token={CryptoAsset.Bean}
       handleChange={handlePriceChange}
       value={TrimBN(pricePerPodValue, 6)}
+    />
+  );
+  const startField = (
+    <PlotInputField
+      key={0}
+      handleChange={handleStartChange}
+      label="Start Index"
+      value={TrimBN(start, 6)}
+      minHandler={minMaxHandler}
+      error={errorAmount}
     />
   );
   const amountField = (
@@ -272,11 +310,11 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       // Execute
       createPodListing({
         index: toStringBaseUnitBN(index, BEAN.decimals),
-        start: '0', // FIXME: correct `start`
+        start: toStringBaseUnitBN(start, BEAN.decimals),
         amount: toStringBaseUnitBN(totalAmount, BEAN.decimals),
         pricePerPod: toStringBaseUnitBN(pricePerPodValue, BEAN.decimals),
         maxHarvestableIndex: toStringBaseUnitBN(expiresIn.plus(harvestableIndex), BEAN.decimals),
-        toWallet: false, // FIXME: correct `toWallet`
+        toWallet: props.settings.toWallet,
       }, (response) => {
         // Reset inputs
         setIndex(new BigNumber(-1));
@@ -301,6 +339,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       {index.gte(0) ? (
         <>
           {priceField}
+          {startField}
           {amountField}
           {expiresInField}
           {alreadyListedNotification}

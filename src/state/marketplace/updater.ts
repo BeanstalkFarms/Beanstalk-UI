@@ -144,7 +144,7 @@ type PodOrderFilledEvent = {
   id: string;
   index: string;
   start: string;
-  amount: string; 
+  amount: string;
 }
 
 // FIXME: define type for Events
@@ -158,6 +158,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       podListings[values.index] = {
         account: values.account,
         index: toTokenUnitsBN(new BigNumber(values.index), BEAN.decimals),
+        start: toTokenUnitsBN(new BigNumber(values.start), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
         maxHarvestableIndex: toTokenUnitsBN(new BigNumber(values.maxHarvestableIndex), BEAN.decimals),
         totalAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
@@ -213,7 +214,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
     } else if (event.event === 'PodOrderFilled') {
       const values = (event.returnValues as PodOrderFilledEvent);
       const amountBN = toTokenUnitsBN(values.amount, BEAN.decimals);
-      
+
       // Check whether current offer is sold or not
       const key = values.id;
       const buyOffer = podOrders[key];

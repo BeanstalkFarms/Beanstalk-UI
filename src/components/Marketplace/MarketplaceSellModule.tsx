@@ -37,7 +37,7 @@ export default function MarketplaceSellModule() {
   const [listing, setListing] = useState<PodListingState | null>(null);
 
   const [settings, setSettings] = useState({
-    toWallet: false,
+    toWallet: true,
   });
 
   // Handlers
