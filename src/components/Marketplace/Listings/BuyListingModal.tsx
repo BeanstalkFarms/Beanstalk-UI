@@ -206,6 +206,7 @@ export default function BuyListingModal({
   const handleForm = () => {
     if (buyPods.isLessThanOrEqualTo(0)) return null;
     const listingIndex = toStringBaseUnitBN(currentListing.index, BEAN.decimals);
+    const listingStart = toStringBaseUnitBN(currentListing.start, BEAN.decimals);
     const pricePerPod = toStringBaseUnitBN(currentListing.pricePerPod, BEAN.decimals);
     const _claimable = settings.claim ? claimable : null;
 
@@ -232,7 +233,7 @@ export default function BuyListingModal({
       const params = {
         from: currentListing.account,
         index: listingIndex,
-        start: '0', // FIXME: start
+        start: listingStart,
         beanAmount: beanAmount,
         buyBeanAmount: buyBeanAmount,
         pricePerPod: pricePerPod,

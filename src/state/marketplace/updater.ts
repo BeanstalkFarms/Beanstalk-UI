@@ -180,12 +180,13 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       const prevKey = values.index.toString();
       const currentListing = podListings[prevKey];
       delete podListings[prevKey];
-      const newIndex = new BigNumber(values.index).plus(values.amount);
+      const newIndex = new BigNumber(values.index).plus(values.amount).plus(values.start);
       const newKey = newIndex.toString();
       podListings[newKey] = currentListing;
 
       // Bump up |amountSold| for this listing
       podListings[newKey].index = toTokenUnitsBN(newIndex, BEAN.decimals);
+      podListings[newKey].start = new BigNumber(0);
       podListings[newKey].filledAmount = podListings[newKey].filledAmount.plus(amountBN);
       podListings[newKey].remainingAmount = currentListing.totalAmount.minus(podListings[newKey].filledAmount);
 

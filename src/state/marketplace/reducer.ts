@@ -23,6 +23,13 @@ export type PodListing = {
    */
   index: BigNumber;
 
+    /**
+   * The difference in index of where the listing starts selling pods from and where the plot starts
+   * 
+   */
+  start: BigNumber;
+
+
   /**
    * Price per Pod, in Beans.
    */
