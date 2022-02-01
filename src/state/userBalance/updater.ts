@@ -46,6 +46,7 @@ import {
   toTokenUnitsBN,
   account,
   getEthPrices,
+  votes,
 } from 'util/index';
 
 export default function Updater() {
@@ -94,7 +95,8 @@ export default function Updater() {
       accountBalances,
       ethBalance,
       lpReserves,
-      currentSeason
+      currentSeason,
+      votedBips
     ) {
       const [
         uniswapBeanAllowance,
@@ -120,7 +122,6 @@ export default function Updater() {
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
       dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));
-
       dispatch(
         setUserBalance({
           claimableEthBalance,
@@ -136,6 +137,7 @@ export default function Updater() {
           rootsBalance,
           usdcBalance,
           beanWrappedBalance,
+          votedBips,
         })
       );
     }
@@ -513,7 +515,6 @@ export default function Updater() {
           beanReceivableCrates: userBeanReceivableCrates,
           lpWithdrawals: userLPWithdrawals,
           lpReceivableCrates: userLPReceivableCrates,
-          votedBips: votedBips,
           beanClaimableBalance: beanReceivableBalance.plus(
             harvestablePodBalance
           ).plus(cb),
@@ -541,7 +542,7 @@ export default function Updater() {
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance] =
+      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance, votedBips] =
         await Promise.all([
           getBips(),
           getFundraisers(),
@@ -550,6 +551,7 @@ export default function Updater() {
           totalBalancePromises,
           pricePromises,
           getUSDCBalance(),
+          votes(),
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
@@ -579,6 +581,7 @@ export default function Updater() {
             ethBalance,
             lpReserves,
             currentSeason,
+            votedBips,
             usdcBalance
           );
         },
