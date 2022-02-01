@@ -85,14 +85,6 @@ export async function initializeEventListener(
       filter: { account: account },
       fromBlock: 0,
     }),
-    beanstalk.getPastEvents('Vote', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
-    beanstalk.getPastEvents('Unvote', {
-      filter: { account: account },
-      fromBlock: 0,
-    }),
     beanstalk.getPastEvents('EtherClaim', {
       filter: { account: account },
       fromBlock: 0,

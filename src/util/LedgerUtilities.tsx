@@ -163,6 +163,16 @@ export const getTotalBalances = async (batch) => {
   ]);
 };
 
+export const votes = async () => {
+  const beanstalk = beanstalkContractReadOnly();
+  const activeBips = await beanstalk.methods.activeBips().call();
+  const vs = await Promise.all(activeBips.map((b) => beanstalk.methods.voted(account, b).call()));
+  return activeBips.reduce((acc, b, i) => {
+    if (vs[i]) acc.add(b.toString());
+    return acc;
+  }, new Set());
+};
+
 /* TODO: batch BIP detail ledger reads */
 export const getBips = async () => {
   const beanstalk = beanstalkContractReadOnly();
@@ -274,7 +284,6 @@ export const getPrices = async (batch) => {
     ],
   ];
   if (chainId === 1) {
-    console.log(1);
     batchCall = batchCall.concat(
       [
         [
@@ -316,6 +325,5 @@ export const getPrices = async (batch) => {
       ]
     );
   }
-  console.log(batchCall);
   return makeBatchedPromises(batch, batchCall);
 };
