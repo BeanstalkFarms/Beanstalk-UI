@@ -13,7 +13,6 @@ import {
   TableRow,
   Box,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { fundsList, theme } from 'constants/index';
@@ -50,7 +49,6 @@ function summaryFunds(open, fund) {
 }
 
 const Row = (props) => {
-  const classes = useStyles();
   const { fund } = props;
   const [open, setOpen] = React.useState(false);
 

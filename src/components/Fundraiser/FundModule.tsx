@@ -25,7 +25,7 @@ export const FundModule = forwardRef((props, ref) => {
   const [fromTokenValue, setFromTokenValue] = useState(new BigNumber(-1));
   const [toPodValue, setToPodValue] = useState(new BigNumber(0));
 
-  const { weather, soil } = useSelector<
+  const { weather } = useSelector<
     AppState,
     AppState['weather']
   >((state) => state.weather);

@@ -10,7 +10,6 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-import { makeStyles } from '@material-ui/styles';
 
 // import { getAPYs } from 'util/index';
 import { AppState } from 'state';
@@ -205,12 +204,8 @@ export default function NavigationSidebar() {
     checkNavLink(NAVIGATION_MAP);
   }
 
-  useEffect(() => {
-    // Add Fundraiser page to Nav Sidebar if active Fundraiser
-    return checkNavLink(NAVIGATION_MAP);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeFundraisers, NAVIGATION_MAP]);
+  // Add Fundraiser page to Nav Sidebar if active Fundraiser
+  useEffect(() => checkNavLink(NAVIGATION_MAP), []);
 
   //
   let currentBeanPrice = null;
