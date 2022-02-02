@@ -17,8 +17,8 @@ import {
 } from '@material-ui/icons';
 
 import { PodOrder } from 'state/marketplace/reducer';
-import { theme } from 'constants/index';
-import { cancelPodOrder, CryptoAsset, displayBN, FarmAsset } from 'util/index';
+import { BEAN, theme } from 'constants/index';
+import { cancelPodOrder, CryptoAsset, displayBN, FarmAsset, toStringBaseUnitBN } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/Common';
@@ -30,21 +30,21 @@ type OfferRowProps = {
   isMine: boolean;
 }
 
-function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
+function OfferRow({ offer: order, setCurrentOffer, isMine }: OfferRowProps) {
   const classes = useStyles();
   // const { plots } = useSelector<AppState, AppState['userBalance']>(
   //   (state) => state.userBalance
   // );
-  const numPodsLeft = offer.totalAmount.minus(offer.filledAmount);
+  const numPodsLeft = order.totalAmount.minus(order.filledAmount);
   const explainer = (
     <>
       {isMine
         ? 'You want'
         : (
           <>
-            <a href={`https://etherscan.io/address/${offer.account}`} target="_blank" rel="noreferrer">{offer.account.slice(0, 6)}</a> wants
+            <a href={`https://etherscan.io/address/${order.account}`} target="_blank" rel="noreferrer">{order.account.slice(0, 6)}</a> wants
           </>
-        )} to buy {displayBN(numPodsLeft)} Pods for {displayBN(offer.pricePerPod)} Beans per Pod anywhere before {displayBN(offer.maxPlaceInLine)} in the pod line.
+        )} to buy {displayBN(numPodsLeft)} Pods for {displayBN(order.pricePerPod)} Beans per Pod anywhere before {displayBN(order.maxPlaceInLine)} in the pod line.
     </>
   );
   /** Do we have any plots whose index is smaller than max place in line? if so then we can sell */
@@ -54,7 +54,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
     <TableRow>
       {/* Place in line */}
       <TableCell className={classes.lucidaStyle}>
-        <span>0 — {displayBN(offer.maxPlaceInLine)}</span>
+        <span>0 — {displayBN(order.maxPlaceInLine)}</span>
         <QuestionModule
           description={explainer}
           style={{ marginLeft: 10 }}
@@ -69,10 +69,10 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
       <BalanceTableCell
         className={classes.lucidaStyle}
         label="Beans per Pod"
-        balance={offer.pricePerPod}
+        balance={order.pricePerPod}
         icon={<TokenIcon token={CryptoAsset.Bean} />}
       >
-        {offer.pricePerPod.toFixed(2)}
+        {order.pricePerPod.toFixed(2)}
       </BalanceTableCell>
       {isMine ? (
         <>
@@ -80,10 +80,10 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           <BalanceTableCell
             className={classes.lucidaStyle}
             label="Pods Bought"
-            balance={offer.filledAmount}
+            balance={order.filledAmount}
             icon={<TokenIcon token={FarmAsset.Pods} />}
           >
-            {displayBN(offer.filledAmount)} / {displayBN(offer.totalAmount)}
+            {displayBN(order.filledAmount)} / {displayBN(order.totalAmount)}
           </BalanceTableCell>
           {/* Cancel this offer */}
           <TableCell align="center">
@@ -91,14 +91,15 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
               onClick={async () => {
                 // Toast
                 const txToast = new TransactionToast({
-                  loading: `Cancelling buy offer for ${displayBN(numPodsLeft)} Pods at ${displayBN(offer.pricePerPod)} Beans per Pod`,
+                  loading: `Cancelling buy offer for ${displayBN(numPodsLeft)} Pods at ${displayBN(order.pricePerPod)} Beans per Pod`,
                   success: 'Buy offer cancelled',
                 });
 
                 // Execute
                 cancelPodOrder({
-                  index: offer.id.toString(),
-                  toWallet: false, // FIXME
+                  pricePerPod: toStringBaseUnitBN(order.pricePerPod, BEAN.decimals),
+                  maxPlaceInLine: toStringBaseUnitBN(order.maxPlaceInLine, BEAN.decimals),
+                  toWallet: false,
                 }, (response) => txToast.confirming(response))
                 .then((value) => {
                   txToast.success(value);
@@ -122,7 +123,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           <BalanceTableCell
             className={classes.lucidaStyle}
             label="Pods Requested"
-            balance={offer.totalAmount.minus(offer.filledAmount)}
+            balance={order.totalAmount.minus(order.filledAmount)}
             icon={<TokenIcon token={FarmAsset.Pods} />}
           >
             {displayBN(numPodsLeft)}
@@ -131,7 +132,7 @@ function OfferRow({ offer, setCurrentOffer, isMine }: OfferRowProps) {
           {setCurrentOffer && (
             <TableCell align="center">
               <IconButton
-                onClick={() => setCurrentOffer(offer)}
+                onClick={() => setCurrentOffer(order)}
                 // disabled={!canSell}
                 // style={{
                 //   color: canSell ? theme.linkColor : 'lightgray',
