@@ -41,15 +41,15 @@ import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 
 import ListingsTable from './ListingsTable';
 
-type BuyListingModalProps = {
+type FillListingModalProps = {
   currentListing: PodListing;
   setCurrentListing: Function;
 }
 
-export default function BuyListingModal({
+export default function FillListingModal({
   currentListing,
   setCurrentListing,
-}: BuyListingModalProps) {
+}: FillListingModalProps) {
   /** Number of Pods to buy */
   const [buyPods, setBuyPods] = useState(new BigNumber(0));
   /** Number of beans to spend to aquire Pods */

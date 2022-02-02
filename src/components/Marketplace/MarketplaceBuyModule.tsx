@@ -11,7 +11,7 @@ import {
 import { BaseModule, marketStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
 
-import { CreateOfferModule } from './Offers/CreateOfferModule';
+import { CreateOfferModule } from './Orders/CreateOrderModule';
 // import Graph from './GraphModule';
 import Listings from './Listings/Listings';
 

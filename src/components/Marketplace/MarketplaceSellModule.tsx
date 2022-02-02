@@ -8,7 +8,7 @@ import {
   marketStrings,
 } from 'components/Common';
 
-import Orders from './Offers/Offers';
+import Orders from './Orders/Orders';
 import CreateListingModule from './Listings/CreateListingModule';
 
 type PodListingState = {

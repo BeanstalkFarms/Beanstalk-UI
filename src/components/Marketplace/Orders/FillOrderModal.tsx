@@ -29,7 +29,7 @@ import {
   TransactionToast,
 } from 'components/Common';
 import { PodOrder } from 'state/marketplace/reducer';
-import OffersTable from './OffersTable';
+import OffersTable from './OrdersTable';
 
 type FillOrderModalProps = {
   currentOrder: PodOrder;

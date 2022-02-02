@@ -10,7 +10,7 @@ import { CryptoAsset, GetWalletAddress } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { filterStrings, QuestionModule } from 'components/Common';
 
-import BuyListingModal from './BuyListingModal';
+import FillListingModal from './FillListingModal';
 import ListingsTable from './ListingsTable';
 import Filters, { StyledSlider } from '../Filters';
 import GraphModule from '../GraphModule';
@@ -181,7 +181,7 @@ export default function Listings(props: ListingsProps) {
   //
   return (
     <>
-      <BuyListingModal
+      <FillListingModal
         currentListing={currentListing}
         setCurrentListing={setCurrentListing}
       />

@@ -9,8 +9,8 @@ import { GetWalletAddress } from 'util/index';
 import { AppState } from 'state';
 import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
 
-import FillOrderModal from 'components/Marketplace/Offers/FillOrderModal';
-import OffersTable from './OffersTable';
+import FillOrderModal from 'components/Marketplace/Orders/FillOrderModal';
+import OffersTable from './OrdersTable';
 import Filters, { StyledSlider } from '../Filters';
 
 type OrdersProps = {
@@ -21,7 +21,7 @@ type OrdersProps = {
  * Orders
  */
 export default function Orders(props: OrdersProps) {
-  const { orders: allOffers } = useSelector<
+  const { orders: allOrders } = useSelector<
     AppState,
     AppState['marketplace']
   >((state) => state.marketplace);
@@ -51,7 +51,7 @@ export default function Orders(props: OrdersProps) {
   });
 
   // Filter state
-  const filteredOffers = useRef<PodOrder[]>(allOffers);
+  const filteredOffers = useRef<PodOrder[]>(allOrders);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
   /** */
@@ -69,26 +69,26 @@ export default function Orders(props: OrdersProps) {
   // Handle changes in filters
   useMemo(() => {
     filteredOffers.current = _.filter(
-      allOffers,
-      (offer) =>
+      allOrders,
+      (order) =>
         (props.mode === 'MINE'
-          ? offer.account === walletAddress
-          : offer.account !== walletAddress) &&
-        offer.pricePerPod.toNumber() > priceFilters[0] &&
-        offer.pricePerPod.toNumber() < priceFilters[1] &&
-        offer.maxPlaceInLine.gte(new BigNumber(placeInLineFilters[0])) &&
-        offer.maxPlaceInLine.lte(new BigNumber(placeInLineFilters[1]))
+          ? order.account === walletAddress
+          : order.account !== walletAddress) &&
+        order.pricePerPod.toNumber() > priceFilters[0] &&
+        order.pricePerPod.toNumber() < priceFilters[1] &&
+        order.maxPlaceInLine.gte(new BigNumber(placeInLineFilters[0])) &&
+        order.maxPlaceInLine.lte(new BigNumber(placeInLineFilters[1]))
     );
 
     // Filter offers the user cannot sell a plot into
-    filteredOffers.current = _.filter(filteredOffers.current, (offer) => {
+    filteredOffers.current = _.filter(filteredOffers.current, (order) => {
       let validPlots = [];
       if (validOffers) {
         const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
           const plotObjectiveIndex = new BigNumber(plotIndex);
           return plotObjectiveIndex
             .minus(harvestableIndex)
-            .lt(offer.maxPlaceInLine);
+            .lt(order.maxPlaceInLine);
         });
         validPlots = validPlotIndices.reduce(
           (prev, curr) => ({
@@ -106,7 +106,7 @@ export default function Orders(props: OrdersProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    allOffers,
+    allOrders,
     priceFilters,
     placeInLineFilters,
     props.mode,
@@ -220,7 +220,7 @@ export default function Orders(props: OrdersProps) {
     </Filters>
   );
 
-  if (allOffers == null || walletAddress == null) {
+  if (allOrders == null || walletAddress == null) {
     return <div>Loading...</div>;
   }
 

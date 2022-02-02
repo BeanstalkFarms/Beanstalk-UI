@@ -6,7 +6,7 @@ import { BaseModule, Grid, marketStrings, fieldStrings, ListTable, FarmAsset } f
 import MarketplaceBuyModule from './MarketplaceBuyModule';
 import MarketplaceSellModule from './MarketplaceSellModule';
 import Listings from './Listings/Listings';
-import Orders from './Offers/Offers';
+import Orders from './Orders/Orders';
 
 export default function TabbedMarketplace() {
   const { width } = useSelector<AppState, AppState['general']>(
