@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -175,8 +175,9 @@ export default function NavigationSidebar() {
     ? totalBeans.multipliedBy(beanPrice)
     : new BigNumber(0);
 
-  function checkNavLink(navMap) {
-    if (Object.keys(navMap.more).length < 5) {
+  // Add Fundraiser page to Nav Sidebar if active Fundraiser
+  function addActiveFundraiserNav(navMap) {
+    if (Object.keys(navMap.more).length < 5 && activeFundraisers.length > 0) {
       navMap.more.push(
         {
           path: 'fundraiser',
@@ -201,11 +202,8 @@ export default function NavigationSidebar() {
   }
   if (activeFundraisers.length > 0) {
     badgeDataByPath.fundraiser = activeFundraisers;
-    checkNavLink(NAVIGATION_MAP);
+    addActiveFundraiserNav(NAVIGATION_MAP);
   }
-
-  // Add Fundraiser page to Nav Sidebar if active Fundraiser
-  useEffect(() => checkNavLink(NAVIGATION_MAP), []);
 
   //
   let currentBeanPrice = null;
