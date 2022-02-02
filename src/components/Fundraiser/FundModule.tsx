@@ -25,7 +25,7 @@ export const FundModule = forwardRef((props, ref) => {
   const [fromTokenValue, setFromTokenValue] = useState(new BigNumber(-1));
   const [toPodValue, setToPodValue] = useState(new BigNumber(0));
 
-  const { weather, soil } = useSelector<
+  const { weather } = useSelector<
     AppState,
     AppState['weather']
   >((state) => state.weather);
@@ -56,21 +56,17 @@ export const FundModule = forwardRef((props, ref) => {
   }
 
   /* Input Fields */
-
   const fromTokenField = (
     <InputFieldPlus
       key={0}
       balance={props.tokenBalance}
-      handleChange={(v) => {
-        fromValueUpdated(v);
-      }}
+      handleChange={(v) => fromValueUpdated(v)}
       token={props.asset}
       value={fromTokenValue}
     />
   );
 
   /* Output Fields */
-
   const toPodField = (
     <TokenOutputField
       key="pods"
@@ -82,10 +78,9 @@ export const FundModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-
-  const details = [];
   const beanOutput = MaxBN(fromTokenValue, new BigNumber(0));
 
+  const details = [];
   if (fromTokenValue.isEqualTo(props.fundsRemaining)) {
     details.push(`Sow the remaining ${displayBN(beanOutput)} ${TokenLabel(props.asset)} with ${weather.toFixed()}% Weather`
     );
@@ -98,18 +93,13 @@ export const FundModule = forwardRef((props, ref) => {
     totalPods
   )} in the Pod line`);
 
-  const noSoilTextField = soil.isEqualTo(0) ? (
-    <Box style={{ marginTop: '-2px', fontFamily: 'Futura-PT-Book' }}>
-      Currently No Soil
-    </Box>
-  ) : null;
   const noFundsTextField = props.fundsRemaining.isEqualTo(0) ? (
     <Box style={{ marginTop: '-2px', fontFamily: 'Futura-PT-Book' }}>
       {`There is no more ${TokenLabel(props.asset)} to sow for the audit`}
     </Box>
   ) : null;
   function transactionDetails() {
-    if (toPodValue.isLessThanOrEqualTo(0)) return;
+    if (toPodValue.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -139,7 +129,6 @@ export const FundModule = forwardRef((props, ref) => {
   return (
     <>
       {fromTokenField}
-      {noSoilTextField}
       {noFundsTextField}
       {transactionDetails()}
     </>

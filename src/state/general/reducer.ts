@@ -31,6 +31,8 @@ export const initialState: GeneralState = {
   lastCross: 0,
   bips: [],
   hasActiveBIP: false,
+  fundraisers: [],
+  hasActiveFundraiser: false,
   contractEvents: [],
   width: window.innerWidth,
   drawerOpen: false,
