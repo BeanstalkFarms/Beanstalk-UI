@@ -131,6 +131,7 @@ export default function TabbedMarketplace() {
           }}
           section={0}
           sectionTitles={['My Market']}
+          sectionTitlesDescription={[marketStrings.myMarket]}
           showButton={false}
           removeBackground
         >

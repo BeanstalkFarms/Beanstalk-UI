@@ -25,10 +25,9 @@ export type PodListing = {
 
     /**
    * The difference in index of where the listing starts selling pods from and where the plot starts
-   * 
+   *
    */
   start: BigNumber;
-
 
   /**
    * Price per Pod, in Beans.
@@ -77,8 +76,8 @@ export type PodOrder = {
   account: string;
 
   /**
-   * The id of the Pod Order. 
-   * 
+   * The id of the Pod Order.
+   *
    * Computed by hashing the Farmer’s address and the previous block’s hash. In the case of a collisions,
    * Beanstalk will hash the ID until there is no collision.
    */

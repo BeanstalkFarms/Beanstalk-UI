@@ -1,7 +1,7 @@
 // General
 export { default as Page } from './Page';
 export { default as MetamasklessPage } from './MetamasklessPage';
-export { default as MarketplacePage } from './Marketplace';
+export { default as MarketplacePage } from './MarketplacePage';
 
 // Farm
 export { default as FarmPage } from './FarmPage';

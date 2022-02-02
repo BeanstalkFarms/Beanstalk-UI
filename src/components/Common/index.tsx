@@ -291,18 +291,20 @@ export const fundraiserStrings = {
   fundsTableDescription: 'Below is a complete list of all Fundraisers.',
 };
 export const marketStrings = {
+  description: 'The Farmers Market is a decentralized marketplace native to Beanstalk Protocol where users can buy and sell Pods between users in a trustless and decentralized manner.', // TODO
   sellPods: 'Use this tab to Sell Pods on the Pod Marketplace.', // TODO
   buyPods: 'Use this tab to Buy Pods on the Pod Marketplace.', // TODO
   sell: 'Sell Pods from available offers using user plots.', // TODO
   buy: 'Buy Pods from available listings.', // TODO
   createListing: 'Use this tab to create a listing to Sell Pods on the Pod Marketplace.', // TODO
   createOffer: 'Use this tab to create an offer to buy Pods on the Pod Marketplace.', // TODO
-  placeInPodLine: 'This slider and input field represents the maximum place in line that the user is willing to buy Pods at given the specificed price per Pods.',
-  expiresIn: 'This input field represents the amount of Pods that need to be harvested before your listing will expire.',
-  myOffers: 'Bids for Pods you\'re willing to buy on the Market.',
-  myListings: 'Pods you have listed for sale on the Market.',
-  toWrapped: 'When your listing is filled, the Beans will be wrapped in the Silo for efficiency.',
-  toWallet: 'When your listing is filled, the Beans will be sent to your wallet. This introduces a potential tax and gas inefficiency.',
+  placeInPodLine: 'This slider and input field represents the maximum place in line that the user is willing to buy Pods at given the specificed price per Pods.', // TODO
+  expiresIn: 'This input field represents the amount of Pods that need to be harvested before your listing will expire.', // TODO
+  myOffers: 'Bids for Pods you\'re willing to buy on the Market.', // TODO
+  myListings: 'Pods you have listed for sale on the Market.', // TODO
+  myMarket: 'Your listed orders and listings', // TODO
+  toWrapped: 'When your listing is filled, the Beans will be wrapped in the Silo for efficiency.', // TODO
+  toWallet: 'When your listing is filled, the Beans will be sent to your wallet. This introduces a potential tax and gas inefficiency.', // TODO
 };
 export const filterStrings = {
   pricePerPod: 'Price per Pod sliding filter.', // TODO
