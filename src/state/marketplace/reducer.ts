@@ -39,6 +39,11 @@ export type PodListing = {
    */
   maxHarvestableIndex: BigNumber;
 
+  /**
+   * 
+   */
+  toWallet: boolean;
+
   // -- Amounts
 
   /**

@@ -114,16 +114,16 @@ type PodListingCreatedEvent = {
   maxHarvestableIndex: string;
   toWallet: boolean;
 }
-type PodListingCancelledEvent = {
-  account: string;
-  index: string;
-}
 type PodListingFilledEvent = {
   from: string;
   to: string;
   index: string;
   start: string;
   amount: string;
+}
+type PodListingCancelledEvent = {
+  account: string;
+  index: string;
 }
 
 //
@@ -134,10 +134,6 @@ type PodOrderCreatedEvent = {
   pricePerPod: string;
   maxPlaceInLine: string;
 }
-type PodOrderCancelledEvent = {
-  account: string;
-  id: string;
-}
 type PodOrderFilledEvent = {
   from: string;
   to: string;
@@ -145,6 +141,10 @@ type PodOrderFilledEvent = {
   index: string;
   start: string;
   amount: string;
+}
+type PodOrderCancelledEvent = {
+  account: string;
+  id: string;
 }
 
 // FIXME: define type for Events
@@ -161,6 +161,8 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         start: toTokenUnitsBN(new BigNumber(values.start), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
         maxHarvestableIndex: toTokenUnitsBN(new BigNumber(values.maxHarvestableIndex), BEAN.decimals),
+        toWallet: values.toWallet,
+        // -- Amounts
         totalAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
         remainingAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
         filledAmount: new BigNumber(0),

@@ -3,6 +3,7 @@ import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 // -- LISTINGS -- //
 
+// FIXME: this is ListingStruct without account, since account is implied when creating
 type CreatePodListingParams = {
   /** The index of the Plot being listed. */
   index: string,
@@ -48,9 +49,19 @@ export const cancelPodListing = (
   { onResponse }
 );
 
+type ListingStruct = {
+  account: string;
+  index: string;
+  start: string;
+  amount: string;
+  pricePerPod: string;
+  maxHarvestableIndex: string;
+  toWallet: boolean;
+}
+
 type FillPodListingParams = {
   /** listing struct. */
-  listing: string;
+  listing: ListingStruct;
   /** The amount of Beans msg.sender is spending. */
   beanAmount: string;
   /**  */
@@ -60,30 +71,43 @@ type FillPodListingParams = {
 export const fillPodListing = async (
   params: FillPodListingParams,
   onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  (params.claimable
-    ? beanstalkContract().claimAndFillPodListing(
-      params.listing,
-      params.beanAmount,
-      params.claimable
-    )
-    : beanstalkContract().fillPodListing(
-      params.listing,
-      params.beanAmount,
-    )
-  ),
-  { onResponse }
-);
+) => {
+  // Unpack the params object into the correct order explicitly.
+  const l = [
+    params.listing.account,
+    params.listing.index,
+    params.listing.start,
+    params.listing.amount,
+    params.listing.pricePerPod,
+    params.listing.maxHarvestableIndex,
+    params.listing.toWallet,
+  ];
+  return handleCallbacks(
+    (params.claimable
+      ? beanstalkContract().claimAndFillPodListing(
+        l,
+        params.beanAmount,
+        params.claimable
+      )
+      : beanstalkContract().fillPodListing(
+        l,
+        params.beanAmount,
+      )
+    ),
+    { onResponse }
+  );
+};
 
 type BuyBeansAndFillPodListingParams = {
   /** Listing struct. */
-  listing: string;
+  listing: ListingStruct;
   /** The amount of already owned Beans msg.sender is spending. */
   beanAmount: string;
   /** The amount of Beans to buy with ETH and use as payment */
   buyBeanAmount: string;
   /** Allows Farmers to use claimable and wrapped Beans to purchase the listing */
-  claimable: any; // FIXME: should be typeof claimable | null
+  // FIXME: should be typeof claimable | null
+  claimable: any; 
   /** The maximum amount of Eth to spend buying Beans. msg.value must be attached to the transaction. */
   ethAmount: string;
 }
@@ -94,24 +118,38 @@ type BuyBeansAndFillPodListingParams = {
 export const buyBeansAndFillPodListing = async (
   params: BuyBeansAndFillPodListingParams,
   onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  (params.claimable
-    ? beanstalkContract().claimBuyBeansAndFillPodListing(
-        params.listing,
+) => {
+  // Unpack the params object into the correct order explicitly.
+  const l = [
+    params.listing.account,
+    params.listing.index,
+    params.listing.start,
+    params.listing.amount,
+    params.listing.pricePerPod,
+    params.listing.maxHarvestableIndex,
+    params.listing.toWallet,
+  ];
+  return handleCallbacks(
+    (params.claimable
+      ? beanstalkContract().claimBuyBeansAndFillPodListing(
+        l,
         params.beanAmount,
         params.buyBeanAmount,
         params.claimable,
-        { value: params.ethAmount }
+        { value: params.ethAmount } // Not defined in function, but required for swap.
       )
-    : beanstalkContract().buyBeansAndFillPodListing(
-      params.listing,
-      params.beanAmount,
-      params.buyBeanAmount,
-      { value: params.ethAmount }
-    )
-  ),
-  { onResponse }
-);
+      : beanstalkContract().buyBeansAndFillPodListing(
+        l,
+        params.beanAmount,
+        params.buyBeanAmount,
+        { value: params.ethAmount } // Not defined in function, but required for swap.
+      )
+    ),
+    { onResponse }
+  );
+};
+
+// -- ORDERS (prev. Buy Offers) -- //
 
 // FIXME: this is the contract-level Order struct which overlaps with but differs
 // from the Order type used to maintain state on the frontend. We should rename
@@ -122,6 +160,7 @@ type OrderStruct = {
   pricePerPod: string;
   maxPlaceInLine: string;
 }
+
 type FillPodOrderParams = {
   /** The Order struct of the order being bought */
   order: OrderStruct;
@@ -152,8 +191,6 @@ export const fillPodOrder = async (
   ),
   { onResponse }
 );
-
-// -- ORDERS (prev. Buy Offers) -- //
 
 type CreatePodOrderParams = {
   /** The amount of Beans msg.sender will spend up to in the Order */

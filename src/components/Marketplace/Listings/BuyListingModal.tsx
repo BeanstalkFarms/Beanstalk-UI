@@ -231,22 +231,31 @@ export default function BuyListingModal({
 
       //
       const params = {
-        from: currentListing.account,
-        index: listingIndex,
-        start: listingStart,
+        // @publius verify
+        listing: {
+          account: currentListing.account,
+          index: listingIndex,
+          start: listingStart,
+          amount: toStringBaseUnitBN(currentListing.remainingAmount, BEAN.decimals),
+          pricePerPod: pricePerPod,
+          maxHarvestableIndex: toStringBaseUnitBN(currentListing.maxHarvestableIndex, BEAN.decimals),
+          toWallet: currentListing.toWallet,
+        },
         beanAmount: beanAmount,
         buyBeanAmount: buyBeanAmount,
-        pricePerPod: pricePerPod,
         claimable: _claimable,
         ethAmount: eth
       };
       // console.log('buyBeansAndFillPodListing`, params)
 
       // Execute
-      buyBeansAndFillPodListing(params, (response) => {
-        fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-        txToast.confirming(response);
-      })
+      buyBeansAndFillPodListing(
+        params,
+        (response) => {
+          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+          txToast.confirming(response);
+        }
+      )
       .then((value) => {
         txToast.success(value);
       })
