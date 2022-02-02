@@ -113,9 +113,18 @@ export const buyBeansAndFillPodListing = async (
   { onResponse }
 );
 
+// FIXME: this is the contract-level Order struct which overlaps with but differs
+// from the Order type used to maintain state on the frontend. We should rename
+// or prefix one or the other for clarity. For now I'll use the word "struct" to
+// denote matching Solidity types. see `struct Order` in contract.
+type OrderStruct = {
+  account: string;
+  pricePerPod: string;
+  maxPlaceInLine: string;
+}
 type FillPodOrderParams = {
-  /** The id of the order being bought */
-  id: string;
+  /** The Order struct of the order being bought */
+  order: OrderStruct;
   /** The index of the plot that is being sold into the Pod Order */
   index: string;
   /** The start index of the Plot that is being sold. */
@@ -131,7 +140,11 @@ export const fillPodOrder = async (
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   beanstalkContract().fillPodOrder(
-    params.id,
+    [
+      params.order.account,
+      params.order.pricePerPod,
+      params.order.maxPlaceInLine,
+    ],
     params.index,
     params.start,
     params.amount,

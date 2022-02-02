@@ -206,19 +206,26 @@ export default function FillOrderModal({
 
     // Contract Inputs
     const params = {
-      id: currentOrder.id,
+      order: {
+        account: currentOrder.account,                                                  // address account
+        pricePerPod: toStringBaseUnitBN(currentOrder.pricePerPod, BEAN.decimals),       // uint24 pricePerPod
+        maxPlaceInLine: toStringBaseUnitBN(currentOrder.maxPlaceInLine, BEAN.decimals)  // uint256 maxPlaceInLine
+      },
       index: toStringBaseUnitBN(index, BEAN.decimals),   // uint256 index
       start: toStringBaseUnitBN(start, BEAN.decimals),   // uint256 start
-      amount: toStringBaseUnitBN(amount, BEAN.decimals),  // uint256 amount
-      toWallet: settings.toWallet,                          // uint24 toWallet
+      amount: toStringBaseUnitBN(amount, BEAN.decimals), // uint256 amount
+      toWallet: settings.toWallet,                       // uint24 toWallet
     };
 
     // Execute
     // console.log(index.toString(), plotToSellFrom.toString(), amount.toString(), start);
     // console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`, params);
-    fillPodOrder(params, (response) => {
-      txToast.confirming(response);
-    })
+    fillPodOrder(
+      params,
+      (response) => {
+        txToast.confirming(response);
+      }
+    )
     .then((value) => {
       txToast.success(value);
     })
