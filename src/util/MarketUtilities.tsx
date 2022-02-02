@@ -49,16 +49,10 @@ export const cancelPodListing = (
 );
 
 type FillPodListingParams = {
-  /** The address of the Farmer that owns the Listing. */
-  from: string;
-  /** The index of the Plot being listed. */
-  index: string;
-  /** The start index within the Plot that msg.sender is buying from. */
-  start: string;
+  /** listing struct. */
+  listing: string;
   /** The amount of Beans msg.sender is spending. */
   beanAmount: string;
-  /** The price per Pod msg.sender is paying. */
-  pricePerPod: string;
   /**  */
   claimable: any, // FIXME
 }
@@ -69,37 +63,25 @@ export const fillPodListing = async (
 ) => handleCallbacks(
   (params.claimable
     ? beanstalkContract().claimAndFillPodListing(
-      params.from,
-      params.index,
-      params.start,
+      params.listing,
       params.beanAmount,
-      params.pricePerPod,
       params.claimable
     )
     : beanstalkContract().fillPodListing(
-      params.from,
-      params.index,
-      params.start,
+      params.listing,
       params.beanAmount,
-      params.pricePerPod,
     )
   ),
   { onResponse }
 );
 
 type BuyBeansAndFillPodListingParams = {
-  /** The address of the Farmer that owns the Listing. */
-  from: string;
-  /** The index of the Plot being listed. */
-  index: string;
-  /** The start index within the Plot that msg.sender is buying from. */
-  start: string;
+  /** Listing struct. */
+  listing: string;
   /** The amount of already owned Beans msg.sender is spending. */
   beanAmount: string;
   /** The amount of Beans to buy with ETH and use as payment */
   buyBeanAmount: string;
-  /** The price per Pod msg.sender is paying */
-  pricePerPod: string;
   /** Allows Farmers to use claimable and wrapped Beans to purchase the listing */
   claimable: any; // FIXME: should be typeof claimable | null
   /** The maximum amount of Eth to spend buying Beans. msg.value must be attached to the transaction. */
@@ -115,22 +97,16 @@ export const buyBeansAndFillPodListing = async (
 ) => handleCallbacks(
   (params.claimable
     ? beanstalkContract().claimBuyBeansAndFillPodListing(
-        params.from,
-        params.index,
-        params.start,
+        params.listing,
         params.beanAmount,
         params.buyBeanAmount,
-        params.pricePerPod,
         params.claimable,
         { value: params.ethAmount }
       )
     : beanstalkContract().buyBeansAndFillPodListing(
-      params.from,
-      params.index,
-      params.start,
+      params.listing,
       params.beanAmount,
       params.buyBeanAmount,
-      params.pricePerPod,
       { value: params.ethAmount }
     )
   ),
@@ -183,9 +159,9 @@ export const createPodOrder = async (
 ) => handleCallbacks(
   (params.claimable
     ? beanstalkContract().claimAndCreatePodOrder(
-      params.beanAmount, 
-      params.pricePerPod, 
-      params.maxPlaceInLine, 
+      params.beanAmount,
+      params.pricePerPod,
+      params.maxPlaceInLine,
       params.claimable
     )
     : beanstalkContract().createPodOrder(
@@ -237,8 +213,10 @@ export const buyBeansAndCreatePodOrder = async (
 );
 
 type CancelPodOrderParams = {
-  /** The index of the Pod order being canceled. */
-  index: string;
+  /** The price per Pod msg.sender is willing to pay */
+  pricePerPod: string;
+  /** The max Pod index msg.sender is willing to buy */
+  maxPlaceInLine: string;
   /** Whether the remaining Beans in the order should be removed to msg.senders's wallet or wrapped balance. */
   toWallet: boolean;
 }
@@ -248,7 +226,8 @@ export const cancelPodOrder = (
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   beanstalkContract().cancelPodOrder(
-    params.index,
+    params.pricePerPod,
+    params.maxPlaceInLine,
     params.toWallet
   ),
   { onResponse }

@@ -168,9 +168,10 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       };
     } else if (event.event === 'PodListingCancelled') {
       const values = (event.returnValues as PodListingCancelledEvent);
-      delete podListings[values.index];
+      if (podListings[values.index]) delete podListings[values.index];
     } else if (event.event === 'PodListingFilled') {
       const values = (event.returnValues as PodListingFilledEvent);
+      if (!podListings[values.index]) continue;
       const amountBN = toTokenUnitsBN(values.amount, BEAN.decimals);
 
       // Move current listing's index up by |amount|
