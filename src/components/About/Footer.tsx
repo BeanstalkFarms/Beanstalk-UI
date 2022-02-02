@@ -16,6 +16,7 @@ import { ReactComponent as DiscordIcon } from 'img/discord-icon.svg';
 import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
 import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
 import { ReactComponent as OpenSeaIcon } from 'img/opensea-icon.svg';
+import { ReactComponent as RedditIcon } from 'img/reddit-icon.svg';
 import { ReactComponent as UniswapIcon } from 'img/uniswap-logo-black.svg';
 import ThemeBackground from 'components/Themes'
 import LogoLinks from './LogoLinks';
@@ -32,6 +33,7 @@ import {
   MEDIUM_LINK,
   NETLIFY_LINK,
   OPENSEA_LINK_GENESIS,
+  REDDIT_LINK,
   SILO_CONTRACT_LINK,
   TELEGRAM_LINK,
   TWITTER_LINK,
@@ -74,6 +76,9 @@ export default function Footer() {
       <Grid container className={classes.fixedGround} justifyContent="center">
         <LogoLinks close link={TWITTER_LINK}>
           <TwitterIcon style={logoStyle} />
+        </LogoLinks>
+        <LogoLinks close link={REDDIT_LINK}>
+          <RedditIcon style={logoStyle} />
         </LogoLinks>
         <LogoLinks link={TELEGRAM_LINK}>
           <TelegramIcon style={logoStyle} />
