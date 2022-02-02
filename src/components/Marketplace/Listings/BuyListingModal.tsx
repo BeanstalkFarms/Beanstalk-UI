@@ -210,6 +210,16 @@ export default function BuyListingModal({
     const pricePerPod = toStringBaseUnitBN(currentListing.pricePerPod, BEAN.decimals);
     const _claimable = settings.claim ? claimable : null;
 
+    const listing = {
+      account: currentListing.account,
+      index: listingIndex,
+      start: listingStart,
+      amount: toStringBaseUnitBN(currentListing.remainingAmount, BEAN.decimals),
+      pricePerPod: pricePerPod,
+      maxHarvestableIndex: toStringBaseUnitBN(currentListing.maxHarvestableIndex, BEAN.decimals),
+      toWallet: currentListing.toWallet,
+    };
+
     if (fromEthValue.isGreaterThan(0)) {
       // Contract Inputs
       const beanAmount = MaxBN(toBaseUnitBN(fromBeanValue, BEAN.decimals), new BigNumber(0)).toString();
@@ -229,33 +239,20 @@ export default function BuyListingModal({
         success: `Bought ${detail}`,
       });
 
-      //
+      // Parameters
       const params = {
-        // @publius verify
-        listing: {
-          account: currentListing.account,
-          index: listingIndex,
-          start: listingStart,
-          amount: toStringBaseUnitBN(currentListing.remainingAmount, BEAN.decimals),
-          pricePerPod: pricePerPod,
-          maxHarvestableIndex: toStringBaseUnitBN(currentListing.maxHarvestableIndex, BEAN.decimals),
-          toWallet: currentListing.toWallet,
-        },
+        listing,
         beanAmount: beanAmount,
         buyBeanAmount: buyBeanAmount,
         claimable: _claimable,
         ethAmount: eth
       };
-      // console.log('buyBeansAndFillPodListing`, params)
 
       // Execute
-      buyBeansAndFillPodListing(
-        params,
-        (response) => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-          txToast.confirming(response);
-        }
-      )
+      buyBeansAndFillPodListing(params, (response) => {
+        fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+        txToast.confirming(response);
+      })
       .then((value) => {
         txToast.success(value);
       })
@@ -274,16 +271,12 @@ export default function BuyListingModal({
         success: `Bought ${detail}`,
       });
 
-      //
+      // Parameters
       const params = {
-        from: currentListing.account,
-        index: listingIndex,
-        start: '0', // FIXME
+        listing,
         beanAmount: toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
-        pricePerPod: pricePerPod,
         claimable: _claimable,
       };
-      // console.log(`buyBeansAndFillPodListing`, params)
 
       // Execute
       fillPodListing(params, (response) => {
