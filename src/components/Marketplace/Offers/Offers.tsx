@@ -43,7 +43,7 @@ export default function Orders(props: OrdersProps) {
 
   //
   const [walletAddress, setWalletAddress] = useState(null);
-  const [currentOffer, setCurrentOffer] = useState(null);
+  const [currentOrder, seCurrentOrder] = useState(null);
 
   //
   const [settings, setSettings] = useState({
@@ -227,8 +227,8 @@ export default function Orders(props: OrdersProps) {
   return (
     <>
       <FillOrderModal
-        currentOrder={currentOffer}
-        onClose={() => setCurrentOffer(null)}
+        currentOrder={currentOrder}
+        onClose={() => seCurrentOrder(null)}
         settings={settings}
         setSettings={setSettings}
       />
@@ -236,7 +236,7 @@ export default function Orders(props: OrdersProps) {
       <OffersTable
         mode={props.mode}
         offers={filteredOffers.current}
-        setCurrentOffer={setCurrentOffer}
+        seCurrentOrder={seCurrentOrder}
         validOffers={validOffers}
       />
     </>

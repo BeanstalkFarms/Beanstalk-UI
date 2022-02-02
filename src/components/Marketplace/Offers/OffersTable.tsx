@@ -24,18 +24,18 @@ import TokenIcon from 'components/Common/TokenIcon';
 import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/Common';
 import { useStyles } from '../TableStyles';
 
-type OfferRowProps = {
-  offer: PodOrder;
-  setCurrentOffer: Function;
+type OrderRowProps = {
+  order: PodOrder;
+  seCurrentOrder: Function;
   isMine: boolean;
 }
 
-function OfferRow({ offer: order, setCurrentOffer, isMine }: OfferRowProps) {
+function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
   const classes = useStyles();
   // const { plots } = useSelector<AppState, AppState['userBalance']>(
   //   (state) => state.userBalance
   // );
-  const numPodsLeft = order.totalAmount.minus(order.filledAmount);
+  const numPodsLeft = order.remainingAmount;
   const explainer = (
     <>
       {isMine
@@ -129,10 +129,10 @@ function OfferRow({ offer: order, setCurrentOffer, isMine }: OfferRowProps) {
             {displayBN(numPodsLeft)}
           </BalanceTableCell>
           {/* Sell into this offer; only show if handler is set */}
-          {setCurrentOffer && (
+          {seCurrentOrder && (
             <TableCell align="center">
               <IconButton
-                onClick={() => setCurrentOffer(order)}
+                onClick={() => seCurrentOrder(order)}
                 // disabled={!canSell}
                 // style={{
                 //   color: canSell ? theme.linkColor : 'lightgray',
@@ -155,7 +155,7 @@ function OfferRow({ offer: order, setCurrentOffer, isMine }: OfferRowProps) {
 type OffersTableProps = {
   mode: 'ALL' | 'MINE';
   offers: PodOrder[];
-  setCurrentOffer?: Function;
+  seCurrentOrder?: Function;
 }
 
 /**
@@ -208,10 +208,10 @@ export default function OffersTable(props: OffersTableProps) {
               </TableRow>
             </TableHead>
             {slicedItems.map((offer: PodOrder) => (
-              <OfferRow
+              <OrderRow
                 key={offer.id}
-                offer={offer}
-                setCurrentOffer={props.setCurrentOffer}
+                order={offer}
+                seCurrentOrder={props.seCurrentOrder}
                 isMine
               />
             ))}
@@ -254,7 +254,7 @@ export default function OffersTable(props: OffersTableProps) {
               <TableCell align="right">
                 Pods Requested
               </TableCell>
-              {props.setCurrentOffer && (
+              {props.seCurrentOrder && (
                 <TableCell align="center">
                   Sell
                 </TableCell>
@@ -262,10 +262,10 @@ export default function OffersTable(props: OffersTableProps) {
             </TableRow>
           </TableHead>
           {slicedItems.map((offer: PodOrder) => (
-            <OfferRow
+            <OrderRow
               key={offer.id}
-              offer={offer}
-              setCurrentOffer={props.setCurrentOffer}
+              order={offer}
+              seCurrentOrder={props.seCurrentOrder}
             />
           ))}
         </Table>
@@ -293,5 +293,5 @@ export default function OffersTable(props: OffersTableProps) {
 }
 
 OffersTable.defaultProps = {
-  setCurrentOffer: undefined,
+  seCurrentOrder: undefined,
 };
