@@ -18,6 +18,9 @@
 .BeanstalkBG[name="winter"] {
   background-image: url('../../img/winter/beanstalk-background-1.svg');
 }
+.BeanstalkBG[name="winterUpgrade"] {
+  background-image: url('../../img/winter/upgrade/beanstalk-background.svg');
+}
 .BeanstalkBG {
   background-repeat: no-repeat;
   background-size: contain;
@@ -44,6 +47,9 @@
 .Barn[name="winter"] {
   background-image: url('../../img/winter/Barn.svg');
 }
+.Barn[name="winterUpgrade"] {
+  background-image: url('../../img/winter/upgrade/Barn.svg');
+}
 .Barn {
   background-repeat: no-repeat;
   background-size: contain;
@@ -68,6 +74,9 @@
 .BeanstalkMT[name="winter"] {
   background-image: url('../../img/winter/background.svg');
 }
+.BeanstalkMT[name="winterUpgrade"] {
+  background-image: url('../../img/winter/upgrade/background.svg');
+}
 .BeanstalkMT[name="fall"] {
   background-repeat: no-repeat;
   background-size: contain;
@@ -91,6 +100,16 @@
   height: 100%;
   z-index: -100;
 }
+.BeanstalkMT[name="winterUpgrade"] {
+  background-repeat: repeat-x;
+  background-size: contain;
+  background-position: 100%;
+  position: fixed;
+  top: calc(28vh - 2vw);
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+}
 .BeanstalkMT {
   background-repeat: no-repeat;
   background-size: contain;
@@ -105,7 +124,20 @@
 .BeanstalkSky[name="winter"] {
   background-image: url('../../img/winter/Stars.svg');
 }
+.BeanstalkSky[name="winterUpgrade"] {
+  background-image: url('../../img/winter/Stars.svg');
+}
 .BeanstalkSky[name="winter"] {
+  background-repeat: repeat;
+  background-size: contain;
+  background-position: 100%;
+  position: fixed;
+  width: 100%;
+  min-width: 600px;
+  height: 100%;
+  z-index: -102;
+}
+.BeanstalkSky[name="winterUpgrade"] {
   background-repeat: repeat;
   background-size: contain;
   background-position: 100%;

@@ -13,45 +13,12 @@ import {
   TableRow,
   Box,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import {
-  fundsList,
-  theme,
-} from 'constants/index';
+import { fundsList, theme } from 'constants/index';
 import { Line, QuestionModule, fundraiserStrings, TablePageSelect } from 'components/Common';
 import CircularProgressWithLabel from 'components/Governance/CircularProgressWithLabel';
-
-const useStyles = makeStyles({
-  table: {
-    margin: '9px',
-    width: 'auto',
-    backgroundColor: theme.module.background,
-  },
-  pagination: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  title: {
-    display: 'inline-block',
-    fontFamily: 'Futura-Pt-Book',
-    fontSize: '20px',
-    marginTop: '10px',
-    textAlign: 'center',
-    width: '100%',
-  },
-  inputModule: {
-    backgroundColor: theme.module.background,
-    borderRadius: '25px',
-    color: theme.text,
-    marginTop: '18px',
-    maxWidth: '800px',
-    padding: '10px 10px 20px 10px',
-    marginBottom: '80px',
-  },
-});
+import { useStyles } from './FundraiserStyles.ts';
 
 function summaryFunds(open, fund) {
   if (open) {
@@ -64,7 +31,7 @@ function summaryFunds(open, fund) {
             style={{ border: 'none' }}
             title={`FUND-${fundID}`}
             width="100%"
-            height="230px"
+            height="245px"
           />
         );
       }
@@ -188,11 +155,7 @@ const FundTable = (props) => {
             margin="-12px 0 0 2px"
           />
         </span>
-        <Line
-          style={{
-            margin: '10px 8px',
-          }}
-        />
+        <Line style={{ margin: '10px 8px' }} />
         <TableContainer className={classes.table}>
           <Table aria-label="simple table">
             <TableHead>

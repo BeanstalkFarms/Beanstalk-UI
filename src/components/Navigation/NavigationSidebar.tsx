@@ -10,7 +10,6 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
-import { makeStyles } from '@material-ui/styles';
 
 // import { getAPYs } from 'util/index';
 import { AppState } from 'state';
@@ -18,6 +17,7 @@ import { theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
 import { percentForStalk } from 'util/index';
+import { useStyles } from './NavigationStyles.ts';
 
 const NAVIGATION_MAP = {
   farm: [
@@ -67,101 +67,6 @@ const NAVIGATION_MAP = {
   ],
 };
 
-//
-const drawerWidth = 280;
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-  },
-  //
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    fontFamily: 'Futura',
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-  },
-  currentPriceStyle: {},
-  //
-  NavSubheader: {
-    fontFamily: 'Futura',
-    lineHeight: '24px',
-    backgroundColor: '#fff',
-  },
-  Badge: {
-    backgroundColor: theme.secondary,
-    color: theme.accentText,
-    fontSize: 11.5,
-    padding: '2px 5px',
-    borderRadius: 4,
-    marginRight: 4,
-  },
-  NavLinkHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  NavLinkTitle: {
-    fontFamily: 'Futura, Helvetica',
-    fontWeight: '800',
-    fontSize: 17,
-  },
-  NavLink: {
-    color: 'inherit',
-    textDecoration: 'none',
-  },
-  // Metrics
-  metrics: {
-    display: 'flex',
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'end',
-  },
-  metric: {
-    fontSize: 13,
-    marginTop: 3,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  metricLabel: {
-    fontWeight: 'bold',
-    letterSpacing: '0.5px',
-    color: '#555',
-  },
-  metricValue: {
-    color: '#555',
-  },
-  // BIP Progress
-  bipBadgeContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  progressContain: {
-    width: 16,
-    position: 'relative',
-  },
-  progressBackground: {
-    position: 'absolute',
-    top: -5,
-    left: 0,
-  },
-  progressPrimary: {
-    position: 'absolute',
-    top: -5,
-    left: 0,
-  },
-});
-
 const Metric = ({ label, value, hideIfNull = false }) => {
   const classes = useStyles();
   if (hideIfNull && !value) return null;
@@ -173,7 +78,7 @@ const Metric = ({ label, value, hideIfNull = false }) => {
   );
 };
 
-const BIPBadge = ({ bip, voted }) => {
+const Badge = ({ badge, percent, type }) => {
   const classes = useStyles();
   return (
     <Box component="span" className={classes.bipBadgeContainer}>
@@ -195,11 +100,11 @@ const BIPBadge = ({ bip, voted }) => {
           color="inherit"
           thickness={8}
           variant="determinate"
-          value={voted}
+          value={percent}
         />
       </Box>
       <span>
-        BIP-{bip.id.toString()}
+        {type === 'bips' ? `BIP-${badge.id}` : `FUND-${badge.id}`}
       </span>
     </Box>
   );
@@ -225,7 +130,7 @@ export default function NavigationSidebar() {
   const { totalPods, totalBeans, totalRoots } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { initialized, drawerOpen, width, bips } = useSelector<AppState, AppState['general']>(
+  const { initialized, drawerOpen, width, bips, fundraisers } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
@@ -237,9 +142,21 @@ export default function NavigationSidebar() {
           ? bip.endTotalRoots
           : totalRoots
       );
-      aBips.push(<BIPBadge bip={bip} voted={voted} />);
+      aBips.push(<Badge badge={bip} percent={voted} type="bips" />);
     }
     return aBips;
+  }, []);
+
+  const activeFundraisers = fundraisers.reduce((afundraisers, fundraiser) => {
+    if (fundraiser.remaining.isGreaterThan(0)) {
+      const percentFunded = fundraiser.total
+        .minus(fundraiser.remaining)
+        .dividedBy(fundraiser.total)
+        .multipliedBy(new BigNumber(100));
+
+      afundraisers.push(<Badge badge={fundraiser} percent={percentFunded} type="funds" />);
+    }
+    return afundraisers;
   }, []);
 
   // Calculate APYs.
@@ -258,15 +175,34 @@ export default function NavigationSidebar() {
     ? totalBeans.multipliedBy(beanPrice)
     : new BigNumber(0);
 
+  // Add Fundraiser page to Nav Sidebar if active Fundraiser
+  function addActiveFundraiserNav(navMap) {
+    if (Object.keys(navMap.more).length < 5 && activeFundraisers.length > 0) {
+      navMap.more.push(
+        {
+          path: 'fundraiser',
+          title: 'Fundraiser',
+          desc: 'Fundraise Beanstalk proposals',
+        }
+      );
+    }
+    return navMap;
+  }
+
+  // Add badge to Sidebar nav
   const badgeDataByPath : { [key: string] : string | null } = {
     // 'farm/silo': initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
     // 'farm/field': initialized && fieldAPY ? `${fieldAPY.toFixed(0)}%` : null,
     'farm/field': initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
-    fundraiser: 'Omniscia',
     beanfts: 'Winter',
   };
+  // Add conditional badges
   if (activeBips.length > 0) {
     badgeDataByPath.governance = activeBips;
+  }
+  if (activeFundraisers.length > 0) {
+    badgeDataByPath.fundraiser = activeFundraisers;
+    addActiveFundraiserNav(NAVIGATION_MAP);
   }
 
   //

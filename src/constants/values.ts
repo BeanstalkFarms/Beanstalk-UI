@@ -48,6 +48,8 @@ export const PEG_WEATHER_CASES = [
 
 /* Website Settings */
 export const BASE_SLIPPAGE = 0.995; /* 0.5% slippage */
+export const CONVERT_BEAN_SLIPPAGE = 0.980; /* 2.0% slippage */
+export const CONVERT_LP_SLIPPAGE = 0.990; /* 1.0% slippage */
 export const SLIPPAGE_THRESHOLD = 0.97; /* 3% slippage threshold for frontrunning */
 export const LP_FEE = 0.003; /* 0.3% LP fee */
 export const MIN_BALANCE = 0.05; /* 0.05 minimum eth withtheld to transact */
