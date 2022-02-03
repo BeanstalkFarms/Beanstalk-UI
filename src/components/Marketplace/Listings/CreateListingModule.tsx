@@ -383,9 +383,9 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       {fromPlotField}
       {index.gte(0) ? (
         <>
-          {priceField}
           {startField}
           {amountField}
+          {priceField}
           {expiresInField}
           {alreadyListedNotification}
           {transactionDetails()}
