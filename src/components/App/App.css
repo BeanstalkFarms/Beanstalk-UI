@@ -124,20 +124,7 @@
 .BeanstalkSky[name="winter"] {
   background-image: url('../../img/winter/Stars.svg');
 }
-.BeanstalkSky[name="winterUpgrade"] {
-  background-image: url('../../img/winter/Stars.svg');
-}
 .BeanstalkSky[name="winter"] {
-  background-repeat: repeat;
-  background-size: contain;
-  background-position: 100%;
-  position: fixed;
-  width: 100%;
-  min-width: 600px;
-  height: 100%;
-  z-index: -102;
-}
-.BeanstalkSky[name="winterUpgrade"] {
   background-repeat: repeat;
   background-size: contain;
   background-position: 100%;

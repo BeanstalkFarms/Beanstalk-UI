@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import land from 'img/winter/land.svg';
+import land from 'img/winter/upgrade/land.svg';
 import { theme } from 'constants/index';
 
 export default function WinterUpgrade(props) {

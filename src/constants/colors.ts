@@ -217,7 +217,7 @@ export const winterUpgradeTheme = {
   name: 'winterUpgrade',
   text: 'black',
   backgroundText: 'black',
-  bodyBackground: '#005788',
+  bodyBackground: '#66CCFF',
   primary: '#1B4658',
   accentColor: '#9A9A9A',
   accentText: 'white',
