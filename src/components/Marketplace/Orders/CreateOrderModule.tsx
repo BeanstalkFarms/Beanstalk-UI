@@ -37,7 +37,7 @@ import {
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
 
-type CreateOfferModuleProps = {
+type CreateOrderModuleProps = {
   isFormDisabled: boolean;
   setIsFormDisabled: Function;
   settings: any; // FIXME
@@ -46,7 +46,7 @@ type CreateOfferModuleProps = {
   updateExpectedPrice: any; // FIXME
 }
 
-export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref) => {
+export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
@@ -276,7 +276,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
     ? (
       <>
         <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
-          WARNING: The Buy Range is too small to make an offer or there aren&apos;t enough availble Pods in the market.
+          WARNING: The Buy Range is too small to make an Order or there aren&apos;t enough availble Pods in the market.
         </span>
         <br />
       </>
@@ -326,7 +326,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
           }}
         >
           <span style={{ fontSize: 'calc(9px + 0.5vmin)' }}>
-            You can cancel the offer to return the locked Beans from the marketplace
+            You can cancel the order to return the locked Beans from the marketplace
           </span>
         </Box>
       </>
@@ -343,7 +343,7 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
       //    2. Has a price <= pricePerPodValue (ideally minimized)
       //
       // What there is no one Listing below `pricePerPod` that could
-      // fill all of `amount` requested in this Offer?
+      // fill all of `amount` requested in this Order?
       //
       // Consider: I want to buy 100 Pods at 0.50 Bean/Pod (implied 50 Bean spend). There are 
       // two available listings:
@@ -354,13 +354,13 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
       //    1. Suggest the best 1 listing with the best combination of `pricePerPod` and
       //       `amount` that is available.
       //          - I can buy all of Listing A immediately for (100 Pods)*0.40=40 Beans.
-      //            My Buy Offer is filled.
+      //            My Order is filled.
       //          - I can buy all of Listing B immediately for (10 Pods)*0.2=2 Beans. 
-      //            My Buy Offer is NOT filled. I would need to re-issue and receive a new
+      //            My Order is NOT filled. I would need to re-issue and receive a new
       //            prompt to Buy (presumably from Listing A since Listing B is exhausted).
       //
       //    2. Suggest the best N listings under `pricePerPod` until the user receives
-      //       the total number of Pods requested in the BuyOffer. This likely means
+      //       the total number of Pods requested in the Order. This likely means
       //       buying from at least 1 partial listing.
       //          - I buy all of Listing B immediately for (10 Pods)*0.20=2 Beans. This
       //            executes first because we want to lock in the lower price.
@@ -385,8 +385,8 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
 
         // Toast
         const txToast = new TransactionToast({
-          loading: `Placing an offer to buy ${displayBN(toPodValue)} Pods`,
-          success: 'Offer placed!',
+          loading: `Placing an order to buy ${displayBN(toPodValue)} Pods`,
+          success: 'Order placed!',
         });
 
         // Execute
@@ -410,8 +410,8 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
       } else {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Placing an offer to buy ${displayBN(toPodValue)} Pods`,
-          success: 'Offer placed!',
+          loading: `Placing an order to buy ${displayBN(toPodValue)} Pods`,
+          success: 'Order placed!',
         });
 
         // Execute

@@ -10,7 +10,7 @@ import { AppState } from 'state';
 import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
 
 import FillOrderModal from 'components/Marketplace/Orders/FillOrderModal';
-import OffersTable from './OrdersTable';
+import OrdersTable from './OrdersTable';
 import Filters, { StyledSlider } from '../Filters';
 
 type OrdersProps = {
@@ -51,11 +51,11 @@ export default function Orders(props: OrdersProps) {
   });
 
   // Filter state
-  const filteredOffers = useRef<PodOrder[]>(allOrders);
+  const filteredOrders = useRef<PodOrder[]>(allOrders);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
   /** */
-  const [validOffers, setValidOffers] = useState<boolean>(false);
+  const [validOrders, setValidOrders] = useState<boolean>(false);
 
   const placesInLine = [0, totalPods.toNumber()];
   const placesInLineBN = [0, new BigNumber(totalPods.toNumber())];
@@ -68,7 +68,7 @@ export default function Orders(props: OrdersProps) {
 
   // Handle changes in filters
   useMemo(() => {
-    filteredOffers.current = _.filter(
+    filteredOrders.current = _.filter(
       allOrders,
       (order) =>
         (props.mode === 'MINE'
@@ -80,10 +80,10 @@ export default function Orders(props: OrdersProps) {
         order.maxPlaceInLine.lte(new BigNumber(placeInLineFilters[1]))
     );
 
-    // Filter offers the user cannot sell a plot into
-    filteredOffers.current = _.filter(filteredOffers.current, (order) => {
+    // Filter Orders the user cannot sell a plot into
+    filteredOrders.current = _.filter(filteredOrders.current, (order) => {
       let validPlots = [];
-      if (validOffers) {
+      if (validOrders) {
         const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
           const plotObjectiveIndex = new BigNumber(plotIndex);
           return plotObjectiveIndex
@@ -98,7 +98,7 @@ export default function Orders(props: OrdersProps) {
           {}
         );
       }
-      return Object.keys(validPlots).length > 0 === validOffers || !validOffers;
+      return Object.keys(validPlots).length > 0 === validOrders || !validOrders;
     });
 
     return () => {
@@ -111,7 +111,7 @@ export default function Orders(props: OrdersProps) {
     placeInLineFilters,
     props.mode,
     walletAddress,
-    validOffers,
+    validOrders,
   ]);
 
   //
@@ -130,31 +130,30 @@ export default function Orders(props: OrdersProps) {
   // Setup
   useEffect(() => {
     const init = async () => {
-      console.log('Buy Offers: init');
       const addr = await GetWalletAddress();
       setWalletAddress(addr);
     };
     init();
   }, []);
 
-  if (filteredOffers.current == null || walletAddress == null) {
+  if (filteredOrders.current == null || walletAddress == null) {
     return <div>Loading...</div>;
   }
 
   // Filters
   const filters = (
     <Filters
-      title={`${filteredOffers.current.length} offer${
-        filteredOffers.current.length !== 1 ? 's' : ''
+      title={`${filteredOrders.current.length} order${
+        filteredOrders.current.length !== 1 ? 's' : ''
       }`}
     >
       {/* Toggle for users to select to filter out plots they can't sell into  */}
       {props.mode !== 'MINE' && (
         <>
           <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
-            Offers you can Sell to
+            Orders you can Sell to
             <QuestionModule
-              description={filterStrings.toggleValidOffers}
+              description={filterStrings.toggleValidOrders}
               margin="-10px 0px 0px 0px"
               placement="right"
             />
@@ -162,9 +161,9 @@ export default function Orders(props: OrdersProps) {
           <Box sx={{ mt: 3, px: 0.75 }} style={{ margin: '10px 0' }}>
             <SwitchModule
               setValue={(value) => {
-                setValidOffers(value);
+                setValidOrders(value);
               }}
-              value={validOffers}
+              value={validOrders}
             />
           </Box>
         </>
@@ -233,11 +232,11 @@ export default function Orders(props: OrdersProps) {
         setSettings={setSettings}
       />
       {filters}
-      <OffersTable
+      <OrdersTable
         mode={props.mode}
-        offers={filteredOffers.current}
+        orders={filteredOrders.current}
         seCurrentOrder={seCurrentOrder}
-        validOffers={validOffers}
+        validOrders={validOrders}
       />
     </>
   );

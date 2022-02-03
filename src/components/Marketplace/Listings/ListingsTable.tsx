@@ -75,7 +75,7 @@ function ListingRow({
           margin="-10px 0 0 10px"
         />
       </TableCell>
-      {/* # of pods remaining to harvest before this offer to sell expires */}
+      {/* # of pods remaining to harvest before this order to sell expires */}
       <BalanceTableCell
         className={classes.lucidaStyle}
         label={`- If the pod line moves forward ${displayBN(relativeExpiry)} Pods, this listing will automatically expire.`}
@@ -195,7 +195,7 @@ type ListingsTableProps = {
 }
 
 /**
- * A Listing = an Offer to Sell.
+ * A Listing = an Order to Sell.
  * A User can purchase the Pods in a Listing.
  */
 export default function ListingsTable(props: ListingsTableProps) {

@@ -29,9 +29,9 @@ export default function TabbedMarketplace() {
   ];
   const sections = [<MarketplaceBuyModule />, <MarketplaceSellModule />];
 
-  const subSectionTitles = ['My Offers', 'My Listings'];
+  const subSectionTitles = ['My Orders', 'My Listings'];
   const subSectionTitlesDescription = [
-    marketStrings.myOffers,
+    marketStrings.myOrders,
     marketStrings.myListings,
   ];
   const subSections = [
@@ -51,7 +51,7 @@ export default function TabbedMarketplace() {
         showButton={false}
       >
         {/**
-          * My Offers and My Listings */}
+          * My Orders and My Listings */}
         {subSections[subSection]}
       </BaseModule>
     </Box>

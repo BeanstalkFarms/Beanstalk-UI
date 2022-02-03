@@ -29,7 +29,7 @@ import {
   TransactionToast,
 } from 'components/Common';
 import { PodOrder } from 'state/marketplace/reducer';
-import OffersTable from './OrdersTable';
+import OrdersTable from './OrdersTable';
 
 type FillOrderModalProps = {
   currentOrder: PodOrder;
@@ -48,7 +48,7 @@ export default function FillOrderModal({
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The selected Plot index. */
   const [start, setStart] = useState(new BigNumber(-1));
-  /** The amount of Pods the User is willing to sell into this Offer */
+  /** The amount of Pods the User is willing to sell into this Order */
   const [amount, setAmount] = useState(new BigNumber(0));
 
   const { width } = useSelector<AppState, AppState['general']>(
@@ -66,14 +66,14 @@ export default function FillOrderModal({
   // Derived values
   const leftMargin = width < 800 ? 0 : 120;
 
-  // When the modal re-renders for a new offer,
+  // When the modal re-renders for a new Order,
   // reset state.
   useEffect(() => {
     setIndex(new BigNumber(-1));
     setAmount(new BigNumber(0));
   }, [currentOrder]);
 
-  // If no offer selected, exit
+  // If no order selected, exit
   if (currentOrder == null) {
     return null;
   }
@@ -96,8 +96,8 @@ export default function FillOrderModal({
       ? BigNumber.minimum(
         // The total amount requested by the buyer
         currentOrder.remainingAmount,
-        // The number of pods in this plot that we can sell into the offer
-        // Ex. User A creates a Buy Offer with relatiive index 100,000.
+        // The number of pods in this plot that we can sell into the order
+        // Ex. User A creates a Buy order with relatiive index 100,000.
         //     I have a plot at index 99,900 with 200 plots in it.
         //     Only 100 of these are eligible to sell.
         (currentOrder.maxPlaceInLine).minus(plots[selectedPlotIndex]),
@@ -133,7 +133,7 @@ export default function FillOrderModal({
     }
     const newIndex = new BigNumber(event.target.value);
     const _max = getMaxAmountCanSell(newIndex);
-    console.log(`SellIntoOfferModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${_max}`);
+    console.log(`SellIntoorderModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${_max}`);
     setIndex(newIndex);
     setAmount(_max);
     setStart(new BigNumber(0));
@@ -194,7 +194,7 @@ export default function FillOrderModal({
 
   // Handle form submission
   // Sell some or all pods from a plot the user owns into an
-  // existing buy offer.
+  // existing buy order.
   const handleForm = async () => {
     // const plotKey = index.toString();
     // const plotToSellFrom = plots[plotKey];
@@ -219,7 +219,7 @@ export default function FillOrderModal({
 
     // Execute
     // console.log(index.toString(), plotToSellFrom.toString(), amount.toString(), start);
-    // console.log(`Selling into a buy offer from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`, params);
+    // console.log(`Selling into a buy order from plot ${plotKey}; ${amount} of ${plotToSellFrom} pods`, params);
     fillPodOrder(
       params,
       (response) => {
@@ -286,11 +286,11 @@ export default function FillOrderModal({
         isDisabled={isDisabled}
       >
         {/**
-          * Show the offer we're selling into.
+          * Show the order we're selling into.
           */}
-        <OffersTable
+        <OrdersTable
           mode="ALL"
-          offers={[currentOrder]}
+          orders={[currentOrder]}
         />
         <Box sx={{ marginTop: 20 }}>
           {/**

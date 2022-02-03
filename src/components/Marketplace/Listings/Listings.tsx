@@ -27,7 +27,7 @@ type ListingsProps = {
 }
 
 /**
- * A Listing = an Offer to Sell.
+ * A Listing = an Order to Sell.
  * A User can purchase the Pods in a Listing.
  */
 export default function Listings(props: ListingsProps) {

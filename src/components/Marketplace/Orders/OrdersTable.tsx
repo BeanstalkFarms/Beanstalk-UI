@@ -48,7 +48,7 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
     </>
   );
   /** Do we have any plots whose index is smaller than max place in line? if so then we can sell */
-  // const canSell = Object.keys(plots).some((index) => offer.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
+  // const canSell = Object.keys(plots).some((index) => order.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
 
   return (
     <TableRow>
@@ -85,14 +85,14 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
           >
             {displayBN(order.filledAmount)} / {displayBN(order.totalAmount)}
           </BalanceTableCell>
-          {/* Cancel this offer */}
+          {/* Cancel this Order */}
           <TableCell align="center">
             <IconButton
               onClick={async () => {
                 // Toast
                 const txToast = new TransactionToast({
-                  loading: `Cancelling buy offer for ${displayBN(numPodsLeft)} Pods at ${displayBN(order.pricePerPod)} Beans per Pod`,
-                  success: 'Buy offer cancelled',
+                  loading: `Cancelling order for ${displayBN(numPodsLeft)} Pods at ${displayBN(order.pricePerPod)} Beans per Pod`,
+                  success: 'Order cancelled',
                 });
 
                 // Execute
@@ -119,7 +119,7 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
         </>
       ) : (
         <>
-          {/* # of pods remaining in this offer */}
+          {/* # of pods remaining in this Order */}
           <BalanceTableCell
             className={classes.lucidaStyle}
             label="Pods Requested"
@@ -128,7 +128,7 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
           >
             {displayBN(numPodsLeft)}
           </BalanceTableCell>
-          {/* Sell into this offer; only show if handler is set */}
+          {/* Sell into this Order; only show if handler is set */}
           {seCurrentOrder && (
             <TableCell align="center">
               <IconButton
@@ -152,16 +152,16 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
   );
 }
 
-type OffersTableProps = {
+type OrdersTableProps = {
   mode: 'ALL' | 'MINE';
-  offers: PodOrder[];
+  orders: PodOrder[];
   seCurrentOrder?: Function;
 }
 
 /**
- * Offers ("Offers to Buy")
+ * Orders
  */
-export default function OffersTable(props: OffersTableProps) {
+export default function OrdersTable(props: OrdersTableProps) {
   const classes = useStyles();
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
@@ -169,17 +169,17 @@ export default function OffersTable(props: OffersTableProps) {
   /** */
   const [page, setPage] = useState<number>(0);
 
-  if (!props.offers || props.offers.length === 0) {
+  if (!props.orders || props.orders.length === 0) {
     return (
       <div>
-        <h4 style={{ }}>No active offers given the current filters</h4>
+        <h4 style={{ }}>No active orders given the current filters</h4>
       </div>
     );
   }
 
   //
   const rowsPerPage = 5;
-  const slicedItems = props.offers
+  const slicedItems = props.orders
     .sort((a, b) => a.maxPlaceInLine - b.maxPlaceInLine)
     .slice(
       page * rowsPerPage,
@@ -207,22 +207,22 @@ export default function OffersTable(props: OffersTableProps) {
                 </TableCell>
               </TableRow>
             </TableHead>
-            {slicedItems.map((offer: PodOrder) => (
+            {slicedItems.map((order: PodOrder) => (
               <OrderRow
-                key={offer.id}
-                order={offer}
+                key={order.id}
+                order={order}
                 seCurrentOrder={props.seCurrentOrder}
                 isMine
               />
             ))}
           </Table>
         </TableContainer>
-        {/* display page button if user has more offers than rowsPerPage. */}
-        {Object.keys(props.offers).length > rowsPerPage
+        {/* display page button if user has more Orders than rowsPerPage. */}
+        {Object.keys(props.orders).length > rowsPerPage
           ? (
             <TablePagination
               component="div"
-              count={props.offers.length}
+              count={props.orders.length}
               onPageChange={(event, p) => setPage(p)}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -261,21 +261,21 @@ export default function OffersTable(props: OffersTableProps) {
               )}
             </TableRow>
           </TableHead>
-          {slicedItems.map((offer: PodOrder) => (
+          {slicedItems.map((order: PodOrder) => (
             <OrderRow
-              key={offer.id}
-              order={offer}
+              key={order.id}
+              order={order}
               seCurrentOrder={props.seCurrentOrder}
             />
           ))}
         </Table>
       </TableContainer>
-      {/* display page button if user has more offers than rowsPerPage. */}
-      {Object.keys(props.offers).length > rowsPerPage
+      {/* display page button if user has more Orders than rowsPerPage. */}
+      {Object.keys(props.orders).length > rowsPerPage
         ? (
           <TablePagination
             component="div"
-            count={props.offers.length}
+            count={props.orders.length}
             onPageChange={(event, p) => setPage(p)}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -292,6 +292,6 @@ export default function OffersTable(props: OffersTableProps) {
   );
 }
 
-OffersTable.defaultProps = {
+OrdersTable.defaultProps = {
   seCurrentOrder: undefined,
 };

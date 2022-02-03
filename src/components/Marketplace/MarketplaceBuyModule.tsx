@@ -11,8 +11,7 @@ import {
 import { BaseModule, marketStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
 
-import { CreateOfferModule } from './Orders/CreateOrderModule';
-// import Graph from './GraphModule';
+import { CreateOrderModule } from './Orders/CreateOrderModule';
 import Listings from './Listings/Listings';
 
 //
@@ -46,10 +45,10 @@ export default function MarketplaceBuyModule() {
   });
 
   // Sections
-  const sectionTitles = ['Buy Now', 'Create Offer'];
+  const sectionTitles = ['Buy Now', 'Create Order'];
   const sectionTitlesDescription = [
     marketStrings.buy,
-    marketStrings.createOffer,
+    marketStrings.createOrder,
   ];
 
   // Handlers
@@ -80,13 +79,13 @@ export default function MarketplaceBuyModule() {
 
   // NOTE: Can send ref to listings
   // FIXME: buyListingRef isn't used
-  const createOfferModuleRef = useRef<any>();
+  const createOrderModuleRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
         break;
       case 1:
-        createOfferModuleRef.current.handleForm();
+        createOrderModuleRef.current.handleForm();
         break;
       default:
         break;
@@ -97,8 +96,8 @@ export default function MarketplaceBuyModule() {
     <Listings
       mode="ALL"
     />,
-    <CreateOfferModule
-      ref={createOfferModuleRef}
+    <CreateOrderModule
+      ref={createOrderModuleRef}
       isFormDisabled={isFormDisabled}
       setIsFormDisabled={setIsFormDisabled}
       settings={settings}

@@ -42,7 +42,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const [start, setStart] = useState(new BigNumber(0));
   /** The amount of Pods listed from the plot. */
   const [totalAmount, setTotalAmount] = useState(new BigNumber(-1));
-  /** How far forward the Pod line needs to move before the offer expire. */
+  /** How far forward the Pod line needs to move before the order expire. */
   const [expiresIn, setExpiresIn] = useState(new BigNumber(-1));
   /** The price per pod. */
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
