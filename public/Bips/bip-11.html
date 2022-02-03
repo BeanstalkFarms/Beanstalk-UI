@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIP-11</title>
+  <link rel="stylesheet" href="bipStyle.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="bip-11-farmers-market">BIP-11: Farmers Market</h1>
+<h3 id="summary">Summary:</h3>
+<ul>
+  <li>Launch the Farmers Market as a decentralized way to buy and sell Pods through Beanstalk.</li>
+</ul>
+<h3 id="problem">Problem:</h3>
+<p>Currently, there is no way to exchange Pods in a decentralized fashion. Accordingly, there is little liquidity around Pods, and trades require trusting a third party.</p>
+<h3 id="proposed-solution">Proposed Solution:</h3>
+<p>We propose the Farmers Market, a decentralized Pod exchange. The Farmers market will support Pod Orders to purchase Pods and Pod Listings to sell Pods.</p>
+<h4 id="pod-orders">Pod Orders:</h4>
+<p>Anyone with Beans not in the Silo can Order Pods.</p>
+<p>A Pod Order has three inputs: (1) the maximum number of Pods to be purchased, (2) the maximum price per Pod, denominated in Beans, and (3) the maximum place in the Pod Line (i.e., the number of Pods that will become Harvestable before a given Pod) to purchase from.</p>
+<p>A Pod Order can be Cancelled at any time until it is Filled. To facilitate instant clearance, Beans are locked in a Pod Order until it is entirely Filled or Cancelled. Beans can only be locked in a single Pod Order at a time.</p>
+<h4 id="pod-listings">Pod Listings:</h4>
+<p>Pods that grow from Beans that were Sown in the same transaction form a Plot. Anyone with a Plot can List a whole or partial Plot for Beans. By default, the portion of a Plot in a partial Pod Listing that is farthest from the front of the Pod Line is Listed.</p>
+<p>A Pod Listing has five inputs: (1) the Plot being Listed, (2) the difference between the front of the portion of the Plot included in the Pod Listing from the front of the whole Plot, denominated in Pods, where a null input Lists from the back of the Plot, (3) the number of Pods in the Plot for sale, where a null input Lists the whole Plot, (4) the minimum price per Pod, denominated in Beans, and (5) the maximum number of total Harvestable Pods over all Seasons before the Pod Listing expires.</p>
+<p>A Pod Listing can be Cancelled at any time until it is entirely Filled. Plots can only be Listed in a single Pod Listing at a time. Pod Listings are automatically Cancelled if the owner of the Plot transfers or re-Lists any Pods in the Plot.</p>
+<h3>To see the full GitHub submission, <a href="https://github.com/BeanstalkFarms/Beanstalk/pull/44" target="break">click here</a>.</h3>
+</div>
+</body>
+
+</html>
