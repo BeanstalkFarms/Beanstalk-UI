@@ -181,10 +181,10 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
       const coordinate = circlePositions[foundIndex];
 
       // Show tooltip at bottom-right corner of circle position.
-      // Nudge two pixels inward to make hovering easier.
+      // Nudge 10 pixels inward to make hovering easier.
       showTooltip({
-        tooltipLeft: coordinate.x + coordinate.radius / Math.sqrt(2) - 2,
-        tooltipTop: coordinate.y + coordinate.radius / Math.sqrt(2) - 2,
+        tooltipLeft: coordinate.x + coordinate.radius / Math.sqrt(2) - 10 - 180,
+        tooltipTop: coordinate.y + coordinate.radius / Math.sqrt(2) - 4,
         tooltipData: foundIndex,
       });
     } else {
@@ -352,6 +352,7 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
                     padding: '0.3rem 0.5rem',
                     borderRadius: 10,
                     pointerEvents: 'auto',
+                    zIndex: 99999,
                   }}
                   applyPositionStyle
                 >
