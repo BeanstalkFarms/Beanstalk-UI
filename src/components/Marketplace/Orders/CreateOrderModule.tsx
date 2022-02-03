@@ -165,13 +165,14 @@ export const CreateOfferModule = forwardRef((props: CreateOfferModuleProps, ref)
       label="Place in Pod Line"
       description={marketStrings.placeInPodLine}
       handleChange={handleInputChange}
+      placeholder={totalPods.toFixed()}
+      value={TrimBN(maxPlaceInLineValue, 6)}
+      error={maxPlaceInLineValue.isLessThan(toPodValue)}
+      // Enable sliders
+      range
       handleSlider={(event) => {
         setMaxPlaceInLineValue(new BigNumber(event));
       }}
-      placeholder={totalPods.toFixed()}
-      value={TrimBN(maxPlaceInLineValue, 6)}
-      range
-      error={maxPlaceInLineValue.isLessThan(toPodValue)}
     />
   );
 

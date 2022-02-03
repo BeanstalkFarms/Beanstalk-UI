@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Box, Button, InputAdornment, Slider, TextField } from '@material-ui/core';
+import React from 'react';
+import { Box, Grid, Slider, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import BigNumber from 'bignumber.js';
 
 import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/index';
 import { theme } from 'constants/index';
 
-import { FormatTooltip, TokenTypeImageModule, QuestionModule } from './index';
+import { FormatTooltip, QuestionModule } from './index';
 
 const useStyles = makeStyles({
   inputText: {
@@ -35,22 +35,8 @@ const useStyles = makeStyles({
   },
 });
 
-const maxStyle = {
-  backgroundColor: theme.primary,
-  borderRadius: '30px',
-  color: theme.accentText,
-  fontSize: '13px',
-  fontFamily: 'Futura-PT-Book',
-  height: '25px',
-  minWidth: '50px',
-};
-const tokenTypeImageStyle = {
-  height: '30px',
-  marginLeft: '5px',
-  width: '20px',
-};
-
-export type TokenInputFieldProps = {
+// NOTE: high overlap with TokenInputFieldProps
+export type PlotRangeInputFieldProps = {
   /** Input label */
   label: string | null;
   /** ??? */
@@ -79,7 +65,7 @@ export type TokenInputFieldProps = {
   handleSlider: Function;
   // Input values
   /** The numerical value stored in the Input */
-  value: BigNumber;
+  value: [BigNumber, BigNumber]; // two endpoints
   /** Input placeholder */
   placeholder?: string;
   /** Error */
@@ -88,34 +74,22 @@ export type TokenInputFieldProps = {
   description: string;
 }
 
-export default function TokenInputField(props: TokenInputFieldProps) {
+/**
+ * NOTE:
+ * This component a temporary hack to ship the Pod Market quickly.
+ * This input field should be standardized and handle 1 or 2 inputs
+ * without needing to create a second type of component.
+ */
+export default function TokenInputField(props: PlotRangeInputFieldProps) {
   const classes = useStyles();
   /** */
-  const [displayValue, setDisplayValue] = useState('');
+  // const [displayValue, setDisplayValue] = useState('');
   const label = props.label || TokenLabel(props.token);
 
-  function maxButton() {
-    if (props.maxHandler !== undefined) {
-      return (
-        <Button
-          onClick={props.maxHandler}
-          style={maxStyle}
-          disabled={props.locked}>
-          Max
-        </Button>
-      );
-    }
-  }
-
-  const handleChange = (event) => {
-    setDisplayValue(event.target.value);
-    props.handleChange(event);
+  const handleChange = (value: PlotRangeInputFieldProps['value']) => {
+    // setDisplayValue(event.target.value);
+    props.handleChange(value);
   };
-  const handleSlider = (event, newEvent) => {
-    setDisplayValue(newEvent.toString());
-    props.handleSlider(newEvent);
-  };
-
   function displayLP(balance) {
     return `${displayBN(balance[0])} ${TokenLabel(
       CryptoAsset.Bean
@@ -129,28 +103,10 @@ export default function TokenInputField(props: TokenInputFieldProps) {
       : `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`;
   }
 
-  const endAdornment = (
-    <InputAdornment position="end">
-      {maxButton()}
-      <TokenTypeImageModule
-        style={tokenTypeImageStyle}
-        token={props.token}
-      />
-    </InputAdornment>
-  );
-
   // If we're provided a `range`
   let marks = null;
   let showSlider = null;
-  let startAdornment = null;
   if (props.balance && props.range) {
-    startAdornment = (
-      <InputAdornment position="start">
-        <span style={{ fontSize: 'calc(14px + 1vmin)', fontFamily: 'Lucida Console', display: 'flex' }}>
-          0&nbsp;-
-        </span>
-      </InputAdornment>
-    );
     marks = [
       {
         value: 0,
@@ -174,11 +130,16 @@ export default function TokenInputField(props: TokenInputFieldProps) {
           // NOTE: this assumes props.value is
           // a BigNumber. If we want to do multiple handles,
           // this needs to be an array.
-          value={props.value.toNumber()}
-          onChange={handleSlider}
+          value={[
+            props.value[0].toNumber(),
+            props.value[1].toNumber()
+          ]}
+          onChange={(event, newValue: number[]) => handleChange([
+            new BigNumber(newValue[0]),
+            new BigNumber(newValue[1]),
+          ])}
           aria-labelledby="input-slider"
           min={0}
-          step={10000}
           max={props.balance.toNumber()}
           marks={marks}
         />
@@ -217,47 +178,77 @@ export default function TokenInputField(props: TokenInputFieldProps) {
       {/* Allow a range slider */}
       {showSlider}
       {/* Show the text input field */}
-      <TextField
-        className="TextField-rounded"
-        placeholder={props.placeholder || '0.0000'}
-        variant="outlined"
-        size="medium"
-        type="number"
-        disabled={props.handleChange === undefined || props.locked}
-        error={Boolean(props.error)}
-        value={
-          props.value.isNegative()
-            ? ''
-            : (displayValue.length > 1 &&
-                displayValue.replaceAll('0', '').length === 0) ||
-              (props.value.toFixed() === '0' && displayValue === '') ||
-              (displayValue.indexOf('.') > -1 &&
-                displayValue.lastIndexOf('0') === displayValue.length - 1)
-            ? displayValue
-            : props.value.toFixed()
-        }
-        onChange={handleChange}
-        onWheel={(e) => e.target.blur()}
-        onKeyDown={(e) =>
-          (e.key === 'e' || e.key === '+' || e.key === '-') &&
-          e.preventDefault()
-        }
-        fullWidth
-        InputProps={{
-          // Styles
-          inputProps: {
-            min: 0.0,
-            step: 1.0,
-            inputMode: 'decimal',
-          },
-          classes: {
-            input: classes.inputText,
-          },
-          // Adornments
-          endAdornment,
-          startAdornment,
-        }}
-      />
+      <Grid container spacing={1}>
+        <Grid item xs>
+          <TextField
+            className="TextField-rounded"
+            placeholder={props.placeholder || '0.0000'}
+            variant="outlined"
+            size="medium"
+            type="number"
+            disabled={props.handleChange === undefined || props.locked}
+            error={Boolean(props.error)}
+            value={props.value[0].isLessThan(0) ? '0' : props.value[0].toFixed()}
+            onChange={(event) => {
+              // Change only the first item
+              handleChange([
+                new BigNumber(event.target?.value || -1),
+                props.value[1],
+              ]);
+            }}
+            onKeyDown={(e) =>
+              (e.key === 'e' || e.key === '+' || e.key === '-') &&
+              e.preventDefault()
+            }
+            fullWidth
+            InputProps={{
+              inputProps: {
+                min: 0.0,
+                step: 1.0,
+                inputMode: 'decimal',
+              },
+              classes: {
+                input: classes.inputText,
+              },
+            }}
+          />
+        </Grid>
+        <Grid item xs>
+          <TextField
+            className="TextField-rounded"
+            placeholder={props.placeholder || '0.0000'}
+            variant="outlined"
+            size="medium"
+            type="number"
+            disabled={props.handleChange === undefined || props.locked}
+            error={Boolean(props.error)}
+            value={props.value[1].isLessThan(0) ? '0' : props.value[1].toFixed()}
+            onChange={(event) => {
+              // Change only the second item
+              handleChange([
+                props.value[0],
+                new BigNumber(event.target?.value || -1),
+              ]);
+            }}
+            onKeyDown={(e) =>
+              (e.key === 'e' || e.key === '+' || e.key === '-') &&
+              e.preventDefault()
+            }
+            fullWidth
+            InputProps={{
+              inputProps: {
+                min: 0.0,
+                step: 1.0,
+                inputMode: 'decimal',
+              },
+              classes: {
+                input: classes.inputText,
+              },
+            }}
+          />
+        </Grid>
+      </Grid>
+      {/* <pre>{JSON.stringify(props.value)}</pre> */}
     </Box>
   );
 }

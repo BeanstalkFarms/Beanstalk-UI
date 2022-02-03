@@ -1,6 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
-// import { Box } from '@material-ui/core';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { PodListing } from 'state/marketplace/reducer';
@@ -14,6 +13,7 @@ import {
   createPodListing,
   toStringBaseUnitBN,
   TrimBN,
+  MaxBN,
 } from 'util/index';
 import {
   PlotListInputField,
@@ -24,6 +24,7 @@ import {
   TransactionDetailsModule,
   TransactionToast,
 } from 'components/Common';
+import PlotRangeInputField from 'components/Common/PlotRangeInputField';
 import ListingsTable from './ListingsTable';
 
 type CreateListingModuleProps = {
@@ -63,7 +64,9 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     // TODO: rest (???)
     const canSell = pricePerPodValue.isLessThanOrEqualTo(1);
     if (canSell) {
-      console.log(index, pricePerPodValue, totalAmount, expiresIn);
+      // console.log(`setListing`, {
+      //   index, pricePerPodValue, totalAmount, expiresIn
+      // });
       setListing({
         index,
         pricePerPod: pricePerPodValue,
@@ -75,25 +78,27 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     }
   }, [index, setListing, pricePerPodValue, totalAmount, expiresIn]);
 
-  function fromIndexValueUpdated(newStartNumber: BigNumber, newAmountNumber: BigNumber) {
-    const newStartValue = MinBN(
-      new BigNumber(newStartNumber),
-      amountInSelectedPlot
-    );
-    const newAmountValue = MinBN(new BigNumber(newAmountNumber), totalAmount);
-    setStart(TrimBN(newStartValue, BEAN.decimals));
-    setTotalAmount(TrimBN(newAmountValue, BEAN.decimals));
-  }
+  // function fromIndexValueUpdated(newStartNumber: BigNumber, newAmountNumber: BigNumber) {
+  //   const newStartValue = MinBN(
+  //     new BigNumber(newStartNumber),
+  //     amountInSelectedPlot
+  //   );
+  //   const newAmountValue = MinBN(new BigNumber(newAmountNumber), totalAmount);
+  //   setStart(TrimBN(newStartValue, BEAN.decimals));
+  //   setTotalAmount(TrimBN(newAmountValue, BEAN.decimals));
+  // }
 
   /** */
   const handlePlotChange = (event) => {
     const newIndex = new BigNumber(event.target.value);
     const newAmount = new BigNumber(props.plots[event.target.value]);
+    // Select the plot
     setIndex(newIndex);
-    setTotalAmount(TrimBN(newAmount, 6));
-    setExpiresIn(newIndex.minus(harvestableIndex));
-    setPricePerPodValue(new BigNumber(-1));
-    setStart(new BigNumber(0));
+    // Set defaults
+    setTotalAmount(TrimBN(newAmount, 6));           // Default: sell the whole plot
+    setExpiresIn(newIndex.minus(harvestableIndex)); // Default: expire when the plot harvests
+    setPricePerPodValue(new BigNumber(-1));         // Default: no price
+    setStart(new BigNumber(0));                     // Default: sell entire plot, so start = 0
   };
   /** */
   const handlePriceChange = (event) => {
@@ -111,35 +116,43 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     const newToPodValue = event.target.value !== ''
       ? new BigNumber(event.target.value)
       : new BigNumber(0);
+
+    // BACK-OF-PLOT LOGIC
+    // If changing the amount, move `start` forward by the
+    // start = 0, newToPodValue = 1000, totalAmount = 1900
+    // delta = -900
+    // start - delta = 0 - (-900) = 900.
+    const delta = newToPodValue.minus(totalAmount);
+    setStart(
+      MaxBN(
+        start.minus(delta),
+        new BigNumber(0),
+      )
+    );
     // CONSTRAINT: Amount can't be greater than size of selected plot.
     if (amountInSelectedPlot.lt(newToPodValue)) {
       setTotalAmount(amountInSelectedPlot);
-      return;
+    } else {
+      setTotalAmount(newToPodValue);
     }
-    setTotalAmount(newToPodValue);
   };
   // Handle start change
-  const handleStartChange = (event) => {
-    if (event.target.value) {
-      fromIndexValueUpdated(event.target.value, amountInSelectedPlot);
-    } else {
-      fromIndexValueUpdated(new BigNumber(0), amountInSelectedPlot);
-    }
-  };
+  // const handleStartChange = (event) => {
+  //   if (event.target.value) {
+  //     fromIndexValueUpdated(event.target.value, amountInSelectedPlot);
+  //   } else {
+  //     fromIndexValueUpdated(new BigNumber(0), amountInSelectedPlot);
+  //   }
+  // };
+
   /** */
   const handleExpireChange = (event) => {
     const newExpiresinValue = new BigNumber(event.target.value);
-    // console.log('index', index.toNumber());
-    // console.log('newExpiresinValue', newExpiresinValue.toNumber());
-    // console.log('harvestableIndex', harvestableIndex.toNumber());
-
-    // Price can't be created greater than 1
+    // CONSTRAINT: Expiry can't be bigger than podline length
     if (
       index != null &&
       newExpiresinValue.isGreaterThanOrEqualTo(index.minus(harvestableIndex))
     ) {
-      console.log(newExpiresinValue.toFixed());
-      console.log(index.minus(harvestableIndex).toFixed());
       setExpiresIn(index.minus(harvestableIndex));
     } else {
       setExpiresIn(newExpiresinValue);
@@ -172,11 +185,36 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     />
   );
   const startField = (
-    <PlotInputField
-      key={0}
-      handleChange={handleStartChange}
-      label="Start Index"
-      value={TrimBN(start, 6)}
+    // The slice of the plot we're selling.
+    // This can range from:
+    //  MIN:   0
+    //  START: start
+    //  END:   start + totalAmount 
+    //  MAX:   amountInSelectedPlot
+    <PlotRangeInputField
+      label="Plot Slice"
+      value={[
+        TrimBN(start, 6),                   // `start` is held in state
+        TrimBN(start.plus(totalAmount), 6)  // `end` is calculated depending on `start` and `totalAmount`.
+      ]}
+      range
+      balance={amountInSelectedPlot}
+      handleChange={(event: BigNumber[]) => {
+        setStart(
+          // CONSTRAINT: start > 0
+          MaxBN(
+            new BigNumber(0),
+            event[0]
+          )
+        );
+        setTotalAmount(
+          // CONSTRAINT: totalAmount <= amountInSeletedPlot
+          MinBN(
+            amountInSelectedPlot,
+            event[1].minus(event[0]),
+          )
+        );
+      }}
       minHandler={minMaxHandler}
       error={errorAmount}
     />
