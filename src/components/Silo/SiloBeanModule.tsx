@@ -146,10 +146,15 @@ export default function SiloBeanModule() {
     }
   };
 
+  // If you withdraw LP and you have `convertLP` on,
+  // convert that LP to the underlying beans and eth,
+  // you can reuse those in the same transaction
+  // add claimLPBeans
+  // claimable lp tokens that I withdrew; can use the beans
+  // in the same contract
   const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
     ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
-
   const ethClaimable = claimableEthBalance.plus(
     poolForLPRatio(lpReceivableBalance)[1]
   );
