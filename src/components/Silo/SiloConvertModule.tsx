@@ -8,7 +8,7 @@ import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
 } from 'state/allowances/actions';
-import { BASE_SLIPPAGE } from 'constants/index';
+import { CONVERT_BEAN_SLIPPAGE, CONVERT_LP_SLIPPAGE } from 'constants/index';
 import {
   approveBeanstalkBean,
   approveBeanstalkLP,
@@ -69,7 +69,7 @@ export default function SiloConvertModule() {
   const [section, setSection] = useState(+beanPrice.isGreaterThanOrEqualTo(1));
   const [sectionInfo, setSectionInfo] = useState(0);
   const [settings, setSettings] = useState({
-    slippage: new BigNumber(BASE_SLIPPAGE),
+    slippage: new BigNumber(CONVERT_LP_SLIPPAGE),
   });
   const [page, setPage] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
@@ -90,9 +90,15 @@ export default function SiloConvertModule() {
     if (newSection !== section) {
       setSection(newSection);
       setIsFormDisabled(true);
-      setSettings({
-        slippage: new BigNumber(BASE_SLIPPAGE),
-      });
+      if (newSection === 1) {
+        setSettings({
+          slippage: new BigNumber(CONVERT_BEAN_SLIPPAGE),
+        });
+      } else {
+        setSettings({
+          slippage: new BigNumber(CONVERT_LP_SLIPPAGE),
+        });
+      }
     }
   };
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
