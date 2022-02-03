@@ -192,13 +192,15 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     //  END:   start + totalAmount 
     //  MAX:   amountInSelectedPlot
     <PlotRangeInputField
-      label="Plot Slice"
+      label="Select region of plot"
       value={[
         TrimBN(start, 6),                   // `start` is held in state
         TrimBN(start.plus(totalAmount), 6)  // `end` is calculated depending on `start` and `totalAmount`.
       ]}
       range
       balance={amountInSelectedPlot}
+      // `handleChange` is called for both the slider
+      // and the inputs. keeps things standardized.
       handleChange={(event: BigNumber[]) => {
         setStart(
           // CONSTRAINT: start > 0
@@ -227,7 +229,12 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       value={TrimBN(totalAmount, 6)}
       maxHandler={() => {
         if (index != null) {
-          setTotalAmount(amountInSelectedPlot);
+          // hack: use our existing logic but fake an event object
+          handlePodChange({
+            target: {
+              value: amountInSelectedPlot
+            }
+          });
         }
       }}
     />
