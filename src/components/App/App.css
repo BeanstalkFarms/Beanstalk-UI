@@ -136,7 +136,7 @@
 }
 @keyframes slideLeft {
   from { left: 0; }
-  to { left: 150%; }
+  to { left: 200%; }
 }
 .cloud-1 {
   position: fixed;
@@ -159,11 +159,11 @@
 
 #cloud1 {
   animation: slideLeft 65s linear infinite;
-  margin-left: -50%;
+  margin-left: -100%;
 }
 #cloud2 {
   animation: slideLeft 50s linear infinite;
-  margin-left: -50%;
+  margin-left: -100%;
 }
 
 @media screen and (max-width: 599px) {
