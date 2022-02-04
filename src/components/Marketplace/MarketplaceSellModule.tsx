@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
-import { PodListing } from 'state/marketplace/reducer';
+import { PodListing, PodOrder } from 'state/marketplace/reducer';
 import {
   BaseModule,
   marketStrings,
@@ -22,7 +22,13 @@ type PodListingState = {
   expiresIn: PodListing['maxHarvestableIndex'];
 }
 
-export default function MarketplaceSellModule() {
+type MarketplaceSellModuleProps = {
+  currentOrder: PodOrder | null;
+  setCurrentOrder: Function;
+}
+
+
+export default function MarketplaceSellModule(props: MarketplaceSellModuleProps) {
   // Global state
   const { harvestablePodBalance, plots } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
@@ -77,6 +83,8 @@ export default function MarketplaceSellModule() {
   const sections = [
     <Orders
       mode="ALL"
+      currentOrder={props.currentOrder}
+      setCurrentOrder={props.setCurrentOrder}
     />,
     <CreateListingModule
       ref={createListingModuleRef}

@@ -206,6 +206,10 @@ type ListingsTableProps = {
  * A User can purchase the Pods in a Listing.
  */
 export default function ListingsTable(props: ListingsTableProps) {
+  console.log('props.setCurrentListing', props.setCurrentListing);
+  // console.log('setCurrentListing', setCurrentListing);
+
+
   const [selectedListingIndex, setSelectedListingIndex] = React.useState<string>('');
   const handleListingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedListingIndex((event.target.value));

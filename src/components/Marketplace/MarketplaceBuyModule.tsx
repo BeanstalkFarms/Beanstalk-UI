@@ -14,9 +14,16 @@ import { BASE_SLIPPAGE } from 'constants/index';
 
 import { CreateOrderModule } from './Orders/CreateOrderModule';
 import Listings from './Listings/Listings';
+import { PodListing } from 'state/marketplace/reducer';
+
+type MarketplaceBuyModuleProps = {
+  currentListing: PodListing | null;
+  setCurrentListing: Function;
+}
+
 
 //
-export default function MarketplaceBuyModule() {
+export default function MarketplaceBuyModule(props: MarketplaceBuyModuleProps) {
   // Global state
   const {
     beanPrice,
@@ -96,6 +103,8 @@ export default function MarketplaceBuyModule() {
   const sections = [
     <Listings
       mode="ALL"
+      currentListing={props.currentListing}
+      setCurrentListing={props.setCurrentListing}
     />,
     <CreateOrderModule
       ref={createOrderModuleRef}

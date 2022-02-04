@@ -35,7 +35,13 @@ export default function TabbedMarketplace() {
     marketStrings.buyPods,
     marketStrings.sellPods,
   ];
-  const sections = [<MarketplaceBuyModule />, <MarketplaceSellModule />];
+  const sections = [<MarketplaceBuyModule       
+    currentListing={currentListing}
+    setCurrentListing={setCurrentListing}/>, 
+    <MarketplaceSellModule 
+    currentOrder={currentOrder}
+    setCurrentOrder={setCurrentOrder}
+    />];
 
   const subSectionTitles = ['My Orders', 'My Listings'];
   const subSectionTitlesDescription = [

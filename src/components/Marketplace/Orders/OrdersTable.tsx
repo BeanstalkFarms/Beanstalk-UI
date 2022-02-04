@@ -311,7 +311,7 @@ export default function OrdersTable(props: OrdersTableProps) {
           <TablePagination
             component="div"
             count={props.orders.length}
-            onPageChange={(event, p) => setPage(p)}
+            onPageChange={(event, p) => { setPage(p); setSelectedOrderKey('') }}
             page={page}
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={[]}
