@@ -76,10 +76,6 @@ export const walletStrings = {
     'These are your Beans which are Deposited in the Silo. This includes Beans you have been paid as interest on your Stalk holdings. For more information on your Deposited Beans, look in the Silo module.',
   lpSiloBalance:
     'These are your BEAN:ETH LP Tokens which are Deposited in the Silo. For more information on your Deposited BEAN:ETH LP Tokens, look in the Silo module.',
-  beanTransitBalance:
-    'These are your total Beans which are in Unclaimable Withdrawals. Withdrawals become Claimable 24 Full Seasons after Withdrawal. For more information on your Withdrawn Beans, look in the Silo module.',
-  lpTransitBalance:
-    'These are your total BEAN:ETH LP Tokens which are in Unclaimable Withdrawals. Withdrawals become Claimable 24 Full Seasons after Withdrawal. For more information on your Withdrawn BEAN:ETH LP Tokens, look in the Silo module.',
   claimableBeanBalance:
     'These are your total Claimable Beans which are from Pod Harvests and Withdrawals. For more information on your Claimable Bean Withdrawals, look in the Silo module. For more information on your Harvestable Pods, look in the Field module.',
   claimablelpBalance:
@@ -147,7 +143,7 @@ export const siloStrings = {
   beanDeposit:
     'Use this sub-tab to deposit Beans to the Silo. You can toggle the settings to deposit from Beans, ETH, or both.',
   beanWithdraw:
-    'Use this sub-tab to withdraw Beans from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
+    'Use this sub-tab to withdraw Beans from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
   beanClaim: 'Use this sub-tab to Claim Withrawn BEAN:ETH LP Tokens from the Silo.',
   beanDepositsTable: 'View all your current Bean Deposits in this table.',
   beanWithdrawalsTable: 'View all your current Bean Withdrawals in this table.',
@@ -158,7 +154,7 @@ export const siloStrings = {
   lpDeposit:
     'Use this sub-tab to deposit BEAN:ETH LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited BEAN:ETH LP Tokens.',
   lpWithdraw:
-    'Use this sub-tab to withdraw BEAN:ETH LP Tokens from the Silo. Withdrawals will be claimable 24 full Seasons after withdrawal.',
+    'Use this sub-tab to withdraw BEAN:ETH LP Tokens from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
   lpClaim: 'Use this sub-tab to Claim Withrawn BEAN:ETH LP Tokens from the Silo.',
   lpDepositsTable: 'View all your current LP Token Deposits in this table.',
   lpWithdrawalsTable:
@@ -166,11 +162,13 @@ export const siloStrings = {
   lpAPY:
     'The LP APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
   siloDescription:
-    'The Silo is the Beanstalk DAO. Silo Members earn passive interest during Bean supply increases. Anyone can become a Silo Member by depositing Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module below in exchange for Stalk and Seeds. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. The Seed token yields .0001 Stalk every Season. No action is ever required of Silo Members. All Stalk and Seeds associated with a Deposit are forfeited upon withdrawal. All Withdrawals are frozen for 24 full Seasons.',
+    'The Silo is the Beanstalk DAO. Silo Members earn passive interest during Bean supply increases. Anyone can become a Silo Member by depositing Beans or LP Tokens for the BEAN:ETH Uniswap pool in the Silo module below in exchange for Stalk and Seeds. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. The Seed token yields .0001 Stalk every Season. No action is ever required of Silo Members. All Stalk and Seeds associated with a Deposit are forfeited upon withdrawal. All Withdrawals are frozen for {0} full Seasons.',
   withdrawWarning:
-    'WARNING: Your Withdrawal will be frozen for 24 full Seasons.',
+    'WARNING: Your Withdrawal will be frozen for {0} full Seasons.',
   convertLPDeposit: 'Use this sub-tab to convert Deposited BEAN:ETH LP Tokens to Deposited Beans when P < $1.',
   convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited BEAN:ETH LP Tokens when P > $1.',
+  withdrawSeasons: 'The amount of full Seasons that it will take to withdraw Deposited assets.',
+  decreaseSeasons: 'The amount of Seasons until the Seasons required for withdraw decreases by 1.',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',

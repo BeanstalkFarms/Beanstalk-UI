@@ -166,6 +166,7 @@ export default function Updater() {
         budget2,
         budget3,
         totalCurveBeans,
+        withdrawSeasons,
       ] = totalBalances;
       const totalBudgetBeans = budget0.plus(budget1).plus(budget2).plus(budget3);
       const [bips, hasActiveBIP] = bipInfo;
@@ -185,6 +186,7 @@ export default function Updater() {
           totalStalk,
           totalPods,
           totalRoots,
+          withdrawSeasons,
         })
       );
       dispatch(

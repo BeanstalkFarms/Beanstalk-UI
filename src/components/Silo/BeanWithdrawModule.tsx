@@ -224,7 +224,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           </span>
           <br />
           <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
-            {siloStrings.withdrawWarning}
+            {siloStrings.withdrawWarning.replace('{0}', props.withdrawSeasons)}
           </span>
         </Box>
       </>

@@ -17,6 +17,7 @@ export interface TotalBalanceState {
   totalRoots: BigNumber;
   harvestableBeansPerSeason7: BigNumber;
   harvestableBeansPerSeason30: BigNumber;
+  withdrawSeasons: BigNumber;
 }
 
 export const initialState: TotalBalanceState = {
@@ -34,6 +35,7 @@ export const initialState: TotalBalanceState = {
   totalRoots: new BigNumber(-1),
   harvestableBeansPerSeason7: new BigNumber(-1),
   harvestableBeansPerSeason30: new BigNumber(-1),
+  withdrawSeasons: new BigNumber(-1),
 };
 
 export default createReducer(initialState, (builder) =>
