@@ -11,7 +11,8 @@ import {
   IconButton,
   TablePagination,
   Radio,
-  Button
+  Button,
+  Box
 } from '@material-ui/core';
 import {
   CloseOutlined as CancelIcon,
@@ -31,10 +32,11 @@ type OrderRowProps = {
   isMine: boolean;
   selectedOrderKey?: number;
   handleOrderChange?: Function;
+  setSelectedOrderKey?: Function;
   isSelling?: boolean;
 }
 
-function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSelling }: OrderRowProps) {
+function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSelling, setSelectedOrderKey }: OrderRowProps) {
   const classes = useStyles();
   // const { plots } = useSelector<AppState, AppState['userBalance']>(
   //   (state) => state.userBalance
@@ -55,7 +57,7 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
   // const canSell = Object.keys(plots).some((index) => order.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
 
   return (
-    <TableRow>
+    <TableRow hover onClick={() => setSelectedOrderKey(order.id)} style={{ cursor: 'pointer' }}>
       {/* Place in line */}
       <TableCell className={classes.lucidaStyle}>
         <span>0 — {displayBN(order.maxPlaceInLine)}</span>
@@ -141,7 +143,7 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
                 value={order.id}
                 name="radio-buttons"
                 inputProps={{ 'aria-label': order.id }}
-             />
+            />
 
               {/* <IconButton
                 onClick={() => seCurrentOrder(order)}
@@ -283,6 +285,7 @@ export default function OrdersTable(props: OrdersTableProps) {
               key={order.id}
               order={order}
               selectedOrderKey={selectedOrderKey}
+              setSelectedOrderKey={setSelectedOrderKey}
               handleOrderChange={handleOrderChange}
               isSelling={props.isSelling}
             />

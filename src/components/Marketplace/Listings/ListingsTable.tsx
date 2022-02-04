@@ -31,7 +31,8 @@ import { useStyles } from '../TableStyles';
 type ListingRowProps = {
   listing: PodListing;
   harvestableIndex: AppState['weather']['harvestableIndex'];
-  selectedListingIndex?: number;
+  setSelectedListingIndex?: Function;
+  selectedListingIndex?: string;
   handleListingChange?: Function;
   enableControls: boolean;
   isMine: boolean;
@@ -41,6 +42,7 @@ type ListingRowProps = {
 function ListingRow({
   listing,
   harvestableIndex,
+  setSelectedListingIndex,
   selectedListingIndex,
   handleListingChange,
   enableControls,
@@ -64,7 +66,7 @@ function ListingRow({
     </>
   );
   return (
-    <TableRow>
+    <TableRow hover onClick={() => setSelectedListingIndex(listing.index.toString())} style={{ cursor: 'pointer' }}>
       {/* Place in line */}
       <TableCell
         align="left"
@@ -206,10 +208,6 @@ type ListingsTableProps = {
  * A User can purchase the Pods in a Listing.
  */
 export default function ListingsTable(props: ListingsTableProps) {
-  console.log('props.setCurrentListing', props.setCurrentListing);
-  // console.log('setCurrentListing', setCurrentListing);
-
-
   const [selectedListingIndex, setSelectedListingIndex] = React.useState<string>('');
   const handleListingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedListingIndex((event.target.value));
@@ -321,6 +319,7 @@ export default function ListingsTable(props: ListingsTableProps) {
                 key={listing.index - props.harvestableIndex}
                 harvestableIndex={props.harvestableIndex}
                 listing={listing}
+                setSelectedListingIndex={setSelectedListingIndex}
                 selectedListingIndex={selectedListingIndex}
                 handleListingChange={handleListingChange}
                 isBuying={props.isBuying}
