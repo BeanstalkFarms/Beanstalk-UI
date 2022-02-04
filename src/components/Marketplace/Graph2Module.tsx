@@ -13,7 +13,7 @@ import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
 
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
-import { GraphTooltip } from './GraphTooltip';
+import { GraphListingTooltip } from './GraphTooltips';
 import { AnimatedLineSeries, Axis, XYChart } from '@visx/xychart';
 import { curveNatural } from '@visx/curve';
 

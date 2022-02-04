@@ -140,6 +140,7 @@ export default function TabbedMarketplace() {
           showButton={false}>
           <GraphModule
             setCurrentListing={setCurrentListing}
+            setCurrentOrder={setCurrentOrder}
           />
         </BaseModule>
       </Grid>
