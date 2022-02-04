@@ -86,6 +86,8 @@ export type TokenInputFieldProps = {
   error?: string | boolean;
   /** */
   description: string;
+  /**  */
+  inputClassname?: string;
 }
 
 export default function TokenInputField(props: TokenInputFieldProps) {
@@ -251,7 +253,7 @@ export default function TokenInputField(props: TokenInputFieldProps) {
             inputMode: 'decimal',
           },
           classes: {
-            input: classes.inputText,
+            input: `${classes.inputText} ${props.inputClassname}`,
           },
           // Adornments
           endAdornment,
@@ -276,4 +278,5 @@ TokenInputField.defaultProps = {
   maxHandler: undefined,
   placeholder: undefined,
   error: undefined,
+  inputClassname: undefined,
 };

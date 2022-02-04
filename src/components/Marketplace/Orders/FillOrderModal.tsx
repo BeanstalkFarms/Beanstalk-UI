@@ -46,7 +46,7 @@ export default function FillOrderModal({
 }: FillOrderModalProps) {
   /** The selected Plot index. */
   const [index, setIndex] = useState(new BigNumber(-1));
-  /** The selected Plot index. */
+  /**  */
   const [start, setStart] = useState(new BigNumber(-1));
   /** The amount of Pods the User is willing to sell into this Order */
   const [amount, setAmount] = useState(new BigNumber(0));

@@ -14,6 +14,13 @@ export enum SwapMode {
   BeanEthereumSwap,
 }
 
+// FIXME: move somewhere else when we're no longer exclusively using uniswap
+export type SwapSettings = {
+  claim: boolean;
+  mode: SwapMode;
+  slippage: BigNumber;
+}
+
 /**
  * 
  * @param amountIn 
@@ -84,7 +91,9 @@ export const lpForPool = (amount1, reserve1, amount2, reserve2, totalLP) =>
     lpForToken(amount2, reserve2, totalLP)
   );
 
-/** */
+/**
+ * 
+ */
 export const getToAmount = (
   amountIn: BigNumber,
   reserveIn: BigNumber,
