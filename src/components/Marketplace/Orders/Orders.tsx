@@ -15,6 +15,8 @@ import Filters, { StyledSlider } from '../Filters';
 
 type OrdersProps = {
   mode: 'ALL' | 'MINE';
+  currentOrder: PodOrder | null;
+  setCurrentOrder: Function;
 };
 
 /**
@@ -43,7 +45,6 @@ export default function Orders(props: OrdersProps) {
 
   //
   const [walletAddress, setWalletAddress] = useState(null);
-  const [currentOrder, seCurrentOrder] = useState(null);
 
   //
   const [settings, setSettings] = useState({
@@ -226,8 +227,8 @@ export default function Orders(props: OrdersProps) {
   return (
     <>
       <FillOrderModal
-        currentOrder={currentOrder}
-        onClose={() => seCurrentOrder(null)}
+        currentOrder={props.currentOrder}
+        onClose={() => props.setCurrentOrder(null)}
         settings={settings}
         setSettings={setSettings}
       />
@@ -235,7 +236,7 @@ export default function Orders(props: OrdersProps) {
       <OrdersTable
         mode={props.mode}
         orders={filteredOrders.current}
-        seCurrentOrder={seCurrentOrder}
+        seCurrentOrder={props.setCurrentOrder}
         validOrders={validOrders}
       />
     </>

@@ -21,10 +21,10 @@ type CirclePosition = {
   radius: number;
 };
 
-const MIN_RADIUS = 3;
-const MAX_RADIUS = 20;
 // Calculates a circle radius between MIN_RADIUS and MAX_RADIUS based on the given plotSize
 // Uses log-scale stretching to give relative scale among large maxPlotSize values
+const MIN_RADIUS = 2;
+const MAX_RADIUS = 6;
 const calculateCircleRadius = (
   plotSize: number,
   maxPlotSize: number
@@ -33,6 +33,19 @@ const calculateCircleRadius = (
   const ratio = logPlotSize / Math.log(maxPlotSize);
   return MIN_RADIUS + (MAX_RADIUS - MIN_RADIUS) * ratio;
 };
+
+// Calculates a line height between MIN_HEIGHT and MAX_HEIGHT based on the given plotSize
+// Uses log-scale stretching to give relative scale among large maxPlotSize values
+// const MIN_HEIGHT = 3;
+// const MAX_HEIGHT = 20;
+// const calculateLineHeight = (
+//   plotSize: number,
+//   maxPlotSize: number
+// ): number => {
+//   const logPlotSize = Math.log(plotSize) > 0 ? Math.log(plotSize) : 0;
+//   const ratio = logPlotSize / Math.log(maxPlotSize);
+//   return MIN_HEIGHT + (MAX_HEIGHT - MIN_HEIGHT) * ratio;
+// };
 
 // Returns the index of the element within positions that the given point is within.
 // Returns undefined if point is not within any position.
@@ -136,6 +149,37 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
     range: [graphHeight - bottomAxisHeight, topVerticalPadding],
   });
 
+  // const linePositions = listings.map((listing) => {
+  //   const y = yScale(listing.pricePerPod.toNumber());
+  //   return {
+  //     from: {
+  //       x: xScale(listing.index.minus(harvestableIndex).toNumber()) + leftAxisWidth,
+  //       y
+  //     }, 
+  //     to: {
+  //       // VERIFY: is this the correct amount?
+  //       x: xScale(listing.index.plus(listing.remainingAmount).minus(harvestableIndex).toNumber()) + leftAxisWidth,
+  //       y
+  //     },
+  //     height: calculateLineHeight(
+  //       listing.remainingAmount.toNumber(),
+  //       maxPlotSize
+  //     )
+  //   }
+  // });
+
+  // const lines = linePositions.map((coordinate, i) => (
+  //   <Line
+  //     pointerEvents="none"
+  //     key={`point-${i}`}
+  //     from={coordinate.from}
+  //     to={coordinate.to}
+  //     fill="#f7d186"
+  //     stroke={i === tooltipData ? '#c8ab74' : '#d1cabc'}
+  //     strokeWidth={coordinate.height}
+  //   />
+  // ));
+
   const circlePositions = listings.map((listing) => ({
     // x position is current place in line
     x: xScale(listing.index.minus(harvestableIndex).toNumber()) + leftAxisWidth,
@@ -178,13 +222,19 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
 
     const foundIndex = findPointInCircles(circlePositions, transformedPoint);
     if (foundIndex !== undefined) {
+      // Get the original position of the circle (no zoom)
       const coordinate = circlePositions[foundIndex];
 
+      // Apply our current zoom settings to the original position.
+      // This makes sure the tooltip appears in the right spot even
+      // if you zoom/pan around.
+      const zoomedCoordinate = zoom.applyToPoint(coordinate);
+
       // Show tooltip at bottom-right corner of circle position.
-      // Nudge 10 pixels inward to make hovering easier.
+      // Nudge inward to make hovering easier.
       showTooltip({
-        tooltipLeft: coordinate.x + coordinate.radius / Math.sqrt(2) - 10 - 180,
-        tooltipTop: coordinate.y + coordinate.radius / Math.sqrt(2) - 4,
+        tooltipLeft: zoomedCoordinate.x + coordinate.radius / Math.sqrt(2) - 170, // 170 = width of tooltip
+        tooltipTop: zoomedCoordinate.y + coordinate.radius / Math.sqrt(2) - 4,    // 4 = a nudge
         tooltipData: foundIndex,
       });
     } else {
