@@ -167,8 +167,8 @@ export const siloStrings = {
     'WARNING: Your Withdrawal will be frozen for {0} full Seasons.',
   convertLPDeposit: 'Use this sub-tab to convert Deposited BEAN:ETH LP Tokens to Deposited Beans when P < $1.',
   convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited BEAN:ETH LP Tokens when P > $1.',
-  withdrawSeasons: 'The amount of full Seasons that it will take to withdraw Deposited assets.',
-  decreaseSeasons: 'The amount of Seasons until the Seasons required for withdraw decreases by 1.',
+  withdrawSeasons: 'The Withdraw Seasons is the number of full Seasons assets are Frozen upon Withdrawal from the Silo.',
+  decreaseSeasons: 'The Next Decrease is the number of Seasons until the Withdrawal Freeze decreases by 1 Season.',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',
