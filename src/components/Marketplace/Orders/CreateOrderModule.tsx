@@ -264,12 +264,12 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
     );
   }
   details.push(
-    `Place an Order ${displayBN(toPodValue)} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at a price of
+    `Place an Order for ${displayBN(toPodValue)} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at a price of
     ${pricePerPodValue.toFixed(2)} Beans per Pod`
   );
   details.push(
     `${displayBN(toBuyBeanValue.plus(MaxBN(fromBeanValue, new BigNumber(0))))} Beans
-    will be locked in the Market to allow for order fulfillment`
+    will be locked in the Pod Order to allow for instant settlement`
   );
 
   const rangeWarning = maxPlaceInLineValue.isLessThan(toPodValue)
@@ -345,7 +345,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       // What there is no one Listing below `pricePerPod` that could
       // fill all of `amount` requested in this Order?
       //
-      // Consider: I want to buy 100 Pods at 0.50 Bean/Pod (implied 50 Bean spend). There are 
+      // Consider: I want to buy 100 Pods at 0.50 Bean/Pod (implied 50 Bean spend). There are
       // two available listings:
       //    a) 100 Pods at 0.40 Bean/Pod
       //    b) 10 Pods at 0.20 Bean/Pod
@@ -355,7 +355,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       //       `amount` that is available.
       //          - I can buy all of Listing A immediately for (100 Pods)*0.40=40 Beans.
       //            My Order is filled.
-      //          - I can buy all of Listing B immediately for (10 Pods)*0.2=2 Beans. 
+      //          - I can buy all of Listing B immediately for (10 Pods)*0.2=2 Beans.
       //            My Order is NOT filled. I would need to re-issue and receive a new
       //            prompt to Buy (presumably from Listing A since Listing B is exhausted).
       //

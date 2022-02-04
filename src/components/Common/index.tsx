@@ -291,25 +291,25 @@ export const fundraiserStrings = {
   fundsTableDescription: 'Below is a complete list of all Fundraisers.',
 };
 export const marketStrings = {
-  description: 'The Farmers Market is a decentralized marketplace native to Beanstalk Protocol where users can buy and sell Pods between users in a trustless and decentralized manner.', // TODO
-  sellPods: 'Use this tab to Sell Pods on the Pod Marketplace.', // TODO
-  buyPods: 'Use this tab to Buy Pods on the Pod Marketplace.', // TODO
-  sell: 'Sell Pods from available offers using user plots.', // TODO
-  buy: 'Buy Pods from available listings.', // TODO
-  createListing: 'Use this tab to create a listing to Sell Pods on the Pod Marketplace.', // TODO
-  createOffer: 'Use this tab to create an offer to buy Pods on the Pod Marketplace.', // TODO
-  placeInPodLine: 'This slider and input field represents the maximum place in line that the user is willing to buy Pods at given the specificed price per Pods.', // TODO
+  description: 'The Farmers Market is a Beanstalk-native decentralized marketplace where anyone can buy and sell Pods in a trustless and decentralized fashion.', // TODO
+  sellPods: 'Use this tab to sell Pods on the Farmers Marker.', // TODO
+  buyPods: 'Use this tab to buy Pods on the Farmers Marker.', // TODO
+  sell: 'Use this sub-tab to sell Pods into current Pod Orders on the Farmers Marker.', // TODO
+  buy: 'Use this sub-tab to buy Pods from current Pod Listings on the Farmers Marker.', // TODO
+  createListing: 'Use this sub-tab to create a Pod Listing to sell Pods on the Farmers Marker.', // TODO
+  createOrder: 'Use this sub-tab to create a Pod Order to buy Pods on the Farmers Marker.', // TODO
+  placeInPodLine: 'Use this slider or input field to adjust the maximum place in the Pod Line you are willing to buy Pods from, at the specificed price per Pods.', // TODO
   expiresIn: 'This input field represents the amount of Pods that need to be harvested before your listing will expire.', // TODO
-  myOffers: 'Bids for Pods you\'re willing to buy on the Market.', // TODO
-  myListings: 'Pods you have listed for sale on the Market.', // TODO
-  myMarket: 'Your listed orders and listings', // TODO
-  toWrapped: 'When your listing is filled, the Beans will be wrapped in the Silo for efficiency.', // TODO
-  toWallet: 'When your listing is filled, the Beans will be sent to your wallet. This introduces a potential tax and gas inefficiency.', // TODO
+  myOrders: 'This tab contains all of your current Pod Orders on the Farmers Market.', // TODO
+  myListings: 'This tab contains all of your current Pod Listings on the Farmers Market.', // TODO
+  myMarket: 'My Market contains all of your current Pod Orders and Listings on the Farmers Market.', // TODO
+  toWrapped: 'If your Pod Listing is Filled, the Beans will become Claimable.', // TODO
+  toWallet: 'If your Pod Listing is Filled, the Beans will be sent to your wallet.', // TODO
 };
 export const filterStrings = {
-  pricePerPod: 'Price per Pod sliding filter.', // TODO
-  placeInLine: 'Place in Line sliding filter.', // TODO
-  toggleValidOffers: 'Toggle for users to filter out plots that they can’t sell into.', // TODO
+  pricePerPod: 'Use this slider to filter Pod Orders and Pod Listings by Price per Pod.', // TODO
+  placeInLine: 'Use this slider to filter Pod Orders and Pod Listings by Place in Line.', // TODO
+  toggleValidOffers: 'Toggle to filter out Pod Listings that you cannot currently Fill.', // TODO
 };
 export const settingsStrings = {
   showLP: 'Toggle to also Deposit Circulating LP Tokens.',
