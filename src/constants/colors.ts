@@ -235,7 +235,7 @@ export const winterUpgradeTheme = {
   },
   cloud: mainCloud,
   cloudColor: 'white',
-  sun: winterSun,
+  sun: mainSun,
   // sunHeight: '15vw',
   // sunLeftPosition: '55vw',
   ground: winterGround,

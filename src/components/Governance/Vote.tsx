@@ -13,7 +13,7 @@ import {
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckIcon from '@material-ui/icons/Check';
 import { percentForStalk, megaVote } from 'util/index';
-import { Line, QuestionModule, governanceStrings } from 'components/Common';
+import { Line, QuestionModule, governanceStrings, TransactionDetailsModule } from 'components/Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 import { useStyles } from './VoteStyles.ts';
 
@@ -53,6 +53,15 @@ export default function Vote(props) {
   // Take the selected row indecies and return the combined array
   const selectedBips = selected.reduce((dp, bip) => {
     dp.push(displayBips[bip]);
+    return dp;
+  }, []);
+  // Take the selected row indecies and return the combined array
+  const selectedDetails = selectedBips.reduce((dp, bip) => {
+    if (bip[2] === false) {
+      dp.push(`Vote for BIP-${bip[0]}`);
+      return dp;
+    }
+    dp.push(`Unvote BIP-${bip[0]}`);
     return dp;
   }, []);
 
@@ -100,6 +109,127 @@ export default function Vote(props) {
     // Execute
     megaVote(selectedBips);
   };
+  const voteTable = (
+    <TableContainer className={classes.table}>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              {props.bips.length > 1
+                ? (
+                  <Checkbox
+                    checked={selectAll}
+                    onChange={handleSelectAllClick}
+                  />
+                )
+                : null}
+            </TableCell>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              BIP
+            </TableCell>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              Seasons Remaining
+            </TableCell>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              Voted
+            </TableCell>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              Vote %
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {displayBips.map((bip, index) => {
+            const isItemSelected = isSelected(index);
+
+            return (
+              <TableRow
+                key={`table_row_${index}`} // eslint-disable-line
+                className={selected[index] === index ? classes.rowSelected : null}
+                hover
+                onClick={() => handleClick(bip, index)}
+                selected={isItemSelected}
+                style={{ cursor: 'pointer' }}
+              >
+                <TableCell
+                  className={classes.cell}
+                  align="center"
+                  size="small"
+                >
+                  <Checkbox
+                    checked={isItemSelected || selectAll}
+                  />
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  size="small"
+                  align="center"
+                >
+                  {bip[0]}
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  size="small"
+                  align="center"
+                >
+                  {bip[1]}
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  size="small"
+                  align="center"
+                >
+                  {bip[2] ? <CheckIcon /> : 'No'}
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  size="small"
+                  align="center"
+                >
+                  {bip[3]}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+
+  function transactionDetails() {
+    if (props.userRoots.isLessThanOrEqualTo(0) || selected.length < 1) return null;
+
+    return (
+      <>
+        {/* <ExpandMoreIcon
+          color="primary"
+          style={{ marginBottom: '-14px', width: '100%' }}
+        /> */}
+        <TransactionDetailsModule fields={selectedDetails} />
+        <br />
+      </>
+    );
+  }
 
   return (
     <AppBar className={classes.inputModule} position="static">
@@ -116,110 +246,8 @@ export default function Vote(props) {
             margin: '10px 8px',
           }}
         />
-        <TableContainer className={classes.table}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                >
-                  {props.bips.length > 1
-                    ? (
-                      <Checkbox
-                        checked={selectAll}
-                        onChange={handleSelectAllClick}
-                      />
-                    )
-                    : null}
-                </TableCell>
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                >
-                  BIP
-                </TableCell>
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                >
-                  Seasons Remaining
-                </TableCell>
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                >
-                  Voted
-                </TableCell>
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                >
-                  Vote %
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {displayBips.map((bip, index) => {
-                const isItemSelected = isSelected(index);
-
-                return (
-                  <TableRow
-                    key={`table_row_${index}`} // eslint-disable-line
-                    className={selected[index] === index ? classes.rowSelected : null}
-                    hover
-                    onClick={() => handleClick(bip, index)}
-                    selected={isItemSelected}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <TableCell
-                      className={classes.cell}
-                      align="center"
-                      size="small"
-                    >
-                      <Checkbox
-                        checked={isItemSelected || selectAll}
-                      />
-                    </TableCell>
-                    <TableCell
-                      className={classes.cell}
-                      size="small"
-                      align="center"
-                    >
-                      {bip[0]}
-                    </TableCell>
-                    <TableCell
-                      className={classes.cell}
-                      size="small"
-                      align="center"
-                    >
-                      {bip[1]}
-                    </TableCell>
-                    <TableCell
-                      className={classes.cell}
-                      size="small"
-                      align="center"
-                    >
-                      {bip[2] ? <CheckIcon /> : 'No'}
-                    </TableCell>
-                    <TableCell
-                      className={classes.cell}
-                      size="small"
-                      align="center"
-                    >
-                      {bip[3]}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {voteTable}
+        {transactionDetails()}
         <Button
           className={classes.formButton}
           color="primary"
