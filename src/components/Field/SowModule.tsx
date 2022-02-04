@@ -174,7 +174,7 @@ export const SowModule = forwardRef((props, ref) => {
   details.push(
     `Receive ${displayBN(toPodValue)} Pods at #${displayBN(
       props.unripenedPods
-    )} in the Pod line`
+    )} in the Pod Line`
   );
 
   const noSoilTextField = props.soil.isEqualTo(0) ? (

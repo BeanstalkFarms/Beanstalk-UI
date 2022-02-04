@@ -264,7 +264,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
     );
   }
   details.push(
-    `Place an Order for ${displayBN(toPodValue)} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod line at a price of
+    `Place an Order for ${displayBN(toPodValue)} Pods anywhere before ${displayBN(maxPlaceInLineValue)} in the Pod Line at a price of
     ${pricePerPodValue.toFixed(2)} Beans per Pod`
   );
   details.push(

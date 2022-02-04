@@ -42,7 +42,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const [start, setStart] = useState(new BigNumber(0));
   /** The amount of Pods listed from the plot. */
   const [totalAmount, setTotalAmount] = useState(new BigNumber(-1));
-  /** How far forward the Pod line needs to move before the order expire. */
+  /** How far forward the Pod Line needs to move before the order expire. */
   const [expiresIn, setExpiresIn] = useState(new BigNumber(-1));
   /** The price per pod. */
   const [pricePerPodValue, setPricePerPodValue] = useState(new BigNumber(-1));
@@ -189,10 +189,10 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     // This can range from:
     //  MIN:   0
     //  START: start
-    //  END:   start + totalAmount 
+    //  END:   start + totalAmount
     //  MAX:   amountInSelectedPlot
     <PlotRangeInputField
-      label="Select region of plot"
+      label="Plot Range"
       value={[
         TrimBN(start, 6),                   // `start` is held in state
         TrimBN(start.plus(totalAmount), 6)  // `end` is calculated depending on `start` and `totalAmount`.

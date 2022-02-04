@@ -54,7 +54,7 @@ function ListingRow({
             <a href={`https://etherscan.io/address/${listing.account}`} target="_blank" rel="noreferrer">{listing.account.slice(0, 6)}</a> wants
           </>
         )
-      } to sell {displayBN(amountRemaining)} Pods at {displayBN(relativeIndex)} in the pod line for {displayBN(listing.pricePerPod)} Beans per Pod. If the pod line moves forward by {displayBN(relativeExpiry)} Pods, this listing will automatically expire.
+      } to sell {displayBN(amountRemaining)} Pods at {displayBN(relativeIndex)} in the Pod Line for {displayBN(listing.pricePerPod)} Beans per Pod. If the Pod Line moves forward by {displayBN(relativeExpiry)} Pods, this Pod Listing will automatically expire.
     </>
   );
   return (

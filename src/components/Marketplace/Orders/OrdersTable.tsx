@@ -44,7 +44,7 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
           <>
             <a href={`https://etherscan.io/address/${order.account}`} target="_blank" rel="noreferrer">{order.account.slice(0, 6)}</a> wants
           </>
-        )} to buy {displayBN(numPodsLeft)} Pods for {displayBN(order.pricePerPod)} Beans per Pod anywhere before {displayBN(order.maxPlaceInLine)} in the Pod line.
+        )} to buy {displayBN(numPodsLeft)} Pods for {displayBN(order.pricePerPod)} Beans per Pod anywhere before {displayBN(order.maxPlaceInLine)} in the Pod Line.
     </>
   );
   /** Do we have any plots whose index is smaller than max place in line? if so then we can sell */

@@ -299,7 +299,7 @@ export const marketStrings = {
   createListing: 'Use this sub-tab to create a Pod Listing to sell Pods on the Farmers Marker.', // TODO
   createOrder: 'Use this sub-tab to create a Pod Order to buy Pods on the Farmers Marker.', // TODO
   placeInPodLine: 'Use this slider or input field to adjust the maximum place in the Pod Line you are willing to buy Pods from, at the specificed price per Pods.', // TODO
-  expiresIn: 'This input field represents the amount of Pods that need to be harvested before your listing will expire.', // TODO
+  expiresIn: 'Use this input field to change the number of Pods that need to become Harvestable before this Pod Listing will automatically expire.', // TODO
   myOrders: 'This tab contains all of your current Pod Orders on the Farmers Market.', // TODO
   myListings: 'This tab contains all of your current Pod Listings on the Farmers Market.', // TODO
   myMarket: 'My Market contains all of your current Pod Orders and Listings on the Farmers Market.', // TODO
