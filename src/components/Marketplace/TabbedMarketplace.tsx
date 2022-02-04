@@ -3,10 +3,12 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { Box } from '@material-ui/core';
 import { BaseModule, Grid, marketStrings, fieldStrings, ListTable, FarmAsset } from 'components/Common';
+import { PodListing, PodOrder } from 'state/marketplace/reducer';
 import MarketplaceBuyModule from './MarketplaceBuyModule';
 import MarketplaceSellModule from './MarketplaceSellModule';
 import Listings from './Listings/Listings';
 import Orders from './Orders/Orders';
+import GraphModule from './GraphModule';
 
 export default function TabbedMarketplace() {
   const { width } = useSelector<AppState, AppState['general']>(
@@ -22,6 +24,12 @@ export default function TabbedMarketplace() {
   const [section, setSection] = useState(0);
   const [subSection, setSubSection] = useState(0);
   const [page, setPage] = useState(0);
+
+  /** The currently selected listing (used when buying pods). */
+  const [currentOrder, setCurrentOrder] = useState<PodOrder | null>(null);
+  const [currentListing, setCurrentListing] = useState<PodListing | null>(null);
+
+  //
   const sectionTitles = ['Buy Pods', 'Sell Pods'];
   const sectionTitlesDescription = [
     marketStrings.buyPods,
@@ -35,8 +43,16 @@ export default function TabbedMarketplace() {
     marketStrings.myListings,
   ];
   const subSections = [
-    <Orders mode="MINE" />,
-    <Listings mode="MINE" />,
+    <Orders
+      mode="MINE"
+      currentOrder={currentOrder}
+      setCurrentOrder={setCurrentOrder}
+    />,
+    <Listings
+      mode="MINE"
+      currentListing={currentListing}
+      setCurrentListing={setCurrentListing}
+    />,
   ];
 
   const showMyMarketTables = (
@@ -115,6 +131,17 @@ export default function TabbedMarketplace() {
           removeBackground
         >
           {sections[section]}
+        </BaseModule>
+        <BaseModule
+          section={0}
+          sectionTitles={[]}
+          sectionTitlesDescription={[]}
+          removeBackground
+          showButton={false}>
+          <GraphModule
+            setCurrentListing={setCurrentListing}
+            setCurrentOrder={setCurrentOrder}
+          />
         </BaseModule>
       </Grid>
       {/* Column: My Market */}

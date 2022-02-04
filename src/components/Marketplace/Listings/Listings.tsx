@@ -13,7 +13,6 @@ import { filterStrings, QuestionModule } from 'components/Common';
 import FillListingModal from './FillListingModal';
 import ListingsTable from './ListingsTable';
 import Filters, { StyledSlider } from '../Filters';
-import GraphModule from '../GraphModule';
 
 const filterTitleStyle = {
   display: 'inline',
@@ -24,6 +23,8 @@ const filterTitleStyle = {
 
 type ListingsProps = {
   mode: 'ALL' | 'MINE';
+  currentListing: PodListing | null;
+  setCurrentListing: Function;
 }
 
 /**
@@ -33,8 +34,6 @@ type ListingsProps = {
 export default function Listings(props: ListingsProps) {
   /** FIXME: is this somewhere in global state? */
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  /** The currently selected listing (used when buying pods). */
-  const [currentListing, setCurrentListing] = useState<PodListing | null>(null);
 
   const { listings: allListings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
@@ -182,21 +181,16 @@ export default function Listings(props: ListingsProps) {
   return (
     <>
       <FillListingModal
-        currentListing={currentListing}
-        setCurrentListing={setCurrentListing}
+        currentListing={props.currentListing}
+        setCurrentListing={props.setCurrentListing}
       />
       <Box>{filters}</Box>
       <ListingsTable
         mode={props.mode}
         listings={filteredListings.current}
         harvestableIndex={harvestableIndex}
-        setCurrentListing={setCurrentListing}
+        setCurrentListing={props.setCurrentListing}
       />
-      {props.mode === 'ALL' && (
-        <GraphModule
-          setCurrentListing={setCurrentListing}
-        />
-      )}
     </>
   );
 }

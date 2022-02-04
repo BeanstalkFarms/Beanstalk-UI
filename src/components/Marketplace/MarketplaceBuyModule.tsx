@@ -7,6 +7,7 @@ import {
   approveBeanstalkBean,
   SwapMode,
   poolForLP,
+  SwapSettings,
 } from 'util/index';
 import { BaseModule, marketStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
@@ -38,9 +39,9 @@ export default function MarketplaceBuyModule() {
   /** */
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   /** */
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<SwapSettings>({
     claim: false,
-    mode: SwapMode.Ethereum,
+    mode: SwapMode.BeanEthereum,
     slippage: new BigNumber(BASE_SLIPPAGE),
   });
 

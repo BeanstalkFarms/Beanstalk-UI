@@ -3,17 +3,18 @@ import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { useTooltip, Tooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
-import { Circle } from '@visx/shape';
+import { Circle, Line } from '@visx/shape';
 import { withParentSize } from '@visx/responsive';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { Zoom, applyMatrixToPoint } from '@visx/zoom';
 import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
+import minBy from 'lodash/minBy';
 
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
-import { GraphTooltip } from './GraphTooltip';
+import { GraphListingTooltip, GraphOrderTooltip } from './GraphTooltips';
 
 type CirclePosition = {
   x: number;
@@ -21,10 +22,27 @@ type CirclePosition = {
   radius: number;
 };
 
-const MIN_RADIUS = 3;
-const MAX_RADIUS = 20;
+type LinePosition = {
+  from: {
+    x: number;
+    y: number;
+  },
+  to: {
+    x: number;
+    y: number;
+  }
+  height: number;
+};
+
+type TooltipData = {
+  type: 'listing' | 'order';
+  index: number;
+}
+
 // Calculates a circle radius between MIN_RADIUS and MAX_RADIUS based on the given plotSize
 // Uses log-scale stretching to give relative scale among large maxPlotSize values
+const MIN_RADIUS = 2;
+const MAX_RADIUS = 6;
 const calculateCircleRadius = (
   plotSize: number,
   maxPlotSize: number
@@ -32,6 +50,19 @@ const calculateCircleRadius = (
   const logPlotSize = Math.log(plotSize) > 0 ? Math.log(plotSize) : 0;
   const ratio = logPlotSize / Math.log(maxPlotSize);
   return MIN_RADIUS + (MAX_RADIUS - MIN_RADIUS) * ratio;
+};
+
+// Calculates a line height between MIN_HEIGHT and MAX_HEIGHT based on the given plotSize
+// Uses log-scale stretching to give relative scale among large maxPlotSize values
+const MIN_HEIGHT = 1;
+const MAX_HEIGHT = 4;
+const calculateLineHeight = (
+  plotSize: number,
+  maxPlotSize: number
+): number => {
+  const logPlotSize = Math.log(plotSize) > 0 ? Math.log(plotSize) : 0;
+  const ratio = logPlotSize / Math.log(maxPlotSize);
+  return MIN_HEIGHT + (MAX_HEIGHT - MIN_HEIGHT) * ratio;
 };
 
 // Returns the index of the element within positions that the given point is within.
@@ -60,6 +91,29 @@ const findPointInCircles = (
   return foundPositions.find((index) => positions[index].radius === minRadius);
 };
 
+// Returns the index of the element within positions that the given point is within.
+// Returns undefined if point is not within any position.
+const findPointInLines = (
+  positions: LinePosition[],
+  point: { x: number; y: number }
+): number | undefined => {
+  const foundPositions: number[] = [];
+  for (let i = 0; i < positions.length; i += 1) {
+    const position = positions[i];
+    if (
+      point.x >= position.from.x &&
+      point.x <= position.to.x &&
+      point.y >= position.from.y - (position.height / 2) &&
+      point.y <= position.from.y + (position.height / 2)
+    ) {
+      foundPositions.push(i);
+    }
+  }
+
+  // In case point is within multiple positions, choose the one with the smallest height
+  return minBy(foundPositions, (index) => positions[index].height);
+};
+
 const rescaleYWithZoom = (scale, zoom) => {
   const newDomain = scale.range().map((r) => scale.invert(
     (r - zoom.transformMatrix.translateY) / zoom.transformMatrix.scaleY
@@ -79,12 +133,13 @@ const rescaleXWithZoom = (scale, zoom) => {
 interface GraphContentProps {
   parentWidth?: number;
   setCurrentListing: Function;
+  setCurrentOrder: Function;
 }
 const defaultGraphContentProps = {
   parentWidth: undefined,
 };
 
-const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => {
+const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: GraphContentProps) => {
   const graphHeight = 350;
   const leftAxisWidth = 70;
   const bottomAxisHeight = 50;
@@ -92,6 +147,10 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
   const topVerticalPadding = 20;
   // Amount of right horizontal padding in between graph content and graph container
   const rightHorizontalPadding = 20;
+
+  const { orders } = useSelector<AppState, AppState['marketplace']>(
+    (state) => state.marketplace
+  );
 
   const { listings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
@@ -122,7 +181,7 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
     hideTooltip,
     showTooltip,
     tooltipData,
-  } = useTooltip();
+  } = useTooltip<TooltipData>();
 
   if (parentWidth === undefined) return <></>;
 
@@ -136,7 +195,43 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
     range: [graphHeight - bottomAxisHeight, topVerticalPadding],
   });
 
-  const circlePositions = listings.map((listing) => ({
+  // -- Orders
+
+  const orderPositions : LinePosition[] = orders.map((order) => {
+    const y = yScale(order.pricePerPod.toNumber());
+    return {
+      from: {
+        // start at x = 0
+        x: leftAxisWidth, 
+        y
+      }, 
+      to: {
+        // move to maxPlaceInLine
+        x: xScale(order.maxPlaceInLine.toNumber()) + leftAxisWidth,
+        y
+      },
+      height: calculateLineHeight(
+        order.remainingAmount.toNumber(),
+        maxPlotSize
+      )
+    };
+  });
+
+  const orderLines = orderPositions.map((coordinate, i) => (
+    <Line
+      pointerEvents="none"
+      key={`point-${i}`}
+      from={coordinate.from}
+      to={coordinate.to}
+      fill="rgba(255, 0, 0, 0.2)"
+      stroke={i === tooltipData?.index ? '#c8ab74' : '#d1cabc'}
+      strokeWidth={coordinate.height}
+    />
+  ));
+
+  // -- Listings
+
+  const listingPositions : CirclePosition[] = listings.map((listing) => ({
     // x position is current place in line
     x: xScale(listing.index.minus(harvestableIndex).toNumber()) + leftAxisWidth,
     // y position is price per pod
@@ -148,7 +243,7 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
     ),
   }));
 
-  const circles = circlePositions.map((coordinate, i) => (
+  const listingCircles = listingPositions.map((coordinate, i) => (
     <Circle
       pointerEvents="none"
       key={`point-${i}`}
@@ -156,7 +251,7 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
       cy={coordinate.y}
       r={coordinate.radius}
       fill="#f7d186"
-      stroke={i === tooltipData ? '#c8ab74' : '#d1cabc'}
+      stroke={i === tooltipData?.index ? '#c8ab74' : '#d1cabc'}
       strokeWidth={2}
     />
   ));
@@ -176,19 +271,52 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
     // that we can hover over circles correctly even when zoomed in.
     const transformedPoint = zoom.applyInverseToPoint(point);
 
-    const foundIndex = findPointInCircles(circlePositions, transformedPoint);
-    if (foundIndex !== undefined) {
-      const coordinate = circlePositions[foundIndex];
+    const listingIndex = findPointInCircles(listingPositions, transformedPoint);
+    if (listingIndex !== undefined) {
+      // Get the original position of the circle (no zoom)
+      // FIXME: rename this position? used word interchangably.
+      // position makes more sense for the line.
+      const coordinate = listingPositions[listingIndex];
+
+      // Apply our current zoom settings to the original position.
+      // This makes sure the tooltip appears in the right spot even
+      // if you zoom/pan around.
+      const zoomedCoordinate = zoom.applyToPoint(coordinate);
 
       // Show tooltip at bottom-right corner of circle position.
-      // Nudge 10 pixels inward to make hovering easier.
+      // Nudge inward to make hovering easier.
       showTooltip({
-        tooltipLeft: coordinate.x + coordinate.radius / Math.sqrt(2) - 10 - 180,
-        tooltipTop: coordinate.y + coordinate.radius / Math.sqrt(2) - 4,
-        tooltipData: foundIndex,
+        tooltipLeft: zoomedCoordinate.x + coordinate.radius / Math.sqrt(2) - 170, // 170 = width of tooltip
+        tooltipTop: zoomedCoordinate.y + coordinate.radius / Math.sqrt(2) - 4,    // 4 = a nudge
+        tooltipData: {
+          index: listingIndex,
+          type: 'listing',
+        }
       });
     } else {
-      hideTooltip();
+      const orderIndex = findPointInLines(orderPositions, transformedPoint);
+      if (orderIndex !== undefined) {
+        // Get the original position of the circle (no zoom)
+        const position = orderPositions[orderIndex];
+
+        const zoomedCoordinate = zoom.applyToPoint({
+          x: position.to.x,
+          y: position.to.y,
+        });
+
+        // Show tooltip at bottom-right corner of circle position.
+        // Nudge inward to make hovering easier.
+        showTooltip({
+          tooltipLeft: point.x - 90,        // -90 centers tooltip on mouse
+          tooltipTop: zoomedCoordinate.y,   // locks to the same y-position regardless of mouse
+          tooltipData: {
+            index: orderIndex,
+            type: 'order',
+          }
+        });
+      } else {
+        hideTooltip();
+      }
     }
   };
 
@@ -254,7 +382,10 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
               }}
             >
               <g transform={zoom.toString()}>
-                {circles}
+                {listingCircles}
+              </g>
+              <g transform={zoom.toString()}>
+                {orderLines}
               </g>
               {/* Contains the entire chart (incl. axes and labels)
                   QUESTION: why have this + the below <rect> both take up the full dims? */}
@@ -337,7 +468,8 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
             </svg>
             {/* Tooltip Display */}
             {tooltipOpen &&
-              typeof tooltipData === 'number' &&
+              typeof tooltipData === 'object' &&
+              tooltipData != null &&
               tooltipLeft != null &&
               tooltipTop != null && (
                 <Tooltip
@@ -356,11 +488,20 @@ const GraphContent = ({ parentWidth, setCurrentListing }: GraphContentProps) => 
                   }}
                   applyPositionStyle
                 >
-                  <GraphTooltip
-                    listing={listings[tooltipData]}
-                    onBuyClick={() => setCurrentListing(listings[tooltipData])}
-                    harvestableIndex={harvestableIndex}
-                  />
+                  {tooltipData.type === 'listing' ? (
+                    <GraphListingTooltip
+                      listing={listings[tooltipData.index]}
+                      onTransact={() => setCurrentListing(listings[tooltipData.index])}
+                      harvestableIndex={harvestableIndex}
+                    />
+                  ) : (
+                    <GraphOrderTooltip
+                      order={orders[tooltipData.index]}
+                      onTransact={() => setCurrentOrder(orders[tooltipData.index])}
+                      // harvestableIndex={harvestableIndex}
+                    />
+
+                  )}
                 </Tooltip>
               )}
           </div>
@@ -382,11 +523,15 @@ const graphStyle = {
 };
 type GraphModuleProps = {
   setCurrentListing: Function;
+  setCurrentOrder: Function;
 }
 export default function GraphModule(props: GraphModuleProps) {
   return (
     <Box style={graphStyle}>
-      <GraphWithParent setCurrentListing={props.setCurrentListing} />
+      <GraphWithParent
+        setCurrentListing={props.setCurrentListing}
+        setCurrentOrder={props.setCurrentOrder}
+      />
     </Box>
   );
 }
