@@ -291,6 +291,7 @@ export default function FillOrderModal({
         <OrdersTable
           mode="ALL"
           orders={[currentOrder]}
+          isSelling={true}
         />
         <Box sx={{ marginTop: 20 }}>
           {/**

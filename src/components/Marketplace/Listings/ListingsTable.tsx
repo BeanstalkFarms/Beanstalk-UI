@@ -16,6 +16,8 @@ import {
   IconButton,
   // CircularProgress,
   TablePagination,
+  Radio,
+  Button
 } from '@material-ui/core';
 
 import { PodListing } from 'state/marketplace/reducer';
@@ -29,17 +31,21 @@ import { useStyles } from '../TableStyles';
 type ListingRowProps = {
   listing: PodListing;
   harvestableIndex: AppState['weather']['harvestableIndex'];
-  setCurrentListing: Function;
+  selectedListingIndex?: number;
+  handleListingChange?: Function;
   enableControls: boolean;
   isMine: boolean;
+  isBuying: boolean;
 }
 
 function ListingRow({
   listing,
   harvestableIndex,
-  setCurrentListing,
+  selectedListingIndex,
+  handleListingChange,
   enableControls,
   isMine,
+  isBuying
 }: ListingRowProps) {
   const classes = useStyles();
   const relativeIndex = (listing.index).minus(harvestableIndex).plus(listing.start);
@@ -167,19 +173,19 @@ function ListingRow({
             icon={<TokenIcon token={FarmAsset.Pods} />}
           />
           {/* Buy this listing; only show if handler is set */}
-          {setCurrentListing && (
+          {handleListingChange && selectedListingIndex !== null && !isBuying &&
+          (
             <TableCell align="center">
-              <IconButton
-                onClick={() => setCurrentListing(listing)}
-                style={{
-                  color: theme.linkColor,
-                }}
-                size="small"
-              >
-                <ShoppingCartIcon />
-              </IconButton>
+              <Radio
+                checked={selectedListingIndex === listing.index.toString()}
+                onChange={handleListingChange}
+                value={listing.index}
+                name="radio-buttons"
+                inputProps={{ 'aria-label': toStringBaseUnitBN(listing.index, BEAN.decimals) }}
+            />
             </TableCell>
-          )}
+          )
+          }
         </>
       )}
     </TableRow>
@@ -192,6 +198,7 @@ type ListingsTableProps = {
   listings: PodListing[];
   setCurrentListing?: Function;
   harvestableIndex: BigNumber;
+  isBuying?: boolean;
 }
 
 /**
@@ -199,6 +206,11 @@ type ListingsTableProps = {
  * A User can purchase the Pods in a Listing.
  */
 export default function ListingsTable(props: ListingsTableProps) {
+  const [selectedListingIndex, setSelectedListingIndex] = React.useState<string>('');
+  const handleListingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedListingIndex((event.target.value));
+  };
+
   const classes = useStyles();
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
@@ -245,7 +257,6 @@ export default function ListingsTable(props: ListingsTableProps) {
                   key={listing.index - props.harvestableIndex}
                   harvestableIndex={props.harvestableIndex}
                   listing={listing}
-                  setCurrentListing={props.setCurrentListing}
                   enableControls={props.enableControls}
                   isMine
                 />
@@ -306,12 +317,30 @@ export default function ListingsTable(props: ListingsTableProps) {
                 key={listing.index - props.harvestableIndex}
                 harvestableIndex={props.harvestableIndex}
                 listing={listing}
-                setCurrentListing={props.setCurrentListing}
+                selectedListingIndex={selectedListingIndex}
+                handleListingChange={handleListingChange}
+                isBuying={props.isBuying}
               />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <div>
+        { !props.isBuying &&
+          <Button
+            className={classes.formButton}
+            style={{ marginTop:'8px', textAlign: 'center' }}
+            color="primary"
+            disabled={
+              !selectedListingIndex
+            }
+            variant="contained"
+            onClick={() => { props.setCurrentListing(slicedItems.find((listing) => listing.index.toString() === selectedListingIndex)) }}
+          >
+            Buy Pods
+          </Button>
+        }
+      </div>
       {/* display page button if user has more listings than rowsPerPage. */}
       {Object.keys(props.listings).length > rowsPerPage
         ? (

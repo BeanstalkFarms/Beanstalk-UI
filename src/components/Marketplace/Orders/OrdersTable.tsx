@@ -10,6 +10,8 @@ import {
   TableRow,
   IconButton,
   TablePagination,
+  Radio,
+  Button
 } from '@material-ui/core';
 import {
   CloseOutlined as CancelIcon,
@@ -26,11 +28,13 @@ import { useStyles } from '../TableStyles';
 
 type OrderRowProps = {
   order: PodOrder;
-  seCurrentOrder: Function;
   isMine: boolean;
+  selectedOrderKey?: number;
+  handleOrderChange?: Function;
+  isSelling?: boolean;
 }
 
-function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
+function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSelling }: OrderRowProps) {
   const classes = useStyles();
   // const { plots } = useSelector<AppState, AppState['userBalance']>(
   //   (state) => state.userBalance
@@ -129,9 +133,17 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
             {displayBN(numPodsLeft)}
           </BalanceTableCell>
           {/* Sell into this Order; only show if handler is set */}
-          {seCurrentOrder && (
+          {handleOrderChange && selectedOrderKey !== null && !isSelling && (
             <TableCell align="center">
-              <IconButton
+              <Radio
+                checked={selectedOrderKey === order.id}
+                onChange={handleOrderChange}
+                value={order.id}
+                name="radio-buttons"
+                inputProps={{ 'aria-label': order.id }}
+             />
+
+              {/* <IconButton
                 onClick={() => seCurrentOrder(order)}
                 // disabled={!canSell}
                 // style={{
@@ -143,7 +155,7 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
                 size="small"
               >
                 <ShoppingCartIcon />
-              </IconButton>
+              </IconButton> */}
             </TableCell>
           )}
         </>
@@ -156,12 +168,17 @@ type OrdersTableProps = {
   mode: 'ALL' | 'MINE';
   orders: PodOrder[];
   seCurrentOrder?: Function;
+  isSelling?: boolean;
 }
 
 /**
  * Orders
  */
 export default function OrdersTable(props: OrdersTableProps) {
+  const [selectedOrderKey, setSelectedOrderKey] = React.useState<string>('');
+  const handleOrderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedOrderKey((event.target.value));
+  };
   const classes = useStyles();
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
@@ -176,6 +193,7 @@ export default function OrdersTable(props: OrdersTableProps) {
       </div>
     );
   }
+
 
   //
   const rowsPerPage = 5;
@@ -211,7 +229,6 @@ export default function OrdersTable(props: OrdersTableProps) {
               <OrderRow
                 key={order.id}
                 order={order}
-                seCurrentOrder={props.seCurrentOrder}
                 isMine
               />
             ))}
@@ -265,11 +282,29 @@ export default function OrdersTable(props: OrdersTableProps) {
             <OrderRow
               key={order.id}
               order={order}
-              seCurrentOrder={props.seCurrentOrder}
+              selectedOrderKey={selectedOrderKey}
+              handleOrderChange={handleOrderChange}
+              isSelling={props.isSelling}
             />
           ))}
         </Table>
       </TableContainer>
+      <div>
+        { !props.isSelling &&
+          <Button
+            className={classes.formButton}
+            style={{ marginTop:'8px', textAlign: 'center' }}
+            color="primary"
+            disabled={
+              !selectedOrderKey
+            }
+            variant="contained"
+            onClick={() => { props.seCurrentOrder(slicedItems.find((order) => order.id === selectedOrderKey)) }}
+          >
+            Sell Pods To
+          </Button>
+        }
+      </div>
       {/* display page button if user has more Orders than rowsPerPage. */}
       {Object.keys(props.orders).length > rowsPerPage
         ? (

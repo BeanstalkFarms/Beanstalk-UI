@@ -450,6 +450,7 @@ export default function FillListingModal({
           mode="ALL"
           harvestableIndex={harvestableIndex}
           listings={[currentListing]}
+          isBuying={true}
         />
         <Box sx={{ marginTop: 20 }}>
           {fromBeanField}

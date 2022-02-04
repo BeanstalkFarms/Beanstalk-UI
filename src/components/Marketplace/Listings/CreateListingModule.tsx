@@ -179,6 +179,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const priceField = (
     <TokenInputField
       label="Price per Pod"
+      placeholder="0.50"
       token={CryptoAsset.Bean}
       handleChange={handlePriceChange}
       value={TrimBN(pricePerPodValue, 6)}
