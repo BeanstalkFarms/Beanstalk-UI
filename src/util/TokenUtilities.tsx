@@ -67,11 +67,11 @@ export type Token =
   | BudgetAsset;
 
 /**
- * 
- * @param to 
- * @param amount 
- * @param onResponse 
- * @returns 
+ *
+ * @param to
+ * @param amount
+ * @param onResponse
+ * @returns
  */
 export const transferBeans = async (
   to: string,
@@ -87,15 +87,13 @@ export const approveToken = async (
   address: String,
   spender: String,
   amount: String,
-  callback: (number) => void,
-  completeCallback
+  callback: (number) => void
 ) => {
   tokenContract(token)
     .approve(spender, amount)
     .then((response) => {
       callback(1);
       response.wait().then(() => {
-        completeCallback();
         callback(2);
       });
     });
@@ -306,10 +304,10 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
  * This is what's stored in the contract.
  *
  * FIXME: 'base unit' naming?
- * 
- * @param rawAmt 
- * @param decimals 
- * @returns 
+ *
+ * @param rawAmt
+ * @param decimals
+ * @returns
  */
  export function toBaseUnitBN(
   rawAmt: string | number | BigNumber,
@@ -325,7 +323,7 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
 /**
  * Convert a "token amount" (integer form) to "raw amount" (decimal form).
  * This is typically what's displayed to users within the application.
- * 
+ *
  * @param tokenAmt BigNumber.Value
  * @param decimals BigNumber.Value
  * @returns BigNumber
@@ -342,10 +340,10 @@ export function toTokenUnitsBN(
 }
 
 /**
- * 
- * @param rawAmt 
- * @param decimals 
- * @returns 
+ *
+ * @param rawAmt
+ * @param decimals
+ * @returns
  */
  export function toStringBaseUnitBN(
   rawAmt: string | number | BigNumber,

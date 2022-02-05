@@ -48,7 +48,7 @@ export default function Orders(props: OrdersProps) {
 
   //
   const [settings, setSettings] = useState({
-    toWallet: true,
+    toWallet: false,
   });
 
   // Filter state
@@ -144,9 +144,7 @@ export default function Orders(props: OrdersProps) {
   // Filters
   const filters = (
     <Filters
-      title={`${filteredOrders.current.length} order${
-        filteredOrders.current.length !== 1 ? 's' : ''
-      }`}
+      title={`${filteredOrders.current.length} Order${filteredOrders.current.length !== 1 ? 's' : ''}`}
     >
       {/* Toggle for users to select to filter out plots they can't sell into  */}
       {props.mode !== 'MINE' && (

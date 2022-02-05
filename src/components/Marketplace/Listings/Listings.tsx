@@ -114,7 +114,7 @@ export default function Listings(props: ListingsProps) {
 
   // Filters
   const filters = (
-    <Filters title={`${filteredListings.current.length} listing${filteredListings.current.length !== 1 ? 's' : ''}`}>
+    <Filters title={`${filteredListings.current.length} Listing${filteredListings.current.length !== 1 ? 's' : ''}`}>
       <>
         {/* Price per Pod sliding filter  */}
         <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
