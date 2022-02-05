@@ -239,7 +239,7 @@ export const beanftStrings = {
   default: 'This tab will display your BeaNFTs if you have any BeaNFTs associated with this event. If it is empty, you can purchase a BeaNFT on OpenSea.',
   minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
   singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',
-  unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',
+  unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at any time. There is no penalty for waiting to mint.',
   winter: 'Use this tab to view all the Winter BeaNFTs you own. Winter BeaNFTs are not available for minting yet, but will be soon. However, the NFT image and metadata are already stored on the IPFS.',
   genesisNFTs: 'The total minted and unminted Genesis BeaNFTs that you own.',
   winterNFTs: 'The total minted and unminted Winter BeaNFTs that you own.',
@@ -295,32 +295,32 @@ export const fundraiserStrings = {
 export const marketStrings = {
   description: 'The Farmers Market is a Beanstalk-native decentralized marketplace where anyone can buy and sell Pods in a trustless and decentralized fashion.', // TODO
   // Tabs
-  sellPods: 'Sell Pods on the Farmers Market.',
-  buyPods: 'Buy Pods on the Farmers Market.',
+  sellPods: 'Use this tab to Sell Pods on the Farmers Market.',
+  buyPods: 'Use this tab to Buy Pods on the Farmers Market.',
   // Sub-tabs
-  sell: 'Sell Pods into current Pod Orders on the Farmers Market.',
-  buy: 'Buy Pods from current Pod Listings on the Farmers Market.',
+  sell: 'Use this sub-tab to sell Pods into outstanding Pod Orders on the Farmers Market.',
+  buy: 'Use this sub-tab to buy Pods from outstanding Pod Listings on the Farmers Market.',
   createListing: 'Use this sub-tab to create a Pod Listing to sell Pods on the Farmers Marker.',
   createOrder: 'Use this sub-tab to create a Pod Order to buy Pods on the Farmers Marker.',
   // General
-  pricePerPod: 'The Price per Pod, denominated in Beans.',
+  pricePerPod: 'The price per Pod, denominated in Beans.',
   // Create listing
-  plotRange: 'Select the range of Pods within this Plot to sell.',
+  plotRange: 'Select the range of Pods within the selected Plot to sell.',
   alreadyListed: 'Pods in this Plot are already listed on the Farmers Market. Listing Pods from the same Plot will replace the previous Pod Listing.',
-  expiresIn: 'After the Pod Line moves by this amount, this Pod Listing will automatically expire.',
-  toWrapped: 'The Beans will become Claimable.', // TODO: switch to "Wrapped" language - "If your Pod Listing is filled,"
-  toWallet: 'The Beans will be sent to your wallet.', // "If your Pod Listing is filled,"
+  expiresIn: 'After this number of additional Pods become Harvestable, this Pod Listing will automatically Expire.',
+  toWrapped: 'The Beans received from the sale of your Pods will become Claimable Beans.', // TODO: switch to "Wrapped" language - "If your Pod Listing is filled,"
+  toWallet: 'The Beans received from the sale of your Pods will be sent to your wallet and become circulating Beans.',
   // Create order
-  beansToLock: 'Use these Beans in your Order. Beans will be locked them in the Market for fulfillment.',
+  beansToLock: 'Use these Beans in your Pod Order. The Beans will be locked in the Farmers Market for facilitate instant settlement. You can receive your locked Beans at any time by cancelling the Pod Order. ',
   ethToLock: 'Buy Beans with this amount of ETH and use them to place the Pod Order. Beans will be locked them in the Market for fulfillment.',
   placeInPodLine: 'Set the maximum place in the Pod Line you are willing to buy Pods from. Any Pod before this place in the Pod Line will be eligible.', // TODO
-  canCancelOrder: 'You can Cancel the Pod Order to receive the locked Beans from the Farmers Market at anytime.',
+  canCancelOrder: 'You can Cancel the Pod Order to receive the locked Beans from the Farmers Market at any time.',
   buyRangeWarning: 'WARNING: The Buy Range is too small to make an Order or there aren&apos;t enough availble Pods in the Farmers Market.',
   podsReceived: 'The number of Pods to purchase at the Price per Pod.',
   // My Market
-  myOrders: 'This tab contains all of your current Pod Orders on the Farmers Market.', // TODO
-  myListings: 'This tab contains all of your current Pod Listings on the Farmers Market.', // TODO
-  myMarket: 'My Market contains all of your current Pod Orders and Listings on the Farmers Market.', // TODO
+  myOrders: 'This tab contains all of your outstanding Pod Orders on the Farmers Market.', // TODO
+  myListings: 'This tab contains all of your outstanding Pod Listings on the Farmers Market.', // TODO
+  myMarket: 'My Market contains all of your outstanding Pod Orders and Listings on the Farmers Market.', // TODO
 };
 export const filterStrings = {
   pricePerPod: 'Use this slider to filter Pod Orders and Pod Listings by Price per Pod.', // TODO
