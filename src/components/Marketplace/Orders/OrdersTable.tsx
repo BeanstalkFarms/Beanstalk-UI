@@ -10,10 +10,11 @@ import {
   TableRow,
   IconButton,
   TablePagination,
+  Radio,
+  Button
 } from '@material-ui/core';
 import {
   CloseOutlined as CancelIcon,
-  ShoppingCartOutlined as ShoppingCartIcon,
 } from '@material-ui/icons';
 
 import { PodOrder } from 'state/marketplace/reducer';
@@ -21,16 +22,19 @@ import { BEAN, theme } from 'constants/index';
 import { cancelPodOrder, CryptoAsset, displayBN, FarmAsset, toStringBaseUnitBN } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
-import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/Common';
+import { BalanceTableCell, QuestionModule, TablePageSelect, TransactionToast } from 'components/Common';
 import { useStyles } from '../TableStyles';
 
 type OrderRowProps = {
   order: PodOrder;
-  seCurrentOrder: Function;
   isMine: boolean;
+  selectedOrderKey?: number;
+  handleOrderChange?: Function;
+  setSelectedOrderKey?: Function;
+  isSelling?: boolean;
 }
 
-function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
+function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSelling, setSelectedOrderKey }: OrderRowProps) {
   const classes = useStyles();
   // const { plots } = useSelector<AppState, AppState['userBalance']>(
   //   (state) => state.userBalance
@@ -39,7 +43,7 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
   const explainer = (
     <>
       {isMine
-        ? 'This is your Pod Order'
+        ? 'You want'
         : (
           <>
             <a href={`https://etherscan.io/address/${order.account}`} target="_blank" rel="noreferrer">{order.account.slice(0, 6)}</a> wants
@@ -51,7 +55,11 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
   // const canSell = Object.keys(plots).some((index) => order.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
 
   return (
-    <TableRow>
+    <TableRow
+      hover={!isMine && !isSelling}
+      onClick={!isMine && !isSelling ? () => setSelectedOrderKey(order.id) : null}
+      style={!isMine && !isSelling ? { cursor: 'pointer' } : null}
+    >
       {/* Place in line */}
       <TableCell className={classes.lucidaStyle}>
         <span>0 — {displayBN(order.maxPlaceInLine)}</span>
@@ -129,9 +137,17 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
             {displayBN(numPodsLeft)}
           </BalanceTableCell>
           {/* Sell into this Order; only show if handler is set */}
-          {seCurrentOrder && (
+          {handleOrderChange && selectedOrderKey !== null && !isSelling && (
             <TableCell align="center">
-              <IconButton
+              <Radio
+                checked={selectedOrderKey === order.id}
+                onChange={handleOrderChange}
+                value={order.id}
+                name="radio-buttons"
+                inputProps={{ 'aria-label': order.id }}
+            />
+
+              {/* <IconButton
                 onClick={() => seCurrentOrder(order)}
                 // disabled={!canSell}
                 // style={{
@@ -143,7 +159,7 @@ function OrderRow({ order, seCurrentOrder, isMine }: OrderRowProps) {
                 size="small"
               >
                 <ShoppingCartIcon />
-              </IconButton>
+              </IconButton> */}
             </TableCell>
           )}
         </>
@@ -156,12 +172,17 @@ type OrdersTableProps = {
   mode: 'ALL' | 'MINE';
   orders: PodOrder[];
   seCurrentOrder?: Function;
+  isSelling?: boolean;
 }
 
 /**
  * Orders
  */
 export default function OrdersTable(props: OrdersTableProps) {
+  const [selectedOrderKey, setSelectedOrderKey] = React.useState<string>('');
+  const handleOrderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedOrderKey((event.target.value));
+  };
   const classes = useStyles();
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
@@ -211,7 +232,6 @@ export default function OrdersTable(props: OrdersTableProps) {
               <OrderRow
                 key={order.id}
                 order={order}
-                seCurrentOrder={props.seCurrentOrder}
                 isMine
               />
             ))}
@@ -265,18 +285,39 @@ export default function OrdersTable(props: OrdersTableProps) {
             <OrderRow
               key={order.id}
               order={order}
-              seCurrentOrder={props.seCurrentOrder}
+              selectedOrderKey={selectedOrderKey}
+              setSelectedOrderKey={setSelectedOrderKey}
+              handleOrderChange={handleOrderChange}
+              isSelling={props.isSelling}
             />
           ))}
         </Table>
       </TableContainer>
+      <div>
+        { !props.isSelling &&
+          <Button
+            className={classes.formButton}
+            style={{ marginTop: '8px', textAlign: 'center' }}
+            color="primary"
+            disabled={
+              !selectedOrderKey
+            }
+            variant="contained"
+            onClick={() => {
+              props.seCurrentOrder(slicedItems.find((order) => order.id === selectedOrderKey));
+            }}
+          >
+            {selectedOrderKey ? 'Fill Order' : 'Select Order to Fill'}
+          </Button>
+        }
+      </div>
       {/* display page button if user has more Orders than rowsPerPage. */}
       {Object.keys(props.orders).length > rowsPerPage
         ? (
           <TablePagination
             component="div"
             count={props.orders.length}
-            onPageChange={(event, p) => setPage(p)}
+            onPageChange={(event, p) => { setPage(p); setSelectedOrderKey(''); }}
             page={page}
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={[]}
@@ -284,6 +325,11 @@ export default function OrdersTable(props: OrdersTableProps) {
               `${Math.ceil(from / rowsPerPage)}-${
                 count !== -1 ? Math.ceil(count / rowsPerPage) : 0
               }`
+            }
+            ActionsComponent={
+              Object.keys(props.orders).length > (rowsPerPage * 2)
+                ? TablePageSelect
+                : undefined
             }
           />
         )
