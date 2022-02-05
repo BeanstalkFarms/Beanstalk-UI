@@ -102,9 +102,22 @@ export default function FillOrderModal({
         // Ex. User A creates a Buy order with relatiive index 100,000.
         //     I have a plot at index 99,900 with 200 plots in it.
         //     Only 100 of these are eligible to sell.
-        (currentOrder.maxPlaceInLine).minus(plots[selectedPlotIndex]),
+        (currentOrder.maxPlaceInLine).minus(selectedPlotIndex.minus(harvestableIndex)),
         // The total number of pods in the seller's plot.
-        plots[selectedPlotIndex]
+        plots[selectedPlotIndex.toString()]
+      )
+      : new BigNumber(0)
+  );
+
+  // Get the maximum `end` value.
+  const getMaxEnd = (selectedPlotIndex: BigNumber) => (
+    // This plot begins at `selectedPlotIndex` and has `plots[selectedPlotIndex]` Pods in it.
+    selectedPlotIndex.gt(0)
+      ? MinBN(
+        // The number of pods that are "eligible" for this order
+        (currentOrder.maxPlaceInLine).minus(selectedPlotIndex.minus(harvestableIndex)),
+        // The total number of pods in the seller's plot.
+        plots[selectedPlotIndex.toString()],
       )
       : new BigNumber(0)
   );
@@ -116,6 +129,7 @@ export default function FillOrderModal({
   const beansReceived = amount.times(currentOrder.pricePerPod);
   const amountInSelectedPlot = index ? new BigNumber(plots[index.toString()]) : new BigNumber(-1);
   // const end = start.plus(amount);
+  const maxEnd = getMaxEnd(index);
 
   // function fromIndexValueUpdated(newStartNumber: BigNumber, newAmountNumber: BigNumber) {
   //   const newStartValue = MinBN(
@@ -136,13 +150,16 @@ export default function FillOrderModal({
       return;
     }
     const newIndex = new BigNumber(event.target.value);
-    const amountInPlot = plots[newIndex.toString()];
-    const _max = getMaxAmountCanSell(newIndex);
-    console.log(`SellIntoOrderModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${_max}`);
+    const _maxAmount = getMaxAmountCanSell(newIndex);
+    const _maxEnd = getMaxEnd(newIndex);
+    console.log(`SellIntoOrderModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${_maxAmount}`);
+    
+    // Defaults
     setIndex(newIndex);
-    setAmount(_max);
-    setStart(new BigNumber(amountInPlot).minus(_max));
+    setAmount(_maxAmount);
+    setStart(new BigNumber(_maxEnd).minus(_maxAmount));
   };
+
   // Handle Pod change
   const handlePodChange = (event) => {
     const newAmount = new BigNumber(event.target.value || 0);
@@ -169,14 +186,6 @@ export default function FillOrderModal({
       setAmount(newAmount);
     }
   };
-  // Handle start change
-  // const handleStartChange = (event) => {
-  //   if (event.target.value) {
-  //     fromIndexValueUpdated(event.target.value, maxAmountCanSell);
-  //   } else {
-  //     fromIndexValueUpdated(new BigNumber(0), maxAmountCanSell);
-  //   }
-  // };
 
   const minMaxHandler = () => {
     setStart(
@@ -270,7 +279,7 @@ export default function FillOrderModal({
         setStart(new BigNumber(0));
       }}
       maxHandler={() => {
-        setStart(amountInSelectedPlot.minus(amount));
+        setStart(maxEnd.minus(amount));
       }}
       error={errorAmount}
     />
