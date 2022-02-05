@@ -48,7 +48,7 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
           <>
             <a href={`https://etherscan.io/address/${order.account}`} target="_blank" rel="noreferrer">{order.account.slice(0, 6)}</a> wants
           </>
-        )} to buy {displayBN(numPodsLeft)} Pods for {displayBN(order.pricePerPod)} Beans per Pod anywhere before {displayBN(order.maxPlaceInLine)} in the Pod Line.
+        )} to buy {displayBN(numPodsLeft)} Pod{numPodsLeft.eq(1) ? '' : 's'} for {displayBN(order.pricePerPod)} Beans per Pod anywhere before {displayBN(order.maxPlaceInLine)} in the Pod Line.
     </>
   );
   /** Do we have any plots whose index is smaller than max place in line? if so then we can sell */
@@ -193,7 +193,7 @@ export default function OrdersTable(props: OrdersTableProps) {
   if (!props.orders || props.orders.length === 0) {
     return (
       <div>
-        <h4 style={{ }}>No active orders given the current filters</h4>
+        <h4 style={{ }}>No active Orders given the current filters</h4>
       </div>
     );
   }

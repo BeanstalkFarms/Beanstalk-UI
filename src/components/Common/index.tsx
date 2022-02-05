@@ -325,7 +325,7 @@ export const marketStrings = {
 export const filterStrings = {
   pricePerPod: 'Use this slider to filter Pod Orders and Pod Listings by Price per Pod.', // TODO
   placeInLine: 'Use this slider to filter Pod Orders and Pod Listings by Place in Line.', // TODO
-  toggleValidOffers: 'Toggle to filter out Pod Listings that you cannot currently Fill.', // TODO
+  toggleValidOrders: 'Toggle to filter out Pod Listings that you cannot currently Fill.', // TODO
 };
 export const settingsStrings = {
   showLP: 'Toggle to also Deposit Circulating LP Tokens.',
