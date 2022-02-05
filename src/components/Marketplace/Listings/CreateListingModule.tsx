@@ -179,7 +179,6 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const priceField = (
     <TokenInputField
       label="Price per Pod"
-      placeholder="0.50"
       token={CryptoAsset.Bean}
       handleChange={handlePriceChange}
       value={TrimBN(pricePerPodValue, 6)}
@@ -286,7 +285,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
         width: '100%',
         margin: '10px 0',
       }}>
-        {'You\'ve already listed this Plot on the Marketplace. Resubmitting this form will update the previous listing.'}
+        {'Pods in this Plot are already Listed on the Farmers Market. Listing Pods from the same Plot will replace the previous Pod Listing.'}
         <ListingsTable
           mode="MINE"
           enableControls={false}
@@ -299,15 +298,15 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
 
   /** Details */
   const details = [
-    `List ${displayBN(totalAmount)} Pods from plot at position ${displayBN(selectedPlotPositionInLine)} in line for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
-    `If fully sold, you will receive ${displayBN(totalAmount.multipliedBy(pricePerPodValue))} Beans.`,
-    `This listing will expire when ${displayBN(expiresIn)} additional Pods have been harvested. The total amount of pods harvested at this time will be ${displayBN(expiresIn.plus(harvestableIndex))}.`,
+    `List ${displayBN(totalAmount)} Pods from Plot at position ${displayBN(selectedPlotPositionInLine)} in the Pod Line for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
+    `This Pod Listing will expire when ${displayBN(expiresIn)} additional Pods have been Harvested so the total number of Pods Harvested is ${displayBN(expiresIn.plus(harvestableIndex))}.`,
+    `If completely Filled, you will receive ${displayBN(totalAmount.multipliedBy(pricePerPodValue))} Beans.`,
   ];
 
   if (props.settings.toWallet) {
-    details.push(marketStrings.toWrapped);
-  } else {
     details.push(marketStrings.toWallet);
+  } else {
+    details.push(marketStrings.toWrapped);
   }
 
   function transactionDetails() {

@@ -244,8 +244,8 @@ export const SendPlotModule = forwardRef((props, ref) => {
 
         // Toast
         const txToast = new TransactionToast({
-          loading: `Sending plot ${startPlot}-${endPlot} to ${props.toAddress.substring(0, 6)}`,
-          success: `Sent plot ${startPlot}-${endPlot} to ${props.toAddress.substring(0, 6)}`,
+          loading: `Plot ${startPlot}-${endPlot} send to ${props.toAddress.substring(0, 6)} pending. `,
+          success: `Plot ${startPlot}-${endPlot} send to ${props.toAddress.substring(0, 6)} successful.`,
         });
 
         // Execute

@@ -70,8 +70,8 @@ export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
 
       // Toast
       const txToast = new TransactionToast({
-        loading: `Harvesting ${displayBN(props.harvestablePodBalance)} Pods`,
-        success: `Harvested ${displayBN(props.harvestablePodBalance)} Pods`,
+        loading: `${displayBN(props.harvestablePodBalance)} Pod Harvest pending.`,
+        success: `${displayBN(props.harvestablePodBalance)} Pod Harvest successful.`,
       });
 
       // Execute

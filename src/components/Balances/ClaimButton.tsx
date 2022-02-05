@@ -17,8 +17,8 @@ export default function ClaimButton(props) {
     if (props.asset === ClaimableAsset.Ethereum) {
       // Toast
       const txToast = new TransactionToast({
-        loading: 'Claiming assets', // FIXME
-        success: 'Claimed assets', // FIXME
+        loading: 'Asset Claim pending.', // FIXME
+        success: 'Asset Claim successful.', // FIXME
       });
 
       // Execute
@@ -39,8 +39,8 @@ export default function ClaimButton(props) {
     } else {
       // Toast
       const txToast = new TransactionToast({
-        loading: 'Updating Silo', // FIXME
-        success: 'Updated Silo', // FIXME
+        loading: 'Silo update pending.', // FIXME
+        success: 'Silo update successful.', // FIXME
       });
 
       // Execute

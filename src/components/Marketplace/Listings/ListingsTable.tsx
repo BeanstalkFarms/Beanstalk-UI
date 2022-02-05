@@ -16,8 +16,6 @@ import {
   IconButton,
   // CircularProgress,
   TablePagination,
-  Radio,
-  Button
 } from '@material-ui/core';
 
 import { PodListing } from 'state/marketplace/reducer';
@@ -31,23 +29,17 @@ import { useStyles } from '../TableStyles';
 type ListingRowProps = {
   listing: PodListing;
   harvestableIndex: AppState['weather']['harvestableIndex'];
-  setSelectedListingIndex?: Function;
-  selectedListingIndex?: string;
-  handleListingChange?: Function;
+  setCurrentListing: Function;
   enableControls: boolean;
   isMine: boolean;
-  isBuying: boolean;
 }
 
 function ListingRow({
   listing,
   harvestableIndex,
-  setSelectedListingIndex,
-  selectedListingIndex,
-  handleListingChange,
+  setCurrentListing,
   enableControls,
   isMine,
-  isBuying
 }: ListingRowProps) {
   const classes = useStyles();
   const relativeIndex = (listing.index).minus(harvestableIndex).plus(listing.start);
@@ -66,7 +58,7 @@ function ListingRow({
     </>
   );
   return (
-    <TableRow hover onClick={() => setSelectedListingIndex(listing.index.toString())} style={{ cursor: 'pointer' }}>
+    <TableRow>
       {/* Place in line */}
       <TableCell
         align="left"
@@ -86,7 +78,7 @@ function ListingRow({
       {/* # of pods remaining to harvest before this order to sell expires */}
       <BalanceTableCell
         className={classes.lucidaStyle}
-        label={`- If the pod line moves forward ${displayBN(relativeExpiry)} Pods, this listing will automatically expire.`}
+        label={`- If the Pod Line moves forward ${displayBN(relativeExpiry)} Pods, this Listing will automatically expire.`}
         balance={new BigNumber(relativeExpiry)}
       />
       {/* Price */}
@@ -138,8 +130,8 @@ function ListingRow({
                 onClick={async () => {
                   // Toast
                   const txToast = new TransactionToast({
-                    loading: `Cancelling listing with ${displayBN(amountRemaining)} Pods remaining at ${displayBN(relativeIndex)} in line`,
-                    success: 'Listing cancelled',
+                    loading: `Cancel Listing with ${displayBN(amountRemaining)} Pods remaining at ${displayBN(relativeIndex)} in the Pod Line pending.`,
+                    success: `Cancel Listing with ${displayBN(amountRemaining)} Pods remaining at ${displayBN(relativeIndex)} in the Pod Line successful.`,
                   });
 
                   // Execute
@@ -175,19 +167,19 @@ function ListingRow({
             icon={<TokenIcon token={FarmAsset.Pods} />}
           />
           {/* Buy this listing; only show if handler is set */}
-          {handleListingChange && selectedListingIndex !== null && !isBuying &&
-          (
+          {setCurrentListing && (
             <TableCell align="center">
-              <Radio
-                checked={selectedListingIndex === listing.index.toString()}
-                onChange={handleListingChange}
-                value={listing.index}
-                name="radio-buttons"
-                inputProps={{ 'aria-label': toStringBaseUnitBN(listing.index, BEAN.decimals) }}
-            />
+              <IconButton
+                onClick={() => setCurrentListing(listing)}
+                style={{
+                  color: theme.linkColor,
+                }}
+                size="small"
+              >
+                <ShoppingCartIcon />
+              </IconButton>
             </TableCell>
-          )
-          }
+          )}
         </>
       )}
     </TableRow>
@@ -200,7 +192,6 @@ type ListingsTableProps = {
   listings: PodListing[];
   setCurrentListing?: Function;
   harvestableIndex: BigNumber;
-  isBuying?: boolean;
 }
 
 /**
@@ -208,11 +199,6 @@ type ListingsTableProps = {
  * A User can purchase the Pods in a Listing.
  */
 export default function ListingsTable(props: ListingsTableProps) {
-  const [selectedListingIndex, setSelectedListingIndex] = React.useState<string>('');
-  const handleListingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedListingIndex((event.target.value));
-  };
-
   const classes = useStyles();
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
@@ -259,6 +245,7 @@ export default function ListingsTable(props: ListingsTableProps) {
                   key={listing.index - props.harvestableIndex}
                   harvestableIndex={props.harvestableIndex}
                   listing={listing}
+                  setCurrentListing={props.setCurrentListing}
                   enableControls={props.enableControls}
                   isMine
                 />
@@ -319,31 +306,12 @@ export default function ListingsTable(props: ListingsTableProps) {
                 key={listing.index - props.harvestableIndex}
                 harvestableIndex={props.harvestableIndex}
                 listing={listing}
-                setSelectedListingIndex={setSelectedListingIndex}
-                selectedListingIndex={selectedListingIndex}
-                handleListingChange={handleListingChange}
-                isBuying={props.isBuying}
+                setCurrentListing={props.setCurrentListing}
               />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <div>
-        { !props.isBuying &&
-          <Button
-            className={classes.formButton}
-            style={{ marginTop:'8px', textAlign: 'center' }}
-            color="primary"
-            disabled={
-              !selectedListingIndex
-            }
-            variant="contained"
-            onClick={() => { props.setCurrentListing(slicedItems.find((listing) => listing.index.toString() === selectedListingIndex)) }}
-          >
-            Buy Pods
-          </Button>
-        }
-      </div>
       {/* display page button if user has more listings than rowsPerPage. */}
       {Object.keys(props.listings).length > rowsPerPage
         ? (
