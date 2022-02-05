@@ -192,9 +192,11 @@ export default function BaseModule({
     </>
     : null;
 
+  // Removed style from <Box> temporarily:
+  // style={{ position: 'relative', zIndex: '0' }}
   const moduleContent = (
     <>
-      <Box style={{ position: 'relative', zIndex: '0' }}>
+      <Box style={{ position: 'relative' }}>
         {children}
         {allowance.isEqualTo(0) ? (
           <Box className={classes.moduleContent} />

@@ -22,7 +22,7 @@ import { BEAN } from 'constants/index';
 import {
   BaseModule,
   PlotListInputField,
-  SettingsFormModule,
+  // SettingsFormModule,
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
@@ -37,14 +37,13 @@ type FillOrderModalProps = {
   currentOrder: PodOrder;
   onClose: Function;
   settings: any; // FIXME
-  setSettings: Function;
+  // setSettings: Function;
 }
 
 export default function FillOrderModal({
   currentOrder,
   onClose,
   settings,
-  setSettings
 }: FillOrderModalProps) {
   /** The selected Plot index. */
   const [index, setIndex] = useState(new BigNumber(-1));
@@ -346,14 +345,14 @@ export default function FillOrderModal({
   // Users select how they want to receive their Beans from their listed Plots once purchased
   // FIXME:
   // Once new pod marketplace contract is updated we will need to send in this variable
-  const showSettings = (
-    <SettingsFormModule
-      settings={settings}
-      setSettings={setSettings}
-      isCreateListing
-      showUnitModule={false}
-    />
-  );
+  // const showSettings = (
+  //   <SettingsFormModule
+  //     settings={settings}
+  //     setSettings={setSettings}
+  //     isCreateListing
+  //     showUnitModule={false}
+  //   />
+  // );
 
   return (
     <Modal
