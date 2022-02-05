@@ -10,7 +10,7 @@ import { FormatTooltip, QuestionModule } from './index';
 
 const useStyles = makeStyles({
   inputText: {
-    fontSize: 'calc(15px + 1vmin)',
+    fontSize: 'calc(10px + 1vmin)',
     fontFamily: 'Lucida Console',
     fontWeight: 400,
     color: theme.text,
@@ -81,10 +81,10 @@ const minMaxStyle = {
   backgroundColor: theme.primary,
   borderRadius: '30px',
   color: theme.accentText,
-  fontSize: '13px',
+  fontSize: '11px',
   fontFamily: 'Futura-PT-Book',
-  height: '25px',
-  minWidth: '50px',
+  height: '22px',
+  minWidth: '38px',
 };
 
 /**
@@ -181,6 +181,7 @@ export default function TokenInputField(props: PlotRangeInputFieldProps) {
           min={0}
           max={props.balance.toNumber()}
           marks={marks}
+          disabled={props.disableSlider}
         />
       </Box>
     );

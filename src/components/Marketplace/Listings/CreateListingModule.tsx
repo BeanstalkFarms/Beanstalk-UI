@@ -162,10 +162,6 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     }
   };
 
-  const minMaxHandler = () => {
-    setTotalAmount(amountInSelectedPlot);
-    setStart(new BigNumber(0));
-  };
   const errorAmount = amountInSelectedPlot.minus(start).minus(totalAmount).isLessThan(0);
 
   /* Input Fields */
@@ -211,7 +207,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
         // value that is greater than end value (or vice
         // versa), override and set amount = 0. This locks
         // end = start.
-        if(event[0].gte(event[1])) {
+        if (event[0].gte(event[1])) {
           setStart(
             // CONSTRAINT: start > 0
             MaxBN(

@@ -27,6 +27,7 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
   TransactionToast,
+  marketStrings,
 } from 'components/Common';
 import PlotRangeInputField from 'components/Common/PlotRangeInputField';
 import { PodOrder } from 'state/marketplace/reducer';
@@ -231,7 +232,7 @@ export default function FillOrderModal({
     <PlotRangeInputField
       disableSlider
       label="Plot Range"
-      // description={marketStrings.plotRange}
+      description={marketStrings.plotRange}
       value={[
         TrimBN(start, 6),                   // `start` is held in state
         TrimBN(start.plus(amount), 6)       // `end` is calculated depending on `start` and `amount`.
@@ -248,7 +249,7 @@ export default function FillOrderModal({
         // value that is greater than end value (or vice
         // versa), override and set amount = 0. This locks
         // end = start.
-        if(event[0].gte(event[1])) {
+        if (event[0].gte(event[1])) {
           setStart(
             // CONSTRAINT: start > 0
             MaxBN(
