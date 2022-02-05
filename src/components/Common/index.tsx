@@ -169,7 +169,7 @@ export const siloStrings = {
     'WARNING: When Converting all the way to the peg, the Convert may fail due to a small amount of slippage in the direction of the peg.',
   convertLPDeposit: 'Use this sub-tab to convert Deposited BEAN:ETH LP Tokens to Deposited Beans when P < $1.',
   convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited BEAN:ETH LP Tokens when P > $1.',
-  convertSlippage: 'test',
+  convertSlippage: 'Customize the maximum difference between the current distance from peg and the distance from peg when your transaction is mined, in the direction of the peg.',
   withdrawSeasons: 'The Withdraw Seasons is the number of full Seasons assets are Frozen upon Withdrawal from the Silo.',
   decreaseSeasons: 'The Next Decrease is the number of Seasons until the Withdrawal Freeze decreases by 1 Season.',
 };
