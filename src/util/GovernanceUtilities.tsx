@@ -1,3 +1,4 @@
+import { ContractTransaction } from 'ethers';
 import { beanstalkContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
@@ -18,18 +19,25 @@ export const unvote = async (
 );
 
 // Decides what function the user should call when voting for bips
+// vote -> vote on 1 BIP
+// unvote -> unvote on 1 BIP
+// voteAll -> vote on multiple BIPs
+// unvoteAll -> unvote on multiple BIPs
+// voteUnvoteAll -> vote or unvote multiple BIPs (depending on current voter status)
 export const megaVote = async (
-  bipList: Array,
+  bipList: any[],
   onResponse: TxnCallbacks['onResponse']
 ) => {
   const bips = bipList.map((b) => b[0]);
   const [voted, unvoted] = bipList.reduce(([vb, ub], bip) => (bip[2] ? [true, ub] : [vb, true]), [false, false]);
   const bs = beanstalkContract();
-  let voteFunction;
+  
+  let voteFunction : Promise<ContractTransaction>;
   if (bips.length === 1) voteFunction = unvoted ? bs.vote(bips[0]) : bs.unvote(bips[0]);
   else if (voted) voteFunction = unvoted ? bs.voteUnvoteAll(bips) : bs.unvoteAll(bips);
   else voteFunction = bs.voteAll(bips);
-  handleCallbacks(
+
+  return handleCallbacks(
     voteFunction,
     { onResponse }
   );
