@@ -113,27 +113,30 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   };
   /** */
   const handlePodChange = (event) => {
-    const newToPodValue = event.target.value !== ''
+    const newAmount = event.target.value !== ''
       ? new BigNumber(event.target.value)
       : new BigNumber(0);
 
     // BACK-OF-PLOT LOGIC
-    // If changing the amount, move `start` forward by the
-    // start = 0, newToPodValue = 1000, totalAmount = 1900
-    // delta = -900
-    // start - delta = 0 - (-900) = 900.
-    const delta = newToPodValue.minus(totalAmount);
+    // If changing the `amount`, move `start` forward.
+    // 
+    // Example:
+    //  start = 0, newToPodValue = 1000, totalAmount = 1900
+    //  delta = -900
+    //  start - delta = 0 - (-900) = 900.
+    const delta = newAmount.minus(totalAmount);
     setStart(
       MaxBN(
         start.minus(delta),
         new BigNumber(0),
       )
     );
+
     // CONSTRAINT: Amount can't be greater than size of selected plot.
-    if (amountInSelectedPlot.lt(newToPodValue)) {
+    if (amountInSelectedPlot.lt(newAmount)) {
       setTotalAmount(amountInSelectedPlot);
     } else {
-      setTotalAmount(newToPodValue);
+      setTotalAmount(newAmount);
     }
   };
   // Handle start change
@@ -159,10 +162,6 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     }
   };
 
-  const minMaxHandler = () => {
-    setTotalAmount(amountInSelectedPlot);
-    setStart(new BigNumber(0));
-  };
   const errorAmount = amountInSelectedPlot.minus(start).minus(totalAmount).isLessThan(0);
 
   /* Input Fields */
@@ -205,22 +204,39 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       // `handleChange` is called for both the slider
       // and the inputs. keeps things standardized.
       handleChange={(event: BigNumber[]) => {
-        setStart(
-          // CONSTRAINT: start > 0
-          MaxBN(
+        // FIX: If someone manually types in a start
+        // value that is greater than end value (or vice
+        // versa), override and set amount = 0. This locks
+        // end = start.
+        if (event[0].gte(event[1])) {
+          setStart(
+            // CONSTRAINT: start > 0
+            MaxBN(
+              new BigNumber(0),
+              event[0]
+            )
+          );
+          setTotalAmount(
             new BigNumber(0),
-            event[0]
-          )
-        );
-        setTotalAmount(
-          // CONSTRAINT: totalAmount <= amountInSeletedPlot
-          MinBN(
-            amountInSelectedPlot,
-            event[1].minus(event[0]),
-          )
-        );
+          );
+        } else {
+          setStart(
+            // CONSTRAINT: start > 0
+            MaxBN(
+              new BigNumber(0),
+              event[0]
+            )
+          );
+          setTotalAmount(
+            // CONSTRAINT: totalAmount <= amountInSeletedPlot
+            MinBN(
+              amountInSelectedPlot,
+              event[1].minus(event[0]),
+            )
+          );
+        }
       }}
-      minHandler={minMaxHandler}
+      // minHandler={minMaxHandler}
       error={errorAmount}
     />
   );
@@ -380,6 +396,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       {fromPlotField}
       {index.gte(0) ? (
         <>
+          <div style={{ height: 2 }} />
           {startField}
           {amountField}
           {priceField}
