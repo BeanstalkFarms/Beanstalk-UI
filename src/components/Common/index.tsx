@@ -181,7 +181,7 @@ export const fieldStrings = {
   harvest:
     'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.',
   sendPlotWarning:
-    'WARNING: There is currently no decentralized market for buying and selling Plots. Send Plots at your own risk.',
+    'WARNING: You can exchange your Pods in a decentralized fashion on the Farmers Market. Send Plots at your own risk.',
   availableSoil:
     'Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any number of Beans up to the Available Soil in exchange for Pods.',
   podLine:
@@ -314,8 +314,8 @@ export const marketStrings = {
   beansToLock: 'Use these Beans in your Order. Beans will be locked them in the Market for fulfillment.',
   ethToLock: 'Buy Beans with this amount of ETH and use them to place the Pod Order. Beans will be locked them in the Market for fulfillment.',
   placeInPodLine: 'Set the maximum place in the Pod Line you are willing to buy Pods from. Any Pod before this place in the Pod Line will be eligible.', // TODO
-  canCancelOrder: 'You can cancel the order to return the locked Beans from the marketplace',
-  buyRangeWarning: 'WARNING: The Buy Range is too small to make an Order or there aren&apos;t enough availble Pods in the market.',
+  canCancelOrder: 'You can Cancel the Pod Order to receive the locked Beans from the Farmers Market at anytime.',
+  buyRangeWarning: 'WARNING: The Buy Range is too small to make an Order or there aren&apos;t enough availble Pods in the Farmers Market.',
   podsReceived: 'The number of Pods to purchase at the Price per Pod.',
   // My Market
   myOrders: 'This tab contains all of your current Pod Orders on the Farmers Market.', // TODO
@@ -332,5 +332,5 @@ export const settingsStrings = {
   hasClaimable: 'Toggle to Claim and use Claimable assets in the transaction.',
   disableConvertible: 'Toggle to convert Deposited Beans into Deposited LP Tokens.',
   hasRemoveLP: 'Toggle to remove the Beans and ETH from the liquidity pool. By default this is toggled on.',
-  toWalletDescription: 'Toggle to select how users want to receive their Beans once their Pods are sold.',
+  toWalletDescription: 'Toggle to select whether the Beans received when your Pod Listing is Filled should be sent to your wallet as circulating Beans are held within Beanstalk as Claimable Beans. Toggle "To Wallet" on to have the Beans sent to your wallet.',
 };

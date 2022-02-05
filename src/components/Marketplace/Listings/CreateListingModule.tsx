@@ -113,30 +113,27 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   };
   /** */
   const handlePodChange = (event) => {
-    const newAmount = event.target.value !== ''
+    const newToPodValue = event.target.value !== ''
       ? new BigNumber(event.target.value)
       : new BigNumber(0);
 
     // BACK-OF-PLOT LOGIC
-    // If changing the `amount`, move `start` forward.
-    // 
-    // Example:
-    //  start = 0, newToPodValue = 1000, totalAmount = 1900
-    //  delta = -900
-    //  start - delta = 0 - (-900) = 900.
-    const delta = newAmount.minus(totalAmount);
+    // If changing the amount, move `start` forward by the
+    // start = 0, newToPodValue = 1000, totalAmount = 1900
+    // delta = -900
+    // start - delta = 0 - (-900) = 900.
+    const delta = newToPodValue.minus(totalAmount);
     setStart(
       MaxBN(
         start.minus(delta),
         new BigNumber(0),
       )
     );
-
     // CONSTRAINT: Amount can't be greater than size of selected plot.
-    if (amountInSelectedPlot.lt(newAmount)) {
+    if (amountInSelectedPlot.lt(newToPodValue)) {
       setTotalAmount(amountInSelectedPlot);
     } else {
-      setTotalAmount(newAmount);
+      setTotalAmount(newToPodValue);
     }
   };
   // Handle start change
@@ -162,6 +159,10 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     }
   };
 
+  const minMaxHandler = () => {
+    setTotalAmount(amountInSelectedPlot);
+    setStart(new BigNumber(0));
+  };
   const errorAmount = amountInSelectedPlot.minus(start).minus(totalAmount).isLessThan(0);
 
   /* Input Fields */
@@ -178,8 +179,6 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const priceField = (
     <TokenInputField
       label="Price per Pod"
-      description={marketStrings.pricePerPod}
-      placeholder="0.50"
       token={CryptoAsset.Bean}
       handleChange={handlePriceChange}
       value={TrimBN(pricePerPodValue, 6)}
@@ -194,7 +193,6 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     //  MAX:   amountInSelectedPlot
     <PlotRangeInputField
       label="Plot Range"
-      description={marketStrings.plotRange}
       value={[
         TrimBN(start, 6),                   // `start` is held in state
         TrimBN(start.plus(totalAmount), 6)  // `end` is calculated depending on `start` and `totalAmount`.
@@ -204,39 +202,22 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       // `handleChange` is called for both the slider
       // and the inputs. keeps things standardized.
       handleChange={(event: BigNumber[]) => {
-        // FIX: If someone manually types in a start
-        // value that is greater than end value (or vice
-        // versa), override and set amount = 0. This locks
-        // end = start.
-        if (event[0].gte(event[1])) {
-          setStart(
-            // CONSTRAINT: start > 0
-            MaxBN(
-              new BigNumber(0),
-              event[0]
-            )
-          );
-          setTotalAmount(
+        setStart(
+          // CONSTRAINT: start > 0
+          MaxBN(
             new BigNumber(0),
-          );
-        } else {
-          setStart(
-            // CONSTRAINT: start > 0
-            MaxBN(
-              new BigNumber(0),
-              event[0]
-            )
-          );
-          setTotalAmount(
-            // CONSTRAINT: totalAmount <= amountInSeletedPlot
-            MinBN(
-              amountInSelectedPlot,
-              event[1].minus(event[0]),
-            )
-          );
-        }
+            event[0]
+          )
+        );
+        setTotalAmount(
+          // CONSTRAINT: totalAmount <= amountInSeletedPlot
+          MinBN(
+            amountInSelectedPlot,
+            event[1].minus(event[0]),
+          )
+        );
       }}
-      // minHandler={minMaxHandler}
+      minHandler={minMaxHandler}
       error={errorAmount}
     />
   );
@@ -304,7 +285,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
         width: '100%',
         margin: '10px 0',
       }}>
-        {marketStrings.alreadyListed}
+        {'Pods in this Plot are already Listed on the Farmers Market. Listing Pods from the same Plot will replace the previous Pod Listing.'}
         <ListingsTable
           mode="MINE"
           enableControls={false}
@@ -318,9 +299,15 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   /** Details */
   const details = [
     `List ${displayBN(totalAmount)} Pods from Plot at position ${displayBN(selectedPlotPositionInLine)} in the Pod Line for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
-    `This Pod Listing will expire when ${displayBN(expiresIn)} additional Pods have been Harvested so the total number of Pods Harvested is ${displayBN(expiresIn.plus(harvestableIndex))}.`,
-    `If completely Filled, you will receive ${displayBN(totalAmount.multipliedBy(pricePerPodValue))} Beans. ${props.settings.toWallet ? marketStrings.toWallet : marketStrings.toWrapped}`,
+    `This Pod Listing will expire when ${displayBN(expiresIn)} additional Pods become Harvestable so the total number of Harvestable Pods is ${displayBN(expiresIn.plus(harvestableIndex))}.`,
+    `If completely Filled, you will receive ${displayBN(totalAmount.multipliedBy(pricePerPodValue))} Beans.`,
   ];
+
+  if (props.settings.toWallet) {
+    details.push(marketStrings.toWallet);
+  } else {
+    details.push(marketStrings.toWrapped);
+  }
 
   function transactionDetails() {
     if (!props.readyToSubmit) return null;
@@ -361,8 +348,8 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     handleForm() {
       // Toast
       const txToast = new TransactionToast({
-        loading: `Listing ${displayBN(totalAmount)} Pods for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod`,
-        success: 'Listing placed',
+        loading: `Listing ${displayBN(totalAmount)} Pods for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
+        success: 'Pod Listing placed.',
       });
 
       // Execute
@@ -396,7 +383,6 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       {fromPlotField}
       {index.gte(0) ? (
         <>
-          <div style={{ height: 2 }} />
           {startField}
           {amountField}
           {priceField}
