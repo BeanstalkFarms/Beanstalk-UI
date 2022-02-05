@@ -271,6 +271,11 @@ const BipTable = (props) => {
               page={page}
               rowsPerPage={rowsPerPage}
               rowsPerPageOptions={[]}
+              labelDisplayedRows={({ from, count }) =>
+                `${Math.ceil(from / rowsPerPage)}-${
+                  count !== -1 ? Math.ceil(count / rowsPerPage) : 0
+                }`
+              }
               ActionsComponent={
                 Object.keys(tableBips).length > (rowsPerPage * 2)
                   ? TablePageSelect

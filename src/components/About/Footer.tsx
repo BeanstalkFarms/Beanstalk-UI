@@ -12,6 +12,9 @@ import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
 import { ReactComponent as CoinGeckoIcon } from 'img/coingecko-icon.svg';
 import { ReactComponent as CoinMarketCapIcon } from 'img/coinmarketcap-icon.svg';
 import { ReactComponent as CommonwealthIcon } from 'img/commonwealth-icon.svg';
+import { ReactComponent as CurveIcon } from 'img/curve-dao-icon.svg';
+import { ReactComponent as DuneWinterIcon } from 'img/dune-icon-winter.svg'; // Icon is 2 colors so manually changed for winter theme
+import { ReactComponent as DuneIcon } from 'img/dune-icon.svg'; // Icon is 2 colors so manually changed for winter theme
 import { ReactComponent as DiscordIcon } from 'img/discord-icon.svg';
 import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
 import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
@@ -27,6 +30,8 @@ import {
   COINGECKO_LINK,
   COINMARKETCAP_LINK,
   COMMONWEALTH_LINK,
+  CURVE_LINK,
+  DUNE_LINK,
   DISCORD_LINK,
   GITHUB_LINK,
   LICENSE_LINK,
@@ -77,9 +82,11 @@ export default function Footer() {
         <LogoLinks close link={TWITTER_LINK}>
           <TwitterIcon style={logoStyle} />
         </LogoLinks>
-        <LogoLinks close link={REDDIT_LINK}>
-          <RedditIcon style={logoStyle} />
-        </LogoLinks>
+        {width > 400 ? (
+          <LogoLinks close link={REDDIT_LINK}>
+            <RedditIcon style={logoStyle} />
+          </LogoLinks>
+        ) : null}
         <LogoLinks link={TELEGRAM_LINK}>
           <TelegramIcon style={logoStyle} />
         </LogoLinks>
@@ -103,6 +110,11 @@ export default function Footer() {
         <LogoLinks close link={GITHUB_LINK}>
           <GitHubIcon style={logoStyle} />
         </LogoLinks>
+        <LogoLinks close link={DUNE_LINK} paddingRight="5px">
+          {theme.name === 'winterUpgrade'
+            ? <DuneWinterIcon style={logoStyle} />
+            : <DuneIcon style={logoStyle} />}
+        </LogoLinks>
         <LogoLinks close link={BEAN_TOKEN_LINK}>
           <BeanIcon style={logoStyle} />
         </LogoLinks>
@@ -114,6 +126,9 @@ export default function Footer() {
             <UniswapIcon style={logoStyle} />
           </LogoLinks>
         ) : null}
+        <LogoLinks close link={CURVE_LINK}>
+          <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)'} : { height: '25px', width: '25px', fill: 'url(#blackGradient)' }} />
+        </LogoLinks>
         {width > 500 ? (
           <LogoLinks link={COMMONWEALTH_LINK}>
             <CommonwealthIcon style={logoStyle} />
