@@ -56,9 +56,9 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
 
   return (
     <TableRow
-      hover={isSelling}
-      onClick={isSelling ? () => setSelectedOrderKey(order.id) : null}
-      style={isSelling ? { cursor: 'pointer' } : null}
+      hover={!isMine && !isSelling}
+      onClick={!isMine && !isSelling ? () => setSelectedOrderKey(order.id) : null}
+      style={!isMine && !isSelling ? { cursor: 'pointer' } : null}
     >
       {/* Place in line */}
       <TableCell className={classes.lucidaStyle}>
@@ -307,7 +307,7 @@ export default function OrdersTable(props: OrdersTableProps) {
               props.seCurrentOrder(slicedItems.find((order) => order.id === selectedOrderKey));
             }}
           >
-            Select Pods to Sell
+            {selectedOrderKey ? 'Sell Pods' : 'Select Pods to Sell'}
           </Button>
         }
       </div>
