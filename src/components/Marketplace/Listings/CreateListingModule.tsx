@@ -285,7 +285,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
         width: '100%',
         margin: '10px 0',
       }}>
-        {'Pods in this Plot are already Listed on the Farmers Market. Listing Pods from the same Plot will replace the previous Pod Listing.'}
+        {marketStrings.alreadyListed}
         <ListingsTable
           mode="MINE"
           enableControls={false}

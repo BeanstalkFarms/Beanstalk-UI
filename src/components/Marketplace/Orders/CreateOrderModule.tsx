@@ -298,7 +298,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       locked={pricePerPodValue.lte(0)}
       token={FarmAsset.Pods}
       value={TrimBN(toPodValue, 6)}
-      handleChange={(event: React.ChangeEvent<HTMLInputElement>) => 
+      handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
         calculateBeansAndEthForPodAmount(
           new BigNumber(event.target.value || 0),
           pricePerPodValue
@@ -362,7 +362,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
     ? (
       <>
         <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
-          WARNING: The Buy Range is too small to make an Order or there aren&apos;t enough availble Pods in the market.
+          {marketStrings.buyRangeWarning}
         </span>
         <br />
       </>
@@ -408,7 +408,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
           }}
         >
           <span style={{ fontSize: 'calc(9px + 0.5vmin)' }}>
-            You can cancel the order to return the locked Beans from the marketplace
+            {marketStrings.canCancelOrder}
           </span>
         </Box>
       </>

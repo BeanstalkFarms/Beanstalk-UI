@@ -300,6 +300,7 @@ export const marketStrings = {
   buy: 'Use this sub-tab to buy Pods from current Pod Listings on the Farmers Marker.', // TODO
   createListing: 'Use this sub-tab to create a Pod Listing to sell Pods on the Farmers Marker.', // TODO
   createOrder: 'Use this sub-tab to create a Pod Order to buy Pods on the Farmers Marker.', // TODO
+  alreadyListed: 'Pods in this Plot are already Listed on the Farmers Market. Listing Pods from the same Plot will replace the previous Pod Listing.',
   placeInPodLine: 'Use this slider or input field to adjust the maximum place in the Pod Line you are willing to buy Pods from, at the specificed price per Pods.', // TODO
   expiresIn: 'Use this input field to change the number of Pods that need to become Harvestable before this Pod Listing will automatically expire.', // TODO
   myOrders: 'This tab contains all of your current Pod Orders on the Farmers Market.', // TODO
@@ -307,6 +308,8 @@ export const marketStrings = {
   myMarket: 'My Market contains all of your current Pod Orders and Listings on the Farmers Market.', // TODO
   toWrapped: 'If your Pod Listing is Filled, the Beans will become Claimable.', // TODO
   toWallet: 'If your Pod Listing is Filled, the Beans will be sent to your wallet.', // TODO
+  canCancelOrder: 'You can cancel the order to return the locked Beans from the marketplace',
+  buyRangeWarning: 'WARNING: The Buy Range is too small to make an Order or there aren&apos;t enough availble Pods in the market.',
 };
 export const filterStrings = {
   pricePerPod: 'Use this slider to filter Pod Orders and Pod Listings by Price per Pod.', // TODO
