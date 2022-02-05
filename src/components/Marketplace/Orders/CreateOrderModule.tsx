@@ -5,7 +5,7 @@ import { unstable_batchedUpdates } from 'react-dom'; // eslint-disable-line
 import { AppState } from 'state';
 import { Box } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import AddIcon from '@material-ui/icons/Add';
+// import AddIcon from '@material-ui/icons/Add';
 import {
   BEAN,
   ETH,
@@ -21,7 +21,6 @@ import {
   toStringBaseUnitBN,
   buyBeansAndCreatePodOrder,
   createPodOrder,
-  MinBN,
 } from 'util/index';
 import {
   ClaimTextModule,
@@ -35,9 +34,10 @@ import {
   TransactionDetailsModule,
   TransactionTextModule,
   marketStrings,
+  TokenOutputField,
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
-import { makeStyles } from '@material-ui/styles';
+// import { makeStyles } from '@material-ui/styles';
 
 type CreateOrderModuleProps = {
   isFormDisabled: boolean;
@@ -48,16 +48,16 @@ type CreateOrderModuleProps = {
   updateExpectedPrice: any; // FIXME
 }
 
-const useStyles = makeStyles({
-  toPodsInput: {
-    '&::placeholder': {
-      fontSize: 15,
-    },
-  }
-});
+// const useStyles = makeStyles({
+//   toPodsInput: {
+//     '&::placeholder': {
+//       fontSize: 15,
+//     },
+//   }
+// });
 
 export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref) => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
@@ -82,9 +82,6 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
   const { totalPods } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  // const { listings } = useSelector<AppState, AppState['marketplace']>(
-  //   (state) => state.marketplace,
-  // );
 
   // Disable form when params are not properly established.
   useEffect(() => {
@@ -110,16 +107,43 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
 
   // Figure out how many Beans + ETH we need to purchase a given
   // number of Pods at the user's selected price.
-  function calculateBeansAndEthForPodAmount(amount: BigNumber, price: BigNumber) {
+  /* function calculateBeansAndEthForPodAmount(amount: BigNumber, price: BigNumber) {
     if (price.isGreaterThan(1) || price.isLessThanOrEqualTo(0)) {
       setToPodValue(new BigNumber(0));
     } else {
+      // The number of Beans that must be locked
+      // in the Marketplace to buy `amount` Pods
+      // at `price`.
       const beansNeeded = amount.times(price);
-      const buyBeans = MaxBN(beansNeeded.minus(beanBalance), new BigNumber(0));
+
+      // The number of beans we would need to buy
+      // in order to create this Order.
+      // NOTE: we may not be able to buy this many beans.
+      const buyBeans = MaxBN(
+        beansNeeded.minus(beanBalance),
+        new BigNumber(0)
+      );
+
+      // Calculate the amount of ETH needed
+      // to buy `buyBeans`.
       const ethNeeded = getToAmount(
         buyBeans,
         beanReserve,
         ethReserve,
+      );
+
+      // Calculate amount of ETH we can use.
+      // Capped by the amount in user's balance.
+      const ethToUse = MinBN(
+        ethNeeded,
+        ethBalance
+      )
+
+      // Calculate amount of Beans we can use.
+      // Capped by the amount in user's balance.
+      const beansToUse = MinBN(
+        beansNeeded,
+        beanBalance
       );
 
       // console.log({
@@ -156,14 +180,20 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       // }
 
       setToPodValue(amount);
-      setToBuyBeanValue(TrimBN(buyBeans, BEAN.decimals));
-      setFromBeanValue(TrimBN(beansNeeded, BEAN.decimals));
+      setToBuyBeanValue(TrimBN(
+        buyBeans,
+        BEAN.decimals
+      ));
+      setFromBeanValue(TrimBN(
+        beansToUse,
+        BEAN.decimals
+      ));
       setFromEthValue(TrimBN(
-        MinBN(ethNeeded, ethBalance),
+        ethToUse,
         ETH.decimals
       ));
     }
-  }
+  } */
 
   function calculatePods(buyNumber: BigNumber, price: BigNumber) {
     let podNumber = new BigNumber(0);
@@ -272,6 +302,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       claimableBalance={claimableEthBalance}
       handleChange={(v: BigNumber) => fromValueUpdated(fromBeanValue, v)}
       mode={props.settings.mode} // will auto-disable if mode == SwapMode.Bean
+      visible={props.settings.mode !== SwapMode.Bean} // should be visible if mode = Etherum | BeanEthereum
       claim={props.settings.claim}
       updateExpectedPrice={props.updateExpectedPrice}
       value={TrimBN(fromEthValue, 9)}
@@ -292,25 +323,33 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
   //   />
   // );
   const toPodField = (
-    <TokenInputField
-      label="Pods Received"
+    <TokenOutputField
+      title="Pods Received"
       description={marketStrings.podsReceived}
-      placeholder={pricePerPodValue.lte(0) ? 'Choose price first' : undefined}
-      locked={pricePerPodValue.lte(0)}
       token={FarmAsset.Pods}
       value={TrimBN(toPodValue, 6)}
-      handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-        calculateBeansAndEthForPodAmount(
-          new BigNumber(event.target.value || 0),
-          pricePerPodValue
-        )
-      }
-      style={{
-        marginTop: 20,
-      }}
-      inputClassname={pricePerPodValue.lte(0) ? classes.toPodsInput : null}
     />
   );
+  // const toPodField = (
+  //   <TokenInputField
+  //     label="Pods Received"
+  //     description={marketStrings.podsReceived}
+  //     placeholder={pricePerPodValue.lte(0) ? 'Choose price first' : undefined}
+  //     locked={pricePerPodValue.lte(0)}
+  //     token={FarmAsset.Pods}
+  //     value={TrimBN(toPodValue, 6)}
+  //     handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+  //       calculateBeansAndEthForPodAmount(
+  //         new BigNumber(event.target.value || 0),
+  //         pricePerPodValue
+  //       )
+  //     }
+  //     style={{
+  //       marginTop: 20,
+  //     }}
+  //     inputClassname={pricePerPodValue.lte(0) ? classes.toPodsInput : null}
+  //   />
+  // );
 
   /* Transaction Details, settings and text */
   const beanClaimable = MaxBN(
@@ -379,7 +418,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
       hasClaimable={hasClaimable}
       hasSlippage
-      showUnitModule={false}
+      // showUnitModule={false}
       setSettings={props.setSettings}
       settings={props.settings}
     />
@@ -522,20 +561,16 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       {maxPlaceInLineField}
       {pricePerPodField}
       {fromBeanField}
-      <AddIcon
+      {/* <AddIcon
         color="primary"
         style={{ marginBottom: '-12px', width: '100%', height: 16 }}
-      />
+      /> */}
       {fromEthField}
-      {/* {pricePerPodValue.gt(0) ? ( */}
-      <>
-        <ExpandMoreIcon
-          color="primary"
-          style={{ marginBottom: '-14px', width: '100%' }}
-        />
-        {toPodField}
-      </>
-      {/* ) : null} */}
+      <ExpandMoreIcon
+        color="primary"
+        style={{ marginBottom: '-14px', width: '100%' }}
+      />
+      {toPodField}
       {/* {lockedBeansField} */}
       {transactionDetails()}
       {rangeWarning}

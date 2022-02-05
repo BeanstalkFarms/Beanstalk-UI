@@ -46,7 +46,8 @@ export default function MarketplaceBuyModule(props: MarketplaceBuyModuleProps) {
   /** */
   const [settings, setSettings] = useState<SwapSettings>({
     claim: false,
-    mode: SwapMode.BeanEthereum,
+    // mode: SwapMode.BeanEthereum,
+    mode: SwapMode.Bean,
     slippage: new BigNumber(BASE_SLIPPAGE),
   });
 

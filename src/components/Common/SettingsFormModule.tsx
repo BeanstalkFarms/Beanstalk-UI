@@ -19,7 +19,8 @@ export default function SettingsFormModule(props) {
     position: 'absolute',
     right: '-79px',
     width: '60px',
-    zIndex: '-1',
+    // zIndex: '-1',
+    zIndex: 99999,
   };
   const bottomSettingStyle = {
     backgroundColor: theme.module.background,
@@ -32,7 +33,8 @@ export default function SettingsFormModule(props) {
     position: 'absolute',
     right: '7px',
     width: 'auto',
-    zIndex: '-1',
+    // zIndex: '-1',
+    zIndex: 9999,
   };
 
   const [settingsStyle, setSettingsStyle] = useState({ display: 'none' });

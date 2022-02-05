@@ -307,7 +307,7 @@ export default function OrdersTable(props: OrdersTableProps) {
               props.seCurrentOrder(slicedItems.find((order) => order.id === selectedOrderKey));
             }}
           >
-            {selectedOrderKey ? 'Sell Pods' : 'Select Pods to Sell'}
+            {selectedOrderKey ? 'Fill Order' : 'Select Order to Fill'}
           </Button>
         }
       </div>

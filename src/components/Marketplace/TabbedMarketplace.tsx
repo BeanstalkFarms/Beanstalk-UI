@@ -67,6 +67,7 @@ export default function TabbedMarketplace() {
   const showMyMarketTables = (
     <Box>
       <BaseModule
+        style={{ marginTop: '20px' }}
         handleTabChange={(event, newSubSection) => {
           setSubSection(newSubSection);
         }}
@@ -89,7 +90,8 @@ export default function TabbedMarketplace() {
   ) ? (
     <>
       <BaseModule
-        section={['']}
+        style={{ marginTop: '20px' }}
+        section={0}
         sectionTitles={['My Plots']}
         sectionTitlesDescription={[fieldStrings.plotTable]}
         showButton={false}
