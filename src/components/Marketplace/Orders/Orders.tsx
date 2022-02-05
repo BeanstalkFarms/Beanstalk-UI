@@ -48,7 +48,7 @@ export default function Orders(props: OrdersProps) {
 
   //
   const [settings, setSettings] = useState({
-    toWallet: true,
+    toWallet: false,
   });
 
   // Filter state
