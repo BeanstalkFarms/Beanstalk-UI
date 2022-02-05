@@ -377,7 +377,7 @@ export default function FillOrderModal({
           overflow: 'auto'
         }}
         section={0}
-        sectionTitles={['Sell Pods']}
+        sectionTitles={['Fill Order']}
         size="small"
         marginTop="0px"
         handleForm={handleForm}
@@ -426,7 +426,7 @@ export default function FillOrderModal({
             </>
           )}
         </Box>
-        {showSettings}
+        {/* {showSettings} */}
       </BaseModule>
     </Modal>
   );
