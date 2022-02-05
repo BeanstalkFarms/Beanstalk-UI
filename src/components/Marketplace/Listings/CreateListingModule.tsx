@@ -395,6 +395,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
       {fromPlotField}
       {index.gte(0) ? (
         <>
+          <div style={{ height: 2 }} />
           {startField}
           {amountField}
           {priceField}

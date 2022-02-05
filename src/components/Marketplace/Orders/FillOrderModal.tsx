@@ -194,7 +194,7 @@ export default function FillOrderModal({
   const errorAmount = amount.isGreaterThan(maxAmountCanSell);
 
   /* Input Fields */
-  const plotField = (
+  const amountField = (
     <TokenInputField
       key={2}
       label="Number of Pods to Sell"
@@ -210,19 +210,7 @@ export default function FillOrderModal({
       style={{ marginTop: 20 }}
     />
   );
-  // const startField = (
-  //   <PlotInputField
-  //     key={0}
-  //     // hidden={props.isFormDisabled && !start.isEqualTo(toPlotEndIndex)}
-  //     // balance={plotEndId}
-  //     handleChange={handleStartChange}
-  //     label="Start Index"
-  //     value={TrimBN(start, 6)}
-  //     minHandler={minMaxHandler}
-  //     error={errorAmount}
-  //   />
-  // );
-  const startField = (
+  const plotRangeField = (
     // The slice of the plot we're selling.
     // This can range from:
     //  MIN:   0
@@ -362,17 +350,22 @@ export default function FillOrderModal({
     <Modal
       open={currentOrder != null}
       onClose={onClose}
+      style={{
+        maxHeight: '90vh'
+      }}
     >
       <BaseModule
         style={{
           position: 'absolute',
           top: '50%',
-          marginTop: '-40px',
+          marginTop: '5vh',
           width: '400px',
           left: '50%',
           marginLeft: `${leftMargin}px`,
           textAlign: 'center',
           transform: 'translate(-50%, -50%)',
+          maxHeight: '90vh',
+          overflow: 'auto'
         }}
         section={0}
         sectionTitles={['Sell Pods']}
@@ -404,8 +397,9 @@ export default function FillOrderModal({
           {index.lt(0) ? null : (
             <>
               <div style={{ height: 5 }} />
-              {startField}
-              {plotField}
+              {amountField}
+              <div style={{ height: 5 }} />
+              {plotRangeField}
               {/**
                 * Outputs + Details
                 */}
