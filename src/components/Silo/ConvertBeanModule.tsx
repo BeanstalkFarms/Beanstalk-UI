@@ -201,6 +201,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
       showUnitModule={false}
       hasSlippage
+      convertSlippage={siloStrings.convertSlippage}
     />
   );
 

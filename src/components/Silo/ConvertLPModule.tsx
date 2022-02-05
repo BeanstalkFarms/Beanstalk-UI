@@ -221,6 +221,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       setSettings={props.setSettings}
       settings={props.settings}
       showUnitModule={false}
+      convertSlippage={siloStrings.convertSlippage}
     />
   );
 
