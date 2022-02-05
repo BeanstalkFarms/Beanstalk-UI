@@ -234,7 +234,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
             )}% ownership of Beanstalk.`}
           </span>
           <br />
-          <span style={{ color: 'red' }}>{siloStrings.withdrawWarning}</span>
+          <span style={{ color: 'red' }}>{siloStrings.withdrawWarning.replace('{0}', props.withdrawSeasons)}</span>
         </Box>
       </>
     );

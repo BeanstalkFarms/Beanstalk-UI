@@ -98,6 +98,12 @@ export default function Main() {
         name={theme.name}
       />
       {/* Effects */}
+      {theme.name === 'winterUpgrade' ? (
+        <>
+          <div id="cloud1" className="cloud-1" />
+          <div id="cloud2" className="cloud-2" />
+        </>
+      ) : null}
       {theme.name === 'winter' ? (
         <Snowfall
           snowflakeCount={200}

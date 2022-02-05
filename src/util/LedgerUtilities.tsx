@@ -160,6 +160,7 @@ export const getTotalBalances = async (batch) => {
     [bean.methods.balanceOf(BUDGETS[2]), tokenResult(BEAN)],
     [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)],
     [bean.methods.balanceOf(CURVE.addr), tokenResult(BEAN)],
+    [beanstalk.methods.withdrawSeasons(), bigNumberResult],
   ]);
 };
 

@@ -1,11 +1,13 @@
 import React from 'react';
-// import { useSelector } from 'react-redux';
-// import { AppState } from 'state';
+import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { MEDIUM_INTEREST_LINK } from 'constants/index';
 import {
   ContentDropdown,
   ContentSection,
   Grid,
+  HeaderLabelList,
   siloStrings,
   // HeaderLabelList,
 } from 'components/Common';
@@ -24,9 +26,13 @@ export default function Silo() {
   // const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
   //   (state) => state.totalBalance
   // );
-  // const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
-  //   (state) => state.beansPerSeason
-  // );
+  const { withdrawSeasons } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const { season } = useSelector<AppState, AppState['season']>(
+    (state) => state.season
+  );
   // const [beanAPY, lpAPY] = getAPYs(
   //   farmableMonth,
   //   parseFloat(totalStalk),
@@ -74,13 +80,38 @@ export default function Silo() {
     },
   ];
 
+  const nextDecrease = withdrawSeasons.isGreaterThan(13) ?
+    (new BigNumber(84)).minus(season.mod(84)) :
+    (withdrawSeasons.isGreaterThan(5) ?
+    (new BigNumber(168)).minus(season.mod(168)) :
+    'na');
+
   return (
     <ContentSection id="silo" title="Silo">
       {/* apyField hidden for now */}
+
+      <HeaderLabelList
+        description={[
+          siloStrings.withdrawSeasons,
+          siloStrings.decreaseSeasons,
+        ]}
+        balanceDescription={[
+          `${withdrawSeasons} Seasons`,
+          `${nextDecrease} Seasons`,
+        ]}
+        title={[
+          'Withdraw Seasons',
+          'Next Decrease',
+        ]}
+        value={[
+          `${withdrawSeasons}`,
+          `${nextDecrease}`,
+        ]}
+      />
       <TabbedSilo />
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown
-          description={siloStrings.siloDescription}
+          description={siloStrings.siloDescription.replace('{0}', withdrawSeasons)}
           descriptionTitle="What is the Silo?"
           descriptionLinks={descriptionLinks}
         />
