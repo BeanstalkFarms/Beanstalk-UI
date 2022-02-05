@@ -112,7 +112,7 @@ export default function SettingsFormModule(props) {
       visible: props.isCreateListing,
       component: () => (
         <SwitchModule
-          description={settingsStrings.isCreateListing}
+          description={settingsStrings.toWalletDescription}
           label="To Wallet"
           margin="-50px 0px 0px 17px"
           setValue={(value) =>

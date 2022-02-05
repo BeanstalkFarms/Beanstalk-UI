@@ -316,5 +316,5 @@ export const settingsStrings = {
   hasClaimable: 'Toggle to Claim and use Claimable assets in the transaction.',
   disableConvertible: 'Toggle to convert Deposited Beans into Deposited LP Tokens.',
   hasRemoveLP: 'Toggle to remove the Beans and ETH from the liquidity pool. By default this is toggled on.',
-  isCreateListing: 'Toggle to select how users want to receive their Beans once their Pods are sold.',
+  toWalletDescription: 'Toggle to select how users want to receive their Beans once their Pods are sold.',
 };
