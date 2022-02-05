@@ -179,6 +179,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const priceField = (
     <TokenInputField
       label="Price per Pod"
+      description={marketStrings.pricePerPod}
       token={CryptoAsset.Bean}
       handleChange={handlePriceChange}
       value={TrimBN(pricePerPodValue, 6)}
@@ -193,6 +194,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
     //  MAX:   amountInSelectedPlot
     <PlotRangeInputField
       label="Plot Range"
+      description={marketStrings.plotRange}
       value={[
         TrimBN(start, 6),                   // `start` is held in state
         TrimBN(start.plus(totalAmount), 6)  // `end` is calculated depending on `start` and `totalAmount`.
@@ -300,14 +302,8 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const details = [
     `List ${displayBN(totalAmount)} Pods from Plot at position ${displayBN(selectedPlotPositionInLine)} in the Pod Line for ${TrimBN(pricePerPodValue, 6).toString()} Beans per Pod.`,
     `This Pod Listing will expire when ${displayBN(expiresIn)} additional Pods have been Harvested so the total number of Pods Harvested is ${displayBN(expiresIn.plus(harvestableIndex))}.`,
-    `If completely Filled, you will receive ${displayBN(totalAmount.multipliedBy(pricePerPodValue))} Beans.`,
+    `If completely Filled, you will receive ${displayBN(totalAmount.multipliedBy(pricePerPodValue))} Beans. ${props.settings.toWallet ? marketStrings.toWallet : marketStrings.toWrapped}`,
   ];
-
-  if (props.settings.toWallet) {
-    details.push(marketStrings.toWallet);
-  } else {
-    details.push(marketStrings.toWrapped);
-  }
 
   function transactionDetails() {
     if (!props.readyToSubmit) return null;

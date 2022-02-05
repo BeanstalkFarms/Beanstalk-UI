@@ -245,6 +245,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
   const pricePerPodField = (
     <TokenInputField
       label="Price per pod"
+      description={marketStrings.pricePerPod}
       token={CryptoAsset.Bean}
       handleChange={handlePriceChange}
       placeholder="0.50"
@@ -293,7 +294,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
   const toPodField = (
     <TokenInputField
       label="Pods Received"
-      // description="Test"
+      description={marketStrings.podsReceived}
       placeholder={pricePerPodValue.lte(0) ? 'Choose price first' : undefined}
       locked={pricePerPodValue.lte(0)}
       token={FarmAsset.Pods}
