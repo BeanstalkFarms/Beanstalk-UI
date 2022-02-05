@@ -1,41 +1,46 @@
-import { beanstalkContract, txCallback } from './index';
+import { ContractTransaction } from 'ethers';
+import { beanstalkContract } from './index';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
-export const vote = async (bip, callback) => {
-  beanstalkContract()
-    .vote(bip)
-    .then((response) => {
-      callback();
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
-};
+export const vote = async (
+  bip,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract().vote(bip),
+  { onResponse }
+);
 
-export const unvote = async (bip, callback) => {
-  beanstalkContract()
-    .unvote(bip)
-    .then((response) => {
-      callback();
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
-};
+export const unvote = async (
+  bip,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract().unvote(bip),
+  { onResponse }
+);
 
 // Decides what function the user should call when voting for bips
-export const megaVote = async (bipList: Array) => {
+// vote -> vote on 1 BIP
+// unvote -> unvote on 1 BIP
+// voteAll -> vote on multiple BIPs
+// unvoteAll -> unvote on multiple BIPs
+// voteUnvoteAll -> vote or unvote multiple BIPs (depending on current voter status)
+export const megaVote = async (
+  bipList: any[],
+  onResponse: TxnCallbacks['onResponse']
+) => {
   const bips = bipList.map((b) => b[0]);
   const [voted, unvoted] = bipList.reduce(([vb, ub], bip) => (bip[2] ? [true, ub] : [vb, true]), [false, false]);
   const bs = beanstalkContract();
-  let voteFunction;
+  
+  let voteFunction : Promise<ContractTransaction>;
   if (bips.length === 1) voteFunction = unvoted ? bs.vote(bips[0]) : bs.unvote(bips[0]);
   else if (voted) voteFunction = unvoted ? bs.voteUnvoteAll(bips) : bs.unvoteAll(bips);
   else voteFunction = bs.voteAll(bips);
-  voteFunction.then((response) => {
-    response.wait().then(() => {
-      txCallback();
-    });
-  });
+
+  return handleCallbacks(
+    voteFunction,
+    { onResponse }
+  );
 };
 
 export const percentForStalk = (stalk, totalStalk) =>

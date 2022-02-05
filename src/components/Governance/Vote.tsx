@@ -13,36 +13,48 @@ import {
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckIcon from '@material-ui/icons/Check';
 import { percentForStalk, megaVote } from 'util/index';
+import TransactionToast from 'components/Common/TransactionToast';
 import { Line, QuestionModule, governanceStrings, TransactionDetailsModule } from 'components/Common';
+import { AppState } from 'state';
+import { BIP } from 'util/LedgerUtilities';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 import { useStyles } from './VoteStyles.ts';
 
-export default function Vote(props) {
+type VoteProps = {
+  bips: (BIP['id'])[];
+  seasonBips: BIP[];
+  stalkBips: BIP[];
+  votedBips: BIP[];
+  totalRoots: AppState['totalBalance']['totalRoots'];
+  userRoots: AppState['userBalance']['rootsBalance'];
+}
+
+export default function Vote(props: VoteProps) {
   const classes = useStyles();
 
   const [selected, setSelected] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
   // Active bips
-  const displayBips = props.bips.reduce((dp, bip) => {
+  const displayBips = props.bips.reduce((dp, bipId) => {
     const row = [];
-    row.push(bip);
-    row.push(`${props.seasonBips[bip]}`);
-    const newStalk = props.votedBips[bip]
-      ? props.stalkBips[bip].minus(props.userRoots)
-      : props.stalkBips[bip].plus(props.userRoots);
+    row.push(bipId);
+    row.push(`${props.seasonBips[bipId]}`);
+    const newStalk = props.votedBips[bipId]
+      ? props.stalkBips[bipId].minus(props.userRoots)
+      : props.stalkBips[bipId].plus(props.userRoots);
     const percentForNewStalk = percentForStalk(newStalk, props.totalRoots);
     const percentForPrevStalk = percentForStalk(
-      props.stalkBips[bip],
+      props.stalkBips[bipId],
       props.totalRoots
     );
-    row.push(props.votedBips[bip]);
+    row.push(props.votedBips[bipId]);
     row.push(
       <Box>
         <CircularProgressWithLabel
           lowvalue={Math.min(percentForNewStalk, percentForPrevStalk)}
           value={Math.max(percentForNewStalk, percentForPrevStalk)}
-          voting={!props.votedBips[bip]}
+          voting={!props.votedBips[bipId]}
         />
       </Box>
     );
@@ -50,11 +62,12 @@ export default function Vote(props) {
     return dp;
   }, []);
 
-  // Take the selected row indecies and return the combined array
+  // Take the selected row indices and return the combined array
   const selectedBips = selected.reduce((dp, bip) => {
     dp.push(displayBips[bip]);
     return dp;
   }, []);
+
   // Take the selected row indecies and return the combined array
   const selectedDetails = selectedBips.reduce((dp, bip) => {
     if (bip[2] === false) {
@@ -106,8 +119,30 @@ export default function Vote(props) {
   const isSelected = (s) => selected.indexOf(s) !== -1;
 
   const buttonHandler = () => {
+    // Toast
+    const _s = selectedBips.length > 1 ? 's' : '';
+    const txToast = new TransactionToast({
+      // Since we vote for m
+      loading: `Casting vote${_s} for ${selectedBips.length} BIP${_s}`,
+      success: `Vote${_s} cast for ${selectedBips.length} BIP${_s}`
+      // loading: props.votedBips[props.bips[selected]] ? `Unvoting for BIP` : `Voting for BIP`,
+      // success: props.votedBips[props.bips[selected]] ? `Vote removed!` : `Vote cast!`,
+    });
+
     // Execute
-    megaVote(selectedBips);
+    megaVote(
+      selectedBips,
+      (response) => {
+        txToast.confirming(response);
+      }
+    )
+    .then((value) => {
+      txToast.success(value);
+    })
+    .catch((err) => {
+      console.log(err);
+      txToast.error(err);
+    });
   };
   const voteTable = (
     <TableContainer className={classes.table}>

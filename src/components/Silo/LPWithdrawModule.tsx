@@ -28,6 +28,7 @@ import {
   TransitAsset,
   TransactionDetailsModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const LPWithdrawModule = forwardRef((props, ref) => {
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
@@ -125,7 +126,6 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   };
 
   /* Input Fields */
-
   const fromLPField = (
     <TokenInputField
       balance={props.maxFromLPVal}
@@ -141,7 +141,6 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toBurnStalkField = (
     <TokenOutputField
       burn
@@ -251,17 +250,49 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
       }
 
       if (props.settings.claim) {
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Claiming and withdrawing ${displayBN(fromLPValue)} LP Tokens`,
+          success: `Claimed and withdrew ${displayBN(fromLPValue)} LP Tokens`,
+        });
+
+        // Execute
         claimAndWithdrawLP(
           withdrawParams.crates,
           withdrawParams.amounts,
           props.claimable,
-          () => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1));
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
-        withdrawLP(withdrawParams.crates, withdrawParams.amounts, () => {
-          fromValueUpdated(new BigNumber(-1));
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Withdrawing ${displayBN(fromLPValue)} LP Tokens`,
+          success: `Withdrew ${displayBN(fromLPValue)} LP Tokens`,
+        });
+
+        // Execute
+        withdrawLP(
+          withdrawParams.crates,
+          withdrawParams.amounts,
+          (response) => {
+            fromValueUpdated(new BigNumber(-1));
+            txToast.confirming(response);
+          }
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
         });
       }
     },

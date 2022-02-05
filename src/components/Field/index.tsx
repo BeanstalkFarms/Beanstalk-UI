@@ -47,7 +47,7 @@ export default function Field() {
   const description = (
     <>
       The Field is the Beanstalk credit facility. Anyone can lend Beans to
-      Beanstalk anytime there is Available Soil by sowing Beans in the Field in
+      Beanstalk any time there is Available Soil by sowing Beans in the Field in
       exchange for Pods. Pods are the debt asset of Beanstalk. The Weather
       during the Season Beans are sown determines the number of Pods received
       for each Bean sown. When the Bean supply increases, Pods become redeemable

@@ -18,11 +18,13 @@ import TransitIcon from 'img/transit-icon.svg';
 import PooledIcon from 'img/pooled-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
-import { account, txCallback, tokenContract } from './index';
+import { account, tokenContract } from './index';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 const MAX_UINT256 =
   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
+// ENUMS
 export enum CryptoAsset {
   Bean = 0,
   Ethereum,
@@ -54,6 +56,7 @@ export enum UniswapAsset {
 export enum BudgetAsset {
   Bean = 16,
 }
+
 export type Token =
   | CryptoAsset
   | SiloAsset
@@ -63,23 +66,24 @@ export type Token =
   | UniswapAsset
   | BudgetAsset;
 
+/**
+ *
+ * @param to
+ * @param amount
+ * @param onResponse
+ * @returns
+ */
 export const transferBeans = async (
   to: string,
-  amount: BigNumber,
-  callback
-) => {
-  tokenContract(BEAN)
-    .transfer(to, amount)
-    .then((response) => {
-      callback();
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
-};
+  amount: string,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  tokenContract(BEAN).transfer(to, amount),
+  { onResponse }
+);
 
 export const approveToken = async (
-  token,
+  token: string,
   address: String,
   spender: String,
   amount: String,
@@ -195,15 +199,17 @@ export function TokenImage(tokenType: Token): string {
   }
 }
 
-export function TokenTypeImage(tokenType: Token): string {
+export function TokenTypeImage(tokenType: Token): string | null {
   if (tokenType < 6 || tokenType === 10) return null;
   if (tokenType < 8) return SiloIcon;
   if (tokenType < 10) return TransitIcon;
   if (tokenType < 15) return ClaimableIcon;
   if (tokenType < 16) return PooledIcon;
   if (tokenType < 17) return BudgetIcon;
+  return null;
 }
 
+/** Trim a BigNumber to a set number of decimals. */
 export function TrimBN(bn: BigNumber, decimals: number, allowNegative: boolean = false): BigNumber {
   if (typeof bn !== 'object') return new BigNumber(bn);
 
@@ -211,9 +217,12 @@ export function TrimBN(bn: BigNumber, decimals: number, allowNegative: boolean =
   const decimalComponents = numberString.split('.');
   if ((bn.isLessThan(0) && !allowNegative) || decimalComponents.length < 2) return bn;
 
+  // If too many decimals are provided, trim them.
+  // If there aren't enough decimals, do nothing.
+  // 1.123456 => [1, 123456]
   const decimalsFound = decimalComponents[1].length;
-  const decimalsToTrim =
-    decimalsFound < decimals ? 0 : decimalsFound - decimals;
+  const decimalsToTrim = decimalsFound < decimals ? 0 : decimalsFound - decimals;
+
   return new BigNumber(
     numberString.substr(0, numberString.length - decimalsToTrim)
   );
@@ -225,7 +234,7 @@ export function displayFullBN(bn: BigNumber, maxDecimals: number = 18) {
     .toLocaleString('en-US', { maximumFractionDigits: maxDecimals });
 }
 
-export function displayBN(bn: BigNumber, allowNegative: Boolean = false) {
+export function displayBN(bn: BigNumber, allowNegative: Boolean = false) : string {
   if (bn === undefined) return '0';
   if (bn.isLessThan(new BigNumber(0))) {
     return allowNegative ? `-${displayBN(bn.multipliedBy(-1))}` : '0';
@@ -290,31 +299,55 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
   return bn2;
 }
 
-export function toBaseUnitBN(
+/**
+ * Convert a "raw amount" (decimal form) to "token amount" (integer form).
+ * This is what's stored in the contract.
+ *
+ * FIXME: 'base unit' naming?
+ *
+ * @param rawAmt
+ * @param decimals
+ * @returns
+ */
+ export function toBaseUnitBN(
   rawAmt: string | number | BigNumber,
   decimals: number
 ): BigNumber {
-  const raw = new BigNumber(rawAmt);
+  const amt = new BigNumber(rawAmt);
   const base = new BigNumber(10);
   const decimalsBN = new BigNumber(decimals);
-  return raw.multipliedBy(base.pow(decimalsBN)).integerValue();
+  const digits = base.pow(decimalsBN);
+  return amt.multipliedBy(digits).integerValue();
 }
 
-export function toStringBaseUnitBN(
-  rawAmt: string | number | BigNumber,
-  decimals: number
-): BigNumber {
-  const raw = new BigNumber(rawAmt);
-  const base = new BigNumber(10);
-  const decimalsBN = new BigNumber(decimals);
-  return raw.multipliedBy(base.pow(decimalsBN)).integerValue().toString();
-}
-
+/**
+ * Convert a "token amount" (integer form) to "raw amount" (decimal form).
+ * This is typically what's displayed to users within the application.
+ *
+ * @param tokenAmt BigNumber.Value
+ * @param decimals BigNumber.Value
+ * @returns BigNumber
+ */
 export function toTokenUnitsBN(
-  tokenAmt: string | number | BigNumber,
-  decimals: number
+  tokenAmt: string | number | BigNumber, // FIXME: use BigNumber.Value here?
+  decimals: number // FIXME: use BigNumber.Value here?
 ): BigNumber {
   const amt = new BigNumber(tokenAmt);
-  const digits = new BigNumber(10).pow(new BigNumber(decimals));
-  return amt.div(digits);
+  const base = new BigNumber(10);
+  const decimalsBN = new BigNumber(decimals);
+  const digits = base.pow(decimalsBN);
+  return amt.dividedBy(digits);
+}
+
+/**
+ *
+ * @param rawAmt
+ * @param decimals
+ * @returns
+ */
+ export function toStringBaseUnitBN(
+  rawAmt: string | number | BigNumber,
+  decimals: number
+): string {
+  return toBaseUnitBN(rawAmt, decimals).toString();
 }

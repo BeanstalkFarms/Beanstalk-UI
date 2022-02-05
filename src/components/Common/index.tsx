@@ -15,7 +15,7 @@ export {
 
 export { default as AddressInputField } from './AddressInputField';
 export { default as BalanceField } from './BalanceField';
-export { default as ListInputField } from './ListInputField';
+export { default as PlotListInputField } from './PlotListInputField';
 export { default as BaseModule } from './BaseModule';
 export { default as ContentDropdown } from './ContentDropdown';
 export { default as ContentTitle } from './ContentTitle';
@@ -48,6 +48,8 @@ export { default as UnitSelectionModule } from './UnitSelectionModule';
 export { default as TabImageModule } from './TabImageModule';
 export { default as Line } from './Line';
 export { default as SectionTabs } from './SectionTabs';
+export { default as BalanceTableCell } from './BalanceTableCell';
+export { default as TransactionToast } from './TransactionToast';
 
 export const FormatTooltip = withStyles((theme: Theme) => ({
   tooltip: {
@@ -179,7 +181,7 @@ export const fieldStrings = {
   harvest:
     'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.',
   sendPlotWarning:
-    'WARNING: There is currently no decentralized market for buying and selling Plots. Send Plots at your own risk.',
+    'WARNING: You can exchange your Pods in a decentralized fashion on the Farmers Market. Send Plots at your own risk.',
   availableSoil:
     'Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any number of Beans up to the Available Soil in exchange for Pods.',
   podLine:
@@ -237,7 +239,7 @@ export const beanftStrings = {
   default: 'This tab will display your BeaNFTs if you have any BeaNFTs associated with this event. If it is empty, you can purchase a BeaNFT on OpenSea.',
   minted: 'Use this tab to view all the BeaNFTs you own but have already minted.',
   singleMint: 'Use this button to Mint only the individual BeaNFT currently being displayed.',
-  unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at anytime. There is no penalty for waiting to mint.',
+  unminted: 'Use this tab to view all the BeaNFTs you own but have not yet minted. You can mint Unminted BeaNFTs at any time. There is no penalty for waiting to mint.',
   winter: 'Use this tab to view all the Winter BeaNFTs you own. Winter BeaNFTs are not available for minting yet, but will be soon. However, the NFT image and metadata are already stored on the IPFS.',
   genesisNFTs: 'The total minted and unminted Genesis BeaNFTs that you own.',
   winterNFTs: 'The total minted and unminted Winter BeaNFTs that you own.',
@@ -289,4 +291,46 @@ export const claimStrings = {
 export const fundraiserStrings = {
   fundsDescription: 'Fundraisers allow Beanstalk to raise a pre-defined amount of another stablecoin in order to pay for things like audits. Each fundraiser allows anyone to exchange the desired stablecoin, up to the amount specified in the Fundraiser, for Beans at a price of $1.00. All Beans will be Sown and the corresponding amount of Pods will be sent to the wallet that contributed to the Fundraiser. Any excess funds beyond the Fundraiser amount, or of a different currency, will not receive Sown Beans.',
   fundsTableDescription: 'Below is a complete list of all Fundraisers.',
+};
+export const marketStrings = {
+  description: 'The Farmers Market is a Beanstalk-native decentralized marketplace where anyone can buy and sell Pods in a trustless and decentralized fashion.', // TODO
+  // Tabs
+  sellPods: 'Use this tab to Sell Pods on the Farmers Market.',
+  buyPods: 'Use this tab to Buy Pods on the Farmers Market.',
+  // Sub-tabs
+  sell: 'Use this sub-tab to sell Pods into outstanding Pod Orders on the Farmers Market.',
+  buy: 'Use this sub-tab to buy Pods from outstanding Pod Listings on the Farmers Market.',
+  createListing: 'Use this sub-tab to create a Pod Listing to sell Pods on the Farmers Marker.',
+  createOrder: 'Use this sub-tab to create a Pod Order to buy Pods on the Farmers Marker.',
+  // General
+  pricePerPod: 'The price per Pod, denominated in Beans.',
+  // Create listing
+  plotRange: 'Select the range of Pods within the selected Plot to sell.',
+  alreadyListed: 'Pods in this Plot are already listed on the Farmers Market. Listing Pods from the same Plot will replace the previous Pod Listing.',
+  expiresIn: 'After this number of additional Pods become Harvestable, this Pod Listing will automatically Expire.',
+  toWrapped: 'The Beans received from the sale of your Pods will become Claimable Beans.', // TODO: switch to "Wrapped" language - "If your Pod Listing is filled,"
+  toWallet: 'The Beans received from the sale of your Pods will be sent to your wallet and become circulating Beans.',
+  // Create order
+  beansToLock: 'Use these Beans in your Pod Order. The Beans will be locked in the Farmers Market for facilitate instant settlement. You can receive your locked Beans at any time by cancelling the Pod Order. ',
+  ethToLock: 'Buy Beans with this amount of ETH and use them to place the Pod Order. Beans will be locked them in the Market for fulfillment.',
+  placeInPodLine: 'Set the maximum place in the Pod Line you are willing to buy Pods from. Any Pod before this place in the Pod Line will be eligible.', // TODO
+  canCancelOrder: 'You can Cancel the Pod Order to receive the locked Beans from the Farmers Market at any time.',
+  buyRangeWarning: 'WARNING: The Buy Range is too small to make an Order or there aren&apos;t enough availble Pods in the Farmers Market.',
+  podsReceived: 'The number of Pods to purchase at the Price per Pod.',
+  // My Market
+  myOrders: 'This tab contains all of your outstanding Pod Orders on the Farmers Market.', // TODO
+  myListings: 'This tab contains all of your outstanding Pod Listings on the Farmers Market.', // TODO
+  myMarket: 'My Market contains all of your outstanding Pod Orders and Listings on the Farmers Market.', // TODO
+};
+export const filterStrings = {
+  pricePerPod: 'Use this slider to filter Pod Orders and Pod Listings by Price per Pod.', // TODO
+  placeInLine: 'Use this slider to filter Pod Orders and Pod Listings by Place in Line.', // TODO
+  toggleValidOrders: 'Toggle to filter out Pod Listings that you cannot currently Fill.', // TODO
+};
+export const settingsStrings = {
+  showLP: 'Toggle to also Deposit Circulating LP Tokens.',
+  hasClaimable: 'Toggle to Claim and use Claimable assets in the transaction.',
+  disableConvertible: 'Toggle to convert Deposited Beans into Deposited LP Tokens.',
+  hasRemoveLP: 'Toggle to remove the Beans and ETH from the liquidity pool. By default this is toggled on.',
+  toWalletDescription: 'Toggle to select whether the Beans received when your Pod Listing is Filled should be sent to your wallet as circulating Beans are held within Beanstalk as Claimable Beans. Toggle "To Wallet" on to have the Beans sent to your wallet.',
 };

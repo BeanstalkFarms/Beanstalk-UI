@@ -11,12 +11,12 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const BeanClaimModule = forwardRef((props, ref) => {
   props.setIsFormDisabled(props.maxFromBeanVal.isLessThanOrEqualTo(0));
-
+  
   /* Input Fields */
-
   const fromBeanField = (
     <TokenInputField
       balance={props.maxFromBeanVal}
@@ -26,7 +26,6 @@ export const BeanClaimModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toBeanField = (
     <TokenOutputField
       mint
@@ -36,7 +35,6 @@ export const BeanClaimModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-
   const details = [];
   details.push(
     `Claim ${displayBN(
@@ -65,7 +63,23 @@ export const BeanClaimModule = forwardRef((props, ref) => {
     handleForm() {
       if (props.maxFromBeanVal.isLessThanOrEqualTo(0)) return;
 
-      claimBeans(Object.keys(props.crates), () => {});
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Claiming ${props.maxFromBeanVal.toFixed(3)} Beans`,
+        success: `Claimed ${props.maxFromBeanVal.toFixed(3)} Beans`,
+      });
+
+      // Execute
+      claimBeans(
+        Object.keys(props.crates),
+        (response) => txToast.confirming(response)
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 

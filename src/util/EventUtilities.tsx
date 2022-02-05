@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from 'constants/index';
+// import { EventData } from 'web3'
+// import { Contract, Event } from 'ethers';
 import {
   account,
   beanstalkContractReadOnly,
@@ -29,10 +31,11 @@ let lastPriceRefresh = new Date().getTime();
 let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
+//
 export async function initializeEventListener(
-  callback,
-  updatePrices,
-  updateTotals
+  callback: Function,
+  updatePrices: Function,
+  updateTotals: Function
 ) {
   const startTime = benchmarkStart('EVENT LISTENER');
 
@@ -100,7 +103,7 @@ export async function initializeEventListener(
   ]);
 
   // eslint-disable-next-line
-  let allEvents = [].concat.apply([], accountEvents);
+  let allEvents : any[] = [].concat.apply([], accountEvents);
   allEvents.sort((a, b) => {
     const diff = a.blockNumber - b.blockNumber;
     if (diff !== 0) return diff;

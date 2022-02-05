@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
+import { Toaster } from 'react-hot-toast';
 
 import Updater from 'state/userBalance/updater';
 import NFTUpdater from 'state/nfts/updater';
@@ -15,6 +16,7 @@ import { NavigationBar, NavigationSidebar } from 'components/Navigation';
 import {
   //
   MetamasklessPage,
+  MarketplacePage,
   //
   FarmPage,
   SiloPage,
@@ -39,9 +41,7 @@ BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
 export default function App() {
   const dispatch = useDispatch();
-  const { initialized, metamaskFailure } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
+  const { initialized, metamaskFailure, width } = useSelector<AppState, AppState['general']>((state) => state.general);
 
   // HANDLE WINDOW SIZE CHANGE
   // Used throughout the app to show/hide components and
@@ -76,6 +76,9 @@ export default function App() {
           </Route>
           <Route exact path="/farm">
             <Redirect to="/silo" />
+          </Route>
+          <Route path="/analytics">
+            <AnalyticsPage />
           </Route>
           {/* Farm */}
           <Route exact path="/farm/silo">
@@ -115,6 +118,9 @@ export default function App() {
           <Route exact path="/about">
             <AboutPage key="about" />
           </Route>
+          <Route exact path="/market">
+            <MarketplacePage key="marketplace" />
+          </Route>
           {/* If nothing matches, go to the Silo */}
           <Redirect to="/farm/silo" />
         </Switch>
@@ -136,6 +142,18 @@ export default function App() {
           <Box component="main" sx={{ flex: 1, position: 'relative' }}>
             <NavigationBar />
             {app}
+            <Toaster
+              containerStyle={{
+                // Shift toast by side nav bar width
+                left: width < 800 ? 0 : 280,
+                marginTop: -2,
+              }}
+              toastOptions={{
+                style: {
+                  maxWidth: 350
+                }
+              }}
+            />
             <Footer />
           </Box>
         </Box>

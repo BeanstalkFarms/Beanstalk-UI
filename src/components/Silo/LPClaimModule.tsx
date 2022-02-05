@@ -18,13 +18,13 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const LPClaimModule = forwardRef((props, ref) => {
   const [settings, setSettings] = useState({ removeLP: true });
   props.setIsFormDisabled(props.maxFromLPVal.isLessThanOrEqualTo(0));
 
   /* Input Fields */
-
   const fromLPField = (
     <TokenInputField
       balance={props.maxFromLPVal}
@@ -36,7 +36,6 @@ export const LPClaimModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toLPField = (
     <TokenOutputField mint token={CryptoAsset.LP} value={props.maxFromLPVal} />
   );
@@ -127,9 +126,47 @@ export const LPClaimModule = forwardRef((props, ref) => {
       if (props.maxFromLPVal.isLessThanOrEqualTo(0)) return;
 
       if (settings.removeLP) {
-        removeAndClaimLP(Object.keys(props.crates), '0', '0', () => {});
+        // Toast
+        const txToast = new TransactionToast({
+          loading: 'Removing and claiming LP Tokens',
+          success: 'Removed and claimed LP Tokens',
+        });
+
+        // Execute
+        removeAndClaimLP(
+          Object.keys(props.crates),
+          '0',
+          '0',
+          (response) => {
+            txToast.confirming(response);
+          }
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       } else {
-        claimLP(Object.keys(props.crates), () => {});
+        // Toast
+        const txToast = new TransactionToast({
+          loading: 'Claiming LP Tokens',
+          success: 'Claimed LP Tokens',
+        });
+
+        // Execute
+        claimLP(
+          Object.keys(props.crates),
+          (response) => {
+            txToast.confirming(response);
+          }
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     },
   }));

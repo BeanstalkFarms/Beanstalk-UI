@@ -45,8 +45,16 @@ import {
   TransactionTextModule,
   TransactionDetailsModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
+
+function displayLP(beanInput: BigNumber, ethInput: BigNumber) {
+  return `${displayBN(beanInput)}
+    ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
+    ${TokenLabel(CryptoAsset.Ethereum)}`;
+}
 
 export const LPDepositModule = forwardRef((props, ref) => {
+  /* Local state */
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(0));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(0));
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(0));
@@ -62,6 +70,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
     amounts: [],
   });
 
+  /* */
   function fromValueUpdated(newFromNumber, newFromEthNumber, newFromLPNumber) {
     if (
       newFromNumber.isLessThanOrEqualTo(0) &&
@@ -229,6 +238,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
     );
   }
 
+  /* Constants */
   const convertibleBeans =
     props.settings.convert && props.settings.mode === SwapMode.BeanEthereum
       ? props.maxFromBeanSiloVal
@@ -241,7 +251,6 @@ export const LPDepositModule = forwardRef((props, ref) => {
     .plus(claimableBeans);
 
   /* Input Fields */
-
   const fromBeanField = (
     <InputFieldPlus
       balance={props.beanBalance.plus(convertibleBeans)}
@@ -292,7 +301,6 @@ export const LPDepositModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toStalkField = (
     <TokenOutputField
       decimals={4}
@@ -314,15 +322,6 @@ export const LPDepositModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-
-  function displayLP(beanInput, ethInput) {
-    return `${displayBN(beanInput)}
-      ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
-      ${TokenLabel(CryptoAsset.Ethereum)}`;
-  }
-
-  /* Transaction Details, settings and text */
-
   const details = [];
   if (props.settings.claim) {
     const claimedBeans = MinBN(fromBeanValue, props.beanClaimableBalance);
@@ -339,7 +338,6 @@ export const LPDepositModule = forwardRef((props, ref) => {
   }
 
   // Eth Mode transaction details
-
   if (
     (props.settings.mode === SwapMode.Ethereum ||
       (props.settings.mode === SwapMode.BeanEthereumSwap &&
@@ -376,8 +374,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
     );
   }
 
-  // Bean Mode transaction details
-
+  /* Transaction details: Bean mode */
   if (
     (props.settings.mode === SwapMode.Bean ||
       (props.settings.mode === SwapMode.BeanEthereumSwap &&
@@ -411,18 +408,13 @@ export const LPDepositModule = forwardRef((props, ref) => {
     );
   }
 
-  // Circulating LP Mode transaction details
-
+  /* Transaction Details: Circulating LP Mode */
   if (props.settings.mode === SwapMode.LP) {
     // placeholder for review - do not need it right now
   }
 
-  // Bean + Eth Mode transaction details
-
-  if (
-    props.settings.mode === SwapMode.BeanEthereum &&
-    fromEthValue.isGreaterThan(0)
-  ) {
+  /* Transaction Details: Bean + Eth Mode */
+  if (props.settings.mode === SwapMode.BeanEthereum && fromEthValue.isGreaterThan(0)) {
     details.push(
       `Add ${displayLP(
         MaxBN(fromBeanValue, new BigNumber(0)),
@@ -436,15 +428,14 @@ export const LPDepositModule = forwardRef((props, ref) => {
     );
   }
 
+  /* Transaction Details: Wrap up */
   details.push(
     `Deposit ${displayBN(
       new BigNumber(toSiloLPValue).plus(MinBN(fromLPValue, new BigNumber(0)))
     )} LP Tokens in the Silo`
   );
   details.push(
-    `Receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
-      new BigNumber(toSeedsValue)
-    )} Seeds`
+    `Receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`
   );
 
   const resetFields = () => {
@@ -472,7 +463,6 @@ export const LPDepositModule = forwardRef((props, ref) => {
 
   function transactionDetails() {
     if (toStalkValue.isLessThanOrEqualTo(0)) return;
-
     return (
       <>
         <ExpandMoreIcon
@@ -504,6 +494,7 @@ export const LPDepositModule = forwardRef((props, ref) => {
     );
   }
 
+  /* */
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (
@@ -514,10 +505,35 @@ export const LPDepositModule = forwardRef((props, ref) => {
         const claimable = props.settings.claim ? props.claimable : null;
         const lp = MaxBN(fromLPValue, new BigNumber(0));
         if (props.settings.mode === SwapMode.LP && lp.isGreaterThan(0)) {
-          depositLP(toStringBaseUnitBN(lp, ETH.decimals), claimable, () =>
-            resetFields()
-          );
+          // Toast
+          const txToast = new TransactionToast({
+            loading: `Depositing ${displayBN(toSiloLPValue)} LP Tokens`,
+            success: `Deposited ${displayBN(toSiloLPValue)} LP Tokens`,
+          });
+
+          // Execute
+          depositLP(
+            toStringBaseUnitBN(lp, ETH.decimals),
+            claimable,
+            (response) => {
+              resetFields();
+              txToast.confirming(response);
+            }
+          )
+          .then((value) => {
+            txToast.success(value);
+          })
+          .catch((err) => {
+            txToast.error(err);
+          });
         } else if (props.settings.convert) {
+          // Toast
+          const txToast = new TransactionToast({
+            loading: `Converting and depositing ${displayBN(toSiloLPValue)} LP Tokens`,
+            success: `Converted and deposited ${displayBN(toSiloLPValue)} LP Tokens`,
+          });
+
+          // Execute
           convertAddAndDepositLP(
             toStringBaseUnitBN(lp, ETH.decimals),
             toStringBaseUnitBN(fromEthValue, ETH.decimals),
@@ -535,14 +551,32 @@ export const LPDepositModule = forwardRef((props, ref) => {
             beanConvertParams.crates,
             beanConvertParams.amounts,
             claimable,
-            () => resetFields()
-          );
+            (response) => {
+              resetFields();
+              txToast.confirming(response);
+            }
+          )
+          .then((value) => {
+            txToast.success(value);
+          })
+          .catch((err) => {
+            txToast.error(err);
+          });
         } else {
+          // Contract inputs
           const beans = fromBeanValue
             .plus(toBuyBeanValue)
             .minus(toSellBeanValue);
           const buyEth = MaxBN(toBuyEthValue, new BigNumber(0));
           const eth = fromEthValue.plus(buyEth).minus(toSellEthValue);
+
+          // Toast
+          const txToast = new TransactionToast({
+            loading: `Adding and depositing ${displayBN(toSiloLPValue)} LP Tokens`,
+            success: `Added and deposited ${displayBN(toSiloLPValue)} LP Tokens`,
+          });
+
+          // Execute
           addAndDepositLP(
             toStringBaseUnitBN(lp, ETH.decimals),
             toStringBaseUnitBN(toBuyBeanValue, BEAN.decimals),
@@ -560,13 +594,24 @@ export const LPDepositModule = forwardRef((props, ref) => {
               ),
             ],
             claimable,
-            () => resetFields()
-          );
+            (response) => {
+              resetFields();
+              txToast.confirming(response);
+            }
+          )
+          .then((value) => {
+            txToast.success(value);
+          })
+          .catch((err) => {
+            console.error(err);
+            txToast.error(err);
+          });
         }
       }
     },
   }));
 
+  /* Render */
   return (
     <>
       {fromLPField}

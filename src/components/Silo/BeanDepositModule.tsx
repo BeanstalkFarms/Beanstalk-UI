@@ -35,6 +35,7 @@ import {
   TransactionTextModule,
   TransactionDetailsModule,
 } from 'components/Common';
+import TransactionToast from 'components/Common/TransactionToast';
 
 export const BeanDepositModule = forwardRef((props, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
@@ -67,7 +68,6 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   }
 
   /* Input Fields */
-
   const fromBeanField = (
     <InputFieldPlus
       key={0}
@@ -101,7 +101,6 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toStalkField = (
     <TokenOutputField
       decimals={4}
@@ -129,7 +128,6 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-
   const details = [];
   if (props.settings.claim) {
     const claimedBeans = MinBN(fromBeanValue, props.beanClaimableBalance);
@@ -167,13 +165,8 @@ export const BeanDepositModule = forwardRef((props, ref) => {
     MaxBN(fromBeanValue, new BigNumber(0))
   );
 
-  details.push(`Deposit ${displayBN(beanOutput)}
-    ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`);
-  details.push(
-    `Receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
-      new BigNumber(toSeedsValue)
-    )} Seeds`
-  );
+  details.push(`Deposit ${displayBN(beanOutput)} ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} in the Silo`);
+  details.push(`Receive ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(new BigNumber(toSeedsValue))} Seeds`);
 
   const frontrunTextField =
     props.settings.mode !== SwapMode.Bean &&
@@ -230,9 +223,10 @@ export const BeanDepositModule = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (toStalkValue.isLessThanOrEqualTo(0)) return;
-
       const claimable = props.settings.claim ? props.claimable : null;
+      
       if (fromEthValue.isGreaterThan(0)) {
+        // Contract Inputs
         const beans = MaxBN(
           toBaseUnitBN(fromBeanValue, BEAN.decimals),
           new BigNumber(0)
@@ -242,17 +236,52 @@ export const BeanDepositModule = forwardRef((props, ref) => {
           toBuyBeanValue.multipliedBy(props.settings.slippage),
           BEAN.decimals
         );
-        buyAndDepositBeans(beans, buyBeans, eth, claimable, () => {
-          fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Depositing ${toBuyBeanValue} Beans`,
+          success: `Deposited ${toBuyBeanValue} Beans`,
+        });
+
+        // Execute
+        buyAndDepositBeans(
+          beans,
+          buyBeans,
+          eth,
+          claimable,
+          (response) => {
+            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            txToast.confirming(response);
+          }
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
         });
       } else {
+        // Toast
+        const txToast = new TransactionToast({
+          loading: `Depositing ${fromBeanValue} Beans`,
+          success: `Deposited ${fromBeanValue} Beans`,
+        });
+
+        // Execute
         depositBeans(
           toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
           claimable,
-          () => {
+          (response) => {
             fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+            txToast.confirming(response);
           }
-        );
+        )
+        .then((value) => {
+          txToast.success(value);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
       }
     },
   }));

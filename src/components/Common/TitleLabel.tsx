@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { theme } from 'constants/index';
 
 export default function TitleLabel(props) {
   const classes = makeStyles(() => ({
@@ -12,7 +13,7 @@ export default function TitleLabel(props) {
       padding: props.padding || '5px',
       textTransform: props.textTransform,
       fontWeight: 'bold',
-      color: 'white', // HOTFIX
+      color: theme.backgroundText,
     },
   }))();
 

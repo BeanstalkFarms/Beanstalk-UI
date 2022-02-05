@@ -22,12 +22,14 @@ export * from './TimeUtilities';
 export * from './BeaNFTUtilities';
 export * from './APYUtilities';
 export * from './FundraiserUtilities';
+export * from './MarketUtilities';
 
 let ethereum;
 export let initializing;
-export let web3: Web3;
-export let account: String;
-export let txCallback = null;
+/** txCallback is called after each successful request to the chain. */
+export let txCallback : Function | undefined;
+export let web3 : Web3;
+export let account : string;
 export let metamaskFailure = -1;
 export let chainId = 1;
 
@@ -147,7 +149,11 @@ export async function switchToMainnet() {
   }
 }
 
-export function initializeCallback(callback) {
+/**
+ * Defined as a function so we can update the "global" txCallback var
+ * from outside of this file.
+ */
+export function initializeCallback(callback: Function) {
   txCallback = callback;
 }
 
@@ -155,7 +161,7 @@ export async function isAddress(a) {
   return ethers.utils.isAddress(a);
 }
 
-export async function GetWalletAddress(): Promise<String | undefined> {
+export async function GetWalletAddress(): Promise<string | undefined> {
   await initializing;
   return account;
 }
