@@ -16,11 +16,11 @@ import {
   MinBN,
   TrimBN,
   toStringBaseUnitBN,
+  MaxBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
 import {
   BaseModule,
-  PlotInputField,
   PlotListInputField,
   SettingsFormModule,
   TokenInputField,
@@ -28,6 +28,7 @@ import {
   TransactionDetailsModule,
   TransactionToast,
 } from 'components/Common';
+import PlotRangeInputField from 'components/Common/PlotRangeInputField';
 import { PodOrder } from 'state/marketplace/reducer';
 import OrdersTable from './OrdersTable';
 
@@ -112,16 +113,18 @@ export default function FillOrderModal({
   // (i.e. can only sell if plot is before this)
   const maxAmountCanSell = getMaxAmountCanSell(index);
   const beansReceived = amount.times(currentOrder.pricePerPod);
+  const amountInSelectedPlot = index ? new BigNumber(plots[index.toString()]) : new BigNumber(-1);
+  // const end = start.plus(amount);
 
-  function fromIndexValueUpdated(newStartNumber: BigNumber, newAmountNumber: BigNumber) {
-    const newStartValue = MinBN(
-      new BigNumber(newStartNumber),
-      maxAmountCanSell
-    );
-    const newAmountValue = MinBN(new BigNumber(newAmountNumber), amount);
-    setStart(TrimBN(newStartValue, BEAN.decimals));
-    setAmount(TrimBN(newAmountValue, BEAN.decimals));
-  }
+  // function fromIndexValueUpdated(newStartNumber: BigNumber, newAmountNumber: BigNumber) {
+  //   const newStartValue = MinBN(
+  //     new BigNumber(newStartNumber),
+  //     maxAmountCanSell
+  //   );
+  //   const newAmountValue = MinBN(new BigNumber(newAmountNumber), amount);
+  //   setStart(TrimBN(newStartValue, BEAN.decimals));
+  //   setAmount(TrimBN(newAmountValue, BEAN.decimals));
+  // }
 
   // Handle plot change
   const handlePlotChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,35 +135,62 @@ export default function FillOrderModal({
       return;
     }
     const newIndex = new BigNumber(event.target.value);
+    const amountInPlot = plots[newIndex.toString()];
     const _max = getMaxAmountCanSell(newIndex);
-    console.log(`SellIntoorderModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${_max}`);
+    console.log(`SellIntoOrderModal: handlePlotChange, newIndex=${newIndex}, maxAmountCanSell=${_max}`);
     setIndex(newIndex);
     setAmount(_max);
-    setStart(new BigNumber(0));
+    setStart(new BigNumber(amountInPlot).minus(_max));
   };
   // Handle Pod change
   const handlePodChange = (event) => {
     const newAmount = new BigNumber(event.target.value || 0);
+
+    // BACK-OF-PLOT LOGIC
+    // If changing the `amount`, move `start` forward.
+    // 
+    // Example:
+    //  start = 0, newToPodValue = 1000, totalAmount = 1900
+    //  delta = -900
+    //  start - delta = 0 - (-900) = 900.
+    const delta = newAmount.minus(amount);
+    setStart(
+      MaxBN(
+        start.minus(delta),
+        new BigNumber(0),
+      )
+    );
+
+    // CONSTRAINT: New `amount` can't be greater than `maxAmountCanSell`.
     if (newAmount.isGreaterThanOrEqualTo(maxAmountCanSell)) {
       setAmount(maxAmountCanSell);
-      return;
+    } else {
+      setAmount(newAmount);
     }
-    setAmount(newAmount);
   };
   // Handle start change
-  const handleStartChange = (event) => {
-    if (event.target.value) {
-      fromIndexValueUpdated(event.target.value, maxAmountCanSell);
-    } else {
-      fromIndexValueUpdated(new BigNumber(0), maxAmountCanSell);
-    }
-  };
+  // const handleStartChange = (event) => {
+  //   if (event.target.value) {
+  //     fromIndexValueUpdated(event.target.value, maxAmountCanSell);
+  //   } else {
+  //     fromIndexValueUpdated(new BigNumber(0), maxAmountCanSell);
+  //   }
+  // };
 
   const minMaxHandler = () => {
+    setStart(
+      MaxBN(
+        new BigNumber(0),
+        // 0 < amount < maxAmountCanSell
+        // We want to expand the plot range using the existing "end"
+        // as a reference point. "end" is calculated as start.plus(amount).
+        start.plus(amount).minus(maxAmountCanSell)
+      )
+    );
     setAmount(maxAmountCanSell);
-    setStart(new BigNumber(0));
   };
-  const errorAmount = maxAmountCanSell.minus(start).minus(amount).isLessThan(0);
+  // const errorAmount = maxAmountCanSell.minus(start).minus(amount).isLessThan(0);
+  const errorAmount = amount.isGreaterThan(maxAmountCanSell);
 
   /* Input Fields */
   const plotField = (
@@ -179,15 +209,80 @@ export default function FillOrderModal({
       style={{ marginTop: 20 }}
     />
   );
+  // const startField = (
+  //   <PlotInputField
+  //     key={0}
+  //     // hidden={props.isFormDisabled && !start.isEqualTo(toPlotEndIndex)}
+  //     // balance={plotEndId}
+  //     handleChange={handleStartChange}
+  //     label="Start Index"
+  //     value={TrimBN(start, 6)}
+  //     minHandler={minMaxHandler}
+  //     error={errorAmount}
+  //   />
+  // );
   const startField = (
-    <PlotInputField
-      key={0}
-      // hidden={props.isFormDisabled && !start.isEqualTo(toPlotEndIndex)}
-      // balance={plotEndId}
-      handleChange={handleStartChange}
-      label="Start Index"
-      value={TrimBN(start, 6)}
-      minHandler={minMaxHandler}
+    // The slice of the plot we're selling.
+    // This can range from:
+    //  MIN:   0
+    //  START: start
+    //  END:   start + amount
+    //  MAX:   amountInSelectedPlot
+    <PlotRangeInputField
+      disableSlider
+      label="Plot Range"
+      // description={marketStrings.plotRange}
+      value={[
+        TrimBN(start, 6),                   // `start` is held in state
+        TrimBN(start.plus(amount), 6)       // `end` is calculated depending on `start` and `amount`.
+      ]}
+      range
+      balance={amountInSelectedPlot}
+      // `handleChange` is called for both the slider
+      // and the inputs. keeps things standardized.
+      handleChange={(event: BigNumber[]) => {
+        // Check if we're moving the "end" slider handle.
+        // console.log(event[0].toNumber(), event[1].toNumber())
+
+        // FIX: If someone manually types in a start
+        // value that is greater than end value (or vice
+        // versa), override and set amount = 0. This locks
+        // end = start.
+        if(event[0].gte(event[1])) {
+          setStart(
+            // CONSTRAINT: start > 0
+            MaxBN(
+              new BigNumber(0),
+              event[0]
+            )
+          );
+          setAmount(
+            new BigNumber(0),
+          );
+        } else {
+          setStart(
+            // CONSTRAINT: start > 0
+            MaxBN(
+              new BigNumber(0),
+              event[0]
+            )
+          );
+          setAmount(
+            // CONSTRAINT: amount <= maxAmountCanSell
+            MinBN(
+              maxAmountCanSell,
+              event[1].minus(event[0]),
+            )
+          );
+        }
+      }}
+      // minHandler={minMaxHandler}
+      minHandler={() => {
+        setStart(new BigNumber(0));
+      }}
+      maxHandler={() => {
+        setStart(amountInSelectedPlot.minus(amount));
+      }}
       error={errorAmount}
     />
   );

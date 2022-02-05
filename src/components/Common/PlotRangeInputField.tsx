@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Slider, TextField } from '@material-ui/core';
+import { Box, Button, Grid, InputAdornment, Slider, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import BigNumber from 'bignumber.js';
 
@@ -58,6 +58,7 @@ export type PlotRangeInputFieldProps = {
   isLP: boolean;
   // Handlers
   /** */
+  minHandler?: Function;
   maxHandler?: Function;
   /** */
   handleChange: Function;
@@ -72,7 +73,19 @@ export type PlotRangeInputFieldProps = {
   error?: string | boolean;
   /** */
   description: string;
+  /** */
+  disableSlider: boolean;
 }
+
+const minMaxStyle = {
+  backgroundColor: theme.primary,
+  borderRadius: '30px',
+  color: theme.accentText,
+  fontSize: '13px',
+  fontFamily: 'Futura-PT-Book',
+  height: '25px',
+  minWidth: '50px',
+};
 
 /**
  * NOTE:
@@ -85,6 +98,32 @@ export default function TokenInputField(props: PlotRangeInputFieldProps) {
   /** */
   // const [displayValue, setDisplayValue] = useState('');
   const label = props.label || TokenLabel(props.token);
+
+  function minButton() {
+    if (props.minHandler !== undefined) {
+      return (
+        <Button
+          onClick={props.minHandler}
+          style={minMaxStyle}
+          disabled={props.locked}>
+          Min
+        </Button>
+      );
+    }
+  }
+
+  function maxButton() {
+    if (props.maxHandler !== undefined) {
+      return (
+        <Button
+          onClick={props.maxHandler}
+          style={minMaxStyle}
+          disabled={props.locked}>
+          Max
+        </Button>
+      );
+    }
+  }
 
   const handleChange = (value: PlotRangeInputFieldProps['value']) => {
     // setDisplayValue(event.target.value);
@@ -134,10 +173,10 @@ export default function TokenInputField(props: PlotRangeInputFieldProps) {
             props.value[0].toNumber(),
             props.value[1].toNumber()
           ]}
-          onChange={(event, newValue: number[]) => handleChange([
+          onChange={!props.disableSlider ? (event, newValue: number[]) => handleChange([
             new BigNumber(newValue[0]),
             new BigNumber(newValue[1]),
-          ])}
+          ]) : null}
           aria-labelledby="input-slider"
           min={0}
           max={props.balance.toNumber()}
@@ -186,6 +225,7 @@ export default function TokenInputField(props: PlotRangeInputFieldProps) {
             variant="outlined"
             size="medium"
             type="number"
+            // disabled={true}
             disabled={props.handleChange === undefined || props.locked}
             error={Boolean(props.error)}
             value={props.value[0].isLessThan(0) ? '0' : props.value[0].toFixed()}
@@ -210,6 +250,11 @@ export default function TokenInputField(props: PlotRangeInputFieldProps) {
               classes: {
                 input: classes.inputText,
               },
+              endAdornment: (
+                <InputAdornment position="end">
+                  {minButton()}
+                </InputAdornment>
+              )
             }}
           />
         </Grid>
@@ -244,6 +289,11 @@ export default function TokenInputField(props: PlotRangeInputFieldProps) {
               classes: {
                 input: classes.inputText,
               },
+              endAdornment: (
+                <InputAdornment position="end">
+                  {maxButton()}
+                </InputAdornment>
+              )
             }}
           />
         </Grid>
@@ -264,7 +314,9 @@ TokenInputField.defaultProps = {
   poolForLPRatio: undefined,
   balanceLabel: 'Balance',
   balance: undefined,
+  minHandler: undefined,
   maxHandler: undefined,
   placeholder: undefined,
   error: undefined,
+  disableSlider: false,
 };
