@@ -7,6 +7,7 @@ import prices from './prices/reducer';
 import weather from './weather/reducer';
 import beansPerSeason from './beansPerSeason/reducer';
 import general from './general/reducer';
+import marketplace from './marketplace/reducer';
 import nfts from './nfts/reducer';
 
 const store = configureStore({
@@ -19,6 +20,7 @@ const store = configureStore({
     prices,
     beansPerSeason,
     general,
+    marketplace,
     nfts,
   },
   middleware: [

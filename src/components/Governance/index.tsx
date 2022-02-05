@@ -10,6 +10,7 @@ import {
   Grid,
 } from 'components/Common';
 import { WHITEPAPER } from 'constants/index';
+import { BIP } from 'util/LedgerUtilities';
 import Fundraiser from '../Fundraiser';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
@@ -45,7 +46,8 @@ export default function Governance() {
     width: '100%',
   };
 
-  const activeBips = bips.reduce((aBips, bip) => {
+  //
+  const activeBips : (BIP['id'])[] = bips.reduce((aBips, bip) => {
     if (bip.active) aBips.push(bip.id.toString());
     return aBips;
   }, []);
@@ -70,8 +72,8 @@ export default function Governance() {
           seasonBips={seasonBips}
           stalkBips={stalkBips}
           totalRoots={totalRoots}
-          userRoots={rootsBalance}
           votedBips={_votedBips}
+          userRoots={rootsBalance}
         />
       </Grid>
     ) : (

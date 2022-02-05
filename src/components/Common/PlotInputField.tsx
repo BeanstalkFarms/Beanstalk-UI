@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { theme } from 'constants/index';
+import { QuestionModule } from './index';
 
 export default function PlotInputField(props) {
   const [displayValue, setDisplayValue] = useState('');
@@ -66,7 +67,21 @@ export default function PlotInputField(props) {
   return (
     <Box style={{ margin: '8px 0' }}>
       <Box style={smallLabels}>
-        <Box style={leftStyle}>{props.label}</Box>
+        <Box style={leftStyle}>
+          {props.description
+            ? (
+              <Box>
+                {props.label}
+                <QuestionModule
+                  description={props.description}
+                  margin="-10px 0 0 0"
+                  placement="right"
+                />
+              </Box>
+            )
+            : props.label
+          }
+        </Box>
       </Box>
 
       <TextField
@@ -76,6 +91,7 @@ export default function PlotInputField(props) {
         size="medium"
         type="number"
         disabled={props.handleChange === undefined}
+        error={props.error}
         value={
           props.value.isNegative()
             ? ''
@@ -115,4 +131,5 @@ PlotInputField.defaultProps = {
   hidden: false,
   maxval: 0,
   label: 'Index',
+  error: undefined,
 };

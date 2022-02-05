@@ -146,14 +146,20 @@ export default function SiloBeanModule() {
     }
   };
 
+  // If you withdraw LP and you have `convertLP` on,
+  // convert that LP to the underlying beans and eth,
+  // you can reuse those in the same transaction
+  // add claimLPBeans
+  // claimable lp tokens that I withdrew; can use the beans
+  // in the same contract
   const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
     ? poolForLPRatio(lpReceivableBalance)[0]
     : new BigNumber(0);
-
   const ethClaimable = claimableEthBalance.plus(
     poolForLPRatio(lpReceivableBalance)[1]
   );
 
+  /* */
   const sections = [
     <BeanDepositModule
       key={0}
@@ -202,6 +208,8 @@ export default function SiloBeanModule() {
       withdrawSeasons={totalBalance.withdrawSeasons}
     />,
   ];
+
+  /* */
   if (beanReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <BeanClaimModule
@@ -218,6 +226,8 @@ export default function SiloBeanModule() {
   }
   if (section > sectionTitles.length - 1) setSection(0);
 
+  /* "Info" section == the BaseModule shown below the Deposit &
+     Withdraw tabs. Used to show bean deposits. */
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
   if (beanDeposits !== undefined && Object.keys(beanDeposits).length > 0) {
@@ -255,6 +265,7 @@ export default function SiloBeanModule() {
     sectionTitlesInfo.push('Bean Withdrawals');
   }
 
+  /* */
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
       <Box
@@ -301,6 +312,7 @@ export default function SiloBeanModule() {
       ? beanstalkBeanAllowance
       : new BigNumber(1);
 
+  /* */
   return (
     <>
       <BaseModule

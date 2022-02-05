@@ -2,9 +2,13 @@ import React, { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { CryptoAsset, MinBN } from 'util/index';
 import { BASE_SLIPPAGE } from 'constants/index';
-import { TokenInputField } from './index';
+import { TokenInputField, TokenInputFieldProps } from './index';
 
-export default function InputFieldPlus(props) {
+type InputFieldPlusProps = TokenInputFieldProps & {
+
+}
+export default function InputFieldPlus(props: Partial<InputFieldPlusProps>) {
+  /** */
   const inputBalance = props.balance.plus(
     props.claim ? props.claimableBalance : new BigNumber(0)
   );
@@ -43,9 +47,10 @@ export default function InputFieldPlus(props) {
 
   const maxHandler = () => props.handleChange(maxBalance);
 
-  const tokenInputField = (
+  return (
     <TokenInputField
       balance={inputBalance}
+      balanceLabel={props.balanceLabel}
       isLP={props.isLP}
       handleChange={handleChange}
       maxHandler={maxHandler}
@@ -54,8 +59,6 @@ export default function InputFieldPlus(props) {
       value={props.value}
     />
   );
-
-  return <>{tokenInputField}</>;
 }
 
 InputFieldPlus.defaultProps = {

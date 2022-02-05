@@ -26,6 +26,7 @@ import {
   FormatTooltip,
   TablePageSelect,
   QuestionModule,
+  BalanceTableCell,
 } from './index';
 
 const useStyles = makeStyles({
@@ -71,6 +72,8 @@ function displayLP(balance) {
   )} ${TokenLabel(CryptoAsset.Ethereum)}`;
 }
 
+// FIXME: Resolve this with the tables used in the Marketplace.
+// FIXME: types and code ceanup
 const BasicTable = (props) => {
   const classes = useStyles();
 
@@ -140,39 +143,9 @@ const BasicTable = (props) => {
             />
           </Box>
         </TableCell>
-        <TableCell
-          align="center"
-          className={classes.lucidaStyle}
-          style={{ color: 'white' }}
-        >
-          <FormatTooltip
-            placement="right"
-            title={
-              props.isLP
-                ? displayLP(props.poolForLPRatio(props.claimableBalance))
-                : `${displayFullBN(props.claimableBalance)} ${TokenLabel(
-                    props.asset
-                  )}`
-            }
-          >
-            <span>{displayBN(props.claimableBalance)}</span>
-          </FormatTooltip>
-        </TableCell>
+        <BalanceTableCell align="center" color="white" className={classes.lucidaStyle} balance={props.claimableBalance} label={TokenLabel(props.asset)} />
         {props.claimableStalk !== undefined ? (
-          <TableCell
-            align="center"
-            className={classes.lucidaStyle}
-            style={{ color: 'white' }}
-          >
-            <FormatTooltip
-              placement="right"
-              title={`${displayFullBN(props.claimableStalk)} ${TokenLabel(
-                SiloAsset.Stalk
-              )}`}
-            >
-              <span>{displayBN(props.claimableStalk)}</span>
-            </FormatTooltip>
-          </TableCell>
+          <BalanceTableCell align="center" color="white" className={classes.lucidaStyle} balance={props.claimableStalk} label={TokenLabel(SiloAsset.Stalk)} />
         ) : null}
       </TableRow>
     );

@@ -1,11 +1,11 @@
-import { beanstalkContract, txCallback } from './index';
+import { beanstalkContract } from './index';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
-export const fund = async (id, amount, callback) => {
-    beanstalkContract().fund(id, amount)
-    .then((response) => {
-      callback();
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
-  };
+export const fund = async (
+  id,
+  amount,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  beanstalkContract().fund(id, amount),
+  { onResponse }
+);

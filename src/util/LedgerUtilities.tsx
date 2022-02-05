@@ -42,9 +42,10 @@ const makeBatchedPromises = (batch, promisesAndResultHandlers) => {
   return Promise.all(batchedPromises);
 };
 
-const identityResult = (result) => result;
-const bigNumberResult = (result) => new BigNumber(result);
-const tokenResult = (token) => (result) =>
+//
+const identityResult = (result: any) => result;
+const bigNumberResult = (result: any) => new BigNumber(result);
+const tokenResult = (token) => (result: any) =>
   toTokenUnitsBN(new BigNumber(result), token.decimals);
 
 export async function getEtherBalance() {
@@ -174,6 +175,22 @@ export const votes = async () => {
   }, new Set());
 };
 
+export type BIP = {
+  id: BigNumber;
+  executed: boolean;
+  increaseBase: any;
+  pauseOrUnpause: BigNumber;
+  start: BigNumber;
+  period: BigNumber;
+  proposer: string;
+  roots: BigNumber;
+  endTotalRoots: BigNumber;
+  stalkBase: BigNumber;
+  timestamp: BigNumber;
+  updated: BigNumber;
+  active: boolean;
+}
+
 /* TODO: batch BIP detail ledger reads */
 export const getBips = async () => {
   const beanstalk = beanstalkContractReadOnly();
@@ -187,6 +204,8 @@ export const getBips = async () => {
       bip.endTotalRoots.toString() === '0'
         ? await beanstalk.methods.rootsFor(i.toString()).call()
         : bip.roots;
+    
+    //
     const bipDict = {
       id: i,
       executed: bip.executed,
@@ -202,6 +221,7 @@ export const getBips = async () => {
       updated: bigNumberResult(bip.updated),
       active: false,
     };
+
     bips.push(bipDict);
   }
 

@@ -20,44 +20,49 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
-    'react', 
-    'react-hooks', 
-    '@typescript-eslint', 
-    'jest'
+    'react',
+    'react-hooks',
+    '@typescript-eslint',
+    'jest',
   ],
   extends: [
-    'plugin:react/recommended', 
-    'airbnb'
+    'plugin:react/recommended',
+    'airbnb',
   ],
-  //
   rules: {
-    // Stylistic
-    'semi': 'warn',
-    'comma-dangle': ['warn', {
-      arrays: 'always-multiline',
-      imports: 'always-multiline',
-      exports: 'always-multiline',
-      functions: 'never',
-      objects: 'always-multiline',
-    }],
+    // -- Stylistic
+    semi: 'warn',
+    // 'comma-dangle': ['warn', {
+    //   arrays: 'always-multiline',
+    //   imports: 'always-multiline',
+    //   exports: 'always-multiline',
+    //   functions: 'never',
+    //   objects: 'always-multiline',
+    // }],
     'quote-props': 'warn',
     'import/order': 'warn',
     'space-infix-ops': 'warn',
     'quotes': ['warn', 'single'],
+    'no-trailing-spaces': 0,
+    'comma-dangle': 0,
     'no-multiple-empty-lines': 'warn',
     'jsx-quotes': ['error', 'prefer-double'],
     'react/jsx-curly-brace-presence': 'warn',
     'eol-last': 'warn',
     'key-spacing': 'warn',
-    'no-multi-spaces': 'warn',
+    'no-multi-spaces': 0,
     'react/jsx-boolean-value': 'warn',
     'react/jsx-props-no-multi-spaces': 'warn',
     'spaced-comment': 'warn',
-    // Space efficiency
+    'brace-style': 0,
+    'keyword-spacing': 'warn',
+    // -- Space efficiency
     'arrow-body-style': 'warn',
-    'no-trailing-spaces': 'warn',
+    'no-trailing-spaces': 0,
     '@typescript-eslint/no-unused-vars': ['warn'],
-    // Other (to categorize)
+    // -- Other (to categorize)
+    'react/button-has-type': 0,
+    'react/require-default-props': 0,
     'max-classes-per-file': 0,
     'react/jsx-filename-extension': ['error', {
       extensions: ['.ts', '.tsx'],
@@ -87,12 +92,12 @@ module.exports = {
     'operator-linebreak': 0,
     'import/no-mutable-exports': 0,
     'no-underscore-dangle': 0,
-    // 
+    //
     'import/no-extraneous-dependencies': 0,
     'implicit-arrow-linebreak': 0,
     'object-curly-newline': 0,
     'function-paren-newline': 0,
-    'indent': 0,
+    indent: 0,
     'react/prop-types': 0,
     'prefer-destructuring': 0,
     'react/destructuring-assignment': 0,

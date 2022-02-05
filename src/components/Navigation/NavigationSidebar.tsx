@@ -13,10 +13,10 @@ import BigNumber from 'bignumber.js';
 
 // import { getAPYs } from 'util/index';
 import { AppState } from 'state';
-import { theme } from 'constants/index';
+import { BEAN, theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
-import { percentForStalk } from 'util/index';
+import { percentForStalk, toTokenUnitsBN } from 'util/index';
 import { useStyles } from './NavigationStyles.ts';
 
 const NAVIGATION_MAP = {
@@ -35,6 +35,11 @@ const NAVIGATION_MAP = {
       path: 'farm/trade',
       title: 'Trade',
       desc: 'Buy and sell Beans',
+    },
+    {
+      path: 'market',
+      title: 'Market',
+      desc: 'Buy and sell Pods',
     },
     {
       path: 'governance',
@@ -198,7 +203,7 @@ export default function NavigationSidebar() {
   };
   // Add conditional badges
   if (activeBips.length > 0) {
-    badgeDataByPath.governance = activeBips;
+    badgeDataByPath.governance = activeBips.slice(0, 3);
   }
   if (activeFundraisers.length > 0) {
     badgeDataByPath.fundraiser = activeFundraisers;
@@ -279,9 +284,9 @@ export default function NavigationSidebar() {
         {NAVIGATION_MAP.more.map((item: any) => <NavItem item={item} key={item.path} />)}
       </List>
       <Box p={2} className={classes.metrics}>
-        <Metric label="Mkt. Cap" value={marketCap?.isGreaterThan(0) && `$${marketCap.dividedBy(10 ** 6).toFixed(1)}M`} hideIfNull />
-        <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${totalPods.dividedBy(10 ** 6).toFixed(1)}M`} hideIfNull />
-        <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${weather.harvestableIndex.dividedBy(10 ** 6).toFixed(1)}M`} hideIfNull />
+        <Metric label="Mkt. Cap" value={marketCap?.isGreaterThan(0) && `$${toTokenUnitsBN(marketCap, BEAN.decimals).toFixed(1)}M`} hideIfNull />
+        <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${toTokenUnitsBN(totalPods, BEAN.decimals).toFixed(1)}M`} hideIfNull />
+        <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${toTokenUnitsBN(weather.harvestableIndex, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Weather" value={weather?.weather?.isGreaterThan(0) && `${weather.weather.toFixed(0)}%`} hideIfNull />
         {/* <Metric label="ETH" value={ethPrices?.ethPrice && ethPrices.ethPrice > 0 && `$${ethPrices.ethPrice}`} hideIfNull /> */}
         <Metric label="ETH" value={usdcPrice && usdcPrice > 0 && `$${(1 / usdcPrice).toFixed(2)}`} hideIfNull />

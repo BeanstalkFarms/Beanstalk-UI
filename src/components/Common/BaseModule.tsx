@@ -65,6 +65,9 @@ export default function BaseModule({
       textTransform: textTransform,
       borderRadius: '15px',
       margin: '12px 0 12px 0',
+      // "& > div": {
+      //   height: 48
+      // }
     },
     formButton: {
       borderRadius: '15px',
@@ -73,7 +76,7 @@ export default function BaseModule({
       height: '44px',
       margin: '12px 12px',
       width: '64%',
-      maxWidth: '200px',
+      maxWidth: '240px',
     },
     indicator: {
       backgroundColor: 'transparent',
@@ -189,9 +192,11 @@ export default function BaseModule({
     </>
     : null;
 
+  // Removed style from <Box> temporarily:
+  // style={{ position: 'relative', zIndex: '0' }}
   const moduleContent = (
     <>
-      <Box style={{ position: 'relative', zIndex: '0' }}>
+      <Box style={{ position: 'relative' }}>
         {children}
         {allowance.isEqualTo(0) ? (
           <Box className={classes.moduleContent} />
@@ -210,7 +215,7 @@ export default function BaseModule({
 
   return (
     <>
-      {normalBox && sectionTitles.length > 1 ? (
+      {normalBox && sectionTitles.length >= 1 ? (
         <Box
           style={style}
           className={
@@ -233,7 +238,8 @@ export default function BaseModule({
             {sectionTitles.map((sectionTitle, index) => (
               <Tab
                 className={classes.sectionTab}
-                disabled={sectionTitles.length < 2}
+                // disabled={sectionTitles.length < 2}
+                disableRipple={sectionTitles.length === 1}
                 label={
                   sectionTitlesDescription !== undefined ? (
                     <Box>
@@ -264,7 +270,6 @@ export default function BaseModule({
             </form>
           ) : (
             moduleContent
-            // <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
           )}
         </Box>
       ) : sectionTitles.length === 1 && normalBox ? (
@@ -301,7 +306,6 @@ export default function BaseModule({
             </form>
           ) : (
             moduleContent
-            // <span style={{ padding: '0px 10px' }}>{moduleContent}</span>
           )}
         </Box>
       ) : (
@@ -313,7 +317,6 @@ export default function BaseModule({
           boxShadow={3}
         >
           {moduleContent}
-          {/* <span style={{ padding: '0px 10px' }}>{moduleContent}</span> */}
         </Box>
       )}
     </>
