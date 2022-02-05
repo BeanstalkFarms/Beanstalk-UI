@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import {
   CloseOutlined as CancelIcon,
-  ShoppingCartOutlined as ShoppingCartIcon,
 } from '@material-ui/icons';
 import {
   Table,
@@ -14,7 +13,6 @@ import {
   TableHead,
   TableRow,
   IconButton,
-  // CircularProgress,
   TablePagination,
   Radio,
   Button
@@ -329,7 +327,8 @@ export default function ListingsTable(props: ListingsTableProps) {
                 setSelectedListingIndex={setSelectedListingIndex}
                 selectedListingIndex={selectedListingIndex}
                 handleListingChange={handleListingChange}
-                isBuying={props.isBuying}              />
+                isBuying={props.isBuying}
+              />
             ))}
           </TableBody>
         </Table>
@@ -338,13 +337,17 @@ export default function ListingsTable(props: ListingsTableProps) {
         { !props.isBuying &&
           <Button
             className={classes.formButton}
-            style={{ marginTop:'8px', textAlign: 'center' }}
+            style={{ marginTop: '8px', textAlign: 'center' }}
             color="primary"
             disabled={
               !selectedListingIndex
             }
             variant="contained"
-            onClick={() => { props.setCurrentListing(slicedItems.find((listing) => listing.index.toString() === selectedListingIndex)) }}
+            onClick={() => { 
+              props.setCurrentListing(
+                slicedItems.find((listing) => listing.index.toString() === selectedListingIndex)
+              );
+            }}
           >
             {selectedListingIndex ? 'Buy Pods' : 'Select Pods to Buy'}
           </Button>
