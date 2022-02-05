@@ -55,7 +55,11 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
   // const canSell = Object.keys(plots).some((index) => order.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
 
   return (
-    <TableRow hover onClick={() => setSelectedOrderKey(order.id)} style={{ cursor: 'pointer' }}>
+    <TableRow
+      hover={isSelling}
+      onClick={isSelling ? () => setSelectedOrderKey(order.id) : null}
+      style={isSelling ? { cursor: 'pointer' } : null}
+    >
       {/* Place in line */}
       <TableCell className={classes.lucidaStyle}>
         <span>0 — {displayBN(order.maxPlaceInLine)}</span>
@@ -303,7 +307,7 @@ export default function OrdersTable(props: OrdersTableProps) {
               props.seCurrentOrder(slicedItems.find((order) => order.id === selectedOrderKey));
             }}
           >
-            Sell Pods To
+            Select Pods to Sell
           </Button>
         }
       </div>
