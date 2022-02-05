@@ -28,6 +28,7 @@ import {
 import {
   SettingsFormModule,
   SiloAsset,
+  siloStrings,
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
@@ -213,6 +214,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       setSettings={props.setSettings}
       settings={props.settings}
       showUnitModule={false}
+      convertSlippage={siloStrings.convertSlippage}
     />
   );
 
@@ -264,6 +266,17 @@ export const ConvertLPModule = forwardRef((props, ref) => {
           {toDepositedBeansField}
         </Box>
         <TransactionDetailsModule fields={details} />
+        <Box
+          style={{
+            display: 'inline-block',
+            width: '100%',
+            fontSize: 'calc(9px + 0.5vmin)',
+          }}
+        >
+          <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
+            {siloStrings.convertWarning}
+          </span>
+        </Box>
       </>
     );
   }

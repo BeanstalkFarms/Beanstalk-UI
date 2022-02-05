@@ -104,7 +104,7 @@ export default function SiloLPModule() {
 
   const sectionTitlesDescription = [
     siloStrings.lpDeposit,
-    siloStrings.lpWithdraw,
+    siloStrings.lpWithdraw.replace('{0}', totalBalance.withdrawSeasons),
   ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
@@ -228,6 +228,7 @@ export default function SiloLPModule() {
       settings={settings}
       totalLP={totalBalance.totalLP}
       totalStalk={totalBalance.totalStalk}
+      withdrawSeasons={totalBalance.withdrawSeasons}
     />,
   ];
   if (lpReceivableBalance.isGreaterThan(0)) {

@@ -13,4 +13,11 @@ export const fundsList = [
     type: 'Audit',
     token: 'USDC',
   },
+  {
+    path: '/Funds/fund-2.html',
+    name: 'Omniscia Retainer',
+    description: 'The proceeds of this Fundraiser will pay the retainer fee for Omniscia to audit Beanstalk.',
+    type: 'Audit',
+    token: 'USDC',
+  },
 ];

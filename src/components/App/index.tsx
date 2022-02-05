@@ -113,13 +113,7 @@ export default function App() {
             <BalancesPage />
           </Route>
           <Route exact path="/beanfts">
-            <Redirect to="/beanfts/beanft" />
-          </Route>
-          <Route exact path="/beanfts/beanft">
-            <BeaNFTPage sectionNumber={0} />
-          </Route>
-          <Route exact path="/beanfts/earnnfts">
-            <BeaNFTPage sectionNumber={1} />
+            <BeaNFTPage key="beanfts" />
           </Route>
           <Route exact path="/about">
             <AboutPage key="about" />

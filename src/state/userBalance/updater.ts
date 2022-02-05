@@ -46,6 +46,7 @@ import {
   toTokenUnitsBN,
   account,
   getEthPrices,
+  votes,
 } from 'util/index';
 import { UserBalanceState } from './reducer';
 
@@ -96,7 +97,8 @@ export default function Updater() {
       accountBalances,
       ethBalance,
       lpReserves,
-      currentSeason
+      currentSeason,
+      votedBips
     ) {
       const [
         uniswapBeanAllowance,
@@ -122,7 +124,6 @@ export default function Updater() {
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
       dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));
-
       dispatch(
         setUserBalance({
           claimableEthBalance,
@@ -138,6 +139,7 @@ export default function Updater() {
           rootsBalance,
           usdcBalance,
           beanWrappedBalance,
+          votedBips,
         })
       );
     }
@@ -165,6 +167,8 @@ export default function Updater() {
         budget1,
         budget2,
         budget3,
+        totalCurveBeans,
+        withdrawSeasons,
       ] = totalBalances;
       const totalBudgetBeans = budget0.plus(budget1).plus(budget2).plus(budget3);
       const [bips, hasActiveBIP] = bipInfo;
@@ -174,6 +178,7 @@ export default function Updater() {
         setTotalBalance({
           totalBeans,
           totalBudgetBeans,
+          totalCurveBeans,
           totalLP,
           totalSiloBeans,
           totalSiloLP,
@@ -183,6 +188,7 @@ export default function Updater() {
           totalStalk,
           totalPods,
           totalRoots,
+          withdrawSeasons,
         })
       );
       dispatch(
@@ -221,6 +227,9 @@ export default function Updater() {
         twapPrices,
         beansToPeg,
         lpToPeg,
+        curveVirtualPrice,
+        bean3crvPrice,
+        bean3crvReserve,
         ethPrices,
       ] = _prices;
 
@@ -248,6 +257,10 @@ export default function Updater() {
           lpToPeg,
           beanTWAPPrice: twapPrices[0],
           usdcTWAPPrice: twapPrices[1],
+          curveVirtualPrice,
+          bean3crvPrice,
+          bean3crvReserve: bean3crvReserve[0],
+          crvReserve: bean3crvReserve[1],
           ethPrices,
         })
       );
@@ -534,7 +547,6 @@ export default function Updater() {
           beanReceivableCrates: userBeanReceivableCrates,
           lpWithdrawals: userLPWithdrawals,
           lpReceivableCrates: userLPReceivableCrates,
-          votedBips: votedBips,
           beanClaimableBalance: beanReceivableBalance.plus(
             harvestablePodBalance
           ).plus(cb),
@@ -564,7 +576,7 @@ export default function Updater() {
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance] =
+      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance, votedBips] =
         await Promise.all([
           getBips(),
           getFundraisers(),
@@ -574,6 +586,7 @@ export default function Updater() {
           pricePromises,
           // getListings()
           getUSDCBalance(),
+          votes(),
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
@@ -604,6 +617,7 @@ export default function Updater() {
             ethBalance,
             lpReserves,
             currentSeason,
+            votedBips,
             usdcBalance
           );
         },

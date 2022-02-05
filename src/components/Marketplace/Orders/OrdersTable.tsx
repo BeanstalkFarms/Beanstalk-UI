@@ -11,12 +11,10 @@ import {
   IconButton,
   TablePagination,
   Radio,
-  Button,
-  Box
+  Button
 } from '@material-ui/core';
 import {
   CloseOutlined as CancelIcon,
-  ShoppingCartOutlined as ShoppingCartIcon,
 } from '@material-ui/icons';
 
 import { PodOrder } from 'state/marketplace/reducer';
@@ -24,7 +22,7 @@ import { BEAN, theme } from 'constants/index';
 import { cancelPodOrder, CryptoAsset, displayBN, FarmAsset, toStringBaseUnitBN } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
-import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/Common';
+import { BalanceTableCell, QuestionModule, TablePageSelect, TransactionToast } from 'components/Common';
 import { useStyles } from '../TableStyles';
 
 type OrderRowProps = {
@@ -196,7 +194,6 @@ export default function OrdersTable(props: OrdersTableProps) {
     );
   }
 
-
   //
   const rowsPerPage = 5;
   const slicedItems = props.orders
@@ -296,13 +293,15 @@ export default function OrdersTable(props: OrdersTableProps) {
         { !props.isSelling &&
           <Button
             className={classes.formButton}
-            style={{ marginTop:'8px', textAlign: 'center' }}
+            style={{ marginTop: '8px', textAlign: 'center' }}
             color="primary"
             disabled={
               !selectedOrderKey
             }
             variant="contained"
-            onClick={() => { props.seCurrentOrder(slicedItems.find((order) => order.id === selectedOrderKey)) }}
+            onClick={() => {
+              props.seCurrentOrder(slicedItems.find((order) => order.id === selectedOrderKey));
+            }}
           >
             Sell Pods To
           </Button>
@@ -314,7 +313,7 @@ export default function OrdersTable(props: OrdersTableProps) {
           <TablePagination
             component="div"
             count={props.orders.length}
-            onPageChange={(event, p) => { setPage(p); setSelectedOrderKey('') }}
+            onPageChange={(event, p) => { setPage(p); setSelectedOrderKey(''); }}
             page={page}
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={[]}
@@ -322,6 +321,11 @@ export default function OrdersTable(props: OrdersTableProps) {
               `${Math.ceil(from / rowsPerPage)}-${
                 count !== -1 ? Math.ceil(count / rowsPerPage) : 0
               }`
+            }
+            ActionsComponent={
+              Object.keys(props.orders).length > (rowsPerPage * 2)
+                ? TablePageSelect
+                : undefined
             }
           />
         )

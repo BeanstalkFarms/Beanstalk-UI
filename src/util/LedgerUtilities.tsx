@@ -3,6 +3,7 @@ import {
   BUDGETS,
   BEAN,
   BEANSTALK,
+  CURVE,
   ETH,
   STALK,
   UNI_V2_ETH_BEAN_LP,
@@ -13,11 +14,14 @@ import {
 import {
   account,
   beanstalkContractReadOnly,
+  bean3crvContractReadOnly,
+  curveContractReadOnly,
   initializing,
   pairContractReadOnly,
   tokenContractReadOnly,
   toTokenUnitsBN,
   web3,
+  chainId,
 } from './index';
 
 /* Client is responsible for calling execute() */
@@ -155,7 +159,19 @@ export const getTotalBalances = async (batch) => {
     [bean.methods.balanceOf(BUDGETS[1]), tokenResult(BEAN)],
     [bean.methods.balanceOf(BUDGETS[2]), tokenResult(BEAN)],
     [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)],
+    [bean.methods.balanceOf(CURVE.addr), tokenResult(BEAN)],
+    [beanstalk.methods.withdrawSeasons(), bigNumberResult],
   ]);
+};
+
+export const votes = async () => {
+  const beanstalk = beanstalkContractReadOnly();
+  const activeBips = await beanstalk.methods.activeBips().call();
+  const vs = await Promise.all(activeBips.map((b) => beanstalk.methods.voted(account, b).call()));
+  return activeBips.reduce((acc, b, i) => {
+    if (vs[i]) acc.add(b.toString());
+    return acc;
+  }, new Set());
 };
 
 /* TODO: batch BIP detail ledger reads */
@@ -224,8 +240,10 @@ export const getPrices = async (batch) => {
   const beanstalk = beanstalkContractReadOnly();
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
+  const bean3crvContract = bean3crvContractReadOnly();
+  const curveContract = curveContractReadOnly();
 
-  return makeBatchedPromises(batch, [
+  let batchCall = [
     // referenceTokenReserves
     [
       referenceLPContract.methods.getReserves(),
@@ -265,5 +283,48 @@ export const getPrices = async (batch) => {
       beanstalk.methods.lpToPeg(),
       (lp) => toTokenUnitsBN(lp, 18),
     ],
-  ]);
+  ];
+  if (chainId === 1) {
+    batchCall = batchCall.concat(
+      [
+        [
+          curveContract.methods.get_virtual_price(),
+          (price) => toTokenUnitsBN(price, 18),
+        ],
+        // Curve Bean price
+        [
+          bean3crvContract.methods.get_dy(0, 1, 1),
+          (price) => toTokenUnitsBN(price, 12),
+        ],
+        // Bean3Crv Balances
+        [
+          bean3crvContract.methods.get_balances(),
+          (prices) => [
+            toTokenUnitsBN(prices[0], 6),
+            toTokenUnitsBN(prices[1], 18),
+          ],
+        ],
+      ]
+    );
+  } else {
+    batchCall = batchCall.concat(
+      [
+        [
+          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
+          () => new BigNumber(0),
+        ],
+        // Curve Bean price
+        [
+          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
+          () => new BigNumber(0),
+        ],
+        // Bean3Crv Balances
+        [
+          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
+          () => [new BigNumber(0), new BigNumber(0)],
+        ],
+      ]
+    );
+  }
+  return makeBatchedPromises(batch, batchCall);
 };

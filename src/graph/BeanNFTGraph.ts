@@ -1,11 +1,8 @@
-import Parse from 'parse/dist/parse.min.js';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { PARSE_APP_ID, PARSE_API_KEY, WINTER_NFT_SUBGRAPH_API_LINK } from 'constants/index';
-import * as nftData from 'json/accounts.json';
-// const APIURL = 'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.0'
+import { WINTER_NFT_SUBGRAPH_API_LINK } from 'constants/index';
+import * as nftData from 'json/accounts2.json';
 
-Parse.initialize(PARSE_APP_ID, PARSE_API_KEY);
-Parse.serverURL = 'https://parseapi.back4app.com/';
+// const APIURL = 'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.0'
 
 const client = new ApolloClient({
   uri: WINTER_NFT_SUBGRAPH_API_LINK,
@@ -130,29 +127,19 @@ export async function queryAccountNFTStats(account) {
   return user;
 }
 
-export async function loadWinterNFTs(account) {
-  const nftQuery = new Parse.Query('NFT');
-  const data = await nftQuery.contains('account', account.toLowerCase()).findAll();
-  return data.map((d) => {
-    const j = d.toJSON();
-    return {
-      id: j.nftId,
-      account: j.account,
-      imageIpfsHash: j.imageIpfsHash,
-      metadataIpfsHash: j.metadataIpfsHash,
-      signature: j.signature,
-    };
-  });
-}
-
 export async function loadNFTs(account) {
-  if (!nftData.default[account]) return [];
-  const nfts = nftData.default[account];
-  nfts.map((n) => {
-    n.id = parseInt(n.id, 10);
-    return n;
-  });
-  return nfts;
+  if (!nftData.default[account]) {
+    return {
+      genesis: [],
+      winter: [],
+    };
+  }
+  const genesisNFTs = nftData.default[account].filter((n) => n.subcollection === 'Genesis');
+  const winterNFTs = nftData.default[account].filter((n) => n.subcollection === 'Winter');
+  return {
+    genesis: genesisNFTs,
+    winter: winterNFTs,
+  };
 }
 
 // const SowQuery = `

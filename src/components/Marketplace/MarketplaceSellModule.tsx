@@ -27,7 +27,6 @@ type MarketplaceSellModuleProps = {
   setCurrentOrder: Function;
 }
 
-
 export default function MarketplaceSellModule(props: MarketplaceSellModuleProps) {
   // Global state
   const { harvestablePodBalance, plots } = useSelector<AppState, AppState['userBalance']>(

@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
+import { PodListing } from 'state/marketplace/reducer';
 import {
   approveBeanstalkBean,
   SwapMode,
@@ -11,16 +12,13 @@ import {
 } from 'util/index';
 import { BaseModule, marketStrings } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/index';
-
 import { CreateOrderModule } from './Orders/CreateOrderModule';
 import Listings from './Listings/Listings';
-import { PodListing } from 'state/marketplace/reducer';
 
 type MarketplaceBuyModuleProps = {
   currentListing: PodListing | null;
   setCurrentListing: Function;
 }
-
 
 //
 export default function MarketplaceBuyModule(props: MarketplaceBuyModuleProps) {

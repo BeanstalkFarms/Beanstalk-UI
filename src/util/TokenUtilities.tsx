@@ -15,7 +15,7 @@ import SeedLogo from 'img/seed-logo.svg';
 import SiloIcon from 'img/silo-icon.svg';
 import StalkLogo from 'img/stalk-logo.svg';
 import TransitIcon from 'img/transit-icon.svg';
-import UniswapIcon from 'img/uniswap-icon.svg';
+import PooledIcon from 'img/pooled-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
 import { account, tokenContract } from './index';
@@ -206,7 +206,7 @@ export function TokenTypeImage(tokenType: Token): string | null {
   if (tokenType < 8) return SiloIcon;
   if (tokenType < 10) return TransitIcon;
   if (tokenType < 15) return ClaimableIcon;
-  if (tokenType < 16) return UniswapIcon;
+  if (tokenType < 16) return PooledIcon;
   if (tokenType < 17) return BudgetIcon;
   return null;
 }

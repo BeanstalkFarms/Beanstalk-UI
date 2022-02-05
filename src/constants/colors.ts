@@ -16,6 +16,7 @@ import barn from 'img/Barn.svg';
 import darkBarn from 'img/dark/Barn.svg';
 import fallBarn from 'img/fall/Barn.svg';
 import winterBarn from 'img/winter/Barn.svg';
+import winterUpgradeBarn from 'img/winter/upgrade/Barn.svg';
 import mainBarn from 'img/main/Barn.svg';
 import bean from 'img/bean-bold-logo.svg';
 import beanWhite from 'img/bean-white-logo.svg';
@@ -213,13 +214,53 @@ export const winterTheme = {
   bean: beanWhite,
 };
 
-export let theme = mainTheme;
+// FIXME: temporarily added winterUpgrade, need to clean up theme files and naming
+export const winterUpgradeTheme = {
+  ...normalTheme,
+  name: 'winterUpgrade',
+  text: 'black',
+  backgroundText: 'black',
+  bodyBackground: '#66CCFF',
+  primary: '#1B4658',
+  accentColor: '#9A9A9A',
+  accentText: 'white',
+  secondary: '#1B4658',
+  linkColor: '#3B3B3B',
+  footer: '#DDEBEF',
+  voteSelect: '#DAF2FF',
+  activeSection: '#1B4658',
+  navSelection: '#61dafb38',
+  menuColor: 'white',
+  module: {
+    foreground: '#FFFFFF',
+    background: '#F5FAFF',
+    metaBackground: 'rgba(238 238 238 / 85%)',
+  },
+  cloud: mainCloud,
+  cloudColor: 'white',
+  sun: mainSun,
+  // sunHeight: '15vw',
+  // sunLeftPosition: '55vw',
+  ground: winterGround,
+  groundSize: 'cover',
+  groundHeight: '74px',
+  groundItemHeight: '65px',
+  groundGrass: 'flex',
+  landHeight: '140px',
+  barnHeight: '74px',
+  footerPadding: '28px 15px 0 0',
+  barn: winterUpgradeBarn,
+  bean: beanWhite,
+};
+
+export let theme = winterUpgradeTheme;
 
 export function changeTheme(t: String) {
   if (t === 'ropsten') theme = ropstenTheme;
   else if (t === 'spooky') theme = spookyTheme;
   else if (t === 'fall') theme = fallTheme;
   else if (t === 'winter') theme = winterTheme;
+  else if (t === 'winterUpgrade') theme = winterUpgradeTheme;
   else if (t === 'main') theme = mainTheme;
   else theme = normalTheme;
 }

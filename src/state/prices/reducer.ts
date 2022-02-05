@@ -11,6 +11,10 @@ export interface PriceState {
   usdcTWAPPrice: BigNumber;
   beansToPeg: BigNumber;
   lpToPeg: BigNumber;
+  curveVirtualPrice: BigNumber;
+  bean3crvPrice: BigNumber;
+  bean3crvReserve: BigNumber;
+  crvReserve: BigNumber;
   ethPrices: {
     fast: BigNumber;
     propose: BigNumber;
@@ -28,6 +32,10 @@ export const initialState: PriceState = {
   usdcTWAPPrice: new BigNumber(-1),
   beansToPeg: new BigNumber(-1),
   lpToPeg: new BigNumber(-1),
+  curveVirtualPrice: new BigNumber(-1),
+  bean3crvPrice: new BigNumber(-1),
+  bean3crvReserve: new BigNumber(-1),
+  crvReserve: new BigNumber(-1),
   ethPrices: {
     fast: new BigNumber(-1),
     propose: new BigNumber(-1),

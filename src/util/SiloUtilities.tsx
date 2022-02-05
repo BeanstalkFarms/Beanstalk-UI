@@ -150,7 +150,7 @@ export const claim = async (
   wrappedBeans = '0',
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (wrappedBeans === '0' 
+  (wrappedBeans === '0'
     ? beanstalkContract().claim([...claimable, toWallet])
     : beanstalkContract().claimAndUnwrapBeans([...claimable, toWallet], wrappedBeans)),
   { onResponse }

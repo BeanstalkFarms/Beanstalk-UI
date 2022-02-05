@@ -92,16 +92,19 @@ function queryHourData(first: Number, skip: Number): Promise {
 
 export async function hourBeanQuery() {
   try {
-    const [d1, d2, d3, d4] = await Promise.all([
+    // FIXME: Need a more efficient and scalable query
+    const [d1, d2, d3, d4, d5] = await Promise.all([
       queryHourData(1000, 0),
       queryHourData(1000, 1000),
       queryHourData(1000, 2000),
       queryHourData(1000, 3000),
+      queryHourData(1000, 4000),
     ]);
     const data = d1.data.hourDatas
       .concat(d2.data.hourDatas)
       .concat(d3.data.hourDatas)
-      .concat(d4.data.hourDatas);
+      .concat(d4.data.hourDatas)
+      .concat(d5.data.hourDatas);
     const dates = data.reduce((acc, d) => {
       const date = new Date();
       date.setTime(d.hourTimestamp * 1000);

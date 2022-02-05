@@ -83,7 +83,7 @@ export default function SiloBeanModule() {
   const sectionTitles = ['Deposit', 'Withdraw'];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit,
-    siloStrings.beanWithdraw,
+    siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
   ];
   const sectionTitlesInfoDescription = [
     siloStrings.beanDepositsTable,
@@ -205,6 +205,7 @@ export default function SiloBeanModule() {
       setSettings={setSettings}
       settings={settings}
       totalStalk={totalBalance.totalStalk}
+      withdrawSeasons={totalBalance.withdrawSeasons}
     />,
   ];
 

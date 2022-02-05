@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   AppBar,
   Button,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -11,110 +10,21 @@ import {
   TableRow,
   Box,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import { Link } from 'react-scroll';
-import InfoIcon from '@material-ui/icons/Info';
+import Checkbox from '@material-ui/core/Checkbox';
 import CheckIcon from '@material-ui/icons/Check';
-import { percentForStalk, vote, unvote } from 'util/index';
-import { theme } from 'constants/index';
+import { percentForStalk, megaVote } from 'util/index';
 import TransactionToast from 'components/Common/TransactionToast';
-import { Line, QuestionModule, governanceStrings } from 'components/Common';
+import { Line, QuestionModule, governanceStrings, TransactionDetailsModule } from 'components/Common';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
+import { useStyles } from './VoteStyles.ts';
 
 export default function Vote(props) {
-  const classes = makeStyles(() => ({
-    inputModule: {
-      backgroundColor: theme.module.background,
-      borderRadius: '25px',
-      color: 'black',
-      marginTop: '18px',
-      maxWidth: '550px',
-      padding: '10px',
-    },
-    formButton: {
-      borderRadius: '15px',
-      fontFamily: 'Futura-Pt-Book',
-      fontSize: 'calc(12px + 1vmin)',
-      height: '44px',
-      margin: '20px 0 10px',
-      width: '200px',
-    },
-    title: {
-      display: 'inline-block',
-      fontFamily: 'Futura-Pt-Book',
-      fontSize: '18px',
-      marginTop: '10px',
-      textAlign: 'center',
-      width: '100%',
-    },
-    cell: {
-      fontFamily: 'Futura-PT',
-      borderColor: theme.accentColor,
-    },
-    cellTitle: {
-      fontFamily: 'Futura-PT-Book',
-      borderColor: theme.accentColor,
-    },
-    table: {
-      backgroundColor: theme.module.background,
-      margin: '8px',
-      width: 'auto',
-    },
-    futuraPT: {
-      fontFamily: 'Futura-Pt',
-    },
-    rowSelected: {
-      backgroundColor: theme.voteSelect,
-    },
-  }))();
+  const classes = useStyles();
 
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
-  const buttonHandler = () => {
-    const bip = props.bips[selected];
-    if (props.votedBips[bip]) {
-      // Toast
-      const txToast = new TransactionToast({
-        loading: `Unvoting for BIP ${bip}`,
-        success: 'Vote removed!',
-      });
-
-      // Execute
-      unvote(
-        bip.toString(),
-        (response) => {
-          txToast.confirming(response);
-        }
-      )
-      .then((value) => {
-        txToast.success(value);
-      })
-      .catch((err) => {
-        txToast.error(err);
-      });
-    } else {
-      // Toast
-      const txToast = new TransactionToast({
-        loading: `Voting for BIP ${bip}`,
-        success: 'Vote cast!',
-      });
-
-      // Execute
-      vote(
-        bip.toString(),
-        (response) => {
-          txToast.confirming(response);
-        }
-      )
-      .then((value) => {
-        txToast.success(value);
-      })
-      .catch((err) => {
-        txToast.error(err);
-      });
-    }
-  };
-
+  // Active bips
   const displayBips = props.bips.reduce((dp, bip) => {
     const row = [];
     row.push(bip);
@@ -141,6 +51,206 @@ export default function Vote(props) {
     return dp;
   }, []);
 
+  // Take the selected row indecies and return the combined array
+  const selectedBips = selected.reduce((dp, bip) => {
+    dp.push(displayBips[bip]);
+    return dp;
+  }, []);
+  // Take the selected row indecies and return the combined array
+  const selectedDetails = selectedBips.reduce((dp, bip) => {
+    if (bip[2] === false) {
+      dp.push(`Vote for BIP-${bip[0]}`);
+      return dp;
+    }
+    dp.push(`Unvote BIP-${bip[0]}`);
+    return dp;
+  }, []);
+
+  // Handle select all
+  const handleSelectAllClick = () => {
+    if (!selectAll) {
+      // take all active bips and return the index number
+      setSelected(Object.keys(props.bips).map((i) => Number(i)));
+      setSelectAll(!selectAll);
+      return;
+    }
+    setSelected([]);
+    setSelectAll(!selectAll);
+  };
+
+  // Selected Bips checkbox handler
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    // Checkbox selected if number selected equals active bips
+    if (newSelected.length === displayBips.length) {
+      setSelectAll(true);
+    } else {
+      setSelectAll(false);
+    }
+
+    setSelected(newSelected);
+  };
+  const isSelected = (s) => selected.indexOf(s) !== -1;
+
+  const buttonHandler = () => {
+    // Toast
+    // FIXME: transaction error tx toast on click
+    const txToast = new TransactionToast({
+      loading: props.votedBips[props.bips[selected]] ? 'Unvoting for BIP' : 'Voting for BIP',
+      success: props.votedBips[props.bips[selected]] ? 'Vote removed!' : 'Vote cast!',
+    });
+
+    // Execute
+    megaVote(
+      selectedBips,
+      (response) => {
+        txToast.confirming(response);
+      }
+    )
+    .then((value) => {
+      txToast.success(value);
+    })
+    .catch((err) => {
+      console.log(err);
+      txToast.error(err);
+    });
+  };
+  const voteTable = (
+    <TableContainer className={classes.table}>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              {props.bips.length > 1
+                ? (
+                  <Checkbox
+                    checked={selectAll}
+                    onChange={handleSelectAllClick}
+                  />
+                )
+                : null}
+            </TableCell>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              BIP
+            </TableCell>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              Seasons Remaining
+            </TableCell>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              Voted
+            </TableCell>
+            <TableCell
+              className={classes.cellTitle}
+              size="small"
+              align="center"
+            >
+              Vote %
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {displayBips.map((bip, index) => {
+            const isItemSelected = isSelected(index);
+
+            return (
+              <TableRow
+                key={`table_row_${index}`} // eslint-disable-line
+                className={selected[index] === index ? classes.rowSelected : null}
+                hover
+                onClick={() => handleClick(bip, index)}
+                selected={isItemSelected}
+                style={{ cursor: 'pointer' }}
+              >
+                <TableCell
+                  className={classes.cell}
+                  align="center"
+                  size="small"
+                >
+                  <Checkbox
+                    checked={isItemSelected || selectAll}
+                  />
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  size="small"
+                  align="center"
+                >
+                  {bip[0]}
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  size="small"
+                  align="center"
+                >
+                  {bip[1]}
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  size="small"
+                  align="center"
+                >
+                  {bip[2] ? <CheckIcon /> : 'No'}
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  size="small"
+                  align="center"
+                >
+                  {bip[3]}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+
+  function transactionDetails() {
+    if (props.userRoots.isLessThanOrEqualTo(0) || selected.length < 1) return null;
+
+    return (
+      <>
+        {/* <ExpandMoreIcon
+          color="primary"
+          style={{ marginBottom: '-14px', width: '100%' }}
+        /> */}
+        <TransactionDetailsModule fields={selectedDetails} />
+        <br />
+      </>
+    );
+  }
+
   return (
     <AppBar className={classes.inputModule} position="static">
       <form autoComplete="off" noValidate>
@@ -156,129 +266,19 @@ export default function Vote(props) {
             margin: '10px 8px',
           }}
         />
-        <TableContainer className={classes.table}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                />
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                >
-                  BIP
-                </TableCell>
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                >
-                  Seasons Remaining
-                </TableCell>
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                >
-                  Voted
-                </TableCell>
-                <TableCell
-                  className={classes.cellTitle}
-                  size="small"
-                  align="center"
-                >
-                  Vote %
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {displayBips.map((bip, index) => (
-                <TableRow
-                  key={`table_row_${index}`} // eslint-disable-line
-                  className={selected === index ? classes.rowSelected : null}
-                  onClick={() => setSelected(index)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <TableCell
-                    className={classes.cell}
-                    align="center"
-                    size="small"
-                  >
-                    <Link
-                      duration={450}
-                      isDynamic
-                      offset={-210}
-                      smooth
-                      spy
-                      to={`bip-${bip[0]}`}
-                    >
-                      <IconButton
-                        onClick={() => {
-                          if (!document.getElementById(`bip-${bip[0]}-open`)) {
-                            document
-                              .getElementById(`open-bip-${bip[0]}`)
-                              .click();
-                          }
-                        }}
-                        style={{
-                          padding: '7px',
-                          width: '30px',
-                          height: '30px',
-                          color: 'rgba(0 0 0 / 25%)',
-                        }}
-                      >
-                        <InfoIcon fontSize="small" />
-                      </IconButton>
-                    </Link>
-                  </TableCell>
-                  <TableCell
-                    className={classes.cell}
-                    size="small"
-                    align="center"
-                  >
-                    {bip[0]}
-                  </TableCell>
-                  <TableCell
-                    className={classes.cell}
-                    size="small"
-                    align="center"
-                  >
-                    {bip[1]}
-                  </TableCell>
-                  <TableCell
-                    className={classes.cell}
-                    size="small"
-                    align="center"
-                  >
-                    {bip[2] ? <CheckIcon /> : 'No'}
-                  </TableCell>
-                  <TableCell
-                    className={classes.cell}
-                    size="small"
-                    align="center"
-                  >
-                    {bip[3]}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {voteTable}
+        {transactionDetails()}
         <Button
           className={classes.formButton}
           color="primary"
-          disabled={props.userRoots.isLessThanOrEqualTo(0)}
+          disabled={props.userRoots.isLessThanOrEqualTo(0) || selected.length < 1}
           onClick={buttonHandler}
           variant="contained"
         >
           {props.userRoots.isGreaterThan(0)
             ? `${
                 props.votedBips[props.bips[selected]] ? 'Unvote' : 'Vote'
-              }: BIP ${props.bips[selected]}`
+              }`
             : 'No Stalk'}
         </Button>
       </form>

@@ -12,7 +12,7 @@ import {
 import Image from 'material-ui-image';
 import { makeStyles } from '@material-ui/styles';
 import { BASE_IPFS_LINK, BASE_OPENSEA_LINK, theme } from 'constants/index';
-import { mintNFT } from 'util/index';
+import { mintNFT, mintGenesisNFT } from 'util/index';
 import {
   beanftStrings,
   SingleButton,
@@ -62,7 +62,9 @@ export default function NftPicTable({
           fontSize="15px"
           handleClick={() => {
             const nft = nftList[i];
-            mintNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature);
+            nft.subcollection === 'Genesis' ?
+              mintGenesisNFT(nft.account, nft.id, nft.metadataIpfsHash, nft.signature) :
+              mintNFT(nft.account, nft.id, nft.signature2);
           }}
           height="30px"
           margin="-10px 7px 0 0"
@@ -131,20 +133,20 @@ export default function NftPicTable({
                         `ID: ${nftList[index].id}`
                       )}
                       <br />
-                      <span>{'Metadata: '}</span>
+                      <span>{'Image: '}</span>
                       <Link
-                        href={`${BASE_IPFS_LINK}${nftList[index].metadataIpfsHash}`}
+                        href={`${BASE_IPFS_LINK}${nftList[index].imageIpfsHash}`}
                         color="inherit"
                         target="blank"
                       >
                         <span>
-                          {`${nftList[index].metadataIpfsHash.substring(
+                          {`${nftList[index].imageIpfsHash.substring(
                             0,
                             6
                           )}...${nftList[
                             index
-                          ].metadataIpfsHash.substring(
-                            nftList[index].metadataIpfsHash.length - 4
+                          ].imageIpfsHash.substring(
+                            nftList[index].imageIpfsHash.length - 4
                           )}`}
                         </span>
                       </Link>

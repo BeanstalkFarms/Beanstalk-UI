@@ -130,6 +130,7 @@ export default function SettingsFormModule(props) {
             props.setSettings({ ...props.settings, slippage: value })
           }
           slippage={props.settings.slippage}
+          description={props.convertSlippage}
         />
       ),
     },

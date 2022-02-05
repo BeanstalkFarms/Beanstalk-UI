@@ -13,12 +13,15 @@ export const COMMONWEALTH_LINK = 'https://commonwealth.im/beanstalk/';
 export const DISCORD_LINK = 'https://discord.gg/y4cJNv5DTM';
 export const GITHUB_LINK = 'https://github.com/BeanstalkFarms/Beanstalk';
 export const MEDIUM_LINK = 'https://medium.com/@BeanstalkFarms';
-export const OPENSEA_LINK = 'https://opensea.io/collection/beanft-genesis';
+export const OPENSEA_LINK_GENESIS = 'https://opensea.io/collection/beanft-genesis';
+export const OPENSEA_LINK_COLLECTION = 'https://opensea.io/collection/beanft-collection';
 export const REDDIT_LINK = 'https://www.reddit.com/r/BeanstalkProtocol/';
 export const TELEGRAM_LINK = 'https://t.me/joinchat/OdWoJSyPVsRhYzgx';
 export const TWITTER_LINK = 'https://twitter.com/BeanstalkFarms';
 export const LICENSE_LINK = 'https://github.com/BeanstalkFarms/Beanstalk/blob/master/LICENSE.txt';
 export const CODE_OF_CONDUCT_LINK = 'https://github.com/BeanstalkFarms/Beanstalk/blob/master/CODE_OF_CONDUCT.md';
+export const CURVE_LINK = 'https://curve.fi/factory/81/';
+export const DUNE_LINK = 'https://dune.xyz/tbiq/Beanstalk';
 export const NETLIFY_LINK = 'https://www.netlify.com/';
 
 /* Path Links */

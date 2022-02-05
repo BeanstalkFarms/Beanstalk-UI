@@ -67,7 +67,7 @@ export default function SiloCharts(props) {
           description={siloChartStrings.seeds}
         />
       ),
-      data: [props.data.map((d) => ({ x: d.x, y: d.seeds }))],
+      data: [props.data.map((d) => ({ x: d.x, y: d.seeds * 10000 }))],
     },
   ];
 

@@ -23,7 +23,7 @@ import { theme, BEAN } from 'constants/index';
 import { displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset, cancelPodListing } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
-import { BalanceTableCell, QuestionModule, TransactionToast } from 'components/Common';
+import { BalanceTableCell, QuestionModule, TablePageSelect, TransactionToast } from 'components/Common';
 import { useStyles } from '../TableStyles';
 
 type ListingRowProps = {
@@ -267,6 +267,11 @@ export default function ListingsTable(props: ListingsTableProps) {
                 `${Math.ceil(from / rowsPerPage)}-${
                   count !== -1 ? Math.ceil(count / rowsPerPage) : 0
                 }`
+              }
+              ActionsComponent={
+                Object.keys(props.listings).length > (rowsPerPage * 2)
+                  ? TablePageSelect
+                  : undefined
               }
             />
           )
