@@ -12,7 +12,7 @@ import {
   toTokenUnitsBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
-import { PodOrder, PodListing, MarketHistoryItem } from './reducer';
+import { PodOrder, PodListing, MarketHistoryItem, MarketStats } from './reducer';
 
 // Pod Listing Events
 // These map to the values returned by the Beanstalk contract.
@@ -64,6 +64,11 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
   const podListings : { [key: string]: PodListing } = {};
   const podOrders : { [key: string]: PodOrder } = {};
   const marketHistory : MarketHistoryItem[] = [];
+  const marketStats : MarketStats = {
+    podVolume: new BigNumber(0),
+    beanVolume: new BigNumber(0),
+    countFills: new BigNumber(0),
+  };
 
   for (const event of events) {
     if (event.event === 'PodListingCreated') {
@@ -98,6 +103,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
       const newIndex = new BigNumber(values.index).plus(values.amount).plus(values.start);
       const newKey = newIndex.toString();
       podListings[newKey] = currentListing;
+      const filledBeans = (podListings[newKey].pricePerPod).times(amountBN);
 
       // Bump up |amountSold| for this listing
       podListings[newKey].index = toTokenUnitsBN(newIndex, BEAN.decimals);
@@ -116,11 +122,15 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
         // Amounts
         amount: amountBN,
         pricePerPod: podListings[newKey].pricePerPod,
-        filledBeans: podListings[newKey].pricePerPod.times(amountBN),
+        filledBeans: filledBeans,
         // Parties
         from: values.from,
         to: values.to,
       });
+
+      marketStats.podVolume = marketStats.podVolume.plus(amountBN);
+      marketStats.beanVolume = marketStats.beanVolume.plus(filledBeans);
+      marketStats.countFills = marketStats.countFills.plus(1);
 
       // Check whether current listing is sold or not
       // FIXME: potential for roundoff error such that remainingAmount < 0?
@@ -153,6 +163,8 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
       const podOrder = podOrders[key];
       podOrders[key].filledAmount = podOrders[key].filledAmount.plus(amountBN);
       podOrders[key].remainingAmount = podOrder.totalAmount.minus(podOrder.filledAmount);
+      
+      const filledBeans = podOrders[key].pricePerPod.times(amountBN);
 
       // Add to market history
       marketHistory.push({
@@ -164,12 +176,16 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
         transactionHash: event.transactionHash,
         // Amounts
         amount: amountBN,
-        pricePerPod: podListings[key].pricePerPod,
-        filledBeans: podListings[key].pricePerPod.times(amountBN),
+        pricePerPod: podOrders[key].pricePerPod,
+        filledBeans: filledBeans,
         // Partie
         from: values.from,
         to: values.to,
       });
+
+      marketStats.podVolume = marketStats.podVolume.plus(amountBN);
+      marketStats.beanVolume = marketStats.beanVolume.plus(filledBeans);
+      marketStats.countFills = marketStats.countFills.plus(1);
 
       const isFilled = podOrder.remainingAmount.isEqualTo(0);
       if (isFilled) {
@@ -189,11 +205,13 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
     return listing;
   });
   const finalPodOrders = Object.values(podOrders);
+  const finalMarketHistory = marketHistory.reverse(); 
 
   return {
     listings: finalPodListings,
     orders: finalPodOrders,
-    history: marketHistory,
+    history: finalMarketHistory,
+    stats: marketStats,
   };
 }
 
@@ -243,13 +261,15 @@ export default function Updater() {
       const {
         listings,
         orders,
-        history
+        history,
+        stats
       } = processEvents(marketplaceEvents, harvestableIndex);
       dispatch(
         setMarketplaceState({
           listings,
           orders,
           history,
+          stats
         })
       );
     };
