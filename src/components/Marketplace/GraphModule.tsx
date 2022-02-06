@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { useTooltip, Tooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
-import { Circle, Line } from '@visx/shape';
+import { Circle, Line, Area,  Bar } from '@visx/shape';
 import { withParentSize } from '@visx/responsive';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleLinear } from '@visx/scale';
@@ -15,6 +15,7 @@ import minBy from 'lodash/minBy';
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
 import { GraphListingTooltip, GraphOrderTooltip } from './GraphTooltips';
+import { PatternLines } from '@visx/pattern';
 
 type CirclePosition = {
   x: number;
@@ -38,6 +39,19 @@ type TooltipData = {
   type: 'listing' | 'order';
   index: number;
 }
+
+// const brushMargin = { top: 10, bottom: 15, left: 50, right: 20 };
+// const chartSeparation = 30;
+const PATTERN_ID = 'brush_pattern';
+// const GRADIENT_ID = 'brush_gradient';
+export const accentColor = '#f6acc8';
+export const background = '#584153';
+export const background2 = '#af8baf';
+// const selectedBrushStyle = {
+//   fill: `url(#${PATTERN_ID})`,
+//   stroke: 'white',
+// };
+
 
 // Calculates a circle radius between MIN_RADIUS and MAX_RADIUS based on the given plotSize
 // Uses log-scale stretching to give relative scale among large maxPlotSize values
@@ -217,14 +231,22 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
     };
   });
 
+  // '#B3CDE3',
+  // '#CCEBC5',
+  // '#DECBE4',
+  // '#FBB4AE',
+  // '#C5AC77',
+  // '#DEDBDB',
+  // '#FED9A6',
+
   const orderLines = orderPositions.map((coordinate, i) => (
     <Line
       pointerEvents="none"
       key={`point-${i}`}
       from={coordinate.from}
       to={coordinate.to}
-      fill="rgba(255, 0, 0, 0.2)"
-      stroke={i === tooltipData?.index ? '#c8ab74' : '#d1cabc'}
+      // fill={`url(#${PATTERN_ID})`}
+      stroke={`rgb(204, 235, 197)`}
       strokeWidth={coordinate.height}
     />
   ));
@@ -361,6 +383,14 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
 
   return (
     <>
+      <PatternLines
+        id={PATTERN_ID}
+        height={5}
+        width={5}
+        stroke={'black'}
+        strokeWidth={1}
+        orientation={['diagonal']}
+      />
       <Zoom<SVGSVGElement>
         width={parentWidth}
         height={graphHeight}
@@ -382,10 +412,10 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
               }}
             >
               <g transform={zoom.toString()}>
-                {listingCircles}
+                {orderLines}
               </g>
               <g transform={zoom.toString()}>
-                {orderLines}
+                {listingCircles}
               </g>
               {/* Contains the entire chart (incl. axes and labels)
                   QUESTION: why have this + the below <rect> both take up the full dims? */}
@@ -477,15 +507,25 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
                   offsetTop={0}
                   left={tooltipLeft}
                   top={tooltipTop}
-                  style={{
-                    backgroundColor: '#f7d186',
-                    border: '2px solid #c8ab74',
-                    boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
-                    padding: '0.3rem 0.5rem',
-                    borderRadius: 10,
-                    pointerEvents: 'auto',
-                    zIndex: 99999,
-                  }}
+                  style={tooltipData.type === "listing"
+                    ? {
+                      backgroundColor: '#f7d186',
+                      border: '2px solid #c8ab74',
+                      boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
+                      padding: '0.3rem 0.5rem',
+                      borderRadius: 10,
+                      pointerEvents: 'auto',
+                      zIndex: 99999,
+                    }
+                    : {
+                      backgroundColor: 'rgb(204, 235, 197)',
+                      border: '2px solid #c8ab74',
+                      boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
+                      padding: '0.3rem 0.5rem',
+                      borderRadius: 10,
+                      pointerEvents: 'auto',
+                      zIndex: 99999,
+                    }}
                   applyPositionStyle
                 >
                   {tooltipData.type === 'listing' ? (
@@ -500,7 +540,6 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
                       onTransact={() => setCurrentOrder(orders[tooltipData.index])}
                       // harvestableIndex={harvestableIndex}
                     />
-
                   )}
                 </Tooltip>
               )}
