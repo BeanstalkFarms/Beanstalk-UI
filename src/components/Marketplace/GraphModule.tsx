@@ -3,11 +3,12 @@ import { useSelector } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { useTooltip, Tooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
-import { Circle, Line, Area,  Bar } from '@visx/shape';
+import { Circle, Bar } from '@visx/shape';
 import { withParentSize } from '@visx/responsive';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
+import { PatternLines } from '@visx/pattern';
 import { Zoom, applyMatrixToPoint } from '@visx/zoom';
 import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
 import minBy from 'lodash/minBy';
@@ -15,7 +16,6 @@ import minBy from 'lodash/minBy';
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
 import { GraphListingTooltip, GraphOrderTooltip } from './GraphTooltips';
-import { PatternLines } from '@visx/pattern';
 
 type CirclePosition = {
   x: number;
@@ -24,14 +24,9 @@ type CirclePosition = {
 };
 
 type LinePosition = {
-  from: {
-    x: number;
-    y: number;
-  },
-  to: {
-    x: number;
-    y: number;
-  }
+  x: number;
+  y: number;
+  width: number;
   height: number;
 };
 
@@ -40,18 +35,10 @@ type TooltipData = {
   index: number;
 }
 
-// const brushMargin = { top: 10, bottom: 15, left: 50, right: 20 };
-// const chartSeparation = 30;
 const PATTERN_ID = 'brush_pattern';
-// const GRADIENT_ID = 'brush_gradient';
 export const accentColor = '#f6acc8';
 export const background = '#584153';
 export const background2 = '#af8baf';
-// const selectedBrushStyle = {
-//   fill: `url(#${PATTERN_ID})`,
-//   stroke: 'white',
-// };
-
 
 // Calculates a circle radius between MIN_RADIUS and MAX_RADIUS based on the given plotSize
 // Uses log-scale stretching to give relative scale among large maxPlotSize values
@@ -68,8 +55,8 @@ const calculateCircleRadius = (
 
 // Calculates a line height between MIN_HEIGHT and MAX_HEIGHT based on the given plotSize
 // Uses log-scale stretching to give relative scale among large maxPlotSize values
-const MIN_HEIGHT = 1;
-const MAX_HEIGHT = 4;
+const MIN_HEIGHT = 2;
+const MAX_HEIGHT = 6;
 const calculateLineHeight = (
   plotSize: number,
   maxPlotSize: number
@@ -115,10 +102,10 @@ const findPointInLines = (
   for (let i = 0; i < positions.length; i += 1) {
     const position = positions[i];
     if (
-      point.x >= position.from.x &&
-      point.x <= position.to.x &&
-      point.y >= position.from.y - (position.height / 2) &&
-      point.y <= position.from.y + (position.height / 2)
+      point.x >= position.x &&
+      point.x <= position.x + position.width &&
+      point.y >= position.y - (position.height / 2) &&
+      point.y <= position.y + (position.height / 2)
     ) {
       foundPositions.push(i);
     }
@@ -213,43 +200,33 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
 
   const orderPositions : LinePosition[] = orders.map((order) => {
     const y = yScale(order.pricePerPod.toNumber());
+    const h = calculateLineHeight(
+      order.remainingAmount.toNumber(),
+      maxPlotSize
+    );
+    const w = xScale(order.maxPlaceInLine.toNumber());
     return {
-      from: {
-        // start at x = 0
-        x: leftAxisWidth, 
-        y
-      }, 
-      to: {
-        // move to maxPlaceInLine
-        x: xScale(order.maxPlaceInLine.toNumber()) + leftAxisWidth,
-        y
-      },
-      height: calculateLineHeight(
-        order.remainingAmount.toNumber(),
-        maxPlotSize
-      )
+      x: leftAxisWidth,
+      y: y - h / 2,
+      height: h,
+      width: w,
     };
   });
 
-  // '#B3CDE3',
-  // '#CCEBC5',
-  // '#DECBE4',
-  // '#FBB4AE',
-  // '#C5AC77',
-  // '#DEDBDB',
-  // '#FED9A6',
-
-  const orderLines = orderPositions.map((coordinate, i) => (
-    <Line
-      pointerEvents="none"
-      key={`point-${i}`}
-      from={coordinate.from}
-      to={coordinate.to}
-      // fill={`url(#${PATTERN_ID})`}
-      stroke={`rgb(204, 235, 197)`}
-      strokeWidth={coordinate.height}
-    />
-  ));
+  const orderLines = orderPositions.map((coordinate, i) => {
+    const active = tooltipData?.type === 'order' && i === tooltipData?.index;
+    return (
+      <Bar
+        x={coordinate.x}
+        y={coordinate.y}
+        height={coordinate.height}
+        width={coordinate.width}
+        fill={`url('#${PATTERN_ID}')`}
+        stroke={active ? '#000' : '#888'}
+        strokeWidth={active ? 1.5 : 1}
+      />
+    );
+  });
 
   // -- Listings
 
@@ -265,18 +242,21 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
     ),
   }));
 
-  const listingCircles = listingPositions.map((coordinate, i) => (
-    <Circle
-      pointerEvents="none"
-      key={`point-${i}`}
-      cx={coordinate.x}
-      cy={coordinate.y}
-      r={coordinate.radius}
-      fill="#f7d186"
-      stroke={i === tooltipData?.index ? '#c8ab74' : '#d1cabc'}
-      strokeWidth={2}
-    />
-  ));
+  const listingCircles = listingPositions.map((coordinate, i) => {
+    const active = tooltipData?.type === 'listing' && i === tooltipData?.index;
+    return (
+      <Circle
+        pointerEvents="none"
+        key={`point-${i}`}
+        cx={coordinate.x}
+        cy={coordinate.y}
+        r={coordinate.radius}
+        fill="#b3cde3"
+        stroke={active ? '#000' : '#888'}
+        strokeWidth={active ? 2 : 1}
+      />
+    );
+  });
 
   const handleMouseMove = (event: React.MouseEvent | React.TouchEvent, zoom: ProvidedZoom<SVGSVGElement>) => {
     if (!svgRef.current) return;
@@ -308,8 +288,8 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
       // Show tooltip at bottom-right corner of circle position.
       // Nudge inward to make hovering easier.
       showTooltip({
-        tooltipLeft: zoomedCoordinate.x + coordinate.radius / Math.sqrt(2) - 170, // 170 = width of tooltip
-        tooltipTop: zoomedCoordinate.y + coordinate.radius / Math.sqrt(2) - 4,    // 4 = a nudge
+        tooltipLeft: zoomedCoordinate.x + coordinate.radius / Math.sqrt(2) - 100, // 200 = width of tooltip
+        tooltipTop: zoomedCoordinate.y + coordinate.radius / Math.sqrt(2) - 0,
         tooltipData: {
           index: listingIndex,
           type: 'listing',
@@ -322,8 +302,8 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
         const position = orderPositions[orderIndex];
 
         const zoomedCoordinate = zoom.applyToPoint({
-          x: position.to.x,
-          y: position.to.y,
+          x: position.x,
+          y: position.y,
         });
 
         // Show tooltip at bottom-right corner of circle position.
@@ -383,14 +363,6 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
 
   return (
     <>
-      <PatternLines
-        id={PATTERN_ID}
-        height={5}
-        width={5}
-        stroke={'black'}
-        strokeWidth={1}
-        orientation={['diagonal']}
-      />
       <Zoom<SVGSVGElement>
         width={parentWidth}
         height={graphHeight}
@@ -412,6 +384,14 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
               }}
             >
               <g transform={zoom.toString()}>
+                <PatternLines
+                  id={PATTERN_ID}
+                  height={5}
+                  width={5}
+                  stroke="green"
+                  strokeWidth={1}
+                  orientation={['diagonal']}
+                />
                 {orderLines}
               </g>
               <g transform={zoom.toString()}>
@@ -507,40 +487,51 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
                   offsetTop={0}
                   left={tooltipLeft}
                   top={tooltipTop}
-                  style={tooltipData.type === "listing"
-                    ? {
-                      backgroundColor: '#f7d186',
-                      border: '2px solid #c8ab74',
+                  applyPositionStyle
+                  style={{ 
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                    paddingTop: 7,
+                  }}
+                >
+                  <Box
+                    style={tooltipData.type === 'listing' ? {
+                      backgroundColor: '#b3cde3',
+                      border: '2px solid #333',
+                      boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
+                      padding: '0.3rem 0.5rem',
+                      borderRadius: 10,
+                      pointerEvents: 'auto',
+                      zIndex: 99999,
+                    } : {
+                      backgroundColor: '#ccebc5',
+                      border: '2px solid #333',
                       boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
                       padding: '0.3rem 0.5rem',
                       borderRadius: 10,
                       pointerEvents: 'auto',
                       zIndex: 99999,
                     }
-                    : {
-                      backgroundColor: 'rgb(204, 235, 197)',
-                      border: '2px solid #c8ab74',
-                      boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
-                      padding: '0.3rem 0.5rem',
-                      borderRadius: 10,
-                      pointerEvents: 'auto',
-                      zIndex: 99999,
-                    }}
-                  applyPositionStyle
-                >
-                  {tooltipData.type === 'listing' ? (
-                    <GraphListingTooltip
-                      listing={listings[tooltipData.index]}
-                      onTransact={() => setCurrentListing(listings[tooltipData.index])}
-                      harvestableIndex={harvestableIndex}
-                    />
-                  ) : (
-                    <GraphOrderTooltip
-                      order={orders[tooltipData.index]}
-                      onTransact={() => setCurrentOrder(orders[tooltipData.index])}
-                      // harvestableIndex={harvestableIndex}
-                    />
-                  )}
+                  }>
+                    {tooltipData.type === 'listing' ? (
+                      <GraphListingTooltip
+                        listing={listings[tooltipData.index]}
+                        onTransact={() => {
+                          hideTooltip();
+                          setCurrentListing(listings[tooltipData.index]);
+                        }}
+                        harvestableIndex={harvestableIndex}
+                      />
+                    ) : (
+                      <GraphOrderTooltip
+                        order={orders[tooltipData.index]}
+                        onTransact={() => {
+                          hideTooltip();
+                          setCurrentOrder(orders[tooltipData.index]);
+                        }}
+                      />
+                    )}
+                  </Box>
                 </Tooltip>
               )}
           </div>
