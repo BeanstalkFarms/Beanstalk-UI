@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { Box } from '@material-ui/core';
 import { BaseModule, Grid, marketStrings, fieldStrings, ListTable, FarmAsset } from 'components/Common';
 import { PodListing, PodOrder } from 'state/marketplace/reducer';
 import MarketplaceBuyModule from './MarketplaceBuyModule';
@@ -9,6 +8,8 @@ import MarketplaceSellModule from './MarketplaceSellModule';
 import Listings from './Listings/Listings';
 import Orders from './Orders/Orders';
 import GraphModule from './GraphModule';
+import HistoryTable from './History/HistoryTable';
+// import Stats from './History/Stats';
 
 export default function TabbedMarketplace() {
   const { width } = useSelector<AppState, AppState['general']>(
@@ -65,22 +66,20 @@ export default function TabbedMarketplace() {
   ];
 
   const showMyMarketTables = (
-    <Box>
-      <BaseModule
-        style={{ marginTop: '20px' }}
-        handleTabChange={(event, newSubSection) => {
-          setSubSection(newSubSection);
-        }}
-        section={subSection}
-        sectionTitles={subSectionTitles}
-        sectionTitlesDescription={subSectionTitlesDescription}
-        showButton={false}
-      >
-        {/**
-          * My Orders and My Listings */}
-        {subSections[subSection]}
-      </BaseModule>
-    </Box>
+    <BaseModule
+      style={{ marginTop: '20px' }}
+      handleTabChange={(event, newSubSection) => {
+        setSubSection(newSubSection);
+      }}
+      section={subSection}
+      sectionTitles={subSectionTitles}
+      sectionTitlesDescription={subSectionTitlesDescription}
+      showButton={false}
+    >
+      {/**
+        * My Orders and My Listings */}
+      {subSections[subSection]}
+    </BaseModule>
   );
 
   /* My Plots */
@@ -88,29 +87,50 @@ export default function TabbedMarketplace() {
     plots !== undefined &&
     (Object.keys(plots).length > 0 || harvestablePodBalance.isGreaterThan(0))
   ) ? (
-    <>
-      <BaseModule
-        style={{ marginTop: '20px' }}
-        section={0}
-        sectionTitles={['My Plots']}
-        sectionTitlesDescription={[fieldStrings.plotTable]}
-        showButton={false}
-      >
-        <ListTable
-          asset={FarmAsset.Pods}
-          claimableBalance={harvestablePodBalance}
-          claimableCrates={harvestablePlots}
-          crates={plots}
-          indexTitle="Place in Line"
-          index={parseFloat(harvestableIndex)}
-          handleChange={(event, p: number) => setPage(p)}
-          page={page}
-          title="Plots"
-        />
-      </BaseModule>
-    </>
+    <BaseModule
+      style={{ marginTop: '20px' }}
+      section={0}
+      sectionTitles={['My Plots']}
+      sectionTitlesDescription={[fieldStrings.plotTable]}
+      showButton={false}
+    >
+      <ListTable
+        asset={FarmAsset.Pods}
+        claimableBalance={harvestablePodBalance}
+        claimableCrates={harvestablePlots}
+        crates={plots}
+        indexTitle="Place in Line"
+        index={parseFloat(harvestableIndex)}
+        handleChange={(event, p: number) => setPage(p)}
+        page={page}
+        title="Plots"
+      />
+    </BaseModule>
     )
   : null;
+
+  const showHistory = (
+    <BaseModule
+      style={{ marginTop: '20px' }}
+      section={0}
+      sectionTitles={[]}
+      sectionTitlesDescription={[]}
+      showButton={false}
+    >
+      <HistoryTable />
+    </BaseModule>
+  );
+  // const showStats = (
+  //   <BaseModule
+  //     style={{ marginTop: '20px' }}
+  //     section={0}
+  //     sectionTitles={[]}
+  //     sectionTitlesDescription={[]}
+  //     showButton={false}
+  //   >
+  //     <Stats />
+  //   </BaseModule>
+  // );
 
   return (
     <Grid
@@ -164,9 +184,7 @@ export default function TabbedMarketplace() {
         style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
       >
         <BaseModule
-          handleTabChange={(event, newSection) => {
-            setSection(newSection);
-          }}
+          handleTabChange={undefined}
           section={0}
           sectionTitles={['My Market']}
           sectionTitlesDescription={[marketStrings.myMarket]}
@@ -175,6 +193,17 @@ export default function TabbedMarketplace() {
         >
           {showMyMarketTables}
           {showPlots}
+        </BaseModule>
+        <BaseModule
+          handleTabChange={undefined}
+          section={0}
+          sectionTitles={['History']}
+          sectionTitlesDescription={[marketStrings.history]}
+          showButton={false}
+          removeBackground
+        >
+          {/* {showStats} */}
+          {showHistory}
         </BaseModule>
       </Grid>
     </Grid>

@@ -321,6 +321,8 @@ export const marketStrings = {
   myOrders: 'This tab contains all of your outstanding Pod Orders on the Farmers Market.', // TODO
   myListings: 'This tab contains all of your outstanding Pod Listings on the Farmers Market.', // TODO
   myMarket: 'My Market contains all of your outstanding Pod Orders and Listings on the Farmers Market.', // TODO
+  // History
+  history: 'History contains a historical log of fills executed on the marketplace.'
 };
 export const filterStrings = {
   pricePerPod: 'Use this slider to filter Pod Orders and Pod Listings by Price per Pod.', // TODO

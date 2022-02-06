@@ -11,6 +11,7 @@ export default function BalanceTableCell({
   label,
   icon,
   children,
+  title,
 }) {
     return (
       <TableCell
@@ -20,7 +21,7 @@ export default function BalanceTableCell({
       >
         <FormatTooltip
           placement="right"
-          title={`${displayFullBN(balance)} ${label}`}
+          title={title || `${displayFullBN(balance)} ${label}`}
         >
           {/* Allow some cells to set a custom table child. Default to showing provided balance.
               This is for backwards compatibility with existing tables. Both need to be wrapped in
@@ -42,5 +43,6 @@ export default function BalanceTableCell({
 }
 
 BalanceTableCell.defaultProps = {
-    align: 'right',
+  align: 'right',
+  title: undefined,
 };

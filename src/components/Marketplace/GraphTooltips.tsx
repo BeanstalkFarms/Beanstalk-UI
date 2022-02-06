@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     margin: '4px 0',
   },
   tooltipDetailPill: {
-    backgroundColor: '#fae4b5',
+    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 5,
   },
@@ -102,7 +102,7 @@ export const GraphOrderTooltip = (props: GraphOrderTooltipProps) => {
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Plots Requested</span>
+        <span style={{ fontWeight: 'bold' }}>Pods Ordered</span>
         <div className={classes.tooltipDetailPill}>
           <span>
             {displayBN(order.remainingAmount)}

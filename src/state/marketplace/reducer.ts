@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { BigNumber } from 'bignumber.js';
 import {
-  setMarketplaceListings,
+  setMarketplaceState,
 } from './actions';
 
 export type PodListing = {
@@ -131,19 +131,68 @@ export type PodOrder = {
   status: string;
 };
 
-export interface MarketplaceState {
-  listings: PodListing[];
-  orders: PodOrder[];
+export type BaseFillEvent = {
+  // const timestamp = block.timestamp + myEvent.logIndex;
+  timestamp: number; // FIXME: not calculated yet
+  blockNumber: number;
+  logIndex: number;
+  transactionHash: string;
+  from: string;
+  to: string;
 }
 
-export const initialState: MarketplaceState = {
+export type PodListingFilled = BaseFillEvent & {
+  type: 'PodListingFilled';
+  // Mapped from PodListingFilledEvent
+  index: BigNumber;
+  start: BigNumber;
+  amount: PodListing['totalAmount'];
+  // Added
+  pricePerPod: PodListing['pricePerPod']; // snapshot at time of fill
+  filledBeans: BigNumber;
+}
+
+export type PodOrderFilled = BaseFillEvent & {
+  type: 'PodOrderFilled';
+  // Mapped from PodOrderFilledEvent
+  index: BigNumber;
+  start: BigNumber
+  amount: PodOrder['totalAmount'];
+  // Added
+  pricePerPod: PodOrder['pricePerPod']; // snapshot at time of fill
+  filledBeans: BigNumber;
+}
+
+export type MarketHistoryItem = (PodListingFilled | PodOrderFilled);
+
+export type MarketStats = {
+  podVolume: BigNumber;
+  beanVolume: BigNumber;
+  countFills: BigNumber;
+}
+export interface MarketState {
+  listings: PodListing[];
+  orders: PodOrder[];
+  history: MarketHistoryItem[];
+  stats: MarketStats;
+}
+
+export const initialState: MarketState = {
   listings: [],
   orders: [],
+  history: [],
+  stats: {
+    podVolume: new BigNumber(0),
+    beanVolume: new BigNumber(0),
+    countFills: new BigNumber(0),
+  }
 };
 
 export default createReducer(initialState, (builder) =>
-  builder.addCase(setMarketplaceListings, (state, { payload }) => {
+  builder.addCase(setMarketplaceState, (state, { payload }) => {
     state.listings = payload.listings;
     state.orders = payload.orders;
+    state.history = payload.history;
+    state.stats = payload.stats;
   })
 );

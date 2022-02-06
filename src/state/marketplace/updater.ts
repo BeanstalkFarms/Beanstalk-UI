@@ -3,108 +3,19 @@ import BigNumber from 'bignumber.js';
 import { AppState } from 'state';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  setMarketplaceListings,
+  setMarketplaceState,
 } from 'state/marketplace/actions';
 import orderBy from 'lodash/orderBy';
+import { EventData } from 'web3-eth-contract';
 import {
   beanstalkContractReadOnly,
   toTokenUnitsBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
-import { PodOrder, PodListing } from './reducer';
+import { PodOrder, PodListing, MarketHistoryItem, MarketStats } from './reducer';
 
-// mock global events for marketplace
-// TODO: hook this up to real contract events
-// eslint-disable-next-line
-const MOCK_EVENTS = [
-  {
-    event: 'PodListingCreated',
-    returnValues: {
-      account: '0xaaa',
-      index: new BigNumber(0),
-      pricePerPod: new BigNumber(0.98),
-      maxHarvestableIndex: new BigNumber(123123123),
-      amount: new BigNumber(123123),
-    },
-  },
-  {
-    event: 'PodListingCreated',
-    returnValues: {
-      account: '0xbbb',
-      index: new BigNumber(1000000),
-      pricePerPod: new BigNumber(0.99),
-      maxHarvestableIndex: new BigNumber(123123123),
-      amount: new BigNumber(1000),
-    },
-  },
-  {
-    event: 'PodListingCancelled',
-    returnValues: {
-      account: '0xaaa',
-      index: new BigNumber(0),
-    },
-  },
-  {
-    event: 'PodOrderCreated',
-    returnValues: {
-      account: '0xaaa',
-      index: new BigNumber(100000),
-      amount: new BigNumber(10000),
-      pricePerPod: new BigNumber(0.95),
-      maxPlaceInLine: new BigNumber(123123),
-    },
-  },
-  {
-    event: 'PodOrderCreated',
-    returnValues: {
-      account: '0xaaa',
-      index: new BigNumber(300000),
-      amount: new BigNumber(10000),
-      pricePerPod: new BigNumber(0.95),
-      maxPlaceInLine: new BigNumber(123123),
-    },
-  },
-  {
-    event: 'PodOrderCancelled',
-    returnValues: {
-      index: new BigNumber(300000),
-    },
-  },
-  {
-    event: 'PodListingFilled',
-    returnValues: {
-      buyer: '0xccc',
-      seller: '0xaaa',
-      index: new BigNumber(1000000),
-      pricePerPod: new BigNumber(0.99),
-      amount: new BigNumber(500),
-    },
-  },
-  {
-    event: 'PodListingFilled',
-    returnValues: {
-      buyer: '0xccc',
-      seller: '0xaaa',
-      index: new BigNumber(1000500),
-      pricePerPod: new BigNumber(0.99),
-      amount: new BigNumber(500),
-    },
-  },
-];
-
-// TODO: figure out how to access the Ethers Event type, or
-// write our own. Perhaps something like this:
-//
-// type EthersEvent<A, B> = {
-//   event: A;
-//   returnValue: B;
-// }
-// type MarketplaceListingEvent = EthersEvent<
-//   'ListingCreated' | 'ListingCancelled' | 'ListingFilled',
-//   any
-// >;
-
-//
+// Pod Listing Events
+// These map to the values returned by the Beanstalk contract.
 type PodListingCreatedEvent = {
   account: string;
   index: string;
@@ -126,7 +37,8 @@ type PodListingCancelledEvent = {
   index: string;
 }
 
-//
+// Pod Order Events
+// These map to the values returned by the Beanstalk contract.
 type PodOrderCreatedEvent = {
   account: string;
   id: string;
@@ -148,10 +60,16 @@ type PodOrderCancelledEvent = {
 }
 
 // FIXME: define type for Events
-function processEvents(events: any, harvestableIndex: BigNumber) {
+function processEvents(events: EventData[], harvestableIndex: BigNumber) {
   const podListings : { [key: string]: PodListing } = {};
   const podOrders : { [key: string]: PodOrder } = {};
-  console.log('marketplace/updater: processEvents', events);
+  const marketHistory : MarketHistoryItem[] = [];
+  const marketStats : MarketStats = {
+    podVolume: new BigNumber(0),
+    beanVolume: new BigNumber(0),
+    countFills: new BigNumber(0),
+  };
+
   for (const event of events) {
     if (event.event === 'PodListingCreated') {
       const values = (event.returnValues as PodListingCreatedEvent);
@@ -162,7 +80,6 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
         maxHarvestableIndex: toTokenUnitsBN(new BigNumber(values.maxHarvestableIndex), BEAN.decimals),
         toWallet: values.toWallet,
-        // -- Amounts
         totalAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
         remainingAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
         filledAmount: new BigNumber(0),
@@ -174,7 +91,7 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
     } else if (event.event === 'PodListingFilled') {
       const values = (event.returnValues as PodListingFilledEvent);
       if (!podListings[values.index]) continue;
-      const amountBN = toTokenUnitsBN(values.amount, BEAN.decimals);
+      const amount = toTokenUnitsBN(values.amount, BEAN.decimals);
 
       // Move current listing's index up by |amount|
       // FIXME: does this match the new marketplace behavior? Believe
@@ -183,15 +100,43 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       const prevKey = values.index.toString();
       const currentListing = podListings[prevKey];
       delete podListings[prevKey];
+
+      // The new index of the Plot, now that some of it has been sold.
       const newIndex = new BigNumber(values.index).plus(values.amount).plus(values.start);
       const newKey = newIndex.toString();
       podListings[newKey] = currentListing;
 
+      // 
+      const filledBeans = (currentListing.pricePerPod).times(amount);
+
       // Bump up |amountSold| for this listing
       podListings[newKey].index = toTokenUnitsBN(newIndex, BEAN.decimals);
       podListings[newKey].start = new BigNumber(0);
-      podListings[newKey].filledAmount = podListings[newKey].filledAmount.plus(amountBN);
-      podListings[newKey].remainingAmount = currentListing.totalAmount.minus(podListings[newKey].filledAmount);
+      podListings[newKey].filledAmount = currentListing.filledAmount.plus(amount);
+      podListings[newKey].remainingAmount = currentListing.totalAmount.minus(currentListing.filledAmount);
+
+      // Add to market history
+      marketHistory.push({
+        // Event info
+        type: 'PodListingFilled',
+        timestamp: 0,
+        blockNumber: event.blockNumber,
+        logIndex: event.logIndex,
+        transactionHash: event.transactionHash,
+        // Amounts
+        index: podListings[newKey].index,
+        start: podListings[newKey].start, // VERIFY
+        amount: amount,
+        pricePerPod: podListings[newKey].pricePerPod,
+        filledBeans: filledBeans,
+        // Parties
+        from: values.from,
+        to: values.to,
+      });
+
+      marketStats.podVolume  = marketStats.podVolume.plus(amount);
+      marketStats.beanVolume = marketStats.beanVolume.plus(filledBeans);
+      marketStats.countFills = marketStats.countFills.plus(1);
 
       // Check whether current listing is sold or not
       // FIXME: potential for roundoff error such that remainingAmount < 0?
@@ -217,15 +162,41 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
       delete podOrders[values.id];
     } else if (event.event === 'PodOrderFilled') {
       const values = (event.returnValues as PodOrderFilledEvent);
-      const amountBN = toTokenUnitsBN(values.amount, BEAN.decimals);
+      const amount = toTokenUnitsBN(values.amount, BEAN.decimals);
 
       // Check whether current offer is sold or not
       const key = values.id;
-      const buyOffer = podOrders[key];
-      podOrders[key].filledAmount = podOrders[key].filledAmount.plus(amountBN);
-      podOrders[key].remainingAmount = buyOffer.totalAmount.minus(buyOffer.filledAmount);
+      const podOrder = podOrders[key];
+      podOrders[key].filledAmount = podOrder.filledAmount.plus(amount);
+      podOrders[key].remainingAmount = podOrder.totalAmount.minus(podOrder.filledAmount);
+      
+      //
+      const filledBeans = podOrders[key].pricePerPod.times(amount);
 
-      const isFilled = buyOffer.remainingAmount.isEqualTo(0);
+      // Add to market history
+      marketHistory.push({
+        // Event info
+        type: 'PodOrderFilled',
+        timestamp: 0,
+        blockNumber: event.blockNumber,
+        logIndex: event.logIndex,
+        transactionHash: event.transactionHash,
+        // Amounts
+        index: toTokenUnitsBN(values.index, BEAN.decimals),
+        start: toTokenUnitsBN(values.start, BEAN.decimals), // VERIFY
+        amount: amount,
+        pricePerPod: podOrders[key].pricePerPod,
+        filledBeans: filledBeans,
+        // Parties
+        from: values.from,
+        to: values.to,
+      });
+
+      marketStats.podVolume  = marketStats.podVolume.plus(amount);
+      marketStats.beanVolume = marketStats.beanVolume.plus(filledBeans);
+      marketStats.countFills = marketStats.countFills.plus(1);
+
+      const isFilled = podOrder.remainingAmount.isEqualTo(0);
       if (isFilled) {
         delete podOrders[key];
       }
@@ -243,10 +214,13 @@ function processEvents(events: any, harvestableIndex: BigNumber) {
     return listing;
   });
   const finalPodOrders = Object.values(podOrders);
+  const finalMarketHistory = marketHistory.reverse(); 
 
   return {
     listings: finalPodListings,
     orders: finalPodOrders,
+    history: finalMarketHistory,
+    stats: marketStats,
   };
 }
 
@@ -262,7 +236,7 @@ export default function Updater() {
     const fetchMarketplaceListings = async () => {
       const beanstalk = beanstalkContractReadOnly();
       // TODO: Change fromBlock: 0 to the block that BIP-10 is implemented.
-      const events = await Promise.all(
+      const events : (EventData[])[] = await Promise.all(
         [
           beanstalk.getPastEvents('PodListingCreated', {
             fromBlock: 0,
@@ -284,8 +258,9 @@ export default function Updater() {
           })
         ]
       );
+      
       // eslint-disable-next-line
-      let marketplaceEvents = [].concat.apply([], events);
+      let marketplaceEvents : EventData[] = [].concat.apply([], events);
       marketplaceEvents.sort((a, b) => {
         const diff = a.blockNumber - b.blockNumber;
         if (diff !== 0) return diff;
@@ -294,12 +269,18 @@ export default function Updater() {
 
       const {
         listings,
-        orders
-      } = processEvents(marketplaceEvents, harvestableIndex);
-      dispatch(setMarketplaceListings({
-        listings,
         orders,
-      }));
+        history,
+        stats
+      } = processEvents(marketplaceEvents, harvestableIndex);
+      dispatch(
+        setMarketplaceState({
+          listings,
+          orders,
+          history,
+          stats
+        })
+      );
     };
 
     if (harvestableIndex != null) {
