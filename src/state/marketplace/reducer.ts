@@ -141,21 +141,29 @@ export type BaseFillEvent = {
   to: string;
 }
 
-export type PodListingFill = BaseFillEvent & {
-  type: 'PodListingFill';
-  amount: PodListing['totalAmount'];      // 
-  pricePerPod: PodListing['pricePerPod']; // match type; snapshot
+export type PodListingFilled = BaseFillEvent & {
+  type: 'PodListingFilled';
+  // Mapped from PodListingFilledEvent
+  index: BigNumber;
+  start: BigNumber;
+  amount: PodListing['totalAmount'];
+  // Added
+  pricePerPod: PodListing['pricePerPod']; // snapshot at time of fill
   filledBeans: BigNumber;
 }
 
-export type PodOrderFill = BaseFillEvent & {
-  type: 'PodOrderFill';
-  amount: PodOrder['totalAmount'];        // match type
-  pricePerPod: PodOrder['pricePerPod'];   // match type
+export type PodOrderFilled = BaseFillEvent & {
+  type: 'PodOrderFilled';
+  // Mapped from PodOrderFilledEvent
+  index: BigNumber;
+  start: BigNumber
+  amount: PodOrder['totalAmount'];
+  // Added
+  pricePerPod: PodOrder['pricePerPod']; // snapshot at time of fill
   filledBeans: BigNumber;
 }
 
-export type MarketHistoryItem = (PodListingFill | PodOrderFill);
+export type MarketHistoryItem = (PodListingFilled | PodOrderFilled);
 
 export type MarketStats = {
   podVolume: BigNumber;

@@ -198,7 +198,7 @@ export default function TabbedMarketplace() {
           handleTabChange={undefined}
           section={0}
           sectionTitles={['History']}
-          sectionTitlesDescription={[marketStrings.myMarket]}
+          sectionTitlesDescription={[marketStrings.history]}
           showButton={false}
           removeBackground
         >
