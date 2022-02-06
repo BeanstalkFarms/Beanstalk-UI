@@ -131,7 +131,7 @@ export type PodOrder = {
   status: string;
 };
 
-export type MarketHistoryItem = {
+export type BaseFillEvent = {
   // const timestamp = block.timestamp + myEvent.logIndex;
   timestamp: number; // FIXME: not calculated yet
   blockNumber: number;
@@ -141,26 +141,26 @@ export type MarketHistoryItem = {
   to: string;
 }
 
-export type PodListingFill = MarketHistoryItem & {
+export type PodListingFill = BaseFillEvent & {
   type: 'PodListingFill';
   amount: PodListing['totalAmount'];      // 
   pricePerPod: PodListing['pricePerPod']; // match type; snapshot
   filledBeans: BigNumber;
 }
 
-export type PodOrderFill = MarketHistoryItem & {
+export type PodOrderFill = BaseFillEvent & {
   type: 'PodOrderFill';
   amount: PodOrder['totalAmount'];        // match type
   pricePerPod: PodOrder['pricePerPod'];   // match type
   filledBeans: BigNumber;
 }
 
-export type MarketHistory = (PodListingFill | PodOrderFill)[];
+export type MarketHistoryItem = (PodListingFill | PodOrderFill);
 
 export interface MarketplaceState {
   listings: PodListing[];
   orders: PodOrder[];
-  history: MarketHistory;
+  history: MarketHistoryItem[];
 }
 
 export const initialState: MarketplaceState = {

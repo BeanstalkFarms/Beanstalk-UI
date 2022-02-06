@@ -11,7 +11,7 @@ import {
   toTokenUnitsBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
-import { PodOrder, PodListing, MarketHistory } from './reducer';
+import { PodOrder, PodListing, MarketHistoryItem } from './reducer';
 import { EventData } from 'web3-eth-contract';
 
 // Pod Listing Events
@@ -63,7 +63,7 @@ type PodOrderCancelledEvent = {
 function processEvents(events: EventData[], harvestableIndex: BigNumber) {
   const podListings : { [key: string]: PodListing } = {};
   const podOrders : { [key: string]: PodOrder } = {};
-  const marketHistory : MarketHistory = [];
+  const marketHistory : MarketHistoryItem[] = [];
 
   for (const event of events) {
     if (event.event === 'PodListingCreated') {
@@ -231,6 +231,7 @@ export default function Updater() {
           })
         ]
       );
+      
       // eslint-disable-next-line
       let marketplaceEvents : EventData[] = [].concat.apply([], events);
       marketplaceEvents.sort((a, b) => {

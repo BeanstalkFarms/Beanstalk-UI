@@ -145,25 +145,11 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
                 value={order.id}
                 name="radio-buttons"
                 inputProps={{ 'aria-label': order.id }}
-            />
-
-              {/* <IconButton
-                onClick={() => seCurrentOrder(order)}
-                // disabled={!canSell}
-                // style={{
-                //   color: canSell ? theme.linkColor : 'lightgray',
-                // }}
-                style={{
-                  color: theme.linkColor,
-                }}
-                size="small"
-              >
-                <ShoppingCartIcon />
-              </IconButton> */}
+              />
             </TableCell>
           )}
         </>
-      ) }
+      )}
     </TableRow>
   );
 }
@@ -179,6 +165,7 @@ type OrdersTableProps = {
  * Orders
  */
 export default function OrdersTable(props: OrdersTableProps) {
+  const [page, setPage] = useState<number>(0);
   const [selectedOrderKey, setSelectedOrderKey] = React.useState<string>('');
   const handleOrderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedOrderKey((event.target.value));
@@ -187,8 +174,6 @@ export default function OrdersTable(props: OrdersTableProps) {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-  /** */
-  const [page, setPage] = useState<number>(0);
 
   if (!props.orders || props.orders.length === 0) {
     return (
