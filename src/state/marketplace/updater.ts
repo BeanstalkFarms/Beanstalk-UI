@@ -6,13 +6,13 @@ import {
   setMarketplaceState,
 } from 'state/marketplace/actions';
 import orderBy from 'lodash/orderBy';
+import { EventData } from 'web3-eth-contract';
 import {
   beanstalkContractReadOnly,
   toTokenUnitsBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
 import { PodOrder, PodListing, MarketHistoryItem } from './reducer';
-import { EventData } from 'web3-eth-contract';
 
 // Pod Listing Events
 // These map to the values returned by the Beanstalk contract.
@@ -108,7 +108,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
       // Add to market history
       marketHistory.push({
         // Event info
-        type: "PodListingFill",
+        type: 'PodListingFill',
         timestamp: 0,
         blockNumber: event.blockNumber,
         logIndex: event.logIndex,
@@ -120,7 +120,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
         // Parties
         from: values.from,
         to: values.to,
-      })
+      });
 
       // Check whether current listing is sold or not
       // FIXME: potential for roundoff error such that remainingAmount < 0?
@@ -157,7 +157,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
       // Add to market history
       marketHistory.push({
         // Event info
-        type: "PodOrderFill",
+        type: 'PodOrderFill',
         timestamp: 0,
         blockNumber: event.blockNumber,
         logIndex: event.logIndex,

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { Box } from '@material-ui/core';
 import { BaseModule, Grid, marketStrings, fieldStrings, ListTable, FarmAsset } from 'components/Common';
 import { PodListing, PodOrder } from 'state/marketplace/reducer';
 import MarketplaceBuyModule from './MarketplaceBuyModule';
@@ -66,22 +65,20 @@ export default function TabbedMarketplace() {
   ];
 
   const showMyMarketTables = (
-    <>
-      <BaseModule
-        style={{ marginTop: '20px' }}
-        handleTabChange={(event, newSubSection) => {
-          setSubSection(newSubSection);
-        }}
-        section={subSection}
-        sectionTitles={subSectionTitles}
-        sectionTitlesDescription={subSectionTitlesDescription}
-        showButton={false}
-      >
-        {/**
-          * My Orders and My Listings */}
-        {subSections[subSection]}
-      </BaseModule>
-    </>
+    <BaseModule
+      style={{ marginTop: '20px' }}
+      handleTabChange={(event, newSubSection) => {
+        setSubSection(newSubSection);
+      }}
+      section={subSection}
+      sectionTitles={subSectionTitles}
+      sectionTitlesDescription={subSectionTitlesDescription}
+      showButton={false}
+    >
+      {/**
+        * My Orders and My Listings */}
+      {subSections[subSection]}
+    </BaseModule>
   );
 
   /* My Plots */
@@ -121,7 +118,7 @@ export default function TabbedMarketplace() {
     >
       <HistoryModule />
     </BaseModule>
-  )
+  );
 
   return (
     <Grid
