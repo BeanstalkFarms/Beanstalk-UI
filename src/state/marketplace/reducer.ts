@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { BigNumber } from 'bignumber.js';
 import {
-  setMarketplaceListings,
+  setMarketplaceState,
 } from './actions';
 
 export type PodListing = {
@@ -131,19 +131,48 @@ export type PodOrder = {
   status: string;
 };
 
+export type BaseFillEvent = {
+  // const timestamp = block.timestamp + myEvent.logIndex;
+  timestamp: number; // FIXME: not calculated yet
+  blockNumber: number;
+  logIndex: number;
+  transactionHash: string;
+  from: string;
+  to: string;
+}
+
+export type PodListingFill = BaseFillEvent & {
+  type: 'PodListingFill';
+  amount: PodListing['totalAmount'];      // 
+  pricePerPod: PodListing['pricePerPod']; // match type; snapshot
+  filledBeans: BigNumber;
+}
+
+export type PodOrderFill = BaseFillEvent & {
+  type: 'PodOrderFill';
+  amount: PodOrder['totalAmount'];        // match type
+  pricePerPod: PodOrder['pricePerPod'];   // match type
+  filledBeans: BigNumber;
+}
+
+export type MarketHistoryItem = (PodListingFill | PodOrderFill);
+
 export interface MarketplaceState {
   listings: PodListing[];
   orders: PodOrder[];
+  history: MarketHistoryItem[];
 }
 
 export const initialState: MarketplaceState = {
   listings: [],
   orders: [],
+  history: [],
 };
 
 export default createReducer(initialState, (builder) =>
-  builder.addCase(setMarketplaceListings, (state, { payload }) => {
+  builder.addCase(setMarketplaceState, (state, { payload }) => {
     state.listings = payload.listings;
     state.orders = payload.orders;
+    state.history = payload.history;
   })
 );
