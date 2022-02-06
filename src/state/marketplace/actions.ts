@@ -1,7 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
-import { MarketplaceState } from './reducer';
+import { MarketState } from './reducer';
 
 // FIXME: rename
-export const setMarketplaceState = createAction<MarketplaceState>(
+export const setMarketplaceState = createAction<MarketState>(
   'marketplace/setMarketplaceState'
 );

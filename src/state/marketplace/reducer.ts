@@ -157,16 +157,27 @@ export type PodOrderFill = BaseFillEvent & {
 
 export type MarketHistoryItem = (PodListingFill | PodOrderFill);
 
-export interface MarketplaceState {
+export type MarketStats = {
+  podVolume: BigNumber;
+  beanVolume: BigNumber;
+  countFills: BigNumber;
+}
+export interface MarketState {
   listings: PodListing[];
   orders: PodOrder[];
   history: MarketHistoryItem[];
+  stats: MarketStats;
 }
 
-export const initialState: MarketplaceState = {
+export const initialState: MarketState = {
   listings: [],
   orders: [],
   history: [],
+  stats: {
+    podVolume: new BigNumber(0),
+    beanVolume: new BigNumber(0),
+    countFills: new BigNumber(0),
+  }
 };
 
 export default createReducer(initialState, (builder) =>
@@ -174,5 +185,6 @@ export default createReducer(initialState, (builder) =>
     state.listings = payload.listings;
     state.orders = payload.orders;
     state.history = payload.history;
+    state.stats = payload.stats;
   })
 );

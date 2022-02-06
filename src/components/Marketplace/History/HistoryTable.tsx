@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { MarketHistoryItem } from 'state/marketplace/reducer';
 import { CryptoAsset, displayBN, FarmAsset } from 'util/index';
-import { useStyles } from './TableStyles';
+import { useStyles } from '../TableStyles';
 
-export default function HistoryModule() {
+export default function HistoryTable() {
   const classes = useStyles();
   const [page, setPage] = useState<number>(0);
   const { history } = useSelector<AppState, AppState['marketplace']>(
