@@ -50,21 +50,24 @@ export const tokenContract = (token) =>
 export const tokenContractReadOnly = (token) =>
   new web3.eth.Contract(beanAbi, token.addr);
 
+export const tokenV2ContractReadOnly = (token) =>
+  new web3.eth.Contract(beanAbi, token.address);
+
 export const beanstalkContract = () =>
-  new ethers.Contract(BEANSTALK.addr, beanstalkAbi, web3Signer);
+  new ethers.Contract(BEANSTALK, beanstalkAbi, web3Signer);
 
 export const beanstalkContractReadOnly = () =>
-  new web3.eth.Contract(beanstalkAbi, BEANSTALK.addr);
+  new web3.eth.Contract(beanstalkAbi, BEANSTALK);
 
 export const beaNFTContract = () =>
-  new ethers.Contract(BEANFTCOLLECTION.addr, beaNFTAbi, web3Signer);
+  new ethers.Contract(BEANFTCOLLECTION, beaNFTAbi, web3Signer);
 export const beaNFTContractReadOnly = () =>
-  new web3.eth.Contract(beaNFTAbi, BEANFTCOLLECTION.addr);
+  new web3.eth.Contract(beaNFTAbi, BEANFTCOLLECTION);
 
 export const beaNFTGenesisContract = () =>
-  new ethers.Contract(BEANFTGENESIS.addr, BeaNFTGenesisABI, web3Signer);
+  new ethers.Contract(BEANFTGENESIS, BeaNFTGenesisABI, web3Signer);
 export const beaNFTGenesisContractReadOnly = () =>
-  new web3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS.addr);
+  new web3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS);
 
 export const pairContract = (pair) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);

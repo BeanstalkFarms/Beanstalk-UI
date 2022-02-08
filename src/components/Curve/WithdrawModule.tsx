@@ -120,7 +120,7 @@ export const WithdrawModule = forwardRef(({
       balance={lpBalance}
       handleChange={handleFromChange}
       locked={lpBalance.isLessThanOrEqualTo(0)}
-      token={CryptoAsset.Crv}
+      token={CryptoAsset.Crv3}
       value={TrimBN(fromCurveLPValue, 9)}
     />
   );
@@ -129,7 +129,7 @@ export const WithdrawModule = forwardRef(({
   const toCurveLPField = (
     <TokenOutputField
       burn
-      token={CryptoAsset.Crv}
+      token={CryptoAsset.Crv3}
       value={fromCurveLPValue}
     />
   );

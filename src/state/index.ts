@@ -9,6 +9,7 @@ import beansPerSeason from './beansPerSeason/reducer';
 import general from './general/reducer';
 import marketplace from './marketplace/reducer';
 import nfts from './nfts/reducer';
+import tokenBalances from './tokenBalance/reducer';
 
 const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
     general,
     marketplace,
     nfts,
+    tokenBalances,
   },
   middleware: [
     ...getDefaultMiddleware({

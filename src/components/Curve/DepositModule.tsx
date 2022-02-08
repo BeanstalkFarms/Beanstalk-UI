@@ -81,7 +81,7 @@ export const DepositModule = forwardRef(({
       key={0}
       balance={lpBalance}
       handleChange={(v) => fromValueUpdated(v)}
-      token={CryptoAsset.Crv}
+      token={CryptoAsset.Crv3}
       value={fromCurveLPValue}
     />
   );
@@ -106,7 +106,7 @@ export const DepositModule = forwardRef(({
   const toCurveLPField = (
     <TokenOutputField
       key="curve"
-      token={CryptoAsset.Crv}
+      token={CryptoAsset.Crv3}
       value={toCurveLPValue}
       mint
     />

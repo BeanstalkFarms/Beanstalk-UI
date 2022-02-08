@@ -19,7 +19,7 @@ export const ClaimModule = forwardRef(({
   // const tokenBalances = useSelector<AppState, AppState['tokenBalances']>(
   //   (state) => state.tokenBalances
   // );
-  console.log(claimableCurveLPBalance.toFixed());
+
   setIsFormDisabled(claimableCurveLPBalance.isLessThanOrEqualTo(0));
 
   /* Input Fields */
@@ -28,7 +28,7 @@ export const ClaimModule = forwardRef(({
       key={0}
       balance={claimableCurveLPBalance}
       isLP
-      token={CryptoAsset.Crv}
+      token={CryptoAsset.Crv3}
       value={TrimBN(claimableCurveLPBalance, UNI_V2_ETH_BEAN_LP.decimals)}
       size="small"
     />
@@ -38,7 +38,7 @@ export const ClaimModule = forwardRef(({
   const toCurveField = (
     <TokenOutputField
       key="curve"
-      token={CryptoAsset.Crv}
+      token={CryptoAsset.Crv3}
       value={TrimBN(claimableCurveLPBalance, UNI_V2_ETH_BEAN_LP.decimals)}
       mint
     />

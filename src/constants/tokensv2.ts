@@ -6,7 +6,7 @@ import EthereumLogo from 'img/eth-logo.svg';
 import USDCLogo from 'img/usdc-logo.svg';
 import DAILogo from 'img/dai-logo.svg';
 import USDTLogo from 'img/usdt-logo.svg';
-import CRVLogo from 'img/crv3-logo.svg';
+import CRV3Logo from 'img/crv3-logo.svg';
 
 export const Bean = new Token(
   '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
@@ -70,7 +70,7 @@ export const Crv3 = new Token(
   18,
   '3 Curve',
   '3CRV',
-  CRVLogo
+  CRV3Logo
 );
 
 export const supportedTokens = [Eth, Weth, Bean, Weth, Usdc, Dai, Tether, Crv3];
