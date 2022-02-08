@@ -91,7 +91,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
     } else if (event.event === 'PodListingFilled') {
       const values = (event.returnValues as PodListingFilledEvent);
       if (!podListings[values.index]) continue;
-      const amountBN = toTokenUnitsBN(values.amount, BEAN.decimals);
+      const amount = toTokenUnitsBN(values.amount, BEAN.decimals);
 
       // Move current listing's index up by |amount|
       // FIXME: does this match the new marketplace behavior? Believe
@@ -100,27 +100,33 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
       const prevKey = values.index.toString();
       const currentListing = podListings[prevKey];
       delete podListings[prevKey];
+
+      // The new index of the Plot, now that some of it has been sold.
       const newIndex = new BigNumber(values.index).plus(values.amount).plus(values.start);
       const newKey = newIndex.toString();
       podListings[newKey] = currentListing;
-      const filledBeans = (podListings[newKey].pricePerPod).times(amountBN);
+
+      // 
+      const filledBeans = (currentListing.pricePerPod).times(amount);
 
       // Bump up |amountSold| for this listing
       podListings[newKey].index = toTokenUnitsBN(newIndex, BEAN.decimals);
       podListings[newKey].start = new BigNumber(0);
-      podListings[newKey].filledAmount = podListings[newKey].filledAmount.plus(amountBN);
-      podListings[newKey].remainingAmount = currentListing.totalAmount.minus(podListings[newKey].filledAmount);
+      podListings[newKey].filledAmount = currentListing.filledAmount.plus(amount);
+      podListings[newKey].remainingAmount = currentListing.totalAmount.minus(currentListing.filledAmount);
 
       // Add to market history
       marketHistory.push({
         // Event info
-        type: 'PodListingFill',
+        type: 'PodListingFilled',
         timestamp: 0,
         blockNumber: event.blockNumber,
         logIndex: event.logIndex,
         transactionHash: event.transactionHash,
         // Amounts
-        amount: amountBN,
+        index: podListings[newKey].index,
+        start: podListings[newKey].start, // VERIFY
+        amount: amount,
         pricePerPod: podListings[newKey].pricePerPod,
         filledBeans: filledBeans,
         // Parties
@@ -128,7 +134,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
         to: values.to,
       });
 
-      marketStats.podVolume = marketStats.podVolume.plus(amountBN);
+      marketStats.podVolume  = marketStats.podVolume.plus(amount);
       marketStats.beanVolume = marketStats.beanVolume.plus(filledBeans);
       marketStats.countFills = marketStats.countFills.plus(1);
 
@@ -156,34 +162,37 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
       delete podOrders[values.id];
     } else if (event.event === 'PodOrderFilled') {
       const values = (event.returnValues as PodOrderFilledEvent);
-      const amountBN = toTokenUnitsBN(values.amount, BEAN.decimals);
+      const amount = toTokenUnitsBN(values.amount, BEAN.decimals);
 
       // Check whether current offer is sold or not
       const key = values.id;
       const podOrder = podOrders[key];
-      podOrders[key].filledAmount = podOrders[key].filledAmount.plus(amountBN);
+      podOrders[key].filledAmount = podOrder.filledAmount.plus(amount);
       podOrders[key].remainingAmount = podOrder.totalAmount.minus(podOrder.filledAmount);
       
-      const filledBeans = podOrders[key].pricePerPod.times(amountBN);
+      //
+      const filledBeans = podOrders[key].pricePerPod.times(amount);
 
       // Add to market history
       marketHistory.push({
         // Event info
-        type: 'PodOrderFill',
+        type: 'PodOrderFilled',
         timestamp: 0,
         blockNumber: event.blockNumber,
         logIndex: event.logIndex,
         transactionHash: event.transactionHash,
         // Amounts
-        amount: amountBN,
+        index: toTokenUnitsBN(values.index, BEAN.decimals),
+        start: toTokenUnitsBN(values.start, BEAN.decimals), // VERIFY
+        amount: amount,
         pricePerPod: podOrders[key].pricePerPod,
         filledBeans: filledBeans,
-        // Partie
+        // Parties
         from: values.from,
         to: values.to,
       });
 
-      marketStats.podVolume = marketStats.podVolume.plus(amountBN);
+      marketStats.podVolume  = marketStats.podVolume.plus(amount);
       marketStats.beanVolume = marketStats.beanVolume.plus(filledBeans);
       marketStats.countFills = marketStats.countFills.plus(1);
 
