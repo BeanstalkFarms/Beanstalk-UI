@@ -68,6 +68,7 @@ export default function Orders(props: OrdersProps) {
     useState<number[]>(placesInLine);
 
   // Handle changes in filters
+  // FIXME: this is super inefficient
   useMemo(() => {
     filteredOrders.current = _.filter(
       allOrders,
@@ -83,8 +84,9 @@ export default function Orders(props: OrdersProps) {
 
     // Filter Orders the user cannot sell a plot into
     filteredOrders.current = _.filter(filteredOrders.current, (order) => {
-      let validPlots = [];
+      let validPlots : any[] = [];
       if (validOrders) {
+        // Find plot indices that are eligible to be sold to this Order.
         const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
           const plotObjectiveIndex = new BigNumber(plotIndex);
           return plotObjectiveIndex
@@ -141,10 +143,16 @@ export default function Orders(props: OrdersProps) {
     return <div>Loading...</div>;
   }
 
+  // const numPods = 
+
   // Filters
   const filters = (
     <Filters
-      title={`${filteredOrders.current.length} Order${filteredOrders.current.length !== 1 ? 's' : ''}`}
+      title={(
+        <>
+          {filteredOrders.current.length} Order{filteredOrders.current.length !== 1 ? 's' : ''} &middot; {}
+        </>
+      )}
     >
       {/* Toggle for users to select to filter out plots they can't sell into  */}
       {props.mode !== 'MINE' && (
