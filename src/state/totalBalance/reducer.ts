@@ -2,6 +2,10 @@ import { createReducer } from '@reduxjs/toolkit';
 import { BigNumber } from 'bignumber.js';
 import { setTotalBalance } from './actions';
 
+// @publius
+// Annotations here would be much appreciated. Particularly the
+// various kinds of LP, use of "transit". Are we missing a
+// `totalCurveLP` variable here?
 export interface TotalBalanceState {
   totalBeans: BigNumber;
   totalSiloBeans: BigNumber;

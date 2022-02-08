@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { BigNumber } from 'bignumber.js';
 import { setWeather } from './actions';
 
+// @publius
 export interface WeatherState {
   didSowBelowMin: Boolean;
   didSowFaster: Boolean;

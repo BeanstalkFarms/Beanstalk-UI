@@ -92,7 +92,7 @@ export const lpForPool = (amount1, reserve1, amount2, reserve2, totalLP) =>
   );
 
 /**
- * 
+ * @publius
  */
 export const getToAmount = (
   amountIn: BigNumber,
@@ -112,6 +112,9 @@ export const getToAmount = (
   return numerator.dividedBy(denominator);
 };
 
+/**
+ * @publius
+ */
 export const getFromAmount = (
   amountOut: BigNumber,
   reserveIn: BigNumber,
@@ -131,6 +134,9 @@ export const getFromAmount = (
   return numerator.dividedBy(denominator).plus(10 ** (0 - decimals));
 };
 
+/**
+ * @publius
+ */
 export const getBuyAndAddLPAmount = (
   eth: BigNumber,
   ethReserve: BigNumber,
@@ -165,6 +171,9 @@ export const getBuyAndAddLPAmount = (
     : beans2;
 };
 
+/**
+ * @publius
+ */
 export const calculateBeansToLP = (
   beans: BigNumber,
   beanReserve: BigNumber,
@@ -189,6 +198,9 @@ export const calculateBeansToLP = (
   };
 };
 
+/**
+ * @publius
+ */
 export const calculateMaxBeansToPeg = (
   beansToPeg: BigNumber,
   beanReserve: BigNumber,
@@ -205,6 +217,9 @@ export const calculateMaxBeansToPeg = (
   return beansToPeg.plus(beansToAdd);
 };
 
+/**
+ * @publius
+ */
 export const calculateLPToBeans = (
   lp: BigNumber,
   beanReserve: BigNumber,

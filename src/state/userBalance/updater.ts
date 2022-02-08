@@ -483,11 +483,13 @@ export default function Updater() {
       });
       dispatch(setContractEvents(events));
 
+      // @publius
       const [s, hi, fb, gs, ce, cb, br, er] =
         eventParsingParameters !== undefined
           ? eventParsingParameters
           : eventParsingParametersRef.current;
 
+      // @publius
       const rawBeanDeposits = { ...userBeanDeposits };
       userBeanDeposits = addRewardedCrates(userBeanDeposits, s, fb);
       const beanDepositsBalance = Object.values(userBeanDeposits).reduce(

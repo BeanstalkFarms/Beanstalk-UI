@@ -32,12 +32,13 @@ export interface GeneralState {
   metamaskFailure: number;
 
   /**
-   * 
+   * @publius
    */
   lastCross: number;
 
   /**
    * FIXME: define BIP type
+   * @publius
    */
   bips: Array;
 
@@ -48,6 +49,7 @@ export interface GeneralState {
 
   /**
    * FIXME: define Fundraiser type
+   * @publius
    */
   fundraisers: Array;
   
