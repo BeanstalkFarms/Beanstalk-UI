@@ -80,10 +80,10 @@ export default function Balances() {
     beanReserve,
     ethReserve,
     beanPrice,
-    bean3crvPrice,
+    beanCrv3Price,
     curveVirtualPrice,
-    bean3crvReserve,
-    crvReserve,
+    beanCrv3Reserve,
+    crv3Reserve,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
@@ -126,7 +126,7 @@ export default function Balances() {
     : new BigNumber(0);
   const poolMarketCap = beanReserve.isGreaterThan(0)
     ? (beanReserve.multipliedBy(beanPrice).multipliedBy(2)).plus(
-        (bean3crvReserve.multipliedBy(bean3crvPrice).plus(crvReserve)).multipliedBy(curveVirtualPrice)
+        (beanCrv3Reserve.multipliedBy(beanCrv3Price).plus(crv3Reserve)).multipliedBy(curveVirtualPrice)
       )
     : new BigNumber(0);
 
@@ -306,7 +306,7 @@ export default function Balances() {
                 .minus(totalTransitBeans)
                 .minus(beanReserve)
                 .minus(totalBudgetBeans)
-                .minus(bean3crvReserve)
+                .minus(beanCrv3Reserve)
             : new BigNumber(0)
         }
         lpBalance={
@@ -326,7 +326,7 @@ export default function Balances() {
         beanReceivableBalance={new BigNumber(0)}
         harvestablePodBalance={new BigNumber(0)}
         lpReceivableBalance={new BigNumber(0)}
-        beanReserveTotal={beanReserve.plus(bean3crvReserve)}
+        beanReserveTotal={beanReserve.plus(beanCrv3Reserve)}
         ethBalance={ethReserve}
         stalkBalance={totalStalk}
         seedBalance={totalSeeds}

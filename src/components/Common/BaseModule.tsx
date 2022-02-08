@@ -29,6 +29,7 @@ export default function BaseModule({
   widthTooltip,
   marginTooltip,
   margin,
+  marginMeta,
   showButton,
   singleReset,
 }) {
@@ -283,7 +284,7 @@ export default function BaseModule({
         >
           <span className={classes.singleSection}>
             {sectionTitlesDescription !== undefined ? (
-              <Box>
+              <Box style={{ margin: marginMeta }}>
                 {sectionTitles[0]}
                 <QuestionModule
                   description={sectionTitlesDescription[0]}
@@ -331,6 +332,7 @@ BaseModule.defaultProps = {
   showButton: true,
   removeBackground: false,
   marginTop: '44px',
+  marginMeta: '0px',
   margin: '-12px 0 0 0px',
   normalBox: true,
   textTransform: 'uppercase',

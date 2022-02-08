@@ -42,7 +42,7 @@ const beaNFTAbi = require('../constants/abi/BeaNFT.json');
 const BeaNFTGenesisABI = require('../constants/abi/BeaNFTGenesis.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
-const curveMetaPoolAbi = require('../constants/abi/Bean3crvMetaPool.json');
+const curveMetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
 
 export const tokenContract = (token) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
@@ -77,7 +77,7 @@ export const uniswapRouterContract = () =>
 // export const curveContract = () =>
 //   new ethers.Contract(CURVE.addr, curveMetaPoolAbi, web3Signer);
 
-export const bean3crvContractReadOnly = () =>
+export const beanCrv3ContractReadOnly = () =>
   new web3.eth.Contract(curveMetaPoolAbi, CURVE.addr);
 
 export const curveContractReadOnly = () =>

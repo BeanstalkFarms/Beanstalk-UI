@@ -2,6 +2,8 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { BEAN, UNI_V2_ETH_BEAN_LP } from 'constants/index';
 import {
   claimLP,
@@ -17,34 +19,45 @@ import {
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
+  TransactionToast,
 } from 'components/Common';
-import TransactionToast from 'components/Common/TransactionToast';
 
-export const LPClaimModule = forwardRef((props, ref) => {
+export const LPClaimModule = forwardRef(({
+  setIsFormDisabled,
+  poolForLPRatio,
+}, ref) => {
   const [settings, setSettings] = useState({ removeLP: true });
-  props.setIsFormDisabled(props.maxFromLPVal.isLessThanOrEqualTo(0));
+
+  const {
+    lpReceivableBalance,
+    lpReceivableCrates,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
+  setIsFormDisabled(lpReceivableBalance.isLessThanOrEqualTo(0));
 
   /* Input Fields */
   const fromLPField = (
     <TokenInputField
-      balance={props.maxFromLPVal}
+      balance={lpReceivableBalance}
       isLP
-      poolForLPRatio={props.poolForLPRatio}
+      poolForLPRatio={poolForLPRatio}
       token={ClaimableAsset.LP}
-      value={TrimBN(props.maxFromLPVal, UNI_V2_ETH_BEAN_LP.decimals)}
+      value={TrimBN(lpReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
     />
   );
 
   /* Output Fields */
   const toLPField = (
-    <TokenOutputField mint token={CryptoAsset.LP} value={props.maxFromLPVal} />
+    <TokenOutputField mint token={CryptoAsset.LP} value={lpReceivableBalance} />
   );
   const toLPBeanField = (
     <TokenOutputField
       decimals={BEAN.decimals}
       mint
       token={CryptoAsset.Bean}
-      value={props.poolForLPRatio(props.maxFromLPVal)[0]}
+      value={poolForLPRatio(lpReceivableBalance)[0]}
     />
   );
   const toLPEthField = (
@@ -52,24 +65,22 @@ export const LPClaimModule = forwardRef((props, ref) => {
       decimals={9}
       mint
       token={CryptoAsset.Ethereum}
-      value={props.poolForLPRatio(props.maxFromLPVal)[1]}
+      value={poolForLPRatio(lpReceivableBalance)[1]}
     />
   );
 
   /* Transaction Details, settings and text */
-
   function displayLP(balance) {
     return `${displayBN(balance[0])} ${TokenLabel(
       CryptoAsset.Bean
     )} and ${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
-  const details = [];
-  details.push(
+  const details = [
     `Claim ${displayBN(
-      new BigNumber(props.maxFromLPVal)
-    )} LP Tokens from the Silo`
-  );
+      new BigNumber(lpReceivableBalance)
+    )} LP Tokens from the Silo`,
+  ];
 
   const showSettings = (
     <SettingsFormModule
@@ -85,11 +96,11 @@ export const LPClaimModule = forwardRef((props, ref) => {
     if (settings.removeLP) {
       details.push(
         `Remove ${displayBN(
-          props.maxFromLPVal
+          lpReceivableBalance
         )} LP Tokens from the BEAN:ETH LP pool`
       );
       details.push(
-        `Receive ${displayLP(props.poolForLPRatio(props.maxFromLPVal))}`
+        `Receive ${displayLP(poolForLPRatio(lpReceivableBalance))}`
       );
 
       return (
@@ -123,18 +134,18 @@ export const LPClaimModule = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (props.maxFromLPVal.isLessThanOrEqualTo(0)) return;
+      if (lpReceivableBalance.isLessThanOrEqualTo(0)) return null;
 
       if (settings.removeLP) {
         // Toast
         const txToast = new TransactionToast({
-          loading: 'Removing and claiming LP Tokens',
-          success: 'Removed and claimed LP Tokens',
+          loading: `Removing and claiming ${displayBN(lpReceivableBalance)} LP Tokens`,
+          success: `Removed and claimed ${displayBN(lpReceivableBalance)} LP Tokens`,
         });
 
         // Execute
         removeAndClaimLP(
-          Object.keys(props.crates),
+          Object.keys(lpReceivableCrates),
           '0',
           '0',
           (response) => {
@@ -150,13 +161,13 @@ export const LPClaimModule = forwardRef((props, ref) => {
       } else {
         // Toast
         const txToast = new TransactionToast({
-          loading: 'Claiming LP Tokens',
-          success: 'Claimed LP Tokens',
+          loading: `Claiming ${displayBN(lpReceivableBalance)} LP Tokens`,
+          success: `Claimed ${displayBN(lpReceivableBalance)} LP Tokens`,
         });
 
         // Execute
         claimLP(
-          Object.keys(props.crates),
+          Object.keys(lpReceivableCrates),
           (response) => {
             txToast.confirming(response);
           }

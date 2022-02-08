@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { BaseModule, Grid, siloStrings } from 'components/Common';
+import SiloSelectLPModule from './SiloSelectLPModule';
 import SiloBeanModule from './SiloBeanModule';
-import SiloLPModule from './SiloLPModule';
 import SiloConvertModule from './SiloConvertModule';
 
 export default function TabbedSilo() {
-  const { innerWidth: width } = window;
+  const { width } = useSelector<AppState, AppState['general']>(
+    (state) => state.general
+  );
 
   const [section, setSection] = useState(0);
   const sectionTitles = ['LP', 'Beans', 'Convert'];
@@ -14,7 +18,7 @@ export default function TabbedSilo() {
     siloStrings.beanDescription,
     siloStrings.convert,
   ];
-  const sections = [<SiloLPModule />, <SiloBeanModule />, <SiloConvertModule />];
+  const sections = [<SiloSelectLPModule />, <SiloBeanModule />, <SiloConvertModule />];
 
   return (
     <Grid

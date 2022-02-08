@@ -47,7 +47,7 @@ const maxStyle = {
 const tokenTypeImageStyle = {
   height: '30px',
   marginLeft: '5px',
-  width: '20px',
+  width: '25px',
 };
 
 export type TokenInputFieldProps = {
@@ -107,6 +107,7 @@ export default function TokenInputField(props: TokenInputFieldProps) {
         </Button>
       );
     }
+    return null;
   }
 
   const handleChange = (event) => {
@@ -223,7 +224,7 @@ export default function TokenInputField(props: TokenInputFieldProps) {
         className="TextField-rounded"
         placeholder={props.placeholder || '0.0000'}
         variant="outlined"
-        size="medium"
+        size={props.size}
         type="number"
         disabled={props.handleChange === undefined || props.locked}
         error={Boolean(props.error)}
@@ -272,6 +273,7 @@ TokenInputField.defaultProps = {
   locked: false,
   // maxval: 0,
   token: 'Beans',
+  size: 'medium',
   poolForLPRatio: undefined,
   balanceLabel: 'Balance',
   balance: undefined,

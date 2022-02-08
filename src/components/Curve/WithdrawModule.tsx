@@ -1,91 +1,58 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
-import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
-  SEEDS,
-  STALK,
   LPBEANS_TO_SEEDS,
+  STALK,
+  SEEDS,
   UNI_V2_ETH_BEAN_LP,
 } from 'constants/index';
 import {
-  claimAndWithdrawLP,
   displayBN,
   MinBN,
-  MinBNs,
-  smallDecimalPercent,
   toStringBaseUnitBN,
   TrimBN,
-  withdrawLP,
+  smallDecimalPercent,
 } from 'util/index';
 import {
-  // ClaimTextModule,
-  SettingsFormModule,
+  CryptoAsset,
+  InputFieldPlus,
   SiloAsset,
   siloStrings,
-  TokenInputField,
   TokenOutputField,
-  TransitAsset,
   TransactionDetailsModule,
-  TransactionToast,
 } from 'components/Common';
 
-export const LPWithdrawModule = forwardRef(({
+export const WithdrawModule = forwardRef(({
   setIsFormDisabled,
-  poolForLPRatio,
-  settings,
-  setSettings,
-  stalkToLP, /* empty */
-  seedsToLP, /* empty */
 }, ref) => {
-  const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
-  const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
+  const [fromCurveLPValue, setFromCurveLPValue] = useState(new BigNumber(-1));
+  const [toSeedValue, setToSeedValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
   const [withdrawParams, setWithdrawParams] = useState({
     crates: [],
     amounts: [],
   });
 
-  const {
-    claimable,
-    hasClaimable,
-    lpDeposits,
-    lpSiloBalance,
-    lpSeedDeposits,
-    seedBalance,
-    stalkBalance,
-  } = useSelector<AppState, AppState['userBalance']>(
-    (state) => state.userBalance
-  );
-
-  const season = useSelector<AppState, AppState['season']>(
-    (state) => state.season.season
-  );
-
+  // const tokenBalances = useSelector<AppState, AppState['tokenBalances']>(
+  //   (state) => state.tokenBalances
+  // );
   const { totalStalk, withdrawSeasons } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-
-  /* function maxLPs(stalk: BugNumber) {
-    var stalkRemoved = new BigNumber(0)
-    var beans = new BigNumber(0)
-    Object.keys(lpDeposits).sort((a,b) => parseInt(a) - parseInt(b)).forEach(key => {
-      let stalkPerLP = (new BigNumber(10000)).plus(season.minus(key)).multipliedBy(5)
-      const stalkLeft = stalk.minus(stalkRemoved)
-      if (stalkPerLP.multipliedBy(lpDeposits[key]).isGreaterThanOrEqualTo(stalkLeft)) {
-        stalkRemoved = stalkRemoved.plus(stalkPerLP.multipliedBy(lpDeposits[key]))
-        beans = beans.plus(lpDeposits[key])
-        if (stalkRemoved.isEqualTo(stalk)) return
-      } else {
-        beans = beans.plus(TrimBN(stalkLeft.dividedBy(stalkPerLP),18))
-        return
-      }
-    })
-    return beans
-  }
-  */
+  const season = useSelector<AppState, AppState['season']>(
+    (state) => state.season.season
+  );
+  const {
+    lpDeposits,
+    lpBalance,
+    lpSeedDeposits,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
 
   const getStalkAndSeedsRemoved = (beans) => {
     let lpRemoved = new BigNumber(0);
@@ -129,12 +96,12 @@ export const LPWithdrawModule = forwardRef(({
   };
 
   function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, lpSiloBalance);
+    const fromNumber = MinBN(newFromNumber, lpBalance); /* tokenBalances.BEAN is used as max curve lp Balance */
     const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals);
-    setFromLPValue(newFromLPValue);
+    setFromCurveLPValue(newFromLPValue);
     const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber);
     setToStalkValue(TrimBN(stalkRemoved, STALK.decimals));
-    setToSeedsValue(TrimBN(seedsRemoved, SEEDS.decimals));
+    setToSeedValue(TrimBN(seedsRemoved, SEEDS.decimals));
     setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0));
   }
 
@@ -145,31 +112,27 @@ export const LPWithdrawModule = forwardRef(({
       fromValueUpdated(new BigNumber(-1));
     }
   };
-  const maxHandler = () => {
-    const minMaxFromVal = MinBNs([
-      stalkBalance.multipliedBy(stalkToLP),
-      seedBalance.multipliedBy(seedsToLP),
-      lpSiloBalance,
-    ]);
-    fromValueUpdated(minMaxFromVal);
-  };
 
   /* Input Fields */
-  const fromLPField = (
-    <TokenInputField
-      balance={lpSiloBalance}
+  const fromCurveLPField = (
+    <InputFieldPlus
+      key={1}
+      balance={lpBalance}
       handleChange={handleFromChange}
-      isLP
-      locked={lpSiloBalance.isLessThanOrEqualTo(0)}
-      maxHandler={maxHandler}
-      poolForLPRatio={poolForLPRatio}
-      setValue={setFromLPValue}
-      token={SiloAsset.LP}
-      value={TrimBN(fromLPValue, 9)}
+      locked={lpBalance.isLessThanOrEqualTo(0)}
+      token={CryptoAsset.Crv}
+      value={TrimBN(fromCurveLPValue, 9)}
     />
   );
 
   /* Output Fields */
+  const toCurveLPField = (
+    <TokenOutputField
+      burn
+      token={CryptoAsset.Crv}
+      value={fromCurveLPValue}
+    />
+  );
   const toBurnStalkField = (
     <TokenOutputField
       burn
@@ -183,38 +146,24 @@ export const LPWithdrawModule = forwardRef(({
       burn
       decimals={4}
       token={SiloAsset.Seed}
-      value={toSeedsValue}
+      value={toSeedValue}
     />
-  );
-  const toTransitLPField = (
-    <TokenOutputField mint token={TransitAsset.LP} value={fromLPValue} />
   );
 
   /* Transaction Details, settings and text */
-  const details = [];
-  details.push(
-    `Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
-  );
-  details.push(
+  const details = [
+    `Withdraw ${displayBN(new BigNumber(fromCurveLPValue))} BEAN:3CRV LP Tokens from the Silo`,
     `Burn ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
-      new BigNumber(toSeedsValue)
+      new BigNumber(toSeedValue)
     )} Seeds`
-  );
+  ];
 
-  const showSettings = hasClaimable ? (
-    <SettingsFormModule
-      hasClaimable={hasClaimable}
-      showUnitModule={false}
-      setSettings={setSettings}
-      settings={settings}
-    />
-  ) : null;
   const stalkChangePercent = toStalkValue
     .dividedBy(totalStalk)
     .multipliedBy(100);
 
   function transactionDetails() {
-    if (fromLPValue.isLessThanOrEqualTo(0)) return null;
+    if (fromCurveLPValue.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -227,7 +176,7 @@ export const LPWithdrawModule = forwardRef(({
           <Box style={{ marginLeft: '5px' }}>{toBurnSeedsField}</Box>
         </Box>
         <Box style={{ display: 'inline-block', width: '100%' }}>
-          {toTransitLPField}
+          {toCurveLPField}
         </Box>
         <TransactionDetailsModule fields={details} />
         <Box
@@ -243,7 +192,9 @@ export const LPWithdrawModule = forwardRef(({
             )}% ownership of Beanstalk.`}
           </span>
           <br />
-          <span style={{ color: 'red' }}>{siloStrings.withdrawWarning.replace('{0}', withdrawSeasons)}</span>
+          <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
+            {siloStrings.withdrawWarning.replace('{0}', withdrawSeasons)}
+          </span>
         </Box>
       </>
     );
@@ -252,67 +203,19 @@ export const LPWithdrawModule = forwardRef(({
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (
-        fromLPValue.isLessThanOrEqualTo(0) ||
+        fromCurveLPValue.isLessThanOrEqualTo(0) ||
         withdrawParams.crates.length === 0 ||
         withdrawParams.amounts.length === 0
       ) {
-        return;
-      }
-
-      if (settings.claim) {
-        // Toast
-        const txToast = new TransactionToast({
-          loading: `Claiming and withdrawing ${displayBN(fromLPValue)} LP Tokens`,
-          success: `Claimed and withdrew ${displayBN(fromLPValue)} LP Tokens`,
-        });
-
-        // Execute
-        claimAndWithdrawLP(
-          withdrawParams.crates,
-          withdrawParams.amounts,
-          claimable,
-          (response) => {
-            fromValueUpdated(new BigNumber(-1));
-            txToast.confirming(response);
-          }
-        )
-        .then((value) => {
-          txToast.success(value);
-        })
-        .catch((err) => {
-          txToast.error(err);
-        });
-      } else {
-        // Toast
-        const txToast = new TransactionToast({
-          loading: `Withdrawing ${displayBN(fromLPValue)} LP Tokens`,
-          success: `Withdrew ${displayBN(fromLPValue)} LP Tokens`,
-        });
-
-        // Execute
-        withdrawLP(
-          withdrawParams.crates,
-          withdrawParams.amounts,
-          (response) => {
-            fromValueUpdated(new BigNumber(-1));
-            txToast.confirming(response);
-          }
-        )
-        .then((value) => {
-          txToast.success(value);
-        })
-        .catch((err) => {
-          txToast.error(err);
-        });
+        return null;
       }
     },
   }));
 
   return (
     <>
-      {fromLPField}
+      {fromCurveLPField}
       {transactionDetails()}
-      {showSettings}
     </>
   );
 });

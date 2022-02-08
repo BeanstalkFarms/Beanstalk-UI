@@ -228,8 +228,8 @@ export default function Updater() {
         beansToPeg,
         lpToPeg,
         curveVirtualPrice,
-        bean3crvPrice,
-        bean3crvReserve,
+        beanCrv3Price,
+        beanCrv3Reserve,
         ethPrices,
       ] = _prices;
 
@@ -258,9 +258,9 @@ export default function Updater() {
           beanTWAPPrice: twapPrices[0],
           usdcTWAPPrice: twapPrices[1],
           curveVirtualPrice,
-          bean3crvPrice,
-          bean3crvReserve: bean3crvReserve[0],
-          crvReserve: bean3crvReserve[1],
+          beanCrv3Price,
+          beanCrv3Reserve: beanCrv3Reserve[0],
+          crv3Reserve: beanCrv3Reserve[1],
           ethPrices,
         })
       );

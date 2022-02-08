@@ -14,7 +14,7 @@ import {
 import {
   account,
   beanstalkContractReadOnly,
-  bean3crvContractReadOnly,
+  beanCrv3ContractReadOnly,
   curveContractReadOnly,
   initializing,
   pairContractReadOnly,
@@ -204,7 +204,7 @@ export const getBips = async () => {
       bip.endTotalRoots.toString() === '0'
         ? await beanstalk.methods.rootsFor(i.toString()).call()
         : bip.roots;
-    
+
     //
     const bipDict = {
       id: i,
@@ -260,7 +260,7 @@ export const getPrices = async (batch) => {
   const beanstalk = beanstalkContractReadOnly();
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
-  const bean3crvContract = bean3crvContractReadOnly();
+  const bean3crvContract = beanCrv3ContractReadOnly();
   const curveContract = curveContractReadOnly();
 
   let batchCall = [

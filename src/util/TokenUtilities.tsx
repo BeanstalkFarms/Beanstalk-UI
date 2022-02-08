@@ -17,6 +17,7 @@ import StalkLogo from 'img/stalk-logo.svg';
 import TransitIcon from 'img/transit-icon.svg';
 import PooledIcon from 'img/pooled-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
+import CRV3Logo from 'img/crv3-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
 import { account, tokenContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
@@ -30,31 +31,32 @@ export enum CryptoAsset {
   Ethereum,
   LP,
   Usdc,
+  Crv3,
 }
 export enum SiloAsset {
-  Stalk = 4,
+  Stalk = 5,
   Seed,
   Bean,
   LP,
 }
 export enum TransitAsset {
-  Bean = 8,
+  Bean = 9,
   LP,
 }
 export enum FarmAsset {
-  Pods = 10,
+  Pods = 11,
 }
 export enum ClaimableAsset {
-  Bean = 11,
+  Bean = 12,
   LP,
   Ethereum,
   Stalk,
 }
 export enum UniswapAsset {
-  Bean = 15,
+  Bean = 16,
 }
 export enum BudgetAsset {
-  Bean = 16,
+  Bean = 17,
 }
 
 export type Token =
@@ -131,6 +133,8 @@ export function TokenLabel(tokenType: Token): string {
       return 'LP';
     case CryptoAsset.Usdc:
       return 'USDC';
+    case CryptoAsset.Crv3:
+      return 'Crv3';
     case SiloAsset.Stalk:
       return 'Stalk';
     case SiloAsset.Seed:
@@ -194,19 +198,21 @@ export function TokenImage(tokenType: Token): string {
 
     case CryptoAsset.Usdc:
       return USDCLogo;
+
+    case CryptoAsset.Crv3:
+      return CRV3Logo;
     default:
       return '';
   }
 }
 
 export function TokenTypeImage(tokenType: Token): string | null {
-  if (tokenType < 6 || tokenType === 10) return null;
-  if (tokenType < 8) return SiloIcon;
-  if (tokenType < 10) return TransitIcon;
-  if (tokenType < 15) return ClaimableIcon;
-  if (tokenType < 16) return PooledIcon;
-  if (tokenType < 17) return BudgetIcon;
-  return null;
+  if (tokenType < 7 || tokenType === 11) return null;
+  if (tokenType < 9) return SiloIcon;
+  if (tokenType < 11) return TransitIcon;
+  if (tokenType < 16) return ClaimableIcon;
+  if (tokenType < 17) return PooledIcon;
+  if (tokenType < 18) return BudgetIcon;
 }
 
 /** Trim a BigNumber to a set number of decimals. */
