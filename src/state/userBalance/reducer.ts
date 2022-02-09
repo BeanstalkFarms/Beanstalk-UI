@@ -36,7 +36,7 @@ export interface UserBalanceState {
   lpWithdrawals: Object;
   lpReceivableCrates: Object;
   curveDeposits: Object;
-  curveBdvDeposits: Object;
+  curveBDVDeposits: Object;
   curveWithdrawals: Object;
   curveReceivableCrates: Object;
   /** Plots are keyed by plotIndex, value is size of the Plot in Pods. */
@@ -86,7 +86,7 @@ export const initialState: UserBalanceState = {
   lpWithdrawals: {},
   lpReceivableCrates: {},
   curveDeposits: {},
-  curveBdvDeposits: {},
+  curveBDVDeposits: {},
   curveWithdrawals: {},
   curveReceivableCrates: {},
   plots: {},

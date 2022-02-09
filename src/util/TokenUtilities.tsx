@@ -18,7 +18,7 @@ import StalkLogo from 'img/stalk-logo.svg';
 import TransitIcon from 'img/transit-icon.svg';
 import PooledIcon from 'img/pooled-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
-import CRV3Logo from 'img/crv3-logo.svg';
+import CRV3Logo from 'img/bean-curve-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
 import { account, tokenContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
@@ -39,25 +39,28 @@ export enum SiloAsset {
   Seed,
   Bean,
   LP,
+  Crv3,
 }
 export enum TransitAsset {
-  Bean = 9,
+  Bean = 10,
   LP,
+  Crv3,
 }
 export enum FarmAsset {
-  Pods = 11,
+  Pods = 13,
 }
 export enum ClaimableAsset {
-  Bean = 12,
+  Bean = 14,
   LP,
+  Crv3,
   Ethereum,
   Stalk,
 }
 export enum UniswapAsset {
-  Bean = 16,
+  Bean = 19,
 }
 export enum BudgetAsset {
-  Bean = 17,
+  Bean = 20,
 }
 
 export type Token =
@@ -139,7 +142,7 @@ export function TokenLabel(tokenType: Token): string {
     case CryptoAsset.Usdc:
       return 'USDC';
     case CryptoAsset.Crv3:
-      return 'Crv3';
+      return 'BEAN:3CRV';
     case SiloAsset.Stalk:
       return 'Stalk';
     case SiloAsset.Seed:
@@ -148,16 +151,22 @@ export function TokenLabel(tokenType: Token): string {
       return 'Deposited Beans';
     case SiloAsset.LP:
       return 'Deposited LP';
+    case SiloAsset.Crv3:
+      return 'Deposited BEAN:3CRV';
     case TransitAsset.Bean:
       return 'Withdrawn Beans';
     case TransitAsset.LP:
       return 'Withdrawn LP';
+    case TransitAsset.Crv3:
+      return 'Withdrawn BEAN:3CRV';
     case FarmAsset.Pods:
       return 'Pods';
     case ClaimableAsset.Bean:
       return 'Claimable Beans';
     case ClaimableAsset.LP:
       return 'Claimable LP';
+    case ClaimableAsset.Crv3:
+      return 'Claimable BEAN:3CRV';
     case ClaimableAsset.Ethereum:
       return 'Claimable ETH';
     case ClaimableAsset.Stalk:
@@ -204,7 +213,10 @@ export function TokenImage(tokenType: Token): string {
     case CryptoAsset.Usdc:
       return USDCLogo;
 
+    case ClaimableAsset.Crv3:
     case CryptoAsset.Crv3:
+    case SiloAsset.Crv3:
+    case TransitAsset.Crv3:
       return CRV3Logo;
     default:
       return '';
@@ -212,12 +224,12 @@ export function TokenImage(tokenType: Token): string {
 }
 
 export function TokenTypeImage(tokenType: Token): string | null {
-  if (tokenType < 7 || tokenType === 11) return null;
-  if (tokenType < 9) return SiloIcon;
-  if (tokenType < 11) return TransitIcon;
-  if (tokenType < 16) return ClaimableIcon;
-  if (tokenType < 17) return PooledIcon;
-  if (tokenType < 18) return BudgetIcon;
+  if (tokenType < 7 || tokenType === 14) return null;
+  if (tokenType < 10) return SiloIcon;
+  if (tokenType < 14) return TransitIcon;
+  if (tokenType < 18) return ClaimableIcon;
+  if (tokenType < 20) return PooledIcon;
+  if (tokenType < 21) return BudgetIcon;
 }
 
 /** Trim a BigNumber to a set number of decimals. */

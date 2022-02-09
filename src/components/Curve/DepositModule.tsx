@@ -110,7 +110,7 @@ export const DepositModule = forwardRef(({
   const toCurveLPField = (
     <TokenOutputField
       key="curve"
-      token={CryptoAsset.Crv3}
+      token={SiloAsset.Crv3}
       value={toCurveLPValue}
       mint
     />
@@ -168,18 +168,15 @@ export const DepositModule = forwardRef(({
     handleForm() {
       if (toCurveLPValue.isLessThanOrEqualTo(0)) return null;
 
-      // Contract Inputs
-      const lp = MaxBN(toCurveLPValue, new BigNumber(0));
-
       // Toast
       const txToast = new TransactionToast({
-        loading: `Depositing ${displayBN(lp)} BEAN:3CRV LP Tokens`,
-        success: `Deposited ${displayBN(lp)} BBEAN:3CRV LP Tokens`,
+        loading: `Depositing ${displayBN(toCurveLPValue)} BEAN:3CRV LP Tokens`,
+        success: `Deposited ${displayBN(toCurveLPValue)} BEAN:3CRV LP Tokens`,
       });
 
       // Execute
       deposit(
-        toStringBaseUnitBN(lp, ETH.decimals),
+        toStringBaseUnitBN(toCurveLPValue, ETH.decimals),
         (response) => {
           resetFields();
           txToast.confirming(response);

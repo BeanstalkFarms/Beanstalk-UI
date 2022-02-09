@@ -1,42 +1,45 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
 import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-// import { useSelector } from 'react-redux';
-// import { AppState } from 'state';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { ETH, UNI_V2_ETH_BEAN_LP } from 'constants/index';
 import {
-  claimWithdrawal,
+  claimWithdrawals,
   displayBN,
   MaxBN,
-  TrimBN,
   toStringBaseUnitBN,
+  TrimBN,
 } from 'util/index';
 import {
-  CryptoAsset,
+  ClaimableAsset,
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
   TransactionToast,
+  TransitAsset,
 } from 'components/Common';
 
 export const ClaimModule = forwardRef(({
-  claimableCurveLPBalance,
   setIsFormDisabled,
 }, ref) => {
-  // const tokenBalances = useSelector<AppState, AppState['tokenBalances']>(
-  //   (state) => state.tokenBalances
-  // );
+  const {
+    curveReceivableBalance,
+    curveReceivableCrates,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
 
-  setIsFormDisabled(claimableCurveLPBalance.isLessThanOrEqualTo(0));
+  setIsFormDisabled(curveReceivableBalance.isLessThanOrEqualTo(0));
 
   /* Input Fields */
   const fromCurveField = (
     <TokenInputField
       key={0}
-      balance={claimableCurveLPBalance}
+      balance={curveReceivableBalance}
       isLP
-      token={CryptoAsset.Crv3}
-      value={TrimBN(claimableCurveLPBalance, UNI_V2_ETH_BEAN_LP.decimals)}
+      token={TransitAsset.Crv3}
+      value={TrimBN(curveReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
       size="small"
     />
   );
@@ -45,8 +48,8 @@ export const ClaimModule = forwardRef(({
   const toCurveField = (
     <TokenOutputField
       key="curve"
-      token={CryptoAsset.Crv3}
-      value={TrimBN(claimableCurveLPBalance, UNI_V2_ETH_BEAN_LP.decimals)}
+      token={ClaimableAsset.Crv3}
+      value={TrimBN(curveReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
       mint
     />
   );
@@ -54,11 +57,11 @@ export const ClaimModule = forwardRef(({
   /* Transaction Details, settings and text */
   const details = [];
   details.push(`Receive ${displayBN(
-    new BigNumber(claimableCurveLPBalance
+    new BigNumber(curveReceivableBalance
   ))} BEAN:3Crv LP Tokens`);
 
   function transactionDetails() {
-    if (claimableCurveLPBalance.isLessThanOrEqualTo(0)) return null;
+    if (curveReceivableBalance.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -74,23 +77,18 @@ export const ClaimModule = forwardRef(({
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (claimableCurveLPBalance.isLessThanOrEqualTo(0)) return null;
-
-      // Contract Inputs
-      const lp = MaxBN(claimableCurveLPBalance, new BigNumber(0));
+      if (curveReceivableBalance.isLessThanOrEqualTo(0)) return null;
 
       // Toast
       const txToast = new TransactionToast({
-        loading: `Claiming ${displayBN(lp)} BEAN:3CRV LP Tokens`,
-        success: `Claimed ${displayBN(lp)} BBEAN:3CRV LP Tokens`,
+        loading: `Claiming ${displayBN(curveReceivableBalance)} BEAN:3CRV LP Tokens`,
+        success: `Claimed ${displayBN(curveReceivableBalance)} BEAN:3CRV LP Tokens`,
       });
 
       // Execute
-      claimWithdrawal(
-        toStringBaseUnitBN(lp, ETH.decimals),
-        (response) => {
-          txToast.confirming(response);
-        }
+      claimWithdrawals(
+        Object.keys(curveReceivableCrates),
+        (response) => txToast.confirming(response)
       )
       .then((value) => {
         txToast.success(value);

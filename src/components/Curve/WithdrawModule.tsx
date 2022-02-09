@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
   ETH,
-  LPBEANS_TO_SEEDS,
+  CURVE_BDV_TO_SEEDS,
+  CURVE_BDV_TO_STALK,
   STALK,
   SEEDS,
   UNI_V2_ETH_BEAN_LP,
@@ -28,6 +29,7 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
   TransactionToast,
+  TransitAsset,
 } from 'components/Common';
 
 export const WithdrawModule = forwardRef(({
@@ -53,7 +55,7 @@ export const WithdrawModule = forwardRef(({
   const {
     curveDeposits,
     curveSiloBalance,
-    curveBdvDeposits,
+    curveBDVDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -73,17 +75,17 @@ export const WithdrawModule = forwardRef(({
           .isLessThanOrEqualTo(beans)
           ? curveDeposits[key]
           : beans.minus(lpRemoved);
-        const crateSeedsRemoved = curveBdvDeposits[key]
+        const crateBDVRemoved = curveBDVDeposits[key]
           .multipliedBy(crateLPsRemoved)
           .dividedBy(curveDeposits[key]);
         lpRemoved = lpRemoved.plus(crateLPsRemoved);
-        seedsRemoved = seedsRemoved.plus(crateSeedsRemoved);
+        seedsRemoved = seedsRemoved.plus(crateBDVRemoved.multipliedBy(CURVE_BDV_TO_SEEDS));
         BigNumber.set({ DECIMAL_PLACES: 10 });
         stalkRemoved = stalkRemoved.plus(
-          crateSeedsRemoved.dividedBy(LPBEANS_TO_SEEDS)
+          crateBDVRemoved.multipliedBy(CURVE_BDV_TO_STALK)
         );
         stalkRemoved = stalkRemoved.plus(
-          crateSeedsRemoved
+          crateBDVRemoved.multipliedBy(CURVE_BDV_TO_SEEDS)
             .multipliedBy(season.minus(key))
             .multipliedBy(0.00001)
         );
@@ -116,7 +118,7 @@ export const WithdrawModule = forwardRef(({
       balance={curveSiloBalance}
       handleChange={(v) => fromValueUpdated(v)}
       locked={curveSiloBalance.isLessThanOrEqualTo(0)}
-      token={CryptoAsset.Crv3}
+      token={SiloAsset.Crv3}
       value={TrimBN(fromCurveLPValue, 9)}
     />
   );
@@ -125,7 +127,7 @@ export const WithdrawModule = forwardRef(({
   const toCurveLPField = (
     <TokenOutputField
       burn
-      token={CryptoAsset.Crv3}
+      token={TransitAsset.Crv3}
       value={fromCurveLPValue}
     />
   );
@@ -209,18 +211,16 @@ export const WithdrawModule = forwardRef(({
       ) {
         return;
       }
-      // Contract Inputs
-      const lp = MaxBN(fromCurveLPValue, new BigNumber(0));
-
       // Toast
       const txToast = new TransactionToast({
-        loading: `Depositing ${displayBN(lp)} BEAN:3CRV LP Tokens`,
-        success: `Deposited ${displayBN(lp)} BBEAN:3CRV LP Tokens`,
+        loading: `Withdrawing ${displayBN(fromCurveLPValue)} BEAN:3CRV LP Tokens`,
+        success: `Withdrew ${displayBN(fromCurveLPValue)} BEAN:3CRV LP Tokens`,
       });
 
       // Execute
       withdraw(
-        toStringBaseUnitBN(lp, ETH.decimals),
+        withdrawParams.crates,
+        withdrawParams.amounts,
         (response) => {
           resetFields();
           txToast.confirming(response);

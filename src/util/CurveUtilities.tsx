@@ -16,30 +16,31 @@ export const deposit = async (
 // function withdraw(address token, uint32[] calldata seasons, uint256[] calldata amounts);
 export const withdraw = async (
   seasons,
-  amount,
+  amounts,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().withdraw(CURVE.addr, seasons, amount),
-  { onResponse }
-);
-
-// Claim a token
-// function claimWithdrawal(address account, address token, uint32 _s) public returns (uint256 amount);
-export const claimWithdrawal = async (
-  seasons,
-  onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  beanstalkContract().claimWithdrawal(account, CURVE.addr, seasons),
+  beanstalkContract().withdraw(CURVE.addr, seasons, amounts),
   { onResponse }
 );
 
 // Claim tokens
-// function claimWithdrawals(address account, address[] calldata tokens, uint32[] calldata withdrawals);
+// function claimWithdrawal(address token, uint32 _s) public returns (uint256 amount);
+// function claimWithdrawals(address[] calldata tokens, uint32[] calldata withdrawals);
 export const claimWithdrawals = async (
-  // address,
   withdrawals,
   onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  beanstalkContract().claimWithdrawals(account, CURVE.addr, withdrawals),
-  { onResponse }
-);
+) => {
+  const tokens = [];
+  Object.keys(withdrawals).forEach(() => {
+    tokens.push(CURVE.addr);
+  });
+
+  return (
+    handleCallbacks(
+      (withdrawals.length === 1) ?
+      beanstalkContract().claimWithdrawal(CURVE.addr, withdrawals[0]) :
+      beanstalkContract().claimWithdrawals(tokens, withdrawals),
+      { onResponse }
+    )
+  );
+}

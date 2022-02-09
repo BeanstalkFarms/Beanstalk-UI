@@ -279,7 +279,7 @@ export default function Updater() {
       let userLPDeposits = {};
       let lpWithdrawals = {};
       let userCurveDeposits = {};
-      let userCurveBdvDeposits = {};
+      let userCurveBDVDeposits = {};
       let curveWithdrawals = {};
       let userPlots : UserBalanceState['plots'] = {};
       let userBeanDeposits = {};
@@ -299,6 +299,7 @@ export default function Updater() {
       // TODO: all event handling logic needs to exist not filtered on address for individual listings and buy offers
       // but full marketplace since, should not be filtering based on address for these events but grabbing them all
       events.forEach((event) => {
+        console.log(event.event);
         if (event.event === 'BeanDeposit') {
           const s = parseInt(event.returnValues.season, 10);
           const beans = toTokenUnitsBN(
@@ -454,12 +455,6 @@ export default function Updater() {
               lpWithdrawals[s] !== undefined ? lpWithdrawals[s].plus(lp) : lp,
           };
         } else if (event.event === 'Deposit') {
-          console.log(event.returnValues.account);
-          console.log(event.returnValues.token);
-          // event.returnValues.season
-          // event.returnValues.amount
-          // event.returnValues.bdv
-          //
           const s = parseInt(event.returnValues.season, 10);
           const curve = toTokenUnitsBN(
             new BigNumber(event.returnValues.amount),
@@ -474,48 +469,36 @@ export default function Updater() {
             [s]:
               userCurveDeposits[s] !== undefined ? userCurveDeposits[s].plus(curve) : curve,
           };
-          userCurveBdvDeposits = {
-            ...userCurveBdvDeposits,
+          userCurveBDVDeposits = {
+            ...userCurveBDVDeposits,
             [s]:
-              userCurveBdvDeposits[s] !== undefined
-                ? userCurveBdvDeposits[s].plus(bdv)
+              userCurveBDVDeposits[s] !== undefined
+                ? userCurveBDVDeposits[s].plus(bdv)
                 : bdv,
           };
         } else if (event.event === 'Remove') {
-          console.log(event.returnValues.account);
-          console.log(event.returnValues.token);
-          // event.returnValues.seasons
-          // event.returnValues.amounts
-          console.log(event.returnValues.amount);
-          //
           event.returnValues.seasons.forEach((s, i) => {
             const curve = toTokenUnitsBN(
               event.returnValues.amounts[i],
               UNI_V2_ETH_BEAN_LP.decimals
             );
-            const bdv = userCurveBdvDeposits[s]
+            const bdv = userCurveBDVDeposits[s]
               .multipliedBy(curve)
               .dividedBy(userCurveDeposits[s]);
             userCurveDeposits = {
               ...userCurveDeposits,
               [s]: userCurveDeposits[s].minus(curve),
             };
-            userCurveBdvDeposits = {
-              ...userCurveBdvDeposits,
-              [s]: userCurveBdvDeposits[s].minus(bdv),
+            userCurveBDVDeposits = {
+              ...userCurveBDVDeposits,
+              [s]: userCurveBDVDeposits[s].minus(bdv),
             };
             if (userCurveDeposits[s].isEqualTo(0)) delete userCurveDeposits[s];
-            if (userCurveBdvDeposits[s].isEqualTo(0)) {
-              delete userCurveBdvDeposits[s];
+            if (userCurveBDVDeposits[s].isEqualTo(0)) {
+              delete userCurveBDVDeposits[s];
             }
           });
         } else if (event.event === 'Withdraw') {
-          console.log(event.returnValues.account);
-          console.log(event.returnValues.token);
-          // event.returnValues.season
-          // event.returnValues.amount
-          console.log(event.returnValues.amount);
-          //
           const s = parseInt(event.returnValues.season, 10);
           const curve = toTokenUnitsBN(
             new BigNumber(event.returnValues.amount),
@@ -527,14 +510,7 @@ export default function Updater() {
               curveWithdrawals[s] !== undefined ? curveWithdrawals[s].plus(curve) : curve,
           };
         } else if (event.event === 'ClaimWithdrawal') {
-          console.log(event.returnValues.account);
-          console.log(event.returnValues.token);
-          // event.returnValues.withdrawals
-          console.log(event.returnValues.amount);
-          //
-          event.returnValues.withdrawals.forEach(
-            (s) => delete curveWithdrawals[s]
-          );
+          delete curveWithdrawals[event.returnValues.withdrawals];
         } else if (event.event === 'Harvest') {
           let beansClaimed = toTokenUnitsBN(
             event.returnValues.beans,
@@ -648,7 +624,7 @@ export default function Updater() {
           lpDeposits: userLPDeposits,
           lpSeedDeposits: userLPSeedDeposits,
           curveDeposits: userCurveDeposits,
-          curveBdvDeposits: userCurveBdvDeposits,
+          curveBDVDeposits: userCurveBDVDeposits,
           beanWithdrawals: userBeanWithdrawals,
           beanReceivableCrates: userBeanReceivableCrates,
           lpWithdrawals: userLPWithdrawals,
