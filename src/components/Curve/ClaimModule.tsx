@@ -3,13 +3,20 @@ import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // import { useSelector } from 'react-redux';
 // import { AppState } from 'state';
-import { UNI_V2_ETH_BEAN_LP } from 'constants/index';
-import { displayBN, TrimBN } from 'util/index';
+import { ETH, UNI_V2_ETH_BEAN_LP } from 'constants/index';
+import {
+  claimWithdrawal,
+  displayBN,
+  MaxBN,
+  TrimBN,
+  toStringBaseUnitBN,
+} from 'util/index';
 import {
   CryptoAsset,
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
+  TransactionToast,
 } from 'components/Common';
 
 export const ClaimModule = forwardRef(({
@@ -69,7 +76,28 @@ export const ClaimModule = forwardRef(({
     handleForm() {
       if (claimableCurveLPBalance.isLessThanOrEqualTo(0)) return null;
 
-      console.log('handle ref');
+      // Contract Inputs
+      const lp = MaxBN(claimableCurveLPBalance, new BigNumber(0));
+
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Claiming ${displayBN(lp)} BEAN:3CRV LP Tokens`,
+        success: `Claimed ${displayBN(lp)} BBEAN:3CRV LP Tokens`,
+      });
+
+      // Execute
+      claimWithdrawal(
+        toStringBaseUnitBN(lp, ETH.decimals),
+        (response) => {
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 

@@ -7,6 +7,7 @@ import {
   updateBeanstalkLPAllowance,
   updateUniswapBeanAllowance,
   updateBeanstalkUSDCAllowance,
+  updateBeanstalkCurveAllowance,
 } from 'state/allowances/actions';
 import { setUserBalance } from 'state/userBalance/actions';
 import { setTotalBalance } from 'state/totalBalance/actions';
@@ -105,6 +106,7 @@ export default function Updater() {
         beanstalkBeanAllowance,
         beanstalkLPAllowance,
         beanstalkUSDCAllowance,
+        beanstalkCurveAllowance,
         claimableEthBalance,
         beanBalance,
         lpBalance,
@@ -124,6 +126,7 @@ export default function Updater() {
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
       dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));
+      dispatch(updateBeanstalkCurveAllowance(beanstalkCurveAllowance));
       dispatch(
         setUserBalance({
           claimableEthBalance,

@@ -5,6 +5,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
+  ETH,
   LPBEANS_TO_SEEDS,
   STALK,
   SEEDS,
@@ -12,10 +13,12 @@ import {
 } from 'constants/index';
 import {
   displayBN,
+  MaxBN,
   MinBN,
+  smallDecimalPercent,
   toStringBaseUnitBN,
   TrimBN,
-  smallDecimalPercent,
+  withdraw,
 } from 'util/index';
 import {
   CryptoAsset,
@@ -24,6 +27,7 @@ import {
   siloStrings,
   TokenOutputField,
   TransactionDetailsModule,
+  TransactionToast,
 } from 'components/Common';
 
 export const WithdrawModule = forwardRef(({
@@ -48,7 +52,7 @@ export const WithdrawModule = forwardRef(({
   );
   const {
     lpDeposits,
-    lpBalance,
+    lpSiloBalance,
     lpSeedDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
@@ -96,7 +100,7 @@ export const WithdrawModule = forwardRef(({
   };
 
   function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, lpBalance); /* tokenBalances.BEAN is used as max curve lp Balance */
+    const fromNumber = MinBN(newFromNumber, lpSiloBalance); /* tokenBalances.BEAN is used as max curve lp Balance */
     const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals);
     setFromCurveLPValue(newFromLPValue);
     const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber);
@@ -105,21 +109,13 @@ export const WithdrawModule = forwardRef(({
     setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0));
   }
 
-  const handleFromChange = (event) => {
-    if (event.target.value) {
-      fromValueUpdated(new BigNumber(event.target.value));
-    } else {
-      fromValueUpdated(new BigNumber(-1));
-    }
-  };
-
   /* Input Fields */
   const fromCurveLPField = (
     <InputFieldPlus
       key={1}
-      balance={lpBalance}
-      handleChange={handleFromChange}
-      locked={lpBalance.isLessThanOrEqualTo(0)}
+      balance={lpSiloBalance}
+      handleChange={(v) => fromValueUpdated(v)}
+      locked={lpSiloBalance.isLessThanOrEqualTo(0)}
       token={CryptoAsset.Crv3}
       value={TrimBN(fromCurveLPValue, 9)}
     />
@@ -161,6 +157,10 @@ export const WithdrawModule = forwardRef(({
   const stalkChangePercent = toStalkValue
     .dividedBy(totalStalk)
     .multipliedBy(100);
+
+  const resetFields = () => {
+    fromValueUpdated(new BigNumber(-1));
+  };
 
   function transactionDetails() {
     if (fromCurveLPValue.isLessThanOrEqualTo(0)) return null;
@@ -207,8 +207,31 @@ export const WithdrawModule = forwardRef(({
         withdrawParams.crates.length === 0 ||
         withdrawParams.amounts.length === 0
       ) {
-        return null;
+        return;
       }
+      // Contract Inputs
+      const lp = MaxBN(fromCurveLPValue, new BigNumber(0));
+
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Depositing ${displayBN(lp)} BEAN:3CRV LP Tokens`,
+        success: `Deposited ${displayBN(lp)} BBEAN:3CRV LP Tokens`,
+      });
+
+      // Execute
+      withdraw(
+        toStringBaseUnitBN(lp, ETH.decimals),
+        (response) => {
+          resetFields();
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 

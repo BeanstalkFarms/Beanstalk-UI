@@ -15,6 +15,7 @@ export * from './GovernanceUtilities';
 export * from './LedgerUtilities';
 export * from './SeasonUtilities';
 export * from './SiloUtilities';
+export * from './CurveUtilities';
 export * from './TokenUtilities';
 export * from './TimeUtilities';
 export * from './UniswapUtilities';
@@ -77,8 +78,8 @@ export const pairContractReadOnly = (pair) =>
 export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
 
-// export const curveContract = () =>
-//   new ethers.Contract(CURVE.addr, curveMetaPoolAbi, web3Signer);
+export const curveContract = () =>
+  new ethers.Contract(CURVE.addr, curveMetaPoolAbi, web3Signer);
 
 export const beanCrv3ContractReadOnly = () =>
   new web3.eth.Contract(curveMetaPoolAbi, CURVE.addr);

@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import {
   BEAN,
   BEANSTALK,
+  CURVE,
   UNI_V2_ETH_BEAN_LP,
   UNISWAP_V2_ROUTER,
   USDC,
@@ -121,6 +122,10 @@ export const approveBeanstalkLP = async (callback) => {
 
 export const approveBeanstalkUSDC = async (callback) => {
   approveToken(USDC, account, BEANSTALK, MAX_UINT256, callback);
+};
+
+export const approveBeanstalkCurve = async (callback) => {
+  approveToken(CURVE, account, BEANSTALK, MAX_UINT256, callback);
 };
 
 export function TokenLabel(tokenType: Token): string {

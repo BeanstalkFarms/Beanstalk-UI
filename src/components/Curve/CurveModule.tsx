@@ -2,9 +2,9 @@ import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
+import { updateBeanstalkCurveAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
-import { approveBeanstalkBean } from 'util/index';
+import { approveBeanstalkCurve } from 'util/index';
 import { BaseModule, curveStrings  } from 'components/Common';
 import { DepositModule } from './DepositModule';
 import { WithdrawModule } from './WithdrawModule';
@@ -19,10 +19,9 @@ export default function CurveModule() {
     useCrv3: false,
   });
 
-  const { beanstalkBeanAllowance } = useSelector<
-    AppState,
-    AppState['allowances']
-  >((state) => state.allowances);
+  const { beanstalkCurveAllowance } = useSelector<AppState, AppState['allowances']>(
+    (state) => state.allowances
+  );
 
   const sectionTitles = ['Deposit', 'Withdraw'];
   const sectionTitlesDescription = [curveStrings.deposit, curveStrings.withdraw];
@@ -91,20 +90,14 @@ export default function CurveModule() {
   }
   if (section > sectionTitles.length - 1) setSection(0);
 
-  /* need curve allowances */
-  const allowance =
-    section > 2
-      ? beanstalkBeanAllowance
-      : new BigNumber(1);
-
   return (
     <>
       <BaseModule
-        allowance={allowance}
+        allowance={section === 0 ? beanstalkCurveAllowance : new BigNumber(1)}
         resetForm={() => {
           setSettings({ ...settings });
         }}
-        handleApprove={approveBeanstalkBean}
+        handleApprove={approveBeanstalkCurve}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
@@ -113,7 +106,7 @@ export default function CurveModule() {
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkBeanAllowance}
+        setAllowance={updateBeanstalkCurveAllowance}
       >
         {sections[section]}
       </BaseModule>

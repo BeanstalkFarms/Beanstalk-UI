@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
+  ETH,
   LPBEAN_TO_STALK,
   LPBEANS_TO_SEEDS,
   SEEDS,
@@ -14,11 +15,13 @@ import {
 } from 'constants/index';
 import {
   displayBN,
+  deposit,
   MaxBN,
   MinBN,
   smallDecimalPercent,
   TrimBN,
   tokenForLP,
+  toStringBaseUnitBN,
 } from 'util/index';
 import {
   CryptoAsset,
@@ -26,6 +29,7 @@ import {
   SiloAsset,
   TokenOutputField,
   TransactionDetailsModule,
+  TransactionToast,
 } from 'components/Common';
 
 export const DepositModule = forwardRef(({
@@ -117,6 +121,10 @@ export const DepositModule = forwardRef(({
     .dividedBy(totalStalk.plus(toStalkValue))
     .multipliedBy(100);
 
+  const resetFields = () => {
+    fromValueUpdated(new BigNumber(-1));
+  };
+
   const details = [];
   details.push(`Receive ${displayBN(
     new BigNumber(toCurveLPValue
@@ -159,7 +167,30 @@ export const DepositModule = forwardRef(({
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (toCurveLPValue.isLessThanOrEqualTo(0)) return null;
-      console.log('deposit ref');
+
+      // Contract Inputs
+      const lp = MaxBN(toCurveLPValue, new BigNumber(0));
+
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Depositing ${displayBN(lp)} BEAN:3CRV LP Tokens`,
+        success: `Deposited ${displayBN(lp)} BBEAN:3CRV LP Tokens`,
+      });
+
+      // Execute
+      deposit(
+        toStringBaseUnitBN(lp, ETH.decimals),
+        (response) => {
+          resetFields();
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        txToast.error(err);
+      });
     },
   }));
 
