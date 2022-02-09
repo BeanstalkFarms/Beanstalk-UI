@@ -276,6 +276,9 @@ export default function Updater() {
       let userLPSeedDeposits = {};
       let userLPDeposits = {};
       let lpWithdrawals = {};
+      let userCurveDeposits = {};
+      let userCurveBdvDeposits = {};
+      let curveWithdrawals = {};
       let userPlots : UserBalanceState['plots'] = {};
       let userBeanDeposits = {};
       let beanWithdrawals = {};
@@ -448,6 +451,88 @@ export default function Updater() {
             [s]:
               lpWithdrawals[s] !== undefined ? lpWithdrawals[s].plus(lp) : lp,
           };
+        } else if (event.event === 'Deposit') {
+          console.log(event.returnValues.account);
+          console.log(event.returnValues.token);
+          // event.returnValues.season
+          // event.returnValues.amount
+          // event.returnValues.bdv
+          //
+          const s = parseInt(event.returnValues.season, 10);
+          const curve = toTokenUnitsBN(
+            new BigNumber(event.returnValues.amount),
+            UNI_V2_ETH_BEAN_LP.decimals
+          );
+          const bdv = toTokenUnitsBN(
+            new BigNumber(event.returnValues.bdv),
+            BEAN.decimals
+          );
+          userCurveDeposits = {
+            ...userCurveDeposits,
+            [s]:
+              userCurveDeposits[s] !== undefined ? userCurveDeposits[s].plus(curve) : curve,
+          };
+          userCurveBdvDeposits = {
+            ...userCurveBdvDeposits,
+            [s]:
+              userCurveBdvDeposits[s] !== undefined
+                ? userCurveBdvDeposits[s].plus(bdv)
+                : bdv,
+          };
+        } else if (event.event === 'Remove') {
+          console.log(event.returnValues.account);
+          console.log(event.returnValues.token);
+          // event.returnValues.seasons
+          // event.returnValues.amounts
+          console.log(event.returnValues.amount);
+          //
+          event.returnValues.seasons.forEach((s, i) => {
+            const curve = toTokenUnitsBN(
+              event.returnValues.amounts[i],
+              UNI_V2_ETH_BEAN_LP.decimals
+            );
+            const bdv = userCurveBdvDeposits[s]
+              .multipliedBy(curve)
+              .dividedBy(userCurveDeposits[s]);
+            userCurveDeposits = {
+              ...userCurveDeposits,
+              [s]: userCurveDeposits[s].minus(curve),
+            };
+            userCurveBdvDeposits = {
+              ...userCurveBdvDeposits,
+              [s]: userCurveBdvDeposits[s].minus(bdv),
+            };
+            if (userCurveDeposits[s].isEqualTo(0)) delete userCurveDeposits[s];
+            if (userCurveBdvDeposits[s].isEqualTo(0)) {
+              delete userCurveBdvDeposits[s];
+            }
+          });
+        } else if (event.event === 'Withdraw') {
+          console.log(event.returnValues.account);
+          console.log(event.returnValues.token);
+          // event.returnValues.season
+          // event.returnValues.amount
+          console.log(event.returnValues.amount);
+          //
+          const s = parseInt(event.returnValues.season, 10);
+          const curve = toTokenUnitsBN(
+            new BigNumber(event.returnValues.amount),
+            UNI_V2_ETH_BEAN_LP.decimals
+          );
+          curveWithdrawals = {
+            ...curveWithdrawals,
+            [s]:
+              curveWithdrawals[s] !== undefined ? curveWithdrawals[s].plus(curve) : curve,
+          };
+        } else if (event.event === 'ClaimWithdrawal') {
+          console.log(event.returnValues.account);
+          console.log(event.returnValues.token);
+          // event.returnValues.withdrawals
+          console.log(event.returnValues.amount);
+          //
+          event.returnValues.withdrawals.forEach(
+            (s) => delete curveWithdrawals[s]
+          );
         } else if (event.event === 'Harvest') {
           let beansClaimed = toTokenUnitsBN(
             event.returnValues.beans,
@@ -501,6 +586,10 @@ export default function Updater() {
         (a, c) => a.plus(c),
         zeroBN
       );
+      const curveDepositsBalance = Object.values(userCurveDeposits).reduce(
+        (a, c) => a.plus(c),
+        zeroBN
+      );
       const [podBalance, harvestablePodBalance, plots, harvestablePlots] =
         parsePlots(userPlots, hi);
 
@@ -516,12 +605,19 @@ export default function Updater() {
         userLPWithdrawals,
         userLPReceivableCrates,
       ] = parseWithdrawals(lpWithdrawals, s);
+      const [
+        curveTransitBalance,
+        curveReceivableBalance,
+        userCurveWithdrawals,
+        userCurveReceivableCrates,
+      ] = parseWithdrawals(curveWithdrawals, s);
       const minReceivables = [br, er].map((reserve) =>
         reserve.multipliedBy(BASE_SLIPPAGE).toFixed(0)
       );
       const claimable = [
         Object.keys(userBeanReceivableCrates).map((b) => b.toString()),
         Object.keys(userLPReceivableCrates).map((b) => b.toString()),
+        Object.keys(userCurveReceivableCrates).map((b) => b.toString()),
         Object.keys(harvestablePlots).map((b) =>
           toBaseUnitBN(b, BEAN.decimals).toString()
         ),
@@ -541,21 +637,29 @@ export default function Updater() {
           lpTransitBalance: lpTransitBalance,
           lpReceivableBalance: lpReceivableBalance,
           lpSiloBalance: lpDepositsBalance,
+          curveTransitBalance: curveTransitBalance,
+          curveReceivableBalance: curveReceivableBalance,
+          curveSiloBalance: curveDepositsBalance,
           plots: plots,
           harvestablePlots: harvestablePlots,
           beanDeposits: userBeanDeposits,
           lpDeposits: userLPDeposits,
           lpSeedDeposits: userLPSeedDeposits,
+          curveDeposits: userCurveDeposits,
+          curveBdvDeposits: userCurveBdvDeposits,
           beanWithdrawals: userBeanWithdrawals,
           beanReceivableCrates: userBeanReceivableCrates,
           lpWithdrawals: userLPWithdrawals,
           lpReceivableCrates: userLPReceivableCrates,
+          curveWithdrawals: userCurveWithdrawals,
+          curveReceivableCrates: userCurveReceivableCrates,
           beanClaimableBalance: beanReceivableBalance.plus(
             harvestablePodBalance
           ).plus(cb),
           hasClaimable: beanReceivableBalance
             .plus(harvestablePodBalance)
             .plus(lpReceivableBalance)
+            .plus(curveReceivableBalance)
             .plus(cb)
             .plus(ce)
             .isGreaterThan(0),
@@ -599,10 +703,10 @@ export default function Updater() {
       const eventParsingParameters = [
         totalBalances[14].season /* season */,
         totalBalances[10] /* harvestableIndex */,
-        accountBalances[10] /* farmableBeanBalance */,
-        accountBalances[11] /* grownStalkBalance */,
-        accountBalances[4] /* claimableEthBalance */,
-        accountBalances[14], /* wrappedBeans */
+        accountBalances[11] /* farmableBeanBalance */,
+        accountBalances[12] /* grownStalkBalance */,
+        accountBalances[5] /* claimableEthBalance */,
+        accountBalances[15], /* wrappedBeans */
         beanReserve,
         ethReserve,
       ];

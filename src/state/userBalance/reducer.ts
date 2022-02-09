@@ -18,6 +18,10 @@ export interface UserBalanceState {
   lpSiloBalance: BigNumber;
   lpTransitBalance: BigNumber;
   lpReceivableBalance: BigNumber;
+  curveBalance: BigNumber;
+  curveSiloBalance: BigNumber;
+  curveTransitBalance: BigNumber;
+  curveReceivableBalance: BigNumber;
   stalkBalance: BigNumber;
   seedBalance: BigNumber;
   podBalance: BigNumber;
@@ -31,6 +35,10 @@ export interface UserBalanceState {
   lpSeedDeposits: Object;
   lpWithdrawals: Object;
   lpReceivableCrates: Object;
+  curveDeposits: Object;
+  curveBdvDeposits: Object;
+  curveWithdrawals: Object;
+  curveReceivableCrates: Object;
   /** Plots are keyed by plotIndex, value is size of the Plot in Pods. */
   plots: { [plotIndex: string]: BigNumber };
   harvestablePlots: Object;
@@ -60,6 +68,10 @@ export const initialState: UserBalanceState = {
   lpSiloBalance: new BigNumber(-1),
   lpTransitBalance: new BigNumber(-1),
   lpReceivableBalance: new BigNumber(-1),
+  curveBalance: new BigNumber(-1),
+  curveSiloBalance: new BigNumber(-1),
+  curveTransitBalance: new BigNumber(-1),
+  curveReceivableBalance: new BigNumber(-1),
   stalkBalance: new BigNumber(-1),
   seedBalance: new BigNumber(-1),
   podBalance: new BigNumber(-1),
@@ -73,6 +85,10 @@ export const initialState: UserBalanceState = {
   lpSeedDeposits: {},
   lpWithdrawals: {},
   lpReceivableCrates: {},
+  curveDeposits: {},
+  curveBdvDeposits: {},
+  curveWithdrawals: {},
+  curveReceivableCrates: {},
   plots: {},
   harvestablePlots: {},
   votedBips: new Set(),
