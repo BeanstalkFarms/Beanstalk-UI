@@ -205,7 +205,7 @@ export const getBips = async () => {
         ? await beanstalk.methods.rootsFor(i.toString()).call()
         : bip.roots;
     
-    //
+    // @publius: help with "increaseBase", "stalkBase", "endTotalRoots", "roots"
     const bipDict = {
       id: i,
       executed: bip.executed,

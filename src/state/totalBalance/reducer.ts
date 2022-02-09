@@ -3,20 +3,35 @@ import { BigNumber } from 'bignumber.js';
 import { setTotalBalance } from './actions';
 
 export interface TotalBalanceState {
+  /**  */
   totalBeans: BigNumber;
+  /**  */
   totalSiloBeans: BigNumber;
+  /**  */
   totalTransitBeans: BigNumber;
+  /**  */
   totalBudgetBeans: BigNumber;
+  /**  */
   totalCurveBeans: BigNumber;
+  /**  */
   totalLP: BigNumber;
+  /**  */
   totalSiloLP: BigNumber;
+  /** */
   totalTransitLP: BigNumber;
+  /**  */
   totalStalk: BigNumber;
+  /**  */
   totalSeeds: BigNumber;
+  /**  */
   totalPods: BigNumber;
+  /** @publius could you write up an explanation of a 'root'? */
   totalRoots: BigNumber;
+  /**  */
   harvestableBeansPerSeason7: BigNumber;
+  /**  */
   harvestableBeansPerSeason30: BigNumber;
+  /**  */
   withdrawSeasons: BigNumber;
 }
 

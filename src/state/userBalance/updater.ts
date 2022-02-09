@@ -120,6 +120,7 @@ export default function Updater() {
       const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       const lockedSeasons = lockedUntil.minus(currentSeason);
 
+      // @publius what are "allowances"?
       dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
@@ -483,6 +484,7 @@ export default function Updater() {
       });
       dispatch(setContractEvents(events));
 
+      // @publius
       const [s, hi, fb, gs, ce, cb, br, er] =
         eventParsingParameters !== undefined
           ? eventParsingParameters
