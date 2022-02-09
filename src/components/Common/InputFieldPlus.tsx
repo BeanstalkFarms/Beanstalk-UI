@@ -55,6 +55,7 @@ export default function InputFieldPlus(props: Partial<InputFieldPlusProps>) {
       handleChange={handleChange}
       maxHandler={maxHandler}
       poolForLPRatio={props.poolForLPRatio}
+      locked={props.locked}
       token={props.token}
       value={props.value}
       size={props.size}
@@ -78,4 +79,5 @@ InputFieldPlus.defaultProps = {
   updateExpectedPrice: () => {},
   value: new BigNumber(-1),
   visible: true,
+  locked: false,
 };

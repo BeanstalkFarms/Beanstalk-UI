@@ -66,7 +66,8 @@ export const UNI_V2_USDC_ETH_LP = {
 };
 
 export const CURVE = {
-  addr: '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD', // BEAN:3crv address
+  // addr: '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD', // BEAN:3crv address
+  addr: '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC', // Ropsten
   decimals: 18,
   symbol: 'BEAN:3CRV',
   factory: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7', // 3crv address

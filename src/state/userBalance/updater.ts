@@ -110,6 +110,7 @@ export default function Updater() {
         claimableEthBalance,
         beanBalance,
         lpBalance,
+        curveBalance,
         seedBalance,
         stalkBalance,
         lockedUntil,
@@ -133,6 +134,7 @@ export default function Updater() {
           ethBalance,
           beanBalance,
           lpBalance,
+          curveBalance,
           seedBalance,
           stalkBalance,
           locked,
@@ -703,10 +705,10 @@ export default function Updater() {
       const eventParsingParameters = [
         totalBalances[14].season /* season */,
         totalBalances[10] /* harvestableIndex */,
-        accountBalances[11] /* farmableBeanBalance */,
-        accountBalances[12] /* grownStalkBalance */,
+        accountBalances[12] /* farmableBeanBalance */,
+        accountBalances[13] /* grownStalkBalance */,
         accountBalances[5] /* claimableEthBalance */,
-        accountBalances[15], /* wrappedBeans */
+        accountBalances[16], /* wrappedBeans */
         beanReserve,
         ethReserve,
       ];

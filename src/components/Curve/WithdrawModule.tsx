@@ -51,9 +51,9 @@ export const WithdrawModule = forwardRef(({
     (state) => state.season.season
   );
   const {
-    lpDeposits,
-    lpSiloBalance,
-    lpSeedDeposits,
+    curveDeposits,
+    curveSiloBalance,
+    curveBdvDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -65,17 +65,17 @@ export const WithdrawModule = forwardRef(({
     const crates = [];
     const amounts = [];
     BigNumber.set({ DECIMAL_PLACES: 6 });
-    Object.keys(lpDeposits)
+    Object.keys(curveDeposits)
       .sort((a, b) => parseInt(b, 10) - parseInt(a, 10))
       .some((key) => {
         const crateLPsRemoved = lpRemoved
-          .plus(lpDeposits[key])
+          .plus(curveDeposits[key])
           .isLessThanOrEqualTo(beans)
-          ? lpDeposits[key]
+          ? curveDeposits[key]
           : beans.minus(lpRemoved);
-        const crateSeedsRemoved = lpSeedDeposits[key]
+        const crateSeedsRemoved = curveBdvDeposits[key]
           .multipliedBy(crateLPsRemoved)
-          .dividedBy(lpDeposits[key]);
+          .dividedBy(curveDeposits[key]);
         lpRemoved = lpRemoved.plus(crateLPsRemoved);
         seedsRemoved = seedsRemoved.plus(crateSeedsRemoved);
         BigNumber.set({ DECIMAL_PLACES: 10 });
@@ -100,7 +100,7 @@ export const WithdrawModule = forwardRef(({
   };
 
   function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, lpSiloBalance); /* tokenBalances.BEAN is used as max curve lp Balance */
+    const fromNumber = MinBN(newFromNumber, curveSiloBalance); /* tokenBalances.BEAN is used as max curve lp Balance */
     const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals);
     setFromCurveLPValue(newFromLPValue);
     const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber);
@@ -113,9 +113,9 @@ export const WithdrawModule = forwardRef(({
   const fromCurveLPField = (
     <InputFieldPlus
       key={1}
-      balance={lpSiloBalance}
+      balance={curveSiloBalance}
       handleChange={(v) => fromValueUpdated(v)}
-      locked={lpSiloBalance.isLessThanOrEqualTo(0)}
+      locked={curveSiloBalance.isLessThanOrEqualTo(0)}
       token={CryptoAsset.Crv3}
       value={TrimBN(fromCurveLPValue, 9)}
     />

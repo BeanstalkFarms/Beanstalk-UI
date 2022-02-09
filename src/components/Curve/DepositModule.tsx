@@ -46,7 +46,7 @@ export const DepositModule = forwardRef(({
   const { totalStalk, totalLP } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { lpBalance } = useSelector<AppState, AppState['userBalance']>(
+  const { curveBalance } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
   const { beanReserve } = useSelector<AppState, AppState['prices']>(
@@ -54,7 +54,7 @@ export const DepositModule = forwardRef(({
   );
 
   function fromValueUpdated(newFromCurveLPNumber) {
-    let fromNumber = MinBN(newFromCurveLPNumber, lpBalance);
+    let fromNumber = MinBN(newFromCurveLPNumber, curveBalance);
 
     const newFromCurveLPValue = TrimBN(MaxBN(fromNumber, new BigNumber(0)), UNI_V2_ETH_BEAN_LP.decimals);
     fromNumber = tokenForLP(newFromCurveLPValue, beanReserve, totalLP);
@@ -83,7 +83,7 @@ export const DepositModule = forwardRef(({
   const fromCurveLPField = (
     <InputFieldPlus
       key={0}
-      balance={lpBalance}
+      balance={curveBalance}
       handleChange={(v) => fromValueUpdated(v)}
       token={CryptoAsset.Crv3}
       value={fromCurveLPValue}
