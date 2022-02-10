@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
+import { Box } from '@material-ui/core';
 import { displayBN, displayFullBN } from 'util/index';
 import { MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
@@ -23,7 +24,7 @@ export default function Field() {
   // const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
   //   (state) => state.beansPerSeason
   // );
-  const { width } = useSelector<AppState, AppState['general']>(
+  const { width, hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
@@ -72,6 +73,14 @@ export default function Field() {
       text: 'Read More',
     },
   ];
+  const fundBox = hasActiveFundraiser ? (
+    <Box style={{ margin: '10px 0', backgroundColor: theme.module.metaBackground, padding: '5px' }}>
+      <span>
+        {fieldStrings.activeFundraiser}
+        <a href="https://bean.money/fundraiser">bean.money/fundraiser</a>.
+      </span>
+    </Box>
+  ) : null;
 
   const leftHeader = (
     <HeaderLabelList
@@ -135,52 +144,55 @@ export default function Field() {
   );
 
   return (
-    <ContentSection id="field" title="Field">
-      {/* Field "Analytics" displayed at the top of the page */}
-      <Grid container item justifyContent="center" style={containerStyle}>
-        <Grid item md={12} lg={6} style={headerLabelStyle}>
-          {leftHeader}
+    <>
+      {fundBox}
+      <ContentSection id="field" title="Field">
+        {/* Field "Analytics" displayed at the top of the page */}
+        <Grid container item justifyContent="center" style={containerStyle}>
+          <Grid item md={12} lg={6} style={headerLabelStyle}>
+            {leftHeader}
+          </Grid>
+          <Grid item md={12} lg={6} style={headerLabelStyle}>
+            {rightHeader}
+          </Grid>
         </Grid>
-        <Grid item md={12} lg={6} style={headerLabelStyle}>
-          {rightHeader}
-        </Grid>
-      </Grid>
-      {/* Content */}
-      <Grid
-        container
-        item
-        xs={12}
-        spacing={2}
-        className="SiloSection"
-        alignItems="flex-start"
-        justifyContent="center"
-      >
+        {/* Content */}
         <Grid
+          container
           item
-          md={6}
-          sm={12}
-          style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
+          xs={12}
+          spacing={2}
+          className="SiloSection"
+          alignItems="flex-start"
+          justifyContent="center"
         >
-          <BaseModule
-            section={0}
-            sectionTitles={['']}
-            sectionTitlesDescription={['']}
-            showButton={false}
-            removeBackground
-            normalBox={false}
+          <Grid
+            item
+            md={6}
+            sm={12}
+            style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
           >
-            <FieldModule />
-          </BaseModule>
+            <BaseModule
+              section={0}
+              sectionTitles={['']}
+              sectionTitlesDescription={['']}
+              showButton={false}
+              removeBackground
+              normalBox={false}
+            >
+              <FieldModule />
+            </BaseModule>
+          </Grid>
         </Grid>
-      </Grid>
-      {/* Help Dropdown */}
-      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-        <ContentDropdown
-          description={description}
-          descriptionTitle="What is the Field?"
-          descriptionLinks={descriptionLinks}
-        />
-      </Grid>
-    </ContentSection>
+        {/* Help Dropdown */}
+        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+          <ContentDropdown
+            description={description}
+            descriptionTitle="What is the Field?"
+            descriptionLinks={descriptionLinks}
+          />
+        </Grid>
+      </ContentSection>
+    </>
   );
 }
