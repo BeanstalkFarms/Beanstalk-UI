@@ -40,6 +40,17 @@ export default function Field() {
     width: width > 606 ? '500px' : '250px',
     padding: '0px',
   };
+  const bannerStyle = {
+    borderRadius: '15px',
+    boxShadow:
+      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    width: width > 606 ? '500px' : '250px',
+    margin: '10px 0',
+    backgroundColor: theme.module.metaBackground,
+    padding: '10px',
+    display: 'inline-flex',
+
+  };
 
   // Hiding for now as the numbers are misleading
   // const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
@@ -74,7 +85,7 @@ export default function Field() {
     },
   ];
   const fundBox = hasActiveFundraiser ? (
-    <Box style={{ margin: '10px 0', backgroundColor: theme.module.metaBackground, padding: '5px' }}>
+    <Box style={bannerStyle}>
       <span>
         {fieldStrings.activeFundraiser}
         <a href="https://bean.money/fundraiser">bean.money/fundraiser</a>.
