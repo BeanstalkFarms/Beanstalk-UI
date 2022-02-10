@@ -5,7 +5,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
-  ETH,
   CURVE_BDV_TO_SEEDS,
   CURVE_BDV_TO_STALK,
   STALK,
@@ -14,7 +13,6 @@ import {
 } from 'constants/index';
 import {
   displayBN,
-  MaxBN,
   MinBN,
   smallDecimalPercent,
   toStringBaseUnitBN,
@@ -22,7 +20,6 @@ import {
   withdraw,
 } from 'util/index';
 import {
-  CryptoAsset,
   InputFieldPlus,
   SiloAsset,
   siloStrings,

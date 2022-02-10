@@ -25,15 +25,12 @@ export default function CurveModule() {
     (state) => state.allowances
   );
   const {
-    curveBalance,
-    beanBalance,
-    ethBalance,
+    // curveBalance,
     curveReceivableBalance,
     curveDeposits,
     curveBDVDeposits,
     curveReceivableCrates,
     curveWithdrawals,
-    lockedSeasons,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -81,9 +78,9 @@ export default function CurveModule() {
     if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(
       amount,
-      prices.beanReserve,
-      prices.ethReserve,
-      totalBalance.totalLP
+      prices.beanCrv3Reserve,
+      prices.crv3Reserve,
+      totalBalance.totalCrv3
     );
   };
 

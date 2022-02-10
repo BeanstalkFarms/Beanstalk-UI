@@ -52,6 +52,7 @@ const smallGridStyle = {
 export default function BalanceModule(props) {
   const [beanActive, setBeanActive] = useState(-1);
   const [lpActive, setLPActive] = useState(-1);
+  const [curveActive, setCurveActive] = useState(-1);
 
   const beanTotals = props.beanBalance
     .plus(props.beanSiloBalance)
@@ -65,48 +66,15 @@ export default function BalanceModule(props) {
     .plus(props.lpSiloBalance)
     .plus(props.lpTransitBalance)
     .plus(props.lpReceivableBalance);
-  const claimableBalance = props.beanReceivableBalance.plus(props.harvestablePodBalance).plus(props.beanWrappedBalance);
+  const curveTotals = props.curveBalance
+    .plus(props.curveSiloBalance)
+    .plus(props.curveTransitBalance)
+    .plus(props.curveReceivableBalance);
+  const claimableBalance = props.beanReceivableBalance
+    .plus(props.harvestablePodBalance)
+    .plus(props.beanWrappedBalance);
 
   /* Show Claimables */
-
-  const claimableBeansSection = (
-    <ToggleTokenBalanceModule
-      balance={claimableBalance}
-      balanceColor={beanActive === 4 ? color.claimable : null}
-      description={props.description.claimableBeanBalance}
-      title={`Claimable ${props.showTokenName ? 'Beans' : ''}`}
-      token={ClaimableAsset.Bean}
-    />
-  );
-
-  const budgetBeansSection = (
-    <ToggleTokenBalanceModule
-      balance={props.budgetBalance}
-      balanceColor={beanActive === 5 ? color.budget : null}
-      description={props.description.budgetBalance}
-      title={`Budget ${props.showTokenName ? 'Beans' : ''}`}
-      token={BudgetAsset.Bean}
-    />
-  );
-  const claimableLPSection = (
-    <ToggleTokenBalanceModule
-      balance={props.lpReceivableBalance}
-      balanceColor={lpActive === 4 ? color.claimable : null}
-      description={props.description.claimablelpBalance}
-      isLP
-      poolForLPRatio={props.poolForLPRatio}
-      title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
-      token={ClaimableAsset.LP}
-    />
-  );
-  const beanReserveSection = (
-    <ToggleTokenBalanceModule
-      balance={props.beanReserveTotal}
-      balanceColor={beanActive === 3 ? color.pool : null}
-      description={props.description.beanReserveTotal}
-      token={UniswapAsset.Bean}
-    />
-  );
   const beanTransitSection = (
     <ToggleTokenBalanceModule
       balance={props.beanTransitBalance}
@@ -125,6 +93,65 @@ export default function BalanceModule(props) {
       poolForLPRatio={props.poolForLPRatio}
       title={`Withdrawn ${props.showTokenName ? 'LP' : ''}`}
       token={TransitAsset.LP}
+    />
+  );
+  const curveTransitSection = (
+    <ToggleTokenBalanceModule
+      balance={props.curveTransitBalance}
+      balanceColor={curveActive === 2 ? color.transit : null}
+      description={props.description.curveTransitBalance}
+      isLP
+      poolForLPRatio={props.poolForCurveRatio}
+      title={`Withdrawn ${props.showTokenName ? 'LP' : ''}`}
+      token={TransitAsset.Crv3}
+    />
+  );
+  const claimableBeansSection = (
+    <ToggleTokenBalanceModule
+      balance={claimableBalance}
+      balanceColor={beanActive === 4 ? color.claimable : null}
+      description={props.description.claimableBeanBalance}
+      title={`Claimable ${props.showTokenName ? 'Beans' : ''}`}
+      token={ClaimableAsset.Bean}
+    />
+  );
+  const claimableLPSection = (
+    <ToggleTokenBalanceModule
+      balance={props.lpReceivableBalance}
+      balanceColor={lpActive === 4 ? color.claimable : null}
+      description={props.description.claimablelpBalance}
+      isLP
+      poolForLPRatio={props.poolForLPRatio}
+      title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
+      token={ClaimableAsset.LP}
+    />
+  );
+  const claimableCurveSection = (
+    <ToggleTokenBalanceModule
+      balance={props.curveReceivableBalance}
+      balanceColor={curveActive === 4 ? color.claimable : null}
+      description={props.description.claimableCurveBalance}
+      isLP
+      poolForLPRatio={props.poolForCurveRatio}
+      title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
+      token={ClaimableAsset.Crv3}
+    />
+  );
+  const beanReserveSection = (
+    <ToggleTokenBalanceModule
+      balance={props.beanReserveTotal}
+      balanceColor={beanActive === 3 ? color.pool : null}
+      description={props.description.beanReserveTotal}
+      token={UniswapAsset.Bean}
+    />
+  );
+  const budgetBeansSection = (
+    <ToggleTokenBalanceModule
+      balance={props.budgetBalance}
+      balanceColor={beanActive === 5 ? color.budget : null}
+      description={props.description.budgetBalance}
+      title={`Budget ${props.showTokenName ? 'Beans' : ''}`}
+      token={BudgetAsset.Bean}
     />
   );
 
@@ -235,6 +262,62 @@ export default function BalanceModule(props) {
     </>
   );
 
+  /* Curve Hidden */
+
+  const switchCurveSizeBalances = (
+    <>
+      <Hidden smUp>
+        <Grid item xs={12} style={smallGridStyle}>
+          <TokenBalanceModule
+            balance={curveTotals}
+            description="Total Curve"
+            isLP
+            poolForLPRatio={props.poolForCurveRatio}
+            style={{ position: 'relative' }}
+            swerve
+            title="Total Curve"
+            token={CryptoAsset.Crv3}
+          />
+        </Grid>
+      </Hidden>
+      <Hidden xsDown>
+        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+          <Grid item xs={12}>
+            <FormatTooltip
+              placement="top"
+              margin={props.chartMargin}
+              title={
+                (props.beanLPTotal[0].isGreaterThan(0) ||
+                  props.beanLPTotal[1].isGreaterThan(0)) &&
+                curveActive < 0
+                  ? `${displayFullBN(
+                      props.beanLPTotal[0],
+                      BEAN.decimals
+                    )} Beans/${displayFullBN(props.beanLPTotal[1])} ETH`
+                  : ''
+              }
+            >
+              <Box>
+                <BalanceChart
+                  asset={CryptoAsset.Crv3}
+                  claimable={props.curveReceivableBalance}
+                  circulating={props.curveBalance}
+                  setActive={setCurveActive}
+                  silo={props.curveSiloBalance}
+                  title="BEAN/3CRV"
+                  total={`${displayBN(props.beanLPTotal[0])}/${displayBN(
+                    props.beanLPTotal[1]
+                  )}`}
+                  transit={props.curveTransitBalance}
+                />
+              </Box>
+            </FormatTooltip>
+          </Grid>
+        </Grid>
+      </Hidden>
+    </>
+  );
+
   return (
     <Grid
       container
@@ -294,6 +377,7 @@ export default function BalanceModule(props) {
         </Grid>
       </Grid>
 
+      {/* Bean Balances */}
       <span style={spanStyle}>Beans</span>
       <Grid
         container
@@ -331,6 +415,8 @@ export default function BalanceModule(props) {
 
         {switchBeanSizeBalances}
       </Grid>
+
+      {/* LP Balances */}
       <span style={spanStyle}>LP</span>
       <Grid
         container
@@ -370,6 +456,49 @@ export default function BalanceModule(props) {
 
         {switchLPSizeBalances}
       </Grid>
+
+      {/* Curve Balances */}
+      <span style={spanStyle}>Curve</span>
+      <Grid
+        container
+        style={{
+          backgroundColor: theme.module.foreground,
+          borderRadius: '25px',
+        }}
+      >
+        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+          <Grid item xs={12}>
+            <TokenBalanceModule
+              balance={props.curveBalance}
+              balanceColor={curveActive === 0 ? color.circulating : null}
+              description={props.description.curveBalance}
+              isLP
+              poolForLPRatio={props.poolForCurveRatio}
+              swerve
+              title={`Circulating ${props.showTokenName ? 'LP' : ''}`}
+              token={CryptoAsset.Crv3}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TokenBalanceModule
+              balance={props.curveSiloBalance}
+              balanceColor={curveActive === 1 ? color.silo : null}
+              description={props.description.curveSiloBalance}
+              isLP
+              poolForLPRatio={props.poolForCurveRatio}
+              swerve
+              title={`Deposited ${props.showTokenName ? 'LP' : ''}`}
+              token={SiloAsset.Crv3}
+            />
+          </Grid>
+          {curveTransitSection}
+          {claimableCurveSection}
+        </Grid>
+
+        {switchCurveSizeBalances}
+      </Grid>
+
+      {/* Stalk & Seeds Balances */}
       <Grid
         container
         style={{

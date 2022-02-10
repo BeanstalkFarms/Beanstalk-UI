@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
   ETH,
-  LPBEAN_TO_STALK,
-  LPBEANS_TO_SEEDS,
+  BEAN_TO_STALK,
+  BEAN_TO_SEEDS,
   SEEDS,
   STALK,
   UNI_V2_ETH_BEAN_LP,
@@ -20,7 +20,6 @@ import {
   MinBN,
   smallDecimalPercent,
   TrimBN,
-  tokenForLP,
   toStringBaseUnitBN,
 } from 'util/index';
 import {
@@ -40,24 +39,19 @@ export const DepositModule = forwardRef(({
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
   const [toSeedValue, setToSeedValue] = useState(new BigNumber(0));
 
-  // const tokenBalances = useSelector<AppState, AppState['tokenBalances']>(
-  //   (state) => state.tokenBalances
-  // );
-  const { totalStalk, totalLP } = useSelector<AppState, AppState['totalBalance']>(
+  const { totalStalk } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
   const { curveBalance } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
-  );
-  const { beanReserve } = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
   );
 
   function fromValueUpdated(newFromCurveLPNumber) {
     let fromNumber = MinBN(newFromCurveLPNumber, curveBalance);
 
     const newFromCurveLPValue = TrimBN(MaxBN(fromNumber, new BigNumber(0)), UNI_V2_ETH_BEAN_LP.decimals);
-    fromNumber = tokenForLP(newFromCurveLPValue, beanReserve, totalLP);
+    // fromNumber = tokenForLP(newFromCurveLPValue, beanReserve, totalLP);
+    fromNumber = MaxBN(newFromCurveLPNumber, new BigNumber(0));
 
     setFromCurveLPValue(TrimBN(newFromCurveLPValue, 9));
     setToCurveLPValue(TrimBN(newFromCurveLPValue, UNI_V2_ETH_BEAN_LP.decimals));
@@ -65,13 +59,13 @@ export const DepositModule = forwardRef(({
 
     setToStalkValue(
       TrimBN(
-        fromNumber.multipliedBy(LPBEAN_TO_STALK),
+        fromNumber.multipliedBy(BEAN_TO_STALK),
         STALK.decimals
       )
     );
     setToSeedValue(
       TrimBN(
-        fromNumber.multipliedBy(2 * LPBEANS_TO_SEEDS),
+        fromNumber.multipliedBy(2 * BEAN_TO_SEEDS),
         SEEDS.decimals
       )
     );

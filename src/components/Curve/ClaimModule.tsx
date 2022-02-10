@@ -3,12 +3,10 @@ import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { ETH, UNI_V2_ETH_BEAN_LP } from 'constants/index';
+import { UNI_V2_ETH_BEAN_LP } from 'constants/index';
 import {
   claimWithdrawals,
   displayBN,
-  MaxBN,
-  toStringBaseUnitBN,
   TrimBN,
 } from 'util/index';
 import {

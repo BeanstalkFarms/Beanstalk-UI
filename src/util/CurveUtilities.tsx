@@ -1,5 +1,5 @@
 import { CURVE } from 'constants/index';
-import { account, beanstalkContract } from './index';
+import { beanstalkContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 // Deposit a token
@@ -43,4 +43,4 @@ export const claimWithdrawals = async (
       { onResponse }
     )
   );
-}
+};
