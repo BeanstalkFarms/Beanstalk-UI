@@ -128,7 +128,7 @@ export const DepositModule = forwardRef(({
   const details = [];
   details.push(`Receive ${displayBN(
     new BigNumber(toCurveLPValue
-  ))} Curve BEAN LP Tokens`);
+  ))} Deposited BEAN:3CRV LP Tokens`);
 
   function transactionDetails() {
     if (toCurveLPValue.isLessThanOrEqualTo(0)) return null;

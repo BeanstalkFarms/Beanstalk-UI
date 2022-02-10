@@ -76,12 +76,6 @@ export default function CurveModule() {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-  console.log('----');
-  console.log(curveReceivableBalance.toFixed());
-  console.log(curveDeposits);
-  console.log(curveBDVDeposits);
-  console.log(curveReceivableCrates);
-  console.log(curveWithdrawals);
 
   const poolForLPRatio = (amount: BigNumber) => {
     if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
@@ -147,9 +141,6 @@ export default function CurveModule() {
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
   if (curveDeposits !== undefined && Object.keys(curveDeposits).length > 0) {
-    console.log('in deposits');
-    console.log(curveDeposits);
-    console.log(curveBDVDeposits);
     sectionsInfo.push(
       <ListTable
         asset={SiloAsset.LP}
@@ -160,7 +151,7 @@ export default function CurveModule() {
         page={page}
         poolForLPRatio={poolForLPRatio}
         season={season}
-        seedCrates={curveBDVDeposits}
+        bdvCrates={curveBDVDeposits}
       />
     );
     sectionTitlesInfo.push('Curve Deposits');

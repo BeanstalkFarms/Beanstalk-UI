@@ -154,6 +154,7 @@ export default function Updater() {
       const [
         totalBeans,
         totalLP,
+        totalCrv3,
         totalSeeds,
         totalStalk,
         totalSiloBeans,
@@ -185,6 +186,7 @@ export default function Updater() {
           totalBudgetBeans,
           totalCurveBeans,
           totalLP,
+          totalCrv3,
           totalSiloBeans,
           totalSiloLP,
           totalTransitBeans,
@@ -679,8 +681,8 @@ export default function Updater() {
         _prices[2]
       ); /* tokenReserves, token0 */
       const eventParsingParameters = [
-        totalBalances[14].season /* season */,
-        totalBalances[10] /* harvestableIndex */,
+        totalBalances[15].season /* season */,
+        totalBalances[11] /* harvestableIndex */,
         accountBalances[12] /* farmableBeanBalance */,
         accountBalances[13] /* grownStalkBalance */,
         accountBalances[5] /* claimableEthBalance */,

@@ -224,10 +224,10 @@ export function TokenImage(tokenType: Token): string {
 }
 
 export function TokenTypeImage(tokenType: Token): string | null {
-  if (tokenType < 7 || tokenType === 14) return null;
+  if (tokenType < 7 || tokenType === 13) return null;
   if (tokenType < 10) return SiloIcon;
-  if (tokenType < 14) return TransitIcon;
-  if (tokenType < 18) return ClaimableIcon;
+  if (tokenType < 13) return TransitIcon;
+  if (tokenType < 19) return ClaimableIcon;
   if (tokenType < 20) return PooledIcon;
   if (tokenType < 21) return BudgetIcon;
 }

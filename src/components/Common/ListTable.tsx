@@ -97,6 +97,15 @@ const BasicTable = (props) => {
           .plus(props.crates[k]);
         return crates;
       }, {});
+    } else if (props.bdvCrates !== undefined) {
+      stalkCrates = Object.keys(props.bdvCrates).reduce((crates, k) => {
+        crates[k] = props.season
+          .minus(k)
+          .multipliedBy(props.bdvCrates[k])
+          .multipliedBy(0.0001)
+          .plus(props.bdvCrates[k]);
+        return crates;
+      }, {});
     } else {
       stalkCrates = Object.keys(props.seedCrates).reduce((crates, k) => {
         crates[k] = props.season
@@ -108,7 +117,7 @@ const BasicTable = (props) => {
       }, {});
     }
   }
-  if (props.seedCrates !== undefined) titles.push('Seeds');
+  if (props.seedCrates !== undefined || props.bdvCrates !== undefined) titles.push('Seeds');
 
   let claimWord = 'Claimable';
   let claimableRow;
@@ -227,6 +236,18 @@ const BasicTable = (props) => {
                         )} ${TokenLabel(SiloAsset.Seed)}`}
                       >
                         <span>{displayBN(props.seedCrates[season])}</span>
+                      </FormatTooltip>
+                    </TableCell>
+                  ) : null}
+                  {props.bdvCrates !== undefined ? (
+                    <TableCell align="center" className={classes.lucidaStyle}>
+                      <FormatTooltip
+                        placement="right"
+                        title={`${displayFullBN(
+                          props.bdvCrates[season].multipliedBy(4)
+                        )} ${TokenLabel(SiloAsset.Seed)}`}
+                      >
+                        <span>{displayBN(props.bdvCrates[season].multipliedBy(4))}</span>
                       </FormatTooltip>
                     </TableCell>
                   ) : null}

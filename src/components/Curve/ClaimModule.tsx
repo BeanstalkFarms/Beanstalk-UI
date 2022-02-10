@@ -58,7 +58,7 @@ export const ClaimModule = forwardRef(({
   const details = [];
   details.push(`Receive ${displayBN(
     new BigNumber(curveReceivableBalance
-  ))} BEAN:3Crv LP Tokens`);
+  ))} BEAN:3CRV LP Tokens`);
 
   function transactionDetails() {
     if (curveReceivableBalance.isLessThanOrEqualTo(0)) return null;

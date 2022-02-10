@@ -125,10 +125,12 @@ export const getTotalBalances = async (batch) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
+  const curve = beanCrv3ContractReadOnly();
 
   return makeBatchedPromises(batch, [
     [bean.methods.totalSupply(), tokenResult(BEAN)],
     [lp.methods.totalSupply(), tokenResult(UNI_V2_ETH_BEAN_LP)],
+    [curve.methods.totalSupply(), tokenResult(CURVE)],
     [beanstalk.methods.totalSeeds(), tokenResult(SEEDS)],
     [beanstalk.methods.totalStalk(), tokenResult(STALK)],
     [beanstalk.methods.totalDepositedBeans(), tokenResult(BEAN)],
