@@ -64,9 +64,11 @@ export const sellBeans = async (
   { onResponse }
 );
 
+// @publius
 export const tokenForLP = (amount, reserve, totalLP) =>
   amount.multipliedBy(reserve).dividedBy(totalLP);
 
+// @publius
 export const poolForLP = (amount, reserve1, reserve2, totalLP) => {
   if (
     amount.isLessThanOrEqualTo(0) ||
@@ -82,9 +84,11 @@ export const poolForLP = (amount, reserve1, reserve2, totalLP) => {
   ];
 };
 
+// @publius
 export const lpForToken = (amount, reserve, totalLP) =>
   amount.multipliedBy(totalLP).dividedBy(reserve);
 
+// @publius
 export const lpForPool = (amount1, reserve1, amount2, reserve2, totalLP) =>
   MinBN(
     lpForToken(amount1, reserve1, totalLP),

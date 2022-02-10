@@ -7,20 +7,35 @@ import { setTotalBalance } from './actions';
 // various kinds of LP, use of "transit". Are we missing a
 // `totalCurveLP` variable here?
 export interface TotalBalanceState {
+  /**  */
   totalBeans: BigNumber;
+  /**  */
   totalSiloBeans: BigNumber;
+  /**  */
   totalTransitBeans: BigNumber;
+  /**  */
   totalBudgetBeans: BigNumber;
+  /**  */
   totalCurveBeans: BigNumber;
+  /**  */
   totalLP: BigNumber;
+  /**  */
   totalSiloLP: BigNumber;
+  /** */
   totalTransitLP: BigNumber;
+  /**  */
   totalStalk: BigNumber;
+  /**  */
   totalSeeds: BigNumber;
+  /**  */
   totalPods: BigNumber;
+  /** @publius could you write up an explanation of a 'root'? */
   totalRoots: BigNumber;
+  /**  */
   harvestableBeansPerSeason7: BigNumber;
+  /**  */
   harvestableBeansPerSeason30: BigNumber;
+  /**  */
   withdrawSeasons: BigNumber;
 }
 

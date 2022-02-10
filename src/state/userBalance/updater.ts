@@ -120,6 +120,7 @@ export default function Updater() {
       const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       const lockedSeasons = lockedUntil.minus(currentSeason);
 
+      // @publius what are "allowances"?
       dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));

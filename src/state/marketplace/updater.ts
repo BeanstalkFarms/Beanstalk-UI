@@ -68,6 +68,12 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
     podVolume: new BigNumber(0),
     beanVolume: new BigNumber(0),
     countFills: new BigNumber(0),
+    listings: {
+      sumRemainingAmount: new BigNumber(0),
+    },
+    orders: {
+      sumRemainingAmount: new BigNumber(0),
+    }
   };
 
   for (const event of events) {
@@ -206,14 +212,19 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
   // Finally, order listings and offers by their index and also mark any that have expired.
   const finalPodListings = orderBy(Object.values(podListings), 'index', 'asc').map((listing) => {
     if (listing.maxHarvestableIndex.isLessThanOrEqualTo(harvestableIndex)) {
+      // Don't add to remaining amount since listing has expired.
       return {
         ...listing,
         status: 'expired',
       };
     }
+    marketStats.listings.sumRemainingAmount = marketStats.listings.sumRemainingAmount.plus(listing.remainingAmount);
     return listing;
   });
-  const finalPodOrders = Object.values(podOrders);
+  const finalPodOrders = Object.values(podOrders).map((order) => {
+    marketStats.orders.sumRemainingAmount = marketStats.orders.sumRemainingAmount.plus(order.remainingAmount);
+    return order;
+  });
   const finalMarketHistory = marketHistory.reverse(); 
 
   return {

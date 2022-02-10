@@ -186,7 +186,7 @@ export function parseWithdrawals(withdrawals, index: BigNumber) {
   return [transit, receivable, transitWithdrawals, receivableWithdrawals];
 }
 
-// @publius
+// @publius to discuss: rename of crates
 export function addRewardedCrates(
   crates,
   season,
