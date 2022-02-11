@@ -278,13 +278,13 @@
 .TextField-rounded-mint fieldset {
   border-radius: 25px;
   background-color: rgb(0, 255, 0, 0.05);
-  z-index:-100;
+  z-index: 1;
 }
 
 .TextField-rounded-burn fieldset {
   border-radius: 25px;
   background-color: rgb(255, 0, 0, 0.05);
-  z-index:-100;
+  z-index: 1;
 }
 
 @media screen and (max-width: 700px) {
