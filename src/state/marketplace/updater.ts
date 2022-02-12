@@ -59,7 +59,6 @@ type PodOrderCancelledEvent = {
   id: string;
 }
 
-// FIXME: define type for Events
 function processEvents(events: EventData[], harvestableIndex: BigNumber) {
   const podListings : { [key: string]: PodListing } = {};
   const podOrders : { [key: string]: PodOrder } = {};
