@@ -5,46 +5,85 @@ import {
 } from './actions';
 import { Listing, BuyOffer } from './updater';
 
-// export type Plots = ;
+/** @publius  */
 export interface UserBalanceState {
+  /**  */
   ethBalance: BigNumber;
+  /** @publius */
   claimableEthBalance: BigNumber;
+  /**  */
   beanBalance: BigNumber;
+  /** @publius */
   beanSiloBalance: BigNumber;
+  /** @publius */
   beanReceivableBalance: BigNumber;
+  /** @publius */
   beanTransitBalance: BigNumber;
+  /** @publius */
   beanWrappedBalance: BigNumber;
+  /**  */
   lpBalance: BigNumber;
+  /** @publius */
   lpSiloBalance: BigNumber;
+  /** @publius */
   lpTransitBalance: BigNumber;
+  /** @publius */
   lpReceivableBalance: BigNumber;
+  /**  */
   stalkBalance: BigNumber;
+  /**  */
   seedBalance: BigNumber;
+  /**  */
   podBalance: BigNumber;
+  /** @publius */
   harvestablePodBalance: BigNumber;
+  /** @publius what is diff between this and harvestablePodBalance? */
   harvestableBalance: BigNumber;
+  /**  */
   beanDeposits: Object;
+  /** @publius  */
   rawBeanDeposits: Object;
+  /**  */
   beanWithdrawals: Object;
+  /**  */
   beanReceivableCrates: Object;
+  /**  */
   lpDeposits: Object;
+  /**  */
   lpSeedDeposits: Object;
+  /**  */
   lpWithdrawals: Object;
+  /** @publius */
   lpReceivableCrates: Object;
+  /**  */
   /** Plots are keyed by plotIndex, value is size of the Plot in Pods. */
+  /**  */
   plots: { [plotIndex: string]: BigNumber };
+  /**  */
   harvestablePlots: Object;
+  /**  */
   votedBips: Object;
+  /** @publius */
   locked: Boolean;
+  /** @publius */
   lockedSeasons: BigNumber;
+  /** @publius */
   beanClaimableBalance: BigNumber;
+  /** @publius */
   claimable: Array;
+  /**  */
   hasClaimable: Boolean;
+  /**  */
   farmableBeanBalance: BigNumber;
+  /**  */
   grownStalkBalance: BigNumber;
+  /**  */
   rootsBalance: BigNumber;
+  /**  */
   listings: Listing[];
+  /**  */
   buyOffers: BuyOffer[];
+  /**  */
   usdcBalance: BigNumber;
 }
 

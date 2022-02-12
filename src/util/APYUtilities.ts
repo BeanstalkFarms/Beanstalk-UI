@@ -1,3 +1,5 @@
+// @publius - know we're likely going to scrap apy,
+// but annotation of what's going on here would be appreciated
 export const getAPY = (hours: number, bps: number, s0: number, S0: number, K0: number) => {
     const b = [1 + s0];
     const k = [1];

@@ -51,7 +51,7 @@ export default function HistoryTable() {
               </TableCell>
               <TableCell />
               <TableCell>
-                Index
+                Pod Line
               </TableCell>
               <TableCell align="right">
                 Price
@@ -98,7 +98,10 @@ export default function HistoryTable() {
                       : 'These Pods have harvested'
                     }
                   >
-                    {displayBN(item.index)}
+                    {placeInLine.gt(0) 
+                      ? `${displayBN(placeInLine)}`
+                      : 'Hvst.'
+                    }
                   </BalanceTableCell>
                   <BalanceTableCell
                     className={classes.lucidaStyle}

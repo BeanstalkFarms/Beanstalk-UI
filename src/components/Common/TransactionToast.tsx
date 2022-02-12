@@ -90,7 +90,7 @@ export default class TransactionToast {
   error(error: MetamaskErrorObject | Error | string) {
     let msg;
     if (typeof error === 'object') {
-      // lol @ this
+      // Is there a better way to do this?
       if (error.message && error.message.substring(0, 8).toLowerCase() === 'metamask') {
         switch ((error as MetamaskErrorObject).code) {
           // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature.

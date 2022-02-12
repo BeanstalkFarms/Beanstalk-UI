@@ -169,6 +169,12 @@ export type MarketStats = {
   podVolume: BigNumber;
   beanVolume: BigNumber;
   countFills: BigNumber;
+  listings: {
+    sumRemainingAmount: BigNumber;
+  },
+  orders: {
+    sumRemainingAmount: BigNumber;
+  }
 }
 export interface MarketState {
   listings: PodListing[];
@@ -185,6 +191,12 @@ export const initialState: MarketState = {
     podVolume: new BigNumber(0),
     beanVolume: new BigNumber(0),
     countFills: new BigNumber(0),
+    listings: {
+      sumRemainingAmount: new BigNumber(0)
+    },
+    orders: {
+      sumRemainingAmount: new BigNumber(0)
+    }
   }
 };
 

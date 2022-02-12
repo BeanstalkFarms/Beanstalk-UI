@@ -9,7 +9,7 @@ import Listings from './Listings/Listings';
 import Orders from './Orders/Orders';
 import GraphModule from './GraphModule';
 import HistoryTable from './History/HistoryTable';
-// import Stats from './History/Stats';
+import Stats from './History/Stats';
 
 export default function TabbedMarketplace() {
   const { width } = useSelector<AppState, AppState['general']>(
@@ -120,17 +120,17 @@ export default function TabbedMarketplace() {
       <HistoryTable />
     </BaseModule>
   );
-  // const showStats = (
-  //   <BaseModule
-  //     style={{ marginTop: '20px' }}
-  //     section={0}
-  //     sectionTitles={[]}
-  //     sectionTitlesDescription={[]}
-  //     showButton={false}
-  //   >
-  //     <Stats />
-  //   </BaseModule>
-  // );
+  const showStats = (
+    <BaseModule
+      style={{ marginTop: '20px' }}
+      section={0}
+      sectionTitles={[]}
+      sectionTitlesDescription={[]}
+      showButton={false}
+    >
+      <Stats />
+    </BaseModule>
+  );
 
   return (
     <Grid
@@ -202,7 +202,7 @@ export default function TabbedMarketplace() {
           showButton={false}
           removeBackground
         >
-          {/* {showStats} */}
+          {showStats}
           {showHistory}
         </BaseModule>
       </Grid>
