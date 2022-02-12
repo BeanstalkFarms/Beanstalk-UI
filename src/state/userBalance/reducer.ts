@@ -27,7 +27,7 @@ export interface UserBalanceState {
   lpSiloBalance: BigNumber;
   /** @publius */
   lpTransitBalance: BigNumber;
-  /** @publius*/
+  /** @publius */
   lpReceivableBalance: BigNumber;
   /**  */
   stalkBalance: BigNumber;
