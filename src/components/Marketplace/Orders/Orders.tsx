@@ -5,10 +5,11 @@ import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
 import { PodOrder } from 'state/marketplace/reducer';
-import { GetWalletAddress } from 'util/index';
+import { displayBN, FarmAsset, GetWalletAddress } from 'util/index';
 import { AppState } from 'state';
 import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
 
+import TokenIcon from 'components/Common/TokenIcon';
 import FillOrderModal from 'components/Marketplace/Orders/FillOrderModal';
 import OrdersTable from './OrdersTable';
 import Filters, { StyledSlider } from '../Filters';
@@ -68,6 +69,7 @@ export default function Orders(props: OrdersProps) {
     useState<number[]>(placesInLine);
 
   // Handle changes in filters
+  // FIXME: this is super inefficient
   useMemo(() => {
     filteredOrders.current = _.filter(
       allOrders,
@@ -83,8 +85,9 @@ export default function Orders(props: OrdersProps) {
 
     // Filter Orders the user cannot sell a plot into
     filteredOrders.current = _.filter(filteredOrders.current, (order) => {
-      let validPlots = [];
+      let validPlots : any[] = [];
       if (validOrders) {
+        // Find plot indices that are eligible to be sold to this Order.
         const validPlotIndices = Object.keys(plots).filter((plotIndex) => {
           const plotObjectiveIndex = new BigNumber(plotIndex);
           return plotObjectiveIndex
@@ -141,10 +144,20 @@ export default function Orders(props: OrdersProps) {
     return <div>Loading...</div>;
   }
 
+  // const numPods = _.sum(filteredOrders.current.map((order: PodOrder) => order.totalAmount.toNumber()));
+  const numPods = filteredOrders.current.reduce(
+    (sum, curr) => sum.plus(curr.remainingAmount),
+    new BigNumber(0)
+  );
+
   // Filters
   const filters = (
     <Filters
-      title={`${filteredOrders.current.length} Order${filteredOrders.current.length !== 1 ? 's' : ''}`}
+      title={(
+        <>
+          {filteredOrders.current.length} Order{filteredOrders.current.length !== 1 ? 's' : ''} &middot; {displayBN(numPods)}<TokenIcon token={FarmAsset.Pods} />
+        </>
+      )}
     >
       {/* Toggle for users to select to filter out plots they can't sell into  */}
       {props.mode !== 'MINE' && (
