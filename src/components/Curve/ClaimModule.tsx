@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { UNI_V2_ETH_BEAN_LP } from 'constants/index';
 import {
-  claimWithdrawals,
+  claimSeasons,
   displayBN,
   TrimBN,
 } from 'util/index';
@@ -84,7 +84,7 @@ export const ClaimModule = forwardRef(({
       });
 
       // Execute
-      claimWithdrawals(
+      claimSeasons(
         Object.keys(curveReceivableCrates),
         (response) => txToast.confirming(response)
       )

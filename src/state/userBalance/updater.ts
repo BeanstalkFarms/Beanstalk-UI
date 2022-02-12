@@ -478,7 +478,28 @@ export default function Updater() {
                 ? userCurveBDVDeposits[s].plus(bdv)
                 : bdv,
           };
-        } else if (event.event === 'Remove') {
+        } else if (event.event === 'RemoveSeason') {
+          const s = parseInt(event.returnValues.season, 10);
+          const curve = toTokenUnitsBN(
+            event.returnValues.amount,
+            UNI_V2_ETH_BEAN_LP.decimals
+          );
+          const bdv = userCurveBDVDeposits[s]
+            .multipliedBy(curve)
+            .dividedBy(userCurveDeposits[s]);
+          userCurveDeposits = {
+            ...userCurveDeposits,
+            [s]: userCurveDeposits[s].minus(curve),
+          };
+          userCurveBDVDeposits = {
+            ...userCurveBDVDeposits,
+            [s]: userCurveBDVDeposits[s].minus(bdv),
+          };
+          if (userCurveDeposits[s].isEqualTo(0)) delete userCurveDeposits[s];
+          if (userCurveBDVDeposits[s].isEqualTo(0)) {
+            delete userCurveBDVDeposits[s];
+          }
+        } else if (event.event === 'RemoveSeasons') {
           event.returnValues.seasons.forEach((s, i) => {
             const curve = toTokenUnitsBN(
               event.returnValues.amounts[i],
@@ -511,8 +532,12 @@ export default function Updater() {
             [s]:
               curveWithdrawals[s] !== undefined ? curveWithdrawals[s].plus(curve) : curve,
           };
-        } else if (event.event === 'ClaimWithdrawal') {
-          delete curveWithdrawals[event.returnValues.withdrawals];
+        } else if (event.event === 'ClaimSeason') {
+          delete curveWithdrawals[event.returnValues.season];
+        } else if (event.event === 'ClaimSeasons') {
+          event.returnValues.seasons.forEach((s) => {
+            delete curveWithdrawals[s];
+          });
         } else if (event.event === 'Harvest') {
           let beansClaimed = toTokenUnitsBN(
             event.returnValues.beans,

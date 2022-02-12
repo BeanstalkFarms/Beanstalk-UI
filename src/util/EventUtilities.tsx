@@ -72,7 +72,11 @@ export async function initializeEventListener(
       filter: { account: account },
       fromBlock: 0,
     }),
-    beanstalk.getPastEvents('Remove', {
+    beanstalk.getPastEvents('RemoveSeason', {
+      filter: { account: account },
+      fromBlock: 0,
+    }),
+    beanstalk.getPastEvents('RemoveSeasons', {
       filter: { account: account },
       fromBlock: 0,
     }),
@@ -80,7 +84,11 @@ export async function initializeEventListener(
       filter: { account: account },
       fromBlock: 0,
     }),
-    beanstalk.getPastEvents('ClaimWithdrawal', {
+    beanstalk.getPastEvents('ClaimSeason', {
+      filter: { account: account },
+      fromBlock: 0,
+    }),
+    beanstalk.getPastEvents('ClaimSeasons', {
       filter: { account: account },
       fromBlock: 0,
     }),

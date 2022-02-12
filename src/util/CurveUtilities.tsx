@@ -13,34 +13,51 @@ export const deposit = async (
 );
 
 // Withdraw a token
-// function withdraw(address token, uint32[] calldata seasons, uint256[] calldata amounts);
+// function withdrawTokenBySeason(address token, uint32 season, uint256 amount)
+// function withdrawTokenBySeasons(address token, uint32[] calldata seasons, uint256[] calldata amounts)
 export const withdraw = async (
   seasons,
   amounts,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().withdraw(CURVE.addr, seasons, amounts),
+  (seasons.length === 1) ?
+  beanstalkContract().withdrawTokenBySeason(CURVE.addr, seasons[0], amounts[0]) :
+  beanstalkContract().withdrawTokenBySeasons(CURVE.addr, seasons, amounts),
   { onResponse }
 );
 
-// Claim tokens
-// function claimWithdrawal(address token, uint32 _s) public returns (uint256 amount);
-// function claimWithdrawals(address[] calldata tokens, uint32[] calldata withdrawals);
-export const claimWithdrawals = async (
-  withdrawals,
+// Claim token
+// function claimTokenBySeason(address token, uint32 season) public
+// function claimTokenBySeasons(address token, uint32[] calldata seasons)
+export const claimSeasons = async (
+  seasons,
   onResponse: TxnCallbacks['onResponse']
-) => {
-  const tokens = [];
-  Object.keys(withdrawals).forEach(() => {
-    tokens.push(CURVE.addr);
-  });
+) => handleCallbacks(
+  (seasons.length === 1) ?
+  beanstalkContract().claimTokenBySeason(CURVE.addr, seasons[0]) :
+  beanstalkContract().claimTokenBySeasons(CURVE.addr, seasons),
+  { onResponse }
+);
 
-  return (
-    handleCallbacks(
-      (withdrawals.length === 1) ?
-      beanstalkContract().claimWithdrawal(CURVE.addr, withdrawals[0]) :
-      beanstalkContract().claimWithdrawals(tokens, withdrawals),
-      { onResponse }
-    )
-  );
-};
+// FIXME
+// Claim tokens
+// function claimTokensBySeason(SeasonClaim[] calldata claims)
+// function claimTokensBySeasons(SeasonsClaim[] calldata claims)
+// struct SeasonClaim {
+//    address token;
+//    uint32 season;
+// }
+// struct SeasonsClaim {
+//   address token;
+//   uint32[] seasons;
+// }
+export const claimTokensBySeason = async (
+  SeasonsClaim,
+  claims,
+  onResponse: TxnCallbacks['onResponse']
+) => handleCallbacks(
+  (SeasonsClaim.seasons.length === 1) ?
+  beanstalkContract().claimTokenBySeason(CURVE.addr, SeasonsClaim.seasons[0]) :
+  beanstalkContract().claimTokenBySeasons(CURVE.addr, SeasonsClaim.seasons),
+  { onResponse }
+);

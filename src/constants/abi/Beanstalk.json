@@ -7,6 +7,25 @@
                 "type": "uint256"
             }
         ],
+        "name": "mockToBDV",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
         "name": "budgetSow",
         "outputs": [
             {
@@ -703,6 +722,25 @@
             {
                 "internalType": "uint256",
                 "name": "lp",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "curveToBDV",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
                 "type": "uint256"
             }
         ],
@@ -5167,7 +5205,7 @@
                 "type": "address"
             },
             {
-                "indexed": false,
+                "indexed": true,
                 "internalType": "address",
                 "name": "token",
                 "type": "address"
@@ -5175,7 +5213,7 @@
             {
                 "indexed": false,
                 "internalType": "uint32",
-                "name": "withdrawals",
+                "name": "season",
                 "type": "uint32"
             },
             {
@@ -5185,7 +5223,38 @@
                 "type": "uint256"
             }
         ],
-        "name": "ClaimWithdrawal",
+        "name": "ClaimSeason",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint32[]",
+                "name": "seasons",
+                "type": "uint32[]"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "ClaimSeasons",
         "type": "event"
     },
     {
@@ -5242,6 +5311,37 @@
             },
             {
                 "indexed": false,
+                "internalType": "uint32",
+                "name": "season",
+                "type": "uint32"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "RemoveSeason",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "indexed": false,
                 "internalType": "uint32[]",
                 "name": "seasons",
                 "type": "uint32[]"
@@ -5259,7 +5359,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "Remove",
+        "name": "RemoveSeasons",
         "type": "event"
     },
     {
@@ -5302,35 +5402,79 @@
             },
             {
                 "internalType": "uint32",
-                "name": "_s",
+                "name": "season",
                 "type": "uint32"
             }
         ],
-        "name": "claimWithdrawal",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
-        ],
+        "name": "claimTokenBySeason",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [
             {
-                "internalType": "address[]",
-                "name": "tokens",
-                "type": "address[]"
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
             },
             {
                 "internalType": "uint32[]",
-                "name": "withdrawals",
+                "name": "seasons",
                 "type": "uint32[]"
             }
         ],
-        "name": "claimWithdrawals",
+        "name": "claimTokenBySeasons",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "season",
+                        "type": "uint32"
+                    }
+                ],
+                "internalType": "struct SiloV2Facet.SeasonClaim[]",
+                "name": "claims",
+                "type": "tuple[]"
+            }
+        ],
+        "name": "claimTokensBySeason",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint32[]",
+                        "name": "seasons",
+                        "type": "uint32[]"
+                    }
+                ],
+                "internalType": "struct SiloV2Facet.SeasonsClaim[]",
+                "name": "claims",
+                "type": "tuple[]"
+            }
+        ],
+        "name": "claimTokensBySeasons",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -5367,7 +5511,7 @@
             },
             {
                 "internalType": "uint32",
-                "name": "_s",
+                "name": "season",
                 "type": "uint32"
             }
         ],
@@ -5439,7 +5583,7 @@
             },
             {
                 "internalType": "uint32",
-                "name": "_s",
+                "name": "season",
                 "type": "uint32"
             }
         ],
@@ -5490,6 +5634,29 @@
                 "type": "address"
             },
             {
+                "internalType": "uint32",
+                "name": "season",
+                "type": "uint32"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "withdrawTokenBySeason",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
                 "internalType": "uint32[]",
                 "name": "seasons",
                 "type": "uint32[]"
@@ -5500,7 +5667,7 @@
                 "type": "uint256[]"
             }
         ],
-        "name": "withdraw",
+        "name": "withdrawTokenBySeasons",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -5508,20 +5675,61 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "season",
+                        "type": "uint32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct SiloV2Facet.WithdrawSeason[]",
+                "name": "withdraws",
+                "type": "tuple[]"
             }
         ],
-        "name": "mockToBDV",
-        "outputs": [
+        "name": "withdrawTokensBySeason",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint32[]",
+                        "name": "seasons",
+                        "type": "uint32[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "amounts",
+                        "type": "uint256[]"
+                    }
+                ],
+                "internalType": "struct SiloV2Facet.WithdrawSeasons[]",
+                "name": "withdraws",
+                "type": "tuple[]"
             }
         ],
-        "stateMutability": "pure",
+        "name": "withdrawTokensBySeasons",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     }
 ]
