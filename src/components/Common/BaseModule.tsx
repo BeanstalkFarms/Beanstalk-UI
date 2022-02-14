@@ -78,7 +78,7 @@ export default function BaseModule({
       margin: '12px 12px',
       width: '64%',
       maxWidth: '240px',
-      zIndex: 0,
+      zIndex: '1',
     },
     indicator: {
       backgroundColor: 'transparent',

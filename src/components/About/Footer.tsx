@@ -61,7 +61,7 @@ export default function Footer() {
       display: 'flex',
       alignContent: 'space-around',
       height: theme.groundHeight,
-      // zIndex: 1000000,
+      zIndex: 101,
       position: 'fixed',
       bottom: 0,
       left: 0,
