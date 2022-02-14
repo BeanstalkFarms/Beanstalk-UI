@@ -160,10 +160,12 @@
 #cloud1 {
   animation: slideLeft 65s linear infinite;
   margin-left: -100%;
+  transform: translateZ(0);
 }
 #cloud2 {
   animation: slideLeft 50s linear infinite;
   margin-left: -100%;
+  transform: translateZ(0);
 }
 
 @media screen and (max-width: 599px) {
