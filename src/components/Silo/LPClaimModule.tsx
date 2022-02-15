@@ -161,8 +161,8 @@ export const LPClaimModule = forwardRef(({
       } else {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Claiming ${displayBN(lpReceivableBalance)} LP Tokens`,
-          success: `Claimed ${displayBN(lpReceivableBalance)} LP Tokens`,
+          loading: `Claiming ${displayBN(lpReceivableBalance)} BEAN:ETH LP Tokens`,
+          success: `Claimed ${displayBN(lpReceivableBalance)} BEAN:ETH LP Tokens`,
         });
 
         // Execute

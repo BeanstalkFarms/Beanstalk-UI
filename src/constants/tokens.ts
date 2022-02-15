@@ -73,6 +73,10 @@ export const CURVE = {
   factory: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7', // 3crv address
 };
 
+export const PRICE = {
+  addr: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF',
+};
+
 export function changeAddresses(chainId) {
   if (chainId === 1) {
     UNI_V2_USDC_ETH_LP.addr = '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc';
@@ -80,11 +84,13 @@ export function changeAddresses(chainId) {
     UNI_V2_ETH_BEAN_LP.addr = '0x87898263B6C5BABe34b4ec53F22d98430b91e371';
     USDC.addr = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
     CURVE.addr = '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD';
+    PRICE.addr = '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF';
   } else if (chainId === 3 || chainId === 1337) {
     UNI_V2_USDC_ETH_LP.addr = '0x681A4164703351d6AceBA9D7038b573b444d3353';
     WETH.addr = '0xc778417E063141139Fce010982780140Aa0cD5Ab';
     UNI_V2_ETH_BEAN_LP.addr = '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db';
     USDC.addr = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F';
     CURVE.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC';
+    PRICE.addr = '0xbECa940b55D3f40B1Dd8afD615f278260DCB2bD2';
   }
 }

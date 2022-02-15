@@ -21,6 +21,27 @@ export interface PriceState {
     safe: BigNumber;
     ethPrice: BigNumber;
   };
+  priceTuple: {
+    deltaB: BigNumber;
+    liquidity: BigNumber;
+    price: BigNumber;
+  };
+  curveTuple: {
+    balances: Array;
+    deltaB: BigNumber;
+    liquidity: BigNumber;
+    price: BigNumber;
+    pool: Array;
+    tokens: String;
+  };
+  uniTuple: {
+    balances: BigNumber;
+    deltaB: BigNumber;
+    liquidity: BigNumber;
+    price: BigNumber;
+    pool: Array;
+    tokens: String;
+  };
 }
 
 export const initialState: PriceState = {
@@ -41,6 +62,27 @@ export const initialState: PriceState = {
     propose: new BigNumber(-1),
     safe: new BigNumber(-1),
     ethPrice: new BigNumber(-1),
+  },
+  priceTuple: {
+    deltaB: new BigNumber(-1),
+    liquidity: new BigNumber(-1),
+    price: new BigNumber(-1),
+  },
+  curveTuple: {
+    balances: [],
+    deltaB: new BigNumber(-1),
+    liquidity: new BigNumber(-1),
+    price: new BigNumber(-1),
+    pool: '',
+    tokens: [],
+  },
+  uniTuple: {
+    balances: [],
+    deltaB: new BigNumber(-1),
+    liquidity: new BigNumber(-1),
+    price: new BigNumber(-1),
+    pool: '',
+    tokens: [],
   },
 };
 

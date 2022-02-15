@@ -5,6 +5,7 @@ import {
   BEANFTGENESIS,
   BEANSTALK,
   CURVE,
+  PRICE,
   UNISWAP_V2_ROUTER,
   changeNetwork,
 } from 'constants/index';
@@ -44,6 +45,7 @@ const BeaNFTGenesisABI = require('../constants/abi/BeaNFTGenesis.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 const curveMetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
+const beanstalkPriceAbi = require('../constants/abi/BeanstalkPrice.json');
 
 export const tokenContract = (token) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
@@ -53,6 +55,9 @@ export const tokenContractReadOnly = (token) =>
 
 export const tokenV2ContractReadOnly = (token) =>
   new web3.eth.Contract(beanAbi, token.address);
+
+export const beanstalkPriceContractReadOnly = () =>
+  new web3.eth.Contract(beanstalkPriceAbi, PRICE.addr);
 
 export const beanstalkContract = () =>
   new ethers.Contract(BEANSTALK, beanstalkAbi, web3Signer);

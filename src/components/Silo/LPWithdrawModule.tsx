@@ -193,7 +193,7 @@ export const LPWithdrawModule = forwardRef(({
   /* Transaction Details, settings and text */
   const details = [];
   details.push(
-    `Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
+    `Withdraw ${displayBN(new BigNumber(fromLPValue))} BEAN:ETH LP Tokens from the Silo`
   );
   details.push(
     `Burn ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(

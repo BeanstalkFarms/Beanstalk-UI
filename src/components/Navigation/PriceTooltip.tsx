@@ -8,37 +8,20 @@ import { FormatTooltip } from 'components/Common';
 
 export default function PriceTooltip() {
   const {
-    beanReserve,
     beanPrice,
-    bean3crvPrice,
-    curveVirtualPrice,
-    bean3crvReserve,
-    crvReserve,
+    priceTuple,
+    uniTuple,
+    curveTuple,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
-  const priceStyle = {
-    fontSize: 13,
-    lineHeight: '13px',
-    color: theme.backgroundText,
-    marginLeft: '10px',
-  };
-
-  const beanUniLiqValue = beanReserve.multipliedBy(beanPrice).multipliedBy(2);
-
-  // FIXME: PriceTooltip is loading before CurvePrices get updated so returns undefined
-  const beanCurveLiqValue = theme.name !== 'ropsten' && bean3crvPrice !== undefined ?
-    (bean3crvReserve.multipliedBy(bean3crvPrice).plus(crvReserve)).multipliedBy(curveVirtualPrice)
-    : null;
-
-  // FIXME: PriceTooltip is loading before CurvePrices get updated so returns undefined
-  const displayCurve = theme.name !== 'ropsten' && bean3crvPrice !== undefined ?
+  const displayCurve = theme.name !== 'ropsten' ?
     <>
       <br />
-      Curve Bean Price: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`$${bean3crvPrice.multipliedBy(curveVirtualPrice).toFixed(4)}`}
+      Curve Bean Price: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`$${curveTuple.price.toFixed(4)}`}
       <br />
-      &nbsp;&nbsp;{`Liquidity: $${displayBN(beanCurveLiqValue)}`}
+      &nbsp;&nbsp;{`Liquidity: $${displayBN(curveTuple.liquidity)}`}
     </>
     : null;
 
@@ -47,15 +30,22 @@ export default function PriceTooltip() {
       placement="right"
       title={
         <>
-          {`Uniswap Bean Price: $${beanPrice.toFixed(4)}`}
+          {`Uniswap Bean Price: $${uniTuple.price.toFixed(4)}`}
           <br />
-          &nbsp;&nbsp;{`Liquidity: $${displayBN(beanUniLiqValue)}`}
+          &nbsp;&nbsp;{`Liquidity: $${displayBN(uniTuple.liquidity)}`}
           {displayCurve}
         </>
       }
     >
-      <Box style={priceStyle}>
-        {`$${beanPrice.toFixed(4)}`}
+      <Box
+        style={{
+          fontSize: 13,
+          lineHeight: '13px',
+          color: theme.backgroundText,
+          marginLeft: '10px',
+        }}
+      >
+        {`$${priceTuple.price.toFixed(4)}`}
       </Box>
     </FormatTooltip>
   );

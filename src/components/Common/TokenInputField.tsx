@@ -120,9 +120,7 @@ export default function TokenInputField(props: TokenInputFieldProps) {
   };
 
   function displayLP(balance) {
-    return `${displayBN(balance[0])} ${TokenLabel(
-      CryptoAsset.Bean
-    )}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
+    return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
   let balanceContent = null;

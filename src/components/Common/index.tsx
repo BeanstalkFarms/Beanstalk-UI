@@ -104,7 +104,7 @@ export const walletStrings = {
     'This is your total Unharvestable Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, look in the Field module.',
   ethBalance: 'This is the ETH balance of your wallet.',
   topLeft:
-    'The Bean Balance is the total USD value of your Beans, BEAN:ETH LP Tokens. This total does not include your Pods or claimable ETH.',
+    'The Bean Balance is the total USD value of your Beans, BEAN:ETH LP Tokens and BEAN:3CRV LP Tokens. This total does not include your Pods or claimable ETH.',
   topLeftTitle: 'Bean Balance',
   topRight:
     'Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk.',
@@ -260,8 +260,8 @@ export const governanceStrings = {
 };
 export const curveStrings = {
   description: 'What is curve?',
-  deposit: 'Use this tab to deposit assets into the BEAN:3crv pool. Users can deposit assets in a balanced proportion or any combination of assets in the BEAN:3crv pool.',
-  withdraw: 'Use this tab to withdraw assets from the BEAN:3crv pool. Users can withdraw assets in a balanced proportion or any combination of assets from the BEAN:3crv pool.',
+  deposit: 'Use this tab to deposit assets into the BEAN:3CRV pool. Users can deposit assets in a balanced proportion or any combination of assets in the BEAN:3CRV pool.',
+  withdraw: 'Use this tab to withdraw assets from the BEAN:3CRV pool. Users can withdraw assets in a balanced proportion or any combination of assets from the BEAN:3CRV pool.',
   claim: 'Use this sub-tab to Claim Withrawn BEAN:3CRV LP Tokens from the Silo.',
   holder: 'placeholder',
 };

@@ -123,18 +123,27 @@ export default function Balances() {
     .plus(beanWrappedBalance)
     .plus(beanReceivableBalance)
     .plus(harvestablePodBalance);
-  // const userCurve = curveBalance
-  //   .plus(curveSiloBalance)
-  //   .plus(curveTransitBalance)
-  //   .plus(curveReceivableBalance);
+  const userCurve = curveBalance
+    .plus(curveSiloBalance)
+    .plus(curveTransitBalance)
+    .plus(curveReceivableBalance);
 
   const userBeansAndEth = poolForLPRatio(userLP);
+  const userBeansAndCrv3 = poolForCurveRatio(userCurve);
   const poolBeansAndEth = poolForLPRatio(totalLP);
+  const poolBeansAndCrv3 = poolForCurveRatio(totalCrv3);
 
   const userLPBeans = userBeansAndEth[0].multipliedBy(2);
+  const userCurveBalanceInDollars = (
+    userBeansAndCrv3[0]
+    .multipliedBy(beanCrv3Price)
+    .plus(userBeansAndCrv3[1])
+  ).multipliedBy(curveVirtualPrice);
+
   const userBalanceInDollars = userBeans
     .plus(userLPBeans)
-    .multipliedBy(beanPrice);
+    .multipliedBy(beanPrice)
+    .plus(userCurveBalanceInDollars);
 
   const marketCap = totalBeans.isGreaterThan(0)
     ? totalBeans.multipliedBy(beanPrice)
@@ -282,6 +291,7 @@ export default function Balances() {
         topLeft={userBalanceInDollars}
         topRight={rootsBalance.dividedBy(totalRoots).multipliedBy(100)}
         beanLPTotal={userBeansAndEth}
+        beanCurveTotal={userBeansAndCrv3}
         poolForLPRatio={poolForLPRatio}
         poolForCurveRatio={poolForCurveRatio}
         beanBalance={beanBalance}
@@ -364,6 +374,7 @@ export default function Balances() {
         topLeft={marketCap}
         topRight={poolMarketCap}
         beanLPTotal={poolBeansAndEth}
+        beanCurveTotal={poolBeansAndCrv3}
         poolForLPRatio={poolForLPRatio}
         poolForCurveRatio={poolForCurveRatio}
       />

@@ -101,6 +101,7 @@ export default function BalanceModule(props) {
       balanceColor={curveActive === 2 ? color.transit : null}
       description={props.description.curveTransitBalance}
       isLP
+      isCurve
       poolForLPRatio={props.poolForCurveRatio}
       title={`Withdrawn ${props.showTokenName ? 'LP' : ''}`}
       token={TransitAsset.Crv3}
@@ -132,6 +133,7 @@ export default function BalanceModule(props) {
       balanceColor={curveActive === 4 ? color.claimable : null}
       description={props.description.claimableCurveBalance}
       isLP
+      isCurve
       poolForLPRatio={props.poolForCurveRatio}
       title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
       token={ClaimableAsset.Crv3}
@@ -179,7 +181,7 @@ export default function BalanceModule(props) {
               placement="top"
               title={
                 beanTotals.isGreaterThan(0) && beanActive < 0
-                  ? `${displayFullBN(beanTotals)} Beans`
+                  ? `${displayFullBN(beanTotals)} BEAN`
                   : ''
               }
             >
@@ -192,7 +194,7 @@ export default function BalanceModule(props) {
                   pool={props.beanReserveTotal}
                   silo={props.beanSiloBalance}
                   setActive={setBeanActive}
-                  title="Beans"
+                  title="BEAN"
                   total={displayBN(beanTotals)}
                   transit={props.beanTransitBalance}
                 />
@@ -235,7 +237,7 @@ export default function BalanceModule(props) {
                   ? `${displayFullBN(
                       props.beanLPTotal[0],
                       BEAN.decimals
-                    )} Beans/${displayFullBN(props.beanLPTotal[1])} ETH`
+                    )} BEAN/${displayFullBN(props.beanLPTotal[1])} ETH`
                   : ''
               }
             >
@@ -246,9 +248,7 @@ export default function BalanceModule(props) {
                   circulating={props.lpBalance}
                   setActive={setLPActive}
                   silo={props.lpSiloBalance}
-                  title={`${TokenLabel(CryptoAsset.Bean)}/${TokenLabel(
-                    CryptoAsset.Ethereum
-                  )}`}
+                  title={`BEAN/${TokenLabel(CryptoAsset.Ethereum)}`}
                   total={`${displayBN(props.beanLPTotal[0])}/${displayBN(
                     props.beanLPTotal[1]
                   )}`}
@@ -272,6 +272,7 @@ export default function BalanceModule(props) {
             balance={curveTotals}
             description="Total Curve"
             isLP
+            isCurve
             poolForLPRatio={props.poolForCurveRatio}
             style={{ position: 'relative' }}
             swerve
@@ -287,13 +288,13 @@ export default function BalanceModule(props) {
               placement="top"
               margin={props.chartMargin}
               title={
-                (props.beanLPTotal[0].isGreaterThan(0) ||
-                  props.beanLPTotal[1].isGreaterThan(0)) &&
+                (props.beanCurveTotal[0].isGreaterThan(0) ||
+                  props.beanCurveTotal[1].isGreaterThan(0)) &&
                 curveActive < 0
                   ? `${displayFullBN(
-                      props.beanLPTotal[0],
+                      props.beanCurveTotal[0],
                       BEAN.decimals
-                    )} Beans/${displayFullBN(props.beanLPTotal[1])} ETH`
+                    )} BEAN/${displayFullBN(props.beanCurveTotal[1])} 3CRV`
                   : ''
               }
             >
@@ -305,8 +306,8 @@ export default function BalanceModule(props) {
                   setActive={setCurveActive}
                   silo={props.curveSiloBalance}
                   title="BEAN/3CRV"
-                  total={`${displayBN(props.beanLPTotal[0])}/${displayBN(
-                    props.beanLPTotal[1]
+                  total={`${displayBN(props.beanCurveTotal[0])}/${displayBN(
+                    props.beanCurveTotal[1]
                   )}`}
                   transit={props.curveTransitBalance}
                 />
@@ -417,7 +418,7 @@ export default function BalanceModule(props) {
       </Grid>
 
       {/* LP Balances */}
-      <span style={spanStyle}>LP</span>
+      <span style={spanStyle}>Uniswap</span>
       <Grid
         container
         style={{
@@ -473,6 +474,7 @@ export default function BalanceModule(props) {
               balanceColor={curveActive === 0 ? color.circulating : null}
               description={props.description.curveBalance}
               isLP
+              isCurve
               poolForLPRatio={props.poolForCurveRatio}
               swerve
               title={`Circulating ${props.showTokenName ? 'LP' : ''}`}
@@ -485,6 +487,7 @@ export default function BalanceModule(props) {
               balanceColor={curveActive === 1 ? color.silo : null}
               description={props.description.curveSiloBalance}
               isLP
+              isCurve
               poolForLPRatio={props.poolForCurveRatio}
               swerve
               title={`Deposited ${props.showTokenName ? 'LP' : ''}`}

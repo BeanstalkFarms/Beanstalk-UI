@@ -413,7 +413,7 @@ export const LPDepositModule = forwardRef(({
     details.push(
       `Receive ${displayBN(
         new BigNumber(toSiloLPValue.minus(MaxBN(fromLPValue, new BigNumber(0))))
-      )} LP Tokens`
+      )} BEAN:ETH LP Tokens`
     );
   }
 
@@ -444,7 +444,7 @@ export const LPDepositModule = forwardRef(({
     details.push(
       `Receive ${displayBN(
         new BigNumber(toSiloLPValue.minus(MaxBN(fromLPValue, new BigNumber(0))))
-      )} LP Tokens`
+      )} BEAN:ETH LP Tokens`
     );
   }
 

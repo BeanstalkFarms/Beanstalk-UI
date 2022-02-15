@@ -16,6 +16,7 @@ import {
 import {
   account,
   beanstalkContractReadOnly,
+  beanstalkPriceContractReadOnly,
   beanCrv3ContractReadOnly,
   curveContractReadOnly,
   initializing,
@@ -113,6 +114,14 @@ export const getAccountBalances = async (batch) => {
     [usdc.methods.balanceOf(account), tokenResult(USDC)],
     [beanstalk.methods.wrappedBeans(account), tokenResult(BEAN)],
   ]);
+};
+
+/* Beanstalk Price Getters */
+export const getPriceArray = async () => {
+  const beanstalkPrice = beanstalkPriceContractReadOnly();
+  const priceTuple = await beanstalkPrice.methods.price().call();
+
+  return priceTuple;
 };
 /* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
 

@@ -67,7 +67,7 @@ const titleStyle = {
 };
 
 function displayLP(balance) {
-  return `${displayBN(balance[0])} ${TokenLabel(CryptoAsset.Bean)}/${displayBN(
+  return `${displayBN(balance[0])} BEAN/${displayBN(
     balance[1]
   )} ${TokenLabel(CryptoAsset.Ethereum)}`;
 }

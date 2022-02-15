@@ -47,6 +47,7 @@ import {
   toTokenUnitsBN,
   account,
   getEthPrices,
+  getPriceArray,
   votes,
 } from 'util/index';
 import { UserBalanceState } from './reducer';
@@ -239,6 +240,7 @@ export default function Updater() {
         beanCrv3Price,
         beanCrv3Reserve,
         ethPrices,
+        priceTuple,
       ] = _prices;
 
       //
@@ -253,6 +255,9 @@ export default function Updater() {
         .dividedBy(usdcMultiple);
       const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
+
+      const curveTuple = priceTuple.ps[0];
+      const uniTuple = priceTuple.ps[1];
 
       //
       dispatch(
@@ -270,6 +275,27 @@ export default function Updater() {
           beanCrv3Reserve: beanCrv3Reserve[0],
           crv3Reserve: beanCrv3Reserve[1],
           ethPrices,
+          priceTuple: {
+            deltaB: new BigNumber(priceTuple.deltaB),
+            liquidity: toTokenUnitsBN(priceTuple.liquidity, 6),
+            price: toTokenUnitsBN(priceTuple.price, 6),
+          },
+          curveTuple: {
+            balances: curveTuple.balances,
+            deltaB: new BigNumber(curveTuple.deltaB),
+            liquidity: toTokenUnitsBN(curveTuple.liquidity, 6),
+            price: toTokenUnitsBN(curveTuple.price, 6),
+            pool: curveTuple.pool,
+            tokens: curveTuple.tokens,
+          },
+          uniTuple: {
+            balances: uniTuple.balances,
+            deltaB: new BigNumber(uniTuple.deltaB),
+            liquidity: toTokenUnitsBN(uniTuple.liquidity, 6),
+            price: toTokenUnitsBN(uniTuple.price, 6),
+            pool: uniTuple.pool,
+            tokens: uniTuple.tokens,
+          },
         })
       );
       return [beanReserve, ethReserve];
@@ -302,7 +328,6 @@ export default function Updater() {
       // TODO: all event handling logic needs to exist not filtered on address for individual listings and buy offers
       // but full marketplace since, should not be filtering based on address for these events but grabbing them all
       events.forEach((event) => {
-        console.log(event.event);
         if (event.event === 'BeanDeposit') {
           const s = parseInt(event.returnValues.season, 10);
           const beans = toTokenUnitsBN(
@@ -718,6 +743,7 @@ export default function Updater() {
         ethReserve,
       ];
       const ethPrices = await getEthPrices();
+      const priceTuple = await getPriceArray();
 
       return [
         () => {
@@ -725,6 +751,7 @@ export default function Updater() {
           const lpReserves = processPrices([
             ..._prices,
             ethPrices,
+            priceTuple,
           ]);
           processAccountBalances(
             accountBalances,
@@ -765,8 +792,9 @@ export default function Updater() {
 
       const _prices = await pricePromises;
       const ethPrices = await getEthPrices();
+      const priceTuple = await getPriceArray();
       ReactDOM.unstable_batchedUpdates(() => {
-        processPrices([..._prices, ethPrices]);
+        processPrices([..._prices, ethPrices, priceTuple]);
       });
       benchmarkEnd('PRICES', startTime);
     }
