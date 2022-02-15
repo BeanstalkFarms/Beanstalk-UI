@@ -199,12 +199,12 @@ export const fieldStrings = {
   activeFundraiser: 'When there is an active Fundraiser, users can sow Beans in the Field directly from USDC independent of the amount of available Soil remaining. You can participate here: ',
 };
 export const tradeStrings = {
-  swap: 'Use this tab to trade against the BEAN:ETH Uniswap pool directly on the app.bean.money website.',
+  swap: 'Use this tab to trade against the BEAN:ETH Uniswap pool directly through the Beanstalk interface.',
   send: 'Use this tab to send Beans to another Ethereum address.',
   sendWarning: 'WARNING: You are sending Beans to another wallet and will no longer own them.',
   price: 'This is the live Bean price on Uniswap.',
   tradeDescription:
-    'Anyone can buy and sell Beans on Uniswap directly through the app.bean.money website. To buy and deposit or buy and sow in a single transaction from ETH, use the Silo and Field modules, respectively.',
+    'Anyone can buy and sell Beans on Uniswap directly through the Beanstalk interface. To buy and deposit or buy and sow in a single transaction from ETH, use the Silo and Field modules, respectively.',
   timeSinceCross: 'This is the time elapsed since the price last crossed the peg.',
 };
 export const seasonStrings = {
