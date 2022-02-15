@@ -17,7 +17,7 @@ export default function LoadingBean() {
           style={{ verticalAlign: 'middle' }}
           height="250px"
           src={BeanLogo}
-          alt="bean.money"
+          alt="app.bean.money"
         />
       </Box>
     </Box>

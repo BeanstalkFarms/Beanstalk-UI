@@ -88,7 +88,7 @@ export default function Field() {
     <Box style={bannerStyle}>
       <span>
         {fieldStrings.activeFundraiser}
-        <a href="https://bean.money/fundraiser">bean.money/fundraiser</a>.
+        <a href="https://app.bean.money/fundraiser">app.bean.money/fundraiser</a>.
       </span>
     </Box>
   ) : null;

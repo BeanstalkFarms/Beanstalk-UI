@@ -259,7 +259,7 @@ export default function NavigationSidebar() {
           name={theme.name}
           height="36px"
           src={BeanLogo}
-          alt="bean.money"
+          alt="app.bean.money"
         />
         <span style={{ fontSize: 14 }}>
           {currentBeanPrice}
