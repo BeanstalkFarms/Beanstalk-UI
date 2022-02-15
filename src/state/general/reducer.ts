@@ -33,12 +33,23 @@ export interface GeneralState {
 
   /**
    * @publius
+   * lastcross is the timestamp of the last time the price of Bean in the Uniswap Bean:Eth pool crossed above/below the price of $1.
    */
   lastCross: number;
 
   /**
-   * FIXME: define BIP type
    * @publius
+   * FIXME: define BIP type
+   * id - int / BigNumber, id of the bip
+   * executed - boolean, whether the bip has passed or not
+   * pauseOrUnpause - int / BigNumber, 0 for neither, 1 for pause, 2 for unpause Whether the BIP will either pause or unpause Beanstalk. Has never been used and hopefully will never, but if a bip is a pause/unpause and contains no diamond cut, then it can be commited via super majority instantly.
+   * start - int / BigNumber, The start season of the bip
+   * period - int / BigNumber, the number of seasons the bip lasts for
+   * proposer - address, the farmer that proposed the bip
+   * roots - int / BigNumber, the number of roots that have voted for the BIP (roots are not an actual token and thus don't have a defined # of decimals) 
+   * endTotalRoots - int / BigNumber, if the BIP is ended, then endTotalRoots is the number of total Roots.
+   * timestamp - int / BigNumber the timestamp of when the BIP was proposed.
+   * active - boolean, whether the BIP is still active or not.
    */
   bips: Array;
 
@@ -50,6 +61,11 @@ export interface GeneralState {
   /**
    * FIXME: define Fundraiser type
    * @publius
+   * id - int / BigNumber, id of the fundraiser
+   * remaining: float / BigNumber - the remaining tokens in the fundraiser
+   * total: float / BigNumber - the total tokens in the fundraiser
+   * token - address, the address of the token the fundraiser is taking place in
+    };
    */
   fundraisers: Array;
   

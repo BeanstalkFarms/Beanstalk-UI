@@ -7,83 +7,96 @@ import { Listing, BuyOffer } from './updater';
 
 /** @publius  */
 export interface UserBalanceState {
-  /**  */
+  /** The farmer's Ether balance */
   ethBalance: BigNumber;
-  /** @publius */
+  /** The Farmer's claimable Eth balance from Seasons of Plenty */
   claimableEthBalance: BigNumber;
-  /**  */
+  /** The farmer's balance of circulating Bean balance */
   beanBalance: BigNumber;
-  /** @publius */
+  /** The farmer's balance of Deposited Beans in the Silo */
   beanSiloBalance: BigNumber;
-  /** @publius */
+  /** The farmer's balance of Claimable Beans from Withdrawals */
   beanReceivableBalance: BigNumber;
-  /** @publius */
+  /** The farmer's balance of withdrawn Beans */
   beanTransitBalance: BigNumber;
-  /** @publius */
+  /** The farmer's balance of wrapped Beans in the Beanstalk contract */
   beanWrappedBalance: BigNumber;
-  /**  */
+  /** The farmer's circulating balance of LP Tokens */
   lpBalance: BigNumber;
-  /** @publius */
+  /** The farmer's balance of Deposit LP Tokens */
   lpSiloBalance: BigNumber;
-  /** @publius */
+  /** The farmer's balance of Withdrawn LP Tokens */
   lpTransitBalance: BigNumber;
-  /** @publius*/
+  /** The farmer's balance of claimable LP Tokens from withdrawals */
   lpReceivableBalance: BigNumber;
-  /**  */
+  /** The farmer's balance of Stalk */
   stalkBalance: BigNumber;
-  /**  */
+  /** The farmer's balance of Seeds */
   seedBalance: BigNumber;
-  /**  */
+  /** The farmer's balance of Pods */
   podBalance: BigNumber;
-  /** @publius */
+  /** The farmer's balance of harvestable Pods */
   harvestablePodBalance: BigNumber;
-  /** @publius what is diff between this and harvestablePodBalance? */
+  /* @publius what is diff between this and harvestablePodBalance? 
+   * harvestableBalance isn't used anywhere. We can delete
+   */
   harvestableBalance: BigNumber;
-  /**  */
+  /** A mapping of the farmer's Bean Deposits mapping from season to Beans including the Deposit attributed to farmable Beans (When farmer's update their Silo, Farmable Beans are deposited in the most recent Season */
   beanDeposits: Object;
-  /** @publius  */
+  /** A mapping of the farmer's Bean Deposits mapping from season to Beans excluding the Deposit attributed to farmable Beans */
   rawBeanDeposits: Object;
-  /**  */
+  /** A mapping of the farmer's Bean Withdrawals mapping from season to Beans excluding claimable Withdrawals */
   beanWithdrawals: Object;
-  /**  */
+  /** A mapping of the farmer's Bean Claimable Withdrawals mapping from season to Beans */
   beanReceivableCrates: Object;
-  /**  */
+  /** A mapping of the farmer's LP Deposits mapping from Season to LP. */
   lpDeposits: Object;
-  /**  */
+  /** A mapping of the Seeds awarded to each LP Deposit in lpDeposits from Season to LPSeeds. There should exist a mapping in lpSeedDeposits for each mapping in lpDeposits */
   lpSeedDeposits: Object;
-  /**  */
+  /** A mapping of the farmer's LP Withdrawals */
   lpWithdrawals: Object;
-  /** @publius */
+  /** A mapping of the farmer's claimable LP Withdrawals */
   lpReceivableCrates: Object;
   /**  */
   /** Plots are keyed by plotIndex, value is size of the Plot in Pods. */
   /**  */
   plots: { [plotIndex: string]: BigNumber };
-  /**  */
+  /** A mapping of the farmer's harvestable plots. */
   harvestablePlots: Object;
-  /**  */
+  /** A list of the BIPs the farmer has voted on. */
   votedBips: Object;
-  /** @publius */
+  /** @publius Depreciated. a boolean denoting whether the Farmer has an active vote. Farmer's used to be unable to withdraw when they were locked, so this variable was used to lock the modules */
   locked: Boolean;
-  /** @publius */
+  /** @publius Depreciated. The number of Seasons the Farmer is locked for. (Until the end of the BIPs they voted for) */
   lockedSeasons: BigNumber;
-  /** @publius */
+  /** @publius The sum of BeanRecievableBalance + beanHarvestableBalance + wrappedBeans */
   beanClaimableBalance: BigNumber;
-  /** @publius */
+  /** @publius The farmer's claimable struct. This struct is kind of complex to build and gets passed into a lot of functions, so we found it easiest to store in the state.
+   * struct Claim {
+   *    uint32[] beanWithdrawals;
+   *    uint32[] lpWithdrawals;
+   *    uint256[] plots;
+   *    bool claimEth;
+   *    bool convertLP;
+   *    uint256 minBeanAmount;
+   *    uint256 minEthAmount;
+   *    bool toWallet;
+   * }
+  */
   claimable: Array;
-  /**  */
+  /** Whether the farmer has any type of claimable balance (Beans, LP, Eth) */
   hasClaimable: Boolean;
-  /**  */
+  /** The number of Farmable Beans the farmer has. */
   farmableBeanBalance: BigNumber;
-  /**  */
+  /** The number of Grown Stalk the farmer has. */
   grownStalkBalance: BigNumber;
-  /**  */
+  /** The number of Roots the farmer has. */
   rootsBalance: BigNumber;
-  /**  */
+  /** A farmer's pod listings. */
   listings: Listing[];
-  /**  */
+  /** A farmer's pod orders. */
   buyOffers: BuyOffer[];
-  /**  */
+  /** A farmer's balance of USDC. */
   usdcBalance: BigNumber;
 }
 

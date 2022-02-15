@@ -121,10 +121,16 @@ export default function Updater() {
       const lockedSeasons = lockedUntil.minus(currentSeason);
 
       // @publius what are "allowances"?
-      dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
-      dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
-      dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
-      dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));
+      // Any contract that transfers ERC-20 tokens on the farmer's behalf needs to be approved to do so.
+      // For example, when you deposit Beans, Beanstalk transfers the farmer's circulating Beans to the Beanstalk contract.
+      // The farmer needs to approve Beanstalk to do this. 
+      // Note: Ethereum is NOT an ERC-20 and thus it doesn't require approval. Instead Ethereum is sent as a part of the transaction.
+      // You can read more here: https://brogna.medium.com/token-allowance-dc553f7d38b3
+      // There are 4 types of allowances each necessary in different cases
+      dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance)); // Needed for selling Beans on Uniswap 
+      dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance)); // Needed for depositing Beans, adding LP + Depositing from Beans or Bean/Eth, sowing in Beanstalk
+      dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance)); // Needed for depositing LP from circulating
+      dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance)); // Needed for contributing to a fundraiser.
       dispatch(
         setUserBalance({
           claimableEthBalance,

@@ -65,10 +65,18 @@ export const sellBeans = async (
 );
 
 // @publius
+// Used to calculate how much of an underlying reserve a given amount of LP tokens owns in an LP pool.
+// amount - the amount of LP tokens the farmer owns
+// reserve - the reserve of an asset in the lp pool
+// totalLP - the total lp tokens
+// returns the amount of reserve tokens the farmer owns.
+// Ownership of reserve tokens is proportional to ownership of LP tokens.
 export const tokenForLP = (amount, reserve, totalLP) =>
   amount.multipliedBy(reserve).dividedBy(totalLP);
 
 // @publius
+// Used to calcuate the # of reserve tokens owned by a farmer for 2 assets in a pool (e.g. Beans + Eth)
+// Just calls tokenForLP twice.
 export const poolForLP = (amount, reserve1, reserve2, totalLP) => {
   if (
     amount.isLessThanOrEqualTo(0) ||
@@ -85,10 +93,17 @@ export const poolForLP = (amount, reserve1, reserve2, totalLP) => {
 };
 
 // @publius
+// The opposite of tokenForLP. If a farmer owns/deposits X of reserve asset -> how many LP tokens do they 1 own/get. 
+// amount - the amount of the reserve asset the farmer has
+// reserve - the total amount of the reserve asset
+// totalLP - the total amount of the LP token
+// returns the amount of lp tokens that amount corresponds to.
 export const lpForToken = (amount, reserve, totalLP) =>
   amount.multipliedBy(totalLP).dividedBy(reserve);
 
 // @publius
+// the opposite of poolForLP - used to calculate how many LP tokens a farmer gets if they deposit both reserve assets in a 2 asset pool.
+// e.g. if a farmer deposits amount1 of Beans and amount2 of Eth into an LP pool with reserve1 Beans, reserve2 Eth and totalLP LP tokens, it returns how many LP tokens the farmer gets.
 export const lpForPool = (amount1, reserve1, amount2, reserve2, totalLP) =>
   MinBN(
     lpForToken(amount1, reserve1, totalLP),
@@ -98,6 +113,8 @@ export const lpForPool = (amount1, reserve1, amount2, reserve2, totalLP) =>
 /**
  * @publius
  */
+// Gets the amount out from swapping in a Uniswap pool given the reserves and the amount in.
+// https://github.com/Uniswap/v2-periphery/blob/master/contracts/libraries/UniswapV2Library.sol
 export const getToAmount = (
   amountIn: BigNumber,
   reserveIn: BigNumber,
@@ -119,6 +136,8 @@ export const getToAmount = (
 /**
  * @publius
  */
+// Gets the amount from swapping in a Uniswap pool given the reserves and the amount out.
+// https://github.com/Uniswap/v2-periphery/blob/master/contracts/libraries/UniswapV2Library.sol
 export const getFromAmount = (
   amountOut: BigNumber,
   reserveIn: BigNumber,
@@ -140,6 +159,8 @@ export const getFromAmount = (
 
 /**
  * @publius
+ * Used to calculate the LP earned from from buying Beans from Eth and adding LP
+ * Returns how many Beans to buy such that the remaining Eth is the exact proportion to add Beans/Eth into LP.
  */
 export const getBuyAndAddLPAmount = (
   eth: BigNumber,
@@ -177,6 +198,8 @@ export const getBuyAndAddLPAmount = (
 
 /**
  * @publius
+ * Used to calculate the LP earned from buying Eth from Beans and adding LP
+ * Returns how many Eth to buy such that the remaining Bean is the exact proportion to add Beans/Eth into LP.
  */
 export const calculateBeansToLP = (
   beans: BigNumber,
@@ -204,6 +227,7 @@ export const calculateBeansToLP = (
 
 /**
  * @publius
+ * Used to calculate the maximum amount of Beans to sell to the peg and add LP.
  */
 export const calculateMaxBeansToPeg = (
   beansToPeg: BigNumber,
@@ -223,6 +247,7 @@ export const calculateMaxBeansToPeg = (
 
 /**
  * @publius
+ * * Used to calculate the maximum amount of LP to remove and use the underlying Beans to buy the price to the peg.
  */
 export const calculateLPToBeans = (
   lp: BigNumber,

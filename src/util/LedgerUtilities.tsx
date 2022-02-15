@@ -206,6 +206,9 @@ export const getBips = async () => {
         : bip.roots;
     
     // @publius: help with "increaseBase", "stalkBase", "endTotalRoots", "roots"
+    // "increaseBase", "stalkBase"  - DEPRECIATED, we can delete these
+    //  roots - how many Roots have voted for the BIP
+    // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP -> used for calculating % voted for the BIP after the fact.
     const bipDict = {
       id: i,
       executed: bip.executed,

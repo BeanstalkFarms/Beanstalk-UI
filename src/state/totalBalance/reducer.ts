@@ -6,36 +6,42 @@ import { setTotalBalance } from './actions';
 // Annotations here would be much appreciated. Particularly the
 // various kinds of LP, use of "transit". Are we missing a
 // `totalCurveLP` variable here?
+// Will be added in the BIP-12 branch deployment
 export interface TotalBalanceState {
-  /**  */
+  /** The total Bean Supply */
   totalBeans: BigNumber;
-  /**  */
+  /** The total number of beans in the Silo */
   totalSiloBeans: BigNumber;
-  /**  */
+  /** Transit is Withdrawn, The total number of Withdrawn Beans */
   totalTransitBeans: BigNumber;
-  /**  */
+  /** The total number of Beans in Budgets (There are 4) */
   totalBudgetBeans: BigNumber;
-  /**  */
+  /** The total number of Beans in the curve pool */
   totalCurveBeans: BigNumber;
-  /**  */
+  /** The total number of LP tokens */
   totalLP: BigNumber;
-  /**  */
+  /** The total number of LP tokens in the Silo */
   totalSiloLP: BigNumber;
-  /** */
+  /** The total number of withdrawn LP Tokens */
   totalTransitLP: BigNumber;
-  /**  */
+  /** The total number of Stalk */
   totalStalk: BigNumber;
-  /**  */
+  /** The total number of Seeds */
   totalSeeds: BigNumber;
-  /**  */
+  /** The total number of Pods */
   totalPods: BigNumber;
-  /** @publius could you write up an explanation of a 'root'? */
+  /* @publius could you write up an explanation of a 'root'? 
+   * Roots are an internal accounting variable used to track Farmable Beans/Stalk/Seeds
+   * Roots represent actual ownership of the system under the hood.
+   * Roots are gained when you deposit or collect Grown Stalk. Roots are lost when you withdraw
+   * When you update your Silo, Beanstalk solves userRoots / totalRoots = userStalk / totalStalk for userStalk and uses that to calculate Farmable Stalk and other farmable assets
+   * Voting takes place in roots cause its cheaper
+   */
   totalRoots: BigNumber;
-  /**  */
   harvestableBeansPerSeason7: BigNumber;
-  /**  */
+  /** The average # of Harvestable Beans per Season over the last 7 days */
   harvestableBeansPerSeason30: BigNumber;
-  /**  */
+  /** The average # of Harvestable Beans per Season over the last 30 days */
   withdrawSeasons: BigNumber;
 }
 
