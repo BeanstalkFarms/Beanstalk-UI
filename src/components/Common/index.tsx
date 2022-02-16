@@ -368,5 +368,6 @@ export const settingsStrings = {
   hasClaimable: 'Toggle to Claim and use Claimable assets in the transaction.',
   disableConvertible: 'Toggle to convert Deposited Beans into Deposited LP Tokens.',
   hasRemoveLP: 'Toggle to remove the Beans and ETH from the liquidity pool. By default this is toggled on.',
-  toWalletDescription: 'Toggle to select whether the Beans received when your Pod Listing is Filled should be sent to your wallet as circulating Beans are held within Beanstalk as Claimable Beans. Toggle "To Wallet" on to have the Beans sent to your wallet.',
+  toWalletDescription: 'Toggle to select whether the Beans received when your Pod Listing is Filled should be sent to your wallet as circulating Beans, or held within Beanstalk as Claimable Beans. Toggle "To Wallet" on to have the Beans sent to your wallet.',
+  toWalletCancelOrder: 'Toggle to select whether the Beans you locked up for this Pod Order should be sent to your wallet as circulating Beans, or held within Beanstalk as Claimable Beans. Toggle "To Wallet" on to have the Beans sent to your wallet.',
 };

@@ -59,6 +59,15 @@ export const GraphListingTooltip = (props: GraphListingTooltipProps) => {
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
+        <span style={{ fontWeight: 'bold' }}>Beans to Fill</span>
+        <div className={classes.tooltipDetailPill}>
+          <span>
+            {displayBN(listing.remainingAmount.times(listing.pricePerPod))}
+          </span>
+          <TokenIcon token={CryptoAsset.Bean} />
+        </div>
+      </div>
+      <div className={classes.tooltipDetailRow}>
         <span style={{ fontWeight: 'bold' }}>Place In Line</span>
         <div className={classes.tooltipDetailPill}>
           <span>
@@ -108,6 +117,15 @@ export const GraphOrderTooltip = (props: GraphOrderTooltipProps) => {
             {displayBN(order.remainingAmount)}
           </span>
           <TokenIcon token={FarmAsset.Pods} />
+        </div>
+      </div>
+      <div className={classes.tooltipDetailRow}>
+        <span style={{ fontWeight: 'bold' }}>Beans if Filled</span>
+        <div className={classes.tooltipDetailPill}>
+          <span>
+            {displayBN(order.remainingAmount.times(order.pricePerPod))}
+          </span>
+          <TokenIcon token={CryptoAsset.Bean} />
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
