@@ -67,7 +67,7 @@ const titleStyle = {
 };
 
 function displayLP(balance) {
-  return `${displayBN(balance[0])} ${TokenLabel(CryptoAsset.Bean)}/${displayBN(
+  return `${displayBN(balance[0])} BEAN/${displayBN(
     balance[1]
   )} ${TokenLabel(CryptoAsset.Ethereum)}`;
 }
@@ -88,16 +88,18 @@ const BasicTable = (props) => {
   let stalkCrates;
   if (props.asset === SiloAsset.Bean || props.asset === SiloAsset.LP) {
     titles.push('Stalk');
-    if (props.seedCrates === undefined) {
-      stalkCrates = Object.keys(props.crates).reduce((crates, k) => {
+    if (props.bdvCrates !== undefined) {
+      // Curve LP Deposits
+      stalkCrates = Object.keys(props.bdvCrates).reduce((crates, k) => {
         crates[k] = props.season
           .minus(k)
-          .multipliedBy(props.crates[k])
-          .multipliedBy(0.0002)
-          .plus(props.crates[k]);
+          .multipliedBy(props.bdvCrates[k])
+          .multipliedBy(0.0001)
+          .plus(props.bdvCrates[k]);
         return crates;
       }, {});
-    } else {
+    } else if (props.seedCrates !== undefined) {
+      // Uniswap LP Deposits
       stalkCrates = Object.keys(props.seedCrates).reduce((crates, k) => {
         crates[k] = props.season
           .minus(k)
@@ -106,9 +108,19 @@ const BasicTable = (props) => {
           .plus(props.seedCrates[k].dividedBy(4));
         return crates;
       }, {});
+    } else {
+      // Bean Deposits
+      stalkCrates = Object.keys(props.crates).reduce((crates, k) => {
+        crates[k] = props.season
+          .minus(k)
+          .multipliedBy(props.crates[k])
+          .multipliedBy(0.0002)
+          .plus(props.crates[k]);
+        return crates;
+      }, {});
     }
   }
-  if (props.seedCrates !== undefined) titles.push('Seeds');
+  if (props.seedCrates !== undefined || props.bdvCrates !== undefined) titles.push('Seeds');
 
   let claimWord = 'Claimable';
   let claimableRow;
@@ -227,6 +239,18 @@ const BasicTable = (props) => {
                         )} ${TokenLabel(SiloAsset.Seed)}`}
                       >
                         <span>{displayBN(props.seedCrates[season])}</span>
+                      </FormatTooltip>
+                    </TableCell>
+                  ) : null}
+                  {props.bdvCrates !== undefined ? (
+                    <TableCell align="center" className={classes.lucidaStyle}>
+                      <FormatTooltip
+                        placement="right"
+                        title={`${displayFullBN(
+                          props.bdvCrates[season].multipliedBy(4)
+                        )} ${TokenLabel(SiloAsset.Seed)}`}
+                      >
+                        <span>{displayBN(props.bdvCrates[season].multipliedBy(4))}</span>
                       </FormatTooltip>
                     </TableCell>
                   ) : null}

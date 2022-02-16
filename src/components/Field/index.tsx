@@ -49,7 +49,6 @@ export default function Field() {
     backgroundColor: theme.module.metaBackground,
     padding: '10px',
     display: 'inline-flex',
-
   };
 
   // Hiding for now as the numbers are misleading
@@ -88,7 +87,7 @@ export default function Field() {
     <Box style={bannerStyle}>
       <span>
         {fieldStrings.activeFundraiser}
-        <a href="https://bean.money/fundraiser">bean.money/fundraiser</a>.
+        <a href="https://app.bean.money/fundraiser">bean.money/fundraiser</a>.
       </span>
     </Box>
   ) : null;

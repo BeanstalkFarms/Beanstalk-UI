@@ -62,8 +62,6 @@ export default function Graph2Module(props: GraphModuleProps) {
     tooltipData,
   } = useTooltip();
 
-  console.log(props.setCurrentListing)
-
   return (
     <div>
       <XYChart

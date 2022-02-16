@@ -5,7 +5,7 @@ import { IconButton, Box } from '@material-ui/core';
 import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, BEAN_TO_STALK } from 'constants/index';
+import { BASE_SLIPPAGE } from 'constants/index';
 import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
 import {
   BaseModule,
@@ -27,22 +27,13 @@ export default function SiloBeanModule() {
   const {
     beanBalance,
     ethBalance,
-    lpReceivableBalance,
     beanDeposits,
-    claimable,
-    claimableEthBalance,
-    hasClaimable,
-    beanSiloBalance,
-    beanClaimableBalance,
-    seedBalance,
-    stalkBalance,
     lockedSeasons,
     beanReceivableBalance,
     beanReceivableCrates,
     farmableBeanBalance,
     rawBeanDeposits,
     beanWithdrawals,
-    harvestablePodBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -146,66 +137,24 @@ export default function SiloBeanModule() {
     }
   };
 
-  // If you withdraw LP and you have `convertLP` on,
-  // convert that LP to the underlying beans and eth,
-  // you can reuse those in the same transaction
-  // add claimLPBeans
-  // claimable lp tokens that I withdrew; can use the beans
-  // in the same contract
-  const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
-    ? poolForLPRatio(lpReceivableBalance)[0]
-    : new BigNumber(0);
-  const ethClaimable = claimableEthBalance.plus(
-    poolForLPRatio(lpReceivableBalance)[1]
-  );
-
   /* */
   const sections = [
     <BeanDepositModule
       key={0}
-      beanBalance={beanBalance}
-      beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
-      beanReserve={prices.beanReserve}
-      ethClaimable={ethClaimable}
-      beanLPClaimableBalance={claimLPBeans}
-      beanToStalk={BEAN_TO_STALK}
-      claimable={claimable}
-      claimableEthBalance={claimableEthBalance}
-      ethBalance={ethBalance}
-      ethReserve={prices.ethReserve}
-      hasClaimable={hasClaimable}
-      harvestablePodBalance={harvestablePodBalance}
-      lpReceivableBalance={lpReceivableBalance}
+      poolForLPRatio={poolForLPRatio}
       ref={depositRef}
       setIsFormDisabled={setIsFormDisabled}
-      setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalStalk={totalBalance.totalStalk}
       updateExpectedPrice={updateExpectedPrice}
     />,
     <BeanWithdrawModule
       key={1}
-      ethClaimable={ethClaimable}
-      beanReceivableBalance={beanReceivableBalance}
-      beanClaimableBalance={beanClaimableBalance}
-      claimable={claimable}
-      claimableEthBalance={claimableEthBalance}
-      crates={beanDeposits}
-      hasClaimable={hasClaimable}
-      harvestablePodBalance={harvestablePodBalance}
-      lpReceivableBalance={lpReceivableBalance}
-      maxFromBeanVal={beanSiloBalance}
-      maxToSeedsVal={seedBalance}
-      maxToStalkVal={stalkBalance}
       ref={withdrawRef}
-      season={season}
       setIsFormDisabled={setIsFormDisabled}
-      setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalStalk={totalBalance.totalStalk}
-      withdrawSeasons={totalBalance.withdrawSeasons}
+      poolForLPRatio={poolForLPRatio}
     />,
   ];
 
@@ -214,11 +163,8 @@ export default function SiloBeanModule() {
     sections.push(
       <BeanClaimModule
         key={2}
-        crates={beanReceivableCrates}
-        maxFromBeanVal={beanReceivableBalance}
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
-        setSection={setSection}
       />
     );
     sectionTitles.push('Claim');
