@@ -145,12 +145,8 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
                   margin="-55px 0px 0px 20px"
                   setValue={(value) => setToWallet(value)}
                   value={toWallet}
-                  style={{
-                    textAlign: 'center',
-                  }}
-                  formControlStyles={{
-                    paddingBottom: 5,
-                  }}
+                  style={{ textAlign: 'center' }}
+                  formControlStyles={{ paddingBottom: 5 }}
                 />
                 <Button onClick={cancelOrder} variant="contained" style={{ marginTop: 15 }}>
                   Cancel Order
