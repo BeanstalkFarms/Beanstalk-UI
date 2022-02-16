@@ -254,7 +254,7 @@ export default function NavigationSidebar() {
           name={theme.name}
           height="36px"
           src={BeanLogo}
-          alt="bean.money"
+          alt="app.bean.money"
         />
         {currentBeanPrice}
       </Box>
