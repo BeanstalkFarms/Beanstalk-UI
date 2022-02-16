@@ -14,7 +14,7 @@ import TradeModule from './TradeModule';
 import LastCrossTimer from './LastCrossTimer';
 
 export default function Trade() {
-  const { beanPrice } = useSelector<AppState, AppState['prices']>(
+  const { beanPrice, beanCrv3Price, curveVirtualPrice } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
@@ -38,19 +38,23 @@ export default function Trade() {
       <Grid container item xs={12} justifyContent="center" style={headerLabelStyle}>
         <HeaderLabelList
           description={[
-            tradeStrings.price,
+            tradeStrings.beanPrice,
+            tradeStrings.curvePrice,
             lcDescription,
           ]}
           balanceDescription={[
             `$${displayFullBN(beanPrice)}`,
+            `$${displayFullBN(beanCrv3Price.multipliedBy(curveVirtualPrice))}`,
             lcBalanceDescription,
           ]}
           title={[
-            'Current Bean Price',
+            'Current Uniswap Price',
+            'Current Curve Price',
             lcTitle,
           ]}
           value={[
             `$${beanPrice.toFixed(4)}`,
+            `$${beanCrv3Price.multipliedBy(curveVirtualPrice).toFixed(4)}`,
             lcValue,
           ]}
           width="300px"

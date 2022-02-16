@@ -276,13 +276,13 @@ export default function Updater() {
           crv3Reserve: beanCrv3Reserve[1],
           ethPrices,
           priceTuple: {
-            deltaB: new BigNumber(priceTuple.deltaB),
+            deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
             liquidity: toTokenUnitsBN(priceTuple.liquidity, 6),
             price: toTokenUnitsBN(priceTuple.price, 6),
           },
           curveTuple: {
             balances: curveTuple.balances,
-            deltaB: new BigNumber(curveTuple.deltaB),
+            deltaB: toTokenUnitsBN(curveTuple.deltaB, 6),
             liquidity: toTokenUnitsBN(curveTuple.liquidity, 6),
             price: toTokenUnitsBN(curveTuple.price, 6),
             pool: curveTuple.pool,
@@ -290,7 +290,7 @@ export default function Updater() {
           },
           uniTuple: {
             balances: uniTuple.balances,
-            deltaB: new BigNumber(uniTuple.deltaB),
+            deltaB: toTokenUnitsBN(uniTuple.deltaB, 6),
             liquidity: toTokenUnitsBN(uniTuple.liquidity, 6),
             price: toTokenUnitsBN(uniTuple.price, 6),
             pool: uniTuple.pool,

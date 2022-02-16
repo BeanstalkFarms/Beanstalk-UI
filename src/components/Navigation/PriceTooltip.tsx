@@ -19,9 +19,13 @@ export default function PriceTooltip() {
   const displayCurve = theme.name !== 'ropsten' ?
     <>
       <br />
-      Curve Bean Price: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`$${curveTuple.price.toFixed(4)}`}
+      Curve
+      <br />
+      &nbsp;&nbsp;{`Price: $${curveTuple.price.toFixed(4)}`}
       <br />
       &nbsp;&nbsp;{`Liquidity: $${displayBN(curveTuple.liquidity)}`}
+      <br />
+      &nbsp;&nbsp;{`Delta B: ${displayBN(curveTuple.deltaB)}`}
     </>
     : null;
 
@@ -30,9 +34,13 @@ export default function PriceTooltip() {
       placement="right"
       title={
         <>
-          {`Uniswap Bean Price: $${uniTuple.price.toFixed(4)}`}
+          Uniswap
+          <br />
+          &nbsp;&nbsp;{`Price: $${uniTuple.price.toFixed(4)}`}
           <br />
           &nbsp;&nbsp;{`Liquidity: $${displayBN(uniTuple.liquidity)}`}
+          <br />
+          &nbsp;&nbsp;{`Delta B: ${displayBN(uniTuple.deltaB)}`}
           {displayCurve}
         </>
       }

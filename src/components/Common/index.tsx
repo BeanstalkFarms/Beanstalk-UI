@@ -227,10 +227,11 @@ export const tradeStrings = {
   swap: 'Use this tab to trade against the BEAN:ETH Uniswap pool directly on the bean.money website.',
   send: 'Use this tab to send Beans to another Ethereum address.',
   sendWarning: 'WARNING: You are sending Beans to another wallet and will no longer own them.',
-  price: 'This is the live Bean price on Uniswap.',
+  beanPrice: 'This is the live Bean price on Uniswap.',
+  curvePrice: 'This is the live Bean price on Curve.',
   tradeDescription:
-    'Anyone can buy and sell Beans on Uniswap directly through the bean.money website. To buy and deposit or buy and sow in a single transaction from ETH, use the Silo and Field modules, respectively.',
-  timeSinceCross: 'This is the time elapsed since the price last crossed the peg.',
+    'Anyone can buy and sell Beans on Uniswap directly through the bean.money website, and via the Uniswap and Curve websites. To buy and deposit Beans or BEAN:ETH Uniswap V2 LP Tokens, or buy and sow in a single transaction from ETH, use the Silo and Field pages, respectively. To acquire BEAN:3CRV Curve LP Tokens, use the Curve website. To deposit BEAN:3CRV Curve LP Tokens, use the Silo page.',
+  timeSinceCross: 'This is the time elapsed since the Uniswap price last crossed the peg.',
 };
 export const seasonStrings = {
   advance: 'Advance the Season by calling the Sunrise function',
