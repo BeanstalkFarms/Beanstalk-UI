@@ -2,6 +2,8 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { BEAN } from 'constants/index';
 import { claimBeans, displayBN, TrimBN } from 'util/index';
 import {
@@ -10,18 +12,26 @@ import {
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
+  TransactionToast,
 } from 'components/Common';
-import TransactionToast from 'components/Common/TransactionToast';
 
-export const BeanClaimModule = forwardRef((props, ref) => {
-  props.setIsFormDisabled(props.maxFromBeanVal.isLessThanOrEqualTo(0));
-  
+export const BeanClaimModule = forwardRef(({
+  setIsFormDisabled,
+}, ref) => {
+  const {
+    beanReceivableBalance,
+    beanReceivableCrates,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+  setIsFormDisabled(beanReceivableBalance.isLessThanOrEqualTo(0));
+
   /* Input Fields */
   const fromBeanField = (
     <TokenInputField
-      balance={props.maxFromBeanVal}
+      balance={beanReceivableBalance}
       token={ClaimableAsset.Bean}
-      value={TrimBN(props.maxFromBeanVal, BEAN.decimals)}
+      value={TrimBN(beanReceivableBalance, BEAN.decimals)}
     />
   );
 
@@ -30,7 +40,7 @@ export const BeanClaimModule = forwardRef((props, ref) => {
     <TokenOutputField
       mint
       token={CryptoAsset.Bean}
-      value={TrimBN(props.maxFromBeanVal, BEAN.decimals)}
+      value={TrimBN(beanReceivableBalance, BEAN.decimals)}
     />
   );
 
@@ -38,12 +48,12 @@ export const BeanClaimModule = forwardRef((props, ref) => {
   const details = [];
   details.push(
     `Claim ${displayBN(
-      new BigNumber(props.maxFromBeanVal)
+      new BigNumber(beanReceivableBalance)
     )} Beans from the Silo`
   );
 
   function transactionDetails() {
-    if (props.maxFromBeanVal.isLessThanOrEqualTo(0)) return;
+    if (beanReceivableBalance.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -61,17 +71,17 @@ export const BeanClaimModule = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (props.maxFromBeanVal.isLessThanOrEqualTo(0)) return;
+      if (beanReceivableBalance.isLessThanOrEqualTo(0)) return null;
 
       // Toast
       const txToast = new TransactionToast({
-        loading: `Claiming ${props.maxFromBeanVal.toFixed(3)} Beans`,
-        success: `Claimed ${props.maxFromBeanVal.toFixed(3)} Beans`,
+        loading: `Claiming ${displayBN(beanReceivableBalance)} Beans`,
+        success: `Claimed ${displayBN(beanReceivableBalance)} Beans`,
       });
 
       // Execute
       claimBeans(
-        Object.keys(props.crates),
+        Object.keys(beanReceivableCrates),
         (response) => txToast.confirming(response)
       )
       .then((value) => {

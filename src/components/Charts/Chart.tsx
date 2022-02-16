@@ -59,7 +59,7 @@ export function Chart(props) {
             style={{ verticalAlign: 'middle' }}
             height="100px"
             src={BeanLogo}
-            alt="bean.money"
+            alt="app.bean.money"
           />
         </Box>
       </Box>

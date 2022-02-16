@@ -28,7 +28,7 @@ export default function TokenOutputField(props) {
   const tokenStyle = {
     height: '30px',
     marginLeft: '-10px',
-    width: '20px',
+    width: '25px',
   };
 
   const tokenLabel = props.title !== undefined

@@ -9,6 +9,7 @@ export default function SectionTabs({
     setSection,
     section,
     sectionTitles,
+    minWidth,
   }) {
   const tabHeight = '48px';
 
@@ -22,6 +23,7 @@ export default function SectionTabs({
         root: {
           '&$selected': {
             color: colors.accentText,
+            fill: colors.accentText,
           },
         },
       },
@@ -33,6 +35,7 @@ export default function SectionTabs({
     height: tabHeight,
     minHeight: tabHeight,
     maxWidth: `${Math.max(sectionTitles.length * 120, 300)}px`,
+    minWidth: minWidth,
     width: width < 550 ? '95%' : '80%',
     backgroundColor: colors.module.background,
     padding: '0 5px',

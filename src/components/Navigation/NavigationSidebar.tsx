@@ -18,6 +18,7 @@ import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
 import { percentForStalk, toTokenUnitsBN } from 'util/index';
 import { useStyles } from './NavigationStyles.ts';
+import PriceTooltip from './PriceTooltip';
 
 const NAVIGATION_MAP = {
   farm: [
@@ -210,15 +211,9 @@ export default function NavigationSidebar() {
     addActiveFundraiserNav(NAVIGATION_MAP);
   }
 
-  //
-  let currentBeanPrice = null;
-  if (beanPrice !== undefined && beanPrice.isGreaterThan(0)) {
-    currentBeanPrice = (
-      <Box className={classes.currentPriceStyle}>
-        {`$${beanPrice.toFixed(4)}`}
-      </Box>
-    );
-  }
+  const currentBeanPrice = beanPrice && beanPrice.isGreaterThan(0) && (
+    <PriceTooltip />
+  );
 
   //
   const NavItem = ({ item }: { item: any }) => (
@@ -253,17 +248,15 @@ export default function NavigationSidebar() {
 
   const drawerContent = (
     <>
-      <Box className="App-logo" p={2}>
+      <Box className={classes.currentPriceStyle} p={2}>
         <img
           className="svg"
           name={theme.name}
           height="36px"
           src={BeanLogo}
-          alt="bean.money"
+          alt="app.bean.money"
         />
-        <span style={{ fontSize: 14 }}>
-          {currentBeanPrice}
-        </span>
+        {currentBeanPrice}
       </Box>
       {/**
         * Farm section */}
