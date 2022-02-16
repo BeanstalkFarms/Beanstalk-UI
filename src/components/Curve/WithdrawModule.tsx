@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
+import { utils } from 'ethers';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -89,7 +90,7 @@ export const WithdrawModule = forwardRef(({
         BigNumber.set({ DECIMAL_PLACES: 6 });
         crates.push(key);
         amounts.push(
-          toStringBaseUnitBN(crateLPsRemoved, UNI_V2_ETH_BEAN_LP.decimals)
+          utils.parseEther(crateLPsRemoved.toString())
         );
         return lpRemoved.isEqualTo(beans);
       });

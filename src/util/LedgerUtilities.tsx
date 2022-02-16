@@ -27,6 +27,7 @@ import {
   web3,
   chainId,
 } from './index';
+import { utils } from 'ethers';
 
 /* Client is responsible for calling execute() */
 export const createLedgerBatch = () => new web3.BatchRequest();
@@ -185,7 +186,7 @@ export const getTotalBalances = async (batch) => {
     [bean.methods.balanceOf(BUDGETS[2]), tokenResult(BEAN)],
     [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)],
     [bean.methods.balanceOf(CURVE.addr), tokenResult(BEAN)],
-    [beanstalk.methods.withdrawSeasons(), bigNumberResult],
+    [beanstalk.methods.withdrawSeasons(), bigNumberResult]
   ]);
 };
 
@@ -328,7 +329,7 @@ export const getPrices = async (batch) => {
       (lp) => toTokenUnitsBN(lp, 18),
     ],
   ];
-  if (chainId === 1) {
+  if (chainId === 1 || chainId === 1337) {
     batchCall = batchCall.concat(
       [
         [
@@ -348,6 +349,7 @@ export const getPrices = async (batch) => {
             toTokenUnitsBN(prices[1], 18),
           ],
         ],
+        [beanstalk.methods.curveToBDV(utils.parseEther('1')), (r) => toTokenUnitsBN(r, 6)]
       ]
     );
   } else {
@@ -366,6 +368,10 @@ export const getPrices = async (batch) => {
         [
           lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
           () => [new BigNumber(0), new BigNumber(0)],
+        ],
+        [
+          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
+          () => new BigNumber(1),
         ],
       ]
     );

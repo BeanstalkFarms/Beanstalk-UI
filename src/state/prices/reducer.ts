@@ -15,6 +15,7 @@ export interface PriceState {
   beanCrv3Price: BigNumber;
   beanCrv3Reserve: BigNumber;
   crv3Reserve: BigNumber;
+  curveToBdv: BigNumber;
   ethPrices: {
     fast: BigNumber;
     propose: BigNumber;
@@ -57,6 +58,7 @@ export const initialState: PriceState = {
   beanCrv3Price: new BigNumber(-1),
   beanCrv3Reserve: new BigNumber(-1),
   crv3Reserve: new BigNumber(-1),
+  curveToBdv: new BigNumber(-1),
   ethPrices: {
     fast: new BigNumber(-1),
     propose: new BigNumber(-1),

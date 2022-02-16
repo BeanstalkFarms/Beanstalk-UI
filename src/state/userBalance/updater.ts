@@ -239,6 +239,7 @@ export default function Updater() {
         curveVirtualPrice,
         beanCrv3Price,
         beanCrv3Reserve,
+        curveToBDV,
         ethPrices,
         priceTuple,
       ] = _prices;
@@ -274,6 +275,7 @@ export default function Updater() {
           beanCrv3Price,
           beanCrv3Reserve: beanCrv3Reserve[0],
           crv3Reserve: beanCrv3Reserve[1],
+          curveToBDV,
           ethPrices,
           priceTuple: {
             deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
@@ -742,8 +744,7 @@ export default function Updater() {
         beanReserve,
         ethReserve,
       ];
-      const ethPrices = await getEthPrices();
-      const priceTuple = await getPriceArray();
+      const [ethPrices, priceTuple] = await Promise.all([getEthPrices(), getPriceArray()]);
 
       return [
         () => {

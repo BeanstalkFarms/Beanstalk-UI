@@ -1,5 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { utils } from 'ethers';
 import { unstable_batchedUpdates } from 'react-dom'; // eslint-disable-line
 import { Box } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -46,12 +47,17 @@ export const DepositModule = forwardRef(({
     (state) => state.userBalance
   );
 
+  const { curveToBDV } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
   function fromValueUpdated(newFromCurveLPNumber) {
     let fromNumber = MinBN(newFromCurveLPNumber, curveBalance);
 
     const newFromCurveLPValue = TrimBN(MaxBN(fromNumber, new BigNumber(0)), UNI_V2_ETH_BEAN_LP.decimals);
     // fromNumber = tokenForLP(newFromCurveLPValue, beanReserve, totalLP);
     fromNumber = MaxBN(newFromCurveLPNumber, new BigNumber(0));
+    const bdvNumber = fromNumber.multipliedBy(curveToBDV);
 
     setFromCurveLPValue(TrimBN(newFromCurveLPValue, 9));
     setToCurveLPValue(TrimBN(newFromCurveLPValue, UNI_V2_ETH_BEAN_LP.decimals));
@@ -59,13 +65,13 @@ export const DepositModule = forwardRef(({
 
     setToStalkValue(
       TrimBN(
-        fromNumber.multipliedBy(BEAN_TO_STALK),
+        bdvNumber.multipliedBy(BEAN_TO_STALK),
         STALK.decimals
       )
     );
     setToSeedValue(
       TrimBN(
-        fromNumber.multipliedBy(2 * BEAN_TO_SEEDS),
+        bdvNumber.multipliedBy(2 * BEAN_TO_SEEDS),
         SEEDS.decimals
       )
     );
@@ -184,7 +190,7 @@ export const DepositModule = forwardRef(({
 
       // Execute
       deposit(
-        toStringBaseUnitBN(toCurveLPValue, ETH.decimals),
+        utils.parseEther(toCurveLPValue.toString()),
         (response) => {
           resetFields();
           txToast.confirming(response);

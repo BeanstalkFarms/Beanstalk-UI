@@ -88,16 +88,8 @@ const BasicTable = (props) => {
   let stalkCrates;
   if (props.asset === SiloAsset.Bean || props.asset === SiloAsset.LP) {
     titles.push('Stalk');
-    if (props.seedCrates === undefined) {
-      stalkCrates = Object.keys(props.crates).reduce((crates, k) => {
-        crates[k] = props.season
-          .minus(k)
-          .multipliedBy(props.crates[k])
-          .multipliedBy(0.0002)
-          .plus(props.crates[k]);
-        return crates;
-      }, {});
-    } else if (props.bdvCrates !== undefined) {
+    if (props.bdvCrates !== undefined) {
+      // Curve LP Deposits
       stalkCrates = Object.keys(props.bdvCrates).reduce((crates, k) => {
         crates[k] = props.season
           .minus(k)
@@ -106,13 +98,24 @@ const BasicTable = (props) => {
           .plus(props.bdvCrates[k]);
         return crates;
       }, {});
-    } else {
+    } else if (props.seedCrates !== undefined) {
+      // Uniswap LP Deposits
       stalkCrates = Object.keys(props.seedCrates).reduce((crates, k) => {
         crates[k] = props.season
           .minus(k)
           .multipliedBy(props.seedCrates[k])
           .multipliedBy(0.0001)
           .plus(props.seedCrates[k].dividedBy(4));
+        return crates;
+      }, {});
+    } else {
+      // Bean Deposits
+      stalkCrates = Object.keys(props.crates).reduce((crates, k) => {
+        crates[k] = props.season
+          .minus(k)
+          .multipliedBy(props.crates[k])
+          .multipliedBy(0.0002)
+          .plus(props.crates[k]);
         return crates;
       }, {});
     }
