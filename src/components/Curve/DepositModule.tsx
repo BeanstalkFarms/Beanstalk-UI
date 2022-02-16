@@ -7,7 +7,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
-  ETH,
   BEAN_TO_STALK,
   BEAN_TO_SEEDS,
   SEEDS,
@@ -21,7 +20,6 @@ import {
   MinBN,
   smallDecimalPercent,
   TrimBN,
-  toStringBaseUnitBN,
 } from 'util/index';
 import {
   CryptoAsset,

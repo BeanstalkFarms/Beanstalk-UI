@@ -16,7 +16,6 @@ import {
   displayBN,
   MinBN,
   smallDecimalPercent,
-  toStringBaseUnitBN,
   TrimBN,
   withdraw,
 } from 'util/index';

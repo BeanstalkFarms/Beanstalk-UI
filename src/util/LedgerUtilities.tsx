@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { utils } from 'ethers';
 import {
   BUDGETS,
   BEAN,
@@ -27,7 +28,6 @@ import {
   web3,
   chainId,
 } from './index';
-import { utils } from 'ethers';
 
 /* Client is responsible for calling execute() */
 export const createLedgerBatch = () => new web3.BatchRequest();
