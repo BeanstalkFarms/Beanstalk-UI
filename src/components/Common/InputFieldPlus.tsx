@@ -55,8 +55,11 @@ export default function InputFieldPlus(props: Partial<InputFieldPlusProps>) {
       handleChange={handleChange}
       maxHandler={maxHandler}
       poolForLPRatio={props.poolForLPRatio}
+      locked={props.locked}
       token={props.token}
       value={props.value}
+      size={props.size}
+      error={props.error}
     />
   );
 }
@@ -67,11 +70,14 @@ InputFieldPlus.defaultProps = {
   claim: false,
   claimableBalance: new BigNumber(0),
   buyEth: new BigNumber(0),
+  error: false,
   handleChange: () => {},
   isLP: false,
   poolForLPRatio: undefined,
+  size: 'medium',
   token: CryptoAsset.Bean,
   updateExpectedPrice: () => {},
   value: new BigNumber(-1),
   visible: true,
+  locked: false,
 };

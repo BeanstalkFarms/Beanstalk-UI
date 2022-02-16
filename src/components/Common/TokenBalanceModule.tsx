@@ -47,9 +47,11 @@ export default function TokenBalanceModule(props) {
     );
 
   function displayLP(balance) {
-    return `${displayBN(balance[0])} ${TokenLabel(
-      CryptoAsset.Bean
-    )}/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
+    if (props.isCurve) {
+      return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} 3CRV`;
+    }
+    return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])}
+      ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
   let balanceContent = props.balance.isGreaterThan(0)

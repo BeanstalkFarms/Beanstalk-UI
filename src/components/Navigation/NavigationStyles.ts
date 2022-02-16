@@ -23,7 +23,11 @@ export const useStyles = makeStyles({
   content: {
     flexGrow: 1,
   },
-  currentPriceStyle: {},
+  currentPriceStyle: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   //
   NavSubheader: {
     fontFamily: 'Futura',
@@ -46,7 +50,7 @@ export const useStyles = makeStyles({
   NavLinkTitle: {
     fontFamily: 'Futura, Helvetica',
     fontWeight: '800',
-    fontSize: 14,
+    fontSize: 12,
   },
   NavLink: {
     color: 'inherit',
