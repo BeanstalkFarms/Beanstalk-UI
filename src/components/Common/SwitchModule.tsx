@@ -10,6 +10,7 @@ export default function SwitchModule(props) {
     marginBottom: '-8px',
     marginLeft: '0px',
     width: '100%',
+    ...props.style,
   };
 
   const GreenSwitch = withStyles({
@@ -33,6 +34,7 @@ export default function SwitchModule(props) {
       marginLeft: '0',
       marginTop: '3px',
       width: '100%',
+      ...props.formControlStyles
     },
   })(FormControlLabel);
 
