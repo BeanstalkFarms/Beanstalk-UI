@@ -25,7 +25,7 @@ export default function CurveModule() {
     (state) => state.allowances
   );
   const {
-    // curveBalance,
+    curveBalance,
     curveReceivableBalance,
     curveDeposits,
     curveBDVDeposits,
@@ -213,10 +213,14 @@ export default function CurveModule() {
       </Box>
     ) : null;
 
+  const allowance = section === 0 && curveBalance.isGreaterThan(0)
+    ? beanstalkCurveAllowance
+    : new BigNumber(1);
+
   return (
     <>
       <BaseModule
-        allowance={section === 0 ? beanstalkCurveAllowance : new BigNumber(1)}
+        allowance={allowance}
         resetForm={() => {
           setSettings({ ...settings });
         }}

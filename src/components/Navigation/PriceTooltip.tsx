@@ -25,7 +25,7 @@ export default function PriceTooltip() {
       <br />
       &nbsp;&nbsp;{`Liquidity: $${displayBN(curveTuple.liquidity)}`}
       <br />
-      &nbsp;&nbsp;{`Delta B: ${displayBN(curveTuple.deltaB)}`}
+      &nbsp;&nbsp;{`Delta B: ${displayBN(curveTuple.deltaB, true)}`}
     </>
     : null;
 
@@ -40,7 +40,7 @@ export default function PriceTooltip() {
           <br />
           &nbsp;&nbsp;{`Liquidity: $${displayBN(uniTuple.liquidity)}`}
           <br />
-          &nbsp;&nbsp;{`Delta B: ${displayBN(uniTuple.deltaB)}`}
+          &nbsp;&nbsp;{`Delta B: ${displayBN(uniTuple.deltaB, true)}`}
           {displayCurve}
         </>
       }

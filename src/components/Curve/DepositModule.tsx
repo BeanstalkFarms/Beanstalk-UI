@@ -124,6 +124,20 @@ export const DepositModule = forwardRef(({
     new BigNumber(toCurveLPValue
   ))} Deposited BEAN:3CRV LP Tokens`);
 
+  const noBeanCrv3 = curveBalance.isLessThanOrEqualTo(0) ? (
+    <Box
+      style={{
+        display: 'inline-block',
+        width: '100%',
+        fontSize: 'calc(9px + 0.5vmin)',
+      }}
+    >
+      <span>
+        To deposit BEAN:3CRV LP Tokens, you must first add liquidity on Curve <a href="https://curve.fi/factory/81/deposit" target="break">here</a>.
+      </span>
+    </Box>
+  ) : null;
+
   function transactionDetails() {
     if (toCurveLPValue.isLessThanOrEqualTo(0)) return null;
 
@@ -188,6 +202,7 @@ export const DepositModule = forwardRef(({
   return (
     <>
       {fromCurveLPField}
+      {noBeanCrv3}
       {transactionDetails()}
     </>
   );
