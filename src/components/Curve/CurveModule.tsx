@@ -145,6 +145,7 @@ export default function CurveModule() {
         handleChange={handlePageChange}
         indexTitle="Season"
         isLP
+        isCurve
         page={page}
         poolForLPRatio={poolForLPRatio}
         season={season}
@@ -167,6 +168,7 @@ export default function CurveModule() {
         index={season}
         indexTitle="Seasons to Arrival"
         isLP
+        isCurve
         page={page}
         poolForLPRatio={poolForLPRatio}
       />

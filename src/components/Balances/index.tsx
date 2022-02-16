@@ -74,6 +74,8 @@ export default function Balances() {
     totalBudgetBeans,
     totalSiloLP,
     totalTransitLP,
+    totalSiloCurve,
+    totalTransitCurve,
     totalStalk,
     totalSeeds,
     totalPods,
@@ -350,8 +352,8 @@ export default function Balances() {
         curveBalance={
           totalCrv3.isGreaterThan(0)
             ? totalCrv3
-                .minus(curveSiloBalance)
-                .minus(curveTransitBalance)
+                .minus(totalSiloCurve)
+                .minus(totalTransitCurve)
             : new BigNumber(0)
         }
         beanSiloBalance={totalSiloBeans}
@@ -362,8 +364,8 @@ export default function Balances() {
         lpSiloBalance={totalSiloLP}
         lpTransitBalance={totalTransitLP}
         lpReceivableBalance={new BigNumber(0)}
-        curveSiloBalance={curveSiloBalance}
-        curveTransitBalance={curveTransitBalance}
+        curveSiloBalance={totalSiloCurve}
+        curveTransitBalance={totalTransitCurve}
         curveReceivableBalance={new BigNumber(0)}
         budgetBalance={totalBudgetBeans}
         beanReserveTotal={beanReserve.plus(beanCrv3Reserve)}
