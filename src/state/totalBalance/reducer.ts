@@ -14,6 +14,10 @@ export interface TotalBalanceState {
   /**  */
   totalCurveBeans: BigNumber;
   /**  */
+  totalSiloCurve: BigNumber;
+  /**  */
+  totalTransitCurve: BigNumber;
+  /**  */
   totalLP: BigNumber;
   /**  */
   totalSiloLP: BigNumber;
@@ -41,6 +45,8 @@ export const initialState: TotalBalanceState = {
   totalTransitBeans: new BigNumber(-1),
   totalBudgetBeans: new BigNumber(-1),
   totalCurveBeans: new BigNumber(-1),
+  totalSiloCurve: new BigNumber(-1),
+  totalTransitCurve: new BigNumber(-1),
   totalLP: new BigNumber(-1),
   totalSiloLP: new BigNumber(-1),
   totalTransitLP: new BigNumber(-1),

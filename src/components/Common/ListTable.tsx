@@ -66,18 +66,23 @@ const titleStyle = {
   width: '33%',
 };
 
-function displayLP(balance) {
-  return `${displayBN(balance[0])} BEAN/${displayBN(
-    balance[1]
-  )} ${TokenLabel(CryptoAsset.Ethereum)}`;
-}
-
 // FIXME: Resolve this with the tables used in the Marketplace.
 // FIXME: types and code ceanup
 const BasicTable = (props) => {
   const classes = useStyles();
 
   const { rowsPerPage } = props;
+
+  function displayLP(balance) {
+    if (props.isCurve) {
+      return `${displayBN(balance[0])} BEAN/${displayBN(
+        balance[1]
+      )} 3CRV`;
+    }
+    return `${displayBN(balance[0])} BEAN/${displayBN(
+      balance[1]
+    )} ${TokenLabel(CryptoAsset.Ethereum)}`;
+  }
 
   const reverse =
     props.asset === FarmAsset.Pods ||
