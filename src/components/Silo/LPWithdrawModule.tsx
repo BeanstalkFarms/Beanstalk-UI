@@ -2,6 +2,8 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import {
   SEEDS,
   STALK,
@@ -27,10 +29,17 @@ import {
   TokenOutputField,
   TransitAsset,
   TransactionDetailsModule,
+  TransactionToast,
 } from 'components/Common';
-import TransactionToast from 'components/Common/TransactionToast';
 
-export const LPWithdrawModule = forwardRef((props, ref) => {
+export const LPWithdrawModule = forwardRef(({
+  setIsFormDisabled,
+  poolForLPRatio,
+  settings,
+  setSettings,
+  stalkToLP, /* empty */
+  seedsToLP, /* empty */
+}, ref) => {
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
@@ -39,15 +48,35 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     amounts: [],
   });
 
+  const {
+    claimable,
+    hasClaimable,
+    lpDeposits,
+    lpSiloBalance,
+    lpSeedDeposits,
+    seedBalance,
+    stalkBalance,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
+  const season = useSelector<AppState, AppState['season']>(
+    (state) => state.season.season
+  );
+
+  const { totalStalk, withdrawSeasons } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
   /* function maxLPs(stalk: BugNumber) {
     var stalkRemoved = new BigNumber(0)
     var beans = new BigNumber(0)
-    Object.keys(props.crates).sort((a,b) => parseInt(a) - parseInt(b)).forEach(key => {
-      let stalkPerLP = (new BigNumber(10000)).plus(props.season.minus(key)).multipliedBy(5)
+    Object.keys(lpDeposits).sort((a,b) => parseInt(a) - parseInt(b)).forEach(key => {
+      let stalkPerLP = (new BigNumber(10000)).plus(season.minus(key)).multipliedBy(5)
       const stalkLeft = stalk.minus(stalkRemoved)
-      if (stalkPerLP.multipliedBy(props.crates[key]).isGreaterThanOrEqualTo(stalkLeft)) {
-        stalkRemoved = stalkRemoved.plus(stalkPerLP.multipliedBy(props.crates[key]))
-        beans = beans.plus(props.crates[key])
+      if (stalkPerLP.multipliedBy(lpDeposits[key]).isGreaterThanOrEqualTo(stalkLeft)) {
+        stalkRemoved = stalkRemoved.plus(stalkPerLP.multipliedBy(lpDeposits[key]))
+        beans = beans.plus(lpDeposits[key])
         if (stalkRemoved.isEqualTo(stalk)) return
       } else {
         beans = beans.plus(TrimBN(stalkLeft.dividedBy(stalkPerLP),18))
@@ -65,17 +94,17 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     const crates = [];
     const amounts = [];
     BigNumber.set({ DECIMAL_PLACES: 6 });
-    Object.keys(props.crates)
+    Object.keys(lpDeposits)
       .sort((a, b) => parseInt(b, 10) - parseInt(a, 10))
       .some((key) => {
         const crateLPsRemoved = lpRemoved
-          .plus(props.crates[key])
+          .plus(lpDeposits[key])
           .isLessThanOrEqualTo(beans)
-          ? props.crates[key]
+          ? lpDeposits[key]
           : beans.minus(lpRemoved);
-        const crateSeedsRemoved = props.seedCrates[key]
+        const crateSeedsRemoved = lpSeedDeposits[key]
           .multipliedBy(crateLPsRemoved)
-          .dividedBy(props.crates[key]);
+          .dividedBy(lpDeposits[key]);
         lpRemoved = lpRemoved.plus(crateLPsRemoved);
         seedsRemoved = seedsRemoved.plus(crateSeedsRemoved);
         BigNumber.set({ DECIMAL_PLACES: 10 });
@@ -84,7 +113,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
         );
         stalkRemoved = stalkRemoved.plus(
           crateSeedsRemoved
-            .multipliedBy(props.season.minus(key))
+            .multipliedBy(season.minus(key))
             .multipliedBy(0.00001)
         );
         BigNumber.set({ DECIMAL_PLACES: 6 });
@@ -100,13 +129,13 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   };
 
   function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, props.maxFromLPVal);
+    const fromNumber = MinBN(newFromNumber, lpSiloBalance);
     const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals);
     setFromLPValue(newFromLPValue);
     const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber);
     setToStalkValue(TrimBN(stalkRemoved, STALK.decimals));
     setToSeedsValue(TrimBN(seedsRemoved, SEEDS.decimals));
-    props.setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0));
+    setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0));
   }
 
   const handleFromChange = (event) => {
@@ -118,9 +147,9 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   };
   const maxHandler = () => {
     const minMaxFromVal = MinBNs([
-      props.maxToStalkVal.multipliedBy(props.stalkToLP),
-      props.maxToSeedsVal.multipliedBy(props.seedsToLP),
-      props.maxFromLPVal,
+      stalkBalance.multipliedBy(stalkToLP),
+      seedBalance.multipliedBy(seedsToLP),
+      lpSiloBalance,
     ]);
     fromValueUpdated(minMaxFromVal);
   };
@@ -128,12 +157,12 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   /* Input Fields */
   const fromLPField = (
     <TokenInputField
-      balance={props.maxFromLPVal}
+      balance={lpSiloBalance}
       handleChange={handleFromChange}
       isLP
-      locked={props.maxFromLPVal.isLessThanOrEqualTo(0)}
+      locked={lpSiloBalance.isLessThanOrEqualTo(0)}
       maxHandler={maxHandler}
-      poolForLPRatio={props.poolForLPRatio}
+      poolForLPRatio={poolForLPRatio}
       setValue={setFromLPValue}
       token={SiloAsset.LP}
       value={TrimBN(fromLPValue, 9)}
@@ -162,23 +191,9 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   );
 
   /* Transaction Details, settings and text */
-
   const details = [];
-  // Hiding for partial claim
-  // if (props.settings.claim) {
-  //   details.push(
-  //     <ClaimTextModule
-  //       key="claim"
-  //       balance={props.beanClaimable.plus(props.ethClaimable)}
-  //       claim={props.settings.claim}
-  //       mode={props.settings.mode}
-  //       beanClaimable={props.beanClaimable}
-  //       ethClaimable={props.ethClaimable}
-  //     />
-  //   );
-  // }
   details.push(
-    `Withdraw ${displayBN(new BigNumber(fromLPValue))} LP Tokens from the Silo`
+    `Withdraw ${displayBN(new BigNumber(fromLPValue))} BEAN:ETH LP Tokens from the Silo`
   );
   details.push(
     `Burn ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
@@ -186,25 +201,20 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
     )} Seeds`
   );
 
-  const unvoteTextField = props.locked ? (
-    <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
-      Unvote Active BIPs to Withdraw
-    </Box>
-  ) : null;
-  const showSettings = props.hasClaimable ? (
+  const showSettings = hasClaimable ? (
     <SettingsFormModule
-      hasClaimable={props.hasClaimable}
+      hasClaimable={hasClaimable}
       showUnitModule={false}
-      setSettings={props.setSettings}
-      settings={props.settings}
+      setSettings={setSettings}
+      settings={settings}
     />
   ) : null;
   const stalkChangePercent = toStalkValue
-    .dividedBy(props.totalStalk)
+    .dividedBy(totalStalk)
     .multipliedBy(100);
 
   function transactionDetails() {
-    if (fromLPValue.isLessThanOrEqualTo(0) || props.locked) return;
+    if (fromLPValue.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -233,7 +243,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
             )}% ownership of Beanstalk.`}
           </span>
           <br />
-          <span style={{ color: 'red' }}>{siloStrings.withdrawWarning.replace('{0}', props.withdrawSeasons)}</span>
+          <span style={{ color: 'red' }}>{siloStrings.withdrawWarning.replace('{0}', withdrawSeasons)}</span>
         </Box>
       </>
     );
@@ -249,7 +259,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
         return;
       }
 
-      if (props.settings.claim) {
+      if (settings.claim) {
         // Toast
         const txToast = new TransactionToast({
           loading: `Claiming and withdrawing ${displayBN(fromLPValue)} LP Tokens`,
@@ -260,7 +270,7 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
         claimAndWithdrawLP(
           withdrawParams.crates,
           withdrawParams.amounts,
-          props.claimable,
+          claimable,
           (response) => {
             fromValueUpdated(new BigNumber(-1));
             txToast.confirming(response);
@@ -301,7 +311,6 @@ export const LPWithdrawModule = forwardRef((props, ref) => {
   return (
     <>
       {fromLPField}
-      {unvoteTextField}
       {transactionDetails()}
       {showSettings}
     </>

@@ -17,7 +17,6 @@ import {
   MinBNs,
   toStringBaseUnitBN,
   TrimBN,
-  poolForLP,
   getToAmount,
   // maxLPToPeg,
   convertDepositedLP,
@@ -26,6 +25,7 @@ import {
   SwapMode,
 } from 'util/index';
 import {
+  CryptoAsset,
   SettingsFormModule,
   SiloAsset,
   siloStrings,
@@ -33,11 +33,16 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
   TransactionTextModule,
-  CryptoAsset,
+  TransactionToast,
 } from 'components/Common';
-import TransactionToast from 'components/Common/TransactionToast';
 
-export const ConvertLPModule = forwardRef((props, ref) => {
+export const ConvertLPModule = forwardRef(({
+  setIsFormDisabled,
+  settings,
+  setSettings,
+  updateExpectedPrice,
+  poolForLPRatio,
+}, ref) => {
   const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
@@ -57,34 +62,17 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-
-  const { beanReserve, ethReserve, beanPrice, usdcPrice, lpToPeg } =
+  const { beanReserve, ethReserve, beanPrice, lpToPeg } =
     useSelector<AppState, AppState['prices']>((state) => state.prices);
-
   const { totalLP } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-
-  const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) {
-      return [new BigNumber(-1), new BigNumber(-1)];
-    }
-    return poolForLP(amount, beanReserve, ethReserve, totalLP);
-  };
 
   function displayLP(beanInput, ethInput) {
     return `${displayBN(beanInput)}
       ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
       ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
-
-  const updateExpectedPrice = (sellEth: BigNumber, boughtBeans: BigNumber) => {
-    const endPrice = ethReserve
-      .plus(sellEth)
-      .dividedBy(beanReserve.minus(boughtBeans))
-      .dividedBy(usdcPrice);
-    return beanPrice.plus(endPrice).dividedBy(2);
-  };
 
   const getStalkAndSeedsRemoved = (beans) => {
     let lpRemoved = new BigNumber(0);
@@ -150,7 +138,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
       setToSeedsValue(TrimBN(netSeeds, SEEDS.decimals));
     });
 
-    props.setIsFormDisabled(
+    setIsFormDisabled(
       newFromLPValue.isLessThanOrEqualTo(0) || lpToPeg.isLessThanOrEqualTo(0)
     );
   }
@@ -211,8 +199,8 @@ export const ConvertLPModule = forwardRef((props, ref) => {
     <SettingsFormModule
       // handleMode={resetFields}
       hasSlippage
-      setSettings={props.setSettings}
-      settings={props.settings}
+      setSettings={setSettings}
+      settings={settings}
       showUnitModule={false}
       convertSlippage={siloStrings.convertSlippage}
     />
@@ -250,7 +238,7 @@ export const ConvertLPModule = forwardRef((props, ref) => {
   ) : null;
 
   function transactionDetails() {
-    if (fromLPValue.isLessThanOrEqualTo(0)) return;
+    if (fromLPValue.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -293,15 +281,15 @@ export const ConvertLPModule = forwardRef((props, ref) => {
 
       // Toast
       const txToast = new TransactionToast({
-        loading: `Converting ${displayBN(fromLPValue)} LP Tokens to Silo Beans`,
-        success: `Converted ${displayBN(fromLPValue)} LP Tokens to Silo Beans`,
+        loading: `Converting ${displayBN(fromLPValue)} LP Tokens to ${displayBN(toBeanValue)} Silo Beans`,
+        success: `Converted ${displayBN(fromLPValue)} LP Tokens to ${displayBN(toBeanValue)} Silo Beans`,
       });
 
       // Execute
       convertDepositedLP(
         toStringBaseUnitBN(fromLPValue, UNI_V2_ETH_BEAN_LP.decimals),
         toStringBaseUnitBN(
-          toBeanValue.multipliedBy(props.settings.slippage),
+          toBeanValue.multipliedBy(settings.slippage),
           BEAN.decimals
         ),
         convertParams.crates,

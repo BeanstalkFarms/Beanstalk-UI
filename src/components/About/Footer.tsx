@@ -129,7 +129,7 @@ export default function Footer() {
         <LogoLinks close link={CURVE_LINK}>
           <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)'} : { height: '25px', width: '25px', fill: 'url(#blackGradient)' }} />
         </LogoLinks>
-        {width > 500 ? (
+        {width > 900 ? (
           <LogoLinks link={COMMONWEALTH_LINK}>
             <CommonwealthIcon style={logoStyle} />
           </LogoLinks>

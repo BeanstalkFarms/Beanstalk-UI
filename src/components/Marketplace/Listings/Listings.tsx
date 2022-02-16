@@ -101,7 +101,6 @@ export default function Listings(props: ListingsProps) {
   // Setup
   useEffect(() => {
     const init = async () => {
-      console.log('Listings: init');
       const addr = await GetWalletAddress();
       setWalletAddress(addr);
     };

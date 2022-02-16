@@ -49,7 +49,6 @@ export default function Field() {
     backgroundColor: theme.module.metaBackground,
     padding: '10px',
     display: 'inline-flex',
-
   };
 
   // Hiding for now as the numbers are misleading

@@ -7,6 +7,8 @@ export * from './funds';
 export * from './tokens';
 export * from './values';
 export * from './colors';
+export * from './contracts';
+export * from './tokensv2';
 
 export function changeNetwork(chainId) {
     changeAddresses(chainId);

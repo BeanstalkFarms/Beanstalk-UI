@@ -19,6 +19,7 @@ import {
   calculateMaxBeansToPeg,
 } from 'util/index';
 import {
+  CryptoAsset,
   SettingsFormModule,
   SiloAsset,
   siloStrings,
@@ -26,11 +27,15 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
   TransactionTextModule,
-  CryptoAsset,
+  TransactionToast,
 } from 'components/Common';
-import TransactionToast from 'components/Common/TransactionToast';
 
-export const ConvertBeanModule = forwardRef((props, ref) => {
+export const ConvertBeanModule = forwardRef(({
+  setIsFormDisabled,
+  settings,
+  setSettings,
+  updateExpectedPrice,
+}, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
   const [toLPValue, setToLPValue] = useState(new BigNumber(0));
@@ -48,16 +53,13 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-
   const season = useSelector<AppState, AppState['season']>(
     (state) => state.season.season
   );
-
   const { totalLP } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-
-  const { beanReserve, ethReserve, beanPrice, usdcPrice, beansToPeg } =
+  const { beanReserve, ethReserve, beanPrice, beansToPeg } =
     useSelector<AppState, AppState['prices']>((state) => state.prices);
 
   const maxBeansToPeg = calculateMaxBeansToPeg(
@@ -71,14 +73,6 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       ${beanInput.isEqualTo(1) ? 'Bean' : 'Beans'} and ${displayBN(ethInput)}
       ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
-
-  const updateExpectedPrice = (buyEth: BigNumber, sellBeans: BigNumber) => {
-    const endPrice = ethReserve
-      .minus(buyEth.abs())
-      .dividedBy(beanReserve.plus(sellBeans.abs()))
-      .dividedBy(usdcPrice);
-    return beanPrice.plus(endPrice).dividedBy(2);
-  };
 
   const getStalkRemoved = (beans) => {
     let beansRemoved = new BigNumber(0);
@@ -126,7 +120,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       setToSellBeans(swapBeans);
     });
 
-    props.setIsFormDisabled(
+    setIsFormDisabled(
       newFromBeanValue.isLessThanOrEqualTo(0) ||
         maxBeansToPeg.isLessThanOrEqualTo(0)
     );
@@ -161,7 +155,6 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toStalkField = (
     <TokenOutputField
       decimals={4}
@@ -188,8 +181,8 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
 
   const showSettings = (
     <SettingsFormModule
-      setSettings={props.setSettings}
-      settings={props.settings}
+      setSettings={setSettings}
+      settings={settings}
       handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
       showUnitModule={false}
       hasSlippage
@@ -220,7 +213,7 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
   ];
 
   function transactionDetails() {
-    if (fromBeanValue.isLessThanOrEqualTo(0)) return;
+    if (fromBeanValue.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -262,15 +255,15 @@ export const ConvertBeanModule = forwardRef((props, ref) => {
       }
       // Toast
       const txToast = new TransactionToast({
-        loading: `Converting ${displayBN(fromBeanValue)} Silo Beans to LP Tokens`,
-        success: `Converted ${displayBN(fromBeanValue)} Silo Beans to LP Tokens`,
+        loading: `Converting ${displayBN(fromBeanValue)} Silo Beans to ${displayBN(toLPValue)} LP Tokens`,
+        success: `Converted ${displayBN(fromBeanValue)} Silo Beans to ${displayBN(toLPValue)} LP Tokens`,
       });
 
       // Execute
       convertDepositedBeans(
         toStringBaseUnitBN(fromBeanValue, BEAN.decimals),
         toStringBaseUnitBN(
-          toLPValue.multipliedBy(props.settings.slippage),
+          toLPValue.multipliedBy(settings.slippage),
           UNI_V2_ETH_BEAN_LP.decimals
         ),
         convertParams.crates,
