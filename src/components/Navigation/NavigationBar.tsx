@@ -43,11 +43,7 @@ export default function NavigationBar() {
   const { drawerOpen, width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-  const { beanPrice } = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
   const toggleDrawerOpen = () => dispatch(setDrawerOpen(!drawerOpen));
-
   const currentBeanPrice = <PriceTooltip allowExpand={false} />;
 
   return (

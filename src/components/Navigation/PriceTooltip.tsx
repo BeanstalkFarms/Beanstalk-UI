@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Button, makeStyles, Popover, Theme, Tooltip, withStyles } from '@material-ui/core';
+import { Box, Button, makeStyles, Tooltip, withStyles } from '@material-ui/core';
 import { AppState } from 'state';
 import { CryptoAsset, displayBN } from 'util/index';
 import { theme } from 'constants/index';
@@ -14,7 +14,7 @@ import uniswapLogo from 'img/uniswap-icon.svg';
 import curveLogo from 'img/curve-logo.svg';
 import TokenIcon from 'components/Common/TokenIcon';
 
-export const FormatTooltip = withStyles((t: Theme) => ({
+export const FormatTooltip = withStyles(() => ({
   tooltip: {
     backgroundColor: 'transparent',
     color: 'black',
@@ -23,25 +23,24 @@ export const FormatTooltip = withStyles((t: Theme) => ({
     fontFamily: 'Futura-Pt-Book',
     zIndex: 9999,
     maxWidth: 'none', // prevent wrapping
-    margin: (props: any) => props.margin || "24px 0",
+    margin: (props: any) => props.margin || '24px 0',
   },
 }))(Tooltip);
 
 const useStyles = makeStyles({
   sidebarExpansionContainer: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     // HACK: manually match widebar size and position
     width: 280, 
     marginLeft: -14,
-    borderBottom: "1px solid #ddd",
+    borderBottom: '1px solid #ddd',
     paddingBottom: 10,
-    boxShadow: "0 0 10px 4px -2px black"
   },
   aggregatePrice: {
     fontSize: 14,
     lineHeight: '13px',
     color: theme.backgroundText,
-    fontFamily: "Futura",
+    fontFamily: 'Futura',
     marginLeft: '10px',
     fontWeight: 500,
     borderRadius: 4,
@@ -51,45 +50,45 @@ const useStyles = makeStyles({
   accordionIcon: {
     fontSize: 14,
     lineHeight: 14,
-    verticalAlign: "bottom"
+    verticalAlign: 'bottom'
   },
   cardsContainer: {
-    display: "flex",
+    display: 'flex',
     fontSize: 16,
   },
   poolButton: {
-    display: "block", // so flexbox works
+    display: 'block', // so flexbox works
   },
   poolCard: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 4,
-    padding: "8px 8px",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    // justifyContent: "center",
-    textTransform: "none"
+    padding: '8px 8px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    textTransform: 'none'
   },
   poolLogo: {
     height: 23
   },
   poolPrice: {
     fontSize: 13,
-    padding: "0 14px",
-    fontFamily: "Lucida Console",
+    padding: '0 14px',
+    fontFamily: 'Lucida Console',
     fontWeight: 500,
   },
   poolMeta: {
     flex: 1,
     fontSize: 11,
-    lineHeight: "15px"
+    lineHeight: '15px'
   },
   poolMetaRow: {
-    display: "flex",
-    flexDirection: "row",
+    display: 'flex',
+    flexDirection: 'row',
   },
   poolMetaRowLabel: {
-    textAlign: "right",
+    textAlign: 'right',
     width: 46,
     marginRight: 4,
     opacity: 0.5,
@@ -111,54 +110,51 @@ export default function PriceTooltip({
     (state) => state.prices
   );
 
-  const PriceCards = ({ direction = 'row' }) => {
-    return (
-      <div className={classes.cardsContainer} style={{ flexDirection: direction }}>
-        {/* Uniswap */}
-        <Button className={classes.poolButton} href={UNISWAP_CONTRACT_LINK} target="_blank" rel="noreferrer">
-          <Box className={classes.poolCard} boxShadow="2">
-            <img src={uniswapLogo} alt="Uniswap Logo" className={classes.poolLogo} />
-            <span className={classes.poolPrice}>${uniTuple.price.toFixed(4)}</span>
-            <div className={classes.poolMeta}>
-              <div className={classes.poolMetaRow}>
-                <div className={classes.poolMetaRowLabel}>liquidity:</div>
-                <div>${displayBN(uniTuple.liquidity)}</div>
-              </div>
-              <div className={classes.poolMetaRow}>
-                <div className={classes.poolMetaRowLabel}>delta:</div>
-                <div>{uniTuple.deltaB.isNegative() ? '' : '+'}{displayBN(uniTuple.deltaB, true)}<TokenIcon token={CryptoAsset.Bean} /></div>
-              </div>
+  const PriceCards = ({ direction = 'row' }) => (
+    <div className={classes.cardsContainer} style={{ flexDirection: direction }}>
+      {/* Uniswap */}
+      <Button className={classes.poolButton} href={UNISWAP_CONTRACT_LINK} target="_blank" rel="noreferrer">
+        <Box className={classes.poolCard} boxShadow="2">
+          <img src={uniswapLogo} alt="Uniswap Logo" className={classes.poolLogo} />
+          <span className={classes.poolPrice}>${uniTuple.price.toFixed(4)}</span>
+          <div className={classes.poolMeta}>
+            <div className={classes.poolMetaRow}>
+              <div className={classes.poolMetaRowLabel}>liquidity:</div>
+              <div>${displayBN(uniTuple.liquidity)}</div>
             </div>
-          </Box>
-        </Button>
-        {/* Curve */}
-        <Button className={classes.poolButton} href={CURVE_LINK} target="_blank" rel="noreferrer">
-          <Box className={classes.poolCard} boxShadow="2">
-            <img src={curveLogo} alt="Curve Logo" className={classes.poolLogo} />
-            <span className={classes.poolPrice}>${curveTuple.price.toFixed(4)}</span>
-            <div className={classes.poolMeta}>
-              <div className={classes.poolMetaRow}>
-                <div className={classes.poolMetaRowLabel}>liquidity:</div>
-                <div>${displayBN(curveTuple.liquidity)}</div>
-              </div>
-              <div className={classes.poolMetaRow}>
-                <div className={classes.poolMetaRowLabel}>delta:</div>
-                <div>{curveTuple.deltaB.isNegative() ? '' : '+'}{displayBN(curveTuple.deltaB, true)}<TokenIcon token={CryptoAsset.Bean} /></div>
-              </div>
+            <div className={classes.poolMetaRow}>
+              <div className={classes.poolMetaRowLabel}>delta:</div>
+              <div>{uniTuple.deltaB.isNegative() ? '' : '+'}{displayBN(uniTuple.deltaB, true)}<TokenIcon token={CryptoAsset.Bean} /></div>
             </div>
-          </Box>
-        </Button>
-      </div>
-    )
-  }
+          </div>
+        </Box>
+      </Button>
+      {/* Curve */}
+      <Button className={classes.poolButton} href={CURVE_LINK} target="_blank" rel="noreferrer">
+        <Box className={classes.poolCard} boxShadow="2">
+          <img src={curveLogo} alt="Curve Logo" className={classes.poolLogo} />
+          <span className={classes.poolPrice}>${curveTuple.price.toFixed(4)}</span>
+          <div className={classes.poolMeta}>
+            <div className={classes.poolMetaRow}>
+              <div className={classes.poolMetaRowLabel}>liquidity:</div>
+              <div>${displayBN(curveTuple.liquidity)}</div>
+            </div>
+            <div className={classes.poolMetaRow}>
+              <div className={classes.poolMetaRowLabel}>delta:</div>
+              <div>{curveTuple.deltaB.isNegative() ? '' : '+'}{displayBN(curveTuple.deltaB, true)}<TokenIcon token={CryptoAsset.Bean} /></div>
+            </div>
+          </div>
+        </Box>
+      </Button>
+    </div>
+  );
 
   // Open popover after component mounts. This ensures that `ref` is
   // populated so we can position things correctly by default.
   useEffect(() => {
-    if (!isMobile) setOpen(true)
+    if (!isMobile) setOpen(true);
   }, [isMobile]);
 
- 
   if (!beanPrice || beanPrice.isLessThan(0)) return null;
 
   if (allowExpand === false) {
@@ -166,7 +162,7 @@ export default function PriceTooltip({
       <div className={classes.aggregatePrice}>
         {`$${priceTuple.price.toFixed(4)}`}
       </div>
-    )
+    );
   }
 
   return isMobile ? (
