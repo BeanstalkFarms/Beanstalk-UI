@@ -655,7 +655,6 @@ export default function Updater() {
       const claimable = [
         Object.keys(userBeanReceivableCrates).map((b) => b.toString()),
         Object.keys(userLPReceivableCrates).map((b) => b.toString()),
-        Object.keys(userCurveReceivableCrates).map((b) => b.toString()),
         Object.keys(harvestablePlots).map((b) =>
           toBaseUnitBN(b, BEAN.decimals).toString()
         ),
@@ -663,6 +662,7 @@ export default function Updater() {
         true,
         minReceivables[0],
         minReceivables[1],
+        false,
       ];
 
       dispatch(
