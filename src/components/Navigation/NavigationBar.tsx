@@ -48,9 +48,7 @@ export default function NavigationBar() {
   );
   const toggleDrawerOpen = () => dispatch(setDrawerOpen(!drawerOpen));
 
-  const currentBeanPrice = beanPrice && beanPrice.isGreaterThan(0) && (
-    <PriceTooltip />
-  );
+  const currentBeanPrice = <PriceTooltip allowExpand={false} />;
 
   return (
     <AppBar className={classes.appBar} position="sticky">

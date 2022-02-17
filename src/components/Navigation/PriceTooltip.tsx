@@ -7,6 +7,8 @@ import { theme } from 'constants/index';
 import { UNISWAP_CONTRACT_LINK, CURVE_LINK } from 'constants/links';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 import uniswapLogo from 'img/uniswap-icon.svg';
 import curveLogo from 'img/curve-logo.svg';
@@ -20,11 +22,21 @@ export const FormatTooltip = withStyles((t: Theme) => ({
     fontSize: 12,
     fontFamily: 'Futura-Pt-Book',
     zIndex: 9999,
-    maxWidth: 'none' // prevent wrapping
+    maxWidth: 'none', // prevent wrapping
+    margin: (props: any) => props.margin || "24px 0",
   },
 }))(Tooltip);
 
 const useStyles = makeStyles({
+  sidebarExpansionContainer: {
+    backgroundColor: "white",
+    // HACK: manually match widebar size and position
+    width: 280, 
+    marginLeft: -14,
+    borderBottom: "1px solid #ddd",
+    paddingBottom: 10,
+    boxShadow: "0 0 10px 4px -2px black"
+  },
   aggregatePrice: {
     fontSize: 14,
     lineHeight: '13px',
@@ -33,7 +45,6 @@ const useStyles = makeStyles({
     marginLeft: '10px',
     fontWeight: 500,
     borderRadius: 4,
-    cursor: "pointer",
     paddingRight: 4,
     paddingLeft: 4,
   },
@@ -56,7 +67,7 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
     textTransform: "none"
   },
   poolLogo: {
@@ -69,6 +80,7 @@ const useStyles = makeStyles({
     fontWeight: 500,
   },
   poolMeta: {
+    flex: 1,
     fontSize: 11,
     lineHeight: "15px"
   },
@@ -84,8 +96,10 @@ const useStyles = makeStyles({
   }
 });
 
-export default function PriceTooltip() {
-  const ref = useRef(null);
+export default function PriceTooltip({
+  isMobile = false,
+  allowExpand = true
+}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const {
@@ -96,19 +110,6 @@ export default function PriceTooltip() {
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
-
-  const displayCurve = theme.name !== 'ropsten' ?
-    <>
-      <br />
-      Curve
-      <br />
-      &nbsp;&nbsp;{`Price: $${curveTuple.price.toFixed(4)}`}
-      <br />
-      &nbsp;&nbsp;{`Liquidity: $${displayBN(curveTuple.liquidity)}`}
-      <br />
-      &nbsp;&nbsp;{`Delta B: ${displayBN(curveTuple.deltaB, true)}`}
-    </>
-    : null;
 
   const PriceCards = ({ direction = 'row' }) => {
     return (
@@ -154,20 +155,54 @@ export default function PriceTooltip() {
   // Open popover after component mounts. This ensures that `ref` is
   // populated so we can position things correctly by default.
   useEffect(() => {
-    setOpen(true)
-  }, []);
+    if (!isMobile) setOpen(true)
+  }, [isMobile]);
 
-  return (beanPrice && beanPrice.isGreaterThan(0)) ? (
+ 
+  if (!beanPrice || beanPrice.isLessThan(0)) return null;
+
+  if (allowExpand === false) {
+    return (
+      <div className={classes.aggregatePrice}>
+        {`$${priceTuple.price.toFixed(4)}`}
+      </div>
+    )
+  }
+
+  return isMobile ? (
     <FormatTooltip
+      margin="12px 0 24px 0" // Reduce the top margin
       interactive
       open={open}
+      placement="bottom-end"
+      style={{ marginTop: 0 }}
+      title={(
+        <Box className={classes.sidebarExpansionContainer}>
+          <PriceCards direction="column" />
+        </Box>
+      )}
+    >
+      <Button onClick={() => setOpen(!open)} className={classes.aggregatePrice}>
+        {`$${priceTuple.price.toFixed(4)}`}
+        {open
+          ? <KeyboardArrowUpIcon className={classes.accordionIcon} /> 
+          : <KeyboardArrowDownIcon className={classes.accordionIcon} />}
+      </Button>
+    </FormatTooltip>
+  ) : (
+    <FormatTooltip
+      margin="-4px 12px" // -4 centers on the NavigationBar
+      interactive
+      open={isMobile ? false : open}
       placement="right-end"
       title={<PriceCards />}
     >
       <Button onClick={() => setOpen(!open)} className={classes.aggregatePrice}>
         {`$${priceTuple.price.toFixed(4)}`}
-        {open ? <ChevronLeftIcon className={classes.accordionIcon} /> : <ChevronRightIcon className={classes.accordionIcon} />}
+        {open
+          ? <ChevronLeftIcon className={classes.accordionIcon} /> 
+          : <ChevronRightIcon className={classes.accordionIcon} />}
       </Button>
     </FormatTooltip>
-  ) : null; 
+  ); 
 }

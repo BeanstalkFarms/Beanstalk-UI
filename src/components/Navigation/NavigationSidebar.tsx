@@ -209,8 +209,10 @@ export default function NavigationSidebar() {
     addActiveFundraiserNav(NAVIGATION_MAP);
   }
 
-  const currentBeanPrice = beanPrice && beanPrice.isGreaterThan(0) && (
-    <PriceTooltip />
+  const currentBeanPrice = (
+    <PriceTooltip
+      isMobile={width < 800}
+    />
   );
 
   //
