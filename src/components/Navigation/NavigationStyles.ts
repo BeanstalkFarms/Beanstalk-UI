@@ -11,7 +11,7 @@ export const useStyles = makeStyles({
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
   },
-  //
+  // Drawer
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -28,20 +28,21 @@ export const useStyles = makeStyles({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  //
+  // Nav overall
   NavSubheader: {
     fontFamily: 'Futura',
-    lineHeight: '24px',
-    backgroundColor: '#fff',
+    lineHeight: '22px',
+    // backgroundColor: '#fff',
   },
   Badge: {
     backgroundColor: theme.secondary,
     color: theme.accentText,
-    fontSize: 11.5,
+    fontSize: 11,
     padding: '2px 5px',
     borderRadius: 4,
     marginRight: 4,
   },
+  // Nav links
   NavLinkHeader: {
     display: 'flex',
     flexDirection: 'row',
@@ -49,8 +50,8 @@ export const useStyles = makeStyles({
   },
   NavLinkTitle: {
     fontFamily: 'Futura, Helvetica',
-    fontWeight: '800',
-    fontSize: 12,
+    fontWeight: 800,
+    fontSize: 14,
   },
   NavLink: {
     color: 'inherit',

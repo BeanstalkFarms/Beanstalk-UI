@@ -51,6 +51,7 @@ export default function PriceTooltip() {
           lineHeight: '13px',
           color: theme.backgroundText,
           marginLeft: '10px',
+          fontWeight: 'semibold'
         }}
       >
         {`$${priceTuple.price.toFixed(4)}`}
