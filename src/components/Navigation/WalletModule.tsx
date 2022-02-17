@@ -365,8 +365,9 @@ function DisplayEvent({ event }) {
 
 const walletListStyle = {
   width: 365,
-  marginTop: 2,
-  overflow: 'hidden',
+  marginTop: 4,
+  overflow: 'auto',
+  maxHeight: 500,
 };
 
 /**
@@ -807,7 +808,7 @@ export default function WalletModule() {
                       position: 'sticky',
                       top: '0px',
                       backgroundColor: theme.module.background,
-                      // maxHeight: 100,
+                      zIndex: 99,
                     }}
                   >
                     {/* Tab buttons ("My Balances", "Transactions") */}
