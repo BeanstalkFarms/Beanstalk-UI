@@ -24,15 +24,14 @@ export const FormatTooltip = withStyles(() => ({
     zIndex: 9999,
     maxWidth: 'none', // prevent wrapping
     margin: (props: any) => props.margin || '24px 0',
+    padding: 0,
   },
 }))(Tooltip);
 
 const useStyles = makeStyles({
   sidebarExpansionContainer: {
     backgroundColor: 'white',
-    // HACK: manually match widebar size and position
-    width: 280, 
-    marginLeft: -14,
+    width: '100%',
     borderBottom: '1px solid #ddd',
     paddingBottom: 10,
   },
@@ -74,7 +73,7 @@ const useStyles = makeStyles({
   },
   poolPrice: {
     fontSize: 13,
-    padding: '0 14px',
+    padding: '0 8px',
     fontFamily: 'Lucida Console',
     fontWeight: 500,
   },
@@ -115,7 +114,7 @@ export default function PriceTooltip({
       {/* Uniswap */}
       <Button className={classes.poolButton} href={UNISWAP_CONTRACT_LINK} target="_blank" rel="noreferrer">
         <Box className={classes.poolCard} boxShadow="2">
-          <img src={uniswapLogo} alt="Uniswap Logo" className={classes.poolLogo} />
+          <img src={uniswapLogo} alt="Uniswap Logo" className={classes.poolLogo} style={{ marginTop: -4 }} />
           <span className={classes.poolPrice}>${uniTuple.price.toFixed(4)}</span>
           <div className={classes.poolMeta}>
             <div className={classes.poolMetaRow}>
@@ -167,11 +166,20 @@ export default function PriceTooltip({
 
   return isMobile ? (
     <FormatTooltip
-      margin="12px 0 24px 0" // Reduce the top margin
+      margin="24px 0 24px 0" // Reduce the top margin
       interactive
       open={open}
       placement="bottom-end"
-      style={{ marginTop: 0 }}
+      style={{
+        marginTop: 0,
+      }}
+      PopperProps={{
+        disablePortal: true,
+        style: {
+          width: 280,
+          marginLeft: -5,
+        }
+      }}
       title={(
         <Box className={classes.sidebarExpansionContainer}>
           <PriceCards direction="column" />
@@ -187,7 +195,7 @@ export default function PriceTooltip({
     </FormatTooltip>
   ) : (
     <FormatTooltip
-      margin="-6px 12px" // -6 centers on the NavigationBar
+      margin="-3px 18px" // -6 centers on the NavigationBar
       interactive
       open={isMobile ? false : open}
       placement="right-end"
