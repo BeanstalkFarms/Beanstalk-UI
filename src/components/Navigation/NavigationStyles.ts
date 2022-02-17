@@ -28,6 +28,9 @@ export const useStyles = makeStyles({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  beanLogo: {
+    marginTop: 4,
+  },
   // Nav overall
   NavSubheader: {
     fontFamily: 'Futura',

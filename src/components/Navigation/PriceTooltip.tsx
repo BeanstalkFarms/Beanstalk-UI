@@ -187,7 +187,7 @@ export default function PriceTooltip({
     </FormatTooltip>
   ) : (
     <FormatTooltip
-      margin="-4px 12px" // -4 centers on the NavigationBar
+      margin="-6px 12px" // -6 centers on the NavigationBar
       interactive
       open={isMobile ? false : open}
       placement="right-end"
