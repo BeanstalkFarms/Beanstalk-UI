@@ -83,6 +83,10 @@ const menuItemStyle = {
 //
 const useStyles = makeStyles({
   walletButton: {
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 18,
+    pdadingRight: 18,
     textDecoration: 'none',
     color: theme.accentText,
     textTransform: 'none',
@@ -361,8 +365,9 @@ function DisplayEvent({ event }) {
 
 const walletListStyle = {
   width: 365,
-  marginTop: 2,
-  overflow: 'hidden',
+  marginTop: 4,
+  overflow: 'auto',
+  maxHeight: 500,
 };
 
 /**
@@ -803,6 +808,7 @@ export default function WalletModule() {
                       position: 'sticky',
                       top: '0px',
                       backgroundColor: theme.module.background,
+                      zIndex: 99,
                     }}
                   >
                     {/* Tab buttons ("My Balances", "Transactions") */}
