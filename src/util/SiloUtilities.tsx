@@ -151,12 +151,25 @@ export const claim = async (
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   (wrappedBeans === '0'
-    ? beanstalkContract().claim([...claimable, toWallet])
-    : beanstalkContract().claimAndUnwrapBeans([...claimable, toWallet], wrappedBeans)),
+    ? beanstalkContract().claim(
+      [
+        ...claimable, 
+        toWallet
+      ]
+    )
+    : beanstalkContract().claimAndUnwrapBeans(
+      [
+        ...claimable,
+        toWallet
+      ],
+      wrappedBeans
+    )
+  ),
   { onResponse }
 );
 
 export const updateSilo = async (
+  // claimable: any, // FIXME
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   beanstalkContract().updateSilo(account),

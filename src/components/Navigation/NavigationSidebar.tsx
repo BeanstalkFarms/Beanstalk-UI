@@ -196,9 +196,7 @@ export default function NavigationSidebar() {
   }
 
   // Add badge to Sidebar nav
-  const badgeDataByPath : { [key: string] : string | null } = {
-    // 'farm/silo': initialized && beanAPY ? `${beanAPY.toFixed(0)}%` : null,
-    // 'farm/field': initialized && fieldAPY ? `${fieldAPY.toFixed(0)}%` : null,
+  const badgeDataByPath : { [key: string] : string | any[] | null } = {
     'farm/field': initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
     beanfts: 'Winter',
   };
@@ -211,8 +209,10 @@ export default function NavigationSidebar() {
     addActiveFundraiserNav(NAVIGATION_MAP);
   }
 
-  const currentBeanPrice = beanPrice && beanPrice.isGreaterThan(0) && (
-    <PriceTooltip />
+  const currentBeanPrice = (
+    <PriceTooltip
+      isMobile={width < 800}
+    />
   );
 
   //
@@ -229,7 +229,7 @@ export default function NavigationSidebar() {
           <span className={classes.NavLinkTitle} style={{ marginRight: 8 }}>{item.title}</span>
           {!!badgeDataByPath[item.path] && (
             Array.isArray(badgeDataByPath[item.path]) ? (
-              badgeDataByPath[item.path].map((val, index) => (
+              (badgeDataByPath[item.path] as any[]).map((val, index) => (
                 <span key={index} className={classes.Badge}>{val}</span>
               ))
             ) : (
@@ -248,14 +248,16 @@ export default function NavigationSidebar() {
 
   const drawerContent = (
     <>
-      <Box className={classes.currentPriceStyle} p={2}>
-        <img
-          className="svg"
-          name={theme.name}
-          height="36px"
-          src={BeanLogo}
-          alt="app.bean.money"
-        />
+      <Box className={classes.logoPriceBar} p={2} pt={1}>
+        <a href="https://bean.money" className={classes.beanLogoLink}>
+          <img
+            className={classes.beanLogoImage}
+            name={theme.name}
+            height="36px"
+            src={BeanLogo}
+            alt="app.bean.money"
+          />
+        </a>
         {currentBeanPrice}
       </Box>
       {/**
@@ -281,7 +283,6 @@ export default function NavigationSidebar() {
         <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${toTokenUnitsBN(totalPods, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${toTokenUnitsBN(weather.harvestableIndex, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Weather" value={weather?.weather?.isGreaterThan(0) && `${weather.weather.toFixed(0)}%`} hideIfNull />
-        {/* <Metric label="ETH" value={ethPrices?.ethPrice && ethPrices.ethPrice > 0 && `$${ethPrices.ethPrice}`} hideIfNull /> */}
         <Metric label="ETH" value={usdcPrice && usdcPrice > 0 && `$${(1 / usdcPrice).toFixed(2)}`} hideIfNull />
         <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} hideIfNull />
       </Box>
