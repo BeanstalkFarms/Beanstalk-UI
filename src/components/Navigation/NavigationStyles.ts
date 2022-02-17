@@ -23,13 +23,17 @@ export const useStyles = makeStyles({
   content: {
     flexGrow: 1,
   },
-  currentPriceStyle: {
+  logoPriceBar: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  beanLogo: {
-    marginTop: 4,
+  beanLogoLink: {
+    display: 'block',
+    paddingTop: 4
+  },
+  beanLogoImage: {
+    marginTop: 0
   },
   // Nav overall
   NavSubheader: {

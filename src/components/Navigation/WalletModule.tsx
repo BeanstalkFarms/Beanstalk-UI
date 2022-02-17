@@ -83,6 +83,10 @@ const menuItemStyle = {
 //
 const useStyles = makeStyles({
   walletButton: {
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 18,
+    pdadingRight: 18,
     textDecoration: 'none',
     color: theme.accentText,
     textTransform: 'none',
@@ -803,6 +807,7 @@ export default function WalletModule() {
                       position: 'sticky',
                       top: '0px',
                       backgroundColor: theme.module.background,
+                      // maxHeight: 100,
                     }}
                   >
                     {/* Tab buttons ("My Balances", "Transactions") */}

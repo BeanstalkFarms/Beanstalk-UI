@@ -200,6 +200,15 @@ export default function PriceTooltip({
       open={isMobile ? false : open}
       placement="right-end"
       title={<PriceCards />}
+      PopperProps={{
+        popperOptions: {
+          // Disable the popper's response to scroll events and make its position fixed.
+          // This is because we're using the Popper's `portal`
+          // as a hack to display it outside of <NavigationSidebar />.
+          eventsEnabled: false,
+          positionFixed: true
+        }
+      }}
     >
       <Button onClick={() => setOpen(!open)} className={classes.aggregatePrice}>
         {`$${priceTuple.price.toFixed(4)}`}

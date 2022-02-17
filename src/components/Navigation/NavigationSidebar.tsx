@@ -248,10 +248,10 @@ export default function NavigationSidebar() {
 
   const drawerContent = (
     <>
-      <Box className={classes.currentPriceStyle} p={2} pt={1.5}>
-        <a href="https://bean.money">
+      <Box className={classes.logoPriceBar} p={2} pt={1}>
+        <a href="https://bean.money" className={classes.beanLogoLink}>
           <img
-            className={classes.beanLogo}
+            className={classes.beanLogoImage}
             name={theme.name}
             height="36px"
             src={BeanLogo}
