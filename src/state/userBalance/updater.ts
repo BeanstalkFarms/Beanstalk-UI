@@ -662,7 +662,6 @@ export default function Updater() {
         true,
         minReceivables[0],
         minReceivables[1],
-        false,
       ];
 
       dispatch(
