@@ -14,7 +14,7 @@ import { BEAN, ETH } from 'constants/index';
 const BEANSPROUT_WALLET = '0x516d34570521C2796f20fe1745129024d45344Fc'; // Silo Chad Test Wallet
 const POKER_CONFIRMATION_KEY = 'beanstalk-poker-confirmation';
 const POKER_DISCORD_URL = 'https://discord.gg/TC8SV7evkw';
-const POKER_REGISTRATION_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdNNy0obUeqJaJXnEqrtmN6s5STIUlmLvv3nk_p3mGDmB5Yjw/viewform'
+const POKER_REGISTRATION_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdNNy0obUeqJaJXnEqrtmN6s5STIUlmLvv3nk_p3mGDmB5Yjw/viewform';
 
 const prefilledFormUrl = (
   _account: string,
