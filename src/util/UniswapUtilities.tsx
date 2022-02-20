@@ -26,7 +26,7 @@ export const buyExactBeans = async (
   amountIn: string,
   amountOut: string,
   to: string | undefined,
-  onResponse: TxnCallbacks['onResponse']
+  onResponse: TxnCallbacks['onResponse'],
 ) => handleCallbacks(
   uniswapRouterContract().swapETHForExactTokens(
     amountOut,
@@ -36,7 +36,7 @@ export const buyExactBeans = async (
     { value: amountIn }
   ),
   { onResponse }
-)
+);
 
 /**
  * 

@@ -153,6 +153,7 @@ export default function SettingsFormModule(props) {
 
   const unitModule = props.showUnitModule ? (
     <UnitSelectionModule
+      beanEthereum={props.showBeanEthereum}
       beanEthereumSwap={props.showBeanEthereumSwap}
       lp={props.showLP}
       setValue={(value) => {

@@ -1,55 +1,84 @@
 import React, { useState } from 'react';
-import { Page } from 'Pages/index';
-import { Grid } from '@material-ui/core';
-import { BaseModule, EthInputField, InputFieldPlus, SettingsFormModule, TokenInputField, TokenOutputField, TransactionToast } from 'components/Common';
-import { BASE_SLIPPAGE } from 'constants/values';
-import BigNumber from 'bignumber.js';
-import { buyExactBeans, CryptoAsset, getFromAmount, SwapMode, toBaseUnitBN, toStringBaseUnitBN, transferBeans, TrimBN } from 'util/index';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state/index';
+import { Button, Grid } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import BigNumber from 'bignumber.js';
+
+import { BaseModule, SettingsFormModule, TokenOutputField, TransactionToast } from 'components/Common';
+import { BASE_SLIPPAGE } from 'constants/values';
+import { Page } from 'Pages/index';
+import { account, buyExactBeans, CryptoAsset, getFromAmount, SwapMode, toStringBaseUnitBN, transferBeans, TrimBN } from 'util/index';
+import { AppState } from 'state/index';
 import { BEAN, ETH } from 'constants/index';
 
-const BEANSPROUT_WALLET = "0x516d34570521C2796f20fe1745129024d45344Fc"; // Silo Chad Test Wallet
+const BEANSPROUT_WALLET = '0x516d34570521C2796f20fe1745129024d45344Fc'; // Silo Chad Test Wallet
+const POKER_CONFIRMATION_KEY = 'beanstalk-poker-confirmation';
+const POKER_DISCORD_LINK = 'https://discord.gg/TC8SV7evkw';
+
+const prefilledFormUrl = (
+  _account: string,
+  _txnHash: string,
+) => (
+  `https://docs.google.com/forms/d/e/1FAIpQLSdNNy0obUeqJaJXnEqrtmN6s5STIUlmLvv3nk_p3mGDmB5Yjw/viewform?usp=pp_url&entry.673389134=${_account}&entry.1853585154=${_txnHash}`
+);
+
+type PokerConfirmations = {
+  [account: string]: string;
+}
+const usePokerConfirmations = () => {
+  let confirmation = null;
+  try {
+    const s = window.localStorage.getItem(POKER_CONFIRMATION_KEY);
+    if (s) {
+      confirmation = JSON.parse(s);
+    }
+  } catch (e) {
+    // pass; default null if never set
+  }
+  return useState<PokerConfirmations | null>(confirmation);
+};
 
 function Poker() {
+  /** Settings */
   const [settings, setSettings] = useState({
     claim: false,
-    mode: null,
+    mode: SwapMode.Bean,
     slippage: new BigNumber(BASE_SLIPPAGE),
-  })
+  });
+  /** Disable the form button while the txn is pending. */
+  const [transacting, setTransacting] = useState(false);
+  /** When the buy-in txn confirms, we store it in local state to prevent people from buying in twice. */
+  const [confirmations, setConfirmations] = usePokerConfirmations();
 
-  const { beanReserve, ethReserve, usdcPrice, beanPrice } = useSelector<
-    AppState,
-    AppState['prices']
-  >((state) => state.prices);
+  // Global state
+  const { beanReserve, ethReserve } = useSelector<AppState, AppState['prices']>((state) => state.prices);
+  const { beanBalance, ethBalance } = useSelector<AppState, AppState['userBalance']>((state) => state.userBalance);
 
-  const {
-    beanBalance,
-    ethBalance,
-    lpReceivableBalance,
-    beanClaimableBalance,
-    claimable,
-    claimableEthBalance,
-    harvestablePodBalance,
-    hasClaimable,
-    plots,
-    harvestablePlots,
-  } = useSelector<AppState, AppState['userBalance']>(
-    (state) => state.userBalance
-  );
-
+  // Calculations
+  const alreadyConfirmed = confirmations && confirmations[account];
   const ethNeeded = getFromAmount(
     (new BigNumber(100)).div(settings.slippage),
     ethReserve,
     beanReserve
-  )
-
+  );
   const notEnoughOfToken = settings.mode === SwapMode.Bean ? (
     beanBalance.lt(100)
   ) : (
     ethBalance.lt(ethNeeded)
   );
+
+  // Handlers
+  const handleConfirmation = (txnHash: string) => {
+    const o = { 
+      ...confirmations,   // keep prev entries
+      [account]: txnHash, // add hash to current wallet
+    };
+    window.localStorage.setItem(
+      POKER_CONFIRMATION_KEY,
+      JSON.stringify(o)
+    );
+    setConfirmations(o);
+  };
 
   return (
     <Grid container item xs={12} justifyContent="center">
@@ -64,25 +93,30 @@ function Poker() {
             undefined
             // section > 0 || orderIndex ? new BigNumber(1) : uniswapBeanAllowance
           }
-          isDisabled={notEnoughOfToken}
-          resetForm={() => {
-            // setOrderIndex(1);
-          }}
+          isDisabled={alreadyConfirmed || transacting || notEnoughOfToken}
           section={0}
-          sectionTitles={['Buy In']}
+          sectionTitles={[alreadyConfirmed ? 'Buy-in received' : 'Buy in']}
           // sectionTitlesDescription={sectionTitlesDescription}
           // setAllowance={updateUniswapBeanAllowance}
           // handleApprove={approveUniswapBean}
+          // Hide the button when we finalize the buy-in.
+          showButton={!alreadyConfirmed}
           handleForm={() => {
             // Toast
             const txToast = new TransactionToast({
-              loading: `Buying in for 100 Beans`,
-              success: `Bought into the Poker Tournament!`,
+              loading: 'Buying in for 100 Beans',
+              success: 'Bought into the Poker Tournament!',
             });
-            const onResponse = (response) => {
-              txToast.confirming(response)
+            const onResponse = (response: any) => {
+              txToast.confirming(response);
+            };
+            const onConfirm = (value) => {
+              txToast.success(value);
+              setTransacting(false);
+              handleConfirmation(value.transactionHash);
             };
 
+            setTransacting(true);
             if (settings.mode === SwapMode.Bean) {
               // Execute
               transferBeans(
@@ -90,9 +124,7 @@ function Poker() {
                 toStringBaseUnitBN(100, BEAN.decimals),
                 onResponse
               )
-              .then((value) => {
-                txToast.success(value);
-              })
+              .then(onConfirm)
               .catch((err) => {
                 txToast.error(err);
               });
@@ -104,60 +136,89 @@ function Poker() {
                 BEANSPROUT_WALLET,
                 onResponse
               )
-              .then((value) => {
-                txToast.success(value);
-              })
+              .then(onConfirm)
               .catch((err) => {
                 txToast.error(err);
               });
             }
           }}
-          // handleTabChange={handleTabChange}
           marginTop="16px"
         >
-          {settings.mode === SwapMode.Bean ? (
+          {alreadyConfirmed ? (
             <>
-              <TokenInputField
-                locked={true}
-                key={0}
-                balance={beanBalance}
-                token={CryptoAsset.Bean}
-                value={new BigNumber(100)}
-              />
-              {notEnoughOfToken ? (
-                <p>You need 100 Beans to buy in. <button onClick={() => setSettings({ ...settings, mode: SwapMode.Ethereum })}>Use Ethereum</button></p>
-              ) : null}
+              <p>
+                To finish registration, please create a <a href="https://pokerstars.com" target="_blank" rel="noreferrer">PokerStars</a> account and submit your username via the registration form below. If you have already done this, you don&apos;t need to submit the form again. Join the <a href={POKER_DISCORD_LINK} target="_blank" rel="noreferrer">Beans of Poker</a> Discord for more updates.
+              </p>
+              <a href={prefilledFormUrl(account, confirmations[account])} target="_blank" rel="noreferrer">
+                <Button
+                  style={{
+                    borderRadius: '15px',
+                    fontFamily: 'Futura-Pt-Book',
+                    fontSize: 'calc(10px + 1vmin)',
+                    height: '44px',
+                    margin: '12px 12px',
+                    width: '64%',
+                    maxWidth: '240px',
+                    zIndex: '1',
+                    color: '#fff',
+                    textDecoration: 'none !important',
+                  }}
+                  color="primary"
+                  variant="contained"
+                >
+                  Register
+                </Button>
+              </a>
             </>
           ) : (
-            <>
-              <TokenInputField
-                balance={ethBalance}
-                locked
-                token={CryptoAsset.Ethereum}
-                value={TrimBN(ethNeeded, 9)}
-              />
-              <ExpandMoreIcon
-                color="primary"
-                style={{ marginBottom: '-14px', width: '100%' }}
-              />
-              <TokenOutputField
-                value={100}
-                token={CryptoAsset.Bean}
-              />
-            </>
+            settings.mode === SwapMode.Bean ? (
+              <>
+                <TokenOutputField
+                  locked
+                  key={0}
+                  balance={beanBalance}
+                  token={CryptoAsset.Bean}
+                  value={new BigNumber(100)}
+                />
+                {notEnoughOfToken ? (
+                  <p>You need 100 Beans to buy in. <button onClick={() => setSettings({ ...settings, mode: SwapMode.Ethereum })}>Use Ethereum</button></p>
+                ) : null}
+              </>
+            ) : settings.mode === SwapMode.Ethereum ? (
+              <>
+                <TokenOutputField
+                  balance={ethBalance}
+                  locked
+                  token={CryptoAsset.Ethereum}
+                  value={TrimBN(ethNeeded, 9)}
+                />
+                <ExpandMoreIcon
+                  color="primary"
+                  style={{ marginBottom: '-14px', width: '100%' }}
+                />
+                <TokenOutputField
+                  value={100}
+                  token={CryptoAsset.Bean}
+                />
+              </>
+            ) : null
           )}
           {/* Settings */}
-          <SettingsFormModule
-            settings={settings}
-            setSettings={setSettings}
-            // handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
-            // hasClaimable={props.hasClaimable}
-            hasSlippage
-          />
+          {!alreadyConfirmed && (
+            <SettingsFormModule
+              settings={settings}
+              setSettings={setSettings}
+              // Hide the BeanEthereum pair
+              showBeanEthereum={false}
+              hasSlippage
+              // handleMode={() => fromValueUpdated(new BigNumber(-1), new BigNumber(-1))}
+              // hasClaimable={props.hasClaimable}
+            />
+          )}
         </BaseModule>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 export default function PokerPage() {
