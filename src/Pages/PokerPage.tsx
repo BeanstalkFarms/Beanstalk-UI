@@ -4,7 +4,7 @@ import { Button, Grid } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import BigNumber from 'bignumber.js';
 
-import { BaseModule, SettingsFormModule, TokenOutputField, TransactionToast } from 'components/Common';
+import { BaseModule, SettingsFormModule, TokenInputField, TokenOutputField, TransactionToast } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/values';
 import { Page } from 'Pages/index';
 import { account, buyExactBeans, CryptoAsset, getFromAmount, SwapMode, toStringBaseUnitBN, transferBeans, TrimBN } from 'util/index';
@@ -13,13 +13,14 @@ import { BEAN, ETH } from 'constants/index';
 
 const BEANSPROUT_WALLET = '0x516d34570521C2796f20fe1745129024d45344Fc'; // Silo Chad Test Wallet
 const POKER_CONFIRMATION_KEY = 'beanstalk-poker-confirmation';
-const POKER_DISCORD_LINK = 'https://discord.gg/TC8SV7evkw';
+const POKER_DISCORD_URL = 'https://discord.gg/TC8SV7evkw';
+const POKER_REGISTRATION_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdNNy0obUeqJaJXnEqrtmN6s5STIUlmLvv3nk_p3mGDmB5Yjw/viewform'
 
 const prefilledFormUrl = (
   _account: string,
   _txnHash: string,
 ) => (
-  `https://docs.google.com/forms/d/e/1FAIpQLSdNNy0obUeqJaJXnEqrtmN6s5STIUlmLvv3nk_p3mGDmB5Yjw/viewform?usp=pp_url&entry.673389134=${_account}&entry.1853585154=${_txnHash}`
+  `${POKER_REGISTRATION_FORM_URL}?entry.673389134=${_account}&entry.1853585154=${_txnHash}`
 );
 
 type PokerConfirmations = {
@@ -147,7 +148,7 @@ function Poker() {
           {alreadyConfirmed ? (
             <>
               <p>
-                To finish registration, please create a <a href="https://pokerstars.com" target="_blank" rel="noreferrer">PokerStars</a> account and submit your username via the registration form below. If you have already done this, you don&apos;t need to submit the form again. Join the <a href={POKER_DISCORD_LINK} target="_blank" rel="noreferrer">Beans of Poker</a> Discord for more updates.
+                To finish registration, please create a <a href="https://pokerstars.com" target="_blank" rel="noreferrer">PokerStars</a> account and submit your username via the registration form below. If you have already done this, you don&apos;t need to submit the form again. Join the <a href={POKER_DISCORD_URL} target="_blank" rel="noreferrer">Beans of Poker</a> Discord for more updates.
               </p>
               <a href={prefilledFormUrl(account, confirmations[account])} target="_blank" rel="noreferrer">
                 <Button
@@ -173,7 +174,7 @@ function Poker() {
           ) : (
             settings.mode === SwapMode.Bean ? (
               <>
-                <TokenOutputField
+                <TokenInputField
                   locked
                   key={0}
                   balance={beanBalance}
@@ -186,7 +187,7 @@ function Poker() {
               </>
             ) : settings.mode === SwapMode.Ethereum ? (
               <>
-                <TokenOutputField
+                <TokenInputField
                   balance={ethBalance}
                   locked
                   token={CryptoAsset.Ethereum}
