@@ -203,7 +203,7 @@ export default function NavigationSidebar() {
   const badgeDataByPath : { [key: string] : string | any[] | null } = {
     'farm/field': initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
     beanfts: 'Winter',
-    poker: '2/26 · 5:30P PT'
+    poker: '3/5 · 5:30P PT'
   };
   // Add conditional badges
   if (activeBips.length > 0) {

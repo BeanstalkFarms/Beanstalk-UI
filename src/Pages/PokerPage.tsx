@@ -13,7 +13,7 @@ import { BEAN, ETH } from 'constants/index';
 
 const BEANSPROUT_WALLET = '0x516d34570521C2796f20fe1745129024d45344Fc'; // Silo Chad Test Wallet
 const POKER_CONFIRMATION_KEY = 'beanstalk-poker-confirmation';
-const POKER_DISCORD_URL = 'https://discord.gg/TC8SV7evkw';
+// const POKER_DISCORD_URL = 'https://discord.gg/TC8SV7evkw';
 const POKER_REGISTRATION_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdNNy0obUeqJaJXnEqrtmN6s5STIUlmLvv3nk_p3mGDmB5Yjw/viewform';
 
 const prefilledFormUrl = (
@@ -148,28 +148,29 @@ function Poker() {
           {alreadyConfirmed ? (
             <>
               <p>
-                To finish registration, please create a <a href="https://pokerstars.com" target="_blank" rel="noreferrer">PokerStars</a> account and submit your username via the registration form below. If you have already done this, you don&apos;t need to submit the form again. Join the <a href={POKER_DISCORD_URL} target="_blank" rel="noreferrer">Beans of Poker</a> Discord for more updates.
+                To complete your registration, you will need to create a PokerStars account, join the club lobby, and submit your username via the registration form below. Step by step directions are available once you proceed.
               </p>
-              <a href={prefilledFormUrl(account, confirmations[account])} target="_blank" rel="noreferrer">
-                <Button
-                  style={{
-                    borderRadius: '15px',
-                    fontFamily: 'Futura-Pt-Book',
-                    fontSize: 'calc(10px + 1vmin)',
-                    height: '44px',
-                    margin: '12px 12px',
-                    width: '64%',
-                    maxWidth: '240px',
-                    zIndex: '1',
-                    color: '#fff',
-                    textDecoration: 'none !important',
-                  }}
-                  color="primary"
-                  variant="contained"
-                >
-                  Register
-                </Button>
-              </a>
+              <Button
+                href={prefilledFormUrl(account, confirmations[account])}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  borderRadius: '15px',
+                  fontFamily: 'Futura-Pt-Book',
+                  fontSize: 'calc(10px + 1vmin)',
+                  height: '44px',
+                  margin: '12px 12px',
+                  width: '64%',
+                  maxWidth: '240px',
+                  zIndex: '1',
+                  color: '#fff',
+                  textDecoration: 'none !important',
+                }}
+                color="primary"
+                variant="contained"
+              >
+                Register
+              </Button>
             </>
           ) : (
             settings.mode === SwapMode.Bean ? (
@@ -182,7 +183,7 @@ function Poker() {
                   value={new BigNumber(100)}
                 />
                 {notEnoughOfToken ? (
-                  <p>You need 100 Beans to buy in. <button onClick={() => setSettings({ ...settings, mode: SwapMode.Ethereum })}>Use Ethereum</button></p>
+                  <p>You need 100 Beans to buy in. <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Ethereum }); }}>Use Ethereum</a></p>
                 ) : null}
               </>
             ) : settings.mode === SwapMode.Ethereum ? (
