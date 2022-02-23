@@ -124,7 +124,7 @@ export default function App() {
             <MarketplacePage key="marketplace" />
           </Route>
           <Route exact path="/poker">
-            <PokerPage key="marketplace" />
+            <PokerPage key="poker" />
           </Route>
           {/* If nothing matches, go to the Silo */}
           <Redirect to="/farm/silo" />

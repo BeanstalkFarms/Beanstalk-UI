@@ -4,16 +4,17 @@ import { Button, Grid } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import BigNumber from 'bignumber.js';
 
-import { BaseModule, SettingsFormModule, TokenInputField, TokenOutputField, TransactionToast } from 'components/Common';
+import { BaseModule, ContentDropdown, SettingsFormModule, TokenInputField, TokenOutputField, TransactionToast } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/values';
 import { Page } from 'Pages/index';
 import { account, buyExactBeans, CryptoAsset, getFromAmount, SwapMode, toStringBaseUnitBN, transferBeans, TrimBN } from 'util/index';
 import { AppState } from 'state/index';
 import { BEAN, ETH } from 'constants/index';
 
-const BEANSPROUT_WALLET = '0x516d34570521C2796f20fe1745129024d45344Fc'; // Silo Chad Test Wallet
-const POKER_CONFIRMATION_KEY = 'beanstalk-poker-confirmation';
+// const BEANSPROUT_WALLET = '0x516d34570521C2796f20fe1745129024d45344Fc'; // Silo Chad Test Wallet
 // const POKER_DISCORD_URL = 'https://discord.gg/TC8SV7evkw';
+const BEANSPROUT_WALLET = '0x0536f43136d5479310C01f82De2C04C0115217A6'; // Bean Sprout Multisig
+const POKER_CONFIRMATION_KEY = 'beanstalk-poker-confirmation';
 const POKER_REGISTRATION_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdNNy0obUeqJaJXnEqrtmN6s5STIUlmLvv3nk_p3mGDmB5Yjw/viewform';
 
 const prefilledFormUrl = (
@@ -89,6 +90,21 @@ function Poker() {
         sm={8}
         style={{ maxWidth: '500px' }}
       >
+        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+          <ContentDropdown
+            description={
+              <>
+                <span style={{ display: 'flex' }}>
+                  The Beans on the Table Poker Tournament is set to run on 3/5 at 5:30 PM PT/8:30 PM ET. Registration will be capped at 300 participants, and the buy in for the tournament is 100 Beans (or ETH-equivalent) per player. The tournament is expected to run for 3-4+ hours.
+                </span>
+                <span style={{ display: 'flex' }}>
+                  In order to participate: (1) register on bean.money, (2) create a user profile on the poker platform, (3) join the club lobby on the poker platform, and (4) finalize your transaction details. Anyone is welcome to join the tournament, listen to live updates, and become a part of the Beanstalk community.
+                </span>
+              </>
+            }
+            descriptionTitle="What is the Poker Tournament?"
+          />
+        </Grid>
         <BaseModule
           allowance={
             undefined
@@ -183,7 +199,7 @@ function Poker() {
                   value={new BigNumber(100)}
                 />
                 {notEnoughOfToken ? (
-                  <p>You need 100 Beans to buy in. <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Ethereum }); }}>Use Ethereum</a></p>
+                  <p>You need 100 Beans to buy in. <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Ethereum }); }}>Buy in with Ethereum</a></p>
                 ) : null}
               </>
             ) : settings.mode === SwapMode.Ethereum ? (
@@ -202,6 +218,13 @@ function Poker() {
                   value={100}
                   token={CryptoAsset.Bean}
                 />
+                {notEnoughOfToken ? (
+                  <p>You need {ethNeeded.toFixed(3)} ETH + gas to buy in. <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Bean }); }}>Buy in with Beans</a></p>
+                ) : null}
+                {/* <p>
+                  This transaction will buy 100 Beans with ETH and send them as your buy-in.<br />
+                  If you&apos;d like to purchase more than 100 Beans for use in the Silo or Field, head to the <Link to="/farm/trade"><a>Swap</a></Link> module. You can then <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Bean }); }}>Buy in with Beans</a>
+                </p> */}
               </>
             ) : null
           )}
@@ -224,13 +247,14 @@ function Poker() {
 }
 
 export default function PokerPage() {
-  const sectionTitles = ['Poker'];
+  const sectionTitles = ['Poker Tournament'];
   const sections = [<Poker />];
 
   return (
     <Page
       sections={sections}
       sectionTitles={sectionTitles}
+      routeTitle="poker"
     />
   );
 }
