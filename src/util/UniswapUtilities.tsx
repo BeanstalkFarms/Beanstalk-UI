@@ -21,6 +21,23 @@ export type SwapSettings = {
   slippage: BigNumber;
 }
 
+/** */
+export const buyExactBeans = async (
+  amountIn: string,
+  amountOut: string,
+  to: string | undefined,
+  onResponse: TxnCallbacks['onResponse'],
+) => handleCallbacks(
+  uniswapRouterContract().swapETHForExactTokens(
+    amountOut,
+    [WETH.addr, BEAN.addr],
+    to || account,          // custom destination if provided; otherwise, to connected wallet
+    createDeadline(),
+    { value: amountIn }
+  ),
+  { onResponse }
+);
+
 /**
  * 
  * @param amountIn 

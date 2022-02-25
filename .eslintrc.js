@@ -56,6 +56,7 @@ module.exports = {
     'spaced-comment': 'warn',
     'brace-style': 0,
     'keyword-spacing': 'warn',
+    'jsx-a11y/anchor-is-valid': 0,
     // -- Space efficiency
     'arrow-body-style': 'warn',
     'no-trailing-spaces': 0,
