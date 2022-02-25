@@ -37,8 +37,11 @@ export interface UserBalanceState {
   podBalance: BigNumber;
   /** The farmer's balance of harvestable Pods */
   harvestablePodBalance: BigNumber;
-  /* @publius what is diff between this and harvestablePodBalance? 
+  /**
+   * @publius what is diff between this and harvestablePodBalance? 
    * harvestableBalance isn't used anywhere. We can delete
+   * 
+   * FIXME: DEPRECATE
    */
   harvestableBalance: BigNumber;
   /** A mapping of the farmer's Bean Deposits mapping from season to Beans including the Deposit attributed to farmable Beans (When farmer's update their Silo, Farmable Beans are deposited in the most recent Season */
