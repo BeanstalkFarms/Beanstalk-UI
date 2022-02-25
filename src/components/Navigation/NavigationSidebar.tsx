@@ -67,6 +67,10 @@ const NAVIGATION_MAP = {
       title: 'BeaNFTs',
     },
     {
+      path: 'poker',
+      title: 'Poker',
+    },
+    {
       path: 'about',
       title: 'About',
     },
@@ -199,6 +203,7 @@ export default function NavigationSidebar() {
   const badgeDataByPath : { [key: string] : string | any[] | null } = {
     'farm/field': initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
     beanfts: 'Winter',
+    poker: '3/5 · 5:30P PT'
   };
   // Add conditional badges
   if (activeBips.length > 0) {
