@@ -178,7 +178,7 @@ export const votes = async () => {
 export type BIP = {
   id: BigNumber;
   executed: boolean;
-  increaseBase: any;
+  // DEPRECATED: increaseBase: any;
   pauseOrUnpause: BigNumber;
   start: BigNumber;
   period: BigNumber;
@@ -205,14 +205,13 @@ export const getBips = async () => {
         ? await beanstalk.methods.rootsFor(i.toString()).call()
         : bip.roots;
     
-    // @publius: help with "increaseBase", "stalkBase", "endTotalRoots", "roots"
     // "increaseBase", "stalkBase"  - DEPRECIATED, we can delete these
-    //  roots - how many Roots have voted for the BIP
+    // roots - how many Roots have voted for the BIP
     // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP -> used for calculating % voted for the BIP after the fact.
     const bipDict = {
       id: i,
       executed: bip.executed,
-      increaseBase: bip.increaseBase,
+      // DEPRECATED: increaseBase: bip.increaseBase,
       pauseOrUnpause: bigNumberResult(bip.pauseOrUnpause),
       start: bigNumberResult(bip.start),
       period: bigNumberResult(bip.period),

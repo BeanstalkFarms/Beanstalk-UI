@@ -5,7 +5,6 @@ import {
 } from './actions';
 import { Listing, BuyOffer } from './updater';
 
-/** @publius  */
 export interface UserBalanceState {
   /** The farmer's Ether balance */
   ethBalance: BigNumber;
@@ -53,21 +52,23 @@ export interface UserBalanceState {
   lpWithdrawals: Object;
   /** A mapping of the farmer's claimable LP Withdrawals */
   lpReceivableCrates: Object;
-  /**  */
   /** Plots are keyed by plotIndex, value is size of the Plot in Pods. */
-  /**  */
   plots: { [plotIndex: string]: BigNumber };
   /** A mapping of the farmer's harvestable plots. */
   harvestablePlots: Object;
   /** A list of the BIPs the farmer has voted on. */
   votedBips: Object;
-  /** @publius Depreciated. a boolean denoting whether the Farmer has an active vote. Farmer's used to be unable to withdraw when they were locked, so this variable was used to lock the modules */
-  locked: Boolean;
-  /** @publius Depreciated. The number of Seasons the Farmer is locked for. (Until the end of the BIPs they voted for) */
-  lockedSeasons: BigNumber;
-  /** @publius The sum of BeanRecievableBalance + beanHarvestableBalance + wrappedBeans */
+
+  /** @DEPRECATED. a boolean denoting whether the Farmer has an active vote. Farmer's used to be unable to withdraw when they were locked, so this variable was used to lock the modules */
+  // locked: Boolean;
+  /** @DEPRECATED. The number of Seasons the Farmer is locked for. (Until the end of the BIPs they voted for) */
+  // lockedSeasons: BigNumber;
+
+  /** The sum of BeanRecievableBalance + beanHarvestableBalance + wrappedBeans */
   beanClaimableBalance: BigNumber;
-  /** @publius The farmer's claimable struct. This struct is kind of complex to build and gets passed into a lot of functions, so we found it easiest to store in the state.
+
+  /** 
+   * The farmer's claimable struct. This struct is kind of complex to build and gets passed into a lot of functions, so we found it easiest to store in the state.
    * struct Claim {
    *    uint32[] beanWithdrawals;
    *    uint32[] lpWithdrawals;
@@ -123,8 +124,8 @@ export const initialState: UserBalanceState = {
   plots: {},
   harvestablePlots: {},
   votedBips: new Set(),
-  locked: false,
-  lockedSeasons: new BigNumber(-1),
+  // DEPRECATED: locked: false,
+  // DEPRECATED: lockedSeasons: new BigNumber(-1),
   beanClaimableBalance: new BigNumber(-1),
   claimable: [[], [], [], false, false, '0', '0'],
   hasClaimable: false,

@@ -110,17 +110,17 @@ export default function Updater() {
         lpBalance,
         seedBalance,
         stalkBalance,
-        lockedUntil,
+        // lockedUntil,
         farmableBeanBalance,
         grownStalkBalance,
         rootsBalance,
         usdcBalance,
         beanWrappedBalance,
       ] = accountBalances;
-      const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
-      const lockedSeasons = lockedUntil.minus(currentSeason);
+      // const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
+      // const lockedSeasons = lockedUntil.minus(currentSeason);
 
-      // @publius what are "allowances"?
+      // ALLOWANCES:
       // Any contract that transfers ERC-20 tokens on the farmer's behalf needs to be approved to do so.
       // For example, when you deposit Beans, Beanstalk transfers the farmer's circulating Beans to the Beanstalk contract.
       // The farmer needs to approve Beanstalk to do this. 
@@ -139,8 +139,8 @@ export default function Updater() {
           lpBalance,
           seedBalance,
           stalkBalance,
-          locked,
-          lockedSeasons,
+          // locked,
+          // lockedSeasons,
           farmableBeanBalance,
           grownStalkBalance,
           rootsBalance,

@@ -2,7 +2,6 @@ import { createReducer } from '@reduxjs/toolkit';
 import { BigNumber } from 'bignumber.js';
 import { setWeather } from './actions';
 
-// @publius
 // All the variables required for tracking and predicting the weather changes.
 // Reccomend you refer to Section 8 in the Whitepaper for more clarity.
 export interface WeatherState {
