@@ -40,6 +40,21 @@ const usePokerConfirmations = () => {
   return useState<PokerConfirmations | null>(confirmation);
 };
 
+function RegistrationExplainer() {
+  return (
+    <div style={{ border: '1px solid black', borderRadius: 12, padding: '0px 18px', textAlign: 'left', marginTop: 24, marginBottom: 24 }}>
+      <p>
+        <strong>Note:</strong> Be sure to follow all registration steps or you run the risk of forfeiting your buy in.
+      </p>
+      <p style={{ marginTop: 12 }}>
+        1) Buy in using the button below.<br />
+        2) You&apos;ll be prompted to complete your registration via a Google Form. We&apos;ll walk you through creating a PokerStars profile and joining the club lobby.<br />
+        3) Confirm your transaction details and click &quot;Submit&quot; on the Google Form.
+      </p>
+    </div>
+  );
+}
+
 function Poker() {
   /** Settings */
   const [settings, setSettings] = useState({
@@ -97,9 +112,9 @@ function Poker() {
                 <span style={{ display: 'flex' }}>
                   The Beans on the Table Poker Tournament is set to run on 3/5 at 5:30 PM PT/8:30 PM ET. Registration will be capped at 300 participants, and the buy in for the tournament is 100 Beans (or ETH-equivalent) per player. The tournament is expected to run for 3-4+ hours.
                 </span>
-                <span style={{ display: 'flex' }}>
+                {/* <span style={{ display: 'flex' }}>
                   In order to participate: (1) register on bean.money, (2) create a user profile on the poker platform, (3) join the club lobby on the poker platform, and (4) finalize your transaction details. Anyone is welcome to join the tournament, listen to live updates, and become a part of the Beanstalk community.
-                </span>
+                </span> */}
               </>
             }
             descriptionTitle="What is the Poker Tournament?"
@@ -199,8 +214,11 @@ function Poker() {
                   value={new BigNumber(100)}
                 />
                 {notEnoughOfToken ? (
-                  <p>You need 100 Beans to buy in. <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Ethereum }); }}>Buy in with Ethereum</a></p>
+                  <>
+                    <p>You need 100 Beans to buy in. <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Ethereum }); }}>Buy in with Ethereum</a></p>
+                  </>
                 ) : null}
+                <RegistrationExplainer />
               </>
             ) : settings.mode === SwapMode.Ethereum ? (
               <>
@@ -219,12 +237,12 @@ function Poker() {
                   token={CryptoAsset.Bean}
                 />
                 {notEnoughOfToken ? (
-                  <p>You need {ethNeeded.toFixed(3)} ETH + gas to buy in. <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Bean }); }}>Buy in with Beans</a></p>
+                  <>
+                    <p>You need {ethNeeded.toFixed(3)} ETH + gas to buy in. <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Bean }); }}>Buy in with Beans</a></p>
+                    
+                  </>
                 ) : null}
-                {/* <p>
-                  This transaction will buy 100 Beans with ETH and send them as your buy-in.<br />
-                  If you&apos;d like to purchase more than 100 Beans for use in the Silo or Field, head to the <Link to="/farm/trade"><a>Swap</a></Link> module. You can then <a href="#" onClick={(e) => { e.preventDefault(); setSettings({ ...settings, mode: SwapMode.Bean }); }}>Buy in with Beans</a>
-                </p> */}
+                <RegistrationExplainer />
               </>
             ) : null
           )}
