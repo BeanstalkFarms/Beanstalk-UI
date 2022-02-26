@@ -187,7 +187,7 @@ export default function NavigationSidebar() {
 
   // Add Fundraiser page to Nav Sidebar if active Fundraiser
   function addActiveFundraiserNav(navMap) {
-    if (Object.keys(navMap.more).length < 5 && activeFundraisers.length > 0) {
+    if (Object.keys(navMap.more).length < 6 && activeFundraisers.length > 0) {
       navMap.more.push(
         {
           path: 'fundraiser',
@@ -205,6 +205,7 @@ export default function NavigationSidebar() {
     beanfts: 'Winter',
     poker: '3/5 · 5:30P PT'
   };
+
   // Add conditional badges
   if (activeBips.length > 0) {
     badgeDataByPath.governance = activeBips.slice(0, 3);
