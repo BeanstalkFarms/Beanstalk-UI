@@ -47,10 +47,9 @@ function RegistrationExplainer() {
         <strong>Note:</strong> Be sure to follow all registration steps or you run the risk of forfeiting your buy in.
       </p>
       <p style={{ marginTop: 12 }}>
-        1) Register on bean.money below<br />
-        2) Create a user profile on the poker platform<br />
-        3) Join the club lobby on the poker platform<br />
-        4) Confirm your transaction details and click &quot;Submit&quot; on Google Form
+        1) Buy in using the button below.<br />
+        2) You&apos;ll be prompted to complete your registration via a Google Form. We&apos;ll walk you through creating a PokerStars profile and joining the club lobby.<br />
+        3) Confirm your transaction details and click &quot;Submit&quot; on the Google Form.
       </p>
     </div>
   );
