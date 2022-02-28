@@ -338,6 +338,7 @@ export default function BalanceModule(props) {
       >
         <Grid container item xs={12} style={containerGridHorizontalStyle}>
           <Grid item sm={6} xs={12}>
+            {/* "Bean Balance" */}
             <DataBalanceModule
               balance={`$${displayBN(props.topLeft)}`}
               balanceDescription={`$${displayFullBN(props.topLeft)} USD`}
@@ -350,6 +351,7 @@ export default function BalanceModule(props) {
             />
           </Grid>
           <Grid item sm={6} xs={12}>
+            {/* "Ownership" */}
             <DataBalanceModule
               balance={
                 props.topRight.isLessThanOrEqualTo(100)
