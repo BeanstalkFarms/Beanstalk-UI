@@ -187,6 +187,7 @@ export function parseWithdrawals(withdrawals, index: BigNumber) {
 }
 
 // @publius to discuss: rename of crates
+// "crate" = a Deposit or Withdrawal
 export function addRewardedCrates(
   crates,
   season,

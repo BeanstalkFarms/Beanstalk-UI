@@ -1,9 +1,31 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { BigNumber } from 'bignumber.js';
-import {
-  setUserBalance,
-} from './actions';
-import { Listing, BuyOffer } from './updater';
+
+import { setUserBalance } from './actions';
+
+/**
+ * struct Claim {
+ *    uint32[] beanWithdrawals;
+ *    uint32[] lpWithdrawals;
+ *    uint256[] plots;
+ *    bool claimEth;
+ *    bool convertLP;
+ *    uint256 minBeanAmount;
+ *    uint256 minEthAmount;
+ *    bool toWallet;
+ * }
+ * IN REDUX STATE: claimable: [[], [], [], false, false, '0', '0'],
+ */
+type Claimable = [
+  beanWithdrawals: any[],
+  lpWithdrawals: any[],
+  plots: any[],
+  claimEth: boolean,
+  convertLP: boolean,
+  minBeanAmount: any,
+  minEthAmount: any,
+  // toWallet is used in claimable calls but not included here
+];
 
 export interface UserBalanceState {
   /** The farmer's Ether balance */
@@ -58,29 +80,17 @@ export interface UserBalanceState {
   harvestablePlots: Object;
   /** A list of the BIPs the farmer has voted on. */
   votedBips: Object;
-
   /** @DEPRECATED. a boolean denoting whether the Farmer has an active vote. Farmer's used to be unable to withdraw when they were locked, so this variable was used to lock the modules */
   // locked: Boolean;
   /** @DEPRECATED. The number of Seasons the Farmer is locked for. (Until the end of the BIPs they voted for) */
   // lockedSeasons: BigNumber;
-
   /** The sum of BeanRecievableBalance + beanHarvestableBalance + wrappedBeans */
   beanClaimableBalance: BigNumber;
-
   /** 
-   * The farmer's claimable struct. This struct is kind of complex to build and gets passed into a lot of functions, so we found it easiest to store in the state.
-   * struct Claim {
-   *    uint32[] beanWithdrawals;
-   *    uint32[] lpWithdrawals;
-   *    uint256[] plots;
-   *    bool claimEth;
-   *    bool convertLP;
-   *    uint256 minBeanAmount;
-   *    uint256 minEthAmount;
-   *    bool toWallet;
-   * }
-  */
-  claimable: Array;
+   * The farmer's claimable struct. This struct is kind of complex to build and gets passed into
+   * a lot of functions, so we found it easiest to store in the state.
+   */
+  claimable: Claimable;
   /** Whether the farmer has any type of claimable balance (Beans, LP, Eth) */
   hasClaimable: Boolean;
   /** The number of Farmable Beans the farmer has. */
@@ -90,9 +100,9 @@ export interface UserBalanceState {
   /** The number of Roots the farmer has. */
   rootsBalance: BigNumber;
   /** A farmer's pod listings. */
-  listings: Listing[];
+  // listings: PodListing[];
   /** A farmer's pod orders. */
-  buyOffers: BuyOffer[];
+  // buyOffers: PodOrder[];
   /** A farmer's balance of USDC. */
   usdcBalance: BigNumber;
 }
@@ -132,8 +142,6 @@ export const initialState: UserBalanceState = {
   farmableBeanBalance: new BigNumber(-1),
   grownStalkBalance: new BigNumber(-1),
   rootsBalance: new BigNumber(-1),
-  listings: [],
-  buyOffers: [],
   usdcBalance: new BigNumber(-1),
 };
 

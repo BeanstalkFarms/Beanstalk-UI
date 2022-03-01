@@ -490,7 +490,18 @@ export default function Updater() {
       });
       dispatch(setContractEvents(events));
 
-      // @publius
+      // Variables named during conversation with Publius 2/28
+      // These are instantaneous values pulled from contract functions
+      // that are used for certain calculations during event processing.
+      // ---
+      // s = season
+      // hi = harvestableindex
+      // fb = farmable beans
+      // gs = grown stalk
+      // ce = claiamble ether
+      // cb = wrapped beans
+      // br = Bean reserve
+      // er = ETH reserve
       const [s, hi, fb, gs, ce, cb, br, er] =
         eventParsingParameters !== undefined
           ? eventParsingParameters
@@ -569,8 +580,6 @@ export default function Updater() {
           rawBeanDeposits: rawBeanDeposits,
           farmableBeanBalance: fb,
           grownStalkBalance: gs,
-          // listings: listings,
-          // buyOffers: buyOffers,
         })
       );
 
