@@ -27,7 +27,6 @@ type Claimable = [
   // toWallet is used in claimable calls but not included here
 ];
 
-
 export type SeasonMap<T> = {
   [season: string]: T;
 }

@@ -331,6 +331,7 @@ export default function Updater() {
           };
           if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
         } else if (event.event === 'BeanRemove') {
+          // FIXME: define crates contract return value
           event.returnValues.crates.forEach((s, i) => {
             const beans = toTokenUnitsBN(
               event.returnValues.crateBeans[i],
@@ -370,11 +371,11 @@ export default function Updater() {
         } else if (event.event === 'PlotTransfer') {
           // The account received a Plot
           if (event.returnValues.to === account) {
-            const s = toTokenUnitsBN(
+            const index = toTokenUnitsBN(
               new BigNumber(event.returnValues.id),
               BEAN.decimals
             );
-            userPlots[s] = toTokenUnitsBN(
+            userPlots[index.toString()] = toTokenUnitsBN(
               event.returnValues.pods,
               BEAN.decimals
             );
@@ -639,7 +640,7 @@ export default function Updater() {
         accountBalances, // 3
         totalBalances, // 4
         _prices, // 5
-        usdcBalance, //6
+        usdcBalance, // 6
         votedBips // 7
       ] =
         await Promise.all([
@@ -649,7 +650,7 @@ export default function Updater() {
           accountBalancePromises, // 3
           totalBalancePromises, // 4
           pricePromises, // 5
-          getUSDCBalance(), //6
+          getUSDCBalance(), // 6
           votes(), // 7
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
