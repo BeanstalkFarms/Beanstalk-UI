@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
+import { EventData } from 'web3-eth-contract';
+
 import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
@@ -50,6 +52,10 @@ import {
 } from 'util/index';
 import { UserBalanceState } from './reducer';
 
+type EventParsingParameters = [
+
+]
+
 //
 export default function Updater() {
   const zeroBN = new BigNumber(0);
@@ -68,8 +74,7 @@ export default function Updater() {
     (state) => state.prices
   );
 
-  const eventParsingParametersRef = useRef([]);
-  eventParsingParametersRef.current = [
+  const eventParsingParametersRef = useRef([
     season.season,
     weather.harvestableIndex,
     userBalance.farmableBeanBalance,
@@ -78,14 +83,14 @@ export default function Updater() {
     userBalance.beanClaimableBalance,
     prices.beanReserve,
     prices.ethReserve,
-  ];
+  ] as const); // 'as const' forces this into a tuple instead of array
 
-  const benchmarkStart = (operation) => {
+  const benchmarkStart = (operation : string) => {
     console.log(`LOADING ${operation}`);
     return Date.now();
   };
 
-  const benchmarkEnd = (operation, startTime) => {
+  const benchmarkEnd = (operation : string, startTime : number) => {
     console.log(
       `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
     );
@@ -110,13 +115,14 @@ export default function Updater() {
         lpBalance,
         seedBalance,
         stalkBalance,
-        // lockedUntil,
+        // lockedUntil, @DEPRECATED
         farmableBeanBalance,
         grownStalkBalance,
         rootsBalance,
         usdcBalance,
         beanWrappedBalance,
       ] = accountBalances;
+      // @DEPRECATED
       // const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       // const lockedSeasons = lockedUntil.minus(currentSeason);
 
@@ -139,8 +145,8 @@ export default function Updater() {
           lpBalance,
           seedBalance,
           stalkBalance,
-          // locked,
-          // lockedSeasons,
+          // locked, @DEPRECATED
+          // lockedSeasons, @DEPRECATED
           farmableBeanBalance,
           grownStalkBalance,
           rootsBalance,
@@ -274,36 +280,48 @@ export default function Updater() {
       return [beanReserve, ethReserve];
     }
 
-    async function processEvents(events, eventParsingParameters) {
+    async function processEvents(
+      events: EventData[],
+      eventParsingParameters: EventParsingParameters
+    ) {
       const startTime = benchmarkStart('EVENT PROCESSOR');
 
-      let userLPSeedDeposits = {};
-      let userLPDeposits = {};
-      let lpWithdrawals = {};
+      // These get piped into redux 1:1 and so need to match 
+      // the type defined in UserBalanceState.
+      let userLPSeedDeposits : UserBalanceState['lpSeedDeposits'] = {};
+      let userLPDeposits : UserBalanceState['lpDeposits'] = {};
+      let lpWithdrawals : UserBalanceState['lpWithdrawals'] = {};
       let userPlots : UserBalanceState['plots'] = {};
-      let userBeanDeposits = {};
-      let beanWithdrawals = {};
-      const votedBips = new Set();
+      let userBeanDeposits : UserBalanceState['beanDeposits'] = {};
+      let beanWithdrawals : UserBalanceState['beanWithdrawals'] = {};
+      const votedBips : UserBalanceState['votedBips'] = new Set();
 
-      /** New events from Plot Marketplace:
-       * ListingCreated
-       * ListingCancelled
-       * BuyOfferCreated
-       * BuyOfferCancelled
-       * BuyOfferAccepted
-      */
-      // TODO: PlotTransfer will now need to update listing data too
-      // will need to split up listings into two listings if listing not fully purchased
-      // set state accordingly and adjust index
-      // TODO: all event handling logic needs to exist not filtered on address for individual listings and buy offers
-      // but full marketplace since, should not be filtering based on address for these events but grabbing them all
+      // 1.
+      // This object expansion used below is super slow.
+      // Let's move to a library like `immutable` or rewrite
+      // these to use less expansions.
+      // TODO: what's the standard here these days?
+      //
+      // 2.
+      // I've extracted the `EventData` type from web3 library, but
+      // each of the events below needs to have defined `returnValues`.
+      // TODO: figure out if we should auto-generate these, or write them by hand.
+      // If we write by hand what's the best paradigm? 
+      // See `src/state/marketplace/reducer.ts` for an example I built recently. -SC
       events.forEach((event) => {
         if (event.event === 'BeanDeposit') {
+          // `season` is a base-10 numerical string.
           const s = parseInt(event.returnValues.season, 10);
+          // numbers on Etherum are always returned as ints,
+          // so this conversion turns `returnValues.beans`
           const beans = toTokenUnitsBN(
             new BigNumber(event.returnValues.beans),
             BEAN.decimals
           );
+
+          // Override the bean deposit for season `s`.
+          // If a prior deposit exists, add `beans` to that
+          // deposit. Otherwise, a new item is created. 
           userBeanDeposits = {
             ...userBeanDeposits,
             [s]:
@@ -345,11 +363,12 @@ export default function Updater() {
             new BigNumber(event.returnValues.index),
             BEAN.decimals
           );
-          userPlots[s] = toTokenUnitsBN(
+          userPlots[s.toString()] = toTokenUnitsBN(
             event.returnValues.pods,
             BEAN.decimals // QUESTION: why is this BEAN.decimals and not PODS? are they the same?
           );
         } else if (event.event === 'PlotTransfer') {
+          // The account received a Plot
           if (event.returnValues.to === account) {
             const s = toTokenUnitsBN(
               new BigNumber(event.returnValues.id),
@@ -359,37 +378,56 @@ export default function Updater() {
               event.returnValues.pods,
               BEAN.decimals
             );
-          } else {
-            const s = toTokenUnitsBN(
+          } 
+          // The account sent a Plot
+          else {
+            // Numerical "index" of the plot.
+            // Absolute, with respect to Pod 0.
+            const index = toTokenUnitsBN(
               new BigNumber(event.returnValues.id),
               BEAN.decimals
             );
+            // String version of `idx`, used to key
+            // objects. This prevents duplicate toString() calls 
+            // and resolves Typescript errors.
+            const indexStr = index.toString();
+            // Size of the Plot, in pods
             const pods = toTokenUnitsBN(
               new BigNumber(event.returnValues.pods),
               BEAN.decimals
             );
+
             let i = 0;
             let found = false;
-            if (userPlots[s] !== undefined) {
-              if (!pods.isEqualTo(userPlots[s])) {
-                const newStartIndex = s.plus(pods);
-                userPlots[newStartIndex] = userPlots[s].minus(pods);
+
+            // If we've located the plot in a prior event
+            if (userPlots[indexStr] !== undefined) {
+              // Send partial plot
+              if (!pods.isEqualTo(userPlots[indexStr])) {
+                const newStartIndex = index.plus(pods);
+                userPlots[newStartIndex.toString()] = userPlots[indexStr].minus(pods);
               }
-              delete userPlots[s];
-            } else {
+              delete userPlots[indexStr];
+            } 
+            
+            // QUESTION: what's going on here?
+            // FIXME: lots of Object.keys calls while the array itself is being
+            // modified.
+            else {
               while (found === false && i < Object.keys(userPlots).length) {
                 const startIndex = new BigNumber(Object.keys(userPlots)[i]);
                 const endIndex = new BigNumber(
-                  startIndex.plus(userPlots[startIndex])
+                  startIndex.plus(userPlots[startIndex.toString()])
                 );
-                if (startIndex.isLessThanOrEqualTo(s) && endIndex.isGreaterThanOrEqualTo(s)) {
-                  userPlots[startIndex] = new BigNumber(s.minus(startIndex));
-                  if (!s.isEqualTo(endIndex)) {
-                    const s2 = s.plus(pods);
-                    userPlots[s2] = new BigNumber(endIndex).minus(
-                      new BigNumber(s2)
-                    );
-                    if (userPlots[s2].isEqualTo(0)) delete userPlots[s2];
+                if (startIndex.isLessThanOrEqualTo(index) && endIndex.isGreaterThanOrEqualTo(index)) {
+                  userPlots[startIndex.toString()] = new BigNumber(index.minus(startIndex));
+                  if (!index.isEqualTo(endIndex)) {
+                    const s2    = index.plus(pods);
+                    const s2Str = s2.toString();
+                    userPlots[s2Str] = endIndex.minus(s2);
+                    if (userPlots[s2Str].isEqualTo(0)) {
+                      delete userPlots[s2Str];
+                    }
                   }
                   found = true;
                 }

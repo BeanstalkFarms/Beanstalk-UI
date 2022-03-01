@@ -329,8 +329,8 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
  * @returns BigNumber
  */
 export function toTokenUnitsBN(
-  tokenAmt: string | number | BigNumber, // FIXME: use BigNumber.Value here?
-  decimals: number // FIXME: use BigNumber.Value here?
+  tokenAmt: string | number | BigNumber,  // FIXME: use BigNumber.Value here?
+  decimals: number                        // FIXME: use BigNumber.Value here?
 ): BigNumber {
   const amt = new BigNumber(tokenAmt);
   const base = new BigNumber(10);
