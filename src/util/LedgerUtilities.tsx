@@ -1,5 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { utils } from 'ethers';
+import { Contract, utils } from 'ethers';
+import Web3 from 'web3';
+import { BatchRequest } from 'web3-core';
+
 import {
   BUDGETS,
   BEAN,
@@ -32,12 +35,20 @@ import {
 /* Client is responsible for calling execute() */
 export const createLedgerBatch = () => new web3.BatchRequest();
 
-const makeBatchedPromises = (batch, promisesAndResultHandlers) => {
+/* */
+type PromiseHandlerTuple = readonly [
+  any, // FIXME: should be type of callable contract handler
+  (s: any) => any,
+]
+const makeBatchedPromises = (
+  batch: BatchRequest,
+  promisesAndResultHandlers: readonly PromiseHandlerTuple[]
+) => {
   const batchedPromises = promisesAndResultHandlers.map(
     (methodAndHandler) =>
-      new Promise((resolve, reject) => {
+      new Promise<any>((resolve, reject) => {
         batch.add(
-          methodAndHandler[0].call.request({}, 'latest', (error, result) => {
+          (methodAndHandler[0].call).request({}, 'latest', (error: any, result: any) => {
             if (result !== undefined) resolve(methodAndHandler[1](result));
             else reject(error);
           })
@@ -89,7 +100,7 @@ export async function getBlockTimestamp(blockNumber) {
 }
 
 /* Batched Getters */
-export const getAccountBalances = async (batch) => {
+export const getAccountBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
@@ -117,6 +128,8 @@ export const getAccountBalances = async (batch) => {
   ]);
 };
 
+// export const 
+
 /* Beanstalk Price Getters */
 export const getPriceArray = async () => {
   const beanstalkPrice = beanstalkPriceContractReadOnly();
@@ -126,12 +139,13 @@ export const getPriceArray = async () => {
 };
 /* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
 
-export const getTokenBalances = async (batch) =>
+export const getTokenBalances = async (batch: BatchRequest) =>
   makeBatchedPromises(batch, supportedERC20Tokens.map((t) => [
     tokenV2ContractReadOnly(t).methods.balanceOf(account), tokenResult(t)
   ]));
 
-export const getTotalBalances = async (batch) => {
+//
+export const getTotalBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
@@ -189,7 +203,7 @@ export const getTotalBalances = async (batch) => {
     [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)],
     [bean.methods.balanceOf(CURVE.addr), tokenResult(BEAN)],
     [beanstalk.methods.withdrawSeasons(), bigNumberResult]
-  ]);
+  ] as const);
 };
 
 export const votes = async () => {
@@ -264,7 +278,9 @@ export const getBips = async () => {
   return [bips, hasActiveBIP];
 };
 
-/* TODO: batch BIP detail ledger reads */
+/*
+ * TODO: batch BIP detail ledger reads
+ */
 export const getFundraisers = async () => {
   const beanstalk = beanstalkContractReadOnly();
   let hasActiveFundraiser = false;
@@ -286,7 +302,10 @@ export const getFundraisers = async () => {
   return [fundraisers, hasActiveFundraiser];
 };
 
-export const getPrices = async (batch) => {
+/**
+ * 
+ */
+export const getPrices = async (batch: BatchRequest) => {
   const beanstalk = beanstalkContractReadOnly();
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
