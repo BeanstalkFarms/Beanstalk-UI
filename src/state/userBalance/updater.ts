@@ -54,15 +54,47 @@ import {
 } from 'util/index';
 import { UserBalanceState } from './reducer';
 
-type EventParsingParameters = [
+type EventParsingParameters = any[]
 
-]
+type AsyncReturnType<T extends (...args: any) => any> =
+  T extends (...args: any) => Promise<infer U> ? U :
+  T extends (...args: any) => infer U ? U :
+  any
+;
 
-//
+/**
+ * 
+ */
+function lpReservesForTokenReserves(tokenReserves, token0) {
+  const rawBeanReserve =
+    token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
+  const rawEthReserve =
+    token0 !== BEAN.addr ? tokenReserves[0] : tokenReserves[1];
+  const beanReserve = toTokenUnitsBN(rawBeanReserve, BEAN.decimals);
+  const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
+  return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
+}
+
+const benchmarkStart = (operation : string) => {
+  console.log(`LOADING ${operation}`);
+  return Date.now();
+};
+
+const benchmarkEnd = (operation : string, startTime : number) => {
+  console.log(
+    `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
+  );
+};
+
+/**
+ * A React component that returns nothing but handle loading of data
+ * and passage of that data into Redux.
+ */
 export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
 
+  // Global state
   const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -76,6 +108,7 @@ export default function Updater() {
     (state) => state.prices
   );
 
+  // Parameters used between 
   const eventParsingParametersRef = useRef([
     season.season,
     weather.harvestableIndex,
@@ -87,25 +120,17 @@ export default function Updater() {
     prices.ethReserve,
   ] as const); // 'as const' forces this into a tuple instead of array
 
-  const benchmarkStart = (operation : string) => {
-    console.log(`LOADING ${operation}`);
-    return Date.now();
-  };
-
-  const benchmarkEnd = (operation : string, startTime : number) => {
-    console.log(
-      `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
-    );
-  };
 
   useEffect(() => {
-    //
+    /**
+     * 
+     */
     function processAccountBalances(
-      accountBalances,
+      accountBalances: AsyncReturnType<typeof getAccountBalances>,
       ethBalance,
       lpReserves,
       currentSeason,
-      votedBips
+      votedBips: Set<any>,
     ) {
       const [
         uniswapBeanAllowance,
@@ -119,7 +144,7 @@ export default function Updater() {
         curveBalance,
         seedBalance,
         stalkBalance,
-        // lockedUntil, @DEPRECATED
+        lockedUntil, // @DEPRECATED
         farmableBeanBalance,
         grownStalkBalance,
         rootsBalance,
@@ -165,8 +190,14 @@ export default function Updater() {
       );
     }
 
-    //
-    function processTotalBalances(totalBalances, bipInfo, fundraiserInfo) {
+    /**
+     * 
+     */
+    function processTotalBalances(
+      totalBalances: any[], // FIXME
+      bipInfo,
+      fundraiserInfo
+    ) {
       const [
         totalBeans,
         totalLP,
@@ -186,17 +217,23 @@ export default function Updater() {
         _weather,
         rain,
         _season,
-        // Automate this:
+        // FIXME: Automate budget beans
         budget0,
         budget1,
         budget2,
         budget3,
+        //
         totalCurveBeans,
         withdrawSeasons,
       ] = totalBalances;
 
       //
-      const totalBudgetBeans = budget0.plus(budget1).plus(budget2).plus(budget3);
+      const totalBudgetBeans = (
+        budget0
+          .plus(budget1)
+          .plus(budget2)
+          .plus(budget3)
+      );
       const [bips, hasActiveBIP] = bipInfo;
       const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
       const totalPods = podIndex.minus(harvestableIndex);
@@ -238,19 +275,12 @@ export default function Updater() {
       return _season.season;
     }
 
-    //
-    function lpReservesForTokenReserves(tokenReserves, token0) {
-      const rawBeanReserve =
-        token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
-      const rawEthReserve =
-        token0 !== BEAN.addr ? tokenReserves[0] : tokenReserves[1];
-      const beanReserve = toTokenUnitsBN(rawBeanReserve, BEAN.decimals);
-      const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
-      return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
-    }
-
-    //
-    function processPrices(_prices) {
+    /**
+     * 
+     */
+    function processPrices(
+      _prices: AsyncReturnType<typeof getPrices>
+    ) : [AppState['prices']['beanReserve'], AppState['prices']['ethReserve']] {
       const [
         referenceTokenReserves,
         tokenReserves,
@@ -279,6 +309,7 @@ export default function Updater() {
       const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
 
+      //
       const curveTuple = priceTuple.ps[0];
       const uniTuple = priceTuple.ps[1];
 
@@ -322,12 +353,16 @@ export default function Updater() {
           },
         })
       );
+
       return [beanReserve, ethReserve];
     }
 
-    async function processEvents(
+    /**
+     * 
+     */
+    function processEvents(
       events: EventData[],
-      eventParsingParameters: EventParsingParameters
+      eventParsingParameters: EventParsingParameters,
     ) {
       const startTime = benchmarkStart('EVENT PROCESSOR');
 
@@ -336,9 +371,9 @@ export default function Updater() {
       let userLPSeedDeposits : UserBalanceState['lpSeedDeposits'] = {};
       let userLPDeposits : UserBalanceState['lpDeposits'] = {};
       let lpWithdrawals : UserBalanceState['lpWithdrawals'] = {};
-      let userCurveDeposits = {};
-      let userCurveBDVDeposits = {};
-      let curveWithdrawals = {};
+      let userCurveDeposits : UserBalanceState['curveDeposits'] = {};
+      let userCurveBDVDeposits : UserBalanceState['curveBDVDeposits'] = {};
+      let curveWithdrawals : UserBalanceState['curveWithdrawals'] = {};
       let userPlots : UserBalanceState['plots'] = {};
       let userBeanDeposits : UserBalanceState['beanDeposits'] = {};
       let beanWithdrawals : UserBalanceState['beanWithdrawals'] = {};
@@ -773,13 +808,21 @@ export default function Updater() {
       benchmarkEnd('EVENT PROCESSOR', startTime);
     }
 
+    /**
+     * 
+     */
     async function updateAllBalances() : Promise<[Function, any]> {
       const startTime = benchmarkStart('ALL BALANCES');
+
+      // Create a new web3.BatchRequest. Provide this to batched
+      // getter functions, which return a single Promise.all()
+      // that resolves when the batch is executed and returns
+      // values.
       const batch = createLedgerBatch();
       const accountBalancePromises = getAccountBalances(batch);
       const totalBalancePromises = getTotalBalances(batch);
       const pricePromises = getPrices(batch);
-      batch.execute();
+      batch.execute(); 
 
       const [
         bipInfo, // 0
@@ -813,6 +856,8 @@ export default function Updater() {
         _prices[1], // tokenReserves
         _prices[2]  // token0
       );
+
+      //
       const eventParsingParameters = [
         totalBalances[17].season /* season */,
         totalBalances[13] /* harvestableIndex */,
@@ -826,6 +871,7 @@ export default function Updater() {
 
       return [
         () => {
+          //
           const currentSeason = processTotalBalances(
             totalBalances,
             bipInfo,
@@ -836,6 +882,8 @@ export default function Updater() {
             ethPrices,
             priceTuple,
           ]);
+
+          //
           processAccountBalances(
             accountBalances,
             ethBalance,
@@ -849,6 +897,9 @@ export default function Updater() {
       ];
     }
 
+    /**
+     * 
+     */
     async function updateTotals() {
       const startTime = benchmarkStart('TOTALS');
       const batch = createLedgerBatch();
@@ -867,6 +918,9 @@ export default function Updater() {
       benchmarkEnd('TOTALS', startTime);
     }
 
+    /**
+     * 
+     */
     async function updatePrices() {
       const startTime = benchmarkStart('PRICES');
       const batch = createLedgerBatch();
@@ -882,15 +936,24 @@ export default function Updater() {
       benchmarkEnd('PRICES', startTime);
     }
 
+    /**
+     * 
+     */
     async function getLastCross() {
       const lastCrossInitializer = await lastCrossQuery();
       dispatch(setLastCross(lastCrossInitializer));
     }
 
+    /**
+     * 
+     */
     async function getAPYs() {
       dispatch(setBeansPerSeason(await apyQuery()));
     }
 
+    /**
+     * 
+     */
     async function start() {
       let startTime = benchmarkStart('*INIT*');
       if (await initialize()) {
@@ -928,6 +991,7 @@ export default function Updater() {
       }
     }
 
+    //
     start();
     getLastCross();
     getAPYs();
