@@ -20,9 +20,11 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "noImplicitAny": false,
   },
   "include": [
-    "src"
-  ]
+    "src", "custom.d.ts"
+  ],
+  "exclude": ["src/components/*"]
 }
