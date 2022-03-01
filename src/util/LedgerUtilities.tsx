@@ -15,6 +15,7 @@ import {
   UNISWAP_V2_ROUTER,
   USDC,
   supportedERC20Tokens,
+  SupportedToken,
 } from 'constants/index';
 import {
   account,
@@ -60,9 +61,10 @@ const makeBatchedPromises = (
 //
 const identityResult = (result: any) => result;
 const bigNumberResult = (result: any) => new BigNumber(result);
-const tokenResult = (token) => (result: any) =>
+const tokenResult = (token : SupportedToken) => (result: BigNumber.Value) =>
   toTokenUnitsBN(new BigNumber(result), token.decimals);
 
+//
 export async function getEtherBalance() {
   return tokenResult(ETH)(await web3.eth.getBalance(account));
 }
@@ -122,7 +124,8 @@ export const getAccountBalances = async (batch: BatchRequest) => {
     [curve.methods.balanceOf(account), tokenResult(CURVE)],
     [beanstalk.methods.balanceOfSeeds(account), tokenResult(SEEDS)],
     [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
-    [beanstalk.methods.votedUntil(account), bigNumberResult],
+    // @DEPRECATED
+    // [beanstalk.methods.votedUntil(account), bigNumberResult],
     [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEAN)],
     [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
     [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
@@ -313,8 +316,8 @@ export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
       token: fundraiser.token,
     };
     if (fundraiserDict.remaining.isGreaterThan(0)) {
-      hasActiveFundraiser = true
-    };
+      hasActiveFundraiser = true;
+    }
     fundraisers.push(fundraiserDict);
   }
 

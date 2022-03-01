@@ -144,7 +144,7 @@ export default function Updater() {
         seedBalance,
         stalkBalance,
         // eslint-disable-next-line
-        lockedUntil, // @DEPRECATED
+        // lockedUntil, // @DEPRECATED
         farmableBeanBalance,
         grownStalkBalance,
         rootsBalance,
@@ -825,27 +825,27 @@ export default function Updater() {
       batch.execute(); 
 
       const [
-        bipInfo, // 0
-        fundraiserInfo, // 1
-        ethBalance, // 2
-        accountBalances, // 3
-        totalBalances, // 4
-        _prices, // 5
-        usdcBalance, // 6
-        votedBips, // 7
-        ethPrices, // 8
-        priceTuple, // 9
+        bipInfo,                // 0
+        fundraiserInfo,         // 1
+        ethBalance,             // 2
+        accountBalances,        // 3
+        totalBalances,          // 4
+        _prices,                // 5
+        usdcBalance,            // 6
+        votedBips,              // 7
+        ethPrices,              // 8
+        priceTuple,             // 9
       ] = await Promise.all([
-        getBips(), // 0
-        getFundraisers(), // 1
-        getEtherBalance(), // 2
-        accountBalancePromises, // 3
-        totalBalancePromises, // 4
-        pricePromises, // 5
-        getUSDCBalance(), // 6
-        votes(), // 7
-        getEthPrices(), // 8
-        getPriceArray() // 9
+        getBips(),              // 0
+        getFundraisers(),       // 1
+        getEtherBalance(),      // 2
+        accountBalancePromises, // 3: uses makeBatchedPromises -> tuple
+        totalBalancePromises,   // 4: uses makeBatchedPromises -> tuple
+        pricePromises,          // 5: uses makeBatchedPromises -> tuple
+        getUSDCBalance(),       // 6
+        votes(),                // 7
+        getEthPrices(),         // 8
+        getPriceArray()         // 9
       ]);
 
       //
