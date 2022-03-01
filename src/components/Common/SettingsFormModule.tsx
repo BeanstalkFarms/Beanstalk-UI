@@ -20,7 +20,7 @@ export default function SettingsFormModule(props) {
     right: '-79px',
     width: '60px',
     // zIndex: '-1',
-    zIndex: 99999,
+    zIndex: 99,
   };
   const bottomSettingStyle = {
     backgroundColor: theme.module.background,
@@ -34,7 +34,7 @@ export default function SettingsFormModule(props) {
     right: '7px',
     width: 'auto',
     // zIndex: '-1',
-    zIndex: 9999,
+    zIndex: 99,
   };
 
   const [settingsStyle, setSettingsStyle] = useState({ display: 'none' });
@@ -153,6 +153,7 @@ export default function SettingsFormModule(props) {
 
   const unitModule = props.showUnitModule ? (
     <UnitSelectionModule
+      beanEthereum={props.showBeanEthereum}
       beanEthereumSwap={props.showBeanEthereumSwap}
       lp={props.showLP}
       setValue={(value) => {

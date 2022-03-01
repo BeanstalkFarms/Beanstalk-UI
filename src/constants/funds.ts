@@ -16,7 +16,7 @@ export const fundsList = [
   {
     path: '/Funds/fund-2.html',
     name: 'Omniscia Retainer',
-    description: 'The proceeds of this Fundraiser will pay the retainer fee for Omniscia to audit Beanstalk.',
+    description: 'The proceeds of this Fundraiser will pay the retainer fee for Omniscia to audit Beanstalk. Even if there is no Available Soil in the Field, contributors to the Fundraiser are rewarded with Pods based on the current Weather at a value of 1 Bean per USDC contributed.',
     type: 'Audit',
     token: 'USDC',
   },

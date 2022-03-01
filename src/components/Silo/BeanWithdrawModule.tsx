@@ -2,19 +2,22 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { BEAN, BEAN_TO_SEEDS, SEEDS, STALK } from 'constants/index';
 import {
   claimAndWithdrawBeans,
   displayBN,
   MinBN,
   MinBNs,
+  MaxBN,
   smallDecimalPercent,
   toStringBaseUnitBN,
   TrimBN,
   withdrawBeans,
 } from 'util/index';
 import {
-  // ClaimTextModule,
+  ClaimTextModule,
   SettingsFormModule,
   SiloAsset,
   siloStrings,
@@ -22,10 +25,17 @@ import {
   TokenOutputField,
   TransactionDetailsModule,
   TransitAsset,
+  TransactionToast,
 } from 'components/Common';
-import TransactionToast from 'components/Common/TransactionToast';
 
-export const BeanWithdrawModule = forwardRef((props, ref) => {
+export const BeanWithdrawModule = forwardRef(({
+  setIsFormDisabled,
+  settings,
+  setSettings,
+  poolForLPRatio,
+  stalkToLP, /* empty */
+  seedsToLP, /* empty */
+}, ref) => {
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [toSeedsValue, setToSeedsValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
@@ -34,15 +44,35 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
     amounts: [],
   });
 
+  const {
+    beanDeposits,
+    beanSiloBalance,
+    beanClaimableBalance,
+    claimable,
+    claimableEthBalance,
+    hasClaimable,
+    lpReceivableBalance,
+    seedBalance,
+    stalkBalance,
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+  const season = useSelector<AppState, AppState['season']>(
+    (state) => state.season.season
+  );
+  const { totalStalk, withdrawSeasons } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
   /* function maxBeans(stalk: BugNumber) {
     var stalkRemoved = new BigNumber(0)
     var beans = new BigNumber(0)
-    Object.keys(props.crates).sort((a,b) => parseInt(a) - parseInt(b)).forEach(key => {
-      let stalkPerBean = (new BigNumber(10000)).plus(props.season.minus(key)).multipliedBy(5)
+    Object.keys(beanDeposits).sort((a,b) => parseInt(a) - parseInt(b)).forEach(key => {
+      let stalkPerBean = (new BigNumber(10000)).plus(season.minus(key)).multipliedBy(5)
       const stalkLeft = stalk.minus(stalkRemoved)
-      if (stalkPerBean.multipliedBy(props.crates[key]).isGreaterThanOrEqualTo(stalkLeft)) {
-        stalkRemoved = stalkRemoved.plus(stalkPerBean.multipliedBy(props.crates[key]))
-        beans = beans.plus(props.crates[key])
+      if (stalkPerBean.multipliedBy(beanDeposits[key]).isGreaterThanOrEqualTo(stalkLeft)) {
+        stalkRemoved = stalkRemoved.plus(stalkPerBean.multipliedBy(beanDeposits[key]))
+        beans = beans.plus(beanDeposits[key])
         if (stalkRemoved.isEqualTo(stalk)) return
       } else {
         beans = beans.plus(TrimBN(stalkLeft.dividedBy(stalkPerBean),BEAN.decimals))
@@ -58,19 +88,19 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
     let stalkRemoved = new BigNumber(0);
     const crates = [];
     const amounts = [];
-    Object.keys(props.crates)
+    Object.keys(beanDeposits)
       .sort((a, b) => parseInt(b, 10) - parseInt(a, 10))
       .some((key) => {
         const crateBeansRemoved = beansRemoved
-          .plus(props.crates[key])
+          .plus(beanDeposits[key])
           .isLessThanOrEqualTo(beans)
-          ? props.crates[key]
+          ? beanDeposits[key]
           : beans.minus(beansRemoved);
         beansRemoved = beansRemoved.plus(crateBeansRemoved);
         stalkRemoved = stalkRemoved.plus(crateBeansRemoved);
         stalkRemoved = stalkRemoved.plus(
           crateBeansRemoved
-            .multipliedBy(props.season.minus(key))
+            .multipliedBy(season.minus(key))
             .multipliedBy(0.0002)
         );
         crates.push(key);
@@ -82,14 +112,14 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   };
 
   function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, props.maxFromBeanVal);
+    const fromNumber = MinBN(newFromNumber, beanSiloBalance);
     const newFromBeanValue = TrimBN(fromNumber, BEAN.decimals);
     setFromBeanValue(newFromBeanValue);
     setToStalkValue(TrimBN(getStalkRemoved(fromNumber), STALK.decimals));
     setToSeedsValue(
       TrimBN(fromNumber.multipliedBy(BEAN_TO_SEEDS), SEEDS.decimals)
     );
-    props.setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0));
+    setIsFormDisabled(newFromBeanValue.isLessThanOrEqualTo(0));
   }
 
   const handleFromChange = (event) => {
@@ -101,26 +131,20 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   };
   const maxHandler = () => {
     const minMaxFromVal = MinBNs([
-      props.maxToSeedsVal.multipliedBy(props.seedsToBean),
-      props.maxToStalkVal.multipliedBy(props.stalkToBean),
-      props.maxFromBeanVal,
+      stalkBalance.multipliedBy(stalkToLP),
+      seedBalance.multipliedBy(seedsToLP),
+      beanSiloBalance,
     ]);
-    if (props.locked) {
-      fromValueUpdated(new BigNumber(-1));
-    } else {
-      fromValueUpdated(minMaxFromVal);
-    }
+    fromValueUpdated(minMaxFromVal);
   };
 
   /* Input Fields */
-
   const fromBeanField = (
     <TokenInputField
-      balance={props.maxFromBeanVal}
-      claim={props.settings.claim}
-      claimableBalance={props.beanClaimableBalance}
+      balance={beanSiloBalance}
+      claim={settings.claim}
       handleChange={handleFromChange}
-      locked={props.maxFromBeanVal.isLessThanOrEqualTo(0)}
+      locked={beanSiloBalance.isLessThanOrEqualTo(0)}
       maxHandler={maxHandler}
       setValue={setFromBeanValue}
       token={SiloAsset.Bean}
@@ -129,7 +153,6 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   );
 
   /* Output Fields */
-
   const toBurnStalkField = (
     <TokenOutputField
       burn
@@ -152,23 +175,30 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
 
   /* Transaction Details, settings and text */
 
-  const details = [];
-  // Hiding for partial claim
-  // if (props.settings.claim) {
-  //   details.push(
-  //     <ClaimTextModule
-  //       key="claim"
-  //       balance={props.beanClaimableBalance.plus(props.ethClaimable)}
-  //       claim={props.settings.claim}
-  //       mode={props.settings.mode}
-  //       beanClaimable={props.beanClaimableBalance}
-  //       ethClaimable={props.ethClaimable}
-  //     />
-  //   );
-  // }
+  // If you withdraw LP and you have `convertLP` on,
+  // convert that LP to the underlying beans and eth,
+  // you can reuse those in the same transaction
+  // add claimLPBeans
+  // claimable lp tokens that I withdrew; can use the beans
+  // in the same contract
+  const claimLPBeans = MaxBN(poolForLPRatio(lpReceivableBalance)[0], new BigNumber(0));
+  const ethClaimable = claimableEthBalance.plus(
+    MaxBN(poolForLPRatio(lpReceivableBalance)[1], new BigNumber(0))
+  );
 
   const beanOutput = new BigNumber(fromBeanValue);
 
+  const details = [];
+  if (settings.claim) {
+    details.push(
+      <ClaimTextModule
+        key="claim"
+        claim={settings.claim}
+        beanClaimable={beanClaimableBalance.plus(claimLPBeans)}
+        ethClaimable={ethClaimable}
+      />
+    );
+  }
   details.push(`Withdraw ${displayBN(beanOutput)}
     ${beanOutput.isEqualTo(1) ? 'Bean' : 'Beans'} from the Silo`);
   details.push(
@@ -177,25 +207,20 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
     )} Seeds`
   );
 
-  const unvoteTextField = props.locked ? (
-    <Box style={{ marginTop: '-5px', fontFamily: 'Futura-PT-Book' }}>
-      Unvote Active BIPs to Withdraw
-    </Box>
-  ) : null;
-  const showSettings = props.hasClaimable ? (
+  const showSettings = hasClaimable ? (
     <SettingsFormModule
-      hasClaimable={props.hasClaimable}
+      hasClaimable={hasClaimable}
       showUnitModule={false}
-      setSettings={props.setSettings}
-      settings={props.settings}
+      setSettings={setSettings}
+      settings={settings}
     />
   ) : null;
   const stalkChangePercent = toStalkValue
-    .dividedBy(props.totalStalk)
+    .dividedBy(totalStalk)
     .multipliedBy(100);
 
   function transactionDetails() {
-    if (fromBeanValue.isLessThanOrEqualTo(0) || props.locked) return;
+    if (fromBeanValue.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -225,7 +250,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
           </span>
           <br />
           <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
-            {siloStrings.withdrawWarning.replace('{0}', props.withdrawSeasons)}
+            {siloStrings.withdrawWarning.replace('{0}', withdrawSeasons)}
           </span>
         </Box>
       </>
@@ -241,18 +266,18 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
       ) {
         return;
       }
-      if (props.settings.claim) {
+      if (settings.claim) {
         // Toast
         const txToast = new TransactionToast({
-          loading: `Claiming + withdrawing ${displayBN(fromBeanValue)} Beans`,
-          success: `Claim + withdrawl of ${displayBN(fromBeanValue)} Beans complete!`,
+          loading: `Claiming and withdrawing ${displayBN(fromBeanValue)} Beans`,
+          success: `Claimed and withdrew of ${displayBN(fromBeanValue)} Beans`,
         });
 
         // Execute
         claimAndWithdrawBeans(
           withdrawParams.crates,
           withdrawParams.amounts,
-          props.claimable,
+          claimable,
           (response) => {
             fromValueUpdated(new BigNumber(-1));
             txToast.confirming(response);
@@ -268,7 +293,7 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
         // Toast
         const txToast = new TransactionToast({
           loading: `Withdrawing ${displayBN(fromBeanValue)} Beans`,
-          success: `Withdrawl of ${displayBN(fromBeanValue)} Beans complete!`,
+          success: `Withdrew ${displayBN(fromBeanValue)} Beans`,
         });
 
         // Execute
@@ -293,7 +318,6 @@ export const BeanWithdrawModule = forwardRef((props, ref) => {
   return (
     <>
       {fromBeanField}
-      {unvoteTextField}
       {transactionDetails()}
       {showSettings}
     </>

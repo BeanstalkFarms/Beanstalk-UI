@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-// import BigNumber from 'bignumber.js';
 import {
   Table,
   TableCell,
@@ -11,7 +10,9 @@ import {
   IconButton,
   TablePagination,
   Radio,
-  Button
+  Button,
+  Popover,
+  Box
 } from '@material-ui/core';
 import {
   CloseOutlined as CancelIcon,
@@ -22,7 +23,7 @@ import { BEAN, theme } from 'constants/index';
 import { cancelPodOrder, CryptoAsset, displayBN, FarmAsset, toStringBaseUnitBN } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
-import { BalanceTableCell, QuestionModule, TablePageSelect, TransactionToast } from 'components/Common';
+import { BalanceTableCell, QuestionModule, settingsStrings, SwitchModule, TablePageSelect, TransactionToast } from 'components/Common';
 import { useStyles } from '../TableStyles';
 
 type OrderRowProps = {
@@ -36,9 +37,8 @@ type OrderRowProps = {
 
 function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSelling, setSelectedOrderKey }: OrderRowProps) {
   const classes = useStyles();
-  // const { plots } = useSelector<AppState, AppState['userBalance']>(
-  //   (state) => state.userBalance
-  // );
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [toWallet, setToWallet] = useState(false);
   const numPodsLeft = order.remainingAmount;
   const explainer = (
     <>
@@ -51,8 +51,29 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
         )} to buy {displayBN(numPodsLeft)} Pod{numPodsLeft.eq(1) ? '' : 's'} for {displayBN(order.pricePerPod)} Beans per Pod anywhere before {displayBN(order.maxPlaceInLine)} in the Pod Line.
     </>
   );
-  /** Do we have any plots whose index is smaller than max place in line? if so then we can sell */
-  // const canSell = Object.keys(plots).some((index) => order.maxPlaceInLine.minus(new BigNumber(plots[index])).gt(0));
+
+  const cancelOrder = async () => {
+    // Toast
+    const destination = toWallet ? 'to your wallet' : 'to your Claimable balance';
+    const beansReturned = displayBN(numPodsLeft.times(order.pricePerPod));
+    const txToast = new TransactionToast({
+      loading: `Cancelling order for ${displayBN(numPodsLeft)} Pods at ${displayBN(order.pricePerPod)} Beans per Pod. Returning ${beansReturned} Beans ${destination}.`,
+      success: `Order cancelled. Sent ${beansReturned} Beans ${destination}.`,
+    });
+
+    // Execute
+    cancelPodOrder({
+      pricePerPod: toStringBaseUnitBN(order.pricePerPod, BEAN.decimals),
+      maxPlaceInLine: toStringBaseUnitBN(order.maxPlaceInLine, BEAN.decimals),
+      toWallet,
+    }, (response) => txToast.confirming(response))
+    .then((value) => {
+      txToast.success(value);
+    })
+    .catch((err) => {
+      txToast.error(err);
+    });
+  };
 
   return (
     <TableRow
@@ -96,26 +117,7 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
           {/* Cancel this Order */}
           <TableCell align="center">
             <IconButton
-              onClick={async () => {
-                // Toast
-                const txToast = new TransactionToast({
-                  loading: `Cancelling order for ${displayBN(numPodsLeft)} Pods at ${displayBN(order.pricePerPod)} Beans per Pod`,
-                  success: 'Order cancelled',
-                });
-
-                // Execute
-                cancelPodOrder({
-                  pricePerPod: toStringBaseUnitBN(order.pricePerPod, BEAN.decimals),
-                  maxPlaceInLine: toStringBaseUnitBN(order.maxPlaceInLine, BEAN.decimals),
-                  toWallet: false,
-                }, (response) => txToast.confirming(response))
-                .then((value) => {
-                  txToast.success(value);
-                })
-                .catch((err) => {
-                  txToast.error(err);
-                });
-              }}
+              onClick={(event) => setAnchorEl(event.currentTarget)}
               style={{
                 color: theme.linkColor,
               }}
@@ -123,6 +125,34 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
             >
               <CancelIcon />
             </IconButton>
+            <Popover
+              open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
+              onClose={() => setAnchorEl(null)}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+            >
+              <Box sx={{ p: 2 }}>
+                <SwitchModule
+                  description={settingsStrings.toWalletCancelOrder}
+                  label="To Wallet"
+                  margin="-55px 0px 0px 20px"
+                  setValue={(value) => setToWallet(value)}
+                  value={toWallet}
+                  style={{ textAlign: 'center' }}
+                  formControlStyles={{ paddingBottom: 5 }}
+                />
+                <Button onClick={cancelOrder} variant="contained" style={{ marginTop: 15 }}>
+                  Cancel Order
+                </Button>
+              </Box>
+            </Popover>
           </TableCell>
         </>
       ) : (

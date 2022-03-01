@@ -44,6 +44,7 @@ export default function SiloConvertModule() {
     beanReserve,
     ethReserve,
     beanPrice,
+    usdcPrice,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
@@ -109,6 +110,14 @@ export default function SiloConvertModule() {
     setPage(newPage);
   };
 
+  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
+    const endPrice = ethReserve
+      .plus(sellEth)
+      .dividedBy(beanReserve.minus(buyBeans))
+      .dividedBy(usdcPrice);
+    return beanPrice.plus(endPrice).dividedBy(2);
+  };
+
   const lpRef = useRef<any>();
   const beanRef = useRef<any>();
   const handleForm = () => {
@@ -124,9 +133,7 @@ export default function SiloConvertModule() {
     }
   };
 
-  const sections = [];
-  // if (prices.beanPrice.isLessThan(1)) {
-  sections.push(
+  const sections = [
     <ConvertLPModule
       key={0}
       ref={lpRef}
@@ -135,11 +142,8 @@ export default function SiloConvertModule() {
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-    />
-  );
-  // }
-  // if (prices.beanPrice.isGreaterThan(1)) {
-  sections.push(
+      updateExpectedPrice={updateExpectedPrice}
+    />,
     <ConvertBeanModule
       key={1}
       ref={beanRef}
@@ -147,9 +151,9 @@ export default function SiloConvertModule() {
       setSection={setSection}
       setSettings={setSettings}
       settings={settings}
+      updateExpectedPrice={updateExpectedPrice}
     />
-  );
-  // }
+  ];
   if (section > sectionTitles.length - 1) setSection(0);
 
   const sectionTitlesInfo = [];

@@ -58,6 +58,16 @@ export interface UserBalanceState {
   lpTransitBalance: BigNumber;
   /** The farmer's balance of claimable LP Tokens from withdrawals */
   lpReceivableBalance: BigNumber;
+  lpReceivableBalance: BigNumber;
+  /** @publius */
+  curveBalance: BigNumber;
+  /** @publius */
+  curveSiloBalance: BigNumber;
+  /** @publius */
+  curveTransitBalance: BigNumber;
+  /** @publius */
+  curveReceivableBalance: BigNumber;
+  /** @publius */
   /** The farmer's balance of Stalk */
   stalkBalance: BigNumber;
   /** The farmer's balance of Seeds */
@@ -104,6 +114,16 @@ export interface UserBalanceState {
    * A mapping of the farmer's claimable LP Withdrawals
    */
   lpReceivableCrates: SeasonMap<BigNumber>;
+  
+  /** @publius */
+  curveDeposits: Object;
+  /** @publius */
+  curveBDVDeposits: Object;
+  /** @publius */
+  curveWithdrawals: Object;
+  /** @publius */
+  curveReceivableCrates: Object;
+  
   /**
    * Plots are keyed by plotIndex, value is size of the Plot in Pods.
    */
@@ -121,6 +141,7 @@ export interface UserBalanceState {
   /** @DEPRECATED. The number of Seasons the Farmer is locked for. (Until the end of the BIPs they voted for) */
   // lockedSeasons: BigNumber;
   /** The sum of BeanRecievableBalance + beanHarvestableBalance + wrappedBeans */
+
   beanClaimableBalance: BigNumber;
   /** 
    * The farmer's claimable struct. This struct is kind of complex to build and gets passed into
@@ -155,6 +176,10 @@ export const initialState: UserBalanceState = {
   lpSiloBalance: new BigNumber(-1),
   lpTransitBalance: new BigNumber(-1),
   lpReceivableBalance: new BigNumber(-1),
+  curveBalance: new BigNumber(-1),
+  curveSiloBalance: new BigNumber(-1),
+  curveTransitBalance: new BigNumber(-1),
+  curveReceivableBalance: new BigNumber(-1),
   stalkBalance: new BigNumber(-1),
   seedBalance: new BigNumber(-1),
   podBalance: new BigNumber(-1),
@@ -167,6 +192,10 @@ export const initialState: UserBalanceState = {
   lpSeedDeposits: {},
   lpWithdrawals: {},
   lpReceivableCrates: {},
+  curveDeposits: {},
+  curveBDVDeposits: {},
+  curveWithdrawals: {},
+  curveReceivableCrates: {},
   plots: {},
   harvestablePlots: {},
   votedBips: new Set(),

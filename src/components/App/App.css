@@ -160,10 +160,12 @@
 #cloud1 {
   animation: slideLeft 65s linear infinite;
   margin-left: -100%;
+  transform: translateZ(0);
 }
 #cloud2 {
   animation: slideLeft 50s linear infinite;
   margin-left: -100%;
+  transform: translateZ(0);
 }
 
 @media screen and (max-width: 599px) {
@@ -278,13 +280,13 @@
 .TextField-rounded-mint fieldset {
   border-radius: 25px;
   background-color: rgb(0, 255, 0, 0.05);
-  z-index:-100;
+  z-index: 1;
 }
 
 .TextField-rounded-burn fieldset {
   border-radius: 25px;
   background-color: rgb(255, 0, 0, 0.05);
-  z-index:-100;
+  z-index: 1;
 }
 
 @media screen and (max-width: 700px) {

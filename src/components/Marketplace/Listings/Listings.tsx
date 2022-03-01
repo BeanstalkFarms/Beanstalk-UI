@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 
 import { PodListing } from 'state/marketplace/reducer';
-import { CryptoAsset, GetWalletAddress } from 'util/index';
+import { CryptoAsset, displayBN, FarmAsset, GetWalletAddress } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { filterStrings, QuestionModule } from 'components/Common';
 
@@ -101,7 +101,6 @@ export default function Listings(props: ListingsProps) {
   // Setup
   useEffect(() => {
     const init = async () => {
-      console.log('Listings: init');
       const addr = await GetWalletAddress();
       setWalletAddress(addr);
     };
@@ -112,9 +111,18 @@ export default function Listings(props: ListingsProps) {
     return <div>Loading...</div>;
   }
 
+  const numPods = filteredListings.current.reduce(
+    (sum, curr) => sum.plus(curr.remainingAmount),
+    new BigNumber(0)
+  );
+
   // Filters
   const filters = (
-    <Filters title={`${filteredListings.current.length} Listing${filteredListings.current.length !== 1 ? 's' : ''}`}>
+    <Filters title={
+      <>
+        {filteredListings.current.length} Listing{filteredListings.current.length !== 1 ? 's' : ''} &middot; {displayBN(numPods)}<TokenIcon token={FarmAsset.Pods} />
+      </>
+    }>
       <>
         {/* Price per Pod sliding filter  */}
         <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>

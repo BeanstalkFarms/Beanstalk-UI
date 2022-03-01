@@ -13,6 +13,10 @@ export interface TotalBalanceState {
   totalBudgetBeans: BigNumber;
   /** The total number of Beans in the curve pool */
   totalCurveBeans: BigNumber;
+  /**  */
+  totalSiloCurve: BigNumber;
+  /**  */
+  totalTransitCurve: BigNumber;
   /** The total number of LP tokens */
   totalLP: BigNumber;
   /** The total number of LP tokens in the Silo */
@@ -47,6 +51,8 @@ export const initialState: TotalBalanceState = {
   totalTransitBeans: new BigNumber(-1),
   totalBudgetBeans: new BigNumber(-1),
   totalCurveBeans: new BigNumber(-1),
+  totalSiloCurve: new BigNumber(-1),
+  totalTransitCurve: new BigNumber(-1),
   totalLP: new BigNumber(-1),
   totalSiloLP: new BigNumber(-1),
   totalTransitLP: new BigNumber(-1),

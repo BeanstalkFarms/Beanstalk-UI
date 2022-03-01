@@ -11,7 +11,7 @@ export const useStyles = makeStyles({
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
   },
-  //
+  // Drawer
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -23,21 +23,33 @@ export const useStyles = makeStyles({
   content: {
     flexGrow: 1,
   },
-  currentPriceStyle: {},
-  //
+  logoPriceBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  beanLogoLink: {
+    display: 'block',
+    paddingTop: 4
+  },
+  beanLogoImage: {
+    marginTop: 0
+  },
+  // Nav overall
   NavSubheader: {
     fontFamily: 'Futura',
-    lineHeight: '24px',
-    backgroundColor: '#fff',
+    lineHeight: '22px',
+    // backgroundColor: '#fff',
   },
   Badge: {
     backgroundColor: theme.secondary,
     color: theme.accentText,
-    fontSize: 11.5,
+    fontSize: 11,
     padding: '2px 5px',
     borderRadius: 4,
     marginRight: 4,
   },
+  // Nav links
   NavLinkHeader: {
     display: 'flex',
     flexDirection: 'row',
@@ -45,7 +57,7 @@ export const useStyles = makeStyles({
   },
   NavLinkTitle: {
     fontFamily: 'Futura, Helvetica',
-    fontWeight: '800',
+    fontWeight: 800,
     fontSize: 14,
   },
   NavLink: {

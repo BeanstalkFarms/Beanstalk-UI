@@ -17,8 +17,8 @@ export default function ClaimButton(props) {
     if (props.asset === ClaimableAsset.Ethereum) {
       // Toast
       const txToast = new TransactionToast({
-        loading: 'Asset Claim pending.', // FIXME
-        success: 'Asset Claim successful.', // FIXME
+        loading: 'Claiming Beans', // FIXME
+        success: 'Claim successful', // FIXME
       });
 
       // Execute
@@ -39,13 +39,16 @@ export default function ClaimButton(props) {
     } else {
       // Toast
       const txToast = new TransactionToast({
-        loading: 'Silo update pending.', // FIXME
-        success: 'Silo update successful.', // FIXME
+        loading: 'Farming Stalk',
+        success: 'Farm successful',
       });
 
       // Execute
       updateSilo(
-        props.claimable,
+        // FIXME: removing this since the updateSilo
+        // function doesn't take a claimable param. Was
+        // this intended for some other legacy purpose?
+        // props.claimable,
         (response) => {
           txToast.confirming(response);
         }

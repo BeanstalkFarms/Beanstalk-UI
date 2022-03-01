@@ -8,7 +8,7 @@ import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
 } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, LPBEAN_TO_STALK } from 'constants/index';
+import { BASE_SLIPPAGE } from 'constants/index';
 import {
   approveBeanstalkBean,
   approveBeanstalkLP,
@@ -37,22 +37,11 @@ export default function SiloLPModule() {
     beanBalance,
     ethBalance,
     lpReceivableBalance,
-    beanDeposits,
-    claimable,
-    claimableEthBalance,
-    hasClaimable,
-    beanSiloBalance,
-    beanClaimableBalance,
     lpDeposits,
-    lpSiloBalance,
-    seedBalance,
-    stalkBalance,
     lpSeedDeposits,
     lpReceivableCrates,
     lpWithdrawals,
     lockedSeasons,
-    harvestablePodBalance,
-    beanReceivableBalance,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -101,7 +90,6 @@ export default function SiloLPModule() {
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   const sectionTitles = ['Deposit', 'Withdraw'];
-
   const sectionTitlesDescription = [
     siloStrings.lpDeposit,
     siloStrings.lpWithdraw.replace('{0}', totalBalance.withdrawSeasons),
@@ -165,83 +153,32 @@ export default function SiloLPModule() {
     }
   };
 
-  const claimLPBeans = lpReceivableBalance.isGreaterThan(0)
-    ? poolForLPRatio(lpReceivableBalance)[0]
-    : new BigNumber(0);
-
-  const ethClaimable = claimableEthBalance.plus(
-    poolForLPRatio(lpReceivableBalance)[1]
-  );
-
   const sections = [
     <LPDepositModule
       key={0}
-      ethClaimable={ethClaimable}
-      beanBalance={beanBalance}
-      beanCrates={beanDeposits}
-      beanReceivableBalance={beanReceivableBalance}
-      beanReserve={prices.beanReserve}
-      beanToEth={prices.ethReserve.dividedBy(prices.beanReserve)}
-      beanToStalk={LPBEAN_TO_STALK}
-      claimable={claimable}
-      claimableEthBalance={claimableEthBalance}
-      ethBalance={ethBalance}
-      ethReserve={prices.ethReserve}
-      ethToBean={prices.beanReserve.dividedBy(prices.ethReserve)}
-      harvestablePodBalance={harvestablePodBalance}
-      hasClaimable={hasClaimable}
-      lpBalance={lpBalance}
-      lpReceivableBalance={lpReceivableBalance}
       updateExpectedPrice={updateExpectedPrice}
-      maxFromBeanSiloVal={beanSiloBalance}
-      beanClaimableBalance={beanClaimableBalance.plus(claimLPBeans)}
-      beanLPClaimableBalance={claimLPBeans}
+      poolForLPRatio={poolForLPRatio}
       ref={depositRef}
-      season={season}
       setIsFormDisabled={setIsFormDisabled}
-      setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalLP={totalBalance.totalLP}
-      totalStalk={totalBalance.totalStalk}
     />,
     <LPWithdrawModule
       key={1}
-      ethClaimable={ethClaimable}
-      beanReceivableBalance={beanReceivableBalance}
-      claimable={claimable}
-      claimableEthBalance={claimableEthBalance}
-      crates={lpDeposits}
-      harvestablePodBalance={harvestablePodBalance}
-      hasClaimable={hasClaimable}
-      lpReceivableBalance={lpReceivableBalance}
-      maxFromLPVal={lpSiloBalance}
-      maxToSeedsVal={seedBalance}
-      maxToStalkVal={stalkBalance}
       poolForLPRatio={poolForLPRatio}
       ref={withdrawRef}
-      season={season}
-      seedCrates={lpSeedDeposits}
       setIsFormDisabled={setIsFormDisabled}
-      setSection={setSection}
       setSettings={setSettings}
       settings={settings}
-      totalLP={totalBalance.totalLP}
-      totalStalk={totalBalance.totalStalk}
-      withdrawSeasons={totalBalance.withdrawSeasons}
     />,
   ];
   if (lpReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <LPClaimModule
         key={2}
-        // claimableEthBalance={claimableEthBalance}
-        crates={lpReceivableCrates}
-        maxFromLPVal={lpReceivableBalance}
-        poolForLPRatio={poolForLPRatio}
         ref={claimRef}
+        poolForLPRatio={poolForLPRatio}
         setIsFormDisabled={setIsFormDisabled}
-        setSection={setSection}
       />
     );
     sectionTitles.push('Claim');

@@ -12,6 +12,7 @@ import { AppState } from 'state';
 import { setDrawerOpen } from 'state/general/actions';
 import { theme } from 'constants/index';
 import WalletModule from './WalletModule';
+import PriceTooltip from './PriceTooltip';
 
 const useStyles = makeStyles({
   appBar: {
@@ -42,17 +43,8 @@ export default function NavigationBar() {
   const { drawerOpen, width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-  const { beanPrice } = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
   const toggleDrawerOpen = () => dispatch(setDrawerOpen(!drawerOpen));
-
-  const priceStyle = {
-    fontSize: 13,
-    lineHeight: '13px',
-    color: theme.backgroundText,
-    marginLeft: '10px',
-  };
+  const currentBeanPrice = <PriceTooltip allowExpand={false} />;
 
   return (
     <AppBar className={classes.appBar} position="sticky">
@@ -62,13 +54,7 @@ export default function NavigationBar() {
             <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen} style={{ backgroundColor: theme.secondary }}>
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
-            {beanPrice && beanPrice.isGreaterThan(0) && (
-              <Box
-                style={priceStyle}
-              >
-                ${beanPrice.toFixed(4)}
-              </Box>
-            )}
+            {currentBeanPrice}
           </Box>
         ) : <Box />}
         <Box>

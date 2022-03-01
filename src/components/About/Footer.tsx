@@ -61,7 +61,7 @@ export default function Footer() {
       display: 'flex',
       alignContent: 'space-around',
       height: theme.groundHeight,
-      // zIndex: 1000000,
+      zIndex: 101,
       position: 'fixed',
       bottom: 0,
       left: 0,
@@ -129,7 +129,7 @@ export default function Footer() {
         <LogoLinks close link={CURVE_LINK}>
           <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)'} : { height: '25px', width: '25px', fill: 'url(#blackGradient)' }} />
         </LogoLinks>
-        {width > 500 ? (
+        {width > 900 ? (
           <LogoLinks link={COMMONWEALTH_LINK}>
             <CommonwealthIcon style={logoStyle} />
           </LogoLinks>

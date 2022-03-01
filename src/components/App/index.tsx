@@ -7,6 +7,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { Toaster } from 'react-hot-toast';
 
 import Updater from 'state/userBalance/updater';
+import TokenUpdater from 'state/tokenBalance/updater';
 import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
@@ -30,6 +31,7 @@ import {
   AboutPage,
   BalancesPage,
   PegMaintenancePage,
+  PokerPage,
 } from 'Pages';
 
 import Wrapper from './Wrapper';
@@ -121,6 +123,9 @@ export default function App() {
           <Route exact path="/market">
             <MarketplacePage key="marketplace" />
           </Route>
+          <Route exact path="/poker">
+            <PokerPage key="poker" />
+          </Route>
           {/* If nothing matches, go to the Silo */}
           <Redirect to="/farm/silo" />
         </Switch>
@@ -133,6 +138,7 @@ export default function App() {
       <CssBaseline />
       {/* UPDATERS */}
       <Updater />
+      <TokenUpdater />
       <NFTUpdater />
       {/* CONTENT */}
       <Box className="App">

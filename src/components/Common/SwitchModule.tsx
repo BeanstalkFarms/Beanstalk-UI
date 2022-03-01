@@ -10,6 +10,7 @@ export default function SwitchModule(props) {
     marginBottom: '-8px',
     marginLeft: '0px',
     width: '100%',
+    ...props.style,
   };
 
   const GreenSwitch = withStyles({
@@ -28,11 +29,11 @@ export default function SwitchModule(props) {
   const GreenFormControlLabel = withStyles({
     label: {
       fontFamily: 'Futura-PT-Book',
-      fontSize: '9px',
-      marginBottom: '-10px',
-      marginLeft: '0',
-      marginTop: '3px',
+      fontSize: props.fontSize,
+      margin: props.textMargin,
       width: '100%',
+      textAlign: props.textAlign,
+      ...props.formControlStyles
     },
   })(FormControlLabel);
 
@@ -48,20 +49,20 @@ export default function SwitchModule(props) {
           label={props.label ? props.label : null}
           onChange={changeHandler}
           style={{
-            flexDirection: 'column-reverse',
+            flexDirection: props.flexDirection,
             marginLeft: '0',
             width: '100%',
           }}
         />
-        {props.description
-          ? (
+        {props.description !== undefined
+          ?
             <QuestionModule
               description={props.description}
               margin={props.margin}
               marginTooltip={props.marginTooltip}
             />
-          )
-          : null}
+          : null
+        }
       </Box>
     </Box>
   );
@@ -71,4 +72,8 @@ SwitchModule.defaultProps = {
   disabled: false,
   margin: '-50px 0px 0px 15px',
   marginTooltip: '0px 0 5px 10px',
+  flexDirection: 'column-reverse',
+  textAlign: 'center',
+  fontSize: '9px',
+  textMargin: '3px 0 -10px 0',
 };
