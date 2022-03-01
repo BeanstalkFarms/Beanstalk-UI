@@ -1,4 +1,8 @@
 import Web3 from 'web3';
+import Onboard from '@web3-onboard/core'
+import injectedModule from '@web3-onboard/injected-wallets'
+import walletConnectModule from '@web3-onboard/walletconnect'
+
 import { ethers } from 'ethers';
 import {
   BEANFTCOLLECTION,
@@ -26,6 +30,8 @@ export * from './APYUtilities';
 export * from './FundraiserUtilities';
 export * from './MarketUtilities';
 
+const MAINNET_RPC_URL = 'https://mainnet.infura.io/v3/9d1f966887eb483696b887c83bce72e8'
+
 let ethereum;
 export let initializing;
 /** txCallback is called after each successful request to the chain. */
@@ -33,7 +39,7 @@ export let txCallback : Function | undefined;
 export let web3 : Web3;
 export let account : string;
 export let metamaskFailure = -1;
-export let chainId = 1;
+export const chainId = 1;
 
 export let web3Provider;
 export let web3Signer;
@@ -100,49 +106,43 @@ async function initializeMetaMaskListeners() {
   ethereum.on('chainChanged', changeHandler);
 }
 
-export async function initialize(): Promise<boolean> {
-  if (!ethereum) {
-    try {
-      ethereum = (window as any).ethereum;
-      if (!ethereum) {
-        metamaskFailure = 0;
-        return false;
-      }
-      if (!ethereum.isMetaMask) {
-        metamaskFailure = 1;
-        return false;
-      }
-      ethereum.request({ method: 'eth_requestAccounts' });
-      if (ethereum && web3 === undefined) {
-        web3Provider = new ethers.providers.Web3Provider(ethereum);
-        web3Signer = web3Provider.getSigner();
-
-        web3 = new Web3(ethereum);
-        initializeMetaMaskListeners();
-        const [hexAccount, chainIdentifier] = await Promise.all([
-          web3Signer.getAddress(),
-          web3Signer.getChainId(),
-        ]);
-        account = hexAccount;
-        chainId = parseInt(chainIdentifier, 10);
-        if (chainId !== 1 && chainId !== 3 && chainId !== 1337) {
-          metamaskFailure = 3;
-          return false;
-        }
-        changeNetwork(chainId);
-        if (account === undefined) {
-          metamaskFailure = 2;
-          return false;
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      metamaskFailure = 2;
-      return false;
-    }
-    return true;
+const walletConnect = walletConnectModule({
+  qrcodeModalOptions: {
+    mobileLinks: ['rainbow', 'metamask', 'argent', 'trust', 'imtoken', 'pillar']
   }
-  await initializing;
+})
+
+export async function initialize(): Promise<boolean> {
+  const injected = injectedModule()
+  const onboard = Onboard({
+    wallets: [injected, walletConnect],
+    chains: [
+      {
+        id: '0x1',
+        token: 'ETH',
+        label: 'Ethereum Mainnet',
+        rpcUrl: MAINNET_RPC_URL
+      }
+    ],
+    appMetadata: {
+      name: 'My App',
+      icon: '<SVG_ICON_STRING>',
+      description: 'My app using Onboard'
+    }
+  })
+
+  const wallets = await onboard.connectWallet()
+
+  web3 = new Web3(new Web3.providers.HttpProvider(MAINNET_RPC_URL));
+
+  console.log(web3)
+  account = wallets[0].accounts[0].address;
+
+  web3Provider = new ethers.providers.Web3Provider(wallets[0].provider);
+  web3Signer = web3Provider.getSigner();
+
+  console.log(wallets)
+  metamaskFailure = 1;
   return true;
 }
 
