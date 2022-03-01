@@ -194,10 +194,14 @@ export default function Updater() {
         totalCurveBeans,
         withdrawSeasons,
       ] = totalBalances;
+
+      //
       const totalBudgetBeans = budget0.plus(budget1).plus(budget2).plus(budget3);
       const [bips, hasActiveBIP] = bipInfo;
       const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
       const totalPods = podIndex.minus(harvestableIndex);
+
+      //
       dispatch(
         setTotalBalance({
           totalBeans,
@@ -785,23 +789,30 @@ export default function Updater() {
         totalBalances, // 4
         _prices, // 5
         usdcBalance, // 6
-        votedBips // 7
-      ] =
-        await Promise.all([
-          getBips(), // 0
-          getFundraisers(), // 1
-          getEtherBalance(), // 2
-          accountBalancePromises, // 3
-          totalBalancePromises, // 4
-          pricePromises, // 5
-          getUSDCBalance(), // 6
-          votes(), // 7
-        ]);
+        votedBips, // 7
+        ethPrices, // 8
+        priceTuple, // 9
+      ] = await Promise.all([
+        getBips(), // 0
+        getFundraisers(), // 1
+        getEtherBalance(), // 2
+        accountBalancePromises, // 3
+        totalBalancePromises, // 4
+        pricePromises, // 5
+        getUSDCBalance(), // 6
+        votes(), // 7
+        getEthPrices(), // 8
+        getPriceArray() // 9
+      ]);
+
+      //
       benchmarkEnd('ALL BALANCES', startTime);
+
+      //
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(
-        _prices[1],
-        _prices[2]
-      ); /* tokenReserves, token0 */
+        _prices[1], // tokenReserves
+        _prices[2]  // token0
+      );
       const eventParsingParameters = [
         totalBalances[17].season /* season */,
         totalBalances[13] /* harvestableIndex */,
@@ -812,11 +823,14 @@ export default function Updater() {
         beanReserve,
         ethReserve,
       ];
-      const [ethPrices, priceTuple] = await Promise.all([getEthPrices(), getPriceArray()]);
 
       return [
         () => {
-          const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
+          const currentSeason = processTotalBalances(
+            totalBalances,
+            bipInfo,
+            fundraiserInfo
+          );
           const lpReserves = processPrices([
             ..._prices,
             ethPrices,
