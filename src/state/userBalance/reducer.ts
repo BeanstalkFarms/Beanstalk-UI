@@ -116,13 +116,16 @@ export interface UserBalanceState {
   lpReceivableCrates: SeasonMap<BigNumber>;
   
   /** @publius */
-  curveDeposits: Object;
+  curveDeposits: SeasonMap<BigNumber>;
+
   /** @publius */
-  curveBDVDeposits: Object;
+  curveBDVDeposits: SeasonMap<BigNumber>;
+
   /** @publius */
-  curveWithdrawals: Object;
+  curveWithdrawals: SeasonMap<BigNumber>;
+
   /** @publius */
-  curveReceivableCrates: Object;
+  curveReceivableCrates: SeasonMap<BigNumber>;
   
   /**
    * Plots are keyed by plotIndex, value is size of the Plot in Pods.
