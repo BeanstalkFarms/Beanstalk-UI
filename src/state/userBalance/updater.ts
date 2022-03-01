@@ -594,17 +594,25 @@ export default function Updater() {
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance, votedBips] =
+      const [
+        bipInfo, // 0
+        fundraiserInfo, // 1
+        ethBalance, // 2
+        accountBalances, // 3
+        totalBalances, // 4
+        _prices, // 5
+        usdcBalance, //6
+        votedBips // 7
+      ] =
         await Promise.all([
-          getBips(),
-          getFundraisers(),
-          getEtherBalance(),
-          accountBalancePromises,
-          totalBalancePromises,
-          pricePromises,
-          // getListings()
-          getUSDCBalance(),
-          votes(),
+          getBips(), // 0
+          getFundraisers(), // 1
+          getEtherBalance(), // 2
+          accountBalancePromises, // 3
+          totalBalancePromises, // 4
+          pricePromises, // 5
+          getUSDCBalance(), //6
+          votes(), // 7
         ]);
       benchmarkEnd('ALL BALANCES', startTime);
       const [beanReserve, ethReserve] = lpReservesForTokenReserves(

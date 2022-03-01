@@ -27,6 +27,15 @@ type Claimable = [
   // toWallet is used in claimable calls but not included here
 ];
 
+
+export type SeasonMap<T> = {
+  [season: string]: T;
+}
+
+export type PlotMap<T> = {
+  [index: string]: T;
+}
+
 export interface UserBalanceState {
   /** The farmer's Ether balance */
   ethBalance: BigNumber;
@@ -58,28 +67,56 @@ export interface UserBalanceState {
   podBalance: BigNumber;
   /** The farmer's balance of harvestable Pods */
   harvestablePodBalance: BigNumber;
-  /** A mapping of the farmer's Bean Deposits mapping from season to Beans including the Deposit attributed to farmable Beans (When farmer's update their Silo, Farmable Beans are deposited in the most recent Season */
-  beanDeposits: Object;
-  /** A mapping of the farmer's Bean Deposits mapping from season to Beans excluding the Deposit attributed to farmable Beans */
-  rawBeanDeposits: Object;
-  /** A mapping of the farmer's Bean Withdrawals mapping from season to Beans excluding claimable Withdrawals */
-  beanWithdrawals: Object;
-  /** A mapping of the farmer's Bean Claimable Withdrawals mapping from season to Beans */
-  beanReceivableCrates: Object;
-  /** A mapping of the farmer's LP Deposits mapping from Season to LP. */
-  lpDeposits: Object;
-  /** A mapping of the Seeds awarded to each LP Deposit in lpDeposits from Season to LPSeeds. There should exist a mapping in lpSeedDeposits for each mapping in lpDeposits */
-  lpSeedDeposits: Object;
-  /** A mapping of the farmer's LP Withdrawals */
-  lpWithdrawals: Object;
-  /** A mapping of the farmer's claimable LP Withdrawals */
-  lpReceivableCrates: Object;
-  /** Plots are keyed by plotIndex, value is size of the Plot in Pods. */
-  plots: { [plotIndex: string]: BigNumber };
-  /** A mapping of the farmer's harvestable plots. */
-  harvestablePlots: Object;
-  /** A list of the BIPs the farmer has voted on. */
-  votedBips: Object;
+  /**
+   * A mapping of the farmer's Bean Deposits mapping from season to Beans
+   * including the Deposit attributed to farmable Beans (When farmer's update
+   * their Silo, Farmable Beans are deposited in the most recent Season
+   */
+  beanDeposits: SeasonMap<BigNumber>;
+  /**
+   * A mapping of the farmer's Bean Deposits mapping from season to Beans
+   * excluding the Deposit attributed to farmable Beans
+   */
+  rawBeanDeposits: SeasonMap<BigNumber>;
+  /**
+   * A mapping of the farmer's Bean Withdrawals mapping from season to Beans
+   * excluding claimable Withdrawals
+   */
+  beanWithdrawals: SeasonMap<BigNumber>;
+  /**
+   * A mapping of the farmer's Bean Claimable Withdrawals mapping from season to Beans
+   */
+  beanReceivableCrates: SeasonMap<BigNumber>;
+  /**
+   * A mapping of the farmer's LP Deposits mapping from Season to LP.
+   */
+  lpDeposits: SeasonMap<BigNumber>;
+  /**
+   * A mapping of the Seeds awarded to each LP Deposit in lpDeposits from
+   * Season to LPSeeds. There should exist a mapping in lpSeedDeposits for
+   * each mapping in lpDeposits.
+   */
+  lpSeedDeposits: SeasonMap<BigNumber>;
+  /**
+   * A mapping of the farmer's LP Withdrawals
+   */
+  lpWithdrawals: SeasonMap<BigNumber>;
+  /**
+   * A mapping of the farmer's claimable LP Withdrawals
+   */
+  lpReceivableCrates: SeasonMap<BigNumber>;
+  /**
+   * Plots are keyed by plotIndex, value is size of the Plot in Pods.
+   */
+  plots: PlotMap<BigNumber>;
+  /**
+   * A mapping of the farmer's harvestable plots.
+   */
+  harvestablePlots: PlotMap<BigNumber>;
+  /**
+   * A Set of the BIPs the farmer has voted on.
+   */
+  votedBips: Set<any>;
   /** @DEPRECATED. a boolean denoting whether the Farmer has an active vote. Farmer's used to be unable to withdraw when they were locked, so this variable was used to lock the modules */
   // locked: Boolean;
   /** @DEPRECATED. The number of Seasons the Farmer is locked for. (Until the end of the BIPs they voted for) */
@@ -92,7 +129,7 @@ export interface UserBalanceState {
    */
   claimable: Claimable;
   /** Whether the farmer has any type of claimable balance (Beans, LP, Eth) */
-  hasClaimable: Boolean;
+  hasClaimable: boolean;
   /** The number of Farmable Beans the farmer has. */
   farmableBeanBalance: BigNumber;
   /** The number of Grown Stalk the farmer has. */
