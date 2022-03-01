@@ -25,3 +25,14 @@ export function timeToStringDetailed(timeDifference) {
   }
   return `${timeInSeconds} sec`;
 }
+
+export const benchmarkStart = (operation : string) => {
+  console.log(`LOADING ${operation}`);
+  return Date.now();
+};
+
+export const benchmarkEnd = (operation : string, startTime : number) => {
+  console.log(
+    `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
+  );
+};

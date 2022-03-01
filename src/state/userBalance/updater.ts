@@ -51,6 +51,8 @@ import {
   getEthPrices,
   getPriceArray,
   votes,
+  benchmarkStart,
+  benchmarkEnd,
 } from 'util/index';
 import { UserBalanceState } from './reducer';
 
@@ -83,17 +85,6 @@ function lpReservesForTokenReserves(
 
   return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
 }
-
-const benchmarkStart = (operation : string) => {
-  console.log(`LOADING ${operation}`);
-  return Date.now();
-};
-
-const benchmarkEnd = (operation : string, startTime : number) => {
-  console.log(
-    `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
-  );
-};
 
 /**
  * A React component that returns nothing but handle loading of data
@@ -733,6 +724,7 @@ export default function Updater() {
       const [podBalance, harvestablePodBalance, plots, harvestablePlots] =
         parsePlots(userPlots, hi);
 
+      //
       const [
         beanTransitBalance,
         beanReceivableBalance,
@@ -751,9 +743,13 @@ export default function Updater() {
         userCurveWithdrawals,
         userCurveReceivableCrates,
       ] = parseWithdrawals(curveWithdrawals, s);
+      
+      //
       const minReceivables = [br, er].map((reserve) =>
         reserve.multipliedBy(BASE_SLIPPAGE).toFixed(0)
       );
+
+      // Build the Claimable struct
       const claimable = [
         Object.keys(userBeanReceivableCrates).map((b) => b.toString()),
         Object.keys(userLPReceivableCrates).map((b) => b.toString()),

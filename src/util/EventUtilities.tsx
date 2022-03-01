@@ -1,8 +1,11 @@
 import BigNumber from 'bignumber.js';
 import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from 'constants/index';
+import { Withdrawals } from 'state/userBalance/reducer';
 import {
   account,
   beanstalkContractReadOnly,
+  benchmarkStart,
+  benchmarkEnd,
   pairContractReadOnly,
   txCallback,
 } from './index';
@@ -13,16 +16,6 @@ const IGNORED_EVENTS = new Set([
   'Swap',
   'Transfer',
 ]);
-
-const benchmarkStart = (operation) => {
-  console.log(`LOADING ${operation}`);
-  return Date.now();
-};
-const benchmarkEnd = (operation, startTime) => {
-  console.log(
-    `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
-  );
-};
 
 let listeningForEvents = false;
 let lastPriceRefresh = new Date().getTime();
@@ -193,21 +186,39 @@ export async function initializeEventListener(
   return allEvents;
 }
 
-export function parseWithdrawals(withdrawals, index: BigNumber) {
-  let receivable = new BigNumber(0);
-  let transit = new BigNumber(0);
-  const transitWithdrawals = {};
-  const receivableWithdrawals = {};
-  Object.keys(withdrawals).forEach((s) => {
-    if (new BigNumber(s).isLessThanOrEqualTo(index)) {
-      receivable = receivable.plus(withdrawals[s]);
-      receivableWithdrawals[s] = withdrawals[s];
+//
+export function parseWithdrawals(
+  withdrawals: Withdrawals, 
+  currentSeason: BigNumber
+) : [
+  transitBalance: BigNumber,
+  receivableBalance: BigNumber,
+  transitWithdrawals: Withdrawals,
+  receivableBalance: Withdrawals,
+] {
+  let receivableBalance = new BigNumber(0);
+  let transitBalance    = new BigNumber(0);
+  const receivableWithdrawals : Withdrawals = {};
+  const transitWithdrawals    : Withdrawals = {};
+
+  // Split each withdrawal between `receivable` and `transit`.
+  Object.keys(withdrawals).forEach((season: string) => {
+    const v = withdrawals[season];
+    if (new BigNumber(season).isLessThanOrEqualTo(currentSeason)) {
+      receivableBalance = receivableBalance.plus(v);
+      receivableWithdrawals[season] = v;
     } else {
-      transit = transit.plus(withdrawals[s]);
-      transitWithdrawals[s] = withdrawals[s];
+      transitBalance = transitBalance.plus(v);
+      transitWithdrawals[season] = v;
     }
   });
-  return [transit, receivable, transitWithdrawals, receivableWithdrawals];
+
+  return [
+    transitBalance,
+    receivableBalance,
+    transitWithdrawals,
+    receivableWithdrawals
+  ];
 }
 
 // @publius to discuss: rename of crates

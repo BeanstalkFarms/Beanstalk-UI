@@ -35,6 +35,9 @@ export type PlotMap<T> = {
   [index: string]: T;
 }
 
+export type Deposits = SeasonMap<BigNumber>;
+export type Withdrawals = SeasonMap<BigNumber>;
+
 export interface UserBalanceState {
   /** The farmer's Ether balance */
   ethBalance: BigNumber;
@@ -58,7 +61,6 @@ export interface UserBalanceState {
   lpTransitBalance: BigNumber;
   /** The farmer's balance of claimable LP Tokens from withdrawals */
   lpReceivableBalance: BigNumber;
-  lpReceivableBalance: BigNumber;
   /** @publius */
   curveBalance: BigNumber;
   /** @publius */
@@ -81,51 +83,51 @@ export interface UserBalanceState {
    * including the Deposit attributed to farmable Beans (When farmer's update
    * their Silo, Farmable Beans are deposited in the most recent Season
    */
-  beanDeposits: SeasonMap<BigNumber>;
+  beanDeposits: Deposits;
   /**
    * A mapping of the farmer's Bean Deposits mapping from season to Beans
    * excluding the Deposit attributed to farmable Beans
    */
-  rawBeanDeposits: SeasonMap<BigNumber>;
+  rawBeanDeposits: Deposits;
   /**
    * A mapping of the farmer's Bean Withdrawals mapping from season to Beans
    * excluding claimable Withdrawals
    */
-  beanWithdrawals: SeasonMap<BigNumber>;
+  beanWithdrawals: Withdrawals;
   /**
    * A mapping of the farmer's Bean Claimable Withdrawals mapping from season to Beans
    */
-  beanReceivableCrates: SeasonMap<BigNumber>;
+  beanReceivableCrates: Withdrawals;
   /**
    * A mapping of the farmer's LP Deposits mapping from Season to LP.
    */
-  lpDeposits: SeasonMap<BigNumber>;
+  lpDeposits: Deposits;
   /**
    * A mapping of the Seeds awarded to each LP Deposit in lpDeposits from
    * Season to LPSeeds. There should exist a mapping in lpSeedDeposits for
    * each mapping in lpDeposits.
    */
-  lpSeedDeposits: SeasonMap<BigNumber>;
+  lpSeedDeposits: Deposits;
   /**
    * A mapping of the farmer's LP Withdrawals
    */
-  lpWithdrawals: SeasonMap<BigNumber>;
+  lpWithdrawals: Withdrawals;
   /**
    * A mapping of the farmer's claimable LP Withdrawals
    */
-  lpReceivableCrates: SeasonMap<BigNumber>;
+  lpReceivableCrates: Withdrawals;
   
   /** @publius */
-  curveDeposits: SeasonMap<BigNumber>;
+  curveDeposits: Deposits;
 
   /** @publius */
-  curveBDVDeposits: SeasonMap<BigNumber>;
+  curveBDVDeposits: Deposits;
 
   /** @publius */
-  curveWithdrawals: SeasonMap<BigNumber>;
+  curveWithdrawals: Withdrawals;
 
   /** @publius */
-  curveReceivableCrates: SeasonMap<BigNumber>;
+  curveReceivableCrates: Withdrawals;
   
   /**
    * Plots are keyed by plotIndex, value is size of the Plot in Pods.
