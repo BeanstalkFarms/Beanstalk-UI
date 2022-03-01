@@ -213,29 +213,34 @@ export const votes = async () => {
   }, new Set());
 };
 
+//
 export type BIP = {
   id: BigNumber;
   executed: boolean;
-  // DEPRECATED: increaseBase: any;
   pauseOrUnpause: BigNumber;
   start: BigNumber;
   period: BigNumber;
   proposer: string;
   roots: BigNumber;
   endTotalRoots: BigNumber;
-  stalkBase: BigNumber;
   timestamp: BigNumber;
   updated: BigNumber;
   active: boolean;
+  // @DEPRECATED
+  // increaseBase: any;
+  // stalkBase: BigNumber;
 }
 
-/* TODO: batch BIP detail ledger reads */
-export const getBips = async () => {
+/*
+ * TODO: batch BIP detail ledger reads
+ */
+export const getBips = async () : Promise<[BIP[], boolean]> => {
   const beanstalk = beanstalkContractReadOnly();
   const numberOfBips = bigNumberResult(
     await beanstalk.methods.numberOfBips().call()
   );
-  const bips = [];
+
+  const bips : BIP[] = [];
   for (let i = new BigNumber(0); i.isLessThan(numberOfBips); i = i.plus(1)) {
     const bip = await beanstalk.methods.bip(i.toString()).call();
     const bipRoots =
@@ -243,48 +248,58 @@ export const getBips = async () => {
         ? await beanstalk.methods.rootsFor(i.toString()).call()
         : bip.roots;
     
-    // "increaseBase", "stalkBase"  - DEPRECIATED, we can delete these
+    // @DEPRECATED: "increaseBase", "stalkBase"
     // roots - how many Roots have voted for the BIP
     // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP -> used for calculating % voted for the BIP after the fact.
-
     const bipDict = {
       id: i,
       executed: bip.executed,
-      // DEPRECATED: increaseBase: bip.increaseBase,
       pauseOrUnpause: bigNumberResult(bip.pauseOrUnpause),
       start: bigNumberResult(bip.start),
       period: bigNumberResult(bip.period),
       proposer: bip.propser,
       roots: bigNumberResult(bipRoots),
       endTotalRoots: bigNumberResult(bip.endTotalRoots),
-      stalkBase: bigNumberResult(bip.stalkBase),
       timestamp: bigNumberResult(bip.timestamp),
       updated: bigNumberResult(bip.updated),
       active: false,
+      // @DEPRECATED
+      // increaseBase: bip.increaseBase,
+      // stalkBase: bigNumberResult(bip.stalkBase),
     };
 
     bips.push(bipDict);
   }
 
-  let hasActiveBIP = false;
-  const activeBips = await beanstalk.methods.activeBips().call();
-  activeBips.forEach((id) => {
+  // https://github.com/BeanstalkFarms/Beanstalk/blob/8e5833bccef7fd4e41fbda70567b902d33ca410d/protocol/contracts/farm/AppStorage.sol#L99
+  let hasActiveBIP : boolean = false;
+  const activeBips : string[] = await beanstalk.methods.activeBips().call();
+  activeBips.forEach((id: string) => {
     hasActiveBIP = true;
     bips[parseInt(id, 10)].active = true;
   });
+  
   return [bips, hasActiveBIP];
 };
+
+export type Fundraiser = {
+  id: BigNumber;
+  remaining: BigNumber;
+  total: BigNumber;
+  token: string;
+}
 
 /*
  * TODO: batch BIP detail ledger reads
  */
-export const getFundraisers = async () => {
+export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
   const beanstalk = beanstalkContractReadOnly();
   let hasActiveFundraiser = false;
   const numberOfFundraisers = bigNumberResult(
     await beanstalk.methods.numberOfFundraisers().call()
   );
-  const fundraisers = [];
+
+  const fundraisers : Fundraiser[] = [];
   for (let i = new BigNumber(0); i.isLessThan(numberOfFundraisers); i = i.plus(1)) {
     const fundraiser = await beanstalk.methods.fundraiser(i.toString()).call();
     const fundraiserDict = {
@@ -293,9 +308,12 @@ export const getFundraisers = async () => {
       total: toTokenUnitsBN(fundraiser.total, USDC.decimals),
       token: fundraiser.token,
     };
-    if (fundraiserDict.remaining.isGreaterThan(0)) hasActiveFundraiser = true;
+    if (fundraiserDict.remaining.isGreaterThan(0)) {
+      hasActiveFundraiser = true
+    };
     fundraisers.push(fundraiserDict);
   }
+
   return [fundraisers, hasActiveFundraiser];
 };
 
@@ -397,5 +415,6 @@ export const getPrices = async (batch: BatchRequest) => {
       ]
     );
   }
+  
   return makeBatchedPromises(batch, batchCall);
 };
