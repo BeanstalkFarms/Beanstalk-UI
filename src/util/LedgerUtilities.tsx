@@ -73,17 +73,21 @@ export async function getUSDCBalance() {
 
 export async function getEthPrices() {
   try {
-    // FIXME
-    const ethPrice = await fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=stats&action=ethprice')
-      .then((response) => response.json())
-      .then((res) => res.result.ethusd);
-    const gas = await fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=gastracker&action=gasoracle')
-      .then((response) => response.json())
-      .then((res) => ({
-        safe: res.result.FastGasPrice,
-        propose: res.result.SafeGasPrice,
-        fast: res.result.ProposeGasPrice,
-      }));
+    const [
+      ethPrice,
+      gas
+    ] = await Promise.all([
+      fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=stats&action=ethprice')
+        .then((response) => response.json())
+        .then((res) => res.result.ethusd),
+      fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=gastracker&action=gasoracle')
+        .then((response) => response.json())
+        .then((res) => ({
+          safe: res.result.FastGasPrice,
+          propose: res.result.SafeGasPrice,
+          fast: res.result.ProposeGasPrice,
+        }))
+    ]);
     return {
       ...gas,
       ethPrice,
@@ -93,7 +97,7 @@ export async function getEthPrices() {
   }
 }
 
-export async function getBlockTimestamp(blockNumber) {
+export async function getBlockTimestamp(blockNumber: any) {
   await initializing;
   return (await web3.eth.getBlock(blockNumber)).timestamp;
 }
@@ -415,6 +419,6 @@ export const getPrices = async (batch: BatchRequest) => {
       ]
     );
   }
-  
+
   return makeBatchedPromises(batch, batchCall);
 };
