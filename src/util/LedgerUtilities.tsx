@@ -334,7 +334,7 @@ export const getPrices = async (batch: BatchRequest) => {
   const bean3crvContract = beanCrv3ContractReadOnly();
   const curveContract = curveContractReadOnly();
 
-  let batchCall = [
+  let batchCall : PromiseHandlerTuple[] = [
     // referenceTokenReserves
     [
       referenceLPContract.methods.getReserves(),
@@ -357,50 +357,62 @@ export const getPrices = async (batch: BatchRequest) => {
       identityResult,
     ],
     // twapPrices
+    // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/farm/facets/OracleFacet.sol#L87
     [
       beanstalk.methods.getTWAPPrices(),
-      (prices) => [
+      (prices: [string, string]) : [beanPrice: BigNumber, usdcPrice: BigNumber] => [
         toTokenUnitsBN(prices[0], 18),
         toTokenUnitsBN(prices[1], 18),
       ],
     ],
     // beansToPeg
+    // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L70
     [
       beanstalk.methods.beansToPeg(),
-      (lp) => toTokenUnitsBN(lp, 6),
+      (beans: string) => toTokenUnitsBN(beans, BEAN.decimals),
     ],
     // lpToPeg
+    // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L79
     [
       beanstalk.methods.lpToPeg(),
-      (lp) => toTokenUnitsBN(lp, 18),
+      (lp: string) => toTokenUnitsBN(lp, UNI_V2_ETH_BEAN_LP.decimals),
     ],
   ];
+
+  // Curve prices (only works on mainnet or dev)
+  // https://besu.hyperledger.org/en/stable/Concepts/NetworkID-And-ChainID/
   if (chainId === 1 || chainId === 1337) {
     batchCall = batchCall.concat(
       [
+        // Curve virtual price
         [
           curveContract.methods.get_virtual_price(),
-          (price) => toTokenUnitsBN(price, 18),
+          (price: string) => toTokenUnitsBN(price, 18),
         ],
         // Curve Bean price
         [
           bean3crvContract.methods.get_dy(0, 1, 1),
-          (price) => toTokenUnitsBN(price, 12),
+          (price: string) => toTokenUnitsBN(price, 12),
         ],
         // Bean3Crv Balances
         [
           bean3crvContract.methods.get_balances(),
-          (prices) => [
+          (prices: [string, string]) => [
             toTokenUnitsBN(prices[0], 6),
             toTokenUnitsBN(prices[1], 18),
           ],
         ],
-        [beanstalk.methods.curveToBDV(utils.parseEther('1')), (r) => toTokenUnitsBN(r, 6)]
+        //
+        [
+          beanstalk.methods.curveToBDV(utils.parseEther('1')),
+          (r: string) => toTokenUnitsBN(r, 6)
+        ]
       ]
     );
   } else {
     batchCall = batchCall.concat(
       [
+        // 
         [
           lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
           () => new BigNumber(0),
@@ -415,6 +427,7 @@ export const getPrices = async (batch: BatchRequest) => {
           lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
           () => [new BigNumber(0), new BigNumber(0)],
         ],
+        //
         [
           lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
           () => new BigNumber(1),

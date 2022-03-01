@@ -29,7 +29,7 @@ import {
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery } from 'graph/index';
 import { AppState } from 'state';
-import { BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
+import { BASE_SLIPPAGE, BEAN, SupportedToken, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
 import {
   addRewardedCrates,
   createLedgerBatch,
@@ -65,13 +65,22 @@ type AsyncReturnType<T extends (...args: any) => any> =
 /**
  * 
  */
-function lpReservesForTokenReserves(tokenReserves, token0) {
+function lpReservesForTokenReserves(
+  tokenReserves, 
+  token0: SupportedToken['addr']
+) : [
+  beanReserve: BigNumber, 
+  ethReserve: BigNumber, 
+  rawBeanReserve: BigNumber, 
+  rawEthReserve: BigNumber
+] {
   const rawBeanReserve =
     token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
   const rawEthReserve =
     token0 !== BEAN.addr ? tokenReserves[0] : tokenReserves[1];
   const beanReserve = toTokenUnitsBN(rawBeanReserve, BEAN.decimals);
   const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
+
   return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
 }
 
@@ -195,8 +204,8 @@ export default function Updater() {
      */
     function processTotalBalances(
       totalBalances: any[], // FIXME
-      bipInfo,
-      fundraiserInfo
+      bipInfo: AsyncReturnType<typeof getBips>,
+      fundraiserInfo: AsyncReturnType<typeof getFundraisers>
     ) {
       const [
         totalBeans,
@@ -227,7 +236,7 @@ export default function Updater() {
         withdrawSeasons,
       ] = totalBalances;
 
-      //
+      // Calculations
       const totalBudgetBeans = (
         budget0
           .plus(budget1)
@@ -238,40 +247,37 @@ export default function Updater() {
       const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
       const totalPods = podIndex.minus(harvestableIndex);
 
-      //
-      dispatch(
-        setTotalBalance({
-          totalBeans,
-          totalBudgetBeans,
-          totalCurveBeans,
-          totalLP,
-          totalCrv3,
-          totalSiloBeans,
-          totalSiloLP,
-          totalSiloCurve,
-          totalTransitBeans,
-          totalTransitLP,
-          totalTransitCurve,
-          totalSeeds,
-          totalStalk,
-          totalPods,
-          totalRoots,
-          withdrawSeasons,
-        })
-      );
-      dispatch(
-        setWeather({
-          ..._weather,
-          ...rain,
-          harvestableIndex,
-          soil,
-        })
-      );
+      // Dispatchers
+      dispatch(setTotalBalance({
+        totalBeans,
+        totalBudgetBeans,
+        totalCurveBeans,
+        totalLP,
+        totalCrv3,
+        totalSiloBeans,
+        totalSiloLP,
+        totalSiloCurve,
+        totalTransitBeans,
+        totalTransitLP,
+        totalTransitCurve,
+        totalSeeds,
+        totalStalk,
+        totalPods,
+        totalRoots,
+        withdrawSeasons,
+      }));
+      dispatch(setWeather({
+        ..._weather,
+        ...rain,
+        harvestableIndex,
+        soil,
+      }));
       dispatch(setBips(bips));
       dispatch(setHasActiveBIP(hasActiveBIP));
       dispatch(setFundraisers(fundraisers));
       dispatch(setHasActiveFundraiser(hasActiveFundraiser));
       dispatch(setSeason(_season));
+
       return _season.season;
     }
 
@@ -282,10 +288,10 @@ export default function Updater() {
       _prices: AsyncReturnType<typeof getPrices>
     ) : [AppState['prices']['beanReserve'], AppState['prices']['ethReserve']] {
       const [
-        referenceTokenReserves,
-        tokenReserves,
-        token0,
-        twapPrices,
+        referenceTokenReserves,   // reserves tuple
+        tokenReserves,            // reserves tuple
+        token0,                   // 
+        twapPrices,               // prices tuple
         beansToPeg,
         lpToPeg,
         curveVirtualPrice,
@@ -296,7 +302,7 @@ export default function Updater() {
         priceTuple,
       ] = _prices;
 
-      //
+      // Calculations
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
       const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
         lpReservesForTokenReserves(tokenReserves, token0);
@@ -314,45 +320,43 @@ export default function Updater() {
       const uniTuple = priceTuple.ps[1];
 
       //
-      dispatch(
-        setPrices({
-          beanPrice,
-          usdcPrice,
-          ethReserve,
-          beanReserve,
-          beansToPeg,
-          lpToPeg,
-          beanTWAPPrice: twapPrices[0],
-          usdcTWAPPrice: twapPrices[1],
-          curveVirtualPrice,
-          beanCrv3Price,
-          beanCrv3Reserve: beanCrv3Reserve[0],
-          crv3Reserve: beanCrv3Reserve[1],
-          curveToBDV,
-          ethPrices,
-          priceTuple: {
-            deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
-            liquidity: toTokenUnitsBN(priceTuple.liquidity, 6),
-            price: toTokenUnitsBN(priceTuple.price, 6),
-          },
-          curveTuple: {
-            balances: curveTuple.balances,
-            deltaB: toTokenUnitsBN(curveTuple.deltaB, 6),
-            liquidity: toTokenUnitsBN(curveTuple.liquidity, 6),
-            price: toTokenUnitsBN(curveTuple.price, 6),
-            pool: curveTuple.pool,
-            tokens: curveTuple.tokens,
-          },
-          uniTuple: {
-            balances: uniTuple.balances,
-            deltaB: toTokenUnitsBN(uniTuple.deltaB, 6),
-            liquidity: toTokenUnitsBN(uniTuple.liquidity, 6),
-            price: toTokenUnitsBN(uniTuple.price, 6),
-            pool: uniTuple.pool,
-            tokens: uniTuple.tokens,
-          },
-        })
-      );
+      dispatch(setPrices({
+        beanPrice,
+        usdcPrice,
+        ethReserve,
+        beanReserve,
+        beansToPeg,
+        lpToPeg,
+        beanTWAPPrice: twapPrices[0],
+        usdcTWAPPrice: twapPrices[1],
+        curveVirtualPrice,
+        beanCrv3Price,
+        beanCrv3Reserve: beanCrv3Reserve[0],
+        crv3Reserve: beanCrv3Reserve[1],
+        curveToBDV,
+        ethPrices,
+        priceTuple: {
+          deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
+          liquidity: toTokenUnitsBN(priceTuple.liquidity, 6),
+          price: toTokenUnitsBN(priceTuple.price, 6),
+        },
+        curveTuple: {
+          balances: curveTuple.balances,
+          deltaB: toTokenUnitsBN(curveTuple.deltaB, 6),
+          liquidity: toTokenUnitsBN(curveTuple.liquidity, 6),
+          price: toTokenUnitsBN(curveTuple.price, 6),
+          pool: curveTuple.pool,
+          tokens: curveTuple.tokens,
+        },
+        uniTuple: {
+          balances: uniTuple.balances,
+          deltaB: toTokenUnitsBN(uniTuple.deltaB, 6),
+          liquidity: toTokenUnitsBN(uniTuple.liquidity, 6),
+          price: toTokenUnitsBN(uniTuple.price, 6),
+          pool: uniTuple.pool,
+          tokens: uniTuple.tokens,
+        },
+      }));
 
       return [beanReserve, ethReserve];
     }
