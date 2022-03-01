@@ -120,7 +120,6 @@ export default function Updater() {
     prices.ethReserve,
   ] as const); // 'as const' forces this into a tuple instead of array
 
-
   useEffect(() => {
     /**
      * 
@@ -144,6 +143,7 @@ export default function Updater() {
         curveBalance,
         seedBalance,
         stalkBalance,
+        // eslint-disable-next-line
         lockedUntil, // @DEPRECATED
         farmableBeanBalance,
         grownStalkBalance,

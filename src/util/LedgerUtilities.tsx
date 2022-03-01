@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Contract, utils } from 'ethers';
-import Web3 from 'web3';
+import { utils } from 'ethers';
 import { BatchRequest } from 'web3-core';
 
 import {
@@ -127,8 +126,6 @@ export const getAccountBalances = async (batch: BatchRequest) => {
     [beanstalk.methods.wrappedBeans(account), tokenResult(BEAN)],
   ]);
 };
-
-// export const 
 
 /* Beanstalk Price Getters */
 export const getPriceArray = async () => {

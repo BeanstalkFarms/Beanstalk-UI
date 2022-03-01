@@ -285,8 +285,6 @@ export default function Balances() {
       </Grid>
     ) : null;
 
-  console.log(`balances`, rootsBalance.toString(), totalRoots.toString());
-
   const myBalancesSection = (
     <>
       <BalanceModule
