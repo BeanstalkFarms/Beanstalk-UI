@@ -158,7 +158,6 @@ export default function BalanceModule(props) {
   );
 
   /* Bean Hidden */
-
   const switchBeanSizeBalances = (
     <>
       <Hidden smUp>
@@ -207,7 +206,6 @@ export default function BalanceModule(props) {
   );
 
   /* LP Hidden */
-
   const switchLPSizeBalances = (
     <>
       <Hidden smUp>
@@ -263,7 +261,6 @@ export default function BalanceModule(props) {
   );
 
   /* Curve Hidden */
-
   const switchCurveSizeBalances = (
     <>
       <Hidden smUp>
@@ -328,6 +325,9 @@ export default function BalanceModule(props) {
         backgroundColor: theme.module.background,
       }}
     >
+      {/*
+        * Section 1: "Top"
+        */}
       <Grid
         container
         style={{
@@ -379,8 +379,9 @@ export default function BalanceModule(props) {
           </Grid>
         </Grid>
       </Grid>
-
-      {/* Bean Balances */}
+      {/*
+        * Section 2: Beans
+        */}
       <span style={spanStyle}>Beans</span>
       <Grid
         container
@@ -418,8 +419,9 @@ export default function BalanceModule(props) {
 
         {switchBeanSizeBalances}
       </Grid>
-
-      {/* LP Balances */}
+      {/*
+        * Section 3: Uniswap
+        */}
       <span style={spanStyle}>Uniswap</span>
       <Grid
         container
@@ -459,8 +461,9 @@ export default function BalanceModule(props) {
 
         {switchLPSizeBalances}
       </Grid>
-
-      {/* Curve Balances */}
+      {/*
+        * Section 3: Curve
+        */}
       <span style={spanStyle}>Curve</span>
       <Grid
         container
@@ -499,11 +502,11 @@ export default function BalanceModule(props) {
           {curveTransitSection}
           {claimableCurveSection}
         </Grid>
-
         {switchCurveSizeBalances}
       </Grid>
-
-      {/* Stalk & Seeds Balances */}
+      {/*
+        * Section 4: Stalk/Seeds/Pods/ETH overview
+        */}
       <Grid
         container
         style={{

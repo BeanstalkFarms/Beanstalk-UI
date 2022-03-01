@@ -95,16 +95,11 @@ export default function Balances() {
     (state) => state.prices
   );
 
+  // Pool calculators
   const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) {
-      return [new BigNumber(0), new BigNumber(0)];
-    }
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
   };
   const poolForCurveRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) {
-      return [new BigNumber(0), new BigNumber(0)];
-    }
     return poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
   };
 
@@ -115,26 +110,30 @@ export default function Balances() {
     setSection(newSection);
   };
 
-  const userLP = lpBalance
-    .plus(lpSiloBalance)
-    .plus(lpTransitBalance)
-    .plus(lpReceivableBalance);
+  // User Silo deposit balances: 
+  // Beans, Uniswap LP, Curve LP
   const userBeans = beanBalance
     .plus(beanSiloBalance)
     .plus(beanTransitBalance)
     .plus(beanWrappedBalance)
     .plus(beanReceivableBalance)
     .plus(harvestablePodBalance);
+  const userLP = lpBalance
+    .plus(lpSiloBalance)
+    .plus(lpTransitBalance)
+    .plus(lpReceivableBalance);
   const userCurve = curveBalance
     .plus(curveSiloBalance)
     .plus(curveTransitBalance)
     .plus(curveReceivableBalance);
 
+  // Get pool tuples
   const userBeansAndEth = poolForLPRatio(userLP);
   const userBeansAndCrv3 = poolForCurveRatio(userCurve);
   const poolBeansAndEth = poolForLPRatio(totalLP);
   const poolBeansAndCrv3 = poolForCurveRatio(totalCrv3);
 
+  // 
   const userLPBeans = userBeansAndEth[0].multipliedBy(2);
   const userCurveBalanceInDollars = (
     userBeansAndCrv3[0]
@@ -288,10 +287,17 @@ export default function Balances() {
   const myBalancesSection = (
     <>
       <BalanceModule
+        // -- Strings
         description={walletStrings}
         strings={walletTopStrings}
+        // -- "Top" Metrics
+        // "top left" of the balance module
+        // => User Balance in Dollars
         topLeft={userBalanceInDollars}
+        // "top right" of the balance module
+        // => % ownership in Beanstalk
         topRight={rootsBalance.dividedBy(totalRoots).multipliedBy(100)}
+        // -- Other Balances
         beanLPTotal={userBeansAndEth}
         beanCurveTotal={userBeansAndCrv3}
         poolForLPRatio={poolForLPRatio}
@@ -329,8 +335,15 @@ export default function Balances() {
   const totalBalancesSection = (
     <>
       <BalanceModule
+        // -- Strings
         description={totalStrings}
         strings={totalTopStrings}
+        // -- "Top" Metrics
+        // "top left" = Market Cap
+        topLeft={marketCap}
+        // "top right" = Pool Value
+        topRight={poolMarketCap}
+        // -- Other Metrics
         beanBalance={
           totalBeans.isGreaterThan(0)
             ? totalBeans
@@ -373,8 +386,6 @@ export default function Balances() {
         stalkBalance={totalStalk}
         seedBalance={totalSeeds}
         podBalance={totalPods}
-        topLeft={marketCap}
-        topRight={poolMarketCap}
         beanLPTotal={poolBeansAndEth}
         beanCurveTotal={poolBeansAndCrv3}
         poolForLPRatio={poolForLPRatio}
