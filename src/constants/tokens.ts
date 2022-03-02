@@ -83,6 +83,7 @@ export const PRICE = {
 };
 
 export function changeAddresses(chainId: number) {
+  // Mainnet Addresses
   if (chainId === 1) {
     UNI_V2_USDC_ETH_LP.addr = '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc';
     WETH.addr = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
@@ -90,7 +91,9 @@ export function changeAddresses(chainId: number) {
     USDC.addr = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
     CURVE.addr = '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD';
     PRICE.addr = '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF';
-  } else if (chainId === 3) {
+  }
+  // Ropsten Addresses
+  else if (chainId === 3) {
     UNI_V2_USDC_ETH_LP.addr = '0x681A4164703351d6AceBA9D7038b573b444d3353';
     WETH.addr = '0xc778417E063141139Fce010982780140Aa0cD5Ab';
     UNI_V2_ETH_BEAN_LP.addr = '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db';

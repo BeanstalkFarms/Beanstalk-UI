@@ -11,24 +11,26 @@ import {
   // toStringBaseUnitBN,
   // transferBeans,
   web3Provider,
+  getRpcEndpoint
 } from 'util/index';
 
 // import { tradeStrings } from 'components/Common';
 // import TransactionToast from 'components/Common/TransactionToast';
-import { JSON_RPC_ENDPOINT } from 'constants/values';
 
 const WIDGET_TOKEN_LIST = [
   // List of top tokens on Uniswap V2 that have liquidity.
   // https://v2.info.uniswap.org/tokens
-  {
+  // Bean uses the same address across all 3 chains
+  ...[1, 3, 1337].map((chainId: number) => ({
     name: 'Bean',
     address: BEAN.addr,
     symbol: BEAN.symbol,
     decimals: BEAN.decimals,
-    chainId: 1,
+    chainId,
     logoURI:
       'https://github.com/BeanstalkFarms/Beanstalk/blob/master/assets/bean-64x64.png?raw=true',
-  },
+  })),
+  // Other mainnet tokens
   {
     name: 'USD Coin',
     address: USDC.addr,
@@ -101,10 +103,16 @@ const WIDGET_TOKEN_LIST = [
     logoURI:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984/logo.png',
   },
-  // {
-  //   name: 'tBTC',
-  //   address: '0x8daebade922df735c38c80c7ebd708af50815faa'
-  // }
+  // Ropsten tokens
+  {
+    name: 'USD Coin',
+    address: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
+    symbol: USDC.symbol,
+    decimals: USDC.decimals,
+    chainId: 3,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+  }
 ];
 
 export default function TradeModule() {
@@ -118,6 +126,7 @@ export default function TradeModule() {
       direction="column"
     >
       <Grid item xs={9} sm={8} style={{ maxWidth: '500px' }}>
+        <p>{getRpcEndpoint()}</p>
         <SwapWidget
           theme={{
             tokenColorExtraction: false
@@ -127,7 +136,7 @@ export default function TradeModule() {
           defaultInputAddress="NATIVE"
           defaultOutputAddress={BEAN.addr}
           tokenList={WIDGET_TOKEN_LIST}
-          jsonRpcEndpoint={JSON_RPC_ENDPOINT}
+          jsonRpcEndpoint={getRpcEndpoint()}
         />
       </Grid>
     </Grid>
