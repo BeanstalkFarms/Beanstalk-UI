@@ -1,57 +1,150 @@
-import React, { useState } from 'react';
-import BigNumber from 'bignumber.js';
-import { useSelector } from 'react-redux';
+import React from 'react';
+// import BigNumber from 'bignumber.js';
+// import { useSelector } from 'react-redux';
+import { SwapWidget } from '@uniswap/widgets/dist/index.js';
+import { Grid } from '@material-ui/core';
+import '@uniswap/widgets/dist/fonts.css';
 
-import { AppState } from 'state';
-import { updateUniswapBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
+// import { AppState } from 'state';
+import { BEAN, DAI, TETHER, USDC } from 'constants/index';
 import {
-  approveUniswapBean,
-  buyBeans,
-  displayBN,
-  sellBeans,
-  toStringBaseUnitBN,
-  transferBeans,
+  // toStringBaseUnitBN,
+  // transferBeans,
+  web3Provider,
 } from 'util/index';
 
-import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
-import TransactionToast from 'components/Common/TransactionToast';
-import SendModule from './SendModule';
-import SwapModule from './SwapModule';
+// import { tradeStrings } from 'components/Common';
+// import TransactionToast from 'components/Common/TransactionToast';
+import { JSON_RPC_ENDPOINT } from 'constants/values';
+
+const WIDGET_TOKEN_LIST = [
+  // List of top tokens on Uniswap V2 that have liquidity.
+  // https://v2.info.uniswap.org/tokens
+  {
+    name: 'Bean',
+    address: BEAN.addr,
+    symbol: BEAN.symbol,
+    decimals: BEAN.decimals,
+    chainId: 1,
+    logoURI:
+      'https://github.com/BeanstalkFarms/Beanstalk/blob/master/assets/bean-64x64.png?raw=true',
+  },
+  {
+    name: 'USD Coin',
+    address: USDC.addr,
+    symbol: USDC.symbol,
+    decimals: USDC.decimals,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+  },
+  {
+    name: 'Tether',
+    address: TETHER.addr,
+    symbol: TETHER.symbol,
+    decimals: TETHER.decimals,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
+  },
+  {
+    name: 'Fei',
+    address: '0x956f47f50a910163d8bf957cf5846d573e7f87ca',
+    symbol: 'FEI',
+    decimals: 18,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x956f47f50a910163d8bf957cf5846d573e7f87ca/logo.png',
+  },
+  {
+    name: 'Frax',
+    address: '0x853d955acef822db058eb8505911ed77f175b99e',
+    symbol: 'FRAX',
+    decimals: 18,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x853d955acef822db058eb8505911ed77f175b99e/logo.png',
+  },
+  {
+    name: 'Frax Share',
+    address: '0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0',
+    symbol: 'FXS',
+    decimals: 18,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0/logo.png',
+  },
+  {
+    name: 'Wrapped BTC',
+    address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+    symbol: 'WBTC',
+    decimals: 8,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/logo.png',
+  },
+  {
+    name: 'Dai',
+    address: DAI.addr,
+    symbol: DAI.symbol,
+    decimals: DAI.decimals,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+  },
+  {
+    name: 'Uniswap',
+    address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
+    symbol: 'UNI',
+    decimals: 18,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984/logo.png',
+  },
+  // {
+  //   name: 'tBTC',
+  //   address: '0x8daebade922df735c38c80c7ebd708af50815faa'
+  // }
+];
 
 export default function TradeModule() {
-  const { uniswapBeanAllowance } = useSelector<
-    AppState,
-    AppState['allowances']
-  >((state) => state.allowances);
+  return (
+    <Grid
+      container
+      item
+      xs={12}
+      alignItems="center"
+      justifyContent="center"
+      direction="column"
+    >
+      <Grid item xs={9} sm={8} style={{ maxWidth: '500px' }}>
+        <SwapWidget
+          theme={{
+            tokenColorExtraction: false
+          }}
+          provider={web3Provider}
+          width={500}
+          defaultInputAddress="NATIVE"
+          defaultOutputAddress={BEAN.addr}
+          tokenList={WIDGET_TOKEN_LIST}
+          jsonRpcEndpoint={JSON_RPC_ENDPOINT}
+        />
+      </Grid>
+    </Grid>
+  );
+}
 
-  const { beanReserve, ethReserve, usdcPrice, beanPrice } = useSelector<
-    AppState,
-    AppState['prices']
-  >((state) => state.prices);
-
-  const { beanBalance, ethBalance } = useSelector<
-    AppState,
-    AppState['userBalance']
-  >((state) => state.userBalance);
+/*
+  const { beanBalance } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
   const [section, setSection] = useState(0);
-  const sectionTitles = ['Swap', 'Send'];
-  const sectionTitlesDescription = [tradeStrings.swap, tradeStrings.send];
+  const sectionTitles = ['Send'];
+  const sectionTitlesDescription = [tradeStrings.send];
 
-  /* Swap Sub-Module state */
-  const [orderIndex, setOrderIndex] = useState(true);
-  const [settings, setSettings] = useState({
-    slippage: new BigNumber(BASE_SLIPPAGE),
-  });
   const [fromValue, setFromValue] = useState(new BigNumber(-1));
   const [toValue, setToValue] = useState(new BigNumber(-1));
-  const fromToken = orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
-  const toToken = !orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
-  const ethToBean = new BigNumber(beanReserve.dividedBy(ethReserve));
-  const beanToEth = new BigNumber(1).dividedBy(ethToBean);
-  const conversionFactor = orderIndex ? ethToBean : beanToEth;
 
-  /* Send Sub-Module state */
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
 
@@ -59,7 +152,6 @@ export default function TradeModule() {
     setFromValue(new BigNumber(-1));
     setToValue(new BigNumber(-1));
   }
-
   const handleTabChange = (event, newSection) => {
     handleSwapCallback();
     setToAddress('');
@@ -67,69 +159,22 @@ export default function TradeModule() {
   };
 
   const handleForm = () => {
-    // 0 = "Swap"
-    if (section === 0) {
-      const minimumToAmount = toValue.multipliedBy(settings.slippage);
-      if (toValue.isGreaterThan(0)) {
-        // Buy Beans via Ethereum
-        if (fromToken === CryptoAsset.Ethereum) {
-          // Toast
-          const txToast = new TransactionToast({
-            loading: `Buying ${displayBN(toValue)} Beans for ${displayBN(fromValue)} ETH`,
-            success: `Bought ${displayBN(toValue)} Beans`,
-          });
+    if (fromValue.isGreaterThan(0)) {
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Transfering ${fromValue} Beans to ${toAddress.substring(
+          0,
+          6
+        )}`,
+        success: `Sent ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
+      });
 
-          // Execute
-          buyBeans(
-            toStringBaseUnitBN(fromValue, ETH.decimals),
-            toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
-            (response) => txToast.confirming(response)
-          )
-          .then((value) => {
-            handleSwapCallback();
-            txToast.success(value);
-          })
-          .catch((err) => {
-            txToast.error(err);
-          });
-        } else {
-          // Toast
-          const txToast = new TransactionToast({
-            loading: `Selling ${fromValue} Beans`,
-            success: `Sold ${fromValue} Beans`,
-          });
-
-          // Execute
-          sellBeans(
-            toStringBaseUnitBN(fromValue, BEAN.decimals),
-            toStringBaseUnitBN(minimumToAmount, ETH.decimals),
-            (response) => txToast.confirming(response)
-          )
-          .then((value) => {
-            handleSwapCallback();
-            txToast.success(value);
-          })
-          .catch((err) => {
-            txToast.error(err);
-          });
-        }
-      }
-    }
-    // 1 = "Send"
-    else if (section === 1) {
-      if (fromValue.isGreaterThan(0)) {
-        // Toast
-        const txToast = new TransactionToast({
-          loading: `Transfering ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
-          success: `Sent ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
-        });
-
-        // Execute
-        transferBeans(
-          toAddress,
-          toStringBaseUnitBN(fromValue, BEAN.decimals),
-          (response) => txToast.confirming(response)
-        )
+      // Execute
+      transferBeans(
+        toAddress,
+        toStringBaseUnitBN(fromValue, BEAN.decimals),
+        (response) => txToast.confirming(response)
+      )
         .then((value) => {
           handleSwapCallback();
           txToast.success(value);
@@ -137,7 +182,6 @@ export default function TradeModule() {
         .catch((err) => {
           txToast.error(err);
         });
-      }
     }
   };
 
@@ -147,75 +191,28 @@ export default function TradeModule() {
       : fromValue.isLessThanOrEqualTo(0) ||
         toAddress.length !== 42 ||
         isValidAddress !== true;
-
-  const sections = [
-    <SwapModule
-      orderIndex={orderIndex}
-      setOrderIndex={setOrderIndex}
-      fromValue={fromValue}
-      setFromValue={setFromValue}
-      toValue={toValue}
-      setToValue={setToValue}
-      balance={fromToken === CryptoAsset.Ethereum ? ethBalance : beanBalance}
-      toBalance={fromToken === CryptoAsset.Ethereum ? beanBalance : ethBalance}
-      maxFromVal={
-        fromToken === CryptoAsset.Ethereum
-          ? ethBalance.isGreaterThan(MIN_BALANCE)
-            ? ethBalance.minus(MIN_BALANCE)
-            : new BigNumber(-1)
-          : beanBalance
-      }
-      beanReserve={beanReserve}
-      ethReserve={ethReserve}
-      usdcPrice={usdcPrice}
-      beanPrice={beanPrice}
-      fromToken={fromToken}
-      toToken={toToken}
-      conversionFactor={conversionFactor}
-      settings={settings}
-      setSettings={setSettings}
-    />,
-    <SendModule
-      toAddress={toAddress}
-      setToAddress={setToAddress}
-      fromAddress=""
-      fromBeanValue={fromValue}
-      isValidAddress={isValidAddress}
-      setIsValidAddress={setIsValidAddress}
-      setFromBeanValue={setFromValue}
-      maxFromBeanVal={beanBalance}
-      fromToken={CryptoAsset.Bean}
-    />,
-  ];
-
-  return (
-    <Grid container item xs={12} justifyContent="center">
-      <Grid
-        item
-        xs={9}
-        sm={8}
-        style={{ maxWidth: '500px' }}
-      >
-        <BaseModule
-          allowance={
-            section > 0 || orderIndex ? new BigNumber(1) : uniswapBeanAllowance
-          }
-          isDisabled={disabled}
-          resetForm={() => {
-            setOrderIndex(1);
-          }}
-          section={section}
-          sectionTitles={sectionTitles}
-          sectionTitlesDescription={sectionTitlesDescription}
-          setAllowance={updateUniswapBeanAllowance}
-          handleApprove={approveUniswapBean}
-          handleForm={handleForm}
-          handleTabChange={handleTabChange}
-          marginTop="16px"
-        >
-          {sections[section]}
-        </BaseModule>
-      </Grid>
-    </Grid>
-  );
-}
+*/
+/* 
+<BaseModule
+  isDisabled={disabled}
+  section={section}
+  sectionTitles={sectionTitles}
+  sectionTitlesDescription={sectionTitlesDescription}
+  setAllowance={updateUniswapBeanAllowance}
+  handleApprove={approveUniswapBean}
+  handleForm={handleForm}
+  handleTabChange={handleTabChange}
+  marginTop="16px"
+>
+  <SendModule
+    toAddress={toAddress}
+    setToAddress={setToAddress}
+    fromAddress=""
+    fromBeanValue={fromValue}
+    isValidAddress={isValidAddress}
+    setIsValidAddress={setIsValidAddress}
+    setFromBeanValue={setFromValue}
+    maxFromBeanVal={beanBalance}
+    fromToken={CryptoAsset.Bean}
+  />
+</BaseModule> */

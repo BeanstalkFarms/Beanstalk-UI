@@ -10,6 +10,9 @@ import {
   changeNetwork,
   SupportedToken,
 } from 'constants/index';
+import {
+  BEAN
+} from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 
 export * from './EventUtilities';
@@ -162,6 +165,21 @@ export async function switchToMainnet() {
   } catch {
     return false;
   }
+}
+
+export async function addTokenToMetamask() {
+  return ethereum.request({
+    method: 'wallet_watchAsset',
+    params: {
+      type: 'ERC20', // Initially only supports ERC20, but eventually more!
+      options: {
+        address: BEAN.addr,       // The address that the token is at.
+        symbol: BEAN.symbol,      // A ticker symbol or shorthand, up to 5 chars.
+        decimals: BEAN.decimals,  // The number of decimals in the token
+        image: 'https://app.bean.money/assets/beanstalk-logo-square.png', // A string url of the token logo
+      },
+    },
+  });
 }
 
 /**

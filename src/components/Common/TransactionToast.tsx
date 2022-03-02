@@ -74,11 +74,11 @@ export default class TransactionToast {
    * and set a timeout duration for the toast.
    * @param value The ethers.ContractReceipt confirming the txn.
    */
-  success(value: ContractReceipt) {
+  success(value?: ContractReceipt) {
     toast.success(
       <ToastAlert
         desc={this.messages.success}
-        hash={value.transactionHash}
+        hash={value?.transactionHash}
       />,
       {
         id: this.toastId,
