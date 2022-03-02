@@ -31,7 +31,9 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
     borderRadius: 16,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    fontFamily: 'Futura-PT-Book',
+    fontSize: 16
   },
   buttonImage: {
     height: 30,
@@ -81,8 +83,6 @@ export default function Trade() {
           /> 
         </Grid>
       </Grid>
-      {/* <Grid item container justifyContent="center" style={{ margin: '20px 0px' }} spacing={2}>
-      </Grid> */}
     </ContentSection>
   );
 }

@@ -6,7 +6,7 @@ import { Grid } from '@material-ui/core';
 import '@uniswap/widgets/dist/fonts.css';
 
 // import { AppState } from 'state';
-import { BEAN, USDC } from 'constants/index';
+import { BEAN, DAI, TETHER, USDC } from 'constants/index';
 import {
   // toStringBaseUnitBN,
   // transferBeans,
@@ -36,6 +36,28 @@ const WIDGET_TOKEN_LIST = [
     logoURI:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
   },
+  {
+    name: 'Tether',
+    address: TETHER.addr,
+    symbol: TETHER.symbol,
+    decimals: TETHER.decimals,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
+  },
+  {
+    name: 'Dai',
+    address: DAI.addr,
+    symbol: DAI.symbol,
+    decimals: DAI.decimals,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+  },
+  // {
+  //   name: 'tBTC',
+  //   address: '0x8daebade922df735c38c80c7ebd708af50815faa'
+  // }
 ];
 
 export default function TradeModule() {
@@ -50,6 +72,9 @@ export default function TradeModule() {
     >
       <Grid item xs={9} sm={8} style={{ maxWidth: '500px' }}>
         <SwapWidget
+          theme={{
+            tokenColorExtraction: false
+          }}
           provider={web3Provider}
           width={500}
           defaultInputAddress="NATIVE"
