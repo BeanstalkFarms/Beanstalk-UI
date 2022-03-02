@@ -151,27 +151,6 @@ export const getAccountBalances = async (batch: BatchRequest) => {
     exec(usdc.methods.balanceOf(account)).then(tokenResult(USDC)),
     exec(beanstalk.methods.wrappedBeans(account)).then(tokenResult(BEAN)),
   ] as const);
-
-  // return makeBatchedPromises(batch, [
-  //   [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
-  //   [bean.methods.allowance(account, BEANSTALK), bigNumberResult],
-  //   [lp.methods.allowance(account, BEANSTALK), bigNumberResult],
-  //   [usdc.methods.allowance(account, BEANSTALK), bigNumberResult],
-  //   [curve.methods.allowance(account, BEANSTALK), bigNumberResult],
-  //   [beanstalk.methods.balanceOfEth(account), tokenResult(ETH)],
-  //   [bean.methods.balanceOf(account), tokenResult(BEAN)],
-  //   [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
-  //   [curve.methods.balanceOf(account), tokenResult(CURVE)],
-  //   [beanstalk.methods.balanceOfSeeds(account), tokenResult(SEEDS)],
-  //   [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
-  //   // @DEPRECATED
-  //   // [beanstalk.methods.votedUntil(account), bigNumberResult],
-  //   [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEAN)],
-  //   [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
-  //   [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
-  //   [usdc.methods.balanceOf(account), tokenResult(USDC)],
-  //   [beanstalk.methods.wrappedBeans(account), tokenResult(BEAN)],
-  // ]);
 };
 
 /* Beanstalk Price Getters */
@@ -217,65 +196,57 @@ export const getTotalBalances = async (batch: BatchRequest) => {
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
   const curve = beanCrv3ContractReadOnly();
+  const exec = setupBatch(batch);
 
-  return makeBatchedPromises(batch, [
+  return Promise.all([
     // Supply
-    [bean.methods.totalSupply(), tokenResult(BEAN)],
-    [lp.methods.totalSupply(), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [curve.methods.totalSupply(), tokenResult(CURVE)],
-    [beanstalk.methods.totalSeeds(), tokenResult(SEEDS)],
-    [beanstalk.methods.totalStalk(), tokenResult(STALK)],
-    [beanstalk.methods.totalDepositedBeans(), tokenResult(BEAN)],
-    [beanstalk.methods.totalDepositedLP(), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [beanstalk.methods.getTotalDeposited(CURVE.addr), tokenResult(CURVE)],
-    [beanstalk.methods.totalWithdrawnBeans(), tokenResult(BEAN)],
-    [beanstalk.methods.totalWithdrawnLP(), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [beanstalk.methods.getTotalWithdrawn(CURVE.addr), tokenResult(CURVE)],
+    exec(bean.methods.totalSupply()).then(tokenResult(BEAN)),
+    exec(lp.methods.totalSupply()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
+    exec(curve.methods.totalSupply()).then(tokenResult(CURVE)),
+    exec(beanstalk.methods.totalSeeds()).then(tokenResult(SEEDS)),
+    exec(beanstalk.methods.totalStalk()).then(tokenResult(STALK)),
+    exec(beanstalk.methods.totalDepositedBeans()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.totalDepositedLP()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
+    exec(beanstalk.methods.getTotalDeposited(CURVE.addr)).then(tokenResult(CURVE)),
+    exec(beanstalk.methods.totalWithdrawnBeans()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.totalWithdrawnLP()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
+    exec(beanstalk.methods.getTotalWithdrawn(CURVE.addr)).then(tokenResult(CURVE)),
     // Field
-    [beanstalk.methods.totalSoil(), tokenResult(BEAN)],
-    [beanstalk.methods.podIndex(), tokenResult(BEAN)],
-    [beanstalk.methods.harvestableIndex(), tokenResult(BEAN)],
-    [beanstalk.methods.totalRoots(), bigNumberResult],
-    [
-      beanstalk.methods.weather(),
-      (stringWeather : any) => ({
-        didSowBelowMin: stringWeather.didSowBelowMin,
-        didSowFaster: stringWeather.didSowFaster,
-        lastDSoil: tokenResult(BEAN)(stringWeather.lastDSoil),
-        lastSoilPercent: bigNumberResult(stringWeather.lastSoilPercent),
-        lastSowTime: bigNumberResult(stringWeather.lastSowTime),
-        nextSowTime: bigNumberResult(stringWeather.nextSowTime),
-        startSoil: tokenResult(BEAN)(stringWeather.startSoil),
-        weather: bigNumberResult(stringWeather.yield),
-      } as Weather),
-    ],
-    [
-      beanstalk.methods.rain(),
-      (stringRain) => ({
-        raining: stringRain.raining,
-        rainStart: bigNumberResult(stringRain.start),
-      } as Rain),
-    ],
-    [
-      beanstalk.methods.time(),
-      (time) => ({
-        season: bigNumberResult(time.current),
-        start: bigNumberResult(time.start),
-        period: bigNumberResult(time.period),
-        timestamp: bigNumberResult(time.timestamp),
-      } as Time),
-    ],
+    exec(beanstalk.methods.totalSoil()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.podIndex()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.harvestableIndex()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.totalRoots()).then(bigNumberResult),
+    exec(beanstalk.methods.weather()).then((stringWeather : any) => ({
+      didSowBelowMin: stringWeather.didSowBelowMin,
+      didSowFaster: stringWeather.didSowFaster,
+      lastDSoil: tokenResult(BEAN)(stringWeather.lastDSoil),
+      lastSoilPercent: bigNumberResult(stringWeather.lastSoilPercent),
+      lastSowTime: bigNumberResult(stringWeather.lastSowTime),
+      nextSowTime: bigNumberResult(stringWeather.nextSowTime),
+      startSoil: tokenResult(BEAN)(stringWeather.startSoil),
+      weather: bigNumberResult(stringWeather.yield),
+    }) as Weather),
+    exec(beanstalk.methods.rain()).then((stringRain) => ({
+      raining: stringRain.raining,
+      rainStart: bigNumberResult(stringRain.start),
+    }) as Rain),
+    exec(beanstalk.methods.time()).then((time) => ({
+      season: bigNumberResult(time.current),
+      start: bigNumberResult(time.start),
+      period: bigNumberResult(time.period),
+      timestamp: bigNumberResult(time.timestamp),
+    }) as Time),
     // Budgets
     // FIXME: Automate this:
-    [bean.methods.balanceOf(BUDGETS[0]), tokenResult(BEAN)],
-    [bean.methods.balanceOf(BUDGETS[1]), tokenResult(BEAN)],
-    [bean.methods.balanceOf(BUDGETS[2]), tokenResult(BEAN)],
-    [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)],
+    exec(bean.methods.balanceOf(BUDGETS[0])).then(tokenResult(BEAN)),
+    exec(bean.methods.balanceOf(BUDGETS[1])).then(tokenResult(BEAN)),
+    exec(bean.methods.balanceOf(BUDGETS[2])).then(tokenResult(BEAN)),
+    exec(bean.methods.balanceOf(BUDGETS[3])).then(tokenResult(BEAN)),
     // Misc
     // FIXME: needs to be rekeyed or placed in right array spot
-    [bean.methods.balanceOf(CURVE.addr), tokenResult(BEAN)],
-    [beanstalk.methods.withdrawSeasons(), bigNumberResult]
-  ] as const);
+    exec(bean.methods.balanceOf(CURVE.addr)).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.withdrawSeasons()).then(bigNumberResult)
+  ]);
 };
 
 export const votes = async () => {
@@ -402,107 +373,91 @@ export const getPrices = async (batch: BatchRequest) => {
   const bean3crvContract = beanCrv3ContractReadOnly();
   const curveContract = curveContractReadOnly();
 
-  let batchCall : PromiseHandlerTuple[] = [
+  const exec = setupBatch(batch);
+
+  let promises = [
     // referenceTokenReserves
-    [
-      referenceLPContract.methods.getReserves(),
+    exec(referenceLPContract.methods.getReserves()).then(
       (reserves) => [
         bigNumberResult(reserves._reserve0),
         bigNumberResult(reserves._reserve1),
       ],
-    ],
+    ),
     // tokenReserves
-    [
-      lpContract.methods.getReserves(),
+    exec(lpContract.methods.getReserves()).then(
       (reserves) => [
         bigNumberResult(reserves._reserve0),
         bigNumberResult(reserves._reserve1),
       ],
-    ],
+    ),
     // token0
-    [
-      lpContract.methods.token0(),
+    exec(lpContract.methods.token0()).then(
       identityResult,
-    ],
+    ),
     // twapPrices
     // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/farm/facets/OracleFacet.sol#L87
-    [
-      beanstalk.methods.getTWAPPrices(),
+    exec(beanstalk.methods.getTWAPPrices()).then(
       (prices: [string, string]) : [beanPrice: BigNumber, usdcPrice: BigNumber] => [
         toTokenUnitsBN(prices[0], 18),
         toTokenUnitsBN(prices[1], 18),
       ],
-    ],
+    ),
     // beansToPeg
     // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L70
-    [
-      beanstalk.methods.beansToPeg(),
+    exec(beanstalk.methods.beansToPeg()).then(
       (beans: string) => toTokenUnitsBN(beans, BEAN.decimals),
-    ],
+    ),
     // lpToPeg
     // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L79
-    [
-      beanstalk.methods.lpToPeg(),
+    exec(beanstalk.methods.lpToPeg()).then(
       (lp: string) => toTokenUnitsBN(lp, UNI_V2_ETH_BEAN_LP.decimals),
-    ],
+    ),
   ];
 
   // Curve prices (only works on mainnet or dev)
   // https://besu.hyperledger.org/en/stable/Concepts/NetworkID-And-ChainID/
   if (chainId === 1 || chainId === 1337) {
-    batchCall = batchCall.concat(
-      [
-        // Curve virtual price
-        [
-          curveContract.methods.get_virtual_price(),
-          (price: string) => toTokenUnitsBN(price, 18),
+    promises = promises.concat([
+      // Curve virtual price
+      exec(curveContract.methods.get_virtual_price()).then(
+        (price: string) => toTokenUnitsBN(price, 18),
+      ),
+      // Curve Bean price
+      exec(bean3crvContract.methods.get_dy(0, 1, 1)).then(
+        (price: string) => toTokenUnitsBN(price, 12),
+      ),
+      // Bean3Crv Balances
+      exec(bean3crvContract.methods.get_balances()).then(
+        (prices: [string, string]) => [
+          toTokenUnitsBN(prices[0], 6),
+          toTokenUnitsBN(prices[1], 18),
         ],
-        // Curve Bean price
-        [
-          bean3crvContract.methods.get_dy(0, 1, 1),
-          (price: string) => toTokenUnitsBN(price, 12),
-        ],
-        // Bean3Crv Balances
-        [
-          bean3crvContract.methods.get_balances(),
-          (prices: [string, string]) => [
-            toTokenUnitsBN(prices[0], 6),
-            toTokenUnitsBN(prices[1], 18),
-          ],
-        ],
-        //
-        [
-          beanstalk.methods.curveToBDV(utils.parseEther('1')),
-          (r: string) => toTokenUnitsBN(r, 6)
-        ]
-      ]
-    );
+      ),
+      //
+      exec(beanstalk.methods.curveToBDV(utils.parseEther('1'))).then(
+        (r: string) => toTokenUnitsBN(r, 6)
+      ),
+    ]);
   } else {
-    batchCall = batchCall.concat(
-      [
-        // 
-        [
-          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
-          () => new BigNumber(0),
-        ],
-        // Curve Bean price
-        [
-          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
-          () => new BigNumber(0),
-        ],
-        // Bean3Crv Balances
-        [
-          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
-          () => [new BigNumber(0), new BigNumber(0)],
-        ],
-        //
-        [
-          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
-          () => new BigNumber(1),
-        ],
-      ]
-    );
+    promises = promises.concat([
+      // 
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(0),
+      ),
+      // Curve Bean price
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(0),
+      ),
+      // Bean3Crv Balances
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => [new BigNumber(0), new BigNumber(0)],
+      ),
+      //
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(1),
+      ),
+    ]);
   }
 
-  return makeBatchedPromises(batch, batchCall);
+  return Promise.all(promises);
 };
