@@ -21,9 +21,8 @@ export const initialState: SeasonState = {
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(setSeason, (state, { payload }) => {
-      Object.keys(payload).map((key) => {
+      Object.keys(payload).forEach((key) => {
         state[key] = payload[key];
-        return state[key];
       });
     })
 );
