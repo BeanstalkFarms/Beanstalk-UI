@@ -101,7 +101,7 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
         balance={order.pricePerPod}
         icon={<TokenIcon token={CryptoAsset.Bean} />}
       >
-        {order.pricePerPod.toFixed(2)}
+        {order.pricePerPod.toFixed(3)}
       </BalanceTableCell>
       {isMine ? (
         <>
