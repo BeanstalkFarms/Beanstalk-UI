@@ -60,6 +60,9 @@ export const MAX_UINT32 = 4294967295;
 
 export const UNISWAP_V2_ROUTER = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
 
+export const JSON_RPC_ENDPOINT =
+  'https://mainnet.infura.io/v3/3e668b7b056a45ac9980fd8064f9d51d';
+
 /* NFTs */
 export const TOTAL_NFTS = 4068;
 export const NFTS_PER_SEASON = 5;

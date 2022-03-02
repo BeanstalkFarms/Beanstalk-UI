@@ -13,6 +13,7 @@
     "@patternfly/patternfly": "^4.132.2",
     "@patternfly/react-charts": "^6.15.3",
     "@reduxjs/toolkit": "^1.5.0",
+    "@uniswap/widgets": "^0.0.20-beta",
     "@visx/brush": "^2.6.0",
     "@visx/gradient": "^2.1.0",
     "@visx/pattern": "^2.1.2",
