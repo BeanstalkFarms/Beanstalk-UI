@@ -6,7 +6,7 @@ import '@uniswap/widgets/dist/fonts.css';
 
 import { AppState } from 'state';
 import { updateUniswapBeanAllowance } from 'state/allowances/actions';
-import { BEAN } from 'constants/index';
+import { BEAN, USDC } from 'constants/index';
 import {
   approveUniswapBean,
   toStringBaseUnitBN,
@@ -21,13 +21,22 @@ import SendModule from './SendModule';
 
 const WIDGET_TOKEN_LIST = [
   {
-    name: 'Bean',
-    address: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
-    symbol: 'Bean',
-    decimals: 6,
+    name: BEAN.symbol,
+    address: BEAN.addr,
+    symbol: BEAN.symbol,
+    decimals: BEAN.decimals,
     chainId: 1,
     logoURI:
       'https://github.com/BeanstalkFarms/Beanstalk/blob/master/assets/bean-64x64.png?raw=true',
+  },
+  {
+    name: 'USD Coin',
+    address: USDC.addr,
+    symbol: USDC.symbol,
+    decimals: USDC.decimals,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
   },
 ];
 
@@ -106,7 +115,7 @@ export default function TradeModule() {
           provider={web3Provider}
           width={500}
           defaultInputAddress="NATIVE"
-          defaultOutputAddress="0xDC59ac4FeFa32293A95889Dc396682858d52e5Db"
+          defaultOutputAddress={BEAN.addr}
           tokenList={WIDGET_TOKEN_LIST}
           jsonRpcEndpoint={JSON_RPC_ENDPOINT}
         />
