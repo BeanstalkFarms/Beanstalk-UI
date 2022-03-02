@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     paddingTop: 12,
     paddingBottom: 12,
     fontWeight: 'bold',
-    borderRadius: 16,
+    borderRadius: '15px',
     flexDirection: 'row',
     justifyContent: 'space-between',
     fontFamily: 'Futura-PT-Book',

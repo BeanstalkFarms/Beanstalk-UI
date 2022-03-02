@@ -2,7 +2,7 @@ import React from 'react';
 // import BigNumber from 'bignumber.js';
 // import { useSelector } from 'react-redux';
 import { SwapWidget } from '@uniswap/widgets/dist/index.js';
-import { Grid } from '@material-ui/core';
+import { Grid, makeStyles } from '@material-ui/core';
 import '@uniswap/widgets/dist/fonts.css';
 
 // import { AppState } from 'state';
@@ -115,7 +115,20 @@ const WIDGET_TOKEN_LIST = [
   }
 ];
 
+const useStyles = makeStyles(() => ({
+  widget: {}
+}));
+
+// https://docs.uniswap.org/sdk/widgets/swap-widget#installing-library
+const swapWidgetTheme = {
+  tokenColorExtraction: false,
+  borderRadius: 15,
+  // container: "transparent", // main background
+  // module: "hsl(231,14%,92%)", // defaut hsl(231,14%,90%)
+};
+
 export default function TradeModule() {
+  const classes = useStyles();
   return (
     <Grid
       container
@@ -125,17 +138,26 @@ export default function TradeModule() {
       justifyContent="center"
       direction="column"
     >
-      <Grid item xs={9} sm={8} style={{ maxWidth: '500px' }}>
+      <Grid
+        item
+        xs={9}
+        sm={8}
+        style={{
+          maxWidth: '500px',
+          backgroundColor: 'hsl(220,23%,97.5%)',
+          padding: '3px 3px 12px 3px',
+          borderRadius: 15 
+        }}
+      >
         <SwapWidget
-          theme={{
-            tokenColorExtraction: false
-          }}
+          theme={swapWidgetTheme}
           provider={web3Provider}
           width="100%"
           defaultInputAddress="NATIVE"
           defaultOutputAddress={BEAN.addr}
           tokenList={WIDGET_TOKEN_LIST}
           jsonRpcEndpoint={getRpcEndpoint()}
+          className={classes.widget}
         />
       </Grid>
     </Grid>
