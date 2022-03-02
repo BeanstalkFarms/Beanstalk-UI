@@ -98,7 +98,7 @@ function ListingRow({
         balance={listing.pricePerPod}
         icon={<TokenIcon token={CryptoAsset.Bean} />}
       >
-        {listing.pricePerPod.toFixed(2)}
+        {listing.pricePerPod.toFixed(3)}
       </BalanceTableCell>
       {isMine ? (
         <>
