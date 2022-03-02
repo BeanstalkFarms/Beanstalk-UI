@@ -104,6 +104,21 @@ export async function getBlockTimestamp(blockNumber: any) {
   return (await web3.eth.getBlock(blockNumber)).timestamp;
 }
 
+const setupBatch = (batch: BatchRequest) => (
+  function execute(fn: any) {
+    return new Promise<any>((resolve, reject) => {
+      batch.add(
+        (fn.call).request({}, 'latest', (error: any, result: any) => {
+          if (result !== undefined) {
+            return resolve(result);
+          }
+          return reject(error);
+        })
+      );
+    });
+  }
+);
+
 /* Batched Getters */
 export const getAccountBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
@@ -111,27 +126,52 @@ export const getAccountBalances = async (batch: BatchRequest) => {
   const beanstalk = beanstalkContractReadOnly();
   const usdc = tokenContractReadOnly(USDC);
   const curve = beanCrv3ContractReadOnly();
+  const exec = setupBatch(batch);
 
-  return makeBatchedPromises(batch, [
-    [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
-    [bean.methods.allowance(account, BEANSTALK), bigNumberResult],
-    [lp.methods.allowance(account, BEANSTALK), bigNumberResult],
-    [usdc.methods.allowance(account, BEANSTALK), bigNumberResult],
-    [curve.methods.allowance(account, BEANSTALK), bigNumberResult],
-    [beanstalk.methods.balanceOfEth(account), tokenResult(ETH)],
-    [bean.methods.balanceOf(account), tokenResult(BEAN)],
-    [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [curve.methods.balanceOf(account), tokenResult(CURVE)],
-    [beanstalk.methods.balanceOfSeeds(account), tokenResult(SEEDS)],
-    [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
+  return Promise.all([
+    // Allowances
+    exec(bean.methods.allowance(account, UNISWAP_V2_ROUTER)).then(bigNumberResult),
+    exec(bean.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    exec(lp.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    exec(usdc.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    exec(curve.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    // Balances
+    exec(beanstalk.methods.balanceOfEth(account)).then(tokenResult(ETH)),
+    exec(bean.methods.balanceOf(account)).then(tokenResult(BEAN)),
+    exec(lp.methods.balanceOf(account)).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
+    exec(curve.methods.balanceOf(account)).then(tokenResult(CURVE)),
+    exec(beanstalk.methods.balanceOfSeeds(account)).then(tokenResult(SEEDS)),
+    exec(beanstalk.methods.balanceOfStalk(account)).then(tokenResult(STALK)),
     // @DEPRECATED
-    // [beanstalk.methods.votedUntil(account), bigNumberResult],
-    [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEAN)],
-    [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
-    [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
-    [usdc.methods.balanceOf(account), tokenResult(USDC)],
-    [beanstalk.methods.wrappedBeans(account), tokenResult(BEAN)],
-  ]);
+    // Leaving this here to prevent reshuffling of numerically-indexed eventParsingParameters.
+    Promise.resolve(undefined),
+    exec(beanstalk.methods.balanceOfFarmableBeans(account)).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.balanceOfGrownStalk(account)).then(tokenResult(STALK)),
+    exec(beanstalk.methods.balanceOfRoots(account)).then(bigNumberResult),
+    exec(usdc.methods.balanceOf(account)).then(tokenResult(USDC)),
+    exec(beanstalk.methods.wrappedBeans(account)).then(tokenResult(BEAN)),
+  ] as const);
+
+  // return makeBatchedPromises(batch, [
+  //   [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
+  //   [bean.methods.allowance(account, BEANSTALK), bigNumberResult],
+  //   [lp.methods.allowance(account, BEANSTALK), bigNumberResult],
+  //   [usdc.methods.allowance(account, BEANSTALK), bigNumberResult],
+  //   [curve.methods.allowance(account, BEANSTALK), bigNumberResult],
+  //   [beanstalk.methods.balanceOfEth(account), tokenResult(ETH)],
+  //   [bean.methods.balanceOf(account), tokenResult(BEAN)],
+  //   [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
+  //   [curve.methods.balanceOf(account), tokenResult(CURVE)],
+  //   [beanstalk.methods.balanceOfSeeds(account), tokenResult(SEEDS)],
+  //   [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
+  //   // @DEPRECATED
+  //   // [beanstalk.methods.votedUntil(account), bigNumberResult],
+  //   [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEAN)],
+  //   [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
+  //   [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
+  //   [usdc.methods.balanceOf(account), tokenResult(USDC)],
+  //   [beanstalk.methods.wrappedBeans(account), tokenResult(BEAN)],
+  // ]);
 };
 
 /* Beanstalk Price Getters */
@@ -148,6 +188,29 @@ export const getTokenBalances = async (batch: BatchRequest) =>
     tokenV2ContractReadOnly(t).methods.balanceOf(account), tokenResult(t)
   ]));
 
+export type Weather = {
+  didSowBelowMin: boolean;
+  didSowFaster: boolean;
+  lastDSoil: BigNumber;
+  lastSoilPercent: BigNumber;
+  lastSowTime: BigNumber;
+  nextSowTime: BigNumber;
+  startSoil: BigNumber;
+  weather: BigNumber;
+}
+
+export type Rain = {
+  raining: boolean;
+  rainStart: BigNumber;
+}
+
+export type Time = {
+  season: BigNumber;
+  start: BigNumber;
+  period: BigNumber;
+  timestamp: BigNumber;
+}
+
 //
 export const getTotalBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
@@ -156,6 +219,7 @@ export const getTotalBalances = async (batch: BatchRequest) => {
   const curve = beanCrv3ContractReadOnly();
 
   return makeBatchedPromises(batch, [
+    // Supply
     [bean.methods.totalSupply(), tokenResult(BEAN)],
     [lp.methods.totalSupply(), tokenResult(UNI_V2_ETH_BEAN_LP)],
     [curve.methods.totalSupply(), tokenResult(CURVE)],
@@ -167,13 +231,14 @@ export const getTotalBalances = async (batch: BatchRequest) => {
     [beanstalk.methods.totalWithdrawnBeans(), tokenResult(BEAN)],
     [beanstalk.methods.totalWithdrawnLP(), tokenResult(UNI_V2_ETH_BEAN_LP)],
     [beanstalk.methods.getTotalWithdrawn(CURVE.addr), tokenResult(CURVE)],
+    // Field
     [beanstalk.methods.totalSoil(), tokenResult(BEAN)],
     [beanstalk.methods.podIndex(), tokenResult(BEAN)],
     [beanstalk.methods.harvestableIndex(), tokenResult(BEAN)],
     [beanstalk.methods.totalRoots(), bigNumberResult],
     [
       beanstalk.methods.weather(),
-      (stringWeather) => ({
+      (stringWeather : any) => ({
         didSowBelowMin: stringWeather.didSowBelowMin,
         didSowFaster: stringWeather.didSowFaster,
         lastDSoil: tokenResult(BEAN)(stringWeather.lastDSoil),
@@ -182,14 +247,14 @@ export const getTotalBalances = async (batch: BatchRequest) => {
         nextSowTime: bigNumberResult(stringWeather.nextSowTime),
         startSoil: tokenResult(BEAN)(stringWeather.startSoil),
         weather: bigNumberResult(stringWeather.yield),
-      }),
+      } as Weather),
     ],
     [
       beanstalk.methods.rain(),
       (stringRain) => ({
         raining: stringRain.raining,
         rainStart: bigNumberResult(stringRain.start),
-      }),
+      } as Rain),
     ],
     [
       beanstalk.methods.time(),
@@ -198,13 +263,16 @@ export const getTotalBalances = async (batch: BatchRequest) => {
         start: bigNumberResult(time.start),
         period: bigNumberResult(time.period),
         timestamp: bigNumberResult(time.timestamp),
-      }),
+      } as Time),
     ],
-    // TO DO: Automate this:
+    // Budgets
+    // FIXME: Automate this:
     [bean.methods.balanceOf(BUDGETS[0]), tokenResult(BEAN)],
     [bean.methods.balanceOf(BUDGETS[1]), tokenResult(BEAN)],
     [bean.methods.balanceOf(BUDGETS[2]), tokenResult(BEAN)],
     [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)],
+    // Misc
+    // FIXME: needs to be rekeyed or placed in right array spot
     [bean.methods.balanceOf(CURVE.addr), tokenResult(BEAN)],
     [beanstalk.methods.withdrawSeasons(), bigNumberResult]
   ] as const);

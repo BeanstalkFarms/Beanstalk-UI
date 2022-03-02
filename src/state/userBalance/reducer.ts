@@ -146,7 +146,6 @@ export interface UserBalanceState {
   /** @DEPRECATED. The number of Seasons the Farmer is locked for. (Until the end of the BIPs they voted for) */
   // lockedSeasons: BigNumber;
   /** The sum of BeanRecievableBalance + beanHarvestableBalance + wrappedBeans */
-
   beanClaimableBalance: BigNumber;
   /** 
    * The farmer's claimable struct. This struct is kind of complex to build and gets passed into
