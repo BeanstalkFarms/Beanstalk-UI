@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
+import { EventData } from 'web3-eth-contract';
+
 import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
@@ -27,7 +29,7 @@ import {
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery } from 'graph/index';
 import { AppState } from 'state';
-import { BASE_SLIPPAGE, BEAN, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
+import { BASE_SLIPPAGE, BEAN, SupportedToken, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
 import {
   addRewardedCrates,
   createLedgerBatch,
@@ -35,7 +37,7 @@ import {
   getBips,
   getFundraisers,
   getEtherBalance,
-  getUSDCBalance,
+  // getUSDCBalance,
   getPrices,
   getTotalBalances,
   initialize,
@@ -48,15 +50,65 @@ import {
   account,
   getEthPrices,
   getPriceArray,
-  votes,
+  getVotes,
+  benchmarkStart,
+  benchmarkEnd,
 } from 'util/index';
 import { UserBalanceState } from './reducer';
 
-//
+type EventParsingParameters = [
+  season: AppState['season']['season'],
+  harvestableIndex: AppState['weather']['harvestableIndex'],
+  farmableBeanBalance: AppState['userBalance']['farmableBeanBalance'],
+  grownStalkBalance: AppState['userBalance']['grownStalkBalance'],
+  claimableEthBalance: AppState['userBalance']['claimableEthBalance'],
+  beanClaimableBalance: AppState['userBalance']['beanClaimableBalance'],
+  beanReserve: AppState['prices']['beanReserve'],
+  ethReserve: AppState['prices']['ethReserve'],
+]
+
+type AsyncReturnType<T extends (...args: any) => any> =
+  T extends (...args: any) => Promise<infer U> ? U :
+  T extends (...args: any) => infer U ? U :
+  any
+;
+
+type TokenReserveTuple = [
+  beanReserve: AppState['prices']['beanReserve'],
+  ethReserve:  AppState['prices']['ethReserve']
+];
+
+/**
+ * 
+ */
+function lpReservesForTokenReserves(
+  tokenReserves: TokenReserveTuple,
+  token0: SupportedToken['addr']
+) : [
+  beanReserve: BigNumber, 
+  ethReserve: BigNumber, 
+  rawBeanReserve: BigNumber, 
+  rawEthReserve: BigNumber
+] {
+  const rawBeanReserve =
+    token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
+  const rawEthReserve =
+    token0 !== BEAN.addr ? tokenReserves[0] : tokenReserves[1];
+  const beanReserve = toTokenUnitsBN(rawBeanReserve, BEAN.decimals);
+  const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
+
+  return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
+}
+
+/**
+ * A React component that returns nothing but handle loading of data
+ * and passage of that data into Redux.
+ */
 export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
 
+  // Global state
   const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -70,8 +122,8 @@ export default function Updater() {
     (state) => state.prices
   );
 
-  const eventParsingParametersRef = useRef([]);
-  eventParsingParametersRef.current = [
+  // Parameters used between 
+  const eventParsingParametersRef = useRef([
     season.season,
     weather.harvestableIndex,
     userBalance.farmableBeanBalance,
@@ -80,40 +132,36 @@ export default function Updater() {
     userBalance.beanClaimableBalance,
     prices.beanReserve,
     prices.ethReserve,
-  ];
-
-  const benchmarkStart = (operation) => {
-    console.log(`LOADING ${operation}`);
-    return Date.now();
-  };
-
-  const benchmarkEnd = (operation, startTime) => {
-    console.log(
-      `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
-    );
-  };
+  ] as const); // 'as const' forces this into a tuple instead of array
 
   useEffect(() => {
-    //
+    // -- Processors
+
+    /**
+     * 
+     */
     function processAccountBalances(
-      accountBalances,
-      ethBalance,
-      lpReserves,
-      currentSeason,
-      votedBips
-    ) {
+      accountBalances: AsyncReturnType<typeof getAccountBalances>,
+      ethBalance: BigNumber,
+      votedBips: Set<any>,
+    ) : void {
       const [
+        // Allowances
         uniswapBeanAllowance,
         beanstalkBeanAllowance,
         beanstalkLPAllowance,
         beanstalkUSDCAllowance,
         beanstalkCurveAllowance,
+        // Balances
         claimableEthBalance,
         beanBalance,
         lpBalance,
         curveBalance,
         seedBalance,
         stalkBalance,
+        // @DEPRECATED
+        // Leaving this here to prevent reshuffling of numerically-indexed eventParsingParameters.
+        // eslint-disable-next-line
         lockedUntil,
         farmableBeanBalance,
         grownStalkBalance,
@@ -121,39 +169,53 @@ export default function Updater() {
         usdcBalance,
         beanWrappedBalance,
       ] = accountBalances;
-      const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
-      const lockedSeasons = lockedUntil.minus(currentSeason);
+        
+      // @DEPRECATED
+      // const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
+      // const lockedSeasons = lockedUntil.minus(currentSeason);
 
-      // @publius what are "allowances"?
-      dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));
-      dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));
-      dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));
-      dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));
-      dispatch(updateBeanstalkCurveAllowance(beanstalkCurveAllowance));
-      dispatch(
-        setUserBalance({
-          claimableEthBalance,
-          ethBalance,
-          beanBalance,
-          lpBalance,
-          curveBalance,
-          seedBalance,
-          stalkBalance,
-          locked,
-          lockedSeasons,
-          farmableBeanBalance,
-          grownStalkBalance,
-          rootsBalance,
-          usdcBalance,
-          beanWrappedBalance,
-          votedBips,
-        })
-      );
+      // ALLOWANCES:
+      // Any contract that transfers ERC-20 tokens on the farmer's behalf needs to be approved to do so.
+      // For example, when you deposit Beans, Beanstalk transfers the farmer's circulating Beans to the Beanstalk contract.
+      // The farmer needs to approve Beanstalk to do this. 
+      // Note: Ethereum is NOT an ERC-20 and thus it doesn't require approval. Instead Ethereum is sent as a part of the transaction.
+      // You can read more here: https://brogna.medium.com/token-allowance-dc553f7d38b3
+      // There are 4 types of allowances each necessary in different cases
+      dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));       // Needed for selling Beans on Uniswap 
+      dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));   // Needed for depositing Beans, adding LP + Depositing from Beans or Bean/Eth, sowing in Beanstalk
+      dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));       // Needed for depositing LP from circulating
+      dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));   // Needed for contributing to a fundraiser.
+      dispatch(updateBeanstalkCurveAllowance(beanstalkCurveAllowance)); // Needed for interacting with Curve.
+      dispatch(setUserBalance({
+        claimableEthBalance,
+        ethBalance,
+        beanBalance,
+        lpBalance,
+        curveBalance,
+        seedBalance,
+        stalkBalance,
+        // locked, @DEPRECATED
+        // lockedSeasons, @DEPRECATED
+        farmableBeanBalance,
+        grownStalkBalance,
+        rootsBalance,
+        usdcBalance,
+        beanWrappedBalance,
+        //
+        votedBips,
+      }));
     }
 
-    //
-    function processTotalBalances(totalBalances, bipInfo, fundraiserInfo) {
+    /**
+     * 
+     */
+    function processTotalBalances(
+      totalBalances: any[], // FIXME
+      bipInfo: AsyncReturnType<typeof getBips>,
+      fundraiserInfo: AsyncReturnType<typeof getFundraisers>
+    ) {
       const [
+        // Silo
         totalBeans,
         totalLP,
         totalCrv3,
@@ -165,6 +227,7 @@ export default function Updater() {
         totalTransitBeans,
         totalTransitLP,
         totalTransitCurve,
+        // Field
         soil,
         podIndex,
         harvestableIndex,
@@ -172,174 +235,197 @@ export default function Updater() {
         _weather,
         rain,
         _season,
-        // Automate this:
+        // Budgets
+        // FIXME: Automate budget beans
         budget0,
         budget1,
         budget2,
         budget3,
+        // More
         totalCurveBeans,
         withdrawSeasons,
       ] = totalBalances;
-      const totalBudgetBeans = budget0.plus(budget1).plus(budget2).plus(budget3);
+
+      // Calculations
+      const totalBudgetBeans = (
+        budget0
+          .plus(budget1)
+          .plus(budget2)
+          .plus(budget3)
+      );
       const [bips, hasActiveBIP] = bipInfo;
       const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
       const totalPods = podIndex.minus(harvestableIndex);
-      dispatch(
-        setTotalBalance({
-          totalBeans,
-          totalBudgetBeans,
-          totalCurveBeans,
-          totalLP,
-          totalCrv3,
-          totalSiloBeans,
-          totalSiloLP,
-          totalSiloCurve,
-          totalTransitBeans,
-          totalTransitLP,
-          totalTransitCurve,
-          totalSeeds,
-          totalStalk,
-          totalPods,
-          totalRoots,
-          withdrawSeasons,
-        })
-      );
-      dispatch(
-        setWeather({
-          ..._weather,
-          ...rain,
-          harvestableIndex,
-          soil,
-        })
-      );
+
+      // Dispatchers
+      dispatch(setTotalBalance({
+        totalBeans,
+        totalBudgetBeans,
+        totalCurveBeans,
+        totalLP,
+        totalCrv3,
+        totalSiloBeans,
+        totalSiloLP,
+        totalSiloCurve,
+        totalTransitBeans,
+        totalTransitLP,
+        totalTransitCurve,
+        totalSeeds,
+        totalStalk,
+        totalPods,
+        totalRoots,
+        withdrawSeasons,
+      }));
+      dispatch(setWeather({
+        ..._weather,
+        ...rain,
+        harvestableIndex,
+        soil,
+      }));
       dispatch(setBips(bips));
       dispatch(setHasActiveBIP(hasActiveBIP));
       dispatch(setFundraisers(fundraisers));
       dispatch(setHasActiveFundraiser(hasActiveFundraiser));
       dispatch(setSeason(_season));
+
       return _season.season;
     }
 
-    //
-    function lpReservesForTokenReserves(tokenReserves, token0) {
-      const rawBeanReserve =
-        token0 === BEAN.addr ? tokenReserves[0] : tokenReserves[1];
-      const rawEthReserve =
-        token0 !== BEAN.addr ? tokenReserves[0] : tokenReserves[1];
-      const beanReserve = toTokenUnitsBN(rawBeanReserve, BEAN.decimals);
-      const ethReserve = toTokenUnitsBN(rawEthReserve, WETH.decimals);
-      return [beanReserve, ethReserve, rawBeanReserve, rawEthReserve];
-    }
-
-    //
-    function processPrices(_prices) {
+    /**
+     * 
+     */
+    function processPrices(
+      _prices: AsyncReturnType<typeof getPrices>
+    ) : TokenReserveTuple {
       const [
-        referenceTokenReserves,
-        tokenReserves,
-        token0,
-        twapPrices,
-        beansToPeg,
-        lpToPeg,
-        curveVirtualPrice,
-        beanCrv3Price,
-        beanCrv3Reserve,
-        curveToBDV,
-        ethPrices,
-        priceTuple,
+        referenceTokenReserves,   // reserves tuple
+        tokenReserves,            // reserves tuple
+        token0,                   // 
+        twapPrices,               // prices tuple
+        beansToPeg,               //
+        lpToPeg,                  //
+        curveVirtualPrice,        //
+        beanCrv3Price,            //
+        beanCrv3Reserve,          // 
+        curveToBDV,               //
+        ethPrices,                //
+        priceTuple,               //
       ] = _prices;
 
-      //
+      // Calculations
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
-      const [beanReserve, ethReserve, rawBeanReserve, rawEthReserve] =
-        lpReservesForTokenReserves(tokenReserves, token0);
+      const [
+        beanReserve,
+        ethReserve,
+        rawBeanReserve,
+        rawEthReserve
+      ] = lpReservesForTokenReserves(
+        tokenReserves,
+        token0
+      );
       const beanEthPrice = rawEthReserve
         .dividedBy(rawBeanReserve)
         .dividedBy(usdcMultiple);
       const usdcEthPrice = referenceTokenReserves[1]
         .dividedBy(referenceTokenReserves[0])
         .dividedBy(usdcMultiple);
-      const beanPrice = beanEthPrice.dividedBy(usdcEthPrice);
+      const beanPrice = beanEthPrice
+        .dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
 
+      //
       const curveTuple = priceTuple.ps[0];
       const uniTuple = priceTuple.ps[1];
 
       //
-      dispatch(
-        setPrices({
-          beanPrice,
-          usdcPrice,
-          ethReserve,
-          beanReserve,
-          beansToPeg,
-          lpToPeg,
-          beanTWAPPrice: twapPrices[0],
-          usdcTWAPPrice: twapPrices[1],
-          curveVirtualPrice,
-          beanCrv3Price,
-          beanCrv3Reserve: beanCrv3Reserve[0],
-          crv3Reserve: beanCrv3Reserve[1],
-          curveToBDV,
-          ethPrices,
-          priceTuple: {
-            deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
-            liquidity: toTokenUnitsBN(priceTuple.liquidity, 6),
-            price: toTokenUnitsBN(priceTuple.price, 6),
-          },
-          curveTuple: {
-            balances: curveTuple.balances,
-            deltaB: toTokenUnitsBN(curveTuple.deltaB, 6),
-            liquidity: toTokenUnitsBN(curveTuple.liquidity, 6),
-            price: toTokenUnitsBN(curveTuple.price, 6),
-            pool: curveTuple.pool,
-            tokens: curveTuple.tokens,
-          },
-          uniTuple: {
-            balances: uniTuple.balances,
-            deltaB: toTokenUnitsBN(uniTuple.deltaB, 6),
-            liquidity: toTokenUnitsBN(uniTuple.liquidity, 6),
-            price: toTokenUnitsBN(uniTuple.price, 6),
-            pool: uniTuple.pool,
-            tokens: uniTuple.tokens,
-          },
-        })
-      );
+      dispatch(setPrices({
+        beanPrice,
+        usdcPrice,
+        ethReserve,
+        beanReserve,
+        beansToPeg,
+        lpToPeg,
+        beanTWAPPrice: twapPrices[0],
+        usdcTWAPPrice: twapPrices[1],
+        curveVirtualPrice,
+        beanCrv3Price,
+        beanCrv3Reserve: beanCrv3Reserve[0],
+        crv3Reserve: beanCrv3Reserve[1],
+        curveToBDV,
+        ethPrices,
+        priceTuple: {
+          deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
+          liquidity: toTokenUnitsBN(priceTuple.liquidity, 6),
+          price: toTokenUnitsBN(priceTuple.price, 6),
+        },
+        curveTuple: {
+          balances: curveTuple.balances,
+          deltaB: toTokenUnitsBN(curveTuple.deltaB, 6),
+          liquidity: toTokenUnitsBN(curveTuple.liquidity, 6),
+          price: toTokenUnitsBN(curveTuple.price, 6),
+          pool: curveTuple.pool,
+          tokens: curveTuple.tokens,
+        },
+        uniTuple: {
+          balances: uniTuple.balances,
+          deltaB: toTokenUnitsBN(uniTuple.deltaB, 6),
+          liquidity: toTokenUnitsBN(uniTuple.liquidity, 6),
+          price: toTokenUnitsBN(uniTuple.price, 6),
+          pool: uniTuple.pool,
+          tokens: uniTuple.tokens,
+        },
+      }));
+
       return [beanReserve, ethReserve];
     }
 
-    async function processEvents(events, eventParsingParameters) {
+    /**
+     * 
+     */
+    function processEvents(
+      events: EventData[],
+      eventParsingParameters: EventParsingParameters,
+    ) : void {
       const startTime = benchmarkStart('EVENT PROCESSOR');
 
-      let userLPSeedDeposits = {};
-      let userLPDeposits = {};
-      let lpWithdrawals = {};
-      let userCurveDeposits = {};
-      let userCurveBDVDeposits = {};
-      let curveWithdrawals = {};
+      // These get piped into redux 1:1 and so need to match 
+      // the type defined in UserBalanceState.
+      let userLPSeedDeposits : UserBalanceState['lpSeedDeposits'] = {};
+      let userLPDeposits : UserBalanceState['lpDeposits'] = {};
+      let lpWithdrawals : UserBalanceState['lpWithdrawals'] = {};
+      let userCurveDeposits : UserBalanceState['curveDeposits'] = {};
+      let userCurveBDVDeposits : UserBalanceState['curveBDVDeposits'] = {};
+      let curveWithdrawals : UserBalanceState['curveWithdrawals'] = {};
       let userPlots : UserBalanceState['plots'] = {};
-      let userBeanDeposits = {};
-      let beanWithdrawals = {};
-      const votedBips = new Set();
+      let userBeanDeposits : UserBalanceState['beanDeposits'] = {};
+      let beanWithdrawals : UserBalanceState['beanWithdrawals'] = {};
+      const votedBips : UserBalanceState['votedBips'] = new Set();
 
-      /** New events from Plot Marketplace:
-       * ListingCreated
-       * ListingCancelled
-       * BuyOfferCreated
-       * BuyOfferCancelled
-       * BuyOfferAccepted
-      */
-      // TODO: PlotTransfer will now need to update listing data too
-      // will need to split up listings into two listings if listing not fully purchased
-      // set state accordingly and adjust index
-      // TODO: all event handling logic needs to exist not filtered on address for individual listings and buy offers
-      // but full marketplace since, should not be filtering based on address for these events but grabbing them all
+      // 1.
+      // This object expansion used below is super slow.
+      // Let's move to a library like `immutable` or rewrite
+      // these to use less expansions.
+      // TODO: what's the standard here these days?
+      //
+      // 2.
+      // I've extracted the `EventData` type from web3 library, but
+      // each of the events below needs to have defined `returnValues`.
+      // TODO: figure out if we should auto-generate these, or write them by hand.
+      // If we write by hand what's the best paradigm? 
+      // See `src/state/marketplace/reducer.ts` for an example I built recently. -SC
       events.forEach((event) => {
         if (event.event === 'BeanDeposit') {
+          // `season` is a base-10 numerical string.
           const s = parseInt(event.returnValues.season, 10);
+          // numbers on Etherum are always returned as ints,
+          // so this conversion turns `returnValues.beans`
           const beans = toTokenUnitsBN(
             new BigNumber(event.returnValues.beans),
             BEAN.decimals
           );
+          // Override the bean deposit for season `s`.
+          // If a prior deposit exists, add `beans` to that
+          // deposit. Otherwise, a new item is created. 
           userBeanDeposits = {
             ...userBeanDeposits,
             [s]:
@@ -349,6 +435,7 @@ export default function Updater() {
           };
           if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
         } else if (event.event === 'BeanRemove') {
+          // FIXME: define crates contract return value
           event.returnValues.crates.forEach((s, i) => {
             const beans = toTokenUnitsBN(
               event.returnValues.crateBeans[i],
@@ -381,51 +468,71 @@ export default function Updater() {
             new BigNumber(event.returnValues.index),
             BEAN.decimals
           );
-          userPlots[s] = toTokenUnitsBN(
+          userPlots[s.toString()] = toTokenUnitsBN(
             event.returnValues.pods,
             BEAN.decimals // QUESTION: why is this BEAN.decimals and not PODS? are they the same?
           );
         } else if (event.event === 'PlotTransfer') {
+          // The account received a Plot
           if (event.returnValues.to === account) {
-            const s = toTokenUnitsBN(
+            const index = toTokenUnitsBN(
               new BigNumber(event.returnValues.id),
               BEAN.decimals
             );
-            userPlots[s] = toTokenUnitsBN(
+            userPlots[index.toString()] = toTokenUnitsBN(
               event.returnValues.pods,
               BEAN.decimals
             );
-          } else {
-            const s = toTokenUnitsBN(
+          } 
+          // The account sent a Plot
+          else {
+            // Numerical "index" of the plot.
+            // Absolute, with respect to Pod 0.
+            const index = toTokenUnitsBN(
               new BigNumber(event.returnValues.id),
               BEAN.decimals
             );
+            // String version of `idx`, used to key
+            // objects. This prevents duplicate toString() calls 
+            // and resolves Typescript errors.
+            const indexStr = index.toString();
+            // Size of the Plot, in pods
             const pods = toTokenUnitsBN(
               new BigNumber(event.returnValues.pods),
               BEAN.decimals
             );
+
             let i = 0;
             let found = false;
-            if (userPlots[s] !== undefined) {
-              if (!pods.isEqualTo(userPlots[s])) {
-                const newStartIndex = s.plus(pods);
-                userPlots[newStartIndex] = userPlots[s].minus(pods);
+
+            // If we've located the plot in a prior event
+            if (userPlots[indexStr] !== undefined) {
+              // Send partial plot
+              if (!pods.isEqualTo(userPlots[indexStr])) {
+                const newStartIndex = index.plus(pods);
+                userPlots[newStartIndex.toString()] = userPlots[indexStr].minus(pods);
               }
-              delete userPlots[s];
-            } else {
+              delete userPlots[indexStr];
+            } 
+            
+            // QUESTION: what's going on here?
+            // FIXME: lots of Object.keys calls while the array itself is being
+            // modified.
+            else {
               while (found === false && i < Object.keys(userPlots).length) {
                 const startIndex = new BigNumber(Object.keys(userPlots)[i]);
                 const endIndex = new BigNumber(
-                  startIndex.plus(userPlots[startIndex])
+                  startIndex.plus(userPlots[startIndex.toString()])
                 );
-                if (startIndex.isLessThanOrEqualTo(s) && endIndex.isGreaterThanOrEqualTo(s)) {
-                  userPlots[startIndex] = new BigNumber(s.minus(startIndex));
-                  if (!s.isEqualTo(endIndex)) {
-                    const s2 = s.plus(pods);
-                    userPlots[s2] = new BigNumber(endIndex).minus(
-                      new BigNumber(s2)
-                    );
-                    if (userPlots[s2].isEqualTo(0)) delete userPlots[s2];
+                if (startIndex.isLessThanOrEqualTo(index) && endIndex.isGreaterThanOrEqualTo(index)) {
+                  userPlots[startIndex.toString()] = new BigNumber(index.minus(startIndex));
+                  if (!index.isEqualTo(endIndex)) {
+                    const s2    = index.plus(pods);
+                    const s2Str = s2.toString();
+                    userPlots[s2Str] = endIndex.minus(s2);
+                    if (userPlots[s2Str].isEqualTo(0)) {
+                      delete userPlots[s2Str];
+                    }
                   }
                   found = true;
                 }
@@ -608,12 +715,24 @@ export default function Updater() {
       });
       dispatch(setContractEvents(events));
 
-      // @publius
+      // Variables named during conversation with Publius 2/28
+      // These are instantaneous values pulled from contract functions
+      // that are used for certain calculations during event processing.
+      // ---
+      // s = season
+      // hi = harvestableindex
+      // fb = farmable beans
+      // gs = grown stalk
+      // ce = claiamble ether
+      // cb = wrapped beans
+      // br = Bean reserve
+      // er = ETH reserve
       const [s, hi, fb, gs, ce, cb, br, er] =
         eventParsingParameters !== undefined
           ? eventParsingParameters
           : eventParsingParametersRef.current;
 
+      // @publius
       const rawBeanDeposits = { ...userBeanDeposits };
       userBeanDeposits = addRewardedCrates(userBeanDeposits, s, fb);
       const beanDepositsBalance = Object.values(userBeanDeposits).reduce(
@@ -631,6 +750,7 @@ export default function Updater() {
       const [podBalance, harvestablePodBalance, plots, harvestablePlots] =
         parsePlots(userPlots, hi);
 
+      //
       const [
         beanTransitBalance,
         beanReceivableBalance,
@@ -649,9 +769,13 @@ export default function Updater() {
         userCurveWithdrawals,
         userCurveReceivableCrates,
       ] = parseWithdrawals(curveWithdrawals, s);
+      
+      //
       const minReceivables = [br, er].map((reserve) =>
         reserve.multipliedBy(BASE_SLIPPAGE).toFixed(0)
       );
+
+      // Build the Claimable struct
       const claimable = [
         Object.keys(userBeanReceivableCrates).map((b) => b.toString()),
         Object.keys(userLPReceivableCrates).map((b) => b.toString()),
@@ -664,156 +788,228 @@ export default function Updater() {
         minReceivables[1],
       ];
 
-      dispatch(
-        setUserBalance({
-          beanSiloBalance: beanDepositsBalance,
-          podBalance: podBalance,
-          harvestablePodBalance: harvestablePodBalance,
-          beanTransitBalance: beanTransitBalance,
-          beanReceivableBalance: beanReceivableBalance,
-          lpTransitBalance: lpTransitBalance,
-          lpReceivableBalance: lpReceivableBalance,
-          lpSiloBalance: lpDepositsBalance,
-          curveTransitBalance: curveTransitBalance,
-          curveReceivableBalance: curveReceivableBalance,
-          curveSiloBalance: curveDepositsBalance,
-          plots: plots,
-          harvestablePlots: harvestablePlots,
-          beanDeposits: userBeanDeposits,
-          lpDeposits: userLPDeposits,
-          lpSeedDeposits: userLPSeedDeposits,
-          curveDeposits: userCurveDeposits,
-          curveBDVDeposits: userCurveBDVDeposits,
-          beanWithdrawals: userBeanWithdrawals,
-          beanReceivableCrates: userBeanReceivableCrates,
-          lpWithdrawals: userLPWithdrawals,
-          lpReceivableCrates: userLPReceivableCrates,
-          curveWithdrawals: userCurveWithdrawals,
-          curveReceivableCrates: userCurveReceivableCrates,
-          beanClaimableBalance: beanReceivableBalance.plus(
-            harvestablePodBalance
-          ).plus(cb),
-          hasClaimable: beanReceivableBalance
-            .plus(harvestablePodBalance)
-            .plus(lpReceivableBalance)
-            .plus(curveReceivableBalance)
-            .plus(cb)
-            .plus(ce)
-            .isGreaterThan(0),
-          claimable: claimable,
-          rawBeanDeposits: rawBeanDeposits,
-          farmableBeanBalance: fb,
-          grownStalkBalance: gs,
-          // listings: listings,
-          // buyOffers: buyOffers,
-        })
-      );
+      dispatch(setUserBalance({
+        beanSiloBalance: beanDepositsBalance,
+        podBalance: podBalance,
+        harvestablePodBalance: harvestablePodBalance,
+        beanTransitBalance: beanTransitBalance,
+        beanReceivableBalance: beanReceivableBalance,
+        lpTransitBalance: lpTransitBalance,
+        lpReceivableBalance: lpReceivableBalance,
+        lpSiloBalance: lpDepositsBalance,
+        curveTransitBalance: curveTransitBalance,
+        curveReceivableBalance: curveReceivableBalance,
+        curveSiloBalance: curveDepositsBalance,
+        plots: plots,
+        harvestablePlots: harvestablePlots,
+        beanDeposits: userBeanDeposits,
+        lpDeposits: userLPDeposits,
+        lpSeedDeposits: userLPSeedDeposits,
+        curveDeposits: userCurveDeposits,
+        curveBDVDeposits: userCurveBDVDeposits,
+        beanWithdrawals: userBeanWithdrawals,
+        beanReceivableCrates: userBeanReceivableCrates,
+        lpWithdrawals: userLPWithdrawals,
+        lpReceivableCrates: userLPReceivableCrates,
+        curveWithdrawals: userCurveWithdrawals,
+        curveReceivableCrates: userCurveReceivableCrates,
+        beanClaimableBalance: beanReceivableBalance.plus(
+          harvestablePodBalance
+        ).plus(cb),
+        hasClaimable: beanReceivableBalance
+          .plus(harvestablePodBalance)
+          .plus(lpReceivableBalance)
+          .plus(curveReceivableBalance)
+          .plus(cb)
+          .plus(ce)
+          .isGreaterThan(0),
+        claimable: claimable,
+        rawBeanDeposits: rawBeanDeposits,
+        farmableBeanBalance: fb,
+        grownStalkBalance: gs,
+      }));
 
       benchmarkEnd('EVENT PROCESSOR', startTime);
     }
 
-    async function updateAllBalances() : Promise<[Function, any]> {
+    // -- Updaters     
+
+    /**
+     * 
+     */
+    async function updateBalancesAndPrices() : Promise<[Function, EventParsingParameters]> {
       const startTime = benchmarkStart('ALL BALANCES');
+
+      // Create a new web3.BatchRequest. Provide this to batched
+      // getter functions, which return a single Promise.all()
+      // that resolves when the batch is executed and returns
+      // values.
       const batch = createLedgerBatch();
       const accountBalancePromises = getAccountBalances(batch);
       const totalBalancePromises = getTotalBalances(batch);
       const pricePromises = getPrices(batch);
-      batch.execute();
+      batch.execute(); 
 
-      const [bipInfo, fundraiserInfo, ethBalance, accountBalances, totalBalances, _prices, usdcBalance, votedBips] =
-        await Promise.all([
-          getBips(),
-          getFundraisers(),
-          getEtherBalance(),
-          accountBalancePromises,
-          totalBalancePromises,
-          pricePromises,
-          // getListings()
-          getUSDCBalance(),
-          votes(),
-        ]);
+      const [
+        bipInfo,                // 0
+        fundraiserInfo,         // 1
+        ethBalance,             // 2
+        accountBalances,        // 3
+        totalBalances,          // 4
+        _prices,                // 5
+        // usdcBalance,            // 6
+        votedBips,              // 7
+        ethPrices,              // 8
+        priceTuple,             // 9
+      ] = await Promise.all([
+        getBips(), // 0
+        getFundraisers(),       // 1
+        getEtherBalance(),      // 2
+        accountBalancePromises, // 3: uses `exec` -> tuple
+        totalBalancePromises,   // 4: uses `exec` -> tuple
+        pricePromises,          // 5: uses `exec` -> tuple
+        // getUSDCBalance(),       // 6
+        getVotes(),                // 7
+        getEthPrices(),         // 8
+        getPriceArray()         // 9
+      ]);
+
+      //
       benchmarkEnd('ALL BALANCES', startTime);
-      const [beanReserve, ethReserve] = lpReservesForTokenReserves(
-        _prices[1],
-        _prices[2]
-      ); /* tokenReserves, token0 */
-      const eventParsingParameters = [
-        totalBalances[17].season /* season */,
-        totalBalances[13] /* harvestableIndex */,
-        accountBalances[12] /* farmableBeanBalance */,
-        accountBalances[13] /* grownStalkBalance */,
-        accountBalances[5] /* claimableEthBalance */,
-        accountBalances[16], /* wrappedBeans */
+
+      //
+      const [
+        beanReserve,
+        ethReserve
+      ] = lpReservesForTokenReserves(
+        _prices[1], // tokenReserves
+        _prices[2]  // token0
+      );
+
+      // Parameters needed to parse events
+      const eventParsingParameters : EventParsingParameters = [
+        totalBalances[17].season  /* season */,
+        totalBalances[13]         /* harvestableIndex */,
+        accountBalances[12]       /* farmableBeanBalance */,
+        accountBalances[13]       /* grownStalkBalance */,
+        accountBalances[5]        /* claimableEthBalance */,
+        accountBalances[16],      /* wrappedBeans */
         beanReserve,
         ethReserve,
       ];
-      const [ethPrices, priceTuple] = await Promise.all([getEthPrices(), getPriceArray()]);
 
       return [
         () => {
-          const currentSeason = processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
-          const lpReserves = processPrices([
+          processAccountBalances(
+            accountBalances,
+            ethBalance,
+            votedBips,
+          );
+          processTotalBalances(
+            totalBalances,
+            bipInfo,
+            fundraiserInfo
+          );
+          processPrices([
             ..._prices,
             ethPrices,
             priceTuple,
           ]);
-          processAccountBalances(
-            accountBalances,
-            ethBalance,
-            lpReserves,
-            currentSeason,
-            votedBips,
-            usdcBalance
-          );
         },
         eventParsingParameters,
       ];
     }
 
-    async function updateTotals() {
+    /**
+     * 
+     */
+    async function updateTotalBalances() {
       const startTime = benchmarkStart('TOTALS');
+
+      //
       const batch = createLedgerBatch();
       const totalBalancePromises = getTotalBalances(batch);
-
       batch.execute();
 
-      const [bipInfo, fundraiserInfo, totalBalances] = await Promise.all([
+      const [
+        bipInfo,
+        fundraiserInfo,
+        totalBalances
+      ] = await Promise.all([
         getBips(),
         getFundraisers(),
         totalBalancePromises,
       ]);
+
       ReactDOM.unstable_batchedUpdates(() => {
-        processTotalBalances(totalBalances, bipInfo, fundraiserInfo);
+        processTotalBalances(
+          totalBalances,
+          bipInfo,
+          fundraiserInfo
+        );
       });
+
       benchmarkEnd('TOTALS', startTime);
     }
 
+    /**
+     * 
+     */
     async function updatePrices() {
       const startTime = benchmarkStart('PRICES');
+
+      //
       const batch = createLedgerBatch();
       const pricePromises = getPrices(batch);
       batch.execute();
 
-      const _prices = await pricePromises;
-      const ethPrices = await getEthPrices();
-      const priceTuple = await getPriceArray();
+      const [
+        _prices,
+        ethPrices,
+        priceTuple
+      ] = await Promise.all([
+        pricePromises,
+        getEthPrices(),
+        getPriceArray(),
+      ]);
+
       ReactDOM.unstable_batchedUpdates(() => {
-        processPrices([..._prices, ethPrices, priceTuple]);
+        processPrices([
+          ..._prices,
+          ethPrices,
+          priceTuple
+        ]);
       });
+
       benchmarkEnd('PRICES', startTime);
     }
 
+    // -- Subgraph queries
+
+    /**
+     * 
+     */
     async function getLastCross() {
       const lastCrossInitializer = await lastCrossQuery();
       dispatch(setLastCross(lastCrossInitializer));
     }
 
+    /**
+     * 
+     */
     async function getAPYs() {
       dispatch(setBeansPerSeason(await apyQuery()));
     }
 
+    // -- Start
+
+    /**
+     * 
+     */
     async function start() {
       let startTime = benchmarkStart('*INIT*');
+
+      // Ensures we're connected to a wallet.
       if (await initialize()) {
         benchmarkEnd('*INIT*', startTime);
         startTime = benchmarkStart('**WEBSITE**');
@@ -821,7 +1017,7 @@ export default function Updater() {
         // After each transaction, run this transaction callback.
         // This refreshes all balances after we complete a txn.
         initializeCallback(async () => {
-          const [updateBalanceState] = await updateAllBalances();
+          const [updateBalanceState] = await updateBalancesAndPrices();
           ReactDOM.unstable_batchedUpdates(() => {
             updateBalanceState();
           });
@@ -829,14 +1025,20 @@ export default function Updater() {
 
         //
         const [balanceInitializers, eventInitializer] = await Promise.all([
-          updateAllBalances(),
-          initializeEventListener(processEvents, updatePrices, updateTotals),
+          //
+          updateBalancesAndPrices(),
+          // Listen for events on the Beanstalk contract. When a new event occurs:
+          // - run `processEvents` with the new event 
+          // - call `updatePrices` and `updateTotals` to get new info from the contract
+          initializeEventListener(processEvents, updatePrices, updateTotalBalances),
         ]);
 
         //
         ReactDOM.unstable_batchedUpdates(() => {
-          const [updateBalanceState, eventParsingParameters] =
-            balanceInitializers;
+          const [
+            updateBalanceState,
+            eventParsingParameters
+          ] = balanceInitializers;
           updateBalanceState();
           processEvents(eventInitializer, eventParsingParameters);
 
@@ -848,6 +1050,8 @@ export default function Updater() {
         dispatch(setMetamaskFailure(true));
       }
     }
+    
+    // -- Run things
 
     start();
     getLastCross();

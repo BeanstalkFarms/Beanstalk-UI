@@ -14,9 +14,8 @@ export const initialState: Dictionary<BigNumber> =
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(setTokenBalance, (state, { payload }) => {
-      Object.keys(payload).map((key) => {
+      Object.keys(payload).forEach((key) => {
         state[key] = payload[key];
-        return state[key];
       });
     })
 );

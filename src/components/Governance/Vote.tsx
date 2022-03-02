@@ -24,7 +24,7 @@ type VoteProps = {
   bips: (BIP['id'])[];
   seasonBips: BIP[];
   stalkBips: BIP[];
-  votedBips: BIP[];
+  votedBips: BIP[]; // FIXME: this might be a set
   totalRoots: AppState['totalBalance']['totalRoots'];
   userRoots: AppState['userBalance']['rootsBalance'];
 }
