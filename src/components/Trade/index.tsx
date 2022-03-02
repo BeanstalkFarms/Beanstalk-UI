@@ -14,7 +14,7 @@ import {
   tradeStrings,
   // HeaderLabelList,
 } from 'components/Common';
-import { CURVE_LINK } from 'constants/index';
+import { CURVE_LINK, theme } from 'constants/index';
 import metamaskIcon from 'img/metamask-icon.png';
 import curveIcon from 'img/curve-logo.svg';
 import TradeModule from './TradeModule';
@@ -25,7 +25,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     width: 500,
     textTransform: 'none',
-    backgroundColor: 'white',
+    backgroundColor: theme.module.background,
+    // backgroundColor: theme.secondary,
+    // color: theme.accentText,
     paddingTop: 12,
     paddingBottom: 12,
     fontWeight: 'bold',
@@ -57,7 +59,7 @@ export default function Trade() {
               addTokenToMetamask();
             }}
           >
-            <span>Add BEAN to Metamask</span>
+            <span>Add BEAN to MetaMask</span>
             <img src={metamaskIcon} alt="" className={classes.buttonImage} />
           </Button>
         </Grid>

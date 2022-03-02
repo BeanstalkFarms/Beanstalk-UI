@@ -51,33 +51,35 @@ const AccordionDetails = withStyles(() => ({
   },
 }))(MuiAccordionDetails);
 
+const useStyles = makeStyles(() => ({
+  root: {
+    // width: '300px',
+  },
+  topContainer: {
+    backgroundColor: 'transparent',
+    boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
+  },
+  heading: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    fontFamily: 'Futura-PT-Book',
+    color: theme.accentText,
+  },
+  descriptionText: {
+    color: theme.accentText,
+    textAlign: 'justify',
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '16px',
+  },
+}));
+
 export default function ContentDropdown({
   description,
   descriptionTitle,
   descriptionLinks,
   accordionStyles,
 }) {
-  const classes = makeStyles(() => ({
-    root: {
-      // width: '300px',
-    },
-    topContainer: {
-      backgroundColor: 'transparent',
-      boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
-    },
-    heading: {
-      fontSize: '16px',
-      fontWeight: 'bold',
-      fontFamily: 'Futura-PT-Book',
-      color: theme.accentText,
-    },
-    descriptionText: {
-      color: theme.accentText,
-      textAlign: 'justify',
-      fontFamily: 'Futura-PT-Book',
-      fontSize: '16px',
-    },
-  }))();
+  const classes = useStyles();
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
   const handleChange = (panel: string) => (

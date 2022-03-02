@@ -18,6 +18,8 @@ import {
 import { JSON_RPC_ENDPOINT } from 'constants/values';
 
 const WIDGET_TOKEN_LIST = [
+  // List of top tokens on Uniswap V2 that have liquidity.
+  // https://v2.info.uniswap.org/tokens
   {
     name: 'Bean',
     address: BEAN.addr,
@@ -46,6 +48,42 @@ const WIDGET_TOKEN_LIST = [
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
   },
   {
+    name: 'Fei',
+    address: '0x956f47f50a910163d8bf957cf5846d573e7f87ca',
+    symbol: 'FEI',
+    decimals: 18,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x956f47f50a910163d8bf957cf5846d573e7f87ca/logo.png',
+  },
+  {
+    name: 'Frax',
+    address: '0x853d955acef822db058eb8505911ed77f175b99e',
+    symbol: 'FRAX',
+    decimals: 18,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x853d955acef822db058eb8505911ed77f175b99e/logo.png',
+  },
+  {
+    name: 'Frax Share',
+    address: '0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0',
+    symbol: 'FXS',
+    decimals: 18,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0/logo.png',
+  },
+  {
+    name: 'Wrapped BTC',
+    address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+    symbol: 'WBTC',
+    decimals: 8,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/logo.png',
+  },
+  {
     name: 'Dai',
     address: DAI.addr,
     symbol: DAI.symbol,
@@ -53,6 +91,15 @@ const WIDGET_TOKEN_LIST = [
     chainId: 1,
     logoURI:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+  },
+  {
+    name: 'Uniswap',
+    address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
+    symbol: 'UNI',
+    decimals: 18,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984/logo.png',
   },
   // {
   //   name: 'tBTC',
