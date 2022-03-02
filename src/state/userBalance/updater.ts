@@ -57,14 +57,14 @@ import {
 import { UserBalanceState } from './reducer';
 
 type EventParsingParameters = [
-  season: AppState["season"]["season"],
-  harvestableIndex: AppState["weather"]["harvestableIndex"],
-  farmableBeanBalance: AppState["userBalance"]["farmableBeanBalance"],
-  grownStalkBalance: AppState["userBalance"]["grownStalkBalance"],
-  claimableEthBalance: AppState["userBalance"]["claimableEthBalance"],
-  beanClaimableBalance: AppState["userBalance"]["beanClaimableBalance"],
-  beanReserve: AppState["prices"]["beanReserve"],
-  ethReserve: AppState["prices"]["ethReserve"],
+  season: AppState['season']['season'],
+  harvestableIndex: AppState['weather']['harvestableIndex'],
+  farmableBeanBalance: AppState['userBalance']['farmableBeanBalance'],
+  grownStalkBalance: AppState['userBalance']['grownStalkBalance'],
+  claimableEthBalance: AppState['userBalance']['claimableEthBalance'],
+  beanClaimableBalance: AppState['userBalance']['beanClaimableBalance'],
+  beanReserve: AppState['prices']['beanReserve'],
+  ethReserve: AppState['prices']['ethReserve'],
 ]
 
 type AsyncReturnType<T extends (...args: any) => any> =

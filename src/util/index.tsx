@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-import { provider, HttpProvider } from 'web3-core';
 import { ethers } from 'ethers';
 import {
   BEANFTCOLLECTION,

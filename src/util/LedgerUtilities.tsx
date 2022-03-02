@@ -79,10 +79,6 @@ export type Fundraiser = {
   total: BigNumber;
   token: string;
 }
-type PromiseHandlerTuple = readonly [
-  any, // FIXME: should be type of callable contract handler
-  (s: any) => any,
-]
 
 /**
  * Create a scoped `execute` function which accepts a Contract
@@ -151,7 +147,7 @@ export async function getEthPrices() {
       ...gas,
       ethPrice,
     };
-  } catch(e) {
+  } catch (e) {
     console.error(e);
   }
 }
@@ -202,7 +198,7 @@ export const getTokenBalances = async (batch: BatchRequest) => {
       exec(tokenV2ContractReadOnly(t).methods.balanceOf(account)).then(tokenResult(t))
     )
   );
-}
+};
 
 export const getTotalBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
