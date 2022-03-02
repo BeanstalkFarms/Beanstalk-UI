@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     paddingTop: 12,
     paddingBottom: 12,
     fontWeight: 'bold',
-    borderRadius: 16,
+    borderRadius: '15px',
     flexDirection: 'row',
     justifyContent: 'space-between',
     fontFamily: 'Futura-PT-Book',
@@ -50,7 +50,7 @@ export default function Trade() {
       <Grid item xs={12}>
         <TradeModule />
       </Grid>
-      <Grid container spacing={1} style={{ marginTop: 16 }}>
+      <Grid container spacing={1} style={{ marginTop: 16, maxWidth: 500 }}>
         <Grid item xs={12} container justifyContent="center">
           <Button
             className={classes.button}
@@ -81,6 +81,7 @@ export default function Trade() {
             descriptionTitle="How do I Trade?"
             accordionStyles={{
               maxWidth: 500,
+              width: '100%',
             }}
           /> 
         </Grid>

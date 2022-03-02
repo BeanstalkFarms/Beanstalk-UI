@@ -60,9 +60,6 @@ export const MAX_UINT32 = 4294967295;
 
 export const UNISWAP_V2_ROUTER = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
 
-export const JSON_RPC_ENDPOINT =
-  'https://mainnet.infura.io/v3/3e668b7b056a45ac9980fd8064f9d51d';
-
 /* NFTs */
 export const TOTAL_NFTS = 4068;
 export const NFTS_PER_SEASON = 5;
@@ -73,6 +70,7 @@ export const GENESIS_NFT = {
 };
 export const PARSE_API_KEY = 'MLpZllgINkSrNFn4XySbgx2r4bzAv95zlzEofKWJ';
 export const PARSE_APP_ID = 'PxgBC714lswdUeAU9taADj9Bl39JY7QEEGkTHk99';
+export const INFURA_API_KEY = '3e668b7b056a45ac9980fd8064f9d51d';
 
 /* Diamonds */
 export const zeroBN = new BigNumber(0);

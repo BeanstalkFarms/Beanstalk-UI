@@ -7,8 +7,9 @@ import {
   CURVE,
   PRICE,
   UNISWAP_V2_ROUTER,
-  changeNetwork,
+  INFURA_API_KEY,
   SupportedToken,
+  changeNetwork,
 } from 'constants/index';
 import {
   BEAN
@@ -34,7 +35,6 @@ export * from './MarketUtilities';
 // FIXME
 let ethereum : any;
 export let initializing : boolean;
-/** txCallback is called after each successful request to the chain. */
 export let txCallback : () => any;
 export let web3 : Web3;
 export let account : string;
@@ -180,6 +180,19 @@ export async function addTokenToMetamask() {
       },
     },
   });
+}
+
+export function getRpcEndpoint() {
+  switch (chainId) {
+    case 1:
+      return `https://mainnet.infura.io/v3/${INFURA_API_KEY}`;
+    case 3:
+      return `https://ropsten.infura.io/v3/${INFURA_API_KEY}`;
+    case 1337:
+      return 'http://localhost:8545';
+    default:
+      throw new Error('Unsupported chain');
+  }
 }
 
 /**
