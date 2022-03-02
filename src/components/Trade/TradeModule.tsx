@@ -126,13 +126,12 @@ export default function TradeModule() {
       direction="column"
     >
       <Grid item xs={9} sm={8} style={{ maxWidth: '500px' }}>
-        <p>{getRpcEndpoint()}</p>
         <SwapWidget
           theme={{
             tokenColorExtraction: false
           }}
           provider={web3Provider}
-          width={500}
+          width="100%"
           defaultInputAddress="NATIVE"
           defaultOutputAddress={BEAN.addr}
           tokenList={WIDGET_TOKEN_LIST}
