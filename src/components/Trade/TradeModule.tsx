@@ -1,55 +1,47 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
+import { SwapWidget } from '@uniswap/widgets/dist/index.js';
+import '@uniswap/widgets/dist/fonts.css';
 
 import { AppState } from 'state';
 import { updateUniswapBeanAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
+import { BEAN } from 'constants/index';
 import {
   approveUniswapBean,
-  buyBeans,
-  displayBN,
-  sellBeans,
   toStringBaseUnitBN,
   transferBeans,
+  web3Provider,
 } from 'util/index';
 
 import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
+import { JSON_RPC_ENDPOINT } from 'constants/values';
 import SendModule from './SendModule';
-import SwapModule from './SwapModule';
+
+const WIDGET_TOKEN_LIST = [
+  {
+    name: 'Bean',
+    address: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
+    symbol: 'Bean',
+    decimals: 6,
+    chainId: 1,
+    logoURI:
+      'https://github.com/BeanstalkFarms/Beanstalk/blob/master/assets/bean-64x64.png?raw=true',
+  },
+];
 
 export default function TradeModule() {
-  const { uniswapBeanAllowance } = useSelector<
-    AppState,
-    AppState['allowances']
-  >((state) => state.allowances);
-
-  const { beanReserve, ethReserve, usdcPrice, beanPrice } = useSelector<
-    AppState,
-    AppState['prices']
-  >((state) => state.prices);
-
-  const { beanBalance, ethBalance } = useSelector<
-    AppState,
-    AppState['userBalance']
-  >((state) => state.userBalance);
+  const { beanBalance } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
   const [section, setSection] = useState(0);
-  const sectionTitles = ['Swap', 'Send'];
-  const sectionTitlesDescription = [tradeStrings.swap, tradeStrings.send];
+  const sectionTitles = ['Send'];
+  const sectionTitlesDescription = [tradeStrings.send];
 
   /* Swap Sub-Module state */
-  const [orderIndex, setOrderIndex] = useState(true);
-  const [settings, setSettings] = useState({
-    slippage: new BigNumber(BASE_SLIPPAGE),
-  });
   const [fromValue, setFromValue] = useState(new BigNumber(-1));
   const [toValue, setToValue] = useState(new BigNumber(-1));
-  const fromToken = orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
-  const toToken = !orderIndex ? CryptoAsset.Ethereum : CryptoAsset.Bean;
-  const ethToBean = new BigNumber(beanReserve.dividedBy(ethReserve));
-  const beanToEth = new BigNumber(1).dividedBy(ethToBean);
-  const conversionFactor = orderIndex ? ethToBean : beanToEth;
 
   /* Send Sub-Module state */
   const [toAddress, setToAddress] = useState('');
@@ -67,69 +59,22 @@ export default function TradeModule() {
   };
 
   const handleForm = () => {
-    // 0 = "Swap"
-    if (section === 0) {
-      const minimumToAmount = toValue.multipliedBy(settings.slippage);
-      if (toValue.isGreaterThan(0)) {
-        // Buy Beans via Ethereum
-        if (fromToken === CryptoAsset.Ethereum) {
-          // Toast
-          const txToast = new TransactionToast({
-            loading: `Buying ${displayBN(toValue)} Beans for ${displayBN(fromValue)} ETH`,
-            success: `Bought ${displayBN(toValue)} Beans`,
-          });
+    if (fromValue.isGreaterThan(0)) {
+      // Toast
+      const txToast = new TransactionToast({
+        loading: `Transfering ${fromValue} Beans to ${toAddress.substring(
+          0,
+          6
+        )}`,
+        success: `Sent ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
+      });
 
-          // Execute
-          buyBeans(
-            toStringBaseUnitBN(fromValue, ETH.decimals),
-            toStringBaseUnitBN(minimumToAmount, BEAN.decimals),
-            (response) => txToast.confirming(response)
-          )
-          .then((value) => {
-            handleSwapCallback();
-            txToast.success(value);
-          })
-          .catch((err) => {
-            txToast.error(err);
-          });
-        } else {
-          // Toast
-          const txToast = new TransactionToast({
-            loading: `Selling ${fromValue} Beans`,
-            success: `Sold ${fromValue} Beans`,
-          });
-
-          // Execute
-          sellBeans(
-            toStringBaseUnitBN(fromValue, BEAN.decimals),
-            toStringBaseUnitBN(minimumToAmount, ETH.decimals),
-            (response) => txToast.confirming(response)
-          )
-          .then((value) => {
-            handleSwapCallback();
-            txToast.success(value);
-          })
-          .catch((err) => {
-            txToast.error(err);
-          });
-        }
-      }
-    }
-    // 1 = "Send"
-    else if (section === 1) {
-      if (fromValue.isGreaterThan(0)) {
-        // Toast
-        const txToast = new TransactionToast({
-          loading: `Transfering ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
-          success: `Sent ${fromValue} Beans to ${toAddress.substring(0, 6)}`,
-        });
-
-        // Execute
-        transferBeans(
-          toAddress,
-          toStringBaseUnitBN(fromValue, BEAN.decimals),
-          (response) => txToast.confirming(response)
-        )
+      // Execute
+      transferBeans(
+        toAddress,
+        toStringBaseUnitBN(fromValue, BEAN.decimals),
+        (response) => txToast.confirming(response)
+      )
         .then((value) => {
           handleSwapCallback();
           txToast.success(value);
@@ -137,7 +82,6 @@ export default function TradeModule() {
         .catch((err) => {
           txToast.error(err);
         });
-      }
     }
   };
 
@@ -148,62 +92,26 @@ export default function TradeModule() {
         toAddress.length !== 42 ||
         isValidAddress !== true;
 
-  const sections = [
-    <SwapModule
-      orderIndex={orderIndex}
-      setOrderIndex={setOrderIndex}
-      fromValue={fromValue}
-      setFromValue={setFromValue}
-      toValue={toValue}
-      setToValue={setToValue}
-      balance={fromToken === CryptoAsset.Ethereum ? ethBalance : beanBalance}
-      toBalance={fromToken === CryptoAsset.Ethereum ? beanBalance : ethBalance}
-      maxFromVal={
-        fromToken === CryptoAsset.Ethereum
-          ? ethBalance.isGreaterThan(MIN_BALANCE)
-            ? ethBalance.minus(MIN_BALANCE)
-            : new BigNumber(-1)
-          : beanBalance
-      }
-      beanReserve={beanReserve}
-      ethReserve={ethReserve}
-      usdcPrice={usdcPrice}
-      beanPrice={beanPrice}
-      fromToken={fromToken}
-      toToken={toToken}
-      conversionFactor={conversionFactor}
-      settings={settings}
-      setSettings={setSettings}
-    />,
-    <SendModule
-      toAddress={toAddress}
-      setToAddress={setToAddress}
-      fromAddress=""
-      fromBeanValue={fromValue}
-      isValidAddress={isValidAddress}
-      setIsValidAddress={setIsValidAddress}
-      setFromBeanValue={setFromValue}
-      maxFromBeanVal={beanBalance}
-      fromToken={CryptoAsset.Bean}
-    />,
-  ];
-
   return (
-    <Grid container item xs={12} justifyContent="center">
-      <Grid
-        item
-        xs={9}
-        sm={8}
-        style={{ maxWidth: '500px' }}
-      >
+    <Grid
+      container
+      item
+      xs={12}
+      alignItems="center"
+      justifyContent="center"
+      direction="column"
+    >
+      <Grid item xs={9} sm={8} style={{ maxWidth: '500px' }}>
+        <SwapWidget
+          provider={web3Provider}
+          width={500}
+          defaultInputAddress="NATIVE"
+          defaultOutputAddress="0xDC59ac4FeFa32293A95889Dc396682858d52e5Db"
+          tokenList={WIDGET_TOKEN_LIST}
+          jsonRpcEndpoint={JSON_RPC_ENDPOINT}
+        />
         <BaseModule
-          allowance={
-            section > 0 || orderIndex ? new BigNumber(1) : uniswapBeanAllowance
-          }
           isDisabled={disabled}
-          resetForm={() => {
-            setOrderIndex(1);
-          }}
           section={section}
           sectionTitles={sectionTitles}
           sectionTitlesDescription={sectionTitlesDescription}
@@ -213,7 +121,17 @@ export default function TradeModule() {
           handleTabChange={handleTabChange}
           marginTop="16px"
         >
-          {sections[section]}
+          <SendModule
+            toAddress={toAddress}
+            setToAddress={setToAddress}
+            fromAddress=""
+            fromBeanValue={fromValue}
+            isValidAddress={isValidAddress}
+            setIsValidAddress={setIsValidAddress}
+            setFromBeanValue={setFromValue}
+            maxFromBeanVal={beanBalance}
+            fromToken={CryptoAsset.Bean}
+          />
         </BaseModule>
       </Grid>
     </Grid>
