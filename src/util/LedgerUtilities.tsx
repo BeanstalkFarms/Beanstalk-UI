@@ -71,9 +71,6 @@ export type BIP = {
   timestamp: BigNumber;
   updated: BigNumber;
   active: boolean;
-  // @DEPRECATED
-  // increaseBase: any;
-  // stalkBase: BigNumber;
 }
 
 export type Fundraiser = {
@@ -285,7 +282,7 @@ export const getBips = async (
   const numberOfBips = bigNumberResult(
     await beanstalk.methods.numberOfBips().call()
   );
-  
+
   let hasActiveBIP : boolean = false;
   const bips : BIP[] = [];
   for (let i = new BigNumber(0); i.isLessThan(numberOfBips); i = i.plus(1)) {
@@ -298,7 +295,6 @@ export const getBips = async (
       ? await beanstalk.methods.rootsFor(i.toString()).call()
       : bip.roots;
 
-    // @DEPRECATED: "increaseBase", "stalkBase"
     // roots - how many Roots have voted for the BIP
     // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP 
     // -> used for calculating % voted for the BIP after the fact.
@@ -314,16 +310,12 @@ export const getBips = async (
       timestamp: bigNumberResult(bip.timestamp),
       updated: bigNumberResult(bip.updated),
       active: false,
-      // @DEPRECATED
-      // increaseBase: bip.increaseBase,
-      // stalkBase: bigNumberResult(bip.stalkBase),
     };
 
     bips.push(bipDict);
   }
 
   // https://github.com/BeanstalkFarms/Beanstalk/blob/8e5833bccef7fd4e41fbda70567b902d33ca410d/protocol/contracts/farm/AppStorage.sol#L99
-  
   const activeBips : string[] = await beanstalk.methods.activeBips().call();
   activeBips.forEach((id: string) => {
     hasActiveBIP = true;
