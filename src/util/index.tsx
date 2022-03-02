@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { provider, HttpProvider } from 'web3-core';
 import { ethers } from 'ethers';
 import {
   BEANFTCOLLECTION,
@@ -8,7 +9,9 @@ import {
   PRICE,
   UNISWAP_V2_ROUTER,
   changeNetwork,
+  SupportedToken,
 } from 'constants/index';
+import { Token as SupportedV2Token } from 'classes';
 
 export * from './EventUtilities';
 export * from './FieldUtilities';
@@ -26,17 +29,18 @@ export * from './APYUtilities';
 export * from './FundraiserUtilities';
 export * from './MarketUtilities';
 
-let ethereum;
-export let initializing;
+// FIXME
+let ethereum : any;
+export let initializing : boolean;
 /** txCallback is called after each successful request to the chain. */
-export let txCallback : Function | undefined;
+export let txCallback : () => any;
 export let web3 : Web3;
 export let account : string;
 export let metamaskFailure = -1;
 export let chainId = 1;
 
-export let web3Provider;
-export let web3Signer;
+export let web3Provider : ethers.providers.Web3Provider;
+export let web3Signer : ethers.providers.JsonRpcSigner;
 
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');
@@ -47,13 +51,13 @@ const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 const curveMetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
 const beanstalkPriceAbi = require('../constants/abi/BeanstalkPrice.json');
 
-export const tokenContract = (token) =>
+export const tokenContract = (token: SupportedToken) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
 
-export const tokenContractReadOnly = (token) =>
+export const tokenContractReadOnly = (token: SupportedToken) =>
   new web3.eth.Contract(beanAbi, token.addr);
 
-export const tokenV2ContractReadOnly = (token) =>
+export const tokenV2ContractReadOnly = (token: SupportedV2Token) =>
   new web3.eth.Contract(beanAbi, token.address);
 
 export const beanstalkPriceContractReadOnly = () =>
@@ -75,9 +79,9 @@ export const beaNFTGenesisContract = () =>
 export const beaNFTGenesisContractReadOnly = () =>
   new web3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS);
 
-export const pairContract = (pair) =>
+export const pairContract = (pair: SupportedToken) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
-export const pairContractReadOnly = (pair) =>
+export const pairContractReadOnly = (pair: SupportedToken) =>
   new web3.eth.Contract(uniswapPairAbi, pair.addr);
 
 export const uniswapRouterContract = () =>
@@ -119,12 +123,15 @@ export async function initialize(): Promise<boolean> {
 
         web3 = new Web3(ethereum);
         initializeMetaMaskListeners();
-        const [hexAccount, chainIdentifier] = await Promise.all([
+        const [
+          hexAccount,
+          chainIdentifier
+        ] = await Promise.all([
           web3Signer.getAddress(),
           web3Signer.getChainId(),
         ]);
         account = hexAccount;
-        chainId = parseInt(chainIdentifier, 10);
+        chainId = chainIdentifier;
         if (chainId !== 1 && chainId !== 3 && chainId !== 1337) {
           metamaskFailure = 3;
           return false;
@@ -162,11 +169,11 @@ export async function switchToMainnet() {
  * Defined as a function so we can update the "global" txCallback var
  * from outside of this file.
  */
-export function initializeCallback(callback: Function) {
+export function initializeCallback(callback: () => any) {
   txCallback = callback;
 }
 
-export async function isAddress(a) {
+export async function isAddress(a: string) {
   return ethers.utils.isAddress(a);
 }
 

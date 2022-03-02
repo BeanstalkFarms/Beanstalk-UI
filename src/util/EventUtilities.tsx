@@ -24,7 +24,7 @@ const newEventHashes = new Set();
 
 //
 export async function initializeEventListener(
-  callback: Function,
+  processEvents: Function,
   updatePrices: Function,
   updateTotals: Function
 ) {
@@ -167,9 +167,9 @@ export async function initializeEventListener(
       event.returnValues.account.toLowerCase() === account.toLowerCase()
     ) {
       allEvents = [...allEvents, event];
-      callback(allEvents);
+      processEvents(allEvents);
     } else if (event.event === 'Sunrise') {
-      callback(allEvents);
+      processEvents(allEvents);
       txCallback();
       console.log('-------UPDATING TOTALS!');
       updateTotals();

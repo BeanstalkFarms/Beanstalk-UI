@@ -50,13 +50,22 @@ import {
   account,
   getEthPrices,
   getPriceArray,
-  votes,
+  getVotes,
   benchmarkStart,
   benchmarkEnd,
 } from 'util/index';
 import { UserBalanceState } from './reducer';
 
-type EventParsingParameters = any[]
+type EventParsingParameters = [
+  season: AppState["season"]["season"],
+  harvestableIndex: AppState["weather"]["harvestableIndex"],
+  farmableBeanBalance: AppState["userBalance"]["farmableBeanBalance"],
+  grownStalkBalance: AppState["userBalance"]["grownStalkBalance"],
+  claimableEthBalance: AppState["userBalance"]["claimableEthBalance"],
+  beanClaimableBalance: AppState["userBalance"]["beanClaimableBalance"],
+  beanReserve: AppState["prices"]["beanReserve"],
+  ethReserve: AppState["prices"]["ethReserve"],
+]
 
 type AsyncReturnType<T extends (...args: any) => any> =
   T extends (...args: any) => Promise<infer U> ? U :
@@ -126,6 +135,8 @@ export default function Updater() {
   ] as const); // 'as const' forces this into a tuple instead of array
 
   useEffect(() => {
+    // -- Processors
+
     /**
      * 
      */
@@ -190,6 +201,7 @@ export default function Updater() {
         rootsBalance,
         usdcBalance,
         beanWrappedBalance,
+        //
         votedBips,
       }));
     }
@@ -373,7 +385,7 @@ export default function Updater() {
     function processEvents(
       events: EventData[],
       eventParsingParameters: EventParsingParameters,
-    ) {
+    ) : void {
       const startTime = benchmarkStart('EVENT PROCESSOR');
 
       // These get piped into redux 1:1 and so need to match 
@@ -820,10 +832,12 @@ export default function Updater() {
       benchmarkEnd('EVENT PROCESSOR', startTime);
     }
 
+    // -- Updaters     
+
     /**
      * 
      */
-    async function updateAllBalances() : Promise<[Function, any]> {
+    async function updateBalancesAndPrices() : Promise<[Function, EventParsingParameters]> {
       const startTime = benchmarkStart('ALL BALANCES');
 
       // Create a new web3.BatchRequest. Provide this to batched
@@ -848,14 +862,14 @@ export default function Updater() {
         ethPrices,              // 8
         priceTuple,             // 9
       ] = await Promise.all([
-        getBips(),              // 0
+        getBips(), // 0
         getFundraisers(),       // 1
         getEtherBalance(),      // 2
-        accountBalancePromises, // 3: uses makeBatchedPromises -> tuple
-        totalBalancePromises,   // 4: uses makeBatchedPromises -> tuple
-        pricePromises,          // 5: uses makeBatchedPromises -> tuple
+        accountBalancePromises, // 3: uses `exec` -> tuple
+        totalBalancePromises,   // 4: uses `exec` -> tuple
+        pricePromises,          // 5: uses `exec` -> tuple
         // getUSDCBalance(),       // 6
-        votes(),                // 7
+        getVotes(),                // 7
         getEthPrices(),         // 8
         getPriceArray()         // 9
       ]);
@@ -872,8 +886,8 @@ export default function Updater() {
         _prices[2]  // token0
       );
 
-      //
-      const eventParsingParameters = [
+      // Parameters needed to parse events
+      const eventParsingParameters : EventParsingParameters = [
         totalBalances[17].season  /* season */,
         totalBalances[13]         /* harvestableIndex */,
         accountBalances[12]       /* farmableBeanBalance */,
@@ -886,6 +900,11 @@ export default function Updater() {
 
       return [
         () => {
+          processAccountBalances(
+            accountBalances,
+            ethBalance,
+            votedBips,
+          );
           processTotalBalances(
             totalBalances,
             bipInfo,
@@ -896,11 +915,6 @@ export default function Updater() {
             ethPrices,
             priceTuple,
           ]);
-          processAccountBalances(
-            accountBalances,
-            ethBalance,
-            votedBips,
-          );
         },
         eventParsingParameters,
       ];
@@ -909,7 +923,7 @@ export default function Updater() {
     /**
      * 
      */
-    async function updateTotals() {
+    async function updateTotalBalances() {
       const startTime = benchmarkStart('TOTALS');
 
       //
@@ -970,6 +984,8 @@ export default function Updater() {
       benchmarkEnd('PRICES', startTime);
     }
 
+    // -- Subgraph queries
+
     /**
      * 
      */
@@ -985,11 +1001,15 @@ export default function Updater() {
       dispatch(setBeansPerSeason(await apyQuery()));
     }
 
+    // -- Start
+
     /**
      * 
      */
     async function start() {
       let startTime = benchmarkStart('*INIT*');
+
+      // Ensures we're connected to a wallet.
       if (await initialize()) {
         benchmarkEnd('*INIT*', startTime);
         startTime = benchmarkStart('**WEBSITE**');
@@ -997,7 +1017,7 @@ export default function Updater() {
         // After each transaction, run this transaction callback.
         // This refreshes all balances after we complete a txn.
         initializeCallback(async () => {
-          const [updateBalanceState] = await updateAllBalances();
+          const [updateBalanceState] = await updateBalancesAndPrices();
           ReactDOM.unstable_batchedUpdates(() => {
             updateBalanceState();
           });
@@ -1005,14 +1025,20 @@ export default function Updater() {
 
         //
         const [balanceInitializers, eventInitializer] = await Promise.all([
-          updateAllBalances(),
-          initializeEventListener(processEvents, updatePrices, updateTotals),
+          //
+          updateBalancesAndPrices(),
+          // Listen for events on the Beanstalk contract. When a new event occurs:
+          // - run `processEvents` with the new event 
+          // - call `updatePrices` and `updateTotals` to get new info from the contract
+          initializeEventListener(processEvents, updatePrices, updateTotalBalances),
         ]);
 
         //
         ReactDOM.unstable_batchedUpdates(() => {
-          const [updateBalanceState, eventParsingParameters] =
-            balanceInitializers;
+          const [
+            updateBalanceState,
+            eventParsingParameters
+          ] = balanceInitializers;
           updateBalanceState();
           processEvents(eventInitializer, eventParsingParameters);
 
@@ -1024,8 +1050,9 @@ export default function Updater() {
         dispatch(setMetamaskFailure(true));
       }
     }
+    
+    // -- Run things
 
-    // Blast off
     start();
     getLastCross();
     getAPYs();

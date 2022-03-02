@@ -35,75 +35,67 @@ import {
 /* Client is responsible for calling execute() */
 export const createLedgerBatch = () => new web3.BatchRequest();
 
-/* */
+// FIXME: move these elsewhere.
+export type Weather = {
+  didSowBelowMin: boolean;
+  didSowFaster: boolean;
+  lastDSoil: BigNumber;
+  lastSoilPercent: BigNumber;
+  lastSowTime: BigNumber;
+  nextSowTime: BigNumber;
+  startSoil: BigNumber;
+  weather: BigNumber;
+}
+
+export type Rain = {
+  raining: boolean;
+  rainStart: BigNumber;
+}
+
+export type Time = {
+  season: BigNumber;
+  start: BigNumber;
+  period: BigNumber;
+  timestamp: BigNumber;
+}
+
+export type BIP = {
+  id: BigNumber;
+  executed: boolean;
+  pauseOrUnpause: BigNumber;
+  start: BigNumber;
+  period: BigNumber;
+  proposer: string;
+  roots: BigNumber;
+  endTotalRoots: BigNumber;
+  timestamp: BigNumber;
+  updated: BigNumber;
+  active: boolean;
+  // @DEPRECATED
+  // increaseBase: any;
+  // stalkBase: BigNumber;
+}
+
+export type Fundraiser = {
+  id: BigNumber;
+  remaining: BigNumber;
+  total: BigNumber;
+  token: string;
+}
 type PromiseHandlerTuple = readonly [
   any, // FIXME: should be type of callable contract handler
   (s: any) => any,
 ]
-const makeBatchedPromises = (
-  batch: BatchRequest,
-  promisesAndResultHandlers: readonly PromiseHandlerTuple[]
-) => {
-  const batchedPromises = promisesAndResultHandlers.map(
-    (methodAndHandler) =>
-      new Promise<any>((resolve, reject) => {
-        batch.add(
-          (methodAndHandler[0].call).request({}, 'latest', (error: any, result: any) => {
-            if (result !== undefined) resolve(methodAndHandler[1](result));
-            else reject(error);
-          })
-        );
-      })
-  );
-  return Promise.all(batchedPromises);
-};
 
-//
-const identityResult = (result: any) => result;
-const bigNumberResult = (result: any) => new BigNumber(result);
-const tokenResult = (token : SupportedToken) => (result: BigNumber.Value) =>
-  toTokenUnitsBN(new BigNumber(result), token.decimals);
-
-//
-export async function getEtherBalance() {
-  return tokenResult(ETH)(await web3.eth.getBalance(account));
-}
-
-export async function getUSDCBalance() {
-  return tokenResult(USDC)(await web3.eth.getBalance(account));
-}
-
-export async function getEthPrices() {
-  try {
-    const [
-      ethPrice,
-      gas
-    ] = await Promise.all([
-      fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=stats&action=ethprice')
-        .then((response) => response.json())
-        .then((res) => res.result.ethusd),
-      fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=gastracker&action=gasoracle')
-        .then((response) => response.json())
-        .then((res) => ({
-          safe: res.result.FastGasPrice,
-          propose: res.result.SafeGasPrice,
-          fast: res.result.ProposeGasPrice,
-        }))
-    ]);
-    return {
-      ...gas,
-      ethPrice,
-    };
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-export async function getBlockTimestamp(blockNumber: any) {
-  await initializing;
-  return (await web3.eth.getBlock(blockNumber)).timestamp;
-}
-
+/**
+ * Create a scoped `execute` function which accepts a Contract
+ * method and executes it when the batch is committed. The promise
+ * resolves with the raw result of the method. Downstream functions
+ * can use a chain of `.then` calls to mutate the returned value accordingly.
+ * 
+ * This ensures that Typescript keeps track of any changes to variable type
+ * during that chain.
+ */
 const setupBatch = (batch: BatchRequest) => (
   function execute(fn: any) {
     return new Promise<any>((resolve, reject) => {
@@ -119,7 +111,54 @@ const setupBatch = (batch: BatchRequest) => (
   }
 );
 
-/* Batched Getters */
+// Result handlers
+const identityResult = (result: any) => result;
+const bigNumberResult = (result: any) => new BigNumber(result);
+const tokenResult = (token : SupportedToken) => (result: BigNumber.Value) =>
+  toTokenUnitsBN(new BigNumber(result), token.decimals);
+
+/* ------------------- */
+
+export async function getBlockTimestamp(blockNumber: any) {
+  await initializing;
+  return (await web3.eth.getBlock(blockNumber)).timestamp;
+}
+
+export async function getEtherBalance() {
+  return web3.eth.getBalance(account).then(tokenResult(ETH));
+}
+
+export async function getUSDCBalance() {
+  return web3.eth.getBalance(account).then(tokenResult(USDC));
+}
+
+export async function getEthPrices() {
+  try {
+    const [
+      gas,
+      ethPrice,
+    ] = await Promise.all([
+      fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=gastracker&action=gasoracle')
+        .then((response) => response.json())
+        .then((res) => ({
+          safe: res.result.FastGasPrice,
+          propose: res.result.SafeGasPrice,
+          fast: res.result.ProposeGasPrice,
+        })),
+      fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=stats&action=ethprice')
+        .then((response) => response.json())
+        .then((res) => res.result.ethusd),
+    ]);
+
+    return {
+      ...gas,
+      ethPrice,
+    };
+  } catch(e) {
+    console.error(e);
+  }
+}
+
 export const getAccountBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
@@ -153,44 +192,21 @@ export const getAccountBalances = async (batch: BatchRequest) => {
   ] as const);
 };
 
-/* Beanstalk Price Getters */
 export const getPriceArray = async () => {
   const beanstalkPrice = beanstalkPriceContractReadOnly();
   const priceTuple = await beanstalkPrice.methods.price().call();
-
   return priceTuple;
 };
-/* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
 
-export const getTokenBalances = async (batch: BatchRequest) =>
-  makeBatchedPromises(batch, supportedERC20Tokens.map((t) => [
-    tokenV2ContractReadOnly(t).methods.balanceOf(account), tokenResult(t)
-  ]));
-
-export type Weather = {
-  didSowBelowMin: boolean;
-  didSowFaster: boolean;
-  lastDSoil: BigNumber;
-  lastSoilPercent: BigNumber;
-  lastSowTime: BigNumber;
-  nextSowTime: BigNumber;
-  startSoil: BigNumber;
-  weather: BigNumber;
+export const getTokenBalances = async (batch: BatchRequest) => {
+  const exec = setupBatch(batch);
+  return Promise.all(
+    supportedERC20Tokens.map((t) => 
+      exec(tokenV2ContractReadOnly(t).methods.balanceOf(account)).then(tokenResult(t))
+    )
+  );
 }
 
-export type Rain = {
-  raining: boolean;
-  rainStart: BigNumber;
-}
-
-export type Time = {
-  season: BigNumber;
-  start: BigNumber;
-  period: BigNumber;
-  timestamp: BigNumber;
-}
-
-//
 export const getTotalBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
@@ -246,10 +262,10 @@ export const getTotalBalances = async (batch: BatchRequest) => {
     // FIXME: needs to be rekeyed or placed in right array spot
     exec(bean.methods.balanceOf(CURVE.addr)).then(tokenResult(BEAN)),
     exec(beanstalk.methods.withdrawSeasons()).then(bigNumberResult)
-  ]);
+  ] as const);
 };
 
-export const votes = async () => {
+export const getVotes = async () => {
   const beanstalk = beanstalkContractReadOnly();
   const activeBips = await beanstalk.methods.activeBips().call();
   const vs = await Promise.all(activeBips.map((b) => beanstalk.methods.voted(account, b).call()));
@@ -259,51 +275,40 @@ export const votes = async () => {
   }, new Set());
 };
 
-//
-export type BIP = {
-  id: BigNumber;
-  executed: boolean;
-  pauseOrUnpause: BigNumber;
-  start: BigNumber;
-  period: BigNumber;
-  proposer: string;
-  roots: BigNumber;
-  endTotalRoots: BigNumber;
-  timestamp: BigNumber;
-  updated: BigNumber;
-  active: boolean;
-  // @DEPRECATED
-  // increaseBase: any;
-  // stalkBase: BigNumber;
-}
-
 /*
  * TODO: batch BIP detail ledger reads
  */
-export const getBips = async () : Promise<[BIP[], boolean]> => {
+export const getBips = async (
+  // currentSeason: BigNumber
+) : Promise<[BIP[], boolean]> => {
   const beanstalk = beanstalkContractReadOnly();
   const numberOfBips = bigNumberResult(
     await beanstalk.methods.numberOfBips().call()
   );
-
+  
+  let hasActiveBIP : boolean = false;
   const bips : BIP[] = [];
   for (let i = new BigNumber(0); i.isLessThan(numberOfBips); i = i.plus(1)) {
     const bip = await beanstalk.methods.bip(i.toString()).call();
-    const bipRoots =
-      bip.endTotalRoots.toString() === '0'
-        ? await beanstalk.methods.rootsFor(i.toString()).call()
-        : bip.roots;
-    
+
+    const start = bigNumberResult(bip.start);
+    const period = bigNumberResult(bip.period);
+    // const active = currentSeason.lte(start.plus(period)) && bip.executed === false;
+    const bipRoots = bip.endTotalRoots.toString() === '0'
+      ? await beanstalk.methods.rootsFor(i.toString()).call()
+      : bip.roots;
+
     // @DEPRECATED: "increaseBase", "stalkBase"
     // roots - how many Roots have voted for the BIP
-    // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP -> used for calculating % voted for the BIP after the fact.
+    // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP 
+    // -> used for calculating % voted for the BIP after the fact.
     const bipDict = {
       id: i,
       executed: bip.executed,
       pauseOrUnpause: bigNumberResult(bip.pauseOrUnpause),
-      start: bigNumberResult(bip.start),
-      period: bigNumberResult(bip.period),
-      proposer: bip.propser,
+      start: start,
+      period: period,
+      proposer: bip.propser, // FIXME: typo?
       roots: bigNumberResult(bipRoots),
       endTotalRoots: bigNumberResult(bip.endTotalRoots),
       timestamp: bigNumberResult(bip.timestamp),
@@ -318,7 +323,7 @@ export const getBips = async () : Promise<[BIP[], boolean]> => {
   }
 
   // https://github.com/BeanstalkFarms/Beanstalk/blob/8e5833bccef7fd4e41fbda70567b902d33ca410d/protocol/contracts/farm/AppStorage.sol#L99
-  let hasActiveBIP : boolean = false;
+  
   const activeBips : string[] = await beanstalk.methods.activeBips().call();
   activeBips.forEach((id: string) => {
     hasActiveBIP = true;
@@ -327,13 +332,6 @@ export const getBips = async () : Promise<[BIP[], boolean]> => {
   
   return [bips, hasActiveBIP];
 };
-
-export type Fundraiser = {
-  id: BigNumber;
-  remaining: BigNumber;
-  total: BigNumber;
-  token: string;
-}
 
 /*
  * TODO: batch BIP detail ledger reads
