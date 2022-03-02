@@ -216,10 +216,9 @@ export const initialState: UserBalanceState = {
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(setUserBalance, (state, { payload }) => {
-      Object.keys(payload).map((key) => {
-        state[key] = payload[key];
-        return state[key];
+    .addCase(setUserBalance, (state, { payload } : { payload: Partial<UserBalanceState> }) => {
+      Object.keys(payload).forEach((key: string) => {
+        state[key as keyof UserBalanceState] = payload[key as keyof UserBalanceState];
       });
     })
 );

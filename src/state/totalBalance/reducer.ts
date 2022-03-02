@@ -67,9 +67,8 @@ export const initialState: TotalBalanceState = {
 
 export default createReducer(initialState, (builder) =>
   builder.addCase(setTotalBalance, (state, { payload }) => {
-    Object.keys(payload).map((key) => {
+    Object.keys(payload).forEach((key) => {
       state[key] = payload[key];
-      return state[key];
     });
   })
 );
