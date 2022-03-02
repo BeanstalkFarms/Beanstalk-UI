@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
-import BigNumber from 'bignumber.js';
-import { useSelector } from 'react-redux';
+import React from 'react';
+// import BigNumber from 'bignumber.js';
+// import { useSelector } from 'react-redux';
 import { SwapWidget } from '@uniswap/widgets/dist/index.js';
+import { Grid } from '@material-ui/core';
 import '@uniswap/widgets/dist/fonts.css';
 
-import { AppState } from 'state';
-import { updateUniswapBeanAllowance } from 'state/allowances/actions';
+// import { AppState } from 'state';
 import { BEAN, USDC } from 'constants/index';
 import {
-  approveUniswapBean,
-  toStringBaseUnitBN,
-  transferBeans,
+  // toStringBaseUnitBN,
+  // transferBeans,
   web3Provider,
 } from 'util/index';
 
-import { BaseModule, CryptoAsset, Grid, tradeStrings } from 'components/Common';
-import TransactionToast from 'components/Common/TransactionToast';
+// import { tradeStrings } from 'components/Common';
+// import TransactionToast from 'components/Common/TransactionToast';
 import { JSON_RPC_ENDPOINT } from 'constants/values';
-import SendModule from './SendModule';
 
 const WIDGET_TOKEN_LIST = [
   {
-    name: BEAN.symbol,
+    name: 'Bean',
     address: BEAN.addr,
     symbol: BEAN.symbol,
     decimals: BEAN.decimals,
@@ -41,6 +39,30 @@ const WIDGET_TOKEN_LIST = [
 ];
 
 export default function TradeModule() {
+  return (
+    <Grid
+      container
+      item
+      xs={12}
+      alignItems="center"
+      justifyContent="center"
+      direction="column"
+    >
+      <Grid item xs={9} sm={8} style={{ maxWidth: '500px' }}>
+        <SwapWidget
+          provider={web3Provider}
+          width={500}
+          defaultInputAddress="NATIVE"
+          defaultOutputAddress={BEAN.addr}
+          tokenList={WIDGET_TOKEN_LIST}
+          jsonRpcEndpoint={JSON_RPC_ENDPOINT}
+        />
+      </Grid>
+    </Grid>
+  );
+}
+
+/*
   const { beanBalance } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -48,11 +70,9 @@ export default function TradeModule() {
   const sectionTitles = ['Send'];
   const sectionTitlesDescription = [tradeStrings.send];
 
-  /* Swap Sub-Module state */
   const [fromValue, setFromValue] = useState(new BigNumber(-1));
   const [toValue, setToValue] = useState(new BigNumber(-1));
 
-  /* Send Sub-Module state */
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
 
@@ -60,7 +80,6 @@ export default function TradeModule() {
     setFromValue(new BigNumber(-1));
     setToValue(new BigNumber(-1));
   }
-
   const handleTabChange = (event, newSection) => {
     handleSwapCallback();
     setToAddress('');
@@ -100,49 +119,28 @@ export default function TradeModule() {
       : fromValue.isLessThanOrEqualTo(0) ||
         toAddress.length !== 42 ||
         isValidAddress !== true;
-
-  return (
-    <Grid
-      container
-      item
-      xs={12}
-      alignItems="center"
-      justifyContent="center"
-      direction="column"
-    >
-      <Grid item xs={9} sm={8} style={{ maxWidth: '500px' }}>
-        <SwapWidget
-          provider={web3Provider}
-          width={500}
-          defaultInputAddress="NATIVE"
-          defaultOutputAddress={BEAN.addr}
-          tokenList={WIDGET_TOKEN_LIST}
-          jsonRpcEndpoint={JSON_RPC_ENDPOINT}
-        />
-        <BaseModule
-          isDisabled={disabled}
-          section={section}
-          sectionTitles={sectionTitles}
-          sectionTitlesDescription={sectionTitlesDescription}
-          setAllowance={updateUniswapBeanAllowance}
-          handleApprove={approveUniswapBean}
-          handleForm={handleForm}
-          handleTabChange={handleTabChange}
-          marginTop="16px"
-        >
-          <SendModule
-            toAddress={toAddress}
-            setToAddress={setToAddress}
-            fromAddress=""
-            fromBeanValue={fromValue}
-            isValidAddress={isValidAddress}
-            setIsValidAddress={setIsValidAddress}
-            setFromBeanValue={setFromValue}
-            maxFromBeanVal={beanBalance}
-            fromToken={CryptoAsset.Bean}
-          />
-        </BaseModule>
-      </Grid>
-    </Grid>
-  );
-}
+*/
+/* 
+<BaseModule
+  isDisabled={disabled}
+  section={section}
+  sectionTitles={sectionTitles}
+  sectionTitlesDescription={sectionTitlesDescription}
+  setAllowance={updateUniswapBeanAllowance}
+  handleApprove={approveUniswapBean}
+  handleForm={handleForm}
+  handleTabChange={handleTabChange}
+  marginTop="16px"
+>
+  <SendModule
+    toAddress={toAddress}
+    setToAddress={setToAddress}
+    fromAddress=""
+    fromBeanValue={fromValue}
+    isValidAddress={isValidAddress}
+    setIsValidAddress={setIsValidAddress}
+    setFromBeanValue={setFromValue}
+    maxFromBeanVal={beanBalance}
+    fromToken={CryptoAsset.Bean}
+  />
+</BaseModule> */

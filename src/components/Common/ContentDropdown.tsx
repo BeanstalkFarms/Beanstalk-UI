@@ -52,9 +52,10 @@ const AccordionDetails = withStyles(() => ({
 }))(MuiAccordionDetails);
 
 export default function ContentDropdown({
-    description,
-    descriptionTitle,
-    descriptionLinks,
+  description,
+  descriptionTitle,
+  descriptionLinks,
+  accordionStyles,
 }) {
   const classes = makeStyles(() => ({
     root: {
@@ -90,7 +91,11 @@ export default function ContentDropdown({
         expanded={expanded === 'event'}
         onChange={handleChange('event')}
         className={classes.topContainer}
-        style={{ backgroundColor: theme.secondary, borderRadius: '15px' }}
+        style={{
+          backgroundColor: theme.secondary,
+          borderRadius: '15px',
+          ...accordionStyles
+        }}
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon style={{ color: theme.accentText }} />}

@@ -230,6 +230,7 @@ export function TokenTypeImage(tokenType: Token): string | null {
   if (tokenType < 19) return ClaimableIcon;
   if (tokenType < 20) return PooledIcon;
   if (tokenType < 21) return BudgetIcon;
+  return null;
 }
 
 /** Trim a BigNumber to a set number of decimals. */

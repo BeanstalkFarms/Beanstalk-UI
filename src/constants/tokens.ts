@@ -8,7 +8,7 @@ export const BUDGETS = [
 export const BEAN = {
   addr: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
   decimals: 6,
-  symbol: 'Bean',
+  symbol: 'BEAN',
 };
 
 export const SEEDS = {
