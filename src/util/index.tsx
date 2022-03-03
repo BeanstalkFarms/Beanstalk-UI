@@ -1,7 +1,13 @@
 import Web3 from 'web3';
-import Onboard from '@web3-onboard/core'
-import injectedModule from '@web3-onboard/injected-wallets'
-import walletConnectModule from '@web3-onboard/walletconnect'
+// import {
+//   init,
+//   useConnectWallet,
+//   useSetChain,
+//   useWallets
+// } from '@web3-onboard/react'
+import Onboard from '@web3-onboard/core';
+import injectedModule from '@web3-onboard/injected-wallets';
+import walletConnectModule from '@web3-onboard/walletconnect';
 
 import { ethers } from 'ethers';
 import {
@@ -11,7 +17,7 @@ import {
   CURVE,
   PRICE,
   UNISWAP_V2_ROUTER,
-  changeNetwork,
+  // changeNetwork,
 } from 'constants/index';
 
 export * from './EventUtilities';
@@ -30,7 +36,7 @@ export * from './APYUtilities';
 export * from './FundraiserUtilities';
 export * from './MarketUtilities';
 
-const MAINNET_RPC_URL = 'https://mainnet.infura.io/v3/9d1f966887eb483696b887c83bce72e8'
+const MAINNET_RPC_URL = 'https://mainnet.infura.io/v3/9d1f966887eb483696b887c83bce72e8';
 
 let ethereum;
 export let initializing;
@@ -98,22 +104,23 @@ export const beanCrv3ContractReadOnly = () =>
 export const curveContractReadOnly = () =>
   new web3.eth.Contract(curveMetaPoolAbi, CURVE.factory);
 
-async function initializeMetaMaskListeners() {
-  const changeHandler = () => {
-    window.location.replace(window.location.origin);
-  };
-  ethereum.on('accountsChanged', changeHandler);
-  ethereum.on('chainChanged', changeHandler);
-}
+// async function initializeMetaMaskListeners() {
+//   const changeHandler = () => {
+//     window.location.replace(window.location.origin);
+//   };
+//   ethereum.on('accountsChanged', changeHandler);
+//   ethereum.on('chainChanged', changeHandler);
+// }
 
 const walletConnect = walletConnectModule({
   qrcodeModalOptions: {
     mobileLinks: ['rainbow', 'metamask', 'argent', 'trust', 'imtoken', 'pillar']
   }
-})
+});
+const injected = injectedModule();
 
 export async function initialize(): Promise<boolean> {
-  const injected = injectedModule()
+  // const injected = injectedModule();
   const onboard = Onboard({
     wallets: [injected, walletConnect],
     chains: [
@@ -129,19 +136,37 @@ export async function initialize(): Promise<boolean> {
       icon: '<SVG_ICON_STRING>',
       description: 'My app using Onboard'
     }
-  })
+  });
+  // previous logic work switched out in this commit for reference: https://github.com/BeanstalkFarms/Beanstalk-UI/commit/61199814d0f45b7433606f159751f364bf68d941
 
-  const wallets = await onboard.connectWallet()
-
+  // WIP: Metamask can be connected but walletconnect, switching chains and signers is not working atm
+  const currentState = onboard.state.get();
+  console.log(currentState);
+  if (currentState.wallets.length === 0) {
+    console.log('If no wallet in state');
+  }
+  if (currentState.chains.length === 0) {
+    console.log('if no chain in state');
+  }
+  // web3 = new Web3(new Web3.providers.HttpProvider(MAINNET_RPC_URL));
+  const wallets = await onboard.connectWallet();
   web3 = new Web3(wallets[0].provider);
+  console.log(web3);
 
-  console.log(web3)
-  account = wallets[0].accounts[0].address;
+  if (currentState.chains.length > 0 && web3 !== undefined) {
+    account = wallets[0].accounts[0].address;
+    // chainId = chains[0].accounts[0].address;
 
-  web3Provider = new ethers.providers.Web3Provider(wallets[0].provider);
-  web3Signer = web3Provider.getSigner();
+    web3Provider = new ethers.providers.Web3Provider(wallets[0].provider);
+    web3Signer = web3Provider.getSigner();
 
-  console.log(wallets)
+    console.log(wallets);
+  }
+  if (account === undefined) {
+    metamaskFailure = 2;
+    return false;
+  }
+
   metamaskFailure = 1;
   return true;
 }

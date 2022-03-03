@@ -20,6 +20,7 @@
     "@visx/zoom": "^2.6.1",
     "@web3-onboard/core": "^2.0.0-alpha.6",
     "@web3-onboard/injected-wallets": "^2.0.0-alpha.5",
+    "@web3-onboard/react": "^2.0.2",
     "@web3-onboard/walletconnect": "^2.0.0",
     "bignumber": "^1.1.0",
     "bignumber.js": "^9.0.1",
