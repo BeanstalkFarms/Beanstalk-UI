@@ -133,7 +133,7 @@ export async function initialize(): Promise<boolean> {
 
   const wallets = await onboard.connectWallet()
 
-  web3 = new Web3(new Web3.providers.HttpProvider(MAINNET_RPC_URL));
+  web3 = new Web3(wallets[0].provider);
 
   console.log(web3)
   account = wallets[0].accounts[0].address;
