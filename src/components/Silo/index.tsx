@@ -8,13 +8,15 @@ import {
   ContentDropdown,
   ContentSection,
   Grid,
-  HeaderLabelList,
+  HeaderLabelList, marketStrings,
   siloStrings,
   // HeaderLabelList,
 } from 'components/Common';
 import { CryptoAsset, displayBN, getAPYs } from 'util/index';
-import TabbedSilo from './TabbedSilo';
 import TokenIcon from 'components/Common/TokenIcon';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from "@material-ui/core";
+import Checkbox from "@material-ui/core/Checkbox";
+import TokenDataTable from "./TokenDataTable";
 
 const headerLabelStyle = {
   maxWidth: '300px',
@@ -25,11 +27,13 @@ const headerLabelStyle = {
 // Whitelisted tokens that can be deposited into the Silo
 const TOKENS = [
   {
-    name: "Bean",
+    name: 'Bean',
+    slug: 'bean-eth', // /farm/silo/bean-eth
     rewards: {
       stalk: BEAN_TO_STALK,
       seeds: BEAN_TO_SEEDS,
     },
+    siloed: new BigNumber(10), // test
     getAPY: (apys: ReturnType<typeof getAPYs>) => {
       return apys[1]; // LP APY
     },
@@ -43,7 +47,7 @@ const TOKENS = [
         siloed: userBalances.beanSiloBalance
       }
     }
-  },
+  }
 ]
 
 export default function Silo() {
@@ -196,6 +200,8 @@ export default function Silo() {
     </>
   );
 
+
+
   return (
     <>
       <Grid container justifyContent="center">
@@ -204,17 +210,69 @@ export default function Silo() {
         </Grid>
         <Grid item xs={12} sm={10} lg={8} container justifyContent="center">
           <BaseModule
-            section={''}
+            section={0}
             sectionTitles={[]}
             sectionTitlesDescription={[]}
             showButton={false}
+            normalBox={false}
             // removeBackground
             style={{ display: "block", width: "100%" }}
             margin="0"
           >
-            
+            <TokenDataTable tokens={TOKENS} />
           </BaseModule>
+
+
+
+
+
+
+
+          {/*<BaseModule*/}
+          {/*  section={0}*/}
+          {/*  sectionTitles={[]}*/}
+          {/*  sectionTitlesDescription={[]}*/}
+          {/*  showButton={false}*/}
+          {/*  normalBox={false}*/}
+          {/*  removeBackground*/}
+          {/*  style={{ display: "block", width: "100%" }}*/}
+          {/*  margin="0"*/}
+          {/*>*/}
+          {/*  <BaseModule*/}
+          {/*    section={0}*/}
+          {/*    sectionTitles={[]}*/}
+          {/*    sectionTitlesDescription={[]}*/}
+          {/*    showButton={false}*/}
+          {/*    normalBox={false}*/}
+          {/*    // removeBackground*/}
+          {/*    style={{ display: "block", width: "100%" }}*/}
+          {/*    margin="0"*/}
+          {/*>*/}
+          {/*    <TokenRowModule />*/}
+          {/*  </BaseModule>*/}
+
+
+
+          {/*</BaseModule>*/}
+
+
+
+
         </Grid>
+
+        {/*<BaseModule*/}
+        {/*  handleTabChange={undefined}*/}
+        {/*  section={0}*/}
+        {/*  sectionTitles={['History']}*/}
+        {/*  sectionTitlesDescription={[marketStrings.history]}*/}
+        {/*  showButton={false}*/}
+        {/*  removeBackground*/}
+        {/*>*/}
+        {/*  {showStats}*/}
+        {/*  {showHistory}*/}
+        {/*</BaseModule>*/}
+
+
       </Grid>
       {/* Silos */}
       {/* <HeaderLabelList
