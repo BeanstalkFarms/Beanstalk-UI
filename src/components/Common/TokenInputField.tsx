@@ -88,6 +88,7 @@ export type TokenInputFieldProps = {
   description: string;
   /**  */
   inputClassname?: string;
+  size?: string;
 }
 
 export default function TokenInputField(props: TokenInputFieldProps) {

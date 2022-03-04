@@ -230,6 +230,7 @@ export function TokenTypeImage(tokenType: Token): string | null {
   if (tokenType < 19) return ClaimableIcon;
   if (tokenType < 20) return PooledIcon;
   if (tokenType < 21) return BudgetIcon;
+  return null;
 }
 
 /** Trim a BigNumber to a set number of decimals. */
@@ -352,8 +353,8 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
  * @returns BigNumber
  */
 export function toTokenUnitsBN(
-  tokenAmt: string | number | BigNumber, // FIXME: use BigNumber.Value here?
-  decimals: number // FIXME: use BigNumber.Value here?
+  tokenAmt: string | number | BigNumber,  // FIXME: use BigNumber.Value here?
+  decimals: number                        // FIXME: use BigNumber.Value here?
 ): BigNumber {
   const amt = new BigNumber(tokenAmt);
   const base = new BigNumber(10);

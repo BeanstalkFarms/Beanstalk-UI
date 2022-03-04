@@ -109,7 +109,7 @@ export default function HistoryTable() {
                     balance={item.pricePerPod}
                     icon={<TokenIcon token={CryptoAsset.Bean} />}
                   >
-                    {item.pricePerPod.toFixed(2)}
+                    {item.pricePerPod.toFixed(3)}
                   </BalanceTableCell>
                   <BalanceTableCell
                     className={classes.lucidaStyle}

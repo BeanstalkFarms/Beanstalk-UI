@@ -62,8 +62,6 @@ export type PlotRangeInputFieldProps = {
   maxHandler?: Function;
   /** */
   handleChange: Function;
-  /** */
-  handleSlider: Function;
   // Input values
   /** The numerical value stored in the Input */
   value: [BigNumber, BigNumber]; // two endpoints
@@ -319,5 +317,4 @@ TokenInputField.defaultProps = {
   maxHandler: undefined,
   placeholder: undefined,
   error: undefined,
-  disableSlider: false,
 };
