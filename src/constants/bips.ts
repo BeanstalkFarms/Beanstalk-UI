@@ -12,4 +12,5 @@ export const bipsList = [
   { path: '/Bips/bip-10.html', title: 'Omniscia Retainer' },
   { path: '/Bips/bip-11.html', title: 'Farmers Market' },
   { path: '/Bips/bip-12.html', title: 'Silo Generalization I' },
+  { path: '/Bips/bip-13.html', title: 'Adjustment to Weather Changes' },
 ];
