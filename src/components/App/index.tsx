@@ -21,6 +21,7 @@ import {
   //
   FarmPage,
   SiloPage,
+  SiloDepositPage,
   FieldPage,
   TradePage,
   DAOPage,
@@ -85,6 +86,9 @@ export default function App() {
           {/* Farm */}
           <Route exact path="/farm/silo">
             <SiloPage />
+          </Route>
+          <Route exact path="/farm/silo/:token">
+            <SiloDepositPage />
           </Route>
           <Route exact path="/farm/field">
             <FieldPage />

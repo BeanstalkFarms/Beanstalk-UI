@@ -111,7 +111,7 @@ export default function TokenDataTable({ tokens }) {
                     style={{ marginTop: '8px', marginBottom: '8px', textAlign: 'center' }}
                     color="primary"
                     variant="contained"
-                    href={`#`}
+                    href={`/farm/silo/${token.slug}`}
                   >
                     ENTER
                   </Button>

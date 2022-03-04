@@ -10,12 +10,15 @@ export default function Page({
   textTransform,
   sectionNumber = 0,
   hideTitles = false,
+  noRedirect = false,
 }) {
   const [section, setSection] = useState(sectionNumber);
   const history = useHistory();
 
   useEffect(() => {
-    history.push(`${(!routeTitle ? sectionTitles[section] : routeTitle).toLowerCase().replace(/ /g, '')}`);
+    if (!noRedirect) {
+      history.push(`${(!routeTitle ? sectionTitles[section] : routeTitle).toLowerCase().replace(/ /g, '')}`);
+    }
   });
 
   const pageStyle = {
