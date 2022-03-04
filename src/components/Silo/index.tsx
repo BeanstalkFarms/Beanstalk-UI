@@ -221,9 +221,7 @@ export default function Silo() {
           >
             <TokenDataTable tokens={TOKENS} />
           </BaseModule>
-
-
-
+          {/*<TokenDataTable tokens={TOKENS} />*/}
 
 
 

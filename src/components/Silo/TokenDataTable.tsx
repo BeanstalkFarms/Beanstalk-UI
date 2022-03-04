@@ -15,9 +15,30 @@ import TokenIcon from 'components/Common/TokenIcon';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { CryptoAsset, displayBN, FarmAsset } from 'util/index';
+import { makeStyles } from "@material-ui/styles";
+import { theme } from "../../constants";
+
+
+const useStyles = makeStyles({
+  table: {
+    margin: '9px',
+    width: 'auto',
+    backgroundColor: theme.module.background,
+    borderRadius: 25
+  },
+  tableBox: {
+    display: "block",
+    width: "100%"
+  },
+  tablePaper: {
+    borderRadius: 25
+  }
+});
+
 
 
 export default function TokenDataTable({ tokens }) {
+  const classes = useStyles();
   const { stats } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
@@ -54,8 +75,8 @@ export default function TokenDataTable({ tokens }) {
   ];
 
   return (
-    <div>
-      <TableContainer  component={Paper}>
+    <Box className={classes.tableBox}>
+      <TableContainer className={classes.table}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -79,7 +100,7 @@ export default function TokenDataTable({ tokens }) {
                 <TableCell align="center">
                   {token.rewards.stalk} Stalk, {token.rewards.seeds} Seeds
                 </TableCell>
-                <TableCell align="center">{token.name}</TableCell>
+                <TableCell align="center">17%</TableCell>
                 <TableCell align="center">
                   123
                   {/*{token.getTotalBalance(totalBeans)}*/}
@@ -87,7 +108,7 @@ export default function TokenDataTable({ tokens }) {
                 <TableCell align="center">
                   <Button
                     // className={classes.formButton}
-                    style={{ marginTop: '8px', textAlign: 'center' }}
+                    style={{ marginTop: '8px', marginBottom: '8px', textAlign: 'center' }}
                     color="primary"
                     variant="contained"
                     href={`#`}
@@ -113,7 +134,7 @@ export default function TokenDataTable({ tokens }) {
             {/*    <TableCell align="center">*/}
             {/*      <Button*/}
             {/*        // className={classes.formButton}*/}
-            {/*        style={{ marginTop: '8px', textAlign: 'center' }}*/}
+            {/*        style={{ marginTop: '8px', marginBottom: '8px', textAlign: 'center' }}*/}
             {/*        color="primary"*/}
             {/*        variant="contained"*/}
             {/*        href={`/cole/test`}*/}
@@ -123,11 +144,15 @@ export default function TokenDataTable({ tokens }) {
             {/*    </TableCell>*/}
             {/*  </TableRow>*/}
             {/*))}*/}
+
+
           </TableBody>
         </Table>
       </TableContainer>
 
-    </div>
+
+
+    </Box>
 
   );
 }
