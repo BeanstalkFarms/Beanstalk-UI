@@ -89,7 +89,7 @@ export default function SiloLPModule() {
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
-  const sectionTitles = ['Deposit', 'Deposit'];
+  const sectionTitles = ['Deposit', 'Withdraw'];
   const sectionTitlesDescription = [
     siloStrings.lpDeposit,
     siloStrings.lpWithdraw.replace('{0}', totalBalance.withdrawSeasons),

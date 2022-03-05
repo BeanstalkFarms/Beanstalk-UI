@@ -175,7 +175,7 @@ export default function Silo() {
           `${nextDecrease} Seasons`,
         ]}
         title={[
-          'Deposit Seasons',
+          'Withdraw Seasons',
           'Next Decrease',
         ]}
         value={[

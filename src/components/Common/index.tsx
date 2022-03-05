@@ -97,7 +97,7 @@ export const walletStrings = {
   claimableEthBalance:
     'These are your total Claimable ETH which are from Seasons of Plenty.',
   stalkBalance:
-    'This is your total Stalk Balance. Stalk are the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Deposit your Deposited assets from the Silo.',
+    'This is your total Stalk Balance. Stalk are the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo.',
   seedBalance:
     'This is your total Seed Balance. Each Seed yields .0001 Grown Stalk each Season. Grown Stalk must be Farmed in order to be included in your Stalk balance and start earning interest.',
   podBalance:
@@ -197,7 +197,7 @@ export const siloStrings = {
   convertLPDeposit: 'Use this sub-tab to convert Deposited BEAN:ETH LP Tokens to Deposited Beans when P < $1.',
   convertBeanDeposit: 'Use this sub-tab to convert Deposited Beans to Deposited BEAN:ETH LP Tokens when P > $1.',
   convertSlippage: 'Customize the maximum difference between the current distance from peg and the distance from peg when your transaction is mined, in the direction of the peg.',
-  withdrawSeasons: 'The Deposit Seasons is the number of full Seasons assets are Frozen upon Withdrawal from the Silo.',
+  withdrawSeasons: 'The Withdraw Seasons is the number of full Seasons assets are Frozen upon Withdrawal from the Silo.',
   decreaseSeasons: 'The Next Decrease is the number of Seasons until the Withdrawal Freeze decreases by 1 Season.',
 };
 export const fieldStrings = {

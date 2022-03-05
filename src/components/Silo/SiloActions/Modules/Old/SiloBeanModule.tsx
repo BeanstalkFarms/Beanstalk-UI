@@ -71,7 +71,7 @@ export default function SiloBeanModule() {
     );
   };
 
-  const sectionTitles = ['Deposit', 'Deposit'];
+  const sectionTitles = ['Deposit', 'Withdraw'];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit,
     siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
