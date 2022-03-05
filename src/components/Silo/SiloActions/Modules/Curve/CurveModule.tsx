@@ -44,7 +44,7 @@ export default function CurveModule() {
     (state) => state.totalBalance
   );
 
-  const sectionTitles = ['Deposit', 'Withdraw'];
+  const sectionTitles = ['Deposit', 'Deposit'];
   const sectionTitlesDescription = [curveStrings.deposit, curveStrings.withdraw];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,

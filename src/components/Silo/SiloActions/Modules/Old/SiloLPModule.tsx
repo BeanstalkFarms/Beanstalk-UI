@@ -1,12 +1,20 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@material-ui/core';
-import { List as ListIcon } from '@material-ui/icons';
 import { AppState } from 'state';
-import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
+import { List as ListIcon } from '@material-ui/icons';
+import {
+  updateBeanstalkBeanAllowance,
+  updateBeanstalkLPAllowance,
+} from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
-import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
+import {
+  approveBeanstalkBean,
+  approveBeanstalkLP,
+  SwapMode,
+  poolForLP,
+} from 'util/index';
 import {
   BaseModule,
   ListTable,
@@ -14,52 +22,49 @@ import {
   siloStrings,
   TransitAsset,
 } from 'components/Common';
-import { BeanClaimModule } from './BeanClaimModule';
-import { BeanDepositModule } from './BeanDepositModule';
-import { BeanWithdrawModule } from './BeanWithdrawModule';
+import { LPDepositModule } from '../SubModules/LPDepositModule';
+import { LPWithdrawModule } from '../SubModules/LPWithdrawModule';
+import { LPClaimModule } from '../SubModules/LPClaimModule';
 
-export default function SiloBeanModule() {
-  const { beanstalkBeanAllowance } = useSelector<
+export default function SiloLPModule() {
+  const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
     AppState,
     AppState['allowances']
   >((state) => state.allowances);
 
   const {
+    lpBalance,
     beanBalance,
     ethBalance,
-    beanDeposits,
+    lpReceivableBalance,
+    lpDeposits,
+    lpSeedDeposits,
+    lpReceivableCrates,
+    lpWithdrawals,
     lockedSeasons,
-    beanReceivableBalance,
-    beanReceivableCrates,
-    farmableBeanBalance,
-    rawBeanDeposits,
-    beanWithdrawals,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
-  );
-
-  const season = useSelector<AppState, AppState['season']>(
-    (state) => state.season.season
   );
 
   const prices = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
+  const season = useSelector<AppState, AppState['season']>(
+    (state) => state.season.season
+  );
+
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
 
-  const [section, setSection] = useState(0);
-  const [sectionInfo, setSectionInfo] = useState(0);
-  const [settings, setSettings] = useState({
-    claim: false,
-    mode: null,
-    slippage: new BigNumber(BASE_SLIPPAGE),
-  });
-  const [page, setPage] = useState(0);
-  const [isFormDisabled, setIsFormDisabled] = useState(true);
-  const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
+  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
+    const endPrice = prices.ethReserve
+      .plus(sellEth)
+      .dividedBy(prices.beanReserve.minus(buyBeans))
+      .dividedBy(prices.usdcPrice);
+    return prices.beanPrice.plus(endPrice).dividedBy(2);
+  };
 
   const poolForLPRatio = (amount: BigNumber) => {
     if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
@@ -71,14 +76,27 @@ export default function SiloBeanModule() {
     );
   };
 
-  const sectionTitles = ['Deposit', 'Withdraw'];
+  const [section, setSection] = useState(0);
+  const [sectionInfo, setSectionInfo] = useState(0);
+  const [settings, setSettings] = useState({
+    claim: false,
+    convert: false,
+    useLP: false,
+    mode: null,
+    slippage: new BigNumber(BASE_SLIPPAGE),
+  });
+  const [page, setPage] = useState(0);
+  const [isFormDisabled, setIsFormDisabled] = useState(true);
+  const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
+
+  const sectionTitles = ['Deposit', 'Deposit'];
   const sectionTitlesDescription = [
-    siloStrings.beanDeposit,
-    siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
+    siloStrings.lpDeposit,
+    siloStrings.lpWithdraw.replace('{0}', totalBalance.withdrawSeasons),
   ];
   const sectionTitlesInfoDescription = [
-    siloStrings.beanDepositsTable,
-    siloStrings.beanWithdrawalsTable,
+    siloStrings.lpDepositsTable,
+    siloStrings.lpWithdrawalsTable,
   ];
 
   const handleTabChange = (event, newSection) => {
@@ -87,6 +105,8 @@ export default function SiloBeanModule() {
       setIsFormDisabled(true);
       setSettings({
         claim: false,
+        convert: false,
+        useLP: false,
         mode: null,
         slippage: new BigNumber(BASE_SLIPPAGE),
       });
@@ -101,7 +121,11 @@ export default function SiloBeanModule() {
   };
 
   if (settings.mode === null) {
-    if (beanBalance.isGreaterThan(0)) {
+    if (lpBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.LP }));
+    } else if (beanBalance.isGreaterThan(0) && ethBalance.isGreaterThan(0)) {
+      setSettings((p) => ({ ...p, mode: SwapMode.BeanEthereum }));
+    } else if (beanBalance.isGreaterThan(0)) {
       setSettings((p) => ({ ...p, mode: SwapMode.Bean }));
     } else if (ethBalance.isGreaterThan(0)) {
       setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
@@ -109,14 +133,6 @@ export default function SiloBeanModule() {
       setSettings((p) => ({ ...p, mode: SwapMode.Ethereum }));
     }
   }
-
-  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
-    const endPrice = prices.ethReserve
-      .plus(sellEth)
-      .dividedBy(prices.beanReserve.minus(buyBeans))
-      .dividedBy(prices.usdcPrice);
-    return prices.beanPrice.plus(endPrice).dividedBy(2);
-  };
 
   const depositRef = useRef<any>();
   const withdrawRef = useRef<any>();
@@ -137,81 +153,78 @@ export default function SiloBeanModule() {
     }
   };
 
-  /* */
   const sections = [
-    <BeanDepositModule
+    <LPDepositModule
       key={0}
+      updateExpectedPrice={updateExpectedPrice}
       poolForLPRatio={poolForLPRatio}
       ref={depositRef}
       setIsFormDisabled={setIsFormDisabled}
       setSettings={setSettings}
       settings={settings}
-      updateExpectedPrice={updateExpectedPrice}
     />,
-    <BeanWithdrawModule
+    <LPWithdrawModule
       key={1}
+      poolForLPRatio={poolForLPRatio}
       ref={withdrawRef}
       setIsFormDisabled={setIsFormDisabled}
       setSettings={setSettings}
       settings={settings}
-      poolForLPRatio={poolForLPRatio}
     />,
   ];
-
-  /* */
-  if (beanReceivableBalance.isGreaterThan(0)) {
+  if (lpReceivableBalance.isGreaterThan(0)) {
     sections.push(
-      <BeanClaimModule
+      <LPClaimModule
         key={2}
         ref={claimRef}
+        poolForLPRatio={poolForLPRatio}
         setIsFormDisabled={setIsFormDisabled}
       />
     );
     sectionTitles.push('Claim');
-    sectionTitlesDescription.push(siloStrings.beanClaim);
+    sectionTitlesDescription.push(siloStrings.lpClaim);
   }
   if (section > sectionTitles.length - 1) setSection(0);
 
-  /* "Info" section == the BaseModule shown below the Deposit &
-     Withdraw tabs. Used to show bean deposits. */
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
-  if (beanDeposits !== undefined && Object.keys(beanDeposits).length > 0) {
+  if (lpDeposits !== undefined && Object.keys(lpDeposits).length > 0) {
     sectionsInfo.push(
       <ListTable
-        asset={SiloAsset.Bean}
-        claimableBalance={farmableBeanBalance}
-        claimableStalk={farmableBeanBalance}
-        crates={rawBeanDeposits}
+        asset={SiloAsset.LP}
+        crates={lpDeposits}
         handleChange={handlePageChange}
         indexTitle="Season"
+        isLP
         page={page}
+        poolForLPRatio={poolForLPRatio}
         season={season}
+        seedCrates={lpSeedDeposits}
       />
     );
-    sectionTitlesInfo.push('Bean Deposits');
+    sectionTitlesInfo.push('LP Deposits');
   }
   if (
-    (beanWithdrawals !== undefined &&
-      Object.keys(beanWithdrawals).length > 0) ||
-    beanReceivableBalance.isGreaterThan(0)
+    (lpWithdrawals !== undefined && Object.keys(lpWithdrawals).length > 0) ||
+    lpReceivableBalance.isGreaterThan(0)
   ) {
     sectionsInfo.push(
       <ListTable
-        asset={TransitAsset.Bean}
-        crates={beanWithdrawals}
-        claimableBalance={beanReceivableBalance}
-        claimableCrates={beanReceivableCrates}
+        asset={TransitAsset.LP}
+        crates={lpWithdrawals}
+        claimableBalance={lpReceivableBalance}
+        claimableCrates={lpReceivableCrates}
         handleChange={handlePageChange}
         index={season}
         indexTitle="Seasons to Arrival"
+        isLP
         page={page}
+        poolForLPRatio={poolForLPRatio}
       />
     );
-    sectionTitlesInfo.push('Bean Withdrawals');
+    sectionTitlesInfo.push('LP Withdrawals');
   }
 
-  /* */
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
       <Box
@@ -251,34 +264,43 @@ export default function SiloBeanModule() {
       </Box>
     ) : null;
 
-  const allowance =
-    (settings.mode === SwapMode.Bean ||
-      settings.mode === SwapMode.BeanEthereum) &&
-    section === 0
-      ? beanstalkBeanAllowance
-      : new BigNumber(1);
+  let allowance = new BigNumber(1);
+  let setAllowance = updateBeanstalkBeanAllowance;
+  let handleApprove = approveBeanstalkBean;
+  if (
+    settings.mode === SwapMode.Bean ||
+    settings.mode === SwapMode.BeanEthereum
+  ) {
+    allowance = beanstalkBeanAllowance;
+    if (allowance.isGreaterThan(0) && settings.useLP) {
+      allowance = beanstalkLPAllowance;
+      setAllowance = updateBeanstalkLPAllowance;
+      handleApprove = approveBeanstalkLP;
+    }
+  } else if (settings.mode === SwapMode.LP) {
+    allowance = beanstalkLPAllowance;
+    setAllowance = updateBeanstalkLPAllowance;
+    handleApprove = approveBeanstalkLP;
+  }
 
-  /* */
   return (
     <>
       <BaseModule
         style={{ marginTop: '20px' }}
-        allowance={allowance}
+        allowance={section === 0 ? allowance : new BigNumber(1)}
         resetForm={() => {
           setSettings({ ...settings, mode: SwapMode.Ethereum });
         }}
-        handleApprove={approveBeanstalkBean}
+        handleApprove={handleApprove}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
-        isDisabled={
-          isFormDisabled && (isFormDisabled)
-        }
+        isDisabled={isFormDisabled}
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkBeanAllowance}
+        setAllowance={setAllowance}
       >
         {sections[section]}
         {showListTablesIcon}

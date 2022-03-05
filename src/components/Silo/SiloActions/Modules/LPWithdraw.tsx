@@ -22,11 +22,10 @@ import {
   siloStrings,
   TransitAsset,
 } from 'components/Common';
-import { LPDepositModule } from './LPDepositModule';
-import { LPWithdrawModule } from './LPWithdrawModule';
-import { LPClaimModule } from './LPClaimModule';
+import { LPWithdrawModule } from './SubModules/LPWithdrawModule';
+import { LPClaimModule } from './SubModules/LPClaimModule';
 
-export default function SiloLPModule() {
+export default function LPWithdraw() {
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -89,7 +88,7 @@ export default function SiloLPModule() {
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
-  const sectionTitles = ['Deposit', 'Withdraw'];
+  const sectionTitles = ['Withdraw'];
   const sectionTitlesDescription = [
     siloStrings.lpDeposit,
     siloStrings.lpWithdraw.replace('{0}', totalBalance.withdrawSeasons),
@@ -154,15 +153,6 @@ export default function SiloLPModule() {
   };
 
   const sections = [
-    <LPDepositModule
-      key={0}
-      updateExpectedPrice={updateExpectedPrice}
-      poolForLPRatio={poolForLPRatio}
-      ref={depositRef}
-      setIsFormDisabled={setIsFormDisabled}
-      setSettings={setSettings}
-      settings={settings}
-    />,
     <LPWithdrawModule
       key={1}
       poolForLPRatio={poolForLPRatio}

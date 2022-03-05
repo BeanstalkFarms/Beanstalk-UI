@@ -10,14 +10,14 @@ import {
   HeaderLabelList,
   siloStrings
 } from 'components/Common';
-import TabbedSilo from './TabbedSilo';
+import TabbedForm from "./TabbedForm";
 
 // import the TOKENS array
 // grab the :token parameter from react-router
 // const token = "bean"; or "bean-eth";
 // grab that element from the TOKENS array.
 
-export default function Silo() {
+export default function SiloTransaction() {
   const { withdrawSeasons } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
@@ -53,7 +53,7 @@ export default function Silo() {
           `${nextDecrease} Seasons`,
         ]}
         title={[
-          'Withdraw Seasons',
+          'Deposit Seasons',
           'Next Decrease',
         ]}
         value={[
@@ -61,7 +61,7 @@ export default function Silo() {
           `${nextDecrease}`,
         ]}
       />
-      <TabbedSilo />
+      <TabbedForm />
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown
           description={siloStrings.siloDescription.replace('{0}', withdrawSeasons)}
@@ -73,6 +73,6 @@ export default function Silo() {
   );
 }
 
-Silo.defaultProps = {
+SiloTransaction.defaultProps = {
   margin: '-10px 0 -20px 0',
 };

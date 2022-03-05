@@ -1,10 +1,10 @@
 import React from 'react';
 import { Page } from 'Pages/index';
-import SiloDeposit from 'components/Silo/SiloDeposit';
+import SiloTransaction from 'components/Silo/SiloActions';
 
 export default function SiloDepositPage(props) {
-  const sectionTitles = ['poop'];
-  const sections = [<SiloDeposit />];
+  const sectionTitles = ['Silo'];
+  const sections = [<SiloTransaction />];
 
   return (
     <Page

@@ -157,7 +157,7 @@ export default function BaseModule({
       <FormatTooltip
         placement="top"
         margin="0 0 0 7px"
-        title={locked ? 'Unvote Active BIPs to Withdraw' : ''}
+        title={locked ? 'Unvote Active BIPs to Deposit' : ''}
       >
         <Box>
           <Button

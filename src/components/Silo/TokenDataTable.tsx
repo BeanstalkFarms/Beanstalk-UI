@@ -1,9 +1,7 @@
-  import React from 'react';
+import React from 'react';
 import {
   Box,
   Button,
-  Divider,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -11,12 +9,12 @@ import {
   TableHead,
   TableRow
 } from '@material-ui/core';
-import TokenIcon from 'components/Common/TokenIcon';
-import { useSelector } from 'react-redux';
+import { useSelector, useStore } from 'react-redux';
 import { AppState } from 'state';
-import { CryptoAsset, displayBN, FarmAsset } from 'util/index';
+import { getAPYs } from 'util/index';
 import { makeStyles } from "@material-ui/styles";
 import { theme } from "../../constants";
+import TOKENS from 'constants/siloTokens';
 
 
 const useStyles = makeStyles({
@@ -37,18 +35,38 @@ const useStyles = makeStyles({
 
 
 
-export default function TokenDataTable({ tokens }) {
+export default function TokenDataTable() {
   const classes = useStyles();
+
   const { stats } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
 
-  const { totalBeans } = useSelector<AppState, AppState['totalBalance']>(
+  const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
+    (state) => state.beansPerSeason
+  );
+
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
+  );
+
+  // console.log("TOTAL BEANS: ");
+  // console.log(totalBalance.totalBeans.toNumber());
+
+  const userBalance = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
   );
 
 
 
+  // on each render, grab APY array
+  const apys = getAPYs(
+    farmableMonth,
+    parseFloat(totalBalance.totalStalk),
+    parseFloat(totalBalance.totalSeeds)
+  );
+
+  const [beanAPY, lpAPY] = apys;
 
   const testTokens = [
     {
@@ -89,7 +107,7 @@ export default function TokenDataTable({ tokens }) {
           </TableHead>
           <TableBody>
 
-            {tokens.map((token) => (
+            {TOKENS.map((token) => (
               <TableRow
                 key={token.name}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -100,14 +118,12 @@ export default function TokenDataTable({ tokens }) {
                 <TableCell align="center">
                   {token.rewards.stalk} Stalk, {token.rewards.seeds} Seeds
                 </TableCell>
-                <TableCell align="center">17%</TableCell>
+                <TableCell align="center">{Math.round(token.getAPY(apys))}%</TableCell>
                 <TableCell align="center">
-                  123
-                  {/*{token.getTotalBalance(totalBeans)}*/}
+                  {token.getUserBalance(userBalance).decimalPlaces(2).toNumber()}
                 </TableCell>
                 <TableCell align="center">
                   <Button
-                    // className={classes.formButton}
                     style={{ marginTop: '8px', marginBottom: '8px', textAlign: 'center' }}
                     color="primary"
                     variant="contained"
@@ -118,41 +134,9 @@ export default function TokenDataTable({ tokens }) {
                 </TableCell>
               </TableRow>
             ))}
-
-
-            {/*{testTokens.map((token) => (*/}
-            {/*  <TableRow*/}
-            {/*    key={token.label}*/}
-            {/*    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}*/}
-            {/*  >*/}
-            {/*    <TableCell component="th" scope="row">*/}
-            {/*      {token.label}*/}
-            {/*    </TableCell>*/}
-            {/*    <TableCell align="center">{token.rewards}</TableCell>*/}
-            {/*    <TableCell align="center">{token.apy}</TableCell>*/}
-            {/*    <TableCell align="center">{token.deposits}</TableCell>*/}
-            {/*    <TableCell align="center">*/}
-            {/*      <Button*/}
-            {/*        // className={classes.formButton}*/}
-            {/*        style={{ marginTop: '8px', marginBottom: '8px', textAlign: 'center' }}*/}
-            {/*        color="primary"*/}
-            {/*        variant="contained"*/}
-            {/*        href={`/cole/test`}*/}
-            {/*      >*/}
-            {/*        ENTER*/}
-            {/*      </Button>*/}
-            {/*    </TableCell>*/}
-            {/*  </TableRow>*/}
-            {/*))}*/}
-
-
           </TableBody>
         </Table>
       </TableContainer>
-
-
-
     </Box>
-
   );
 }

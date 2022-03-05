@@ -6,7 +6,7 @@ import SiloSelectLPModule from './SiloSelectLPModule';
 import SiloBeanModule from './SiloBeanModule';
 import SiloConvertModule from './SiloConvertModule';
 
-export default function TabbedSilo() {
+export default function SiloTabs() {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
