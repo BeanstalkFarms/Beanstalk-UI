@@ -71,7 +71,7 @@ export async function initializeEventListener(
       filter: { account: account },
       fromBlock: 0,
     }),
-    beanstalk.getPastEvents('Withdraw', {
+    beanstalk.getPastEvents('Deposit', {
       filter: { account: account },
       fromBlock: 0,
     }),
