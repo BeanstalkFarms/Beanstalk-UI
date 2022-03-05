@@ -2,66 +2,17 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { APY_CALCULATION, BEAN_TO_SEEDS, BEAN_TO_STALK, MEDIUM_INTEREST_LINK, theme } from 'constants/index';
+import { APY_CALCULATION } from 'constants/index';
 import {
   BaseModule,
-  ContentDropdown,
-  ContentSection,
   Grid,
-  HeaderLabelList, marketStrings,
+  HeaderLabelList,
   siloStrings,
   // HeaderLabelList,
 } from 'components/Common';
-import { CryptoAsset, displayBN, getAPYs } from 'util/index';
-import TokenIcon from 'components/Common/TokenIcon';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from "@material-ui/core";
-import Checkbox from "@material-ui/core/Checkbox";
+import { displayBN, getAPYs } from 'util/index';
 import TokenDataTable from "./TokenDataTable";
 
-const headerLabelStyle = {
-  maxWidth: '300px',
-  color: theme.text,
-  padding: '0px',
-};
-
-// Whitelisted tokens that can be deposited into the Silo
-const TOKENS = {
-  // Bean
-  'bean': {
-    name: 'Bean',
-    slug: 'bean', // /farm/silo/bean-eth
-    rewards: {
-      stalk: BEAN_TO_STALK,
-      seeds: BEAN_TO_SEEDS,
-    },
-    siloed: new BigNumber(10), // test
-    getAPY: (apys: ReturnType<typeof getAPYs>) => {
-      return apys[0]; // Bean
-    },
-    getTotalBalance: (totalBalances: AppState['totalBalance']) => {
-      return {
-        siloed: totalBalances.totalBeans,
-      };
-    },
-    getUserBalance: (userBalances: AppState['userBalance']) => {
-      return {
-        siloed: userBalances.beanSiloBalance
-      }
-    }
-  }
-}
-
-
-// React component
-const TokenRow = (props) => {
-  return (
-    <div>
-      APY: {props.apy}
-      totalBalance: {props.totalBalance}
-      ...
-    </div>
-  );
-}
 
 export default function Silo() {
   // Hide APY's for now since they are misleading
@@ -77,9 +28,7 @@ export default function Silo() {
   );
   const {
     beanSiloBalance,
-    beanClaimableBalance,
-    stalkBalance,
-    grownStalkBalance
+    stalkBalance
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -93,7 +42,6 @@ export default function Silo() {
 
   const [beanAPY, lpAPY] = apys;
 
-  //
   const metrics = (
     <>
       <Grid item lg={4} sm={12}>
@@ -193,8 +141,6 @@ export default function Silo() {
     </>
   );
 
-
-
   return (
     <>
       <Grid container justifyContent="center">
@@ -212,72 +158,9 @@ export default function Silo() {
             style={{ display: "block", width: "100%" }}
             margin="0"
           >
-            {/* <TokenDataTable tokens={TOKENS} /> */}
-            <div>
-              {Object.values(TOKENS).map(token => {
-                return (
-                  <div>
-                    Name: {token.name}<br/>
-                    APY: {token.getAPY(apys)}
-                    How many Beans are in the Silo? {token.getTotalBalance(totalBalance)}
-                  </div>
-                )
-              })}
-              <TokenRow
-                name="Bean"
-                apy={apys[0]} // Bean APY
-                totalBalance={totalBalance.totalBeans}
-              />
-            </div>
+            <TokenDataTable />
           </BaseModule>
-          {/*<TokenDataTable tokens={TOKENS} />*/}
-
-
-
-
-          {/*<BaseModule*/}
-          {/*  section={0}*/}
-          {/*  sectionTitles={[]}*/}
-          {/*  sectionTitlesDescription={[]}*/}
-          {/*  showButton={false}*/}
-          {/*  normalBox={false}*/}
-          {/*  removeBackground*/}
-          {/*  style={{ display: "block", width: "100%" }}*/}
-          {/*  margin="0"*/}
-          {/*>*/}
-          {/*  <BaseModule*/}
-          {/*    section={0}*/}
-          {/*    sectionTitles={[]}*/}
-          {/*    sectionTitlesDescription={[]}*/}
-          {/*    showButton={false}*/}
-          {/*    normalBox={false}*/}
-          {/*    // removeBackground*/}
-          {/*    style={{ display: "block", width: "100%" }}*/}
-          {/*    margin="0"*/}
-          {/*>*/}
-          {/*    <TokenRowModule />*/}
-          {/*  </BaseModule>*/}
-
-
-
-          {/*</BaseModule>*/}
-
-
-
-
         </Grid>
-
-        {/*<BaseModule*/}
-        {/*  handleTabChange={undefined}*/}
-        {/*  section={0}*/}
-        {/*  sectionTitles={['History']}*/}
-        {/*  sectionTitlesDescription={[marketStrings.history]}*/}
-        {/*  showButton={false}*/}
-        {/*  removeBackground*/}
-        {/*>*/}
-        {/*  {showStats}*/}
-        {/*  {showHistory}*/}
-        {/*</BaseModule>*/}
 
 
       </Grid>
@@ -292,7 +175,7 @@ export default function Silo() {
           `${nextDecrease} Seasons`,
         ]}
         title={[
-          'Withdraw Seasons',
+          'Deposit Seasons',
           'Next Decrease',
         ]}
         value={[
@@ -316,27 +199,3 @@ Silo.defaultProps = {
   margin: '-10px 0 -20px 0',
 };
 
-
-
-  // const descriptionLinks = [
-  //   {
-  //     href: `${MEDIUM_INTEREST_LINK}#8b79`,
-  //     text: 'Read More',
-  //   },
-  // ];
-
-  // const nextDecrease = withdrawSeasons.isGreaterThan(13) ?
-  //   (new BigNumber(84)).minus(season.mod(84)) :
-  //   (withdrawSeasons.isGreaterThan(5) ?
-  //   (new BigNumber(168)).minus(season.mod(168)) :
-  //   'na');
-
-  /* <TokenIcon
-    token={CryptoAsset.Bean}
-    style={{
-      display: "inline-block",
-      filter: "invert(100%)",
-      // color: "white",
-      opacity: 1
-    }}
-  /> */

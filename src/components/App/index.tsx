@@ -87,7 +87,7 @@ export default function App() {
           <Route exact path="/farm/silo">
             <SiloPage />
           </Route>
-          <Route exact path="/farm/silo/:token">
+          <Route exact path="/farm/silo/:tokenSlug">
             <SiloDepositPage />
           </Route>
           <Route exact path="/farm/field">

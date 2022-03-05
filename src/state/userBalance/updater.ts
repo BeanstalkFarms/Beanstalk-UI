@@ -660,7 +660,7 @@ export default function Updater() {
               delete userCurveBDVDeposits[s];
             }
           });
-        } else if (event.event === 'Withdraw') {
+        } else if (event.event === 'Deposit') {
           const s = parseInt(event.returnValues.season, 10);
           const curve = toTokenUnitsBN(
             new BigNumber(event.returnValues.amount),
