@@ -25,17 +25,18 @@ const headerLabelStyle = {
 };
 
 // Whitelisted tokens that can be deposited into the Silo
-const TOKENS = [
-  {
+const TOKENS = {
+  // Bean
+  'bean': {
     name: 'Bean',
-    slug: 'bean-eth', // /farm/silo/bean-eth
+    slug: 'bean', // /farm/silo/bean-eth
     rewards: {
       stalk: BEAN_TO_STALK,
       seeds: BEAN_TO_SEEDS,
     },
     siloed: new BigNumber(10), // test
     getAPY: (apys: ReturnType<typeof getAPYs>) => {
-      return apys[1]; // LP APY
+      return apys[0]; // Bean
     },
     getTotalBalance: (totalBalances: AppState['totalBalance']) => {
       return {
@@ -48,15 +49,27 @@ const TOKENS = [
       }
     }
   }
-]
+}
+
+
+// React component
+const TokenRow = (props) => {
+  return (
+    <div>
+      APY: {props.apy}
+      totalBalance: {props.totalBalance}
+      ...
+    </div>
+  );
+}
 
 export default function Silo() {
   // Hide APY's for now since they are misleading
   // Fetch and calculate APYs
-  const { totalStalk, totalSeeds, withdrawSeasons, totalSiloBeans, totalSiloLP } = useSelector<AppState, AppState['totalBalance']>(
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { farmableMonth  } = useSelector<AppState, AppState['beansPerSeason']>(
+  const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
   const { season } = useSelector<AppState, AppState['season']>(
@@ -71,34 +84,14 @@ export default function Silo() {
     (state) => state.userBalance
   );
 
-  const [beanAPY, lpAPY] = getAPYs(
+  // on each render, grab APY array
+  const apys = getAPYs(
     farmableMonth,
-    parseFloat(totalStalk),
-    parseFloat(totalSeeds)
+    parseFloat(totalBalance.totalStalk),
+    parseFloat(totalBalance.totalSeeds)
   );
 
-  // const descriptionLinks = [
-  //   {
-  //     href: `${MEDIUM_INTEREST_LINK}#8b79`,
-  //     text: 'Read More',
-  //   },
-  // ];
-
-  // const nextDecrease = withdrawSeasons.isGreaterThan(13) ?
-  //   (new BigNumber(84)).minus(season.mod(84)) :
-  //   (withdrawSeasons.isGreaterThan(5) ?
-  //   (new BigNumber(168)).minus(season.mod(168)) :
-  //   'na');
-
-  /* <TokenIcon
-    token={CryptoAsset.Bean}
-    style={{
-      display: "inline-block",
-      filter: "invert(100%)",
-      // color: "white",
-      opacity: 1
-    }}
-  /> */
+  const [beanAPY, lpAPY] = apys;
 
   //
   const metrics = (
@@ -144,7 +137,7 @@ export default function Silo() {
           ]}
           value={[
             <span>
-              ${displayBN(totalSiloBeans)}
+              ${displayBN(totalBalance.totalSiloBeans)}
             </span>,
             <span>
               {displayBN(new BigNumber(604622))}
@@ -219,7 +212,23 @@ export default function Silo() {
             style={{ display: "block", width: "100%" }}
             margin="0"
           >
-            <TokenDataTable tokens={TOKENS} />
+            {/* <TokenDataTable tokens={TOKENS} /> */}
+            <div>
+              {Object.values(TOKENS).map(token => {
+                return (
+                  <div>
+                    Name: {token.name}<br/>
+                    APY: {token.getAPY(apys)}
+                    How many Beans are in the Silo? {token.getTotalBalance(totalBalance)}
+                  </div>
+                )
+              })}
+              <TokenRow
+                name="Bean"
+                apy={apys[0]} // Bean APY
+                totalBalance={totalBalance.totalBeans}
+              />
+            </div>
           </BaseModule>
           {/*<TokenDataTable tokens={TOKENS} />*/}
 
@@ -307,3 +316,27 @@ Silo.defaultProps = {
   margin: '-10px 0 -20px 0',
 };
 
+
+
+  // const descriptionLinks = [
+  //   {
+  //     href: `${MEDIUM_INTEREST_LINK}#8b79`,
+  //     text: 'Read More',
+  //   },
+  // ];
+
+  // const nextDecrease = withdrawSeasons.isGreaterThan(13) ?
+  //   (new BigNumber(84)).minus(season.mod(84)) :
+  //   (withdrawSeasons.isGreaterThan(5) ?
+  //   (new BigNumber(168)).minus(season.mod(168)) :
+  //   'na');
+
+  /* <TokenIcon
+    token={CryptoAsset.Bean}
+    style={{
+      display: "inline-block",
+      filter: "invert(100%)",
+      // color: "white",
+      opacity: 1
+    }}
+  /> */
