@@ -32,6 +32,7 @@ export default function BaseModule({
   marginMeta,
   showButton,
   singleReset,
+  setButtonLabel
 }) {
   const dispatch = useDispatch();
   const s = size === 'small' || window.innerWidth < 450;
@@ -144,7 +145,7 @@ export default function BaseModule({
     buttonLabel = 'APPROVE';
     buttonHandler = approveHandler;
   } else if (allowance.isGreaterThan(0)) {
-    buttonLabel = sectionTitles[section];
+    buttonLabel = (setButtonLabel != null) ? setButtonLabel : sectionTitles[section];
     buttonHandler = handleForm;
   } else {
     buttonLabel = 'WAITING . . .';

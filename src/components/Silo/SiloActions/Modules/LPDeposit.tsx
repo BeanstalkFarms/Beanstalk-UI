@@ -289,9 +289,10 @@ export function LPDeposit() {
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
         section={section}
-        sectionTitles={sectionTitles}
+        sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={setAllowance}
+        setButtonLabel={(sectionTitles.length > 1) ? null : "Deposit"}
       >
         {sections[0]}
         {showListTablesIcon}

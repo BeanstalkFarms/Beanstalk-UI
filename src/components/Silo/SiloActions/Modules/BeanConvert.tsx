@@ -234,9 +234,10 @@ export default function BeanConvert() {
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
         section={section}
-        sectionTitles={sectionTitles}
+        sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={setAllowance}
+        setButtonLabel={(sectionTitles.length > 1) ? null : "Convert Beans"}
       >
         {sections[0]}
         {showListTablesIcon}

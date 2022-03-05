@@ -41,26 +41,6 @@ export default function SiloTransaction() {
 
   return (
     <ContentSection id="silo" title="Silo">
-      {/* apyField hidden for now */}
-
-      <HeaderLabelList
-        description={[
-          siloStrings.withdrawSeasons,
-          siloStrings.decreaseSeasons,
-        ]}
-        balanceDescription={[
-          `${withdrawSeasons} Seasons`,
-          `${nextDecrease} Seasons`,
-        ]}
-        title={[
-          'Withdraw Seasons',
-          'Next Decrease',
-        ]}
-        value={[
-          `${withdrawSeasons}`,
-          `${nextDecrease}`,
-        ]}
-      />
       <TabbedForm />
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown

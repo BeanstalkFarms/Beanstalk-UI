@@ -5,14 +5,16 @@ import { BaseModule, Grid, siloStrings } from 'components/Common';
 import Deposit from "./Deposit";
 import Withdraw from "./Withdraw";
 import Convert from "./Convert";
+import { useParams } from "react-router-dom";
 
 export default function TabbedForm() {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
+  const { tokenSlug } = useParams<{ tokenSlug: string }>();
+
   const [section, setSection] = useState(0);
-  const sectionTitles = ['deposit', 'withdraw', 'convert'];
   const sectionTitlesDescription = [
     siloStrings.lpDescription,
     siloStrings.beanDescription,
@@ -22,6 +24,11 @@ export default function TabbedForm() {
   //                    LP             BEANS              CONVERT
   const sections = [<Deposit />, <Withdraw />, <Convert />];
 
+  const sectionTitles = (tokenSlug === "bean-3crv") ? (
+      ['deposit', 'withdraw']
+  ) : (
+      ['deposit', 'withdraw', 'convert']
+  );
 
 
   return (

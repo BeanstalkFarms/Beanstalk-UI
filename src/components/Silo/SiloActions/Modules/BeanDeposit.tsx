@@ -64,14 +64,13 @@ export default function BeanDeposit() {
     );
   };
 
-  const sectionTitles = ['Deposit'];
+  const sectionTitles = ["Deposit"];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit,
     siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
   ];
   const sectionTitlesInfoDescription = [
-    siloStrings.beanDepositsTable,
-    siloStrings.beanWithdrawalsTable,
+    siloStrings.beanDepositsTable
   ];
 
   const handleTabChange = (event, newSection) => {
@@ -175,25 +174,6 @@ export default function BeanDeposit() {
     );
     sectionTitlesInfo.push('Bean Deposits');
   }
-  if (
-    (beanWithdrawals !== undefined &&
-      Object.keys(beanWithdrawals).length > 0) ||
-    beanReceivableBalance.isGreaterThan(0)
-  ) {
-    sectionsInfo.push(
-      <ListTable
-        asset={TransitAsset.Bean}
-        crates={beanWithdrawals}
-        claimableBalance={beanReceivableBalance}
-        claimableCrates={beanReceivableCrates}
-        handleChange={handlePageChange}
-        index={season}
-        indexTitle="Seasons to Arrival"
-        page={page}
-      />
-    );
-    sectionTitlesInfo.push('Bean Withdrawals');
-  }
 
   /* */
   const showListTablesIcon =
@@ -261,11 +241,12 @@ export default function BeanDeposit() {
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
         section={section}
-        sectionTitles={sectionTitles}
+        sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []} // only show titles if user can claim beans
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={updateBeanstalkBeanAllowance}
+        setButtonLabel={(sectionTitles.length > 1) ? null : "Deposit"}
       >
-        {sections[0]}
+        {sections[section]}
         {showListTablesIcon}
       </BaseModule>
       {showListTables}

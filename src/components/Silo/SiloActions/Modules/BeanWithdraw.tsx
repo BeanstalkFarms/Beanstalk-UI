@@ -266,9 +266,10 @@ export default function BeanWithdraw() {
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
         section={section}
-        sectionTitles={sectionTitles}
+        sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={updateBeanstalkBeanAllowance}
+        setButtonLabel={(sectionTitles.length > 1) ? null : "Withdraw"}
       >
         {sections[section]}
         {showListTablesIcon}

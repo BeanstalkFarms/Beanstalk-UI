@@ -4,7 +4,7 @@ import BeanWithdraw from "./Modules/BeanWithdraw";
 import LPWithdraw from "./Modules/LPWithdraw";
 import CurveWithdraw from "./Modules/CurveWithdraw";
 
-export default function Deposit() {
+export default function Withdraw() {
   const { tokenSlug } = useParams<{ tokenSlug: string }>();
 
   return (

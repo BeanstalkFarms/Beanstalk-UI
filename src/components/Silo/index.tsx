@@ -26,10 +26,8 @@ export default function Silo() {
   const { season } = useSelector<AppState, AppState['season']>(
     (state) => state.season
   );
-  const {
-    beanSiloBalance,
-    stalkBalance
-  } = useSelector<AppState, AppState['userBalance']>(
+
+  const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
 
@@ -44,38 +42,6 @@ export default function Silo() {
 
   const metrics = (
     <>
-      <Grid item lg={4} sm={12}>
-        {/* Metrics card: APYs */}
-        <HeaderLabelList
-          title={[
-            'Bean APY',
-            'LP APY',
-          ]}
-          value={[
-            `${beanAPY.toFixed(0) === '0' ? '–' : beanAPY.toFixed(0)}%`,
-            `${lpAPY.toFixed(0) === '0' ? '–' : lpAPY.toFixed(0)}%`,
-          ]}
-          description={[
-            <span>
-              {siloStrings.beanAPY}{' '}
-              <a target="blank" href={APY_CALCULATION}>
-                click here
-              </a>
-            </span>,
-            <span>
-              {siloStrings.lpAPY}{' '}
-              <a target="blank" href={APY_CALCULATION}>
-                click here
-              </a>
-            </span>,
-          ]}
-          balanceDescription={[
-            `${beanAPY.toFixed(2)}%`,
-            `${lpAPY.toFixed(2)}%`,
-          ]}
-          width="100%"
-        />
-      </Grid>
       <Grid item lg={4} sm={12}>
         {/* Metrics card: TVL/30-day */}
         <HeaderLabelList
@@ -107,19 +73,56 @@ export default function Silo() {
         />
       </Grid>
       <Grid item lg={4} sm={12}>
+        {/* Metrics card: APYs */}
+        <HeaderLabelList
+          title={[
+            'My Deposits',
+            'Farmable Beans',
+          ]}
+          value={[
+            <span>
+              {/*TODO: calculate total deposits*/}
+              {/*${userBalance.beanDeposits}*/}
+            </span>,
+            <span>
+              {displayBN(userBalance.farmableBeanBalance.div(10))}
+            </span>,
+          ]}
+          // calculate bean APY
+          // value={[
+          //   `${beanAPY.toFixed(0) === '0' ? '–' : beanAPY.toFixed(0)}%`,
+          //   `${lpAPY.toFixed(0) === '0' ? '–' : lpAPY.toFixed(0)}%`,
+          // ]}
+          description={[
+            <span>
+              desc
+            </span>,
+            <span>
+              desc
+            </span>,
+          ]}
+          balanceDescription={[
+            `${beanAPY.toFixed(2)}%`,
+            `${lpAPY.toFixed(2)}%`,
+          ]}
+          width="100%"
+        />
+      </Grid>
+
+      <Grid item lg={4} sm={12}>
         {/* Metrics card: My Balances */}
         <HeaderLabelList
           // containerTitle="Balances"
           title={[
-            'My Beans',
+            'My Ownership',
             'My Stalk',
           ]}
           value={[
             <span>
-              ${displayBN(beanSiloBalance.div(10))}
+              {displayBN(userBalance.stalkBalance.dividedBy(totalBalance.totalStalk.div(10)))}%
             </span>,
             <span>
-              {displayBN(stalkBalance.div(10))}
+              {displayBN(userBalance.grownStalkBalance.div(10))}
             </span>,
           ]}
           description={[
