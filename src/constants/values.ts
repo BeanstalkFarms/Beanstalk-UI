@@ -44,8 +44,15 @@ export const DELTA_POD_DEMAND_UPPER_BOUND = 1.02; /* 102% */
 export const STEADY_SOW_TIME = 60; /* 60 seconds */
 export const RAIN_TIME = 24; /* 24 Seasons */
 export const PEG_WEATHER_CASES = [
-  3, 1, 0, 0, -1, -3, -3, 0, 3, 1, 0, 0, -1, -3, -3, 0, 3, 3, 1, 0, 0, -1, -3, 0,
-  3, 3, 1, 0, 1, -1, -3, 0,
+  // Dec, Sdy, Inc
+   3,  1,  0, 0,  // Exs Low: P < 1
+  -1, -3, -3, 0,  //          P > 1
+   3,  1,  0, 0,  // Rea Low: P < 1
+  -1, -3, -3, 0,  //          P > 1
+   3,  3,  1, 0,  // Rea Hgh: P < 1
+   0, -1, -3, 0,  //          P > 1
+   3,  3,  1, 0,  // Exs Hgh: P < 1
+   1, -1, -3, 0,  //          P > 1
 ]; /* Peg Maintenance Weather Cases */
 
 /* Website Settings */

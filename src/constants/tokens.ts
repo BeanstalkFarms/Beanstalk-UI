@@ -99,6 +99,6 @@ export function changeAddresses(chainId: number) {
     UNI_V2_ETH_BEAN_LP.addr = '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db';
     USDC.addr = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F';
     CURVE.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC';
-    PRICE.addr = '0xbECa940b55D3f40B1Dd8afD615f278260DCB2bD2';
+    PRICE.addr = '0x9d80cDBFee5c8294BCb2b356F608Db90b2D13d4b';
   }
 }
