@@ -12,7 +12,7 @@ export const deposit = async (
   { onResponse }
 );
 
-// Deposit a token
+// Withdraw a token
 // function withdrawTokenBySeason(address token, uint32 season, uint256 amount)
 // function withdrawTokenBySeasons(address token, uint32[] calldata seasons, uint256[] calldata amounts)
 export const withdraw = async (
