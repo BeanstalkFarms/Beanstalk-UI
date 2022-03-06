@@ -7,7 +7,6 @@ import TOKENS from 'constants/siloTokens';
 export default function SiloDepositPage(props) {
   const { tokenSlug } = useParams<{ tokenSlug: string }>();
   const sections = [<SiloTransaction />];
-  // const tokenData = TOKENS.some((token) => token.slug === tokenSlug);
   const tokenData = TOKENS.filter((token) => token.slug === tokenSlug)[0];
   const sectionTitles = [`${tokenData.name} Silo`];
 

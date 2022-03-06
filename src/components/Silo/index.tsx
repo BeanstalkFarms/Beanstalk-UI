@@ -10,7 +10,7 @@ import {
   siloStrings,
   // HeaderLabelList,
 } from 'components/Common';
-import { displayBN, getAPYs } from 'util/index';
+import { displayBN, getAPYs, poolForLP } from 'util/index';
 import TokenDataTable from "./TokenDataTable";
 
 
@@ -39,6 +39,85 @@ export default function Silo() {
   );
 
   const [beanAPY, lpAPY] = apys;
+
+  const {
+    lpBalance,
+    lpSiloBalance,
+    lpTransitBalance,
+    lpReceivableBalance,
+    curveBalance,
+    curveSiloBalance,
+    curveTransitBalance,
+    curveReceivableBalance,
+    beanBalance,
+    beanReceivableBalance,
+    beanTransitBalance,
+    beanWrappedBalance,
+    beanSiloBalance,
+    harvestablePodBalance
+  } = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
+  const {
+    totalLP,
+    totalCrv3,
+  } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const {
+    beanReserve,
+    ethReserve,
+    beanPrice,
+    beanCrv3Price,
+    curveVirtualPrice,
+    beanCrv3Reserve,
+    crv3Reserve,
+  } = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
+  // START LOGIC COPIED FROM BALANCES/index
+  // TODO: combine logic into one file
+  const poolForLPRatio = (amount: BigNumber) => {
+    return poolForLP(amount, beanReserve, ethReserve, totalLP);
+  };
+  const poolForCurveRatio = (amount: BigNumber) => {
+    return poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
+  };
+
+  const userBeans = beanBalance
+    .plus(beanSiloBalance)
+    .plus(beanTransitBalance)
+    .plus(beanWrappedBalance)
+    .plus(beanReceivableBalance)
+    .plus(harvestablePodBalance);
+  const userLP = lpBalance
+    .plus(lpSiloBalance)
+    .plus(lpTransitBalance)
+    .plus(lpReceivableBalance);
+  const userCurve = curveBalance
+    .plus(curveSiloBalance)
+    .plus(curveTransitBalance)
+    .plus(curveReceivableBalance);
+
+  // Get pool tuples
+  const userBeansAndEth = poolForLPRatio(userLP);
+  const userBeansAndCrv3 = poolForCurveRatio(userCurve);
+
+  const userLPBeans = userBeansAndEth[0].multipliedBy(2);
+  const userCurveBalanceInDollars = (
+    userBeansAndCrv3[0]
+    .multipliedBy(beanCrv3Price)
+    .plus(userBeansAndCrv3[1])
+  ).multipliedBy(curveVirtualPrice);
+
+  const userBalanceInDollars = userBeans
+    .plus(userLPBeans)
+    .multipliedBy(beanPrice)
+    .plus(userCurveBalanceInDollars);
+  // END LOGIC COPIED FROM BALANCES/index
 
   const metrics = (
     <>
@@ -82,7 +161,7 @@ export default function Silo() {
           value={[
             <span>
               {/*TODO: calculate total deposits*/}
-              {/*${userBalance.beanDeposits}*/}
+              ${displayBN(userBalanceInDollars)}
             </span>,
             <span>
               {displayBN(userBalance.farmableBeanBalance.div(10))}
