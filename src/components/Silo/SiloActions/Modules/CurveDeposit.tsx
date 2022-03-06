@@ -231,7 +231,7 @@ export default function CurveDeposit() {
         singleReset
         setButtonLabel={(sectionTitles.length > 1) ? null : "Deposit"}
       >
-        {sections[0]}
+        {sections[section]}
         {showListTablesIcon}
       </BaseModule>
       {showListTables}

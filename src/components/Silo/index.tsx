@@ -59,10 +59,10 @@ export default function Silo() {
           ]}
           description={[
             <span>
-              desc
+              {siloStrings.tvlDescription}
             </span>,
             <span>
-              desc
+              {siloStrings.thirtyDayInterestDescription}
             </span>,
           ]}
           balanceDescription={[
@@ -95,10 +95,10 @@ export default function Silo() {
           // ]}
           description={[
             <span>
-              desc
+              {siloStrings.myDepositsDescription}
             </span>,
             <span>
-              desc
+              {siloStrings.farmableBeansDescription}
             </span>,
           ]}
           balanceDescription={[
@@ -127,10 +127,10 @@ export default function Silo() {
           ]}
           description={[
             <span>
-              desc
+              {siloStrings.myOwnershipDescription}
             </span>,
             <span>
-              desc
+              {siloStrings.farmableStalkDescription}
             </span>,
           ]}
           balanceDescription={[

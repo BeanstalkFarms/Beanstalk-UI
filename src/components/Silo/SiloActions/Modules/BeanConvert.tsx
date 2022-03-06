@@ -239,7 +239,7 @@ export default function BeanConvert() {
         setAllowance={setAllowance}
         setButtonLabel={(sectionTitles.length > 1) ? null : "Convert Beans"}
       >
-        {sections[0]}
+        {sections[section]}
         {showListTablesIcon}
       </BaseModule>
       {showListTables}

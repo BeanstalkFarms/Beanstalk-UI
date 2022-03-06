@@ -294,7 +294,7 @@ export function LPDeposit() {
         setAllowance={setAllowance}
         setButtonLabel={(sectionTitles.length > 1) ? null : "Deposit"}
       >
-        {sections[0]}
+        {sections[section]}
         {showListTablesIcon}
       </BaseModule>
       {showListTables}

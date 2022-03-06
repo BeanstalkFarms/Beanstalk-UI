@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { useSelector, useStore } from 'react-redux';
 import { AppState } from 'state';
-import { getAPYs } from 'util/index';
+import { displayBN, getAPYs } from 'util/index';
 import { makeStyles } from "@material-ui/styles";
 import { theme } from "../../constants";
 import TOKENS from 'constants/siloTokens';
@@ -120,7 +120,7 @@ export default function TokenDataTable() {
                 </TableCell>
                 <TableCell align="center">{Math.round(token.getAPY(apys))}%</TableCell>
                 <TableCell align="center">
-                  {token.getUserBalance(userBalance).decimalPlaces(2).toNumber()}
+                  {displayBN(token.getUserBalance(userBalance))}
                 </TableCell>
                 <TableCell align="center">
                   <Button
