@@ -229,7 +229,7 @@ export default function CurveWithdraw() {
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={updateBeanstalkCurveAllowance}
         singleReset
-        setButtonLabel={(sectionTitles.length > 1) ? null : "Withdraw"}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
       >
         {sections[section]}
         {showListTablesIcon}

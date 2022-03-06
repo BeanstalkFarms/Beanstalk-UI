@@ -239,7 +239,7 @@ export default function LPConvert() {
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={setAllowance}
-        setButtonLabel={(sectionTitles.length > 1) ? null : "Convert LP"}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Convert LP'}
       >
         {sections[section]}
         {showListTablesIcon}

@@ -269,7 +269,7 @@ export default function BeanWithdraw() {
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={updateBeanstalkBeanAllowance}
-        setButtonLabel={(sectionTitles.length > 1) ? null : "Withdraw"}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
       >
         {sections[section]}
         {showListTablesIcon}

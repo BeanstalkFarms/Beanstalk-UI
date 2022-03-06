@@ -96,12 +96,8 @@ export default function Balances() {
   );
 
   // Pool calculators
-  const poolForLPRatio = (amount: BigNumber) => {
-    return poolForLP(amount, beanReserve, ethReserve, totalLP);
-  };
-  const poolForCurveRatio = (amount: BigNumber) => {
-    return poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
-  };
+  const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, beanReserve, ethReserve, totalLP);
+  const poolForCurveRatio = (amount: BigNumber) => poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
 
   const showFirst = window.location.pathname === '/analytics' ? 1 : 0;
   const sectionTitles = ['My Balances', 'Beanstalk'];

@@ -11,8 +11,7 @@ import {
   // HeaderLabelList,
 } from 'components/Common';
 import { displayBN, getAPYs, poolForLP } from 'util/index';
-import TokenDataTable from "./TokenDataTable";
-
+import TokenDataTable from './TokenDataTable';
 
 export default function Silo() {
   // Hide APY's for now since they are misleading
@@ -80,12 +79,8 @@ export default function Silo() {
 
   // START LOGIC COPIED FROM BALANCES/index
   // TODO: combine logic into one file
-  const poolForLPRatio = (amount: BigNumber) => {
-    return poolForLP(amount, beanReserve, ethReserve, totalLP);
-  };
-  const poolForCurveRatio = (amount: BigNumber) => {
-    return poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
-  };
+  const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, beanReserve, ethReserve, totalLP);
+  const poolForCurveRatio = (amount: BigNumber) => poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
 
   const userBeans = beanBalance
     .plus(beanSiloBalance)
@@ -145,8 +140,8 @@ export default function Silo() {
             </span>,
           ]}
           balanceDescription={[
-            ``,
-            ``,
+            '',
+            '',
           ]}
           width="100%"
         />
@@ -160,7 +155,7 @@ export default function Silo() {
           ]}
           value={[
             <span>
-              {/*TODO: calculate total deposits*/}
+              {/* TODO: calculate total deposits */}
               ${displayBN(userBalanceInDollars)}
             </span>,
             <span>
@@ -213,8 +208,8 @@ export default function Silo() {
             </span>,
           ]}
           balanceDescription={[
-            ``,
-            ``,
+            '',
+            '',
           ]}
           width="100%"
         />
@@ -237,13 +232,12 @@ export default function Silo() {
             showButton={false}
             normalBox={false}
             // removeBackground
-            style={{ display: "block", width: "100%" }}
+            style={{ display: 'block', width: '100%' }}
             margin="0"
           >
             <TokenDataTable />
           </BaseModule>
         </Grid>
-
 
       </Grid>
       {/* Silos */}
@@ -280,4 +274,3 @@ export default function Silo() {
 Silo.defaultProps = {
   margin: '-10px 0 -20px 0',
 };
-

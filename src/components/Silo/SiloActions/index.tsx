@@ -10,7 +10,7 @@ import {
   HeaderLabelList,
   siloStrings
 } from 'components/Common';
-import TabbedForm from "./TabbedForm";
+import TabbedForm from './TabbedForm';
 
 // import the TOKENS array
 // grab the :token parameter from react-router

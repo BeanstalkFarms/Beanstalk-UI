@@ -12,10 +12,9 @@ import {
 import { useSelector, useStore } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN, getAPYs } from 'util/index';
-import { makeStyles } from "@material-ui/styles";
-import { theme } from "../../constants";
+import { makeStyles } from '@material-ui/styles';
 import TOKENS from 'constants/siloTokens';
-
+import { theme } from '../../constants';
 
 const useStyles = makeStyles({
   table: {
@@ -25,15 +24,13 @@ const useStyles = makeStyles({
     borderRadius: 25
   },
   tableBox: {
-    display: "block",
-    width: "100%"
+    display: 'block',
+    width: '100%'
   },
   tablePaper: {
     borderRadius: 25
   }
 });
-
-
 
 export default function TokenDataTable() {
   const classes = useStyles();
@@ -56,8 +53,6 @@ export default function TokenDataTable() {
   const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-
-
 
   // on each render, grab APY array
   const apys = getAPYs(

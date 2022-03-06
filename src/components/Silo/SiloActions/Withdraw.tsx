@@ -1,8 +1,8 @@
 import React from 'react';
-import { useParams } from "react-router-dom";
-import BeanWithdraw from "./Modules/BeanWithdraw";
-import LPWithdraw from "./Modules/LPWithdraw";
-import CurveWithdraw from "./Modules/CurveWithdraw";
+import { useParams } from 'react-router-dom';
+import BeanWithdraw from './Modules/BeanWithdraw';
+import LPWithdraw from './Modules/LPWithdraw';
+import CurveWithdraw from './Modules/CurveWithdraw';
 
 export default function Withdraw() {
   const { tokenSlug } = useParams<{ tokenSlug: string }>();

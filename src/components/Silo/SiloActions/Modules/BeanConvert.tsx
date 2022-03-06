@@ -237,7 +237,7 @@ export default function BeanConvert() {
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={setAllowance}
-        setButtonLabel={(sectionTitles.length > 1) ? null : "Convert Beans"}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Convert Beans'}
       >
         {sections[section]}
         {showListTablesIcon}

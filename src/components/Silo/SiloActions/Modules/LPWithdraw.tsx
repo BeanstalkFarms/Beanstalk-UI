@@ -291,7 +291,7 @@ export default function LPWithdraw() {
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={setAllowance}
-        setButtonLabel={(sectionTitles.length > 1) ? null : "Withdraw"}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
       >
         {sections[section]}
         {showListTablesIcon}

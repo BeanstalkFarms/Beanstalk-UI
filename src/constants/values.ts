@@ -18,7 +18,7 @@ export const GOVERNANCE_EXPIRATION = 25; /* 24 + 1 seasons */
 // export const GOVERNANCE_PROPOSAL_THRESHOLD = 1e16; /* 0.5% */
 
 /* Silo */
-//export const BASE_ADVANCE_INCENTIVE = 1e8; /* 100 beans */
+// export const BASE_ADVANCE_INCENTIVE = 1e8; /* 100 beans */
 
 export const BEAN_TO_STALK = 1;
 export const BEAN_TO_SEEDS = 2;

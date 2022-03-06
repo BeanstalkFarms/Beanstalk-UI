@@ -229,7 +229,7 @@ export default function CurveDeposit() {
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={updateBeanstalkCurveAllowance}
         singleReset
-        setButtonLabel={(sectionTitles.length > 1) ? null : "Deposit"}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
       >
         {sections[section]}
         {showListTablesIcon}

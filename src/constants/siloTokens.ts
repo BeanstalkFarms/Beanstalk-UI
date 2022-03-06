@@ -6,9 +6,9 @@ import {
   CURVE_BDV_TO_STALK,
   LPBEAN_TO_STALK,
   LPBEANS_TO_SEEDS
-} from "./values";
-import { getAPYs } from "../util";
-import { AppState } from "../state";
+} from './values';
+import { getAPYs } from '../util';
+import { AppState } from '../state';
 
 const TOKENS = [
   {
@@ -18,15 +18,10 @@ const TOKENS = [
       stalk: BEAN_TO_STALK,
       seeds: BEAN_TO_SEEDS,
     },
-    getAPY: (apys: ReturnType<typeof getAPYs>) => {
-      return apys[0]; // Bean
-    },
-    getTotalBalance: (totalBalances: AppState['totalBalance']) => {
-      return totalBalances.totalBeans;
-    },
-    getUserBalance: (userBalances: AppState['userBalance']) => {
-      return userBalances.beanSiloBalance;
-    }
+    getAPY: (apys: ReturnType<typeof getAPYs>) => 
+       apys[0], // Bean    
+    getTotalBalance: (totalBalances: AppState['totalBalance']) => totalBalances.totalBeans,
+    getUserBalance: (userBalances: AppState['userBalance']) => userBalances.beanSiloBalance
   },
   {
     name: 'Bean:ETH',
@@ -35,15 +30,10 @@ const TOKENS = [
       stalk: LPBEAN_TO_STALK,
       seeds: LPBEANS_TO_SEEDS,
     },
-    getAPY: (apys: ReturnType<typeof getAPYs>) => {
-      return apys[1]; // LP
-    },
-    getTotalBalance: (totalBalances: AppState['totalBalance']) => {
-      return totalBalances.totalSiloBeans;
-    },
-    getUserBalance: (userBalances: AppState['userBalance']) => {
-      return userBalances.lpSiloBalance;
-    }
+    getAPY: (apys: ReturnType<typeof getAPYs>) => 
+       apys[1], // LP    
+    getTotalBalance: (totalBalances: AppState['totalBalance']) => totalBalances.totalSiloBeans,
+    getUserBalance: (userBalances: AppState['userBalance']) => userBalances.lpSiloBalance
   },
   {
     name: 'Bean:3CRV',
@@ -52,15 +42,10 @@ const TOKENS = [
       stalk: CURVE_BDV_TO_STALK,
       seeds: CURVE_BDV_TO_SEEDS,
     },
-    getAPY: (apys: ReturnType<typeof getAPYs>) => {
-      return apys[1]; // LP
-    },
-    getTotalBalance: (totalBalances: AppState['totalBalance']) => {
-      return totalBalances.totalCurveBeans;
-    },
-    getUserBalance: (userBalances: AppState['userBalance']) => {
-      return userBalances.curveSiloBalance;
-    }
+    getAPY: (apys: ReturnType<typeof getAPYs>) => 
+       apys[1], // LP    
+    getTotalBalance: (totalBalances: AppState['totalBalance']) => totalBalances.totalCurveBeans,
+    getUserBalance: (userBalances: AppState['userBalance']) => userBalances.curveSiloBalance
   }
 ];
 

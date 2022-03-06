@@ -292,7 +292,7 @@ export function LPDeposit() {
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={setAllowance}
-        setButtonLabel={(sectionTitles.length > 1) ? null : "Deposit"}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
       >
         {sections[section]}
         {showListTablesIcon}

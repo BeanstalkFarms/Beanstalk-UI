@@ -1,7 +1,7 @@
 import React from 'react';
 import { Page } from 'Pages/index';
 import SiloTransaction from 'components/Silo/SiloActions';
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import TOKENS from 'constants/siloTokens';
 
 export default function SiloDepositPage(props) {

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { BaseModule, Grid, siloStrings } from 'components/Common';
-import Deposit from "./Deposit";
-import Withdraw from "./Withdraw";
-import Convert from "./Convert";
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
+import Deposit from './Deposit';
+import Withdraw from './Withdraw';
+import Convert from './Convert';
 
 export default function TabbedForm() {
   const { width } = useSelector<AppState, AppState['general']>(
@@ -24,12 +24,11 @@ export default function TabbedForm() {
   //                    LP             BEANS              CONVERT
   const sections = [<Deposit />, <Withdraw />, <Convert />];
 
-  const sectionTitles = (tokenSlug === "bean-3crv") ? (
+  const sectionTitles = (tokenSlug === 'bean-3crv') ? (
       ['deposit', 'withdraw']
   ) : (
       ['deposit', 'withdraw', 'convert']
   );
-
 
   return (
     <Grid

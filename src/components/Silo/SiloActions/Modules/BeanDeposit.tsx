@@ -3,13 +3,13 @@ import { Box, IconButton } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { BaseModule, ListTable, SiloAsset, siloStrings, TransitAsset } from 'components/Common';
-import BigNumber from "bignumber.js";
-import { BASE_SLIPPAGE } from "../../../../constants";
-import { approveBeanstalkBean, poolForLP, SwapMode } from "../../../../util";
-import { updateBeanstalkBeanAllowance } from "../../../../state/allowances/actions";
-import { BeanDepositModule } from "./Old/BeanDepositModule";
-import { BeanClaimModule } from "./SubModules/BeanClaimModule";
-import { List as ListIcon } from "@material-ui/icons";
+import BigNumber from 'bignumber.js';
+import { List as ListIcon } from '@material-ui/icons';
+import { BASE_SLIPPAGE } from '../../../../constants';
+import { approveBeanstalkBean, poolForLP, SwapMode } from '../../../../util';
+import { updateBeanstalkBeanAllowance } from '../../../../state/allowances/actions';
+import { BeanDepositModule } from './Old/BeanDepositModule';
+import { BeanClaimModule } from './SubModules/BeanClaimModule';
 
 export default function BeanDeposit() {
    const { beanstalkBeanAllowance } = useSelector<
@@ -64,7 +64,7 @@ export default function BeanDeposit() {
     );
   };
 
-  const sectionTitles = ["Deposit"];
+  const sectionTitles = ['Deposit'];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit,
     siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
@@ -222,8 +222,6 @@ export default function BeanDeposit() {
       ? beanstalkBeanAllowance
       : new BigNumber(1);
 
-
-
   return (
     <>
       <BaseModule
@@ -244,13 +242,12 @@ export default function BeanDeposit() {
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []} // only show titles if user can claim beans
         sectionTitlesDescription={sectionTitlesDescription}
         setAllowance={updateBeanstalkBeanAllowance}
-        setButtonLabel={(sectionTitles.length > 1) ? null : "Deposit"}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
       >
         {sections[section]}
         {showListTablesIcon}
       </BaseModule>
       {showListTables}
-
 
     </>
   );
