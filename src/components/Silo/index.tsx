@@ -9,7 +9,7 @@ import {
   siloStrings,
   // HeaderLabelList,
 } from 'components/Common';
-import { displayBN, getAPYs, poolForLP } from 'util/index';
+import { displayBN, displayFullBN, getAPYs, poolForLP } from 'util/index';
 import TokenDataTable from './TokenDataTable';
 
 export default function Silo() {
@@ -119,24 +119,16 @@ export default function Silo() {
             '30 Day Interest',
           ]}
           value={[
-            <span>
-              ${displayBN(totalBalance.totalSiloBeans)}
-            </span>,
-            <span>
-              {displayBN(new BigNumber(604622))}
-            </span>,
-          ]}
-          description={[
-            <span>
-              {siloStrings.tvlDescription}
-            </span>,
-            <span>
-              {siloStrings.thirtyDayInterestDescription}
-            </span>,
+            <span>${displayBN(totalBalance.totalSiloBeans)}</span>,
+            <span>{displayBN(new BigNumber(farmableMonth).multipliedBy(720))}</span>,
           ]}
           balanceDescription={[
             '',
             '',
+          ]}
+          description={[
+            <span>{siloStrings.tvlDescription}</span>,
+            <span>{siloStrings.thirtyDayInterestDescription}</span>,
           ]}
           width="100%"
         />
@@ -149,19 +141,13 @@ export default function Silo() {
             'Farmable Beans',
           ]}
           value={[
-            <span>
-              {/* TODO: calculate total deposits */}
-              ${displayBN(userBalanceInDollars)}
-            </span>,
-            <span>
-              {displayBN(userBalance.farmableBeanBalance.div(10))}
-            </span>,
+            <span>${displayBN(userBalanceInDollars)}</span>,
+            <span>{displayBN(userBalance.farmableBeanBalance)}</span>,
           ]}
-          // calculate bean APY
-          // value={[
-          //   `${beanAPY.toFixed(0) === '0' ? '–' : beanAPY.toFixed(0)}%`,
-          //   `${lpAPY.toFixed(0) === '0' ? '–' : lpAPY.toFixed(0)}%`,
-          // ]}
+          balanceDescription={[
+            `${displayFullBN(userBalanceInDollars)}%`,
+            `${displayFullBN(userBalance.farmableBeanBalance)}%`,
+          ]}
           description={[
             <span>
               {siloStrings.myDepositsDescription}
@@ -170,29 +156,30 @@ export default function Silo() {
               {siloStrings.farmableBeansDescription}
             </span>,
           ]}
-          balanceDescription={[
-            `${beanAPY.toFixed(2)}%`,
-            `${lpAPY.toFixed(2)}%`,
-          ]}
           width="100%"
         />
       </Grid>
-
       <Grid item lg={4} sm={12}>
         {/* Metrics card: My Balances */}
         <HeaderLabelList
           // containerTitle="Balances"
           title={[
             'My Ownership',
-            'My Stalk',
+            'Farmable Stalk',
           ]}
           value={[
             <span>
-              {displayBN(userBalance.stalkBalance.dividedBy(totalBalance.totalStalk.div(10)))}%
+              {displayBN(
+                userBalance.stalkBalance
+                  .dividedBy(totalBalance.totalStalk)
+                  .multipliedBy(100)
+              )}%
             </span>,
-            <span>
-              {displayBN(userBalance.grownStalkBalance.div(10))}
-            </span>,
+            <span>{displayBN(userBalance.grownStalkBalance)}</span>,
+          ]}
+          balanceDescription={[
+            '',
+            '',
           ]}
           description={[
             <span>
@@ -202,67 +189,32 @@ export default function Silo() {
               {siloStrings.farmableStalkDescription}
             </span>,
           ]}
-          balanceDescription={[
-            '',
-            '',
-          ]}
           width="100%"
         />
       </Grid>
-      {/* Select a silo */}
     </>
   );
 
   return (
-    <>
-      <Grid container justifyContent="center">
-        <Grid item xs={12} sm={10} lg={8} container spacing={2}>
-          {metrics}
-        </Grid>
-        <Grid item xs={12} sm={10} lg={8} container justifyContent="center">
-          <BaseModule
-            section={0}
-            sectionTitles={[]}
-            sectionTitlesDescription={[]}
-            showButton={false}
-            normalBox={false}
-            // removeBackground
-            style={{ display: 'block', width: '100%' }}
-            margin="0"
-          >
-            <TokenDataTable />
-          </BaseModule>
-        </Grid>
-
+    <Grid container justifyContent="center">
+      <Grid item xs={12} sm={10} lg={8} container spacing={2}>
+        {metrics}
       </Grid>
-      {/* Silos */}
-      {/* <HeaderLabelList
-        description={[
-          siloStrings.withdrawSeasons,
-          siloStrings.decreaseSeasons,
-        ]}
-        balanceDescription={[
-          `${withdrawSeasons} Seasons`,
-          `${nextDecrease} Seasons`,
-        ]}
-        title={[
-          'Withdraw Seasons',
-          'Next Decrease',
-        ]}
-        value={[
-          `${withdrawSeasons}`,
-          `${nextDecrease}`,
-        ]}
-      /> */}
-      {/* <TabbedSilo /> */}
-      {/* <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-        <ContentDropdown
-          description={siloStrings.siloDescription.replace('{0}', withdrawSeasons)}
-          descriptionTitle="What is the Silo?"
-          descriptionLinks={descriptionLinks}
-        />
-      </Grid> */}
-    </>
+      <Grid item xs={12} sm={10} lg={8} container justifyContent="center">
+        <BaseModule
+          section={0}
+          sectionTitles={[]}
+          sectionTitlesDescription={[]}
+          showButton={false}
+          normalBox={false}
+          // removeBackground
+          style={{ display: 'block', width: '100%' }}
+          margin="0"
+        >
+          <TokenDataTable />
+        </BaseModule>
+      </Grid>
+    </Grid>
   );
 }
 
