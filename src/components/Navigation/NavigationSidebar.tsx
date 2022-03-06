@@ -67,10 +67,6 @@ const NAVIGATION_MAP = {
       title: 'BeaNFTs',
     },
     {
-      path: 'poker',
-      title: 'Poker',
-    },
-    {
       path: 'about',
       title: 'About',
     },

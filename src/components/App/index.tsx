@@ -31,7 +31,6 @@ import {
   AboutPage,
   BalancesPage,
   PegMaintenancePage,
-  PokerPage,
 } from 'Pages';
 
 import Wrapper from './Wrapper';
@@ -122,9 +121,6 @@ export default function App() {
           </Route>
           <Route exact path="/market">
             <MarketplacePage key="marketplace" />
-          </Route>
-          <Route exact path="/poker">
-            <PokerPage key="poker" />
           </Route>
           {/* If nothing matches, go to the Silo */}
           <Redirect to="/farm/silo" />
