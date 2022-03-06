@@ -1,5 +1,4 @@
 import React from 'react';
-import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { MEDIUM_INTEREST_LINK } from 'constants/index';
@@ -7,7 +6,6 @@ import {
   ContentDropdown,
   ContentSection,
   Grid,
-  HeaderLabelList,
   siloStrings
 } from 'components/Common';
 import TabbedForm from './TabbedForm';
@@ -22,22 +20,12 @@ export default function SiloTransaction() {
     (state) => state.totalBalance
   );
 
-  const { season } = useSelector<AppState, AppState['season']>(
-    (state) => state.season
-  );
-
   const descriptionLinks = [
     {
       href: `${MEDIUM_INTEREST_LINK}#8b79`,
       text: 'Read More',
     },
   ];
-
-  const nextDecrease = withdrawSeasons.isGreaterThan(13) ?
-    (new BigNumber(84)).minus(season.mod(84)) :
-    (withdrawSeasons.isGreaterThan(5) ?
-    (new BigNumber(168)).minus(season.mod(168)) :
-    'na');
 
   return (
     <ContentSection id="silo" title="Silo">

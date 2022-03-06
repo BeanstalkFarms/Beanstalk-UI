@@ -109,13 +109,13 @@ export default function BeanWithdraw() {
     }
   }
 
-  const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
-    const endPrice = prices.ethReserve
-      .plus(sellEth)
-      .dividedBy(prices.beanReserve.minus(buyBeans))
-      .dividedBy(prices.usdcPrice);
-    return prices.beanPrice.plus(endPrice).dividedBy(2);
-  };
+  // const updateExpectedPrice = (sellEth: BigNumber, buyBeans: BigNumber) => {
+  //   const endPrice = prices.ethReserve
+  //     .plus(sellEth)
+  //     .dividedBy(prices.beanReserve.minus(buyBeans))
+  //     .dividedBy(prices.usdcPrice);
+  //   return prices.beanPrice.plus(endPrice).dividedBy(2);
+  // };
 
   const depositRef = useRef<any>();
   const withdrawRef = useRef<any>();

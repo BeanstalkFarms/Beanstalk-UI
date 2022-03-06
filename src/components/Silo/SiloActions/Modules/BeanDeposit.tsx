@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Box, IconButton } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { BaseModule, ListTable, SiloAsset, siloStrings, TransitAsset } from 'components/Common';
+import { BaseModule, ListTable, SiloAsset, siloStrings } from 'components/Common';
 import BigNumber from 'bignumber.js';
 import { List as ListIcon } from '@material-ui/icons';
 import { BASE_SLIPPAGE } from '../../../../constants';
@@ -23,10 +23,8 @@ export default function BeanDeposit() {
     beanDeposits,
     lockedSeasons,
     beanReceivableBalance,
-    beanReceivableCrates,
     farmableBeanBalance,
     rawBeanDeposits,
-    beanWithdrawals,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -128,15 +126,16 @@ export default function BeanDeposit() {
         break;
     }
   };
-/* */
+  
+  /* */
   const sections = [
     <BeanDepositModule
       key={0}
-      poolForLPRatio={poolForLPRatio}
       ref={depositRef}
       setIsFormDisabled={setIsFormDisabled}
       setSettings={setSettings}
       settings={settings}
+      poolForLPRatio={poolForLPRatio}
       updateExpectedPrice={updateExpectedPrice}
     />
   ];

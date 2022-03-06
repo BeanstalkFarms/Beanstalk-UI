@@ -31,10 +31,7 @@ export default function LPConvert() {
 
   const {
     lpDeposits,
-    beanDeposits,
     lpSeedDeposits,
-    farmableBeanBalance,
-    rawBeanDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );

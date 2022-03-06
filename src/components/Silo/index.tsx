@@ -2,7 +2,6 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { APY_CALCULATION } from 'constants/index';
 import {
   BaseModule,
   Grid,
@@ -22,10 +21,6 @@ export default function Silo() {
   const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
-  const { season } = useSelector<AppState, AppState['season']>(
-    (state) => state.season
-  );
-
   const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );

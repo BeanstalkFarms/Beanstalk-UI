@@ -9,7 +9,7 @@ import {
   TableHead,
   TableRow
 } from '@material-ui/core';
-import { useSelector, useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN, getAPYs } from 'util/index';
 import { makeStyles } from '@material-ui/styles';
@@ -35,10 +35,6 @@ const useStyles = makeStyles({
 export default function TokenDataTable() {
   const classes = useStyles();
 
-  const { stats } = useSelector<AppState, AppState['marketplace']>(
-    (state) => state.marketplace
-  );
-
   const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
@@ -61,31 +57,29 @@ export default function TokenDataTable() {
     parseFloat(totalBalance.totalSeeds)
   );
 
-  const [beanAPY, lpAPY] = apys;
-
-  const testTokens = [
-    {
-      label: 'BEAN:ETH',
-      slug: 'bean-eth',
-      rewards: '1 Stalk, 4 Seeds',
-      apy: 17,
-      deposits: 1224
-    },
-    {
-      label: 'BEAN:3CRV',
-      slug: 'bean-3crv',
-      rewards: '1 Stalk, 4 Seeds',
-      apy: 17,
-      deposits: 1224
-    },
-    {
-      label: 'Bean Silo',
-      slug: 'bean-silo',
-      rewards: '1 Stalk, 4 Seeds',
-      apy: 17,
-      deposits: 1224
-    },
-  ];
+  // const testTokens = [
+  //   {
+  //     label: 'BEAN:ETH',
+  //     slug: 'bean-eth',
+  //     rewards: '1 Stalk, 4 Seeds',
+  //     apy: 17,
+  //     deposits: 1224
+  //   },
+  //   {
+  //     label: 'BEAN:3CRV',
+  //     slug: 'bean-3crv',
+  //     rewards: '1 Stalk, 4 Seeds',
+  //     apy: 17,
+  //     deposits: 1224
+  //   },
+  //   {
+  //     label: 'Bean Silo',
+  //     slug: 'bean-silo',
+  //     rewards: '1 Stalk, 4 Seeds',
+  //     apy: 17,
+  //     deposits: 1224
+  //   },
+  // ];
 
   return (
     <Box className={classes.tableBox}>

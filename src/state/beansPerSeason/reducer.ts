@@ -4,10 +4,10 @@ import {
 } from './actions';
 
 export interface BeansPerSeasonState {
-  farmableWeek: Number;
-  farmableMonth: Number;
-  harvestableWeek: Number;
-  harvestableMonth: Number;
+  farmableWeek: number;
+  farmableMonth: number;
+  harvestableWeek: number;
+  harvestableMonth: number;
 }
 
 export const initialState: BeansPerSeasonState = {

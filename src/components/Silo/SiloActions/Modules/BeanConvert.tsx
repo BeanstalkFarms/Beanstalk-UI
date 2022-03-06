@@ -13,7 +13,6 @@ import {
   approveBeanstalkBean,
   approveBeanstalkLP,
   SwapMode,
-  poolForLP,
 } from 'util/index';
 import {
   BaseModule,
@@ -30,9 +29,7 @@ export default function BeanConvert() {
   >((state) => state.allowances);
 
   const {
-    lpDeposits,
     beanDeposits,
-    lpSeedDeposits,
     farmableBeanBalance,
     rawBeanDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
@@ -51,20 +48,6 @@ export default function BeanConvert() {
   const season = useSelector<AppState, AppState['season']>(
     (state) => state.season.season
   );
-
-  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
-    (state) => state.totalBalance
-  );
-
-  const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
-    return poolForLP(
-      amount,
-      beanReserve,
-      ethReserve,
-      totalBalance.totalLP
-    );
-  };
 
   const [section, setSection] = useState(+beanPrice.isGreaterThanOrEqualTo(1));
   const [sectionInfo, setSectionInfo] = useState(0);
