@@ -10,10 +10,15 @@ import {
 import { getAPYs } from '../util';
 import { AppState } from '../state';
 
+import beanIcon from '../img/bean-logo.svg';
+import beanEthIcon from '../img/bean-eth-logo.svg';
+import bean3CrvIcon from '../img/bean-curve-logo.svg';
+
 const TOKENS = [
   {
     name: 'Bean',
     slug: 'bean',
+    icon: beanIcon,
     rewards: {
       stalk: BEAN_TO_STALK,
       seeds: BEAN_TO_SEEDS,
@@ -26,6 +31,7 @@ const TOKENS = [
   {
     name: 'Bean:ETH',
     slug: 'bean-eth',
+    icon: beanEthIcon,
     rewards: {
       stalk: LPBEAN_TO_STALK,
       seeds: LPBEANS_TO_SEEDS,
@@ -38,6 +44,7 @@ const TOKENS = [
   {
     name: 'Bean:3CRV',
     slug: 'bean-3crv',
+    icon: bean3CrvIcon,
     rewards: {
       stalk: CURVE_BDV_TO_STALK,
       seeds: CURVE_BDV_TO_SEEDS,

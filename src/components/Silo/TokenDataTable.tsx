@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -10,16 +9,20 @@ import {
   TableRow
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { AppState } from 'state';
-import { displayBN, getAPYs } from 'util/index';
+import { displayBN, getAPYs, SiloAsset } from 'util/index';
 import { makeStyles } from '@material-ui/styles';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+
 import TOKENS from 'constants/siloTokens';
+import TokenIcon from 'components/Common/TokenIcon';
 import { theme } from '../../constants';
 
 const useStyles = makeStyles({
   table: {
-    margin: '9px',
-    width: 'auto',
+    // margin: '9px 0px',
+    // width: 'auto',
     backgroundColor: theme.module.background,
     borderRadius: 25
   },
@@ -29,11 +32,56 @@ const useStyles = makeStyles({
   },
   tablePaper: {
     borderRadius: 25
+  },
+  tokenImage: {
+    display: 'inline-block',
+    marginRight: 12,
+    height: 30,
+    width: 30
+  },
+  tokenNameCell: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  row: {
+    '&:hover': {
+      background: 'rgba(0, 0, 0, 0.04)',
+      cursor: 'pointer',
+    }
+  },
+  headerCell: {
+    fontWeight: 'bold',
   }
 });
 
+// const testTokens = [
+//   {
+//     label: 'BEAN:ETH',
+//     slug: 'bean-eth',
+//     rewards: '1 Stalk, 4 Seeds',
+//     apy: 17,
+//     deposits: 1224
+//   },
+//   {
+//     label: 'BEAN:3CRV',
+//     slug: 'bean-3crv',
+//     rewards: '1 Stalk, 4 Seeds',
+//     apy: 17,
+//     deposits: 1224
+//   },
+//   {
+//     label: 'Bean Silo',
+//     slug: 'bean-silo',
+//     rewards: '1 Stalk, 4 Seeds',
+//     apy: 17,
+//     deposits: 1224
+//   },
+// ];
+
 export default function TokenDataTable() {
   const classes = useStyles();
+  const history = useHistory();
 
   const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
@@ -42,9 +90,6 @@ export default function TokenDataTable() {
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-
-  // console.log("TOTAL BEANS: ");
-  // console.log(totalBalance.totalBeans.toNumber());
 
   const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
@@ -57,69 +102,47 @@ export default function TokenDataTable() {
     parseFloat(totalBalance.totalSeeds)
   );
 
-  // const testTokens = [
-  //   {
-  //     label: 'BEAN:ETH',
-  //     slug: 'bean-eth',
-  //     rewards: '1 Stalk, 4 Seeds',
-  //     apy: 17,
-  //     deposits: 1224
-  //   },
-  //   {
-  //     label: 'BEAN:3CRV',
-  //     slug: 'bean-3crv',
-  //     rewards: '1 Stalk, 4 Seeds',
-  //     apy: 17,
-  //     deposits: 1224
-  //   },
-  //   {
-  //     label: 'Bean Silo',
-  //     slug: 'bean-silo',
-  //     rewards: '1 Stalk, 4 Seeds',
-  //     apy: 17,
-  //     deposits: 1224
-  //   },
-  // ];
-
   return (
     <Box className={classes.tableBox}>
       <TableContainer className={classes.table}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow>
-              <TableCell>SILO</TableCell>
-              <TableCell align="center">REWARDS</TableCell>
-              <TableCell align="center">APY</TableCell>
-              <TableCell align="center">DEPOSITS</TableCell>
-              <TableCell align="center"> </TableCell>
+              <TableCell className={classes.headerCell}>SILO</TableCell>
+              <TableCell align="left" className={classes.headerCell}>REWARDS</TableCell>
+              <TableCell align="left" className={classes.headerCell}>vAPY</TableCell>
+              <TableCell align="right" className={classes.headerCell}>DEPOSITS</TableCell>
+              <TableCell align="center" className={classes.headerCell}> </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-
             {TOKENS.map((token) => (
-              <TableRow
-                key={token.name}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
+              <TableRow key={token.name} className={classes.row} onClick={() => history.push(`/farm/silo/${token.slug}`)}>
                 <TableCell component="th" scope="row">
-                  {token.name}
+                  <div className={classes.tokenNameCell}>
+                    <img src={token.icon} alt="" className={classes.tokenImage} />
+                    <span>{token.name}</span>
+                  </div>
                 </TableCell>
-                <TableCell align="center">
-                  {token.rewards.stalk} Stalk, {token.rewards.seeds} Seeds
+                <TableCell align="left" style={{ fontSize: 15 }}>
+                  <span>{token.rewards.stalk}<TokenIcon token={SiloAsset.Stalk} style={{ width: '17px', height: '17px' }} /></span>
+                  <span>&nbsp;</span>
+                  <span>{token.rewards.seeds}<TokenIcon token={SiloAsset.Seed} style={{ width: '17px', height: '17px' }} /></span>
                 </TableCell>
-                <TableCell align="center">{Math.round(token.getAPY(apys))}%</TableCell>
-                <TableCell align="center">
+                <TableCell align="left">{Math.round(token.getAPY(apys))}%</TableCell>
+                <TableCell align="right">
                   {displayBN(token.getUserBalance(userBalance))}
                 </TableCell>
                 <TableCell align="center">
-                  <Button
+                  <ChevronRightIcon />
+                  {/* <Button
                     style={{ marginTop: '8px', marginBottom: '8px', textAlign: 'center' }}
                     color="primary"
                     variant="contained"
                     href={`/farm/silo/${token.slug}`}
                   >
                     ENTER
-                  </Button>
+                  </Button> */}
                 </TableCell>
               </TableRow>
             ))}

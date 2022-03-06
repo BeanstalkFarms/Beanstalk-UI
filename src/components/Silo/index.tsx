@@ -7,9 +7,8 @@ import {
   Grid,
   HeaderLabelList,
   siloStrings,
-  // HeaderLabelList,
 } from 'components/Common';
-import { displayBN, displayFullBN, getAPYs, poolForLP } from 'util/index';
+import { displayBN, displayFullBN, poolForLP } from 'util/index';
 import TokenDataTable from './TokenDataTable';
 
 export default function Silo() {
@@ -24,15 +23,6 @@ export default function Silo() {
   const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-
-  // on each render, grab APY array
-  const apys = getAPYs(
-    farmableMonth,
-    parseFloat(totalBalance.totalStalk),
-    parseFloat(totalBalance.totalSeeds)
-  );
-
-  const [beanAPY, lpAPY] = apys;
 
   const {
     lpBalance,
@@ -109,10 +99,13 @@ export default function Silo() {
     .plus(userCurveBalanceInDollars);
   // END LOGIC COPIED FROM BALANCES/index
 
+  const farmableMonthTotal = new BigNumber(farmableMonth).multipliedBy(720);
+
   const metrics = (
     <>
       <Grid item lg={4} sm={12}>
-        {/* Metrics card: TVL/30-day */}
+        {/*
+          * Metrics card: TVL/30-day */}
         <HeaderLabelList
           title={[
             'TVL',
@@ -120,7 +113,7 @@ export default function Silo() {
           ]}
           value={[
             <span>${displayBN(totalBalance.totalSiloBeans)}</span>,
-            <span>{displayBN(new BigNumber(farmableMonth).multipliedBy(720))}</span>,
+            <span>{displayBN(farmableMonthTotal)}</span>,
           ]}
           balanceDescription={[
             '',
@@ -134,7 +127,8 @@ export default function Silo() {
         />
       </Grid>
       <Grid item lg={4} sm={12}>
-        {/* Metrics card: APYs */}
+        {/*
+          * Metrics card: APYs */}
         <HeaderLabelList
           title={[
             'My Deposits',
@@ -145,8 +139,8 @@ export default function Silo() {
             <span>{displayBN(userBalance.farmableBeanBalance)}</span>,
           ]}
           balanceDescription={[
-            `${displayFullBN(userBalanceInDollars)}%`,
-            `${displayFullBN(userBalance.farmableBeanBalance)}%`,
+            `$${userBalanceInDollars.toFixed(2)}`,
+            `${displayFullBN(userBalance.farmableBeanBalance)} Beans`,
           ]}
           description={[
             <span>
@@ -208,7 +202,14 @@ export default function Silo() {
           showButton={false}
           normalBox={false}
           // removeBackground
-          style={{ display: 'block', width: '100%' }}
+          style={{
+            display: 'block',
+            width: '100%',
+            // Override padding. This allows the <TokenDataTable />
+            // to extend all the way to the edges of the screen and control
+            // its own sizing accordingly.
+            padding: 0,
+          }}
           margin="0"
         >
           <TokenDataTable />
