@@ -31,7 +31,6 @@ import {
   AboutPage,
   BalancesPage,
   PegMaintenancePage,
-  PokerPage,
 } from 'Pages';
 
 import Wrapper from './Wrapper';
