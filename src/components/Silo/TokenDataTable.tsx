@@ -100,7 +100,7 @@ export default function TokenDataTable() {
               <TableCell className={`${classes.headerCell}`}>
                 SILO
                 <QuestionModule
-                  description={siloStrings.siloDescription.replace('{0}', totalBalance.withdrawSeasons)}
+                  description={siloStrings.siloDescription.replace('{0}', totalBalance.withdrawSeasons.toFixed(0))}
                   placement="right"
                   margin="-7px 8px 0 0"
                 />
@@ -136,19 +136,22 @@ export default function TokenDataTable() {
           </TableHead>
           <TableBody>
             {TOKENS.map((token) => (
-              <TableRow key={token.name} className={classes.row} onClick={() => history.push(`/farm/silo/${token.slug}`)}>
+              <TableRow
+                key={token.name}
+                className={classes.row}
+                onClick={() => history.push(`/silo/${token.slug}`)}
+              >
                 <TableCell scope="row">
                   <div className={classes.tokenNameCell}>
                     <img src={token.icon} alt="" className={classes.tokenImage} />
                     <span>{token.name}</span>
                   </div>
                 </TableCell>
-                <TableCell align="left" style={{ fontSize: 15 }}>
+                <TableCell align="left">
                   <FormatTooltip
                     margin="10px"
                     placement="top"
                     title={(
-                      // 'Test'
                       <>
                         <span><strong>{token.rewards.stalk} Stalk</strong>: {siloStrings.stalkDescription}</span><br />
                         <span><strong>{token.rewards.seeds} Seeds</strong>: {siloStrings.seedDescription}</span>

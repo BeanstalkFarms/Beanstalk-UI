@@ -23,17 +23,17 @@ import PriceTooltip from './PriceTooltip';
 const NAVIGATION_MAP = {
   farm: [
     {
-      path: 'farm/silo',
+      path: 'silo',
       title: 'Silo',
       desc: 'Earn interest and governance rights',
     },
     {
-      path: 'farm/field',
+      path: 'field',
       title: 'Field',
       desc: 'Lend to Beanstalk',
     },
     {
-      path: 'farm/trade',
+      path: 'trade',
       title: 'Trade',
       desc: 'Buy and sell Beans',
     },
@@ -201,7 +201,7 @@ export default function NavigationSidebar() {
 
   // Add badge to Sidebar nav
   const badgeDataByPath : { [key: string] : string | any[] | null } = {
-    'farm/field': initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
+    field: initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
     beanfts: 'Winter',
     poker: '3/5 · 5:30P PT'
   };
