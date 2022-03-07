@@ -209,7 +209,7 @@ export const siloStrings = {
   stalkDescription: 'The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs.',
   seedDescription: 'The Seed token yields .0001 Stalk every Season.',
   rewardsColumn: 'Silo deposits earn Stalk and Seeds per Bean-denominated deposit value. Rewards vary between different assets. This column shows the reward for each respective asset.',
-  depositsColumn: 'The total amount of each token you have deposited in the Silo.',
+  depositsColumn: 'The amount of each token you have deposited in the Silo.',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',

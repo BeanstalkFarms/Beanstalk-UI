@@ -100,6 +100,9 @@ export default function Silo() {
   // END LOGIC COPIED FROM BALANCES/index
 
   const farmableMonthTotal = new BigNumber(farmableMonth).multipliedBy(720);
+  const ownership = userBalance.stalkBalance
+    .dividedBy(totalBalance.totalStalk)
+    .multipliedBy(100);
 
   const metrics = (
     <>
@@ -157,18 +160,12 @@ export default function Silo() {
             'Farmable Stalk',
           ]}
           value={[
-            <span>
-              {displayBN(
-                userBalance.stalkBalance
-                  .dividedBy(totalBalance.totalStalk)
-                  .multipliedBy(100)
-              )}%
-            </span>,
+            <span>{displayBN(ownership)}%</span>,
             <span>{displayBN(userBalance.grownStalkBalance)}</span>,
           ]}
           balanceDescription={[
-            '',
-            '',
+            <span>{displayBN(userBalance.stalkBalance)} Stalk &rarr; {ownership.toFixed(5)}%</span>,
+            `${displayFullBN(userBalance.grownStalkBalance)} Stalk`,
           ]}
           description={[
             <span>
