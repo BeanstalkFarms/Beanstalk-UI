@@ -12,7 +12,7 @@ export default function SiloDepositPage(props) {
 
   // this token doesn't exist
   if (tokenData === undefined) {
-    return <Redirect to={"/silo"} />
+    return <Redirect to="/silo" />;
   }
   return (
     <Page

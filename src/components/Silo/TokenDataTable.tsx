@@ -156,7 +156,7 @@ export default function TokenDataTable() {
                         <span><strong>{token.rewards.stalk} Stalk</strong>: {siloStrings.stalkDescription}</span><br />
                         <span><strong>{token.rewards.seeds} Seeds</strong>: {siloStrings.seedDescription}</span>
                       </>
-                    )}                    
+                    )}
                   >
                     <span>
                       <span>{token.rewards.stalk}<TokenIcon token={SiloAsset.Stalk} style={{ width: '17px', height: '17px' }} /></span>

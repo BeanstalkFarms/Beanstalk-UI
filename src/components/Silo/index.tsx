@@ -124,7 +124,7 @@ export default function Silo() {
           ]}
           description={[
             <span>{siloStrings.tvlDescription}</span>,
-            <span>{siloStrings.thirtyDayInterestDescription} Beans</span>,
+            <span>{siloStrings.thirtyDayInterestDescription}</span>,
           ]}
           width="100%"
         />
