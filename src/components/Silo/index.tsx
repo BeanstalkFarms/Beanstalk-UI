@@ -112,16 +112,16 @@ export default function Silo() {
             '30 Day Interest',
           ]}
           value={[
-            <span>${displayBN(totalBalance.totalSiloBeans)}</span>,
+            <span>${displayBN(totalBalance.totalSiloBeans.times(beanPrice))}</span>,
             <span>{displayBN(farmableMonthTotal)}</span>,
           ]}
           balanceDescription={[
-            '',
-            '',
+            `${displayFullBN(totalBalance.totalSiloBeans)}`,
+            displayFullBN(farmableMonthTotal),
           ]}
           description={[
             <span>{siloStrings.tvlDescription}</span>,
-            <span>{siloStrings.thirtyDayInterestDescription}</span>,
+            <span>{siloStrings.thirtyDayInterestDescription} Beans</span>,
           ]}
           width="100%"
         />
@@ -143,12 +143,8 @@ export default function Silo() {
             `${displayFullBN(userBalance.farmableBeanBalance)} Beans`,
           ]}
           description={[
-            <span>
-              {siloStrings.myDepositsDescription}
-            </span>,
-            <span>
-              {siloStrings.farmableBeansDescription}
-            </span>,
+            <span>{siloStrings.myDepositsDescription}</span>,
+            <span>{siloStrings.farmableBeansDescription}</span>,
           ]}
           width="100%"
         />
@@ -156,7 +152,6 @@ export default function Silo() {
       <Grid item lg={4} sm={12}>
         {/* Metrics card: My Balances */}
         <HeaderLabelList
-          // containerTitle="Balances"
           title={[
             'My Ownership',
             'Farmable Stalk',
@@ -190,8 +185,8 @@ export default function Silo() {
   );
 
   return (
-    <Grid container justifyContent="center">
-      <Grid item xs={12} sm={10} lg={8} container spacing={2}>
+    <Grid container justifyContent="center" style={{ marginTop: 20 }}>
+      <Grid item xs={12} sm={10} lg={8} container justifyContent="center" spacing={2}>
         {metrics}
       </Grid>
       <Grid item xs={12} sm={10} lg={8} container justifyContent="center">
@@ -201,7 +196,6 @@ export default function Silo() {
           sectionTitlesDescription={[]}
           showButton={false}
           normalBox={false}
-          // removeBackground
           style={{
             display: 'block',
             width: '100%',
@@ -211,6 +205,7 @@ export default function Silo() {
             padding: 0,
           }}
           margin="0"
+          marginTop="30px"
         >
           <TokenDataTable />
         </BaseModule>

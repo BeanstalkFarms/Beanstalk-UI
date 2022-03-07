@@ -261,8 +261,8 @@ export default function Updater() {
       dispatch(setTotalBalance({
         totalBeans,
         totalBudgetBeans,
-        totalCurveBeans,
         totalLP,
+        totalCurveBeans,
         totalCrv3,
         totalSiloBeans,
         totalSiloLP,

@@ -204,7 +204,12 @@ export const siloStrings = {
   myDepositsDescription: 'The total value of your Silo deposits, denominated in USD.',
   farmableBeansDescription: 'Your claimable interest for being a Silo holder.',
   myOwnershipDescription: 'Your percent ownership of the Silo. You will receive this percentage of all new Beans minted to Silo holders.',
-  farmableStalkDescription: 'Your claimable Stalk earned for holding assets in the Silo. Claiming your Stalk increases your stake in the Silo.'
+  farmableStalkDescription: 'Your claimable Stalk earned for holding assets in the Silo. Claiming your Stalk increases your stake in the Silo.',
+  variableAPY: 'The Variable APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
+  stalkDescription: 'The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs.',
+  seedDescription: 'The Seed token yields .0001 Stalk every Season.',
+  rewardsColumn: 'Silo deposits earn Stalk and Seeds per Bean-denominated deposit value. Rewards vary between different assets. This column shows the reward for each respective asset.',
+  depositsColumn: 'The total amount of each token you have deposited in the Silo.',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',
