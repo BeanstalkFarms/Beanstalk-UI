@@ -2,12 +2,23 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { BaseModule, Grid, siloStrings } from 'components/Common';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Convert from './Convert';
+import { Button } from "@material-ui/core";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import { makeStyles } from "@material-ui/styles";
+import { theme } from "../../../constants";
+
+const useStyles = makeStyles({
+  backButton: {
+    color: theme.text,
+  },
+});
 
 export default function TabbedForm() {
+  const classes = useStyles();
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
@@ -20,8 +31,6 @@ export default function TabbedForm() {
     siloStrings.beanDescription,
     siloStrings.convert,
   ];
-  // const sections = [<SiloSelectLPModule />, <SiloBeanModule />, <SiloConvertModule />];
-  //                    LP             BEANS              CONVERT
   const sections = [<Deposit />, <Withdraw />, <Convert />];
 
   const sectionTitles = (tokenSlug === 'bean-3crv') ? (
@@ -46,6 +55,16 @@ export default function TabbedForm() {
         sm={12}
         style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
       >
+        <Grid container justifyContent={"flex-start"}>
+          <Link to="/silo" style={{ textDecoration: 'none' }}>
+            <Button
+              startIcon={<ChevronLeftIcon />}
+              className={classes.backButton}
+            >
+              Back
+            </Button>
+          </Link>
+        </Grid>
         <BaseModule
           handleTabChange={(event, newSection) => {
             setSection(newSection);
