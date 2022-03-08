@@ -80,7 +80,7 @@ export function getTotalSiloDepositsUSD(
   );
 
   //
-  const totalSiloBeansUSD  = totalSiloBeans.multipliedBy(priceState.beanPrice);
+  const totalSiloBeansUSD = totalSiloBeans.multipliedBy(priceState.beanPrice);
   const totalSiloLPUSD    = totalLPBeans.multipliedBy(priceState.beanPrice);
   const totalSiloCurveUSD = totalCurveBeans.multipliedBy(priceState.curveVirtualPrice);
 
