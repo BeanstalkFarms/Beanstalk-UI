@@ -53,6 +53,44 @@ export function getUserSiloDepositsUSD(
   };
 }
 
+export function getTotalSiloDepositsUSD(
+  priceState: AppState['prices'],
+  totalBalanceState: AppState['totalBalance']
+) : DepositValueByToken {
+  const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanReserve, priceState.ethReserve, totalBalanceState.totalLP);
+  const poolForCurveRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanCrv3Reserve, priceState.crv3Reserve, totalBalanceState.totalCrv3);
+
+  // Balance of user assets deposited in the Silo.
+  // FIXME: abstract this so new assets are automatically summed using
+  // a map or something similar. -SC
+  // This is the same as `getUserBalancesUSD` but only includes Silo components.
+  const totalSiloBeans = totalBalanceState.totalSiloBeans;
+  const totalSiloLP = totalBalanceState.totalSiloLP;
+  const totalSiloCurve = totalBalanceState.totalSiloCurve;
+
+  // Get pool tuples
+  const totalBeansAndEth = poolForLPRatio(totalSiloLP);
+  const totalBeansAndCrv3 = poolForCurveRatio(totalSiloCurve);
+
+  const totalLPBeans = totalBeansAndEth[0].multipliedBy(2);
+  const totalCurveBeans = (
+    totalBeansAndCrv3[0]
+      .multipliedBy(priceState.beanCrv3Price)
+      .plus(totalBeansAndCrv3[1])
+  );
+
+  //
+  const totalSiloBeansUSD  = totalSiloBeans.multipliedBy(priceState.beanPrice);
+  const totalSiloLPUSD    = totalLPBeans.multipliedBy(priceState.beanPrice);
+  const totalSiloCurveUSD = totalCurveBeans.multipliedBy(priceState.curveVirtualPrice);
+
+  return {
+    Bean: totalSiloBeansUSD,
+    'Bean:ETH': totalSiloLPUSD,
+    'Bean:3CRV': totalSiloCurveUSD
+  };
+}
+
 export function sumDeposits(siloDeposits: DepositValueByToken) {
   return (
     siloDeposits.Bean

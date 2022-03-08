@@ -10,7 +10,7 @@ import {
 } from 'components/Common';
 import { displayBN, displayFullBN } from 'util/index';
 import TokenDataTable from './TokenDataTable';
-import { sumDeposits, getUserSiloDepositsUSD } from '../../util/SiloUtilities';
+import { sumDeposits, getUserSiloDepositsUSD, getTotalSiloDepositsUSD } from '../../util/SiloUtilities';
 
 export default function Silo() {
   // Hide APY's for now since they are misleading
@@ -30,7 +30,11 @@ export default function Silo() {
 
   //
   const userSiloDepositsByTokenUSD = getUserSiloDepositsUSD(userBalance, priceState, totalBalance);
+  const totalSiloDepositsByTokenUSD = getTotalSiloDepositsUSD(priceState, totalBalance);
   const sumUserSiloDepositsUSD = sumDeposits(userSiloDepositsByTokenUSD);
+  const tvl = sumDeposits(totalSiloDepositsByTokenUSD);
+
+  //
   const farmableMonthTotal = new BigNumber(farmableMonth).multipliedBy(720);
   const ownership = (
     userBalance.stalkBalance
@@ -49,11 +53,15 @@ export default function Silo() {
             '30 Day Interest',
           ]}
           value={[
-            <span>${displayBN(totalBalance.totalSiloBeans.times(priceState.beanPrice))}</span>,
+            <span>${displayBN(tvl)}</span>,
             <span>{displayBN(farmableMonthTotal)}</span>,
           ]}
           balanceDescription={[
-            `${displayFullBN(totalBalance.totalSiloBeans)}`,
+            <>
+              <div><span style={{ fontWeight: 'bold' }}>Beans:</span> {displayBN(totalBalance.totalSiloBeans)}</div>
+              <div><span style={{ fontWeight: 'bold' }}>Bean:ETH LP:</span> {displayBN(totalBalance.totalSiloLP)}</div>
+              <div><span style={{ fontWeight: 'bold' }}>Bean:3CRV LP:</span> {displayBN(totalBalance.totalSiloCurve)}</div>
+            </>,
             displayFullBN(farmableMonthTotal),
           ]}
           description={[
