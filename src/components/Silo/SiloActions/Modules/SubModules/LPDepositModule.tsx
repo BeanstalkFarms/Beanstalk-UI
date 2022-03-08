@@ -258,7 +258,7 @@ export const LPDepositModule = forwardRef(({
     setToStalkValue(
       TrimBN(
         fromNumber
-          .multipliedBy(LPBEAN_TO_STALK)
+          .multipliedBy(2 * LPBEAN_TO_STALK)
           .minus(fromConvertBeans.multipliedBy(BEAN_TO_STALK)),
         STALK.decimals
       )
