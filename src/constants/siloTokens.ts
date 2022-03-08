@@ -11,7 +11,7 @@ import { getAPYs } from '../util';
 import { AppState } from '../state';
 
 import beanIcon from '../img/bean-logo.svg';
-import beanEthIcon from '../img/bean-eth-logo.svg';
+import beanEthIcon from '../img/lp-logo.svg';
 import bean3CrvIcon from '../img/bean-curve-logo.svg';
 import { getUSDValueOfSiloDeposits } from '../util/getUSDValueOfSiloDeposits';
 
@@ -34,7 +34,7 @@ const TOKENS = [
         getUSDValueOfSiloDeposits(userBalanceState, priceState, totalBalanceState).Bean
   },
   {
-    name: 'Bean:ETH',
+    name: 'Bean:ETH LP',
     slug: 'bean-eth',
     icon: beanEthIcon,
     rewards: {
@@ -51,7 +51,7 @@ const TOKENS = [
         getUSDValueOfSiloDeposits(userBalanceState, priceState, totalBalanceState)['Bean:ETH']
   },
   {
-    name: 'Bean:3CRV',
+    name: 'Bean:3CRV LP',
     slug: 'bean-3crv',
     icon: bean3CrvIcon,
     rewards: {

@@ -58,7 +58,7 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
     fontFamily: 'Futura-PT-Book',
   },
-  apy: {
+  chip: {
     fontFamily: 'Lucida Console',
     fontSize: 13,
     // fontFamily: 'Futura-PT-Book',
@@ -178,7 +178,7 @@ export default function TokenDataTable() {
                   placement="top"
                   title={`${token.getAPY(apys).toFixed(1)}%`}
                 >
-                  <span className={classes.apy}>
+                  <span className={classes.chip}>
                     {token.getAPY(apys).toFixed(1)}%
                   </span>
                 </FormatTooltip>
@@ -189,11 +189,10 @@ export default function TokenDataTable() {
                   placement="top"
                   title={displayBN(token.getUserBalance(userBalanceState))}
                 >
-                  <span className={classes.apy}>
+                  <span className={classes.chip}>
                     {`$${displayBN(token.getDepositBalanceInUSD(userBalanceState, priceState, totalBalanceState))}`}
                   </span>
                 </FormatTooltip>
-
               </TableCell>
               <TableCell align="center">
                 <ChevronRightIcon style={{ marginTop: 3 }} />
