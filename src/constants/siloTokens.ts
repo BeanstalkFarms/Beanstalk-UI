@@ -13,7 +13,7 @@ import { AppState } from '../state';
 import beanIcon from '../img/bean-logo.svg';
 import beanEthIcon from '../img/bean-eth-logo.svg';
 import bean3CrvIcon from '../img/bean-curve-logo.svg';
-import { getUSDValueOfSiloDeposits } from "../util/getUSDValueOfSiloDeposits";
+import { getUSDValueOfSiloDeposits } from '../util/getUSDValueOfSiloDeposits';
 
 const TOKENS = [
   {
@@ -48,7 +48,7 @@ const TOKENS = [
     getDepositBalanceInUSD: (userBalanceState: AppState['userBalance'],
       priceState: AppState['prices'],
       totalBalanceState: AppState['totalBalance']) =>
-        getUSDValueOfSiloDeposits(userBalanceState, priceState, totalBalanceState)["Bean:ETH"]
+        getUSDValueOfSiloDeposits(userBalanceState, priceState, totalBalanceState)['Bean:ETH']
   },
   {
     name: 'Bean:3CRV',
@@ -65,7 +65,7 @@ const TOKENS = [
     getDepositBalanceInUSD: (userBalanceState: AppState['userBalance'],
       priceState: AppState['prices'],
       totalBalanceState: AppState['totalBalance']) =>
-        getUSDValueOfSiloDeposits(userBalanceState, priceState, totalBalanceState)["Bean:3CRV"]
+        getUSDValueOfSiloDeposits(userBalanceState, priceState, totalBalanceState)['Bean:3CRV']
   }
 ];
 

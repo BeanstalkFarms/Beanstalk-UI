@@ -1,6 +1,6 @@
-import BigNumber from "bignumber.js";
-import { poolForLP } from "./UniswapUtilities";
-import { AppState } from "../state";
+import BigNumber from 'bignumber.js';
+import { poolForLP } from './UniswapUtilities';
+import { AppState } from '../state';
 
 // Takes in userBalanceState, priceState, and totalBalanceState
 // and returns the total USD price of user's token deposits.
@@ -38,9 +38,9 @@ export function getUSDValueOfSiloDeposits(
     .plus(userBeansAndCrv3[1])
   ).multipliedBy(priceState.curveVirtualPrice);
 
-  return { 'Bean': userBeans, 'Bean:ETH': userLPBeans, 'Bean:3CRV': userCurveBalanceInDollars }
+  return { Bean: userBeans, 'Bean:ETH': userLPBeans, 'Bean:3CRV': userCurveBalanceInDollars };
 }
 
 export function addTotalDeposits(siloDeposits) {
-  return new BigNumber(siloDeposits.Bean.toNumber() + siloDeposits["Bean:ETH"].toNumber() + siloDeposits["Bean:3CRV"].toNumber())
+  return new BigNumber(siloDeposits.Bean.toNumber() + siloDeposits['Bean:ETH'].toNumber() + siloDeposits['Bean:3CRV'].toNumber());
 }

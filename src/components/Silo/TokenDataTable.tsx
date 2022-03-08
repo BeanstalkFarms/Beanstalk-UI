@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Box,
   Table,
   TableBody,
   TableCell,
@@ -19,7 +18,7 @@ import TOKENS from 'constants/siloTokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import { FormatTooltip, QuestionModule, siloStrings } from 'components/Common';
 import { theme } from '../../constants';
-import { getUSDValueOfSiloDeposits } from "../../util/getUSDValueOfSiloDeposits";
+import { getUSDValueOfSiloDeposits } from '../../util/getUSDValueOfSiloDeposits';
 
 const useStyles = makeStyles({
   table: {
@@ -99,8 +98,6 @@ export default function TokenDataTable() {
     parseFloat(totalBalanceState.totalStalk),
     parseFloat(totalBalanceState.totalSeeds)
   );
-
-
 
   return (
     <TableContainer className={classes.table}>
@@ -190,10 +187,10 @@ export default function TokenDataTable() {
                 <FormatTooltip
                   margin="10px"
                   placement="top"
-                  title={`$${displayBN(token.getDepositBalanceInUSD(userBalanceState, priceState, totalBalanceState))} USD`}
+                  title={displayBN(token.getUserBalance(userBalanceState))}
                 >
                   <span className={classes.apy}>
-                    {displayBN(token.getUserBalance(userBalanceState))}
+                    {`$${displayBN(token.getDepositBalanceInUSD(userBalanceState, priceState, totalBalanceState))}`}
                   </span>
                 </FormatTooltip>
 

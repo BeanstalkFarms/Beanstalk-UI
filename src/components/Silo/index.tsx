@@ -8,9 +8,9 @@ import {
   HeaderLabelList,
   siloStrings,
 } from 'components/Common';
-import { displayBN, displayFullBN, poolForLP } from 'util/index';
+import { displayBN, displayFullBN } from 'util/index';
 import TokenDataTable from './TokenDataTable';
-import { addTotalDeposits, getUSDValueOfSiloDeposits } from "../../util/getUSDValueOfSiloDeposits";
+import { addTotalDeposits, getUSDValueOfSiloDeposits } from '../../util/getUSDValueOfSiloDeposits';
 
 export default function Silo() {
   // Hide APY's for now since they are misleading

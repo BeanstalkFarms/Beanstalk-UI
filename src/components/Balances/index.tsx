@@ -21,7 +21,7 @@ import {
 import ClaimBalance from './ClaimBalance';
 import ClaimButton from './ClaimButton';
 import BalanceModule from './BalanceModule';
-import { addTotalDeposits, getUSDValueOfSiloDeposits } from "../../util/getUSDValueOfSiloDeposits";
+import { addTotalDeposits, getUSDValueOfSiloDeposits } from '../../util/getUSDValueOfSiloDeposits';
 
 const balanceStyle = {
   borderRadius: '25px',
