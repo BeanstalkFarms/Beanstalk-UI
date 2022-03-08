@@ -1,4 +1,5 @@
 import flatMap from 'lodash/flatMap';
+import sumBy from 'lodash/sumBy';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { BEANSTALK_SUBGRAPH_API_LINK } from 'constants/index';
 
@@ -24,7 +25,7 @@ const APYQuery = `
        harvestableBeansPerSeason30
   }
  }
- `;
+`;
 
 const SeasonQuery = `
 query seasons($first: Int, $skip: Int) {
@@ -59,7 +60,19 @@ query seasons($first: Int, $skip: Int) {
        sownBeans
   }
  }
- `;
+`;
+
+const FarmableMonthTotalQuery = `
+  query {
+    seasons(
+      first: 720,
+      orderBy: timestamp,
+      orderDirection: desc,
+    ) {
+      newFarmableBeans
+    }
+  }
+`;
 
 function roundTo4Digits(num) {
   return parseFloat(num.toFixed(4));
@@ -118,5 +131,23 @@ export async function apyQuery() {
   } catch (error) {
     console.error('error fetching Beanstalk data.');
     return {};
+  }
+}
+
+export async function farmableMonthTotalQuery() {
+  try {
+    const response = await client.query({
+      query: gql(FarmableMonthTotalQuery),
+    });
+
+    const total = sumBy(
+      response.data.seasons,
+      (season: any) => parseInt(season.newFarmableBeans, 10),
+    );
+
+    return total;
+  } catch (error) {
+    console.error('error fetching Beanstalk data.', error);
+    return 0;
   }
 }

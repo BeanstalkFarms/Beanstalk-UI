@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Divider,
   Table,
   TableBody,
   TableCell,
@@ -102,7 +101,7 @@ const APYTooltip = ({ apys, children } : { apys: APYTuple, children: any }) => {
               </Typography>
             </Box>
             <Box sx={{ 
-              //border: '1px solid #ccc', p: 0.5, borderRadius: 4
+              // border: '1px solid #ccc', p: 0.5, borderRadius: 4
               // minWidth: '80px',
               flex: 1,
             }}>
@@ -123,7 +122,7 @@ const APYTooltip = ({ apys, children } : { apys: APYTuple, children: any }) => {
       {children}
     </FormatTooltip>
   );
-}
+};
 
 export default function TokenDataTable() {
   const classes = useStyles();

@@ -121,12 +121,12 @@ export default function Balances() {
 
   // User Silo deposit balances:
   // Beans, Uniswap LP, Curve LP
-  const userBeans = beanBalance
-    .plus(beanSiloBalance)
-    .plus(beanTransitBalance)
-    .plus(beanWrappedBalance)
-    .plus(beanReceivableBalance)
-    .plus(harvestablePodBalance);
+  // const userBeans = beanBalance
+  //   .plus(beanSiloBalance)
+  //   .plus(beanTransitBalance)
+  //   .plus(beanWrappedBalance)
+  //   .plus(beanReceivableBalance)
+  //   .plus(harvestablePodBalance);
   const userLP = lpBalance
     .plus(lpSiloBalance)
     .plus(lpTransitBalance)

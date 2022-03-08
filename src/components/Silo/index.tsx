@@ -15,7 +15,7 @@ import { sumDeposits, getUserSiloDepositsUSD, getTotalSiloDepositsUSD } from '..
 export default function Silo() {
   // Hide APY's for now since they are misleading
   // Fetch and calculate APYs
-  const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
+  const { farmableMonthTotal } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
   const userBalance = useSelector<AppState, AppState['userBalance']>(
@@ -35,7 +35,7 @@ export default function Silo() {
   const tvl = sumDeposits(totalSiloDepositsByTokenUSD);
 
   //
-  const farmableMonthTotal = new BigNumber(farmableMonth).multipliedBy(720);
+  // const farmableMonthTotal = new BigNumber(farmableMonth).multipliedBy(720);
   const ownership = (
     userBalance.stalkBalance
       .dividedBy(totalBalance.totalStalk)
@@ -54,7 +54,7 @@ export default function Silo() {
           ]}
           value={[
             <span>${displayBN(tvl)}</span>,
-            <span>{displayBN(farmableMonthTotal)}</span>,
+            <span>{displayBN(new BigNumber(farmableMonthTotal))}</span>,
           ]}
           balanceDescription={[
             <>
@@ -62,7 +62,7 @@ export default function Silo() {
               <div><span style={{ fontWeight: 'bold' }}>Bean:ETH LP:</span> {displayBN(totalBalance.totalSiloLP)}</div>
               <div><span style={{ fontWeight: 'bold' }}>Bean:3CRV LP:</span> {displayBN(totalBalance.totalSiloCurve)}</div>
             </>,
-            displayFullBN(farmableMonthTotal),
+            displayFullBN(new BigNumber(farmableMonthTotal)),
           ]}
           description={[
             <span>{siloStrings.tvlDescription}</span>,

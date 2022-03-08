@@ -8,8 +8,8 @@ import { AppState } from '../state';
 // FIXME: this should be auto-gen'd from `siloTokens`.
 type DepositValueByToken = {
   Bean: BigNumber;
-  "Bean:ETH": BigNumber;
-  "Bean:3CRV": BigNumber;
+  'Bean:ETH': BigNumber;
+  'Bean:3CRV': BigNumber;
 }
 
 // Takes in userBalanceState, priceState, and totalBalanceState

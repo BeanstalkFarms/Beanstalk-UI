@@ -8,6 +8,8 @@ export interface BeansPerSeasonState {
   farmableMonth: number;
   harvestableWeek: number;
   harvestableMonth: number;
+  //
+  farmableMonthTotal: number;
 }
 
 export const initialState: BeansPerSeasonState = {
@@ -15,6 +17,8 @@ export const initialState: BeansPerSeasonState = {
   farmableMonth: 0,
   harvestableWeek: 0,
   harvestableMonth: 0,
+  //
+  farmableMonthTotal: -1,
 };
 
 export default createReducer(initialState, (builder) =>
