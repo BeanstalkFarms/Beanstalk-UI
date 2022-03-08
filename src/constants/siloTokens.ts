@@ -13,6 +13,7 @@ import { AppState } from '../state';
 import beanIcon from '../img/bean-logo.svg';
 import beanEthIcon from '../img/bean-eth-logo.svg';
 import bean3CrvIcon from '../img/bean-curve-logo.svg';
+import { getUSDValueOfSiloDeposits } from "../util/getUSDValueOfSiloDeposits";
 
 const TOKENS = [
   {
@@ -26,7 +27,11 @@ const TOKENS = [
     getAPY: (apys: ReturnType<typeof getAPYs>) => 
        apys[0], // Bean    
     getTotalBalance: (totalBalances: AppState['totalBalance']) => totalBalances.totalBeans,
-    getUserBalance: (userBalances: AppState['userBalance']) => userBalances.beanSiloBalance
+    getUserBalance: (userBalances: AppState['userBalance']) => userBalances.beanSiloBalance,
+    getDepositBalanceInUSD: (userBalanceState: AppState['userBalance'],
+      priceState: AppState['prices'],
+      totalBalanceState: AppState['totalBalance']) =>
+        getUSDValueOfSiloDeposits(userBalanceState, priceState, totalBalanceState).Bean
   },
   {
     name: 'Bean:ETH',
@@ -39,7 +44,11 @@ const TOKENS = [
     getAPY: (apys: ReturnType<typeof getAPYs>) => 
        apys[1], // LP    
     getTotalBalance: (totalBalances: AppState['totalBalance']) => totalBalances.totalSiloBeans,
-    getUserBalance: (userBalances: AppState['userBalance']) => userBalances.lpSiloBalance
+    getUserBalance: (userBalances: AppState['userBalance']) => userBalances.lpSiloBalance,
+    getDepositBalanceInUSD: (userBalanceState: AppState['userBalance'],
+      priceState: AppState['prices'],
+      totalBalanceState: AppState['totalBalance']) =>
+        getUSDValueOfSiloDeposits(userBalanceState, priceState, totalBalanceState)["Bean:ETH"]
   },
   {
     name: 'Bean:3CRV',
@@ -52,7 +61,11 @@ const TOKENS = [
     getAPY: (apys: ReturnType<typeof getAPYs>) => 
        apys[1], // LP    
     getTotalBalance: (totalBalances: AppState['totalBalance']) => totalBalances.totalCurveBeans,
-    getUserBalance: (userBalances: AppState['userBalance']) => userBalances.curveSiloBalance
+    getUserBalance: (userBalances: AppState['userBalance']) => userBalances.curveSiloBalance,
+    getDepositBalanceInUSD: (userBalanceState: AppState['userBalance'],
+      priceState: AppState['prices'],
+      totalBalanceState: AppState['totalBalance']) =>
+        getUSDValueOfSiloDeposits(userBalanceState, priceState, totalBalanceState)["Bean:3CRV"]
   }
 ];
 

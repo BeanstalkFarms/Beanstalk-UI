@@ -21,6 +21,7 @@ import {
 import ClaimBalance from './ClaimBalance';
 import ClaimButton from './ClaimButton';
 import BalanceModule from './BalanceModule';
+import { addTotalDeposits, getUSDValueOfSiloDeposits } from "../../util/getUSDValueOfSiloDeposits";
 
 const balanceStyle = {
   borderRadius: '25px',
@@ -95,6 +96,18 @@ export default function Balances() {
     (state) => state.prices
   );
 
+  const userBalance = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const priceState = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
   // Pool calculators
   const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, beanReserve, ethReserve, totalLP);
   const poolForCurveRatio = (amount: BigNumber) => poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
@@ -106,7 +119,7 @@ export default function Balances() {
     setSection(newSection);
   };
 
-  // User Silo deposit balances: 
+  // User Silo deposit balances:
   // Beans, Uniswap LP, Curve LP
   const userBeans = beanBalance
     .plus(beanSiloBalance)
@@ -129,18 +142,8 @@ export default function Balances() {
   const poolBeansAndEth = poolForLPRatio(totalLP);
   const poolBeansAndCrv3 = poolForCurveRatio(totalCrv3);
 
-  // 
-  const userLPBeans = userBeansAndEth[0].multipliedBy(2);
-  const userCurveBalanceInDollars = (
-    userBeansAndCrv3[0]
-    .multipliedBy(beanCrv3Price)
-    .plus(userBeansAndCrv3[1])
-  ).multipliedBy(curveVirtualPrice);
-
-  const userBalanceInDollars = userBeans
-    .plus(userLPBeans)
-    .multipliedBy(beanPrice)
-    .plus(userCurveBalanceInDollars);
+  const allSiloDepositsUSD = getUSDValueOfSiloDeposits(userBalance, priceState, totalBalance);
+  const userBalanceInDollars = addTotalDeposits(allSiloDepositsUSD);
 
   const marketCap = totalBeans.isGreaterThan(0)
     ? totalBeans.multipliedBy(beanPrice)

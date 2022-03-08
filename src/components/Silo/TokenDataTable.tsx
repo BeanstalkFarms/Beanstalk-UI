@@ -19,6 +19,7 @@ import TOKENS from 'constants/siloTokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import { FormatTooltip, QuestionModule, siloStrings } from 'components/Common';
 import { theme } from '../../constants';
+import { getUSDValueOfSiloDeposits } from "../../util/getUSDValueOfSiloDeposits";
 
 const useStyles = makeStyles({
   table: {
@@ -65,6 +66,10 @@ const useStyles = makeStyles({
     backgroundColor: '#C4C4C44D',
     padding: '6px 9px',
     borderRadius: '6px',
+  },
+  tableRow: {
+    maxWidth: '100vw',
+    overflow: 'auto'
   }
 });
 
@@ -76,118 +81,131 @@ export default function TokenDataTable() {
     (state) => state.beansPerSeason
   );
 
-  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
-    (state) => state.totalBalance
+  const userBalanceState = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
   );
 
-  const userBalance = useSelector<AppState, AppState['userBalance']>(
-    (state) => state.userBalance
+  const priceState = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
+  const totalBalanceState = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
   );
 
   // on each render, grab APY array
   const apys = getAPYs(
     farmableMonth,
-    parseFloat(totalBalance.totalStalk),
-    parseFloat(totalBalance.totalSeeds)
+    parseFloat(totalBalanceState.totalStalk),
+    parseFloat(totalBalanceState.totalSeeds)
   );
 
+
+
   return (
-    <Box className={classes.tableBox}>
-      <TableContainer className={classes.table}>
-        <Table sx={{ minWidth: 650 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell className={`${classes.headerCell}`}>
-                SILO
-                <QuestionModule
-                  description={siloStrings.siloDescription.replace('{0}', totalBalance.withdrawSeasons.toFixed(0))}
-                  placement="right"
-                  margin="-7px 8px 0 0"
-                />
+    <TableContainer className={classes.table}>
+      <Table sx={{ minWidth: 650 }}>
+        <TableHead>
+          <TableRow className={classes.tableRow}>
+            <TableCell className={`${classes.headerCell}`}>
+              SILO
+              <QuestionModule
+                description={siloStrings.siloDescription.replace('{0}', totalBalanceState.withdrawSeasons.toFixed(0))}
+                placement="right"
+                margin="-7px 8px 0 0"
+              />
+            </TableCell>
+            <TableCell align="left" className={classes.headerCell}>
+              REWARDS
+              <QuestionModule
+                description={siloStrings.rewardsColumn}
+                placement="right"
+                margin="-7px 8px 0 0"
+              />
+            </TableCell>
+            <TableCell align="center" className={classes.headerCell}>
+              vAPY
+              <QuestionModule
+                description={(
+                  <span>{siloStrings.variableAPY} <a href="https://app.bean.money/docs/APY.html" target="_blank" rel="noreferrer">click here</a>.</span>
+                )}
+                placement="right"
+                margin="-7px 8px 0 0"
+              />
+            </TableCell>
+            <TableCell align="right" className={classes.headerCell}>
+              DEPOSITS
+              <QuestionModule
+                description={siloStrings.depositsColumn}
+                placement="right"
+                margin="-7px 8px 0 0"
+              />
+            </TableCell>
+            <TableCell align="center" className={classes.headerCell} />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {TOKENS.map((token) => (
+            <TableRow
+              key={token.name}
+              className={classes.row}
+              onClick={() => history.push(`/silo/${token.slug}`)}
+            >
+              <TableCell scope="row">
+                <div className={classes.tokenNameCell}>
+                  <img src={token.icon} alt="" className={classes.tokenImage} />
+                  <span>{token.name}</span>
+                </div>
               </TableCell>
-              <TableCell align="left" className={classes.headerCell}>
-                REWARDS
-                <QuestionModule
-                  description={siloStrings.rewardsColumn}
-                  placement="right"
-                  margin="-7px 8px 0 0"
-                />
-              </TableCell>
-              <TableCell align="center" className={classes.headerCell}>
-                vAPY
-                <QuestionModule
-                  description={(
-                    <span>{siloStrings.variableAPY} <a href="https://app.bean.money/docs/APY.html" target="_blank" rel="noreferrer">click here</a>.</span>
+              <TableCell align="left">
+                <FormatTooltip
+                  margin="10px"
+                  placement="top"
+                  title={(
+                    <>
+                      <span><strong>{token.rewards.stalk} Stalk</strong>: {siloStrings.stalkDescription}</span><br />
+                      <span><strong>{token.rewards.seeds} Seeds</strong>: {siloStrings.seedDescription}</span>
+                    </>
                   )}
-                  placement="right"
-                  margin="-7px 8px 0 0"
-                />
+                >
+                  <span>
+                    <span>{token.rewards.stalk}<TokenIcon token={SiloAsset.Stalk} style={{ width: '17px', height: '17px' }} /></span>
+                    <span>&nbsp;</span>
+                    <span>{token.rewards.seeds}<TokenIcon token={SiloAsset.Seed} style={{ width: '17px', height: '17px' }} /></span>
+                  </span>
+                </FormatTooltip>
               </TableCell>
-              <TableCell align="right" className={classes.headerCell}>
-                DEPOSITS
-                <QuestionModule
-                  description={siloStrings.depositsColumn}
-                  placement="right"
-                  margin="-7px 8px 0 0"
-                />
+              <TableCell align="center">
+                <FormatTooltip
+                  margin="10px"
+                  placement="top"
+                  title={`${token.getAPY(apys).toFixed(1)}%`}
+                >
+                  <span className={classes.apy}>
+                    {token.getAPY(apys).toFixed(1)}%
+                  </span>
+                </FormatTooltip>
               </TableCell>
-              <TableCell align="center" className={classes.headerCell} />
+              <TableCell align="right">
+                <FormatTooltip
+                  margin="10px"
+                  placement="top"
+                  title={`$${displayBN(token.getDepositBalanceInUSD(userBalanceState, priceState, totalBalanceState))} USD`}
+                >
+                  <span className={classes.apy}>
+                    {displayBN(token.getUserBalance(userBalanceState))}
+                  </span>
+                </FormatTooltip>
+
+              </TableCell>
+              <TableCell align="center">
+                <ChevronRightIcon style={{ marginTop: 3 }} />
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {TOKENS.map((token) => (
-              <TableRow
-                key={token.name}
-                className={classes.row}
-                onClick={() => history.push(`/silo/${token.slug}`)}
-              >
-                <TableCell scope="row">
-                  <div className={classes.tokenNameCell}>
-                    <img src={token.icon} alt="" className={classes.tokenImage} />
-                    <span>{token.name}</span>
-                  </div>
-                </TableCell>
-                <TableCell align="left">
-                  <FormatTooltip
-                    margin="10px"
-                    placement="top"
-                    title={(
-                      <>
-                        <span><strong>{token.rewards.stalk} Stalk</strong>: {siloStrings.stalkDescription}</span><br />
-                        <span><strong>{token.rewards.seeds} Seeds</strong>: {siloStrings.seedDescription}</span>
-                      </>
-                    )}
-                  >
-                    <span>
-                      <span>{token.rewards.stalk}<TokenIcon token={SiloAsset.Stalk} style={{ width: '17px', height: '17px' }} /></span>
-                      <span>&nbsp;</span>
-                      <span>{token.rewards.seeds}<TokenIcon token={SiloAsset.Seed} style={{ width: '17px', height: '17px' }} /></span>
-                    </span>
-                  </FormatTooltip>
-                </TableCell>
-                <TableCell align="center">
-                  <FormatTooltip
-                    margin="10px"
-                    placement="top"
-                    title={`${token.getAPY(apys).toFixed(1)}%`}
-                  >
-                    <span className={classes.apy}>
-                      {token.getAPY(apys).toFixed(1)}%
-                    </span>
-                  </FormatTooltip>
-                </TableCell>
-                <TableCell align="right">
-                  {displayBN(token.getUserBalance(userBalance))}
-                </TableCell>
-                <TableCell align="center">
-                  <ChevronRightIcon style={{ marginTop: 3 }} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 
