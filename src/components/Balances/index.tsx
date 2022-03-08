@@ -21,7 +21,7 @@ import {
 import ClaimBalance from './ClaimBalance';
 import ClaimButton from './ClaimButton';
 import BalanceModule from './BalanceModule';
-import { addTotalDeposits, getUSDValueOfSiloDeposits } from '../../util/getUSDValueOfSiloDeposits';
+import { sumBalances, getUserBalancesUSD } from '../../util/getUserBalancesUSD';
 
 const balanceStyle = {
   borderRadius: '25px',
@@ -142,8 +142,8 @@ export default function Balances() {
   const poolBeansAndEth = poolForLPRatio(totalLP);
   const poolBeansAndCrv3 = poolForCurveRatio(totalCrv3);
 
-  const allSiloDepositsUSD = getUSDValueOfSiloDeposits(userBalance, priceState, totalBalance);
-  const userBalanceInDollars = addTotalDeposits(allSiloDepositsUSD);
+  const allSiloDepositsUSD = getUserBalancesUSD(userBalance, priceState, totalBalance);
+  const userBalanceInDollars = sumBalances(allSiloDepositsUSD);
 
   const marketCap = totalBeans.isGreaterThan(0)
     ? totalBeans.multipliedBy(beanPrice)

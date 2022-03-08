@@ -10,39 +10,33 @@ import {
 } from 'components/Common';
 import { displayBN, displayFullBN } from 'util/index';
 import TokenDataTable from './TokenDataTable';
-import { addTotalDeposits, getUSDValueOfSiloDeposits } from '../../util/getUSDValueOfSiloDeposits';
+import { sumDeposits, getUserSiloDepositsUSD } from '../../util/SiloUtilities';
 
 export default function Silo() {
   // Hide APY's for now since they are misleading
   // Fetch and calculate APYs
-
   const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
-
   const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-
   const priceState = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
-  const { beanPrice } = useSelector<AppState, AppState['prices']>(
-    (state) => state.prices
-  );
-
-  const allSiloDepositsUSD = getUSDValueOfSiloDeposits(userBalance, priceState, totalBalance);
-  const totalSiloDepositsUSD = addTotalDeposits(allSiloDepositsUSD);
-
+  //
+  const userSiloDepositsByTokenUSD = getUserSiloDepositsUSD(userBalance, priceState, totalBalance);
+  const sumUserSiloDepositsUSD = sumDeposits(userSiloDepositsByTokenUSD);
   const farmableMonthTotal = new BigNumber(farmableMonth).multipliedBy(720);
-  const ownership = userBalance.stalkBalance
-    .dividedBy(totalBalance.totalStalk)
-    .multipliedBy(100);
+  const ownership = (
+    userBalance.stalkBalance
+      .dividedBy(totalBalance.totalStalk)
+      .multipliedBy(100)
+  );
 
   const metrics = (
     <>
@@ -55,7 +49,7 @@ export default function Silo() {
             '30 Day Interest',
           ]}
           value={[
-            <span>${displayBN(totalBalance.totalSiloBeans.times(beanPrice))}</span>,
+            <span>${displayBN(totalBalance.totalSiloBeans.times(priceState.beanPrice))}</span>,
             <span>{displayBN(farmableMonthTotal)}</span>,
           ]}
           balanceDescription={[
@@ -78,11 +72,11 @@ export default function Silo() {
             'Farmable Beans',
           ]}
           value={[
-            <span>${displayBN(totalSiloDepositsUSD)}</span>,
+            <span>${displayBN(sumUserSiloDepositsUSD)}</span>,
             <span>{displayBN(userBalance.farmableBeanBalance)}</span>,
           ]}
           balanceDescription={[
-            `$${displayBN(totalSiloDepositsUSD)}`,
+            `$${displayBN(sumUserSiloDepositsUSD)}`,
             `${displayFullBN(userBalance.farmableBeanBalance)} Beans`,
           ]}
           description={[

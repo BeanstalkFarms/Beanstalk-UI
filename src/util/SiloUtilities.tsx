@@ -1,6 +1,67 @@
 import BigNumber from 'bignumber.js';
+
 import { account, beanstalkContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
+import { poolForLP } from './UniswapUtilities';
+import { AppState } from '../state';
+
+// FIXME: this should be auto-gen'd from `siloTokens`.
+type DepositValueByToken = {
+  Bean: BigNumber;
+  "Bean:ETH": BigNumber;
+  "Bean:3CRV": BigNumber;
+}
+
+// Takes in userBalanceState, priceState, and totalBalanceState
+// and returns the total USD price of user's token deposits.
+export function getUserSiloDepositsUSD(
+  userBalanceState: AppState['userBalance'],
+  priceState: AppState['prices'],
+  totalBalanceState: AppState['totalBalance']
+) : DepositValueByToken {
+  const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanReserve, priceState.ethReserve, totalBalanceState.totalLP);
+  const poolForCurveRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanCrv3Reserve, priceState.crv3Reserve, totalBalanceState.totalCrv3);
+
+  // Balance of user assets deposited in the Silo.
+  // FIXME: abstract this so new assets are automatically summed using
+  // a map or something similar. -SC
+  // This is the same as `getUserBalancesUSD` but only includes Silo components.
+  const userBeans = userBalanceState.beanSiloBalance;
+  const userLP = userBalanceState.lpSiloBalance;
+  const userCurve = userBalanceState.curveSiloBalance;
+
+  // Get pool tuples
+  const userBeansAndEth = poolForLPRatio(userLP);
+  const userBeansAndCrv3 = poolForCurveRatio(userCurve);
+
+  const userLPBeans = userBeansAndEth[0].multipliedBy(2);
+  const userCurveBeans = (
+    userBeansAndCrv3[0]
+      .multipliedBy(priceState.beanCrv3Price)
+      .plus(userBeansAndCrv3[1])
+  );
+
+  //
+  const userBeanBalanceUSD  = userBeans.multipliedBy(priceState.beanPrice);
+  const userLPBalanceUSD    = userLPBeans.multipliedBy(priceState.beanPrice);
+  const userCurveBalanceUSD = userCurveBeans.multipliedBy(priceState.curveVirtualPrice);
+
+  return {
+    Bean: userBeanBalanceUSD,
+    'Bean:ETH': userLPBalanceUSD,
+    'Bean:3CRV': userCurveBalanceUSD
+  };
+}
+
+export function sumDeposits(siloDeposits: DepositValueByToken) {
+  return (
+    siloDeposits.Bean
+      .plus(siloDeposits['Bean:ETH'])
+      .plus(siloDeposits['Bean:3CRV'])
+  );
+}
+
+// -------------
 
 export const depositBeans = async (
   amount,
