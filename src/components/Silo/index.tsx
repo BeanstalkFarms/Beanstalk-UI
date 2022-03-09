@@ -58,9 +58,9 @@ export default function Silo() {
           ]}
           balanceDescription={[
             <>
-              <div><span style={{ fontWeight: 'bold' }}>Beans:</span> {displayBN(totalBalance.totalSiloBeans)}</div>
-              <div><span style={{ fontWeight: 'bold' }}>Bean:ETH LP:</span> {displayBN(totalBalance.totalSiloLP)}</div>
-              <div><span style={{ fontWeight: 'bold' }}>Bean:3CRV LP:</span> {displayBN(totalBalance.totalSiloCurve)}</div>
+              <div>{displayBN(totalBalance.totalSiloBeans)} <span>Beans</span></div>
+              <div>{displayBN(totalBalance.totalSiloLP)} <span>Bean:ETH LP</span></div>
+              <div>{displayBN(totalBalance.totalSiloCurve)} <span>Bean:3CRV LP</span></div>
             </>,
             displayFullBN(new BigNumber(farmableMonthTotal)),
           ]}

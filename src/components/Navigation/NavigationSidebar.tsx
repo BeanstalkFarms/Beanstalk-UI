@@ -11,12 +11,11 @@ import {
 } from '@material-ui/core';
 import BigNumber from 'bignumber.js';
 
-// import { getAPYs } from 'util/index';
 import { AppState } from 'state';
 import { BEAN, theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
-import { percentForStalk, toTokenUnitsBN } from 'util/index';
+import { getAPYs, percentForStalk, toTokenUnitsBN } from 'util/index';
 import { useStyles } from './NavigationStyles.ts';
 import PriceTooltip from './PriceTooltip';
 
@@ -121,12 +120,12 @@ export default function NavigationSidebar() {
   const classes = useStyles();
 
   // Grab state
-  // const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
-  //   (state) => state.totalBalance
-  // );
-  // const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
-  //   (state) => state.beansPerSeason
-  // );
+  const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+  const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
+    (state) => state.beansPerSeason
+  );
   const weather = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
@@ -165,6 +164,13 @@ export default function NavigationSidebar() {
     return afundraisers;
   }, []);
 
+  // on each render, grab APY array
+  const apys = getAPYs(
+    farmableMonth,
+    parseFloat(totalStalk),
+    parseFloat(totalSeeds)
+  );
+
   // Calculate APYs.
   // FIXME: these calcs should be done during fetching and not within
   // each respective component. Certain calculations (like fieldAPY)
@@ -197,6 +203,9 @@ export default function NavigationSidebar() {
 
   // Add badge to Sidebar nav
   const badgeDataByPath : { [key: string] : string | any[] | null } = {
+    silo: initialized ? (
+      `${apys[0][0].toFixed(0)}% - ${apys[1][0].toFixed(0)}%`
+    ) : null,
     field: initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
     beanfts: 'Winter',
     poker: '3/5 · 5:30P PT'
