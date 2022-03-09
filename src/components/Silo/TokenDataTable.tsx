@@ -99,7 +99,7 @@ const APYTooltip = ({ apys, children } : { apys: APYTuple, children: any }) => {
               // minWidth: '80px',
               flex: 1,
             }}>
-              <span className={classes.apyTooltipHeader}><TokenIcon token={CryptoAsset.Bean} /> Bean APY</span>
+              <span className={classes.apyTooltipHeader}><TokenIcon token={CryptoAsset.Bean} /> Bean vAPY</span>
               <Typography
                 sx={{ fontSize: 18 }}
                 className={classes.chip}>
@@ -111,7 +111,7 @@ const APYTooltip = ({ apys, children } : { apys: APYTuple, children: any }) => {
               // minWidth: '80px',
               flex: 1,
             }}>
-              <span className={classes.apyTooltipHeader}><TokenIcon token={SiloAsset.Stalk} /> Stalk APY</span>
+              <span className={classes.apyTooltipHeader}><TokenIcon token={SiloAsset.Stalk} /> Stalk vAPY</span>
               <Typography
                 sx={{ fontSize: 18 }}
                 className={classes.chip}>
