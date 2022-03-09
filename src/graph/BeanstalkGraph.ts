@@ -1,3 +1,5 @@
+import flatMap from 'lodash/flatMap';
+import sumBy from 'lodash/sumBy';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { BEANSTALK_SUBGRAPH_API_LINK } from 'constants/index';
 
@@ -23,7 +25,7 @@ const APYQuery = `
        harvestableBeansPerSeason30
   }
  }
- `;
+`;
 
 const SeasonQuery = `
 query seasons($first: Int, $skip: Int) {
@@ -58,7 +60,19 @@ query seasons($first: Int, $skip: Int) {
        sownBeans
   }
  }
- `;
+`;
+
+const FarmableMonthTotalQuery = `
+  query {
+    seasons(
+      first: 720,
+      orderBy: timestamp,
+      orderDirection: desc,
+    ) {
+      newFarmableBeans
+    }
+  }
+`;
 
 function roundTo4Digits(num) {
   return parseFloat(num.toFixed(4));
@@ -74,18 +88,16 @@ function querySeasons(first: Number, skip: Number): Promise {
 export async function beanstalkQuery() {
   try {
     // FIXME: Need a more efficient and scalable query
-    const [d1, d2, d3, d4, d5] = await Promise.all([
+    const results = await Promise.all([
       querySeasons(1000, 0),
       querySeasons(1000, 1000),
       querySeasons(1000, 2000),
       querySeasons(1000, 3000),
       querySeasons(1000, 4000),
+      querySeasons(1000, 5000),
     ]);
-    const data = d1.data.seasons
-      .concat(d2.data.seasons)
-      .concat(d3.data.seasons)
-      .concat(d4.data.seasons)
-      .concat(d5.data.seasons);
+    const data = flatMap(results, (d: any) => d.data.seasons);
+
     const seasons = data.map((s) => {
       const season = {};
       Object.keys(s).forEach((key) => {
@@ -119,5 +131,23 @@ export async function apyQuery() {
   } catch (error) {
     console.error('error fetching Beanstalk data.');
     return {};
+  }
+}
+
+export async function farmableMonthTotalQuery() {
+  try {
+    const response = await client.query({
+      query: gql(FarmableMonthTotalQuery),
+    });
+
+    const total = sumBy(
+      response.data.seasons,
+      (season: any) => parseInt(season.newFarmableBeans, 10),
+    );
+
+    return total;
+  } catch (error) {
+    console.error('error fetching Beanstalk data.', error);
+    return 0;
   }
 }

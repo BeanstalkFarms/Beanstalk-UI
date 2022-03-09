@@ -199,6 +199,17 @@ export const siloStrings = {
   convertSlippage: 'Customize the maximum difference between the current distance from peg and the distance from peg when your transaction is mined, in the direction of the peg.',
   withdrawSeasons: 'The Withdraw Seasons is the number of full Seasons assets are Frozen upon Withdrawal from the Silo.',
   decreaseSeasons: 'The Next Decrease is the number of Seasons until the Withdrawal Freeze decreases by 1 Season.',
+  tvlDescription: 'The total value of all Silo deposits, denominated in USD.',
+  thirtyDayInterestDescription: 'The total number of Beans paid out to Silo Members over the last 30 days.',
+  myDepositsDescription: 'The total value of your Silo deposits, denominated in USD.',
+  farmableBeansDescription: 'Your claimable interest for being a Silo Member.',
+  myOwnershipDescription: 'Your percentage ownership of the Silo. You will receive this percentage of all new Beans minted to Silo Members.',
+  farmableStalkDescription: 'Your claimable Stalk earned by holding assets in the Silo. Claiming your Stalk increases your stake in the Silo.',
+  variableAPY: 'The Variable APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
+  stalkDescription: 'The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs.',
+  seedDescription: 'The Seed token yields .0001 Stalk every Season.',
+  rewardsColumn: 'Silo deposits earn Stalk and Seeds per Bean-denominated deposit value. Rewards vary between different assets. This column shows the reward for each respective asset.',
+  depositsColumn: 'The amount of each token you have deposited in the Silo.',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',

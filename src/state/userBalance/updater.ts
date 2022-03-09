@@ -27,7 +27,7 @@ import {
   setHasActiveFundraiser,
   setContractEvents,
 } from 'state/general/actions';
-import { lastCrossQuery, apyQuery } from 'graph/index';
+import { lastCrossQuery, apyQuery, farmableMonthTotalQuery } from 'graph/index';
 import { AppState } from 'state';
 import { BASE_SLIPPAGE, BEAN, SupportedToken, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
 import {
@@ -261,8 +261,8 @@ export default function Updater() {
       dispatch(setTotalBalance({
         totalBeans,
         totalBudgetBeans,
-        totalCurveBeans,
         totalLP,
+        totalCurveBeans,
         totalCrv3,
         totalSiloBeans,
         totalSiloLP,
@@ -1001,6 +1001,15 @@ export default function Updater() {
       dispatch(setBeansPerSeason(await apyQuery()));
     }
 
+    /**
+     * 
+     */
+    async function getFarmableMonthTotal() {
+      dispatch(setBeansPerSeason({
+        farmableMonthTotal: await farmableMonthTotalQuery()
+      }));
+    }
+
     // -- Start
 
     /**
@@ -1056,6 +1065,7 @@ export default function Updater() {
     start();
     getLastCross();
     getAPYs();
+    getFarmableMonthTotal();
 
     // eslint-disable-next-line
   }, []);

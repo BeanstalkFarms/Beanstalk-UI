@@ -13,9 +13,11 @@ export interface TotalBalanceState {
   totalBudgetBeans: BigNumber;
   /** The total number of Beans in the curve pool */
   totalCurveBeans: BigNumber;
-  /**  */
+  /** */
+  totalCrv3: BigNumber;
+  /** The total number of Bean:3CRV LP tokens deposited in the Silo */
   totalSiloCurve: BigNumber;
-  /**  */
+  /** The total number of withdrawn Bean:3CRV LP tokens */
   totalTransitCurve: BigNumber;
   /** The total number of LP tokens */
   totalLP: BigNumber;

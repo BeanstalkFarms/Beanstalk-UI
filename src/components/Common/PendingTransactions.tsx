@@ -28,8 +28,8 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
  * To be upgraded/replaced during form state overhaul, Q1 2022.
  * Leaving code here for future review.
  */
-const PendingTransactions = () => {
-  return null;
+const PendingTransactions = () => 
+   null
   // const classes = useStyles();
   // const transactions = useTransactions();
   // return (
@@ -69,6 +69,6 @@ const PendingTransactions = () => {
   //       ))}
   //   </>
   // );
-};
+;
 
 export default PendingTransactions;

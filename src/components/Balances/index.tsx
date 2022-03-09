@@ -21,6 +21,7 @@ import {
 import ClaimBalance from './ClaimBalance';
 import ClaimButton from './ClaimButton';
 import BalanceModule from './BalanceModule';
+import { sumBalances, getUserBalancesUSD } from '../../util/getUserBalancesUSD';
 
 const balanceStyle = {
   borderRadius: '25px',
@@ -95,18 +96,21 @@ export default function Balances() {
     (state) => state.prices
   );
 
-  const poolForLPRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) {
-      return [new BigNumber(0), new BigNumber(0)];
-    }
-    return poolForLP(amount, beanReserve, ethReserve, totalLP);
-  };
-  const poolForCurveRatio = (amount: BigNumber) => {
-    if (amount.isLessThanOrEqualTo(0)) {
-      return [new BigNumber(0), new BigNumber(0)];
-    }
-    return poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
-  };
+  const userBalance = useSelector<AppState, AppState['userBalance']>(
+    (state) => state.userBalance
+  );
+
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
+  const priceState = useSelector<AppState, AppState['prices']>(
+    (state) => state.prices
+  );
+
+  // Pool calculators
+  const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, beanReserve, ethReserve, totalLP);
+  const poolForCurveRatio = (amount: BigNumber) => poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
 
   const showFirst = window.location.pathname === '/analytics' ? 1 : 0;
   const sectionTitles = ['My Balances', 'Beanstalk'];
@@ -115,37 +119,31 @@ export default function Balances() {
     setSection(newSection);
   };
 
+  // User Silo deposit balances:
+  // Beans, Uniswap LP, Curve LP
+  // const userBeans = beanBalance
+  //   .plus(beanSiloBalance)
+  //   .plus(beanTransitBalance)
+  //   .plus(beanWrappedBalance)
+  //   .plus(beanReceivableBalance)
+  //   .plus(harvestablePodBalance);
   const userLP = lpBalance
     .plus(lpSiloBalance)
     .plus(lpTransitBalance)
     .plus(lpReceivableBalance);
-  const userBeans = beanBalance
-    .plus(beanSiloBalance)
-    .plus(beanTransitBalance)
-    .plus(beanWrappedBalance)
-    .plus(beanReceivableBalance)
-    .plus(harvestablePodBalance);
   const userCurve = curveBalance
     .plus(curveSiloBalance)
     .plus(curveTransitBalance)
     .plus(curveReceivableBalance);
 
+  // Get pool tuples
   const userBeansAndEth = poolForLPRatio(userLP);
   const userBeansAndCrv3 = poolForCurveRatio(userCurve);
   const poolBeansAndEth = poolForLPRatio(totalLP);
   const poolBeansAndCrv3 = poolForCurveRatio(totalCrv3);
 
-  const userLPBeans = userBeansAndEth[0].multipliedBy(2);
-  const userCurveBalanceInDollars = (
-    userBeansAndCrv3[0]
-    .multipliedBy(beanCrv3Price)
-    .plus(userBeansAndCrv3[1])
-  ).multipliedBy(curveVirtualPrice);
-
-  const userBalanceInDollars = userBeans
-    .plus(userLPBeans)
-    .multipliedBy(beanPrice)
-    .plus(userCurveBalanceInDollars);
+  const allSiloDepositsUSD = getUserBalancesUSD(userBalance, priceState, totalBalance);
+  const userBalanceInDollars = sumBalances(allSiloDepositsUSD);
 
   const marketCap = totalBeans.isGreaterThan(0)
     ? totalBeans.multipliedBy(beanPrice)
@@ -288,10 +286,17 @@ export default function Balances() {
   const myBalancesSection = (
     <>
       <BalanceModule
+        // -- Strings
         description={walletStrings}
         strings={walletTopStrings}
+        // -- "Top" Metrics
+        // "top left" of the balance module
+        // => User Balance in Dollars
         topLeft={userBalanceInDollars}
+        // "top right" of the balance module
+        // => % ownership in Beanstalk
         topRight={rootsBalance.dividedBy(totalRoots).multipliedBy(100)}
+        // -- Other Balances
         beanLPTotal={userBeansAndEth}
         beanCurveTotal={userBeansAndCrv3}
         poolForLPRatio={poolForLPRatio}
@@ -329,8 +334,15 @@ export default function Balances() {
   const totalBalancesSection = (
     <>
       <BalanceModule
+        // -- Strings
         description={totalStrings}
         strings={totalTopStrings}
+        // -- "Top" Metrics
+        // "top left" = Market Cap
+        topLeft={marketCap}
+        // "top right" = Pool Value
+        topRight={poolMarketCap}
+        // -- Other Metrics
         beanBalance={
           totalBeans.isGreaterThan(0)
             ? totalBeans
@@ -373,8 +385,6 @@ export default function Balances() {
         stalkBalance={totalStalk}
         seedBalance={totalSeeds}
         podBalance={totalPods}
-        topLeft={marketCap}
-        topRight={poolMarketCap}
         beanLPTotal={poolBeansAndEth}
         beanCurveTotal={poolBeansAndCrv3}
         poolForLPRatio={poolForLPRatio}
