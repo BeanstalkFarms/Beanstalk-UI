@@ -117,21 +117,20 @@ export default function BeanWithdraw() {
   //   return prices.beanPrice.plus(endPrice).dividedBy(2);
   // };
 
-  const depositRef = useRef<any>();
+  // Two options are Withdraw and Claim.
+  // Claim only shows if beanReceivableBalance > 0.
   const withdrawRef = useRef<any>();
   const claimRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
-        depositRef.current.handleForm();
-        break;
-      case 1:
         withdrawRef.current.handleForm();
         break;
-      case 2:
+      case 1:
         claimRef.current.handleForm();
         break;
       default:
+        console.error(`No form matched section ${section}.`);
         break;
     }
   };
