@@ -115,14 +115,10 @@ export default function LPConvert() {
   };
 
   const lpRef = useRef<any>();
-  const beanRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
         lpRef.current.handleForm();
-        break;
-      case 1:
-        beanRef.current.handleForm();
         break;
       default:
         break;

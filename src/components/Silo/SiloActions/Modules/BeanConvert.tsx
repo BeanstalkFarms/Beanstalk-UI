@@ -100,14 +100,11 @@ export default function BeanConvert() {
     return beanPrice.plus(endPrice).dividedBy(2);
   };
 
-  const lpRef = useRef<any>();
+  //
   const beanRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
-        lpRef.current.handleForm();
-        break;
-      case 1:
         beanRef.current.handleForm();
         break;
       default:
@@ -115,6 +112,7 @@ export default function BeanConvert() {
     }
   };
 
+  //
   const sections = [
     <ConvertBeanModule
       key={1}
