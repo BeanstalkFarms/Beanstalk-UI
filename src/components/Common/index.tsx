@@ -1,6 +1,6 @@
 import { Theme, withStyles } from '@material-ui/styles';
 import { Tooltip } from '@material-ui/core';
-import BigNumber from "bignumber.js";
+import BigNumber from 'bignumber.js';
 
 export { Grid } from '@material-ui/core';
 export type { Token } from 'util/index';

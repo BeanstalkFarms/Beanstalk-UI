@@ -10,7 +10,7 @@ import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Convert from './Convert';
 import { theme } from '../../../constants';
-import TOKENS from "../../../constants/siloTokens";
+import TOKENS from '../../../constants/siloTokens';
 
 const useStyles = makeStyles({
   backButton: {
