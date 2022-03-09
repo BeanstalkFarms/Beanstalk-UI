@@ -44,7 +44,7 @@ export default function Silo() {
 
   const metrics = (
     <>
-      <Grid item lg={4} sm={12}>
+      <Grid item lg={4} xs={12}>
         {/*
           * Metrics card: TVL/30-day */}
         <HeaderLabelList
@@ -71,7 +71,7 @@ export default function Silo() {
           width="100%"
         />
       </Grid>
-      <Grid item lg={4} sm={12}>
+      <Grid item lg={4} xs={12}>
         {/*
           * Metrics card: APYs */}
         <HeaderLabelList
@@ -94,7 +94,7 @@ export default function Silo() {
           width="100%"
         />
       </Grid>
-      <Grid item lg={4} sm={12}>
+      <Grid item lg={4} xs={12}>
         {/* Metrics card: My Balances */}
         <HeaderLabelList
           title={[
@@ -128,26 +128,29 @@ export default function Silo() {
       <Grid item xs={12} sm={10} lg={8} container justifyContent="center" spacing={2}>
         {metrics}
       </Grid>
-      <Grid item xs={12} sm={10} lg={8} container justifyContent="center">
-        <BaseModule
-          section={0}
-          sectionTitles={[]}
-          sectionTitlesDescription={[]}
-          showButton={false}
-          normalBox={false}
-          style={{
-            display: 'block',
-            width: '100%',
-            // Override padding. This allows the <TokenDataTable />
-            // to extend all the way to the edges of the screen and control
-            // its own sizing accordingly.
-            padding: 0,
-          }}
-          margin="0"
-          marginTop="30px"
-        >
-          <TokenDataTable />
-        </BaseModule>
+      <Grid item xs={12} sm={10} lg={8} container justifyContent="center" spacing={2}>
+        <Grid item>
+          <BaseModule
+            section={0}
+            sectionTitles={[]}
+            sectionTitlesDescription={[]}
+            showButton={false}
+            normalBox={false}
+            style={{
+              display: 'block',
+              width: '100%',
+              // Override padding. This allows the <TokenDataTable />
+              // to extend all the way to the edges of the screen and control
+              // its own sizing accordingly.
+              padding: 0,
+              // FIXME: remove border radius on mobile
+            }}
+            margin="0"
+            marginTop="30px"
+          >
+            <TokenDataTable />
+          </BaseModule>
+        </Grid>
       </Grid>
     </Grid>
   );
