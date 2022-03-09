@@ -20,9 +20,6 @@ const useStyles = makeStyles({
 
 export default function TabbedForm() {
   const classes = useStyles();
-  const { width } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
 
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
@@ -50,7 +47,7 @@ export default function TabbedForm() {
       container
       item
       xs={12}
-      spacing={2}
+      // spacing={2}
       className="SiloSection"
       alignItems="flex-start"
       justifyContent="center"
@@ -58,8 +55,8 @@ export default function TabbedForm() {
       <Grid
         item
         md={6}
-        sm={12}
-        style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
+        xs={12}
+        // style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
       >
         <Grid container justifyContent="flex-start">
           <Link to="/silo" style={{ textDecoration: 'none' }}>

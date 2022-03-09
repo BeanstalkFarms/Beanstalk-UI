@@ -129,7 +129,7 @@ export default function Silo() {
         {metrics}
       </Grid>
       <Grid item xs={12} sm={10} lg={8} container justifyContent="center" spacing={2}>
-        <Grid item>
+        <Grid item xs={12}>
           <BaseModule
             section={0}
             sectionTitles={[]}
