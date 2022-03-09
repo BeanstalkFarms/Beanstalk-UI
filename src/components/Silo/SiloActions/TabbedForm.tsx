@@ -10,6 +10,7 @@ import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Convert from './Convert';
 import { theme } from '../../../constants';
+import TOKENS from "../../../constants/siloTokens";
 
 const useStyles = makeStyles({
   backButton: {
@@ -23,12 +24,17 @@ export default function TabbedForm() {
     (state) => state.general
   );
 
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
+  );
+
   const { tokenSlug } = useParams<{ tokenSlug: string }>();
+  const tokenData = TOKENS.filter((token) => token.slug === tokenSlug)[0];
 
   const [section, setSection] = useState(0);
   const sectionTitlesDescription = [
-    siloStrings.lpDescription,
-    siloStrings.beanDescription,
+    siloStrings.tokenDepositDescription(tokenData.name),
+    siloStrings.tokenWithdrawDescription(tokenData.name, totalBalance.withdrawSeasons),
     siloStrings.convert,
   ];
   const sections = [<Deposit />, <Withdraw />, <Convert />];
