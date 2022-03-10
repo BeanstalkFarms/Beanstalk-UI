@@ -151,7 +151,7 @@ export default function BeanWithdraw() {
   if (beanReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <BeanClaimModule
-        key={2}
+        key={1}
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
       />

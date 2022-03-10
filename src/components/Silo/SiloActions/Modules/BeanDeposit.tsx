@@ -109,7 +109,6 @@ export default function BeanDeposit() {
   };
 
   const depositRef = useRef<any>();
-  const withdrawRef = useRef<any>();
   const claimRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
@@ -117,9 +116,6 @@ export default function BeanDeposit() {
         depositRef.current.handleForm();
         break;
       case 1:
-        withdrawRef.current.handleForm();
-        break;
-      case 2:
         claimRef.current.handleForm();
         break;
       default:
@@ -144,7 +140,7 @@ export default function BeanDeposit() {
   if (beanReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <BeanClaimModule
-        key={2}
+        key={1}
         ref={claimRef}
         setIsFormDisabled={setIsFormDisabled}
       />
