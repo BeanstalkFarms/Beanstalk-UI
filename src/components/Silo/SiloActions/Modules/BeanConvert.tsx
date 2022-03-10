@@ -20,7 +20,7 @@ import {
   SiloAsset,
   siloStrings,
 } from 'components/Common';
-import { ConvertBeanModule } from './Old/ConvertBeanModule';
+import { ConvertBeanModule } from './SubModules/ConvertBeanModule';
 
 export default function BeanConvert() {
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<

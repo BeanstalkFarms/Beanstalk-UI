@@ -15,7 +15,7 @@ import {
   TransitAsset,
 } from 'components/Common';
 import { BeanClaimModule } from './SubModules/BeanClaimModule';
-import { BeanWithdrawModule } from './Old/BeanWithdrawModule';
+import { BeanWithdrawModule } from './SubModules/BeanWithdrawModule';
 
 export default function BeanWithdraw() {
   const { beanstalkBeanAllowance } = useSelector<

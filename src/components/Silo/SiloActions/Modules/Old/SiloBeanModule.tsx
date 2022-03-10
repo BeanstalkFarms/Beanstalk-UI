@@ -15,8 +15,8 @@ import {
   TransitAsset,
 } from 'components/Common';
 import { BeanClaimModule } from '../SubModules/BeanClaimModule';
-import { BeanDepositModule } from './BeanDepositModule';
-import { BeanWithdrawModule } from './BeanWithdrawModule';
+import { BeanDepositModule } from '../SubModules/BeanDepositModule';
+import { BeanWithdrawModule } from '../SubModules/BeanWithdrawModule';
 
 export default function SiloBeanModule() {
   const { beanstalkBeanAllowance } = useSelector<
