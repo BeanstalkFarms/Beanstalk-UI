@@ -5,7 +5,7 @@ import {
   Telegram as TelegramIcon,
   Twitter as TwitterIcon,
 } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
@@ -46,28 +46,29 @@ import {
   theme,
 } from 'constants/index';
 
+const useStyles = makeStyles({
+  fixedGround: {
+    backgroundColor: 'transparent',
+    backgroundImage: `url(${theme.ground})`,
+    backgroundPosition: '0% 0%',
+    backgroundRepeat: 'repeat',
+    backgroundSize: theme.groundSize,
+    display: 'flex',
+    alignContent: 'space-around',
+    height: theme.groundHeight,
+    zIndex: 101,
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+  },
+})
+
 export default function Footer() {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
-  const classes = makeStyles({
-    fixedGround: {
-      backgroundColor: 'transparent',
-      backgroundImage: `url(${theme.ground})`,
-      backgroundPosition: '0% 0%',
-      backgroundRepeat: 'repeat',
-      backgroundSize: theme.groundSize,
-      display: 'flex',
-      alignContent: 'space-around',
-      height: theme.groundHeight,
-      zIndex: 101,
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      paddingLeft: width < 800 ? 0 : 300
-    },
-  })();
+  const classes = useStyles();
 
   const logoStyle = {
     height: '25px',
@@ -78,18 +79,22 @@ export default function Footer() {
   return (
     <>
       <ThemeBackground />
-      <Grid container className={classes.fixedGround} justifyContent="center">
+      <Grid container className={classes.fixedGround} style={{
+        paddingLeft: width < 800 ? 0 : 300
+      }} justifyContent="center">
         <LogoLinks close link={TWITTER_LINK}>
           <TwitterIcon style={logoStyle} />
         </LogoLinks>
-        {width > 450 ? (
-          <LogoLinks close link={REDDIT_LINK}>
-            <RedditIcon style={logoStyle} />
-          </LogoLinks>
+        {width > 900 ? (
+          <>
+            <LogoLinks close link={REDDIT_LINK}>
+              <RedditIcon style={logoStyle} />
+            </LogoLinks>
+            <LogoLinks link={TELEGRAM_LINK}>
+              <TelegramIcon style={logoStyle} />
+            </LogoLinks>
+          </>
         ) : null}
-        <LogoLinks link={TELEGRAM_LINK}>
-          <TelegramIcon style={logoStyle} />
-        </LogoLinks>
         <LogoLinks link={DISCORD_LINK}>
           <DiscordIcon style={logoStyle} />
         </LogoLinks>
@@ -99,13 +104,15 @@ export default function Footer() {
         <LogoLinks close link={OPENSEA_LINK_GENESIS} paddingRight="10px">
           <OpenSeaIcon style={logoStyle} />
         </LogoLinks>
-        <LogoLinks link={COINMARKETCAP_LINK}>
-          <CoinMarketCapIcon style={logoStyle} />
-        </LogoLinks>
-        {width > 500 ? (
-          <LogoLinks link={COINGECKO_LINK}>
-            <CoinGeckoIcon style={logoStyle} />
-          </LogoLinks>
+        {width > 900 ? (
+          <>
+            <LogoLinks link={COINMARKETCAP_LINK}>
+              <CoinMarketCapIcon style={logoStyle} />
+            </LogoLinks>
+            <LogoLinks link={COINGECKO_LINK}>
+              <CoinGeckoIcon style={logoStyle} />
+            </LogoLinks>
+          </>
         ) : null}
         <LogoLinks close link={GITHUB_LINK}>
           <GitHubIcon style={logoStyle} />
@@ -121,18 +128,18 @@ export default function Footer() {
         <LogoLinks close link={SILO_CONTRACT_LINK}>
           <EtherscanIcon style={logoStyle} />
         </LogoLinks>
-        {width > 550 ? (
-          <LogoLinks close link={UNISWAP_CONTRACT_LINK} paddingRight="5px">
-            <UniswapIcon style={logoStyle} />
-          </LogoLinks>
-        ) : null}
-        <LogoLinks close link={CURVE_LINK}>
-          <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)'} : { height: '25px', width: '25px', fill: 'url(#blackGradient)' }} />
-        </LogoLinks>
         {width > 900 ? (
-          <LogoLinks link={COMMONWEALTH_LINK}>
-            <CommonwealthIcon style={logoStyle} />
-          </LogoLinks>
+          <>
+            <LogoLinks close link={UNISWAP_CONTRACT_LINK} paddingRight="5px">
+              <UniswapIcon style={logoStyle} />
+            </LogoLinks>
+            <LogoLinks close link={CURVE_LINK}>
+              <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)'} : { height: '25px', width: '25px', fill: 'url(#blackGradient)' }} />
+            </LogoLinks>
+            <LogoLinks link={COMMONWEALTH_LINK}>
+              <CommonwealthIcon style={logoStyle} />
+            </LogoLinks>
+          </>
         ) : null}
         <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
           <LogoLinks close link={NETLIFY_LINK} paddingTop="0px" color={theme.footer}>

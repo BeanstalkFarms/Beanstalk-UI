@@ -1,5 +1,6 @@
 import { Theme, withStyles } from '@material-ui/styles';
 import { Tooltip } from '@material-ui/core';
+import BigNumber from 'bignumber.js';
 
 export { Grid } from '@material-ui/core';
 export type { Token } from 'util/index';
@@ -157,22 +158,14 @@ export const claimableStrings = {
   farm: 'Use this button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
 };
 export const siloStrings = {
-  beanDescription: 'Use this tab to deposit, withdraw, and claim Beans to and from the Silo.',
-  beanDeposit:
-    'Use this sub-tab to deposit Beans to the Silo. You can toggle the settings to deposit from Beans, ETH, or both.',
-  beanWithdraw:
-    'Use this sub-tab to withdraw Beans from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
+  tokenDepositDescription: (tokenName: string) => `Use this tab to deposit ${tokenName} into the Silo.`,
+  tokenWithdrawDescription: (tokenName: string, numSeasons: BigNumber) => `Use this tab to withdraw ${tokenName} from the Silo. Withdrawals will be claimable ${numSeasons} full Seasons after withdrawal.`,
   beanClaim: 'Use this sub-tab to Claim Withrawn BEAN:ETH LP Tokens from the Silo.',
   beanDepositsTable: 'View all your current Bean Deposits in this table.',
   beanWithdrawalsTable: 'View all your current Bean Withdrawals in this table.',
   beanAPY:
     'The Bean APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
   convert: 'Use this tab to convert Deposited Beans to Deposited BEAN:ETH LP Tokens when P > $1 and convert Deposited BEAN:ETH LP Tokens to Deposited Beans when P < $1.',
-  lpDescription: 'Use this tab to deposit, withdraw, and claim BEAN:ETH LP Tokens to and from the Silo.',
-  lpDeposit:
-    'Use this sub-tab to deposit BEAN:ETH LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited BEAN:ETH LP Tokens.',
-  lpWithdraw:
-    'Use this sub-tab to withdraw BEAN:ETH LP Tokens from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
   lpClaim: 'Use this sub-tab to Claim Withrawn BEAN:ETH LP Tokens from the Silo.',
   lpDepositsTable: 'View all your current LP Token Deposits in this table.',
   lpWithdrawalsTable:
@@ -180,10 +173,6 @@ export const siloStrings = {
   lpAPY:
     'The LP APY is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate APY,',
   curveDescription: 'Use this tab to deposit, withdraw, and claim BEAN:3CRV LP Tokens to and from the Silo.',
-  curveDeposit:
-    'Use this sub-tab to deposit BEAN:3CRV LP Tokens to the Silo.',
-  curveWithdraw:
-    'Use this sub-tab to withdraw BEAN:3CRV LP Tokens from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
   curveClaim: 'Use this sub-tab to Claim Withrawn BEAN:3CRV LP Tokens from the Silo.',
   curveDepositsTable: 'View all your current BEAN:3CRV LP Token Deposits in this table.',
   curveWithdrawalsTable:
@@ -210,6 +199,20 @@ export const siloStrings = {
   seedDescription: 'The Seed token yields .0001 Stalk every Season.',
   rewardsColumn: 'Silo deposits earn Stalk and Seeds per Bean-denominated deposit value. Rewards vary between different assets. This column shows the reward for each respective asset.',
   depositsColumn: 'The amount of each token you have deposited in the Silo.',
+
+  // OLD: Only use is in Silo/SiloActions/Modules/Old. Can be removed when these are deleted
+  beanDeposit:
+    'Use this sub-tab to deposit Beans to the Silo. You can toggle the settings to deposit from Beans, ETH, or both.',
+  beanWithdraw:
+    'Use this sub-tab to withdraw Beans from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
+  curveDeposit:
+    'Use this sub-tab to deposit BEAN:3CRV LP Tokens to the Silo.',
+  curveWithdraw:
+    'Use this sub-tab to withdraw BEAN:3CRV LP Tokens from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
+  lpDeposit:
+    'Use this sub-tab to deposit BEAN:ETH LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited BEAN:ETH LP Tokens.',
+  lpWithdraw:
+    'Use this sub-tab to withdraw BEAN:ETH LP Tokens from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
 };
 export const fieldStrings = {
   sow: 'Use this tab to sow Beans in the Field in exchange for Pods.',

@@ -151,7 +151,7 @@ export default function LPWithdraw() {
 
   const sections = [
     <LPWithdrawModule
-      key={1}
+      key={0}
       poolForLPRatio={poolForLPRatio}
       ref={withdrawRef}
       setIsFormDisabled={setIsFormDisabled}
@@ -162,7 +162,7 @@ export default function LPWithdraw() {
   if (lpReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <LPClaimModule
-        key={2}
+        key={1}
         ref={claimRef}
         poolForLPRatio={poolForLPRatio}
         setIsFormDisabled={setIsFormDisabled}

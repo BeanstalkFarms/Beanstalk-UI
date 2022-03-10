@@ -13,17 +13,17 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { AppState } from 'state';
 import { APYTuple, CryptoAsset, displayBN, getAPYs, SiloAsset } from 'util/index';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import TOKENS from 'constants/siloTokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import { FormatTooltip, QuestionModule, siloStrings } from 'components/Common';
-import { theme } from '../../constants';
+import { theme as beanstalkTheme } from '../../constants';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   table: {
-    backgroundColor: theme.module.background,
+    backgroundColor: beanstalkTheme.module.background,
     borderRadius: 25,
     fontFamily: 'Futura-PT-Book',
   },
@@ -62,11 +62,11 @@ const useStyles = makeStyles({
   chip: {
     fontFamily: 'Lucida Console',
     fontSize: 13,
-    // fontFamily: 'Futura-PT-Book',
     backgroundColor: '#C4C4C44D',
     padding: '6px 9px',
     borderRadius: '6px',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontWeight: 400,
   },
   tableRow: {
     maxWidth: '100vw',
@@ -75,8 +75,14 @@ const useStyles = makeStyles({
   apyTooltipHeader: {
     display: 'inline-block',
     marginBottom: '4px',
+  },
+  //
+  hideOnMobile: {
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
+    }
   }
-});
+}));
 
 const APYTooltip = ({ apys, children } : { apys: APYTuple, children: any }) => {
   const classes = useStyles();
@@ -173,7 +179,7 @@ export default function TokenDataTable() {
               />
             </TableCell>
             <TableCell align="center" className={classes.headerCell}>
-              BEAN vAPY
+              <span className={classes.hideOnMobile}>BEAN&nbsp;</span>vAPY
               <QuestionModule
                 description={(
                   <span>{siloStrings.variableAPY} <a href="https://app.bean.money/docs/APY.html" target="_blank" rel="noreferrer">click here</a>.</span>
@@ -182,7 +188,7 @@ export default function TokenDataTable() {
                 margin="-7px 8px 0 0"
               />
             </TableCell>
-            <TableCell align="center" className={classes.headerCell}>
+            <TableCell align="center" className={`${classes.headerCell} ${classes.hideOnMobile}`}>
               STALK vAPY
               <QuestionModule
                 description={(
@@ -192,7 +198,7 @@ export default function TokenDataTable() {
                 margin="-7px 8px 0 0"
               />
             </TableCell>
-            <TableCell align="right" className={classes.headerCell}>
+            <TableCell align="right" className={`${classes.headerCell} ${classes.hideOnMobile}`}>
               DEPOSITS
               <QuestionModule
                 description={siloStrings.depositsColumn}
@@ -243,14 +249,14 @@ export default function TokenDataTable() {
                     </span>
                   </APYTooltip>
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" className={`${classes.headerCell} ${classes.hideOnMobile}`}>
                   <APYTooltip apys={tokenApys}>
                     <span className={classes.chip}>
                       {tokenApys[1].toFixed(1)}%
                     </span>
                   </APYTooltip>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="right" className={`${classes.headerCell} ${classes.hideOnMobile}`}>
                   <FormatTooltip
                     margin="10px"
                     placement="top"
