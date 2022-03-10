@@ -10,6 +10,7 @@ import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Convert from './Convert';
 import { theme } from '../../../constants';
+import TOKENS from '../../../constants/siloTokens';
 
 const useStyles = makeStyles({
   backButton: {
@@ -19,16 +20,18 @@ const useStyles = makeStyles({
 
 export default function TabbedForm() {
   const classes = useStyles();
-  const { width } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
+
+  const totalBalance = useSelector<AppState, AppState['totalBalance']>(
+    (state) => state.totalBalance
   );
 
   const { tokenSlug } = useParams<{ tokenSlug: string }>();
+  const tokenData = TOKENS.filter((token) => token.slug === tokenSlug)[0];
 
   const [section, setSection] = useState(0);
   const sectionTitlesDescription = [
-    siloStrings.lpDescription,
-    siloStrings.beanDescription,
+    siloStrings.tokenDepositDescription(tokenData.name),
+    siloStrings.tokenWithdrawDescription(tokenData.name, totalBalance.withdrawSeasons),
     siloStrings.convert,
   ];
   const sections = [<Deposit />, <Withdraw />, <Convert />];
@@ -44,7 +47,7 @@ export default function TabbedForm() {
       container
       item
       xs={12}
-      spacing={2}
+      // spacing={2}
       className="SiloSection"
       alignItems="flex-start"
       justifyContent="center"
@@ -52,8 +55,8 @@ export default function TabbedForm() {
       <Grid
         item
         md={6}
-        sm={12}
-        style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
+        xs={12}
+        // style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
       >
         <Grid container justifyContent="flex-start">
           <Link to="/silo" style={{ textDecoration: 'none' }}>

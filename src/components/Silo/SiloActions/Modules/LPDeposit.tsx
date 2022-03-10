@@ -134,15 +134,11 @@ export function LPDeposit() {
   }
 
   const depositRef = useRef<any>();
-  const withdrawRef = useRef<any>();
   const claimRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
         depositRef.current.handleForm();
-        break;
-      case 1:
-        withdrawRef.current.handleForm();
         break;
       case 2:
         claimRef.current.handleForm();
@@ -166,7 +162,7 @@ export function LPDeposit() {
   if (lpReceivableBalance.isGreaterThan(0)) {
     sections.push(
       <LPClaimModule
-        key={2}
+        key={1}
         ref={claimRef}
         poolForLPRatio={poolForLPRatio}
         setIsFormDisabled={setIsFormDisabled}
