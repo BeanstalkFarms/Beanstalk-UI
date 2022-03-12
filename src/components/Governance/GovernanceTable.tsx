@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import {
   AppBar,
+  Button,
   Collapse,
   IconButton,
   Table,
@@ -23,7 +24,8 @@ import {
   GOVERNANCE_EMERGENCY_THRESHOLD_NUMERATOR,
   GOVERNANCE_EXPIRATION,
 } from 'constants/index';
-import { percentForStalk } from 'util/index';
+import { percentForStalk, commit, emergencyCommit } from 'util/index';
+import TransactionToast from 'components/Common/TransactionToast';
 import {
   governanceStrings,
   Line,
@@ -164,6 +166,90 @@ const BipTable = (props) => {
     setPage(newPage);
   };
 
+  const commitHandler = (e) => {
+    const id = e.currentTarget.dataset.index;
+    const bip = props.bips[id];
+
+    const voteProportion = bip.roots.dividedBy(props.totalRoots);
+    const emergencyCommitable = bip.timestamp
+      .plus(GOVERNANCE_EMERGENCY_PERIOD)
+      .isLessThanOrEqualTo(new Date().getTime() / 1000) &&
+    voteProportion.isGreaterThanOrEqualTo(
+      GOVERNANCE_EMERGENCY_THRESHOLD_NUMERATOR /
+        GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR
+    );
+
+    if (emergencyCommitable) {
+      // Toast
+      const txToast = new TransactionToast({
+        loading: 'Emergency Commiting BIP',
+        success: 'BIP Emergency Committed'
+      });
+
+      // Execute
+      emergencyCommit(
+        id,
+        (response) => {
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        console.log(err);
+        txToast.error(err);
+      });
+    } else {
+      // Toast
+      const txToast = new TransactionToast({
+        loading: 'Commiting BIP',
+        success: 'BIP Committed'
+      });
+
+      // Execute
+      commit(
+        id,
+        (response) => {
+          txToast.confirming(response);
+        }
+      )
+      .then((value) => {
+        txToast.success(value);
+      })
+      .catch((err) => {
+        console.log(err);
+        txToast.error(err);
+      });
+    }
+  };
+
+  function commitButton(id) {
+    return (
+      <>
+        <Button
+          className={classes.formButton}
+          color="primary"
+          onClick={commitHandler}
+          data-index={id}
+          variant="contained"
+        >
+          <Box>
+            <span style={{ fontFamily: 'Futura-PT-Book' }}>
+              Commit
+            </span>
+            <QuestionModule
+              description="Placeholder for commit copy"
+              margin="-11px 7px 0 0"
+              marginTooltip="0 0 -5px 20px"
+              widthTooltip="150px"
+            />
+          </Box>
+        </Button>
+      </>
+    );
+  }
+
   const titles = ['BIP', 'Title', 'Status', '% Voted'];
   const tableBips = props.bips
     .reduce((bips, bip) => {
@@ -183,7 +269,7 @@ const BipTable = (props) => {
       ) {
         tb.status = 'Failed';
       } else if (bip.start.plus(bip.period).isLessThan(props.season)) {
-        tb.status = voteProportion.isGreaterThan(0.5) ? 'Commitable' : 'Failed';
+        tb.status = voteProportion.isGreaterThan(0.5) ? commitButton(bipID) : 'Failed';
       } else if (
         bip.timestamp
           .plus(GOVERNANCE_EMERGENCY_PERIOD)
@@ -193,7 +279,7 @@ const BipTable = (props) => {
             GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR
         )
       ) {
-        tb.status = 'Emergency Committable';
+        tb.status = commitButton(bipID);
       } else {
         tb.status = `${bip.period.minus(
           props.season.minus(bip.start).minus(1)
