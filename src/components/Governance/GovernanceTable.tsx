@@ -239,7 +239,7 @@ const BipTable = (props) => {
               Commit
             </span>
             <QuestionModule
-              description="Placeholder for commit copy"
+              description="Anyone can commit a BIP if it either has greater than a 50% majority of Stalk Voting for at the end of the 168 Season Voting Period, or greater than a 2/3 majority of Stalk Voting for at any point 24 hours or more after it was proposed and before the end of the Voting Period."
               margin="-11px 7px 0 0"
               marginTooltip="0 0 -5px 20px"
               widthTooltip="150px"
