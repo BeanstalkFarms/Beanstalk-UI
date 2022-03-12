@@ -59,7 +59,7 @@ export const PEG_WEATHER_CASES = [
    3,  3,  1, 0,  // Rea Hgh: P < 1
    0, -1, -3, 0,  //          P > 1
    3,  3,  1, 0,  // Exs Hgh: P < 1
-   1, -1, -3, 0,  //          P > 1
+   0, -1, -3, 0,  //          P > 1
 ]; /* Peg Maintenance Weather Cases */
 
 /* Website Settings */
