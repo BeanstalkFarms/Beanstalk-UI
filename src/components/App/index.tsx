@@ -19,8 +19,8 @@ import {
   MetamasklessPage,
   MarketplacePage,
   //
-  FarmPage,
   SiloPage,
+  SiloDepositPage,
   FieldPage,
   TradePage,
   DAOPage,
@@ -31,7 +31,6 @@ import {
   AboutPage,
   BalancesPage,
   PegMaintenancePage,
-  PokerPage,
 } from 'Pages';
 
 import Wrapper from './Wrapper';
@@ -74,7 +73,7 @@ export default function App() {
         <Switch>
           {/* Redirects */}
           <Route exact path="/">
-            <Redirect to="/farm/silo" />
+            <Redirect to="/silo" />
           </Route>
           <Route exact path="/farm">
             <Redirect to="/silo" />
@@ -83,21 +82,38 @@ export default function App() {
             <AnalyticsPage />
           </Route>
           {/* Farm */}
-          <Route exact path="/farm/silo">
+          <Route exact path="/silo">
             <SiloPage />
           </Route>
-          <Route exact path="/farm/field">
+          <Route exact path="/silo/:tokenSlug">
+            <SiloDepositPage />
+          </Route>
+          <Route exact path="/field">
             <FieldPage />
           </Route>
-          <Route exact path="/farm/trade">
+          <Route exact path="/trade">
             <TradePage />
           </Route>
-          <Route exact path="/farm/balances">
+          {/* Redirect old /farm routes */}
+          <Route exact path="/farm/silo">
+            <Redirect to="/silo" />
+          </Route>
+          <Route exact path="/farm/silo/:tokenSlug">
+            {/* fixme: attach the :tokenSlug parameter */}
+            <Redirect to="/silo" />
+          </Route>
+          <Route exact path="/farm/field">
+            <Redirect to="/field" />
+          </Route>
+          <Route exact path="/farm/trade">
+            <Redirect to="/trade" />
+          </Route>
+          {/* <Route exact path="/farm/balances">
             <FarmPage sectionNumber={3} />
           </Route>
           <Route exact path="/farm/beanfts">
             <FarmPage sectionNumber={4} />
-          </Route>
+          </Route> */}
           {/* More */}
           <Route exact path="/analytics">
             <AnalyticsPage />
@@ -123,11 +139,8 @@ export default function App() {
           <Route exact path="/market">
             <MarketplacePage key="marketplace" />
           </Route>
-          <Route exact path="/poker">
-            <PokerPage key="poker" />
-          </Route>
           {/* If nothing matches, go to the Silo */}
-          <Redirect to="/farm/silo" />
+          <Redirect to="/silo" />
         </Switch>
       </div>
     );

@@ -82,7 +82,7 @@ export default function Footer() {
         <LogoLinks close link={TWITTER_LINK}>
           <TwitterIcon style={logoStyle} />
         </LogoLinks>
-        {width > 400 ? (
+        {width > 450 ? (
           <LogoLinks close link={REDDIT_LINK}>
             <RedditIcon style={logoStyle} />
           </LogoLinks>
@@ -121,7 +121,7 @@ export default function Footer() {
         <LogoLinks close link={SILO_CONTRACT_LINK}>
           <EtherscanIcon style={logoStyle} />
         </LogoLinks>
-        {width > 400 ? (
+        {width > 550 ? (
           <LogoLinks close link={UNISWAP_CONTRACT_LINK} paddingRight="5px">
             <UniswapIcon style={logoStyle} />
           </LogoLinks>

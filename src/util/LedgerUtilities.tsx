@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { utils } from 'ethers';
+import { BatchRequest } from 'web3-core';
+
 import {
   BUDGETS,
   BEAN,
@@ -13,6 +15,7 @@ import {
   UNISWAP_V2_ROUTER,
   USDC,
   supportedERC20Tokens,
+  SupportedToken,
 } from 'constants/index';
 import {
   account,
@@ -32,167 +35,230 @@ import {
 /* Client is responsible for calling execute() */
 export const createLedgerBatch = () => new web3.BatchRequest();
 
-const makeBatchedPromises = (batch, promisesAndResultHandlers) => {
-  const batchedPromises = promisesAndResultHandlers.map(
-    (methodAndHandler) =>
-      new Promise((resolve, reject) => {
-        batch.add(
-          methodAndHandler[0].call.request({}, 'latest', (error, result) => {
-            if (result !== undefined) resolve(methodAndHandler[1](result));
-            else reject(error);
-          })
-        );
-      })
-  );
-  return Promise.all(batchedPromises);
-};
+// FIXME: move these elsewhere.
+export type Weather = {
+  didSowBelowMin: boolean;
+  didSowFaster: boolean;
+  lastDSoil: BigNumber;
+  lastSoilPercent: BigNumber;
+  lastSowTime: BigNumber;
+  nextSowTime: BigNumber;
+  startSoil: BigNumber;
+  weather: BigNumber;
+}
 
-//
+export type Rain = {
+  raining: boolean;
+  rainStart: BigNumber;
+}
+
+export type Time = {
+  season: BigNumber;
+  start: BigNumber;
+  period: BigNumber;
+  timestamp: BigNumber;
+}
+
+export type BIP = {
+  id: BigNumber;
+  executed: boolean;
+  pauseOrUnpause: BigNumber;
+  start: BigNumber;
+  period: BigNumber;
+  proposer: string;
+  roots: BigNumber;
+  endTotalRoots: BigNumber;
+  timestamp: BigNumber;
+  updated: BigNumber;
+  active: boolean;
+}
+
+export type Fundraiser = {
+  id: BigNumber;
+  remaining: BigNumber;
+  total: BigNumber;
+  token: string;
+}
+
+/**
+ * Create a scoped `execute` function which accepts a Contract
+ * method and executes it when the batch is committed. The promise
+ * resolves with the raw result of the method. Downstream functions
+ * can use a chain of `.then` calls to mutate the returned value accordingly.
+ * 
+ * This ensures that Typescript keeps track of any changes to variable type
+ * during that chain.
+ */
+const setupBatch = (batch: BatchRequest) => (
+  function execute(fn: any) {
+    return new Promise<any>((resolve, reject) => {
+      batch.add(
+        (fn.call).request({}, 'latest', (error: any, result: any) => {
+          if (result !== undefined) {
+            return resolve(result);
+          }
+          return reject(error);
+        })
+      );
+    });
+  }
+);
+
+// Result handlers
 const identityResult = (result: any) => result;
 const bigNumberResult = (result: any) => new BigNumber(result);
-const tokenResult = (token) => (result: any) =>
+const tokenResult = (token : SupportedToken) => (result: BigNumber.Value) =>
   toTokenUnitsBN(new BigNumber(result), token.decimals);
 
+/* ------------------- */
+
+export async function getBlockTimestamp(blockNumber: any) {
+  await initializing;
+  return (await web3.eth.getBlock(blockNumber)).timestamp;
+}
+
 export async function getEtherBalance() {
-  return tokenResult(ETH)(await web3.eth.getBalance(account));
+  return web3.eth.getBalance(account).then(tokenResult(ETH));
 }
 
 export async function getUSDCBalance() {
-  return tokenResult(USDC)(await web3.eth.getBalance(account));
+  return web3.eth.getBalance(account).then(tokenResult(USDC));
 }
 
 export async function getEthPrices() {
   try {
-    // FIXME
-    const ethPrice = await fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=stats&action=ethprice')
-      .then((response) => response.json())
-      .then((res) => res.result.ethusd);
-    const gas = await fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=gastracker&action=gasoracle')
-      .then((response) => response.json())
-      .then((res) => ({
-        safe: res.result.FastGasPrice,
-        propose: res.result.SafeGasPrice,
-        fast: res.result.ProposeGasPrice,
-      }));
+    const [
+      gas,
+      ethPrice,
+    ] = await Promise.all([
+      fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=gastracker&action=gasoracle')
+        .then((response) => response.json())
+        .then((res) => ({
+          safe: res.result.FastGasPrice,
+          propose: res.result.SafeGasPrice,
+          fast: res.result.ProposeGasPrice,
+        })),
+      fetch('https://beanstalk-etherscan-proxy.vercel.app/api/etherscan?module=stats&action=ethprice')
+        .then((response) => response.json())
+        .then((res) => res.result.ethusd),
+    ]);
+
     return {
       ...gas,
       ethPrice,
     };
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
-export async function getBlockTimestamp(blockNumber) {
-  await initializing;
-  return (await web3.eth.getBlock(blockNumber)).timestamp;
-}
-
-/* Batched Getters */
-export const getAccountBalances = async (batch) => {
+export const getAccountBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
   const usdc = tokenContractReadOnly(USDC);
   const curve = beanCrv3ContractReadOnly();
+  const exec = setupBatch(batch);
 
-  return makeBatchedPromises(batch, [
-    [bean.methods.allowance(account, UNISWAP_V2_ROUTER), bigNumberResult],
-    [bean.methods.allowance(account, BEANSTALK), bigNumberResult],
-    [lp.methods.allowance(account, BEANSTALK), bigNumberResult],
-    [usdc.methods.allowance(account, BEANSTALK), bigNumberResult],
-    [curve.methods.allowance(account, BEANSTALK), bigNumberResult],
-    [beanstalk.methods.balanceOfEth(account), tokenResult(ETH)],
-    [bean.methods.balanceOf(account), tokenResult(BEAN)],
-    [lp.methods.balanceOf(account), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [curve.methods.balanceOf(account), tokenResult(CURVE)],
-    [beanstalk.methods.balanceOfSeeds(account), tokenResult(SEEDS)],
-    [beanstalk.methods.balanceOfStalk(account), tokenResult(STALK)],
-    [beanstalk.methods.votedUntil(account), bigNumberResult],
-    [beanstalk.methods.balanceOfFarmableBeans(account), tokenResult(BEAN)],
-    [beanstalk.methods.balanceOfGrownStalk(account), tokenResult(STALK)],
-    [beanstalk.methods.balanceOfRoots(account), bigNumberResult],
-    [usdc.methods.balanceOf(account), tokenResult(USDC)],
-    [beanstalk.methods.wrappedBeans(account), tokenResult(BEAN)],
-  ]);
+  return Promise.all([
+    // Allowances
+    exec(bean.methods.allowance(account, UNISWAP_V2_ROUTER)).then(bigNumberResult),
+    exec(bean.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    exec(lp.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    exec(usdc.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    exec(curve.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    // Balances
+    exec(beanstalk.methods.balanceOfEth(account)).then(tokenResult(ETH)),
+    exec(bean.methods.balanceOf(account)).then(tokenResult(BEAN)),
+    exec(lp.methods.balanceOf(account)).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
+    exec(curve.methods.balanceOf(account)).then(tokenResult(CURVE)),
+    exec(beanstalk.methods.balanceOfSeeds(account)).then(tokenResult(SEEDS)),
+    exec(beanstalk.methods.balanceOfStalk(account)).then(tokenResult(STALK)),
+    // @DEPRECATED
+    // Leaving this here to prevent reshuffling of numerically-indexed eventParsingParameters.
+    Promise.resolve(undefined),
+    exec(beanstalk.methods.balanceOfFarmableBeans(account)).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.balanceOfGrownStalk(account)).then(tokenResult(STALK)),
+    exec(beanstalk.methods.balanceOfRoots(account)).then(bigNumberResult),
+    exec(usdc.methods.balanceOf(account)).then(tokenResult(USDC)),
+    exec(beanstalk.methods.wrappedBeans(account)).then(tokenResult(BEAN)),
+  ] as const);
 };
 
-/* Beanstalk Price Getters */
 export const getPriceArray = async () => {
   const beanstalkPrice = beanstalkPriceContractReadOnly();
   const priceTuple = await beanstalkPrice.methods.price().call();
-
   return priceTuple;
 };
-/* last balanceOfIncreaseStalk is balanceOfGrownStalk once transitioned */
 
-export const getTokenBalances = async (batch) =>
-  makeBatchedPromises(batch, supportedERC20Tokens.map((t) => [
-    tokenV2ContractReadOnly(t).methods.balanceOf(account), tokenResult(t)
-  ]));
+export const getTokenBalances = async (batch: BatchRequest) => {
+  const exec = setupBatch(batch);
+  return Promise.all(
+    supportedERC20Tokens.map((t) => 
+      exec(tokenV2ContractReadOnly(t).methods.balanceOf(account)).then(tokenResult(t))
+    )
+  );
+};
 
-export const getTotalBalances = async (batch) => {
+export const getTotalBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
   const curve = beanCrv3ContractReadOnly();
+  const exec = setupBatch(batch);
 
-  return makeBatchedPromises(batch, [
-    [bean.methods.totalSupply(), tokenResult(BEAN)],
-    [lp.methods.totalSupply(), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [curve.methods.totalSupply(), tokenResult(CURVE)],
-    [beanstalk.methods.totalSeeds(), tokenResult(SEEDS)],
-    [beanstalk.methods.totalStalk(), tokenResult(STALK)],
-    [beanstalk.methods.totalDepositedBeans(), tokenResult(BEAN)],
-    [beanstalk.methods.totalDepositedLP(), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [beanstalk.methods.getTotalDeposited(CURVE.addr), tokenResult(CURVE)],
-    [beanstalk.methods.totalWithdrawnBeans(), tokenResult(BEAN)],
-    [beanstalk.methods.totalWithdrawnLP(), tokenResult(UNI_V2_ETH_BEAN_LP)],
-    [beanstalk.methods.getTotalWithdrawn(CURVE.addr), tokenResult(CURVE)],
-    [beanstalk.methods.totalSoil(), tokenResult(BEAN)],
-    [beanstalk.methods.podIndex(), tokenResult(BEAN)],
-    [beanstalk.methods.harvestableIndex(), tokenResult(BEAN)],
-    [beanstalk.methods.totalRoots(), bigNumberResult],
-    [
-      beanstalk.methods.weather(),
-      (stringWeather) => ({
-        didSowBelowMin: stringWeather.didSowBelowMin,
-        didSowFaster: stringWeather.didSowFaster,
-        lastDSoil: tokenResult(BEAN)(stringWeather.lastDSoil),
-        lastSoilPercent: bigNumberResult(stringWeather.lastSoilPercent),
-        lastSowTime: bigNumberResult(stringWeather.lastSowTime),
-        nextSowTime: bigNumberResult(stringWeather.nextSowTime),
-        startSoil: tokenResult(BEAN)(stringWeather.startSoil),
-        weather: bigNumberResult(stringWeather.yield),
-      }),
-    ],
-    [
-      beanstalk.methods.rain(),
-      (stringRain) => ({
-        raining: stringRain.raining,
-        rainStart: bigNumberResult(stringRain.start),
-      }),
-    ],
-    [
-      beanstalk.methods.time(),
-      (time) => ({
-        season: bigNumberResult(time.current),
-        start: bigNumberResult(time.start),
-        period: bigNumberResult(time.period),
-        timestamp: bigNumberResult(time.timestamp),
-      }),
-    ],
-    // TO DO: Automate this:
-    [bean.methods.balanceOf(BUDGETS[0]), tokenResult(BEAN)],
-    [bean.methods.balanceOf(BUDGETS[1]), tokenResult(BEAN)],
-    [bean.methods.balanceOf(BUDGETS[2]), tokenResult(BEAN)],
-    [bean.methods.balanceOf(BUDGETS[3]), tokenResult(BEAN)],
-    [bean.methods.balanceOf(CURVE.addr), tokenResult(BEAN)],
-    [beanstalk.methods.withdrawSeasons(), bigNumberResult]
-  ]);
+  return Promise.all([
+    // Supply
+    exec(bean.methods.totalSupply()).then(tokenResult(BEAN)),
+    exec(lp.methods.totalSupply()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
+    exec(curve.methods.totalSupply()).then(tokenResult(CURVE)),
+    exec(beanstalk.methods.totalSeeds()).then(tokenResult(SEEDS)),
+    exec(beanstalk.methods.totalStalk()).then(tokenResult(STALK)),
+    exec(beanstalk.methods.totalDepositedBeans()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.totalDepositedLP()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
+    exec(beanstalk.methods.getTotalDeposited(CURVE.addr)).then(tokenResult(CURVE)),
+    exec(beanstalk.methods.totalWithdrawnBeans()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.totalWithdrawnLP()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
+    exec(beanstalk.methods.getTotalWithdrawn(CURVE.addr)).then(tokenResult(CURVE)),
+    // Field
+    exec(beanstalk.methods.totalSoil()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.podIndex()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.harvestableIndex()).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.totalRoots()).then(bigNumberResult),
+    exec(beanstalk.methods.weather()).then((stringWeather : any) => ({
+      didSowBelowMin: stringWeather.didSowBelowMin,
+      didSowFaster: stringWeather.didSowFaster,
+      lastDSoil: tokenResult(BEAN)(stringWeather.lastDSoil),
+      lastSoilPercent: bigNumberResult(stringWeather.lastSoilPercent),
+      lastSowTime: bigNumberResult(stringWeather.lastSowTime),
+      nextSowTime: bigNumberResult(stringWeather.nextSowTime),
+      startSoil: tokenResult(BEAN)(stringWeather.startSoil),
+      weather: bigNumberResult(stringWeather.yield),
+    }) as Weather),
+    exec(beanstalk.methods.rain()).then((stringRain) => ({
+      raining: stringRain.raining,
+      rainStart: bigNumberResult(stringRain.start),
+    }) as Rain),
+    exec(beanstalk.methods.time()).then((time) => ({
+      season: bigNumberResult(time.current),
+      start: bigNumberResult(time.start),
+      period: bigNumberResult(time.period),
+      timestamp: bigNumberResult(time.timestamp),
+    }) as Time),
+    // Budgets
+    // FIXME: Automate this:
+    exec(bean.methods.balanceOf(BUDGETS[0])).then(tokenResult(BEAN)),
+    exec(bean.methods.balanceOf(BUDGETS[1])).then(tokenResult(BEAN)),
+    exec(bean.methods.balanceOf(BUDGETS[2])).then(tokenResult(BEAN)),
+    exec(bean.methods.balanceOf(BUDGETS[3])).then(tokenResult(BEAN)),
+    // Misc
+    // FIXME: needs to be rekeyed or placed in right array spot
+    exec(bean.methods.balanceOf(CURVE.addr)).then(tokenResult(BEAN)),
+    exec(beanstalk.methods.withdrawSeasons()).then(bigNumberResult)
+  ] as const);
 };
 
-export const votes = async () => {
+export const getVotes = async () => {
   const beanstalk = beanstalkContractReadOnly();
   const activeBips = await beanstalk.methods.activeBips().call();
   const vs = await Promise.all(activeBips.map((b) => beanstalk.methods.voted(account, b).call()));
@@ -202,48 +268,41 @@ export const votes = async () => {
   }, new Set());
 };
 
-export type BIP = {
-  id: BigNumber;
-  executed: boolean;
-  increaseBase: any;
-  pauseOrUnpause: BigNumber;
-  start: BigNumber;
-  period: BigNumber;
-  proposer: string;
-  roots: BigNumber;
-  endTotalRoots: BigNumber;
-  stalkBase: BigNumber;
-  timestamp: BigNumber;
-  updated: BigNumber;
-  active: boolean;
-}
-
-/* TODO: batch BIP detail ledger reads */
-export const getBips = async () => {
+/*
+ * TODO: batch BIP detail ledger reads
+ */
+export const getBips = async (
+  // currentSeason: BigNumber
+) : Promise<[BIP[], boolean]> => {
   const beanstalk = beanstalkContractReadOnly();
   const numberOfBips = bigNumberResult(
     await beanstalk.methods.numberOfBips().call()
   );
-  const bips = [];
+
+  let hasActiveBIP : boolean = false;
+  const bips : BIP[] = [];
   for (let i = new BigNumber(0); i.isLessThan(numberOfBips); i = i.plus(1)) {
     const bip = await beanstalk.methods.bip(i.toString()).call();
-    const bipRoots =
-      bip.endTotalRoots.toString() === '0'
-        ? await beanstalk.methods.rootsFor(i.toString()).call()
-        : bip.roots;
 
-    // @publius: help with "increaseBase", "stalkBase", "endTotalRoots", "roots"
+    const start = bigNumberResult(bip.start);
+    const period = bigNumberResult(bip.period);
+    // const active = currentSeason.lte(start.plus(period)) && bip.executed === false;
+    const bipRoots = bip.endTotalRoots.toString() === '0'
+      ? await beanstalk.methods.rootsFor(i.toString()).call()
+      : bip.roots;
+
+    // roots - how many Roots have voted for the BIP
+    // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP 
+    // -> used for calculating % voted for the BIP after the fact.
     const bipDict = {
       id: i,
       executed: bip.executed,
-      increaseBase: bip.increaseBase,
       pauseOrUnpause: bigNumberResult(bip.pauseOrUnpause),
-      start: bigNumberResult(bip.start),
-      period: bigNumberResult(bip.period),
-      proposer: bip.propser,
+      start: start,
+      period: period,
+      proposer: bip.propser, // FIXME: typo?
       roots: bigNumberResult(bipRoots),
       endTotalRoots: bigNumberResult(bip.endTotalRoots),
-      stalkBase: bigNumberResult(bip.stalkBase),
       timestamp: bigNumberResult(bip.timestamp),
       updated: bigNumberResult(bip.updated),
       active: false,
@@ -252,23 +311,27 @@ export const getBips = async () => {
     bips.push(bipDict);
   }
 
-  let hasActiveBIP = false;
-  const activeBips = await beanstalk.methods.activeBips().call();
-  activeBips.forEach((id) => {
+  // https://github.com/BeanstalkFarms/Beanstalk/blob/8e5833bccef7fd4e41fbda70567b902d33ca410d/protocol/contracts/farm/AppStorage.sol#L99
+  const activeBips : string[] = await beanstalk.methods.activeBips().call();
+  activeBips.forEach((id: string) => {
     hasActiveBIP = true;
     bips[parseInt(id, 10)].active = true;
   });
+  
   return [bips, hasActiveBIP];
 };
 
-/* TODO: batch BIP detail ledger reads */
-export const getFundraisers = async () => {
+/*
+ * TODO: batch BIP detail ledger reads
+ */
+export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
   const beanstalk = beanstalkContractReadOnly();
   let hasActiveFundraiser = false;
   const numberOfFundraisers = bigNumberResult(
     await beanstalk.methods.numberOfFundraisers().call()
   );
-  const fundraisers = [];
+
+  const fundraisers : Fundraiser[] = [];
   for (let i = new BigNumber(0); i.isLessThan(numberOfFundraisers); i = i.plus(1)) {
     const fundraiser = await beanstalk.methods.fundraiser(i.toString()).call();
     const fundraiserDict = {
@@ -277,106 +340,110 @@ export const getFundraisers = async () => {
       total: toTokenUnitsBN(fundraiser.total, USDC.decimals),
       token: fundraiser.token,
     };
-    if (fundraiserDict.remaining.isGreaterThan(0)) hasActiveFundraiser = true;
+    if (fundraiserDict.remaining.isGreaterThan(0)) {
+      hasActiveFundraiser = true;
+    }
     fundraisers.push(fundraiserDict);
   }
+
   return [fundraisers, hasActiveFundraiser];
 };
 
-export const getPrices = async (batch) => {
+/**
+ * 
+ */
+export const getPrices = async (batch: BatchRequest) => {
   const beanstalk = beanstalkContractReadOnly();
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const bean3crvContract = beanCrv3ContractReadOnly();
   const curveContract = curveContractReadOnly();
 
-  let batchCall = [
+  const exec = setupBatch(batch);
+
+  let promises = [
     // referenceTokenReserves
-    [
-      referenceLPContract.methods.getReserves(),
+    exec(referenceLPContract.methods.getReserves()).then(
       (reserves) => [
         bigNumberResult(reserves._reserve0),
         bigNumberResult(reserves._reserve1),
       ],
-    ],
+    ),
     // tokenReserves
-    [
-      lpContract.methods.getReserves(),
+    exec(lpContract.methods.getReserves()).then(
       (reserves) => [
         bigNumberResult(reserves._reserve0),
         bigNumberResult(reserves._reserve1),
       ],
-    ],
+    ),
     // token0
-    [
-      lpContract.methods.token0(),
+    exec(lpContract.methods.token0()).then(
       identityResult,
-    ],
+    ),
     // twapPrices
-    [
-      beanstalk.methods.getTWAPPrices(),
-      (prices) => [
+    // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/farm/facets/OracleFacet.sol#L87
+    exec(beanstalk.methods.getTWAPPrices()).then(
+      (prices: [string, string]) : [beanPrice: BigNumber, usdcPrice: BigNumber] => [
         toTokenUnitsBN(prices[0], 18),
         toTokenUnitsBN(prices[1], 18),
       ],
-    ],
+    ),
     // beansToPeg
-    [
-      beanstalk.methods.beansToPeg(),
-      (lp) => toTokenUnitsBN(lp, 6),
-    ],
+    // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L70
+    exec(beanstalk.methods.beansToPeg()).then(
+      (beans: string) => toTokenUnitsBN(beans, BEAN.decimals),
+    ),
     // lpToPeg
-    [
-      beanstalk.methods.lpToPeg(),
-      (lp) => toTokenUnitsBN(lp, 18),
-    ],
+    // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L79
+    exec(beanstalk.methods.lpToPeg()).then(
+      (lp: string) => toTokenUnitsBN(lp, UNI_V2_ETH_BEAN_LP.decimals),
+    ),
   ];
+
+  // Curve prices (only works on mainnet or dev)
+  // https://besu.hyperledger.org/en/stable/Concepts/NetworkID-And-ChainID/
   if (chainId === 1 || chainId === 1337) {
-    batchCall = batchCall.concat(
-      [
-        [
-          curveContract.methods.get_virtual_price(),
-          (price) => toTokenUnitsBN(price, 18),
+    promises = promises.concat([
+      // Curve virtual price
+      exec(curveContract.methods.get_virtual_price()).then(
+        (price: string) => toTokenUnitsBN(price, 18),
+      ),
+      // Curve Bean price
+      exec(bean3crvContract.methods.get_dy(0, 1, 1)).then(
+        (price: string) => toTokenUnitsBN(price, 12),
+      ),
+      // Bean3Crv Balances
+      exec(bean3crvContract.methods.get_balances()).then(
+        (prices: [string, string]) => [
+          toTokenUnitsBN(prices[0], 6),
+          toTokenUnitsBN(prices[1], 18),
         ],
-        // Curve Bean price
-        [
-          bean3crvContract.methods.get_dy(0, 1, 1),
-          (price) => toTokenUnitsBN(price, 12),
-        ],
-        // Bean3Crv Balances
-        [
-          bean3crvContract.methods.get_balances(),
-          (prices) => [
-            toTokenUnitsBN(prices[0], 6),
-            toTokenUnitsBN(prices[1], 18),
-          ],
-        ],
-        [beanstalk.methods.curveToBDV(utils.parseEther('1')), (r) => toTokenUnitsBN(r, 6)]
-      ]
-    );
+      ),
+      //
+      exec(beanstalk.methods.curveToBDV(utils.parseEther('1'))).then(
+        (r: string) => toTokenUnitsBN(r, 6)
+      ),
+    ]);
   } else {
-    batchCall = batchCall.concat(
-      [
-        [
-          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
-          () => new BigNumber(0),
-        ],
-        // Curve Bean price
-        [
-          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
-          () => new BigNumber(0),
-        ],
-        // Bean3Crv Balances
-        [
-          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
-          () => [new BigNumber(0), new BigNumber(0)],
-        ],
-        [
-          lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000'),
-          () => new BigNumber(1),
-        ],
-      ]
-    );
+    promises = promises.concat([
+      // 
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(0),
+      ),
+      // Curve Bean price
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(0),
+      ),
+      // Bean3Crv Balances
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => [new BigNumber(0), new BigNumber(0)],
+      ),
+      //
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(1),
+      ),
+    ]);
   }
-  return makeBatchedPromises(batch, batchCall);
+
+  return Promise.all(promises);
 };

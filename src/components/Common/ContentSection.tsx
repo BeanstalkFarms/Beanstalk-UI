@@ -3,6 +3,26 @@ import { Box, Link, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { theme } from 'constants/index';
 
+const useStyles = makeStyles({
+  appSection: {
+    padding: (props: any) => props.padding,
+    margin: '0px',
+  },
+  sectionTitle: {
+    marginTop: (props: any) => props.marginTop,
+    width: (props: any) => props.width,
+    color: theme.backgroundText,
+  },
+  hideButton: {
+    borderRadius: '12px',
+    fontFamily: 'Futura-Pt-Book',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+  },
+});
+
 export default function ContentSection({
   description,
   descriptionLinks,
@@ -17,25 +37,7 @@ export default function ContentSection({
   const [shouldDisplayDescription, setshouldDisplayDescription] =
     React.useState(true);
 
-  const classes = makeStyles({
-    appSection: {
-      padding: padding,
-      margin: '0px',
-    },
-    sectionTitle: {
-      marginTop: marginTop,
-      width: width,
-      color: theme.backgroundText,
-    },
-    hideButton: {
-      borderRadius: '12px',
-      fontFamily: 'Futura-Pt-Book',
-      cursor: 'pointer',
-      '&:hover': {
-        textDecoration: 'underline',
-      },
-    },
-  })();
+  const classes = useStyles({ marginTop, padding, width });
 
   React.useEffect(() => {
     // on initialize fetch is_hidden variable or default to false. if is_hidden set shouldDisplay to false

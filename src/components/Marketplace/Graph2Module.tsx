@@ -13,9 +13,9 @@ import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
 
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
-import { GraphListingTooltip } from './GraphTooltips';
 import { AnimatedLineSeries, Axis, XYChart } from '@visx/xychart';
 import { curveNatural } from '@visx/curve';
+import { GraphListingTooltip } from './GraphTooltips';
 
 type GraphModuleProps = {
   setCurrentListing: Function;
@@ -96,5 +96,5 @@ export default function Graph2Module(props: GraphModuleProps) {
         {JSON.stringify(listings, null, 2)}
       </pre>
     </div>
-  )
+  );
 }

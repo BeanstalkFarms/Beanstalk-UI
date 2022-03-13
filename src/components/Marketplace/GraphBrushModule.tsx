@@ -8,10 +8,10 @@ import { PatternLines } from '@visx/pattern';
 import { LinearGradient } from '@visx/gradient';
 import { max, extent } from 'd3-array';
 
-import AreaChart from './AreaChart';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { PodListing } from 'state/marketplace/reducer';
+import AreaChart from './AreaChart';
 
 // Initialize some variables
 const brushMargin = { top: 10, bottom: 15, left: 50, right: 20 };
@@ -66,7 +66,7 @@ function BrushChart({
       const y = getPrice(s);
       return x > x0 && x < x1 && y > y0 && y < y1;
     });
-    setFilteredListings(listingsCopy)
+    setFilteredListings(listingsCopy);
   };
 
   const innerHeight = height - margin.top - margin.bottom;
@@ -121,7 +121,7 @@ function BrushChart({
       start: { x: 0 },
       end: { x: 0.5 },
     }),
-    [/*brushIndexScale*/],
+    [/* brushIndexScale */],
   );
 
   // event handlers

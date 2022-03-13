@@ -6,7 +6,7 @@ import { ReactComponent as UniswapIcon } from 'img/uniswap-logo-black.svg';
 import { ReactComponent as CurveIcon } from 'img/curve-logo.svg';
 import { ReactComponent as UpRightArrowIcon } from 'img/up-right-arrow.svg';
 import { SectionTabs } from 'components/Common';
-import Curve from 'components/Curve/CurveModule';
+import Curve from 'components/Silo/SiloActions/Modules/Curve/CurveModule';
 import SiloLPModule from './SiloLPModule';
 
 export default function SiloSelectLPModule() {
