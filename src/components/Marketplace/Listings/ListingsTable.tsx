@@ -232,6 +232,7 @@ export default function ListingsTable(props: ListingsTableProps) {
   const rowsPerPage = 5;
   const slicedItems = props.listings
     .sort((a, b) => a.index - b.index)
+    .filter((listing) => listing?.remainingAmount?.gt(100))
     .slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
