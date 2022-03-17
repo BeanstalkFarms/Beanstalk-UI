@@ -21,7 +21,7 @@ import {
   SiloAsset,
   siloStrings,
 } from 'components/Common';
-import { ConvertLPModule } from './Old/ConvertLPModule';
+import { ConvertLPModule } from './SubModules/ConvertLPModule';
 
 export default function LPConvert() {
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<

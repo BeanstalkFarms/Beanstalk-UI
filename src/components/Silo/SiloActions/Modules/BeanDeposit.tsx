@@ -8,7 +8,7 @@ import { List as ListIcon } from '@material-ui/icons';
 import { BASE_SLIPPAGE } from '../../../../constants';
 import { approveBeanstalkBean, poolForLP, SwapMode } from '../../../../util';
 import { updateBeanstalkBeanAllowance } from '../../../../state/allowances/actions';
-import { BeanDepositModule } from './Old/BeanDepositModule';
+import { BeanDepositModule } from './SubModules/BeanDepositModule';
 import { BeanClaimModule } from './SubModules/BeanClaimModule';
 
 export default function BeanDeposit() {
