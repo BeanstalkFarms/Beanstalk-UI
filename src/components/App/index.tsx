@@ -14,24 +14,19 @@ import { AppState } from 'state';
 import Footer from 'components/About/Footer';
 import { NavigationBar, NavigationSidebar } from 'components/Navigation';
 
-import {
-  //
-  MetamasklessPage,
-  MarketplacePage,
-  //
-  SiloPage,
-  SiloDepositPage,
-  FieldPage,
-  TradePage,
-  DAOPage,
-  //
-  AnalyticsPage,
-  FundraiserPage,
-  BeaNFTPage,
-  AboutPage,
-  BalancesPage,
-  PegMaintenancePage,
-} from 'pages';
+import ConnectPage from 'pages/connect';
+import MarketplacePage from 'pages/market';
+import SiloPage from 'pages/silo';
+import SiloDepositPage from 'pages/silo/deposit';
+import FieldPage from 'pages/field';
+import TradePage from 'pages/trade';
+import GovernancePage from 'pages/governance';
+import AnalyticsPage from 'pages/analytics';
+import FundraiserPage from 'pages/fundraiser';
+import BeaNFTPage from 'pages/beanfts';
+import AboutPage from 'pages/about';
+import BalancesPage from 'pages/balances';
+import PegMaintenancePage from 'pages/peg';
 
 import Wrapper from './Wrapper';
 import theme from './theme';
@@ -61,7 +56,7 @@ export default function App() {
     app = (
       <>
         {/* <NavigationBar /> */}
-        <MetamasklessPage />
+        <ConnectPage />
       </>
     );
   } else if (!initialized) {
@@ -108,12 +103,6 @@ export default function App() {
           <Route exact path="/farm/trade">
             <Redirect to="/trade" />
           </Route>
-          {/* <Route exact path="/farm/balances">
-            <FarmPage sectionNumber={3} />
-          </Route>
-          <Route exact path="/farm/beanfts">
-            <FarmPage sectionNumber={4} />
-          </Route> */}
           {/* More */}
           <Route exact path="/analytics">
             <AnalyticsPage />
@@ -125,7 +114,7 @@ export default function App() {
             <FundraiserPage />
           </Route>
           <Route exact path="/governance">
-            <DAOPage />
+            <GovernancePage />
           </Route>
           <Route exact path="/balances">
             <BalancesPage />

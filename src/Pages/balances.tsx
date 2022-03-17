@@ -1,10 +1,10 @@
 import React from 'react';
 import { Page } from 'pages/index';
-import Governance from 'components/Governance';
+import Balances from 'components/Balances';
 
-export default function DAO() {
-  const sectionTitles = ['Governance'];
-  const sections = [<Governance />];
+export default function BalancesPage() {
+  const sectionTitles = ['Balances'];
+  const sections = [<Balances />];
 
   return (
     <Page

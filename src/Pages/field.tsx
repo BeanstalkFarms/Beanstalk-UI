@@ -1,11 +1,10 @@
 import React from 'react';
-
 import { Page } from 'pages/index';
-import Trade from 'components/Trade';
+import Field from 'components/Field';
 
-export default function Trade(props) {
-  const sectionTitles = ['Trade'];
-  const sections = [<Trade />];
+export default function FieldPage(props) {
+  const sectionTitles = ['Field'];
+  const sections = [<Field />];
 
   return (
     <Page
