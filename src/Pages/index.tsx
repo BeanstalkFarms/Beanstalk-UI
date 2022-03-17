@@ -17,4 +17,3 @@ export { default as AnalyticsPage } from './AnalyticsPage';
 export { default as FundraiserPage } from './FundraiserPage';
 export { default as BeaNFTPage } from './BeaNFTPage';
 export { default as AboutPage } from './AboutPage';
-export { default as PokerPage } from './PokerPage';

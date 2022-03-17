@@ -31,7 +31,7 @@ import {
   AboutPage,
   BalancesPage,
   PegMaintenancePage,
-} from 'Pages';
+} from 'pages';
 
 import Wrapper from './Wrapper';
 import theme from './theme';

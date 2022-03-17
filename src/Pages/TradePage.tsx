@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Page } from 'Pages/index';
+import { Page } from 'pages/index';
 import Trade from 'components/Trade';
 
 export default function Trade(props) {

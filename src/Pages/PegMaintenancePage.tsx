@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page } from 'Pages/index';
+import { Page } from 'pages/index';
 import Seasons from 'components/Seasons';
 
 export default function PegMaintenancePage() {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page } from 'Pages/index';
+import { Page } from 'pages/index';
 import SiloTransaction from 'components/Silo/SiloActions';
 import { Redirect, useParams } from 'react-router-dom';
 import TOKENS from 'constants/siloTokens';
@@ -14,6 +14,7 @@ export default function SiloDepositPage(props) {
   if (tokenData === undefined) {
     return <Redirect to="/silo" />;
   }
+  
   return (
     <Page
       sections={sections}

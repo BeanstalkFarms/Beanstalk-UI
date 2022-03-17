@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page } from 'Pages/index';
+import { Page } from 'pages/index';
 import Field from 'components/Field';
 import Trade from 'components/Trade';
 import Balances from 'components/Balances';
