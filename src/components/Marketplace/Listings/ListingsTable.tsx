@@ -219,9 +219,9 @@ export default function ListingsTable(props: ListingsTableProps) {
   );
   /** */
   const [page, setPage] = useState<number>(0);
-  const filteredListings = props.listings.filter((listing) => listing?.remainingAmount?.gt(100))
+  const filteredListings = props.listings.filter((listing) => listing?.remainingAmount?.gt(0.0001));
 
-  if (!filteredListings ||filteredListings.length === 0) {
+  if (!filteredListings || filteredListings.length === 0) {
     return (
       <div>
         <h4 style={{ }}>No active listings given the current filters</h4>
