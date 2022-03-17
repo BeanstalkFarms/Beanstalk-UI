@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 
 import { BaseModule, ContentDropdown, SettingsFormModule, TokenInputField, TokenOutputField, TransactionToast } from 'components/Common';
 import { BASE_SLIPPAGE } from 'constants/values';
-import { Page } from 'pages/index';
+import Page from 'components/Page';
 import { account, buyExactBeans, CryptoAsset, getFromAmount, SwapMode, toStringBaseUnitBN, transferBeans, TrimBN } from 'util/index';
 import { AppState } from 'state/index';
 import { BEAN, ETH } from 'constants/index';
@@ -265,14 +265,9 @@ function Poker() {
 }
 
 export default function PokerPage() {
-  const sectionTitles = ['Poker Tournament'];
-  const sections = [<Poker />];
-
   return (
-    <Page
-      sections={sections}
-      sectionTitles={sectionTitles}
-      routeTitle="poker"
-    />
-  );
+    <Page title="Market">
+      <Poker />
+    </Page>
+  )
 }

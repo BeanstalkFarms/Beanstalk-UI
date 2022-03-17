@@ -1,26 +1,21 @@
-import React from 'react';
-import { Page } from 'pages/index';
-import SiloTransaction from 'components/Silo/SiloActions';
+import React, { useMemo } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
+import Page from 'components/Page';
+import SiloTransaction from 'components/Silo/SiloActions';
 import TOKENS from 'constants/siloTokens';
 
-export default function SiloDepositPage(props) {
+export default function SiloDepositPage() {
   const { tokenSlug } = useParams<{ tokenSlug: string }>();
-  const sections = [<SiloTransaction />];
-  const tokenData = TOKENS.filter((token) => token.slug === tokenSlug)[0];
-  const sectionTitles = [(tokenData === undefined) ? 'Silo' : `${tokenData.name} Silo`];
+  const tokenData = useMemo(() => 
+    TOKENS.filter((token) => token.slug === tokenSlug)[0],
+    [tokenSlug]
+  );
 
-  // this token doesn't exist
-  if (tokenData === undefined) {
-    return <Redirect to="/silo" />;
-  }
+  if (tokenData === undefined) return <Redirect to="/silo" />;
   
   return (
-    <Page
-      sections={sections}
-      sectionTitles={sectionTitles}
-      noRedirect
-      sectionNumber={props.sectionNumber}
-    />
+    <Page title={`${tokenData.name} Silo`}>
+      <SiloTransaction />
+    </Page>
   );
 }

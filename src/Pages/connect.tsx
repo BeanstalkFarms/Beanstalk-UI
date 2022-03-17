@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page } from 'pages/index';
+import Page from 'components/Page/index-old';
 import MetamasklessModule from 'components/App/MetamasklessModule';
 import Charts from 'components/Charts';
 

@@ -1,16 +1,11 @@
 import React from 'react';
-import { Page } from 'pages/index';
+import Page from 'components/Page';
 import Field from 'components/Field';
 
-export default function FieldPage(props) {
-  const sectionTitles = ['Field'];
-  const sections = [<Field />];
-
+export default function FieldPage() {
   return (
-    <Page
-      sections={sections}
-      sectionTitles={sectionTitles}
-      sectionNumber={props.sectionNumber}
-    />
+    <Page title="Field">
+      <Field />
+    </Page>
   );
 }

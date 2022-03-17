@@ -1,16 +1,11 @@
 import React from 'react';
-
-import { Page } from 'pages/index';
+import Page from 'components/Page';
 import Governance from 'components/Governance';
 
 export default function GovernancePage() {
-  const sectionTitles = ['Governance'];
-  const sections = [<Governance />];
-
   return (
-    <Page
-      sections={sections}
-      sectionTitles={sectionTitles}
-    />
+    <Page title="Governance">
+      <Governance />
+    </Page>
   );
 }
