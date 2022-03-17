@@ -4,7 +4,6 @@ export { default as MetamasklessPage } from './MetamasklessPage';
 export { default as MarketplacePage } from './MarketplacePage';
 
 // Farm
-export { default as FarmPage } from './FarmPage';
 export { default as SiloPage } from './SiloPage';
 export { default as SiloDepositPage } from './SiloDepositPage';
 export { default as FieldPage } from './FieldPage';
