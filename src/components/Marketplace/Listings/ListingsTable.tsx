@@ -219,8 +219,9 @@ export default function ListingsTable(props: ListingsTableProps) {
   );
   /** */
   const [page, setPage] = useState<number>(0);
+  const filteredListings = props.listings.filter((listing) => listing?.remainingAmount?.gt(0.0001));
 
-  if (!props.listings || props.listings.length === 0) {
+  if (!filteredListings || filteredListings.length === 0) {
     return (
       <div>
         <h4 style={{ }}>No active listings given the current filters</h4>
@@ -229,8 +230,9 @@ export default function ListingsTable(props: ListingsTableProps) {
   }
 
   //
+
   const rowsPerPage = 5;
-  const slicedItems = props.listings
+  const slicedItems = filteredListings
     .sort((a, b) => a.index - b.index)
     .slice(
       page * rowsPerPage,
@@ -267,11 +269,11 @@ export default function ListingsTable(props: ListingsTableProps) {
           </Table>
         </TableContainer>
         {/* display page button if user has more listings than rowsPerPage. */}
-        {Object.keys(props.listings).length > rowsPerPage
+        {Object.keys(filteredListings).length > rowsPerPage
           ? (
             <TablePagination
               component="div"
-              count={props.listings.length}
+              count={filteredListings.length}
               onPageChange={(event, p) => setPage(p)}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -282,7 +284,7 @@ export default function ListingsTable(props: ListingsTableProps) {
                 }`
               }
               ActionsComponent={
-                Object.keys(props.listings).length > (rowsPerPage * 2)
+                Object.keys(filteredListings).length > (rowsPerPage * 2)
                   ? TablePageSelect
                   : undefined
               }
@@ -354,11 +356,11 @@ export default function ListingsTable(props: ListingsTableProps) {
         }
       </div>
       {/* display page button if user has more listings than rowsPerPage. */}
-      {Object.keys(props.listings).length > rowsPerPage
+      {Object.keys(filteredListings).length > rowsPerPage
         ? (
           <TablePagination
             component="div"
-            count={props.listings.length}
+            count={filteredListings.length}
             onPageChange={(event, p) => setPage(p)}
             page={page}
             rowsPerPage={rowsPerPage}
