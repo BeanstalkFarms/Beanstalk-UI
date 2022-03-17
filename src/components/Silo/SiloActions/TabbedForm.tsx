@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { BaseModule, Grid, siloStrings } from 'components/Common';
 import { Link, useParams } from 'react-router-dom';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
+
+import { AppState } from 'state';
+import { theme } from 'constants/index';
+import TOKENS, { SiloToken } from 'constants/siloTokens';
+import { BaseModule, Grid, siloStrings } from 'components/Common';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Convert from './Convert';
-import { theme } from '../../../constants';
-import TOKENS from '../../../constants/siloTokens';
 
 const useStyles = makeStyles({
   backButton: {
@@ -18,28 +19,33 @@ const useStyles = makeStyles({
   },
 });
 
-export default function TabbedForm() {
+type TabbedFormProps = {
+  tokenData: SiloToken; // FIXME
+}
+
+const TabbedForm : React.FC<TabbedFormProps> = (props) => {
   const classes = useStyles();
 
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
 
-  const { tokenSlug } = useParams<{ tokenSlug: string }>();
-  const tokenData = TOKENS.filter((token) => token.slug === tokenSlug)[0];
-
   const [section, setSection] = useState(0);
   const sectionTitlesDescription = [
-    siloStrings.tokenDepositDescription(tokenData.name),
-    siloStrings.tokenWithdrawDescription(tokenData.name, totalBalance.withdrawSeasons),
+    siloStrings.tokenDepositDescription(props.tokenData.name),
+    siloStrings.tokenWithdrawDescription(props.tokenData.name, totalBalance.withdrawSeasons),
     siloStrings.convert,
   ];
-  const sections = [<Deposit />, <Withdraw />, <Convert />];
+  const sections = [
+    <Deposit />,
+    <Withdraw />,
+    <Convert />
+  ];
 
-  const sectionTitles = (tokenSlug === 'bean-3crv') ? (
-      ['deposit', 'withdraw']
+  const sectionTitles = (props.tokenData.slug === 'bean-3crv') ? (
+    ['deposit', 'withdraw']
   ) : (
-      ['deposit', 'withdraw', 'convert']
+    ['deposit', 'withdraw', 'convert']
   );
 
   return (
@@ -84,3 +90,5 @@ export default function TabbedForm() {
     </Grid>
   );
 }
+
+export default TabbedForm;

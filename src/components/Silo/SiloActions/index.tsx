@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+
 import { AppState } from 'state';
 import { MEDIUM_INTEREST_LINK } from 'constants/index';
 import {
@@ -9,27 +10,27 @@ import {
   siloStrings
 } from 'components/Common';
 import TabbedForm from './TabbedForm';
+import { SiloToken } from 'constants/siloTokens';
 
-// import the TOKENS array
-// grab the :token parameter from react-router
-// const token = "bean"; or "bean-eth";
-// grab that element from the TOKENS array.
+const descriptionLinks = [
+  {
+    href: `${MEDIUM_INTEREST_LINK}#8b79`,
+    text: 'Read More',
+  },
+];
 
-export default function SiloTransaction() {
+type SiloActionsProps = {
+  tokenData: SiloToken;
+}
+
+const SiloActions : React.FC<SiloActionsProps> = (props) => {
   const { withdrawSeasons } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
 
-  const descriptionLinks = [
-    {
-      href: `${MEDIUM_INTEREST_LINK}#8b79`,
-      text: 'Read More',
-    },
-  ];
-
   return (
     <ContentSection id="silo" title="Silo">
-      <TabbedForm />
+      <TabbedForm tokenData={props.tokenData} />
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown
           description={siloStrings.siloDescription.replace('{0}', withdrawSeasons)}
@@ -41,6 +42,4 @@ export default function SiloTransaction() {
   );
 }
 
-SiloTransaction.defaultProps = {
-  margin: '-10px 0 -20px 0',
-};
+export default SiloActions;

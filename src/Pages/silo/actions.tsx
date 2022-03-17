@@ -15,7 +15,7 @@ export default function SiloActionsPage() {
   
   return (
     <Page title={`${tokenData.name} Silo`}>
-      <SiloActions />
+      <SiloActions tokenData={tokenData} />
     </Page>
   );
 }
