@@ -17,7 +17,7 @@ import { NavigationBar, NavigationSidebar } from 'components/Navigation';
 import ConnectPage from 'pages/connect';
 import MarketplacePage from 'pages/market';
 import SiloPage from 'pages/silo';
-import SiloDepositPage from 'pages/silo/deposit';
+import SiloActionsPage from 'pages/silo/actions';
 import FieldPage from 'pages/field';
 import TradePage from 'pages/trade';
 import GovernancePage from 'pages/governance';
@@ -81,7 +81,7 @@ export default function App() {
             <SiloPage />
           </Route>
           <Route exact path="/silo/:tokenSlug">
-            <SiloDepositPage />
+            <SiloActionsPage />
           </Route>
           <Route exact path="/field">
             <FieldPage />

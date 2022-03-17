@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 import Page from 'components/Page';
-import SiloTransaction from 'components/Silo/SiloActions';
+import SiloActions from 'components/Silo/SiloActions';
 import TOKENS from 'constants/siloTokens';
 
-export default function SiloDepositPage() {
+export default function SiloActionsPage() {
   const { tokenSlug } = useParams<{ tokenSlug: string }>();
   const tokenData = useMemo(() => 
     TOKENS.filter((token) => token.slug === tokenSlug)[0],
@@ -15,7 +15,7 @@ export default function SiloDepositPage() {
   
   return (
     <Page title={`${tokenData.name} Silo`}>
-      <SiloTransaction />
+      <SiloActions />
     </Page>
   );
 }
