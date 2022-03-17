@@ -3,7 +3,6 @@ import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import Snowfall from 'react-snowfall';
 import { AppState } from 'state';
-import { FallingLeaves } from 'components/Fall';
 import { theme } from 'constants/index';
 import './index.tsx';
 import 'components/Themes/winterApp.css';
@@ -111,9 +110,6 @@ export default function Main() {
           wind={[-0.5, 0.5]}
           style={{ position: 'fixed' }}
         />
-      ) : null}
-      {theme.name === 'fall' ? (
-        <FallingLeaves />
       ) : null}
       {/* Sun (top left corner) */}
       <img alt="Sun Icon" src={theme.sun} style={sunStyle} />

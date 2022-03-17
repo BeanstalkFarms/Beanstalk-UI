@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
+
 import sunriseIcon from 'img/black-sun.svg';
 import { sunrise, chainId } from 'util/index';
 import {
