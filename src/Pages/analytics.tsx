@@ -8,6 +8,7 @@ export default function AnalyticsPage() {
 
   return (
     <Page
+      title="Analytics"
       sections={sections}
       sectionTitles={sectionTitles}
     />

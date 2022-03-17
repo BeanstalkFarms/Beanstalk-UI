@@ -1,56 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 import { Box } from '@material-ui/core';
-import { ContentTitle, SectionTabs } from 'components/Common';
+import { makeStyles } from '@material-ui/styles';
 
-const pageStyle = {
-  width: '100%',
-  textAlign: 'center',
-  paddingBottom: 80,
-  fontFamily: 'Futura-PT-Book',
-};
+import { ContentTitle } from 'components/Common';
 
-export default function Page({
-  sections,
-  sectionTitles,
-  routeTitle,
-  textTransform,
-  sectionNumber = 0,
-  hideTitles = false,
-  noRedirect = false,
-}) {
-  const [section, setSection] = useState(sectionNumber);
-  const history = useHistory();
+const useStyles = makeStyles(() => ({
+  page: {
+    width: '100%',
+    textAlign: 'center',
+    paddingBottom: 80,
+    fontFamily: 'Futura-PT-Book',
+  }
+}))
 
-  useEffect(() => {
-    if (!noRedirect) {
-      history.push(`${(!routeTitle ? sectionTitles[section] : routeTitle).toLowerCase().replace(/ /g, '')}`);
-    }
-  });
+type PageProps = {
+  title?: string;
+}
 
-  // If multiple sections are provided, show a tab selector.
-  // Otherwise, show a basic title component.
-  const titleSection = !hideTitles ? (
-    sections.length > 1 ? (
-      <SectionTabs
-        setSection={setSection}
-        section={section}
-        sectionTitles={sectionTitles}
-      />
-    ) : (
-      <ContentTitle
-        title={sectionTitles[0]}
-        textTransform={textTransform}
-      />
-    )
-  ) : null;
-
+const Page : React.FC<PageProps> = (props) => {
+  const classes = useStyles();
   return (
-    <>
-      <Box style={pageStyle}>
-        {titleSection}
-        {sections[section]}
-      </Box>
-    </>
+    <Box className={classes.page}>
+      {props.title ? (
+        <ContentTitle title={props.title} />
+      ) : null}
+      {props.children}
+    </Box>
   );
 }
+
+export default Page;
