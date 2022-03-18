@@ -5,14 +5,12 @@ import { BatchRequest } from 'web3-core';
 import {
   BUDGETS,
   BEAN,
-  BEANSTALK,
   CURVE,
   ETH,
   STALK,
   SEEDS,
   UNI_V2_ETH_BEAN_LP,
   UNI_V2_USDC_ETH_LP,
-  UNISWAP_V2_ROUTER,
   USDC,
   supportedERC20Tokens,
   SupportedToken,
@@ -151,39 +149,6 @@ export async function getEthPrices() {
     console.error(e);
   }
 }
-
-export const getAccountBalances = async (batch: BatchRequest) => {
-  const bean = tokenContractReadOnly(BEAN);
-  const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
-  const beanstalk = beanstalkContractReadOnly();
-  const usdc = tokenContractReadOnly(USDC);
-  const curve = beanCrv3ContractReadOnly();
-  const exec = setupBatch(batch);
-
-  return Promise.all([
-    // Allowances
-    exec(bean.methods.allowance(account, UNISWAP_V2_ROUTER)).then(bigNumberResult),
-    exec(bean.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
-    exec(lp.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
-    exec(usdc.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
-    exec(curve.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
-    // Balances
-    exec(beanstalk.methods.balanceOfEth(account)).then(tokenResult(ETH)),
-    exec(bean.methods.balanceOf(account)).then(tokenResult(BEAN)),
-    exec(lp.methods.balanceOf(account)).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
-    exec(curve.methods.balanceOf(account)).then(tokenResult(CURVE)),
-    exec(beanstalk.methods.balanceOfSeeds(account)).then(tokenResult(SEEDS)),
-    exec(beanstalk.methods.balanceOfStalk(account)).then(tokenResult(STALK)),
-    // @DEPRECATED
-    // Leaving this here to prevent reshuffling of numerically-indexed eventParsingParameters.
-    Promise.resolve(undefined),
-    exec(beanstalk.methods.balanceOfFarmableBeans(account)).then(tokenResult(BEAN)),
-    exec(beanstalk.methods.balanceOfGrownStalk(account)).then(tokenResult(STALK)),
-    exec(beanstalk.methods.balanceOfRoots(account)).then(bigNumberResult),
-    exec(usdc.methods.balanceOf(account)).then(tokenResult(USDC)),
-    exec(beanstalk.methods.wrappedBeans(account)).then(tokenResult(BEAN)),
-  ] as const);
-};
 
 export const getPriceArray = async () => {
   const beanstalkPrice = beanstalkPriceContractReadOnly();

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
 import { EventData } from 'web3-eth-contract';
+import { Beanstalk, MulticallResult, UNISWAP_V2_ROUTER } from 'beanstalk-sdk';
 
 import {
   updateBeanstalkBeanAllowance,
@@ -29,11 +30,10 @@ import {
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery, farmableMonthTotalQuery } from 'graph/index';
 import { AppState } from 'state';
-import { BASE_SLIPPAGE, BEAN, SupportedToken, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
+import { BASE_SLIPPAGE, BEAN, BEANSTALK, CURVE, SupportedToken, UNI_V2_ETH_BEAN_LP, USDC, WETH } from 'constants/index';
 import {
   addRewardedCrates,
   createLedgerBatch,
-  getAccountBalances,
   getBips,
   getFundraisers,
   getEtherBalance,
@@ -141,35 +141,10 @@ export default function Updater() {
      * 
      */
     function processAccountBalances(
-      accountBalances: AsyncReturnType<typeof getAccountBalances>,
+      accountBalances: MulticallResult,
       ethBalance: BigNumber,
       votedBips: Set<any>,
     ) : void {
-      const [
-        // Allowances
-        uniswapBeanAllowance,
-        beanstalkBeanAllowance,
-        beanstalkLPAllowance,
-        beanstalkUSDCAllowance,
-        beanstalkCurveAllowance,
-        // Balances
-        claimableEthBalance,
-        beanBalance,
-        lpBalance,
-        curveBalance,
-        seedBalance,
-        stalkBalance,
-        // @DEPRECATED
-        // Leaving this here to prevent reshuffling of numerically-indexed eventParsingParameters.
-        // eslint-disable-next-line
-        lockedUntil,
-        farmableBeanBalance,
-        grownStalkBalance,
-        rootsBalance,
-        usdcBalance,
-        beanWrappedBalance,
-      ] = accountBalances;
-        
       // @DEPRECATED
       // const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       // const lockedSeasons = lockedUntil.minus(currentSeason);
@@ -181,26 +156,26 @@ export default function Updater() {
       // Note: Ethereum is NOT an ERC-20 and thus it doesn't require approval. Instead Ethereum is sent as a part of the transaction.
       // You can read more here: https://brogna.medium.com/token-allowance-dc553f7d38b3
       // There are 4 types of allowances each necessary in different cases
-      dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));       // Needed for selling Beans on Uniswap 
-      dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));   // Needed for depositing Beans, adding LP + Depositing from Beans or Bean/Eth, sowing in Beanstalk
-      dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));       // Needed for depositing LP from circulating
-      dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));   // Needed for contributing to a fundraiser.
-      dispatch(updateBeanstalkCurveAllowance(beanstalkCurveAllowance)); // Needed for interacting with Curve.
+      dispatch(updateUniswapBeanAllowance(accountBalances[BEAN.addr][`${account},${UNISWAP_V2_ROUTER}`].allowance));       // Needed for selling Beans on Uniswap 
+      dispatch(updateBeanstalkBeanAllowance(accountBalances[BEAN.addr][`${account},${BEANSTALK}`].allowance));   // Needed for depositing Beans, adding LP + Depositing from Beans or Bean/Eth, sowing in Beanstalk
+      dispatch(updateBeanstalkLPAllowance(accountBalances[UNI_V2_ETH_BEAN_LP.addr].allowance));       // Needed for depositing LP from circulating
+      dispatch(updateBeanstalkUSDCAllowance(accountBalances[USDC.addr].allowance));   // Needed for contributing to a fundraiser.
+      dispatch(updateBeanstalkCurveAllowance(accountBalances[CURVE.addr].allowance)); // Needed for interacting with Curve.
       dispatch(setUserBalance({
-        claimableEthBalance,
-        ethBalance,
-        beanBalance,
-        lpBalance,
-        curveBalance,
-        seedBalance,
-        stalkBalance,
+        claimableEthBalance: accountBalances[BEANSTALK].claimableEthBalance,
+        ethBalance: accountBalances[BEANSTALK].ethBalance,
+        beanBalance: accountBalances[BEANSTALK].beanBalance,
+        lpBalance: accountBalances[BEANSTALK].lpBalance,
+        curveBalance: accountBalances[BEANSTALK].curveBalance,
+        seedBalance: accountBalances[BEANSTALK].seedBalance,
+        stalkBalance: accountBalances[BEANSTALK].stalkBalance,
         // locked, @DEPRECATED
         // lockedSeasons, @DEPRECATED
-        farmableBeanBalance,
-        grownStalkBalance,
-        rootsBalance,
-        usdcBalance,
-        beanWrappedBalance,
+        farmableBeanBalance: accountBalances[BEANSTALK].farmableBeanBalance,
+        grownStalkBalance: accountBalances[BEANSTALK].grownStalkBalance,
+        rootsBalance: accountBalances[BEANSTALK].rootsBalance,
+        usdcBalance: accountBalances[BEANSTALK].usdcBalance,
+        beanWrappedBalance: accountBalances[BEANSTALK].beanWrappedBalance,
         //
         votedBips,
       }));
@@ -840,12 +815,14 @@ export default function Updater() {
     async function updateBalancesAndPrices() : Promise<[Function, EventParsingParameters]> {
       const startTime = benchmarkStart('ALL BALANCES');
 
+      const beanstalk = new Beanstalk();
+
       // Create a new web3.BatchRequest. Provide this to batched
       // getter functions, which return a single Promise.all()
       // that resolves when the batch is executed and returns
       // values.
       const batch = createLedgerBatch();
-      const accountBalancePromises = getAccountBalances(batch);
+      const accountBalances = await beanstalk.getAccountBalances(account);
       const totalBalancePromises = getTotalBalances(batch);
       const pricePromises = getPrices(batch);
       batch.execute(); 
@@ -854,7 +831,6 @@ export default function Updater() {
         bipInfo,                // 0
         fundraiserInfo,         // 1
         ethBalance,             // 2
-        accountBalances,        // 3
         totalBalances,          // 4
         _prices,                // 5
         // usdcBalance,            // 6
@@ -865,7 +841,6 @@ export default function Updater() {
         getBips(), // 0
         getFundraisers(),       // 1
         getEtherBalance(),      // 2
-        accountBalancePromises, // 3: uses `exec` -> tuple
         totalBalancePromises,   // 4: uses `exec` -> tuple
         pricePromises,          // 5: uses `exec` -> tuple
         // getUSDCBalance(),       // 6
@@ -890,10 +865,10 @@ export default function Updater() {
       const eventParsingParameters : EventParsingParameters = [
         totalBalances[17].season  /* season */,
         totalBalances[13]         /* harvestableIndex */,
-        accountBalances[12]       /* farmableBeanBalance */,
-        accountBalances[13]       /* grownStalkBalance */,
-        accountBalances[5]        /* claimableEthBalance */,
-        accountBalances[16],      /* wrappedBeans */
+        accountBalances[BEANSTALK].farmableBeanBalance    /* farmableBeanBalance */,
+        accountBalances[BEANSTALK].grownStalkBalance      /* grownStalkBalance */,
+        accountBalances[BEANSTALK].claimableEthBalance        /* claimableEthBalance */,
+        accountBalances[BEANSTALK].wrappedBeans,      /* wrappedBeans */
         beanReserve,
         ethReserve,
       ];
