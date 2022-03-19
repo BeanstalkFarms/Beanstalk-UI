@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
     color: theme.backgroundText,
   },
-}))
+}));
 
 type ContentTitleProps = {
   title: string;
@@ -43,6 +43,6 @@ const ContentTitle : React.FC<ContentTitleProps> = ({ title }) => {
       </Box>
     </Box>
   );
-}
+};
 
 export default ContentTitle;

@@ -9,8 +9,8 @@ import {
   Grid,
   siloStrings
 } from 'components/Common';
-import TabbedForm from './TabbedForm';
 import { SiloToken } from 'constants/siloTokens';
+import TabbedForm from './TabbedForm';
 
 const descriptionLinks = [
   {
@@ -44,6 +44,6 @@ const SiloActions : React.FC<SiloActionsProps> = (props) => {
       </Grid>
     </ContentSection>
   );
-}
+};
 
 export default SiloActions;

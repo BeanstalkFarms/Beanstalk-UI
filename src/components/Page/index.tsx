@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 80,
     fontFamily: 'Futura-PT-Book',
   }
-}))
+}));
 
 type PageProps = {
   title?: string;
@@ -27,6 +27,6 @@ const Page : React.FC<PageProps> = (props) => {
       {props.children}
     </Box>
   );
-}
+};
 
 export default Page;

@@ -269,5 +269,5 @@ export default function PokerPage() {
     <Page title="Market">
       <Poker />
     </Page>
-  )
+  );
 }

@@ -97,6 +97,6 @@ const TabbedForm : React.FC<TabbedFormProps> = (props) => {
       </Grid>
     </Grid>
   );
-}
+};
 
 export default TabbedForm;

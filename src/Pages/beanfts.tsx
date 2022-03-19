@@ -10,5 +10,5 @@ export default function BeaNFTPage() {
     <Page title="Balances">
       <NFTs />
     </Page>
-  )
+  );
 }
