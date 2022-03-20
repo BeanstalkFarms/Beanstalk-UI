@@ -12,6 +12,6 @@ export * from './tokensv2';
 
 export function changeNetwork(chainId: number) {
     changeAddresses(chainId);
-    if (chainId === 1) changeTheme('winterUpgrade');
+    if (chainId === 1) changeTheme('spring');
     if (chainId === 3) changeTheme('ropsten');
 }
