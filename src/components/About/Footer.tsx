@@ -56,6 +56,7 @@ const useStyles = makeStyles({
     display: 'flex',
     alignContent: 'space-around',
     height: theme.groundHeight,
+    paddingTop: !theme.groundPaddingTop ? '0px' : theme.groundPaddingTop,
     zIndex: 101,
     position: 'fixed',
     bottom: 0,
@@ -158,6 +159,13 @@ export default function Footer() {
             </span>
           </LogoLinks>
         </Grid>
+        {!theme.flowers ? null : <img alt="Rainbow Icon" src={theme.flowers} style={{
+          position: 'absolute',
+          width: '100vw',
+          minWidth: '1200px',
+          top: '-50px',
+          zIndex: '-1'
+        }} />}
       </Grid>
     </>
   );

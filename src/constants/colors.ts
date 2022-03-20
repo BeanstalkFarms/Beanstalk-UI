@@ -20,6 +20,8 @@ import winterUpgradeBarn from 'img/winter/upgrade/Barn.svg';
 import mainBarn from 'img/main/Barn.svg';
 import bean from 'img/bean-bold-logo.svg';
 import beanWhite from 'img/bean-white-logo.svg';
+import springGround from 'img/spring/ground.svg';
+import rainbow from 'img/spring/rainbow.svg';
 
 const normalTheme = {
   name: 'main',
@@ -253,7 +255,14 @@ export const winterUpgradeTheme = {
   bean: beanWhite,
 };
 
-export let theme = winterUpgradeTheme;
+export const springTheme = {
+  ...mainTheme,
+  name: 'spring',
+  flowers: springGround,
+  rainbow: rainbow,
+};
+
+export let theme = springTheme;
 
 export function changeTheme(t: String) {
   if (t === 'ropsten') theme = ropstenTheme;
@@ -262,5 +271,6 @@ export function changeTheme(t: String) {
   else if (t === 'winter') theme = winterTheme;
   else if (t === 'winterUpgrade') theme = winterUpgradeTheme;
   else if (t === 'main') theme = mainTheme;
+  else if (t === 'spring') theme = springTheme;
   else theme = normalTheme;
 }

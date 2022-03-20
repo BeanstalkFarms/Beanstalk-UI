@@ -57,7 +57,7 @@ function Barn() {
       />
       <Box
         className="Barn"
-        name={theme.name}
+        name={'main'}
         style={width < 800
           ? { bottom: theme.barnHeight, left: '0px' }
           : { bottom: theme.barnHeight, left: '280px' }
@@ -79,6 +79,15 @@ export default function Main() {
     minHeight: '150px',
     position: 'fixed',
     top: 100,
+    zIndex: -101,
+  };
+
+  const rainbowStyle = {
+    width: '125vw',
+    left: '-10vw',
+    top: 150,
+    opacity: '0.15',
+    position: 'fixed',
     zIndex: -101,
   };
 
@@ -117,6 +126,7 @@ export default function Main() {
       ) : null}
       {/* Sun (top left corner) */}
       <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
+      {!theme.rainbow ? null : <img alt="Rainbow Icon" src={theme.rainbow} style={rainbowStyle} />}
     </Box>
   );
 }

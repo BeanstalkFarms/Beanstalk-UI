@@ -9,6 +9,9 @@
 .BeanstalkBG[name="ropsten"] {
   background-image: url('../../img/main/beanstalk-ropsten.svg');
 }
+.BeanstalkBG[name="spring"] {
+  background-image: url('../../img/spring/beanstalk.svg');
+}
 .BeanstalkBG[name="spooky"] {
   background-image: url('../../img/dark/beanstalk-background.svg');
 }
@@ -67,6 +70,9 @@
 }
 .BeanstalkMT[name="ropsten"] {
   background-image: url('../../img/main/background-ropsten.svg');
+}
+.BeanstalkMT[name="spring"] {
+  background-image: url('../../img/main/background.svg');
 }
 .BeanstalkMT[name="fall"] {
   background-image: url('../../img/fall/Mountain.svg');
