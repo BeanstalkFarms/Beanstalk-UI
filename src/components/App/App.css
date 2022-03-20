@@ -38,6 +38,9 @@
 .Barn[name="main"] {
   background-image: url('../../img/main/Barn.svg');
 }
+.Barn[name="spring"] {
+  background-image: url('../../img/main/Barn.svg');
+}
 .Barn[name="ropsten"] {
   background-image: url('../../img/main/Barn.svg');
 }

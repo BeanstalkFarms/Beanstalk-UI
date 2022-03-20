@@ -57,7 +57,7 @@ function Barn() {
       />
       <Box
         className="Barn"
-        name={'main'}
+        name={theme.name}
         style={width < 800
           ? { bottom: theme.barnHeight, left: '0px' }
           : { bottom: theme.barnHeight, left: '280px' }
