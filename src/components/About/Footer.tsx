@@ -75,7 +75,7 @@ export default function Footer() {
     height: '25px',
     width: '25px',
     fill: theme.footer,
-    backgroundColor: 'rgba(200, 165, 126, 0.6',
+    backgroundColor: 'rgba(200, 165, 126, 0.4',
     borderRadius: '5px'
   };
 
@@ -137,7 +137,7 @@ export default function Footer() {
               <UniswapIcon style={logoStyle} />
             </LogoLinks>
             <LogoLinks close link={CURVE_LINK}>
-              <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)'} : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.6', borderRadius: '5px' }} />
+              <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)'} : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
             </LogoLinks>
             <LogoLinks link={COMMONWEALTH_LINK}>
               <CommonwealthIcon style={logoStyle} />
@@ -146,17 +146,17 @@ export default function Footer() {
         ) : null}
         <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
           <LogoLinks close link={NETLIFY_LINK} paddingTop="0px" color={theme.footer}>
-            <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.5', borderRadius: '5px' }}>
+            <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }}>
               {'This site is powered by Netlify'}
             </span>
           </LogoLinks>
           <LogoLinks close link={LICENSE_LINK} paddingTop="0px" color={theme.footer}>
-            <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.5', borderRadius: '5px' }}>
+            <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }}>
               {'MIT License'}
             </span>
           </LogoLinks>
           <LogoLinks close link={CODE_OF_CONDUCT_LINK} paddingTop="0px" color={theme.footer}>
-            <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.5', borderRadius: '5px' }}>
+            <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }}>
               {'Code of Conduct'}
             </span>
           </LogoLinks>
