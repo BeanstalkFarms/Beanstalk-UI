@@ -99,7 +99,7 @@ export default function Silo() {
         <HeaderLabelList
           title={[
             'My Ownership',
-            'Farmable Stalk',
+            'Grown Stalk',
           ]}
           value={[
             <span>{displayBN(ownership)}%</span>,
