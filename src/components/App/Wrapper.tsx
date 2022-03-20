@@ -86,7 +86,7 @@ export default function Main() {
     width: '125vw',
     left: '-10vw',
     top: 150,
-    opacity: '0.15',
+    opacity: '0.2',
     position: 'fixed',
     zIndex: -101,
   };
