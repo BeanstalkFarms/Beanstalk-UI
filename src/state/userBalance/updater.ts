@@ -156,8 +156,8 @@ export default function Updater() {
       // Note: Ethereum is NOT an ERC-20 and thus it doesn't require approval. Instead Ethereum is sent as a part of the transaction.
       // You can read more here: https://brogna.medium.com/token-allowance-dc553f7d38b3
       // There are 4 types of allowances each necessary in different cases
-      dispatch(updateUniswapBeanAllowance(accountBalances[BEAN.addr][`${account},${UNISWAP_V2_ROUTER}`].allowance));       // Needed for selling Beans on Uniswap 
-      dispatch(updateBeanstalkBeanAllowance(accountBalances[BEAN.addr][`${account},${BEANSTALK}`].allowance));   // Needed for depositing Beans, adding LP + Depositing from Beans or Bean/Eth, sowing in Beanstalk
+      dispatch(updateUniswapBeanAllowance(accountBalances[BEAN.addr].allowance[`${account},${UNISWAP_V2_ROUTER}`]));       // Needed for selling Beans on Uniswap
+      dispatch(updateBeanstalkBeanAllowance(accountBalances[BEAN.addr].allowance[`${account},${BEANSTALK}`]));   // Needed for depositing Beans, adding LP + Depositing from Beans or Bean/Eth, sowing in Beanstalk
       dispatch(updateBeanstalkLPAllowance(accountBalances[UNI_V2_ETH_BEAN_LP.addr].allowance));       // Needed for depositing LP from circulating
       dispatch(updateBeanstalkUSDCAllowance(accountBalances[USDC.addr].allowance));   // Needed for contributing to a fundraiser.
       dispatch(updateBeanstalkCurveAllowance(accountBalances[CURVE.addr].allowance)); // Needed for interacting with Curve.
@@ -865,8 +865,8 @@ export default function Updater() {
       const eventParsingParameters : EventParsingParameters = [
         totalBalances[17].season  /* season */,
         totalBalances[13]         /* harvestableIndex */,
-        accountBalances[BEANSTALK].farmableBeanBalance    /* farmableBeanBalance */,
-        accountBalances[BEANSTALK].grownStalkBalance      /* grownStalkBalance */,
+        accountBalances[BEANSTALK].balanceOfFarmableBeans    /* farmableBeanBalance */,
+        accountBalances[BEANSTALK].balanceOfStalk      /* grownStalkBalance */,
         accountBalances[BEANSTALK].claimableEthBalance        /* claimableEthBalance */,
         accountBalances[BEANSTALK].wrappedBeans,      /* wrappedBeans */
         beanReserve,
