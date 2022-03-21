@@ -73,5 +73,5 @@ export const Crv3 = new Token(
   CRV3Logo
 );
 
-export const supportedTokens = [Eth, Weth, Bean, Weth, Usdc, Dai, Tether, Crv3];
-export const supportedERC20Tokens = [Weth, Bean, Weth, Usdc, Dai, Tether, Crv3];
+export const supportedTokensV2 = [Eth, Weth, Bean, Usdc, Dai, Tether, Crv3];
+export const supportedERC20TokensV2 = [Weth, Bean, Usdc, Dai, Tether, Crv3];

@@ -51,7 +51,7 @@ export let txCallback : Function | undefined;
 export let web3 : Web3;
 export let account : string;
 export let metamaskFailure = -1;
-export const chainId = 1;
+export let chainId = 1;
 
 export let web3Provider : ethers.providers.Web3Provider;
 export let web3Signer : ethers.providers.JsonRpcSigner;
@@ -132,11 +132,17 @@ if(!onboard) {
     wallets: [injected, walletConnect],
     chains: [
       {
+        id: '0x3',
+        token: 'tROP',
+        label: 'Ethereum Ropsten Testnet',
+        rpcUrl: `https://ropsten.infura.io/v3/${INFURA_API_KEY}`,
+      },
+      {
         id: '0x1',
         token: 'ETH',
         label: 'Ethereum Mainnet',
         rpcUrl: MAINNET_RPC_URL
-      }
+      },
     ],
     appMetadata: {
       name: 'My App',
@@ -146,6 +152,46 @@ if(!onboard) {
   });
 }
 
+// Used in the Uniswap trade module
+export function getRpcEndpoint() {
+  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  const currentState = onboard.state.get();
+  return currentState.chains[0].rpcUrl;
+  // switch (chainId) {
+  //   case 1:
+  //     return `https://mainnet.infura.io/v3/${INFURA_API_KEY}`;
+  //   case 3:
+  //     return `https://ropsten.infura.io/v3/${INFURA_API_KEY}`;
+  //   case 1337:
+  //     return 'http://localhost:8545';
+  //   default:
+  //     throw new Error('Unsupported chain');
+  // }
+}
+
+//
+export async function switchChain() {
+  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  const currentState = onboard.state.get();
+  const url = getRpcEndpoint();
+  console.log(`switchChain:`, url)
+
+  chainId = 3;
+  changeNetwork(3);
+
+  //
+  web3 = new Web3(
+    new Web3.providers.HttpProvider(url)
+  );
+  web3Provider = new ethers.providers.Web3Provider(
+    currentState.wallets[0].provider,
+    'ropsten',
+  );
+  web3Signer = web3Provider.getSigner();
+  console.log('initialize: web3', web3);
+}
+
+//
 export async function initialize(): Promise<boolean> {
   if(metamaskFailure > -1) {
     console.warn(`initialize: already executed.`)
@@ -168,25 +214,19 @@ export async function initialize(): Promise<boolean> {
     console.log('initialize: if no chain in state');
   }
   
+  // Request a wallet connection and initialize a web3 provider.
   const wallets = await onboard.connectWallet();
-  web3 = new Web3(new Web3.providers.HttpProvider(MAINNET_RPC_URL));
-  // web3 = new Web3(wallets[0].provider)
-  console.log('initialize: web3', web3);
 
   //
-  if (currentState.chains.length > 0 && web3 !== undefined) {
-    console.log(`initialize: setting up account, provider, signer`);
-    account = wallets[0].accounts[0].address;
+  switchChain();
+  account = wallets[0].accounts[0].address;
+  
+  // TEST: getBalance
+  await web3.eth.getBalance(wallets[0].accounts[0].address).then((result) => {
+    console.log(`account ${account} has balance ${result}`);
+  });
 
-    await web3.eth.getBalance(wallets[0].accounts[0].address).then((result) => {
-      console.log(`account ${account} has balance ${result}`)
-    });
-
-    web3Provider = new ethers.providers.Web3Provider(wallets[0].provider, "mainnet");
-    web3Signer = web3Provider.getSigner();
-
-    console.log('initialize: wallets', wallets);
-  }
+  console.log('initialize: wallets', wallets);
 
   //
   if (account === undefined) {
@@ -199,6 +239,7 @@ export async function initialize(): Promise<boolean> {
   return true;
 }
 
+// Used in MetamasklessModule 
 export async function switchToMainnet() {
   try {
     await ethereum.request({
@@ -224,19 +265,6 @@ export async function addTokenToMetamask() {
       },
     },
   });
-}
-
-export function getRpcEndpoint() {
-  switch (chainId) {
-    case 1:
-      return `https://mainnet.infura.io/v3/${INFURA_API_KEY}`;
-    case 3:
-      return `https://ropsten.infura.io/v3/${INFURA_API_KEY}`;
-    case 1337:
-      return 'http://localhost:8545';
-    default:
-      throw new Error('Unsupported chain');
-  }
 }
 
 /**

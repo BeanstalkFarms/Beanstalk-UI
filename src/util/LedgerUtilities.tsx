@@ -26,7 +26,7 @@ import {
   initializing,
   pairContractReadOnly,
   tokenContractReadOnly,
-  tokenV2ContractReadOnly,
+  // tokenV2ContractReadOnly,
   toTokenUnitsBN,
   web3,
   chainId,
@@ -94,7 +94,12 @@ const setupBatch = (batch: BatchRequest, tag: string) => (
     return new Promise<any>((resolve, reject) => {
       batch.add(
         (fn.call).request({}, 'latest', (error: any, result: any) => {
-          console.log(`${tag}: exec:`, fn.call.name, { result, error })
+          console.log(`${tag}: exec:`, fn._method.name, {
+            arguments: fn.arguments,
+            contractAddress: fn._parent._address,
+            result,
+            error,
+          })
           if (result !== undefined) {
             return resolve(result);
           }
@@ -208,7 +213,7 @@ export const getTokenBalances = async (batch: BatchRequest) => {
   const exec = setupBatch(batch, 'getTokenBalances');
   return Promise.all(
     supportedERC20Tokens.map((t) => 
-      exec(tokenV2ContractReadOnly(t).methods.balanceOf(account)).then(tokenResult(t))
+      exec(tokenContractReadOnly(t).methods.balanceOf(account)).then(tokenResult(t))
     )
   );
 };

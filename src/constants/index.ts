@@ -10,8 +10,10 @@ export * from './colors';
 export * from './contracts';
 export * from './tokensv2';
 
+//
 export function changeNetwork(chainId: number) {
-    changeAddresses(chainId);
-    if (chainId === 1) changeTheme('winterUpgrade');
-    if (chainId === 3) changeTheme('ropsten');
+    console.log(`changeNetwork: ${chainId}`);
+  changeAddresses(chainId);
+  if (chainId === 1) changeTheme('winterUpgrade');
+  if (chainId === 3) changeTheme('ropsten');
 }

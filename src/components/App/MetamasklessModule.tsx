@@ -6,18 +6,20 @@ import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
 import { SvgCloudIcon } from 'components/About/SvgCloudIcon';
 import About from 'components/About';
 
+const connectMetaStyle = {
+  fontFamily: 'Futura-PT-Book',
+  fontSize: '18px',
+  height: '46px',
+  lineHeight: '20px',
+  margin: 'auto 0',
+  padding: '20px',
+  top: 'calc(50% - 23px)',
+  width: 'auto',
+};
+
 export default function MetamasklessModule() {
-  const connectMetaStyle = {
-    fontFamily: 'Futura-PT-Book',
-    fontSize: '18px',
-    height: '46px',
-    lineHeight: '20px',
-    margin: 'auto 0',
-    padding: '20px',
-    top: 'calc(50% - 23px)',
-    width: 'auto',
-  };
   const history = useHistory();
+
   let metamaskModule;
   if (metamaskFailure === 0 || metamaskFailure === 1) {
     metamaskModule = (
