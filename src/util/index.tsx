@@ -181,16 +181,22 @@ export async function initialize(): Promise<boolean> {
 
   // Check if we've previously connected a wallet.
   const previouslyConnectedWallets = getPreviouslyConnectedWallets();
-
-  // Request a wallet connection and initialize a web3 provider.
-  const wallets = await onboard.connectWallet({
-    autoSelect: (previouslyConnectedWallets && previouslyConnectedWallets[0]) 
-      ? {
-        label: previouslyConnectedWallets[0],
-        disableModals: true,
-      }
-      : undefined,
-  });
+  
+  // Request a wallet connection.
+  let wallets;
+  try {
+    wallets = await onboard.connectWallet({
+      autoSelect: (previouslyConnectedWallets && previouslyConnectedWallets[0]) 
+        ? {
+          label: previouslyConnectedWallets[0],
+          disableModals: true,
+        }
+        : undefined,
+    });
+  } catch(e) {
+    console.error(e);
+    wallets = await onboard.connectWallet();
+  }
 
   // Convert the hex chain ID returned by web3-onboard
   // into our decimal format. Switch 
