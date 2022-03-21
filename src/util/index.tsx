@@ -1,14 +1,4 @@
 import Web3 from 'web3';
-// import {
-//   init,
-//   useConnectWallet,
-//   useSetChain,
-//   useWallets
-// } from '@web3-onboard/react'
-import Onboard, { OnboardAPI } from '@web3-onboard/core';
-import injectedModule from '@web3-onboard/injected-wallets';
-import walletConnectModule from '@web3-onboard/walletconnect';
-
 import { ethers } from 'ethers';
 import {
   BEANFTCOLLECTION,
@@ -17,7 +7,6 @@ import {
   CURVE,
   PRICE,
   UNISWAP_V2_ROUTER,
-  INFURA_API_KEY,
   SupportedToken,
   changeTheme,
 } from 'constants/index';
@@ -27,6 +16,7 @@ import {
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
 import { INFURA_NETWORK_URLS } from 'constants/infura';
+import onboard from './onboard';
 
 export * from './EventUtilities';
 export * from './FieldUtilities';
@@ -44,9 +34,7 @@ export * from './APYUtilities';
 export * from './FundraiserUtilities';
 export * from './MarketUtilities';
 
-const MAINNET_RPC_URL = 'https://mainnet.infura.io/v3/23db69ab62394f4eb41db6a21853402c';
 
-let ethereum;
 export let initializing;
 /** txCallback is called after each successful request to the chain. */
 export let txCallback : Function | undefined;
@@ -112,46 +100,20 @@ export const beanCrv3ContractReadOnly = () =>
 export const curveContractReadOnly = () =>
   new web3.eth.Contract(curveMetaPoolAbi, CURVE.factory);
 
-// async function initializeMetaMaskListeners() {
-//   const changeHandler = () => {
-//     window.location.replace(window.location.origin);
-//   };
-//   ethereum.on('accountsChanged', changeHandler);
-//   ethereum.on('chainChanged', changeHandler);
-// }
+/**
+ * Listen for events emitted by the current provider.
+ */
+async function initWalletListeners() {
+  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  const currentState = onboard.state.get();
+  const provider = currentState.wallets[0].provider;
 
-const walletConnect = walletConnectModule({
-  qrcodeModalOptions: {
-    mobileLinks: ['rainbow', 'metamask', 'argent', 'trust', 'imtoken', 'pillar']
-  }
-});
-const injected = injectedModule();
-
-//
-let onboard : OnboardAPI | undefined;
-if(!onboard) {
-  onboard = Onboard({
-    wallets: [injected, walletConnect],
-    chains: [
-      {
-        id: '0x1',
-        token: 'ETH',
-        label: 'Ethereum Mainnet',
-        rpcUrl: MAINNET_RPC_URL
-      },
-      {
-        id: '0x3',
-        token: 'tROP',
-        label: 'Ethereum Ropsten Testnet',
-        rpcUrl: `https://ropsten.infura.io/v3/${INFURA_API_KEY}`,
-      },
-    ],
-    appMetadata: {
-      name: 'My App',
-      icon: '<SVG_ICON_STRING>',
-      description: 'My app using Onboard'
-    }
-  });
+  // When changing account or chain, refresh the page.
+  const changeHandler = () => {
+    window.location.replace(window.location.origin);
+  };
+  provider.on('accountsChanged', changeHandler);
+  provider.on('chainChanged', changeHandler);
 }
 
 /**
@@ -187,7 +149,9 @@ export async function switchChain(_chainId: SupportedChainId) {
   web3Signer = web3Provider.getSigner();
 }
 
-//
+/**
+ * 
+ */
 export async function initialize(): Promise<boolean> {
   if(metamaskFailure > -1) {
     console.warn(`initialize: already executed.`)
@@ -198,20 +162,29 @@ export async function initialize(): Promise<boolean> {
     console.warn('initialize: missing onboard instance');
     return false;
   }
-
-  // previous logic work switched out in this commit for reference: https://github.com/BeanstalkFarms/Beanstalk-UI/commit/61199814d0f45b7433606f159751f364bf68d941
-  // WIP: Metamask can be connected but walletconnect, switching chains and signers is not working atm
-  // const currentState = onboard.state.get();
-  // console.log('initialize: currentState', currentState);
-  // if (currentState.wallets.length === 0) {
-  //   console.log('initialize: If no wallet in state');
-  // }
-  // if (currentState.chains.length === 0) {
-  //   console.log('initialize: if no chain in state');
-  // }
   
+  // Setup wallet change listener
+  const walletsSub = onboard.state.select('wallets')
+  const { unsubscribe } = walletsSub.subscribe((wallets) => {
+    const connectedWallets = wallets.map(({ label }) => label)
+    window.localStorage.setItem(
+      'connectedWallets',
+      JSON.stringify(connectedWallets)
+    )
+  });
+
+  // Check if we've previously connected a wallet.
+  const previouslyConnectedWallets = JSON.parse(
+    window.localStorage.getItem('connectedWallets') || 'null',
+  );
+
   // Request a wallet connection and initialize a web3 provider.
-  const wallets = await onboard.connectWallet();
+  const wallets = await onboard.connectWallet({
+    autoSelect: previouslyConnectedWallets ? {
+      label: previouslyConnectedWallets[0],
+      disableModals: true,
+    } : undefined,
+  });
 
   // Convert the hex chain ID returned by web3-onboard
   // into our decimal format. Switch 
@@ -220,11 +193,8 @@ export async function initialize(): Promise<boolean> {
   switchChain(chainId);
   account = wallets[0].accounts[0].address;
   
-  // TEST: getBalance
-  // await web3.eth.getBalance(account).then((result) => {
-  //   console.log(`account ${account} has balance ${result}`);
-  // });
-  // console.log('initialize: wallets', wallets);
+  // Listen for events emitted by the wallet provider.
+  initWalletListeners();
 
   //
   if (account === undefined) {
@@ -237,24 +207,26 @@ export async function initialize(): Promise<boolean> {
   return true;
 }
 
-// Used in MetamasklessModule 
+/**
+ * 
+ */
 export async function switchToMainnet() {
-  try {
-    await ethereum.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: '0x1' }],
-    });
-    return true;
-  } catch {
-    return false;
-  }
+  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  return onboard.setChain({ chainId: '0x1' });
 }
 
-export async function addTokenToMetamask() {
-  return ethereum.request({
+/**
+ * 
+ */
+export async function watchToken() {
+  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  const currentState = onboard.state.get();
+  const provider = currentState.wallets[0].provider;
+
+  return provider.request({
     method: 'wallet_watchAsset',
     params: {
-      type: 'ERC20', // Initially only supports ERC20, but eventually more!
+      type: 'ERC20',              // Initially only supports ERC20, but eventually more!
       options: {
         address: BEAN.addr,       // The address that the token is at.
         symbol: BEAN.symbol,      // A ticker symbol or shorthand, up to 5 chars.
@@ -277,7 +249,7 @@ export async function isAddress(a: string) {
   return ethers.utils.isAddress(a);
 }
 
-export async function GetWalletAddress(): Promise<string | undefined> {
+export async function getWalletAddress(): Promise<string | undefined> {
   await initializing;
   return account;
 }

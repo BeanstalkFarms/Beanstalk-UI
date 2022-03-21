@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 
 import { PodListing } from 'state/marketplace/reducer';
-import { CryptoAsset, displayBN, FarmAsset, GetWalletAddress } from 'util/index';
+import { CryptoAsset, displayBN, FarmAsset, getWalletAddress } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { filterStrings, QuestionModule } from 'components/Common';
 
@@ -101,7 +101,7 @@ export default function Listings(props: ListingsProps) {
   // Setup
   useEffect(() => {
     const init = async () => {
-      const addr = await GetWalletAddress();
+      const addr = await getWalletAddress();
       setWalletAddress(addr);
     };
     init();

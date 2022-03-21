@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 // import { AppState } from 'state';
 // import { theme } from 'constants/index';
 import {
-  addTokenToMetamask,
+  watchToken,
 } from 'util/index';
 import {
   ContentSection,
@@ -56,7 +56,7 @@ export default function Trade() {
             className={classes.button}
             variant="contained"
             onClick={() => {
-              addTokenToMetamask();
+              watchToken();
             }}
           >
             <span>Add BEAN to MetaMask</span>

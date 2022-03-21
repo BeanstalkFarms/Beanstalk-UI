@@ -5,7 +5,7 @@ import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
 import { PodOrder } from 'state/marketplace/reducer';
-import { displayBN, FarmAsset, GetWalletAddress } from 'util/index';
+import { displayBN, FarmAsset, getWalletAddress } from 'util/index';
 import { AppState } from 'state';
 import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
 
@@ -134,7 +134,7 @@ export default function Orders(props: OrdersProps) {
   // Setup
   useEffect(() => {
     const init = async () => {
-      const addr = await GetWalletAddress();
+      const addr = await getWalletAddress();
       setWalletAddress(addr);
     };
     init();

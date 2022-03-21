@@ -26,7 +26,7 @@ import {
   chainId,
   displayBN,
   getBlockTimestamp,
-  GetWalletAddress,
+  getWalletAddress,
   toTokenUnitsBN,
   poolForLP,
 } from 'util/index';
@@ -443,7 +443,7 @@ export default function WalletModule() {
 
   useEffect(() => {
     async function handleWallet() {
-      GetWalletAddress().then((accountHex) => {
+      getWalletAddress().then((accountHex) => {
         if (accountHex !== undefined) {
           const accountDisplay = `${accountHex.substr(
             0,
