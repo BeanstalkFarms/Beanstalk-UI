@@ -857,22 +857,28 @@ export default function Updater() {
         accountBalances,        // 3
         totalBalances,          // 4
         _prices,                // 5
-        // usdcBalance,            // 6
+        // usdcBalance,         // 6
         votedBips,              // 7
         ethPrices,              // 8
         priceTuple,             // 9
       ] = await Promise.all([
-        getBips(), // 0
+        getBips(),              // 0
         getFundraisers(),       // 1
         getEtherBalance(),      // 2
         accountBalancePromises, // 3: uses `exec` -> tuple
         totalBalancePromises,   // 4: uses `exec` -> tuple
-        pricePromises,          // 5: uses `exec` -> tuple
-        // getUSDCBalance(),       // 6
-        getVotes(),                // 7
+        pricePromises,          // 5: uses `exec` -> tuplex
+        // getUSDCBalance(),    // 6
+        getVotes(),             // 7
         getEthPrices(),         // 8
         getPriceArray()         // 9
-      ]);
+      ]).catch((err) => {
+        console.error(`userBalance/updater: updateBalancesAndPrices failed`, err)
+        throw err;
+      }).then((result) => {
+        console.log(`userBalance/updater: updateBalancesAndPrices returned result`, result)
+        return result;
+      })
 
       //
       benchmarkEnd('ALL BALANCES', startTime);
@@ -1061,7 +1067,6 @@ export default function Updater() {
     }
     
     // -- Run things
-
     start();
     getLastCross();
     getAPYs();

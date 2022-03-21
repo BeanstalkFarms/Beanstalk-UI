@@ -15,7 +15,7 @@ import {
   Grid,
 } from 'components/Common';
 import { mintAllAccountNFTs, mintAllNFTs } from 'util/index';
-import ClaimNFT from './claimnft';
+import ClaimNFT from './ClaimNft';
 import NftStatsHeader from './NftStatsHeader';
 
 export default function NFTs() {

@@ -18,8 +18,8 @@ const IGNORED_EVENTS = new Set([
 ]);
 
 let listeningForEvents = false;
-let lastPriceRefresh = new Date().getTime();
-let lastTotalsRefresh = new Date().getTime();
+// let lastPriceRefresh = new Date().getTime();
+// let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
 //
@@ -33,6 +33,8 @@ export async function initializeEventListener(
   const beanstalk = beanstalkContractReadOnly();
   const beanPair = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const usdcPair = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
+
+  console.log(`initializeEventListener: `, account)
 
   const accountEvents = await Promise.all([
     beanstalk.getPastEvents('BeanDeposit', {
@@ -115,7 +117,13 @@ export async function initializeEventListener(
       filter: { to: account },
       fromBlock: 0,
     }),
-  ]);
+  ]).catch((err) => {
+    console.error(`initializeEventListener: failed to fetch accountEvents`, err)
+    throw err;
+  }).then((result) => {
+    console.log(`initializeEventListener: fetched accountEvents`, result)
+    return result;
+  })
 
   // eslint-disable-next-line
   let allEvents : any[] = [].concat.apply([], accountEvents);
@@ -134,53 +142,53 @@ export async function initializeEventListener(
   listeningForEvents = true;
 
   /* Listen for new Contract events */
-  beanPair.events.allEvents({ fromBlack: 'latest' }, (error, event) => {
-    if (
-      new Date().getTime() - lastPriceRefresh > 5000 &&
-      (event.returnValues.to === undefined ||
-        event.returnValues.to.toLowerCase() !== account.toLowerCase())
-    ) {
-      console.log('UPDATING PRICES!');
-      updatePrices();
-      lastPriceRefresh = new Date().getTime();
-    }
-  });
-  usdcPair.events.Swap({ fromBlack: 'latest' }, () => {
-    if (new Date().getTime() - lastPriceRefresh > 5000) {
-      console.log('UPDATING PRICES!');
-      updatePrices();
-      lastPriceRefresh = new Date().getTime();
-    }
-  });
-  beanstalk.events.allEvents({ fromBlock: 'latest' }, (error, event) => {
-    if (IGNORED_EVENTS.has(event.event)) {
-      return;
-    }
-    const newEventHash = event.transactionHash + String(event.logIndex);
-    if (newEventHashes.has(newEventHash)) {
-      return;
-    }
-    newEventHashes.add(newEventHash);
+  // beanPair.events.allEvents({ fromBlock: 'latest' }, (error, event) => {
+  //   if (
+  //     new Date().getTime() - lastPriceRefresh > 5000 &&
+  //     (event?.returnValues.to === undefined ||
+  //       event?.returnValues.to.toLowerCase() !== account.toLowerCase())
+  //   ) {
+  //     console.log('UPDATING PRICES!');
+  //     updatePrices();
+  //     lastPriceRefresh = new Date().getTime();
+  //   }
+  // });
+  // usdcPair.events.Swap({ fromBlock: 'latest' }, () => {
+  //   if (new Date().getTime() - lastPriceRefresh > 5000) {
+  //     console.log('UPDATING PRICES!');
+  //     updatePrices();
+  //     lastPriceRefresh = new Date().getTime();
+  //   }
+  // });
+  // beanstalk.events.allEvents({ fromBlock: 'latest' }, (error, event) => {
+  //   if (IGNORED_EVENTS.has(event.event)) {
+  //     return;
+  //   }
+  //   const newEventHash = event.transactionHash + String(event.logIndex);
+  //   if (newEventHashes.has(newEventHash)) {
+  //     return;
+  //   }
+  //   newEventHashes.add(newEventHash);
 
-    if (
-      event.returnValues.account !== undefined &&
-      event.returnValues.account.toLowerCase() === account.toLowerCase()
-    ) {
-      allEvents = [...allEvents, event];
-      processEvents(allEvents);
-    } else if (event.event === 'Sunrise') {
-      processEvents(allEvents);
-      txCallback();
-      console.log('-------UPDATING TOTALS!');
-      updateTotals();
-      lastTotalsRefresh = new Date().getTime();
-      lastPriceRefresh = new Date().getTime();
-    } else if (new Date().getTime() - lastTotalsRefresh > 5000) {
-      console.log('UPDATING TOTALS!');
-      updateTotals();
-      lastTotalsRefresh = new Date().getTime();
-    }
-  });
+  //   if (
+  //     event?.returnValues.account !== undefined &&
+  //     event?.returnValues.account.toLowerCase() === account.toLowerCase()
+  //   ) {
+  //     allEvents = [...allEvents, event];
+  //     processEvents(allEvents);
+  //   } else if (event.event === 'Sunrise') {
+  //     processEvents(allEvents);
+  //     if(txCallback) txCallback();
+  //     console.log('-------UPDATING TOTALS!');
+  //     updateTotals();
+  //     lastTotalsRefresh = new Date().getTime();
+  //     lastPriceRefresh = new Date().getTime();
+  //   } else if (new Date().getTime() - lastTotalsRefresh > 5000) {
+  //     console.log('UPDATING TOTALS!');
+  //     updateTotals();
+  //     lastTotalsRefresh = new Date().getTime();
+  //   }
+  // });
 
   benchmarkEnd('EVENT LISTENER', startTime);
   return allEvents;

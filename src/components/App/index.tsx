@@ -152,7 +152,7 @@ export default function App() {
       {/* UPDATERS */}
       <Updater />
       <TokenUpdater />
-      <NFTUpdater />
+      {/* <NFTUpdater /> */}
       {/* CONTENT */}
       <Box className="App">
         <Wrapper />
