@@ -19,12 +19,14 @@ import {
   UNISWAP_V2_ROUTER,
   INFURA_API_KEY,
   SupportedToken,
-  changeNetwork,
+  changeTheme,
 } from 'constants/index';
 import {
-  BEAN
+  BEAN, changeAddresses
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
+import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
+import { INFURA_NETWORK_URLS } from 'constants/infura';
 
 export * from './EventUtilities';
 export * from './FieldUtilities';
@@ -51,7 +53,7 @@ export let txCallback : Function | undefined;
 export let web3 : Web3;
 export let account : string;
 export let metamaskFailure = -1;
-export let chainId = 1;
+export let chainId : SupportedChainId = 1;
 
 export let web3Provider : ethers.providers.Web3Provider;
 export let web3Signer : ethers.providers.JsonRpcSigner;
@@ -132,16 +134,16 @@ if(!onboard) {
     wallets: [injected, walletConnect],
     chains: [
       {
-        id: '0x3',
-        token: 'tROP',
-        label: 'Ethereum Ropsten Testnet',
-        rpcUrl: `https://ropsten.infura.io/v3/${INFURA_API_KEY}`,
-      },
-      {
         id: '0x1',
         token: 'ETH',
         label: 'Ethereum Mainnet',
         rpcUrl: MAINNET_RPC_URL
+      },
+      {
+        id: '0x3',
+        token: 'tROP',
+        label: 'Ethereum Ropsten Testnet',
+        rpcUrl: `https://ropsten.infura.io/v3/${INFURA_API_KEY}`,
       },
     ],
     appMetadata: {
@@ -152,43 +154,37 @@ if(!onboard) {
   });
 }
 
-// Used in the Uniswap trade module
-export function getRpcEndpoint() {
-  if(!onboard) throw new Error('Onboard is not yet initialized.');
-  const currentState = onboard.state.get();
-  return currentState.chains[0].rpcUrl;
-  // switch (chainId) {
-  //   case 1:
-  //     return `https://mainnet.infura.io/v3/${INFURA_API_KEY}`;
-  //   case 3:
-  //     return `https://ropsten.infura.io/v3/${INFURA_API_KEY}`;
-  //   case 1337:
-  //     return 'http://localhost:8545';
-  //   default:
-  //     throw new Error('Unsupported chain');
-  // }
+/**
+ * 
+ * @param _chainId 
+ * @returns 
+ */
+export function getRpcEndpoint(_chainId: SupportedChainId) {
+  return INFURA_NETWORK_URLS[_chainId];
 }
 
-//
-export async function switchChain() {
+/**
+ * Switch our RPC endpoint
+ * @param _chainId 
+ */
+export async function switchChain(_chainId: SupportedChainId) {
   if(!onboard) throw new Error('Onboard is not yet initialized.');
   const currentState = onboard.state.get();
-  const url = getRpcEndpoint();
-  console.log(`switchChain:`, url)
-
-  chainId = 3;
-  changeNetwork(3);
-
-  //
-  web3 = new Web3(
-    new Web3.providers.HttpProvider(url)
-  );
+  
+  // Update chain information, tokens, theme
+  chainId = _chainId;
+  changeAddresses(chainId);
+  if (chainId === 1) changeTheme('winterUpgrade');
+  if (chainId === 3) changeTheme('ropsten');
+  
+  // Create web3 / ethers instances.
+  const rpcUrl = getRpcEndpoint(chainId);
+  web3 = new Web3(new Web3.providers.HttpProvider(rpcUrl));
   web3Provider = new ethers.providers.Web3Provider(
-    currentState.wallets[0].provider,
-    'ropsten',
+    currentState.wallets[0].provider,   // the provider instance from web3-onboard
+    CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
   );
   web3Signer = web3Provider.getSigner();
-  console.log('initialize: web3', web3);
 }
 
 //
@@ -205,28 +201,30 @@ export async function initialize(): Promise<boolean> {
 
   // previous logic work switched out in this commit for reference: https://github.com/BeanstalkFarms/Beanstalk-UI/commit/61199814d0f45b7433606f159751f364bf68d941
   // WIP: Metamask can be connected but walletconnect, switching chains and signers is not working atm
-  const currentState = onboard.state.get();
-  console.log('initialize: currentState', currentState);
-  if (currentState.wallets.length === 0) {
-    console.log('initialize: If no wallet in state');
-  }
-  if (currentState.chains.length === 0) {
-    console.log('initialize: if no chain in state');
-  }
+  // const currentState = onboard.state.get();
+  // console.log('initialize: currentState', currentState);
+  // if (currentState.wallets.length === 0) {
+  //   console.log('initialize: If no wallet in state');
+  // }
+  // if (currentState.chains.length === 0) {
+  //   console.log('initialize: if no chain in state');
+  // }
   
   // Request a wallet connection and initialize a web3 provider.
   const wallets = await onboard.connectWallet();
 
-  //
-  switchChain();
+  // Convert the hex chain ID returned by web3-onboard
+  // into our decimal format. Switch 
+  const chainHexId = wallets[0].chains[0].id;
+  chainId = parseInt(chainHexId, 16);
+  switchChain(chainId);
   account = wallets[0].accounts[0].address;
   
   // TEST: getBalance
-  await web3.eth.getBalance(wallets[0].accounts[0].address).then((result) => {
-    console.log(`account ${account} has balance ${result}`);
-  });
-
-  console.log('initialize: wallets', wallets);
+  // await web3.eth.getBalance(account).then((result) => {
+  //   console.log(`account ${account} has balance ${result}`);
+  // });
+  // console.log('initialize: wallets', wallets);
 
   //
   if (account === undefined) {

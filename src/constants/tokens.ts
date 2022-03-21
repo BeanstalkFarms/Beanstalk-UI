@@ -110,3 +110,5 @@ export const supportedERC20Tokens = [
   USDC,
   CURVE
 ]
+
+export const supportedTokens = supportedERC20Tokens;
