@@ -149,6 +149,12 @@ export async function switchChain(_chainId: SupportedChainId) {
   web3Signer = web3Provider.getSigner();
 }
 
+function getPreviouslyConnectedWallets() : null | string[] {
+  return JSON.parse(
+    window.localStorage.getItem('connectedWallets') || 'null',
+  );
+}
+
 /**
  * 
  */
@@ -174,16 +180,16 @@ export async function initialize(): Promise<boolean> {
   });
 
   // Check if we've previously connected a wallet.
-  const previouslyConnectedWallets = JSON.parse(
-    window.localStorage.getItem('connectedWallets') || 'null',
-  );
+  const previouslyConnectedWallets = getPreviouslyConnectedWallets();
 
   // Request a wallet connection and initialize a web3 provider.
   const wallets = await onboard.connectWallet({
-    autoSelect: previouslyConnectedWallets ? {
-      label: previouslyConnectedWallets[0],
-      disableModals: true,
-    } : undefined,
+    autoSelect: (previouslyConnectedWallets && previouslyConnectedWallets[0]) 
+      ? {
+        label: previouslyConnectedWallets[0],
+        disableModals: true,
+      }
+      : undefined,
   });
 
   // Convert the hex chain ID returned by web3-onboard
@@ -205,6 +211,16 @@ export async function initialize(): Promise<boolean> {
 
   metamaskFailure = 1;
   return true;
+}
+
+export async function disconnect() {
+  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  const state = onboard.state.get();
+  window.localStorage.removeItem('connectedWallets');
+  await onboard.disconnectWallet({
+    label: state.wallets[0].label,
+  });
+  window.location.reload();
 }
 
 /**
