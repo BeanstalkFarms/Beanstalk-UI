@@ -15,7 +15,7 @@ import {
   Grid,
 } from 'components/Common';
 import { mintAllAccountNFTs, mintAllNFTs } from 'util/index';
-import ClaimNFT from './ClaimNft';
+import ClaimNft from './ClaimNft';
 import NftStatsHeader from './NftStatsHeader';
 
 export default function NFTs() {
@@ -64,7 +64,7 @@ export default function NFTs() {
         <Grid container>
           <Grid item xl={2} lg={1} md={false} />
           <Grid item xl={6} lg={5} md={6} xs={12}>
-            <ClaimNFT
+            <ClaimNft
               buttonDescription={beanftStrings.mintAll}
               claimedNFTs={claimedNFTs}
               unclaimedNFTs={unclaimedNFTs}
@@ -80,7 +80,7 @@ export default function NFTs() {
             />
           </Grid>
           <Grid item lg={5} md={6} xs={12}>
-            <ClaimNFT
+            <ClaimNft
               buttonDescription={beanftStrings.mintAll}
               claimedNFTs={claimedWinterNFTs}
               unclaimedNFTs={unclaimedWinterNFTs}

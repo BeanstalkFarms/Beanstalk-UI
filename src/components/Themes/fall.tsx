@@ -3,6 +3,7 @@ import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
+
 import TurkeyIcon from 'img/fall/turkey.svg';
 import FenceIcon from 'img/fall/fence-fall.svg';
 import fallGround from 'img/fall/ground-grass.png';

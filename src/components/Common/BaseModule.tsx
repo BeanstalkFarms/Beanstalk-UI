@@ -6,6 +6,70 @@ import { makeStyles } from '@material-ui/styles';
 import { theme } from 'constants/index';
 import { FormatTooltip, Line, QuestionModule } from './index';
 
+const useStyles = makeStyles(() => ({
+  inputModule: {
+    backgroundColor: theme.module.background,
+    borderRadius: '25px',
+    color: theme.text,
+    padding: '10px',
+  },
+  metaModule: {
+    backgroundColor: theme.module.metaBackground,
+    borderRadius: '25px',
+    boxShadow: 'none',
+    color: theme.backgroundText,
+    marginTop: '16px',
+    padding: '10px 16px 30px 16px',
+  },
+  sectionTab: {
+    fontFamily: 'Futura-Pt-Book',
+    minWidth: '44px',
+    borderRadius: '15px',
+  },
+  singleSection: {
+    fontFamily: 'Futura-Pt-Book',
+    minWidth: '44px',
+    borderRadius: '15px',
+    margin: '12px 0 12px 0',
+  },
+  formButton: {
+    borderRadius: '15px',
+    fontFamily: 'Futura-Pt-Book',
+    fontSize: 'calc(10px + 1vmin)',
+    height: '44px',
+    margin: '12px 12px',
+    width: '64%',
+    maxWidth: '240px',
+    zIndex: 1,
+  },
+  indicator: {
+    backgroundColor: 'transparent',
+    display: 'flex',
+    justifyContent: 'center',
+    '& > span': {
+      backgroundColor: theme.secondary,
+      borderRadius: '3.5px',
+      height: '7px',
+      marginTop: '-8px',
+      maxWidth: '7px',
+      width: '100%',
+    },
+  },
+  noIndicator: {
+    backgroundColor: 'transparent',
+  },
+  moduleContent: {
+    backgroundColor: theme.module.background,
+    height: '100%',
+    left: '0',
+    opacity: '50%',
+    position: 'absolute',
+    top: '0',
+    width: '100%',
+    zIndex: 1,
+  },
+}));
+
 export default function BaseModule({
   size,
   allowance,
@@ -36,78 +100,7 @@ export default function BaseModule({
 }) {
   const dispatch = useDispatch();
   const s = size === 'small' || window.innerWidth < 450;
-  const classes = makeStyles(() => ({
-    inputModule: {
-      backgroundColor: theme.module.background,
-      borderRadius: '25px',
-      color: theme.text,
-      marginTop: marginTop,
-      padding: '10px',
-    },
-    metaModule: {
-      backgroundColor: theme.module.metaBackground,
-      borderRadius: '25px',
-      boxShadow: 'none',
-      color: theme.backgroundText,
-      marginTop: '16px',
-      padding: '10px 16px 30px 16px',
-    },
-    sectionTab: {
-      fontFamily: 'Futura-Pt-Book',
-      fontSize: s ? textTabSize : '18px',
-      minWidth: '44px',
-      textTransform: textTransform,
-      borderRadius: '15px',
-      color: removeBackground ? theme.backgroundText : theme.text,
-    },
-    singleSection: {
-      fontFamily: 'Futura-Pt-Book',
-      fontSize: s ? '14px' : '18px',
-      minWidth: '44px',
-      textTransform: textTransform,
-      borderRadius: '15px',
-      margin: '12px 0 12px 0',
-      // "& > div": {
-      //   height: 48
-      // }
-    },
-    formButton: {
-      borderRadius: '15px',
-      fontFamily: 'Futura-Pt-Book',
-      fontSize: 'calc(10px + 1vmin)',
-      height: '44px',
-      margin: '12px 12px',
-      width: '64%',
-      maxWidth: '240px',
-      zIndex: '1',
-    },
-    indicator: {
-      backgroundColor: 'transparent',
-      display: 'flex',
-      justifyContent: 'center',
-      '& > span': {
-        backgroundColor: theme.secondary,
-        borderRadius: '3.5px',
-        height: '7px',
-        marginTop: '-8px',
-        maxWidth: '7px',
-        width: '100%',
-      },
-    },
-    noIndicator: {
-      backgroundColor: 'transparent',
-    },
-    moduleContent: {
-      backgroundColor: theme.module.background,
-      height: '100%',
-      left: '0',
-      opacity: '50%',
-      position: 'absolute',
-      top: '0',
-      width: '100%',
-      zIndex: '1',
-    },
-  }))();
+  const classes = useStyles();
 
   function a11yProps(index) {
     return {
@@ -221,9 +214,8 @@ export default function BaseModule({
       {normalBox && sectionTitles.length >= 1 ? (
         <Box
           style={style}
-          className={
-            removeBackground ? classes.metaModule : classes.inputModule
-          }
+          className={removeBackground ? classes.metaModule : classes.inputModule}
+          sx={{ marginTop: marginTop }}
           boxShadow={3}
         >
           <Tabs
@@ -241,7 +233,11 @@ export default function BaseModule({
             {sectionTitles.map((sectionTitle, index) => (
               <Tab
                 className={classes.sectionTab}
-                // disabled={sectionTitles.length < 2}
+                style={{
+                  textTransform: textTransform,
+                  fontSize: s ? textTabSize : '18px',
+                  color: removeBackground ? theme.backgroundText : theme.text,
+                }}
                 disableRipple={sectionTitles.length === 1}
                 label={
                   sectionTitlesDescription !== undefined ? (
@@ -281,9 +277,18 @@ export default function BaseModule({
           className={
             removeBackground ? classes.metaModule : classes.inputModule
           }
+          sx={{
+            marginTop: marginTop
+          }}
           boxShadow={3}
         >
-          <span className={classes.singleSection}>
+          <span
+            className={classes.singleSection}
+            style={{
+              textTransform: textTransform,
+              fontSize: s ? '14px' : '18px',
+            }}
+          >
             {sectionTitlesDescription !== undefined ? (
               <Box style={{ margin: marginMeta }}>
                 {sectionTitles[0]}
@@ -317,6 +322,9 @@ export default function BaseModule({
           className={
             removeBackground ? classes.metaModule : classes.inputModule
           }
+          sx={{ 
+            marginTop: marginTop
+          }}
           boxShadow={3}
         >
           {moduleContent}

@@ -39,7 +39,6 @@ export const useStyles = makeStyles({
   NavSubheader: {
     fontFamily: 'Futura',
     lineHeight: '22px',
-    // backgroundColor: '#fff',
   },
   Badge: {
     backgroundColor: theme.secondary,
