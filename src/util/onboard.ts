@@ -1,7 +1,7 @@
 import Onboard, { OnboardAPI } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
-import { InjectedNameSpace, InjectedWalletModule } from '@web3-onboard/injected-wallets/dist/types';
-import { createEIP1193Provider } from '@web3-onboard/common';
+// import { InjectedNameSpace, InjectedWalletModule } from '@web3-onboard/injected-wallets/dist/types';
+// import { createEIP1193Provider } from '@web3-onboard/common';
 import ledgerModule from '@web3-onboard/ledger';
 import trezorModule from '@web3-onboard/trezor';
 import walletConnectModule from '@web3-onboard/walletconnect';
@@ -9,7 +9,7 @@ import walletLinkModule from '@web3-onboard/walletlink';
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
 import { INFURA_HTTPS_URLS } from 'constants/infura';
 
-import tallyIconUrl from 'img/tally-icon.svg';
+// import tallyIconUrl from 'img/tally-icon.svg';
 
 const getChainInfo = (_chainId: SupportedChainId) => ({
   token: CHAIN_INFO[_chainId].nativeCurrency.symbol,
@@ -20,7 +20,7 @@ const getChainInfo = (_chainId: SupportedChainId) => ({
 //
 let onboard : OnboardAPI | undefined;
 if (!onboard) {
-  const tally: InjectedWalletModule = {
+  /* const tally: InjectedWalletModule = {
     label: 'Tally',
     injectedNamespace: InjectedNameSpace.Ethereum,
     checkProviderIdentity: ({ provider }) =>
@@ -48,13 +48,13 @@ if (!onboard) {
       return { provider };
     },
     platforms: ['all']
-  };
+  }; */
 
   onboard = Onboard({
     wallets: [
       injectedModule({
         custom: [
-          tally
+          // tally
         ]
       }),
       walletConnectModule({
