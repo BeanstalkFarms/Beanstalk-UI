@@ -7,22 +7,20 @@ import {
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-
 import { AppState } from 'state';
-import BeanIcon from 'img/bean-logo.svg';
-import CoinGeckoIcon from 'img/coingecko-icon.svg';
-import CoinMarketCapIcon from 'img/coinmarketcap-icon.svg';
-import CommonwealthIcon from 'img/commonwealth-icon.svg';
-import CurveIcon from 'img/curve-dao-icon.svg';
-import DuneWinterIcon from 'img/dune-icon-winter.svg'; // Icon is 2 colors so manually changed for winter theme
-import DuneIcon from 'img/dune-icon.svg'; // Icon is 2 colors so manually changed for winter theme
-import DiscordIcon from 'img/discord-icon.svg';
-import EtherscanIcon from 'img/etherscan-logo.svg';
-import MediumIcon from 'img/medium-icon.svg';
-import OpenSeaIcon from 'img/opensea-icon.svg';
-import RedditIcon from 'img/reddit-icon.svg';
-import UniswapIcon from 'img/uniswap-logo-black.svg';
-
+import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
+import { ReactComponent as CoinGeckoIcon } from 'img/coingecko-icon.svg';
+import { ReactComponent as CoinMarketCapIcon } from 'img/coinmarketcap-icon.svg';
+import { ReactComponent as CommonwealthIcon } from 'img/commonwealth-icon.svg';
+import { ReactComponent as CurveIcon } from 'img/curve-dao-icon.svg';
+import { ReactComponent as DuneWinterIcon } from 'img/dune-icon-winter.svg'; // Icon is 2 colors so manually changed for winter theme
+import { ReactComponent as DuneIcon } from 'img/dune-icon.svg'; // Icon is 2 colors so manually changed for winter theme
+import { ReactComponent as DiscordIcon } from 'img/discord-icon.svg';
+import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
+import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
+import { ReactComponent as OpenSeaIcon } from 'img/opensea-icon.svg';
+import { ReactComponent as RedditIcon } from 'img/reddit-icon.svg';
+import { ReactComponent as UniswapIcon } from 'img/uniswap-logo-black.svg';
 import ThemeBackground from 'components/Themes'
 import LogoLinks from './LogoLinks';
 
