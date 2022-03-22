@@ -30,7 +30,7 @@ import {
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery, farmableMonthTotalQuery } from 'graph/index';
 import { AppState } from 'state';
-import { BASE_SLIPPAGE, BEAN, BEANSTALK, CURVE, SupportedToken, UNI_V2_ETH_BEAN_LP, USDC, WETH } from 'constants/index';
+import { BASE_SLIPPAGE, BEAN, BEANSTALK, CURVE, ETH, SEEDS, STALK, SupportedToken, UNI_V2_ETH_BEAN_LP, USDC, WETH } from 'constants/index';
 import {
   addRewardedCrates,
   createLedgerBatch,
@@ -156,26 +156,26 @@ export default function Updater() {
       // Note: Ethereum is NOT an ERC-20 and thus it doesn't require approval. Instead Ethereum is sent as a part of the transaction.
       // You can read more here: https://brogna.medium.com/token-allowance-dc553f7d38b3
       // There are 4 types of allowances each necessary in different cases
-      dispatch(updateUniswapBeanAllowance(accountBalances[BEAN.addr].allowance[`${account},${UNISWAP_V2_ROUTER}`]));       // Needed for selling Beans on Uniswap
-      dispatch(updateBeanstalkBeanAllowance(accountBalances[BEAN.addr].allowance[`${account},${BEANSTALK}`]));   // Needed for depositing Beans, adding LP + Depositing from Beans or Bean/Eth, sowing in Beanstalk
-      dispatch(updateBeanstalkLPAllowance(accountBalances[UNI_V2_ETH_BEAN_LP.addr].allowance));       // Needed for depositing LP from circulating
-      dispatch(updateBeanstalkUSDCAllowance(accountBalances[USDC.addr].allowance));   // Needed for contributing to a fundraiser.
-      dispatch(updateBeanstalkCurveAllowance(accountBalances[CURVE.addr].allowance)); // Needed for interacting with Curve.
+      dispatch(updateUniswapBeanAllowance(toTokenUnitsBN(accountBalances[BEAN.addr].allowance[`${account},${UNISWAP_V2_ROUTER}`], BEAN.decimals)));       // Needed for selling Beans on Uniswap
+      dispatch(updateBeanstalkBeanAllowance(toTokenUnitsBN(accountBalances[BEAN.addr].allowance[`${account},${BEANSTALK}`], BEAN.decimals)));   // Needed for depositing Beans, adding LP + Depositing from Beans or Bean/Eth, sowing in Beanstalk
+      dispatch(updateBeanstalkLPAllowance(toTokenUnitsBN(accountBalances[UNI_V2_ETH_BEAN_LP.addr].allowance, UNI_V2_ETH_BEAN_LP.decimals)));       // Needed for depositing LP from circulating
+      dispatch(updateBeanstalkUSDCAllowance(toTokenUnitsBN(accountBalances[USDC.addr].allowance, USDC.decimals)));   // Needed for contributing to a fundraiser.
+      dispatch(updateBeanstalkCurveAllowance(toTokenUnitsBN(accountBalances[CURVE.addr].allowance, CURVE.decimals))); // Needed for interacting with Curve.
       dispatch(setUserBalance({
-        claimableEthBalance: accountBalances[BEANSTALK].balanceOfEth,
+        claimableEthBalance: toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfEth, ETH.decimals),
         ethBalance: ethBalance,
-        beanBalance: accountBalances[BEAN.addr].balanceOf,
-        lpBalance: accountBalances[UNI_V2_ETH_BEAN_LP.addr].balanceOf,
-        curveBalance: accountBalances[CURVE_BEAN_3CRV_LP.addr].balanceOf,
-        seedBalance: accountBalances[BEANSTALK].balanceOfSeeds,
-        stalkBalance: accountBalances[BEANSTALK].balanceOfStalk,
+        beanBalance: toTokenUnitsBN(accountBalances[BEAN.addr].balanceOf, BEAN.decimals),
+        lpBalance: toTokenUnitsBN(accountBalances[UNI_V2_ETH_BEAN_LP.addr].balanceOf, UNI_V2_ETH_BEAN_LP.decimals),
+        curveBalance: toTokenUnitsBN(accountBalances[CURVE_BEAN_3CRV_LP.addr].balanceOf, CURVE.decimals),
+        seedBalance: toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfSeeds, SEEDS.decimals),
+        stalkBalance: toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfStalk, STALK.decimals),
         // locked, @DEPRECATED
         // lockedSeasons, @DEPRECATED
-        farmableBeanBalance: accountBalances[BEANSTALK].balanceOfFarmableBeans,
-        grownStalkBalance: accountBalances[BEANSTALK].balanceOfGrownStalk,
+        farmableBeanBalance: toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfFarmableBeans, BEAN.decimals),
+        grownStalkBalance: toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfGrownStalk, STALK.decimals),
         rootsBalance: accountBalances[BEANSTALK].balanceOfRoots,
-        usdcBalance: accountBalances[USDC.addr].balanceOf,
-        beanWrappedBalance: accountBalances[BEANSTALK].wrappedBeans,
+        usdcBalance: toTokenUnitsBN(accountBalances[USDC.addr].balanceOf, USDC.decimals),
+        beanWrappedBalance: toTokenUnitsBN(accountBalances[BEANSTALK].wrappedBeans, BEAN.decimals),
         //
         votedBips,
       }));
@@ -865,10 +865,10 @@ export default function Updater() {
       const eventParsingParameters : EventParsingParameters = [
         totalBalances[17].season  /* season */,
         totalBalances[13]         /* harvestableIndex */,
-        accountBalances[BEANSTALK].balanceOfFarmableBeans    /* farmableBeanBalance */,
-        accountBalances[BEANSTALK].balanceOfGrownStalk      /* grownStalkBalance */,
-        accountBalances[BEANSTALK].balanceOfEth        /* claimableEthBalance */,
-        accountBalances[BEANSTALK].wrappedBeans,      /* wrappedBeans */
+        toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfFarmableBeans, BEAN.decimals)    /* farmableBeanBalance */,
+        toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfGrownStalk, STALK.decimals)      /* grownStalkBalance */,
+        toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfEth, ETH.decimals)        /* claimableEthBalance */,
+        toTokenUnitsBN(accountBalances[BEANSTALK].wrappedBeans, BEAN.decimals),      /* wrappedBeans */
         beanReserve,
         ethReserve,
       ];
