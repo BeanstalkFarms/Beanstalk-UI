@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { WINTER_NFT_SUBGRAPH_API_LINK } from 'constants/index';
-import * as nftData from 'json/accounts2.json';
 
 // const APIURL = 'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.0'
 
@@ -127,15 +126,25 @@ export async function queryAccountNFTStats(account) {
   return user;
 }
 
-export async function loadNFTs(account) {
-  if (!nftData.default[account]) {
+type Nft = {
+  id: number;
+  metadataIpfsHash?: string;
+  imageIpfsHash?: string;
+  signature?: string;
+  account: string;
+  subcollection: string;
+}
+
+export async function loadNFTs(account: string) {
+  const nftData = (await import("../json/accounts2.json")).default as { [key: string] : Nft[] };
+  if (!nftData[account]) {
     return {
       genesis: [],
       winter: [],
     };
   }
-  const genesisNFTs = nftData.default[account].filter((n) => n.subcollection === 'Genesis');
-  const winterNFTs = nftData.default[account].filter((n) => n.subcollection === 'Winter');
+  const genesisNFTs = nftData[account].filter((n) => n.subcollection === 'Genesis');
+  const winterNFTs = nftData[account].filter((n) => n.subcollection === 'Winter');
   return {
     genesis: genesisNFTs,
     winter: winterNFTs,

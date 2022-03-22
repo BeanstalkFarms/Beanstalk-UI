@@ -95,6 +95,7 @@ export default function NftPicTable({
                     className={classes.lucidaStyle}
                   >
                     <img
+                      alt="beanft"
                       src={`${BASE_IPFS_LINK}${nftList[index].imageIpfsHash}`}
                       width="90px"
                       height="90px"
