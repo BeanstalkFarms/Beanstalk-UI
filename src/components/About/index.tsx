@@ -9,15 +9,16 @@ import {
 import { ContentSection, Grid } from 'components/Common';
 import { SvgCloudIcon } from './SvgCloudIcon';
 
+const cloudDivStyle = {
+  display: 'inline-flex',
+  justifyContent: 'center',
+  width: '100%',
+};
+const cloudStyle = {
+  maxWidth: '400px',
+};
+
 export default function About(props) {
-  const cloudDivStyle = {
-    display: 'inline-flex',
-    justifyContent: 'center',
-    width: '100%',
-  };
-  const cloudStyle = {
-    maxWidth: '400px',
-  };
   const sectionContentStyle = props.style;
   const showLandingPage = props.defaultSection !== undefined;
 
@@ -25,7 +26,7 @@ export default function About(props) {
     <>
       <ContentSection
         id="about"
-        style={showLandingPage ? { minHeight: '99vh' } : sectionContentStyle}
+        style={showLandingPage ? { minHeight: '0vh' } : sectionContentStyle}
         title={showLandingPage ? 'Beanstalk' : 'About'}
       >
         <Box style={{ minHeight: '330px', width: '100%', paddingTop: '90px' }}>

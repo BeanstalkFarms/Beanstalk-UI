@@ -218,6 +218,8 @@ export async function initialize(): Promise<boolean> {
     return false;
   }
 
+  console.log(`initialize: ${account}`);
+
   return true;
 }
 

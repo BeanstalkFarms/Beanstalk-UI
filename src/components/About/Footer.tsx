@@ -56,12 +56,18 @@ const useStyles = makeStyles({
     display: 'flex',
     alignContent: 'space-around',
     height: theme.groundHeight,
-    zIndex: 101,
+    zIndex: 11,
     position: 'fixed',
     bottom: 0,
     left: 0,
   },
 })
+
+const logoStyle = {
+  height: '25px',
+  width: '25px',
+  fill: theme.footer,
+};
 
 export default function Footer() {
   const { width } = useSelector<AppState, AppState['general']>(
@@ -69,12 +75,6 @@ export default function Footer() {
   );
 
   const classes = useStyles();
-
-  const logoStyle = {
-    height: '25px',
-    width: '25px',
-    fill: theme.footer,
-  };
 
   return (
     <>

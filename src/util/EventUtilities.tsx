@@ -8,6 +8,7 @@ import {
   txCallback,
   beanstalkContractReadOnlyWs,
   pairContractReadOnlyWs,
+  beanstalkContractReadOnly,
 } from './index';
 
 const IGNORED_EVENTS = new Set([
@@ -29,10 +30,7 @@ export async function initializeEventListener(
   updateTotals: Function
 ) {
   const startTime = benchmarkStart('EVENT LISTENER');
-
-  const beanstalk = beanstalkContractReadOnlyWs();
-  const beanPair = pairContractReadOnlyWs(UNI_V2_ETH_BEAN_LP);
-  const usdcPair = pairContractReadOnlyWs(UNI_V2_USDC_ETH_LP);
+  const beanstalk = beanstalkContractReadOnly();
 
   console.log('initializeEventListener: ', account);
 
@@ -141,8 +139,12 @@ export async function initializeEventListener(
   }
   listeningForEvents = true;
 
+  const beanstalkWs = beanstalkContractReadOnlyWs();
+  const beanPairWs = pairContractReadOnlyWs(UNI_V2_ETH_BEAN_LP);
+  const usdcPairWs = pairContractReadOnlyWs(UNI_V2_USDC_ETH_LP);
+
   /* Listen for new Contract events */
-  beanPair.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
+  beanPairWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
     if (error) {
       console.error(error);
       return;
@@ -157,7 +159,7 @@ export async function initializeEventListener(
       lastPriceRefresh = new Date().getTime();
     }
   });
-  usdcPair.events.Swap({ fromBlock: 'latest' }, (error: any) => {
+  usdcPairWs.events.Swap({ fromBlock: 'latest' }, (error: any) => {
     if (error) {
       console.error(error);
       return;
@@ -168,7 +170,7 @@ export async function initializeEventListener(
       lastPriceRefresh = new Date().getTime();
     }
   });
-  beanstalk.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
+  beanstalkWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
     if (error) {
       console.error(error);
       return;

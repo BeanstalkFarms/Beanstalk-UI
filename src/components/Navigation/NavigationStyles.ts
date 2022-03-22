@@ -16,6 +16,7 @@ export const useStyles = makeStyles({
     width: drawerWidth,
     flexShrink: 0,
     fontFamily: 'Futura',
+    zIndex: 12,
   },
   drawerPaper: {
     width: drawerWidth,

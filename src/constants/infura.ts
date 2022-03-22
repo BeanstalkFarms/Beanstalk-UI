@@ -13,6 +13,6 @@ export const INFURA_HTTPS_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
 };
 export const INFURA_WS_URLS: { [key in SupportedChainId]: string } = {
-  [SupportedChainId.MAINNET]: `ws://mainnet.infura.io/ws/v3/${INFURA_KEY}`,
-  [SupportedChainId.ROPSTEN]: `ws://ropsten.infura.io/ws/v3/${INFURA_KEY}`,
+  [SupportedChainId.MAINNET]: `wss://mainnet.infura.io/ws/v3/${INFURA_KEY}`,
+  [SupportedChainId.ROPSTEN]: `wss://ropsten.infura.io/ws/v3/${INFURA_KEY}`,
 };
