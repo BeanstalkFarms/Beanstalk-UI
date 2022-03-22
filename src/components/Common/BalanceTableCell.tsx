@@ -13,33 +13,33 @@ export default function BalanceTableCell({
   children,
   title,
 }) {
-    return (
-      <TableCell
-        align={align}
-        className={className}
-        style={{ color: color }}
+  return (
+    <TableCell
+      align={align}
+      className={className}
+      style={{ color: color }}
+    >
+      <FormatTooltip
+        placement="right"
+        title={title || `${displayFullBN(balance)} ${label}`}
       >
-        <FormatTooltip
-          placement="right"
-          title={title || `${displayFullBN(balance)} ${label}`}
-        >
-          {/* Allow some cells to set a custom table child. Default to showing provided balance.
-              This is for backwards compatibility with existing tables. Both need to be wrapped in
-              a <span> to ensure proper tooltip ref forwarding. */}
-          {children ? (
-            <span>
-              {children}
-              {icon ? <span>{icon}</span> : null}
-            </span>
-          ) : (
-            <span>
-              <span>{displayBN(balance)}</span>
-              {icon ? <span>{icon}</span> : null}
-            </span>
-          )}
-        </FormatTooltip>
-      </TableCell>
-    );
+        {/* Allow some cells to set a custom table child. Default to showing provided balance.
+            This is for backwards compatibility with existing tables. Both need to be wrapped in
+            a <span> to ensure proper tooltip ref forwarding. */}
+        {children ? (
+          <span>
+            {children}
+            {icon ? <span>{icon}</span> : null}
+          </span>
+        ) : (
+          <span>
+            <span>{displayBN(balance)}</span>
+            {icon ? <span>{icon}</span> : null}
+          </span>
+        )}
+      </FormatTooltip>
+    </TableCell>
+  );
 }
 
 BalanceTableCell.defaultProps = {

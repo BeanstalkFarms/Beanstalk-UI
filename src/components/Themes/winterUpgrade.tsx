@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function WinterUpgrade(props) {
+export default function WinterUpgrade(props: any) {
   const classes = useStyles();
   return (
     <>

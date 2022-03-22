@@ -122,13 +122,13 @@ const inOutDisplay = (inBN, inToken, outBN, outToken) => (
       <TokenTypeImageModule style={tokenImageStyle} token={inToken} />
     </span>
   </>
-  );
+);
 const outDisplay = (outBN, outToken) => (
   <>
     <span style={{ color: 'green' }}>{`+${displayBN(outBN)}`}</span>
     <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
   </>
-  );
+);
 
 /**
  *

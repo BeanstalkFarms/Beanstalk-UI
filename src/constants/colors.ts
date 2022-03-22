@@ -1,67 +1,28 @@
-import cloud from 'img/cloud-background.png';
-import darkCloud from 'img/dark/cloud-background-dark.png';
-import fallCloud from 'img/fall/cloud-background-fall.png';
 import mainCloud from 'img/main/cloud-navbar.png';
-import sun from 'img/Sun.svg';
-import darkSun from 'img/dark/Sun.svg';
-import fallSun from 'img/fall/Sun.svg';
-import winterSun from 'img/winter/Sun.svg';
 import mainSun from 'img/main/Sun.svg';
-import ground from 'img/ground.png';
-import darkGround from 'img/dark/ground.png';
-import fallGround from 'img/fall/ground.png';
-import winterGround from 'img/winter/ground.png';
 import mainGround from 'img/main/ground.png';
-import barn from 'img/Barn.svg';
-import darkBarn from 'img/dark/Barn.svg';
-import fallBarn from 'img/fall/Barn.svg';
-import winterBarn from 'img/winter/Barn.svg';
-import winterUpgradeBarn from 'img/winter/upgrade/Barn.svg';
 import mainBarn from 'img/main/Barn.svg';
 import bean from 'img/bean-bold-logo.svg';
-import beanWhite from 'img/bean-white-logo.svg';
 import springGround from 'img/spring/ground.svg';
 import rainbow from 'img/spring/rainbow.svg';
 
-const normalTheme = {
-  name: 'main',
-  primary: '#0E8837',
-  secondary: '#627264',
-  accentColor: '#9A9A9A',
-  bodyBackground: '#DAF2FF',
-  accentText: 'white',
-  border: 'rgba(224, 224, 224, 1)',
-  text: 'black',
-  backgroundText: 'black',
-  iconButtonColor: 'rgba(59, 59, 59, 0.8)',
-  linkColor: '#3B3B3B',
-  linkHoverColor: '#292929',
-  footer: '#000000',
-  voteSelect: '#DAF2FF',
-  activeSection: 'rgb(14, 136, 55)',
-  navSelection: '#61dafb38',
-  menuColor: 'white',
-  module: {
-    foreground: '#FFFFFF',
-    background: '#F5FAFF',
-    metaBackground: 'rgba(238 238 238 / 85%)',
-  },
-  cloud: cloud,
-  cloudColor: '#F5FAFF',
-  sun: sun,
-  sunHeight: '10vw',
-  sunLeftPosition: 20,
-  ground: ground,
-  groundSize: 'contain',
-  groundHeight: '82px',
-  groundItemHeight: 'calc(60px - 1vh)',
-  groundGrass: 'none',
-  barnHeight: '82px',
-  landHeight: '82px',
-  footerPadding: '18px 15px 0 0',
-  barn: barn,
-  bean: bean,
-};
+// import cloud from 'img/cloud-background.png';
+// import darkCloud from 'img/dark/cloud-background-dark.png';
+// import fallCloud from 'img/fall/cloud-background-fall.png';
+// import sun from 'img/Sun.svg';
+// import darkSun from 'img/dark/Sun.svg';
+// import fallSun from 'img/fall/Sun.svg';
+// import winterSun from 'img/winter/Sun.svg';
+// import ground from 'img/ground.png';
+// import darkGround from 'img/dark/ground.png';
+// import fallGround from 'img/fall/ground.png';
+// import winterGround from 'img/winter/ground.png';
+// import barn from 'img/Barn.svg';
+// import darkBarn from 'img/dark/Barn.svg';
+// import fallBarn from 'img/fall/Barn.svg';
+// import winterBarn from 'img/winter/Barn.svg';
+// import winterUpgradeBarn from 'img/winter/upgrade/Barn.svg';
+// import beanWhite from 'img/bean-white-logo.svg';
 
 const mainTheme = {
   name: 'main',
@@ -107,6 +68,62 @@ export const ropstenTheme = {
   name: 'ropsten',
   primary: '#FF4A8D',
   secondary: '#7A2343',
+};
+
+export const springTheme = {
+  ...mainTheme,
+  name: 'spring',
+  flowers: springGround,
+  rainbow: rainbow,
+};
+
+export let theme : any = springTheme;
+
+export function changeTheme(t: String) {
+  if (t === 'ropsten') theme = ropstenTheme;
+  else if (t === 'spring') theme = springTheme;
+  else theme = mainTheme;
+}
+
+/* 
+const normalTheme = {
+  name: 'main',
+  primary: '#0E8837',
+  secondary: '#627264',
+  accentColor: '#9A9A9A',
+  bodyBackground: '#DAF2FF',
+  accentText: 'white',
+  border: 'rgba(224, 224, 224, 1)',
+  text: 'black',
+  backgroundText: 'black',
+  iconButtonColor: 'rgba(59, 59, 59, 0.8)',
+  linkColor: '#3B3B3B',
+  linkHoverColor: '#292929',
+  footer: '#000000',
+  voteSelect: '#DAF2FF',
+  activeSection: 'rgb(14, 136, 55)',
+  navSelection: '#61dafb38',
+  menuColor: 'white',
+  module: {
+    foreground: '#FFFFFF',
+    background: '#F5FAFF',
+    metaBackground: 'rgba(238 238 238 / 85%)',
+  },
+  cloud: cloud,
+  cloudColor: '#F5FAFF',
+  sun: sun,
+  sunHeight: '10vw',
+  sunLeftPosition: 20,
+  ground: ground,
+  groundSize: 'contain',
+  groundHeight: '82px',
+  groundItemHeight: 'calc(60px - 1vh)',
+  groundGrass: 'none',
+  barnHeight: '82px',
+  landHeight: '82px',
+  footerPadding: '18px 15px 0 0',
+  barn: barn,
+  bean: bean,
 };
 
 export const spookyTheme = {
@@ -253,24 +270,4 @@ export const winterUpgradeTheme = {
   footerPadding: '28px 15px 0 0',
   barn: winterUpgradeBarn,
   bean: beanWhite,
-};
-
-export const springTheme = {
-  ...mainTheme,
-  name: 'spring',
-  flowers: springGround,
-  rainbow: rainbow,
-};
-
-export let theme = springTheme;
-
-export function changeTheme(t: String) {
-  if (t === 'ropsten') theme = ropstenTheme;
-  else if (t === 'spooky') theme = spookyTheme;
-  else if (t === 'fall') theme = fallTheme;
-  else if (t === 'winter') theme = winterTheme;
-  else if (t === 'winterUpgrade') theme = winterUpgradeTheme;
-  else if (t === 'main') theme = mainTheme;
-  else if (t === 'spring') theme = springTheme;
-  else theme = normalTheme;
-}
+}; */

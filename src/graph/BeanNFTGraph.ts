@@ -1,8 +1,6 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { WINTER_NFT_SUBGRAPH_API_LINK } from 'constants/index';
 
-// const APIURL = 'https://api.studio.thegraph.com/query/6727/bean-nft/v1.0.0'
-
 const client = new ApolloClient({
   uri: WINTER_NFT_SUBGRAPH_API_LINK,
   cache: new InMemoryCache(),
