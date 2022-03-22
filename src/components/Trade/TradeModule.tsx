@@ -1,22 +1,14 @@
 import React from 'react';
-// import BigNumber from 'bignumber.js';
-// import { useSelector } from 'react-redux';
 import { SwapWidget } from '@uniswap/widgets/dist/index.js';
 import { Grid, makeStyles } from '@material-ui/core';
 import '@uniswap/widgets/dist/fonts.css';
 
-// import { AppState } from 'state';
 import { BEAN, DAI, TETHER, USDC } from 'constants/index';
 import {
-  // toStringBaseUnitBN,
-  // transferBeans,
   web3Provider,
   getRpcEndpoint,
   chainId
 } from 'util/index';
-
-// import { tradeStrings } from 'components/Common';
-// import TransactionToast from 'components/Common/TransactionToast';
 
 const WIDGET_TOKEN_LIST = [
   // List of top tokens on Uniswap V2 that have liquidity.
@@ -124,7 +116,7 @@ const useStyles = makeStyles(() => ({
 const swapWidgetTheme = {
   tokenColorExtraction: false,
   borderRadius: 15,
-  // container: "transparent", // main background
+  // container: "transparent",    // main background
   // module: "hsl(231,14%,92%)", // defaut hsl(231,14%,90%)
 };
 
