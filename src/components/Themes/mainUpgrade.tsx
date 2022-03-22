@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     position: 'fixed',
     bottom: '24px',
   },
-})
+});
 
 export default function MainUpgrade(props: any) {
   const classes = useStyles();
