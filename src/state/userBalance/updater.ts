@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
 import { EventData } from 'web3-eth-contract';
-import { Beanstalk, MulticallResult, UNISWAP_V2_ROUTER } from 'beanstalk-sdk';
+import { Beanstalk, CURVE_BEAN_3CRV_LP, MulticallResult, UNISWAP_V2_ROUTER } from 'beanstalk-sdk';
 
 import {
   updateBeanstalkBeanAllowance,
@@ -162,20 +162,20 @@ export default function Updater() {
       dispatch(updateBeanstalkUSDCAllowance(accountBalances[USDC.addr].allowance));   // Needed for contributing to a fundraiser.
       dispatch(updateBeanstalkCurveAllowance(accountBalances[CURVE.addr].allowance)); // Needed for interacting with Curve.
       dispatch(setUserBalance({
-        claimableEthBalance: accountBalances[BEANSTALK].claimableEthBalance,
-        ethBalance: accountBalances[BEANSTALK].ethBalance,
-        beanBalance: accountBalances[BEANSTALK].beanBalance,
-        lpBalance: accountBalances[BEANSTALK].lpBalance,
-        curveBalance: accountBalances[BEANSTALK].curveBalance,
-        seedBalance: accountBalances[BEANSTALK].seedBalance,
-        stalkBalance: accountBalances[BEANSTALK].stalkBalance,
+        claimableEthBalance: accountBalances[BEANSTALK].balanceOfEth,
+        ethBalance: ethBalance,
+        beanBalance: accountBalances[BEAN.addr].balanceOf,
+        lpBalance: accountBalances[UNI_V2_ETH_BEAN_LP.addr].balanceOf,
+        curveBalance: accountBalances[CURVE_BEAN_3CRV_LP.addr].balanceOf,
+        seedBalance: accountBalances[BEANSTALK].balanceOfSeeds,
+        stalkBalance: accountBalances[BEANSTALK].balanceOfStalk,
         // locked, @DEPRECATED
         // lockedSeasons, @DEPRECATED
-        farmableBeanBalance: accountBalances[BEANSTALK].farmableBeanBalance,
-        grownStalkBalance: accountBalances[BEANSTALK].grownStalkBalance,
-        rootsBalance: accountBalances[BEANSTALK].rootsBalance,
-        usdcBalance: accountBalances[BEANSTALK].usdcBalance,
-        beanWrappedBalance: accountBalances[BEANSTALK].beanWrappedBalance,
+        farmableBeanBalance: accountBalances[BEANSTALK].balanceOfFarmableBeans,
+        grownStalkBalance: accountBalances[BEANSTALK].balanceOfGrownStalk,
+        rootsBalance: accountBalances[BEANSTALK].balanceOfRoots,
+        usdcBalance: accountBalances[USDC.addr].balanceOf,
+        beanWrappedBalance: accountBalances[BEANSTALK].wrappedBeans,
         //
         votedBips,
       }));
@@ -866,8 +866,8 @@ export default function Updater() {
         totalBalances[17].season  /* season */,
         totalBalances[13]         /* harvestableIndex */,
         accountBalances[BEANSTALK].balanceOfFarmableBeans    /* farmableBeanBalance */,
-        accountBalances[BEANSTALK].balanceOfStalk      /* grownStalkBalance */,
-        accountBalances[BEANSTALK].claimableEthBalance        /* claimableEthBalance */,
+        accountBalances[BEANSTALK].balanceOfGrownStalk      /* grownStalkBalance */,
+        accountBalances[BEANSTALK].balanceOfEth        /* claimableEthBalance */,
         accountBalances[BEANSTALK].wrappedBeans,      /* wrappedBeans */
         beanReserve,
         ethReserve,
