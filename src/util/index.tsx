@@ -90,7 +90,7 @@ export const pairContractReadOnly = (pair: SupportedToken) =>
   new web3.eth.Contract(uniswapPairAbi, pair.addr);
 export const pairContractReadOnlyWs = (pair: SupportedToken) =>
   new web3Ws.eth.Contract(uniswapPairAbi, pair.addr);
-    
+
 export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
 
@@ -120,9 +120,9 @@ async function initWalletListeners() {
 }
 
 /**
- * 
- * @param _chainId 
- * @returns 
+ *
+ * @param _chainId
+ * @returns
  */
 export function getRpcEndpoint(_chainId: SupportedChainId) {
   return INFURA_HTTPS_URLS[_chainId];
@@ -130,18 +130,18 @@ export function getRpcEndpoint(_chainId: SupportedChainId) {
 
 /**
  * Switch our RPC endpoint
- * @param _chainId 
+ * @param _chainId
  */
 export async function switchChain(_chainId: SupportedChainId) {
   if (!onboard) throw new Error('Onboard is not yet initialized.');
   const currentState = onboard.state.get();
-  
+
   // Update chain information, tokens, theme
   chainId = _chainId;
   changeTokenAddresses(chainId);
-  if (chainId === 1) changeTheme('winterUpgrade');
+  if (chainId === 1) changeTheme('spring');
   if (chainId === 3) changeTheme('ropsten');
-  
+
   // Create web3 / ethers instances.
   const rpcUrl = getRpcEndpoint(chainId);
   web3 = new Web3(
@@ -164,14 +164,14 @@ function getPreviouslyConnectedWallets() : null | string[] {
 }
 
 /**
- * 
+ *
  */
 export async function initialize(): Promise<boolean> {
   if (!onboard) {
     console.warn('initialize: missing onboard instance');
     return false;
   }
-  
+
   // Setup wallet change listener
   const walletsSub = onboard.state.select('wallets');
   walletsSub.subscribe((wallets) => {
@@ -184,10 +184,10 @@ export async function initialize(): Promise<boolean> {
 
   // Check if we've previously connected a wallet.
   const previouslyConnectedWallets = getPreviouslyConnectedWallets();
-  
+
   // Request a wallet connection.
   const wallets = await onboard.connectWallet({
-    autoSelect: (previouslyConnectedWallets && previouslyConnectedWallets[0]) 
+    autoSelect: (previouslyConnectedWallets && previouslyConnectedWallets[0])
       ? {
         label: previouslyConnectedWallets[0],
         disableModals: true,
@@ -202,12 +202,12 @@ export async function initialize(): Promise<boolean> {
   }
 
   // Convert the hex chain ID returned by web3-onboard
-  // into our decimal format. Switch 
+  // into our decimal format. Switch
   const chainHexId = wallets[0].chains[0].id;
   chainId = parseInt(chainHexId, 16);
   switchChain(chainId);
   account = wallets[0].accounts[0].address;
-  
+
   // Listen for events emitted by the wallet provider.
   initWalletListeners();
 
@@ -234,7 +234,7 @@ export async function disconnect() {
 }
 
 /**
- * 
+ *
  */
 export async function switchToMainnet() {
   if (!onboard) throw new Error('Onboard is not yet initialized.');
@@ -242,7 +242,7 @@ export async function switchToMainnet() {
 }
 
 /**
- * 
+ *
  */
 export async function watchToken() {
   if (!onboard) throw new Error('Onboard is not yet initialized.');
