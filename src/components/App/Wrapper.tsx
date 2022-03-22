@@ -82,6 +82,15 @@ export default function Main() {
     zIndex: -101,
   };
 
+  const rainbowStyle = {
+    width: '125vw',
+    left: '-10vw',
+    top: 150,
+    opacity: '0.2',
+    position: 'fixed',
+    zIndex: -101,
+  };
+
   return (
     <Box className="App">
       {/* Barn (bottom left corner) */}
@@ -114,6 +123,7 @@ export default function Main() {
       ) : null} */}
       {/* Sun (top left corner) */}
       <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
+      {!theme.rainbow ? null : <img alt="Rainbow Icon" src={theme.rainbow} style={rainbowStyle} />}
     </Box>
   );
 }
