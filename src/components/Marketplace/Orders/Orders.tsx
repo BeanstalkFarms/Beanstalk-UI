@@ -4,13 +4,13 @@ import _ from 'lodash';
 import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
-import { PodOrder } from 'state/marketplace/reducer';
 import { displayBN, FarmAsset, getWalletAddress } from 'util/index';
+import { PodOrder } from 'state/marketplace/reducer';
 import { AppState } from 'state';
 import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
-
 import TokenIcon from 'components/Common/TokenIcon';
 import FillOrderModal from 'components/Marketplace/Orders/FillOrderModal';
+
 import OrdersTable from './OrdersTable';
 import Filters, { StyledSlider } from '../Filters';
 

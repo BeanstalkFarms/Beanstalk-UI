@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import Snowfall from 'react-snowfall';
+// import Snowfall from 'react-snowfall';
+
 import { AppState } from 'state';
 import { theme } from 'constants/index';
 import './index.tsx';
@@ -103,14 +104,14 @@ export default function Main() {
           <div id="cloud2" className="cloud-2" />
         </>
       ) : null}
-      {theme.name === 'winter' ? (
+      {/* {theme.name === 'winter' ? (
         <Snowfall
           snowflakeCount={200}
           speed={[0, 0.5]}
           wind={[-0.5, 0.5]}
           style={{ position: 'fixed' }}
         />
-      ) : null}
+      ) : null} */}
       {/* Sun (top left corner) */}
       <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
     </Box>
