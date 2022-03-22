@@ -1,4 +1,3 @@
-import type { EIP1193Provider, ChainListener } from '@web3-onboard/common';
 import Onboard, { OnboardAPI } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
 import { InjectedNameSpace, InjectedWalletModule } from '@web3-onboard/injected-wallets/dist/types';
@@ -8,14 +7,14 @@ import trezorModule from '@web3-onboard/trezor';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import walletLinkModule from '@web3-onboard/walletlink';
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
-import { INFURA_NETWORK_URLS } from 'constants/infura';
+import { INFURA_HTTPS_URLS } from 'constants/infura';
 
 import tallyIconUrl from 'img/tally-icon.svg';
 
 const getChainInfo = (_chainId: SupportedChainId) => ({
   token: CHAIN_INFO[_chainId].nativeCurrency.symbol,
   label: CHAIN_INFO[_chainId].label,
-  rpcUrl: INFURA_NETWORK_URLS[_chainId],
+  rpcUrl: INFURA_HTTPS_URLS[_chainId],
 });
 
 //
@@ -29,7 +28,10 @@ if (!onboard) {
     // The `_: any` fixes a validation error returned by @web3-onboard/core 
     // if getIcon and getInterface have arity = 0.
     // @ts-ignore
-    getIcon: async (_: any) => tallyIconUrl,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getIcon: async (_: any) => tallyIconUrl, 
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getInterface: async (_: any) => {
       const provider = createEIP1193Provider(
         // @ts-ignore

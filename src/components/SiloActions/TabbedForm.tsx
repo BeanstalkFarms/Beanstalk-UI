@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 
 import { AppState } from 'state';
 import { theme } from 'constants/index';
-import TOKENS, { SiloToken } from 'constants/siloTokens';
+import { SiloToken } from 'constants/siloTokens';
 import { BaseModule, Grid, siloStrings } from 'components/Common';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';

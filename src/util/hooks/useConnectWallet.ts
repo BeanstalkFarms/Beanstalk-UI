@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react';
 
 import type {
   OnboardAPI,
@@ -6,7 +6,7 @@ import type {
   DisconnectOptions,
   WalletState,
   // ConnectedChain
-} from '@web3-onboard/core'
+} from '@web3-onboard/core';
 
 // import { Chain } from '@web3-onboard/common'
 
@@ -17,10 +17,10 @@ export const useConnectWallet = (): [
   (options: ConnectOptions) => Promise<void>,
   (wallet: DisconnectOptions) => Promise<void>
 ] => {
-  if (!web3Onboard) throw new Error('Must initialize before using hooks.')
+  if (!web3Onboard) throw new Error('Must initialize before using hooks.');
 
-  const [wallet, setConnectedWallet] = useState<WalletState | null>(null)
-  const [connecting, setConnecting] = useState(false)
+  const [wallet, setConnectedWallet] = useState<WalletState | null>(null);
+  const [connecting, setConnecting] = useState(false);
 
   useEffect(() => {
     const subscription = (web3Onboard as OnboardAPI).state
@@ -32,35 +32,35 @@ export const useConnectWallet = (): [
         } else {
           updatedWallet = wallets.find(
             ({ label }) => label === wallet.label
-          )
+          );
         }
-        updatedWallet && setConnectedWallet(updatedWallet)
-      })
+        updatedWallet && setConnectedWallet(updatedWallet);
+      });
 
-    return () => subscription.unsubscribe()
-  }, [wallet])
+    return () => subscription.unsubscribe();
+  }, [wallet]);
 
   const connect = useCallback(async (options: ConnectOptions) => {
-    setConnecting(true)
+    setConnecting(true);
 
     const [connectedWallet] = await (web3Onboard as OnboardAPI).connectWallet(
       options
-    )
+    );
 
-    setConnecting(false)
-    setConnectedWallet(connectedWallet || null)
-  }, [])
+    setConnecting(false);
+    setConnectedWallet(connectedWallet || null);
+  }, []);
 
   const disconnect = useCallback(async ({ label }) => {
-    setConnecting(true)
+    setConnecting(true);
 
-    await (web3Onboard as OnboardAPI).disconnectWallet({ label })
+    await (web3Onboard as OnboardAPI).disconnectWallet({ label });
 
-    setConnectedWallet(null)
-    setConnecting(false)
-  }, [])
+    setConnectedWallet(null);
+    setConnecting(false);
+  }, []);
 
-  return [{ wallet, connecting }, connect, disconnect]
+  return [{ wallet, connecting }, connect, disconnect];
 
 // export const useConnectWallet = (): [
 //   { wallet: WalletState | null; connecting: boolean },
@@ -109,7 +109,7 @@ export const useConnectWallet = (): [
 //   }, [])
 
 //   return [{ wallet, connecting }, connect, disconnect]
-}
+};
 
 // type SetChainOptions = {
 //   chainId: string

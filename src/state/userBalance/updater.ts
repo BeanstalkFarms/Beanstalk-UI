@@ -54,8 +54,8 @@ import {
   benchmarkStart,
   benchmarkEnd,
 } from 'util/index';
+// import { useConnectWallet } from 'util/hooks/useConnectWallet';
 import { UserBalanceState } from './reducer';
-import { useConnectWallet } from 'util/hooks/useConnectWallet';
 
 type EventParsingParameters = [
   season: AppState['season']['season'],
@@ -110,7 +110,7 @@ export default function Updater() {
   const dispatch = useDispatch();
 
   //
-  const [{ wallet }] = useConnectWallet()
+  // const [{ wallet }] = useConnectWallet();
 
   // Global state
   const userBalance = useSelector<AppState, AppState['userBalance']>(

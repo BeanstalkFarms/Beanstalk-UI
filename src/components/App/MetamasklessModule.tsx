@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Grid, Button, Link } from '@material-ui/core';
 import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
-import { METAMASK_LINK, HOW_TO_MM_PATH } from 'constants/index';
+import { METAMASK_LINK } from 'constants/index';
 import { SvgCloudIcon } from 'components/About/SvgCloudIcon';
 import About from 'components/About';
 

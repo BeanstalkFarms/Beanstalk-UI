@@ -1,27 +1,10 @@
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Box } from '@material-ui/core';
-import { useTooltip, Tooltip } from '@visx/tooltip';
-import { Text } from '@visx/text';
-import { Circle } from '@visx/shape';
-import { withParentSize } from '@visx/responsive';
-import { AxisBottom, AxisLeft } from '@visx/axis';
-import { scaleLinear } from '@visx/scale';
-import { localPoint } from '@visx/event';
-import { Zoom, applyMatrixToPoint } from '@visx/zoom';
-import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
-
-import { theme as colorTheme } from 'constants/index';
+import { useTooltip } from '@visx/tooltip';
 import { AppState } from 'state';
 import { AnimatedLineSeries, Axis, XYChart } from '@visx/xychart';
-import { curveNatural } from '@visx/curve';
-import { GraphListingTooltip } from './GraphTooltips';
 
-type GraphModuleProps = {
-  setCurrentListing: Function;
-}
-
-export default function Graph2Module(props: GraphModuleProps) {
+export default function Graph2Module() {
   const graphHeight = 350;
   const leftAxisWidth = 70;
   const bottomAxisHeight = 50;

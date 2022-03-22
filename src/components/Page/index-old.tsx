@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+// import { useHistory } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import { ContentTitle, SectionTabs } from 'components/Common';
 
@@ -13,11 +13,11 @@ const pageStyle = {
 export default function Page({
   sections,
   sectionTitles,
-  routeTitle,
+  // routeTitle,
   textTransform,
   sectionNumber = 0,
   hideTitles = false,
-  noRedirect = false,
+  // noRedirect = false,
 }) {
   const [section, setSection] = useState(sectionNumber);
   // const history = useHistory();

@@ -15,7 +15,7 @@ import {
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
-import { INFURA_NETWORK_URLS } from 'constants/infura';
+import { INFURA_HTTPS_URLS, INFURA_WS_URLS } from 'constants/infura';
 import onboard from './onboard';
 
 export * from './EventUtilities';
@@ -38,6 +38,7 @@ export let initializing;
 /** txCallback is called after each successful request to the chain. */
 export let txCallback : Function | undefined;
 export let web3 : Web3;
+export let web3Ws : Web3;
 export let account : string;
 export let metamaskFailure = -1;
 export let chainId : SupportedChainId = 1;
@@ -68,9 +69,10 @@ export const beanstalkPriceContractReadOnly = () =>
 
 export const beanstalkContract = () =>
   new ethers.Contract(BEANSTALK, beanstalkAbi, web3Signer);
-
 export const beanstalkContractReadOnly = () =>
   new web3.eth.Contract(beanstalkAbi, BEANSTALK);
+export const beanstalkContractReadOnlyWs = () =>
+  new web3Ws.eth.Contract(beanstalkAbi, BEANSTALK);
 
 export const beaNFTContract = () =>
   new ethers.Contract(BEANFTCOLLECTION, beaNFTAbi, web3Signer);
@@ -86,7 +88,9 @@ export const pairContract = (pair: SupportedToken) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
 export const pairContractReadOnly = (pair: SupportedToken) =>
   new web3.eth.Contract(uniswapPairAbi, pair.addr);
-
+export const pairContractReadOnlyWs = (pair: SupportedToken) =>
+  new web3Ws.eth.Contract(uniswapPairAbi, pair.addr);
+    
 export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
 
@@ -121,7 +125,7 @@ async function initWalletListeners() {
  * @returns 
  */
 export function getRpcEndpoint(_chainId: SupportedChainId) {
-  return INFURA_NETWORK_URLS[_chainId];
+  return INFURA_HTTPS_URLS[_chainId];
 }
 
 /**
@@ -140,7 +144,12 @@ export async function switchChain(_chainId: SupportedChainId) {
   
   // Create web3 / ethers instances.
   const rpcUrl = getRpcEndpoint(chainId);
-  web3 = new Web3(new Web3.providers.HttpProvider(rpcUrl));
+  web3 = new Web3(
+    new Web3.providers.HttpProvider(rpcUrl)
+  );
+  web3Ws = new Web3(
+    new Web3.providers.WebsocketProvider(INFURA_WS_URLS[chainId])
+  );
   web3Provider = new ethers.providers.Web3Provider(
     currentState.wallets[0].provider,   // the provider instance from web3-onboard
     CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
@@ -165,7 +174,7 @@ export async function initialize(): Promise<boolean> {
   
   // Setup wallet change listener
   const walletsSub = onboard.state.select('wallets');
-  const { unsubscribe } = walletsSub.subscribe((wallets) => {
+  walletsSub.subscribe((wallets) => {
     const connectedWallets = wallets.map(({ label }) => label);
     window.localStorage.setItem(
       'connectedWallets',
@@ -187,7 +196,7 @@ export async function initialize(): Promise<boolean> {
   });
 
   if (!wallets || wallets.length === 0) {
-    console.log(`No wallets found.`)
+    console.log('No wallets found.');
     metamaskFailure = 2;
     return false;
   }

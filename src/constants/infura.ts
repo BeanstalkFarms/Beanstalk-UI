@@ -8,7 +8,11 @@ if (typeof INFURA_KEY === 'undefined') {
 /**
  * These are the network URLs used by the interface when there is not another available source of chain data
  */
-export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {
+export const INFURA_HTTPS_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
+};
+export const INFURA_WS_URLS: { [key in SupportedChainId]: string } = {
+  [SupportedChainId.MAINNET]: `ws://mainnet.infura.io/ws/v3/${INFURA_KEY}`,
+  [SupportedChainId.ROPSTEN]: `ws://ropsten.infura.io/ws/v3/${INFURA_KEY}`,
 };
