@@ -58,7 +58,7 @@ export default function MetamasklessModule() {
             onClick={async () => {
               const initialized = await initialize();
               if (initialized) {
-                history.replace('/silo');
+                history.push('/');
               }
             }}
             style={connectMetaStyle}

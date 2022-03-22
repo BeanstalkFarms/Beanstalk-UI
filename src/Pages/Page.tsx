@@ -17,6 +17,7 @@ export default function Page({
 
   useEffect(() => {
     if (!noRedirect) {
+      console.log(`!noRedirect`, routeTitle, sectionTitles)
       history.push(`${(!routeTitle ? sectionTitles[section] : routeTitle).toLowerCase().replace(/ /g, '')}`);
     }
   });
