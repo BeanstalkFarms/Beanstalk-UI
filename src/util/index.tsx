@@ -11,7 +11,7 @@ import {
   changeTheme,
 } from 'constants/index';
 import {
-  BEAN, changeAddresses
+  BEAN, changeTokenAddresses
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
@@ -33,7 +33,6 @@ export * from './BeaNFTUtilities';
 export * from './APYUtilities';
 export * from './FundraiserUtilities';
 export * from './MarketUtilities';
-
 
 export let initializing;
 /** txCallback is called after each successful request to the chain. */
@@ -104,7 +103,7 @@ export const curveContractReadOnly = () =>
  * Listen for events emitted by the current provider.
  */
 async function initWalletListeners() {
-  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  if (!onboard) throw new Error('Onboard is not yet initialized.');
   const currentState = onboard.state.get();
   const provider = currentState.wallets[0].provider;
 
@@ -130,12 +129,12 @@ export function getRpcEndpoint(_chainId: SupportedChainId) {
  * @param _chainId 
  */
 export async function switchChain(_chainId: SupportedChainId) {
-  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  if (!onboard) throw new Error('Onboard is not yet initialized.');
   const currentState = onboard.state.get();
   
   // Update chain information, tokens, theme
   chainId = _chainId;
-  changeAddresses(chainId);
+  changeTokenAddresses(chainId);
   if (chainId === 1) changeTheme('winterUpgrade');
   if (chainId === 3) changeTheme('ropsten');
   
@@ -159,43 +158,38 @@ function getPreviouslyConnectedWallets() : null | string[] {
  * 
  */
 export async function initialize(): Promise<boolean> {
-  if(metamaskFailure > -1) {
-    console.warn(`initialize: already executed.`)
-    return false;
-  }
-
-  if(!onboard) {
+  if (!onboard) {
     console.warn('initialize: missing onboard instance');
     return false;
   }
   
   // Setup wallet change listener
-  const walletsSub = onboard.state.select('wallets')
+  const walletsSub = onboard.state.select('wallets');
   const { unsubscribe } = walletsSub.subscribe((wallets) => {
-    const connectedWallets = wallets.map(({ label }) => label)
+    const connectedWallets = wallets.map(({ label }) => label);
     window.localStorage.setItem(
       'connectedWallets',
       JSON.stringify(connectedWallets)
-    )
+    );
   });
 
   // Check if we've previously connected a wallet.
   const previouslyConnectedWallets = getPreviouslyConnectedWallets();
   
   // Request a wallet connection.
-  let wallets;
-  try {
-    wallets = await onboard.connectWallet({
-      autoSelect: (previouslyConnectedWallets && previouslyConnectedWallets[0]) 
-        ? {
-          label: previouslyConnectedWallets[0],
-          disableModals: true,
-        }
-        : undefined,
-    });
-  } catch(e) {
-    console.error(e);
-    wallets = await onboard.connectWallet();
+  const wallets = await onboard.connectWallet({
+    autoSelect: (previouslyConnectedWallets && previouslyConnectedWallets[0]) 
+      ? {
+        label: previouslyConnectedWallets[0],
+        disableModals: true,
+      }
+      : undefined,
+  });
+
+  if (!wallets || wallets.length === 0) {
+    console.log(`No wallets found.`)
+    metamaskFailure = 2;
+    return false;
   }
 
   // Convert the hex chain ID returned by web3-onboard
@@ -210,17 +204,16 @@ export async function initialize(): Promise<boolean> {
 
   //
   if (account === undefined) {
-    console.log(`initialize: account = undefined`);
+    console.log('initialize: account = undefined');
     metamaskFailure = 2;
     return false;
   }
 
-  metamaskFailure = 1;
   return true;
 }
 
 export async function disconnect() {
-  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  if (!onboard) throw new Error('Onboard is not yet initialized.');
   const state = onboard.state.get();
   window.localStorage.removeItem('connectedWallets');
   await onboard.disconnectWallet({
@@ -233,7 +226,7 @@ export async function disconnect() {
  * 
  */
 export async function switchToMainnet() {
-  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  if (!onboard) throw new Error('Onboard is not yet initialized.');
   return onboard.setChain({ chainId: '0x1' });
 }
 
@@ -241,7 +234,7 @@ export async function switchToMainnet() {
  * 
  */
 export async function watchToken() {
-  if(!onboard) throw new Error('Onboard is not yet initialized.');
+  if (!onboard) throw new Error('Onboard is not yet initialized.');
   const currentState = onboard.state.get();
   const provider = currentState.wallets[0].provider;
 

@@ -862,8 +862,8 @@ export default function WalletModule() {
                       fullWidth
                       variant="text"
                       style={{
-                        fontWeight: "bold",
-                        textTransform: "none"
+                        fontWeight: 'bold',
+                        textTransform: 'none'
                       }}
                       onClick={() => disconnect()}
                     >

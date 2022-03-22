@@ -34,7 +34,7 @@ export async function initializeEventListener(
   const beanPair = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const usdcPair = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
 
-  console.log(`initializeEventListener: `, account)
+  console.log('initializeEventListener: ', account);
 
   const accountEvents = await Promise.all([
     beanstalk.getPastEvents('BeanDeposit', {
@@ -118,12 +118,12 @@ export async function initializeEventListener(
       fromBlock: 0,
     }),
   ]).catch((err) => {
-    console.error(`initializeEventListener: failed to fetch accountEvents`, err)
+    console.error('initializeEventListener: failed to fetch accountEvents', err);
     throw err;
   }).then((result) => {
-    console.log(`initializeEventListener: fetched accountEvents`, result)
+    console.log('initializeEventListener: fetched accountEvents', result);
     return result;
-  })
+  });
 
   // eslint-disable-next-line
   let allEvents : any[] = [].concat.apply([], accountEvents);

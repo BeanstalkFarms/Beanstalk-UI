@@ -8,7 +8,7 @@ export enum SupportedChainId {
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
   [SupportedChainId.ROPSTEN]: 'ropsten',
-}
+};
 
 export enum NetworkType {
   L1,
@@ -23,14 +23,14 @@ export const L1_CHAIN_IDS = [
   // SupportedChainId.KOVAN,
   // SupportedChainId.POLYGON,
   // SupportedChainId.POLYGON_MUMBAI,
-] as const
+] as const;
 
 export const L2_CHAIN_IDS = [
   // SupportedChainId.ARBITRUM_ONE,
   // SupportedChainId.ARBITRUM_RINKEBY,
   // SupportedChainId.OPTIMISM,
   // SupportedChainId.OPTIMISTIC_KOVAN,
-] as const
+] as const;
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]

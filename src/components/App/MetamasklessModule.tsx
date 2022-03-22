@@ -47,24 +47,24 @@ export default function MetamasklessModule() {
   } else {
     metamaskModule = (
       <Grid container item xs={12}>
-        <Grid item xs={12} style={{ minHeight: '150px' }}>
+        {/* <Grid item xs={12} style={{ minHeight: '150px' }}>
           <Link href={HOW_TO_MM_PATH} color="inherit" target="blank">
             <SvgCloudIcon color="white" text="Connect Metamask" />
           </Link>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <Button
             color="primary"
             onClick={async () => {
               const initialized = await initialize();
               if (initialized) {
-                history.push('/');
+                history.replace('/silo');
               }
             }}
             style={connectMetaStyle}
             variant="contained"
           >
-            Connect Metamask
+            Connect Wallet
           </Button>
         </Grid>
       </Grid>

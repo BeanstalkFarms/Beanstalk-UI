@@ -99,7 +99,7 @@ const setupBatch = (batch: BatchRequest, tag: string) => (
             contractAddress: fn._parent._address,
             result,
             error,
-          })
+          });
           if (result !== undefined) {
             return resolve(result);
           }
@@ -193,11 +193,11 @@ export const getAccountBalances = async (batch: BatchRequest) => {
   return (
     promises
       .catch((err) => {
-        console.error(`getAccountBalances: failed to execute`, err)
+        console.error('getAccountBalances: failed to execute', err);
         throw err;
       })
       .then((result) => {
-        console.log(`getAccountBalances: returned without error`)
+        console.log('getAccountBalances: returned without error');
         return result;
       })
   );
@@ -278,11 +278,11 @@ export const getTotalBalances = async (batch: BatchRequest) => {
   return (
     promises
       .catch((err) => {
-        console.error(`getTotalBalances: failed to execute`, err)
+        console.error('getTotalBalances: failed to execute', err);
         throw err;
       })
       .then((result) => {
-        console.log(`getTotalBalances: returned without error`)
+        console.log('getTotalBalances: returned without error');
         return result;
       })
   );
@@ -478,11 +478,11 @@ export const getPrices = async (batch: BatchRequest) => {
   return (
     Promise.all(promises)
       .catch((err) => {
-        console.error(`getPrices: failed to execute`, err)
+        console.error('getPrices: failed to execute', err);
         throw err;
       })
       .then((result) => {
-        console.log(`getPrices: returned without error`)
+        console.log('getPrices: returned without error');
         return result;
       })
   );

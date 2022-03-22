@@ -55,6 +55,7 @@ import {
   benchmarkEnd,
 } from 'util/index';
 import { UserBalanceState } from './reducer';
+import { useConnectWallet } from 'util/hooks/useConnectWallet';
 
 type EventParsingParameters = [
   season: AppState['season']['season'],
@@ -107,6 +108,9 @@ function lpReservesForTokenReserves(
 export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
+
+  //
+  const [{ wallet }] = useConnectWallet()
 
   // Global state
   const userBalance = useSelector<AppState, AppState['userBalance']>(
@@ -873,12 +877,12 @@ export default function Updater() {
         getEthPrices(),         // 8
         getPriceArray()         // 9
       ]).catch((err) => {
-        console.error(`userBalance/updater: updateBalancesAndPrices failed`, err)
+        console.error('userBalance/updater: updateBalancesAndPrices failed', err);
         throw err;
       }).then((result) => {
-        console.log(`userBalance/updater: updateBalancesAndPrices returned result`, result)
+        console.log('userBalance/updater: updateBalancesAndPrices returned result', result);
         return result;
-      })
+      });
 
       //
       benchmarkEnd('ALL BALANCES', startTime);

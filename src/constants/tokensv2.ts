@@ -1,5 +1,4 @@
 import { Token } from 'classes';
-import { SupportedChainId } from './chains';
 
 // Beanstalk
 // address: string, chainId: number, decimals: number, symbol?: string, name?: string, logo?: string
@@ -9,6 +8,7 @@ import usdcLogoUrl from 'img/usdc-logo.svg';
 import daiLogoUrl from 'img/dai-logo.svg';
 import usdtLogoUrl from 'img/usdt-logo.svg';
 import crv3LogoUrl from 'img/crv3-logo.svg';
+import { SupportedChainId } from './chains';
 
 export const Bean = new Token(
   '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',

@@ -8,7 +8,6 @@ import { Toaster } from 'react-hot-toast';
 
 import Updater from 'state/userBalance/updater';
 import TokenUpdater from 'state/tokenBalance/updater';
-import NFTUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
 import Footer from 'components/About/Footer';
@@ -36,6 +35,7 @@ import {
 import Wrapper from './Wrapper';
 import theme from './theme';
 import LoadingBean from './LoadingBean';
+import { useConnectWallet } from 'util/hooks/useConnectWallet';
 import './App.css';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
@@ -43,6 +43,7 @@ BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 export default function App() {
   const dispatch = useDispatch();
   const { initialized, metamaskFailure, width } = useSelector<AppState, AppState['general']>((state) => state.general);
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
 
   // HANDLE WINDOW SIZE CHANGE
   // Used throughout the app to show/hide components and
@@ -57,10 +58,9 @@ export default function App() {
   }, [dispatch]);
 
   let app;
-  if (metamaskFailure > -1) {
+  if (!wallet) {
     app = (
       <>
-        {/* <NavigationBar /> */}
         <MetamasklessPage />
       </>
     );
@@ -160,6 +160,7 @@ export default function App() {
           <NavigationSidebar />
           <Box component="main" sx={{ flex: 1, position: 'relative' }}>
             <NavigationBar />
+            {JSON.stringify(wallet?.accounts[0].address)}
             {app}
             <Toaster
               containerStyle={{

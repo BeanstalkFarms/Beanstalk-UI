@@ -82,7 +82,7 @@ export const PRICE = {
   addr: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF',
 };
 
-export function changeAddresses(chainId: number) {
+export function changeTokenAddresses(chainId: number) {
   console.log(`changeAddresses: ${chainId}`);
   // Mainnet Addresses
   if (chainId === 1) {
@@ -109,6 +109,6 @@ export const supportedERC20Tokens = [
   BEAN,
   USDC,
   CURVE
-]
+];
 
 export const supportedTokens = supportedERC20Tokens;

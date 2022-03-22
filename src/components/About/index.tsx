@@ -30,6 +30,7 @@ export default function About(props) {
       >
         <Box style={{ minHeight: '330px', width: '100%', paddingTop: '90px' }}>
           {props.defaultSection}
+          {/* */}
           <Grid container style={cloudDivStyle}>
             <Grid item lg={3} md={3} sm={4} xs={6} style={cloudStyle}>
               <Link href={INTRO_TO_PATH} color="inherit" target="tutorial">
