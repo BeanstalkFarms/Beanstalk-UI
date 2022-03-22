@@ -8,6 +8,7 @@ import { Toaster } from 'react-hot-toast';
 
 import Updater from 'state/userBalance/updater';
 import TokenUpdater from 'state/tokenBalance/updater';
+import NftUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
 import { AppState } from 'state';
 import Footer from 'components/About/Footer';
@@ -30,15 +31,19 @@ import PegMaintenancePage from 'pages/peg';
 import Wrapper from './Wrapper';
 import theme from './theme';
 import LoadingBean from './LoadingBean';
-import { useConnectWallet } from 'util/hooks/useConnectWallet';
+// import { useConnectWallet } from 'util/hooks/useConnectWallet';
 import './App.css';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
 export default function App() {
   const dispatch = useDispatch();
-  const { initialized, metamaskFailure, width } = useSelector<AppState, AppState['general']>((state) => state.general);
-  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
+  const {
+    initialized,
+    metamaskFailure,
+    width
+  } = useSelector<AppState, AppState['general']>((state) => state.general);
+  // const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
 
   // HANDLE WINDOW SIZE CHANGE
   // Used throughout the app to show/hide components and
@@ -53,19 +58,17 @@ export default function App() {
   }, [dispatch]);
 
   let app;
-  if (!wallet) {
+  if (metamaskFailure > -1) {
     app = (
-      <>
-        {/* <NavigationBar /> */}
-        <ConnectPage />
-      </>
+      <ConnectPage />
     );
   } else if (!initialized) {
-    app = <LoadingBean />;
+    app = (
+      <LoadingBean />
+    );
   } else {
     app = (
       <div>
-        {/* <NavigationBar /> */}
         <Switch>
           {/* Redirects */}
           <Route exact path="/">
@@ -142,7 +145,7 @@ export default function App() {
       {/* UPDATERS */}
       <Updater />
       <TokenUpdater />
-      {/* <NFTUpdater /> */}
+      <NftUpdater />
       {/* CONTENT */}
       <Box className="App">
         <Wrapper />

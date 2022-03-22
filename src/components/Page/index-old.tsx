@@ -20,14 +20,13 @@ export default function Page({
   noRedirect = false,
 }) {
   const [section, setSection] = useState(sectionNumber);
-  const history = useHistory();
-
-  useEffect(() => {
-    if (!noRedirect) {
-      console.log(`!noRedirect`, routeTitle, sectionTitles)
-      history.push(`${(!routeTitle ? sectionTitles[section] : routeTitle).toLowerCase().replace(/ /g, '')}`);
-    }
-  });
+  // const history = useHistory();
+  // useEffect(() => {
+  //   if (!noRedirect) {
+  //     console.log(`!noRedirect`, routeTitle, sectionTitles)
+  //     history.push(`${(!routeTitle ? sectionTitles[section] : routeTitle).toLowerCase().replace(/ /g, '')}`);
+  //   }
+  // });
 
   // If multiple sections are provided, show a tab selector.
   // Otherwise, show a basic title component.

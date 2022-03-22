@@ -41,24 +41,20 @@ export default function MetamasklessModule() {
           }}
           style={{ cursor: 'pointer' }}
           color="white"
-          text="Switch to Mainnet" />
+          text="Switch to Mainnet"
+        />
       </Grid>
     );
   } else {
     metamaskModule = (
       <Grid container item xs={12}>
-        {/* <Grid item xs={12} style={{ minHeight: '150px' }}>
-          <Link href={HOW_TO_MM_PATH} color="inherit" target="blank">
-            <SvgCloudIcon color="white" text="Connect Metamask" />
-          </Link>
-        </Grid> */}
         <Grid item xs={12}>
           <Button
             color="primary"
             onClick={async () => {
               const initialized = await initialize();
               if (initialized) {
-                history.push('/');
+                window.location.reload();
               }
             }}
             style={connectMetaStyle}
