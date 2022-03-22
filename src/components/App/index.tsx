@@ -6,32 +6,33 @@ import { Box, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import { Toaster } from 'react-hot-toast';
 
+// import { useConnectWallet } from 'util/hooks/useConnectWallet';
+
+import { AppState } from 'state';
 import Updater from 'state/userBalance/updater';
 import TokenUpdater from 'state/tokenBalance/updater';
 import NftUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
-import { AppState } from 'state';
 import Footer from 'components/About/Footer';
 import { NavigationBar, NavigationSidebar } from 'components/Navigation';
 
-import ConnectPage from 'pages/connect';
-import MarketplacePage from 'pages/market';
-import SiloPage from 'pages/silo';
-import SiloActionsPage from 'pages/silo/actions';
-import FieldPage from 'pages/field';
-import TradePage from 'pages/trade';
-import GovernancePage from 'pages/governance';
-import AnalyticsPage from 'pages/analytics';
-import FundraiserPage from 'pages/fundraiser';
-import BeaNFTPage from 'pages/beanfts';
-import AboutPage from 'pages/about';
-import BalancesPage from 'pages/balances';
-import PegMaintenancePage from 'pages/peg';
+import ConnectPage from '../../pages/connect';
+import MarketplacePage from '../../pages/market';
+import SiloPage from '../../pages/silo';
+import SiloActionsPage from '../../pages/silo/actions';
+import FieldPage from '../../pages/field';
+import TradePage from '../../pages/trade';
+import GovernancePage from '../../pages/governance';
+import AnalyticsPage from '../../pages/analytics';
+import FundraiserPage from '../../pages/fundraiser';
+import BeaNFTPage from '../../pages/beanfts';
+import AboutPage from '../../pages/about';
+import BalancesPage from '../../pages/balances';
+import PegMaintenancePage from '../../pages/peg';
 
 import Wrapper from './Wrapper';
 import theme from './theme';
 import LoadingBean from './LoadingBean';
-// import { useConnectWallet } from 'util/hooks/useConnectWallet';
 import './App.css';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
