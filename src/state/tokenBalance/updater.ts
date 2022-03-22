@@ -34,6 +34,7 @@ export default function Updater() {
     }
 
     async function start() {
+      // -1 = not initialized
       if (!account && metamaskFailure === -1) {
         setTimeout(() => start(), 100);
       } else if (account) {

@@ -82,7 +82,8 @@ export const PRICE = {
   addr: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF',
 };
 
-export function changeAddresses(chainId: number) {
+export function changeTokenAddresses(chainId: number) {
+  console.log(`changeAddresses: ${chainId}`);
   // Mainnet Addresses
   if (chainId === 1) {
     UNI_V2_USDC_ETH_LP.addr = '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc';
@@ -102,3 +103,12 @@ export function changeAddresses(chainId: number) {
     PRICE.addr = '0x9d80cDBFee5c8294BCb2b356F608Db90b2D13d4b';
   }
 }
+
+export const supportedERC20Tokens = [
+  WETH,
+  BEAN,
+  USDC,
+  CURVE
+];
+
+export const supportedTokens = supportedERC20Tokens;

@@ -26,9 +26,10 @@ import {
   chainId,
   displayBN,
   getBlockTimestamp,
-  GetWalletAddress,
+  getWalletAddress,
   toTokenUnitsBN,
   poolForLP,
+  disconnect,
 } from 'util/index';
 import {
   ClaimableAsset,
@@ -443,7 +444,7 @@ export default function WalletModule() {
 
   useEffect(() => {
     async function handleWallet() {
-      GetWalletAddress().then((accountHex) => {
+      getWalletAddress().then((accountHex) => {
         if (accountHex !== undefined) {
           const accountDisplay = `${accountHex.substr(
             0,
@@ -847,6 +848,27 @@ export default function WalletModule() {
                     }}
                   >
                     {walletPages[walletPage]}
+                  </Box>
+                  <Box
+                    style={{
+                      width: '100%',
+                      height: '40px',
+                      position: 'sticky',
+                      bottom: '0px',
+                      backgroundColor: theme.module.background,
+                      zIndex: 99,
+                    }}>
+                    <Button
+                      fullWidth
+                      variant="text"
+                      style={{
+                        fontWeight: 'bold',
+                        textTransform: 'none'
+                      }}
+                      onClick={() => disconnect()}
+                    >
+                      Disconnect
+                    </Button>
                   </Box>
                 </MenuList>
               </ClickAwayListener>

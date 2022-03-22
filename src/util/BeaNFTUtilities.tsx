@@ -88,26 +88,26 @@ export const getMintedNFTs = async () => {
   return [ownedIds, tradedIds];
 };
 
-export const listenForNFTTransfers = async (callback) => {
-  const beaNFT = beaNFTGenesisContractReadOnly();
-  beaNFT.events.allEvents(
-    {
-      fromBlack: 'latest',
-      filter: { to: account },
-    },
-    () => {
-      callback();
-    }
-  );
+// export const listenForNFTTransfers = async (callback) => {
+//   const beaNFT = beaNFTGenesisContractReadOnly();
+//   beaNFT.events.allEvents(
+//     {
+//       fromBlack: 'latest',
+//       filter: { to: account },
+//     },
+//     () => {
+//       callback();
+//     }
+//   );
 
-  const beaNFT2 = beaNFTGenesisContractReadOnly();
-  beaNFT2.events.allEvents(
-    {
-      fromBlack: 'latest',
-      filter: { to: account },
-    },
-    () => {
-      callback();
-    }
-  );
-};
+//   const beaNFT2 = beaNFTGenesisContractReadOnly();
+//   beaNFT2.events.allEvents(
+//     {
+//       fromBlack: 'latest',
+//       filter: { to: account },
+//     },
+//     () => {
+//       callback();
+//     }
+//   );
+// };

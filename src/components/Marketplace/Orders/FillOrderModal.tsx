@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import {
-  Box,
-  Modal,
-} from '@material-ui/core';
+import { Box, Modal } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {
@@ -19,6 +16,7 @@ import {
   MaxBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
+import { PodOrder } from 'state/marketplace/reducer';
 import {
   BaseModule,
   PlotListInputField,
@@ -30,7 +28,7 @@ import {
   marketStrings,
 } from 'components/Common';
 import PlotRangeInputField from 'components/Common/PlotRangeInputField';
-import { PodOrder } from 'state/marketplace/reducer';
+
 import OrdersTable from './OrdersTable';
 
 type FillOrderModalProps = {

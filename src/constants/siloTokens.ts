@@ -15,7 +15,21 @@ import beanEthIcon from '../img/lp-logo.svg';
 import bean3CrvIcon from '../img/bean-curve-logo.svg';
 import { getUserSiloDepositsUSD } from '../util/SiloUtilities';
 
-const TOKENS = [
+export type SiloToken = {
+  name: string;
+  slug: string;
+  icon: any;
+  rewards: {
+    stalk: number;
+    seeds: number;
+  };
+  getAPY: Function;
+  getTotalSiloBalance: Function;
+  getUserSiloBalance: Function;
+  getUserSiloBalanceInUSD: Function;
+}
+
+const TOKENS : SiloToken[] = [
   {
     name: 'Bean',
     slug: 'bean',

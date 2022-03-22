@@ -56,13 +56,19 @@ const useStyles = makeStyles({
     display: 'flex',
     alignContent: 'space-around',
     height: theme.groundHeight,
+    zIndex: 11,
     paddingTop: !theme.groundPaddingTop ? '0px' : theme.groundPaddingTop,
-    zIndex: 101,
     position: 'fixed',
     bottom: 0,
     left: 0,
   },
 })
+
+const logoStyle = {
+  height: '25px',
+  width: '25px',
+  fill: theme.footer,
+};
 
 export default function Footer() {
   const { width } = useSelector<AppState, AppState['general']>(
@@ -70,14 +76,6 @@ export default function Footer() {
   );
 
   const classes = useStyles();
-
-  const logoStyle = {
-    height: '25px',
-    width: '25px',
-    fill: theme.footer,
-    backgroundColor: 'rgba(200, 165, 126, 0.4',
-    borderRadius: '5px'
-  };
 
   return (
     <>

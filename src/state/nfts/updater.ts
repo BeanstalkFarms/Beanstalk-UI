@@ -13,7 +13,7 @@ import {
   queryAccountNFTStats,
 } from 'graph';
 import {
-  listenForNFTTransfers,
+  // listenForNFTTransfers,
   metamaskFailure,
   account,
   getMintedNFTs,
@@ -42,7 +42,7 @@ export default function NFTUpdater() {
       }
       dispatch(setUnclaimed(un));
       dispatch(setClaimed(cn));
-      listenForNFTTransfers(loadAccountNFTs); // eslint-disable-line
+      // listenForNFTTransfers(loadAccountNFTs); // eslint-disable-line
     }
     async function loadAccountNFTs() {
       const {

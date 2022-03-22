@@ -5,7 +5,6 @@ import { unstable_batchedUpdates } from 'react-dom'; // eslint-disable-line
 import { AppState } from 'state';
 import { Box } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-// import AddIcon from '@material-ui/icons/Add';
 import {
   BEAN,
   ETH,
@@ -37,7 +36,6 @@ import {
   TokenOutputField,
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
-// import { makeStyles } from '@material-ui/styles';
 
 type CreateOrderModuleProps = {
   isFormDisabled: boolean;
@@ -48,16 +46,7 @@ type CreateOrderModuleProps = {
   updateExpectedPrice: any; // FIXME
 }
 
-// const useStyles = makeStyles({
-//   toPodsInput: {
-//     '&::placeholder': {
-//       fontSize: 15,
-//     },
-//   }
-// });
-
 export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref) => {
-  // const classes = useStyles();
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
@@ -561,17 +550,12 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       {maxPlaceInLineField}
       {pricePerPodField}
       {fromBeanField}
-      {/* <AddIcon
-        color="primary"
-        style={{ marginBottom: '-12px', width: '100%', height: 16 }}
-      /> */}
       {fromEthField}
       <ExpandMoreIcon
         color="primary"
         style={{ marginBottom: '-14px', width: '100%' }}
       />
       {toPodField}
-      {/* {lockedBeansField} */}
       {transactionDetails()}
       {rangeWarning}
       {frontrunTextField}

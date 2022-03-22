@@ -9,7 +9,6 @@ import {
   TablePagination,
   TableRow,
 } from '@material-ui/core';
-import Image from 'material-ui-image';
 import { makeStyles } from '@material-ui/styles';
 import { BASE_IPFS_LINK, BASE_OPENSEA_LINK, theme } from 'constants/index';
 import { mintNFT, mintGenesisNFT } from 'util/index';
@@ -95,8 +94,8 @@ export default function NftPicTable({
                     align="center"
                     className={classes.lucidaStyle}
                   >
-                    <Image
-                      unoptimized="true"
+                    <img
+                      alt="beanft"
                       src={`${BASE_IPFS_LINK}${nftList[index].imageIpfsHash}`}
                       width="90px"
                       height="90px"
