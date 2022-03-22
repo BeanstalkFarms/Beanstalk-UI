@@ -136,7 +136,7 @@ type Nft = {
 }
 
 export async function loadNFTs(account: string) {
-  const nftData = (await import("../json/accounts2.json")).default as { [key: string] : Nft[] };
+  const nftData = (await import('../json/accounts2.json')).default as { [key: string] : Nft[] };
   if (!nftData[account]) {
     return {
       genesis: [],

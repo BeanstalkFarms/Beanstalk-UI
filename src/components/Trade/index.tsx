@@ -12,9 +12,10 @@ import {
 } from 'components/Common';
 import { CURVE_LINK, theme } from 'constants/index';
 
-import TradeModule from './TradeModule';
 import metamaskIcon from 'img/metamask-icon.png';
 import curveIcon from 'img/curve-logo.svg';
+
+import TradeModule from './TradeModule';
 
 const useStyles = makeStyles(() => ({
   button: {
