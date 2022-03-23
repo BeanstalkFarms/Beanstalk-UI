@@ -51,11 +51,9 @@ const TabbedForm : React.FC<TabbedFormProps> = (props) => {
   );
 
   // Handlers
-  const handleTabChange = useCallback(() => 
-    (event: any, newSection: number) => {
-      setSection(newSection);
-    }, 
-    []
+  const handleTabChange = useCallback(
+    (event: any, newSection: number) => setSection(newSection), 
+    [setSection]
   );
 
   return (
