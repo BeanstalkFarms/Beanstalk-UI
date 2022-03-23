@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import _ from 'lodash';
+import filter from 'lodash/filter';
 import BigNumber from 'bignumber.js';
 import { Box } from '@material-ui/core';
 
+import { AppState } from 'state';
 import { PodListing } from 'state/marketplace/reducer';
 import { CryptoAsset, displayBN, FarmAsset, getWalletAddress } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
@@ -61,7 +61,7 @@ export default function Listings(props: ListingsProps) {
 
   // Handle changes in filters
   useMemo(() => {
-    filteredListings.current = _.filter(allListings, (listing) => (
+    filteredListings.current = filter(allListings, (listing) => (
       (props.mode === 'MINE' ? (
         listing.account === walletAddress
       ) : (

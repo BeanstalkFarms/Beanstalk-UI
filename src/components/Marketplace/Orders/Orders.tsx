@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import _ from 'lodash';
+import filter from 'lodash/filter';
 import { Box } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
@@ -71,7 +71,7 @@ export default function Orders(props: OrdersProps) {
   // Handle changes in filters
   // FIXME: this is super inefficient
   useMemo(() => {
-    filteredOrders.current = _.filter(
+    filteredOrders.current = filter(
       allOrders,
       (order) =>
         (props.mode === 'MINE'
@@ -84,7 +84,7 @@ export default function Orders(props: OrdersProps) {
     );
 
     // Filter Orders the user cannot sell a plot into
-    filteredOrders.current = _.filter(filteredOrders.current, (order) => {
+    filteredOrders.current = filter(filteredOrders.current, (order) => {
       let validPlots : any[] = [];
       if (validOrders) {
         // Find plot indices that are eligible to be sold to this Order.
@@ -144,7 +144,7 @@ export default function Orders(props: OrdersProps) {
     return <div>Loading...</div>;
   }
 
-  // const numPods = _.sum(filteredOrders.current.map((order: PodOrder) => order.totalAmount.toNumber()));
+  // const numPods = sum(filteredOrders.current.map((order: PodOrder) => order.totalAmount.toNumber()));
   const numPods = filteredOrders.current.reduce(
     (sum, curr) => sum.plus(curr.remainingAmount),
     new BigNumber(0)
