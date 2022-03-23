@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Button, makeStyles, Tooltip, withStyles } from '@material-ui/core';
+import { Box, Button, Tooltip } from '@material-ui/core';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { AppState } from 'state';
 import { CryptoAsset, displayBN } from 'util/index';
 import { theme } from 'constants/index';

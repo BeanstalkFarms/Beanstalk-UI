@@ -1,6 +1,7 @@
 import React from 'react';
 import { SwapWidget } from '@uniswap/widgets/dist/index.js';
-import { Grid, makeStyles } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import '@uniswap/widgets/dist/fonts.css';
 
 import { BEAN, DAI, TETHER, USDC } from 'constants/index';

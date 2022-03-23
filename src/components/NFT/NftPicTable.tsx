@@ -9,7 +9,7 @@ import {
   TablePagination,
   TableRow,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { BASE_IPFS_LINK, BASE_OPENSEA_LINK, theme } from 'constants/index';
 import { mintNFT, mintGenesisNFT } from 'util/index';
 import {
