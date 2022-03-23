@@ -9,7 +9,7 @@ import {
   CryptoAsset,
   displayBN,
   FarmAsset,
-  GetWalletAddress,
+  getWalletAddress,
   createPodListing,
   toStringBaseUnitBN,
   TrimBN,
@@ -266,7 +266,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const [myListings, setMyListings] = useState<null | PodListing[]>(null);
   useEffect(() => {
     (async () => {
-      const walletAddress = await GetWalletAddress();
+      const walletAddress = await getWalletAddress();
       setMyListings(
         allListings
           .filter((listing) => listing.account === walletAddress)

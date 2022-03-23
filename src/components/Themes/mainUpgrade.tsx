@@ -2,29 +2,31 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+
 import { AppState } from 'state';
 import PlantsIcon from 'img/main/Planted.svg';
 import FenceIcon from 'img/main/Fence.svg';
 import land from 'img/main/land.svg';
 import { theme } from 'constants/index';
-// import ground from 'img/main/land.png';
 
-export default function MainUpgrade(props) {
-  const classes = makeStyles({
-    topGround: {
-      backgroundColor: 'transparent',
-      backgroundImage: `url(${land})`,
-      backgroundPosition: '0% 0%',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: theme.groundSize,
-      display: theme.groundGrass,
-      alignContent: 'space-around',
-      height: theme.landHeight,
-      zIndex: -11,
-      position: 'fixed',
-      bottom: '24px',
-    },
-  })();
+const useStyles = makeStyles({
+  topGround: {
+    backgroundColor: 'transparent',
+    backgroundImage: `url(${land})`,
+    backgroundPosition: '0% 0%',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: theme.groundSize,
+    display: theme.groundGrass,
+    alignContent: 'space-around',
+    height: theme.landHeight,
+    zIndex: -11,
+    position: 'fixed',
+    bottom: '24px',
+  },
+});
+
+export default function MainUpgrade(props: any) {
+  const classes = useStyles();
 
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general

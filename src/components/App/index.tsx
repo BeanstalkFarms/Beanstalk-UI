@@ -6,32 +6,29 @@ import { Box, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import { Toaster } from 'react-hot-toast';
 
+// import { useConnectWallet } from 'util/hooks/useConnectWallet';
+
+import { AppState } from 'state';
 import Updater from 'state/userBalance/updater';
 import TokenUpdater from 'state/tokenBalance/updater';
-import NFTUpdater from 'state/nfts/updater';
+import NftUpdater from 'state/nfts/updater';
 import { setWidth } from 'state/general/actions';
-import { AppState } from 'state';
 import Footer from 'components/About/Footer';
 import { NavigationBar, NavigationSidebar } from 'components/Navigation';
 
-import {
-  //
-  MetamasklessPage,
-  MarketplacePage,
-  //
-  SiloPage,
-  SiloDepositPage,
-  FieldPage,
-  TradePage,
-  DAOPage,
-  //
-  AnalyticsPage,
-  FundraiserPage,
-  BeaNFTPage,
-  AboutPage,
-  BalancesPage,
-  PegMaintenancePage,
-} from 'Pages';
+import ConnectPage from 'pages/connect';
+import MarketplacePage from 'pages/market';
+import SiloPage from 'pages/silo';
+import SiloActionsPage from 'pages/silo/actions';
+import FieldPage from 'pages/field';
+import TradePage from 'pages/trade';
+import GovernancePage from 'pages/governance';
+import AnalyticsPage from 'pages/analytics';
+import FundraiserPage from 'pages/fundraiser';
+import BeaNFTPage from 'pages/beanfts';
+import AboutPage from 'pages/about';
+import BalancesPage from 'pages/balances';
+import PegMaintenancePage from 'pages/peg';
 
 import Wrapper from './Wrapper';
 import theme from './theme';
@@ -42,7 +39,12 @@ BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
 export default function App() {
   const dispatch = useDispatch();
-  const { initialized, metamaskFailure, width } = useSelector<AppState, AppState['general']>((state) => state.general);
+  const {
+    initialized,
+    metamaskFailure,
+    width
+  } = useSelector<AppState, AppState['general']>((state) => state.general);
+  // const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
 
   // HANDLE WINDOW SIZE CHANGE
   // Used throughout the app to show/hide components and
@@ -59,17 +61,15 @@ export default function App() {
   let app;
   if (metamaskFailure > -1) {
     app = (
-      <>
-        {/* <NavigationBar /> */}
-        <MetamasklessPage />
-      </>
+      <ConnectPage />
     );
   } else if (!initialized) {
-    app = <LoadingBean />;
+    app = (
+      <LoadingBean />
+    );
   } else {
     app = (
       <div>
-        {/* <NavigationBar /> */}
         <Switch>
           {/* Redirects */}
           <Route exact path="/">
@@ -86,7 +86,7 @@ export default function App() {
             <SiloPage />
           </Route>
           <Route exact path="/silo/:tokenSlug">
-            <SiloDepositPage />
+            <SiloActionsPage />
           </Route>
           <Route exact path="/field">
             <FieldPage />
@@ -108,12 +108,6 @@ export default function App() {
           <Route exact path="/farm/trade">
             <Redirect to="/trade" />
           </Route>
-          {/* <Route exact path="/farm/balances">
-            <FarmPage sectionNumber={3} />
-          </Route>
-          <Route exact path="/farm/beanfts">
-            <FarmPage sectionNumber={4} />
-          </Route> */}
           {/* More */}
           <Route exact path="/analytics">
             <AnalyticsPage />
@@ -125,7 +119,7 @@ export default function App() {
             <FundraiserPage />
           </Route>
           <Route exact path="/governance">
-            <DAOPage />
+            <GovernancePage />
           </Route>
           <Route exact path="/balances">
             <BalancesPage />
@@ -152,7 +146,7 @@ export default function App() {
       {/* UPDATERS */}
       <Updater />
       <TokenUpdater />
-      <NFTUpdater />
+      <NftUpdater />
       {/* CONTENT */}
       <Box className="App">
         <Wrapper />

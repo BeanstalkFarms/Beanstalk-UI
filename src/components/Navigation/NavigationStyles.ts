@@ -16,6 +16,7 @@ export const useStyles = makeStyles({
     width: drawerWidth,
     flexShrink: 0,
     fontFamily: 'Futura',
+    zIndex: 12,
   },
   drawerPaper: {
     width: drawerWidth,
@@ -39,7 +40,6 @@ export const useStyles = makeStyles({
   NavSubheader: {
     fontFamily: 'Futura',
     lineHeight: '22px',
-    // backgroundColor: '#fff',
   },
   Badge: {
     backgroundColor: theme.secondary,

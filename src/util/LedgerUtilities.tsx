@@ -26,7 +26,7 @@ import {
   initializing,
   pairContractReadOnly,
   tokenContractReadOnly,
-  tokenV2ContractReadOnly,
+  // tokenV2ContractReadOnly,
   toTokenUnitsBN,
   web3,
   chainId,
@@ -89,11 +89,17 @@ export type Fundraiser = {
  * This ensures that Typescript keeps track of any changes to variable type
  * during that chain.
  */
-const setupBatch = (batch: BatchRequest) => (
+const setupBatch = (batch: BatchRequest, tag: string) => (
   function execute(fn: any) {
     return new Promise<any>((resolve, reject) => {
       batch.add(
         (fn.call).request({}, 'latest', (error: any, result: any) => {
+          console.log(`${tag}: exec:`, fn._method.name, {
+            arguments: fn.arguments,
+            contractAddress: fn._parent._address,
+            result,
+            error,
+          });
           if (result !== undefined) {
             return resolve(result);
           }
@@ -158,9 +164,9 @@ export const getAccountBalances = async (batch: BatchRequest) => {
   const beanstalk = beanstalkContractReadOnly();
   const usdc = tokenContractReadOnly(USDC);
   const curve = beanCrv3ContractReadOnly();
-  const exec = setupBatch(batch);
+  const exec = setupBatch(batch, 'getAccountBalances');
 
-  return Promise.all([
+  const promises = Promise.all([
     // Allowances
     exec(bean.methods.allowance(account, UNISWAP_V2_ROUTER)).then(bigNumberResult),
     exec(bean.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
@@ -183,6 +189,18 @@ export const getAccountBalances = async (batch: BatchRequest) => {
     exec(usdc.methods.balanceOf(account)).then(tokenResult(USDC)),
     exec(beanstalk.methods.wrappedBeans(account)).then(tokenResult(BEAN)),
   ] as const);
+
+  return (
+    promises
+      .catch((err) => {
+        console.error('getAccountBalances: failed to execute', err);
+        throw err;
+      })
+      .then((result) => {
+        console.log('getAccountBalances: returned without error');
+        return result;
+      })
+  );
 };
 
 export const getPriceArray = async () => {
@@ -192,10 +210,10 @@ export const getPriceArray = async () => {
 };
 
 export const getTokenBalances = async (batch: BatchRequest) => {
-  const exec = setupBatch(batch);
+  const exec = setupBatch(batch, 'getTokenBalances');
   return Promise.all(
     supportedERC20Tokens.map((t) => 
-      exec(tokenV2ContractReadOnly(t).methods.balanceOf(account)).then(tokenResult(t))
+      exec(tokenContractReadOnly(t).methods.balanceOf(account)).then(tokenResult(t))
     )
   );
 };
@@ -205,9 +223,9 @@ export const getTotalBalances = async (batch: BatchRequest) => {
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
   const curve = beanCrv3ContractReadOnly();
-  const exec = setupBatch(batch);
+  const exec = setupBatch(batch, 'getTotalBalances');
 
-  return Promise.all([
+  const promises = Promise.all([
     // Supply
     exec(bean.methods.totalSupply()).then(tokenResult(BEAN)),
     exec(lp.methods.totalSupply()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
@@ -256,6 +274,18 @@ export const getTotalBalances = async (batch: BatchRequest) => {
     exec(bean.methods.balanceOf(CURVE.addr)).then(tokenResult(BEAN)),
     exec(beanstalk.methods.withdrawSeasons()).then(bigNumberResult)
   ] as const);
+
+  return (
+    promises
+      .catch((err) => {
+        console.error('getTotalBalances: failed to execute', err);
+        throw err;
+      })
+      .then((result) => {
+        console.log('getTotalBalances: returned without error');
+        return result;
+      })
+  );
 };
 
 export const getVotes = async () => {
@@ -359,7 +389,7 @@ export const getPrices = async (batch: BatchRequest) => {
   const bean3crvContract = beanCrv3ContractReadOnly();
   const curveContract = curveContractReadOnly();
 
-  const exec = setupBatch(batch);
+  const exec = setupBatch(batch, 'getPrices');
 
   let promises = [
     // referenceTokenReserves
@@ -445,5 +475,15 @@ export const getPrices = async (batch: BatchRequest) => {
     ]);
   }
 
-  return Promise.all(promises);
+  return (
+    Promise.all(promises)
+      .catch((err) => {
+        console.error('getPrices: failed to execute', err);
+        throw err;
+      })
+      .then((result) => {
+        console.log('getPrices: returned without error');
+        return result;
+      })
+  );
 };

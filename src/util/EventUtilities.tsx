@@ -3,11 +3,12 @@ import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from 'constants/index';
 import { Withdrawals } from 'state/userBalance/reducer';
 import {
   account,
-  beanstalkContractReadOnly,
   benchmarkStart,
   benchmarkEnd,
-  pairContractReadOnly,
   txCallback,
+  beanstalkContractReadOnlyWs,
+  pairContractReadOnlyWs,
+  beanstalkContractReadOnly,
 } from './index';
 
 const IGNORED_EVENTS = new Set([
@@ -29,10 +30,9 @@ export async function initializeEventListener(
   updateTotals: Function
 ) {
   const startTime = benchmarkStart('EVENT LISTENER');
-
   const beanstalk = beanstalkContractReadOnly();
-  const beanPair = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
-  const usdcPair = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
+
+  console.log('initializeEventListener: ', account);
 
   const accountEvents = await Promise.all([
     beanstalk.getPastEvents('BeanDeposit', {
@@ -115,7 +115,13 @@ export async function initializeEventListener(
       filter: { to: account },
       fromBlock: 0,
     }),
-  ]);
+  ]).catch((err) => {
+    console.error('initializeEventListener: failed to fetch accountEvents', err);
+    throw err;
+  }).then((result) => {
+    console.log('initializeEventListener: fetched accountEvents', result);
+    return result;
+  });
 
   // eslint-disable-next-line
   let allEvents : any[] = [].concat.apply([], accountEvents);
@@ -133,26 +139,42 @@ export async function initializeEventListener(
   }
   listeningForEvents = true;
 
+  const beanstalkWs = beanstalkContractReadOnlyWs();
+  const beanPairWs = pairContractReadOnlyWs(UNI_V2_ETH_BEAN_LP);
+  const usdcPairWs = pairContractReadOnlyWs(UNI_V2_USDC_ETH_LP);
+
   /* Listen for new Contract events */
-  beanPair.events.allEvents({ fromBlack: 'latest' }, (error, event) => {
+  beanPairWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
+    if (error) {
+      console.error(error);
+      return;
+    }
     if (
       new Date().getTime() - lastPriceRefresh > 5000 &&
-      (event.returnValues.to === undefined ||
-        event.returnValues.to.toLowerCase() !== account.toLowerCase())
+      (event?.returnValues.to === undefined ||
+        event?.returnValues.to.toLowerCase() !== account.toLowerCase())
     ) {
       console.log('UPDATING PRICES!');
       updatePrices();
       lastPriceRefresh = new Date().getTime();
     }
   });
-  usdcPair.events.Swap({ fromBlack: 'latest' }, () => {
+  usdcPairWs.events.Swap({ fromBlock: 'latest' }, (error: any) => {
+    if (error) {
+      console.error(error);
+      return;
+    }
     if (new Date().getTime() - lastPriceRefresh > 5000) {
       console.log('UPDATING PRICES!');
       updatePrices();
       lastPriceRefresh = new Date().getTime();
     }
   });
-  beanstalk.events.allEvents({ fromBlock: 'latest' }, (error, event) => {
+  beanstalkWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
+    if (error) {
+      console.error(error);
+      return;
+    }
     if (IGNORED_EVENTS.has(event.event)) {
       return;
     }
@@ -163,14 +185,14 @@ export async function initializeEventListener(
     newEventHashes.add(newEventHash);
 
     if (
-      event.returnValues.account !== undefined &&
-      event.returnValues.account.toLowerCase() === account.toLowerCase()
+      event?.returnValues.account !== undefined &&
+      event?.returnValues.account.toLowerCase() === account.toLowerCase()
     ) {
       allEvents = [...allEvents, event];
       processEvents(allEvents);
     } else if (event.event === 'Sunrise') {
       processEvents(allEvents);
-      txCallback();
+      if (txCallback) txCallback();
       console.log('-------UPDATING TOTALS!');
       updateTotals();
       lastTotalsRefresh = new Date().getTime();

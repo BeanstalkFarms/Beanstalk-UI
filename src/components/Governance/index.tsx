@@ -37,7 +37,7 @@ export default function Governance() {
     (state) => state.general
   );
 
-  if (bips === undefined || bips.length === 0) return;
+  if (bips === undefined || bips.length === 0) return null;
 
   const activeBipStyle = {
     fontFamily: 'Futura-PT-Book',

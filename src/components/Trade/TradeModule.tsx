@@ -1,32 +1,25 @@
 import React from 'react';
-// import BigNumber from 'bignumber.js';
-// import { useSelector } from 'react-redux';
 import { SwapWidget } from '@uniswap/widgets/dist/index.js';
 import { Grid, makeStyles } from '@material-ui/core';
 import '@uniswap/widgets/dist/fonts.css';
 
-// import { AppState } from 'state';
 import { BEAN, DAI, TETHER, USDC } from 'constants/index';
 import {
-  // toStringBaseUnitBN,
-  // transferBeans,
   web3Provider,
-  getRpcEndpoint
+  getRpcEndpoint,
+  chainId
 } from 'util/index';
-
-// import { tradeStrings } from 'components/Common';
-// import TransactionToast from 'components/Common/TransactionToast';
 
 const WIDGET_TOKEN_LIST = [
   // List of top tokens on Uniswap V2 that have liquidity.
   // https://v2.info.uniswap.org/tokens
   // Bean uses the same address across all 3 chains
-  ...[1, 3, 1337].map((chainId: number) => ({
+  ...[1, 3, 1337].map((_chainId: number) => ({
     name: 'Bean',
     address: BEAN.addr,
     symbol: BEAN.symbol,
     decimals: BEAN.decimals,
-    chainId,
+    chainId: _chainId,
     logoURI:
       'https://github.com/BeanstalkFarms/Beanstalk/blob/master/assets/bean-64x64.png?raw=true',
   })),
@@ -123,7 +116,7 @@ const useStyles = makeStyles(() => ({
 const swapWidgetTheme = {
   tokenColorExtraction: false,
   borderRadius: 15,
-  // container: "transparent", // main background
+  // container: "transparent",    // main background
   // module: "hsl(231,14%,92%)", // defaut hsl(231,14%,90%)
 };
 
@@ -156,7 +149,7 @@ export default function TradeModule() {
           defaultInputAddress="NATIVE"
           defaultOutputAddress={BEAN.addr}
           tokenList={WIDGET_TOKEN_LIST}
-          jsonRpcEndpoint={getRpcEndpoint()}
+          jsonRpcEndpoint={getRpcEndpoint(chainId)}
           className={classes.widget}
         />
       </Grid>

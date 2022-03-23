@@ -7,14 +7,15 @@ import {
   Cancel as CancelIcon,
 } from '@material-ui/icons';
 
-export default function AddressInputField(props) {
-  const classes = makeStyles(() => ({
-    inputText: {
-      fontFamily: 'Lucida Console',
-      fontSize: 'calc(15px + 1vmin)',
-      fontWeight: '400',
-    },
-  }))();
+const useStyles = makeStyles(({
+  inputText: {
+    fontFamily: 'Lucida Console',
+    fontSize: 'calc(15px + 1vmin)',
+    fontWeight: 400,
+  },
+}));
+export default function AddressInputField(props: any) {
+  const classes = useStyles();
 
   const smallLabels = {
     display: 'inline-block',
