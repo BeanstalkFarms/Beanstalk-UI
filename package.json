@@ -42,8 +42,8 @@
     "web3": "^1.5.2"
   },
   "scripts": {
-    "start": "react-app-rewired --max_old_space_size=4096 start",
-    "build": "react-app-rewired --max_old_space_size=8192 build",
+    "start": "node --max_old_space_size=4096 node_modules/.bin/react-app-rewired start",
+    "build": "node --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts-rewired test",
     "eject": "react-scripts-rewired eject",
@@ -111,6 +111,7 @@
     "gh-pages": "^3.2.3",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
+    "memory-usage": "^1.2.1",
     "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
     "react-app-rewired": "^2.2.1",
