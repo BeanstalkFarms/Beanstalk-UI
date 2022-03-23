@@ -3,39 +3,38 @@ import { SOIL_SUBGRAPH_API_LINK } from 'constants/index';
 
 const SoilQuery = `
 query seasons($first: Int, $skip: Int) {
-    seasons(
-       skip: $skip
-       first: $first,
-       orderBy: timestamp,
-       orderDirection: asc
-       where: {
-           timestamp_gt: 0
-       }
- ) { 
-       id
-       timestamp
-       soil
+  seasons(
+    skip: $skip
+    first: $first,
+    orderBy: timestamp,
+    orderDirection: asc
+    where: {
+      timestamp_gt: 0
+    }
+  ) { 
+    id
+    timestamp
+    soil
   } 
- }
- `;
+}`;
 
- function roundTo4Digits(num) {
-    return parseFloat(num.toFixed(4));
-  }
+function roundTo4Digits(num) {
+  return parseFloat(num.toFixed(4));
+}
 
- const client = new ApolloClient({
+const client = new ApolloClient({
   uri: SOIL_SUBGRAPH_API_LINK,
   cache: new InMemoryCache(),
 });
 
- function querySoil(first: Number, skip: Number): Promise {
+function querySoil(first: Number, skip: Number): Promise {
   return client.query({
     query: gql(SoilQuery),
     variables: { first: first, skip: skip },
   });
 }
 
- export async function soilQuery() {
+export async function soilQuery() {
   try {
     const [d1, d2, d3, d4] = await Promise.all([
       querySoil(1000, 0),

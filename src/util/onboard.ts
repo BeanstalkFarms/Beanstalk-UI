@@ -2,8 +2,8 @@ import Onboard, { OnboardAPI } from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
 // import { InjectedNameSpace, InjectedWalletModule } from '@web3-onboard/injected-wallets/dist/types';
 // import { createEIP1193Provider } from '@web3-onboard/common';
+// import trezorModule from '@web3-onboard/trezor';
 import ledgerModule from '@web3-onboard/ledger';
-import trezorModule from '@web3-onboard/trezor';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import walletLinkModule from '@web3-onboard/walletlink';
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
@@ -64,10 +64,10 @@ if (!onboard) {
       }),
       walletLinkModule({ darkMode: true }),
       ledgerModule(),
-      trezorModule({
-        email: 'operations@bean.money',
-        appUrl: 'https://app.bean.money'
-      })
+      // trezorModule({
+      //   email: 'operations@bean.money',
+      //   appUrl: 'https://app.bean.money'
+      // })
     ],
     chains: [
       {
