@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Box, Button, Link, Tab, Tabs } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { theme } from 'constants/index';
 import { FormatTooltip, Line, QuestionModule } from './index';
 

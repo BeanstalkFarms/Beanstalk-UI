@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box, InputAdornment, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { BASE_SLIPPAGE, SLIPPAGE_THRESHOLD } from 'constants/index';
 import { QuestionModule } from './index';
 

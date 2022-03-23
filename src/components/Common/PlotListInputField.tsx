@@ -7,7 +7,7 @@ import {
   OutlinedInput,
   Select,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { displayBN } from 'util/index';
 
 export default function ListInputField(props) {

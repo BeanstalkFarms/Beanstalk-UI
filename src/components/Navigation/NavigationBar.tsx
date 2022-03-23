@@ -6,7 +6,7 @@ import {
   Toolbar,
   Box,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AppState } from 'state';
 import { setDrawerOpen } from 'state/general/actions';

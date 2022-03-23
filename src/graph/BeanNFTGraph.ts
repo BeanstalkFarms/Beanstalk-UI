@@ -14,8 +14,7 @@ const StateQuery = `
     nfts
     mintedNFTs
   }
-}
-`;
+}`;
 
 const WinterNFTQuery = `
 query winterNFTs($season: String) {
@@ -52,8 +51,7 @@ query winterNFTs($season: String) {
     earnedNFTs
     investedBeans
   }
-}
-`;
+}`;
 
 export async function queryWinterNFTs(): Promise {
   let data = await client.query({
@@ -107,9 +105,7 @@ query accounts($account: String) {
     earnedNFTs
     investedBeans
   }
-}
-
-`;
+}`;
 
 export async function queryAccountNFTStats(account) {
   const data = await client.query({

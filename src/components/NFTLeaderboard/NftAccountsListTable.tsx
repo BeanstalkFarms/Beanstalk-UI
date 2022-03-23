@@ -11,7 +11,7 @@ import {
   TablePagination,
   TableRow,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   BASE_ETHERSCAN_ADDR_LINK,
 } from 'constants/index';

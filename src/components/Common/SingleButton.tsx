@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { QuestionModule } from '.';
 
 export default function SingleButton(props) {
