@@ -116,7 +116,7 @@ export default function BalanceModule(props) {
     <ToggleTokenBalanceModule
       balance={props.beanlusdTransitBalance}
       balanceColor={beanlusdActive === 2 ? color.transit : null}
-      description={props.description.curveTransitBalance} // change
+      description={props.description.beanlusdTransitBalance}
       isLP
       isBeanlusd
       poolForLPRatio={props.poolForBeanlusdRatio}
@@ -160,7 +160,7 @@ export default function BalanceModule(props) {
     <ToggleTokenBalanceModule
       balance={props.beanlusdReceivableBalance}
       balanceColor={beanlusdActive === 4 ? color.claimable : null}
-      description={props.description.claimableCurveBalance} // change
+      description={props.description.beanlusdReceivableBalance}
       isLP
       isBeanlusd
       poolForLPRatio={props.poolForBeanlusdRatio}
@@ -296,13 +296,13 @@ export default function BalanceModule(props) {
         <Grid item xs={12} style={smallGridStyle}>
           <TokenBalanceModule
             balance={curveTotals}
-            description="Total Curve"
+            description="Total BEAN:3CRV"
             isLP
             isCurve
             poolForLPRatio={props.poolForCurveRatio}
             style={{ position: 'relative' }}
             swerve
-            title="Total Curve"
+            title="Total BEAN:3CRV"
             token={CryptoAsset.Crv3}
           />
         </Grid>
@@ -605,7 +605,7 @@ export default function BalanceModule(props) {
             <TokenBalanceModule
               balance={props.beanlusdBalance}
               balanceColor={beanlusdActive === 0 ? color.circulating : null}
-              description={props.description.curveBalance} // change
+              description={props.description.beanlusdBalance}
               isLP
               isBeanlusd
               poolForLPRatio={props.poolForBeanlusdRatio}
@@ -618,7 +618,7 @@ export default function BalanceModule(props) {
             <TokenBalanceModule
               balance={props.beanlusdSiloBalance}
               balanceColor={beanlusdActive === 1 ? color.silo : null}
-              description={props.description.curveSiloBalance} // change
+              description={props.description.beanlusdSiloBalance}
               isLP
               isBeanlusd
               poolForLPRatio={props.poolForBeanlusdRatio}
