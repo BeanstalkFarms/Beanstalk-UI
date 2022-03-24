@@ -528,14 +528,14 @@ export default function Updater() {
                 const endIndex = new BigNumber(
                   startIndex.plus(userPlots[startIndex.toString()])
                 );
-                if (startIndex.isLessThanOrEqualTo(index) && endIndex.isGreaterThanOrEqualTo(index)) {
+                if (startIndex.isLessThanOrEqualTo(index) && endIndex.isGreaterThan(index)) {
                   userPlots[startIndex.toString()] = new BigNumber(index.minus(startIndex));
                   if (!index.isEqualTo(endIndex)) {
                     const s2    = index.plus(pods);
-                    const s2Str = s2.toString();
-                    userPlots[s2Str] = endIndex.minus(s2);
-                    if (userPlots[s2Str].isEqualTo(0)) {
-                      delete userPlots[s2Str];
+                    if (!s2.isEqualTo(endIndex)) {
+                      const s2Str = s2.toString();
+                      userPlots[s2Str] = endIndex.minus(s2);
+                      if (userPlots[s2Str].isEqualTo(0)) delete userPlots[s2Str];
                     }
                   }
                   found = true;
