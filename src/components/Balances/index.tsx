@@ -99,8 +99,6 @@ export default function Balances() {
     curveVirtualPrice,
     beanCrv3Reserve,
     crv3Reserve,
-    beanlusdVirtualPrice,
-    beanlusdPrice,
     beanlusdReserve,
     lusdReserve,
   } = useSelector<AppState, AppState['prices']>(
