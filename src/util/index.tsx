@@ -210,8 +210,7 @@ export async function initialize(): Promise<boolean> {
   const chainHexId = wallets[0].chains[0].id;
   chainId = parseInt(chainHexId, 16);
   switchChain(chainId);
-  // account = wallets[0].accounts[0].address;
-  account = '0x10bf1Dcb5ab7860baB1C3320163C6dddf8DCC0e4';
+  account = wallets[0].accounts[0].address;
 
   // Listen for events emitted by the wallet provider.
   initWalletListeners();
