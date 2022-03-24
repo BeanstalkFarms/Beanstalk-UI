@@ -80,15 +80,15 @@ type TokenReserveTuple = [
 ];
 
 /**
- * 
+ *
  */
 function lpReservesForTokenReserves(
   tokenReserves: TokenReserveTuple,
   token0: SupportedToken['addr']
 ) : [
-  beanReserve: BigNumber, 
-  ethReserve: BigNumber, 
-  rawBeanReserve: BigNumber, 
+  beanReserve: BigNumber,
+  ethReserve: BigNumber,
+  rawBeanReserve: BigNumber,
   rawEthReserve: BigNumber
 ] {
   const rawBeanReserve =
@@ -126,7 +126,7 @@ export default function Updater() {
     (state) => state.prices
   );
 
-  // Parameters used between 
+  // Parameters used between
   const eventParsingParametersRef = useRef([
     season.season,
     weather.harvestableIndex,
@@ -142,7 +142,7 @@ export default function Updater() {
     // -- Processors
 
     /**
-     * 
+     *
      */
     function processAccountBalances(
       accountBalances: AsyncReturnType<typeof getAccountBalances>,
@@ -157,23 +157,24 @@ export default function Updater() {
         beanstalkUSDCAllowance,
         beanstalkCurveAllowance,
         // Balances
-        claimableEthBalance,
+        claimableEthBalance, // 5 indexed
         beanBalance,
         lpBalance,
         curveBalance,
+        beanlusdBalance,
         seedBalance,
         stalkBalance,
         // @DEPRECATED
         // Leaving this here to prevent reshuffling of numerically-indexed eventParsingParameters.
         // eslint-disable-next-line
         lockedUntil,
-        farmableBeanBalance,
-        grownStalkBalance,
+        farmableBeanBalance, // 13 indexed
+        grownStalkBalance, // 14 indexed
         rootsBalance,
         usdcBalance,
-        beanWrappedBalance,
+        beanWrappedBalance, // 17 indexed
       ] = accountBalances;
-        
+
       // @DEPRECATED
       // const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       // const lockedSeasons = lockedUntil.minus(currentSeason);
@@ -181,11 +182,11 @@ export default function Updater() {
       // ALLOWANCES:
       // Any contract that transfers ERC-20 tokens on the farmer's behalf needs to be approved to do so.
       // For example, when you deposit Beans, Beanstalk transfers the farmer's circulating Beans to the Beanstalk contract.
-      // The farmer needs to approve Beanstalk to do this. 
+      // The farmer needs to approve Beanstalk to do this.
       // Note: Ethereum is NOT an ERC-20 and thus it doesn't require approval. Instead Ethereum is sent as a part of the transaction.
       // You can read more here: https://brogna.medium.com/token-allowance-dc553f7d38b3
       // There are 4 types of allowances each necessary in different cases
-      dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));       // Needed for selling Beans on Uniswap 
+      dispatch(updateUniswapBeanAllowance(uniswapBeanAllowance));       // Needed for selling Beans on Uniswap
       dispatch(updateBeanstalkBeanAllowance(beanstalkBeanAllowance));   // Needed for depositing Beans, adding LP + Depositing from Beans or Bean/Eth, sowing in Beanstalk
       dispatch(updateBeanstalkLPAllowance(beanstalkLPAllowance));       // Needed for depositing LP from circulating
       dispatch(updateBeanstalkUSDCAllowance(beanstalkUSDCAllowance));   // Needed for contributing to a fundraiser.
@@ -196,6 +197,7 @@ export default function Updater() {
         beanBalance,
         lpBalance,
         curveBalance,
+        beanlusdBalance,
         seedBalance,
         stalkBalance,
         // locked, @DEPRECATED
@@ -211,7 +213,7 @@ export default function Updater() {
     }
 
     /**
-     * 
+     *
      */
     function processTotalBalances(
       totalBalances: any[], // FIXME
@@ -223,22 +225,25 @@ export default function Updater() {
         totalBeans,
         totalLP,
         totalCrv3,
+        totalBeanlusd,
         totalSeeds,
         totalStalk,
         totalSiloBeans,
         totalSiloLP,
         totalSiloCurve,
+        totalSiloBeanlusd,
         totalTransitBeans,
         totalTransitLP,
         totalTransitCurve,
+        totalTransitBeanlusd,
         // Field
         soil,
         podIndex,
-        harvestableIndex,
+        harvestableIndex, // 16 indexed
         totalRoots,
         _weather,
         rain,
-        _season,
+        _season, // 20 indexed
         // Budgets
         // FIXME: Automate budget beans
         budget0,
@@ -247,6 +252,7 @@ export default function Updater() {
         budget3,
         // More
         totalCurveBeans,
+        totalBeanlusdBeans,
         withdrawSeasons,
       ] = totalBalances;
 
@@ -268,12 +274,16 @@ export default function Updater() {
         totalLP,
         totalCurveBeans,
         totalCrv3,
+        totalBeanlusdBeans,
+        totalBeanlusd,
         totalSiloBeans,
         totalSiloLP,
         totalSiloCurve,
+        totalSiloBeanlusd,
         totalTransitBeans,
         totalTransitLP,
         totalTransitCurve,
+        totalTransitBeanlusd,
         totalSeeds,
         totalStalk,
         totalPods,
@@ -296,7 +306,7 @@ export default function Updater() {
     }
 
     /**
-     * 
+     *
      */
     function processPrices(
       _prices: AsyncReturnType<typeof getPrices>
@@ -304,14 +314,17 @@ export default function Updater() {
       const [
         referenceTokenReserves,   // reserves tuple
         tokenReserves,            // reserves tuple
-        token0,                   // 
+        token0,                   //
         twapPrices,               // prices tuple
         beansToPeg,               //
         lpToPeg,                  //
         curveVirtualPrice,        //
         beanCrv3Price,            //
-        beanCrv3Reserve,          // 
+        beanCrv3Reserve,          //
         curveToBDV,               //
+        beanlusdVirtualPrice,     //
+        beanlusdPrice,            //
+        beanlusdReserve,          //
         ethPrices,                //
         priceTuple,               //
       ] = _prices;
@@ -356,6 +369,10 @@ export default function Updater() {
         beanCrv3Reserve: beanCrv3Reserve[0],
         crv3Reserve: beanCrv3Reserve[1],
         curveToBDV,
+        beanlusdVirtualPrice,
+        beanlusdPrice,
+        beanlusdReserve: beanlusdReserve[0],
+        lusdReserve: beanlusdReserve[1],
         ethPrices,
         priceTuple: {
           deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
@@ -384,7 +401,7 @@ export default function Updater() {
     }
 
     /**
-     * 
+     *
      */
     function processEvents(
       events: EventData[],
@@ -392,7 +409,7 @@ export default function Updater() {
     ) : void {
       const startTime = benchmarkStart('EVENT PROCESSOR');
 
-      // These get piped into redux 1:1 and so need to match 
+      // These get piped into redux 1:1 and so need to match
       // the type defined in UserBalanceState.
       let userLPSeedDeposits : UserBalanceState['lpSeedDeposits'] = {};
       let userLPDeposits : UserBalanceState['lpDeposits'] = {};
@@ -415,7 +432,7 @@ export default function Updater() {
       // I've extracted the `EventData` type from web3 library, but
       // each of the events below needs to have defined `returnValues`.
       // TODO: figure out if we should auto-generate these, or write them by hand.
-      // If we write by hand what's the best paradigm? 
+      // If we write by hand what's the best paradigm?
       // See `src/state/marketplace/reducer.ts` for an example I built recently. -SC
       events.forEach((event) => {
         if (event.event === 'BeanDeposit') {
@@ -429,7 +446,7 @@ export default function Updater() {
           );
           // Override the bean deposit for season `s`.
           // If a prior deposit exists, add `beans` to that
-          // deposit. Otherwise, a new item is created. 
+          // deposit. Otherwise, a new item is created.
           userBeanDeposits = {
             ...userBeanDeposits,
             [s]:
@@ -487,7 +504,7 @@ export default function Updater() {
               event.returnValues.pods,
               BEAN.decimals
             );
-          } 
+          }
           // The account sent a Plot
           else {
             // Numerical "index" of the plot.
@@ -497,7 +514,7 @@ export default function Updater() {
               BEAN.decimals
             );
             // String version of `idx`, used to key
-            // objects. This prevents duplicate toString() calls 
+            // objects. This prevents duplicate toString() calls
             // and resolves Typescript errors.
             const indexStr = index.toString();
             // Size of the Plot, in pods
@@ -517,8 +534,8 @@ export default function Updater() {
                 userPlots[newStartIndex.toString()] = userPlots[indexStr].minus(pods);
               }
               delete userPlots[indexStr];
-            } 
-            
+            }
+
             // QUESTION: what's going on here?
             // FIXME: lots of Object.keys calls while the array itself is being
             // modified.
@@ -773,7 +790,7 @@ export default function Updater() {
         userCurveWithdrawals,
         userCurveReceivableCrates,
       ] = parseWithdrawals(curveWithdrawals, s);
-      
+
       //
       const minReceivables = [br, er].map((reserve) =>
         reserve.multipliedBy(BASE_SLIPPAGE).toFixed(0)
@@ -836,10 +853,10 @@ export default function Updater() {
       benchmarkEnd('EVENT PROCESSOR', startTime);
     }
 
-    // -- Updaters     
+    // -- Updaters
 
     /**
-     * 
+     *
      */
     async function updateBalancesAndPrices() : Promise<[Function, EventParsingParameters]> {
       const startTime = benchmarkStart('ALL BALANCES');
@@ -852,7 +869,7 @@ export default function Updater() {
       const accountBalancePromises = getAccountBalances(batch);
       const totalBalancePromises = getTotalBalances(batch);
       const pricePromises = getPrices(batch);
-      batch.execute(); 
+      batch.execute();
 
       const [
         bipInfo,                // 0
@@ -898,12 +915,12 @@ export default function Updater() {
 
       // Parameters needed to parse events
       const eventParsingParameters : EventParsingParameters = [
-        totalBalances[17].season  /* season */,
-        totalBalances[13]         /* harvestableIndex */,
-        accountBalances[12]       /* farmableBeanBalance */,
-        accountBalances[13]       /* grownStalkBalance */,
+        totalBalances[20].season  /* season */,
+        totalBalances[16]         /* harvestableIndex */,
+        accountBalances[13]       /* farmableBeanBalance */,
+        accountBalances[14]       /* grownStalkBalance */,
         accountBalances[5]        /* claimableEthBalance */,
-        accountBalances[16],      /* wrappedBeans */
+        accountBalances[17],      /* wrappedBeans */
         beanReserve,
         ethReserve,
       ];
@@ -931,7 +948,7 @@ export default function Updater() {
     }
 
     /**
-     * 
+     *
      */
     async function updateTotalBalances() {
       const startTime = benchmarkStart('TOTALS');
@@ -963,7 +980,7 @@ export default function Updater() {
     }
 
     /**
-     * 
+     *
      */
     async function updatePrices() {
       const startTime = benchmarkStart('PRICES');
@@ -997,7 +1014,7 @@ export default function Updater() {
     // -- Subgraph queries
 
     /**
-     * 
+     *
      */
     async function getLastCross() {
       const lastCrossInitializer = await lastCrossQuery();
@@ -1005,14 +1022,14 @@ export default function Updater() {
     }
 
     /**
-     * 
+     *
      */
     async function getAPYs() {
       dispatch(setBeansPerSeason(await apyQuery()));
     }
 
     /**
-     * 
+     *
      */
     async function getFarmableMonthTotal() {
       dispatch(setBeansPerSeason({
@@ -1023,7 +1040,7 @@ export default function Updater() {
     // -- Start
 
     /**
-     * 
+     *
      */
     async function start() {
       let startTime = benchmarkStart('*INIT*');
@@ -1047,7 +1064,7 @@ export default function Updater() {
           //
           updateBalancesAndPrices(),
           // Listen for events on the Beanstalk contract. When a new event occurs:
-          // - run `processEvents` with the new event 
+          // - run `processEvents` with the new event
           // - call `updatePrices` and `updateTotals` to get new info from the contract
           initializeEventListener(processEvents, updatePrices, updateTotalBalances),
         ]);
@@ -1069,7 +1086,7 @@ export default function Updater() {
         dispatch(setMetamaskFailure(true));
       }
     }
-    
+
     // -- Run things
     start();
     getLastCross();

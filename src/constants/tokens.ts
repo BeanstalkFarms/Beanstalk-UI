@@ -78,6 +78,14 @@ export const CURVE : SupportedToken = {
   factory: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7', // 3crv address
 };
 
+export const BEANLUSD : SupportedToken = {
+  addr: '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D', // BEAN:LUSD address
+  // addr: '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC', // Ropsten
+  decimals: 18,
+  symbol: 'BEAN:LUSD',
+  // factory: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7', // 3crv address
+};
+
 export const PRICE = {
   addr: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF',
 };
@@ -108,7 +116,8 @@ export const supportedERC20Tokens = [
   WETH,
   BEAN,
   USDC,
-  CURVE
+  CURVE,
+  BEANLUSD
 ];
 
 export const supportedTokens = supportedERC20Tokens;

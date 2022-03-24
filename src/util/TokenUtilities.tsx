@@ -19,6 +19,7 @@ import TransitIcon from 'img/transit-icon.svg';
 import PooledIcon from 'img/pooled-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
 import CRV3Logo from 'img/bean-curve-logo.svg';
+import BeanlusdLogo from 'img/bean-lusd-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
 import { account, tokenContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
@@ -33,34 +34,38 @@ export enum CryptoAsset {
   LP,
   Usdc,
   Crv3,
+  Beanlusd,
 }
 export enum SiloAsset {
-  Stalk = 5,
+  Stalk = 6,
   Seed,
   Bean,
   LP,
   Crv3,
+  Beanlusd,
 }
 export enum TransitAsset {
-  Bean = 10,
+  Bean = 12,
   LP,
   Crv3,
+  Beanlusd,
 }
 export enum FarmAsset {
-  Pods = 13,
+  Pods = 16,
 }
 export enum ClaimableAsset {
-  Bean = 14,
+  Bean = 17,
   LP,
   Crv3,
+  Beanlusd,
   Ethereum,
   Stalk,
 }
 export enum UniswapAsset {
-  Bean = 19,
+  Bean = 23,
 }
 export enum BudgetAsset {
-  Bean = 20,
+  Bean = 24,
 }
 
 export type Token =
@@ -143,6 +148,8 @@ export function TokenLabel(tokenType: Token): string {
       return 'USDC';
     case CryptoAsset.Crv3:
       return 'BEAN:3CRV';
+    case CryptoAsset.Beanlusd:
+      return 'BEAN:LUSD';
     case SiloAsset.Stalk:
       return 'Stalk';
     case SiloAsset.Seed:
@@ -153,12 +160,16 @@ export function TokenLabel(tokenType: Token): string {
       return 'Deposited LP';
     case SiloAsset.Crv3:
       return 'Deposited BEAN:3CRV';
+    case SiloAsset.Beanlusd:
+      return 'Deposited BEAN:LUSD';
     case TransitAsset.Bean:
       return 'Withdrawn Beans';
     case TransitAsset.LP:
       return 'Withdrawn LP';
     case TransitAsset.Crv3:
       return 'Withdrawn BEAN:3CRV';
+    case TransitAsset.Beanlusd:
+      return 'Withdrawn BEAN:LUSD';
     case FarmAsset.Pods:
       return 'Pods';
     case ClaimableAsset.Bean:
@@ -167,6 +178,8 @@ export function TokenLabel(tokenType: Token): string {
       return 'Claimable LP';
     case ClaimableAsset.Crv3:
       return 'Claimable BEAN:3CRV';
+    case ClaimableAsset.Beanlusd:
+      return 'Claimable BEAN:LUSD';
     case ClaimableAsset.Ethereum:
       return 'Claimable ETH';
     case ClaimableAsset.Stalk:
@@ -218,18 +231,24 @@ export function TokenImage(tokenType: Token): string {
     case SiloAsset.Crv3:
     case TransitAsset.Crv3:
       return CRV3Logo;
+
+    case ClaimableAsset.Beanlusd:
+    case CryptoAsset.Beanlusd:
+    case SiloAsset.Beanlusd:
+    case TransitAsset.Beanlusd:
+      return BeanlusdLogo;
     default:
       return '';
   }
 }
 
 export function TokenTypeImage(tokenType: Token): string | null {
-  if (tokenType < 7 || tokenType === 13) return null;
-  if (tokenType < 10) return SiloIcon;
-  if (tokenType < 13) return TransitIcon;
-  if (tokenType < 19) return ClaimableIcon;
-  if (tokenType < 20) return PooledIcon;
-  if (tokenType < 21) return BudgetIcon;
+  if (tokenType < 8 || tokenType === 16) return null;
+  if (tokenType < 12) return SiloIcon;
+  if (tokenType < 16) return TransitIcon;
+  if (tokenType < 23) return ClaimableIcon;
+  if (tokenType < 24) return PooledIcon;
+  if (tokenType < 25) return BudgetIcon;
   return null;
 }
 

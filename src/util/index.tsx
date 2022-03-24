@@ -11,7 +11,7 @@ import {
   changeTheme,
 } from 'constants/index';
 import {
-  BEAN, changeTokenAddresses
+  BEAN, BEANLUSD, changeTokenAddresses
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
@@ -53,6 +53,7 @@ const BeaNFTGenesisABI = require('../constants/abi/BeaNFTGenesis.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 const curveMetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
+const beanlusdPoolAbi = require('../constants/abi/BeanlusdPool.json');
 const beanstalkPriceAbi = require('../constants/abi/BeanstalkPrice.json');
 
 export const tokenContract = (token: SupportedToken) =>
@@ -102,6 +103,9 @@ export const beanCrv3ContractReadOnly = () =>
 
 export const curveContractReadOnly = () =>
   new web3.eth.Contract(curveMetaPoolAbi, CURVE.factory);
+
+export const beanlusdContractReadOnly = () =>
+  new web3.eth.Contract(beanlusdPoolAbi, BEANLUSD.addr);
 
 /**
  * Listen for events emitted by the current provider.
@@ -206,7 +210,8 @@ export async function initialize(): Promise<boolean> {
   const chainHexId = wallets[0].chains[0].id;
   chainId = parseInt(chainHexId, 16);
   switchChain(chainId);
-  account = wallets[0].accounts[0].address;
+  // account = wallets[0].accounts[0].address;
+  account = '0x10bf1Dcb5ab7860baB1C3320163C6dddf8DCC0e4';
 
   // Listen for events emitted by the wallet provider.
   initWalletListeners();
