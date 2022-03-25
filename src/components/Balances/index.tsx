@@ -99,6 +99,8 @@ export default function Balances() {
     curveVirtualPrice,
     beanCrv3Reserve,
     crv3Reserve,
+    beanlusdPrice,
+    beanlusdVirtualPrice,
     beanlusdReserve,
     lusdReserve,
   } = useSelector<AppState, AppState['prices']>(
@@ -165,8 +167,11 @@ export default function Balances() {
     ? totalBeans.multipliedBy(beanPrice)
     : new BigNumber(0);
   const poolMarketCap = beanReserve.isGreaterThan(0)
-    ? (beanReserve.multipliedBy(beanPrice).multipliedBy(2)).plus(
-        (beanCrv3Reserve.multipliedBy(beanCrv3Price).plus(crv3Reserve)).multipliedBy(curveVirtualPrice) // add beanlusd
+    ? (beanReserve.multipliedBy(beanPrice).multipliedBy(2))
+      .plus(
+        (beanCrv3Reserve.multipliedBy(beanCrv3Price.multipliedBy(1.0004)).plus(crv3Reserve)).multipliedBy(curveVirtualPrice)
+      ).plus(
+        (beanlusdReserve.multipliedBy(beanlusdPrice.multipliedBy(1.0004)).plus(lusdReserve)).multipliedBy(beanlusdVirtualPrice)
       )
     : new BigNumber(0);
 
