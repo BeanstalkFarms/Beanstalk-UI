@@ -13,6 +13,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 import uniswapLogo from 'img/uniswap-icon.svg';
 import curveLogo from 'img/curve-logo.svg';
+import lusdLogo from 'img/lusd-icon.svg';
 import TokenIcon from 'components/Common/TokenIcon';
 
 export const FormatTooltip = withStyles(() => ({
@@ -106,9 +107,15 @@ export default function PriceTooltip({
     priceTuple,
     uniTuple,
     curveTuple,
+    beanlusdPrice,
+    beanlusdReserve,
+    lusdReserve,
+    beanlusdVirtualPrice,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
-  );
+  ); // update to Price Contract tuple for LUSD
+
+  const lusdLiquidity = (beanlusdReserve.multipliedBy(beanlusdPrice.multipliedBy(1.0004)).plus(lusdReserve)).multipliedBy(beanlusdVirtualPrice); // remove once Pirce Contract tuple added for LUSD
 
   const PriceCards = ({ direction = 'row' }) => (
     <div className={classes.cardsContainer} style={{ flexDirection: direction }}>
@@ -138,6 +145,23 @@ export default function PriceTooltip({
             <div className={classes.poolMetaRow}>
               <div className={classes.poolMetaRowLabel}>liquidity:</div>
               <div>${displayBN(curveTuple.liquidity)}</div>
+            </div>
+            <div className={classes.poolMetaRow}>
+              <div className={classes.poolMetaRowLabel}>delta:</div>
+              <div>{curveTuple.deltaB.isNegative() ? '' : '+'}{displayBN(curveTuple.deltaB, true)}<TokenIcon token={CryptoAsset.Bean} /></div>
+            </div>
+          </div>
+        </Box>
+      </Button>
+      {/* LUSD: update to Price Contract tuple */}
+      <Button className={classes.poolButton} href={CURVE_LINK} target="_blank" rel="noreferrer">
+        <Box className={classes.poolCard} boxShadow="2">
+          <img src={lusdLogo} alt="LUSD Logo" className={classes.poolLogo} />
+          <span className={classes.poolPrice}>${beanlusdPrice.toFixed(4)}</span>
+          <div className={classes.poolMeta}>
+            <div className={classes.poolMetaRow}>
+              <div className={classes.poolMetaRowLabel}>liquidity:</div>
+              <div>${displayBN(lusdLiquidity)}</div>
             </div>
             <div className={classes.poolMetaRow}>
               <div className={classes.poolMetaRowLabel}>delta:</div>
@@ -190,7 +214,7 @@ export default function PriceTooltip({
       <Button onClick={() => setOpen(!open)} className={classes.aggregatePrice}>
         {`$${priceTuple.price.toFixed(4)}`}
         {open
-          ? <KeyboardArrowUpIcon className={classes.accordionIcon} /> 
+          ? <KeyboardArrowUpIcon className={classes.accordionIcon} />
           : <KeyboardArrowDownIcon className={classes.accordionIcon} />}
       </Button>
     </FormatTooltip>
@@ -214,9 +238,9 @@ export default function PriceTooltip({
       <Button onClick={() => setOpen(!open)} className={classes.aggregatePrice}>
         {`$${priceTuple.price.toFixed(4)}`}
         {open
-          ? <ChevronLeftIcon className={classes.accordionIcon} /> 
+          ? <ChevronLeftIcon className={classes.accordionIcon} />
           : <ChevronRightIcon className={classes.accordionIcon} />}
       </Button>
     </FormatTooltip>
-  ); 
+  );
 }

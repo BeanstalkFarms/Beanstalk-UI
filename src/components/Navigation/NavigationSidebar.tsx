@@ -222,7 +222,7 @@ export default function NavigationSidebar() {
 
   const currentBeanPrice = (
     <PriceTooltip
-      isMobile={width < 800}
+      isMobile={width < 1150} // 800 with 2 price boxes, 1150 with 3 price boxes
     />
   );
 

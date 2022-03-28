@@ -99,6 +99,7 @@ export function changeTokenAddresses(chainId: number) {
     UNI_V2_ETH_BEAN_LP.addr = '0x87898263B6C5BABe34b4ec53F22d98430b91e371';
     USDC.addr = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
     CURVE.addr = '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD';
+    BEANLUSD.addr = '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D';
     PRICE.addr = '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF';
   }
   // Ropsten Addresses
@@ -108,6 +109,7 @@ export function changeTokenAddresses(chainId: number) {
     UNI_V2_ETH_BEAN_LP.addr = '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db';
     USDC.addr = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F';
     CURVE.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC';
+    BEANLUSD.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // FIX: change ropsten BEAN:LUSD address (currently curve)
     PRICE.addr = '0x9d80cDBFee5c8294BCb2b356F608Db90b2D13d4b';
   }
 }
