@@ -16,7 +16,8 @@ import {
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
-import { INFURA_HTTPS_URLS, INFURA_WS_URLS } from 'constants/infura';
+// import { INFURA_HTTPS_URLS, INFURA_WS_URLS } from 'constants/rpc/infura';
+import { ALCHEMY_HTTPS_URLS, ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
 import onboard from './onboard';
 
 export * from './EventUtilities';
@@ -126,7 +127,10 @@ async function initWalletListeners() {
  * @returns
  */
 export function getRpcEndpoint(_chainId: SupportedChainId) {
-  return INFURA_HTTPS_URLS[_chainId];
+  return [
+    ALCHEMY_HTTPS_URLS[_chainId],
+    ALCHEMY_WS_URLS[_chainId],
+  ]
 }
 
 /**
@@ -146,7 +150,7 @@ export async function switchChain(_chainId: SupportedChainId) {
   if (chainId === 3) changeTheme('ropsten');
 
   // Create web3 / ethers instances.
-  const rpcUrl = getRpcEndpoint(chainId);
+  const [rpcHttp, rpcWs] = getRpcEndpoint(chainId);
   
   if(currentState.wallets[0].label === "MetaMask") {
     console.log(`Using Metamask`)
@@ -159,10 +163,10 @@ export async function switchChain(_chainId: SupportedChainId) {
     web3Signer = web3Provider.getSigner();
   } else {
     web3 = new Web3(
-      new Web3.providers.HttpProvider(rpcUrl)
+      new Web3.providers.HttpProvider(rpcHttp)
     );
     web3Ws = new Web3(
-      new Web3.providers.WebsocketProvider(INFURA_WS_URLS[chainId])
+      new Web3.providers.WebsocketProvider(rpcWs)
     );
     web3Provider = new ethers.providers.Web3Provider(
       currentState.wallets[0].provider,   // the provider instance from web3-onboard

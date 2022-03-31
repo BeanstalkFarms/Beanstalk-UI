@@ -131,6 +131,9 @@ export async function getUSDCBalance() {
   return web3.eth.getBalance(account).then(tokenResult(USDC));
 }
 
+/**
+ * @rpc 2 calls
+ */
 export async function getEthPrices() {
   try {
     const [
@@ -158,6 +161,9 @@ export async function getEthPrices() {
   }
 }
 
+/**
+ * @rpc 17 calls
+ */
 export const getAccountBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
@@ -203,12 +209,19 @@ export const getAccountBalances = async (batch: BatchRequest) => {
   );
 };
 
+/**
+ * @rpc 1 call.
+ */
 export const getPriceArray = async () => {
   const beanstalkPrice = beanstalkPriceContractReadOnly();
   const priceTuple = await beanstalkPrice.methods.price().call();
   return priceTuple;
 };
 
+/**
+ * @rpc N calls where N = # of supportedERC20Tokens
+ * @rpc 3/28/2022: N = 5 calls.
+ */
 export const getTokenBalances = async (batch: BatchRequest) => {
   const exec = setupBatch(batch, 'getTokenBalances');
   return Promise.all(
@@ -218,6 +231,9 @@ export const getTokenBalances = async (batch: BatchRequest) => {
   );
 };
 
+/**
+ * @rpc 28 calls.
+ */
 export const getTotalBalances = async (batch: BatchRequest) => {
   const bean = tokenContractReadOnly(BEAN);
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
@@ -288,6 +304,10 @@ export const getTotalBalances = async (batch: BatchRequest) => {
   );
 };
 
+/**
+ * @rpc N + 1 calls where N = number of BIPs
+ * @rpc 3/28/2022: 13 BIPs => 14 calls.
+ */
 export const getVotes = async () => {
   const beanstalk = beanstalkContractReadOnly();
   const activeBips = await beanstalk.methods.activeBips().call();
@@ -298,8 +318,11 @@ export const getVotes = async () => {
   }, new Set());
 };
 
-/*
+/**
  * TODO: batch BIP detail ledger reads
+ * 
+ * @rpc 1 + N < calls < 1 + 2*N where N = number of BIPs.
+ * @rpc 3/28/2022: 13 BIPs => 14 - 27 calls.
  */
 export const getBips = async (
   // currentSeason: BigNumber
@@ -351,8 +374,10 @@ export const getBips = async (
   return [bips, hasActiveBIP];
 };
 
-/*
+/**
  * TODO: batch BIP detail ledger reads
+ * @rpc N + 1 calls where N = # of fundraisers.
+ * @rpc 3/28/2022: 3 fundraisers => 4 calls.
  */
 export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
   const beanstalk = beanstalkContractReadOnly();
@@ -380,7 +405,7 @@ export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
 };
 
 /**
- * 
+ * @rpc 13 calls (6 are identical across chains, 7 are unique)
  */
 export const getPrices = async (batch: BatchRequest) => {
   const beanstalk = beanstalkContractReadOnly();
@@ -391,6 +416,7 @@ export const getPrices = async (batch: BatchRequest) => {
 
   const exec = setupBatch(batch, 'getPrices');
 
+  // ~13 calls
   let promises = [
     // referenceTokenReserves
     exec(referenceLPContract.methods.getReserves()).then(

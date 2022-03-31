@@ -23,7 +23,10 @@ let lastPriceRefresh = new Date().getTime();
 let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
-//
+/**
+ * @rpc 20 separate calls to `getPastEvents`. Not batched.
+ * @rpc 3 websocket opens for Beanstalk contract, BEAN:ETH + ETH:USDC pools.
+ */
 export async function initializeEventListener(
   processEvents: Function,
   updatePrices: Function,

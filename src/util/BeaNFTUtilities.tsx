@@ -48,6 +48,9 @@ export const mintAllAccountNFTs = async (nftIds, signatures) => {
   });
 };
 
+/**
+ * @rpc 1 call
+ */
 export const isMinted = async (nftId) => {
   try {
     await beaNFTGenesisContractReadOnly().methods.ownerOf(new BigNumber(nftId)).call();
@@ -57,6 +60,9 @@ export const isMinted = async (nftId) => {
   }
 };
 
+/**
+ * @rpc 2 calls
+ */
 export const getMintedWinterNFTs = async () => {
   const beaNFT = beaNFTContractReadOnly();
   const toTransfers = await beaNFT.getPastEvents('Transfer', {
@@ -73,6 +79,10 @@ export const getMintedWinterNFTs = async () => {
   );
   return [ownedIds, tradedIds];
 };
+
+/**
+ * @rpc 2 calls
+ */
 export const getMintedNFTs = async () => {
   const beaNFT = beaNFTGenesisContractReadOnly();
   const toTransfers = await beaNFT.getPastEvents('Transfer', {

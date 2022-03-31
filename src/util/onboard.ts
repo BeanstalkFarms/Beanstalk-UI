@@ -7,7 +7,7 @@ import ledgerModule from '@web3-onboard/ledger';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import walletLinkModule from '@web3-onboard/walletlink';
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
-import { INFURA_HTTPS_URLS } from 'constants/infura';
+import { INFURA_HTTPS_URLS } from 'constants/rpc/infura';
 
 // import tallyIconUrl from 'img/tally-icon.svg';
 
