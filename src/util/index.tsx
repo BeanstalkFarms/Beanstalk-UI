@@ -130,7 +130,7 @@ export function getRpcEndpoint(_chainId: SupportedChainId) {
   return [
     ALCHEMY_HTTPS_URLS[_chainId],
     ALCHEMY_WS_URLS[_chainId],
-  ]
+  ];
 }
 
 /**
@@ -141,8 +141,6 @@ export async function switchChain(_chainId: SupportedChainId) {
   if (!onboard) throw new Error('Onboard is not yet initialized.');
   const currentState = onboard.state.get();
 
-  console.log(`current state`, currentState)
-
   // Update chain information, tokens, theme
   chainId = _chainId;
   changeTokenAddresses(chainId);
@@ -152,8 +150,8 @@ export async function switchChain(_chainId: SupportedChainId) {
   // Create web3 / ethers instances.
   const [rpcHttp, rpcWs] = getRpcEndpoint(chainId);
   
-  if(currentState.wallets[0].label === "MetaMask") {
-    console.log(`Using Metamask`)
+  if (currentState.wallets[0].label === 'MetaMask') {
+    console.log('Using Metamask');
     web3   = new Web3((currentState.wallets[0].provider as unknown) as Web3CoreProvider);
     web3Ws = web3;
     web3Provider = new ethers.providers.Web3Provider(
