@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { provider as Web3CoreProvider } from 'web3-core';
 import { ethers } from 'ethers';
 import {
   BEANFTCOLLECTION,
@@ -44,7 +45,7 @@ export let metamaskFailure = -1;
 export let chainId : SupportedChainId = 1;
 
 export let web3Provider : ethers.providers.Web3Provider;
-export let web3Signer : ethers.providers.JsonRpcSigner;
+export let web3Signer   : ethers.providers.JsonRpcSigner;
 
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');
@@ -136,6 +137,8 @@ export async function switchChain(_chainId: SupportedChainId) {
   if (!onboard) throw new Error('Onboard is not yet initialized.');
   const currentState = onboard.state.get();
 
+  console.log(`current state`, currentState)
+
   // Update chain information, tokens, theme
   chainId = _chainId;
   changeTokenAddresses(chainId);
@@ -144,17 +147,29 @@ export async function switchChain(_chainId: SupportedChainId) {
 
   // Create web3 / ethers instances.
   const rpcUrl = getRpcEndpoint(chainId);
-  web3 = new Web3(
-    new Web3.providers.HttpProvider(rpcUrl)
-  );
-  web3Ws = new Web3(
-    new Web3.providers.WebsocketProvider(INFURA_WS_URLS[chainId])
-  );
-  web3Provider = new ethers.providers.Web3Provider(
-    currentState.wallets[0].provider,   // the provider instance from web3-onboard
-    CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
-  );
-  web3Signer = web3Provider.getSigner();
+  
+  if(currentState.wallets[0].label === "MetaMask") {
+    console.log(`Using Metamask`)
+    web3   = new Web3((currentState.wallets[0].provider as unknown) as Web3CoreProvider);
+    web3Ws = web3;
+    web3Provider = new ethers.providers.Web3Provider(
+      currentState.wallets[0].provider,   // the provider instance from web3-onboard
+      CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
+    );
+    web3Signer = web3Provider.getSigner();
+  } else {
+    web3 = new Web3(
+      new Web3.providers.HttpProvider(rpcUrl)
+    );
+    web3Ws = new Web3(
+      new Web3.providers.WebsocketProvider(INFURA_WS_URLS[chainId])
+    );
+    web3Provider = new ethers.providers.Web3Provider(
+      currentState.wallets[0].provider,   // the provider instance from web3-onboard
+      CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
+    );
+    web3Signer = web3Provider.getSigner();
+  }
 }
 
 function getPreviouslyConnectedWallets() : null | string[] {
@@ -206,7 +221,7 @@ export async function initialize(): Promise<boolean> {
   const chainHexId = wallets[0].chains[0].id;
   chainId = parseInt(chainHexId, 16);
   switchChain(chainId);
-  account = wallets[0].accounts[0].address;
+  account = wallets[0].accounts[0].address.toLowerCase();
 
   // Listen for events emitted by the wallet provider.
   initWalletListeners();
