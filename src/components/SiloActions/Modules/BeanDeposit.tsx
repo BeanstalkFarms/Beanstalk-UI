@@ -61,13 +61,8 @@ export default function BeanDeposit() {
   };
 
   const sectionTitles = ['Deposit'];
-  const sectionTitlesDescription = [
-    siloStrings.beanDeposit,
-    siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
-  ];
-  const sectionTitlesInfoDescription = [
-    siloStrings.beanDepositsTable
-  ];
+  const sectionTitlesDescription = [siloStrings.beanDeposit];
+  const sectionTitlesInfoDescription = [siloStrings.beanDepositsTable];
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
