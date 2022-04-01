@@ -35,7 +35,7 @@ export async function initializeEventListener(
   const startTime = benchmarkStart('EVENT LISTENER');
   const beanstalk = beanstalkContractReadOnly();
 
-  console.log('initializeEventListener: ', account);
+  // console.log('initializeEventListener: ', account);
 
   const accountEvents = await Promise.all([
     beanstalk.getPastEvents('BeanDeposit', {
@@ -119,10 +119,10 @@ export async function initializeEventListener(
       fromBlock: 0,
     }),
   ]).catch((err) => {
-    console.error('initializeEventListener: failed to fetch accountEvents', err);
+    // console.error('initializeEventListener: failed to fetch accountEvents', err);
     throw err;
   }).then((result) => {
-    console.log('initializeEventListener: fetched accountEvents', result);
+    // console.log('initializeEventListener: fetched accountEvents', result);
     return result;
   });
 

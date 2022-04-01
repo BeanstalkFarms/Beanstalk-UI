@@ -150,8 +150,8 @@ export async function switchChain(_chainId: SupportedChainId) {
   // Create web3 / ethers instances.
   const [rpcHttp, rpcWs] = getRpcEndpoint(chainId);
   
+  console.log(`Using wallet: ${currentState.wallets[0]?.label}`);
   if (currentState.wallets[0].label === 'MetaMask') {
-    console.log('Using Metamask');
     web3   = new Web3((currentState.wallets[0].provider as unknown) as Web3CoreProvider);
     web3Ws = web3;
     web3Provider = new ethers.providers.Web3Provider(
@@ -239,7 +239,7 @@ export async function initialize(): Promise<boolean> {
     return false;
   }
 
-  console.log(`initialize: ${account}`);
+  // console.log(`initialize: ${account}`);
 
   return true;
 }

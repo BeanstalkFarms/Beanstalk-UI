@@ -109,9 +109,6 @@ export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
 
-  //
-  // const [{ wallet }] = useConnectWallet();
-
   // Global state
   const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
