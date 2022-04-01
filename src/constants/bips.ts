@@ -13,4 +13,5 @@ export const bipsList = [
   { path: '/Bips/bip-11.html', title: 'Farmers Market' },
   { path: '/Bips/bip-12.html', title: 'Silo Generalization I' },
   { path: '/Bips/bip-13.html', title: 'Adjustment to Weather Changes' },
+  { path: '/Bips/bip-14.html', title: 'Beanstalk Q2 2022 Budget' },
 ];
