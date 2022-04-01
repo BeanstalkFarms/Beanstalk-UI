@@ -89,7 +89,7 @@ export type Fundraiser = {
  * This ensures that Typescript keeps track of any changes to variable type
  * during that chain.
  */
-const setupBatch = (batch: BatchRequest, tag: string) => (
+const setupBatch = (batch: BatchRequest/* , tag: string */) => (
   function execute(fn: any) {
     return new Promise<any>((resolve, reject) => {
       batch.add(
@@ -199,12 +199,8 @@ export const getAccountBalances = async (batch: BatchRequest) => {
   return (
     promises
       .catch((err) => {
-        // console.error('getAccountBalances: failed to execute', err);
+        console.error('getAccountBalances: failed to execute', err);
         throw err;
-      })
-      .then((result) => {
-        // console.log('getAccountBalances: returned without error');
-        return result;
       })
   );
 };
@@ -294,12 +290,8 @@ export const getTotalBalances = async (batch: BatchRequest) => {
   return (
     promises
       .catch((err) => {
-        // console.error('getTotalBalances: failed to execute', err);
+        console.error('getTotalBalances: failed to execute', err);
         throw err;
-      })
-      .then((result) => {
-        // console.log('getTotalBalances: returned without error');
-        return result;
       })
   );
 };
@@ -504,12 +496,8 @@ export const getPrices = async (batch: BatchRequest) => {
   return (
     Promise.all(promises)
       .catch((err) => {
-        // console.error('getPrices: failed to execute', err);
+        console.error('getPrices: failed to execute', err);
         throw err;
-      })
-      .then((result) => {
-        // console.log('getPrices: returned without error');
-        return result;
       })
   );
 };

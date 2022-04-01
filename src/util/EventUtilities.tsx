@@ -119,11 +119,8 @@ export async function initializeEventListener(
       fromBlock: 0,
     }),
   ]).catch((err) => {
-    // console.error('initializeEventListener: failed to fetch accountEvents', err);
+    console.error('initializeEventListener: failed to fetch accountEvents', err);
     throw err;
-  }).then((result) => {
-    // console.log('initializeEventListener: fetched accountEvents', result);
-    return result;
   });
 
   // eslint-disable-next-line
