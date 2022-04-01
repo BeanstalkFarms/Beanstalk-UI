@@ -478,7 +478,7 @@ export default function Updater() {
           );
         } else if (event.event === 'PlotTransfer') {
           // The account received a Plot
-          if (event.returnValues.to === account) {
+          if (event.returnValues.to.toLowerCase() === account) {
             const index = toTokenUnitsBN(
               new BigNumber(event.returnValues.id),
               BEAN.decimals

@@ -223,6 +223,10 @@ export async function initialize(): Promise<boolean> {
   const chainHexId = wallets[0].chains[0].id;
   chainId = parseInt(chainHexId, 16);
   switchChain(chainId);
+
+  // NOTE: the toLowerCase() is important here. Need to make sure
+  // that any location that uses an address is lower-cased (the PlotTransfer
+  // event is an example). Some wallets see,m to return lowercased address, some don't.
   account = wallets[0].accounts[0].address.toLowerCase();
 
   // Listen for events emitted by the wallet provider.
