@@ -1,8 +1,8 @@
-import { SupportedChainId } from './chains';
+import { SupportedChainId } from '../chains';
 
-const INFURA_KEY = '23db69ab62394f4eb41db6a21853402c';
+const INFURA_KEY = '23db69ab62394f4eb41db6a21853402c'; // Silo Chad's key
 if (typeof INFURA_KEY === 'undefined') {
-  throw new Error('REACT_APP_INFURA_KEY must be a defined environment variable');
+  throw new Error('INFURA_KEY must be defined');
 }
 
 /**

@@ -150,7 +150,7 @@ export default function TradeModule() {
           defaultInputAddress="NATIVE"
           defaultOutputAddress={BEAN.addr}
           tokenList={WIDGET_TOKEN_LIST}
-          jsonRpcEndpoint={getRpcEndpoint(chainId)}
+          jsonRpcEndpoint={getRpcEndpoint(chainId)[0]}
           className={classes.widget}
         />
       </Grid>

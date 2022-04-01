@@ -23,7 +23,10 @@ let lastPriceRefresh = new Date().getTime();
 let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
-//
+/**
+ * @rpc 20 separate calls to `getPastEvents`. Not batched.
+ * @rpc 3 websocket opens for Beanstalk contract, BEAN:ETH + ETH:USDC pools.
+ */
 export async function initializeEventListener(
   processEvents: Function,
   updatePrices: Function,
@@ -32,7 +35,7 @@ export async function initializeEventListener(
   const startTime = benchmarkStart('EVENT LISTENER');
   const beanstalk = beanstalkContractReadOnly();
 
-  console.log('initializeEventListener: ', account);
+  // console.log('initializeEventListener: ', account);
 
   const accountEvents = await Promise.all([
     beanstalk.getPastEvents('BeanDeposit', {
@@ -118,9 +121,6 @@ export async function initializeEventListener(
   ]).catch((err) => {
     console.error('initializeEventListener: failed to fetch accountEvents', err);
     throw err;
-  }).then((result) => {
-    console.log('initializeEventListener: fetched accountEvents', result);
-    return result;
   });
 
   // eslint-disable-next-line

@@ -188,18 +188,18 @@ export default function NavigationSidebar() {
     : new BigNumber(0);
 
   // Add Fundraiser page to Nav Sidebar if active Fundraiser
-  function addActiveFundraiserNav(navMap) {
-    if (Object.keys(navMap.more).length < 6 && activeFundraisers.length > 0) {
-      navMap.more.push(
-        {
-          path: 'fundraiser',
-          title: 'Fundraiser',
-          desc: 'Fundraise Beanstalk proposals',
-        }
-      );
-    }
-    return navMap;
-  }
+  // function addActiveFundraiserNav(navMap) {
+  //   if (Object.keys(navMap.more).length < 6 && activeFundraisers.length > 0) {
+  //     navMap.more.push(
+  //       {
+  //         path: 'fundraiser',
+  //         title: 'Fundraiser',
+  //         desc: 'Fundraise Beanstalk proposals',
+  //       }
+  //     );
+  //   }
+  //   return navMap;
+  // }
 
   // Add badge to Sidebar nav
   const badgeDataByPath : { [key: string] : string | any[] | null } = {
@@ -217,7 +217,7 @@ export default function NavigationSidebar() {
   }
   if (activeFundraisers.length > 0) {
     badgeDataByPath.fundraiser = activeFundraisers;
-    addActiveFundraiserNav(NAVIGATION_MAP);
+    // addActiveFundraiserNav(NAVIGATION_MAP);
   }
 
   const currentBeanPrice = (
@@ -287,6 +287,17 @@ export default function NavigationSidebar() {
           MORE
         </ListSubheader>
       }>
+        {activeFundraisers.length > 0 ? (
+          <NavItem
+            item={
+              {
+                path: 'fundraiser',
+                title: 'Fundraiser',
+                desc: 'Fundraise Beanstalk proposals',
+              }
+            }
+          />
+        ) : null}
         {NAVIGATION_MAP.more.map((item: any) => <NavItem item={item} key={item.path} />)}
       </List>
       <Box p={2} className={classes.metrics}>

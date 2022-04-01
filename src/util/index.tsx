@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { provider as Web3CoreProvider } from 'web3-core';
 import { ethers } from 'ethers';
 import {
   BEANFTCOLLECTION,
@@ -15,7 +16,8 @@ import {
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
-import { INFURA_HTTPS_URLS, INFURA_WS_URLS } from 'constants/infura';
+// import { INFURA_HTTPS_URLS, INFURA_WS_URLS } from 'constants/rpc/infura';
+import { ALCHEMY_HTTPS_URLS, ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
 import onboard from './onboard';
 
 export * from './EventUtilities';
@@ -44,7 +46,7 @@ export let metamaskFailure = -1;
 export let chainId : SupportedChainId = 1;
 
 export let web3Provider : ethers.providers.Web3Provider;
-export let web3Signer : ethers.providers.JsonRpcSigner;
+export let web3Signer   : ethers.providers.JsonRpcSigner;
 
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');
@@ -125,7 +127,10 @@ async function initWalletListeners() {
  * @returns
  */
 export function getRpcEndpoint(_chainId: SupportedChainId) {
-  return INFURA_HTTPS_URLS[_chainId];
+  return [
+    ALCHEMY_HTTPS_URLS[_chainId],
+    ALCHEMY_WS_URLS[_chainId],
+  ];
 }
 
 /**
@@ -143,18 +148,30 @@ export async function switchChain(_chainId: SupportedChainId) {
   if (chainId === 3) changeTheme('ropsten');
 
   // Create web3 / ethers instances.
-  const rpcUrl = getRpcEndpoint(chainId);
-  web3 = new Web3(
-    new Web3.providers.HttpProvider(rpcUrl)
-  );
-  web3Ws = new Web3(
-    new Web3.providers.WebsocketProvider(INFURA_WS_URLS[chainId])
-  );
-  web3Provider = new ethers.providers.Web3Provider(
-    currentState.wallets[0].provider,   // the provider instance from web3-onboard
-    CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
-  );
-  web3Signer = web3Provider.getSigner();
+  const [rpcHttp, rpcWs] = getRpcEndpoint(chainId);
+  
+  console.log(`Using wallet: ${currentState.wallets[0]?.label}`);
+  if (currentState.wallets[0].label === 'MetaMask') {
+    web3   = new Web3((currentState.wallets[0].provider as unknown) as Web3CoreProvider);
+    web3Ws = web3;
+    web3Provider = new ethers.providers.Web3Provider(
+      currentState.wallets[0].provider,   // the provider instance from web3-onboard
+      CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
+    );
+    web3Signer = web3Provider.getSigner();
+  } else {
+    web3 = new Web3(
+      new Web3.providers.HttpProvider(rpcHttp)
+    );
+    web3Ws = new Web3(
+      new Web3.providers.WebsocketProvider(rpcWs)
+    );
+    web3Provider = new ethers.providers.Web3Provider(
+      currentState.wallets[0].provider,   // the provider instance from web3-onboard
+      CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
+    );
+    web3Signer = web3Provider.getSigner();
+  }
 }
 
 function getPreviouslyConnectedWallets() : null | string[] {
@@ -206,7 +223,11 @@ export async function initialize(): Promise<boolean> {
   const chainHexId = wallets[0].chains[0].id;
   chainId = parseInt(chainHexId, 16);
   switchChain(chainId);
-  account = wallets[0].accounts[0].address;
+
+  // NOTE: the toLowerCase() is important here. Need to make sure
+  // that any location that uses an address is lower-cased (the PlotTransfer
+  // event is an example). Some wallets see,m to return lowercased address, some don't.
+  account = wallets[0].accounts[0].address.toLowerCase();
 
   // Listen for events emitted by the wallet provider.
   initWalletListeners();
@@ -218,7 +239,7 @@ export async function initialize(): Promise<boolean> {
     return false;
   }
 
-  console.log(`initialize: ${account}`);
+  // console.log(`initialize: ${account}`);
 
   return true;
 }
