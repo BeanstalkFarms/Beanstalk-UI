@@ -217,6 +217,7 @@ export default function ListingsTable(props: ListingsTableProps) {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+
   /** */
   const [page, setPage] = useState<number>(0);
   const filteredListings = props.listings.filter((listing) => listing?.remainingAmount?.gt(0.0001));
@@ -224,13 +225,12 @@ export default function ListingsTable(props: ListingsTableProps) {
   if (!filteredListings || filteredListings.length === 0) {
     return (
       <div>
-        <h4 style={{ }}>No active listings given the current filters</h4>
+        <h4>No active listings given the current filters</h4>
       </div>
     );
   }
 
   //
-
   const rowsPerPage = 5;
   const slicedItems = filteredListings
     .sort((a, b) => a.index - b.index)

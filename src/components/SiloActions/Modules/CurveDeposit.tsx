@@ -44,11 +44,8 @@ export default function CurveDeposit() {
   );
 
   const sectionTitles = ['Deposit'];
-  const sectionTitlesDescription = [curveStrings.deposit, curveStrings.withdraw];
-  const sectionTitlesInfoDescription = [
-    siloStrings.lpDepositsTable,
-    siloStrings.lpWithdrawalsTable,
-  ];
+  const sectionTitlesDescription = [curveStrings.deposit];
+  const sectionTitlesInfoDescription = [siloStrings.lpDepositsTable];
 
   const [sectionInfo, setSectionInfo] = useState(0);
   const [page, setPage] = useState(0);
@@ -58,11 +55,7 @@ export default function CurveDeposit() {
     if (newSection !== section) {
       setSection(newSection);
       setIsFormDisabled(true);
-      if (newSection > 0) {
-        setSettings((p) => ({ ...p, useBalanced: false }));
-      } else {
-        setSettings((p) => ({ ...p, useBalanced: false }));
-      }
+      setSettings((p) => ({ ...p, useBalanced: false }));
     }
   };
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
@@ -83,6 +76,7 @@ export default function CurveDeposit() {
     );
   };
 
+  //
   const depositRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
