@@ -10,7 +10,6 @@ import { BASE_SLIPPAGE } from 'constants/index';
 import { approveBeanstalkCurve, poolForLP } from 'util/index';
 import { BaseModule, curveStrings, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
 import CurveDepositAction from './Actions/CurveDepositAction';
-import CurveClaimAction from './Actions/CurveClaimAction';
 
 export default function CurveDeposit() {
   const [section, setSection] = useState(0);
@@ -45,11 +44,8 @@ export default function CurveDeposit() {
   );
 
   const sectionTitles = ['Deposit'];
-  const sectionTitlesDescription = [curveStrings.deposit, curveStrings.withdraw];
-  const sectionTitlesInfoDescription = [
-    siloStrings.lpDepositsTable,
-    siloStrings.lpWithdrawalsTable,
-  ];
+  const sectionTitlesDescription = [curveStrings.deposit];
+  const sectionTitlesInfoDescription = [siloStrings.lpDepositsTable];
 
   const [sectionInfo, setSectionInfo] = useState(0);
   const [page, setPage] = useState(0);
@@ -59,11 +55,7 @@ export default function CurveDeposit() {
     if (newSection !== section) {
       setSection(newSection);
       setIsFormDisabled(true);
-      if (newSection > 0) {
-        setSettings((p) => ({ ...p, useBalanced: false }));
-      } else {
-        setSettings((p) => ({ ...p, useBalanced: false }));
-      }
+      setSettings((p) => ({ ...p, useBalanced: false }));
     }
   };
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
@@ -84,19 +76,12 @@ export default function CurveDeposit() {
     );
   };
 
+  //
   const depositRef = useRef<any>();
-  const withdrawRef = useRef<any>();
-  const claimRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
         depositRef.current.handleForm();
-        break;
-      case 1:
-        withdrawRef.current.handleForm();
-        break;
-      case 2:
-        claimRef.current.handleForm();
         break;
       default:
         break;
@@ -112,21 +97,6 @@ export default function CurveDeposit() {
       settings={settings} // hide
     />
   ];
-
-  if (curveReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <CurveClaimAction
-        key={2}
-        ref={claimRef}
-        setIsFormDisabled={setIsFormDisabled}
-        setSettings={setSettings} // hide
-        settings={settings} // hide
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(curveStrings.lpClaim);
-  }
-  if (section > sectionTitles.length - 1) setSection(0);
 
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
