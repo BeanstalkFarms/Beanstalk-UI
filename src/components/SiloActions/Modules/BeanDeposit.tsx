@@ -21,7 +21,6 @@ export default function BeanDeposit() {
     ethBalance,
     beanDeposits,
     lockedSeasons,
-    beanReceivableBalance,
     farmableBeanBalance,
     rawBeanDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
