@@ -20,6 +20,13 @@ type OrdersProps = {
   setCurrentOrder: Function;
 };
 
+const filterTitleStyle = {
+  display: 'inline',
+  marginTop: 0,
+  fontFamily: 'Futura-PT-Book',
+  fontSize: '20.8px',
+};
+
 /**
  * Orders
  */
@@ -37,12 +44,6 @@ export default function Orders(props: OrdersProps) {
   const { plots } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
-  const filterTitleStyle = {
-    display: 'inline',
-    marginTop: 0,
-    fontFamily: 'Futura-PT-Book',
-    fontSize: '20.8px',
-  };
 
   //
   const [walletAddress, setWalletAddress] = useState(null);
@@ -75,8 +76,8 @@ export default function Orders(props: OrdersProps) {
       allOrders,
       (order) =>
         (props.mode === 'MINE'
-          ? order.account === walletAddress
-          : order.account !== walletAddress) &&
+          ? order.account.toLowerCase() === walletAddress
+          : order.account.toLowerCase() !== walletAddress) &&
         order.pricePerPod.toNumber() > priceFilters[0] &&
         order.pricePerPod.toNumber() < priceFilters[1] &&
         order.maxPlaceInLine.gte(new BigNumber(placeInLineFilters[0])) &&
