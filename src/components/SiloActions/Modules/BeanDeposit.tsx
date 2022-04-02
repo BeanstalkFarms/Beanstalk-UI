@@ -9,7 +9,6 @@ import { BASE_SLIPPAGE } from '../../../constants';
 import { approveBeanstalkBean, poolForLP, SwapMode } from '../../../util';
 import { updateBeanstalkBeanAllowance } from '../../../state/allowances/actions';
 import BeanDepositAction from './Actions/BeanDepositAction';
-import BeanClaimAction from './Actions/BeanClaimAction';
 
 export default function BeanDeposit() {
    const { beanstalkBeanAllowance } = useSelector<
@@ -44,7 +43,6 @@ export default function BeanDeposit() {
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [settings, setSettings] = useState({
-    claim: false,
     mode: null,
     slippage: new BigNumber(BASE_SLIPPAGE),
   });
@@ -63,20 +61,14 @@ export default function BeanDeposit() {
   };
 
   const sectionTitles = ['Deposit'];
-  const sectionTitlesDescription = [
-    siloStrings.beanDeposit,
-    siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
-  ];
-  const sectionTitlesInfoDescription = [
-    siloStrings.beanDepositsTable
-  ];
+  const sectionTitlesDescription = [siloStrings.beanDeposit];
+  const sectionTitlesInfoDescription = [siloStrings.beanDepositsTable];
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
       setSection(newSection);
       setIsFormDisabled(true);
       setSettings({
-        claim: false,
         mode: null,
         slippage: new BigNumber(BASE_SLIPPAGE),
       });
@@ -109,14 +101,10 @@ export default function BeanDeposit() {
   };
 
   const depositRef = useRef<any>();
-  const claimRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
         depositRef.current.handleForm();
-        break;
-      case 1:
-        claimRef.current.handleForm();
         break;
       default:
         break;
@@ -135,20 +123,6 @@ export default function BeanDeposit() {
       updateExpectedPrice={updateExpectedPrice}
     />
   ];
-
-  /* */
-  if (beanReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <BeanClaimAction
-        key={1}
-        ref={claimRef}
-        setIsFormDisabled={setIsFormDisabled}
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(siloStrings.beanClaim);
-  }
-  if (section > sectionTitles.length - 1) setSection(0);
 
   /* "Info" section == the BaseModule shown below the Deposit &
      Deposit tabs. Used to show bean deposits. */
