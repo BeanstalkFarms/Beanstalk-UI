@@ -21,7 +21,6 @@ export default function BeanDeposit() {
     ethBalance,
     beanDeposits,
     lockedSeasons,
-    beanReceivableBalance,
     farmableBeanBalance,
     rawBeanDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
@@ -110,7 +109,7 @@ export default function BeanDeposit() {
         break;
     }
   };
-  
+
   /* */
   const sections = [
     <BeanDepositAction
