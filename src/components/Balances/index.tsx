@@ -398,6 +398,7 @@ export default function Balances() {
   return (
     <ContentSection
       id="balances"
+      style={{ marginBottom: 50 }}
     >
       <Box className="BalanceSection-mobile">
         <BaseModule
