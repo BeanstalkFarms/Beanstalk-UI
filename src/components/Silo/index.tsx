@@ -124,7 +124,7 @@ export default function Silo() {
   );
 
   return (
-    <Grid container justifyContent="center" style={{ marginTop: 20 }}>
+    <Grid container justifyContent="center" style={{ margin: '20px 0 50px 0' }}>
       <Grid item xs={12} sm={10} lg={8} container justifyContent="center" spacing={2}>
         {metrics}
       </Grid>
