@@ -83,6 +83,7 @@ export default function Footer() {
       <Grid container className={classes.fixedGround} style={{
         paddingLeft: width < 800 ? 0 : 300
       }} justifyContent="center">
+        {/* Row 1: Icons */}
         <LogoLinks close link={TWITTER_LINK}>
           <TwitterIcon style={logoStyle} />
         </LogoLinks>
@@ -142,6 +143,7 @@ export default function Footer() {
             </LogoLinks>
           </>
         ) : null}
+        {/* Row 2 */}
         <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
           <LogoLinks close link={NETLIFY_LINK} paddingTop="0px" color={theme.footer}>
             <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }}>

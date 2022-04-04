@@ -117,6 +117,7 @@ const useStyles = makeStyles(() => ({
 const swapWidgetTheme = {
   tokenColorExtraction: false,
   borderRadius: 15,
+  accent: '#3B3B3B',
   // container: "transparent",    // main background
   // module: "hsl(231,14%,92%)", // defaut hsl(231,14%,90%)
 };
@@ -140,7 +141,7 @@ export default function TradeModule() {
           maxWidth: '500px',
           backgroundColor: 'hsl(220,23%,97.5%)',
           padding: '3px 3px 12px 3px',
-          borderRadius: 15 
+          borderRadius: 15
         }}
       >
         <SwapWidget
@@ -150,7 +151,7 @@ export default function TradeModule() {
           defaultInputAddress="NATIVE"
           defaultOutputAddress={BEAN.addr}
           tokenList={WIDGET_TOKEN_LIST}
-          jsonRpcEndpoint={getRpcEndpoint(chainId)}
+          jsonRpcEndpoint={getRpcEndpoint(chainId)[0]}
           className={classes.widget}
         />
       </Grid>
@@ -216,7 +217,7 @@ export default function TradeModule() {
         toAddress.length !== 42 ||
         isValidAddress !== true;
 */
-/* 
+/*
 <BaseModule
   isDisabled={disabled}
   section={section}

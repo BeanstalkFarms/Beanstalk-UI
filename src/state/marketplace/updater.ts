@@ -79,7 +79,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
     if (event.event === 'PodListingCreated') {
       const values = (event.returnValues as PodListingCreatedEvent);
       podListings[values.index] = {
-        account: values.account,
+        account: values.account.toLowerCase(),
         index: toTokenUnitsBN(new BigNumber(values.index), BEAN.decimals),
         start: toTokenUnitsBN(new BigNumber(values.start), BEAN.decimals),
         pricePerPod: toTokenUnitsBN(new BigNumber(values.pricePerPod), BEAN.decimals),
@@ -135,8 +135,8 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
         pricePerPod: podListings[newKey].pricePerPod,
         filledBeans: filledBeans,
         // Parties
-        from: values.from,
-        to: values.to,
+        from: values.from.toLowerCase(),
+        to: values.to.toLowerCase(),
       });
 
       marketStats.podVolume  = marketStats.podVolume.plus(amount);
@@ -153,7 +153,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
     } else if (event.event === 'PodOrderCreated') {
       const values = (event.returnValues as PodOrderCreatedEvent);
       podOrders[values.id] = {
-        account: values.account,
+        account: values.account.toLowerCase(),
         id: values.id.toString(),
         maxPlaceInLine: toTokenUnitsBN(new BigNumber(values.maxPlaceInLine), BEAN.decimals),
         totalAmount: toTokenUnitsBN(new BigNumber(values.amount), BEAN.decimals),
@@ -193,8 +193,8 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
         pricePerPod: podOrders[key].pricePerPod,
         filledBeans: filledBeans,
         // Parties
-        from: values.from,
-        to: values.to,
+        from: values.from.toLowerCase(),
+        to: values.to.toLowerCase(),
       });
 
       marketStats.podVolume  = marketStats.podVolume.plus(amount);
@@ -208,18 +208,26 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
     }
   }
 
-  // Finally, order listings and offers by their index and also mark any that have expired.
-  const finalPodListings = orderBy(Object.values(podListings), 'index', 'asc').map((listing) => {
-    if (listing.maxHarvestableIndex.isLessThanOrEqualTo(harvestableIndex)) {
-      // Don't add to remaining amount since listing has expired.
-      return {
-        ...listing,
-        status: 'expired',
-      };
-    }
-    marketStats.listings.sumRemainingAmount = marketStats.listings.sumRemainingAmount.plus(listing.remainingAmount);
-    return listing;
-  });
+  //
+  const finalPodListings = (
+    orderBy(Object.values(podListings), 'index', 'asc')
+      // Filter out dust pod listings.
+      // FIXME: if there are no listings after this filter is applied,
+      // Pod Orders don't show up on the marketplace graph.
+      .filter((listing) => listing.remainingAmount.gt(0.0001))
+      // Change the status of expired listings.
+      .map((listing) => {
+        if (listing.maxHarvestableIndex.isLessThanOrEqualTo(harvestableIndex)) {
+          return {
+            ...listing,
+            status: 'expired',
+          };
+        }
+        marketStats.listings.sumRemainingAmount = marketStats.listings.sumRemainingAmount.plus(listing.remainingAmount);
+        return listing;
+      }
+    )
+  );
   const finalPodOrders = Object.values(podOrders).map((order) => {
     marketStats.orders.sumRemainingAmount = marketStats.orders.sumRemainingAmount.plus(order.remainingAmount);
     return order;

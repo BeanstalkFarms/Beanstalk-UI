@@ -466,7 +466,7 @@ export default function WalletModule() {
           )}...${accountHex.substr(accountHex.length - 4, 4)}`;
           setWalletText(accountDisplay);
         } else {
-          console.log('Please Install Metamask!');
+          console.log('handleWallet: account is undefined.');
         }
       });
     }

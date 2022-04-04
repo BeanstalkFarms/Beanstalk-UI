@@ -1,5 +1,4 @@
 export * from './UniswapV2Graph';
-export * from './BeanstalkUniswapGraph';
+export * from './BeanSubgraph';
 export * from './BeanNFTGraph';
-export * from './BeanstalkGraph';
-export * from './SoilGraph';
+export * from './BeanstalkSubgraph';

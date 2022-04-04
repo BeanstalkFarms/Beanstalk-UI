@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+ import React, { useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@material-ui/core';
@@ -23,7 +23,6 @@ import {
   TransitAsset,
 } from 'components/Common';
 import LPDepositAction from './Actions/LPDepositAction';
-import LPClaimAction from './Actions/LPClaimAction';
 
 export function LPDeposit() {
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
@@ -78,7 +77,6 @@ export function LPDeposit() {
   const [section, setSection] = useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
   const [settings, setSettings] = useState({
-    claim: false,
     convert: false,
     useLP: false,
     mode: null,
@@ -89,21 +87,14 @@ export function LPDeposit() {
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   const sectionTitles = ['Deposit'];
-  const sectionTitlesDescription = [
-    siloStrings.lpDeposit,
-    siloStrings.lpWithdraw.replace('{0}', totalBalance.withdrawSeasons),
-  ];
-  const sectionTitlesInfoDescription = [
-    siloStrings.lpDepositsTable,
-    siloStrings.lpWithdrawalsTable,
-  ];
+  const sectionTitlesDescription = [siloStrings.lpDeposit];
+  const sectionTitlesInfoDescription = [siloStrings.lpDepositsTable];
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
       setSection(newSection);
       setIsFormDisabled(true);
       setSettings({
-        claim: false,
         convert: false,
         useLP: false,
         mode: null,
@@ -134,14 +125,10 @@ export function LPDeposit() {
   }
 
   const depositRef = useRef<any>();
-  const claimRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
         depositRef.current.handleForm();
-        break;
-      case 2:
-        claimRef.current.handleForm();
         break;
       default:
         break;
@@ -159,19 +146,6 @@ export function LPDeposit() {
       settings={settings}
     />
   ];
-  if (lpReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <LPClaimAction
-        key={1}
-        ref={claimRef}
-        poolForLPRatio={poolForLPRatio}
-        setIsFormDisabled={setIsFormDisabled}
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(siloStrings.lpClaim);
-  }
-  if (section > sectionTitles.length - 1) setSection(0);
 
   const sectionTitlesInfo = [];
   const sectionsInfo = [];

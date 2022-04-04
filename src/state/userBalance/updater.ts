@@ -109,9 +109,6 @@ export default function Updater() {
   const zeroBN = new BigNumber(0);
   const dispatch = useDispatch();
 
-  //
-  // const [{ wallet }] = useConnectWallet();
-
   // Global state
   const userBalance = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
@@ -495,7 +492,7 @@ export default function Updater() {
           );
         } else if (event.event === 'PlotTransfer') {
           // The account received a Plot
-          if (event.returnValues.to === account) {
+          if (event.returnValues.to.toLowerCase() === account) {
             const index = toTokenUnitsBN(
               new BigNumber(event.returnValues.id),
               BEAN.decimals
