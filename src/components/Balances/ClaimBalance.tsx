@@ -1,10 +1,11 @@
 import React from 'react';
+import type { FC } from 'react';
 import { Box } from '@material-ui/core';
 import {
   CryptoAsset,
   displayBN,
   displayFullBN,
-  smallDecimalPercent,
+  smallDecimalPercent, Token,
   TokenLabel,
 } from 'util/index';
 import {
@@ -13,25 +14,52 @@ import {
   TokenTypeImageModule,
   QuestionModule,
 } from 'components/Common';
+import BigNumber from "bignumber.js";
+import { makeStyles } from "@material-ui/core/styles";
 
-export default function ClaimBalance({
-  asset,
-  balance,
-  balanceColor,
-  description,
-  height,
-  title,
-  token,
-  width,
-  widthTooltip,
-}) {
-  const style = {
-    color: balanceColor,
+const useStyles = makeStyles(({
+  style: {
     display: 'inline',
     fontFamily: 'Lucida Console',
-    fontWeight: '400',
+    fontWeight: 400,
     lineHeight: '100%',
-  };
+  },
+  imageStyle: {
+    display: 'inline-block',
+    marginBottom: '-2px',
+    marginLeft: '0px',
+  }
+}));
+
+interface ClaimProps {
+    asset?: Token;
+    balance: BigNumber;
+    balanceColor?: string;
+    description: string;
+    height?: string;
+    title?: string;
+    token: Token;
+    width?: string;
+    widthTooltip?: string;
+    userClaimable?: boolean;
+}
+
+const ClaimBalance: FC<ClaimProps> = (
+    {
+      asset,
+      balance,
+      balanceColor,
+      description,
+      height,
+      title,
+      token,
+      width,
+      widthTooltip,
+      userClaimable //unused
+    }
+) => {
+  const classes = useStyles();
+
   const imageStyle = {
     display: 'inline-block',
     height: height,
@@ -70,12 +98,14 @@ export default function ClaimBalance({
                 className="claimTextField-content"
                 style={{ margin: '0 0 0 5px' }}
               >
-                <h5 style={style}>{displayBalance}</h5>
-                <TokenTypeImageModule
-                  style={imageStyle}
-                  token={token}
-                  left={height !== '15px' ? '2px' : '0px'}
-                />
+                <Box sx={{ color: balanceColor }}>
+                  <h5 className={classes.style}>{displayBalance}</h5>
+                  <TokenTypeImageModule
+                    style={imageStyle}
+                    token={token}
+                    left={height !== '15px' ? '2px' : '0px'}
+                  />
+                </Box>
               </Box>
             </FormatTooltip>
           </Box>
@@ -84,10 +114,12 @@ export default function ClaimBalance({
     );
   }
   return null;
-}
+};
 
 ClaimBalance.defaultProps = {
   title: 'undefined',
   width: 'calc(55px + 2vw)',
   height: '15px',
 };
+
+export default ClaimBalance;
