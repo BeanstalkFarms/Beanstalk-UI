@@ -5,19 +5,34 @@ import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
 import { METAMASK_LINK } from 'constants/index';
 import SvgCloudIcon from 'components/About/SvgCloudIcon';
 import About from 'components/About';
+import { makeStyles } from "@material-ui/core/styles";
 
-const connectMetaStyle = {
-  fontFamily: 'Futura-PT-Book',
-  fontSize: '18px',
-  height: '46px',
-  lineHeight: '20px',
-  margin: 'auto 0',
-  padding: '20px',
-  top: 'calc(50% - 23px)',
-  width: 'auto',
-};
+const useStyles = makeStyles(({
+  connectMetaStyle: {
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '18px',
+    height: '46px',
+    lineHeight: '20px',
+    margin: 'auto 0',
+    padding: '20px',
+    top: 'calc(50% - 23px)',
+    width: 'auto',
+  }
+}));
+
+// const connectMetaStyle = {
+//   fontFamily: 'Futura-PT-Book',
+//   fontSize: '18px',
+//   height: '46px',
+//   lineHeight: '20px',
+//   margin: 'auto 0',
+//   padding: '20px',
+//   top: 'calc(50% - 23px)',
+//   width: 'auto',
+// };
 
 export default function MetamasklessModule() {
+  const classes = useStyles();
   const history = useHistory();
 
   let metamaskModule;
@@ -57,7 +72,8 @@ export default function MetamasklessModule() {
                 window.location.reload();
               }
             }}
-            style={connectMetaStyle}
+            className={classes.connectMetaStyle}
+            // style={connectMetaStyle}
             variant="contained"
           >
             Connect Wallet

@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 import { Link, Grid } from '@material-ui/core';
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   icon: {
-    marginLeft: "6px",
-    marginRight: "6px",
-    marginTop: "25px"
+    marginLeft: '6px',
+    marginRight: '6px',
+    marginTop: '25px'
   }
 })
 

@@ -1,20 +1,39 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Box } from '@material-ui/core';
 import { ChartDonut, ChartLabel } from '@patternfly/react-charts';
 import { CryptoAsset } from 'components/Common';
+import { makeStyles } from '@material-ui/core/styles';
+import BigNumber from 'bignumber.js';
 
-export default function BalanceChart(props) {
-  const chartSizeStyle = {
+const useStyles = makeStyles(({
+  chartSizeStyle: {
     fontFamily: 'Futura-PT-Book',
     height: '100%',
     width: '90%',
     margin: '0 10%',
-  };
-  const svgStyle = {
+  },
+  svgStyle: {
     maxHeight: '140px',
     maxWidth: '140px',
     margin: '8px auto 4px auto',
-  };
+  }
+}));
+
+interface BalanceChartProps {
+  circulating: BigNumber;
+  silo: string;
+  transit: string;
+  pool: string;
+  claimable: string;
+  budget: string;
+  total: string;
+  title: string;
+  asset: number;
+  setActive: any;
+}
+
+const BalanceChart: FC<BalanceChartProps> = (props) => {
+  const classes = useStyles({});
 
   const colors = [
     '#B3CDE3',
@@ -46,8 +65,8 @@ export default function BalanceChart(props) {
       : [{ x: 'Empty', y: 100, fill: colors[5] }];
 
   return (
-    <Box style={chartSizeStyle}>
-      <svg style={svgStyle}>
+    <Box className={classes.chartSizeStyle}>
+      <svg className={classes.svgStyle}>
         <ChartDonut
           standalone={false}
           constrainToVisibleArea={false}
@@ -115,4 +134,7 @@ export default function BalanceChart(props) {
       </svg>
     </Box>
   );
-}
+};
+
+export default BalanceChart;
+
