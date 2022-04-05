@@ -26,6 +26,8 @@ export const LPBEAN_TO_STALK = 1;
 export const LPBEANS_TO_SEEDS = 4;
 export const CURVE_BDV_TO_STALK = 1;
 export const CURVE_BDV_TO_SEEDS = 4;
+export const LUSD_BDV_TO_STALK = 1;
+export const LUSD_BDV_TO_SEEDS = 3;
 
 // export const LP_TO_SEEDS = 8; // unused
 export const UNISWAP_BASE_LP = 1e-15;

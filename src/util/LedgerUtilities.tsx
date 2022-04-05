@@ -182,6 +182,7 @@ export const getAccountBalances = async (batch: BatchRequest) => {
     exec(lp.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
     exec(usdc.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
     exec(curve.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    exec(beanlusd.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
     // Balances
     exec(beanstalk.methods.balanceOfEth(account)).then(tokenResult(ETH)),
     exec(bean.methods.balanceOf(account)).then(tokenResult(BEAN)),
@@ -477,7 +478,7 @@ export const getPrices = async (batch: BatchRequest) => {
           toTokenUnitsBN(prices[1], 18),
         ],
       ),
-      //
+      // Curve to BDV
       exec(beanstalk.methods.curveToBDV(utils.parseEther('1'))).then(
         (r: string) => toTokenUnitsBN(r, 6)
       ),
@@ -495,6 +496,10 @@ export const getPrices = async (batch: BatchRequest) => {
           toTokenUnitsBN(prices[0], 6),
           toTokenUnitsBN(prices[1], 18),
         ],
+      ),
+      // Bean:LUSD to BDV - Need Fix once new Beanstalk abi
+      exec(beanstalk.methods.curveToBDV(utils.parseEther('1'))).then(
+        (r: string) => toTokenUnitsBN(r, 6)
       ),
     ]);
   } else {
@@ -526,6 +531,10 @@ export const getPrices = async (batch: BatchRequest) => {
       // Bean:LUSD Balances
       exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
         () => [new BigNumber(0), new BigNumber(0)],
+      ),
+      //
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(1),
       ),
     ]);
   }

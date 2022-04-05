@@ -15,7 +15,7 @@ export const getAPY = (
   s0: number,
   /** Current: total amount of Stalk outstanding */
   S0: number,
-  /** Current: total amoutn of Seeds outstanding */
+  /** Current: total amount of Seeds outstanding */
   K0: number
 ) : APYTuple => {
   // Initialize sequence
@@ -35,7 +35,7 @@ export const getAPY = (
 
   return [
     (b[hours] - 1 - s0) * 100,  // User Beans: final value - initial deposit
-    (k[hours] - 1) * 100        // User Stalk: 
+    (k[hours] - 1) * 100        // User Stalk:
   ];
 };
 
@@ -46,8 +46,9 @@ export const getAPYs = (
   S0: number,
   /** Current: amount of Seeds outstanding */
   K0: number
-): [beanAPY: APYTuple, lpAPY: APYTuple] => {
+): [beanAPY: APYTuple, lpAPY: APYTuple, beanlusdAPY: APYTuple] => {
   const beanAPY = getAPY(8760, beansPerSeason, 0, S0, K0);
   const lpAPY   = getAPY(8760, beansPerSeason, 1, S0, K0);
-  return [beanAPY, lpAPY];
+  const beanlusdAPY   = getAPY(8760, beansPerSeason, 0.5, S0, K0);
+  return [beanAPY, lpAPY, beanlusdAPY];
 };

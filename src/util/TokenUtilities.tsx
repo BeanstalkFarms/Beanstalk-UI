@@ -3,6 +3,7 @@ import {
   BEAN,
   BEANSTALK,
   CURVE,
+  BEANLUSD,
   UNI_V2_ETH_BEAN_LP,
   UNISWAP_V2_ROUTER,
   USDC,
@@ -134,6 +135,10 @@ export const approveBeanstalkUSDC = async (callback) => {
 
 export const approveBeanstalkCurve = async (callback) => {
   approveToken(CURVE, account, BEANSTALK, MAX_UINT256, callback);
+};
+
+export const approveBeanstalkBeanlusd = async (callback) => {
+  approveToken(BEANLUSD, account, BEANSTALK, MAX_UINT256, callback);
 };
 
 export function TokenLabel(tokenType: Token): string {

@@ -44,7 +44,7 @@ const TabbedForm : React.FC<TabbedFormProps> = (props) => {
     <Withdraw />,
     <Convert />
   ];
-  const sectionTitles = (props.tokenData.slug === 'bean-3crv') ? (
+  const sectionTitles = (props.tokenData.slug === 'bean-3crv' || props.tokenData.slug === 'bean-lusd') ? (
     ['Deposit', 'Withdraw']
   ) : (
     ['Deposit', 'Withdraw', 'Convert']
@@ -52,7 +52,7 @@ const TabbedForm : React.FC<TabbedFormProps> = (props) => {
 
   // Handlers
   const handleTabChange = useCallback(
-    (event: any, newSection: number) => setSection(newSection), 
+    (event: any, newSection: number) => setSection(newSection),
     [setSection]
   );
 

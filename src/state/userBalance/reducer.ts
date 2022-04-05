@@ -137,6 +137,18 @@ export interface UserBalanceState {
   /** @publius */
   curveReceivableCrates: Withdrawals;
 
+  /** @publius */
+  beanlusdDeposits: Deposits;
+
+  /** @publius */
+  beanlusdBDVDeposits: Deposits;
+
+  /** @publius */
+  beanlusdWithdrawals: Withdrawals;
+
+  /** @publius */
+  beanlusdReceivableCrates: Withdrawals;
+
   /**
    * Plots are keyed by plotIndex, value is size of the Plot in Pods.
    */
@@ -212,6 +224,10 @@ export const initialState: UserBalanceState = {
   curveBDVDeposits: {},
   curveWithdrawals: {},
   curveReceivableCrates: {},
+  beanlusdDeposits: {},
+  beanlusdBDVDeposits: {},
+  beanlusdWithdrawals: {},
+  beanlusdReceivableCrates: {},
   plots: {},
   harvestablePlots: {},
   votedBips: new Set(),

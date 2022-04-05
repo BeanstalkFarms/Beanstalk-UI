@@ -292,6 +292,13 @@ export const curveStrings = {
   claim: 'Use this sub-tab to Claim Withrawn BEAN:3CRV LP Tokens from the Silo.',
   holder: 'placeholder',
 };
+export const beanlusdStrings = {
+  description: 'What is curve?',
+  deposit: 'Use this tab to deposit assets into the BEAN:LUSD pool. Users can deposit assets in a balanced proportion or any combination of assets in the BEAN:LUSD pool.',
+  withdraw: 'Use this tab to withdraw assets from the BEAN:LUSD pool. Users can withdraw assets in a balanced proportion or any combination of assets from the BEAN:LUSD pool.',
+  claim: 'Use this sub-tab to Claim Withrawn BEAN:LUSD LP Tokens from the Silo.',
+  holder: 'placeholder',
+};
 export const beanftStrings = {
   beanftDescription:
     'BeaNFT Genesis Collection is a series of 2067 Bean NFTs which could only be minted by participating in Beanstalk during Seasons 1200 – 1800. The top 10 Sows each Season were awarded a BeaNFT. Check out the full collection on',

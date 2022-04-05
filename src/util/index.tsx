@@ -153,11 +153,11 @@ export async function switchChain(_chainId: SupportedChainId) {
 
   // Create web3 / ethers instances.
   const [rpcHttp, rpcWs] = getRpcEndpoint(chainId);
-  
+
   // Brave injects "MetaMask" wallet but doesn't provide websocket RPC pool.
   // @ts-ignore
   const isBrave = (window?.navigator?.brave && await window.navigator.brave.isBrave() || false);
-  
+
   console.log(`Using wallet: ${currentState.wallets[0]?.label}`);
 
   if (currentState.wallets[0].label === 'MetaMask' && !isBrave) {

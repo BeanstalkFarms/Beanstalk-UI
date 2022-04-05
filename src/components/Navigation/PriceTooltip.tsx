@@ -5,7 +5,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { AppState } from 'state';
 import { CryptoAsset, displayBN } from 'util/index';
 import { theme } from 'constants/index';
-import { UNISWAP_CONTRACT_LINK, CURVE_LINK } from 'constants/links';
+import { UNISWAP_CONTRACT_LINK, CURVE_LINK, LUSD_LINK } from 'constants/links';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -107,15 +107,11 @@ export default function PriceTooltip({
     priceTuple,
     uniTuple,
     curveTuple,
-    beanlusdPrice,
-    beanlusdReserve,
-    lusdReserve,
-    beanlusdVirtualPrice,
+    beanlusdTuple,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
-  ); // update to Price Contract tuple for LUSD
+  );
 
-  const lusdLiquidity = (beanlusdReserve.multipliedBy(beanlusdPrice.multipliedBy(1.0004)).plus(lusdReserve)).multipliedBy(beanlusdVirtualPrice); // remove once Pirce Contract tuple added for LUSD
 
   const PriceCards = ({ direction = 'row' }) => (
     <div className={classes.cardsContainer} style={{ flexDirection: direction }}>
@@ -153,19 +149,19 @@ export default function PriceTooltip({
           </div>
         </Box>
       </Button>
-      {/* LUSD: update to Price Contract tuple */}
-      <Button className={classes.poolButton} href={CURVE_LINK} target="_blank" rel="noreferrer">
+      {/* LUSD */}
+      <Button className={classes.poolButton} href={LUSD_LINK} target="_blank" rel="noreferrer">
         <Box className={classes.poolCard} boxShadow="2">
           <img src={lusdLogo} alt="LUSD Logo" className={classes.poolLogo} />
-          <span className={classes.poolPrice}>${beanlusdPrice.toFixed(4)}</span>
+          <span className={classes.poolPrice}>${beanlusdTuple.price.toFixed(4)}</span>
           <div className={classes.poolMeta}>
             <div className={classes.poolMetaRow}>
               <div className={classes.poolMetaRowLabel}>liquidity:</div>
-              <div>${displayBN(lusdLiquidity)}</div>
+              <div>${displayBN(beanlusdTuple.liquidity)}</div>
             </div>
             <div className={classes.poolMetaRow}>
               <div className={classes.poolMetaRowLabel}>delta:</div>
-              <div>{curveTuple.deltaB.isNegative() ? '' : '+'}{displayBN(curveTuple.deltaB, true)}<TokenIcon token={CryptoAsset.Bean} /></div>
+              <div>{beanlusdTuple.deltaB.isNegative() ? '' : '+'}{displayBN(beanlusdTuple.deltaB, true)}<TokenIcon token={CryptoAsset.Bean} /></div>
             </div>
           </div>
         </Box>
