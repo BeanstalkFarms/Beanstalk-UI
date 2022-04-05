@@ -3,7 +3,7 @@ import { Box, Link, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { theme } from 'constants/index';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(({
   appSection: {
     padding: (props: any) => props.padding,
     margin: '0px',
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
           maxWidth: '550px',
       }
   }
-});
+}));
 
 interface ContentSectionProps {
   description?: string;
@@ -39,33 +39,28 @@ interface ContentSectionProps {
   descriptionLinks?: [{text:string, href: string}];
   children: any;
   id: string;
-  marginTop?: string;
-  marginBottom?: number;
-  padding?: string;
   width?: string;
   textAlign?: string;
   minHeight?: string;
-  paddingTop?: string;
+  style?: {}
 }
 
 const ContentSection: FC<ContentSectionProps> = ({
-  description,
   title,
+  description,
+  style,
   descriptionLinks,
   children,
   id,
-  marginTop,
-  padding,
-  paddingTop,
-  width,
   textAlign,
   minHeight,
-  marginBottom
+  width,
 }) => {
+  const classes = useStyles({});
   const [shouldDisplayDescription, setshouldDisplayDescription] =
     React.useState(true);
 
-  const classes = useStyles({ marginTop, padding, width });
+
 
   React.useEffect(() => {
     // on initialize fetch is_hidden variable or default to false. if is_hidden set shouldDisplay to false
@@ -127,7 +122,7 @@ const ContentSection: FC<ContentSectionProps> = ({
     ) : null;
 
   return (
-    <Box id={id} className="AppContent" sx={{ paddingTop: paddingTop, width: width, marginBottom: marginBottom }}>
+    <Box id={id} className="AppContent" sx={style}>
       <Grid
         container
         spacing={3}
@@ -143,7 +138,6 @@ const ContentSection: FC<ContentSectionProps> = ({
 
 ContentSection.defaultProps = {
   descriptionLinks: [{ text: '', href: '' }],
-  padding: '0px 0px',
   width: '100%',
   minHeight: '0px',
   textAlign: 'center',
