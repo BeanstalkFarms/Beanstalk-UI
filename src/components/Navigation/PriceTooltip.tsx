@@ -112,7 +112,6 @@ export default function PriceTooltip({
     (state) => state.prices
   );
 
-
   const PriceCards = ({ direction = 'row' }) => (
     <div className={classes.cardsContainer} style={{ flexDirection: direction }}>
       {/* Uniswap */}
