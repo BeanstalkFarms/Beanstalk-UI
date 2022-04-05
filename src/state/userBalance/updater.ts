@@ -350,6 +350,7 @@ export default function Updater() {
       //
       const curveTuple = priceTuple.ps[0];
       const uniTuple = priceTuple.ps[1];
+      const beanlusdTuple = priceTuple.ps[0]; // change index 0 to index 2 once new price contract
 
       //
       dispatch(setPrices({
@@ -391,6 +392,14 @@ export default function Updater() {
           price: toTokenUnitsBN(uniTuple.price, 6),
           pool: uniTuple.pool,
           tokens: uniTuple.tokens,
+        },
+        beanlusdTuple: {
+          balances: beanlusdTuple.balances,
+          deltaB: toTokenUnitsBN(beanlusdTuple.deltaB, 6),
+          liquidity: toTokenUnitsBN(beanlusdTuple.liquidity, 6),
+          price: toTokenUnitsBN(beanlusdTuple.price, 6),
+          pool: beanlusdTuple.pool,
+          tokens: beanlusdTuple.tokens,
         },
       }));
 

@@ -47,6 +47,14 @@ export interface PriceState {
     pool: Array;
     tokens: String;
   };
+  beanlusdTuple: {
+    balances: BigNumber;
+    deltaB: BigNumber;
+    liquidity: BigNumber;
+    price: BigNumber;
+    pool: Array;
+    tokens: String;
+  };
 }
 
 export const initialState: PriceState = {
@@ -87,6 +95,14 @@ export const initialState: PriceState = {
     tokens: [],
   },
   uniTuple: {
+    balances: [],
+    deltaB: new BigNumber(-1),
+    liquidity: new BigNumber(-1),
+    price: new BigNumber(-1),
+    pool: '',
+    tokens: [],
+  },
+  beanlusdTuple: {
     balances: [],
     deltaB: new BigNumber(-1),
     liquidity: new BigNumber(-1),
