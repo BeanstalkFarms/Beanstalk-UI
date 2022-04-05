@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, ReactComponentElement } from 'react';
 import { Link, Box } from '@material-ui/core';
 import {
   HOW_TO_PATH,
@@ -7,18 +7,27 @@ import {
   WHITEPAPER,
 } from 'constants/index';
 import { ContentSection, Grid } from 'components/Common';
-import { SvgCloudIcon } from './SvgCloudIcon';
+import { makeStyles } from '@material-ui/core/styles';
+import SvgCloudIcon from './SvgCloudIcon';
 
-const cloudDivStyle = {
-  display: 'inline-flex',
-  justifyContent: 'center',
-  width: '100%',
-};
-const cloudStyle = {
-  maxWidth: '400px',
-};
+const useStyles = makeStyles(({
+  cloudDivStyle: {
+    display: 'inline-flex',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  cloudStyle: {
+    maxWidth: '400px',
+  }
+}));
 
-export default function About(props) {
+interface AboutProps {
+    style?: string;
+    defaultSection?: ReactComponentElement<any>;
+}
+
+const About: FC<AboutProps> = (props) => {
+  const classes = useStyles();
   const sectionContentStyle = props.style;
   const showLandingPage = props.defaultSection !== undefined;
 
@@ -32,13 +41,13 @@ export default function About(props) {
         <Box style={{ minHeight: '330px', width: '100%', paddingTop: '90px' }}>
           {props.defaultSection}
           {/* */}
-          <Grid container style={cloudDivStyle}>
-            <Grid item lg={3} md={3} sm={4} xs={6} style={cloudStyle}>
+          <Grid container className={classes.cloudDivStyle}>
+            <Grid item lg={3} md={3} sm={4} xs={6} className={classes.cloudStyle}>
               <Link href={INTRO_TO_PATH} color="inherit" target="tutorial">
                 <SvgCloudIcon text="About Beanstalk" />
               </Link>
             </Grid>
-            <Grid item lg={3} md={3} sm={4} xs={6} style={cloudStyle}>
+            <Grid item lg={3} md={3} sm={4} xs={6} className={classes.cloudStyle}>
               <Link // eslint-disable-line
                 href=""
                 color="inherit"
@@ -52,7 +61,7 @@ export default function About(props) {
                 <SvgCloudIcon text="How To Guide" />
               </Link>
             </Grid>
-            <Grid item lg={3} md={3} sm={4} xs={6} style={cloudStyle}>
+            <Grid item lg={3} md={3} sm={4} xs={6} className={classes.cloudStyle}>
               <Link href={WHITEPAPER} color="inherit" target="tutorial">
                 <SvgCloudIcon text="Whitepaper" />
               </Link>
@@ -62,4 +71,6 @@ export default function About(props) {
       </ContentSection>
     </>
   );
-}
+};
+
+export default About;

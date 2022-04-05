@@ -80,7 +80,7 @@ export default function FundraiserModule({
   return (
     <>
       <ContentTitle title={title} />
-      <ContentSection id={title} style={{ paddingTop: '10px', width: '100%' }}>
+      <ContentSection id={title} paddingTop={'10px'} width={'100%'}>
         <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
           <ContentDropdown
             description={description}
