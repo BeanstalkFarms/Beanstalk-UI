@@ -16,7 +16,6 @@ import {
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
-// import { INFURA_HTTPS_URLS, INFURA_WS_URLS } from 'constants/rpc/infura';
 import { ALCHEMY_HTTPS_URLS, ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
 import onboard from './onboard';
 
@@ -158,7 +157,9 @@ export async function switchChain(_chainId: SupportedChainId) {
 
   if (currentState.wallets[0].label === 'MetaMask' && !isBrave) {
     console.log(`Using Brave: ${isBrave}`);
-    web3   = new Web3((currentState.wallets[0].provider as unknown) as Web3CoreProvider);
+    web3   = new Web3(
+      (currentState.wallets[0].provider as unknown) as Web3CoreProvider
+    );
     web3Ws = web3;
     web3Provider = new ethers.providers.Web3Provider(
       currentState.wallets[0].provider,   // the provider instance from web3-onboard
