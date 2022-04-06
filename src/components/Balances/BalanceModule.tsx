@@ -18,6 +18,58 @@ import {
 } from 'components/Common';
 import BalanceChart from './BalanceChart';
 import ToggleTokenBalanceModule from './ToggleTokenBalanceModule';
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  containerGridStyle: {
+    minHeight: '110px',
+    padding: '4px 4px',
+    width: '50%',
+  },
+  containerGridHorizontalStyle: {
+    padding: '4px 4px',
+  },
+  spanStyle: {
+    display: 'inline-block',
+    fontFamily: 'Futura-Pt-Book',
+    fontWeight: 'bold',
+    margin: '5px 0 5px 15px',
+    textAlign: 'left',
+    width: '100%',
+  },
+  smallGridStyle: {
+    fontWeight: 'bold',
+    fontFamily: 'Futura-Pt-Book',
+    marginTop: '-5px',
+    padding: '0 4px 4px 4px',
+  },
+  mainGrid: {
+    padding: (props: any) => props.padding,
+    backgroundColor: theme.module.background,
+  },
+  sectionOne: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px',
+    textAlign: 'left',
+  },
+  sectionTwo: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px',
+  },
+  sectionThreeUniswap: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px'
+  },
+  sectionThreeCurve: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px'
+  },
+  sectionFour: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px',
+    marginTop: '20px',
+  }
+});
 
 const color = {
   circulating: '#B3CDE3',
@@ -27,29 +79,9 @@ const color = {
   transit: '#DECBE4',
   budget: '#FED9A6',
 };
-const containerGridStyle = {
-  minHeight: '110px',
-  padding: '4px 4px',
-  width: '50%',
-};
-const containerGridHorizontalStyle = {
-  padding: '4px 4px',
-};
-const spanStyle = {
-  display: 'inline-block',
-  fontFamily: 'Futura-Pt-Book',
-  fontWeight: 'bold',
-  margin: '5px 0 5px 15px',
-  textAlign: 'left',
-  width: '100%',
-};
-const smallGridStyle = {
-  fontWeight: 'bold',
-  fontFamily: 'Futura-Pt-Book',
-  marginTop: '-5px',
-  padding: '0 4px 4px 4px',
-};
+
 export default function BalanceModule(props) {
+  const classes = useStyles(props);
   const [beanActive, setBeanActive] = useState(-1);
   const [lpActive, setLPActive] = useState(-1);
   const [curveActive, setCurveActive] = useState(-1);
@@ -161,7 +193,7 @@ export default function BalanceModule(props) {
   const switchBeanSizeBalances = (
     <>
       <Hidden smUp>
-        <Grid item xs={12} style={smallGridStyle}>
+        <Grid item xs={12} className={classes.smallGridStyle}>
           <TokenBalanceModule
             balance={beanTotals}
             description="Total Beans"
@@ -173,7 +205,7 @@ export default function BalanceModule(props) {
         </Grid>
       </Hidden>
       <Hidden xsDown>
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
               margin={props.chartMargin}
@@ -209,7 +241,7 @@ export default function BalanceModule(props) {
   const switchLPSizeBalances = (
     <>
       <Hidden smUp>
-        <Grid item xs={12} style={smallGridStyle}>
+        <Grid item xs={12} className={classes.smallGridStyle}>
           <TokenBalanceModule
             balance={lpTotals}
             description="Total LP"
@@ -223,7 +255,7 @@ export default function BalanceModule(props) {
         </Grid>
       </Hidden>
       <Hidden xsDown>
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
               placement="top"
@@ -264,7 +296,7 @@ export default function BalanceModule(props) {
   const switchCurveSizeBalances = (
     <>
       <Hidden smUp>
-        <Grid item xs={12} style={smallGridStyle}>
+        <Grid item xs={12} className={classes.smallGridStyle}>
           <TokenBalanceModule
             balance={curveTotals}
             description="Total Curve"
@@ -279,7 +311,7 @@ export default function BalanceModule(props) {
         </Grid>
       </Hidden>
       <Hidden xsDown>
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
               placement="top"
@@ -320,23 +352,16 @@ export default function BalanceModule(props) {
     <Grid
       container
       justifyContent="center"
-      style={{
-        padding: props.padding,
-        backgroundColor: theme.module.background,
-      }}
+      className={classes.mainGrid}
     >
       {/*
         * Section 1: "Top"
         */}
       <Grid
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-          textAlign: 'left',
-        }}
+        className={classes.sectionOne}
       >
-        <Grid container item xs={12} style={containerGridHorizontalStyle}>
+        <Grid container item xs={12} className={classes.containerGridHorizontalStyle}>
           <Grid item sm={6} xs={12}>
             {/* "Bean Balance" */}
             <DataBalanceModule
@@ -382,15 +407,12 @@ export default function BalanceModule(props) {
       {/*
         * Section 2: Beans
         */}
-      <span style={spanStyle}>Beans</span>
+      <span className={classes.spanStyle}>Beans</span>
       <Grid
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-        }}
+        className={classes.sectionTwo}
       >
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
               balance={props.beanBalance}
@@ -422,15 +444,12 @@ export default function BalanceModule(props) {
       {/*
         * Section 3: Uniswap
         */}
-      <span style={spanStyle}>Uniswap</span>
+      <span className={classes.spanStyle}>Uniswap</span>
       <Grid
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-        }}
+        className={classes.sectionThreeUniswap}
       >
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
               balance={props.lpBalance}
@@ -464,15 +483,12 @@ export default function BalanceModule(props) {
       {/*
         * Section 3: Curve
         */}
-      <span style={spanStyle}>Curve</span>
+      <span className={classes.spanStyle}>Curve</span>
       <Grid
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-        }}
+        className={classes.sectionThreeCurve}
       >
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
               balance={props.curveBalance}
@@ -509,13 +525,9 @@ export default function BalanceModule(props) {
         */}
       <Grid
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-          marginTop: '20px',
-        }}
+        className={classes.sectionFour}
       >
-        <Grid container item xs={12} style={containerGridHorizontalStyle}>
+        <Grid container item xs={12} className={classes.containerGridHorizontalStyle}>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
               balance={props.stalkBalance}

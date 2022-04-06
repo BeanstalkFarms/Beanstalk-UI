@@ -21,11 +21,11 @@ const useStyles = makeStyles(({
 
 interface BalanceChartProps {
   circulating: BigNumber;
-  silo: string;
-  transit: string;
-  pool: string;
-  claimable: string;
-  budget: string;
+  silo: BigNumber;
+  transit: BigNumber;
+  pool?: BigNumber;
+  claimable: BigNumber;
+  budget?: BigNumber;
   total: string;
   title: string;
   asset: number;
@@ -33,7 +33,7 @@ interface BalanceChartProps {
 }
 
 const BalanceChart: FC<BalanceChartProps> = (props) => {
-  const classes = useStyles({});
+  const classes = useStyles();
 
   const colors = [
     '#B3CDE3',
