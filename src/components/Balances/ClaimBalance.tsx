@@ -28,7 +28,8 @@ const useStyles = makeStyles(({
     display: 'inline-block',
     marginBottom: '-2px',
     marginLeft: '0px',
-  }
+  },
+  gridStyle: { height: '20px' }
 }));
 
 interface ClaimProps {
@@ -75,9 +76,9 @@ const ClaimBalance: FC<ClaimProps> = (
   if (balance.isGreaterThan(0)) {
     return (
       <Grid container item xs={12} justifyContent="center">
-        <Grid container item justifyContent="center" style={{ height: '20px' }}>
-          <Box style={{ position: 'relative' }}>
-            <Box className="claimTextField-header" style={{ width: width }}>
+        <Grid container item justifyContent="center" className={classes.gridStyle}>
+          <Box sx={{ position: 'relative' }}>
+            <Box className="claimTextField-header" sx={{ width: width }}>
               {`${asset !== undefined ? TokenLabel(asset) : title}`}
               <QuestionModule
                 description={description}
@@ -96,7 +97,7 @@ const ClaimBalance: FC<ClaimProps> = (
             >
               <Box
                 className="claimTextField-content"
-                style={{ margin: '0 0 0 5px' }}
+                sx={{ margin: '0 0 0 5px' }}
               >
                 <Box sx={{ color: balanceColor }}>
                   <h5 className={classes.style}>{displayBalance}</h5>
