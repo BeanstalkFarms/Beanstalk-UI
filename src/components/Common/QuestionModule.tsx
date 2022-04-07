@@ -25,7 +25,7 @@ export default function QuestionModule(props) {
   const timer = width < 500 ? 3000 : 250;
 
   return (
-    <Box style={questionStyle}>
+    <Box sx={questionStyle}>
       <ClickAwayListener onClickAway={handleTooltipClose}>
         <FormatTooltip
           margin={props.marginTooltip}

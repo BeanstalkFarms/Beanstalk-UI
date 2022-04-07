@@ -5,15 +5,19 @@ import { makeStyles } from '@material-ui/core/styles';
 import { BASE_SLIPPAGE, SLIPPAGE_THRESHOLD } from 'constants/index';
 import { QuestionModule } from './index';
 
-export default function SlippageModule(props) {
-  const classes = makeStyles(() => ({
-    inputText: {
-      textAlign: 'right',
-      fontSize: '16px',
-      fontFamily: 'Futura-PT-Book',
-    },
-  }))();
+const useStyles = makeStyles({
+  inputText: {
+    textAlign: 'right',
+    fontSize: '16px',
+    fontFamily: 'Futura-PT-Book',
+  },
+  textStyle: {
+    margin: '0 auto', width: '90%'
+  }
+});
 
+export default function SlippageModule(props) {
+  const classes = useStyles();
   const [isFieldEmpty, setIsFieldEmpty] = useState(false);
 
   const defaultSlippage = new BigNumber(1)
@@ -23,7 +27,7 @@ export default function SlippageModule(props) {
   return (
     <Box>
       <Box
-        style={{
+        sx={{
           padding: '5px',
           fontFamily: 'Futura-PT-Book',
           fontSize: '11px',
@@ -48,7 +52,7 @@ export default function SlippageModule(props) {
             ? ''
             : new BigNumber(1).minus(props.slippage).multipliedBy(100)
         }
-        style={{ margin: '0 auto', width: '90%' }}
+        className={classes.textStyle}
         onChange={(e) => {
           function setSlippagePercentage(newPercentage: BigNumber) {
             props.setSlippage(

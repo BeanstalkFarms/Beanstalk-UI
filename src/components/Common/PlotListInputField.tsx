@@ -38,13 +38,16 @@ export default function ListInputField(props) {
       textTransform: 'uppercase' as const,
       width: 'calc(100% - 13px)',
     },
+    outlinedInput: {
+      height: 'calc(56px + 1vmin)'
+    }
   })();
 
   if (props.hidden) return null;
   const itemKeys = Object.keys(props.items);
 
   return (
-    <Box style={{ margin: '8px 0', ...props.style }}>
+    <Box sx={{ margin: '8px 0', ...props.style }}>
       <Box className={classes.smallLabels}>
         {props.label}
       </Box>
@@ -65,7 +68,7 @@ export default function ListInputField(props) {
               name="Selected Plot"
               labelWidth={props.labelWidth}
               id="outlined-age-native-simple"
-              style={{ height: 'calc(56px + 1vmin)' }}
+              className={classes.outlinedInput}
             />
           }
         >

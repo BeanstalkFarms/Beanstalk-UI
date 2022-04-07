@@ -1,20 +1,21 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/styles';
 
-export default function SwapTransactionDetailsModule(props) {
-  const leftTransactionStyle = {
+const useStyles = makeStyles({
+  leftTransactionStyle: {
     display: 'inline-block',
     fontFamily: 'Futura-PT-Book',
     textAlign: 'left',
     width: '50%',
-  };
-  const rightTransactionStyle = {
+  },
+  rightTransactionStyle: {
     display: 'inline-block',
     fontFamily: 'Futura-PT-Book',
     fontSize: 'calc(9px + 0.5vmin)',
     textAlign: 'right',
     width: '50%',
-  };
-  const transactionStyle = {
+  },
+  transactionStyle: {
     border: '1px solid black' as const,
     borderRadius: '15px',
     color: 'black',
@@ -23,21 +24,25 @@ export default function SwapTransactionDetailsModule(props) {
     marginLeft: '5%',
     padding: '12px',
     width: '90%',
-  };
+  }
+});
+
+export default function SwapTransactionDetailsModule(props) {
+  const classes = useStyles();
 
   const rows = Object.keys(props.fields).reduce((r, key, i) => {
     r.push(
-      <span key={`${i}-left`} style={leftTransactionStyle}>
+      <span key={`${i}-left`} className={classes.leftTransactionStyle}>
         {key}
       </span>
     );
     r.push(
-      <span key={`${i}-right`} style={rightTransactionStyle}>
+      <span key={`${i}-right`} className={classes.rightTransactionStyle}>
         {props.fields[key]}
       </span>
     );
     return r;
   }, []);
 
-  return <p style={transactionStyle}>{rows}</p>;
+  return <p className={classes.transactionStyle}>{rows}</p>;
 }

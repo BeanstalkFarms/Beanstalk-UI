@@ -4,16 +4,20 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import BeanEthIcon from 'img/bean-eth-logo.svg';
 import BeanEthSwapIcon from 'img/bean-eth-swap-logo.svg';
 import { CryptoAsset, SwapMode, TokenImage } from 'util/index';
+import { makeStyles } from '@material-ui/styles';
 
-export default function UnitSelectionModule(props) {
-  const change = (event, value) => {
-    if (value !== null) props.setValue(value);
-  };
-
-  const imageStyle = {
+const useStyles = makeStyles({
+  imageStyle: {
     display: 'inline',
     height: '20px',
     width: '20px',
+  }
+});
+
+export default function UnitSelectionModule(props) {
+  const classes = useStyles();
+  const change = (event, value) => {
+    if (value !== null) props.setValue(value);
   };
 
   const lpButton = props.lp ? (
@@ -23,7 +27,7 @@ export default function UnitSelectionModule(props) {
     //   title={props.lpDescription}
     // >
     <ToggleButton aria-label="right aligned" value={SwapMode.LP}>
-      <img alt="LP" src={TokenImage(CryptoAsset.LP)} style={imageStyle} />
+      <img alt="LP" src={TokenImage(CryptoAsset.LP)} className={classes.imageStyle} />
     </ToggleButton>
   ) : // </FormatTooltip>
   null;
@@ -34,7 +38,7 @@ export default function UnitSelectionModule(props) {
     //   title={props.beanDescription}
     // >
     <ToggleButton aria-label="left aligned" value={SwapMode.Bean}>
-      <img alt="Bean" src={TokenImage(CryptoAsset.Bean)} style={imageStyle} />
+      <img alt="Bean" src={TokenImage(CryptoAsset.Bean)} className={classes.imageStyle} />
     </ToggleButton>
   ) : // </FormatTooltip>
   null;
@@ -48,7 +52,7 @@ export default function UnitSelectionModule(props) {
       <img
         alt="Eth"
         src={TokenImage(CryptoAsset.Ethereum)}
-        style={imageStyle}
+        className={classes.imageStyle}
       />
     </ToggleButton>
   ) : // </FormatTooltip>
@@ -60,7 +64,7 @@ export default function UnitSelectionModule(props) {
     //   title={props.beanEthereumDescription}
     // >
     <ToggleButton aria-label="centered" value={SwapMode.BeanEthereum}>
-      <img alt="Bean/Eth" src={BeanEthIcon} style={imageStyle} />
+      <img alt="Bean/Eth" src={BeanEthIcon} className={classes.imageStyle} />
     </ToggleButton>
   ) : // </FormatTooltip>
   null;
@@ -71,7 +75,7 @@ export default function UnitSelectionModule(props) {
     //   title={props.beanEthereumSwapDescription}
     // >
     <ToggleButton aria-label="right aligned" value={SwapMode.BeanEthereumSwap}>
-      <img alt="Bean/Eth Swap" src={BeanEthSwapIcon} style={imageStyle} />
+      <img alt="Bean/Eth Swap" src={BeanEthSwapIcon} className={classes.imageStyle} />
     </ToggleButton>
   ) : // </FormatTooltip>
   null;

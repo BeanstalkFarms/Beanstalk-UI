@@ -1,31 +1,36 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { TokenImage, TokenLabel, TokenTypeImage } from 'util/index';
+import { makeStyles } from '@material-ui/styles';
 import { QuestionModule } from './index';
 
-export default function TabImageModule(props) {
-  const tokenTypeStyle = {
+const useStyles = makeStyles({
+  tokenTypeStyle: {
     height: '100%',
     width: '100%',
-  };
-  const tokenTypeModifierStyle = {
+  },
+  tokenTypeModifierStyle: {
     bottom: '20%',
     height: '30%',
     left: '48%',
     position: 'absolute',
-  };
+  }
+});
+
+export default function TabImageModule(props) {
+  const classes = useStyles();
 
   return (
     <Box style={{ ...props.style }}>
       <img
         alt={TokenLabel(props.token)}
         src={TokenImage(props.token)}
-        style={tokenTypeStyle}
+        className={classes.tokenTypeStyle}
       />
       <img
         alt=""
         src={TokenTypeImage(props.token)}
-        style={tokenTypeModifierStyle}
+        className={classes.tokenTypeModifierStyle}
       />
       <QuestionModule
         description={props.description}

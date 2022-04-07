@@ -6,15 +6,15 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
-export default function TablePageSelect(props) {
-  const useStyles = makeStyles({
+const useStyles = makeStyles({
     pagination: {
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
     },
-  });
+});
 
+export default function TablePageSelect(props) {
   const classes = useStyles();
   const muiTheme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;

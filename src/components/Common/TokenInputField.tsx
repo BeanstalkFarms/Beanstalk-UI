@@ -33,17 +33,17 @@ const useStyles = makeStyles({
     marginRight: '13px',
     textAlign: 'right' as const,
   },
+  maxStyle: {
+    backgroundColor: theme.primary,
+    borderRadius: '30px',
+    color: theme.accentText,
+    fontSize: '13px',
+    fontFamily: 'Futura-PT-Book',
+    height: '25px',
+    minWidth: '50px',
+  }
 });
 
-const maxStyle = {
-  backgroundColor: theme.primary,
-  borderRadius: '30px',
-  color: theme.accentText,
-  fontSize: '13px',
-  fontFamily: 'Futura-PT-Book',
-  height: '25px',
-  minWidth: '50px',
-};
 const tokenTypeImageStyle = {
   height: '30px',
   marginLeft: '5px',
@@ -102,7 +102,7 @@ export default function TokenInputField(props: TokenInputFieldProps) {
       return (
         <Button
           onClick={props.maxHandler}
-          style={maxStyle}
+          className={classes.maxStyle}
           disabled={props.locked}>
           Max
         </Button>
