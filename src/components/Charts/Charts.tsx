@@ -37,6 +37,7 @@ export default function Charts(props) {
       {...props}
     />
   ));
+  // TODO: style
   const baseStyle = isMobile
     ? { width: '100%', paddingLeft: 0, paddingRight: 0 }
     : { margin: 'auto' };

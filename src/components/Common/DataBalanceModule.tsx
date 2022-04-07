@@ -8,7 +8,7 @@ export default function DataBalanceModule(props) {
       {props.content !== undefined ? (
         props.content
       ) : (
-        <Box className="BalanceModule-balanceContent" style={props.style}>
+        <Box className="BalanceModule-balanceContent" sx={props.style}>
           {props.balance}
         </Box>
       )}

@@ -22,6 +22,16 @@ import ClaimBalance from './ClaimBalance';
 import ClaimButton from './ClaimButton';
 import BalanceModule from './BalanceModule';
 import { sumBalances, getUserBalancesUSD } from '../../util/getUserBalancesUSD';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(({
+  boxStyle: {
+    fontSize: '18px',
+    fontFamily: 'Futura-Pt-Book',
+    marginTop: '13px',
+    textTransform: 'uppercase',
+  }
+}));
 
 const balanceStyle = {
   borderRadius: '25px',
@@ -29,14 +39,9 @@ const balanceStyle = {
   backgroundColor: theme.module.background,
   padding: '10px',
 };
-const boxStyle = {
-  fontSize: '18px',
-  fontFamily: 'Futura-Pt-Book',
-  marginTop: '13px',
-  textTransform: 'uppercase',
-};
 
 export default function Balances() {
+  const classes = useStyles();
   const {
     lpBalance,
     lpSiloBalance,
@@ -421,16 +426,16 @@ export default function Balances() {
         alignItems="flex-start"
       >
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
-          <Box className="AppBar-shadow" style={balanceStyle}>
-            <Box style={boxStyle}>My Balances </Box>
+          <Box className="AppBar-shadow" sx={balanceStyle}>
+            <Box className={classes.boxStyle}>My Balances </Box>
             <Line />
             {myBalancesSection}
           </Box>
         </Grid>
 
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
-          <Box className="AppBar-shadow" style={balanceStyle}>
-            <Box style={boxStyle}>Beanstalk</Box>
+          <Box className="AppBar-shadow" sx={balanceStyle}>
+            <Box className={classes.boxStyle}>Beanstalk</Box>
             <Line />
             {totalBalancesSection}
           </Box>

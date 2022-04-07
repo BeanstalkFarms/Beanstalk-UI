@@ -8,8 +8,17 @@ import { AppState } from 'state';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
 import FieldCharts from './FieldCharts';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+  root: {
+    margin: 'auto',
+    width: '100%'
+  }
+});
 
 export default function Charts(props) {
+  const classes = useStyles();
   //
   const [chartData, setChartData] = useState([]);
   const [section, setSection] = useState(0);
@@ -48,7 +57,7 @@ export default function Charts(props) {
   //
   return (
     <Grid
-      style={{ margin: 'auto', width: '100%' }}
+      className={classes.root}
       container
       item
       md={10}

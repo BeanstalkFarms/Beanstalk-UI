@@ -7,6 +7,7 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { theme } from 'constants/index';
 
+// TODO: style
 const Accordion = withStyles({
   root: {
     maxWidth: '400px',

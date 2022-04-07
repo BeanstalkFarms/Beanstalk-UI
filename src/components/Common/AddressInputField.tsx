@@ -13,20 +13,19 @@ const useStyles = makeStyles(({
     fontSize: 'calc(15px + 1vmin)',
     fontWeight: 400,
   },
-}));
-export default function AddressInputField(props: any) {
-  const classes = useStyles();
-
-  const smallLabels = {
+  smallLabels: {
     display: 'inline-block',
     fontFamily: 'Futura-PT-Book',
     fontSize: 'calc(9px + 0.7vmin)',
     marginLeft: '13px',
-    marginTop: props.marginTop,
+    marginTop: (props: any) => props.marginTop,
     textAlign: 'left' as const,
     textTransform: 'uppercase' as const,
     width: 'calc(100% - 13px)',
-  };
+  }
+}));
+export default function AddressInputField(props: any) {
+  const classes = useStyles(props);
 
   let endAdornment;
   let startAdornment;
@@ -52,7 +51,7 @@ export default function AddressInputField(props: any) {
 
   return (
     <Box>
-      <Box style={smallLabels}>Recipient Address</Box>
+      <Box className={classes.smallLabels}>Recipient Address</Box>
       <TextField
         className="TextField-rounded"
         placeholder="0x00000"

@@ -45,8 +45,7 @@ interface ClaimProps {
     userClaimable?: boolean;
 }
 
-const ClaimBalance: FC<ClaimProps> = (
-    {
+const ClaimBalance: FC<ClaimProps> = ({
       asset,
       balance,
       balanceColor,
@@ -57,8 +56,7 @@ const ClaimBalance: FC<ClaimProps> = (
       width,
       widthTooltip,
       userClaimable //unused
-    }
-) => {
+  }) => {
   const classes = useStyles();
 
   const imageStyle = {
