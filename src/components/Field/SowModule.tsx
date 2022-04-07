@@ -55,10 +55,10 @@ export const SowModule = forwardRef((props, ref) => {
         props.beanReserve,
         ETH.decimals
       ),
-    ]);
+    ]).dividedBy(props.settings.slippage);
     BigNumber.set({ DECIMAL_PLACES: 6 });
     const buyBeans = getToAmount(
-      newFromEthValue,
+      newFromEthValue.multipliedBy(props.settings.slippage),
       props.ethReserve,
       props.beanReserve
     );
@@ -223,10 +223,7 @@ export const SowModule = forwardRef((props, ref) => {
           new BigNumber(0)
         ).toString();
         const eth = toStringBaseUnitBN(fromEthValue, ETH.decimals);
-        const buyBeans = toStringBaseUnitBN(
-          toBuyBeanValue.multipliedBy(props.settings.slippage),
-          BEAN.decimals
-        );
+        const buyBeans = toStringBaseUnitBN(toBuyBeanValue, BEAN.decimals);
 
         // Toast
         const txToast = new TransactionToast({
