@@ -23,6 +23,8 @@ let lastPriceRefresh = new Date().getTime();
 let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
+const BEANSTALK_GENESIS_BLOCK = 12974075;
+
 /**
  * @rpc 20 separate calls to `getPastEvents`. Not batched.
  * @rpc 3 websocket opens for Beanstalk contract, BEAN:ETH + ETH:USDC pools.
@@ -40,83 +42,83 @@ export async function initializeEventListener(
   const accountEvents = await Promise.all([
     beanstalk.getPastEvents('BeanDeposit', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('BeanRemove', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('BeanWithdraw', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('LPDeposit', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('LPRemove', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('LPWithdraw', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('Deposit', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('RemoveSeason', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('RemoveSeasons', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('Withdraw', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('ClaimSeason', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('ClaimSeasons', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('Sow', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('Harvest', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('BeanClaim', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('LPClaim', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('Proposal', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('EtherClaim', {
       filter: { account: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('PlotTransfer', {
       filter: { from: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('PlotTransfer', {
       filter: { to: account },
-      fromBlock: 0,
+      fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
   ]).catch((err) => {
     console.error('initializeEventListener: failed to fetch accountEvents', err);

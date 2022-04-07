@@ -16,7 +16,8 @@ import {
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
-import { ALCHEMY_HTTPS_URLS, ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
+import { ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
+import { POKT_HTTPS_URLS } from 'constants/rpc/pokt';
 import onboard from './onboard';
 
 export * from './EventUtilities';
@@ -127,7 +128,7 @@ async function initWalletListeners() {
  */
 export function getRpcEndpoint(_chainId: SupportedChainId) {
   return [
-    ALCHEMY_HTTPS_URLS[_chainId],
+    POKT_HTTPS_URLS[_chainId],
     ALCHEMY_WS_URLS[_chainId],
   ];
 }
