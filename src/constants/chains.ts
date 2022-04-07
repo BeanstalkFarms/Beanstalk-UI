@@ -3,11 +3,13 @@ import ethereumLogoUrl from 'img/eth-logo.svg';
 export enum SupportedChainId {
   MAINNET = 1,
   ROPSTEN = 3,
+  LOCALHOST = 1337,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
   [SupportedChainId.ROPSTEN]: 'ropsten',
+  [SupportedChainId.LOCALHOST]: 'localhost',
 };
 
 export enum NetworkType {
@@ -18,6 +20,7 @@ export enum NetworkType {
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
   SupportedChainId.ROPSTEN,
+  SupportedChainId.LOCALHOST
 ] as const;
 
 export const L2_CHAIN_IDS = [] as const;
