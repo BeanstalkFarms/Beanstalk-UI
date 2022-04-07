@@ -7,6 +7,7 @@ import {
   BEAN,
   DELTA_POD_DEMAND_LOWER_BOUND,
   DELTA_POD_DEMAND_UPPER_BOUND,
+  STEADY_SOW_TIME,
   MAX_UINT32,
   OPTIMAL_POD_RATE,
   PEG_WEATHER_CASES,
@@ -112,9 +113,10 @@ export default function PegMaintenance() {
     startSoil,
     soil,
     lastDSoil,
+    nextSowTime,
     lastSowTime,
-    didSowBelowMin,
-    didSowFaster,
+    // didSowBelowMin,
+    // didSowFaster,
     weather,
     raining,
     rainStart,
@@ -130,11 +132,34 @@ export default function PegMaintenance() {
   //       ? new BigNumber(100000)
   //       : deltaSoil.dividedBy(lastDSoil)
   // )
-  const deltaDemand = !deltaSoil.isEqualTo(0)
-    ? !lastDSoil.isEqualTo(0)
-      ? deltaSoil.dividedBy(lastDSoil)
-      : new BigNumber(100000)
-    : new BigNumber(0);
+  let deltaDemand = new BigNumber(0);
+  if (nextSowTime < MAX_UINT32) {
+    console.log('--');
+    console.log(lastSowTime.toFixed());
+    console.log(nextSowTime.toFixed());
+    console.log(STEADY_SOW_TIME);
+    console.log(nextSowTime.isLessThan(lastSowTime.minus(new BigNumber(STEADY_SOW_TIME))));
+    console.log(lastSowTime.isGreaterThan(new BigNumber(STEADY_SOW_TIME)));
+    if (lastSowTime === MAX_UINT32 || nextSowTime < 300 ||
+      (
+        lastSowTime.isGreaterThan(new BigNumber(STEADY_SOW_TIME)) &&
+        nextSowTime.isLessThan(lastSowTime.minus(new BigNumber(STEADY_SOW_TIME)))
+      )
+    ) {
+      deltaDemand = new BigNumber(10000000);
+    } else if (nextSowTime.isLessThanOrEqualTo(lastSowTime.plus(STEADY_SOW_TIME))) {
+      deltaDemand = new BigNumber(1);
+    } else {
+      deltaDemand = new BigNumber(0);
+    }
+  } else {
+    deltaDemand = !deltaSoil.isEqualTo(0)
+      ? !lastDSoil.isEqualTo(0)
+        ? deltaSoil.dividedBy(lastDSoil)
+        : new BigNumber(10000000)
+      : new BigNumber(0);
+  }
+  // console.log(deltaDemand.toString());
 
   let caseId = 0;
   if (podRate.isGreaterThanOrEqualTo(POD_RATE_UPPER_BOUND)) caseId = 24;
@@ -151,8 +176,7 @@ export default function PegMaintenance() {
   if (deltaDemand.isGreaterThanOrEqualTo(DELTA_POD_DEMAND_UPPER_BOUND)) {
     caseId += 2;
   } else if (deltaDemand.isGreaterThanOrEqualTo(DELTA_POD_DEMAND_LOWER_BOUND)) {
-    if (lastSowTime.isEqualTo(MAX_UINT32) || !didSowBelowMin) caseId += 1;
-    else if (didSowFaster) caseId += 2;
+    caseId += 1;
   }
 
   let deltaWeather = new BigNumber(PEG_WEATHER_CASES[caseId]);
@@ -250,7 +274,8 @@ export default function PegMaintenance() {
     three: {
       title: 'Delta Demand',
       balance:
-        lastDSoil.isEqualTo(0) && deltaSoil.isGreaterThan(0) ? (
+        // lastDSoil.isEqualTo(0) && deltaSoil.isGreaterThan(0) ? (
+        deltaDemand.isEqualTo(new BigNumber('10000000')) ? (
           <span>
             <span style={{ fontSize: '19px' }}>&#8734;</span>%
           </span>
