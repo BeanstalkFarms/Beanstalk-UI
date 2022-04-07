@@ -134,12 +134,6 @@ export default function PegMaintenance() {
   // )
   let deltaDemand = new BigNumber(0);
   if (nextSowTime < MAX_UINT32) {
-    console.log('--');
-    console.log(lastSowTime.toFixed());
-    console.log(nextSowTime.toFixed());
-    console.log(STEADY_SOW_TIME);
-    console.log(nextSowTime.isLessThan(lastSowTime.minus(new BigNumber(STEADY_SOW_TIME))));
-    console.log(lastSowTime.isGreaterThan(new BigNumber(STEADY_SOW_TIME)));
     if (lastSowTime === MAX_UINT32 || nextSowTime < 300 ||
       (
         lastSowTime.isGreaterThan(new BigNumber(STEADY_SOW_TIME)) &&
