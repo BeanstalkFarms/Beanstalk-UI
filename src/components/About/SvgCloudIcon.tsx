@@ -47,4 +47,3 @@ const SvgCloudIcon: FC<SvgCloudIconProps> = ({
 );
 
 export default SvgCloudIcon;
-

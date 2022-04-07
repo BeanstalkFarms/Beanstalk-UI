@@ -11,8 +11,8 @@ import {
 } from '@visx/xychart';
 import BeanLogo from 'img/bean-logo.svg';
 import { theme as colorTheme } from 'constants/index';
-import { DataSelector, TimeSelector } from './Selectors';
 import { makeStyles } from '@material-ui/core/styles';
+import { DataSelector, TimeSelector } from './Selectors';
 
 const useStyles = makeStyles(({
   chartStyle: {

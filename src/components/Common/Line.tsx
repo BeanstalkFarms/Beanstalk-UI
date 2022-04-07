@@ -9,6 +9,5 @@ export default function Line(props) {
     height: '1px',
     margin: '14px 4px 8px 4px',
   };
-
   return <hr style={{ ...props.style, ...lineStyle }} />;
 }

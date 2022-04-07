@@ -8,7 +8,7 @@ const useStyles = makeStyles({
     marginRight: '6px',
     marginTop: '25px'
   }
-})
+});
 
 interface LogoLinkProps {
     link: string;
@@ -30,4 +30,3 @@ const LogoLink: FC<LogoLinkProps> = ({ link, children }) => {
 };
 
 export default LogoLink;
-

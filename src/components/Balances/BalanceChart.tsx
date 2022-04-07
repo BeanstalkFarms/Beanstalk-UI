@@ -137,4 +137,3 @@ const BalanceChart: FC<BalanceChartProps> = (props) => {
 };
 
 export default BalanceChart;
-

@@ -5,7 +5,7 @@ import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
 import { METAMASK_LINK } from 'constants/index';
 import SvgCloudIcon from 'components/About/SvgCloudIcon';
 import About from 'components/About';
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(({
   connectMetaStyle: {

@@ -1,11 +1,10 @@
 import React from 'react';
-import type { FC } from 'react';
 import { Box } from '@material-ui/core';
 import {
   CryptoAsset,
   displayBN,
   displayFullBN,
-  smallDecimalPercent, Token,
+  smallDecimalPercent,
   TokenLabel,
 } from 'util/index';
 import {
@@ -14,8 +13,7 @@ import {
   TokenTypeImageModule,
   QuestionModule,
 } from 'components/Common';
-import BigNumber from "bignumber.js";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(({
   style: {
@@ -32,31 +30,17 @@ const useStyles = makeStyles(({
   gridStyle: { height: '20px' }
 }));
 
-interface ClaimProps {
-    asset?: Token;
-    balance: BigNumber;
-    balanceColor?: string;
-    description: string;
-    height?: string;
-    title?: string;
-    token: Token;
-    width?: string;
-    widthTooltip?: string;
-    userClaimable?: boolean;
-}
-
-const ClaimBalance: FC<ClaimProps> = ({
-      asset,
-      balance,
-      balanceColor,
-      description,
-      height,
-      title,
-      token,
-      width,
-      widthTooltip,
-      userClaimable //unused
-  }) => {
+export default function ClaimBalance({
+  asset,
+  balance,
+  balanceColor,
+  description,
+  height,
+  title,
+  token,
+  width,
+  widthTooltip,
+}) {
   const classes = useStyles();
 
   const imageStyle = {
@@ -113,12 +97,10 @@ const ClaimBalance: FC<ClaimProps> = ({
     );
   }
   return null;
-};
+}
 
 ClaimBalance.defaultProps = {
   title: 'undefined',
   width: 'calc(55px + 2vw)',
   height: '15px',
 };
-
-export default ClaimBalance;

@@ -50,21 +50,20 @@ const useStyles = makeStyles({
     fontFamily: 'Lucida Console',
     fontSize: '11px',
   },
+  claimableStyle: {
+    borderColor: theme.accentColor,
+    color: 'white',
+    fontFamily: 'Futura-PT',
+    fontWeight: 'bold',
+    width: '33%',
+  },
+  titleStyle: {
+    borderColor: theme.accentColor,
+    color: theme.text,
+    fontFamily: 'Futura-PT',
+    width: '33%',
+  },
 });
-
-const claimableStyle = {
-  borderColor: theme.accentColor,
-  color: 'white',
-  fontFamily: 'Futura-PT',
-  fontWeight: 'bold',
-  width: '33%',
-};
-const titleStyle = {
-  borderColor: theme.accentColor,
-  color: theme.text,
-  fontFamily: 'Futura-PT',
-  width: '33%',
-};
 
 // FIXME: Resolve this with the tables used in the Marketplace.
 // FIXME: types and code ceanup
@@ -148,7 +147,7 @@ const BasicTable = (props) => {
           align="center"
           component="th"
           scope="season"
-          style={claimableStyle}
+          className={classes.claimableStyle}
         >
           <Box>
             {claimWord}
@@ -177,7 +176,7 @@ const BasicTable = (props) => {
           <TableHead>
             <TableRow key={claimWord}>
               {titles.map((t) => (
-                <TableCell key={t} align="center" style={titleStyle}>
+                <TableCell key={t} align="center" className={classes.titleStyle}>
                   {t}
                 </TableCell>
               ))}

@@ -34,7 +34,7 @@ export default function DataBalanceModule(props) {
         className={`BalanceModule-title${
           props.swerve !== undefined ? ' TokenBalanceModule-header' : ''
         }`}
-        style={props.style}
+        sx={props.style}
       >
         {props.title}
         <QuestionModule
@@ -47,7 +47,7 @@ export default function DataBalanceModule(props) {
         className={`BalanceModule-balance${
           props.swerve !== undefined ? ' TokenBalanceModule-content' : ''
         }`}
-        style={props.style}
+        sx={props.style}
       >
         {balanceSection}
       </Box>

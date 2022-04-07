@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux';
 import { BaseModule, chartStrings, ContentSection } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
 import { AppState } from 'state';
+import { makeStyles } from '@material-ui/core/styles';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
 import FieldCharts from './FieldCharts';
-import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   root: {

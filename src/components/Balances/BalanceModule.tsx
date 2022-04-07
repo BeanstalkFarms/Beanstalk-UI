@@ -16,9 +16,9 @@ import {
   TransitAsset,
   UniswapAsset,
 } from 'components/Common';
+import { makeStyles } from '@material-ui/core/styles';
 import BalanceChart from './BalanceChart';
 import ToggleTokenBalanceModule from './ToggleTokenBalanceModule';
-import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   containerGridStyle: {

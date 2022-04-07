@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js';
 import { AppState } from 'state';
 import { poolForLP } from 'util/index';
 import { UNISWAP_BASE_LP, theme } from 'constants/index';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   BaseModule,
   ClaimableAsset,
@@ -22,7 +23,6 @@ import ClaimBalance from './ClaimBalance';
 import ClaimButton from './ClaimButton';
 import BalanceModule from './BalanceModule';
 import { sumBalances, getUserBalancesUSD } from '../../util/getUserBalancesUSD';
-import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(({
   boxStyle: {

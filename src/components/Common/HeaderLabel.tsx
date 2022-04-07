@@ -42,6 +42,11 @@ const useStyles = makeStyles(() => ({
     padding: '5px',
     textAlign: 'right',
   },
+  tooltipSpan: {
+    backgroundColor: '#C4C4C44D',
+    padding: '5px',
+    borderRadius: '6px'
+  }
 }));
 export default function HeaderLabel(props) {
   const classes = useStyles();
@@ -62,7 +67,7 @@ export default function HeaderLabel(props) {
         placement="top"
         title={props.balanceDescription}
       >
-        <span style={{ backgroundColor: '#C4C4C44D', padding: '5px', borderRadius: '6px' }}>{props.value}</span>
+        <span className={classes.tooltipSpan}>{props.value}</span>
       </FormatTooltip>
     ) : (
       props.value
