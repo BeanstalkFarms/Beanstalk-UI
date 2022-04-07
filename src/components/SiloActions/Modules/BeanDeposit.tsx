@@ -109,7 +109,7 @@ export default function BeanDeposit() {
         break;
     }
   };
-  
+
   /* */
   const sections = [
     <BeanDepositAction
