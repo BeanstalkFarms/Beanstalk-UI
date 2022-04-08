@@ -1,4 +1,3 @@
-import { CURVE } from 'constants/index';
 import { beanstalkContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
@@ -6,9 +5,10 @@ import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 // function deposit(address token, uint256 amount) external;
 export const deposit = async (
   amount,
+  addy,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().deposit(CURVE.addr, amount),
+  beanstalkContract().deposit(addy, amount),
   { onResponse }
 );
 
@@ -18,11 +18,12 @@ export const deposit = async (
 export const withdraw = async (
   seasons,
   amounts,
+  addy,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   (seasons.length === 1) ?
-  beanstalkContract().withdrawTokenBySeason(CURVE.addr, seasons[0], amounts[0]) :
-  beanstalkContract().withdrawTokenBySeasons(CURVE.addr, seasons, amounts),
+  beanstalkContract().withdrawTokenBySeason(addy, seasons[0], amounts[0]) :
+  beanstalkContract().withdrawTokenBySeasons(addy, seasons, amounts),
   { onResponse }
 );
 
@@ -31,11 +32,12 @@ export const withdraw = async (
 // function claimTokenBySeasons(address token, uint32[] calldata seasons)
 export const claimSeasons = async (
   seasons,
+  addy,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   (seasons.length === 1) ?
-  beanstalkContract().claimTokenBySeason(CURVE.addr, seasons[0]) :
-  beanstalkContract().claimTokenBySeasons(CURVE.addr, seasons),
+  beanstalkContract().claimTokenBySeason(addy, seasons[0]) :
+  beanstalkContract().claimTokenBySeasons(addy, seasons),
   { onResponse }
 );
 
@@ -54,10 +56,11 @@ export const claimSeasons = async (
 export const claimTokensBySeason = async (
   SeasonsClaim,
   claims,
+  addy,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   (SeasonsClaim.seasons.length === 1) ?
-  beanstalkContract().claimTokenBySeason(CURVE.addr, SeasonsClaim.seasons[0]) :
-  beanstalkContract().claimTokenBySeasons(CURVE.addr, SeasonsClaim.seasons),
+  beanstalkContract().claimTokenBySeason(addy, SeasonsClaim.seasons[0]) :
+  beanstalkContract().claimTokenBySeasons(addy, SeasonsClaim.seasons),
   { onResponse }
 );

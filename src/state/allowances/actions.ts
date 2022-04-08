@@ -20,3 +20,7 @@ export const updateBeanstalkUSDCAllowance = createAction<BigNumber>(
 export const updateBeanstalkCurveAllowance = createAction<BigNumber>(
   'allowances/updateBeanstalkCurveAllowance'
 );
+
+export const updateBeanstalkBeanlusdAllowance = createAction<BigNumber>(
+  'allowances/updateBeanstalkBeanlusdAllowance'
+);

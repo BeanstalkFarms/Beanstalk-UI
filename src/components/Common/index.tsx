@@ -77,24 +77,32 @@ export const walletStrings = {
     'Circulating BEAN:ETH LP Tokens are in your wallet. Circulating BEAN:ETH LP Tokens do not earn interest. You can Deposit BEAN:ETH LP Tokens in the Silo to start earning interest on your Beans. To remove your liquidity from the BEAN:ETH pool, go to Uniswap.',
   curveBalance:
     'Circulating BEAN:3CRV LP Tokens are in your wallet. Circulating BEAN:3CRV LP Tokens do not earn interest. You can Deposit BEAN:3CRV LP Tokens in the Silo to start earning interest on your Beans. To remove your liquidity from the BEAN:3CRV pool, go to Curve.',
+  beanlusdBalance:
+    'Circulating BEAN:LUSD LP Tokens are in your wallet. Circulating BEAN:LUSD LP Tokens do not earn interest. To remove your liquidity from the BEAN:LUSD pool, go to Curve.',
   beanSiloBalance:
     'These are your Beans which are Deposited in the Silo. This includes Beans you have been paid as interest on your Stalk holdings. For more information on your Deposited Beans, look in the Silo module.',
   lpSiloBalance:
     'These are your BEAN:ETH LP Tokens which are Deposited in the Silo. For more information on your Deposited BEAN:ETH LP Tokens, look in the Silo module.',
   curveSiloBalance:
     'These are your BEAN:3CRV LP Tokens which are Deposited in the Silo. For more information on your Deposited BEAN:3CRV LP Tokens, look in the Silo module.',
+  beanlusdSiloBalance:
+    'These are your BEAN:LUSD LP Tokens which are Deposited in the Silo. Currently, BEAN:LUSD LP Tokens are not whitelisted for the Silo and cannot be deposited.',
   beanTransitBalance:
     'These are your Beans in Unclaimed Withdrawals. This includes both frozen and Claimable Bean Withdrawals.',
   lpTransitBalance:
     'These are your BEAN:ETH LP Tokens in Unclaimed Withdrawals. This includes both frozen and Claimable BEAN:ETH LP Token Withdrawals.',
   curveTransitBalance:
     'These are your BEAN:3CRV LP Tokens in Unclaimed Withdrawals. This includes both frozen and Claimable BEAN:3CRV LP Token Withdrawals.',
+  beanlusdTransitBalance:
+    'These are your BEAN:LUSD LP Tokens in Unclaimed Withdrawals. This includes both frozen and Claimable BEAN:LUSD LP Token Withdrawals.',
   claimableBeanBalance:
     'These are your total Claimable Beans which are from Pod Harvests and Withdrawals. For more information on your Claimable Bean Withdrawals, look in the Silo module. For more information on your Harvestable Pods, look in the Field module.',
   claimablelpBalance:
     'These are your total Claimable BEAN:ETH LP Tokens which are from Withdrawals. For more information on your Claimable BEAN:ETH LP Token Withdrawals, look in the Silo module.',
   claimableCurveBalance:
     'These are your total Claimable BEAN:3CRV LP Tokens which are from Withdrawals. For more information on your Claimable BEAN:3CRV LP Token Withdrawals, look in the Silo module.',
+  claimableBeanlusdBalance:
+    'These are your total Claimable BEAN:LUSD LP Tokens which are from Withdrawals. For more information on your Claimable BEAN:LUSD LP Token Withdrawals, look in the Silo module.',
   claimableEthBalance:
     'These are your total Claimable ETH which are from Seasons of Plenty.',
   stalkBalance:
@@ -105,7 +113,7 @@ export const walletStrings = {
     'This is your total Unharvestable Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, look in the Field module.',
   ethBalance: 'This is the ETH balance of your wallet.',
   topLeft:
-    'The Bean Balance is the total USD value of your Beans, BEAN:ETH LP Tokens and BEAN:3CRV LP Tokens. This total does not include your Pods or claimable ETH.',
+    'The Bean Balance is the total USD value of your Beans, BEAN:ETH LP Tokens, BEAN:3CRV LP Tokens and  BEAN:LUSD LP Tokens. This total does not include your Pods or claimable ETH.',
   topLeftTitle: 'Bean Balance',
   topRight:
     'Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk.',
@@ -117,16 +125,20 @@ export const totalStrings = {
     'This is the number of Beans in the Marketing and Development Budgets.',
   lpBalance: 'This is the number of BEAN:ETH LP Tokens not in the Silo or Withdrawals.',
   curveBalance: 'This is the number of BEAN:3CRV LP Tokens not in the Silo or Withdrawals.',
+  beanlusdBalance: 'This is the number of BEAN:LUSD LP Tokens not in the Silo or Withdrawals. Currently, BEAN:LUSD LP Tokens are not whitelisted for the Silo and cannot be deposited.',
   beanSiloBalance:
     'This is the number of Beans currently Deposited in the Silo.',
   lpSiloBalance: 'This is the number of BEAN:ETH LP Tokens Deposited in the Silo.',
   curveSiloBalance: 'This is the number of BEAN:3CRV LP Tokens Deposited in the Silo.',
+  beanlusdSiloBalance: 'This is the number of BEAN:LUSD LP Tokens Deposited in the Silo. Currently, BEAN:LUSD LP Tokens are not whitelisted for the Silo and cannot be deposited.',
   beanTransitBalance:
     'This is the number of Beans in Unclaimed Withdrawals. This includes both frozen and Claimable Bean Withdrawals.',
   lpTransitBalance:
     'This is the number of BEAN:ETH LP Tokens in Unclaimed Withdrawals. This includes both frozen and Claimable BEAN:ETH LP Token Withdrawals.',
   curveTransitBalance:
     'This is the number of BEAN:3CRV LP Tokens in Unclaimed Withdrawals. This includes both frozen and Claimable BEAN:3CRV LP Token Withdrawals.',
+  beanlusdTransitBalance:
+    'This is the number of BEAN:LUSD LP Tokens in Unclaimed Withdrawals. This includes both frozen and Claimable BEAN:LUSD LP Token Withdrawals.',
   stalkBalance:
     'This is the total current number of Stalk. Stalk are the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Stalk is forfeited upon Withdrawal of Deposited assets from the Silo.',
   seedBalance:
@@ -135,10 +147,10 @@ export const totalStrings = {
     'This is the total number of Unharvestable Pods. This is the outstanding debt of Beanstalk.',
   ethBalance: 'This is the number of Ethereum in the BEAN:ETH liquidity pool.',
   beanReserveTotal:
-    'This is the number of Beans in the BEAN:ETH and the BEAN:3CRV liquidity pools.',
+    'This is the number of Beans in the BEAN:ETH, the BEAN:3CRV and the BEAN:LUSD liquidity pools.',
   topLeft: 'This is the current USD value of all Beans.',
   topLeftTitle: 'Market Cap',
-  topRight: 'This is the current USD value of the BEAN:ETH and the BEAN:3CRV liquidity pools.',
+  topRight: 'This is the current USD value of the BEAN:ETH, the BEAN:3CRV and the BEAN:LUSD liquidity pools.',
   topRightTitle: 'Pool Value',
 };
 export const walletTopStrings = {
@@ -209,6 +221,10 @@ export const siloStrings = {
     'Use this sub-tab to deposit BEAN:3CRV LP Tokens to the Silo.',
   curveWithdraw:
     'Use this sub-tab to withdraw BEAN:3CRV LP Tokens from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
+  beanlusdDeposit:
+    'Use this sub-tab to deposit BEAN:LUSD LP Tokens to the Silo.',
+  beanlusdWithdraw:
+    'Use this sub-tab to withdraw BEAN:LUSD LP Tokens from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
   lpDeposit:
     'Use this sub-tab to deposit BEAN:ETH LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited BEAN:ETH LP Tokens.',
   lpWithdraw:
@@ -278,6 +294,13 @@ export const curveStrings = {
   deposit: 'Use this tab to deposit assets into the BEAN:3CRV pool. Users can deposit assets in a balanced proportion or any combination of assets in the BEAN:3CRV pool.',
   withdraw: 'Use this tab to withdraw assets from the BEAN:3CRV pool. Users can withdraw assets in a balanced proportion or any combination of assets from the BEAN:3CRV pool.',
   claim: 'Use this sub-tab to Claim Withrawn BEAN:3CRV LP Tokens from the Silo.',
+  holder: 'placeholder',
+};
+export const beanlusdStrings = {
+  description: 'What is curve?',
+  deposit: 'Use this tab to deposit assets into the BEAN:LUSD pool. Users can deposit assets in a balanced proportion or any combination of assets in the BEAN:LUSD pool.',
+  withdraw: 'Use this tab to withdraw assets from the BEAN:LUSD pool. Users can withdraw assets in a balanced proportion or any combination of assets from the BEAN:LUSD pool.',
+  claim: 'Use this sub-tab to Claim Withrawn BEAN:LUSD LP Tokens from the Silo.',
   holder: 'placeholder',
 };
 export const beanftStrings = {

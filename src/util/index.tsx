@@ -6,13 +6,14 @@ import {
   BEANFTGENESIS,
   BEANSTALK,
   CURVE,
+  LUSD,
   PRICE,
   UNISWAP_V2_ROUTER,
   SupportedToken,
   changeTheme,
 } from 'constants/index';
 import {
-  BEAN, changeTokenAddresses
+  BEAN, BEANLUSD, changeTokenAddresses
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
@@ -54,8 +55,10 @@ const beaNFTAbi = require('../constants/abi/BeaNFT.json');
 const BeaNFTGenesisABI = require('../constants/abi/BeaNFTGenesis.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
-const curveMetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
+const beanCrv3MetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
+const beanlusdPoolAbi = require('../constants/abi/BeanlusdPool.json');
 const beanstalkPriceAbi = require('../constants/abi/BeanstalkPrice.json');
+const lusdCrv3MetaPoolAbi = require('../constants/abi/LusdCrv3MetaPool.json');
 
 export const tokenContract = (token: SupportedToken) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
@@ -103,14 +106,19 @@ export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
 
 export const curveContract = () =>
-  new ethers.Contract(CURVE.addr, curveMetaPoolAbi, web3Signer);
+  new ethers.Contract(CURVE.addr, beanCrv3MetaPoolAbi, web3Signer);
 
 export const beanCrv3ContractReadOnly = () =>
-  new web3.eth.Contract(curveMetaPoolAbi, CURVE.addr);
+  new web3.eth.Contract(beanCrv3MetaPoolAbi, CURVE.addr);
 
 export const curveContractReadOnly = () =>
-  new web3.eth.Contract(curveMetaPoolAbi, CURVE.factory);
+  new web3.eth.Contract(beanCrv3MetaPoolAbi, CURVE.factory);
 
+export const beanlusdContractReadOnly = () =>
+  new web3.eth.Contract(beanlusdPoolAbi, BEANLUSD.addr);
+
+export const lusdCrv3ContractReadOnly = () =>
+  new web3.eth.Contract(lusdCrv3MetaPoolAbi, LUSD.addr);
 /**
  * Listen for events emitted by the current provider.
  */
@@ -159,11 +167,11 @@ export async function switchChain(_chainId: SupportedChainId) {
 
   // Create web3 / ethers instances.
   const [primaryRpc, eventsRpc, websocketRpc] = getRpcEndpoint(chainId);
-  
+
   // Brave injects "MetaMask" wallet but doesn't provide websocket RPC pool.
   // @ts-ignore
   const isBrave = (window?.navigator?.brave && await window.navigator.brave.isBrave() || false);
-  
+
   console.log(`Using wallet: ${currentState.wallets[0]?.label}`);
   console.log(`Using Brave: ${isBrave}`);
 
@@ -179,7 +187,7 @@ export async function switchChain(_chainId: SupportedChainId) {
       CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
     );
     web3Signer  = web3Provider.getSigner();
-  } 
+  }
   // Use a mixture of Beanstalk's RPC endpoints to serve requests.
   else {
     web3        = new Web3(new Web3.providers.HttpProvider(primaryRpc));

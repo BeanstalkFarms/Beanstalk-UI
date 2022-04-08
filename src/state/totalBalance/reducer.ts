@@ -19,6 +19,14 @@ export interface TotalBalanceState {
   totalSiloCurve: BigNumber;
   /** The total number of withdrawn Bean:3CRV LP tokens */
   totalTransitCurve: BigNumber;
+  /** The total number of Beans in the BEAN:LUSD pool */
+  totalBeanlusdBeans: BigNumber;
+  /** */
+  totalBeanlusd: BigNumber;
+  /** The total number of BEAN:LUSD LP tokens deposited in the Silo */
+  totalSiloBeanlusd: BigNumber;
+  /** The total number of withdrawn BEAN:LUSD LP tokens */
+  totalTransitBeanlusd: BigNumber;
   /** The total number of LP tokens */
   totalLP: BigNumber;
   /** The total number of LP tokens in the Silo */
@@ -53,8 +61,13 @@ export const initialState: TotalBalanceState = {
   totalTransitBeans: new BigNumber(-1),
   totalBudgetBeans: new BigNumber(-1),
   totalCurveBeans: new BigNumber(-1),
+  totalCrv3: new BigNumber(-1),
   totalSiloCurve: new BigNumber(-1),
   totalTransitCurve: new BigNumber(-1),
+  totalBeanlusdBeans: new BigNumber(-1),
+  totalBeanlusd: new BigNumber(-1),
+  totalSiloBeanlusd: new BigNumber(-1),
+  totalTransitBeanlusd: new BigNumber(-1),
   totalLP: new BigNumber(-1),
   totalSiloLP: new BigNumber(-1),
   totalTransitLP: new BigNumber(-1),

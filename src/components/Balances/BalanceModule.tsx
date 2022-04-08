@@ -53,6 +53,7 @@ export default function BalanceModule(props) {
   const [beanActive, setBeanActive] = useState(-1);
   const [lpActive, setLPActive] = useState(-1);
   const [curveActive, setCurveActive] = useState(-1);
+  const [beanlusdActive, setBeanlusdActive] = useState(-1);
 
   const beanTotals = props.beanBalance
     .plus(props.beanSiloBalance)
@@ -70,6 +71,10 @@ export default function BalanceModule(props) {
     .plus(props.curveSiloBalance)
     .plus(props.curveTransitBalance)
     .plus(props.curveReceivableBalance);
+  const beanlusdTotals = props.beanlusdBalance
+    .plus(props.beanlusdSiloBalance)
+    .plus(props.beanlusdTransitBalance)
+    .plus(props.beanlusdReceivableBalance);
   const claimableBalance = props.beanReceivableBalance
     .plus(props.harvestablePodBalance)
     .plus(props.beanWrappedBalance);
@@ -107,6 +112,18 @@ export default function BalanceModule(props) {
       token={TransitAsset.Crv3}
     />
   );
+  const beanlusdTransitSection = (
+    <ToggleTokenBalanceModule
+      balance={props.beanlusdTransitBalance}
+      balanceColor={beanlusdActive === 2 ? color.transit : null}
+      description={props.description.beanlusdTransitBalance}
+      isLP
+      isBeanlusd
+      poolForLPRatio={props.poolForBeanlusdRatio}
+      title={`Withdrawn ${props.showTokenName ? 'LP' : ''}`}
+      token={TransitAsset.Beanlusd}
+    />
+  );
   const claimableBeansSection = (
     <ToggleTokenBalanceModule
       balance={claimableBalance}
@@ -137,6 +154,18 @@ export default function BalanceModule(props) {
       poolForLPRatio={props.poolForCurveRatio}
       title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
       token={ClaimableAsset.Crv3}
+    />
+  );
+  const claimableBeanlusdSection = (
+    <ToggleTokenBalanceModule
+      balance={props.beanlusdReceivableBalance}
+      balanceColor={beanlusdActive === 4 ? color.claimable : null}
+      description={props.description.beanlusdReceivableBalance}
+      isLP
+      isBeanlusd
+      poolForLPRatio={props.poolForBeanlusdRatio}
+      title={`Claimable ${props.showTokenName ? 'LP' : ''}`}
+      token={ClaimableAsset.Beanlusd}
     />
   );
   const beanReserveSection = (
@@ -267,13 +296,13 @@ export default function BalanceModule(props) {
         <Grid item xs={12} style={smallGridStyle}>
           <TokenBalanceModule
             balance={curveTotals}
-            description="Total Curve"
+            description="Total BEAN:3CRV"
             isLP
             isCurve
             poolForLPRatio={props.poolForCurveRatio}
             style={{ position: 'relative' }}
             swerve
-            title="Total Curve"
+            title="Total BEAN:3CRV"
             token={CryptoAsset.Crv3}
           />
         </Grid>
@@ -307,6 +336,62 @@ export default function BalanceModule(props) {
                     props.beanCurveTotal[1]
                   )}`}
                   transit={props.curveTransitBalance}
+                />
+              </Box>
+            </FormatTooltip>
+          </Grid>
+        </Grid>
+      </Hidden>
+    </>
+  );
+
+  /* BEAN:LUSD Hidden */
+  const switchBeanlusdSizeBalances = (
+    <>
+      <Hidden smUp>
+        <Grid item xs={12} style={smallGridStyle}>
+          <TokenBalanceModule
+            balance={beanlusdTotals}
+            description="Total BEAN:LUSD"
+            isLP
+            isBeanlusd
+            poolForLPRatio={props.poolForCurveRatio}
+            style={{ position: 'relative' }}
+            swerve
+            title="Total BEAN:LUSD"
+            token={CryptoAsset.Beanlusd}
+          />
+        </Grid>
+      </Hidden>
+      <Hidden xsDown>
+        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+          <Grid item xs={12}>
+            <FormatTooltip
+              placement="top"
+              margin={props.chartMargin}
+              title={
+                (props.beanlusdTotal[0].isGreaterThan(0) ||
+                  props.beanlusdTotal[1].isGreaterThan(0)) &&
+                beanlusdActive < 0
+                  ? `${displayFullBN(
+                      props.beanlusdTotal[0],
+                      BEAN.decimals
+                    )} BEAN/${displayFullBN(props.beanlusdTotal[1])} LUSD`
+                  : ''
+              }
+            >
+              <Box>
+                <BalanceChart
+                  asset={CryptoAsset.Beanlusd}
+                  claimable={props.beanlusdReceivableBalance}
+                  circulating={props.beanlusdBalance}
+                  setActive={setBeanlusdActive}
+                  silo={props.beanlusdSiloBalance}
+                  title="BEAN/LUSD"
+                  total={`${displayBN(props.beanlusdTotal[0])}/${displayBN(
+                    props.beanlusdTotal[1]
+                  )}`}
+                  transit={props.beanlusdTransitBalance}
                 />
               </Box>
             </FormatTooltip>
@@ -462,9 +547,9 @@ export default function BalanceModule(props) {
         {switchLPSizeBalances}
       </Grid>
       {/*
-        * Section 3: Curve
+        * Section 3: BEAN:3CRV
         */}
-      <span style={spanStyle}>Curve</span>
+      <span style={spanStyle}>BEAN:3CRV</span>
       <Grid
         container
         style={{
@@ -505,7 +590,50 @@ export default function BalanceModule(props) {
         {switchCurveSizeBalances}
       </Grid>
       {/*
-        * Section 4: Stalk/Seeds/Pods/ETH overview
+        * Section 4: BEAN:LUSD
+        */}
+      <span style={spanStyle}>BEAN:LUSD</span>
+      <Grid
+        container
+        style={{
+          backgroundColor: theme.module.foreground,
+          borderRadius: '25px',
+        }}
+      >
+        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+          <Grid item xs={12}>
+            <TokenBalanceModule
+              balance={props.beanlusdBalance}
+              balanceColor={beanlusdActive === 0 ? color.circulating : null}
+              description={props.description.beanlusdBalance}
+              isLP
+              isBeanlusd
+              poolForLPRatio={props.poolForBeanlusdRatio}
+              swerve
+              title={`Circulating ${props.showTokenName ? 'LP' : ''}`}
+              token={CryptoAsset.Beanlusd}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TokenBalanceModule
+              balance={props.beanlusdSiloBalance}
+              balanceColor={beanlusdActive === 1 ? color.silo : null}
+              description={props.description.beanlusdSiloBalance}
+              isLP
+              isBeanlusd
+              poolForLPRatio={props.poolForBeanlusdRatio}
+              swerve
+              title={`Deposited ${props.showTokenName ? 'LP' : ''}`}
+              token={SiloAsset.Beanlusd}
+            />
+          </Grid>
+          {beanlusdTransitSection}
+          {claimableBeanlusdSection}
+        </Grid>
+        {switchBeanlusdSizeBalances}
+      </Grid>
+      {/*
+        * Section 5: Stalk/Seeds/Pods/ETH overview
         */}
       <Grid
         container
