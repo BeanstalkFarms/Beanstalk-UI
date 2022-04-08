@@ -19,7 +19,7 @@ import {
 } from '@material-ui/core';
 
 import { PodListing } from 'state/marketplace/reducer';
-import { theme, BEAN } from 'constants/index';
+import { BEAN } from 'constants/index';
 import { displayBN, toStringBaseUnitBN, FarmAsset, CryptoAsset, cancelPodListing } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
@@ -157,9 +157,7 @@ function ListingRow({
                     txToast.error(err);
                   });
                 }}
-                style={{
-                  color: theme.linkColor,
-                }}
+                className={classes.iconButton}
                 size="small"
               >
                 <CancelIcon />

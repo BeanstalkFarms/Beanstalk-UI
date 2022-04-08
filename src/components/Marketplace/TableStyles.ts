@@ -48,5 +48,11 @@ export const useStyles = makeStyles({
   },
   pointerCursor: {
     cursor: 'pointer'
+  },
+  iconButton: {
+    color: theme.linkColor
+  },
+  marginTop15: {
+    marginTop: 15
   }
 });

@@ -19,7 +19,7 @@ import {
 } from '@material-ui/icons';
 
 import { PodOrder } from 'state/marketplace/reducer';
-import { BEAN, theme } from 'constants/index';
+import { BEAN } from 'constants/index';
 import { cancelPodOrder, CryptoAsset, displayBN, FarmAsset, toStringBaseUnitBN } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
@@ -118,9 +118,7 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
           <TableCell align="center">
             <IconButton
               onClick={(event) => setAnchorEl(event.currentTarget)}
-              style={{
-                color: theme.linkColor,
-              }}
+              className={classes.iconButton}
               size="small"
             >
               <CancelIcon />
@@ -148,7 +146,7 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
                   style={{ textAlign: 'center' }}
                   formControlStyles={{ paddingBottom: 5 }}
                 />
-                <Button onClick={cancelOrder} variant="contained" style={{ marginTop: 15 }}>
+                <Button onClick={cancelOrder} variant="contained" className={classes.marginTop15}>
                   Cancel Order
                 </Button>
               </Box>

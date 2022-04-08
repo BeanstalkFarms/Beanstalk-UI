@@ -26,6 +26,12 @@ const useStyles = makeStyles({
     borderRadius: 10,
     padding: 5,
   },
+  boldFont: {
+    fontWeight: 'bold'
+  },
+  centerText: {
+    textAlign: 'center'
+  }
 });
 
 type GraphListingTooltipProps = {
@@ -41,7 +47,7 @@ export const GraphListingTooltip = (props: GraphListingTooltipProps) => {
   return (
     <div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Price per pod</span>
+        <span className={classes.boldFont}>Price per pod</span>
         <div className={classes.tooltipDetailPill}>
           <span>
             {displayFullBN(listing.pricePerPod, 3)}
@@ -50,7 +56,7 @@ export const GraphListingTooltip = (props: GraphListingTooltipProps) => {
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Plot Size</span>
+        <span className={classes.boldFont}>Plot Size</span>
         <div className={classes.tooltipDetailPill}>
           <span>
             {displayBN(listing.remainingAmount)}
@@ -59,7 +65,7 @@ export const GraphListingTooltip = (props: GraphListingTooltipProps) => {
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Beans to Fill</span>
+        <span className={classes.boldFont}>Beans to Fill</span>
         <div className={classes.tooltipDetailPill}>
           <span>
             {displayBN(listing.remainingAmount.times(listing.pricePerPod))}
@@ -68,14 +74,14 @@ export const GraphListingTooltip = (props: GraphListingTooltipProps) => {
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Place In Line</span>
+        <span className={classes.boldFont}>Place In Line</span>
         <div className={classes.tooltipDetailPill}>
           <span>
             {displayBN(listing.index.minus(harvestableIndex))}
           </span>
         </div>
       </div>
-      <div style={{ textAlign: 'center' }}>
+      <div className={classes.centerText}>
         <Button
           className={classes.formButton}
           color="primary"
@@ -102,7 +108,7 @@ export const GraphOrderTooltip = (props: GraphOrderTooltipProps) => {
   return (
     <div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Price per pod</span>
+        <span className={classes.boldFont}>Price per pod</span>
         <div className={classes.tooltipDetailPill}>
           <span>
             {displayFullBN(order.pricePerPod, 2)}
@@ -111,7 +117,7 @@ export const GraphOrderTooltip = (props: GraphOrderTooltipProps) => {
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Pods Ordered</span>
+        <span className={classes.boldFont}>Pods Ordered</span>
         <div className={classes.tooltipDetailPill}>
           <span>
             {displayBN(order.remainingAmount)}
@@ -120,7 +126,7 @@ export const GraphOrderTooltip = (props: GraphOrderTooltipProps) => {
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Beans if Filled</span>
+        <span className={classes.boldFont}>Beans if Filled</span>
         <div className={classes.tooltipDetailPill}>
           <span>
             {displayBN(order.remainingAmount.times(order.pricePerPod))}
@@ -129,14 +135,14 @@ export const GraphOrderTooltip = (props: GraphOrderTooltipProps) => {
         </div>
       </div>
       <div className={classes.tooltipDetailRow}>
-        <span style={{ fontWeight: 'bold' }}>Max Place In Line</span>
+        <span className={classes.boldFont}>Max Place In Line</span>
         <div className={classes.tooltipDetailPill}>
           <span>
             {displayBN(order.maxPlaceInLine)}
           </span>
         </div>
       </div>
-      <div style={{ textAlign: 'center' }}>
+      <div className={classes.centerText}>
         <Button
           className={classes.formButton}
           color="primary"

@@ -15,7 +15,43 @@ import minBy from 'lodash/minBy';
 
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
+import { makeStyles } from '@material-ui/styles';
 import { GraphListingTooltip, GraphOrderTooltip } from './GraphTooltips';
+
+const useStyles = makeStyles({
+  positionRelative: {
+    position: 'relative'
+  },
+  tooltip: {
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+    paddingTop: 7,
+  },
+  listingBox: {
+    backgroundColor: '#b3cde3',
+    border: '2px solid #333',
+    boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
+    padding: '0.3rem 0.5rem',
+    borderRadius: 10,
+    pointerEvents: 'auto',
+    zIndex: 99999,
+  },
+  nonListingBox: {
+    backgroundColor: '#ccebc5',
+    border: '2px solid #333',
+    boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
+    padding: '0.3rem 0.5rem',
+    borderRadius: 10,
+    pointerEvents: 'auto',
+    zIndex: 99999,
+  },
+  graphStyle: {
+    borderRadius: '25px',
+    fontFamily: 'Futura-Pt-Book',
+    backgroundColor: colorTheme.module.foreground,
+    marginTop: 20,
+  }
+});
 
 type CirclePosition = {
   x: number;
@@ -141,6 +177,7 @@ const defaultGraphContentProps = {
 };
 
 const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: GraphContentProps) => {
+  const classes = useStyles();
   const graphHeight = 350;
   const leftAxisWidth = 70;
   const bottomAxisHeight = 50;
@@ -373,7 +410,7 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
         scaleYMax={4}
       >
         {(zoom) => (
-          <div style={{ position: 'relative' }}>
+          <div className={classes.positionRelative}>
             <svg
               width={parentWidth}
               height={graphHeight}
@@ -488,31 +525,10 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
                   left={tooltipLeft}
                   top={tooltipTop}
                   applyPositionStyle
-                  style={{ 
-                    backgroundColor: 'transparent',
-                    boxShadow: 'none',
-                    paddingTop: 7,
-                  }}
+                  className={classes.tooltip}
                 >
                   <Box
-                    style={tooltipData.type === 'listing' ? {
-                      backgroundColor: '#b3cde3',
-                      border: '2px solid #333',
-                      boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
-                      padding: '0.3rem 0.5rem',
-                      borderRadius: 10,
-                      pointerEvents: 'auto',
-                      zIndex: 99999,
-                    } : {
-                      backgroundColor: '#ccebc5',
-                      border: '2px solid #333',
-                      boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
-                      padding: '0.3rem 0.5rem',
-                      borderRadius: 10,
-                      pointerEvents: 'auto',
-                      zIndex: 99999,
-                    }
-                  }>
+                    className={tooltipData.type === 'listing' ? classes.listingBox : classes.nonListingBox}>
                     {tooltipData.type === 'listing' ? (
                       <GraphListingTooltip
                         listing={listings[tooltipData.index]}
@@ -544,20 +560,14 @@ GraphContent.defaultProps = defaultGraphContentProps;
 const GraphWithParent = withParentSize(GraphContent);
 
 // --
-
-const graphStyle = {
-  borderRadius: '25px',
-  fontFamily: 'Futura-Pt-Book',
-  backgroundColor: colorTheme.module.foreground,
-  marginTop: 20,
-};
 type GraphModuleProps = {
   setCurrentListing: Function;
   setCurrentOrder: Function;
 }
 export default function GraphModule(props: GraphModuleProps) {
+  const classes = useStyles();
   return (
-    <Box style={graphStyle}>
+    <Box className={classes.graphStyle}>
       <GraphWithParent
         setCurrentListing={props.setCurrentListing}
         setCurrentOrder={props.setCurrentOrder}
