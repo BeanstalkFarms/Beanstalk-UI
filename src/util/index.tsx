@@ -17,7 +17,7 @@ import {
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
 import { POKT_HTTPS_URLS } from 'constants/rpc/pokt';
-import { ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
+import { ALCHEMY_HTTPS_URLS, ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
 import onboard from './onboard';
 
 export * from './EventUtilities';
@@ -40,6 +40,7 @@ export let initializing;
 /** txCallback is called after each successful request to the chain. */
 export let txCallback : Function | undefined;
 export let web3 : Web3;
+export let web3Events: Web3;
 export let web3Ws : Web3;
 export let account : string;
 export let metamaskFailure = -1;
@@ -71,20 +72,26 @@ export const beanstalkPriceContractReadOnly = () =>
 
 export const beanstalkContract = () =>
   new ethers.Contract(BEANSTALK, beanstalkAbi, web3Signer);
-export const beanstalkContractReadOnly = () =>
-  new web3.eth.Contract(beanstalkAbi, BEANSTALK);
+export const beanstalkContractReadOnly = (events = false) => {
+  const w3 = events ? web3Events : web3;
+  return new w3.eth.Contract(beanstalkAbi, BEANSTALK);
+};
 export const beanstalkContractReadOnlyWs = () =>
   new web3Ws.eth.Contract(beanstalkAbi, BEANSTALK);
 
 export const beaNFTContract = () =>
   new ethers.Contract(BEANFTCOLLECTION, beaNFTAbi, web3Signer);
-export const beaNFTContractReadOnly = () =>
-  new web3.eth.Contract(beaNFTAbi, BEANFTCOLLECTION);
+export const beaNFTContractReadOnly = (events = false) => {
+  const w3 = events ? web3Events : web3;
+  return new w3.eth.Contract(beaNFTAbi, BEANFTCOLLECTION);
+};
 
 export const beaNFTGenesisContract = () =>
   new ethers.Contract(BEANFTGENESIS, BeaNFTGenesisABI, web3Signer);
-export const beaNFTGenesisContractReadOnly = () =>
-  new web3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS);
+export const beaNFTGenesisContractReadOnly = (events = false) => {
+  const w3 = events ? web3Events : web3;
+  return new w3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS);
+};
 
 export const pairContract = (pair: SupportedToken) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
@@ -130,6 +137,7 @@ export function getRpcEndpoint(_chainId: SupportedChainId) {
   return [
     POKT_HTTPS_URLS[_chainId],
     ALCHEMY_WS_URLS[_chainId],
+    ALCHEMY_HTTPS_URLS[_chainId],
   ];
 }
 
@@ -148,7 +156,7 @@ export async function switchChain(_chainId: SupportedChainId) {
   if (chainId === 3) changeTheme('ropsten');
 
   // Create web3 / ethers instances.
-  const [rpcHttp, rpcWs] = getRpcEndpoint(chainId);
+  const [rpcHttp, rpcWs, arpcHttp] = getRpcEndpoint(chainId);
   
   // Brave injects "MetaMask" wallet but doesn't provide websocket RPC pool.
   // @ts-ignore
@@ -170,6 +178,9 @@ export async function switchChain(_chainId: SupportedChainId) {
   } else {
     web3 = new Web3(
       new Web3.providers.HttpProvider(rpcHttp)
+    );
+    web3Events = new Web3(
+      new Web3.providers.HttpProvider(arpcHttp)
     );
     web3Ws = new Web3(
       new Web3.providers.WebsocketProvider(rpcWs)

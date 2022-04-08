@@ -35,7 +35,7 @@ export async function initializeEventListener(
   updateTotals: Function
 ) {
   const startTime = benchmarkStart('EVENT LISTENER');
-  const beanstalk = beanstalkContractReadOnly();
+  const beanstalk = beanstalkContractReadOnly(true);
 
   // console.log('initializeEventListener: ', account);
 

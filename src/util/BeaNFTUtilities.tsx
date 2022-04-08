@@ -64,7 +64,7 @@ export const isMinted = async (nftId) => {
  * @rpc 2 calls
  */
 export const getMintedWinterNFTs = async () => {
-  const beaNFT = beaNFTContractReadOnly();
+  const beaNFT = beaNFTContractReadOnly(true);
   const toTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { to: account },
     fromBlock: 0,
@@ -84,7 +84,7 @@ export const getMintedWinterNFTs = async () => {
  * @rpc 2 calls
  */
 export const getMintedNFTs = async () => {
-  const beaNFT = beaNFTGenesisContractReadOnly();
+  const beaNFT = beaNFTGenesisContractReadOnly(true);
   const toTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { to: account },
     fromBlock: 0,
