@@ -708,7 +708,7 @@ export default function Updater() {
           event.returnValues.withdrawals.forEach(
             (s) => delete lpWithdrawals[s]
           );
-        } else if (event.event === 'Proposal' || event.event === 'Vote') {
+        } else if (event.event === 'Vote') {
           votedBips.add(event.returnValues.bip);
         } else if (event.event === 'Unvote') {
           votedBips.delete(event.returnValues.bip);
