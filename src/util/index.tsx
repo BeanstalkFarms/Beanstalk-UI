@@ -36,18 +36,17 @@ export * from './APYUtilities';
 export * from './FundraiserUtilities';
 export * from './MarketUtilities';
 
-export let initializing;
-/** txCallback is called after each successful request to the chain. */
-export let txCallback : Function | undefined;
-export let web3 : Web3;
-export let web3Events: Web3;
-export let web3Ws : Web3;
+export let initializing : boolean | undefined;
+export let txCallback : Function | undefined; // txCallback is called after each successful request to the chain.
 export let account : string;
 export let metamaskFailure = -1;
 export let chainId : SupportedChainId = 1;
 
-export let web3Provider : ethers.providers.Web3Provider;
-export let web3Signer   : ethers.providers.JsonRpcSigner;
+export let web3 : Web3;       // `primary` instance; used for most contract calls
+export let web3Events: Web3;  // `events` instance; used to fetch historical events (may use eth-archival node)
+export let web3Ws : Web3;     // `websocket` instance; used to listen to new chain events
+export let web3Provider : ethers.providers.Web3Provider;    // ethers provider
+export let web3Signer   : ethers.providers.JsonRpcSigner;   // ethers signer; used to sign calls to ethers.Contract instances
 
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');
@@ -130,14 +129,17 @@ async function initWalletListeners() {
 
 /**
  *
- * @param _chainId
- * @returns
  */
-export function getRpcEndpoint(_chainId: SupportedChainId) {
+type LiveRpcEndpoints = [
+  primary: string,
+  events: string,
+  websocket: string,
+]
+export function getRpcEndpoint(_chainId: SupportedChainId) : LiveRpcEndpoints {
   return [
     POKT_HTTPS_URLS[_chainId],
-    ALCHEMY_WS_URLS[_chainId],
     ALCHEMY_HTTPS_URLS[_chainId],
+    ALCHEMY_WS_URLS[_chainId],
   ];
 }
 
@@ -156,40 +158,35 @@ export async function switchChain(_chainId: SupportedChainId) {
   if (chainId === 3) changeTheme('ropsten');
 
   // Create web3 / ethers instances.
-  const [rpcHttp, rpcWs, arpcHttp] = getRpcEndpoint(chainId);
+  const [primaryRpc, eventsRpc, websocketRpc] = getRpcEndpoint(chainId);
   
   // Brave injects "MetaMask" wallet but doesn't provide websocket RPC pool.
   // @ts-ignore
   const isBrave = (window?.navigator?.brave && await window.navigator.brave.isBrave() || false);
   
   console.log(`Using wallet: ${currentState.wallets[0]?.label}`);
+  console.log(`Using Brave: ${isBrave}`);
 
+  // If the user is using MetaMask in Chrome, we default to MetaMask's RPC endpoint
+  // (which uses Infura). This has support for HTTP and socket calls. Helps keep the
+  // load on our RPC endpoints low in the meantime.
   if (currentState.wallets[0].label === 'MetaMask' && !isBrave) {
-    console.log(`Using Brave: ${isBrave}`);
-    web3   = new Web3(
-      (currentState.wallets[0].provider as unknown) as Web3CoreProvider
-    );
-    web3Ws = web3;
+    web3        = new Web3((currentState.wallets[0].provider as unknown) as Web3CoreProvider);
+    web3Events  = web3;
+    web3Ws      = web3;
     web3Provider = new ethers.providers.Web3Provider(
       currentState.wallets[0].provider,   // the provider instance from web3-onboard
       CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
     );
-    web3Signer = web3Provider.getSigner();
-  } else {
-    web3 = new Web3(
-      new Web3.providers.HttpProvider(rpcHttp)
-    );
-    web3Events = new Web3(
-      new Web3.providers.HttpProvider(arpcHttp)
-    );
-    web3Ws = new Web3(
-      new Web3.providers.WebsocketProvider(rpcWs)
-    );
-    web3Provider = new ethers.providers.Web3Provider(
-      currentState.wallets[0].provider,   // the provider instance from web3-onboard
-      // CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
-    );
-    web3Signer = web3Provider.getSigner();
+    web3Signer  = web3Provider.getSigner();
+  } 
+  // Use a mixture of Beanstalk's RPC endpoints to serve requests.
+  else {
+    web3        = new Web3(new Web3.providers.HttpProvider(primaryRpc));
+    web3Events  = new Web3(new Web3.providers.HttpProvider(eventsRpc));
+    web3Ws      = new Web3(new Web3.providers.WebsocketProvider(websocketRpc));
+    web3Provider = new ethers.providers.Web3Provider(currentState.wallets[0].provider);
+    web3Signer  = web3Provider.getSigner();
   }
 }
 

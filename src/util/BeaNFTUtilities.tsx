@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { BEANSTALK_GENESIS_BLOCK } from './EventUtilities';
 import {
   account,
   beaNFTContract,
@@ -67,11 +68,11 @@ export const getMintedWinterNFTs = async () => {
   const beaNFT = beaNFTContractReadOnly(true);
   const toTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { to: account },
-    fromBlock: 0,
+    fromBlock: BEANSTALK_GENESIS_BLOCK,
   });
   const fromTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { from: account },
-    fromBlock: 0,
+    fromBlock: BEANSTALK_GENESIS_BLOCK,
   });
   const ownedIds = toTransfers.map((t) => parseInt(t.returnValues.tokenId, 10));
   const tradedIds = fromTransfers.map((t) =>
@@ -87,11 +88,11 @@ export const getMintedNFTs = async () => {
   const beaNFT = beaNFTGenesisContractReadOnly(true);
   const toTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { to: account },
-    fromBlock: 0,
+    fromBlock: BEANSTALK_GENESIS_BLOCK,
   });
   const fromTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { from: account },
-    fromBlock: 0,
+    fromBlock: BEANSTALK_GENESIS_BLOCK,
   });
   const ownedIds = toTransfers.map((t) => parseInt(t.returnValues.tokenId, 10));
   const tradedIds = fromTransfers.map((t) => parseInt(t.returnValues.tokenId, 10));
