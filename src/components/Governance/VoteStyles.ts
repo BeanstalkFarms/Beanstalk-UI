@@ -44,5 +44,9 @@ export const useStyles = makeStyles({
   },
   rowSelected: {
     backgroundColor: theme.voteSelect,
+    cursor: 'pointer'
   },
+  pointerCursor: {
+    cursor: 'pointer'
+  }
 });

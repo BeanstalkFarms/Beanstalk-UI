@@ -41,4 +41,12 @@ export const useStyles = makeStyles({
     color: 'white',
     backgroundColor: theme.linkColor,
   },
+  cell: {
+    textAlign: 'center',
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+  pointerCursor: {
+    cursor: 'pointer'
+  }
 });

@@ -1,8 +1,29 @@
 import React from 'react';
 import { Box, CircularProgress, Typography } from '@material-ui/core';
 import { FormatTooltip } from 'components/Common';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles({
+  blackground: {
+    position: 'absolute',
+    left: '1.2px',
+    top: '1.2px'
+  },
+  majority: {
+    position: 'absolute',
+    transform: 'rotate(87deg)'
+  },
+  superMajority: {
+    position: 'absolute',
+    transform: 'rotate(147deg)'
+  },
+  absolutePosition: {
+    position: 'absolute'
+  }
+});
 
 export default function CircularProgressWithLabel(props) {
+  const classes = useStyles();
   const showBlip =
     props.value - props.lowvalue < 3 && props.value - props.lowvalue > 0;
   const displayLowNumber = showBlip ? 3 : props.value - props.lowvalue;
@@ -37,7 +58,7 @@ export default function CircularProgressWithLabel(props) {
       <CircularProgress
         key="blackground"
         size={38}
-        style={{ position: 'absolute', left: '1.2px', top: '1.2px' }}
+        className={classes.blackground}
         thickness={0.5}
         variant="determinate"
         value={100}
@@ -53,8 +74,8 @@ export default function CircularProgressWithLabel(props) {
     );
     circles.push(
       <CircularProgress
-        key="majoriry"
-        style={{ position: 'absolute', transform: 'rotate(87deg)' }}
+        key="majority"
+        className={classes.majority}
         thickness={7}
         value={(7 * 100) / 360}
         variant="determinate"
@@ -63,7 +84,7 @@ export default function CircularProgressWithLabel(props) {
     circles.push(
       <CircularProgress
         key="superMajority"
-        style={{ position: 'absolute', transform: 'rotate(147deg)' }}
+        className={classes.superMajority}
         thickness={7}
         value={(7 * 100) / 360}
         variant="determinate"
@@ -92,7 +113,7 @@ export default function CircularProgressWithLabel(props) {
           <Typography
             color="textSecondary"
             component="div"
-            style={{ position: 'absolute' }}
+            className={classes.absolutePosition}
             variant="caption"
           >
             {props.lowvalue === undefined ? `${Math.round(props.value)}%` : ''}

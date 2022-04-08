@@ -11,11 +11,32 @@ import {
 } from 'components/Common';
 import { WHITEPAPER } from 'constants/index';
 import { BIP } from 'util/LedgerUtilities';
+import { makeStyles } from '@material-ui/styles';
 import Fundraiser from '../Fundraiser';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';
 
+const useStyles = makeStyles({
+  activeBipStyle: {
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '16px',
+    marginTop: '10px',
+    width: '100%',
+  },
+  voteGrid: {
+    maxWidth: '550px',
+    margin: 'auto'
+  },
+  minHeight200: {
+    minHeight: '200px'
+  },
+  helperGrid: {
+    margin: '20px 0px'
+  }
+});
+
 export default function Governance() {
+  const classes = useStyles();
   const { bips } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
@@ -39,13 +60,6 @@ export default function Governance() {
 
   if (bips === undefined || bips.length === 0) return null;
 
-  const activeBipStyle = {
-    fontFamily: 'Futura-PT-Book',
-    fontSize: '16px',
-    marginTop: '10px',
-    width: '100%',
-  };
-
   //
   const activeBips : (BIP['id'])[] = bips.reduce((aBips, bip) => {
     if (bip.active) aBips.push(bip.id.toString());
@@ -66,7 +80,7 @@ export default function Governance() {
 
   const voteField =
     activeBips.length > 0 ? (
-      <Grid item md={6} xs={12} style={{ maxWidth: '550px', margin: 'auto' }}>
+      <Grid item md={6} xs={12} className={classes.voteGrid}>
         <Vote
           bips={activeBips}
           seasonBips={seasonBips}
@@ -77,7 +91,7 @@ export default function Governance() {
         />
       </Grid>
     ) : (
-      <Box style={activeBipStyle}>No Active BIPs</Box>
+      <Box className={classes.activeBipStyle}>No Active BIPs</Box>
     );
 
   const descriptionLinks = [
@@ -107,7 +121,7 @@ export default function Governance() {
           xs={12}
           alignItems="flex-start"
           justifyContent="center"
-          style={{ minHeight: '200px' }}
+          className={classes.minHeight200}
         >
           <Grid item xs={12}>
             {voteField}
@@ -123,7 +137,7 @@ export default function Governance() {
         </Grid>
         {fundraiserTable}
       </Grid>
-      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+      <Grid container justifyContent="center" className={classes.helperGrid}>
         <ContentDropdown
           description={governanceStrings.governanceDescription}
           descriptionTitle="How do I participate in Governance?"

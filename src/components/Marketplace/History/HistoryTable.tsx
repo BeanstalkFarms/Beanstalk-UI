@@ -82,11 +82,7 @@ export default function HistoryTable() {
                     {displayBN(item.amount)}
                   </BalanceTableCell>
                   <TableCell
-                    style={{
-                      textAlign: 'center',
-                      paddingLeft: 0,
-                      paddingRight: 0,
-                    }}
+                    className={classes.cell}
                   >
                     @
                   </TableCell>

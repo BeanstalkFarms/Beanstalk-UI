@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { updateBeanstalkUSDCAllowance } from 'state/allowances/actions';
+import { makeStyles } from '@material-ui/styles';
 import {
   approveBeanstalkUSDC,
   displayBN,
@@ -20,6 +21,16 @@ import {
 } from '../Common';
 import { FundModule } from './FundModule';
 
+const useStyles = makeStyles({
+  headerLabelStyle: {
+    maxWidth: '300px',
+    padding: '0px',
+  },
+  helperGrid: {
+    margin: '20px 0px'
+  }
+});
+
 export default function FundraiserModule({
   remaining,
   total,
@@ -28,6 +39,7 @@ export default function FundraiserModule({
   id,
   minHeight,
 }) {
+  const classes = useStyles();
   const { beanstalkUSDCAllowance } = useSelector<AppState, AppState['allowances']>(
     (state) => state.allowances
   );
@@ -42,10 +54,6 @@ export default function FundraiserModule({
   const [isFormDisabled, setIsFormDisabled] = useState(true);
 
   const { innerWidth: width } = window;
-  const headerLabelStyle = {
-    maxWidth: '300px',
-    padding: '0px',
-  };
 
   const sectionTitles = ['Fund'];
   const sectionTitlesDescription = [
@@ -81,13 +89,13 @@ export default function FundraiserModule({
     <>
       <ContentTitle title={title} />
       <ContentSection id={title} style={{ paddingTop: '10px', width: '100%' }}>
-        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <Grid container justifyContent="center" className={classes.helperGrid}>
           <ContentDropdown
             description={description}
             descriptionTitle="What is this Fundraiser?"
           />
         </Grid>
-        <Grid container item xs={12} justifyContent="center" style={headerLabelStyle}>
+        <Grid container item xs={12} justifyContent="center" className={classes.headerLabelStyle}>
           <HeaderLabelList
             balanceDescription={[
               `${displayFullBN(remaining)} ${TokenLabel(CryptoAsset.Usdc)}`,

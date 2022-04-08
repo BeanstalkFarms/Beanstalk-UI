@@ -200,11 +200,10 @@ export default function Vote(props: VoteProps) {
             return (
               <TableRow
                 key={`table_row_${index}`} // eslint-disable-line
-                className={selected[index] === index ? classes.rowSelected : null}
+                className={selected[index] === index ? classes.rowSelected : classes.pointerCursor}
                 hover
                 onClick={() => handleClick(bip, index)}
                 selected={isItemSelected}
-                style={{ cursor: 'pointer' }}
               >
                 <TableCell
                   className={classes.cell}
@@ -256,10 +255,6 @@ export default function Vote(props: VoteProps) {
 
     return (
       <>
-        {/* <ExpandMoreIcon
-          color="primary"
-          style={{ marginBottom: '-14px', width: '100%' }}
-        /> */}
         <TransactionDetailsModule fields={selectedDetails} />
         <br />
       </>

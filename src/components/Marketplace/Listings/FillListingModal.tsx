@@ -39,7 +39,15 @@ import {
 import TransactionToast from 'components/Common/TransactionToast';
 import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 
+import { makeStyles } from '@material-ui/styles';
 import ListingsTable from './ListingsTable';
+
+const useStyles = makeStyles({
+  expandMoreIcon: {
+    marginBottom: '-14px',
+    width: '100%'
+  }
+});
 
 type FillListingModalProps = {
   currentListing: PodListing;
@@ -50,6 +58,7 @@ export default function FillListingModal({
   currentListing,
   setCurrentListing,
 }: FillListingModalProps) {
+  const classes = useStyles();
   /** Number of Pods to buy */
   const [buyPods, setBuyPods] = useState(new BigNumber(0));
   /** Number of beans to spend to aquire Pods */
@@ -457,7 +466,7 @@ export default function FillListingModal({
           {fromEthField}
           <ExpandMoreIcon
             color="primary"
-            style={{ marginBottom: '-14px', width: '100%' }}
+            className={classes.expandMoreIcon}
           />
           {toPodField}
           {transactionDetails()}

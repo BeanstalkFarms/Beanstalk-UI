@@ -68,6 +68,21 @@ const useStyles = makeStyles({
     padding: '10px 10px 20px 10px',
     marginBottom: '80px',
   },
+  commitFont: {
+    fontFamily: 'Futura-PT-Book'
+  },
+  lineMargin: {
+    margin: '10px 8px',
+  },
+  outerTableCell: {
+    width: '10px',
+    borderBottom: `2px solid ${theme.accentColor}`,
+  },
+  innerTableCell: {
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '16px',
+    borderBottom: `2px solid ${theme.accentColor}`,
+  }
 });
 
 function summaryBips(open, bip) {
@@ -235,7 +250,7 @@ const BipTable = (props) => {
           variant="contained"
         >
           <Box>
-            <span style={{ fontFamily: 'Futura-PT-Book' }}>
+            <span className={classes.commitFont}>
               Commit
             </span>
             <QuestionModule
@@ -307,9 +322,7 @@ const BipTable = (props) => {
           />
         </span>
         <Line
-          style={{
-            margin: '10px 8px',
-          }}
+          className={classes.lineMargin}
         />
         <TableContainer className={classes.table}>
           <Table aria-label="simple table">
@@ -317,21 +330,14 @@ const BipTable = (props) => {
               <TableRow>
                 <TableCell
                   size="small"
-                  style={{
-                    width: '10px',
-                    borderBottom: `2px solid ${theme.accentColor}`,
-                  }}
+                  className={classes.outerTableCell}
                 />
                 {titles.map((t) => (
                   <TableCell
                     key={t}
                     align="center"
                     size="small"
-                    style={{
-                      fontFamily: 'Futura-PT-Book',
-                      fontSize: '16px',
-                      borderBottom: `2px solid ${theme.accentColor}`,
-                    }}
+                    className={classes.innerTableCell}
                   >
                     {t}
                   </TableCell>

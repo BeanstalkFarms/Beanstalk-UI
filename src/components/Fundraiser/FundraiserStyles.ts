@@ -29,4 +29,7 @@ export const useStyles = makeStyles({
     padding: '10px 10px 20px 10px',
     marginBottom: '80px',
   },
+  noBorder: {
+    border: 'none'
+  }
 });
