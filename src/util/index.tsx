@@ -6,17 +6,18 @@ import {
   BEANFTGENESIS,
   BEANSTALK,
   CURVE,
+  LUSD,
   PRICE,
   UNISWAP_V2_ROUTER,
   SupportedToken,
   changeTheme,
 } from 'constants/index';
 import {
-  BEAN, changeTokenAddresses
+  BEAN, BEANLUSD, changeTokenAddresses
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
-// import { INFURA_HTTPS_URLS, INFURA_WS_URLS } from 'constants/rpc/infura';
+// import { POKT_HTTPS_URLS } from 'constants/rpc/pokt';
 import { ALCHEMY_HTTPS_URLS, ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
 import onboard from './onboard';
 
@@ -36,17 +37,17 @@ export * from './APYUtilities';
 export * from './FundraiserUtilities';
 export * from './MarketUtilities';
 
-export let initializing;
-/** txCallback is called after each successful request to the chain. */
-export let txCallback : Function | undefined;
-export let web3 : Web3;
-export let web3Ws : Web3;
+export let initializing : boolean | undefined;
+export let txCallback : Function | undefined; // txCallback is called after each successful request to the chain.
 export let account : string;
 export let metamaskFailure = -1;
 export let chainId : SupportedChainId = 1;
 
-export let web3Provider : ethers.providers.Web3Provider;
-export let web3Signer   : ethers.providers.JsonRpcSigner;
+export let web3 : Web3;       // `primary` instance; used for most contract calls
+export let web3Events: Web3;  // `events` instance; used to fetch historical events (may use eth-archival node)
+export let web3Ws : Web3;     // `websocket` instance; used to listen to new chain events
+export let web3Provider : ethers.providers.Web3Provider;    // ethers provider
+export let web3Signer   : ethers.providers.JsonRpcSigner;   // ethers signer; used to sign calls to ethers.Contract instances
 
 const beanAbi = require('../constants/abi/Bean.json');
 const beanstalkAbi = require('../constants/abi/Beanstalk.json');
@@ -54,8 +55,10 @@ const beaNFTAbi = require('../constants/abi/BeaNFT.json');
 const BeaNFTGenesisABI = require('../constants/abi/BeaNFTGenesis.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
-const curveMetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
+const beanCrv3MetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
+const beanlusdPoolAbi = require('../constants/abi/BeanlusdPool.json');
 const beanstalkPriceAbi = require('../constants/abi/BeanstalkPrice.json');
+const lusdCrv3MetaPoolAbi = require('../constants/abi/LusdCrv3MetaPool.json');
 
 export const tokenContract = (token: SupportedToken) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
@@ -71,20 +74,26 @@ export const beanstalkPriceContractReadOnly = () =>
 
 export const beanstalkContract = () =>
   new ethers.Contract(BEANSTALK, beanstalkAbi, web3Signer);
-export const beanstalkContractReadOnly = () =>
-  new web3.eth.Contract(beanstalkAbi, BEANSTALK);
+export const beanstalkContractReadOnly = (events = false) => {
+  const w3 = events ? web3Events : web3;
+  return new w3.eth.Contract(beanstalkAbi, BEANSTALK);
+};
 export const beanstalkContractReadOnlyWs = () =>
   new web3Ws.eth.Contract(beanstalkAbi, BEANSTALK);
 
 export const beaNFTContract = () =>
   new ethers.Contract(BEANFTCOLLECTION, beaNFTAbi, web3Signer);
-export const beaNFTContractReadOnly = () =>
-  new web3.eth.Contract(beaNFTAbi, BEANFTCOLLECTION);
+export const beaNFTContractReadOnly = (events = false) => {
+  const w3 = events ? web3Events : web3;
+  return new w3.eth.Contract(beaNFTAbi, BEANFTCOLLECTION);
+};
 
 export const beaNFTGenesisContract = () =>
   new ethers.Contract(BEANFTGENESIS, BeaNFTGenesisABI, web3Signer);
-export const beaNFTGenesisContractReadOnly = () =>
-  new web3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS);
+export const beaNFTGenesisContractReadOnly = (events = false) => {
+  const w3 = events ? web3Events : web3;
+  return new w3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS);
+};
 
 export const pairContract = (pair: SupportedToken) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
@@ -97,14 +106,19 @@ export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
 
 export const curveContract = () =>
-  new ethers.Contract(CURVE.addr, curveMetaPoolAbi, web3Signer);
+  new ethers.Contract(CURVE.addr, beanCrv3MetaPoolAbi, web3Signer);
 
 export const beanCrv3ContractReadOnly = () =>
-  new web3.eth.Contract(curveMetaPoolAbi, CURVE.addr);
+  new web3.eth.Contract(beanCrv3MetaPoolAbi, CURVE.addr);
 
 export const curveContractReadOnly = () =>
-  new web3.eth.Contract(curveMetaPoolAbi, CURVE.factory);
+  new web3.eth.Contract(beanCrv3MetaPoolAbi, CURVE.factory);
 
+export const beanlusdContractReadOnly = () =>
+  new web3.eth.Contract(beanlusdPoolAbi, BEANLUSD.addr);
+
+export const lusdCrv3ContractReadOnly = () =>
+  new web3.eth.Contract(lusdCrv3MetaPoolAbi, LUSD.addr);
 /**
  * Listen for events emitted by the current provider.
  */
@@ -123,13 +137,17 @@ async function initWalletListeners() {
 
 /**
  *
- * @param _chainId
- * @returns
  */
-export function getRpcEndpoint(_chainId: SupportedChainId) {
+type LiveRpcEndpoints = [
+  primary: string,
+  events: string,
+  websocket: string,
+]
+export function getRpcEndpoint(_chainId: SupportedChainId) : LiveRpcEndpoints {
   return [
-    ALCHEMY_HTTPS_URLS[_chainId],
-    ALCHEMY_WS_URLS[_chainId],
+    ALCHEMY_HTTPS_URLS[_chainId], // primary
+    ALCHEMY_HTTPS_URLS[_chainId], // events
+    ALCHEMY_WS_URLS[_chainId],    // websocket
   ];
 }
 
@@ -148,35 +166,35 @@ export async function switchChain(_chainId: SupportedChainId) {
   if (chainId === 3) changeTheme('ropsten');
 
   // Create web3 / ethers instances.
-  const [rpcHttp, rpcWs] = getRpcEndpoint(chainId);
-  
+  const [primaryRpc, eventsRpc, websocketRpc] = getRpcEndpoint(chainId);
+
   // Brave injects "MetaMask" wallet but doesn't provide websocket RPC pool.
   // @ts-ignore
   const isBrave = (window?.navigator?.brave && await window.navigator.brave.isBrave() || false);
-  
-  console.log(`Using wallet: ${currentState.wallets[0]?.label}`);
 
+  console.log(`Using wallet: ${currentState.wallets[0]?.label}`);
+  console.log(`Using Brave: ${isBrave}`);
+
+  // If the user is using MetaMask in Chrome, we default to MetaMask's RPC endpoint
+  // (which uses Infura). This has support for HTTP and socket calls. Helps keep the
+  // load on our RPC endpoints low in the meantime.
   if (currentState.wallets[0].label === 'MetaMask' && !isBrave) {
-    console.log(`Using Brave: ${isBrave}`);
-    web3   = new Web3((currentState.wallets[0].provider as unknown) as Web3CoreProvider);
-    web3Ws = web3;
+    web3        = new Web3((currentState.wallets[0].provider as unknown) as Web3CoreProvider);
+    web3Events  = web3;
+    web3Ws      = web3;
     web3Provider = new ethers.providers.Web3Provider(
       currentState.wallets[0].provider,   // the provider instance from web3-onboard
       CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
     );
-    web3Signer = web3Provider.getSigner();
-  } else {
-    web3 = new Web3(
-      new Web3.providers.HttpProvider(rpcHttp)
-    );
-    web3Ws = new Web3(
-      new Web3.providers.WebsocketProvider(rpcWs)
-    );
-    web3Provider = new ethers.providers.Web3Provider(
-      currentState.wallets[0].provider,   // the provider instance from web3-onboard
-      // CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
-    );
-    web3Signer = web3Provider.getSigner();
+    web3Signer  = web3Provider.getSigner();
+  }
+  // Use a mixture of Beanstalk's RPC endpoints to serve requests.
+  else {
+    web3        = new Web3(new Web3.providers.HttpProvider(primaryRpc));
+    web3Events  = new Web3(new Web3.providers.HttpProvider(eventsRpc));
+    web3Ws      = new Web3(new Web3.providers.WebsocketProvider(websocketRpc));
+    web3Provider = new ethers.providers.Web3Provider(currentState.wallets[0].provider);
+    web3Signer  = web3Provider.getSigner();
   }
 }
 

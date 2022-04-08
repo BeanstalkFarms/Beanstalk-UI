@@ -44,8 +44,14 @@ export default function CurveDeposit() {
   );
 
   const sectionTitles = ['Deposit'];
-  const sectionTitlesDescription = [curveStrings.deposit];
-  const sectionTitlesInfoDescription = [siloStrings.lpDepositsTable];
+  const sectionTitlesDescription = [
+    curveStrings.deposit,
+    curveStrings.withdraw,
+  ];
+  const sectionTitlesInfoDescription = [
+    siloStrings.lpDepositsTable,
+    siloStrings.lpWithdrawalsTable,
+  ];
 
   const [sectionInfo, setSectionInfo] = useState(0);
   const [page, setPage] = useState(0);

@@ -50,6 +50,9 @@ export default function TokenBalanceModule(props) {
     if (props.isCurve) {
       return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} 3CRV`;
     }
+    if (props.isBeanlusd) {
+      return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} LUSD`;
+    }
     return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])}
       ${TokenLabel(CryptoAsset.Ethereum)}`;
   }

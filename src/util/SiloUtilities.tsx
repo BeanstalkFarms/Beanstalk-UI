@@ -21,6 +21,7 @@ export function getUserSiloDepositsUSD(
 ) : DepositValueByToken {
   const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanReserve, priceState.ethReserve, totalBalanceState.totalLP);
   const poolForCurveRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanCrv3Reserve, priceState.crv3Reserve, totalBalanceState.totalCrv3);
+  const poolForBeanlusdRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanlusdReserve, priceState.lusdReserve, totalBalanceState.totalBeanlusd);
 
   // Balance of user assets deposited in the Silo.
   // FIXME: abstract this so new assets are automatically summed using
@@ -29,10 +30,12 @@ export function getUserSiloDepositsUSD(
   const userBeans = userBalanceState.beanSiloBalance;
   const userLP = userBalanceState.lpSiloBalance;
   const userCurve = userBalanceState.curveSiloBalance;
+  const userBeanlusd = userBalanceState.beanlusdSiloBalance;
 
   // Get pool tuples
   const userBeansAndEth = poolForLPRatio(userLP);
   const userBeansAndCrv3 = poolForCurveRatio(userCurve);
+  const userBeansAndLusd = poolForBeanlusdRatio(userBeanlusd);
 
   const userLPBeans = userBeansAndEth[0].multipliedBy(2);
   const userCurveBeans = (
@@ -40,16 +43,23 @@ export function getUserSiloDepositsUSD(
       .multipliedBy(priceState.beanCrv3Price)
       .plus(userBeansAndCrv3[1])
   );
+  const userBeanlusdBeans = (
+    userBeansAndLusd[0]
+      .multipliedBy(priceState.beanlusdPrice)
+      .plus(userBeansAndLusd[1])
+  );
 
   //
   const userBeanBalanceUSD  = userBeans.multipliedBy(priceState.beanPrice);
   const userLPBalanceUSD    = userLPBeans.multipliedBy(priceState.beanPrice);
   const userCurveBalanceUSD = userCurveBeans.multipliedBy(priceState.curveVirtualPrice);
+  const userBeanlusdBalanceUSD = userBeanlusdBeans.multipliedBy(priceState.beanlusdVirtualPrice);
 
   return {
     Bean: userBeanBalanceUSD,
     'Bean:ETH': userLPBalanceUSD,
-    'Bean:3CRV': userCurveBalanceUSD
+    'Bean:3CRV': userCurveBalanceUSD,
+    'Bean:LUSD': userBeanlusdBalanceUSD
   };
 }
 
@@ -59,6 +69,7 @@ export function getTotalSiloDepositsUSD(
 ) : DepositValueByToken {
   const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanReserve, priceState.ethReserve, totalBalanceState.totalLP);
   const poolForCurveRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanCrv3Reserve, priceState.crv3Reserve, totalBalanceState.totalCrv3);
+  const poolForBeanlusdRatio = (amount: BigNumber) => poolForLP(amount, priceState.beanlusdReserve, priceState.lusdReserve, totalBalanceState.totalBeanlusd);
 
   // Balance of user assets deposited in the Silo.
   // FIXME: abstract this so new assets are automatically summed using
@@ -67,10 +78,12 @@ export function getTotalSiloDepositsUSD(
   const totalSiloBeans = totalBalanceState.totalSiloBeans;
   const totalSiloLP = totalBalanceState.totalSiloLP;
   const totalSiloCurve = totalBalanceState.totalSiloCurve;
+  const totalSiloBeanlusd = totalBalanceState.totalSiloBeanlusd;
 
   // Get pool tuples
   const totalBeansAndEth = poolForLPRatio(totalSiloLP);
   const totalBeansAndCrv3 = poolForCurveRatio(totalSiloCurve);
+  const totalBeansAndLusd = poolForBeanlusdRatio(totalSiloBeanlusd);
 
   const totalLPBeans = totalBeansAndEth[0].multipliedBy(2);
   const totalCurveBeans = (
@@ -78,16 +91,23 @@ export function getTotalSiloDepositsUSD(
       .multipliedBy(priceState.beanCrv3Price)
       .plus(totalBeansAndCrv3[1])
   );
+  const totalBeanlusdBeans = (
+    totalBeansAndLusd[0]
+      .multipliedBy(priceState.beanlusdPrice)
+      .plus(totalBeansAndLusd[1])
+  );
 
   //
   const totalSiloBeansUSD = totalSiloBeans.multipliedBy(priceState.beanPrice);
   const totalSiloLPUSD    = totalLPBeans.multipliedBy(priceState.beanPrice);
   const totalSiloCurveUSD = totalCurveBeans.multipliedBy(priceState.curveVirtualPrice);
+  const totalSiloBeanlusdUSD = totalBeanlusdBeans.multipliedBy(priceState.beanlusdVirtualPrice);
 
   return {
     Bean: totalSiloBeansUSD,
     'Bean:ETH': totalSiloLPUSD,
-    'Bean:3CRV': totalSiloCurveUSD
+    'Bean:3CRV': totalSiloCurveUSD,
+    'Bean:LUSD': totalSiloBeanlusdUSD
   };
 }
 
@@ -96,6 +116,7 @@ export function sumDeposits(siloDeposits: DepositValueByToken) {
     siloDeposits.Bean
       .plus(siloDeposits['Bean:ETH'])
       .plus(siloDeposits['Bean:3CRV'])
+      .plus(siloDeposits['Bean:LUSD'])
   );
 }
 
@@ -252,7 +273,7 @@ export const claim = async (
   (wrappedBeans === '0'
     ? beanstalkContract().claim(
       [
-        ...claimable, 
+        ...claimable,
         toWallet
       ]
     )

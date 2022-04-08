@@ -7,6 +7,7 @@ import {
   BEAN,
   BEANSTALK,
   CURVE,
+  BEANLUSD,
   ETH,
   STALK,
   SEEDS,
@@ -22,7 +23,9 @@ import {
   beanstalkContractReadOnly,
   beanstalkPriceContractReadOnly,
   beanCrv3ContractReadOnly,
+  beanlusdContractReadOnly,
   curveContractReadOnly,
+  lusdCrv3ContractReadOnly,
   initializing,
   pairContractReadOnly,
   tokenContractReadOnly,
@@ -85,7 +88,7 @@ export type Fundraiser = {
  * method and executes it when the batch is committed. The promise
  * resolves with the raw result of the method. Downstream functions
  * can use a chain of `.then` calls to mutate the returned value accordingly.
- * 
+ *
  * This ensures that Typescript keeps track of any changes to variable type
  * during that chain.
  */
@@ -170,6 +173,7 @@ export const getAccountBalances = async (batch: BatchRequest) => {
   const beanstalk = beanstalkContractReadOnly();
   const usdc = tokenContractReadOnly(USDC);
   const curve = beanCrv3ContractReadOnly();
+  const beanlusd = beanlusdContractReadOnly();
   const exec = setupBatch(batch, 'getAccountBalances');
 
   const promises = Promise.all([
@@ -179,11 +183,13 @@ export const getAccountBalances = async (batch: BatchRequest) => {
     exec(lp.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
     exec(usdc.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
     exec(curve.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
+    exec(beanlusd.methods.allowance(account, BEANSTALK)).then(bigNumberResult),
     // Balances
     exec(beanstalk.methods.balanceOfEth(account)).then(tokenResult(ETH)),
     exec(bean.methods.balanceOf(account)).then(tokenResult(BEAN)),
     exec(lp.methods.balanceOf(account)).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
     exec(curve.methods.balanceOf(account)).then(tokenResult(CURVE)),
+    exec(beanlusd.methods.balanceOf(account)).then(tokenResult(BEANLUSD)),
     exec(beanstalk.methods.balanceOfSeeds(account)).then(tokenResult(SEEDS)),
     exec(beanstalk.methods.balanceOfStalk(account)).then(tokenResult(STALK)),
     // @DEPRECATED
@@ -221,7 +227,7 @@ export const getPriceArray = async () => {
 export const getTokenBalances = async (batch: BatchRequest) => {
   const exec = setupBatch(batch, 'getTokenBalances');
   return Promise.all(
-    supportedERC20Tokens.map((t) => 
+    supportedERC20Tokens.map((t) =>
       exec(tokenContractReadOnly(t).methods.balanceOf(account)).then(tokenResult(t))
     )
   );
@@ -235,6 +241,7 @@ export const getTotalBalances = async (batch: BatchRequest) => {
   const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const beanstalk = beanstalkContractReadOnly();
   const curve = beanCrv3ContractReadOnly();
+  const beanlusd = beanlusdContractReadOnly();
   const exec = setupBatch(batch, 'getTotalBalances');
 
   const promises = Promise.all([
@@ -242,14 +249,17 @@ export const getTotalBalances = async (batch: BatchRequest) => {
     exec(bean.methods.totalSupply()).then(tokenResult(BEAN)),
     exec(lp.methods.totalSupply()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
     exec(curve.methods.totalSupply()).then(tokenResult(CURVE)),
+    exec(beanlusd.methods.totalSupply()).then(tokenResult(BEANLUSD)),
     exec(beanstalk.methods.totalSeeds()).then(tokenResult(SEEDS)),
     exec(beanstalk.methods.totalStalk()).then(tokenResult(STALK)),
     exec(beanstalk.methods.totalDepositedBeans()).then(tokenResult(BEAN)),
     exec(beanstalk.methods.totalDepositedLP()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
     exec(beanstalk.methods.getTotalDeposited(CURVE.addr)).then(tokenResult(CURVE)),
+    exec(beanstalk.methods.getTotalDeposited(BEANLUSD.addr)).then(tokenResult(BEANLUSD)),
     exec(beanstalk.methods.totalWithdrawnBeans()).then(tokenResult(BEAN)),
     exec(beanstalk.methods.totalWithdrawnLP()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
     exec(beanstalk.methods.getTotalWithdrawn(CURVE.addr)).then(tokenResult(CURVE)),
+    exec(beanstalk.methods.getTotalWithdrawn(BEANLUSD.addr)).then(tokenResult(BEANLUSD)),
     // Field
     exec(beanstalk.methods.totalSoil()).then(tokenResult(BEAN)),
     exec(beanstalk.methods.podIndex()).then(tokenResult(BEAN)),
@@ -284,6 +294,7 @@ export const getTotalBalances = async (batch: BatchRequest) => {
     // Misc
     // FIXME: needs to be rekeyed or placed in right array spot
     exec(bean.methods.balanceOf(CURVE.addr)).then(tokenResult(BEAN)),
+    exec(bean.methods.balanceOf(BEANLUSD.addr)).then(tokenResult(BEAN)),
     exec(beanstalk.methods.withdrawSeasons()).then(bigNumberResult)
   ] as const);
 
@@ -312,7 +323,7 @@ export const getVotes = async () => {
 
 /**
  * TODO: batch BIP detail ledger reads
- * 
+ *
  * @rpc 1 + N < calls < 1 + 2*N where N = number of BIPs.
  * @rpc 3/28/2022: 13 BIPs => 14 - 27 calls.
  */
@@ -337,7 +348,7 @@ export const getBips = async (
       : bip.roots;
 
     // roots - how many Roots have voted for the BIP
-    // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP 
+    // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP
     // -> used for calculating % voted for the BIP after the fact.
     const bipDict = {
       id: i,
@@ -362,7 +373,7 @@ export const getBips = async (
     hasActiveBIP = true;
     bips[parseInt(id, 10)].active = true;
   });
-  
+
   return [bips, hasActiveBIP];
 };
 
@@ -404,6 +415,8 @@ export const getPrices = async (batch: BatchRequest) => {
   const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const bean3crvContract = beanCrv3ContractReadOnly();
+  const beanlusdContract = beanlusdContractReadOnly();
+  const lusd3crvContract = lusdCrv3ContractReadOnly(); // use for lusd:3crv price as oracle with bean:lusd pool
   const curveContract = curveContractReadOnly();
 
   const exec = setupBatch(batch, 'getPrices');
@@ -467,14 +480,37 @@ export const getPrices = async (batch: BatchRequest) => {
           toTokenUnitsBN(prices[1], 18),
         ],
       ),
-      //
+      // Curve to BDV
       exec(beanstalk.methods.curveToBDV(utils.parseEther('1'))).then(
         (r: string) => toTokenUnitsBN(r, 6)
+      ),
+      // Bean:LUSD virtual price
+      exec(beanlusdContract.methods.get_virtual_price()).then(
+        (price: string) => toTokenUnitsBN(price, 18),
+      ),
+      // Bean:LUSD price
+      exec(beanlusdContract.methods.get_dy(0, 1, 1)).then(
+        (price: string) => toTokenUnitsBN(price, 12),
+      ),
+      // Bean:LUSD Balances
+      exec(beanlusdContract.methods.get_balances()).then(
+        (prices: [string, string]) => [
+          toTokenUnitsBN(prices[0], 6),
+          toTokenUnitsBN(prices[1], 18),
+        ],
+      ),
+      // Bean:LUSD to BDV - Need Fix once new Beanstalk abi
+      exec(beanstalk.methods.lusdToBDV(utils.parseEther('1'))).then(
+        (r: string) => toTokenUnitsBN(r, 6)
+      ),
+      // LUSD:3CRV price
+      exec(lusd3crvContract.methods.get_dy(0, 1, 1000000000000)).then(
+        (price: string) => toTokenUnitsBN(price, 12),
       ),
     ]);
   } else {
     promises = promises.concat([
-      // 
+      //
       exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
         () => new BigNumber(0),
       ),
@@ -487,6 +523,26 @@ export const getPrices = async (batch: BatchRequest) => {
         () => [new BigNumber(0), new BigNumber(0)],
       ),
       //
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(1),
+      ),
+      //
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(0),
+      ),
+      // Bean:LUSD price
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(0),
+      ),
+      // Bean:LUSD Balances
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => [new BigNumber(0), new BigNumber(0)],
+      ),
+      //
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(1),
+      ),
+      // LUSD:3CRV price
       exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
         () => new BigNumber(1),
       ),
