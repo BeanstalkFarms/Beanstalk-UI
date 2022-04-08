@@ -16,6 +16,12 @@ export interface PriceState {
   beanCrv3Reserve: BigNumber;
   crv3Reserve: BigNumber;
   curveToBdv: BigNumber;
+  beanlusdToBDV: BigNumber;
+  beanlusdVirtualPrice: BigNumber;
+  beanlusdPrice: BigNumber;
+  beanlusdReserve: BigNumber;
+  lusdReserve: BigNumber;
+  lusdCrv3Price: BigNumber;
   ethPrices: {
     fast: BigNumber;
     propose: BigNumber;
@@ -43,6 +49,14 @@ export interface PriceState {
     pool: Array;
     tokens: String;
   };
+  beanlusdTuple: {
+    balances: BigNumber;
+    deltaB: BigNumber;
+    liquidity: BigNumber;
+    price: BigNumber;
+    pool: Array;
+    tokens: String;
+  };
 }
 
 export const initialState: PriceState = {
@@ -59,6 +73,12 @@ export const initialState: PriceState = {
   beanCrv3Reserve: new BigNumber(-1),
   crv3Reserve: new BigNumber(-1),
   curveToBdv: new BigNumber(-1),
+  beanlusdToBdv: new BigNumber(-1),
+  beanlusdVirtualPrice: new BigNumber(-1),
+  beanlusdPrice: new BigNumber(-1),
+  beanlusdReserve: new BigNumber(-1),
+  lusdReserve: new BigNumber(-1),
+  lusdCrv3Price: new BigNumber(-1),
   ethPrices: {
     fast: new BigNumber(-1),
     propose: new BigNumber(-1),
@@ -79,6 +99,14 @@ export const initialState: PriceState = {
     tokens: [],
   },
   uniTuple: {
+    balances: [],
+    deltaB: new BigNumber(-1),
+    liquidity: new BigNumber(-1),
+    price: new BigNumber(-1),
+    pool: '',
+    tokens: [],
+  },
+  beanlusdTuple: {
     balances: [],
     deltaB: new BigNumber(-1),
     liquidity: new BigNumber(-1),

@@ -87,8 +87,14 @@ export function LPDeposit() {
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   const sectionTitles = ['Deposit'];
-  const sectionTitlesDescription = [siloStrings.lpDeposit];
-  const sectionTitlesInfoDescription = [siloStrings.lpDepositsTable];
+  const sectionTitlesDescription = [
+    siloStrings.lpDeposit,
+    siloStrings.lpWithdraw.replace('{0}', totalBalance.withdrawSeasons),
+  ];
+  const sectionTitlesInfoDescription = [
+    siloStrings.lpDepositsTable,
+    siloStrings.lpWithdrawalsTable,
+  ];
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {

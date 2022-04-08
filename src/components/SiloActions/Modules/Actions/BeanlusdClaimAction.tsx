@@ -3,9 +3,9 @@ import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import {
+import { 
   UNI_V2_ETH_BEAN_LP,
-  CURVE,
+  BEANLUSD,
 } from 'constants/index';
 import {
   claimSeasons,
@@ -21,36 +21,36 @@ import {
   TransitAsset,
 } from 'components/Common';
 
-const CurveClaimAction = forwardRef(({
+const BeanlusdClaimAction = forwardRef(({
   setIsFormDisabled,
 }, ref) => {
   const {
-    curveReceivableBalance,
-    curveReceivableCrates,
+    beanlusdReceivableBalance,
+    beanlusdReceivableCrates,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
 
-  setIsFormDisabled(curveReceivableBalance.isLessThanOrEqualTo(0));
+  setIsFormDisabled(beanlusdReceivableBalance.isLessThanOrEqualTo(0));
 
   /* Input Fields */
-  const fromCurveField = (
+  const fromLPField = (
     <TokenInputField
       key={0}
-      balance={curveReceivableBalance}
+      balance={beanlusdReceivableBalance}
       isLP
-      token={TransitAsset.Crv3}
-      value={TrimBN(curveReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
+      token={TransitAsset.Beanlusd}
+      value={TrimBN(beanlusdReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
       size="small"
     />
   );
 
   /* Output Fields */
-  const toCurveField = (
+  const toLPField = (
     <TokenOutputField
       key="curve"
-      token={ClaimableAsset.Crv3}
-      value={TrimBN(curveReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
+      token={ClaimableAsset.Beanlusd}
+      value={TrimBN(beanlusdReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
       mint
     />
   );
@@ -58,11 +58,11 @@ const CurveClaimAction = forwardRef(({
   /* Transaction Details, settings and text */
   const details = [];
   details.push(`Receive ${displayBN(
-    new BigNumber(curveReceivableBalance
+    new BigNumber(beanlusdReceivableBalance
   ))} BEAN:3CRV LP Tokens`);
 
   function transactionDetails() {
-    if (curveReceivableBalance.isLessThanOrEqualTo(0)) return null;
+    if (beanlusdReceivableBalance.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -70,7 +70,7 @@ const CurveClaimAction = forwardRef(({
           color="primary"
           style={{ marginBottom: '-14px', width: '100%' }}
         />
-        {toCurveField}
+        {toLPField}
         <TransactionDetailsModule fields={details} />
       </>
     );
@@ -78,18 +78,18 @@ const CurveClaimAction = forwardRef(({
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (curveReceivableBalance.isLessThanOrEqualTo(0)) return null;
+      if (beanlusdReceivableBalance.isLessThanOrEqualTo(0)) return null;
 
       // Toast
       const txToast = new TransactionToast({
-        loading: `Claiming ${displayBN(curveReceivableBalance)} BEAN:3CRV LP Tokens`,
-        success: `Claimed ${displayBN(curveReceivableBalance)} BEAN:3CRV LP Tokens`,
+        loading: `Claiming ${displayBN(beanlusdReceivableBalance)} BEAN:LUSD LP Tokens`,
+        success: `Claimed ${displayBN(beanlusdReceivableBalance)} BEAN:LUSD LP Tokens`,
       });
 
       // Execute
       claimSeasons(
-        Object.keys(curveReceivableCrates),
-        CURVE.addr,
+        Object.keys(beanlusdReceivableCrates),
+        BEANLUSD.addr,
         (response) => txToast.confirming(response)
       )
       .then((value) => {
@@ -103,10 +103,10 @@ const CurveClaimAction = forwardRef(({
 
   return (
     <>
-      {fromCurveField}
+      {fromLPField}
       {transactionDetails()}
     </>
   );
 });
 
-export default CurveClaimAction;
+export default BeanlusdClaimAction;

@@ -5,14 +5,13 @@ import { List as ListIcon } from '@material-ui/icons';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
-import { updateBeanstalkCurveAllowance } from 'state/allowances/actions';
+import { updateBeanstalkBeanlusdAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
-import { approveBeanstalkCurve, poolForLP } from 'util/index';
-import { BaseModule, curveStrings, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
-import CurveWithdrawAction from './Actions/CurveWithdrawAction';
-import CurveClaimAction from './Actions/CurveClaimAction';
+import { approveBeanstalkBeanlusd, poolForLP } from 'util/index';
+import { BaseModule, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
+import BeanlusdDepositAction from './Actions/BeanlusdDepositAction';
 
-export default function CurveWithdraw() {
+export default function BeanlusdDeposit() {
   const [section, setSection] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [settings, setSettings] = useState({
@@ -21,16 +20,16 @@ export default function CurveWithdraw() {
     useCrv3: false,
   });
 
-  const { beanstalkCurveAllowance } = useSelector<AppState, AppState['allowances']>(
+  const { beanstalkBeanlusdAllowance } = useSelector<AppState, AppState['allowances']>(
     (state) => state.allowances
   );
   const {
-    curveBalance,
-    curveReceivableBalance,
-    curveDeposits,
-    curveBDVDeposits,
-    curveReceivableCrates,
-    curveWithdrawals,
+    beanlusdBalance,
+    beanlusdReceivableBalance,
+    beanlusdDeposits,
+    beanlusdBDVDeposits,
+    beanlusdReceivableCrates,
+    beanlusdWithdrawals,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -44,10 +43,10 @@ export default function CurveWithdraw() {
     (state) => state.totalBalance
   );
 
-  const sectionTitles = ['Withdraw'];
+  const sectionTitles = ['Deposit'];
   const sectionTitlesDescription = [
-    curveStrings.deposit,
-    curveStrings.withdraw,
+    siloStrings.beanlusddeposit,
+    siloStrings.beanlusdWithdraw.replace('{0}', totalBalance.withdrawSeasons),
   ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
@@ -62,11 +61,7 @@ export default function CurveWithdraw() {
     if (newSection !== section) {
       setSection(newSection);
       setIsFormDisabled(true);
-      if (newSection > 0) {
-        setSettings((p) => ({ ...p, useBalanced: false }));
-      } else {
-        setSettings((p) => ({ ...p, useBalanced: false }));
-      }
+      setSettings((p) => ({ ...p, useBalanced: false }));
     }
   };
   const handleTabInfoChange = (event, newSectionInfo, newPageZero) => {
@@ -81,21 +76,18 @@ export default function CurveWithdraw() {
     if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(
       amount,
-      prices.beanCrv3Reserve,
-      prices.crv3Reserve,
-      totalBalance.totalCrv3
+      prices.beanlusdReserve,
+      prices.lusdReserve,
+      totalBalance.totalBeanlusd
     );
   };
 
-  const withdrawRef = useRef<any>();
-  const claimRef = useRef<any>();
+  //
+  const depositRef = useRef<any>();
   const handleForm = () => {
     switch (section) {
       case 0:
-        withdrawRef.current.handleForm();
-        break;
-      case 1:
-        claimRef.current.handleForm();
+        depositRef.current.handleForm();
         break;
       default:
         break;
@@ -103,37 +95,22 @@ export default function CurveWithdraw() {
   };
 
   const sections = [
-    <CurveWithdrawAction
-      key={1}
-      ref={withdrawRef}
+    <BeanlusdDepositAction
+      key={0}
+      ref={depositRef}
       setIsFormDisabled={setIsFormDisabled}
       setSettings={setSettings} // hide
       settings={settings} // hide
-    />,
+    />
   ];
-
-  if (curveReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <CurveClaimAction
-        key={2}
-        ref={claimRef}
-        setIsFormDisabled={setIsFormDisabled}
-        setSettings={setSettings} // hide
-        settings={settings} // hide
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(curveStrings.lpClaim);
-  }
-  if (section > sectionTitles.length - 1) setSection(0);
 
   const sectionTitlesInfo = [];
   const sectionsInfo = [];
-  if (curveDeposits !== undefined && Object.keys(curveDeposits).length > 0) {
+  if (beanlusdDeposits !== undefined && Object.keys(beanlusdDeposits).length > 0) {
     sectionsInfo.push(
       <ListTable
         asset={SiloAsset.LP}
-        crates={curveDeposits}
+        crates={beanlusdDeposits}
         handleChange={handlePageChange}
         indexTitle="Season"
         isLP
@@ -141,21 +118,21 @@ export default function CurveWithdraw() {
         page={page}
         poolForLPRatio={poolForLPRatio}
         season={season}
-        bdvCrates={curveBDVDeposits}
+        bdvCrates={beanlusdBDVDeposits}
       />
     );
-    sectionTitlesInfo.push('Curve Deposits');
+    sectionTitlesInfo.push('Bean:LUSD Deposits');
   }
   if (
-    (curveWithdrawals !== undefined && Object.keys(curveWithdrawals).length > 0) ||
-    curveReceivableBalance.isGreaterThan(0)
+    (beanlusdWithdrawals !== undefined && Object.keys(beanlusdWithdrawals).length > 0) ||
+    beanlusdReceivableBalance.isGreaterThan(0)
   ) {
     sectionsInfo.push(
       <ListTable
         asset={TransitAsset.LP}
-        crates={curveWithdrawals}
-        claimableBalance={curveReceivableBalance}
-        claimableCrates={curveReceivableCrates}
+        crates={beanlusdWithdrawals}
+        claimableBalance={beanlusdReceivableBalance}
+        claimableCrates={beanlusdReceivableCrates}
         handleChange={handlePageChange}
         index={season}
         indexTitle="Seasons to Arrival"
@@ -165,7 +142,7 @@ export default function CurveWithdraw() {
         poolForLPRatio={poolForLPRatio}
       />
     );
-    sectionTitlesInfo.push('Curve Withdrawals');
+    sectionTitlesInfo.push('Bean:LUSD Withdrawals');
   }
 
   const showListTablesIcon =
@@ -207,8 +184,8 @@ export default function CurveWithdraw() {
       </Box>
     ) : null;
 
-  const allowance = section === 0 && curveBalance.isGreaterThan(0)
-    ? beanstalkCurveAllowance
+  const allowance = section === 0 && beanlusdBalance.isGreaterThan(0)
+    ? beanstalkBeanlusdAllowance
     : new BigNumber(1);
 
   return (
@@ -218,7 +195,7 @@ export default function CurveWithdraw() {
         resetForm={() => {
           setSettings({ ...settings });
         }}
-        handleApprove={approveBeanstalkCurve}
+        handleApprove={approveBeanstalkBeanlusd}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
@@ -227,9 +204,9 @@ export default function CurveWithdraw() {
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkCurveAllowance}
+        setAllowance={updateBeanstalkBeanlusdAllowance}
         singleReset
-        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
       >
         {sections[section]}
         {showListTablesIcon}

@@ -70,6 +70,14 @@ export interface UserBalanceState {
   /** @publius */
   curveReceivableBalance: BigNumber;
   /** @publius */
+  beanlusdBalance: BigNumber;
+  /** @publius */
+  beanlusdSiloBalance: BigNumber,
+  /** @publius */
+  beanlusdTransitBalance: BigNumber,
+  /** @publius */
+  beanlusdReceivableBalance: BigNumber,
+  /** @publius */
   /** The farmer's balance of Stalk */
   stalkBalance: BigNumber;
   /** The farmer's balance of Seeds */
@@ -116,7 +124,7 @@ export interface UserBalanceState {
    * A mapping of the farmer's claimable LP Withdrawals
    */
   lpReceivableCrates: Withdrawals;
-  
+
   /** @publius */
   curveDeposits: Deposits;
 
@@ -128,7 +136,19 @@ export interface UserBalanceState {
 
   /** @publius */
   curveReceivableCrates: Withdrawals;
-  
+
+  /** @publius */
+  beanlusdDeposits: Deposits;
+
+  /** @publius */
+  beanlusdBDVDeposits: Deposits;
+
+  /** @publius */
+  beanlusdWithdrawals: Withdrawals;
+
+  /** @publius */
+  beanlusdReceivableCrates: Withdrawals;
+
   /**
    * Plots are keyed by plotIndex, value is size of the Plot in Pods.
    */
@@ -147,7 +167,7 @@ export interface UserBalanceState {
   // lockedSeasons: BigNumber;
   /** The sum of BeanRecievableBalance + beanHarvestableBalance + wrappedBeans */
   beanClaimableBalance: BigNumber;
-  /** 
+  /**
    * The farmer's claimable struct. This struct is kind of complex to build and gets passed into
    * a lot of functions, so we found it easiest to store in the state.
    */
@@ -184,6 +204,10 @@ export const initialState: UserBalanceState = {
   curveSiloBalance: new BigNumber(-1),
   curveTransitBalance: new BigNumber(-1),
   curveReceivableBalance: new BigNumber(-1),
+  beanlusdBalance: new BigNumber(-1),
+  beanlusdSiloBalance: new BigNumber(0), // change to -1 when bip
+  beanlusdTransitBalance: new BigNumber(0), // change to -1 when bip
+  beanlusdReceivableBalance: new BigNumber(0), // change to -1 when bip
   stalkBalance: new BigNumber(-1),
   seedBalance: new BigNumber(-1),
   podBalance: new BigNumber(-1),
@@ -200,6 +224,10 @@ export const initialState: UserBalanceState = {
   curveBDVDeposits: {},
   curveWithdrawals: {},
   curveReceivableCrates: {},
+  beanlusdDeposits: {},
+  beanlusdBDVDeposits: {},
+  beanlusdWithdrawals: {},
+  beanlusdReceivableCrates: {},
   plots: {},
   harvestablePlots: {},
   votedBips: new Set(),

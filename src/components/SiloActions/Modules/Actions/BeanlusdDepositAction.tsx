@@ -6,9 +6,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
-  BEAN_TO_STALK,
-  BEAN_TO_SEEDS,
-  CURVE,
+  LUSD_BDV_TO_STALK,
+  LUSD_BDV_TO_SEEDS,
+  BEANLUSD,
   SEEDS,
   STALK,
   UNI_V2_ETH_BEAN_LP,
@@ -30,61 +30,61 @@ import {
   TransactionToast,
 } from 'components/Common';
 
-const CurveDepositAction = forwardRef(({
+const BeanlusdDepositAction = forwardRef(({
   setIsFormDisabled,
 }, ref) => {
-  const [fromCurveLPValue, setFromCurveLPValue] = useState(new BigNumber(-1));
-  const [toCurveLPValue, setToCurveLPValue] = useState(new BigNumber(0));
+  const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
+  const [toLPValue, setToLPValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
   const [toSeedValue, setToSeedValue] = useState(new BigNumber(0));
 
   const { totalStalk } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { curveBalance } = useSelector<AppState, AppState['userBalance']>(
+  const { beanlusdBalance } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
 
-  const { curveToBDV } = useSelector<AppState, AppState['prices']>(
+  const { beanlusdToBDV } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
-  function fromValueUpdated(newFromCurveLPNumber) {
-    let fromNumber = MinBN(newFromCurveLPNumber, curveBalance);
+  function fromValueUpdated(newFromLPNumber) {
+    let fromNumber = MinBN(newFromLPNumber, beanlusdBalance);
 
-    const newFromCurveLPValue = TrimBN(MaxBN(fromNumber, new BigNumber(0)), UNI_V2_ETH_BEAN_LP.decimals);
-    // fromNumber = tokenForLP(newFromCurveLPValue, beanReserve, totalLP);
-    fromNumber = MaxBN(newFromCurveLPNumber, new BigNumber(0));
-    const bdvNumber = fromNumber.multipliedBy(curveToBDV);
+    const newFromLPValue = TrimBN(MaxBN(fromNumber, new BigNumber(0)), UNI_V2_ETH_BEAN_LP.decimals);
+    // fromNumber = tokenForLP(newFromLPValue, beanReserve, totalLP);
+    fromNumber = MaxBN(newFromLPNumber, new BigNumber(0));
+    const bdvNumber = fromNumber.multipliedBy(beanlusdToBDV);
 
-    setFromCurveLPValue(TrimBN(newFromCurveLPValue, 9));
-    setToCurveLPValue(TrimBN(newFromCurveLPValue, UNI_V2_ETH_BEAN_LP.decimals));
+    setFromLPValue(TrimBN(newFromLPValue, 9));
+    setToLPValue(TrimBN(newFromLPValue, UNI_V2_ETH_BEAN_LP.decimals));
     // need curve LP to token bean value for Stalk and Seeds
 
     setToStalkValue(
       TrimBN(
-        bdvNumber.multipliedBy(BEAN_TO_STALK),
+        bdvNumber.multipliedBy(LUSD_BDV_TO_STALK),
         STALK.decimals
       )
     );
     setToSeedValue(
       TrimBN(
-        bdvNumber.multipliedBy(2 * BEAN_TO_SEEDS),
+        bdvNumber.multipliedBy(LUSD_BDV_TO_SEEDS),
         SEEDS.decimals
       )
     );
 
-    setIsFormDisabled(newFromCurveLPValue.isLessThanOrEqualTo(0));
+    setIsFormDisabled(newFromLPValue.isLessThanOrEqualTo(0));
   }
 
   /* Input Fields */
-  const fromCurveLPField = (
+  const fromLPField = (
     <InputFieldPlus
       key={0}
-      balance={curveBalance}
+      balance={beanlusdBalance}
       handleChange={(v) => fromValueUpdated(v)}
-      token={CryptoAsset.Crv3}
-      value={fromCurveLPValue}
+      token={CryptoAsset.Beanlusd}
+      value={fromLPValue}
     />
   );
 
@@ -105,11 +105,11 @@ const CurveDepositAction = forwardRef(({
       value={toSeedValue}
     />
   );
-  const toCurveLPField = (
+  const toLPField = (
     <TokenOutputField
       key="curve"
-      token={SiloAsset.Crv3}
-      value={toCurveLPValue}
+      token={SiloAsset.Beanlusd}
+      value={toLPValue}
       mint
     />
   );
@@ -125,10 +125,10 @@ const CurveDepositAction = forwardRef(({
 
   const details = [];
   details.push(`Receive ${displayBN(
-    new BigNumber(toCurveLPValue
-  ))} Deposited BEAN:3CRV LP Tokens`);
+    new BigNumber(toLPValue
+  ))} Deposited BEAN:LUSD LP Tokens`);
 
-  const noBeanCrv3 = curveBalance.isLessThanOrEqualTo(0) ? (
+  const noBeanCrv3 = beanlusdBalance.isLessThanOrEqualTo(0) ? (
     <Box
       style={{
         display: 'inline-block',
@@ -137,13 +137,13 @@ const CurveDepositAction = forwardRef(({
       }}
     >
       <span>
-        To deposit BEAN:3CRV LP Tokens, you must first add liquidity on Curve <a href="https://curve.fi/factory/81/deposit" target="break">here</a>.
+        To deposit BEAN:LUSD LP Tokens, you must first add liquidity on Curve <a href="https://curve.fi/factory/103/deposit" target="break">here</a>.
       </span>
     </Box>
   ) : null;
 
   function transactionDetails() {
-    if (toCurveLPValue.isLessThanOrEqualTo(0)) return null;
+    if (toLPValue.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -156,7 +156,7 @@ const CurveDepositAction = forwardRef(({
           <Box style={{ marginLeft: '5px' }}>{toSeedField}</Box>
         </Box>
         <Box style={{ display: 'inline-block', width: '100%' }}>
-          {toCurveLPField}
+          {toLPField}
         </Box>
         <TransactionDetailsModule fields={details} />
         <Box
@@ -178,18 +178,18 @@ const CurveDepositAction = forwardRef(({
 
   useImperativeHandle(ref, () => ({
     handleForm() {
-      if (toCurveLPValue.isLessThanOrEqualTo(0)) return null;
+      if (toLPValue.isLessThanOrEqualTo(0)) return null;
 
       // Toast
       const txToast = new TransactionToast({
-        loading: `Depositing ${displayBN(toCurveLPValue)} BEAN:3CRV LP Tokens`,
-        success: `Deposited ${displayBN(toCurveLPValue)} BEAN:3CRV LP Tokens`,
+        loading: `Depositing ${displayBN(toLPValue)} BEAN:LUSD LP Tokens`,
+        success: `Deposited ${displayBN(toLPValue)} BEAN:LUSD LP Tokens`,
       });
 
       // Execute
       deposit(
-        utils.parseEther(toCurveLPValue.toString()),
-        CURVE.addr,
+        utils.parseEther(toLPValue.toString()),
+        BEANLUSD.addr,
         (response) => {
           resetFields();
           txToast.confirming(response);
@@ -206,11 +206,11 @@ const CurveDepositAction = forwardRef(({
 
   return (
     <>
-      {fromCurveLPField}
+      {fromLPField}
       {noBeanCrv3}
       {transactionDetails()}
     </>
   );
 });
 
-export default CurveDepositAction;
+export default BeanlusdDepositAction;

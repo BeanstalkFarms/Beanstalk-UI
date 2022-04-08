@@ -6,9 +6,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
-  CURVE_BDV_TO_SEEDS,
-  CURVE_BDV_TO_STALK,
-  CURVE,
+  LUSD_BDV_TO_SEEDS,
+  LUSD_BDV_TO_STALK,
+  BEANLUSD,
   STALK,
   SEEDS,
   UNI_V2_ETH_BEAN_LP,
@@ -30,10 +30,10 @@ import {
   TransitAsset,
 } from 'components/Common';
 
-const CurveWithdrawAction = forwardRef(({
+const BeanlusdWithdrawAction = forwardRef(({
   setIsFormDisabled,
 }, ref) => {
-  const [fromCurveLPValue, setFromCurveLPValue] = useState(new BigNumber(-1));
+  const [fromLPValue, setFromLPValue] = useState(new BigNumber(-1));
   const [toSeedValue, setToSeedValue] = useState(new BigNumber(0));
   const [toStalkValue, setToStalkValue] = useState(new BigNumber(0));
   const [withdrawParams, setWithdrawParams] = useState({
@@ -51,9 +51,9 @@ const CurveWithdrawAction = forwardRef(({
     (state) => state.season.season
   );
   const {
-    curveDeposits,
-    curveSiloBalance,
-    curveBDVDeposits,
+    beanlusdDeposits,
+    beanlusdSiloBalance,
+    beanlusdBDVDeposits,
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -65,25 +65,25 @@ const CurveWithdrawAction = forwardRef(({
     const crates = [];
     const amounts = [];
     BigNumber.set({ DECIMAL_PLACES: 6 });
-    Object.keys(curveDeposits)
+    Object.keys(beanlusdDeposits)
       .sort((a, b) => parseInt(b, 10) - parseInt(a, 10))
       .some((key) => {
         const crateLPsRemoved = lpRemoved
-          .plus(curveDeposits[key])
+          .plus(beanlusdDeposits[key])
           .isLessThanOrEqualTo(beans)
-          ? curveDeposits[key]
+          ? beanlusdDeposits[key]
           : beans.minus(lpRemoved);
-        const crateBDVRemoved = curveBDVDeposits[key]
+        const crateBDVRemoved = beanlusdBDVDeposits[key]
           .multipliedBy(crateLPsRemoved)
-          .dividedBy(curveDeposits[key]);
+          .dividedBy(beanlusdDeposits[key]);
         lpRemoved = lpRemoved.plus(crateLPsRemoved);
-        seedsRemoved = seedsRemoved.plus(crateBDVRemoved.multipliedBy(CURVE_BDV_TO_SEEDS));
+        seedsRemoved = seedsRemoved.plus(crateBDVRemoved.multipliedBy(LUSD_BDV_TO_SEEDS));
         BigNumber.set({ DECIMAL_PLACES: 10 });
         stalkRemoved = stalkRemoved.plus(
-          crateBDVRemoved.multipliedBy(CURVE_BDV_TO_STALK)
+          crateBDVRemoved.multipliedBy(LUSD_BDV_TO_STALK)
         );
         stalkRemoved = stalkRemoved.plus(
-          crateBDVRemoved.multipliedBy(CURVE_BDV_TO_SEEDS)
+          crateBDVRemoved.multipliedBy(LUSD_BDV_TO_SEEDS)
             .multipliedBy(season.minus(key))
             .multipliedBy(0.00001)
         );
@@ -100,9 +100,9 @@ const CurveWithdrawAction = forwardRef(({
   };
 
   function fromValueUpdated(newFromNumber) {
-    const fromNumber = MinBN(newFromNumber, curveSiloBalance); /* tokenBalances.BEAN is used as max curve lp Balance */
+    const fromNumber = MinBN(newFromNumber, beanlusdSiloBalance); /* tokenBalances.BEAN is used as max curve lp Balance */
     const newFromLPValue = TrimBN(fromNumber, UNI_V2_ETH_BEAN_LP.decimals);
-    setFromCurveLPValue(newFromLPValue);
+    setFromLPValue(newFromLPValue);
     const [stalkRemoved, seedsRemoved] = getStalkAndSeedsRemoved(fromNumber);
     setToStalkValue(TrimBN(stalkRemoved, STALK.decimals));
     setToSeedValue(TrimBN(seedsRemoved, SEEDS.decimals));
@@ -110,23 +110,23 @@ const CurveWithdrawAction = forwardRef(({
   }
 
   /* Input Fields */
-  const fromCurveLPField = (
+  const fromLPField = (
     <InputFieldPlus
       key={1}
-      balance={curveSiloBalance}
+      balance={beanlusdSiloBalance}
       handleChange={(v) => fromValueUpdated(v)}
-      locked={curveSiloBalance.isLessThanOrEqualTo(0)}
-      token={SiloAsset.Crv3}
-      value={TrimBN(fromCurveLPValue, 9)}
+      locked={beanlusdSiloBalance.isLessThanOrEqualTo(0)}
+      token={SiloAsset.Beanlusd}
+      value={TrimBN(fromLPValue, 9)}
     />
   );
 
   /* Output Fields */
-  const toCurveLPField = (
+  const toLPField = (
     <TokenOutputField
       burn
-      token={TransitAsset.Crv3}
-      value={fromCurveLPValue}
+      token={TransitAsset.Beanlusd}
+      value={fromLPValue}
     />
   );
   const toBurnStalkField = (
@@ -148,7 +148,7 @@ const CurveWithdrawAction = forwardRef(({
 
   /* Transaction Details, settings and text */
   const details = [
-    `Withdraw ${displayBN(new BigNumber(fromCurveLPValue))} BEAN:3CRV LP Tokens from the Silo`,
+    `Withdraw ${displayBN(new BigNumber(fromLPValue))} BEAN:3CRV LP Tokens from the Silo`,
     `Burn ${displayBN(new BigNumber(toStalkValue))} Stalk and ${displayBN(
       new BigNumber(toSeedValue)
     )} Seeds`
@@ -163,7 +163,7 @@ const CurveWithdrawAction = forwardRef(({
   };
 
   function transactionDetails() {
-    if (fromCurveLPValue.isLessThanOrEqualTo(0)) return null;
+    if (fromLPValue.isLessThanOrEqualTo(0)) return null;
 
     return (
       <>
@@ -176,7 +176,7 @@ const CurveWithdrawAction = forwardRef(({
           <Box style={{ marginLeft: '5px' }}>{toBurnSeedsField}</Box>
         </Box>
         <Box style={{ display: 'inline-block', width: '100%' }}>
-          {toCurveLPField}
+          {toLPField}
         </Box>
         <TransactionDetailsModule fields={details} />
         <Box
@@ -203,7 +203,7 @@ const CurveWithdrawAction = forwardRef(({
   useImperativeHandle(ref, () => ({
     handleForm() {
       if (
-        fromCurveLPValue.isLessThanOrEqualTo(0) ||
+        fromLPValue.isLessThanOrEqualTo(0) ||
         withdrawParams.crates.length === 0 ||
         withdrawParams.amounts.length === 0
       ) {
@@ -211,15 +211,15 @@ const CurveWithdrawAction = forwardRef(({
       }
       // Toast
       const txToast = new TransactionToast({
-        loading: `Withdrawing ${displayBN(fromCurveLPValue)} BEAN:3CRV LP Tokens`,
-        success: `Withdrew ${displayBN(fromCurveLPValue)} BEAN:3CRV LP Tokens`,
+        loading: `Withdrawing ${displayBN(fromLPValue)} BEAN:3CRV LP Tokens`,
+        success: `Withdrew ${displayBN(fromLPValue)} BEAN:3CRV LP Tokens`,
       });
 
       // Execute
       withdraw(
         withdrawParams.crates,
         withdrawParams.amounts,
-        CURVE.addr,
+        BEANLUSD.addr,
         (response) => {
           resetFields();
           txToast.confirming(response);
@@ -236,10 +236,10 @@ const CurveWithdrawAction = forwardRef(({
 
   return (
     <>
-      {fromCurveLPField}
+      {fromLPField}
       {transactionDetails()}
     </>
   );
 });
 
-export default CurveWithdrawAction;
+export default BeanlusdWithdrawAction;

@@ -257,15 +257,6 @@ function DisplayEvent({ event }) {
       eventAmount = inOutDisplay(lp, SiloAsset.LP, lp, TransitAsset.LP);
       break;
     }
-    case 'Proposal': {
-      eventTitle = 'BIP Proposal';
-      eventAmount = (
-        <span style={{ fontFamily: 'Futura-PT-Book' }}>
-          {`BIP ${event.returnValues.bip}`}
-        </span>
-      );
-      break;
-    }
     case 'Vote': {
       eventTitle = 'BIP Vote';
       eventAmount = (
@@ -332,16 +323,6 @@ function DisplayEvent({ event }) {
       }
       break;
     }
-    case 'EtherClaim': {
-      const ethReward = toTokenUnitsBN(
-        new BigNumber(event.returnValues.ethereum),
-        ETH.decimals
-      );
-
-      eventTitle = 'ETH Claim';
-      eventAmount = outDisplay(ethReward, CryptoAsset.Ethereum);
-      break;
-    }
     default:
       break;
   }
@@ -387,6 +368,10 @@ export default function WalletModule() {
     curveSiloBalance,
     curveTransitBalance,
     curveReceivableBalance,
+    beanlusdBalance,
+    beanlusdSiloBalance,
+    beanlusdTransitBalance,
+    beanlusdReceivableBalance,
     beanBalance,
     beanSiloBalance,
     beanTransitBalance,
@@ -407,11 +392,15 @@ export default function WalletModule() {
     beanCrv3Reserve,
     curveVirtualPrice,
     crv3Reserve,
+    beanlusdPrice,
+    beanlusdVirtualPrice,
+    beanlusdReserve,
+    lusdReserve,
     ethReserve,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
-  const { totalLP, totalCrv3, totalStalk } = useSelector<AppState, AppState['totalBalance']>(
+  const { totalLP, totalCrv3, totalBeanlusd, totalStalk } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
   const { contractEvents } = useSelector<AppState, AppState['general']>(
@@ -440,6 +429,12 @@ export default function WalletModule() {
       return [new BigNumber(0), new BigNumber(0)];
     }
     return poolForLP(amount, beanCrv3Reserve, crv3Reserve, totalCrv3);
+  };
+  const poolForBeanlusdRatio = (amount: BigNumber) => {
+    if (amount.isLessThanOrEqualTo(0)) {
+      return [new BigNumber(0), new BigNumber(0)];
+    }
+    return poolForLP(amount, beanlusdReserve, lusdReserve, totalBeanlusd);
   };
 
   useEffect(() => {
@@ -661,7 +656,7 @@ export default function WalletModule() {
             );
           }
           if (transactionPage === 1) {
-            return ['EtherClaim', 'Swap'].includes(event.event);
+            return ['Swap'].includes(event.event);
           }
 
           if (transactionPage === 2) {
@@ -673,7 +668,7 @@ export default function WalletModule() {
           }
 
           if (transactionPage === 4) {
-            return ['Vote', 'Unvote', 'Proposal', 'Incentivization'].includes(
+            return ['Vote', 'Unvote', 'Incentivization'].includes(
               event.event
             );
           }
@@ -710,9 +705,14 @@ export default function WalletModule() {
     .plus(curveSiloBalance)
     .plus(curveTransitBalance)
     .plus(curveReceivableBalance);
+  const userBeanlusd = beanlusdBalance
+    .plus(beanlusdSiloBalance)
+    .plus(beanlusdTransitBalance)
+    .plus(beanlusdReceivableBalance);
 
   const userBeansAndEth = poolForLPRatio(userLP);
   const userBeansAndCrv3 = poolForCurveRatio(userCurve);
+  const userBeansAndLusd = poolForBeanlusdRatio(userBeanlusd);
   const userLPBeans = userBeansAndEth[0].multipliedBy(2);
 
   const userCurveBalanceInDollars = (
@@ -721,11 +721,18 @@ export default function WalletModule() {
     .plus(userBeansAndCrv3[1])
   ).multipliedBy(curveVirtualPrice);
 
+  const userBeanlusdBalanceInDollars = (
+    userBeansAndLusd[0]
+    .multipliedBy(beanlusdPrice)
+    .plus(userBeansAndLusd[1])
+  ).multipliedBy(beanlusdVirtualPrice);
+
   const userBalanceInDollars = beanPrice.isGreaterThan(0)
     ? userBeans
       .plus(userLPBeans)
       .multipliedBy(beanPrice)
       .plus(userCurveBalanceInDollars)
+      .plus(userBeanlusdBalanceInDollars)
     : new BigNumber(0);
 
   //
@@ -739,8 +746,10 @@ export default function WalletModule() {
         beanReserveTotal={new BigNumber(0)}
         beanLPTotal={userBeansAndEth}
         beanCurveTotal={userBeansAndCrv3}
+        beanlusdTotal={userBeansAndLusd}
         poolForLPRatio={poolForLPRatio}
         poolForCurveRatio={poolForCurveRatio}
+        poolForBeanlusdRatio={poolForBeanlusdRatio}
         beanBalance={beanBalance}
         beanSiloBalance={beanSiloBalance}
         beanTransitBalance={beanTransitBalance}
@@ -755,6 +764,10 @@ export default function WalletModule() {
         curveSiloBalance={curveSiloBalance}
         curveTransitBalance={curveTransitBalance}
         curveReceivableBalance={curveReceivableBalance}
+        beanlusdBalance={beanlusdBalance}
+        beanlusdSiloBalance={beanlusdSiloBalance}
+        beanlusdTransitBalance={beanlusdTransitBalance}
+        beanlusdReceivableBalance={beanlusdReceivableBalance}
         stalkBalance={stalkBalance}
         seedBalance={seedBalance}
         ethBalance={ethBalance}
