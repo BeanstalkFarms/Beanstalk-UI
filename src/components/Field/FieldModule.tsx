@@ -14,11 +14,26 @@ import {
   ListTable,
   fieldStrings,
 } from 'components/Common';
+import { makeStyles } from '@material-ui/styles';
 import { SowModule } from './SowModule';
 import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
 
+const useStyles = makeStyles({
+  listTableBox: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    margin: '20px 0 -56px -4px',
+  },
+  iconButton: {
+    height: '44px',
+    width: '44px',
+    marginTop: '-8px'
+  }
+});
+
 export default function FieldModule() {
+  const classes = useStyles();
   const newBN = new BigNumber(-1);
 
   /* App state */
@@ -231,11 +246,7 @@ export default function FieldModule() {
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
       <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
+        className={classes.listTableBox}
       >
         <IconButton
           color="primary"
@@ -245,7 +256,7 @@ export default function FieldModule() {
               shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
+          className={classes.iconButton}
         >
           <ListIcon />
         </IconButton>

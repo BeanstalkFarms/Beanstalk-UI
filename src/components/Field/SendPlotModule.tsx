@@ -19,8 +19,36 @@ import {
   TransactionDetailsModule,
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles({
+  walletText: {
+    color: theme.backgroundText
+  },
+  errorMessage: {
+    color: 'red'
+  },
+  plotWarning: {
+    display: 'inline-block',
+    width: '100%',
+    color: 'red'
+  },
+  fromIndexField: {
+    marginRight: '5px'
+  },
+  fromIndexEndField: {
+    marginLeft: '5px'
+  },
+  inlineFlex: {
+    display: 'inline-flex'
+  },
+  inlineBlock: {
+    display: 'inline-block'
+  }
+});
 
 export const SendPlotModule = forwardRef((props, ref) => {
+  const classes = useStyles();
   const [plotId, setPlotId] = useState(new BigNumber(-1));
   const [plotEndId, setPlotEndId] = useState(new BigNumber(-1));
   const [fromPlotIndex, setFromPlotIndex] = useState(new BigNumber(-1));
@@ -178,7 +206,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
         <a
           href={`${BASE_ETHERSCAN_ADDR_LINK}${props.toAddress}`}
           target="blank"
-          style={{ color: theme.backgroundText }}
+          className={classes.walletText}
         >
           {`${walletText}`}
         </a>
@@ -206,7 +234,7 @@ export const SendPlotModule = forwardRef((props, ref) => {
   }
 
   if (toPlotEndIndex.isEqualTo(fromPlotIndex)) {
-    details = [<span style={{ color: 'red' }}>Invalid transfer amount</span>];
+    details = [<span className={classes.errorMessage}>Invalid transfer amount</span>];
   }
 
   /* */
@@ -214,18 +242,14 @@ export const SendPlotModule = forwardRef((props, ref) => {
     if (toPlotEndIndex.isLessThanOrEqualTo(0)) return null;
     return (
       <>
-        <Box style={
-          width > 500
-            ? { display: 'inline-flex' }
-            : { display: 'inline-block' }
-        }>
-          <Box style={{ marginRight: '5px' }}>{fromIndexField}</Box>
-          <Box style={{ marginLeft: '5px' }}>{fromIndexEndField}</Box>
+        <Box className={width > 50 ? classes.inlineFlex : classes.inlineBlock}>
+          <Box className={classes.fromIndexField}>{fromIndexField}</Box>
+          <Box className={classes.fromIndexEndField}>{fromIndexEndField}</Box>
         </Box>
         <TransactionDetailsModule
           fields={details}
         />
-        <Box style={{ display: 'inline-block', width: '100%', color: 'red' }}>
+        <Box className={classes.plotWarning}>
           <span>{fieldStrings.sendPlotWarning}</span>
         </Box>
       </>

@@ -31,8 +31,21 @@ import {
   TransactionTextModule,
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles({
+  noSoilBox: {
+    marginTop: '-2px',
+    fontFamily: 'Futura-PT-Book'
+  },
+  expandIcon: {
+    marginBottom: '-14px',
+    width: '100%'
+  }
+});
 
 export const SowModule = forwardRef((props, ref) => {
+  const classes = useStyles();
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
@@ -178,7 +191,7 @@ export const SowModule = forwardRef((props, ref) => {
   );
 
   const noSoilTextField = props.soil.isEqualTo(0) ? (
-    <Box style={{ marginTop: '-2px', fontFamily: 'Futura-PT-Book' }}>
+    <Box className={classes.noSoilBox}>
       Currently No Soil
     </Box>
   ) : null;
@@ -203,7 +216,7 @@ export const SowModule = forwardRef((props, ref) => {
       <>
         <ExpandMoreIcon
           color="primary"
-          style={{ marginBottom: '-14px', width: '100%' }}
+          className={classes.expandIcon}
         />
         {toPodField}
         <TransactionDetailsModule fields={details} />

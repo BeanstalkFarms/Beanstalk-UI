@@ -13,6 +13,7 @@ import {
 } from 'components/Common';
 import { UserBalanceState } from 'state/userBalance/reducer';
 import TransactionToast from 'components/Common/TransactionToast';
+import { makeStyles } from '@material-ui/styles';
 
 type HarvestModuleProps = {
   setIsFormDisabled: Function;
@@ -20,7 +21,19 @@ type HarvestModuleProps = {
   harvestablePlots: UserBalanceState['harvestablePlots'];
 };
 
+const useStyles = makeStyles({
+  expandMoreIcon: {
+    marginBottom: '-14px',
+    width: '100%'
+  },
+  boxStyle: {
+    display: 'inline-block',
+    width: '100%'
+  }
+});
+
 export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
+  const classes = useStyles();
   props.setIsFormDisabled(props.harvestablePodBalance.isLessThanOrEqualTo(0));
 
   /* Input Fields */
@@ -54,9 +67,9 @@ export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
       <>
         <ExpandMoreIcon
           color="primary"
-          style={{ marginBottom: '-14px', width: '100%' }}
+          className={classes.expandMoreIcon}
         />
-        <Box style={{ display: 'inline-block', width: '100%' }}>
+        <Box className={classes.boxStyle}>
           {toBeanField}
         </Box>
         <TransactionDetailsModule fields={details} />

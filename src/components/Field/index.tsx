@@ -12,9 +12,25 @@ import {
   HeaderLabelList,
   fieldStrings,
 } from 'components/Common';
+import { makeStyles } from '@material-ui/styles';
 import FieldModule from './FieldModule';
 
+const useStyles = makeStyles({
+  headerLabelStyle: {
+    maxWidth: '250px',
+  },
+  descriptionImage: {
+    verticalAlign: 'middle',
+    marginRight: '-1.5px',
+    padding: '0 0 4px 0',
+  },
+  whatIsTheFieldGrid: {
+    margin: '20px 0px'
+  }
+});
+
 export default function Field() {
+  const classes = useStyles();
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
@@ -29,9 +45,6 @@ export default function Field() {
   );
 
   //
-  const headerLabelStyle = {
-    maxWidth: '250px',
-  };
   const containerStyle = {
     backgroundColor: theme.secondary,
     borderRadius: '15px',
@@ -64,11 +77,7 @@ export default function Field() {
       for each Bean sown. When the Bean supply increases, Pods become redeemable
       for &nbsp;
       <img
-        style={{
-          verticalAlign: 'middle',
-          marginRight: '-1.5px',
-          padding: '0 0 4px 0',
-        }}
+        className={classes.descriptionImage}
         height="17px"
         src={theme.bean}
         alt="Beans"
@@ -159,10 +168,10 @@ export default function Field() {
       <ContentSection id="field" title="Field">
         {/* Field "Analytics" displayed at the top of the page */}
         <Grid container item justifyContent="center" style={containerStyle}>
-          <Grid item md={12} lg={6} style={headerLabelStyle}>
+          <Grid item md={12} lg={6} className={classes.headerLabelStyle}>
             {leftHeader}
           </Grid>
-          <Grid item md={12} lg={6} style={headerLabelStyle}>
+          <Grid item md={12} lg={6} className={classes.headerLabelStyle}>
             {rightHeader}
           </Grid>
         </Grid>
@@ -195,7 +204,7 @@ export default function Field() {
           </Grid>
         </Grid>
         {/* Help Dropdown */}
-        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <Grid container justifyContent="center" className={classes.whatIsTheFieldGrid}>
           <ContentDropdown
             description={description}
             descriptionTitle="What is the Field?"
