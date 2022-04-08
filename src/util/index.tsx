@@ -178,7 +178,7 @@ export async function switchChain(_chainId: SupportedChainId) {
     );
     web3Provider = new ethers.providers.Web3Provider(
       currentState.wallets[0].provider,   // the provider instance from web3-onboard
-      CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
+      // CHAIN_IDS_TO_NAMES[chainId],        // "mainnet" or "ropsten"
     );
     web3Signer = web3Provider.getSigner();
   }

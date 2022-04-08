@@ -46,8 +46,10 @@ export const POD_RATE_LOWER_BOUND = 5; /* 5% */
 export const OPTIMAL_POD_RATE = 15; /* 15% */
 export const POD_RATE_UPPER_BOUND = 25; /* 25% */
 
-export const DELTA_POD_DEMAND_LOWER_BOUND = 0.98; /* 98% */
-export const DELTA_POD_DEMAND_UPPER_BOUND = 1.02; /* 102% */
+export const STEADY_SOW_TIME = 60; /* 1 minute */
+
+export const DELTA_POD_DEMAND_LOWER_BOUND = 0.95; /* 95% */
+export const DELTA_POD_DEMAND_UPPER_BOUND = 1.05; /* 105% */
 
 /* Season */
 // export const STEADY_SOW_TIME = 60; /* 60 seconds */

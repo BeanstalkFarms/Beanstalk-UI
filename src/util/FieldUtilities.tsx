@@ -1,14 +1,16 @@
 import { beanstalkContract, account } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
+const MIN_SOIL = '1';
+
 export const sowBeans = async (
   amount: string,
   claimable: string,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   (claimable
-    ? beanstalkContract().claimAndSowBeans(amount, claimable)
-    : beanstalkContract().sowBeans(amount)
+    ? beanstalkContract().claimAndSowBeansWithMin(amount, MIN_SOIL, claimable)
+    : beanstalkContract().sowBeansWithMin(amount, MIN_SOIL)
   ),
   { onResponse }
 );
@@ -21,13 +23,14 @@ export const buyAndSowBeans = async (
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
   (claimable
-    ? beanstalkContract().claimBuyAndSowBeans(
+    ? beanstalkContract().claimBuyAndSowBeansWithMin(
         amount,
         buyBeanAmount,
+        MIN_SOIL,
         claimable,
         { value: ethAmount }
       )
-    : beanstalkContract().buyAndSowBeans(amount, buyBeanAmount, {
+    : beanstalkContract().buyAndSowBeansWithMin(amount, buyBeanAmount, MIN_SOIL, {
         value: ethAmount,
       })
   ),
