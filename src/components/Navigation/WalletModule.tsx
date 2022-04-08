@@ -257,15 +257,6 @@ function DisplayEvent({ event }) {
       eventAmount = inOutDisplay(lp, SiloAsset.LP, lp, TransitAsset.LP);
       break;
     }
-    case 'Proposal': {
-      eventTitle = 'BIP Proposal';
-      eventAmount = (
-        <span style={{ fontFamily: 'Futura-PT-Book' }}>
-          {`BIP ${event.returnValues.bip}`}
-        </span>
-      );
-      break;
-    }
     case 'Vote': {
       eventTitle = 'BIP Vote';
       eventAmount = (
@@ -330,16 +321,6 @@ function DisplayEvent({ event }) {
           CryptoAsset.Ethereum
         );
       }
-      break;
-    }
-    case 'EtherClaim': {
-      const ethReward = toTokenUnitsBN(
-        new BigNumber(event.returnValues.ethereum),
-        ETH.decimals
-      );
-
-      eventTitle = 'ETH Claim';
-      eventAmount = outDisplay(ethReward, CryptoAsset.Ethereum);
       break;
     }
     default:
@@ -675,7 +656,7 @@ export default function WalletModule() {
             );
           }
           if (transactionPage === 1) {
-            return ['EtherClaim', 'Swap'].includes(event.event);
+            return ['Swap'].includes(event.event);
           }
 
           if (transactionPage === 2) {
@@ -687,7 +668,7 @@ export default function WalletModule() {
           }
 
           if (transactionPage === 4) {
-            return ['Vote', 'Unvote', 'Proposal', 'Incentivization'].includes(
+            return ['Vote', 'Unvote', 'Incentivization'].includes(
               event.event
             );
           }

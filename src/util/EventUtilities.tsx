@@ -23,7 +23,7 @@ let lastPriceRefresh = new Date().getTime();
 let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
-const BEANSTALK_GENESIS_BLOCK = 12974075;
+export const BEANSTALK_GENESIS_BLOCK = 12974075;
 
 /**
  * @rpc 20 separate calls to `getPastEvents`. Not batched.
@@ -35,7 +35,7 @@ export async function initializeEventListener(
   updateTotals: Function
 ) {
   const startTime = benchmarkStart('EVENT LISTENER');
-  const beanstalk = beanstalkContractReadOnly();
+  const beanstalk = beanstalkContractReadOnly(true);
 
   // console.log('initializeEventListener: ', account);
 
@@ -101,14 +101,6 @@ export async function initializeEventListener(
       fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
     beanstalk.getPastEvents('LPClaim', {
-      filter: { account: account },
-      fromBlock: BEANSTALK_GENESIS_BLOCK,
-    }),
-    beanstalk.getPastEvents('Proposal', {
-      filter: { account: account },
-      fromBlock: BEANSTALK_GENESIS_BLOCK,
-    }),
-    beanstalk.getPastEvents('EtherClaim', {
       filter: { account: account },
       fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
