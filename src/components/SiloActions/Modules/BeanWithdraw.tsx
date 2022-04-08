@@ -70,10 +70,9 @@ export default function BeanWithdraw() {
     );
   };
 
-  const sectionTitles = [
-    'Withdraw'
-  ];
+  const sectionTitles = ['Withdraw'];
   const sectionTitlesDescription = [
+    siloStrings.beanDeposit,
     siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
   ];
   const sectionTitlesInfoDescription = [

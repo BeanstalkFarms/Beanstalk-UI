@@ -45,7 +45,10 @@ export default function CurveWithdraw() {
   );
 
   const sectionTitles = ['Withdraw'];
-  const sectionTitlesDescription = [curveStrings.deposit, curveStrings.withdraw];
+  const sectionTitlesDescription = [
+    curveStrings.deposit,
+    curveStrings.withdraw,
+  ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
     siloStrings.lpWithdrawalsTable,

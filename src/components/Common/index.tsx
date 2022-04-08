@@ -221,6 +221,10 @@ export const siloStrings = {
     'Use this sub-tab to deposit BEAN:3CRV LP Tokens to the Silo.',
   curveWithdraw:
     'Use this sub-tab to withdraw BEAN:3CRV LP Tokens from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
+  beanlusdDeposit:
+    'Use this sub-tab to deposit BEAN:LUSD LP Tokens to the Silo.',
+  beanlusdWithdraw:
+    'Use this sub-tab to withdraw BEAN:LUSD LP Tokens from the Silo. Withdrawals will be claimable {0} full Seasons after withdrawal.',
   lpDeposit:
     'Use this sub-tab to deposit BEAN:ETH LP Tokens to the Silo. You can toggle the settings to deposit from Beans, ETH, or both and to convert Deposited Beans to Deposited BEAN:ETH LP Tokens.',
   lpWithdraw:

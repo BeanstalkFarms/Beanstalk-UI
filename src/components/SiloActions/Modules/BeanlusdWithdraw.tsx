@@ -45,7 +45,10 @@ export default function BeanlusdWithdraw() {
   );
 
   const sectionTitles = ['Withdraw'];
-  const sectionTitlesDescription = [beanlusdStrings.deposit, beanlusdStrings.withdraw];
+  const sectionTitlesDescription = [
+    siloStrings.beanlusddeposit,
+    siloStrings.beanlusdWithdraw.replace('{0}', totalBalance.withdrawSeasons),
+  ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
     siloStrings.lpWithdrawalsTable,

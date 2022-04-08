@@ -8,7 +8,7 @@ import { AppState } from 'state';
 import { updateBeanstalkBeanlusdAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
 import { approveBeanstalkBeanlusd, poolForLP } from 'util/index';
-import { BaseModule, beanlusdStrings, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
+import { BaseModule, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
 import BeanlusdDepositAction from './Actions/BeanlusdDepositAction';
 
 export default function BeanlusdDeposit() {
@@ -44,7 +44,10 @@ export default function BeanlusdDeposit() {
   );
 
   const sectionTitles = ['Deposit'];
-  const sectionTitlesDescription = [beanlusdStrings.deposit, beanlusdStrings.withdraw];
+  const sectionTitlesDescription = [
+    siloStrings.beanlusddeposit,
+    siloStrings.beanlusdWithdraw.replace('{0}', totalBalance.withdrawSeasons),
+  ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
     siloStrings.lpWithdrawalsTable,

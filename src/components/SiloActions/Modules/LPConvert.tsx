@@ -73,7 +73,6 @@ export default function LPConvert() {
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
   const sectionTitles = ['Convert LP'];
-
   const sectionTitlesDescription = [
     siloStrings.convertLPDeposit,
     siloStrings.convertBeanDeposit,

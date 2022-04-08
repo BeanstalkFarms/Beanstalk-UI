@@ -30,7 +30,7 @@ import {
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery, farmableMonthTotalQuery } from 'graph/index';
 import { AppState } from 'state';
-import { BASE_SLIPPAGE, BEAN, BEANLUSD, CURVE, SupportedToken, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
+import { BASE_SLIPPAGE, BEAN, CURVE, SupportedToken, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
 import {
   addRewardedCrates,
   createLedgerBatch,
@@ -914,6 +914,9 @@ export default function Updater() {
         curveTransitBalance: curveTransitBalance,
         curveReceivableBalance: curveReceivableBalance,
         curveSiloBalance: curveDepositsBalance,
+        beanlusdTransitBalance: beanlusdTransitBalance,
+        beanlusdReceivableBalance: beanlusdReceivableBalance,
+        beanlusdSiloBalance: beanlusdDepositsBalance,
         plots: plots,
         harvestablePlots: harvestablePlots,
         beanDeposits: userBeanDeposits,
@@ -938,6 +941,7 @@ export default function Updater() {
           .plus(harvestablePodBalance)
           .plus(lpReceivableBalance)
           .plus(curveReceivableBalance)
+          .plus(beanlusdReceivableBalance)
           .plus(cb)
           .plus(ce)
           .isGreaterThan(0),
