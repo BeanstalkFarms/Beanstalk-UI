@@ -196,8 +196,7 @@ export default function PriceTooltip({
     return (
       <div className={classes.aggregatePrice}>
         {`$${priceLiquidity.toFixed(4)}`}
-        {/*`$${priceTuple.price.toFixed(4)}` */}
-
+        {/* `$${priceTuple.price.toFixed(4)}` */}
       </div>
     );
   }
