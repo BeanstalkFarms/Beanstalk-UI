@@ -16,8 +16,8 @@ import {
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
-import { ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
 import { POKT_HTTPS_URLS } from 'constants/rpc/pokt';
+import { ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
 import onboard from './onboard';
 
 export * from './EventUtilities';
