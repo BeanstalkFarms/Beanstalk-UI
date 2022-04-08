@@ -104,14 +104,6 @@ export async function initializeEventListener(
       filter: { account: account },
       fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
-    beanstalk.getPastEvents('Proposal', {
-      filter: { account: account },
-      fromBlock: BEANSTALK_GENESIS_BLOCK,
-    }),
-    beanstalk.getPastEvents('EtherClaim', {
-      filter: { account: account },
-      fromBlock: BEANSTALK_GENESIS_BLOCK,
-    }),
     beanstalk.getPastEvents('PlotTransfer', {
       filter: { from: account },
       fromBlock: BEANSTALK_GENESIS_BLOCK,
