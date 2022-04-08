@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Box, Button, Tooltip } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -107,10 +108,25 @@ export default function PriceTooltip({
     priceTuple,
     uniTuple,
     curveTuple,
-    beanlusdTuple,
+    // beanlusdTuple,
+    beanlusdPrice,
+    beanlusdReserve,
+    lusdReserve,
+    lusdCrv3Price,
+    beanlusdVirtualPrice,
+    curveVirtualPrice,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
+  // remove this logic once new Price Contract
+  const priceLusd = beanlusdPrice.multipliedBy(lusdCrv3Price).multipliedBy(new BigNumber(1.00080016)).multipliedBy(curveVirtualPrice); // remove once Price Contract tuple added for LUSD
+
+  // weight displayed price by liqudity (including LUSD liqudity)
+  const lusdLiquidity = (beanlusdReserve.multipliedBy(beanlusdPrice.multipliedBy(1.0004)).plus(lusdReserve)).multipliedBy(beanlusdVirtualPrice); // remove once Price Contract tuple added for LUSD
+  const totalLiquidity = priceTuple.liquidity.plus(lusdLiquidity);
+  const lusdPercent = lusdLiquidity.dividedBy(totalLiquidity);
+
+  const priceLiquidity = priceTuple.price.multipliedBy(new BigNumber(1).minus(lusdPercent)).plus(priceLusd.multipliedBy(lusdPercent));
 
   const PriceCards = ({ direction = 'row' }) => (
     <div className={classes.cardsContainer} style={{ flexDirection: direction }}>
@@ -152,15 +168,15 @@ export default function PriceTooltip({
       <Button className={classes.poolButton} href={LUSD_LINK} target="_blank" rel="noreferrer">
         <Box className={classes.poolCard} boxShadow="2">
           <img src={lusdLogo} alt="LUSD Logo" className={classes.poolLogo} />
-          <span className={classes.poolPrice}>${beanlusdTuple.price.toFixed(4)}</span>
+          <span className={classes.poolPrice}>${priceLusd.toFixed(4)}</span>
           <div className={classes.poolMeta}>
             <div className={classes.poolMetaRow}>
               <div className={classes.poolMetaRowLabel}>liquidity:</div>
-              <div>${displayBN(beanlusdTuple.liquidity)}</div>
+              <div>${displayBN(lusdLiquidity)}</div>
             </div>
             <div className={classes.poolMetaRow}>
               <div className={classes.poolMetaRowLabel}>delta:</div>
-              <div>{beanlusdTuple.deltaB.isNegative() ? '' : '+'}{displayBN(beanlusdTuple.deltaB, true)}<TokenIcon token={CryptoAsset.Bean} /></div>
+              <div>Coming Soon</div>
             </div>
           </div>
         </Box>
@@ -179,7 +195,9 @@ export default function PriceTooltip({
   if (allowExpand === false) {
     return (
       <div className={classes.aggregatePrice}>
-        {`$${priceTuple.price.toFixed(4)}`}
+        {`$${priceLiquidity.toFixed(4)}`}
+        {/*`$${priceTuple.price.toFixed(4)}` */}
+
       </div>
     );
   }

@@ -21,6 +21,7 @@ export interface PriceState {
   beanlusdPrice: BigNumber;
   beanlusdReserve: BigNumber;
   lusdReserve: BigNumber;
+  lusdCrv3Price: BigNumber;
   ethPrices: {
     fast: BigNumber;
     propose: BigNumber;
@@ -77,6 +78,7 @@ export const initialState: PriceState = {
   beanlusdPrice: new BigNumber(-1),
   beanlusdReserve: new BigNumber(-1),
   lusdReserve: new BigNumber(-1),
+  lusdCrv3Price: new BigNumber(-1),
   ethPrices: {
     fast: new BigNumber(-1),
     propose: new BigNumber(-1),

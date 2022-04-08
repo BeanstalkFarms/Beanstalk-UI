@@ -59,17 +59,19 @@ export const TETHER : SupportedToken = {
   symbol: 'USDT',
 };
 
-// LP
+// BEAN:ETH Uni V2 LP Pool
 export const UNI_V2_ETH_BEAN_LP : SupportedToken = {
   addr: '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
   decimals: 18,
 };
 
+// USDC:ETH Uni V2 LP Pool
 export const UNI_V2_USDC_ETH_LP : SupportedToken = {
   addr: '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc',
   decimals: 18,
 };
 
+// BEAN:3CRV Factory Pool
 export const CURVE : SupportedToken = {
   addr: '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD', // BEAN:3crv address
   // addr: '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC', // Ropsten
@@ -78,11 +80,21 @@ export const CURVE : SupportedToken = {
   factory: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7', // 3crv address
 };
 
+// BEAN:LUSD Plain Pool
 export const BEANLUSD : SupportedToken = {
   addr: '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D', // BEAN:LUSD address
   // addr: '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC', // Ropsten
   decimals: 18,
   symbol: 'BEAN:LUSD',
+  // factory: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7', // 3crv address
+};
+
+// LUSD:3CRV Factory Pool
+export const LUSD : SupportedToken = {
+  addr: '0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA', // LUSD:3CRV address
+  // addr: '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC', // Ropsten
+  decimals: 18,
+  symbol: 'LUSD:3CRV',
   // factory: '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7', // 3crv address
 };
 
@@ -100,6 +112,7 @@ export function changeTokenAddresses(chainId: number) {
     USDC.addr = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
     CURVE.addr = '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD';
     BEANLUSD.addr = '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D';
+    LUSD.addr = '0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA';
     PRICE.addr = '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF';
   }
   // Ropsten Addresses
@@ -110,6 +123,7 @@ export function changeTokenAddresses(chainId: number) {
     USDC.addr = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F';
     CURVE.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC';
     BEANLUSD.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // FIX: change ropsten BEAN:LUSD address (currently curve)
+    LUSD.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // using curuve ropsten address for lusd:3crv pool
     PRICE.addr = '0x9d80cDBFee5c8294BCb2b356F608Db90b2D13d4b';
   }
 }

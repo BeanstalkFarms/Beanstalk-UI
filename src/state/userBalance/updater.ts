@@ -326,6 +326,7 @@ export default function Updater() {
         beanlusdPrice,            //
         beanlusdReserve,          //
         beanlusdToBDV,            //
+        lusdCrv3Price,            //
         ethPrices,                //
         priceTuple,               //
       ] = _prices;
@@ -376,6 +377,7 @@ export default function Updater() {
         beanlusdPrice,
         beanlusdReserve: beanlusdReserve[0],
         lusdReserve: beanlusdReserve[1],
+        lusdCrv3Price,
         ethPrices,
         priceTuple: {
           deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),

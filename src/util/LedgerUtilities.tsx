@@ -25,6 +25,7 @@ import {
   beanCrv3ContractReadOnly,
   beanlusdContractReadOnly,
   curveContractReadOnly,
+  lusdCrv3ContractReadOnly,
   initializing,
   pairContractReadOnly,
   tokenContractReadOnly,
@@ -415,6 +416,7 @@ export const getPrices = async (batch: BatchRequest) => {
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const bean3crvContract = beanCrv3ContractReadOnly();
   const beanlusdContract = beanlusdContractReadOnly();
+  const lusd3crvContract = lusdCrv3ContractReadOnly(); // use for lusd:3crv price as oracle with bean:lusd pool
   const curveContract = curveContractReadOnly();
 
   const exec = setupBatch(batch, 'getPrices');
@@ -501,6 +503,10 @@ export const getPrices = async (batch: BatchRequest) => {
       exec(beanstalk.methods.curveToBDV(utils.parseEther('1'))).then(
         (r: string) => toTokenUnitsBN(r, 6)
       ),
+      // LUSD:3CRV price
+      exec(lusd3crvContract.methods.get_dy(0, 1, 1000000000000)).then(
+        (price: string) => toTokenUnitsBN(price, 12),
+      ),
     ]);
   } else {
     promises = promises.concat([
@@ -533,6 +539,10 @@ export const getPrices = async (batch: BatchRequest) => {
         () => [new BigNumber(0), new BigNumber(0)],
       ),
       //
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(1),
+      ),
+      // LUSD:3CRV price
       exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
         () => new BigNumber(1),
       ),
