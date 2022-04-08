@@ -17,8 +17,9 @@ import {
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
-import { POKT_HTTPS_URLS } from 'constants/rpc/pokt';
-import { ALCHEMY_HTTPS_URLS, ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
+import { INFURA_HTTPS_URLS, INFURA_WS_URLS } from 'constants/rpc/infura';
+// import { POKT_HTTPS_URLS } from 'constants/rpc/pokt';
+// import { ALCHEMY_HTTPS_URLS, ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
 import onboard from './onboard';
 
 export * from './EventUtilities';
@@ -145,9 +146,9 @@ type LiveRpcEndpoints = [
 ]
 export function getRpcEndpoint(_chainId: SupportedChainId) : LiveRpcEndpoints {
   return [
-    POKT_HTTPS_URLS[_chainId], // primary
-    ALCHEMY_HTTPS_URLS[_chainId], // events
-    ALCHEMY_WS_URLS[_chainId],    // websocket
+    INFURA_HTTPS_URLS[_chainId], // primary
+    INFURA_HTTPS_URLS[_chainId], // events
+    INFURA_WS_URLS[_chainId],    // websocket
   ];
 }
 
