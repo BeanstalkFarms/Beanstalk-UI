@@ -8,6 +8,7 @@ import { AppState } from 'state';
 import {
   CURVE_BDV_TO_SEEDS,
   CURVE_BDV_TO_STALK,
+  CURVE,
   STALK,
   SEEDS,
   UNI_V2_ETH_BEAN_LP,
@@ -218,6 +219,7 @@ const CurveWithdrawAction = forwardRef(({
       withdraw(
         withdrawParams.crates,
         withdrawParams.amounts,
+        CURVE.addr,
         (response) => {
           resetFields();
           txToast.confirming(response);

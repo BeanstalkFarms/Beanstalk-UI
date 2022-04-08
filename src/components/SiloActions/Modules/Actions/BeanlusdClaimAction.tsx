@@ -3,7 +3,10 @@ import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { UNI_V2_ETH_BEAN_LP } from 'constants/index';
+import { 
+  UNI_V2_ETH_BEAN_LP,
+  BEANLUSD,
+} from 'constants/index';
 import {
   claimSeasons,
   displayBN,
@@ -86,6 +89,7 @@ const BeanlusdClaimAction = forwardRef(({
       // Execute
       claimSeasons(
         Object.keys(beanlusdReceivableCrates),
+        BEANLUSD.addr,
         (response) => txToast.confirming(response)
       )
       .then((value) => {

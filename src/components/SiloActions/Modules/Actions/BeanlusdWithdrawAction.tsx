@@ -8,6 +8,7 @@ import { AppState } from 'state';
 import {
   LUSD_BDV_TO_SEEDS,
   LUSD_BDV_TO_STALK,
+  BEANLUSD,
   STALK,
   SEEDS,
   UNI_V2_ETH_BEAN_LP,
@@ -218,6 +219,7 @@ const BeanlusdWithdrawAction = forwardRef(({
       withdraw(
         withdrawParams.crates,
         withdrawParams.amounts,
+        BEANLUSD.addr,
         (response) => {
           resetFields();
           txToast.confirming(response);

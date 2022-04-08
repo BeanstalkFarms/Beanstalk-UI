@@ -3,7 +3,10 @@ import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { UNI_V2_ETH_BEAN_LP } from 'constants/index';
+import {
+  UNI_V2_ETH_BEAN_LP,
+  CURVE,
+} from 'constants/index';
 import {
   claimSeasons,
   displayBN,
@@ -86,6 +89,7 @@ const CurveClaimAction = forwardRef(({
       // Execute
       claimSeasons(
         Object.keys(curveReceivableCrates),
+        CURVE.addr,
         (response) => txToast.confirming(response)
       )
       .then((value) => {

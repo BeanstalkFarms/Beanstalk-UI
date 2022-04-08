@@ -500,7 +500,7 @@ export const getPrices = async (batch: BatchRequest) => {
         ],
       ),
       // Bean:LUSD to BDV - Need Fix once new Beanstalk abi
-      exec(beanstalk.methods.curveToBDV(utils.parseEther('1'))).then(
+      exec(beanstalk.methods.lusdToBDV(utils.parseEther('1'))).then(
         (r: string) => toTokenUnitsBN(r, 6)
       ),
       // LUSD:3CRV price

@@ -8,6 +8,7 @@ import { AppState } from 'state';
 import {
   BEAN_TO_STALK,
   BEAN_TO_SEEDS,
+  CURVE,
   SEEDS,
   STALK,
   UNI_V2_ETH_BEAN_LP,
@@ -188,6 +189,7 @@ const CurveDepositAction = forwardRef(({
       // Execute
       deposit(
         utils.parseEther(toCurveLPValue.toString()),
+        CURVE.addr,
         (response) => {
           resetFields();
           txToast.confirming(response);

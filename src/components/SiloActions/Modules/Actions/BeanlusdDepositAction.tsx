@@ -8,6 +8,7 @@ import { AppState } from 'state';
 import {
   LUSD_BDV_TO_STALK,
   LUSD_BDV_TO_SEEDS,
+  BEANLUSD,
   SEEDS,
   STALK,
   UNI_V2_ETH_BEAN_LP,
@@ -44,7 +45,7 @@ const BeanlusdDepositAction = forwardRef(({
     (state) => state.userBalance
   );
 
-  const { curveToBDV } = useSelector<AppState, AppState['prices']>(
+  const { beanlusdToBDV } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
 
@@ -54,7 +55,7 @@ const BeanlusdDepositAction = forwardRef(({
     const newFromLPValue = TrimBN(MaxBN(fromNumber, new BigNumber(0)), UNI_V2_ETH_BEAN_LP.decimals);
     // fromNumber = tokenForLP(newFromLPValue, beanReserve, totalLP);
     fromNumber = MaxBN(newFromLPNumber, new BigNumber(0));
-    const bdvNumber = fromNumber.multipliedBy(curveToBDV);
+    const bdvNumber = fromNumber.multipliedBy(beanlusdToBDV);
 
     setFromLPValue(TrimBN(newFromLPValue, 9));
     setToLPValue(TrimBN(newFromLPValue, UNI_V2_ETH_BEAN_LP.decimals));
@@ -188,6 +189,7 @@ const BeanlusdDepositAction = forwardRef(({
       // Execute
       deposit(
         utils.parseEther(toLPValue.toString()),
+        BEANLUSD.addr,
         (response) => {
           resetFields();
           txToast.confirming(response);
