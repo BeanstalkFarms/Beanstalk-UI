@@ -17,8 +17,6 @@ import {
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
-import { INFURA_HTTPS_URLS } from 'constants/rpc/infura';
-// import { POKT_HTTPS_URLS } from 'constants/rpc/pokt';
 import { ALCHEMY_HTTPS_URLS, ALCHEMY_WS_URLS } from 'constants/rpc/alchemy';
 import onboard from './onboard';
 
@@ -147,7 +145,7 @@ type LiveRpcEndpoints = [
 export function getRpcEndpoint(_chainId: SupportedChainId) : LiveRpcEndpoints {
   return [
     ALCHEMY_HTTPS_URLS[_chainId], // primary
-    INFURA_HTTPS_URLS[_chainId], // events
+    ALCHEMY_HTTPS_URLS[_chainId], // events
     ALCHEMY_WS_URLS[_chainId],    // websocket
   ];
 }
