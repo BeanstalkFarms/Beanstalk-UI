@@ -829,8 +829,6 @@ export default function WalletModule() {
   const [walletPage, setWalletPage] = useState(0);
   const walletPages = [myBalancesSection, walletEventsDisplay];
 
-
-
   //
   return (
     <>
