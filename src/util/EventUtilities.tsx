@@ -23,7 +23,8 @@ let lastPriceRefresh = new Date().getTime();
 let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
-export const BEANSTALK_GENESIS_BLOCK = 12974075;
+// export const BEANSTALK_GENESIS_BLOCK = 12974075;
+export const BEANSTALK_GENESIS_BLOCK = 0;
 
 /**
  * @rpc 20 separate calls to `getPastEvents`. Not batched.
