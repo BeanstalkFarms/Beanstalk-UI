@@ -893,8 +893,6 @@ export default function Updater() {
       const claimable = [
         Object.keys(userBeanReceivableCrates).map((b) => b.toString()),
         Object.keys(userLPReceivableCrates).map((b) => b.toString()),
-        Object.keys(userCurveReceivableCrates).map((b) => b.toString()),
-        Object.keys(userBeanlusdReceivableCrates).map((b) => b.toString()),
         Object.keys(harvestablePlots).map((b) =>
           toBaseUnitBN(b, BEAN.decimals).toString()
         ),
