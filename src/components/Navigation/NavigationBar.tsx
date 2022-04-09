@@ -35,6 +35,9 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  iconButton: {
+    backgroundColor: theme.secondary
+  }
 });
 
 export default function NavigationBar() {
@@ -51,7 +54,7 @@ export default function NavigationBar() {
       <Toolbar className={classes.toolbar}>
         {width < 800 ? (
           <Box className={classes.menuIconContain}>
-            <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen} style={{ backgroundColor: theme.secondary }}>
+            <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen} className={classes.iconButton}>
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
             {currentBeanPrice}

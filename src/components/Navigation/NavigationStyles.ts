@@ -59,6 +59,7 @@ export const useStyles = makeStyles({
     fontFamily: 'Futura, Helvetica',
     fontWeight: 800,
     fontSize: 14,
+    marginRight: 8
   },
   NavLink: {
     color: 'inherit',
@@ -100,10 +101,14 @@ export const useStyles = makeStyles({
     position: 'absolute',
     top: -5,
     left: 0,
+    opacity: 0.3
   },
   progressPrimary: {
     position: 'absolute',
     top: -5,
     left: 0,
   },
+  blockDisplay: {
+    display: 'block'
+  }
 });

@@ -91,7 +91,6 @@ const Badge = ({ badge, percent, type }) => {
         <CircularProgress
           key="blackground"
           size={10}
-          style={{ opacity: 0.3 }}
           className={classes.progressBackground}
           color="inherit"
           thickness={8}
@@ -235,9 +234,9 @@ export default function NavigationSidebar() {
       className={classes.NavLink}
       onClick={() => dispatch(setDrawerOpen(false))}
     >
-      <ListItem button style={{ display: 'block' }}>
+      <ListItem button className={classes.blockDisplay}>
         <Box className={classes.NavLinkHeader}>
-          <span className={classes.NavLinkTitle} style={{ marginRight: 8 }}>{item.title}</span>
+          <span className={classes.NavLinkTitle}>{item.title}</span>
           {!!badgeDataByPath[item.path] && (
             Array.isArray(badgeDataByPath[item.path]) ? (
               (badgeDataByPath[item.path] as any[]).map((val, index) => (
