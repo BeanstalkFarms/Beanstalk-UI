@@ -4,12 +4,28 @@ import { Box } from '@material-ui/core';
 import BeanLogo from 'img/bean-logo.svg';
 import { theme } from 'constants/index';
 import './index.tsx';
+import {makeStyles} from "@material-ui/styles";
+
+const useStyles = makeStyles({
+    root: {
+        height: (props: any) => props.height - 100,
+        overflow: 'hidden',
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
 
 export default function LoadingBean() {
   const { innerHeight: height } = window;
+  const props = {
+      height: height
+  }
+  const classes = useStyles(props)
 
   return (
-    <Box sx={{ height: height - 100, overflow: 'hidden', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <Box className={classes.root}>
       <Box className="Loading-logo">
         <img
           className="svg"

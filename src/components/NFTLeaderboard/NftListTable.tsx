@@ -38,6 +38,11 @@ const useStyles = makeStyles({
     fontSize: '10px',
     padding: '6px 6px',
   },
+  cellStyle: {
+    fontFamily: 'Futura-PT',
+    padding: '6px 6px',
+    width: (props: any) => `${100 / props.colTitles.length - 1}%`,
+  }
 });
 
 export default function NftListTable({
@@ -48,13 +53,10 @@ export default function NftListTable({
   rowsPerPage,
   style,
 }) {
-  const classes = useStyles();
-
-  const cellStyle = {
-    fontFamily: 'Futura-PT',
-    padding: '6px 6px',
-    width: `${100 / colTitles.length - 1}%`,
+  const props = {
+    colTitles: colTitles
   };
+  const classes = useStyles(props);
 
   let count = 0;
 
@@ -68,7 +70,7 @@ export default function NftListTable({
                 <TableCell
                   key={t}
                   align="center"
-                  style={cellStyle}
+                  className={classes.cellStyle}
                 >
                   {t}
                 </TableCell>

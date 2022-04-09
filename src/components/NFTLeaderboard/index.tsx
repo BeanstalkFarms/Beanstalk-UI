@@ -9,11 +9,30 @@ import {
   ContentSection,
 } from 'components/Common';
 import { MEDIUM_NFT_WINTER_LINK } from 'constants/index';
+import { makeStyles } from '@material-ui/styles';
 import NftListTable from './NftListTable';
 import NftAccountsListTable from './NftAccountsListTable';
 import WinterNftStatsHeader from './WinterNftStatsHeader';
 
+const useStyles = makeStyles({
+  noTxBox: {
+    width: 'auto', 
+    maxWidth: '450px', 
+    margin: '20px 0'
+  },
+  listTablesBox: {
+    marginTop: '0px',
+    maxWidth: '450px',
+    minWidth: '360px'
+  },
+  winterNFTStatsGrid: {
+    margin: '20px 0px',
+    zIndex: 100
+  }
+});
+
 export default function NftLeaderboard() {
+  const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
 
@@ -38,7 +57,7 @@ export default function NftLeaderboard() {
   // create Top Transactions table
   const sectionsInfo = [];
   const noTxBox = (
-    <Box style={{ width: 'auto', maxWidth: '450px', margin: '20px 0' }}>
+    <Box className={classes.noTxBox}>
       There are no transactions this Season yet.
     </Box>
   );
@@ -73,7 +92,7 @@ export default function NftLeaderboard() {
   // Table Wrapper with tabs
   const showListTables =
     sectionsInfo.length > 0 ? (
-      <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '360px' }}>
+      <Box className={classes.listTableBox}>
         <BaseModule
           handleTabChange={handleTabInfoChange}
           section={sectionInfo}
@@ -98,7 +117,7 @@ export default function NftLeaderboard() {
     <ContentSection
       id="leaderboard"
     >
-      <Grid container justifyContent="center" style={{ margin: '20px 0px', zIndex: 100 }}>
+      <Grid container justifyContent="center" className={classes.winterNFTStatsGrid}>
         <ContentDropdown
           description={beanftWinterStrings.beanftDescription}
           descriptionTitle="What is the BeaNFT Winter Collection?"

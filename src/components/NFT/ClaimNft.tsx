@@ -10,7 +10,16 @@ import {
   OPENSEA_LINK_GENESIS,
   OPENSEA_LINK_COLLECTION,
 } from 'constants/index';
+import { makeStyles } from '@material-ui/styles';
 import NftPicTable from './NftPicTable';
+
+const useStyles = makeStyles({
+  listTablesBox: {
+    marginTop: '0px', 
+    maxWidth: '450px', 
+    minWidth: '360px'
+  }
+});
 
 export default function ClaimNFT({
   title,
@@ -20,6 +29,7 @@ export default function ClaimNFT({
   mintAll,
   mintable,
 }) {
+  const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
 
@@ -82,7 +92,7 @@ export default function ClaimNFT({
   // Table Wrapper
   const showListTables =
     sectionsInfo.length > 0 ? (
-      <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '360px' }}>
+      <Box className={classes.listTablesBox}>
         <BaseModule
           handleTabChange={handleTabInfoChange}
           section={sectionInfo}
@@ -131,7 +141,6 @@ export default function ClaimNFT({
         item
         justifyContent="center"
         alignItems="flex-start"
-        // style={{ marginBottom: '100px' }}
       >
         {showButton}
       </Grid>
