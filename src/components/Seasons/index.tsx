@@ -13,11 +13,24 @@ import {
   seasonStrings,
   SingleButton,
 } from 'components/Common';
+import { makeStyles } from '@material-ui/styles';
 import PegMaintenance from './PegMaintenance';
 import SeasonReward from './SeasonReward';
 import SeasonTimer from './SeasonTimer';
 
+const useStyles = makeStyles({
+  advanceButtonGrid: {
+      maxWidth: '300px',
+      padding: '0px'
+  },
+  pegMaintencanceGrid: {
+    padding: '0px',
+      marginTop: '12px'
+  }
+});
+
 export default function Seasons() {
+  const classes = useStyles();
   const { season, period, start } = useSelector<AppState, AppState['season']>(
     (state) => state.season
   );
@@ -44,7 +57,7 @@ export default function Seasons() {
         md={5}
         sm={6}
         xs={12}
-        style={{ maxWidth: '300px', padding: '0px' }}
+        className={classes.advanceButtonGrid}
       >
         <SingleButton
           description={seasonStrings.advance}
@@ -109,7 +122,7 @@ export default function Seasons() {
         container
         item
         xs={12}
-        style={{ padding: '0px', marginTop: '12px' }}
+        className={classes.pegMaintenanceGrid}
         justifyContent="center"
       >
         <PegMaintenance />
