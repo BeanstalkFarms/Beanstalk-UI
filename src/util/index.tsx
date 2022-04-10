@@ -13,7 +13,10 @@ import {
   changeTheme,
 } from 'constants/index';
 import {
-  BEAN, BEANLUSD, changeTokenAddresses
+  BEAN,
+  BEANLUSD,
+  BEANSTALK_GETTERS,
+  changeTokenAddresses,
 } from 'constants/tokens';
 import { Token as SupportedV2Token } from 'classes';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains';
@@ -58,6 +61,7 @@ const beanCrv3MetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
 const beanlusdPoolAbi = require('../constants/abi/BeanlusdPool.json');
 const beanstalkPriceAbi = require('../constants/abi/BeanstalkPrice.json');
 const lusdCrv3MetaPoolAbi = require('../constants/abi/LusdCrv3MetaPool.json');
+const beanstalkGettersAbi = require('../constants/abi/BeanstalkGetters.json');
 
 export const tokenContract = (token: SupportedToken) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
@@ -118,6 +122,9 @@ export const beanlusdContractReadOnly = () =>
 
 export const lusdCrv3ContractReadOnly = () =>
   new web3.eth.Contract(lusdCrv3MetaPoolAbi, LUSD.addr);
+
+  export const beanstalkGettersContractReadOnly = () =>
+  new web3.eth.Contract(beanstalkGettersAbi, BEANSTALK_GETTERS.addr);
 /**
  * Listen for events emitted by the current provider.
  */

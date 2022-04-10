@@ -22,6 +22,7 @@ import {
   account,
   beanstalkContractReadOnly,
   beanstalkPriceContractReadOnly,
+  beanstalkGettersContractReadOnly,
   beanCrv3ContractReadOnly,
   beanlusdContractReadOnly,
   curveContractReadOnly,
@@ -312,11 +313,10 @@ export const getTotalBalances = async (batch: BatchRequest) => {
  * @rpc 3/28/2022: 13 BIPs => 14 calls.
  */
 export const getVotes = async () => {
-  const beanstalk = beanstalkContractReadOnly();
-  const activeBips = await beanstalk.methods.activeBips().call();
-  const vs = await Promise.all(activeBips.map((b) => beanstalk.methods.voted(account, b).call()));
-  return activeBips.reduce((acc, b, i) => {
-    if (vs[i]) acc.add(b.toString());
+  const beanstalkG = beanstalkGettersContractReadOnly();
+  const votedBips = await beanstalkG.methods.getActiveVotes(account).call();
+  return votedBips.reduce((acc, b) => {
+    if (b.vote) acc.add(b.bipId.toString());
     return acc;
   }, new Set());
 };
@@ -330,49 +330,28 @@ export const getVotes = async () => {
 export const getBips = async (
   // currentSeason: BigNumber
 ) : Promise<[BIP[], boolean]> => {
-  const beanstalk = beanstalkContractReadOnly();
-  const numberOfBips = bigNumberResult(
-    await beanstalk.methods.numberOfBips().call()
-  );
+  const beanstalkG = beanstalkGettersContractReadOnly();
+  const bipsData = await beanstalkG.methods.bips().call();
 
   let hasActiveBIP : boolean = false;
-  const bips : BIP[] = [];
-  for (let i = new BigNumber(0); i.isLessThan(numberOfBips); i = i.plus(1)) {
-    const bip = await beanstalk.methods.bip(i.toString()).call();
 
-    const start = bigNumberResult(bip.start);
-    const period = bigNumberResult(bip.period);
-    // const active = currentSeason.lte(start.plus(period)) && bip.executed === false;
-    const bipRoots = bip.endTotalRoots.toString() === '0'
-      ? await beanstalk.methods.rootsFor(i.toString()).call()
-      : bip.roots;
-
-    // roots - how many Roots have voted for the BIP
-    // endTotalRoots - if the BIP has ended, how many total Roots existed at the end of the BIP
-    // -> used for calculating % voted for the BIP after the fact.
-    const bipDict = {
+  const bips : BIP[] = bipsData.reduce((bs, b, i) => {
+    bs.push({
       id: i,
-      executed: bip.executed,
-      pauseOrUnpause: bigNumberResult(bip.pauseOrUnpause),
-      start: start,
-      period: period,
-      proposer: bip.propser, // FIXME: typo?
-      roots: bigNumberResult(bipRoots),
-      endTotalRoots: bigNumberResult(bip.endTotalRoots),
-      timestamp: bigNumberResult(bip.timestamp),
-      updated: bigNumberResult(bip.updated),
-      active: false,
-    };
-
-    bips.push(bipDict);
-  }
-
-  // https://github.com/BeanstalkFarms/Beanstalk/blob/8e5833bccef7fd4e41fbda70567b902d33ca410d/protocol/contracts/farm/AppStorage.sol#L99
-  const activeBips : string[] = await beanstalk.methods.activeBips().call();
-  activeBips.forEach((id: string) => {
-    hasActiveBIP = true;
-    bips[parseInt(id, 10)].active = true;
-  });
+      executed: b.executed,
+      pauseOrUnpause: bigNumberResult(b.pauseOrUnpause),
+      start: bigNumberResult(b.start),
+      period: bigNumberResult(b.period),
+      proposer: b.proposer,
+      roots: bigNumberResult(b.roots),
+      endTotalRoots: bigNumberResult(b.totalRoots),
+      timestamp: bigNumberResult(b.timestamp),
+      updated: bigNumberResult(b.updated),
+      active: b.active,
+    });
+    if (b.active) hasActiveBIP = true;
+    return bs;
+  }, []);
 
   return [bips, hasActiveBIP];
 };
@@ -383,26 +362,20 @@ export const getBips = async (
  * @rpc 3/28/2022: 3 fundraisers => 4 calls.
  */
 export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
-  const beanstalk = beanstalkContractReadOnly();
+  const beanstalkG = beanstalkGettersContractReadOnly();
+  const fundraisersData = await beanstalkG.methods.fundraisers().call();
   let hasActiveFundraiser = false;
-  const numberOfFundraisers = bigNumberResult(
-    await beanstalk.methods.numberOfFundraisers().call()
-  );
 
-  const fundraisers : Fundraiser[] = [];
-  for (let i = new BigNumber(0); i.isLessThan(numberOfFundraisers); i = i.plus(1)) {
-    const fundraiser = await beanstalk.methods.fundraiser(i.toString()).call();
-    const fundraiserDict = {
+  const fundraisers : Fundraiser[] = fundraisersData.reduce((fs, f, i) => {
+    fs.push({
       id: i,
-      remaining: toTokenUnitsBN(fundraiser.remaining, USDC.decimals),
-      total: toTokenUnitsBN(fundraiser.total, USDC.decimals),
-      token: fundraiser.token,
-    };
-    if (fundraiserDict.remaining.isGreaterThan(0)) {
-      hasActiveFundraiser = true;
-    }
-    fundraisers.push(fundraiserDict);
-  }
+      remaining: toTokenUnitsBN(f.remaining, USDC.decimals),
+      total: toTokenUnitsBN(f.total, USDC.decimals),
+      token: f.token,
+    });
+    if (f.remaining > 0) hasActiveFundraiser = true;
+    return fs;
+  }, []);
 
   return [fundraisers, hasActiveFundraiser];
 };
