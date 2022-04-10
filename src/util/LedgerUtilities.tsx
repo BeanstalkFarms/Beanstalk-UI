@@ -322,10 +322,9 @@ export const getVotes = async () => {
 };
 
 /**
- * TODO: batch BIP detail ledger reads
- *
- * @rpc 1 + N < calls < 1 + 2*N where N = number of BIPs.
- * @rpc 3/28/2022: 13 BIPs => 14 - 27 calls.
+ * @todo when .fundraisers() method is added to Beanstalk contract, use that
+ *       instead of the separate `beanstalkGetters` contract.
+ * @rpc 4/10/2022: 1 call.
  */
 export const getBips = async (
   // currentSeason: BigNumber
@@ -335,9 +334,9 @@ export const getBips = async (
 
   let hasActiveBIP : boolean = false;
 
-  const bips : BIP[] = bipsData.reduce((bs, b, i) => {
+  const bips : BIP[] = bipsData.reduce((bs : BIP[], b: any, i: number) => {
     bs.push({
-      id: i,
+      id: new BigNumber(i),
       executed: b.executed,
       pauseOrUnpause: bigNumberResult(b.pauseOrUnpause),
       start: bigNumberResult(b.start),
@@ -357,18 +356,20 @@ export const getBips = async (
 };
 
 /**
- * TODO: batch BIP detail ledger reads
- * @rpc N + 1 calls where N = # of fundraisers.
- * @rpc 3/28/2022: 3 fundraisers => 4 calls.
+ * @todo when .fundraisers() method is added to Beanstalk contract, use that
+ *       instead of the separate `beanstalkGetters` contract.
+ * @rpc 1 call to Beanstalk Getters contract.
+ * @rpc 4/10/2022: 1 call
+ * 
  */
 export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
   const beanstalkG = beanstalkGettersContractReadOnly();
   const fundraisersData = await beanstalkG.methods.fundraisers().call();
   let hasActiveFundraiser = false;
 
-  const fundraisers : Fundraiser[] = fundraisersData.reduce((fs, f, i) => {
+  const fundraisers : Fundraiser[] = fundraisersData.reduce((fs: Fundraiser[], f: any, i: number) => {
     fs.push({
-      id: i,
+      id: new BigNumber(i),
       remaining: toTokenUnitsBN(f.remaining, USDC.decimals),
       total: toTokenUnitsBN(f.total, USDC.decimals),
       token: f.token,
