@@ -137,7 +137,7 @@ export default function BeanlusdWithdraw() {
         handleChange={handlePageChange}
         indexTitle="Season"
         isLP
-        isCurve
+        isLUSD
         page={page}
         poolForLPRatio={poolForLPRatio}
         season={season}
@@ -160,7 +160,7 @@ export default function BeanlusdWithdraw() {
         index={season}
         indexTitle="Seasons to Arrival"
         isLP
-        isCurve
+        isLUSD
         page={page}
         poolForLPRatio={poolForLPRatio}
       />

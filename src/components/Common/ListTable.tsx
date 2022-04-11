@@ -79,6 +79,11 @@ const BasicTable = (props) => {
         balance[1]
       )} 3CRV`;
     }
+    if (props.isLUSD) {
+      return `${displayBN(balance[0])} BEAN/${displayBN(
+        balance[1]
+      )} LUSD`;
+    }
     return `${displayBN(balance[0])} BEAN/${displayBN(
       balance[1]
     )} ${TokenLabel(CryptoAsset.Ethereum)}`;

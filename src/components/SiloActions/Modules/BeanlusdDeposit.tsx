@@ -114,7 +114,7 @@ export default function BeanlusdDeposit() {
         handleChange={handlePageChange}
         indexTitle="Season"
         isLP
-        isCurve
+        isLUSD
         page={page}
         poolForLPRatio={poolForLPRatio}
         season={season}
@@ -137,7 +137,7 @@ export default function BeanlusdDeposit() {
         index={season}
         indexTitle="Seasons to Arrival"
         isLP
-        isCurve
+        isLUSD
         page={page}
         poolForLPRatio={poolForLPRatio}
       />
