@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
 import { updateBeanstalkBeanlusdAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE } from 'constants/index';
+import { BASE_SLIPPAGE, LUSD_BDV_TO_SEEDS } from 'constants/index';
 import { approveBeanstalkBeanlusd, poolForLP } from 'util/index';
 import { BaseModule, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
 import BeanlusdDepositAction from './Actions/BeanlusdDepositAction';
@@ -119,6 +119,7 @@ export default function BeanlusdDeposit() {
         poolForLPRatio={poolForLPRatio}
         season={season}
         bdvCrates={beanlusdBDVDeposits}
+        bdvPerSeed={LUSD_BDV_TO_SEEDS}
       />
     );
     sectionTitlesInfo.push('Bean:LUSD Deposits');
@@ -140,6 +141,7 @@ export default function BeanlusdDeposit() {
         isLUSD
         page={page}
         poolForLPRatio={poolForLPRatio}
+        bdvPerSeed={LUSD_BDV_TO_SEEDS}
       />
     );
     sectionTitlesInfo.push('Bean:LUSD Withdrawals');

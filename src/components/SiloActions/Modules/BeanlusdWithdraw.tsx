@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
 import { updateBeanstalkCurveAllowance } from 'state/allowances/actions';
-import { BASE_SLIPPAGE } from 'constants/index';
+import { BASE_SLIPPAGE, LUSD_BDV_TO_SEEDS } from 'constants/index';
 import { approveBeanstalkCurve, poolForLP } from 'util/index';
 import { BaseModule, beanlusdStrings, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
 import BeanlusdWithdrawAction from './Actions/BeanlusdWithdrawAction';
@@ -142,6 +142,7 @@ export default function BeanlusdWithdraw() {
         poolForLPRatio={poolForLPRatio}
         season={season}
         bdvCrates={beanlusdBDVDeposits}
+        bdvPerSeed={LUSD_BDV_TO_SEEDS}
       />
     );
     sectionTitlesInfo.push('BEAN:LUSD Deposits');
@@ -163,6 +164,7 @@ export default function BeanlusdWithdraw() {
         isLUSD
         page={page}
         poolForLPRatio={poolForLPRatio}
+        bdvPerSeed={LUSD_BDV_TO_SEEDS}
       />
     );
     sectionTitlesInfo.push('BEAN:LUSD Withdrawals');

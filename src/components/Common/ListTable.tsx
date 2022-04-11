@@ -257,10 +257,10 @@ const BasicTable = (props) => {
                       <FormatTooltip
                         placement="right"
                         title={`${displayFullBN(
-                          props.bdvCrates[season].multipliedBy(4)
+                          props.bdvCrates[season].multipliedBy(props.bdvPerSeed)
                         )} ${TokenLabel(SiloAsset.Seed)}`}
                       >
-                        <span>{displayBN(props.bdvCrates[season].multipliedBy(4))}</span>
+                        <span>{displayBN(props.bdvCrates[season].multipliedBy(props.bdvPerSeed))}</span>
                       </FormatTooltip>
                     </TableCell>
                   ) : null}
@@ -309,4 +309,5 @@ ListTable.defaultProps = {
   page: 0,
   resetPage: 0,
   rowsPerPage: 3,
+  bdvPerSeed: 4,
 };
