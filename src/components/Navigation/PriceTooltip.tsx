@@ -108,7 +108,6 @@ export default function PriceTooltip({
     uniTuple,
     curveTuple,
     beanlusdTuple,
-    priceLiquidity,
   } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
@@ -180,8 +179,7 @@ export default function PriceTooltip({
   if (allowExpand === false) {
     return (
       <div className={classes.aggregatePrice}>
-        {`$${priceLiquidity.toFixed(4)}`}
-        {/* `$${priceTuple.price.toFixed(4)}` */}
+        `$${priceTuple.price.toFixed(4)}`
       </div>
     );
   }
