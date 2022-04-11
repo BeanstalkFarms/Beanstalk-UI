@@ -352,10 +352,9 @@ export default function Updater() {
         .dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
 
-      //
       const curveTuple = priceTuple.ps[0];
       const uniTuple = priceTuple.ps[1];
-      const beanlusdTuple = priceTuple.ps[0]; // change index 0 to index 2 once new price contract
+      const beanlusdTuple = priceTuple.ps[priceTuple.ps.length > 2 ? 2 : 1];
 
       //
       dispatch(setPrices({
