@@ -179,7 +179,7 @@ export default function PriceTooltip({
   if (allowExpand === false) {
     return (
       <div className={classes.aggregatePrice}>
-        `$${priceTuple.price.toFixed(4)}`
+        {priceTuple.price.toFixed(4)}
       </div>
     );
   }
