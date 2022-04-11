@@ -23,8 +23,10 @@ import {
   TransitAsset,
 } from 'components/Common';
 import LPDepositAction from './Actions/LPDepositAction';
+import { useStyles } from './SiloStyles';
 
 export function LPDeposit() {
+  const classes = useStyles();
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -188,13 +190,7 @@ export function LPDeposit() {
 
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
-      >
+      <Box className={classes.listTablesIcon}>
         <IconButton
           color="primary"
           onClick={() => {
@@ -203,7 +199,7 @@ export function LPDeposit() {
               shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
+          className={classes.iconButton}
         >
           <ListIcon />
         </IconButton>

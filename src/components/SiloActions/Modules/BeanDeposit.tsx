@@ -5,12 +5,27 @@ import { AppState } from 'state';
 import { BaseModule, ListTable, SiloAsset, siloStrings } from 'components/Common';
 import BigNumber from 'bignumber.js';
 import { List as ListIcon } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/styles';
 import { BASE_SLIPPAGE } from '../../../constants';
 import { approveBeanstalkBean, poolForLP, SwapMode } from '../../../util';
 import { updateBeanstalkBeanAllowance } from '../../../state/allowances/actions';
 import BeanDepositAction from './Actions/BeanDepositAction';
 
+const useStyles = makeStyles({
+  listTablesIcon: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    margin: '20px 0 -56px -4px',
+  },
+  iconButton: {
+    height: '44px',
+    width: '44px',
+    marginTop: '-8px'
+  }
+});
+
 export default function BeanDeposit() {
+  const classes = useStyles();
    const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -146,13 +161,7 @@ export default function BeanDeposit() {
   /* */
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
-      >
+      <Box className={classes.listTablesIcon}>
         <IconButton
           color="primary"
           onClick={() => {
@@ -161,7 +170,7 @@ export default function BeanDeposit() {
               shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
+          className={classes.iconButton}
         >
           <ListIcon />
         </IconButton>

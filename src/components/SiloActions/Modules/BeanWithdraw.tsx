@@ -16,8 +16,10 @@ import {
 } from 'components/Common';
 import BeanClaimAction from './Actions/BeanClaimAction';
 import BeanWithdrawAction from './Actions/BeanWithdrawAction';
+import { useStyles } from './SiloStyles';
 
 export default function BeanWithdraw() {
+  const classes = useStyles();
   const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -204,13 +206,7 @@ export default function BeanWithdraw() {
   /* */
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
-      >
+      <Box className={classes.listTablesIcon}>
         <IconButton
           color="primary"
           onClick={() => {
@@ -219,7 +215,7 @@ export default function BeanWithdraw() {
               shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
+          className={classes.iconButton}
         >
           <ListIcon />
         </IconButton>

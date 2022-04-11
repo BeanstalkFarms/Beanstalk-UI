@@ -24,8 +24,10 @@ import {
 } from 'components/Common';
 import LPWithdrawAction from './Actions/LPWithdrawAction';
 import LPClaimAction from './Actions/LPClaimAction';
+import { useStyles } from './SiloStyles';
 
 export default function LPWithdraw() {
+  const classes = useStyles();
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -214,13 +216,7 @@ export default function LPWithdraw() {
 
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
-      >
+      <Box className={classes.listTablesIcon}>
         <IconButton
           color="primary"
           onClick={() => {
@@ -229,7 +225,7 @@ export default function LPWithdraw() {
               shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
+          className={classes.iconButton}
         >
           <ListIcon />
         </IconButton>
