@@ -29,7 +29,7 @@ const SiloActions : React.FC<SiloActionsProps> = (props) => {
   );
 
   return (
-    <ContentSection id="silo" title="Silo">
+    <ContentSection id="silo">
       {/* Tabbed Silo form with 2-3 actions depending on token */}
       <TabbedForm
         tokenData={props.tokenData}

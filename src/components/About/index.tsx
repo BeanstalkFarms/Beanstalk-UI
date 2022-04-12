@@ -22,21 +22,18 @@ const useStyles = makeStyles(({
 }));
 
 interface AboutProps {
-    style?: string;
-    defaultSection?: ReactComponentElement<any>;
+  // style?: string;
+  defaultSection?: ReactComponentElement<any>;
 }
 
-const About: FC<AboutProps> = (props) => {
+const About : FC<AboutProps> = (props) => {
   const classes = useStyles();
-  const sectionContentStyle = props.style;
-  const showLandingPage = props.defaultSection !== undefined;
-
+  // const sectionContentStyle = props.style;
+  // const showLandingPage = props.defaultSection !== undefined;
+  // style={showLandingPage ? { minHeight: '0vh' } : sectionContentStyle}
+  // title={showLandingPage ? 'Beanstalk' : 'About'}
   return (
-    <ContentSection
-      id="about"
-      style={showLandingPage ? { minHeight: '0vh' } : sectionContentStyle}
-      title={showLandingPage ? 'Beanstalk' : 'About'}
-    >
+    <ContentSection id="about">
       <Box style={{ minHeight: '330px', width: '100%', paddingTop: '90px' }}>
         {props.defaultSection}
         {/* */}

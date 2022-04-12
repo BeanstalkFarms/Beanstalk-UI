@@ -18,7 +18,7 @@ export default function Marketplace() {
   ];
 
   return (
-    <ContentSection id="market" title="Market">
+    <ContentSection id="market">
       <TabbedMarketplace />
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown

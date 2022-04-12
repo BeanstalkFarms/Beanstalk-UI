@@ -109,10 +109,7 @@ export default function Governance() {
     : null;
 
   return (
-    <ContentSection
-      id="governance"
-      title="Governance"
-    >
+    <ContentSection id="governance">
       <Grid container item xs={12} spacing={3} justifyContent="center">
         <Grid
           container

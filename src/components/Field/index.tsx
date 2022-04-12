@@ -165,7 +165,7 @@ export default function Field() {
   return (
     <>
       {fundBox}
-      <ContentSection id="field" title="Field">
+      <ContentSection id="field">
         {/* Field "Analytics" displayed at the top of the page */}
         <Grid container item justifyContent="center" style={containerStyle}>
           <Grid item md={12} lg={6} className={classes.headerLabelStyle}>
@@ -180,7 +180,6 @@ export default function Field() {
           container
           item
           xs={12}
-          spacing={2}
           className="SiloSection"
           alignItems="flex-start"
           justifyContent="center"
@@ -189,7 +188,6 @@ export default function Field() {
             item
             md={6}
             sm={12}
-            style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
           >
             <BaseModule
               section={0}

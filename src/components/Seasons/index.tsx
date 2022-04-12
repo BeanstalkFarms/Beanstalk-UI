@@ -79,7 +79,7 @@ export default function Seasons() {
     SeasonReward(time);
 
   return (
-    <ContentSection id="seasons" title="Seasons">
+    <ContentSection id="seasons">
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown
           description={pegStrings.pegDescription}

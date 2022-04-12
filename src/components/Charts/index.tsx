@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Charts(props) {
+export default function Charts() {
   const classes = useStyles();
   //
   const [chartData, setChartData] = useState([]);
@@ -66,12 +66,10 @@ export default function Charts(props) {
       justifyContent="center">
       <ContentSection
         id="charts"
-        title={props.title}
-        size="20px"
-        style={{
-          width: '100%',
-          marginTop: props.marginTop || 0,
-        }}
+        // style={{
+        //   width: '100%',
+        //   marginTop: props.marginTop || 0,
+        // }}
       >
         <BaseModule
           handleTabChange={(event, newSection) => {

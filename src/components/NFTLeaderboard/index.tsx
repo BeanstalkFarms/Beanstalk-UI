@@ -114,9 +114,7 @@ export default function NftLeaderboard() {
   ];
 
   return (
-    <ContentSection
-      id="leaderboard"
-    >
+    <ContentSection id="leaderboard">
       <Grid container justifyContent="center" className={classes.winterNFTStatsGrid}>
         <ContentDropdown
           description={beanftWinterStrings.beanftDescription}

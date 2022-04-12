@@ -53,7 +53,7 @@ export default function Fundraiser(props) {
   ];
 
   return (
-    <ContentSection id="fund" title="Fundraiser">
+    <ContentSection id="fund">
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown
           description={fundraiserStrings.fundsDescription}

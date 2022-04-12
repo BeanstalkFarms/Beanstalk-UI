@@ -151,6 +151,7 @@ export default function TabbedMarketplace() {
         sm={12}
         style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
       >
+        {/* Buy / Sell */}
         <BaseModule
           handleTabChange={(event, newSection) => {
             setSection(newSection);
@@ -163,6 +164,7 @@ export default function TabbedMarketplace() {
         >
           {sections[section]}
         </BaseModule>
+        {/* Mkt. Graph */}
         <BaseModule
           section={0}
           sectionTitles={[]}

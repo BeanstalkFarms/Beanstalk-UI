@@ -77,56 +77,47 @@ export default function NFTs() {
   );
 
   return (
-    <>
-      <ContentSection
-        id="nft"
-        title="BeaNFTs"
-        textTransform="none"
-        style={{
-          paddingTop: 20, // FIXME
-        }}
-      >
-        <NftStatsHeader />
-        <Grid container>
-          <Grid item xl={2} lg={1} md={false} />
-          <Grid item xl={6} lg={5} md={6} xs={12}>
-            <ClaimNft
-              buttonDescription={beanftStrings.mintAll}
-              claimedNFTs={claimedNFTs}
-              unclaimedNFTs={unclaimedNFTs}
-              title="Genesis"
-              mintable
-              mintAll={() => {
-                const accounts = unclaimedNFTs.map((u) => u.account);
-                const ids = unclaimedNFTs.map((u) => u.id);
-                const hashes = unclaimedNFTs.map((u) => u.metadataIpfsHash);
-                const signatures = unclaimedNFTs.map((u) => u.signature);
-                mintAllNFTs(accounts, ids, hashes, signatures);
-              }}
-            />
-          </Grid>
-          <Grid item lg={5} md={6} xs={12}>
-            <ClaimNft
-              buttonDescription={beanftStrings.mintAll}
-              claimedNFTs={claimedWinterNFTs}
-              unclaimedNFTs={unclaimedWinterNFTs}
-              title="Winter"
-              mintable
-              mintAll={() => {
-                const ids = unclaimedWinterNFTs.map((u) => u.id);
-                const signatures = unclaimedWinterNFTs.map((u) => u.signature2);
-                mintAllAccountNFTs(ids, signatures);
-              }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-          <ContentDropdown
-            description={description}
-            descriptionTitle="What are BeaNFTs?"
+    <ContentSection id="nft">
+      <NftStatsHeader />
+      <Grid container>
+        <Grid item xl={2} lg={1} md={false} />
+        <Grid item xl={6} lg={5} md={6} xs={12}>
+          <ClaimNft
+            buttonDescription={beanftStrings.mintAll}
+            claimedNFTs={claimedNFTs}
+            unclaimedNFTs={unclaimedNFTs}
+            title="Genesis"
+            mintable
+            mintAll={() => {
+              const accounts = unclaimedNFTs.map((u) => u.account);
+              const ids = unclaimedNFTs.map((u) => u.id);
+              const hashes = unclaimedNFTs.map((u) => u.metadataIpfsHash);
+              const signatures = unclaimedNFTs.map((u) => u.signature);
+              mintAllNFTs(accounts, ids, hashes, signatures);
+            }}
           />
         </Grid>
-      </ContentSection>
-    </>
+        <Grid item lg={5} md={6} xs={12}>
+          <ClaimNft
+            buttonDescription={beanftStrings.mintAll}
+            claimedNFTs={claimedWinterNFTs}
+            unclaimedNFTs={unclaimedWinterNFTs}
+            title="Winter"
+            mintable
+            mintAll={() => {
+              const ids = unclaimedWinterNFTs.map((u) => u.id);
+              const signatures = unclaimedWinterNFTs.map((u) => u.signature2);
+              mintAllAccountNFTs(ids, signatures);
+            }}
+          />
+        </Grid>
+      </Grid>
+      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        <ContentDropdown
+          description={description}
+          descriptionTitle="What are BeaNFTs?"
+        />
+      </Grid>
+    </ContentSection>
   );
 }

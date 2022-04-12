@@ -400,11 +400,10 @@ export default function Balances() {
 
   const sections = [myBalancesSection, totalBalancesSection];
 
+  // style={{ marginBottom: 50 }}
   return (
-    <ContentSection
-      id="balances"
-      style={{ marginBottom: 50 }}
-    >
+    <ContentSection id="balances">
+      {/* Mobile */}
       <Box className="BalanceSection-mobile">
         <BaseModule
           handleForm={() => {}}
@@ -416,7 +415,7 @@ export default function Balances() {
           {sections[section]}
         </BaseModule>
       </Box>
-
+      {/* Desktop */}
       <Grid
         className="BalanceSection"
         container
@@ -427,12 +426,11 @@ export default function Balances() {
       >
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
           <Box className="AppBar-shadow" sx={balanceStyle}>
-            <Box className={classes.boxStyle}>My Balances </Box>
+            <Box className={classes.boxStyle}>My Balances</Box>
             <Line />
             {myBalancesSection}
           </Box>
         </Grid>
-
         <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
           <Box className="AppBar-shadow" sx={balanceStyle}>
             <Box className={classes.boxStyle}>Beanstalk</Box>

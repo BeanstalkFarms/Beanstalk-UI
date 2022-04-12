@@ -88,7 +88,7 @@ export default function FundraiserModule({
   return (
     <>
       <ContentTitle title={title} />
-      <ContentSection id={title} style={{ paddingTop: '10px', width: '100%' }}>
+      <ContentSection id={title}>
         <Grid container justifyContent="center" className={classes.helperGrid}>
           <ContentDropdown
             description={description}

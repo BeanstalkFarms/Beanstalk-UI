@@ -41,7 +41,7 @@ const useStyles = makeStyles(() => ({
 export default function Trade() {
   const classes = useStyles();
   return (
-    <ContentSection id="trade" title="Trade">
+    <ContentSection id="trade">
       <Grid item xs={12}>
         <TradeModule />
       </Grid>
