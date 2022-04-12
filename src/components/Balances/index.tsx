@@ -327,7 +327,6 @@ export default function Balances() {
       />
       <Grid
         container
-        item
         justifyContent="center"
         style={{ alignItems: 'flex-end' }}
       >
@@ -400,11 +399,10 @@ export default function Balances() {
 
   const sections = [myBalancesSection, totalBalancesSection];
 
-  // style={{ marginBottom: 50 }}
   return (
     <ContentSection id="balances">
       {/* Mobile */}
-      <Box className="BalanceSection-mobile">
+      <Box sx={{ display: { sm: 'block', md: 'none' } }}>
         <BaseModule
           handleForm={() => {}}
           handleTabChange={handleTabChange}
@@ -416,29 +414,29 @@ export default function Balances() {
         </BaseModule>
       </Box>
       {/* Desktop */}
-      <Grid
-        className="BalanceSection"
-        container
-        item
-        spacing={8}
-        justifyContent="center"
-        alignItems="flex-start"
-      >
-        <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
-          <Box className="AppBar-shadow" sx={balanceStyle}>
-            <Box className={classes.boxStyle}>My Balances</Box>
-            <Line />
-            {myBalancesSection}
-          </Box>
+      <Box sx={{ display: { sm: 'none', md: 'block' } }}>
+        <Grid
+          container
+          spacing={8}
+          justifyContent="center"
+          alignItems="flex-start"
+        >
+          <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
+            <Box className="AppBar-shadow" sx={balanceStyle}>
+              <Box className={classes.boxStyle}>My Balances</Box>
+              <Line />
+              {myBalancesSection}
+            </Box>
+          </Grid>
+          <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
+            <Box className="AppBar-shadow" sx={balanceStyle}>
+              <Box className={classes.boxStyle}>Beanstalk</Box>
+              <Line />
+              {totalBalancesSection}
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
-          <Box className="AppBar-shadow" sx={balanceStyle}>
-            <Box className={classes.boxStyle}>Beanstalk</Box>
-            <Line />
-            {totalBalancesSection}
-          </Box>
-        </Grid>
-      </Grid>
+      </Box>
     </ContentSection>
   );
 }

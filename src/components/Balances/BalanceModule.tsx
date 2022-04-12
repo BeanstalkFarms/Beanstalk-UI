@@ -358,6 +358,7 @@ export default function BalanceModule(props) {
         * Section 1: "Top"
         */}
       <Grid
+        item
         container
         className={classes.sectionOne}
       >
@@ -535,6 +536,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={SiloAsset.Stalk}
+              direction="column"
             />
           </Grid>
           <Grid item sm={3} xs={12}>
@@ -544,6 +546,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={SiloAsset.Seed}
+              direction="column"
             />
           </Grid>
           <Grid item sm={3} xs={12}>
@@ -553,6 +556,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={FarmAsset.Pods}
+              direction="column"
             />
           </Grid>
           <Grid item sm={3} xs={12}>
@@ -566,6 +570,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={CryptoAsset.Ethereum}
+              direction="column"
             />
           </Grid>
         </Grid>

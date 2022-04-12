@@ -1,8 +1,37 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { FormatTooltip, QuestionModule } from '.';
 
-export default function DataBalanceModule(props) {
+const useStyles = makeStyles({
+  root: {
+    margin: '6px 10px',
+  },
+  title: {
+    fontSize: '14px',
+    fontFamily: 'Futura-PT-Book',
+    margin: '2px',
+  },
+  balance: {
+    fontSize: '12px',
+    fontFamily: 'Lucida Console',
+    fontWeight: '400',
+  }
+});
+
+const DataBalanceModule : React.FC<{
+  title?: string;
+  content?: string;
+  style?: any;
+  balance?: string;
+  balanceDescription?: string;
+  placement?: string;
+  margin?: string;
+  description?: string;
+  direction?: 'row' | 'column';
+}> = (props) => {
+  const classes = useStyles();
+
   const spanContent = (
     <span>
       {props.content !== undefined ? (
@@ -14,47 +43,33 @@ export default function DataBalanceModule(props) {
       )}
     </span>
   );
-
-  const balanceSection =
-    props.balanceDescription !== undefined ? (
-      <FormatTooltip
-        margin={props.margin}
-        placement={props.placement !== undefined ? props.placement : 'right'}
-        title={props.balanceDescription}
-      >
-        {spanContent}
-      </FormatTooltip>
-    ) : (
-      spanContent
-    );
+  const balanceSection = props.balanceDescription !== undefined ? (
+    <FormatTooltip
+      margin={props.margin}
+      placement={props.placement !== undefined ? props.placement : 'right'}
+      title={props.balanceDescription}
+    >
+      {spanContent}
+    </FormatTooltip>
+  ) : (
+    spanContent
+  );
 
   return (
-    <Box>
-      <Box
-        className={`BalanceModule-title${
-          props.swerve !== undefined ? ' TokenBalanceModule-header' : ''
-        }`}
-        sx={props.style}
-      >
+    <Stack direction={props.direction || 'row'} alignItems="center" justifyContent="space-between" className={classes.root}>
+      <div className={classes.title}>
         {props.title}
         <QuestionModule
           description={props.description}
-          margin={props.questionMargin}
-          widthTooltip={props.widthTooltip}
+          margin="-6px 0 0 0"
+          placement={props.placement || 'top'}
         />
-      </Box>
-      <Box
-        className={`BalanceModule-balance${
-          props.swerve !== undefined ? ' TokenBalanceModule-content' : ''
-        }`}
-        sx={props.style}
-      >
+      </div>
+      <div className={classes.balance}>
         {balanceSection}
-      </Box>
-    </Box>
+      </div>
+    </Stack>
   );
-}
-
-DataBalanceModule.defaultProps = {
-  questionMargin: '-8px 0 0 -1px',
 };
+
+export default DataBalanceModule;

@@ -189,24 +189,6 @@
   }
 }
 
-.BalanceSection-mobile {
-    display: none !important;
-}
-
-@media screen and (max-width: 1200px) {
-  .BalanceSection {
-    display: none !important;
-  }
-  .BalanceSection-mobile {
-    display: block !important;
-    max-width: 500px;
-  }
-  /* .SiloSection {
-    max-width: 1050px;
-    padding: 0px;
-  } */
-}
-
 .AppContent {
   /* display: flex; */
   /* font-family: Futura-PT-Book; */
@@ -319,7 +301,9 @@
   font-size: 14px;
   font-family: Futura-PT-Book;
   margin: 2px;
-} /* format for left side text */
+}
+
+/* format for left side text */
 .BalanceModule-balance {
   display: inline-block;
   font-family: Lucida Console;
@@ -334,14 +318,16 @@
   font-family: Lucida Console;
   font-weight: 400;
   right: -10px;
-} /* format for top right balance numbers */
+}
+/* format for top right balance numbers */
 .TokenBalanceModule-header {
   text-align: left;
   font-family: Futura-PT-Book;
   position: absolute;
   left: 0;
   padding-left: 10px;
-} /* format for left side text */
+}
+/* format for left side text */
 .TokenBalanceModule-content {
   text-align: right;
   font-family: Lucida Console;
@@ -349,7 +335,9 @@
   width: auto;
   right: -10px;
   font-size: 14px;
-} /* format for right side numbers */
+} 
+/* format for right side numbers */
+
 .nftTextField-box {
   background-color: #F5FAFF;
   border-radius: 25px;
