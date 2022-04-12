@@ -106,27 +106,18 @@ export default function Field() {
       balanceDescription={[
         `${displayFullBN(weather.soil)} Soil`,
         `${weather.weather}% Weather`,
-        // `${apy.toFixed(2)}% APY`,
       ]}
       description={[
         fieldStrings.availableSoil,
         fieldStrings.weather,
-        // <span>
-        //   {fieldStrings.podAPY}{' '}
-        //   <a target="blank" href={APY_CALCULATION}>
-        //     click here
-        //   </a>
-        // </span>,
       ]}
       title={[
         'Available Soil',
         'Weather',
-        // 'Pod APY',
       ]}
       value={[
         displayBN(weather.soil),
         `${weather.weather.toFixed()}%`,
-        // `${apy.toFixed(0) === '0' ? '–' : apy.toFixed(0)}%`,
       ]}
       container={false}
     />
@@ -136,27 +127,18 @@ export default function Field() {
       balanceDescription={[
         `${displayFullBN(totalBalance.totalPods)} Unharvestable Pods`,
         `${displayFullBN(weather.harvestableIndex)} Harvested Pods`,
-        // `${tth.toFixed(2)} Seasons`,
       ]}
       description={[
         fieldStrings.podLine,
         fieldStrings.podsHarvested,
-        // <span>
-        //   {fieldStrings.seasonsToPodClearance}{' '}
-        //   <a target="blank" href={APY_CALCULATION}>
-        //     click here
-        //   </a>
-        // </span>,
       ]}
       title={[
         'Pod Line',
         'Pods Harvested',
-        // 'Pod Clearance',
       ]}
       value={[
         displayBN(totalBalance.totalPods),
         displayBN(weather.harvestableIndex),
-        // `${tth.toFixed(0) === 'Infinity' ? '–' : tth.toFixed(0)}`,
       ]}
       container={false}
     />
