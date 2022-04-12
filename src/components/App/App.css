@@ -201,16 +201,13 @@
     display: block !important;
     max-width: 500px;
   }
-  .SiloSection {
+  /* .SiloSection {
     max-width: 1050px;
     padding: 0px;
-  }
+  } */
 }
 
 .AppContent {
-  /* min-height: 300px; */
-  /* width: 100vw; */
-  /* position: relative; */
   /* display: flex; */
   /* font-family: Futura-PT-Book; */
 }

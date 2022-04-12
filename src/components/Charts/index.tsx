@@ -9,16 +9,17 @@ import makeStyles from '@mui/styles/makeStyles';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
 import FieldCharts from './FieldCharts';
+import WideContainer from 'components/Common/Container/WideContainer';
 
-const useStyles = makeStyles({
-  root: {
-    margin: 'auto',
-    width: '100%'
-  }
-});
+// const useStyles = makeStyles({
+//   root: {
+//     margin: 'auto',
+//     width: '100%'
+//   }
+// });
 
 export default function Charts() {
-  const classes = useStyles();
+  // const classes = useStyles();
   //
   const [chartData, setChartData] = useState([]);
   const [section, setSection] = useState(0);
@@ -56,21 +57,10 @@ export default function Charts() {
 
   //
   return (
-    <Grid
-      className={classes.root}
-      container
-      item
-      md={10}
-      sm={10}
-      xs={10}
-      justifyContent="center">
-      <ContentSection
-        id="charts"
-        // style={{
-        //   width: '100%',
-        //   marginTop: props.marginTop || 0,
-        // }}
-      >
+    <WideContainer>
+      <Grid
+        container
+        justifyContent="center">
         <BaseModule
           handleTabChange={(event, newSection) => {
             setSection(newSection);
@@ -87,11 +77,7 @@ export default function Charts() {
         >
           {sections[section]}
         </BaseModule>
-      </ContentSection>
-    </Grid>
+      </Grid>
+    </WideContainer>
   );
 }
-
-Charts.defaultProps = {
-  title: 'Charts',
-};

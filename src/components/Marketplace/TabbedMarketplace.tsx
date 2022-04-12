@@ -138,7 +138,6 @@ export default function TabbedMarketplace() {
       item
       xs={12}
       spacing={2}
-      className="SiloSection"
       alignItems="flex-start"
       justifyContent="center"
       style={{ minHeight: '550px', paddingBottom: 80 }}

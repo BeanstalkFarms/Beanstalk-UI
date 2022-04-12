@@ -11,6 +11,7 @@ import {
 } from 'components/Common';
 import { SiloToken } from 'constants/siloTokens';
 import TabbedForm from './TabbedForm';
+import NarrowContainer from 'components/Common/Container/NarrowContainer';
 
 const descriptionLinks = [
   {
@@ -29,7 +30,7 @@ const SiloActions : React.FC<SiloActionsProps> = (props) => {
   );
 
   return (
-    <ContentSection id="silo">
+    <NarrowContainer>
       {/* Tabbed Silo form with 2-3 actions depending on token */}
       <TabbedForm
         tokenData={props.tokenData}
@@ -42,7 +43,7 @@ const SiloActions : React.FC<SiloActionsProps> = (props) => {
           descriptionLinks={descriptionLinks}
         />
       </Grid>
-    </ContentSection>
+    </NarrowContainer>
   );
 };
 

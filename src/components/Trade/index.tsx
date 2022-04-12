@@ -16,6 +16,7 @@ import metamaskIcon from 'img/metamask-icon.png';
 import curveIcon from 'img/curve-logo.svg';
 
 import TradeModule from './TradeModule';
+import NarrowContainer from 'components/Common/Container/NarrowContainer';
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -41,10 +42,10 @@ const useStyles = makeStyles(() => ({
 export default function Trade() {
   const classes = useStyles();
   return (
-    <ContentSection id="trade">
-      <Grid item xs={12}>
+    <NarrowContainer>
+      <div>
         <TradeModule />
-      </Grid>
+      </div>
       <Grid container spacing={1} style={{ marginTop: 16, maxWidth: 500 }}>
         <Grid item xs={12} container justifyContent="center">
           <Button
@@ -81,6 +82,6 @@ export default function Trade() {
           /> 
         </Grid>
       </Grid>
-    </ContentSection>
+    </NarrowContainer>
   );
 }
