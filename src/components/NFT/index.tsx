@@ -42,12 +42,17 @@ export default function NFTs() {
           href={OPENSEA_LINK_GENESIS}
           target="blank"
           style={{ color: 'white' }}
-          underline="hover">OpenSea</Link>.&nbsp;
+          underline="hover">
+          OpenSea
+        </Link>.
+        &nbsp;
         <Link
           href={MEDIUM_NFT_GENESIS_LINK}
           target="blank"
           style={{ color: 'white' }}
-          underline="hover">Read More</Link>.
+          underline="hover">
+          Read More
+        </Link>.
       </span>
       <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter Collection: </span>
       <span>
@@ -56,12 +61,17 @@ export default function NFTs() {
           href={OPENSEA_LINK_COLLECTION}
           target="blank"
           style={{ color: 'white' }}
-          underline="hover">OpenSea</Link>.&nbsp;
+          underline="hover">
+          OpenSea
+        </Link>.
+        &nbsp;
         <Link
           href={MEDIUM_NFT_WINTER_LINK}
           target="blank"
           style={{ color: 'white' }}
-          underline="hover">Read More</Link>.
+          underline="hover">
+          Read More
+        </Link>.
       </span>
     </>
   );

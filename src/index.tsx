@@ -12,12 +12,10 @@ import theme from 'components/App/muiTheme';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
-
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
-
 
 ReactDOM.render(
   <React.StrictMode>

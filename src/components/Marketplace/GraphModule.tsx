@@ -221,7 +221,7 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
     tooltipData,
   } = useTooltip<TooltipData>();
 
-  if (parentWidth === undefined) return <></>;
+  if (parentWidth === undefined) return null;
 
   const xScale = scaleLinear<number>({
     domain: xDomain,

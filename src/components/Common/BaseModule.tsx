@@ -175,8 +175,7 @@ export default function BaseModule({
   const resetLink = singleReset !== true ?
     <>
       <br />
-      <// eslint-disable-line
-      Link
+      <Link
         style={{ color: 'green' }}
         href=""
         onClick={(event) => {

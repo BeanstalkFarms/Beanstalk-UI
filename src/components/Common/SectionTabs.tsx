@@ -3,20 +3,21 @@ import { AppState } from 'state';
 import { theme as colors } from 'constants/index';
 import { useSelector } from 'react-redux';
 import { Tab, Tabs, adaptV4Theme } from '@mui/material';
-import { ThemeProvider, Theme, StyledEngineProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
+
+const tabHeight = '48px';
 
 export default function SectionTabs({
-    setSection,
-    section,
-    sectionTitles,
-    minWidth,
-  }) {
-  const tabHeight = '48px';
-
+  setSection,
+  section,
+  sectionTitles,
+  minWidth,
+}) {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
+  // FIXME
   const theme = createTheme(adaptV4Theme({
     overrides: {
       MuiTab: {

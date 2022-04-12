@@ -31,7 +31,7 @@ const About: FC<AboutProps> = (props) => {
   const sectionContentStyle = props.style;
   const showLandingPage = props.defaultSection !== undefined;
 
-  return <>
+  return (
     <ContentSection
       id="about"
       style={showLandingPage ? { minHeight: '0vh' } : sectionContentStyle}
@@ -47,8 +47,7 @@ const About: FC<AboutProps> = (props) => {
             </Link>
           </Grid>
           <Grid item lg={3} md={3} sm={4} xs={6} className={classes.cloudStyle}>
-            <// eslint-disable-line
-            Link
+            <Link
               href=""
               color="inherit"
               onClick={(event) => {
@@ -69,7 +68,7 @@ const About: FC<AboutProps> = (props) => {
         </Grid>
       </Box>
     </ContentSection>
-  </>;
+  );
 };
 
 export default About;

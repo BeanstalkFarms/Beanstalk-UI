@@ -379,7 +379,8 @@ const BipTable = (props) => {
       </AppBar>
     );
   }
-  return <></>;
+  
+  return null;
 };
 
 /**

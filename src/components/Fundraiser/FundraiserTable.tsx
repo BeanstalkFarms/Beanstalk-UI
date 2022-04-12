@@ -213,7 +213,8 @@ const FundTable = (props) => {
       </AppBar>
     );
   }
-  return <></>;
+
+  return null;
 };
 
 /**
