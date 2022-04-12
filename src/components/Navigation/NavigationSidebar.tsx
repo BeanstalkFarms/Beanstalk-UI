@@ -16,7 +16,7 @@ import { BEAN, theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
 import { getAPYs, percentForStalk, toTokenUnitsBN } from 'util/index';
-import { useStyles } from './NavigationStyles.ts';
+import { useStyles } from './NavigationStyles';
 import PriceTooltip from './PriceTooltip';
 
 const NAVIGATION_MAP = {
@@ -271,7 +271,7 @@ export default function NavigationSidebar() {
       {/**
         * Farm section */}
       <List subheader={
-        <ListSubheader component="div" className={classes.NavSubheader} id="nested-list-subheader">
+        <ListSubheader disableSticky component="div" className={classes.NavSubheader} id="nested-list-subheader">
           FARM
         </ListSubheader>
       }>
@@ -280,7 +280,7 @@ export default function NavigationSidebar() {
       {/**
         * More section */}
       <List subheader={
-        <ListSubheader component="div" className={classes.NavSubheader} id="nested-list-subheader">
+        <ListSubheader disableSticky component="div" className={classes.NavSubheader} id="nested-list-subheader">
           MORE
         </ListSubheader>
       }>

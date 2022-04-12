@@ -21,6 +21,7 @@ const useStyles = makeStyles({
     boxShadow: 'none',
     marginBottom: 12,
     fontFamily: 'Futura',
+    zIndex: 11,
   },
   menuIconContain: {
     display: 'flex',
