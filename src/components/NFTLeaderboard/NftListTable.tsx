@@ -100,7 +100,7 @@ export default function NftListTable({
                         href={`${BASE_ETHERSCAN_ADDR_LINK}${nftList[index].account}`}
                         color="inherit"
                         target="blank"
-                      >
+                        underline="hover">
                         <span>
                           {`${nftList[index].account.substring(
                             0,
@@ -117,7 +117,7 @@ export default function NftListTable({
                       href={`${BASE_ETHERSCAN_TX_LINK}${nftList[index].txn}`}
                       color="inherit"
                       target="blank"
-                    >
+                      underline="hover">
                       {nftList[index].type}
                     </Link>
                   </TableCell>

@@ -25,7 +25,11 @@ export default function FrontrunText() {
     <Box className={classes.textStyle}>
       Your Transaction may be Frontrun. Consider Lowering Slippage Tolerance.
       <br />
-      <Link href={SLIPPAGE_LINK} target="blank" className={classes.linkStyle}>
+      <Link
+        href={SLIPPAGE_LINK}
+        target="blank"
+        className={classes.linkStyle}
+        underline="hover">
         Click Here to Learn More
       </Link>
       .

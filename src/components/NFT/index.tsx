@@ -38,14 +38,30 @@ export default function NFTs() {
       <span>
         The BeaNFT Genesis collection is a series of 2067 BeaNFTs which could only
         be minted by participating in Beanstalk during Seasons 1200 – 1800.{' '}
-        <Link href={OPENSEA_LINK_GENESIS} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
-        <Link href={MEDIUM_NFT_GENESIS_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+        <Link
+          href={OPENSEA_LINK_GENESIS}
+          target="blank"
+          style={{ color: 'white' }}
+          underline="hover">OpenSea</Link>.&nbsp;
+        <Link
+          href={MEDIUM_NFT_GENESIS_LINK}
+          target="blank"
+          style={{ color: 'white' }}
+          underline="hover">Read More</Link>.
       </span>
       <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter Collection: </span>
       <span>
         The BeaNFT Winter Collection is the second minting event for BeaNFTs and is a collection of 751 BeaNFTs which could only be earned by participating in Beanstalk from Season 3300 to 3900. The top 5 largest bean-denominated investments each Season (across the Silo and Field) were be awarded one Winter BeaNFT.{' '}
-        <Link href={OPENSEA_LINK_COLLECTION} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
-        <Link href={MEDIUM_NFT_WINTER_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+        <Link
+          href={OPENSEA_LINK_COLLECTION}
+          target="blank"
+          style={{ color: 'white' }}
+          underline="hover">OpenSea</Link>.&nbsp;
+        <Link
+          href={MEDIUM_NFT_WINTER_LINK}
+          target="blank"
+          style={{ color: 'white' }}
+          underline="hover">Read More</Link>.
       </span>
     </>
   );

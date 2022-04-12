@@ -124,7 +124,7 @@ export default function NftPicTable({
                             href={`${BASE_OPENSEA_LINK}/${nftList[index].id}`}
                             color="inherit"
                             target="blank"
-                          >
+                            underline="hover">
                             {`${nftList[index].id}`}
                           </Link>
                         </>
@@ -137,7 +137,7 @@ export default function NftPicTable({
                         href={`${BASE_IPFS_LINK}${nftList[index].imageIpfsHash}`}
                         color="inherit"
                         target="blank"
-                      >
+                        underline="hover">
                         <span>
                           {`${nftList[index].imageIpfsHash.substring(
                             0,

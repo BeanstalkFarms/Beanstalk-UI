@@ -93,7 +93,7 @@ export default function ContentSection({
                   key={l.text}
                   href={l.href}
                   target="blank"
-                >
+                  underline="hover">
                   {l.text}
                 </Link>
                 .

@@ -84,121 +84,123 @@ export default function Footer() {
     (state) => state.general
   );
 
-  return (
-    <>
-      <ThemeBackground />
-      {/* TODO: remove style */}
-      <Grid
-        container
-        className={classes.fixedGround}
-        style={{
-          paddingLeft: width < 800 ? 0 : 300
-        }}
-        justifyContent="center"
-      >
-        {/* Row 1: Icons */}
-        <LogoLink link={TWITTER_LINK}>
-          <TwitterIcon className={classes.logoStyle} />
-        </LogoLink>
-        {width > 900 ? (
-          <>
-            <LogoLink link={REDDIT_LINK}>
-              <RedditIcon className={classes.logoStyle} />
-            </LogoLink>
-            <LogoLink link={TELEGRAM_LINK}>
-              <TelegramIcon className={classes.logoStyle} />
-            </LogoLink>
-          </>
-        ) : null}
-        <LogoLink link={DISCORD_LINK}>
-          <DiscordIcon className={classes.logoStyle} />
-        </LogoLink>
-        <LogoLink link={MEDIUM_LINK}>
-          <MediumIcon className={classes.logoStyle} />
-        </LogoLink>
-        <LogoLink link={OPENSEA_LINK_GENESIS}>
-          <OpenSeaIcon className={classes.logoStyle} />
-        </LogoLink>
-        {width > 900 ? (
-          <>
-            <LogoLink link={COINMARKETCAP_LINK}>
-              <CoinMarketCapIcon className={classes.logoStyle} />
-            </LogoLink>
-            <LogoLink link={COINGECKO_LINK}>
-              <CoinGeckoIcon className={classes.logoStyle} />
-            </LogoLink>
-          </>
-        ) : null}
-        <LogoLink link={GITHUB_LINK}>
-          <GitHubIcon className={classes.logoStyle} />
-        </LogoLink>
-        <LogoLink link={DUNE_LINK}>
-          {
-            theme.name === 'winterUpgrade'
-            ? <DuneWinterIcon className={classes.logoStyle} />
-            : <DuneIcon className={classes.logoStyle} />
-          }
-        </LogoLink>
-        <LogoLink link={BEAN_TOKEN_LINK}>
-          <BeanIcon className={classes.logoStyle} />
-        </LogoLink>
-        <LogoLink link={SILO_CONTRACT_LINK}>
-          <EtherscanIcon className={classes.logoStyle} />
-        </LogoLink>
-        {width > 900 ? (
-          <>
-            <LogoLink link={UNISWAP_CONTRACT_LINK}>
-              <UniswapIcon className={classes.logoStyle} />
-            </LogoLink>
-            <LogoLink link={CURVE_LINK}>
-              <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)' } : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
-            </LogoLink>
-            <LogoLink link={COMMONWEALTH_LINK}>
-              <CommonwealthIcon className={classes.logoStyle} />
-            </LogoLink>
-          </>
-        ) : null}
-        {/* Row 2 */}
-        <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
-          <Grid item>
-            <Link href={NETLIFY_LINK} color="inherit" target="blank">
-              <span className={classes.textLinks}>
-                This site is powered by Netlify
-              </span>
-            </Link>
-          </Grid>
-          <Grid item>
-            <Link href={LICENSE_LINK} color="inherit" target="blank">
-              <span className={classes.textLinks}>
-                MIT License
-              </span>
-            </Link>
-          </Grid>
-          <Grid item>
-            <Link href={CODE_OF_CONDUCT_LINK} color="inherit" target="blank">
-              <span className={classes.textLinks}>
-                Code of Conduct
-              </span>
-            </Link>
-          </Grid>
-        </Grid>
-        {!theme.flowers 
-          ? null 
-          : (
-            <img
-              alt="Rainbow Icon"
-              src={theme.flowers}
-              style={{
-                position: 'absolute',
-                width: '100vw',
-                minWidth: '1200px',
-                top: '-50px',
-                zIndex: '-1'
-              }}
-            />
-          )
+  return <>
+    <ThemeBackground />
+    {/* TODO: remove style */}
+    <Grid
+      container
+      className={classes.fixedGround}
+      style={{
+        paddingLeft: width < 800 ? 0 : 300
+      }}
+      justifyContent="center"
+    >
+      {/* Row 1: Icons */}
+      <LogoLink link={TWITTER_LINK}>
+        <TwitterIcon className={classes.logoStyle} />
+      </LogoLink>
+      {width > 900 ? (
+        <>
+          <LogoLink link={REDDIT_LINK}>
+            <RedditIcon className={classes.logoStyle} />
+          </LogoLink>
+          <LogoLink link={TELEGRAM_LINK}>
+            <TelegramIcon className={classes.logoStyle} />
+          </LogoLink>
+        </>
+      ) : null}
+      <LogoLink link={DISCORD_LINK}>
+        <DiscordIcon className={classes.logoStyle} />
+      </LogoLink>
+      <LogoLink link={MEDIUM_LINK}>
+        <MediumIcon className={classes.logoStyle} />
+      </LogoLink>
+      <LogoLink link={OPENSEA_LINK_GENESIS}>
+        <OpenSeaIcon className={classes.logoStyle} />
+      </LogoLink>
+      {width > 900 ? (
+        <>
+          <LogoLink link={COINMARKETCAP_LINK}>
+            <CoinMarketCapIcon className={classes.logoStyle} />
+          </LogoLink>
+          <LogoLink link={COINGECKO_LINK}>
+            <CoinGeckoIcon className={classes.logoStyle} />
+          </LogoLink>
+        </>
+      ) : null}
+      <LogoLink link={GITHUB_LINK}>
+        <GitHubIcon className={classes.logoStyle} />
+      </LogoLink>
+      <LogoLink link={DUNE_LINK}>
+        {
+          theme.name === 'winterUpgrade'
+          ? <DuneWinterIcon className={classes.logoStyle} />
+          : <DuneIcon className={classes.logoStyle} />
         }
+      </LogoLink>
+      <LogoLink link={BEAN_TOKEN_LINK}>
+        <BeanIcon className={classes.logoStyle} />
+      </LogoLink>
+      <LogoLink link={SILO_CONTRACT_LINK}>
+        <EtherscanIcon className={classes.logoStyle} />
+      </LogoLink>
+      {width > 900 ? (
+        <>
+          <LogoLink link={UNISWAP_CONTRACT_LINK}>
+            <UniswapIcon className={classes.logoStyle} />
+          </LogoLink>
+          <LogoLink link={CURVE_LINK}>
+            <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)' } : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
+          </LogoLink>
+          <LogoLink link={COMMONWEALTH_LINK}>
+            <CommonwealthIcon className={classes.logoStyle} />
+          </LogoLink>
+        </>
+      ) : null}
+      {/* Row 2 */}
+      <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
+        <Grid item>
+          <Link href={NETLIFY_LINK} color="inherit" target="blank" underline="hover">
+            <span className={classes.textLinks}>
+              This site is powered by Netlify
+            </span>
+          </Link>
+        </Grid>
+        <Grid item>
+          <Link href={LICENSE_LINK} color="inherit" target="blank" underline="hover">
+            <span className={classes.textLinks}>
+              MIT License
+            </span>
+          </Link>
+        </Grid>
+        <Grid item>
+          <Link
+            href={CODE_OF_CONDUCT_LINK}
+            color="inherit"
+            target="blank"
+            underline="hover">
+            <span className={classes.textLinks}>
+              Code of Conduct
+            </span>
+          </Link>
+        </Grid>
       </Grid>
-    </>
-  );
+      {!theme.flowers 
+        ? null 
+        : (
+          <img
+            alt="Rainbow Icon"
+            src={theme.flowers}
+            style={{
+              position: 'absolute',
+              width: '100vw',
+              minWidth: '1200px',
+              top: '-50px',
+              zIndex: '-1'
+            }}
+          />
+        )
+      }
+    </Grid>
+  </>;
 }

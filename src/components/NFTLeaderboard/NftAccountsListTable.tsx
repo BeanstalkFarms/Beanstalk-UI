@@ -88,7 +88,7 @@ export default function NftAccountsListTable({
                       href={`${BASE_ETHERSCAN_ADDR_LINK}${nftList[index].account}`}
                       color="inherit"
                       target="blank"
-                    >
+                      underline="hover">
                       <span>
                         {`${nftList[index].account.substring(
                           0,

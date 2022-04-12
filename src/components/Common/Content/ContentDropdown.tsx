@@ -123,7 +123,7 @@ export default function ContentDropdown({
                     key={l.text}
                     href={l.href}
                     target="blank"
-                  >
+                    underline="hover">
                     {l.text}
                   </Link>
                   .

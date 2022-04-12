@@ -175,14 +175,15 @@ export default function BaseModule({
   const resetLink = singleReset !== true ?
     <>
       <br />
-      <Link // eslint-disable-line
+      <// eslint-disable-line
+      Link
         style={{ color: 'green' }}
         href=""
         onClick={(event) => {
           event.preventDefault();
           resetForm();
         }}
-      >
+        underline="hover">
         Reset Defaults
       </Link>
     </>

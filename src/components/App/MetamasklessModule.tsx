@@ -39,7 +39,7 @@ export default function MetamasklessModule() {
   if (metamaskFailure === 0 || metamaskFailure === 1) {
     metamaskModule = (
       <Grid item xs={12}>
-        <Link href={METAMASK_LINK} target="blank" color="inherit">
+        <Link href={METAMASK_LINK} target="blank" color="inherit" underline="hover">
           <SvgCloudIcon color="white" text="Install Metamask" />
         </Link>
       </Grid>
