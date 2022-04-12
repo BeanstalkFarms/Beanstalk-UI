@@ -1,19 +1,18 @@
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { Box, Card, Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { displayBN, displayFullBN } from 'util/index';
 import { MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
-  BaseModule,
   ContentDropdown,
   Grid,
   HeaderLabelList,
   fieldStrings,
 } from 'components/Common';
 import { makeStyles } from '@mui/styles';
-import FieldModule from './FieldModule';
 import MultiCard from 'components/Common/Cards/MultiCard';
+import FieldModule from './FieldModule';
 
 const useStyles = makeStyles({
   headerLabelStyle: {

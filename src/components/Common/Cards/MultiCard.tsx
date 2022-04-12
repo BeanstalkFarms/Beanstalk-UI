@@ -30,19 +30,19 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type MultiCardType = "meta" | "input";
+type MultiCardType = 'meta' | 'input';
 
 const MultiCard : React.FC<CardProps & { type: MultiCardType }> = ({ children, type, ...props }) => {
   const classes = useStyles();
   return (
     <Card
-      elevation={type === "meta" ? 0 : 7}
+      elevation={type === 'meta' ? 0 : 7}
       className={classNames(classes.root, classes[type])}
       {...props}
     >
       {children}
     </Card>
-  )
-}
+  );
+};
 
 export default MultiCard;

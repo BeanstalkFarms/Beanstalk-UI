@@ -1,17 +1,16 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Container } from '@mui/material';
 
 import { AppState } from 'state';
 import { MEDIUM_INTEREST_LINK } from 'constants/index';
 import {
   ContentDropdown,
-  ContentSection,
   Grid,
   siloStrings
 } from 'components/Common';
 import { SiloToken } from 'constants/siloTokens';
 import TabbedForm from './TabbedForm';
-import NarrowContainer from 'components/Common/Container/NarrowContainer';
 
 const descriptionLinks = [
   {
@@ -30,7 +29,7 @@ const SiloActions : React.FC<SiloActionsProps> = (props) => {
   );
 
   return (
-    <NarrowContainer>
+    <Container maxWidth="sm">
       {/* Tabbed Silo form with 2-3 actions depending on token */}
       <TabbedForm
         tokenData={props.tokenData}
@@ -43,7 +42,7 @@ const SiloActions : React.FC<SiloActionsProps> = (props) => {
           descriptionLinks={descriptionLinks}
         />
       </Grid>
-    </NarrowContainer>
+    </Container>
   );
 };
 

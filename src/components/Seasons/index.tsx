@@ -1,33 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { makeStyles } from '@mui/styles';
+import { Container } from '@mui/material';
 
-import sunriseIcon from 'img/black-sun.svg';
+import { AppState } from 'state';
 import { sunrise, chainId } from 'util/index';
 import {
   ContentDropdown,
-  ContentSection,
   Grid,
   HeaderLabelList,
   pegStrings,
   seasonStrings,
   SingleButton,
 } from 'components/Common';
-import { makeStyles } from '@mui/styles';
+import sunriseIcon from 'img/black-sun.svg';
+
 import PegMaintenance from './PegMaintenance';
 import SeasonReward from './SeasonReward';
 import SeasonTimer from './SeasonTimer';
-import NarrowContainer from 'components/Common/Container/NarrowContainer';
 
 const useStyles = makeStyles({
   advanceButtonGrid: {
     maxWidth: '300px',
     padding: '0px'
   },
-  pegMaintenanceGrid: {
-    // padding: '0px',
-    // marginTop: '12px'
-  }
 });
 
 export default function Seasons() {
@@ -111,14 +107,14 @@ export default function Seasons() {
         {advanceButton}
         <PegMaintenance />
       </Grid>
-      <NarrowContainer>
+      <Container maxWidth="sm">
         <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
           <ContentDropdown
             description={pegStrings.pegDescription}
             descriptionTitle="What is Peg Maintenance?"
           />
         </Grid>
-      </NarrowContainer>
+      </Container>
     </div>
   );
 }
