@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { IconButton, Box } from '@material-ui/core';
-import ListIcon from '@material-ui/icons/List';
+import { IconButton, Box } from '@mui/material';
+import ListIcon from '@mui/icons-material/List';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
@@ -14,7 +14,7 @@ import {
   ListTable,
   fieldStrings,
 } from 'components/Common';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { SowModule } from './SowModule';
 import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
@@ -257,7 +257,7 @@ export default function FieldModule() {
             );
           }}
           className={classes.iconButton}
-        >
+          size="large">
           <ListIcon />
         </IconButton>
       </Box>

@@ -2,9 +2,9 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { AppState } from 'state';
-import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { BEAN, BEAN_TO_SEEDS, UNI_V2_ETH_BEAN_LP } from 'constants/index';
 
 import {

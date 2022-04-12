@@ -13,10 +13,10 @@ import {
   Button,
   Popover,
   Box
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   CloseOutlined as CancelIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { PodOrder } from 'state/marketplace/reducer';
 import { BEAN } from 'constants/index';

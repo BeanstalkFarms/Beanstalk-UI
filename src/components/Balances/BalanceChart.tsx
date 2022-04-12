@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { ChartDonut, ChartLabel } from '@patternfly/react-charts';
 import { CryptoAsset } from 'components/Common';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import BigNumber from 'bignumber.js';
 
 const useStyles = makeStyles(({

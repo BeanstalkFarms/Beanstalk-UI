@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid } from '@mui/material';
 import {
   BaseModule,
   beanftWinterStrings,
@@ -9,7 +9,7 @@ import {
   ContentSection,
 } from 'components/Common';
 import { MEDIUM_NFT_WINTER_LINK } from 'constants/index';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import NftListTable from './NftListTable';
 import NftAccountsListTable from './NftAccountsListTable';
 import WinterNftStatsHeader from './WinterNftStatsHeader';

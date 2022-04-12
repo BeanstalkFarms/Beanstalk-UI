@@ -1,11 +1,11 @@
 import React from 'react';
-import { Grid, Link } from '@material-ui/core';
+import { Grid, Link } from '@mui/material';
 import {
   GitHub as GitHubIcon,
   Telegram as TelegramIcon,
   Twitter as TwitterIcon,
-} from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
+} from '@mui/icons-material';
+import makeStyles from '@mui/styles/makeStyles';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 

@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from 'constants/index';
 import {
   displayBN,
@@ -19,7 +19,7 @@ import {
   TransactionDetailsModule,
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   walletText: {

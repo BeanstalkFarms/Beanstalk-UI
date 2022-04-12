@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Grid, Button, Link } from '@material-ui/core';
+import { Grid, Button, Link } from '@mui/material';
 import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
 import { METAMASK_LINK } from 'constants/index';
 import SvgCloudIcon from 'components/About/SvgCloudIcon';
 import About from 'components/About';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles(({
   connectMetaStyle: {

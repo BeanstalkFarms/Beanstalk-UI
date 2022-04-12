@@ -9,9 +9,9 @@ import {
   TableHead,
   TableRow,
   Box,
-} from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckIcon from '@material-ui/icons/Check';
+} from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import CheckIcon from '@mui/icons-material/Check';
 import { percentForStalk, megaVote } from 'util/index';
 import TransactionToast from 'components/Common/TransactionToast';
 import { Line, QuestionModule, governanceStrings, TransactionDetailsModule } from 'components/Common';

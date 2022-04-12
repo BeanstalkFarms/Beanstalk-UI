@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { AppState } from 'state';
 import {
   ContentDropdown,
@@ -11,7 +11,7 @@ import {
 } from 'components/Common';
 import { WHITEPAPER } from 'constants/index';
 import { BIP } from 'util/LedgerUtilities';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import Fundraiser from '../Fundraiser';
 import GovernanceTable from './GovernanceTable';
 import Vote from './Vote';

@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
-import { Box, Button, Link, Tab, Tabs } from '@material-ui/core';
+import { Box, Button, Link, Tab, Tabs } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { theme } from 'constants/index';
 import { FormatTooltip, Line, QuestionModule } from './index';
 

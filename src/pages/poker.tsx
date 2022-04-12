@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Grid } from '@material-ui/core';
-import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { Button, Grid } from '@mui/material';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import BigNumber from 'bignumber.js';
 
 import { BaseModule, ContentDropdown, SettingsFormModule, TokenInputField, TokenOutputField, TransactionToast } from 'components/Common';

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Button } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 import {
   watchToken,

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { TokenImage, TokenLabel, TokenTypeImage } from 'util/index';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { QuestionModule } from './index';
 
 const useStyles = makeStyles({

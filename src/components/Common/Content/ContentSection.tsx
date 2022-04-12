@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Link, Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Link, Grid } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { theme } from 'constants/index';
 
 const useStyles = makeStyles({

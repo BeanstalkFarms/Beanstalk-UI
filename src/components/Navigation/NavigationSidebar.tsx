@@ -8,7 +8,7 @@ import {
   Drawer,
   ListSubheader,
   CircularProgress,
-} from '@material-ui/core';
+} from '@mui/material';
 import BigNumber from 'bignumber.js';
 
 import { AppState } from 'state';

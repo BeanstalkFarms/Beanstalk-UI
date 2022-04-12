@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { updateBeanstalkUSDCAllowance } from 'state/allowances/actions';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import {
   approveBeanstalkUSDC,
   displayBN,

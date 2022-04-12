@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Box, IconButton } from '@material-ui/core';
+import { Box, IconButton } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { BaseModule, ListTable, SiloAsset, siloStrings } from 'components/Common';
 import BigNumber from 'bignumber.js';
-import { List as ListIcon } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/styles';
+import { List as ListIcon } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
 import { BASE_SLIPPAGE } from '../../../constants';
 import { approveBeanstalkBean, poolForLP, SwapMode } from '../../../util';
 import { updateBeanstalkBeanAllowance } from '../../../state/allowances/actions';
@@ -171,7 +171,7 @@ export default function BeanDeposit() {
             );
           }}
           className={classes.iconButton}
-        >
+          size="large">
           <ListIcon />
         </IconButton>
       </Box>

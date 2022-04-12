@@ -10,8 +10,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {
   BASE_ETHERSCAN_ADDR_LINK,
 } from 'constants/index';

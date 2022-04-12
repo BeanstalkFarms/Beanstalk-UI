@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Button, InputAdornment, Slider, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Button, InputAdornment, Slider, TextField } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import BigNumber from 'bignumber.js';
 
 import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/index';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Box } from '@material-ui/core';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { Box } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { FormatTooltip } from './index';
 
 export default function QuestionModule(props) {

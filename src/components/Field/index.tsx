@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { displayBN, displayFullBN } from 'util/index';
 import { MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
@@ -12,7 +12,7 @@ import {
   HeaderLabelList,
   fieldStrings,
 } from 'components/Common';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import FieldModule from './FieldModule';
 
 const useStyles = makeStyles({

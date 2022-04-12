@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import { BaseModule, chartStrings, ContentSection } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
 import { AppState } from 'state';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
 import FieldCharts from './FieldCharts';

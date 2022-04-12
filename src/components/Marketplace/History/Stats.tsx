@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box, Divider } from '@material-ui/core';
+import { Box, Divider } from '@mui/material';
 import TokenIcon from 'components/Common/TokenIcon';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { CryptoAsset, displayBN, FarmAsset } from 'util/index';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
     outerBox: {

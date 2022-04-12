@@ -1,6 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
@@ -22,7 +22,7 @@ import {
   pegStrings,
   QuestionModule,
 } from 'components/Common';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   gridStyle: {

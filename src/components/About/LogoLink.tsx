@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { Link, Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Link, Grid } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles({
   icon: {

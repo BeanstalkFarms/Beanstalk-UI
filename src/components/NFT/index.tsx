@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { Link } from '@material-ui/core';
+import { Link } from '@mui/material';
 import {
   MEDIUM_NFT_GENESIS_LINK,
   MEDIUM_NFT_WINTER_LINK,

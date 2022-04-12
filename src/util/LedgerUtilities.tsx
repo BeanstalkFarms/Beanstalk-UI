@@ -264,17 +264,17 @@ export const getTotalBalances = async (batch: BatchRequest) => {
       nextSowTime: bigNumberResult(stringWeather.nextSowTime),
       startSoil: tokenResult(BEAN)(stringWeather.startSoil),
       weather: bigNumberResult(stringWeather.yield),
-    }) as Weather),
+    } as Weather)),
     exec(beanstalk.methods.rain()).then((stringRain) => ({
       raining: stringRain.raining,
       rainStart: bigNumberResult(stringRain.start),
-    }) as Rain),
+    } as Rain)),
     exec(beanstalk.methods.time()).then((time) => ({
       season: bigNumberResult(time.current),
       start: bigNumberResult(time.start),
       period: bigNumberResult(time.period),
       timestamp: bigNumberResult(time.timestamp),
-    }) as Time),
+    } as Time)),
     // Budgets
     // FIXME: Automate this:
     exec(bean.methods.balanceOf(BUDGETS[0])).then(tokenResult(BEAN)),

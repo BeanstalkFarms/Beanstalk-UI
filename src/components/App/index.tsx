@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, CssBaseline } from '@material-ui/core';
+import { Box, CssBaseline } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
 
 import { AppState } from 'state';

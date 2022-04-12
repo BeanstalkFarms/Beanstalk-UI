@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Link, Grid } from '@material-ui/core';
+import { Box, Link, Grid } from '@mui/material';
 import {
   beanftStrings,
   BaseModule,
@@ -10,7 +10,7 @@ import {
   OPENSEA_LINK_GENESIS,
   OPENSEA_LINK_COLLECTION,
 } from 'constants/index';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import NftPicTable from './NftPicTable';
 
 const useStyles = makeStyles({

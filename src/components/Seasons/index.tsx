@@ -13,7 +13,7 @@ import {
   seasonStrings,
   SingleButton,
 } from 'components/Common';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import PegMaintenance from './PegMaintenance';
 import SeasonReward from './SeasonReward';
 import SeasonTimer from './SeasonTimer';

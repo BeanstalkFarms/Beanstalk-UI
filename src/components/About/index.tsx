@@ -1,5 +1,5 @@
 import React, { FC, ReactComponentElement } from 'react';
-import { Link, Box } from '@material-ui/core';
+import { Link, Box } from '@mui/material';
 import {
   HOW_TO_PATH,
   HOW_TO_MOBILE_PATH,
@@ -7,7 +7,7 @@ import {
   WHITEPAPER,
 } from 'constants/index';
 import { ContentSection, Grid } from 'components/Common';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import SvgCloudIcon from './SvgCloudIcon';
 
 const useStyles = makeStyles(({

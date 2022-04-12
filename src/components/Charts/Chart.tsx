@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import {
   Axis, // any of these can be non-animated equivalents
   Grid,
@@ -11,7 +11,7 @@ import {
 } from '@visx/xychart';
 import BeanLogo from 'img/bean-logo.svg';
 import { theme as colorTheme } from 'constants/index';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { DataSelector, TimeSelector } from './Selectors';
 
 const useStyles = makeStyles(({

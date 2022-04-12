@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import { useHistory } from 'react-router-dom';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { ContentTitle, SectionTabs } from 'components/Common';
 
 const pageStyle = {

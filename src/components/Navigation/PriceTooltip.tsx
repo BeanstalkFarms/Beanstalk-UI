@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Button, Tooltip } from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { Box, Button, Tooltip } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
 import { AppState } from 'state';
 import { CryptoAsset, displayBN } from 'util/index';
 import { theme } from 'constants/index';
 import { UNISWAP_CONTRACT_LINK, CURVE_LINK } from 'constants/links';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import uniswapLogo from 'img/uniswap-icon.svg';
 import curveLogo from 'img/curve-logo.svg';

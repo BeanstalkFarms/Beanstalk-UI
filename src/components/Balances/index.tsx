@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { AppState } from 'state';
 import { poolForLP } from 'util/index';
 import { UNISWAP_BASE_LP, theme } from 'constants/index';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import {
   BaseModule,
   ClaimableAsset,

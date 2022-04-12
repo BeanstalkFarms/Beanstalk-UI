@@ -2,8 +2,8 @@ import React from 'react';
 import { AppState } from 'state';
 import { theme as colors } from 'constants/index';
 import { useSelector } from 'react-redux';
-import { Tab, Tabs } from '@material-ui/core';
-import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
+import { Tab, Tabs, adaptV4Theme } from '@mui/material';
+import { ThemeProvider, Theme, StyledEngineProvider, createTheme } from '@mui/material/styles';
 
 export default function SectionTabs({
     setSection,
@@ -17,7 +17,7 @@ export default function SectionTabs({
     (state) => state.general
   );
 
-  const theme = createTheme({
+  const theme = createTheme(adaptV4Theme({
     overrides: {
       MuiTab: {
         root: {
@@ -28,7 +28,7 @@ export default function SectionTabs({
         },
       },
     },
-  });
+  }));
 
   const tabsStyle = {
     margin: 'auto',
@@ -73,17 +73,19 @@ export default function SectionTabs({
   const tabs = sectionTitles.map((s, i) => (<Tab key={i} style={tabStyle} label={s} />));
 
   return (
-    <MuiThemeProvider theme={theme}>
-      <Tabs
-        TabIndicatorProps={tabProps}
-        style={tabsStyle}
-        value={section}
-        variant="fullWidth"
-        onChange={handleChange}
-        centered
-      >
-        {tabs}
-      </Tabs>
-    </MuiThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Tabs
+          TabIndicatorProps={tabProps}
+          style={tabsStyle}
+          value={section}
+          variant="fullWidth"
+          onChange={handleChange}
+          centered
+        >
+          {tabs}
+        </Tabs>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link, Box } from '@material-ui/core';
+import { Link, Box } from '@mui/material';
 import { SLIPPAGE_LINK } from 'constants/index';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
     linkStyle: {

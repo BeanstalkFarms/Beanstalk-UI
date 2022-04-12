@@ -9,7 +9,7 @@ import {
   siloStrings,
 } from 'components/Common';
 import { displayBN, displayFullBN } from 'util/index';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import TokenDataTable from './TokenDataTable';
 import { sumDeposits, getUserSiloDepositsUSD, getTotalSiloDepositsUSD } from '../../util/SiloUtilities';
 
