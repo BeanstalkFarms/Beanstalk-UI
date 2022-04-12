@@ -23,9 +23,9 @@ export const FormatTooltip = withStyles(() => ({
     boxShadow: 'none',
     fontSize: 12,
     fontFamily: 'Futura-Pt-Book',
-    zIndex: 9999,
+    // zIndex: 9999,
     maxWidth: 'none', // prevent wrapping
-    margin: (props: any) => props.margin || '24px 0',
+    margin: (props: any) => props.margin || null,
     padding: 0,
   },
 }))(Tooltip);
@@ -111,7 +111,7 @@ export default function PriceTooltip({
     (state) => state.prices
   );
 
-  const PriceCards = ({ direction = 'row' }) => (
+  const PriceCards = ({ direction = 'row' } : { direction: 'row' | 'column' }) => (
     <div className={classes.cardsContainer} style={{ flexDirection: direction }}>
       {/* Uniswap */}
       <Button className={classes.poolButton} href={UNISWAP_CONTRACT_LINK} target="_blank" rel="noreferrer">
@@ -197,10 +197,9 @@ export default function PriceTooltip({
     </FormatTooltip>
   ) : (
     <FormatTooltip
-      margin="-3px 18px" // -6 centers on the NavigationBar
       interactive
       open={isMobile ? false : open}
-      placement="right-end"
+      placement="right"
       title={<PriceCards />}
       PopperProps={{
         popperOptions: {
