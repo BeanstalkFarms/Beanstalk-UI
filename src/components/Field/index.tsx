@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { Box } from '@mui/material';
+import { Box, Card, Container } from '@mui/material';
 import { displayBN, displayFullBN } from 'util/index';
 import { MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
@@ -12,8 +12,8 @@ import {
   fieldStrings,
 } from 'components/Common';
 import { makeStyles } from '@mui/styles';
-import NarrowContainer from 'components/Common/Container/NarrowContainer';
 import FieldModule from './FieldModule';
+import MultiCard from 'components/Common/Cards/MultiCard';
 
 const useStyles = makeStyles({
   headerLabelStyle: {
@@ -137,36 +137,30 @@ export default function Field() {
   );
 
   return (
-    <NarrowContainer>
-      {fundBox}
-      {/* Field "Analytics" displayed at the top of the page */}
-      <Grid item xs={12} container justifyContent="center" style={containerStyle}>
-        <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
-          {leftHeader}
+    <Container maxWidth="sm">
+      <Grid container justifyContent="center">
+        {fundBox}
+        {/* Field "Analytics" displayed at the top of the page */}
+        <Grid item xs="auto" container style={containerStyle}>
+          <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
+            {leftHeader}
+          </Grid>
+          <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
+            {rightHeader}
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
-          {rightHeader}
-        </Grid>
+        {/* Content */}
+        <MultiCard type="meta">
+          <FieldModule />
+        </MultiCard>
+        <div className={classes.whatIsTheFieldGrid}>
+          <ContentDropdown
+            description={description}
+            descriptionTitle="What is the Field?"
+            descriptionLinks={descriptionLinks}
+          />
+        </div>
       </Grid>
-      {/* Content */}
-      <BaseModule
-        section={0}
-        sectionTitles={['']}
-        sectionTitlesDescription={['']}
-        showButton={false}
-        removeBackground
-        normalBox={false}
-      >
-        <FieldModule />
-      </BaseModule>
-      {/* Help Dropdown */}
-      <div className={classes.whatIsTheFieldGrid}>
-        <ContentDropdown
-          description={description}
-          descriptionTitle="What is the Field?"
-          descriptionLinks={descriptionLinks}
-        />
-      </div>
-    </NarrowContainer>
+    </Container>
   );
 }
