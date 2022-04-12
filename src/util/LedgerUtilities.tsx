@@ -17,6 +17,7 @@ import {
   supportedERC20Tokens,
   SupportedToken,
 } from 'constants/index';
+import { BIP, Fundraiser } from 'state/general/reducer';
 import {
   account,
   beanstalkContractReadOnly,
@@ -59,26 +60,26 @@ export type Time = {
   timestamp: BigNumber;
 }
 
-export type BIP = {
-  id: BigNumber;
-  executed: boolean;
-  pauseOrUnpause: BigNumber;
-  start: BigNumber;
-  period: BigNumber;
-  proposer: string;
-  roots: BigNumber;
-  endTotalRoots: BigNumber;
-  timestamp: BigNumber;
-  updated: BigNumber;
-  active: boolean;
-}
+// export type BIP = {
+//   id: BigNumber;
+//   executed: boolean;
+//   pauseOrUnpause: BigNumber;
+//   start: BigNumber;
+//   period: BigNumber;
+//   proposer: string;
+//   roots: BigNumber;
+//   endTotalRoots: BigNumber;
+//   timestamp: BigNumber;
+//   updated: BigNumber;
+//   active: boolean;
+// }
 
-export type Fundraiser = {
-  id: BigNumber;
-  remaining: BigNumber;
-  total: BigNumber;
-  token: string;
-}
+// export type Fundraiser = {
+//   id: BigNumber;
+//   remaining: BigNumber;
+//   total: BigNumber;
+//   token: string;
+// }
 
 /**
  * Create a scoped `execute` function which accepts a Contract

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { Link } from '@mui/material';
+import { Container, Grid, Link, Stack } from '@mui/material';
 import {
   MEDIUM_NFT_GENESIS_LINK,
   MEDIUM_NFT_WINTER_LINK,
@@ -10,9 +10,7 @@ import {
 } from 'constants/index';
 import {
   beanftStrings,
-  ContentSection,
   ContentDropdown,
-  Grid,
 } from 'components/Common';
 import { mintAllAccountNFTs, mintAllNFTs } from 'util/index';
 import ClaimNft from './ClaimNft';
@@ -77,47 +75,52 @@ export default function NFTs() {
   );
 
   return (
-    <ContentSection id="nft">
-      <NftStatsHeader />
-      <Grid container>
-        <Grid item xl={2} lg={1} md={false} />
-        <Grid item xl={6} lg={5} md={6} xs={12}>
-          <ClaimNft
-            buttonDescription={beanftStrings.mintAll}
-            claimedNFTs={claimedNFTs}
-            unclaimedNFTs={unclaimedNFTs}
-            title="Genesis"
-            mintable
-            mintAll={() => {
-              const accounts = unclaimedNFTs.map((u) => u.account);
-              const ids = unclaimedNFTs.map((u) => u.id);
-              const hashes = unclaimedNFTs.map((u) => u.metadataIpfsHash);
-              const signatures = unclaimedNFTs.map((u) => u.signature);
-              mintAllNFTs(accounts, ids, hashes, signatures);
-            }}
-          />
+    <Container maxWidth="lg">
+      <Stack spacing={4} direction="column" alignItems="center">
+        {/* Counts of each type of BeaNFT */}
+        <NftStatsHeader />
+        {/* Genesis vs. Winter columns */}
+        <Grid container>
+          <Grid item xl={2} lg={1} md={false} />
+          <Grid item xl={6} lg={5} md={6} xs={12}>
+            <ClaimNft
+              buttonDescription={beanftStrings.mintAll}
+              claimedNFTs={claimedNFTs}
+              unclaimedNFTs={unclaimedNFTs}
+              title="Genesis"
+              mintable
+              mintAll={() => {
+                const accounts = unclaimedNFTs.map((u) => u.account);
+                const ids = unclaimedNFTs.map((u) => u.id);
+                const hashes = unclaimedNFTs.map((u) => u.metadataIpfsHash);
+                const signatures = unclaimedNFTs.map((u) => u.signature);
+                mintAllNFTs(accounts, ids, hashes, signatures);
+              }}
+            />
+          </Grid>
+          <Grid item lg={5} md={6} xs={12}>
+            <ClaimNft
+              buttonDescription={beanftStrings.mintAll}
+              claimedNFTs={claimedWinterNFTs}
+              unclaimedNFTs={unclaimedWinterNFTs}
+              title="Winter"
+              mintable
+              mintAll={() => {
+                const ids = unclaimedWinterNFTs.map((u) => u.id);
+                const signatures = unclaimedWinterNFTs.map((u) => u.signature2);
+                mintAllAccountNFTs(ids, signatures);
+              }}
+            />
+          </Grid>
         </Grid>
-        <Grid item lg={5} md={6} xs={12}>
-          <ClaimNft
-            buttonDescription={beanftStrings.mintAll}
-            claimedNFTs={claimedWinterNFTs}
-            unclaimedNFTs={unclaimedWinterNFTs}
-            title="Winter"
-            mintable
-            mintAll={() => {
-              const ids = unclaimedWinterNFTs.map((u) => u.id);
-              const signatures = unclaimedWinterNFTs.map((u) => u.signature2);
-              mintAllAccountNFTs(ids, signatures);
-            }}
+        {/* About BeaNFTs */}
+        <Container maxWidth="sm">
+          <ContentDropdown
+            description={description}
+            descriptionTitle="What are BeaNFTs?"
           />
-        </Grid>
-      </Grid>
-      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-        <ContentDropdown
-          description={description}
-          descriptionTitle="What are BeaNFTs?"
-        />
-      </Grid>
-    </ContentSection>
+        </Container>
+      </Stack>
+    </Container>
   );
 }

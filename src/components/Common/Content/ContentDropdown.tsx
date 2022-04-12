@@ -11,9 +11,6 @@ import { theme } from 'constants/index';
 // TODO: style
 const Accordion = withStyles({
   root: {
-    maxWidth: '400px',
-    minWidth: '300px',
-    width: '60vw',
     boxShadow: 'none',
     '&:not(:last-child)': {
       borderBottom: 0,
@@ -54,9 +51,6 @@ const AccordionDetails = withStyles(() => ({
 }))(MuiAccordionDetails);
 
 const useStyles = makeStyles(() => ({
-  root: {
-    // width: '300px',
-  },
   topContainer: {
     backgroundColor: 'transparent',
     boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',

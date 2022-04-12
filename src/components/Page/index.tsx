@@ -7,8 +7,15 @@ import { ContentTitle } from 'components/Common';
 const useStyles = makeStyles(() => ({
   page: {
     width: '100%',
+    // FIXME: remove this textAlign dependency
+    // Disabling this breaks a ton of stuff:
+    // - "Sow" button moves to left side
+    // - "Currently No Soil" moves left
+    // - ContentTitle moves left
     textAlign: 'center',
-    paddingBottom: 80,
+    // Provides room to scroll past footer
+    paddingBottom: 140, 
+    // FIXME: this should be defined elsewhere
     fontFamily: 'Futura-PT-Book',
   }
 }));

@@ -1,18 +1,17 @@
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { displayBN, displayFullBN } from 'util/index';
 import { MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
-  BaseModule,
   ContentDropdown,
-  ContentSection,
   Grid,
   HeaderLabelList,
   fieldStrings,
 } from 'components/Common';
 import { makeStyles } from '@mui/styles';
+import MultiCard from 'components/Common/Cards/MultiCard';
 import FieldModule from './FieldModule';
 
 const useStyles = makeStyles({
@@ -29,6 +28,25 @@ const useStyles = makeStyles({
   }
 });
 
+const containerStyle = {
+  backgroundColor: theme.secondary,
+  borderRadius: '15px',
+  boxShadow:
+    '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+  // width: width > 606 ? '500px' : '250px',
+  padding: '0px',
+};
+const bannerStyle = {
+  borderRadius: '15px',
+  boxShadow:
+    '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+  // width: width > 606 ? '500px' : '250px',
+  margin: '10px 0',
+  backgroundColor: theme.module.metaBackground,
+  padding: '10px',
+  display: 'inline-flex',
+};
+
 export default function Field() {
   const classes = useStyles();
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
@@ -37,36 +55,9 @@ export default function Field() {
   const weather = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
-  // const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
-  //   (state) => state.beansPerSeason
-  // );
-  const { width, hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
+  const {  hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-
-  //
-  const containerStyle = {
-    backgroundColor: theme.secondary,
-    borderRadius: '15px',
-    boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-    width: width > 606 ? '500px' : '250px',
-    padding: '0px',
-  };
-  const bannerStyle = {
-    borderRadius: '15px',
-    boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-    width: width > 606 ? '500px' : '250px',
-    margin: '10px 0',
-    backgroundColor: theme.module.metaBackground,
-    padding: '10px',
-    display: 'inline-flex',
-  };
-
-  // Hiding for now as the numbers are misleading
-  // const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
-  // const apy = weather.weather.multipliedBy(8760).dividedBy(tth);
 
   const description = (
     <>
@@ -145,53 +136,30 @@ export default function Field() {
   );
 
   return (
-    <>
-      {fundBox}
-      <ContentSection id="field">
+    <Container maxWidth="sm">
+      <Grid container justifyContent="center">
+        {fundBox}
         {/* Field "Analytics" displayed at the top of the page */}
-        <Grid container item justifyContent="center" style={containerStyle}>
-          <Grid item md={12} lg={6} className={classes.headerLabelStyle}>
+        <Grid item xs="auto" container style={containerStyle}>
+          <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
             {leftHeader}
           </Grid>
-          <Grid item md={12} lg={6} className={classes.headerLabelStyle}>
+          <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
             {rightHeader}
           </Grid>
         </Grid>
         {/* Content */}
-        <Grid
-          container
-          item
-          xs={12}
-          className="SiloSection"
-          alignItems="flex-start"
-          justifyContent="center"
-        >
-          <Grid
-            item
-            md={6}
-            sm={12}
-          >
-            <BaseModule
-              section={0}
-              sectionTitles={['']}
-              sectionTitlesDescription={['']}
-              showButton={false}
-              removeBackground
-              normalBox={false}
-            >
-              <FieldModule />
-            </BaseModule>
-          </Grid>
-        </Grid>
-        {/* Help Dropdown */}
-        <Grid container justifyContent="center" className={classes.whatIsTheFieldGrid}>
+        <MultiCard type="meta">
+          <FieldModule />
+        </MultiCard>
+        <div className={classes.whatIsTheFieldGrid}>
           <ContentDropdown
             description={description}
             descriptionTitle="What is the Field?"
             descriptionLinks={descriptionLinks}
           />
-        </Grid>
-      </ContentSection>
-    </>
+        </div>
+      </Grid>
+    </Container>
   );
 }

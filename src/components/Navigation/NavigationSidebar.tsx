@@ -149,7 +149,7 @@ export default function NavigationSidebar() {
       aBips.push(<Badge badge={bip} percent={voted} type="bips" />);
     }
     return aBips;
-  }, []);
+  }, [] as React.ReactElement[]);
 
   const activeFundraisers = fundraisers.reduce((afundraisers, fundraiser) => {
     if (fundraiser.remaining.isGreaterThan(0)) {
@@ -161,44 +161,18 @@ export default function NavigationSidebar() {
       afundraisers.push(<Badge badge={fundraiser} percent={percentFunded} type="funds" />);
     }
     return afundraisers;
-  }, []);
+  }, [] as React.ReactElement[]);
 
-  // on each render, grab APY array
+  // Get Silo and Field APYs
   const apys = getAPYs(
     farmableMonth,
     parseFloat(totalStalk),
     parseFloat(totalSeeds)
   );
 
-  // Calculate APYs.
-  // FIXME: these calcs should be done during fetching and not within
-  // each respective component. Certain calculations (like fieldAPY)
-  // should require that all necessary dependencies be loaded before running calculation.
-  // const tth = totalPods.dividedBy(beansPerSeason.harvestableMonth);
-  // const fieldAPY = beansPerSeason.harvestableMonth > 0 ? weather.weather.multipliedBy(8760).dividedBy(tth) : null;
-  // const [beanAPY] = getAPYs(
-  //   beansPerSeason.farmableMonth,
-  //   parseFloat(totalStalk),
-  //   parseFloat(totalSeeds)
-  // );
-
   const marketCap = totalBeans.isGreaterThan(0)
     ? totalBeans.multipliedBy(beanPrice)
     : new BigNumber(0);
-
-  // Add Fundraiser page to Nav Sidebar if active Fundraiser
-  // function addActiveFundraiserNav(navMap) {
-  //   if (Object.keys(navMap.more).length < 6 && activeFundraisers.length > 0) {
-  //     navMap.more.push(
-  //       {
-  //         path: 'fundraiser',
-  //         title: 'Fundraiser',
-  //         desc: 'Fundraise Beanstalk proposals',
-  //       }
-  //     );
-  //   }
-  //   return navMap;
-  // }
 
   // Add badge to Sidebar nav
   const badgeDataByPath : { [key: string] : string | any[] | null } = {
@@ -206,8 +180,6 @@ export default function NavigationSidebar() {
       `${apys[0][0].toFixed(0)}% - ${apys[1][0].toFixed(0)}%`
     ) : null,
     field: initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
-    beanfts: 'Winter',
-    poker: '3/5 · 5:30P PT'
   };
 
   // Add conditional badges
@@ -216,7 +188,6 @@ export default function NavigationSidebar() {
   }
   if (activeFundraisers.length > 0) {
     badgeDataByPath.fundraiser = activeFundraisers;
-    // addActiveFundraiserNav(NAVIGATION_MAP);
   }
 
   const currentBeanPrice = (

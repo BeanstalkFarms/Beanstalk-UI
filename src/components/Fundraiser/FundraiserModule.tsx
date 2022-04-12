@@ -121,7 +121,6 @@ export default function FundraiserModule({
           item
           xs={12}
           spacing={2}
-          className="SiloSection"
           alignItems="flex-start"
           justifyContent="center"
           style={{ minHeight: minHeight, height: '100%' }}
