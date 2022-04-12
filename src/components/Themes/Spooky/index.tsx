@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+
 import { AppState } from 'state';
 import PumpkinIcon from 'img/dark/pumpkin-dark.svg';
 import TombstoneIcon from 'img/dark/tombstone-dark.svg';

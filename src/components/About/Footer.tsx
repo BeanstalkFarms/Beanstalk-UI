@@ -1,5 +1,5 @@
-/* eslint-disable */
-import { Box, Grid, Link } from '@material-ui/core';
+import React from 'react';
+import { Grid, Link } from '@material-ui/core';
 import {
   GitHub as GitHubIcon,
   Telegram as TelegramIcon,
@@ -8,6 +8,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
+
 import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
 import { ReactComponent as CoinGeckoIcon } from 'img/coingecko-icon.svg';
 import { ReactComponent as CoinMarketCapIcon } from 'img/coinmarketcap-icon.svg';
@@ -21,8 +22,7 @@ import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
 import { ReactComponent as OpenSeaIcon } from 'img/opensea-icon.svg';
 import { ReactComponent as RedditIcon } from 'img/reddit-icon.svg';
 import { ReactComponent as UniswapIcon } from 'img/uniswap-logo-black.svg';
-import ThemeBackground from 'components/Themes'
-
+import ThemeBackground from 'components/Themes';
 import {
   BEAN_TOKEN_LINK,
   CODE_OF_CONDUCT_LINK,
@@ -44,8 +44,7 @@ import {
   UNISWAP_CONTRACT_LINK,
   theme,
 } from 'constants/index';
-import React from "react";
-import LogoLink from "./LogoLink";
+import LogoLink from './LogoLink';
 
 const useStyles = makeStyles({
   fixedGround: {
@@ -61,7 +60,7 @@ const useStyles = makeStyles({
     paddingTop: !theme.groundPaddingTop ? '0px' : theme.groundPaddingTop,
     position: 'fixed',
     bottom: 0,
-    left: 0
+    left: 0,
   },
   logoStyle: {
     height: '25px',
@@ -71,12 +70,12 @@ const useStyles = makeStyles({
   textLinks: {
     color: theme.footer,
     padding: '3px',
-    "font-size": '12px',
+    'font-size': '12px',
     margin: '0 5px',
     backgroundColor: 'rgba(200, 165, 126, 0.4)',
     borderRadius: '5px'
   }
-})
+});
 
 export default function Footer() {
   const classes = useStyles();
@@ -88,10 +87,15 @@ export default function Footer() {
   return (
     <>
       <ThemeBackground />
-      {/*TODO: remove style*/}
-      <Grid container className={classes.fixedGround} style={{
-        paddingLeft: width < 800 ? 0 : 300
-      }} justifyContent="center">
+      {/* TODO: remove style */}
+      <Grid
+        container
+        className={classes.fixedGround}
+        style={{
+          paddingLeft: width < 800 ? 0 : 300
+        }}
+        justifyContent="center"
+      >
         {/* Row 1: Icons */}
         <LogoLink link={TWITTER_LINK}>
           <TwitterIcon className={classes.logoStyle} />
@@ -147,7 +151,7 @@ export default function Footer() {
               <UniswapIcon className={classes.logoStyle} />
             </LogoLink>
             <LogoLink link={CURVE_LINK}>
-              <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)'} : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
+              <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)' } : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
             </LogoLink>
             <LogoLink link={COMMONWEALTH_LINK}>
               <CommonwealthIcon className={classes.logoStyle} />
@@ -159,32 +163,41 @@ export default function Footer() {
           <Grid item>
             <Link href={NETLIFY_LINK} color="inherit" target="blank">
               <span className={classes.textLinks}>
-                {'This site is powered by Netlify'}
+                This site is powered by Netlify
               </span>
             </Link>
           </Grid>
           <Grid item>
             <Link href={LICENSE_LINK} color="inherit" target="blank">
               <span className={classes.textLinks}>
-                {'MIT License'}
+                MIT License
               </span>
             </Link>
           </Grid>
           <Grid item>
             <Link href={CODE_OF_CONDUCT_LINK} color="inherit" target="blank">
               <span className={classes.textLinks}>
-                {'Code of Conduct'}
+                Code of Conduct
               </span>
             </Link>
           </Grid>
         </Grid>
-        {!theme.flowers ? null : <img alt="Rainbow Icon" src={theme.flowers} style={{
-          position: 'absolute',
-          width: '100vw',
-          minWidth: '1200px',
-          top: '-50px',
-          zIndex: '-1'
-        }} />}
+        {!theme.flowers 
+          ? null 
+          : (
+            <img
+              alt="Rainbow Icon"
+              src={theme.flowers}
+              style={{
+                position: 'absolute',
+                width: '100vw',
+                minWidth: '1200px',
+                top: '-50px',
+                zIndex: '-1'
+              }}
+            />
+          )
+        }
       </Grid>
     </>
   );

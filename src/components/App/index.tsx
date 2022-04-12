@@ -3,10 +3,7 @@ import BigNumber from 'bignumber.js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, CssBaseline } from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/styles';
 import { Toaster } from 'react-hot-toast';
-
-// import { useConnectWallet } from 'util/hooks/useConnectWallet';
 
 import { AppState } from 'state';
 import Updater from 'state/userBalance/updater';
@@ -31,7 +28,6 @@ import BalancesPage from 'pages/balances';
 import PegMaintenancePage from 'pages/peg';
 
 import Wrapper from './Wrapper';
-import theme from './theme';
 import LoadingBean from './LoadingBean';
 import './App.css';
 
@@ -141,7 +137,7 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <CssBaseline />
       {/* UPDATERS */}
       <Updater />
@@ -171,6 +167,6 @@ export default function App() {
           </Box>
         </Box>
       </Box>
-    </ThemeProvider>
+    </>
   );
 }
