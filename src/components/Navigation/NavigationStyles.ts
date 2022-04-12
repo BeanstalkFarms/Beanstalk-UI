@@ -65,6 +65,9 @@ export const useStyles = makeStyles({
     color: 'inherit',
     textDecoration: 'none',
   },
+  NavLinkDesc: {
+    fontSize: 14,
+  },
   // Metrics
   metrics: {
     display: 'flex',

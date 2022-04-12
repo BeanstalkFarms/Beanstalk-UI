@@ -248,9 +248,7 @@ export default function NavigationSidebar() {
           )}
         </Box>
         {item.desc && (
-          <Box>
-            <span>{item.desc}</span>
-          </Box>
+          <Box className={classes.NavLinkDesc}>{item.desc}</Box>
         )}
       </ListItem>
     </NavLink>
