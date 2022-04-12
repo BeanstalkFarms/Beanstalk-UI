@@ -172,9 +172,9 @@ export default function Balances() {
 
   const spaceTop = (
     <Grid
-      container
       item
       xs={12}
+      container
       justifyContent="center"
       style={{ marginTop: '10px' }}
     />
@@ -185,11 +185,11 @@ export default function Balances() {
 
   const claimableSection = userTotalClaimable.isGreaterThan(0) ? (
     <Grid
-      container
       item
       xs={6}
+      container
       justifyContent="center"
-      style={{ alignItems: 'flex-end' }}
+      alignItems="flex-end"
     >
       <ClaimButton
         asset={ClaimableAsset.Ethereum}
@@ -230,63 +230,61 @@ export default function Balances() {
     </Grid>
   ) : null;
 
-  const farmableSection =
-    isFarmableBeans ||
-    (stalkBalance.isGreaterThan(0) && rootsBalance.isEqualTo(0)) ? (
-      <Grid
-        container
-        item
-        xs={6}
-        justifyContent="center"
-        style={{ alignItems: 'flex-end' }}
+  const farmableSection = (isFarmableBeans || (stalkBalance.isGreaterThan(0) && rootsBalance.isEqualTo(0))) ? (
+    <Grid
+      item
+      xs={6}
+      container
+      justifyContent="center"
+      alignItems="flex-end"
+    >
+      <ClaimButton
+        asset={ClaimableAsset.Stalk}
+        balance={
+          rootsBalance.isEqualTo(0) ? new BigNumber(0) : grownStalkBalance
+        }
+        buttonDescription="Farm Beans, Seeds and Stalk."
+        claimTitle="FARM"
+        claimable={grownStalkBalance}
+        description={claimableStrings.farm}
+        userClaimable={grownStalkBalance.isGreaterThan(0)}
+        widthTooltip="230px"
       >
-        <ClaimButton
-          asset={ClaimableAsset.Stalk}
-          balance={
-            rootsBalance.isEqualTo(0) ? new BigNumber(0) : grownStalkBalance
-          }
-          buttonDescription="Farm Beans, Seeds and Stalk."
-          claimTitle="FARM"
-          claimable={grownStalkBalance}
-          description={claimableStrings.farm}
-          userClaimable={grownStalkBalance.isGreaterThan(0)}
-          widthTooltip="230px"
-        >
-          <Grid container item>
-            <Grid
-              container
-              item
-              xs={12}
-              justifyContent="center"
-              style={{ fontWeight: 'bold', marginBottom: '5px' }}
-            >
-              Farmable
-            </Grid>
-            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
-              ? spaceTop
-              : null}
-            {grownStalkBalance.isGreaterThan(0) ? (
-              <ClaimBalance
-                balance={grownStalkBalance}
-                description={claimableStrings.grownStalk}
-                title="Grown Stalk"
-                token={ClaimableAsset.Stalk}
-                userClaimable={grownStalkBalance.isGreaterThan(0)}
-              />
-            ) : null}
-            {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
-              ? spaceTop
-              : null}
-            {rootsBalance.isEqualTo(0) ? (
-              <Box style={{ width: '130%', marginLeft: '-15%' }}>
-                You have not updated your Silo account since the last BIP has
-                passed. Please click &apos;Farm&apos; to update your Silo.
-              </Box>
-            ) : null}
+        <Grid container item>
+          <Grid
+            container
+            item
+            xs={12}
+            justifyContent="center"
+            style={{ fontWeight: 'bold', marginBottom: '5px' }}
+          >
+            Farmable
           </Grid>
-        </ClaimButton>
-      </Grid>
-    ) : null;
+          {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
+            ? spaceTop
+            : null}
+          {grownStalkBalance.isGreaterThan(0) ? (
+            <ClaimBalance
+              balance={grownStalkBalance}
+              description={claimableStrings.grownStalk}
+              title="Grown Stalk"
+              token={ClaimableAsset.Stalk}
+              userClaimable={grownStalkBalance.isGreaterThan(0)}
+            />
+          ) : null}
+          {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
+            ? spaceTop
+            : null}
+          {rootsBalance.isEqualTo(0) ? (
+            <Box style={{ width: '130%', marginLeft: '-15%' }}>
+              You have not updated your Silo account since the last BIP has
+              passed. Please click &apos;Farm&apos; to update your Silo.
+            </Box>
+          ) : null}
+        </Grid>
+      </ClaimButton>
+    </Grid>
+  ) : null;
 
   const myBalancesSection = (
     <>
@@ -336,65 +334,63 @@ export default function Balances() {
     </>
   );
   const totalBalancesSection = (
-    <>
-      <BalanceModule
-        // -- Strings
-        description={totalStrings}
-        strings={totalTopStrings}
-        // -- "Top" Metrics
-        // "top left" = Market Cap
-        topLeft={marketCap}
-        // "top right" = Pool Value
-        topRight={poolMarketCap}
-        // -- Other Metrics
-        beanBalance={
-          totalBeans.isGreaterThan(0)
-            ? totalBeans
-                .minus(totalSiloBeans)
-                .minus(totalTransitBeans)
-                .minus(beanReserve)
-                .minus(totalBudgetBeans)
-                .minus(beanCrv3Reserve)
-            : new BigNumber(0)
-        }
-        lpBalance={
-          totalLP.isGreaterThan(0)
-            ? totalLP
-                .minus(totalSiloLP)
-                .minus(totalTransitLP)
-                .minus(new BigNumber(UNISWAP_BASE_LP))
-            : new BigNumber(0)
-        }
-        curveBalance={
-          totalCrv3.isGreaterThan(0)
-            ? totalCrv3
-                .minus(totalSiloCurve)
-                .minus(totalTransitCurve)
-            : new BigNumber(0)
-        }
-        beanSiloBalance={totalSiloBeans}
-        beanTransitBalance={totalTransitBeans}
-        beanClaimableBalance={undefined}
-        beanReceivableBalance={new BigNumber(0)}
-        harvestablePodBalance={new BigNumber(0)}
-        lpSiloBalance={totalSiloLP}
-        lpTransitBalance={totalTransitLP}
-        lpReceivableBalance={new BigNumber(0)}
-        curveSiloBalance={totalSiloCurve}
-        curveTransitBalance={totalTransitCurve}
-        curveReceivableBalance={new BigNumber(0)}
-        budgetBalance={totalBudgetBeans}
-        beanReserveTotal={beanReserve.plus(beanCrv3Reserve)}
-        ethBalance={ethReserve}
-        stalkBalance={totalStalk}
-        seedBalance={totalSeeds}
-        podBalance={totalPods}
-        beanLPTotal={poolBeansAndEth}
-        beanCurveTotal={poolBeansAndCrv3}
-        poolForLPRatio={poolForLPRatio}
-        poolForCurveRatio={poolForCurveRatio}
-      />
-    </>
+    <BalanceModule
+      // -- Strings
+      description={totalStrings}
+      strings={totalTopStrings}
+      // -- "Top" Metrics
+      // "top left" = Market Cap
+      topLeft={marketCap}
+      // "top right" = Pool Value
+      topRight={poolMarketCap}
+      // -- Other Metrics
+      beanBalance={
+        totalBeans.isGreaterThan(0)
+          ? totalBeans
+              .minus(totalSiloBeans)
+              .minus(totalTransitBeans)
+              .minus(beanReserve)
+              .minus(totalBudgetBeans)
+              .minus(beanCrv3Reserve)
+          : new BigNumber(0)
+      }
+      lpBalance={
+        totalLP.isGreaterThan(0)
+          ? totalLP
+              .minus(totalSiloLP)
+              .minus(totalTransitLP)
+              .minus(new BigNumber(UNISWAP_BASE_LP))
+          : new BigNumber(0)
+      }
+      curveBalance={
+        totalCrv3.isGreaterThan(0)
+          ? totalCrv3
+              .minus(totalSiloCurve)
+              .minus(totalTransitCurve)
+          : new BigNumber(0)
+      }
+      beanSiloBalance={totalSiloBeans}
+      beanTransitBalance={totalTransitBeans}
+      beanClaimableBalance={undefined}
+      beanReceivableBalance={new BigNumber(0)}
+      harvestablePodBalance={new BigNumber(0)}
+      lpSiloBalance={totalSiloLP}
+      lpTransitBalance={totalTransitLP}
+      lpReceivableBalance={new BigNumber(0)}
+      curveSiloBalance={totalSiloCurve}
+      curveTransitBalance={totalTransitCurve}
+      curveReceivableBalance={new BigNumber(0)}
+      budgetBalance={totalBudgetBeans}
+      beanReserveTotal={beanReserve.plus(beanCrv3Reserve)}
+      ethBalance={ethReserve}
+      stalkBalance={totalStalk}
+      seedBalance={totalSeeds}
+      podBalance={totalPods}
+      beanLPTotal={poolBeansAndEth}
+      beanCurveTotal={poolBeansAndCrv3}
+      poolForLPRatio={poolForLPRatio}
+      poolForCurveRatio={poolForCurveRatio}
+    />
   );
 
   const sections = [myBalancesSection, totalBalancesSection];

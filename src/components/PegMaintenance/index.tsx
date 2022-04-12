@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
 import { Container } from '@mui/material';
+import BigNumber from 'bignumber.js';
 
 import { AppState } from 'state';
 import { sunrise, chainId } from 'util/index';
@@ -15,7 +16,7 @@ import {
 } from 'components/Common';
 import sunriseIcon from 'img/black-sun.svg';
 
-import PegMaintenance from './PegMaintenance';
+import Seasons from './Seasons';
 import SeasonReward from './SeasonReward';
 import SeasonTimer from './SeasonTimer';
 
@@ -26,16 +27,16 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Seasons() {
+export default function PegMaintenance() {
   const classes = useStyles();
   const { season, period, start } = useSelector<AppState, AppState['season']>(
     (state) => state.season
   );
   const nextSeasonTime = start.plus(season.plus(1).multipliedBy(period));
-  const timeUntilSunrise = (deadline: string) =>
-    parseInt(deadline, 10) - Date.now() / 1e3;
+  const timeUntilSunrise = (deadline: BigNumber) =>
+    parseInt(deadline.toString(), 10) - Date.now() / 1e3;
 
-  const timer = useRef();
+  const timer = useRef<any>();
   const [time, setTime] = useState(timeUntilSunrise(nextSeasonTime));
 
   // 
@@ -49,7 +50,7 @@ export default function Seasons() {
   }, [time, nextSeasonTime]);
 
   // On Ropsten, add a button to advance the season.
-  const advanceButton = (time <= 0 && chainId === 3) ? (
+  const sunriseButton = (time <= 0 && chainId === 3) ? (
     <Grid
       item
       md={5}
@@ -77,44 +78,48 @@ export default function Seasons() {
     SeasonReward(time);
 
   return (
-    <div>
-      <Grid container justifyContent="center">
-        <Grid item xs={12}>
-          <HeaderLabelList
-            description={[
-              seasonStrings.season,
-              stDescription,
-              srDescription,
-            ]}
-            balanceDescription={[
-              `${season.isNegative() ? '---' : String(season)}`,
-              stBalanceDescription,
-              srBalanceDescription,
-            ]}
-            title={[
-              'Current Season',
-              stTitle,
-              srTitle,
-            ]}
-            value={[
-              `${season.isNegative() ? '---' : String(season)}`,
-              stValue,
-              srValue,
-            ]}
-            width="300px"
-          />
-        </Grid>
-        {advanceButton}
-        <PegMaintenance />
-      </Grid>
-      <Container maxWidth="sm">
-        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+    <Grid container justifyContent="center" rowSpacing={2}>
+      {/* Description */}
+      <Grid item xs={12}>
+        <Container maxWidth="xs">
           <ContentDropdown
             description={pegStrings.pegDescription}
             descriptionTitle="What is Peg Maintenance?"
           />
-        </Grid>
-      </Container>
-    </div>
+        </Container>
+      </Grid>
+      {/* Quick Stats */}
+      <Grid item xs={12}>
+        <HeaderLabelList
+          description={[
+            seasonStrings.season,
+            stDescription,
+            srDescription,
+          ]}
+          balanceDescription={[
+            `${season.isNegative() ? '---' : String(season)}`,
+            stBalanceDescription,
+            srBalanceDescription,
+          ]}
+          title={[
+            'Current Season',
+            stTitle,
+            srTitle,
+          ]}
+          value={[
+            `${season.isNegative() ? '---' : String(season)}`,
+            stValue,
+            srValue,
+          ]}
+          width="300px"
+        />
+      </Grid>
+      {/* Sunrise Button */}
+      {sunriseButton}
+      {/* Seasons Card */}
+      <Grid item xs={12}>
+        <Seasons />
+      </Grid>
+    </Grid>
   );
 }

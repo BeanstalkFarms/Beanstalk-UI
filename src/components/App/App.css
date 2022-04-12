@@ -295,13 +295,13 @@
   }
 }
 
-.BalanceModule-title {
+/* .BalanceModule-title {
   display: inline-block;
   text-align: left;
   font-size: 14px;
   font-family: Futura-PT-Book;
   margin: 2px;
-}
+} */
 
 /* format for left side text */
 .BalanceModule-balance {
@@ -383,10 +383,10 @@
 /* For medium screens */
 
 @media screen and (max-width: 599px) {
-  .BalanceModule-title {
+  /* .BalanceModule-title {
     padding-left: 10px;
     width: 50%;
-  }
+  } */
   .BalanceModule-balance {
     width: 47%;
     text-align: right;
@@ -454,9 +454,9 @@
 /* For tiny screens */
 
 @media screen and (max-width: 400px) {
-  .BalanceModule-title {
+  /* .BalanceModule-title {
     font-size: 12px;
-  }
+  } */
   .BalanceModule-balance {
     font-size: 12px;
   }
@@ -491,10 +491,10 @@
 }
 
 @media screen and (max-width: 360px) {
-  .BalanceModule-title {
+  /* .BalanceModule-title {
     width: 45%;
     font-size: 10px;
-  }
+  } */
   .BalanceModule-balance {
     width: 40%;
     font-size: 10px;

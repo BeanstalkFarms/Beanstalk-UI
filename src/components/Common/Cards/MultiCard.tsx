@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     borderRadius: '25px',
   },
-  // "Input" cards (white background)
+  // "Input" cards (off-white background)
   input: {
     backgroundColor: theme.module.background,
     color: theme.text,
@@ -28,15 +28,28 @@ const useStyles = makeStyles(() => ({
     padding: '10px 16px 30px 16px',
     marginTop: '16px',
   },
+  // "Foreground" (pure white)
+  foreground: {
+    backgroundColor: theme.module.foreground,
+    color: theme.text,
+    // FIXME
+    padding: '10px',
+  }
 }));
 
-type MultiCardType = 'meta' | 'input';
+const defaultElevation = {
+  meta: 0,
+  input: 7,
+  foreground: 0,
+};
 
-const MultiCard : React.FC<CardProps & { type: MultiCardType }> = ({ children, type, ...props }) => {
+type MultiCardType = 'meta' | 'input' | 'foreground';
+
+const MultiCard : React.FC<CardProps & { type: MultiCardType }> = ({ children, type, elevation, ...props }) => {
   const classes = useStyles();
   return (
     <Card
-      elevation={type === 'meta' ? 0 : 7}
+      elevation={elevation || defaultElevation[type]}
       className={classNames(classes.root, classes[type])}
       {...props}
     >

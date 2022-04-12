@@ -9,6 +9,6 @@ const lineStyle = {
   margin: '14px 4px 8px 4px',
 };
 
-export default function Line(props : { style: any }) {
+export default function Line(props : { style?: any }) {
   return <hr style={{ ...props.style, ...lineStyle }} />;
 }
