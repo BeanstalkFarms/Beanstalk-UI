@@ -461,7 +461,7 @@ export default function FillListingModal({
           listings={[currentListing]}
           isBuying
         />
-        <Box sx={{ marginTop: 20 }}>
+        <Box sx={{ marginTop: '20px' }}>
           {fromBeanField}
           {fromEthField}
           <ExpandMoreIcon

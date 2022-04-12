@@ -264,7 +264,11 @@ export default function BaseModule({
             }}
           />
           {showButton ? (
-            <form autoComplete="off" noValidate style={{ padding: '0 10px' }}>
+            <form
+              autoComplete="off"
+              noValidate
+              // style={{ padding: '0 10px' }}
+            >
               {moduleContent}
             </form>
           ) : (
