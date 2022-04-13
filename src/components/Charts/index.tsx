@@ -95,5 +95,5 @@ export default function Charts(props) {
 }
 
 Charts.defaultProps = {
-  title: 'Analytics',
+  title: 'Charts',
 };
