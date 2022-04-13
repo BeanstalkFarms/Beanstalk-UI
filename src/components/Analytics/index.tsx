@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Charts(props) {
+export default function Analytics(props) {
   const classes = useStyles();
   //
   const [chartData, setChartData] = useState([]);
@@ -94,6 +94,6 @@ export default function Charts(props) {
   );
 }
 
-Charts.defaultProps = {
-  title: 'Charts',
+Analytics.defaultProps = {
+  title: 'Analytics',
 };
