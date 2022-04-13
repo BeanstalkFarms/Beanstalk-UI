@@ -34,7 +34,7 @@ const useStyles = makeStyles({
     textAlign: 'right' as const,
   },
   maxStyle: {
-    backgroundColor: theme.primary,
+    // backgroundColor: theme.primary,
     borderRadius: '30px',
     color: theme.accentText,
     fontSize: '13px',
@@ -72,7 +72,7 @@ export type TokenInputFieldProps = {
   isLP: boolean;
   // Handlers
   /** */
-  maxHandler?: Function;
+  maxHandler?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /** */
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   /** */
@@ -101,6 +101,8 @@ export default function TokenInputField(props: TokenInputFieldProps) {
     if (props.maxHandler !== undefined) {
       return (
         <Button
+          variant="contained"
+          color="primary"
           onClick={props.maxHandler}
           className={classes.maxStyle}
           disabled={props.locked}>
