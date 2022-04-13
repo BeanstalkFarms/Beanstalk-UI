@@ -19,11 +19,15 @@ const useStyles = makeStyles({
   },
   absolutePosition: {
     position: 'absolute'
+  },
+  circularProgress: {
+    position: 'absolute',
+    color: (props: any) => props.color,
+    transform: (props: any) => props.rotation
   }
 });
 
 export default function CircularProgressWithLabel(props) {
-  const classes = useStyles();
   const showBlip =
     props.value - props.lowvalue < 3 && props.value - props.lowvalue > 0;
   const displayLowNumber = showBlip ? 3 : props.value - props.lowvalue;
@@ -33,7 +37,11 @@ export default function CircularProgressWithLabel(props) {
         -90 + (360 * (props.lowvalue - displayLowNumber / 2)) / 100
       }deg)`;
   const color = props.voting ? 'green' : 'red';
-
+  const styleProps = {
+    color: color,
+    rotation: rotation
+  };
+  const classes = useStyles(styleProps);
   const arrow = '\u2192';
 
   const votingTitle = props.voting
@@ -67,7 +75,7 @@ export default function CircularProgressWithLabel(props) {
     circles.push(
       <CircularProgress
         key="change"
-        style={{ position: 'absolute', color: color, transform: rotation }}
+        className={classes.circularProgress}
         value={displayLowNumber}
         variant="determinate"
       />
