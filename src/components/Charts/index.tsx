@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Analytics(props) {
+export default function Charts(props) {
   const classes = useStyles();
   //
   const [chartData, setChartData] = useState([]);
@@ -70,7 +70,7 @@ export default function Analytics(props) {
         size="20px"
         style={{
           width: '100%',
-          marginTop: props.marginTop || 0,
+          marginTop: 0,
         }}
       >
         <BaseModule
@@ -94,6 +94,6 @@ export default function Analytics(props) {
   );
 }
 
-Analytics.defaultProps = {
+Charts.defaultProps = {
   title: 'Analytics',
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import Page from 'components/Page';
-import Analytics from 'components/Analytics';
+import Analytics from 'components/Charts';
 
 export default function AnalyticsPage() {
   return (
