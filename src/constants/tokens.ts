@@ -99,7 +99,7 @@ export const LUSD : SupportedToken = {
 };
 
 export const PRICE = {
-  addr: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF',
+  addr: '0xd047408488aa48A31319265E9808D6c59Adb1E51',
 };
 
 export const BEANSTALK_GETTERS = {
@@ -117,7 +117,7 @@ export function changeTokenAddresses(chainId: number) {
     CURVE.addr = '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD';
     BEANLUSD.addr = '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D';
     LUSD.addr = '0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA';
-    PRICE.addr = '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF';
+    PRICE.addr = '0xd047408488aa48A31319265E9808D6c59Adb1E51';
     BEANSTALK_GETTERS.addr = '0x2585Bc446edbD99de17A7a1a85EC328372c599f7';
   }
   // Ropsten Addresses
@@ -129,7 +129,7 @@ export function changeTokenAddresses(chainId: number) {
     CURVE.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC';
     BEANLUSD.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // FIX: change ropsten BEAN:LUSD address (currently curve)
     LUSD.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // using curuve ropsten address for lusd:3crv pool
-    PRICE.addr = '0x9d80cDBFee5c8294BCb2b356F608Db90b2D13d4b';
+    PRICE.addr = '0xB721C3386052389892A898EC700619A7Ab20C6B7';
     BEANSTALK_GETTERS.addr = '0xB6CC892079345d69BE3a6C91DCc8Dc0D2AAb4A03';
   }
 }

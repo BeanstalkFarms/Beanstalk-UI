@@ -163,7 +163,19 @@ export type PodOrderFilled = BaseFillEvent & {
   filledBeans: BigNumber;
 }
 
-export type MarketHistoryItem = (PodListingFilled | PodOrderFilled);
+export type PodOrderCreated = BaseFillEvent & { type: 'PodOrderCreated' };
+export type PodOrderCancelled = BaseFillEvent & { type: 'PodOrderCancelled' };
+export type PodListingCreated = BaseFillEvent & { type: 'PodListingCreated' };
+export type PodListingCancelled = BaseFillEvent & { type: 'PodListingCancelled' };
+
+export type MarketHistoryItem = (
+    PodListingCreated
+  | PodListingFilled
+  | PodListingCancelled
+  | PodOrderCreated
+  | PodOrderFilled
+  | PodOrderCancelled
+);
 
 export type MarketStats = {
   podVolume: BigNumber;

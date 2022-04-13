@@ -1,6 +1,9 @@
 import BigNumber from 'bignumber.js';
+import { EventData } from 'web3-eth-contract';
+
 import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from 'constants/index';
 import { Withdrawals } from 'state/userBalance/reducer';
+import { DEPLOYMENT_BLOCKS } from 'constants/blocks';
 import {
   account,
   benchmarkStart,
@@ -9,6 +12,7 @@ import {
   beanstalkContractReadOnlyWs,
   pairContractReadOnlyWs,
   beanstalkContractReadOnly,
+  chainId,
 } from './index';
 
 const IGNORED_EVENTS = new Set([
@@ -23,9 +27,6 @@ let lastPriceRefresh = new Date().getTime();
 let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
-// export const BEANSTALK_GENESIS_BLOCK = 12974075;
-export const BEANSTALK_GENESIS_BLOCK = 0;
-
 /**
  * @rpc 20 separate calls to `getPastEvents`. Not batched.
  * @rpc 3 websocket opens for Beanstalk contract, BEAN:ETH + ETH:USDC pools.
@@ -34,11 +35,14 @@ export async function initializeEventListener(
   processEvents: Function,
   updatePrices: Function,
   updateTotals: Function
-) {
+) : Promise<EventData[]> {
   const startTime = benchmarkStart('EVENT LISTENER');
   const beanstalk = beanstalkContractReadOnly(true);
 
-  // console.log('initializeEventListener: ', account);
+  const {
+    BEANSTALK_GENESIS_BLOCK,
+    BIP10_COMMITTED_BLOCK
+  } = DEPLOYMENT_BLOCKS[chainId];
 
   const accountEvents = await Promise.all([
     beanstalk.getPastEvents('BeanDeposit', {
@@ -113,16 +117,51 @@ export async function initializeEventListener(
       filter: { to: account },
       fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
+    // Farmer's Market
+    beanstalk.getPastEvents('PodListingCreated', {
+      filter: { account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodListingCancelled', {
+      filter: { account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodListingFilled', {
+      filter: { from: account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodListingFilled', {
+      filter: { to: account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodOrderCreated', {
+      filter: { account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodOrderCancelled', {
+      filter: { account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodOrderFilled', {
+      filter: { from: account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodOrderFilled', {
+      filter: { to: account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    })
   ]).catch((err) => {
     console.error('initializeEventListener: failed to fetch accountEvents', err);
     throw err;
   });
 
   // eslint-disable-next-line
-  let allEvents : any[] = [].concat.apply([], accountEvents);
+  let allEvents : EventData[] = [].concat.apply([], accountEvents);
   allEvents.sort((a, b) => {
+    // First, sort by block number, highest blockNumber first.
     const diff = a.blockNumber - b.blockNumber;
     if (diff !== 0) return diff;
+    // Then, sort by logIndex, highest logIndex first
     return a.logIndex - b.logIndex;
   });
 
@@ -166,6 +205,7 @@ export async function initializeEventListener(
     }
   });
   beanstalkWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
+    console.log('[contract/beanstalk] Received event: ', event, error);
     if (error) {
       console.error(error);
       return;
@@ -173,6 +213,7 @@ export async function initializeEventListener(
     if (IGNORED_EVENTS.has(event.event)) {
       return;
     }
+    
     const newEventHash = event.transactionHash + String(event.logIndex);
     if (newEventHashes.has(newEventHash)) {
       return;
@@ -183,6 +224,7 @@ export async function initializeEventListener(
       event?.returnValues.account !== undefined &&
       event?.returnValues.account.toLowerCase() === account.toLowerCase()
     ) {
+      // FIXME: looks like this is mutating state directly?
       allEvents = [...allEvents, event];
       processEvents(allEvents);
     } else if (event.event === 'Sunrise') {
@@ -200,6 +242,7 @@ export async function initializeEventListener(
   });
 
   benchmarkEnd('EVENT LISTENER', startTime);
+
   return allEvents;
 }
 

@@ -16,7 +16,7 @@ import { PodOrder, PodListing, MarketHistoryItem, MarketStats } from './reducer'
 
 // Pod Listing Events
 // These map to the values returned by the Beanstalk contract.
-type PodListingCreatedEvent = {
+export type PodListingCreatedEvent = {
   account: string;
   index: string;
   start: string;
@@ -25,28 +25,28 @@ type PodListingCreatedEvent = {
   maxHarvestableIndex: string;
   toWallet: boolean;
 }
-type PodListingFilledEvent = {
+export type PodListingFilledEvent = {
   from: string;
   to: string;
   index: string;
   start: string;
   amount: string;
 }
-type PodListingCancelledEvent = {
+export type PodListingCancelledEvent = {
   account: string;
   index: string;
 }
 
 // Pod Order Events
 // These map to the values returned by the Beanstalk contract.
-type PodOrderCreatedEvent = {
+export type PodOrderCreatedEvent = {
   account: string;
   id: string;
   amount: string;
   pricePerPod: string;
   maxPlaceInLine: string;
 }
-type PodOrderFilledEvent = {
+export type PodOrderFilledEvent = {
   from: string;
   to: string;
   id: string;
@@ -54,7 +54,7 @@ type PodOrderFilledEvent = {
   start: string;
   amount: string;
 }
-type PodOrderCancelledEvent = {
+export type PodOrderCancelledEvent = {
   account: string;
   id: string;
 }
@@ -232,7 +232,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
     marketStats.orders.sumRemainingAmount = marketStats.orders.sumRemainingAmount.plus(order.remainingAmount);
     return order;
   });
-  const finalMarketHistory = marketHistory.reverse(); 
+  const finalMarketHistory = marketHistory.reverse();
 
   return {
     listings: finalPodListings,
@@ -291,14 +291,28 @@ export default function Updater() {
         history,
         stats
       } = processEvents(marketplaceEvents, harvestableIndex);
-      dispatch(
-        setMarketplaceState({
-          listings,
-          orders,
-          history,
-          stats
-        })
-      );
+      
+      dispatch(setMarketplaceState({
+        listings,
+        orders,
+        history,
+        stats
+      }));
+
+      // const accountHistory = (
+      //   history
+      //     .filter((item) => item.from === account || item.to === account)
+      //     .map((item) => ({
+      //       event: item.type,
+      //       blockNumber: item.blockNumber,
+      //       transactionHash: item.transactionHash,
+      //       returnValues: {
+      //         // fixme
+      //       },
+      //       address: account,           
+      //     } as EventData))
+      // )
+      // dispatch(addContractEvents(accountHistory));
     };
 
     if (harvestableIndex != null) {

@@ -352,10 +352,9 @@ export default function Updater() {
         .dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
 
-      //
       const curveTuple = priceTuple.ps[0];
       const uniTuple = priceTuple.ps[1];
-      const beanlusdTuple = priceTuple.ps[0]; // change index 0 to index 2 once new price contract
+      const beanlusdTuple = priceTuple.ps[priceTuple.ps.length > 2 ? 2 : 1];
 
       //
       dispatch(setPrices({
@@ -817,6 +816,9 @@ export default function Updater() {
           votedBips.delete(event.returnValues.bip);
         }
       });
+      
+      console.log(`[userBalance/updater]: Setting ${events.length} contract events`);
+
       dispatch(setContractEvents(events));
 
       // Variables named during conversation with Publius 2/28
@@ -1176,12 +1178,15 @@ export default function Updater() {
             updateBalanceState,
             eventParsingParameters
           ] = balanceInitializers;
+
+          //
           updateBalanceState();
           processEvents(eventInitializer, eventParsingParameters);
 
           /** */
           dispatch(setInitialized(true));
         });
+        
         benchmarkEnd('**WEBSITE**', startTime);
       } else {
         dispatch(setMetamaskFailure(true));
