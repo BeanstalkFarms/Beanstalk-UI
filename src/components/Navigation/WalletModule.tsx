@@ -31,6 +31,8 @@ import {
   toTokenUnitsBN,
   poolForLP,
   disconnect,
+  account,
+  Token,
 } from 'util/index';
 import {
   ClaimableAsset,
@@ -43,6 +45,7 @@ import {
   walletTopStrings,
 } from 'components/Common';
 import BalanceModule from 'components/Balances/BalanceModule';
+import { PodListingFilledEvent, PodOrderFilledEvent } from 'state/marketplace/updater';
 
 type EventDataWithTimestamp = (EventData & { timestamp: number });
 type BatchedEvent = {
@@ -114,33 +117,28 @@ const useStyles = makeStyles({
   },
 });
 
-// FIXME: these should be refactored into real components
-// and have typescript types applied
-const inOutDisplay = (inBN, inToken, outBN, outToken) => (
+/**
+ * Token Flow with respect to the User.
+ * - "in"  = I receive something.
+ * - "out" = I spend something.
+ */
+const TokenFlow : React.FC<{
+  in?:  [BigNumber, Token],
+  out?: [BigNumber, Token]
+}> = (props) => (
   <>
-    <span style={{
-        color: 'green',
-        display: 'block',
-        marginTop: '-7px',
-        width: '100%',
-      }}>
-      {`+${displayBN(outBN)}`}{' '}
-      <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
-    </span>
-    <span style={{
-        color: 'red',
-        display: 'block',
-        width: '100%',
-      }}>
-      {`-${displayBN(inBN)}`}{' '}
-      <TokenTypeImageModule style={tokenImageStyle} token={inToken} />
-    </span>
-  </>
-);
-const outDisplay = (outBN, outToken) => (
-  <>
-    <span style={{ color: 'green' }}>{`+${displayBN(outBN)}`}</span>
-    <TokenTypeImageModule style={tokenImageStyle} token={outToken} />
+    {props.in ? (
+      <>
+        <span style={{ color: 'green' }}>{`+${displayBN(props.in[0])}`}</span>
+        <TokenTypeImageModule style={tokenImageStyle} token={props.in[1]} />
+      </>
+    ) : null}
+    {props.out ? (
+      <>
+        <span style={{ color: 'red' }}>{`-${displayBN(props.out[0])}`}</span>
+        <TokenTypeImageModule style={tokenImageStyle} token={props.out[1]} />
+      </>
+    ) : null}
   </>
 );
 
@@ -158,7 +156,11 @@ function DisplayEvent({ event }) {
         BEAN.decimals
       );
       eventTitle = `Bean Deposit (Season${s})`;
-      eventAmount = outDisplay(beans, SiloAsset.Bean);
+      eventAmount = (
+        <TokenFlow
+          out={[beans, SiloAsset.Bean]}
+        />
+      );
       break;
     }
     case 'BeanClaim': {
@@ -168,11 +170,11 @@ function DisplayEvent({ event }) {
       );
 
       eventTitle = 'Bean Claim';
-      eventAmount = inOutDisplay(
-        beans,
-        ClaimableAsset.Bean,
-        beans,
-        CryptoAsset.Bean
+      eventAmount = (
+        <TokenFlow
+          out={[beans, ClaimableAsset.Bean]}
+          in={[beans, CryptoAsset.Bean]}
+        />
       );
       break;
     }
@@ -184,11 +186,11 @@ function DisplayEvent({ event }) {
       );
 
       eventTitle = `Bean Withdrawal (Season ${s - WITHDRAWAL_FROZEN})`;
-      eventAmount = inOutDisplay(
-        beans,
-        SiloAsset.Bean,
-        beans,
-        TransitAsset.Bean
+      eventAmount = (
+        <TokenFlow
+          out={[beans, SiloAsset.Bean]} 
+          in={[beans, TransitAsset.Bean]}
+        />
       );
       break;
     }
@@ -204,11 +206,11 @@ function DisplayEvent({ event }) {
           .toFixed(0);
 
         eventTitle = `Bean Sow (${weather}% Weather)`;
-        eventAmount = inOutDisplay(
-          beans,
-          CryptoAsset.Bean,
-          pods,
-          FarmAsset.Pods
+        eventAmount = (
+          <TokenFlow
+            out={[beans, CryptoAsset.Bean]}
+            in={[pods, FarmAsset.Pods]}
+          />
         );
       } else {
         eventTitle = 'Bean Sow';
@@ -231,12 +233,12 @@ function DisplayEvent({ event }) {
       );
 
       eventTitle = 'Pod Harvest';
-      eventAmount = inOutDisplay(
-        beans,
-        FarmAsset.Pods,
-        beans,
-        CryptoAsset.Bean
-      );
+      eventAmount = (
+        <TokenFlow
+          out={[beans, FarmAsset.Pods]}
+          in={[beans, CryptoAsset.Bean]}
+        />
+      );  
       break;
     }
     case 'LPDeposit': {
@@ -247,7 +249,11 @@ function DisplayEvent({ event }) {
       );
 
       eventTitle = `LP Deposit (Season${s})`;
-      eventAmount = outDisplay(lp, SiloAsset.LP);
+      eventAmount = (
+        <TokenFlow
+          out={[lp, SiloAsset.LP]}
+        />
+      );
       break;
     }
     case 'LPClaim': {
@@ -257,7 +263,12 @@ function DisplayEvent({ event }) {
       );
 
       eventTitle = 'LP Claim';
-      eventAmount = inOutDisplay(lp, ClaimableAsset.LP, lp, CryptoAsset.LP);
+      eventAmount = (
+        <TokenFlow
+          out={[lp, ClaimableAsset.LP]}
+          in={[lp, CryptoAsset.LP]}
+        />
+      );
       break;
     }
     case 'LPWithdraw': {
@@ -268,7 +279,12 @@ function DisplayEvent({ event }) {
       );
 
       eventTitle = `LP Withdrawal (Season ${s - WITHDRAWAL_FROZEN})`;
-      eventAmount = inOutDisplay(lp, SiloAsset.LP, lp, TransitAsset.LP);
+      eventAmount = (
+        <TokenFlow
+          out={[lp, SiloAsset.LP]}
+          in={[lp, TransitAsset.LP]}
+        />
+      );
       break;
     }
     case 'Vote': {
@@ -296,7 +312,7 @@ function DisplayEvent({ event }) {
       );
 
       eventTitle = 'Sunrise Reward';
-      eventAmount = outDisplay(beanReward, CryptoAsset.Bean);
+      eventAmount = <TokenFlow out={[beanReward, CryptoAsset.Bean]} />;
       break;
     }
     case 'Swap': {
@@ -311,11 +327,11 @@ function DisplayEvent({ event }) {
         );
 
         eventTitle = 'ETH to Bean Swap';
-        eventAmount = inOutDisplay(
-          swapFrom,
-          CryptoAsset.Ethereum,
-          swapTo,
-          CryptoAsset.BEAN
+        eventAmount = (
+          <TokenFlow
+            out={[swapFrom, CryptoAsset.Ethereum]}
+            in={[swapTo, CryptoAsset.Bean]}
+          />
         );
       } else if (event.returnValues.amount1In !== '0') {
         const swapFrom = toTokenUnitsBN(
@@ -328,11 +344,82 @@ function DisplayEvent({ event }) {
         );
 
         eventTitle = 'Bean to ETH Swap';
-        eventAmount = inOutDisplay(
-          swapFrom,
-          CryptoAsset.BEAN,
-          swapTo,
-          CryptoAsset.Ethereum
+        eventAmount = (
+          <TokenFlow
+            out={[swapFrom, CryptoAsset.Bean]}
+            in={[swapTo, CryptoAsset.Ethereum]}
+          />
+        );
+      }
+      break;
+    }
+    case 'PlotTransfer': {
+      const pods = toTokenUnitsBN(
+        new BigNumber(event.returnValues.pods),
+        BEAN.decimals
+      );
+      if (event.returnValues.from.toLowerCase() === account) {
+        eventTitle = 'Send Plot';
+        eventAmount = (
+          <TokenFlow
+            out={[pods, FarmAsset.Pods]}
+          />
+        );
+      } else {
+        eventTitle = 'Receive Plot';
+        eventAmount = (
+          <TokenFlow
+            in={[pods, FarmAsset.Pods]}
+          />
+        );
+      }
+      break;
+    }
+    // FIXME: need to add Bean inflows here.
+    // Technically we need to look up the price of the Pod Order
+    // during this Fill by scanning Events. This is too complex to
+    // do efficiently in the frontend so it should be likely be
+    // moved to the subgraph.
+    case 'PodOrderFilled': {
+      const values = (event.returnValues as PodOrderFilledEvent);
+      const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
+      if (values.from.toLowerCase() === account) {
+        // I Filled a Pod Order
+        eventTitle = 'Sold Pods to Pod Order';
+        eventAmount = (
+          <TokenFlow
+            out={[pods, FarmAsset.Pods]}
+          />
+        );
+      } else {
+        // My Pod Order was Filled
+        eventTitle = 'Bought Pods via Pod Order';
+        eventAmount = (
+          <TokenFlow
+            in={[pods, FarmAsset.Pods]}
+          />
+        );
+      }
+      break;
+    }
+    case 'PodListingFilled': {
+      const values = (event.returnValues as PodListingFilledEvent);
+      const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
+      if (values.from.toLowerCase() === account) {
+        // I Filled a Pod Listing
+        eventTitle = 'Bought Pods from Pod Listing';
+        eventAmount = (
+          <TokenFlow
+            out={[pods, FarmAsset.Pods]}
+          />
+        );
+      } else {
+        // My Pod Listing was Filled
+        eventTitle = 'Sold Pods via Pod Listing';
+        eventAmount = (
+          <TokenFlow
+            in={[pods, FarmAsset.Pods]}
+          />
         );
       }
       break;
@@ -476,6 +563,8 @@ export default function WalletModule() {
      */
     async function buildWalletEvents() {
       const timestampPromisesByBlockNumber : {[blockNumber: string] : Promise<number> } = {};
+
+      console.log(`[wallet] Building transactions from ${contractEvents.length} events.`);
 
       contractEvents.forEach((event) => {
         if (timestampPromisesByBlockNumber[event.blockNumber.toString()] === undefined) {

@@ -817,6 +817,8 @@ export default function Updater() {
         }
       });
       
+      console.log(`[userBalance/updater]: Setting ${events.length} contract events`);
+
       dispatch(setContractEvents(events));
 
       // Variables named during conversation with Publius 2/28
@@ -1176,12 +1178,15 @@ export default function Updater() {
             updateBalanceState,
             eventParsingParameters
           ] = balanceInitializers;
+
+          //
           updateBalanceState();
           processEvents(eventInitializer, eventParsingParameters);
 
           /** */
           dispatch(setInitialized(true));
         });
+        
         benchmarkEnd('**WEBSITE**', startTime);
       } else {
         dispatch(setMetamaskFailure(true));

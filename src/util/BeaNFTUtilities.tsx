@@ -1,11 +1,12 @@
 import BigNumber from 'bignumber.js';
-import { BEANSTALK_GENESIS_BLOCK } from './EventUtilities';
+import { DEPLOYMENT_BLOCKS } from 'constants/blocks';
 import {
   account,
   beaNFTContract,
   beaNFTContractReadOnly,
   beaNFTGenesisContract,
   beaNFTGenesisContractReadOnly,
+  chainId,
   txCallback,
 } from './index';
 
@@ -66,6 +67,7 @@ export const isMinted = async (nftId) => {
  */
 export const getMintedWinterNFTs = async () => {
   const beaNFT = beaNFTContractReadOnly(true);
+  const { BEANSTALK_GENESIS_BLOCK } = DEPLOYMENT_BLOCKS[chainId];
   const toTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { to: account },
     fromBlock: BEANSTALK_GENESIS_BLOCK,
@@ -86,6 +88,7 @@ export const getMintedWinterNFTs = async () => {
  */
 export const getMintedNFTs = async () => {
   const beaNFT = beaNFTGenesisContractReadOnly(true);
+  const { BEANSTALK_GENESIS_BLOCK } = DEPLOYMENT_BLOCKS[chainId];
   const toTransfers = await beaNFT.getPastEvents('Transfer', {
     filter: { to: account },
     fromBlock: BEANSTALK_GENESIS_BLOCK,

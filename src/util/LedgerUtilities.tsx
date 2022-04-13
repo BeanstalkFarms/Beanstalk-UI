@@ -124,7 +124,7 @@ const tokenResult = (token : SupportedToken) => (result: BigNumber.Value) =>
 
 export async function getBlockTimestamp(blockNumber: any) {
   await initializing;
-  return (await web3?.eth.getBlock(blockNumber)).timestamp;
+  return (await web3.eth.getBlock(blockNumber)).timestamp;
 }
 
 export async function getEtherBalance() {

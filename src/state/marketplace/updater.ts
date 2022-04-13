@@ -16,7 +16,7 @@ import { PodOrder, PodListing, MarketHistoryItem, MarketStats } from './reducer'
 
 // Pod Listing Events
 // These map to the values returned by the Beanstalk contract.
-type PodListingCreatedEvent = {
+export type PodListingCreatedEvent = {
   account: string;
   index: string;
   start: string;
@@ -25,28 +25,28 @@ type PodListingCreatedEvent = {
   maxHarvestableIndex: string;
   toWallet: boolean;
 }
-type PodListingFilledEvent = {
+export type PodListingFilledEvent = {
   from: string;
   to: string;
   index: string;
   start: string;
   amount: string;
 }
-type PodListingCancelledEvent = {
+export type PodListingCancelledEvent = {
   account: string;
   index: string;
 }
 
 // Pod Order Events
 // These map to the values returned by the Beanstalk contract.
-type PodOrderCreatedEvent = {
+export type PodOrderCreatedEvent = {
   account: string;
   id: string;
   amount: string;
   pricePerPod: string;
   maxPlaceInLine: string;
 }
-type PodOrderFilledEvent = {
+export type PodOrderFilledEvent = {
   from: string;
   to: string;
   id: string;
@@ -54,7 +54,7 @@ type PodOrderFilledEvent = {
   start: string;
   amount: string;
 }
-type PodOrderCancelledEvent = {
+export type PodOrderCancelledEvent = {
   account: string;
   id: string;
 }
