@@ -69,18 +69,21 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function ContentDropdown({
-  description,
-  descriptionTitle,
-  descriptionLinks,
-  accordionStyles,
-}) {
+type ContentDropdownProps = {
+  description?: string;
+  descriptionTitle?: string;
+  descriptionLinks?: [{text: string, href: string}];
+  accordionStyles?: {};
+}
+
+const ContentDropdown: React.FC<ContentDropdownProps> = ({ description, descriptionTitle,
+  descriptionLinks, accordionStyles }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
   const handleChange = (panel: string) => (
-    event: React.ChangeEvent<{}>, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
+      event: React.ChangeEvent<{}>, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
   };
 
   return (
@@ -90,17 +93,17 @@ export default function ContentDropdown({
         onChange={handleChange('event')}
         className={classes.topContainer}
         style={{
-          backgroundColor: theme.secondary,
-          borderRadius: '15px',
-          ...accordionStyles
-        }}
-      >
+              backgroundColor: theme.secondary,
+              borderRadius: '15px',
+              ...accordionStyles
+            }}
+        >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon style={{ color: theme.accentText }} />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
           style={{ backgroundColor: theme.secondary }}
-        >
+          >
           <Typography className={classes.heading}>
             {descriptionTitle}
           </Typography>
@@ -109,32 +112,32 @@ export default function ContentDropdown({
           <Typography className={classes.descriptionText}>
             {description}
             {descriptionLinks !== undefined ?
-              descriptionLinks.map((l) => (
-                <span key={l.text}>
-                  {' '}
-                  <Link
-                    style={{ color: theme.accentText }}
-                    key={l.text}
-                    href={l.href}
-                    target="blank"
-                    underline="hover">
-                    {l.text}
-                  </Link>
-                  .
-                </span>
-              ))
-              : null
-          }
+                  descriptionLinks.map((l) => (
+                    <span key={l.text}>
+                      {' '}
+                      <Link
+                        style={{ color: theme.accentText }}
+                        key={l.text}
+                        href={l.href}
+                        target="blank"
+                        underline="hover">
+                        {l.text}
+                      </Link>
+                      .
+                    </span>
+                  ))
+                  : null
+              }
           </Typography>
         </AccordionDetails>
       </Accordion>
     </Box>
   );
-}
+};
 
 ContentDropdown.defaultProps = {
-  marginTop: '20px',
-  width: '100%',
   description: 'Template description',
   descriptionTitle: 'FAQ',
 };
+
+export default ContentDropdown;
