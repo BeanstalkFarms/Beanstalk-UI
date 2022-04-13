@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { useTooltip, Tooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { Circle, Bar } from '@visx/shape';
@@ -15,7 +15,7 @@ import minBy from 'lodash/minBy';
 
 import { theme as colorTheme } from 'constants/index';
 import { AppState } from 'state';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { GraphListingTooltip, GraphOrderTooltip } from './GraphTooltips';
 
 const useStyles = makeStyles({
@@ -221,7 +221,7 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
     tooltipData,
   } = useTooltip<TooltipData>();
 
-  if (parentWidth === undefined) return <></>;
+  if (parentWidth === undefined) return null;
 
   const xScale = scaleLinear<number>({
     domain: xDomain,

@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { IconButton, Box } from '@material-ui/core';
+import { IconButton, Box } from '@mui/material';
 import { AppState } from 'state';
-import { List as ListIcon } from '@material-ui/icons';
+import { List as ListIcon } from '@mui/icons-material';
 import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
@@ -172,7 +172,7 @@ export default function LPConvert() {
             );
           }}
           className={classes.iconButton}
-        >
+          size="large">
           <ListIcon />
         </IconButton>
       </Box>

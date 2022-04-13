@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import {
   CloseOutlined as CancelIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import {
   Table,
   TableCell,
@@ -16,7 +16,7 @@ import {
   TablePagination,
   Radio,
   Button
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { PodListing } from 'state/marketplace/reducer';
 import { BEAN } from 'constants/index';

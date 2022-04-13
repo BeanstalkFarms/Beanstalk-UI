@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { IconButton, Box } from '@material-ui/core';
-import SettingsIcon from '@material-ui/icons/Settings';
+import { IconButton, Box } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { SwapMode } from 'util/index';
 import { theme } from 'constants/index';
 import { settingsStrings, SlippageModule, SwitchModule, UnitSelectionModule } from './index';
@@ -189,7 +189,7 @@ export default function SettingsFormModule(props) {
           );
         }}
         style={{ height: '44px', width: '44px', marginTop: '-8px' }}
-      >
+        size="large">
         <SettingsIcon />
       </IconButton>
     </Box>

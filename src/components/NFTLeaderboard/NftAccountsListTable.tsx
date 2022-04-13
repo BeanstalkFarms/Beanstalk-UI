@@ -10,8 +10,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {
   BASE_ETHERSCAN_ADDR_LINK,
 } from 'constants/index';
@@ -88,7 +88,7 @@ export default function NftAccountsListTable({
                       href={`${BASE_ETHERSCAN_ADDR_LINK}${nftList[index].account}`}
                       color="inherit"
                       target="blank"
-                    >
+                      underline="hover">
                       <span>
                         {`${nftList[index].account.substring(
                           0,

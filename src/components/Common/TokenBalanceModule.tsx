@@ -1,66 +1,60 @@
 import React, { Fragment } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
-import { CryptoAsset, displayBN, displayFullBN, TokenLabel } from 'util/index';
+import { Box } from '@mui/material';
+import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/index';
 import { DataBalanceModule, TokenTypeImageModule } from '.';
 
-export default function TokenBalanceModule(props) {
-  const style = {
-    color: props.balanceColor,
-    display: 'inline',
-    fontFamily: 'Lucida Console',
-    fontWeight: '400',
-    lineHeight: '100%',
-    margin: '2px',
-  };
-  const imageStyle = {
-    display: 'inline-block',
-    height: '20px',
-    marginBottom: '-5px',
-    marginLeft: '5px',
-  };
+const style = {
+  display: 'inline',
+  fontFamily: 'Lucida Console',
+  fontWeight: '400',
+  lineHeight: '100%',
+  margin: '2px',
+  fontSize: '11px',
+};
+const imageStyle = {
+  display: 'inline-block',
+  height: '18px',
+  marginBottom: '-5px',
+  marginLeft: '5px',
+};
 
-  let balanceStyle = { color: props.balanceColor };
+type TokenBalanceModuleProps = {
+  isCurve: boolean;
+  isLP: boolean;
+  description: string;
+  balance: BigNumber;
+  poolForLPRatio: Function;
+  balanceColor?: string;
+  token: Token;
+  title?: string;
+}
 
-  if (props.claimPadding !== undefined) {
-    balanceStyle = {
-      color: props.balanceColor,
-      paddingRight: '0px',
-      textAlign: 'center',
-      width: '100%',
-    };
-  }
-
+export default function TokenBalanceModule(props: TokenBalanceModuleProps) {
   const width = window.innerWidth;
-
   const tokenLabel = TokenLabel(props.token);
-  const content =
-    width > 360 ? (
-      <>
-        <h5 style={style}>{displayBN(props.balance)}</h5>
-        <TokenTypeImageModule style={imageStyle} token={props.token} />
-      </>
-    ) : (
-      <>
-        <h5 style={style}>{displayBN(props.balance)}</h5>
-      </>
-    );
+  const content = (width > 360) ? (
+    <>
+      <h5 style={style}>{displayBN(props.balance)}</h5>
+      <TokenTypeImageModule style={imageStyle} token={props.token} />
+    </>
+  ) : (
+    <h5 style={style}>{displayBN(props.balance)}</h5>
+  );
 
-  function displayLP(balance) {
+  function displayLP(balance : [BigNumber, BigNumber]) {
     if (props.isCurve) {
       return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} 3CRV`;
     }
-    return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])}
-      ${TokenLabel(CryptoAsset.Ethereum)}`;
+    return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 
-  let balanceContent = props.balance.isGreaterThan(0)
-    ? `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`
-    : undefined;
-  balanceContent =
-    props.balance.isGreaterThan(0) && props.isLP
-      ? displayLP(props.poolForLPRatio(props.balance))
-      : balanceContent;
+  const balanceContent = props.balance.isGreaterThan(0)
+    ? (
+      props.isLP
+        ? `${displayLP(props.poolForLPRatio(props.balance))}` 
+        : `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`
+    ) : undefined;
 
   return (
     <Box style={{ position: 'relative' }}>
@@ -68,7 +62,7 @@ export default function TokenBalanceModule(props) {
         balanceDescription={balanceContent}
         content={content}
         description={props.description}
-        style={balanceStyle}
+        style={{ color: props.balanceColor }}
         title={props.title === undefined ? tokenLabel : props.title}
         token={props.token}
         widthTooltip={props.widthTooltip}
@@ -77,10 +71,3 @@ export default function TokenBalanceModule(props) {
     </Box>
   );
 }
-
-TokenBalanceModule.defaultProps = {
-  balance: new BigNumber(-1),
-  balanceColor: 'black',
-  endText: '',
-  startText: '',
-};

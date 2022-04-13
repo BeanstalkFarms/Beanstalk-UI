@@ -8,8 +8,8 @@ import {
   TableContainer,
   TablePagination,
   TableRow,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { BASE_IPFS_LINK, BASE_OPENSEA_LINK, theme } from 'constants/index';
 import { mintNFT, mintGenesisNFT } from 'util/index';
 import {
@@ -124,7 +124,7 @@ export default function NftPicTable({
                             href={`${BASE_OPENSEA_LINK}/${nftList[index].id}`}
                             color="inherit"
                             target="blank"
-                          >
+                            underline="hover">
                             {`${nftList[index].id}`}
                           </Link>
                         </>
@@ -137,7 +137,7 @@ export default function NftPicTable({
                         href={`${BASE_IPFS_LINK}${nftList[index].imageIpfsHash}`}
                         color="inherit"
                         target="blank"
-                      >
+                        underline="hover">
                         <span>
                           {`${nftList[index].imageIpfsHash.substring(
                             0,

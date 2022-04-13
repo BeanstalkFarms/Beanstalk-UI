@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link, Box } from '@material-ui/core';
+import { Link, Box } from '@mui/material';
 import { SLIPPAGE_LINK } from 'constants/index';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
     linkStyle: {
@@ -25,7 +25,11 @@ export default function FrontrunText() {
     <Box className={classes.textStyle}>
       Your Transaction may be Frontrun. Consider Lowering Slippage Tolerance.
       <br />
-      <Link href={SLIPPAGE_LINK} target="blank" className={classes.linkStyle}>
+      <Link
+        href={SLIPPAGE_LINK}
+        target="blank"
+        className={classes.linkStyle}
+        underline="hover">
         Click Here to Learn More
       </Link>
       .

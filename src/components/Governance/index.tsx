@@ -1,19 +1,20 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Box } from '@material-ui/core';
+import { Box, Container } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
 import { AppState } from 'state';
 import {
   ContentDropdown,
-  ContentSection,
   ContentTitle,
   governanceStrings,
   Grid,
 } from 'components/Common';
 import { WHITEPAPER } from 'constants/index';
-import { BIP } from 'util/LedgerUtilities';
-import { makeStyles } from '@material-ui/styles';
+import { BIP } from 'state/general/reducer';
+
 import Fundraiser from '../Fundraiser';
-import GovernanceTable from './GovernanceTable';
+import BipTable from './BipTable';
 import Vote from './Vote';
 
 const useStyles = makeStyles({
@@ -26,9 +27,6 @@ const useStyles = makeStyles({
   voteGrid: {
     maxWidth: '550px',
     margin: 'auto'
-  },
-  minHeight200: {
-    minHeight: '200px'
   },
   helperGrid: {
     margin: '20px 0px'
@@ -101,41 +99,45 @@ export default function Governance() {
     },
   ];
 
-  const fundraiserTable = !hasActiveFundraiser ?
-    <>
-      <ContentTitle title="Fundraisers" />
-      <Fundraiser />
-    </>
-    : null;
-
   return (
-    <ContentSection
-      id="governance"
-      title="Governance"
-    >
-      <Grid container item xs={12} spacing={3} justifyContent="center">
+    <Container maxWidth="md">
+      <Grid container item xs={12} rowSpacing={12} justifyContent="center">
+        {/* Section: BIPs */}
         <Grid
-          container
           item
-          sm={12}
           xs={12}
+          container
+          rowSpacing={4}
           alignItems="flex-start"
           justifyContent="center"
-          className={classes.minHeight200}
         >
+          {/* Active BIPs */}
           <Grid item xs={12}>
             {voteField}
           </Grid>
+          {/* Past BIPs */}
           <Grid item xs={12}>
-            <GovernanceTable
+            <BipTable
               bips={bips}
               season={season}
               totalRoots={totalRoots}
-              style={{ maxWidth: '745px', margin: '0 auto' }}
             />
           </Grid>
         </Grid>
-        {fundraiserTable}
+        {/* Section: Fundraiser */}
+        {hasActiveFundraiser ? (
+          <Grid
+            item
+            xs={12}
+            container
+            rowSpacing={4}
+            alignItems="flex-start"
+            justifyContent="center"
+          >
+            <ContentTitle title="Fundraisers" />
+            <Fundraiser />
+          </Grid>
+        ) : null}
       </Grid>
       <Grid container justifyContent="center" className={classes.helperGrid}>
         <ContentDropdown
@@ -144,6 +146,6 @@ export default function Governance() {
           descriptionLinks={descriptionLinks}
         />
       </Grid>
-    </ContentSection>
+    </Container>
   );
 }

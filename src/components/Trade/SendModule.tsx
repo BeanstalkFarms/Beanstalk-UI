@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from 'constants/index';
 import { displayBN, isAddress, MinBN, TrimBN } from 'util/index';
 import {

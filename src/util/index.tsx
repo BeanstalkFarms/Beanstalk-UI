@@ -152,7 +152,7 @@ export async function switchChain(_chainId: SupportedChainId) {
   
   // Brave injects "MetaMask" wallet but doesn't provide websocket RPC pool.
   // @ts-ignore
-  const isBrave = (window?.navigator?.brave && await window.navigator.brave.isBrave() || false);
+  const isBrave = (window?.navigator?.brave && (await window.navigator.brave.isBrave()) || false);
   
   console.log(`Using wallet: ${currentState.wallets[0]?.label}`);
 

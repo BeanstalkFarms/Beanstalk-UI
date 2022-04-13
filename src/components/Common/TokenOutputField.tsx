@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, InputAdornment, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, InputAdornment, TextField } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { TrimBN, TokenLabel } from 'util/index';
 import { TokenTypeImageModule } from '.';
 

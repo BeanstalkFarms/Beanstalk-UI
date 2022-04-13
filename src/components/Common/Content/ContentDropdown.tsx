@@ -1,18 +1,16 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Box, Link, Typography } from '@material-ui/core';
-import MuiAccordion from '@material-ui/core/Accordion';
-import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
-import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
+import { Box, Link, Typography } from '@mui/material';
+import MuiAccordion from '@mui/material/Accordion';
+import MuiAccordionSummary from '@mui/material/AccordionSummary';
+import MuiAccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { theme } from 'constants/index';
 
 // TODO: style
 const Accordion = withStyles({
   root: {
-    maxWidth: '400px',
-    minWidth: '300px',
-    width: '60vw',
     boxShadow: 'none',
     '&:not(:last-child)': {
       borderBottom: 0,
@@ -53,9 +51,6 @@ const AccordionDetails = withStyles(() => ({
 }))(MuiAccordionDetails);
 
 const useStyles = makeStyles(() => ({
-  root: {
-    // width: '300px',
-  },
   topContainer: {
     backgroundColor: 'transparent',
     boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
@@ -122,7 +117,7 @@ export default function ContentDropdown({
                     key={l.text}
                     href={l.href}
                     target="blank"
-                  >
+                    underline="hover">
                     {l.text}
                   </Link>
                   .

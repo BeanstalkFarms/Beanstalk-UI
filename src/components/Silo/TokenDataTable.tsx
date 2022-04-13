@@ -8,13 +8,13 @@ import {
   TableHead,
   TableRow,
   Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { AppState } from 'state';
 import { APYTuple, CryptoAsset, displayBN, getAPYs, SiloAsset } from 'util/index';
-import { makeStyles } from '@material-ui/core/styles';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import makeStyles from '@mui/styles/makeStyles';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import TOKENS from 'constants/siloTokens';
 import TokenIcon from 'components/Common/TokenIcon';
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
   //
   hideOnMobile: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       display: 'none',
     }
   }

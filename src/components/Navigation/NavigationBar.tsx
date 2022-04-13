@@ -5,9 +5,9 @@ import {
   IconButton,
   Toolbar,
   Box,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import MenuIcon from '@mui/icons-material/Menu';
 import { AppState } from 'state';
 import { setDrawerOpen } from 'state/general/actions';
 import { theme } from 'constants/index';
@@ -21,6 +21,7 @@ const useStyles = makeStyles({
     boxShadow: 'none',
     marginBottom: 12,
     fontFamily: 'Futura',
+    zIndex: 11,
   },
   menuIconContain: {
     display: 'flex',
@@ -54,7 +55,12 @@ export default function NavigationBar() {
       <Toolbar className={classes.toolbar}>
         {width < 800 ? (
           <Box className={classes.menuIconContain}>
-            <IconButton edge="start" aria-label="menu" onClick={toggleDrawerOpen} className={classes.iconButton}>
+            <IconButton
+              edge="start"
+              aria-label="menu"
+              onClick={toggleDrawerOpen}
+              className={classes.iconButton}
+              size="large">
               <MenuIcon className={classes.menuIcon} />
             </IconButton>
             {currentBeanPrice}

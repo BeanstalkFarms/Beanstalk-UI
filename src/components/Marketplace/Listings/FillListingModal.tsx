@@ -5,8 +5,8 @@ import BigNumber from 'bignumber.js';
 import {
   Box,
   Modal,
-} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { PodListing } from 'state/marketplace/reducer';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
@@ -39,7 +39,7 @@ import {
 import TransactionToast from 'components/Common/TransactionToast';
 import { BASE_SLIPPAGE, BEAN, ETH, MIN_BALANCE } from 'constants/index';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import ListingsTable from './ListingsTable';
 
 const useStyles = makeStyles({
@@ -461,7 +461,7 @@ export default function FillListingModal({
           listings={[currentListing]}
           isBuying
         />
-        <Box sx={{ marginTop: 20 }}>
+        <Box sx={{ marginTop: '20px' }}>
           {fromBeanField}
           {fromEthField}
           <ExpandMoreIcon

@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Box } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { BEAN } from 'constants/index';
 import { displayBN, harvest, toStringBaseUnitBN, TrimBN } from 'util/index';
 import {
@@ -13,7 +13,7 @@ import {
 } from 'components/Common';
 import { UserBalanceState } from 'state/userBalance/reducer';
 import TransactionToast from 'components/Common/TransactionToast';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 type HarvestModuleProps = {
   setIsFormDisabled: Function;
