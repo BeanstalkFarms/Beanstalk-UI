@@ -153,13 +153,15 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
     (state) => state.marketplace
   );
 
-  const { listings } = useSelector<AppState, AppState['marketplace']>(
+  let { listings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
 
   const { harvestableIndex } = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
+
+  listings = listings.filter((l) => l.maxHarvestableIndex.isGreaterThan(harvestableIndex));
 
   const maxPlaceInLine = Math.max(
     ...listings.map((l) => l.index.minus(harvestableIndex).toNumber())
