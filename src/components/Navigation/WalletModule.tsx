@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
+import { EventData } from 'web3-eth-contract';
 import {
   Button,
   ClickAwayListener,
@@ -42,6 +43,19 @@ import {
   walletTopStrings,
 } from 'components/Common';
 import BalanceModule from 'components/Balances/BalanceModule';
+
+type EventDataWithTimestamp = (EventData & { timestamp: number });
+type BatchedEvent = {
+  event: string;
+  returnValues: any;
+  transactionHash: string;
+  timestamp: number;
+}
+type CurrentBlock = {
+  number: number;
+  transactionHash: string;
+  timestamp: number;
+}
 
 //
 const tokenImageStyle = {
@@ -418,8 +432,9 @@ export default function WalletModule() {
     setOpenWallet(false);
   };
 
-  const [walletEvents, setWalletEvents] = useState([]);
+  const [walletEvents, setWalletEvents] = useState<BatchedEvent[]>([]);
 
+  // Helpers
   const poolForLPRatio = (amount: BigNumber) => {
     if (amount.isLessThanOrEqualTo(0)) return [new BigNumber(-1), new BigNumber(-1)];
     return poolForLP(amount, beanReserve, ethReserve, totalLP);
@@ -437,7 +452,11 @@ export default function WalletModule() {
     return poolForLP(amount, beanlusdReserve, lusdReserve, totalBeanlusd);
   };
 
+  // Load
   useEffect(() => {
+    /**
+     * 
+     */
     async function handleWallet() {
       getWalletAddress().then((accountHex) => {
         if (accountHex !== undefined) {
@@ -452,25 +471,31 @@ export default function WalletModule() {
       });
     }
 
+    /**
+     * 
+     */
     async function buildWalletEvents() {
-      const timestampPromisesByBlockNumber = {};
+      const timestampPromisesByBlockNumber : {[blockNumber: string] : Promise<number> } = {};
+
       contractEvents.forEach((event) => {
-        if (timestampPromisesByBlockNumber[event.blockNumber] === undefined) {
-          timestampPromisesByBlockNumber[event.blockNumber] = getBlockTimestamp(
+        if (timestampPromisesByBlockNumber[event.blockNumber.toString()] === undefined) {
+          timestampPromisesByBlockNumber[event.blockNumber.toString()] = getBlockTimestamp(
             event.blockNumber
-          );
+          ) as Promise<number>;
         }
       });
+
       const blockNumbers = Object.keys(timestampPromisesByBlockNumber);
       const blockTimePromises = Object.values(timestampPromisesByBlockNumber);
+
       Promise.all(blockTimePromises).then((blockTimestamps) => {
-        const timestampsByBlockNumber = {};
+        const timestampsByBlockNumber : { [blockNumber: string] : number } = {};
         blockTimestamps.forEach((timestamp, index) => {
           const blockNumber = blockNumbers[index];
           timestampsByBlockNumber[blockNumber] = timestamp;
         });
 
-        const filteredEvents = [];
+        const filteredEvents : EventDataWithTimestamp[] = [];
         contractEvents.forEach((event) => {
           if (event.event === 'BeanRemove' || event.event === 'LPRemove') {
             return;
@@ -485,10 +510,11 @@ export default function WalletModule() {
           return blockDiff === 0 ? b.logIndex - a.logIndex : blockDiff;
         });
 
-        const batchedEvents = [];
-        let currentBlock = {};
+        const batchedEvents : BatchedEvent[] = [];
+        let currentBlock : CurrentBlock = {};
         let pendingAmountsPerType = {};
         let pendingSeasonsPerType = {};
+
         filteredEvents.forEach((event, index) => {
           function seasonsDisplay(season) {
             return season.min === season.max
@@ -498,7 +524,7 @@ export default function WalletModule() {
           function flushPendingAmounts() {
             // eslint-disable-next-line
             for (const type in pendingAmountsPerType) {
-              const batchedEvent = {};
+              const batchedEvent : BatchedEvent = {};
               switch (type) {
                 case 'BeanDeposit': {
                   batchedEvent.event = type;
@@ -651,9 +677,7 @@ export default function WalletModule() {
       {walletEvents
         .filter((event) => {
           if (transactionPage === 0) {
-            return ['BeanDeposit', 'BeanWithdraw', 'BeanClaim'].includes(
-              event.event
-            );
+            return ['BeanDeposit', 'BeanWithdraw', 'BeanClaim'].includes(event.event);
           }
           if (transactionPage === 1) {
             return ['Swap'].includes(event.event);
@@ -668,9 +692,7 @@ export default function WalletModule() {
           }
 
           if (transactionPage === 4) {
-            return ['Vote', 'Unvote', 'Incentivization'].includes(
-              event.event
-            );
+            return ['Vote', 'Unvote', 'Incentivization'].includes(event.event);
           }
           return true;
         })

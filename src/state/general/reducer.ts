@@ -1,5 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
+import { EventData } from 'web3-eth-contract';
+
 import {
   setInitialized,
   setMetamaskFailure,
@@ -7,6 +9,7 @@ import {
   setBips,
   setHasActiveBIP,
   setContractEvents,
+  // addContractEvents,
   setHasActiveFundraiser,
   setFundraisers,
   setWidth,
@@ -161,7 +164,7 @@ export interface GeneralState {
   /**
    * FIXME: define Contract Event type
    */
-  contractEvents: Array;
+  contractEvents: EventData[];
   
   // transactions: Array<Transaction>;
 
@@ -216,6 +219,12 @@ export default createReducer(initialState, (builder) =>
     .addCase(setContractEvents, (state, { payload }) => {
       state.contractEvents = payload;
     })
+    // .addCase(addContractEvents, (state, { payload }) => {
+    //   state.contractEvents = [
+    //     ...payload,
+    //     ...state.contractEvents
+    //   ].sort((a, b) => a.blockNumber - b.blockNumber);
+    // })
     .addCase(setWidth, (state, { payload }) => {
       state.width = payload;
     })

@@ -232,7 +232,7 @@ function processEvents(events: EventData[], harvestableIndex: BigNumber) {
     marketStats.orders.sumRemainingAmount = marketStats.orders.sumRemainingAmount.plus(order.remainingAmount);
     return order;
   });
-  const finalMarketHistory = marketHistory.reverse(); 
+  const finalMarketHistory = marketHistory.reverse();
 
   return {
     listings: finalPodListings,
@@ -291,14 +291,28 @@ export default function Updater() {
         history,
         stats
       } = processEvents(marketplaceEvents, harvestableIndex);
-      dispatch(
-        setMarketplaceState({
-          listings,
-          orders,
-          history,
-          stats
-        })
-      );
+      
+      dispatch(setMarketplaceState({
+        listings,
+        orders,
+        history,
+        stats
+      }));
+
+      // const accountHistory = (
+      //   history
+      //     .filter((item) => item.from === account || item.to === account)
+      //     .map((item) => ({
+      //       event: item.type,
+      //       blockNumber: item.blockNumber,
+      //       transactionHash: item.transactionHash,
+      //       returnValues: {
+      //         // fixme
+      //       },
+      //       address: account,           
+      //     } as EventData))
+      // )
+      // dispatch(addContractEvents(accountHistory));
     };
 
     if (harvestableIndex != null) {

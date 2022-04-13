@@ -46,7 +46,7 @@ export default function Orders(props: OrdersProps) {
   );
 
   //
-  const [walletAddress, setWalletAddress] = useState(null);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
   //
   const [settings, setSettings] = useState({
@@ -72,17 +72,23 @@ export default function Orders(props: OrdersProps) {
   // Handle changes in filters
   // FIXME: this is super inefficient
   useMemo(() => {
-    filteredOrders.current = filter(
-      allOrders,
-      (order) =>
-        (props.mode === 'MINE'
-          ? order.account.toLowerCase() === walletAddress
-          : order.account.toLowerCase() !== walletAddress) &&
-        order.pricePerPod.toNumber() > priceFilters[0] &&
-        order.pricePerPod.toNumber() < priceFilters[1] &&
-        order.maxPlaceInLine.gte(new BigNumber(placeInLineFilters[0])) &&
-        order.maxPlaceInLine.lte(new BigNumber(placeInLineFilters[1]))
-    );
+    if (props.mode === 'MINE') {
+      filteredOrders.current = filter(
+        allOrders,
+        (order) => 
+          order.account.toLowerCase() === walletAddress
+      );
+    } else {
+      filteredOrders.current = filter(
+        allOrders,
+        (order) => 
+          order.account.toLowerCase() !== walletAddress &&
+          order.pricePerPod.toNumber() > priceFilters[0] &&
+          order.pricePerPod.toNumber() < priceFilters[1] &&
+          order.maxPlaceInLine.gte(new BigNumber(placeInLineFilters[0])) &&
+          order.maxPlaceInLine.lte(new BigNumber(placeInLineFilters[1]))
+      );
+    }
 
     // Filter Orders the user cannot sell a plot into
     filteredOrders.current = filter(filteredOrders.current, (order) => {
@@ -136,7 +142,7 @@ export default function Orders(props: OrdersProps) {
   useEffect(() => {
     const init = async () => {
       const addr = await getWalletAddress();
-      setWalletAddress(addr);
+      setWalletAddress(addr ? addr.toLowerCase() : null);
     };
     init();
   }, []);

@@ -23,8 +23,8 @@ let lastPriceRefresh = new Date().getTime();
 let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
-// export const BEANSTALK_GENESIS_BLOCK = 12974075;
-export const BEANSTALK_GENESIS_BLOCK = 0;
+export const BEANSTALK_GENESIS_BLOCK = 12974075; // Beanstalk
+export const BIP10_COMMITTED_BLOCK   = 14148509; // Market
 
 /**
  * @rpc 20 separate calls to `getPastEvents`. Not batched.
@@ -113,6 +113,39 @@ export async function initializeEventListener(
       filter: { to: account },
       fromBlock: BEANSTALK_GENESIS_BLOCK,
     }),
+    // Farmer's Market
+    beanstalk.getPastEvents('PodListingCreated', {
+      filter: { account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodListingCancelled', {
+      filter: { account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodListingFilled', {
+      filter: { from: account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodListingFilled', {
+      filter: { to: account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodOrderCreated', {
+      filter: { account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodOrderCancelled', {
+      filter: { account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodOrderFilled', {
+      filter: { from: account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    }),
+    beanstalk.getPastEvents('PodOrderFilled', {
+      filter: { to: account },
+      fromBlock: BIP10_COMMITTED_BLOCK,
+    })
   ]).catch((err) => {
     console.error('initializeEventListener: failed to fetch accountEvents', err);
     throw err;

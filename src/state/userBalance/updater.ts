@@ -816,6 +816,7 @@ export default function Updater() {
           votedBips.delete(event.returnValues.bip);
         }
       });
+      
       dispatch(setContractEvents(events));
 
       // Variables named during conversation with Publius 2/28

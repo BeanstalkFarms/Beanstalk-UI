@@ -61,24 +61,26 @@ export default function Listings(props: ListingsProps) {
 
   // Handle changes in filters
   useMemo(() => {
-    filteredListings.current = filter(allListings, (listing) => (
-      (props.mode === 'MINE' ? (
+    if (props.mode === 'MINE') {
+      filteredListings.current = filter(allListings, (listing) => (
         listing.account === walletAddress
-      ) : (
-        listing.account !== walletAddress
-      )) &&
-      listing.pricePerPod > priceFilters[0] &&
-      listing.pricePerPod < priceFilters[1] &&
-      listing.index
-        .minus(harvestableIndex)
-        .gte(new BigNumber(placeInLineFilters[0])) &&
-      listing.index
-        .minus(harvestableIndex)
-        .lte(new BigNumber(placeInLineFilters[1])) &&
-      listing.maxHarvestableIndex
-        .minus(harvestableIndex)
-        .gte(new BigNumber(0))
-    ));
+      ));
+    } else {
+      filteredListings.current = filter(allListings, (listing) => (
+        listing.account !== walletAddress &&
+        listing.pricePerPod > priceFilters[0] &&
+        listing.pricePerPod < priceFilters[1] &&
+        listing.index
+          .minus(harvestableIndex)
+          .gte(new BigNumber(placeInLineFilters[0])) &&
+        listing.index
+          .minus(harvestableIndex)
+          .lte(new BigNumber(placeInLineFilters[1])) &&
+        listing.maxHarvestableIndex
+          .minus(harvestableIndex)
+          .gte(new BigNumber(0))
+      ));
+    }
 
     return () => {
       // cleanup listings
