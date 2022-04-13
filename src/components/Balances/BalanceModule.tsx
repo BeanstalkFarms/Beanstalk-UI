@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Hidden, Box } from '@material-ui/core';
+import { Hidden, Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { BEAN, theme } from 'constants/index';
 import { displayBN, displayFullBN, TokenLabel, TrimBN } from 'util/index';
@@ -16,7 +16,7 @@ import {
   TransitAsset,
   UniswapAsset,
 } from 'components/Common';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import BalanceChart from './BalanceChart';
 import ToggleTokenBalanceModule from './ToggleTokenBalanceModule';
 
@@ -204,7 +204,7 @@ export default function BalanceModule(props) {
           />
         </Grid>
       </Hidden>
-      <Hidden xsDown>
+      <Hidden smDown>
         <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
@@ -254,7 +254,7 @@ export default function BalanceModule(props) {
           />
         </Grid>
       </Hidden>
-      <Hidden xsDown>
+      <Hidden smDown>
         <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
@@ -310,7 +310,7 @@ export default function BalanceModule(props) {
           />
         </Grid>
       </Hidden>
-      <Hidden xsDown>
+      <Hidden smDown>
         <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
@@ -358,6 +358,7 @@ export default function BalanceModule(props) {
         * Section 1: "Top"
         */}
       <Grid
+        item
         container
         className={classes.sectionOne}
       >
@@ -535,6 +536,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={SiloAsset.Stalk}
+              direction="column"
             />
           </Grid>
           <Grid item sm={3} xs={12}>
@@ -544,6 +546,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={SiloAsset.Seed}
+              direction="column"
             />
           </Grid>
           <Grid item sm={3} xs={12}>
@@ -553,6 +556,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={FarmAsset.Pods}
+              direction="column"
             />
           </Grid>
           <Grid item sm={3} xs={12}>
@@ -566,6 +570,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={CryptoAsset.Ethereum}
+              direction="column"
             />
           </Grid>
         </Grid>

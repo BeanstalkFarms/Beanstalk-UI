@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import { Box, Modal } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Box, Modal } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import {
   CryptoAsset,
@@ -29,7 +29,7 @@ import {
 } from 'components/Common';
 import PlotRangeInputField from 'components/Common/PlotRangeInputField';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import OrdersTable from './OrdersTable';
 
 const useStyles = makeStyles({

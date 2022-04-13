@@ -1,32 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Grid } from '@material-ui/core';
+import { Container, Grid } from '@mui/material';
 import { useSelector } from 'react-redux';
 
-import { BaseModule, chartStrings, ContentSection } from 'components/Common';
+import { BaseModule, chartStrings,  } from 'components/Common';
 import { beanstalkQuery } from 'graph/index';
 import { AppState } from 'state';
-import { makeStyles } from '@material-ui/core/styles';
 import BeanCharts from './BeanCharts';
 import SiloCharts from './SiloCharts';
 import FieldCharts from './FieldCharts';
 
-const useStyles = makeStyles({
-  root: {
-    margin: 'auto',
-    width: '100%'
-  }
-});
-
-export default function Analytics(props) {
-  const classes = useStyles();
-  //
+export default function Charts() {
   const [chartData, setChartData] = useState([]);
   const [section, setSection] = useState(0);
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
-  //
+  // Load data when component is mounted.
   useEffect(() => {
     async function loadBeanstalkData() {
       const beanstalkData = await beanstalkQuery();
@@ -37,11 +27,8 @@ export default function Analytics(props) {
 
   //
   const isMobile: boolean = width <= 850;
-  // const baseStyle = isMobile
-  //   ? { paddingLeft: 0, paddingRight: 0 }
-  //   : {  }; // minWidth: 600
 
-  //
+  // Sections
   const titles = ['Bean', 'Field', 'Silo'];
   const descriptions = [
     chartStrings.bean,
@@ -56,23 +43,8 @@ export default function Analytics(props) {
 
   //
   return (
-    <Grid
-      className={classes.root}
-      container
-      item
-      md={10}
-      sm={10}
-      xs={10}
-      justifyContent="center">
-      <ContentSection
-        id="charts"
-        title={props.title}
-        size="20px"
-        style={{
-          width: '100%',
-          marginTop: props.marginTop || 0,
-        }}
-      >
+    <Container maxWidth="lg">
+      <Grid container justifyContent="center">
         <BaseModule
           handleTabChange={(event, newSection) => {
             setSection(newSection);
@@ -83,17 +55,11 @@ export default function Analytics(props) {
           size={isMobile ? 'small' : 'medium'}
           sectionTitles={titles}
           showButton={false}
-          style={{
-            width: '100%',
-          }}
+          style={{ width: '100%' }}
         >
           {sections[section]}
         </BaseModule>
-      </ContentSection>
-    </Grid>
+      </Grid>
+    </Container>
   );
 }
-
-Analytics.defaultProps = {
-  title: 'Analytics',
-};

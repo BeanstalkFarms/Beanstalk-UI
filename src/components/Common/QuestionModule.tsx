@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
-import { Box } from '@material-ui/core';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { Box } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { FormatTooltip } from './index';
 
-export default function QuestionModule(props) {
+type QuestionModuleProps = {
+  margin?: string;
+  position?: string;
+  style?: any;
+  marginTooltip?: string;
+  placement?: string;
+  description?: string;
+  widthTooltip?: string | number;
+  fontSize?: string;
+}
+
+const QuestionModule : React.FC<QuestionModuleProps> = (props) => {
   const { innerWidth: width } = window;
   const questionStyle = {
     display: 'inline-block',
@@ -51,8 +62,10 @@ export default function QuestionModule(props) {
       </ClickAwayListener>
     </Box>
   );
-}
+};
 
 QuestionModule.defaultProps = {
   fontSize: '8px',
 };
+
+export default QuestionModule;

@@ -1,11 +1,11 @@
 import React from 'react';
 import Page from 'components/Page';
-import Seasons from 'components/Seasons';
+import PegMaintenance from 'components/PegMaintenance';
 
 export default function PegMaintenancePage() {
   return (
     <Page title="Peg Maintenance">
-      <Seasons />
+      <PegMaintenance />
     </Page>
   );
 }

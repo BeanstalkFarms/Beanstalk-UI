@@ -1,10 +1,10 @@
 /* eslint-disable */
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import BeanLogo from 'img/bean-logo.svg';
 import { theme } from 'constants/index';
 import './index.tsx';
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles} from "@mui/styles";
 
 const useStyles = makeStyles({
     root: {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
 import { BalanceTableCell, TablePageSelect } from 'components/Common';
 import TokenIcon from 'components/Common/TokenIcon';
 import { useSelector } from 'react-redux';

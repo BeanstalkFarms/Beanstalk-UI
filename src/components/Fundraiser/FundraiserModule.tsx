@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { updateBeanstalkUSDCAllowance } from 'state/allowances/actions';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import {
   approveBeanstalkUSDC,
   displayBN,
@@ -88,7 +88,7 @@ export default function FundraiserModule({
   return (
     <>
       <ContentTitle title={title} />
-      <ContentSection id={title} style={{ paddingTop: '10px', width: '100%' }}>
+      <ContentSection id={title}>
         <Grid container justifyContent="center" className={classes.helperGrid}>
           <ContentDropdown
             description={description}
@@ -121,7 +121,6 @@ export default function FundraiserModule({
           item
           xs={12}
           spacing={2}
-          className="SiloSection"
           alignItems="flex-start"
           justifyContent="center"
           style={{ minHeight: minHeight, height: '100%' }}

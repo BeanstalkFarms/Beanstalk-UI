@@ -1,18 +1,20 @@
 import React, { Fragment } from 'react';
-import { Box, Button, Link, Tab, Tabs } from '@material-ui/core';
+import { Box, Button, Link, Tab, Tabs } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { theme } from 'constants/index';
 import { FormatTooltip, Line, QuestionModule } from './index';
 
 const useStyles = makeStyles(() => ({
+  // disableBackground = false
   inputModule: {
     backgroundColor: theme.module.background,
     borderRadius: '25px',
     color: theme.text,
     padding: '10px',
   },
+  // disableBackground = true
   metaModule: {
     backgroundColor: theme.module.metaBackground,
     borderRadius: '25px',
@@ -70,6 +72,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+type BaseModuleProps = {
+  removeBackground: boolean;
+}
 export default function BaseModule({
   size,
   allowance,
@@ -97,7 +102,7 @@ export default function BaseModule({
   showButton,
   singleReset,
   setButtonLabel
-}) {
+} : Partial<BaseModuleProps>) {
   const dispatch = useDispatch();
   const s = size === 'small' || window.innerWidth < 450;
   const classes = useStyles();
@@ -175,14 +180,14 @@ export default function BaseModule({
   const resetLink = singleReset !== true ?
     <>
       <br />
-      <Link // eslint-disable-line
+      <Link
         style={{ color: 'green' }}
         href=""
         onClick={(event) => {
           event.preventDefault();
           resetForm();
         }}
-      >
+        underline="hover">
         Reset Defaults
       </Link>
     </>
@@ -214,7 +219,11 @@ export default function BaseModule({
       {normalBox && sectionTitles.length >= 1 ? (
         <Box
           style={style}
-          className={removeBackground ? classes.metaModule : classes.inputModule}
+          className={
+            removeBackground
+              ? classes.metaModule 
+              : classes.inputModule
+          }
           sx={{ marginTop: marginTop }}
           boxShadow={3}
         >
@@ -236,7 +245,11 @@ export default function BaseModule({
                 style={{
                   textTransform: textTransform,
                   fontSize: s ? textTabSize : '18px',
-                  color: removeBackground ? theme.backgroundText : theme.text,
+                  color: (
+                    removeBackground
+                      ? theme.backgroundText
+                      : theme.text
+                  ),
                 }}
                 disableRipple={sectionTitles.length === 1}
                 label={
@@ -264,7 +277,12 @@ export default function BaseModule({
             }}
           />
           {showButton ? (
-            <form autoComplete="off" noValidate style={{ padding: '0 10px' }}>
+            <form
+              autoComplete="off"
+              noValidate
+              // Removed during mui-v5 update.
+              // style={{ padding: '0 10px' }}
+            >
               {moduleContent}
             </form>
           ) : (
@@ -275,7 +293,9 @@ export default function BaseModule({
         <Box
           style={style}
           className={
-            removeBackground ? classes.metaModule : classes.inputModule
+            removeBackground
+              ? classes.metaModule
+              : classes.inputModule
           }
           sx={{
             marginTop: marginTop
@@ -320,7 +340,9 @@ export default function BaseModule({
         <Box
           style={style}
           className={
-            removeBackground ? classes.metaModule : classes.inputModule
+            removeBackground
+              ? classes.metaModule
+              : classes.inputModule
           }
           sx={{ 
             marginTop: marginTop

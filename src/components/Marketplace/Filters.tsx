@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
-import { Box, IconButton, Popover, Slider } from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/styles';
+import { Box, IconButton, Popover, Slider } from '@mui/material';
+import { makeStyles, withStyles } from '@mui/styles';
 import {
   FilterListRounded as FilterIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 const useStyles = makeStyles({
   root: {

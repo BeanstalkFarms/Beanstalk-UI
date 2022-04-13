@@ -189,30 +189,9 @@
   }
 }
 
-.BalanceSection-mobile {
-    display: none !important;
-}
-
-@media screen and (max-width: 1200px) {
-  .BalanceSection {
-    display: none !important;
-  }
-  .BalanceSection-mobile {
-    display: block !important;
-    max-width: 500px;
-  }
-  .SiloSection {
-    max-width: 1050px;
-    padding: 0px;
-  }
-}
-
 .AppContent {
-  /* min-height: 300px; */
-  /* width: 100vw; */
-  /* position: relative; */
-  display: flex;
-  font-family: Futura-PT-Book;
+  /* display: flex; */
+  /* font-family: Futura-PT-Book; */
 }
 
 .AppBar-shadow {
@@ -316,13 +295,15 @@
   }
 }
 
-.BalanceModule-title {
+/* .BalanceModule-title {
   display: inline-block;
   text-align: left;
   font-size: 14px;
   font-family: Futura-PT-Book;
   margin: 2px;
-} /* format for left side text */
+} */
+
+/* format for left side text */
 .BalanceModule-balance {
   display: inline-block;
   font-family: Lucida Console;
@@ -337,14 +318,16 @@
   font-family: Lucida Console;
   font-weight: 400;
   right: -10px;
-} /* format for top right balance numbers */
+}
+/* format for top right balance numbers */
 .TokenBalanceModule-header {
   text-align: left;
   font-family: Futura-PT-Book;
   position: absolute;
   left: 0;
   padding-left: 10px;
-} /* format for left side text */
+}
+/* format for left side text */
 .TokenBalanceModule-content {
   text-align: right;
   font-family: Lucida Console;
@@ -352,7 +335,9 @@
   width: auto;
   right: -10px;
   font-size: 14px;
-} /* format for right side numbers */
+} 
+/* format for right side numbers */
+
 .nftTextField-box {
   background-color: #F5FAFF;
   border-radius: 25px;
@@ -398,10 +383,10 @@
 /* For medium screens */
 
 @media screen and (max-width: 599px) {
-  .BalanceModule-title {
+  /* .BalanceModule-title {
     padding-left: 10px;
     width: 50%;
-  }
+  } */
   .BalanceModule-balance {
     width: 47%;
     text-align: right;
@@ -469,9 +454,9 @@
 /* For tiny screens */
 
 @media screen and (max-width: 400px) {
-  .BalanceModule-title {
+  /* .BalanceModule-title {
     font-size: 12px;
-  }
+  } */
   .BalanceModule-balance {
     font-size: 12px;
   }
@@ -506,10 +491,10 @@
 }
 
 @media screen and (max-width: 360px) {
-  .BalanceModule-title {
+  /* .BalanceModule-title {
     width: 45%;
     font-size: 10px;
-  }
+  } */
   .BalanceModule-balance {
     width: 40%;
     font-size: 10px;

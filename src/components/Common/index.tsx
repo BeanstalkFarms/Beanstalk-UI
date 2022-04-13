@@ -1,8 +1,8 @@
-import { Theme, withStyles } from '@material-ui/styles';
-import { Tooltip } from '@material-ui/core';
+import { Theme, withStyles } from '@mui/styles';
+import { Tooltip } from '@mui/material';
 import BigNumber from 'bignumber.js';
 
-export { Grid } from '@material-ui/core';
+export { Grid } from '@mui/material';
 export type { Token } from 'util/index';
 export {
   BudgetAsset,

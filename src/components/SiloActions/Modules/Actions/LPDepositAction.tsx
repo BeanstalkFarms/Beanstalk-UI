@@ -3,8 +3,8 @@ import BigNumber from 'bignumber.js';
 import { unstable_batchedUpdates } from 'react-dom'; // eslint-disable-line
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { Box } from '@material-ui/core';
-import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { Box } from '@mui/material';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import {
   BEAN,
   BEAN_TO_SEEDS,

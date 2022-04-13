@@ -25,7 +25,7 @@ import {
   TransactionToast,
 } from 'components/Common';
 import PlotRangeInputField from 'components/Common/PlotRangeInputField';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import ListingsTable from './ListingsTable';
 
 const useStyles = makeStyles({

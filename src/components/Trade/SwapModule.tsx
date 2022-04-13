@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import { IconButton, Box } from '@material-ui/core';
-import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
+import { IconButton, Box } from '@mui/material';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import { BEAN, ETH, LP_FEE, SLIPPAGE_THRESHOLD } from 'constants/index';
 import {
   displayBN,
@@ -122,7 +122,7 @@ export default function SwapModule(props) {
       }}
       style={{ marginTop: '-6px', marginBottom: '-24px' }}
       color="primary"
-    >
+      size="large">
       <UnfoldMoreIcon />
     </IconButton>
   );

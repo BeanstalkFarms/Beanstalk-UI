@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { BEAN, ETH, SLIPPAGE_THRESHOLD } from 'constants/index';
 import {
   displayBN,
@@ -31,7 +31,7 @@ import {
   TransactionTextModule,
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   noSoilBox: {

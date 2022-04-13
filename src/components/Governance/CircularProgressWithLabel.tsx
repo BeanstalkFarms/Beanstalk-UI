@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, CircularProgress, Typography } from '@material-ui/core';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { FormatTooltip } from 'components/Common';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   blackground: {

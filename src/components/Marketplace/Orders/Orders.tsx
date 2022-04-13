@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import filter from 'lodash/filter';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import { displayBN, FarmAsset, getWalletAddress } from 'util/index';
@@ -11,7 +11,7 @@ import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
 import TokenIcon from 'components/Common/TokenIcon';
 import FillOrderModal from 'components/Marketplace/Orders/FillOrderModal';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import OrdersTable from './OrdersTable';
 import Filters, { StyledSlider } from '../Filters';
 

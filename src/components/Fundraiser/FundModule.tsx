@@ -1,11 +1,11 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TransactionToast from 'components/Common/TransactionToast';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { USDC, BEAN } from '../../constants';
 import {
   displayBN,

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import filter from 'lodash/filter';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 
 import { AppState } from 'state';
 import { PodListing } from 'state/marketplace/reducer';
@@ -10,7 +10,7 @@ import { CryptoAsset, displayBN, FarmAsset, getWalletAddress } from 'util/index'
 import TokenIcon from 'components/Common/TokenIcon';
 import { filterStrings, QuestionModule } from 'components/Common';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import FillListingModal from './FillListingModal';
 import ListingsTable from './ListingsTable';
 import Filters, { StyledSlider } from '../Filters';

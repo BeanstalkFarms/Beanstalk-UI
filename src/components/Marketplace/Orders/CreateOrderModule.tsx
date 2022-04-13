@@ -3,8 +3,8 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { unstable_batchedUpdates } from 'react-dom'; // eslint-disable-line
 import { AppState } from 'state';
-import { Box } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Box } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   BEAN,
   ETH,
@@ -36,7 +36,7 @@ import {
   TokenOutputField,
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   buyRangeWarning: {
