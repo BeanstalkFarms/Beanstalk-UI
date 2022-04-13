@@ -158,8 +158,10 @@ export async function initializeEventListener(
   // eslint-disable-next-line
   let allEvents : EventData[] = [].concat.apply([], accountEvents);
   allEvents.sort((a, b) => {
+    // First, sort by block number, highest blockNumber first.
     const diff = a.blockNumber - b.blockNumber;
     if (diff !== 0) return diff;
+    // Then, sort by logIndex, highest logIndex first
     return a.logIndex - b.logIndex;
   });
 

@@ -115,6 +115,10 @@ const useStyles = makeStyles({
       backgroundColor: theme.activeSection,
     },
   },
+  shiftTokenFlowUp: {
+    // temporary hack instead of rebuilding this component from scratch
+    marginTop: '-7px', 
+  }
 });
 
 /**
@@ -125,22 +129,25 @@ const useStyles = makeStyles({
 const TokenFlow : React.FC<{
   in?:  [BigNumber, Token],
   out?: [BigNumber, Token]
-}> = (props) => (
-  <>
-    {props.in ? (
-      <>
-        <span style={{ color: 'green' }}>{`+${displayBN(props.in[0])}`}</span>
-        <TokenTypeImageModule style={tokenImageStyle} token={props.in[1]} />
-      </>
-    ) : null}
-    {props.out ? (
-      <>
-        <span style={{ color: 'red' }}>{`-${displayBN(props.out[0])}`}</span>
-        <TokenTypeImageModule style={tokenImageStyle} token={props.out[1]} />
-      </>
-    ) : null}
-  </>
-);
+}> = (props) => {
+  const classes = useStyles();
+  return (
+    <div className={props.in && props.out ? classes.shiftTokenFlowUp : undefined}>
+      {props.out ? (
+        <div>
+          <span style={{ color: 'red' }}>{`-${displayBN(props.out[0])}`}</span>
+          <TokenTypeImageModule style={tokenImageStyle} token={props.out[1]} />
+        </div>
+      ) : null}
+      {props.in ? (
+        <div>
+          <span style={{ color: 'green' }}>{`+${displayBN(props.in[0])}`}</span>
+          <TokenTypeImageModule style={tokenImageStyle} token={props.in[1]} />
+        </div>
+      ) : null}
+    </div>
+  );
+};
 
 /**
  *
@@ -158,7 +165,7 @@ function DisplayEvent({ event }) {
       eventTitle = `Bean Deposit (Season${s})`;
       eventAmount = (
         <TokenFlow
-          out={[beans, SiloAsset.Bean]}
+          in={[beans, SiloAsset.Bean]}
         />
       );
       break;
@@ -251,7 +258,7 @@ function DisplayEvent({ event }) {
       eventTitle = `LP Deposit (Season${s})`;
       eventAmount = (
         <TokenFlow
-          out={[lp, SiloAsset.LP]}
+          in={[lp, SiloAsset.LP]}
         />
       );
       break;
@@ -382,45 +389,27 @@ function DisplayEvent({ event }) {
     // moved to the subgraph.
     case 'PodOrderFilled': {
       const values = (event.returnValues as PodOrderFilledEvent);
-      const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
-      if (values.from.toLowerCase() === account) {
-        // I Filled a Pod Order
-        eventTitle = 'Sold Pods to Pod Order';
-        eventAmount = (
-          <TokenFlow
-            out={[pods, FarmAsset.Pods]}
-          />
-        );
+      // const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
+      if (values.to.toLowerCase() === account) {
+        // My Pod Order was "Filled".
+        // I lose Beans, gain the Plot.
+        eventTitle = 'Bought Plot via Farmer\'s Market';
       } else {
-        // My Pod Order was Filled
-        eventTitle = 'Bought Pods via Pod Order';
-        eventAmount = (
-          <TokenFlow
-            in={[pods, FarmAsset.Pods]}
-          />
-        );
+        // I "Filled" a Pod Order (sold my plot)
+        // I lose the plot, gain Beans.
+        eventTitle = 'Sold Plot via Farmer\'s Market';
       }
       break;
     }
     case 'PodListingFilled': {
       const values = (event.returnValues as PodListingFilledEvent);
-      const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
-      if (values.from.toLowerCase() === account) {
-        // I Filled a Pod Listing
-        eventTitle = 'Bought Pods from Pod Listing';
-        eventAmount = (
-          <TokenFlow
-            out={[pods, FarmAsset.Pods]}
-          />
-        );
+      // const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
+      if (values.to.toLowerCase() === account) {
+        // I "Filled" a Pod Listing (I spent Beans to buy someone's Pods)
+        eventTitle = 'Bought Plot via Farmer\'s Market';
       } else {
-        // My Pod Listing was Filled
-        eventTitle = 'Sold Pods via Pod Listing';
-        eventAmount = (
-          <TokenFlow
-            in={[pods, FarmAsset.Pods]}
-          />
-        );
+        // My Pod Listing was "Filled" (someone spent Beans to buy my Pods)
+        eventTitle = 'Sold Plot via Farmer\'s Market';
       }
       break;
     }
@@ -428,6 +417,7 @@ function DisplayEvent({ event }) {
       break;
   }
 
+  //
   const date = new Date(event.timestamp * 1e3);
   const dateString = date.toLocaleDateString('en-US');
   const timeString = date.toLocaleTimeString('en-US');
@@ -440,7 +430,9 @@ function DisplayEvent({ event }) {
           <br />
           <Box style={timestampStyle}>{`${dateString} ${timeString}`}</Box>
         </Box>
-        <Box style={eventAmountStyle}>{eventAmount}</Box>
+        <Box style={eventAmountStyle}>
+          {eventAmount}
+        </Box>
       </Box>
     </Box>
   );
