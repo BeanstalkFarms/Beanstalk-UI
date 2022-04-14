@@ -122,8 +122,8 @@ export default function Main() {
         />
       ) : null} */}
       {/* Sun (top left corner) */}
-      <img alt="Sun Icon" src={theme.sun} style={sunStyle} />
-      {!theme.rainbow ? null : <img alt="Rainbow Icon" src={theme.rainbow} style={rainbowStyle} />}
+      <img alt="" src={theme.sun} style={sunStyle} />
+      {!theme.rainbow ? null : <img alt="" src={theme.rainbow} style={rainbowStyle} />}
     </Box>
   );
 }

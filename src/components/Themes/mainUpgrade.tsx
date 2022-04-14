@@ -62,8 +62,8 @@ export default function MainUpgrade(props: any) {
   return (
     <>
       <Grid container className={classes.topGround} justifyContent="center" />
-      <img alt="Fence Icon" src={FenceIcon} style={miscStyle} />
-      <img alt="Plants Icon" src={PlantsIcon} style={itemStyle} />
+      <img alt="" src={FenceIcon} style={miscStyle} />
+      <img alt="" src={PlantsIcon} style={itemStyle} />
       {props.children}
     </>
   );
