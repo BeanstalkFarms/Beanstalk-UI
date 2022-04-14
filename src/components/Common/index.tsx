@@ -35,10 +35,8 @@ export { default as QuestionModule } from './QuestionModule';
 export { default as SettingsFormModule } from './SettingsFormModule';
 export { default as SingleButton } from './SingleButton';
 export { default as SlippageModule } from './SlippageModule';
-export { default as SwapTransactionDetailsModule } from './SwapTransactionDetailsModule';
 export { default as SwitchModule } from './SwitchModule';
 export { default as TablePageSelect } from './TablePageSelect';
-// export { default as TitleLabel } from './TitleLabel';
 export { default as TokenBalanceModule } from './TokenBalanceModule';
 export { default as TokenInputField } from './TokenInputField';
 export { default as TokenOutputField } from './TokenOutputField';
@@ -48,7 +46,6 @@ export { default as TransactionTextModule } from './TransactionTextModule';
 export { default as UnitSelectionModule } from './UnitSelectionModule';
 export { default as TabImageModule } from './TabImageModule';
 export { default as Line } from './Line';
-export { default as SectionTabs } from './SectionTabs';
 export { default as BalanceTableCell } from './BalanceTableCell';
 export { default as TransactionToast } from './TransactionToast';
 
@@ -61,14 +58,9 @@ export const FormatTooltip = withStyles((theme: Theme) => ({
     fontFamily: 'Futura-Pt-Book',
     width: (props) => props.width,
     maxWidth: '345px',
-    margin: (props) => props.margin,
+    margin: (props) => props.margin || '0 0 0 20px',
   },
 }))(Tooltip);
-
-FormatTooltip.defaultProps = {
-  margin: '0 0 0 20px',
-  // width: 'auto',
-};
 
 export const walletStrings = {
   beanBalance:
