@@ -8,14 +8,19 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import LastPageIcon from '@mui/icons-material/LastPage';
 
 const useStyles = makeStyles({
-    pagination: {
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'center',
-    },
+  pagination: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+  },
 });
 
-export default function TablePageSelect(props) {
+export default function TablePageSelect(props: {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (event: React.MouseEvent<HTMLButtonElement>, page: number) => void;
+}) {
   const classes = useStyles();
   const muiTheme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
