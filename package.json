@@ -74,7 +74,7 @@
   },
   "scripts": {
     "start": "node --max_old_space_size=4096 node_modules/.bin/react-app-rewired start",
-    "build": "node --optimize_for_size --max_old_speace_size=8192 node_modules/.bin/react-app-rewired build",
+    "build": "node --optimize_for_size --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts-rewired test",
     "eject": "react-scripts-rewired eject",
