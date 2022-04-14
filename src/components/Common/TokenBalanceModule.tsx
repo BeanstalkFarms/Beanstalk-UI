@@ -31,7 +31,7 @@ const useStyles = makeStyles({
     marginBottom: '-5px',
     marginLeft: '5px',
   }
-})
+});
 
 export default function TokenBalanceModule(props: TokenBalanceModuleProps) {
   const classes = useStyles();
@@ -52,7 +52,7 @@ export default function TokenBalanceModule(props: TokenBalanceModuleProps) {
   const displayLP = useMemo(() => (balance : [BigNumber, BigNumber]) => {
     if (isCurve) return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} 3CRV`;
     return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
-  }, [isCurve])
+  }, [isCurve]);
 
   const balanceContent = props.balance.isGreaterThan(0)
     ? (
