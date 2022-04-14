@@ -27,7 +27,7 @@ const Accordion = withStyles({
 
 const AccordionSummary = withStyles({
   root: {
-    backgroundColor: theme.secondary,
+    // backgroundColor: theme.secondary,
     marginBottom: -1,
     borderRadius: '15px',
     minHeight: 56,
@@ -45,24 +45,25 @@ const AccordionSummary = withStyles({
 
 const AccordionDetails = withStyles(() => ({
   root: {
-    backgroundColor: theme.secondary,
-    borderRadius: '0 0 15px 15px',
+    // backgroundColor: theme.secondary,
+    // borderRadius: '0 0 15px 15px',
   },
 }))(MuiAccordionDetails);
 
 const useStyles = makeStyles(() => ({
   topContainer: {
-    backgroundColor: 'transparent',
     boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.2)',
+    // backgroundColor: theme.secondary,
+    // borderRadius: '15px',
   },
   heading: {
     fontSize: '16px',
     fontWeight: 'bold',
     fontFamily: 'Futura-PT-Book',
-    color: theme.accentText,
+    // color: theme.accentText,
   },
   descriptionText: {
-    color: theme.accentText,
+    // color: theme.accentText,
     textAlign: 'justify',
     fontFamily: 'Futura-PT-Book',
     fontSize: '16px',
@@ -76,34 +77,32 @@ type ContentDropdownProps = {
   accordionStyles?: {};
 }
 
-const ContentDropdown: React.FC<ContentDropdownProps> = ({ description, descriptionTitle,
-  descriptionLinks, accordionStyles }) => {
+const ContentDropdown : React.FC<ContentDropdownProps> = ({
+  description,
+  descriptionTitle,
+  descriptionLinks,
+  accordionStyles
+}) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
-  const handleChange = (panel: string) => (
-      event: React.ChangeEvent<{}>, isExpanded: boolean) => {
+  const handleChange = (panel: string) => (_: any, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   return (
-    <Box style={{ margin: '0px' }}>
+    <Box>
       <Accordion
         expanded={expanded === 'event'}
         onChange={handleChange('event')}
         className={classes.topContainer}
-        style={{
-              backgroundColor: theme.secondary,
-              borderRadius: '15px',
-              ...accordionStyles
-            }}
-        >
+        style={accordionStyles}
+      >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon style={{ color: theme.accentText }} />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
-          style={{ backgroundColor: theme.secondary }}
-          >
+        >
           <Typography className={classes.heading}>
             {descriptionTitle}
           </Typography>
@@ -112,22 +111,22 @@ const ContentDropdown: React.FC<ContentDropdownProps> = ({ description, descript
           <Typography className={classes.descriptionText}>
             {description}
             {descriptionLinks !== undefined ?
-                  descriptionLinks.map((l) => (
-                    <span key={l.text}>
-                      {' '}
-                      <Link
-                        style={{ color: theme.accentText }}
-                        key={l.text}
-                        href={l.href}
-                        target="blank"
-                        underline="hover">
-                        {l.text}
-                      </Link>
-                      .
-                    </span>
-                  ))
-                  : null
-              }
+              descriptionLinks.map((l) => (
+                <span key={l.text}>
+                  {' '}
+                  <Link
+                    style={{ color: theme.accentText }}
+                    key={l.text}
+                    href={l.href}
+                    target="blank"
+                    underline="hover">
+                    {l.text}
+                  </Link>
+                  .
+                </span>
+              ))
+              : null
+            }
           </Typography>
         </AccordionDetails>
       </Accordion>
