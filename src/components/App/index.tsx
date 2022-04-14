@@ -40,7 +40,6 @@ export default function App() {
     metamaskFailure,
     width
   } = useSelector<AppState, AppState['general']>((state) => state.general);
-  // const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
 
   // HANDLE WINDOW SIZE CHANGE
   // Used throughout the app to show/hide components and
