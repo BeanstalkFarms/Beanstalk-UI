@@ -24,14 +24,6 @@ import { makeStyles } from '@mui/styles';
 import MultiCard from 'components/Common/Cards/MultiCard';
 
 const useStyles = makeStyles({
-  // pegMaintenanceSpanStyle: {
-  //   width: '100%',
-  //   display: 'inline-block',
-  //   textAlign: 'center',
-  //   marginTop: '5px',
-  //   fontFamily: 'Futura-Pt-Book',
-  //   fontSize: '20px',
-  // },
   spanStyle: {
     display: 'inline-block',
     fontFamily: 'Futura-Pt-Book',
