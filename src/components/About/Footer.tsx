@@ -58,6 +58,7 @@ const useStyles = makeStyles({
     height: theme.groundHeight,
     zIndex: 11,
     paddingTop: !theme.groundPaddingTop ? '0px' : theme.groundPaddingTop,
+    paddingLeft: (props: any) => (props.width < 800 ? 0 : 300),
     position: 'fixed',
     bottom: 0,
     left: 0,
@@ -78,11 +79,10 @@ const useStyles = makeStyles({
 });
 
 export default function Footer() {
-  const classes = useStyles();
-
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
+  const classes = useStyles({ width: width });
 
   return (
     <>
@@ -91,9 +91,6 @@ export default function Footer() {
       <Grid
         container
         className={classes.fixedGround}
-        style={{
-          paddingLeft: width < 800 ? 0 : 300
-        }}
         justifyContent="center"
       >
         {/* Row 1: Icons */}

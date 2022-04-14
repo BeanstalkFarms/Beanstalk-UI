@@ -18,6 +18,11 @@ const useStyles = makeStyles(({
   },
   cloudStyle: {
     maxWidth: '400px',
+  },
+  defaultSection: {
+    minHeight: '330px',
+    width: '100%',
+    paddingTop: '90px'
   }
 }));
 
@@ -34,7 +39,7 @@ const About : FC<AboutProps> = (props) => {
   // title={showLandingPage ? 'Beanstalk' : 'About'}
   return (
     <ContentSection id="about">
-      <Box style={{ minHeight: '330px', width: '100%', paddingTop: '90px' }}>
+      <Box className={classes.defaultSection}>
         {props.defaultSection}
         {/* */}
         <Grid container className={classes.cloudDivStyle}>

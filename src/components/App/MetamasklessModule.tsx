@@ -20,17 +20,6 @@ const useStyles = makeStyles(({
   }
 }));
 
-// const connectMetaStyle = {
-//   fontFamily: 'Futura-PT-Book',
-//   fontSize: '18px',
-//   height: '46px',
-//   lineHeight: '20px',
-//   margin: 'auto 0',
-//   padding: '20px',
-//   top: 'calc(50% - 23px)',
-//   width: 'auto',
-// };
-
 export default function MetamasklessModule() {
   const classes = useStyles();
   const history = useHistory();
