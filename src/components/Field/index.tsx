@@ -25,27 +25,27 @@ const useStyles = makeStyles({
   },
   whatIsTheFieldGrid: {
     margin: '20px 0px'
+  },
+  //
+  container: {
+    backgroundColor: theme.secondary,
+    borderRadius: '15px',
+    boxShadow:
+      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    // width: width > 606 ? '500px' : '250px',
+    padding: '0px',
+  },
+  banner: {
+    borderRadius: '15px',
+    boxShadow:
+      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    // width: width > 606 ? '500px' : '250px',
+    margin: '10px 0',
+    backgroundColor: theme.module.metaBackground,
+    padding: '10px',
+    display: 'inline-flex',
   }
 });
-
-const containerStyle = {
-  backgroundColor: theme.secondary,
-  borderRadius: '15px',
-  boxShadow:
-    '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-  // width: width > 606 ? '500px' : '250px',
-  padding: '0px',
-};
-const bannerStyle = {
-  borderRadius: '15px',
-  boxShadow:
-    '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-  // width: width > 606 ? '500px' : '250px',
-  margin: '10px 0',
-  backgroundColor: theme.module.metaBackground,
-  padding: '10px',
-  display: 'inline-flex',
-};
 
 export default function Field() {
   const classes = useStyles();
@@ -84,7 +84,7 @@ export default function Field() {
     },
   ];
   const fundBox = hasActiveFundraiser ? (
-    <Box style={bannerStyle}>
+    <Box className={classes.banner}>
       <span>
         {fieldStrings.activeFundraiser}
         <a href="https://app.bean.money/fundraiser">app.bean.money/fundraiser</a>.
@@ -142,7 +142,7 @@ export default function Field() {
         <Box mb={1}>
           {fundBox}
           {/* Field "Analytics" displayed at the top of the page */}
-          <Grid item xs="auto" container style={containerStyle}>
+          <Grid item xs="auto" container className={classes.container}>
             <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
               {leftHeader}
             </Grid>
