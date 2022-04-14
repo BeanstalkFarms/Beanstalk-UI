@@ -73,9 +73,9 @@ export default function Fall(props) {
   return (
     <>
       <Grid container className={classes.topGround} justifyContent="center" />
-      <img alt="Fence Icon" src={FenceIcon} style={miscStyle} />
-      <img alt="Turkey Icon" src={TurkeyIcon} style={itemStyle} />
-      <img alt="Turkey Icon" src={TurkeyIcon} style={rightItemStyle} />
+      <img alt="" src={FenceIcon} style={miscStyle} />
+      <img alt="" src={TurkeyIcon} style={itemStyle} />
+      <img alt="" src={TurkeyIcon} style={rightItemStyle} />
       {props.children}
     </>
   );
