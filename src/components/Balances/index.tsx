@@ -290,6 +290,16 @@ export default function Balances() {
                 userClaimable={grownStalkBalance.isGreaterThan(0)}
               />
             ) : null}
+            {farmableBeanBalance.isGreaterThan(0) ? (
+              <ClaimBalance
+                balance={farmableBeanBalance}
+                description={claimableStrings.beans}
+                height="13px"
+                title="Grown Beans"
+                token={ClaimableAsset.Bean}
+                userClaimable={farmableBeanBalance.isGreaterThan(0)}
+              />
+            ) : null}
             {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
               ? spaceTop
               : null}
