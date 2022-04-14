@@ -25,6 +25,14 @@ module.exports = {
     'airbnb'
   ],
   rules: {
+    // -- Tree-shaking
+    // https://mui.com/material-ui/guides/minimizing-bundle-size/#option-1
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
+      }
+    ],
     // -- Stylistic
     semi: 'warn',
     'quote-props': 'warn',

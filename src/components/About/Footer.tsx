@@ -9,19 +9,21 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 
-import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
-import { ReactComponent as CoinGeckoIcon } from 'img/coingecko-icon.svg';
-import { ReactComponent as CoinMarketCapIcon } from 'img/coinmarketcap-icon.svg';
-import { ReactComponent as CommonwealthIcon } from 'img/commonwealth-icon.svg';
-import { ReactComponent as CurveIcon } from 'img/curve-dao-icon.svg';
-import { ReactComponent as DuneWinterIcon } from 'img/dune-icon-winter.svg'; // Icon is 2 colors so manually changed for winter theme
-import { ReactComponent as DuneIcon } from 'img/dune-icon.svg'; // Icon is 2 colors so manually changed for winter theme
-import { ReactComponent as DiscordIcon } from 'img/discord-icon.svg';
-import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
-import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
-import { ReactComponent as OpenSeaIcon } from 'img/opensea-icon.svg';
-import { ReactComponent as RedditIcon } from 'img/reddit-icon.svg';
-import { ReactComponent as UniswapIcon } from 'img/uniswap-logo-black.svg';
+//
+import BeanIcon from 'img/bean-logo.svg';
+import CoinGeckoIcon from 'img/coingecko-icon.svg';
+import CoinMarketCapIcon from 'img/coinmarketcap-icon.svg';
+import CommonwealthIcon from 'img/commonwealth-icon.svg';
+import CurveIcon from 'img/curve-dao-icon.svg';
+import DuneWinterIcon from 'img/dune-icon-winter.svg'; // Icon is 2 colors so manually changed for winter theme
+import DuneIcon from 'img/dune-icon.svg'; // Icon is 2 colors so manually changed for winter theme
+import DiscordIcon from 'img/discord-icon.svg';
+import EtherscanIcon from 'img/etherscan-logo.svg';
+import MediumIcon from 'img/medium-icon.svg';
+import OpenSeaIcon from 'img/opensea-icon.svg';
+import RedditIcon from 'img/reddit-icon.svg';
+import UniswapIcon from 'img/uniswap-logo-black.svg';
+
 import ThemeBackground from 'components/Themes';
 import {
   BEAN_TOKEN_LINK,
@@ -100,7 +102,7 @@ export default function Footer() {
         {width > 900 ? (
           <>
             <LogoLink link={REDDIT_LINK}>
-              <RedditIcon className={classes.logoStyle} />
+              <img src={RedditIcon} alt="Reddit Icon" className={classes.logoStyle} />
             </LogoLink>
             <LogoLink link={TELEGRAM_LINK}>
               <TelegramIcon className={classes.logoStyle} />
@@ -108,21 +110,21 @@ export default function Footer() {
           </>
         ) : null}
         <LogoLink link={DISCORD_LINK}>
-          <DiscordIcon className={classes.logoStyle} />
+          <img src={DiscordIcon} alt="Discord Icon" className={classes.logoStyle} />
         </LogoLink>
         <LogoLink link={MEDIUM_LINK}>
-          <MediumIcon className={classes.logoStyle} />
+          <img src={MediumIcon} alt="Medium Icon" className={classes.logoStyle} />
         </LogoLink>
         <LogoLink link={OPENSEA_LINK_GENESIS}>
-          <OpenSeaIcon className={classes.logoStyle} />
+          <img src={OpenSeaIcon} alt="Opensea Icon" className={classes.logoStyle} />
         </LogoLink>
         {width > 900 ? (
           <>
             <LogoLink link={COINMARKETCAP_LINK}>
-              <CoinMarketCapIcon className={classes.logoStyle} />
+              <img src={CoinMarketCapIcon} alt="CoinMarketCap Icon" className={classes.logoStyle} />
             </LogoLink>
             <LogoLink link={COINGECKO_LINK}>
-              <CoinGeckoIcon className={classes.logoStyle} />
+              <img src={CoinGeckoIcon} alt="CoinGecko Icon" className={classes.logoStyle} />
             </LogoLink>
           </>
         ) : null}
@@ -132,26 +134,26 @@ export default function Footer() {
         <LogoLink link={DUNE_LINK}>
           {
             theme.name === 'winterUpgrade'
-            ? <DuneWinterIcon className={classes.logoStyle} />
-            : <DuneIcon className={classes.logoStyle} />
+            ? <img src={DuneWinterIcon} alt="Dune Icon" className={classes.logoStyle} />
+            : <img src={DuneIcon} alt="Dune Icon" className={classes.logoStyle} />
           }
         </LogoLink>
         <LogoLink link={BEAN_TOKEN_LINK}>
-          <BeanIcon className={classes.logoStyle} />
+          <img src={BeanIcon} alt="Bean Icon" className={classes.logoStyle} />
         </LogoLink>
         <LogoLink link={SILO_CONTRACT_LINK}>
-          <EtherscanIcon className={classes.logoStyle} />
+          <img src={EtherscanIcon} alt="Etherscan Icon" className={classes.logoStyle} />
         </LogoLink>
         {width > 900 ? (
           <>
             <LogoLink link={UNISWAP_CONTRACT_LINK}>
-              <UniswapIcon className={classes.logoStyle} />
+              <img src={UniswapIcon} alt="Uniswap Icon" className={classes.logoStyle} />
             </LogoLink>
             <LogoLink link={CURVE_LINK}>
-              <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)' } : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
+              <img src={CurveIcon} alt="Curve Icon" style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)' } : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
             </LogoLink>
             <LogoLink link={COMMONWEALTH_LINK}>
-              <CommonwealthIcon className={classes.logoStyle} />
+              <img src={CommonwealthIcon} alt="Commonwealth Icon" className={classes.logoStyle} />
             </LogoLink>
           </>
         ) : null}
