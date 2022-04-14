@@ -13,6 +13,8 @@ const useStyles = makeStyles(() => ({
     borderRadius: '25px',
     color: theme.text,
     padding: '10px',
+    // Added to enable the SettingsFormMoudle 
+    overflow: 'visible',
   },
   // disableBackground = true
   metaModule: {
@@ -22,6 +24,7 @@ const useStyles = makeStyles(() => ({
     color: theme.backgroundText,
     marginTop: '16px',
     padding: '10px 16px 30px 16px',
+    overflow: 'visible',
   },
   sectionTab: {
     fontFamily: 'Futura-Pt-Book',
@@ -289,7 +292,7 @@ export default function BaseModule({
             moduleContent
           )}
         </Box>
-      ) : sectionTitles.length === 1 && normalBox ? (
+      ) : (sectionTitles.length === 1 && normalBox) ? (
         <Box
           style={style}
           className={

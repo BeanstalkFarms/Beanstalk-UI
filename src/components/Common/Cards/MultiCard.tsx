@@ -12,6 +12,7 @@ const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
     borderRadius: '25px',
+    overflow: 'visible',
   },
   // "Input" cards (off-white background)
   input: {

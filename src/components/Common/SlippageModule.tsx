@@ -35,12 +35,12 @@ export default function SlippageModule(props) {
       >
         Slippage:
         <QuestionModule
-          description={props.description}
-          margin={props.margin}
-          marginTooltip={props.marginTooltip}
+          description="Customize the maximum difference between the current price and the price when your transaction is mined."
+          margin="-5px 0 0 -1px"
         />
       </Box>
       <TextField
+        variant="standard"
         type="number"
         error={
           !isFieldEmpty &&
@@ -84,7 +84,7 @@ export default function SlippageModule(props) {
             setIsFieldEmpty(true);
           }
         }}
-        onWheel={(e) => e.target.blur()}
+        // onWheel={(e) => e.target.blur()}
         onKeyDown={(e) =>
           (e.key === 'e' || e.key === '+' || e.key === '-') &&
           e.preventDefault()
@@ -108,10 +108,3 @@ export default function SlippageModule(props) {
     </Box>
   );
 }
-
-SlippageModule.defaultProps = {
-  description:
-    'Customize the maximum difference between the current price and the price when your transaction is mined.',
-  margin: '-5px 0 0 -1px',
-  marginTooltip: '0px 0 5px 10px',
-};

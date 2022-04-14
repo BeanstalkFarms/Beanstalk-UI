@@ -138,6 +138,7 @@ export default function Field() {
   return (
     <Container maxWidth="sm">
       <Grid container justifyContent="center">
+        {/* Top section */}
         <Box mb={1}>
           {fundBox}
           {/* Field "Analytics" displayed at the top of the page */}
@@ -150,10 +151,11 @@ export default function Field() {
             </Grid>
           </Grid>
         </Box>
-        {/* Content */}
+        {/* Field Module: Sow + Send */}
         <MultiCard type="meta">
           <FieldModule />
         </MultiCard>
+        {/* Description */}
         <div className={classes.whatIsTheFieldGrid}>
           <ContentDropdown
             description={description}
