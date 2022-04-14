@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { fundsList, FUNDRAISER_LINK } from 'constants/index';
+import { Container } from '@mui/material';
 import {
   ContentDropdown,
   ContentSection,
@@ -53,7 +54,7 @@ export default function Fundraiser(props) {
   ];
 
   return (
-    <ContentSection id="fund">
+    <Container maxWidth="sm" id="fund">
       <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
         <ContentDropdown
           description={fundraiserStrings.fundsDescription}
@@ -73,6 +74,6 @@ export default function Fundraiser(props) {
           />
         </Grid>
       </Grid>
-    </ContentSection>
+    </Container>
   );
 }

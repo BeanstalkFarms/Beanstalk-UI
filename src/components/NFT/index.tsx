@@ -81,8 +81,7 @@ export default function NFTs() {
         <NftStatsHeader />
         {/* Genesis vs. Winter columns */}
         <Grid container>
-          <Grid item xl={2} lg={1} md={false} />
-          <Grid item xl={6} lg={5} md={6} xs={12}>
+          <Grid item xl={6} lg={6} md={12} xs={12}>
             <ClaimNft
               buttonDescription={beanftStrings.mintAll}
               claimedNFTs={claimedNFTs}
@@ -98,7 +97,7 @@ export default function NFTs() {
               }}
             />
           </Grid>
-          <Grid item lg={5} md={6} xs={12}>
+          <Grid item xl={6} lg={6} md={12} xs={12}>
             <ClaimNft
               buttonDescription={beanftStrings.mintAll}
               claimedNFTs={claimedWinterNFTs}

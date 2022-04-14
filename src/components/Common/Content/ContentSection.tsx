@@ -9,7 +9,7 @@ const ContentSection : React.FC<ContentSectionProps> = ({ id, children }) => (
   <Box id={id} className="AppContent">
     <Grid
       container
-      spacing={3}
+      // spacing={3}
       justifyContent="center"
     >
       {children}
