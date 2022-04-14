@@ -4,33 +4,24 @@ import { SLIPPAGE_LINK } from 'constants/index';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
-    linkStyle: {
-        color: 'red',
-        fontFamily: 'Futura-PT-Book',
-        fontSize: 'calc(9px + 0.5vmin)',
-        marginTop: '-9px',
-    },
-    textStyle: {
-        color: 'red',
-        fontFamily: 'Futura-PT-Book',
-        fontSize: 'calc(9px + 0.5vmin)',
-        marginTop: '-4px',
-    }
+  textStyle: {
+    color: 'red',
+    fontSize: 'calc(9px + 0.5vmin)',
+  }
 });
 
 export default function FrontrunText() {
   const classes = useStyles();
-
   return (
     <Box className={classes.textStyle}>
-      Your Transaction may be Frontrun. Consider Lowering Slippage Tolerance.
+      Your transaction may be frontrun. Consider lowering slippage tolerance.
       <br />
       <Link
         href={SLIPPAGE_LINK}
+        className={classes.textStyle}
         target="blank"
-        className={classes.linkStyle}
         underline="hover">
-        Click Here to Learn More
+        Click here to learn more
       </Link>
       .
     </Box>
