@@ -40,6 +40,7 @@ const useStyles = makeStyles({
   cellStyle: {
     fontFamily: 'Futura-PT',
     padding: '6px 6px',
+    // FIXME: just use a grid
     width: (props: any) => `${100 / props.colTitles.length - 1}%`,
   }
 });
