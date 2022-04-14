@@ -138,16 +138,18 @@ export default function Field() {
   return (
     <Container maxWidth="sm">
       <Grid container justifyContent="center">
-        {fundBox}
-        {/* Field "Analytics" displayed at the top of the page */}
-        <Grid item xs="auto" container style={containerStyle}>
-          <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
-            {leftHeader}
+        <Box mb={1}>
+          {fundBox}
+          {/* Field "Analytics" displayed at the top of the page */}
+          <Grid item xs="auto" container style={containerStyle}>
+            <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
+              {leftHeader}
+            </Grid>
+            <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
+              {rightHeader}
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
-            {rightHeader}
-          </Grid>
-        </Grid>
+        </Box>
         {/* Content */}
         <MultiCard type="meta">
           <FieldModule />
