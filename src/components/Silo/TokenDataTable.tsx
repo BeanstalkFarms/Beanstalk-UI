@@ -69,8 +69,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 400,
   },
   tableRow: {
-    maxWidth: '100vw',
-    overflow: 'auto'
+    // maxWidth: '100vw',
+    // overflow: 'auto',
+    width: '100%'
   },
   apyTooltipHeader: {
     display: 'inline-block',
@@ -159,7 +160,7 @@ export default function TokenDataTable() {
 
   return (
     <TableContainer className={classes.table}>
-      <Table sx={{ minWidth: 650 }}>
+      <Table sx={{ minWidth: { md: 650 } }}>
         <TableHead>
           <TableRow className={classes.tableRow}>
             <TableCell className={`${classes.headerCell}`}>
@@ -170,7 +171,7 @@ export default function TokenDataTable() {
                 margin="-7px 8px 0 0"
               />
             </TableCell>
-            <TableCell align="left" className={classes.headerCell}>
+            <TableCell align="left" className={`${classes.headerCell}`}>
               REWARDS
               <QuestionModule
                 description={siloStrings.rewardsColumn}
@@ -188,7 +189,7 @@ export default function TokenDataTable() {
                 margin="-7px 8px 0 0"
               />
             </TableCell>
-            <TableCell align="center" className={`${classes.headerCell} ${classes.hideOnMobile}`}>
+            <TableCell align="center" className={`${classes.hideOnMobile}`}>
               STALK vAPY
               <QuestionModule
                 description={(
@@ -198,7 +199,7 @@ export default function TokenDataTable() {
                 margin="-7px 8px 0 0"
               />
             </TableCell>
-            <TableCell align="right" className={`${classes.headerCell} ${classes.hideOnMobile}`}>
+            <TableCell align="right" className={`${classes.hideOnMobile}`}>
               DEPOSITS
               <QuestionModule
                 description={siloStrings.depositsColumn}
@@ -206,7 +207,7 @@ export default function TokenDataTable() {
                 margin="-7px 8px 0 0"
               />
             </TableCell>
-            <TableCell align="center" className={classes.headerCell} />
+            <TableCell align="center" className={`${classes.headerCell} ${classes.hideOnMobile}`} />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -220,7 +221,7 @@ export default function TokenDataTable() {
               >
                 <TableCell scope="row">
                   <div className={classes.tokenNameCell}>
-                    <img src={token.icon} alt="" className={classes.tokenImage} />
+                    <img src={token.icon} alt="" className={`${classes.tokenImage} ${classes.hideOnMobile}`} />
                     <span>{token.name}</span>
                   </div>
                 </TableCell>
@@ -267,7 +268,7 @@ export default function TokenDataTable() {
                     </span>
                   </FormatTooltip>
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align="center" className={classes.hideOnMobile}>
                   <ChevronRightIcon style={{ marginTop: 3 }} />
                 </TableCell>
               </TableRow>

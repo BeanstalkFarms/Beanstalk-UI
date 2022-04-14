@@ -30,6 +30,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '100%',
   },
   //
   title: {
@@ -51,6 +52,7 @@ const useStyles = makeStyles(() => ({
 export default function HeaderLabel(props) {
   const classes = useStyles();
 
+  //
   const questionTooltip =
     props.description !== undefined ? (
       <QuestionModule
@@ -60,6 +62,8 @@ export default function HeaderLabel(props) {
         placement={props.placement}
       />
     ) : undefined;
+  
+  //
   const balanceTooltip =
     props.balanceDescription !== undefined ? (
       <FormatTooltip
@@ -76,7 +80,7 @@ export default function HeaderLabel(props) {
   return (
     <Box
       className={
-        props.container === undefined
+        props.container === true
           ? classes.container
           : classes.subContainer
       }
@@ -85,7 +89,9 @@ export default function HeaderLabel(props) {
         {props.title}
         {questionTooltip}
       </Box>
-      <Box className={classes.value}>{balanceTooltip}</Box>
+      <Box className={classes.value}>
+        {balanceTooltip}
+      </Box>
     </Box>
   );
 }
@@ -93,4 +99,5 @@ export default function HeaderLabel(props) {
 HeaderLabel.defaultProps = {
   margin: '-8px 0 0 2px',
   marginTooltip: '0 0 0 10px',
+  container: false,
 };

@@ -43,7 +43,7 @@ export default function Charts() {
 
   //
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="xl">
       <Grid container justifyContent="center">
         <BaseModule
           handleTabChange={(event, newSection) => {

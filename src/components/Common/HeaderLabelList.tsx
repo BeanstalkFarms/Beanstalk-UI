@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Stack, Box } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { theme } from 'constants/index';
 import { HeaderLabel } from './index';
@@ -30,18 +30,14 @@ const useStyles = makeStyles({
 export default function HeaderLabelList(props: any) {
   const classes = useStyles();
   return (
-    <Grid
-      container
-      className={`${classes.container} ${props.container ? classes.containerShadow : ''}`}
-      style={{ width: props.width }}
-    >
+    <Stack className={`HeaderLabelList ${classes.container} ${props.container ? classes.containerShadow : ''}`}>
       {props.containerTitle && (
-        <Grid item xs={12}>
-          <div className={classes.containerTitle}>{props.containerTitle}</div>
-        </Grid>
+        <Box className={classes.containerTitle}>
+          {props.containerTitle}
+        </Box>
       )}
       {props.title.filter((x) => x !== null).map((item, index) => (
-        <Grid key={index} item xs={12}>
+        <Box key={index}>
           <HeaderLabel
             balanceDescription={props.balanceDescription[index]}
             description={props.description[index]}
@@ -49,13 +45,12 @@ export default function HeaderLabelList(props: any) {
             value={props.value[index]}
             container={false}
           />
-        </Grid>
+        </Box>
       ))}
-    </Grid>
+    </Stack>
   );
 }
 
 HeaderLabelList.defaultProps = {
   container: true,
-  width: '250px',
 };
