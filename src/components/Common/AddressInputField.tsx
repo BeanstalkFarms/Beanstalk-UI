@@ -18,14 +18,13 @@ const useStyles = makeStyles(({
     fontFamily: 'Futura-PT-Book',
     fontSize: 'calc(9px + 0.7vmin)',
     marginLeft: '13px',
-    marginTop: (props: any) => props.marginTop,
     textAlign: 'left' as const,
     textTransform: 'uppercase' as const,
     width: 'calc(100% - 13px)',
   }
 }));
 export default function AddressInputField(props: any) {
-  const classes = useStyles(props);
+  const classes = useStyles();
 
   let endAdornment;
   let startAdornment;
