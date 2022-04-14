@@ -168,6 +168,7 @@ export const claimableStrings = {
   grownStalk:
     'Grown Stalk do not earn Farmable Beans. Once farmed, Grown Stalk earn Farmable Beans. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
   farm: 'Use this button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
+  farmableStalk: 'Stalk that you receive from your farmable beans.'
 };
 export const siloStrings = {
   tokenDepositDescription: (tokenName: string) => `Use this tab to deposit ${tokenName} into the Silo.`,
