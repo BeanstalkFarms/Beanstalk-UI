@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Grid, Button, Link } from '@mui/material';
 import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
 import { METAMASK_LINK } from 'constants/index';
+
 import SvgCloudIcon from 'components/About/SvgCloudIcon';
 import About from 'components/About';
 import makeStyles from '@mui/styles/makeStyles';
@@ -29,7 +30,7 @@ export default function MetamasklessModule() {
     metamaskModule = (
       <Grid item xs={12}>
         <Link href={METAMASK_LINK} target="blank" color="inherit" underline="hover">
-          <SvgCloudIcon color="white" text="Install Metamask" />
+          <SvgCloudIcon text="Install Metamask" />
         </Link>
       </Grid>
     );

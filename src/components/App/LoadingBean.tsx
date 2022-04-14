@@ -24,6 +24,7 @@ export default function LoadingBean() {
       <Box className="Loading-logo">
         <img
           className="svg"
+          // @ts-ignore
           name={theme.name}
           height="250px"
           src={BeanLogo}
