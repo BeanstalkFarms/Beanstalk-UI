@@ -315,7 +315,7 @@ export default function Balances() {
             {farmableSeedBalance.isGreaterThan(0) ? (
               <ClaimBalance
                 balance={farmableSeedBalance}
-                description={claimableStrings.beans}
+                description={claimableStrings.seeds}
                 // height="20px"
                 title="Seeds"
                 token={SiloAsset.Seed}
