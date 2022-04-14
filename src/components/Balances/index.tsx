@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Container } from '@mui/material';
+import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { AppState } from 'state';

@@ -5,7 +5,6 @@ import { fundsList, FUNDRAISER_LINK } from 'constants/index';
 import { Container } from '@mui/material';
 import {
   ContentDropdown,
-  ContentSection,
   fundraiserStrings,
   Grid,
 } from '../Common';

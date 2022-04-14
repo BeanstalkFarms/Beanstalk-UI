@@ -4,7 +4,7 @@ import { theme as colors } from 'constants/index';
 import { useSelector } from 'react-redux';
 import { Tab, Tabs, adaptV4Theme } from '@mui/material';
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
-import {makeStyles} from "@mui/styles";
+import { makeStyles } from '@mui/styles';
 
 const tabHeight = '48px';
 
@@ -30,8 +30,8 @@ const useStyles = makeStyles({
       padding: '0 6px',
       fontSize: (props: any) => (props.width < 425 ? '12px' : (props.width < 600 ? '14px' : '18px')),
       fontFamily: 'Futura-PT-Book',
-  };
-})
+  }
+});
 
 export default function SectionTabs({
   setSection,
@@ -42,7 +42,7 @@ export default function SectionTabs({
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-  const classes = useStyles({width: width, minWidth: minWidth, sectionTitles: sectionTitles})
+  const classes = useStyles({ width: width, minWidth: minWidth, sectionTitles: sectionTitles });
 
   // FIXME
   const theme = createTheme(adaptV4Theme({
