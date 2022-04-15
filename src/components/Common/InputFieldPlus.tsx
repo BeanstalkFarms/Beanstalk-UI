@@ -28,6 +28,7 @@ const InputFieldPlus : React.FC<InputFieldPlusProps> = ({
   beanLPClaimableBalance = new BigNumber(0),
   balance = new BigNumber(-1),
   value = new BigNumber(-1),
+  visible = true,
   handleChange,
   ...props
 }) => {
@@ -56,7 +57,7 @@ const InputFieldPlus : React.FC<InputFieldPlusProps> = ({
   // If `visible` becomes false without `value` being set to zero,
   // clear out the input. This seems like an antipattern - the clearing-out
   // should be controlled by the form itself, not the input.
-  if (!props.visible) {
+  if (!visible) {
     if (value.isGreaterThan(0)) {
       handleChange(new BigNumber(-1));
     }
