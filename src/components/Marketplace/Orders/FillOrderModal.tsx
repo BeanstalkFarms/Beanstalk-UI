@@ -401,7 +401,7 @@ export default function FillOrderModal({
           orders={[currentOrder]}
           isSelling
         />
-        <Box sx={{ marginTop: 20 }}>
+        <Box sx={{ marginTop: '20px' }}>
           {/**
             * Input fields.
             */}
