@@ -9,22 +9,24 @@ import {
   TableHead,
   TableRow,
   Box,
-} from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckIcon from '@material-ui/icons/Check';
+} from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import CheckIcon from '@mui/icons-material/Check';
+
 import { percentForStalk, megaVote } from 'util/index';
+import { AppState } from 'state';
+import { BIP } from 'state/general/reducer';
 import TransactionToast from 'components/Common/TransactionToast';
 import { Line, QuestionModule, governanceStrings, TransactionDetailsModule } from 'components/Common';
-import { AppState } from 'state';
-import { BIP } from 'util/LedgerUtilities';
+
 import CircularProgressWithLabel from './CircularProgressWithLabel';
-import { useStyles } from './VoteStyles.ts';
+import { useStyles } from './VoteStyles';
 
 type VoteProps = {
   bips: (BIP['id'])[];
   seasonBips: BIP[];
-  stalkBips: BIP[];
-  votedBips: BIP[]; // FIXME: this might be a set
+  stalkBips: any[];
+  votedBips: any[]; // FIXME: this might be a set?
   totalRoots: AppState['totalBalance']['totalRoots'];
   userRoots: AppState['userBalance']['rootsBalance'];
 }
@@ -36,8 +38,9 @@ export default function Vote(props: VoteProps) {
   const [selectAll, setSelectAll] = useState(false);
 
   // Active bips
-  const displayBips = props.bips.reduce((dp, bipId) => {
-    const row = [];
+  const displayBips = props.bips.reduce((dp, bipIdBn) => {
+    const row : any[] = [];
+    const bipId : number = bipIdBn.toNumber();
     row.push(bipId);
     row.push(`${props.seasonBips[bipId]}`);
     const newStalk = props.votedBips[bipId]
@@ -200,11 +203,10 @@ export default function Vote(props: VoteProps) {
             return (
               <TableRow
                 key={`table_row_${index}`} // eslint-disable-line
-                className={selected[index] === index ? classes.rowSelected : null}
+                className={selected[index] === index ? classes.rowSelected : classes.pointerCursor}
                 hover
                 onClick={() => handleClick(bip, index)}
                 selected={isItemSelected}
-                style={{ cursor: 'pointer' }}
               >
                 <TableCell
                   className={classes.cell}
@@ -256,10 +258,6 @@ export default function Vote(props: VoteProps) {
 
     return (
       <>
-        {/* <ExpandMoreIcon
-          color="primary"
-          style={{ marginBottom: '-14px', width: '100%' }}
-        /> */}
         <TransactionDetailsModule fields={selectedDetails} />
         <br />
       </>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { Link } from '@material-ui/core';
+import { Box, Container, Grid, Link, Stack } from '@mui/material';
 import {
   MEDIUM_NFT_GENESIS_LINK,
   MEDIUM_NFT_WINTER_LINK,
@@ -10,9 +10,7 @@ import {
 } from 'constants/index';
 import {
   beanftStrings,
-  ContentSection,
   ContentDropdown,
-  Grid,
 } from 'components/Common';
 import { mintAllAccountNFTs, mintAllNFTs } from 'util/index';
 import ClaimNft from './ClaimNft';
@@ -38,32 +36,54 @@ export default function NFTs() {
       <span>
         The BeaNFT Genesis collection is a series of 2067 BeaNFTs which could only
         be minted by participating in Beanstalk during Seasons 1200 – 1800.{' '}
-        <Link href={OPENSEA_LINK_GENESIS} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
-        <Link href={MEDIUM_NFT_GENESIS_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+        <Link
+          href={OPENSEA_LINK_GENESIS}
+          target="blank"
+          style={{ color: 'white' }}
+          underline="hover">
+          OpenSea
+        </Link>.
+        &nbsp;
+        <Link
+          href={MEDIUM_NFT_GENESIS_LINK}
+          target="blank"
+          style={{ color: 'white' }}
+          underline="hover">
+          Read More
+        </Link>.
       </span>
       <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter Collection: </span>
       <span>
         The BeaNFT Winter Collection is the second minting event for BeaNFTs and is a collection of 751 BeaNFTs which could only be earned by participating in Beanstalk from Season 3300 to 3900. The top 5 largest bean-denominated investments each Season (across the Silo and Field) were be awarded one Winter BeaNFT.{' '}
-        <Link href={OPENSEA_LINK_COLLECTION} target="blank" style={{ color: 'white' }}>OpenSea</Link>.&nbsp;
-        <Link href={MEDIUM_NFT_WINTER_LINK} target="blank" style={{ color: 'white' }}>Read More</Link>.
+        <Link
+          href={OPENSEA_LINK_COLLECTION}
+          target="blank"
+          style={{ color: 'white' }}
+          underline="hover">
+          OpenSea
+        </Link>.
+        &nbsp;
+        <Link
+          href={MEDIUM_NFT_WINTER_LINK}
+          target="blank"
+          style={{ color: 'white' }}
+          underline="hover">
+          Read More
+        </Link>.
       </span>
     </>
   );
 
   return (
-    <>
-      <ContentSection
-        id="nft"
-        title="BeaNFTs"
-        textTransform="none"
-        style={{
-          paddingTop: 20, // FIXME
-        }}
-      >
-        <NftStatsHeader />
+    <Container maxWidth="lg">
+      <Stack spacing={4} direction="column" alignItems="center">
+        {/* Counts of each type of BeaNFT */}
+        <Box sx={{ width: '300px' }}>
+          <NftStatsHeader />
+        </Box>
+        {/* Genesis vs. Winter columns */}
         <Grid container>
-          <Grid item xl={2} lg={1} md={false} />
-          <Grid item xl={6} lg={5} md={6} xs={12}>
+          <Grid item xl={6} lg={6} md={12} xs={12}>
             <ClaimNft
               buttonDescription={beanftStrings.mintAll}
               claimedNFTs={claimedNFTs}
@@ -79,7 +99,7 @@ export default function NFTs() {
               }}
             />
           </Grid>
-          <Grid item lg={5} md={6} xs={12}>
+          <Grid item xl={6} lg={6} md={12} xs={12}>
             <ClaimNft
               buttonDescription={beanftStrings.mintAll}
               claimedNFTs={claimedWinterNFTs}
@@ -94,13 +114,14 @@ export default function NFTs() {
             />
           </Grid>
         </Grid>
-        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+        {/* About BeaNFTs */}
+        <Container maxWidth="sm">
           <ContentDropdown
             description={description}
             descriptionTitle="What are BeaNFTs?"
           />
-        </Grid>
-      </ContentSection>
-    </>
+        </Container>
+      </Stack>
+    </Container>
   );
 }

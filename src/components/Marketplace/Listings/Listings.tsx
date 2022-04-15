@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import filter from 'lodash/filter';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 
 import { AppState } from 'state';
 import { PodListing } from 'state/marketplace/reducer';
@@ -10,16 +10,25 @@ import { CryptoAsset, displayBN, FarmAsset, getWalletAddress } from 'util/index'
 import TokenIcon from 'components/Common/TokenIcon';
 import { filterStrings, QuestionModule } from 'components/Common';
 
+import { makeStyles } from '@mui/styles';
 import FillListingModal from './FillListingModal';
 import ListingsTable from './ListingsTable';
 import Filters, { StyledSlider } from '../Filters';
 
-const filterTitleStyle = {
-  display: 'inline',
-  marginTop: 0,
-  fontFamily: 'Futura-PT-Book',
-  fontSize: '20.8px',
-};
+const useStyles = makeStyles({
+  filterTitleStyle: {
+    display: 'inline',
+    marginTop: 0,
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '20.8px',
+  },
+  divStyle: {
+    color: 'black',
+    minWidth: 40, // prevent wrapping of bean onto newline
+    textAlign: 'center',
+    marginLeft: 10, // align vertically with placeInLine
+  }
+});
 
 type ListingsProps = {
   mode: 'ALL' | 'MINE';
@@ -32,6 +41,7 @@ type ListingsProps = {
  * A User can purchase the Pods in a Listing.
  */
 export default function Listings(props: ListingsProps) {
+  const classes = useStyles();
   /** FIXME: is this somewhere in global state? */
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
@@ -127,7 +137,7 @@ export default function Listings(props: ListingsProps) {
     }>
       <>
         {/* Price per Pod sliding filter  */}
-        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+        <Box sx={{ mt: 3, px: 0.75 }} className={classes.filterTitleStyle}>
           Price Per Pod
           <QuestionModule
             description={filterStrings.pricePerPod}
@@ -140,12 +150,7 @@ export default function Listings(props: ListingsProps) {
             value={tempPriceFilters}
             valueLabelDisplay="on"
             valueLabelFormat={(value: number) => (
-              <div style={{
-                color: 'black',
-                minWidth: 40, // prevent wrapping of bean onto newline
-                textAlign: 'center',
-                marginLeft: 10, // align vertically with placeInLine
-              }}>
+              <div className={classes.divStyle}>
                 {value}<TokenIcon token={CryptoAsset.Bean} />
               </div>
             )}
@@ -156,7 +161,7 @@ export default function Listings(props: ListingsProps) {
           />
         </Box>
         {/* Place in Line sliding filter  */}
-        <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+        <Box sx={{ mt: 3, px: 0.75 }} className={classes.filterTitleStyle}>
           Place In Line
           <QuestionModule
             description={filterStrings.placeInLine}

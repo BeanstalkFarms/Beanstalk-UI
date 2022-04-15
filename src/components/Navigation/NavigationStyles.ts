@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { theme } from 'constants/index';
 
 const drawerWidth = 280;
@@ -11,7 +11,7 @@ export const useStyles = makeStyles({
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
   },
-  // Drawer
+  // -- Drawer
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -36,7 +36,7 @@ export const useStyles = makeStyles({
   beanLogoImage: {
     marginTop: 0
   },
-  // Nav overall
+  // -- Nav links
   NavSubheader: {
     fontFamily: 'Futura',
     lineHeight: '22px',
@@ -49,7 +49,6 @@ export const useStyles = makeStyles({
     borderRadius: 4,
     marginRight: 4,
   },
-  // Nav links
   NavLinkHeader: {
     display: 'flex',
     flexDirection: 'row',
@@ -59,12 +58,16 @@ export const useStyles = makeStyles({
     fontFamily: 'Futura, Helvetica',
     fontWeight: 800,
     fontSize: 14,
+    marginRight: 8
   },
   NavLink: {
     color: 'inherit',
     textDecoration: 'none',
   },
-  // Metrics
+  NavLinkDesc: {
+    fontSize: 14,
+  },
+  // -- Metrics
   metrics: {
     display: 'flex',
     flex: 1,
@@ -86,7 +89,7 @@ export const useStyles = makeStyles({
   metricValue: {
     color: '#555',
   },
-  // BIP Progress
+  // -- BIP Badge: Progress
   bipBadgeContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -100,10 +103,14 @@ export const useStyles = makeStyles({
     position: 'absolute',
     top: -5,
     left: 0,
+    opacity: 0.3
   },
   progressPrimary: {
     position: 'absolute',
     top: -5,
     left: 0,
   },
+  blockDisplay: {
+    display: 'block'
+  }
 });

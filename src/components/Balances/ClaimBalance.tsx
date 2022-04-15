@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import {
   CryptoAsset,
   displayBN,
@@ -13,6 +13,22 @@ import {
   TokenTypeImageModule,
   QuestionModule,
 } from 'components/Common';
+import makeStyles from '@mui/styles/makeStyles';
+
+const useStyles = makeStyles(({
+  style: {
+    display: 'inline',
+    fontFamily: 'Lucida Console',
+    fontWeight: 400,
+    lineHeight: '100%',
+  },
+  imageStyle: {
+    display: 'inline-block',
+    marginBottom: '-2px',
+    marginLeft: '0px',
+  },
+  gridStyle: { height: '20px' }
+}));
 
 export default function ClaimBalance({
   asset,
@@ -25,13 +41,8 @@ export default function ClaimBalance({
   width,
   widthTooltip,
 }) {
-  const style = {
-    color: balanceColor,
-    display: 'inline',
-    fontFamily: 'Lucida Console',
-    fontWeight: '400',
-    lineHeight: '100%',
-  };
+  const classes = useStyles();
+
   const imageStyle = {
     display: 'inline-block',
     height: height,
@@ -47,13 +58,14 @@ export default function ClaimBalance({
   if (balance.isGreaterThan(0)) {
     return (
       <Grid container item xs={12} justifyContent="center">
-        <Box style={{ position: 'relative' }}>
-          <Box className="claimTextField-header" style={{ width: width }}>
-            {`${asset !== undefined ? TokenLabel(asset) : title}`}
-            <QuestionModule
-              description={description}
-              margin="-8px 0 0 -1px"
-              widthTooltip={widthTooltip}
+        <Grid container item justifyContent="center" className={classes.gridStyle}>
+          <Box sx={{ position: 'relative' }}>
+            <Box className="claimTextField-header" sx={{ width: width }}>
+              {`${asset !== undefined ? TokenLabel(asset) : title}`}
+              <QuestionModule
+                description={description}
+                margin="-8px 0 0 -1px"
+                widthTooltip={widthTooltip}
               />
           </Box>
         </Box>
@@ -65,19 +77,22 @@ export default function ClaimBalance({
                 asset !== undefined ? TokenLabel(asset) : title
               }`}
             >
-            <Box
-              className="claimTextField-content"
-              style={{ margin: '0 0 0 5px' }}
+              <Box
+                className="claimTextField-content"
+                sx={{ margin: '0 0 0 5px' }}
               >
-              <h5 style={style}>{displayBalance}</h5>
-              <TokenTypeImageModule
-                style={imageStyle}
-                token={token}
-                left={height !== '15px' ? '2px' : '0px'}
-                />
-            </Box>
-          </FormatTooltip>
-        </Box>
+                <Box sx={{ color: balanceColor }}>
+                  <h5 className={classes.style}>{displayBalance}</h5>
+                  <TokenTypeImageModule
+                    style={imageStyle}
+                    token={token}
+                    left={height !== '15px' ? '2px' : '0px'}
+                  />
+                </Box>
+              </Box>
+            </FormatTooltip>
+          </Box>
+        </Grid>
       </Grid>
     );
   }

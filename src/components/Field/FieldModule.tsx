@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { IconButton, Box } from '@material-ui/core';
-import ListIcon from '@material-ui/icons/List';
+import { IconButton, Box } from '@mui/material';
+import ListIcon from '@mui/icons-material/List';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
@@ -14,11 +14,26 @@ import {
   ListTable,
   fieldStrings,
 } from 'components/Common';
+import { makeStyles } from '@mui/styles';
 import { SowModule } from './SowModule';
 import { HarvestModule } from './HarvestModule';
 import { SendPlotModule } from './SendPlotModule';
 
+const useStyles = makeStyles({
+  listTableBox: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    margin: '20px 0 -56px -4px',
+  },
+  iconButton: {
+    height: '44px',
+    width: '44px',
+    marginTop: '-8px'
+  }
+});
+
 export default function FieldModule() {
+  const classes = useStyles();
   const newBN = new BigNumber(-1);
 
   /* App state */
@@ -231,11 +246,7 @@ export default function FieldModule() {
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
       <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
+        className={classes.listTableBox}
       >
         <IconButton
           color="primary"
@@ -245,8 +256,8 @@ export default function FieldModule() {
               shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
-        >
+          className={classes.iconButton}
+          size="large">
           <ListIcon />
         </IconButton>
       </Box>
@@ -277,20 +288,24 @@ export default function FieldModule() {
   return (
     <>
       <BaseModule
+        // Allowance
         allowance={allowance}
+        setAllowance={updateBeanstalkBeanAllowance}
+        handleApprove={approveBeanstalkBean}
+        // Form
+        mode={settings.mode}
+        handleForm={handleForm}
         resetForm={() => {
           setSettings({ ...settings, mode: SwapMode.Ethereum });
         }}
-        handleApprove={approveBeanstalkBean}
-        handleForm={handleForm}
-        handleTabChange={handleTabChange}
         isDisabled={isFormDisabled && sectionTitles[section] !== 'Harvest'}
-        marginTop="14px"
-        mode={settings.mode}
+        // Sections
+        handleTabChange={handleTabChange}
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkBeanAllowance}
+        // FIXME: this reduces the top margin. We shouldn't need this for things to line up!
+        marginTop="14px"
       >
         {sections[section]}
         {showListTablesIcon}

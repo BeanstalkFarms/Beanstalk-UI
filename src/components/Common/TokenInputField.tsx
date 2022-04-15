@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Button, InputAdornment, Slider, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Button, InputAdornment, Slider, TextField } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import BigNumber from 'bignumber.js';
 
 import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/index';
@@ -33,17 +33,17 @@ const useStyles = makeStyles({
     marginRight: '13px',
     textAlign: 'right' as const,
   },
+  maxStyle: {
+    // backgroundColor: theme.primary,
+    borderRadius: '30px',
+    color: theme.accentText,
+    fontSize: '13px',
+    fontFamily: 'Futura-PT-Book',
+    height: '25px',
+    minWidth: '50px',
+  }
 });
 
-const maxStyle = {
-  backgroundColor: theme.primary,
-  borderRadius: '30px',
-  color: theme.accentText,
-  fontSize: '13px',
-  fontFamily: 'Futura-PT-Book',
-  height: '25px',
-  minWidth: '50px',
-};
 const tokenTypeImageStyle = {
   height: '30px',
   marginLeft: '5px',
@@ -62,19 +62,19 @@ export type TokenInputFieldProps = {
   /** ??? */
   // maxval: number;
   /** Show the icon for this token to the right of the input */
-  token?: Token;
+  token: Token;
   poolForLPRatio?: any;
   /** */
-  balanceLabel?: string;
-  /** */
   balance?: BigNumber;
+  /** */
+  balanceLabel?: string;
   range: boolean;
   isLP: boolean;
   // Handlers
   /** */
-  maxHandler?: Function;
+  maxHandler?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /** */
-  handleChange: Function;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   /** */
   handleSlider: Function;
   // Input values
@@ -101,8 +101,10 @@ export default function TokenInputField(props: TokenInputFieldProps) {
     if (props.maxHandler !== undefined) {
       return (
         <Button
+          variant="contained"
+          color="primary"
           onClick={props.maxHandler}
-          style={maxStyle}
+          className={classes.maxStyle}
           disabled={props.locked}>
           Max
         </Button>
@@ -111,16 +113,16 @@ export default function TokenInputField(props: TokenInputFieldProps) {
     return null;
   }
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayValue(event.target.value);
     props.handleChange(event);
   };
-  const handleSlider = (event, newEvent) => {
+  const handleSlider = (event: React.ChangeEvent, newEvent: any) => {
     setDisplayValue(newEvent.toString());
     props.handleSlider(newEvent);
   };
 
-  function displayLP(balance) {
+  function displayLP(balance : [BigNumber, BigNumber]) {
     return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
   }
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, FormControlLabel, Switch } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { Box, FormControlLabel, Switch } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import { QuestionModule } from '.';
 
 export default function SwitchModule(props) {

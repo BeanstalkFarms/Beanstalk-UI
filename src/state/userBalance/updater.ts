@@ -55,7 +55,6 @@ import {
   benchmarkStart,
   benchmarkEnd,
 } from 'util/index';
-// import { useConnectWallet } from 'util/hooks/useConnectWallet';
 import { UserBalanceState } from './reducer';
 
 type EventParsingParameters = [

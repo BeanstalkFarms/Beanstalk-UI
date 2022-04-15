@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { theme } from 'constants/index';
 
 export const useStyles = makeStyles({
@@ -41,4 +41,18 @@ export const useStyles = makeStyles({
     color: 'white',
     backgroundColor: theme.linkColor,
   },
+  cell: {
+    textAlign: 'center',
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+  pointerCursor: {
+    cursor: 'pointer'
+  },
+  iconButton: {
+    color: theme.linkColor
+  },
+  marginTop15: {
+    marginTop: 15
+  }
 });

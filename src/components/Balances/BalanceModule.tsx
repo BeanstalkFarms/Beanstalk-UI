@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Hidden, Box } from '@material-ui/core';
+import { Hidden, Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { BEAN, theme } from 'constants/index';
 import { displayBN, displayFullBN, TokenLabel, TrimBN } from 'util/index';
@@ -16,8 +16,60 @@ import {
   TransitAsset,
   UniswapAsset,
 } from 'components/Common';
+import makeStyles from '@mui/styles/makeStyles';
 import BalanceChart from './BalanceChart';
 import ToggleTokenBalanceModule from './ToggleTokenBalanceModule';
+
+const useStyles = makeStyles({
+  containerGridStyle: {
+    minHeight: '110px',
+    padding: '4px 4px',
+    width: '50%',
+  },
+  containerGridHorizontalStyle: {
+    padding: '4px 4px',
+  },
+  spanStyle: {
+    display: 'inline-block',
+    fontFamily: 'Futura-Pt-Book',
+    fontWeight: 'bold',
+    margin: '5px 0 5px 15px',
+    textAlign: 'left',
+    width: '100%',
+  },
+  smallGridStyle: {
+    fontWeight: 'bold',
+    fontFamily: 'Futura-Pt-Book',
+    marginTop: '-5px',
+    padding: '0 4px 4px 4px',
+  },
+  mainGrid: {
+    padding: (props: any) => props.padding,
+    backgroundColor: theme.module.background,
+  },
+  sectionOne: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px',
+    textAlign: 'left',
+  },
+  sectionTwo: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px',
+  },
+  sectionThreeUniswap: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px'
+  },
+  sectionThreeCurve: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px'
+  },
+  sectionFour: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px',
+    marginTop: '20px',
+  }
+});
 
 const color = {
   circulating: '#B3CDE3',
@@ -27,29 +79,9 @@ const color = {
   transit: '#DECBE4',
   budget: '#FED9A6',
 };
-const containerGridStyle = {
-  minHeight: '110px',
-  padding: '4px 4px',
-  width: '50%',
-};
-const containerGridHorizontalStyle = {
-  padding: '4px 4px',
-};
-const spanStyle = {
-  display: 'inline-block',
-  fontFamily: 'Futura-Pt-Book',
-  fontWeight: 'bold',
-  margin: '5px 0 5px 15px',
-  textAlign: 'left',
-  width: '100%',
-};
-const smallGridStyle = {
-  fontWeight: 'bold',
-  fontFamily: 'Futura-Pt-Book',
-  marginTop: '-5px',
-  padding: '0 4px 4px 4px',
-};
+
 export default function BalanceModule(props) {
+  const classes = useStyles(props);
   const [beanActive, setBeanActive] = useState(-1);
   const [lpActive, setLPActive] = useState(-1);
   const [curveActive, setCurveActive] = useState(-1);
@@ -190,7 +222,7 @@ export default function BalanceModule(props) {
   const switchBeanSizeBalances = (
     <>
       <Hidden smUp>
-        <Grid item xs={12} style={smallGridStyle}>
+        <Grid item xs={12} className={classes.smallGridStyle}>
           <TokenBalanceModule
             balance={beanTotals}
             description="Total Beans"
@@ -201,8 +233,8 @@ export default function BalanceModule(props) {
           />
         </Grid>
       </Hidden>
-      <Hidden xsDown>
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+      <Hidden smDown>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
               margin={props.chartMargin}
@@ -238,7 +270,7 @@ export default function BalanceModule(props) {
   const switchLPSizeBalances = (
     <>
       <Hidden smUp>
-        <Grid item xs={12} style={smallGridStyle}>
+        <Grid item xs={12} className={classes.smallGridStyle}>
           <TokenBalanceModule
             balance={lpTotals}
             description="Total LP"
@@ -251,8 +283,8 @@ export default function BalanceModule(props) {
           />
         </Grid>
       </Hidden>
-      <Hidden xsDown>
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+      <Hidden smDown>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
               placement="top"
@@ -293,7 +325,7 @@ export default function BalanceModule(props) {
   const switchCurveSizeBalances = (
     <>
       <Hidden smUp>
-        <Grid item xs={12} style={smallGridStyle}>
+        <Grid item xs={12} className={classes.smallGridStyle}>
           <TokenBalanceModule
             balance={curveTotals}
             description="Total BEAN:3CRV"
@@ -307,8 +339,8 @@ export default function BalanceModule(props) {
           />
         </Grid>
       </Hidden>
-      <Hidden xsDown>
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+      <Hidden smDown>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
               placement="top"
@@ -405,23 +437,17 @@ export default function BalanceModule(props) {
     <Grid
       container
       justifyContent="center"
-      style={{
-        padding: props.padding,
-        backgroundColor: theme.module.background,
-      }}
+      className={classes.mainGrid}
     >
       {/*
         * Section 1: "Top"
         */}
       <Grid
+        item
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-          textAlign: 'left',
-        }}
+        className={classes.sectionOne}
       >
-        <Grid container item xs={12} style={containerGridHorizontalStyle}>
+        <Grid container item xs={12} className={classes.containerGridHorizontalStyle}>
           <Grid item sm={6} xs={12}>
             {/* "Bean Balance" */}
             <DataBalanceModule
@@ -467,15 +493,12 @@ export default function BalanceModule(props) {
       {/*
         * Section 2: Beans
         */}
-      <span style={spanStyle}>Beans</span>
+      <span className={classes.spanStyle}>Beans</span>
       <Grid
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-        }}
+        className={classes.sectionTwo}
       >
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
               balance={props.beanBalance}
@@ -507,15 +530,12 @@ export default function BalanceModule(props) {
       {/*
         * Section 3: Uniswap
         */}
-      <span style={spanStyle}>Uniswap</span>
+      <span className={classes.spanStyle}>Uniswap</span>
       <Grid
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-        }}
+        className={classes.sectionThreeUniswap}
       >
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
               balance={props.lpBalance}
@@ -549,15 +569,12 @@ export default function BalanceModule(props) {
       {/*
         * Section 3: BEAN:3CRV
         */}
-      <span style={spanStyle}>BEAN:3CRV</span>
+      <span className={classes.spanStyle}>Curve</span>
       <Grid
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-        }}
+        className={classes.sectionThreeCurve}
       >
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <TokenBalanceModule
               balance={props.curveBalance}
@@ -595,55 +612,9 @@ export default function BalanceModule(props) {
       <span style={spanStyle}>BEAN:LUSD</span>
       <Grid
         container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-        }}
+        className={classes.sectionFour}
       >
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
-          <Grid item xs={12}>
-            <TokenBalanceModule
-              balance={props.beanlusdBalance}
-              balanceColor={beanlusdActive === 0 ? color.circulating : null}
-              description={props.description.beanlusdBalance}
-              isLP
-              isBeanlusd
-              poolForLPRatio={props.poolForBeanlusdRatio}
-              swerve
-              title={`Circulating ${props.showTokenName ? 'LP' : ''}`}
-              token={CryptoAsset.Beanlusd}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TokenBalanceModule
-              balance={props.beanlusdSiloBalance}
-              balanceColor={beanlusdActive === 1 ? color.silo : null}
-              description={props.description.beanlusdSiloBalance}
-              isLP
-              isBeanlusd
-              poolForLPRatio={props.poolForBeanlusdRatio}
-              swerve
-              title={`Deposited ${props.showTokenName ? 'LP' : ''}`}
-              token={SiloAsset.Beanlusd}
-            />
-          </Grid>
-          {beanlusdTransitSection}
-          {claimableBeanlusdSection}
-        </Grid>
-        {switchBeanlusdSizeBalances}
-      </Grid>
-      {/*
-        * Section 5: Stalk/Seeds/Pods/ETH overview
-        */}
-      <Grid
-        container
-        style={{
-          backgroundColor: theme.module.foreground,
-          borderRadius: '25px',
-          marginTop: '20px',
-        }}
-      >
-        <Grid container item xs={12} style={containerGridHorizontalStyle}>
+        <Grid container item xs={12} className={classes.containerGridHorizontalStyle}>
           <Grid item sm={3} xs={12}>
             <TokenBalanceModule
               balance={props.stalkBalance}
@@ -651,6 +622,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={SiloAsset.Stalk}
+              direction="column"
             />
           </Grid>
           <Grid item sm={3} xs={12}>
@@ -660,6 +632,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={SiloAsset.Seed}
+              direction="column"
             />
           </Grid>
           <Grid item sm={3} xs={12}>
@@ -669,6 +642,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={FarmAsset.Pods}
+              direction="column"
             />
           </Grid>
           <Grid item sm={3} xs={12}>
@@ -682,6 +656,7 @@ export default function BalanceModule(props) {
               margin={props.margin}
               placement="bottom"
               token={CryptoAsset.Ethereum}
+              direction="column"
             />
           </Grid>
         </Grid>

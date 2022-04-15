@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import {
   Axis, // any of these can be non-animated equivalents
   Grid,
@@ -11,19 +11,33 @@ import {
 } from '@visx/xychart';
 import BeanLogo from 'img/bean-logo.svg';
 import { theme as colorTheme } from 'constants/index';
+import makeStyles from '@mui/styles/makeStyles';
 import { DataSelector, TimeSelector } from './Selectors';
 
-export function Chart(props) {
-  const n = !props.isMobile;
-  const chartStyle = {
+const useStyles = makeStyles(({
+  chartStyle: {
     borderRadius: '25px',
     padding: '10px',
-    paddingTop: `${n ? '30px' : '40px'}`,
+    paddingTop: (props: any) => `${!props.isMobile ? '30px' : '40px'}`,
     fontFamily: 'Futura-Pt-Book',
     position: 'relative',
-    height: `${n ? '370px' : '250px'}`,
+    height: (props: any) => `${!props.isMobile ? '370px' : '250px'}`,
     backgroundColor: colorTheme.module.foreground,
-  };
+  },
+  loadingStyle: {
+      borderRadius: '25px',
+      padding: (props: any) => `${!props.isMobile ? '135px' : '60px'}`,
+      fontFamily: 'Futura-Pt-Book',
+      position: 'relative',
+      height: (props: any) => `${!props.isMobile ? '370px' : '240px'}`,
+      backgroundColor: colorTheme.module.background,
+    }
+}));
+
+export function Chart(props) {
+  const classes = useStyles(props);
+  const n = !props.isMobile;
+
   const theme = buildChartTheme({
     backgroundColor: colorTheme.module.foreground,
     colors: ['#444444', '#888888'],
@@ -42,16 +56,8 @@ export function Chart(props) {
   let data = dataMode === 'hr' ? [...props.data[0]] : [...props.data[1]];
 
   if (data.length === 0) {
-    const loadingStyle = {
-      borderRadius: '25px',
-      padding: `${n ? '135px' : '60px'}`,
-      fontFamily: 'Futura-Pt-Book',
-      position: 'relative',
-      height: `${n ? '370px' : '240px'}`,
-      backgroundColor: colorTheme.module.background,
-    };
     return (
-      <Box style={loadingStyle}>
+      <Box className={classes.loadingStyle}>
         <Box className="Loading-logo">
           <img
             className="svg"
@@ -137,7 +143,7 @@ export function Chart(props) {
   }
 
   return (
-    <Box style={chartStyle}>
+    <Box className={classes.chartStyle}>
       {useDataMode ? (
         <DataSelector
           size={props.size}
@@ -168,19 +174,19 @@ export function Chart(props) {
           renderTooltip={({ tooltipData, colorScale }) => (
             <Box>
               <Box
-                style={{
+                sx={{
                   color: colorScale(tooltipData.datumByKey[props.title].key),
                 }}
               >
                 {tooltipData.datumByKey[props.title].key}
               </Box>
-              <Box style={{ marginTop: '5px' }}>
+              <Box sx={{ marginTop: '5px' }}>
                 {`${frontUnit}${accessors
                   .yAccessor(tooltipData.datumByKey[props.title].datum)
                   .toLocaleString('en-US')}
                   ${backUnit}`}
               </Box>
-              <Box style={{ marginTop: '5px', color: '#777777' }}>
+              <Box sx={{ marginTop: '5px', color: '#777777' }}>
                 {toolTipFormatter(
                   accessors.xAccessor(tooltipData.datumByKey[props.title].datum)
                 )}

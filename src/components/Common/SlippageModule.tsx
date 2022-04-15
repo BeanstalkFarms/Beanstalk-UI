@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box, InputAdornment, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, InputAdornment, TextField } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { BASE_SLIPPAGE, SLIPPAGE_THRESHOLD } from 'constants/index';
 import { QuestionModule } from './index';
 
-export default function SlippageModule(props) {
-  const classes = makeStyles(() => ({
-    inputText: {
-      textAlign: 'right',
-      fontSize: '16px',
-      fontFamily: 'Futura-PT-Book',
-    },
-  }))();
+const useStyles = makeStyles({
+  inputText: {
+    textAlign: 'right',
+    fontSize: '16px',
+    fontFamily: 'Futura-PT-Book',
+  },
+  textStyle: {
+    margin: '0 auto', width: '90%'
+  }
+});
 
+export default function SlippageModule(props) {
+  const classes = useStyles();
   const [isFieldEmpty, setIsFieldEmpty] = useState(false);
 
   const defaultSlippage = new BigNumber(1)
@@ -23,7 +27,7 @@ export default function SlippageModule(props) {
   return (
     <Box>
       <Box
-        style={{
+        sx={{
           padding: '5px',
           fontFamily: 'Futura-PT-Book',
           fontSize: '11px',
@@ -31,12 +35,12 @@ export default function SlippageModule(props) {
       >
         Slippage:
         <QuestionModule
-          description={props.description}
-          margin={props.margin}
-          marginTooltip={props.marginTooltip}
+          description="Customize the maximum difference between the current price and the price when your transaction is mined."
+          margin="-5px 0 0 -1px"
         />
       </Box>
       <TextField
+        variant="standard"
         type="number"
         error={
           !isFieldEmpty &&
@@ -48,7 +52,7 @@ export default function SlippageModule(props) {
             ? ''
             : new BigNumber(1).minus(props.slippage).multipliedBy(100)
         }
-        style={{ margin: '0 auto', width: '90%' }}
+        className={classes.textStyle}
         onChange={(e) => {
           function setSlippagePercentage(newPercentage: BigNumber) {
             props.setSlippage(
@@ -80,7 +84,7 @@ export default function SlippageModule(props) {
             setIsFieldEmpty(true);
           }
         }}
-        onWheel={(e) => e.target.blur()}
+        // onWheel={(e) => e.target.blur()}
         onKeyDown={(e) =>
           (e.key === 'e' || e.key === '+' || e.key === '-') &&
           e.preventDefault()
@@ -104,10 +108,3 @@ export default function SlippageModule(props) {
     </Box>
   );
 }
-
-SlippageModule.defaultProps = {
-  description:
-    'Customize the maximum difference between the current price and the price when your transaction is mined.',
-  margin: '-5px 0 0 -1px',
-  marginTooltip: '0px 0 5px 10px',
-};

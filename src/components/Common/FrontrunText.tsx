@@ -1,27 +1,27 @@
 import React from 'react';
-import { Link, Box } from '@material-ui/core';
+import { Link, Box } from '@mui/material';
 import { SLIPPAGE_LINK } from 'constants/index';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+  textStyle: {
+    color: 'red',
+    fontSize: 'calc(9px + 0.5vmin)',
+  }
+});
 
 export default function FrontrunText() {
-  const linkStyle = {
-    color: 'red',
-    fontFamily: 'Futura-PT-Book',
-    fontSize: 'calc(9px + 0.5vmin)',
-    marginTop: '-9px',
-  };
-  const textStyle = {
-    color: 'red',
-    fontFamily: 'Futura-PT-Book',
-    fontSize: 'calc(9px + 0.5vmin)',
-    marginTop: '-4px',
-  };
-
+  const classes = useStyles();
   return (
-    <Box style={textStyle}>
-      Your Transaction may be Frontrun. Consider Lowering Slippage Tolerance.
+    <Box className={classes.textStyle}>
+      Your transaction may be frontrun. Consider lowering slippage tolerance.
       <br />
-      <Link href={SLIPPAGE_LINK} target="blank" style={linkStyle}>
-        Click Here to Learn More
+      <Link
+        href={SLIPPAGE_LINK}
+        className={classes.textStyle}
+        target="blank"
+        underline="hover">
+        Click here to learn more
       </Link>
       .
     </Box>

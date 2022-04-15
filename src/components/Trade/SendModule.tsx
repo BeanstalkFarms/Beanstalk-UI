@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { BASE_ETHERSCAN_ADDR_LINK, BEAN, theme } from 'constants/index';
 import { displayBN, isAddress, MinBN, TrimBN } from 'util/index';
 import {
@@ -74,7 +74,6 @@ export default function SendModule(props) {
       setAddress={props.setWalletText}
       fromAddress={props.address}
       handleChange={handleChange}
-      marginTop={window.innerWidth > 400 ? '8px' : '7px'}
       snapped={snappedToAddress}
       handleClear={clearHandler}
       isValidAddress={props.isValidAddress}

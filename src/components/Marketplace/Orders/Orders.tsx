@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import filter from 'lodash/filter';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import { displayBN, FarmAsset, getWalletAddress } from 'util/index';
@@ -11,8 +11,21 @@ import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
 import TokenIcon from 'components/Common/TokenIcon';
 import FillOrderModal from 'components/Marketplace/Orders/FillOrderModal';
 
+import { makeStyles } from '@mui/styles';
 import OrdersTable from './OrdersTable';
 import Filters, { StyledSlider } from '../Filters';
+
+const useStyles = makeStyles({
+  filterTitleStyle: {
+    display: 'inline',
+    marginTop: 0,
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '20.8px',
+  },
+  validOrders: {
+    margin: '10px 0'
+  }
+});
 
 type OrdersProps = {
   mode: 'ALL' | 'MINE';
@@ -20,17 +33,11 @@ type OrdersProps = {
   setCurrentOrder: Function;
 };
 
-const filterTitleStyle = {
-  display: 'inline',
-  marginTop: 0,
-  fontFamily: 'Futura-PT-Book',
-  fontSize: '20.8px',
-};
-
 /**
  * Orders
  */
 export default function Orders(props: OrdersProps) {
+  const classes = useStyles();
   const { orders: allOrders } = useSelector<
     AppState,
     AppState['marketplace']
@@ -169,7 +176,7 @@ export default function Orders(props: OrdersProps) {
       {/* Toggle for users to select to filter out plots they can't sell into  */}
       {props.mode !== 'MINE' && (
         <>
-          <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+          <Box sx={{ mt: 3, px: 0.75 }} className={classes.filterTitleStyle}>
             Orders you can Sell to
             <QuestionModule
               description={filterStrings.toggleValidOrders}
@@ -177,7 +184,7 @@ export default function Orders(props: OrdersProps) {
               placement="right"
             />
           </Box>
-          <Box sx={{ mt: 3, px: 0.75 }} style={{ margin: '10px 0' }}>
+          <Box sx={{ mt: 3, px: 0.75 }} className={classes.validOrders}>
             <SwitchModule
               setValue={(value) => {
                 setValidOrders(value);
@@ -188,7 +195,7 @@ export default function Orders(props: OrdersProps) {
         </>
       )}
       {/* Price per Pod sliding filter  */}
-      <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+      <Box sx={{ mt: 3, px: 0.75 }} className={classes.filterTitleStyle}>
         Price Per Pod
         <QuestionModule
           description={filterStrings.pricePerPod}
@@ -207,7 +214,7 @@ export default function Orders(props: OrdersProps) {
         />
       </Box>
       {/* Place in Line sliding filter  */}
-      <Box sx={{ mt: 3, px: 0.75 }} style={filterTitleStyle}>
+      <Box sx={{ mt: 3, px: 0.75 }} className={classes.filterTitleStyle}>
         Place In Line
         <QuestionModule
           description={filterStrings.placeInLine}

@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Box } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { BEAN } from 'constants/index';
 import { displayBN, harvest, toStringBaseUnitBN, TrimBN } from 'util/index';
 import {
@@ -13,6 +13,7 @@ import {
 } from 'components/Common';
 import { UserBalanceState } from 'state/userBalance/reducer';
 import TransactionToast from 'components/Common/TransactionToast';
+import { makeStyles } from '@mui/styles';
 
 type HarvestModuleProps = {
   setIsFormDisabled: Function;
@@ -20,7 +21,19 @@ type HarvestModuleProps = {
   harvestablePlots: UserBalanceState['harvestablePlots'];
 };
 
+const useStyles = makeStyles({
+  expandMoreIcon: {
+    marginBottom: '-14px',
+    width: '100%'
+  },
+  boxStyle: {
+    display: 'inline-block',
+    width: '100%'
+  }
+});
+
 export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
+  const classes = useStyles();
   props.setIsFormDisabled(props.harvestablePodBalance.isLessThanOrEqualTo(0));
 
   /* Input Fields */
@@ -54,9 +67,9 @@ export const HarvestModule = forwardRef((props: HarvestModuleProps, ref) => {
       <>
         <ExpandMoreIcon
           color="primary"
-          style={{ marginBottom: '-14px', width: '100%' }}
+          className={classes.expandMoreIcon}
         />
-        <Box style={{ display: 'inline-block', width: '100%' }}>
+        <Box className={classes.boxStyle}>
           {toBeanField}
         </Box>
         <TransactionDetailsModule fields={details} />

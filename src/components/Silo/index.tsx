@@ -28,14 +28,11 @@ export default function Silo() {
     (state) => state.prices
   );
 
-  //
+  // Calculations
   const userSiloDepositsByTokenUSD = getUserSiloDepositsUSD(userBalance, priceState, totalBalance);
   const totalSiloDepositsByTokenUSD = getTotalSiloDepositsUSD(priceState, totalBalance);
   const sumUserSiloDepositsUSD = sumDeposits(userSiloDepositsByTokenUSD);
   const tvl = sumDeposits(totalSiloDepositsByTokenUSD);
-
-  //
-  // const farmableMonthTotal = new BigNumber(farmableMonth).multipliedBy(720);
   const ownership = (
     userBalance.stalkBalance
       .dividedBy(totalBalance.totalStalk)
@@ -125,7 +122,7 @@ export default function Silo() {
   );
 
   return (
-    <Grid container justifyContent="center" style={{ margin: '20px 0 50px 0' }}>
+    <Grid container justifyContent="center">
       <Grid item xs={12} sm={10} lg={8} container justifyContent="center" spacing={2}>
         {metrics}
       </Grid>
@@ -156,7 +153,3 @@ export default function Silo() {
     </Grid>
   );
 }
-
-Silo.defaultProps = {
-  margin: '-10px 0 -20px 0',
-};

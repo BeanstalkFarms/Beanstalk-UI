@@ -1,31 +1,44 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
-import { TokenImage, TokenLabel, TokenTypeImage } from 'util/index';
+import { Box } from '@mui/material';
+import { Token, TokenImage, TokenLabel, TokenTypeImage } from 'util/index';
+import { makeStyles } from '@mui/styles';
 import { QuestionModule } from './index';
 
-export default function TabImageModule(props) {
-  const tokenTypeStyle = {
+const useStyles = makeStyles({
+  root: {
+    height: '25px',
+    width: '30px',
+  },
+  tokenTypeStyle: {
     height: '100%',
     width: '100%',
-  };
-  const tokenTypeModifierStyle = {
+  },
+  // FIXME: we should never position things like this
+  tokenTypeModifierStyle: {
     bottom: '20%',
     height: '30%',
     left: '48%',
     position: 'absolute',
-  };
+  }
+});
 
+export default function TabImageModule(props: {
+  style?: any;
+  token: Token;
+  description: string;
+}) {
+  const classes = useStyles();
   return (
-    <Box style={{ ...props.style }}>
+    <Box style={props.style} className={classes.root}>
       <img
         alt={TokenLabel(props.token)}
         src={TokenImage(props.token)}
-        style={tokenTypeStyle}
+        className={classes.tokenTypeStyle}
       />
       <img
         alt=""
-        src={TokenTypeImage(props.token)}
-        style={tokenTypeModifierStyle}
+        src={TokenTypeImage(props.token) || undefined}
+        className={classes.tokenTypeModifierStyle}
       />
       <QuestionModule
         description={props.description}
@@ -34,7 +47,3 @@ export default function TabImageModule(props) {
     </Box>
   );
 }
-
-TabImageModule.defaultProps = {
-  style: { height: '25px', width: '30px' },
-};

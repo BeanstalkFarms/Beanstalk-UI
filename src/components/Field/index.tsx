@@ -1,59 +1,60 @@
 import React from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { Box } from '@material-ui/core';
+import { Box, Container } from '@mui/material';
 import { displayBN, displayFullBN } from 'util/index';
 import { MEDIUM_INTEREST_LINK, theme } from 'constants/index';
 import {
-  BaseModule,
   ContentDropdown,
-  ContentSection,
   Grid,
   HeaderLabelList,
   fieldStrings,
 } from 'components/Common';
+import { makeStyles } from '@mui/styles';
+import MultiCard from 'components/Common/Cards/MultiCard';
 import FieldModule from './FieldModule';
 
+const useStyles = makeStyles({
+  headerLabelStyle: {
+    // maxWidth: '250px',
+  },
+  descriptionImage: {
+    verticalAlign: 'middle',
+    marginRight: '-1.5px',
+    padding: '0 0 4px 0',
+  },
+  whatIsTheFieldGrid: {
+    margin: '20px 0px'
+  },
+  //
+  container: {
+    backgroundColor: theme.secondary,
+    borderRadius: '15px',
+    // FIXME: use a MUI shadow
+    boxShadow: '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+  },
+  banner: {
+    borderRadius: '15px',
+    boxShadow:
+      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    margin: '10px 0',
+    backgroundColor: theme.module.metaBackground,
+    padding: '10px',
+    display: 'inline-flex',
+  }
+});
+
 export default function Field() {
+  const classes = useStyles();
   const totalBalance = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
   const weather = useSelector<AppState, AppState['weather']>(
     (state) => state.weather
   );
-  // const beansPerSeason = useSelector<AppState, AppState['beansPerSeason']>(
-  //   (state) => state.beansPerSeason
-  // );
-  const { width, hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
+  const {  hasActiveFundraiser } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-
-  //
-  const headerLabelStyle = {
-    maxWidth: '250px',
-  };
-  const containerStyle = {
-    backgroundColor: theme.secondary,
-    borderRadius: '15px',
-    boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-    width: width > 606 ? '500px' : '250px',
-    padding: '0px',
-  };
-  const bannerStyle = {
-    borderRadius: '15px',
-    boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-    width: width > 606 ? '500px' : '250px',
-    margin: '10px 0',
-    backgroundColor: theme.module.metaBackground,
-    padding: '10px',
-    display: 'inline-flex',
-  };
-
-  // Hiding for now as the numbers are misleading
-  // const tth = totalBalance.totalPods.dividedBy(beansPerSeason.harvestableMonth);
-  // const apy = weather.weather.multipliedBy(8760).dividedBy(tth);
 
   const description = (
     <>
@@ -64,11 +65,7 @@ export default function Field() {
       for each Bean sown. When the Bean supply increases, Pods become redeemable
       for &nbsp;
       <img
-        style={{
-          verticalAlign: 'middle',
-          marginRight: '-1.5px',
-          padding: '0 0 4px 0',
-        }}
+        className={classes.descriptionImage}
         height="17px"
         src={theme.bean}
         alt="Beans"
@@ -84,7 +81,7 @@ export default function Field() {
     },
   ];
   const fundBox = hasActiveFundraiser ? (
-    <Box style={bannerStyle}>
+    <Box className={classes.banner}>
       <span>
         {fieldStrings.activeFundraiser}
         <a href="https://app.bean.money/fundraiser">app.bean.money/fundraiser</a>.
@@ -97,27 +94,18 @@ export default function Field() {
       balanceDescription={[
         `${displayFullBN(weather.soil)} Soil`,
         `${weather.weather}% Weather`,
-        // `${apy.toFixed(2)}% APY`,
       ]}
       description={[
         fieldStrings.availableSoil,
         fieldStrings.weather,
-        // <span>
-        //   {fieldStrings.podAPY}{' '}
-        //   <a target="blank" href={APY_CALCULATION}>
-        //     click here
-        //   </a>
-        // </span>,
       ]}
       title={[
         'Available Soil',
         'Weather',
-        // 'Pod APY',
       ]}
       value={[
         displayBN(weather.soil),
         `${weather.weather.toFixed()}%`,
-        // `${apy.toFixed(0) === '0' ? '–' : apy.toFixed(0)}%`,
       ]}
       container={false}
     />
@@ -127,82 +115,52 @@ export default function Field() {
       balanceDescription={[
         `${displayFullBN(totalBalance.totalPods)} Unharvestable Pods`,
         `${displayFullBN(weather.harvestableIndex)} Harvested Pods`,
-        // `${tth.toFixed(2)} Seasons`,
       ]}
       description={[
         fieldStrings.podLine,
         fieldStrings.podsHarvested,
-        // <span>
-        //   {fieldStrings.seasonsToPodClearance}{' '}
-        //   <a target="blank" href={APY_CALCULATION}>
-        //     click here
-        //   </a>
-        // </span>,
       ]}
       title={[
         'Pod Line',
         'Pods Harvested',
-        // 'Pod Clearance',
       ]}
       value={[
         displayBN(totalBalance.totalPods),
         displayBN(weather.harvestableIndex),
-        // `${tth.toFixed(0) === 'Infinity' ? '–' : tth.toFixed(0)}`,
       ]}
       container={false}
     />
   );
 
   return (
-    <>
-      {fundBox}
-      <ContentSection id="field" title="Field">
+    <Container maxWidth="sm" disableGutters>
+      {/* Top section */}
+      <Container maxWidth="sm">
+        {fundBox}
         {/* Field "Analytics" displayed at the top of the page */}
-        <Grid container item justifyContent="center" style={containerStyle}>
-          <Grid item md={12} lg={6} style={headerLabelStyle}>
-            {leftHeader}
+        <Box className={classes.container} sx={{ p: 1 }}>
+          <Grid container rowSpacing={0} columnSpacing={1}>
+            <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
+              {leftHeader}
+            </Grid>
+            <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
+              {rightHeader}
+            </Grid>
           </Grid>
-          <Grid item md={12} lg={6} style={headerLabelStyle}>
-            {rightHeader}
-          </Grid>
-        </Grid>
-        {/* Content */}
-        <Grid
-          container
-          item
-          xs={12}
-          spacing={2}
-          className="SiloSection"
-          alignItems="flex-start"
-          justifyContent="center"
-        >
-          <Grid
-            item
-            md={6}
-            sm={12}
-            style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
-          >
-            <BaseModule
-              section={0}
-              sectionTitles={['']}
-              sectionTitlesDescription={['']}
-              showButton={false}
-              removeBackground
-              normalBox={false}
-            >
-              <FieldModule />
-            </BaseModule>
-          </Grid>
-        </Grid>
-        {/* Help Dropdown */}
-        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-          <ContentDropdown
-            description={description}
-            descriptionTitle="What is the Field?"
-            descriptionLinks={descriptionLinks}
-          />
-        </Grid>
-      </ContentSection>
-    </>
+        </Box>
+      </Container>
+      {/* Field Module: Sow + Send */}
+      <MultiCard type="meta">
+        <FieldModule />
+      </MultiCard>
+      {/* Description */}
+      <div className={classes.whatIsTheFieldGrid}>
+        <ContentDropdown
+          description={description}
+          descriptionTitle="What is the Field?"
+          descriptionLinks={descriptionLinks}
+        />
+      </div>
+    </Container>
   );
 }

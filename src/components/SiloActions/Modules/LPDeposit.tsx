@@ -1,9 +1,9 @@
  import React, { useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { IconButton, Box } from '@material-ui/core';
+import { IconButton, Box } from '@mui/material';
 import { AppState } from 'state';
-import { List as ListIcon } from '@material-ui/icons';
+import { List as ListIcon } from '@mui/icons-material';
 import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
@@ -23,8 +23,10 @@ import {
   TransitAsset,
 } from 'components/Common';
 import LPDepositAction from './Actions/LPDepositAction';
+import { useStyles } from './SiloStyles';
 
 export function LPDeposit() {
+  const classes = useStyles();
   const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -194,13 +196,7 @@ export function LPDeposit() {
 
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
-      >
+      <Box className={classes.listTablesIcon}>
         <IconButton
           color="primary"
           onClick={() => {
@@ -209,8 +205,8 @@ export function LPDeposit() {
               shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
-        >
+          className={classes.iconButton}
+          size="large">
           <ListIcon />
         </IconButton>
       </Box>

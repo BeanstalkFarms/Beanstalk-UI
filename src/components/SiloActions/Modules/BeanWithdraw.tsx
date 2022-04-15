@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { IconButton, Box } from '@material-ui/core';
-import { List as ListIcon } from '@material-ui/icons';
+import { IconButton, Box } from '@mui/material';
+import { List as ListIcon } from '@mui/icons-material';
 import { AppState } from 'state';
 import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
@@ -16,8 +16,10 @@ import {
 } from 'components/Common';
 import BeanClaimAction from './Actions/BeanClaimAction';
 import BeanWithdrawAction from './Actions/BeanWithdrawAction';
+import { useStyles } from './SiloStyles';
 
 export default function BeanWithdraw() {
+  const classes = useStyles();
   const { beanstalkBeanAllowance } = useSelector<
     AppState,
     AppState['allowances']
@@ -197,13 +199,7 @@ export default function BeanWithdraw() {
   /* */
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
-      >
+      <Box className={classes.listTablesIcon}>
         <IconButton
           color="primary"
           onClick={() => {
@@ -212,8 +208,8 @@ export default function BeanWithdraw() {
               shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
-        >
+          className={classes.iconButton}
+          size="large">
           <ListIcon />
         </IconButton>
       </Box>

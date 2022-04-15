@@ -1,54 +1,16 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
-// import Snowfall from 'react-snowfall';
 
 import { AppState } from 'state';
 import { theme } from 'constants/index';
 import './index.tsx';
-import 'components/Themes/winterApp.css';
+import 'components/Themes/Winter/winterApp.css';
 
 function Barn() {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-
-  /* Hiding Flashing lights effect on barn */
-  // This rotates between 0 and 5 every 1.75s
-  // to create a "flashing lights" effect on the barn.
-  // const increment = (c: number) => c % 5 + 1;
-  // const timer = useRef<number | undefined>();
-  // const [count, setCount] = useState(increment(1));
-  // useEffect(() => {
-  //   if (width > 500 && theme.name === 'winter') {
-  //     timer.current = window.setInterval(() => {
-  //       setCount(increment(count));
-  //     }, 1750);
-  //     return () => {
-  //       window.clearInterval(timer.current);
-  //     };
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [count]);
-  //
-  // // Show the winter-themed barn with flashing lights.
-  // if (theme.name === 'winter') {
-  //   return (
-  //     <>
-  //       <Box
-  //         className={`BG${count}`}
-  //         name={theme.name}
-  //       />
-  //       <Box
-  //         className={`B${count}`}
-  //         name={theme.name}
-  //         style={width < 800 ? { left: '0px' } : { left: '280px' }}
-  //       />
-  //     </>
-  //   );
-  // }
-
-  // Show the typical Beanstalk background.
   return (
     <>
       <Box
@@ -113,17 +75,53 @@ export default function Main() {
           <div id="cloud2" className="cloud-2" />
         </>
       ) : null}
-      {/* {theme.name === 'winter' ? (
-        <Snowfall
-          snowflakeCount={200}
-          speed={[0, 0.5]}
-          wind={[-0.5, 0.5]}
-          style={{ position: 'fixed' }}
-        />
-      ) : null} */}
       {/* Sun (top left corner) */}
       <img alt="" src={theme.sun} style={sunStyle} />
       {!theme.rainbow ? null : <img alt="" src={theme.rainbow} style={rainbowStyle} />}
     </Box>
   );
 }
+
+/* Hiding Flashing lights effect on barn */
+// This rotates between 0 and 5 every 1.75s
+// to create a "flashing lights" effect on the barn.
+// const increment = (c: number) => c % 5 + 1;
+// const timer = useRef<number | undefined>();
+// const [count, setCount] = useState(increment(1));
+// useEffect(() => {
+//   if (width > 500 && theme.name === 'winter') {
+//     timer.current = window.setInterval(() => {
+//       setCount(increment(count));
+//     }, 1750);
+//     return () => {
+//       window.clearInterval(timer.current);
+//     };
+//   }
+//   // eslint-disable-next-line react-hooks/exhaustive-deps
+// }, [count]);
+//
+// // Show the winter-themed barn with flashing lights.
+// if (theme.name === 'winter') {
+//   return (
+//     <>
+//       <Box
+//         className={`BG${count}`}
+//         name={theme.name}
+//       />
+//       <Box
+//         className={`B${count}`}
+//         name={theme.name}
+//         style={width < 800 ? { left: '0px' } : { left: '280px' }}
+//       />
+//     </>
+//   );
+// }
+
+/* {theme.name === 'winter' ? (
+  <Snowfall
+    snowflakeCount={200}
+    speed={[0, 0.5]}
+    wind={[-0.5, 0.5]}
+    style={{ position: 'fixed' }}
+  />
+) : null} */

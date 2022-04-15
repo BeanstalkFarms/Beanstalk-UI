@@ -4,7 +4,7 @@ import NFTs from 'components/NFT';
 
 export default function BeaNFTPage() {
   return (
-    <Page title="Balances">
+    <Page title="BeaNFTs">
       <NFTs />
     </Page>
   );

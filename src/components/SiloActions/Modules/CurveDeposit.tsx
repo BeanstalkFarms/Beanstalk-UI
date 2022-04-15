@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
-import { IconButton, Box } from '@material-ui/core';
-import { List as ListIcon } from '@material-ui/icons';
+import { IconButton, Box } from '@mui/material';
+import { List as ListIcon } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
@@ -10,8 +10,10 @@ import { BASE_SLIPPAGE } from 'constants/index';
 import { approveBeanstalkCurve, poolForLP } from 'util/index';
 import { BaseModule, curveStrings, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
 import CurveDepositAction from './Actions/CurveDepositAction';
+import { useStyles } from './SiloStyles';
 
 export default function CurveDeposit() {
+  const classes = useStyles();
   const [section, setSection] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [settings, setSettings] = useState({
@@ -147,13 +149,7 @@ export default function CurveDeposit() {
 
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          margin: '20px 0 -56px -4px',
-        }}
-      >
+      <Box className={classes.listTablesIcon}>
         <IconButton
           color="primary"
           onClick={() => {
@@ -162,8 +158,8 @@ export default function CurveDeposit() {
               shouldExpand ? { display: 'block' } : { display: 'none' }
             );
           }}
-          style={{ height: '44px', width: '44px', marginTop: '-8px' }}
-        >
+          className={classes.iconButton}
+          size="large">
           <ListIcon />
         </IconButton>
       </Box>

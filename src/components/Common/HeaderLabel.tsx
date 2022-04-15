@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { theme } from 'constants/index';
 import { FormatTooltip, QuestionModule } from './index';
 
@@ -30,6 +30,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '100%',
   },
   //
   title: {
@@ -42,10 +43,16 @@ const useStyles = makeStyles(() => ({
     padding: '5px',
     textAlign: 'right',
   },
+  tooltipSpan: {
+    backgroundColor: '#C4C4C44D',
+    padding: '5px',
+    borderRadius: '6px'
+  }
 }));
 export default function HeaderLabel(props) {
   const classes = useStyles();
 
+  //
   const questionTooltip =
     props.description !== undefined ? (
       <QuestionModule
@@ -55,6 +62,8 @@ export default function HeaderLabel(props) {
         placement={props.placement}
       />
     ) : undefined;
+  
+  //
   const balanceTooltip =
     props.balanceDescription !== undefined ? (
       <FormatTooltip
@@ -62,7 +71,7 @@ export default function HeaderLabel(props) {
         placement="top"
         title={props.balanceDescription}
       >
-        <span style={{ backgroundColor: '#C4C4C44D', padding: '5px', borderRadius: '6px' }}>{props.value}</span>
+        <span className={classes.tooltipSpan}>{props.value}</span>
       </FormatTooltip>
     ) : (
       props.value
@@ -71,7 +80,7 @@ export default function HeaderLabel(props) {
   return (
     <Box
       className={
-        props.container === undefined
+        props.container === true
           ? classes.container
           : classes.subContainer
       }
@@ -80,7 +89,9 @@ export default function HeaderLabel(props) {
         {props.title}
         {questionTooltip}
       </Box>
-      <Box className={classes.value}>{balanceTooltip}</Box>
+      <Box className={classes.value}>
+        {balanceTooltip}
+      </Box>
     </Box>
   );
 }
@@ -88,4 +99,5 @@ export default function HeaderLabel(props) {
 HeaderLabel.defaultProps = {
   margin: '-8px 0 0 2px',
   marginTooltip: '0 0 0 10px',
+  container: false,
 };

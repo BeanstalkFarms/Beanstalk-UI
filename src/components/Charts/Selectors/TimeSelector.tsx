@@ -1,27 +1,30 @@
 import React from 'react';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
-export function TimeSelector(props) {
-  const toggleStyle = !props.isMobile
-    ? {
+const useStyles = makeStyles({
+    toggleStyle: {
         position: 'absolute',
         top: '10px',
         right: '25px',
-      }
-    : {
+    },
+    toggleStyleMobile: {
         position: 'absolute',
         top: '8px',
         right: '10px',
-      };
-  const toggleButtonStyle = !props.isMobile
-    ? {
+    },
+    toggleButtonStyle: {
         padding: '5px',
         minWidth: '42px',
-      }
-    : {
+    },
+    toggleButtonStyleMobile: {
         padding: '2px',
         minWidth: '32px',
-      };
+    }
+});
+
+export function TimeSelector(props) {
+  const classes = useStyles();
 
   const change = (event, value) => {
     if (value !== null) props.setValue(value);
@@ -34,17 +37,17 @@ export function TimeSelector(props) {
       color="primary"
       exclusive
       onChange={change}
-      style={toggleStyle}
+      className={!props.isMobile ? classes.toggleStyle : classes.toggleStyleMobile}
       value={props.value}
       variant="contained"
     >
-      <ToggleButton style={toggleButtonStyle} value="week">
+      <ToggleButton className={!props.isMobile ? classes.toggleButtonStyle : classes.toggleButtonStyleMobile} value="week">
         {props.isMobile ? 'w' : 'week'}
       </ToggleButton>
-      <ToggleButton style={toggleButtonStyle} value="month">
+      <ToggleButton className={!props.isMobile ? classes.toggleButtonStyle : classes.toggleButtonStyleMobile} value="month">
         {props.isMobile ? 'm' : 'month'}
       </ToggleButton>
-      <ToggleButton style={toggleButtonStyle} value="all">
+      <ToggleButton className={!props.isMobile ? classes.toggleButtonStyle : classes.toggleButtonStyleMobile} value="all">
         {props.isMobile ? 'a' : 'all'}
       </ToggleButton>
     </ToggleButtonGroup>

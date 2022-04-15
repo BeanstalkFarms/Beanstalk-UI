@@ -8,7 +8,7 @@ import {
   Drawer,
   ListSubheader,
   CircularProgress,
-} from '@material-ui/core';
+} from '@mui/material';
 import BigNumber from 'bignumber.js';
 
 import { AppState } from 'state';
@@ -16,7 +16,7 @@ import { BEAN, theme } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
 import { getAPYs, percentForStalk, toTokenUnitsBN } from 'util/index';
-import { useStyles } from './NavigationStyles.ts';
+import { useStyles } from './NavigationStyles';
 import PriceTooltip from './PriceTooltip';
 
 const NAVIGATION_MAP = {
@@ -91,7 +91,6 @@ const Badge = ({ badge, percent, type }) => {
         <CircularProgress
           key="blackground"
           size={10}
-          style={{ opacity: 0.3 }}
           className={classes.progressBackground}
           color="inherit"
           thickness={8}
@@ -150,7 +149,7 @@ export default function NavigationSidebar() {
       aBips.push(<Badge badge={bip} percent={voted} type="bips" />);
     }
     return aBips;
-  }, []);
+  }, [] as React.ReactElement[]);
 
   const activeFundraisers = fundraisers.reduce((afundraisers, fundraiser) => {
     if (fundraiser.remaining.isGreaterThan(0)) {
@@ -162,44 +161,18 @@ export default function NavigationSidebar() {
       afundraisers.push(<Badge badge={fundraiser} percent={percentFunded} type="funds" />);
     }
     return afundraisers;
-  }, []);
+  }, [] as React.ReactElement[]);
 
-  // on each render, grab APY array
+  // Get Silo and Field APYs
   const apys = getAPYs(
     farmableMonth,
     parseFloat(totalStalk),
     parseFloat(totalSeeds)
   );
 
-  // Calculate APYs.
-  // FIXME: these calcs should be done during fetching and not within
-  // each respective component. Certain calculations (like fieldAPY)
-  // should require that all necessary dependencies be loaded before running calculation.
-  // const tth = totalPods.dividedBy(beansPerSeason.harvestableMonth);
-  // const fieldAPY = beansPerSeason.harvestableMonth > 0 ? weather.weather.multipliedBy(8760).dividedBy(tth) : null;
-  // const [beanAPY] = getAPYs(
-  //   beansPerSeason.farmableMonth,
-  //   parseFloat(totalStalk),
-  //   parseFloat(totalSeeds)
-  // );
-
   const marketCap = totalBeans.isGreaterThan(0)
     ? totalBeans.multipliedBy(beanPrice)
     : new BigNumber(0);
-
-  // Add Fundraiser page to Nav Sidebar if active Fundraiser
-  // function addActiveFundraiserNav(navMap) {
-  //   if (Object.keys(navMap.more).length < 6 && activeFundraisers.length > 0) {
-  //     navMap.more.push(
-  //       {
-  //         path: 'fundraiser',
-  //         title: 'Fundraiser',
-  //         desc: 'Fundraise Beanstalk proposals',
-  //       }
-  //     );
-  //   }
-  //   return navMap;
-  // }
 
   // Add badge to Sidebar nav
   const badgeDataByPath : { [key: string] : string | any[] | null } = {
@@ -207,8 +180,6 @@ export default function NavigationSidebar() {
       `${apys[0][0].toFixed(0)}% - ${apys[1][0].toFixed(0)}%`
     ) : null,
     field: initialized && weather ? `${weather.weather.toFixed(0)}%` : null,
-    beanfts: 'Winter',
-    poker: '3/5 · 5:30P PT'
   };
 
   // Add conditional badges
@@ -217,7 +188,6 @@ export default function NavigationSidebar() {
   }
   if (activeFundraisers.length > 0) {
     badgeDataByPath.fundraiser = activeFundraisers;
-    // addActiveFundraiserNav(NAVIGATION_MAP);
   }
 
   const currentBeanPrice = (
@@ -235,9 +205,9 @@ export default function NavigationSidebar() {
       className={classes.NavLink}
       onClick={() => dispatch(setDrawerOpen(false))}
     >
-      <ListItem button style={{ display: 'block' }}>
+      <ListItem button className={classes.blockDisplay}>
         <Box className={classes.NavLinkHeader}>
-          <span className={classes.NavLinkTitle} style={{ marginRight: 8 }}>{item.title}</span>
+          <span className={classes.NavLinkTitle}>{item.title}</span>
           {!!badgeDataByPath[item.path] && (
             Array.isArray(badgeDataByPath[item.path]) ? (
               (badgeDataByPath[item.path] as any[]).map((val, index) => (
@@ -249,9 +219,7 @@ export default function NavigationSidebar() {
           )}
         </Box>
         {item.desc && (
-          <Box>
-            <span>{item.desc}</span>
-          </Box>
+          <Box className={classes.NavLinkDesc}>{item.desc}</Box>
         )}
       </ListItem>
     </NavLink>
@@ -274,7 +242,7 @@ export default function NavigationSidebar() {
       {/**
         * Farm section */}
       <List subheader={
-        <ListSubheader component="div" className={classes.NavSubheader} id="nested-list-subheader">
+        <ListSubheader disableSticky component="div" className={classes.NavSubheader} id="nested-list-subheader">
           FARM
         </ListSubheader>
       }>
@@ -283,7 +251,7 @@ export default function NavigationSidebar() {
       {/**
         * More section */}
       <List subheader={
-        <ListSubheader component="div" className={classes.NavSubheader} id="nested-list-subheader">
+        <ListSubheader disableSticky component="div" className={classes.NavSubheader} id="nested-list-subheader">
           MORE
         </ListSubheader>
       }>

@@ -5,7 +5,7 @@ import { beanftStrings, HeaderLabelList } from 'components/Common';
 
 export default function NftStatsHeader() {
   const { winterNFTs, genesisNFTs, unmintedNFTs, unclaimedNFTs } = useSelector<AppState, AppState['nfts']>(
-      (state) => state.nfts
+    (state) => state.nfts
   );
 
   const totalWinterNFTs = winterNFTs + unmintedNFTs;
@@ -29,7 +29,6 @@ export default function NftStatsHeader() {
         totalGenesisNFTs,
         totalWinterNFTs,
       ]}
-      width="300px"
     />
   );
 }

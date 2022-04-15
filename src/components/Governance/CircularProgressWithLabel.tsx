@@ -1,6 +1,31 @@
 import React from 'react';
-import { Box, CircularProgress, Typography } from '@material-ui/core';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { FormatTooltip } from 'components/Common';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+  blackground: {
+    position: 'absolute',
+    left: '1.2px',
+    top: '1.2px'
+  },
+  majority: {
+    position: 'absolute',
+    transform: 'rotate(87deg)'
+  },
+  superMajority: {
+    position: 'absolute',
+    transform: 'rotate(147deg)'
+  },
+  absolutePosition: {
+    position: 'absolute'
+  },
+  circularProgress: {
+    position: 'absolute',
+    color: (props: any) => props.color,
+    transform: (props: any) => props.rotation
+  }
+});
 
 export default function CircularProgressWithLabel(props) {
   const showBlip =
@@ -12,7 +37,11 @@ export default function CircularProgressWithLabel(props) {
         -90 + (360 * (props.lowvalue - displayLowNumber / 2)) / 100
       }deg)`;
   const color = props.voting ? 'green' : 'red';
-
+  const styleProps = {
+    color: color,
+    rotation: rotation
+  };
+  const classes = useStyles(styleProps);
   const arrow = '\u2192';
 
   const votingTitle = props.voting
@@ -37,7 +66,7 @@ export default function CircularProgressWithLabel(props) {
       <CircularProgress
         key="blackground"
         size={38}
-        style={{ position: 'absolute', left: '1.2px', top: '1.2px' }}
+        className={classes.blackground}
         thickness={0.5}
         variant="determinate"
         value={100}
@@ -46,15 +75,15 @@ export default function CircularProgressWithLabel(props) {
     circles.push(
       <CircularProgress
         key="change"
-        style={{ position: 'absolute', color: color, transform: rotation }}
+        className={classes.circularProgress}
         value={displayLowNumber}
         variant="determinate"
       />
     );
     circles.push(
       <CircularProgress
-        key="majoriry"
-        style={{ position: 'absolute', transform: 'rotate(87deg)' }}
+        key="majority"
+        className={classes.majority}
         thickness={7}
         value={(7 * 100) / 360}
         variant="determinate"
@@ -63,7 +92,7 @@ export default function CircularProgressWithLabel(props) {
     circles.push(
       <CircularProgress
         key="superMajority"
-        style={{ position: 'absolute', transform: 'rotate(147deg)' }}
+        className={classes.superMajority}
         thickness={7}
         value={(7 * 100) / 360}
         variant="determinate"
@@ -92,7 +121,7 @@ export default function CircularProgressWithLabel(props) {
           <Typography
             color="textSecondary"
             component="div"
-            style={{ position: 'absolute' }}
+            className={classes.absolutePosition}
             variant="caption"
           >
             {props.lowvalue === undefined ? `${Math.round(props.value)}%` : ''}

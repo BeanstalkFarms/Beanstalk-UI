@@ -1,22 +1,19 @@
 import React from 'react';
-import { Box, InputAdornment, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, InputAdornment, TextField } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { TrimBN, TokenLabel } from 'util/index';
 import { TokenTypeImageModule } from '.';
 
-export default function TokenOutputField(props) {
-  const classes = makeStyles(() => ({
-    inputText: {
-      fontSize: 'calc(12px + 1vmin)',
-      fontFamily: 'Lucida Console',
-    },
-  }))();
-
-  const smallLabels = {
+const useStyles = makeStyles({
+  inputText: {
+    fontSize: 'calc(12px + 1vmin)',
+    fontFamily: 'Lucida Console',
+  },
+  smallLabels: {
     fontFamily: 'Futura-PT-Book',
     fontSize: 'calc(9px + 0.7vmin)',
-  };
-  const leftStyle = {
+  },
+  leftStyle: {
     display: 'inline-block',
     float: 'left',
     fontFamily: 'Futura-PT-Book',
@@ -24,7 +21,17 @@ export default function TokenOutputField(props) {
     textAlign: 'left' as const,
     textTransform: 'uppercase' as const,
     width: '100%',
-  };
+  },
+  tokenStyle: {
+    height: '30px',
+    marginLeft: '-10px',
+    width: '25px',
+  }
+});
+
+export default function TokenOutputField(props) {
+  const classes = useStyles();
+
   const tokenStyle = {
     height: '30px',
     marginLeft: '-10px',
@@ -55,8 +62,8 @@ export default function TokenOutputField(props) {
 
   return (
     <Box style={{ margin: '8px 0' }}>
-      <Box style={smallLabels}>
-        <Box style={leftStyle}>{tokenLabel}</Box>
+      <Box className={classes.smallLabels}>
+        <Box className={classes.leftStyle}>{tokenLabel}</Box>
       </Box>
 
       <TextField

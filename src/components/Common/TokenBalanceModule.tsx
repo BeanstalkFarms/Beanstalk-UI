@@ -1,69 +1,69 @@
-import React, { Fragment } from 'react';
+import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
-import { CryptoAsset, displayBN, displayFullBN, TokenLabel } from 'util/index';
+import { Box } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/index';
 import { DataBalanceModule, TokenTypeImageModule } from '.';
 
-export default function TokenBalanceModule(props) {
-  const style = {
-    color: props.balanceColor,
+type TokenBalanceModuleProps = {
+  isCurve: boolean;
+  isLP: boolean;
+  isBeanlusd: boolean;
+  description: string;
+  balance: BigNumber;
+  poolForLPRatio: Function;
+  balanceColor?: string;
+  token: Token;
+  title?: string;
+}
+
+const useStyles = makeStyles({
+  balance: {
     display: 'inline',
     fontFamily: 'Lucida Console',
     fontWeight: '400',
     lineHeight: '100%',
     margin: '2px',
-  };
-  const imageStyle = {
+    fontSize: '11px',
+  },
+  tokenImage: {
     display: 'inline-block',
-    height: '20px',
+    height: '18px',
     marginBottom: '-5px',
     marginLeft: '5px',
-  };
-
-  let balanceStyle = { color: props.balanceColor };
-
-  if (props.claimPadding !== undefined) {
-    balanceStyle = {
-      color: props.balanceColor,
-      paddingRight: '0px',
-      textAlign: 'center',
-      width: '100%',
-    };
   }
+});
 
-  const width = window.innerWidth;
-
+export default function TokenBalanceModule(props: TokenBalanceModuleProps) {
+  const classes = useStyles();
   const tokenLabel = TokenLabel(props.token);
-  const content =
-    width > 360 ? (
-      <>
-        <h5 style={style}>{displayBN(props.balance)}</h5>
-        <TokenTypeImageModule style={imageStyle} token={props.token} />
-      </>
-    ) : (
-      <>
-        <h5 style={style}>{displayBN(props.balance)}</h5>
-      </>
-    );
 
-  function displayLP(balance) {
-    if (props.isCurve) {
-      return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} 3CRV`;
-    }
-    if (props.isBeanlusd) {
-      return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} LUSD`;
-    }
-    return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])}
-      ${TokenLabel(CryptoAsset.Ethereum)}`;
-  }
+  //
+  const isCurve = props.isCurve;
+  const isBeanlusd = props.isBeanlusd;
+  const width = window.innerWidth;
+  const content = (width > 360) ? (
+    <>
+      <h5 className={classes.balance}>{displayBN(props.balance)}</h5>
+      <TokenTypeImageModule className={classes.tokenImage} token={props.token} />
+    </>
+  ) : (
+    <h5 className={classes.balance}>{displayBN(props.balance)}</h5>
+  );
+   
 
-  let balanceContent = props.balance.isGreaterThan(0)
-    ? `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`
-    : undefined;
-  balanceContent =
-    props.balance.isGreaterThan(0) && props.isLP
-      ? displayLP(props.poolForLPRatio(props.balance))
-      : balanceContent;
+  const displayLP = useMemo(() => (balance : [BigNumber, BigNumber]) => {
+    if (isCurve) return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} 3CRV`;
+    if (isBeanlusd) return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} LUSD`;
+    return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} ${TokenLabel(CryptoAsset.Ethereum)}`;
+  }, [isCurve, isBeanlusd]);
+
+  const balanceContent = props.balance.isGreaterThan(0)
+    ? (
+      props.isLP
+        ? `${displayLP(props.poolForLPRatio(props.balance))}` 
+        : `${displayFullBN(props.balance)} ${TokenLabel(props.token)}`
+    ) : undefined;
 
   return (
     <Box style={{ position: 'relative' }}>
@@ -71,7 +71,7 @@ export default function TokenBalanceModule(props) {
         balanceDescription={balanceContent}
         content={content}
         description={props.description}
-        style={balanceStyle}
+        style={{ color: props.balanceColor }}
         title={props.title === undefined ? tokenLabel : props.title}
         token={props.token}
         widthTooltip={props.widthTooltip}
@@ -80,10 +80,3 @@ export default function TokenBalanceModule(props) {
     </Box>
   );
 }
-
-TokenBalanceModule.defaultProps = {
-  balance: new BigNumber(-1),
-  balanceColor: 'black',
-  endText: '',
-  startText: '',
-};

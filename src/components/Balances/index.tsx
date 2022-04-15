@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { AppState } from 'state';
 import { poolForLP, SiloAsset } from 'util/index';
 import { UNISWAP_BASE_LP, theme } from 'constants/index';
+import makeStyles from '@mui/styles/makeStyles';
 import {
   BaseModule,
   ClaimableAsset,
@@ -23,20 +24,24 @@ import ClaimButton from './ClaimButton';
 import BalanceModule from './BalanceModule';
 import { sumBalances, getUserBalancesUSD } from '../../util/getUserBalancesUSD';
 
+const useStyles = makeStyles(({
+  boxStyle: {
+    fontSize: '18px',
+    fontFamily: 'Futura-Pt-Book',
+    marginTop: '13px',
+    textTransform: 'uppercase',
+  }
+}));
+
 const balanceStyle = {
   borderRadius: '25px',
   color: 'primary',
   backgroundColor: theme.module.background,
   padding: '10px',
 };
-const boxStyle = {
-  fontSize: '18px',
-  fontFamily: 'Futura-Pt-Book',
-  marginTop: '13px',
-  textTransform: 'uppercase',
-};
 
 export default function Balances() {
+  const classes = useStyles();
   const {
     lpBalance,
     lpSiloBalance,
@@ -190,9 +195,9 @@ export default function Balances() {
 
   const spaceTop = (
     <Grid
-      container
       item
       xs={12}
+      container
       justifyContent="center"
       style={{ marginTop: '10px' }}
     />
@@ -203,11 +208,11 @@ export default function Balances() {
 
   const claimableSection = userTotalClaimable.isGreaterThan(0) ? (
     <Grid
-      container
       item
       xs={6}
+      container
       justifyContent="center"
-      style={{ alignItems: 'flex-end' }}
+      alignItems="flex-end"
     >
       <ClaimButton
         asset={ClaimableAsset.Ethereum}
@@ -248,15 +253,25 @@ export default function Balances() {
     </Grid>
   ) : null;
 
-  const farmableSection =
-    isFarmableBeans ||
-    (stalkBalance.isGreaterThan(0) && rootsBalance.isEqualTo(0)) ? (
-      <Grid
-        container
-        item
-        xs={6}
-        justifyContent="center"
-        style={{ alignItems: 'flex-end' }}
+  const farmableSection = (isFarmableBeans || (stalkBalance.isGreaterThan(0) && rootsBalance.isEqualTo(0))) ? (
+    <Grid
+      item
+      xs={6}
+      container
+      justifyContent="center"
+      alignItems="flex-end"
+    >
+      <ClaimButton
+        asset={ClaimableAsset.Stalk}
+        balance={
+          rootsBalance.isEqualTo(0) ? new BigNumber(0) : grownStalkBalance
+        }
+        buttonDescription="Farm Beans, Seeds and Stalk."
+        claimTitle="FARM"
+        claimable={grownStalkBalance}
+        description={claimableStrings.farm}
+        userClaimable={grownStalkBalance.isGreaterThan(0)}
+        widthTooltip="230px"
       >
         <ClaimButton
           asset={ClaimableAsset.Stalk}
@@ -332,9 +347,31 @@ export default function Balances() {
               </Box>
             ) : null}
           </Grid>
-        </ClaimButton>
-      </Grid>
-    ) : null;
+          {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
+            ? spaceTop
+            : null}
+          {grownStalkBalance.isGreaterThan(0) ? (
+            <ClaimBalance
+              balance={grownStalkBalance}
+              description={claimableStrings.grownStalk}
+              title="Grown Stalk"
+              token={ClaimableAsset.Stalk}
+              userClaimable={grownStalkBalance.isGreaterThan(0)}
+            />
+          ) : null}
+          {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
+            ? spaceTop
+            : null}
+          {rootsBalance.isEqualTo(0) ? (
+            <Box style={{ width: '130%', marginLeft: '-15%' }}>
+              You have not updated your Silo account since the last BIP has
+              passed. Please click &apos;Farm&apos; to update your Silo.
+            </Box>
+          ) : null}
+        </Grid>
+      </ClaimButton>
+    </Grid>
+  ) : null;
 
   const myBalancesSection = (
     <>
@@ -381,7 +418,6 @@ export default function Balances() {
       />
       <Grid
         container
-        item
         justifyContent="center"
         style={{ alignItems: 'flex-end' }}
       >
@@ -468,11 +504,9 @@ export default function Balances() {
   const sections = [myBalancesSection, totalBalancesSection];
 
   return (
-    <ContentSection
-      id="balances"
-      style={{ marginBottom: 50 }}
-    >
-      <Box className="BalanceSection-mobile">
+    <ContentSection id="balances">
+      {/* Mobile */}
+      <Box sx={{ display: { sm: 'block', md: 'none' } }}>
         <BaseModule
           handleForm={() => {}}
           handleTabChange={handleTabChange}
@@ -483,31 +517,30 @@ export default function Balances() {
           {sections[section]}
         </BaseModule>
       </Box>
-
-      <Grid
-        className="BalanceSection"
-        container
-        item
-        spacing={8}
-        justifyContent="center"
-        alignItems="flex-start"
-      >
-        <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
-          <Box className="AppBar-shadow" style={balanceStyle}>
-            <Box style={boxStyle}>My Balances </Box>
-            <Line />
-            {myBalancesSection}
-          </Box>
+      {/* Desktop */}
+      <Box sx={{ display: { sm: 'none', md: 'block' } }}>
+        <Grid
+          container
+          spacing={8}
+          justifyContent="center"
+          alignItems="flex-start"
+        >
+          <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
+            <Box className="AppBar-shadow" sx={balanceStyle}>
+              <Box className={classes.boxStyle}>My Balances</Box>
+              <Line />
+              {myBalancesSection}
+            </Box>
+          </Grid>
+          <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
+            <Box className="AppBar-shadow" sx={balanceStyle}>
+              <Box className={classes.boxStyle}>Beanstalk</Box>
+              <Line />
+              {totalBalancesSection}
+            </Box>
+          </Grid>
         </Grid>
-
-        <Grid item sm={12} md={6} style={{ maxWidth: '500px' }}>
-          <Box className="AppBar-shadow" style={balanceStyle}>
-            <Box style={boxStyle}>Beanstalk</Box>
-            <Line />
-            {totalBalancesSection}
-          </Box>
-        </Grid>
-      </Grid>
+      </Box>
     </ContentSection>
   );
 }
