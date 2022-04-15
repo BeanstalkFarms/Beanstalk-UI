@@ -4,6 +4,13 @@ import toast from 'react-hot-toast';
 import { chainId } from 'util/index';
 import { IconButton } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+  errorMessage: {
+    wordBreak: 'break-all'
+  }
+});
 
 function dismissErrors(id?: any) {
   if (id) {
@@ -14,6 +21,7 @@ function dismissErrors(id?: any) {
 }
 
 export function ToastAlert({ desc, hash, msg, id }: { desc: string, hash?: string, msg?: string, id?: any }) {
+  const classes = useStyles();
   return (
     <>
       <div>
@@ -24,7 +32,11 @@ export function ToastAlert({ desc, hash, msg, id }: { desc: string, hash?: strin
             <a href={`https://${chainId === 3 ? 'ropsten.' : ''}etherscan.io/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
           </>
         )}
-        {msg}
+        {msg && (
+          <div className={classes.errorMessage}>
+            {msg}
+          </div>
+        )}
       </div>
       <IconButton style={{ backgroundColor: 'transparent' }} onClick={(id !== null) ? () => dismissErrors(id) : dismissErrors}>
         <ClearIcon />
@@ -122,8 +134,8 @@ export default class TransactionToast {
             break;
         }
       } else {
-        console.error(error);
-        msg = 'Error: '.concat(error.message.split('(')[0]);
+        const message = error.message.substring(0, 250);
+        msg = error.message.length > 250 ? message.concat('...') : message;
         duration = Infinity;
       }
     } else {
