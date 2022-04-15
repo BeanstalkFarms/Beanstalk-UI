@@ -145,8 +145,8 @@ export function changeTokenAddresses(chainId: number) {
     LUSD3CRV.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // using curuve ropsten address for lusd:3crv pool
     PRICE.addr = '0xB721C3386052389892A898EC700619A7Ab20C6B7';
     BEANSTALK_GETTERS.addr = '0xB6CC892079345d69BE3a6C91DCc8Dc0D2AAb4A03';
-    LUSD.addr = '0x86E5040C1F0459cb59B8cf2794555615554799D3'; // TODO: verify
-    tBTC.addr = '0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa'; // TODO: verify
+    LUSD.addr = '0x86E5040C1F0459cb59B8cf2794555615554799D3';
+    tBTC.addr = '0xcF24B7272d754C7CDca4Ea10fDb9eC4CbBE2F59B';
   }
 }
 
