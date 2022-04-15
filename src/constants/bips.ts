@@ -16,4 +16,5 @@ export const bipsList = [
   { path: '/Bips/bip-14.html', title: 'Beanstalk Q2 2022 Budget' },
   { path: '/Bips/bip-15.html', title: 'Demand for Soil Improvement' },
   { path: '/Bips/bip-16.html', title: 'Whitelist BEAN:LUSD Curve Pool' },
+  { path: '/Bips/bip-17.html', title: 'Bean Sprout Q2 2022 Budget Proposal' },
 ];
