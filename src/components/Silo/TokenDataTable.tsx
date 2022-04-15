@@ -189,7 +189,7 @@ export default function TokenDataTable() {
                 margin="-7px 8px 0 0"
               />
             </TableCell>
-            <TableCell align="center" className={`${classes.hideOnMobile}`}>
+            <TableCell align="center" className={`${classes.headerCell} ${classes.hideOnMobile}`}>
               STALK vAPY
               <QuestionModule
                 description={(
@@ -199,7 +199,7 @@ export default function TokenDataTable() {
                 margin="-7px 8px 0 0"
               />
             </TableCell>
-            <TableCell align="right" className={`${classes.hideOnMobile}`}>
+            <TableCell align="right" className={`${classes.headerCell} ${classes.hideOnMobile}`}>
               DEPOSITS
               <QuestionModule
                 description={siloStrings.depositsColumn}
