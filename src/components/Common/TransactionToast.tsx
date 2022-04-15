@@ -2,18 +2,34 @@ import React from 'react';
 import { ContractReceipt, ContractTransaction } from 'ethers';
 import toast from 'react-hot-toast';
 import { chainId } from 'util/index';
+import { IconButton } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
 
-export function ToastAlert({ desc, hash }: { desc: string, hash?: string }) {
+function dismissErrors(id?: any) {
+  if (id) {
+    toast.dismiss(id);
+  } else {
+    toast.dismiss();
+  }
+}
+
+export function ToastAlert({ desc, hash, msg, id }: { desc: string, hash?: string, msg?: string, id?: any }) {
   return (
-    <div>
-      {desc}
-      {hash && (
-        <>
-          &nbsp;&middot;&nbsp;
-          <a href={`https://${chainId === 3 ? 'ropsten.' : ''}etherscan.io/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
-        </>
-      )}
-    </div>
+    <>
+      <div>
+        {desc}
+        {hash && (
+          <>
+            &nbsp;&middot;&nbsp;
+            <a href={`https://${chainId === 3 ? 'ropsten.' : ''}etherscan.io/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
+          </>
+        )}
+        {msg}
+      </div>
+      <IconButton style={{ backgroundColor: 'transparent' }} onClick={(id !== null) ? () => dismissErrors(id) : dismissErrors}>
+        <ClearIcon />
+      </IconButton>
+    </>
   );
 }
 
@@ -62,6 +78,7 @@ export default class TransactionToast {
       <ToastAlert
         desc={this.messages.loading}
         hash={response.hash}
+        id={this.toastId}
       />,
       {
         id: this.toastId,
@@ -79,6 +96,7 @@ export default class TransactionToast {
       <ToastAlert
         desc={this.messages.success}
         hash={value?.transactionHash}
+        id={this.toastId}
       />,
       {
         id: this.toastId,
@@ -89,6 +107,7 @@ export default class TransactionToast {
 
   error(error: MetamaskErrorObject | Error | string) {
     let msg;
+    let duration = 5000;
     if (typeof error === 'object') {
       // Is there a better way to do this?
       if (error.message && error.message.substring(0, 8).toLowerCase() === 'metamask') {
@@ -104,16 +123,22 @@ export default class TransactionToast {
         }
       } else {
         console.error(error);
-        msg = 'An unknown error occurred.';
+        msg = 'Error: '.concat(error.message.split('(')[0]);
+        duration = Infinity;
       }
     } else {
       console.error(error);
       msg = 'An unknown error occurred.';
     }
     toast.error(
-      msg,
+      <ToastAlert
+        desc={this.messages.error}
+        msg={msg}
+        id={this.toastId}
+      />,
       {
         id: this.toastId,
+        duration: duration
       }
     );
   }
