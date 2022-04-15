@@ -40,7 +40,7 @@ export default function Vote(props: VoteProps) {
   // Active bips
   const displayBips = props.bips.reduce((dp, bipIdBn) => {
     const row : any[] = [];
-    const bipId : number = bipIdBn.toNumber();
+    const bipId : number = bipIdBn;
     row.push(bipId);
     row.push(`${props.seasonBips[bipId]}`);
     const newStalk = props.votedBips[bipId]
