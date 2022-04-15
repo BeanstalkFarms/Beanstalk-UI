@@ -59,6 +59,18 @@ export const TETHER : SupportedToken = {
   symbol: 'USDT',
 };
 
+export const LUSD : SupportedToken = {
+  addr: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
+  decimals: 18,
+  symbol: 'LUSD',
+};
+
+export const tBTC: SupportedToken = {
+  addr: '0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa',
+  decimals: 18,
+  symbol: 'tBTC'
+};
+
 // BEAN:ETH Uni V2 LP Pool
 export const UNI_V2_ETH_BEAN_LP : SupportedToken = {
   addr: '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
@@ -90,7 +102,7 @@ export const BEANLUSD : SupportedToken = {
 };
 
 // LUSD:3CRV Factory Pool
-export const LUSD : SupportedToken = {
+export const LUSD3CRV : SupportedToken = {
   addr: '0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA', // LUSD:3CRV address
   // addr: '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC', // Ropsten
   decimals: 18,
@@ -116,9 +128,11 @@ export function changeTokenAddresses(chainId: number) {
     USDC.addr = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
     CURVE.addr = '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD';
     BEANLUSD.addr = '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D';
-    LUSD.addr = '0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA';
+    LUSD3CRV.addr = '0xEd279fDD11cA84bEef15AF5D39BB4d4bEE23F0cA';
     PRICE.addr = '0xd047408488aa48A31319265E9808D6c59Adb1E51';
     BEANSTALK_GETTERS.addr = '0x2585Bc446edbD99de17A7a1a85EC328372c599f7';
+    LUSD.addr = '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0';
+    tBTC.addr = '0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa';
   }
   // Ropsten Addresses
   else if (chainId === 3) {
@@ -128,9 +142,11 @@ export function changeTokenAddresses(chainId: number) {
     USDC.addr = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F';
     CURVE.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC';
     BEANLUSD.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // FIX: change ropsten BEAN:LUSD address (currently curve)
-    LUSD.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // using curuve ropsten address for lusd:3crv pool
+    LUSD3CRV.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // using curuve ropsten address for lusd:3crv pool
     PRICE.addr = '0xB721C3386052389892A898EC700619A7Ab20C6B7';
     BEANSTALK_GETTERS.addr = '0xB6CC892079345d69BE3a6C91DCc8Dc0D2AAb4A03';
+    LUSD.addr = '0x86E5040C1F0459cb59B8cf2794555615554799D3';
+    tBTC.addr = '0xcF24B7272d754C7CDca4Ea10fDb9eC4CbBE2F59B';
   }
 }
 
@@ -139,7 +155,9 @@ export const supportedERC20Tokens = [
   BEAN,
   USDC,
   CURVE,
-  BEANLUSD
+  BEANLUSD,
+  LUSD,
+  tBTC
 ];
 
 export const supportedTokens = supportedERC20Tokens;

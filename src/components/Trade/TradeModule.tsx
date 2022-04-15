@@ -4,7 +4,7 @@ import { Grid } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import '@uniswap/widgets/dist/fonts.css';
 
-import { BEAN, DAI, TETHER, USDC } from 'constants/index';
+import { BEAN, DAI, LUSD, tBTC, TETHER, USDC } from 'constants/index';
 import {
   web3Provider,
   getRpcEndpoint,
@@ -97,6 +97,24 @@ const WIDGET_TOKEN_LIST = [
     logoURI:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984/logo.png',
   },
+  {
+    name: 'LUSD',
+    address: LUSD.addr,
+    symbol: LUSD.symbol,
+    decimals: LUSD.decimals,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/logo.png',
+  },
+  {
+    name: 'tBTC',
+    address: tBTC.addr,
+    symbol: tBTC.symbol,
+    decimals: tBTC.decimals,
+    chainId: 1,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa/logo.png',
+  },
   // Ropsten tokens
   {
     name: 'USD Coin',
@@ -106,7 +124,25 @@ const WIDGET_TOKEN_LIST = [
     chainId: 3,
     logoURI:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-  }
+  },
+  {
+    name: 'LUSD',
+    address: LUSD.addr,
+    symbol: LUSD.symbol,
+    decimals: LUSD.decimals,
+    chainId: 3,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/logo.png',
+  },
+  {
+    name: 'tBTC',
+    address: tBTC.addr,
+    symbol: tBTC.symbol,
+    decimals: tBTC.decimals,
+    chainId: 3,
+    logoURI:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa/logo.png',
+  },
 ];
 
 const useStyles = makeStyles(() => ({

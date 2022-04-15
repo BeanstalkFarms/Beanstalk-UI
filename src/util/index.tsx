@@ -6,7 +6,7 @@ import {
   BEANFTGENESIS,
   BEANSTALK,
   CURVE,
-  LUSD,
+  LUSD3CRV,
   PRICE,
   UNISWAP_V2_ROUTER,
   SupportedToken,
@@ -121,7 +121,7 @@ export const beanlusdContractReadOnly = () =>
   new web3.eth.Contract(beanlusdPoolAbi, BEANLUSD.addr);
 
 export const lusdCrv3ContractReadOnly = () =>
-  new web3.eth.Contract(lusdCrv3MetaPoolAbi, LUSD.addr);
+  new web3.eth.Contract(lusdCrv3MetaPoolAbi, LUSD3CRV.addr);
 
   export const beanstalkGettersContractReadOnly = () =>
   new web3.eth.Contract(beanstalkGettersAbi, BEANSTALK_GETTERS.addr);
