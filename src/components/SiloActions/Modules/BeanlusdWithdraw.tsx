@@ -44,10 +44,11 @@ export default function BeanlusdWithdraw() {
     (state) => state.totalBalance
   );
 
-  const sectionTitles = ['Withdraw'];
+  const sectionTitles = ['Withdraw', 'Claim'];
   const sectionTitlesDescription = [
     siloStrings.beanlusddeposit,
     siloStrings.beanlusdWithdraw.replace('{0}', totalBalance.withdrawSeasons),
+    beanlusdStrings.lpClaim,
   ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
@@ -110,21 +111,15 @@ export default function BeanlusdWithdraw() {
       setSettings={setSettings} // hide
       settings={settings} // hide
     />,
+    <BeanlusdClaimAction
+      key={2}
+      ref={claimRef}
+      setIsFormDisabled={setIsFormDisabled}
+      setSettings={setSettings} // hide
+      settings={settings} // hide
+    />
   ];
 
-  if (beanlusdReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <BeanlusdClaimAction
-        key={2}
-        ref={claimRef}
-        setIsFormDisabled={setIsFormDisabled}
-        setSettings={setSettings} // hide
-        settings={settings} // hide
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(beanlusdStrings.lpClaim);
-  }
   if (section > sectionTitles.length - 1) setSection(0);
 
   const sectionTitlesInfo = [];

@@ -41,7 +41,6 @@ const CurveClaimAction = forwardRef(({
       isLP
       token={TransitAsset.Crv3}
       value={TrimBN(curveReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
-      size="small"
     />
   );
 

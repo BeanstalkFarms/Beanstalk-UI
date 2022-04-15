@@ -70,10 +70,11 @@ export default function BeanWithdraw() {
     );
   };
 
-  const sectionTitles = ['Withdraw'];
+  const sectionTitles = ['Withdraw', 'Claim'];
   const sectionTitlesDescription = [
     siloStrings.beanDeposit,
     siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
+    siloStrings.beanClaim,
   ];
   const sectionTitlesInfoDescription = [
     siloStrings.beanDepositsTable,
@@ -145,20 +146,13 @@ export default function BeanWithdraw() {
       settings={settings}
       poolForLPRatio={poolForLPRatio}
     />,
+    <BeanClaimAction
+      key={1}
+      ref={claimRef}
+      setIsFormDisabled={setIsFormDisabled}
+    />
   ];
 
-  /* */
-  if (beanReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <BeanClaimAction
-        key={1}
-        ref={claimRef}
-        setIsFormDisabled={setIsFormDisabled}
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(siloStrings.beanClaim);
-  }
   if (section > sectionTitles.length - 1) setSection(0);
 
   /* "Info" section == the BaseModule shown below the Deposit &

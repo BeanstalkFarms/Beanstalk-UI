@@ -85,7 +85,7 @@ const LPClaimAction = forwardRef(({
   const showSettings = (
     <SettingsFormModule
       hasRemoveLP
-      margin="12px 4px -56px 0"
+      margin="20px -4px -56px 0px"
       setSettings={setSettings}
       settings={settings}
       showUnitModule={false}
@@ -93,6 +93,7 @@ const LPClaimAction = forwardRef(({
   );
 
   function transactionDetails() {
+    if (lpReceivableBalance.isLessThanOrEqualTo(0)) return null;
     if (settings.removeLP) {
       details.push(
         `Remove ${displayBN(
