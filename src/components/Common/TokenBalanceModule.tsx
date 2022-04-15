@@ -50,7 +50,6 @@ export default function TokenBalanceModule(props: TokenBalanceModuleProps) {
   ) : (
     <h5 className={classes.balance}>{displayBN(props.balance)}</h5>
   );
-   
 
   const displayLP = useMemo(() => (balance : [BigNumber, BigNumber]) => {
     if (isCurve) return `${displayBN(balance[0])} BEAN/${displayBN(balance[1])} 3CRV`;

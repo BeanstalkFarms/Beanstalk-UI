@@ -64,7 +64,11 @@ const useStyles = makeStyles({
     backgroundColor: theme.module.foreground,
     borderRadius: '25px'
   },
-  sectionFour: {
+  sectionFourBeanlusd: {
+    backgroundColor: theme.module.foreground,
+    borderRadius: '25px'
+  },
+  sectionFive: {
     backgroundColor: theme.module.foreground,
     borderRadius: '25px',
     marginTop: '20px',
@@ -598,7 +602,44 @@ export default function BalanceModule(props) {
       <span className={classes.spanStyle}>BEAN:LUSD</span>
       <Grid
         container
-        className={classes.sectionFour}
+        className={classes.sectionFourBeanlusd}
+      >
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
+          <Grid item xs={12}>
+            <TokenBalanceModule
+              balance={props.beanlusdBalance}
+              balanceColor={beanlusdActive === 0 ? color.circulating : null}
+              description={props.description.beanlusdBalance}
+              isLP
+              isBeanlusd
+              poolForLPRatio={props.poolForBeanlusdRatio}
+              title={`Circulating ${props.showTokenName ? 'LP' : ''}`}
+              token={CryptoAsset.Beanlusd}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TokenBalanceModule
+              balance={props.beanlusdSiloBalance}
+              balanceColor={beanlusdActive === 1 ? color.silo : null}
+              description={props.description.beanlusdSiloBalance}
+              isLP
+              isBeanlusd
+              poolForLPRatio={props.poolForBeanlusdRatio}
+              title={`Deposited ${props.showTokenName ? 'LP' : ''}`}
+              token={SiloAsset.Beanlusd}
+            />
+          </Grid>
+          {beanlusdTransitSection}
+          {claimableBeanlusdSection}
+        </Grid>
+        {switchBeanlusdSizeBalances}
+      </Grid>
+      {/*
+        * Section 5: Stalk/Seeds/Pods/ETH overview
+        */}
+      <Grid
+        container
+        className={classes.sectionFive}
       >
         <Grid container item xs={12} className={classes.containerGridHorizontalStyle}>
           <Grid item sm={3} xs={12}>

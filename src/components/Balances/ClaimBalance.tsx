@@ -67,13 +67,13 @@ export default function ClaimBalance({
                 margin="-8px 0 0 -1px"
                 widthTooltip={widthTooltip}
               />
+            </Box>
           </Box>
-        </Box>
-        <Box>
-          <FormatTooltip
-            margin="0 0 6px 10px"
-            placement="top-start"
-            title={`${displayFullBN(balance)} ${
+          <Box>
+            <FormatTooltip
+              margin="0 0 6px 10px"
+              placement="top-start"
+              title={`${displayFullBN(balance)} ${
                 asset !== undefined ? TokenLabel(asset) : title
               }`}
             >
