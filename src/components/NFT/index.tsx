@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { Box, Container, Grid, Link, Stack } from '@mui/material';
+// import { makeStyles } from '@mui/styles';
 import {
   MEDIUM_NFT_GENESIS_LINK,
   MEDIUM_NFT_WINTER_LINK,
@@ -16,44 +17,44 @@ import { mintAllAccountNFTs, mintAllNFTs } from 'util/index';
 import ClaimNft from './ClaimNft';
 import NftStatsHeader from './NftStatsHeader';
 
-const NFT_PAGE_MAX_WIDTH = '1300px';
-const LG_MEDIA_QUERY = {
-  below: '@media (max-width: 1000px)',
-  above: '@media (min-width: 1001px)',
-};
+// const NFT_PAGE_MAX_WIDTH = '1300px';
+// const LG_MEDIA_QUERY = {
+//   below: '@media (max-width: 1000px)',
+//   above: '@media (min-width: 1001px)',
+// };
 
-const useStyles = makeStyles(() => ({
-  container: {
-    display: 'flex',
-    width: '100%',
-    flexDirection: 'column',
-    maxWidth: NFT_PAGE_MAX_WIDTH,
-  },
-  nfts: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [LG_MEDIA_QUERY.below]: {
-      flexDirection: 'column',
-    },
-    [LG_MEDIA_QUERY.above]: {
-      flexDirection: 'row',
-    },
-  },
-  dropdown: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'center',
-    margin: '20px 0',
-  },
-}));
+// const useStyles = makeStyles(() => ({
+//   container: {
+//     display: 'flex',
+//     width: '100%',
+//     flexDirection: 'column',
+//     maxWidth: NFT_PAGE_MAX_WIDTH,
+//   },
+//   nfts: {
+//     display: 'flex',
+//     width: '100%',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     [LG_MEDIA_QUERY.below]: {
+//       flexDirection: 'column',
+//     },
+//     [LG_MEDIA_QUERY.above]: {
+//       flexDirection: 'row',
+//     },
+//   },
+//   dropdown: {
+//     display: 'flex',
+//     width: '100%',
+//     justifyContent: 'center',
+//     margin: '20px 0',
+//   },
+// }));
 
 export default function NFTs() {
   const { unclaimedWinterNFTs, claimedWinterNFTs, unclaimedNFTs, claimedNFTs } =
     useSelector<AppState, AppState['nfts']>((state) => state.nfts);
 
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const description = (
     <>
