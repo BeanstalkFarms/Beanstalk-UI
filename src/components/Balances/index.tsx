@@ -128,7 +128,6 @@ export default function Balances() {
   // Farmable Assets
   const farmableStalkBalance = farmableBeanBalance.multipliedBy(BEAN_TO_STALK);
   const farmableSeedBalance  = farmableBeanBalance.multipliedBy(BEAN_TO_SEEDS);
-  //
 
   // Pool calculators
   const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, beanReserve, ethReserve, totalLP);
