@@ -17,19 +17,17 @@ const useStyles = makeStyles({
     width: 400,
     bgcolor: 'background.paper',
     border: '2px solid #000',
-    boxShadow: 24,
-    p: 3,
+    padding: '10px 20px',
   }
 });
 
 export const StyledSlider = withStyles({
   valueLabel: {
-    top: -22,
-    width: '50px',
-    '& *': {
-      background: 'transparent',
-      color: '#000',
-    },
+    marginTop: '10px',
+    width: '55px',
+    fontSize: '11px',
+    background: 'transparent',
+    color: '#000',
   },
 })(Slider);
 
