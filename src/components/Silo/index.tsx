@@ -29,10 +29,10 @@ export default function Silo() {
   );
 
   // Calculations
-  const userSiloDepositsByTokenUSD = getUserSiloDepositsUSD(userBalance, priceState, totalBalance);
   const totalSiloDepositsByTokenUSD = getTotalSiloDepositsUSD(priceState, totalBalance);
-  const sumUserSiloDepositsUSD = sumDeposits(userSiloDepositsByTokenUSD);
-  const tvl = sumDeposits(totalSiloDepositsByTokenUSD);
+  const totalValueLocked            = sumDeposits(totalSiloDepositsByTokenUSD);
+  const userSiloDepositsByTokenUSD  = getUserSiloDepositsUSD(userBalance, priceState, totalBalance);
+  const userAggregateDeposits       = sumDeposits(userSiloDepositsByTokenUSD);
   const ownership = (
     userBalance.stalkBalance
       .dividedBy(totalBalance.totalStalk)
@@ -50,7 +50,7 @@ export default function Silo() {
             '30 Day Interest',
           ]}
           value={[
-            <span>${displayBN(tvl)}</span>,
+            <span>${displayBN(totalValueLocked)}</span>,
             <span>{displayBN(new BigNumber(farmableMonthTotal))}</span>,
           ]}
           balanceDescription={[
@@ -78,11 +78,11 @@ export default function Silo() {
             'Farmable Beans',
           ]}
           value={[
-            <span>${displayBN(sumUserSiloDepositsUSD)}</span>,
+            <span>${displayBN(userAggregateDeposits)}</span>,
             <span>{displayBN(userBalance.farmableBeanBalance)}</span>,
           ]}
           balanceDescription={[
-            `$${displayBN(sumUserSiloDepositsUSD)}`,
+            `$${displayBN(userAggregateDeposits)}`,
             `${displayFullBN(userBalance.farmableBeanBalance)} Beans`,
           ]}
           description={[

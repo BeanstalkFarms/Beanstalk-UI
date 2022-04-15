@@ -191,23 +191,25 @@ export default function Updater() {
       dispatch(updateBeanstalkCurveAllowance(beanstalkCurveAllowance)); // Needed for interacting with Curve.
       dispatch(updateBeanstalkBeanlusdAllowance(beanstalkBeanlusdAllowance)); // Needed for interacting with Curve.
       dispatch(setUserBalance({
-        claimableEthBalance,
-        ethBalance,
+        // Silo
         beanBalance,
         lpBalance,
         curveBalance,
         beanlusdBalance,
         seedBalance,
         stalkBalance,
-        // locked, @DEPRECATED
-        // lockedSeasons, @DEPRECATED
         farmableBeanBalance,
         grownStalkBalance,
-        rootsBalance,
-        usdcBalance,
+        // Farm / Field
         beanWrappedBalance,
-        //
+        claimableEthBalance,
+        ethBalance,
+        // Governance
         votedBips,
+        rootsBalance,
+        // locked, @DEPRECATED
+        // lockedSeasons, @DEPRECATED
+        usdcBalance,
       }));
     }
 
@@ -903,41 +905,51 @@ export default function Updater() {
         minReceivables[1],
       ];
 
+      //
       dispatch(setUserBalance({
+        // -- Silo
+        // Deposits
+        // [Seed/BDV deposits]
+        // Flow: Silo -> Transit -> Receivable
+        beanDeposits: userBeanDeposits,
         beanSiloBalance: beanDepositsBalance,
-        podBalance: podBalance,
-        harvestablePodBalance: harvestablePodBalance,
         beanTransitBalance: beanTransitBalance,
         beanReceivableBalance: beanReceivableBalance,
-        lpTransitBalance: lpTransitBalance,
-        lpReceivableBalance: lpReceivableBalance,
-        lpSiloBalance: lpDepositsBalance,
-        curveTransitBalance: curveTransitBalance,
-        curveReceivableBalance: curveReceivableBalance,
-        curveSiloBalance: curveDepositsBalance,
-        beanlusdTransitBalance: beanlusdTransitBalance,
-        beanlusdReceivableBalance: beanlusdReceivableBalance,
-        beanlusdSiloBalance: beanlusdDepositsBalance,
-        plots: plots,
-        harvestablePlots: harvestablePlots,
-        beanDeposits: userBeanDeposits,
-        lpDeposits: userLPDeposits,
-        lpSeedDeposits: userLPSeedDeposits,
-        curveDeposits: userCurveDeposits,
-        curveBDVDeposits: userCurveBDVDeposits,
-        beanlusdDeposits: userBeanlusdDeposits,
-        beanlusdBDVDeposits: userBeanlusdBDVDeposits,
         beanWithdrawals: userBeanWithdrawals,
         beanReceivableCrates: userBeanReceivableCrates,
-        lpWithdrawals: userLPWithdrawals,
-        lpReceivableCrates: userLPReceivableCrates,
+        //
+        lpDeposits: userLPDeposits,                 // Deposit Map: Season => Token (Bean:ETH LP)
+        lpSeedDeposits: userLPSeedDeposits,         // Deposit Map: Season => Seeds
+        lpSiloBalance: lpDepositsBalance,           // Sum of `lpDeposits`
+        lpWithdrawals: userLPWithdrawals,           // Withdrawal Map: Season => Token (Bean:ETH LP)
+        lpTransitBalance: lpTransitBalance,         // Sum of `lpWithdrawals`
+        lpReceivableCrates: userLPReceivableCrates, // Claimable Map: Season => Token (Bean:ETH LP)
+        lpReceivableBalance: lpReceivableBalance,   // Sum of `lpReceivableCrates`
+        // 
+        curveDeposits: userCurveDeposits,
+        curveBDVDeposits: userCurveBDVDeposits,
+        curveSiloBalance: curveDepositsBalance,
+        curveTransitBalance: curveTransitBalance,
+        curveReceivableBalance: curveReceivableBalance,
         curveWithdrawals: userCurveWithdrawals,
         curveReceivableCrates: userCurveReceivableCrates,
+        // 
+        beanlusdDeposits: userBeanlusdDeposits,
+        beanlusdBDVDeposits: userBeanlusdBDVDeposits,
+        beanlusdSiloBalance: beanlusdDepositsBalance,
+        beanlusdTransitBalance: beanlusdTransitBalance,
+        beanlusdReceivableBalance: beanlusdReceivableBalance,
         beanlusdWithdrawals: userBeanlusdWithdrawals,
         beanlusdReceivableCrates: userBeanlusdReceivableCrates,
+        // Farm
         beanClaimableBalance: beanReceivableBalance.plus(
           harvestablePodBalance
         ).plus(cb),
+        // Field
+        podBalance: podBalance,
+        plots: plots,
+        harvestablePodBalance: harvestablePodBalance,
+        harvestablePlots: harvestablePlots,
         hasClaimable: beanReceivableBalance
           .plus(harvestablePodBalance)
           .plus(lpReceivableBalance)

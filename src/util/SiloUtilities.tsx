@@ -68,9 +68,9 @@ export function getTotalSiloDepositsUSD(
   // FIXME: abstract this so new assets are automatically summed using
   // a map or something similar. -SC
   // This is the same as `getUserBalancesUSD` but only includes Silo components.
-  const totalSiloBeans = totalBalanceState.totalSiloBeans;
-  const totalSiloLP = totalBalanceState.totalSiloLP;
-  const totalSiloCurve = totalBalanceState.totalSiloCurve;
+  const totalSiloBeans    = totalBalanceState.totalSiloBeans;
+  const totalSiloLP       = totalBalanceState.totalSiloLP;
+  const totalSiloCurve    = totalBalanceState.totalSiloCurve;
   const totalSiloBeanlusd = totalBalanceState.totalSiloBeanlusd;
 
   // Get pool tuples
