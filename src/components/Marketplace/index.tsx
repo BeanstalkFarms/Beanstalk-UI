@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Container } from '@mui/material';
 import { AppState } from 'state';
 import { BaseModule, Grid, marketStrings, fieldStrings, ListTable, FarmAsset, ContentDropdown } from 'components/Common';
 import { PodListing, PodOrder } from 'state/marketplace/reducer';
@@ -13,9 +14,6 @@ import HistoryTable from './History/HistoryTable';
 import Stats from './History/Stats';
 
 export default function TabbedMarketplace() {
-  const { width } = useSelector<AppState, AppState['general']>(
-    (state) => state.general
-  );
   const { harvestablePodBalance, plots, harvestablePlots } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
@@ -142,87 +140,77 @@ export default function TabbedMarketplace() {
   );
 
   return (
-    <Grid
-      container
-      item
-      xs={12}
-      spacing={2}
-      alignItems="flex-start"
-      justifyContent="center"
-      style={{ minHeight: '550px', paddingBottom: 80 }}
-    >
-      {/* Column: Buy/Sell */}
+    <Container maxWidth="lg">
       <Grid
-        item
-        lg={6}
-        md={9}
-        sm={12}
-        style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
+        container
+        spacing={2}
+        alignItems="flex-start"
+        justifyContent="center"
       >
-        {/* Buy / Sell */}
-        <BaseModule
-          handleTabChange={(event, newSection) => {
-            setSection(newSection);
-          }}
-          section={section}
-          sectionTitles={sectionTitles}
-          sectionTitlesDescription={sectionTitlesDescription}
-          showButton={false}
-          removeBackground
-        >
-          {sections[section]}
-        </BaseModule>
-        {/* Mkt. Graph */}
-        <BaseModule
-          section={0}
-          sectionTitles={[]}
-          sectionTitlesDescription={[]}
-          removeBackground
-          showButton={false}>
-          <GraphModule
-            setCurrentListing={setCurrentListing}
-            setCurrentOrder={setCurrentOrder}
-          />
-        </BaseModule>
-      </Grid>
-      {/* Column: My Market */}
-      <Grid
-        item
-        lg={6}
-        md={9}
-        sm={12}
-        style={width > 500 ? { maxWidth: '550px' } : { width: width - 64 }}
-      >
-        <BaseModule
-          handleTabChange={undefined}
-          section={0}
-          sectionTitles={['My Market']}
-          sectionTitlesDescription={[marketStrings.myMarket]}
-          showButton={false}
-          removeBackground
-        >
-          {showMyMarketTables}
-          {showPlots}
-        </BaseModule>
-        <BaseModule
-          handleTabChange={undefined}
-          section={0}
-          sectionTitles={['History']}
-          sectionTitlesDescription={[marketStrings.history]}
-          showButton={false}
-          removeBackground
-        >
-          {showStats}
-          {showHistory}
-        </BaseModule>
-        <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
-          <ContentDropdown
-            description={marketStrings.description}
-            descriptionTitle="What is the Marketplace?"
-            descriptionLinks={descriptionLinks}
-          />
+        {/* Column: Buy/Sell */}
+        <Grid item lg={6} md={9} sm={12} sx={{ width: '100%' }}>
+          {/* Buy / Sell */}
+          <BaseModule
+            handleTabChange={(event, newSection) => {
+              setSection(newSection);
+            }}
+            section={section}
+            sectionTitles={sectionTitles}
+            sectionTitlesDescription={sectionTitlesDescription}
+            showButton={false}
+            removeBackground
+          >
+            {sections[section]}
+          </BaseModule>
+          {/* Mkt. Graph */}
+          <BaseModule
+            section={0}
+            sectionTitles={[]}
+            sectionTitlesDescription={[]}
+            removeBackground
+            showButton={false}>
+            <GraphModule
+              setCurrentListing={setCurrentListing}
+              setCurrentOrder={setCurrentOrder}
+            />
+          </BaseModule>
+        </Grid>
+        {/* Column: My Market */}
+        <Grid item lg={6} md={9} sm={12} sx={{ width: '100%' }}>
+          {/* My Market */}
+          <BaseModule
+            handleTabChange={undefined}
+            section={0}
+            sectionTitles={['My Market']}
+            sectionTitlesDescription={[marketStrings.myMarket]}
+            showButton={false}
+            removeBackground
+          >
+            {showMyMarketTables}
+            {showPlots}
+          </BaseModule>
+          {/* History */}
+          <BaseModule
+            handleTabChange={undefined}
+            section={0}
+            sectionTitles={['History']}
+            sectionTitlesDescription={[marketStrings.history]}
+            showButton={false}
+            removeBackground
+          >
+            {showStats}
+            {showHistory}
+          </BaseModule>
+          {/* Descriptions */}
+          <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+            <ContentDropdown
+              description={marketStrings.description}
+              descriptionTitle="What is the Marketplace?"
+              descriptionLinks={descriptionLinks}
+            />
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </Container>
   );
 }

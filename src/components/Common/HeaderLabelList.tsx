@@ -5,15 +5,17 @@ import { theme } from 'constants/index';
 import { HeaderLabel } from './index';
 
 const useStyles = makeStyles({
+  root: {
+    color: theme.accentText,
+    fontSize: '16px',
+    textTransform: 'none',
+  },
   container: {
     margin: 'auto',
     backgroundColor: theme.secondary,
     borderRadius: '15px',
-    color: theme.accentText,
     display: 'flex',
-    fontSize: '16px',
     padding: '8px',
-    textTransform: 'none',
   },
   containerShadow: {
     boxShadow: '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
@@ -30,7 +32,7 @@ const useStyles = makeStyles({
 export default function HeaderLabelList(props: any) {
   const classes = useStyles();
   return (
-    <Stack className={`HeaderLabelList ${classes.container} ${props.container ? classes.containerShadow : ''}`}>
+    <Stack className={`HeaderLabelList ${classes.root} ${props.container ? `${classes.container} ${classes.containerShadow}` : ''}`}>
       {props.containerTitle && (
         <Box className={classes.containerTitle}>
           {props.containerTitle}

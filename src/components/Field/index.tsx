@@ -30,16 +30,13 @@ const useStyles = makeStyles({
   container: {
     backgroundColor: theme.secondary,
     borderRadius: '15px',
-    boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-    // width: width > 606 ? '500px' : '250px',
-    // padding: '0px',
+    // FIXME: use a MUI shadow
+    boxShadow: '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
   },
   banner: {
     borderRadius: '15px',
     boxShadow:
       '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%),0px 1px 10px 0px rgb(0 0 0 / 12%)',
-    // width: width > 606 ? '500px' : '250px',
     margin: '10px 0',
     backgroundColor: theme.module.metaBackground,
     padding: '10px',
@@ -136,36 +133,34 @@ export default function Field() {
   );
 
   return (
-    <>
-      <Container maxWidth="sm" disableGutters>
-        <Grid container justifyContent="center">
-          {/* Top section */}
-          <Box mb={1}>
-            {fundBox}
-            {/* Field "Analytics" displayed at the top of the page */}
-            <Grid item xs="auto" container className={classes.container}>
-              <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
-                {leftHeader}
-              </Grid>
-              <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
-                {rightHeader}
-              </Grid>
+    <Container maxWidth="sm" disableGutters>
+      {/* Top section */}
+      <Container maxWidth="sm">
+        {fundBox}
+        {/* Field "Analytics" displayed at the top of the page */}
+        <Box className={classes.container} sx={{ p: 1 }}>
+          <Grid container rowSpacing={0} columnSpacing={1}>
+            <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
+              {leftHeader}
             </Grid>
-          </Box>
-          {/* Field Module: Sow + Send */}
-          <MultiCard type="meta">
-            <FieldModule />
-          </MultiCard>
-          {/* Description */}
-          <div className={classes.whatIsTheFieldGrid}>
-            <ContentDropdown
-              description={description}
-              descriptionTitle="What is the Field?"
-              descriptionLinks={descriptionLinks}
-            />
-          </div>
-        </Grid>
+            <Grid item xs={12} md={6} className={classes.headerLabelStyle}>
+              {rightHeader}
+            </Grid>
+          </Grid>
+        </Box>
       </Container>
-    </>
+      {/* Field Module: Sow + Send */}
+      <MultiCard type="meta">
+        <FieldModule />
+      </MultiCard>
+      {/* Description */}
+      <div className={classes.whatIsTheFieldGrid}>
+        <ContentDropdown
+          description={description}
+          descriptionTitle="What is the Field?"
+          descriptionLinks={descriptionLinks}
+        />
+      </div>
+    </Container>
   );
 }
