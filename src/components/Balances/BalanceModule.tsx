@@ -395,7 +395,7 @@ export default function BalanceModule(props) {
           />
         </Grid>
       </Hidden>
-      <Hidden xsDown>
+      <Hidden smDown>
         <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
@@ -642,7 +642,7 @@ export default function BalanceModule(props) {
         className={classes.sectionFive}
       >
         <Grid container item xs={12} className={classes.containerGridHorizontalStyle}>
-          <Grid item sm={3} xs={12}>
+          <Grid item sm={3} xs={3}>
             <TokenBalanceModule
               balance={props.stalkBalance}
               description={props.description.stalkBalance}
@@ -651,7 +651,7 @@ export default function BalanceModule(props) {
               direction="column"
             />
           </Grid>
-          <Grid item sm={3} xs={12}>
+          <Grid item sm={3} xs={3}>
             <TokenBalanceModule
               balance={props.seedBalance}
               description={props.description.seedBalance}
@@ -660,7 +660,7 @@ export default function BalanceModule(props) {
               direction="column"
             />
           </Grid>
-          <Grid item sm={3} xs={12}>
+          <Grid item sm={3} xs={3}>
             <TokenBalanceModule
               balance={props.podBalance}
               description={props.description.podBalance}
@@ -669,7 +669,7 @@ export default function BalanceModule(props) {
               direction="column"
             />
           </Grid>
-          <Grid item sm={3} xs={12}>
+          <Grid item sm={3} xs={3}>
             <TokenBalanceModule
               balance={
                 props.ethBalance.isLessThan(0.0003)

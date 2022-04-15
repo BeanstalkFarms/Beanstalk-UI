@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
+import makeStyles from '@mui/styles/makeStyles';
+
 import { AppState } from 'state';
 import { poolForLP, SiloAsset } from 'util/index';
 import { UNISWAP_BASE_LP, theme, BEAN_TO_STALK, BEAN_TO_SEEDS } from 'constants/index';
-
-import makeStyles from '@mui/styles/makeStyles';
 import {
   BaseModule,
   ClaimableAsset,
   claimableStrings,
-  ContentSection,
   CryptoAsset,
   Grid,
   Line,
@@ -470,12 +469,13 @@ export default function Balances() {
     </>
   );
 
+  // On mobile, render these sections using tabs.
   const sections = [myBalancesSection, totalBalancesSection];
 
   return (
-    <ContentSection id="balances">
+    <Container maxWidth="xl">
       {/* Mobile */}
-      <Box sx={{ display: { sm: 'block', md: 'none' } }}>
+      <Box sx={{ display: { xs: 'block', lg: 'none' } }}>
         <BaseModule
           handleForm={() => {}}
           handleTabChange={handleTabChange}
@@ -487,7 +487,7 @@ export default function Balances() {
         </BaseModule>
       </Box>
       {/* Desktop */}
-      <Box sx={{ display: { sm: 'none', md: 'block' } }}>
+      <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
         <Grid
           container
           spacing={8}
@@ -510,6 +510,6 @@ export default function Balances() {
           </Grid>
         </Grid>
       </Box>
-    </ContentSection>
+    </Container>
   );
 }
