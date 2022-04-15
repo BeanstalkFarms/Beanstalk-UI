@@ -99,6 +99,8 @@ export async function hourBeanQuery() {
       queryHourData(1000, 2000),
       queryHourData(1000, 3000),
       queryHourData(1000, 4000),
+      queryHourData(1000, 5000),
+      queryHourData(1000, 6000),
     ]);
     const data = d1.data.hourDatas
       .concat(d2.data.hourDatas)

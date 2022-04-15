@@ -44,10 +44,11 @@ export default function CurveWithdraw() {
     (state) => state.totalBalance
   );
 
-  const sectionTitles = ['Withdraw'];
+  const sectionTitles = ['Withdraw', 'Claim'];
   const sectionTitlesDescription = [
     curveStrings.deposit,
     curveStrings.withdraw,
+    curveStrings.lpClaim
   ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
@@ -110,21 +111,15 @@ export default function CurveWithdraw() {
       setSettings={setSettings} // hide
       settings={settings} // hide
     />,
+    <CurveClaimAction
+      key={2}
+      ref={claimRef}
+      setIsFormDisabled={setIsFormDisabled}
+      setSettings={setSettings} // hide
+      settings={settings} // hide
+    />
   ];
 
-  if (curveReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <CurveClaimAction
-        key={2}
-        ref={claimRef}
-        setIsFormDisabled={setIsFormDisabled}
-        setSettings={setSettings} // hide
-        settings={settings} // hide
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(curveStrings.lpClaim);
-  }
   if (section > sectionTitles.length - 1) setSection(0);
 
   const sectionTitlesInfo = [];

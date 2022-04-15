@@ -41,7 +41,6 @@ const BeanlusdClaimAction = forwardRef(({
       isLP
       token={TransitAsset.Beanlusd}
       value={TrimBN(beanlusdReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
-      size="small"
     />
   );
 

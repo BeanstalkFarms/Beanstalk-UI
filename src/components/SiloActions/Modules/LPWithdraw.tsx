@@ -88,10 +88,11 @@ export default function LPWithdraw() {
   const [isFormDisabled, setIsFormDisabled] = useState(true);
   const [listTablesStyle, setListTablesStyle] = useState({ display: 'block' });
 
-  const sectionTitles = ['Withdraw'];
+  const sectionTitles = ['Withdraw', 'Claim'];
   const sectionTitlesDescription = [
     siloStrings.lpDeposit,
     siloStrings.lpWithdraw.replace('{0}', totalBalance.withdrawSeasons),
+    siloStrings.lpClaim,
   ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
@@ -158,19 +159,14 @@ export default function LPWithdraw() {
       setSettings={setSettings}
       settings={settings}
     />,
+    <LPClaimAction
+      key={1}
+      ref={claimRef}
+      poolForLPRatio={poolForLPRatio}
+      setIsFormDisabled={setIsFormDisabled}
+    />
   ];
-  if (lpReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <LPClaimAction
-        key={1}
-        ref={claimRef}
-        poolForLPRatio={poolForLPRatio}
-        setIsFormDisabled={setIsFormDisabled}
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(siloStrings.lpClaim);
-  }
+
   if (section > sectionTitles.length - 1) setSection(0);
 
   const sectionTitlesInfo = [];
