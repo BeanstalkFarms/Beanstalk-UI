@@ -4,7 +4,8 @@ import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { AppState } from 'state';
 import { poolForLP, SiloAsset } from 'util/index';
-import { UNISWAP_BASE_LP, theme } from 'constants/index';
+import { UNISWAP_BASE_LP, theme, BEAN_TO_STALK, BEAN_TO_SEEDS } from 'constants/index';
+
 import makeStyles from '@mui/styles/makeStyles';
 import {
   BaseModule,
@@ -124,7 +125,10 @@ export default function Balances() {
     (state) => state.prices
   );
 
-  const farmableSeedBalance = farmableBeanBalance.multipliedBy(2);
+  // Farmable Assets
+  const farmableStalkBalance = farmableBeanBalance.multipliedBy(BEAN_TO_STALK);
+  const farmableSeedBalance  = farmableBeanBalance.multipliedBy(BEAN_TO_SEEDS);
+  //
 
   // Pool calculators
   const poolForLPRatio = (amount: BigNumber) => poolForLP(amount, beanReserve, ethReserve, totalLP);
@@ -284,48 +288,47 @@ export default function Balances() {
           >
             Farmable
           </Grid>
+          {/* what is this? */}
           {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
             ? spaceTop
             : null}
+          {}
           {farmableBeanBalance.isGreaterThan(0) ? (
-            <ClaimBalance
-              balance={farmableBeanBalance}
-              description={claimableStrings.beans}
-              height="13px"
-              title="Grown Beans"
-              token={ClaimableAsset.Bean}
-              userClaimable={farmableBeanBalance.isGreaterThan(0)}
-            />
+            <>
+              <ClaimBalance
+                balance={farmableBeanBalance}
+                description={claimableStrings.beans}
+                height="13px"
+                title="Farmable Beans"
+                token={ClaimableAsset.Bean}
+                userClaimable={farmableBeanBalance.isGreaterThan(0)}
+              />
+              <ClaimBalance
+                balance={farmableStalkBalance}
+                description={claimableStrings.farmableStalk}
+                // height="20px"
+                title="Farmable Stalk"
+                token={SiloAsset.Stalk}
+                userClaimable={farmableBeanBalance.isGreaterThan(0)}
+              />
+              <ClaimBalance
+                balance={farmableSeedBalance}
+                description={claimableStrings.seeds}
+                // height="20px"
+                title="Farmable Seeds"
+                token={SiloAsset.Seed}
+                userClaimable={farmableSeedBalance.isGreaterThan(0)}
+              />
+              <ClaimBalance
+                balance={grownStalkBalance}
+                description={claimableStrings.grownStalk}
+                title="Grown Stalk"
+                token={ClaimableAsset.Stalk}
+                userClaimable={grownStalkBalance.isGreaterThan(0)}
+              />
+            </>
           ) : null}
-          {farmableSeedBalance.isGreaterThan(0) ? (
-            <ClaimBalance
-              balance={farmableBeanBalance}
-              description={claimableStrings.farmableStalk}
-              // height="20px"
-              title="Farmable Stalk"
-              token={SiloAsset.Stalk}
-              userClaimable={farmableBeanBalance.isGreaterThan(0)}
-            />
-          ) : null}
-          {grownStalkBalance.isGreaterThan(0) ? (
-            <ClaimBalance
-              balance={grownStalkBalance}
-              description={claimableStrings.grownStalk}
-              title="Grown Stalk"
-              token={ClaimableAsset.Stalk}
-              userClaimable={grownStalkBalance.isGreaterThan(0)}
-            />
-          ) : null}
-          {farmableSeedBalance.isGreaterThan(0) ? (
-            <ClaimBalance
-              balance={farmableSeedBalance}
-              description={claimableStrings.seeds}
-              // height="20px"
-              title="Seeds"
-              token={SiloAsset.Seed}
-              userClaimable={farmableSeedBalance.isGreaterThan(0)}
-            />
-          ) : null}
+          {/* ??? */}
           {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
             ? spaceTop
             : null}
@@ -336,27 +339,6 @@ export default function Balances() {
             </Box>
           ) : null}
         </Grid>
-        {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
-          ? spaceTop
-          : null}
-        {grownStalkBalance.isGreaterThan(0) ? (
-          <ClaimBalance
-            balance={grownStalkBalance}
-            description={claimableStrings.grownStalk}
-            title="Grown Stalk"
-            token={ClaimableAsset.Stalk}
-            userClaimable={grownStalkBalance.isGreaterThan(0)}
-          />
-        ) : null}
-        {beanClaimable.isGreaterThan(0) && ethClaimable.isGreaterThan(0)
-          ? spaceTop
-          : null}
-        {rootsBalance.isEqualTo(0) ? (
-          <Box style={{ width: '130%', marginLeft: '-15%' }}>
-            You have not updated your Silo account since the last BIP has
-            passed. Please click &apos;Farm&apos; to update your Silo.
-          </Box>
-        ) : null}
       </ClaimButton>
     </Grid>
   ) : null;
