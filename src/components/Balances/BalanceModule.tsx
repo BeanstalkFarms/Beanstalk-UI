@@ -227,7 +227,6 @@ export default function BalanceModule(props) {
             balance={beanTotals}
             description="Total Beans"
             style={{ position: 'relative' }}
-            swerve
             title="Total Beans"
             token={CryptoAsset.Bean}
           />
@@ -277,7 +276,6 @@ export default function BalanceModule(props) {
             isLP
             poolForLPRatio={props.poolForLPRatio}
             style={{ position: 'relative' }}
-            swerve
             title="Total LP"
             token={CryptoAsset.LP}
           />
@@ -333,7 +331,6 @@ export default function BalanceModule(props) {
             isCurve
             poolForLPRatio={props.poolForCurveRatio}
             style={{ position: 'relative' }}
-            swerve
             title="Total BEAN:3CRV"
             token={CryptoAsset.Crv3}
           />
@@ -381,7 +378,7 @@ export default function BalanceModule(props) {
   const switchBeanlusdSizeBalances = (
     <>
       <Hidden smUp>
-        <Grid item xs={12} style={smallGridStyle}>
+        <Grid item xs={12} className={classes.smallGridStyle}>
           <TokenBalanceModule
             balance={beanlusdTotals}
             description="Total BEAN:LUSD"
@@ -389,14 +386,13 @@ export default function BalanceModule(props) {
             isBeanlusd
             poolForLPRatio={props.poolForCurveRatio}
             style={{ position: 'relative' }}
-            swerve
             title="Total BEAN:LUSD"
             token={CryptoAsset.Beanlusd}
           />
         </Grid>
       </Hidden>
       <Hidden xsDown>
-        <Grid container item sm={6} xs={12} style={containerGridStyle}>
+        <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
             <FormatTooltip
               placement="top"
@@ -457,7 +453,6 @@ export default function BalanceModule(props) {
               margin="0 0 6px 10px"
               placement="top-start"
               style={{ position: 'relative' }}
-              swerve
               title={props.description.topLeftTitle}
             />
           </Grid>
@@ -484,7 +479,6 @@ export default function BalanceModule(props) {
               margin="0 0 6px 10px"
               placement="top-start"
               style={{ position: 'relative' }}
-              swerve
               title={props.description.topRightTitle}
             />
           </Grid>
@@ -504,7 +498,6 @@ export default function BalanceModule(props) {
               balance={props.beanBalance}
               balanceColor={beanActive === 0 ? color.circulating : null}
               description={props.description.beanBalance}
-              swerve
               title={`Circulating ${props.showTokenName ? 'Beans' : ''}`}
               token={CryptoAsset.Bean}
             />
@@ -514,7 +507,6 @@ export default function BalanceModule(props) {
               balance={props.beanSiloBalance}
               balanceColor={beanActive === 1 ? color.silo : null}
               description={props.description.beanSiloBalance}
-              swerve
               title={`Deposited ${props.showTokenName ? 'Beans' : ''}`}
               token={SiloAsset.Bean}
             />
@@ -524,7 +516,6 @@ export default function BalanceModule(props) {
           {beanReserveSection}
           {budgetBeansSection}
         </Grid>
-
         {switchBeanSizeBalances}
       </Grid>
       {/*
@@ -543,7 +534,6 @@ export default function BalanceModule(props) {
               description={props.description.lpBalance}
               isLP
               poolForLPRatio={props.poolForLPRatio}
-              swerve
               title={`Circulating ${props.showTokenName ? 'LP' : ''}`}
               token={CryptoAsset.LP}
             />
@@ -555,7 +545,6 @@ export default function BalanceModule(props) {
               description={props.description.lpSiloBalance}
               isLP
               poolForLPRatio={props.poolForLPRatio}
-              swerve
               title={`Deposited ${props.showTokenName ? 'LP' : ''}`}
               token={SiloAsset.LP}
             />
@@ -563,7 +552,6 @@ export default function BalanceModule(props) {
           {lpTransitSection}
           {claimableLPSection}
         </Grid>
-
         {switchLPSizeBalances}
       </Grid>
       {/*
@@ -583,7 +571,6 @@ export default function BalanceModule(props) {
               isLP
               isCurve
               poolForLPRatio={props.poolForCurveRatio}
-              swerve
               title={`Circulating ${props.showTokenName ? 'LP' : ''}`}
               token={CryptoAsset.Crv3}
             />
@@ -596,7 +583,6 @@ export default function BalanceModule(props) {
               isLP
               isCurve
               poolForLPRatio={props.poolForCurveRatio}
-              swerve
               title={`Deposited ${props.showTokenName ? 'LP' : ''}`}
               token={SiloAsset.Crv3}
             />
@@ -609,7 +595,7 @@ export default function BalanceModule(props) {
       {/*
         * Section 4: BEAN:LUSD
         */}
-      <span style={spanStyle}>BEAN:LUSD</span>
+      <span className={classes.spanStyle}>BEAN:LUSD</span>
       <Grid
         container
         className={classes.sectionFour}
@@ -619,7 +605,6 @@ export default function BalanceModule(props) {
             <TokenBalanceModule
               balance={props.stalkBalance}
               description={props.description.stalkBalance}
-              margin={props.margin}
               placement="bottom"
               token={SiloAsset.Stalk}
               direction="column"
@@ -629,7 +614,6 @@ export default function BalanceModule(props) {
             <TokenBalanceModule
               balance={props.seedBalance}
               description={props.description.seedBalance}
-              margin={props.margin}
               placement="bottom"
               token={SiloAsset.Seed}
               direction="column"
@@ -639,7 +623,6 @@ export default function BalanceModule(props) {
             <TokenBalanceModule
               balance={props.podBalance}
               description={props.description.podBalance}
-              margin={props.margin}
               placement="bottom"
               token={FarmAsset.Pods}
               direction="column"
@@ -653,7 +636,6 @@ export default function BalanceModule(props) {
                   : props.ethBalance
               }
               description={props.description.ethBalance}
-              margin={props.margin}
               placement="bottom"
               token={CryptoAsset.Ethereum}
               direction="column"

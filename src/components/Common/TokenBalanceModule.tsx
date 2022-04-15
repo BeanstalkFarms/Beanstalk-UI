@@ -6,9 +6,9 @@ import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/i
 import { DataBalanceModule, TokenTypeImageModule } from '.';
 
 type TokenBalanceModuleProps = {
-  isCurve: boolean;
-  isLP: boolean;
-  isBeanlusd: boolean;
+  isCurve?: boolean;
+  isLP?: boolean;
+  isBeanlusd?: boolean;
   description: string;
   balance: BigNumber;
   poolForLPRatio: Function;

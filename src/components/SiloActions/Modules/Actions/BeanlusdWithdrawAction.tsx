@@ -1,8 +1,8 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
 import { utils } from 'ethers';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Box } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
