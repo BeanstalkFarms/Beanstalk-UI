@@ -136,7 +136,7 @@ export default class TransactionToast {
             break;
         }
       } else {
-        const message = error.message.substring(0, 250);
+        const message = error.message.substring(0, 200);
         msg = error.message.length > 250 ? message.concat('...') : message;
         duration = Infinity;
       }
