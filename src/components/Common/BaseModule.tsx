@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
     padding: '10px',
     // Added to enable the SettingsFormMoudle 
     overflow: 'visible',
+    position: 'relative',
   },
   // disableBackground = true
   metaModule: {
@@ -180,6 +181,7 @@ export default function BaseModule({
   } else {
     <></>;
   }
+  
   const resetLink = singleReset !== true ?
     <>
       <br />
@@ -200,7 +202,7 @@ export default function BaseModule({
   // style={{ position: 'relative', zIndex: '0' }}
   const moduleContent = (
     <>
-      <Box style={{ position: 'relative' }}>
+      <Box>
         {children}
         {allowance.isEqualTo(0) ? (
           <Box className={classes.moduleContent} />
@@ -219,7 +221,8 @@ export default function BaseModule({
 
   return (
     <>
-      {normalBox && sectionTitles.length >= 1 ? (
+      {(normalBox && sectionTitles.length >= 1) ? (
+        // Multiple sections, "normalBox"
         <Box
           style={style}
           className={
@@ -274,11 +277,7 @@ export default function BaseModule({
               />
             ))}
           </Tabs>
-          <Line
-            style={{
-              margin: '4px 8px',
-            }}
-          />
+          <Line style={{ margin: '4px 8px' }} />
           {showButton ? (
             <form
               autoComplete="off"
@@ -292,7 +291,8 @@ export default function BaseModule({
             moduleContent
           )}
         </Box>
-      ) : (sectionTitles.length === 1 && normalBox) ? (
+      ) : (normalBox && sectionTitles.length === 1) ? (
+        // Single section, "normalBox"
         <Box
           style={style}
           className={
@@ -300,9 +300,7 @@ export default function BaseModule({
               ? classes.metaModule
               : classes.inputModule
           }
-          sx={{
-            marginTop: marginTop
-          }}
+          sx={{ marginTop: marginTop }}
           boxShadow={3}
         >
           <span
@@ -326,11 +324,7 @@ export default function BaseModule({
               sectionTitles[0]
             )}
           </span>
-          <Line
-            style={{
-              margin: '4px 8px',
-            }}
-          />
+          <Line style={{ margin: '4px 8px' }} />
           {showButton ? (
             <form autoComplete="off" noValidate style={{ padding: '0 10px' }}>
               {moduleContent}
@@ -340,6 +334,7 @@ export default function BaseModule({
           )}
         </Box>
       ) : (
+        // Not a normal box
         <Box
           style={style}
           className={

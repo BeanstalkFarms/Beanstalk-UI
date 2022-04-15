@@ -8,35 +8,46 @@ import { theme } from 'constants/index';
 import { settingsStrings, SlippageModule, SwitchModule, UnitSelectionModule } from './index';
 
 const useStyles = makeStyles({
+  settingsIcon: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    // Makes the settings bar float to the right side of the module.
+    position: 'absolute', 
+    width: '100%',  //
+    height: 'auto', //
+    right: '15px',  // 
+    bottom: '20px', // 
+  },
   /* */
   rightSettingStyle: {
     backgroundColor: theme.module.background,
     boxShadow: '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
     clipPath: 'inset(-10px -10px -10px 0.4px)',
     //
-    width: '80px',
-    height: 'auto',
     paddingBottom: '10px',
     paddingRight: '10px',
     borderRadius: '0 10px 10px 0',
     //
     position: 'absolute',
-    right: '-89px',
-    bottom: '0px',
+    width: '80px',  // 
+    height: 'auto', // no height restriction
+    right: '-79px', // slightly less than width to ensure overlap
+    bottom: '26px', // bypass the 15px border radius
     zIndex: 99,
   },
   /* */
   bottomSettingStyle: {
     backgroundColor: theme.module.background,
     borderRadius: '0 0 10px 10px',
-    bottom: '-76px',
     boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
     clipPath: 'inset(0.4px -10px -10px -10px)',
-    height: '55px',
+    //
     position: 'absolute',
-    right: '10px',
-    width: 'auto',
+    width: 'auto',    // no width restriction
+    height: '55px',   // 
+    right: '26px',    // bypass the 15px border radius
+    bottom: '-54px',  // slightly less than height to ensure overlap 
     zIndex: 99,
   },
 });
@@ -57,7 +68,7 @@ type SettingsFormModuleProps = {
   hasConvertible: boolean;
   hasRemoveLP: boolean;
   hasSlippage: boolean;
-  margin: string;
+  // margin: string;
   showBeanEthereum: boolean;
   showBeanEthereumSwap: boolean;
   showLP: boolean;
@@ -195,18 +206,7 @@ export default function SettingsFormModule(props: SettingsFormModuleProps) {
   const rightDrawerEnabled = rightDrawerItems.findIndex((item) => item.enabled === true) > -1;
 
   const settingsIcon = (
-    <Box
-      style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        margin: props.margin,
-        // Makes the settings bar float to the right side of the module.
-        position: 'absolute',
-        width: '100%',
-        bottom: 0,
-        right: 0,
-      }}
-    >
+    <Box className={classes.settingsIcon}>
       <IconButton
         color="primary"
         onClick={() => {

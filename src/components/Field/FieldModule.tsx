@@ -288,20 +288,24 @@ export default function FieldModule() {
   return (
     <>
       <BaseModule
+        // Allowance
         allowance={allowance}
+        setAllowance={updateBeanstalkBeanAllowance}
+        handleApprove={approveBeanstalkBean}
+        // Form
+        mode={settings.mode}
+        handleForm={handleForm}
         resetForm={() => {
           setSettings({ ...settings, mode: SwapMode.Ethereum });
         }}
-        handleApprove={approveBeanstalkBean}
-        handleForm={handleForm}
-        handleTabChange={handleTabChange}
         isDisabled={isFormDisabled && sectionTitles[section] !== 'Harvest'}
-        marginTop="14px"
-        mode={settings.mode}
+        // Sections
+        handleTabChange={handleTabChange}
         section={section}
         sectionTitles={sectionTitles}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkBeanAllowance}
+        // FIXME: this reduces the top margin. We shouldn't need this for things to line up!
+        marginTop="14px"
       >
         {sections[section]}
         {showListTablesIcon}
