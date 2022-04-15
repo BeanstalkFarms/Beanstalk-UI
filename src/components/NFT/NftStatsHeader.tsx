@@ -29,7 +29,6 @@ export default function NftStatsHeader() {
         totalGenesisNFTs,
         totalWinterNFTs,
       ]}
-      width="300px"
     />
   );
 }

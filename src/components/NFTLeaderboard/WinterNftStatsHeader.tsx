@@ -35,7 +35,6 @@ export default function WinterNftStatsHeader() {
           Math.floor(investedBeans),
           remainingNFTs,
         ]}
-        width="300px"
       />
     );
 }

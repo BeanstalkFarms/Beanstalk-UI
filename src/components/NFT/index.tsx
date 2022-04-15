@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { Container, Grid, Link, Stack } from '@mui/material';
+import { Box, Container, Grid, Link, Stack } from '@mui/material';
 import {
   MEDIUM_NFT_GENESIS_LINK,
   MEDIUM_NFT_WINTER_LINK,
@@ -78,7 +78,9 @@ export default function NFTs() {
     <Container maxWidth="lg">
       <Stack spacing={4} direction="column" alignItems="center">
         {/* Counts of each type of BeaNFT */}
-        <NftStatsHeader />
+        <Box sx={{ width: '300px' }}>
+          <NftStatsHeader />
+        </Box>
         {/* Genesis vs. Winter columns */}
         <Grid container>
           <Grid item xl={6} lg={6} md={12} xs={12}>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
-import { Container } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 
 import { AppState } from 'state';
@@ -78,18 +78,16 @@ export default function PegMaintenance() {
     SeasonReward(time);
 
   return (
-    <Grid container justifyContent="center" rowSpacing={2}>
+    <Stack direction="column" alignItems="center" spacing={2}>
       {/* Description */}
-      <Grid item xs={12}>
-        <Container maxWidth="xs">
-          <ContentDropdown
-            description={pegStrings.pegDescription}
-            descriptionTitle="What is Peg Maintenance?"
-          />
-        </Container>
-      </Grid>
+      <Container maxWidth="xs">
+        <ContentDropdown
+          description={pegStrings.pegDescription}
+          descriptionTitle="What is Peg Maintenance?"
+        />
+      </Container>
       {/* Quick Stats */}
-      <Grid item xs={12}>
+      <Container maxWidth="xs" sx={{ marginLeft: "auto" }}>
         <HeaderLabelList
           description={[
             seasonStrings.season,
@@ -111,15 +109,16 @@ export default function PegMaintenance() {
             stValue,
             srValue,
           ]}
-          width="300px"
         />
-      </Grid>
+      </Container>
       {/* Sunrise Button */}
-      {sunriseButton}
+      <Box>
+        {sunriseButton}
+      </Box>
       {/* Seasons Card */}
-      <Grid item xs={12}>
+      <Box sx={{ width: '100%' }}>
         <Seasons />
-      </Grid>
-    </Grid>
+      </Box>
+    </Stack>
   );
 }
