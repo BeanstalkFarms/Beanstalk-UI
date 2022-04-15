@@ -87,7 +87,7 @@ export default function PegMaintenance() {
         />
       </Container>
       {/* Quick Stats */}
-      <Container maxWidth="xs" sx={{ marginLeft: "auto" }}>
+      <Container maxWidth="xs" sx={{ marginLeft: 'auto' }}>
         <HeaderLabelList
           description={[
             seasonStrings.season,
