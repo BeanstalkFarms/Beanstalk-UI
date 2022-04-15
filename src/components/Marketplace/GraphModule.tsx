@@ -22,11 +22,6 @@ const useStyles = makeStyles({
   positionRelative: {
     position: 'relative'
   },
-  tooltip: {
-    backgroundColor: 'transparent',
-    boxShadow: 'none',
-    paddingTop: 7,
-  },
   listingBox: {
     backgroundColor: '#b3cde3',
     border: '2px solid #333',
@@ -36,7 +31,7 @@ const useStyles = makeStyles({
     pointerEvents: 'auto',
     zIndex: 99999,
   },
-  nonListingBox: {
+  orderBox: {
     backgroundColor: '#ccebc5',
     border: '2px solid #333',
     boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
@@ -527,10 +522,16 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
                   left={tooltipLeft}
                   top={tooltipTop}
                   applyPositionStyle
-                  className={classes.tooltip}
+                  style={{
+                    // This needs to stay as `style` for override purposes
+                    padding: 0,
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                    fontSize: 13,
+                  }}
                 >
                   <Box
-                    className={tooltipData.type === 'listing' ? classes.listingBox : classes.nonListingBox}>
+                    className={tooltipData.type === 'listing' ? classes.listingBox : classes.orderBox}>
                     {tooltipData.type === 'listing' ? (
                       <GraphListingTooltip
                         listing={listings[tooltipData.index]}
