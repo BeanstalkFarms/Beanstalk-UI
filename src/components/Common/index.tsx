@@ -97,8 +97,8 @@ export const walletStrings = {
     'This is your total Unharvestable Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, look in the Field module.',
   ethBalance: 'This is the ETH balance of your wallet.',
   topLeft:
-    'The Bean Balance is the total USD value of your Beans, BEAN:ETH LP Tokens and BEAN:3CRV LP Tokens. This total does not include your Pods or claimable ETH.',
-  topLeftTitle: 'Bean Balance',
+    'The Balance is the total USD value of your Beans, BEAN:ETH LP Tokens and BEAN:3CRV LP Tokens. This total does not include your Pods or claimable ETH.',
+  topLeftTitle: 'Balance',
   topRight:
     'Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk.',
   topRightTitle: 'Ownership',
