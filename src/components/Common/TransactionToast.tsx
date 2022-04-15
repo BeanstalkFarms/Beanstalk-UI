@@ -137,7 +137,7 @@ export default class TransactionToast {
         }
       } else {
         const message = error.message.substring(0, 200);
-        msg = error.message.length > 250 ? message.concat('...') : message;
+        msg = error.message.length > 200 ? message.concat('...') : message;
         duration = Infinity;
       }
     } else {
