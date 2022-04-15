@@ -1,21 +1,40 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Box } from '@material-ui/core';
+import { Box, Container } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
 import { AppState } from 'state';
 import {
   ContentDropdown,
-  ContentSection,
   ContentTitle,
   governanceStrings,
   Grid,
 } from 'components/Common';
 import { WHITEPAPER } from 'constants/index';
-import { BIP } from 'util/LedgerUtilities';
+import { BIP } from 'state/general/reducer';
+
 import Fundraiser from '../Fundraiser';
-import GovernanceTable from './GovernanceTable';
+import BipTable from './BipTable';
 import Vote from './Vote';
 
+const useStyles = makeStyles({
+  activeBipStyle: {
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '16px',
+    marginTop: '10px',
+    width: '100%',
+  },
+  voteGrid: {
+    maxWidth: '550px',
+    margin: 'auto'
+  },
+  helperGrid: {
+    margin: '20px 0px'
+  }
+});
+
 export default function Governance() {
+  const classes = useStyles();
   const { bips } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
@@ -39,13 +58,6 @@ export default function Governance() {
 
   if (bips === undefined || bips.length === 0) return null;
 
-  const activeBipStyle = {
-    fontFamily: 'Futura-PT-Book',
-    fontSize: '16px',
-    marginTop: '10px',
-    width: '100%',
-  };
-
   //
   const activeBips : (BIP['id'])[] = bips.reduce((aBips, bip) => {
     if (bip.active) aBips.push(bip.id.toString());
@@ -66,7 +78,7 @@ export default function Governance() {
 
   const voteField =
     activeBips.length > 0 ? (
-      <Grid item md={6} xs={12} style={{ maxWidth: '550px', margin: 'auto' }}>
+      <Grid item md={6} xs={12} className={classes.voteGrid}>
         <Vote
           bips={activeBips}
           seasonBips={seasonBips}
@@ -77,7 +89,7 @@ export default function Governance() {
         />
       </Grid>
     ) : (
-      <Box style={activeBipStyle}>No Active BIPs</Box>
+      <Box className={classes.activeBipStyle}>No Active BIPs</Box>
     );
 
   const descriptionLinks = [
@@ -87,49 +99,53 @@ export default function Governance() {
     },
   ];
 
-  const fundraiserTable = !hasActiveFundraiser ?
-    <>
-      <ContentTitle title="Fundraisers" />
-      <Fundraiser />
-    </>
-    : null;
-
   return (
-    <ContentSection
-      id="governance"
-      title="Governance"
-    >
-      <Grid container item xs={12} spacing={3} justifyContent="center">
+    <Container maxWidth="md">
+      <Grid container item xs={12} rowSpacing={12} justifyContent="center">
+        {/* Section: BIPs */}
         <Grid
-          container
           item
-          sm={12}
           xs={12}
+          container
+          rowSpacing={4}
           alignItems="flex-start"
           justifyContent="center"
-          style={{ minHeight: '200px' }}
         >
+          {/* Active BIPs */}
           <Grid item xs={12}>
             {voteField}
           </Grid>
+          {/* Past BIPs */}
           <Grid item xs={12}>
-            <GovernanceTable
+            <BipTable
               bips={bips}
               season={season}
               totalRoots={totalRoots}
-              style={{ maxWidth: '745px', margin: '0 auto' }}
             />
           </Grid>
         </Grid>
-        {fundraiserTable}
+        {/* Section: Fundraiser */}
+        {hasActiveFundraiser ? (
+          <Grid
+            item
+            xs={12}
+            container
+            rowSpacing={4}
+            alignItems="flex-start"
+            justifyContent="center"
+          >
+            <ContentTitle title="Fundraisers" />
+            <Fundraiser />
+          </Grid>
+        ) : null}
       </Grid>
-      <Grid container justifyContent="center" style={{ margin: '20px 0px' }}>
+      <Grid container justifyContent="center" className={classes.helperGrid}>
         <ContentDropdown
           description={governanceStrings.governanceDescription}
           descriptionTitle="How do I participate in Governance?"
           descriptionLinks={descriptionLinks}
         />
       </Grid>
-    </ContentSection>
+    </Container>
   );
 }

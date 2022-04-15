@@ -25,7 +25,20 @@ import {
   TransactionToast,
 } from 'components/Common';
 import PlotRangeInputField from 'components/Common/PlotRangeInputField';
+import { makeStyles } from '@mui/styles';
 import ListingsTable from './ListingsTable';
+
+const useStyles = makeStyles({
+  divStyle: {
+    border: '1px solid black' as const,
+    borderRadius: '15px',
+    color: 'black',
+    fontSize: 'calc(11px + 0.5vmin)',
+    padding: '12px',
+    width: '100%',
+    margin: '10px 0',
+  }
+});
 
 type CreateListingModuleProps = {
   // harvestableIndex: AppState['weather']['harvestableIndex'];
@@ -36,6 +49,7 @@ type CreateListingModuleProps = {
 }
 
 export const CreateListingModule = forwardRef((props: CreateListingModuleProps, ref) => {
+  const classes = useStyles();
   /** The absolute index of the selected plot in line. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /** The selected Plot index. */
@@ -276,15 +290,7 @@ export const CreateListingModule = forwardRef((props: CreateListingModuleProps, 
   const existingListing = myListings ? myListings.find((listing) => listing.index.isEqualTo(index)) : null;
   if (existingListing) {
     alreadyListedNotification = (
-      <div style={{
-        border: '1px solid black' as const,
-        borderRadius: '15px',
-        color: 'black',
-        fontSize: 'calc(11px + 0.5vmin)',
-        padding: '12px',
-        width: '100%',
-        margin: '10px 0',
-      }}>
+      <div className={classes.divStyle}>
         Pods in this Plot are already Listed on the Farmers Market. Listing Pods from the same Plot will replace the previous Pod Listing.
         <ListingsTable
           mode="MINE"

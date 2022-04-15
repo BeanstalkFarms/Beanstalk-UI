@@ -1,33 +1,28 @@
 import React, { useState } from 'react';
-import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Button, InputAdornment, TextField } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { theme } from 'constants/index';
 import { QuestionModule } from './index';
 
-export default function PlotInputField(props) {
-  const [displayValue, setDisplayValue] = useState('');
-
-  const classes = makeStyles(() => ({
-    inputText: {
-      fontSize: 'calc(15px + 1vmin)',
-      fontFamily: 'Lucida Console',
-      fontWeight: '400',
-    },
-  }))();
-
-  const smallLabels = {
+const useStyles = makeStyles({
+  inputText: {
+    fontSize: 'calc(15px + 1vmin)',
+    fontFamily: 'Lucida Console',
+    fontWeight: '400',
+  },
+  smallLabels: {
     fontSize: 'calc(9px + 0.7vmin)',
     fontFamily: 'Futura-PT',
-  };
-  const leftStyle = {
+  },
+  leftStyle: {
     display: 'inline-block',
     float: 'left',
     fontFamily: 'Futura-PT-Book',
     marginLeft: '13px',
     textAlign: 'left' as const,
     textTransform: 'uppercase' as const,
-  };
-  const maxStyle = {
+  },
+  maxStyle: {
     backgroundColor: theme.primary,
     borderRadius: '30px',
     color: theme.accentText,
@@ -35,7 +30,12 @@ export default function PlotInputField(props) {
     fontFamily: 'Futura-PT-Book',
     height: '25px',
     minWidth: '50px',
-  };
+  }
+});
+
+export default function PlotInputField(props) {
+  const classes = useStyles();
+  const [displayValue, setDisplayValue] = useState('');
 
   const handleChange = (event) => {
     setDisplayValue(event.target.value);
@@ -45,7 +45,7 @@ export default function PlotInputField(props) {
   let endAdornment =
     props.maxHandler !== undefined ? (
       <InputAdornment position="end">
-        <Button onClick={props.maxHandler} style={maxStyle}>
+        <Button onClick={props.maxHandler} className={classes.maxStyle}>
           Max
         </Button>
       </InputAdornment>
@@ -54,7 +54,7 @@ export default function PlotInputField(props) {
   endAdornment =
     props.minHandler !== undefined ? (
       <InputAdornment position="end">
-        <Button onClick={props.minHandler} style={maxStyle}>
+        <Button onClick={props.minHandler} className={classes.maxStyle}>
           Min
         </Button>
       </InputAdornment>
@@ -65,9 +65,9 @@ export default function PlotInputField(props) {
   if (props.hidden) return null;
 
   return (
-    <Box style={{ margin: '8px 0' }}>
-      <Box style={smallLabels}>
-        <Box style={leftStyle}>
+    <Box sx={{ margin: '8px 0' }}>
+      <Box className={classes.smallLabels}>
+        <Box className={classes.leftStyle}>
           {props.description
             ? (
               <Box>

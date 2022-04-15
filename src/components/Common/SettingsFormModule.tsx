@@ -1,44 +1,94 @@
 import React, { useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { IconButton, Box } from '@material-ui/core';
-import SettingsIcon from '@material-ui/icons/Settings';
+import { IconButton, Box } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { SwapMode } from 'util/index';
 import { theme } from 'constants/index';
 import { settingsStrings, SlippageModule, SwitchModule, UnitSelectionModule } from './index';
 
-export default function SettingsFormModule(props) {
-  const rightSettingStyle = {
+const useStyles = makeStyles({
+  settingsIcon: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    // Makes the settings bar float to the right side of the module.
+    position: 'absolute', 
+    width: '100%',  //
+    height: 'auto', //
+    right: '15px',  // 
+    bottom: '20px', // 
+  },
+  /* */
+  rightSettingStyle: {
     backgroundColor: theme.module.background,
-    borderRadius: '0 10px 10px 0',
-    bottom: '0px',
-    boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    boxShadow: '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
     clipPath: 'inset(-10px -10px -10px 0.4px)',
-    height: 'auto',
+    //
     paddingBottom: '10px',
+    paddingRight: '10px',
+    borderRadius: '0 10px 10px 0',
+    //
     position: 'absolute',
-    right: '-79px',
-    width: '60px',
-    // zIndex: '-1',
+    width: '80px',  // 
+    height: 'auto', // no height restriction
+    right: '-79px', // slightly less than width to ensure overlap
+    bottom: '26px', // bypass the 15px border radius
     zIndex: 99,
-  };
-  const bottomSettingStyle = {
+  },
+  /* */
+  bottomSettingStyle: {
     backgroundColor: theme.module.background,
     borderRadius: '0 0 10px 10px',
-    bottom: '-76px',
     boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
     clipPath: 'inset(0.4px -10px -10px -10px)',
-    height: '55px',
+    //
     position: 'absolute',
-    right: '7px',
-    width: 'auto',
-    // zIndex: '-1',
+    width: 'auto',    // no width restriction
+    height: '55px',   // 
+    right: '26px',    // bypass the 15px border radius
+    bottom: '-54px',  // slightly less than height to ensure overlap 
     zIndex: 99,
-  };
+  },
+});
 
-  const [settingsStyle, setSettingsStyle] = useState({ display: 'none' });
+export type Settings = {
+  mode: SwapMode;
+  removeLP: boolean;
+  useLP: boolean;
+  claim: boolean;
+  convert: boolean;
+  toWallet: boolean;
+  slippage: BigNumber;
+}
 
+type SettingsFormModuleProps = {
+  handleMode: (mode: Settings['mode']) => void;
+  hasClaimable: boolean;
+  hasConvertible: boolean;
+  hasRemoveLP: boolean;
+  hasSlippage: boolean;
+  // margin: string;
+  showBeanEthereum: boolean;
+  showBeanEthereumSwap: boolean;
+  showLP: boolean;
+  showUnitModule?: boolean;
+
+  // siloBeanBalance: BigNumber;
+  // disableConvertible: boolean;
+  // convertSlippage: any; // FIXME
+  
+  //
+  isCreateListing: boolean;
+
+  //
+  settings: Settings;
+  setSettings: (s: Settings) => void;
+}
+
+export default function SettingsFormModule(props: SettingsFormModuleProps) {
+  const classes = useStyles();
+  const [visible, setVisible] = useState<boolean>(false);
   const [showSlippage, setShowSlippage] = useState(
     props.hasSlippage &&
       (!props.showUnitModule || props.settings.mode !== SwapMode.Bean)
@@ -46,39 +96,45 @@ export default function SettingsFormModule(props) {
 
   const rightDrawerItems = [
     {
-      visible: props.showLP && props.settings.mode !== SwapMode.LP,
+      enabled: props.showLP && props.settings.mode !== SwapMode.LP,
       component: () => (
         <SwitchModule
           description={settingsStrings.showLP}
           label="Use LP"
-          setValue={(value) =>
-            props.setSettings({ ...props.settings, useLP: value })
+          setValue={(value: boolean) =>
+            props.setSettings({
+              ...props.settings,
+              useLP: value
+            })
           }
           value={props.settings.useLP}
         />
       ),
     },
     {
-      visible: props.hasClaimable,
+      enabled: props.hasClaimable,
       component: () => (
         <SwitchModule
           description={settingsStrings.hasClaimable}
           label="Claim"
-          setValue={(value) =>
-            props.setSettings({ ...props.settings, claim: value })
+          setValue={(value: boolean) =>
+            props.setSettings({
+              ...props.settings,
+              claim: value
+            })
           }
           value={props.settings.claim}
         />
       ),
     },
     {
-      visible: props.hasConvertible,
+      enabled: props.hasConvertible,
       component: () => (
         <SwitchModule
           disabled={props.disableConvertible}
           description={settingsStrings.disableConvertible}
           label="Convert"
-          setValue={(value) => {
+          setValue={(value: boolean) => {
             if (props.settings.mode !== SwapMode.BeanEthereum) {
               props.handleMode(SwapMode.BeanEthereum);
             }
@@ -97,39 +153,48 @@ export default function SettingsFormModule(props) {
       ),
     },
     {
-      visible: props.hasRemoveLP,
+      enabled: props.hasRemoveLP,
       component: () => (
         <SwitchModule
           description={settingsStrings.hasRemoveLP}
           label="Remove LP"
           margin="-50px 0px 0px 20px"
-          setValue={(value) =>
-            props.setSettings({ ...props.settings, removeLP: value })
+          setValue={(value: boolean) =>
+            props.setSettings({
+              ...props.settings,
+              removeLP: value
+            })
           }
           value={props.settings.removeLP}
         />
       ),
     },
     {
-      visible: props.isCreateListing,
+      enabled: props.isCreateListing,
       component: () => (
         <SwitchModule
           description={settingsStrings.toWalletDescription}
           label="To Wallet"
           margin="-50px 0px 0px 17px"
-          setValue={(value) =>
-            props.setSettings({ ...props.settings, toWallet: value })
+          setValue={(value: boolean) =>
+            props.setSettings({
+              ...props.settings,
+              toWallet: value
+            })
           }
           value={props.settings.toWallet}
         />
       ),
     },
     {
-      visible: showSlippage && props.hasSlippage,
+      enabled: showSlippage && props.hasSlippage,
       component: () => (
         <SlippageModule
-          setSlippage={(value) =>
-            props.setSettings({ ...props.settings, slippage: value })
+          setSlippage={(value: BigNumber) =>
+            props.setSettings({
+              ...props.settings,
+              slippage: value
+            })
           }
           slippage={props.settings.slippage}
           description={props.convertSlippage}
@@ -138,58 +203,17 @@ export default function SettingsFormModule(props) {
     },
   ];
 
-  const rightDrawerVisibleItems = rightDrawerItems.reduce(
-    (hasVisible, item) => hasVisible || item.visible,
-    false
-  );
-
-  const rightDrawer = rightDrawerVisibleItems ? (
-    <Box id="y" style={Object.assign(rightSettingStyle, settingsStyle)}>
-      {rightDrawerItems.map((item, index) => (
-        <span key={index}>{item.visible ? item.component() : null}</span>
-      ))}
-    </Box>
-  ) : null;
-
-  const unitModule = props.showUnitModule ? (
-    <UnitSelectionModule
-      beanEthereum={props.showBeanEthereum}
-      beanEthereumSwap={props.showBeanEthereumSwap}
-      lp={props.showLP}
-      setValue={(value) => {
-        setShowSlippage(props.hasSlippage && value !== SwapMode.Bean);
-        props.handleMode(value);
-        props.setSettings({ ...props.settings, mode: value });
-        // setSettingsStyle({ display: 'none' });
-      }}
-      value={props.settings.mode}
-    />
-  ) : null;
-
-  const bottomDrawer = props.showUnitModule ? (
-    <Box id="x" style={Object.assign(bottomSettingStyle, settingsStyle)}>
-      {unitModule}
-    </Box>
-  ) : null;
+  const rightDrawerEnabled = rightDrawerItems.findIndex((item) => item.enabled === true) > -1;
 
   const settingsIcon = (
-    <Box
-      style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        margin: props.margin,
-      }}
-    >
+    <Box className={classes.settingsIcon}>
       <IconButton
         color="primary"
         onClick={() => {
-          const shouldExpand = settingsStyle.display === 'none';
-          setSettingsStyle(
-            shouldExpand ? { display: 'block' } : { display: 'none' }
-          );
+          setVisible(!visible);
         }}
         style={{ height: '44px', width: '44px', marginTop: '-8px' }}
-      >
+        size="large">
         <SettingsIcon />
       </IconButton>
     </Box>
@@ -198,21 +222,51 @@ export default function SettingsFormModule(props) {
   return (
     <>
       {settingsIcon}
-      {rightDrawer}
-      {bottomDrawer}
+      {visible ? (
+        <>
+          {/* Right Drawer */}
+          {rightDrawerEnabled ? (
+            <Box id="y" className={classes.rightSettingStyle}>
+              {rightDrawerItems.map((item, index) => (
+                item.enabled ? (
+                  <span key={index}>
+                    <item.component /> 
+                  </span>
+                ) : null
+              ))}
+            </Box>
+          ) : null}
+          {/* Bottom Drawer */}
+          {props.showUnitModule ? (
+            <Box id="x" className={classes.bottomSettingStyle}>
+              <UnitSelectionModule
+                beanEthereum={props.showBeanEthereum}
+                beanEthereumSwap={props.showBeanEthereumSwap}
+                lp={props.showLP}
+                setValue={(value: SwapMode) => {
+                  setShowSlippage(props.hasSlippage && value !== SwapMode.Bean);
+                  props.handleMode(value);
+                  props.setSettings({ ...props.settings, mode: value });
+                }}
+                value={props.settings.mode}
+              />
+            </Box>
+          ) : null}
+        </>
+      ) : null}
     </>
   );
 }
 
 SettingsFormModule.defaultProps = {
-  handleMode: () => {},
-  hasClaimable: false,
-  hasConvertible: false,
-  hasRemoveLP: false,
-  hasSlippage: false,
-  margin: '20px -4px -56px 0',
-  showBeanEthereumSwap: false,
-  showLP: false,
+  // handleMode: () => {},
+  // hasClaimable: false,
+  // hasConvertible: false,
+  // hasRemoveLP: false,
+  // hasSlippage: false,
+  // margin: '20px -4px -56px 0',
+  // showBeanEthereumSwap: false,
+  // showLP: false,
   showUnitModule: true,
-  siloBeanBalance: new BigNumber(0),
+  // siloBeanBalance: new BigNumber(0),
 };

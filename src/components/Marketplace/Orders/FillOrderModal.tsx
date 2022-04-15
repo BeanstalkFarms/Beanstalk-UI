@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import { Box, Modal } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Box, Modal } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import {
   CryptoAsset,
@@ -29,7 +29,21 @@ import {
 } from 'components/Common';
 import PlotRangeInputField from 'components/Common/PlotRangeInputField';
 
+import { makeStyles } from '@mui/styles';
 import OrdersTable from './OrdersTable';
+
+const useStyles = makeStyles({
+  modal: {
+    maxHeight: '90vh'
+  },
+  height5: {
+    height: 5
+  },
+  expandMoreIcon: {
+    marginBottom: '-14px',
+    width: '100%'
+  }
+});
 
 type FillOrderModalProps = {
   currentOrder: PodOrder;
@@ -43,6 +57,7 @@ export default function FillOrderModal({
   onClose,
   settings,
 }: FillOrderModalProps) {
+  const classes = useStyles();
   /** The selected Plot index. */
   const [index, setIndex] = useState(new BigNumber(-1));
   /**  */
@@ -356,9 +371,7 @@ export default function FillOrderModal({
     <Modal
       open={currentOrder != null}
       onClose={onClose}
-      style={{
-        maxHeight: '90vh'
-      }}
+      className={classes.modal}
     >
       <BaseModule
         style={{
@@ -402,16 +415,16 @@ export default function FillOrderModal({
           />
           {index.lt(0) ? null : (
             <>
-              <div style={{ height: 5 }} />
+              <div className={classes.height5} />
               {amountField}
-              <div style={{ height: 5 }} />
+              <div className={classes.height5} />
               {plotRangeField}
               {/**
                 * Outputs + Details
                 */}
               <ExpandMoreIcon
                 color="primary"
-                style={{ marginBottom: '-14px', width: '100%' }}
+                className={classes.expandMoreIcon}
               />
               <TokenOutputField
                 title="Recieved Beans"

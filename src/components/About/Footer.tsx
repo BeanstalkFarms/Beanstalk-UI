@@ -1,29 +1,30 @@
-/* eslint-disable */
-import { Grid } from '@material-ui/core';
+import React from 'react';
+import { Grid, Link } from '@mui/material';
 import {
   GitHub as GitHubIcon,
   Telegram as TelegramIcon,
   Twitter as TwitterIcon,
-} from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
+} from '@mui/icons-material';
+import makeStyles from '@mui/styles/makeStyles';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { ReactComponent as BeanIcon } from 'img/bean-logo.svg';
-import { ReactComponent as CoinGeckoIcon } from 'img/coingecko-icon.svg';
-import { ReactComponent as CoinMarketCapIcon } from 'img/coinmarketcap-icon.svg';
-import { ReactComponent as CommonwealthIcon } from 'img/commonwealth-icon.svg';
-import { ReactComponent as CurveIcon } from 'img/curve-dao-icon.svg';
-import { ReactComponent as DuneWinterIcon } from 'img/dune-icon-winter.svg'; // Icon is 2 colors so manually changed for winter theme
-import { ReactComponent as DuneIcon } from 'img/dune-icon.svg'; // Icon is 2 colors so manually changed for winter theme
-import { ReactComponent as DiscordIcon } from 'img/discord-icon.svg';
-import { ReactComponent as EtherscanIcon } from 'img/etherscan-logo.svg';
-import { ReactComponent as MediumIcon } from 'img/medium-icon.svg';
-import { ReactComponent as OpenSeaIcon } from 'img/opensea-icon.svg';
-import { ReactComponent as RedditIcon } from 'img/reddit-icon.svg';
-import { ReactComponent as UniswapIcon } from 'img/uniswap-logo-black.svg';
-import ThemeBackground from 'components/Themes'
-import LogoLinks from './LogoLinks';
 
+//
+import BeanIcon from 'img/bean-logo.svg';
+import CoinGeckoIcon from 'img/coingecko-icon.svg';
+import CoinMarketCapIcon from 'img/coinmarketcap-icon.svg';
+import CommonwealthIcon from 'img/commonwealth-icon.svg';
+import CurveIcon from 'img/curve-dao-icon.svg';
+import DuneWinterIcon from 'img/dune-icon-winter.svg'; // Icon is 2 colors so manually changed for winter theme
+import DuneIcon from 'img/dune-icon.svg'; // Icon is 2 colors so manually changed for winter theme
+import DiscordIcon from 'img/discord-icon.svg';
+import EtherscanIcon from 'img/etherscan-logo.svg';
+import MediumIcon from 'img/medium-icon.svg';
+import OpenSeaIcon from 'img/opensea-icon.svg';
+import RedditIcon from 'img/reddit-icon.svg';
+import UniswapIcon from 'img/uniswap-logo-black.svg';
+
+import ThemeBackground from 'components/Themes';
 import {
   BEAN_TOKEN_LINK,
   CODE_OF_CONDUCT_LINK,
@@ -45,6 +46,7 @@ import {
   UNISWAP_CONTRACT_LINK,
   theme,
 } from 'constants/index';
+import LogoLink from './LogoLink';
 
 const useStyles = makeStyles({
   fixedGround: {
@@ -58,116 +60,147 @@ const useStyles = makeStyles({
     height: theme.groundHeight,
     zIndex: 11,
     paddingTop: !theme.groundPaddingTop ? '0px' : theme.groundPaddingTop,
+    paddingLeft: (props: any) => (props.width < 800 ? 0 : 300),
     position: 'fixed',
     bottom: 0,
     left: 0,
   },
-})
-
-const logoStyle = {
-  height: '25px',
-  width: '25px',
-  fill: theme.footer,
-};
+  logoStyle: {
+    height: '25px',
+    width: '25px',
+    fill: theme.footer,
+  },
+  textLinks: {
+    color: theme.footer,
+    padding: '3px',
+    'font-size': '12px',
+    margin: '0 5px',
+    backgroundColor: 'rgba(200, 165, 126, 0.4)',
+    borderRadius: '5px'
+  }
+});
 
 export default function Footer() {
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
-
-  const classes = useStyles();
+  const classes = useStyles({ width: width });
 
   return (
     <>
       <ThemeBackground />
-      <Grid container className={classes.fixedGround} style={{
-        paddingLeft: width < 800 ? 0 : 300
-      }} justifyContent="center">
+      {/* TODO: remove style */}
+      <Grid
+        container
+        className={classes.fixedGround}
+        justifyContent="center"
+      >
         {/* Row 1: Icons */}
-        <LogoLinks close link={TWITTER_LINK}>
-          <TwitterIcon style={logoStyle} />
-        </LogoLinks>
+        <LogoLink link={TWITTER_LINK}>
+          <TwitterIcon className={classes.logoStyle} />
+        </LogoLink>
         {width > 900 ? (
           <>
-            <LogoLinks close link={REDDIT_LINK}>
-              <RedditIcon style={logoStyle} />
-            </LogoLinks>
-            <LogoLinks link={TELEGRAM_LINK}>
-              <TelegramIcon style={logoStyle} />
-            </LogoLinks>
+            <LogoLink link={REDDIT_LINK}>
+              <img src={RedditIcon} alt="Reddit Icon" className={classes.logoStyle} />
+            </LogoLink>
+            <LogoLink link={TELEGRAM_LINK}>
+              <TelegramIcon className={classes.logoStyle} />
+            </LogoLink>
           </>
         ) : null}
-        <LogoLinks link={DISCORD_LINK}>
-          <DiscordIcon style={logoStyle} />
-        </LogoLinks>
-        <LogoLinks link={MEDIUM_LINK}>
-          <MediumIcon style={logoStyle} />
-        </LogoLinks>
-        <LogoLinks close link={OPENSEA_LINK_GENESIS} paddingRight="10px">
-          <OpenSeaIcon style={logoStyle} />
-        </LogoLinks>
+        <LogoLink link={DISCORD_LINK}>
+          <img src={DiscordIcon} alt="Discord Icon" className={classes.logoStyle} />
+        </LogoLink>
+        <LogoLink link={MEDIUM_LINK}>
+          <img src={MediumIcon} alt="Medium Icon" className={classes.logoStyle} />
+        </LogoLink>
+        <LogoLink link={OPENSEA_LINK_GENESIS}>
+          <img src={OpenSeaIcon} alt="Opensea Icon" className={classes.logoStyle} />
+        </LogoLink>
         {width > 900 ? (
           <>
-            <LogoLinks link={COINMARKETCAP_LINK}>
-              <CoinMarketCapIcon style={logoStyle} />
-            </LogoLinks>
-            <LogoLinks link={COINGECKO_LINK}>
-              <CoinGeckoIcon style={logoStyle} />
-            </LogoLinks>
+            <LogoLink link={COINMARKETCAP_LINK}>
+              <img src={CoinMarketCapIcon} alt="CoinMarketCap Icon" className={classes.logoStyle} />
+            </LogoLink>
+            <LogoLink link={COINGECKO_LINK}>
+              <img src={CoinGeckoIcon} alt="CoinGecko Icon" className={classes.logoStyle} />
+            </LogoLink>
           </>
         ) : null}
-        <LogoLinks close link={GITHUB_LINK}>
-          <GitHubIcon style={logoStyle} />
-        </LogoLinks>
-        <LogoLinks close link={DUNE_LINK} paddingRight="5px">
-          {theme.name === 'winterUpgrade'
-            ? <DuneWinterIcon style={logoStyle} />
-            : <DuneIcon style={logoStyle} />}
-        </LogoLinks>
-        <LogoLinks close link={BEAN_TOKEN_LINK}>
-          <BeanIcon style={logoStyle} />
-        </LogoLinks>
-        <LogoLinks close link={SILO_CONTRACT_LINK}>
-          <EtherscanIcon style={logoStyle} />
-        </LogoLinks>
+        <LogoLink link={GITHUB_LINK}>
+          <GitHubIcon className={classes.logoStyle} />
+        </LogoLink>
+        <LogoLink link={DUNE_LINK}>
+          {
+            theme.name === 'winterUpgrade'
+            ? <img src={DuneWinterIcon} alt="Dune Icon" className={classes.logoStyle} />
+            : <img src={DuneIcon} alt="Dune Icon" className={classes.logoStyle} />
+          }
+        </LogoLink>
+        <LogoLink link={BEAN_TOKEN_LINK}>
+          <img src={BeanIcon} alt="Bean Icon" className={classes.logoStyle} />
+        </LogoLink>
+        <LogoLink link={SILO_CONTRACT_LINK}>
+          <img src={EtherscanIcon} alt="Etherscan Icon" className={classes.logoStyle} />
+        </LogoLink>
         {width > 900 ? (
           <>
-            <LogoLinks close link={UNISWAP_CONTRACT_LINK} paddingRight="5px">
-              <UniswapIcon style={logoStyle} />
-            </LogoLinks>
-            <LogoLinks close link={CURVE_LINK}>
-              <CurveIcon style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)'} : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
-            </LogoLinks>
-            <LogoLinks link={COMMONWEALTH_LINK}>
-              <CommonwealthIcon style={logoStyle} />
-            </LogoLinks>
+            <LogoLink link={UNISWAP_CONTRACT_LINK}>
+              <img src={UniswapIcon} alt="Uniswap Icon" className={classes.logoStyle} />
+            </LogoLink>
+            <LogoLink link={CURVE_LINK}>
+              <img src={CurveIcon} alt="Curve Icon" style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)' } : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
+            </LogoLink>
+            <LogoLink link={COMMONWEALTH_LINK}>
+              <img src={CommonwealthIcon} alt="Commonwealth Icon" className={classes.logoStyle} />
+            </LogoLink>
           </>
         ) : null}
         {/* Row 2 */}
         <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
-          <LogoLinks close link={NETLIFY_LINK} paddingTop="0px" color={theme.footer}>
-            <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }}>
-              {'This site is powered by Netlify'}
-            </span>
-          </LogoLinks>
-          <LogoLinks close link={LICENSE_LINK} paddingTop="0px" color={theme.footer}>
-            <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }}>
-              {'MIT License'}
-            </span>
-          </LogoLinks>
-          <LogoLinks close link={CODE_OF_CONDUCT_LINK} paddingTop="0px" color={theme.footer}>
-            <span style={{ color: theme.footer, padding: '3px', fontSize: '12px', margin: '0 5px', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }}>
-              {'Code of Conduct'}
-            </span>
-          </LogoLinks>
+          <Grid item>
+            <Link href={NETLIFY_LINK} color="inherit" target="blank" underline="hover">
+              <span className={classes.textLinks}>
+                This site is powered by Netlify
+              </span>
+            </Link>
+          </Grid>
+          <Grid item>
+            <Link href={LICENSE_LINK} color="inherit" target="blank" underline="hover">
+              <span className={classes.textLinks}>
+                MIT License
+              </span>
+            </Link>
+          </Grid>
+          <Grid item>
+            <Link
+              href={CODE_OF_CONDUCT_LINK}
+              color="inherit"
+              target="blank"
+              underline="hover">
+              <span className={classes.textLinks}>
+                Code of Conduct
+              </span>
+            </Link>
+          </Grid>
         </Grid>
-        {!theme.flowers ? null : <img alt="Rainbow Icon" src={theme.flowers} style={{
-          position: 'absolute',
-          width: '100vw',
-          minWidth: '1200px',
-          top: '-50px',
-          zIndex: '-1'
-        }} />}
+        {!theme.flowers 
+          ? null 
+          : (
+            <img
+              alt="Rainbow Icon"
+              src={theme.flowers}
+              style={{
+                position: 'absolute',
+                width: '100vw',
+                minWidth: '1200px',
+                top: '-50px',
+                zIndex: '-1'
+              }}
+            />
+          )
+        }
       </Grid>
     </>
   );

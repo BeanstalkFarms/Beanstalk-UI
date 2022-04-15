@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
 import BigNumber from 'bignumber.js';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import {
@@ -14,11 +14,11 @@ import {
 } from 'util/index';
 import {
   ClaimableAsset,
+  CryptoAsset,
   TokenInputField,
   TokenOutputField,
   TransactionDetailsModule,
   TransactionToast,
-  TransitAsset,
 } from 'components/Common';
 
 const CurveClaimAction = forwardRef(({
@@ -39,9 +39,8 @@ const CurveClaimAction = forwardRef(({
       key={0}
       balance={curveReceivableBalance}
       isLP
-      token={TransitAsset.Crv3}
+      token={ClaimableAsset.Crv3}
       value={TrimBN(curveReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
-      size="small"
     />
   );
 
@@ -49,7 +48,7 @@ const CurveClaimAction = forwardRef(({
   const toCurveField = (
     <TokenOutputField
       key="curve"
-      token={ClaimableAsset.Crv3}
+      token={CryptoAsset.Crv3}
       value={TrimBN(curveReceivableBalance, UNI_V2_ETH_BEAN_LP.decimals)}
       mint
     />

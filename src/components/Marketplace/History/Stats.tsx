@@ -1,23 +1,37 @@
 import React from 'react';
-import { Box, Divider } from '@material-ui/core';
+import { Box, Divider } from '@mui/material';
 import TokenIcon from 'components/Common/TokenIcon';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { CryptoAsset, displayBN, FarmAsset } from 'util/index';
+import { makeStyles } from '@mui/styles';
 
-function Stat({ label, children }) {
-  return (
-    <Box sx={{ flex: 1, textAlign: 'center' }} p={1}>
-      <Box sx={{ fontWeight: 'bold', textTransform: 'uppercase', fontSize: 12 }} mb={0.5}>{label}</Box>
-      <Box sx={{ fontSize: 20 }}>{children}</Box>
-    </Box>
-  );
-}
+const useStyles = makeStyles({
+    outerBox: {
+        flex: 1, textAlign: 'center'
+    },
+    labelBox: {
+        fontWeight: 'bold', textTransform: 'uppercase', fontSize: 12
+    },
+    childBox: {
+        fontSize: 20
+    }
+});
 
 export default function HistoryModule() {
+  const classes = useStyles();
   const { stats } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
   );
+
+  function Stat({ label, children }) {
+      return (
+        <Box className={classes.outerBox} p={1}>
+          <Box className={classes.labelBox} mb={0.5}>{label}</Box>
+          <Box className={classes.childBox}>{children}</Box>
+        </Box>
+      );
+    }
 
   return (
     <Box display="flex">

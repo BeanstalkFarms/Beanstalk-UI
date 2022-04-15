@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Button, Grid, InputAdornment, Slider, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Button, Grid, InputAdornment, Slider, TextField } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import BigNumber from 'bignumber.js';
 
 import { CryptoAsset, displayBN, displayFullBN, Token, TokenLabel } from 'util/index';
@@ -33,6 +33,15 @@ const useStyles = makeStyles({
     marginRight: '13px',
     textAlign: 'right' as const,
   },
+  minMaxStyle: {
+    backgroundColor: theme.primary,
+    borderRadius: '30px',
+    color: theme.accentText,
+    fontSize: '11px',
+    fontFamily: 'Futura-PT-Book',
+    height: '22px',
+    minWidth: '38px',
+  }
 });
 
 // NOTE: high overlap with TokenInputFieldProps
@@ -75,16 +84,6 @@ export type PlotRangeInputFieldProps = {
   disableSlider: boolean;
 }
 
-const minMaxStyle = {
-  backgroundColor: theme.primary,
-  borderRadius: '30px',
-  color: theme.accentText,
-  fontSize: '11px',
-  fontFamily: 'Futura-PT-Book',
-  height: '22px',
-  minWidth: '38px',
-};
-
 /**
  * NOTE:
  * This component a temporary hack to ship the Pod Market quickly.
@@ -102,7 +101,7 @@ export default function TokenInputField(props: PlotRangeInputFieldProps) {
       return (
         <Button
           onClick={props.minHandler}
-          style={minMaxStyle}
+          className={classes.minMaxStyle}
           disabled={props.locked}>
           Min
         </Button>
@@ -115,7 +114,7 @@ export default function TokenInputField(props: PlotRangeInputFieldProps) {
       return (
         <Button
           onClick={props.maxHandler}
-          style={minMaxStyle}
+          className={classes.minMaxStyle}
           disabled={props.locked}>
           Max
         </Button>

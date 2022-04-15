@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { theme } from 'constants/index';
 
 export const useStyles = makeStyles({
@@ -29,4 +29,7 @@ export const useStyles = makeStyles({
     padding: '10px 10px 20px 10px',
     marginBottom: '80px',
   },
+  noBorder: {
+    border: 'none'
+  }
 });

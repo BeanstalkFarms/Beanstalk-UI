@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
-import { IconButton, Box } from '@material-ui/core';
-import { List as ListIcon } from '@material-ui/icons';
+import { IconButton, Box } from '@mui/material';
+import { List as ListIcon } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
@@ -44,10 +44,11 @@ export default function BeanlusdWithdraw() {
     (state) => state.totalBalance
   );
 
-  const sectionTitles = ['Withdraw'];
+  const sectionTitles = ['Withdraw', 'Claim'];
   const sectionTitlesDescription = [
     siloStrings.beanlusddeposit,
     siloStrings.beanlusdWithdraw.replace('{0}', totalBalance.withdrawSeasons),
+    beanlusdStrings.lpClaim,
   ];
   const sectionTitlesInfoDescription = [
     siloStrings.lpDepositsTable,
@@ -110,21 +111,15 @@ export default function BeanlusdWithdraw() {
       setSettings={setSettings} // hide
       settings={settings} // hide
     />,
+    <BeanlusdClaimAction
+      key={2}
+      ref={claimRef}
+      setIsFormDisabled={setIsFormDisabled}
+      setSettings={setSettings} // hide
+      settings={settings} // hide
+    />
   ];
 
-  if (beanlusdReceivableBalance.isGreaterThan(0)) {
-    sections.push(
-      <BeanlusdClaimAction
-        key={2}
-        ref={claimRef}
-        setIsFormDisabled={setIsFormDisabled}
-        setSettings={setSettings} // hide
-        settings={settings} // hide
-      />
-    );
-    sectionTitles.push('Claim');
-    sectionTitlesDescription.push(beanlusdStrings.lpClaim);
-  }
   if (section > sectionTitles.length - 1) setSection(0);
 
   const sectionTitlesInfo = [];

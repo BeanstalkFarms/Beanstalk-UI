@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
-import { IconButton, Box } from '@material-ui/core';
-import { List as ListIcon } from '@material-ui/icons';
+import { IconButton, Box } from '@mui/material';
+import { List as ListIcon } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';

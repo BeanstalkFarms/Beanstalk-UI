@@ -13,13 +13,13 @@ import {
   Button,
   Popover,
   Box
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   CloseOutlined as CancelIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { PodOrder } from 'state/marketplace/reducer';
-import { BEAN, theme } from 'constants/index';
+import { BEAN } from 'constants/index';
 import { cancelPodOrder, CryptoAsset, displayBN, FarmAsset, toStringBaseUnitBN } from 'util/index';
 
 import TokenIcon from 'components/Common/TokenIcon';
@@ -86,12 +86,9 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
         <span>0 — {displayBN(order.maxPlaceInLine)}</span>
         <QuestionModule
           description={explainer}
-          style={{ marginLeft: 10 }}
           placement="right"
-          position="static"
-          widthTooltip={200}
-          fontSize="12px"
-          margin="-10px 0 0 10px"
+          fontSize="11px"
+          margin="-4px 0 0 5px"
         />
       </TableCell>
       {/* Price per pod */}
@@ -118,9 +115,7 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
           <TableCell align="center">
             <IconButton
               onClick={(event) => setAnchorEl(event.currentTarget)}
-              style={{
-                color: theme.linkColor,
-              }}
+              className={classes.iconButton}
               size="small"
             >
               <CancelIcon />
@@ -148,7 +143,7 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
                   style={{ textAlign: 'center' }}
                   formControlStyles={{ paddingBottom: 5 }}
                 />
-                <Button onClick={cancelOrder} variant="contained" style={{ marginTop: 15 }}>
+                <Button onClick={cancelOrder} variant="contained" className={classes.marginTop15}>
                   Cancel Order
                 </Button>
               </Box>

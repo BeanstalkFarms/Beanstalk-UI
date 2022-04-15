@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+
 import { AppState } from 'state';
 import SnowmanIcon from 'img/winter/Snowman.svg';
 import land from 'img/winter/land.svg';

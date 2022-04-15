@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { theme } from 'constants/index';
 
-export const SvgCloudIcon = ({
+interface SvgCloudIconProps {
+    height?: string;
+    width?: string;
+    text?: string;
+}
+
+const SvgCloudIcon: FC<SvgCloudIconProps> = ({
   height = window.innerWidth > 600 ? '200px' : '150px',
   width = window.innerWidth > 600 ? '200px' : '150px',
   text = '',
   ...props
-}: React.SVGProps<SVGSVGElement>) => (
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={width}
@@ -39,3 +45,5 @@ export const SvgCloudIcon = ({
     </text>
   </svg>
 );
+
+export default SvgCloudIcon;

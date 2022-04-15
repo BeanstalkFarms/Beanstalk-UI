@@ -3,8 +3,8 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { unstable_batchedUpdates } from 'react-dom'; // eslint-disable-line
 import { AppState } from 'state';
-import { Box } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Box } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   BEAN,
   ETH,
@@ -36,6 +36,26 @@ import {
   TokenOutputField,
 } from 'components/Common';
 import TransactionToast from 'components/Common/TransactionToast';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+  buyRangeWarning: {
+    color: 'red',
+    fontSize: 'calc(9px + 0.5vmin)'
+  },
+  cancelOrderBox: {
+    display: 'inline-block',
+    width: '100%',
+    fontSize: 'calc(9px + 0.5vmin)',
+  },
+  canCancelOrder: {
+    fontSize: 'calc(9px + 0.5vmin)'
+  },
+  expandMoreIcon: {
+    marginBottom: '-14px',
+    width: '100%'
+  }
+});
 
 type CreateOrderModuleProps = {
   isFormDisabled: boolean;
@@ -47,6 +67,7 @@ type CreateOrderModuleProps = {
 }
 
 export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref) => {
+  const classes = useStyles();
   const [fromBeanValue, setFromBeanValue] = useState(new BigNumber(-1));
   const [fromEthValue, setFromEthValue] = useState(new BigNumber(-1));
   const [toBuyBeanValue, setToBuyBeanValue] = useState(new BigNumber(0));
@@ -390,7 +411,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
   const rangeWarning = maxPlaceInLineValue.isLessThan(toPodValue)
     ? (
       <>
-        <span style={{ color: 'red', fontSize: 'calc(9px + 0.5vmin)' }}>
+        <span className={classes.buyRangeWarning}>
           {marketStrings.buyRangeWarning}
         </span>
         <br />
@@ -430,13 +451,9 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       <>
         <TransactionDetailsModule fields={details} />
         <Box
-          style={{
-            display: 'inline-block',
-            width: '100%',
-            fontSize: 'calc(9px + 0.5vmin)',
-          }}
+          className={classes.cancelOrderBox}
         >
-          <span style={{ fontSize: 'calc(9px + 0.5vmin)' }}>
+          <span className={classes.canCancelOrder}>
             {marketStrings.canCancelOrder}
           </span>
         </Box>
@@ -553,7 +570,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       {fromEthField}
       <ExpandMoreIcon
         color="primary"
-        style={{ marginBottom: '-14px', width: '100%' }}
+        className={classes.expandMoreIcon}
       />
       {toPodField}
       {transactionDetails()}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableCell } from '@material-ui/core';
+import { TableCell } from '@mui/material';
 import { displayBN, displayFullBN } from 'util/index';
 import { FormatTooltip } from '.';
 

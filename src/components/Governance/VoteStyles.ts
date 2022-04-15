@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { theme } from 'constants/index';
 
 export const useStyles = makeStyles({
@@ -44,5 +44,9 @@ export const useStyles = makeStyles({
   },
   rowSelected: {
     backgroundColor: theme.voteSelect,
+    cursor: 'pointer'
   },
+  pointerCursor: {
+    cursor: 'pointer'
+  }
 });

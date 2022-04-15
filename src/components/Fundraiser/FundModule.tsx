@@ -1,10 +1,11 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TransactionToast from 'components/Common/TransactionToast';
+import { makeStyles } from '@mui/styles';
 import { USDC, BEAN } from '../../constants';
 import {
   displayBN,
@@ -22,11 +23,23 @@ import {
   TransactionDetailsModule,
 } from '../Common';
 
+const useStyles = makeStyles({
+  sowMessage: {
+    marginTop: '-2px',
+    fontFamily: 'Futura-PT-Book'
+  },
+  expandMoreIcon: {
+    marginBottom: '-14px',
+    width: '100%'
+  }
+});
+
 type FundModuleProps = {
   id: string;
 }
 
 export const FundModule = forwardRef((props : Partial<FundModuleProps>, ref) => {
+  const classes = useStyles();
   const [fromTokenValue, setFromTokenValue] = useState(new BigNumber(-1));
   const [toPodValue, setToPodValue] = useState(new BigNumber(0));
 
@@ -102,7 +115,7 @@ export const FundModule = forwardRef((props : Partial<FundModuleProps>, ref) => 
   );
 
   const noFundsTextField = props.fundsRemaining.isEqualTo(0) ? (
-    <Box style={{ marginTop: '-2px', fontFamily: 'Futura-PT-Book' }}>
+    <Box className={classes.sowMessage}>
       {`There is no more ${TokenLabel(props.asset)} to sow for the audit`}
     </Box>
   ) : null;
@@ -113,7 +126,7 @@ export const FundModule = forwardRef((props : Partial<FundModuleProps>, ref) => 
       <>
         <ExpandMoreIcon
           color="primary"
-          style={{ marginBottom: '-14px', width: '100%' }}
+          className={classes.expandMoreIcon}
         />
         {toPodField}
         <TransactionDetailsModule fields={details} />

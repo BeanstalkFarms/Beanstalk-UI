@@ -12,9 +12,9 @@ import {
   TableHead,
   TableRow,
   Box,
-} from '@material-ui/core';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+} from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { fundsList, theme } from 'constants/index';
 import { Line, QuestionModule, fundraiserStrings, TablePageSelect } from 'components/Common';
 import CircularProgressWithLabel from 'components/Governance/CircularProgressWithLabel';
@@ -213,7 +213,8 @@ const FundTable = (props) => {
       </AppBar>
     );
   }
-  return <></>;
+
+  return null;
 };
 
 /**

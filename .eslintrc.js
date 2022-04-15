@@ -19,26 +19,22 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    'react-hooks',
-    '@typescript-eslint',
-    'jest',
-  ],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest',],
   extends: [
     'plugin:react/recommended',
-    'airbnb',
+    'airbnb'
   ],
   rules: {
+    // -- Tree-shaking
+    // https://mui.com/material-ui/guides/minimizing-bundle-size/#option-1
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
+      }
+    ],
     // -- Stylistic
     semi: 'warn',
-    // 'comma-dangle': ['warn', {
-    //   arrays: 'always-multiline',
-    //   imports: 'always-multiline',
-    //   exports: 'always-multiline',
-    //   functions: 'never',
-    //   objects: 'always-multiline',
-    // }],
     'quote-props': 'warn',
     'import/order': 'warn',
     'space-infix-ops': 'warn',
@@ -56,10 +52,20 @@ module.exports = {
     'brace-style': 0,
     'keyword-spacing': 'warn',
     'jsx-a11y/anchor-is-valid': 0,
+    'react/self-closing-comp': 'warn',
+    // 'comma-dangle': ['warn', {
+    //   arrays: 'always-multiline',
+    //   imports: 'always-multiline',
+    //   exports: 'always-multiline',
+    //   functions: 'never',
+    //   objects: 'always-multiline',
+    // }],
+
     // -- Space efficiency
     'arrow-body-style': 'warn',
     'no-trailing-spaces': 0,
     '@typescript-eslint/no-unused-vars': ['warn'],
+
     // -- Other (to categorize)
     'react/button-has-type': 0,
     'react/require-default-props': 0,
@@ -92,7 +98,6 @@ module.exports = {
     'operator-linebreak': 0,
     'import/no-mutable-exports': 0,
     'no-underscore-dangle': 0,
-    //
     'import/no-extraneous-dependencies': 0,
     'implicit-arrow-linebreak': 0,
     'object-curly-newline': 0,

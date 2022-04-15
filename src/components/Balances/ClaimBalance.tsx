@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import {
   CryptoAsset,
   displayBN,
@@ -13,81 +13,99 @@ import {
   TokenTypeImageModule,
   QuestionModule,
 } from 'components/Common';
+import makeStyles from '@mui/styles/makeStyles';
 
-export default function ClaimBalance({
+const useStyles = makeStyles(({
+  style: {
+    display: 'inline',
+    fontFamily: 'Lucida Console',
+    fontWeight: 400,
+    lineHeight: '100%',
+  },
+  imageStyle: {
+    display: 'inline-block',
+    marginBottom: '-2px',
+    marginLeft: '0px',
+  },
+  gridStyle: { height: '20px' }
+}));
+
+type ClaimBalanceProps = {
+  height?: string;
+}
+
+const ClaimBalance : React.FC<ClaimBalanceProps> = ({
   asset,
   balance,
   balanceColor,
   description,
-  height,
+  height = '16px',
   title,
   token,
   width,
   widthTooltip,
-}) {
-  const style = {
-    color: balanceColor,
-    display: 'inline',
-    fontFamily: 'Lucida Console',
-    fontWeight: '400',
-    lineHeight: '100%',
-  };
+}) => {
+  const classes = useStyles();
+
+  // Hide if empty balance
+  if (balance.lte(0)) return null;
+
   const imageStyle = {
     display: 'inline-block',
     height: height,
     marginBottom: '-2px',
-    marginLeft: '0px',
+    marginLeft: '5px',
   };
 
-  const displayBalance =
-    balance.isLessThan(0.001) && token === CryptoAsset.Ethereum
-      ? smallDecimalPercent(balance)
-      : displayBN(balance);
+  const displayBalance = (balance.isLessThan(0.001) && token === CryptoAsset.Ethereum)
+    ? smallDecimalPercent(balance)
+    : displayBN(balance);
 
-  if (balance.isGreaterThan(0)) {
-    return (
-      <Grid container item xs={12} justifyContent="center">
-        <Grid container item justifyContent="center" style={{ height: '20px' }}>
-          <Box style={{ position: 'relative' }}>
-            <Box className="claimTextField-header" style={{ width: width }}>
-              {`${asset !== undefined ? TokenLabel(asset) : title}`}
-              <QuestionModule
-                description={description}
-                margin="-8px 0 0 -1px"
-                widthTooltip={widthTooltip}
-              />
-            </Box>
+  return (
+    <Grid container item xs={12} justifyContent="center">
+      <Grid container item justifyContent="center" className={classes.gridStyle}>
+        <Box sx={{ position: 'relative' }}>
+          <Box className="claimTextField-header" sx={{ width: width }}>
+            {`${asset !== undefined ? TokenLabel(asset) : title}`}
+            <QuestionModule
+              description={description}
+              margin="-8px 0 0 -1px"
+              widthTooltip={widthTooltip}
+            />
           </Box>
-          <Box>
-            <FormatTooltip
-              margin="0 0 6px 10px"
-              placement="top-start"
-              title={`${displayFullBN(balance)} ${
-                asset !== undefined ? TokenLabel(asset) : title
-              }`}
+        </Box>
+        <Box>
+          <FormatTooltip
+            margin="0 0 6px 10px"
+            placement="top-start"
+            title={`${displayFullBN(balance)} ${
+              asset !== undefined ? TokenLabel(asset) : title
+            }`}
+          >
+            <Box
+              className="claimTextField-content"
+              sx={{ margin: '0 0 0 5px' }}
             >
-              <Box
-                className="claimTextField-content"
-                style={{ margin: '0 0 0 5px' }}
-              >
-                <h5 style={style}>{displayBalance}</h5>
+              <Box sx={{ color: balanceColor }}>
+                <h5 className={classes.style}>{displayBalance}</h5>
                 <TokenTypeImageModule
                   style={imageStyle}
                   token={token}
-                  left={height !== '15px' ? '2px' : '0px'}
+                  // left={height !== '15px' ? '2px' : '0px'}
                 />
               </Box>
-            </FormatTooltip>
-          </Box>
-        </Grid>
+            </Box>
+          </FormatTooltip>
+        </Box>
       </Grid>
-    );
-  }
-  return null;
-}
-
-ClaimBalance.defaultProps = {
-  title: 'undefined',
-  width: 'calc(55px + 2vw)',
-  height: '15px',
+    </Grid>
+  );
 };
+
+// ClaimBalance.defaultProps = {
+//   title: 'undefined',
+//   width: 'calc(55px + 2vw)',
+//   height: '15px',
+// };
+
+export default ClaimBalance;

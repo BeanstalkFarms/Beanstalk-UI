@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box } from '@material-ui/core';
-import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { Box } from '@mui/material';
+import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { BEAN, UNI_V2_ETH_BEAN_LP } from 'constants/index';
@@ -85,7 +85,7 @@ const LPClaimAction = forwardRef(({
   const showSettings = (
     <SettingsFormModule
       hasRemoveLP
-      margin="12px 4px -56px 0"
+      margin="20px -4px -56px 0px"
       setSettings={setSettings}
       settings={settings}
       showUnitModule={false}
@@ -93,6 +93,7 @@ const LPClaimAction = forwardRef(({
   );
 
   function transactionDetails() {
+    if (lpReceivableBalance.isLessThanOrEqualTo(0)) return null;
     if (settings.removeLP) {
       details.push(
         `Remove ${displayBN(

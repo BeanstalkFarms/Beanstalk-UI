@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Link, Grid } from '@material-ui/core';
+import { Box, Link, Grid } from '@mui/material';
 import {
   beanftStrings,
   BaseModule,
@@ -10,7 +10,16 @@ import {
   OPENSEA_LINK_GENESIS,
   OPENSEA_LINK_COLLECTION,
 } from 'constants/index';
+import { makeStyles } from '@mui/styles';
 import NftPicTable from './NftPicTable';
+
+const useStyles = makeStyles({
+  listTablesBox: {
+    marginTop: '0px', 
+    maxWidth: '450px', 
+    minWidth: '360px'
+  }
+});
 
 export default function ClaimNFT({
   title,
@@ -20,6 +29,7 @@ export default function ClaimNFT({
   mintAll,
   mintable,
 }) {
+  const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [sectionInfo, setSectionInfo] = useState(0);
 
@@ -71,8 +81,14 @@ export default function ClaimNFT({
   if (sectionsInfo.length === 0) {
     sectionsInfo.push(
       <>
-        <Box> You have no BeaNFTs.</Box>
-        <Link href={title === 'Genesis' ? OPENSEA_LINK_GENESIS : OPENSEA_LINK_COLLECTION} color="inherit" target="blank"> Buy BeaNFTs on OpenSea.</Link>
+        <Box>You have no BeaNFTs.</Box>
+        <Link
+          href={title === 'Genesis' ? OPENSEA_LINK_GENESIS : OPENSEA_LINK_COLLECTION}
+          color="inherit"
+          target="blank"
+          underline="hover">
+          Buy BeaNFTs on OpenSea.
+        </Link>
       </>
     );
     sectionTitlesInfo.push('NFTs');
@@ -82,7 +98,7 @@ export default function ClaimNFT({
   // Table Wrapper
   const showListTables =
     sectionsInfo.length > 0 ? (
-      <Box style={{ marginTop: '0px', maxWidth: '450px', minWidth: '360px' }}>
+      <Box className={classes.listTablesBox}>
         <BaseModule
           handleTabChange={handleTabInfoChange}
           section={sectionInfo}
@@ -131,7 +147,6 @@ export default function ClaimNFT({
         item
         justifyContent="center"
         alignItems="flex-start"
-        // style={{ marginBottom: '100px' }}
       >
         {showButton}
       </Grid>

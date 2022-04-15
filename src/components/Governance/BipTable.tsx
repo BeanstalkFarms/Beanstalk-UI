@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
+import BigNumber from 'bignumber.js';
 import {
-  AppBar,
   Button,
   Collapse,
   IconButton,
@@ -12,10 +12,11 @@ import {
   TableHead,
   TableRow,
   Box,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 import {
   bipsList,
   theme,
@@ -25,6 +26,8 @@ import {
   GOVERNANCE_EXPIRATION,
 } from 'constants/index';
 import { percentForStalk, commit, emergencyCommit } from 'util/index';
+import { BIP } from 'state/general/reducer';
+
 import TransactionToast from 'components/Common/TransactionToast';
 import {
   governanceStrings,
@@ -32,6 +35,7 @@ import {
   TablePageSelect,
   QuestionModule,
 } from 'components/Common';
+import MultiCard from 'components/Common/Cards/MultiCard';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 const useStyles = makeStyles({
@@ -68,9 +72,24 @@ const useStyles = makeStyles({
     padding: '10px 10px 20px 10px',
     marginBottom: '80px',
   },
+  commitFont: {
+    fontFamily: 'Futura-PT-Book'
+  },
+  lineMargin: {
+    margin: '10px 8px',
+  },
+  outerTableCell: {
+    width: '10px',
+    borderBottom: `2px solid ${theme.accentColor}`,
+  },
+  innerTableCell: {
+    fontFamily: 'Futura-PT-Book',
+    fontSize: '16px',
+    borderBottom: `2px solid ${theme.accentColor}`,
+  }
 });
 
-function summaryBips(open, bip) {
+function summaryBips(open: boolean, bip: BIP) {
   if (open) {
     const bipID = parseInt(bip[0], 10);
     if (bipsList.length > bipID) {
@@ -98,8 +117,7 @@ function summaryBips(open, bip) {
   }
 }
 
-const Row = (props) => {
-  const { bip } = props;
+const Row : React.FC<{ bip: BIP }> = ({ bip }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -157,7 +175,18 @@ const Row = (props) => {
   );
 };
 
-const BipTable = (props) => {
+type ParsedBip = {
+  BIP: string;
+  title: string;
+  status: string | React.ReactElement;
+  voted: any;
+}
+
+const BipTable : React.FC<{
+  bips: BIP[],
+  season: BigNumber,
+  totalRoots: BigNumber,
+}> = (props) => {
   const classes = useStyles();
 
   const [page, setPage] = useState(0);
@@ -235,7 +264,7 @@ const BipTable = (props) => {
           variant="contained"
         >
           <Box>
-            <span style={{ fontFamily: 'Futura-PT-Book' }}>
+            <span className={classes.commitFont}>
               Commit
             </span>
             <QuestionModule
@@ -251,25 +280,30 @@ const BipTable = (props) => {
   }
 
   const titles = ['BIP', 'Title', 'Status', '% Voted'];
-  const tableBips = props.bips
+
+  const parsedBips = props.bips
     .reduce((bips, bip) => {
       const voteProportion = bip.roots.dividedBy(props.totalRoots);
       const bipID = bip.id;
-      const tb = {
+      const pb : ParsedBip = {
         BIP: bipID.toString(),
         title: bipsList.length > bipID ? bipsList[bipID].title : `BIP-${bipID}`,
+        status: 'Unknown',
+        voted: null,
       };
+
+      //
       if (bip.executed) {
-        tb.status = 'Commited';
+        pb.status = 'Commited';
       } else if (
         bip.start
           .plus(bip.period)
           .plus(GOVERNANCE_EXPIRATION)
           .isLessThanOrEqualTo(props.season)
       ) {
-        tb.status = 'Failed';
+        pb.status = 'Failed';
       } else if (bip.start.plus(bip.period).isLessThan(props.season)) {
-        tb.status = voteProportion.isGreaterThan(0.5) ? commitButton(bipID) : 'Failed';
+        pb.status = voteProportion.isGreaterThan(0.5) ? commitButton(bipID) : 'Failed';
       } else if (
         bip.timestamp
           .plus(GOVERNANCE_EMERGENCY_PERIOD)
@@ -279,26 +313,27 @@ const BipTable = (props) => {
             GOVERNANCE_EMERGENCY_THRESHOLD_DEMONINATOR
         )
       ) {
-        tb.status = commitButton(bipID);
+        pb.status = commitButton(bipID);
       } else {
-        tb.status = `${bip.period.minus(
+        pb.status = `${bip.period.minus(
           props.season.minus(bip.start).minus(1)
         )} Seasons Remaining`;
       }
-      tb.voted = percentForStalk(
+      pb.voted = percentForStalk(
         bip.roots,
         bip.endTotalRoots.isGreaterThan(0)
           ? bip.endTotalRoots
           : props.totalRoots
       );
-      bips.push([tb.BIP, tb.title, tb.status, tb.voted]);
+      bips.push([pb.BIP, pb.title, pb.status, pb.voted]);
       return bips;
     }, [])
     .reverse();
 
-  if (tableBips !== undefined) {
+  //
+  if (parsedBips !== undefined) {
     return (
-      <AppBar className={classes.inputModule} position="static">
+      <MultiCard type="input">
         <span className={classes.title}>
           BIPs
           <QuestionModule
@@ -306,32 +341,22 @@ const BipTable = (props) => {
             margin="-12px 0 0 2px"
           />
         </span>
-        <Line
-          style={{
-            margin: '10px 8px',
-          }}
-        />
+        <Line className={classes.lineMargin} />
+        {/* BIP Table */}
         <TableContainer className={classes.table}>
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell
                   size="small"
-                  style={{
-                    width: '10px',
-                    borderBottom: `2px solid ${theme.accentColor}`,
-                  }}
+                  className={classes.outerTableCell}
                 />
                 {titles.map((t) => (
                   <TableCell
                     key={t}
                     align="center"
                     size="small"
-                    style={{
-                      fontFamily: 'Futura-PT-Book',
-                      fontSize: '16px',
-                      borderBottom: `2px solid ${theme.accentColor}`,
-                    }}
+                    className={classes.innerTableCell}
                   >
                     {t}
                   </TableCell>
@@ -339,19 +364,20 @@ const BipTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tableBips
+              {parsedBips
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((bip, index) => (
+                .map((bip : ParsedBip, index: number) => (
                   <Row key={`bip_row_${index}`} bip={bip} /> // eslint-disable-line
                 ))}
             </TableBody>
           </Table>
         </TableContainer>
-        {Object.keys(tableBips).length > rowsPerPage ? (
+        {/* Pagination */}
+        {Object.keys(parsedBips).length > rowsPerPage ? (
           <div className={classes.pagination}>
             <TablePagination
               component="div"
-              count={Object.keys(tableBips).length}
+              count={Object.keys(parsedBips).length}
               className={classes.pagination}
               onPageChange={handleChangePage}
               page={page}
@@ -363,17 +389,18 @@ const BipTable = (props) => {
                 }`
               }
               ActionsComponent={
-                Object.keys(tableBips).length > (rowsPerPage * 2)
+                Object.keys(parsedBips).length > (rowsPerPage * 2)
                   ? TablePageSelect
                   : undefined
               }
             />
           </div>
         ) : null}
-      </AppBar>
+      </MultiCard>
     );
   }
-  return <></>;
+  
+  return null;
 };
 
 /**
@@ -385,10 +412,4 @@ const BipTable = (props) => {
  * (3) Submit a merge request on github: https://github.com/BeanstalkFarms/Beanstalk
  */
 
-export default function GovernanceTable(props) {
-  return (
-    <Box style={props.style}>
-      <BipTable {...props} />
-    </Box>
-  );
-}
+export default BipTable;

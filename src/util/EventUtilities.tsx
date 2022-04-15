@@ -256,10 +256,10 @@ export function parseWithdrawals(
   transitWithdrawals: Withdrawals,
   receivableBalance: Withdrawals,
 ] {
-  let receivableBalance = new BigNumber(0);
   let transitBalance    = new BigNumber(0);
-  const receivableWithdrawals : Withdrawals = {};
+  let receivableBalance = new BigNumber(0);
   const transitWithdrawals    : Withdrawals = {};
+  const receivableWithdrawals : Withdrawals = {};
 
   // Split each withdrawal between `receivable` and `transit`.
   Object.keys(withdrawals).forEach((season: string) => {

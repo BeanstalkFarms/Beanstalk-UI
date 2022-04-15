@@ -1,8 +1,8 @@
-import { Theme, withStyles } from '@material-ui/styles';
-import { Tooltip } from '@material-ui/core';
+import { Theme, withStyles } from '@mui/styles';
+import { Tooltip } from '@mui/material';
 import BigNumber from 'bignumber.js';
 
-export { Grid } from '@material-ui/core';
+export { Grid } from '@mui/material';
 export type { Token } from 'util/index';
 export {
   BudgetAsset,
@@ -35,10 +35,8 @@ export { default as QuestionModule } from './QuestionModule';
 export { default as SettingsFormModule } from './SettingsFormModule';
 export { default as SingleButton } from './SingleButton';
 export { default as SlippageModule } from './SlippageModule';
-export { default as SwapTransactionDetailsModule } from './SwapTransactionDetailsModule';
 export { default as SwitchModule } from './SwitchModule';
 export { default as TablePageSelect } from './TablePageSelect';
-// export { default as TitleLabel } from './TitleLabel';
 export { default as TokenBalanceModule } from './TokenBalanceModule';
 export { default as TokenInputField } from './TokenInputField';
 export { default as TokenOutputField } from './TokenOutputField';
@@ -48,7 +46,6 @@ export { default as TransactionTextModule } from './TransactionTextModule';
 export { default as UnitSelectionModule } from './UnitSelectionModule';
 export { default as TabImageModule } from './TabImageModule';
 export { default as Line } from './Line';
-export { default as SectionTabs } from './SectionTabs';
 export { default as BalanceTableCell } from './BalanceTableCell';
 export { default as TransactionToast } from './TransactionToast';
 
@@ -61,14 +58,9 @@ export const FormatTooltip = withStyles((theme: Theme) => ({
     fontFamily: 'Futura-Pt-Book',
     width: (props) => props.width,
     maxWidth: '345px',
-    margin: (props) => props.margin,
+    margin: (props) => props.margin || '0 0 0 20px',
   },
 }))(Tooltip);
-
-FormatTooltip.defaultProps = {
-  margin: '0 0 0 20px',
-  // width: 'auto',
-};
 
 export const walletStrings = {
   beanBalance:
@@ -113,8 +105,8 @@ export const walletStrings = {
     'This is your total Unharvestable Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, look in the Field module.',
   ethBalance: 'This is the ETH balance of your wallet.',
   topLeft:
-    'The Bean Balance is the total USD value of your Beans, BEAN:ETH LP Tokens, BEAN:3CRV LP Tokens and  BEAN:LUSD LP Tokens. This total does not include your Pods or claimable ETH.',
-  topLeftTitle: 'Bean Balance',
+    'The Balance is the total USD value of your Beans, BEAN:ETH LP Tokens, BEAN:3CRV LP Tokens and BEAN:LUSD LP Tokens. This total does not include your Pods or claimable ETH.',
+  topLeftTitle: 'Balance',
   topRight:
     'Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk.',
   topRightTitle: 'Ownership',
@@ -168,6 +160,8 @@ export const claimableStrings = {
   grownStalk:
     'Grown Stalk do not earn Farmable Beans. Once farmed, Grown Stalk earn Farmable Beans. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
   farm: 'Use this button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
+  farmableStalk: 'Stalk that you receive from your farmable beans.',
+  seeds: 'Output from Grown Stalk.'
 };
 export const siloStrings = {
   tokenDepositDescription: (tokenName: string) => `Use this tab to deposit ${tokenName} into the Silo.`,

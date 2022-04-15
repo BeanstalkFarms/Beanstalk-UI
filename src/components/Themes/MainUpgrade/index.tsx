@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 import { AppState } from 'state';
 import PlantsIcon from 'img/main/Planted.svg';
@@ -62,8 +62,8 @@ export default function MainUpgrade(props: any) {
   return (
     <>
       <Grid container className={classes.topGround} justifyContent="center" />
-      <img alt="Fence Icon" src={FenceIcon} style={miscStyle} />
-      <img alt="Plants Icon" src={PlantsIcon} style={itemStyle} />
+      <img alt="" src={FenceIcon} style={miscStyle} />
+      <img alt="" src={PlantsIcon} style={itemStyle} />
       {props.children}
     </>
   );

@@ -1,18 +1,23 @@
 import React, { Fragment } from 'react';
-import { Box, Button, Link, Tab, Tabs } from '@material-ui/core';
+import { Box, Button, Link, Tab, Tabs } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { theme } from 'constants/index';
 import { FormatTooltip, Line, QuestionModule } from './index';
 
 const useStyles = makeStyles(() => ({
+  // disableBackground = false
   inputModule: {
     backgroundColor: theme.module.background,
     borderRadius: '25px',
     color: theme.text,
     padding: '10px',
+    // Added to enable the SettingsFormMoudle 
+    overflow: 'visible',
+    position: 'relative',
   },
+  // disableBackground = true
   metaModule: {
     backgroundColor: theme.module.metaBackground,
     borderRadius: '25px',
@@ -20,6 +25,7 @@ const useStyles = makeStyles(() => ({
     color: theme.backgroundText,
     marginTop: '16px',
     padding: '10px 16px 30px 16px',
+    overflow: 'visible',
   },
   sectionTab: {
     fontFamily: 'Futura-Pt-Book',
@@ -70,6 +76,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+type BaseModuleProps = {
+  removeBackground: boolean;
+}
 export default function BaseModule({
   size,
   allowance,
@@ -97,7 +106,7 @@ export default function BaseModule({
   showButton,
   singleReset,
   setButtonLabel
-}) {
+} : Partial<BaseModuleProps>) {
   const dispatch = useDispatch();
   const s = size === 'small' || window.innerWidth < 450;
   const classes = useStyles();
@@ -172,17 +181,18 @@ export default function BaseModule({
   } else {
     <></>;
   }
+  
   const resetLink = singleReset !== true ?
     <>
       <br />
-      <Link // eslint-disable-line
+      <Link
         style={{ color: 'green' }}
         href=""
         onClick={(event) => {
           event.preventDefault();
           resetForm();
         }}
-      >
+        underline="hover">
         Reset Defaults
       </Link>
     </>
@@ -192,7 +202,7 @@ export default function BaseModule({
   // style={{ position: 'relative', zIndex: '0' }}
   const moduleContent = (
     <>
-      <Box style={{ position: 'relative' }}>
+      <Box>
         {children}
         {allowance.isEqualTo(0) ? (
           <Box className={classes.moduleContent} />
@@ -211,10 +221,15 @@ export default function BaseModule({
 
   return (
     <>
-      {normalBox && sectionTitles.length >= 1 ? (
+      {(normalBox && sectionTitles.length >= 1) ? (
+        // Multiple sections, "normalBox"
         <Box
           style={style}
-          className={removeBackground ? classes.metaModule : classes.inputModule}
+          className={
+            removeBackground
+              ? classes.metaModule 
+              : classes.inputModule
+          }
           sx={{ marginTop: marginTop }}
           boxShadow={3}
         >
@@ -236,7 +251,11 @@ export default function BaseModule({
                 style={{
                   textTransform: textTransform,
                   fontSize: s ? textTabSize : '18px',
-                  color: removeBackground ? theme.backgroundText : theme.text,
+                  color: (
+                    removeBackground
+                      ? theme.backgroundText
+                      : theme.text
+                  ),
                 }}
                 disableRipple={sectionTitles.length === 1}
                 label={
@@ -258,28 +277,30 @@ export default function BaseModule({
               />
             ))}
           </Tabs>
-          <Line
-            style={{
-              margin: '4px 8px',
-            }}
-          />
+          <Line style={{ margin: '4px 8px' }} />
           {showButton ? (
-            <form autoComplete="off" noValidate style={{ padding: '0 10px' }}>
+            <form
+              autoComplete="off"
+              noValidate
+              // Removed during mui-v5 update.
+              // style={{ padding: '0 10px' }}
+            >
               {moduleContent}
             </form>
           ) : (
             moduleContent
           )}
         </Box>
-      ) : sectionTitles.length === 1 && normalBox ? (
+      ) : (normalBox && sectionTitles.length === 1) ? (
+        // Single section, "normalBox"
         <Box
           style={style}
           className={
-            removeBackground ? classes.metaModule : classes.inputModule
+            removeBackground
+              ? classes.metaModule
+              : classes.inputModule
           }
-          sx={{
-            marginTop: marginTop
-          }}
+          sx={{ marginTop: marginTop }}
           boxShadow={3}
         >
           <span
@@ -303,11 +324,7 @@ export default function BaseModule({
               sectionTitles[0]
             )}
           </span>
-          <Line
-            style={{
-              margin: '4px 8px',
-            }}
-          />
+          <Line style={{ margin: '4px 8px' }} />
           {showButton ? (
             <form autoComplete="off" noValidate style={{ padding: '0 10px' }}>
               {moduleContent}
@@ -317,10 +334,13 @@ export default function BaseModule({
           )}
         </Box>
       ) : (
+        // Not a normal box
         <Box
           style={style}
           className={
-            removeBackground ? classes.metaModule : classes.inputModule
+            removeBackground
+              ? classes.metaModule
+              : classes.inputModule
           }
           sx={{ 
             marginTop: marginTop

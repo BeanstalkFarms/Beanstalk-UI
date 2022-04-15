@@ -95,6 +95,7 @@ export async function beanstalkQuery() {
       querySeasons(1000, 3000),
       querySeasons(1000, 4000),
       querySeasons(1000, 5000),
+      querySeasons(1000, 6000),
     ]);
     const data = flatMap(results, (d: any) => d.data.seasons);
 
