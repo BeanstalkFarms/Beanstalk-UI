@@ -33,9 +33,11 @@ export function ToastAlert({ desc, hash, msg, id }: { desc: string, hash?: strin
           </>
         )}
         {msg && (
-          <div className={classes.errorMessage}>
-            {msg}
-          </div>
+          <>
+            <div className={classes.errorMessage}>
+              <strong>ERROR: </strong>{msg}
+            </div>
+          </>
         )}
       </div>
       <IconButton style={{ backgroundColor: 'transparent' }} onClick={(id !== null) ? () => dismissErrors(id) : dismissErrors}>
