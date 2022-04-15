@@ -16,15 +16,44 @@ import { mintAllAccountNFTs, mintAllNFTs } from 'util/index';
 import ClaimNft from './ClaimNft';
 import NftStatsHeader from './NftStatsHeader';
 
+const NFT_PAGE_MAX_WIDTH = '1300px';
+const LG_MEDIA_QUERY = {
+  below: '@media (max-width: 1000px)',
+  above: '@media (min-width: 1001px)',
+};
+
+const useStyles = makeStyles(() => ({
+  container: {
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'column',
+    maxWidth: NFT_PAGE_MAX_WIDTH,
+  },
+  nfts: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [LG_MEDIA_QUERY.below]: {
+      flexDirection: 'column',
+    },
+    [LG_MEDIA_QUERY.above]: {
+      flexDirection: 'row',
+    },
+  },
+  dropdown: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center',
+    margin: '20px 0',
+  },
+}));
+
 export default function NFTs() {
-  const {
-    unclaimedWinterNFTs,
-    claimedWinterNFTs,
-    unclaimedNFTs,
-    claimedNFTs,
-  } = useSelector<AppState, AppState['nfts']>(
-    (state) => state.nfts
-  );
+  const { unclaimedWinterNFTs, claimedWinterNFTs, unclaimedNFTs, claimedNFTs } =
+    useSelector<AppState, AppState['nfts']>((state) => state.nfts);
+
+  const classes = useStyles();
 
   const description = (
     <>
@@ -32,7 +61,9 @@ export default function NFTs() {
         To date, there have been two NFT projects build on Beanstalk - the
         BeaNFT Genesis Collection and now the BeaNFT Winter Collection.
       </span>
-      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Genesis Collection: </span>
+      <span style={{ fontWeight: 'bold', display: 'flex' }}>
+        BeaNFT Genesis Collection:{' '}
+      </span>
       <span>
         The BeaNFT Genesis collection is a series of 2067 BeaNFTs which could only
         be minted by participating in Beanstalk during Seasons 1200 – 1800.{' '}
@@ -52,7 +83,9 @@ export default function NFTs() {
           Read More
         </Link>.
       </span>
-      <span style={{ fontWeight: 'bold', display: 'flex' }}>BeaNFT Winter Collection: </span>
+      <span style={{ fontWeight: 'bold', display: 'flex' }}>
+        BeaNFT Winter Collection:{' '}
+      </span>
       <span>
         The BeaNFT Winter Collection is the second minting event for BeaNFTs and is a collection of 751 BeaNFTs which could only be earned by participating in Beanstalk from Season 3300 to 3900. The top 5 largest bean-denominated investments each Season (across the Silo and Field) were be awarded one Winter BeaNFT.{' '}
         <Link

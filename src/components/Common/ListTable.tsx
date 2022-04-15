@@ -78,6 +78,11 @@ const BasicTable = (props) => {
         balance[1]
       )} 3CRV`;
     }
+    if (props.isLUSD) {
+      return `${displayBN(balance[0])} BEAN/${displayBN(
+        balance[1]
+      )} LUSD`;
+    }
     return `${displayBN(balance[0])} BEAN/${displayBN(
       balance[1]
     )} ${TokenLabel(CryptoAsset.Ethereum)}`;
@@ -251,10 +256,10 @@ const BasicTable = (props) => {
                       <FormatTooltip
                         placement="right"
                         title={`${displayFullBN(
-                          props.bdvCrates[season].multipliedBy(4)
+                          props.bdvCrates[season].multipliedBy(props.bdvPerSeed)
                         )} ${TokenLabel(SiloAsset.Seed)}`}
                       >
-                        <span>{displayBN(props.bdvCrates[season].multipliedBy(4))}</span>
+                        <span>{displayBN(props.bdvCrates[season].multipliedBy(props.bdvPerSeed))}</span>
                       </FormatTooltip>
                     </TableCell>
                   ) : null}
@@ -303,4 +308,5 @@ ListTable.defaultProps = {
   page: 0,
   resetPage: 0,
   rowsPerPage: 3,
+  bdvPerSeed: 4,
 };
