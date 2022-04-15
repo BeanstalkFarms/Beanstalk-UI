@@ -77,12 +77,9 @@ function ListingRow({
         {displayBN(relativeIndex)}
         <QuestionModule
           description={explainer}
-          style={{ marginLeft: 10 }}
           placement="right"
-          position="static"
-          widthTooltip={200}
-          fontSize="12px"
-          margin="-10px 0 0 10px"
+          fontSize="11px"
+          margin="-4px 0 0 5px"
         />
       </TableCell>
       {/* # of pods remaining to harvest before this order to sell expires */}

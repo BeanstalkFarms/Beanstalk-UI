@@ -86,12 +86,9 @@ function OrderRow({ order, isMine, selectedOrderKey, handleOrderChange, isSellin
         <span>0 — {displayBN(order.maxPlaceInLine)}</span>
         <QuestionModule
           description={explainer}
-          style={{ marginLeft: 10 }}
           placement="right"
-          position="static"
-          widthTooltip={200}
-          fontSize="12px"
-          margin="-10px 0 0 10px"
+          fontSize="11px"
+          margin="-4px 0 0 5px"
         />
       </TableCell>
       {/* Price per pod */}
