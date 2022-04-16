@@ -17,14 +17,13 @@ import curveLogo from 'img/curve-logo.svg';
 import lusdLogo from 'img/lusd-icon.svg';
 import TokenIcon from 'components/Common/TokenIcon';
 
-export const FormatTooltip = withStyles(() => ({
+export const StyledPriceTooltip = withStyles(() => ({
   tooltip: {
     backgroundColor: 'transparent',
     color: 'black',
     boxShadow: 'none',
     fontSize: 12,
     fontFamily: 'Futura-Pt-Book',
-    // zIndex: 9999,
     maxWidth: 'none', // prevent wrapping
     margin: (props: any) => props.margin || null,
     padding: 0,
@@ -186,7 +185,7 @@ export default function PriceTooltip({
   }
 
   return isMobile ? (
-    <FormatTooltip
+    <StyledPriceTooltip
       margin="24px 0 24px 0" // Reduce the top margin
       interactive="true"
       open={open}
@@ -213,9 +212,9 @@ export default function PriceTooltip({
           ? <KeyboardArrowUpIcon className={classes.accordionIcon} />
           : <KeyboardArrowDownIcon className={classes.accordionIcon} />}
       </Button>
-    </FormatTooltip>
+    </StyledPriceTooltip>
   ) : (
-    <FormatTooltip
+    <StyledPriceTooltip
       interactive="true"
       open={isMobile ? false : open}
       placement="right"
@@ -236,6 +235,6 @@ export default function PriceTooltip({
           ? <ChevronLeftIcon className={classes.accordionIcon} />
           : <ChevronRightIcon className={classes.accordionIcon} />}
       </Button>
-    </FormatTooltip>
+    </StyledPriceTooltip>
   );
 }
