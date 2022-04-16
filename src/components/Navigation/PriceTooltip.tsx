@@ -188,7 +188,7 @@ export default function PriceTooltip({
   return isMobile ? (
     <FormatTooltip
       margin="24px 0 24px 0" // Reduce the top margin
-      interactive
+      interactive="true"
       open={open}
       placement="bottom-end"
       style={{
@@ -216,7 +216,7 @@ export default function PriceTooltip({
     </FormatTooltip>
   ) : (
     <FormatTooltip
-      interactive
+      interactive="true"
       open={isMobile ? false : open}
       placement="right"
       title={<PriceCards />}

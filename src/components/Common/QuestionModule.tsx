@@ -47,7 +47,7 @@ const QuestionModule : React.FC<QuestionModuleProps> = (props) => {
           width={props.widthTooltip}
           onClose={handleTooltipClose}
           disableFocusListener
-          interactive
+          interactive="true"
           open={show}
           leaveDelay={timer}
           onMouseEnter={handleTooltipOpen}
