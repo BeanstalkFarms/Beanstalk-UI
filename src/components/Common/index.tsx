@@ -27,7 +27,6 @@ export { default as EthInputField } from './EthInputField';
 export { default as FrontrunText } from './FrontrunText';
 export { default as HeaderLabel } from './HeaderLabel';
 export { default as HeaderLabelList } from './HeaderLabelList';
-export { default as HeaderLabelWithTimer } from './HeaderLabelWithTimer';
 export { default as InputFieldPlus } from './InputFieldPlus';
 export { default as ListTable } from './ListTable';
 export { default as PlotInputField } from './PlotInputField';
