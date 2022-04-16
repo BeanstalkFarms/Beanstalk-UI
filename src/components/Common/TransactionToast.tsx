@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ContractReceipt, ContractTransaction } from 'ethers';
 import toast from 'react-hot-toast';
 import { chainId } from 'util/index';
-import { IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { makeStyles } from '@mui/styles';
 
@@ -22,28 +22,46 @@ function dismissErrors(id?: any) {
 
 export function ToastAlert({ desc, hash, msg, id }: { desc: string, hash?: string, msg?: string, id?: any }) {
   const classes = useStyles();
+  const handleClick = useCallback(() => (
+    id !== null ? dismissErrors(id) : dismissErrors()
+  ), [id]);
   return (
-    <>
-      <div>
-        {desc}
-        {hash && (
-          <>
-            &nbsp;&middot;&nbsp;
-            <a href={`https://${chainId === 3 ? 'ropsten.' : ''}etherscan.io/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
-          </>
-        )}
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+      <Box sx={{ pl: 1, pr: 2, flex: 1, fontWeight: 600, textAlign: 'center' }}>
+        <div>
+          {desc}
+          {hash && (
+            <>
+              &nbsp;&middot;&nbsp;
+              <a href={`https://${chainId === 3 ? 'ropsten.' : ''}etherscan.io/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
+            </>
+          )}
+        </div>
         {msg && (
-          <>
-            <div className={classes.errorMessage}>
-              <strong>ERROR: </strong>{msg}
-            </div>
-          </>
+          <div className={classes.errorMessage}>
+            {msg}
+          </div>
         )}
-      </div>
-      <IconButton style={{ backgroundColor: 'transparent' }} onClick={(id !== null) ? () => dismissErrors(id) : dismissErrors}>
-        <ClearIcon />
-      </IconButton>
-    </>
+      </Box>
+      {msg && (
+        <IconButton
+          sx={{
+            backgroundColor: 'transparent',
+            p: 0,
+            width: '20px',
+            height: '20px',
+            '& svg': {
+              width: '18px',
+              height: '18px',
+            }
+          }}
+          size="small"
+          onClick={handleClick}
+        >
+          <ClearIcon />
+        </IconButton>
+      )}
+    </Box>
   );
 }
 
@@ -123,7 +141,8 @@ export default class TransactionToast {
     let msg;
     let duration = 5000;
     if (typeof error === 'object') {
-      // Is there a better way to do this?
+      duration = Infinity;
+      // SC: Is there a better way to do this?
       if (error.message && error.message.substring(0, 8).toLowerCase() === 'metamask') {
         switch ((error as MetamaskErrorObject).code) {
           // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature.
@@ -138,7 +157,6 @@ export default class TransactionToast {
       } else {
         const message = error.message.substring(0, 200);
         msg = error.message.length > 200 ? message.concat('...') : message;
-        duration = Infinity;
       }
     } else {
       console.error(error);
