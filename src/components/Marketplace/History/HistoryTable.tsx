@@ -24,7 +24,7 @@ export default function HistoryTable() {
   if (!history || history.length === 0) {
     return (
       <div>
-        <h4 style={{ }}>No transactions yet.</h4>
+        <h4>No transactions yet.</h4>
       </div>
     );
   }
@@ -66,7 +66,7 @@ export default function HistoryTable() {
               // VERIFY
               const placeInLine = (item.index).plus(item.start).minus(harvestableIndex);
               return (
-                <TableRow>
+                <TableRow key={item.index}>
                   <TableCell
                     className={classes.lucidaStyle}>
                     <a href={`https://etherscan.io/tx/${item.transactionHash}`} target="_blank" rel="noreferrer">

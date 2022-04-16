@@ -251,6 +251,7 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
     const active = tooltipData?.type === 'order' && i === tooltipData?.index;
     return (
       <Bar
+        key={`bar-${i}`}
         x={coordinate.x}
         y={coordinate.y}
         height={coordinate.height}
@@ -280,8 +281,8 @@ const GraphContent = ({ parentWidth, setCurrentListing, setCurrentOrder }: Graph
     const active = tooltipData?.type === 'listing' && i === tooltipData?.index;
     return (
       <Circle
-        pointerEvents="none"
         key={`point-${i}`}
+        pointerEvents="none"
         cx={coordinate.x}
         cy={coordinate.y}
         r={coordinate.radius}
