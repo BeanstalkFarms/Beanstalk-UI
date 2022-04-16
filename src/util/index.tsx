@@ -58,7 +58,7 @@ const beanstalkGettersAbi = require('../constants/abi/Beanstalk/BeanstalkGetters
 const beaNFTWinterAbi = require('../constants/abi/BeaNFT/BeaNFTWinter.json');
 const beaNFTGenesisABI = require('../constants/abi/BeaNFT/BeaNFTGenesis.json');
 const uniswapPairAbi = require('../constants/abi/Pools/Uniswap/UniswapV2Pair.json');
-const uniswapRouterAbi = require('../constants/abi/Pools/Uniswap/UniswapV2Router02.json');
+const uniswapRouterAbi = require('../constants/abi/Pools/Uniswap/UniswapV2Router.json');
 const curveMetaPoolAbi = require('../constants/abi/Pools/Curve/CurveMetaPool.json');
 const curvePlainPoolAbi = require('../constants/abi/Pools/Curve/CurvePlainPool.json');
 
