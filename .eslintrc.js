@@ -125,6 +125,7 @@ module.exports = {
     '@typescript-eslint/no-extra-non-null-assertion': ['error'],
     'no-console': 'off',
     'object-shorthand': 0,
+    'comma-spacing': 0,
     'react/jsx-tag-spacing': 'warn',
     'camelcase': 0, // disable because generated files aren't camel-cased
   },

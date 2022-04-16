@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { FormatTooltip } from 'components/Common';
+import { StyledTooltip } from 'components/Common';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
@@ -101,7 +101,7 @@ export default function CircularProgressWithLabel(props) {
   }
 
   return (
-    <FormatTooltip margin="0" title={title}>
+    <StyledTooltip margin="0" title={title}>
       <Box display="inline-flex" position="relative">
         <CircularProgress
           value={props.lowvalue !== undefined ? props.lowvalue : props.value}
@@ -128,7 +128,7 @@ export default function CircularProgressWithLabel(props) {
           </Typography>
         </Box>
       </Box>
-    </FormatTooltip>
+    </StyledTooltip>
   );
 }
 

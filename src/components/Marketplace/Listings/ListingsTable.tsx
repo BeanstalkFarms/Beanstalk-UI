@@ -82,12 +82,14 @@ function ListingRow({
           margin="-4px 0 0 5px"
         />
       </TableCell>
-      {/* # of pods remaining to harvest before this order to sell expires */}
+      {/* Expiry: # of pods remaining to harvest before this order to sell expires */}
       <BalanceTableCell
         className={classes.lucidaStyle}
         label={`- If the Pod Line moves forward ${displayBN(relativeExpiry)} Pods, this Listing will automatically expire.`}
-        balance={new BigNumber(relativeExpiry)}
-      />
+        balance={relativeExpiry}
+      >
+        {relativeExpiry.lte(0) ? 'Expired' : displayBN(relativeExpiry)}
+      </BalanceTableCell>
       {/* Price */}
       <BalanceTableCell
         className={classes.lucidaStyle}

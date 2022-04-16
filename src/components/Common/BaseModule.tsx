@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import makeStyles from '@mui/styles/makeStyles';
 import { theme } from 'constants/index';
-import { FormatTooltip, Line, QuestionModule } from './index';
+import { StyledTooltip, Line, QuestionModule } from './index';
 
 const useStyles = makeStyles(() => ({
   // disableBackground = false
@@ -157,7 +157,7 @@ export default function BaseModule({
   let actionButton;
   if (showButton) {
     actionButton = (
-      <FormatTooltip
+      <StyledTooltip
         placement="top"
         margin="0 0 0 7px"
         title={locked ? 'Unvote Active BIPs to Deposit' : ''}
@@ -176,7 +176,7 @@ export default function BaseModule({
             {buttonLabel}
           </Button>
         </Box>
-      </FormatTooltip>
+      </StyledTooltip>
     );
   } else {
     <></>;

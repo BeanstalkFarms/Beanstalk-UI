@@ -111,6 +111,7 @@ export default function TabbedMarketplace() {
         handleChange={(event, p: number) => setPage(p)}
         page={page}
         title="Plots"
+        rowsPerPage={5}
       />
     </BaseModule>
     )

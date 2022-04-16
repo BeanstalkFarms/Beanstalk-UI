@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { displayFullBN, TokenLabel } from 'util/index';
-import { FormatTooltip } from '.';
+import { StyledTooltip } from '.';
 
 export default function BalanceField(props) {
   const title =
@@ -10,7 +10,7 @@ export default function BalanceField(props) {
       : displayFullBN(props.balance);
 
   return (
-    <FormatTooltip title={title} placement="right">
+    <StyledTooltip title={title} placement="right">
       <span>
         {props.content !== undefined ? (
           props.content
@@ -18,6 +18,6 @@ export default function BalanceField(props) {
           <Box style={props.style}>{props.balance}</Box>
         )}
       </span>
-    </FormatTooltip>
+    </StyledTooltip>
   );
 }

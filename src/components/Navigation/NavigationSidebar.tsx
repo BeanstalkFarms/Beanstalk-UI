@@ -12,7 +12,7 @@ import {
 import BigNumber from 'bignumber.js';
 
 import { AppState } from 'state';
-import { BEAN, theme } from 'constants/index';
+import { BEAN, theme, zeroBN } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
 import { getAPYs, percentForStalk, toTokenUnitsBN } from 'util/index';
@@ -121,6 +121,9 @@ export default function NavigationSidebar() {
   // Grab state
   const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
+  );
+  const { season } = useSelector<AppState, AppState['season']>(
+    (state) => state.season
   );
   const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
@@ -272,8 +275,8 @@ export default function NavigationSidebar() {
         <Metric label="Mkt. Cap" value={marketCap?.isGreaterThan(0) && `$${toTokenUnitsBN(marketCap, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${toTokenUnitsBN(totalPods, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${toTokenUnitsBN(weather.harvestableIndex, BEAN.decimals).toFixed(1)}M`} hideIfNull />
-        <Metric label="Weather" value={weather?.weather?.isGreaterThan(0) && `${weather.weather.toFixed(0)}%`} hideIfNull />
-        <Metric label="ETH" value={usdcPrice && usdcPrice > 0 && `$${(1 / usdcPrice).toFixed(2)}`} hideIfNull />
+        <Metric label="Season" value={season ? season.toFixed(0) : null} hideIfNull />
+        <Metric label="ETH" value={usdcPrice && usdcPrice.gt(zeroBN) && `$${(new BigNumber(1)).div(usdcPrice).toFixed(2)}`} hideIfNull />
         <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} hideIfNull />
       </Box>
     </>

@@ -18,7 +18,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import TOKENS from 'constants/siloTokens';
 import TokenIcon from 'components/Common/TokenIcon';
-import { FormatTooltip, QuestionModule, siloStrings } from 'components/Common';
+import { StyledTooltip, QuestionModule, siloStrings } from 'components/Common';
 import { theme as beanstalkTheme } from '../../constants';
 
 const useStyles = makeStyles((theme) => ({
@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
 const APYTooltip = ({ apys, children } : { apys: APYTuple, children: any }) => {
   const classes = useStyles();
   return (
-    <FormatTooltip
+    <StyledTooltip
       margin="10px"
       placement="top"
       title={(
@@ -127,7 +127,7 @@ const APYTooltip = ({ apys, children } : { apys: APYTuple, children: any }) => {
       )}
     >
       {children}
-    </FormatTooltip>
+    </StyledTooltip>
   );
 };
 
@@ -226,7 +226,7 @@ export default function TokenDataTable() {
                   </div>
                 </TableCell>
                 <TableCell align="left">
-                  <FormatTooltip
+                  <StyledTooltip
                     margin="10px"
                     placement="top"
                     title={(
@@ -241,7 +241,7 @@ export default function TokenDataTable() {
                       <span>&nbsp;</span>
                       <span>{token.rewards.seeds}<TokenIcon token={SiloAsset.Seed} style={{ width: '17px', height: '17px' }} /></span>
                     </span>
-                  </FormatTooltip>
+                  </StyledTooltip>
                 </TableCell>
                 <TableCell align="center">
                   <APYTooltip apys={tokenApys}>
@@ -258,7 +258,7 @@ export default function TokenDataTable() {
                   </APYTooltip>
                 </TableCell>
                 <TableCell align="right" className={`${classes.headerCell} ${classes.hideOnMobile}`}>
-                  <FormatTooltip
+                  <StyledTooltip
                     margin="10px"
                     placement="top"
                     title={`${displayBN(token.getUserSiloBalance(userBalanceState))} ${token.name}`}
@@ -266,7 +266,7 @@ export default function TokenDataTable() {
                     <span className={classes.chip}>
                       {`$${displayBN(token.getUserSiloBalanceInUSD(userBalanceState, priceState, totalBalanceState))}`}
                     </span>
-                  </FormatTooltip>
+                  </StyledTooltip>
                 </TableCell>
                 <TableCell align="center" className={classes.hideOnMobile}>
                   <ChevronRightIcon style={{ marginTop: 3 }} />

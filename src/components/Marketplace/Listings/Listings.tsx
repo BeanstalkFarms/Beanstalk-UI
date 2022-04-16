@@ -1,16 +1,17 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import filter from 'lodash/filter';
 import BigNumber from 'bignumber.js';
 import { Box } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import { AppState } from 'state';
 import { PodListing } from 'state/marketplace/reducer';
-import { CryptoAsset, displayBN, FarmAsset, getWalletAddress } from 'util/index';
+import { account, CryptoAsset, displayBN, FarmAsset } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { filterStrings, QuestionModule } from 'components/Common';
 
-import { makeStyles } from '@mui/styles';
+import { zeroBN } from 'constants/index';
 import FillListingModal from './FillListingModal';
 import ListingsTable from './ListingsTable';
 import Filters, { StyledSlider } from '../Filters';
@@ -42,8 +43,6 @@ type ListingsProps = {
  */
 export default function Listings(props: ListingsProps) {
   const classes = useStyles();
-  /** FIXME: is this somewhere in global state? */
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
   const { listings: allListings } = useSelector<AppState, AppState['marketplace']>(
     (state) => state.marketplace
@@ -60,8 +59,8 @@ export default function Listings(props: ListingsProps) {
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
 
-  const placesInLine = [0, totalPods.toNumber()];
-  const placesInLineBN = [0, new BigNumber(totalPods.toNumber())];
+  const placesInLine   = [0, totalPods.toNumber()];
+  const placesInLineBN = [zeroBN, totalPods];
 
   const [placeInLineFilters, setPlaceInLineFilters] =
     useState<BigNumber[]>(placesInLineBN);
@@ -70,32 +69,36 @@ export default function Listings(props: ListingsProps) {
     useState<number[]>(placesInLine);
 
   // Handle changes in filters
+  // FIXME: This will not rerender if `account` changes because it
+  // it outside of React's scope.
   useMemo(() => {
     if (props.mode === 'MINE') {
       filteredListings.current = filter(allListings, (listing) => (
-        listing.account === walletAddress
+        listing.account === account
       ));
     } else {
       filteredListings.current = filter(allListings, (listing) => (
-        listing.account !== walletAddress &&
-        listing.pricePerPod > priceFilters[0] &&
-        listing.pricePerPod < priceFilters[1] &&
+        listing.account !== account &&
+        listing.pricePerPod.toNumber() >= priceFilters[0] &&
+        listing.pricePerPod.toNumber() <= priceFilters[1] &&
         listing.index
           .minus(harvestableIndex)
           .gte(new BigNumber(placeInLineFilters[0])) &&
+        // FIXME: pre-calculate expiry when data is loaded
+        // This is mega inefficient.
         listing.index
           .minus(harvestableIndex)
           .lte(new BigNumber(placeInLineFilters[1])) &&
         listing.maxHarvestableIndex
           .minus(harvestableIndex)
-          .gte(new BigNumber(0))
+          .gte(zeroBN)
       ));
     }
 
     return () => {
       // cleanup listings
     };
-  }, [allListings, priceFilters, placeInLineFilters, harvestableIndex, props.mode, walletAddress]);
+  }, [allListings, priceFilters, placeInLineFilters, harvestableIndex, props.mode]);
 
   //
   const handlePriceFilter = (event, newValue) => {
@@ -110,22 +113,13 @@ export default function Listings(props: ListingsProps) {
     ]);
   };
 
-  // Setup
-  useEffect(() => {
-    const init = async () => {
-      const addr = await getWalletAddress();
-      setWalletAddress(addr);
-    };
-    init();
-  }, []);
-
-  if (filteredListings.current == null || walletAddress == null) {
+  if (filteredListings.current == null || account == null) {
     return <div>Loading...</div>;
   }
 
   const numPods = filteredListings.current.reduce(
     (sum, curr) => sum.plus(curr.remainingAmount),
-    new BigNumber(0)
+    zeroBN
   );
 
   // Filters
