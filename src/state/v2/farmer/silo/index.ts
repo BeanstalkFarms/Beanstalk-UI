@@ -26,13 +26,11 @@ export type UserTokenBalance = {
   // claim: Transaction;
 }
 
-export type UserTokenBalancesMap = { 
-  [address: string]: UserTokenBalance;
-};
-
 export type UserTokenBalances = {
   // FIXME: enforce that this is a key of whitelisted tokens?
-  tokens: UserTokenBalancesMap;
+  tokens: { 
+    [address: string]: UserTokenBalance;
+  };
 }
 
 // -- Silo Assets
