@@ -51,17 +51,18 @@ export let web3Ws : Web3;     // `websocket` instance; used to listen to new cha
 export let web3Provider : ethers.providers.Web3Provider;    // ethers provider
 export let web3Signer   : ethers.providers.JsonRpcSigner;   // ethers signer; used to sign calls to ethers.Contract instances
 
-const beanAbi = require('../constants/abi/Bean.json');
-const beanstalkAbi = require('../constants/abi/Beanstalk.json');
-const beaNFTAbi = require('../constants/abi/BeaNFT.json');
-const BeaNFTGenesisABI = require('../constants/abi/BeaNFTGenesis.json');
-const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
-const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
-const beanCrv3MetaPoolAbi = require('../constants/abi/BeanCrv3MetaPool.json');
-const beanlusdPoolAbi = require('../constants/abi/BeanlusdPool.json');
-const beanstalkPriceAbi = require('../constants/abi/BeanstalkPrice.json');
-const lusdCrv3MetaPoolAbi = require('../constants/abi/LusdCrv3MetaPool.json');
-const beanstalkGettersAbi = require('../constants/abi/BeanstalkGetters.json');
+const beanAbi = require('../constants/abi/ERC20.json');
+const beanstalkAbi = require('../constants/abi/Beanstalk/Beanstalk.json');
+const beanstalkPriceAbi = require('../constants/abi/Beanstalk/BeanstalkPrice.json');
+const beanstalkGettersAbi = require('../constants/abi/Beanstalk/BeanstalkGetters.json');
+const beaNFTWinterAbi = require('../constants/abi/BeaNFT/BeaNFTWinter.json');
+const beaNFTGenesisABI = require('../constants/abi/BeaNFT/BeaNFTGenesis.json');
+const uniswapPairAbi = require('../constants/abi/Pools/Uniswap/UniswapV2Pair.json');
+const uniswapRouterAbi = require('../constants/abi/Pools/Uniswap/UniswapV2Router02.json');
+const curveMetaPoolAbi = require('../constants/abi/Pools/Curve/CurveMetaPool.json');
+const curvePlainPoolAbi = require('../constants/abi/Pools/Curve/CurvePlainPool.json');
+
+// -- Generic tokens
 
 export const tokenContract = (token: SupportedToken) =>
   new ethers.Contract(token.addr, beanAbi, web3Signer);
@@ -72,11 +73,14 @@ export const tokenContractReadOnly = (token: SupportedToken) =>
 export const tokenV2ContractReadOnly = (token: SupportedV2Token) =>
   new web3.eth.Contract(beanAbi, token.address);
 
+// -- Beanstalk  
+
 export const beanstalkPriceContractReadOnly = () =>
   new web3.eth.Contract(beanstalkPriceAbi, PRICE.addr);
 
 export const beanstalkContract = () =>
   new ethers.Contract(BEANSTALK, beanstalkAbi, web3Signer);
+
 export const beanstalkContractReadOnly = (events = false) => {
   const w3 = events ? web3Events : web3;
   return new w3.eth.Contract(beanstalkAbi, BEANSTALK);
@@ -84,47 +88,59 @@ export const beanstalkContractReadOnly = (events = false) => {
 export const beanstalkContractReadOnlyWs = () =>
   new web3Ws.eth.Contract(beanstalkAbi, BEANSTALK);
 
+export const beanstalkGettersContractReadOnly = () =>
+  new web3.eth.Contract(beanstalkGettersAbi, BEANSTALK_GETTERS.addr);
+
+// -- BeaNFTs
+
 export const beaNFTContract = () =>
-  new ethers.Contract(BEANFTCOLLECTION, beaNFTAbi, web3Signer);
+  new ethers.Contract(BEANFTCOLLECTION, beaNFTWinterAbi, web3Signer);
+
 export const beaNFTContractReadOnly = (events = false) => {
   const w3 = events ? web3Events : web3;
-  return new w3.eth.Contract(beaNFTAbi, BEANFTCOLLECTION);
+  return new w3.eth.Contract(beaNFTWinterAbi, BEANFTCOLLECTION);
 };
 
 export const beaNFTGenesisContract = () =>
-  new ethers.Contract(BEANFTGENESIS, BeaNFTGenesisABI, web3Signer);
+  new ethers.Contract(BEANFTGENESIS, beaNFTGenesisABI, web3Signer);
+
 export const beaNFTGenesisContractReadOnly = (events = false) => {
   const w3 = events ? web3Events : web3;
-  return new w3.eth.Contract(BeaNFTGenesisABI, BEANFTGENESIS);
+  return new w3.eth.Contract(beaNFTGenesisABI, BEANFTGENESIS);
 };
+
+// -- Uniswap
 
 export const pairContract = (pair: SupportedToken) =>
   new ethers.Contract(pair.addr, uniswapPairAbi, web3Signer);
+
 export const pairContractReadOnly = (pair: SupportedToken) =>
   new web3.eth.Contract(uniswapPairAbi, pair.addr);
+  
 export const pairContractReadOnlyWs = (pair: SupportedToken) =>
   new web3Ws.eth.Contract(uniswapPairAbi, pair.addr);
 
 export const uniswapRouterContract = () =>
   new ethers.Contract(UNISWAP_V2_ROUTER, uniswapRouterAbi, web3Signer);
 
-export const curveContract = () =>
-  new ethers.Contract(CURVE.addr, beanCrv3MetaPoolAbi, web3Signer);
+// -- Curve 
 
+// Bean:Crv3 is a MetaPool
 export const beanCrv3ContractReadOnly = () =>
-  new web3.eth.Contract(beanCrv3MetaPoolAbi, CURVE.addr);
+  new web3.eth.Contract(curveMetaPoolAbi, CURVE.addr);
 
-export const curveContractReadOnly = () =>
-  new web3.eth.Contract(beanCrv3MetaPoolAbi, CURVE.factory);
-
-export const beanlusdContractReadOnly = () =>
-  new web3.eth.Contract(beanlusdPoolAbi, BEANLUSD.addr);
-
+// Lusd:Crv3 is a MetaPool
 export const lusdCrv3ContractReadOnly = () =>
-  new web3.eth.Contract(lusdCrv3MetaPoolAbi, LUSD3CRV.addr);
+  new web3.eth.Contract(curveMetaPoolAbi, LUSD3CRV.addr);
 
-  export const beanstalkGettersContractReadOnly = () =>
-  new web3.eth.Contract(beanstalkGettersAbi, BEANSTALK_GETTERS.addr);
+// Curve contract is a PlainPool
+export const curveContractReadOnly = () =>
+  new web3.eth.Contract(curvePlainPoolAbi, CURVE.factory);
+
+// Bean:LUSD is a Plain Pool
+export const beanlusdContractReadOnly = () =>
+  new web3.eth.Contract(curvePlainPoolAbi, BEANLUSD.addr);
+  
 /**
  * Listen for events emitted by the current provider.
  */
