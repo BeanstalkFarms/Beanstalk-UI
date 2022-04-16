@@ -152,15 +152,17 @@ export const totalTopStrings = {
   topLeft: 'USD',
   topRight: 'USD',
 };
+
 export const claimableStrings = {
   beans:
     'Claimable Beans is the sum of harvestable Pods, claimable Bean withdrawals, and Beans under claimable LP withdrawals. Use the Claim button to claim all Claimable Beans and Claimable ETH.',
   eth: 'Claimable ETH is the sum of ETH under claimable LP Withdrawals and from Seasons of Plenty. Use the Claim button to claim all Claimable Beans and Claimable ETH.',
-  grownStalk:
-    'Grown Stalk do not earn Farmable Beans. Once farmed, Grown Stalk earn Farmable Beans. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
-  farm: 'Use this button to Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
-  farmableStalk: 'Stalk that you receive from your farmable beans.',
-  seeds: 'Output from Grown Stalk.'
+  //
+  farmableBeans: 'Beans earned as interest for participation in the Silo.',
+  farmableStalk: 'Stalk earned in conjunction with Farmable Beans.',
+  farmableSeeds: 'Seeds earned in conjunction with Farmable Beans.',
+  grownStalk: 'Grown Stalk earned from your Seeds. Once farmed, Grown Stalk begin earning Farmable Beans. Use the Farm button to farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
+  farm: 'Farm all Farmable Beans, Stalk, Seeds, and Grown Stalk.',
 };
 export const siloStrings = {
   tokenDepositDescription: (tokenName: string) => `Use this tab to deposit ${tokenName} into the Silo.`,

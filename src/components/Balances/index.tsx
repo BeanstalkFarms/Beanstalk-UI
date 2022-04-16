@@ -295,7 +295,7 @@ export default function Balances() {
             <>
               <ClaimBalance
                 balance={farmableBeanBalance}
-                description={claimableStrings.beans}
+                description={claimableStrings.farmableBeans}
                 height="13px"
                 title="Farmable Beans"
                 token={ClaimableAsset.Bean}
@@ -311,7 +311,7 @@ export default function Balances() {
               />
               <ClaimBalance
                 balance={farmableSeedBalance}
-                description={claimableStrings.seeds}
+                description={claimableStrings.farmableSeeds}
                 // height="20px"
                 title="Farmable Seeds"
                 token={SiloAsset.Seed}
