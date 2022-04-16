@@ -1,14 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 import Pools from 'constants/v2/pools';
+import { BeanPoolState } from '.';
 import { updateBeanPool, updateBeanPools } from './actions';
-
-export type BeanPoolState = {
-  price: BigNumber;
-  reserves: BigNumber[];
-  deltaB: BigNumber;
-  totalCrosses: BigNumber;
-}
 
 const initialState : { 
   [address: string]: BeanPoolState 

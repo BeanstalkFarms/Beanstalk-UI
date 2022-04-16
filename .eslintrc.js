@@ -126,6 +126,7 @@ module.exports = {
     'no-console': 'off',
     'object-shorthand': 0,
     'react/jsx-tag-spacing': 'warn',
+    'camelcase': 0, // disable because generated files aren't camel-cased
   },
   settings: {
     'import/resolver': {

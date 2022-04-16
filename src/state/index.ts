@@ -15,6 +15,7 @@ import tokenBalances from './tokenBalance/reducer';
 
 // v2
 import _bean from './v2/bean/reducer';
+import _farmer from './v2/farmer/reducer';
 
 const store = configureStore({
   reducer: {
@@ -32,6 +33,7 @@ const store = configureStore({
     tokenBalances,
     // v2
     _bean,
+    _farmer,
   },
   middleware: [
     ...getDefaultMiddleware({

@@ -30,7 +30,7 @@ import {
 } from 'state/general/actions';
 import { lastCrossQuery, apyQuery, farmableMonthTotalQuery } from 'graph/index';
 import { AppState } from 'state';
-import { BASE_SLIPPAGE, BEAN, CURVE, SupportedToken, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
+import { BASE_SLIPPAGE, BEAN, BEAN_TO_SEEDS, BEAN_TO_STALK, CURVE, SupportedToken, UNI_V2_ETH_BEAN_LP, WETH } from 'constants/index';
 import {
   addRewardedCrates,
   createLedgerBatch,
@@ -58,6 +58,9 @@ import {
 import { updateBeanPools } from 'state/v2/bean/pools/actions';
 import { BeanEthUniswapPool } from 'constants/v2/pools';
 import { UserBalanceState } from './reducer';
+import { updateSiloAssets, updateUserTokenBalances } from 'state/v2/farmer/silo/actions';
+import { Bean } from 'constants/tokensv2';
+import { BeanEthUniswapLP } from 'constants/v2/tokens';
 
 type EventParsingParameters = [
   season: AppState['season']['season'],
@@ -175,6 +178,32 @@ export default function Updater() {
         beanWrappedBalance, // 18 indexed
       ] = accountBalances;
 
+      // V2
+      const farmableStalkBalance = farmableBeanBalance.times(BEAN_TO_STALK);
+      const activeStalkBalance   = stalkBalance.plus(farmableStalkBalance);
+      const farmableSeedBalance  = farmableBeanBalance.times(BEAN_TO_SEEDS);
+      dispatch(updateSiloAssets({
+        stalk: {
+          total:  activeStalkBalance.plus(grownStalkBalance),
+          active: activeStalkBalance,
+          earned: farmableStalkBalance,
+          grown:  grownStalkBalance,
+        },
+        seeds: {
+          total:  seedBalance.plus(farmableSeedBalance),
+          active: seedBalance,
+          earned: farmableSeedBalance,
+          grown:  new BigNumber(0),
+        },
+        // TODO: roots
+        roots: {
+          total:  new BigNumber(0),
+          active: new BigNumber(0),
+          earned: new BigNumber(0),
+          grown:  new BigNumber(0),
+        }
+      }));
+
       // @DEPRECATED
       // const locked = lockedUntil.isGreaterThanOrEqualTo(currentSeason);
       // const lockedSeasons = lockedUntil.minus(currentSeason);
@@ -270,6 +299,8 @@ export default function Updater() {
       const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
       const totalPods = podIndex.minus(harvestableIndex);
 
+
+      // V1
       // Dispatchers
       dispatch(setTotalBalance({
         totalBeans,
@@ -369,7 +400,8 @@ export default function Updater() {
             deltaB: toTokenUnitsBN(curveTuple.deltaB, 6), // FIXME: 6 hardcoded
             totalCrosses: new BigNumber(0),               // FIXME: not tracked yet
           }
-        }
+        },
+        // FIXME: other pools
       ]));
 
       // V1
@@ -914,8 +946,9 @@ export default function Updater() {
       );
 
       // Build the Claimable struct
+      const userBeanReceivableCratesSeasons = Object.keys(userBeanReceivableCrates);
       const claimable = [
-        Object.keys(userBeanReceivableCrates).map((b) => b.toString()),
+        userBeanReceivableCratesSeasons.map((b) => b.toString()),
         Object.keys(userLPReceivableCrates).map((b) => b.toString()),
         Object.keys(harvestablePlots).map((b) =>
           toBaseUnitBN(b, BEAN.decimals).toString()
@@ -926,7 +959,44 @@ export default function Updater() {
         minReceivables[1],
       ];
 
-      //
+      // vs
+      const beanDepositSeasons = Object.keys(userBeanDeposits);
+      const lpDepositSeasons   = Object.keys(userLPDeposits);
+      dispatch(updateUserTokenBalances({
+        // For now we're mapping this explicitly.
+        // Later it will be a simple call to the Subgraph
+        // with a mapping.
+        [Bean.address]: {
+          deposited: beanDepositsBalance,
+          deposits: beanDepositSeasons.map((season) => ({
+            season: new BigNumber(season),
+            amount: userBeanDeposits[season],
+            bdv: new BigNumber(-1),
+            stalk: new BigNumber(-1),
+            seeds: new BigNumber(-1),
+          })),
+          withdrawn: beanTransitBalance,
+          withdrawals: userBeanReceivableCratesSeasons.map((season) => ({
+            season: new BigNumber(season),
+            amount: userBeanReceivableCrates[season],
+            bdv: new BigNumber(-1),
+            stalk: new BigNumber(-1),
+            seeds: new BigNumber(-1),
+          }))
+        },
+        [BeanEthUniswapLP.address]: {
+          deposited: lpDepositsBalance,
+          deposits: lpDepositSeasons.map((season) => ({
+            season: new BigNumber(season),
+            amount: userLPDeposits[season],
+            bdv: new BigNumber(-1),
+            stalk: new BigNumber(-1),
+            seeds: new BigNumber(-1),
+          })),
+        }
+      }))
+
+      // vs
       dispatch(setUserBalance({
         // -- Silo
         // Deposits
