@@ -188,6 +188,7 @@ export async function initializeEventListener(
       (event?.returnValues.to === undefined ||
         event?.returnValues.to.toLowerCase() !== account.toLowerCase())
     ) {
+      console.debug('[ws:Contract/BeanPair] Received event + past refresh threshold.');
       console.log('UPDATING PRICES!');
       updatePrices();
       lastPriceRefresh = new Date().getTime();
@@ -199,13 +200,14 @@ export async function initializeEventListener(
       return;
     }
     if (new Date().getTime() - lastPriceRefresh > 5000) {
+      console.debug('[ws:Contract/UsdcPair] Received event + past refresh threshold.');
       console.log('UPDATING PRICES!');
       updatePrices();
       lastPriceRefresh = new Date().getTime();
     }
   });
   beanstalkWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
-    console.log('[contract/beanstalk] Received event: ', event, error);
+    console.debug('[ws:Contract/Beanstalk] Received event: ', event, error);
     if (error) {
       console.error(error);
       return;

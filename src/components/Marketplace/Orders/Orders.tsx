@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import filter from 'lodash/filter';
 import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 
-import { displayBN, FarmAsset, getWalletAddress } from 'util/index';
+import { account, displayBN, FarmAsset } from 'util/index';
 import { PodOrder } from 'state/marketplace/reducer';
 import { AppState } from 'state';
 import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
@@ -53,22 +53,15 @@ export default function Orders(props: OrdersProps) {
   );
 
   //
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
-
-  //
-  const [settings, setSettings] = useState({
-    toWallet: false,
-  });
-
-  // Filter state
+  // const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [settings, setSettings] = useState({ toWallet: false, });
   const filteredOrders = useRef<PodOrder[]>(allOrders);
   const [priceFilters, setPriceFilters] = useState<number[]>([0, 1]);
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
-  /** */
   const [validOrders, setValidOrders] = useState<boolean>(false);
 
   const placesInLine = [0, totalPods.toNumber()];
-  const placesInLineBN = [0, new BigNumber(totalPods.toNumber())];
+  const placesInLineBN = [new BigNumber(0), totalPods];
 
   const [placeInLineFilters, setPlaceInLineFilters] =
     useState<BigNumber[]>(placesInLineBN);
@@ -83,19 +76,37 @@ export default function Orders(props: OrdersProps) {
       filteredOrders.current = filter(
         allOrders,
         (order) => 
-          order.account.toLowerCase() === walletAddress
+          order.account.toLowerCase() === account
       );
     } else {
+      const endFilterIsMaxed = placeInLineFilters[1].gte(totalPods);
       filteredOrders.current = filter(
         allOrders,
         (order) => 
-          order.account.toLowerCase() !== walletAddress &&
-          order.pricePerPod.toNumber() > priceFilters[0] &&
-          order.pricePerPod.toNumber() < priceFilters[1] &&
-          order.maxPlaceInLine.gte(new BigNumber(placeInLineFilters[0])) &&
-          order.maxPlaceInLine.lte(new BigNumber(placeInLineFilters[1]))
+          order.account.toLowerCase() !== account &&
+          order.pricePerPod.toNumber() >= priceFilters[0] &&
+          order.pricePerPod.toNumber() <= priceFilters[1] &&
+          order.maxPlaceInLine.gte(placeInLineFilters[0]) && 
+          // Bugfix: some market listings have their maxPlaceInLine
+          // bumped up slightly. Probably a rounding error when creating
+          // the order. If the end filter is maxed (equal to the total
+          // number of pods) we ignore the filter entirely.
+          // [Marketplace/Orders]
+          //    end filter                  = 682,224,755.387
+          //    first order maxPlaceInLine  = 682,224,755.391
+          //    totalPods                   = 682,224,755.387
+          (endFilterIsMaxed 
+            ? true
+            : order.maxPlaceInLine.lte(placeInLineFilters[1])
+          )
       );
     }
+
+    console.debug(`[Marketplace/Orders] Filtering ${allOrders.length} Orders (mode = ${props.mode}, account = ${account})`);
+    console.debug('[Marketplace/Orders] priceFilters = ', priceFilters);
+    console.debug('[Marketplace/Orders] placeInLineFilters = ', placeInLineFilters);
+    console.debug(`[Marketplace/Orders] filteredOrders (${filteredOrders.current.length}) = `, filteredOrders.current);
+    console.debug(`[Marketplace/Orders] end filter = ${placeInLineFilters[1].toNumber().toLocaleString()}, first order maxPlaceInLine = ${filteredOrders.current[0] ? filteredOrders.current[0].maxPlaceInLine.toNumber().toLocaleString() : null}, totalPods = ${totalPods.toNumber().toLocaleString()}`);
 
     // Filter Orders the user cannot sell a plot into
     filteredOrders.current = filter(filteredOrders.current, (order) => {
@@ -128,7 +139,7 @@ export default function Orders(props: OrdersProps) {
     priceFilters,
     placeInLineFilters,
     props.mode,
-    walletAddress,
+    account,
     validOrders,
   ]);
 
@@ -145,16 +156,16 @@ export default function Orders(props: OrdersProps) {
     ]);
   };
 
-  // Setup
-  useEffect(() => {
-    const init = async () => {
-      const addr = await getWalletAddress();
-      setWalletAddress(addr ? addr.toLowerCase() : null);
-    };
-    init();
-  }, []);
+  // // Setup
+  // useEffect(() => {
+  //   const init = async () => {
+  //     const addr = await getWalletAddress();
+  //     setWalletAddress(addr ? addr.toLowerCase() : null);
+  //   };
+  //   init();
+  // }, []);
 
-  if (filteredOrders.current == null || walletAddress == null) {
+  if (filteredOrders.current == null || account == null) {
     return <div>Loading...</div>;
   }
 
@@ -241,13 +252,8 @@ export default function Orders(props: OrdersProps) {
           max={totalPods.toNumber()}
         />
       </Box>
-      {/* <Button onClick={applyFilters}>Apply Filter</Button> */}
     </Filters>
   );
-
-  if (allOrders == null || walletAddress == null) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <>

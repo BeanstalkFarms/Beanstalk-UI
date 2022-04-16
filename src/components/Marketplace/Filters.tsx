@@ -46,7 +46,7 @@ export const StyledFilterButton = withStyles({
 })(IconButton);
 
 type FiltersProps = {
-  title: string;
+  title: string | Element;
   children: ReactNode;
 }
 

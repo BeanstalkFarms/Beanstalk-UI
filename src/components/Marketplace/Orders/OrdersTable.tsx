@@ -12,7 +12,8 @@ import {
   Radio,
   Button,
   Popover,
-  Box
+  Box,
+  TableBody
 } from '@mui/material';
 import {
   CloseOutlined as CancelIcon,
@@ -291,16 +292,18 @@ export default function OrdersTable(props: OrdersTableProps) {
               )}
             </TableRow>
           </TableHead>
-          {slicedItems.map((order: PodOrder) => (
-            <OrderRow
-              key={order.id}
-              order={order}
-              selectedOrderKey={selectedOrderKey}
-              setSelectedOrderKey={setSelectedOrderKey}
-              handleOrderChange={handleOrderChange}
-              isSelling={props.isSelling}
-            />
-          ))}
+          <TableBody>
+            {slicedItems.map((order: PodOrder) => (
+              <OrderRow
+                key={order.id}
+                order={order}
+                selectedOrderKey={selectedOrderKey}
+                setSelectedOrderKey={setSelectedOrderKey}
+                handleOrderChange={handleOrderChange}
+                isSelling={props.isSelling}
+              />
+            ))}
+          </TableBody>
         </Table>
       </TableContainer>
       <div>

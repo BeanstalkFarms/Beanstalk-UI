@@ -169,12 +169,14 @@ export type PodListingCreated = BaseFillEvent & { type: 'PodListingCreated' };
 export type PodListingCancelled = BaseFillEvent & { type: 'PodListingCancelled' };
 
 export type MarketHistoryItem = (
-    PodListingCreated
-  | PodListingFilled
-  | PodListingCancelled
-  | PodOrderCreated
+  PodListingFilled
   | PodOrderFilled
-  | PodOrderCancelled
+  // PodListingCreated
+  // | PodListingFilled
+  // | PodListingCancelled
+  // | PodOrderCreated
+  // | PodOrderFilled
+  // | PodOrderCancelled
 );
 
 export type MarketStats = {
