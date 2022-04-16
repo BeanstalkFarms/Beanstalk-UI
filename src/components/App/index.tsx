@@ -89,20 +89,6 @@ export default function App() {
           <Route exact path="/trade">
             <TradePage />
           </Route>
-          {/* Redirect old /farm routes */}
-          <Route exact path="/farm/silo">
-            <Redirect to="/silo" />
-          </Route>
-          <Route exact path="/farm/silo/:tokenSlug">
-            {/* fixme: attach the :tokenSlug parameter */}
-            <Redirect to="/silo" />
-          </Route>
-          <Route exact path="/farm/field">
-            <Redirect to="/field" />
-          </Route>
-          <Route exact path="/farm/trade">
-            <Redirect to="/trade" />
-          </Route>
           {/* More */}
           <Route exact path="/analytics">
             <AnalyticsPage />

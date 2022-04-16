@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { Provider as StateProvider } from 'react-redux';
 import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
 
@@ -19,7 +19,7 @@ declare module '@mui/styles/defaultTheme' {
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <ScrollToTop />
       <StateProvider store={store}>
         <StyledEngineProvider injectFirst>
@@ -28,7 +28,7 @@ ReactDOM.render(
           </ThemeProvider>
         </StyledEngineProvider>
       </StateProvider>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
