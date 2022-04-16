@@ -6,3 +6,5 @@ yarn-error.log
 .idea/
 stats.json
 .env.local
+
+src/constants/generated
