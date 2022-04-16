@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableCell } from '@mui/material';
 import { displayBN, displayFullBN } from 'util/index';
-import { FormatTooltip } from '.';
+import { StyledTooltip } from '.';
 
 export default function BalanceTableCell({
   align,
@@ -19,7 +19,7 @@ export default function BalanceTableCell({
       className={className}
       style={{ color: color }}
     >
-      <FormatTooltip
+      <StyledTooltip
         placement="right"
         title={title || `${displayFullBN(balance)} ${label}`}
       >
@@ -37,7 +37,7 @@ export default function BalanceTableCell({
             {icon ? <span>{icon}</span> : null}
           </span>
         )}
-      </FormatTooltip>
+      </StyledTooltip>
     </TableCell>
   );
 }

@@ -49,7 +49,7 @@ export { default as Line } from './Line';
 export { default as BalanceTableCell } from './BalanceTableCell';
 export { default as TransactionToast } from './TransactionToast';
 
-export const FormatTooltip = withStyles((theme: Theme) => ({
+export const StyledTooltip = withStyles((theme: Theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.white,
     color: 'black',

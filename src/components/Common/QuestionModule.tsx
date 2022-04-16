@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-import { FormatTooltip } from './index';
+import { StyledTooltip } from './index';
 
 type QuestionModuleProps = {
   margin?: string;
@@ -38,10 +38,10 @@ const QuestionModule : React.FC<QuestionModuleProps> = (props) => {
   return (
     <Box sx={questionStyle}>
       <ClickAwayListener onClickAway={handleTooltipClose}>
-        <FormatTooltip
+        <StyledTooltip
           margin={props.marginTooltip}
           placement={
-            props.placement !== undefined ? props.placement : 'top-start'
+            props.placement !== undefined ? props.placement : 'right'
           }
           title={props.description}
           width={props.widthTooltip}
@@ -58,7 +58,7 @@ const QuestionModule : React.FC<QuestionModuleProps> = (props) => {
             width="100%"
             onClick={handleTooltipOpen}
           />
-        </FormatTooltip>
+        </StyledTooltip>
       </ClickAwayListener>
     </Box>
   );

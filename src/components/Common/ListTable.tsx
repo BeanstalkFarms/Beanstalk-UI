@@ -23,7 +23,7 @@ import {
 import { theme } from 'constants/index';
 import {
   claimStrings,
-  FormatTooltip,
+  StyledTooltip,
   TablePageSelect,
   QuestionModule,
   BalanceTableCell,
@@ -212,7 +212,7 @@ const BasicTable = (props) => {
                       : season - props.index}
                   </TableCell>
                   <TableCell align="center" className={classes.lucidaStyle}>
-                    <FormatTooltip
+                    <StyledTooltip
                       placement="right"
                       title={
                         props.isLP
@@ -225,42 +225,42 @@ const BasicTable = (props) => {
                       }
                     >
                       <span>{displayBN(props.crates[season])}</span>
-                    </FormatTooltip>
+                    </StyledTooltip>
                   </TableCell>
                   {stalkCrates !== undefined ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
-                      <FormatTooltip
+                      <StyledTooltip
                         placement="right"
                         title={`${displayFullBN(
                           stalkCrates[season]
                         )} ${TokenLabel(SiloAsset.Stalk)}`}
                       >
                         <span>{displayBN(stalkCrates[season])}</span>
-                      </FormatTooltip>
+                      </StyledTooltip>
                     </TableCell>
                   ) : null}
                   {props.seedCrates !== undefined ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
-                      <FormatTooltip
+                      <StyledTooltip
                         placement="right"
                         title={`${displayFullBN(
                           props.seedCrates[season]
                         )} ${TokenLabel(SiloAsset.Seed)}`}
                       >
                         <span>{displayBN(props.seedCrates[season])}</span>
-                      </FormatTooltip>
+                      </StyledTooltip>
                     </TableCell>
                   ) : null}
                   {props.bdvCrates !== undefined ? (
                     <TableCell align="center" className={classes.lucidaStyle}>
-                      <FormatTooltip
+                      <StyledTooltip
                         placement="right"
                         title={`${displayFullBN(
                           props.bdvCrates[season].multipliedBy(props.bdvPerSeed)
                         )} ${TokenLabel(SiloAsset.Seed)}`}
                       >
                         <span>{displayBN(props.bdvCrates[season].multipliedBy(props.bdvPerSeed))}</span>
-                      </FormatTooltip>
+                      </StyledTooltip>
                     </TableCell>
                   ) : null}
                 </TableRow>
