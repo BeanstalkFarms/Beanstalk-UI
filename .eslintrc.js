@@ -125,6 +125,7 @@ module.exports = {
     '@typescript-eslint/no-extra-non-null-assertion': ['error'],
     'no-console': 'off',
     'object-shorthand': 0,
+    'comma-spacing': 0,
   },
   settings: {
     'import/resolver': {

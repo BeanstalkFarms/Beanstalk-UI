@@ -158,7 +158,10 @@ export default function App() {
               }}
               toastOptions={{
                 style: {
-                  maxWidth: 350
+                  minWidth: 300,
+                  maxWidth: 450,
+                  // paddingRight: 0,
+                  paddingLeft: '16px',
                 }
               }}
             />

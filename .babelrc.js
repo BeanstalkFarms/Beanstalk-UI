@@ -18,6 +18,17 @@ const plugins = [
     },
     'icons',
   ],
+  [
+    'babel-plugin-transform-remove-console',
+    {
+      // During production build, hide `console.debug` calls.
+      "exclude": process.env.NODE_ENV === "production" ? (
+        ["error", "warn", "log"]
+      ) : (
+        ["error", "warn", "log", "debug"]
+      )
+    }
+  ]
 ];
 
 module.exports = { plugins };

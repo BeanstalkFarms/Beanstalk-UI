@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Stack } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { FormatTooltip, QuestionModule } from '.';
+import { StyledTooltip, QuestionModule } from '.';
 
 const useStyles = makeStyles({
   root: {
@@ -44,13 +44,13 @@ const DataBalanceModule : React.FC<{
     </span>
   );
   const balanceSection = props.balanceDescription !== undefined ? (
-    <FormatTooltip
+    <StyledTooltip
       margin={props.margin}
       placement={props.placement !== undefined ? props.placement : 'right'}
       title={props.balanceDescription}
     >
       {spanContent}
-    </FormatTooltip>
+    </StyledTooltip>
   ) : (
     spanContent
   );

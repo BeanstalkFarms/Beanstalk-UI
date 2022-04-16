@@ -92,7 +92,6 @@ export default function ListInputField(props: PlotListInputFieldProps) {
           input={
             <OutlinedInput
               name="Selected Plot"
-              labelWidth={props.labelWidth}
               id="outlined-age-native-simple"
               className={classes.outlinedInput}
             />

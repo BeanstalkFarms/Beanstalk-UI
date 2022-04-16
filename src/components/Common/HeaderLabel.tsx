@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { theme } from 'constants/index';
-import { FormatTooltip, QuestionModule } from './index';
+import { StyledTooltip, QuestionModule } from './index';
 
 const useStyles = makeStyles(() => ({
   // "container" => the label maintains its own background and margins.
@@ -57,7 +57,6 @@ export default function HeaderLabel(props) {
     props.description !== undefined ? (
       <QuestionModule
         description={props.description}
-        margin={props.margin}
         marginTooltip={props.marginTooltip}
         placement={props.placement}
       />
@@ -66,13 +65,13 @@ export default function HeaderLabel(props) {
   //
   const balanceTooltip =
     props.balanceDescription !== undefined ? (
-      <FormatTooltip
+      <StyledTooltip
         margin="10px"
         placement="top"
         title={props.balanceDescription}
       >
         <span className={classes.tooltipSpan}>{props.value}</span>
-      </FormatTooltip>
+      </StyledTooltip>
     ) : (
       props.value
     );
@@ -97,7 +96,6 @@ export default function HeaderLabel(props) {
 }
 
 HeaderLabel.defaultProps = {
-  margin: '-8px 0 0 2px',
   marginTooltip: '0 0 0 10px',
   container: false,
 };

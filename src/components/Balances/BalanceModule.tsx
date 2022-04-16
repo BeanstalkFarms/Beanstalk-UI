@@ -9,7 +9,7 @@ import {
   CryptoAsset,
   DataBalanceModule,
   FarmAsset,
-  FormatTooltip,
+  StyledTooltip,
   Grid,
   SiloAsset,
   TokenBalanceModule,
@@ -239,7 +239,7 @@ export default function BalanceModule(props) {
       <Hidden smDown>
         <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
-            <FormatTooltip
+            <StyledTooltip
               margin={props.chartMargin}
               placement="top"
               title={
@@ -262,7 +262,7 @@ export default function BalanceModule(props) {
                   transit={props.beanTransitBalance}
                 />
               </Box>
-            </FormatTooltip>
+            </StyledTooltip>
           </Grid>
         </Grid>
       </Hidden>
@@ -288,7 +288,7 @@ export default function BalanceModule(props) {
       <Hidden smDown>
         <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
-            <FormatTooltip
+            <StyledTooltip
               placement="top"
               margin={props.chartMargin}
               title={
@@ -316,7 +316,7 @@ export default function BalanceModule(props) {
                   transit={props.lpTransitBalance}
                 />
               </Box>
-            </FormatTooltip>
+            </StyledTooltip>
           </Grid>
         </Grid>
       </Hidden>
@@ -343,7 +343,7 @@ export default function BalanceModule(props) {
       <Hidden smDown>
         <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
-            <FormatTooltip
+            <StyledTooltip
               placement="top"
               margin={props.chartMargin}
               title={
@@ -371,7 +371,7 @@ export default function BalanceModule(props) {
                   transit={props.curveTransitBalance}
                 />
               </Box>
-            </FormatTooltip>
+            </StyledTooltip>
           </Grid>
         </Grid>
       </Hidden>
@@ -398,7 +398,7 @@ export default function BalanceModule(props) {
       <Hidden smDown>
         <Grid container item sm={6} xs={12} className={classes.containerGridStyle}>
           <Grid item xs={12}>
-            <FormatTooltip
+            <StyledTooltip
               placement="top"
               margin={props.chartMargin}
               title={
@@ -426,7 +426,7 @@ export default function BalanceModule(props) {
                   transit={props.beanlusdTransitBalance}
                 />
               </Box>
-            </FormatTooltip>
+            </StyledTooltip>
           </Grid>
         </Grid>
       </Hidden>

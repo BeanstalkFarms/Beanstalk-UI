@@ -8,7 +8,7 @@ import {
   TokenLabel,
 } from 'util/index';
 import {
-  FormatTooltip,
+  StyledTooltip,
   Grid,
   TokenTypeImageModule,
   QuestionModule,
@@ -75,7 +75,7 @@ const ClaimBalance : React.FC<ClaimBalanceProps> = ({
           </Box>
         </Box>
         <Box>
-          <FormatTooltip
+          <StyledTooltip
             margin="0 0 6px 10px"
             placement="top-start"
             title={`${displayFullBN(balance)} ${
@@ -95,7 +95,7 @@ const ClaimBalance : React.FC<ClaimBalanceProps> = ({
                 />
               </Box>
             </Box>
-          </FormatTooltip>
+          </StyledTooltip>
         </Box>
       </Grid>
     </Grid>
