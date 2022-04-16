@@ -41,6 +41,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@typechain/ethers-v5": "^10.0.0",
     "@types/d3-array": "^3.0.2",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
@@ -82,7 +83,8 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,js}\"",
-    "lint": "eslint \"src/**/**/*.ts{,x}\""
+    "lint": "eslint \"src/**/**/*.ts{,x}\"",
+    "generate": "typechain --target=ethers-v5 --out-dir=./src/constants/ethers './src/constants/abi/*.json'"
   },
   "lint-staged": {
     "*.{ts,tsx,json}": "prettier --write"
