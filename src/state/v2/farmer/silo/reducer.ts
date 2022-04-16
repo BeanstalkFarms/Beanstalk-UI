@@ -22,13 +22,13 @@ const initialState : Silo = {
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(updateUserTokenBalances, (state, { payload }) => {
-      for(let key in payload) {
-        state.tokens[key] = Object.assign(
-          {},
-          state.tokens[key],
-          payload[key]
-        );
-      }
+      const addresses = Object.keys(payload);
+      addresses.forEach((address) => {
+        state.tokens[address] = {
+          ...state.tokens[address],
+          ...payload[address]
+        };
+      })
     })
     .addCase(updateSiloAssets, (state, { payload }) => {
       state.stalk = payload.stalk;

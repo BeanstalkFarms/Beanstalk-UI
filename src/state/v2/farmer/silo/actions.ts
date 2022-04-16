@@ -3,7 +3,7 @@ import { UserSiloAssets, UserSiloAsset, UserTokenBalance } from '.';
 
 export type UpdateUserTokenBalancesPayload = { 
   [address: string]: Partial<UserTokenBalance>;
-};;
+};
 
 export const updateUserTokenBalances = createAction<UpdateUserTokenBalancesPayload>(
   'farmer/silo/updateUserTokenBalances'

@@ -44,7 +44,7 @@ module.exports = {
     'jsx-quotes': ['error', 'prefer-double'],
     'react/jsx-curly-brace-presence': 'warn',
     'eol-last': 'warn',
-    'key-spacing': 'warn',
+    'key-spacing': 0, // I like to line up my values sometimes
     'no-multi-spaces': 0,
     'react/jsx-boolean-value': 'warn',
     'react/jsx-props-no-multi-spaces': 'warn',

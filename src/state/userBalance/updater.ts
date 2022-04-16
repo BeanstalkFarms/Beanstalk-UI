@@ -887,14 +887,14 @@ export default function Updater() {
       // cb = wrapped beans
       // br = Bean reserve
       // er = ETH reserve
-      const [s, hi, fb, gs, ce, cb, br, er] =
+      const [sz, hi, fb, gs, ce, cb, br, er] =
         eventParsingParameters !== undefined
           ? eventParsingParameters
           : eventParsingParametersRef.current;
 
       // @publius
       const rawBeanDeposits = { ...userBeanDeposits };
-      userBeanDeposits = addRewardedCrates(userBeanDeposits, s, fb);
+      userBeanDeposits = addRewardedCrates(userBeanDeposits, sz, fb);
       const beanDepositsBalance = Object.values(userBeanDeposits).reduce(
         (a, c) => a.plus(c),
         zeroBN
@@ -920,25 +920,25 @@ export default function Updater() {
         beanReceivableBalance,
         userBeanWithdrawals,
         userBeanReceivableCrates,
-      ] = parseWithdrawals(beanWithdrawals, s);
+      ] = parseWithdrawals(beanWithdrawals, sz);
       const [
         lpTransitBalance,
         lpReceivableBalance,
         userLPWithdrawals,
         userLPReceivableCrates,
-      ] = parseWithdrawals(lpWithdrawals, s);
+      ] = parseWithdrawals(lpWithdrawals, sz);
       const [
         curveTransitBalance,
         curveReceivableBalance,
         userCurveWithdrawals,
         userCurveReceivableCrates,
-      ] = parseWithdrawals(curveWithdrawals, s);
+      ] = parseWithdrawals(curveWithdrawals, sz);
       const [
         beanlusdTransitBalance,
         beanlusdReceivableBalance,
         userBeanlusdWithdrawals,
         userBeanlusdReceivableCrates,
-      ] = parseWithdrawals(beanlusdWithdrawals, s);
+      ] = parseWithdrawals(beanlusdWithdrawals, sz);
 
       //
       const minReceivables = [br, er].map((reserve) =>
@@ -968,17 +968,17 @@ export default function Updater() {
         // with a mapping.
         [Bean.address]: {
           deposited: beanDepositsBalance,
-          deposits: beanDepositSeasons.map((season) => ({
-            season: new BigNumber(season),
-            amount: userBeanDeposits[season],
+          deposits: beanDepositSeasons.map((s) => ({
+            season: new BigNumber(s),
+            amount: userBeanDeposits[s],
             bdv: new BigNumber(-1),
             stalk: new BigNumber(-1),
             seeds: new BigNumber(-1),
           })),
           withdrawn: beanTransitBalance,
-          withdrawals: userBeanReceivableCratesSeasons.map((season) => ({
-            season: new BigNumber(season),
-            amount: userBeanReceivableCrates[season],
+          withdrawals: userBeanReceivableCratesSeasons.map((s) => ({
+            season: new BigNumber(s),
+            amount: userBeanReceivableCrates[s],
             bdv: new BigNumber(-1),
             stalk: new BigNumber(-1),
             seeds: new BigNumber(-1),
@@ -986,9 +986,9 @@ export default function Updater() {
         },
         [BeanEthUniswapLP.address]: {
           deposited: lpDepositsBalance,
-          deposits: lpDepositSeasons.map((season) => ({
-            season: new BigNumber(season),
-            amount: userLPDeposits[season],
+          deposits: lpDepositSeasons.map((s) => ({
+            season: new BigNumber(s),
+            amount: userLPDeposits[s],
             bdv: new BigNumber(-1),
             stalk: new BigNumber(-1),
             seeds: new BigNumber(-1),
