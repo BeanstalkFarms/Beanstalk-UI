@@ -22,6 +22,7 @@ export interface PriceState {
   beanlusdReserve: BigNumber;
   lusdReserve: BigNumber;
   lusdCrv3Price: BigNumber;
+  // these are actually `number` it seems
   ethPrices: {
     fast: BigNumber;
     propose: BigNumber;
