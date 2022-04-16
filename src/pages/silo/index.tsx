@@ -1,11 +1,11 @@
 import React from 'react';
 import Page from 'components/Page';
-import Silo from 'components/Silo';
+import SiloV2 from 'components/SiloV2';
 
 export default function SiloPage() {
   return (
     <Page title="Silo">
-      <Silo />
+      <SiloV2 />
     </Page>
   );
 }

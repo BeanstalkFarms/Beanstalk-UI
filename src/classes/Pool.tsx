@@ -23,7 +23,7 @@ export default class Pool {
   /**
    * The liquidity token associated with the pool
    */
-  public readonly tokens?: [Token];
+  public readonly tokens?: Token[] = undefined;
 
   /**
    * The decentralized exchange associated with the pool
@@ -56,19 +56,19 @@ export default class Pool {
     chainId: number,
     dex: Dex,
     token: Token,
-    tokens: [Token],
+    tokens: Token[],
     name?: string,
     symbol?: string,
     logo?: string
   ) {
-    this.chainId = chainId;
-    this.name = name;
     this.address = address;
-    this.logo = logo;
-    this.symbol = symbol;
+    this.chainId = chainId;
     this.dex = dex;
     this.token = token;
     this.tokens = tokens;
+    this.name = name;
+    this.symbol = symbol;
+    this.logo = logo;
   }
 
   /**

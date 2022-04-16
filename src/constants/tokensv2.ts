@@ -3,6 +3,7 @@ import { Token } from 'classes';
 // Beanstalk
 // address: string, chainId: number, decimals: number, symbol?: string, name?: string, logo?: string
 import beanLogoUrl from 'img/bean-logo.svg';
+import beanEthLogoUrl from 'img/bean-eth-logo.svg';
 import ethLogoUrl from 'img/eth-logo.svg';
 import usdcLogoUrl from 'img/usdc-logo.svg';
 import daiLogoUrl from 'img/dai-logo.svg';
@@ -18,6 +19,26 @@ export const Bean = new Token(
   'BEAN',
   beanLogoUrl
 );
+
+export const BeanEthUniswapLP = new Token(
+  '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
+  SupportedChainId.MAINNET,
+  18,
+  'BEAN:ETH Uniswap V2 LP',
+  'BEAH:ETH',
+  beanEthLogoUrl,
+)
+
+
+
+
+
+
+
+
+
+
+// ========================
 
 export const Eth = new Token(
   '',
@@ -37,7 +58,8 @@ export const Weth = new Token(
   ethLogoUrl
 );
 
-// Supported Stables
+
+// -- Supported Stables
 
 export const Usdc = new Token(
   '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',

@@ -54,4 +54,8 @@ export default class Token {
   public equals(other: Token): boolean {
     return this.chainId === other.chainId && this.address === other.address;
   }
+
+  public toString(): string {
+    return this.name;
+  }
 }
