@@ -55,6 +55,8 @@ import {
   benchmarkStart,
   benchmarkEnd,
 } from 'util/index';
+import { updateBeanPools } from 'state/v2/bean/pools/actions';
+import { BeanEthUniswapPool } from 'constants/v2/pools';
 import { UserBalanceState } from './reducer';
 
 type EventParsingParameters = [
@@ -357,27 +359,46 @@ export default function Updater() {
       const uniTuple = priceTuple.ps[1];
       const beanlusdTuple = priceTuple.ps[priceTuple.ps.length > 2 ? 2 : 1];
 
-      //
+      // V2
+      dispatch(updateBeanPools([
+        {
+          address: BeanEthUniswapPool.address,
+          pool: {
+            price: beanEthPrice,
+            reserves: [beanReserve, ethReserve],
+            deltaB: toTokenUnitsBN(curveTuple.deltaB, 6), // FIXME: 6 hardcoded
+            totalCrosses: new BigNumber(0),               // FIXME: not tracked yet
+          }
+        }
+      ]));
+
+      // V1
       dispatch(setPrices({
+        //
         beanPrice,
         usdcPrice,
-        ethReserve,
-        beanReserve,
-        beansToPeg,
-        lpToPeg,
         beanTWAPPrice: twapPrices[0],
         usdcTWAPPrice: twapPrices[1],
+        //
+        beanReserve,
+        ethReserve,
+        //
+        beansToPeg,
+        lpToPeg,
+        //
         curveVirtualPrice,
         beanCrv3Price,
         beanCrv3Reserve: beanCrv3Reserve[0],
         crv3Reserve: beanCrv3Reserve[1],
         curveToBDV,
+        //
         beanlusdToBDV,
         beanlusdVirtualPrice,
         beanlusdPrice,
         beanlusdReserve: beanlusdReserve[0],
         lusdReserve: beanlusdReserve[1],
         lusdCrv3Price,
+        //
         ethPrices,
         priceTuple: {
           deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),

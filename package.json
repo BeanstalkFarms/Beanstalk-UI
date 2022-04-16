@@ -67,6 +67,7 @@
     "prettier": "^2.3.0",
     "react-app-rewired": "^2.2.1",
     "react-error-overlay": "6.0.9",
+    "typechain": "^8.0.0",
     "webpack-cli": "^4.9.2"
   },
   "resolutions": {

@@ -1,4 +1,5 @@
 // Whitelisted tokens that can be deposited into the Silo
+import { Token } from 'classes';
 import {
   BEAN_TO_SEEDS,
   BEAN_TO_STALK,
@@ -17,7 +18,6 @@ import beanEthIcon from '../img/lp-logo.svg';
 import bean3CrvIcon from '../img/bean-curve-logo.svg';
 import beanlusdIcon from '../img/bean-lusd-logo.svg';
 import { getUserSiloDepositsUSD } from '../util/SiloUtilities';
-import { Token } from 'classes';
 
 import { Bean, BeanEthUniswapLP } from './tokensv2';
 
@@ -39,7 +39,6 @@ export default [
   Bean,
   BeanEthUniswapLP,
 ];
-
 
 // class SiloToken extends 
 

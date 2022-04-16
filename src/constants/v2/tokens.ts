@@ -44,5 +44,4 @@ export const BeanEthUniswapLP = new Token(
   'BEAN:ETH Uniswap V2 LP',
   'BEAH:ETH',
   beanEthLogoUrl,
-)
-
+);
