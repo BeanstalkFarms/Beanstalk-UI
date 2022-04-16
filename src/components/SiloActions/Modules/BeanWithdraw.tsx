@@ -72,16 +72,15 @@ export default function BeanWithdraw() {
     );
   };
 
+  // 
   const sectionTitles = ['Withdraw', 'Claim'];
   const sectionTitlesDescription = [
-    siloStrings.beanDeposit,
     siloStrings.beanWithdraw.replace('{0}', totalBalance.withdrawSeasons),
     siloStrings.beanClaim,
   ];
-  const sectionTitlesInfoDescription = [
-    siloStrings.beanDepositsTable,
-    siloStrings.beanWithdrawalsTable,
-  ];
+
+  // Effect: if section is out of bounds, reset.
+  if (section > sectionTitles.length - 1) setSection(0);
 
   const handleTabChange = (event, newSection) => {
     if (newSection !== section) {
@@ -138,7 +137,7 @@ export default function BeanWithdraw() {
     }
   };
 
-  /* */
+  /* Main sections */
   const sections = [
     <BeanWithdrawAction
       key={1}
@@ -155,12 +154,14 @@ export default function BeanWithdraw() {
     />
   ];
 
-  if (section > sectionTitles.length - 1) setSection(0);
-
   /* "Info" section == the BaseModule shown below the Deposit &
      Deposit tabs. Used to show bean deposits. */
-  const sectionTitlesInfo = [];
   const sectionsInfo = [];
+  const sectionTitlesInfo = [];
+  const sectionTitlesInfoDescription = [ // this would be better as sectionTitleDescriptionsInfo or similar
+    siloStrings.beanDepositsTable,
+    siloStrings.beanWithdrawalsTable,
+  ];
   if (beanDeposits !== undefined && Object.keys(beanDeposits).length > 0) {
     sectionsInfo.push(
       <ListTable
@@ -176,11 +177,8 @@ export default function BeanWithdraw() {
     );
     sectionTitlesInfo.push('Bean Deposits');
   }
-  if (
-    (beanWithdrawals !== undefined &&
-      Object.keys(beanWithdrawals).length > 0) ||
-    beanReceivableBalance.isGreaterThan(0)
-  ) {
+  if ((beanWithdrawals !== undefined && Object.keys(beanWithdrawals).length > 0)
+    || beanReceivableBalance.isGreaterThan(0)) {
     sectionsInfo.push(
       <ListTable
         asset={TransitAsset.Bean}
@@ -196,7 +194,7 @@ export default function BeanWithdraw() {
     sectionTitlesInfo.push('Bean Withdrawals');
   }
 
-  /* */
+  /* Icon to toggle display of the info section. */
   const showListTablesIcon =
     sectionsInfo.length > 0 ? (
       <Box className={classes.listTablesIcon}>
@@ -215,21 +213,23 @@ export default function BeanWithdraw() {
       </Box>
     ) : null;
 
-  const showListTables =
-    sectionsInfo.length > 0 ? (
-      <Box style={{ ...listTablesStyle, marginTop: '61px' }}>
-        <BaseModule
-          handleTabChange={handleTabInfoChange}
-          section={sectionInfo}
-          sectionTitles={sectionTitlesInfo}
-          sectionTitlesDescription={sectionTitlesInfoDescription}
-          showButton={false}
-        >
-          {sectionsInfo[sectionInfo]}
-        </BaseModule>
-      </Box>
-    ) : null;
+  // Show this section only if there are Deposits / Withdrawals.
+  const showListTables = (sectionsInfo.length > 0) ? (
+    <Box style={{ ...listTablesStyle, marginTop: '61px' }}>
+      <BaseModule
+        handleTabChange={handleTabInfoChange}
+        section={sectionInfo}
+        sectionTitles={sectionTitlesInfo}
+        sectionTitlesDescription={sectionTitlesInfoDescription}
+        showButton={false}
+      >
+        {sectionsInfo[sectionInfo]}
+      </BaseModule>
+    </Box>
+  ) : null;
 
+
+  //
   const allowance =
     (settings.mode === SwapMode.Bean ||
       settings.mode === SwapMode.BeanEthereum) &&
@@ -237,7 +237,6 @@ export default function BeanWithdraw() {
       ? beanstalkBeanAllowance
       : new BigNumber(1);
 
-  /* */
   return (
     <>
       <BaseModule
