@@ -57,7 +57,6 @@ export default function HeaderLabel(props) {
     props.description !== undefined ? (
       <QuestionModule
         description={props.description}
-        margin={props.margin}
         marginTooltip={props.marginTooltip}
         placement={props.placement}
       />
@@ -97,7 +96,6 @@ export default function HeaderLabel(props) {
 }
 
 HeaderLabel.defaultProps = {
-  margin: '-8px 0 0 2px',
   marginTooltip: '0 0 0 10px',
   container: false,
 };

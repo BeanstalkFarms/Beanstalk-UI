@@ -228,7 +228,6 @@ export default function BeanWithdraw() {
     </Box>
   ) : null;
 
-
   //
   const allowance =
     (settings.mode === SwapMode.Bean ||
