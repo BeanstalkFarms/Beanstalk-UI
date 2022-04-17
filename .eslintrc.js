@@ -126,6 +126,7 @@ module.exports = {
     'no-console': 'off',
     'object-shorthand': 0,
     'comma-spacing': 0,
+    'jsx-a11y/control-has-associated-label': 0,
   },
   settings: {
     'import/resolver': {
