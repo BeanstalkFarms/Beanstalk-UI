@@ -168,7 +168,7 @@ export async function switchChain(_chainId: SupportedChainId) {
   // Update chain information, tokens, theme
   chainId = _chainId;
   changeTokenAddresses(chainId);
-  if (chainId === 1) changeTheme('spring');
+  if (chainId === 1) changeTheme('easter');
   if (chainId === 3) changeTheme('ropsten');
 
   // Create web3 / ethers instances.
@@ -177,7 +177,7 @@ export async function switchChain(_chainId: SupportedChainId) {
   // Brave injects "MetaMask" wallet but doesn't provide websocket RPC pool.
   // @ts-ignore
   const isBrave = (window?.navigator?.brave && (await window.navigator.brave.isBrave()) || false);
-  
+
   console.log(`Using wallet: ${currentState.wallets[0]?.label}`);
   console.log(`Using Brave: ${isBrave}`);
 

@@ -1,6 +1,6 @@
 /* About Links */
 export const BEAN_TOKEN_LINK =
-  'https://v2.info.uniswap.org/token/0xdc59ac4fefa32293a95889dc396682858d52e5db';
+  'https://etherscan.io/address/0xdc59ac4fefa32293a95889dc396682858d52e5db';
 export const SILO_CONTRACT_LINK =
   'https://etherscan.io/address/0xc1e088fc1323b20bcbee9bd1b9fc9546db5624c5';
 export const UNISWAP_CONTRACT_LINK =
