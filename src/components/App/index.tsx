@@ -33,11 +33,11 @@ import './App.css';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
-const DevHelper = React.lazy(() => (
-  process.env.NODE_ENV === 'development'
-    ? import('./DevHelper')
-    : null
-));
+// const DevHelper = React.lazy(() => (
+//   process.env.NODE_ENV === 'development'
+//     ? import('./DevHelper')
+//     : null
+// ));
 
 export default function App() {
   const dispatch = useDispatch();
@@ -174,7 +174,7 @@ export default function App() {
             <Footer />
           </Box>
         </Box>
-        <Suspense fallback={null}><DevHelper /></Suspense>
+        {/* <Suspense fallback={null}><DevHelper /></Suspense> */}
       </Box>
     </>
   );
