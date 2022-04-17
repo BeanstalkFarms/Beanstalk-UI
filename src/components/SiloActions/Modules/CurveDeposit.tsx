@@ -180,6 +180,7 @@ export default function CurveDeposit() {
       </Box>
     ) : null;
 
+  //
   const allowance = section === 0 && curveBalance.isGreaterThan(0)
     ? beanstalkCurveAllowance
     : new BigNumber(1);
@@ -187,22 +188,26 @@ export default function CurveDeposit() {
   return (
     <>
       <BaseModule
+        marginTop="20px"
+        marginMeta="14px 0 22px 0"
+        // Allowances
         allowance={allowance}
+        setAllowance={updateBeanstalkCurveAllowance}
+        handleApprove={approveBeanstalkCurve}
+        approvalToken="Bean:3CRV LP"
+        // Form
         resetForm={() => {
           setSettings({ ...settings });
         }}
-        handleApprove={approveBeanstalkCurve}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
-        marginTop="20px"
-        marginMeta="14px 0 22px 0"
+        singleReset
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
+        // Sections
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkCurveAllowance}
-        singleReset
-        setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
       >
         {sections[section]}
         {showListTablesIcon}

@@ -227,6 +227,7 @@ export function LPDeposit() {
       </Box>
     ) : null;
 
+  // ALLOWANCES
   let allowance = new BigNumber(1);
   let setAllowance = updateBeanstalkBeanAllowance;
   let handleApprove = approveBeanstalkBean;
@@ -250,21 +251,25 @@ export function LPDeposit() {
     <>
       <BaseModule
         style={{ marginTop: '20px' }}
+        // Allowances
         allowance={section === 0 ? allowance : new BigNumber(1)}
+        setAllowance={setAllowance}
+        handleApprove={handleApprove}
+        approvalToken="Beans" // in the case of LP we do a bean swap first
+        // Form
         resetForm={() => {
           setSettings({ ...settings, mode: SwapMode.Ethereum });
         }}
-        handleApprove={handleApprove}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
+        // Sections
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={setAllowance}
-        setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
       >
         {sections[section]}
         {showListTablesIcon}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,6 +32,12 @@ import LoadingBean from './LoadingBean';
 import './App.css';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
+
+// const DevHelper = React.lazy(() => (
+//   process.env.NODE_ENV === 'development'
+//     ? import('./DevHelper')
+//     : null
+// ));
 
 export default function App() {
   const dispatch = useDispatch();
@@ -168,6 +174,7 @@ export default function App() {
             <Footer />
           </Box>
         </Box>
+        {/* <Suspense fallback={null}><DevHelper /></Suspense> */}
       </Box>
     </>
   );

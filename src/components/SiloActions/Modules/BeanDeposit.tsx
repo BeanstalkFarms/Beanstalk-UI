@@ -200,7 +200,8 @@ export default function BeanDeposit() {
       </Box>
     ) : null;
 
-    const allowance =
+  //
+  const allowance =
     (settings.mode === SwapMode.Bean ||
       settings.mode === SwapMode.BeanEthereum) &&
     section === 0
@@ -211,22 +212,23 @@ export default function BeanDeposit() {
     <>
       <BaseModule
         style={{ marginTop: '20px' }}
+        // Approvals and Allowances
         allowance={allowance}
+        setAllowance={updateBeanstalkBeanAllowance}
+        handleApprove={approveBeanstalkBean}
+        // Form state
         resetForm={() => {
           setSettings({ ...settings, mode: SwapMode.Ethereum });
         }}
-        handleApprove={approveBeanstalkBean}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
-        isDisabled={
-          isFormDisabled && (isFormDisabled)
-        }
+        isDisabled={isFormDisabled}
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
+        // Sections
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []} // only show titles if user can claim beans
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkBeanAllowance}
         setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
       >
         {sections[section]}
