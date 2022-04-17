@@ -4,9 +4,8 @@ import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@mui/material';
 import { List as ListIcon } from '@mui/icons-material';
 import { AppState } from 'state';
-import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
-import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
+import { SwapMode, poolForLP } from 'util/index';
 import {
   BaseModule,
   ListTable,
@@ -20,10 +19,6 @@ import { useStyles } from './SiloStyles';
 
 export default function BeanWithdraw() {
   const classes = useStyles();
-  const { beanstalkBeanAllowance } = useSelector<
-    AppState,
-    AppState['allowances']
-  >((state) => state.allowances);
 
   const {
     beanBalance,
@@ -228,34 +223,25 @@ export default function BeanWithdraw() {
     </Box>
   ) : null;
 
-  //
-  const allowance =
-    (settings.mode === SwapMode.Bean ||
-      settings.mode === SwapMode.BeanEthereum) &&
-    section === 0
-      ? beanstalkBeanAllowance
-      : new BigNumber(1);
-
   return (
     <>
       <BaseModule
         style={{ marginTop: '20px' }}
-        allowance={allowance}
+        // Allowances
+        allowance={new BigNumber(1)}
+        // Form
         resetForm={() => {
           setSettings({ ...settings, mode: SwapMode.Ethereum });
         }}
-        handleApprove={approveBeanstalkBean}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
-        isDisabled={
-          isFormDisabled && (isFormDisabled)
-        }
+        isDisabled={isFormDisabled}
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
+        // Sections
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkBeanAllowance}
         setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
       >
         {sections[section]}

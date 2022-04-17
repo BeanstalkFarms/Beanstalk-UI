@@ -4,14 +4,8 @@ import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@mui/material';
 import { AppState } from 'state';
 import { List as ListIcon } from '@mui/icons-material';
-import {
-  updateBeanstalkBeanAllowance,
-  updateBeanstalkLPAllowance,
-} from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
 import {
-  approveBeanstalkBean,
-  approveBeanstalkLP,
   SwapMode,
   poolForLP,
 } from 'util/index';
@@ -28,10 +22,6 @@ import { useStyles } from './SiloStyles';
 
 export default function LPWithdraw() {
   const classes = useStyles();
-  const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
-    AppState,
-    AppState['allowances']
-  >((state) => state.allowances);
 
   const {
     lpBalance,
@@ -243,44 +233,26 @@ export default function LPWithdraw() {
       </Box>
     ) : null;
 
-  let allowance = new BigNumber(1);
-  let setAllowance = updateBeanstalkBeanAllowance;
-  let handleApprove = approveBeanstalkBean;
-  if (
-    settings.mode === SwapMode.Bean ||
-    settings.mode === SwapMode.BeanEthereum
-  ) {
-    allowance = beanstalkBeanAllowance;
-    if (allowance.isGreaterThan(0) && settings.useLP) {
-      allowance = beanstalkLPAllowance;
-      setAllowance = updateBeanstalkLPAllowance;
-      handleApprove = approveBeanstalkLP;
-    }
-  } else if (settings.mode === SwapMode.LP) {
-    allowance = beanstalkLPAllowance;
-    setAllowance = updateBeanstalkLPAllowance;
-    handleApprove = approveBeanstalkLP;
-  }
-
   return (
     <>
       <BaseModule
         style={{ marginTop: '20px' }}
-        allowance={section === 0 ? allowance : new BigNumber(1)}
+        // Allowances
+        allowance={new BigNumber(1)}
+        // Form
         resetForm={() => {
           setSettings({ ...settings, mode: SwapMode.Ethereum });
         }}
-        handleApprove={handleApprove}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
         lockedSeasons={lockedSeasons}
         mode={settings.mode}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
+        // Sections
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={setAllowance}
-        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
       >
         {sections[section]}
         {showListTablesIcon}

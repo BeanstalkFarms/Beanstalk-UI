@@ -186,6 +186,7 @@ export default function BeanlusdDeposit() {
       </Box>
     ) : null;
 
+  //
   const allowance = section === 0 && beanlusdBalance.isGreaterThan(0)
     ? beanstalkBeanlusdAllowance
     : new BigNumber(1);
@@ -193,20 +194,24 @@ export default function BeanlusdDeposit() {
   return (
     <>
       <BaseModule
+        marginTop="20px"
+        marginMeta="14px 0 22px 0"
+        // Allowances
         allowance={allowance}
+        setAllowance={updateBeanstalkBeanlusdAllowance}
+        handleApprove={approveBeanstalkBeanlusd}
+        // Form
+        handleForm={handleForm}
         resetForm={() => {
           setSettings({ ...settings });
         }}
-        handleApprove={approveBeanstalkBeanlusd}
-        handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
-        marginTop="20px"
-        marginMeta="14px 0 22px 0"
+        // Sections
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkBeanlusdAllowance}
+        // Other
         singleReset
         setButtonLabel={(sectionTitles.length > 1) ? null : 'Deposit'}
       >

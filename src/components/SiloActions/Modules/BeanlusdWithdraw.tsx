@@ -5,9 +5,8 @@ import { List as ListIcon } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
-import { updateBeanstalkCurveAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE, LUSD_BDV_TO_SEEDS } from 'constants/index';
-import { approveBeanstalkCurve, poolForLP } from 'util/index';
+import { poolForLP } from 'util/index';
 import { BaseModule, beanlusdStrings, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
 import BeanlusdWithdrawAction from './Actions/BeanlusdWithdrawAction';
 import BeanlusdClaimAction from './Actions/BeanlusdClaimAction';
@@ -21,11 +20,7 @@ export default function BeanlusdWithdraw() {
     useCrv3: false,
   });
 
-  const { beanstalkCurveAllowance } = useSelector<AppState, AppState['allowances']>(
-    (state) => state.allowances
-  );
   const {
-    beanlusdBalance,
     beanlusdReceivableBalance,
     beanlusdDeposits,
     beanlusdBDVDeposits,
@@ -204,29 +199,26 @@ export default function BeanlusdWithdraw() {
       </Box>
     ) : null;
 
-  const allowance = section === 0 && beanlusdBalance.isGreaterThan(0)
-    ? beanstalkCurveAllowance
-    : new BigNumber(1);
-
   return (
     <>
       <BaseModule
-        allowance={allowance}
+        marginTop="20px"
+        marginMeta="14px 0 22px 0"
+        // Allowance
+        allowance={new BigNumber(1)}
+        // Form
         resetForm={() => {
           setSettings({ ...settings });
         }}
-        handleApprove={approveBeanstalkCurve}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
-        marginTop="20px"
-        marginMeta="14px 0 22px 0"
+        singleReset
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
+        // Sections
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkCurveAllowance}
-        singleReset
-        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
       >
         {sections[section]}
         {showListTablesIcon}

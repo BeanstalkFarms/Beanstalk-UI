@@ -78,34 +78,42 @@ const useStyles = makeStyles(() => ({
 
 type BaseModuleProps = {
   removeBackground: boolean;
+
+  setAllowance: any;
 }
 export default function BaseModule({
+  // Styling
   size,
-  allowance,
-  setAllowance,
   marginTop,
   textTransform,
-  sectionTitles,
-  locked,
-  handleApprove,
-  handleForm,
-  section,
-  isDisabled,
-  children,
-  resetForm,
-  normalBox,
-  style,
-  removeBackground,
-  handleTabChange,
-  sectionTitlesDescription,
   textTabSize,
   widthTooltip,
   marginTooltip,
   margin,
   marginMeta,
+  normalBox,
+  style,
+  // Display
   showButton,
   singleReset,
-  setButtonLabel
+  setButtonLabel,
+  // Allowances
+  allowance,
+  setAllowance,
+  handleApprove,
+  // Form
+  locked,
+  handleForm,
+  resetForm,
+  // Sections
+  section,
+  removeBackground,
+  handleTabChange,
+  isDisabled,
+  sectionTitles,
+  sectionTitlesDescription,
+  // Other
+  children,
 } : Partial<BaseModuleProps>) {
   const dispatch = useDispatch();
   const s = size === 'small' || window.innerWidth < 450;

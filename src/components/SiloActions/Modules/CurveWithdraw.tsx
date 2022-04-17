@@ -5,9 +5,8 @@ import { List as ListIcon } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
-import { updateBeanstalkCurveAllowance } from 'state/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
-import { approveBeanstalkCurve, poolForLP } from 'util/index';
+import { poolForLP } from 'util/index';
 import { BaseModule, curveStrings, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';
 import CurveWithdrawAction from './Actions/CurveWithdrawAction';
 import CurveClaimAction from './Actions/CurveClaimAction';
@@ -23,11 +22,7 @@ export default function CurveWithdraw() {
     useCrv3: false,
   });
 
-  const { beanstalkCurveAllowance } = useSelector<AppState, AppState['allowances']>(
-    (state) => state.allowances
-  );
   const {
-    curveBalance,
     curveReceivableBalance,
     curveDeposits,
     curveBDVDeposits,
@@ -198,29 +193,26 @@ export default function CurveWithdraw() {
       </Box>
     ) : null;
 
-  const allowance = section === 0 && curveBalance.isGreaterThan(0)
-    ? beanstalkCurveAllowance
-    : new BigNumber(1);
-
   return (
     <>
       <BaseModule
-        allowance={allowance}
+        marginTop="20px"
+        marginMeta="14px 0 22px 0"
+        // Allowances
+        allowance={new BigNumber(1)}
+        // Form
         resetForm={() => {
           setSettings({ ...settings });
         }}
-        handleApprove={approveBeanstalkCurve}
         handleForm={handleForm}
         handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
-        marginTop="20px"
-        marginMeta="14px 0 22px 0"
+        singleReset
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
+        // Sections
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={updateBeanstalkCurveAllowance}
-        singleReset
-        setButtonLabel={(sectionTitles.length > 1) ? null : 'Withdraw'}
       >
         {sections[section]}
         {showListTablesIcon}

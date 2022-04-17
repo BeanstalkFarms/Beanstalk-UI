@@ -4,17 +4,8 @@ import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@mui/material';
 import { AppState } from 'state';
 import { List as ListIcon } from '@mui/icons-material';
-import {
-  updateBeanstalkBeanAllowance,
-  updateBeanstalkLPAllowance,
-} from 'state/allowances/actions';
 import { CONVERT_BEAN_SLIPPAGE, CONVERT_LP_SLIPPAGE } from 'constants/index';
-import {
-  approveBeanstalkBean,
-  approveBeanstalkLP,
-  SwapMode,
-  poolForLP,
-} from 'util/index';
+import { poolForLP } from 'util/index';
 import {
   BaseModule,
   ListTable,
@@ -26,10 +17,6 @@ import { useStyles } from './SiloStyles';
 
 export default function LPConvert() {
   const classes = useStyles();
-  const { beanstalkBeanAllowance, beanstalkLPAllowance } = useSelector<
-    AppState,
-    AppState['allowances']
-  >((state) => state.allowances);
 
   const {
     lpDeposits,
@@ -192,42 +179,24 @@ export default function LPConvert() {
       </Box>
     ) : null;
 
-  let allowance = new BigNumber(1);
-  let setAllowance = updateBeanstalkBeanAllowance;
-  let handleApprove = approveBeanstalkBean;
-  if (
-    settings.mode === SwapMode.Bean ||
-    settings.mode === SwapMode.BeanEthereum
-  ) {
-    allowance = beanstalkBeanAllowance;
-    if (allowance.isGreaterThan(0) && settings.useLP) {
-      allowance = beanstalkLPAllowance;
-      setAllowance = updateBeanstalkLPAllowance;
-      handleApprove = approveBeanstalkLP;
-    }
-  } else if (settings.mode === SwapMode.LP) {
-    allowance = beanstalkLPAllowance;
-    setAllowance = updateBeanstalkLPAllowance;
-    handleApprove = approveBeanstalkLP;
-  }
-
   return (
     <>
       <BaseModule
         style={{ marginTop: '20px' }}
-        allowance={section === 0 ? allowance : new BigNumber(1)}
+        // Allowance
+        allowance={new BigNumber(1)}
+        // Form
         resetForm={() => {
           setSettings({ ...settings });
         }}
-        handleApprove={handleApprove}
         handleForm={handleForm}
-        handleTabChange={handleTabChange}
         isDisabled={isFormDisabled}
+        setButtonLabel={(sectionTitles.length > 1) ? null : 'Convert LP'}
+        // Sections
+        handleTabChange={handleTabChange}
         section={section}
         sectionTitles={(sectionTitles.length > 1) ? sectionTitles : []}
         sectionTitlesDescription={sectionTitlesDescription}
-        setAllowance={setAllowance}
-        setButtonLabel={(sectionTitles.length > 1) ? null : 'Convert LP'}
       >
         {sections[section]}
         {showListTablesIcon}
