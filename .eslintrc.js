@@ -128,6 +128,8 @@ module.exports = {
     'comma-spacing': 0,
     'react/jsx-tag-spacing': 'warn',
     'camelcase': 0, // disable because generated files aren't camel-cased
+    'padded-blocks': 'warn',
+    'import/no-useless-path-segments': 'warn',
   },
   settings: {
     'import/resolver': {

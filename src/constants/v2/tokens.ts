@@ -34,7 +34,8 @@ export const Bean = new Token(
   6,
   'Bean',
   'BEAN',
-  beanLogoUrl
+  beanLogoUrl,
+  'bean', // FIXME: use slug or address in url?
 );
 
 export const BeanEthUniswapLP = new Token(
@@ -44,4 +45,14 @@ export const BeanEthUniswapLP = new Token(
   'BEAN:ETH Uniswap V2 LP',
   'BEAH:ETH',
   beanEthLogoUrl,
+  'bean-eth',
 );
+
+// --
+
+export const SiloTokensByAddress = {
+  [Bean.address.toLowerCase()]: Bean,
+  [BeanEthUniswapLP.address.toLowerCase()]: BeanEthUniswapLP,
+}
+
+export const SiloTokens = Object.values(SiloTokensByAddress)

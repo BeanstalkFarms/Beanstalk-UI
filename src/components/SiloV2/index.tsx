@@ -1,10 +1,9 @@
 import React from 'react';
+import { Card } from '@mui/material';
 import { useSelector } from 'react-redux';
-import siloTokens from 'constants/siloTokens';
+import { SiloTokens } from 'constants/v2/tokens';
 import Pools from 'constants/v2/pools';
 import { AppState } from 'state';
-import { Card } from '@mui/material';
-import { PointOfSaleOutlined } from '@mui/icons-material';
 
 export default function SiloV2() {
   const pools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
@@ -14,12 +13,12 @@ export default function SiloV2() {
       <pre>{JSON.stringify(pools, null, 2)}</pre>
       <pre>{JSON.stringify(silo, null, 2)}</pre>
       <hr />
-      {siloTokens.map((token) => {
+      {SiloTokens.map((token) => {
         const pool = Pools.get(token.address);
         return (
           <div>
             <img src={token.logo} style={{ width: 20, height: 20 }} alt="" />
-            <div>{token.name}: {token.address}</div>
+            <div>({token.slug}) {token.name}: {token.address}</div>
             {pool ? (
               <div>
                 Pool: {pool.name}<br />

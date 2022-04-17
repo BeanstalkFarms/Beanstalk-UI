@@ -25,12 +25,17 @@ export default class Token {
   /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
    */
-  public readonly name?: string;
+  public readonly name: string;
 
   /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
    */
-   public readonly logo?: string;
+  public readonly logo?: string;
+
+  /**
+   * The name of the currency, i.e. a descriptive textual non-unique identifier
+   */
+  public readonly slug?: string;
 
   /**
    * @param chainId the chain ID on which this currency resides
@@ -38,13 +43,14 @@ export default class Token {
    * @param symbol symbol of the currency
    * @param name of the currency
    */
-  constructor(address: string, chainId: number, decimals: number, name?: string, symbol?: string, logo?: string) {
+  constructor(address: string, chainId: number, decimals: number, name: string, symbol: string, logo: string, slug?: string) {
     this.chainId = chainId;
     this.decimals = decimals;
     this.symbol = symbol;
     this.name = name;
     this.address = address;
     this.logo = logo;
+    this.slug = slug;
   }
 
   /**

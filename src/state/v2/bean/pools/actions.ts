@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { BeanPoolState } from './reducer';
+import { BeanPoolState } from '.';
 
 type UpdatePoolPayload = {
   address: string;
