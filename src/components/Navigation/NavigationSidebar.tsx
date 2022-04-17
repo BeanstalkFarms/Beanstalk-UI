@@ -15,7 +15,7 @@ import { AppState } from 'state';
 import { BEAN, theme, zeroBN } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
-import { getAPYs, percentForStalk, toTokenUnitsBN } from 'util/index';
+import { getAPYs, toTokenUnitsBN } from 'util/index';
 import { useStyles } from './NavigationStyles';
 import PriceTooltip from './PriceTooltip';
 
@@ -134,25 +134,25 @@ export default function NavigationSidebar() {
   const { beanPrice, ethPrices, usdcPrice } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
-  const { totalPods, totalBeans, totalRoots } = useSelector<AppState, AppState['totalBalance']>(
+  const { totalPods, totalBeans } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { initialized, drawerOpen, width, bips, fundraisers } = useSelector<AppState, AppState['general']>(
+  const { initialized, drawerOpen, width, fundraisers } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
-  const activeBips = bips.reduce((aBips, bip) => {
-    if (bip.active) {
-      const voted = percentForStalk(
-        bip.roots,
-        bip.endTotalRoots.isGreaterThan(0)
-          ? bip.endTotalRoots
-          : totalRoots
-      );
-      aBips.push(<Badge badge={bip} percent={voted} type="bips" />);
-    }
-    return aBips;
-  }, [] as React.ReactElement[]);
+  // const activeBips = bips.reduce((aBips, bip) => {
+  //   if (bip.active) {
+  //     const voted = percentForStalk(
+  //       bip.roots,
+  //       bip.endTotalRoots.isGreaterThan(0)
+  //         ? bip.endTotalRoots
+  //         : totalRoots
+  //     );
+  //     aBips.push(<Badge badge={bip} percent={voted} type="bips" />);
+  //   }
+  //   return aBips;
+  // }, [] as React.ReactElement[]);
 
   const activeFundraisers = fundraisers.reduce((afundraisers, fundraiser) => {
     if (fundraiser.remaining.isGreaterThan(0)) {
@@ -186,12 +186,12 @@ export default function NavigationSidebar() {
   };
 
   // Add conditional badges
-  if (activeBips.length > 0) {
-    badgeDataByPath.governance = activeBips.slice(0, 3);
-  }
-  if (activeFundraisers.length > 0) {
-    badgeDataByPath.fundraiser = activeFundraisers;
-  }
+  // if (activeBips.length > 0) {
+  //   badgeDataByPath.governance = activeBips.slice(0, 3);
+  // }
+  // if (activeFundraisers.length > 0) {
+  //   badgeDataByPath.fundraiser = activeFundraisers;
+  // }
 
   const currentBeanPrice = (
     <PriceTooltip
