@@ -194,6 +194,7 @@ export default function CurveDeposit() {
         allowance={allowance}
         setAllowance={updateBeanstalkCurveAllowance}
         handleApprove={approveBeanstalkCurve}
+        approvalToken="Bean:3CRV LP"
         // Form
         resetForm={() => {
           setSettings({ ...settings });

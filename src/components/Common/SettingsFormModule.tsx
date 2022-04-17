@@ -12,11 +12,12 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'flex-end',
     // Makes the settings bar float to the right side of the module.
-    position: 'absolute', 
-    width: '100%',  //
-    height: 'auto', //
-    right: '15px',  // 
-    bottom: '20px', // 
+    // position: 'absolute', 
+    // width: '100%',  //
+    // height: 'auto', //
+    // right: '15px',  // 
+    // bottom: '20px', // 
+    margin: '20px 0 -56px -4px',
   },
   /* */
   rightSettingStyle: {
@@ -247,6 +248,7 @@ export default function SettingsFormModule(props: SettingsFormModuleProps) {
                   setShowSlippage(props.hasSlippage && value !== SwapMode.Bean);
                   props.handleMode(value);
                   props.setSettings({ ...props.settings, mode: value });
+                  setVisible(false);
                 }}
                 value={props.settings.mode}
               />

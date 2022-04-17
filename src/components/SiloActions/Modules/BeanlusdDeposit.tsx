@@ -200,6 +200,7 @@ export default function BeanlusdDeposit() {
         allowance={allowance}
         setAllowance={updateBeanstalkBeanlusdAllowance}
         handleApprove={approveBeanstalkBeanlusd}
+        approvalToken="Bean:LUSD LP"
         // Form
         handleForm={handleForm}
         resetForm={() => {

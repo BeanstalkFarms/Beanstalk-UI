@@ -64,6 +64,7 @@ const useStyles = makeStyles(() => ({
   noIndicator: {
     backgroundColor: 'transparent',
   },
+  // Overlay to make things look grey
   moduleContent: {
     backgroundColor: theme.module.background,
     height: '100%',
@@ -101,6 +102,7 @@ export default function BaseModule({
   allowance,
   setAllowance,
   handleApprove,
+  approvalToken = 'Beans',
   // Form
   locked,
   handleForm,
@@ -210,17 +212,16 @@ export default function BaseModule({
   // style={{ position: 'relative', zIndex: '0' }}
   const moduleContent = (
     <>
-      <Box>
+      <Box sx={allowance.isEqualTo(0) ? {
+        opacity: 0.5,
+        pointerEvents: 'none',
+      } : null}>
         {children}
-        {allowance.isEqualTo(0) ? (
-          <Box className={classes.moduleContent} />
-        ) : null}
       </Box>
       {actionButton}
       {allowance.isEqualTo(0) ? (
         <span>
-          To use this module, send an Approval by clicking the Approve button
-          above.
+          To use this module, approve Beanstalk to use your {approvalToken}.
           {resetLink}
         </span>
       ) : null}

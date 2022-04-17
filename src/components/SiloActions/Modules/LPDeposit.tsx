@@ -255,6 +255,7 @@ export function LPDeposit() {
         allowance={section === 0 ? allowance : new BigNumber(1)}
         setAllowance={setAllowance}
         handleApprove={handleApprove}
+        approvalToken="Beans" // in the case of LP we do a bean swap first
         // Form
         resetForm={() => {
           setSettings({ ...settings, mode: SwapMode.Ethereum });
