@@ -100,9 +100,8 @@ export default function App() {
                 <Route exact path="/">
                   <Box sx={{ width: '100%', height: '90vh', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                     <Card sx={{ p: 4, fontWeight: 500, maxWidth: 500 }}>
-                      <h3 style={{ fontWeight: 800 }}>Beanstalk suffered an exploit today.</h3>
-                      <p>The Beanstalk Farms team is investigating the attack. There will be a town hall Sunday, 4/17 9 PM ET to discuss the attack and the path forward.</p>
-                      <p>Please check Discord for more information and updates: <a href="https://discord.gg/beanstalk" target="_blank" rel="noreferrer">https://discord.gg/beanstalk</a></p>
+                      <h3 style={{ fontWeight: 800 }}>Beanstalk suffered an exploit on 4/17.</h3>
+                      <p>The Beanstalk Farms team is investigating the attack and charting a path forward. Please check Discord for more information and updates: <a href="https://discord.gg/beanstalk" target="_blank" rel="noreferrer">https://discord.gg/beanstalk</a></p>
                     </Card>
                   </Box>
                 </Route>
