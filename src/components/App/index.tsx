@@ -98,7 +98,7 @@ export default function App() {
               <Switch>
                 {/* Redirects */}
                 <Route exact path="/">
-                  <Box sx={{ width: '100%', height: '90vh', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', fontFamily: "Futura-PT-Book" }}>
+                  <Box sx={{ width: '100%', height: '90vh', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', fontFamily: 'Futura-PT-Book' }}>
                     <Card sx={{ p: 4, fontWeight: 500, maxWidth: 500 }}>
                       <h2 style={{ fontWeight: 800 }}>Beanstalk: The Path Forward</h2>
                       <p>Announcing the Barn Raise, a public ten-day fundraiser to restore Beanstalk.</p>
