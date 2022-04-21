@@ -98,10 +98,12 @@ export default function App() {
               <Switch>
                 {/* Redirects */}
                 <Route exact path="/">
-                  <Box sx={{ width: '100%', height: '90vh', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                  <Box sx={{ width: '100%', height: '90vh', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', fontFamily: "Futura-PT-Book" }}>
                     <Card sx={{ p: 4, fontWeight: 500, maxWidth: 500 }}>
-                      <h3 style={{ fontWeight: 800 }}>Beanstalk suffered an exploit on 4/17.</h3>
-                      <p>The Beanstalk Farms team is investigating the attack and charting a path forward. Please check Discord for more information and updates: <a href="https://discord.gg/beanstalk" target="_blank" rel="noreferrer">https://discord.gg/beanstalk</a></p>
+                      <h2 style={{ fontWeight: 800 }}>Beanstalk: The Path Forward</h2>
+                      <p>Announcing the Barn Raise, a public ten-day fundraiser to restore Beanstalk.</p>
+                      <p>Details: <a href="https://bean.money/blog/path-forward" target="_blank" rel="noreferrer">bean.money/blog/path-forward</a></p>
+                      <p>Join Discord for updates: <a href="https://discord.gg/beanstalk" target="_blank" rel="noreferrer">https://discord.gg/beanstalk</a></p>
                     </Card>
                   </Box>
                 </Route>
