@@ -17,35 +17,35 @@ import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
 import { getAPYs, toTokenUnitsBN } from 'util/index';
 import { useStyles } from './NavigationStyles';
-import PriceTooltip from './PriceTooltip';
+// import PriceTooltip from './PriceTooltip';
 
 const NAVIGATION_MAP = {
   farm: [
-    {
-      path: 'silo',
-      title: 'Silo',
-      desc: 'Earn interest and governance rights',
-    },
-    {
-      path: 'field',
-      title: 'Field',
-      desc: 'Lend to Beanstalk',
-    },
-    {
-      path: 'trade',
-      title: 'Trade',
-      desc: 'Buy and sell Beans',
-    },
-    {
-      path: 'market',
-      title: 'Market',
-      desc: 'Buy and sell Pods',
-    },
-    {
-      path: 'governance',
-      title: 'DAO',
-      desc: 'Vote on the future of Beanstalk',
-    },
+    // {
+    //   path: 'silo',
+    //   title: 'Silo',
+    //   desc: 'Earn interest and governance rights',
+    // },
+    // {
+    //   path: 'field',
+    //   title: 'Field',
+    //   desc: 'Lend to Beanstalk',
+    // },
+    // {
+    //   path: 'trade',
+    //   title: 'Trade',
+    //   desc: 'Buy and sell Beans',
+    // },
+    // {
+    //   path: 'market',
+    //   title: 'Market',
+    //   desc: 'Buy and sell Pods',
+    // },
+    // {
+    //   path: 'governance',
+    //   title: 'DAO',
+    //   desc: 'Vote on the future of Beanstalk',
+    // },
     {
       path: 'balances',
       title: 'Balances',
@@ -57,10 +57,10 @@ const NAVIGATION_MAP = {
       path: 'analytics',
       title: 'Analytics',
     },
-    {
-      path: 'peg',
-      title: 'Peg Maintenance',
-    },
+    // {
+    //   path: 'peg',
+    //   title: 'Peg Maintenance',
+    // },
     {
       path: 'beanfts',
       title: 'BeaNFTs',
@@ -122,9 +122,9 @@ export default function NavigationSidebar() {
   const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { season } = useSelector<AppState, AppState['season']>(
-    (state) => state.season
-  );
+  // const { season } = useSelector<AppState, AppState['season']>(
+  //   (state) => state.season
+  // );
   const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
@@ -193,11 +193,11 @@ export default function NavigationSidebar() {
   //   badgeDataByPath.fundraiser = activeFundraisers;
   // }
 
-  const currentBeanPrice = (
-    <PriceTooltip
-      isMobile={width < 1150} // 800 with 2 price boxes, 1150 with 3 price boxes
-    />
-  );
+  // const currentBeanPrice = (
+  //   <PriceTooltip
+  //     isMobile={width < 1150} // 800 with 2 price boxes, 1150 with 3 price boxes
+  //   />
+  // );
 
   //
   const NavItem = ({ item }: { item: any }) => (
@@ -240,7 +240,7 @@ export default function NavigationSidebar() {
             alt="app.bean.money"
           />
         </a>
-        {currentBeanPrice}
+        {/* currentBeanPrice */}
       </Box>
       {/**
         * Farm section */}
@@ -275,7 +275,7 @@ export default function NavigationSidebar() {
         <Metric label="Mkt. Cap" value={marketCap?.isGreaterThan(0) && `$${toTokenUnitsBN(marketCap, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${toTokenUnitsBN(totalPods, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${toTokenUnitsBN(weather.harvestableIndex, BEAN.decimals).toFixed(1)}M`} hideIfNull />
-        <Metric label="Season" value={(season && season.toNumber() !== -1) ? season.toFixed(0) : null} hideIfNull />
+        {/* <Metric label="Season" value={(season && season.toNumber() !== -1) ? season.toFixed(0) : null} hideIfNull /> */}
         <Metric label="ETH" value={usdcPrice && usdcPrice.gt(zeroBN) && `$${(new BigNumber(1)).div(usdcPrice).toFixed(2)}`} hideIfNull />
         <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} hideIfNull />
       </Box>

@@ -1,8 +1,8 @@
 import React, { FC, ReactComponentElement } from 'react';
 import { Link, Box } from '@mui/material';
 import {
-  HOW_TO_PATH,
-  HOW_TO_MOBILE_PATH,
+  // HOW_TO_PATH,
+  // HOW_TO_MOBILE_PATH,
   INTRO_TO_PATH,
   WHITEPAPER,
 } from 'constants/index';
@@ -49,6 +49,11 @@ const About : FC<AboutProps> = (props) => {
             </Link>
           </Grid>
           <Grid item lg={3} md={3} sm={4} xs={6} className={classes.cloudStyle}>
+            <Link href="https://bean.money/blog/path-forward" color="inherit" target="tutorial" underline="hover">
+              <SvgCloudIcon text="Barn Raise" />
+            </Link>
+          </Grid>
+          {/* <Grid item lg={3} md={3} sm={4} xs={6} className={classes.cloudStyle}>
             <Link
               href=""
               color="inherit"
@@ -61,7 +66,7 @@ const About : FC<AboutProps> = (props) => {
               underline="hover">
               <SvgCloudIcon text="How To Guide" />
             </Link>
-          </Grid>
+          </Grid> */}
           <Grid item lg={3} md={3} sm={4} xs={6} className={classes.cloudStyle}>
             <Link href={WHITEPAPER} color="inherit" target="tutorial" underline="hover">
               <SvgCloudIcon text="Whitepaper" />

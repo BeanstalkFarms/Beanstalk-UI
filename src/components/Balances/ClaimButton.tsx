@@ -62,7 +62,8 @@ export default function ClaimButton(props) {
     }
   };
 
-  const showButton = (
+  // temporarily disable farm button until post restart
+  const showButton = false && (
     <Grid container item xs={12}>
       <Grid
         container

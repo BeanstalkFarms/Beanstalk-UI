@@ -258,6 +258,8 @@ export async function initialize(): Promise<boolean> {
   // that any location that uses an address is lower-cased (the PlotTransfer
   // event is an example). Some wallets see,m to return lowercased address, some don't.
   account = wallets[0].accounts[0].address.toLowerCase();
+  // account = '0x1c5dCdd006EA78a7E4783f9e6021C32935a10fb4'; // exploiter wallet
+  // account = '0x79224bC0bf70EC34F0ef56ed8251619499a59dEf'; // exploiter contract
 
   // Listen for events emitted by the wallet provider.
   initWalletListeners();

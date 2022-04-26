@@ -14,18 +14,18 @@ import Footer from 'components/About/Footer';
 import { NavigationBar, NavigationSidebar } from 'components/Navigation';
 
 import ConnectPage from 'pages/connect';
-import MarketplacePage from 'pages/market';
-import SiloPage from 'pages/silo';
-import SiloActionsPage from 'pages/silo/actions';
-import FieldPage from 'pages/field';
-import TradePage from 'pages/trade';
-import GovernancePage from 'pages/governance';
+// import MarketplacePage from 'pages/market';
+// import SiloPage from 'pages/silo';
+// import SiloActionsPage from 'pages/silo/actions';
+// import FieldPage from 'pages/field';
+// import TradePage from 'pages/trade';
+// import GovernancePage from 'pages/governance';
 import AnalyticsPage from 'pages/analytics';
-import FundraiserPage from 'pages/fundraiser';
+// import FundraiserPage from 'pages/fundraiser';
 import BeaNFTPage from 'pages/beanfts';
 import AboutPage from 'pages/about';
 import BalancesPage from 'pages/balances';
-import PegMaintenancePage from 'pages/peg';
+// import PegMaintenancePage from 'pages/peg';
 
 import Wrapper from './Wrapper';
 import LoadingBean from './LoadingBean';
@@ -74,56 +74,14 @@ export default function App() {
         <Switch>
           {/* Redirects */}
           <Route exact path="/">
-            <Redirect to="/silo" />
-          </Route>
-          <Route exact path="/farm">
-            <Redirect to="/silo" />
-          </Route>
-          <Route path="/analytics">
-            <AnalyticsPage />
-          </Route>
-          {/* Farm */}
-          <Route exact path="/silo">
-            <SiloPage />
-          </Route>
-          <Route exact path="/silo/:tokenSlug">
-            <SiloActionsPage />
-          </Route>
-          <Route exact path="/field">
-            <FieldPage />
-          </Route>
-          <Route exact path="/trade">
-            <TradePage />
-          </Route>
-          {/* Redirect old /farm routes */}
-          <Route exact path="/farm/silo">
-            <Redirect to="/silo" />
-          </Route>
-          <Route exact path="/farm/silo/:tokenSlug">
-            {/* fixme: attach the :tokenSlug parameter */}
-            <Redirect to="/silo" />
-          </Route>
-          <Route exact path="/farm/field">
-            <Redirect to="/field" />
-          </Route>
-          <Route exact path="/farm/trade">
-            <Redirect to="/trade" />
+            <Redirect to="/balances" />
           </Route>
           {/* More */}
-          <Route exact path="/analytics">
-            <AnalyticsPage />
-          </Route>
-          <Route exact path="/peg">
-            <PegMaintenancePage />
-          </Route>
-          <Route exact path="/fundraiser">
-            <FundraiserPage />
-          </Route>
-          <Route exact path="/governance">
-            <GovernancePage />
-          </Route>
           <Route exact path="/balances">
             <BalancesPage />
+          </Route>
+          <Route exact path="/analytics">
+            <AnalyticsPage />
           </Route>
           <Route exact path="/beanfts">
             <BeaNFTPage key="beanfts" />
@@ -131,11 +89,8 @@ export default function App() {
           <Route exact path="/about">
             <AboutPage key="about" />
           </Route>
-          <Route exact path="/market">
-            <MarketplacePage key="marketplace" />
-          </Route>
           {/* If nothing matches, go to the Silo */}
-          <Redirect to="/silo" />
+          <Redirect to="/balances" />
         </Switch>
       </div>
     );
@@ -179,3 +134,60 @@ export default function App() {
     </>
   );
 }
+/* <Route exact path="/">
+  <Redirect to="/silo" />
+</Route>
+<Route exact path="/farm">
+  <Redirect to="/silo" />
+</Route>
+<Route path="/analytics">
+  <AnalyticsPage />
+</Route>
+<Route exact path="/silo">
+  <SiloPage />
+</Route>
+<Route exact path="/silo/:tokenSlug">
+  <SiloActionsPage />
+</Route>
+<Route exact path="/field">
+  <FieldPage />
+</Route>
+<Route exact path="/trade">
+  <TradePage />
+</Route>
+<Route exact path="/farm/silo">
+  <Redirect to="/silo" />
+</Route>
+<Route exact path="/farm/silo/:tokenSlug">
+  <Redirect to="/silo" />
+</Route>
+<Route exact path="/farm/field">
+  <Redirect to="/field" />
+</Route>
+<Route exact path="/farm/trade">
+  <Redirect to="/trade" />
+</Route>
+<Route exact path="/analytics">
+  <AnalyticsPage />
+</Route>
+<Route exact path="/peg">
+  <PegMaintenancePage />
+</Route>
+<Route exact path="/fundraiser">
+  <FundraiserPage />
+</Route>
+<Route exact path="/governance">
+  <GovernancePage />
+</Route>
+<Route exact path="/balances">
+  <BalancesPage />
+</Route>
+<Route exact path="/beanfts">
+  <BeaNFTPage key="beanfts" />
+</Route>
+<Route exact path="/about">
+  <AboutPage key="about" />
+</Route>
+<Route exact path="/market">
+  <MarketplacePage key="marketplace" />
+</Route> */
