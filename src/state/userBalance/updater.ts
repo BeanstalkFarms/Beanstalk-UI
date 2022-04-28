@@ -986,39 +986,6 @@ export default function Updater() {
       batch.execute();
 
       const [
-        // bipInfo,                // 0
-        // fundraiserInfo,         // 1
-        // ethBalanceTest,             // 2
-        // accountBalancesTest,        // 3
-        totalBalancesTest,          // 4
-        // _pricesTest,                // 5
-        // // usdcBalance,         // 6
-        // votedBipsTest,              // 7
-        // ethPricesTest,              // 8
-        // priceTupleTest,             // 9
-      ] = await Promise.all([
-        // getBips(),              // 0
-        // getFundraisers(),       // 1
-        // getEtherBalance(),      // 2
-        // accountBalancePromises, // 3: uses `exec` -> tuple
-        totalBalancePromises,   // 4: uses `exec` -> tuple
-        // pricePromises,          // 5: uses `exec` -> tuplex
-        // // getUSDCBalance(),    // 6
-        // getVotes(),             // 7
-        // getEthPrices(),         // 8
-        // getPriceArray()         // 9
-      ]).catch((err) => {
-        console.error('userBalance/updater: updateBalancesAndPrices failed', err);
-        throw err;
-      }).then((result) => {
-        console.log('userBalance/updater: updateBalancesAndPrices returned result', result);
-        return result;
-      });
-      // accountBalancesTest[13] locked until is undefined => is that normal or causing the error?
-      // _prices => made other calls just 0's and that seems to have worked a bit
-      // getEthPrices was undefined either way depending on browser
-
-      const [
         bipInfo,                // 0
         fundraiserInfo,         // 1
         ethBalance,             // 2
