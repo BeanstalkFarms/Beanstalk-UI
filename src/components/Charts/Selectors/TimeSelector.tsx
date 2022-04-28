@@ -41,9 +41,9 @@ export function TimeSelector(props) {
       value={props.value}
       variant="contained"
     >
-      <ToggleButton className={!props.isMobile ? classes.toggleButtonStyle : classes.toggleButtonStyleMobile} value="week">
+      {/* <ToggleButton className={!props.isMobile ? classes.toggleButtonStyle : classes.toggleButtonStyleMobile} value="week">
         {props.isMobile ? 'w' : 'week'}
-      </ToggleButton>
+      </ToggleButton> */}
       <ToggleButton className={!props.isMobile ? classes.toggleButtonStyle : classes.toggleButtonStyleMobile} value="month">
         {props.isMobile ? 'm' : 'month'}
       </ToggleButton>

@@ -146,8 +146,6 @@ export default function Updater() {
       ethBalance: BigNumber,
       votedBips: Set<any>,
     ) : void {
-      console.log('TRY');
-      console.log(accountBalances);
       const [
         // Allowances
         uniswapBeanAllowance,
@@ -1019,8 +1017,6 @@ export default function Updater() {
       // accountBalancesTest[13] locked until is undefined => is that normal or causing the error?
       // _prices => made other calls just 0's and that seems to have worked a bit
       // getEthPrices was undefined either way depending on browser
-      console.log(totalBalancesTest);
-      console.log('ADfTer--');
 
       const [
         bipInfo,                // 0

@@ -9,7 +9,7 @@ export default function Charts(props) {
   const [section, setSection] = useState(0);
 
   const [dataMode, setDataMode] = useState('hr');
-  const [timeMode, setTimeMode] = useState('week');
+  const [timeMode, setTimeMode] = useState('month');
   const { width } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
