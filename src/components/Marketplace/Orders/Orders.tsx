@@ -60,8 +60,11 @@ export default function Orders(props: OrdersProps) {
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
   const [validOrders, setValidOrders] = useState<boolean>(false);
 
-  const placesInLine = [0, totalPods.toNumber()];
-  const placesInLineBN = [new BigNumber(0), totalPods];
+  const maxOrderMaxPlaceInLine =  useMemo(() => 
+    Math.max(...allOrders.map((o) => o.maxPlaceInLine.toNumber())), [allOrders]);
+
+  const placesInLine = [0, maxOrderMaxPlaceInLine];
+  const placesInLineBN = [0, new BigNumber(maxOrderMaxPlaceInLine)];
 
   const [placeInLineFilters, setPlaceInLineFilters] =
     useState<BigNumber[]>(placesInLineBN);
@@ -249,7 +252,7 @@ export default function Orders(props: OrdersProps) {
           valueLabelDisplay="on"
           onChange={handlePlaceInLineFilter}
           min={0}
-          max={totalPods.toNumber()}
+          max={maxOrderMaxPlaceInLine}
         />
       </Box>
     </Filters>
