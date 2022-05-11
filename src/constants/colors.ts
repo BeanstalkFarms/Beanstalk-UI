@@ -2,7 +2,7 @@ import mainCloud from 'img/main/cloud-navbar.png';
 import mainSun from 'img/main/Sun.svg';
 import mainGround from 'img/main/ground.png';
 import mainBarn from 'img/main/Barn.svg';
-import easterBarn from 'img/easter/Barn.svg';
+// import easterBarn from 'img/easter/Barn.svg';
 import bean from 'img/bean-bold-logo.svg';
 import springGround from 'img/spring/ground.svg';
 import rainbow from 'img/spring/rainbow.svg';
@@ -78,20 +78,20 @@ export const springTheme = {
   rainbow: rainbow,
 };
 
-export const easterTheme = {
-  ...mainTheme,
-  name: 'easter',
-  flowers: springGround,
-  rainbow: rainbow,
-  barn: easterBarn,
-};
+// export const easterTheme = {
+//   ...mainTheme,
+//   name: 'easter',
+//   flowers: springGround,
+//   rainbow: rainbow,
+//   barn: easterBarn,
+// };
 
-export let theme : any = easterTheme;
+export let theme : any = springTheme;
 
 export function changeTheme(t: String) {
   if (t === 'ropsten') theme = ropstenTheme;
   else if (t === 'spring') theme = springTheme;
-  else if (t === 'easter') theme = easterTheme;
+  // else if (t === 'easter') theme = easterTheme;
   else theme = mainTheme;
 }
 

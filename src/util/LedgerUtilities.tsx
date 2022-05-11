@@ -361,7 +361,7 @@ export const getBips = async (
  *       instead of the separate `beanstalkGetters` contract.
  * @rpc 1 call to Beanstalk Getters contract.
  * @rpc 4/10/2022: 1 call
- * 
+ *
  */
 export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
   const beanstalkG = beanstalkGettersContractReadOnly();
@@ -399,47 +399,86 @@ export const getPrices = async (batch: BatchRequest) => {
   // ~13 calls
   let promises = [
     // referenceTokenReserves
-    exec(referenceLPContract.methods.getReserves()).then(
-      (reserves) => [
-        bigNumberResult(reserves._reserve0),
-        bigNumberResult(reserves._reserve1),
-      ],
-    ),
-    // tokenReserves
-    exec(lpContract.methods.getReserves()).then(
-      (reserves) => [
-        bigNumberResult(reserves._reserve0),
-        bigNumberResult(reserves._reserve1),
-      ],
-    ),
-    // token0
-    exec(lpContract.methods.token0()).then(
-      identityResult,
-    ),
-    // twapPrices
-    // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/farm/facets/OracleFacet.sol#L87
-    exec(beanstalk.methods.getTWAPPrices()).then(
-      (prices: [string, string]) : [beanPrice: BigNumber, usdcPrice: BigNumber] => [
-        toTokenUnitsBN(prices[0], 18),
-        toTokenUnitsBN(prices[1], 18),
-      ],
-    ),
-    // beansToPeg
-    // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L70
-    exec(beanstalk.methods.beansToPeg()).then(
-      (beans: string) => toTokenUnitsBN(beans, BEAN.decimals),
-    ),
-    // lpToPeg
-    // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L79
-    exec(beanstalk.methods.lpToPeg()).then(
-      (lp: string) => toTokenUnitsBN(lp, UNI_V2_ETH_BEAN_LP.decimals),
-    ),
+    // exec(referenceLPContract.methods.getReserves()).then(
+    //   (reserves) => [
+    //     bigNumberResult(reserves._reserve0),
+    //     bigNumberResult(reserves._reserve1),
+    //   ],
+    // ),
+    // // tokenReserves
+    // exec(lpContract.methods.getReserves()).then(
+    //   (reserves) => [
+    //     bigNumberResult(reserves._reserve0),
+    //     bigNumberResult(reserves._reserve1),
+    //   ],
+    // ),
+    // // token0
+    // exec(lpContract.methods.token0()).then(
+    //   identityResult,
+    // ),
+    // // twapPrices
+    // // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/farm/facets/OracleFacet.sol#L87
+    // exec(beanstalk.methods.getTWAPPrices()).then(
+    //   (prices: [string, string]) : [beanPrice: BigNumber, usdcPrice: BigNumber] => [
+    //     toTokenUnitsBN(prices[0], 18),
+    //     toTokenUnitsBN(prices[1], 18),
+    //   ],
+    // ),
+    // // beansToPeg
+    // // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L70
+    // exec(beanstalk.methods.beansToPeg()).then(
+    //   (beans: string) => toTokenUnitsBN(beans, BEAN.decimals),
+    // ),
+    // // lpToPeg
+    // // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L79
+    // exec(beanstalk.methods.lpToPeg()).then(
+    //   (lp: string) => toTokenUnitsBN(lp, UNI_V2_ETH_BEAN_LP.decimals),
+    // ),
   ];
 
   // Curve prices (only works on mainnet or dev)
   // https://besu.hyperledger.org/en/stable/Concepts/NetworkID-And-ChainID/
-  if (chainId === 1 || chainId === 1337) {
+  // if (chainId === 1 || chainId === 1337) {
+  if (chainId === 1337) {
     promises = promises.concat([
+      // added other functions below ----------
+      // referenceTokenReserves
+      exec(referenceLPContract.methods.getReserves()).then(
+        (reserves) => [
+          bigNumberResult(reserves._reserve0),
+          bigNumberResult(reserves._reserve1),
+        ],
+      ),
+      // tokenReserves
+      exec(lpContract.methods.getReserves()).then(
+        (reserves) => [
+          bigNumberResult(reserves._reserve0),
+          bigNumberResult(reserves._reserve1),
+        ],
+      ),
+      // token0
+      exec(lpContract.methods.token0()).then(
+        identityResult,
+      ),
+      // twapPrices
+      // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/farm/facets/OracleFacet.sol#L87
+      exec(beanstalk.methods.getTWAPPrices()).then(
+        (prices: [string, string]) : [beanPrice: BigNumber, usdcPrice: BigNumber] => [
+          toTokenUnitsBN(prices[0], 18),
+          toTokenUnitsBN(prices[1], 18),
+        ],
+      ),
+      // beansToPeg
+      // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L70
+      exec(beanstalk.methods.beansToPeg()).then(
+        (beans: string) => toTokenUnitsBN(beans, BEAN.decimals),
+      ),
+      // lpToPeg
+      // https://github.com/BeanstalkFarms/Beanstalk/blob/c4b536e5470894e3f668d166f144f813bd386784/protocol/contracts/libraries/LibConvert.sol#L79
+      exec(beanstalk.methods.lpToPeg()).then(
+        (lp: string) => toTokenUnitsBN(lp, UNI_V2_ETH_BEAN_LP.decimals),
+      ),
+      // added calls above --------------------------^^
       // Curve virtual price
       exec(curveContract.methods.get_virtual_price()).then(
         (price: string) => toTokenUnitsBN(price, 18),
@@ -485,6 +524,26 @@ export const getPrices = async (batch: BatchRequest) => {
     ]);
   } else {
     promises = promises.concat([
+      // added other functions below ----------
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => [new BigNumber(0), new BigNumber(0)],
+      ),
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => [new BigNumber(0), new BigNumber(0)],
+      ),
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => 0,
+      ),
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => [new BigNumber(0), new BigNumber(0)],
+      ),
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(0),
+      ),
+      exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
+        () => new BigNumber(0),
+      ),
+      // added calls above --------------------------^^
       //
       exec(lpContract.methods.balanceOf('0x0000000000000000000000000000000000000000')).then(
         () => new BigNumber(0),

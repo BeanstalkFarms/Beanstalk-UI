@@ -50,7 +50,7 @@ import {
   toTokenUnitsBN,
   account,
   getEthPrices,
-  getPriceArray,
+  // getPriceArray,
   getVotes,
   benchmarkStart,
   benchmarkEnd,
@@ -329,7 +329,7 @@ export default function Updater() {
         beanlusdToBDV,            //
         lusdCrv3Price,            //
         ethPrices,                //
-        priceTuple,               //
+        // priceTuple,               //
       ] = _prices;
 
       // Calculations
@@ -353,9 +353,9 @@ export default function Updater() {
         .dividedBy(usdcEthPrice);
       const usdcPrice = usdcEthPrice;
 
-      const curveTuple = priceTuple.ps[0];
-      const uniTuple = priceTuple.ps[1];
-      const beanlusdTuple = priceTuple.ps[priceTuple.ps.length > 2 ? 2 : 1];
+      // const curveTuple = priceTuple.ps[0];
+      // const uniTuple = priceTuple.ps[1];
+      // const beanlusdTuple = priceTuple.ps[priceTuple.ps.length > 2 ? 2 : 1];
 
       //
       dispatch(setPrices({
@@ -380,34 +380,63 @@ export default function Updater() {
         lusdCrv3Price,
         ethPrices,
         priceTuple: {
-          deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
-          liquidity: toTokenUnitsBN(priceTuple.liquidity, 6),
-          price: toTokenUnitsBN(priceTuple.price, 6),
+          deltaB: new BigNumber(1),
+          liquidity: new BigNumber(1),
+          price: new BigNumber(1),
         },
         curveTuple: {
-          balances: curveTuple.balances,
-          deltaB: toTokenUnitsBN(curveTuple.deltaB, 6),
-          liquidity: toTokenUnitsBN(curveTuple.liquidity, 6),
-          price: toTokenUnitsBN(curveTuple.price, 6),
-          pool: curveTuple.pool,
-          tokens: curveTuple.tokens,
+          balances: new BigNumber(1),
+          deltaB: new BigNumber(1),
+          liquidity: new BigNumber(1),
+          price: new BigNumber(1),
+          pool: [],
+          tokens: '',
         },
         uniTuple: {
-          balances: uniTuple.balances,
-          deltaB: toTokenUnitsBN(uniTuple.deltaB, 6),
-          liquidity: toTokenUnitsBN(uniTuple.liquidity, 6),
-          price: toTokenUnitsBN(uniTuple.price, 6),
-          pool: uniTuple.pool,
-          tokens: uniTuple.tokens,
+          balances: new BigNumber(1),
+          deltaB: new BigNumber(1),
+          liquidity: new BigNumber(1),
+          price: new BigNumber(1),
+          pool: [],
+          tokens: '',
         },
         beanlusdTuple: {
-          balances: beanlusdTuple.balances,
-          deltaB: toTokenUnitsBN(beanlusdTuple.deltaB, 6),
-          liquidity: toTokenUnitsBN(beanlusdTuple.liquidity, 6),
-          price: toTokenUnitsBN(beanlusdTuple.price, 6),
-          pool: beanlusdTuple.pool,
-          tokens: beanlusdTuple.tokens,
+          balances: new BigNumber(1),
+          deltaB: new BigNumber(1),
+          liquidity: new BigNumber(1),
+          price: new BigNumber(1),
+          pool: [],
+          tokens: '',
         },
+        // priceTuple: {
+        //   deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
+        //   liquidity: toTokenUnitsBN(priceTuple.liquidity, 6),
+        //   price: toTokenUnitsBN(priceTuple.price, 6),
+        // },
+        // curveTuple: {
+        //   balances: curveTuple.balances,
+        //   deltaB: toTokenUnitsBN(curveTuple.deltaB, 6),
+        //   liquidity: toTokenUnitsBN(curveTuple.liquidity, 6),
+        //   price: toTokenUnitsBN(curveTuple.price, 6),
+        //   pool: curveTuple.pool,
+        //   tokens: curveTuple.tokens,
+        // },
+        // uniTuple: {
+        //   balances: uniTuple.balances,
+        //   deltaB: toTokenUnitsBN(uniTuple.deltaB, 6),
+        //   liquidity: toTokenUnitsBN(uniTuple.liquidity, 6),
+        //   price: toTokenUnitsBN(uniTuple.price, 6),
+        //   pool: uniTuple.pool,
+        //   tokens: uniTuple.tokens,
+        // },
+        // beanlusdTuple: {
+        //   balances: beanlusdTuple.balances,
+        //   deltaB: toTokenUnitsBN(beanlusdTuple.deltaB, 6),
+        //   liquidity: toTokenUnitsBN(beanlusdTuple.liquidity, 6),
+        //   price: toTokenUnitsBN(beanlusdTuple.price, 6),
+        //   pool: beanlusdTuple.pool,
+        //   tokens: beanlusdTuple.tokens,
+        // },
       }));
 
       return [beanReserve, ethReserve];
@@ -817,7 +846,7 @@ export default function Updater() {
           votedBips.delete(event.returnValues.bip);
         }
       });
-      
+
       console.log(`[userBalance/updater]: Setting ${events.length} contract events`);
 
       dispatch(setContractEvents(events));
@@ -925,7 +954,7 @@ export default function Updater() {
         lpTransitBalance: lpTransitBalance,         // Sum of `lpWithdrawals`
         lpReceivableCrates: userLPReceivableCrates, // Claimable Map: Season => Token (Bean:ETH LP)
         lpReceivableBalance: lpReceivableBalance,   // Sum of `lpReceivableCrates`
-        // 
+        //
         curveDeposits: userCurveDeposits,
         curveBDVDeposits: userCurveBDVDeposits,
         curveSiloBalance: curveDepositsBalance,
@@ -933,7 +962,7 @@ export default function Updater() {
         curveReceivableBalance: curveReceivableBalance,
         curveWithdrawals: userCurveWithdrawals,
         curveReceivableCrates: userCurveReceivableCrates,
-        // 
+        //
         beanlusdDeposits: userBeanlusdDeposits,
         beanlusdBDVDeposits: userBeanlusdBDVDeposits,
         beanlusdSiloBalance: beanlusdDepositsBalance,
@@ -995,7 +1024,7 @@ export default function Updater() {
         // usdcBalance,         // 6
         votedBips,              // 7
         ethPrices,              // 8
-        priceTuple,             // 9
+        // priceTuple,             // 9
       ] = await Promise.all([
         getBips(),              // 0
         getFundraisers(),       // 1
@@ -1006,7 +1035,7 @@ export default function Updater() {
         // getUSDCBalance(),    // 6
         getVotes(),             // 7
         getEthPrices(),         // 8
-        getPriceArray()         // 9
+        // getPriceArray()         // 9
       ]).catch((err) => {
         console.error('userBalance/updater: updateBalancesAndPrices failed', err);
         throw err;
@@ -1054,7 +1083,7 @@ export default function Updater() {
           processPrices([
             ..._prices,
             ethPrices,
-            priceTuple,
+            // priceTuple,
           ]);
         },
         eventParsingParameters,
@@ -1107,18 +1136,18 @@ export default function Updater() {
       const [
         _prices,
         ethPrices,
-        priceTuple
+        // priceTuple
       ] = await Promise.all([
         pricePromises,
         getEthPrices(),
-        getPriceArray(),
+        // getPriceArray(),
       ]);
 
       ReactDOM.unstable_batchedUpdates(() => {
         processPrices([
           ..._prices,
           ethPrices,
-          priceTuple
+          // priceTuple
         ]);
       });
 
@@ -1197,7 +1226,7 @@ export default function Updater() {
           /** */
           dispatch(setInitialized(true));
         });
-        
+
         benchmarkEnd('**WEBSITE**', startTime);
       } else {
         dispatch(setMetamaskFailure(true));

@@ -17,7 +17,7 @@ import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
 import { getAPYs, toTokenUnitsBN } from 'util/index';
 import { useStyles } from './NavigationStyles';
-import PriceTooltip from './PriceTooltip';
+// import PriceTooltip from './PriceTooltip';
 
 const NAVIGATION_MAP = {
   farm: [
@@ -193,11 +193,11 @@ export default function NavigationSidebar() {
   //   badgeDataByPath.fundraiser = activeFundraisers;
   // }
 
-  const currentBeanPrice = (
-    <PriceTooltip
-      isMobile={width < 1150} // 800 with 2 price boxes, 1150 with 3 price boxes
-    />
-  );
+  // const currentBeanPrice = (
+  //   <PriceTooltip
+  //     isMobile={width < 1150} // 800 with 2 price boxes, 1150 with 3 price boxes
+  //   />
+  // );
 
   //
   const NavItem = ({ item }: { item: any }) => (
@@ -240,7 +240,7 @@ export default function NavigationSidebar() {
             alt="app.bean.money"
           />
         </a>
-        {currentBeanPrice}
+        {/* currentBeanPrice */}
       </Box>
       {/**
         * Farm section */}
