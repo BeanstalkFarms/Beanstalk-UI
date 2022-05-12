@@ -223,16 +223,16 @@ export default function Updater() {
     ) {
       const [
         // Silo
-        totalBeans,
-        totalLP,
-        totalCrv3,
-        totalBeanlusd,
-        totalSeeds,
-        totalStalk,
+        totalBeans0, // TEMP VARIABLE NAME
+        totalLP0, // TEMP VARIABLE NAME
+        totalCrv30, // TEMP VARIABLE NAME
+        totalBeanlusd0, // TEMP VARIABLE NAME
+        totalSeeds0, // TEMP VARIABLE NAME
+        totalStalk0, // TEMP VARIABLE NAME
         totalSiloBeans,
         totalSiloLP,
-        totalSiloCurve,
-        totalSiloBeanlusd,
+        totalSiloCurve0, // TEMP VARIABLE NAME
+        totalSiloBeanlusd0, // TEMP VARIABLE NAME
         totalTransitBeans,
         totalTransitLP,
         totalTransitCurve,
@@ -241,7 +241,7 @@ export default function Updater() {
         soil,
         podIndex,
         harvestableIndex, // 16 indexed
-        totalRoots,
+        totalRoots0, // TEMP VARIABLE NAME
         _weather,
         rain,
         _season, // 20 indexed
@@ -252,10 +252,42 @@ export default function Updater() {
         budget2,
         budget3,
         // More
-        totalCurveBeans,
-        totalBeanlusdBeans,
+        totalCurveBeans0, // TEMP VARIABLE NAME
+        totalBeanlusdBeans0, // TEMP VARIABLE NAME
         withdrawSeasons,
       ] = totalBalances;
+
+      // START TEMP STATIC LOGIC
+      // TEMP NUMBERS FOR BALANCE PURPOSES
+      // Numbers are from ethwallet's subgraph queries + https://etherscan.io/tokencheck-tool at blockNumber = 14602789 (1 block before exploit)
+      // Set total balances to pre-explit totals
+      const totalBeans = toTokenUnitsBN(108155457359439, 6); // 108,155,457.359439
+      const totalLP = toTokenUnitsBN(540894218294675521, 18); // 0.540894218294675521
+      const totalCrv3 = toTokenUnitsBN(79238241423601190873232684, 18); // 79,238,241.423601190873232684
+      const totalBeanlusd = toTokenUnitsBN(1637956191657208904972868, 18); // 1,637,956.191657208904972868
+
+      const totalCurveBeans = toTokenUnitsBN(35526663973650, 6); // 35,526,663.973650
+      const totalBeanlusdBeans = toTokenUnitsBN(386525983128, 6); // 386,525.983128
+
+      // remove exploiter contract balances from totals (0x79224bC0bf70EC34F0ef56ed8251619499a59dEf)
+      const totalSiloCurve = totalSiloCurve0.minus(new BigNumber(795425740.813818200295323741)); // 795,425,740.813818200295323741
+      const totalSiloBeanlusd = totalSiloBeanlusd0.minus(new BigNumber(58924887.872471876761750555)); // 58,924,887.872471876761750555
+
+      const totalSeeds = totalSeeds0.minus(new BigNumber(3330860480.776205)); // 3,330,860,480.776205
+      const totalStalk = totalStalk0.minus(new BigNumber(847198363.98969)); // 847,198,363.98969
+      const totalRoots = totalRoots0.minus(new BigNumber(386865631100312795430494480222)); // 386865631100312795430494480222
+
+      // eslint-disable-next-line
+      const lintHolder = [
+        totalBeans0,
+        totalLP0,
+        totalCrv30,
+        totalBeanlusd0,
+        totalCurveBeans0,
+        totalBeanlusdBeans0,
+      ];
+
+      // END OF TEMP STATIC LOGIC
 
       // Calculations
       const totalBudgetBeans = (
@@ -313,24 +345,50 @@ export default function Updater() {
       _prices: AsyncReturnType<typeof getPrices>
     ) : TokenReserveTuple {
       const [
-        referenceTokenReserves,   // reserves tuple
-        tokenReserves,            // reserves tuple
+        referenceTokenReserves1,   // TEMP VARIABLE NAME
+        tokenReserves1,            // TEMP VARIABLE NAME
         token0,                   //
         twapPrices,               // prices tuple
         beansToPeg,               //
         lpToPeg,                  //
         curveVirtualPrice,        //
-        beanCrv3Price,            //
-        beanCrv3Reserve,          //
+        beanCrv3Price1,            // TEMP VARIABLE NAME
+        beanCrv3Reserve1,          // TEMP VARIABLE NAME
         curveToBDV,               //
         beanlusdVirtualPrice,     //
-        beanlusdPrice,            //
-        beanlusdReserve,          //
+        beanlusdPrice1,            // TEMP VARIABLE NAME
+        beanlusdReserve1,          // TEMP VARIABLE NAME
         beanlusdToBDV,            //
         lusdCrv3Price,            //
-        ethPrices,                //
+        ethPrices1,                // TEMP VARIABLE NAME
         // priceTuple,               //
       ] = _prices;
+
+      // START TEMP STATIC LOGIC
+
+      // TEMP NUMBERS FOR BALANCE PURPOSES
+      // Numbers are from ethwallet's subgraph queries + https://etherscan.io/tokencheck-tool at blockNumber = 14602789 (1 block before exploit)
+      const referenceTokenReserves = [new BigNumber(139110092060237), new BigNumber(45761018335868468217485)];   // [139,110,092.060237 USDC, 45,761.018335868468217485 WETH]
+      const tokenReserves = [new BigNumber(10893463495905011377651), new BigNumber(32421439802954)];            // [10,893.463495905011377651 ETH, 32,421,439.802954 BEAN]
+      // const twapPrices = [toTokenUnitsBN(28261502490114, 18), toTokenUnitsBN(36111252197165, 18)];               //
+      const beanCrv3Price = toTokenUnitsBN(1020804362796, 12);           // 1.020804362796498291795164257067944
+      const beanCrv3Reserve = [toTokenUnitsBN(35356158873650, 6), toTokenUnitsBN(43647927045368147486658523, 18)];         // [35,356,158.873650 BEAN, 43,647,927.045368147486658523 3CRV]
+      const beanlusdPrice = toTokenUnitsBN(1020804362796, 12);           //
+      const beanlusdReserve = [toTokenUnitsBN(386525983128, 6), toTokenUnitsBN(1251430208529208800000000, 18)];         // [386,525.983128, 1,251,430.208529208800000000] 1,295,851.169337099803946395
+      const ethPrices = new BigNumber(2988.40);               //
+
+      // eslint-disable-next-line
+      const lintHolder = [
+        referenceTokenReserves1,
+        tokenReserves1,
+        beanCrv3Price1,
+        beanCrv3Reserve1,
+        beanlusdPrice1,
+        beanlusdReserve1,
+        ethPrices1
+      ];
+
+      // END OF TEMP STATIC LOGIC
 
       // Calculations
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
@@ -408,6 +466,35 @@ export default function Updater() {
           pool: [],
           tokens: '',
         },
+        // priceTuple: {
+        //   deltaB: toTokenUnitsBN(priceTuple.deltaB, 6),
+        //   liquidity: toTokenUnitsBN(priceTuple.liquidity, 6),
+        //   price: toTokenUnitsBN(priceTuple.price, 6),
+        // },
+        // curveTuple: {
+        //   balances: curveTuple.balances,
+        //   deltaB: toTokenUnitsBN(curveTuple.deltaB, 6),
+        //   liquidity: toTokenUnitsBN(curveTuple.liquidity, 6),
+        //   price: toTokenUnitsBN(curveTuple.price, 6),
+        //   pool: curveTuple.pool,
+        //   tokens: curveTuple.tokens,
+        // },
+        // uniTuple: {
+        //   balances: uniTuple.balances,
+        //   deltaB: toTokenUnitsBN(uniTuple.deltaB, 6),
+        //   liquidity: toTokenUnitsBN(uniTuple.liquidity, 6),
+        //   price: toTokenUnitsBN(uniTuple.price, 6),
+        //   pool: uniTuple.pool,
+        //   tokens: uniTuple.tokens,
+        // },
+        // beanlusdTuple: {
+        //   balances: beanlusdTuple.balances,
+        //   deltaB: toTokenUnitsBN(beanlusdTuple.deltaB, 6),
+        //   liquidity: toTokenUnitsBN(beanlusdTuple.liquidity, 6),
+        //   price: toTokenUnitsBN(beanlusdTuple.price, 6),
+        //   pool: beanlusdTuple.pool,
+        //   tokens: beanlusdTuple.tokens,
+        // },
       }));
 
       return [beanReserve, ethReserve];
