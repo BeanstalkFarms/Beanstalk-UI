@@ -41,7 +41,7 @@ const strokes = [
     strokeWidth: 3,
   },
   {
-    stroke: BeanstalkPalette.lightBlue,
+    stroke: BeanstalkPalette.darkBlue,
     strokeWidth: 2,
   }
 ]

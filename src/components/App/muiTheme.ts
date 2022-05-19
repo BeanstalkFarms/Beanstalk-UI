@@ -2,7 +2,6 @@ import {
   createTheme,
   experimental_sx as sx,
 } from '@mui/material/styles';
-import { theme } from 'constants/index';
 
 declare module '@mui/material/styles' {
   // interface Theme {
@@ -12,9 +11,11 @@ declare module '@mui/material/styles' {
   // }
 
   interface Palette {
+    light: Palette['primary'];
     dark: Palette['primary'];
   }
   interface PaletteOptions {
+    light: PaletteOptions['primary'];
     dark: PaletteOptions['primary'];
   }
 
@@ -34,6 +35,7 @@ declare module '@mui/material/styles' {
 export const BeanstalkPalette = {
   logoGreen: '#46B955',
   lightBlue: '#C1DEF2',
+  darkBlue: '#1F78B4',
   white: '#fff',
   black: '#333',
   lightishGrey: '#9E9E9E'
@@ -63,7 +65,12 @@ const muiTheme = createTheme({
     },
     secondary: {
       main: BeanstalkPalette.lightBlue,
+      dark: BeanstalkPalette.darkBlue,
       contrastText: "black",
+    },
+    light: {
+      main: BeanstalkPalette.white,
+      contrastText: BeanstalkPalette.black,
     },
     dark: {
       main: BeanstalkPalette.black,
@@ -259,6 +266,12 @@ const muiTheme = createTheme({
         },
       }
     },
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0,
+        color: "transparent"
+      }
+    }
   }
 });
 

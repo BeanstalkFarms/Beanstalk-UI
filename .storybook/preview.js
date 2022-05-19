@@ -1,5 +1,6 @@
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
+import { HashRouter } from 'react-router-dom';
 import theme from 'components/App/muiTheme';
 
 import '../src/index.css';
@@ -16,10 +17,12 @@ export const parameters = {
 
 export const decorators = [
   (Story) => (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <Story />
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <HashRouter>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Story />
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </HashRouter>
   )
 ]
