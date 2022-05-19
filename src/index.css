@@ -1,28 +1,25 @@
+/* Futura PT */
 @font-face {
-  font-family: 'Futura-PT';
-  src: url('./font/FuturaPTLight.otf');
+  font-family: 'Futura PT';
+  src: url('./font/FuturaPT/FuturaPTLight.otf');
+  font-weight: 300;
 }
 
 @font-face {
-  font-family: 'Futura-PT-Book';
-  src: url('./font/FuturaPTBook.otf');
+  font-family: 'Futura PT';
+  src: url('./font/FuturaPT/FuturaPTMedium.otf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Futura PT';
+  src: url('./font/FuturaPT/FuturaPTBold.otf');
+  font-weight: 600;
 }
 
 @font-face {
   font-family: 'Lucida Console';
-  src: url('./font/LucidaConsoleRegular.ttf');
-}
-
-@font-face {
-  font-family: 'Futura';
-  src: url('./font/Futura-Medium.ttf');
-  font-weight: normal;
-}
-
-@font-face {
-  font-family: 'Futura';
-  src: url('./font/Futura-Bold.ttf');
-  font-weight: bold;
+  src: url('./font/LucidaConsole/LucidaConsoleRegular.ttf');
 }
 
 html, body {height: 100%;}

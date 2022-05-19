@@ -26,6 +26,7 @@
     "classnames": "^2.3.1",
     "ethers": "^5.4.6",
     "graphql": "^15.5.3",
+    "luxon": "^2.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hot-toast": "^2.2.0",
@@ -39,12 +40,23 @@
     "web3": "^1.5.2"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^6.5.0",
+    "@storybook/addon-essentials": "^6.5.0",
+    "@storybook/addon-interactions": "^6.5.0",
+    "@storybook/addon-links": "^6.5.0",
+    "@storybook/builder-webpack4": "^6.5.0",
+    "@storybook/manager-webpack4": "^6.5.0",
+    "@storybook/node-logger": "^6.5.0",
+    "@storybook/preset-create-react-app": "^3.2.0",
+    "@storybook/react": "^6.5.0",
+    "@storybook/testing-library": "^0.0.11",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@typechain/ethers-v5": "^10.0.0",
     "@types/d3-array": "^3.0.2",
     "@types/jest": "^26.0.15",
+    "@types/luxon": "^2.3.2",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -54,6 +66,7 @@
     "@types/react-scrollspy": "^3.3.3",
     "@typescript-eslint/eslint-plugin": "4.13.0",
     "@typescript-eslint/parser": "4.13.0",
+    "@visx/mock-data": "^2.1.2",
     "babel-plugin-import": "^1.13.5",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "customize-cra": "^1.0.0",
@@ -65,6 +78,7 @@
     "eslint-plugin-jsx-a11y": "6.4.1",
     "eslint-plugin-react": "7.22.0",
     "eslint-plugin-react-hooks": "4.2.0",
+    "eslint-plugin-storybook": "^0.5.12",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.0",
@@ -86,7 +100,9 @@
     "deploy": "gh-pages -d build",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,js}\"",
     "lint": "eslint \"src/**/**/*.ts{,x}\"",
-    "generate": "typechain --target=ethers-v5 --out-dir=./src/constants/generated './src/constants/abi/**/*.json'"
+    "generate": "typechain --target=ethers-v5 --out-dir=./src/constants/generated './src/constants/abi/**/*.json'",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "lint-staged": {
     "*.{ts,tsx,json}": "prettier --write"
@@ -103,6 +119,16 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
     ]
   },
   "browserslist": {

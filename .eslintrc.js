@@ -3,36 +3,30 @@ module.exports = {
     browser: true,
     es2021: true,
     webextensions: true,
-    'jest/globals': true,
+    'jest/globals': true
   },
   globals: {
     page: 'readonly',
-    JSX: true,
+    JSX: true
   },
   // https://typescript-eslint.io/docs/linting/
   root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
-      jsx: true,
+      jsx: true
     },
     ecmaVersion: 12,
-    sourceType: 'module',
+    sourceType: 'module'
   },
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest',],
-  extends: [
-    'plugin:react/recommended',
-    'airbnb'
-  ],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest'],
+  extends: ['plugin:react/recommended', 'airbnb', 'plugin:storybook/recommended'],
   rules: {
     // -- Tree-shaking
     // https://mui.com/material-ui/guides/minimizing-bundle-size/#option-1
-    "no-restricted-imports": [
-      "error",
-      {
-        "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
-      }
-    ],
+    "no-restricted-imports": ["error", {
+      "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
+    }],
     // -- Stylistic
     semi: 'warn',
     'quote-props': 'warn',
@@ -44,7 +38,8 @@ module.exports = {
     'jsx-quotes': ['error', 'prefer-double'],
     'react/jsx-curly-brace-presence': 'warn',
     'eol-last': 'warn',
-    'key-spacing': 0, // I like to line up my values sometimes
+    'key-spacing': 0,
+    // I like to line up my values sometimes
     'no-multi-spaces': 0,
     'react/jsx-boolean-value': 'warn',
     'react/jsx-props-no-multi-spaces': 'warn',
@@ -60,18 +55,16 @@ module.exports = {
     //   functions: 'never',
     //   objects: 'always-multiline',
     // }],
-
     // -- Space efficiency
     'arrow-body-style': 'warn',
     'no-trailing-spaces': 0,
     '@typescript-eslint/no-unused-vars': ['warn'],
-
     // -- Other (to categorize)
     'react/button-has-type': 0,
     'react/require-default-props': 0,
     'max-classes-per-file': 0,
     'react/jsx-filename-extension': ['error', {
-      extensions: ['.ts', '.tsx'],
+      extensions: ['.ts', '.tsx']
     }],
     'no-continue': 0,
     'import/extensions': 0,
@@ -85,13 +78,10 @@ module.exports = {
     'consistent-return': 0,
     'linebreak-style': 0,
     'no-param-reassign': 0,
-    'no-unused-expressions': [
-      'error',
-      {
-        allowShortCircuit: true,
-        allowTernary: true,
-      },
-    ],
+    'no-unused-expressions': ['error', {
+      allowShortCircuit: true,
+      allowTernary: true
+    }],
     'max-len': 0,
     'react/no-array-index-key': 0,
     'no-mixed-operators': 0,
@@ -114,12 +104,7 @@ module.exports = {
     'no-nested-ternary': 0,
     'react/jsx-wrap-multilines': 0,
     'no-await-in-loop': 0,
-    'no-restricted-syntax': [
-      'error',
-      'ForInStatement',
-      'LabeledStatement',
-      'WithStatement',
-    ],
+    'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
     '@typescript-eslint/no-extra-non-null-assertion': ['error'],
@@ -127,13 +112,14 @@ module.exports = {
     'object-shorthand': 0,
     'comma-spacing': 0,
     'react/jsx-tag-spacing': 'warn',
-    'camelcase': 0, // disable because generated files aren't camel-cased
+    'camelcase': 0,
+    // disable because generated files aren't camel-cased
     'padded-blocks': 'warn',
-    'import/no-useless-path-segments': 'warn',
+    'import/no-useless-path-segments': 'warn'
   },
   settings: {
     'import/resolver': {
-      typescript: {},
-    },
-  },
+      typescript: {}
+    }
+  }
 };
