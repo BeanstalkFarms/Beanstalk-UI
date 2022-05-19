@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react';
-import { DateTime } from 'luxon';
+import React, { useCallback, useMemo } from 'react';
 import { bisector, extent, max, min } from 'd3-array';
 
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
@@ -7,8 +6,8 @@ import { LinePath, Bar, Line } from '@visx/shape';
 import { Group } from '@visx/group';
 import { scaleTime, scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
-import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
-import generateDateValue, { DateValue } from '@visx/mock-data/lib/generators/genDateValue';
+import { withTooltip } from '@visx/tooltip';
+import { DateValue } from '@visx/mock-data/lib/generators/genDateValue';
 import { curveNatural } from '@visx/curve';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 
@@ -17,39 +16,35 @@ export type DataPoint = {
   value: number;
 }
 
-// Mock data
-const today = DateTime.now();
-const N = 30;
-const data = new Array(N).fill(null).map((_, i) => ({
-  date: today.minus({ days: N - i }).toJSDate(),
-  value: 100_000 + 300 * i + 1000*Math.random(),
-}));
-
 // data accessors
 const getX = (d: DateValue) => d.date;
 const getY = (d: DateValue) => d.value;
 const bisectDate = bisector<DataPoint, Date>((d) => new Date(d.date)).left;
 
-// scales
-const xScale = scaleTime<number>({
-  domain: extent(data, getX) as [Date, Date],
-});
-const yScale = scaleLinear<number>({
-  domain: [min(data, getY), max(data, getY) as number],
-});
-
 type GraphProps = {
   width: number;
   height: number; 
-  onCursor: (d?: DataPoint) => void;
+  series: (DataPoint[])[];
+  onCursor: (ds?: DataPoint[]) => void;
 }
 
+// plot config
 const margin = {
   top: 20,
   bottom: 20,
   left: 0,
   right: 0,
 }
+const strokes = [
+  {
+    stroke: BeanstalkPalette.logoGreen,
+    strokeWidth: 3,
+  },
+  {
+    stroke: BeanstalkPalette.lightBlue,
+    strokeWidth: 2,
+  }
+]
 
 const Graph : React.FC<GraphProps> = withTooltip(({
   // Chart sizing
@@ -61,32 +56,52 @@ const Graph : React.FC<GraphProps> = withTooltip(({
   tooltipData,
   tooltipTop = 0,
   tooltipLeft = 0,
+  // Data
+  series,
   // Events
   onCursor
 }) => {
-  xScale.range([0, width]);
-  yScale.range([height - (margin.top + margin.bottom), 0]);
+  const data = series[0];
+
+  // scales
+  const scales = useMemo(() => series.map((_data) => {
+    const xScale = scaleTime<number>({
+      domain: extent(_data, getX) as [Date, Date],
+    });
+    const yScale = scaleLinear<number>({
+      domain: [min(_data, getY) as number, max(_data, getY) as number],
+    });
+    xScale.range([0, width]);
+    yScale.range([height-margin.top, margin.bottom]);
+    return { xScale, yScale };
+  }), [width, height, series])
 
   //
   const handleTooltip = useCallback(
     (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
       const { x } = localPoint(event) || { x: 0 };
-      const x0 = xScale.invert(x);
-      const index = bisectDate(data, x0, 1);
-      const d0 = data[index - 1];
-      const d1 = data[index];
-      let d = d0;
-      if (d1 && getX(d1)) {
-        d = x0.valueOf() - getX(d0).valueOf() > getX(d1).valueOf() - x0.valueOf() ? d1 : d0;
-      }
-      showTooltip({
-        tooltipData: d,
-        tooltipLeft: x,
-        tooltipTop: yScale(getY(d)),
+
+      // for each series
+      const ds = scales.map((scale, i) => {
+        const x0 = scale.xScale.invert(x);
+        const index = bisectDate(data, x0, 1);
+        const d0 = series[i][index - 1];
+        const d1 = series[i][index];
+        let d = d0;
+        if (d1 && getX(d1)) {
+          d = x0.valueOf() - getX(d0).valueOf() > getX(d1).valueOf() - x0.valueOf() ? d1 : d0;
+        }
+        return d;
       });
-      onCursor(d);
+
+      showTooltip({
+        tooltipData: ds,
+        tooltipLeft: x,
+        // tooltipTop: syScale(getY(d)),
+      });
+      onCursor(ds);
     },
-    [showTooltip, onCursor/* yScale, xScale*/],
+    [showTooltip, onCursor, data, scales, series],
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -98,7 +113,38 @@ const Graph : React.FC<GraphProps> = withTooltip(({
     <>
       <svg width={width} height={height}>
         {/**
-          * Overlay to handle tooltip
+          * Lines
+          */}
+        <Group>
+          {series.map((_data, index) => {
+            return (
+              <LinePath<DateValue>
+                curve={curveNatural}
+                data={_data}
+                x={(d) => scales[index].xScale(getX(d)) ?? 0}
+                y={(d) => scales[index].yScale(getY(d)) ?? 0}
+                {...strokes[index]}
+              />
+            );
+          })}
+        </Group>
+        {/**
+          * Cursor
+          */}
+        {tooltipData && (
+          <g>
+            <Line
+              from={{ x: tooltipLeft, y: margin.top }}
+              to={{ x: tooltipLeft, y: height + margin.top }}
+              stroke={BeanstalkPalette.lightishGrey}
+              strokeWidth={1}
+              pointerEvents="none"
+            />
+          </g>
+        )}
+        {/**
+          * Overlay to handle tooltip.
+          * Needs to be the last item to maintain mouse control.
           */}
         <Bar
           x={0}
@@ -112,45 +158,6 @@ const Graph : React.FC<GraphProps> = withTooltip(({
           onMouseMove={handleTooltip}
           onMouseLeave={handleMouseLeave}
         />
-        {/**
-          * Cursor
-          */}
-        {tooltipData && (
-          <g>
-            <Line
-              from={{ x: tooltipLeft, y: margin.top }}
-              to={{ x: tooltipLeft, y: height + margin.top }}
-              stroke={BeanstalkPalette.lightishGrey}
-              strokeWidth={1}
-              pointerEvents="none"
-              // strokeDasharray="5,2"
-            />
-            {/* <circle
-              cx={tooltipLeft}
-              cy={tooltipTop + margin.top}
-              r={4}
-              fill="black"
-              fillOpacity={0.1}
-              stroke="black"
-              strokeOpacity={0.1}
-              strokeWidth={2}
-              pointerEvents="none"
-            /> */}
-          </g>
-        )}
-        {/**
-          * Lines
-          */}
-        <Group top={margin.top}>
-          <LinePath<DateValue>
-            curve={curveNatural}
-            data={data}
-            x={(d) => xScale(getX(d)) ?? 0}
-            y={(d) => yScale(getY(d)) ?? 0}
-            stroke={BeanstalkPalette.logoGreen}
-            strokeWidth={3}
-          />
-        </Group>
       </svg>
     </>
   );
@@ -160,7 +167,8 @@ const Graph : React.FC<GraphProps> = withTooltip(({
  * Wrap the graph in a ParentSize handler.
  */
 const SimpleGraph : React.FC<{
-  onCursor: GraphProps['onCursor']
+  series: (DataPoint[])[];
+  onCursor: GraphProps['onCursor'];
 }> = (props) => {
   return (
     <ParentSize debounceTime={50}>
@@ -168,11 +176,24 @@ const SimpleGraph : React.FC<{
         <Graph
           width={visWidth}
           height={visHeight}
+          series={props.series}
           onCursor={props.onCursor}
         />
       )}
     </ParentSize>
   )
 }
+
+/* <circle
+  cx={tooltipLeft}
+  cy={tooltipTop + margin.top}
+  r={4}
+  fill="black"
+  fillOpacity={0.1}
+  stroke="black"
+  strokeOpacity={0.1}
+  strokeWidth={2}
+  pointerEvents="none"
+/> */
 
 export default SimpleGraph;

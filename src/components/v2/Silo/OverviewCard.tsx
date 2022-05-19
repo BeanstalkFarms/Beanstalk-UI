@@ -1,8 +1,8 @@
-import { Box, Button, ButtonGroup, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 
-import tempChartImage from 'img/temp-chart.svg';
 import SimpleGraph, { DataPoint } from './SimpleGraph';
+import { mockDepositData, mockOwnershipPctData } from './SimpleGraph.mock';
 
 const windows = [
   { label: '1H', },
@@ -13,16 +13,16 @@ const windows = [
   { label: 'All', },
 ]
 
-const DepositsTab : React.FC<{
-  totalDepositValue: number;
-}> = ({ 
-  totalDepositValue
-}) => {
-  const [displayValue, setDisplayValue] = useState(totalDepositValue);
+type TabData = {
+  current: number[];
+  series: (DataPoint[])[]
+}
 
-  const handleCursor = useCallback((d?: DataPoint) => {
-    setDisplayValue(d?.value || totalDepositValue)
-  }, [totalDepositValue])
+const DepositsTab : React.FC<TabData> = ({ current, series }) => {
+  const [displayValue, setDisplayValue] = useState(current);
+  const handleCursor = useCallback((ds?: DataPoint[]) => {
+    setDisplayValue(ds ? ds.map((d) => d.value) : current)
+  }, [current])
   
   return (
     <>
@@ -30,13 +30,47 @@ const DepositsTab : React.FC<{
         <Stack gap={0.5}>
           <Typography color="gray">Total Silo Deposits</Typography>
           <Typography variant="h1" color="primary">
-            ${displayValue.toLocaleString()}
+            ${displayValue[0].toLocaleString()}
           </Typography>
           <Typography>Season 5995</Typography>
         </Stack>
       </Box>
       <Box sx={{ width: '100%', height: '300px' }}>
         <SimpleGraph
+          series={series}
+          onCursor={handleCursor}
+        />
+      </Box>
+    </>
+  )
+}
+
+const StalkOwnershipTab : React.FC<TabData> = ({ current, series }) => {
+  const [displayValue, setDisplayValue] = useState(current);
+  const handleCursor = useCallback((ds?: DataPoint[]) => {
+    setDisplayValue(ds ? ds.map((d) => d.value) : current)
+  }, [current])
+  
+  return (
+    <>
+      <Stack direction="row" gap={4} sx={{ px: 2 }}>
+        <Stack gap={0.5} sx={{ minWidth: 180 }}>
+          <Typography color="gray">My Stalk</Typography>
+          <Typography variant="h1" color="primary">
+            {displayValue[0].toLocaleString("en-us", { maximumFractionDigits: 0 })}
+          </Typography>
+          <Typography>Season 5995</Typography>
+        </Stack>
+        <Stack gap={0.5}>
+          <Typography color="gray">Ownership % of all Stalk</Typography>
+          <Typography variant="h1" color="secondary.dark">
+            {(100*displayValue[1]).toLocaleString()}%
+          </Typography>
+        </Stack>
+      </Stack>
+      <Box sx={{ width: '100%', height: '300px' }}>
+        <SimpleGraph
+          series={series}
           onCursor={handleCursor}
         />
       </Box>
@@ -76,16 +110,28 @@ const OverviewCard : React.FC<{
           </Stack>
         </Box>
       </Stack>
-      {tab === 0 && (
+      <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
         <DepositsTab
-          totalDepositValue={totalDepositValue}
+          current={[
+            totalDepositValue
+          ]}
+          series={[
+            mockDepositData
+          ]}
         />
-      )}
-      {tab === 1 && (
-        <div>
-          Stalk
-        </div>
-      )}
+      </Box>
+      <Box sx={{ display: tab === 1 ? 'block' : 'none' }}>
+        <StalkOwnershipTab
+          current={[
+            totalDepositValue,
+            0.01,
+          ]}
+          series={[
+            mockDepositData,
+            mockOwnershipPctData,
+          ]}
+        />
+      </Box>
     </Card>
   );
 }
