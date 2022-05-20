@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 import { utils } from 'ethers';
-import { BatchRequest } from 'web3-core';
 
 import {
   BUDGETS,
@@ -33,12 +32,11 @@ import {
   tokenContractReadOnly,
   // tokenV2ContractReadOnly,
   toTokenUnitsBN,
-  web3,
   chainId,
 } from './index';
 
 /* Client is responsible for calling execute() */
-export const createLedgerBatch = () => new web3.BatchRequest();
+// export const createLedgerBatch = () => new web3.BatchRequest();
 
 // FIXME: move these elsewhere.
 export type Weather = {
@@ -123,18 +121,18 @@ export const tokenResult = (token : SupportedToken) => (result: BigNumber.Value)
 
 /* ------------------- */
 
-export async function getBlockTimestamp(blockNumber: any) {
-  await initializing;
-  return (await web3.eth.getBlock(blockNumber)).timestamp;
-}
+// export async function getBlockTimestamp(blockNumber: any) {
+//   await initializing;
+//   return (await web3.eth.getBlock(blockNumber)).timestamp;
+// }
 
-export async function getEtherBalance() {
-  return web3.eth.getBalance(account).then(tokenResult(ETH));
-}
+// export async function getEtherBalance() {
+//   return web3.eth.getBalance(account).then(tokenResult(ETH));
+// }
 
-export async function getUSDCBalance() {
-  return web3.eth.getBalance(account).then(tokenResult(USDC));
-}
+// export async function getUSDCBalance() {
+//   return web3.eth.getBalance(account).then(tokenResult(USDC));
+// }
 
 /**
  * @rpc 2 calls
