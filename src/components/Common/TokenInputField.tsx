@@ -62,7 +62,7 @@ export type TokenInputFieldProps = {
   /** ??? */
   // maxval: number;
   /** Show the icon for this token to the right of the input */
-  token: Token;
+  token?: Token;
   poolForLPRatio?: any;
   /** */
   balance?: BigNumber;

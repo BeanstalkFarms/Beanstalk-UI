@@ -6,7 +6,7 @@ const Deposit : React.FC<{
 }> = (props) => {
   return (
     <div>
-      
+      {props.token.address}
     </div>
   )
 }

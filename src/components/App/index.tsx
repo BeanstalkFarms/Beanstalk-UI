@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, CssBaseline } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
@@ -65,58 +65,32 @@ export default function App() {
   } else {
     app = (
       <div>
-        <Switch>
+        <Routes>
           {/* Redirects */}
-          <Route exact path="/">
+          {/* <Route path="/">
             <Redirect to="/silo" />
           </Route>
-          <Route exact path="/farm">
+          <Route path="/farm">
             <Redirect to="/silo" />
-          </Route>
-          <Route path="/analytics">
-            <AnalyticsPage />
-          </Route>
+          </Route> */}
+          <Route path="/analytics" element={<AnalyticsPage />} />
           {/* Farm */}
-          <Route exact path="/silo">
-            <SiloPage />
-          </Route>
-          <Route exact path="/silo/:address">
-            <SiloTokenPage />
-          </Route>
-          <Route exact path="/field">
-            <FieldPage />
-          </Route>
-          <Route exact path="/trade">
-            <TradePage />
-          </Route>
+          <Route path="/silo" element={<SiloPage />} />
+          <Route path="/silo/:address" element={<SiloTokenPage />} />
+          <Route path="/field" element={<FieldPage />} />
+          <Route path="/trade" element={<TradePage />} />
           {/* More */}
-          <Route exact path="/analytics">
-            <AnalyticsPage />
-          </Route>
-          <Route exact path="/peg">
-            <PegMaintenancePage />
-          </Route>
-          <Route exact path="/fundraiser">
-            <FundraiserPage />
-          </Route>
-          <Route exact path="/governance">
-            <GovernancePage />
-          </Route>
-          <Route exact path="/balances">
-            <BalancesPage />
-          </Route>
-          <Route exact path="/beanfts">
-            <BeaNFTPage key="beanfts" />
-          </Route>
-          <Route exact path="/about">
-            <AboutPage key="about" />
-          </Route>
-          <Route exact path="/market">
-            <MarketplacePage key="marketplace" />
-          </Route>
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/peg" element={<PegMaintenancePage />} />
+          <Route path="/fundraiser" element={<FundraiserPage />} />
+          <Route path="/governance" element={<GovernancePage />} />
+          <Route path="/balances" element={<BalancesPage />} />
+          <Route path="/beanfts" element={<BeaNFTPage key="beanfts" />} />
+          <Route path="/about" element={<AboutPage key="about" />} />
+          <Route path="/market" element={<MarketplacePage key="marketplace" />} />
           {/* If nothing matches, go to the Silo */}
-          <Redirect to="/silo" />
-        </Switch>
+          {/* <Redirect to="/silo" /> */}
+        </Routes>
       </div>
     );
   }

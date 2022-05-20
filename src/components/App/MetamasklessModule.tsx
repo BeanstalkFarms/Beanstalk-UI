@@ -1,5 +1,4 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { Grid, Button, Link } from '@mui/material';
 import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
 import { METAMASK_LINK } from 'constants/index';
@@ -23,7 +22,6 @@ const useStyles = makeStyles(({
 
 export default function MetamasklessModule() {
   const classes = useStyles();
-  const history = useHistory();
 
   let metamaskModule;
   if (metamaskFailure === 0 || metamaskFailure === 1) {
@@ -41,7 +39,7 @@ export default function MetamasklessModule() {
           onClick={async () => {
             const switchSuccessful = await switchToMainnet();
             if (switchSuccessful) {
-              history.push('/');
+              // history.push('/');
             }
           }}
           style={{ cursor: 'pointer' }}

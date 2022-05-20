@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Page from 'components/Page';
 import { SiloTokensByAddress } from 'constants/v2/tokens';
 import TokenPage from 'components/SiloV2/TokenPage';
 
 export default function SiloActionsPage() {
   const { address } = useParams<{ address: string }>();
+
+  if(!address) return null;
 
   const token = SiloTokensByAddress[address.toLowerCase()];
 
