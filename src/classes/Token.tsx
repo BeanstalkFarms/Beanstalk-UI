@@ -1,7 +1,12 @@
+import BigNumber from "bignumber.js";
+import { ERC20 } from "constants/generated";
+import { erc20TokenContract, provider } from "util/index";
+import { bigNumberResult } from "util/LedgerUtilities2";
+
 /**
  * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
  */
-export default class Token {
+export default abstract class Token {
   /**
    * The contract address on the chain on which this token lives
    */
@@ -38,6 +43,11 @@ export default class Token {
   public readonly slug?: string;
 
   /**
+   * 
+   */
+  public readonly contract?: any;
+
+  /**
    * @param chainId the chain ID on which this currency resides
    * @param decimals decimals of the currency
    * @param symbol symbol of the currency
@@ -63,5 +73,38 @@ export default class Token {
 
   public toString(): string {
     return this.name;
+  }
+
+  abstract getBalance(account: string) : Promise<BigNumber>;
+  
+  abstract getTotalSupply() : Promise<BigNumber>;
+}
+
+export class NativeToken extends Token {
+  // eslint-disable-next-line class-methods-use-this
+  public getBalance(account: string) {
+    return provider.getBalance(account).then(bigNumberResult);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public getTotalSupply(): Promise<BigNumber> {
+    return Promise.resolve(new BigNumber(-1));
+  }
+}
+
+export class ERC20Token extends Token {
+  public readonly contract : ERC20;
+
+  constructor(...args: ConstructorParameters<typeof Token>) {
+    super(...args);
+    this.contract = erc20TokenContract(this.address);
+  }
+  
+  public getBalance(account: string) {
+    return this.contract.balanceOf(account).then(bigNumberResult);
+  }
+
+  public getTotalSupply() {
+    return this.contract.totalSupply().then(bigNumberResult);
   }
 }

@@ -51,7 +51,7 @@
  */
 
 import { ContractReceipt, ContractTransaction } from 'ethers';
-import { txCallback } from './index';
+// import { txCallback } from './index';
 
 export type TxnCallbacks = {
   onResponse: (response: ContractTransaction) => void;
@@ -77,7 +77,7 @@ export async function handleCallbacks(
           // onfulfilled
           (value: ContractReceipt) => {
             resolve(value);
-            txCallback && txCallback();
+            // txCallback && txCallback();
           },
           // onrejected
           (reason: any) => {

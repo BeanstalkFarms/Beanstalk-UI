@@ -56,46 +56,46 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  let app;
-  if (metamaskFailure > -1) {
-    app = (
-      <ConnectPage />
-    );
-  } else if (!initialized) {
-    app = (
-      <LoadingBean />
-    );
-  } else {
-    app = (
-      <div>
-        <Routes>
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          {/* Farm */}
-          <Route path="/silo" element={<SiloPage />} />
-          <Route path="/silo/:address" element={<SiloTokenPage />} />
-          <Route path="/field" element={<FieldPage />} />
-          <Route path="/trade" element={<TradePage />} />
-          {/* More */}
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/peg" element={<PegMaintenancePage />} />
-          <Route path="/fundraiser" element={<FundraiserPage />} />
-          <Route path="/governance" element={<GovernancePage />} />
-          <Route path="/balances" element={<BalancesPage />} />
-          <Route path="/beanfts" element={<BeaNFTPage key="beanfts" />} />
-          <Route path="/about" element={<AboutPage key="about" />} />
-          <Route path="/market" element={<MarketplacePage key="marketplace" />} />
-        </Routes>
-      </div>
-    );
-  }
+  // let app;
+  // if (metamaskFailure > -1) {
+  //   app = (
+  //     <ConnectPage />
+  //   );
+  // } else if (!initialized) {
+  //   app = (
+  //     <LoadingBean />
+  //   );
+  // } else {
+  const app = (
+    <div>
+      <Routes>
+        <Route path="/analytics" element={<AnalyticsPage />} />
+        {/* Farm */}
+        <Route path="/silo" element={<SiloPage />} />
+        <Route path="/silo/:address" element={<SiloTokenPage />} />
+        {/* <Route path="/field" element={<FieldPage />} />
+        <Route path="/trade" element={<TradePage />} /> */}
+        {/* More */}
+        {/* <Route path="/analytics" element={<AnalyticsPage />} />
+        <Route path="/peg" element={<PegMaintenancePage />} />
+        <Route path="/fundraiser" element={<FundraiserPage />} />
+        <Route path="/governance" element={<GovernancePage />} />
+        <Route path="/balances" element={<BalancesPage />} />
+        <Route path="/beanfts" element={<BeaNFTPage key="beanfts" />} />
+        <Route path="/about" element={<AboutPage key="about" />} />
+        <Route path="/market" element={<MarketplacePage key="marketplace" />} /> */}
+      </Routes>
+    </div>
+  );
+  // }
 
   return (
     <>
       <CssBaseline />
       {/* UPDATERS */}
-      <Updater />
+      {/* <Updater />
       <TokenUpdater />
-      <NftUpdater />
+      <NftUpdater /> */}
       {/* CONTENT */}
       <Box
         className="App"
@@ -106,8 +106,9 @@ export default function App() {
           backgroundPosition: 'bottom center',
           backgroundSize: '100%',
           backgroundRepeat: 'no-repeat',
+          minHeight: '100vh',
         }}
-        >
+      >
         <Box>
           <NavBar />
           <Box sx={{ pt: 10 }}>

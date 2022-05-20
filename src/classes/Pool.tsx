@@ -1,10 +1,15 @@
-import Token from './Token';
+import Token, { ERC20Token } from './Token';
 import Dex from './Dex';
+import BigNumber from 'bignumber.js';
+import { UniswapV2Pair, UniswapV2Pair__factory, UniswapV2Router, UniswapV2Router__factory } from 'constants/generated';
+import { provider } from 'util/index';
+
+type Reserves = [BigNumber, BigNumber];
 
 /**
  * A Pool is an AMM liquidity pool between at least 2 tokens.
  */
-export default class Pool {
+export default abstract class Pool {
   /**
    * The contract address on the chain on which this token lives
    */
@@ -18,27 +23,27 @@ export default class Pool {
   /**
    * The liquidity token associated with the pool
    */
-  public readonly token?: Token;
+  public readonly lpToken: ERC20Token;
 
   /**
    * The liquidity token associated with the pool
    */
-  public readonly tokens?: Token[] = undefined;
+  public readonly tokens: ERC20Token[];
 
   /**
    * The decentralized exchange associated with the pool
    */
-  public readonly dex?: Dex;
+  public readonly dex: Dex;
+
+  /**
+   * The name of the currency, i.e. a descriptive textual non-unique identifier
+   */
+  public readonly name: string;
 
   /**
    * The symbol of the currency, i.e. a short textual non-unique identifier
    */
   public readonly symbol?: string;
-
-  /**
-   * The name of the currency, i.e. a descriptive textual non-unique identifier
-   */
-  public readonly name?: string;
 
   /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
@@ -55,20 +60,23 @@ export default class Pool {
     address: string,
     chainId: number,
     dex: Dex,
-    token: Token,
+    lpToken: Token,
     tokens: Token[],
-    name?: string,
-    symbol?: string,
-    logo?: string
+    metadata: {
+      name: string,
+      symbol?: string,
+      logo?: string,
+    }
   ) {
     this.address = address;
     this.chainId = chainId;
     this.dex = dex;
-    this.token = token;
+    this.lpToken = lpToken;
     this.tokens = tokens;
-    this.name = name;
-    this.symbol = symbol;
-    this.logo = logo;
+
+    this.name = metadata.name;
+    this.symbol = metadata.symbol;
+    this.logo = metadata.logo;
   }
 
   /**
@@ -77,5 +85,27 @@ export default class Pool {
    */
   public equals(other: Token): boolean {
     return this.chainId === other.chainId && this.address === other.address;
+  }
+
+  abstract getReserves() : Promise<Reserves>;
+}
+
+export class UniswapV2Pool extends Pool {
+  public readonly contract : UniswapV2Pair;
+  
+  constructor(...args: ConstructorParameters<typeof Pool>) {
+    super(...args);
+    this.contract = UniswapV2Pair__factory.connect(this.address, provider);
+  }
+
+  public getReserves() {
+    return (
+      this.contract.getReserves().then((result) => (
+        [
+          new BigNumber(result._reserve0.toString()), 
+          new BigNumber(result._reserve1.toString()),
+        ] as Reserves
+      ))
+    );
   }
 }

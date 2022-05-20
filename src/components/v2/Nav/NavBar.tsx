@@ -1,26 +1,26 @@
 import React, { useState } from "react";
-import { AppBar, Box, Button, IconButton, Link, Menu, MenuItem, Stack } from "@mui/material";
+import { AppBar, Button, IconButton, Link, Menu, MenuItem, Stack } from "@mui/material";
+import { Link as RouterLink, useMatch, useResolvedPath } from "react-router-dom";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import ethIcon from 'img/eth-logo.svg';
 import beanCircleIcon from 'img/bean-circle.svg';
 import swapIcon from 'img/swap.svg';
 import tempUserIcon from 'img/temp-user-icon.svg';
-import { useMatch, useResolvedPath } from "react-router-dom";
 import { BeanstalkPalette } from "components/App/muiTheme";
 
 const NAVIGATION_MAP = {
   top: [
     {
-      path: '',
+      path: '/',
       title: 'Forecast',
     },
     {
-      path: 'silo',
+      path: '/silo',
       title: 'Silo',
     },
     {
-      path: 'field',
+      path: '/field',
       title: 'Field',
     },
   ],
@@ -58,6 +58,8 @@ const NavButton : React.FC<{ to: string; title: string }> = ({ to, title }) => {
   // const match = to === "";
   return (
     <Button
+      component={RouterLink}
+      to={to}
       size="small"
       variant="text"
       color={match ? "primary" : "dark"}

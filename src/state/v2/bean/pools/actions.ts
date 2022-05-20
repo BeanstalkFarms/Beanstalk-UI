@@ -1,9 +1,9 @@
 import { createAction } from '@reduxjs/toolkit';
 import { BeanPoolState } from '.';
 
-type UpdatePoolPayload = {
+export type UpdatePoolPayload = {
   address: string;
-  pool: BeanPoolState;
+  pool: Partial<BeanPoolState>;
 };
 
 export const updateBeanPool = createAction<UpdatePoolPayload>(

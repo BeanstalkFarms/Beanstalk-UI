@@ -116,9 +116,9 @@ const setupBatch = (batch: BatchRequest/* , tag: string */) => (
 );
 
 // Result handlers
-const identityResult = (result: any) => result;
-const bigNumberResult = (result: any) => new BigNumber(result);
-const tokenResult = (token : SupportedToken) => (result: BigNumber.Value) =>
+export const identityResult = (result: any) => result;
+export const bigNumberResult = (result: any) => new BigNumber(result);
+export const tokenResult = (token : SupportedToken) => (result: BigNumber.Value) =>
   toTokenUnitsBN(new BigNumber(result), token.decimals);
 
 /* ------------------- */
@@ -252,6 +252,7 @@ export const getTotalBalances = async (batch: BatchRequest) => {
     exec(lp.methods.totalSupply()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
     exec(curve.methods.totalSupply()).then(tokenResult(CURVE)),
     exec(beanlusd.methods.totalSupply()).then(tokenResult(BEANLUSD)),
+    //
     exec(beanstalk.methods.totalSeeds()).then(tokenResult(SEEDS)),
     exec(beanstalk.methods.totalStalk()).then(tokenResult(STALK)),
     exec(beanstalk.methods.totalDepositedBeans()).then(tokenResult(BEAN)),

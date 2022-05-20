@@ -1,11 +1,14 @@
 import React from 'react';
 import { Box, Button, Card, Divider, Grid, Stack, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { SiloTokens } from 'constants/v2/tokens';
+import { Token } from 'classes';
+import { Link } from 'react-router-dom';
 
 const arrowContainerWidth = 20;
 
-const TokenTable : React.FC = () => {
+const TokenTable : React.FC<{
+  tokens: Token[];
+}> = (props) => {
   return (
     <Card>
       {/* Table Header */}
@@ -47,10 +50,12 @@ const TokenTable : React.FC = () => {
         *   gap     = 0
         */}
       <Stack direction="column" gap={1} sx={{ p: 1 }}>
-        {SiloTokens.map((token) => {
+        {props.tokens.map((token) => {
           return (
             <Box>
               <Button
+                component={Link}
+                to={`/silo/${token.address}`}
                 fullWidth
                 variant="outlined"
                 color="secondary"

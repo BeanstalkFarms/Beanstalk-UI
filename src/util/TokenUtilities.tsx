@@ -22,7 +22,7 @@ import USDCLogo from 'img/usdc-logo.svg';
 import CRV3Logo from 'img/bean-curve-logo.svg';
 import BeanlusdLogo from 'img/bean-lusd-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
-import { account, tokenContract } from './index';
+import { account, erc20TokenContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 const MAX_UINT256 =
@@ -90,7 +90,7 @@ export const transferBeans = async (
   amount: string,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  tokenContract(BEAN).transfer(to, amount),
+  erc20TokenContract(BEAN).transfer(to, amount),
   { onResponse }
 );
 
@@ -101,7 +101,7 @@ export const approveToken = async (
   amount: String,
   callback: (number) => void
 ) => {
-  tokenContract(token)
+  erc20TokenContract(token)
     .approve(spender, amount)
     .then((response) => {
       callback(1);

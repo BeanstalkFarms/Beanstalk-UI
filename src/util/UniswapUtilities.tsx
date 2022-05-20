@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js';
 import { BEAN, WETH, zeroBN } from 'constants/index';
-import { account, MinBN, uniswapRouterContract } from './index';
+import { MinBN, uniswapRouterContract } from './index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
+const account = null;
 const DEADLINE_FROM_NOW = 60 * 15;
 const createDeadline = () => Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
 
@@ -76,21 +77,21 @@ export const sellBeans = async (
 
 /** 
  * Used to calculate how much of an underlying reserve a given amount of LP tokens owns in an LP pool.
- * 
- * amount - the amount of LP tokens the farmer owns
- * reserve - the reserve of an asset in the lp pool
- * totalLP - the total lp tokens
- * returns the amount of reserve tokens the farmer owns.
  * Ownership of reserve tokens is proportional to ownership of LP tokens.
+ * 
+ * @param amount - the amount of LP tokens the farmer owns
+ * @param reserve - the reserve of an asset in the lp pool
+ * @param totalLP - the total lp tokens
+ * @returns the amount of reserve tokens the farmer owns.
  */
-export const tokenForLP = (amount, reserve, totalLP) =>
+export const tokenForLP = (amount: BigNumber, reserve: BigNumber, totalLP: BigNumber) =>
   amount.multipliedBy(reserve).dividedBy(totalLP);
 
 /**
  * Used to calcuate the # of reserve tokens owned by a farmer for 2 assets in a pool (e.g. Beans + Eth)
  * Just calls tokenForLP twice.
  */
-export const poolForLP = (amount, reserve1, reserve2, totalLP) => {
+export const poolForLP = (amount: BigNumber, reserve1: BigNumber, reserve2: BigNumber, totalLP: BigNumber) => {
   if (
     amount.isLessThanOrEqualTo(0) ||
     reserve1.isLessThanOrEqualTo(0) ||
@@ -108,10 +109,11 @@ export const poolForLP = (amount, reserve1, reserve2, totalLP) => {
 /**
  * 
  * The opposite of tokenForLP. If a farmer owns/deposits X of reserve asset -> how many LP tokens do they 1 own/get. 
- * amount - the amount of the reserve asset the farmer has
- * reserve - the total amount of the reserve asset
- * totalLP - the total amount of the LP token
- * returns the amount of lp tokens that amount corresponds to.
+ * 
+ * @param amount - the amount of the reserve asset the farmer has
+ * @param reserve - the total amount of the reserve asset
+ * @param totalLP - the total amount of the LP token
+ * @returns the amount of lp tokens that amount corresponds to.
  */
 export const lpForToken = (amount, reserve, totalLP) =>
   amount.multipliedBy(totalLP).dividedBy(reserve);

@@ -8,11 +8,13 @@ import {
 import orderBy from 'lodash/orderBy';
 import { EventData } from 'web3-eth-contract';
 import {
-  beanstalkContractReadOnly,
+  beanstalkContract,
   toTokenUnitsBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
 import { PodOrder, PodListing, MarketHistoryItem, MarketStats } from './reducer';
+
+const beanstalkContractReadOnly = beanstalkContract;
 
 // Pod Listing Events
 // These map to the values returned by the Beanstalk contract.

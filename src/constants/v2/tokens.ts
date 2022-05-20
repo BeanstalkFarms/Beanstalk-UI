@@ -1,5 +1,3 @@
-import { Token } from 'classes';
-
 import ethLogoUrl from 'img/eth-logo.svg';
 import beanLogoUrl from 'img/bean-logo.svg';
 import beanEthLogoUrl from 'img/bean-eth-logo.svg';
@@ -9,8 +7,9 @@ import beanEthLogoUrl from 'img/bean-eth-logo.svg';
 // import crv3LogoUrl from 'img/crv3-logo.svg';
 
 import { SupportedChainId } from '../chains';
+import { ERC20Token, NativeToken } from 'classes/Token';
 
-export const Eth = new Token(
+export const Eth = new NativeToken(
   '',
   SupportedChainId.MAINNET,
   18,
@@ -19,7 +18,7 @@ export const Eth = new Token(
   ethLogoUrl
 );
 
-export const Weth = new Token(
+export const Weth = new ERC20Token(
   '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
   SupportedChainId.MAINNET,
   18,
@@ -28,7 +27,7 @@ export const Weth = new Token(
   ethLogoUrl
 );
 
-export const Bean = new Token(
+export const Bean = new ERC20Token(
   '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
   SupportedChainId.MAINNET,
   6,
@@ -38,12 +37,12 @@ export const Bean = new Token(
   'bean', // FIXME: use slug or address in url?
 );
 
-export const BeanEthUniswapLP = new Token(
+export const BeanEthUniswapLP = new ERC20Token(
   '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
   SupportedChainId.MAINNET,
   18,
   'BEAN:ETH Uniswap V2 LP',
-  'BEAH:ETH',
+  'BEAN:ETH',
   beanEthLogoUrl,
   'bean-eth',
 );

@@ -299,6 +299,16 @@ export default function Updater() {
       const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
       const totalPods = podIndex.minus(harvestableIndex);
 
+      // V2
+      dispatch(updateBeanPools([
+        {
+          address: BeanEthUniswapPool.address,
+          pool: {
+            total: totalLP,
+          }
+        },
+      ]));
+
 
       // V1
       // Dispatchers
@@ -368,14 +378,17 @@ export default function Updater() {
       // Calculations
       const usdcMultiple = new BigNumber(10).exponentiatedBy(12);
       const [
-        beanReserve,
-        ethReserve,
-        rawBeanReserve,
-        rawEthReserve
+        beanReserve,    // bignumber with decimals
+        ethReserve,     // bignumber with decimals
+        rawBeanReserve, // bignumber, no decimals
+        rawEthReserve   // bignumber, no decimals
       ] = lpReservesForTokenReserves(
         tokenReserves,
         token0
       );
+
+      // Uniswap:
+      // price = (eth/bean)/10^12
       const beanEthPrice = rawEthReserve
         .dividedBy(rawBeanReserve)
         .dividedBy(usdcMultiple);
@@ -401,7 +414,6 @@ export default function Updater() {
             totalCrosses: new BigNumber(0),               // FIXME: not tracked yet
           }
         },
-        // FIXME: other pools
       ]));
 
       // V1
