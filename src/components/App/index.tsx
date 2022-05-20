@@ -27,9 +27,12 @@ import AboutPage from 'pages/about';
 import BalancesPage from 'pages/balances';
 import PegMaintenancePage from 'pages/peg';
 
-import Wrapper from './Wrapper';
+import PageBackground from './PageBackground';
 import LoadingBean from './LoadingBean';
 import './App.css';
+import NavBar from 'components/v2/Nav/NavBar';
+import pageBackground from 'img/bg-mainnet.png';
+import { BeanstalkPalette } from './muiTheme';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -94,28 +97,38 @@ export default function App() {
       <TokenUpdater />
       <NftUpdater />
       {/* CONTENT */}
-      <Box className="App">
-        <Wrapper />
-        <Box sx={{ display: 'flex' }}>
-          <Box component="main" sx={{ flex: 1, position: 'relative' }}>
+      <Box
+        className="App"
+        sx={{
+          backgroundColor: BeanstalkPalette.lighterBlue,
+          backgroundImage: `url(${pageBackground})`,
+          backgroundAttachment: 'fixed',
+          backgroundPosition: 'bottom center',
+          backgroundSize: '100%',
+          backgroundRepeat: 'no-repeat',
+        }}
+        >
+        <Box>
+          <NavBar />
+          <Box sx={{ pt: 10 }}>
             {app}
-            <Toaster
-              containerStyle={{
-                // Shift toast by side nav bar width
-                // left: width < 800 ? 0 : 280,
-                marginTop: -2,
-              }}
-              toastOptions={{
-                style: {
-                  minWidth: 300,
-                  maxWidth: 450,
-                  // paddingRight: 0,
-                  paddingLeft: '16px',
-                }
-              }}
-            />
-            <Footer />
           </Box>
+          <Toaster
+            containerStyle={{
+              // Shift toast by side nav bar width
+              // left: width < 800 ? 0 : 280,
+              marginTop: -2,
+            }}
+            toastOptions={{
+              style: {
+                minWidth: 300,
+                maxWidth: 450,
+                // paddingRight: 0,
+                paddingLeft: '16px',
+              }
+            }}
+          />
+          {/* <Footer /> */}
         </Box>
       </Box>
     </>

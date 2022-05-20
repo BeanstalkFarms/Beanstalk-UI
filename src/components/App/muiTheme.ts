@@ -35,6 +35,7 @@ declare module '@mui/material/styles' {
 export const BeanstalkPalette = {
   logoGreen: '#46B955',
   lightBlue: '#C1DEF2',
+  lighterBlue: '#daf2ff', // see `bodyBackground`
   darkBlue: '#1F78B4',
   white: '#fff',
   black: '#333',
@@ -65,6 +66,7 @@ const muiTheme = createTheme({
     },
     secondary: {
       main: BeanstalkPalette.lightBlue,
+      light: BeanstalkPalette.lighterBlue,
       dark: BeanstalkPalette.darkBlue,
       contrastText: "black",
     },
@@ -165,22 +167,23 @@ const muiTheme = createTheme({
     MuiAccordion: {
       defaultProps: {
         elevation: 0,
-        variant: 'outlined',
       },
       styleOverrides: {
-        root: {
-          background: `linear-gradient(90deg, rgba(70, 185, 85, 0.2) 0%, rgba(123, 97, 255, 0.2) 36.58%, rgba(31, 120, 180, 0.2) 96.2%);`,
-        }
+        root: sx({
+          background: `linear-gradient(90deg, rgba(70, 185, 85, 0.2) 0%, rgba(123, 97, 255, 0.2) 36.58%, rgba(31, 120, 180, 0.2) 96.2%)`,
+          borderWidth: 1,
+          borderColor: BeanstalkPalette.darkBlue,
+          borderStyle: 'solid',
+        }),
       },
       variants: [
         {
           props: {
-            variant: "outlined",
+            variant: "outlined",            
           },
           style: {
             background: 'transparent',
-            borderWidth: 1,
-            borderColor: BeanstalkPalette.lightBlue, 
+            borderColor: BeanstalkPalette.lightBlue,
           },
         }
       ]

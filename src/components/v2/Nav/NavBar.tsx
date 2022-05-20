@@ -7,6 +7,7 @@ import beanCircleIcon from 'img/bean-circle.svg';
 import swapIcon from 'img/swap.svg';
 import tempUserIcon from 'img/temp-user-icon.svg';
 import { useMatch, useResolvedPath } from "react-router-dom";
+import { BeanstalkPalette } from "components/App/muiTheme";
 
 const NAVIGATION_MAP = {
   top: [
@@ -52,9 +53,9 @@ const NAVIGATION_MAP = {
 };
 
 const NavButton : React.FC<{ to: string; title: string }> = ({ to, title }) => {
-  // const resolved = useResolvedPath(to);
-  // const match = useMatch({ path: resolved.pathname, end: true });
-  const match = to === "";
+  const resolved = useResolvedPath(to);
+  const match = useMatch({ path: resolved.pathname, end: true });
+  // const match = to === "";
   return (
     <Button
       size="small"
@@ -129,7 +130,7 @@ const MoreButton : React.FC = () => {
 const NavBar : React.FC<{}> = () => {
   //
   return (
-    <AppBar sx={{ px: 1, py: 1 }}>
+    <AppBar sx={{ px: 1, py: 1, backgroundColor: BeanstalkPalette.lighterBlue, borderBottom: `1px solid ${BeanstalkPalette.lightBlue}` }}>
       <Stack direction="row" gap={1} alignItems="center">
         <Button
           color="light"
