@@ -155,8 +155,6 @@ const muiTheme = createTheme({
         root: sx({
           textTransform: 'none',
           fontWeight: 'bold',
-          // px: 2,
-          // py: 1.5,
         }),
       },
     },

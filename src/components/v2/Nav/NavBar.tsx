@@ -56,7 +56,21 @@ const NavButton : React.FC<{ to: string; title: string }> = ({ to, title }) => {
   // const match = useMatch({ path: resolved.pathname, end: true });
   const match = to === "";
   return (
-    <Button variant="text" color={match ? "primary" : "dark"}>
+    <Button
+      size="small"
+      variant="text"
+      color={match ? "primary" : "dark"}
+      sx={{ 
+        textDecoration: match ? 'underline' : null,
+        '&:hover': {
+          textDecoration: match ? 'underline' : null,
+          textDecorationThickness: '2px',
+        },
+        textDecorationThickness: '2px',
+        minWidth: 0,
+        px: 1.5,
+      }}
+    >
       {title}
     </Button>
   )
@@ -74,7 +88,16 @@ const MoreButton : React.FC = () => {
   
   return (
     <>
-      <Button variant="text" color="dark" endIcon={<ArrowDropDownIcon />} onClick={handleClick}>
+      <Button
+        size="small"
+        variant="text"
+        color="dark"
+        endIcon={<ArrowDropDownIcon />}
+        onClick={handleClick}
+        sx={{
+          px: 1.5
+        }}
+      >
         More
       </Button>
       <Menu
@@ -114,7 +137,7 @@ const NavBar : React.FC<{}> = () => {
           endIcon={<ArrowDropDownIcon />}>
           $1.0031
         </Button>
-        <Stack direction="row" sx={{ flex: 1 }} gap={0.5}>
+        <Stack direction="row" sx={{ flex: 1 }}>
           {NAVIGATION_MAP.top.map((item) => (
             <NavButton to={item.path} title={item.title} />
           ))}
