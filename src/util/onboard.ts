@@ -88,6 +88,11 @@ if (!onboard) {
         { name: 'Tally', url: 'https://tally.cash' },
         { name: 'Coinbase', url: 'https://wallet.coinbase.com/' },
       ]
+    },
+    accountCenter: {
+      desktop: {
+        enabled: false
+      }
     }
   });
 }

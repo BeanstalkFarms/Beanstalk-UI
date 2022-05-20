@@ -66,13 +66,6 @@ export default function App() {
     app = (
       <div>
         <Routes>
-          {/* Redirects */}
-          {/* <Route path="/">
-            <Redirect to="/silo" />
-          </Route>
-          <Route path="/farm">
-            <Redirect to="/silo" />
-          </Route> */}
           <Route path="/analytics" element={<AnalyticsPage />} />
           {/* Farm */}
           <Route path="/silo" element={<SiloPage />} />
@@ -88,8 +81,6 @@ export default function App() {
           <Route path="/beanfts" element={<BeaNFTPage key="beanfts" />} />
           <Route path="/about" element={<AboutPage key="about" />} />
           <Route path="/market" element={<MarketplacePage key="marketplace" />} />
-          {/* If nothing matches, go to the Silo */}
-          {/* <Redirect to="/silo" /> */}
         </Routes>
       </div>
     );
@@ -106,14 +97,12 @@ export default function App() {
       <Box className="App">
         <Wrapper />
         <Box sx={{ display: 'flex' }}>
-          <NavigationSidebar />
           <Box component="main" sx={{ flex: 1, position: 'relative' }}>
-            <NavigationBar />
             {app}
             <Toaster
               containerStyle={{
                 // Shift toast by side nav bar width
-                left: width < 800 ? 0 : 280,
+                // left: width < 800 ? 0 : 280,
                 marginTop: -2,
               }}
               toastOptions={{

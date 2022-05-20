@@ -60,7 +60,7 @@ const useStyles = makeStyles({
     height: theme.groundHeight,
     zIndex: 11,
     paddingTop: !theme.groundPaddingTop ? '0px' : theme.groundPaddingTop,
-    paddingLeft: (props: any) => (props.width < 800 ? 0 : 300),
+    // paddingLeft: (props: any) => (props.width < 800 ? 0 : 300),
     position: 'fixed',
     bottom: 0,
     left: 0,

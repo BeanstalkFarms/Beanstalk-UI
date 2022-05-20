@@ -61,7 +61,7 @@ export default function Main() {
       <Box
         className="BeanstalkMT"
         name={theme.name}
-        style={width < 800 ? { left: '0px' } : { left: '280px' }}
+        // style={width < 800 ? { left: '0px' } : { left: '280px' }}
       />
       {/* Sky */}
       <Box
