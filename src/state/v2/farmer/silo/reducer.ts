@@ -10,7 +10,7 @@ const initialSiloAsset = {
   active: NEG1,
   earned: NEG1,
   grown: NEG1,
-}
+};
 
 const initialState : Silo = {
   tokens: {},
@@ -28,7 +28,7 @@ export default createReducer(initialState, (builder) =>
           ...state.tokens[address],
           ...payload[address]
         };
-      })
+      });
     })
     .addCase(updateSiloAssets, (state, { payload }) => {
       state.stalk = payload.stalk;

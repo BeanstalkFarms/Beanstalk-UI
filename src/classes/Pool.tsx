@@ -1,8 +1,8 @@
-import Token, { ERC20Token } from './Token';
-import Dex from './Dex';
 import BigNumber from 'bignumber.js';
-import { UniswapV2Pair, UniswapV2Pair__factory, UniswapV2Router, UniswapV2Router__factory } from 'constants/generated';
+import { UniswapV2Pair, UniswapV2Pair__factory } from 'constants/generated';
 import { provider } from 'util/index';
+import Dex from './Dex';
+import Token, { ERC20Token } from './Token';
 
 type Reserves = [BigNumber, BigNumber];
 

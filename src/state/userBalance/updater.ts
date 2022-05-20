@@ -57,10 +57,10 @@ import {
 } from 'util/index';
 import { updateBeanPools } from 'state/v2/bean/pools/actions';
 import { BeanEthUniswapPool } from 'constants/v2/pools';
-import { UserBalanceState } from './reducer';
 import { updateSiloAssets, updateUserTokenBalances } from 'state/v2/farmer/silo/actions';
 import { Bean } from 'constants/tokensv2';
 import { BeanEthUniswapLP } from 'constants/v2/tokens';
+import { UserBalanceState } from './reducer';
 
 type EventParsingParameters = [
   season: AppState['season']['season'],
@@ -308,7 +308,6 @@ export default function Updater() {
           }
         },
       ]));
-
 
       // V1
       // Dispatchers
@@ -1006,7 +1005,7 @@ export default function Updater() {
             seeds: new BigNumber(-1),
           })),
         }
-      }))
+      }));
 
       // vs
       dispatch(setUserBalance({

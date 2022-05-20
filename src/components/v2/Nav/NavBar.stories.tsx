@@ -1,8 +1,8 @@
-import React from "react";
-import { Box, Button } from "@mui/material";
+import React from 'react';
+import { Box } from '@mui/material';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import NavBar from "./NavBar";
-import { BeanstalkPalette } from "components/App/muiTheme";
+import { BeanstalkPalette } from 'components/App/muiTheme';
+import NavBar from './NavBar';
 
 export default {
   component: NavBar,
@@ -12,12 +12,10 @@ export default {
   }
 } as ComponentMeta<typeof NavBar>;
 
-const Template: ComponentStory<typeof NavBar> = (args: any) => {
-  return (
-    <Box sx={{ backgroundColor: BeanstalkPalette.lightBlue, minHeight: 200 }}>
-      <NavBar {...args} />
-    </Box>
-  )
-};
+const Template: ComponentStory<typeof NavBar> = (args: any) => (
+  <Box sx={{ backgroundColor: BeanstalkPalette.lightBlue, minHeight: 200 }}>
+    <NavBar {...args} />
+  </Box>
+  );
 
-export const Default = Template.bind({})
+export const Default = Template.bind({});

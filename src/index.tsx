@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
-import { Provider as StateProvider } from 'react-redux';
+import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
+import { Provider } from 'wagmi';
 
 import store from 'state';
 import App from 'components/App';
 import ScrollToTop from 'components/Common/ScrollToTop';
 import theme from 'components/App/muiTheme';
+import client from './util/wagmi';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -21,13 +23,15 @@ ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
       <ScrollToTop />
-      <StateProvider store={store}>
+      <ReduxProvider store={store}>
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>
-            <App />
+            <Provider client={client}>
+              <App />
+            </Provider>
           </ThemeProvider>
         </StyledEngineProvider>
-      </StateProvider>
+      </ReduxProvider>
     </HashRouter>
   </React.StrictMode>,
   document.getElementById('root')

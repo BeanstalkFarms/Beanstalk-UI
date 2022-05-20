@@ -1,7 +1,7 @@
-import React from "react";
-import { Button } from "@mui/material";
+import React from 'react';
+import { Button } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Box } from "@mui/system";
+import { Box } from '@mui/system';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
@@ -37,17 +37,17 @@ Primary.args = {
 
 export const Dropdown = Template.bind({});
 Dropdown.args = {
-  variant: "contained",
-  color: "secondary",
-  children: "Select a token",
+  variant: 'contained',
+  color: 'secondary',
+  children: 'Select a token',
   endIcon: <ArrowDropDownIcon />
-}
+};
 
 export const Large = Template.bind({});
 Large.args = {
-  variant: "contained",
-  color: "primary",
-  children: "Convert Allocation of Deposited Assets",
-  size: "large",
+  variant: 'contained',
+  color: 'primary',
+  children: 'Convert Allocation of Deposited Assets',
+  size: 'large',
   fullWidth: true,
-}
+};

@@ -1,7 +1,7 @@
-import BigNumber from "bignumber.js";
-import { ERC20 } from "constants/generated";
-import { erc20TokenContract, provider } from "util/index";
-import { bigNumberResult } from "util/LedgerUtilities2";
+import BigNumber from 'bignumber.js';
+import { ERC20 } from 'constants/generated';
+import { erc20TokenContract, provider } from 'util/index';
+import { bigNumberResult } from 'util/LedgerUtilities2';
 
 /**
  * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies

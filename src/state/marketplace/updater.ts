@@ -6,13 +6,13 @@ import {
   setMarketplaceState,
 } from 'state/marketplace/actions';
 import orderBy from 'lodash/orderBy';
-import { EventData } from 'web3-eth-contract';
 import {
   beanstalkContract,
   toTokenUnitsBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
 import { PodOrder, PodListing, MarketHistoryItem, MarketStats } from './reducer';
+import { ethers } from 'ethers';
 
 const beanstalkContractReadOnly = beanstalkContract;
 
@@ -61,7 +61,7 @@ export type PodOrderCancelledEvent = {
   id: string;
 }
 
-function processEvents(events: EventData[], harvestableIndex: BigNumber) {
+function processEvents(events: ethers.Event[], harvestableIndex: BigNumber) {
   const podListings : { [key: string]: PodListing } = {};
   const podOrders : { [key: string]: PodOrder } = {};
   const marketHistory : MarketHistoryItem[] = [];
@@ -280,7 +280,7 @@ export default function Updater() {
       );
       
       // eslint-disable-next-line
-      let marketplaceEvents : EventData[] = [].concat.apply([], events);
+      let marketplaceEvents : ethers.Event[] = [].concat.apply([], events);
       marketplaceEvents.sort((a, b) => {
         const diff = a.blockNumber - b.blockNumber;
         if (diff !== 0) return diff;

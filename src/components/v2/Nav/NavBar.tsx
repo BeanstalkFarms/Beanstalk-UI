@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { AppBar, Button, IconButton, Link, Menu, MenuItem, Stack } from "@mui/material";
-import { Link as RouterLink, useMatch, useResolvedPath } from "react-router-dom";
+import React, { useState } from 'react';
+import { AppBar, Button, IconButton, Menu, MenuItem, Stack } from '@mui/material';
+import { Link as RouterLink, useMatch, useResolvedPath } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import ethIcon from 'img/eth-logo.svg';
 import beanCircleIcon from 'img/bean-circle.svg';
 import swapIcon from 'img/swap.svg';
 import tempUserIcon from 'img/temp-user-icon.svg';
-import { BeanstalkPalette } from "components/App/muiTheme";
+import { BeanstalkPalette } from 'components/App/muiTheme';
 
 const NAVIGATION_MAP = {
   top: [
@@ -62,7 +62,7 @@ const NavButton : React.FC<{ to: string; title: string }> = ({ to, title }) => {
       to={to}
       size="small"
       variant="text"
-      color={match ? "primary" : "dark"}
+      color={match ? 'primary' : 'dark'}
       sx={{ 
         textDecoration: match ? 'underline' : null,
         '&:hover': {
@@ -76,8 +76,8 @@ const NavButton : React.FC<{ to: string; title: string }> = ({ to, title }) => {
     >
       {title}
     </Button>
-  )
-}
+  );
+};
 
 const MoreButton : React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -126,45 +126,44 @@ const MoreButton : React.FC = () => {
         <MenuItem onClick={handleClose}>Logout</MenuItem>
       </Menu>
     </>
-  )
-}
-
-const NavBar : React.FC<{}> = () => {
-  //
-  return (
-    <AppBar sx={{ px: 1, py: 1, backgroundColor: BeanstalkPalette.lighterBlue, borderBottom: `1px solid ${BeanstalkPalette.lightBlue}` }}>
-      <Stack direction="row" gap={1} alignItems="center">
-        <Button
-          color="light"
-          startIcon={<img src={beanCircleIcon} alt="Bean" style={{ height: 25 }} />}
-          endIcon={<ArrowDropDownIcon />}>
-          $1.0031
-        </Button>
-        <Stack direction="row" sx={{ flex: 1 }}>
-          {NAVIGATION_MAP.top.map((item) => (
-            <NavButton to={item.path} title={item.title} />
-          ))}
-          <MoreButton />
-        </Stack>
-        <IconButton color="light" variant="contained">
-          <img src={swapIcon} alt="Swap" />
-        </IconButton>
-        <Button
-          color="light"
-          startIcon={<img src={ethIcon} alt="Bean" style={{ height: 25 }} />}
-          endIcon={<ArrowDropDownIcon />}
-        >
-          Ethereum
-        </Button>
-        <Button
-          color="light"
-          startIcon={<img src={tempUserIcon} alt="User" style={{ height: 25 }} />}
-        >
-          0x1594a...0f5
-        </Button>
-      </Stack>
-    </AppBar>
   );
-}
+};
+
+const NavBar : React.FC<{}> = () => 
+  //
+   (
+     <AppBar sx={{ px: 1, py: 1, backgroundColor: BeanstalkPalette.lighterBlue, borderBottom: `1px solid ${BeanstalkPalette.lightBlue}` }}>
+       <Stack direction="row" gap={1} alignItems="center">
+         <Button
+           color="light"
+           startIcon={<img src={beanCircleIcon} alt="Bean" style={{ height: 25 }} />}
+           endIcon={<ArrowDropDownIcon />}>
+           $1.0031
+         </Button>
+         <Stack direction="row" sx={{ flex: 1 }}>
+           {NAVIGATION_MAP.top.map((item) => (
+             <NavButton to={item.path} title={item.title} />
+          ))}
+           <MoreButton />
+         </Stack>
+         <IconButton color="light" variant="contained">
+           <img src={swapIcon} alt="Swap" />
+         </IconButton>
+         <Button
+           color="light"
+           startIcon={<img src={ethIcon} alt="Bean" style={{ height: 25 }} />}
+           endIcon={<ArrowDropDownIcon />}
+        >
+           Ethereum
+         </Button>
+         <Button
+           color="light"
+           startIcon={<img src={tempUserIcon} alt="User" style={{ height: 25 }} />}
+        >
+           0x1594a...0f5
+         </Button>
+       </Stack>
+     </AppBar>
+  );
 
 export default NavBar;

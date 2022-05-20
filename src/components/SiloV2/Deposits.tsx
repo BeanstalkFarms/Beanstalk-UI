@@ -1,13 +1,13 @@
+import React, { useMemo } from 'react';
+import { Token } from 'classes';
+import BigNumber from 'bignumber.js';
 import { Card } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { Token } from 'classes';
-import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+
 import { AppState } from 'state';
 import { UserTokenBalance } from 'state/v2/farmer/silo';
-import { displayBN } from 'util/TokenUtilities';
 import type { Deposit } from 'state/v2/farmer/silo';
-import BigNumber from 'bignumber.js';
 
 const columns = [
   {
@@ -29,26 +29,19 @@ const columns = [
     headerName: 'Seeds',
     width: 200,
   }
-]
+];
 
 const Deposits : React.FC<{
   token: Token
 }> = ({
   token,
-  ...props
 }) => {
   const { deposits }  = useSelector<AppState, UserTokenBalance>((state) => state._farmer.silo.tokens[token.address]);
 
-  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => {
-    return deposits.map((deposit) => {
-      return {
-        id: deposit.season,
-        ...deposit
-      }
-    })
-  }, [deposits])
-
-  console.log(rows)
+  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => deposits.map((deposit) => ({
+    id: deposit.season,
+    ...deposit
+  })), [deposits]);
 
   return (
     <Card sx={{ height: 400, width: '100%' }}>
@@ -60,7 +53,7 @@ const Deposits : React.FC<{
         disableSelectionOnClick
       />
     </Card>
-  )
-}
+  );
+};
 
 export default Deposits;

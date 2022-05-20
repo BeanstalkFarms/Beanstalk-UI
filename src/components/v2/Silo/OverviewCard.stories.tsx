@@ -1,17 +1,14 @@
-import React from "react";
-import { Button } from "@mui/material";
+import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import OverviewCard from "./OverviewCard";
+import OverviewCard from './OverviewCard';
 
 export default {
   component: OverviewCard,
   args: {}
 } as ComponentMeta<typeof OverviewCard>;
 
-const Template: ComponentStory<typeof OverviewCard> = (args: any) => {
-  return (
-    <OverviewCard {...args} />
-  )
-};
+const Template: ComponentStory<typeof OverviewCard> = (args: any) => (
+  <OverviewCard {...args} />
+  );
 
-export const Default = Template.bind({})
+export const Default = Template.bind({});

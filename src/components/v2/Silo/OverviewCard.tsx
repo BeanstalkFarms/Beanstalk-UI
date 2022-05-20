@@ -11,7 +11,7 @@ const windows = [
   { label: '1M', },
   { label: '1Y', },
   { label: 'All', },
-]
+];
 
 type TabData = {
   current: number[];
@@ -21,8 +21,8 @@ type TabData = {
 const DepositsTab : React.FC<TabData> = ({ current, series }) => {
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback((ds?: DataPoint[]) => {
-    setDisplayValue(ds ? ds.map((d) => d.value) : current)
-  }, [current])
+    setDisplayValue(ds ? ds.map((d) => d.value) : current);
+  }, [current]);
   
   return (
     <>
@@ -42,14 +42,14 @@ const DepositsTab : React.FC<TabData> = ({ current, series }) => {
         />
       </Box>
     </>
-  )
-}
+  );
+};
 
 const StalkOwnershipTab : React.FC<TabData> = ({ current, series }) => {
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback((ds?: DataPoint[]) => {
-    setDisplayValue(ds ? ds.map((d) => d.value) : current)
-  }, [current])
+    setDisplayValue(ds ? ds.map((d) => d.value) : current);
+  }, [current]);
   
   return (
     <>
@@ -57,14 +57,14 @@ const StalkOwnershipTab : React.FC<TabData> = ({ current, series }) => {
         <Stack gap={0.5} sx={{ minWidth: 180 }}>
           <Typography color="gray">My Stalk</Typography>
           <Typography variant="h1" color="primary">
-            {displayValue[0].toLocaleString("en-us", { maximumFractionDigits: 0 })}
+            {displayValue[0].toLocaleString('en-us', { maximumFractionDigits: 0 })}
           </Typography>
           <Typography>Season 5995</Typography>
         </Stack>
         <Stack gap={0.5}>
           <Typography color="gray">Ownership % of all Stalk</Typography>
           <Typography variant="h1" color="secondary.dark">
-            {(100*displayValue[1]).toLocaleString()}%
+            {(100 * displayValue[1]).toLocaleString()}%
           </Typography>
         </Stack>
       </Stack>
@@ -75,8 +75,8 @@ const StalkOwnershipTab : React.FC<TabData> = ({ current, series }) => {
         />
       </Box>
     </>
-  )
-}
+  );
+};
 
 const OverviewCard : React.FC<{
   // FIXME: naming
@@ -134,6 +134,6 @@ const OverviewCard : React.FC<{
       </Box>
     </Card>
   );
-}
+};
 
 export default OverviewCard;

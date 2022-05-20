@@ -8,15 +8,14 @@ import Deposits from './Deposits';
 const TokenPage : React.FC<{
   token: Token
 }> = ({
-  token,
-  ...props
+  token
 }) => {
-  const pools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+  // const pools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   const silo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
 
   return (
     <div>
-      {token.logo}<br/>
+      {token.logo}<br />
       {silo.tokens[token.address].deposited.toString()}
       <Deposit
         token={token}
@@ -25,7 +24,7 @@ const TokenPage : React.FC<{
         token={token}
       />
     </div>
-  )
-}
+  );
+};
 
 export default TokenPage;

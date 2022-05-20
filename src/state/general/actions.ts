@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { EventData } from 'web3-eth-contract';
+// import { EventData } from 'web3-eth-contract';
 
 export enum TransactionState {
   PENDING,
@@ -29,9 +29,11 @@ export const setLastCross = createAction<number>(
   'general/setLastCross'
 );
 
-export const setBips = createAction<Array>('general/setBips');
+export const setBips = createAction<any[]>(
+  'general/setBips'
+);
 
-export const setContractEvents = createAction<EventData[]>(
+export const setContractEvents = createAction<any[]>(
   'general/setContractEvents'
 );
 
@@ -43,7 +45,7 @@ export const setHasActiveBIP = createAction<boolean>(
   'general/setHasActiveBIP'
 );
 
-export const setFundraisers = createAction<Array>('general/setFundraisers');
+export const setFundraisers = createAction<any[]>('general/setFundraisers');
 
 export const setHasActiveFundraiser = createAction<boolean>(
   'general/setHasActiveFundraiser'

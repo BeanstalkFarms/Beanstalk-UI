@@ -1,12 +1,12 @@
 import { ethers } from 'ethers';
 
-import { changeTheme, BEANSTALK, BEANFTCOLLECTION, BEANFTGENESIS, UNISWAP_V2_ROUTER } from 'constants/index';
+import { changeTheme, BEANSTALK, BEANFTCOLLECTION, BEANFTGENESIS, UNISWAP_V2_ROUTER, BEANSTALK_PRICE } from 'constants/index';
 import { changeTokenAddresses } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import { ALCHEMY_HTTPS_URLS } from 'constants/rpc/alchemy';
 import { ERC20__factory } from 'constants/generated/factories/ERC20__factory';
 import { BeaNFTGenesis__factory, BeanstalkPrice__factory, Beanstalk__factory, UniswapV2Router__factory } from 'constants/generated';
-import web3Onboard from './web3Onboard';
+// import web3Onboard from './web3Onboard';
 
 // -- Exports
 // export * from './LedgerUtilities';
@@ -21,6 +21,7 @@ export * from './TimeUtilities';
 export * from './APYUtilities';
 export * from './FundraiserUtilities';
 export * from './MarketUtilities';
+export type EventData = ethers.Event
 
 // -- Globals
 export let chainId : SupportedChainId = 1; // fixme
@@ -31,30 +32,30 @@ export const provider = new ethers.providers.JsonRpcProvider(RPC_HOST);
 
 // -- Contracts 
 export const erc20TokenContract = (address: string, signer?: ethers.Signer) =>
-  ERC20__factory.connect(address, signer || provider)
+  ERC20__factory.connect(address, signer || provider);
 
-// export const beanstalkPriceContract = () =>
-//   BeanstalkPrice__factory.connect()
+export const beanstalkPriceContract = () =>
+  BeanstalkPrice__factory.connect(BEANSTALK_PRICE[SupportedChainId.ROPSTEN], provider);
 
 export const beanstalkContract = (signer?: ethers.Signer) => 
-  Beanstalk__factory.connect(BEANSTALK, signer || provider)
+  Beanstalk__factory.connect(BEANSTALK, signer || provider);
 
 export const beaNFTGenesisContract = (signer?: ethers.Signer) =>
-  BeaNFTGenesis__factory.connect(BEANFTGENESIS, signer || provider)
+  BeaNFTGenesis__factory.connect(BEANFTGENESIS, signer || provider);
 
 export const beaNFTWinterContract = (signer?: ethers.Signer) =>
-  BeaNFTGenesis__factory.connect(BEANFTCOLLECTION, signer || provider)
+  BeaNFTGenesis__factory.connect(BEANFTCOLLECTION, signer || provider);
 
 export const uniswapRouterContract = (signer?: ethers.Signer) =>
-  UniswapV2Router__factory.connect(UNISWAP_V2_ROUTER, signer || provider)
+  UniswapV2Router__factory.connect(UNISWAP_V2_ROUTER, signer || provider);
 
 // -- Helpers
 export async function switchChain(_chainId: SupportedChainId) {
-  if (!web3Onboard) throw new Error('Onboard is not yet initialized.');
+  // if (!web3Onboard) throw new Error('Onboard is not yet initialized.');
 
-  await web3Onboard.setChain({
-    chainId: `0x${_chainId.toString(16)}`,
-  })
+  // await web3Onboard.setChain({
+  //   chainId: `0x${_chainId.toString(16)}`,
+  // });
 
   // Update chain information, tokens, theme
   chainId = _chainId;
@@ -70,15 +71,15 @@ export function getPreviouslyConnectedWallets() : null | string[] {
 }
 
 export function trimAddress(address: string) {
-  return `${address.substring(0, 6)}..${address.slice(-4)}`
+  return `${address.substring(0, 6)}..${address.slice(-4)}`;
 }
 
-const ordinalRulesEN = new Intl.PluralRules("en", { type: "ordinal" });
+const ordinalRulesEN = new Intl.PluralRules('en', { type: 'ordinal' });
 const suffixes = {
-  one: "st",
-  two: "nd",
-  few: "rd",
-  other: "th"
+  one: 'st',
+  two: 'nd',
+  few: 'rd',
+  other: 'th'
 };
 
 export function ordinal(number: number) : string {

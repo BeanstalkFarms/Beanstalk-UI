@@ -40,7 +40,7 @@ export const BeanstalkPalette = {
   white: '#fff',
   black: '#333',
   lightishGrey: '#9E9E9E'
-}
+};
 
 // FIXME: changes to createTheme don't hot reload.
 const muiTheme = createTheme({
@@ -62,13 +62,13 @@ const muiTheme = createTheme({
   palette: {
     primary: {
       main: BeanstalkPalette.logoGreen,
-      contrastText: "white",
+      contrastText: 'white',
     },
     secondary: {
       main: BeanstalkPalette.lightBlue,
       light: BeanstalkPalette.lighterBlue,
       dark: BeanstalkPalette.darkBlue,
-      contrastText: "black",
+      contrastText: 'black',
     },
     light: {
       main: BeanstalkPalette.white,
@@ -80,7 +80,7 @@ const muiTheme = createTheme({
     },
     //
     text: {
-      primary: "#333333",
+      primary: '#333333',
       // secondary: BeanstalkPalette.white,
       // disabled: BeanstalkPalette.white,
     }
@@ -135,13 +135,13 @@ const muiTheme = createTheme({
     MuiCard: {
       defaultProps: {
         elevation: 0,
-        variant: "outlined",
-        color: "secondary"
+        variant: 'outlined',
+        color: 'secondary'
       },
       styleOverrides: {
         root: sx({
           borderWidth: 1,
-          borderColor: "secondary.main",
+          borderColor: 'secondary.main',
         })
       }
     },
@@ -151,7 +151,7 @@ const muiTheme = createTheme({
     MuiButton: {
       defaultProps: {
         disableElevation: true,
-        variant: "contained",
+        variant: 'contained',
       },
       styleOverrides: {
         root: sx({
@@ -170,7 +170,7 @@ const muiTheme = createTheme({
       },
       styleOverrides: {
         root: sx({
-          background: `linear-gradient(90deg, rgba(70, 185, 85, 0.2) 0%, rgba(123, 97, 255, 0.2) 36.58%, rgba(31, 120, 180, 0.2) 96.2%)`,
+          background: 'linear-gradient(90deg, rgba(70, 185, 85, 0.2) 0%, rgba(123, 97, 255, 0.2) 36.58%, rgba(31, 120, 180, 0.2) 96.2%)',
           borderWidth: 1,
           borderColor: BeanstalkPalette.darkBlue,
           borderStyle: 'solid',
@@ -179,7 +179,7 @@ const muiTheme = createTheme({
       variants: [
         {
           props: {
-            variant: "outlined",            
+            variant: 'outlined',            
           },
           style: {
             background: 'transparent',
@@ -193,7 +193,7 @@ const muiTheme = createTheme({
      */
     MuiTextField: {
       defaultProps: {
-        color: "secondary",
+        color: 'secondary',
       },
       styleOverrides: {
         root: {
@@ -209,7 +209,7 @@ const muiTheme = createTheme({
       defaultProps: {},
       styleOverrides: {
         root: {
-          fontWeight: "normal"
+          fontWeight: 'normal'
         },
         indicator: {
           display: 'none',
@@ -231,15 +231,15 @@ const muiTheme = createTheme({
           textAlign: 'left',
           minWidth: 0,
 
-          fontWeight: "normal",
-          textTransform: "none",
-          color: "gray",
+          fontWeight: 'normal',
+          textTransform: 'none',
+          color: 'gray',
           fontSize: 20,
           '&:active': {},
           // FIXME: unsure why `selected` style
           // override doesn't work here.
           '&.Mui-selected': {
-            fontWeight: "bold",
+            fontWeight: 'bold',
             color: BeanstalkPalette.black,
           }
         }),
@@ -254,8 +254,8 @@ const muiTheme = createTheme({
     },
     MuiButtonGroup: {
       defaultProps: {
-        variant: "text",
-        size: "small"
+        variant: 'text',
+        size: 'small'
       },
       styleOverrides: {
         root: {
@@ -270,7 +270,7 @@ const muiTheme = createTheme({
     MuiAppBar: {
       defaultProps: {
         elevation: 0,
-        color: "transparent"
+        color: 'transparent'
       }
     }
   }

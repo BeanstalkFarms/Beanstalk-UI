@@ -24,8 +24,8 @@ module.exports = {
   rules: {
     // -- Tree-shaking
     // https://mui.com/material-ui/guides/minimizing-bundle-size/#option-1
-    "no-restricted-imports": ["error", {
-      "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
+    'no-restricted-imports': ['error', {
+      patterns: ['@mui/*/*/*', '!@mui/material/test-utils/*']
     }],
     // -- Stylistic
     semi: 'warn',
@@ -112,7 +112,7 @@ module.exports = {
     'object-shorthand': 0,
     'comma-spacing': 0,
     'react/jsx-tag-spacing': 'warn',
-    'camelcase': 0,
+    camelcase: 0,
     // disable because generated files aren't camel-cased
     'padded-blocks': 'warn',
     'import/no-useless-path-segments': 'warn'

@@ -6,8 +6,8 @@ import beanEthLogoUrl from 'img/bean-eth-logo.svg';
 // import usdtLogoUrl from 'img/usdt-logo.svg';
 // import crv3LogoUrl from 'img/crv3-logo.svg';
 
-import { SupportedChainId } from '../chains';
 import { ERC20Token, NativeToken } from 'classes/Token';
+import { SupportedChainId } from '../chains';
 
 export const Eth = new NativeToken(
   '',
@@ -52,6 +52,6 @@ export const BeanEthUniswapLP = new ERC20Token(
 export const SiloTokensByAddress = {
   [Bean.address.toLowerCase()]: Bean,
   [BeanEthUniswapLP.address.toLowerCase()]: BeanEthUniswapLP,
-}
+};
 
-export const SiloTokens = Object.values(SiloTokensByAddress)
+export const SiloTokens = Object.values(SiloTokensByAddress);

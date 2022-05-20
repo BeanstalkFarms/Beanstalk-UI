@@ -34,7 +34,7 @@ const margin = {
   bottom: 20,
   left: 0,
   right: 0,
-}
+};
 const strokes = [
   {
     stroke: BeanstalkPalette.logoGreen,
@@ -44,7 +44,7 @@ const strokes = [
     stroke: BeanstalkPalette.darkBlue,
     strokeWidth: 2,
   }
-]
+];
 
 const Graph : React.FC<GraphProps> = withTooltip(({
   // Chart sizing
@@ -54,7 +54,7 @@ const Graph : React.FC<GraphProps> = withTooltip(({
   showTooltip,
   hideTooltip,
   tooltipData,
-  tooltipTop = 0,
+  // tooltipTop = 0,
   tooltipLeft = 0,
   // Data
   series,
@@ -72,9 +72,9 @@ const Graph : React.FC<GraphProps> = withTooltip(({
       domain: [min(_data, getY) as number, max(_data, getY) as number],
     });
     xScale.range([0, width]);
-    yScale.range([height-margin.top, margin.bottom]);
+    yScale.range([height - margin.top, margin.bottom]);
     return { xScale, yScale };
-  }), [width, height, series])
+  }), [width, height, series]);
 
   //
   const handleTooltip = useCallback(
@@ -107,7 +107,7 @@ const Graph : React.FC<GraphProps> = withTooltip(({
   const handleMouseLeave = useCallback(() => {
     hideTooltip();
     onCursor(undefined);
-  }, [hideTooltip, onCursor])
+  }, [hideTooltip, onCursor]);
   
   return (
     <>
@@ -116,17 +116,15 @@ const Graph : React.FC<GraphProps> = withTooltip(({
           * Lines
           */}
         <Group>
-          {series.map((_data, index) => {
-            return (
-              <LinePath<DateValue>
-                curve={curveNatural}
-                data={_data}
-                x={(d) => scales[index].xScale(getX(d)) ?? 0}
-                y={(d) => scales[index].yScale(getY(d)) ?? 0}
-                {...strokes[index]}
+          {series.map((_data, index) => (
+            <LinePath<DateValue>
+              curve={curveNatural}
+              data={_data}
+              x={(d) => scales[index].xScale(getX(d)) ?? 0}
+              y={(d) => scales[index].yScale(getY(d)) ?? 0}
+              {...strokes[index]}
               />
-            );
-          })}
+            ))}
         </Group>
         {/**
           * Cursor
@@ -169,20 +167,18 @@ const Graph : React.FC<GraphProps> = withTooltip(({
 const SimpleGraph : React.FC<{
   series: (DataPoint[])[];
   onCursor: GraphProps['onCursor'];
-}> = (props) => {
-  return (
-    <ParentSize debounceTime={50}>
-      {({ width: visWidth, height: visHeight }) => (
-        <Graph
-          width={visWidth}
-          height={visHeight}
-          series={props.series}
-          onCursor={props.onCursor}
+}> = (props) => (
+  <ParentSize debounceTime={50}>
+    {({ width: visWidth, height: visHeight }) => (
+      <Graph
+        width={visWidth}
+        height={visHeight}
+        series={props.series}
+        onCursor={props.onCursor}
         />
       )}
-    </ParentSize>
-  )
-}
+  </ParentSize>
+  );
 
 /* <circle
   cx={tooltipLeft}

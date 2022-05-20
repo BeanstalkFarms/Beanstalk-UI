@@ -1,10 +1,10 @@
-import React from "react";
-import { TextField, Button } from "@mui/material";
+import React from 'react';
+import { TextField, Button } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export default {
   component: TextField,
-}
+};
 
 const Template : any = (args : any) => (
   <TextField
@@ -29,4 +29,4 @@ WithAdornment.args = {
       Select a token
     </Button>
   ),
-}
+};

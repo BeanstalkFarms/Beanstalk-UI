@@ -5,9 +5,8 @@ import { useDispatch } from 'react-redux';
 import Pools from 'constants/v2/pools';
 import { updateBeanPools, UpdatePoolPayload } from './actions';
 
-export const getPools = async () => {
-  return Promise.all(
-    Pools.all.map(pool => {
+export const getPools = async () => Promise.all(
+    Pools.all.map((pool) => {
       const calls = [
         pool.lpToken.getTotalSupply(),
         pool.getReserves(),
@@ -23,7 +22,6 @@ export const getPools = async () => {
       } as UpdatePoolPayload));
     })
   );
-}
 
 export const useGetPools = () => {
   const dispatch = useDispatch();
@@ -36,7 +34,7 @@ export const useGetPools = () => {
   const clear = useCallback(() => {}, [dispatch]);
 
   return [fetch, clear];
-}
+};
 
 // -- Updater
 
@@ -45,7 +43,7 @@ export default function PoolsUpdater() {
 
   useEffect(() => {
     fetch();
-  }, [])
+  }, []);
 
   return null;
 }

@@ -1,10 +1,9 @@
 import React from 'react';
-import { Accordion, AccordionSummary, Button, Card, Container, Stack } from '@mui/material';
+import { Button, Card, Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { Bean, SiloTokens } from 'constants/v2/tokens';
+import { SiloTokens } from 'constants/v2/tokens';
 import Pools from 'constants/v2/pools';
 import { AppState } from 'state';
-import AccordionWrapper from 'components/v2/Common/AccordionWrapper';
 import NextSeason from 'components/v2/Silo/NextSeason';
 import OverviewCard from 'components/v2/Silo/OverviewCard';
 import RewardsBar from 'components/v2/Silo/RewardsBar';
@@ -13,8 +12,6 @@ import PageHeader from 'components/v2/Common/PageHeader';
 import { SNAPSHOT_LINK } from 'constants/index';
 import snapshotIcon from 'img/snapshot-icon.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Token } from 'classes';
-import BigNumber from 'bignumber.js';
 
 /* <PageHeader
   title="The Field"
@@ -22,18 +19,18 @@ import BigNumber from 'bignumber.js';
   description="Earn yield through lending Beans to Beanstalk when there is Available Soil in exchange for Pods"
 /> */
 
-const useGetSiloTokenValueUSD = () => {
-  const pools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
-  const prices = useSelector<AppState, AppState['prices']>((state) => state.prices);
-  return (token: Token, amount: BigNumber) => {
-    // If no pool is present, this token is 
-    if (token === Bean) {
-      return amount.times(prices.beanTWAPPrice);
-    }
-    const pool = Pools.get(token.address);
-    return amount;
-  }
-}
+// const useGetSiloTokenValueUSD = () => {
+//   const pools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+//   const prices = useSelector<AppState, AppState['prices']>((state) => state.prices);
+//   return (token: Token, amount: BigNumber) => {
+//     // If no pool is present, this token is 
+//     if (token === Bean) {
+//       return amount.times(prices.beanTWAPPrice);
+//     }
+//     const pool = Pools.get(token.address);
+//     return amount;
+//   };
+// };
 
 export default function SiloV2() {
   const pools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
@@ -53,7 +50,7 @@ export default function SiloV2() {
               color="light"
               variant="contained"
               startIcon={<img src={snapshotIcon} alt="Snapshot" style={{ height: 20 }} />}
-              endIcon={<ArrowForwardIcon sx={{ transform: "rotate(-45deg)" }} />}
+              endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
             >
               Governance
             </Button>
@@ -85,7 +82,7 @@ export default function SiloV2() {
                   </div>
                 ) : null}
                 <div>
-                  Deposits: {silo.tokens[token.address]?.deposited.toString() || 'none'}<br/>
+                  Deposits: {silo.tokens[token.address]?.deposited.toString() || 'none'}<br />
                 </div>
                 <br />
                 <br />

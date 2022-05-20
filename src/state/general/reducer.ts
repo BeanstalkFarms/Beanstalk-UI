@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
-import { EventData } from 'web3-eth-contract';
+// import { EventData } from 'web3-eth-contract';
 
 import {
   setInitialized,
@@ -164,7 +164,7 @@ export interface GeneralState {
   /**
    * FIXME: define Contract Event type
    */
-  contractEvents: EventData[];
+  contractEvents: any[];
   
   // transactions: Array<Transaction>;
 
