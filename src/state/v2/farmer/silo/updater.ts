@@ -29,7 +29,7 @@ export const useFarmerSilo = () => {
         stalkBalance,
         seedBalance,
         rootBalance,
-        farmableBeanBalance,
+        earnedBeanBalance,
         grownStalkBalance,
       ] = await Promise.all([
         beanstalk.balanceOfStalk(account.address).then(tokenResult(Stalk)),
@@ -43,32 +43,31 @@ export const useFarmerSilo = () => {
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
-      const farmableStalkBalance = farmableBeanBalance.times(BEAN_TO_STALK);
-      const activeStalkBalance   = stalkBalance.plus(farmableStalkBalance);
-      const farmableSeedBalance  = farmableBeanBalance.times(BEAN_TO_SEEDS);
+      const earnedStalkBalance = earnedBeanBalance.times(BEAN_TO_STALK);
+      const activeStalkBalance = stalkBalance.plus(earnedStalkBalance);
+      const earnedSeedBalance  = earnedBeanBalance.times(BEAN_TO_SEEDS);
       
       // total:   active & inactive
       // active:  owned, actively earning other silo assets
       // earned:  active but not yet deposited into a Season
       // grown:   inactive
       dispatch(updateFarmerSiloAssets({
+        beans: {
+          earned: earnedBeanBalance,
+        },
         stalk: {
           total:  activeStalkBalance.plus(grownStalkBalance),
           active: activeStalkBalance,
-          earned: farmableStalkBalance,
+          earned: earnedStalkBalance,
           grown:  grownStalkBalance,
         },
         seeds: {
-          total:  seedBalance.plus(farmableSeedBalance),
+          total:  seedBalance.plus(earnedSeedBalance),
           active: seedBalance,
-          earned: farmableSeedBalance,
-          grown:  new BigNumber(0),
+          earned: earnedSeedBalance,
         },
         roots: {
           total: rootBalance,
-          active: NEG1,
-          earned: NEG1,
-          grown: NEG1,
         }
       }));
     }

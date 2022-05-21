@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { FarmerSiloAssets, FarmerSiloAsset, FarmerTokenBalance } from '.';
+import { FarmerSiloAssets, FarmerTokenBalance } from '.';
 
 export type UpdateFarmerTokenBalancesPayload = { 
   [address: string]: Partial<FarmerTokenBalance>;
@@ -13,10 +13,6 @@ export const updateFarmerTokenBalances = createAction<UpdateFarmerTokenBalancesP
   'farmer/silo/updateFarmerTokenBalances'
 );
 
-export type UpdateSiloAssetsPayload = {
-  [asset in keyof FarmerSiloAssets]: FarmerSiloAsset;
-};
-
-export const updateFarmerSiloAssets = createAction<UpdateSiloAssetsPayload>(
+export const updateFarmerSiloAssets = createAction<FarmerSiloAssets>(
   'farmer/silo/updateFarmerSiloAssets'
 );

@@ -28,6 +28,7 @@ module.exports = {
       patterns: ['@mui/*/*/*', '!@mui/material/test-utils/*']
     }],
     // -- Stylistic
+    'react/no-unused-prop-types': 'warn',
     'arrow-parens': 'warn',
     semi: 'warn',
     'quote-props': 'warn',

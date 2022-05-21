@@ -56,7 +56,7 @@ import {
   benchmarkEnd,
 } from 'util/index';
 import { updateBeanPools } from 'state/v2/bean/pools/actions';
-import { BeanEthUniswapPool } from 'constants/v2/pools';
+import { BEAN_ETH_UNISWAP_V2_POOL_MAINNET } from 'constants/v2/pools';
 import { updateSiloAssets, updateUserTokenBalances } from 'state/v2/farmer/silo/actions';
 import { Bean } from 'constants/tokensv2';
 import { BeanEthUniswapLP } from 'constants/v2/tokens';
@@ -302,7 +302,7 @@ export default function Updater() {
       // V2
       dispatch(updateBeanPools([
         {
-          address: BeanEthUniswapPool.address,
+          address: BEAN_ETH_UNISWAP_V2_POOL_MAINNET.address,
           pool: {
             total: totalLP,
           }
@@ -405,7 +405,7 @@ export default function Updater() {
       // V2
       dispatch(updateBeanPools([
         {
-          address: BeanEthUniswapPool.address,
+          address: BEAN_ETH_UNISWAP_V2_POOL_MAINNET.address,
           pool: {
             price: beanEthPrice,
             reserves: [beanReserve, ethReserve],

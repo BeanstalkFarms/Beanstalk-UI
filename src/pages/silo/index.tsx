@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Card, Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { SiloTokens } from 'constants/v2/tokens';
 import Pools from 'constants/v2/pools';
 import { AppState } from 'state';
 import NextSeason from 'components/v2/Silo/NextSeason';
@@ -12,29 +11,15 @@ import PageHeader from 'components/v2/Common/PageHeader';
 import { SNAPSHOT_LINK } from 'constants/index';
 import snapshotIcon from 'img/snapshot-icon.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
-/* <PageHeader
-  title="The Field"
-  purpose="The Decentralized Credit Facility"
-  description="Earn yield through lending Beans to Beanstalk when there is Available Soil in exchange for Pods"
-/> */
-
-// const useGetSiloTokenValueUSD = () => {
-//   const pools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
-//   const prices = useSelector<AppState, AppState['prices']>((state) => state.prices);
-//   return (token: Token, amount: BigNumber) => {
-//     // If no pool is present, this token is 
-//     if (token === Bean) {
-//       return amount.times(prices.beanTWAPPrice);
-//     }
-//     const pool = Pools.get(token.address);
-//     return amount;
-//   };
-// };
+import { useNetwork } from 'wagmi';
+import usePools from 'hooks/usePools';
+import { whitelist } from 'constants/v2/tokens';
 
 export default function SiloV2() {
-  const pools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
-  const silo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const poolState = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+  const siloState = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const { activeChain } = useNetwork();
+  const pools = usePools();
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>
@@ -57,17 +42,24 @@ export default function SiloV2() {
           )}
         />
         <NextSeason />
-        <OverviewCard />
-        <RewardsBar />
-        <TokenTable
-          tokens={SiloTokens}
+        <OverviewCard
+          stalk={siloState.stalk}
         />
+        <RewardsBar
+          beans={siloState.beans}
+          stalk={siloState.stalk}
+          seeds={siloState.seeds}
+        />
+        {/* <TokenTable
+          config={{
+            whitelist
+        }}
+          data={siloState}
+        /> */}
         <Card>
-          {/* <pre>{JSON.stringify(pools, null, 2)}</pre>
-          <pre>{JSON.stringify(silo, null, 2)}</pre>
-          <hr /> */}
-          {SiloTokens.map((token) => {
-            const pool = Pools.get(token.address);
+          {whitelist.map((_token) => {
+            const token = _token[activeChain?.id]
+            const pool = pools[token.address];
             return (
               <div>
                 <img src={token.logo} style={{ width: 20, height: 20 }} alt="" />
@@ -77,14 +69,13 @@ export default function SiloV2() {
                   <div>
                     Pool: {pool.name}<br />
                     Tokens: {pool.tokens?.toString()}<br />
-                    Price: {pools[pool.address].price.toString()}<br />
-                    Reserves: [{pools[pool.address].reserves.map((r) => r.toString()).join(', ')}]<br />
+                    Price: {poolState[pool.address]?.price.toString()}<br />
+                    Reserves: [{poolState[pool.address]?.reserves.map((r) => r.toString()).join(', ')}]<br />
                   </div>
                 ) : null}
                 <div>
-                  Deposits: {silo.tokens[token.address]?.deposited.toString() || 'none'}<br />
+                  Deposits: {siloState.tokens[token.address]?.deposited.toString() || 'none'}<br />
                 </div>
-                <br />
                 <br />
               </div>
             );

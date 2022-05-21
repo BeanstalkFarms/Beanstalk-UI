@@ -34,6 +34,7 @@ import pageBackground from 'img/bg-mainnet.png';
 import { BeanstalkPalette } from './muiTheme';
 import ForecastPage from 'pages/forecast';
 import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
+import PoolsUpdater from 'state/v2/bean/pools/updater';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -90,6 +91,7 @@ export default function App() {
       <CssBaseline />
       {/* UPDATERS */}
       <FarmerSiloUpdater />
+      <PoolsUpdater />
       {/* <Updater />
       <TokenUpdater />
       <NftUpdater /> */}

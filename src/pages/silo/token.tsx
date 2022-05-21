@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import Deposit from 'components/SiloV2/Actions/Deposit';
 import Deposits from 'components/SiloV2/Deposits';
-import { SiloTokensByAddress } from 'constants/v2/tokens';
 
 const TokenPage : React.FC<{}> = () => {
   const { address } = useParams<{ address: string }>();
@@ -13,18 +12,18 @@ const TokenPage : React.FC<{}> = () => {
 
   if (!address) return null;
 
-  const token = SiloTokensByAddress[address.toLowerCase()];
+  // const token = SiloTokensByAddress[address.toLowerCase()];
 
   return (
     <div>
-      {token.logo}<br />
+      {/* {token.logo}<br />
       {silo.tokens[token.address].deposited.toString()}
       <Deposit
         token={token}
       />
       <Deposits
         token={token}
-      />
+      /> */}
     </div>
   );
 };

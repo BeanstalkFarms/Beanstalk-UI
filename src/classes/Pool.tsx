@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js';
 import { UniswapV2Pair, UniswapV2Pair__factory } from 'constants/generated';
+import { useBeanstalkContract } from 'hooks/useContract';
 import { provider } from 'util/index';
+import client from 'util/wagmi';
 import Dex from './Dex';
 import Token, { ERC20Token } from './Token';
 
@@ -91,16 +93,14 @@ export default abstract class Pool {
 }
 
 export class UniswapV2Pool extends Pool {
-  public readonly contract : UniswapV2Pair;
-  
-  constructor(...args: ConstructorParameters<typeof Pool>) {
-    super(...args);
-    this.contract = UniswapV2Pair__factory.connect(this.address, provider);
+  public getContract() {
+    return UniswapV2Pair__factory.connect(this.address, client.provider);
   }
-
+  
   public getReserves() {
+    console.debug(`[UniswapV2Pool] getReserves: ${this.address} ${this.name} on chain ${client.provider._network.chainId} via ${client.provider.connection.url}`)
     return (
-      this.contract.getReserves().then((result) => (
+      this.getContract().getReserves().then((result) => (
         [
           new BigNumber(result._reserve0.toString()), 
           new BigNumber(result._reserve1.toString()),

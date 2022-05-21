@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { ERC20 } from 'constants/generated';
-import { erc20TokenContract, provider } from 'util/index';
+import { beanstalkContract, erc20TokenContract, provider } from 'util/index';
 import { bigNumberResult } from 'util/LedgerUtilities2';
 
 /**
@@ -53,14 +53,22 @@ export default abstract class Token {
    * @param symbol symbol of the currency
    * @param name of the currency
    */
-  constructor(address: string, chainId: number, decimals: number, name: string, symbol: string, logo: string, slug?: string) {
+  constructor(
+    address: string,
+    chainId: number,
+    decimals: number,
+    metadata: {
+      name: string,
+      symbol: string,
+      logo: string,
+    }
+  ) {
+    this.address = address;
     this.chainId = chainId;
     this.decimals = decimals;
-    this.symbol = symbol;
-    this.name = name;
-    this.address = address;
-    this.logo = logo;
-    this.slug = slug;
+    this.symbol = metadata.symbol;
+    this.name = metadata.name;
+    this.logo = metadata.logo;
   }
 
   /**
@@ -93,36 +101,32 @@ export class NativeToken extends Token {
 }
 
 export class ERC20Token extends Token {
-  public readonly contract : ERC20;
-
-  constructor(...args: ConstructorParameters<typeof Token>) {
-    super(...args);
-    this.contract = erc20TokenContract(this.address);
+  public getContract() {
+    return erc20TokenContract(this.address);
   }
   
   public getBalance(account: string) {
-    return this.contract.balanceOf(account).then(bigNumberResult);
+    return this.getContract().balanceOf(account).then(bigNumberResult);
   }
 
   public getTotalSupply() {
-    return this.contract.totalSupply().then(bigNumberResult);
+    return this.getContract().totalSupply().then(bigNumberResult);
   }
 }
 
 export class BeanstalkToken extends Token {
-  // constructor(...args: ConstructorParameters<typeof Token>) {
-  //   super(...args);
-  // }
+  // eslint-disable-next-line class-methods-use-this
+  public getContract() {
+    return beanstalkContract();
+  }
 
   // eslint-disable-next-line class-methods-use-this
   public getBalance(account: string) {
     return null;
-    // return this.contract.balanceOf(account).then(bigNumberResult);
   }
 
   // eslint-disable-next-line class-methods-use-this
   public getTotalSupply() {
     return null;
-    // return this.contract.totalSupply().then(bigNumberResult);
   }
 }

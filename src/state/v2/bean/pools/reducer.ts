@@ -8,14 +8,14 @@ const initialState : {
   [address: string]: BeanPoolState 
 } = {};
 
-Pools.all.forEach((pool) => {
-  initialState[pool.address] = {
-    price: new BigNumber(-1),
-    reserves: [new BigNumber(-1), new BigNumber(-1)],
-    deltaB: new BigNumber(-1),
-    totalCrosses: new BigNumber(-1),
-  };
-});
+// Pools.all.forEach((pool) => {
+//   initialState[pool.address] = {
+//     price: new BigNumber(-1),
+//     reserves: [new BigNumber(-1), new BigNumber(-1)],
+//     deltaB: new BigNumber(-1),
+//     totalCrosses: new BigNumber(-1),
+//   };
+// });
 
 export default createReducer(initialState, (builder) =>
   builder
