@@ -1,5 +1,6 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
+
 import OverviewCard from './OverviewCard';
 
 export default {
@@ -9,6 +10,6 @@ export default {
 
 const Template: ComponentStory<typeof OverviewCard> = (args: any) => (
   <OverviewCard {...args} />
-  );
+);
 
 export const Default = Template.bind({});

@@ -12,12 +12,12 @@ const client = createWagmiClient({
       ALCHEMY_API_KEYS[(config.chainId as SupportedChainId) || SupportedChainId.MAINNET]
     )
   ),
-  webSocketProvider: (config) => (
-    new ethers.providers.AlchemyWebSocketProvider(
-      config.chainId,
-      ALCHEMY_API_KEYS[(config.chainId as SupportedChainId) || SupportedChainId.MAINNET]
-    )
-  ),
+  // webSocketProvider: (config) => (
+  //   new ethers.providers.AlchemyWebSocketProvider(
+  //     config.chainId,
+  //     ALCHEMY_API_KEYS[(config.chainId as SupportedChainId) || SupportedChainId.MAINNET]
+  //   )
+  // ),
   autoConnect: true,
   connectors: [
     new InjectedConnector(),

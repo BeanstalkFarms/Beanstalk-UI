@@ -9,6 +9,6 @@ export default {
 
 const Template: ComponentStory<typeof RewardsBar> = (args: any) => (
   <RewardsBar {...args} />
-  );
+);
 
 export const Default = Template.bind({});

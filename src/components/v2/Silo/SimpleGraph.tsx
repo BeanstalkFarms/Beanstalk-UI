@@ -175,10 +175,10 @@ const SimpleGraph : React.FC<{
         height={visHeight}
         series={props.series}
         onCursor={props.onCursor}
-        />
-      )}
+      />
+    )}
   </ParentSize>
-  );
+);
 
 /* <circle
   cx={tooltipLeft}
