@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { DEPLOYMENT_BLOCKS } from 'constants/blocks';
+import { DEPLOYMENT_BLOCKS } from 'constants/v2/blocks';
 import {
   account,
   beaNFTContract,

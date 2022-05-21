@@ -3,7 +3,7 @@ import { EventData } from 'web3-eth-contract';
 
 import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from 'constants/index';
 import { Withdrawals } from 'state/userBalance/reducer';
-import { DEPLOYMENT_BLOCKS } from 'constants/blocks';
+import { DEPLOYMENT_BLOCKS } from 'constants/v2/blocks';
 import {
   account,
   benchmarkStart,

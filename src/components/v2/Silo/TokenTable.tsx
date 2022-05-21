@@ -4,16 +4,22 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Token } from 'classes';
 import { Link } from 'react-router-dom';
 import usePools from 'hooks/usePools';
-import { displayFullBN } from 'util/index';
+import { displayBN, displayFullBN } from 'util/index';
 import { AppState } from 'state';
+import BigNumber from 'bignumber.js';
 
 const arrowContainerWidth = 20;
 
 const TokenTable : React.FC<{
-  tokens: Token[];
+  config: {
+    /** Array of Whitelisted tokens in the Silo. */
+    whitelist: Token[];
+  };
   data: AppState['_farmer']['silo'];
-}> = (props) => {
-  const pools = usePools();
+}> = ({
+  config,
+  data
+}) => {
   return (
     <Card>
       {/* Table Header */}
@@ -55,8 +61,7 @@ const TokenTable : React.FC<{
         *   gap     = 0
         */}
       <Stack direction="column" gap={1} sx={{ p: 1 }}>
-        {props.tokens.map((token) => {
-          const pool = pools[token.address];
+        {config.whitelist.map((token) => {
           return (
             <Box>
               <Button
@@ -86,7 +91,7 @@ const TokenTable : React.FC<{
                   </Grid>
                   <Grid item xs={3}>
                     <Typography color="black">
-                      {}
+                      Rewards
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
@@ -97,7 +102,7 @@ const TokenTable : React.FC<{
                   <Grid item xs={3} sx={{ textAlign: 'right' }}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
-                        {/* {displayFullBN(props.data.tokens[token.address]?.deposited)} */}
+                        {displayBN(new BigNumber(data.tokens[token.address]?.deposited || 0))}
                       </Typography>
                       <Stack sx={{ width: arrowContainerWidth, }} alignItems="center">
                         <ArrowRightIcon color="black" />

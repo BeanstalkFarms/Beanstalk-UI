@@ -1,6 +1,6 @@
+import { useCallback, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { Bean, BEAN_TO_SEEDS, BEAN_TO_STALK } from 'constants/index';
-import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult, tokenResult } from 'util/LedgerUtilities2';
 import { useAccount, useConnect, useNetwork, useProvider } from 'wagmi';

@@ -35,13 +35,6 @@ export type FarmerTokenBalances = {
 
 // -- Silo Assets
 
-// export type FarmerSiloAsset = {
-//   total: BigNumber;
-//   active: BigNumber;
-//   earned: BigNumber;
-//   grown: BigNumber;
-// }
-
 export type FarmerSiloAssets = {
   beans: {
     earned: BigNumber;

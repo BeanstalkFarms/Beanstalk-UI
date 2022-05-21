@@ -890,7 +890,7 @@ export default function Updater() {
       // These are instantaneous values pulled from contract functions
       // that are used for certain calculations during event processing.
       // ---
-      // s = season
+      // sz = season
       // hi = harvestableindex
       // fb = farmable beans
       // gs = grown stalk
