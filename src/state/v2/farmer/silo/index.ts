@@ -15,7 +15,7 @@ export type Withdrawal = {
   amount: BigNumber;
 }
 
-export type UserTokenBalance = {
+export type FarmerTokenBalance = {
   circulating: BigNumber; // The circulating balance in the Farmer's wallet.
   wrapped: BigNumber; // The Farmer's wrapped balance.
   deposited: BigNumber; //
@@ -26,31 +26,31 @@ export type UserTokenBalance = {
   // claim: Transaction;
 }
 
-export type UserTokenBalances = {
+export type FarmerTokenBalances = {
   // FIXME: enforce that this is a key of whitelisted tokens?
   tokens: { 
-    [address: string]: UserTokenBalance;
+    [address: string]: FarmerTokenBalance;
   };
 }
 
 // -- Silo Assets
 
-export type UserSiloAsset = {
+export type FarmerSiloAsset = {
   total: BigNumber;
   active: BigNumber;
   earned: BigNumber;
   grown: BigNumber;
 }
 
-export type UserSiloAssets = {
-  stalk: UserSiloAsset;
-  seeds: UserSiloAsset;
-  roots: UserSiloAsset;
+export type FarmerSiloAssets = {
+  stalk: FarmerSiloAsset;
+  seeds: FarmerSiloAsset;
+  roots: FarmerSiloAsset;
 }
 
 // --
 
 export type Silo = (
-  UserTokenBalances 
-  & UserSiloAssets
+  FarmerTokenBalances 
+  & FarmerSiloAssets
 );

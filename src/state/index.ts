@@ -20,16 +20,16 @@ import _farmer from './v2/farmer/reducer';
 const store = configureStore({
   reducer: {
     // v1
-    allowances,
-    userBalance,
-    totalBalance,
-    season,
-    weather,
-    prices,
-    beansPerSeason,
-    general,
-    marketplace,
-    nfts,
+    // allowances,
+    // userBalance,
+    // totalBalance,
+    // season,
+    // weather,
+    // prices,
+    // beansPerSeason,
+    // general,
+    // marketplace,
+    // nfts,
     tokenBalances,
     // v2
     _bean,

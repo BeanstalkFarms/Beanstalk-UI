@@ -1,12 +1,12 @@
 import { ethers } from 'ethers';
 
-import { changeTheme, BEANSTALK, BEANFTCOLLECTION, BEANFTGENESIS, UNISWAP_V2_ROUTER, BEANSTALK_PRICE } from 'constants/index';
+import { changeTheme, BEANSTALK, BEANFTCOLLECTION, BEANFTGENESIS, UNISWAP_V2_ROUTER } from 'constants/index';
 import { changeTokenAddresses } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import { ALCHEMY_HTTPS_URLS } from 'constants/rpc/alchemy';
 import { ERC20__factory } from 'constants/generated/factories/ERC20__factory';
 import { BeaNFTGenesis__factory, BeanstalkPrice__factory, Beanstalk__factory, UniswapV2Router__factory } from 'constants/generated';
-// import web3Onboard from './web3Onboard';
+import { BEANSTALK_PRICE_ADDRESSES } from 'constants/v2/addresses';
 
 // -- Exports
 // export * from './LedgerUtilities';
@@ -35,7 +35,7 @@ export const erc20TokenContract = (address: string, signer?: ethers.Signer) =>
   ERC20__factory.connect(address, signer || provider);
 
 export const beanstalkPriceContract = () =>
-  BeanstalkPrice__factory.connect(BEANSTALK_PRICE[SupportedChainId.ROPSTEN], provider);
+  BeanstalkPrice__factory.connect(BEANSTALK_PRICE_ADDRESSES[SupportedChainId.ROPSTEN], provider);
 
 export const beanstalkContract = (signer?: ethers.Signer) => 
   Beanstalk__factory.connect(BEANSTALK, signer || provider);

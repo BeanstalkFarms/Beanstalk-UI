@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 import { Silo } from '.';
-import { updateSiloAssets, updateUserTokenBalances } from './actions';
+import { reset, updateFarmerSiloAssets, updateFarmerTokenBalances } from './actions';
 
 const NEG1 = new BigNumber(-1);
 
@@ -21,7 +21,11 @@ const initialState : Silo = {
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(updateUserTokenBalances, (state, { payload }) => {
+    .addCase(reset, (state) => {
+      console.debug(`[farmer/silo/reducer] reset`)
+      return initialState;
+    })
+    .addCase(updateFarmerTokenBalances, (state, { payload }) => {
       const addresses = Object.keys(payload);
       addresses.forEach((address) => {
         state.tokens[address] = {
@@ -30,7 +34,7 @@ export default createReducer(initialState, (builder) =>
         };
       });
     })
-    .addCase(updateSiloAssets, (state, { payload }) => {
+    .addCase(updateFarmerSiloAssets, (state, { payload }) => {
       state.stalk = payload.stalk;
       state.seeds = payload.seeds;
       state.roots = payload.roots;

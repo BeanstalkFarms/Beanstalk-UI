@@ -32,6 +32,8 @@ import './App.css';
 import NavBar from 'components/v2/Nav/NavBar';
 import pageBackground from 'img/bg-mainnet.png';
 import { BeanstalkPalette } from './muiTheme';
+import ForecastPage from 'pages/forecast';
+import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -64,6 +66,7 @@ export default function App() {
     <div>
       <Routes>
         {/* Farm */}
+        <Route path="/" element={<ForecastPage />} />
         <Route path="/silo" element={<SiloPage />} />
         <Route path="/silo/:address" element={<SiloTokenPage />} />
         {/* <Route path="/field" element={<FieldPage />} />
@@ -86,6 +89,7 @@ export default function App() {
     <>
       <CssBaseline />
       {/* UPDATERS */}
+      <FarmerSiloUpdater />
       {/* <Updater />
       <TokenUpdater />
       <NftUpdater /> */}

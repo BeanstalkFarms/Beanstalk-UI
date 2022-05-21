@@ -1,18 +1,22 @@
 import { createAction } from '@reduxjs/toolkit';
-import { UserSiloAssets, UserSiloAsset, UserTokenBalance } from '.';
+import { FarmerSiloAssets, FarmerSiloAsset, FarmerTokenBalance } from '.';
 
-export type UpdateUserTokenBalancesPayload = { 
-  [address: string]: Partial<UserTokenBalance>;
+export type UpdateFarmerTokenBalancesPayload = { 
+  [address: string]: Partial<FarmerTokenBalance>;
 };
 
-export const updateUserTokenBalances = createAction<UpdateUserTokenBalancesPayload>(
-  'farmer/silo/updateUserTokenBalances'
+export const reset = createAction(
+  'farmer/silo/reset'
+);
+
+export const updateFarmerTokenBalances = createAction<UpdateFarmerTokenBalancesPayload>(
+  'farmer/silo/updateFarmerTokenBalances'
 );
 
 export type UpdateSiloAssetsPayload = {
-  [asset in keyof UserSiloAssets]: UserSiloAsset;
+  [asset in keyof FarmerSiloAssets]: FarmerSiloAsset;
 };
 
-export const updateSiloAssets = createAction<UpdateSiloAssetsPayload>(
-  'farmer/silo/updateSiloAssets'
+export const updateFarmerSiloAssets = createAction<UpdateSiloAssetsPayload>(
+  'farmer/silo/updateFarmerSiloAssets'
 );

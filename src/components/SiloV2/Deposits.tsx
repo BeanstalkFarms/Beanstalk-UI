@@ -6,7 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
-import { UserTokenBalance } from 'state/v2/farmer/silo';
+import { FarmerTokenBalance } from 'state/v2/farmer/silo';
 import type { Deposit } from 'state/v2/farmer/silo';
 
 const columns = [
@@ -36,7 +36,7 @@ const Deposits : React.FC<{
 }> = ({
   token,
 }) => {
-  const { deposits }  = useSelector<AppState, UserTokenBalance>((state) => state._farmer.silo.tokens[token.address]);
+  const { deposits }  = useSelector<AppState, FarmerTokenBalance>((state) => state._farmer.silo.tokens[token.address]);
 
   const rows : (Deposit & { id: BigNumber })[] = useMemo(() => deposits.map((deposit) => ({
     id: deposit.season,

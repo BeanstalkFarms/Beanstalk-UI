@@ -75,9 +75,9 @@ export default abstract class Token {
     return this.name;
   }
 
-  abstract getBalance(account: string) : Promise<BigNumber>;
+  abstract getBalance(account: string) : Promise<BigNumber> | null;
   
-  abstract getTotalSupply() : Promise<BigNumber>;
+  abstract getTotalSupply() : Promise<BigNumber> | null;
 }
 
 export class NativeToken extends Token {
@@ -106,5 +106,23 @@ export class ERC20Token extends Token {
 
   public getTotalSupply() {
     return this.contract.totalSupply().then(bigNumberResult);
+  }
+}
+
+export class BeanstalkToken extends Token {
+  // constructor(...args: ConstructorParameters<typeof Token>) {
+  //   super(...args);
+  // }
+
+  // eslint-disable-next-line class-methods-use-this
+  public getBalance(account: string) {
+    return null;
+    // return this.contract.balanceOf(account).then(bigNumberResult);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public getTotalSupply() {
+    return null;
+    // return this.contract.totalSupply().then(bigNumberResult);
   }
 }

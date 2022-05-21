@@ -6,17 +6,19 @@ import beanEthLogoUrl from 'img/bean-eth-logo.svg';
 // import usdtLogoUrl from 'img/usdt-logo.svg';
 // import crv3LogoUrl from 'img/crv3-logo.svg';
 
-import { ERC20Token, NativeToken } from 'classes/Token';
+import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from '../chains';
 
-export const Eth = new NativeToken(
-  '',
-  SupportedChainId.MAINNET,
-  18,
-  'Ether',
-  'ETH',
-  ethLogoUrl
-);
+export const ETH = {
+  [SupportedChainId.MAINNET]: new NativeToken(
+    '',
+    SupportedChainId.MAINNET,
+    18,
+    'Ether',
+    'ETH',
+    ethLogoUrl
+  ),
+}
 
 export const Weth = new ERC20Token(
   '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -27,15 +29,48 @@ export const Weth = new ERC20Token(
   ethLogoUrl
 );
 
-export const Bean = new ERC20Token(
-  '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
+export const Stalk = new BeanstalkToken(
+  '',
   SupportedChainId.MAINNET,
-  6,
-  'Bean',
-  'BEAN',
-  beanLogoUrl,
-  'bean', // FIXME: use slug or address in url?
-);
+  10,
+  'Stalk',
+  'STALK',
+  '',
+  'stalk'
+)
+
+export const Seeds = new BeanstalkToken(
+  '',
+  SupportedChainId.MAINNET,
+  10,
+  'Seeds',
+  'SEED',
+  '',
+  'seeds'
+)
+
+const BEAN = {
+  [SupportedChainId.MAINNET]: new ERC20Token(
+    '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
+    SupportedChainId.MAINNET,
+    6,
+    'Bean',
+    'BEAN',
+    beanLogoUrl,
+    'bean', // FIXME: use slug or address in url?
+  ),
+  [SupportedChainId.ROPSTEN]: new ERC20Token(
+    '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
+    SupportedChainId.MAINNET,
+    6,
+    'Bean',
+    'BEAN',
+    beanLogoUrl,
+    'bean', // FIXME: use slug or address in url?
+  ),
+}
+
+export const Bean = BEAN[SupportedChainId.MAINNET];
 
 export const BeanEthUniswapLP = new ERC20Token(
   '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
