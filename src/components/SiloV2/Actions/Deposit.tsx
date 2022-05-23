@@ -1,12 +1,13 @@
+import { Card } from '@mui/material';
 import { Token } from 'classes';
 import React from 'react';
 
 const Deposit : React.FC<{
   token: Token
 }> = (props) => (
-  <div>
-    {props.token.address}
-  </div>
+  <Card>
+    DEPOSIT
+  </Card>
   );
 
 export default Deposit;

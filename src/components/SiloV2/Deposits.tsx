@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { FarmerTokenBalance } from 'state/v2/farmer/silo';
 import type { Deposit } from 'state/v2/farmer/silo';
+import { SiloToken } from 'constants/siloTokens';
 
 const columns = [
   {
@@ -32,19 +33,19 @@ const columns = [
 ];
 
 const Deposits : React.FC<{
-  token: Token
+  token: Token;
+  siloToken: FarmerTokenBalance; // FIXME: naming
 }> = ({
   token,
+  siloToken,
 }) => {
-  const { deposits }  = useSelector<AppState, FarmerTokenBalance>((state) => state._farmer.silo.tokens[token.address]);
-
-  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => deposits.map((deposit) => ({
+  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => siloToken?.deposits.map((deposit) => ({
     id: deposit.season,
     ...deposit
-  })), [deposits]);
+  })), [siloToken?.deposits]);
 
   return (
-    <Card sx={{ height: 400, width: '100%' }}>
+    <Card sx={{ height: 375, width: '100%' }}>
       <DataGrid
         columns={columns}
         rows={rows}

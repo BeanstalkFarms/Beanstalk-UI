@@ -6,7 +6,7 @@ import beanEthLogoUrl from 'img/bean-eth-logo.svg';
 // import usdtLogoUrl from 'img/usdt-logo.svg';
 // import crv3LogoUrl from 'img/crv3-logo.svg';
 
-import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
+import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from '../chains';
 
 // Native Tokens
@@ -128,7 +128,7 @@ export const BEAN_ETH_UNISWAP_V2_LP = {
 
 // export const SiloTokens = Object.values(SiloTokensByAddress);
 
-export const whitelist = [
+export const whitelist : { [address: string] : Token }[] = [
   BEAN,
   BEAN_ETH_UNISWAP_V2_LP,
 ]
