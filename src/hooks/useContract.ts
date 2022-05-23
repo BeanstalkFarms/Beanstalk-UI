@@ -1,10 +1,11 @@
-import { Beanstalk } from 'constants/generated';
-import { AddressMap, BEANSTALK_ADDRESSES } from 'constants/v2/addresses';
+import { Beanstalk, BeanstalkPrice } from 'constants/generated';
+import { AddressMap, BEANSTALK_ADDRESSES, BEANSTALK_PRICE_ADDRESSES } from 'constants/v2/addresses';
 import { Contract } from 'ethers';
 import { useMemo } from 'react';
 import { useAccount, useProvider } from 'wagmi';
 
 const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
+const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
 
 export default function useContract<T extends Contract = Contract>(
   addressOrAddressMap: string | AddressMap | undefined,
@@ -63,6 +64,14 @@ export function useBeanstalkContract() {
   return useContract<Beanstalk>(
     BEANSTALK_ADDRESSES,
     BEANSTALK_ABI,
+    true,
+  );
+}
+
+export function useBeanstalkPriceContract() {
+  return useContract<BeanstalkPrice>(
+    BEANSTALK_PRICE_ADDRESSES,
+    BEANSTALK_PRICE_ABI,
     true,
   );
 }

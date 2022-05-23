@@ -80,7 +80,6 @@ export default function processFarmerEvents(
   const votedBips : UserBalanceState['votedBips'] = new Set();
   
   events.forEach((event) => {
-    console.debug(event);
     if (event.event === 'BeanDeposit') {
       // `season` is a base-10 numerical string.
       const s = parseInt(event.returnValues.season, 10);

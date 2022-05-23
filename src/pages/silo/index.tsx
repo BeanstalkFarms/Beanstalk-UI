@@ -13,7 +13,7 @@ import snapshotIcon from 'img/snapshot-icon.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useNetwork } from 'wagmi';
 // import usePools from 'hooks/usePools';
-import { whitelist as siloWhitelist } from 'constants/v2/tokens';
+import { SiloWhitelistTokens as siloWhitelist } from 'constants/v2/tokens';
 
 const SiloPage : React.FC = () => {
   // const poolState = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);

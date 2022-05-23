@@ -11,6 +11,10 @@ import seedLogo from 'img/seed-logo.svg';
 import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from '../chains';
 
+export type TokenMap = { [chainId: number] : Token };
+export type TokenOrTokenMap = Token | TokenMap;
+export type TokensByAddress = { [address: string] : Token };
+
 // Native Tokens
 
 export const ETH = {
@@ -123,14 +127,13 @@ export const BEAN_ETH_UNISWAP_V2_LP = {
 
 // --
 
-// export const SiloTokensByAddress = {
-//   [Bean.address.toLowerCase()]: Bean,
-//   [BeanEthUniswapLP.address.toLowerCase()]: BeanEthUniswapLP,
-// };
+export const ERC20Tokens : TokenOrTokenMap[] = [
+  BEAN,
+  BEAN_ETH_UNISWAP_V2_LP,
+  WETH,
+];
 
-// export const SiloTokens = Object.values(SiloTokensByAddress);
-
-export const whitelist : { [address: string] : Token }[] = [
+export const SiloWhitelistTokens : TokenOrTokenMap[] = [
   BEAN,
   BEAN_ETH_UNISWAP_V2_LP,
 ];
