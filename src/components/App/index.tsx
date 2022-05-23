@@ -14,9 +14,9 @@ import { setWidth } from 'state/general/actions';
 
 import SiloPage from 'pages/silo';
 import SiloTokenPage from 'pages/silo/token';
+import FieldPage from 'pages/field';
 // import ConnectPage from 'pages/connect';
 // import MarketplacePage from 'pages/market';
-// import FieldPage from 'pages/field';
 // import TradePage from 'pages/trade';
 // import GovernancePage from 'pages/governance';
 // import AnalyticsPage from 'pages/analytics';
@@ -73,8 +73,8 @@ export default function App() {
         <Route path="/" element={<ForecastPage />} />
         <Route path="/silo" element={<SiloPage />} />
         <Route path="/silo/:address" element={<SiloTokenPage />} />
-        {/* <Route path="/field" element={<FieldPage />} />
-        <Route path="/trade" element={<TradePage />} /> */}
+        <Route path="/field" element={<FieldPage />} />
+        {/* <Route path="/trade" element={<TradePage />} /> */}
         {/* More */}
         {/* <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/peg" element={<PegMaintenancePage />} />

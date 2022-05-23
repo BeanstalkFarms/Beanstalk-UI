@@ -1,8 +1,11 @@
+import { SupportedChainId } from "constants/chains";
+import { BEAN } from "constants/v2/tokens";
 import { useBeanstalkContract } from "hooks/useContract";
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { bigNumberResult } from "util/LedgerUtilities2";
+import { bigNumberResult, tokenResult } from "util/LedgerUtilities2";
 import { useNetwork } from "wagmi";
+import { updateHarvestableIndex } from "../field/actions";
 import { updateSeason } from "./actions";
 
 export const useSun = () => {
@@ -13,13 +16,17 @@ export const useSun = () => {
   const fetch = useCallback(async () => {
     if (beanstalk) {
       const [
-        season
+        season,
+        harvestableIndex,
       ] = await Promise.all([
         beanstalk.season().then(bigNumberResult),
+        // FIXME
+        beanstalk.harvestableIndex().then(tokenResult(BEAN[SupportedChainId.MAINNET])),
       ] as const);
 
       console.debug(`[beanstalk/sun/updater] season = ${season}`)
       dispatch(updateSeason(season));
+      dispatch(updateHarvestableIndex(harvestableIndex))
     }
   }, [
     dispatch,

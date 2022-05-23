@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "state";
 import processFarmerEvents from "util/processFarmerEvents";
 import { useAccount, useNetwork } from "wagmi";
+import { updateFarmerField } from "./field/actions";
 import { updateFarmerTokenBalances } from "./silo/actions";
 
 export default function FarmerUpdater() {
@@ -21,13 +22,17 @@ export default function FarmerUpdater() {
   const season = useSelector<AppState, AppState['_farmer']['silo']['beans']['earned']>(
     (state) => state._beanstalk.sun.season,
   );
+  const harvestableIndex = useSelector<AppState, AppState['_beanstalk']['field']['harvestableIndex']>(
+    (state) => state._beanstalk.field.harvestableIndex,
+  );
 
   useEffect(() => {
     if(account?.address && activeChain?.id && season && earnedBeans) {
       const results = processFarmerEvents(events, {
         account: account.address,
         farmableBeans: earnedBeans,
-        season: season
+        season: season,
+        harvestableIndex: harvestableIndex
       });
       console.debug('[farmer/updater] process events', results);
       dispatch(updateFarmerTokenBalances({
@@ -51,6 +56,10 @@ export default function FarmerUpdater() {
             stalk: new BigNumber(0),
           })),
         }
+      }));
+      dispatch(updateFarmerField({
+        plots: results.plots,
+        harvestablePlots: results.harvestablePlots,
       }))
     }
   }, [
@@ -60,6 +69,7 @@ export default function FarmerUpdater() {
     dispatch,
     // event parsing params
     earnedBeans,
+    harvestableIndex,
     season
   ])
 

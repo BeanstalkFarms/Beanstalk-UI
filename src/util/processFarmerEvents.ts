@@ -63,6 +63,7 @@ export default function processFarmerEvents(
     account: string;
     season: BigNumber;
     farmableBeans: BigNumber;
+    harvestableIndex: BigNumber;
   },
 ) {
   // These get piped into redux 1:1 and so need to match
@@ -474,6 +475,9 @@ export default function processFarmerEvents(
     (a, c) => a.plus(c),
     zeroBN
   );
+  const [podBalance, harvestablePodBalance, plots, harvestablePlots] =
+    parsePlots(userPlots, params.harvestableIndex);
+
 
   return {
     // Bean
@@ -497,5 +501,9 @@ export default function processFarmerEvents(
     beanlusdDepositsBalance,
     // Plots
     userPlots,
+    podBalance,
+    harvestablePodBalance,
+    plots,
+    harvestablePlots,
   }
 }

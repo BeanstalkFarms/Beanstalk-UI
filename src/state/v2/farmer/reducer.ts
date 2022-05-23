@@ -1,9 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
 import silo from './silo/reducer';
+import field from './field/reducer';
 import events from './events/reducer';
 
 export default combineReducers({
   silo,
-  events
+  field,
+  events,
 });
