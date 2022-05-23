@@ -2,7 +2,6 @@ import { useCallback, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
 
-import Pools from 'constants/v2/pools';
 import usePools from 'hooks/usePools';
 import { updateBeanPools, UpdatePoolPayload } from './actions';
 
@@ -41,12 +40,14 @@ export const useGetPools = () => {
 
 // -- Updater
 
-export default function PoolsUpdater() {
-  const [fetch, clear] = useGetPools();
+const PoolsUpdater = () => {
+  const [fetch] = useGetPools();
 
   useEffect(() => {
     fetch();
   }, [fetch]);
 
   return null;
-}
+};
+
+export default PoolsUpdater;

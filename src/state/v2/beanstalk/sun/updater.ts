@@ -41,7 +41,7 @@ export const useSun = () => {
   return [fetch, clear] as const;
 };
 
-export default function SunUpdater() {
+const SunUpdater = () => {
   const { activeChain } = useNetwork();
   const [fetch] = useSun();
   useEffect(() => {
@@ -49,4 +49,6 @@ export default function SunUpdater() {
   }, [activeChain?.id, fetch]);
 
   return null;
-}
+};
+
+export default SunUpdater;

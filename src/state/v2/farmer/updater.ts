@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import { SupportedChainId } from 'constants/chains';
 import { BEAN, BEAN_ETH_UNISWAP_V2_LP } from 'constants/v2/tokens';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +8,7 @@ import { useAccount, useNetwork } from 'wagmi';
 import { updateFarmerField } from './field/actions';
 import { updateFarmerTokenBalances } from './silo/actions';
 
-export default function FarmerUpdater() {
+const FarmerUpdater = () => {
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const dispatch = useDispatch();
@@ -74,4 +73,6 @@ export default function FarmerUpdater() {
   ]);
 
   return null;
-}
+};
+
+export default FarmerUpdater;

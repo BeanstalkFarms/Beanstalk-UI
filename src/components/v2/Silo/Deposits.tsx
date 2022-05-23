@@ -3,12 +3,9 @@ import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
 import { Box, Card, Stack, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useSelector } from 'react-redux';
 
-import { AppState } from 'state';
 import { FarmerTokenBalance } from 'state/v2/farmer/silo';
 import type { Deposit } from 'state/v2/farmer/silo';
-import { SiloToken } from 'constants/siloTokens';
 
 const columns = [
   {

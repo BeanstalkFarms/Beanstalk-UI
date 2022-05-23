@@ -28,7 +28,7 @@ const columns : DataGridProps['columns'] = [
   },
 ];
 
-export default function FieldPage() {
+const FieldPage : React.FC = () => {
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const { harvestableIndex } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const rows = useMemo(() => Object.keys(farmerField.plots).map((index) => ({
@@ -70,4 +70,6 @@ export default function FieldPage() {
       </Stack>
     </Container>
   );
-}
+};
+
+export default FieldPage;

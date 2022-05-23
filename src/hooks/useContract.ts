@@ -11,8 +11,9 @@ export default function useContract<T extends Contract = Contract>(
   abi: any,
   withSignerIfPossible = true,
 ) : T | null {
-  const { data: account } = useAccount();
+  const { data } = useAccount();
   const provider = useProvider();
+  const account = withSignerIfPossible ? data : null;
 
   return useMemo(() => {
     // NOTE:
@@ -32,7 +33,8 @@ export default function useContract<T extends Contract = Contract>(
     if (!address) {
       console.debug('[useContract] attempted to instantiate contract with no avail address', {
         addressOrAddressMap,
-        chainId
+        chainId,
+        account,
       });
     }
 
@@ -52,7 +54,8 @@ export default function useContract<T extends Contract = Contract>(
   }, [
     provider,
     abi,
-    addressOrAddressMap
+    addressOrAddressMap,
+    account
   ]);
 }
 

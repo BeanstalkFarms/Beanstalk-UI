@@ -1,7 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { UniswapV2Pair, UniswapV2Pair__factory } from 'constants/generated';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { provider } from 'util/index';
+import { UniswapV2Pair__factory } from 'constants/generated';
 import client from 'util/wagmi';
 import Dex from './Dex';
 import Token, { ERC20Token } from './Token';

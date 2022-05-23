@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from 'react';
-import BigNumber from 'bignumber.js';
 import { Bean, BEAN_TO_SEEDS, BEAN_TO_STALK } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult, tokenResult } from 'util/LedgerUtilities2';
@@ -84,7 +83,7 @@ export const useFarmerSilo = () => {
 
 // -- Updater
 
-export default function FarmerSiloUpdater() {
+const FarmerSiloUpdater = () => {
   const [fetch, clear] = useFarmerSilo();
   const { status: connectStatus } = useConnect();
   const { data: account } = useAccount();
@@ -105,4 +104,6 @@ export default function FarmerSiloUpdater() {
   ]);
 
   return null;
-}
+};
+
+export default FarmerSiloUpdater;

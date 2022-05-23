@@ -1,4 +1,3 @@
-import { GetAccountResult } from '@wagmi/core';
 import BigNumber from 'bignumber.js';
 import { BEAN, CURVE, UNI_V2_ETH_BEAN_LP } from 'constants/tokens';
 import { UserBalanceState } from 'state/userBalance/reducer';

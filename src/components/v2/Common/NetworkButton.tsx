@@ -5,7 +5,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ethIcon from 'img/eth-logo.svg';
 
 const NetworkButton : React.FC = () => {
-  const { activeChain, chains, error, isLoading, pendingChainId, switchNetwork } = useNetwork();
+  const { activeChain, chains, error, switchNetwork } = useNetwork();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

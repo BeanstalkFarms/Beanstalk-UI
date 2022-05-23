@@ -67,13 +67,13 @@ const TokenTable : React.FC<{
               <Grid item xs={3}>
                 <Stack direction="row" alignItems="center" gap={1}>
                   <img
-                      src={token.logo}
-                      alt={token.name}
-                      style={{ height: 20, display: 'inline' }}
-                      />
+                    src={token.logo}
+                    alt={token.name}
+                    style={{ height: 20, display: 'inline' }}
+                  />
                   <Typography color="black" display="inline">
-                      {token.name}
-                    </Typography>
+                    {token.name}
+                  </Typography>
                 </Stack>
               </Grid>
               <Grid item xs={3}>

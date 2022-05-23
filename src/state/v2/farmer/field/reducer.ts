@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js';
 import { createReducer } from '@reduxjs/toolkit';
 import { Field } from '.';
 import { updateFarmerField } from './actions';

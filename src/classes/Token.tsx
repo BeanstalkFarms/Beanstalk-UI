@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import { ERC20 } from 'constants/generated';
 import { beanstalkContract, erc20TokenContract, provider } from 'util/index';
 import { bigNumberResult } from 'util/LedgerUtilities2';
 
@@ -121,7 +120,7 @@ export class BeanstalkToken extends Token {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  public getBalance(account: string) {
+  public getBalance() {
     return null;
   }
 

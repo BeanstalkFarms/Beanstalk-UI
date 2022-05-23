@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { useAccount } from 'wagmi';
@@ -139,7 +139,7 @@ const parseBNJS = (_o: { [key: string ] : any }) => {
   return o;
 };
 
-export default function FarmerEventsUpdater() {
+const FarmerEventsUpdater = () => {
   const beanstalk = useBeanstalkContract();
   const { data: account } = useAccount();
   const blocks = useBlocks();
@@ -178,4 +178,6 @@ export default function FarmerEventsUpdater() {
   ]);
 
   return null;
-}
+};
+
+export default FarmerEventsUpdater;

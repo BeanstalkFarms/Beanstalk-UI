@@ -5,7 +5,6 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import { Token } from 'classes';
 import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
-import useChainConstant from 'hooks/useConstant';
 import { Stalk } from 'constants/v2/tokens';
 import BigNumber from 'bignumber.js';
 
@@ -20,24 +19,24 @@ const Deposit : React.FC<{
         placeholder="Placeholder"
         fullWidth
         InputProps={{
-            endAdornment: (
-              <Button
-                variant="contained"
-                color="secondary"
-                endIcon={<ArrowDropDownIcon />}
-                fullWidth
-                sx={{ 
-                  // FIXME: button wraps. hack for now.
-                  maxWidth: 170,
-                  // whiteSpace: 'no-wrap !important',
-                  // minWidth: 'auto !important',
-                }}
-              >
-                Select a token
-              </Button>
-            )
-          }}
-        />
+          endAdornment: (
+            <Button
+              variant="contained"
+              color="secondary"
+              endIcon={<ArrowDropDownIcon />}
+              fullWidth
+              sx={{ 
+                // FIXME: button wraps. hack for now.
+                maxWidth: 170,
+                // whiteSpace: 'no-wrap !important',
+                // minWidth: 'auto !important',
+              }}
+            >
+              Select a token
+            </Button>
+          )
+        }}
+      />
       <Stack direction="column" gap={1}>
         <TokenOutputField
           token={Stalk}

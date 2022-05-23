@@ -28,7 +28,7 @@ const initialState : Silo = {
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(reset, (state) => {
+    .addCase(reset, () => {
       console.debug('[farmer/silo/reducer] reset');
       return initialState;
     })
