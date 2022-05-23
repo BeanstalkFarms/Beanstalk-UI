@@ -476,7 +476,26 @@ export default function processFarmerEvents(
   );
 
   return {
+    // Bean
     userBeanDeposits,
+    beanWithdrawals,
     beanDepositsBalance,
+    // LP
+    userLPSeedDeposits,
+    userLPDeposits,
+    lpWithdrawals,
+    lpDepositsBalance,
+    // Curve
+    userCurveDeposits,
+    userCurveBDVDeposits,
+    curveWithdrawals,
+    curveDepositsBalance,
+    // BEAN:LUSD
+    userBeanlusdDeposits,
+    userBeanlusdBDVDeposits,
+    beanlusdWithdrawals,
+    beanlusdDepositsBalance,
+    // Plots
+    userPlots,
   }
 }

@@ -1,6 +1,8 @@
 import ethLogoUrl from 'img/eth-logo.svg';
 import beanLogoUrl from 'img/bean-logo.svg';
 import beanEthLogoUrl from 'img/bean-eth-logo.svg';
+import stalkLogo from 'img/stalk-logo.svg';
+import seedLogo from 'img/seed-logo.svg';
 // import usdcLogoUrl from 'img/usdc-logo.svg';
 // import daiLogoUrl from 'img/dai-logo.svg';
 // import usdtLogoUrl from 'img/usdt-logo.svg';
@@ -33,7 +35,7 @@ export const Stalk = new BeanstalkToken(
   {
     name: 'Stalk',
     symbol: 'STALK',
-    logo: '',
+    logo: stalkLogo,
   }
 )
 
@@ -44,7 +46,7 @@ export const Seeds = new BeanstalkToken(
   {
     name: 'Seeds',
     symbol: 'SEED',
-    logo: '',
+    logo: seedLogo,
   }
 )
 

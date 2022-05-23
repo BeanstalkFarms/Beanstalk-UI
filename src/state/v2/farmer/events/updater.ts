@@ -168,12 +168,6 @@ export default function FarmerEventsUpdater() {
               return a.logIndex - b.logIndex;
             })
         );
-        /*.map((event) => ({
-          event: event.event,
-          blockNumber: event.blockNumber,
-          logIndex: event.logIndex,
-          data: event.decode ? event.decode(event.data, event.topics) : null,
-        }))*/
         console.debug(`[farmer/updater] allEvents`, allEvents)
         dispatch(setEvents(allEvents));
       })

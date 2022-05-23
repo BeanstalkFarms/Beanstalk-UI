@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
-import { Card } from '@mui/material';
+import { Box, Card, Stack, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 
@@ -20,16 +20,16 @@ const columns = [
     headerName: 'Amount',
     width: 300,
   },
-  {
-    field: 'stalk',
-    headerName: 'Stalk',
-    width: 200,
-  },
-  {
-    field: 'seeds',
-    headerName: 'Seeds',
-    width: 200,
-  }
+  // {
+  //   field: 'stalk',
+  //   headerName: 'Stalk',
+  //   width: 200,
+  // },
+  // {
+  //   field: 'seeds',
+  //   headerName: 'Seeds',
+  //   width: 200,
+  // }
 ];
 
 const Deposits : React.FC<{
@@ -45,14 +45,21 @@ const Deposits : React.FC<{
   })), [siloToken?.deposits]);
 
   return (
-    <Card sx={{ height: 375, width: '100%' }}>
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        disableSelectionOnClick
-      />
+    <Card sx={{ p: 2 }}>
+      <Stack gap={2}>
+        <Box>
+          <Typography variant="h4" sx={{ fontWeight: "bold" }}>{token.name} Deposits</Typography>
+        </Box>
+        <Box sx={{ height: 375, width: '100%' }}>
+          <DataGrid
+            columns={columns}
+            rows={rows}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            disableSelectionOnClick
+          />
+        </Box>
+      </Stack>
     </Card>
   );
 };

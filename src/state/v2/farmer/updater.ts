@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { SupportedChainId } from "constants/chains";
-import { BEAN } from "constants/v2/tokens";
+import { BEAN, BEAN_ETH_UNISWAP_V2_LP } from "constants/v2/tokens";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "state";
@@ -40,7 +40,17 @@ export default function FarmerUpdater() {
             seeds: new BigNumber(0),
             stalk: new BigNumber(0),
           })),
-        } 
+        },
+        [BEAN_ETH_UNISWAP_V2_LP[activeChain.id].address]: {
+          deposited: results.lpDepositsBalance,
+          deposits: Object.keys(results.userLPDeposits).map((s) => ({
+            amount: results.userLPDeposits[s],
+            bdv: results.userLPDeposits[s],
+            season: new BigNumber(s),
+            seeds: new BigNumber(0),
+            stalk: new BigNumber(0),
+          })),
+        }
       }))
     }
   }, [
