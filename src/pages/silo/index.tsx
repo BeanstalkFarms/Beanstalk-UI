@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Button,  Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-// import Pools from 'constants/v2/pools';
 import { AppState } from 'state';
 import NextSeason from 'components/v2/Silo/NextSeason';
 import OverviewCard from 'components/v2/Silo/OverviewCard';
@@ -11,22 +10,15 @@ import PageHeader from 'components/v2/Common/PageHeader';
 import { SNAPSHOT_LINK } from 'constants/index';
 import snapshotIcon from 'img/snapshot-icon.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useNetwork } from 'wagmi';
-// import usePools from 'hooks/usePools';
-import { SiloWhitelistTokens as siloWhitelist } from 'constants/v2/tokens';
+import useWhitelist from 'hooks/useWhitelist';
+import usePools from 'hooks/usePools';
 
 const SiloPage : React.FC = () => {
-  // const poolState = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
-  // const pools = usePools();
-  const siloState = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const { activeChain } = useNetwork();
-  
-  const whitelist = useMemo(() => {
-    if (activeChain?.id) {
-      return siloWhitelist.map((token) => token[activeChain.id]);
-    }
-    return [];
-  }, [activeChain]);
+  const beanPrice = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
+  const beanPools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const whitelist = useWhitelist();
+  const poolsByAddress = usePools();
 
   return (
     <Container maxWidth="lg">
@@ -51,18 +43,21 @@ const SiloPage : React.FC = () => {
         />
         <NextSeason />
         <OverviewCard
-          stalk={siloState.stalk}
+          stalk={farmerSilo.stalk}
         />
         <RewardsBar
-          beans={siloState.beans}
-          stalk={siloState.stalk}
-          seeds={siloState.seeds}
+          beans={farmerSilo.beans}
+          stalk={farmerSilo.stalk}
+          seeds={farmerSilo.seeds}
         />
         <TokenTable
           config={{
-            whitelist: whitelist,
+            whitelist: Object.values(whitelist),
+            poolsByAddress: poolsByAddress,
           }}
-          data={siloState}
+          beanPrice={beanPrice}
+          beanPools={beanPools}
+          farmerSilo={farmerSilo}
         />
       </Stack>
     </Container>

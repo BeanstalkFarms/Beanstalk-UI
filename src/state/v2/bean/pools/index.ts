@@ -5,4 +5,9 @@ export type BeanPoolState = {
   reserves: BigNumber[];
   deltaB: BigNumber;
   totalCrosses: BigNumber;
+  supply: BigNumber;
+}
+
+export type BeanPools = { 
+  [address: string]: BeanPoolState 
 }
