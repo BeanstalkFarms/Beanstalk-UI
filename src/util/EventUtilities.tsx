@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import { EventData } from 'web3-eth-contract';
 
 import { UNI_V2_ETH_BEAN_LP, UNI_V2_USDC_ETH_LP } from 'constants/index';
 import { Withdrawals } from 'state/userBalance/reducer';
@@ -8,10 +7,10 @@ import {
   account,
   benchmarkStart,
   benchmarkEnd,
-  txCallback,
-  beanstalkContractReadOnlyWs,
-  pairContractReadOnlyWs,
-  beanstalkContractReadOnly,
+  // txCallback,
+  // beanstalkContractReadOnlyWs,
+  // pairContractReadOnlyWs,
+  // beanstalkContractReadOnly,
   chainId,
 } from './index';
 

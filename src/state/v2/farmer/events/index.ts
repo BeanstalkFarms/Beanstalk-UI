@@ -1,3 +1,4 @@
 import { ethers } from "ethers";
+import { ParsedEvent } from "./updater";
 
-export type Events = ethers.Event[];
+export type Events = ParsedEvent[];

@@ -35,7 +35,9 @@ import { BeanstalkPalette } from './muiTheme';
 import ForecastPage from 'pages/forecast';
 import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
 import PoolsUpdater from 'state/v2/bean/pools/updater';
-import FarmerUpdater from 'state/v2/farmer/events/updater';
+import FarmerEventsUpdater from 'state/v2/farmer/events/updater';
+import FarmerUpdater from 'state/v2/farmer/updater';
+import SunUpdater from 'state/v2/beanstalk/sun/updater';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -93,7 +95,9 @@ export default function App() {
       {/* UPDATERS */}
       <FarmerSiloUpdater />
       <PoolsUpdater />
+      <FarmerEventsUpdater />
       <FarmerUpdater />
+      <SunUpdater />
       {/* <Updater />
       <TokenUpdater />
       <NftUpdater /> */}
@@ -112,7 +116,7 @@ export default function App() {
       >
         <Box>
           <NavBar />
-          <Box sx={{ pt: 10 }}>
+          <Box sx={{ py: 10 }}>
             {app}
           </Box>
           <Toaster

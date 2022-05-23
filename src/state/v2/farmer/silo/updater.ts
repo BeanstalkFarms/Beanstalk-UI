@@ -10,8 +10,6 @@ import { Seeds, Stalk } from 'constants/v2/tokens';
 import { GetAccountResult } from '@wagmi/core';
 import { useBeanstalkContract } from 'hooks/useContract';
 
-const NEG1 = new BigNumber(-1);
-
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract()
