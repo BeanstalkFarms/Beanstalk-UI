@@ -15,11 +15,11 @@ const NetworkButton : React.FC = () => {
     setAnchorEl(null);
   };
   const handleSwitch = useCallback((id) => () => {
-      if (switchNetwork) {
-        switchNetwork(id);
-        handleClose();
-      }
-    }, [switchNetwork]);
+    if (switchNetwork) {
+      switchNetwork(id);
+      handleClose();
+    }
+  }, [switchNetwork]);
   
   return (
     <>

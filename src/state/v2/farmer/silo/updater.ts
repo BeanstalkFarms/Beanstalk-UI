@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { Bean, BEAN_TO_SEEDS, BEAN_TO_STALK } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult, tokenResult } from 'util/LedgerUtilities2';
-import { useAccount, useConnect, useNetwork, useProvider } from 'wagmi';
+import { useAccount, useConnect } from 'wagmi';
 
 import { Seeds, Stalk } from 'constants/v2/tokens';
 import { GetAccountResult } from '@wagmi/core';
