@@ -22,11 +22,11 @@ export default function SiloV2() {
   const pools = usePools();
   
   const whitelist = useMemo(() => {
-    if(activeChain?.id) {
+    if (activeChain?.id) {
       return siloWhitelist.map((token) => token[activeChain.id]);
     }
     return [];
-  }, [activeChain])
+  }, [activeChain]);
 
   return (
     <Container maxWidth="lg">

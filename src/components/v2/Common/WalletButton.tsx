@@ -9,12 +9,10 @@ const SelectWalletDialog : React.FC = ({
   open
 }) => {
   const { connect, connectors, error, isConnecting, pendingConnector } = useConnect();
-  const handleConnect = useCallback((connector: Connector) => {
-    return () => {
+  const handleConnect = useCallback((connector: Connector) => () => {
       connect(connector);
       handleClose();
-    };
-  }, [connect, handleClose])
+    }, [connect, handleClose]);
   return (
     <Dialog onClose={handleClose} open={open}>
       <Box sx={{ p: 2, minWidth: 340 }}>
@@ -39,7 +37,7 @@ const SelectWalletDialog : React.FC = ({
         {error && <div>{error.message}</div>}
       </Box>
     </Dialog>
-  )
+  );
 };
 
 const WalletButton : React.FC = () => {
@@ -47,10 +45,10 @@ const WalletButton : React.FC = () => {
   const { disconnect } = useDisconnect();
 
   const [open, setOpen] = useState(false);
-  const handleClose = useCallback(() => setOpen(false), [])
+  const handleClose = useCallback(() => setOpen(false), []);
 
   //
-  if(account?.address) {
+  if (account?.address) {
     return (
       <>
         <Button
@@ -62,7 +60,7 @@ const WalletButton : React.FC = () => {
           {trimAddress(account.address)}
         </Button>
       </>
-    )
+    );
   }
 
   return (
@@ -79,7 +77,7 @@ const WalletButton : React.FC = () => {
         handleClose={handleClose}
       />
     </>
-  )
-}
+  );
+};
 
 export default WalletButton;

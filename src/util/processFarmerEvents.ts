@@ -1,10 +1,9 @@
-import { GetAccountResult } from "@wagmi/core";
-import BigNumber from "bignumber.js";
-import { BEAN, CURVE, UNI_V2_ETH_BEAN_LP } from "constants/tokens";
-import { UserBalanceState } from "state/userBalance/reducer";
-import { ParsedEvent } from "state/v2/farmer/events/updater";
-import { toTokenUnitsBN } from "./TokenUtilities";
-
+import { GetAccountResult } from '@wagmi/core';
+import BigNumber from 'bignumber.js';
+import { BEAN, CURVE, UNI_V2_ETH_BEAN_LP } from 'constants/tokens';
+import { UserBalanceState } from 'state/userBalance/reducer';
+import { ParsedEvent } from 'state/v2/farmer/events/updater';
+import { toTokenUnitsBN } from './TokenUtilities';
 
 // @publius to discuss: rename of crates
 // "crate" = a Deposit or Withdrawal
@@ -56,7 +55,6 @@ export function parsePlots(
   return [pods, harvestablePods, unharvestablePlots, harvestablePlots];
 }
 
-
 export default function processFarmerEvents(
   events: ParsedEvent[],
   params: {
@@ -83,7 +81,7 @@ export default function processFarmerEvents(
   const votedBips : UserBalanceState['votedBips'] = new Set();
   
   events.forEach((event) => {
-    console.debug(event)
+    console.debug(event);
     if (event.event === 'BeanDeposit') {
       // `season` is a base-10 numerical string.
       const s = parseInt(event.returnValues.season, 10);
@@ -458,7 +456,7 @@ export default function processFarmerEvents(
     params.season,
     params.farmableBeans
   );
-  console.debug(userBeanDeposits, params.season, params.farmableBeans)
+  console.debug(userBeanDeposits, params.season, params.farmableBeans);
   const beanDepositsBalance = Object.values(userBeanDeposits).reduce(
     (a, c) => a.plus(c),
     zeroBN
@@ -477,7 +475,6 @@ export default function processFarmerEvents(
   );
   const [podBalance, harvestablePodBalance, plots, harvestablePlots] =
     parsePlots(userPlots, params.harvestableIndex);
-
 
   return {
     // Bean
@@ -505,5 +502,5 @@ export default function processFarmerEvents(
     harvestablePodBalance,
     plots,
     harvestablePlots,
-  }
+  };
 }

@@ -3,8 +3,8 @@ import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
 
 import Pools from 'constants/v2/pools';
-import { updateBeanPools, UpdatePoolPayload } from './actions';
 import usePools from 'hooks/usePools';
+import { updateBeanPools, UpdatePoolPayload } from './actions';
 
 export const useGetPools = () => {
   const dispatch = useDispatch();

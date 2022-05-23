@@ -1,13 +1,13 @@
-import BigNumber from "bignumber.js";
-import { SupportedChainId } from "constants/chains";
-import { BEAN, BEAN_ETH_UNISWAP_V2_LP } from "constants/v2/tokens";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "state";
-import processFarmerEvents from "util/processFarmerEvents";
-import { useAccount, useNetwork } from "wagmi";
-import { updateFarmerField } from "./field/actions";
-import { updateFarmerTokenBalances } from "./silo/actions";
+import BigNumber from 'bignumber.js';
+import { SupportedChainId } from 'constants/chains';
+import { BEAN, BEAN_ETH_UNISWAP_V2_LP } from 'constants/v2/tokens';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from 'state';
+import processFarmerEvents from 'util/processFarmerEvents';
+import { useAccount, useNetwork } from 'wagmi';
+import { updateFarmerField } from './field/actions';
+import { updateFarmerTokenBalances } from './silo/actions';
 
 export default function FarmerUpdater() {
   const { data: account } = useAccount();
@@ -27,7 +27,7 @@ export default function FarmerUpdater() {
   );
 
   useEffect(() => {
-    if(account?.address && activeChain?.id && season && earnedBeans) {
+    if (account?.address && activeChain?.id && season && earnedBeans) {
       const results = processFarmerEvents(events, {
         account: account.address,
         farmableBeans: earnedBeans,
@@ -60,7 +60,7 @@ export default function FarmerUpdater() {
       dispatch(updateFarmerField({
         plots: results.plots,
         harvestablePlots: results.harvestablePlots,
-      }))
+      }));
     }
   }, [
     events,
@@ -71,7 +71,7 @@ export default function FarmerUpdater() {
     earnedBeans,
     harvestableIndex,
     season
-  ])
+  ]);
 
   return null;
 }

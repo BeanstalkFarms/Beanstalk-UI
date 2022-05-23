@@ -1,8 +1,8 @@
-import { Beanstalk } from "constants/generated";
-import { AddressMap, BEANSTALK_ADDRESSES } from "constants/v2/addresses";
-import { Contract } from "ethers";
-import { useMemo } from "react";
-import { useAccount, useProvider } from "wagmi";
+import { Beanstalk } from 'constants/generated';
+import { AddressMap, BEANSTALK_ADDRESSES } from 'constants/v2/addresses';
+import { Contract } from 'ethers';
+import { useMemo } from 'react';
+import { useAccount, useProvider } from 'wagmi';
 
 const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
 
@@ -30,13 +30,13 @@ export default function useContract<T extends Contract = Contract>(
     else address = addressOrAddressMap[chainId];
 
     if (!address) {
-      console.debug(`[useContract] attempted to instantiate contract with no avail address`, {
+      console.debug('[useContract] attempted to instantiate contract with no avail address', {
         addressOrAddressMap,
         chainId
-      })
+      });
     }
 
-    console.debug(`[useContract] initializing contract instance`, {
+    console.debug('[useContract] initializing contract instance', {
       address,
       chainId,
     });
@@ -53,7 +53,7 @@ export default function useContract<T extends Contract = Contract>(
     provider,
     abi,
     addressOrAddressMap
-  ])
+  ]);
 }
 
 export function useBeanstalkContract() {

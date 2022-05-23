@@ -5,24 +5,24 @@ import { useDispatch } from 'react-redux';
 import { bigNumberResult, tokenResult } from 'util/LedgerUtilities2';
 import { useAccount, useConnect, useNetwork, useProvider } from 'wagmi';
 
-import { reset, updateFarmerSiloAssets } from './actions';
 import { Seeds, Stalk } from 'constants/v2/tokens';
 import { GetAccountResult } from '@wagmi/core';
 import { useBeanstalkContract } from 'hooks/useContract';
+import { reset, updateFarmerSiloAssets } from './actions';
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
-  const beanstalk = useBeanstalkContract()
+  const beanstalk = useBeanstalkContract();
 
   // Handlers
   const fetch = useCallback(async (account: GetAccountResult) => {
-    console.debug(`[farmer/silo/updater] fetch called`, beanstalk, account)
+    console.debug('[farmer/silo/updater] fetch called', beanstalk, account);
 
     // FIXME: account?.connector ensures we don't make any calls
     // until the user's wallet is fully connected; alternatively can
     // get status straight from useConnect() above
     if (beanstalk && account?.address && account?.connector?.getChainId()) {
-      console.debug(`[farmer/silo/updater] fetch executing`);
+      console.debug('[farmer/silo/updater] fetch executing');
       const [
         stalkBalance,
         seedBalance,
@@ -37,7 +37,7 @@ export const useFarmerSilo = () => {
         beanstalk.balanceOfGrownStalk(account.address).then(tokenResult(Stalk)),
       ] as const);
 
-      console.debug(`[farmer/silo] fetch result`, [stalkBalance, seedBalance])
+      console.debug('[farmer/silo] fetch result', [stalkBalance, seedBalance]);
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
@@ -75,8 +75,8 @@ export const useFarmerSilo = () => {
   ]);
   
   const clear = useCallback(() => {
-    console.debug(`[farmer/silo/updater] clear`)
-    dispatch(reset())
+    console.debug('[farmer/silo/updater] clear');
+    dispatch(reset());
   }, [dispatch]);
 
   return [fetch, clear] as const;
@@ -91,10 +91,10 @@ export default function FarmerSiloUpdater() {
 
   // Fetch on initial connect
   useEffect(() => {
-    console.debug(`[farmer/silo/updater] status`, connectStatus, account)
-    if(connectStatus === 'connected' && account) {
+    console.debug('[farmer/silo/updater] status', connectStatus, account);
+    if (connectStatus === 'connected' && account) {
       fetch(account);
-    } else if(connectStatus === 'disconnected') {
+    } else if (connectStatus === 'disconnected') {
       clear();
     }
   }, [

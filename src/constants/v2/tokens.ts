@@ -24,7 +24,7 @@ export const ETH = {
       logo: ethLogoUrl
     }
   ),
-}
+};
 
 // Beanstalk Internal Tokens (not ERC20)
 
@@ -37,7 +37,7 @@ export const Stalk = new BeanstalkToken(
     symbol: 'STALK',
     logo: stalkLogo,
   }
-)
+);
 
 export const Seeds = new BeanstalkToken(
   '',
@@ -48,7 +48,7 @@ export const Seeds = new BeanstalkToken(
     symbol: 'SEED',
     logo: seedLogo,
   }
-)
+);
 
 // ERC20 Tokens
 
@@ -96,7 +96,7 @@ export const BEAN = {
       logo: beanLogoUrl,
     }
   ),
-}
+};
 
 export const BEAN_ETH_UNISWAP_V2_LP = {
   [SupportedChainId.MAINNET]: new ERC20Token(
@@ -119,7 +119,7 @@ export const BEAN_ETH_UNISWAP_V2_LP = {
       logo: beanEthLogoUrl,
     }
   ),
-}
+};
 
 // --
 
@@ -133,4 +133,4 @@ export const BEAN_ETH_UNISWAP_V2_LP = {
 export const whitelist : { [address: string] : Token }[] = [
   BEAN,
   BEAN_ETH_UNISWAP_V2_LP,
-]
+];

@@ -31,13 +31,13 @@ import FieldPage from 'pages/field';
 import './App.css';
 import NavBar from 'components/v2/Nav/NavBar';
 import pageBackground from 'img/bg-mainnet.png';
-import { BeanstalkPalette } from './muiTheme';
 import ForecastPage from 'pages/forecast';
 import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
 import PoolsUpdater from 'state/v2/bean/pools/updater';
 import FarmerEventsUpdater from 'state/v2/farmer/events/updater';
 import FarmerUpdater from 'state/v2/farmer/updater';
 import SunUpdater from 'state/v2/beanstalk/sun/updater';
+import { BeanstalkPalette } from './muiTheme';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 

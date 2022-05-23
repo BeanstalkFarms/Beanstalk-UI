@@ -48,7 +48,7 @@ const Deposits : React.FC<{
     <Card sx={{ p: 2 }}>
       <Stack gap={2}>
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: "bold" }}>{token.name} Deposits</Typography>
+          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{token.name} Deposits</Typography>
         </Box>
         <Box sx={{ height: 375, width: '100%' }}>
           <DataGrid

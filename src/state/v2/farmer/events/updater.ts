@@ -1,14 +1,14 @@
 import { useCallback, useEffect } from 'react';
-import BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { useAccount } from 'wagmi';
-import flatten from 'lodash/flatten'
+import flatten from 'lodash/flatten';
 import useBlocks from 'hooks/useBlocks';
-import { setEvents } from './actions';
 import { useDispatch } from 'react-redux';
 import { Beanstalk } from 'constants/generated';
 import ethers, { BigNumber as BN } from 'ethers';
 import { GetAccountResult } from '@wagmi/core';
+import { setEvents } from './actions';
 
 export type ParsedEvent = {
   event: ethers.Event['event'];
@@ -120,13 +120,11 @@ const getEvents = (beanstalk: Beanstalk, account: GetAccountResult, blocks: Retu
       blocks.BIP10_COMMITTED_BLOCK,
     ),
   ] as const
-)
+);
 
 // HACK:
 // Recursively parse all instances of BNJS as BigNumber
-const bn = (v: any) => {
-  return v instanceof BN ? new BigNumber(v.toString()) : false;
-};
+const bn = (v: any) => (v instanceof BN ? new BigNumber(v.toString()) : false);
 const parseBNJS = (_o: { [key: string ] : any }) => {
   const o : { [key: string ] : any } = {};
   Object.keys(_o).forEach((k: string) => {
@@ -136,10 +134,10 @@ const parseBNJS = (_o: { [key: string ] : any }) => {
           ? _o[k].map((v: any) => bn(v) || v)
           : _o[k]
       )
-    )
+    );
   });
   return o;
-}
+};
 
 export default function FarmerEventsUpdater() {
   const beanstalk = useBeanstalkContract();
@@ -148,7 +146,7 @@ export default function FarmerEventsUpdater() {
   const dispatch = useDispatch();
   
   useEffect(() => {
-    if(beanstalk && account) {
+    if (beanstalk && account) {
       console.debug('[farmer/updater] fetching events');
       Promise.all(getEvents(beanstalk, account, blocks)).then((results) => {
         const allEvents : ParsedEvent[] = (
@@ -168,9 +166,9 @@ export default function FarmerEventsUpdater() {
               return a.logIndex - b.logIndex;
             })
         );
-        console.debug(`[farmer/updater] allEvents`, allEvents)
+        console.debug('[farmer/updater] allEvents', allEvents);
         dispatch(setEvents(allEvents));
-      })
+      });
     }
   }, [
     account,

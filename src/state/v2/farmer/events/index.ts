@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
-import { ParsedEvent } from "./updater";
+import { ethers } from 'ethers';
+import { ParsedEvent } from './updater';
 
 export type Events = ParsedEvent[];

@@ -98,7 +98,7 @@ export class UniswapV2Pool extends Pool {
   }
   
   public getReserves() {
-    console.debug(`[UniswapV2Pool] getReserves: ${this.address} ${this.name} on chain ${client.provider._network.chainId} via ${client.provider.connection.url}`)
+    console.debug(`[UniswapV2Pool] getReserves: ${this.address} ${this.name} on chain ${client.provider._network.chainId} via ${client.provider.connection.url}`);
     return (
       this.getContract().getReserves().then((result) => (
         [

@@ -11,16 +11,15 @@ import BigNumber from 'bignumber.js';
 
 const Deposit : React.FC<{
   token: Token
-}> = () => {
-  return (
-    <form>
-      <Stack gap={1}>
-        <TextField
-          type="text"
-          variant="outlined"
-          placeholder="Placeholder"
-          fullWidth
-          InputProps={{
+}> = () => (
+  <form>
+    <Stack gap={1}>
+      <TextField
+        type="text"
+        variant="outlined"
+        placeholder="Placeholder"
+        fullWidth
+        InputProps={{
             endAdornment: (
               <Button
                 variant="contained"
@@ -39,33 +38,32 @@ const Deposit : React.FC<{
             )
           }}
         />
-        <Stack direction="column" gap={1}>
-          <TokenOutputField
-            token={Stalk}
-            value={new BigNumber(10_000)}
+      <Stack direction="column" gap={1}>
+        <TokenOutputField
+          token={Stalk}
+          value={new BigNumber(10_000)}
           />
-          <Stack direction="row" gap={1} justifyContent="center">
-            <Box sx={{ flex: 1 }}>
-              <TokenOutputField
-                token={Stalk}
-                value={new BigNumber(10_000)}
+        <Stack direction="row" gap={1} justifyContent="center">
+          <Box sx={{ flex: 1 }}>
+            <TokenOutputField
+              token={Stalk}
+              value={new BigNumber(10_000)}
               />
-            </Box>
-            <Box sx={{ flex: 1 }}>
-              <TokenOutputField
-                token={Stalk}
-                value={new BigNumber(10_000)}
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <TokenOutputField
+              token={Stalk}
+              value={new BigNumber(10_000)}
               />
-            </Box>
-          </Stack>
+          </Box>
         </Stack>
-        <Button disabled={true} type="submit" size="large" fullWidth>
-          Deposit
-        </Button>
       </Stack>
-    </form>
-  )
-}
+      <Button disabled type="submit" size="large" fullWidth>
+        Deposit
+      </Button>
+    </Stack>
+  </form>
+  );
 
 const Actions : React.FC<{
   token: Token

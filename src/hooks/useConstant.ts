@@ -1,6 +1,6 @@
-import { SupportedChainId } from "constants/chains";
-import { useNetwork } from "wagmi";
-import useWhitelist from "./useWhitelist";
+import { SupportedChainId } from 'constants/chains';
+import { useNetwork } from 'wagmi';
+import useWhitelist from './useWhitelist';
 
 type ConstantByChain = { [key: number] : any };
 

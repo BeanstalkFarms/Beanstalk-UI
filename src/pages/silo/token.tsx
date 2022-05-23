@@ -27,7 +27,7 @@ const TokenPage : React.FC<{}> = () => {
         {/* Header */}
         <Stack direction="row" alignItems="center" gap={2}>
           <Box>
-            <Button to={"/silo"} component={RouterLink} variant="contained" color="light" sx={{ p: 1, borderRadius: 100, minWidth: 0 }}>
+            <Button to="/silo" component={RouterLink} variant="contained" color="light" sx={{ p: 1, borderRadius: 100, minWidth: 0 }}>
               <ChevronLeftIcon />
             </Button>
           </Box>

@@ -7,7 +7,6 @@ import BigNumber from 'bignumber.js';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayFullBN } from 'util/index';
 
-
 const columns : DataGridProps['columns'] = [
   {
     field: 'placeInLine',
@@ -32,15 +31,11 @@ const columns : DataGridProps['columns'] = [
 export default function FieldPage() {
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const { harvestableIndex } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  const rows = useMemo(() => {
-    return Object.keys(farmerField.plots).map((index) => {
-      return ({
+  const rows = useMemo(() => Object.keys(farmerField.plots).map((index) => ({
         id: index,
         placeInLine: new BigNumber(index).minus(harvestableIndex),
         amount: new BigNumber(farmerField.plots[index]),
-      });
-    })
-  }, [farmerField?.plots, harvestableIndex])
+      })), [farmerField?.plots, harvestableIndex]);
   return (
     <Container maxWidth="md">
       <Stack gap={2}>

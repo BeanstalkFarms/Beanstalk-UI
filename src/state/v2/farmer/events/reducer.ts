@@ -8,10 +8,8 @@ const initialState : ParsedEvent[] = [];
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(resetEvents, (state) => {
-      console.debug(`[farmer/silo/reducer] reset`)
+      console.debug('[farmer/silo/reducer] reset');
       return initialState;
     })
-    .addCase(setEvents, (state, { payload }) => {
-      return payload;
-    })
+    .addCase(setEvents, (state, { payload }) => payload)
 );

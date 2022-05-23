@@ -11,7 +11,7 @@ const initialState : Field = {
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(updateFarmerField, (state, { payload }) => {
-      state.plots = payload.plots
+      state.plots = payload.plots;
       state.harvestablePlots = payload.harvestablePlots;
     })
 );

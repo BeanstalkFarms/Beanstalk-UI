@@ -11,8 +11,8 @@ import {
   toTokenUnitsBN,
 } from 'util/index';
 import { BEAN } from 'constants/index';
-import { PodOrder, PodListing, MarketHistoryItem, MarketStats } from './reducer';
 import { ethers } from 'ethers';
+import { PodOrder, PodListing, MarketHistoryItem, MarketStats } from './reducer';
 
 const beanstalkContractReadOnly = beanstalkContract;
 

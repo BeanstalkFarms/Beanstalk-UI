@@ -14,14 +14,12 @@ const NetworkButton : React.FC = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleSwitch = useCallback((id) => {
-    return () => {
-      if(switchNetwork) {
+  const handleSwitch = useCallback((id) => () => {
+      if (switchNetwork) {
         switchNetwork(id);
         handleClose();
       }
-    }
-  }, [switchNetwork]);
+    }, [switchNetwork]);
   
   return (
     <>
@@ -54,7 +52,7 @@ const NetworkButton : React.FC = () => {
         </Box>
       </Dialog>
     </>
-  )
-}
+  );
+};
 
 export default NetworkButton;
