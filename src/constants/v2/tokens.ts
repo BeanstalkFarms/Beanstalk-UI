@@ -11,9 +11,9 @@ import seedLogo from 'img/seed-logo.svg';
 import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from '../chains';
 
-export type TokenMap = { [chainId: number] : Token };
-export type TokenOrTokenMap = Token | TokenMap;
-export type TokensByAddress = { [address: string] : Token };
+export type TokenMap<T = Token> = { [chainId: number] : T };
+export type TokenOrTokenMap<T = Token> = T | TokenMap<T>;
+export type TokensByAddress<T = Token> = { [address: string] : T };
 
 // Native Tokens
 

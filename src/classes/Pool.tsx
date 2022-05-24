@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { UniswapV2Pair__factory } from 'constants/generated';
+import { MinBN } from 'util';
 import client from 'util/wagmi';
 import Dex from './Dex';
 import Token, { ERC20Token } from './Token';
@@ -86,6 +87,63 @@ export default abstract class Pool {
   public equals(other: Token): boolean {
     return this.chainId === other.chainId && this.address === other.address;
   }
+
+  /** 
+   * Used to calculate how much of an underlying reserve a given amount of LP tokens owns in an LP pool.
+   * Ownership of reserve tokens is proportional to ownership of LP tokens.
+   * 
+   * @param amount - the amount of LP tokens the farmer owns
+   * @param reserve - the reserve of an asset in the lp pool
+   * @param totalLP - the total lp tokens
+   * @returns the amount of reserve tokens the farmer owns.
+   */
+  static tokenForLP = (amount: BigNumber, reserve: BigNumber, totalLP: BigNumber) =>
+  amount.multipliedBy(reserve).dividedBy(totalLP);
+
+  /**
+   * Used to calcuate the # of reserve tokens owned by a farmer for 2 assets in a pool (e.g. Beans + Eth)
+   * Just calls tokenForLP twice.
+   */
+  static poolForLP = (
+    amount: BigNumber,
+    reserve1: BigNumber,
+    reserve2: BigNumber,
+    totalLP: BigNumber
+  ) => {
+    if (
+      amount.isLessThanOrEqualTo(0) ||
+      reserve1.isLessThanOrEqualTo(0) ||
+      reserve2.isLessThanOrEqualTo(0) ||
+      totalLP.isLessThanOrEqualTo(0)
+    ) {
+      return [new BigNumber(0), new BigNumber(0)];
+    }
+    return [
+      Pool.tokenForLP(amount, reserve1, totalLP),
+      Pool.tokenForLP(amount, reserve2, totalLP),
+    ];
+  };
+
+  /**
+   * The opposite of tokenForLP. If a farmer owns/deposits X of reserve asset -> how many LP tokens do they 1 own/get. 
+   * 
+   * @param amount - the amount of the reserve asset the farmer has
+   * @param reserve - the total amount of the reserve asset
+   * @param totalLP - the total amount of the LP token
+   * @returns the amount of lp tokens that amount corresponds to.
+   */
+  static lpForToken = (amount: BigNumber, reserve: BigNumber, totalLP: BigNumber) =>
+    amount.multipliedBy(totalLP).dividedBy(reserve);
+
+  /**
+   * The opposite of poolForLP - used to calculate how many LP tokens a farmer gets if they deposit both reserve assets in a 2 asset pool.
+   * e.g. if a farmer deposits amount1 of Beans and amount2 of Eth into an LP pool with reserve1 Beans, reserve2 Eth and totalLP LP tokens, it returns how many LP tokens the farmer gets.
+   */
+  static lpForPool = (amount1: BigNumber, reserve1: BigNumber, amount2: BigNumber, reserve2: BigNumber, totalLP: BigNumber) =>
+    MinBN(
+      Pool.lpForToken(amount1, reserve1, totalLP),
+      Pool.lpForToken(amount2, reserve2, totalLP)
+    );
 
   abstract getReserves() : Promise<Reserves>;
 }

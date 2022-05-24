@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 
 const ForecastPage : React.FC = () => {
-  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const farmerSilo = useSelector<AppState, AppState['_farmer']>((state) => state._farmer);
   const tokens = useTokenList(ERC20Tokens);
 
   return (
@@ -14,7 +14,7 @@ const ForecastPage : React.FC = () => {
       <Stack direction="row">
         <Card>
           _farmer.silo<br />
-          <pre>{JSON.stringify(farmerSilo, null, 2)}</pre>
+          <pre>{JSON.stringify({ ...farmerSilo, events: null }, null, 2)}</pre>
         </Card>
         <Card>
           useTokenList(AllTokens)<br />

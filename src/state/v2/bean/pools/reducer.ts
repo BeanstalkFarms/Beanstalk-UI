@@ -1,10 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { BeanPoolState } from '.';
+import { BeanPools } from '.';
 import { updateBeanPool, updateBeanPools } from './actions';
 
-const initialState : { 
-  [address: string]: BeanPoolState 
-} = {};
+const initialState : BeanPools = {};
 
 // Pools.all.forEach((pool) => {
 //   initialState[pool.address] = {
