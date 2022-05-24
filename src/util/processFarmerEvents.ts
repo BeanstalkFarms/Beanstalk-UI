@@ -454,7 +454,6 @@ export default function processFarmerEvents(
     params.season,
     params.farmableBeans
   );
-  console.debug(userBeanDeposits, params.season, params.farmableBeans);
   const beanDepositsBalance = Object.values(userBeanDeposits).reduce(
     (a, c) => a.plus(c),
     zeroBN

@@ -19,37 +19,44 @@ export const useGetPools = () => {
   // Handlers
   const fetch = useCallback(
     async () => {
-      const result = await beanstalkPriceContract?.price();
-      if (!result) return;
-      console.debug('[bean/pools/updater] result', result, tokens);
-      const _pools = result.ps.reduce<(Promise<UpdatePoolPayload>)[]>((acc, poolData) => {
-        const address = poolData.pool;
-        // If a new pool is added to the Pools contract before it's
-        // configured in the frontend, this function would throw an error.
-        // Thus, we only process the pool's data if we have it configured.
-        if (pools[address]) {
-          acc.push(
-            pools[address].lpToken.getTotalSupply().then((supply) => ({
-              address: poolData.pool,
-              pool: {
-                price: tokenResult(BEAN)(poolData.price.toString()),
-                reserves: [
-                  tokenResult(tokens[poolData.tokens[0]])(poolData.balances[0]),
-                  tokenResult(tokens[poolData.tokens[1]])(poolData.balances[1]),
-                ],
-                deltaB: tokenResult(BEAN)(poolData.deltaB.toString()),
-                totalCrosses: new BigNumber(0),
-                supply: tokenResult(pools[address].lpToken)(supply.toString())
-              },
-            }))
-          );
-        }
-        return acc;
-      }, []);
-      dispatch(updateBeanPools(await Promise.all(_pools)));
-      dispatch(updateBeanPrice(tokenResult(BEAN)(result.price.toString())));
+      if (beanstalkPriceContract) {
+        const result = await beanstalkPriceContract?.price();
+        if (!result) return;
+        console.debug('[bean/pools/updater] result', result, tokens);
+        const beanPools = result.ps.reduce<(Promise<UpdatePoolPayload>)[]>((acc, poolData) => {
+          const address = poolData.pool;
+          // If a new pool is added to the Pools contract before it's
+          // configured in the frontend, this function would throw an error.
+          // Thus, we only process the pool's data if we have it configured.
+          if (pools[address]) {
+            acc.push(
+              pools[address].lpToken.getTotalSupply().then((supply) => ({
+                address: poolData.pool,
+                pool: {
+                  price: tokenResult(BEAN)(poolData.price.toString()),
+                  reserves: [
+                    tokenResult(tokens[poolData.tokens[0]])(poolData.balances[0]),
+                    tokenResult(tokens[poolData.tokens[1]])(poolData.balances[1]),
+                  ],
+                  deltaB: tokenResult(BEAN)(poolData.deltaB.toString()),
+                  supply: tokenResult(pools[address].lpToken)(supply.toString()),
+                  totalCrosses: new BigNumber(0),
+                },
+              }))
+            );
+          }
+          return acc;
+        }, []);
+        dispatch(updateBeanPools(await Promise.all(beanPools)));
+        dispatch(updateBeanPrice(tokenResult(BEAN)(result.price.toString())));
+      }
     },
-    [dispatch, beanstalkPriceContract, tokens, pools]
+    [
+      dispatch,
+      beanstalkPriceContract,
+      tokens,
+      pools
+    ]
   );
   const clear = useCallback(() => {}, []);
 
