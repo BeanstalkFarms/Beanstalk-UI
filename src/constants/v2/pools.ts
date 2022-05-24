@@ -11,9 +11,9 @@ export const BEAN_ETH_UNISWAP_V2_POOL_MAINNET = new UniswapV2Pool(
   BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.MAINNET],
   [BEAN[SupportedChainId.MAINNET], WETH[SupportedChainId.MAINNET]],
   {
-    name: 'Bean:ETH Uniswap V2 Pool',
-    logo: beanEthLogoUrl, //TODO: Change
-    symbol: undefined
+    name: 'BEAN:ETH Uniswap V2 Pool',
+    logo: beanEthLogoUrl,
+    symbol: "BEAN:ETH"
   },
 );
 
@@ -24,9 +24,9 @@ export const BEAN_ETH_UNISWAP_V2_POOL_ROPSTEN = new UniswapV2Pool(
   BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.ROPSTEN],
   [BEAN[SupportedChainId.ROPSTEN], WETH[SupportedChainId.ROPSTEN]],
   {
-    name: 'Bean:ETH Uniswap V2 Pool',
-    logo: undefined,
-    symbol: undefined
+    name: 'BEAN:ETH Uniswap V2 Pool',
+    logo: beanEthLogoUrl,
+    symbol: "BEAN:ETH"
   },
 );
 

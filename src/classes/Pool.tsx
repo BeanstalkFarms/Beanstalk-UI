@@ -44,12 +44,12 @@ export default abstract class Pool {
   /**
    * The symbol of the currency, i.e. a short textual non-unique identifier
    */
-  public readonly symbol?: string;
+  public readonly symbol: string;
 
   /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
    */
-  public readonly logo?: string;
+  public readonly logo: string;
 
   /**
    * @param chainId the chain ID on which this currency resides
@@ -61,12 +61,12 @@ export default abstract class Pool {
     address: string,
     chainId: number,
     dex: Dex,
-    lpToken: Token,
-    tokens: Token[],
+    lpToken: ERC20Token,
+    tokens: ERC20Token[],
     metadata: {
       name: string,
-      symbol?: string,
-      logo?: string,
+      symbol: string,
+      logo: string,
     }
   ) {
     this.address = address;
