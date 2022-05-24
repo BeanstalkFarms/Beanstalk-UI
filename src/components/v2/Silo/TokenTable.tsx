@@ -53,6 +53,7 @@ const TokenTable : React.FC<{
         <Box>
           <Button
             component={Link}
+            
             to={`/silo/${token.address}`}
             fullWidth
             variant="outlined"

@@ -23,6 +23,7 @@ export const useGetPools = () => {
               new BigNumber(poolData.balances[1].toString()),
             ],
             deltaB: new BigNumber(poolData.deltaB.toString()),
+            liquidity: new BigNumber(poolData.liquidity.toString()),
             totalCrosses: new BigNumber(0),
           }
         } as UpdatePoolPayload));

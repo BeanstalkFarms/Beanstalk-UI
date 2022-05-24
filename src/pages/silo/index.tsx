@@ -13,20 +13,22 @@ import snapshotIcon from 'img/snapshot-icon.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useNetwork } from 'wagmi';
 // import usePools from 'hooks/usePools';
-import { SiloWhitelistTokens as siloWhitelist } from 'constants/v2/tokens';
+import { BEAN_ETH_UNISWAP_V2_LP, BEAN, SiloWhitelistTokens as siloWhitelist } from 'constants/v2/tokens';
+import { SupportedChainId } from "../../constants/chains";
 
 const SiloPage : React.FC = () => {
   // const poolState = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   // const pools = usePools();
   const siloState = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const { activeChain } = useNetwork();
+  // const { activeChain } = useNetwork();
   
   const whitelist = useMemo(() => {
-    if (activeChain?.id) {
-      return siloWhitelist.map((token) => token[activeChain.id]);
-    }
-    return [];
-  }, [activeChain]);
+    return [BEAN[SupportedChainId.MAINNET], BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.MAINNET]]
+    // if (activeChain?.id) {
+    //   return siloWhitelist.map((token) => token[activeChain.id]);
+    // }
+    // return [];
+  }, []);
 
   return (
     <Container maxWidth="lg">
