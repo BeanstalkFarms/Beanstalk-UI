@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Card, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from '../../../util';
+import fertilizerClosedIcon from 'img/fertilizer-closed.svg';
 
 const RemainingFertilizer: React.FC = () => {
     return (
@@ -43,14 +44,7 @@ const RemainingFertilizer: React.FC = () => {
             </Stack>
             {/* right column */}
             <Stack>
-              <Box sx={{
-                opacity: 0.2,
-                height: '250px',
-                width: '250px',
-                backgroundColor: 'transparent',
-                borderRadius: 2,
-                border: 1
-              }} />
+              <img alt="" src={fertilizerClosedIcon} />
             </Stack>
           </Stack>
         </Stack>

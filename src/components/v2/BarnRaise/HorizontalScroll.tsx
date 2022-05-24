@@ -1,10 +1,11 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Box, Card, Divider, Link, Stack, Typography } from '@mui/material';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 import { makeStyles } from '@mui/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import BigNumber from 'bignumber.js';
+import beanCircleIcon from 'img/bean-circle.svg';
+import fertilizerOpenedIcon from 'img/fertilizer-opened.svg';
 
 const useStyles = makeStyles(() => ({
   scrollMenu: {
@@ -45,24 +46,18 @@ function ScrollItem({ onClick, selected, title, itemId }: { onClick: any, select
         <Typography sx={{ fontSize: '18px', ml: 1 }}>Season 5192</Typography>
       </Stack>
       <Stack alignItems="center">
-        <Box sx={{
-          opacity: 0.2,
-          height: '150px',
-          width: '150px',
-          backgroundColor: 'transparent',
-          borderRadius: 2,
-          border: 1
-        }} />
+        <Stack alignItems="center">
+          <img alt="" src={fertilizerOpenedIcon} width="150px" />
+        </Stack>
       </Stack>
-
       <Stack alignItems="center" gap={0.5} sx={{ pt: 1 }}>
         <Typography sx={{ fontSize: '18px' }}>x 10,000</Typography>
         <Typography sx={{ fontSize: '18px' }}>500% Humidity</Typography>
         <Stack direction="row" gap={0.2}>
-          <Typography sx={{ fontSize: '18px' }}>X</Typography>
+          <img alt="" src={beanCircleIcon} width="16px" />
           <Typography sx={{ fontSize: '18px' }}>100</Typography>
           <Typography sx={{ fontSize: '18px' }}>/</Typography>
-          <Typography sx={{ fontSize: '18px' }}>X</Typography>
+          <img alt="" src={beanCircleIcon} width="16px" />
           <Typography sx={{ fontSize: '18px' }}>50,000</Typography>
         </Stack>
       </Stack>
@@ -99,15 +94,15 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ items }) => {
           <Stack gap={1}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography>Total Fertilizer Reward:</Typography>
-              <Stack direction="row" alignItems="center" gap={0.5}>
-                <Typography>IMG</Typography>
+              <Stack direction="row" alignItems="center" gap={0.1}>
+                <img alt="" src={beanCircleIcon} width="16px" />
                 <Typography>100,000</Typography>
               </Stack>
             </Stack>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography>Total Fertilizer Reward:</Typography>
-              <Stack direction="row" alignItems="center" gap={0.5}>
-                <Typography>IMG</Typography>
+              <Stack direction="row" alignItems="center" gap={0.1}>
+                <img alt="" src={beanCircleIcon} width="16px" />
                 <Typography>100,000</Typography>
               </Stack>
             </Stack>
