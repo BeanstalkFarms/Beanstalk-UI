@@ -1,7 +1,7 @@
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 import { HashRouter } from 'react-router-dom';
-import theme from 'components/App/muiTheme';
+import theme from 'components/App/v2/muiTheme';
 
 import '../src/index.css';
 

@@ -9,7 +9,7 @@ import { localPoint } from '@visx/event';
 import { withTooltip } from '@visx/tooltip';
 import { DateValue } from '@visx/mock-data/lib/generators/genDateValue';
 import { curveNatural } from '@visx/curve';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette } from 'components/v2/App/muiTheme';
 
 export type DataPoint = {
   date: Date;

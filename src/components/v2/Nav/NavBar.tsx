@@ -5,7 +5,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import beanCircleIcon from 'img/bean-circle.svg';
 import swapIcon from 'img/swap.svg';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette } from 'components/v2/App/muiTheme';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import WalletButton from '../Common/WalletButton';
@@ -24,6 +24,10 @@ const NAVIGATION_MAP = {
     {
       path: '/field',
       title: 'Field',
+    },
+    {
+      path: '/barn-raise',
+      title: 'Barn Raise',
     },
   ],
   more: [
