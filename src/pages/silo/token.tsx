@@ -7,8 +7,8 @@ import Deposits from 'components/v2/Silo/Deposits';
 import useWhitelist from 'hooks/useWhitelist';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import PoolCard from '../../components/v2/Silo/PoolCard';
 import usePools from 'hooks/usePools';
+import PoolCard from '../../components/v2/Silo/PoolCard';
 
 const TokenPage : React.FC<{}> = () => {
   const { address } = useParams<{ address: string }>();
@@ -59,6 +59,7 @@ const TokenPage : React.FC<{}> = () => {
         )}
         <Actions
           token={token}
+          poolState={poolState}
         />
         <Deposits
           token={token}

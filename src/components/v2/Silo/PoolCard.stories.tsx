@@ -1,9 +1,9 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
+import BigNumber from 'bignumber.js';
 import PoolCard from './PoolCard';
 import { BEAN_ETH_UNISWAP_V2_POOL_MAINNET } from '../../../constants/v2/pools';
 import { BeanPoolState } from '../../../state/v2/bean/pools';
-import BigNumber from 'bignumber.js';
 
 export default {
   component: PoolCard,

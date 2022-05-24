@@ -63,6 +63,7 @@ const BeanDepositAction = forwardRef(({
   } = useSelector<AppState, AppState['userBalance']>(
     (state) => state.userBalance
   );
+  
   const {
     beanReserve,
     ethReserve,

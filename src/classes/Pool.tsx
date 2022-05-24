@@ -144,6 +144,27 @@ export default abstract class Pool {
       Pool.lpForToken(amount1, reserve1, totalLP),
       Pool.lpForToken(amount2, reserve2, totalLP)
     );
+  
+  /**
+   * 
+   */
+  static getToAmount = (
+    amountIn: BigNumber,
+    reserveIn: BigNumber,
+    reserveOut: BigNumber
+  ) => {
+    if (
+      amountIn.isLessThanOrEqualTo(0) ||
+      reserveIn.isLessThanOrEqualTo(0) ||
+      reserveOut.isLessThanOrEqualTo(0)
+    ) {
+      return new BigNumber(0);
+    }
+    const amountInWithFee = amountIn.multipliedBy(997);
+    const numerator = amountInWithFee.multipliedBy(reserveOut);
+    const denominator = reserveIn.multipliedBy(1000).plus(amountInWithFee);
+    return numerator.dividedBy(denominator);
+  };
 
   abstract getReserves() : Promise<Reserves>;
 }

@@ -1,8 +1,8 @@
 import Pool, { UniswapV2Pool } from 'classes/Pool';
 import { SupportedChainId } from 'constants/chains';
+import beanEthLogoUrl from 'img/bean-eth-logo.svg';
 import { Uniswap } from './dexes';
 import { BEAN, BEAN_ETH_UNISWAP_V2_LP, WETH } from './tokens';
-import beanEthLogoUrl from 'img/bean-eth-logo.svg';
 
 export const BEAN_ETH_UNISWAP_V2_POOL_MAINNET = new UniswapV2Pool(
   '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
@@ -13,7 +13,7 @@ export const BEAN_ETH_UNISWAP_V2_POOL_MAINNET = new UniswapV2Pool(
   {
     name: 'BEAN:ETH Uniswap V2 Pool',
     logo: beanEthLogoUrl,
-    symbol: "BEAN:ETH"
+    symbol: 'BEAN:ETH'
   },
 );
 
@@ -26,7 +26,7 @@ export const BEAN_ETH_UNISWAP_V2_POOL_ROPSTEN = new UniswapV2Pool(
   {
     name: 'BEAN:ETH Uniswap V2 Pool',
     logo: beanEthLogoUrl,
-    symbol: "BEAN:ETH"
+    symbol: 'BEAN:ETH'
   },
 );
 
