@@ -21,13 +21,13 @@ const PoolCard : React.FC<{
           <Typography sx={{ fontSize: '16px', fontWeight: 700 }}>${displayBN(pool.price)}</Typography>
         </Stack>
         <Stack>
-          <Stack direction="row" gap="5px">
+          <Stack direction="row" gap={0.5}>
             <Typography sx={{ opacity: 0.7 }}>liquidity:</Typography>
             <Typography>${displayBN(pool.liquidity)}</Typography>
           </Stack>
-          <Stack direction="row" gap="5px">
+          <Stack direction="row" gap={0.5}>
             <Typography sx={{ opacity: 0.7 }}>delta:</Typography>
-            <Stack direction="row" gap="2px">
+            <Stack direction="row" gap={0.2}>
               <Typography>+</Typography>
               <img alt="" src={BEAN[SupportedChainId.MAINNET].logo} width="10px" />
               <Typography>{displayBN(pool.deltaB)}</Typography>
