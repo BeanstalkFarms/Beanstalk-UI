@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Menu, Popper } from '@mui/material';
+import { Box, Button, Menu, Popper, Stack } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
@@ -30,9 +30,10 @@ const PriceButton : React.FC = () => {
         startIcon={<img src={beanCircleIcon} alt="Bean" style={{ height: 25 }} />}
         endIcon={<Icon />}
         onClick={handleClick}
+        disableRipple
         sx={{
-          borderBottomLeftRadius: anchorEl ? 0 : 'inherit',
-          borderBottomRightRadius: anchorEl ? 0 : 'inherit',
+          borderBottomLeftRadius: anchorEl ? 0 : undefined,
+          borderBottomRightRadius: anchorEl ? 0 : undefined,
           // position: anchorEl ? 'relative' : 'inherit',
           zIndex: anchorEl ? 999 : undefined
         }}
@@ -49,7 +50,6 @@ const PriceButton : React.FC = () => {
           sx={(theme) => ({
             background: 'white',
             width: '350px',
-            marginTop: '-1px',
             borderColor: 'primary.main',
             overflow: 'hidden',
             borderBottomLeftRadius: theme.shape.borderRadius,
@@ -61,13 +61,15 @@ const PriceButton : React.FC = () => {
           })}
           className="border border-t-0 shadow-xl"
         >
-          {Object.values(pools).map((pool) => (
-            <PoolCard
-              key={pool.address}
-              pool={pool}
-              poolState={beanPools[pool.address]}
-            />
-          ))}
+          <Stack gap={1}>
+            {Object.values(pools).map((pool) => (
+              <PoolCard
+                key={pool.address}
+                pool={pool}
+                poolState={beanPools[pool.address]}
+              />
+            ))}
+          </Stack>
         </Box>
       </Popper>
     </>
