@@ -160,7 +160,7 @@ export const CRV3 = {
       logo: beanCrv3LogoUrl,
     }
   ),
-}
+};
 
 export const BEAN_CRV3_LP = {
   [SupportedChainId.MAINNET]: new ERC20Token(

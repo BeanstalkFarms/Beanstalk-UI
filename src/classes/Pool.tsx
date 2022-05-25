@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { CurveMetaPool__factory, UniswapV2Pair__factory } from 'constants/generated';
+import { ChainConstant } from 'constants/v2';
+import { AddressMap } from 'constants/v2/addresses';
 import { MinBN } from 'util';
 import client from 'util/wagmi';
 import Dex from './Dex';
@@ -58,22 +60,22 @@ export default abstract class Pool {
    * @param name of the currency
    */
   constructor(
-    address: string,
     chainId: number,
-    dex: Dex,
-    lpToken: ERC20Token,
-    tokens: ERC20Token[],
+    address: AddressMap,
+    // dex: Dex,
+    lpToken: ChainConstant<ERC20Token>,
+    tokens: (ChainConstant<ERC20Token>)[],
     metadata: {
       name: string,
       symbol: string,
       logo: string,
     }
   ) {
-    this.address = address;
     this.chainId = chainId;
-    this.dex = dex;
-    this.lpToken = lpToken;
-    this.tokens = tokens;
+    this.address = address[chainId];
+    // this.dex = dex;
+    this.lpToken = lpToken[chainId];
+    this.tokens = tokens.map((token) => token[chainId]);
 
     this.name = metadata.name;
     this.symbol = metadata.symbol;

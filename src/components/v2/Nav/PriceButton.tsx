@@ -6,8 +6,8 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import beanCircleIcon from 'img/bean-circle.svg';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import PoolCard from '../Silo/PoolCard';
 import usePools from 'hooks/usePools';
+import PoolCard from '../Silo/PoolCard';
 
 const PriceButton : React.FC = () => {
   const beanPrice = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
@@ -16,7 +16,7 @@ const PriceButton : React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if(anchorEl) {
+    if (anchorEl) {
       setAnchorEl(null);
     } else {
       setAnchorEl(event.currentTarget);
@@ -43,14 +43,14 @@ const PriceButton : React.FC = () => {
         open={open}
         anchorEl={anchorEl}
         placement="bottom-start"
-        disablePortal={true}
+        disablePortal
       >
         <Box
-          sx={theme => ({
-            background: "white",
+          sx={(theme) => ({
+            background: 'white',
             width: '350px',
             marginTop: '-1px',
-            borderColor: "primary.main",
+            borderColor: 'primary.main',
             overflow: 'hidden',
             borderBottomLeftRadius: theme.shape.borderRadius,
             borderBottomRightRadius: theme.shape.borderRadius,
@@ -71,7 +71,7 @@ const PriceButton : React.FC = () => {
         </Box>
       </Popper>
     </>
-  )
-}
+  );
+};
 
 export default PriceButton;
