@@ -6,9 +6,9 @@ import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles
 import { Provider } from 'wagmi';
 
 import store from 'state';
-import App from 'components/App';
+import App from 'components/v2/App';
 import ScrollToTop from 'components/Common/ScrollToTop';
-import theme from 'components/App/muiTheme';
+import theme from 'components/v2/App/muiTheme';
 import client from './util/wagmi';
 
 import './index.css';

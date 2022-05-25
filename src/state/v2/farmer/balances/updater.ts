@@ -1,5 +1,4 @@
-import { ERC20Token } from 'classes/Token';
-import { ERC20Tokens, TokensByAddress } from 'constants/v2/tokens';
+import { ERC20Tokens } from 'constants/v2/tokens';
 import useTokenList from 'hooks/useTokenList';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -12,19 +11,19 @@ import { clearBalances, updateBalances } from './actions';
 
 export const useFetchBalances = () => {
   const dispatch = useDispatch();
-  const tokens = useTokenList(ERC20Tokens) as TokensByAddress<ERC20Token>;
+  const tokens = useTokenList(ERC20Tokens);
 
   // Handlers
   const fetch = useCallback(async (address: string) => {
-    if (address) {
-      // const _balances = await getBalances(walletAddress);
+    if (address && tokens) {
       const balances = Object.keys(tokens).map((tokenAddr) => {
         console.debug(`[farmer/balances/updater] updating token ${tokens[tokenAddr].name} ${tokenAddr}`);
         return (
-          tokens[tokenAddr].getBalance(address)
+          tokens[tokenAddr]?.getBalance(address)
             .then(tokenResult(tokens[tokenAddr]))
             .then((result) => {
               console.debug(`[farmer/balances/updater] ${tokens[tokenAddr].name} ${tokens[tokenAddr].chainId} ${tokens[tokenAddr]} => ${result.toString()}`);
+              return result;
             })
             .then((balanceResult) => ({
               token: tokens[tokenAddr],

@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { Beanstalk, ERC20 } from 'constants/generated';
 import { beanstalkContract, erc20TokenContract, provider } from 'util/index';
 import { bigNumberResult } from 'util/LedgerUtilities2';
 
@@ -82,12 +83,19 @@ export default abstract class Token {
     return this.name;
   }
 
-  abstract getBalance(account: string) : Promise<BigNumber> | null;
+  abstract getContract() : ERC20 | Beanstalk | undefined;
+
+  abstract getBalance(account: string) : Promise<BigNumber | undefined>;
   
-  abstract getTotalSupply() : Promise<BigNumber> | null;
+  abstract getTotalSupply() : Promise<BigNumber> | undefined;
 }
 
 export class NativeToken extends Token {
+  // eslint-disable-next-line class-methods-use-this
+  public getContract() {
+    return undefined;
+  }
+
   // eslint-disable-next-line class-methods-use-this
   public getBalance(account: string) {
     return provider.getBalance(account).then(bigNumberResult);
@@ -121,11 +129,11 @@ export class BeanstalkToken extends Token {
 
   // eslint-disable-next-line class-methods-use-this
   public getBalance() {
-    return null;
+    return Promise.resolve(undefined);
   }
 
   // eslint-disable-next-line class-methods-use-this
   public getTotalSupply() {
-    return null;
+    return undefined;
   }
 }

@@ -40,6 +40,7 @@ export const useGetPools = () => {
                   ],
                   deltaB: tokenResult(BEAN)(poolData.deltaB.toString()),
                   supply: tokenResult(pools[address].lpToken)(supply.toString()),
+                  liquidity: tokenResult(BEAN)(poolData.liquidity.toString()),
                   totalCrosses: new BigNumber(0),
                 },
               }))

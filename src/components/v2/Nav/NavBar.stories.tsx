@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette } from 'components/v2/App/muiTheme';
 import NavBar from './NavBar';
 
 export default {

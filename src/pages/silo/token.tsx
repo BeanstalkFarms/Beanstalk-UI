@@ -7,35 +7,26 @@ import Deposits from 'components/v2/Silo/Deposits';
 import useWhitelist from 'hooks/useWhitelist';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import usePools from 'hooks/usePools';
 import PoolCard from '../../components/v2/Silo/PoolCard';
-import { BeanPoolState } from "../../state/v2/bean/pools";
-import BigNumber from "bignumber.js";
 
 const TokenPage: React.FC<{}> = () => {
   const { address } = useParams<{ address: string }>();
-  const silo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const pools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
-  const whitelist = useWhitelist();
+  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const beanPools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+  const WHITELIST = useWhitelist();
+  const POOLS = usePools();
 
-  if (!whitelist || !address || !whitelist[address]) return (<div>Not found</div>);
+  // Ensure this address is a whitelisted token
+  if (!WHITELIST || !address || !WHITELIST[address]) return (<div>Not found</div>);
 
-  const token = whitelist[address];
-  const siloToken = silo.tokens[token.address];
-  // const pool = pools[address];
-  // const hasPool = pool !== undefined;
-  const hasPool = true;
-
-  console.log("POOLS: ");
-  console.log(pools);
-
-  const pool: BeanPoolState = {
-    price: new BigNumber(99),
-    reserves: [new BigNumber(27), new BigNumber(234)],
-    deltaB: new BigNumber(234242),
-    liquidity: new BigNumber(123567),
-    totalCrosses: new BigNumber(1230)
-  };
-
+  // Load data about the LP token
+  const token = WHITELIST[address];
+  const pool  = POOLS[address];
+  const siloToken = farmerSilo.tokens[token.address];
+  const poolState = beanPools[address];
+  const hasPool = poolState !== undefined;
+  // If no data loaded...
   if (!token || !siloToken) return null;
 
   return (
@@ -61,12 +52,13 @@ const TokenPage: React.FC<{}> = () => {
         </Stack>
         {hasPool && (
           <PoolCard
-            address={address}
             pool={pool}
+            poolState={poolState}
           />
         )}
         <Actions
           token={token}
+          poolState={poolState}
         />
         <Deposits
           token={token}

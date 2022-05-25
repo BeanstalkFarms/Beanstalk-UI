@@ -44,12 +44,12 @@ export default abstract class Pool {
   /**
    * The symbol of the currency, i.e. a short textual non-unique identifier
    */
-  public readonly symbol?: string;
+  public readonly symbol: string;
 
   /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
    */
-  public readonly logo?: string;
+  public readonly logo: string;
 
   /**
    * @param chainId the chain ID on which this currency resides
@@ -61,12 +61,12 @@ export default abstract class Pool {
     address: string,
     chainId: number,
     dex: Dex,
-    lpToken: Token,
-    tokens: Token[],
+    lpToken: ERC20Token,
+    tokens: ERC20Token[],
     metadata: {
       name: string,
-      symbol?: string,
-      logo?: string,
+      symbol: string,
+      logo: string,
     }
   ) {
     this.address = address;
@@ -144,6 +144,27 @@ export default abstract class Pool {
       Pool.lpForToken(amount1, reserve1, totalLP),
       Pool.lpForToken(amount2, reserve2, totalLP)
     );
+  
+  /**
+   * 
+   */
+  static getToAmount = (
+    amountIn: BigNumber,
+    reserveIn: BigNumber,
+    reserveOut: BigNumber
+  ) => {
+    if (
+      amountIn.isLessThanOrEqualTo(0) ||
+      reserveIn.isLessThanOrEqualTo(0) ||
+      reserveOut.isLessThanOrEqualTo(0)
+    ) {
+      return new BigNumber(0);
+    }
+    const amountInWithFee = amountIn.multipliedBy(997);
+    const numerator = amountInWithFee.multipliedBy(reserveOut);
+    const denominator = reserveIn.multipliedBy(1000).plus(amountInWithFee);
+    return numerator.dividedBy(denominator);
+  };
 
   abstract getReserves() : Promise<Reserves>;
 }

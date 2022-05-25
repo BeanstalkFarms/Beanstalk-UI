@@ -3,13 +3,9 @@ import { useNetwork } from 'wagmi';
 
 type ConstantByChain = { [key: number] : any };
 
-export default function useChainConstant<O extends ConstantByChain>(o: O) : O[keyof O] {
+export default function useChainConstant<T extends ConstantByChain>(map: T) : T[keyof T] {
   const { activeChain } = useNetwork();
-  
-  // if (!activeChain?.id || !o[activeChain?.id as SupportedChainId]) {
-  //   throw new Error('No supported constant found.');
-  // }
 
   // FIXME: fall back to mainnet when wallet isn't connected?
-  return o[activeChain?.id || SupportedChainId.MAINNET];
+  return map[activeChain?.id || SupportedChainId.MAINNET];
 }

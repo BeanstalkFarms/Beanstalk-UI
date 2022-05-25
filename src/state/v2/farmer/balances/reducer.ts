@@ -6,7 +6,7 @@ import {
 } from './actions';
 
 export interface BalanceState {
-  [token: string]: BigNumber;
+  [tokenAddress: string]: BigNumber;
 }
 
 export const initialState: BalanceState = {};

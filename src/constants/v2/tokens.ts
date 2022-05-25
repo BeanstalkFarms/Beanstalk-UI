@@ -127,13 +127,13 @@ export const BEAN_ETH_UNISWAP_V2_LP = {
 
 // --
 
-export const ERC20Tokens : TokenOrTokenMap[] = [
+export const ERC20Tokens : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNISWAP_V2_LP,
   WETH,
 ];
 
-export const SiloWhitelistTokens : TokenOrTokenMap[] = [
+export const SiloWhitelistTokens : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNISWAP_V2_LP,
 ];

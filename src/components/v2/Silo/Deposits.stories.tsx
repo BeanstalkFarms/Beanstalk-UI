@@ -1,11 +1,11 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-import Deposits from './Deposits';
 import BigNumber from 'bignumber.js';
+import Deposits from './Deposits';
 import { Deposit, FarmerTokenBalance, Withdrawal } from '../../../state/v2/farmer/silo';
 import { BEAN_ETH_UNISWAP_V2_LP } from '../../../constants/v2/tokens';
-import { SupportedChainId } from "../../../constants/chains";
+import { SupportedChainId } from '../../../constants/chains';
 
 export default {
   component: Deposits,

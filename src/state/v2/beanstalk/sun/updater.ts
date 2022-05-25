@@ -2,11 +2,12 @@ import { SupportedChainId } from 'constants/chains';
 import { BEAN } from 'constants/v2/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { useCallback, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from 'state';
 import { bigNumberResult, tokenResult } from 'util/LedgerUtilities2';
 import { useNetwork } from 'wagmi';
 import { updateHarvestableIndex } from '../field/actions';
-import { updateSeason } from './actions';
+import { setAwaitingSunrise, setRemainingUntilSunrise, updateSeason } from './actions';
 
 export const useSun = () => {
   const dispatch = useDispatch();
@@ -44,8 +45,34 @@ export const useSun = () => {
 const SunUpdater = () => {
   const { activeChain } = useNetwork();
   const [fetch] = useSun();
+  const dispatch = useDispatch();
+  const { awaiting, next } = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']>((state) => state._beanstalk.sun.sunrise);
+
+  // Update sunrise timer
   useEffect(() => {
-    if (activeChain?.id) fetch();
+    if (awaiting === false) {
+      const i = setInterval(() => {
+        const _remaining = next.diffNow();
+        dispatch(setRemainingUntilSunrise(_remaining));
+        console.debug(`[beanstalk/sun/updater] remaining until sunrise: ${(_remaining.milliseconds / 1000 / 60).toFixed(2)} minutes`);
+        if (_remaining.milliseconds < 0) {
+          dispatch(setAwaitingSunrise(_remaining.milliseconds < 0));
+        }
+      }, 1000);
+      return () => clearInterval(i);
+    }
+  }, [dispatch, awaiting, next]);
+
+  // 
+  // useEffect(() => {
+    
+  // }, [season])
+
+  // Fetch when chain changes
+  useEffect(() => {
+    if (activeChain?.id) {
+      fetch();
+    }
   }, [activeChain?.id, fetch]);
 
   return null;
