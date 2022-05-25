@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Button, Card, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import gearIcon from 'img/gear.svg';
+import { GetAccountResult } from '@wagmi/core';
 import TokenInputField from '../Common/Form/TokenInputField';
 import { Token } from '../../../classes';
 import { ERC20Token, NativeToken } from '../../../classes/Token';
@@ -17,7 +18,7 @@ export interface BarnraiseFormProps {
   handleSetFrom: (val?: any) => void; // TODO: Add type
   erc20TokenList: TokensByAddress<Token> | never[];
   balances: BalanceState;
-  account: any;
+  account: GetAccountResult<any> | null;
 }
 
 const BarnraisePurchaseForm: React.FC<BarnraiseFormProps> =
