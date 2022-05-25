@@ -1,5 +1,4 @@
 // Whitelisted tokens that can be deposited into the Silo
-import { Token } from 'classes';
 import {
   BEAN_TO_SEEDS,
   BEAN_TO_STALK,

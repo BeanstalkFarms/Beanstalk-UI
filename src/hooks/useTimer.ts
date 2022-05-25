@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { DateTime, Duration } from 'luxon';
@@ -12,7 +11,7 @@ const useSunriseTimer = () => {
   /** Whether the timer has ticked down to zero. */
   const [awaitingSunrise, setAwaitingSunrise] = useState<boolean>(false);
   /** Timestamp of next Sunrise, in ms. */
-  const [nextSunrise, setNextSunrise] = useState<DateTime>(getNextHour());
+  const [nextSunrise] = useState<DateTime>(getNextHour());
   /** Time array */
   const [remaining, setRemaining] = useState<Duration>(nextSunrise.diffNow());
 
