@@ -18,7 +18,7 @@ export interface BarnraiseFormProps {
   handleSetFrom: (val?: any) => void; // TODO: Add type
   erc20TokenList: TokensByAddress<Token> | never[];
   balances: BalanceState;
-  account: GetAccountResult<any> | null;
+  account: any;
 }
 
 const BarnraisePurchaseForm: React.FC<BarnraiseFormProps> =
@@ -71,7 +71,7 @@ const BarnraisePurchaseForm: React.FC<BarnraiseFormProps> =
                 tokenList={erc20TokenList}
               />
               {/* Max Module */}
-              {/* only show 'max' button is user's wallet is connected */}
+              {/* only show 'max' button if user's wallet is connected */}
               {account && (
                 <Stack direction="row" alignItems="center" spacing={0.5} px={0.75}>
                   <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
