@@ -17,9 +17,16 @@ const RemainingFertilizer: React.FC<{
   <Card sx={{ p: 2 }}>
     <Stack gap={1}>
       <Typography variant="h6">Remaining Fertilizer</Typography>
-      <Stack direction="row" justifyContent="left" gap={2}>
+      <Stack direction={{ xs: 'column-reverse', md: 'row' }} justifyContent={{ xs: 'center', md: 'left' }} gap={2}>
         {/* left column */}
-        <Stack sx={{ ml: 3 }}>
+        <Stack
+          sx={{
+            ml: 3,
+            '@media (max-width:600px)': {
+              ml: 0
+            }
+          }}
+        >
           <img alt="" src={fertilizerClosedIcon} width="300px" />
         </Stack>
         {/* right column */}
