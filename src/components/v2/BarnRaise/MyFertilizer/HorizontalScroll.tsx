@@ -50,17 +50,17 @@ function ScrollItem({
     <Stack
       onClick={() => onClick(visibility)}
       style={{
-        width: '160px',
+        width: '140px',
       }}
       tabIndex={0}
-      sx={{ mr: 1, ml: 1 }}
+      sx={{ mr: 0.8, ml: 0.8 }}
     >
       <Stack alignItems="left">
         <Typography sx={{ fontSize: '18px', ml: 1 }}>Season 5192</Typography>
       </Stack>
       <Stack alignItems="center">
         <Stack alignItems="center">
-          <img alt="" src={fertilizerOpenedIcon} width="150px" />
+          <img alt="" src={fertilizerOpenedIcon} width="130px" />
         </Stack>
       </Stack>
       <Stack alignItems="center" gap={0.5} sx={{ pt: 1 }}>
