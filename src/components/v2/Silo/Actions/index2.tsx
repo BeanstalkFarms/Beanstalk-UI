@@ -9,7 +9,7 @@ import BigNumber from 'bignumber.js';
 import TokenInputField from 'components/v2/Common/Form/MultiTokenInputField';
 import useChainConstant from 'hooks/useConstant';
 import { ERC20Token, NativeToken } from 'classes/Token';
-import useTokenList from 'hooks/useTokenList';
+import useTokenMap from 'hooks/useTokenMap';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { useAccount } from 'wagmi';
@@ -36,7 +36,7 @@ const Deposit : React.FC<{
   to,
   poolState,
 }) => {
-  const erc20TokenList = useTokenList(ERC20Tokens);
+  const erc20TokenList = useTokenMap(ERC20Tokens);
   const bean = useChainConstant(BEAN);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [from, setFrom] = useState<NativeToken | ERC20Token>(bean);

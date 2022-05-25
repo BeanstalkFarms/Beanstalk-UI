@@ -7,7 +7,7 @@ import { SupportedChainId } from 'constants/chains';
 import { zeroBN } from 'constants/index';
 import { ERC20Token, NativeToken } from '../classes/Token';
 import { BEAN, ERC20Tokens } from '../constants/v2/tokens';
-import useTokenList from '../hooks/useTokenList';
+import useTokenMap from '../hooks/useTokenMap';
 import useChainConstant from '../hooks/useConstant';
 import { AppState } from '../state';
 import HorizontalScroll from '../components/v2/BarnRaise/HorizontalScroll';
@@ -63,7 +63,7 @@ const WrappedRemainingFertilizer = () => {
 };
 
 const BarnRaisePage: React.FC = () => {
-  const erc20TokenList = useTokenList(ERC20Tokens); // TODO: update tokens
+  const erc20TokenList = useTokenMap(ERC20Tokens); // TODO: update tokens
   const bean = useChainConstant(BEAN);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
 

@@ -1,6 +1,6 @@
 import { SiloWhitelistTokens } from 'constants/v2/tokens';
-import useTokenList from './useTokenList';
+import useTokenMap from './useTokenMap';
 
 export default function useWhitelist() {
-  return useTokenList(SiloWhitelistTokens);
+  return useTokenMap(SiloWhitelistTokens);
 }

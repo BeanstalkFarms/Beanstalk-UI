@@ -8,7 +8,7 @@ import { BEAN, WETH, ERC20Tokens, Seeds, Stalk, BEAN_ETH_UNISWAP_V2_LP, ETH } fr
 import BigNumber from 'bignumber.js';
 import useChainConstant from 'hooks/useConstant';
 import { ERC20Token, NativeToken } from 'classes/Token';
-import useTokenList from 'hooks/useTokenList';
+import useTokenMap from 'hooks/useTokenMap';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
 import { useAccount } from 'wagmi';
@@ -49,7 +49,7 @@ const Deposit : React.FC<{
     BEAN,
     ETH,
   ]), [])
-  const erc20TokenList = useTokenList(baseTokens);
+  const erc20TokenList = useTokenMap(baseTokens);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   
   //
@@ -114,10 +114,13 @@ const Deposit : React.FC<{
                         handleClose={() => setShowTokenSelect(false)}
                         selected={values.tokens}
                         onSelect={(_tokens: Set<Token>) => {
+                          // If the user has typed some existing values in,
+                          // save them. Add new tokens to the end of the list.
+                          // FIXME: match sorting of erc20TokenList
                           const copy = new Set(_tokens);
                           const v = values.tokens.filter(x => {
                             copy.delete(x.token);
-                            return _tokens.has(x.token)
+                            return _tokens.has(x.token);
                           });
                           setFieldValue('tokens', [
                             ...v,
