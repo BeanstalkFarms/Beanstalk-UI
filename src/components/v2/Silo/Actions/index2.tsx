@@ -4,8 +4,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Token } from 'classes';
 import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
-import { BEAN, WETH, ERC20Tokens, Seeds, Stalk, BEAN_ETH_UNISWAP_V2_LP, ETH } from 'constants/v2/tokens';
+import { BEAN, ERC20Tokens, Seeds, Stalk } from 'constants/v2/tokens';
 import BigNumber from 'bignumber.js';
+import TokenInputField from 'components/v2/Common/Form/MultiTokenInputField';
 import useChainConstant from 'hooks/useConstant';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useTokenList from 'hooks/useTokenList';
@@ -14,10 +15,7 @@ import { useSelector } from 'react-redux';
 import { useAccount } from 'wagmi';
 import { displayBN } from 'util/TokenUtilities';
 import { BeanPoolState } from 'state/v2/bean/pools';
-import { Field, FieldArray, Form, Formik } from 'formik';
-import InputField from 'components/v2/Common/Form/InputField';
-import TokenAdornment from 'components/v2/Common/Form/TokenAdornment';
-import TokenSelectDialog from 'components/v2/Common/Form/TokenSelectDialog';
+import { Form, Formik } from 'formik';
 // import { clearBalances } from 'state/v2/farmer/balances/actions';
 // import { zeroBN } from 'constants/index';
 
@@ -31,11 +29,6 @@ import TokenSelectDialog from 'components/v2/Common/Form/TokenSelectDialog';
 //     seeds: new BigNumber(0),
 //   });
 
-const setDifference = (a: Set<any>, b: Set<any>) => new Set(
-  [...a].filter(x => !b.has(x))
-)
-// const setIntersection
-
 const Deposit : React.FC<{
   to: Token;
   poolState: BeanPoolState;
@@ -43,19 +36,11 @@ const Deposit : React.FC<{
   to,
   poolState,
 }) => {
-  const Bean = useChainConstant(BEAN);
-  const Weth = useChainConstant(WETH);
-  const baseTokens = useMemo(() => ([
-    BEAN,
-    ETH,
-  ]), [])
-  const erc20TokenList = useTokenList(baseTokens);
+  const erc20TokenList = useTokenList(ERC20Tokens);
+  const bean = useChainConstant(BEAN);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
-  
-  //
-  const [from, setFrom] = useState<NativeToken | ERC20Token>(Bean);
+  const [from, setFrom] = useState<NativeToken | ERC20Token>(bean);
   const [amount, setAmount] = useState<BigNumber>(new BigNumber(-1));
-  const [showTokenSelect, setShowTokenSelect] = useState(false);
   const { data: account } = useAccount();
 
   //
@@ -83,77 +68,93 @@ const Deposit : React.FC<{
   }, [account, handleReset]);
 
   //
+  console.debug(poolState);
+  // const poolForLP = (_amount: BigNumber) => (
+  //   _amount.lte(0)
+  //     ? [zeroBN, zeroBN]
+  //     : Pool.poolForLP(
+  //       _amount,
+  //       poolState.reserves[0],
+  //       poolState.reserves[1],
+  //       poolState.supply,
+  //     )
+  // );
+
   const initialValues = useMemo(() => ({
     tokens: [
       {
-        token: Bean,
-        amount: undefined,
+        token: bean,
+        amount: new BigNumber(-1),
+      },
+      {
+        token: bean,
+        amount: new BigNumber(100),
       },
     ],
-  }), [Bean]);
-
-  // if (!poolState) return null;
+  }), [bean])
 
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={() => {}}
     >
-      {({ values, setFieldValue }) => {
-        return (
-          <Form>
-            <Stack gap={1}>
-              {/* <div><pre>{JSON.stringify(values, null, 2)}</pre></div> */}
-              {/* Deposit Amount */}
-              <FieldArray name="tokens">
-                {(arrayHelpers) => {
-                  return (
-                    <div>
-                      <TokenSelectDialog
-                        open={showTokenSelect}
-                        handleClose={() => setShowTokenSelect(false)}
-                        selected={values.tokens}
-                        onSelect={(_tokens: Set<Token>) => {
-                          const copy = new Set(_tokens);
-                          const v = values.tokens.filter(x => {
-                            copy.delete(x.token);
-                            return _tokens.has(x.token)
-                          });
-                          setFieldValue('tokens', [
-                            ...v,
-                            ...Array.from(copy).map((token) => ({ token, amount: 0 })),
-                          ])
-                        }}
-                        balances={balances}
-                        tokenList={erc20TokenList}
-                      />
-                      {values.tokens.map((token, index) => (
-                        <div key={token.token.address}>
-                          <InputField
-                            name={`tokens.${index}.amount`}
-                            InputProps={{
-                              endAdornment: (
-                                <TokenAdornment
-                                  token={token.token}
-                                  onClick={() => setShowTokenSelect(true)}
-                                />
-                              )
-                            }}
-                          />
-                          <button onClick={() => setFieldValue(`tokens.${index}.amount`, 69420)}>Max</button>
-                        </div>
-                      ))}
-                    </div>
-                  )
-                }}
-              </FieldArray>
-              <Button disabled type="submit" size="large" fullWidth>
-                Deposit
-              </Button>
+      <Form>
+        <Stack gap={1}>
+          {/* Deposit Amount */}
+          <TokenInputField
+            amount={amount}
+            setAmount={handleSetAmount}
+            token={from}
+            setToken={(t: Token) => setFrom(t as ERC20Token)}
+            tokenList={erc20TokenList}
+          />
+          {/* Max Module */}
+          {/* <Stack direction="row" alignItems="center" spacing={0.5} px={0.75}>
+            <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
+              {token === ETH ? (
+                <>
+                  <Typography variant="body1" sx={{ fontSize: 13.5 }}>
+                    = {displayBN(usdcAmount)} USDC
+                  </Typography>
+                  {quoting && <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />}
+                </>
+              ) : null}
             </Stack>
-          </Form>
-        );
-      }}
+            <Typography sx={{ fontSize: 13.5 }}>
+              Balance: {balances[from.address] ? displayBN(balances[from.address]) : '0'}
+            </Typography>
+            <Typography variant="body1" onClick={handleMax} color="primary" sx={{ fontSize: 13.5, fontWeight: 600, cursor: 'pointer' }}>
+              (Max)
+            </Typography>
+          </Stack> */}
+          {/* Output */}
+          {/* {amount.gt(0) ? (
+            <Stack direction="column" gap={1}>
+              <TokenOutputField
+                token={to}
+                value={amount}
+              />
+              <Stack direction="row" gap={1} justifyContent="center">
+                <Box sx={{ flex: 1 }}>
+                  <TokenOutputField
+                    token={Stalk}
+                    value={new BigNumber(10_000)}
+                  />
+                </Box>
+                <Box sx={{ flex: 1 }}>
+                  <TokenOutputField
+                    token={Seeds}
+                    value={new BigNumber(10_000)}
+                  />
+                </Box>
+              </Stack>
+            </Stack>
+          ) : null} */}
+          <Button disabled type="submit" size="large" fullWidth>
+            Deposit
+          </Button>
+        </Stack>
+      </Form>
     </Formik>
   );
 };

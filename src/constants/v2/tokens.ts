@@ -28,6 +28,16 @@ export const ETH = {
       logo: ethLogoUrl
     }
   ),
+  [SupportedChainId.ROPSTEN]: new NativeToken(
+    '',
+    SupportedChainId.ROPSTEN,
+    18,
+    {
+      name: 'Ropsten Ether',
+      symbol: 'ropETH',
+      logo: ethLogoUrl
+    }
+  ),
 };
 
 // Beanstalk Internal Tokens (not ERC20)
