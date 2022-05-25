@@ -146,7 +146,7 @@ const TokenInputField : React.FC<{
 
   return (
     <>
-      {/* Token Selector Dialog */}
+      {/* Token Selector FertDialog */}
       <StyledDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"

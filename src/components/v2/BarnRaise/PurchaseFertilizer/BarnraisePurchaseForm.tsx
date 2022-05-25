@@ -3,12 +3,12 @@ import { Button, Card, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import gearIcon from 'img/gear.svg';
 import { GetAccountResult } from '@wagmi/core';
-import TokenInputField from '../Common/Form/TokenInputField';
-import { Token } from '../../../classes';
-import { ERC20Token, NativeToken } from '../../../classes/Token';
-import { displayBN } from '../../../util';
-import { TokensByAddress } from '../../../constants/v2/tokens';
-import { BalanceState } from '../../../state/v2/farmer/balances/reducer';
+import TokenInputField from '../../Common/Form/TokenInputField';
+import { Token } from '../../../../classes';
+import { ERC20Token, NativeToken } from '../../../../classes/Token';
+import { displayBN } from '../../../../util';
+import { TokensByAddress } from '../../../../constants/v2/tokens';
+import { BalanceState } from '../../../../state/v2/farmer/balances/reducer';
 import PurchaseDropdown from './PurchaseDropdown';
 
 export interface BarnraiseFormProps {

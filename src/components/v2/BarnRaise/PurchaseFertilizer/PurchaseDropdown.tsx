@@ -1,11 +1,11 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import chevronDownIcon from '../../../img/chevron-down.svg';
-import fertilizerOpenedIcon from '../../../img/fertilizer-opened.svg';
-import beanCircleIcon from '../../../img/bean-circle.svg';
-import TransactionDetailsAccordion from './TransactionDetailsAccordion';
-import { ERC20Token, NativeToken } from '../../../classes/Token';
+import chevronDownIcon from '../../../../img/chevron-down.svg';
+import fertilizerOpenedIcon from '../../../../img/fertilizer-opened.svg';
+import beanCircleIcon from '../../../../img/bean-circle.svg';
+import TxnAccordion from './TxnAccordion';
+import { ERC20Token, NativeToken } from '../../../../classes/Token';
 
 export interface AccordionProps {
   amount: BigNumber;
@@ -36,7 +36,7 @@ const PurchaseDropdown: React.FC<AccordionProps> =
           </Stack>
         </Stack>
       </Stack>
-      <TransactionDetailsAccordion token={token} amount={amount} />
+      <TxnAccordion token={token} amount={amount} />
     </Stack>
   );
 export default PurchaseDropdown;

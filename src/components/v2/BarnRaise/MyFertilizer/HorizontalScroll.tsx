@@ -7,7 +7,9 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import beanCircleIcon from 'img/bean-circle.svg';
 import fertilizerOpenedIcon from 'img/fertilizer-opened.svg';
-import {ERC20Token, NativeToken} from "../../../classes/Token";
+import {ERC20Token, NativeToken} from "../../../../classes/Token";
+import BigNumber from "bignumber.js";
+import MyFertilizerHeader from "./MyFertilizerHeader";
 
 const useStyles = makeStyles(() => ({
   scrollMenu: {
@@ -78,9 +80,10 @@ function ScrollItem({
 
 export interface HorizontalScrollProps {
   items: any;
+  handleOpenFertilizerDialog: (val?: any) => void;
 }
 
-const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ items }) => {
+const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ items, handleOpenFertilizerDialog }) => {
   const classes = useStyles();
   const [selected, setSelected] = React.useState([]);
   const [position, setPosition] = React.useState(0);
@@ -100,38 +103,7 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ items }) => {
   return (
     <Card sx={{ p: 2 }}>
       <Stack>
-        <Stack gap={1}>
-          <Typography variant="h6">My Active Fertilizer</Typography>
-          <Stack gap={1}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography>Unclaimed Beans:</Typography>
-              <Stack direction="row" alignItems="center" gap={0.5}>
-                <Stack direction="row" gap={0.2}>
-                  <img alt="" src={beanCircleIcon} width="16px" />
-                  <Typography>200</Typography>
-                </Stack>
-                <Link underline="none" href="#"><Typography>(Claim)</Typography></Link>
-                <Typography>or</Typography>
-                <Link underline="none" href="#"><Typography>(Claim & Deposit)</Typography></Link>
-              </Stack>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography>Total Fertilizer Reward:</Typography>
-              <Stack direction="row" alignItems="center" gap={0.1}>
-                <img alt="" src={beanCircleIcon} width="16px" />
-                <Typography>100,000</Typography>
-              </Stack>
-            </Stack>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography>Total Owed Beans:</Typography>
-              <Stack direction="row" alignItems="center" gap={0.1}>
-                <img alt="" src={beanCircleIcon} width="16px" />
-                <Typography>100,000</Typography>
-              </Stack>
-            </Stack>
-            <Divider sx={{ color: '#c7ddf0' }} />
-          </Stack>
-        </Stack>
+        <MyFertilizerHeader />
         <Stack sx={{ pt: 2, pb: 1 }} gap={3}>
           <ScrollMenu
             LeftArrow={LeftArrow}
@@ -150,10 +122,10 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ items }) => {
           </ScrollMenu>
           <Stack>
             <Link
-              href="#"
-              // target="_blank"
+              onClick={handleOpenFertilizerDialog}
               underline="none"
               rel="noreferrer"
+              sx={{ cursor: "pointer" }}
             >
               <Typography variant="body1" sx={{ textAlign: 'center' }}>
                 View All Fertilizer

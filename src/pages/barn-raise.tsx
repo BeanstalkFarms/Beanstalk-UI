@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Container, Stack } from '@mui/material';
+import { Container, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -11,9 +11,12 @@ import { BEAN, ERC20Tokens } from '../constants/v2/tokens';
 import useTokenList from '../hooks/useTokenList';
 import useChainConstant from '../hooks/useConstant';
 import { AppState } from '../state';
-import HorizontalScroll from '../components/v2/BarnRaise/HorizontalScroll';
-import BarnraisePurchaseForm from '../components/v2/BarnRaise/BarnraisePurchaseForm';
-import RemainingFertilizer from '../components/v2/BarnRaise/RemainingFertilizer';
+import HorizontalScroll from '../components/v2/BarnRaise/MyFertilizer/HorizontalScroll';
+import BarnraisePurchaseForm from '../components/v2/BarnRaise/PurchaseFertilizer/BarnraisePurchaseForm';
+import RemainingFertilizer from '../components/v2/BarnRaise/RemainingFertilizer/RemainingFertilizer';
+import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '../components/v2/Common/Dialog';
+import { displayBN } from '../util';
+import FertDialog from "../components/v2/BarnRaise/MyFertilizer/ViewAllDialog/FertDialog";
 
 const getItems = () =>
   Array(20)
@@ -42,8 +45,8 @@ const WrappedRemainingFertilizer = () => {
   //
   const beforeUnpause = useMemo(() => sun.season.lte(unpauseSeason), [sun.season, unpauseSeason]);
   const nextDecreaseAmount = useMemo(() => {
-    if (beforeUnpause)                return HUMIDITY_DECREASE_UNPAUSE;
-    if (fertilizer.humidity.gt(20))   return HUMIDITY_DECREASE_PER_SEASON;
+    if (beforeUnpause) return HUMIDITY_DECREASE_UNPAUSE;
+    if (fertilizer.humidity.gt(20)) return HUMIDITY_DECREASE_PER_SEASON;
     return zeroBN;
   }, [fertilizer.humidity, beforeUnpause]);
 
@@ -63,6 +66,7 @@ const BarnRaisePage: React.FC = () => {
   const erc20TokenList = useTokenList(ERC20Tokens); // TODO: update tokens
   const bean = useChainConstant(BEAN);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
+  const [viewAllFertilizer, setViewAllFertilizer] = useState(false);
   const { data: account } = useAccount();
 
   // Form
@@ -78,6 +82,9 @@ const BarnRaisePage: React.FC = () => {
     // if (amt.gt(balances[from.address])) amt = balances[from.address]; //TODO: turn this on
     setAmount(amt);
   }, []);
+
+  const handleFertilizerDialogClose = () => setViewAllFertilizer(false);
+  const handleFertilizerDialogOpen = () => setViewAllFertilizer(true);
 
   return (
     <Container maxWidth="md">
@@ -97,7 +104,14 @@ const BarnRaisePage: React.FC = () => {
           balances={balances}
           account={account}
         />
-        <HorizontalScroll items={items} />
+        <HorizontalScroll
+          items={items}
+          handleOpenFertilizerDialog={handleFertilizerDialogOpen}
+        />
+        <FertDialog
+          viewAllFertilizer={viewAllFertilizer}
+          handleCloseFertilizerDialog={handleFertilizerDialogClose}
+        />
       </Stack>
     </Container>
   );

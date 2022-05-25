@@ -3,11 +3,11 @@ import { Accordion, AccordionDetails, AccordionSummary, Divider, Stack, Typograp
 import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { makeStyles } from '@mui/styles';
-import { displayBN } from '../../../util';
-import splitArrowsIcon from '../../../img/split-arrows.svg';
-import cucumberIcon from '../../../img/cucumber.svg';
-import AccordionWrapper from '../Common/AccordionWrapper';
-import { ERC20Token, NativeToken } from '../../../classes/Token';
+import { displayBN } from '../../../../util';
+import splitArrowsIcon from '../../../../img/split-arrows.svg';
+import cucumberIcon from '../../../../img/cucumber.svg';
+import AccordionWrapper from '../../Common/AccordionWrapper';
+import { ERC20Token, NativeToken } from '../../../../classes/Token';
 
 const useStyles = makeStyles(() => ({
   hr: {
@@ -25,7 +25,7 @@ export interface AccordionProps {
   token: NativeToken | ERC20Token;
 }
 
-const TransactionDetailsAccordion: React.FC<AccordionProps> =
+const TxnAccordion: React.FC<AccordionProps> =
   ({
      amount,
      token
@@ -82,4 +82,4 @@ const TransactionDetailsAccordion: React.FC<AccordionProps> =
     );
   };
 
-export default TransactionDetailsAccordion;
+export default TxnAccordion;

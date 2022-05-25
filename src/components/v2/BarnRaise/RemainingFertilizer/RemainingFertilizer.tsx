@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import fertilizerClosedIcon from 'img/fertilizer-closed.svg';
-import { displayFullBN } from '../../../util';
+import { displayFullBN } from '../../../../util';
 // import { AppState } from 'state';
 
 const RemainingFertilizer: React.FC<{
