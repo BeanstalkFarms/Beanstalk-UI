@@ -14,27 +14,106 @@ import { useSelector } from 'react-redux';
 import { useAccount } from 'wagmi';
 import { displayBN } from 'util/TokenUtilities';
 import { BeanPoolState } from 'state/v2/bean/pools';
-import { Field, FieldArray, Form, Formik } from 'formik';
+import { Field, FieldArray, Form, Formik, FormikBag, FormikProps } from 'formik';
 import InputField from 'components/v2/Common/Form/InputField';
 import TokenAdornment from 'components/v2/Common/Form/TokenAdornment';
 import TokenSelectDialog from 'components/v2/Common/Form/TokenSelectDialog';
-// import { clearBalances } from 'state/v2/farmer/balances/actions';
-// import { zeroBN } from 'constants/index';
 
-// const calculateRewards = (
-//   tokenIn: Token,
-//   amountIn: BigNumber,
-//   tokenOut: Token,
-// ) => ({
-//     amountOut: new BigNumber(0),
-//     stalk: new BigNumber(0),
-//     seeds: new BigNumber(0),
-//   });
+type DepositFormValues = {
+  tokens: ({
+    token: Token;
+    amount: number | undefined;
+  })[]
+}
 
-const setDifference = (a: Set<any>, b: Set<any>) => new Set(
-  [...a].filter(x => !b.has(x))
-)
-// const setIntersection
+// Each transaction in the Farm function needs to
+
+const useDepositSummary = (to: Token, tokens: DepositFormValues['tokens']) => {
+  console.log()
+  return [];
+}
+
+const DepositForm : React.FC<
+  FormikProps<DepositFormValues>
+  & { to: Token }
+> = ({
+  // Custom
+  to,
+  // Formik
+  values,
+  setFieldValue
+}) => {
+  // TODO: extract these?
+  const baseTokens = useMemo(() => ([BEAN, ETH]), [])
+  const erc20TokenList = useTokenMap(baseTokens);
+  const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
+  const [showTokenSelect, setShowTokenSelect] = useState(false);
+  const summary = useDepositSummary(to, values.tokens);
+
+  console.debug(`[DepositForm] render`)
+  const onSelect = useCallback((_tokens: Set<Token>) => {
+    // If the user has typed some existing values in,
+    // save them. Add new tokens to the end of the list.
+    // FIXME: match sorting of erc20TokenList
+    const copy = new Set(_tokens);
+    const v = values.tokens.filter(x => {
+      copy.delete(x.token);
+      return _tokens.has(x.token);
+    });
+    setFieldValue('tokens', [
+      ...v,
+      ...Array.from(copy).map((token) => ({ token, amount: 0 })),
+    ])
+  }, [values.tokens, setFieldValue])
+  const handleClose = useCallback(() => setShowTokenSelect(false), []);
+  
+  return (
+    <Form>
+      <Stack gap={1}>
+        {/* <div><pre>{JSON.stringify(values, null, 2)}</pre></div> */}
+        {/* Deposit Amount */}
+        <FieldArray name="tokens">
+          {(arrayHelpers) => {
+            return (
+              <div>
+                <TokenSelectDialog
+                  open={showTokenSelect}
+                  handleClose={handleClose}
+                  selected={values.tokens}
+                  onSelect={onSelect}
+                  balances={balances}
+                  tokenList={erc20TokenList}
+                />
+                {values.tokens.map((token, index) => (
+                  <div key={token.token.address}>
+                    <InputField
+                      name={`tokens.${index}.amount`}
+                      InputProps={{
+                        endAdornment: (
+                          <TokenAdornment
+                            token={token.token}
+                            onClick={() => setShowTokenSelect(true)}
+                          />
+                        )
+                      }}
+                    />
+                    <button onClick={() => setFieldValue(`tokens.${index}.amount`, 69420)}>Max</button>
+                  </div>
+                ))}
+              </div>
+            )
+          }}
+        </FieldArray>
+        <Button onClick={() => { setFieldValue('tokens.0.amount', 99) }} size="large" fullWidth>
+          Test
+        </Button>
+        <Button disabled type="submit" size="large" fullWidth>
+          Deposit
+        </Button>
+      </Stack>
+    </Form>
+  );
+}
 
 const Deposit : React.FC<{
   to: Token;
@@ -44,46 +123,7 @@ const Deposit : React.FC<{
   poolState,
 }) => {
   const Bean = useChainConstant(BEAN);
-  const Weth = useChainConstant(WETH);
-  const baseTokens = useMemo(() => ([
-    BEAN,
-    ETH,
-  ]), [])
-  const erc20TokenList = useTokenMap(baseTokens);
-  const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
-  
-  //
-  const [from, setFrom] = useState<NativeToken | ERC20Token>(Bean);
-  const [amount, setAmount] = useState<BigNumber>(new BigNumber(-1));
-  const [showTokenSelect, setShowTokenSelect] = useState(false);
-  const { data: account } = useAccount();
-
-  //
-  const handleSetAmount = useCallback((val?: string | BigNumber) => {
-    let amt = new BigNumber(!val ? -1 : val);
-    if (amt.gt(balances[from.address])) amt = balances[from.address];
-    setAmount(amt);
-  }, [from, balances]);
-  const handleMax = useCallback(() => {
-    handleSetAmount(balances[from.address]);
-  }, [handleSetAmount, balances, from]);
-  const handleReset = useCallback(() => {
-    setAmount(new BigNumber(-1));
-  }, []);
-  
-  // When `token` changes, reset the `amount` input.
-  useEffect(() => {
-    setAmount(new BigNumber(-1));
-  }, [from]);
-
-  // When `wallet` changes and amount > wallet balance, reset the `amount` input
-  useEffect(() => {
-    handleReset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, handleReset]);
-
-  //
-  const initialValues = useMemo(() => ({
+  const initialValues : DepositFormValues = useMemo(() => ({
     tokens: [
       {
         token: Bean,
@@ -92,71 +132,9 @@ const Deposit : React.FC<{
     ],
   }), [Bean]);
 
-  // if (!poolState) return null;
-
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={() => {}}
-    >
-      {({ values, setFieldValue }) => {
-        return (
-          <Form>
-            <Stack gap={1}>
-              {/* <div><pre>{JSON.stringify(values, null, 2)}</pre></div> */}
-              {/* Deposit Amount */}
-              <FieldArray name="tokens">
-                {(arrayHelpers) => {
-                  return (
-                    <div>
-                      <TokenSelectDialog
-                        open={showTokenSelect}
-                        handleClose={() => setShowTokenSelect(false)}
-                        selected={values.tokens}
-                        onSelect={(_tokens: Set<Token>) => {
-                          // If the user has typed some existing values in,
-                          // save them. Add new tokens to the end of the list.
-                          // FIXME: match sorting of erc20TokenList
-                          const copy = new Set(_tokens);
-                          const v = values.tokens.filter(x => {
-                            copy.delete(x.token);
-                            return _tokens.has(x.token);
-                          });
-                          setFieldValue('tokens', [
-                            ...v,
-                            ...Array.from(copy).map((token) => ({ token, amount: 0 })),
-                          ])
-                        }}
-                        balances={balances}
-                        tokenList={erc20TokenList}
-                      />
-                      {values.tokens.map((token, index) => (
-                        <div key={token.token.address}>
-                          <InputField
-                            name={`tokens.${index}.amount`}
-                            InputProps={{
-                              endAdornment: (
-                                <TokenAdornment
-                                  token={token.token}
-                                  onClick={() => setShowTokenSelect(true)}
-                                />
-                              )
-                            }}
-                          />
-                          <button onClick={() => setFieldValue(`tokens.${index}.amount`, 69420)}>Max</button>
-                        </div>
-                      ))}
-                    </div>
-                  )
-                }}
-              </FieldArray>
-              <Button disabled type="submit" size="large" fullWidth>
-                Deposit
-              </Button>
-            </Stack>
-          </Form>
-        );
-      }}
+    <Formik initialValues={initialValues} onSubmit={() => {}}>
+      {(props) => <DepositForm to={to} {...props} />}
     </Formik>
   );
 };

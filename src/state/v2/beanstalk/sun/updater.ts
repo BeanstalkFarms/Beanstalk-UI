@@ -54,7 +54,7 @@ const SunUpdater = () => {
       const i = setInterval(() => {
         const _remaining = next.diffNow();
         dispatch(setRemainingUntilSunrise(_remaining));
-        console.debug(`[beanstalk/sun/updater] remaining until sunrise: ${(_remaining.milliseconds / 1000 / 60).toFixed(2)} minutes`);
+        // console.debug(`[beanstalk/sun/updater] remaining until sunrise: ${(_remaining.milliseconds / 1000 / 60).toFixed(2)} minutes`);
         if (_remaining.milliseconds < 0) {
           dispatch(setAwaitingSunrise(_remaining.milliseconds < 0));
         }

@@ -24,7 +24,7 @@ import Token from 'classes/Token';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { TokensByAddress } from 'constants/v2/tokens';
-import { Field, FieldArray, FieldProps, useFormikContext } from 'formik';
+import { FastField, Field, FieldArray, FieldProps, useFormikContext } from 'formik';
 
 const InputField : React.FC<{ name: string; } & TextFieldProps> = ({
   // 
@@ -44,9 +44,9 @@ const InputField : React.FC<{ name: string; } & TextFieldProps> = ({
     ...InputProps,
   }), [InputProps])
   return (
-    <>
-      <Field name={name}>
-        {({ field, form, meta } : FieldProps) => (
+    <FastField name={name}>
+      {({ field, form, meta } : FieldProps) => (
+        <>
           <TextField
             type="number"
             placeholder={placeholder || '0'}
@@ -60,10 +60,10 @@ const InputField : React.FC<{ name: string; } & TextFieldProps> = ({
               ...sx
             }}
           />
-        )}
-      </Field>
-      <div>{name}: render {new Date().toISOString()}</div>
-    </>
+          <div>{name}: render {new Date().toISOString()}</div>
+        </>
+      )}
+    </FastField>
   );
 };
 

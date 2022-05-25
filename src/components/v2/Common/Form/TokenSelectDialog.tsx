@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/v2/Common/Dialog';
 import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
@@ -37,7 +37,7 @@ const TokenSelectDialog : React.FC<{
   balances: AppState['_farmer']['balances'];
   // Token Configuration
   tokenList: TokensByAddress;
-}> = ({
+}> = React.memo(({
   open,
   handleClose,
   selected,
@@ -47,9 +47,12 @@ const TokenSelectDialog : React.FC<{
 }) => {
   const classes = useStyles();
   const tokenListValues = useMemo(() => Object.values(tokenList), [tokenList]);
-  
   const [_selected, _setSelected] = useState<Set<Token>>(new Set());
-  const toggle = (token: Token) => {
+
+  console.debug(`[TokenSelectDialog] render`)
+
+  //
+  const toggle = useCallback((token: Token) => {
     const copy = new Set(_selected);
     if (_selected.has(token)) {
       copy.delete(token);
@@ -58,17 +61,20 @@ const TokenSelectDialog : React.FC<{
       copy.add(token);
       _setSelected(copy);
     }
-  }
+  }, [_selected]);
 
   // Whenever the Dialog opens, store a temporary copy of the currently
   // selected tokens so we can manipulate them.
   useEffect(() => {
     if (open) {
+      console.debug(`[TokenSelectDialog] resetting _selected`)
       _setSelected(
         new Set(selected.map(({ token }) => token))
       );
     }
   }, [open, selected])
+
+  if (!_selected) return null;
 
   return (
     <>
@@ -129,5 +135,6 @@ const TokenSelectDialog : React.FC<{
       </StyledDialog>
     </>
   )
-}
+});
+
 export default TokenSelectDialog;
