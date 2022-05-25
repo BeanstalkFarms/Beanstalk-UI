@@ -11,12 +11,13 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export interface HorizontalScrollProps {
+export interface FertDialogProps {
   viewAllFertilizer: boolean;
   handleCloseFertilizerDialog: (val?: any) => void;
+  dataGridRows: any[];
 }
 
-const FertDialog: React.FC<HorizontalScrollProps> = ({viewAllFertilizer, handleCloseFertilizerDialog}) => {
+const FertDialog: React.FC<FertDialogProps> = ({viewAllFertilizer, handleCloseFertilizerDialog, dataGridRows}) => {
   const classes = useStyles();
 
   return (
@@ -32,7 +33,9 @@ const FertDialog: React.FC<HorizontalScrollProps> = ({viewAllFertilizer, handleC
       </StyledDialogTitle>
       <StyledDialogContent sx={{padding: 2}}>
         <MyFertilizerHeader />
-        {/*<FertDataGrid token={} siloToken={}*/}
+        <FertDataGrid
+          rows={dataGridRows}
+        />
       </StyledDialogContent>
     </StyledDialog>
   );

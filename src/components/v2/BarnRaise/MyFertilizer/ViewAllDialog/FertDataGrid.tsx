@@ -1,64 +1,52 @@
-import React, { useMemo } from 'react';
-import { Token } from 'classes';
-import BigNumber from 'bignumber.js';
-import { Box, Card, Stack, Typography } from '@mui/material';
+import React from 'react';
+import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-
-import { FarmerTokenBalance } from 'state/v2/farmer/silo';
-import type { Deposit } from 'state/v2/farmer/silo';
+import { tableStyle } from '../../../../../util/tableStyle';
 
 const columns = [
   {
-    field: 'season',
+    field: 'id',
     headerName: 'Season',
+    width: 90
   },
   {
-    field: 'amount',
-    headerName: 'Amount',
-    width: 300,
+    field: 'numFertilizer',
+    headerName: '# Fertilizer',
+    width: 90
   },
-  // {
-  //   field: 'stalk',
-  //   headerName: 'Stalk',
-  //   width: 200,
-  // },
-  // {
-  //   field: 'seeds',
-  //   headerName: 'Seeds',
-  //   width: 200,
-  // }
+  {
+    field: 'humidity',
+    headerName: 'Humidity',
+    width: 90
+  },
+  {
+    field: 'rewards',
+    headerName: 'Received Rewards',
+    width: 150
+  },
+  {
+    field: 'owedBeans',
+    headerName: 'Total Owed Beans',
+    width: 150
+  },
 ];
 
-const FertDataGrid : React.FC<{
-  token: Token;
-  siloToken: FarmerTokenBalance; // FIXME: naming
-}> = ({
-  token,
-  siloToken,
-}) => {
-  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => siloToken?.deposits.map((deposit) => ({
-    id: deposit.season,
-    ...deposit
-  })), [siloToken?.deposits]);
+export interface FertDataGridProps {
+  rows: any[];
+}
 
-  return (
-    <Card sx={{ p: 2 }}>
-      <Stack gap={2}>
-        <Box>
-          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{token.name} Deposits</Typography>
-        </Box>
-        <Box sx={{ height: 375, width: '100%' }}>
-          <DataGrid
-            columns={columns}
-            rows={rows}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            disableSelectionOnClick
-          />
-        </Box>
-      </Stack>
-    </Card>
+const FertDataGrid: React.FC<FertDataGridProps> = ({ rows }) => (
+  <>
+    <Box sx={{ height: 375, width: '100%', ...tableStyle }}>
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+        disableSelectionOnClick
+        />
+    </Box>
+  </>
   );
-};
 
 export default FertDataGrid;

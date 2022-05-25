@@ -14,14 +14,25 @@ import { AppState } from '../state';
 import HorizontalScroll from '../components/v2/BarnRaise/MyFertilizer/HorizontalScroll';
 import BarnraisePurchaseForm from '../components/v2/BarnRaise/PurchaseFertilizer/BarnraisePurchaseForm';
 import RemainingFertilizer from '../components/v2/BarnRaise/RemainingFertilizer/RemainingFertilizer';
-import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '../components/v2/Common/Dialog';
-import { displayBN } from '../util';
 import FertDialog from "../components/v2/BarnRaise/MyFertilizer/ViewAllDialog/FertDialog";
 
 const getItems = () =>
   Array(20)
     .fill(0)
     .map((_, ind) => ({ id: `element-${ind}` }));
+
+// rows for "View All Fertilizer" DataGrid
+const rows = [
+  { id: 5123, numFertilizer: 'x10,000', humidity: '500%', rewards: '10000', owedBeans: '1000' },
+  { id: 5124, numFertilizer: 'x10,000', humidity: '400%', rewards: '15000', owedBeans: '100' },
+  { id: 5125, numFertilizer: 'x10,000', humidity: '300%', rewards: '1400', owedBeans: '1050' },
+  { id: 5126, numFertilizer: 'x10,000', humidity: '100%', rewards: '1040', owedBeans: '1000' },
+  { id: 5127, numFertilizer: 'x10,000', humidity: '200%', rewards: '1000', owedBeans: '100' },
+  { id: 5128, numFertilizer: 'x10,000', humidity: '500%', rewards: '1030', owedBeans: '1400' },
+  { id: 5129, numFertilizer: 'x10,000', humidity: '500%', rewards: '100', owedBeans: '10800' },
+  { id: 5130, numFertilizer: 'x10,000', humidity: '500%', rewards: '1040', owedBeans: '100' },
+  { id: 5131, numFertilizer: 'x10,000', humidity: '500%', rewards: '100', owedBeans: '1010' },
+];
 
 // -- 
 const HUMIDITY_DECREASE_UNPAUSE = new BigNumber(-250);
@@ -111,6 +122,7 @@ const BarnRaisePage: React.FC = () => {
         <FertDialog
           viewAllFertilizer={viewAllFertilizer}
           handleCloseFertilizerDialog={handleFertilizerDialogClose}
+          dataGridRows={rows}
         />
       </Stack>
     </Container>
