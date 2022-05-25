@@ -1,9 +1,8 @@
 import React from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Stack, Typography } from '@mui/material';
-import BigNumber from 'bignumber.js';
+import { Accordion, AccordionDetails, AccordionSummary, Stack, Typography } from '@mui/material';
+// import BigNumber from 'bignumber.js';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { makeStyles } from '@mui/styles';
-import { displayBN } from '../../../../util';
 import splitArrowsIcon from '../../../../img/split-arrows.svg';
 import cucumberIcon from '../../../../img/cucumber.svg';
 import AccordionWrapper from '../../Common/AccordionWrapper';
@@ -21,13 +20,13 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface AccordionProps {
-  amount: BigNumber;
+  // amount: BigNumber;
   token: NativeToken | ERC20Token;
 }
 
 const TxnAccordion: React.FC<AccordionProps> =
   ({
-     amount,
+    //  amount,
      token
    }:
      AccordionProps
@@ -57,7 +56,7 @@ const TxnAccordion: React.FC<AccordionProps> =
             </Stack>
           </AccordionSummary>
           <AccordionDetails>
-            {/*<Typography>{displayBN(amount)}</Typography>*/}
+            {/* <Typography>{displayBN(amount)}</Typography> */}
             <Stack gap={2}>
               <Stack
                 sx={{ pl: 2, pr: 2 }}

@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { Button, Card, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import gearIcon from 'img/gear.svg';
-import { GetAccountResult } from '@wagmi/core';
 import TokenInputField from '../../Common/Form/TokenInputField';
 import { Token } from '../../../../classes';
 import { ERC20Token, NativeToken } from '../../../../classes/Token';
