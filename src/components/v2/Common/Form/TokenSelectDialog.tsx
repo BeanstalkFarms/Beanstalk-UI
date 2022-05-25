@@ -49,7 +49,7 @@ const TokenSelectDialog : React.FC<{
   const tokenListValues = useMemo(() => Object.values(tokenList), [tokenList]);
   const [_selected, _setSelected] = useState<Set<Token>>(new Set());
 
-  console.debug(`[TokenSelectDialog] render`)
+  console.debug('[TokenSelectDialog] render');
 
   //
   const toggle = useCallback((token: Token) => {
@@ -67,12 +67,12 @@ const TokenSelectDialog : React.FC<{
   // selected tokens so we can manipulate them.
   useEffect(() => {
     if (open) {
-      console.debug(`[TokenSelectDialog] resetting _selected`)
+      console.debug('[TokenSelectDialog] resetting _selected');
       _setSelected(
         new Set(selected.map(({ token }) => token))
       );
     }
-  }, [open, selected])
+  }, [open, selected]);
 
   if (!_selected) return null;
 
@@ -105,7 +105,7 @@ const TokenSelectDialog : React.FC<{
                 secondaryAction={<Typography>{displayBN(balances ? balances[_token.address] : zeroBN)}</Typography>}
                 onClick={() => toggle(_token)}
               >
-                <ListItemButton disableRipple={true}>
+                <ListItemButton disableRipple>
                   <ListItemIcon>
                     <img src={_token.logo} alt="" className={classes.tokenLogo} />
                   </ListItemIcon>
@@ -128,13 +128,13 @@ const TokenSelectDialog : React.FC<{
             size="large"
           >
             {_selected.size === 0 
-              ? "Select Token to Continue"
+              ? 'Select Token to Continue'
               : `Select ${_selected.size} Token${_selected.size === 1 ? '' : 's'}`}
           </Button>
         </StyledDialogActions>
       </StyledDialog>
     </>
-  )
+  );
 });
 
 export default TokenSelectDialog;

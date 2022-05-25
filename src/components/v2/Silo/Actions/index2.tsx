@@ -4,7 +4,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Token } from 'classes';
 import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
-import { BEAN, ERC20Tokens, Seeds, Stalk } from 'constants/v2/tokens';
+import { BEAN, ERC20Tokens, SEEDS, STALK } from 'constants/v2/tokens';
 import BigNumber from 'bignumber.js';
 import TokenInputField from 'components/v2/Common/Form/MultiTokenInputField';
 import useChainConstant from 'hooks/useConstant';
@@ -91,7 +91,7 @@ const Deposit : React.FC<{
         amount: new BigNumber(100),
       },
     ],
-  }), [bean])
+  }), [bean]);
 
   return (
     <Formik

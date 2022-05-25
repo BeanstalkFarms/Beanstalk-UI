@@ -144,6 +144,7 @@ export function changeTokenAddresses(chainId: number) {
     UNI_V2_ETH_BEAN_LP.addr = '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db';
     USDC.addr = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F';
     CURVE.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC';
+    
     BEANLUSD.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // FIX: change ropsten BEAN:LUSD address (currently curve)
     LUSD3CRV.addr = '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC'; // using curuve ropsten address for lusd:3crv pool
     LUSD.addr = '0x86E5040C1F0459cb59B8cf2794555615554799D3';

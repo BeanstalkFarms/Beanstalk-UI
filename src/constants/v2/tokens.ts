@@ -42,7 +42,7 @@ export const ETH = {
 
 // Beanstalk Internal Tokens (not ERC20)
 
-export const Stalk = new BeanstalkToken(
+export const STALK = new BeanstalkToken(
   '',
   SupportedChainId.MAINNET,
   10,
@@ -53,7 +53,7 @@ export const Stalk = new BeanstalkToken(
   }
 );
 
-export const Seeds = new BeanstalkToken(
+export const SEEDS = new BeanstalkToken(
   '',
   SupportedChainId.MAINNET,
   10,

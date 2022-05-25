@@ -1,30 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Theme } from '@emotion/react';
+import React, { useMemo } from 'react';
 import {
-  Box,
-  Button,
-  InputAdornment,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  SxProps,
   TextField,
   TextFieldProps,
-  Typography
 } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { makeStyles } from '@mui/styles';
-import BigNumber from 'bignumber.js';
-
-import { StyledDialog, StyledDialogContent, StyledDialogTitle } from 'components/v2/Common/Dialog';
-import { displayBN } from 'util/index';
-import Token from 'classes/Token';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { TokensByAddress } from 'constants/v2/tokens';
-import { FastField, Field, FieldArray, FieldProps, useFormikContext } from 'formik';
+import { FastField, FieldProps } from 'formik';
 
 const InputField : React.FC<{ name: string; } & TextFieldProps> = ({
   // 
@@ -42,7 +21,7 @@ const InputField : React.FC<{ name: string; } & TextFieldProps> = ({
     },
     classes: {},
     ...InputProps,
-  }), [InputProps])
+  }), [InputProps]);
   return (
     <FastField name={name}>
       {({ field, form, meta } : FieldProps) => (

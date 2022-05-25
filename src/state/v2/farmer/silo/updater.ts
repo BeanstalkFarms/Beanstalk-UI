@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from 'react';
-import { Bean, BEAN_TO_SEEDS, BEAN_TO_STALK } from 'constants/index';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult, tokenResult } from 'util/LedgerUtilities2';
 import { useAccount, useConnect } from 'wagmi';
 
-import { Seeds, Stalk } from 'constants/v2/tokens';
+import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
 import { GetAccountResult } from '@wagmi/core';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { reset, updateFarmerSiloAssets } from './actions';
@@ -29,11 +29,11 @@ export const useFarmerSilo = () => {
         earnedBeanBalance,
         grownStalkBalance,
       ] = await Promise.all([
-        beanstalk.balanceOfStalk(account.address).then(tokenResult(Stalk)),
-        beanstalk.balanceOfSeeds(account.address).then(tokenResult(Seeds)),
+        beanstalk.balanceOfStalk(account.address).then(tokenResult(STALK)),
+        beanstalk.balanceOfSeeds(account.address).then(tokenResult(SEEDS)),
         beanstalk.balanceOfRoots(account.address).then(bigNumberResult),
-        beanstalk.balanceOfFarmableBeans(account.address).then(tokenResult(Bean)),
-        beanstalk.balanceOfGrownStalk(account.address).then(tokenResult(Stalk)),
+        beanstalk.balanceOfFarmableBeans(account.address).then(tokenResult(BEAN)),
+        beanstalk.balanceOfGrownStalk(account.address).then(tokenResult(STALK)),
       ] as const);
 
       console.debug('[farmer/silo] fetch result', [stalkBalance, seedBalance]);

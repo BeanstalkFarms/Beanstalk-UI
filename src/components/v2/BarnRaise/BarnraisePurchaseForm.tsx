@@ -14,8 +14,8 @@ import beanCircleIcon from '../../../img/bean-circle.svg';
 import chevronDownIcon from '../../../img/chevron-down.svg';
 import splitArrowsIcon from '../../../img/split-arrows.svg';
 import AccordionWrapper from '../Common/AccordionWrapper';
-import TransactionDetailsAccordion from "./TransactionDetailsAccordion";
-import PurchaseDropdown from "./PurchaseDropdown";
+import TransactionDetailsAccordion from './TransactionDetailsAccordion';
+import PurchaseDropdown from './PurchaseDropdown';
 
 export interface BarnraiseFormProps {
   amount: BigNumber;

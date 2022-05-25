@@ -1,20 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Button, Card, IconButton, Stack, Tab, Tabs, Typography } from '@mui/material';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Box, Button, Card, IconButton, Stack, Tab, Tabs } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Token } from 'classes';
-import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
-import { BEAN, WETH, ERC20Tokens, Seeds, Stalk, BEAN_ETH_UNISWAP_V2_LP, ETH } from 'constants/v2/tokens';
-import BigNumber from 'bignumber.js';
+import { BEAN, ETH } from 'constants/v2/tokens';
 import useChainConstant from 'hooks/useConstant';
-import { ERC20Token, NativeToken } from 'classes/Token';
 import useTokenMap from 'hooks/useTokenMap';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { useAccount } from 'wagmi';
-import { displayBN } from 'util/TokenUtilities';
 import { BeanPoolState } from 'state/v2/bean/pools';
-import { Field, FieldArray, Form, Formik, FormikBag, FormikProps } from 'formik';
+import { FieldArray, Form, Formik, FormikProps } from 'formik';
 import InputField from 'components/v2/Common/Form/InputField';
 import TokenAdornment from 'components/v2/Common/Form/TokenAdornment';
 import TokenSelectDialog from 'components/v2/Common/Form/TokenSelectDialog';
@@ -29,9 +24,9 @@ type DepositFormValues = {
 // Each transaction in the Farm function needs to
 
 const useDepositSummary = (to: Token, tokens: DepositFormValues['tokens']) => {
-  console.log()
+  console.log();
   return [];
-}
+};
 
 const DepositForm : React.FC<
   FormikProps<DepositFormValues>
@@ -44,27 +39,27 @@ const DepositForm : React.FC<
   setFieldValue
 }) => {
   // TODO: extract these?
-  const baseTokens = useMemo(() => ([BEAN, ETH]), [])
+  const baseTokens = useMemo(() => ([BEAN, ETH]), []);
   const erc20TokenList = useTokenMap(baseTokens);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
   const summary = useDepositSummary(to, values.tokens);
 
-  console.debug(`[DepositForm] render`)
+  console.debug('[DepositForm] render');
   const onSelect = useCallback((_tokens: Set<Token>) => {
     // If the user has typed some existing values in,
     // save them. Add new tokens to the end of the list.
     // FIXME: match sorting of erc20TokenList
     const copy = new Set(_tokens);
-    const v = values.tokens.filter(x => {
+    const v = values.tokens.filter((x) => {
       copy.delete(x.token);
       return _tokens.has(x.token);
     });
     setFieldValue('tokens', [
       ...v,
       ...Array.from(copy).map((token) => ({ token, amount: 0 })),
-    ])
-  }, [values.tokens, setFieldValue])
+    ]);
+  }, [values.tokens, setFieldValue]);
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
   
   return (
@@ -73,22 +68,21 @@ const DepositForm : React.FC<
         {/* <div><pre>{JSON.stringify(values, null, 2)}</pre></div> */}
         {/* Deposit Amount */}
         <FieldArray name="tokens">
-          {(arrayHelpers) => {
-            return (
-              <div>
-                <TokenSelectDialog
-                  open={showTokenSelect}
-                  handleClose={handleClose}
-                  selected={values.tokens}
-                  onSelect={onSelect}
-                  balances={balances}
-                  tokenList={erc20TokenList}
+          {(arrayHelpers) => (
+            <div>
+              <TokenSelectDialog
+                open={showTokenSelect}
+                handleClose={handleClose}
+                selected={values.tokens}
+                onSelect={onSelect}
+                balances={balances}
+                tokenList={erc20TokenList}
                 />
-                {values.tokens.map((token, index) => (
-                  <div key={token.token.address}>
-                    <InputField
-                      name={`tokens.${index}.amount`}
-                      InputProps={{
+              {values.tokens.map((token, index) => (
+                <div key={token.token.address}>
+                  <InputField
+                    name={`tokens.${index}.amount`}
+                    InputProps={{
                         endAdornment: (
                           <TokenAdornment
                             token={token.token}
@@ -97,14 +91,13 @@ const DepositForm : React.FC<
                         )
                       }}
                     />
-                    <button onClick={() => setFieldValue(`tokens.${index}.amount`, 69420)}>Max</button>
-                  </div>
+                  <button onClick={() => setFieldValue(`tokens.${index}.amount`, 69420)}>Max</button>
+                </div>
                 ))}
-              </div>
-            )
-          }}
+            </div>
+            )}
         </FieldArray>
-        <Button onClick={() => { setFieldValue('tokens.0.amount', 99) }} size="large" fullWidth>
+        <Button onClick={() => { setFieldValue('tokens.0.amount', 99); }} size="large" fullWidth>
           Test
         </Button>
         <Button disabled type="submit" size="large" fullWidth>
@@ -113,14 +106,14 @@ const DepositForm : React.FC<
       </Stack>
     </Form>
   );
-}
+};
 
 const Deposit : React.FC<{
   to: Token;
-  poolState: BeanPoolState;
+  // poolState: BeanPoolState;
 }> = ({
   to,
-  poolState,
+  // poolState,
 }) => {
   const Bean = useChainConstant(BEAN);
   const initialValues : DepositFormValues = useMemo(() => ({
