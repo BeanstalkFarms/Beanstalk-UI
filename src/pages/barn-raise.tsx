@@ -4,7 +4,7 @@ import PageHeader from 'components/v2/Common/PageHeader';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { SupportedChainId } from 'constants/chains';
-import { zeroBN } from 'constants/index';
+import { zeroBN } from '../constants';
 import { ERC20Token, NativeToken } from '../classes/Token';
 import { BEAN, ERC20Tokens } from '../constants/v2/tokens';
 import useTokenList from '../hooks/useTokenList';
@@ -13,7 +13,6 @@ import { AppState } from '../state';
 import HorizontalScroll from '../components/v2/BarnRaise/HorizontalScroll';
 import BarnraisePurchaseForm from '../components/v2/BarnRaise/BarnraisePurchaseForm';
 import RemainingFertilizer from '../components/v2/BarnRaise/RemainingFertilizer';
-import { displayBN } from '../util';
 
 const getItems = () =>
   Array(20)

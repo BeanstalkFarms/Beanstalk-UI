@@ -5,14 +5,17 @@ import chevronDownIcon from '../../../img/chevron-down.svg';
 import fertilizerOpenedIcon from '../../../img/fertilizer-opened.svg';
 import beanCircleIcon from '../../../img/bean-circle.svg';
 import TransactionDetailsAccordion from './TransactionDetailsAccordion';
+import { ERC20Token, NativeToken } from '../../../classes/Token';
 
 export interface AccordionProps {
   amount: BigNumber;
+  token: NativeToken | ERC20Token;
 }
 
 const PurchaseDropdown: React.FC<AccordionProps> =
   ({
-     amount
+    amount,
+    token
    }:
      AccordionProps
   ) => (
@@ -33,7 +36,7 @@ const PurchaseDropdown: React.FC<AccordionProps> =
           </Stack>
         </Stack>
       </Stack>
-      <TransactionDetailsAccordion amount={amount} />
+      <TransactionDetailsAccordion token={token} amount={amount} />
     </Stack>
   );
 export default PurchaseDropdown;

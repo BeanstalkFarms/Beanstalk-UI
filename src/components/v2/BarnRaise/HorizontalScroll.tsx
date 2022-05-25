@@ -7,6 +7,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import beanCircleIcon from 'img/bean-circle.svg';
 import fertilizerOpenedIcon from 'img/fertilizer-opened.svg';
+import {ERC20Token, NativeToken} from "../../../classes/Token";
 
 const useStyles = makeStyles(() => ({
   scrollMenu: {
@@ -103,6 +104,18 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ items }) => {
           <Typography variant="h6">My Active Fertilizer</Typography>
           <Stack gap={1}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography>Unclaimed Beans:</Typography>
+              <Stack direction="row" alignItems="center" gap={0.5}>
+                <Stack direction="row" gap={0.2}>
+                  <img alt="" src={beanCircleIcon} width="16px" />
+                  <Typography>200</Typography>
+                </Stack>
+                <Link underline="none" href="#"><Typography>(Claim)</Typography></Link>
+                <Typography>or</Typography>
+                <Link underline="none" href="#"><Typography>(Claim & Deposit)</Typography></Link>
+              </Stack>
+            </Stack>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography>Total Fertilizer Reward:</Typography>
               <Stack direction="row" alignItems="center" gap={0.1}>
                 <img alt="" src={beanCircleIcon} width="16px" />
@@ -110,7 +123,7 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ items }) => {
               </Stack>
             </Stack>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography>Total Fertilizer Reward:</Typography>
+              <Typography>Total Owed Beans:</Typography>
               <Stack direction="row" alignItems="center" gap={0.1}>
                 <img alt="" src={beanCircleIcon} width="16px" />
                 <Typography>100,000</Typography>
