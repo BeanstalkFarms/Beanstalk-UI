@@ -8,20 +8,23 @@ import { Toaster } from 'react-hot-toast';
 import SiloPage from 'pages/silo';
 import SiloTokenPage from 'pages/silo/token';
 import FieldPage from 'pages/field';
-import NavBar from 'components/v2/Nav/NavBar';
-import pageBackground from 'img/bg-mainnet.png';
 import ForecastPage from 'pages/forecast';
+import BarnRaisePage from 'pages/barn-raise';
+
+import pageBackground from 'img/bg-mainnet.png';
+import NavBar from 'components/v2/Nav/NavBar';
+
 import { setWidth } from 'state/general/actions';
 import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
 import PoolsUpdater from 'state/v2/bean/pools/updater';
 import FarmerEventsUpdater from 'state/v2/farmer/events/updater';
 import FarmerUpdater from 'state/v2/farmer/updater';
 import SunUpdater from 'state/v2/beanstalk/sun/updater';
+import FertilizerUpdater from 'state/v2/beanstalk/fertilizer/updater';
 import BalancesUpdater from 'state/v2/farmer/balances/updater';
 import { BeanstalkPalette } from './muiTheme';
 
 import './App.css';
-import BarnRaisePage from 'pages/barn-raise';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -64,6 +67,7 @@ export default function App() {
       <FarmerUpdater />
       <SunUpdater />
       <BalancesUpdater />
+      <FertilizerUpdater />
       {/* CONTENT */}
       <Box
         className="App"

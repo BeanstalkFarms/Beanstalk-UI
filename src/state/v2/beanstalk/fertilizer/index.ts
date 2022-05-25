@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
 export type Fertilizer = {
-  available: BigNumber;
+  remaining: BigNumber;
   humidity: BigNumber;
 }

@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React from 'react';
-import { Box, Card, Divider, Link, Stack, Typography } from '@mui/material';
+import { Card, Divider, Link, Stack, Typography } from '@mui/material';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 import { makeStyles } from '@mui/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -30,9 +31,18 @@ function RightArrow() {
   );
 }
 
-function ScrollItem({ onClick, selected, title, itemId }: { onClick: any, selected: any, title: any, itemId: any }) {
+function ScrollItem({ 
+  onClick,
+  selected,
+  title,
+  itemId
+}: { 
+  onClick: any,
+  selected: any,
+  title: any, 
+  itemId: any
+}) {
   const visibility = React.useContext(VisibilityContext);
-
   return (
     <Stack
       onClick={() => onClick(visibility)}

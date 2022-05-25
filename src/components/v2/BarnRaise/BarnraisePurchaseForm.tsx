@@ -32,9 +32,9 @@ const BarnraisePurchaseForm: React.FC<BarnraiseFormProps> =
       handleSetAmount(balances[from.address]);
     }, [handleSetAmount, balances, from]);
 
-    const handleReset = useCallback(() => {
-      handleSetAmount(new BigNumber(-1));
-    }, [handleSetAmount]);
+    // const handleReset = useCallback(() => {
+    //   handleSetAmount(new BigNumber(-1));
+    // }, [handleSetAmount]);
 
     return (
       <Card sx={{ p: 2 }}>

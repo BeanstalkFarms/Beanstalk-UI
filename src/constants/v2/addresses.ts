@@ -13,5 +13,7 @@ export const BEANSTALK_PRICE_ADDRESSES : AddressMap = {
 };
 
 export const BEANSTALK_FERTILIZER_ADDRESSES : AddressMap = {
-  [SupportedChainId.RINKEBY]: '0xe859C94462B77A600f64Dc742b1D06cE17B256b1'
-}
+  [SupportedChainId.MAINNET]: '',
+  [SupportedChainId.ROPSTEN]: '0xd598d3799521a3F95784A81c883ddf1122Ad769B',
+  // [SupportedChainId.RINKEBY]: '0xe859C94462B77A600f64Dc742b1D06cE17B256b1',
+};

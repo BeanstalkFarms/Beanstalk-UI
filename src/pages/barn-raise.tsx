@@ -3,7 +3,6 @@ import { Container, Stack } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { useAccount } from 'wagmi';
 import { ERC20Token, NativeToken } from '../classes/Token';
 import { BEAN, ERC20Tokens } from '../constants/v2/tokens';
 import useTokenList from '../hooks/useTokenList';
@@ -18,17 +17,32 @@ const getItems = () =>
     .fill(0)
     .map((_, ind) => ({ id: `element-${ind}` }));
 
+const WrappedRemainingFertilizer = () => {
+  const sun = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
+  const fertilizer = useSelector<AppState, AppState['_beanstalk']['fertilizer']>((state) => state._beanstalk.fertilizer);
+  return (
+    <RemainingFertilizer
+      remaining={fertilizer.remaining}
+      humidity={fertilizer.humidity}
+      season={sun.season}
+      sunrise={sun.sunrise}
+    />
+  );
+};
+
 const BarnRaisePage: React.FC = () => {
   const erc20TokenList = useTokenList(ERC20Tokens); // TODO: update tokens
   const bean = useChainConstant(BEAN);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
+
+  // Form
   const [from, setFrom] = useState<NativeToken | ERC20Token>(bean);
   const [amount, setAmount] = useState<BigNumber>(new BigNumber(-1));
-  const { data: account } = useAccount();
+  // const { data: account } = useAccount();
 
   const handleSetFrom = (t: NativeToken | ERC20Token) => setFrom(t);
 
-  const [items, setItems] = React.useState(getItems);
+  const [items] = useState(getItems);
 
   const handleSetAmount = useCallback((val?: string | BigNumber) => {
     let amt = new BigNumber(!val ? -1 : val);
@@ -44,7 +58,7 @@ const BarnRaisePage: React.FC = () => {
           purpose="Rebuilding Beanstalk"
           description="Earn yield through purchasing & activating Fertilizer, the Barn Raise token"
         />
-        <RemainingFertilizer />
+        <WrappedRemainingFertilizer />
         <BarnraisePurchaseForm
           amount={amount}
           handleSetAmount={handleSetAmount}

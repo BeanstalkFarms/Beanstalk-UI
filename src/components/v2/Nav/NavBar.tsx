@@ -148,7 +148,7 @@ const NavBar : React.FC<{}> = () => {
         </Button>
         <Stack direction="row" sx={{ flex: 1 }}>
           {NAVIGATION_MAP.top.map((item) => (
-            <NavButton to={item.path} title={item.title} />
+            <NavButton key={item.path} to={item.path} title={item.title} />
         ))}
           <MoreButton />
         </Stack>
