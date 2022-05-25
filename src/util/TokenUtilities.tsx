@@ -19,7 +19,7 @@ import StalkLogo from 'img/stalk-logo.svg';
 import TransitIcon from 'img/transit-icon.svg';
 import PooledIcon from 'img/pooled-icon.svg';
 import USDCLogo from 'img/usdc-logo.svg';
-import CRV3Logo from 'img/bean-curve-logo.svg';
+import CRV3Logo from 'img/bean-crv3-logo.svg';
 import BeanlusdLogo from 'img/bean-lusd-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
 import { account, erc20TokenContract } from './index';

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { UniswapV2Pair__factory } from 'constants/generated';
+import { CurveMetaPool__factory, UniswapV2Pair__factory } from 'constants/generated';
 import { MinBN } from 'util';
 import client from 'util/wagmi';
 import Dex from './Dex';
@@ -181,6 +181,23 @@ export class UniswapV2Pool extends Pool {
         [
           new BigNumber(result._reserve0.toString()), 
           new BigNumber(result._reserve1.toString()),
+        ] as Reserves
+      ))
+    );
+  }
+}
+
+export class CurveMetaPool extends Pool {
+  public getContract() {
+    return CurveMetaPool__factory.connect(this.address, client.provider);
+  }
+
+  public getReserves(): Promise<Reserves> {
+    return (
+      this.getContract().get_balances().then((result) => (
+        [
+          new BigNumber(result[0].toString()), 
+          new BigNumber(result[1].toString()),
         ] as Reserves
       ))
     );

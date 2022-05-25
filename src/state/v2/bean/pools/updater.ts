@@ -13,33 +13,39 @@ import { updateBeanPrice } from '../reducer';
 export const useGetPools = () => {
   const dispatch = useDispatch();
   const beanstalkPriceContract = useBeanstalkPriceContract();
-  const tokens = useTokenMap(ERC20Tokens);
-  const pools = usePools();
+  const TOKENS = useTokenMap(ERC20Tokens);
+  const POOLS = usePools();
 
   // Handlers
   const fetch = useCallback(
     async () => {
       if (beanstalkPriceContract) {
-        const result = await beanstalkPriceContract?.price();
+        const result = await beanstalkPriceContract.price();
         if (!result) return;
-        console.debug('[bean/pools/updater] result', result, tokens);
+        console.debug('[bean/pools/updater] result', result, TOKENS);
         const beanPools = result.ps.reduce<(Promise<UpdatePoolPayload>)[]>((acc, poolData) => {
           const address = poolData.pool;
           // If a new pool is added to the Pools contract before it's
           // configured in the frontend, this function would throw an error.
           // Thus, we only process the pool's data if we have it configured.
-          if (pools[address]) {
+          if (POOLS[address]) {
+            const POOL = POOLS[address];
             acc.push(
-              pools[address].lpToken.getTotalSupply().then((supply) => ({
+              POOL.lpToken.getTotalSupply().then((supply) => ({
                 address: poolData.pool,
                 pool: {
                   price: tokenResult(BEAN)(poolData.price.toString()),
                   reserves: [
-                    tokenResult(tokens[poolData.tokens[0]])(poolData.balances[0]),
-                    tokenResult(tokens[poolData.tokens[1]])(poolData.balances[1]),
+                    // NOTE:
+                    // Assumes that the ordering of tokens in the Pool instance
+                    // matches the order returned by the price contract.
+                    tokenResult(POOL.tokens[0])(poolData.balances[0]),
+                    tokenResult(POOL.tokens[1])(poolData.balances[1]),
+                    // tokenResult(TOKENS[poolData.tokens[0]])(poolData.balances[0]),
+                    // tokenResult(TOKENS[poolData.tokens[1]])(poolData.balances[1]),
                   ],
                   deltaB: tokenResult(BEAN)(poolData.deltaB.toString()),
-                  supply: tokenResult(pools[address].lpToken)(supply.toString()),
+                  supply: tokenResult(POOL.lpToken)(supply.toString()),
                   liquidity: tokenResult(BEAN)(poolData.liquidity.toString()),
                   totalCrosses: new BigNumber(0),
                 },
@@ -55,8 +61,8 @@ export const useGetPools = () => {
     [
       dispatch,
       beanstalkPriceContract,
-      tokens,
-      pools
+      TOKENS,
+      POOLS
     ]
   );
   const clear = useCallback(() => {}, []);
