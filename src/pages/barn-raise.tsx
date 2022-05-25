@@ -52,6 +52,9 @@ const WrappedRemainingFertilizer = () => {
       remaining={fertilizer.remaining}
       humidity={new BigNumber(500)}
       nextDecreaseAmount={nextDecreaseAmount}
+      // FIXME:
+      //  Below "in early July" is hardcoded.
+      //  Also hardcoded in getNextExpectedSunrise().
       nextDecreaseTimeString={beforeUnpause ? 'in early July' : `in ${nextDecreaseDuration.toFormat('mm:ss')}`}
       // humidity={fertilizer.humidity}
       // nextSunrise={sunrise.next}
