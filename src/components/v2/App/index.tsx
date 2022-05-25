@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -8,34 +8,41 @@ import { Toaster } from 'react-hot-toast';
 import SiloPage from 'pages/silo';
 import SiloTokenPage from 'pages/silo/token';
 import FieldPage from 'pages/field';
-// import ConnectPage from 'pages/connect';
-// import MarketplacePage from 'pages/market';
-// import TradePage from 'pages/trade';
-// import GovernancePage from 'pages/governance';
-// import AnalyticsPage from 'pages/analytics';
-// import FundraiserPage from 'pages/fundraiser';
-// import BeaNFTPage from 'pages/beanfts';
-// import AboutPage from 'pages/about';
-// import BalancesPage from 'pages/balances';
-// import PegMaintenancePage from 'pages/peg';
-
-// import PageBackground from './PageBackground';
-// import LoadingBean from './LoadingBean';
-import './App.css';
-import NavBar from 'components/v2/Nav/NavBar';
-import pageBackground from 'img/bg-mainnet.png';
 import ForecastPage from 'pages/forecast';
+import BarnRaisePage from 'pages/barn-raise';
+
+import pageBackground from 'img/bg-mainnet.png';
+import NavBar from 'components/v2/Nav/NavBar';
+
+import { setWidth } from 'state/general/actions';
 import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
 import PoolsUpdater from 'state/v2/bean/pools/updater';
 import FarmerEventsUpdater from 'state/v2/farmer/events/updater';
 import FarmerUpdater from 'state/v2/farmer/updater';
 import SunUpdater from 'state/v2/beanstalk/sun/updater';
-import { BeanstalkPalette } from './theme';
+import FertilizerUpdater from 'state/v2/beanstalk/fertilizer/updater';
+import BalancesUpdater from 'state/v2/farmer/balances/updater';
+import { BeanstalkPalette } from './muiTheme';
+
+import './App.css';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
 export default function App() {
   const dispatch = useDispatch();
+
+  // HANDLE WINDOW SIZE CHANGE
+  // Used throughout the app to show/hide components and
+  // control elements of the theme.
+  const handleWindowSizeChange = () => dispatch(setWidth(window.innerWidth));
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
   const app = (
     <div>
       <Routes>
@@ -44,16 +51,7 @@ export default function App() {
         <Route path="/silo" element={<SiloPage />} />
         <Route path="/silo/:address" element={<SiloTokenPage />} />
         <Route path="/field" element={<FieldPage />} />
-        {/* <Route path="/trade" element={<TradePage />} /> */}
-        {/* More */}
-        {/* <Route path="/analytics" element={<AnalyticsPage />} />
-        <Route path="/peg" element={<PegMaintenancePage />} />
-        <Route path="/fundraiser" element={<FundraiserPage />} />
-        <Route path="/governance" element={<GovernancePage />} />
-        <Route path="/balances" element={<BalancesPage />} />
-        <Route path="/beanfts" element={<BeaNFTPage key="beanfts" />} />
-        <Route path="/about" element={<AboutPage key="about" />} />
-        <Route path="/market" element={<MarketplacePage key="marketplace" />} /> */}
+        <Route path="/barn-raise" element={<BarnRaisePage />} />
       </Routes>
     </div>
   );
@@ -68,6 +66,8 @@ export default function App() {
       <FarmerEventsUpdater />
       <FarmerUpdater />
       <SunUpdater />
+      <BalancesUpdater />
+      <FertilizerUpdater />
       {/* CONTENT */}
       <Box
         className="App"
@@ -101,6 +101,7 @@ export default function App() {
               }
             }}
           />
+          {/* <Footer /> */}
         </Box>
       </Box>
     </>

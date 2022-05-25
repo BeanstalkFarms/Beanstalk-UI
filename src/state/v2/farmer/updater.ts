@@ -25,6 +25,8 @@ const FarmerUpdater = () => {
     (state) => state._beanstalk.field.harvestableIndex,
   );
 
+  console.debug('[FarmerUpdater] re-rendering');
+
   useEffect(() => {
     if (account?.address && activeChain?.id && season && earnedBeans) {
       const results = processFarmerEvents(events, {

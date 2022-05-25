@@ -68,7 +68,7 @@ const TokenInputField : React.FC<{
   endAdornment?: React.ReactNode;
   startAdornment?: React.ReactNode;
   //
-  tokenList?: TokensByAddress;
+  tokenList?: TokensByAddress | never[];
   // Styles
   sx?: SxProps<Theme> | React.CSSProperties;
 }> = ({
