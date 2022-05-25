@@ -14,8 +14,12 @@ const RemainingFertilizer: React.FC<{
   <Card sx={{ p: 2 }}>
     <Stack gap={1}>
       <Typography variant="h6">Remaining Fertilizer</Typography>
-      <Stack direction="row" justifyContent="space-between" gap={2}>
+      <Stack direction="row" justifyContent="center" gap={4}>
         {/* left column */}
+        <Stack>
+          <img alt="" src={fertilizerClosedIcon} />
+        </Stack>
+        {/* right column */}
         <Stack sx={{ p: 1 }} justifyContent="space-between">
           <Stack gap={3}>
             <Stack gap={1}>
@@ -27,7 +31,7 @@ const RemainingFertilizer: React.FC<{
             <Stack gap={1}>
               <Typography sx={{ opacity: 0.7 }}>Current Humidity (Interest Rate)</Typography>
               <Stack direction="row" alignItems="center" gap={1}>
-                <Typography sx={{ fontSize: '5px', fontWeight: 400 }}>
+                <Typography sx={{ fontSize: '25px', fontWeight: 400 }}>
                   {displayFullBN(props.humidity)}%
                 </Typography>
                 <Typography sx={{ color: '#c35f42' }}>
@@ -46,10 +50,6 @@ const RemainingFertilizer: React.FC<{
               </Typography>
             </Link>
           </Stack>
-        </Stack>
-        {/* right column */}
-        <Stack>
-          <img alt="" src={fertilizerClosedIcon} />
         </Stack>
       </Stack>
     </Stack>

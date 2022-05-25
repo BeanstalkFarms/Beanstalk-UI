@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Container, Stack } from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ import { AppState } from '../state';
 import HorizontalScroll from '../components/v2/BarnRaise/HorizontalScroll';
 import BarnraisePurchaseForm from '../components/v2/BarnRaise/BarnraisePurchaseForm';
 import RemainingFertilizer from '../components/v2/BarnRaise/RemainingFertilizer';
+import { displayBN } from '../util';
 
 const getItems = () =>
   Array(20)
@@ -45,10 +46,10 @@ const BarnRaisePage: React.FC = () => {
   const [items] = useState(getItems);
 
   const handleSetAmount = useCallback((val?: string | BigNumber) => {
-    let amt = new BigNumber(!val ? -1 : val);
-    if (amt.gt(balances[from.address])) amt = balances[from.address];
+    const amt = new BigNumber(!val ? -1 : val); // change to "let"
+    // if (amt.gt(balances[from.address])) amt = balances[from.address]; //TODO: turn this on
     setAmount(amt);
-  }, [from, balances]);
+  }, []);
 
   return (
     <Container maxWidth="md">

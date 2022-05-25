@@ -1,19 +1,28 @@
 import React, { useCallback } from 'react';
-import { Button, Card, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import gearIcon from 'img/gear.svg';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TokenInputField from '../Common/Form/TokenInputField';
 import { Token } from '../../../classes';
 import { ERC20Token, NativeToken } from '../../../classes/Token';
 import { displayBN } from '../../../util';
 import { TokensByAddress } from '../../../constants/v2/tokens';
 import { BalanceState } from '../../../state/v2/farmer/balances/reducer';
+import fertilizerOpenedIcon from '../../../img/fertilizer-opened.svg';
+import beanCircleIcon from '../../../img/bean-circle.svg';
+import chevronDownIcon from '../../../img/chevron-down.svg';
+import splitArrowsIcon from '../../../img/split-arrows.svg';
+import AccordionWrapper from '../Common/AccordionWrapper';
+import TransactionDetailsAccordion from "./TransactionDetailsAccordion";
+import PurchaseDropdown from "./PurchaseDropdown";
 
 export interface BarnraiseFormProps {
   amount: BigNumber;
   handleSetAmount: (val?: string | BigNumber) => void;
   from: NativeToken | ERC20Token;
   handleSetFrom: (val?: any) => void; // TODO: Add type
-  erc20TokenList: TokensByAddress<Token>;
+  erc20TokenList: TokensByAddress<Token> | never[];
   balances: BalanceState;
 }
 
@@ -38,10 +47,21 @@ const BarnraisePurchaseForm: React.FC<BarnraiseFormProps> =
 
     return (
       <Card sx={{ p: 2 }}>
-        <Stack>
+        <Stack gap={1}>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="h6">Purchase Fertilizer</Typography>
-            <p>GEAR</p>
+            <Button
+              sx={{
+                p: 0,
+                backgroundColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                  opacity: 0.8
+                }
+              }}
+            >
+              <img alt="" src={gearIcon} width="31px" />
+            </Button>
           </Stack>
           <form>
             {/* {from.address} {from.name} {balances[from.address]?.toString()} */}
@@ -80,10 +100,7 @@ const BarnraisePurchaseForm: React.FC<BarnraiseFormProps> =
               </Stack>
               {/* Output */}
               {amount.gt(0) ? (
-                <Stack direction="column" gap={1}>
-                  {/* TODO: display purchase info */}
-                  <Typography>AMOUNT is greater than 0</Typography>
-                </Stack>
+                <PurchaseDropdown amount={amount} />
               ) : null}
               <Button disabled type="submit" size="large" fullWidth>
                 Input Amount
