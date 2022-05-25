@@ -1,7 +1,9 @@
 import Pool, { CurveMetaPool, UniswapV2Pool } from 'classes/Pool';
 import { SupportedChainId } from 'constants/chains';
-import bean3CrvLogoUrl from 'img/bean-crv3-logo.svg';
-import beanEthLogoUrl from 'img/bean-eth-logo.svg';
+
+import curveLogo from 'img/curve-logo.svg';
+import uniswapLogo from 'img/uniswap-logo.svg';
+
 import { ChainConstant } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_ETH_UNIV2_ADDRESSES } from './addresses';
 // import { Curve, Uniswap } from './dexes';
@@ -14,7 +16,7 @@ export const BEAN_ETH_UNIV2_POOL_MAINNET = new UniswapV2Pool(
   [BEAN, WETH],
   {
     name: 'BEAN:ETH Uniswap V2 Pool',
-    logo: beanEthLogoUrl,
+    logo: uniswapLogo,
     symbol: 'BEAN:ETH'
   },
 );
@@ -26,7 +28,7 @@ export const BEAN_ETH_UNIV2_POOL_ROPSTEN = new UniswapV2Pool(
   [BEAN, WETH],
   {
     name: 'BEAN:ETH Uniswap V2 Pool',
-    logo: beanEthLogoUrl,
+    logo: uniswapLogo,
     symbol: 'BEAN:ETH'
   },
 );
@@ -38,7 +40,7 @@ export const BEAN_CRV3_CURVE_POOL_ROPSTEN = new CurveMetaPool(
   [BEAN, CRV3],
   {
     name: 'BEAN:3CRV MetaPool',
-    logo: bean3CrvLogoUrl,
+    logo: curveLogo,
     symbol: 'BEAN:3CRV'
   },
 );
