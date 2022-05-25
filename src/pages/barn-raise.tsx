@@ -4,20 +4,35 @@ import PageHeader from 'components/v2/Common/PageHeader';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { SupportedChainId } from 'constants/chains';
-import { zeroBN } from 'constants/index';
+import { useAccount } from 'wagmi';
+import { zeroBN } from '../constants';
 import { ERC20Token, NativeToken } from '../classes/Token';
 import { BEAN, ERC20Tokens } from '../constants/v2/tokens';
 import useTokenMap from '../hooks/useTokenMap';
 import useChainConstant from '../hooks/useChainConstant';
 import { AppState } from '../state';
-import HorizontalScroll from '../components/v2/BarnRaise/HorizontalScroll';
-import BarnraisePurchaseForm from '../components/v2/BarnRaise/BarnraisePurchaseForm';
-import RemainingFertilizer from '../components/v2/BarnRaise/RemainingFertilizer';
+import HorizontalScroll from '../components/v2/BarnRaise/MyFertilizer/HorizontalScroll';
+import BarnraisePurchaseForm from '../components/v2/BarnRaise/PurchaseFertilizer/BarnraisePurchaseForm';
+import RemainingFertilizer from '../components/v2/BarnRaise/RemainingFertilizer/RemainingFertilizer';
+import FertDialog from '../components/v2/BarnRaise/MyFertilizer/ViewAllDialog/FertDialog';
 
 const getItems = () =>
   Array(20)
     .fill(0)
     .map((_, ind) => ({ id: `element-${ind}` }));
+
+// rows for "View All Fertilizer" DataGrid
+const rows = [
+  { id: 5123, numFertilizer: 'x10,000', humidity: '500%', rewards: '10000', owedBeans: '1000' },
+  { id: 5124, numFertilizer: 'x10,000', humidity: '400%', rewards: '15000', owedBeans: '100' },
+  { id: 5125, numFertilizer: 'x10,000', humidity: '300%', rewards: '1400', owedBeans: '1050' },
+  { id: 5126, numFertilizer: 'x10,000', humidity: '100%', rewards: '1040', owedBeans: '1000' },
+  { id: 5127, numFertilizer: 'x10,000', humidity: '200%', rewards: '1000', owedBeans: '100' },
+  { id: 5128, numFertilizer: 'x10,000', humidity: '500%', rewards: '1030', owedBeans: '1400' },
+  { id: 5129, numFertilizer: 'x10,000', humidity: '500%', rewards: '100', owedBeans: '10800' },
+  { id: 5130, numFertilizer: 'x10,000', humidity: '500%', rewards: '1040', owedBeans: '100' },
+  { id: 5131, numFertilizer: 'x10,000', humidity: '500%', rewards: '100', owedBeans: '1010' },
+];
 
 // -- 
 const HUMIDITY_DECREASE_UNPAUSE = new BigNumber(-250);
@@ -41,8 +56,8 @@ const WrappedRemainingFertilizer = () => {
   //
   const beforeUnpause = useMemo(() => sun.season.lte(unpauseSeason), [sun.season, unpauseSeason]);
   const nextDecreaseAmount = useMemo(() => {
-    if (beforeUnpause)                return HUMIDITY_DECREASE_UNPAUSE;
-    if (fertilizer.humidity.gt(20))   return HUMIDITY_DECREASE_PER_SEASON;
+    if (beforeUnpause) return HUMIDITY_DECREASE_UNPAUSE;
+    if (fertilizer.humidity.gt(20)) return HUMIDITY_DECREASE_PER_SEASON;
     return zeroBN;
   }, [fertilizer.humidity, beforeUnpause]);
 
@@ -65,6 +80,8 @@ const BarnRaisePage: React.FC = () => {
   const erc20TokenList = useTokenMap(ERC20Tokens); // TODO: update tokens
   const bean = useChainConstant(BEAN);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
+  const [viewAllFertilizer, setViewAllFertilizer] = useState(false);
+  const { data: account } = useAccount();
 
   // Form
   const [from, setFrom] = useState<NativeToken | ERC20Token>(bean);
@@ -79,6 +96,9 @@ const BarnRaisePage: React.FC = () => {
     // if (amt.gt(balances[from.address])) amt = balances[from.address]; //TODO: turn this on
     setAmount(amt);
   }, []);
+
+  const handleFertilizerDialogClose = () => setViewAllFertilizer(false);
+  const handleFertilizerDialogOpen = () => setViewAllFertilizer(true);
 
   return (
     <Container maxWidth="md">
@@ -96,8 +116,17 @@ const BarnRaisePage: React.FC = () => {
           handleSetFrom={handleSetFrom}
           erc20TokenList={erc20TokenList}
           balances={balances}
+          account={account}
         />
-        <HorizontalScroll items={items} />
+        <HorizontalScroll
+          items={items}
+          handleOpenFertilizerDialog={handleFertilizerDialogOpen}
+        />
+        <FertDialog
+          viewAllFertilizer={viewAllFertilizer}
+          handleCloseFertilizerDialog={handleFertilizerDialogClose}
+          dataGridRows={rows}
+        />
       </Stack>
     </Container>
   );

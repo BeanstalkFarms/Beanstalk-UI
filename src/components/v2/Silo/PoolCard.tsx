@@ -35,6 +35,6 @@ const PoolCard : React.FC<{
       </Stack>
     </Stack>
   </Card>
-  );
+);
 
 export default PoolCard;

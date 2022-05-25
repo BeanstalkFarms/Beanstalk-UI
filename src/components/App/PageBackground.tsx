@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { theme } from 'constants/index';
-import Footer from 'components/About/Footer';
 import './index.tsx';
 
 function Barn() {

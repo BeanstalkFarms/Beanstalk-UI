@@ -10,7 +10,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import usePools from 'hooks/usePools';
 import PoolCard from '../../components/v2/Silo/PoolCard';
 
-const TokenPage : React.FC<{}> = () => {
+const TokenPage: React.FC<{}> = () => {
   const { address } = useParams<{ address: string }>();
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanPools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
@@ -26,7 +26,6 @@ const TokenPage : React.FC<{}> = () => {
   const siloToken = farmerSilo.tokens[token.address];
   const poolState = beanPools[address];
   const hasPool = poolState !== undefined;
-
   // If no data loaded...
   if (!token || !siloToken) return null;
 

@@ -10,6 +10,7 @@ import PageHeader from 'components/v2/Common/PageHeader';
 import { SNAPSHOT_LINK } from 'constants/index';
 import snapshotIcon from 'img/snapshot-icon.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
 import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
 
