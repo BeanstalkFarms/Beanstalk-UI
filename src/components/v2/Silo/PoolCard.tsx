@@ -1,19 +1,21 @@
 import React from 'react';
-import { Card, Stack, Typography } from '@mui/material';
+import { Button, Card, Stack, Typography } from '@mui/material';
 import { BeanPoolState } from 'state/v2/bean/pools';
 import { SupportedChainId } from 'constants/chains';
 import { displayBN } from 'util/index';
 import { BEAN } from 'constants/v2/tokens';
 import { Pool } from 'classes';
 
-const PoolCard : React.FC<{
+const PoolCard: React.FC<{
   pool: Pool;
   poolState: BeanPoolState;
+  isButton?: boolean;
 }> = ({
-  pool,
-  poolState,
-}) => (
-  <Card sx={{ p: 1, pl: 2, pr: 2 }}>
+        pool,
+        poolState,
+        isButton
+      }) => {
+  const cardContent = (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Stack direction="row" gap={2} alignItems="center">
         <img alt="" src={pool.logo} width="20px" />
@@ -34,7 +36,37 @@ const PoolCard : React.FC<{
         </Stack>
       </Stack>
     </Stack>
-  </Card>
-);
+  );
+  return (
+    <>
+      {
+        (isButton) ? (
+          <>
+            <Button
+              variant="outlined"
+              disableRipple
+              sx={{
+                display: 'block',
+                color: '#000000',
+                borderColor: '#c7ddf0',
+                '&:hover': {
+                  borderColor: '#d5e5f2',
+                  backgroundColor: "transparent"
+                }
+              }}>
+              {cardContent}
+            </Button>
+          </>
+        ) : (
+          <>
+            <Card sx={{ p: 1, pl: 2, pr: 2 }}>
+              {cardContent}
+            </Card>
+          </>
+        )
+      }
+    </>
+  );
+};
 
 export default PoolCard;
