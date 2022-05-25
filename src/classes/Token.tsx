@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { Beanstalk, ERC20 } from 'constants/generated';
+import { AddressMap } from 'constants/v2/addresses';
 import { beanstalkContract, erc20TokenContract, provider } from 'util/index';
 import { bigNumberResult } from 'util/LedgerUtilities2';
 
@@ -54,8 +55,8 @@ export default abstract class Token {
    * @param name of the currency
    */
   constructor(
-    address: string,
     chainId: number,
+    address: AddressMap | string,
     decimals: number,
     metadata: {
       name: string,
@@ -63,8 +64,8 @@ export default abstract class Token {
       logo: string,
     }
   ) {
-    this.address = address;
     this.chainId = chainId;
+    this.address = typeof address === 'string' ? address : address[chainId];
     this.decimals = decimals;
     this.symbol = metadata.symbol;
     this.name = metadata.name;

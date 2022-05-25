@@ -7,7 +7,7 @@ import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
 import { BEAN, ERC20Tokens, SEEDS, STALK } from 'constants/v2/tokens';
 import BigNumber from 'bignumber.js';
 import TokenInputField from 'components/v2/Common/Form/MultiTokenInputField';
-import useChainConstant from 'hooks/useConstant';
+import useChainConstant from 'hooks/useChainConstant';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useTokenMap from 'hooks/useTokenMap';
 import { AppState } from 'state';

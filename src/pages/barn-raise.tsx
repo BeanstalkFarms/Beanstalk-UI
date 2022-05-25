@@ -8,7 +8,7 @@ import { zeroBN } from 'constants/index';
 import { ERC20Token, NativeToken } from '../classes/Token';
 import { BEAN, ERC20Tokens } from '../constants/v2/tokens';
 import useTokenMap from '../hooks/useTokenMap';
-import useChainConstant from '../hooks/useConstant';
+import useChainConstant from '../hooks/useChainConstant';
 import { AppState } from '../state';
 import HorizontalScroll from '../components/v2/BarnRaise/HorizontalScroll';
 import BarnraisePurchaseForm from '../components/v2/BarnRaise/BarnraisePurchaseForm';

@@ -4,7 +4,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Token } from 'classes';
 import { BEAN, ETH } from 'constants/v2/tokens';
-import useChainConstant from 'hooks/useConstant';
+import useChainConstant from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
