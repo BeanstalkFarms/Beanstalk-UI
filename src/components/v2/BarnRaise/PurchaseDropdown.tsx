@@ -18,8 +18,8 @@ const PurchaseDropdown: React.FC<AccordionProps> =
   ) => (
     <Stack direction="column" gap={2} justifyContent="center">
       {/* PURCHASE INFO */}
-      <Stack alignItems="center" gap={2}>
-        <img alt="" src={chevronDownIcon} width="25px" />
+      <Stack alignItems="center" gap={1}>
+        <img alt="" src={chevronDownIcon} width="20px" />
         <Stack alignItems="center" gap={0.7} sx={{ pt: 1 }}>
           <img alt="" src={fertilizerOpenedIcon} width="250px" />
           <Typography sx={{ fontSize: '18px' }}>x 10,000</Typography>

@@ -100,6 +100,7 @@ const BarnraisePurchaseForm: React.FC<BarnraiseFormProps> =
               </Stack>
               {/* Output */}
               {amount.gt(0) ? (
+                // DISPLAY PURCHASE INFO
                 <PurchaseDropdown amount={amount} />
               ) : null}
               <Button disabled type="submit" size="large" fullWidth>
