@@ -66,6 +66,7 @@ const TokenPage: React.FC<{}> = () => {
           <PoolCard
             pool={pool}
             poolState={poolState}
+            // isButton={true}
           />
         )}
         <Actions

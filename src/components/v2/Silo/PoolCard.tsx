@@ -17,21 +17,69 @@ const PoolCard: React.FC<{
       }) => {
   const cardContent = (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
-      <Stack direction="row" gap={2} alignItems="center">
+      <Stack
+        direction="row"
+        gap={(isButton) ? 4 : 2}
+        alignItems="center"
+      >
         <img alt="" src={pool.logo} width="20px" />
-        <Typography sx={{ fontSize: '16px', fontWeight: 700 }}>${displayBN(poolState.price)}</Typography>
+        <Typography
+          sx={{
+            fontSize: (isButton) ? '19px' : '16px',
+            fontWeight: (isButton) ? 500 : 700
+          }}
+        >
+          ${displayBN(poolState.price)}
+        </Typography>
       </Stack>
       <Stack>
         <Stack direction="row" gap={0.5}>
-          <Typography sx={{ opacity: 0.7 }}>liquidity:</Typography>
-          <Typography>${displayBN(poolState.liquidity)}</Typography>
+          <Typography
+            sx={{
+              opacity: 0.7,
+              fontSize: (isButton) ? '13px' : null
+            }}>
+            liquidity:
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: (isButton) ? '13px' : null
+            }}
+          >
+            ${displayBN(poolState.liquidity)}
+          </Typography>
         </Stack>
         <Stack direction="row" gap={0.5}>
-          <Typography sx={{ opacity: 0.7 }}>delta:</Typography>
+          <Typography
+            sx={{
+              opacity: 0.7,
+              fontSize: (isButton) ? '13px' : null
+            }}>
+            delta:
+          </Typography>
           <Stack direction="row" gap={0.2}>
-            <Typography>{poolState.deltaB.gte(0) ? '+' : '-'}</Typography>
-            <img alt="" src={BEAN[SupportedChainId.MAINNET].logo} width="10px" />
-            <Typography>{displayBN(poolState.deltaB.abs(), true)}</Typography>
+            <Typography
+              sx={{
+                fontSize: (isButton) ? '13px' : null
+              }}
+            >
+              {poolState.deltaB.gte(0) ? '+' : '-'}
+            </Typography>
+            <Stack direction="row">
+              <img
+                alt=""
+                src={BEAN[SupportedChainId.MAINNET].logo}
+                width={(isButton) ? '8px' : '10px'}
+              />
+              <Typography
+                sx={{
+                  fontSize: (isButton) ? '13px' : null
+                }}
+              >
+                {displayBN(poolState.deltaB.abs(), true)}
+              </Typography>
+            </Stack>
+
           </Stack>
         </Stack>
       </Stack>
@@ -51,7 +99,7 @@ const PoolCard: React.FC<{
                 borderColor: '#c7ddf0',
                 '&:hover': {
                   borderColor: '#d5e5f2',
-                  backgroundColor: "transparent"
+                  backgroundColor: 'transparent'
                 }
               }}>
               {cardContent}
