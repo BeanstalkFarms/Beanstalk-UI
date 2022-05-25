@@ -2,14 +2,17 @@ import React from 'react';
 import { Card, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import fertilizerClosedIcon from 'img/fertilizer-closed.svg';
-import { AppState } from 'state';
 import { displayFullBN } from '../../../util';
+// import { AppState } from 'state';
 
 const RemainingFertilizer: React.FC<{
   remaining: BigNumber;
   humidity: BigNumber;
+  nextDecreaseAmount: BigNumber;
+  nextDecreaseTimeString: string;
   // season: AppState['_beanstalk']['sun']['season'];
-  sunrise: AppState['_beanstalk']['sun']['sunrise'];
+  // nextDecreaseDuration: AppState['_beanstalk']['sun']['sunrise']['remaining'];
+  // nextSunrise: AppState['_beanstalk']['sun']['sunrise']['next'];
 }> = (props) => (
   <Card sx={{ p: 2 }}>
     <Stack gap={1}>
@@ -35,7 +38,9 @@ const RemainingFertilizer: React.FC<{
                   {displayFullBN(props.humidity)}%
                 </Typography>
                 <Typography sx={{ color: '#c35f42' }}>
-                  {displayFullBN(new BigNumber(-250))}% in {props.sunrise.remaining.toISO()}
+                  {props.nextDecreaseAmount.eq(0)
+                    ? null 
+                    : displayFullBN(props.nextDecreaseAmount)}% {props.nextDecreaseTimeString}
                 </Typography>
               </Stack>
             </Stack>
