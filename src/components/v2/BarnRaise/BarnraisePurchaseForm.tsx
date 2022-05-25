@@ -1,9 +1,7 @@
 import React, { useCallback } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, Stack, Typography } from '@mui/material';
+import { Button, Card, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import gearIcon from 'img/gear.svg';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useAccount } from 'wagmi';
 import TokenInputField from '../Common/Form/TokenInputField';
 import { Token } from '../../../classes';
 import { ERC20Token, NativeToken } from '../../../classes/Token';
@@ -19,20 +17,21 @@ export interface BarnraiseFormProps {
   handleSetFrom: (val?: any) => void; // TODO: Add type
   erc20TokenList: TokensByAddress<Token> | never[];
   balances: BalanceState;
+  account: any;
 }
 
 const BarnraisePurchaseForm: React.FC<BarnraiseFormProps> =
   ({
-     amount,
-     handleSetAmount,
-     from,
-     handleSetFrom,
-     erc20TokenList,
-     balances
+    amount,
+    handleSetAmount,
+    from,
+    handleSetFrom,
+    erc20TokenList,
+    balances,
+    account
    }:
      BarnraiseFormProps
   ) => {
-    const { data: account } = useAccount();
     const handleMax = useCallback(() => {
       handleSetAmount(balances[from.address]);
     }, [handleSetAmount, balances, from]);
@@ -40,9 +39,6 @@ const BarnraisePurchaseForm: React.FC<BarnraiseFormProps> =
     // const handleReset = useCallback(() => {
     //   handleSetAmount(new BigNumber(-1));
     // }, [handleSetAmount]);
-
-    console.log('LOGGED IN');
-    console.log(account);
 
     return (
       <Card sx={{ p: 2 }}>

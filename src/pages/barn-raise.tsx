@@ -4,6 +4,7 @@ import PageHeader from 'components/v2/Common/PageHeader';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { SupportedChainId } from 'constants/chains';
+import { useAccount } from 'wagmi';
 import { zeroBN } from '../constants';
 import { ERC20Token, NativeToken } from '../classes/Token';
 import { BEAN, ERC20Tokens } from '../constants/v2/tokens';
@@ -62,6 +63,7 @@ const BarnRaisePage: React.FC = () => {
   const erc20TokenList = useTokenList(ERC20Tokens); // TODO: update tokens
   const bean = useChainConstant(BEAN);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
+  const { data: account } = useAccount();
 
   // Form
   const [from, setFrom] = useState<NativeToken | ERC20Token>(bean);
@@ -93,6 +95,7 @@ const BarnRaisePage: React.FC = () => {
           handleSetFrom={handleSetFrom}
           erc20TokenList={erc20TokenList}
           balances={balances}
+          account={account}
         />
         <HorizontalScroll items={items} />
       </Stack>
