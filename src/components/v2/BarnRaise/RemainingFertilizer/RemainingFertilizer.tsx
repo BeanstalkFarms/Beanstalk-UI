@@ -24,7 +24,12 @@ const RemainingFertilizer: React.FC<{
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
         <Typography variant="h6">Remaining Fertilizer</Typography>
-        <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ xs: 'center', md: 'unset' }} justifyContent={{ md: 'left' }} gap={2}>
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          alignItems={{ xs: 'center', md: 'unset' }}
+          justifyContent={{ md: 'left' }}
+          gap={2}
+        >
           {/* left column */}
           <Stack
             sx={{
