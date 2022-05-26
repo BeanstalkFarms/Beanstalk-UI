@@ -1,7 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { Beanstalk, ERC20 } from 'constants/generated';
-import { beanstalkContract, erc20TokenContract, provider } from 'util/index';
+import { AddressMap } from 'constants/v2/addresses';
+import { beanstalkContract, erc20TokenContract } from 'util/index';
 import { bigNumberResult } from 'util/LedgerUtilities2';
+import client from 'util/wagmi';
 
 /**
  * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
@@ -48,27 +49,41 @@ export default abstract class Token {
   public readonly contract?: any;
 
   /**
+   * 
+   */
+  public readonly rewards?: { stalk: number; seeds: number };
+
+  public readonly displayDecimals: number;
+
+  /**
    * @param chainId the chain ID on which this currency resides
    * @param decimals decimals of the currency
    * @param symbol symbol of the currency
    * @param name of the currency
    */
   constructor(
-    address: string,
     chainId: number,
+    address: AddressMap | string,
     decimals: number,
     metadata: {
       name: string,
       symbol: string,
       logo: string,
+      displayDecimals?: number,
+    },
+    rewards?: {
+      stalk: number;
+      seeds: number;
     }
   ) {
-    this.address = address;
     this.chainId = chainId;
+    this.address = typeof address === 'string' ? address : address[chainId];
     this.decimals = decimals;
     this.symbol = metadata.symbol;
     this.name = metadata.name;
     this.logo = metadata.logo;
+    this.displayDecimals = metadata.displayDecimals || 2;
+    this.rewards = rewards;
   }
 
   /**
@@ -83,7 +98,7 @@ export default abstract class Token {
     return this.name;
   }
 
-  abstract getContract() : ERC20 | Beanstalk | undefined;
+  abstract getContract() : any;
 
   abstract getBalance(account: string) : Promise<BigNumber | undefined>;
   
@@ -93,17 +108,20 @@ export default abstract class Token {
 export class NativeToken extends Token {
   // eslint-disable-next-line class-methods-use-this
   public getContract() {
+    return client.provider;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public getBalance(account: string) : Promise<BigNumber> {
+    return this.getContract().getBalance(account).then(
+      // No need to convert decimals because ethers does this already
+      (result) => bigNumberResult(result)
+    );
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public getTotalSupply() {
     return undefined;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  public getBalance(account: string) {
-    return provider.getBalance(account).then(bigNumberResult);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  public getTotalSupply(): Promise<BigNumber> {
-    return Promise.resolve(new BigNumber(-1));
   }
 }
 

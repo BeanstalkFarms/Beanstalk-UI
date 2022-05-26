@@ -84,3 +84,9 @@ export function useBeanstalkFertilizerContract() {
     true,
   );
 }
+
+// export function useCurveContract() {
+//   return useContract<Curve>(
+
+//   )
+// }

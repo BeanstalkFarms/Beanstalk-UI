@@ -3,29 +3,6 @@ import {
   experimental_sx as sx,
 } from '@mui/material/styles';
 
-declare module '@mui/material/styles' {
-  // interface Theme {
-  //   status: {
-  //     danger: React.CSSProperties['color'];
-  //   };
-  // }
-
-  interface Palette {
-    light: Palette['primary'];
-    dark: Palette['primary'];
-  }
-  interface PaletteOptions {
-    light: PaletteOptions['primary'];
-    dark: PaletteOptions['primary'];
-  }
-
-  // interface ThemeOptions {
-  //   status: {
-  //     danger: React.CSSProperties['color'];
-  //   };
-  // }
-}
-
 /**
  * Beanstalk's primary color pallete.
  * 
@@ -33,10 +10,14 @@ declare module '@mui/material/styles' {
  * See `constants/colors.ts`.
  */
 export const BeanstalkPalette = {
+  // Greens
   logoGreen: '#46B955',
+  lightGreen: '#E1F8E6',
+  // Blues
   lightBlue: '#C1DEF2',
   lighterBlue: '#daf2ff', // see `bodyBackground`
   darkBlue: '#1F78B4',
+  // Other
   white: '#fff',
   black: '#333',
   lightishGrey: '#9E9E9E'
@@ -71,6 +52,7 @@ const muiTheme = createTheme({
   palette: {
     primary: {
       main: BeanstalkPalette.logoGreen,
+      light: BeanstalkPalette.lightGreen,
       contrastText: 'white',
     },
     secondary: {
@@ -168,6 +150,13 @@ const muiTheme = createTheme({
           fontWeight: 'bold',
         }),
       },
+      // variants: [
+      //   {
+      //     props: {
+      //       color: 'light',
+      //     }
+      //   }
+      // ]
     },
     /**
      * FIXME:
@@ -197,6 +186,21 @@ const muiTheme = createTheme({
         }
       ]
     },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        // FIXME: trying to disable the increase
+        // in margin on AccordionSummary during expansion.
+        // None of these work...
+        root: {
+          minHeight: '0 !important',
+          my: 0
+        },
+        expanded: sx({
+          minHeight: '0 !important',
+          m: [0, 0]
+        })
+      }
+    },
     /**
      * https://mui.com/material-ui/react-text-field/
      */
@@ -206,8 +210,8 @@ const muiTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          // borderWidth: '3px',
-          // borderImageWidth: 0.5,
+          // borderWidth: '2px',
+          // borderImageWidth: 2,
         },
       }
     },

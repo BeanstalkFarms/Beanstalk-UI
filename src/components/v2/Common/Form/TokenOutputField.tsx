@@ -24,17 +24,17 @@ const TokenOutputField : React.FC<{
     >
     <Box>
       <Typography sx={{ fontSize: 24, fontWeight: 'normal' }}>
-        +&nbsp;{displayFullBN(value)}
+        +&nbsp;{displayFullBN(value, 2)}
       </Typography>
     </Box>
     <Stack direction="row" alignItems="center" gap={0.5}>
       {token.logo && (
-      <img
-        src={token.logo}
-        alt={token.name}
-        style={{ height: 18 }}
-          />
-        )}
+        <img
+          src={token.logo}
+          alt={token.name}
+          style={{ height: 18 }}
+        />
+      )}
       <Typography>
         {token.name}
       </Typography>

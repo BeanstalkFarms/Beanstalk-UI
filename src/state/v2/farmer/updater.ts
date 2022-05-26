@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { BEAN, BEAN_ETH_UNISWAP_V2_LP } from 'constants/v2/tokens';
+import { BEAN, BEAN_ETH_UNIV2_LP } from 'constants/v2/tokens';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -47,7 +47,7 @@ const FarmerUpdater = () => {
             stalk: new BigNumber(0),
           })),
         },
-        [BEAN_ETH_UNISWAP_V2_LP[activeChain.id].address]: {
+        [BEAN_ETH_UNIV2_LP[activeChain.id].address]: {
           deposited: results.lpDepositsBalance,
           deposits: Object.keys(results.userLPDeposits).map((s) => ({
             amount: results.userLPDeposits[s],

@@ -4,7 +4,7 @@ import { SupportedChainId } from 'constants/chains';
 import { useMemo } from 'react';
 import Token from 'classes/Token';
 
-export default function useTokenList(list: TokenOrTokenMap[]) {
+export default function useTokenMap(list: TokenOrTokenMap[]) {
   const { activeChain } = useNetwork();
   return useMemo(() => {
     if (!activeChain?.id) return {};

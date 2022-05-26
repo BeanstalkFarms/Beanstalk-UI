@@ -5,4 +5,3 @@ export * from './tokens';
 export * from './values';
 export * from './colors';
 export * from './contracts';
-export * from './tokensv2';
