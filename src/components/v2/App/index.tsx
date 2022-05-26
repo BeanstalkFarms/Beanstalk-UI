@@ -10,6 +10,7 @@ import SiloTokenPage from 'pages/silo/token';
 import FieldPage from 'pages/field';
 import ForecastPage from 'pages/forecast';
 import BarnRaisePage from 'pages/barn-raise';
+import TransactionHistoryPage from 'pages/history';
 
 import pageBackground from 'img/bg-mainnet.png';
 import NavBar from 'components/v2/Nav/NavBar';
@@ -53,6 +54,7 @@ export default function App() {
         <Route path="/silo/:address" element={<SiloTokenPage />} />
         <Route path="/field" element={<FieldPage />} />
         <Route path="/barn-raise" element={<BarnRaisePage />} />
+        <Route path="/history" element={<TransactionHistoryPage />} />
         <Route path="/balances" element={<BalancesPage />} />
       </Routes>
     </div>
