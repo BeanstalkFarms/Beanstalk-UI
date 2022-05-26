@@ -32,8 +32,8 @@ const BalancesPage: React.FC = () => {
                   <Typography variant="h2">$109,364</Typography>
                 </Stack>
                 <Grid container direction="row" alignItems="center">
-                  <Grid item xs={12} md={4}>
-                    <Stack sx={{pl: 1, pr: 1, pt: 5, pb: 5}}>
+                  <Grid item xs={12} md={3.5}>
+                    <Stack gap={0.5} sx={{pl: 1, pr: 1, pt: 5, pb: 5}}>
                       <Stack direction="row" justifyContent="space-between">
                         <Typography sx={{opacity: 0.6}}>Deposited Tokens</Typography>
                         <Typography>$100,243</Typography>
@@ -56,12 +56,12 @@ const BalancesPage: React.FC = () => {
                       </Stack>
                     </Stack>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={5}>
                     <Box display="flex" justifyContent="center">
                       <Typography>GRAPH</Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={3.5}>
                     <Stack alignItems="center" justifyContent="center" sx={{p: 3, pt: 5, pb: 5}}>
                       <Stack direction="row">
                         <Typography sx={{opacity: 0.6}}>Hover a state to see breakdown</Typography>
@@ -73,11 +73,11 @@ const BalancesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Grid container direction="row" spacing={1}>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={6} lg={3}>
                   <Card sx={{p: 2, height: "100%"}}>
                     <Stack gap={2}>
                       <Stack>
-                        <Typography>My Total Balance</Typography>
+                        <Typography>My Stalk</Typography>
                         <Stack direction="row">
                           <Typography variant="h2">X</Typography>
                           <Typography variant="h2">109,364</Typography>
@@ -88,22 +88,22 @@ const BalancesPage: React.FC = () => {
                       </Box>
                       <Stack gap={0.7}>
                         <Stack direction="row" justifyContent="space-between">
-                          <Typography sx={{opacity: 0.6}}>Circulating Tokens</Typography>
+                          <Typography sx={{opacity: 0.6}}>Active Stalk</Typography>
                           <Typography>$1,123.00</Typography>
                         </Stack>
                         <Stack direction="row" justifyContent="space-between">
-                          <Typography sx={{opacity: 0.6}}>Circulating Tokens</Typography>
+                          <Typography sx={{opacity: 0.6}}>Grown Stalk</Typography>
                           <Typography>$1,123.00</Typography>
                         </Stack>
                       </Stack>
                     </Stack>
                   </Card>
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={6} lg={3}>
                   <Card sx={{p: 2, height: "100%"}}>
                     <Stack gap={2}>
                       <Stack>
-                        <Typography>My Total Balance</Typography>
+                        <Typography>My Seeds</Typography>
                         <Stack direction="row">
                           <Typography variant="h2">X</Typography>
                           <Typography variant="h2">109,364</Typography>
@@ -114,22 +114,22 @@ const BalancesPage: React.FC = () => {
                       </Box>
                       <Stack gap={0.7}>
                         <Stack direction="row" justifyContent="space-between">
-                          <Typography sx={{opacity: 0.6}}>Circulating Tokens</Typography>
+                          <Typography sx={{opacity: 0.6}}>Active Seed</Typography>
                           <Typography>$1,123.00</Typography>
                         </Stack>
                         <Stack direction="row" justifyContent="space-between">
-                          <Typography sx={{opacity: 0.6}}>Circulating Tokens</Typography>
+                          <Typography sx={{opacity: 0.6}}>Earned Seed</Typography>
                           <Typography>$1,123.00</Typography>
                         </Stack>
                       </Stack>
                     </Stack>
                   </Card>
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={6} lg={3}>
                   <Card sx={{p: 2, height: "100%"}}>
-                    <Stack gap={2} justifyContent="space-between">
+                    <Stack gap={2} justifyContent="space-between" height="100%">
                       <Stack>
-                        <Typography>My Total Balance</Typography>
+                        <Typography>My Plots</Typography>
                         <Stack direction="row">
                           <Typography variant="h2">X</Typography>
                           <Typography variant="h2">109,364</Typography>
@@ -152,13 +152,29 @@ const BalancesPage: React.FC = () => {
                     </Stack>
                   </Card>
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={6} lg={3}>
                   <Card sx={{p: 2, height: "100%"}}>
-                    <Stack>
-                      <Typography>My Total Balance</Typography>
-                      <Stack direction="row">
-                        <Typography variant="h2">X</Typography>
-                        <Typography variant="h2">109,364</Typography>
+                    <Stack gap={2} justifyContent="space-between" height="100%">
+                      <Stack>
+                        <Typography>My Fertilizer</Typography>
+                        <Stack direction="row">
+                          <Typography variant="h2">X</Typography>
+                          <Typography variant="h2">109,364</Typography>
+                        </Stack>
+                      </Stack>
+                      <Box display="flex" justifyContent="center">
+                        <Typography>GRAPH</Typography>
+                      </Box>
+                      <Stack gap={0.7}>
+                        <Link
+                          underline="none"
+                          rel="noreferrer"
+                          sx={{cursor: "pointer"}}
+                        >
+                          <Typography variant="body1" sx={{textAlign: 'center'}}>
+                            View All Fertilizer
+                          </Typography>
+                        </Link>
                       </Stack>
                     </Stack>
                   </Card>
