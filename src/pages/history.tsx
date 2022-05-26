@@ -7,46 +7,22 @@ import PageHeader from "../components/v2/Common/PageHeader";
 import {Box, Button, Card, Divider, Grid, Stack, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import TransactionRow from "../components/v2/History/TransactionRow";
-
-const buttonStyle = {
-  cursor: "pointer",
-  border: 1,
-  pl: 1,
-  pr: 1,
-  pt: 0.5,
-  pb: 0.5,
-  borderRadius: "25px"
-}
+import ButtonFilters from "../components/v2/History/ButtonFilters";
+import TransactionGrid from "../components/v2/History/TransactionGrid";
 
 const TransactionHistoryPage: React.FC = () => {
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="lg">
       {/*Events ({events.length})*/}
       <Stack gap={2}>
         <Card sx={{border: "none", p: 2}}>
           <Stack gap={0.5}>
-            <Stack>
+            <Stack gap={1}>
               <Typography variant="h2">Transaction History</Typography>
-              <Stack direction="row" gap={1}>
-                <Box sx={{...buttonStyle}}>
-                  <Typography>Silo</Typography>
-                </Box>
-                <Box sx={{...buttonStyle}}>
-                  <Typography>Field</Typography>
-                </Box>
-                <Box sx={{...buttonStyle}}>
-                  <Typography>Other</Typography>
-                </Box>
-              </Stack>
+              <ButtonFilters title={"test"} />
             </Stack>
-            <Grid container>
-              <TransactionRow title={"test"} />
-              <TransactionRow title={"test"} />
-              <TransactionRow title={"test"} />
-              <TransactionRow title={"test"} />
-              <TransactionRow title={"test"} />
-            </Grid>
+            <TransactionGrid title={"test"} />
             <Box display="flex" justifyContent="right">
               <Typography>PAGE TAB</Typography>
             </Box>

@@ -11,7 +11,6 @@ export interface TransactionRowProps {
 
 const TransactionRow: React.FC<TransactionRowProps> = ({title}) => {
   const classes = useStyles();
-
   return (
     <Grid item width="100%">
       <Stack gap={0.2} pt={1} pb={1}>
