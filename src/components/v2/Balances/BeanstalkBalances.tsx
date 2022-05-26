@@ -17,6 +17,7 @@ const BeanstalkBalances: React.FC<BeanstalkBalancesProps> = ({title}) => {
       fertilizerCardTitle={"Total Available Fertilizer"}
       // switches
       hideRewardsCard
+      hidePodCardButton
     />
   );
 };

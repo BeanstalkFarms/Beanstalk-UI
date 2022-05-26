@@ -14,12 +14,15 @@ const useStyles = makeStyles(() => ({
 }))
 
 export interface BalanceGridProps {
+  // titles
   totalBalanceTitle: string;
-  hideRewardsCard?: boolean;
   stalkCardTitle: string;
   seedCardTitle: string;
   podCardTitle: string;
   fertilizerCardTitle: string;
+  // switches
+  hideRewardsCard?: boolean;
+  hidePodCardButton: boolean;
 }
 
 const BalanceGrid: React.FC<BalanceGridProps> =
@@ -29,7 +32,8 @@ const BalanceGrid: React.FC<BalanceGridProps> =
     stalkCardTitle,
     seedCardTitle,
     podCardTitle,
-    fertilizerCardTitle
+    fertilizerCardTitle,
+    hidePodCardButton
    }) => {
     const classes = useStyles();
 
@@ -47,7 +51,7 @@ const BalanceGrid: React.FC<BalanceGridProps> =
               <SeedCard title={seedCardTitle} />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-              <PodCard title={podCardTitle} />
+              <PodCard title={podCardTitle} hideButton={hidePodCardButton} />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <FertilizerCard title={fertilizerCardTitle} />
