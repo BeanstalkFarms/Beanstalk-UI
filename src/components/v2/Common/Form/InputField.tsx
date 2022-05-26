@@ -7,22 +7,23 @@ import {
 } from '@mui/material';
 import { Field, FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
+import { displayFullBN } from 'util/index';
 
 const InputField : React.FC<{ 
   name: string;
-  balance?: number;
+  balance: BigNumber | undefined;
   quote: JSX.Element;
 } & TextFieldProps> = ({
-  // --
+  // -- <Field /> props
   name,
+  // -- Token-related props
   balance,
   quote,
-  // -- TextFieldProps
-  sx,
-  InputProps,
+  // -- <TextField /> props
   placeholder,
   disabled,
-  // -- Other  
+  sx,
+  InputProps,
   ...props
 }) => {
   const inputProps = useMemo(() => ({
@@ -41,7 +42,10 @@ const InputField : React.FC<{
           <TextField
             type="number"
             placeholder={placeholder || '0'}
-            disabled={disabled || !balance || balance === 0}
+            // Disable when:
+            // - explicitly disabled
+            // - balance is undefined or zero
+            disabled={disabled || !balance || balance.eq(0)}
             {...props}
             {...field}
             onWheel={(e) => {
@@ -50,10 +54,12 @@ const InputField : React.FC<{
             }}
             onChange={(e) => {
               console.debug(`[InputField] ${name} onChange`);
+              // The field's value cannot be greater than 
+              // the user's available balance.
               const val = e.target.value ? new BigNumber(e.target.value) : undefined;
               form.setFieldValue(
                 name,
-                balance && val !== undefined && val > balance ? balance : val,
+                balance && val && val.gt(balance) ? balance : val,
               );
             }}
             InputProps={inputProps}
@@ -70,7 +76,7 @@ const InputField : React.FC<{
               {quote}
             </Stack>
             <Typography sx={{ fontSize: 13.5 }}>
-              Balance: {balance ? balance.toLocaleString() : '0'}
+              Balance: {balance ? displayFullBN(balance, 2) : '0'}
             </Typography>
             <Typography
               variant="body1"

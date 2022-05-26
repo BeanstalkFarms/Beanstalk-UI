@@ -177,6 +177,21 @@ const muiTheme = createTheme({
         }
       ]
     },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        // FIXME: trying to disable the increase
+        // in margin on AccordionSummary during expansion.
+        // None of these work...
+        root: {
+          minHeight: '0 !important',
+          my: 0
+        },
+        expanded: sx({
+          minHeight: '0 !important',
+          m: [0, 0]
+        })
+      }
+    },
     /**
      * https://mui.com/material-ui/react-text-field/
      */

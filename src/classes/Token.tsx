@@ -53,6 +53,8 @@ export default abstract class Token {
    */
   public readonly rewards?: { stalk: number; seeds: number };
 
+  public readonly displayDecimals: number;
+
   /**
    * @param chainId the chain ID on which this currency resides
    * @param decimals decimals of the currency
@@ -67,6 +69,7 @@ export default abstract class Token {
       name: string,
       symbol: string,
       logo: string,
+      displayDecimals?: number,
     },
     rewards?: {
       stalk: number;
@@ -79,6 +82,7 @@ export default abstract class Token {
     this.symbol = metadata.symbol;
     this.name = metadata.name;
     this.logo = metadata.logo;
+    this.displayDecimals = metadata.displayDecimals || 2;
     this.rewards = rewards;
   }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AccordionWrapper from '../Common/AccordionWrapper';
+import AccordionWrapper from '../Common/Accordion/AccordionWrapper';
 
 const NextSeason : React.FC = () => (
   <AccordionWrapper>
