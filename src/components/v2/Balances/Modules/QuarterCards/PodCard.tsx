@@ -2,6 +2,8 @@
 import React from 'react';
 import {Box, Card, Grid, Link, Stack, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
+import podIcon from "../../../../../img/pod-logo.svg";
+import seedIcon from "../../../../../img/seed-logo.svg";
 
 const useStyles = makeStyles(() => ({}))
 
@@ -16,9 +18,9 @@ const PodCard: React.FC<PodCardProps> = ({title}) => {
     <Card sx={{p: 2, height: "100%"}}>
       <Stack gap={2} justifyContent="space-between" height="100%">
         <Stack>
-          <Typography>My Plots</Typography>
-          <Stack direction="row">
-            <Typography variant="h2">X</Typography>
+          <Typography>{title}</Typography>
+          <Stack direction="row" alignItems="center">
+            <img alt="" src={podIcon} height="25px" />
             <Typography variant="h2">109,364</Typography>
           </Stack>
         </Stack>

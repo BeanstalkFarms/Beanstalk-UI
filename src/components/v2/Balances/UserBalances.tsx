@@ -13,6 +13,7 @@ const UserBalances: React.FC<UserBalancesProps> = ({title}) => {
       totalBalanceTitle={"My Total Balance"}
       stalkCardTitle={"My Stalk"}
       seedCardTitle={"My Seeds"}
+      podCardTitle={"My Pods"}
       fertilizerCardTitle={"My Fertilizer"}
     />
   );

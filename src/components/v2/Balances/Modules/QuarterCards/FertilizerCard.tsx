@@ -2,6 +2,7 @@
 import React from 'react';
 import {Box, Card, Grid, Link, Stack, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
+import fertilizerOpenIcon from "../../../../../img/fertilizer-opened.svg";
 
 const useStyles = makeStyles(() => ({}))
 
@@ -18,12 +19,12 @@ const FertilizerCard: React.FC<FertilizerCardProps> = ({title}) => {
         <Stack>
           <Typography>{title}</Typography>
           <Stack direction="row">
-            <Typography variant="h2">X</Typography>
+            <Typography variant="h2">x</Typography>
             <Typography variant="h2">109,364</Typography>
           </Stack>
         </Stack>
         <Box display="flex" justifyContent="center">
-          <Typography>GRAPH</Typography>
+          <img alt="" src={fertilizerOpenIcon} />
         </Box>
         <Stack gap={0.7}>
           <Link

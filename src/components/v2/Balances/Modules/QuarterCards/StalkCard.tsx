@@ -2,7 +2,7 @@
 import React from 'react';
 import {Box, Card, Grid, Stack, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import splitArrowsIcon from "../../../../../img/split-arrows.svg";
+import stalkIcon from "../../../../../img/stalk-logo.svg";
 
 const useStyles = makeStyles(() => ({
 
@@ -17,11 +17,11 @@ const StalkCard: React.FC<StalkCardProps> = ({title}) => {
 
   return (
     <Card sx={{p: 2, height: "100%"}}>
-      <Stack gap={2}>
+      <Stack gap={2} justifyContent="space-between" height="100%">
         <Stack>
           <Typography>{title}</Typography>
-          <Stack direction="row">
-            <Typography variant="h2">X</Typography>
+          <Stack direction="row" alignItems="center">
+            <img alt="" src={stalkIcon} height="25px" />
             <Typography variant="h2">109,364</Typography>
           </Stack>
         </Stack>
