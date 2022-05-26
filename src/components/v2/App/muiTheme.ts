@@ -111,9 +111,6 @@ const muiTheme = createTheme({
    * 
    */
   components: {
-    /**
-     * 
-     */
     MuiCard: {
       defaultProps: {
         elevation: 0,
@@ -127,9 +124,6 @@ const muiTheme = createTheme({
         })
       }
     },
-    /**
-     * 
-     */
     MuiButton: {
       defaultProps: {
         disableElevation: true,
@@ -141,29 +135,13 @@ const muiTheme = createTheme({
           fontWeight: 'bold',
         }),
       },
-      // variants: [
-      //   {
-      //     props: {
-      //       color: 'light',
-      //     }
-      //   }
-      // ]
     },
-    /**
-     * FIXME:
-     * - Gradient border not working; see AccordionWrapper.tsx
-     */
     MuiAccordion: {
       defaultProps: {
         elevation: 0,
       },
       styleOverrides: {
-        root: sx({
-          background: 'linear-gradient(90deg, rgba(70, 185, 85, 0.2) 0%, rgba(123, 97, 255, 0.2) 36.58%, rgba(31, 120, 180, 0.2) 96.2%)',
-          borderWidth: 1,
-          borderColor: BeanstalkPalette.darkBlue,
-          borderStyle: 'solid',
-        }),
+        root: sx({}),
       },
       variants: [
         {
@@ -192,23 +170,14 @@ const muiTheme = createTheme({
         })
       }
     },
-    /**
-     * https://mui.com/material-ui/react-text-field/
-     */
     MuiTextField: {
       defaultProps: {
         color: 'secondary',
       },
       styleOverrides: {
-        root: {
-          // borderWidth: '2px',
-          // borderImageWidth: 2,
-        },
+        root: {},
       }
     },
-    /**
-     * 
-     */
     MuiTabs: {
       defaultProps: {},
       styleOverrides: {
@@ -220,9 +189,6 @@ const muiTheme = createTheme({
         },
       }
     },
-    /**
-     * 
-     */
     MuiTab: {
       defaultProps: {
         disableRipple: true,
@@ -251,9 +217,7 @@ const muiTheme = createTheme({
     },
     MuiButtonBase: {
       styleOverrides: {
-        root: {
-          // fontWeight: "bold",
-        }
+        root: {}
       }
     },
     MuiButtonGroup: {
