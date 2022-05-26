@@ -24,8 +24,8 @@ const BalancesPage: React.FC = () => {
         />
         <Card sx={{border: "none", pl: 2, pr: 2, pt: 3, pb: 3}}>
           <BalancesToggle balancesTab={balancesTab} handleSetTab={handleSetTab}/>
-          <Grid container direction="column">
-            <Grid item>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
               <Card sx={{p: 2}}>
                 <Stack>
                   <Typography>My Total Balance</Typography>
@@ -71,8 +71,8 @@ const BalancesPage: React.FC = () => {
                 </Grid>
               </Card>
             </Grid>
-            <Grid item>
-              <Grid container direction="row">
+            <Grid item xs={12}>
+              <Grid container direction="row" spacing={1}>
                 <Grid item xs={12} md={3}>
                   <Card sx={{p: 2, height: "100%"}}>
                     <Stack gap={2}>
@@ -165,8 +165,7 @@ const BalancesPage: React.FC = () => {
                 </Grid>
               </Grid>
             </Grid>
-
-            <Grid item>
+            <Grid item xs={12}>
               <Card sx={{ p: 2 }}>
                 <Grid container direction="row">
                   <Grid item xs={12} md={6}>
