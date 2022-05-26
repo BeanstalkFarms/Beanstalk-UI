@@ -25,6 +25,7 @@ import BalancesUpdater from 'state/v2/farmer/balances/updater';
 import { BeanstalkPalette } from './muiTheme';
 
 import './App.css';
+import BalancesPage from '../../../pages/balances';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="/silo/:address" element={<SiloTokenPage />} />
         <Route path="/field" element={<FieldPage />} />
         <Route path="/barn-raise" element={<BarnRaisePage />} />
+        <Route path="/balances" element={<BalancesPage />} />
       </Routes>
     </div>
   );

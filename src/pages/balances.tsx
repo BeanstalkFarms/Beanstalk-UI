@@ -1,11 +1,55 @@
-import React from 'react';
-import Page from 'components/Page';
-import Balances from 'components/Balances';
+/* eslint-disable */
+import React, {useState} from 'react';
+import {Card, Container, Stack, Typography} from '@mui/material';
+import PageHeader from '../components/v2/Common/PageHeader';
+import BalancesToggle from "../components/v2/Balances/BalancesToggle";
 
-export default function BalancesPage() {
+const BalancesPage: React.FC = () => {
+
+  const [balancesTab, setBalancesTab] = useState("user-balance")
+
+  const handleSetTab = (tab: string) => {
+    setBalancesTab(tab)
+  };
+
   return (
-    <Page title="Balances">
-      <Balances />
-    </Page>
-  );
-}
+    <Container maxWidth="lg">
+      <Stack gap={2}>
+        <PageHeader
+          title="Balances"
+          purpose="View Beanstalk balances"
+          description="View all balances"
+        />
+        <Card sx={{border: "none", pl: 2, pr: 2, pt: 3, pb: 3}}>
+          <BalancesToggle balancesTab={balancesTab} handleSetTab={handleSetTab} />
+          <Stack gap={1}>
+            <Card sx={{ p: 2 }}>
+              <Typography>TEST</Typography>
+            </Card>
+            <Stack direction="row" gap={1}>
+              <Card sx={{ p: 2, width: "25%" }}>
+                <Typography>TEST</Typography>
+              </Card>
+              <Card sx={{ p: 2, width: "25%" }}>
+                <Typography>TEST</Typography>
+              </Card>
+              <Card sx={{ p: 2, width: "25%" }}>
+                <Typography>TEST</Typography>
+              </Card>
+              <Card sx={{ p: 2, width: "25%" }}>
+                <Typography>TEST</Typography>
+              </Card>
+            </Stack>
+            <Card sx={{ p: 2 }}>
+              <Typography>TEST</Typography>
+            </Card>
+          </Stack>
+
+
+        </Card>
+      </Stack>
+    </Container>
+  )
+};
+
+export default BalancesPage;

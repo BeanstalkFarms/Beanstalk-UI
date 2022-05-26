@@ -26,6 +26,10 @@ const NAVIGATION_MAP = {
       title: 'Field',
     },
     {
+      path: '/balances',
+      title: 'Balances',
+    },
+    {
       path: '/barn-raise',
       title: 'Barn Raise',
     },
