@@ -8,10 +8,7 @@ import useWhitelist from 'hooks/useWhitelist';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import usePools from 'hooks/usePools';
-import BigNumber from 'bignumber.js';
 import PoolCard from '../../components/v2/Silo/PoolCard';
-import { BEAN_ETH_UNISWAP_V2_POOL_MAINNET } from '../../constants/v2/pools';
-import { BeanPoolState } from '../../state/v2/bean/pools';
 
 const TokenPage: React.FC<{}> = () => {
   const { address } = useParams<{ address: string }>();
