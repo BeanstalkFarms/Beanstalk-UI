@@ -7,7 +7,7 @@ import { SupportedChainId } from 'constants/chains';
 import { useAccount } from 'wagmi';
 import { zeroBN } from '../constants';
 import { ERC20Token, NativeToken } from '../classes/Token';
-import { BEAN, ERC20Tokens } from '../constants/v2/tokens';
+import { BEAN, ERC20_TOKENS } from '../constants/v2/tokens';
 import useTokenMap from '../hooks/useTokenMap';
 import useChainConstant from '../hooks/useChainConstant';
 import { AppState } from '../state';
@@ -77,7 +77,7 @@ const WrappedRemainingFertilizer = () => {
 };
 
 const BarnRaisePage: React.FC = () => {
-  const erc20TokenList = useTokenMap(ERC20Tokens); // TODO: update tokens
+  const erc20TokenList = useTokenMap(ERC20_TOKENS); // TODO: update tokens
   const bean = useChainConstant(BEAN);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [viewAllFertilizer, setViewAllFertilizer] = useState(false);

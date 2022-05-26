@@ -1,5 +1,5 @@
 import { Card, Container, Stack } from '@mui/material';
-import { ERC20Tokens } from 'constants/v2/tokens';
+import { ERC20_TOKENS } from 'constants/v2/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -7,7 +7,7 @@ import { AppState } from 'state';
 
 const ForecastPage : React.FC = () => {
   const farmerSilo = useSelector<AppState, AppState['_farmer']>((state) => state._farmer);
-  const tokens = useTokenMap(ERC20Tokens);
+  const tokens = useTokenMap(ERC20_TOKENS);
 
   return (
     <Container maxWidth="lg">

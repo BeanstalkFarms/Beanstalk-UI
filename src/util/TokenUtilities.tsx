@@ -1,13 +1,14 @@
 import BigNumber from 'bignumber.js';
-import {
-  BEAN,
-  BEANSTALK,
-  CURVE,
-  BEANLUSD,
-  UNI_V2_ETH_BEAN_LP,
-  UNISWAP_V2_ROUTER,
-  USDC,
-} from 'constants/index';
+// import {
+//   BEAN,
+//   BEANSTALK,
+//   CURVE,
+//   BEANLUSD,
+//   UNI_V2_ETH_BEAN_LP,
+//   UNISWAP_V2_ROUTER,
+//   USDC,
+// } from 'constants/index';
+
 import BeanLogo from 'img/bean-logo.svg';
 import ClaimableIcon from 'img/claimable-icon.svg';
 import EthereumLogo from 'img/eth-logo.svg';
@@ -22,11 +23,12 @@ import USDCLogo from 'img/usdc-logo.svg';
 import CRV3Logo from 'img/bean-crv3-logo.svg';
 import BeanlusdLogo from 'img/bean-lusd-logo.svg';
 import BudgetIcon from 'img/treasury-icon.svg';
-import { account, erc20TokenContract } from './index';
-import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
-const MAX_UINT256 =
-  '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+// import { account, erc20TokenContract } from './index';
+// import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
+
+// const MAX_UINT256 =
+//   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
 // ENUMS
 export enum CryptoAsset {
@@ -85,61 +87,61 @@ export type Token =
  * @param onResponse
  * @returns
  */
-export const transferBeans = async (
-  to: string,
-  amount: string,
-  onResponse: TxnCallbacks['onResponse']
-) => handleCallbacks(
-  erc20TokenContract(BEAN).transfer(to, amount),
-  { onResponse }
-);
+// export const transferBeans = async (
+//   to: string,
+//   amount: string,
+//   onResponse: TxnCallbacks['onResponse']
+// ) => handleCallbacks(
+//   erc20TokenContract(BEAN).transfer(to, amount),
+//   { onResponse }
+// );
 
-export const approveToken = async (
-  token: string,
-  address: String,
-  spender: String,
-  amount: String,
-  callback: (number) => void
-) => {
-  erc20TokenContract(token)
-    .approve(spender, amount)
-    .then((response) => {
-      callback(1);
-      response.wait().then(() => {
-        callback(2);
-      });
-    });
-};
+// export const approveToken = async (
+//   token: string,
+//   address: String,
+//   spender: String,
+//   amount: String,
+//   callback: (number) => void
+// ) => {
+//   erc20TokenContract(token)
+//     .approve(spender, amount)
+//     .then((response) => {
+//       callback(1);
+//       response.wait().then(() => {
+//         callback(2);
+//       });
+//     });
+// };
 
-export const approveUniswapBean = async (callback) => {
-  approveToken(BEAN, account, UNISWAP_V2_ROUTER, MAX_UINT256, callback);
-};
+// export const approveUniswapBean = async (callback) => {
+//   approveToken(BEAN, account, UNISWAP_V2_ROUTER, MAX_UINT256, callback);
+// };
 
-export const approveBeanstalkBean = async (callback) => {
-  approveToken(BEAN, account, BEANSTALK, MAX_UINT256, callback);
-};
+// export const approveBeanstalkBean = async (callback) => {
+//   approveToken(BEAN, account, BEANSTALK, MAX_UINT256, callback);
+// };
 
-export const approveBeanstalkLP = async (callback) => {
-  approveToken(
-    UNI_V2_ETH_BEAN_LP,
-    account,
-    BEANSTALK,
-    MAX_UINT256,
-    callback
-  );
-};
+// export const approveBeanstalkLP = async (callback) => {
+//   approveToken(
+//     UNI_V2_ETH_BEAN_LP,
+//     account,
+//     BEANSTALK,
+//     MAX_UINT256,
+//     callback
+//   );
+// };
 
-export const approveBeanstalkUSDC = async (callback) => {
-  approveToken(USDC, account, BEANSTALK, MAX_UINT256, callback);
-};
+// export const approveBeanstalkUSDC = async (callback) => {
+//   approveToken(USDC, account, BEANSTALK, MAX_UINT256, callback);
+// };
 
-export const approveBeanstalkCurve = async (callback) => {
-  approveToken(CURVE, account, BEANSTALK, MAX_UINT256, callback);
-};
+// export const approveBeanstalkCurve = async (callback) => {
+//   approveToken(CURVE, account, BEANSTALK, MAX_UINT256, callback);
+// };
 
-export const approveBeanstalkBeanlusd = async (callback) => {
-  approveToken(BEANLUSD, account, BEANSTALK, MAX_UINT256, callback);
-};
+// export const approveBeanstalkBeanlusd = async (callback) => {
+//   approveToken(BEANLUSD, account, BEANSTALK, MAX_UINT256, callback);
+// };
 
 export function TokenLabel(tokenType: Token): string {
   switch (tokenType) {

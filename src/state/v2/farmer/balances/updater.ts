@@ -1,4 +1,4 @@
-import { ERC20Tokens } from 'constants/v2/tokens';
+import { BALANCE_TOKENS } from 'constants/v2/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -11,7 +11,7 @@ import { clearBalances, updateBalances } from './actions';
 
 export const useFetchBalances = () => {
   const dispatch = useDispatch();
-  const tokens = useTokenMap(ERC20Tokens);
+  const tokens = useTokenMap(BALANCE_TOKENS);
 
   // Handlers
   const fetch = useCallback(async (address: string) => {

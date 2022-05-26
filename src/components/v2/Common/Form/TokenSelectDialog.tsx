@@ -32,7 +32,7 @@ const TokenSelectDialog : React.FC<{
   handleClose: () => void;
   // Selection State
   selected: ({token: Token} & any)[];
-  onSelect: (s: Set<Token>) => void;
+  handleSubmit: (s: Set<Token>) => void;
   // Balance State
   balances: AppState['_farmer']['balances'];
   // Token Configuration
@@ -41,7 +41,7 @@ const TokenSelectDialog : React.FC<{
   open,
   handleClose,
   selected,
-  onSelect,
+  handleSubmit: onSelect,
   balances,
   tokenList
 }) => {

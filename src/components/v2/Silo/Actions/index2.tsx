@@ -4,7 +4,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Token } from 'classes';
 import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
-import { BEAN, ERC20Tokens, SEEDS, STALK } from 'constants/v2/tokens';
+import { BEAN, ERC20_TOKENS, SEEDS, STALK } from 'constants/v2/tokens';
 import BigNumber from 'bignumber.js';
 import TokenInputField from 'components/v2/Common/Form/MultiTokenInputField';
 import useChainConstant from 'hooks/useChainConstant';
@@ -36,7 +36,7 @@ const Deposit : React.FC<{
   to,
   poolState,
 }) => {
-  const erc20TokenList = useTokenMap(ERC20Tokens);
+  const erc20TokenList = useTokenMap(ERC20_TOKENS);
   const bean = useChainConstant(BEAN);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [from, setFrom] = useState<NativeToken | ERC20Token>(bean);

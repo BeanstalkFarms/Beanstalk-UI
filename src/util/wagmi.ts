@@ -1,9 +1,9 @@
-import { SupportedChainId } from 'constants/chains';
-import { ALCHEMY_API_KEYS } from 'constants/rpc/alchemy';
 import { ethers } from 'ethers';
 import { createWagmiClient } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import { SupportedChainId } from 'constants/chains';
+import { ALCHEMY_API_KEYS } from 'constants/rpc/alchemy';
 
 const client = createWagmiClient({
   provider: (config) => (

@@ -2,30 +2,22 @@ import ethLogoUrl from 'img/eth-logo.svg';
 import beanLogoUrl from 'img/bean-logo.svg';
 import beanEthLogoUrl from 'img/bean-eth-logo.svg';
 import beanCrv3LogoUrl from 'img/bean-crv3-logo.svg';
-import crv3 from 'img/crv3-logo.svg';
 import stalkLogo from 'img/stalk-logo.svg';
 import seedLogo from 'img/seed-logo.svg';
-// import usdcLogoUrl from 'img/usdc-logo.svg';
-// import daiLogoUrl from 'img/dai-logo.svg';
-// import usdtLogoUrl from 'img/usdt-logo.svg';
-// import crv3LogoUrl from 'img/crv3-logo.svg';
 
-import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
+import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from '../chains';
-import { ChainConstant } from '.';
+import { ChainConstant, TokenMap } from '.';
 import { BEAN_CRV3_ADDRESSES, CRV3_ADDRESSES } from './addresses';
-
-export type TokenMap<T = Token> = ChainConstant<T>;
-export type TokenOrTokenMap<T = Token> = T | TokenMap<T>;
-export type TokensByAddress<T = Token> = { [address: string] : T };
 
 // -- Native Tokens
 
+export const ETH_DECIMALS = 18;
 export const ETH = {
   [SupportedChainId.MAINNET]: new NativeToken(
     SupportedChainId.MAINNET,
-    '',
-    18,
+    'ETH',
+    ETH_DECIMALS,
     {
       name: 'Ether',
       symbol: 'ETH',
@@ -34,8 +26,8 @@ export const ETH = {
   ),
   [SupportedChainId.ROPSTEN]: new NativeToken(
     SupportedChainId.ROPSTEN,
-    '',
-    18,
+    'ETH',
+    ETH_DECIMALS,
     {
       name: 'Ropsten Ether',
       symbol: 'ropETH',
@@ -102,6 +94,10 @@ export const BEAN = {
       name: 'Bean',
       symbol: 'BEAN',
       logo: beanLogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 2,
     }
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
@@ -112,6 +108,10 @@ export const BEAN = {
       name: 'Bean',
       symbol: 'BEAN',
       logo: beanLogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 2,
     }
   ),
 };
@@ -125,6 +125,10 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
       name: 'BEAN:ETH Uniswap V2 LP',
       symbol: 'BEAN:ETH',
       logo: beanEthLogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 2,
     }
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
@@ -135,6 +139,10 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
       name: 'BEAN:ETH Uniswap V2 LP',
       symbol: 'BEAN:ETH',
       logo: beanEthLogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 2,
     }
   ),
 };
@@ -187,13 +195,18 @@ export const BEAN_CRV3_LP = {
 
 // -- Token Lists
 
-export const ERC20Tokens : TokenMap[] = [
+export const ERC20_TOKENS : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
   WETH,
 ];
 
-export const SiloWhitelistTokens : TokenMap[] = [
+export const BALANCE_TOKENS : TokenMap[] = [
+  ETH,
+  ...ERC20_TOKENS,
+];
+
+export const SILO_TOKENS : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
 ];

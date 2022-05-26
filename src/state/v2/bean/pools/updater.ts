@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { useBeanstalkPriceContract } from 'hooks/useContract';
 import { tokenResult } from 'util/LedgerUtilities2';
-import { BEAN, ERC20Tokens } from 'constants/v2/tokens';
+import { BEAN, ERC20_TOKENS } from 'constants/v2/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import usePools from 'hooks/usePools';
 import { updateBeanPools, UpdatePoolPayload } from './actions';
@@ -13,7 +13,7 @@ import { updateBeanPrice } from '../reducer';
 export const useGetPools = () => {
   const dispatch = useDispatch();
   const beanstalkPriceContract = useBeanstalkPriceContract();
-  const TOKENS = useTokenMap(ERC20Tokens);
+  const TOKENS = useTokenMap(ERC20_TOKENS);
   const POOLS = usePools();
 
   // Handlers

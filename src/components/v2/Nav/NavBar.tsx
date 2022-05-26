@@ -3,11 +3,8 @@ import { AppBar, Button, IconButton, Menu, MenuItem, Stack } from '@mui/material
 import { Link as RouterLink, useMatch, useResolvedPath } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-import beanCircleIcon from 'img/bean-circle.svg';
 import swapIcon from 'img/swap.svg';
 import { BeanstalkPalette } from 'components/v2/App/muiTheme';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import WalletButton from '../Common/WalletButton';
 import NetworkButton from '../Common/NetworkButton';
 import PriceButton from './PriceButton';
@@ -136,24 +133,21 @@ const MoreButton : React.FC = () => {
   );
 };
 
-const NavBar : React.FC<{}> = () => {
-  const beanPrice = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
-  return (
-    <AppBar sx={{ px: 1, py: 1, backgroundColor: BeanstalkPalette.lighterBlue, borderBottom: `1px solid ${BeanstalkPalette.lightBlue}` }}>
-      <Stack direction="row" gap={1} alignItems="center">
-        <Stack direction="row" sx={{ flex: 1 }}>
-          <PriceButton />
-          {NAVIGATION_MAP.top.map((item) => <NavButton key={item.path} to={item.path} title={item.title} />)}
-          <MoreButton />
-        </Stack>
-        <IconButton color="light" variant="contained">
-          <img src={swapIcon} alt="Swap" />
-        </IconButton>
-        <NetworkButton />
-        <WalletButton />
+const NavBar : React.FC<{}> = () => (
+  <AppBar sx={{ px: 1, py: 1, backgroundColor: BeanstalkPalette.lighterBlue, borderBottom: `1px solid ${BeanstalkPalette.lightBlue}` }}>
+    <Stack direction="row" gap={1} alignItems="center">
+      <Stack direction="row" sx={{ flex: 1 }}>
+        <PriceButton />
+        {NAVIGATION_MAP.top.map((item) => <NavButton key={item.path} to={item.path} title={item.title} />)}
+        <MoreButton />
       </Stack>
-    </AppBar>
-  );
-};
+      <IconButton color="light" variant="contained">
+        <img src={swapIcon} alt="Swap" />
+      </IconButton>
+      <NetworkButton />
+      <WalletButton />
+    </Stack>
+  </AppBar>
+);
 
 export default NavBar;
