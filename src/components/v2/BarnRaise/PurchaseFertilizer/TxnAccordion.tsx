@@ -1,11 +1,9 @@
 import React from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Stack, Typography } from '@mui/material';
-// import BigNumber from 'bignumber.js';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Accordion, AccordionDetails, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import splitArrowsIcon from '../../../../img/split-arrows.svg';
+import StyledAccordionSummary from 'components/v2/Common/Accordion/AccordionSummary';
 import cucumberIcon from '../../../../img/cucumber.svg';
-import AccordionWrapper from '../../Common/AccordionWrapper';
+import AccordionWrapper from '../../Common/Accordion/AccordionWrapper';
 import { ERC20Token, NativeToken } from '../../../../classes/Token';
 
 const useStyles = makeStyles(() => ({
@@ -34,29 +32,9 @@ const TxnAccordion: React.FC<AccordionProps> =
     const classes = useStyles();
     return (
       <AccordionWrapper>
-        <Accordion
-          sx={{ background: 'none', borderColor: '#c7ddf0' }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Stack direction="row" gap={1}>
-              <img alt="" src={splitArrowsIcon} />
-              <Typography
-                sx={{
-                  background: 'linear-gradient(90deg, rgba(70, 185, 85, 1.0) 0%, rgba(123, 97, 255, 1.0) 36.58%, rgba(31, 120, 180, 1.0) 96.2%)',
-                  '-webkit-background-clip': 'text',
-                  '-webkit-text-fill-color': 'transparent'
-                }}
-              >
-                Transaction Details
-              </Typography>
-            </Stack>
-          </AccordionSummary>
+        <Accordion sx={{ background: 'none', borderColor: '#c7ddf0' }}>
+          <StyledAccordionSummary title="Transaction Details" />
           <AccordionDetails>
-            {/* <Typography>{displayBN(amount)}</Typography> */}
             <Stack gap={2}>
               <Stack
                 sx={{ pl: 2, pr: 2 }}

@@ -1,9 +1,9 @@
-import { ERC20Tokens } from 'constants/v2/tokens';
-import useTokenList from 'hooks/useTokenList';
+import { BALANCE_TOKENS } from 'constants/v2/tokens';
+import useTokenMap from 'hooks/useTokenMap';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { tokenResult } from 'util/LedgerUtilities2';
+import { tokenResult } from 'util/TokenUtilities';
 import { useAccount } from 'wagmi';
 import { clearBalances, updateBalances } from './actions';
 
@@ -11,7 +11,7 @@ import { clearBalances, updateBalances } from './actions';
 
 export const useFetchBalances = () => {
   const dispatch = useDispatch();
-  const tokens = useTokenList(ERC20Tokens);
+  const tokens = useTokenMap(BALANCE_TOKENS);
 
   // Handlers
   const fetch = useCallback(async (address: string) => {

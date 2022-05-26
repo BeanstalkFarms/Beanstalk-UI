@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import BigNumber from 'bignumber.js';
 import PoolCard from './PoolCard';
-import { BEAN_ETH_UNISWAP_V2_POOL_MAINNET } from '../../../constants/v2/pools';
+import { BEAN_ETH_UNIV2_POOL_MAINNET } from '../../../constants/v2/pools';
 import { BeanPoolState } from '../../../state/v2/bean/pools';
 
 export default {
@@ -21,7 +21,7 @@ const pool: BeanPoolState = {
 const Template: ComponentStory<typeof PoolCard> = (args: any) => (
   <PoolCard
     {...args}
-    address={BEAN_ETH_UNISWAP_V2_POOL_MAINNET.address}
+    address={BEAN_ETH_UNIV2_POOL_MAINNET.address}
     pool={pool}
   />
 );

@@ -1,47 +1,61 @@
-import Pool, { UniswapV2Pool } from 'classes/Pool';
+import Pool, { CurveMetaPool, UniswapV2Pool } from 'classes/Pool';
 import { SupportedChainId } from 'constants/chains';
-import beanEthLogoUrl from 'img/bean-eth-logo.svg';
-import { Uniswap } from './dexes';
-import { BEAN, BEAN_ETH_UNISWAP_V2_LP, WETH } from './tokens';
 
-export const BEAN_ETH_UNISWAP_V2_POOL_MAINNET = new UniswapV2Pool(
-  '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
+import curveLogo from 'img/curve-logo.svg';
+import uniswapLogo from 'img/uniswap-logo.svg';
+
+import { ChainConstant } from '.';
+import { BEAN_CRV3_ADDRESSES, BEAN_ETH_UNIV2_ADDRESSES } from './addresses';
+// import { Curve, Uniswap } from './dexes';
+import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, CRV3, WETH } from './tokens';
+
+export const BEAN_ETH_UNIV2_POOL_MAINNET = new UniswapV2Pool(
   SupportedChainId.MAINNET,
-  Uniswap,
-  BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.MAINNET],
-  [BEAN[SupportedChainId.MAINNET], WETH[SupportedChainId.MAINNET]],
+  BEAN_ETH_UNIV2_ADDRESSES,
+  BEAN_ETH_UNIV2_LP,
+  [BEAN, WETH],
   {
     name: 'BEAN:ETH Uniswap V2 Pool',
-    logo: beanEthLogoUrl,
+    logo: uniswapLogo,
     symbol: 'BEAN:ETH'
   },
 );
 
-export const BEAN_ETH_UNISWAP_V2_POOL_ROPSTEN = new UniswapV2Pool(
-  '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db',
+export const BEAN_ETH_UNIV2_POOL_ROPSTEN = new UniswapV2Pool(
   SupportedChainId.ROPSTEN,
-  Uniswap,
-  BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.ROPSTEN],
-  [BEAN[SupportedChainId.ROPSTEN], WETH[SupportedChainId.ROPSTEN]],
+  BEAN_ETH_UNIV2_ADDRESSES,
+  BEAN_ETH_UNIV2_LP,
+  [BEAN, WETH],
   {
     name: 'BEAN:ETH Uniswap V2 Pool',
-    logo: beanEthLogoUrl,
+    logo: uniswapLogo,
     symbol: 'BEAN:ETH'
+  },
+);
+
+export const BEAN_CRV3_CURVE_POOL_ROPSTEN = new CurveMetaPool(
+  SupportedChainId.ROPSTEN,
+  BEAN_CRV3_ADDRESSES,
+  BEAN_CRV3_LP,
+  [BEAN, CRV3],
+  {
+    name: 'BEAN:3CRV MetaPool',
+    logo: curveLogo,
+    symbol: 'BEAN:3CRV'
   },
 );
 
 // --------------------------------------------------
 
-const Pools : { 
-  [chainId: number]: { 
-    [address: string] : Pool
-  }
-} = {
+type PoolsByAddress = { [address: string] : Pool };
+
+const Pools : ChainConstant<PoolsByAddress> = {
   [SupportedChainId.MAINNET]: {
-    [BEAN_ETH_UNISWAP_V2_POOL_MAINNET.address]: BEAN_ETH_UNISWAP_V2_POOL_MAINNET,
+    [BEAN_ETH_UNIV2_POOL_MAINNET.address]: BEAN_ETH_UNIV2_POOL_MAINNET,
   },
   [SupportedChainId.ROPSTEN]: {
-    [BEAN_ETH_UNISWAP_V2_POOL_ROPSTEN.address]: BEAN_ETH_UNISWAP_V2_POOL_ROPSTEN,
+    [BEAN_ETH_UNIV2_POOL_ROPSTEN.address]: BEAN_ETH_UNIV2_POOL_ROPSTEN,
+    [BEAN_CRV3_CURVE_POOL_ROPSTEN.address]: BEAN_CRV3_CURVE_POOL_ROPSTEN,
   }
 };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { SupportedChainId } from 'constants/chains';
-import { BEAN, BEAN_ETH_UNISWAP_V2_LP } from 'constants/v2/tokens';
+import { BEAN, BEAN_ETH_UNIV2_LP } from 'constants/v2/tokens';
 import BigNumber from 'bignumber.js';
 import TokenTable from './TokenTable';
 
@@ -16,7 +16,7 @@ const Template: ComponentStory<typeof TokenTable> = (args: any) => (
     config={{
       whitelist: [
         BEAN[SupportedChainId.MAINNET],
-        BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.MAINNET]
+        BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]
       ]
     }}
     farmerSilo={{
@@ -25,7 +25,7 @@ const Template: ComponentStory<typeof TokenTable> = (args: any) => (
           // input fake data here
           deposited: new BigNumber(100_000)
         },
-        [BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.MAINNET].address]: {
+        [BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET].address]: {
           // input fake data here
           deposited: new BigNumber(0.0001)
         },
