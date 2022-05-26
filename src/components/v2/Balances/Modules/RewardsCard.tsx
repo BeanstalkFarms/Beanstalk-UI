@@ -21,7 +21,7 @@ const RewardsCard: React.FC<RewardsCardProps> = ({title}) => {
         <Grid item xs={12} md={4.5}>
           <Stack>
             <Typography variant="h2">Inactive Rewards</Typography>
-            <Stack gap={0.5} sx={{pt: 1}}>
+            <Stack gap={0.8} sx={{pt: 1}}>
               <Stack direction="row" justifyContent="space-between">
                 <Typography>Earned Seed</Typography>
                 <Stack direction="row" alignItems="center" gap={0.2}>
@@ -60,8 +60,8 @@ const RewardsCard: React.FC<RewardsCardProps> = ({title}) => {
         <Grid item xs={12} md={4.5}>
           <Stack height="100%">
             <Typography variant="h2">Active Rewards</Typography>
-            <Stack gap={0.5} sx={{pt: 1}} justifyContent="space-between" height="100%">
-              <Stack>
+            <Stack gap={1} sx={{pt: 1}} justifyContent="space-between" height="100%">
+              <Stack gap={0.8}>
                 <Stack direction="row" justifyContent="space-between">
                   <Typography>Earned Beans</Typography>
                   <Stack direction="row" alignItems="center" gap={0.2}>
