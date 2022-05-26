@@ -9,7 +9,11 @@ export interface UserBalancesProps {
 const UserBalances: React.FC<UserBalancesProps> = ({title}) => {
   return (
     <BalanceGrid
+      // titles
       totalBalanceTitle={"My Total Balance"}
+      stalkCardTitle={"My Stalk"}
+      seedCardTitle={"My Seeds"}
+      fertilizerCardTitle={"My Fertilizer"}
     />
   );
 };

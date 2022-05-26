@@ -4,24 +4,32 @@ import {Box, Card, Grid, Link, Stack, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import TotalBalanceCard from "./TotalBalanceCard";
 import RewardsCard from "./RewardsCard";
+import StalkCard from "./QuarterCards/StalkCard";
+import SeedCard from "./QuarterCards/SeedCard";
+import PodCard from "./QuarterCards/PodCard";
+import FertilizerCard from "./QuarterCards/FertilizerCard";
 
 const useStyles = makeStyles(() => ({
-  sectionToggle: {
-    fontSize: "20px",
-    fontWeight: 600,
-    cursor: "pointer"
-  }
+
 }))
 
 export interface BalanceGridProps {
   totalBalanceTitle: string;
   hideRewardsCard?: boolean;
+  stalkCardTitle: string;
+  seedCardTitle: string;
+  podCardTitle: string;
+  fertilizerCardTitle: string;
 }
 
 const BalanceGrid: React.FC<BalanceGridProps> =
   ({
-     totalBalanceTitle,
-     hideRewardsCard = false
+    totalBalanceTitle,
+    hideRewardsCard = false,
+    stalkCardTitle,
+    seedCardTitle,
+    podCardTitle,
+    fertilizerCardTitle
    }) => {
     const classes = useStyles();
 
@@ -33,110 +41,16 @@ const BalanceGrid: React.FC<BalanceGridProps> =
         <Grid item xs={12}>
           <Grid container direction="row" spacing={1}>
             <Grid item xs={12} md={6} lg={3}>
-              <Card sx={{p: 2, height: "100%"}}>
-                <Stack gap={2}>
-                  <Stack>
-                    <Typography>My Stalk</Typography>
-                    <Stack direction="row">
-                      <Typography variant="h2">X</Typography>
-                      <Typography variant="h2">109,364</Typography>
-                    </Stack>
-                  </Stack>
-                  <Box display="flex" justifyContent="center">
-                    <Typography>GRAPH</Typography>
-                  </Box>
-                  <Stack gap={0.7}>
-                    <Stack direction="row" justifyContent="space-between">
-                      <Typography sx={{opacity: 0.6}}>Active Stalk</Typography>
-                      <Typography>$1,123.00</Typography>
-                    </Stack>
-                    <Stack direction="row" justifyContent="space-between">
-                      <Typography sx={{opacity: 0.6}}>Grown Stalk</Typography>
-                      <Typography>$1,123.00</Typography>
-                    </Stack>
-                  </Stack>
-                </Stack>
-              </Card>
+              <StalkCard title={stalkCardTitle} />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-              <Card sx={{p: 2, height: "100%"}}>
-                <Stack gap={2}>
-                  <Stack>
-                    <Typography>My Seeds</Typography>
-                    <Stack direction="row">
-                      <Typography variant="h2">X</Typography>
-                      <Typography variant="h2">109,364</Typography>
-                    </Stack>
-                  </Stack>
-                  <Box display="flex" justifyContent="center">
-                    <Typography>GRAPH</Typography>
-                  </Box>
-                  <Stack gap={0.7}>
-                    <Stack direction="row" justifyContent="space-between">
-                      <Typography sx={{opacity: 0.6}}>Active Seed</Typography>
-                      <Typography>$1,123.00</Typography>
-                    </Stack>
-                    <Stack direction="row" justifyContent="space-between">
-                      <Typography sx={{opacity: 0.6}}>Earned Seed</Typography>
-                      <Typography>$1,123.00</Typography>
-                    </Stack>
-                  </Stack>
-                </Stack>
-              </Card>
+              <SeedCard title={seedCardTitle} />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-              <Card sx={{p: 2, height: "100%"}}>
-                <Stack gap={2} justifyContent="space-between" height="100%">
-                  <Stack>
-                    <Typography>My Plots</Typography>
-                    <Stack direction="row">
-                      <Typography variant="h2">X</Typography>
-                      <Typography variant="h2">109,364</Typography>
-                    </Stack>
-                  </Stack>
-                  <Box display="flex" justifyContent="center">
-                    <Typography>GRAPH</Typography>
-                  </Box>
-                  <Stack gap={0.7}>
-                    <Link
-                      underline="none"
-                      rel="noreferrer"
-                      sx={{cursor: "pointer"}}
-                    >
-                      <Typography variant="body1" sx={{textAlign: 'center'}}>
-                        View All Plots
-                      </Typography>
-                    </Link>
-                  </Stack>
-                </Stack>
-              </Card>
+              <PodCard title={podCardTitle} />
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
-              <Card sx={{p: 2, height: "100%"}}>
-                <Stack gap={2} justifyContent="space-between" height="100%">
-                  <Stack>
-                    <Typography>My Fertilizer</Typography>
-                    <Stack direction="row">
-                      <Typography variant="h2">X</Typography>
-                      <Typography variant="h2">109,364</Typography>
-                    </Stack>
-                  </Stack>
-                  <Box display="flex" justifyContent="center">
-                    <Typography>GRAPH</Typography>
-                  </Box>
-                  <Stack gap={0.7}>
-                    <Link
-                      underline="none"
-                      rel="noreferrer"
-                      sx={{cursor: "pointer"}}
-                    >
-                      <Typography variant="body1" sx={{textAlign: 'center'}}>
-                        View All Fertilizer
-                      </Typography>
-                    </Link>
-                  </Stack>
-                </Stack>
-              </Card>
+              <FertilizerCard title={fertilizerCardTitle} />
             </Grid>
           </Grid>
         </Grid>

@@ -4,11 +4,7 @@ import {Box, Card, Grid, Stack, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
-  sectionToggle: {
-    fontSize: "20px",
-    fontWeight: 600,
-    cursor: "pointer"
-  }
+
 }))
 
 export interface RewardsCardProps {
