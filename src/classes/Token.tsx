@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { AddressMap } from 'constants/v2/addresses';
-import { beanstalkContract, erc20TokenContract } from 'util/index';
-import { bigNumberResult } from 'util/LedgerUtilities2';
+import { bigNumberResult } from 'util/LedgerUtilities';
+import { beanstalkContract, erc20TokenContract } from 'util/contracts';
 import client from 'util/wagmi';
 
 /**

@@ -18,6 +18,7 @@ import { displayBN, displayFullBN, displayTokenAmount, toTokenUnitsBN } from 'ut
 import { zeroBN } from 'constants/index';
 import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/v2/Common/Accordion/AccordionSummary';
+import TokenIcon from 'components/v2/Common/TokenIcon';
 
 type DepositFormValues = {
   tokens: ({
@@ -263,16 +264,6 @@ const TokenQuoteField : React.FC<{
     />
   );
 };
-
-const TokenIcon : React.FC<{ token: Token }> = ({ token }) => (
-  <img
-    src={token.logo}
-    alt={token.symbol}
-    style={{
-      height: '100%'
-    }}
-  />
-);
 
 const TransactionStep : React.FC<{
   type: InstructionType;

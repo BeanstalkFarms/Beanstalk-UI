@@ -135,6 +135,14 @@ const muiTheme = createTheme({
         })
       }
     },
+    MuiDivider: {
+      styleOverrides: {
+        root: sx({
+          borderColor: BeanstalkPalette.lightBlue,
+          borderWidth: 0.5,
+        })
+      }
+    },
     MuiButton: {
       defaultProps: {
         disableElevation: true,
