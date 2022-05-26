@@ -19,7 +19,7 @@ const BalancesPage: React.FC = () => {
           purpose="View Beanstalk balances"
           description="View all balances"
         />
-        <Card sx={{border: "none", pl: 2, pr: 2, pt: 3, pb: 3}}>
+        <Card sx={{border: "none", pl: 2, pr: 2, pt: 3, pb: 2}}>
           <BalancesToggle balancesTab={balancesTab} handleSetTab={handleSetTab}/>
           {balancesTab === "user-balance" && <UserBalances title={"test"}/>}
           {balancesTab === "beanstalk-balance" && <BeanstalkBalances title={"test"}/>}

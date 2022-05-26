@@ -10,6 +10,7 @@ const BeanstalkBalances: React.FC<BeanstalkBalancesProps> = ({title}) => {
   return (
     <BalanceGrid
       totalBalanceTitle={"Total Beanstalk Liquidity"}
+      hideRewardsCard
     />
   );
 };
