@@ -14,7 +14,7 @@ import InputField from 'components/v2/Common/Form/InputField';
 import TokenAdornment from 'components/v2/Common/Form/TokenAdornment';
 import TokenSelectDialog from 'components/v2/Common/Form/TokenSelectDialog';
 import BigNumber from 'bignumber.js';
-import { displayBN, displayFullBN, toTokenUnitsBN } from 'util/TokenUtilities';
+import { displayBN, displayFullBN, displayTokenAmount, toTokenUnitsBN } from 'util/TokenUtilities';
 import { zeroBN } from 'constants/index';
 import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/v2/Common/Accordion/AccordionSummary';
@@ -63,14 +63,14 @@ type Instruction = (
 
 const INSTRUCTION_MESSAGES = {
   [InstructionType.SWAP]: (i: SwapInstruction) => 
-    `Swap ${displayFullBN(i.amountIn)} ${i.tokenIn} for ${displayFullBN(i.amountOut)} ${i.tokenOut}.`,
+    `Swap ${displayTokenAmount(i.amountIn, i.tokenIn)} for ${displayTokenAmount(i.amountOut, i.tokenOut)}.`,
   [InstructionType.DEPOSIT]: (i: DepositInstruction) =>
-    `Deposit ${displayFullBN(i.amountIn)} ${i.tokenIn} into the Silo.`,
+    `Deposit ${displayTokenAmount(i.amountIn, i.tokenIn)} into the Silo.`,
   [InstructionType.RECEIVE_REWARDS]: (i: RewardsInstruction) =>
-    `Receive ${displayFullBN(i.stalk)} Stalk and ${i.seeds} Seeds.`,
+    `Receive ${displayFullBN(i.stalk, 2)} Stalk and ${displayFullBN(i.seeds, 2)} Seeds.`,
 };
 
-const parseInstruction = (i: Instruction) => INSTRUCTION_MESSAGES[i.type](i);
+const parseInstruction = (i: Instruction) => INSTRUCTION_MESSAGES[i.type as keyof typeof INSTRUCTION_MESSAGES](i);
 
 // amount of beans to buy with non-bean tokens, based on each token.amount -> bean conversion
 // -> the exchange rate for each token -> bean
