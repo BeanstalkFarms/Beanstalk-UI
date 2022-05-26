@@ -22,9 +22,9 @@ const TransactionHistoryPage: React.FC = () => {
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
   return (
     <Container maxWidth="xl">
-      Events ({events.length})
+      {/*Events ({events.length})*/}
       <Stack gap={2}>
-        <Card sx={{border: "none", pl: 2, pr: 2, pt: 3, pb: 2}}>
+        <Card sx={{border: "none", p: 2}}>
           <Stack gap={0.5}>
             <Stack>
               <Typography variant="h2">Transaction History</Typography>
