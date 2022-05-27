@@ -34,8 +34,8 @@ const PriceButton : React.FC = () => {
         sx={{
           borderBottomLeftRadius: anchorEl ? 0 : undefined,
           borderBottomRightRadius: anchorEl ? 0 : undefined,
-          // position: anchorEl ? 'relative' : 'inherit',
-          zIndex: anchorEl ? 999 : undefined
+          zIndex: anchorEl ? 999 : undefined,
+          mr: 1,
         }}
       >
         ${beanPrice[0].toFixed(4)}
