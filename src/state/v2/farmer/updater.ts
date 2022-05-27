@@ -44,7 +44,7 @@ const FarmerUpdater = () => {
     //  - pool state isn't loaded and this tries to run
     if (account?.address && activeChain?.id && season && earnedBeans) {
       const results = processFarmerEvents(events, {
-        account: account.address,
+        account: account.address.toLowerCase(),
         farmableBeans: earnedBeans,
         season: season,
         harvestableIndex: harvestableIndex
@@ -64,8 +64,8 @@ const FarmerUpdater = () => {
               amount: tokenAmount,
               bdv:    bdv,
               season: new BigNumber(s),
-              seeds:  Bean.getStalk(bdv),
-              stalk:  Bean.getSeeds(bdv),
+              stalk:  Bean.getStalk(bdv),
+              seeds:  Bean.getSeeds(bdv),
             });
             return prev;
           }, {
@@ -89,8 +89,8 @@ const FarmerUpdater = () => {
               amount: tokenAmount,
               bdv:    bdv,
               season: new BigNumber(s),
-              seeds:  BeanEthLP.getStalk(bdv),
-              stalk:  BeanEthLP.getSeeds(bdv),
+              stalk:  BeanEthLP.getStalk(bdv),
+              seeds:  BeanEthLP.getSeeds(bdv),
             });
             return prev;
           }, {
@@ -109,8 +109,8 @@ const FarmerUpdater = () => {
               amount: tokenAmount,
               bdv:    bdv,
               season: new BigNumber(s),
-              seeds:  BeanCrv3LP.getStalk(bdv),
-              stalk:  BeanCrv3LP.getSeeds(bdv),
+              stalk:  BeanCrv3LP.getStalk(bdv),
+              seeds:  BeanCrv3LP.getSeeds(bdv),
             });
             return prev;
           }, {

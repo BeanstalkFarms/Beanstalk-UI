@@ -1,47 +1,17 @@
 import React, { useMemo } from 'react';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
-import { Box, Card, Stack, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Box, Card, Stack, Tooltip, Typography } from '@mui/material';
+import { DataGrid, GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 
 import { FarmerTokenBalance } from 'state/v2/farmer/silo';
 import type { Deposit } from 'state/v2/farmer/silo';
+import { displayBN, displayFullBN } from 'util/index';
+import useUSD from 'hooks/useUSD';
 import { tableStyle } from '../../../util/tableStyle';
 
-const columns = [
-  {
-    field: 'season',
-    headerName: 'Season',
-    // width: 117
-    flex: 1,
-    align: 'left',
-    headerAlign: 'left',
-  },
-  {
-    field: 'amount',
-    headerName: 'Amount',
-    // minW: 175,
-    flex: 2,
-    align: 'left',
-    headerAlign: 'left',
-  },
-  {
-    field: 'stalk',
-    headerName: 'Stalk',
-    // width: 117
-    flex: 1,
-    align: 'left',
-    headerAlign: 'left',
-  },
-  {
-    field: 'seeds',
-    headerName: 'Seeds',
-    // width: 117
-    flex: 1,
-    align: 'left',
-    headerAlign: 'left',
-  }
-];
+const MAX_ROWS = 10;
+const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
 const Deposits : React.FC<{
   token: Token;
@@ -50,10 +20,65 @@ const Deposits : React.FC<{
   token,
   siloToken,
 }) => {
+  const getUSD = useUSD();
   const rows : (Deposit & { id: BigNumber })[] = useMemo(() => siloToken?.deposited.crates.map((deposit) => ({
     id: deposit.season,
     ...deposit
   })), [siloToken?.deposited.crates]);
+  const columns = useMemo(() => ([
+    {
+      field: 'season',
+      flex: 1,
+      headerName: 'Season',
+      align: 'left',
+      headerAlign: 'left',
+      valueFormatter: (params) => displayBN(params.value),
+      renderCell: basicCell,
+    },
+    {
+      field: 'amount',
+      flex: 2,
+      headerName: 'Amount',
+      align: 'left',
+      headerAlign: 'left',
+      valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
+      renderCell: (params) => (
+        <Tooltip
+          title={(
+            <>
+              <Typography>BDV: {displayBN(params.row.bdv)}</Typography>
+              <Typography>Value: ${displayBN(getUSD(params.row.bdv))}</Typography>
+            </>
+            )}
+          >
+          <Typography>{displayFullBN(params.value, token.displayDecimals, token.displayDecimals)}</Typography>
+        </Tooltip>
+        )
+    },
+    {
+      field: 'stalk',
+      flex: 1,
+      headerName: 'Stalk',
+      align: 'right',
+      headerAlign: 'right',
+      valueFormatter: (params) => displayBN(params.value),
+      renderCell: basicCell,
+    },
+    {
+      field: 'seeds',
+      flex: 1,
+      headerName: 'Seeds',
+      align: 'right',
+      headerAlign: 'right',
+      valueFormatter: (params) => displayBN(params.value),
+      renderCell: basicCell,
+    }
+  ] as GridColumns), [token.displayDecimals, getUSD]);
+
+  const tableHeight = useMemo(() => {
+    if (!rows || rows.length === 0) return '200px';
+    return Math.min(rows.length, MAX_ROWS) * 52 + 112;
+  }, [rows]);
 
   return (
     <Box
@@ -61,18 +86,19 @@ const Deposits : React.FC<{
         ...tableStyle
       }}
     >
-      <Card sx={{ p: 2 }}>
+      <Card>
         <Stack gap={0.5}>
-          <Box>
+          <Box sx={{ px: 2, pt: 2 }}>
             <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{token.name} Deposits</Typography>
           </Box>
-          <Box sx={{ height: 375, width: '100%' }}>
+          <Box sx={{ px: 1, height: tableHeight, width: '100%' }}>
             <DataGrid
               columns={columns}
               rows={rows}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
+              pageSize={MAX_ROWS}
               disableSelectionOnClick
+              disableColumnMenu
+              density="compact"
             />
           </Box>
         </Stack>

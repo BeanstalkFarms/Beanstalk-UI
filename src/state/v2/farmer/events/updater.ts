@@ -155,7 +155,7 @@ const FarmerEventsUpdater = () => {
               event: event.event,
               blockNumber: event.blockNumber,
               logIndex: event.logIndex,
-              args: event.args,
+              // args: event.args,
               returnValues: event.decode ? parseBNJS({ 
                 ...event.decode(event.data, event.topics) as Array<any>
               }) : null,
