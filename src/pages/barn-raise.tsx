@@ -17,7 +17,7 @@ import RemainingFertilizer from '../components/v2/BarnRaise/RemainingFertilizer/
 import FertDialog from '../components/v2/BarnRaise/MyFertilizer/ViewAllDialog/FertDialog';
 
 const getItems = () =>
-  Array(20)
+  Array(10)
     .fill(0)
     .map((_, ind) => ({ id: `element-${ind}` }));
 
