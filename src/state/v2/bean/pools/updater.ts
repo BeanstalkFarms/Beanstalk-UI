@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
 
 import { useBeanstalkPriceContract } from 'hooks/useContract';
-import { tokenResult } from 'util/LedgerUtilities2';
+import { tokenResult } from 'util/TokenUtilities';
 import { BEAN, ERC20_TOKENS } from 'constants/v2/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import usePools from 'hooks/usePools';

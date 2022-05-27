@@ -4,7 +4,8 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { bigNumberResult, tokenResult } from 'util/LedgerUtilities2';
+import { bigNumberResult } from 'util/LedgerUtilities';
+import { tokenResult } from 'util/TokenUtilities';
 import { useNetwork } from 'wagmi';
 import { updateHarvestableIndex } from '../field/actions';
 import { setAwaitingSunrise, setRemainingUntilSunrise, updateSeason } from './actions';
@@ -46,7 +47,8 @@ const SunUpdater = () => {
   const { activeChain } = useNetwork();
   const [fetch] = useSun();
   const dispatch = useDispatch();
-  const { awaiting, next } = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']>((state) => state._beanstalk.sun.sunrise);
+  const { season, sunrise } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
+  const { awaiting, next } = sunrise;
 
   // Update sunrise timer
   useEffect(() => {
@@ -64,9 +66,10 @@ const SunUpdater = () => {
   }, [dispatch, awaiting, next]);
 
   // 
-  // useEffect(() => {
-    
-  // }, [season])
+  useEffect(() => {
+    dispatch(setAwaitingSunrise(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [season]);
 
   // Fetch when chain changes
   useEffect(() => {

@@ -3,6 +3,9 @@ import {
   experimental_sx as sx,
 } from '@mui/material/styles';
 
+const BASE_FONT_SIZE = 16;
+const remBase = (n: number) => `${(n / BASE_FONT_SIZE).toFixed(4)}rem`;
+
 /**
  * Beanstalk's primary color pallete.
  * 
@@ -87,42 +90,47 @@ const muiTheme = createTheme({
     fontWeightRegular: 400,
     fontWeightMedium: 600,
     fontWeightBold: 700,
+    // h1: page titles
     h1: {
-      fontSize: '2.5rem',
-      fontWeight: 700,
+      fontSize: remBase(0.75 * 40),
+      fontWeight: 700,        // 
     },
+    // h2: card titles, tabs, large button text
     h2: {
-      fontSize: '2.25rem', // 36px = 2.25*16
-      fontWeight: 600,
+      fontSize: remBase(0.75 * 24),
+      fontWeight: 600,      //
     },
+    // h3: bold section titles
     h3: {
-      fontSize: '1.25rem',
-      fontWeight: 400,
+      fontSize: '1rem',     // 1*16  = 16px
+      fontWeight: 600,      //
     },
+    // h4: normal section titles
     h4: {
-      fontSize: '1.125rem',
+      fontSize: '1rem',     // 1*16 = 16px
+      fontWeight: 400,      //
+    },
+    // subtitle1: page subtitle
+    subtitle1: {
+      fontSize: '1.125rem',  // 1.125*16 = 18px
       fontWeight: 400,
     },
-    h5: {},
-    h6: {},
-    subtitle1: {},
     subtitle2: {},
     body1: {
-      fontSize: '1rem',
+      fontSize: '1rem',     // 1*16     = 16px
       fontWeight: 400,
       lineHeight: '1.28rem', // pulled from figma
     },
     body2: {},
-    button: {},
+    button: {
+      fontSize: remBase(0.75 * 20),
+    },
   },
 
   /**
    * 
    */
   components: {
-    /**
-     * 
-     */
     MuiCard: {
       defaultProps: {
         elevation: 0,
@@ -136,9 +144,14 @@ const muiTheme = createTheme({
         })
       }
     },
-    /**
-     * 
-     */
+    MuiDivider: {
+      styleOverrides: {
+        root: sx({
+          borderColor: BeanstalkPalette.lightBlue,
+          borderWidth: 0.5,
+        })
+      }
+    },
     MuiButton: {
       defaultProps: {
         disableElevation: true,
@@ -150,29 +163,13 @@ const muiTheme = createTheme({
           fontWeight: 'bold',
         }),
       },
-      // variants: [
-      //   {
-      //     props: {
-      //       color: 'light',
-      //     }
-      //   }
-      // ]
     },
-    /**
-     * FIXME:
-     * - Gradient border not working; see AccordionWrapper.tsx
-     */
     MuiAccordion: {
       defaultProps: {
         elevation: 0,
       },
       styleOverrides: {
-        root: sx({
-          background: 'linear-gradient(90deg, rgba(70, 185, 85, 0.2) 0%, rgba(123, 97, 255, 0.2) 36.58%, rgba(31, 120, 180, 0.2) 96.2%)',
-          borderWidth: 1,
-          borderColor: BeanstalkPalette.darkBlue,
-          borderStyle: 'solid',
-        }),
+        root: sx({}),
       },
       variants: [
         {
@@ -201,23 +198,14 @@ const muiTheme = createTheme({
         })
       }
     },
-    /**
-     * https://mui.com/material-ui/react-text-field/
-     */
     MuiTextField: {
       defaultProps: {
         color: 'secondary',
       },
       styleOverrides: {
-        root: {
-          // borderWidth: '2px',
-          // borderImageWidth: 2,
-        },
+        root: {},
       }
     },
-    /**
-     * 
-     */
     MuiTabs: {
       defaultProps: {},
       styleOverrides: {
@@ -229,9 +217,6 @@ const muiTheme = createTheme({
         },
       }
     },
-    /**
-     * 
-     */
     MuiTab: {
       defaultProps: {
         disableRipple: true,
@@ -260,9 +245,7 @@ const muiTheme = createTheme({
     },
     MuiButtonBase: {
       styleOverrides: {
-        root: {
-          // fontWeight: "bold",
-        }
+        root: {}
       }
     },
     MuiButtonGroup: {
