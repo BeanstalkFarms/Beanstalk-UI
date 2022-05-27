@@ -166,3 +166,9 @@ export class BeanstalkToken extends Token {
     return undefined;
   }
 }
+
+export type AnyToken = (
+  BeanstalkToken
+  | ERC20Token
+  | NativeToken
+);

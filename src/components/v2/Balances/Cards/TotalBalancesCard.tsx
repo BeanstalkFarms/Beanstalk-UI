@@ -48,7 +48,9 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ title }) => {
         </Grid>
         <Grid item xs={12} md={5}>
           <Box display="flex" justifyContent="center" sx={{ height: 250 }}>
-            <ResizablePieChart />
+            <ResizablePieChart
+              // data={}
+            />
           </Box>
         </Grid>
         <Grid item xs={12} md={3.5}>

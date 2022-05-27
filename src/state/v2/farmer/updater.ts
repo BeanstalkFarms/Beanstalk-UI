@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js';
-import { BEAN, BEAN_ETH_UNIV2_LP } from 'constants/v2/tokens';
+import Pool from 'classes/Pool';
+import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP } from 'constants/v2/tokens';
+import useBDV from 'hooks/useBDV';
 import useChainConstant from 'hooks/useChainConstant';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,13 +29,19 @@ const FarmerUpdater = () => {
   );
 
   console.debug('[FarmerUpdater] re-rendering');
-  const Bean = useChainConstant(BEAN);
-  const BeanEthLP = useChainConstant(BEAN_ETH_UNIV2_LP);
+  
+  //
+  const getBDV      = useBDV();
+  const Bean        = useChainConstant(BEAN);
+  const BeanEthLP   = useChainConstant(BEAN_ETH_UNIV2_LP);
+  const BeanCrv3LP  = useChainConstant(BEAN_CRV3_LP);
 
   /**
    * Process events
    */
   useEffect(() => {
+    // possible edge cases:
+    //  - pool state isn't loaded and this tries to run
     if (account?.address && activeChain?.id && season && earnedBeans) {
       const results = processFarmerEvents(events, {
         account: account.address,
@@ -43,6 +51,9 @@ const FarmerUpdater = () => {
       });
       console.debug('[farmer/updater] process events', results);
 
+      // ----
+      // const []
+
       // FIXME: temporary
       // hardcode this because the event process returns `beanDepositsBalance`, etc.
       dispatch(updateFarmerTokenBalances({
@@ -50,21 +61,44 @@ const FarmerUpdater = () => {
           deposited: results.beanDepositsBalance,
           deposits: Object.keys(results.userBeanDeposits).map((s) => ({
             amount: results.userBeanDeposits[s],
-            bdv: results.userBeanDeposits[s],
+            bdv:    results.userBeanDeposits[s],
             season: new BigNumber(s),
-            seeds: Bean.getStalk(results.userBeanDeposits[s]),
-            stalk: Bean.getSeeds(results.userBeanDeposits[s]),
+            seeds:  Bean.getStalk(results.userBeanDeposits[s]),
+            stalk:  Bean.getSeeds(results.userBeanDeposits[s]),
           })),
+          // TODO:
+          // withdrawals: undefined,
+          // withdrawn: undefined,
+          // circulating: undefined,
+          // claimable: undefined,
+          // wrapped: undefined,
         },
         [BeanEthLP.address]: {
           deposited: results.lpDepositsBalance,
           deposits: Object.keys(results.userLPDeposits).map((s) => ({
             amount: results.userLPDeposits[s],
-            bdv: results.userLPDeposits[s],
+            // FIXME: this can't be right!
+            bdv:    getBDV(BeanEthLP, results.userLPDeposits[s]),
             season: new BigNumber(s),
-            seeds: BeanEthLP.getStalk(results.userLPDeposits[s]),
-            stalk: BeanEthLP.getSeeds(results.userLPDeposits[s]),
+            seeds:  BeanEthLP.getStalk(results.userLPDeposits[s]),
+            stalk:  BeanEthLP.getSeeds(results.userLPDeposits[s]),
           })),
+          // TODO:
+          // withdrawals: undefined,
+          // withdrawn: undefined,
+          // circulating: undefined,
+          // claimable: undefined,
+          // wrapped: undefined,
+        },
+        [BeanCrv3LP.address]: {
+          deposited: results.curveDepositsBalance,
+          deposits: Object.keys(results.userCurveDeposits).map((s) => ({
+            amount: results.userCurveDeposits[s],
+            bdv: results.userCurveBDVDeposits[s],
+            season: new BigNumber(s),
+            stalk: BeanCrv3LP.getStalk(results.userCurveBDVDeposits[s]),
+            seeds: BeanCrv3LP.getSeeds(results.userCurveBDVDeposits[s]),
+          }))
         }
       }));
       dispatch(updateFarmerField({
@@ -84,6 +118,8 @@ const FarmerUpdater = () => {
     //
     Bean,
     BeanEthLP,
+    BeanCrv3LP,
+    getBDV,
   ]);
 
   return null;

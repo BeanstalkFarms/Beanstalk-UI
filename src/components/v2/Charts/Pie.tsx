@@ -7,6 +7,7 @@ import VisxPie, { ProvidedProps, PieArcDatum } from '@visx/shape/lib/shapes/Pie'
 import { scaleOrdinal } from '@visx/scale';
 import { animated, useTransition, interpolate } from 'react-spring';
 import mockLiquidity, { LiquidityDatum, mockLiquidityByToken } from './Pie.mock';
+import { Stack, Typography } from '@mui/material';
 
 // react-spring transition definitions
 type AnimatedStyles = { startAngle: number; endAngle: number; opacity: number };
@@ -108,12 +109,14 @@ const Pie : React.FC<{
   width: number;
   height: number;
   margin?: typeof defaultMargin;
-  animate?: boolean
+  animate?: boolean;
+  data: PieDataPoint[];
 }> = ({
   width,
   height,
   margin = defaultMargin,
   animate = true,
+  data,
 }) => {
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
@@ -121,11 +124,22 @@ const Pie : React.FC<{
   const centerY = innerHeight / 2;
   const centerX = innerWidth / 2;
   const donutThickness = 50;
+
+  if (!data || data.length === 0) {
+    return (
+      <Stack sx={{ width, height }} alignItems="center" justifyContent="center">
+        <Typography color="text.secondary">
+          No data
+        </Typography>
+      </Stack>
+    );
+  }
+
   return (
     <svg width={width} height={height}>
       <Group top={centerY + margin.top} left={centerX + margin.left}>
         <VisxPie
-          data={mockLiquidity}
+          data={data}
           pieValue={(elem) => elem.value}
           outerRadius={radius}
           innerRadius={radius - donutThickness}
@@ -145,11 +159,16 @@ const Pie : React.FC<{
   );
 };
 
+export type PieDataPoint = {
+  label: string;
+  value: number;
+}
+
 /**
  * Wrap the graph in a ParentSize handler.
  */
 const ResizablePieChart : React.FC<{
-  // series: (DataPoint[])[];
+  data: PieDataPoint[];
   // onCursor: GraphProps['onCursor'];
 }> = (props) => (
   <ParentSize debounceTime={50}>
@@ -157,6 +176,7 @@ const ResizablePieChart : React.FC<{
       <Pie
         width={visWidth}
         height={visHeight}
+        data={props.data}
         // series={props.series}
         // onCursor={props.onCursor}
       />

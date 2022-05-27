@@ -12,6 +12,7 @@ const BalancesPage: React.FC = () => {
   const [balancesTab, setBalancesTab] = useState("user-balance")
   const handleSetTab = (tab: string) => {setBalancesTab(tab)};
 
+
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>
