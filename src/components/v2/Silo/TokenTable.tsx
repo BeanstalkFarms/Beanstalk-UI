@@ -4,8 +4,9 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
 import { Pool, Token } from 'classes';
 import { AppState } from 'state';
-import BigNumber from 'bignumber.js';
 import useUSD from 'hooks/useUSD';
+import { displayBN } from 'util/index';
+import { zeroBN } from 'constants/index';
 
 const arrowContainerWidth = 20;
 
@@ -16,12 +17,12 @@ const TokenTable : React.FC<{
     /** */
     poolsByAddress: { [address: string] : Pool };
   };
-  beanPrice:  AppState['_bean']['price'];
+  // beanPrice:  AppState['_bean']['price'];
   beanPools:  AppState['_bean']['pools'];
   farmerSilo: AppState['_farmer']['silo'];
 }> = ({
   config,
-  beanPrice,
+  // beanPrice,
   beanPools,
   farmerSilo,
 }) => {
@@ -59,8 +60,9 @@ const TokenTable : React.FC<{
       <Stack direction="column" gap={1} sx={{ p: 1 }}>
         {config.whitelist.map((token) => {
           const deposited = farmerSilo.tokens[token.address]?.deposited;
+
+          if (!deposited) return null;
           // let usdValue : BigNumber;
-          
           // if (!deposited || deposited.eq(0)) {
           //   usdValue = new BigNumber(0);
           // } else if (/* config.poolsByAddress[token.address] && */beanPools[token.address]) {
@@ -110,7 +112,7 @@ const TokenTable : React.FC<{
                   </Grid>
                   <Grid item xs={3}>
                     <Typography color="black">
-                      $1.5B
+                      ${displayBN(beanPools[token.address]?.liquidity || zeroBN)}
                     </Typography>
                   </Grid>
                   <Grid item xs={3} sx={{ textAlign: 'right' }}>

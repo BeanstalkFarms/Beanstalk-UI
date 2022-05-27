@@ -1,5 +1,11 @@
 import BigNumber from 'bignumber.js';
 
+/**
+ * A Crate is an `amount` of a token Deposited or
+ * Withdrawn during a given `season`.
+ * 
+ * `Deposit` and `Withdrawal` extend Crate.
+ */
 export type Crate = {
   season: BigNumber;
   amount: BigNumber;
@@ -22,6 +28,10 @@ export type Deposit = Crate & {
  */
 export type Withdrawal = Crate & {}
 
+/**
+ * A "Farmer Token Balance" provides all information
+ * about a farmer's ownership of a whitelisted Silo token.
+ */
 export type FarmerTokenBalance = {
   deposited: {
     total: BigNumber;
@@ -37,20 +47,6 @@ export type FarmerTokenBalance = {
   wrapped: BigNumber;
   circulating: BigNumber;
 }
-
-/**
- * A "Farmer Token Balance" provides all information
- * about a farmer's ownership of a whitelisted Silo token.
- */
-// export type FarmerTokenBalance = {
-//   circulating: BigNumber; // The circulating balance in the Farmer's wallet.
-//   wrapped: BigNumber; // The Farmer's wrapped balance.
-//   deposited: BigNumber; //
-//   deposits: Deposit[];
-//   withdrawn: BigNumber;
-//   withdrawals: Withdrawal[];
-//   claimable: BigNumber;
-// }
 
 /**
  * "Farmer Token Balances" track the detailed balances of
@@ -89,7 +85,7 @@ export type FarmerSiloAssets = {
   };
 }
 
-export type Silo = (
+export type FarmerSilo = (
   FarmerTokenBalances 
   & FarmerSiloAssets
 );

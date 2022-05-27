@@ -1,4 +1,4 @@
-import { Box, Card, Link, Stack, Typography } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
 import React from 'react';
 
 const StatCard : React.FC<{
@@ -12,18 +12,16 @@ const StatCard : React.FC<{
   children
 }) => (
   <Card sx={{ p: 2, height: '100%' }}>
-    <Stack gap={2} justifyContent="space-between">
+    <Stack gap={2} sx={{ height: '100%' }}>
       {/* Title + Statistic */}
       <Stack gap={1}>
         <Typography color="text.secondary">{title}</Typography>
-        <Typography variant="h1">
+        <Typography variant="h1" sx={{ marginLeft: '-3px' }}>
           {icon} {amount}
         </Typography>
       </Stack>
       {/* Content */}
-      <Box>
-        {children}
-      </Box>
+      {children}
     </Stack>
   </Card>
 );

@@ -19,7 +19,7 @@ const columns = [
   },
   {
     field: 'amount',
-    headerName: 'Deposited LP',
+    headerName: 'Amount',
     // minW: 175,
     flex: 2,
     align: 'left',
@@ -50,10 +50,10 @@ const Deposits : React.FC<{
   token,
   siloToken,
 }) => {
-  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => siloToken?.deposits.map((deposit) => ({
+  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => siloToken?.deposited.crates.map((deposit) => ({
     id: deposit.season,
     ...deposit
-  })), [siloToken?.deposits]);
+  })), [siloToken?.deposited.crates]);
 
   return (
     <Box

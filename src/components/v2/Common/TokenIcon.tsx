@@ -7,7 +7,9 @@ const TokenIcon : React.FC<{ token: Token }> = ({ token }) => (
     alt={token.symbol}
     style={{
       height: '1em',
-      width: '1em',
+      width: 'auto',
+      verticalAlign: 'top',
+      marginTop: '2px'
     }}
   />
 );

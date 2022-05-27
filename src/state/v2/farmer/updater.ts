@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import Pool from 'classes/Pool';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP } from 'constants/v2/tokens';
 import useBDV from 'hooks/useBDV';
 import useChainConstant from 'hooks/useChainConstant';
@@ -16,6 +15,8 @@ const FarmerUpdater = () => {
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const dispatch = useDispatch();
+
+  // Selectors
   const events = useSelector<AppState, AppState['_farmer']['events']>(
     (state) => state._farmer.events
   );
@@ -29,8 +30,6 @@ const FarmerUpdater = () => {
     (state) => state._beanstalk.field.harvestableIndex,
   );
 
-  console.debug('[FarmerUpdater] re-rendering');
-  
   //
   const getBDV      = useBDV();
   const Bean        = useChainConstant(BEAN);
@@ -124,6 +123,8 @@ const FarmerUpdater = () => {
       dispatch(updateFarmerField({
         plots: results.plots,
         harvestablePlots: results.harvestablePlots,
+        pods: results.podBalance,
+        harvestablePods: results.harvestablePodBalance,
       }));
     }
   }, [

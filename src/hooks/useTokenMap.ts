@@ -1,10 +1,10 @@
 import { useNetwork } from 'wagmi';
-import { TokenOrTokenMap, TokensByAddress } from 'constants/v2/tokens';
+import { TokenOrTokenMap, TokensByAddress } from 'constants/v2';
 import { SupportedChainId } from 'constants/chains';
 import { useMemo } from 'react';
 import Token from 'classes/Token';
 
-export default function useTokenMap(list: TokenOrTokenMap[]) {
+export default function useTokenMap(list: TokenOrTokenMap[]) : TokensByAddress {
   const { activeChain } = useNetwork();
   return useMemo(() => {
     if (!activeChain?.id) return {};

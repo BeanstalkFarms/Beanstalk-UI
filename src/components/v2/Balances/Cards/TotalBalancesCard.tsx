@@ -1,64 +1,132 @@
 /* eslint-disable */
-import React from 'react';
-import {Box, Card, Grid, Stack, Typography} from '@mui/material';
-import {makeStyles} from '@mui/styles';
-import ResizablePieChart from 'components/v2/Charts/Pie';
+import React, { useCallback, useMemo, useState } from 'react';
+import {Box, Grid, Stack, Typography} from '@mui/material';
+import ResizablePieChart, { PieDataPoint } from 'components/v2/Charts/Pie';
 import StatCard from '../StatCard';
-
-const useStyles = makeStyles(() => ({
-  sectionToggle: {
-    fontSize: "20px",
-    fontWeight: 600,
-    cursor: "pointer"
-  }
-}))
-
+import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
+import useUSD from 'hooks/useUSD';
+import useWhitelist from 'hooks/useWhitelist';
 export interface TotalBalanceCardProps {
-  title: string;
+  breakdown: ReturnType<typeof useSiloTokenBreakdown>;
 }
 
-const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ title }) => {
-  const classes = useStyles();
+type DrilldownValues = keyof TotalBalanceCardProps['breakdown'];
+
+// Matches the key => value mapping of TotalBalanceCardProps['breakdown'],
+// but without the 'bdv' key.
+// https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
+const STATE_CONFIG : { [name in DrilldownValues as Exclude<name, "bdv">]: [name: string, color: string] } = {
+  'deposited':    ['Deposited',   'rgba(70, 185, 85, 1)'],
+  'withdrawn':    ['Withdrawn',   'rgba(31, 120, 180, 0.3)'],
+  'claimable':    ['Claimable',   'rgba(178, 223, 138, 0.3)'],
+  'circulating':  ['Circulating', 'rgba(25, 135, 59, 1)'],
+  'wrapped':      ['Wrapped',     'rgba(25, 135, 59, 0.5)'],
+};
+
+type StateID = keyof typeof STATE_CONFIG;
+const STATE_IDS = Object.keys(STATE_CONFIG) as StateID[];
+
+const TokenRow : React.FC<{
+  name: string;
+  value: string | JSX.Element;
+  isFaded: boolean;
+  onMouseOver?: () => void;
+  onMouseOut?:  () => void;
+}> = ({ 
+  name,
+  value,
+  isFaded,
+  onMouseOver,
+  onMouseOut
+}) => (
+  <Stack
+    direction="row"
+    justifyContent="space-between"
+    sx={{
+      cursor: 'pointer',
+      py: 0.5,
+      opacity: isFaded ? 0.3 : 1,
+    }}
+    onMouseOver={onMouseOver}
+    onFocus={onMouseOver}
+    onMouseOut={onMouseOut}
+    onBlur={onMouseOut}
+  >
+    <Typography color="text.secondary">
+      {name}
+    </Typography>
+    <Typography>
+      {value}
+    </Typography>
+  </Stack>
+)
+
+const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
+  const getUSD  = useUSD();
+  const whitelist = useWhitelist();
+  
+  const [drilldown, setDrilldown] = useState<StateID | null>(null);
+  const onMouseOut = useCallback(() => setDrilldown(null), []);
+  const onMouseOver = useCallback((v: StateID) => {
+    return () => setDrilldown(v);
+  }, [])
+
+  const pieChartData = useMemo(() => {
+    return STATE_IDS.map((id: StateID) => ({
+      label: STATE_CONFIG[id][0],
+      value: breakdown[id].bdv.toNumber(),
+      color: STATE_CONFIG[id][1]
+    } as PieDataPoint))
+  }, [breakdown])
+
   return (
-    <StatCard title={title} amount={"$109,364"} icon={undefined}>
-      <Grid container direction="row" alignItems="center">
+    <StatCard title="My Balances" amount={`$${getUSD(breakdown.bdv).toFixed(2)}`} icon={undefined}>
+      <Grid container direction="row" alignItems="center" sx={{ mb: 3}}>
         <Grid item xs={12} md={3.5}>
-          <Stack gap={0.5} sx={{pl: 1, pr: 1, pt: 5, pb: 5}}>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{opacity: 0.6}}>Deposited Tokens</Typography>
-              <Typography>$100,243</Typography>
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{opacity: 0.6}}>Withdraw Tokens</Typography>
-              <Typography>$10,534</Typography>
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{opacity: 0.6}}>Claimable Tokens</Typography>
-              <Typography>$4,542</Typography>
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{opacity: 0.6}}>Circulating Tokens</Typography>
-              <Typography>$1,123.00</Typography>
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{opacity: 0.6}}>Wrapped Tokens</Typography>
-              <Typography>$1,234</Typography>
-            </Stack>
+          <Stack>
+            {STATE_IDS.map((id : StateID) => {
+              return (
+                <TokenRow
+                  key={id}
+                  name={`${STATE_CONFIG[id][0]} Tokens`}
+                  value={`$${getUSD(breakdown[id].bdv).toFixed(2)}`}
+                  isFaded={drilldown !== null && drilldown !== id}
+                  onMouseOver={onMouseOver(id)}
+                  onMouseOut={onMouseOut}
+                />
+              )
+            })}
           </Stack>
         </Grid>
         <Grid item xs={12} md={5}>
           <Box display="flex" justifyContent="center" sx={{ height: 250 }}>
             <ResizablePieChart
-              // data={}
+              data={breakdown.bdv.gt(0) ? pieChartData : undefined}
             />
           </Box>
         </Grid>
         <Grid item xs={12} md={3.5}>
-          <Stack alignItems="center" justifyContent="center" sx={{p: 3, pt: 5, pb: 5}}>
-            <Stack direction="row">
-              <Typography sx={{opacity: 0.6}}>Hover a state to see breakdown</Typography>
+          {drilldown === null ? (
+            <Stack alignItems="center" justifyContent="center" sx={{ p: 3, pt: 5, pb: 5 }}>
+              <Typography color="text.secondary">
+                Hover a state to see breakdown
+              </Typography>
             </Stack>
-          </Stack>
+          ) : (
+            <Box>
+              <Typography variant="h2">{STATE_CONFIG[drilldown][0]} Tokens</Typography>
+              {Object.keys(whitelist).map((address) => {
+                return (
+                  <TokenRow
+                    name={`${whitelist[address].name}`}
+                    value={`$${getUSD((breakdown[drilldown]).bdvByToken[address]).toFixed(2)}`}
+                    onMouseOver={onMouseOver('deposited')}
+                    isFaded={false}
+                  />
+                )
+              })}
+            </Box>
+          )}
         </Grid>
       </Grid>
     </StatCard>

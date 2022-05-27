@@ -4,13 +4,35 @@ import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Group } from '@visx/group';
 
 import VisxPie, { ProvidedProps, PieArcDatum } from '@visx/shape/lib/shapes/Pie';
-import { scaleOrdinal } from '@visx/scale';
 import { animated, useTransition, interpolate } from 'react-spring';
-import mockLiquidity, { LiquidityDatum, mockLiquidityByToken } from './Pie.mock';
 import { Stack, Typography } from '@mui/material';
+// import { scaleOrdinal } from '@visx/scale';
+// import { mockLiquidityByToken } from './Pie.mock';
+
+// ------------------------------------------------------
 
 // react-spring transition definitions
 type AnimatedStyles = { startAngle: number; endAngle: number; opacity: number };
+
+export type PieDataPoint = {
+  label: string;
+  value: number;
+  color: string;
+}
+
+export type PieColorsByLabel = {
+  [key: string]: string
+}; 
+
+type AnimatedPieProps<Datum> = ProvidedProps<Datum> & {
+  animate?: boolean;
+  getKey: (d: PieArcDatum<Datum>) => string;
+  getColor: (d: PieArcDatum<Datum>) => string;
+  onClickDatum: (d: PieArcDatum<Datum>) => void;
+  delay?: number;
+};
+
+// ------------------------------------------------------
 
 const fromLeaveTransition = ({ endAngle }: PieArcDatum<any>) => ({
   // enter from 360° if end angle is > 180°
@@ -24,13 +46,17 @@ const enterUpdateTransition = ({ startAngle, endAngle }: PieArcDatum<any>) => ({
   opacity: 1,
 });
 
-type AnimatedPieProps<Datum> = ProvidedProps<Datum> & {
-  animate?: boolean;
-  getKey: (d: PieArcDatum<Datum>) => string;
-  getColor: (d: PieArcDatum<Datum>) => string;
-  onClickDatum: (d: PieArcDatum<Datum>) => void;
-  delay?: number;
-};
+// const getDefaultColors = scaleOrdinal({
+//   domain: Object.keys(mockLiquidityByToken),
+//   range: [
+//     'rgba(31, 120, 180, 0.3)',
+//     'rgba(70, 185, 85, 1)',
+//     'rgba(178, 223, 138, 0.3)',
+//     'rgba(25, 135, 59, 0.2)',
+//   ],
+// });
+
+// ------------------------------------------------------
 
 function AnimatedPie<Datum>({
   animate,
@@ -69,13 +95,13 @@ function AnimatedPie<Datum>({
         {hasSpaceForLabel && (
           <animated.g style={{ opacity: props.opacity }}>
             <text
-              fill="#222"
+              fill="#333"
               x={centroidX}
               y={centroidY}
               dy=".33em"
-              fontSize={10}
+              fontSize={15}
               fontFamily="Futura PT"
-              fontWeight="bold"
+              fontWeight="normal"
               textAnchor="middle"
               pointerEvents="none"
             >
@@ -88,42 +114,40 @@ function AnimatedPie<Datum>({
   });
 }
 
-const getBrowserColor = scaleOrdinal({
-  domain: Object.keys(mockLiquidityByToken),
-  range: [
-    'rgba(31, 120, 180, 0.3)',
-    'rgba(70, 185, 85, 1)',
-    'rgba(178, 223, 138, 0.3)',
-    'rgba(25, 135, 59, 0.2)',
-  ],
-});
+// ------------------------------------------------------
 
-const defaultMargin = {
+const DEFAULT_MARGIN = {
   top: 0,
   left: 0,
   bottom: 0,
   right: 0,
 };
 
-const Pie : React.FC<{
+type PieProps = {
   width: number;
   height: number;
-  margin?: typeof defaultMargin;
+};
+
+type PieCustomizationProps = {
+  margin?: typeof DEFAULT_MARGIN;
   animate?: boolean;
-  data: PieDataPoint[];
-}> = ({
+  data: PieDataPoint[] | undefined;
+  donutThickness?: number;
+}
+
+const Pie : React.FC<PieProps & PieCustomizationProps> = ({
   width,
   height,
-  margin = defaultMargin,
+  margin = DEFAULT_MARGIN,
   animate = true,
   data,
+  donutThickness = 50,
 }) => {
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
   const radius = Math.min(innerWidth, innerHeight) / 2;
   const centerY = innerHeight / 2;
   const centerX = innerWidth / 2;
-  const donutThickness = 50;
 
   if (!data || data.length === 0) {
     return (
@@ -145,12 +169,13 @@ const Pie : React.FC<{
           innerRadius={radius - donutThickness}
         >
           {(pie) => (
-            <AnimatedPie<LiquidityDatum>
+            <AnimatedPie<PieDataPoint>
               {...pie}
               animate={animate}
               getKey={(arc) => arc.data.label}
-              onClickDatum={({ data: { label } }) => {}}
-              getColor={(arc) => getBrowserColor(arc.data.label)}
+              onClickDatum={({ data: { label } }) => { console.debug(`[Pie] click: ${label}`); }}
+              getColor={(arc) => arc.data.color}
+              // getColor={(arc) => getBrowserColor(arc.data.label)}
             />
           )}
         </VisxPie>
@@ -159,26 +184,18 @@ const Pie : React.FC<{
   );
 };
 
-export type PieDataPoint = {
-  label: string;
-  value: number;
-}
+// ------------------------------------------------------
 
 /**
  * Wrap the graph in a ParentSize handler.
  */
-const ResizablePieChart : React.FC<{
-  data: PieDataPoint[];
-  // onCursor: GraphProps['onCursor'];
-}> = (props) => (
+const ResizablePieChart : React.FC<PieCustomizationProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Pie
         width={visWidth}
         height={visHeight}
-        data={props.data}
-        // series={props.series}
-        // onCursor={props.onCursor}
+        {...props}
       />
     )}
   </ParentSize>

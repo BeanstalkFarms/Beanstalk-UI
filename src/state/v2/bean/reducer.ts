@@ -8,7 +8,7 @@ export const updateBeanPrice = createAction<BigNumber>('bean/updatePrice');
 
 const price = createReducer(initialState, (builder) => 
   builder
-    .addCase(updateBeanPrice, (_, { payload }) => [payload])
+    .addCase(updateBeanPrice, (_, { payload }) => [payload]) // array is hack to make redux chill
 );
   
 export default combineReducers({

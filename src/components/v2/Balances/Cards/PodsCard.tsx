@@ -1,38 +1,29 @@
-/* eslint-disable */
 import React from 'react';
-import {Box, Link, Stack, Typography} from '@mui/material';
-import {makeStyles} from '@mui/styles';
+import { Link, Stack, Typography } from '@mui/material';
+import { PODS } from 'constants/v2/tokens';
+import TokenIcon from 'components/v2/Common/TokenIcon';
+import { AppState } from 'state';
+import { displayBN } from 'util/index';
 import StatCard from '../StatCard';
 
-const useStyles = makeStyles(() => ({}))
-
-export interface PodCardProps {
-  title: string;
-  hideButton?: boolean;
-}
-
-const PodCard: React.FC<PodCardProps> = ({
-  title,
-}) => {
-  const classes = useStyles();
-  return (
-    <StatCard title={title} icon={"x"} amount="109,364">
-      <Box display="flex" justifyContent="center">
-        <Typography>GRAPH</Typography>
-      </Box>
-      <Stack gap={0.7}>
-        <Link
-          underline="none"
-          rel="noreferrer"
-          sx={{cursor: "pointer"}}
-        >
-          <Typography variant="body1" sx={{textAlign: 'center'}}>
-            View All Plots
-          </Typography>
-        </Link>
-      </Stack>
-    </StatCard>
-  );
-};
+const PodCard: React.FC<{ state: AppState['_farmer']['field'] }> = ({ state }) => (
+  <StatCard
+    title="My Pods"
+    icon={<TokenIcon token={PODS} />}
+    amount={`${displayBN(state.pods)}`}
+  >
+    <Stack gap={0.7} sx={{ flex: 1 }} justifyContent="flex-end">
+      <Link
+        underline="none"
+        rel="noreferrer"
+        sx={{ cursor: 'pointer' }}
+      >
+        <Typography variant="body1" sx={{ textAlign: 'center' }}>
+          View All Plots
+        </Typography>
+      </Link>
+    </Stack>
+  </StatCard>
+);
 
 export default PodCard;

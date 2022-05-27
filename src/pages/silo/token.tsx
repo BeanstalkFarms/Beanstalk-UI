@@ -23,18 +23,10 @@ const TokenPage: React.FC<{}> = () => {
   // Load data about the LP token
   const token = WHITELIST[address];
   const pool  = POOLS[address];
-  // const pool = BEAN_ETH_UNISWAP_V2_POOL_MAINNET;
   const siloToken = farmerSilo.tokens[token.address];
   const poolState = beanPools[address];
-  // const poolState: BeanPoolState = {
-  //   price: new BigNumber(100),
-  //   reserves: [new BigNumber(100), new BigNumber(100)],
-  //   deltaB: new BigNumber(100000),
-  //   liquidity: new BigNumber(123567),
-  //   totalCrosses: new BigNumber(100),
-  //   supply: new BigNumber(1234)
-  // };
   const hasPool = poolState !== undefined;
+
   // If no data loaded...
   if (!token || !siloToken) return null;
 

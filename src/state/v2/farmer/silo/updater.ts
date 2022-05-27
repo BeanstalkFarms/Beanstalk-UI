@@ -54,15 +54,15 @@ export const useFarmerSilo = () => {
           earned: earnedBeanBalance,
         },
         stalk: {
-          total:  activeStalkBalance.plus(grownStalkBalance),
           active: activeStalkBalance,
           earned: earnedStalkBalance,
           grown:  grownStalkBalance,
+          total:  activeStalkBalance.plus(grownStalkBalance),
         },
         seeds: {
-          total:  seedBalance.plus(earnedSeedBalance),
           active: seedBalance,
           earned: earnedSeedBalance,
+          total:  seedBalance.plus(earnedSeedBalance),
         },
         roots: {
           total: rootBalance,
