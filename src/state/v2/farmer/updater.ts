@@ -9,6 +9,7 @@ import { AppState } from 'state';
 import processFarmerEvents from 'util/processFarmerEvents';
 import { useAccount, useNetwork } from 'wagmi';
 import { updateFarmerField } from './field/actions';
+import { Deposit } from './silo';
 import { updateFarmerTokenBalances } from './silo/actions';
 
 const FarmerUpdater = () => {
@@ -51,22 +52,28 @@ const FarmerUpdater = () => {
       });
       console.debug('[farmer/updater] process events', results);
 
-      // ----
-      // const []
-
       // FIXME: temporary
       // hardcode this because the event process returns `beanDepositsBalance`, etc.
       dispatch(updateFarmerTokenBalances({
         [Bean.address]: {
-          deposited: results.beanDepositsBalance,
-          deposits: Object.keys(results.userBeanDeposits).map((s) => ({
-            amount: results.userBeanDeposits[s],
-            bdv:    results.userBeanDeposits[s],
-            season: new BigNumber(s),
-            seeds:  Bean.getStalk(results.userBeanDeposits[s]),
-            stalk:  Bean.getSeeds(results.userBeanDeposits[s]),
-          })),
-          // TODO:
+          deposited: Object.keys(results.userBeanDeposits).reduce((prev, s) => {
+            const tokenAmount = results.userBeanDeposits[s];
+            const bdv         = tokenAmount; // only for Bean
+            prev.total = prev.total.plus(tokenAmount);
+            prev.bdv   = prev.bdv.plus(bdv);
+            prev.crates.push({
+              amount: tokenAmount,
+              bdv:    bdv,
+              season: new BigNumber(s),
+              seeds:  Bean.getStalk(bdv),
+              stalk:  Bean.getSeeds(bdv),
+            });
+            return prev;
+          }, {
+            total:  new BigNumber(0),
+            bdv:    new BigNumber(0),
+            crates: [] as Deposit[],
+          })
           // withdrawals: undefined,
           // withdrawn: undefined,
           // circulating: undefined,
@@ -74,31 +81,44 @@ const FarmerUpdater = () => {
           // wrapped: undefined,
         },
         [BeanEthLP.address]: {
-          deposited: results.lpDepositsBalance,
-          deposits: Object.keys(results.userLPDeposits).map((s) => ({
-            amount: results.userLPDeposits[s],
-            // FIXME: this can't be right!
-            bdv:    getBDV(BeanEthLP, results.userLPDeposits[s]),
-            season: new BigNumber(s),
-            seeds:  BeanEthLP.getStalk(results.userLPDeposits[s]),
-            stalk:  BeanEthLP.getSeeds(results.userLPDeposits[s]),
-          })),
-          // TODO:
-          // withdrawals: undefined,
-          // withdrawn: undefined,
-          // circulating: undefined,
-          // claimable: undefined,
-          // wrapped: undefined,
+          deposited: Object.keys(results.userLPDeposits).reduce((prev, s) => {
+            const tokenAmount = results.userLPDeposits[s];
+            const bdv         = getBDV(BeanEthLP, tokenAmount);
+            prev.total = prev.total.plus(tokenAmount);
+            prev.bdv   = prev.bdv.plus(bdv);
+            prev.crates.push({
+              amount: tokenAmount,
+              bdv:    bdv,
+              season: new BigNumber(s),
+              seeds:  BeanEthLP.getStalk(bdv),
+              stalk:  BeanEthLP.getSeeds(bdv),
+            });
+            return prev;
+          }, {
+            total:  new BigNumber(0),
+            bdv:    new BigNumber(0),
+            crates: [] as Deposit[],
+          })
         },
         [BeanCrv3LP.address]: {
-          deposited: results.curveDepositsBalance,
-          deposits: Object.keys(results.userCurveDeposits).map((s) => ({
-            amount: results.userCurveDeposits[s],
-            bdv: results.userCurveBDVDeposits[s],
-            season: new BigNumber(s),
-            stalk: BeanCrv3LP.getStalk(results.userCurveBDVDeposits[s]),
-            seeds: BeanCrv3LP.getSeeds(results.userCurveBDVDeposits[s]),
-          }))
+          deposited: Object.keys(results.userCurveDeposits).reduce((prev, s) => {
+            const tokenAmount = results.userCurveDeposits[s];
+            const bdv         = results.userCurveBDVDeposits[s];
+            prev.total = prev.total.plus(tokenAmount);
+            prev.bdv   = prev.bdv.plus(bdv);
+            prev.crates.push({
+              amount: tokenAmount,
+              bdv:    bdv,
+              season: new BigNumber(s),
+              seeds:  BeanCrv3LP.getStalk(bdv),
+              stalk:  BeanCrv3LP.getSeeds(bdv),
+            });
+            return prev;
+          }, {
+            total:  new BigNumber(0),
+            bdv:    new BigNumber(0),
+            crates: [] as Deposit[],
+          })
         }
       }));
       dispatch(updateFarmerField({
