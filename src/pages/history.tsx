@@ -14,7 +14,7 @@ const TransactionHistoryPage: React.FC = () => {
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
   return (
     <Container maxWidth="lg">
-      {/*Events ({events.length})*/}
+      Events ({events.length})
       <Stack gap={2}>
         <Card sx={{border: "none", p: 2}}>
           <Stack gap={0.5}>
