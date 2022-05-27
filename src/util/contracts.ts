@@ -1,18 +1,27 @@
-// export const tokenContract = (token: SupportedToken) =>
-//   new ethers.Contract(token.addr, beanAbi, web3Signer);
-
 import { ethers } from 'ethers';
-import { web3Signer } from 'util/index';
+import { BEANSTALK, BEANFTCOLLECTION, BEANFTGENESIS, UNISWAP_V2_ROUTER } from 'constants/index';
 
-// export const tokenContractReadOnly = (token: SupportedToken) =>
-//   new web3.eth.Contract(beanAbi, token.addr);
+import { ERC20__factory } from 'constants/generated/factories/ERC20__factory';
+import { BeaNFTGenesis__factory, BeanstalkPrice__factory, Beanstalk__factory, UniswapV2Router__factory } from 'constants/generated';
+import { BEANSTALK_PRICE_ADDRESSES } from 'constants/v2/addresses';
+import { SupportedChainId } from 'constants/chains';
+import client from './wagmi';
 
-class Contracts {
-  static Price = () => new ethers.Contract(
-    '0xd047408488aa48A31319265E9808D6c59Adb1E51',
-    require('constants/abi/BeanstalkUtilities.json'),
-    web3Signer
-  )
-}
+// -- Contracts 
+export const erc20TokenContract = (address: string, signer?: ethers.Signer) =>
+  ERC20__factory.connect(address, signer || client.provider);
 
-export default Contracts;
+export const beanstalkPriceContract = () =>
+  BeanstalkPrice__factory.connect(BEANSTALK_PRICE_ADDRESSES[SupportedChainId.ROPSTEN], client.provider);
+
+export const beanstalkContract = (signer?: ethers.Signer) => 
+  Beanstalk__factory.connect(BEANSTALK, signer || client.provider);
+
+export const beaNFTGenesisContract = (signer?: ethers.Signer) =>
+  BeaNFTGenesis__factory.connect(BEANFTGENESIS, signer || client.provider);
+
+export const beaNFTWinterContract = (signer?: ethers.Signer) =>
+  BeaNFTGenesis__factory.connect(BEANFTCOLLECTION, signer || client.provider);
+
+export const uniswapRouterContract = (signer?: ethers.Signer) =>
+  UniswapV2Router__factory.connect(UNISWAP_V2_ROUTER, signer || client.provider);

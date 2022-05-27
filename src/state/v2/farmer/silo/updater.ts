@@ -1,7 +1,8 @@
 import { useCallback, useEffect } from 'react';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK } from 'constants/index';
 import { useDispatch } from 'react-redux';
-import { bigNumberResult, tokenResult } from 'util/LedgerUtilities2';
+import { bigNumberResult } from 'util/LedgerUtilities';
+import { tokenResult } from 'util/TokenUtilities';
 import { useAccount, useConnect } from 'wagmi';
 
 import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
@@ -53,15 +54,15 @@ export const useFarmerSilo = () => {
           earned: earnedBeanBalance,
         },
         stalk: {
-          total:  activeStalkBalance.plus(grownStalkBalance),
           active: activeStalkBalance,
           earned: earnedStalkBalance,
           grown:  grownStalkBalance,
+          total:  activeStalkBalance.plus(grownStalkBalance),
         },
         seeds: {
-          total:  seedBalance.plus(earnedSeedBalance),
           active: seedBalance,
           earned: earnedSeedBalance,
+          total:  seedBalance.plus(earnedSeedBalance),
         },
         roots: {
           total: rootBalance,

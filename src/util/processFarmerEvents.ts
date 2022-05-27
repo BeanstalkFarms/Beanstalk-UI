@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { BEAN, CURVE, UNI_V2_ETH_BEAN_LP } from 'constants/tokens';
 import { UserBalanceState } from 'state/userBalance/reducer';
 import { ParsedEvent } from 'state/v2/farmer/events/updater';
+import { PlotMap } from 'state/v2/farmer/field';
 import { toTokenUnitsBN } from './TokenUtilities';
 
 // @publius to discuss: rename of crates
@@ -27,13 +28,18 @@ export function addRewardedCrates(
 }
 
 export function parsePlots(
-  plots,
+  plots: PlotMap<BigNumber>,
   index: BigNumber
-) {
+) : [
+  pods: BigNumber,
+  harvestablePods: BigNumber,
+  unharvestablePlots: any,
+  harvestablePlots: any,
+] {
   let pods = new BigNumber(0);
   let harvestablePods = new BigNumber(0);
-  const unharvestablePlots = {};
-  const harvestablePlots = {};
+  const unharvestablePlots : PlotMap<BigNumber> = {};
+  const harvestablePlots : PlotMap<BigNumber> = {};
   Object.keys(plots).forEach((p) => {
     if (plots[p].plus(p).isLessThanOrEqualTo(index)) {
       harvestablePods = harvestablePods.plus(plots[p]);
@@ -42,7 +48,7 @@ export function parsePlots(
       harvestablePods = harvestablePods.plus(index.minus(p));
       pods = pods.plus(plots[p].minus(index.minus(p)));
       harvestablePlots[p] = index.minus(p);
-      unharvestablePlots[index.minus(p).plus(p)] = plots[p].minus(
+      unharvestablePlots[index.minus(p).plus(p).toString()] = plots[p].minus(
         index.minus(p)
       );
     } else {
@@ -493,7 +499,7 @@ export default function processFarmerEvents(
     userBeanlusdBDVDeposits,
     beanlusdWithdrawals,
     beanlusdDepositsBalance,
-    // Plots
+    // Field
     userPlots,
     podBalance,
     harvestablePodBalance,

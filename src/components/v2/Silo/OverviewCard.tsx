@@ -1,8 +1,8 @@
 import { Box, Button, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 
-import SimpleGraph, { DataPoint } from './SimpleGraph';
-import { mockDepositData, mockOwnershipPctData } from './SimpleGraph.mock';
+import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
+import { mockDepositData, mockOwnershipPctData } from '../Charts/SimpleLineChart.mock';
 
 const windows = [
   { label: '1H', },
@@ -35,8 +35,8 @@ const DepositsTab : React.FC<TabData> = ({ current, series }) => {
           <Typography>Season 5995</Typography>
         </Stack>
       </Box>
-      <Box sx={{ width: '100%', height: '300px' }}>
-        <SimpleGraph
+      <Box sx={{ width: '100%', height: '200px' }}>
+        <SimpleLineChart
           series={series}
           onCursor={handleCursor}
         />
@@ -68,8 +68,8 @@ const StalkOwnershipTab : React.FC<TabData> = ({ current, series }) => {
           </Typography>
         </Stack>
       </Stack>
-      <Box sx={{ width: '100%', height: '300px' }}>
-        <SimpleGraph
+      <Box sx={{ width: '100%', height: '200px' }}>
+        <SimpleLineChart
           series={series}
           onCursor={handleCursor}
         />
@@ -90,6 +90,7 @@ const OverviewCard : React.FC<{
   };
   return (
     <Card>
+      {/* FIXME: sizing between deposits tab and Total Silo Deposits */}
       <Stack direction="row" justifyContent="space-between" sx={{ px: 2, pt: 2 }}>
         <Tabs value={tab} onChange={handleChange}>
           <Tab label="Deposits" />

@@ -3,7 +3,7 @@ import useTokenMap from 'hooks/useTokenMap';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { tokenResult } from 'util/LedgerUtilities2';
+import { tokenResult } from 'util/TokenUtilities';
 import { useAccount } from 'wagmi';
 import { clearBalances, updateBalances } from './actions';
 

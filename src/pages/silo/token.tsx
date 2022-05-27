@@ -1,13 +1,13 @@
 import React from 'react';
-import { useParams, Link as RouterLink } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import Actions from 'components/v2/Silo/Actions';
 import Deposits from 'components/v2/Silo/Deposits';
 import useWhitelist from 'hooks/useWhitelist';
-import { Box, Button, Container, Stack, Typography } from '@mui/material';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Container, Stack } from '@mui/material';
 import usePools from 'hooks/usePools';
+import PageHeader from 'components/v2/Common/PageHeader';
 import PoolCard from '../../components/v2/Silo/PoolCard';
 
 const TokenPage: React.FC<{}> = () => {
@@ -23,18 +23,10 @@ const TokenPage: React.FC<{}> = () => {
   // Load data about the LP token
   const token = WHITELIST[address];
   const pool  = POOLS[address];
-  // const pool = BEAN_ETH_UNISWAP_V2_POOL_MAINNET;
   const siloToken = farmerSilo.tokens[token.address];
   const poolState = beanPools[address];
-  // const poolState: BeanPoolState = {
-  //   price: new BigNumber(100),
-  //   reserves: [new BigNumber(100), new BigNumber(100)],
-  //   deltaB: new BigNumber(100000),
-  //   liquidity: new BigNumber(123567),
-  //   totalCrosses: new BigNumber(100),
-  //   supply: new BigNumber(1234)
-  // };
   const hasPool = poolState !== undefined;
+
   // If no data loaded...
   if (!token || !siloToken) return null;
 
@@ -42,23 +34,11 @@ const TokenPage: React.FC<{}> = () => {
     <Container maxWidth="sm">
       <Stack gap={2}>
         {/* Header */}
-        <Stack direction="row" alignItems="center" gap={2}>
-          <Box>
-            <Button
-              to="/silo"
-              component={RouterLink}
-              variant="contained"
-              color="light"
-              sx={{ p: 1, borderRadius: 100, minWidth: 0 }}
-            >
-              <ChevronLeftIcon />
-            </Button>
-          </Box>
-          <Stack gap={0.5}>
-            <Typography variant="h2" sx={{ fontSize: 32 }}>{token.name} Silo</Typography>
-            <Typography>Deposit {token.name} to earn Stalk / Seed</Typography>
-          </Stack>
-        </Stack>
+        <PageHeader
+          title={`${token.name} Silo`}
+          description={`Deposit ${token.name} to earn Stalk / Seed`}
+          returnPath="/silo"
+        />
         {hasPool && (
           <PoolCard
             pool={pool}

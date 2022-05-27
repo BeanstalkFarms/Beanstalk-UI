@@ -2,7 +2,7 @@ import { BEAN } from 'constants/v2/tokens';
 import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { tokenResult } from 'util/LedgerUtilities2';
+import { tokenResult } from 'util/TokenUtilities';
 import { useNetwork } from 'wagmi';
 import { setRemaining } from './actions';
 

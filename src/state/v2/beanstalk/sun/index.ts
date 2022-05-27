@@ -13,9 +13,9 @@ export type Sun = {
   }
 }
 
-const UNPAUSE_DATE = DateTime.fromISO('2022-07-04T09:00:00.000-07:00'); // '2016-05-25T09:08:34.123+06:00'
+// const UNPAUSE_DATE = DateTime.fromISO('2022-07-04T09:00:00.000-07:00'); // '2016-05-25T09:08:34.123+06:00'
 export const getNextExpectedSunrise = () => {
   const now = DateTime.now();
-  if (now < UNPAUSE_DATE) return UNPAUSE_DATE;
+  // if (now < UNPAUSE_DATE) return UNPAUSE_DATE;
   return now.set({ minute: 0, second: 0, millisecond: 0 }).plus({ hour: 1 });
 };

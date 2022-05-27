@@ -4,19 +4,26 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import splitArrowsIcon from '../../../../img/split-arrows.svg';
 
 const StyledAccordionSummary : React.FC<{
-  title: string;
-}> = (props) => (
+  title: string | JSX.Element;
+  icon?: JSX.Element;
+  gradientText?: boolean;
+}> = ({
+  title,
+  icon,
+  gradientText = true,
+}) => (
   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
     <Stack direction="row" gap={1}>
-      <img alt="" src={splitArrowsIcon} />
+      {icon || <img alt="" src={splitArrowsIcon} />}
       <Typography
-        sx={{
+        variant="h4"
+        sx={gradientText ? {
           background: 'linear-gradient(90deg, rgba(70, 185, 85, 1.0) 0%, rgba(123, 97, 255, 1.0) 36.58%, rgba(31, 120, 180, 1.0) 96.2%)',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent'
-        }}
+        } : null}
       >
-        {props.title}
+        {title}
       </Typography>
     </Stack>
   </AccordionSummary>
