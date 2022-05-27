@@ -35,19 +35,15 @@ const NAVIGATION_MAP = {
   more: [
     {
       path: 'governance',
-      title: 'DAO',
+      title: 'Governance',
     },
     {
-      path: 'balances',
-      title: 'Balances',
+      path: 'trade',
+      title: 'Trade',
     },
     {
       path: 'analytics',
       title: 'Analytics',
-    },
-    {
-      path: 'peg',
-      title: 'Peg Maintenance',
     },
     {
       path: 'beanfts',
@@ -106,34 +102,39 @@ const MoreButton : React.FC = () => {
         variant="text"
         color="dark"
         endIcon={<ArrowDropDownIcon />}
-        onClick={handleClick}
+        onMouseOver={handleClick}
         sx={{
-          px: 1.5
+          px: 1.5,
+          cursor: 'pointer', 
         }}
+        className={open ? 'Mui-focusVisible' : ''}
       >
         More
       </Button>
       <Menu
         id="basic-menu"
+        elevation={1}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         MenuListProps={{
           'aria-labelledby': 'basic-button',
+          onMouseLeave: handleClose,
+          sx: {
+            cursor: 'pointer'
+          }
         }}
         // https://mui.com/material-ui/react-popover/#anchor-playground
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'right',
+          horizontal: 'left',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'right',
+          horizontal: 'left',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        {NAVIGATION_MAP.more.map((item) => <MenuItem component={RouterLink} key={item.path} to={item.path} sx={{ minWidth: 200 }}>{item.title}</MenuItem>)}
       </Menu>
     </>
   );
