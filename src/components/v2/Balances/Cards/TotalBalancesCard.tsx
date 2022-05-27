@@ -6,6 +6,7 @@ import StatCard from '../StatCard';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
 import useUSD from 'hooks/useUSD';
 import useWhitelist from 'hooks/useWhitelist';
+import { displayFullBN, displayUSD } from 'util/index';
 export interface TotalBalanceCardProps {
   breakdown: ReturnType<typeof useSiloTokenBreakdown>;
 }
@@ -80,7 +81,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
   }, [breakdown])
 
   return (
-    <StatCard title="My Balances" amount={`$${getUSD(breakdown.bdv).toFixed(2)}`} icon={undefined}>
+    <StatCard title="My Balances" amount={`$${displayFullBN(getUSD(breakdown.bdv), 2)}`} icon={undefined}>
       <Grid container direction="row" alignItems="center" sx={{ mb: 3}}>
         <Grid item xs={12} md={3.5}>
           <Stack>
@@ -89,7 +90,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
                 <TokenRow
                   key={id}
                   name={`${STATE_CONFIG[id][0]} Tokens`}
-                  value={`$${getUSD(breakdown[id].bdv).toFixed(2)}`}
+                  value={`$${displayFullBN(getUSD(breakdown[id].bdv), 2)}`}
                   isFaded={drilldown !== null && drilldown !== id}
                   onMouseOver={onMouseOver(id)}
                   onMouseOut={onMouseOut}
@@ -119,7 +120,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
                 return (
                   <TokenRow
                     name={`${whitelist[address].name}`}
-                    value={`$${getUSD((breakdown[drilldown]).bdvByToken[address]).toFixed(2)}`}
+                    value={displayUSD(getUSD(breakdown[drilldown].bdvByToken[address]))}
                     onMouseOver={onMouseOver('deposited')}
                     isFaded={false}
                   />

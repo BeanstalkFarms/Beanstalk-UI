@@ -1,11 +1,13 @@
+import { SupportedChainId } from 'constants/chains';
 import { Beanstalk, BeanstalkFertilizer, BeanstalkPrice } from 'constants/generated';
 import { AddressMap, BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES, BEANSTALK_PRICE_ADDRESSES } from 'constants/v2/addresses';
 import { Contract } from 'ethers';
 import { useMemo } from 'react';
-import { useAccount, useProvider } from 'wagmi';
+import { useAccount, useNetwork, useProvider } from 'wagmi';
 
 const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
 const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
+const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0.json');
 const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
 
 export default function useContract<T extends Contract = Contract>(
@@ -38,6 +40,7 @@ export default function useContract<T extends Contract = Contract>(
         chainId,
         account,
       });
+      return null;
     }
 
     console.debug('[useContract] initializing contract instance', {
@@ -70,9 +73,12 @@ export function useBeanstalkContract() {
 }
 
 export function useBeanstalkPriceContract() {
+  const { activeChain } = useNetwork();
   return useContract<BeanstalkPrice>(
     BEANSTALK_PRICE_ADDRESSES,
-    BEANSTALK_PRICE_ABI,
+    !activeChain || activeChain.id === SupportedChainId.MAINNET
+      ? BEANSTALK_PRICE_V0_ABI
+      : BEANSTALK_PRICE_ABI,
     true,
   );
 }
@@ -84,9 +90,3 @@ export function useBeanstalkFertilizerContract() {
     true,
   );
 }
-
-// export function useCurveContract() {
-//   return useContract<Curve>(
-
-//   )
-// }

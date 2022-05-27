@@ -3,7 +3,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import { SEEDS, STALK } from 'constants/v2/tokens';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { AppState } from 'state';
-import { displayBN } from 'util/index';
+import { displayBN, displayFullBN } from 'util/index';
 import ResizablePieChart, { PieDataPoint } from 'components/v2/Charts/Pie';
 import StatCard from '../StatCard';
 
@@ -55,8 +55,12 @@ const SiloAssetCard: React.FC<StalkCardProps> = ({
         <Stack gap={0.5}>
           {Object.keys(state).map((key) => (
             <Stack key={key} direction="row" justifyContent="space-between">
-              <Typography sx={{ opacity: 0.6, textTransform: 'capitalize' }}>{key} {token.name}</Typography>
-              <Typography>{state[key as keyof typeof state].toFixed(2)}</Typography>
+              <Typography sx={{ opacity: 0.6, textTransform: 'capitalize' }}>
+                {key} {token.name}
+              </Typography>
+              <Typography>
+                {displayFullBN(state[key as keyof typeof state], 0)}
+              </Typography>
             </Stack>
             ))}
         </Stack>

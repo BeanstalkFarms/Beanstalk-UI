@@ -23,7 +23,6 @@ export const useGetPools = () => {
       if (beanstalk && beanstalkPriceContract) {
         const result = await Promise.all([
           beanstalk.totalDepositedBeans(),
-          // beanstalk?.getTotalDeposited()
           beanstalkPriceContract.price()
         ]);
         if (!result) return;
@@ -62,6 +61,7 @@ export const useGetPools = () => {
         ];
         dispatch(updateBeanPools(await Promise.all(beanPools)));
         dispatch(updateBeanPrice(tokenResult(BEAN)(result[1].price.toString())));
+        // dispatch(updateBeanPrice(new BigNumber(1)));
       }
     },
     [

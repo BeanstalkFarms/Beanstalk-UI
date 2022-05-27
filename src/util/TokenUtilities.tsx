@@ -23,10 +23,17 @@ export function TrimBN(bn: BigNumber, decimals: number, allowNegative: boolean =
   );
 }
 
-export function displayFullBN(bn: BigNumber, maxDecimals: number = 18) {
+export function displayFullBN(bn: BigNumber, maxDecimals: number = 18, minDecimals : number = 0) {
   return bn
     .toNumber()
-    .toLocaleString('en-US', { maximumFractionDigits: maxDecimals });
+    .toLocaleString('en-US', {
+      minimumFractionDigits: minDecimals,
+      maximumFractionDigits: maxDecimals
+    });
+}
+
+export function displayUSD(bn: BigNumber) {
+  return `$${displayFullBN(bn, 2, 2)}`;
 }
 
 export function displayTokenAmount(amount: BigNumber, token: Token) {

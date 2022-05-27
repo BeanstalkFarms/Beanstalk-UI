@@ -9,9 +9,14 @@ import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
 import { GetAccountResult } from '@wagmi/core';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { reset, updateFarmerSiloAssets } from './actions';
+// import { SupportedChainId } from 'constants/chains';
+// const useMockBeanstalkContract = () => ({
+//   balanceOfStalk: ()
+// })
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
+  // const { activeChain } = useNetwork();
   const beanstalk = useBeanstalkContract();
 
   // Handlers
