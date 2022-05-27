@@ -143,7 +143,7 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
     },
     {
       stalk: 1,
-      seeds: 2,
+      seeds: 4,
     }
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
@@ -157,7 +157,7 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
     },
     {
       stalk: 1,
-      seeds: 2,
+      seeds: 4,
     }
   ),
 };
@@ -193,7 +193,11 @@ export const BEAN_CRV3_LP = {
     {
       name: 'BEAN:3CRV LP',
       symbol: 'BEAN:3CRV',
-      logo: beanCrv3LpLogoUrl,
+      logo: beanCrv3LpLogoUrl
+    },
+    {
+      stalk: 1,
+      seeds: 4,
     }
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
@@ -204,6 +208,10 @@ export const BEAN_CRV3_LP = {
       name: 'BEAN:3CRV LP',
       symbol: 'BEAN:3CRV',
       logo: beanCrv3LpLogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 4,
     }
   ),
 };
@@ -217,6 +225,10 @@ export const BEAN_LUSD_LP = {
       name: 'BEAN:LUSD LP',
       symbol: 'BEAN:LUSD',
       logo: crv3LogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 3,
     }
   ),
 };

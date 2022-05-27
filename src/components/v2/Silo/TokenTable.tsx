@@ -5,8 +5,11 @@ import { Link } from 'react-router-dom';
 import { Pool, Token } from 'classes';
 import { AppState } from 'state';
 import useUSD from 'hooks/useUSD';
-import { displayBN } from 'util/index';
+import { displayUSD } from 'util/index';
 import { zeroBN } from 'constants/index';
+import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
+import TokenIcon from 'components/v2/Common/TokenIcon';
+import { SEEDS, STALK } from 'constants/v2/tokens';
 
 const arrowContainerWidth = 20;
 
@@ -27,6 +30,7 @@ const TokenTable : React.FC<{
   farmerSilo,
 }) => {
   const getUSD = useUSD();
+  const breakdown = useSiloTokenBreakdown();
   return (
     <Card>
       {/* Table Header */}
@@ -53,31 +57,14 @@ const TokenTable : React.FC<{
           </Grid>
           <Grid item xs={3} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
             <Typography color="gray">My Deposits</Typography>
-            <Typography color="black" fontWeight="bold">$109,609.92</Typography>
+            <Typography color="black" fontWeight="bold">{displayUSD(getUSD(breakdown.bdv))}</Typography>
           </Grid>
         </Grid>
       </Box>
       <Stack direction="column" gap={1} sx={{ p: 1 }}>
         {config.whitelist.map((token) => {
           const deposited = farmerSilo.tokens[token.address]?.deposited;
-
           if (!deposited) return null;
-          // let usdValue : BigNumber;
-          // if (!deposited || deposited.eq(0)) {
-          //   usdValue = new BigNumber(0);
-          // } else if (/* config.poolsByAddress[token.address] && */beanPools[token.address]) {
-          //   const tokensFromLP = Pool.poolForLP(
-          //     deposited || new BigNumber(0),
-          //     beanPools[token.address]?.reserves[0],
-          //     beanPools[token.address]?.reserves[1],
-          //     beanPools[token.address]?.supply,
-          //   );
-          //   const underlyingBDV = tokensFromLP[0].multipliedBy(2);
-          //   usdValue = underlyingBDV.multipliedBy(beanPrice[0]);
-          // } else {
-          //   usdValue = deposited.times(beanPrice[0]);
-          // }
-
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -107,18 +94,19 @@ const TokenTable : React.FC<{
                   </Grid>
                   <Grid item xs={3}>
                     <Typography color="black">
-                      Rewards
+                      <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
+                      <TokenIcon token={SEEDS} />{token.rewards?.seeds}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>
                     <Typography color="black">
-                      ${displayBN(beanPools[token.address]?.liquidity || zeroBN)}
+                      {displayUSD(beanPools[token.address]?.liquidity || zeroBN)}
                     </Typography>
                   </Grid>
                   <Grid item xs={3} sx={{ textAlign: 'right' }}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
-                        ${getUSD(deposited.bdv).toFixed(2)}
+                        {displayUSD(getUSD(deposited.bdv))}
                       </Typography>
                       <Stack sx={{ width: arrowContainerWidth, }} alignItems="center">
                         <ArrowRightIcon />
