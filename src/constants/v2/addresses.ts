@@ -89,6 +89,20 @@ export const BEAN_CRV3_ADDRESSES : AddressMap = {
   [SupportedChainId.ROPSTEN]: '0x9ED0380C5dedadd3b2a32f5D5FD6B3929f8d39d9',
 };
 
+export const BEAN_LUSD_ADDRESSES : AddressMap = {
+  // --------------------------------------------------
+  // "Curve.fi Factory Plain Pool: Bean-LUSD (BEANLUSD-f)""
+  // [Implements: ERC20 & Metapool]
+  // --------------------------------------------------
+  [SupportedChainId.MAINNET]: '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D',
+
+  // --------------------------------------------------
+  // "Curve.fi Factory USD Metapool: Bean:3Crv"
+  // [Implements: ERC20 & Metapool]
+  // --------------------------------------------------
+  // [SupportedChainId.ROPSTEN]: '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC',
+};
+
 export const POOL3_ADDRESSES : AddressMap = {
   // --------------------------------------------------
   // "Curve.fi: DAI/USDC/USDT Pool" (aka 3pool)

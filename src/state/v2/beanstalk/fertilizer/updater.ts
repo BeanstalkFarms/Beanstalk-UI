@@ -3,7 +3,6 @@ import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { tokenResult } from 'util/TokenUtilities';
-import { useNetwork } from 'wagmi';
 import { setRemaining } from './actions';
 
 export const useFertilizer = () => {
