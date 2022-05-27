@@ -3,6 +3,7 @@ import { AddressMap } from 'constants/v2/addresses';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { beanstalkContract, erc20TokenContract } from 'util/contracts';
 import client from 'util/wagmi';
+import { zeroBN } from 'constants/index';
 
 /**
  * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
@@ -96,6 +97,16 @@ export default abstract class Token {
 
   public toString(): string {
     return this.name;
+  }
+
+  public getStalk(bdv?: BigNumber) : BigNumber {
+    if (!this.rewards?.stalk) return zeroBN;
+    return (bdv || new BigNumber(1)).times(this.rewards.stalk);
+  }
+  
+  public getSeeds(bdv?: BigNumber) : BigNumber {
+    if (!this.rewards?.seeds) return zeroBN;
+    return (bdv || new BigNumber(1)).times(this.rewards.seeds);
   }
 
   abstract getContract() : any;

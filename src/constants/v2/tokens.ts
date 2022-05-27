@@ -4,6 +4,7 @@ import beanEthLogoUrl from 'img/bean-eth-logo.svg';
 import beanCrv3LogoUrl from 'img/bean-crv3-logo.svg';
 import stalkLogo from 'img/stalk-logo.svg';
 import seedLogo from 'img/seed-logo.svg';
+import podsLogo from 'img/pod-logo.svg';
 
 import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from '../chains';
@@ -57,6 +58,17 @@ export const SEEDS = new BeanstalkToken(
     name: 'Seeds',
     symbol: 'SEED',
     logo: seedLogo,
+  }
+);
+
+export const PODS = new BeanstalkToken(
+  SupportedChainId.MAINNET,
+  '',
+  10,
+  {
+    name: 'Pods',
+    symbol: 'PODS',
+    logo: podsLogo,
   }
 );
 

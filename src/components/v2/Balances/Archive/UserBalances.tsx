@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react';
-import BalanceGrid from "./Modules/BalanceGrid";
+import BalanceGrid from "./BalanceGrid";
 
 export interface UserBalancesProps {
   title: string;

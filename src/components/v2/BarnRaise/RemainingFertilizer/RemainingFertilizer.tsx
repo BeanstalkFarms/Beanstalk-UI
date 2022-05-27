@@ -65,6 +65,7 @@ const RemainingFertilizer: React.FC<{
               <Link
                 href="#"
                 rel="noreferrer"
+                color="text.secondary"
               >
                 <Typography variant="body1">
                   Learn More About The Barn Raise

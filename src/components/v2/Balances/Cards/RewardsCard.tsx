@@ -14,11 +14,10 @@ export interface RewardsCardProps {
 
 const RewardsCard: React.FC<RewardsCardProps> = ({title}) => {
   const classes = useStyles();
-
   return (
-    <Card sx={{p: 2}}>
+    <Card sx={{ p: 2 }}>
       <Grid container direction="row" justifyContent="space-between" spacing={2}>
-        <Grid item xs={12} md={4.5}>
+        <Grid item xs={12} md={5}>
           <Stack>
             <Typography variant="h2">Inactive Rewards</Typography>
             <Stack gap={0.8} sx={{pt: 1}}>
@@ -57,7 +56,7 @@ const RewardsCard: React.FC<RewardsCardProps> = ({title}) => {
             </Stack>
           </Stack>
         </Grid>
-        <Grid item xs={12} md={4.5}>
+        <Grid item xs={12} md={5}>
           <Stack height="100%">
             <Typography variant="h2">Active Rewards</Typography>
             <Stack gap={1} sx={{pt: 1}} justifyContent="space-between" height="100%">

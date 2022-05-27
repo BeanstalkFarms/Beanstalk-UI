@@ -1,7 +1,9 @@
 import BigNumber from 'bignumber.js';
 
-// -- Token Balances
-
+/**
+ * A "Deposit" represents an amount of a Whitelisted Silo Token
+ * that has been added to the Silo.
+ */
 export type Deposit = {
   season: BigNumber;
   amount: BigNumber;
@@ -10,11 +12,20 @@ export type Deposit = {
   seeds: BigNumber;
 }
 
+/**
+ * A "Withdrawal" represents an amount of a "Deposit"
+ * that was removed from the Silo. Withdrawals remain pending
+ * for several seasons until they are ready to be Claimed.
+ */
 export type Withdrawal = {
   season: BigNumber;
   amount: BigNumber;
 }
 
+/**
+ * A "Farmer Token Balance" provides all information
+ * about a farmer's ownership of a whitelisted Silo token.
+ */
 export type FarmerTokenBalance = {
   circulating: BigNumber; // The circulating balance in the Farmer's wallet.
   wrapped: BigNumber; // The Farmer's wrapped balance.
@@ -23,18 +34,25 @@ export type FarmerTokenBalance = {
   withdrawn: BigNumber;
   withdrawals: Withdrawal[];
   claimable: BigNumber;
-  // claim: Transaction;
 }
 
+/**
+ * "Farmer Token Balances" track the detailed balances of
+ * all whitelisted Silo tokens, including the amount
+ * of each token deposited, claimable, withdrawn, and circulating.
+ * 
+ * FIXME: enforce that `address` is a key of whitelisted tokens?
+ */
 export type FarmerTokenBalances = {
-  // FIXME: enforce that this is a key of whitelisted tokens?
   tokens: { 
     [address: string]: FarmerTokenBalance;
   };
 }
 
-// -- Silo Assets
-
+/**
+ * "Silo Assets" are rewards earned for 
+ * holding tokens in the Silo.
+ */
 export type FarmerSiloAssets = {
   beans: {
     earned: BigNumber;
@@ -54,8 +72,6 @@ export type FarmerSiloAssets = {
     total: BigNumber;
   };
 }
-
-// --
 
 export type Silo = (
   FarmerTokenBalances 

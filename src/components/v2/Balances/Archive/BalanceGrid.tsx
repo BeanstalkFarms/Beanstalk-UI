@@ -2,8 +2,8 @@
 import React from 'react';
 import {Box, Card, Grid, Link, Stack, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
-import TotalBalanceCard from "./TotalBalanceCard";
-import RewardsCard from "./RewardsCard";
+import TotalBalanceCard from "../Cards/TotalBalancesCard";
+import RewardsCard from "../Cards/RewardsCard";
 import StalkCard from "./QuarterCards/StalkCard";
 import SeedCard from "./QuarterCards/SeedCard";
 import PodCard from "./QuarterCards/PodCard";

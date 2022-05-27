@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { BEAN, BEAN_ETH_UNIV2_LP } from 'constants/v2/tokens';
+import useChainConstant from 'hooks/useChainConstant';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -26,7 +27,12 @@ const FarmerUpdater = () => {
   );
 
   console.debug('[FarmerUpdater] re-rendering');
+  const Bean = useChainConstant(BEAN);
+  const BeanEthLP = useChainConstant(BEAN_ETH_UNIV2_LP);
 
+  /**
+   * Process events
+   */
   useEffect(() => {
     if (account?.address && activeChain?.id && season && earnedBeans) {
       const results = processFarmerEvents(events, {
@@ -36,25 +42,28 @@ const FarmerUpdater = () => {
         harvestableIndex: harvestableIndex
       });
       console.debug('[farmer/updater] process events', results);
+
+      // FIXME: temporary
+      // hardcode this because the event process returns `beanDepositsBalance`, etc.
       dispatch(updateFarmerTokenBalances({
-        [BEAN[activeChain.id].address]: {
+        [Bean.address]: {
           deposited: results.beanDepositsBalance,
           deposits: Object.keys(results.userBeanDeposits).map((s) => ({
             amount: results.userBeanDeposits[s],
             bdv: results.userBeanDeposits[s],
             season: new BigNumber(s),
-            seeds: new BigNumber(0),
-            stalk: new BigNumber(0),
+            seeds: Bean.getStalk(results.userBeanDeposits[s]),
+            stalk: Bean.getSeeds(results.userBeanDeposits[s]),
           })),
         },
-        [BEAN_ETH_UNIV2_LP[activeChain.id].address]: {
+        [BeanEthLP.address]: {
           deposited: results.lpDepositsBalance,
           deposits: Object.keys(results.userLPDeposits).map((s) => ({
             amount: results.userLPDeposits[s],
             bdv: results.userLPDeposits[s],
             season: new BigNumber(s),
-            seeds: new BigNumber(0),
-            stalk: new BigNumber(0),
+            seeds: BeanEthLP.getStalk(results.userLPDeposits[s]),
+            stalk: BeanEthLP.getSeeds(results.userLPDeposits[s]),
           })),
         }
       }));
@@ -71,7 +80,10 @@ const FarmerUpdater = () => {
     // event parsing params
     earnedBeans,
     harvestableIndex,
-    season
+    season,
+    //
+    Bean,
+    BeanEthLP,
   ]);
 
   return null;
