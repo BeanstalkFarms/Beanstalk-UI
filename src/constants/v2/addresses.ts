@@ -17,10 +17,21 @@ export const BEANSTALK_PRICE_ADDRESSES : AddressMap = {
 export const BEANSTALK_FERTILIZER_ADDRESSES : AddressMap = {
   [SupportedChainId.MAINNET]: '',
   [SupportedChainId.ROPSTEN]: '0xd598d3799521a3F95784A81c883ddf1122Ad769B', // Post-Exploit
-  // [SupportedChainId.RINKEBY]: '0xe859C94462B77A600f64Dc742b1D06cE17B256b1', // Post-Exploit
 };
 
+// https://ropsten.etherscan.io/address/0xf023d179bc3f571778f57978eca318e1154ee8e3#code
+export const BARNRAISE_CUSTODIAN_ADDRESSES : AddressMap = {
+  [SupportedChainId.MAINNET]: '0x2B7829448eaf27E1515E6Ed5fCB2cDF229B68144',
+  [SupportedChainId.ROPSTEN]: '0xA3D5F4042899a52f2ae7A0Cc58C079EFB62B9e43'
+}
+
 // -- ERC20 Token Contracts
+
+export const USDC_ADDRESSES : AddressMap = {
+  [SupportedChainId.MAINNET]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  [SupportedChainId.ROPSTEN]: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
+  [SupportedChainId.RINKEBY]: '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
+}
 
 export const CRV3_ADDRESSES : AddressMap = {
   // --------------------------------------------------

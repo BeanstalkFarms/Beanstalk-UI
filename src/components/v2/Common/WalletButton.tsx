@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Connector, useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi';
-import { Box, Button, Dialog, ListItemText, Menu, MenuItem, Stack, Typography } from '@mui/material';
+import { Box, Button, Dialog, Divider, ListItemText, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import tempUserIcon from 'img/temp-user-icon.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { trimAddress } from 'util/index';
@@ -93,9 +93,14 @@ const WalletButton : React.FC = () => {
           }}
         >
           <Box sx={{ minWidth: 250 }}>
+            <MenuItem component={RouterLink} to="/balances" onClick={handleHideMenu}>
+              <ListItemText>
+                Balances
+              </ListItemText>
+            </MenuItem>
             <MenuItem component={RouterLink} to="/history" onClick={handleHideMenu}>
               <ListItemText>
-                Transaction History
+                History
               </ListItemText>
             </MenuItem>
             <MenuItem component="a" href={`${CHAIN_INFO[activeChain.id].explorer}/address/${account.address}`} target="_blank" rel="noreferrer">
@@ -106,6 +111,7 @@ const WalletButton : React.FC = () => {
                 <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: '1rem', color: 'text.secondary' }} />
               </Stack>
             </MenuItem>
+            <Divider />
             <MenuItem onClick={() => disconnect()}>
               Disconnect
             </MenuItem>

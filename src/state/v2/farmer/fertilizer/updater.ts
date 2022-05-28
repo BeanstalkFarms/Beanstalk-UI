@@ -5,49 +5,49 @@ import { BEAN, USDC } from 'constants/v2/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkFertilizerContract, useERC20Contract } from 'hooks/useContract';
 import { tokenResult } from 'util/TokenUtilities';
-import { setRemaining, setTotalRaised } from './actions';
+import { useAccount } from 'wagmi';
+import { BigNumber } from 'ethers';
+import { REPLANT_SEASON } from 'hooks/useHumidity';
+import { updateFertTokens } from './actions';
 
-export const useFertilizer = () => {
+export const useFarmerFertilizer = () => {
   const dispatch = useDispatch();
+  const { data: account } = useAccount();
   const fertContract = useBeanstalkFertilizerContract();
-  const usdcContract = useERC20Contract(USDC_ADDRESSES);
-  const custodian = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
+  const replantSeason = useChainConstant(REPLANT_SEASON);
 
   // Handlers
   const fetch = useCallback(async () => {
-    if (fertContract && usdcContract && custodian) {
+    if (fertContract && account?.address) {
       console.debug('[beanstalk/fertilizer/updater] fetching...');
       const [
-        remaining,
-        totalRaised
+        balance,
       ] = await Promise.all([
-        fertContract.remaining().then(tokenResult(BEAN)),
-        usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
+        fertContract.balanceOf(account.address, replantSeason.toString()).then(tokenResult(BEAN)),
       ] as const);
-      console.debug(`[beanstalk/fertilizer/updater] remaining = ${remaining.toFixed(2)}`);
-      dispatch(setRemaining(remaining));
-      dispatch(setTotalRaised(totalRaised));
+      console.debug(`[farmer/fertilizer/updater] balance = ${balance.toFixed(2)}`);
+      dispatch(updateFertTokens({
+        [replantSeason.toNumber()]: balance
+      }));
     }
   }, [
     dispatch,
     fertContract,
-    usdcContract,
-    custodian
+    account,
+    replantSeason
   ]); 
   const clear = useCallback(() => {}, []);
 
   return [fetch, clear] as const;
 };
 
-const FertilizerUpdater = () => {
-  const [fetch] = useFertilizer();
-
+const FarmerFertilizerUpdater = () => {
+  const [fetch] = useFarmerFertilizer();
   useEffect(() => {
-    console.debug('[beanstalk/fertilizer/updater] call: fetch()');
+    console.debug('[farmer/fertilizer/updater] call: fetch()');
     fetch();
   }, [fetch]);
-
   return null;
 };
 
-export default FertilizerUpdater;
+export default FarmerFertilizerUpdater;

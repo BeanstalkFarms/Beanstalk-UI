@@ -1,20 +1,20 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Container, Stack } from '@mui/material';
+import { Box, Card, Container, Divider, Grid, Link, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { SupportedChainId } from 'constants/chains';
 import { useAccount } from 'wagmi';
+import useHumidity, { INITIAL_HUMIDITY } from 'hooks/useHumidity';
 import { zeroBN } from '../constants';
 import { ERC20Token, NativeToken } from '../classes/Token';
 import { BEAN, ERC20_TOKENS } from '../constants/v2/tokens';
 import useTokenMap from '../hooks/useTokenMap';
 import useChainConstant from '../hooks/useChainConstant';
 import { AppState } from '../state';
-import HorizontalScroll from '../components/v2/BarnRaise/MyFertilizer/HorizontalScroll';
 import BarnraisePurchaseForm from '../components/v2/BarnRaise/PurchaseFertilizer/BarnraisePurchaseForm';
 import RemainingFertilizer from '../components/v2/BarnRaise/RemainingFertilizer/RemainingFertilizer';
-import FertDialog from '../components/v2/BarnRaise/MyFertilizer/ViewAllDialog/FertDialog';
+import FertilizerItem from 'components/v2/BarnRaise/FertilizerItem';
 
 const getItems = () =>
   Array(10)
@@ -23,58 +23,91 @@ const getItems = () =>
 
 // rows for "View All Fertilizer" DataGrid
 const rows = [
-  { id: 5123, numFertilizer: 'x10,000', humidity: '500%', rewards: '10000', owedBeans: '1000' },
-  { id: 5124, numFertilizer: 'x10,000', humidity: '400%', rewards: '15000', owedBeans: '100' },
-  { id: 5125, numFertilizer: 'x10,000', humidity: '300%', rewards: '1400', owedBeans: '1050' },
-  { id: 5126, numFertilizer: 'x10,000', humidity: '100%', rewards: '1040', owedBeans: '1000' },
-  { id: 5127, numFertilizer: 'x10,000', humidity: '200%', rewards: '1000', owedBeans: '100' },
-  { id: 5128, numFertilizer: 'x10,000', humidity: '500%', rewards: '1030', owedBeans: '1400' },
-  { id: 5129, numFertilizer: 'x10,000', humidity: '500%', rewards: '100', owedBeans: '10800' },
-  { id: 5130, numFertilizer: 'x10,000', humidity: '500%', rewards: '1040', owedBeans: '100' },
-  { id: 5131, numFertilizer: 'x10,000', humidity: '500%', rewards: '100', owedBeans: '1010' },
+  { id: new BigNumber(5123), numFertilizer: new BigNumber(10000), humidity: new BigNumber(5), rewards: new BigNumber(10000), owedBeans: new BigNumber(1000), },
+  { id: new BigNumber(5124), numFertilizer: new BigNumber(10000), humidity: new BigNumber(5), rewards: new BigNumber(15000), owedBeans: new BigNumber(100), },
+  { id: new BigNumber(5125), numFertilizer: new BigNumber(10000), humidity: new BigNumber(5), rewards: new BigNumber(1400), owedBeans: new BigNumber(1050), },
+  { id: new BigNumber(5126), numFertilizer: new BigNumber(10000), humidity: new BigNumber(5), rewards: new BigNumber(1040), owedBeans: new BigNumber(1000), },
+  { id: new BigNumber(5127), numFertilizer: new BigNumber(10000), humidity: new BigNumber(5), rewards: new BigNumber(1000), owedBeans: new BigNumber(100), },
+  { id: new BigNumber(5128), numFertilizer: new BigNumber(10000), humidity: new BigNumber(5), rewards: new BigNumber(1030), owedBeans: new BigNumber(1400), },
+  { id: new BigNumber(5129), numFertilizer: new BigNumber(10000), humidity: new BigNumber(5), rewards: new BigNumber(100), owedBeans: new BigNumber(10800), },
+  { id: new BigNumber(5130), numFertilizer: new BigNumber(10000), humidity: new BigNumber(5), rewards: new BigNumber(1040), owedBeans: new BigNumber(100), },
+  { id: new BigNumber(5131), numFertilizer: new BigNumber(10000), humidity: new BigNumber(5), rewards: new BigNumber(100), owedBeans: new BigNumber(1010), },
 ];
 
-// -- 
-const HUMIDITY_DECREASE_UNPAUSE = new BigNumber(-250);
-const HUMIDITY_DECREASE_PER_SEASON = new BigNumber(-0.5);
-const UNPAUSE_SEASONS = {
-  [SupportedChainId.MAINNET]: 6074,
-  [SupportedChainId.ROPSTEN]: 564,  // current as of may 24
-};
-
 const WrappedRemainingFertilizer = () => {
-  const unpauseSeason = useChainConstant(UNPAUSE_SEASONS);
-  const sun = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
+  const [humidity, nextDecreaseAmount] = useHumidity();
   const fertilizer = useSelector<AppState, AppState['_beanstalk']['fertilizer']>((state) => state._beanstalk.fertilizer);
   const nextDecreaseDuration = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']['remaining']>(
     (state) => state._beanstalk.sun.sunrise.remaining
   );
-  // const sunrise = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']>(
-  //   (state) => state._beanstalk.sun.sunrise
-  // );
-
-  //
-  const beforeUnpause = useMemo(() => sun.season.lte(unpauseSeason), [sun.season, unpauseSeason]);
-  const nextDecreaseAmount = useMemo(() => {
-    if (beforeUnpause) return HUMIDITY_DECREASE_UNPAUSE;
-    if (fertilizer.humidity.gt(20)) return HUMIDITY_DECREASE_PER_SEASON;
-    return zeroBN;
-  }, [fertilizer.humidity, beforeUnpause]);
-
   return (
     <RemainingFertilizer
       remaining={fertilizer.remaining}
-      humidity={new BigNumber(500)}
       nextDecreaseAmount={nextDecreaseAmount}
       // FIXME:
       //  Below "in early July" is hardcoded.
       //  Also hardcoded in getNextExpectedSunrise().
-      nextDecreaseTimeString={beforeUnpause ? 'in early July' : `in ${nextDecreaseDuration.toFormat('mm:ss')}`}
-      // humidity={fertilizer.humidity}
-      // nextSunrise={sunrise.next}
+      nextDecreaseTimeString={humidity.eq(INITIAL_HUMIDITY) ? 'in early July' : `in ${nextDecreaseDuration.toFormat('mm:ss')}`}
+      humidity={humidity}
     />
   );
 };
+
+const MyFertilizer = () => {
+  return (
+    <Card>
+      {/* Card Header */}
+      <Stack sx={{ p: 2 }} gap={1}>
+        <Typography variant="h6">My Active Fertilizer</Typography>
+        <Stack gap={1}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Typography>Unclaimed Beans:</Typography>
+            <Stack direction="row" alignItems="center" gap={0.5}>
+              <Stack direction="row" gap={0.2}>
+                {/* <img alt="" src={beanCircleIcon} width="16px"/> */}
+                <Typography>200</Typography>
+              </Stack>
+              <Link underline="none" href="#"><Typography>(Claim)</Typography></Link>
+              <Typography>or</Typography>
+              <Link underline="none" href="#"><Typography>(Claim & Deposit)</Typography></Link>
+            </Stack>
+          </Stack>
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Typography>Total Fertilizer Reward:</Typography>
+            <Stack direction="row" alignItems="center" gap={0.1}>
+              {/* <img alt="" src={beanCircleIcon} width="16px"/> */}
+              <Typography>100,000</Typography>
+            </Stack>
+          </Stack>
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Typography>Total Owed Beans:</Typography>
+            <Stack direction="row" alignItems="center" gap={0.1}>
+              {/* <img alt="" src={beanCircleIcon} width="16px"/> */}
+              <Typography>100,000</Typography>
+            </Stack>
+          </Stack>
+        </Stack>
+      </Stack>
+      <Divider />
+      {/* Fertilizers */}
+      <Box sx={{ p: 2 }}>
+        <Grid container spacing={2}>
+          {rows.map((item) => (
+            <Grid key={item.id} item xs={6} md={3}>
+              <FertilizerItem
+                data={{
+                  humidity: item.humidity,
+                  remaining: item.rewards,
+                  amount: item.numFertilizer,
+                }}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </Card>
+  )
+}
 
 const BarnRaisePage: React.FC = () => {
   const erc20TokenList = useTokenMap(ERC20_TOKENS); // TODO: update tokens
@@ -108,7 +141,9 @@ const BarnRaisePage: React.FC = () => {
           purpose="Rebuilding Beanstalk"
           description="Earn yield through purchasing & activating Fertilizer, the Barn Raise token"
         />
+        {/* Section 1: Fertilizer Remaining */}
         <WrappedRemainingFertilizer />
+        {/* Section 2: Purchase Fertilizer */}
         <BarnraisePurchaseForm
           amount={amount}
           handleSetAmount={handleSetAmount}
@@ -118,15 +153,8 @@ const BarnRaisePage: React.FC = () => {
           balances={balances}
           account={account}
         />
-        <HorizontalScroll
-          items={items}
-          handleOpenFertilizerDialog={handleFertilizerDialogOpen}
-        />
-        <FertDialog
-          viewAllFertilizer={viewAllFertilizer}
-          handleCloseFertilizerDialog={handleFertilizerDialogClose}
-          dataGridRows={rows}
-        />
+        {/* Section 3: My Fertilizer */}
+        <MyFertilizer />
       </Stack>
     </Container>
   );

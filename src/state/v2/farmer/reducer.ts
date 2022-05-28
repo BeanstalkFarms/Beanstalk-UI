@@ -1,13 +1,15 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import silo from './silo/reducer';
-import field from './field/reducer';
-import events from './events/reducer';
 import balances from './balances/reducer';
+import events from './events/reducer';
+import fertilizer from './fertilizer/reducer';
+import field from './field/reducer';
+import silo from './silo/reducer';
 
 export default combineReducers({
-  silo,
-  field,
+  balances,
   events,
-  balances
+  fertilizer,
+  field,
+  silo,
 });

@@ -31,7 +31,7 @@ const store = configureStore({
     // general,
     // marketplace,
     // nfts,
-    tokenBalances,
+    // tokenBalances,
     // v2
     _bean,
     _beanstalk,

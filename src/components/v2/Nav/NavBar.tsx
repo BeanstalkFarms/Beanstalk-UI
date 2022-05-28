@@ -23,10 +23,10 @@ const NAVIGATION_MAP = {
       path: '/field',
       title: 'Field',
     },
-    {
-      path: '/balances',
-      title: 'Balances',
-    },
+    // {
+    //   path: '/balances',
+    //   title: 'Balances',
+    // },
     {
       path: '/barn-raise',
       title: 'Barn Raise',

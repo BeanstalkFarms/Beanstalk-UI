@@ -27,6 +27,7 @@ import { BeanstalkPalette } from './muiTheme';
 
 import './App.css';
 import BalancesPage from '../../../pages/balances';
+import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -64,15 +65,26 @@ export default function App() {
   return (
     <>
       <CssBaseline />
-      {/* UPDATERS */}
-      <FarmerSiloUpdater />
+      {/* -----------------------
+        * Bean Updaters
+        * ----------------------- */}
       <PoolsUpdater />
-      <FarmerEventsUpdater />
-      <FarmerUpdater />
-      <SunUpdater />
-      <BalancesUpdater />
+      {/* -----------------------
+        * Beanstalk Updaters
+        * ----------------------- */}
       <FertilizerUpdater />
-      {/* CONTENT */}
+      <SunUpdater />
+      {/* -----------------------
+        * Farmer Updaters
+      * ----------------------- */}
+      <FarmerUpdater />
+      <BalancesUpdater />
+      <FarmerEventsUpdater />
+      <FarmerFertilizerUpdater />
+      <FarmerSiloUpdater />
+      {/* -----------------------
+        * Content
+        * ----------------------- */}
       <Box
         className="App"
         sx={{

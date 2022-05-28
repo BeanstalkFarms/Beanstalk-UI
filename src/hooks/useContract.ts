@@ -1,5 +1,5 @@
 import { SupportedChainId } from 'constants/chains';
-import { Beanstalk, BeanstalkFertilizer, BeanstalkPrice } from 'constants/generated';
+import { Beanstalk, BeanstalkFertilizer, BeanstalkPrice, ERC20 } from 'constants/generated';
 import { AddressMap, BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES, BEANSTALK_PRICE_ADDRESSES } from 'constants/v2/addresses';
 import { Contract } from 'ethers';
 import { useMemo } from 'react';
@@ -9,6 +9,7 @@ const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
 const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
 const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0.json');
 const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
+const ERC20_ABI = require('constants/abi/ERC20.json');
 
 export default function useContract<T extends Contract = Contract>(
   addressOrAddressMap: string | AddressMap | undefined,
@@ -87,6 +88,14 @@ export function useBeanstalkFertilizerContract() {
   return useContract<BeanstalkFertilizer>(
     BEANSTALK_FERTILIZER_ADDRESSES,
     BEANSTALK_FERTILIZER_ABI,
+    true,
+  );
+}
+
+export function useERC20Contract(addressMap: AddressMap) {
+  return useContract<ERC20>(
+    addressMap,
+    ERC20_ABI,
     true,
   );
 }

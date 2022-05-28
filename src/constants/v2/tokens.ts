@@ -2,6 +2,7 @@ import ethLogoUrl from 'img/eth-logo.svg';
 import beanLogoUrl from 'img/bean-logo.svg';
 import beanEthLpLogoUrl from 'img/bean-eth-lp-logo.svg';
 import crv3LogoUrl from 'img/crv3-logo.svg';
+import usdcLogoUrl from 'img/usdc-logo.svg';
 import beanCrv3LpLogoUrl from 'img/bean-crv3-logo.svg';
 // import beanLusdLogoUrl from 'img/bean-lusd-logo.svg';
 import stalkLogo from 'img/stalk-logo.svg';
@@ -11,9 +12,11 @@ import podsLogo from 'img/pod-logo.svg';
 import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from '../chains';
 import { ChainConstant, TokenMap } from '.';
-import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES } from './addresses';
+import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, USDC_ADDRESSES } from './addresses';
 
-// -- Native Tokens
+// ----------------------------------------
+// Native Tokens
+// ----------------------------------------
 
 export const ETH_DECIMALS = 18;
 export const ETH = {
@@ -39,7 +42,9 @@ export const ETH = {
   ),
 };
 
-// -- Beanstalk Internal Tokens (not ERC20)
+// ----------------------------------------
+// Beanstalk Internal Tokens (not ERC20)
+// ----------------------------------------
 
 export const STALK = new BeanstalkToken(
   SupportedChainId.MAINNET,
@@ -74,7 +79,10 @@ export const PODS = new BeanstalkToken(
   }
 );
 
-// -- ERC20 Tokens
+
+// ----------------------------------------
+// ERC20 Tokens
+// ----------------------------------------
 
 export const WETH = {
   [SupportedChainId.MAINNET]: new ERC20Token(
@@ -130,6 +138,58 @@ export const BEAN = {
   ),
 };
 
+export const CRV3 = {
+  [SupportedChainId.MAINNET]: new ERC20Token(
+    SupportedChainId.MAINNET,
+    CRV3_ADDRESSES,
+    18,
+    {
+      name: '3CRV',
+      symbol: '3CRV',
+      logo: crv3LogoUrl,
+    }
+  ),
+  [SupportedChainId.ROPSTEN]: new ERC20Token(
+    SupportedChainId.ROPSTEN,
+    CRV3_ADDRESSES,
+    18,
+    {
+      name: '3CRV',
+      symbol: '3CRV',
+      logo: crv3LogoUrl,
+    }
+  ),
+};
+
+export const USDC = {
+  [SupportedChainId.MAINNET]: new ERC20Token(
+    SupportedChainId.MAINNET,
+    USDC_ADDRESSES,
+    6,
+    {
+      name: 'USD Coin',
+      symbol: 'USDC',
+      logo: usdcLogoUrl,
+    }
+  ),
+  [SupportedChainId.ROPSTEN]: new ERC20Token(
+    SupportedChainId.ROPSTEN,
+    USDC_ADDRESSES,
+    6,
+    {
+      name: 'USD Coin',
+      symbol: 'USDC',
+      logo: usdcLogoUrl,
+    }
+  ),
+}
+
+
+// ----------------------------------------
+// ERC20 Tokens - LP
+// ----------------------------------------
+
+
 export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
@@ -158,29 +218,6 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
     {
       stalk: 1,
       seeds: 4,
-    }
-  ),
-};
-
-export const CRV3 = {
-  [SupportedChainId.MAINNET]: new ERC20Token(
-    SupportedChainId.MAINNET,
-    CRV3_ADDRESSES,
-    18,
-    {
-      name: '3CRV',
-      symbol: '3CRV',
-      logo: crv3LogoUrl,
-    }
-  ),
-  [SupportedChainId.ROPSTEN]: new ERC20Token(
-    SupportedChainId.ROPSTEN,
-    CRV3_ADDRESSES,
-    18,
-    {
-      name: '3CRV',
-      symbol: '3CRV',
-      logo: crv3LogoUrl,
     }
   ),
 };
@@ -233,7 +270,10 @@ export const BEAN_LUSD_LP = {
   ),
 };
 
-// -- Token Lists
+
+// ----------------------------------------
+// Token Lists
+// ----------------------------------------
 
 export const ERC20_TOKENS : TokenMap[] = [
   BEAN,
