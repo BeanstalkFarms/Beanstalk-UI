@@ -116,7 +116,7 @@ const TokenInputField : React.FC<
           {quote}
         </Stack>
         <Typography sx={{ fontSize: 13.5 }}>
-          Balance: {balance ? displayFullBN(balance, 2) : '0'}
+          Balance: {balance ? `${displayFullBN(balance, 2)}` : '0'}
         </Typography>
         <Typography
           variant="body1"

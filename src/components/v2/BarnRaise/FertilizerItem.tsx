@@ -44,7 +44,7 @@ const FertilizerItem : React.FC<{
         <Stack direction="row" justifyContent="space-between">
           <Tooltip title="1 FERT = 1 USDC put into the Barn Raise." placement="left">
             <Typography color="text.secondary">
-              {displayFullBN(amount, 2, 2)} FERT
+              {displayFullBN(amount, 0)} FERT
             </Typography>
           </Tooltip>
           <Tooltip title="Humidity — interest rate earned for buying Fertilizer." placement="right">

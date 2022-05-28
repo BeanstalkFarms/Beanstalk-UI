@@ -41,6 +41,9 @@ const useFertilizerSummary = (tokens: FormTokenState[]) => {
     actions:  [] as Action[],    // 
   });
 
+  // 
+  summary.usdc = summary.usdc.dp(0, BigNumber.ROUND_DOWN);
+
   summary.actions.push({
     type: ActionType.BUY_FERTILIZER,
     amountIn: summary.usdc,

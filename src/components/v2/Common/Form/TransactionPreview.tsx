@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
-import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
+import { BEAN, SEEDS, STALK, USDC } from 'constants/v2/tokens';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction } from 'util/actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
@@ -88,7 +88,11 @@ const TransactionStep : React.FC<{
       break;
     case ActionType.BUY_FERTILIZER:
       action = (
-        <img src={FERTILIZER_ICONS.unused} alt="FERT" style={{ height: '100%' }} />
+        <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={0.75}>
+          <TokenIcon token={USDC[SupportedChainId.MAINNET]} style={{ height: '100%', marginTop: 0, }} />
+          <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
+          <img src={FERTILIZER_ICONS.unused} alt="FERT" style={{ height: '100%' }} />
+        </Stack>
       );
       break;
     case ActionType.RECEIVE_FERT_REWARDS:

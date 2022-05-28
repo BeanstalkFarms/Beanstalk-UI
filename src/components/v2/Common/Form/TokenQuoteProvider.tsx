@@ -5,7 +5,7 @@ import { Field, FieldProps, useFormikContext } from 'formik';
 import TokenInputField from 'components/v2/Common/Form/TokenInputField';
 import TokenAdornment from 'components/v2/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
-import { displayBN } from 'util/TokenUtilities';
+import { displayFullBN } from 'util/TokenUtilities';
 import useQuote from 'hooks/useQuote';
 // import { PinDropSharp } from '@mui/icons-material';
 import { FormTokenState } from '.';
@@ -62,14 +62,14 @@ const TokenQuoteProvider : React.FC<{
     <>
       {amountOut && (
         <Typography variant="body1" sx={{ fontSize: 13.5 }}>
-          = {displayBN(amountOut)} {tokenOut.symbol}
+          = {displayFullBN(amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
         </Typography>
       )}
       {quoting && (
         <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />
       )}
     </>
-  ), [amountOut, quoting, tokenOut.symbol]);
+  ), [amountOut, quoting, tokenOut.displayDecimals, tokenOut.symbol]);
 
   return (  
     <Field name={`${name}.amount`}>
