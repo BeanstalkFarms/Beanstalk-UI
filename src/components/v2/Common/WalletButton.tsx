@@ -1,8 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Connector, useAccount, useConnect, useDisconnect } from 'wagmi';
-import { Box, Button, Dialog, Stack } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Connector, useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi';
+import { Box, Button, Dialog, ListItemText, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import tempUserIcon from 'img/temp-user-icon.svg';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { trimAddress } from 'util/index';
+import { CHAIN_INFO } from 'constants/chains';
 
 const SelectWalletDialog : React.FC = ({
   handleClose,
@@ -42,39 +45,89 @@ const SelectWalletDialog : React.FC = ({
 
 const WalletButton : React.FC = () => {
   const { data: account } = useAccount();
+  const { activeChain } = useNetwork();
   const { disconnect } = useDisconnect();
 
-  const [open, setOpen] = useState(false);
-  const handleClose = useCallback(() => setOpen(false), []);
+  // Wallet Dialog
+  const [showDialog, setShowDialog] = useState(false);
+  const handleCloseDialog = useCallback(() => setShowDialog(false), []);
 
-  //
-  if (account?.address) {
+  // Menu
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const menuVisible = Boolean(anchorEl);
+  const handleShowMenu = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  }, []);
+  const handleHideMenu = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
+  // Display: Connected
+  if (account?.address && activeChain?.id) {
     return (
       <>
         <Button
           variant="contained"
           color="light"
           startIcon={<img src={tempUserIcon} alt="User" style={{ height: 25 }} />}
-          onClick={() => disconnect()}
+          onClick={handleShowMenu}
         >
           {trimAddress(account.address)}
         </Button>
+        <Menu
+          elevation={1}
+          anchorEl={anchorEl}
+          open={menuVisible}
+          onClose={handleHideMenu}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+          // https://mui.com/material-ui/react-popover/#anchor-playground
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <Box sx={{ minWidth: 250 }}>
+            <MenuItem component={RouterLink} to="/history" onClick={handleHideMenu}>
+              <ListItemText>
+                Transaction History
+              </ListItemText>
+            </MenuItem>
+            <MenuItem component="a" href={`${CHAIN_INFO[activeChain.id].explorer}/address/${account.address}`} target="_blank" rel="noreferrer">
+              <Stack sx={{ width: '100%' }} direction="row" alignItems="center" justifyContent="space-between">
+                <Typography variant="body2" color="text.primary">
+                  View on Etherscan
+                </Typography>
+                <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: '1rem', color: 'text.secondary' }} />
+              </Stack>
+            </MenuItem>
+            <MenuItem onClick={() => disconnect()}>
+              Disconnect
+            </MenuItem>
+          </Box>
+        </Menu>
       </>
     );
   }
 
+  // Display: Not Connected
   return (
     <>
       <Button
         variant="contained"
         color="light"
-        onClick={() => setOpen(true)}
+        onClick={() => setShowDialog(true)}
       >
         Connect Wallet
       </Button>
       <SelectWalletDialog
-        open={open}
-        handleClose={handleClose}
+        open={showDialog}
+        handleClose={handleCloseDialog}
       />
     </>
   );

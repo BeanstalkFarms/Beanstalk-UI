@@ -1,25 +1,25 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
-import { Silo } from '.';
+import { FarmerSilo } from '.';
 import { reset, updateFarmerSiloAssets, updateFarmerTokenBalances } from './actions';
 
 const NEG1 = new BigNumber(-1);
 
-const initialState : Silo = {
+const initialState : FarmerSilo = {
   tokens: {},
   beans: {
     earned: NEG1,
   },
   stalk: {
-    total: NEG1,
     active: NEG1,
     earned: NEG1,
     grown: NEG1,
+    total: NEG1,
   },
   seeds: {
-    total: NEG1,
     active: NEG1,
     earned: NEG1,
+    total: NEG1,
   },
   roots: {
     total: NEG1, 

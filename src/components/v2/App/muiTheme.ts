@@ -28,6 +28,15 @@ export const BeanstalkPalette = {
 
 // FIXME: changes to createTheme don't hot reload.
 const muiTheme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 801,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
   /**
    * 
    */

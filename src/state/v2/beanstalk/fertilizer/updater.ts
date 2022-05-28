@@ -3,7 +3,6 @@ import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { tokenResult } from 'util/TokenUtilities';
-import { useNetwork } from 'wagmi';
 import { setRemaining } from './actions';
 
 export const useFertilizer = () => {
@@ -13,6 +12,7 @@ export const useFertilizer = () => {
   // Handlers
   const fetch = useCallback(async () => {
     if (fertilizer) {
+      console.debug('[beanstalk/fertilizer/updater] fetching...');
       const [
         remaining
       ] = await Promise.all([
@@ -31,12 +31,12 @@ export const useFertilizer = () => {
 };
 
 const FertilizerUpdater = () => {
-  const { activeChain } = useNetwork();
   const [fetch] = useFertilizer();
 
   useEffect(() => {
-    if (activeChain?.id) fetch();
-  }, [activeChain?.id, fetch]);
+    console.debug('[beanstalk/fertilizer/updater] call: fetch()');
+    fetch();
+  }, [fetch]);
 
   return null;
 };

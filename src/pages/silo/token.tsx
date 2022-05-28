@@ -26,6 +26,7 @@ const TokenPage: React.FC<{}> = () => {
   const siloToken = farmerSilo.tokens[token.address];
   const poolState = beanPools[address];
   const hasPool = poolState !== undefined;
+
   // If no data loaded...
   if (!token || !siloToken) return null;
 
@@ -42,6 +43,7 @@ const TokenPage: React.FC<{}> = () => {
           <PoolCard
             pool={pool}
             poolState={poolState}
+            // isButton={true}
           />
         )}
         <Actions

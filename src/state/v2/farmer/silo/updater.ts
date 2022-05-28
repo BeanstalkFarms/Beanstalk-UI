@@ -9,9 +9,14 @@ import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
 import { GetAccountResult } from '@wagmi/core';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { reset, updateFarmerSiloAssets } from './actions';
+// import { SupportedChainId } from 'constants/chains';
+// const useMockBeanstalkContract = () => ({
+//   balanceOfStalk: ()
+// })
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
+  // const { activeChain } = useNetwork();
   const beanstalk = useBeanstalkContract();
 
   // Handlers
@@ -54,15 +59,15 @@ export const useFarmerSilo = () => {
           earned: earnedBeanBalance,
         },
         stalk: {
-          total:  activeStalkBalance.plus(grownStalkBalance),
           active: activeStalkBalance,
           earned: earnedStalkBalance,
           grown:  grownStalkBalance,
+          total:  activeStalkBalance.plus(grownStalkBalance),
         },
         seeds: {
-          total:  seedBalance.plus(earnedSeedBalance),
           active: seedBalance,
           earned: earnedSeedBalance,
+          total:  seedBalance.plus(earnedSeedBalance),
         },
         roots: {
           total: rootBalance,

@@ -13,13 +13,15 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
+import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
 
 const SiloPage : React.FC = () => {
-  const beanPrice = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
-  const beanPools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
-  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const sunrise = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']>((state) => state._beanstalk.sun.sunrise);
-  const whitelist = useWhitelist();
+  const beanPrice   = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
+  const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+  const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const { sunrise, season }     = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
+  const breakdown   = useSiloTokenBreakdown();
+  const whitelist   = useWhitelist();
   const poolsByAddress = usePools();
 
   return (
@@ -49,7 +51,9 @@ const SiloPage : React.FC = () => {
           )}
         />
         <OverviewCard
-          stalk={farmerSilo.stalk}
+          farmerSilo={farmerSilo}
+          breakdown={breakdown}
+          season={season}
         />
         <RewardsBar
           beans={farmerSilo.beans}

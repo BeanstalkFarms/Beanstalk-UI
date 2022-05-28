@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { CurveMetaPool__factory, UniswapV2Pair__factory } from 'constants/generated';
+import { CurveMetaPool__factory, CurvePlainPool__factory, UniswapV2Pair__factory } from 'constants/generated';
 import { ChainConstant } from 'constants/v2';
 import { AddressMap } from 'constants/v2/addresses';
 import { MinBN } from 'util/TokenUtilities';
@@ -171,6 +171,9 @@ export default abstract class Pool {
   abstract getReserves() : Promise<Reserves>;
 }
 
+// ------------------------------------
+// Uniswap V2 Pool
+// ------------------------------------
 export class UniswapV2Pool extends Pool {
   public getContract() {
     return UniswapV2Pair__factory.connect(this.address, client.provider);
@@ -189,9 +192,32 @@ export class UniswapV2Pool extends Pool {
   }
 }
 
+// ------------------------------------
+// Curve MetaPool
+// ------------------------------------
 export class CurveMetaPool extends Pool {
   public getContract() {
     return CurveMetaPool__factory.connect(this.address, client.provider);
+  }
+
+  public getReserves(): Promise<Reserves> {
+    return (
+      this.getContract().get_balances().then((result) => (
+        [
+          new BigNumber(result[0].toString()), 
+          new BigNumber(result[1].toString()),
+        ] as Reserves
+      ))
+    );
+  }
+}
+
+// ------------------------------------
+// Curve Plain Pool
+// ------------------------------------
+export class CurvePlainPool extends Pool {
+  public getContract() {
+    return CurvePlainPool__factory.connect(this.address, client.provider);
   }
 
   public getReserves(): Promise<Reserves> {

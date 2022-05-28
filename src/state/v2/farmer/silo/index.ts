@@ -1,40 +1,70 @@
 import BigNumber from 'bignumber.js';
 
-// -- Token Balances
-
-export type Deposit = {
+/**
+ * A Crate is an `amount` of a token Deposited or
+ * Withdrawn during a given `season`.
+ * 
+ * `Deposit` and `Withdrawal` extend Crate.
+ */
+export type Crate = {
   season: BigNumber;
   amount: BigNumber;
+}
+
+/**
+ * A "Deposit" represents an amount of a Whitelisted Silo Token
+ * that has been added to the Silo.
+ */
+export type Deposit = Crate & {
   bdv: BigNumber;
   stalk: BigNumber;
   seeds: BigNumber;
 }
 
-export type Withdrawal = {
-  season: BigNumber;
-  amount: BigNumber;
-}
+/**
+ * A "Withdrawal" represents an amount of a "Deposit"
+ * that was removed from the Silo. Withdrawals remain pending
+ * for several seasons until they are ready to be Claimed.
+ */
+export type Withdrawal = Crate & {}
 
+/**
+ * A "Farmer Token Balance" provides all information
+ * about a farmer's ownership of a whitelisted Silo token.
+ */
 export type FarmerTokenBalance = {
-  circulating: BigNumber; // The circulating balance in the Farmer's wallet.
-  wrapped: BigNumber; // The Farmer's wrapped balance.
-  deposited: BigNumber; //
-  deposits: Deposit[];
-  withdrawn: BigNumber;
-  withdrawals: Withdrawal[];
+  deposited: {
+    total: BigNumber;
+    bdv: BigNumber;
+    crates: Deposit[];
+  };
+  withdrawn: {
+    total: BigNumber;
+    bdv: BigNumber;
+    crates: Withdrawal[];
+  };
   claimable: BigNumber;
-  // claim: Transaction;
+  wrapped: BigNumber;
+  circulating: BigNumber;
 }
 
+/**
+ * "Farmer Token Balances" track the detailed balances of
+ * all whitelisted Silo tokens, including the amount
+ * of each token deposited, claimable, withdrawn, and circulating.
+ * 
+ * FIXME: enforce that `address` is a key of whitelisted tokens?
+ */
 export type FarmerTokenBalances = {
-  // FIXME: enforce that this is a key of whitelisted tokens?
   tokens: { 
     [address: string]: FarmerTokenBalance;
   };
 }
 
-// -- Silo Assets
-
+/**
+ * "Silo Assets" are rewards earned for 
+ * holding tokens in the Silo.
+ */
 export type FarmerSiloAssets = {
   beans: {
     earned: BigNumber;
@@ -55,9 +85,7 @@ export type FarmerSiloAssets = {
   };
 }
 
-// --
-
-export type Silo = (
+export type FarmerSilo = (
   FarmerTokenBalances 
   & FarmerSiloAssets
 );

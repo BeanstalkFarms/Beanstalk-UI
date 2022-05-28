@@ -1,10 +1,15 @@
 import { Box, Button, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
+import BigNumber from 'bignumber.js';
+import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
+import useUSD from 'hooks/useUSD';
 import React, { useCallback, useState } from 'react';
+import { AppState } from 'state';
+import { displayBN, displayUSD } from 'util/index';
 
-import SimpleGraph, { DataPoint } from './SimpleGraph';
-import { mockDepositData, mockOwnershipPctData } from './SimpleGraph.mock';
+import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
+import { mockDepositData, mockOwnershipPctData } from '../Charts/SimpleLineChart.mock';
 
-const windows = [
+const WINDOWS = [
   { label: '1H', },
   { label: '1D', },
   { label: '1W', },
@@ -14,29 +19,34 @@ const windows = [
 ];
 
 type TabData = {
-  current: number[];
+  season: BigNumber;
+  current: BigNumber[];
   series: (DataPoint[])[]
 }
 
-const DepositsTab : React.FC<TabData> = ({ current, series }) => {
+const DepositsTab : React.FC<TabData> = ({
+  season,
+  current,
+  series
+}) => {
+  const getUSD = useUSD();
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback((ds?: DataPoint[]) => {
-    setDisplayValue(ds ? ds.map((d) => d.value) : current);
+    setDisplayValue(ds ? ds.map((d) => new BigNumber(d.value)) : current);
   }, [current]);
-  
   return (
     <>
       <Box sx={{ px: 2 }}>
         <Stack gap={0.5}>
           <Typography color="gray">Total Silo Deposits</Typography>
           <Typography variant="h1" color="primary">
-            ${displayValue[0].toLocaleString()}
+            {displayUSD(getUSD(displayValue[0]))}
           </Typography>
-          <Typography>Season 5995</Typography>
+          <Typography>Season {displayBN(season)}</Typography>
         </Stack>
       </Box>
-      <Box sx={{ width: '100%', height: '300px' }}>
-        <SimpleGraph
+      <Box sx={{ width: '100%', height: '200px' }}>
+        <SimpleLineChart
           series={series}
           onCursor={handleCursor}
         />
@@ -45,10 +55,14 @@ const DepositsTab : React.FC<TabData> = ({ current, series }) => {
   );
 };
 
-const StalkOwnershipTab : React.FC<TabData> = ({ current, series }) => {
+const StalkOwnershipTab : React.FC<TabData> = ({
+  current,
+  series,
+  season
+}) => {
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback((ds?: DataPoint[]) => {
-    setDisplayValue(ds ? ds.map((d) => d.value) : current);
+    setDisplayValue(ds ? ds.map((d) => new BigNumber(d.value)) : current);
   }, [current]);
   
   return (
@@ -57,19 +71,19 @@ const StalkOwnershipTab : React.FC<TabData> = ({ current, series }) => {
         <Stack gap={0.5} sx={{ minWidth: 180 }}>
           <Typography color="gray">My Stalk</Typography>
           <Typography variant="h1" color="primary">
-            {displayValue[0].toLocaleString('en-us', { maximumFractionDigits: 0 })}
+            {displayBN(displayValue[0])}
           </Typography>
-          <Typography>Season 5995</Typography>
+          <Typography>Season {displayBN(season)}</Typography>
         </Stack>
         <Stack gap={0.5}>
           <Typography color="gray">Ownership % of all Stalk</Typography>
           <Typography variant="h1" color="secondary.dark">
-            {(100 * displayValue[1]).toLocaleString()}%
+            {(displayValue[1].multipliedBy(100)).toFixed(3)}%
           </Typography>
         </Stack>
       </Stack>
-      <Box sx={{ width: '100%', height: '300px' }}>
-        <SimpleGraph
+      <Box sx={{ width: '100%', height: '200px' }}>
+        <SimpleLineChart
           series={series}
           onCursor={handleCursor}
         />
@@ -79,10 +93,13 @@ const StalkOwnershipTab : React.FC<TabData> = ({ current, series }) => {
 };
 
 const OverviewCard : React.FC<{
-  // FIXME: naming
-  totalDepositValue: number;
+  farmerSilo: AppState['_farmer']['silo'];
+  breakdown: ReturnType<typeof useSiloTokenBreakdown>;
+  season: BigNumber;
 }> = ({
-  totalDepositValue = 109_609.82
+  farmerSilo,
+  breakdown,
+  season
 }) => {
   const [tab, setTab] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -90,6 +107,7 @@ const OverviewCard : React.FC<{
   };
   return (
     <Card>
+      {/* FIXME: sizing between deposits tab and Total Silo Deposits */}
       <Stack direction="row" justifyContent="space-between" sx={{ px: 2, pt: 2 }}>
         <Tabs value={tab} onChange={handleChange}>
           <Tab label="Deposits" />
@@ -97,7 +115,7 @@ const OverviewCard : React.FC<{
         </Tabs>
         <Box>
           <Stack direction="row">
-            {windows.map((w) => (
+            {WINDOWS.map((w) => (
               <Button
                 variant="text"
                 size="small"
@@ -112,24 +130,16 @@ const OverviewCard : React.FC<{
       </Stack>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
         <DepositsTab
-          current={[
-            totalDepositValue
-          ]}
-          series={[
-            mockDepositData
-          ]}
+          current={[breakdown.bdv]}
+          series={[mockDepositData]}
+          season={season}
         />
       </Box>
       <Box sx={{ display: tab === 1 ? 'block' : 'none' }}>
         <StalkOwnershipTab
-          current={[
-            totalDepositValue,
-            0.01,
-          ]}
-          series={[
-            mockDepositData,
-            mockOwnershipPctData,
-          ]}
+          current={[farmerSilo.stalk.active, new BigNumber(0.01)]}
+          series={[mockDepositData, mockOwnershipPctData]}
+          season={season}
         />
       </Box>
     </Card>

@@ -164,7 +164,7 @@ const Graph : React.FC<GraphProps> = withTooltip(({
 /**
  * Wrap the graph in a ParentSize handler.
  */
-const SimpleGraph : React.FC<{
+const SimpleLineChart : React.FC<{
   series: (DataPoint[])[];
   onCursor: GraphProps['onCursor'];
 }> = (props) => (
@@ -180,6 +180,8 @@ const SimpleGraph : React.FC<{
   </ParentSize>
 );
 
+export default SimpleLineChart;
+
 /* <circle
   cx={tooltipLeft}
   cy={tooltipTop + margin.top}
@@ -191,5 +193,3 @@ const SimpleGraph : React.FC<{
   strokeWidth={2}
   pointerEvents="none"
 /> */
-
-export default SimpleGraph;

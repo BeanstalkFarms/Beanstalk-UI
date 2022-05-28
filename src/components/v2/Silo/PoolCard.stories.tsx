@@ -10,19 +10,20 @@ export default {
   args: {}
 } as ComponentMeta<typeof PoolCard>;
 
-const pool: BeanPoolState = {
+const poolState: BeanPoolState = {
   price: new BigNumber(100),
   reserves: [new BigNumber(100), new BigNumber(100)],
   deltaB: new BigNumber(100000),
   liquidity: new BigNumber(123567),
-  totalCrosses: new BigNumber(100)
+  totalCrosses: new BigNumber(100),
+  supply: new BigNumber(1234)
 };
 
 const Template: ComponentStory<typeof PoolCard> = (args: any) => (
   <PoolCard
     {...args}
-    address={BEAN_ETH_UNIV2_POOL_MAINNET.address}
-    pool={pool}
+    pool={BEAN_ETH_UNISWAP_V2_POOL_MAINNET}
+    poolState={poolState}
   />
 );
 
