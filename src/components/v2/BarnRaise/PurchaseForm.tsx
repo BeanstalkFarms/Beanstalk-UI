@@ -200,10 +200,6 @@ const SetupForm: React.FC<{}> = () => {
 
 export default () => {
   const isReady = useFarmerReady();
-
-  if (isReady) {
-    return <SetupForm />;
-  }
-
+  if (isReady) return <SetupForm />;
   return <div>Setting up....</div>;
 };

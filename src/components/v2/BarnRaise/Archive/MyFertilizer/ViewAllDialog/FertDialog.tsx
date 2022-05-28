@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import {makeStyles} from '@mui/styles';
-import {StyledDialog, StyledDialogContent, StyledDialogTitle} from "../../../Common/Dialog";
+import {StyledDialog, StyledDialogContent, StyledDialogTitle} from "../../../../Common/Dialog";
 import FertDataGrid from "./FertDataGrid";
 import MyFertilizerHeader from "../MyFertilizerHeader";
 

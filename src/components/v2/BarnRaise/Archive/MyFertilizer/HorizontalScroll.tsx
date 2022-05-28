@@ -8,7 +8,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import beanCircleIcon from 'img/bean-circle.svg';
 import fertilizerOpenedIcon from 'img/fertilizer-opened.svg';
 import fertilizerClosedIcon from 'img/fertilizer-closed.svg';
-import {ERC20Token, NativeToken} from "../../../../classes/Token";
+import {ERC20Token, NativeToken} from "../../../../../classes/Token";
 import BigNumber from "bignumber.js";
 import MyFertilizerHeader from "./MyFertilizerHeader";
 
