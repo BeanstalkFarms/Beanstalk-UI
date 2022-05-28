@@ -5,12 +5,13 @@ import gearIcon from 'img/gear.svg';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import { displayBN } from 'util/index';
-import { ETH, TokensByAddress, USDC } from 'constants/v2/tokens';
+import { ETH, USDC } from 'constants/v2/tokens';
+import { TokensByAddress } from 'constants/v2';
 import { BalanceState } from 'state/v2/farmer/balances/reducer';
-import TokenInputField from '../Common/Form/TokenInputField';
-import PurchaseDropdown from './PurchaseFertilizer/PurchaseDropdown';
-import { Form, Formik } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
+
+// ---------------------------------------------------
 
 export interface BarnraiseFormProps {
   amount: BigNumber;
@@ -22,21 +23,28 @@ export interface BarnraiseFormProps {
   account: any;
 }
 
-const FertilizeForm : React.FC = () => {
-  return (
-    <Form noValidate>
-      <Stack gap={1}>
-      </Stack>
-    </Form>
-  )
-}
-
 type FertilizerFormValues = {
   tokens: ({
     token: Token,
     amount: BigNumber | undefined;
   })[]
 }
+
+// ---------------------------------------------------
+
+const FertilizeForm : React.FC<
+  FormikProps<FertilizerFormValues>
+> = () => {
+  return (
+    <Form noValidate>
+      <Stack gap={1}>
+        
+      </Stack>
+    </Form>
+  )
+}
+
+// ---------------------------------------------------
 
 const PREFERRED_TOKENS : PreferredToken[] = [
   {
@@ -60,9 +68,11 @@ const FormWrapper: React.FC<{}> = () => {
     ],
   }), [baseToken]);
   return (
-    <Formik initialValues={initialValues} onSubmit={() => {}}>
-      {(props) => <DepositForm to={to} {...props} />}
-    </Formik>
+    <Card>
+      <Formik initialValues={initialValues} onSubmit={() => {}}>
+        {(props) => <FertilizeForm {...props} />}
+      </Formik>
+    </Card>
   );
 };
 

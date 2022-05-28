@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/v2/Common/Dialog';
 import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { TokensByAddress } from 'constants/v2/tokens';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { AppState } from 'state';
 import { zeroBN } from 'constants/index';
+import { TokensByAddress } from 'constants/v2';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -51,7 +51,7 @@ const TokenSelectDialog : React.FC<{
 
   console.debug('[TokenSelectDialog] render');
 
-  //
+  // Toggle the selection state of a token.
   const toggle = useCallback((token: Token) => {
     const copy = new Set(_selected);
     if (_selected.has(token)) {

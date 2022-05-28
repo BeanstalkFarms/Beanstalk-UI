@@ -1,10 +1,9 @@
 import BigNumber from "bignumber.js";
 import { Token } from "classes";
-import { SupportedChainId } from "constants/chains";
 import { TokenOrTokenMap } from "constants/v2";
 import { useSelector } from "react-redux";
 import { AppState } from "state";
-import { useNetwork } from "wagmi";
+import useGetChainToken from "./useChainToken";
 
 export type PreferredToken = {
   token: TokenOrTokenMap;
@@ -13,19 +12,34 @@ export type PreferredToken = {
 
 type FallbackMode = 'use-best';
 
+/**
+ * Select a single `Token` from a list of `PreferredToken[]` based on
+ * the user's current balances and Token configuration.
+ * 
+ * Example: when instantiating the Sow form, we want the form to use
+ * BEAN by default if the user has some minimum number of Beans in their
+ * balance. Otherwise we move on to ETH, etc.
+ * 
+ * `list` should be ordered according to preference.
+ * 
+ * @param list An ordered list of tokens to select from.
+ * @param fallbackMode What to do if no tokens meet the minimum.
+ *    `use-best` Default to the first token in the list.
+ * @returns 
+ */
 const usePreferredToken = (list: PreferredToken[], fallbackMode : FallbackMode = 'use-best') => {
-  const { activeChain } = useNetwork();
+  const get = useGetChainToken();
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const index = list.findIndex((pt) => {
-    const token = pt.token instanceof Token ? pt.token : pt.token[activeChain?.id || SupportedChainId.MAINNET];
+    const token = get(pt.token);
     const min   = pt.minimum || new BigNumber(token.displayDecimals*100);
     return balances[token.address]?.gte(min) || false;
   });
-  if (index > -1) return list[index].token;
+  if (index > -1) return get(list[index].token);
   switch(fallbackMode) {
     default:
     case 'use-best':
-      return list[0].token;
+      return get(list[0].token);
   }
 }
 

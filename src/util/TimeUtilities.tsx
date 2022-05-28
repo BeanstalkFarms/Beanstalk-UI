@@ -1,3 +1,5 @@
+export const sleep = (ms: number = 1000) => new Promise((r) => setTimeout(() => { r(); }, ms));
+
 export function timeToString(timeDifference: number) {
   const timeInDays = Math.floor(timeDifference / 86400);
   if (timeInDays > 0) return `${timeInDays} ${timeInDays > 1 ? 'days' : 'day'}`;

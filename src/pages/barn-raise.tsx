@@ -131,11 +131,7 @@ const BarnRaisePage: React.FC = () => {
         {/* Section 1: Fertilizer Remaining */}
         <WrappedRemainingFertilizer />
         {/* Section 2: Purchase Fertilizer */}
-        {/* <Form
-          erc20TokenList={erc20TokenList}
-          balances={balances}
-          account={account}
-        /> */}
+        <Form />
         {/* Section 3: My Fertilizer */}
         <MyFertilizer />
       </Stack>
