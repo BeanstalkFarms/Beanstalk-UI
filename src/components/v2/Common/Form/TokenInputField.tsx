@@ -45,6 +45,7 @@ const TokenInputField : React.FC<
   } as TextFieldProps['InputProps']), [InputProps]);
 
   // Derived
+  // Disable when: explicitly disabled, balance is undefined or zero
   const isDisabled = disabled || !balance || balance.eq(0)
 
   // Handlers
@@ -96,9 +97,6 @@ const TokenInputField : React.FC<
       <TextField
         type="number"
         placeholder={placeholder || '0'}
-        // Disable when:
-        // - explicitly disabled
-        // - balance is undefined or zero
         disabled={isDisabled}
         {...props}
         onWheel={handleWheel}

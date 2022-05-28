@@ -6,6 +6,8 @@ import fertActiveIcon from 'img/icon/fertilizer/active.svg';
 import fertUsedIcon   from 'img/icon/fertilizer/used.svg';
 import { BeanstalkPalette } from '../App/muiTheme';
 
+import './FertilizerImage.css';
+
 export type FertilizerState = 'unused' | 'active' | 'used'
 export const FERTILIZER_ICONS : { [key in FertilizerState]: string } = {
   unused: fertUnusedIcon,
@@ -14,11 +16,13 @@ export const FERTILIZER_ICONS : { [key in FertilizerState]: string } = {
 };
 export type FertilizerImageProps = {
   state?: FertilizerState;
+  isNew? : boolean;
   progress?: number;
 };
 
 const FertilizerImage : React.FC<FertilizerImageProps> = ({
   state = 'unused',
+  isNew = false,
   progress,
 }) => (
   <Stack
@@ -27,14 +31,20 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
     sx={{
       width: '100%',
       aspectRatio: '1/1',
-      borderColor: grey[300],
+      borderColor: isNew ? BeanstalkPalette.logoGreen : grey[300],
       borderWidth: 1,
       borderStyle: 'solid',
       borderRadius: 1,
       position: 'relative',
     }}
   >
-    <img alt="" src={FERTILIZER_ICONS[state]} width="40%" style={{ position: 'relative', zIndex: 2 }} />
+    <img
+      alt=""
+      src={FERTILIZER_ICONS[state]}
+      width="45%"
+      style={{ position: 'relative', zIndex: 2 }}
+      className={isNew ? "fert bounce" : undefined}
+    />
     {progress && (
       <Box
         sx={{

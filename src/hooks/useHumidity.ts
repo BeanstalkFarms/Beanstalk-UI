@@ -5,6 +5,8 @@ import { AppState } from 'state';
 import { SupportedChainId } from 'constants/chains';
 import { useNetwork } from 'wagmi';
 import { zeroBN } from 'constants/index';
+import { MaxBN } from 'util/TokenUtilities';
+import useChainConstant from './useChainConstant';
 
 // ----------------------------------------
 
@@ -26,18 +28,16 @@ export const REPLANT_SEASON : { [key: number] : BigNumber } = {
 // deterministic. Leaving this for now to save time but
 // will circle back later! -Silo Chad
 export const useHumidityAtSeason = () => {
-  const { activeChain } = useNetwork();
-  
-  // Until the end of the first Season after Unpause,
-  // the Humidity stays at 500%.
-  // const beforeFirstSunrise  = season.eq(replantSeason);
-  const replantSeason = REPLANT_SEASON[(activeChain?.id as SupportedChainId) || SupportedChainId.MAINNET];
-  const endDecreaseSeason   = replantSeason.plus(461);
+  // Until the end of the first Season after Unpause, the Humidity stays at 500%.
+  const replantSeason     = useChainConstant(REPLANT_SEASON)
+  const endDecreaseSeason = replantSeason.plus(461);
 
   // Decrease by 0.5% every season until 20%
   return useCallback((season: BigNumber) => {
-    const seasonsAfterReplant = season.minus(replantSeason.plus(1));
-    if (season.eq(replantSeason))       return [INITIAL_HUMIDITY, HUMIDITY_DECREASE_AT_REPLANT];
+    // MaxBN provides a constraint on Ropsten because the actual season is 564-fish
+    // but we need to pass a REPLANT_SEASON of 6074 to the contract to get the user's balance
+    const seasonsAfterReplant = MaxBN(season.minus(replantSeason.plus(1)), zeroBN);
+    if (season.lte(replantSeason))       return [INITIAL_HUMIDITY, HUMIDITY_DECREASE_AT_REPLANT];
     if (season.gte(endDecreaseSeason))  return [MIN_HUMIDITY, zeroBN];
     const humidityDecrease = seasonsAfterReplant.multipliedBy(HUMIDITY_DECREASE_PER_SEASON);
     return [RESTART_HUMIDITY.minus(humidityDecrease), HUMIDITY_DECREASE_PER_SEASON];

@@ -25,26 +25,29 @@ export type FertilizerData = {
 const FertilizerItem : React.FC<{
   /** Fertilizer can be `unused` -> `active` -> `used`.  */
   state?: FertilizerState;
+  /**  */
+  isNew?: boolean;
 } & FertilizerData> = ({
   state,
+  isNew,
   amount,
   humidity,
   remaining,
   progress,
 }) => (
   <Stack rowGap={0.75}>
-    <FertilizerImage state={state} progress={progress} />
+    <FertilizerImage isNew={isNew} state={state} progress={progress} />
     {amount.eq(0) ? (
       <Typography textAlign="center">x0</Typography>
     ) : (
       <Stack direction="column" rowGap={0.25}>
         <Stack direction="row" justifyContent="space-between">
-          <Tooltip title="1 FERT represents 1 USDC entered into the Barn Raise." placement="left">
+          <Tooltip title="1 FERT = 1 USDC put into the Barn Raise." placement="left">
             <Typography color="text.secondary">
               {displayBN(amount)} FERT
             </Typography>
           </Tooltip>
-          <Tooltip title="Humidity is the interest rate earned for buying Fertilizer." placement="right">
+          <Tooltip title="Humidity — interest rate earned for buying Fertilizer." placement="right">
             <Typography color="text.secondary">
               <OpacityIcon sx={{ fontSize: 14 }} /> {displayBN(humidity.times(100))}%
             </Typography>
@@ -53,7 +56,7 @@ const FertilizerItem : React.FC<{
         <Tooltip title={"The Beans remaining to be distributed to this Fertilizer."} placement="bottom">
           <Stack direction="row" justifyContent="space-between">
             <Typography color="text.primary" fontWeight="bold">
-              Remaining
+              {isNew ? 'Rewards' : 'Remaining'}
             </Typography>
             <Typography color="text.primary" fontWeight="bold">
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} /> {displayBN(remaining)}

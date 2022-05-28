@@ -85,7 +85,7 @@ const FertilizeForm : React.FC<
 
   return (
     <Form noValidate>
-      <Stack gap={1}>
+      <Stack gap={2}>
         <TokenSelectDialog
           open={showTokenSelect}
           handleClose={handleClose}
@@ -95,7 +95,9 @@ const FertilizeForm : React.FC<
           tokenList={tokenList}
           mode={TokenSelectMode.SINGLE}
         />
-        <Stack gap={1.5}>
+        {/* Form Contents */}
+        <Box>
+          {/* Inputs */}
           {values.tokens.map((state, index) => (
             <TokenQuoteProvider
               name={`tokens.${index}`}
@@ -105,21 +107,25 @@ const FertilizeForm : React.FC<
               showTokenSelect={handleOpen}
             />
           ))}
+          {/* Outputs */}
           {amountUsdc?.gt(0) ? (
-            <Stack direction="column" gap={2} alignItems="center" justifyContent="center">
-              <KeyboardArrowDownIcon />
+            <Stack direction="column" gap={1} alignItems="center" justifyContent="center">
+              <KeyboardArrowDownIcon color="secondary" />
               <Box sx={{ width: 200 }}>
                 <FertilizerItem
+                  isNew={true}
                   amount={amountUsdc}
                   remaining={amountUsdc.multipliedBy(humidity.plus(1))}
                   humidity={humidity}
+                  state="active"
                 />
               </Box>
             </Stack>
           ) : null}
-        </Stack>
+        </Box>
+        {/* Submit */}
         <LoadingButton loading={isSubmitting} type="submit" disabled={!ready} variant="contained" color="primary" size="large">
-          Buy Fertilizer
+          Purchase{amountUsdc && ` ${displayBN(amountUsdc)}`} Fertilizer
         </LoadingButton>
       </Stack>
     </Form>
