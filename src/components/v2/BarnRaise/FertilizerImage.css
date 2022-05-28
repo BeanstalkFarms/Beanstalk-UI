@@ -10,10 +10,10 @@
 
 @keyframes bounce {
     0%   { transform: scale(1,1)          translateY(0); }
-    5%  { transform: scale(1.03, 0.95)   translateY(0); }
+    5%  { transform: scale(1.04, 0.93)   translateY(0); }
     15%  { transform: scale(0.97, 1.03)   translateY(-10px); }
     25%  { transform: scale(1.03, 0.97)   translateY(0); }
-    28%  { transform: scale(1,1)          translateY(-2px); }
-    32%  { transform: scale(1,1)          translateY(0); }
+    32%  { transform: scale(1,1)          translateY(-2px); }
+    38%  { transform: scale(1,1)          translateY(0); }
     100% { transform: scale(1,1)          translateY(0); }
 }

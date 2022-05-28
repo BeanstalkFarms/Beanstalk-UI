@@ -11,6 +11,7 @@ import FieldPage from 'pages/field';
 import ForecastPage from 'pages/forecast';
 import BarnRaisePage from 'pages/barn-raise';
 import TransactionHistoryPage from 'pages/history';
+import BalancesPage from 'pages/balances';
 
 import pageBackground from 'img/bg-mainnet.png';
 import NavBar from 'components/v2/Nav/NavBar';
@@ -23,11 +24,10 @@ import FarmerUpdater from 'state/v2/farmer/updater';
 import SunUpdater from 'state/v2/beanstalk/sun/updater';
 import FertilizerUpdater from 'state/v2/beanstalk/fertilizer/updater';
 import BalancesUpdater from 'state/v2/farmer/balances/updater';
-import { BeanstalkPalette } from './muiTheme';
+import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
 
 import './App.css';
-import BalancesPage from '../../../pages/balances';
-import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
+import { BeanstalkPalette } from './muiTheme';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 

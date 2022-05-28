@@ -14,7 +14,7 @@ export function useGetChainConstant() {
       return map[activeChain?.id || SupportedChainId.MAINNET];
     },
     [activeChain?.id]
-  )
+  );
 }
 
 export default function useChainConstant<T extends ConstantByChain>(map: T) : T[keyof T] {

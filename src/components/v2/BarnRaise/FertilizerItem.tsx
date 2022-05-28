@@ -5,8 +5,8 @@ import TokenIcon from 'components/v2/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
 import BigNumber from 'bignumber.js';
 import { displayBN } from 'util/index';
-import FertilizerImage, { FertilizerState } from './FertilizerImage';
 import OpacityIcon from '@mui/icons-material/Opacity';
+import FertilizerImage, { FertilizerState } from './FertilizerImage';
 
 export type FertilizerData = {
   /** The amount of Fertilizer owned at this */
@@ -53,7 +53,7 @@ const FertilizerItem : React.FC<{
             </Typography>
           </Tooltip>
         </Stack>
-        <Tooltip title={"The Beans remaining to be distributed to this Fertilizer."} placement="bottom">
+        <Tooltip title="The Beans remaining to be distributed to this Fertilizer." placement="bottom">
           <Stack direction="row" justifyContent="space-between">
             <Typography color="text.primary" fontWeight="bold">
               {isNew ? 'Rewards' : 'Remaining'}

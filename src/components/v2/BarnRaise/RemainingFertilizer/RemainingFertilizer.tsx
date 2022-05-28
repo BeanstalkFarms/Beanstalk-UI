@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
-import { Box, Card, Link, Stack, Typography, useMediaQuery } from '@mui/material';
+import React from 'react';
+import { Box, Card, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/index';
-import muiTheme from '../../App/muiTheme';
 import FertilizerImage from '../FertilizerImage';
 
 const RemainingFertilizer: React.FC<{
@@ -16,11 +15,10 @@ const RemainingFertilizer: React.FC<{
       <Typography variant="h2">Remaining Fertilizer</Typography>
       <Stack
         direction={{ xs: 'column', md: 'row' }}
-          // alignItems={{ xs: 'center', md: 'unset' }}
         alignItems="center"
         justifyContent={{ md: 'left' }}
         gap={2}
-        >
+      >
         {/* left column */}
         <Box sx={{ minWidth: 200 }}>
           <FertilizerImage progress={0.5} />

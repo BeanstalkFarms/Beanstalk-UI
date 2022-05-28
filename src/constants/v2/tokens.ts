@@ -1,5 +1,5 @@
 import ethLogoUrl from 'img/eth-logo.svg';
-import beanLogoUrl from 'img/bean-logo.svg';
+// import beanLogoUrl from 'img/bean-logo.svg';
 import beanCircleLogoUrl from 'img/bean-circle.svg';
 import beanEthLpLogoUrl from 'img/bean-eth-lp-logo.svg';
 import crv3LogoUrl from 'img/crv3-logo.svg';

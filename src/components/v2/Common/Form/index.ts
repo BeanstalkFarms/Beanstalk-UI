@@ -1,5 +1,5 @@
-import BigNumber from "bignumber.js";
-import Token from "classes/Token";
+import BigNumber from 'bignumber.js';
+import Token from 'classes/Token';
 
 export type FormTokenState = {
   token: Token;

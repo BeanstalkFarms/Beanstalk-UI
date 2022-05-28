@@ -43,7 +43,7 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
       src={FERTILIZER_ICONS[state]}
       width="45%"
       style={{ position: 'relative', zIndex: 2 }}
-      className={isNew ? "fert bounce" : undefined}
+      className={isNew ? 'fert bounce' : undefined}
     />
     {progress && (
       <Box

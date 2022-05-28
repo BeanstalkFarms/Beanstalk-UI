@@ -3,10 +3,7 @@ import { Box, Card, Container, Divider, Grid, Link, Stack, Typography } from '@m
 import PageHeader from 'components/v2/Common/PageHeader';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { useAccount } from 'wagmi';
 import useHumidity, { INITIAL_HUMIDITY, useHumidityAtSeason } from 'hooks/useHumidity';
-import { ERC20_TOKENS } from 'constants/v2/tokens';
-import useTokenMap from 'hooks/useTokenMap';
 import { AppState } from 'state';
 import Form from 'components/v2/BarnRaise/Form';
 import RemainingFertilizer from 'components/v2/BarnRaise/RemainingFertilizer/RemainingFertilizer';
@@ -116,10 +113,10 @@ const MyFertilizer = () => {
 };
 
 const BarnRaisePage: React.FC = () => {
-  const erc20TokenList = useTokenMap(ERC20_TOKENS); // TODO: update tokens
-  const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
-  const { data: account } = useAccount();
-
+  // const erc20TokenList = useTokenMap(ERC20_TOKENS); // TODO: update tokens
+  // const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
+  // const { data: account } = useAccount();
+  console.debug('render barn raise');
   return (
     <Container maxWidth="md">
       <Stack gap={2}>

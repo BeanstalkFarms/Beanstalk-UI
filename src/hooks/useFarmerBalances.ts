@@ -1,8 +1,6 @@
-import { useSelector } from "react-redux";
-import { AppState } from "state";
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 
-const useFarmerBalances = () => {
-  return useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
-};
+const useFarmerBalances = () => useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
 
 export default useFarmerBalances;

@@ -11,7 +11,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 // import general from './general/reducer';
 // import marketplace from './marketplace/reducer';
 // import nfts from './nfts/reducer';
-import tokenBalances from './tokenBalance/reducer';
+// import tokenBalances from './tokenBalance/reducer';
 
 // v2
 import _bean from './v2/bean/reducer';

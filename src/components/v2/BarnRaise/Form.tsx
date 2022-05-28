@@ -1,8 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Button, Card, Stack, Typography } from '@mui/material';
+import { Box, Card, Stack, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import BigNumber from 'bignumber.js';
-import gearIcon from 'img/gear.svg';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import { displayBN, toStringBaseUnitBN } from 'util/index';
@@ -13,15 +12,17 @@ import { Form, Formik, FormikProps } from 'formik';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
-import TokenSelectDialog, { TokenSelectMode } from '../Common/Form/TokenSelectDialog';
-import TokenQuoteProvider from '../Common/Form/TokenQuoteProvider';
 import useChainConstant from 'hooks/useChainConstant';
 import useFarmerReady from 'hooks/useFarmerReady';
-import FertilizerItem from './FertilizerItem';
-import useHumidity from 'hooks/useHumidity';
-import { FormTokenState } from '../Common/Form';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useBeanstalkFertilizerContract } from 'hooks/useContract';
+import useFertilizerSummary from 'hooks/summary/useFertilizerSummary';
+import TokenSelectDialog, { TokenSelectMode } from 'components/v2/Common/Form/TokenSelectDialog';
+import TokenQuoteProvider from 'components/v2/Common/Form/TokenQuoteProvider';
+import { FormTokenState } from 'components/v2/Common/Form';
+import TransactionPreview from 'components/v2/Common/Form/TransactionPreview';
+import TxnAccordion from 'components/v2/Common/TxnAccordion';
+import FertilizerItem from './FertilizerItem';
 
 // ---------------------------------------------------
 export interface BarnraiseFormProps {
@@ -49,7 +50,7 @@ const PREFERRED_TOKENS : PreferredToken[] = [
     token: ETH,
     minimum: new BigNumber(0.001) // ~$2-4
   }
-]
+];
 
 // ---------------------------------------------------
 
@@ -65,13 +66,15 @@ const FertilizeForm : React.FC<
   const Usdc = useChainConstant(USDC);
   const balances = useFarmerBalances();
   const [showTokenSelect, setShowTokenSelect] = useState(false);
-  const [humidity] = useHumidity();
+  // 
+  const {
+    usdc,
+    humidity,
+    actions
+  } = useFertilizerSummary(values.tokens);
 
   // Extract
-  const amountUsdc = values.tokens[0].token === Usdc
-    ? values.tokens[0].amount
-    : values.tokens[0].amountOut;
-  const ready = amountUsdc?.gt(0);
+  const ready = usdc?.gt(0);
 
   // Handlers
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
@@ -108,29 +111,40 @@ const FertilizeForm : React.FC<
             />
           ))}
           {/* Outputs */}
-          {amountUsdc?.gt(0) ? (
-            <Stack direction="column" gap={1} alignItems="center" justifyContent="center">
-              <KeyboardArrowDownIcon color="secondary" />
-              <Box sx={{ width: 200 }}>
-                <FertilizerItem
-                  isNew={true}
-                  amount={amountUsdc}
-                  remaining={amountUsdc.multipliedBy(humidity.plus(1))}
-                  humidity={humidity}
-                  state="active"
-                />
-              </Box>
-            </Stack>
+          {usdc?.gt(0) ? (
+            <>
+              <Stack direction="column" gap={2} alignItems="center" justifyContent="center">
+                <KeyboardArrowDownIcon color="secondary" />
+                <Box>
+                  <Box sx={{ width: 200 }}>
+                    <FertilizerItem
+                      isNew
+                      amount={usdc}
+                      remaining={usdc.multipliedBy(humidity.plus(1))}
+                      humidity={humidity}
+                      state="active"
+                    />
+                  </Box>
+                </Box>
+                <Box sx={{ width: '100%' }}>
+                  <TxnAccordion>
+                    <TransactionPreview
+                      actions={actions}
+                    />
+                  </TxnAccordion>
+                </Box>
+              </Stack>
+            </>
           ) : null}
         </Box>
         {/* Submit */}
         <LoadingButton loading={isSubmitting} type="submit" disabled={!ready} variant="contained" color="primary" size="large">
-          Purchase{amountUsdc && ` ${displayBN(amountUsdc)}`} Fertilizer
+          Purchase{usdc && ` ${displayBN(usdc)}`} Fertilizer
         </LoadingButton>
       </Stack>
     </Form>
-  )
-}
+  );
+};
 
 // ---------------------------------------------------
 
@@ -142,10 +156,8 @@ const SetupForm: React.FC<{}> = () => {
   const initialValues : FertilizerFormValues = useMemo(() => ({
     tokens: [
       {
-        // token: baseToken,
-        // amount: undefined,
         token: baseToken,
-        amount: new BigNumber(5),
+        amount: undefined,
       },
     ],
   }), [baseToken]);
@@ -160,7 +172,7 @@ const SetupForm: React.FC<{}> = () => {
           call = fertContract.buyAndMint(
             toStringBaseUnitBN(amountUsdc.multipliedBy(0.999), Usdc.decimals),
             { value: toStringBaseUnitBN(amount, Eth.decimals) }
-          )
+          );
         } else if (token === Usdc) {
           call = Promise.resolve();
         } else {
@@ -169,9 +181,9 @@ const SetupForm: React.FC<{}> = () => {
       } else {
         call = Promise.reject();
       }
-      return call.then()
+      return call.then();
     }
-  }, [Eth, Usdc, fertContract])
+  }, [Eth, Usdc, fertContract]);
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
@@ -190,8 +202,8 @@ export default () => {
   const isReady = useFarmerReady();
 
   if (isReady) {
-    return <SetupForm />
+    return <SetupForm />;
   }
 
-  return <div>Setting up....</div>
+  return <div>Setting up....</div>;
 };

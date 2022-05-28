@@ -1,9 +1,8 @@
-import BigNumber from "bignumber.js";
-import { Token } from "classes";
-import { TokenOrTokenMap } from "constants/v2";
-import { useSelector } from "react-redux";
-import { AppState } from "state";
-import useGetChainToken from "./useChainToken";
+import BigNumber from 'bignumber.js';
+import { TokenOrTokenMap } from 'constants/v2';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
+import useGetChainToken from './useChainToken';
 
 export type PreferredToken = {
   token: TokenOrTokenMap;
@@ -32,18 +31,18 @@ const usePreferredToken = (list: PreferredToken[], fallbackMode : FallbackMode =
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const index = list.findIndex((pt) => {
     const tok = get(pt.token);
-    const min = pt.minimum || new BigNumber(tok.displayDecimals*100);
+    const min = pt.minimum || new BigNumber(tok.displayDecimals * 100);
     const bal = balances[tok.address];
-    console.debug(`[usePreferredToken] ${tok.symbol} ${tok.address} ${min.toString()} ${bal.toString()}`)
+    console.debug(`[usePreferredToken] ${tok.symbol} ${tok.address} ${min.toString()} ${bal.toString()}`);
     return bal?.gte(min) || false;
   });
-  console.debug(`[usePreferredToken] found: ${index}`)
+  console.debug(`[usePreferredToken] found: ${index}`);
   if (index > -1) return get(list[index].token);
-  switch(fallbackMode) {
+  switch (fallbackMode) {
     default:
     case 'use-best':
       return get(list[0].token);
   }
-}
+};
 
 export default usePreferredToken;

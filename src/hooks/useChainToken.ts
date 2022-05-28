@@ -20,5 +20,5 @@ export default function useGetChainToken() {
       return t instanceof Token ? t : getChainConstant(t);
     },
     [getChainConstant]
-  )
+  );
 }

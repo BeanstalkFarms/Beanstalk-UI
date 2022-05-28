@@ -13,7 +13,7 @@ import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/v2/Common/Accordion/AccordionSummary';
 import { FormTokenState } from 'components/v2/Common/Form';
 import TokenQuoteProvider from 'components/v2/Common/Form/TokenQuoteProvider';
-import useDepositSummary from 'hooks/useDepositSummary';
+import useDepositSummary from 'hooks/summary/useDepositSummary';
 import TransactionPreview from 'components/v2/Common/Form/TransactionPreview';
 
 // -----------------------------------------------------------------------

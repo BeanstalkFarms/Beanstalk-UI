@@ -1,5 +1,4 @@
 import { createReducer } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
 import { FarmerFertilizer } from '.';
 import { updateFertTokens } from './actions';
 

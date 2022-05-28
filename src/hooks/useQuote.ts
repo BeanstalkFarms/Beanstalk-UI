@@ -1,12 +1,12 @@
-import { BigNumber } from "bignumber.js";
-import Token from "classes/Token";
-import { useCallback, useEffect, useState } from "react";
-import { tokenResult, toStringBaseUnitBN, toTokenUnitsBN } from "util/TokenUtilities";
+import { BigNumber } from 'bignumber.js';
+import Token from 'classes/Token';
+import { useCallback, useEffect, useState } from 'react';
+import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/TokenUtilities';
 import debounce from 'lodash/debounce';
-import { sleep } from "util/TimeUtilities";
-import { useBeanstalkFertilizerContract } from "./useContract";
-import { ETH_DECIMALS } from "constants/v2/tokens";
-import { bigNumberResult } from "util/LedgerUtilities";
+import { sleep } from 'util/TimeUtilities';
+import { ETH_DECIMALS } from 'constants/v2/tokens';
+import { bigNumberResult } from 'util/LedgerUtilities';
+import { useBeanstalkFertilizerContract } from './useContract';
 
 export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
   amountIn: BigNumber | undefined,
@@ -39,7 +39,7 @@ export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
         //
         return call.then((result) => {
           const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
-          console.debug(`[useQuote] got amount out: ${amountOut?.toString()}`, result)
+          console.debug(`[useQuote] got amount out: ${amountOut?.toString()}`, result);
           setAmountOut(_amountOut);
           setQuoting(false);
           return result;

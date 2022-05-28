@@ -1,15 +1,11 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from 'constants/v2/addresses';
-import { BEAN, USDC } from 'constants/v2/tokens';
 import useChainConstant from 'hooks/useChainConstant';
-import { useBeanstalkFertilizerContract, useERC20Contract } from 'hooks/useContract';
-import { tokenResult } from 'util/TokenUtilities';
+import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 import { useAccount } from 'wagmi';
-import { BigNumber } from 'ethers';
 import { REPLANT_SEASON } from 'hooks/useHumidity';
-import { updateFertTokens } from './actions';
 import { bigNumberResult } from 'util/LedgerUtilities';
+import { updateFertTokens } from './actions';
 
 export const useFarmerFertilizer = () => {
   const dispatch = useDispatch();

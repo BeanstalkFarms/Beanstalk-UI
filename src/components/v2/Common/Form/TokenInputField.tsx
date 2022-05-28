@@ -25,7 +25,7 @@ const TokenInputField : React.FC<
   // -- Formik props
   field,
   form,
-  meta,
+  // meta,
   // -- TextField props
   placeholder,
   disabled,
@@ -46,7 +46,7 @@ const TokenInputField : React.FC<
 
   // Derived
   // Disable when: explicitly disabled, balance is undefined or zero
-  const isDisabled = disabled || !balance || balance.eq(0)
+  const isDisabled = disabled || !balance || balance.eq(0);
 
   // Handlers
   const handleMax = useCallback(() => { 
@@ -72,7 +72,7 @@ const TokenInputField : React.FC<
   const handleWheel = useCallback((e) => {
     // @ts-ignore
     e.target.blur();
-  }, [])
+  }, []);
   
   // PROBLEM:
   // BigNumber('0') == BigNumber('0.0').

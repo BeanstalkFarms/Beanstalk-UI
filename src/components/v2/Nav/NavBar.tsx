@@ -123,7 +123,7 @@ const MoreButton: React.FC = () => {
         onMouseOver={handleClick}
         sx={{
           px: 1.5,
-          //cursor: 'pointer',
+          // cursor: 'pointer',
           fontSize: '1rem',
           fontWeight: '400',
         }}

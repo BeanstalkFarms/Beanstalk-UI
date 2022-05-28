@@ -1,55 +1,7 @@
 import { Token } from 'classes';
-import BigNumber from 'bignumber.js';
-import { displayFullBN, displayTokenAmount } from 'util/TokenUtilities';
 import { zeroBN } from 'constants/index';
 import { FormTokenState } from 'components/v2/Common/Form';
-
-// -----------------------------------------------------------------------
-
-export enum ActionType {
-  SWAP,
-  DEPOSIT,
-  RECEIVE_REWARDS,
-}
-
-export type SwapAction = {
-  type: ActionType.SWAP;
-  tokenIn: Token;
-  amountIn: BigNumber;
-  tokenOut: Token;
-  amountOut: BigNumber;
-}
-
-export type RewardsAction = {
-  type: ActionType.RECEIVE_REWARDS;
-  stalk: BigNumber;
-  seeds: BigNumber;
-}
-
-export type DepositAction = {
-  type: ActionType.DEPOSIT;
-  amountIn: BigNumber;
-  tokenIn: Token;
-}
-
-export type Action = (
-  SwapAction
-  | DepositAction
-  | RewardsAction
-);
-
-const ACTION_MESSAGES = {
-  [ActionType.SWAP]: (a: SwapAction) => 
-    `Swap ${displayTokenAmount(a.amountIn, a.tokenIn)} for ${displayTokenAmount(a.amountOut, a.tokenOut)}.`,
-  [ActionType.DEPOSIT]: (a: DepositAction) =>
-    `Deposit ${displayTokenAmount(a.amountIn, a.tokenIn)} into the Silo.`,
-  [ActionType.RECEIVE_REWARDS]: (a: RewardsAction) =>
-    `Receive ${displayFullBN(a.stalk, 2)} Stalk and ${displayFullBN(a.seeds, 2)} Seeds.`,
-};
-
-// -----------------------------------------------------------------------
-
-export const parseActionMessage = (i: Action) => ACTION_MESSAGES[i.type as keyof typeof ACTION_MESSAGES](i);
+import { Action, ActionType } from 'util/actions';
 
 /**
  * Summarize the Actions that will occur when making a Deposit.
@@ -89,13 +41,13 @@ const useDepositSummary = (to: Token, tokens: FormTokenState[]) => {
     }
     return agg;
   }, {  
-    bdv: zeroBN,
-    stalk: zeroBN,
-    seeds: zeroBN,
+    bdv: zeroBN,    // The aggregate BDV to be Deposited.
+    stalk: zeroBN,  // The Stalk earned for the Deposit.
+    seeds: zeroBN,  // The Seeds earned for the Deposit.
     actions: [] as Action[],
   });
 
-  // DEPOSIAT and RECEIVE_REWARDS always come last
+  // DEPOSIT and RECEIVE_REWARDS always come last
   summary.actions.push({
     type: ActionType.DEPOSIT,
     amountIn: summary.bdv,
@@ -104,7 +56,7 @@ const useDepositSummary = (to: Token, tokens: FormTokenState[]) => {
     tokenIn: to, 
   });
   summary.actions.push({
-    type: ActionType.RECEIVE_REWARDS,
+    type: ActionType.RECEIVE_SILO_REWARDS,
     stalk: summary.stalk,
     seeds: summary.seeds,
   });
