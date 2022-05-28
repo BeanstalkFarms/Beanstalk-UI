@@ -1,14 +1,16 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Button, Card, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import gearIcon from 'img/gear.svg';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import { displayBN } from 'util/index';
-import { TokensByAddress } from 'constants/v2/tokens';
+import { ETH, TokensByAddress, USDC } from 'constants/v2/tokens';
 import { BalanceState } from 'state/v2/farmer/balances/reducer';
 import TokenInputField from '../Common/Form/TokenInputField';
 import PurchaseDropdown from './PurchaseFertilizer/PurchaseDropdown';
+import { Form, Formik } from 'formik';
+import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 
 export interface BarnraiseFormProps {
   amount: BigNumber;
@@ -20,88 +22,48 @@ export interface BarnraiseFormProps {
   account: any;
 }
 
-const BuyFertilizerForm: React.FC<BarnraiseFormProps> = ({
-  amount,
-  handleSetAmount,
-  from,
-  handleSetFrom,
-  erc20TokenList,
-  balances,
-  account
-}) => {
-  const handleMax = useCallback(() => {
-    handleSetAmount(balances[from.address]);
-  }, [handleSetAmount, balances, from]);
-
+const FertilizeForm : React.FC = () => {
   return (
-    <Card sx={{ p: 2 }}>
+    <Form noValidate>
       <Stack gap={1}>
-        <Stack direction="row" justifyContent="space-between">
-          <Typography variant="h6">Purchase Fertilizer</Typography>
-          <Button
-            sx={{
-              p: 0,
-              backgroundColor: 'transparent',
-              '&:hover': {
-                backgroundColor: 'transparent',
-                opacity: 0.8
-              }
-            }}
-          >
-            <img alt="" src={gearIcon} width="31px" />
-          </Button>
-        </Stack>
-        <form>
-          {/* {from.address} {from.name} {balances[from.address]?.toString()} */}
-          <Stack gap={1}>
-            {/* Deposit Amount */}
-            <TokenInputField
-              amount={amount}
-              setAmount={handleSetAmount}
-              token={from}
-              setToken={(t: Token) => handleSetFrom(t as ERC20Token)}
-              tokenList={erc20TokenList}
-            />
-            {/* Max Module */}
-            {/* only show 'max' button if user's wallet is connected */}
-            {account && (
-              <Stack direction="row" alignItems="center" spacing={0.5} px={0.75}>
-                <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
-                  {/* {token === ETH ? (
-                    <>
-                      <Typography variant="body1" sx={{ fontSize: 13.5 }}>
-                        = {displayBN(usdcAmount)} USDC
-                      </Typography>
-                      {quoting && <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />}
-                    </>
-                  ) : null} */}
-                </Stack>
-                <Typography sx={{ fontSize: 13.5 }}>
-                  Balance: {balances[from.address] ? displayBN(balances[from.address]) : '0'}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  onClick={handleMax}
-                  color="primary"
-                  sx={{ fontSize: 13.5, fontWeight: 600, cursor: 'pointer' }}
-                >
-                  (Max)
-                </Typography>
-              </Stack>
-            )}
-            {/* Output */}
-            {amount.gt(0) ? (
-              // DISPLAY PURCHASE INFO
-              <PurchaseDropdown token={from} amount={amount} />
-            ) : null}
-            <Button disabled type="submit" size="large" fullWidth>
-              Input Amount
-            </Button>
-          </Stack>
-        </form>
       </Stack>
-    </Card>
+    </Form>
+  )
+}
+
+type FertilizerFormValues = {
+  tokens: ({
+    token: Token,
+    amount: BigNumber | undefined;
+  })[]
+}
+
+const PREFERRED_TOKENS : PreferredToken[] = [
+  {
+    token: USDC,
+    minimum: new BigNumber(1),    // $1
+  },
+  {
+    token: ETH,
+    minimum: new BigNumber(0.001) // ~$2-4
+  }
+]
+
+const FormWrapper: React.FC<{}> = () => {
+  const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
+  const initialValues : FertilizerFormValues = useMemo(() => ({
+    tokens: [
+      {
+        token: baseToken,
+        amount: undefined,
+      },
+    ],
+  }), [baseToken]);
+  return (
+    <Formik initialValues={initialValues} onSubmit={() => {}}>
+      {(props) => <DepositForm to={to} {...props} />}
+    </Formik>
   );
 };
 
-export default BuyFertilizerForm;
+export default FormWrapper;
