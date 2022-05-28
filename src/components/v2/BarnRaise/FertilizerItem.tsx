@@ -4,7 +4,7 @@ import { BEAN } from 'constants/v2/tokens';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
 import BigNumber from 'bignumber.js';
-import { displayBN } from 'util/index';
+import { displayBN, displayFullBN } from 'util/index';
 import OpacityIcon from '@mui/icons-material/Opacity';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
 
@@ -44,7 +44,7 @@ const FertilizerItem : React.FC<{
         <Stack direction="row" justifyContent="space-between">
           <Tooltip title="1 FERT = 1 USDC put into the Barn Raise." placement="left">
             <Typography color="text.secondary">
-              {displayBN(amount)} FERT
+              {displayFullBN(amount, 2, 2)} FERT
             </Typography>
           </Tooltip>
           <Tooltip title="Humidity — interest rate earned for buying Fertilizer." placement="right">
