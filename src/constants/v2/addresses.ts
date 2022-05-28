@@ -23,7 +23,7 @@ export const BEANSTALK_FERTILIZER_ADDRESSES : AddressMap = {
 export const BARNRAISE_CUSTODIAN_ADDRESSES : AddressMap = {
   [SupportedChainId.MAINNET]: '0x2B7829448eaf27E1515E6Ed5fCB2cDF229B68144',
   [SupportedChainId.ROPSTEN]: '0xA3D5F4042899a52f2ae7A0Cc58C079EFB62B9e43'
-}
+};
 
 // -- ERC20 Token Contracts
 
@@ -31,7 +31,7 @@ export const USDC_ADDRESSES : AddressMap = {
   [SupportedChainId.MAINNET]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   [SupportedChainId.ROPSTEN]: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
   [SupportedChainId.RINKEBY]: '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
-}
+};
 
 export const CRV3_ADDRESSES : AddressMap = {
   // --------------------------------------------------

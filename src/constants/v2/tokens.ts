@@ -79,7 +79,6 @@ export const PODS = new BeanstalkToken(
   }
 );
 
-
 // ----------------------------------------
 // ERC20 Tokens
 // ----------------------------------------
@@ -182,13 +181,11 @@ export const USDC = {
       logo: usdcLogoUrl,
     }
   ),
-}
-
+};
 
 // ----------------------------------------
 // ERC20 Tokens - LP
 // ----------------------------------------
-
 
 export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
   [SupportedChainId.MAINNET]: new ERC20Token(
@@ -270,7 +267,6 @@ export const BEAN_LUSD_LP = {
   ),
 };
 
-
 // ----------------------------------------
 // Token Lists
 // ----------------------------------------
@@ -279,8 +275,10 @@ export const ERC20_TOKENS : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
   WETH,
+  USDC,
 ];
 
+// Load the Farmer's balance of these tokens.
 export const BALANCE_TOKENS : TokenMap[] = [
   ETH,
   ...ERC20_TOKENS,

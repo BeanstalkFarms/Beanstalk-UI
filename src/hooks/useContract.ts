@@ -97,5 +97,9 @@ export function useBeanstalkFertilizerContract() {
 }
 
 export function useERC20Contract(addressMap: AddressMap) {
-  return useContract<ERC20>(addressMap, ERC20_ABI, true);
+  return useContract<ERC20>(
+    addressMap,
+    ERC20_ABI,
+    true,
+  );
 }

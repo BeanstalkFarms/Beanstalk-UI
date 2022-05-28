@@ -1,7 +1,10 @@
 import BigNumber from 'bignumber.js';
 
+/**
+ * For fertilizer, the ID is also the Season.
+ */
 export type FertByID = {
-  [key: number]: BigNumber;
+  [id: string]: BigNumber;
 }
 
 export type FarmerFertilizer = {

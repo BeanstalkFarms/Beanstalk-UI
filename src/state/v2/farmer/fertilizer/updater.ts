@@ -26,9 +26,11 @@ export const useFarmerFertilizer = () => {
         fertContract.balanceOf(account.address, replantSeason.toString()).then(tokenResult(BEAN)),
       ] as const);
       console.debug(`[farmer/fertilizer/updater] balance = ${balance.toFixed(2)}`);
-      dispatch(updateFertTokens({
-        [replantSeason.toNumber()]: balance
-      }));
+      if (balance.gt(0)) {
+        dispatch(updateFertTokens({
+          [replantSeason.toNumber()]: balance
+        }));
+      }
     }
   }, [
     dispatch,

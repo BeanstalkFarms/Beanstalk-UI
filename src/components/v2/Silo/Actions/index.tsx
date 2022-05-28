@@ -20,6 +20,8 @@ import TokenOutputField from 'components/v2/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/v2/Common/Accordion/AccordionSummary';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 
+// -----------------------------------------------------------------------
+
 type DepositFormValues = {
   tokens: ({
     token: Token;
@@ -70,6 +72,8 @@ const INSTRUCTION_MESSAGES = {
   [InstructionType.RECEIVE_REWARDS]: (i: RewardsInstruction) =>
     `Receive ${displayFullBN(i.stalk, 2)} Stalk and ${displayFullBN(i.seeds, 2)} Seeds.`,
 };
+
+// -----------------------------------------------------------------------
 
 const parseInstruction = (i: Instruction) => INSTRUCTION_MESSAGES[i.type as keyof typeof INSTRUCTION_MESSAGES](i);
 
@@ -192,6 +196,8 @@ function useQuote(tokenOut: Token) : [
 
   return [amountOut, quoting, getAmountOut];
 }
+
+// -----------------------------------------------------------------------
 
 const TokenQuoteField : React.FC<{
   name: string;
@@ -326,6 +332,8 @@ const TransactionStep : React.FC<{
   </Box>
 );
 
+// -----------------------------------------------------------------------
+
 const EXECUTION_STEPS = [
   InstructionType.SWAP,
   InstructionType.DEPOSIT,
@@ -405,6 +413,8 @@ const TransactionPreview : React.FC<{ instructions: Instruction[] }> = ({ instru
     </Stack>
   );
 };
+
+// -----------------------------------------------------------------------
 
 const DepositForm : React.FC<
   FormikProps<DepositFormValues>
@@ -557,10 +567,7 @@ const Actions : React.FC<{
         {/* Tabs */}
         <Box>
           {tab === 0 ? (
-            <Deposit
-              to={props.token}
-              // poolState={props.poolState}
-            />
+            <Deposit to={props.token} />
           ) : null}
         </Box>
       </Stack>
