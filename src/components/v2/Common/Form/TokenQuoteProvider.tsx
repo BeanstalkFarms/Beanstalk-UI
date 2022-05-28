@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo } from 'react';
 import { CircularProgress, Typography } from '@mui/material';
 import { Token } from 'classes';
-import { useFormikContext } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import TokenInputField from 'components/v2/Common/Form/TokenInputField';
 import TokenAdornment from 'components/v2/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
 import { displayBN } from 'util/TokenUtilities';
 import useQuote from 'hooks/useQuote';
 import { FormTokenState } from '.';
+import { PinDropSharp } from '@mui/icons-material';
 
 const TokenQuoteProvider : React.FC<{
   name: string;
@@ -71,13 +72,17 @@ const TokenQuoteProvider : React.FC<{
   ), [amountOut, quoting, tokenOut.symbol]);
 
   return (  
-    <TokenInputField
-      fullWidth
-      name={`${name}.amount`}
-      balance={balance}
-      quote={Quote}
-      InputProps={InputProps}
-    />
+    <Field name={`${name}.amount`}>
+      {(props) => (
+        <TokenInputField
+          {...props}
+          fullWidth
+          balance={balance}
+          quote={Quote}
+          InputProps={InputProps}
+        />
+      )}
+    </Field>
   );
 };
 

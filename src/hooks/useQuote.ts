@@ -5,10 +5,10 @@ import { tokenResult, toStringBaseUnitBN, toTokenUnitsBN } from "util/TokenUtili
 import debounce from 'lodash/debounce';
 import { sleep } from "util/TimeUtilities";
 import { useBeanstalkFertilizerContract } from "./useContract";
-import { ETH_DECIMALS, USDC } from "constants/v2/tokens";
+import { ETH_DECIMALS } from "constants/v2/tokens";
 import { bigNumberResult } from "util/LedgerUtilities";
 
-export default function useQuote(tokenOut: Token) : [
+export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
   amountIn: BigNumber | undefined,
   quoting: boolean,
   refreshAmountOut: (_tokenIn: Token, _amountIn: BigNumber) => void,
@@ -46,7 +46,7 @@ export default function useQuote(tokenOut: Token) : [
         });
       }
     },  
-    1500,
+    debounceMs,
     { trailing: true }
   ), [
     tokenOut,
