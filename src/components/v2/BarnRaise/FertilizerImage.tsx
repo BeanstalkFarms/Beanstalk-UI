@@ -36,14 +36,14 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
       position: 'relative',
     }}
   >
-    <img alt="" src={FERTILIZER_ICONS[state]} width={'40%'} style={{ position: 'relative', zIndex: 2 }} />
+    <img alt="" src={FERTILIZER_ICONS[state]} width="40%" style={{ position: 'relative', zIndex: 2 }} />
     {progress && (
       <Box
         sx={{
           background: BeanstalkPalette.logoGreen,
           opacity: 0.2,
           width: '100%',
-          height: `${progress*100}%`,
+          height: `${progress * 100}%`,
           position: 'absolute',
           bottom: 0,
           left: 0,
