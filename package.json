@@ -91,7 +91,8 @@
     "webpack-cli": "^4.9.2"
   },
   "resolutions": {
-    "react-error-overlay": "6.0.9"
+    "react-error-overlay": "6.0.9",
+    "babel-loader": "8.1.0"
   },
   "scripts": {
     "start": "node --max_old_space_size=4096 node_modules/.bin/react-app-rewired start",

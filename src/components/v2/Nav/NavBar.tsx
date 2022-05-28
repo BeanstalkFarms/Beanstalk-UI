@@ -1,6 +1,18 @@
 import React, { useCallback, useState } from 'react';
-import { AppBar, Button, IconButton, Menu, MenuItem, Stack } from '@mui/material';
-import { Link as RouterLink, useMatch, useResolvedPath } from 'react-router-dom';
+import {
+  AppBar,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  Typography,
+} from '@mui/material';
+import {
+  Link as RouterLink,
+  useMatch,
+  useResolvedPath,
+} from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import swapIcon from 'img/swap.svg';
@@ -56,18 +68,20 @@ const NAVIGATION_MAP = {
   ],
 };
 
-const NavButton : React.FC<{ to: string; title: string }> = ({ to, title }) => {
+const NavButton: React.FC<{ to: string; title: string }> = ({ to, title }) => {
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
   // const match = to === "";
   return (
     <Button
+      disableRipple
       component={RouterLink}
       to={to}
       size="small"
       variant="text"
+      outline="none"
       color={match ? 'primary' : 'dark'}
-      sx={{ 
+      sx={{
         textDecoration: match ? 'underline' : null,
         '&:hover': {
           textDecoration: match ? 'underline' : null,
@@ -78,23 +92,27 @@ const NavButton : React.FC<{ to: string; title: string }> = ({ to, title }) => {
         px: 1.5,
       }}
     >
-      {title}
+      {' '}
+      <Typography variant="subtitle1">{title}</Typography>
     </Button>
   );
 };
 
-const MoreButton : React.FC = () => {
+const MoreButton: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   // Handlers
-  const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  }, []);
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    },
+    []
+  );
   const handleClose = useCallback(() => {
     setAnchorEl(null);
   }, []);
-  
+
   return (
     <>
       <Button
@@ -105,11 +123,13 @@ const MoreButton : React.FC = () => {
         onMouseOver={handleClick}
         sx={{
           px: 1.5,
-          cursor: 'pointer', 
+          //cursor: 'pointer',
+          fontSize: '1rem',
+          fontWeight: '400',
         }}
         className={open ? 'Mui-focusVisible' : ''}
       >
-        More
+        <Typography variant="subtitle1">More</Typography>
       </Button>
       <Menu
         id="basic-menu"
@@ -121,8 +141,8 @@ const MoreButton : React.FC = () => {
           'aria-labelledby': 'basic-button',
           onMouseLeave: handleClose,
           sx: {
-            cursor: 'pointer'
-          }
+            cursor: 'pointer',
+          },
         }}
         // https://mui.com/material-ui/react-popover/#anchor-playground
         anchorOrigin={{
@@ -134,18 +154,36 @@ const MoreButton : React.FC = () => {
           horizontal: 'left',
         }}
       >
-        {NAVIGATION_MAP.more.map((item) => <MenuItem component={RouterLink} key={item.path} to={item.path} sx={{ minWidth: 200 }}>{item.title}</MenuItem>)}
+        {NAVIGATION_MAP.more.map((item) => (
+          <MenuItem
+            component={RouterLink}
+            key={item.path}
+            to={item.path}
+            sx={{ minWidth: 200 }}
+          >
+            {item.title}
+          </MenuItem>
+        ))}
       </Menu>
     </>
   );
 };
 
-const NavBar : React.FC<{}> = () => (
-  <AppBar sx={{ px: 1, py: 1, backgroundColor: BeanstalkPalette.lighterBlue, borderBottom: `1px solid ${BeanstalkPalette.lightBlue}` }}>
+const NavBar: React.FC<{}> = () => (
+  <AppBar
+    sx={{
+      px: 1,
+      py: 1,
+      backgroundColor: BeanstalkPalette.lighterBlue,
+      borderBottom: `1px solid ${BeanstalkPalette.lightBlue}`,
+    }}
+  >
     <Stack direction="row" gap={1} alignItems="center">
       <Stack direction="row" sx={{ flex: 1 }}>
         <PriceButton />
-        {NAVIGATION_MAP.top.map((item) => <NavButton key={item.path} to={item.path} title={item.title} />)}
+        {NAVIGATION_MAP.top.map((item) => (
+          <NavButton key={item.path} to={item.path} title={item.title} />
+        ))}
         <MoreButton />
       </Stack>
       <IconButton color="light" variant="contained">

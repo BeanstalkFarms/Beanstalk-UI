@@ -1,6 +1,16 @@
 import { SupportedChainId } from 'constants/chains';
-import { Beanstalk, BeanstalkFertilizer, BeanstalkPrice, ERC20 } from 'constants/generated';
-import { AddressMap, BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES, BEANSTALK_PRICE_ADDRESSES } from 'constants/v2/addresses';
+import {
+  Beanstalk,
+  BeanstalkFertilizer,
+  BeanstalkPrice,
+  ERC20,
+} from 'constants/generated';
+import {
+  AddressMap,
+  BEANSTALK_ADDRESSES,
+  BEANSTALK_FERTILIZER_ADDRESSES,
+  BEANSTALK_PRICE_ADDRESSES,
+} from 'constants/v2/addresses';
 import { Contract } from 'ethers';
 import { useMemo } from 'react';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
@@ -14,8 +24,8 @@ const ERC20_ABI = require('constants/abi/ERC20.json');
 export default function useContract<T extends Contract = Contract>(
   addressOrAddressMap: string | AddressMap | undefined,
   abi: any,
-  withSignerIfPossible = true,
-) : T | null {
+  withSignerIfPossible = true
+): T | null {
   const { data } = useAccount();
   const provider = useProvider();
   const account = withSignerIfPossible ? data : null;
@@ -31,16 +41,19 @@ export default function useContract<T extends Contract = Contract>(
     const chainId = provider?._network.chainId;
     if (!addressOrAddressMap || !abi || !chainId) return null;
 
-    let address : string | undefined;
+    let address: string | undefined;
     if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap;
     else address = addressOrAddressMap[chainId];
 
     if (!address) {
-      console.debug('[useContract] attempted to instantiate contract with no avail address', {
-        addressOrAddressMap,
-        chainId,
-        account,
-      });
+      console.debug(
+        '[useContract] attempted to instantiate contract with no avail address',
+        {
+          addressOrAddressMap,
+          chainId,
+          account,
+        }
+      );
       return null;
     }
 
@@ -52,25 +65,16 @@ export default function useContract<T extends Contract = Contract>(
     return new Contract(
       address,
       abi,
-      provider,
+      provider
       // (withSignerIfPossible && account)
       //   ? account
       //   : undefined
     ) as T; // FIXME; not sure we should focibly cast this to T
-  }, [
-    provider,
-    abi,
-    addressOrAddressMap,
-    account
-  ]);
+  }, [provider, abi, addressOrAddressMap, account]);
 }
 
 export function useBeanstalkContract() {
-  return useContract<Beanstalk>(
-    BEANSTALK_ADDRESSES,
-    BEANSTALK_ABI,
-    true,
-  );
+  return useContract<Beanstalk>(BEANSTALK_ADDRESSES, BEANSTALK_ABI, true);
 }
 
 export function useBeanstalkPriceContract() {
@@ -80,7 +84,7 @@ export function useBeanstalkPriceContract() {
     !activeChain || activeChain.id === SupportedChainId.MAINNET
       ? BEANSTALK_PRICE_V0_ABI
       : BEANSTALK_PRICE_ABI,
-    true,
+    true
   );
 }
 
@@ -88,14 +92,10 @@ export function useBeanstalkFertilizerContract() {
   return useContract<BeanstalkFertilizer>(
     BEANSTALK_FERTILIZER_ADDRESSES,
     BEANSTALK_FERTILIZER_ABI,
-    true,
+    true
   );
 }
 
 export function useERC20Contract(addressMap: AddressMap) {
-  return useContract<ERC20>(
-    addressMap,
-    ERC20_ABI,
-    true,
-  );
+  return useContract<ERC20>(addressMap, ERC20_ABI, true);
 }

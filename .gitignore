@@ -8,3 +8,4 @@ stats.json
 .env.local
 
 src/constants/generated
+package.json
