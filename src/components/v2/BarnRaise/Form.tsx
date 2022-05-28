@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Button, Card, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Stack, Typography } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import BigNumber from 'bignumber.js';
 import gearIcon from 'img/gear.svg';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
-import { displayBN } from 'util/index';
+import { displayBN, toStringBaseUnitBN } from 'util/index';
 import { ETH, USDC } from 'constants/v2/tokens';
 import { TokensByAddress } from 'constants/v2';
 import { BalanceState } from 'state/v2/farmer/balances/reducer';
@@ -16,6 +17,11 @@ import TokenSelectDialog, { TokenSelectMode } from '../Common/Form/TokenSelectDi
 import TokenQuoteProvider from '../Common/Form/TokenQuoteProvider';
 import useChainConstant from 'hooks/useChainConstant';
 import useFarmerReady from 'hooks/useFarmerReady';
+import FertilizerItem from './FertilizerItem';
+import useHumidity from 'hooks/useHumidity';
+import { FormTokenState } from '../Common/Form';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 
 // ---------------------------------------------------
 export interface BarnraiseFormProps {
@@ -29,10 +35,7 @@ export interface BarnraiseFormProps {
 }
 
 type FertilizerFormValues = {
-  tokens: ({
-    token: Token,
-    amount: BigNumber | undefined;
-  })[]
+  tokens: FormTokenState[]
 }
 
 // ---------------------------------------------------
@@ -56,15 +59,21 @@ const FertilizeForm : React.FC<
   // Formik
   values,
   setFieldValue,
+  isSubmitting,
 }) => {
-  const tokenList = useTokenMap(
-    useMemo(() => ([USDC, ETH]), [])
-  );
+  const tokenList = useTokenMap(useMemo(() => ([USDC, ETH]), []));
   const Usdc = useChainConstant(USDC);
   const balances = useFarmerBalances();
   const [showTokenSelect, setShowTokenSelect] = useState(false);
+  const [humidity] = useHumidity();
 
-  // console.debug('[DepositForm] render');
+  // Extract
+  const amountUsdc = values.tokens[0].token === Usdc
+    ? values.tokens[0].amount
+    : values.tokens[0].amountOut;
+  const ready = amountUsdc?.gt(0);
+
+  // Handlers
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
   const handleOpen  = useCallback(() => setShowTokenSelect(true),  []);
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -96,7 +105,22 @@ const FertilizeForm : React.FC<
               showTokenSelect={handleOpen}
             />
           ))}
+          {amountUsdc?.gt(0) ? (
+            <Stack direction="column" gap={2} alignItems="center" justifyContent="center">
+              <KeyboardArrowDownIcon />
+              <Box sx={{ width: 200 }}>
+                <FertilizerItem
+                  amount={amountUsdc}
+                  remaining={amountUsdc.multipliedBy(humidity.plus(1))}
+                  humidity={humidity}
+                />
+              </Box>
+            </Stack>
+          ) : null}
         </Stack>
+        <LoadingButton loading={isSubmitting} type="submit" disabled={!ready} variant="contained" color="primary" size="large">
+          Buy Fertilizer
+        </LoadingButton>
       </Stack>
     </Form>
   )
@@ -106,23 +130,55 @@ const FertilizeForm : React.FC<
 
 const SetupForm: React.FC<{}> = () => {
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
+  const fertContract = useBeanstalkFertilizerContract();
+  const Usdc = useChainConstant(USDC);
+  const Eth  = useChainConstant(ETH);
   const initialValues : FertilizerFormValues = useMemo(() => ({
     tokens: [
       {
+        // token: baseToken,
+        // amount: undefined,
         token: baseToken,
-        amount: undefined,
+        amount: new BigNumber(5),
       },
     ],
   }), [baseToken]);
-  console.debug(`[FormWrapper] render with baseToken ${baseToken}`);
+  const onSubmit = useCallback((values: FertilizerFormValues) => {
+    if (fertContract) {
+      const token   = values.tokens[0].token;
+      const amount  = values.tokens[0].amount;
+      const amountUsdc = token === Eth ? values.tokens[0].amountOut :  values.tokens[0].amount;
+      let call;
+      if (amount && amountUsdc) {
+        if (token === Eth) {
+          call = fertContract.buyAndMint(
+            toStringBaseUnitBN(amountUsdc.multipliedBy(0.999), Usdc.decimals),
+            { value: toStringBaseUnitBN(amount, Eth.decimals) }
+          )
+        } else if (token === Usdc) {
+          call = Promise.resolve();
+        } else {
+          call = Promise.reject();
+        }
+      } else {
+        call = Promise.reject();
+      }
+      return call.then()
+    }
+  }, [Eth, Usdc, fertContract])
   return (
-    <Card>
-      <Formik initialValues={initialValues} onSubmit={() => {}}>
-        {(props) => <FertilizeForm {...props} />}
-      </Formik>
+    <Card sx={{ p: 2 }}>
+      <Stack gap={1}>
+        <Typography variant="h2">Purchase Fertilizer</Typography>
+        <Formik initialValues={initialValues} onSubmit={onSubmit}>
+          {(props) => <FertilizeForm {...props} />}
+        </Formik>
+      </Stack>
     </Card>
   );
 };
+
+// ---------------------------------------------------
 
 export default () => {
   const isReady = useFarmerReady();

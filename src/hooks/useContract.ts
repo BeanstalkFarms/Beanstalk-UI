@@ -13,7 +13,7 @@ import {
 } from 'constants/v2/addresses';
 import { Contract } from 'ethers';
 import { useMemo } from 'react';
-import { useAccount, useNetwork, useProvider } from 'wagmi';
+import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 
 const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
 const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
@@ -26,9 +26,10 @@ export default function useContract<T extends Contract = Contract>(
   abi: any,
   withSignerIfPossible = true
 ): T | null {
-  const { data } = useAccount();
+  const { data: _account } = useAccount();
+  const { data: signer } = useSigner();
   const provider = useProvider();
-  const account = withSignerIfPossible ? data : null;
+  const account = withSignerIfPossible ? _account : null;
 
   return useMemo(() => {
     // NOTE:
@@ -65,12 +66,18 @@ export default function useContract<T extends Contract = Contract>(
     return new Contract(
       address,
       abi,
-      provider
-      // (withSignerIfPossible && account)
-      //   ? account
-      //   : undefined
+      (withSignerIfPossible && signer)
+        ? signer
+        : provider
     ) as T; // FIXME; not sure we should focibly cast this to T
-  }, [provider, abi, addressOrAddressMap, account]);
+  }, [
+    provider,
+    signer,
+    abi,
+    withSignerIfPossible,
+    addressOrAddressMap,
+    account
+  ]);
 }
 
 export function useBeanstalkContract() {

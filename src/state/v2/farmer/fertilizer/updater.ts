@@ -9,6 +9,7 @@ import { useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
 import { REPLANT_SEASON } from 'hooks/useHumidity';
 import { updateFertTokens } from './actions';
+import { bigNumberResult } from 'util/LedgerUtilities';
 
 export const useFarmerFertilizer = () => {
   const dispatch = useDispatch();
@@ -23,9 +24,9 @@ export const useFarmerFertilizer = () => {
       const [
         balance,
       ] = await Promise.all([
-        fertContract.balanceOf(account.address, replantSeason.toString()).then(tokenResult(BEAN)),
+        fertContract.balanceOf(account.address, replantSeason.toString()).then(bigNumberResult),
       ] as const);
-      console.debug(`[farmer/fertilizer/updater] balance = ${balance.toFixed(2)}`);
+      console.debug(`[farmer/fertilizer/updater] balance = ${balance.toFixed(10)}`);
       if (balance.gt(0)) {
         dispatch(updateFertTokens({
           [replantSeason.toNumber()]: balance

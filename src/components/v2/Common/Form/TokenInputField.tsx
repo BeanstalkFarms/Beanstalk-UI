@@ -59,7 +59,7 @@ const TokenInputField : React.FC<{
               const val = e.target.value ? new BigNumber(e.target.value) : undefined;
               form.setFieldValue(
                 name,
-                balance && val && val.gt(balance) ? balance : val,
+                (balance && val) && val.gt(balance) ? balance : val,
               );
             }}
             InputProps={inputProps}

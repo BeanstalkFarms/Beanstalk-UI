@@ -15,7 +15,7 @@ export const HUMIDITY_DECREASE_AT_REPLANT = new BigNumber(2.50);
 export const HUMIDITY_DECREASE_PER_SEASON = new BigNumber(0.005);
 export const REPLANT_SEASON : { [key: number] : BigNumber } = {
   [SupportedChainId.MAINNET]: new BigNumber(6074),
-  [SupportedChainId.ROPSTEN]: new BigNumber(564)
+  [SupportedChainId.ROPSTEN]: new BigNumber(6074)
 };
 
 // ----------------------------------------s

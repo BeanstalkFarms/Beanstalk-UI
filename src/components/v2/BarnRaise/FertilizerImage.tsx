@@ -13,13 +13,11 @@ export const FERTILIZER_ICONS : { [key in FertilizerState]: string } = {
   used:   fertUsedIcon,
 };
 export type FertilizerImageProps = {
-  size?: number;
   state?: FertilizerState;
   progress?: number;
 };
 
 const FertilizerImage : React.FC<FertilizerImageProps> = ({
-  size = 200,
   state = 'unused',
   progress,
 }) => (

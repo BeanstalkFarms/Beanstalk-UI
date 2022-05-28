@@ -159,6 +159,9 @@ const muiTheme = createTheme({
           textTransform: 'none',
           fontWeight: 'bold',
         }),
+        sizeLarge: sx({
+          py: 1.5,
+        })
       },
     },
     MuiAccordion: {
