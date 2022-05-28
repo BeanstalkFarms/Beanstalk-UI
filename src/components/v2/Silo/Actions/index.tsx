@@ -132,6 +132,8 @@ const DepositForm : React.FC<
 
 // -----------------------------------------------------------------------
 
+// TODO:
+// - implement usePreferredToken here
 const Deposit : React.FC<{ to: Token; }> = ({ to }) => {
   const Bean = useChainConstant(BEAN);
   const initialValues : DepositFormValues = useMemo(() => ({

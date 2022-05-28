@@ -31,10 +31,13 @@ const usePreferredToken = (list: PreferredToken[], fallbackMode : FallbackMode =
   const get = useGetChainToken();
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const index = list.findIndex((pt) => {
-    const token = get(pt.token);
-    const min   = pt.minimum || new BigNumber(token.displayDecimals*100);
-    return balances[token.address]?.gte(min) || false;
+    const tok = get(pt.token);
+    const min = pt.minimum || new BigNumber(tok.displayDecimals*100);
+    const bal = balances[tok.address];
+    console.debug(`[usePreferredToken] ${tok.symbol} ${tok.address} ${min.toString()} ${bal.toString()}`)
+    return bal?.gte(min) || false;
   });
+  console.debug(`[usePreferredToken] found: ${index}`)
   if (index > -1) return get(list[index].token);
   switch(fallbackMode) {
     default:

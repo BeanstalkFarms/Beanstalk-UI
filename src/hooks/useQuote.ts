@@ -1,9 +1,12 @@
 import { BigNumber } from "bignumber.js";
 import Token from "classes/Token";
 import { useCallback, useEffect, useState } from "react";
-import { toTokenUnitsBN } from "util/TokenUtilities";
+import { tokenResult, toStringBaseUnitBN, toTokenUnitsBN } from "util/TokenUtilities";
 import debounce from 'lodash/debounce';
 import { sleep } from "util/TimeUtilities";
+import { useBeanstalkFertilizerContract } from "./useContract";
+import { ETH_DECIMALS, USDC } from "constants/v2/tokens";
+import { bigNumberResult } from "util/LedgerUtilities";
 
 export default function useQuote(tokenOut: Token) : [
   amountIn: BigNumber | undefined,
@@ -14,38 +17,45 @@ export default function useQuote(tokenOut: Token) : [
   const [amountOut, setAmountOut] = useState<BigNumber | undefined>(undefined);
   /** Whether we're currently waiting for a quote for this swap. */
   const [quoting, setQuoting] = useState<boolean>(false);
-
-  /**
-   * When token changes, reset the amount.
-   */
-   useEffect(() => {
+  /** */
+  const fertContract = useBeanstalkFertilizerContract();
+  
+  // When token changes, reset the amount.
+  useEffect(() => {
     setAmountOut(undefined);
     setQuoting(false);
   }, [tokenOut]);
 
-  /**
-   * 
-   */
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const _getAmountOut = useCallback(debounce(
-    (tokenIn: Token, amountIn: BigNumber) => sleep(250)
-        .then(() => new BigNumber(3000_000000).times(amountIn))
-        .then((result) => {
-          setAmountOut(toTokenUnitsBN(result.toString(), tokenOut.decimals));
+    (tokenIn: Token, amountIn: BigNumber) => {
+      if (fertContract) {
+        const call = (tokenIn.symbol === 'ETH' || tokenIn.symbol === 'ropETH')
+          ? fertContract.callStatic.getUsdcOut(
+            toStringBaseUnitBN(amountIn, ETH_DECIMALS),
+          ).then(bigNumberResult)
+          : sleep(250).then(() => new BigNumber(3000_000000).times(amountIn));
+
+        //
+        return call.then((result) => {
+          const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
+          console.debug(`[useQuote] got amount out: ${amountOut?.toString()}`, result)
+          setAmountOut(_amountOut);
           setQuoting(false);
           return result;
-        }),
+        });
+      }
+    },  
     1500,
     { trailing: true }
   ), [
     tokenOut,
+    fertContract,
     setQuoting,
     setAmountOut
   ]);
 
-  /**
-   * Handler to refresh
-   */
+  // Handler to refresh
   const getAmountOut = useCallback((tokenIn: Token, amountIn: BigNumber) => {
     if (tokenIn === tokenOut) return;
     if (amountIn.lte(0)) {
