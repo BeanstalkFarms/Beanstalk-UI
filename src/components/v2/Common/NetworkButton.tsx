@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { useNetwork } from 'wagmi';
-import { Box, Button, Dialog, Stack } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Box, Button, Dialog, Stack, Typography } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ethIcon from 'img/eth-logo.svg';
 
-const NetworkButton : React.FC = () => {
+const NetworkButton: React.FC = () => {
   const { activeChain, chains, error, switchNetwork } = useNetwork();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -14,24 +14,32 @@ const NetworkButton : React.FC = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleSwitch = useCallback((id) => () => {
-    if (switchNetwork) {
-      switchNetwork(id);
-      handleClose();
-    }
-  }, [switchNetwork]);
-  
+  const handleSwitch = useCallback(
+    (id) => () => {
+      if (switchNetwork) {
+        switchNetwork(id);
+        handleClose();
+      }
+    },
+    [switchNetwork]
+  );
+
   return (
     <>
       {activeChain && (
         <Button
+          disableFocusRipple
           variant="contained"
           color="light"
           startIcon={<img src={ethIcon} alt="Bean" style={{ height: 25 }} />}
-          endIcon={<ArrowDropDownIcon />}
+          endIcon={
+            <KeyboardArrowDownIcon
+              style={{ height: 15, marginLeft: '-8px', marginRight: '-4px' }}
+            />
+          }
           onClick={handleClick}
         >
-          {activeChain?.name}
+          <Typography variant="subtitle1">{activeChain?.name}</Typography>
         </Button>
       )}
       <Dialog onClose={handleClose} open={open}>
@@ -44,7 +52,7 @@ const NetworkButton : React.FC = () => {
                 color="secondary"
                 onClick={handleSwitch(chain.id)}
               >
-                {chain.name}
+                <Typography variant="subtitle1">{chain.name}</Typography>
               </Button>
             ))}
           </Stack>

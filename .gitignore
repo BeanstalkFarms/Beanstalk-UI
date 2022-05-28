@@ -7,4 +7,5 @@ yarn-error.log
 stats.json
 .env.local
 
+# Ignore generated Typechain files.
 src/constants/generated

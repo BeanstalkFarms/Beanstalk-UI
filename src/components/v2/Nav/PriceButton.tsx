@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Popper, Stack } from '@mui/material';
+import { Box, Button, Popper, Stack, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
@@ -9,9 +9,13 @@ import { AppState } from 'state';
 import usePools from 'hooks/usePools';
 import PoolCard from '../Silo/PoolCard';
 
-const PriceButton : React.FC = () => {
-  const beanPrice = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
-  const beanPools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+const PriceButton: React.FC = () => {
+  const beanPrice = useSelector<AppState, AppState['_bean']['price']>(
+    (state) => state._bean.price
+  );
+  const beanPools = useSelector<AppState, AppState['_bean']['pools']>(
+    (state) => state._bean.pools
+  );
   const pools = usePools();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -27,8 +31,14 @@ const PriceButton : React.FC = () => {
     <>
       <Button
         color="light"
-        startIcon={<img src={beanCircleIcon} alt="Bean" style={{ height: 25 }} />}
-        endIcon={<Icon />}
+        startIcon={
+          <img src={beanCircleIcon} alt="Bean" style={{ height: 25 }} />
+        }
+        endIcon={
+          <Icon
+            style={{ height: 15, marginLeft: '-8px', marginRight: '-4px' }}
+          />
+        }
         onClick={handleClick}
         disableRipple
         sx={{
@@ -38,7 +48,9 @@ const PriceButton : React.FC = () => {
           mr: 1,
         }}
       >
-        ${beanPrice[0].toFixed(4)}
+        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+          ${beanPrice[0].toFixed(4)}
+        </Typography>
       </Button>
       <Popper
         open={open}
