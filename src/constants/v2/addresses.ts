@@ -1,6 +1,6 @@
 import { SupportedChainId } from '../chains';
 
-export type AddressMap = { [chainId: number]: string }
+export type AddressMap<T = string> = { [chainId: number]: T };
 
 // -- Beanstalk Contracts
 

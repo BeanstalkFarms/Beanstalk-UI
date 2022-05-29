@@ -109,6 +109,7 @@ const FertilizeForm : React.FC<
           {/* Inputs */}
           {values.tokens.map((state, index) => (
             <TokenQuoteProvider
+              key={index}
               name={`tokens.${index}`}
               tokenOut={Usdc}
               balance={balances[state.token.address] || undefined}
@@ -171,7 +172,7 @@ const SetupForm: React.FC<{}> = () => {
     tokens: [
       {
         token: baseToken,
-        amount: undefined,
+        amount: null,
       },
     ],
   }), [baseToken]);

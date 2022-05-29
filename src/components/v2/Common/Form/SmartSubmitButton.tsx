@@ -58,7 +58,7 @@ const SmartSubmitButton : React.FC<{
         return (
           !allowance                              // waiting for allowance to load
           || allowance.eq(0)                      // allowance is zero
-          || (amt !== undefined && amt.gt(0) // entered amount is greater than allowance
+          || (amt !== null && amt.gt(0) // entered amount is greater than allowance
               ? amt.gt(allowance)
               : false)
         );

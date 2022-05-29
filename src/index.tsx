@@ -14,6 +14,11 @@ import client from './util/wagmi';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
+// Debug
+import { setUseWhatChange } from '@simbathesailor/use-what-changed';
+
+setUseWhatChange(process.env.NODE_ENV === 'development');
+
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
