@@ -56,8 +56,6 @@ const TokenSelectDialog : React.FC<{
   const tokenListValues = useMemo(() => Object.values(tokenList), [tokenList]);
   const [newSelection, setNewSelection] = useState<Set<Token>>(new Set());
 
-  console.debug('[TokenSelectDialog] render');
-
   // Toggle the selection state of a token.
   const toggle = useCallback((token: Token) => {
     const copy = new Set(newSelection);

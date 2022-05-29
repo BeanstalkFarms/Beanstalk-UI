@@ -83,7 +83,7 @@ export const BEAN_LUSD_CURVE_POOL_MAINNET = new CurvePlainPool(
 
 // --------------------------------------------------
 
-type PoolsByAddress = { [address: string] : Pool };
+export type PoolsByAddress = { [address: string] : Pool };
 
 const Pools : ChainConstant<PoolsByAddress> = {
   [SupportedChainId.MAINNET]: {

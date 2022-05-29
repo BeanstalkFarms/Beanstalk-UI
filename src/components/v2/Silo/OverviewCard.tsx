@@ -117,6 +117,7 @@ const OverviewCard : React.FC<{
           <Stack direction="row">
             {WINDOWS.map((w) => (
               <Button
+                key={w.label}
                 variant="text"
                 size="small"
                 color="dark"

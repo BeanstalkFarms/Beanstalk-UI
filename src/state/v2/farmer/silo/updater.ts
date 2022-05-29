@@ -3,31 +3,21 @@ import { BEAN_TO_SEEDS, BEAN_TO_STALK } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
-import { useAccount, useConnect } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
-import { GetAccountResult } from '@wagmi/core';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { reset, updateFarmerSiloAssets } from './actions';
-// import { SupportedChainId } from 'constants/chains';
-// const useMockBeanstalkContract = () => ({
-//   balanceOfStalk: ()
-// })
+import useChainId from 'hooks/useChain';
+import { resetFarmerSilo, updateFarmerSiloAssets } from './actions';
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
-  // const { activeChain } = useNetwork();
   const beanstalk = useBeanstalkContract();
 
   // Handlers
-  const fetch = useCallback(async (account: GetAccountResult) => {
-    console.debug('[farmer/silo/updater] fetch called', beanstalk, account);
-
-    // FIXME: account?.connector ensures we don't make any calls
-    // until the user's wallet is fully connected; alternatively can
-    // get status straight from useConnect() above
-    if (beanstalk && account?.address && account?.connector?.getChainId()) {
-      console.debug('[farmer/silo/updater] fetch executing');
+  const fetch = useCallback(async (account: string) => {
+    if (beanstalk && account) {
+      console.debug('[farmer/silo/useFarmerSilo] FETCH');
       const [
         stalkBalance,
         seedBalance,
@@ -35,14 +25,14 @@ export const useFarmerSilo = () => {
         earnedBeanBalance,
         grownStalkBalance,
       ] = await Promise.all([
-        beanstalk.balanceOfStalk(account.address).then(tokenResult(STALK)),
-        beanstalk.balanceOfSeeds(account.address).then(tokenResult(SEEDS)),
-        beanstalk.balanceOfRoots(account.address).then(bigNumberResult),
-        beanstalk.balanceOfFarmableBeans(account.address).then(tokenResult(BEAN)),
-        beanstalk.balanceOfGrownStalk(account.address).then(tokenResult(STALK)),
+        beanstalk.balanceOfStalk(account).then(tokenResult(STALK)),
+        beanstalk.balanceOfSeeds(account).then(tokenResult(SEEDS)),
+        beanstalk.balanceOfRoots(account).then(bigNumberResult),
+        beanstalk.balanceOfFarmableBeans(account).then(tokenResult(BEAN)),
+        beanstalk.balanceOfGrownStalk(account).then(tokenResult(STALK)),
       ] as const);
 
-      console.debug('[farmer/silo] fetch result', [stalkBalance, seedBalance]);
+      console.debug('[farmer/silo/useFarmerSilo] RESULT', [stalkBalance, seedBalance]);
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
@@ -80,8 +70,8 @@ export const useFarmerSilo = () => {
   ]);
   
   const clear = useCallback(() => {
-    console.debug('[farmer/silo/updater] clear');
-    dispatch(reset());
+    console.debug('[farmer/silo/useFarmerSilo] CLEAR');
+    dispatch(resetFarmerSilo());
   }, [dispatch]);
 
   return [fetch, clear] as const;
@@ -91,23 +81,14 @@ export const useFarmerSilo = () => {
 
 const FarmerSiloUpdater = () => {
   const [fetch, clear] = useFarmerSilo();
-  const { status: connectStatus } = useConnect();
   const { data: account } = useAccount();
+  const chainId = useChainId();
 
-  // Fetch on initial connect
   useEffect(() => {
-    console.debug('[farmer/silo/updater] status', connectStatus, account);
-    if (connectStatus === 'connected' && account) {
-      fetch(account);
-    } else if (connectStatus === 'disconnected') {
-      clear();
-    }
-  }, [
-    connectStatus,
-    account,
-    fetch,
-    clear
-  ]);
+    clear();
+    if (account?.address) fetch(account?.address);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account?.address, chainId]);
 
   return null;
 };

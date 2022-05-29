@@ -5,7 +5,8 @@ import {
   setNextSunrise,
   setRemainingUntilSunrise,
   setAwaitingSunrise,
-  updateSeason
+  updateSeason,
+  resetSun
 } from './actions';
 
 const NEG1 = new BigNumber(-1);
@@ -38,4 +39,5 @@ export default createReducer(initialState, (builder) =>
     .addCase(setRemainingUntilSunrise, (state, { payload }) => {
       state.sunrise.remaining = payload;
     })
+    .addCase(resetSun, () => getInitialState())
 );

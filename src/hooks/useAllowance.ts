@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { useFetchAllowances } from 'state/v2/farmer/allowances/updater';
 import { MAX_UINT256 } from 'util/LedgerUtilities';
+import { useAccount } from 'wagmi';
 
 export const useAllowances = (
   contract: string,
@@ -14,11 +15,12 @@ export const useAllowances = (
   }
 ) => {
   const allowances = useSelector<AppState, AppState['_farmer']['allowances']>((state) => state._farmer.allowances);
+  const { data: account } = useAccount();
   const [fetchAllowances] = useFetchAllowances();
 
   // If a provided Token is a NativeToken, there is no allowance.
   // Otherwise, see if we've loaded an approval for this contract + token combo.
-  const results : (null | BigNumber)[] = useMemo(() => tokens.map((curr) => {
+  const currentAllowances : (null | BigNumber)[] = useMemo(() => tokens.map((curr) => {
     if (curr instanceof NativeToken) return new BigNumber(MAX_UINT256);
     return allowances[contract]
       ? (allowances[contract][curr.address] || null)
@@ -28,28 +30,31 @@ export const useAllowances = (
   // If requested, the component will automatically load any
   // allowances that aren't present in state.
   useEffect(() => {
-    if (config.loadIfAbsent) {
+    if (config.loadIfAbsent && account?.address) {
       // Reduce `results` to a list of the corresponding `tokens`,
       // filtering only for absent results.
-      const absent = results.reduce<Token[]>((prev, curr, index) => {
+      const absent = currentAllowances.reduce<Token[]>((prev, curr, index) => {
         if (!curr) prev.push(tokens[index]);
         return prev;
       }, [] as Token[]);
-      fetchAllowances(absent, contract);
+      console.debug(`[hooks/useAllowance] found ${absent.length} absent tokens for ${contract}`);
+      if (absent.length > 0) fetchAllowances(account?.address, contract, absent);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    results,
+    account?.address,
     contract,
     config.loadIfAbsent,
     fetchAllowances,
-    tokens
   ]);
 
   // Allow a component to refetch initial allowances,
   // or to specify new ones to grab.
-  const refetch = useCallback((_tokens?: Token[]) => fetchAllowances(_tokens || tokens, contract), [fetchAllowances, tokens, contract]);
+  const refetch = useCallback((_tokens?: Token[]) => {
+    if (account?.address) return fetchAllowances(account.address, contract, _tokens || tokens);
+  }, [fetchAllowances, account?.address, tokens, contract]);
 
-  return [results, refetch] as const;
+  return [currentAllowances, refetch] as const;
 };
 
 const useAllowance = (contract: string, token: Token) => {

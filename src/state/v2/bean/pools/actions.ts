@@ -7,8 +7,11 @@ export type UpdatePoolPayload = {
 };
 
 export const updateBeanPool = createAction<UpdatePoolPayload>(
-  'bean/pool/update'
+  'bean/pools/update'
 );
 export const updateBeanPools = createAction<UpdatePoolPayload[]>(
-  'bean/pool/updateAll'
+  'bean/pools/updateAll'
+);
+export const resetPools = createAction(
+  'bean/pools/reset'
 );

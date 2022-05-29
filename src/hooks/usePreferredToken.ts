@@ -33,10 +33,10 @@ const usePreferredToken = (list: PreferredToken[], fallbackMode : FallbackMode =
     const tok = get(pt.token);
     const min = pt.minimum || new BigNumber(tok.displayDecimals * 100);
     const bal = balances[tok.address];
-    console.debug(`[usePreferredToken] ${tok.symbol} ${tok.address} ${min.toString()} ${bal.toString()}`);
+    // console.debug(`[usePreferredToken] ${tok.symbol} ${tok.address} ${min.toString()} ${bal.toString()}`);
     return bal?.gte(min) || false;
   });
-  console.debug(`[usePreferredToken] found: ${index}`);
+  console.debug(`[hooks/usePreferredToken] found a preferred token: ${index}`);
   if (index > -1) return get(list[index].token);
   switch (fallbackMode) {
     default:

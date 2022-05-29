@@ -1,4 +1,5 @@
 import { BALANCE_TOKENS } from 'constants/v2/tokens';
+import useChainId from 'hooks/useChain';
 import useTokenMap from 'hooks/useTokenMap';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -16,26 +17,26 @@ export const useFetchBalances = () => {
   // Handlers
   const fetch = useCallback(async (address: string) => {
     if (address && tokens) {
-      const balances = Object.keys(tokens).map((tokenAddr) => {
-        console.debug(`[farmer/balances/updater] updating token ${tokens[tokenAddr].name} ${tokenAddr}`);
-        return (
+      const balancePromises = Object.keys(tokens).map((tokenAddr) => (
           tokens[tokenAddr]?.getBalance(address)
             .then(tokenResult(tokens[tokenAddr]))
             .then((result) => {
-              console.debug(`[farmer/balances/updater] ${tokens[tokenAddr].name} ${tokens[tokenAddr].chainId} ${tokens[tokenAddr]} => ${result.toString()}`);
+              console.debug(`[farmer/balances/updater] | ${tokens[tokenAddr].symbol} => ${result.toString()}`);
               return result;
             })
             .then((balanceResult) => ({
               token: tokens[tokenAddr],
               balance: balanceResult
             }))
-        );
-      });
+        ));
 
-      dispatch(updateBalances(
-        await Promise.all(balances)
-      ));
-      return balances;
+      console.debug(`[farmer/updater/useFetchBalances] FETCH ${balancePromises.length} balances`);
+      const balances = await Promise.all(balancePromises);
+      console.debug('[farmer/updater/useFetchBalances] RESULT: ', balances);
+      // console.table(balances);
+
+      dispatch(updateBalances(balances));
+      return balancePromises;
     }
   }, [
     dispatch,
@@ -46,28 +47,28 @@ export const useFetchBalances = () => {
     dispatch(clearBalances());
   }, [dispatch]);
 
-  return [fetch, clear];
+  return [fetch, clear] as const;
 };
 
 // -- Updater
 
-const BalancesUpdater = () => {
-  const { data: account } = useAccount();
+const FarmerBalancesUpdater = () => {
   const [fetch, clear] = useFetchBalances();
+  const { data: account } = useAccount();
+  const chainId = useChainId();
 
   useEffect(() => {
+    clear();
     if (account?.address) {
       fetch(account.address);
-    } else {
-      clear();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    account,
-    fetch,
-    clear
+    account?.address,
+    chainId,
   ]);
 
   return null;
 };
 
-export default BalancesUpdater;
+export default FarmerBalancesUpdater;

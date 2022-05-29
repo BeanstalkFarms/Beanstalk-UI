@@ -33,7 +33,6 @@ const TokenQuoteProvider : React.FC<{
   // listen for changes to `amountOut` and `quouting`
   // via effects and update form state accordingly.
   useEffect(() => {
-    console.debug('getAmountOut', state.amount, typeof state.amount);
     getAmountOut(state.token, new BigNumber(state.amount || 0));
   }, [state.token, state.amount, getAmountOut]);
 

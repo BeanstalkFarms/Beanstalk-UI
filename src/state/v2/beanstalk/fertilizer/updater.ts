@@ -5,7 +5,9 @@ import { BEAN, USDC } from 'constants/v2/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkFertilizerContract, useERC20Contract } from 'hooks/useContract';
 import { tokenResult } from 'util/TokenUtilities';
-import { setRemaining, setTotalRaised } from './actions';
+import useChainId from 'hooks/useChain';
+import { SupportedChainId } from 'constants/chains';
+import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 
 export const useFertilizer = () => {
   const dispatch = useDispatch();
@@ -16,7 +18,7 @@ export const useFertilizer = () => {
   // Handlers
   const fetch = useCallback(async () => {
     if (fertContract && usdcContract && custodian) {
-      console.debug('[beanstalk/fertilizer/updater] fetching...');
+      console.debug('[beanstalk/fertilizer/updater] FETCH');
       const [
         remaining,
         totalRaised
@@ -24,7 +26,7 @@ export const useFertilizer = () => {
         fertContract.remaining().then(tokenResult(BEAN)),
         usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
       ] as const);
-      console.debug(`[beanstalk/fertilizer/updater] remaining = ${remaining.toFixed(2)}`);
+      console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remaining.toFixed(2)}`);
       dispatch(setRemaining(remaining));
       dispatch(setTotalRaised(totalRaised));
     }
@@ -34,18 +36,28 @@ export const useFertilizer = () => {
     usdcContract,
     custodian
   ]); 
-  const clear = useCallback(() => {}, []);
+  const clear = useCallback(() => {
+    dispatch(resetFertilizer());
+  }, [dispatch]);
 
   return [fetch, clear] as const;
 };
 
 const FertilizerUpdater = () => {
-  const [fetch] = useFertilizer();
-
+  const [fetch, clear] = useFertilizer();
+  const chainId = useChainId();
+  
   useEffect(() => {
-    console.debug('[beanstalk/fertilizer/updater] call: fetch()');
-    fetch();
-  }, [fetch]);
+    clear();
+    if (chainId === SupportedChainId.ROPSTEN) {
+      fetch();
+    } else {
+      console.warn('[beanstalk/fertilizer/updater] The Fertilizer contract is only supported on Ropsten currently.');
+    }
+    // NOTE: 
+    // The below requires that useChainId() is called last in the stack of hooks.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainId]);
 
   return null;
 };

@@ -4,6 +4,7 @@ import { HashRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
 import { Provider } from 'wagmi';
+import { setUseWhatChange } from '@simbathesailor/use-what-changed';
 
 import store from 'state';
 import App from 'components/v2/App';
@@ -13,6 +14,9 @@ import client from './util/wagmi';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+
+// Debug
+setUseWhatChange(process.env.NODE_ENV === 'development');
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

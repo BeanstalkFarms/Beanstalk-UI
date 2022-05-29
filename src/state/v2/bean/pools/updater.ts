@@ -1,35 +1,40 @@
 import { useCallback, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
-
-import { useBeanstalkContract, useBeanstalkPriceContract } from 'hooks/useContract';
+import { useWhatChanged } from '@simbathesailor/use-what-changed';
+import { useBeanstalkPriceContract } from 'hooks/useContract';
 import { tokenResult } from 'util/TokenUtilities';
-import { BEAN, ERC20_TOKENS } from 'constants/v2/tokens';
-import useTokenMap from 'hooks/useTokenMap';
+import { BEAN } from 'constants/v2/tokens';
 import usePools from 'hooks/usePools';
-import { updateBeanPools, UpdatePoolPayload } from './actions';
+import useChainId from 'hooks/useChain';
+import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 import { updateBeanPrice } from '../reducer';
 
 export const useGetPools = () => {
   const dispatch = useDispatch();
   const beanstalkPriceContract = useBeanstalkPriceContract();
-  const beanstalk = useBeanstalkContract();
-  const TOKENS = useTokenMap(ERC20_TOKENS);
   const POOLS = usePools();
+
+  useWhatChanged([
+    dispatch,
+    beanstalkPriceContract,
+    POOLS
+  ], 'dispatch, price, pools');
 
   // Handlers
   const fetch = useCallback(
     async () => {
-      if (beanstalk && beanstalkPriceContract) {
-        const result = await Promise.all([
-          beanstalk.totalDepositedBeans(),
-          beanstalkPriceContract.price()
-        ]);
-        if (!result) return;
-        console.debug('[bean/pools/updater] result', result, TOKENS);
-        const beanPools : (Promise<UpdatePoolPayload>)[] = [
-          // All
-          ...result[1].ps.reduce<(Promise<UpdatePoolPayload>)[]>((acc, poolData) => {
+      if (beanstalkPriceContract) {
+        console.debug('[bean/pools/useGetPools] FETCH', beanstalkPriceContract.address);
+
+        const priceResult = await beanstalkPriceContract.price();
+        if (!priceResult) return;
+
+        console.debug('[bean/pools/useGetPools] RESULT: price contract result =', priceResult);
+
+        // Step 2: Get LP token supply data and format as UpdatePoolPayload
+        const dataWithSupplyResult : (Promise<UpdatePoolPayload>)[] = [
+          ...priceResult.ps.reduce<(Promise<UpdatePoolPayload>)[]>((acc, poolData) => {
             const address = poolData.pool;
             // If a new pool is added to the Pools contract before it's
             // configured in the frontend, this function would throw an error.
@@ -55,37 +60,47 @@ export const useGetPools = () => {
                   },
                 }))
               );
+            } else {
+              console.debug(`[bean/pools/useGetPools] price contract returned data for pool ${address} but it isn't configured, skipping. available pools:`, POOLS);
             }
             return acc;
           }, [])
         ];
-        dispatch(updateBeanPools(await Promise.all(beanPools)));
-        dispatch(updateBeanPrice(tokenResult(BEAN)(result[1].price.toString())));
-        // dispatch(updateBeanPrice(new BigNumber(1)));
+
+        console.debug('[bean/pools/useGetPools] RESULT: dataWithSupply =', dataWithSupplyResult);
+        
+        dispatch(updateBeanPools(await Promise.all(dataWithSupplyResult)));
+        dispatch(updateBeanPrice(tokenResult(BEAN)(priceResult.price.toString())));
       }
     },
     [
       dispatch,
       beanstalkPriceContract,
-      beanstalk,
-      TOKENS,
       POOLS
     ]
   );
-  const clear = useCallback(() => {}, []);
+  const clear = useCallback(() => {
+    dispatch(resetPools());
+  }, [dispatch]);
 
   return [fetch, clear];
 };
 
-// -- Updater
+// ------------------------------------------
 
 const PoolsUpdater = () => {
-  const [fetch] = useGetPools();
+  const [fetch, clear] = useGetPools();
+  const chainId = useChainId();
 
   useEffect(() => {
+    console.debug(`[bean/pools/updater] resetting pools, chainId = ${chainId}`);
+    clear();
     fetch();
-  }, [fetch]);
-
+    // NOTE: 
+    // The below requires that useChainId() is called last in the stack of hooks.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainId]);
+  
   return null;
 };
 

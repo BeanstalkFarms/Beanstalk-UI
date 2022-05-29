@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 import { FarmerSilo } from '.';
-import { reset, updateFarmerSiloAssets, updateFarmerTokenBalances } from './actions';
+import { resetFarmerSilo, updateFarmerSiloAssets, updateFarmerTokenBalances } from './actions';
 
 const NEG1 = new BigNumber(-1);
 
@@ -28,7 +28,7 @@ const initialState : FarmerSilo = {
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(reset, () => {
+    .addCase(resetFarmerSilo, () => {
       console.debug('[farmer/silo/reducer] reset');
       return initialState;
     })

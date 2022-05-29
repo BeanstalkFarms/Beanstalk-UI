@@ -3,7 +3,7 @@ import Token from 'classes/Token';
 
 export type FormTokenState = {
   token: Token;
-  amount?: BigNumber;
+  amount: BigNumber | null;
   amountOut?: BigNumber;
   quoting?: boolean;
 }

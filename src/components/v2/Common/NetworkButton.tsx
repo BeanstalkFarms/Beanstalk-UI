@@ -5,7 +5,17 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ethIcon from 'img/eth-logo.svg';
 
 const NetworkButton: React.FC = () => {
-  const { activeChain, chains, error, switchNetwork } = useNetwork();
+  const { activeChain, chains, error, switchNetwork } = useNetwork({
+    onSettled(data, err) {
+      if (!err) {
+        console.debug('[NetworkButton] settled network change...');
+        console.debug('');
+        console.debug('');
+        console.debug('');
+        // window.location.reload();
+      }
+    }
+  });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -17,6 +27,7 @@ const NetworkButton: React.FC = () => {
   const handleSwitch = useCallback(
     (id) => () => {
       if (switchNetwork) {
+        console.debug(`[NetworkButton] switching network => ${id}`);
         switchNetwork(id);
         handleClose();
       }

@@ -105,7 +105,7 @@ const TokenInputField : React.FC<
         disabled={isInputDisabled}
         {...props}
         onWheel={handleWheel}
-        value={displayAmount}
+        value={displayAmount || ''}
         onChange={handleChange}
         InputProps={inputProps}
         sx={{
