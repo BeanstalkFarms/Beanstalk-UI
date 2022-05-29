@@ -1,19 +1,14 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { useAccount, useConnect, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 import flatten from 'lodash/flatten';
 import useBlocks from 'hooks/useBlocks';
 import { useDispatch } from 'react-redux';
 import { Beanstalk } from 'constants/generated';
 import ethers, { BigNumber as BN } from 'ethers';
-import { GetAccountResult } from '@wagmi/core';
-import { useEffectDebugger } from 'hooks/useEffectDebugger';
-import {
-  useWhatChanged,
-  setUseWhatChange,
-} from '@simbathesailor/use-what-changed';
-import { setEvents } from './actions';
+import useChainId from 'hooks/useChain';
+import { resetEvents, setEvents } from './actions';
 
 export type ParsedEvent = {
   event: ethers.Event['event'];
@@ -151,59 +146,71 @@ const parseBNJS = (_o: { [key: string]: any }) => {
   return o;
 };
 
-setUseWhatChange(process.env.NODE_ENV === 'development');
-
-const FarmerEventsUpdater = () => {
+const useFarmerEvents = () => {
   const beanstalk = useBeanstalkContract();
-  const { data: account, isLoading: isAccountLoading } = useAccount();
-  const { status } = useConnect();
   const blocks = useBlocks();
   const dispatch = useDispatch();
+
+  // Handlers
+  const fetch = useCallback(async (address?: string) => {
+    if (beanstalk && address && blocks) {
+      console.debug('[farmer/events/useFarmerEvents] FETCH', beanstalk.address, address, blocks);
+      Promise.all(getEvents(beanstalk, address, blocks)).then((results) => {
+        const flattened = flatten<ethers.Event>(results);
+        console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
+        const allEvents: ParsedEvent[] = flattened.map((event) => ({
+          event: event.event,
+          blockNumber: event.blockNumber,
+          logIndex: event.logIndex,
+          // args: event.args,
+          returnValues: event.decode
+            ? parseBNJS({
+                ...(event.decode(event.data, event.topics) as Array<any>),
+              })
+            : null,
+        }))
+        .sort((a, b) => {
+          const diff = a.blockNumber - b.blockNumber;
+          if (diff !== 0) return diff;
+          return a.logIndex - b.logIndex;
+        });
+        console.debug('[farmer/events/useFarmerEvents] parsed events', allEvents);
+        dispatch(setEvents(allEvents));
+      });
+    } else {
+      console.debug('[farmer/events/useFarmerEvents] effect refreshed but vars missing', beanstalk, address, blocks);
+    }
+  }, [
+    dispatch,
+    beanstalk,
+    blocks,
+  ]);
+  
+  const clear = useCallback(() => {
+    console.debug('[farmer/events/useFarmerEvents] clear');
+    dispatch(resetEvents());
+  }, [dispatch]);
+
+  return [fetch, clear] as const;
+};
+
+const FarmerEventsUpdater = () => {
+  const [fetch, clear] = useFarmerEvents();
+  const { data: account } = useAccount();
+  const chainId = useChainId();
 
   // When to pull events:
   //    - when the wallet address is set and changes
   //        - init load
   //        - wallet change
   //    - when the chain changes
-  useEffectDebugger(() => {
-    if (status === 'connected') {
-      if (beanstalk && account?.address && blocks) {
-        console.debug('[farmer/events/updater] fetching events', beanstalk.address, account.address, blocks);
-        Promise.all(getEvents(beanstalk, account.address, blocks)).then((results) => {
-          console.debug(`[farmer/events/updater] received ${results.length} events`);
-          const allEvents: ParsedEvent[] = flatten<ethers.Event>(results)
-            .map((event) => ({
-              event: event.event,
-              blockNumber: event.blockNumber,
-              logIndex: event.logIndex,
-              // args: event.args,
-              returnValues: event.decode
-                ? parseBNJS({
-                    ...(event.decode(event.data, event.topics) as Array<any>),
-                  })
-                : null,
-            }))
-            .sort((a, b) => {
-              const diff = a.blockNumber - b.blockNumber;
-              if (diff !== 0) return diff;
-              return a.logIndex - b.logIndex;
-            });
-          console.debug('[farmer/events/updater] allEvents', allEvents);
-          dispatch(setEvents(allEvents));
-        });
-      } else {
-        console.debug('[farmer/events/updater] effect refreshed but vars missing', beanstalk, account?.address, blocks);
-      }
-    } else {
-      console.debug(`[farmer/events/updater] effect refreshed but status = ${status}`);
+  useEffect(() => {
+    clear();
+    if (account?.address) {
+      fetch(account?.address);
     }
-  }, [
-    account?.address,
-    beanstalk,
-    blocks,
-    status,
-    dispatch
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainId, account?.address]);
 
   return null;
 };

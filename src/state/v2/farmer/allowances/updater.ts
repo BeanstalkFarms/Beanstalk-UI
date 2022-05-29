@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import {  toTokenUnitsBN } from 'util/index';
+import {  toTokenUnitsBN, trimAddress } from 'util/index';
 import BigNumber from 'bignumber.js';
-import { useAccount } from 'wagmi';
 import Token from 'classes/Token';
 import { clearAllowances, UpdateAllowancePayload, updateAllowances } from './actions';
 
@@ -25,27 +24,25 @@ import { clearAllowances, UpdateAllowancePayload, updateAllowances } from './act
 
 export function useFetchAllowances() {
   const dispatch = useDispatch();
-  const { data: account } = useAccount();
 
   // Handlers
-  const fetch = useCallback((ts: Token | Token[], contract: string) => {
-    if (account?.address) {
-      return Promise.all((Array.isArray(ts) ? ts : [ts]).map((token) =>
-        token.getAllowance(account.address as string, contract)
-          .then((result) => ({
-            token,
-            contract,
-            allowance: result ? toTokenUnitsBN(result, token.decimals) : new BigNumber(0),
-          } as UpdateAllowancePayload))
-      )).then((_allowances) => {
-        console.debug(`[farmer/allowances/updater] fetched ${_allowances.length} allowances`, _allowances);
-        dispatch(updateAllowances(_allowances));
-      });
-    } 
-    return Promise.resolve(null);
-  }, [dispatch, account]);
+  const fetch = useCallback((account: string, contract: string, ts: Token | Token[]) => {
+    console.debug(`[farmer/allowances/useFetchAllowances] FETCH account = ${trimAddress(account, false)} contract = ${trimAddress(contract, false)} token(s) = ${ts.toString()}`);
+    return Promise.all((Array.isArray(ts) ? ts : [ts]).map((token) =>
+      token.getAllowance(account, contract)
+        .then((result) => ({
+          token,
+          contract,
+          allowance: result ? toTokenUnitsBN(result, token.decimals) : new BigNumber(0),
+        } as UpdateAllowancePayload))
+    )).then((_allowances) => {
+      console.debug(`[farmer/allowances/useFetchAllowances] RESULT: ${_allowances.length} allowances`, _allowances);
+      dispatch(updateAllowances(_allowances));
+    });
+  }, [dispatch]);
   
   const clear = useCallback(() => {
+    console.debug('[farmer/allowances/useFetchAllowances] CLEAR');
     dispatch(clearAllowances());
   }, [dispatch]);
 
@@ -54,16 +51,6 @@ export function useFetchAllowances() {
 
 // -- Updater
 
-export default function AllowancesUpdater() {
-  // const [fetchAllowances, clearAllowances] = useFetchAllowances();
-
-  // useEffect(() => {
-  //   if (walletAddress) {
-  //     fetchAllowances();
-  //   } else {
-  //     clearAllowances();
-  //   }
-  // }, [walletAddress, fetchAllowances, clearAllowances]);
-
+export default function FarmerAllowancesUpdater() {
   return null;
 }

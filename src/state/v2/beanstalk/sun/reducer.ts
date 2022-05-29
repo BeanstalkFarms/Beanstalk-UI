@@ -39,7 +39,5 @@ export default createReducer(initialState, (builder) =>
     .addCase(setRemainingUntilSunrise, (state, { payload }) => {
       state.sunrise.remaining = payload;
     })
-    .addCase(resetSun, () => {
-      return getInitialState();
-    })
+    .addCase(resetSun, () => getInitialState())
 );

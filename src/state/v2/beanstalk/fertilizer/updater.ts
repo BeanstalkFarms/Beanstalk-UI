@@ -5,9 +5,9 @@ import { BEAN, USDC } from 'constants/v2/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkFertilizerContract, useERC20Contract } from 'hooks/useContract';
 import { tokenResult } from 'util/TokenUtilities';
-import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
+import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 
 export const useFertilizer = () => {
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ const FertilizerUpdater = () => {
     if (chainId === SupportedChainId.ROPSTEN) {
       fetch();
     } else {
-      console.warn(`[beanstalk/fertilizer/updater] The Fertilizer contract is only supported on Ropsten currently.`)
+      console.warn('[beanstalk/fertilizer/updater] The Fertilizer contract is only supported on Ropsten currently.');
     }
     // NOTE: 
     // The below requires that useChainId() is called last in the stack of hooks.

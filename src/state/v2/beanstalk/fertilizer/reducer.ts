@@ -19,9 +19,7 @@ export default createReducer(initialState, (builder) =>
     .addCase(setTotalRaised, (state, { payload }) => {
       state.totalRaised = payload;
     })
-    .addCase(resetFertilizer, () => {
-      return initialState;
-    })
+    .addCase(resetFertilizer, () => initialState)
     // .addCase(setHumidity, (state, { payload }) => {
     //   state.humidity = payload;
     // })

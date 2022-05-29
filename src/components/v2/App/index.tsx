@@ -20,10 +20,10 @@ import { setWidth } from 'state/general/actions';
 import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
 import PoolsUpdater from 'state/v2/bean/pools/updater';
 import FarmerEventsUpdater from 'state/v2/farmer/events/updater';
-import FarmerUpdater from 'state/v2/farmer/updater';
+import FarmerEventsProcessor from 'state/v2/farmer/processor';
 import SunUpdater from 'state/v2/beanstalk/sun/updater';
 import FertilizerUpdater from 'state/v2/beanstalk/fertilizer/updater';
-import BalancesUpdater from 'state/v2/farmer/balances/updater';
+import FarmerBalancesUpdater from 'state/v2/farmer/balances/updater';
 import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
 
 import './App.css';
@@ -68,20 +68,20 @@ export default function App() {
       {/* -----------------------
         * Bean Updaters
         * ----------------------- */}
-      {/* <PoolsUpdater /> */}
+      <PoolsUpdater />
       {/* -----------------------
         * Beanstalk Updaters
         * ----------------------- */}
-      {/* <FertilizerUpdater /> */}
+      <FertilizerUpdater />
       <SunUpdater />
       {/* -----------------------
         * Farmer Updaters
       * ----------------------- */}
-      {/* <FarmerUpdater />
-      <BalancesUpdater />
       <FarmerEventsUpdater />
+      <FarmerEventsProcessor />
+      <FarmerBalancesUpdater />
       <FarmerFertilizerUpdater />
-      <FarmerSiloUpdater /> */}
+      <FarmerSiloUpdater />
       {/* -----------------------
         * Content
         * ----------------------- */}

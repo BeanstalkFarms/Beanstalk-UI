@@ -5,7 +5,7 @@ export type UpdateFarmerTokenBalancesPayload = {
   [address: string]: Partial<FarmerTokenBalance>;
 };
 
-export const reset = createAction(
+export const resetFarmerSilo = createAction(
   'farmer/silo/reset'
 );
 

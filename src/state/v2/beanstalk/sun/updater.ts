@@ -7,9 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
-import { useNetwork } from 'wagmi';
 import { updateHarvestableIndex } from '../field/actions';
-import { resetSun, setAwaitingSunrise, setRemainingUntilSunrise, updateSeason } from './actions';
+import { resetSun, setAwaitingSunrise, updateSeason } from './actions';
 
 export const useSun = () => {
   const dispatch = useDispatch();
@@ -18,7 +17,7 @@ export const useSun = () => {
   // Handlers
   const fetch = useCallback(async () => {
     if (beanstalk) {
-      console.debug(`[beanstalk/sun/useSun] FETCH`)
+      console.debug('[beanstalk/sun/useSun] FETCH');
       const [
         season,
         harvestableIndex,
@@ -37,7 +36,7 @@ export const useSun = () => {
   ]);
   
   const clear = useCallback(() => {
-    console.debug(`[farmer/silo/useSun] clear`)
+    console.debug('[farmer/silo/useSun] clear');
     dispatch(resetSun());
   }, [dispatch]);
 
@@ -68,7 +67,7 @@ const SunUpdater = () => {
 
   // When the season changes
   useEffect(() => {
-    console.debug(`[beanstalk/sun/updater] caught new season = `, season?.toNumber())
+    console.debug('[beanstalk/sun/updater] caught new season = ', season?.toNumber());
     dispatch(setAwaitingSunrise(false));
   }, [dispatch, season]);
 

@@ -6,10 +6,10 @@ import { BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES } from 'constants/v
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
 import useChainConstant from 'hooks/useChainConstant';
 import { ethers } from 'ethers';
-import { useERC20Contract } from 'hooks/useContract';
 import { MAX_UINT256 } from 'util/LedgerUtilities';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
+import { ERC20Token } from 'classes/Token';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
@@ -69,7 +69,6 @@ const SmartSubmitButton : React.FC<{
 
   // Derived
   const nextApprovalToken = nextApprovalIndex > -1 ? selectedTokens[nextApprovalIndex] : null;
-  const erc20TokenContract = useERC20Contract(nextApprovalToken?.address);
   const isApproving = !!values?.approving;
 
   // Dialog state and handlers
@@ -77,7 +76,7 @@ const SmartSubmitButton : React.FC<{
   const handleOpen  = useCallback(() => setOpen(true),  []);
   const handleClose = useCallback(() => setOpen(false), []);
   const handleApproval = useCallback(() => {
-    if (erc20TokenContract && nextApprovalToken) {
+    if (nextApprovalToken) {
       const amount = MAX_UINT256;
 
       // State
@@ -92,7 +91,7 @@ const SmartSubmitButton : React.FC<{
       });
 
       // Execute
-      erc20TokenContract.approve(
+      (nextApprovalToken as ERC20Token).getContract().approve(
         contract.address,
         amount,
       )
@@ -119,7 +118,6 @@ const SmartSubmitButton : React.FC<{
   }, [
     contract.address,
     nextApprovalToken,
-    erc20TokenContract,
     setFieldValue,
     refetchAllowances,
   ]);

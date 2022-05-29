@@ -21,4 +21,3 @@ export const setRemainingUntilSunrise = createAction<Sun['sunrise']['remaining']
 export const resetSun = createAction(
   'beanstalk/sun/reset'
 );
-

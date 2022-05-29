@@ -118,13 +118,14 @@ const Graph : React.FC<GraphProps> = withTooltip(({
         <Group>
           {series.map((_data, index) => (
             <LinePath<DateValue>
+              key={index}
               curve={curveNatural}
               data={_data}
               x={(d) => scales[index].xScale(getX(d)) ?? 0}
               y={(d) => scales[index].yScale(getY(d)) ?? 0}
               {...strokes[index]}
-              />
-            ))}
+            />
+          ))}
         </Group>
         {/**
           * Cursor
