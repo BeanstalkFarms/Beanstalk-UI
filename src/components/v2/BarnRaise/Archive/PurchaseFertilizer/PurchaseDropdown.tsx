@@ -5,7 +5,7 @@ import chevronDownIcon from '../../../../img/chevron-down.svg';
 import fertilizerOpenedIcon from '../../../../img/fertilizer-opened.svg';
 import beanCircleIcon from '../../../../img/bean-circle.svg';
 import TxnAccordion from './TxnAccordion';
-import { ERC20Token, NativeToken } from '../../../../classes/Token';
+import { ERC20Token, NativeToken } from '../../../../../classes/Token';
 
 export interface AccordionProps {
   amount: BigNumber;

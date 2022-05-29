@@ -1,21 +1,38 @@
 import React, { useCallback, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Connector, useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi';
-import { Box, Button, Dialog, ListItemText, Menu, MenuItem, Stack, Typography } from '@mui/material';
+import {
+  Connector,
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useNetwork,
+} from 'wagmi';
+import {
+  Box,
+  Button,
+  Dialog,
+  Divider,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Stack,
+  Typography,
+} from '@mui/material';
 import tempUserIcon from 'img/temp-user-icon.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { trimAddress } from 'util/index';
 import { CHAIN_INFO } from 'constants/chains';
 
-const SelectWalletDialog : React.FC = ({
-  handleClose,
-  open
-}) => {
-  const { connect, connectors, error, isConnecting, pendingConnector } = useConnect();
-  const handleConnect = useCallback((connector: Connector) => () => {
+const SelectWalletDialog: React.FC = ({ handleClose, open }) => {
+  const { connect, connectors, error, isConnecting, pendingConnector } =
+    useConnect();
+  const handleConnect = useCallback(
+    (connector: Connector) => () => {
       connect(connector);
       handleClose();
-    }, [connect, handleClose]);
+    },
+    [connect, handleClose]
+  );
   return (
     <Dialog onClose={handleClose} open={open}>
       <Box sx={{ p: 2, minWidth: 340 }}>
@@ -43,7 +60,7 @@ const SelectWalletDialog : React.FC = ({
   );
 };
 
-const WalletButton : React.FC = () => {
+const WalletButton: React.FC = () => {
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const { disconnect } = useDisconnect();
@@ -55,9 +72,12 @@ const WalletButton : React.FC = () => {
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuVisible = Boolean(anchorEl);
-  const handleShowMenu = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  }, []);
+  const handleShowMenu = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    },
+    []
+  );
   const handleHideMenu = useCallback(() => {
     setAnchorEl(null);
   }, []);
@@ -67,12 +87,17 @@ const WalletButton : React.FC = () => {
     return (
       <>
         <Button
+          disableFocusRipple
           variant="contained"
           color="light"
-          startIcon={<img src={tempUserIcon} alt="User" style={{ height: 25 }} />}
+          startIcon={
+            <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
+          }
           onClick={handleShowMenu}
         >
-          {trimAddress(account.address)}
+          <Typography variant="subtitle1">
+            {trimAddress(account.address)}
+          </Typography>
         </Button>
         <Menu
           elevation={1}
@@ -93,22 +118,48 @@ const WalletButton : React.FC = () => {
           }}
         >
           <Box sx={{ minWidth: 250 }}>
-            <MenuItem component={RouterLink} to="/history" onClick={handleHideMenu}>
-              <ListItemText>
-                Transaction History
-              </ListItemText>
+            <MenuItem
+              component={RouterLink}
+              to="/balances"
+              onClick={handleHideMenu}
+            >
+              <ListItemText>Balances</ListItemText>
             </MenuItem>
-            <MenuItem component="a" href={`${CHAIN_INFO[activeChain.id].explorer}/address/${account.address}`} target="_blank" rel="noreferrer">
-              <Stack sx={{ width: '100%' }} direction="row" alignItems="center" justifyContent="space-between">
+            <MenuItem
+              component={RouterLink}
+              to="/history"
+              onClick={handleHideMenu}
+            >
+              <ListItemText>History</ListItemText>
+            </MenuItem>
+            <MenuItem
+              component="a"
+              href={`${CHAIN_INFO[activeChain.id].explorer}/address/${
+                account.address
+              }`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Stack
+                sx={{ width: '100%' }}
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+              >
                 <Typography variant="body2" color="text.primary">
                   View on Etherscan
                 </Typography>
-                <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: '1rem', color: 'text.secondary' }} />
+                <ArrowForwardIcon
+                  sx={{
+                    transform: 'rotate(-45deg)',
+                    fontSize: '1rem',
+                    color: 'text.secondary',
+                  }}
+                />
               </Stack>
             </MenuItem>
-            <MenuItem onClick={() => disconnect()}>
-              Disconnect
-            </MenuItem>
+            <Divider />
+            <MenuItem onClick={() => disconnect()}>Disconnect</MenuItem>
           </Box>
         </Menu>
       </>
@@ -125,10 +176,7 @@ const WalletButton : React.FC = () => {
       >
         Connect Wallet
       </Button>
-      <SelectWalletDialog
-        open={showDialog}
-        handleClose={handleCloseDialog}
-      />
+      <SelectWalletDialog open={showDialog} handleClose={handleCloseDialog} />
     </>
   );
 };

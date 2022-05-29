@@ -1,5 +1,9 @@
 import BigNumber from 'bignumber.js';
-import { CurveMetaPool__factory, CurvePlainPool__factory, UniswapV2Pair__factory } from 'constants/generated';
+import {
+  CurveMetaPool__factory,
+  CurvePlainPool__factory,
+  UniswapV2Pair__factory,
+} from 'constants/generated';
 import { ChainConstant } from 'constants/v2';
 import { AddressMap } from 'constants/v2/addresses';
 import { MinBN } from 'util/TokenUtilities';
@@ -64,11 +68,11 @@ export default abstract class Pool {
     address: AddressMap,
     // dex: Dex,
     lpToken: ChainConstant<ERC20Token>,
-    tokens: (ChainConstant<ERC20Token>)[],
+    tokens: ChainConstant<ERC20Token>[],
     metadata: {
-      name: string,
-      symbol: string,
-      logo: string,
+      name: string;
+      symbol: string;
+      logo: string;
     }
   ) {
     this.chainId = chainId;
@@ -90,17 +94,20 @@ export default abstract class Pool {
     return this.chainId === other.chainId && this.address === other.address;
   }
 
-  /** 
+  /**
    * Used to calculate how much of an underlying reserve a given amount of LP tokens owns in an LP pool.
    * Ownership of reserve tokens is proportional to ownership of LP tokens.
-   * 
+   *
    * @param amount - the amount of LP tokens the farmer owns
    * @param reserve - the reserve of an asset in the lp pool
    * @param totalLP - the total lp tokens
    * @returns the amount of reserve tokens the farmer owns.
    */
-  static tokenForLP = (amount: BigNumber, reserve: BigNumber, totalLP: BigNumber) =>
-  amount.multipliedBy(reserve).dividedBy(totalLP);
+  static tokenForLP = (
+    amount: BigNumber,
+    reserve: BigNumber,
+    totalLP: BigNumber
+  ) => amount.multipliedBy(reserve).dividedBy(totalLP);
 
   /**
    * Used to calcuate the # of reserve tokens owned by a farmer for 2 assets in a pool (e.g. Beans + Eth)
@@ -127,28 +134,37 @@ export default abstract class Pool {
   };
 
   /**
-   * The opposite of tokenForLP. If a farmer owns/deposits X of reserve asset -> how many LP tokens do they 1 own/get. 
-   * 
+   * The opposite of tokenForLP. If a farmer owns/deposits X of reserve asset -> how many LP tokens do they 1 own/get.
+   *
    * @param amount - the amount of the reserve asset the farmer has
    * @param reserve - the total amount of the reserve asset
    * @param totalLP - the total amount of the LP token
    * @returns the amount of lp tokens that amount corresponds to.
    */
-  static lpForToken = (amount: BigNumber, reserve: BigNumber, totalLP: BigNumber) =>
-    amount.multipliedBy(totalLP).dividedBy(reserve);
+  static lpForToken = (
+    amount: BigNumber,
+    reserve: BigNumber,
+    totalLP: BigNumber
+  ) => amount.multipliedBy(totalLP).dividedBy(reserve);
 
   /**
    * The opposite of poolForLP - used to calculate how many LP tokens a farmer gets if they deposit both reserve assets in a 2 asset pool.
    * e.g. if a farmer deposits amount1 of Beans and amount2 of Eth into an LP pool with reserve1 Beans, reserve2 Eth and totalLP LP tokens, it returns how many LP tokens the farmer gets.
    */
-  static lpForPool = (amount1: BigNumber, reserve1: BigNumber, amount2: BigNumber, reserve2: BigNumber, totalLP: BigNumber) =>
+  static lpForPool = (
+    amount1: BigNumber,
+    reserve1: BigNumber,
+    amount2: BigNumber,
+    reserve2: BigNumber,
+    totalLP: BigNumber
+  ) =>
     MinBN(
       Pool.lpForToken(amount1, reserve1, totalLP),
       Pool.lpForToken(amount2, reserve2, totalLP)
     );
-  
+
   /**
-   * 
+   *
    */
   static getToAmount = (
     amountIn: BigNumber,
@@ -168,7 +184,7 @@ export default abstract class Pool {
     return numerator.dividedBy(denominator);
   };
 
-  abstract getReserves() : Promise<Reserves>;
+  abstract getReserves(): Promise<Reserves>;
 }
 
 // ------------------------------------
@@ -178,17 +194,20 @@ export class UniswapV2Pool extends Pool {
   public getContract() {
     return UniswapV2Pair__factory.connect(this.address, client.provider);
   }
-  
+
   public getReserves() {
-    console.debug(`[UniswapV2Pool] getReserves: ${this.address} ${this.name} on chain ${client.provider._network.chainId} via ${client.provider.connection.url}`);
-    return (
-      this.getContract().getReserves().then((result) => (
-        [
-          new BigNumber(result._reserve0.toString()), 
-          new BigNumber(result._reserve1.toString()),
-        ] as Reserves
-      ))
+    console.debug(
+      `[UniswapV2Pool] getReserves: ${this.address} ${this.name} on chain ${client.provider._network.chainId} via ${client.provider.connection.url}`
     );
+    return this.getContract()
+      .getReserves()
+      .then(
+        (result) =>
+          [
+            new BigNumber(result._reserve0.toString()),
+            new BigNumber(result._reserve1.toString()),
+          ] as Reserves
+      );
   }
 }
 
@@ -201,14 +220,15 @@ export class CurveMetaPool extends Pool {
   }
 
   public getReserves(): Promise<Reserves> {
-    return (
-      this.getContract().get_balances().then((result) => (
-        [
-          new BigNumber(result[0].toString()), 
-          new BigNumber(result[1].toString()),
-        ] as Reserves
-      ))
-    );
+    return this.getContract()
+      .get_balances()
+      .then(
+        (result) =>
+          [
+            new BigNumber(result[0].toString()),
+            new BigNumber(result[1].toString()),
+          ] as Reserves
+      );
   }
 }
 
@@ -221,13 +241,14 @@ export class CurvePlainPool extends Pool {
   }
 
   public getReserves(): Promise<Reserves> {
-    return (
-      this.getContract().get_balances().then((result) => (
-        [
-          new BigNumber(result[0].toString()), 
-          new BigNumber(result[1].toString()),
-        ] as Reserves
-      ))
-    );
+    return this.getContract()
+      .get_balances()
+      .then(
+        (result) =>
+          [
+            new BigNumber(result[0].toString()),
+            new BigNumber(result[1].toString()),
+          ] as Reserves
+      );
   }
 }

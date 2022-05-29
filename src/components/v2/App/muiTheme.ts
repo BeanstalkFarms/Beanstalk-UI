@@ -1,14 +1,11 @@
-import {
-  createTheme,
-  experimental_sx as sx,
-} from '@mui/material/styles';
+import { createTheme, experimental_sx as sx } from '@mui/material/styles';
 
 const BASE_FONT_SIZE = 16;
 const remBase = (n: number) => `${(n / BASE_FONT_SIZE).toFixed(4)}rem`;
 
 /**
  * Beanstalk's primary color pallete.
- * 
+ *
  * Does NOT yet account for prior variance for theming.
  * See `constants/colors.ts`.
  */
@@ -23,7 +20,7 @@ export const BeanstalkPalette = {
   // Other
   white: '#fff',
   black: '#333',
-  lightishGrey: '#9E9E9E'
+  lightishGrey: '#9E9E9E',
 };
 
 // FIXME: changes to createTheme don't hot reload.
@@ -38,12 +35,12 @@ const muiTheme = createTheme({
     },
   },
   /**
-   * 
+   *
    */
   spacing: 10,
 
   /**
-   * 
+   *
    */
   shape: {
     borderRadius: 10,
@@ -77,11 +74,11 @@ const muiTheme = createTheme({
       primary: '#333333',
       // secondary: BeanstalkPalette.white,
       // disabled: BeanstalkPalette.white,
-    }
+    },
   },
 
   /**
-   * 
+   *
    */
   typography: {
     fontFamily: 'Futura PT',
@@ -93,31 +90,31 @@ const muiTheme = createTheme({
     // h1: page titles
     h1: {
       fontSize: remBase(0.75 * 40),
-      fontWeight: 700,        // 
+      fontWeight: 700, //
     },
     // h2: card titles, tabs, large button text
     h2: {
       fontSize: remBase(0.75 * 24),
-      fontWeight: 600,      //
+      fontWeight: 600, //
     },
     // h3: bold section titles
     h3: {
-      fontSize: '1rem',     // 1*16  = 16px
-      fontWeight: 600,      //
+      fontSize: '1rem', // 1*16  = 16px
+      fontWeight: 600, //
     },
     // h4: normal section titles
     h4: {
-      fontSize: '1rem',     // 1*16 = 16px
-      fontWeight: 400,      //
+      fontSize: '1rem', // 1*16 = 16px
+      fontWeight: 400, //
     },
     // subtitle1: page subtitle
     subtitle1: {
-      fontSize: '1.125rem',  // 1.125*16 = 18px
+      fontSize: '1.125rem', // 1.125*16 = 18px
       fontWeight: 400,
     },
     subtitle2: {},
     body1: {
-      fontSize: '1rem',     // 1*16     = 16px
+      fontSize: '1rem', // 1*16     = 16px
       fontWeight: 400,
       lineHeight: '1.28rem', // pulled from figma
     },
@@ -128,29 +125,29 @@ const muiTheme = createTheme({
   },
 
   /**
-   * 
+   *
    */
   components: {
     MuiCard: {
       defaultProps: {
         elevation: 0,
         variant: 'outlined',
-        color: 'secondary'
+        color: 'secondary',
       },
       styleOverrides: {
         root: sx({
           borderWidth: 1,
           borderColor: 'secondary.main',
-        })
-      }
+        }),
+      },
     },
     MuiDivider: {
       styleOverrides: {
         root: sx({
           borderColor: BeanstalkPalette.lightBlue,
           borderWidth: 0.5,
-        })
-      }
+        }),
+      },
     },
     MuiButton: {
       defaultProps: {
@@ -162,6 +159,9 @@ const muiTheme = createTheme({
           textTransform: 'none',
           fontWeight: 'bold',
         }),
+        sizeLarge: sx({
+          py: 1.5,
+        })
       },
     },
     MuiAccordion: {
@@ -174,14 +174,14 @@ const muiTheme = createTheme({
       variants: [
         {
           props: {
-            variant: 'outlined',            
+            variant: 'outlined',
           },
           style: {
             background: 'transparent',
             borderColor: BeanstalkPalette.lightBlue,
           },
-        }
-      ]
+        },
+      ],
     },
     MuiAccordionSummary: {
       styleOverrides: {
@@ -190,13 +190,13 @@ const muiTheme = createTheme({
         // None of these work...
         root: {
           minHeight: '0 !important',
-          my: 0
+          my: 0,
         },
         expanded: sx({
           minHeight: '0 !important',
-          m: [0, 0]
-        })
-      }
+          m: [0, 0],
+        }),
+      },
     },
     MuiTextField: {
       defaultProps: {
@@ -204,18 +204,18 @@ const muiTheme = createTheme({
       },
       styleOverrides: {
         root: {},
-      }
+      },
     },
     MuiTabs: {
       defaultProps: {},
       styleOverrides: {
         root: {
-          fontWeight: 'normal'
+          fontWeight: 'normal',
         },
         indicator: {
           display: 'none',
         },
-      }
+      },
     },
     MuiTab: {
       defaultProps: {
@@ -239,19 +239,19 @@ const muiTheme = createTheme({
           '&.Mui-selected': {
             fontWeight: 'bold',
             color: BeanstalkPalette.black,
-          }
+          },
         }),
-      }
+      },
     },
     MuiButtonBase: {
       styleOverrides: {
-        root: {}
-      }
+        root: {},
+      },
     },
     MuiButtonGroup: {
       defaultProps: {
         variant: 'text',
-        size: 'small'
+        size: 'small',
       },
       styleOverrides: {
         root: {
@@ -259,17 +259,17 @@ const muiTheme = createTheme({
           '&:not(:last-child)': {
             borderColor: 'transparent !important',
             border: 'none',
-          }
+          },
         },
-      }
+      },
     },
     MuiAppBar: {
       defaultProps: {
         elevation: 0,
-        color: 'transparent'
-      }
-    }
-  }
+        color: 'transparent',
+      },
+    },
+  },
 });
 
 export default muiTheme;

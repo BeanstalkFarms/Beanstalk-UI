@@ -8,6 +8,7 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.6.1",
+    "@mui/lab": "^5.0.0-alpha.83",
     "@mui/material": "^5.8.1",
     "@mui/styles": "^5.6.1",
     "@mui/x-data-grid": "^5.9.0",
@@ -91,7 +92,8 @@
     "webpack-cli": "^4.9.2"
   },
   "resolutions": {
-    "react-error-overlay": "6.0.9"
+    "react-error-overlay": "6.0.9",
+    "babel-loader": "8.1.0"
   },
   "scripts": {
     "start": "node --max_old_space_size=4096 node_modules/.bin/react-app-rewired start",

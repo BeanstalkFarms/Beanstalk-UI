@@ -3,8 +3,8 @@ import { Accordion, AccordionDetails, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import StyledAccordionSummary from 'components/v2/Common/Accordion/AccordionSummary';
 import cucumberIcon from '../../../../img/cucumber.svg';
-import AccordionWrapper from '../../Common/Accordion/AccordionWrapper';
-import { ERC20Token, NativeToken } from '../../../../classes/Token';
+import AccordionWrapper from '../../../Common/Accordion/AccordionWrapper';
+import { ERC20Token, NativeToken } from '../../../../../classes/Token';
 
 const useStyles = makeStyles(() => ({
   hr: {

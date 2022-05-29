@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Box, CssBaseline } from '@mui/material';
-import { Toaster } from 'react-hot-toast';
+import { ToastBar, Toaster } from 'react-hot-toast';
 
 import SiloPage from 'pages/silo';
 import SiloTokenPage from 'pages/silo/token';
@@ -11,6 +11,7 @@ import FieldPage from 'pages/field';
 import ForecastPage from 'pages/forecast';
 import BarnRaisePage from 'pages/barn-raise';
 import TransactionHistoryPage from 'pages/history';
+import BalancesPage from 'pages/balances';
 
 import pageBackground from 'img/bg-mainnet.png';
 import NavBar from 'components/v2/Nav/NavBar';
@@ -23,10 +24,10 @@ import FarmerUpdater from 'state/v2/farmer/updater';
 import SunUpdater from 'state/v2/beanstalk/sun/updater';
 import FertilizerUpdater from 'state/v2/beanstalk/fertilizer/updater';
 import BalancesUpdater from 'state/v2/farmer/balances/updater';
-import { BeanstalkPalette } from './muiTheme';
+import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
 
 import './App.css';
-import BalancesPage from '../../../pages/balances';
+import { BeanstalkPalette } from './muiTheme';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -64,15 +65,26 @@ export default function App() {
   return (
     <>
       <CssBaseline />
-      {/* UPDATERS */}
-      <FarmerSiloUpdater />
+      {/* -----------------------
+        * Bean Updaters
+        * ----------------------- */}
       <PoolsUpdater />
-      <FarmerEventsUpdater />
-      <FarmerUpdater />
-      <SunUpdater />
-      <BalancesUpdater />
+      {/* -----------------------
+        * Beanstalk Updaters
+        * ----------------------- */}
       <FertilizerUpdater />
-      {/* CONTENT */}
+      <SunUpdater />
+      {/* -----------------------
+        * Farmer Updaters
+      * ----------------------- */}
+      <FarmerUpdater />
+      <BalancesUpdater />
+      <FarmerEventsUpdater />
+      <FarmerFertilizerUpdater />
+      <FarmerSiloUpdater />
+      {/* -----------------------
+        * Content
+        * ----------------------- */}
       <Box
         className="App"
         sx={{
@@ -92,19 +104,45 @@ export default function App() {
           </Box>
           <Toaster
             containerStyle={{
-              // Shift toast by side nav bar width
-              // left: width < 800 ? 0 : 280,
-              marginTop: -2,
+              top: 78,
             }}
             toastOptions={{
+              duration: 4000,
+              position: 'top-right',
               style: {
                 minWidth: 300,
-                maxWidth: 450,
-                // paddingRight: 0,
+                maxWidth: 400,
                 paddingLeft: '16px',
               }
             }}
-          />
+          >
+            {(t) => (
+              <ToastBar
+                toast={t}
+                style={{
+                  ...t.style,
+                  // Option 1: Pops up instantly,
+                  // then slides out to the right side
+                  // animation: 'none',
+                  // position: 'absolute',
+                  // right: t.visible ? 0 : -500,
+                  // transition: 'right 0.4s ease-in-out',
+                  // opacity: 1,
+                  // Option 2: Slides in and out, but there's
+                  // an issue where it "flashes back" after
+                  // completing the animation.
+                  // position: 'absolute',
+                  // animation: t.visible ? 'custom-enter 1s ease-in-out' : 'custom-exit 1s ease-in-out',
+                  // animationFillMode: 'forwards'
+                  // Option 3: Tries to fix toasts stacking on top of each other
+                  animation: 'none',
+                  marginRight: t.visible ? 0 : -500,
+                  transition: 'margin-right 0.4s ease-in-out',
+                  opacity: 1,
+                }}
+              />
+            )}
+          </Toaster>
           {/* <Footer /> */}
         </Box>
       </Box>

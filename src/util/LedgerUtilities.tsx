@@ -3,3 +3,5 @@ import BigNumber from 'bignumber.js';
 
 export const identityResult = (result: any) => result;
 export const bigNumberResult = (result: any) => new BigNumber(result instanceof BNJS ? result.toString() : result);
+export const MAX_UINT256 =
+  '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';

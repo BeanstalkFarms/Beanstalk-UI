@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/v2/Common/Dialog';
 import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { TokensByAddress } from 'constants/v2/tokens';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { AppState } from 'state';
 import { zeroBN } from 'constants/index';
+import { TokensByAddress } from 'constants/v2';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -26,114 +26,133 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+export enum TokenSelectMode { MULTI, SINGLE }
+
 const TokenSelectDialog : React.FC<{
-  // Visibility
+  /** Show the dialog. */
   open: boolean;
+  /** Close the dialog. */
   handleClose: () => void;
-  // Selection State
-  selected: ({token: Token} & any)[];
+  /** The list of selected Tokens when the User opens the dialog. Updated on submit. */
+  selected: ({ token: Token } & any)[];
+  /** Called when the user "submits" their changes to selected tokens. */
   handleSubmit: (s: Set<Token>) => void;
-  // Balance State
+  /** The Farmer's current balances. Displayed alongside each token; hidden if not provided. */
   balances: AppState['_farmer']['balances'];
-  // Token Configuration
+  /** A list of tokens to show in the Dialog. */
   tokenList: TokensByAddress;
+  /** Single or multi-select */
+  mode?: TokenSelectMode;
 }> = React.memo(({
   open,
   handleClose,
   selected,
-  handleSubmit: onSelect,
+  handleSubmit,
   balances,
-  tokenList
+  tokenList,
+  mode = TokenSelectMode.MULTI,
 }) => {
   const classes = useStyles();
   const tokenListValues = useMemo(() => Object.values(tokenList), [tokenList]);
-  const [_selected, _setSelected] = useState<Set<Token>>(new Set());
+  const [newSelection, setNewSelection] = useState<Set<Token>>(new Set());
 
   console.debug('[TokenSelectDialog] render');
 
-  //
+  // Toggle the selection state of a token.
   const toggle = useCallback((token: Token) => {
-    const copy = new Set(_selected);
-    if (_selected.has(token)) {
+    const copy = new Set(newSelection);
+    if (newSelection.has(token)) {
       copy.delete(token);
-      _setSelected(copy);
+      setNewSelection(copy);
     } else {
       copy.add(token);
-      _setSelected(copy);
+      setNewSelection(copy);
     }
-  }, [_selected]);
+  }, [newSelection]);
 
   // Whenever the Dialog opens, store a temporary copy of the currently
-  // selected tokens so we can manipulate them.
+  // selected tokens so we can manipulate them quickly here without
+  // affecting the form state. User needs to "confirm" the change.
   useEffect(() => {
     if (open) {
       console.debug('[TokenSelectDialog] resetting _selected');
-      _setSelected(
+      setNewSelection(
         new Set(selected.map(({ token }) => token))
       );
     }
   }, [open, selected]);
 
-  if (!_selected) return null;
+  // Submit the newSelection and close the dialog.
+  // Accepts a param _newSelection instead of using
+  // the newSelection state variable so the handler can
+  // be reused with onClickItem.
+  const onClickSubmit = useCallback((_newSelection: Set<Token>) => () => {
+      handleSubmit(_newSelection); // update form state
+      handleClose();               // hide dialog
+    }, [handleSubmit, handleClose]);
+
+  // Click an item in the token list.
+  const onClickItem = useCallback((_token: Token) => {
+    if (mode === TokenSelectMode.MULTI) return () => toggle(_token);
+    return onClickSubmit(new Set([_token])); // submit just this token
+  }, [mode, onClickSubmit, toggle]);
+
+  if (!newSelection) return null;
 
   return (
-    <>
-      {/* Token Selector Dialog */}
-      <StyledDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-        PaperProps={{
-          sx: {
-            minWidth: '350px'
-          }
-        }}
-        transitionDuration={0}
-        TransitionProps={{}}
-      >
-        <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Select token
-        </StyledDialogTitle>
-        <StyledDialogContent sx={{ padding: 0 }}>
-          <List sx={{ padding: 0 }}>
-            {tokenList ? tokenListValues.map((_token) => (
-              <ListItem
-                key={_token.address}
-                color="primary"
-                selected={_selected.has(_token)}
-                disablePadding
-                secondaryAction={<Typography>{displayBN(balances ? balances[_token.address] : zeroBN)}</Typography>}
-                onClick={() => toggle(_token)}
-              >
-                <ListItemButton disableRipple>
-                  <ListItemIcon>
-                    <img src={_token.logo} alt="" className={classes.tokenLogo} />
-                  </ListItemIcon>
-                  <ListItemText primary={_token.symbol} secondary={_token.name} />
-                </ListItemButton>
-              </ListItem>
-            )) : null}
-          </List>
-        </StyledDialogContent>
+    <StyledDialog
+      onClose={handleClose}
+      aria-labelledby="customized-dialog-title"
+      open={open}
+      PaperProps={{
+        sx: {
+          minWidth: '350px'
+        }
+      }}
+      transitionDuration={0}
+      TransitionProps={{}}
+    >
+      <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
+        {mode === TokenSelectMode.MULTI ? 'Select tokens' : 'Select token'}
+      </StyledDialogTitle>
+      <StyledDialogContent sx={{ padding: 0 }}>
+        <List sx={{ padding: 0 }}>
+          {tokenList ? tokenListValues.map((_token) => (
+            <ListItem
+              key={_token.address}
+              color="primary"
+              selected={newSelection.has(_token)}
+              disablePadding
+              secondaryAction={<Typography>{displayBN(balances ? balances[_token.address] : zeroBN)}</Typography>}
+              onClick={onClickItem(_token)}
+            >
+              <ListItemButton disableRipple>
+                <ListItemIcon>
+                  <img src={_token.logo} alt="" className={classes.tokenLogo} />
+                </ListItemIcon>
+                <ListItemText primary={_token.symbol} secondary={_token.name} />
+              </ListItemButton>
+            </ListItem>
+          )) : null}
+        </List>
+      </StyledDialogContent>
+      {mode === TokenSelectMode.MULTI && (
         <StyledDialogActions>
           <Button
-            onClick={() => {
-              onSelect(_selected);
-              handleClose();
-            }}
-            disabled={_selected.size === 0}
+            onClick={onClickSubmit(newSelection)}
+            disabled={newSelection.size === 0}
             variant="outlined"
             fullWidth
             color="primary"
             size="large"
           >
-            {_selected.size === 0 
+            {newSelection.size === 0 
               ? 'Select Token to Continue'
-              : `Select ${_selected.size} Token${_selected.size === 1 ? '' : 's'}`}
+              : `Select ${newSelection.size} Token${newSelection.size === 1 ? '' : 's'}`}
           </Button>
         </StyledDialogActions>
-      </StyledDialog>
-    </>
+      )}
+    </StyledDialog>
   );
 });
 
