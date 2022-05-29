@@ -6,7 +6,9 @@ import {
 } from './actions';
 
 export interface AllowanceState {
-  [token: string]: BigNumber;
+  [contractAddress: string]: {
+    [tokenAddress: string]: BigNumber;
+  };
 }
 
 export const initialState: AllowanceState = {};
@@ -14,11 +16,13 @@ export const initialState: AllowanceState = {};
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(updateAllowance, (state, { payload }) => {
-      state[payload.token.addr] = payload.allowance;
+      if (!state[payload.contract]) state[payload.contract] = {};
+      state[payload.contract][payload.token.address] = payload.allowance;
     })
     .addCase(updateAllowances, (state, { payload }) => {
       payload.forEach((elem) => {
-        state[elem.token.addr] = elem.allowance;
+        if (!state[elem.contract]) state[elem.contract] = {};
+        state[elem.contract][elem.token.address] = elem.allowance;
       });
     })
     .addCase(clearAllowances, (state, { payload }) => {

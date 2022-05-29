@@ -25,7 +25,7 @@ const TokenQuoteProvider : React.FC<{
 }) => {
   // Setup a price quote for this token
   const [amountOut, quoting, getAmountOut] = useQuote(tokenOut);
-  const { setFieldValue } = useFormikContext();
+  const { isSubmitting, setFieldValue } = useFormikContext();
 
   // Run getAmountOut whenever the amount changes.
   // NOTE: because the getAmountOut function is debounced,
@@ -53,9 +53,14 @@ const TokenQuoteProvider : React.FC<{
       <TokenAdornment
         token={state.token}
         onClick={showTokenSelect}
+        disabled={isSubmitting}
       />
     )
-  }), [state.token, showTokenSelect]);
+  }), [
+    state.token,
+    showTokenSelect,
+    isSubmitting
+  ]);
 
   // Render info about the quote beneath the input.
   const Quote = useMemo(() => (

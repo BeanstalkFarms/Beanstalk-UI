@@ -21,8 +21,10 @@ const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0
 const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
 const ERC20_ABI = require('constants/abi/ERC20.json');
 
+export type AddressOrAddressMap = string | AddressMap | undefined;
+
 export default function useContract<T extends Contract = Contract>(
-  addressOrAddressMap: string | AddressMap | undefined,
+  addressOrAddressMap: AddressOrAddressMap,
   abi: any,
   withSignerIfPossible = true
 ): T | null {
@@ -103,9 +105,9 @@ export function useBeanstalkFertilizerContract() {
   );
 }
 
-export function useERC20Contract(addressMap: AddressMap) {
+export function useERC20Contract(addressOrAddressMap: AddressOrAddressMap) {
   return useContract<ERC20>(
-    addressMap,
+    addressOrAddressMap,
     ERC20_ABI,
     true,
   );

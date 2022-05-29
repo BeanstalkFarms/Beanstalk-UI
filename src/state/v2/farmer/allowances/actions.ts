@@ -1,20 +1,21 @@
 import { createAction } from '@reduxjs/toolkit';
-import { SupportedToken } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
+import { Token } from 'classes';
 
 export type UpdateAllowancePayload = {
-  token: SupportedToken,
+  contract: string;
+  token: Token,
   allowance: BigNumber
 };
 
 export const updateAllowances = createAction<UpdateAllowancePayload[]>(
-  'allowances/updateAllowances'
+  'farmer/allowances/updateAllowances'
 );
 
 export const updateAllowance = createAction<UpdateAllowancePayload>(
-  'allowances/updateAllowance'
+  'farmer/allowances/updateAllowance'
 );
 
 export const clearAllowances = createAction(
-  'allowances/clearAllowances'
+  'farmer/allowances/clearAllowances'
 );

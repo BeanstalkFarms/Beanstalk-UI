@@ -7,3 +7,14 @@ export type FormTokenState = {
   amountOut?: BigNumber;
   quoting?: boolean;
 }
+
+export type FormApprovingState = {
+  contract: string;
+  token: Token;
+  amount: BigNumber;
+}
+
+export type FormState = {
+  tokens: FormTokenState[];
+  approving?: FormApprovingState; 
+}

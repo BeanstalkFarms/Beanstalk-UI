@@ -10,6 +10,6 @@ const TxnAccordion : React.FC = ({ children }) => (
       {children}
     </AccordionDetails>
   </Accordion>
-  );
+);
 
 export default TxnAccordion;

@@ -46,7 +46,12 @@ const TokenInputField : React.FC<
 
   // Derived
   // Disable when: explicitly disabled, balance is undefined or zero
-  const isDisabled = disabled || !balance || balance.eq(0);
+  const isInputDisabled = (
+    disabled
+    || !balance 
+    || balance.eq(0)
+    || form.isSubmitting
+  );
 
   // Handlers
   const handleMax = useCallback(() => { 
@@ -97,7 +102,7 @@ const TokenInputField : React.FC<
       <TextField
         type="number"
         placeholder={placeholder || '0'}
-        disabled={isDisabled}
+        disabled={isInputDisabled}
         {...props}
         onWheel={handleWheel}
         value={displayAmount}
@@ -120,9 +125,13 @@ const TokenInputField : React.FC<
         </Typography>
         <Typography
           variant="body1"
-          onClick={handleMax}
-          color="primary"
-          sx={{ fontSize: 13.5, fontWeight: 600, cursor: 'pointer' }}
+          onClick={isInputDisabled ? undefined : handleMax}
+          color={isInputDisabled ? "text.secondary" : "primary"}
+          sx={{
+            fontSize: 13.5,
+            fontWeight: 600,
+            cursor: isInputDisabled ? 'inherit' : 'pointer',
+          }}
         >
           (Max)
         </Typography>

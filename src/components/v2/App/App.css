@@ -1,3 +1,31 @@
+/**
+ * Toast
+ */
+
+@keyframes custom-enter {
+  0% {
+    right: -500px;
+    /* opacity: 0; */
+  }
+  50% {
+    right: 0px;
+    /* opacity: 1; */
+  }
+}
+@keyframes custom-exit {
+  0% {
+    right: 0px;
+    /* opacity: 1; */
+  }
+  50% {
+    right: -500px;
+    /* opacity: 0; */
+  }
+}
+
+/**
+ * Old
+ */
 .BeanstalkBG[name="main"] {
   background-image: url('img/main/beanstalk.svg');
 }

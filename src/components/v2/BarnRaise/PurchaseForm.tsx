@@ -19,10 +19,13 @@ import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 import useFertilizerSummary from 'hooks/summary/useFertilizerSummary';
 import TokenSelectDialog, { TokenSelectMode } from 'components/v2/Common/Form/TokenSelectDialog';
 import TokenQuoteProvider from 'components/v2/Common/Form/TokenQuoteProvider';
-import { FormTokenState } from 'components/v2/Common/Form';
+import { FormState, FormTokenState } from 'components/v2/Common/Form';
 import TransactionPreview from 'components/v2/Common/Form/TransactionPreview';
 import TxnAccordion from 'components/v2/Common/TxnAccordion';
 import FertilizerItem from './FertilizerItem';
+import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
+import { BeanstalkFertilizer } from 'constants/generated';
+import { ethers } from 'ethers';
 
 // ---------------------------------------------------
 export interface BarnraiseFormProps {
@@ -35,9 +38,7 @@ export interface BarnraiseFormProps {
   account: any;
 }
 
-type FertilizerFormValues = {
-  tokens: FormTokenState[]
-}
+type FertilizerFormValues = FormState;
 
 // ---------------------------------------------------
 
@@ -56,16 +57,21 @@ const PREFERRED_TOKENS : PreferredToken[] = [
 
 const FertilizeForm : React.FC<
   FormikProps<FertilizerFormValues>
+  & {
+    contract: ethers.Contract;
+  }
 > = ({
   // Formik
   values,
   setFieldValue,
   isSubmitting,
+  contract,
 }) => {
   const tokenList = useTokenMap(useMemo(() => ([USDC, ETH]), []));
   const Usdc = useChainConstant(USDC);
   const balances = useFarmerBalances();
   const [showTokenSelect, setShowTokenSelect] = useState(false);
+  
   // 
   const {
     usdc,
@@ -138,9 +144,31 @@ const FertilizeForm : React.FC<
           ) : null}
         </Box>
         {/* Submit */}
-        <LoadingButton loading={isSubmitting} type="submit" disabled={!ready} variant="contained" color="primary" size="large">
-          Purchase{usdc && ` ${displayBN(usdc)}`} Fertilizer
-        </LoadingButton>
+        <SmartSubmitButton
+          // Button props
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          loading={isSubmitting}
+          disabled={!ready}
+          // Smart props
+          contract={contract}
+          tokens={values.tokens}
+        >
+          Purchase{usdc && usdc.gt(0) && ` ${displayBN(usdc)}`} Fertilizer
+        </SmartSubmitButton>
+        
+        {/* <LoadingButton
+          loading={isSubmitting}
+          type="submit"
+          disabled={!ready}
+          variant="contained"
+          color="primary"
+          size="large"
+        >
+          Purchase{usdc && usdc.gt(0) && ` ${displayBN(usdc)}`} Fertilizer
+        </LoadingButton> */}
       </Stack>
     </Form>
   );
@@ -189,7 +217,7 @@ const SetupForm: React.FC<{}> = () => {
       <Stack gap={1}>
         <Typography variant="h2">Purchase Fertilizer</Typography>
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
-          {(props) => <FertilizeForm {...props} />}
+          {(props) => <FertilizeForm contract={fertContract} {...props} />}
         </Formik>
       </Stack>
     </Card>
