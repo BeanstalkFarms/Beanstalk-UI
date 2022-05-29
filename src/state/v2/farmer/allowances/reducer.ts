@@ -25,7 +25,5 @@ export default createReducer(initialState, (builder) =>
         state[elem.contract][elem.token.address] = elem.allowance;
       });
     })
-    .addCase(clearAllowances, (state, { payload }) => {
-      state = initialState;
-    })
+    .addCase(clearAllowances, () => initialState)
 );

@@ -96,7 +96,9 @@ export default class TransactionToast {
     this.toastId = toast.loading(
       <ToastAlert
         desc={this.messages.loading}
-      />
+      />, {
+        duration: Infinity,
+      }
     );
   }
 
@@ -114,6 +116,7 @@ export default class TransactionToast {
       />,
       {
         id: this.toastId,
+        duration: Infinity,
       }
     );
   }

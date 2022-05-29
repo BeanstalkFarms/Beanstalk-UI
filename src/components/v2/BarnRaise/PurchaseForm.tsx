@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Box, Card, Stack, Typography } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
 import BigNumber from 'bignumber.js';
+import toast from 'react-hot-toast';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
-import { displayBN, toStringBaseUnitBN } from 'util/index';
+import { displayBN, displayFullBN, toStringBaseUnitBN } from 'util/index';
 import { ETH, USDC } from 'constants/v2/tokens';
 import { TokensByAddress } from 'constants/v2';
 import { BalanceState } from 'state/v2/farmer/balances/reducer';
@@ -19,13 +19,13 @@ import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 import useFertilizerSummary from 'hooks/summary/useFertilizerSummary';
 import TokenSelectDialog, { TokenSelectMode } from 'components/v2/Common/Form/TokenSelectDialog';
 import TokenQuoteProvider from 'components/v2/Common/Form/TokenQuoteProvider';
-import { FormState, FormTokenState } from 'components/v2/Common/Form';
+import { FormState } from 'components/v2/Common/Form';
 import TransactionPreview from 'components/v2/Common/Form/TransactionPreview';
 import TxnAccordion from 'components/v2/Common/TxnAccordion';
-import { BeanstalkFertilizer } from 'constants/generated';
 import { ethers } from 'ethers';
 import FertilizerItem from './FertilizerItem';
 import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
+import TransactionToast from '../Common/TxnToast';
 
 // ---------------------------------------------------
 export interface BarnraiseFormProps {
@@ -94,7 +94,7 @@ const FertilizeForm : React.FC<
 
   return (
     <Form noValidate>
-      <Stack gap={2}>
+      <Stack gap={1}>
         <TokenSelectDialog
           open={showTokenSelect}
           handleClose={handleClose}
@@ -118,33 +118,30 @@ const FertilizeForm : React.FC<
           ))}
           {/* Outputs */}
           {usdc?.gt(0) ? (
-            <>
-              <Stack direction="column" gap={2} alignItems="center" justifyContent="center">
-                <KeyboardArrowDownIcon color="secondary" />
-                <Box>
-                  <Box sx={{ width: 200 }}>
-                    <FertilizerItem
-                      isNew
-                      amount={usdc}
-                      remaining={usdc.multipliedBy(humidity.plus(1))}
-                      humidity={humidity}
-                      state="active"
-                    />
-                  </Box>
-                </Box>
-                <Box sx={{ width: '100%' }}>
-                  <TxnAccordion>
-                    <TransactionPreview
-                      actions={actions}
-                    />
-                  </TxnAccordion>
-                </Box>
-              </Stack>
-            </>
+            <Stack direction="column" gap={1} alignItems="center" justifyContent="center">
+              <KeyboardArrowDownIcon color="secondary" />
+              <Box sx={{ width: 180, pb: 1 }}>
+                <FertilizerItem
+                  isNew
+                  amount={usdc}
+                  remaining={usdc.multipliedBy(humidity.plus(1))}
+                  humidity={humidity}
+                  state="active"
+                />
+              </Box>
+              <Box sx={{ width: '100%', mt: 0 }}>
+                <TxnAccordion defaultExpanded={false}>
+                  <TransactionPreview
+                    actions={actions}
+                  />
+                </TxnAccordion>
+              </Box>
+            </Stack>
           ) : null}
         </Box>
         {/* Submit */}
         <SmartSubmitButton
+          mode="auto"
           // Button props
           type="submit"
           variant="contained"
@@ -158,17 +155,6 @@ const FertilizeForm : React.FC<
         >
           Purchase{usdc && usdc.gt(0) && ` ${displayBN(usdc)}`} Fertilizer
         </SmartSubmitButton>
-        
-        {/* <LoadingButton
-          loading={isSubmitting}
-          type="submit"
-          disabled={!ready}
-          variant="contained"
-          color="primary"
-          size="large"
-        >
-          Purchase{usdc && usdc.gt(0) && ` ${displayBN(usdc)}`} Fertilizer
-        </LoadingButton> */}
       </Stack>
     </Form>
   );
@@ -193,23 +179,49 @@ const SetupForm: React.FC<{}> = () => {
     if (fertContract) {
       const token   = values.tokens[0].token;
       const amount  = values.tokens[0].amount;
-      const amountUsdc = token === Eth ? values.tokens[0].amountOut :  values.tokens[0].amount;
-      let call;
-      if (amount && amountUsdc) {
-        if (token === Eth) {
-          call = fertContract.buyAndMint(
-            toStringBaseUnitBN(amountUsdc.multipliedBy(0.999), Usdc.decimals),
-            { value: toStringBaseUnitBN(amount, Eth.decimals) }
-          );
-        } else if (token === Usdc) {
-          call = Promise.resolve();
-        } else {
-          call = Promise.reject();
-        }
-      } else {
-        call = Promise.reject();
+      const amountUsdc = (
+        token === Eth
+          ? values.tokens[0].amountOut
+          : values.tokens[0].amount
+      );
+
+      if (!amount || !amountUsdc) {
+        toast.error('An error occurred.');
+        return;
       }
-      return call.then();
+
+      //
+      const txToast = new TransactionToast({
+        loading: `Buying ${displayFullBN(amountUsdc, Usdc.displayDecimals)} FERT`,
+        success: 'Success!',
+      });
+
+      // Build call
+      let call;
+      if (token === Eth) {
+        call = fertContract.buyAndMint(
+          toStringBaseUnitBN(amountUsdc, Usdc.decimals),
+          { value: toStringBaseUnitBN(amount, Eth.decimals) }
+        );
+      } else if (token === Usdc) {
+        call = fertContract.mint(
+          toStringBaseUnitBN(amountUsdc, Usdc.decimals),
+        );
+      } else {
+        call = Promise.reject(new Error('Unrecognized token.'));
+      }
+
+      return call
+        .then((txn) => {
+          txToast.confirming(txn);
+          return txn.wait();
+        })
+        .then((receipt) => {
+          txToast.success(receipt);
+        })
+        .catch((err) => {
+          txToast.error(err);
+        });
     }
   }, [Eth, Usdc, fertContract]);
   return (

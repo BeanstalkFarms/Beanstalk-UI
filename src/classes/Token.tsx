@@ -132,7 +132,7 @@ export class NativeToken extends Token {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  public getAllowance(account: string, spender: string): Promise<BigNumber | undefined> {
+  public getAllowance(): Promise<BigNumber | undefined> {
     return Promise.resolve(new BigNumber(parseInt(MAX_UINT256, 16)));
   }
 
@@ -173,7 +173,7 @@ export class BeanstalkToken extends Token {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  public getAllowance(account: string, spender: string) {
+  public getAllowance() {
     return Promise.resolve(new BigNumber(parseInt(MAX_UINT256, 16)));
   }
 

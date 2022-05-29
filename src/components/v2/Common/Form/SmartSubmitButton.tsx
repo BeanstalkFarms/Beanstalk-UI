@@ -1,22 +1,18 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Token } from 'classes';
 import { Button, ButtonProps, Link, Stack, Typography } from '@mui/material';
 import { useAllowances } from 'hooks/useAllowance';
 import { BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES } from 'constants/v2/addresses';
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
-import { useNetwork } from 'wagmi';
 import useChainConstant from 'hooks/useChainConstant';
 import { ethers } from 'ethers';
-import { ERC20 } from 'constants/generated';
 import { useERC20Contract } from 'hooks/useContract';
 import { MAX_UINT256 } from 'util/LedgerUtilities';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
-import toast from 'react-hot-toast';
-import { FormState, FormTokenState } from '.';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import TransactionToast from '../TxnToast';
+import { FormState, FormTokenState } from '.';
 
 const CONTRACT_NAMES : { [address: string] : string } = {
   [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',

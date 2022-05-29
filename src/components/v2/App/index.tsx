@@ -123,17 +123,22 @@ export default function App() {
                   ...t.style,
                   // Option 1: Pops up instantly,
                   // then slides out to the right side
-                  animation: 'none',
-                  position: 'absolute',
-                  right: t.visible ? 0 : -500,
-                  transition: 'right 0.4s ease-in-out',
-                  opacity: 1,
+                  // animation: 'none',
+                  // position: 'absolute',
+                  // right: t.visible ? 0 : -500,
+                  // transition: 'right 0.4s ease-in-out',
+                  // opacity: 1,
                   // Option 2: Slides in and out, but there's
                   // an issue where it "flashes back" after
                   // completing the animation.
                   // position: 'absolute',
                   // animation: t.visible ? 'custom-enter 1s ease-in-out' : 'custom-exit 1s ease-in-out',
                   // animationFillMode: 'forwards'
+                  // Option 3: Tries to fix toasts stacking on top of each other
+                  animation: 'none',
+                  marginRight: t.visible ? 0 : -500,
+                  transition: 'margin-right 0.4s ease-in-out',
+                  opacity: 1,
                 }}
               />
             )}
