@@ -1,8 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { FarmerFertilizer } from '.';
-import { updateFertTokens } from './actions';
-
-// const NEG1 = new BigNumber(-1);
+import { resetFertilizer, updateFertilizer } from './actions';
 
 const initialState : FarmerFertilizer = {
   tokens: {}
@@ -10,10 +8,11 @@ const initialState : FarmerFertilizer = {
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(updateFertTokens, (state, { payload }) => {
+    .addCase(updateFertilizer, (state, { payload }) => {
       state.tokens = {
         ...state.tokens,
         ...payload,
       };
     })
+    .addCase(resetFertilizer, () => initialState)
 );

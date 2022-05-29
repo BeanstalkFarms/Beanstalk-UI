@@ -58,17 +58,17 @@ const TokenInputField : React.FC<
     form.setFieldValue(field.name, balance);
   }, [form, field.name, balance]);
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    console.debug(`[TokenInputField] ${field.name} onChange`);
+    // Always update the display amount right away.
     setDisplayAmount(e.target.value); 
-    const val = e.target.value ? new BigNumber(e.target.value) : undefined;
+    const val = e.target.value ? new BigNumber(e.target.value) : null;
     // Only push a new value to form state if the numeric
     // value is different. For example, if the displayValue
     // goes from '1.0' -> '1.00', don't trigger an update.
-    if (val === undefined || !val.eq(field.value)) {
+    if (val === null || !val.eq(field.value)) {
       form.setFieldValue(
         field.name,
         // If a balance is provided, enforce it as a maximum.
-        (balance && val && val.gt(balance))
+        ((balance && val) && val.gt(balance))
           ? balance
           : val,
       );

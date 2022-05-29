@@ -8,7 +8,7 @@ import { displayBN, displayFullBN, toStringBaseUnitBN } from 'util/index';
 import { ETH, USDC } from 'constants/v2/tokens';
 import { TokensByAddress } from 'constants/v2';
 import { BalanceState } from 'state/v2/farmer/balances/reducer';
-import { Form, Formik, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
@@ -23,6 +23,9 @@ import { FormState } from 'components/v2/Common/Form';
 import TransactionPreview from 'components/v2/Common/Form/TransactionPreview';
 import TxnAccordion from 'components/v2/Common/TxnAccordion';
 import { ethers } from 'ethers';
+import { useFetchFarmerFertilizer } from 'state/v2/farmer/fertilizer/updater';
+import { useAccount } from 'wagmi';
+import { useFetchFarmerBalances } from 'state/v2/farmer/balances/updater';
 import FertilizerItem from './FertilizerItem';
 import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
 import TransactionToast from '../Common/TxnToast';
@@ -88,7 +91,7 @@ const FertilizeForm : React.FC<
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
     setFieldValue(
       'tokens',
-      Array.from(_tokens).map((token) => ({ token, amount: undefined }))
+      Array.from(_tokens).map((token) => ({ token, amount: null }))
     );
   }, [setFieldValue]);
 
@@ -109,7 +112,7 @@ const FertilizeForm : React.FC<
           {/* Inputs */}
           {values.tokens.map((state, index) => (
             <TokenQuoteProvider
-              key={index}
+              key={state.token.address}
               name={`tokens.${index}`}
               tokenOut={Usdc}
               balance={balances[state.token.address] || undefined}
@@ -166,8 +169,13 @@ const FertilizeForm : React.FC<
 const SetupForm: React.FC<{}> = () => {
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const fertContract = useBeanstalkFertilizerContract();
+  const { data: account } = useAccount();
   const Usdc = useChainConstant(USDC);
   const Eth  = useChainConstant(ETH);
+  const [refetchFertilizer] = useFetchFarmerFertilizer();
+  const [refetchBalances]   = useFetchFarmerBalances();
+
+  //
   const initialValues : FertilizerFormValues = useMemo(() => ({
     tokens: [
       {
@@ -176,8 +184,8 @@ const SetupForm: React.FC<{}> = () => {
       },
     ],
   }), [baseToken]);
-  const onSubmit = useCallback((values: FertilizerFormValues) => {
-    if (fertContract) {
+  const onSubmit = useCallback((values: FertilizerFormValues, actions: FormikHelpers<FertilizerFormValues>) => {
+    if (fertContract && account?.address) {
       const token   = values.tokens[0].token;
       const amount  = values.tokens[0].amount;
       const amountUsdc = (
@@ -219,12 +227,23 @@ const SetupForm: React.FC<{}> = () => {
         })
         .then((receipt) => {
           txToast.success(receipt);
+          actions.resetForm();
+          refetchFertilizer(account.address as string);
+          refetchBalances(account.address as string);
         })
         .catch((err) => {
           txToast.error(err);
         });
     }
-  }, [Eth, Usdc, fertContract]);
+  }, [
+    Eth,
+    Usdc,
+    fertContract,
+    account?.address,
+    refetchFertilizer,
+    refetchBalances
+  ]);
+
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>

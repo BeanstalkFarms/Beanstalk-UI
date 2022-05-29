@@ -3,11 +3,12 @@ import BigNumber from 'bignumber.js';
 import { Fertilizer } from '.';
 import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 
-const NEG1 = new BigNumber(-1);
+const ZERO = new BigNumber(0);
+// const NEG1 = new BigNumber(-1);
 
 const initialState : Fertilizer = {
-  remaining: NEG1,
-  totalRaised: NEG1,
+  remaining: ZERO,
+  totalRaised: ZERO,
   // humidity: NEG1,
 };
 
