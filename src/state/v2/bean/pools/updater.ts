@@ -25,15 +25,15 @@ export const useGetPools = () => {
   const fetch = useCallback(
     async () => {
       if (beanstalkPriceContract) {
-        console.debug('[bean/pools/useGetPools] fetch ', beanstalkPriceContract.address);
+        console.debug('[bean/pools/useGetPools] FETCH', beanstalkPriceContract.address);
 
         const priceResult = await beanstalkPriceContract.price();
         if (!priceResult) return;
 
-        console.debug('[bean/pools/useGetPools] result (price contract)', priceResult);
+        console.debug('[bean/pools/useGetPools] RESULT: price contract result =', priceResult);
 
         // Step 2: Get LP token supply data and format as UpdatePoolPayload
-        const poolDataResult : (Promise<UpdatePoolPayload>)[] = [
+        const dataWithSupplyResult : (Promise<UpdatePoolPayload>)[] = [
           ...priceResult.ps.reduce<(Promise<UpdatePoolPayload>)[]>((acc, poolData) => {
             const address = poolData.pool;
             // If a new pool is added to the Pools contract before it's
@@ -67,9 +67,9 @@ export const useGetPools = () => {
           }, [])
         ];
 
-        console.debug('[bean/pools/useGetPools] result (supply)', poolDataResult);
+        console.debug('[bean/pools/useGetPools] RESULT: dataWithSupply =', dataWithSupplyResult);
         
-        dispatch(updateBeanPools(await Promise.all(poolDataResult)));
+        dispatch(updateBeanPools(await Promise.all(dataWithSupplyResult)));
         dispatch(updateBeanPrice(tokenResult(BEAN)(priceResult.price.toString())));
       }
     },

@@ -1,5 +1,6 @@
 import { SupportedChainId } from 'constants/chains';
 import { BEAN } from 'constants/v2/tokens';
+import useChainId from 'hooks/useChain';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +9,7 @@ import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
 import { useNetwork } from 'wagmi';
 import { updateHarvestableIndex } from '../field/actions';
-import { setAwaitingSunrise, setRemainingUntilSunrise, updateSeason } from './actions';
+import { resetSun, setAwaitingSunrise, setRemainingUntilSunrise, updateSeason } from './actions';
 
 export const useSun = () => {
   const dispatch = useDispatch();
@@ -17,16 +18,16 @@ export const useSun = () => {
   // Handlers
   const fetch = useCallback(async () => {
     if (beanstalk) {
+      console.debug(`[beanstalk/sun/useSun] FETCH`)
       const [
         season,
         harvestableIndex,
       ] = await Promise.all([
         beanstalk.season().then(bigNumberResult),
-        // FIXME
-        beanstalk.harvestableIndex().then(tokenResult(BEAN[SupportedChainId.MAINNET])),
+        beanstalk.harvestableIndex().then(tokenResult(BEAN[SupportedChainId.MAINNET])), // FIXME
       ] as const);
 
-      console.debug(`[beanstalk/sun/updater] season = ${season}`);
+      console.debug(`[beanstalk/sun/useSun] RESULT: season = ${season}`);
       dispatch(updateSeason(season));
       dispatch(updateHarvestableIndex(harvestableIndex));
     }
@@ -36,19 +37,19 @@ export const useSun = () => {
   ]);
   
   const clear = useCallback(() => {
-    // console.debug(`[farmer/silo/updater] clear`)
-    // dispatch(reset())
-  }, []);
+    console.debug(`[farmer/silo/useSun] clear`)
+    dispatch(resetSun());
+  }, [dispatch]);
 
   return [fetch, clear] as const;
 };
 
 const SunUpdater = () => {
-  const { activeChain } = useNetwork();
-  const [fetch] = useSun();
+  const [fetch, clear] = useSun();
   const dispatch = useDispatch();
   const { season, sunrise } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const { awaiting, next } = sunrise;
+  const chainId = useChainId();
 
   // Update sunrise timer
   useEffect(() => {
@@ -65,18 +66,20 @@ const SunUpdater = () => {
     }
   }, [dispatch, awaiting, next]);
 
-  // 
+  // When the season changes
   useEffect(() => {
+    console.debug(`[beanstalk/sun/updater] caught new season = `, season?.toNumber())
     dispatch(setAwaitingSunrise(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [season]);
+  }, [dispatch, season]);
 
   // Fetch when chain changes
   useEffect(() => {
-    if (activeChain?.id) {
-      fetch();
-    }
-  }, [activeChain?.id, fetch]);
+    clear();
+    fetch();
+    // NOTE: 
+    // The below requires that useChainId() is called last in the stack of hooks.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainId]);
 
   return null;
 };

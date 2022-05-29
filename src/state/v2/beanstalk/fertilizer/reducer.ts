@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 import { Fertilizer } from '.';
-import { setRemaining, setTotalRaised } from './actions';
+import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 
 const NEG1 = new BigNumber(-1);
 
@@ -18,6 +18,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(setTotalRaised, (state, { payload }) => {
       state.totalRaised = payload;
+    })
+    .addCase(resetFertilizer, () => {
+      return initialState;
     })
     // .addCase(setHumidity, (state, { payload }) => {
     //   state.humidity = payload;
