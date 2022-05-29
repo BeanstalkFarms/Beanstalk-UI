@@ -44,11 +44,12 @@ export function useFetchAllowances() {
     } 
     return Promise.resolve(null);
   }, [dispatch, account]);
+  
   const clear = useCallback(() => {
     dispatch(clearAllowances());
   }, [dispatch]);
 
-  return [fetch, clear];
+  return [fetch, clear] as const;
 }
 
 // -- Updater

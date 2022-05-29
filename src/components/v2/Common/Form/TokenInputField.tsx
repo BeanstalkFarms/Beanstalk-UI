@@ -126,7 +126,7 @@ const TokenInputField : React.FC<
         <Typography
           variant="body1"
           onClick={isInputDisabled ? undefined : handleMax}
-          color={isInputDisabled ? "text.secondary" : "primary"}
+          color={isInputDisabled ? 'text.secondary' : 'primary'}
           sx={{
             fontSize: 13.5,
             fontWeight: 600,

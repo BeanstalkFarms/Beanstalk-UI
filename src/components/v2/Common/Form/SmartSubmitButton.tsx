@@ -3,7 +3,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Token } from 'classes';
 import { Button, ButtonProps, Link, Stack, Typography } from '@mui/material';
 import { useAllowances } from 'hooks/useAllowance';
-import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import { BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES } from 'constants/v2/addresses';
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
 import { useNetwork } from 'wagmi';
@@ -12,10 +11,11 @@ import { ethers } from 'ethers';
 import { ERC20 } from 'constants/generated';
 import { useERC20Contract } from 'hooks/useContract';
 import { MAX_UINT256 } from 'util/LedgerUtilities';
-import { FormState, FormTokenState } from '.';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
+import { FormState, FormTokenState } from '.';
+import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import TransactionToast from '../TxnToast';
 
 const CONTRACT_NAMES : { [address: string] : string } = {
@@ -23,7 +23,7 @@ const CONTRACT_NAMES : { [address: string] : string } = {
   [BEANSTALK_ADDRESSES[SupportedChainId.ROPSTEN]]: 'Beanstalk',
   [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk Fertilizer',
   [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.ROPSTEN]]: 'Beanstalk Fertilizer',
-}
+};
 
 const SmartSubmitButton : React.FC<{
   contract: ethers.Contract;
@@ -54,16 +54,17 @@ const SmartSubmitButton : React.FC<{
   // Convert the current `FormTokenState[]` into more convenient forms,
   // and find the next token that we need to seek approval for.
   const selectedTokens = useMemo(() => tokens.map((elem) => elem.token), [tokens]);
-  const allowances = useAllowances(contract.address, selectedTokens, { loadIfAbsent: true });
+  const [allowances, refetchAllowances] = useAllowances(contract.address, selectedTokens, { loadIfAbsent: true });
   const nextApprovalIndex = useMemo(
     () => allowances.findIndex(
       (allowance, index) => {
+        const amt = tokens[index].amount;
         return (
           !allowance                              // waiting for allowance to load
           || allowance.eq(0)                      // allowance is zero
-          || (tokens[index].amount !== undefined  // entered amount is greater than allowance
-              ? tokens[index].amount?.gt(allowance)
-              : true)
+          || (amt !== undefined && amt.gt(0) // entered amount is greater than allowance
+              ? amt.gt(allowance)
+              : false)
         );
       }
     ),
@@ -71,7 +72,7 @@ const SmartSubmitButton : React.FC<{
   );
 
   // Derived
-  const nextApprovalToken = nextApprovalIndex > -1 ? selectedTokens[nextApprovalIndex] : null
+  const nextApprovalToken = nextApprovalIndex > -1 ? selectedTokens[nextApprovalIndex] : null;
   const erc20TokenContract = useERC20Contract(nextApprovalToken?.address);
   const isApproving = !!values?.approving;
 
@@ -80,10 +81,12 @@ const SmartSubmitButton : React.FC<{
   const handleOpen  = useCallback(() => setOpen(true),  []);
   const handleClose = useCallback(() => setOpen(false), []);
   const handleApproval = useCallback(() => {
-    if(erc20TokenContract) {
+    if (erc20TokenContract && nextApprovalToken) {
       const amount = MAX_UINT256;
+
+      // State
       const txToast = new TransactionToast({
-        loading: 'Confirming...',
+        loading: `Approving ${nextApprovalToken.symbol}`,
         success: 'Success!',
       });
       setFieldValue('approving', {
@@ -91,33 +94,50 @@ const SmartSubmitButton : React.FC<{
         token: nextApprovalToken,
         amount: new BigNumber(MAX_UINT256),
       });
+
+      // Execute
       erc20TokenContract.approve(
         contract.address,
         amount,
       )
       .then((txn) => {
         // submitted
+        // TODO: some sort of global txn tracker here
         txToast.confirming(txn);
         return txn.wait();
       })
       .then((receipt) => {
         // confirmed
-        txToast.success(receipt);
+        refetchAllowances()
+          .then(() => {
+            txToast.success(receipt);
+            setFieldValue('approving', undefined);
+          });
       })
       .catch((err) => {
         // failed
         txToast.error(err);
         setFieldValue('approving', undefined);
-      })
+      });
     }
-  }, [contract.address, nextApprovalToken, erc20TokenContract, setFieldValue])
+  }, [
+    contract.address,
+    nextApprovalToken,
+    erc20TokenContract,
+    setFieldValue,
+    refetchAllowances,
+  ]);
   const handleClickApproveButton = useCallback(() => {
     if (mode === 'auto') {
       handleApproval();
     } else {
       handleOpen();
     }
-  }, [mode, handleApproval, handleOpen])
+  }, [
+    mode,
+    handleApproval,
+    handleOpen
+  ]);
 
   return (
     <>
@@ -157,17 +177,21 @@ const SmartSubmitButton : React.FC<{
           </StyledDialogActions>
         </StyledDialog>
       )}
-      <LoadingButton
-        {...props}
-        onClick={handleClickApproveButton}
-        loading={isApproving}
-      >
-        {nextApprovalToken ? (
-          `Approve ${nextApprovalToken.symbol}`
-        ) : children}
-      </LoadingButton>
+      {nextApprovalToken ? (
+        <LoadingButton
+          {...props}
+          onClick={handleClickApproveButton}
+          loading={isApproving}
+        >
+          Approve {nextApprovalToken.symbol}
+        </LoadingButton>
+      ) : (
+        <LoadingButton {...props}>
+          {children}
+        </LoadingButton>
+      )}
     </>
   );
-}
+};
 
 export default SmartSubmitButton;

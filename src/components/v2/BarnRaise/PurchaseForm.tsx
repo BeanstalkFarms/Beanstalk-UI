@@ -22,10 +22,10 @@ import TokenQuoteProvider from 'components/v2/Common/Form/TokenQuoteProvider';
 import { FormState, FormTokenState } from 'components/v2/Common/Form';
 import TransactionPreview from 'components/v2/Common/Form/TransactionPreview';
 import TxnAccordion from 'components/v2/Common/TxnAccordion';
-import FertilizerItem from './FertilizerItem';
-import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
 import { BeanstalkFertilizer } from 'constants/generated';
 import { ethers } from 'ethers';
+import FertilizerItem from './FertilizerItem';
+import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
 
 // ---------------------------------------------------
 export interface BarnraiseFormProps {
