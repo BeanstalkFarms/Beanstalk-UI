@@ -8,11 +8,11 @@ const NetworkButton: React.FC = () => {
   const { activeChain, chains, error, switchNetwork } = useNetwork({
     onSettled(data, err) {
       if (!err) {
-        console.debug(`[NetworkButton] refreshing page...`);
-        console.debug(``)
-        console.debug(``)
-        console.debug(``)
-        window.location.reload();
+        console.debug('[NetworkButton] settled network change...');
+        console.debug('');
+        console.debug('');
+        console.debug('');
+        // window.location.reload();
       }
     }
   });

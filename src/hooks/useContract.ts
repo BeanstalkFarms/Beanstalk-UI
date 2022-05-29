@@ -1,4 +1,3 @@
-import { useWhatChanged } from '@simbathesailor/use-what-changed';
 import { SupportedChainId } from 'constants/chains';
 import {
   Beanstalk,
@@ -13,8 +12,7 @@ import {
   BEANSTALK_PRICE_ADDRESSES,
 } from 'constants/v2/addresses';
 import { Contract, ContractInterface } from 'ethers';
-import { useMemo } from 'react';
-import { useAccount, useConnect, useContract, useNetwork, useProvider, useSigner } from 'wagmi';
+import { useContract as useWagmiContract, useProvider } from 'wagmi';
 import useChainId from './useChain';
 
 const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
@@ -30,133 +28,32 @@ export function useContractReadOnly<T extends Contract = Contract>(
   addressOrAddressMap: AddressOrAddressMap,
   abiOrAbiMap: AbiOrAbiMap,
 ): T | null {
-  const chainId = useChainId();
-  const provider = useProvider();
-  const address = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : addressOrAddressMap[chainId];
-  const abi     = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : abiOrAbiMap[chainId];
-  const contract = useContract<T>({
+  const chainId   = useChainId();
+  const provider  = useProvider();
+  const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : addressOrAddressMap[chainId];
+  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : abiOrAbiMap[chainId];
+  return useWagmiContract<T>({
     addressOrName: address,
     contractInterface: abi,
     signerOrProvider: provider,
   });
-
-  return contract;
-
-  // return useMemo(() => {
-  //   // NOTE:
-  //   // Here, we use the chainId from the `provider` itself to
-  //   // determine which contract address to use. This prevents an
-  //   // edge case where the `activeChain` provided by `useConnect()`
-  //   // is changed before the provider is updated, causing an instance
-  //   // of `useContract()` to be re-memoized. In downstream functions this
-  //   // could trigger a refetch of data since effects depend on useContract.
-  //   const _chainId = provider?._network.chainId;
-
-  //   console.debug('[useContractReadOnly] attempting to init contract instance', {
-  //     abi,
-  //     addressOrAddressMap,
-  //     _chainId,
-  //     chainId
-  //   });
-
-  //   if (!addressOrAddressMap || !abi || !_chainId) return null;
-
-  //   let address: string | undefined;
-  //   if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap;
-  //   else address = addressOrAddressMap[_chainId];
-
-  //   if (!address) {
-  //     console.debug(
-  //       '[useContractReadOnly] attempted to instantiate contract with no avail address',
-  //       {
-  //         addressOrAddressMap,
-  //         chainId: _chainId,
-  //       }
-  //     );
-  //     return null;
-  //   }
-
-  //   console.debug('[useContractReadOnly] initializing contract instance', {
-  //     address,
-  //     chainId: _chainId,
-  //   });
-
-  //   return new Contract(
-  //     address,
-  //     abi,
-  //     provider
-  //   ) as T; // FIXME; not sure we should focibly cast this to T
-
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [
-  //   provider,
-  //   addressOrAddressMap,
-  //   abi,
-  //   // chainId,
-  // ]);
 }
 
-export default function useContract2<T extends Contract = Contract>(
+export function useContract<T extends Contract = Contract>(
   addressOrAddressMap: AddressOrAddressMap,
-  abi: any,
-  withSignerIfPossible = true
+  abiOrAbiMap: AbiOrAbiMap,
+  useSignerIfPossible: boolean = true
 ): T | null {
-  // const { data, status } = useConnect();
-  const { data: _account, status } = useAccount();
-  const { data: signer } = useSigner();
-  const provider = useProvider();
-  // const chainId = useChainId()
-  const account = withSignerIfPossible ? _account : null;
-
-  console.debug(`[useContract] re-render `, status)
-
-  return useMemo(() => {
-    // NOTE:
-    // Here, we use the chainId from the `provider` itself to
-    // determine which contract address to use. This prevents an
-    // edge case where the `activeChain` provided by `useConnect()`
-    // is changed before the provider is updated, causing an instance
-    // of `useContract()` to be re-memoized. In downstream functions this
-    // could trigger a refetch of data since effects depend on useContract.
-    const chainId = provider?._network.chainId;
-    if (!addressOrAddressMap || !abi || !chainId) return null;
-
-    let address: string | undefined;
-    if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap;
-    else address = addressOrAddressMap[chainId];
-
-    if (!address) {
-      console.debug(
-        '[useContract] attempted to instantiate contract with no avail address',
-        {
-          addressOrAddressMap,
-          chainId,
-          account,
-        }
-      );
-      return null;
-    }
-
-    console.debug('[useContract] initializing contract instance', {
-      address,
-      chainId,
-    });
-
-    return new Contract(
-      address,
-      abi,
-      (withSignerIfPossible && signer)
-        ? signer
-        : provider
-    ) as T; // FIXME; not sure we should focibly cast this to T
-  }, [
-    provider,
-    signer,
-    abi,
-    withSignerIfPossible,
-    addressOrAddressMap,
-    account
-  ]);
+  const chainId   = useChainId();
+  const provider  = useProvider();
+  const signer    = useProvider();
+  const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : addressOrAddressMap[chainId];
+  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : abiOrAbiMap[chainId];
+  return useWagmiContract<T>({
+    addressOrName: address,
+    contractInterface: abi,
+    signerOrProvider: useSignerIfPossible && signer ? signer : provider,
+  });
 }
 
 // --------------------------------------------------
@@ -168,7 +65,7 @@ export function useBeanstalkContract() {
 const BEANSTALK_PRICE_ABIS = {
   [SupportedChainId.MAINNET]: BEANSTALK_PRICE_V0_ABI,
   [SupportedChainId.ROPSTEN]: BEANSTALK_PRICE_ABI
-}
+};
 
 export function useBeanstalkPriceContract() {
   return useContractReadOnly<BeanstalkPrice>(

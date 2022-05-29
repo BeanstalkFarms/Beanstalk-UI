@@ -14,7 +14,5 @@ export default createReducer(initialState, (builder) =>
         state[pl.address] = pl.pool;
       });
     })
-    .addCase(resetPools, () => {
-      return initialState;
-    })
+    .addCase(resetPools, () => initialState)
 );

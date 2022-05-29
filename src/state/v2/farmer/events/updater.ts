@@ -8,12 +8,12 @@ import { useDispatch } from 'react-redux';
 import { Beanstalk } from 'constants/generated';
 import ethers, { BigNumber as BN } from 'ethers';
 import { GetAccountResult } from '@wagmi/core';
-import { setEvents } from './actions';
 import { useEffectDebugger } from 'hooks/useEffectDebugger';
 import {
   useWhatChanged,
   setUseWhatChange,
 } from '@simbathesailor/use-what-changed';
+import { setEvents } from './actions';
 
 export type ParsedEvent = {
   event: ethers.Event['event'];
@@ -153,7 +153,6 @@ const parseBNJS = (_o: { [key: string]: any }) => {
 
 setUseWhatChange(process.env.NODE_ENV === 'development');
 
-
 const FarmerEventsUpdater = () => {
   const beanstalk = useBeanstalkContract();
   const { data: account, isLoading: isAccountLoading } = useAccount();
@@ -171,7 +170,7 @@ const FarmerEventsUpdater = () => {
       if (beanstalk && account?.address && blocks) {
         console.debug('[farmer/events/updater] fetching events', beanstalk.address, account.address, blocks);
         Promise.all(getEvents(beanstalk, account.address, blocks)).then((results) => {
-          console.debug(`[farmer/events/updater] received ${results.length} events`)
+          console.debug(`[farmer/events/updater] received ${results.length} events`);
           const allEvents: ParsedEvent[] = flatten<ethers.Event>(results)
             .map((event) => ({
               event: event.event,
@@ -193,10 +192,10 @@ const FarmerEventsUpdater = () => {
           dispatch(setEvents(allEvents));
         });
       } else {
-        console.debug(`[farmer/events/updater] effect refreshed but vars missing`, beanstalk, account?.address, blocks)
+        console.debug('[farmer/events/updater] effect refreshed but vars missing', beanstalk, account?.address, blocks);
       }
     } else {
-      console.debug(`[farmer/events/updater] effect refreshed but status = ${status}`)
+      console.debug(`[farmer/events/updater] effect refreshed but status = ${status}`);
     }
   }, [
     account?.address,
