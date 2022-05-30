@@ -1,28 +1,53 @@
-import { Card, Container, Stack } from '@mui/material';
-import { ERC20_TOKENS } from 'constants/v2/tokens';
-import useTokenMap from 'hooks/useTokenMap';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { Button, Card, Container, Stack, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import PageHeader from 'components/v2/Common/PageHeader';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+// import duneIcon from 'img/dune-icon.svg';
+// import activeFert from 'img/icon/fertilizer/active.svg';
+import forecast from 'img/Forecast.svg';
 
-const ForecastPage : React.FC = () => {
-  const farmerSilo = useSelector<AppState, AppState['_farmer']>((state) => state._farmer);
-  const tokens = useTokenMap(ERC20_TOKENS);
-
-  return (
-    <Container maxWidth="lg">
-      <Stack direction="row">
-        <Card>
-          _farmer.silo<br />
-          <pre>{JSON.stringify({ ...farmerSilo, events: null }, null, 2)}</pre>
-        </Card>
-        <Card>
-          useTokenMap(AllTokens)<br />
-          <pre>{JSON.stringify(tokens, null, 2)}</pre>
-        </Card>
-      </Stack>
-    </Container>
-  );
-};
+const ForecastPage : React.FC = () => (
+  <Container maxWidth="md">
+    <Stack gap={2}>
+      <PageHeader
+        title={<strong>Forecast</strong>}
+        description="View conditions on the Bean Farm"
+      />
+      <Card sx={{ px: 4, py: 6 }}>
+        <Stack direction="column" alignItems="center" justifyContent="center" gap={4}>
+          <img src={forecast} alt="Barn" style={{ maxWidth: 400 }} />
+          <Typography variant="h1">The Forecast page is coming soon</Typography>
+          <Stack direction="column" gap={2}>
+            <Button
+              component={RouterLink}
+              to="/barn-raise"
+              color="primary"
+              variant="outlined"
+              size="large"
+              // startIcon={<img src={activeFert} alt="Dune" style={{ height: 18 }} />}
+              // endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
+              sx={{ px: 4 }}
+            >
+              Support the Barn Raise
+            </Button>
+            <Button
+              href="https://dune.xyz/tbiq/Beanstalk"
+              target="_blank"
+              rel="noreferrer"
+              color="light"
+              variant="contained"
+              size="small"
+              // startIcon={<img src={duneIcon} alt="Dune" style={{ height: 18 }} />}
+              endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
+            >
+              Analytics
+            </Button>
+          </Stack>
+        </Stack>
+      </Card>
+    </Stack>
+  </Container>
+);
 
 export default ForecastPage;
