@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
-import { Provider } from 'wagmi';
+import { WagmiConfig } from 'wagmi';
 import { setUseWhatChange } from '@simbathesailor/use-what-changed';
 
 import store from 'state';
@@ -32,9 +32,9 @@ ReactDOM.render(
       <ReduxProvider store={store}>
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>
-            <Provider client={client}>
+            <WagmiConfig client={client}>
               <App />
-            </Provider>
+            </WagmiConfig>
           </ThemeProvider>
         </StyledEngineProvider>
       </ReduxProvider>

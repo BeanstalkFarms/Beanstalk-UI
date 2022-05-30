@@ -14,6 +14,7 @@ import {
 import { Contract, ContractInterface } from 'ethers';
 import { useContract as useWagmiContract, useProvider, useSigner } from 'wagmi';
 import useChainId from './useChain';
+import { useGetChainConstant } from './useChainConstant';
 
 const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
 const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
@@ -28,10 +29,13 @@ export function useContractReadOnly<T extends Contract = Contract>(
   addressOrAddressMap: AddressOrAddressMap,
   abiOrAbiMap: AbiOrAbiMap,
 ): T | null {
-  const chainId   = useChainId();
+  const getChainConstant = useGetChainConstant();
   const provider  = useProvider();
-  const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : addressOrAddressMap[chainId];
-  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : abiOrAbiMap[chainId];
+  const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap);
+  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap);
+  // if (!address || !abi) return null;
+  if (!address) throw new Error('Attempted to instantiate contract without address.')
+  if (!abi)     throw new Error('Attempted to instantiate contract without ABI.')
   return useWagmiContract<T>({
     addressOrName: address,
     contractInterface: abi,
@@ -44,11 +48,13 @@ export function useContract<T extends Contract = Contract>(
   abiOrAbiMap: AbiOrAbiMap,
   useSignerIfPossible: boolean = true
 ): T | null {
-  const chainId   = useChainId();
-  const provider  = useProvider();
+  const getChainConstant = useGetChainConstant();
+  const provider         = useProvider();
   const { data: signer } = useSigner();
-  const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : addressOrAddressMap[chainId];
-  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : abiOrAbiMap[chainId];
+  const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap);
+  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap);
+  if (!address) throw new Error('Attempted to instantiate contract without address.')
+  if (!abi)     throw new Error('Attempted to instantiate contract without ABI.')
   return useWagmiContract<T>({
     addressOrName: address,
     contractInterface: abi,
@@ -64,7 +70,8 @@ export function useBeanstalkContract() {
 
 const BEANSTALK_PRICE_ABIS = {
   [SupportedChainId.MAINNET]: BEANSTALK_PRICE_V0_ABI,
-  [SupportedChainId.ROPSTEN]: BEANSTALK_PRICE_ABI
+  [SupportedChainId.ROPSTEN]: BEANSTALK_PRICE_ABI,
+  [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_V0_ABI
 };
 
 export function useBeanstalkPriceContract() {

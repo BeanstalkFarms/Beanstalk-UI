@@ -148,6 +148,7 @@ export class ERC20Token extends Token {
   }
   
   public getBalance(account: string) {
+    console.debug(`[ERC20Token] ${this.symbol} (${this.address}) -> balanceOf(${account})`);
     return this.getContract().balanceOf(account).then(bigNumberResult);
   }
 
@@ -157,6 +158,7 @@ export class ERC20Token extends Token {
   }
 
   public getTotalSupply() {
+    console.debug(`[ERC20Token] ${this.symbol} (${this.address}) -> totalSupply()`);
     return this.getContract().totalSupply().then(bigNumberResult);
   }
 }
