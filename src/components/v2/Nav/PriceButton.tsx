@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Drawer, Popper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import beanCircleIcon from 'img/bean-circle.svg';
 import { useSelector } from 'react-redux';
@@ -41,7 +40,6 @@ const PriceButton: React.FC = () => {
   };
 
   // 
-  const Icon = anchorEl ? ArrowDropUpIcon : ArrowDropDownIcon;
   const Pools = (
     <Stack gap={1}>
       {Object.values(pools).map((pool) => (
@@ -63,12 +61,16 @@ const PriceButton: React.FC = () => {
       <Box>
         <Button
           color="light"
-          startIcon={
-            <img src={beanCircleIcon} alt="Bean" style={{ height: 25 }} />
-          }
+          startIcon={<img src={beanCircleIcon} alt="Bean" style={{ height: 25 }} />}
           endIcon={
-            <Icon
-              style={{ height: 15, marginLeft: '-8px', marginRight: '-4px' }}
+            <ExpandMoreIcon
+              sx={{
+                height: 15,
+                marginLeft: '-4px',
+                marginRight: '-4px',
+                transition: 'all 200ms linear',
+                transform: (popoverOpen || drawerOpen) ? 'scaleY(-1)' : ''
+              }}
             />
           }
           onClick={onClickPriceButton}

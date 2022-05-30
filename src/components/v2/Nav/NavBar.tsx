@@ -12,7 +12,6 @@ import {
   Stack,
   Typography,
   List,
-  ListItemText,
 } from '@mui/material';
 import {
   Link as RouterLink,
@@ -28,6 +27,8 @@ import { BeanstalkPalette } from 'components/v2/App/muiTheme';
 import WalletButton from '../Common/WalletButton';
 import NetworkButton from '../Common/NetworkButton';
 import PriceButton from './PriceButton';
+
+// --------------------------------------------
 
 const NAVIGATION_MAP = {
   top: [
@@ -76,6 +77,8 @@ const NAVIGATION_MAP = {
   ],
 };
 
+// --------------------------------------------
+
 const NavButton: React.FC<{ to: string; title: string }> = ({ to, title }) => {
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
@@ -105,6 +108,36 @@ const NavButton: React.FC<{ to: string; title: string }> = ({ to, title }) => {
     </Button>
   );
 };
+
+const NavListItem : React.FC<{ to: string, title: string, onClick: () => void }> = ({ to, title, onClick }) => {
+  const resolved = useResolvedPath(to);
+  const match = useMatch({ path: resolved.pathname, end: true });
+  return (
+    <RouterLink to={to} style={{ textDecoration: 'none' }}>
+      <ListItem disablePadding>
+        <ListItemButton
+          disableRipple
+          onClick={onClick}
+          color="primary"
+          sx={{
+            py: 2,
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: 24,
+              color: match ? 'text.primary' : 'text.secondary'
+            }}
+          >
+            {title}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+    </RouterLink>
+  );
+};
+
+// --------------------------------------------
 
 const MoreButton: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -177,11 +210,16 @@ const MoreButton: React.FC = () => {
   );
 };
 
+// --------------------------------------------
+
 const NavBar: React.FC<{}> = () => {
   const [open, setOpen] = useState(false);
   // const beanPrice = useSelector<AppState, AppState['_bean']['price']>(
   //   (state) => state._bean.price
   // );
+  const hideDrawer = useCallback(() => setOpen(false), []);
+  const showDrawer = useCallback(() => setOpen(true), []);
+
   return (
     <>
       <Drawer
@@ -192,31 +230,34 @@ const NavBar: React.FC<{}> = () => {
         transitionDuration={0}
       >
         <Box sx={{ backgroundColor: 'white', width: '100%', height: '100vh', position: 'relative', }}>
-          {/* <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1.5 }}> */}
-          {/* <Typography variant="h1">Beanstalk</Typography> */}
-          <Box sx={{ position: 'absolute', top: 4, right: 4, p: 1, zIndex: 10, }}>
-            <IconButton
-              aria-label="close"
-              onClick={() => setOpen(false)}
-              
-            >
+          {/* Close Button */}
+          <Box sx={{ position: 'absolute', top: 4, right: 4, p: 1, zIndex: 10 }}>
+            <IconButton aria-label="close" onClick={hideDrawer}>
               <CloseIcon />
             </IconButton>
           </Box>
-          {/* </Stack> */}
-          <List>
+          {/* Items */}
+          <List style={{ fontSize: 22 }}>
             {NAVIGATION_MAP.top.map((item) => (
-              <RouterLink to={item.path}>
-                <ListItem>
-                  <ListItemButton LinkComponent={RouterLink} onClick={() => setOpen(false)}>
-                    <ListItemText primary={item.title} />
-                  </ListItemButton>
-                </ListItem>
-              </RouterLink>
+              <NavListItem
+                key={item.path}
+                to={item.path}
+                title={item.title}
+                onClick={hideDrawer}
+              />
+            ))}
+            {NAVIGATION_MAP.more.map((item) => (
+              <NavListItem
+                key={item.path}
+                to={item.path}
+                title={item.title}
+                onClick={hideDrawer}
+              />
             ))}
           </List>
         </Box>
       </Drawer>
+      {/* Navigation Bar */}
       <AppBar
         sx={{
           px: 1,
@@ -253,7 +294,7 @@ const NavBar: React.FC<{}> = () => {
               color="light"
               variant="contained"
               aria-label="open drawer"
-              onClick={() => setOpen(true)}
+              onClick={showDrawer}
               edge="start"
               sx={{
                 display: { lg: 'none', xs: 'block' },

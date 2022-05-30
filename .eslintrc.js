@@ -34,6 +34,7 @@ module.exports = {
     'quote-props': 'warn',
     'import/order': 'warn',
     'space-infix-ops': 'warn',
+    'react/jsx-indent': 'warn',
     quotes: ['warn', 'single'],
     'comma-dangle': 0,
     'no-multiple-empty-lines': 'warn',
