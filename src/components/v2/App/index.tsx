@@ -49,12 +49,11 @@ export default function App() {
   const app = (
     <div>
       <Routes>
-        {/* Farm */}
-        <Route path="/" element={<ForecastPage />} />
+        <Route path="/" element={<BarnRaisePage />} />
         <Route path="/silo" element={<SiloPage />} />
         <Route path="/silo/:address" element={<SiloTokenPage />} />
         <Route path="/field" element={<FieldPage />} />
-        <Route path="/barn-raise" element={<BarnRaisePage />} />
+        <Route path="/forecast" element={<ForecastPage />} />
         <Route path="/history" element={<TransactionHistoryPage />} />
         <Route path="/balances" element={<BalancesPage />} />
       </Routes>

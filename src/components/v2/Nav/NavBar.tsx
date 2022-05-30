@@ -47,6 +47,7 @@ const NavBar: React.FC<{}> = () => {
                   key={item.path}
                   to={item.path}
                   title={item.title}
+                  tag={item.tag}
                 />
               ))}
               <MoreButton />
