@@ -72,16 +72,16 @@ export default function App() {
       {/* -----------------------
         * Beanstalk Updaters
         * ----------------------- */}
-      {/* <FertilizerUpdater /> */}
-      {/* <SunUpdater /> */}
+      <FertilizerUpdater />
+      <SunUpdater />
       {/* -----------------------
         * Farmer Updaters
         * ----------------------- */}
-      {/* <FarmerEventsUpdater />
+      <FarmerEventsUpdater />
       <FarmerEventsProcessor />
-      <FarmerBalancesUpdater /> */}
-      {/* <FarmerFertilizerUpdater /> */}
-      {/* <FarmerSiloUpdater /> */}
+      <FarmerBalancesUpdater />
+      <FarmerFertilizerUpdater />
+      <FarmerSiloUpdater />
       {/* -----------------------
         * Content
         * ----------------------- */}

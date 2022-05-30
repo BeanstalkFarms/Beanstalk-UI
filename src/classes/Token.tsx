@@ -125,6 +125,7 @@ export class NativeToken extends Token {
   }
 
   public getBalance(account: string) : Promise<BigNumber> {
+    console.debug(`[NativeToken] ${this.symbol} (${this.chainId} / ${this.address}) -> getBalance(${account})`);
     return this.getContract().getBalance(account).then(
       // No need to convert decimals because ethers does this already
       (result) => bigNumberResult(result)
@@ -148,17 +149,18 @@ export class ERC20Token extends Token {
   }
   
   public getBalance(account: string) {
-    console.debug(`[ERC20Token] ${this.symbol} (${this.address}) -> balanceOf(${account})`);
+    console.debug(`[ERC20Token] ${this.symbol} (${this.chainId} / ${this.address}) -> balanceOf(${account})`);
     return this.getContract().balanceOf(account).then(bigNumberResult);
   }
 
   // eslint-disable-next-line class-methods-use-this
   public getAllowance(account: string, spender: string) {
+    console.debug(`[ERC20Token] ${this.symbol} (${this.chainId} / ${this.address}) -> allowance(${account}, ${spender})`);
     return this.getContract().allowance(account, spender).then(bigNumberResult);
   }
 
   public getTotalSupply() {
-    console.debug(`[ERC20Token] ${this.symbol} (${this.address}) -> totalSupply()`);
+    console.debug(`[ERC20Token] ${this.symbol} (${this.chainId} / ${this.address}) -> totalSupply()`);
     return this.getContract().totalSupply().then(bigNumberResult);
   }
 }

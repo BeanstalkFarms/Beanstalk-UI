@@ -1,33 +1,31 @@
 import { useCallback, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
-import { useWhatChanged } from '@simbathesailor/use-what-changed';
 import { useBeanstalkPriceContract } from 'hooks/useContract';
 import { tokenResult } from 'util/TokenUtilities';
 import { BEAN } from 'constants/v2/tokens';
-import usePools from 'hooks/usePools';
-import useChainId from 'hooks/useChain';
+import { getChainConstant } from 'hooks/useChainConstant';
+import POOLS from 'constants/v2/pools';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 import { updateBeanPrice } from '../reducer';
 
 export const useGetPools = () => {
   const dispatch = useDispatch();
-  const beanstalkPriceContract = useBeanstalkPriceContract();
-  const pools = usePools();
+  const [beanstalkPriceContract, chainId] = useBeanstalkPriceContract();
 
-  useWhatChanged([
-    dispatch,
-    beanstalkPriceContract,
-    pools
-  ], 'dispatch, price, pools');
+  // useWhatChanged([
+  //   dispatch,
+  //   beanstalkPriceContract,
+  //   pools
+  // ], 'dispatch, price, pools');
 
   // Handlers
   const fetch = useCallback(
     async () => {
       try {
         if (beanstalkPriceContract) {
-          console.debug('[bean/pools/useGetPools] FETCH', beanstalkPriceContract.address);
-
+          console.debug('[bean/pools/useGetPools] FETCH', beanstalkPriceContract.address, chainId);
+          const pools = getChainConstant(POOLS, chainId);
           const priceResult = await beanstalkPriceContract.price();
           if (!priceResult) return;
 
@@ -74,14 +72,14 @@ export const useGetPools = () => {
           dispatch(updateBeanPrice(tokenResult(BEAN)(priceResult.price.toString())));
         }
       } catch (e) {
-        console.debug('[bean/pools/useGetPools] FAILED')
+        console.debug('[bean/pools/useGetPools] FAILED', e);
         console.error(e);
       }
     },
     [
       dispatch,
       beanstalkPriceContract,
-      pools
+      chainId,
     ]
   );
   const clear = useCallback(() => {
@@ -95,16 +93,14 @@ export const useGetPools = () => {
 
 const PoolsUpdater = () => {
   const [fetch, clear] = useGetPools();
-  const chainId = useChainId();
 
   useEffect(() => {
-    console.debug(`[bean/pools/updater] resetting pools, chainId = ${chainId}`);
     clear();
     fetch();
-    // NOTE: 
-    // The below requires that useChainId() is called last in the stack of hooks.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId]);
+  }, [
+    fetch,
+    clear
+  ]);
   
   return null;
 };

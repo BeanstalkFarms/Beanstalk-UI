@@ -1,17 +1,17 @@
-import { createClient as createWagmiClient, defaultChains, configureChains, chain } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { publicProvider } from 'wagmi/providers/public'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { createClient as createWagmiClient, configureChains, chain } from 'wagmi';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { publicProvider } from 'wagmi/providers/public';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 // import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 
 import { SupportedChainId } from 'constants/chains';
 import { ALCHEMY_API_KEYS } from 'constants/rpc/alchemy';
 
-const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.ROPSTEN]
+const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.ROPSTEN];
 
 const { chains, provider } = configureChains(
   [
@@ -27,15 +27,15 @@ const { chains, provider } = configureChains(
     jsonRpcProvider({
       priority: 1,
       rpc: (_chain) => {
-        if(_chain.id !== SupportedChainId.LOCALHOST) return null;
-        return { http: `http://3b63-193-19-109-12.ngrok.io/` }
+        if (_chain.id !== SupportedChainId.LOCALHOST) return null;
+        return { http: 'http://3b63-193-19-109-12.ngrok.io/' };
       }
     }),
     publicProvider({
       priority: 2,
     }),
   ]
-)
+);
 
 const client = createWagmiClient({
   autoConnect: true,
@@ -60,7 +60,7 @@ const client = createWagmiClient({
     new CoinbaseWalletConnector({
       chains,
       options: {
-        appName: "Beanstalk",
+        appName: 'Beanstalk',
       }
     }),
   ]
