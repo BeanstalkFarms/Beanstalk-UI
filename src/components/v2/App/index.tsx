@@ -31,6 +31,50 @@ import { BeanstalkPalette } from './muiTheme';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
+const CustomToaster : React.FC = () => (
+  <Toaster
+    containerStyle={{
+      top: 78,
+    }}
+    toastOptions={{
+      duration: 4000,
+      position: 'top-right',
+      style: {
+        minWidth: 300,
+        maxWidth: 400,
+        paddingLeft: '16px',
+      }
+    }}
+  >
+    {(t) => (
+      <ToastBar
+        toast={t}
+        style={{
+          ...t.style,
+          // Option 1: Pops up instantly,
+          // then slides out to the right side
+          // animation: 'none',
+          // position: 'absolute',
+          // right: t.visible ? 0 : -500,
+          // transition: 'right 0.4s ease-in-out',
+          // opacity: 1,
+          // Option 2: Slides in and out, but there's
+          // an issue where it "flashes back" after
+          // completing the animation.
+          // position: 'absolute',
+          // animation: t.visible ? 'custom-enter 1s ease-in-out' : 'custom-exit 1s ease-in-out',
+          // animationFillMode: 'forwards'
+          // Option 3: Tries to fix toasts stacking on top of each other
+          animation: 'none',
+          marginRight: t.visible ? 0 : -500,
+          transition: 'margin-right 0.4s ease-in-out',
+          opacity: 1,
+        }}
+      />
+    )}
+  </Toaster>
+);
+
 export default function App() {
   const dispatch = useDispatch();
 
@@ -84,7 +128,18 @@ export default function App() {
       {/* -----------------------
         * Content
         * ----------------------- */}
-      <Box 
+      {/* <Box 
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 1,
+        }}
+      /> */}
+      {/* Navbar is ~65px tall */}
+      <NavBar />
+      <CustomToaster />
+      <Box
         sx={{
           backgroundColor: BeanstalkPalette.lighterBlue,
           backgroundImage: `url(${pageBackground})`,
@@ -94,61 +149,13 @@ export default function App() {
           backgroundRepeat: 'no-repeat',
           width: '100%',
           minHeight: '100vh',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          zIndex: 1,
-        }}
-      />
-      <Box sx={{ position: 'relative', left: 0, top:0, zIndex: 2, backgroundColor: 'transparent' }}>
-        <Box>
-          <NavBar />
-          <Box sx={{ py: 10 }}>
-            {app}
-          </Box>
-          <Toaster
-            containerStyle={{
-              top: 78,
-            }}
-            toastOptions={{
-              duration: 4000,
-              position: 'top-right',
-              style: {
-                minWidth: 300,
-                maxWidth: 400,
-                paddingLeft: '16px',
-              }
-            }}
-          >
-            {(t) => (
-              <ToastBar
-                toast={t}
-                style={{
-                  ...t.style,
-                  // Option 1: Pops up instantly,
-                  // then slides out to the right side
-                  // animation: 'none',
-                  // position: 'absolute',
-                  // right: t.visible ? 0 : -500,
-                  // transition: 'right 0.4s ease-in-out',
-                  // opacity: 1,
-                  // Option 2: Slides in and out, but there's
-                  // an issue where it "flashes back" after
-                  // completing the animation.
-                  // position: 'absolute',
-                  // animation: t.visible ? 'custom-enter 1s ease-in-out' : 'custom-exit 1s ease-in-out',
-                  // animationFillMode: 'forwards'
-                  // Option 3: Tries to fix toasts stacking on top of each other
-                  animation: 'none',
-                  marginRight: t.visible ? 0 : -500,
-                  transition: 'margin-right 0.4s ease-in-out',
-                  opacity: 1,
-                }}
-              />
-            )}
-          </Toaster>
-          {/* <Footer /> */}
-        </Box>
+          paddingTop: {
+            md: 10,
+            xs: 9,
+          },
+          paddingBottom: 4
+        }}>
+        {app}
       </Box>
     </>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button,  Container, Stack } from '@mui/material';
+import { Box, Button,  Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import NextSeason from 'components/v2/Silo/NextSeason';
@@ -28,7 +28,7 @@ const SiloPage : React.FC = () => {
     <Container maxWidth="lg">
       <Stack gap={2}>
         <PageHeader
-          title={<><strong>The Silo</strong>: The Beanstalk DAO</>}
+          title={<><strong>The Silo</strong><Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>: The Beanstalk DAO</Box></>}
           description="Earn yield by depositing liquidity & participating in protocol governance"
           control={(
             <Button

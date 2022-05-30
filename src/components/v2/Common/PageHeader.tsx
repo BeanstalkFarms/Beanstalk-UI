@@ -13,7 +13,7 @@ const PageHeader : React.FC<{
   /**  */
   control?: React.ReactElement;
 }> = (props) => (
-  <Stack direction="row" justifyContent="space-between">
+  <Stack direction={{ md: 'row', xs: 'column' }} justifyContent="space-between" gap={1}>
     <Stack direction="row" alignItems="center" gap={1.5}>
       {props.returnPath && (
         <Button
@@ -28,12 +28,17 @@ const PageHeader : React.FC<{
       )}
       <Stack direction="column" gap={0.5}>
         <Box>
-          <Typography variant="h1" sx={{ fontWeight: 'normal' }}>
+          <Typography
+            variant="h1"
+            sx={{ fontWeight: 'normal' }}>
             {props.title}
           </Typography>
         </Box>
         <Box>
-          <Typography variant="subtitle1">{props.description}</Typography>
+          <Typography
+            variant="subtitle1">
+            {props.description}
+          </Typography>
         </Box>
       </Stack>
     </Stack>

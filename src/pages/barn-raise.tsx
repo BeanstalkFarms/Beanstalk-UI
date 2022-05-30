@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Container, Stack } from '@mui/material';
+import { Box, Button, Container, Stack } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import PurchaseForm from 'components/v2/BarnRaise/PurchaseForm';
 import RemainingFertilizer from 'components/v2/BarnRaise/RemainingFertilizer';
@@ -10,7 +10,7 @@ const BarnRaisePage: React.FC = () => (
   <Container maxWidth="md">
     <Stack gap={2}>
       <PageHeader
-        title={<><strong>The Barn Raise</strong>: Replanting Beanstalk</>}
+        title={<><strong>The Barn Raise</strong><Box as="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: Replanting Beanstalk</Box></>}
         description="Earn yield through purchasing & activating Fertilizer, the Barn Raise token"
         control={(
           <Button
