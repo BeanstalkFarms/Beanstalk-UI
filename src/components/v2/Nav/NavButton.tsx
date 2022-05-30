@@ -19,7 +19,6 @@ const NavButton: React.FC<{ to: string; title: string }> = ({ to, title }) => {
       to={to}
       size="small"
       variant="text"
-      outline="none"
       color={match ? 'primary' : 'dark'}
       sx={{
         textDecoration: match ? 'underline' : null,

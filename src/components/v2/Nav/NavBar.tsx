@@ -15,7 +15,6 @@ import NavButton from './NavButton';
 import MoreButton from './MoreButton';
 import NavDrawer from './NavDrawer';
 
-
 const NavBar: React.FC<{}> = () => {
   const [open, setOpen] = useState(false);
   const hideDrawer = useCallback(() => setOpen(false), []);
@@ -61,7 +60,6 @@ const NavBar: React.FC<{}> = () => {
               variant="contained"
               aria-label="open drawer"
               onClick={showDrawer}
-              edge="start"
               sx={{
                 display: { lg: 'none', xs: 'block' },
                 minHeight: 0,

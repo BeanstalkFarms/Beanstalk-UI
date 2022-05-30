@@ -1,12 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { useNetwork } from 'wagmi';
 import { Box, Button, Dialog, Stack, Typography } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ethIcon from 'img/eth-logo.svg';
 import { SupportedChainId } from 'constants/chains';
+import { ETH } from 'constants/v2/tokens';
 import TokenIcon from './TokenIcon';
 import DropdownIcon from './DropdownIcon';
-import { ETH } from 'constants/v2/tokens';
 
 const NetworkButton: React.FC = () => {
   const { activeChain, chains, error, switchNetwork } = useNetwork({
@@ -46,11 +44,36 @@ const NetworkButton: React.FC = () => {
           disableFocusRipple
           variant="contained"
           color="light"
-          startIcon={<TokenIcon token={ETH[SupportedChainId.MAINNET]} style={{ height: '1.4em' }} />}
+          startIcon={(
+            <TokenIcon
+              token={ETH[SupportedChainId.MAINNET]}
+              // Want this icon bigger than surrounding text
+              style={{ height: '1.4em' }}
+            />
+          )}
           endIcon={<DropdownIcon open={open} />}
           onClick={handleClick}
+          sx={{
+            // MUI adds a default margin to start and
+            // end icons to give them space between text.
+            // When we hide the text below, we also remove the
+            // margin so the network icon appears closer to the
+            // dropdown icon.
+            px: {
+              // md: 1.5,    // FIXME: couldn't get 'inherit' to work here
+              // xs: 0,
+            },
+            '& .MuiButton-startIcon': {
+              marginRight: { 
+                md: 0.8,  // FIXME: couldn't get 'inherit' to work here
+                xs: 0
+              }
+            }
+          }}
         >
-          <Typography variant="subtitle1">{activeChain?.name}</Typography>
+          <Typography variant="subtitle1" sx={{ display: { md: 'block', xs: 'none' } }}>
+            {activeChain?.name}
+          </Typography>
         </Button>
       )}
       <Dialog onClose={handleClose} open={open}>

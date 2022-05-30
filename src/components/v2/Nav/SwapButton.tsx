@@ -8,6 +8,6 @@ const SwapButton : React.FC = () => (
       <img src={swapIcon} alt="Swap" />
     </IconButton>
   </Box>
-)
+);
 
 export default SwapButton;

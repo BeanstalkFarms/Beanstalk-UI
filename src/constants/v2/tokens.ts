@@ -1,4 +1,4 @@
-import ethLogoUrl from 'img/eth-logo.svg';
+// import ethLogoUrl from 'img/eth-logo.svg';
 import ethIconCircledUrl from 'img/eth-icon-circled.svg';
 // import beanLogoUrl from 'img/bean-logo.svg';
 import beanCircleLogoUrl from 'img/bean-circle.svg';

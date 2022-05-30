@@ -8,7 +8,6 @@ import {
 import {
   Link as RouterLink,
 } from 'react-router-dom';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ROUTES from './routes';
 import DropdownIcon from '../Common/DropdownIcon';
 

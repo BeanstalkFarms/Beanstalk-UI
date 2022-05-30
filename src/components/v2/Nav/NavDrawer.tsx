@@ -52,6 +52,6 @@ const NavDrawer : React.FC<{
       </List>
     </Box>
   </Drawer>
-)
+);
 
 export default NavDrawer;
