@@ -113,6 +113,7 @@ const WalletButton: React.FC = () => {
   const handleCloseDialog = useCallback(() => setShowDialog(false), []);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isTiny = useMediaQuery('(max-width:380px)');
 
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -135,7 +136,7 @@ const WalletButton: React.FC = () => {
           disableFocusRipple
           variant="contained"
           color="light"
-          startIcon={<img src={tempUserIcon} alt="User" style={{ height: 25 }} />}
+          startIcon={isTiny ? null : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />}
           endIcon={<DropdownIcon open={menuVisible} />}
           onClick={handleShowMenu}
         >

@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import {
   AppBar,
+  Box,
   Button,
   Stack,
 } from '@mui/material';
@@ -53,7 +54,9 @@ const NavBar: React.FC<{}> = () => {
           </Stack>
           {/* Desktop: Right Side */}
           <Stack direction="row" justifyContent="flex-end" alignItems="center" sx={{ }} spacing={1}>
-            <NetworkButton />
+            <Box sx={{ display: { lg: 'block', xs: 'none' } }}>
+              <NetworkButton />
+            </Box>
             <WalletButton />
             <Button
               color="light"
@@ -62,9 +65,16 @@ const NavBar: React.FC<{}> = () => {
               onClick={showDrawer}
               sx={{
                 display: { lg: 'none', xs: 'block' },
-                minHeight: 0,
-                minWidth: 0,
+                // Match the height of the Wallet / Priice buttons.
+                // FIXME: need a cleaner way to enforce this height
+                minHeight: '43.5px',
+                // IconButton has some annoying behavior so we're
+                // using a regular button instead. This prevents
+                // the contained icon from being treated like text
+                // with line-height
                 lineHeight: 0,
+                // Make the button more square
+                minWidth: 0,
                 px: 1,
               }}
             >

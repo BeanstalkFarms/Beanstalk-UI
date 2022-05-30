@@ -78,8 +78,8 @@ const MyFertilizer : React.FC = () => {
       </Stack>
       <Divider />
       {/* Fertilizers */}
-      <Stack sx={{ p: 2 }} spacing={2}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack sx={{ px: 2, pb: 2 }} spacing={0}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ py: 1 }}>
           <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
             <Tab label="Active" />
             <Tab label="Used" />
@@ -94,7 +94,7 @@ const MyFertilizer : React.FC = () => {
                 const amount = farmerFertilizer.tokens[id];
                 const remaining = amount.multipliedBy(humidity.plus(1));
                 return (
-                  <Grid key={id} item xs={6} md={3}>
+                  <Grid key={id} item xs={12} md={3}>
                     <FertilizerItem
                       state="active"
                       humidity={humidity}
@@ -107,8 +107,8 @@ const MyFertilizer : React.FC = () => {
               {/* <Grid item xs={6} md={3}>test</Grid> */}
             </Grid>
           ) : (
-            <Stack direction="column" justifyContent="center" alignItems="center" gap={2} sx={{ py: 2 }}>
-              <Box width={125}>
+            <Stack direction="column" justifyContent="center" alignItems="center" gap={2}>
+              <Box width={155}>
                 <FertilizerItem
                   state="used"
                   amount={zeroBN}
@@ -116,7 +116,7 @@ const MyFertilizer : React.FC = () => {
                   remaining={zeroBN}
                 />
               </Box>
-              <Typography variant="body2" textAlign="center" maxWidth="80%">
+              <Typography variant="body2" textAlign="center">
                 Purchase Available Fertilizer using the module above to receive interest at the specified Humidity in the form of future Bean Mints.
               </Typography>
             </Stack>

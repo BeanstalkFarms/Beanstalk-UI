@@ -28,8 +28,7 @@ const SiloPage : React.FC = () => {
     <Container maxWidth="lg">
       <Stack gap={2}>
         <PageHeader
-          title="The Silo"
-          purpose="The Beanstalk DAO"
+          title={<><strong>The Beanstalk DAO</strong>: The Silo</>}
           description="Earn yield by depositing liquidity & participating in protocol governance"
           control={(
             <Button

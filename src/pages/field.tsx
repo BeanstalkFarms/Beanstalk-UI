@@ -40,8 +40,7 @@ const FieldPage : React.FC = () => {
     <Container maxWidth="md">
       <Stack gap={2}>
         <PageHeader
-          title="The Field"
-          purpose="The Decentralized Credit Facility"
+          title={<><strong>The Field</strong>: The Decentralized Credit Facility</>}
           description="Earn yield through lending Beans to Beanstalk when there is Available Soil in exchange for Pods"
           control={(
             <Button
