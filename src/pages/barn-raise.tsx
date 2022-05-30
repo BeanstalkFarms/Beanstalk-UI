@@ -9,8 +9,7 @@ const BarnRaisePage: React.FC = () => (
   <Container maxWidth="md">
     <Stack gap={2}>
       <PageHeader
-        title="The Barn Raise"
-        purpose="Rebuilding Beanstalk"
+        title={<><strong>The Barn Raise</strong>: Rebuilding Beanstalk</>}
         description="Earn yield through purchasing & activating Fertilizer, the Barn Raise token"
       />
       {/* Section 1: Fertilizer Remaining */}

@@ -60,7 +60,8 @@ const PriceButton: React.FC = () => {
   
   // Setup
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.down('lg'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isTiny = useMediaQuery('(max-width:350px)');
   const pools = usePools();
   
   // Popover
@@ -81,11 +82,11 @@ const PriceButton: React.FC = () => {
   };
 
   // Handlers
-  const onClickPriceButton = matches ? handleOpenDrawer : handleOpenPopover;
+  const onClickPriceButton = isMobile ? handleOpenDrawer : handleOpenPopover;
 
   // Pools
   const isPriceLoading = beanPrice[0].eq(new BigNumber(-1));
-  const StartIcon = (
+  const StartIcon = isTiny ? null : (
     <BeanProgressIcon
       size={25}
       enabled={isPriceLoading}
@@ -121,7 +122,7 @@ const PriceButton: React.FC = () => {
           }}
         >
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-            ${beanPrice[0].toFixed(matches ? 2 : 4)}
+            ${(isPriceLoading ? 0.0000 : beanPrice[0]).toFixed(isMobile ? 2 : 4)}
           </Typography>
         </Button>
         <Popper

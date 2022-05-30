@@ -20,20 +20,20 @@ const RemainingFertilizer: React.FC = () => {
   
   return (
     <Card sx={{ p: 2 }}>
-      <Stack gap={1}>
+      <Stack gap={2}>
         <Typography variant="h2">Remaining Fertilizer</Typography>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
-          alignItems="center"
+          alignItems={{ xs: 'left',  md: 'center' }}
           justifyContent={{ md: 'left' }}
           gap={2}
         >
           {/* left column */}
-          <Box sx={{ minWidth: 200 }}>
+          <Box sx={{ minWidth: 200, display: { xs: 'none', md: 'block' } }}>
             <FertilizerImage progress={Math.max(progress.toNumber(), 0.05)} />
           </Box>
           {/* right column */}
-          <Stack sx={{ p: 1 }} justifyContent="space-between" gap={3}>
+          <Stack justifyContent="space-between" gap={3}>
             <Stack gap={3}>
               <Stack gap={1}>
                 <Typography color="text.secondary">Available Unused Fertilizer</Typography>

@@ -4,10 +4,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import React from 'react';
 
 const PageHeader : React.FC<{
-  /** "The Field" */
-  title: string;
-  /** "The Decentralized Credit Facility" */
-  purpose?: string;
+  /** The Field: The Decentralized Credit Facility */
+  title: string | JSX.Element;
   /** "Earn yield through lending beans..." */
   description: string;
   /** Show a back button to return to `returnPath`. */
@@ -30,9 +28,8 @@ const PageHeader : React.FC<{
       )}
       <Stack direction="column" gap={0.5}>
         <Box>
-          <Typography variant="h1">
-            <span>{props.title}{props.purpose && <>:&nbsp;</>}</span>
-            {props.purpose && <span style={{ fontWeight: 'normal' }}>{props.purpose}</span>}
+          <Typography variant="h1" sx={{ fontWeight: 'normal' }}>
+            {props.title}
           </Typography>
         </Box>
         <Box>
