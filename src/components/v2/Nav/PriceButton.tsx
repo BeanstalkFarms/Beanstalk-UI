@@ -57,6 +57,9 @@ const PriceButton: React.FC = () => {
   const beanPools = useSelector<AppState, AppState['_bean']['pools']>(
     (state) => state._bean.pools
   );
+  const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>(
+    (state) => state._beanstalk.sun
+  );
   
   // Setup
   const theme = useTheme();
@@ -93,17 +96,13 @@ const PriceButton: React.FC = () => {
       variant="indeterminate"
     />
   );
-  const Pools = (
-    <Stack gap={1}>
-      {Object.values(pools).map((pool) => (
-        <PoolCard
-          key={pool.address}
-          pool={pool}
-          poolState={beanPools[pool.address]}
-        />
-      ))}
-    </Stack>
-  );
+  const Pools = Object.values(pools).map((pool) => (
+    <PoolCard
+      key={pool.address}
+      pool={pool}
+      poolState={beanPools[pool.address]}
+    />
+  ));
 
   return (
     <>
@@ -146,7 +145,10 @@ const PriceButton: React.FC = () => {
             })}
             className="border border-t-0 shadow-xl"
           >
-            {Pools}
+            <Stack gap={1}>
+              <Typography variant="h3" textAlign="left" mx={0.5} mt={1}>Season {season?.toFixed(0) || 0}</Typography>
+              {Pools}
+            </Stack>
           </Box>
         </Popper>
       </Box>
@@ -157,8 +159,10 @@ const PriceButton: React.FC = () => {
         onClose={() => setDrawerOpen(false)}
       >
         <Stack sx={{ p: 2 }} gap={2}>
-          <Typography variant="h2">Pools</Typography>
-          {Pools}
+          <Typography variant="h2">Pools — Season {season?.toFixed(0) || 0}</Typography>
+          <Stack gap={1}>
+            {Pools}
+          </Stack>
         </Stack>
       </Drawer>
     </>

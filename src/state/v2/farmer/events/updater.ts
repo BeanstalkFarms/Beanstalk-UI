@@ -147,38 +147,43 @@ const parseBNJS = (_o: { [key: string]: any }) => {
 };
 
 const useFarmerEvents = () => {
-  const beanstalk = useBeanstalkContract();
+  const [beanstalk] = useBeanstalkContract();
   const blocks = useBlocks();
   const dispatch = useDispatch();
 
   // Handlers
   const fetch = useCallback(async (address?: string) => {
-    if (beanstalk && address && blocks) {
-      console.debug('[farmer/events/useFarmerEvents] FETCH', beanstalk.address, address, blocks);
-      Promise.all(getEvents(beanstalk, address, blocks)).then((results) => {
-        const flattened = flatten<ethers.Event>(results);
-        console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
-        const allEvents: ParsedEvent[] = flattened.map((event) => ({
-          event: event.event,
-          blockNumber: event.blockNumber,
-          logIndex: event.logIndex,
-          // args: event.args,
-          returnValues: event.decode
-            ? parseBNJS({
-                ...(event.decode(event.data, event.topics) as Array<any>),
-              })
-            : null,
-        }))
-        .sort((a, b) => {
-          const diff = a.blockNumber - b.blockNumber;
-          if (diff !== 0) return diff;
-          return a.logIndex - b.logIndex;
+    try {
+      if (beanstalk && address && blocks) {
+        console.debug(`[farmer/events/useFarmerEvents] FETCH: beanstalk = ${beanstalk.address}, farmer = ${address}`, blocks);
+        Promise.all(getEvents(beanstalk, address, blocks)).then((results) => {
+          const flattened = flatten<ethers.Event>(results);
+          console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
+          const allEvents: ParsedEvent[] = flattened.map((event) => ({
+            event: event.event,
+            blockNumber: event.blockNumber,
+            logIndex: event.logIndex,
+            // args: event.args,
+            returnValues: event.decode
+              ? parseBNJS({
+                  ...(event.decode(event.data, event.topics) as Array<any>),
+                })
+              : null,
+          }))
+          .sort((a, b) => {
+            const diff = a.blockNumber - b.blockNumber;
+            if (diff !== 0) return diff;
+            return a.logIndex - b.logIndex;
+          });
+          console.debug(`[farmer/events/useFarmerEvents] RESULT: received ${allEvents.length} events`, allEvents);
+          dispatch(setEvents(allEvents));
         });
-        console.debug('[farmer/events/useFarmerEvents] parsed events', allEvents);
-        dispatch(setEvents(allEvents));
-      });
-    } else {
-      console.debug('[farmer/events/useFarmerEvents] effect refreshed but vars missing', beanstalk, address, blocks);
+      } else {
+        console.debug('[farmer/events/useFarmerEvents] effect refreshed but vars missing', beanstalk, address, blocks);
+      }
+    } catch (e) {
+      console.debug('[farmer/events/useFarmerEvents] FAILED', e);
+      console.error(e);
     }
   }, [
     dispatch,

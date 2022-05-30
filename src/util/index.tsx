@@ -3,7 +3,6 @@ import { ethers } from 'ethers';
 import { changeTheme } from 'constants/index';
 import { changeTokenAddresses } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
-import { ALCHEMY_HTTPS_URLS } from 'constants/rpc/alchemy';
 
 // -- Exports
 // export * from './SeasonUtilities';
@@ -21,9 +20,6 @@ export type EventData = ethers.Event
 // -- Globals
 export let chainId : SupportedChainId = 1; // fixme
 export const account = null;
-export const PRIMARY_CHAIN_ID = SupportedChainId.RINKEBY;
-export const RPC_HOST = ALCHEMY_HTTPS_URLS[PRIMARY_CHAIN_ID];
-export const provider = new ethers.providers.JsonRpcProvider(RPC_HOST);
 
 // -- Helpers
 export async function switchChain(_chainId: SupportedChainId) {

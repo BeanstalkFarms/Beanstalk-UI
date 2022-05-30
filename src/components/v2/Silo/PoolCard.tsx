@@ -11,10 +11,10 @@ const PoolCard: React.FC<{
   poolState: BeanPoolState;
   isButton?: boolean;
 }> = ({
-        pool,
-        poolState,
-        isButton
-      }) => {
+  pool,
+  poolState,
+  isButton
+}) => {
   const cardContent = (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Stack
@@ -29,7 +29,7 @@ const PoolCard: React.FC<{
             fontWeight: (isButton) ? 500 : 700
           }}
         >
-          ${displayBN(poolState.price)}
+          ${displayBN(poolState?.price)}
         </Typography>
       </Stack>
       <Stack>
@@ -46,7 +46,7 @@ const PoolCard: React.FC<{
               fontSize: (isButton) ? '13px' : null
             }}
           >
-            ${displayBN(poolState.liquidity)}
+            ${displayBN(poolState?.liquidity)}
           </Typography>
         </Stack>
         <Stack direction="row" gap={0.5}>
@@ -63,7 +63,7 @@ const PoolCard: React.FC<{
                 fontSize: (isButton) ? '13px' : null
               }}
             >
-              {poolState.deltaB.gte(0) ? '+' : '-'}
+              {poolState?.deltaB?.gte(0) ? '+' : '-'}
             </Typography>
             <Stack direction="row">
               <img
@@ -76,7 +76,7 @@ const PoolCard: React.FC<{
                   fontSize: (isButton) ? '13px' : null
                 }}
               >
-                {displayBN(poolState.deltaB.abs(), true)}
+                {displayBN(poolState?.deltaB?.abs(), true)}
               </Typography>
             </Stack>
 
