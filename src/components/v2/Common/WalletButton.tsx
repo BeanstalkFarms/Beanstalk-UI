@@ -8,53 +8,96 @@ import {
   useNetwork,
 } from 'wagmi';
 import {
+  Alert,
   Box,
   Button,
+  CircularProgress,
   Dialog,
-  Divider,
   ListItemText,
   Menu,
   MenuItem,
   Stack,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
-import tempUserIcon from 'img/temp-user-icon.svg';
+import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
+import tempUserIcon from 'img/temp-user-icon.svg';
 import { trimAddress } from 'util/index';
 import { CHAIN_INFO } from 'constants/chains';
 
-const SelectWalletDialog: React.FC = ({ handleClose, open }) => {
+import metamaskLogo from 'img/metamask-icon.png';
+import walletConnectLogo from 'img/walletconnect-logo.svg';
+import { StyledDialogTitle } from './Dialog';
+import DropdownIcon from './DropdownIcon';
+
+// -----------------------------------------------------------------
+
+const CONNECTOR_LOGOS : { [key: string] : string } = {
+  MetaMask: metamaskLogo,
+  'Coinbase Wallet': metamaskLogo,
+  WalletConnect: walletConnectLogo,
+};
+
+const CONNECTION_ERRORS_TO_MESSAGES : { 
+  [key: string] : (c?: Connector) => string } = {
+  UserRejectedRequestError: () => 'The connection was cancelled while in progress. Try connecting again.',
+  'Already processing eth_requestAccounts. Please wait.': (c) => `Connection already in progress. Try unlocking ${c?.name || 'your wallet'} to allow Beanstalk to connect.`,
+};
+
+// -----------------------------------------------------------------
+
+const SelectWalletDialog: React.FC<{
+  handleClose: () => void;
+  open: boolean;
+}> = ({ handleClose, open }) => {
   const { connect, connectors, error, isConnecting, pendingConnector } =
-    useConnect();
+    useConnect({
+      onConnect() {
+        handleClose();
+      }
+    });
   const handleConnect = useCallback(
-    (connector: Connector) => () => {
-      connect(connector);
-      handleClose();
-    },
-    [connect, handleClose]
+    (connector: Connector) => () => connect(connector),
+    [connect]
   );
   return (
     <Dialog onClose={handleClose} open={open}>
-      <Box sx={{ p: 2, minWidth: 340 }}>
+      <StyledDialogTitle onClose={handleClose}>
+        Connect a wallet
+      </StyledDialogTitle>
+      <Box sx={{ p: 2, pt: 0, width: '90vw', maxWidth: 400 }}>
         <Stack gap={1}>
           {connectors.map((connector) => (
             <Button
-              size="large"
+              variant="outlined"
+              color="primary"
               key={connector.id}
               disabled={!connector.ready}
-              variant="contained"
-              color="secondary"
               onClick={handleConnect(connector)}
+              sx={{
+                py: 1
+              }}
             >
-              {connector.name}
-              {!connector.ready && ' (unsupported)'}
-              {isConnecting &&
-                connector.id === pendingConnector?.id &&
-                ' (connecting)'}
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
+                <Typography color="text.primary" sx={{ fontSize: 20 }}>
+                  {isConnecting && (connector.id === pendingConnector?.id)
+                    ? <CircularProgress variant="indeterminate" color="primary" size={20} />
+                    : connector.name}
+                </Typography>
+                {CONNECTOR_LOGOS[connector.name] && (
+                  <img src={CONNECTOR_LOGOS[connector.name]} alt="" style={{ height: 40 }} />
+                )}
+              </Stack>
             </Button>
           ))}
+          {error && (
+            <Alert severity="error">
+              {CONNECTION_ERRORS_TO_MESSAGES[error.name || error.message](pendingConnector) || error.message}
+            </Alert>
+          )}
         </Stack>
-        {error && <div>{error.message}</div>}
       </Box>
     </Dialog>
   );
@@ -68,6 +111,8 @@ const WalletButton: React.FC = () => {
   // Wallet Dialog
   const [showDialog, setShowDialog] = useState(false);
   const handleCloseDialog = useCallback(() => setShowDialog(false), []);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
 
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -90,13 +135,12 @@ const WalletButton: React.FC = () => {
           disableFocusRipple
           variant="contained"
           color="light"
-          startIcon={
-            <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
-          }
+          startIcon={<img src={tempUserIcon} alt="User" style={{ height: 25 }} />}
+          endIcon={<DropdownIcon open={menuVisible} />}
           onClick={handleShowMenu}
         >
           <Typography variant="subtitle1">
-            {trimAddress(account.address)}
+            {trimAddress(account.address, !isMobile)}
           </Typography>
         </Button>
         <Menu
@@ -105,9 +149,12 @@ const WalletButton: React.FC = () => {
           open={menuVisible}
           onClose={handleHideMenu}
           MenuListProps={{
-            'aria-labelledby': 'basic-button',
+            sx: {
+              // py: 0
+            }
           }}
-          // https://mui.com/material-ui/react-popover/#anchor-playground
+          // Align the menu to the bottom 
+          // right side of the anchor button. 
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -115,6 +162,11 @@ const WalletButton: React.FC = () => {
           transformOrigin={{
             vertical: 'top',
             horizontal: 'right',
+          }}
+          sx={{
+            // Give some room between the WalletButton
+            // and the popper when it's opened.
+            mt: 0.5,
           }}
         >
           <Box sx={{ minWidth: 250 }}>
@@ -158,7 +210,6 @@ const WalletButton: React.FC = () => {
                 />
               </Stack>
             </MenuItem>
-            <Divider />
             <MenuItem onClick={() => disconnect()}>Disconnect</MenuItem>
           </Box>
         </Menu>
@@ -176,7 +227,10 @@ const WalletButton: React.FC = () => {
       >
         Connect Wallet
       </Button>
-      <SelectWalletDialog open={showDialog} handleClose={handleCloseDialog} />
+      <SelectWalletDialog
+        open={showDialog}
+        handleClose={handleCloseDialog}
+      />
     </>
   );
 };

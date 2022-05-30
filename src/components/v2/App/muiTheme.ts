@@ -1,5 +1,28 @@
 import { createTheme, experimental_sx as sx } from '@mui/material/styles';
 
+// --------------------------------------------------
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    light: Palette['primary'];
+    dark: Palette['primary'];
+  }
+  interface PaletteOptions {
+    light: PaletteOptions['primary'];
+    dark: PaletteOptions['primary'];
+  }
+}
+
+// Update the Button's color prop options
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    light: true;
+    dark: true;
+  }
+}
+
+// --------------------------------------------------
+
 const BASE_FONT_SIZE = 16;
 const remBase = (n: number) => `${(n / BASE_FONT_SIZE).toFixed(4)}rem`;
 

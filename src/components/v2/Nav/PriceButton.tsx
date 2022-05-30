@@ -1,13 +1,54 @@
 import React, { useState } from 'react';
-import { Box, Button, Drawer, Popper, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, CircularProgress, CircularProgressProps, Drawer, Popper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import beanCircleIcon from 'img/bean-circle.svg';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import usePools from 'hooks/usePools';
+import BigNumber from 'bignumber.js';
 import PoolCard from '../Silo/PoolCard';
+import DropdownIcon from '../Common/DropdownIcon';
+
+// ------------------------------------------------------------
+
+const PROGRESS_THICKNESS = 2;
+const PROGRESS_GAP = 3.5;
+const BeanProgressIcon : React.FC<CircularProgressProps & {
+  size: number;
+  enabled: boolean;
+  progress?: number;
+}> = ({
+  size,
+  enabled,
+  variant,
+  progress
+}) => (
+  <Stack sx={{ position: 'relative' }}>
+    {enabled ? (
+      <CircularProgress
+        variant={variant}
+        color="primary"
+        size={size + PROGRESS_GAP * 2}
+        value={progress}
+        sx={{
+          position: 'absolute',
+          left: -PROGRESS_GAP,
+          top: -PROGRESS_GAP,
+          zIndex: 10,
+        }}
+        thickness={PROGRESS_THICKNESS}
+      />
+    ) : null}
+    <img
+      src={beanCircleIcon}
+      alt="Bean"
+      style={{ height: size }}
+    />
+  </Stack>
+);
+
+// ------------------------------------------------------------
 
 const PriceButton: React.FC = () => {
   const beanPrice = useSelector<AppState, AppState['_bean']['price']>(
@@ -22,7 +63,7 @@ const PriceButton: React.FC = () => {
   const matches = useMediaQuery(theme.breakpoints.down('lg'));
   const pools = usePools();
   
-  // Poppover
+  // Popover
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const popoverOpen = Boolean(anchorEl);
   const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,7 +80,18 @@ const PriceButton: React.FC = () => {
     setDrawerOpen(true);
   };
 
-  // 
+  // Handlers
+  const onClickPriceButton = matches ? handleOpenDrawer : handleOpenPopover;
+
+  // Pools
+  const isPriceLoading = beanPrice[0].eq(new BigNumber(-1));
+  const StartIcon = (
+    <BeanProgressIcon
+      size={25}
+      enabled={isPriceLoading}
+      variant="indeterminate"
+    />
+  );
   const Pools = (
     <Stack gap={1}>
       {Object.values(pools).map((pool) => (
@@ -52,27 +104,13 @@ const PriceButton: React.FC = () => {
     </Stack>
   );
 
-  const onClickPriceButton = matches ? handleOpenDrawer : handleOpenPopover;
-
-  //
   return (
     <>
-      {/* Desktop  sx={{ display: { md: 'block', xs: 'none' } }} */}
       <Box>
         <Button
           color="light"
-          startIcon={<img src={beanCircleIcon} alt="Bean" style={{ height: 25 }} />}
-          endIcon={
-            <ExpandMoreIcon
-              sx={{
-                height: 15,
-                marginLeft: '-4px',
-                marginRight: '-4px',
-                transition: 'all 200ms linear',
-                transform: (popoverOpen || drawerOpen) ? 'scaleY(-1)' : ''
-              }}
-            />
-          }
+          startIcon={StartIcon}
+          endIcon={<DropdownIcon open={(popoverOpen || drawerOpen)} />}
           onClick={onClickPriceButton}
           disableRipple
           sx={{
@@ -111,7 +149,7 @@ const PriceButton: React.FC = () => {
           </Box>
         </Popper>
       </Box>
-      {/* Mobile */}
+      {/* Mobile: Drawer */}
       <Drawer
         anchor="bottom"
         open={drawerOpen}
