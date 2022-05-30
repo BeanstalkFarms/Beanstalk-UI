@@ -1,5 +1,32 @@
 import { createTheme, experimental_sx as sx } from '@mui/material/styles';
 
+// --------------------------------------------------
+
+declare module '@mui/material/styles' {
+  interface Theme {
+  }
+
+  interface Palette {
+    light: Palette['primary'];
+    dark: Palette['primary'];
+  }
+  interface PaletteOptions {
+    light: PaletteOptions['primary'];
+    dark: PaletteOptions['primary'];
+  }
+
+  interface PaletteColor {
+    darker?: string;
+  }
+  interface SimplePaletteColorOptions {
+    darker?: string;
+  }
+  interface ThemeOptions {
+  }
+}
+
+// --------------------------------------------------
+
 const BASE_FONT_SIZE = 16;
 const remBase = (n: number) => `${(n / BASE_FONT_SIZE).toFixed(4)}rem`;
 
