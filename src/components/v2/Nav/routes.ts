@@ -2,7 +2,8 @@ const ROUTES = {
   top: [
     {
       path: '/',
-      title: 'Forecast',
+      title: 'Barn Raise',
+      tag: 'NEW'
     },
     {
       path: '/silo',
@@ -13,8 +14,8 @@ const ROUTES = {
       title: 'Field',
     },
     {
-      path: '/barn-raise',
-      title: 'Barn Raise',
+      path: '/forecast',
+      title: 'Forecast',
     },
   ],
   more: [

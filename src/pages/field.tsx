@@ -6,6 +6,7 @@ import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayFullBN } from 'util/index';
+import { SNAPSHOT_LINK } from 'constants/index';
 
 const columns : DataGridProps['columns'] = [
   {
@@ -44,6 +45,7 @@ const FieldPage : React.FC = () => {
           description="Earn yield through lending Beans to Beanstalk when there is Available Soil in exchange for Pods"
           control={(
             <Button
+              href={SNAPSHOT_LINK}
               target="_blank"
               rel="noreferrer"
               color="light"

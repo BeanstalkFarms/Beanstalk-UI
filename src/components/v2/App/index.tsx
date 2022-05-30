@@ -13,7 +13,7 @@ import BarnRaisePage from 'pages/barn-raise';
 import TransactionHistoryPage from 'pages/history';
 import BalancesPage from 'pages/balances';
 
-import pageBackground from 'img/bg-mainnet.png';
+import pageBackground from 'img/theme/bg-mainnet.svg';
 import NavBar from 'components/v2/Nav/NavBar';
 
 import { setWidth } from 'state/general/actions';
@@ -49,12 +49,11 @@ export default function App() {
   const app = (
     <div>
       <Routes>
-        {/* Farm */}
-        <Route path="/" element={<ForecastPage />} />
+        <Route path="/" element={<BarnRaisePage />} />
         <Route path="/silo" element={<SiloPage />} />
         <Route path="/silo/:address" element={<SiloTokenPage />} />
         <Route path="/field" element={<FieldPage />} />
-        <Route path="/barn-raise" element={<BarnRaisePage />} />
+        <Route path="/forecast" element={<ForecastPage />} />
         <Route path="/history" element={<TransactionHistoryPage />} />
         <Route path="/balances" element={<BalancesPage />} />
       </Routes>
