@@ -13,7 +13,7 @@ import BarnRaisePage from 'pages/barn-raise';
 import TransactionHistoryPage from 'pages/history';
 import BalancesPage from 'pages/balances';
 
-import pageBackground from 'img/theme/bg-mainnet.svg';
+import pageBackground from 'img/theme/bg-mainnet-tinypng@3x.png';
 import NavBar from 'components/v2/Nav/NavBar';
 
 import { setWidth } from 'state/general/actions';
@@ -84,8 +84,7 @@ export default function App() {
       {/* -----------------------
         * Content
         * ----------------------- */}
-      <Box
-        className="App"
+      <Box 
         sx={{
           backgroundColor: BeanstalkPalette.lighterBlue,
           backgroundImage: `url(${pageBackground})`,
@@ -93,9 +92,15 @@ export default function App() {
           backgroundPosition: 'bottom center',
           backgroundSize: '100%',
           backgroundRepeat: 'no-repeat',
+          width: '100%',
           minHeight: '100vh',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 1,
         }}
-      >
+      />
+      <Box sx={{ position: 'relative', left: 0, top:0, zIndex: 2, backgroundColor: 'transparent' }}>
         <Box>
           <NavBar />
           <Box sx={{ py: 10 }}>
