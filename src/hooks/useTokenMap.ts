@@ -1,23 +1,19 @@
-import { useNetwork } from 'wagmi';
 import { TokenOrTokenMap, TokensByAddress } from 'constants/v2';
-import { SupportedChainId } from 'constants/chains';
 import { useMemo } from 'react';
 import Token from 'classes/Token';
+import { useGetChainConstant } from './useChainConstant';
 
 export default function useTokenMap(list: TokenOrTokenMap[]) : TokensByAddress {
-  const { activeChain } = useNetwork();
-  return useMemo(() => {
-    if (!activeChain?.id) return {};
-    return list.reduce<TokensByAddress>(
-      (acc, curr) => {
-        const token = curr instanceof Token ? curr : curr[(activeChain?.id || SupportedChainId.MAINNET) as number];
-        if (token) acc[token.address] = token;
-        return acc;
-      },
-      {}
-    );
-  }, [
-    activeChain?.id,
-    list
+  const getChainConstant = useGetChainConstant();
+  return useMemo(() => list.reduce<TokensByAddress>(
+    (acc, curr) => {
+      const token = curr instanceof Token ? curr : getChainConstant(curr);
+      if (token) acc[token.address] = token;
+      return acc;
+    },
+    {}
+  ), [
+    list,
+    getChainConstant,
   ]);
 }

@@ -10,8 +10,8 @@ import { resetFertilizer, updateFertilizer } from './actions';
 
 export const useFetchFarmerFertilizer = () => {
   const dispatch = useDispatch();
-  const fertContract = useBeanstalkFertilizerContract();
   const replantSeason = useChainConstant(REPLANT_SEASON);
+  const [fertContract] = useBeanstalkFertilizerContract();
 
   // Handlers
   const fetch = useCallback(async (account: string) => {

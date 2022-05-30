@@ -76,7 +76,7 @@ export default function App() {
       <SunUpdater />
       {/* -----------------------
         * Farmer Updaters
-      * ----------------------- */}
+        * ----------------------- */}
       <FarmerEventsUpdater />
       <FarmerEventsProcessor />
       <FarmerBalancesUpdater />

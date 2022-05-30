@@ -27,18 +27,20 @@ export function useFetchAllowances() {
 
   // Handlers
   const fetch = useCallback((account: string, contract: string, ts: Token | Token[]) => {
-    console.debug(`[farmer/allowances/useFetchAllowances] FETCH account = ${trimAddress(account, false)} contract = ${trimAddress(contract, false)} token(s) = ${ts.toString()}`);
-    return Promise.all((Array.isArray(ts) ? ts : [ts]).map((token) =>
-      token.getAllowance(account, contract)
-        .then((result) => ({
-          token,
-          contract,
-          allowance: result ? toTokenUnitsBN(result, token.decimals) : new BigNumber(0),
-        } as UpdateAllowancePayload))
-    )).then((_allowances) => {
-      console.debug(`[farmer/allowances/useFetchAllowances] RESULT: ${_allowances.length} allowances`, _allowances);
-      dispatch(updateAllowances(_allowances));
-    });
+    if (contract) {
+      console.debug(`[farmer/allowances/useFetchAllowances] FETCH account = ${trimAddress(account, false)} contract = ${trimAddress(contract, false)} token(s) = ${ts.toString()}`);
+      return Promise.all((Array.isArray(ts) ? ts : [ts]).map((token) =>
+        token.getAllowance(account, contract)
+          .then((result) => ({
+            token,
+            contract,
+            allowance: result ? toTokenUnitsBN(result, token.decimals) : new BigNumber(0),
+          } as UpdateAllowancePayload))
+      )).then((_allowances) => {
+        console.debug(`[farmer/allowances/useFetchAllowances] RESULT: ${_allowances.length} allowances`, _allowances);
+        dispatch(updateAllowances(_allowances));
+      });
+    }
   }, [dispatch]);
   
   const clear = useCallback(() => {

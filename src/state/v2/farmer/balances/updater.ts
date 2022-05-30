@@ -17,27 +17,32 @@ export const useFetchFarmerBalances = () => {
   // Handlers
   // FIXME: make this callback accept a tokens array to prevent reloading all balances on every call
   const fetch = useCallback(async (account: string/* , _tokens? : any */) => {
-    if (account && tokens) {
-      const balancePromises = Object.keys(tokens).map((tokenAddr) => (
-        tokens[tokenAddr]?.getBalance(account)
-          .then(tokenResult(tokens[tokenAddr]))
-          .then((result) => {
-            console.debug(`[farmer/balances/updater] | ${tokens[tokenAddr].symbol} => ${result.toString()}`);
-            return result;
-          })
-          .then((balanceResult) => ({
-            token: tokens[tokenAddr],
-            balance: balanceResult
-          }))
-      ));
+    try {
+      if (account && tokens) {
+        const balancePromises = Object.keys(tokens).map((tokenAddr) => (
+          tokens[tokenAddr]?.getBalance(account)
+            .then(tokenResult(tokens[tokenAddr]))
+            .then((result) => {
+              console.debug(`[farmer/balances/updater] | ${tokens[tokenAddr].symbol} => ${result.toString()}`);
+              return result;
+            })
+            .then((balanceResult) => ({
+              token: tokens[tokenAddr],
+              balance: balanceResult
+            }))
+        ));
 
-      console.debug(`[farmer/updater/useFetchBalances] FETCH ${balancePromises.length} balances`);
-      const balances = await Promise.all(balancePromises);
-      console.debug('[farmer/updater/useFetchBalances] RESULT: ', balances);
-      // console.table(balances);
+        console.debug(`[farmer/updater/useFetchBalances] FETCH: ${balancePromises.length} balances (account = ${account})`);
+        const balances = await Promise.all(balancePromises);
+        console.debug('[farmer/updater/useFetchBalances] RESULT: ', balances);
+        // console.table(balances);
 
-      dispatch(updateBalances(balances));
-      return balancePromises;
+        dispatch(updateBalances(balances));
+        return balancePromises;
+      }
+    } catch (e) {
+      console.debug('[farmer/updater/useFetchBalances] FAILED', e);
+      console.error(e);
     }
   }, [
     dispatch,

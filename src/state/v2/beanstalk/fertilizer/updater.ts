@@ -11,8 +11,8 @@ import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 
 export const useFertilizer = () => {
   const dispatch = useDispatch();
-  const fertContract = useBeanstalkFertilizerContract();
-  const usdcContract = useERC20Contract(USDC_ADDRESSES);
+  const [fertContract] = useBeanstalkFertilizerContract();
+  const [usdcContract] = useERC20Contract(USDC_ADDRESSES);
   const custodian = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
 
   // Handlers
