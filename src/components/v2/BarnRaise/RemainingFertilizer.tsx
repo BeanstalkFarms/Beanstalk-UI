@@ -4,6 +4,7 @@ import { Box, Card, Link, Stack, Typography } from '@mui/material';
 import { displayFullBN } from 'util/index';
 import useHumidity, { INITIAL_HUMIDITY } from 'hooks/useHumidity';
 import { AppState } from 'state';
+import BigNumber from 'bignumber.js';
 import FertilizerImage from './FertilizerImage';
 
 const RemainingFertilizer: React.FC = () => {
@@ -13,7 +14,10 @@ const RemainingFertilizer: React.FC = () => {
     (state) => state._beanstalk.sun.sunrise.remaining
   );
   const nextDecreaseTimeString = humidity.eq(INITIAL_HUMIDITY) ? 'in early July' : `in ${nextDecreaseDuration.toFormat('mm:ss')}`;
-  const progress = fertilizer.totalRaised.div(fertilizer.totalRaised.plus(fertilizer.remaining));
+  const progress = fertilizer.totalRaised.gt(0) 
+    ? fertilizer.totalRaised.div(fertilizer.totalRaised.plus(fertilizer.remaining))
+    : new BigNumber(0);
+  
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
@@ -37,9 +41,11 @@ const RemainingFertilizer: React.FC = () => {
                   <Typography display="inline-block" variant="h1" sx={{ fontWeight: 400 }}>
                     {displayFullBN(fertilizer.remaining, 0)}&nbsp;
                   </Typography>
-                  <Typography display="inline-block" variant="body1" color="text.secondary">
-                    {displayFullBN(progress.multipliedBy(100), 2)}% Filled
-                  </Typography>
+                  {progress.gt(0) ? (
+                    <Typography display="inline-block" variant="body1" color="text.secondary">
+                      {displayFullBN(progress.multipliedBy(100), 2)}% Filled
+                    </Typography>
+                  ) : null}
                 </Stack>
               </Stack>
               <Stack gap={1}>

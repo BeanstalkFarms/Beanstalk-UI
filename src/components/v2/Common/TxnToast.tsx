@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
 import { ContractReceipt, ContractTransaction } from 'ethers';
 import toast from 'react-hot-toast';
-import { chainId } from 'util/index';
 import { Box, IconButton, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { makeStyles } from '@mui/styles';
+import useChainConstant from 'hooks/useChainConstant';
+import { CHAIN_INFO } from 'constants/chains';
 
 const useStyles = makeStyles({
   errorMessage: {
@@ -22,9 +23,8 @@ function dismissErrors(id?: any) {
 
 export function ToastAlert({ desc, hash, msg, id }: { desc: string, hash?: string, msg?: string, id?: any }) {
   const classes = useStyles();
-  const handleClick = useCallback(() => (
-    id !== null ? dismissErrors(id) : dismissErrors()
-  ), [id]);
+  const handleClick = useCallback(() => (id !== null ? dismissErrors(id) : dismissErrors()), [id]);
+  const chainInfo = useChainConstant(CHAIN_INFO);
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
       <Typography sx={{ pl: 1, pr: 2, flex: 1, textAlign: 'center' }}>
@@ -33,7 +33,7 @@ export function ToastAlert({ desc, hash, msg, id }: { desc: string, hash?: strin
           {hash && (
             <>
               &nbsp;&middot;&nbsp;
-              <a href={`https://${chainId === 3 ? 'ropsten.' : ''}etherscan.io/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
+              <a href={`${chainInfo.explorer}/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
             </>
           )}
         </div>

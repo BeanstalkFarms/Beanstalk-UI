@@ -1,12 +1,17 @@
 import React, { useCallback, useState } from 'react';
 import {
   AppBar,
+  Box,
   Button,
+  Drawer,
   IconButton,
+  ListItem,
+  ListItemButton,
   Menu,
   MenuItem,
   Stack,
   Typography,
+  List,
 } from '@mui/material';
 import {
   Link as RouterLink,
@@ -14,12 +19,16 @@ import {
   useResolvedPath,
 } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CloseIcon from '@mui/icons-material/Close';
 
 import swapIcon from 'img/swap.svg';
 import { BeanstalkPalette } from 'components/v2/App/muiTheme';
 import WalletButton from '../Common/WalletButton';
 import NetworkButton from '../Common/NetworkButton';
 import PriceButton from './PriceButton';
+
+// --------------------------------------------
 
 const NAVIGATION_MAP = {
   top: [
@@ -68,6 +77,8 @@ const NAVIGATION_MAP = {
   ],
 };
 
+// --------------------------------------------
+
 const NavButton: React.FC<{ to: string; title: string }> = ({ to, title }) => {
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
@@ -97,6 +108,36 @@ const NavButton: React.FC<{ to: string; title: string }> = ({ to, title }) => {
     </Button>
   );
 };
+
+const NavListItem : React.FC<{ to: string, title: string, onClick: () => void }> = ({ to, title, onClick }) => {
+  const resolved = useResolvedPath(to);
+  const match = useMatch({ path: resolved.pathname, end: true });
+  return (
+    <RouterLink to={to} style={{ textDecoration: 'none' }}>
+      <ListItem disablePadding>
+        <ListItemButton
+          disableRipple
+          onClick={onClick}
+          color="primary"
+          sx={{
+            py: 2,
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: 24,
+              color: match ? 'text.primary' : 'text.secondary'
+            }}
+          >
+            {title}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+    </RouterLink>
+  );
+};
+
+// --------------------------------------------
 
 const MoreButton: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -169,30 +210,108 @@ const MoreButton: React.FC = () => {
   );
 };
 
-const NavBar: React.FC<{}> = () => (
-  <AppBar
-    sx={{
-      px: 1,
-      py: 1,
-      backgroundColor: BeanstalkPalette.lighterBlue,
-      borderBottom: `1px solid ${BeanstalkPalette.lightBlue}`,
-    }}
-  >
-    <Stack direction="row" gap={1} alignItems="center">
-      <Stack direction="row" sx={{ flex: 1 }}>
-        <PriceButton />
-        {NAVIGATION_MAP.top.map((item) => (
-          <NavButton key={item.path} to={item.path} title={item.title} />
-        ))}
-        <MoreButton />
-      </Stack>
-      <IconButton color="light" variant="contained">
-        <img src={swapIcon} alt="Swap" />
-      </IconButton>
-      <NetworkButton />
-      <WalletButton />
-    </Stack>
-  </AppBar>
-);
+// --------------------------------------------
+
+const NavBar: React.FC<{}> = () => {
+  const [open, setOpen] = useState(false);
+  // const beanPrice = useSelector<AppState, AppState['_bean']['price']>(
+  //   (state) => state._bean.price
+  // );
+  const hideDrawer = useCallback(() => setOpen(false), []);
+  const showDrawer = useCallback(() => setOpen(true), []);
+
+  return (
+    <>
+      <Drawer
+        anchor="bottom"
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ height: '100vh' }}
+        transitionDuration={0}
+      >
+        <Box sx={{ backgroundColor: 'white', width: '100%', height: '100vh', position: 'relative', }}>
+          {/* Close Button */}
+          <Box sx={{ position: 'absolute', top: 4, right: 4, p: 1, zIndex: 10 }}>
+            <IconButton aria-label="close" onClick={hideDrawer}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          {/* Items */}
+          <List style={{ fontSize: 22 }}>
+            {NAVIGATION_MAP.top.map((item) => (
+              <NavListItem
+                key={item.path}
+                to={item.path}
+                title={item.title}
+                onClick={hideDrawer}
+              />
+            ))}
+            {NAVIGATION_MAP.more.map((item) => (
+              <NavListItem
+                key={item.path}
+                to={item.path}
+                title={item.title}
+                onClick={hideDrawer}
+              />
+            ))}
+          </List>
+        </Box>
+      </Drawer>
+      {/* Navigation Bar */}
+      <AppBar
+        sx={{
+          px: 1,
+          py: 1,
+          backgroundColor: BeanstalkPalette.lighterBlue,
+          borderBottom: `1px solid ${BeanstalkPalette.lightBlue}`,
+        }}
+      >
+        <Stack direction="row" gap={1} alignItems="center">
+          {/* Desktop: Left Side */}
+          <Stack direction="row" sx={{ flex: 1 }}>
+            <PriceButton />
+            <Box sx={{ display: { lg: 'block', xs: 'none' } }}>
+              {NAVIGATION_MAP.top.map((item) => (
+                <NavButton
+                  key={item.path}
+                  to={item.path}
+                  title={item.title}
+                />
+              ))}
+              <MoreButton />
+            </Box>
+          </Stack>
+          {/* Desktop: Right Side */}
+          <Stack direction="row" justifyContent="flex-end" alignItems="center" sx={{ }} spacing={1}>
+            <Box sx={{ display: { lg: 'block', xs: 'none' } }}>
+              <IconButton color="light" variant="contained">
+                <img src={swapIcon} alt="Swap" />
+              </IconButton>
+              <NetworkButton />
+            </Box>
+            <WalletButton />
+            <Button
+              color="light"
+              variant="contained"
+              aria-label="open drawer"
+              onClick={showDrawer}
+              edge="start"
+              sx={{
+                display: { lg: 'none', xs: 'block' },
+                minHeight: 0,
+                minWidth: 0,
+                lineHeight: 0,
+                px: 1,
+                // py: 0.5
+              }}
+            >
+              <MoreHorizIcon sx={{  }} />
+            </Button>
+          </Stack>
+        </Stack>
+      </AppBar>
+    </>
+  );
+};
 
 export default NavBar;

@@ -5,26 +5,26 @@ import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 import { useAccount } from 'wagmi';
 import { REPLANT_SEASON } from 'hooks/useHumidity';
 import { bigNumberResult } from 'util/LedgerUtilities';
-import { updateFertTokens } from './actions';
+import useChainId from 'hooks/useChain';
+import { resetFertilizer, updateFertilizer } from './actions';
 
-export const useFarmerFertilizer = () => {
+export const useFetchFarmerFertilizer = () => {
   const dispatch = useDispatch();
-  const { data: account } = useAccount();
   const fertContract = useBeanstalkFertilizerContract();
   const replantSeason = useChainConstant(REPLANT_SEASON);
 
   // Handlers
-  const fetch = useCallback(async () => {
-    if (fertContract && account?.address) {
+  const fetch = useCallback(async (account: string) => {
+    if (fertContract && account) {
       console.debug('[beanstalk/fertilizer/updater] fetching...');
       const [
         balance,
       ] = await Promise.all([
-        fertContract.balanceOf(account.address, replantSeason.toString()).then(bigNumberResult),
+        fertContract.balanceOf(account, replantSeason.toString()).then(bigNumberResult),
       ] as const);
       console.debug(`[farmer/fertilizer/updater] balance = ${balance.toFixed(10)}`);
       if (balance.gt(0)) {
-        dispatch(updateFertTokens({
+        dispatch(updateFertilizer({
           [replantSeason.toNumber()]: balance
         }));
       }
@@ -32,20 +32,26 @@ export const useFarmerFertilizer = () => {
   }, [
     dispatch,
     fertContract,
-    account,
     replantSeason
   ]); 
-  const clear = useCallback(() => {}, []);
+  const clear = useCallback(() => { 
+    dispatch(resetFertilizer());
+  }, [dispatch]);
 
   return [fetch, clear] as const;
 };
 
 const FarmerFertilizerUpdater = () => {
-  const [fetch] = useFarmerFertilizer();
+  const [fetch, clear] = useFetchFarmerFertilizer();
+  const { data: account } = useAccount();
+  const chainId = useChainId();
   useEffect(() => {
-    console.debug('[farmer/fertilizer/updater] call: fetch()');
-    fetch();
-  }, [fetch]);
+    clear();
+    if (account?.address) {
+      fetch(account.address);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account?.address, chainId]);
   return null;
 };
 

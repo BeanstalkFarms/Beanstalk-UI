@@ -12,7 +12,7 @@ import {
   BEANSTALK_PRICE_ADDRESSES,
 } from 'constants/v2/addresses';
 import { Contract, ContractInterface } from 'ethers';
-import { useContract as useWagmiContract, useProvider } from 'wagmi';
+import { useContract as useWagmiContract, useProvider, useSigner } from 'wagmi';
 import useChainId from './useChain';
 
 const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
@@ -46,7 +46,7 @@ export function useContract<T extends Contract = Contract>(
 ): T | null {
   const chainId   = useChainId();
   const provider  = useProvider();
-  const signer    = useProvider();
+  const { data: signer } = useSigner();
   const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : addressOrAddressMap[chainId];
   const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : abiOrAbiMap[chainId];
   return useWagmiContract<T>({

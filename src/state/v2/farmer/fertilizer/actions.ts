@@ -1,6 +1,10 @@
 import { createAction } from '@reduxjs/toolkit';
 import { FertByID } from '.';
 
-export const updateFertTokens = createAction<FertByID>(
-  'farmer/fertilizer/updateFertTokens'
+export const updateFertilizer = createAction<FertByID>(
+  'farmer/fertilizer/updateFertilizer'
+);
+
+export const resetFertilizer = createAction(
+  'farmer/fertilizer/reset'
 );
