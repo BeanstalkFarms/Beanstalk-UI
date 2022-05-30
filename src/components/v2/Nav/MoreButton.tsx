@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ROUTES from './routes';
+import DropdownIcon from '../Common/DropdownIcon';
 
 const MoreButton: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -32,7 +33,7 @@ const MoreButton: React.FC = () => {
         size="small"
         variant="text"
         color="dark"
-        endIcon={<ArrowDropDownIcon />}
+        endIcon={<DropdownIcon open={open} />}
         onMouseOver={handleClick}
         sx={{
           px: 1.5,

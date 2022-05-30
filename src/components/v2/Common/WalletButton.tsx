@@ -18,7 +18,10 @@ import {
   MenuItem,
   Stack,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
@@ -29,6 +32,7 @@ import { CHAIN_INFO } from 'constants/chains';
 import metamaskLogo from 'img/metamask-icon.png';
 import walletConnectLogo from 'img/walletconnect-logo.svg';
 import { StyledDialogTitle } from './Dialog';
+import DropdownIcon from './DropdownIcon';
 
 // -----------------------------------------------------------------
 
@@ -109,6 +113,8 @@ const WalletButton: React.FC = () => {
   // Wallet Dialog
   const [showDialog, setShowDialog] = useState(false);
   const handleCloseDialog = useCallback(() => setShowDialog(false), []);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
 
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -132,11 +138,11 @@ const WalletButton: React.FC = () => {
           variant="contained"
           color="light"
           startIcon={<img src={tempUserIcon} alt="User" style={{ height: 25 }} />}
-          endIcon={<ExpandMoreIcon />}
+          endIcon={<DropdownIcon open={menuVisible} />}
           onClick={handleShowMenu}
         >
           <Typography variant="subtitle1">
-            {trimAddress(account.address)}
+            {trimAddress(account.address, !isMobile)}
           </Typography>
         </Button>
         <Menu
@@ -145,12 +151,12 @@ const WalletButton: React.FC = () => {
           open={menuVisible}
           onClose={handleHideMenu}
           MenuListProps={{
-            'aria-labelledby': 'basic-button',
             sx: {
-              py: 0
+              // py: 0
             }
           }}
-          // https://mui.com/material-ui/react-popover/#anchor-playground
+          // Align the menu to the bottom 
+          // right side of the anchor button. 
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -160,6 +166,8 @@ const WalletButton: React.FC = () => {
             horizontal: 'right',
           }}
           sx={{
+            // Give some room between the WalletButton
+            // and the popper when it's opened.
             mt: 0.5,
           }}
         >

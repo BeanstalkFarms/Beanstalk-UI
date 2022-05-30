@@ -3,9 +3,6 @@ import { createTheme, experimental_sx as sx } from '@mui/material/styles';
 // --------------------------------------------------
 
 declare module '@mui/material/styles' {
-  interface Theme {
-  }
-
   interface Palette {
     light: Palette['primary'];
     dark: Palette['primary'];
@@ -14,14 +11,13 @@ declare module '@mui/material/styles' {
     light: PaletteOptions['primary'];
     dark: PaletteOptions['primary'];
   }
+}
 
-  interface PaletteColor {
-    darker?: string;
-  }
-  interface SimplePaletteColorOptions {
-    darker?: string;
-  }
-  interface ThemeOptions {
+// Update the Button's color prop options
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    light: true;
+    dark: true;
   }
 }
 

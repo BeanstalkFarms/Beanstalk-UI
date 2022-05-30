@@ -3,6 +3,10 @@ import { useNetwork } from 'wagmi';
 import { Box, Button, Dialog, Stack, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ethIcon from 'img/eth-logo.svg';
+import { SupportedChainId } from 'constants/chains';
+import TokenIcon from './TokenIcon';
+import DropdownIcon from './DropdownIcon';
+import { ETH } from 'constants/v2/tokens';
 
 const NetworkButton: React.FC = () => {
   const { activeChain, chains, error, switchNetwork } = useNetwork({
@@ -42,12 +46,8 @@ const NetworkButton: React.FC = () => {
           disableFocusRipple
           variant="contained"
           color="light"
-          startIcon={<img src={ethIcon} alt="Bean" style={{ height: 25 }} />}
-          endIcon={
-            <KeyboardArrowDownIcon
-              style={{ height: 15, marginLeft: '-8px', marginRight: '-4px' }}
-            />
-          }
+          startIcon={<TokenIcon token={ETH[SupportedChainId.MAINNET]} style={{ height: '1.4em' }} />}
+          endIcon={<DropdownIcon open={open} />}
           onClick={handleClick}
         >
           <Typography variant="subtitle1">{activeChain?.name}</Typography>

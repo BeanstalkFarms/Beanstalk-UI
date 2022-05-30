@@ -1,4 +1,5 @@
 import ethLogoUrl from 'img/eth-logo.svg';
+import ethIconCircledUrl from 'img/eth-icon-circled.svg';
 // import beanLogoUrl from 'img/bean-logo.svg';
 import beanCircleLogoUrl from 'img/bean-circle.svg';
 import beanEthLpLogoUrl from 'img/bean-eth-lp-logo.svg';
@@ -28,7 +29,7 @@ export const ETH = {
     {
       name: 'Ether',
       symbol: 'ETH',
-      logo: ethLogoUrl
+      logo: ethIconCircledUrl
     }
   ),
   [SupportedChainId.ROPSTEN]: new NativeToken(
@@ -38,7 +39,7 @@ export const ETH = {
     {
       name: 'Ropsten Ether',
       symbol: 'ropETH',
-      logo: ethLogoUrl
+      logo: ethIconCircledUrl
     }
   ),
 };
@@ -92,7 +93,7 @@ export const WETH = {
     {
       name: 'Wrapped Ether',
       symbol: 'WETH',
-      logo: ethLogoUrl
+      logo: ethIconCircledUrl
     }
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
@@ -102,7 +103,7 @@ export const WETH = {
     {
       name: 'Wrapped Ether',
       symbol: 'WETH',
-      logo: ethLogoUrl
+      logo: ethIconCircledUrl
     }
   )
 };
