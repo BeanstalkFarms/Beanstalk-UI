@@ -92,7 +92,7 @@ const NavBar: React.FC<{}> = () => {
         {chainId === SupportedChainId.MAINNET && (
           <Box sx={{ textAlign: 'center', px: 1, pt: 1, cursor: 'pointer' }} onClick={() => setNoticeOpen(true)}>
             <Typography sx={{ fontSize: 14 }} color="text.secondary">
-              You are viewing the state of Beanstalk at block 14602789. <strong>Learn more</strong>
+              You are viewing $BEAN price data as of block 14602789. <strong>Learn more</strong>
             </Typography>
           </Box>
         )}
