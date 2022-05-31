@@ -81,7 +81,8 @@ const FieldPage : React.FC = () => {
                     <Typography variant="h4">My Pod Balance:</Typography>
                     <Stack direction="row" alignItems="center">
                       <img alt="" src={podIcon} height="17px" />
-                      <Typography variant="h4">{displayBN(farmerField.pods)}</Typography>
+                      <Typography variant="h4">100</Typography>
+                      {/*<Typography variant="h4">{displayBN(farmerField.pods)}</Typography>*/}
                     </Stack>
                   </Stack>
                   <Link underline="none" sx={{ cursor: 'pointer' }}>
