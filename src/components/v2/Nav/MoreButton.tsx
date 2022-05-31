@@ -1,10 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import {
   Button,
+  ListItemText,
   Menu,
   MenuItem,
+  Tooltip,
   Typography,
 } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
   Link as RouterLink,
 } from 'react-router-dom';
@@ -67,12 +70,29 @@ const MoreButton: React.FC = () => {
       >
         {ROUTES.more.map((item) => (
           <MenuItem
-            component={RouterLink}
+            disabled={item.disabled}
+            component={item.href ? 'a' : RouterLink}
             key={item.path}
-            to={item.path}
+            href={item.href}
+            target={item.href ? '_blank' : undefined}
+            rel={item.href ? 'noreferrer' : undefined}
+            to={item.href ? undefined : item.path}
             sx={{ minWidth: 200 }}
           >
-            {item.title}
+            {item.disabled ? (
+              <Tooltip title={<>{item.title} will be available upon Unpause</>}>
+                <span>
+                  <ListItemText>{item.title}</ListItemText>
+                </span>
+              </Tooltip>
+            ) : (
+              <ListItemText>{item.title}</ListItemText>
+            )}
+            {item.href ? (
+              <Typography variant="body2" color="text.secondary">
+                <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: 12 }} />
+              </Typography>
+            ) : null}
           </MenuItem>
         ))}
       </Menu>

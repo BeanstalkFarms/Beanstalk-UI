@@ -25,23 +25,33 @@ const ROUTES = {
   more: [
     {
       path: 'governance',
+      href: 'https://snapshot.org/#/beanstalkfarms.eth',
       title: 'Governance',
+    },
+    {
+      path: 'analytics',
+      href: 'https://dune.xyz/tbiq/Beanstalk',
+      title: 'Analytics',
+    },
+    {
+      path: 'discord',
+      href: 'https://discord.gg/beanstalk',
+      title: 'Discord',
     },
     {
       path: 'trade',
       title: 'Trade',
-    },
-    {
-      path: 'analytics',
-      title: 'Analytics',
+      disabled: true,
     },
     {
       path: 'beanfts',
       title: 'BeaNFTs',
+      disabled: true,
     },
     {
       path: 'about',
       title: 'About',
+      href: 'https://bean.money',
     },
   ],
 };
