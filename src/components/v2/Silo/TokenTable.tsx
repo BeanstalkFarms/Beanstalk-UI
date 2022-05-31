@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,10 @@ import { zeroBN } from 'constants/index';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { SEEDS, STALK } from 'constants/v2/tokens';
+import { SupportedChainId } from 'constants/chains';
+import useChainId from 'hooks/useChain';
+import BigNumber from 'bignumber.js';
+import { displayBN } from 'util/TokenUtilitiesOld';
 
 const arrowContainerWidth = 20;
 
@@ -30,7 +34,13 @@ const TokenTable : React.FC<{
   farmerSilo,
 }) => {
   const getUSD = useUSD();
+  const chainId = useChainId();
   const breakdown = useSiloTokenBreakdown();
+  const tvl = useMemo(
+    () => config.whitelist.reduce<BigNumber>((agg, token) => agg.plus(beanPools[token.address]?.liquidity || zeroBN), new BigNumber(0)),
+    [beanPools, config.whitelist]
+  );
+
   return (
     <Card>
       {/* Table Header */}
@@ -53,7 +63,7 @@ const TokenTable : React.FC<{
           </Grid>
           <Grid item xs={3}>
             <Typography color="gray">TVL</Typography>
-            <Typography color="black" fontWeight="bold">$2.21B</Typography>
+            <Typography color="black" fontWeight="bold">${displayBN(tvl)}</Typography>
           </Grid>
           <Grid item xs={3} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
             <Typography color="gray">My Deposits</Typography>
@@ -118,11 +128,13 @@ const TokenTable : React.FC<{
             </Box>
           );
         })}
-        <Box>
-          <Button variant="contained" color="primary" size="large" fullWidth>
-            Convert Allocation of Deposited Assets
-          </Button>
-        </Box>
+        {chainId !== SupportedChainId.MAINNET && (
+          <Box>
+            <Button variant="contained" color="primary" size="large" fullWidth>
+              Convert Allocation of Deposited Assets
+            </Button>
+          </Box>
+        )}
       </Stack>
     </Card>
   );

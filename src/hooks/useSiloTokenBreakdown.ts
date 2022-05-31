@@ -31,11 +31,11 @@ const initState = (tokenAddresses: string[]) => ({
  * First we break things down by state, then by type of token.
  */
 const useSiloTokenBreakdown = () => {
-  const tokens = useSelector<AppState, AppState['_farmer']['silo']['tokens']>((state) => state._farmer.silo.tokens);
-  const tokenAddresses = useMemo(() => Object.keys(tokens), [tokens]);
+  const balances = useSelector<AppState, AppState['_farmer']['silo']['tokens']>((state) => state._farmer.silo.tokens);
+  const tokenAddresses = useMemo(() => Object.keys(balances), [balances]);
   return useMemo(() => 
     tokenAddresses.reduce((prev, curr) => {
-      const t = tokens[curr];
+      const t = balances[curr];
       if (t) {
         prev.bdv = (
           prev.bdv

@@ -15,16 +15,19 @@ const basicCell = (params : GridRenderCellParams) => <Typography>{params.formatt
 
 const Deposits : React.FC<{
   token: Token;
-  siloToken: FarmerTokenBalance; // FIXME: naming
+  balance: FarmerTokenBalance | undefined;
 }> = ({
   token,
-  siloToken,
+  balance,
 }) => {
   const getUSD = useUSD();
-  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => siloToken?.deposited.crates.map((deposit) => ({
-    id: deposit.season,
-    ...deposit
-  })), [siloToken?.deposited.crates]);
+  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => 
+    balance?.deposited.crates.map((deposit) => ({
+      id: deposit.season,
+      ...deposit
+    })) || [],
+    [balance?.deposited.crates]
+  );
   const columns = useMemo(() => ([
     {
       field: 'season',

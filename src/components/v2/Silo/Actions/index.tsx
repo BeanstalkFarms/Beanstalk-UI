@@ -158,10 +158,7 @@ const Deposit : React.FC<{ to: Token; }> = ({ to }) => {
 
 // -----------------------------------------------------------------------
 
-const Actions : React.FC<{
-  token: Token;
-  // poolState: BeanPoolState;
-}> = (props) => {
+const Actions : React.FC<{ token: Token; }> = (props) => {
   const [tab, setTab] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);

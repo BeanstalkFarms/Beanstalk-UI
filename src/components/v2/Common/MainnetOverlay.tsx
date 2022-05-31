@@ -17,6 +17,8 @@ const MainnetOverlay : React.FC = ({ children }) => {
         backdropFilter: 'blur(8px)',
         zIndex: 999,
         pb: 5,
+        px: 2,
+        textAlign: 'center',
       }}
       alignItems="center"
       justifyContent="center"
