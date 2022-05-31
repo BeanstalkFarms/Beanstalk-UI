@@ -16,7 +16,8 @@ export const useFarmerSilo = () => {
   const [beanstalk] = useBeanstalkContract();
 
   // Handlers
-  const fetch = useCallback(async (account: string) => {
+  const fetch = useCallback(async (_account: string) => {
+    const account = getAccount(_account);
     if (beanstalk && account) {
       console.debug('[farmer/silo/useFarmerSilo] FETCH');
       const [
@@ -89,7 +90,7 @@ const FarmerSiloUpdater = () => {
   useEffect(() => {
     clear();
     if (account?.address) {
-      fetch(getAccount(account.address));
+      fetch(account.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address, chainId]);

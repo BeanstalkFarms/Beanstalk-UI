@@ -23,16 +23,17 @@ import { clearAllowances, UpdateAllowancePayload, updateAllowances } from './act
 //   }));
 // };
 
-export function useFetchAllowances() {
+export function useFetchFarmerAllowances() {
   const dispatch = useDispatch();
 
   // Handlers
-  const fetch = useCallback((account: string, contract: string, ts: Token | Token[]) => {
-    if (contract) {
+  const fetch = useCallback((_account: string, contract: string, ts: Token | Token[]) => {
+    const account = getAccount(_account);
+    if (contract && account) {
       console.debug(`[farmer/allowances/useFetchAllowances] FETCH account = ${trimAddress(account, false)} contract = ${trimAddress(contract, false)} token(s) = ${ts.toString()}`);
       return Promise.all((Array.isArray(ts) ? ts : [ts]).map((token) =>
         token.getAllowance(
-          getAccount(account),
+          account,
           contract
         ).then((result) => ({
           token,

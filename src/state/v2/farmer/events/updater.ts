@@ -153,7 +153,8 @@ const useFarmerEvents = () => {
   const dispatch = useDispatch();
 
   // Handlers
-  const fetch = useCallback(async (account?: string) => {
+  const fetch = useCallback(async (_account?: string) => {
+    const account = getAccount(_account);
     try {
       if (beanstalk && account && blocks) {
         console.debug(`[farmer/events/useFarmerEvents] FETCH: beanstalk = ${beanstalk.address}, farmer = ${account}`, blocks);
@@ -208,7 +209,7 @@ const FarmerEventsUpdater = () => {
   useEffect(() => {
     clear();
     if (account?.address) {
-      fetch(getAccount(account.address));
+      fetch(account.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId, account?.address]);
