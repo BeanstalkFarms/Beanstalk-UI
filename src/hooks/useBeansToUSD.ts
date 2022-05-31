@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 
 /**
- * Convert an amount of a token into BDV.
+ * Convert an amount of Beans into USD.
  */
-const useUSD = () => {
+const useBeansToUSD = () => {
   const price = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
   return useCallback((bdv: BigNumber) => bdv.multipliedBy(price[0]), [price]);
 };
 
-export default useUSD;
+export default useBeansToUSD;

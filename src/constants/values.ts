@@ -22,8 +22,8 @@ export const GOVERNANCE_EXPIRATION = 25; /* 24 + 1 seasons */
 
 export const BEAN_TO_STALK = 1;
 export const BEAN_TO_SEEDS = 2;
-export const LPBEAN_TO_STALK = 1;
-export const LPBEANS_TO_SEEDS = 4;
+export const LP_TO_STALK = 1;
+export const LP_TO_SEEDS = 4;
 export const CURVE_BDV_TO_STALK = 1;
 export const CURVE_BDV_TO_SEEDS = 4;
 export const LUSD_BDV_TO_STALK = 1;

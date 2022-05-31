@@ -10,8 +10,8 @@ import {
   BEAN_TO_SEEDS,
   BEAN_TO_STALK,
   ETH,
-  LPBEANS_TO_SEEDS,
-  LPBEAN_TO_STALK,
+  LP_TO_SEEDS,
+  LP_TO_STALK,
   MIN_BALANCE,
   SEEDS,
   SLIPPAGE_THRESHOLD,
@@ -258,7 +258,7 @@ const LPDepositAction = forwardRef(({
     setToStalkValue(
       TrimBN(
         fromNumber
-          .multipliedBy(2 * LPBEAN_TO_STALK)
+          .multipliedBy(2 * LP_TO_STALK)
           .minus(fromConvertBeans.multipliedBy(BEAN_TO_STALK)),
         STALK.decimals
       )
@@ -266,7 +266,7 @@ const LPDepositAction = forwardRef(({
     setToSeedsValue(
       TrimBN(
         fromNumber
-          .multipliedBy(2 * LPBEANS_TO_SEEDS)
+          .multipliedBy(2 * LP_TO_SEEDS)
           .minus(fromConvertBeans.multipliedBy(BEAN_TO_SEEDS)),
         SEEDS.decimals
       )

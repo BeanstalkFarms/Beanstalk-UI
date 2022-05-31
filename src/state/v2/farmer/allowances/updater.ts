@@ -45,6 +45,7 @@ export function useFetchFarmerAllowances() {
         dispatch(updateAllowances(_allowances));
       });
     }
+    return Promise.resolve();
   }, [dispatch]);
   
   const clear = useCallback(() => {

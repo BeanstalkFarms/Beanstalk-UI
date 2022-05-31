@@ -9,7 +9,7 @@ import {
   SEEDS,
   STALK,
   BEAN,
-  LPBEANS_TO_SEEDS,
+  LP_TO_SEEDS,
   BEAN_TO_SEEDS,
   UNI_V2_ETH_BEAN_LP,
 } from 'constants/index';
@@ -106,7 +106,7 @@ const LPConvertAction = forwardRef(({
       });
     BigNumber.set({ DECIMAL_PLACES: 18 });
     setConvertParams({ crates, amounts });
-    return [seedsRemoved.dividedBy(LPBEANS_TO_SEEDS), seedsRemoved];
+    return [seedsRemoved.dividedBy(LP_TO_SEEDS), seedsRemoved];
   };
 
   function fromValueUpdated(newFromNumber) {
