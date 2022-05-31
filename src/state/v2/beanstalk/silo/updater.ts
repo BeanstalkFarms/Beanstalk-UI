@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK } from 'constants/index';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK, zeroBN } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
@@ -7,65 +7,78 @@ import { tokenResult } from 'util/TokenUtilities';
 import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
+import { BeanstalkSiloAssets } from '.';
+import BigNumber from 'bignumber.js';
+import { SupportedChainId } from 'constants/chains';
 
 export const useBeanstalkSilo = () => {
   const dispatch = useDispatch();
-  const [beanstalk] = useBeanstalkContract();
+  const [beanstalk, chainId] = useBeanstalkContract();
 
   // Handlers
   const fetch = useCallback(async () => {
     if (beanstalk) {
       console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH');
 
+      const fixExploit = (v: BigNumber) => (
+        (result: BigNumber) => {
+          if (chainId === SupportedChainId.MAINNET) {
+            return result.plus(v);
+          }
+          return v;
+        }
+      );
+
       const [
-        totalStalk,
-        totalSeeds,
-        totalRoots,
-        totalEarnedBeans,
-        totalWithdrawnBeans,
+        stalkTotal,
+        seedsTotal,
+        rootsTotal,
+        earnedBeansTotal,
+        // withdrawnBeansTotal,
       ] = await Promise.all([
-        beanstalk.totalStalk().then(tokenResult(STALK)),
-        beanstalk.totalSeeds().then(tokenResult(SEEDS)),
-        beanstalk.totalRoots().then(bigNumberResult),
+        beanstalk.totalStalk().then(tokenResult(STALK)).then(fixExploit(new BigNumber(-847_198_363.98969))),
+        beanstalk.totalSeeds().then(tokenResult(SEEDS)).then(fixExploit(new BigNumber(-3_330_860_480.776205))),
+        beanstalk.totalRoots().then(bigNumberResult).then(fixExploit(new BigNumber(-386_865_631_100_312_795_430_494_480_222))),
         beanstalk.totalFarmableBeans().then(tokenResult(BEAN)),   // internally, earned == farmable 
-        beanstalk.totalWithdrawnBeans().then(tokenResult(BEAN)),
+        // beanstalk.totalWithdrawnBeans().then(tokenResult(BEAN)),  // 
       ] as const);
 
-      console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [totalStalk, totalSeeds]);
+      console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [stalkTotal, seedsTotal]);
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
-      const earnedStalkBalance = totalEarnedBeans.times(BEAN_TO_STALK);
-      const activeStalkBalance = totalStalk.plus(earnedStalkBalance);
-      const earnedSeedBalance  = totalEarnedBeans.times(BEAN_TO_SEEDS);
-      
+      const earnedStalkTotal = earnedBeansTotal.times(BEAN_TO_STALK);
+      const activeStalkTotal = stalkTotal.plus(earnedStalkTotal);
+      const earnedSeedTotal  = earnedBeansTotal.times(BEAN_TO_SEEDS);
+
       // total:   active & inactive
       // active:  owned, actively earning other silo assets
       // earned:  active but not yet deposited into a Season
       // grown:   inactive
       dispatch(updateBeanstalkSiloAssets({
         beans: {
-          earned: totalEarnedBeans,
+          earned: earnedBeansTotal,
         },
         stalk: {
-          active: activeStalkBalance,
-          earned: earnedStalkBalance,
-          grown:  totalWithdrawnBeans,
-          total:  activeStalkBalance.plus(totalWithdrawnBeans),
+          active: activeStalkTotal,
+          earned: earnedStalkTotal,
+          grown:  zeroBN,
+          total:  activeStalkTotal,
         },
         seeds: {
-          active: totalSeeds,
-          earned: earnedSeedBalance,
-          total:  totalSeeds.plus(earnedSeedBalance),
+          active: seedsTotal,
+          earned: earnedSeedTotal,
+          total:  seedsTotal.plus(earnedSeedTotal),
         },
         roots: {
-          total: totalRoots,
+          total: rootsTotal,
         }
       }));
     }
   }, [
     dispatch,
     beanstalk,
+    chainId,  
   ]);
   
   const clear = useCallback(() => {
