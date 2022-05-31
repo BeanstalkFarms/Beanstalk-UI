@@ -14,6 +14,10 @@ const ROUTES = {
       title: 'Field',
     },
     {
+      path: '/balances',
+      title: 'Balances',
+    },
+    {
       path: '/forecast',
       title: 'Forecast',
     },
