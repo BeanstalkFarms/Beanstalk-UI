@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
@@ -9,13 +9,14 @@ import { displayUSD } from 'util/index';
 import { zeroBN } from 'constants/index';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
 import TokenIcon from 'components/v2/Common/TokenIcon';
-import { SEEDS, STALK } from 'constants/v2/tokens';
+import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
 import { displayBN } from 'util/TokenUtilitiesOld';
 
 const arrowContainerWidth = 20;
+
 
 const TokenTable : React.FC<{
   config: {
@@ -27,18 +28,31 @@ const TokenTable : React.FC<{
   // beanPrice:  AppState['_bean']['price'];
   beanPools:  AppState['_bean']['pools'];
   farmerSilo: AppState['_farmer']['silo'];
+  beanstalkSilo: AppState['_beanstalk']['silo'];
 }> = ({
   config,
   // beanPrice,
   beanPools,
   farmerSilo,
+  beanstalkSilo,
 }) => {
   const getUSD = useUSD();
   const chainId = useChainId();
   const breakdown = useSiloTokenBreakdown();
-  const tvl = useMemo(
-    () => config.whitelist.reduce<BigNumber>((agg, token) => agg.plus(beanPools[token.address]?.liquidity || zeroBN), new BigNumber(0)),
-    [beanPools, config.whitelist]
+  const getTVL = useCallback((_token: Token) => {
+    // For Beans.
+    if (_token === BEAN[chainId as any]) {
+      return getUSD(beanstalkSilo.beans.total || zeroBN);
+    }
+    return beanPools[_token.address]?.liquidity || zeroBN;
+  }, [beanPools, beanstalkSilo, chainId, getUSD])
+
+  const aggregateTVL = useMemo(
+    () => config.whitelist.reduce<BigNumber>(
+      (agg, token) => agg.plus(getTVL(token)),
+      new BigNumber(0)
+    ),
+    [config.whitelist, getTVL]
   );
 
   return (
@@ -63,7 +77,7 @@ const TokenTable : React.FC<{
           </Grid>
           <Grid item xs={3}>
             <Typography color="gray">TVL</Typography>
-            <Typography color="black" fontWeight="bold">${displayBN(tvl)}</Typography>
+            <Typography color="black" fontWeight="bold">${displayBN(aggregateTVL)}</Typography>
           </Grid>
           <Grid item xs={3} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
             <Typography color="gray">My Deposits</Typography>
@@ -109,7 +123,7 @@ const TokenTable : React.FC<{
                   </Grid>
                   <Grid item xs={3}>
                     <Typography color="black">
-                      {displayUSD(beanPools[token.address]?.liquidity || zeroBN)}
+                      {displayUSD(getTVL(token))}
                     </Typography>
                   </Grid>
                   <Grid item xs={3} sx={{ textAlign: 'right' }}>

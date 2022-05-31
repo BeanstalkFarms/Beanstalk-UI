@@ -75,7 +75,7 @@ const SiloPage : React.FC = () => {
           }}
           beanPools={beanPools}
           farmerSilo={farmerSilo}
-          // beanPrice={beanPrice}
+          beanstalkSilo={beanstalkSilo}
         />
       </Stack>
     </Container>
