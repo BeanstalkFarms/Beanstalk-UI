@@ -7,7 +7,7 @@ import uniswapLogo from 'img/uniswap-logo.svg';
 import { ChainConstant } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_ETH_UNIV2_ADDRESSES, BEAN_LUSD_ADDRESSES } from './addresses';
 // import { Curve, Uniswap } from './dexes';
-import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, CRV3, WETH } from './tokens';
+import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, CRV3, LUSD, WETH } from './tokens';
 
 // ------------------------------------
 // BEAN:ETH Uniswap V2 Pool
@@ -73,7 +73,7 @@ export const BEAN_LUSD_CURVE_POOL_MAINNET = new CurvePlainPool(
   SupportedChainId.MAINNET,
   BEAN_LUSD_ADDRESSES,
   BEAN_LUSD_LP,
-  [BEAN, CRV3],
+  [BEAN, LUSD],
   {
     name: 'BEAN:LUSD Pool',
     logo: curveLogo,

@@ -49,6 +49,16 @@ export const CRV3_ADDRESSES : AddressMap = {
   [SupportedChainId.ROPSTEN]: '0x3D1449b23Ed2Eff19c2da41170d0760299eE9dbD'
 };
 
+export const LUSD_ADDRESSES : AddressMap = {
+  // --------------------------------------------------
+  // -------------------------------------------------
+  [SupportedChainId.MAINNET]: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
+
+  // --------------------------------------------------
+  // --------------------------------------------------
+  [SupportedChainId.ROPSTEN]: '0x86E5040C1F0459cb59B8cf2794555615554799D3'
+};
+
 // -- Pool Contracts
 
 export const BEAN_ETH_UNIV2_ADDRESSES : AddressMap = {

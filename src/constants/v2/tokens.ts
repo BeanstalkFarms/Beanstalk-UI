@@ -8,8 +8,11 @@ import beanEthLpLogoUrl from 'img/bean-eth-lp-logo.svg';
 import beanCrv3LpLogoUrl from 'img/bean-crv3-logo.svg';
 import beanLusdLogoUrl from 'img/bean-lusd-logo.svg';
 
-import crv3LogoUrl from 'img/crv3-logo.svg';
 import usdcLogoUrl from 'img/usdc-logo.svg';
+import crv3LogoUrl from 'img/crv3-logo.svg';
+import lusdLogoUrl from 'img/lusd-icon.svg';
+
+//
 import stalkLogo from 'img/stalk-logo.svg';
 import seedLogo from 'img/seed-logo.svg';
 import podsLogo from 'img/pod-logo.svg';
@@ -17,7 +20,7 @@ import podsLogo from 'img/pod-logo.svg';
 import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from '../chains';
 import { ChainConstant, TokenMap } from '.';
-import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, USDC_ADDRESSES } from './addresses';
+import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES } from './addresses';
 
 // ----------------------------------------
 // Native Tokens
@@ -184,6 +187,29 @@ export const USDC = {
       name: 'USD Coin',
       symbol: 'USDC',
       logo: usdcLogoUrl,
+    }
+  ),
+};
+
+export const LUSD = {
+  [SupportedChainId.MAINNET]: new ERC20Token(
+    SupportedChainId.MAINNET,
+    LUSD_ADDRESSES,
+    6,
+    {
+      name: 'LUSD',
+      symbol: 'LUSD',
+      logo: lusdLogoUrl,
+    }
+  ),
+  [SupportedChainId.ROPSTEN]: new ERC20Token(
+    SupportedChainId.ROPSTEN,
+    LUSD_ADDRESSES,
+    6,
+    {
+      name: 'LUSD',
+      symbol: 'LUSD',
+      logo: lusdLogoUrl,
     }
   ),
 };
