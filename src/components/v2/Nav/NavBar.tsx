@@ -10,6 +10,8 @@ import {
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { BeanstalkPalette } from 'components/v2/App/muiTheme';
+import { SupportedChainId } from 'constants/chains';
+import useChainId from 'hooks/useChain';
 import WalletButton from '../Common/WalletButton';
 import NetworkButton from '../Common/NetworkButton';
 import PriceButton from './PriceButton';
@@ -17,8 +19,6 @@ import ROUTES from './routes';
 import NavButton from './NavButton';
 import MoreButton from './MoreButton';
 import NavDrawer from './NavDrawer';
-import { SupportedChainId } from 'constants/chains';
-import useChainId from 'hooks/useChain';
 
 const NavBar: React.FC<{}> = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);

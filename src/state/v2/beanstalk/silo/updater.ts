@@ -19,9 +19,11 @@ export const useBeanstalkSilo = () => {
     if (beanstalk) {
       console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH');
 
+      // TEMP: FIX EXPLOIT
+      // ---------------------------------------------------------
       // If we're on MAINNET, return the value plus whatever
       // necessary delta (to subtract data, pass a negative value
-      // to fixExplit). Otherwise return the original value.
+      // to fixExploit). Otherwise return the original value.
       const fixExploit = (v: BigNumber) => (
         (result: BigNumber) => {
           if (chainId === SupportedChainId.MAINNET) {

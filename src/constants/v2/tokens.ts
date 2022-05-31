@@ -1,12 +1,15 @@
 // import ethLogoUrl from 'img/eth-logo.svg';
 import ethIconCircledUrl from 'img/eth-icon-circled.svg';
+
+// -- BEAN
 // import beanLogoUrl from 'img/bean-logo.svg';
 import beanCircleLogoUrl from 'img/bean-circle.svg';
 import beanEthLpLogoUrl from 'img/bean-eth-lp-logo.svg';
+import beanCrv3LpLogoUrl from 'img/bean-crv3-logo.svg';
+import beanLusdLogoUrl from 'img/bean-lusd-logo.svg';
+
 import crv3LogoUrl from 'img/crv3-logo.svg';
 import usdcLogoUrl from 'img/usdc-logo.svg';
-import beanCrv3LpLogoUrl from 'img/bean-crv3-logo.svg';
-// import beanLusdLogoUrl from 'img/bean-lusd-logo.svg';
 import stalkLogo from 'img/stalk-logo.svg';
 import seedLogo from 'img/seed-logo.svg';
 import podsLogo from 'img/pod-logo.svg';
@@ -260,7 +263,7 @@ export const BEAN_LUSD_LP = {
     {
       name: 'BEAN:LUSD LP',
       symbol: 'BEAN:LUSD',
-      logo: crv3LogoUrl,
+      logo: beanLusdLogoUrl,
     },
     {
       stalk: 1,
@@ -290,5 +293,5 @@ export const SILO_TOKENS : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
   BEAN_CRV3_LP,
-  // BEAN_LUSD_LP,
+  BEAN_LUSD_LP,
 ];
