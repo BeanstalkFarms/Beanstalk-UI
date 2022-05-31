@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box, Card, Container, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, Container, Grid, Link, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
+import podIcon from 'img/pod-logo.svg';
 
 const columns : DataGridProps['columns'] = [
   {
@@ -73,6 +74,20 @@ const FieldPage : React.FC = () => {
                   <Typography variant="h4">Pod Line</Typography>
                   <Typography variant="h1">{displayBN(podLine)}</Typography>
                 </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Stack direction="row" justifyContent="space-between">
+                  <Stack direction="row" gap={0.3}>
+                    <Typography variant="h4">My Pod Balance:</Typography>
+                    <Stack direction="row" alignItems="center">
+                      <img alt="" src={podIcon} height="17px" />
+                      <Typography variant="h4">{displayBN(farmerField.pods)}</Typography>
+                    </Stack>
+                  </Stack>
+                  <Link underline="none" sx={{ cursor: 'pointer' }}>
+                    <Typography variant="h4">Available Soil</Typography>
+                  </Link>
+                </Stack>
               </Grid>
             </Grid>
           </Stack>
