@@ -91,6 +91,7 @@ const FarmerEventsProcessor = () => {
           [BeanEthLP.address]: {
             deposited: Object.keys(results.userLPDeposits).reduce((prev, s) => {
               const tokenAmount = results.userLPDeposits[s];
+              // userLPSeedDeposits / 4
               const bdv         = getBDV(BeanEthLP, tokenAmount);
               prev.total = prev.total.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);

@@ -18,7 +18,7 @@ export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
   /** Whether we're currently waiting for a quote for this swap. */
   const [quoting, setQuoting] = useState<boolean>(false);
   /** */
-  const fertContract = useBeanstalkFertilizerContract();
+  const [fertContract] = useBeanstalkFertilizerContract();
   
   // When token changes, reset the amount.
   useEffect(() => {
