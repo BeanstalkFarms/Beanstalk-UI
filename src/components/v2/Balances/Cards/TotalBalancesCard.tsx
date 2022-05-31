@@ -84,7 +84,8 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
   return (
     <Box>
       <Stat title="My Balances" amount={`$${displayFullBN(getUSD(breakdown.bdv), 2)}`} icon={undefined} />
-      <Grid container direction="row" alignItems="center" sx={{ mb: 3}}>
+      {/* Left Column */}
+      <Grid container direction="row" alignItems="center" sx={{ mb: 4, mt: { md: 0, xs: 0 } }} rowSpacing={2}>
         <Grid item xs={12} md={3.5}>
           <Stack>
             {STATE_IDS.map((id : StateID) => {
@@ -101,8 +102,9 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
             })}
           </Stack>
         </Grid>
+        {/* Center Column */}
         <Grid item xs={12} md={5}>
-          <Box display="flex" justifyContent="center" sx={{ height: 250 }}>
+          <Box display="flex" justifyContent="center" sx={{ height: 250, py: { xs: 1, md: 0 } }}>
             <ResizablePieChart
               data={breakdown.bdv.gt(0) ? pieChartData : undefined}
             />
@@ -110,25 +112,27 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
         </Grid>
         <Grid item xs={12} md={3.5}>
           {drilldown === null ? (
-            <Stack alignItems="center" justifyContent="center" sx={{ p: 3, pt: 5, pb: 5 }}>
+            <Stack alignItems="center" justifyContent="center" sx={{ pt: 5, pb: 5 }}>
               <Typography color="text.secondary">
                 Hover a state to see breakdown
               </Typography>
             </Stack>
           ) : (
-            <Box>
+            <Stack gap={1}>
               <Typography variant="h2">{STATE_CONFIG[drilldown][0]} Tokens</Typography>
-              {Object.keys(whitelist).map((address) => {
-                return (
-                  <TokenRow
-                    name={`${whitelist[address].name}`}
-                    value={displayUSD(getUSD(breakdown[drilldown].bdvByToken[address]))}
-                    onMouseOver={onMouseOver('deposited')}
-                    isFaded={false}
-                  />
-                )
-              })}
+              <Box>
+                {Object.keys(whitelist).map((address) => {
+                  return (
+                    <TokenRow
+                      name={`${whitelist[address].name}`}
+                      value={displayUSD(getUSD(breakdown[drilldown].bdvByToken[address]))}
+                      onMouseOver={onMouseOver('deposited')}
+                      isFaded={false}
+                    />
+                  )
+                })}
             </Box>
+            </Stack>
           )}
         </Grid>
       </Grid>

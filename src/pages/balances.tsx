@@ -30,12 +30,14 @@ const BalancesPage: React.FC = () => {
       <Card sx={{ p: 2 }}>
         <TotalBalanceCard breakdown={breakdown} />
         <Card sx={{ p: 2 }}>
-          <Grid container spacing={1}>
+          <Grid container spacing={1} rowSpacing={3}>
             <Grid item xs={12} md={3}>
               <Stat
                 title={`My Stalk`}
                 icon={<TokenIcon token={STALK} />}
                 amount={displayBN(farmerSilo.stalk.total)}
+                variant="h2"
+                sx={{ fontSize: '24px !important' }}
               />
             </Grid>
             <Grid item xs={12} md={3}>
@@ -43,6 +45,8 @@ const BalancesPage: React.FC = () => {
                 title={`My Seeds`}
                 icon={<TokenIcon token={SEEDS} />}
                 amount={displayBN(farmerSilo.seeds.total)}
+                variant="h2"
+                sx={{ fontSize: '24px !important' }}
               />
             </Grid>
             <Grid item xs={12} md={3}>
@@ -50,6 +54,8 @@ const BalancesPage: React.FC = () => {
                 title={`My Pods`}
                 icon={<TokenIcon token={PODS} />}
                 amount={displayBN(farmerField.pods)}
+                variant="h2"
+                sx={{ fontSize: '24px !important' }}
               />
             </Grid>
             <Grid item xs={12} md={3}>
@@ -57,6 +63,8 @@ const BalancesPage: React.FC = () => {
                 title={`Unfertilized Beans`}
                 icon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 amount={displayBN(farmerFertilizer.tokens['6074'])}
+                variant="h2"
+                sx={{ fontSize: '24px !important' }}
               />
             </Grid>
           </Grid>
