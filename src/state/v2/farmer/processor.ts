@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
-import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP } from 'constants/v2/tokens';
-import useBDV from 'hooks/useBDV';
-import useChainConstant from 'hooks/useChainConstant';
+import { LP_TO_SEEDS } from 'constants/index';
+import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/v2/tokens';
+import { useGetChainConstant } from 'hooks/useChainConstant';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -31,10 +31,14 @@ const FarmerEventsProcessor = () => {
   );
 
   //
-  const getBDV      = useBDV();
-  const Bean        = useChainConstant(BEAN);
-  const BeanEthLP   = useChainConstant(BEAN_ETH_UNIV2_LP);
-  const BeanCrv3LP  = useChainConstant(BEAN_CRV3_LP);
+  // const getBDV = useBDV();
+  const getChainConstant = useGetChainConstant();
+  const SiloTokens = useMemo(() => ({
+      Bean:       getChainConstant(BEAN),
+      BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
+      BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
+      BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
+    }), [getChainConstant]);
 
   const eventParsingParameters = useMemo(() => {
     if (account?.address && season && earnedBeans && harvestableIndex) {
@@ -61,10 +65,10 @@ const FarmerEventsProcessor = () => {
         const results = processFarmerEvents(events, eventParsingParameters);
         console.debug('[farmer/updater] ...processed events!', results);
 
-        // FIXME: temporary
-        // hardcode this because the event process returns `beanDepositsBalance`, etc.
+        // TEMP:
+        // Hardcode this because the event process returns `beanDepositsBalance`, etc.
         dispatch(updateFarmerTokenBalances({
-          [Bean.address]: {
+          [SiloTokens.Bean.address]: {
             deposited: Object.keys(results.userBeanDeposits).reduce((prev, s) => {
               const tokenAmount = results.userBeanDeposits[s];
               const bdv         = tokenAmount; // only for Bean
@@ -74,8 +78,8 @@ const FarmerEventsProcessor = () => {
                 amount: tokenAmount,
                 bdv:    bdv,
                 season: new BigNumber(s),
-                stalk:  Bean.getStalk(bdv),
-                seeds:  Bean.getSeeds(bdv),
+                stalk:  SiloTokens.Bean.getStalk(bdv),
+                seeds:  SiloTokens.Bean.getSeeds(bdv),
               });
               return prev;
             }, {
@@ -89,19 +93,21 @@ const FarmerEventsProcessor = () => {
             // claimable: undefined,
             // wrapped: undefined,
           },
-          [BeanEthLP.address]: {
+          [SiloTokens.BeanEthLP.address]: {
             deposited: Object.keys(results.userLPDeposits).reduce((prev, s) => {
               const tokenAmount = results.userLPDeposits[s];
-              // userLPSeedDeposits / 4
-              const bdv         = getBDV(BeanEthLP, tokenAmount);
+              // LEGACY: 
+              // BDV of a LP deposit was previously calculated via
+              // 'userLPSeedDeposits / 4'.
+              const bdv  = results.userLPSeedDeposits[s].div(LP_TO_SEEDS);
               prev.total = prev.total.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);
               prev.crates.push({
                 amount: tokenAmount,
                 bdv:    bdv,
                 season: new BigNumber(s),
-                stalk:  BeanEthLP.getStalk(bdv),
-                seeds:  BeanEthLP.getSeeds(bdv),
+                stalk:  SiloTokens.BeanEthLP.getStalk(bdv),
+                seeds:  SiloTokens.BeanEthLP.getSeeds(bdv),
               });
               return prev;
             }, {
@@ -110,7 +116,7 @@ const FarmerEventsProcessor = () => {
               crates: [] as Deposit[],
             })
           },
-          [BeanCrv3LP.address]: {
+          [SiloTokens.BeanCrv3LP.address]: {
             deposited: Object.keys(results.userCurveDeposits).reduce((prev, s) => {
               const tokenAmount = results.userCurveDeposits[s];
               const bdv         = results.userCurveBDVDeposits[s];
@@ -120,8 +126,28 @@ const FarmerEventsProcessor = () => {
                 amount: tokenAmount,
                 bdv:    bdv,
                 season: new BigNumber(s),
-                stalk:  BeanCrv3LP.getStalk(bdv),
-                seeds:  BeanCrv3LP.getSeeds(bdv),
+                stalk:  SiloTokens.BeanCrv3LP.getStalk(bdv),
+                seeds:  SiloTokens.BeanCrv3LP.getSeeds(bdv),
+              });
+              return prev;
+            }, {
+              total:  new BigNumber(0),
+              bdv:    new BigNumber(0),
+              crates: [] as Deposit[],
+            })
+          },
+          [SiloTokens.BeanLusdLP.address]: {
+            deposited: Object.keys(results.userBeanlusdDeposits).reduce((prev, s) => {
+              const tokenAmount = results.userBeanlusdDeposits[s];
+              const bdv         = results.userBeanlusdBDVDeposits[s];
+              prev.total = prev.total.plus(tokenAmount);
+              prev.bdv   = prev.bdv.plus(bdv);
+              prev.crates.push({
+                amount: tokenAmount,
+                bdv:    bdv,
+                season: new BigNumber(s),
+                stalk:  SiloTokens.BeanLusdLP.getStalk(bdv),
+                seeds:  SiloTokens.BeanLusdLP.getSeeds(bdv),
               });
               return prev;
             }, {
@@ -145,10 +171,8 @@ const FarmerEventsProcessor = () => {
     dispatch,
     eventParsingParameters,
     //
-    Bean,
-    BeanEthLP,
-    BeanCrv3LP,
-    getBDV,
+    SiloTokens,
+    // getBDV,
   ]);
 
   return null;

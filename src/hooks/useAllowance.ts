@@ -7,8 +7,10 @@ import { useFetchFarmerAllowances } from 'state/v2/farmer/allowances/updater';
 import { MAX_UINT256 } from 'util/LedgerUtilities';
 import { useAccount } from 'wagmi';
 
+// ----------------------------------------
+
 export const useAllowances = (
-  contract: string,
+  contract: string | undefined,
   tokens: Token[],
   config: { loadIfAbsent: boolean } = {
     loadIfAbsent: true
@@ -21,6 +23,7 @@ export const useAllowances = (
   // If a provided Token is a NativeToken, there is no allowance.
   // Otherwise, see if we've loaded an approval for this contract + token combo.
   const currentAllowances : (null | BigNumber)[] = useMemo(() => tokens.map((curr) => {
+    if (!contract) return null;
     if (curr instanceof NativeToken) return new BigNumber(MAX_UINT256);
     return allowances[contract]
       ? (allowances[contract][curr.address] || null)
@@ -30,7 +33,7 @@ export const useAllowances = (
   // If requested, the component will automatically load any
   // allowances that aren't present in state.
   useEffect(() => {
-    if (config.loadIfAbsent && account?.address) {
+    if (config.loadIfAbsent && account?.address && contract) {
       // Reduce `results` to a list of the corresponding `tokens`,
       // filtering only for absent results.
       const absent = currentAllowances.reduce<Token[]>((prev, curr, index) => {
@@ -38,7 +41,13 @@ export const useAllowances = (
         return prev;
       }, [] as Token[]);
       console.debug(`[hooks/useAllowance] found ${absent.length} absent tokens for ${contract}`);
-      if (absent.length > 0) fetchAllowances(account?.address, contract, absent);
+      if (absent.length > 0) {
+        fetchAllowances(
+          account?.address,
+          contract,
+          absent
+        );
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -51,18 +60,27 @@ export const useAllowances = (
   // Allow a component to refetch initial allowances,
   // or to specify new ones to grab.
   const refetch = useCallback((_tokens?: Token[]) => {
-    if (account?.address) return fetchAllowances(account.address, contract, _tokens || tokens);
+    if (account?.address && contract) {
+      return fetchAllowances(
+        account.address,
+        contract,
+        _tokens || tokens
+      );
+    }
+    return Promise.resolve();
   }, [fetchAllowances, account?.address, tokens, contract]);
 
   return [currentAllowances, refetch] as const;
 };
 
-const useAllowance = (contract: string, token: Token) => {
-  const allowances = useSelector<AppState, AppState['_farmer']['allowances']>((state) => state._farmer.allowances);
-  if (token instanceof NativeToken) return new BigNumber(MAX_UINT256);
-  return allowances[contract]
-    ? (allowances[contract][token.address] || null)
-    : null;
-};
+// ----------------------------------------
 
-export default useAllowance;
+// const useAllowance = (contract: string, token: Token) => {
+//   const allowances = useSelector<AppState, AppState['_farmer']['allowances']>((state) => state._farmer.allowances);
+//   if (token instanceof NativeToken) return new BigNumber(MAX_UINT256);
+//   return allowances[contract]
+//     ? (allowances[contract][token.address] || null)
+//     : null;
+// };
+
+// export default useAllowance;

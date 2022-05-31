@@ -7,7 +7,7 @@ import { AppState } from 'state';
 import {
   SEEDS,
   STALK,
-  LPBEANS_TO_SEEDS,
+  LP_TO_SEEDS,
   UNI_V2_ETH_BEAN_LP,
 } from 'constants/index';
 import {
@@ -109,7 +109,7 @@ const LPWithdrawAction = forwardRef(({
         seedsRemoved = seedsRemoved.plus(crateSeedsRemoved);
         BigNumber.set({ DECIMAL_PLACES: 10 });
         stalkRemoved = stalkRemoved.plus(
-          crateSeedsRemoved.dividedBy(LPBEANS_TO_SEEDS)
+          crateSeedsRemoved.dividedBy(LP_TO_SEEDS)
         );
         stalkRemoved = stalkRemoved.plus(
           crateSeedsRemoved

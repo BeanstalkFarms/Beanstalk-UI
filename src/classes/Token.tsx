@@ -101,12 +101,14 @@ export default abstract class Token {
 
   public getStalk(bdv?: BigNumber) : BigNumber {
     if (!this.rewards?.stalk) return zeroBN;
-    return (bdv || new BigNumber(1)).times(this.rewards.stalk);
+    if (!bdv) return new BigNumber(this.rewards.stalk);
+    return bdv.times(this.rewards.stalk);
   }
   
   public getSeeds(bdv?: BigNumber) : BigNumber {
     if (!this.rewards?.seeds) return zeroBN;
-    return (bdv || new BigNumber(1)).times(this.rewards.seeds);
+    if (!bdv) return new BigNumber(this.rewards.seeds);
+    return bdv.times(this.rewards.seeds);
   }
 
   abstract getContract() : any;

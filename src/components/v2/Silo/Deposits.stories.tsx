@@ -49,7 +49,7 @@ const siloToken: FarmerTokenBalance = {
 };
 
 const Template: ComponentStory<typeof Deposits> = (args: any) => (
-  <Deposits token={BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.MAINNET]} siloToken={siloToken} {...args} />
+  <Deposits token={BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.MAINNET]} balance={siloToken} {...args} />
 );
 
 export const Default = Template.bind({});

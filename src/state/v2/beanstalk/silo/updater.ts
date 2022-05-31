@@ -19,9 +19,11 @@ export const useBeanstalkSilo = () => {
     if (beanstalk) {
       console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH');
 
+      // TEMP: FIX EXPLOIT
+      // ---------------------------------------------------------
       // If we're on MAINNET, return the value plus whatever
       // necessary delta (to subtract data, pass a negative value
-      // to fixExplit). Otherwise return the original value.
+      // to fixExploit). Otherwise return the original value.
       const fixExploit = (v: BigNumber) => (
         (result: BigNumber) => {
           if (chainId === SupportedChainId.MAINNET) {
@@ -36,12 +38,14 @@ export const useBeanstalkSilo = () => {
         seedsTotal,
         rootsTotal,
         earnedBeansTotal,
+        depositedBeansTotal,
         // withdrawnBeansTotal,
       ] = await Promise.all([
         beanstalk.totalStalk().then(tokenResult(STALK)).then(fixExploit(new BigNumber(-847_198_363.98969))),
         beanstalk.totalSeeds().then(tokenResult(SEEDS)).then(fixExploit(new BigNumber(-3_330_860_480.776205))),
         beanstalk.totalRoots().then(bigNumberResult).then(fixExploit(new BigNumber(-386_865_631_100_312_795_430_494_480_222))),
         beanstalk.totalFarmableBeans().then(tokenResult(BEAN)),   // internally, earned == farmable 
+        beanstalk.totalDepositedBeans().then(tokenResult(BEAN)),
         // beanstalk.totalWithdrawnBeans().then(tokenResult(BEAN)),  // 
         // beanstalk.withdrawSeasons().then(bigNumberResult)
       ] as const);
@@ -61,6 +65,7 @@ export const useBeanstalkSilo = () => {
       dispatch(updateBeanstalkSiloAssets({
         beans: {
           earned: earnedBeansTotal,
+          total:  depositedBeansTotal,
         },
         stalk: {
           active: activeStalkTotal,

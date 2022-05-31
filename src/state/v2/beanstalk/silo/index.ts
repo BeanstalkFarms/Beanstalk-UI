@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 export type BeanstalkSiloAssets = {
   beans: {
     earned: BigNumber;
+    total: BigNumber;
   }
   stalk: {
     total: BigNumber;
