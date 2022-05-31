@@ -55,7 +55,7 @@ const SmartSubmitButton : React.FC<{
   // Convert the current `FormTokenState[]` into more convenient forms,
   // and find the next token that we need to seek approval for.
   const selectedTokens = useMemo(() => tokens.map((elem) => elem.token), [tokens]);
-  const [allowances, refetchAllowances] = useAllowances(contract.address, selectedTokens, { loadIfAbsent: true });
+  const [allowances, refetchAllowances] = useAllowances(contract?.address, selectedTokens, { loadIfAbsent: true });
   const nextApprovalIndex = useMemo(
     () => allowances.findIndex(
       (allowance, index) => {
@@ -81,7 +81,7 @@ const SmartSubmitButton : React.FC<{
   const handleOpen  = useCallback(() => setOpen(true),  []);
   const handleClose = useCallback(() => setOpen(false), []);
   const handleApproval = useCallback(() => {
-    if (nextApprovalToken) {
+    if (nextApprovalToken && contract?.address) {
       const amount = MAX_UINT256;
 
       // State
@@ -125,7 +125,7 @@ const SmartSubmitButton : React.FC<{
       });
     }
   }, [
-    contract.address,
+    contract?.address,
     nextApprovalToken,
     setFieldValue,
     refetchAllowances,
@@ -145,7 +145,7 @@ const SmartSubmitButton : React.FC<{
 
   return (
     <>
-      {nextApprovalToken && (
+      {(nextApprovalToken && contract?.address) && (
         <StyledDialog
           open={open}
           onClose={handleClose}

@@ -10,7 +10,7 @@ const BarnRaisePage: React.FC = () => (
   <Container maxWidth="md">
     <Stack gap={2}>
       <PageHeader
-        title={<><strong>The Barn Raise</strong><Box as="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: Replanting Beanstalk</Box></>}
+        title={<><strong>The Barn Raise</strong><Box component="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: Replanting Beanstalk</Box></>}
         description="Earn yield through purchasing & activating Fertilizer, the Barn Raise token"
         control={(
           <Button
