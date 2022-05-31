@@ -1,25 +1,15 @@
 import { Card, Stack, Typography } from '@mui/material';
 import React from 'react';
+import Stat, { StatProps } from '../Common/Stat';
 
-const StatCard : React.FC<{
-  title: string;
-  icon?: JSX.Element | string;
-  amount: string;
-}> = ({
-  title,
-  icon,
-  amount,
-  children
+const StatCard : React.FC<StatProps> = ({
+  children,
+  ...props
 }) => (
   <Card sx={{ p: 2, height: '100%' }}>
     <Stack gap={2} sx={{ height: '100%' }}>
       {/* Title + Statistic */}
-      <Stack gap={1}>
-        <Typography color="text.secondary">{title}</Typography>
-        <Typography variant="h1" sx={{ marginLeft: '-3px' }}>
-          {icon} {amount}
-        </Typography>
-      </Stack>
+      <Stat {...props} />
       {/* Content */}
       {children}
     </Stack>

@@ -146,9 +146,12 @@ export default function App() {
           minHeight: '100vh',
           paddingTop: {
             md: 4,
-            xs: 3,            
+            xs: 2,
           },
-          paddingBottom: 4
+          paddingBottom: {
+            md: 4,
+            xs: 2 
+          }
         }}>
         {app}
       </Box>
