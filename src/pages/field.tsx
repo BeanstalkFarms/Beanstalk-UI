@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Card, Container, Dialog, Grid, Link, Stack, Typography } from '@mui/material';
+import { Box, Card, Container, Dialog, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -15,7 +15,10 @@ const columns: DataGridProps['columns'] = [
     field: 'placeInLine',
     headerName: 'Place In Line:',
     width: 200,
-    valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 0)}`
+    valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 0)}`,
+    renderCell: (params) => (
+      <Typography>{displayBN(params.value)}</Typography>
+      )
   },
   {
     field: 'amount',
@@ -25,7 +28,10 @@ const columns: DataGridProps['columns'] = [
     flex: 1,
     align: 'left',
     headerAlign: 'left',
-    valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`
+    valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
+    renderCell: (params) => (
+      <Typography>{displayBN(params.value)}</Typography>
+      )
   },
 ];
 
@@ -132,7 +138,7 @@ const FieldPage: React.FC = () => {
           <Box
             sx={{
               height: tableHeight,
-              ...tableStyle
+              ...tableStyle,
             }}>
             <DataGrid
               columns={columns}
