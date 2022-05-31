@@ -1,7 +1,7 @@
 import { Box, Button, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
-import useUSD from 'hooks/useUSD';
+import useBeansToUSD from 'hooks/useBeansToUSD';
 import React, { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { displayBN, displayUSD } from 'util/index';
@@ -34,7 +34,7 @@ const DepositsTab : React.FC<TabData> = ({
   current,
   series
 }) => {
-  const getUSD = useUSD();
+  const getUSD = useBeansToUSD();
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback((ds?: DataPoint[]) => {
     setDisplayValue(ds ? ds.map((d) => new BigNumber(d.value)) : current);

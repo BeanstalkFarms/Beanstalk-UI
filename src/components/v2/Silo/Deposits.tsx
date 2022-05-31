@@ -7,7 +7,7 @@ import { DataGrid, GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 import { FarmerTokenBalance } from 'state/v2/farmer/silo';
 import type { Deposit } from 'state/v2/farmer/silo';
 import { displayBN, displayFullBN } from 'util/index';
-import useUSD from 'hooks/useUSD';
+import useBeansToUSD from 'hooks/useBeansToUSD';
 import { tableStyle } from '../../../util/tableStyle';
 
 const MAX_ROWS = 10;
@@ -20,7 +20,7 @@ const Deposits : React.FC<{
   token,
   balance,
 }) => {
-  const getUSD = useUSD();
+  const getUSD = useBeansToUSD();
   const rows : (Deposit & { id: BigNumber })[] = useMemo(() => 
     balance?.deposited.crates.map((deposit) => ({
       id: deposit.season,

@@ -4,7 +4,7 @@ import {Box, Grid, Stack, Typography} from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from 'components/v2/Charts/Pie';
 import StatCard from '../StatCard';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
-import useUSD from 'hooks/useUSD';
+import useBeansToUSD from 'hooks/useBeansToUSD';
 import useWhitelist from 'hooks/useWhitelist';
 import { displayFullBN, displayUSD } from 'util/index';
 export interface TotalBalanceCardProps {
@@ -63,7 +63,7 @@ const TokenRow : React.FC<{
 )
 
 const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
-  const getUSD  = useUSD();
+  const getUSD  = useBeansToUSD();
   const whitelist = useWhitelist();
   
   const [drilldown, setDrilldown] = useState<StateID | null>(null);

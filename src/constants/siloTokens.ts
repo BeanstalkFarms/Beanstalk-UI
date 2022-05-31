@@ -6,8 +6,8 @@ import {
   CURVE_BDV_TO_STALK,
   LUSD_BDV_TO_SEEDS,
   LUSD_BDV_TO_STALK,
-  LPBEAN_TO_STALK,
-  LPBEANS_TO_SEEDS
+  LP_TO_STALK,
+  LP_TO_SEEDS
 } from './values';
 import { getAPYs } from '../util';
 import { AppState } from '../state';
@@ -55,8 +55,8 @@ const TOKENS : SiloToken[] = [
     slug: 'bean-eth',
     icon: beanEthIcon,
     rewards: {
-      stalk: LPBEAN_TO_STALK,
-      seeds: LPBEANS_TO_SEEDS,
+      stalk: LP_TO_STALK,
+      seeds: LP_TO_SEEDS,
     },
     getAPY: (apys: ReturnType<typeof getAPYs>) => apys[1], // LP with 4 Seeds
     getTotalSiloBalance: (totalBalances: AppState['totalBalance']) => totalBalances.totalSiloBeans,
