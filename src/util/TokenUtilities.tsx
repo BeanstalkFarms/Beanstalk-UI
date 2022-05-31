@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
+import { zeroBN } from 'constants/index';
 import { SupportedChainId } from 'constants/chains';
 import { TokenOrTokenMap } from 'constants/v2';
 import { bigNumberResult } from './LedgerUtilities';
@@ -30,10 +31,6 @@ export function displayFullBN(bn: BigNumber, maxDecimals: number = 18, minDecima
       minimumFractionDigits: minDecimals,
       maximumFractionDigits: maxDecimals
     });
-}
-
-export function displayUSD(bn: BigNumber) {
-  return `$${displayFullBN(bn, 2, 2)}`;
 }
 
 export function displayTokenAmount(amount: BigNumber, token: Token) {
@@ -105,6 +102,11 @@ export function MinBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
 export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
   if (bn1.isGreaterThan(bn2)) return bn1;
   return bn2;
+}
+
+export function displayUSD(bn: BigNumber, allowNegative : boolean = false) {
+  const v = allowNegative === false ? MaxBN(zeroBN, bn).abs() : bn;
+  return `$${displayFullBN(v, 2, 2)}`;
 }
 
 /**

@@ -71,6 +71,7 @@ export type FarmerSiloAssets = {
   }
   stalk: {
     total: BigNumber;
+    /** In the case of stalk, active INCLUDES earns. */
     active: BigNumber;
     earned: BigNumber;
     grown: BigNumber;

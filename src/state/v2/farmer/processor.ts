@@ -5,6 +5,7 @@ import useChainConstant from 'hooks/useChainConstant';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
+import { getAccount } from 'util/account';
 import processFarmerEvents from 'util/processFarmerEvents';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
@@ -38,7 +39,7 @@ const FarmerEventsProcessor = () => {
   const eventParsingParameters = useMemo(() => {
     if (account?.address && season && earnedBeans && harvestableIndex) {
       return {
-        account: account.address.toLowerCase(),
+        account: getAccount(account.address.toLowerCase()),
         farmableBeans: earnedBeans,
         season: season,
         harvestableIndex: harvestableIndex
@@ -91,6 +92,7 @@ const FarmerEventsProcessor = () => {
           [BeanEthLP.address]: {
             deposited: Object.keys(results.userLPDeposits).reduce((prev, s) => {
               const tokenAmount = results.userLPDeposits[s];
+              // userLPSeedDeposits / 4
               const bdv         = getBDV(BeanEthLP, tokenAmount);
               prev.total = prev.total.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);

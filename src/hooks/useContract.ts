@@ -32,14 +32,6 @@ export function useContractReadOnly<T extends Contract = Contract>(
   const provider  = useProvider();
   const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, provider.network.chainId);
   const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, provider.network.chainId);
-  // if (!address) throw new Error('Attempted to instantiate contract without address.')
-  // if (!abi)     throw new Error('Attempted to instantiate contract without ABI.')
-  // console.debug(`[useContractReadOnly] contract = ${address}, chainId = ${provider.network.chainId}`, {
-  //   abi,
-  //   abiLength: abi.length,
-  //   lbn: provider._lastBlockNumber,
-  //   chainId: provider.network.chainId,
-  // })
   return useMemo(
     () => {
       console.debug(`[useContractReadOnly] creating new instance of ${address}`);
@@ -56,6 +48,14 @@ export function useContractReadOnly<T extends Contract = Contract>(
     },
     [address, abi, provider]
   );
+  // if (!address) throw new Error('Attempted to instantiate contract without address.')
+  // if (!abi)     throw new Error('Attempted to instantiate contract without ABI.')
+  // console.debug(`[useContractReadOnly] contract = ${address}, chainId = ${provider.network.chainId}`, {
+  //   abi,
+  //   abiLength: abi.length,
+  //   lbn: provider._lastBlockNumber,
+  //   chainId: provider.network.chainId,
+  // })
   // return useWagmiContract<T>({
   //   addressOrName: address,
   //   contractInterface: abi,
@@ -73,8 +73,6 @@ export function useContract<T extends Contract = Contract>(
   const chainId = provider.network.chainId;
   const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, chainId);
   const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, chainId);
-  // if (!address) throw new Error('Attempted to instantiate contract without address.')
-  // if (!abi)     throw new Error('Attempted to instantiate contract without ABI.')
   const signerOrProvider = useSignerIfPossible && signer ? signer : provider;
   return useMemo(
     () => {
@@ -92,6 +90,8 @@ export function useContract<T extends Contract = Contract>(
     },
     [address, abi, signerOrProvider, chainId]
   );
+  // if (!address) throw new Error('Attempted to instantiate contract without address.')
+  // if (!abi)     throw new Error('Attempted to instantiate contract without ABI.')
   // return useWagmiContract<T>({
   //   addressOrName: address,
   //   contractInterface: abi,

@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import tempUserIcon from 'img/temp-user-icon.svg';
 import { trimAddress } from 'util/index';
@@ -29,6 +30,7 @@ import { CHAIN_INFO } from 'constants/chains';
 
 import metamaskLogo from 'img/metamask-icon.png';
 import walletConnectLogo from 'img/walletconnect-logo.svg';
+import { getAccount } from 'util/account';
 import { StyledDialogTitle } from './Dialog';
 import DropdownIcon from './DropdownIcon';
 
@@ -136,12 +138,18 @@ const WalletButton: React.FC = () => {
           disableFocusRipple
           variant="contained"
           color="light"
-          startIcon={isTiny ? null : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />}
+          startIcon={(
+            isTiny
+              ? null
+              : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
+              ? <WarningAmberIcon />
+              : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
+          )}
           endIcon={<DropdownIcon open={menuVisible} />}
           onClick={handleShowMenu}
         >
           <Typography variant="subtitle1">
-            {trimAddress(account.address, !isMobile)}
+            {trimAddress(getAccount(account.address), !isMobile)}
           </Typography>
         </Button>
         <Menu

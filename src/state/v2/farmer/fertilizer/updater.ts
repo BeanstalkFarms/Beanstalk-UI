@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 import { REPLANT_SEASON } from 'hooks/useHumidity';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import useChainId from 'hooks/useChain';
+import { getAccount } from 'util/account';
 import { resetFertilizer, updateFertilizer } from './actions';
 
 export const useFetchFarmerFertilizer = () => {
@@ -48,7 +49,7 @@ const FarmerFertilizerUpdater = () => {
   useEffect(() => {
     clear();
     if (account?.address) {
-      fetch(account.address);
+      fetch(getAccount(account.address));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address, chainId]);

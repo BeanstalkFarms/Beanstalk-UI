@@ -9,10 +9,10 @@ export const resetFarmerSilo = createAction(
   'farmer/silo/reset'
 );
 
-export const updateFarmerTokenBalances = createAction<UpdateFarmerTokenBalancesPayload>(
-  'farmer/silo/updateFarmerTokenBalances'
+export const updateFarmerSiloAssets = createAction<FarmerSiloAssets>(
+  'farmer/silo/update'
 );
 
-export const updateFarmerSiloAssets = createAction<FarmerSiloAssets>(
-  'farmer/silo/updateFarmerSiloAssets'
+export const updateFarmerTokenBalances = createAction<UpdateFarmerTokenBalancesPayload>(
+  'farmer/silo/updateFarmerTokenBalances'
 );

@@ -13,7 +13,7 @@ const StyledAccordionSummary : React.FC<{
   gradientText = true,
 }) => (
   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-    <Stack direction="row" gap={1}>
+    <Stack direction="row" gap={2} alignItems="center" sx={{ pr: 2 }}>
       {icon || <img alt="" src={splitArrowsIcon} />}
       <Typography
         variant="h4"

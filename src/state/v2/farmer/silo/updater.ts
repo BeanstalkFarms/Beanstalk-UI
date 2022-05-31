@@ -8,6 +8,7 @@ import { useAccount } from 'wagmi';
 import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
+import { getAccount } from 'util/account';
 import { resetFarmerSilo, updateFarmerSiloAssets } from './actions';
 
 export const useFarmerSilo = () => {
@@ -25,6 +26,7 @@ export const useFarmerSilo = () => {
         earnedBeanBalance,
         grownStalkBalance,
       ] = await Promise.all([
+        // balanceOfStalk = stalk + farmableStalk (aka earnedStalk)
         beanstalk.balanceOfStalk(account).then(tokenResult(STALK)),
         beanstalk.balanceOfSeeds(account).then(tokenResult(SEEDS)),
         beanstalk.balanceOfRoots(account).then(bigNumberResult),
@@ -37,7 +39,7 @@ export const useFarmerSilo = () => {
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
       const earnedStalkBalance = earnedBeanBalance.times(BEAN_TO_STALK);
-      const activeStalkBalance = stalkBalance.plus(earnedStalkBalance);
+      const activeStalkBalance = stalkBalance;
       const earnedSeedBalance  = earnedBeanBalance.times(BEAN_TO_SEEDS);
       
       // total:   active & inactive
@@ -86,7 +88,9 @@ const FarmerSiloUpdater = () => {
 
   useEffect(() => {
     clear();
-    if (account?.address) fetch(account?.address);
+    if (account?.address) {
+      fetch(getAccount(account.address));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address, chainId]);
 

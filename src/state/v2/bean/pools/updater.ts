@@ -14,7 +14,7 @@ export const useGetPools = () => {
   const [beanstalkPriceContract, chainId] = useBeanstalkPriceContract();
 
   // useWhatChanged([
-  //   dispatch,
+  //   dispatch
   //   beanstalkPriceContract,
   //   pools
   // ], 'dispatch, price, pools');
@@ -44,6 +44,9 @@ export const useGetPools = () => {
                   POOL.lpToken.getTotalSupply().then((supply) => ({
                     address: poolData.pool,
                     pool: {
+                      // ---------------------- 
+                      // TO HARDCODE ON MAINNET
+                      // ----------------------
                       price: tokenResult(BEAN)(poolData.price.toString()),
                       reserves: [
                         // NOTE:
@@ -54,7 +57,9 @@ export const useGetPools = () => {
                       ],
                       deltaB: tokenResult(BEAN)(poolData.deltaB.toString()),
                       supply: tokenResult(POOL.lpToken)(supply.toString()),
+                      // Liquidity: always denominated in USD for the price contract
                       liquidity: tokenResult(BEAN)(poolData.liquidity.toString()),
+                      // USD value of 1 LP token == liquidity / supply
                       totalCrosses: new BigNumber(0),
                     },
                   }))

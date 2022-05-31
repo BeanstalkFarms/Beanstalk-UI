@@ -1,4 +1,4 @@
-import { createTheme, experimental_sx as sx } from '@mui/material/styles';
+import { createTheme, experimental_sx as sx, responsiveFontSizes } from '@mui/material/styles';
 
 // --------------------------------------------------
 
@@ -47,7 +47,7 @@ export const BeanstalkPalette = {
 };
 
 // FIXME: changes to createTheme don't hot reload.
-const muiTheme = createTheme({
+let muiTheme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
@@ -184,6 +184,9 @@ const muiTheme = createTheme({
         }),
         sizeLarge: sx({
           py: 1.5,
+        }),
+        disabled: sx({
+          pointerEvents: 'auto',
         })
       },
     },
@@ -294,5 +297,7 @@ const muiTheme = createTheme({
     },
   },
 });
+
+muiTheme = responsiveFontSizes(muiTheme);
 
 export default muiTheme;

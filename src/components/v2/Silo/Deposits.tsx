@@ -81,29 +81,29 @@ const Deposits : React.FC<{
   }, [rows]);
 
   return (
-    <Box
-      sx={{
-        ...tableStyle
-      }}
-    >
-      <Card>
-        <Stack gap={0.5}>
-          <Box sx={{ px: 2, pt: 2 }}>
-            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{token.name} Deposits</Typography>
-          </Box>
-          <Box sx={{ px: 1, height: tableHeight, width: '100%' }}>
-            <DataGrid
-              columns={columns}
-              rows={rows}
-              pageSize={MAX_ROWS}
-              disableSelectionOnClick
-              disableColumnMenu
-              density="compact"
-            />
-          </Box>
-        </Stack>
-      </Card>
-    </Box>
+    <Card>
+      <Stack gap={0.5}>
+        <Box sx={{ px: 2, pt: 2 }}>
+          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{token.name} Deposits</Typography>
+        </Box>
+        <Box
+          sx={{
+            px: 1,
+            height: tableHeight,
+            width: '100%',
+            ...tableStyle
+          }}>
+          <DataGrid
+            columns={columns}
+            rows={rows}
+            pageSize={MAX_ROWS}
+            disableSelectionOnClick
+            disableColumnMenu
+            density="compact"
+          />
+        </Box>
+      </Stack>
+    </Card>
   );
 };
 
