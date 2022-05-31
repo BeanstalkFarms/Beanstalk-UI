@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { Box, Card, Container, Grid, Link, Stack, Typography } from '@mui/material';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Box, Card, Container, Dialog, Grid, Link, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -8,17 +8,18 @@ import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
 import podIcon from 'img/pod-logo.svg';
+import ClearIcon from '@mui/icons-material/Clear';
 
-const columns : DataGridProps['columns'] = [
+const columns: DataGridProps['columns'] = [
   {
     field: 'placeInLine',
-    headerName: 'Place In Line',
+    headerName: 'Place In Line:',
     width: 200,
     valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 0)}`
   },
   {
     field: 'amount',
-    headerName: 'Amount',
+    headerName: 'Number of Pods:',
     width: 200,
     disableColumnMenu: true,
     flex: 1,
@@ -30,7 +31,10 @@ const columns : DataGridProps['columns'] = [
 
 const MAX_ROWS = 5;
 
-const FieldPage : React.FC = () => {
+const FieldPage: React.FC = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const hideDrawer = useCallback(() => setDrawerOpen(false), []);
+  const showDrawer = useCallback(() => setDrawerOpen(true), []);
   // Data
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const { harvestableIndex } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
@@ -50,11 +54,36 @@ const FieldPage : React.FC = () => {
 
   const podLine = beanstalkField?.pods.minus(beanstalkField.harvestableIndex);
 
+  const podBalance = (
+    <Stack direction="row" gap={0.3}>
+      <Typography variant="h4">My Pod Balance:</Typography>
+      <Stack direction="row" alignItems="center">
+        <img alt="" src={podIcon} height="17px" />
+        <Typography variant="h4">100</Typography>
+        {/* <Typography variant="h4">{displayBN(farmerField.pods)}</Typography> */}
+      </Stack>
+    </Stack>
+  );
+
+  const podLineBox = (
+    <Box sx={{ backgroundColor: '#F6FAFE', p: 1.5, borderRadius: 1.5 }}>
+      <Typography variant="h4" color="text.secondary">Pod Line</Typography>
+      <Typography variant="h1">{displayBN(podLine)}</Typography>
+    </Box>
+  );
+
   return (
     <Container maxWidth="md">
       <Stack spacing={2}>
         <PageHeader
-          title={<><strong>The Field</strong><Box component="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: The Decentralized Credit Facility</Box></>}
+          title={
+            <>
+              <strong>The Field</strong>
+              <Box component="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: The
+                Decentralized Credit Facility
+              </Box>
+            </>
+          }
           description="Earn yield through lending Beans to Beanstalk when there is Available Soil in exchange for Pods"
         />
         <Card sx={{ p: 2 }}>
@@ -70,22 +99,14 @@ const FieldPage : React.FC = () => {
                 <Typography variant="h1">{displayBN(beanstalkField.weather.yield)}%</Typography>
               </Grid>
               <Grid item xs={12}>
-                <Box sx={{ backgroundColor: '#F6FAFE', p: 1.5, borderRadius: 1.5 }}>
-                  <Typography variant="h4">Pod Line</Typography>
-                  <Typography variant="h1">{displayBN(podLine)}</Typography>
+                <Box>
+                  {podLineBox}
                 </Box>
               </Grid>
               <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between">
-                  <Stack direction="row" gap={0.3}>
-                    <Typography variant="h4">My Pod Balance:</Typography>
-                    <Stack direction="row" alignItems="center">
-                      <img alt="" src={podIcon} height="17px" />
-                      <Typography variant="h4">100</Typography>
-                      {/*<Typography variant="h4">{displayBN(farmerField.pods)}</Typography>*/}
-                    </Stack>
-                  </Stack>
-                  <Link underline="none" sx={{ cursor: 'pointer' }}>
+                  <>{podBalance}</>
+                  <Link onClick={showDrawer} underline="none" sx={{ cursor: 'pointer' }}>
                     <Typography variant="h4">Available Soil</Typography>
                   </Link>
                 </Stack>
@@ -93,7 +114,21 @@ const FieldPage : React.FC = () => {
             </Grid>
           </Stack>
         </Card>
-        <Card>
+      </Stack>
+      <Dialog onClose={() => setDrawerOpen(false)} open={drawerOpen} fullWidth>
+        <Card sx={{ p: 2 }}>
+          <Stack gap={1}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Typography variant="h4" color="text.secondary">My Plots:</Typography>
+              <ClearIcon sx={{ cursor: 'pointer', color: '#bbbcd1' }} onClick={hideDrawer} />
+            </Stack>
+            <Box>
+              {podLineBox}
+            </Box>
+            <Box sx={{ pt: 1.2, pb: 1.5 }}>
+              {podBalance}
+            </Box>
+          </Stack>
           <Box
             sx={{
               height: tableHeight,
@@ -108,9 +143,8 @@ const FieldPage : React.FC = () => {
             />
           </Box>
         </Card>
-      </Stack>
+      </Dialog>
     </Container>
   );
 };
-
 export default FieldPage;
