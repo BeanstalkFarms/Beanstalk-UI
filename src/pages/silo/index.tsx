@@ -14,15 +14,18 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
+import useChainId from 'hooks/useChain';
+import { SupportedChainId } from 'constants/chains';
 
 const SiloPage : React.FC = () => {
-  const beanPrice   = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
+  // const beanPrice   = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
   const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const { sunrise, season }     = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
+  const { sunrise, season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const breakdown   = useSiloTokenBreakdown();
   const whitelist   = useWhitelist();
   const poolsByAddress = usePools();
+  const chainId = useChainId();
 
   return (
     <Container maxWidth="lg">
@@ -44,17 +47,21 @@ const SiloPage : React.FC = () => {
             </Button>
           )}
         />
-        <NextSeason
-          title={(
-            `Next Season's Predicted Silo Rewards in ${sunrise.remaining.as('minutes').toLocaleString('en-US', { maximumFractionDigits: 0 })}m`
-          )}
-        />
+        {/* TEMP: Hide next Season metrics on MAINNET. */}
+        {chainId !== SupportedChainId.MAINNET && (
+          <NextSeason
+            title={(
+              `Next Season's Predicted Silo Rewards in ${sunrise.remaining.as('minutes').toLocaleString('en-US', { maximumFractionDigits: 0 })}m`
+            )}
+          />
+        )}
         <OverviewCard
           farmerSilo={farmerSilo}
           breakdown={breakdown}
           season={season}
         />
         <RewardsBar
+          chainId={chainId}
           beans={farmerSilo.beans}
           stalk={farmerSilo.stalk}
           seeds={farmerSilo.seeds}
@@ -64,9 +71,9 @@ const SiloPage : React.FC = () => {
             whitelist: Object.values(whitelist),
             poolsByAddress: poolsByAddress,
           }}
-          beanPrice={beanPrice}
           beanPools={beanPools}
           farmerSilo={farmerSilo}
+          // beanPrice={beanPrice}
         />
       </Stack>
     </Container>

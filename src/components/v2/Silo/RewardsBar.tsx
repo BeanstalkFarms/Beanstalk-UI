@@ -1,16 +1,19 @@
 import React from 'react';
-import { Box, Button, Card, Divider, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { FarmerSiloAssets } from 'state/v2/farmer/silo';
 import { displayBN } from 'util/index';
+import { SupportedChainId } from 'constants/chains';
 
 const gap = 4;
 
 const RewardsBar : React.FC<{
+  chainId: SupportedChainId;
   beans: FarmerSiloAssets['beans'];
   stalk: FarmerSiloAssets['stalk'];
   seeds: FarmerSiloAssets['seeds'];
 }> = ({
+  chainId,
   beans,
   stalk,
   seeds
@@ -47,13 +50,23 @@ const RewardsBar : React.FC<{
         </Stack>
       </Stack>
       {/* Claim */}
+      {/* TEMP: Hide Claim button on MAINNET */}
       <Box sx={{ justifySelf: 'flex-end' }}>
-        <Button variant="contained" sx={{ h: '100%' }} endIcon={<ArrowDropDownIcon />}>
-          Claim Rewards
-        </Button>
+        <Tooltip title={chainId === SupportedChainId.MAINNET ? <>Claiming Silo rewards will be re-enabled upon Unpause.</> : false}>
+          <span>
+            <Button
+              disabled={chainId === SupportedChainId.MAINNET}
+              variant="contained"
+              sx={{ h: '100%' }}
+              endIcon={<ArrowDropDownIcon />}
+            >
+              Claim Rewards
+            </Button>
+          </span>
+        </Tooltip>
       </Box>
     </Stack>
   </Card>
-  );
+);
 
 export default RewardsBar;

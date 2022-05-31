@@ -1,12 +1,11 @@
 import React, { useMemo } from 'react';
-import { Box, Button, Card, Container, Grid, Stack, Typography } from '@mui/material';
+import { Box, Card, Container, Grid, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayFullBN } from 'util/index';
-import { SNAPSHOT_LINK } from 'constants/index';
 import { tableStyle } from 'util/tableStyle';
 
 const columns : DataGridProps['columns'] = [
@@ -66,7 +65,7 @@ const FieldPage : React.FC = () => {
                 <Typography variant="h1">5034%</Typography>
               </Grid>
               <Grid item xs={12}>
-                <Box sx={{ backgroundColor: "#F6FAFE", p: 1.5, borderRadius: 1.5 }}>
+                <Box sx={{ backgroundColor: '#F6FAFE', p: 1.5, borderRadius: 1.5 }}>
                   <Typography variant="h4">Pod Line</Typography>
                   <Typography variant="h1">5034%</Typography>
                 </Box>

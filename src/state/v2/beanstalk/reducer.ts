@@ -1,11 +1,13 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import sun from './sun/reducer';
-import field from './field/reducer';
 import fertilizer from './fertilizer/reducer';
+import field from './field/reducer';
+import silo from './silo/reducer';
+import sun from './sun/reducer';
 
 export default combineReducers({
-  sun,
+  fertilizer,
   field,
-  fertilizer
+  silo,
+  sun,
 });

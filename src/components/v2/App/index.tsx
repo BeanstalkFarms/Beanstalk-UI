@@ -15,14 +15,15 @@ import BalancesPage from 'pages/balances';
 
 import pageBackground from 'img/theme/bg-mainnet-tinypng@3x.png';
 import NavBar from 'components/v2/Nav/NavBar';
-
 import { setWidth } from 'state/general/actions';
-import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
+
 import PoolsUpdater from 'state/v2/bean/pools/updater';
-import FarmerEventsUpdater from 'state/v2/farmer/events/updater';
-import FarmerEventsProcessor from 'state/v2/farmer/processor';
 import SunUpdater from 'state/v2/beanstalk/sun/updater';
 import FertilizerUpdater from 'state/v2/beanstalk/fertilizer/updater';
+import SiloUpdater from 'state/v2/beanstalk/silo/updater';
+import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
+import FarmerEventsUpdater from 'state/v2/farmer/events/updater';
+import FarmerEventsProcessor from 'state/v2/farmer/processor';
 import FarmerBalancesUpdater from 'state/v2/farmer/balances/updater';
 import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
 
@@ -116,6 +117,7 @@ export default function App() {
         * Beanstalk Updaters
         * ----------------------- */}
       <FertilizerUpdater />
+      <SiloUpdater />
       <SunUpdater />
       {/* -----------------------
         * Farmer Updaters
