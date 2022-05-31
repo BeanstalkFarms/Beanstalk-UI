@@ -10,23 +10,10 @@ import { SupportedChainId } from 'constants/chains';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 import { updateBeanPrice } from '../reducer';
 
-const PRE_EXPLOIT_DATA = {
+export const PRE_EXPLOIT_BEAN_DATA = {
   updateBeanPrice: new BigNumber(1.020270),
   // Mock price contract responses.
   updateBeanPools: [
-    {
-      address: BEAN_CRV3_LP[SupportedChainId.MAINNET].address,
-      pool: {
-        price: new BigNumber(1.019926),
-        reserves: [
-          tokenResult(BEAN)(new BigNumber(35524374509797)),              // BEAN 0xDC59ac4FeFa32293A95889Dc396682858d52e5Db
-          tokenResult(CRV3)(new BigNumber(43096623168841692209092388)),  // 3CRV 0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490
-        ],
-        deltaB: tokenResult(BEAN)(new BigNumber(4211106348118)),
-        supply: tokenResult(BEAN_CRV3_LP)(new BigNumber(79284313822927052565331157)),
-        liquidity: tokenResult(BEAN)(new BigNumber(80220177662670)),
-      },
-    },
     {
       address: BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET].address,
       pool: {
@@ -39,6 +26,19 @@ const PRE_EXPLOIT_DATA = {
         supply: tokenResult(BEAN_ETH_UNIV2_LP)(new BigNumber(540894218294675521)),
         liquidity: tokenResult(BEAN)(new BigNumber(66189447135944)),
       }
+    },
+    {
+      address: BEAN_CRV3_LP[SupportedChainId.MAINNET].address,
+      pool: {
+        price: new BigNumber(1.019926),
+        reserves: [
+          tokenResult(BEAN)(new BigNumber(35524374509797)),              // BEAN 0xDC59ac4FeFa32293A95889Dc396682858d52e5Db
+          tokenResult(CRV3)(new BigNumber(43096623168841692209092388)),  // 3CRV 0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490
+        ],
+        deltaB: tokenResult(BEAN)(new BigNumber(4211106348118)),
+        supply: tokenResult(BEAN_CRV3_LP)(new BigNumber(79284313822927052565331157)),
+        liquidity: tokenResult(BEAN)(new BigNumber(80220177662670)),
+      },
     },
     {
       address: BEAN_LUSD_LP[SupportedChainId.MAINNET].address,
@@ -69,8 +69,8 @@ export const useGetPools = () => {
           // ---------------------------------------------------------
           // If we're on MAINNET, use hard-coded pool data from above.
           if (chainId === SupportedChainId.MAINNET) {
-            dispatch(updateBeanPools(PRE_EXPLOIT_DATA.updateBeanPools));
-            dispatch(updateBeanPrice(PRE_EXPLOIT_DATA.updateBeanPrice));
+            dispatch(updateBeanPools(PRE_EXPLOIT_BEAN_DATA.updateBeanPools));
+            dispatch(updateBeanPrice(PRE_EXPLOIT_BEAN_DATA.updateBeanPrice));
             console.debug('[bean/pools/useGetPools] OVERRIDE: using pre-exploit data');
             return;
           }

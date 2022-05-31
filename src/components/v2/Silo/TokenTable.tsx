@@ -14,7 +14,7 @@ import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
 import { displayBN } from 'util/TokenUtilitiesOld';
-import { useGetChainConstant } from 'hooks/useChainConstant';
+import useChainConstant from 'hooks/useChainConstant';
 
 const arrowContainerWidth = 20;
 
@@ -36,17 +36,24 @@ const TokenTable : React.FC<{
 }) => {
   const beansToUSD = useBeansToUSD();
   const chainId = useChainId();
-  const getChainConstant = useGetChainConstant();
   const breakdown = useSiloTokenBreakdown();
+  const Bean = useChainConstant(BEAN);
   const getTVL = useCallback((_token: Token) => {
     // For Beans, grab the amount in the Silo.
-    if (_token === getChainConstant(BEAN)) {
-      return beansToUSD(beanstalkSilo.beans.total || zeroBN);
-    }
+    if (_token === Bean) return beansToUSD(beanstalkSilo.beans.total || zeroBN);
     // For everything else, use `liquidity` from the price contract.
     return beanPools[_token.address]?.liquidity || zeroBN;
-  }, [beanPools, beanstalkSilo, getChainConstant, beansToUSD]);
+  }, [beanPools, beanstalkSilo, Bean, beansToUSD]);
+  const poolTokenToUSD = useCallback((_token: Token, _amount: BigNumber) => {
+    if (!_amount) return zeroBN;
+    // For Beans, use the aggregate Bean price.
+    if (_token === Bean) return beansToUSD(_amount);
+    // For everything else, use the value of the LP token via the beanPool liquidity/supply ratio.
+    const pool = beanPools[_token.address];
+    return (pool?.liquidity && pool?.supply) ? _amount.times(pool.liquidity.div(pool.supply)) : zeroBN;
+  }, [Bean, beanPools, beansToUSD]);
 
+  //
   const aggregateTVL = useMemo(
     () => config.whitelist.reduce<BigNumber>(
       (agg, token) => agg.plus(getTVL(token)),
@@ -123,13 +130,13 @@ const TokenTable : React.FC<{
                   </Grid>
                   <Grid item xs={3}>
                     <Typography color="black">
-                      {displayUSD(getTVL(token))}
+                      ${displayBN(getTVL(token))}
                     </Typography>
                   </Grid>
                   <Grid item xs={3} sx={{ textAlign: 'right' }}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
-                        {deposited?.bdv ? displayUSD(beansToUSD(deposited.bdv)) : '$0'}
+                        {deposited?.total ? displayUSD(poolTokenToUSD(token, deposited.total)) : '$0'}
                       </Typography>
                       <Stack sx={{ width: arrowContainerWidth, }} alignItems="center">
                         <ArrowRightIcon />
