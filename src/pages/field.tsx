@@ -107,7 +107,7 @@ const FieldPage: React.FC = () => {
                 <Stack direction="row" justifyContent="space-between">
                   <>{podBalance}</>
                   <Link onClick={openModal} underline="none" sx={{ cursor: 'pointer' }}>
-                    <Typography variant="h4">Available Soil</Typography>
+                    <Typography variant="h4">View My Plots</Typography>
                   </Link>
                 </Stack>
               </Grid>
