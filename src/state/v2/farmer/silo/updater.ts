@@ -9,6 +9,7 @@ import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { resetFarmerSilo, updateFarmerSiloAssets } from './actions';
+import { getAccount } from 'util/account';
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
@@ -87,7 +88,9 @@ const FarmerSiloUpdater = () => {
 
   useEffect(() => {
     clear();
-    if (account?.address) fetch(account?.address);
+    if (account?.address) {
+      fetch(getAccount(account.address));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address, chainId]);
 

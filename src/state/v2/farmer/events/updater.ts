@@ -9,6 +9,7 @@ import { Beanstalk } from 'constants/generated';
 import ethers, { BigNumber as BN } from 'ethers';
 import useChainId from 'hooks/useChain';
 import { resetEvents, setEvents } from './actions';
+import { getAccount } from 'util/account';
 
 export type ParsedEvent = {
   event: ethers.Event['event'];
@@ -152,11 +153,11 @@ const useFarmerEvents = () => {
   const dispatch = useDispatch();
 
   // Handlers
-  const fetch = useCallback(async (address?: string) => {
+  const fetch = useCallback(async (account?: string) => {
     try {
-      if (beanstalk && address && blocks) {
-        console.debug(`[farmer/events/useFarmerEvents] FETCH: beanstalk = ${beanstalk.address}, farmer = ${address}`, blocks);
-        Promise.all(getEvents(beanstalk, address, blocks)).then((results) => {
+      if (beanstalk && account && blocks) {
+        console.debug(`[farmer/events/useFarmerEvents] FETCH: beanstalk = ${beanstalk.address}, farmer = ${account}`, blocks);
+        Promise.all(getEvents(beanstalk, account, blocks)).then((results) => {
           const flattened = flatten<ethers.Event>(results);
           console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
           const allEvents: ParsedEvent[] = flattened.map((event) => ({
@@ -179,7 +180,7 @@ const useFarmerEvents = () => {
           dispatch(setEvents(allEvents));
         });
       } else {
-        console.debug('[farmer/events/useFarmerEvents] effect refreshed but vars missing', beanstalk, address, blocks);
+        console.debug('[farmer/events/useFarmerEvents] effect refreshed but vars missing', beanstalk, account, blocks);
       }
     } catch (e) {
       console.debug('[farmer/events/useFarmerEvents] FAILED', e);
@@ -204,15 +205,10 @@ const FarmerEventsUpdater = () => {
   const { data: account } = useAccount();
   const chainId = useChainId();
 
-  // When to pull events:
-  //    - when the wallet address is set and changes
-  //        - init load
-  //        - wallet change
-  //    - when the chain changes
   useEffect(() => {
     clear();
     if (account?.address) {
-      fetch(account?.address);
+      fetch(getAccount(account.address));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId, account?.address]);

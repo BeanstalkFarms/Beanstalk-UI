@@ -7,6 +7,7 @@ import { REPLANT_SEASON } from 'hooks/useHumidity';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import useChainId from 'hooks/useChain';
 import { resetFertilizer, updateFertilizer } from './actions';
+import { getAccount } from 'util/account';
 
 export const useFetchFarmerFertilizer = () => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const FarmerFertilizerUpdater = () => {
   useEffect(() => {
     clear();
     if (account?.address) {
-      fetch(account.address);
+      fetch(getAccount(account.address));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address, chainId]);

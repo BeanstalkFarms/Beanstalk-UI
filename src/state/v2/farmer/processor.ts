@@ -5,6 +5,7 @@ import useChainConstant from 'hooks/useChainConstant';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
+import { getAccount } from 'util/account';
 import processFarmerEvents from 'util/processFarmerEvents';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
@@ -38,7 +39,7 @@ const FarmerEventsProcessor = () => {
   const eventParsingParameters = useMemo(() => {
     if (account?.address && season && earnedBeans && harvestableIndex) {
       return {
-        account: account.address.toLowerCase(),
+        account: getAccount(account.address.toLowerCase()),
         farmableBeans: earnedBeans,
         season: season,
         harvestableIndex: harvestableIndex
