@@ -47,7 +47,7 @@ export const BEAN_CRV3_CURVE_POOL_MAINNET = new CurveMetaPool(
   BEAN_CRV3_LP,
   [BEAN, CRV3],
   {
-    name: 'BEAN:3CRV MetaPool',
+    name: 'BEAN:3CRV Pool',
     logo: curveLogo,
     symbol: 'BEAN:3CRV'
   },
@@ -59,7 +59,7 @@ export const BEAN_CRV3_CURVE_POOL_ROPSTEN = new CurveMetaPool(
   BEAN_CRV3_LP,
   [BEAN, CRV3],
   {
-    name: 'BEAN:3CRV MetaPool',
+    name: 'BEAN:3CRV Pool',
     logo: curveLogo,
     symbol: 'BEAN:3CRV'
   },
@@ -75,7 +75,7 @@ export const BEAN_LUSD_CURVE_POOL_MAINNET = new CurvePlainPool(
   BEAN_LUSD_LP,
   [BEAN, CRV3],
   {
-    name: 'BEAN:LUSD Plain Pool',
+    name: 'BEAN:LUSD Pool',
     logo: curveLogo,
     symbol: 'BEAN:LUSD'
   },

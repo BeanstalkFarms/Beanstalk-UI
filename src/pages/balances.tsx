@@ -24,7 +24,7 @@ const BalancesPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack gap={2}>
         <PageHeader
-          title="Balances"
+          title={<strong>Balances</strong>}
           description="View your Beanstalk balances and claim rewards"
         />
         <Grid container spacing={1}>

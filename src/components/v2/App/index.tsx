@@ -13,7 +13,7 @@ import BarnRaisePage from 'pages/barn-raise';
 import TransactionHistoryPage from 'pages/history';
 import BalancesPage from 'pages/balances';
 
-import pageBackground from 'img/theme/bg-mainnet-tinypng@3x.png';
+import pageBackground from 'img/theme/bg-mainnet.png';
 import NavBar from 'components/v2/Nav/NavBar';
 import { setWidth } from 'state/general/actions';
 
