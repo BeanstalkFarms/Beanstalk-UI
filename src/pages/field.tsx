@@ -32,9 +32,9 @@ const columns: DataGridProps['columns'] = [
 const MAX_ROWS = 5;
 
 const FieldPage: React.FC = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const hideDrawer = useCallback(() => setDrawerOpen(false), []);
-  const showDrawer = useCallback(() => setDrawerOpen(true), []);
+  const [modalOpen, setModalOpen] = useState(false);
+  const closeModal = useCallback(() => setModalOpen(false), []);
+  const openModal = useCallback(() => setModalOpen(true), []);
   // Data
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const { harvestableIndex } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
@@ -106,7 +106,7 @@ const FieldPage: React.FC = () => {
               <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between">
                   <>{podBalance}</>
-                  <Link onClick={showDrawer} underline="none" sx={{ cursor: 'pointer' }}>
+                  <Link onClick={openModal} underline="none" sx={{ cursor: 'pointer' }}>
                     <Typography variant="h4">Available Soil</Typography>
                   </Link>
                 </Stack>
@@ -115,12 +115,12 @@ const FieldPage: React.FC = () => {
           </Stack>
         </Card>
       </Stack>
-      <Dialog onClose={() => setDrawerOpen(false)} open={drawerOpen} fullWidth>
+      <Dialog onClose={() => setModalOpen(false)} open={modalOpen} fullWidth>
         <Card sx={{ p: 2 }}>
           <Stack gap={1}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Typography variant="h4" color="text.secondary">My Plots:</Typography>
-              <ClearIcon sx={{ cursor: 'pointer', color: '#bbbcd1' }} onClick={hideDrawer} />
+              <ClearIcon sx={{ cursor: 'pointer', color: '#bbbcd1' }} onClick={closeModal} />
             </Stack>
             <Box>
               {podLineBox}
