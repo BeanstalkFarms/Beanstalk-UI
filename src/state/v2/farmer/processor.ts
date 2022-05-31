@@ -33,14 +33,12 @@ const FarmerEventsProcessor = () => {
   //
   // const getBDV = useBDV();
   const getChainConstant = useGetChainConstant();
-  const SiloTokens = useMemo(() => {
-    return {
+  const SiloTokens = useMemo(() => ({
       Bean:       getChainConstant(BEAN),
       BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
       BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
       BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
-    }
-  }, [getChainConstant])
+    }), [getChainConstant]);
 
   const eventParsingParameters = useMemo(() => {
     if (account?.address && season && earnedBeans && harvestableIndex) {

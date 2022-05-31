@@ -2,9 +2,8 @@ import { useCallback } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { BEAN, BEAN_ETH_UNIV2_LP } from 'constants/v2/tokens';
-import Token, { BeanstalkToken } from 'classes/Token';
-import Pool from 'classes/Pool';
+import { BEAN } from 'constants/v2/tokens';
+import Token from 'classes/Token';
 import useChainConstant from './useChainConstant';
 
 /**
@@ -13,7 +12,6 @@ import useChainConstant from './useChainConstant';
 const useBDV = () => {
   const poolState = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   const Bean      = useChainConstant(BEAN);
-  const BeanEthLP = useChainConstant(BEAN_ETH_UNIV2_LP);
   const getBDV = useCallback((token: Token, amount: BigNumber) => {
     if (token === Bean) return amount;
     if (poolState[token.address]) {

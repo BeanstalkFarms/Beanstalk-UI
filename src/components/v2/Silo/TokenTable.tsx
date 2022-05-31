@@ -14,9 +14,9 @@ import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
 import { displayBN } from 'util/TokenUtilitiesOld';
+import { useGetChainConstant } from 'hooks/useChainConstant';
 
 const arrowContainerWidth = 20;
-
 
 const TokenTable : React.FC<{
   config: {
@@ -25,27 +25,27 @@ const TokenTable : React.FC<{
     /** */
     poolsByAddress: { [address: string] : Pool };
   };
-  // beanPrice:  AppState['_bean']['price'];
   beanPools:  AppState['_bean']['pools'];
   farmerSilo: AppState['_farmer']['silo'];
   beanstalkSilo: AppState['_beanstalk']['silo'];
 }> = ({
   config,
-  // beanPrice,
   beanPools,
   farmerSilo,
   beanstalkSilo,
 }) => {
-  const getUSD = useBeansToUSD();
+  const beansToUSD = useBeansToUSD();
   const chainId = useChainId();
+  const getChainConstant = useGetChainConstant();
   const breakdown = useSiloTokenBreakdown();
   const getTVL = useCallback((_token: Token) => {
-    // For Beans.
-    if (_token === BEAN[chainId as any]) {
-      return getUSD(beanstalkSilo.beans.total || zeroBN);
+    // For Beans, grab the amount in the Silo.
+    if (_token === getChainConstant(BEAN)) {
+      return beansToUSD(beanstalkSilo.beans.total || zeroBN);
     }
+    // For everything else, use `liquidity` from the price contract.
     return beanPools[_token.address]?.liquidity || zeroBN;
-  }, [beanPools, beanstalkSilo, chainId, getUSD])
+  }, [beanPools, beanstalkSilo, getChainConstant, beansToUSD]);
 
   const aggregateTVL = useMemo(
     () => config.whitelist.reduce<BigNumber>(
@@ -81,13 +81,13 @@ const TokenTable : React.FC<{
           </Grid>
           <Grid item xs={3} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
             <Typography color="gray">My Deposits</Typography>
-            <Typography color="black" fontWeight="bold">{displayUSD(getUSD(breakdown.bdv))}</Typography>
+            <Typography color="black" fontWeight="bold">{displayUSD(beansToUSD(breakdown.bdv))}</Typography>
           </Grid>
         </Grid>
       </Box>
       <Stack direction="column" gap={1} sx={{ p: 1 }}>
         {config.whitelist.map((token) => {
-          const farmerDeposited = farmerSilo.tokens[token.address]?.deposited;
+          const deposited = farmerSilo.tokens[token.address]?.deposited;
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -129,7 +129,7 @@ const TokenTable : React.FC<{
                   <Grid item xs={3} sx={{ textAlign: 'right' }}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
-                        {farmerDeposited?.bdv ? displayUSD(getUSD(farmerDeposited.bdv)) : '$0'}
+                        {deposited?.bdv ? displayUSD(beansToUSD(deposited.bdv)) : '$0'}
                       </Typography>
                       <Stack sx={{ width: arrowContainerWidth, }} alignItems="center">
                         <ArrowRightIcon />
