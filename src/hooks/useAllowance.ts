@@ -3,7 +3,7 @@ import Token, { NativeToken } from 'classes/Token';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { useFetchAllowances } from 'state/v2/farmer/allowances/updater';
+import { useFetchFarmerAllowances } from 'state/v2/farmer/allowances/updater';
 import { MAX_UINT256 } from 'util/LedgerUtilities';
 import { useAccount } from 'wagmi';
 
@@ -16,7 +16,7 @@ export const useAllowances = (
 ) => {
   const allowances = useSelector<AppState, AppState['_farmer']['allowances']>((state) => state._farmer.allowances);
   const { data: account } = useAccount();
-  const [fetchAllowances] = useFetchAllowances();
+  const [fetchAllowances] = useFetchFarmerAllowances();
 
   // If a provided Token is a NativeToken, there is no allowance.
   // Otherwise, see if we've loaded an approval for this contract + token combo.

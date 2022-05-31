@@ -12,7 +12,7 @@ import {
   BEANSTALK_PRICE_ADDRESSES,
 } from 'constants/v2/addresses';
 import { Contract, ContractInterface, ethers } from 'ethers';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import {  useProvider, useSigner } from 'wagmi';
 import { getChainConstant } from './useChainConstant';
 
@@ -63,19 +63,18 @@ export function useContractReadOnly<T extends Contract = Contract>(
   // });
 }
 
-export function useContract<T extends Contract = Contract>(
-  addressOrAddressMap: AddressOrAddressMap,
+export function useGetContract<T extends Contract = Contract>(
   abiOrAbiMap: AbiOrAbiMap,
   useSignerIfPossible: boolean = true
-): [T | null, SupportedChainId] {
+): (addressOrAddressMap: AddressOrAddressMap) => [T | null, SupportedChainId] {
   const provider         = useProvider();
   const { data: signer } = useSigner();
   const chainId = provider.network.chainId;
-  const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, chainId);
   const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, chainId);
   const signerOrProvider = useSignerIfPossible && signer ? signer : provider;
-  return useMemo(
-    () => {
+  return useCallback(
+    (addressOrAddressMap: AddressOrAddressMap) => {
+      const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, chainId);
       console.debug(`[useContract] creating new instance of ${address}`);
       return [
         address 
@@ -88,15 +87,17 @@ export function useContract<T extends Contract = Contract>(
         chainId,
       ];
     },
-    [address, abi, signerOrProvider, chainId]
+    [abi, signerOrProvider, chainId]
   );
-  // if (!address) throw new Error('Attempted to instantiate contract without address.')
-  // if (!abi)     throw new Error('Attempted to instantiate contract without ABI.')
-  // return useWagmiContract<T>({
-  //   addressOrName: address,
-  //   contractInterface: abi,
-  //   signerOrProvider: useSignerIfPossible && signer ? signer : provider,
-  // });
+}
+
+export function useContract<T extends Contract = Contract>(
+  addressOrAddressMap: AddressOrAddressMap,
+  abiOrAbiMap: AbiOrAbiMap,
+  useSignerIfPossible: boolean = true
+): [T | null, SupportedChainId] {
+  const getContract = useGetContract(abiOrAbiMap, useSignerIfPossible);
+  return getContract(addressOrAddressMap) as [T | null, SupportedChainId]; // FIXME: hard casting
 }
 
 // --------------------------------------------------
@@ -129,10 +130,14 @@ export function useBeanstalkFertilizerContract() {
   );
 }
 
-export function useERC20Contract(addressOrAddressMap: AddressOrAddressMap) {
-  return useContract<ERC20>(
-    addressOrAddressMap,
+export function useGetERC20Contract() {
+  return useGetContract<ERC20>(
     ERC20_ABI,
-    true,
+    true
   );
+}
+
+export function useERC20Contract(addressOrAddressMap: AddressOrAddressMap) {
+  const get = useGetERC20Contract();
+  return get(addressOrAddressMap);
 }

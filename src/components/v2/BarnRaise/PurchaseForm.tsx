@@ -26,6 +26,7 @@ import { ethers } from 'ethers';
 import { useFetchFarmerFertilizer } from 'state/v2/farmer/fertilizer/updater';
 import { useAccount } from 'wagmi';
 import { useFetchFarmerBalances } from 'state/v2/farmer/balances/updater';
+import { useFetchFarmerAllowances } from 'state/v2/farmer/allowances/updater';
 import FertilizerItem from './FertilizerItem';
 import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
 import TransactionToast from '../Common/TxnToast';
@@ -168,12 +169,13 @@ const FertilizeForm : React.FC<
 
 const SetupForm: React.FC<{}> = () => {
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
-  const fertContract = useBeanstalkFertilizerContract();
+  const [fertContract] = useBeanstalkFertilizerContract();
   const { data: account } = useAccount();
   const Usdc = useChainConstant(USDC);
   const Eth  = useChainConstant(ETH);
   const [refetchFertilizer] = useFetchFarmerFertilizer();
   const [refetchBalances]   = useFetchFarmerBalances();
+  const [refetchAllowances] = useFetchFarmerAllowances();
 
   //
   const initialValues : FertilizerFormValues = useMemo(() => ({
@@ -230,6 +232,7 @@ const SetupForm: React.FC<{}> = () => {
           actions.resetForm();
           refetchFertilizer(account.address as string);
           refetchBalances(account.address as string);
+          refetchAllowances(account.address as string, fertContract.address, Usdc);
         })
         .catch((err) => {
           txToast.error(err);
@@ -241,7 +244,8 @@ const SetupForm: React.FC<{}> = () => {
     fertContract,
     account?.address,
     refetchFertilizer,
-    refetchBalances
+    refetchBalances,
+    refetchAllowances
   ]);
 
   return (

@@ -9,7 +9,7 @@ import { ethers } from 'ethers';
 import { MAX_UINT256 } from 'util/LedgerUtilities';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
-import { ERC20Token } from 'classes/Token';
+import { useGetERC20Contract } from 'hooks/useContract';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
@@ -22,6 +22,10 @@ const CONTRACT_NAMES : { [address: string] : string } = {
 };
 
 const SmartSubmitButton : React.FC<{
+  /**
+   * The contract we're interacting with. Must approve 
+   * `contract.address` to use `tokens`.
+   */
   contract: ethers.Contract;
   /**
    * The tokens (and respective values) currently tracked in the form.
@@ -46,6 +50,7 @@ const SmartSubmitButton : React.FC<{
 }) => {
   const { explorer } = useChainConstant(CHAIN_INFO);
   const { values, setFieldValue } = useFormikContext<FormState>();
+  const getErc20Contract = useGetERC20Contract();
 
   // Convert the current `FormTokenState[]` into more convenient forms,
   // and find the next token that we need to seek approval for.
@@ -91,7 +96,9 @@ const SmartSubmitButton : React.FC<{
       });
 
       // Execute
-      (nextApprovalToken as ERC20Token).getContract().approve(
+      const [tokenContract] = getErc20Contract(nextApprovalToken.address);
+      if (!tokenContract) throw new Error(`Failed to instantiate tokenContract for token ${nextApprovalToken.address}`);
+      tokenContract.approve(
         contract.address,
         amount,
       )
@@ -103,11 +110,13 @@ const SmartSubmitButton : React.FC<{
       })
       .then((receipt) => {
         // confirmed
-        refetchAllowances()
-          .then(() => {
-            txToast.success(receipt);
-            setFieldValue('approving', undefined);
-          });
+        if (refetchAllowances) {
+          refetchAllowances()
+            .then(() => {
+              txToast.success(receipt);
+              setFieldValue('approving', undefined);
+            });
+        }
       })
       .catch((err) => {
         // failed
@@ -120,6 +129,7 @@ const SmartSubmitButton : React.FC<{
     nextApprovalToken,
     setFieldValue,
     refetchAllowances,
+    getErc20Contract
   ]);
   const handleClickApproveButton = useCallback(() => {
     if (mode === 'auto') {

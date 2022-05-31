@@ -17,7 +17,8 @@ export const useFetchFarmerBalances = () => {
 
   // Handlers
   // FIXME: make this callback accept a tokens array to prevent reloading all balances on every call
-  const fetch = useCallback(async (account: string/* , _tokens? : any */) => {
+  const fetch = useCallback(async (_account: string/* , _tokens? : any */) => {
+    const account = getAccount(_account);
     try {
       if (account && tokens) {
         const balancePromises = Object.keys(tokens).map((tokenAddr) => (
@@ -67,7 +68,7 @@ const FarmerBalancesUpdater = () => {
   useEffect(() => {
     clear();
     if (account?.address) {
-      fetch(getAccount(account.address));
+      fetch(account.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

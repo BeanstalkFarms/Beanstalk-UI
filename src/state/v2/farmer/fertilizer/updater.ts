@@ -15,15 +15,16 @@ export const useFetchFarmerFertilizer = () => {
   const [fertContract] = useBeanstalkFertilizerContract();
 
   // Handlers
-  const fetch = useCallback(async (account: string) => {
+  const fetch = useCallback(async (_account: string) => {
+    const account = getAccount(_account);
     if (fertContract && account) {
-      console.debug('[beanstalk/fertilizer/updater] fetching...');
+      console.debug('[farmer/fertilizer/updater] FETCH');
       const [
         balance,
       ] = await Promise.all([
         fertContract.balanceOf(account, replantSeason.toString()).then(bigNumberResult),
       ] as const);
-      console.debug(`[farmer/fertilizer/updater] balance = ${balance.toFixed(10)}`);
+      console.debug(`[farmer/fertilizer/updater] RESULT: balance = ${balance.toFixed(10)}`);
       if (balance.gt(0)) {
         dispatch(updateFertilizer({
           [replantSeason.toNumber()]: balance
@@ -49,7 +50,7 @@ const FarmerFertilizerUpdater = () => {
   useEffect(() => {
     clear();
     if (account?.address) {
-      fetch(getAccount(account.address));
+      fetch(account.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address, chainId]);
