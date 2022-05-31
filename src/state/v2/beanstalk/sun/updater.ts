@@ -1,12 +1,8 @@
-import { SupportedChainId } from 'constants/chains';
-import { BEAN } from 'constants/v2/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { bigNumberResult } from 'util/LedgerUtilities';
-import { tokenResult } from 'util/TokenUtilities';
-import { updateHarvestableIndex } from '../field/actions';
 import { resetSun, setAwaitingSunrise, updateSeason } from './actions';
 
 export const useSun = () => {

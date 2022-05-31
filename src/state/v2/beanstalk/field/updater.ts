@@ -3,9 +3,8 @@ import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
 
-import { BEAN, PODS } from 'constants/v2/tokens';
+import { BEAN } from 'constants/v2/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { SupportedChainId } from 'constants/chains';
 import { resetBeanstalkField, updateBeanstalkField, updateHarvestableIndex } from './actions';
 
 export const useBeanstalkField = () => {
@@ -17,8 +16,6 @@ export const useBeanstalkField = () => {
     if (beanstalk) {
       console.debug('[beanstalk/field/useBeanstalkField] FETCH');
       
-      // pods,
-      // beanstalk.totalPods().then(tokenResult(PODS)),
       const [
         harvestableIndex,
         podIndex,
@@ -53,7 +50,7 @@ export const useBeanstalkField = () => {
         soil,
         weather,
         rain,
-      }))
+      }));
     }
   }, [
     dispatch,

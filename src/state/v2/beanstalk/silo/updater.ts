@@ -9,7 +9,6 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import BigNumber from 'bignumber.js';
 import { SupportedChainId } from 'constants/chains';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
-import { BeanstalkSiloAssets } from '.';
 
 export const useBeanstalkSilo = () => {
   const dispatch = useDispatch();

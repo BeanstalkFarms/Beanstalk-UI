@@ -30,9 +30,9 @@ import { CHAIN_INFO } from 'constants/chains';
 
 import metamaskLogo from 'img/metamask-icon.png';
 import walletConnectLogo from 'img/walletconnect-logo.svg';
+import { getAccount } from 'util/account';
 import { StyledDialogTitle } from './Dialog';
 import DropdownIcon from './DropdownIcon';
-import { getAccount } from 'util/account';
 
 // -----------------------------------------------------------------
 

@@ -67,12 +67,11 @@ const DepositsTab : React.FC<TabData> = ({
 
 const StalkOwnershipTab : React.FC<
   TabData
-  & { beanstalkSilo: AppState['_beanstalk']['silo']; }
+  // & { beanstalkSilo: AppState['_beanstalk']['silo']; }
 > = ({
   current,
   series,
   season,
-  beanstalkSilo,
 }) => {
   // Display value is an array [stalk, pct]
   const [displayValue, setDisplayValue] = useState(current);
@@ -80,9 +79,6 @@ const StalkOwnershipTab : React.FC<
     setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
   }, [current]);
   useEffect(() => setDisplayValue(current), [current]);
-
-  // Get ownership
-  const ownership = displayValue[0].div(beanstalkSilo.stalk.active);
 
   return (
     <>
@@ -171,7 +167,6 @@ const OverviewCard : React.FC<{
             farmerSilo.stalk.active.div(beanstalkSilo.stalk.total)
           ]}
           series={[mockDepositData, mockOwnershipPctData]}
-          beanstalkSilo={beanstalkSilo}
           season={season}
         />
       </Box>

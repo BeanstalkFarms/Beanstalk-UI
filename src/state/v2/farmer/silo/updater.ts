@@ -8,8 +8,8 @@ import { useAccount } from 'wagmi';
 import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
-import { resetFarmerSilo, updateFarmerSiloAssets } from './actions';
 import { getAccount } from 'util/account';
+import { resetFarmerSilo, updateFarmerSiloAssets } from './actions';
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();

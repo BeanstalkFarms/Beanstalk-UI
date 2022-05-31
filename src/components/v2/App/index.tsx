@@ -28,8 +28,8 @@ import FarmerBalancesUpdater from 'state/v2/farmer/balances/updater';
 import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
 
 import './App.css';
-import { BeanstalkPalette } from './muiTheme';
 import FieldUpdater from 'state/v2/beanstalk/field/updater';
+import { BeanstalkPalette } from './muiTheme';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
