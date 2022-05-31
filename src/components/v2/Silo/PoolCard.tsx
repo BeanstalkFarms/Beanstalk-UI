@@ -19,10 +19,10 @@ const PoolCard: React.FC<{
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Stack
         direction="row"
-        gap={(isButton) ? 4 : 2}
+        gap={(isButton) ? 4 : 3}
         alignItems="center"
       >
-        <img alt="" src={pool.logo} width="20px" />
+        <img alt="" src={pool.logo} width={(isButton) ? '20px' : '30px'} />
         <Typography
           sx={{
             fontSize: (isButton) ? '19px' : '16px',
@@ -79,7 +79,6 @@ const PoolCard: React.FC<{
                 {displayBN(poolState?.deltaB?.abs(), true)}
               </Typography>
             </Stack>
-
           </Stack>
         </Stack>
       </Stack>
@@ -107,7 +106,7 @@ const PoolCard: React.FC<{
           </>
         ) : (
           <>
-            <Card sx={{ p: 1, pl: 2, pr: 2 }}>
+            <Card sx={{ p: 1, pr: 2, pl:2 }}>
               {cardContent}
             </Card>
           </>
