@@ -1,11 +1,13 @@
-import { Card, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import React from 'react';
 
-const StatCard : React.FC<{
+export type StatProps = {
   title: string;
   icon?: JSX.Element | string;
   amount: string;
-}> = ({
+}
+
+const Stat : React.FC<StatProps> = ({
   title,
   icon,
   amount,
@@ -18,4 +20,4 @@ const StatCard : React.FC<{
   </Stack>
 );
 
-export default StatCard;
+export default Stat;

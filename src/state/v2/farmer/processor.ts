@@ -136,7 +136,7 @@ const FarmerEventsProcessor = () => {
               crates: [] as Deposit[],
             })
           },
-          [SiloTokens.BeanLusdLP.address]: {
+          [SiloTokens.BeanLusdLP?.address]: {
             deposited: Object.keys(results.userBeanlusdDeposits).reduce((prev, s) => {
               const tokenAmount = results.userBeanlusdDeposits[s];
               const bdv         = results.userBeanlusdBDVDeposits[s];

@@ -7,6 +7,7 @@ import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
 import useBeansToUSD from 'hooks/useBeansToUSD';
 import useWhitelist from 'hooks/useWhitelist';
 import { displayFullBN, displayUSD } from 'util/index';
+import Stat from 'components/v2/Common/Stat';
 export interface TotalBalanceCardProps {
   breakdown: ReturnType<typeof useSiloTokenBreakdown>;
 }
@@ -81,7 +82,8 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
   }, [breakdown])
 
   return (
-    <StatCard title="My Balances" amount={`$${displayFullBN(getUSD(breakdown.bdv), 2)}`} icon={undefined}>
+    <Box>
+      <Stat title="My Balances" amount={`$${displayFullBN(getUSD(breakdown.bdv), 2)}`} icon={undefined} />
       <Grid container direction="row" alignItems="center" sx={{ mb: 3}}>
         <Grid item xs={12} md={3.5}>
           <Stack>
@@ -130,7 +132,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
           )}
         </Grid>
       </Grid>
-    </StatCard>
+    </Box>
   );
 };
 

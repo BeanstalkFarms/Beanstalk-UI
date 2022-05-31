@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Container, Grid, Stack } from '@mui/material';
+import { Card, Container, Grid, Stack } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import TotalBalanceCard from 'components/v2/Balances/Cards/TotalBalancesCard';
 import FertilizerCard from 'components/v2/Balances/Cards/FertilizerCard';
@@ -9,12 +9,17 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
 import SiloAssetCard from 'components/v2/Balances/Cards/SiloAssetCard';
-import { SEEDS, STALK } from 'constants/v2/tokens';
+import { BEAN, PODS, SEEDS, STALK } from 'constants/v2/tokens';
 import PodCard from 'components/v2/Balances/Cards/PodsCard';
+import Stat from 'components/v2/Common/Stat';
+import { displayBN } from 'util/index';
+import TokenIcon from 'components/v2/Common/TokenIcon';
+import { SupportedChainId } from 'constants/chains';
 
 const BalancesPage: React.FC = () => {
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo)
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field)
+  const farmerFertilizer = useSelector<AppState, AppState['_farmer']['fertilizer']>((state) => state._farmer.fertilizer)
   // const farmerField = useSelector<AppState, AppState['_farmer']['fertilizer']>((state) => state._farmer.field)
   const breakdown = useSiloTokenBreakdown();
 
@@ -22,7 +27,42 @@ const BalancesPage: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Stack gap={2}>
+      <Card sx={{ p: 2 }}>
+        <TotalBalanceCard breakdown={breakdown} />
+        <Card sx={{ p: 2 }}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={3}>
+              <Stat
+                title={`My Stalk`}
+                icon={<TokenIcon token={STALK} />}
+                amount={displayBN(farmerSilo.stalk.total)}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Stat
+                title={`My Seeds`}
+                icon={<TokenIcon token={SEEDS} />}
+                amount={displayBN(farmerSilo.seeds.total)}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Stat
+                title={`My Pods`}
+                icon={<TokenIcon token={PODS} />}
+                amount={displayBN(farmerField.pods)}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Stat
+                title={`Unfertilized Beans`}
+                icon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
+                amount={displayBN(farmerFertilizer.tokens['6074'])}
+              />
+            </Grid>
+          </Grid>
+        </Card>
+      </Card>
+      {/* <Stack gap={2}>
         <PageHeader
           title={<strong>Balances</strong>}
           description="View your Beanstalk balances and claim rewards"
@@ -60,7 +100,7 @@ const BalancesPage: React.FC = () => {
             farmerField={farmerField}
           />
         </Grid>
-      </Stack>
+      </Stack> */}
     </Container>
   )
 };

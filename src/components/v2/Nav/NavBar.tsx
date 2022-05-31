@@ -44,39 +44,41 @@ const NavBar: React.FC<{}> = () => {
         hideDrawer={hideDrawer}
       />
       {/* TEMP: Pre-exploit Dialog */}
-      <Dialog onClose={() => setNoticeOpen(false)} open={noticeOpen}>
-        <StyledDialogTitle onClose={() => setNoticeOpen(false)}>
-          Notice
-        </StyledDialogTitle>
-        <StyledDialogContent>
-          <Typography>
-            Until Beanstalk is Unpaused in early July, some balances displayed in the Beanstalk UI will remaining hard-coded to their values at the block before the exploit (14602789).
-          </Typography>
-          <Divider sx={{ my: 2 }} />
-          <Stack gap={1}>
-            <Typography variant="h2">BEAN price: $1.020270</Typography>
-            {PRE_EXPLOIT_BEAN_DATA.updateBeanPools.map((elem) => (
-              <div>
-                <Typography variant="h3">
-                  {pools[elem.address].name}: <Link href={`https://etherscan.io/address/${elem.address}`} target="_blank" rel="noreferrer">{trimAddress(elem.address)}</Link>
-                </Typography>
-                <ul>
-                  {Object.keys(elem.pool).map((key) => (
-                    <li key={key}>
-                      <Typography>
-                        <Box component="span" sx={{ display: 'inline-block', width: 100, textTransform: 'capitalize' }}>{key}:</Box>
-                        {key === 'price' || key === 'liquidity' ? '$' : ''}
-                        {Array.isArray(elem.pool[key]) ? elem.pool[key].map((e, i) => `${displayFullBN(e)} ${pools[elem.address].tokens[i].symbol}`).join(', ') : displayFullBN(elem.pool[key])}
-                        {key === 'supply' ? ` ${pools[elem.address].lpToken.symbol}` : ''}
-                      </Typography>
-                    </li>
-                    ))}
-                </ul>
-              </div>
-            ))}
-          </Stack>
-        </StyledDialogContent>
-      </Dialog>
+      {chainId === SupportedChainId.MAINNET ? (
+        <Dialog onClose={() => setNoticeOpen(false)} open={noticeOpen}>
+          <StyledDialogTitle onClose={() => setNoticeOpen(false)}>
+            Notice
+          </StyledDialogTitle>
+          <StyledDialogContent>
+            <Typography>
+              Until Beanstalk is Unpaused in early July, some balances displayed in the Beanstalk UI will remaining hard-coded to their values at the block before the exploit (14602789).
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Stack gap={1}>
+              <Typography variant="h2">BEAN price: $1.020270</Typography>
+              {PRE_EXPLOIT_BEAN_DATA.updateBeanPools.map((elem) => (
+                <div>
+                  <Typography variant="h3">
+                    {pools[elem.address].name}: <Link href={`https://etherscan.io/address/${elem.address}`} target="_blank" rel="noreferrer">{trimAddress(elem.address)}</Link>
+                  </Typography>
+                  <ul>
+                    {Object.keys(elem.pool).map((key) => (
+                      <li key={key}>
+                        <Typography>
+                          <Box component="span" sx={{ display: 'inline-block', width: 100, textTransform: 'capitalize' }}>{key}:</Box>
+                          {key === 'price' || key === 'liquidity' ? '$' : ''}
+                          {Array.isArray(elem.pool[key]) ? elem.pool[key].map((e, i) => `${displayFullBN(e)} ${pools[elem.address].tokens[i].symbol}`).join(', ') : displayFullBN(elem.pool[key])}
+                          {key === 'supply' ? ` ${pools[elem.address].lpToken.symbol}` : ''}
+                        </Typography>
+                      </li>
+                      ))}
+                  </ul>
+                </div>
+              ))}
+            </Stack>
+          </StyledDialogContent>
+        </Dialog>
+      ) : null}
       {/* Navigation Bar */}
       <AppBar
         // Using position: sticky means that 
@@ -96,7 +98,7 @@ const NavBar: React.FC<{}> = () => {
             </Typography>
           </Box>
         )}
-        <Stack direction="row" alignItems="center" gap={1} sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 'inherit' }}>
+        <Stack direction="row" alignItems="center" gap={1} sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}>
           {/* Desktop: Left Side */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }}>
             <PriceButton />
