@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { Box, Button, CircularProgress, CircularProgressProps, Drawer, Popper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 
 import beanCircleIcon from 'img/bean-circle.svg';
-import { useSelector } from 'react-redux';
+// import sunIcon from 'img/Sun.svg';
+// import sunriseIcon from 'img/sunrise-icon.svg';
+
 import { AppState } from 'state';
 import usePools from 'hooks/usePools';
-import BigNumber from 'bignumber.js';
+import { zeroBN } from 'constants/index';
+import { displayBN } from 'util/TokenUtilities';
+import { CHAIN_INFO } from 'constants/chains';
+import useChainId from 'hooks/useChain';
 import PoolCard from '../Silo/PoolCard';
 import DropdownIcon from '../Common/DropdownIcon';
 
@@ -66,6 +73,7 @@ const PriceButton: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const isTiny = useMediaQuery('(max-width:350px)');
   const pools = usePools();
+  const chainId = useChainId();
   
   // Popover
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -101,6 +109,11 @@ const PriceButton: React.FC = () => {
       key={pool.address}
       pool={pool}
       poolState={beanPools[pool.address]}
+      ButtonProps={{
+        href: `${CHAIN_INFO[chainId]?.explorer}/address/${pool.address}`,
+        target: '_blank',
+        rel: 'noreferrer',
+      }}
     />
   ));
 
@@ -133,7 +146,7 @@ const PriceButton: React.FC = () => {
           <Box
             sx={(_theme) => ({
               background: 'white',
-              width: '350px',
+              width: '400px',
               borderColor: 'primary.main',
               overflow: 'hidden',
               borderBottomLeftRadius: _theme.shape.borderRadius,
@@ -146,7 +159,10 @@ const PriceButton: React.FC = () => {
             className="border border-t-0 shadow-xl"
           >
             <Stack gap={1}>
-              <Typography variant="h3" textAlign="left" mx={0.5} mt={1}>Season {season?.toFixed(0) || 0}</Typography>
+              <Typography variant="body1" textAlign="left" mx={0.5} mt={1}>
+                {/* <img src={sunriseIcon} alt="Sun" style={{ height: 20 }} /> */}
+                Season {displayBN(season || zeroBN)}
+              </Typography>
               {Pools}
             </Stack>
           </Box>
@@ -159,7 +175,9 @@ const PriceButton: React.FC = () => {
         onClose={() => setDrawerOpen(false)}
       >
         <Stack sx={{ p: 2 }} gap={2}>
-          <Typography variant="h2">Pools — Season {season?.toFixed(0) || 0}</Typography>
+          <Typography variant="h2">
+            Pools — Season {displayBN(season || zeroBN)}
+          </Typography>
           <Stack gap={1}>
             {Pools}
           </Stack>
