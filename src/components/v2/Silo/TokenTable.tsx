@@ -73,8 +73,7 @@ const TokenTable : React.FC<{
       </Box>
       <Stack direction="column" gap={1} sx={{ p: 1 }}>
         {config.whitelist.map((token) => {
-          const deposited = farmerSilo.tokens[token.address]?.deposited;
-          // if (!deposited) return null;
+          const farmerDeposited = farmerSilo.tokens[token.address]?.deposited;
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -116,7 +115,7 @@ const TokenTable : React.FC<{
                   <Grid item xs={3} sx={{ textAlign: 'right' }}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
-                        {deposited?.bdv ? displayUSD(getUSD(deposited.bdv)) : '$0'}
+                        {farmerDeposited?.bdv ? displayUSD(getUSD(farmerDeposited.bdv)) : '$0'}
                       </Typography>
                       <Stack sx={{ width: arrowContainerWidth, }} alignItems="center">
                         <ArrowRightIcon />

@@ -132,15 +132,6 @@ export default function App() {
       {/* -----------------------
         * Content
         * ----------------------- */}
-      {/* <Box 
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          zIndex: 1,
-        }}
-      /> */}
-      {/* Navbar is ~65px tall */}
       <NavBar />
       <CustomToaster />
       <Box
@@ -154,8 +145,8 @@ export default function App() {
           width: '100%',
           minHeight: '100vh',
           paddingTop: {
-            md: 10,
-            xs: 9,
+            md: 4,
+            xs: 3,            
           },
           paddingBottom: 4
         }}>
