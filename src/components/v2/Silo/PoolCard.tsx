@@ -33,7 +33,7 @@ const PoolCard: React.FC<{
         </Typography>
       </Stack>
       <Stack>
-        <Stack direction="row" gap={0.5}>
+        <Stack justifyContent="end" direction="row" gap={0.5}>
           <Typography
             sx={{
               opacity: 0.7,
@@ -49,7 +49,7 @@ const PoolCard: React.FC<{
             ${displayBN(poolState?.liquidity)}
           </Typography>
         </Stack>
-        <Stack direction="row" gap={0.5}>
+        <Stack justifyContent="end" direction="row" gap={0.5}>
           <Typography
             sx={{
               opacity: 0.7,

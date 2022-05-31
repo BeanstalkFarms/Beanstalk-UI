@@ -101,6 +101,7 @@ const PriceButton: React.FC = () => {
       key={pool.address}
       pool={pool}
       poolState={beanPools[pool.address]}
+      isButton
     />
   ));
 
