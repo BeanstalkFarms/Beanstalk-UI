@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
-import { displayFullBN } from 'util/index';
+import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
 
 const columns : DataGridProps['columns'] = [
@@ -30,8 +30,10 @@ const columns : DataGridProps['columns'] = [
 const MAX_ROWS = 5;
 
 const FieldPage : React.FC = () => {
+  // Data
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const { harvestableIndex } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
 
   // Rows
   const rows = useMemo(() => Object.keys(farmerField.plots).map((index) => ({
@@ -44,6 +46,8 @@ const FieldPage : React.FC = () => {
     if (!rows || rows.length === 0) return '200px';
     return Math.min(rows.length, MAX_ROWS) * 52 + 112;
   }, [rows]);
+
+  const podLine = beanstalkField?.pods.minus(beanstalkField.harvestableIndex);
 
   return (
     <Container maxWidth="md">
@@ -58,16 +62,16 @@ const FieldPage : React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <Typography variant="h4">Available Soil</Typography>
-                <Typography variant="h1">10,000</Typography>
+                <Typography variant="h1">{displayBN(beanstalkField.soil)}</Typography>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Typography variant="h4">Available Soil</Typography>
-                <Typography variant="h1">5034%</Typography>
+                <Typography variant="h4">Weather</Typography>
+                <Typography variant="h1">{displayBN(beanstalkField.weather.yield)}%</Typography>
               </Grid>
               <Grid item xs={12}>
                 <Box sx={{ backgroundColor: '#F6FAFE', p: 1.5, borderRadius: 1.5 }}>
                   <Typography variant="h4">Pod Line</Typography>
-                  <Typography variant="h1">5034%</Typography>
+                  <Typography variant="h1">{displayBN(podLine)}</Typography>
                 </Box>
               </Grid>
             </Grid>

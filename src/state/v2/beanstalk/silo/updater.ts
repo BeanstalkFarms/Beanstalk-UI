@@ -20,6 +20,9 @@ export const useBeanstalkSilo = () => {
     if (beanstalk) {
       console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH');
 
+      // If we're on MAINNET, return the value plus whatever
+      // necessary delta (to subtract data, pass a negative value
+      // to fixExplit). Otherwise return the original value.
       const fixExploit = (v: BigNumber) => (
         (result: BigNumber) => {
           if (chainId === SupportedChainId.MAINNET) {
@@ -41,6 +44,7 @@ export const useBeanstalkSilo = () => {
         beanstalk.totalRoots().then(bigNumberResult).then(fixExploit(new BigNumber(-386_865_631_100_312_795_430_494_480_222))),
         beanstalk.totalFarmableBeans().then(tokenResult(BEAN)),   // internally, earned == farmable 
         // beanstalk.totalWithdrawnBeans().then(tokenResult(BEAN)),  // 
+        // beanstalk.withdrawSeasons().then(bigNumberResult)
       ] as const);
 
       console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [stalkTotal, seedsTotal]);

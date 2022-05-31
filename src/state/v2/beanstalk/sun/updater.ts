@@ -19,16 +19,13 @@ export const useSun = () => {
       if (beanstalk) {
         console.debug(`[beanstalk/sun/useSun] FETCH (contract = ${beanstalk.address}, chainId = ${chainId})`);
         const [
-          season,
-          harvestableIndex,
+          season
         ] = await Promise.all([
           beanstalk.season().then(bigNumberResult),
-          beanstalk.harvestableIndex().then(tokenResult(BEAN[SupportedChainId.MAINNET])), // FIXME
         ] as const);
 
         console.debug(`[beanstalk/sun/useSun] RESULT: season = ${season}`);
         dispatch(updateSeason(season));
-        dispatch(updateHarvestableIndex(harvestableIndex));
       }
     } catch (e) {
       console.debug('[beanstalk/sun/useSun] FAILED', e);

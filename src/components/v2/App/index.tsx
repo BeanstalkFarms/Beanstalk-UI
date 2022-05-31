@@ -29,6 +29,7 @@ import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
 
 import './App.css';
 import { BeanstalkPalette } from './muiTheme';
+import FieldUpdater from 'state/v2/beanstalk/field/updater';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -117,6 +118,7 @@ export default function App() {
         * Beanstalk Updaters
         * ----------------------- */}
       <FertilizerUpdater />
+      <FieldUpdater />
       <SiloUpdater />
       <SunUpdater />
       {/* -----------------------

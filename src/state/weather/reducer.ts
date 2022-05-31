@@ -19,6 +19,9 @@ export interface WeatherState {
   nextSowTime: BigNumber;
   /** The soil at the start of the current Season */
   startSoil: BigNumber;
+
+  // ------------------------------
+
   /** The current soil */
   soil: BigNumber;
   /** The harvestable index */
