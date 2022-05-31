@@ -104,12 +104,10 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
   return bn2;
 }
 
-
 export function displayUSD(bn: BigNumber, allowNegative : boolean = false) {
   const v = allowNegative === false ? MaxBN(zeroBN, bn).abs() : bn;
   return `$${displayFullBN(v, 2, 2)}`;
 }
-
 
 /**
  * Convert a "raw amount" (decimal form) to "token amount" (integer form).

@@ -35,7 +35,7 @@ const TokenPage: React.FC<{}> = () => {
       <Stack gap={2}>
         {/* Header */}
         <PageHeader
-          title={`${token.name} Silo`}
+          title={<strong>{token.name} Silo</strong>}
           description={`Deposit ${token.name} to earn Stalk / Seed`}
           returnPath="/silo"
         />

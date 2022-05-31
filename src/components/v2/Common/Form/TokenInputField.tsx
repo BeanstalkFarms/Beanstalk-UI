@@ -22,6 +22,7 @@ const TokenInputField : React.FC<
   // -- Custom props
   balance,
   quote,
+  disableTokenSelect,
   // -- Formik props
   field,
   form,

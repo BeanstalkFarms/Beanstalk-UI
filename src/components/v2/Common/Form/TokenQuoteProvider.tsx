@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { CircularProgress, Typography } from '@mui/material';
+import { CircularProgress, TextFieldProps, Typography } from '@mui/material';
 import { Token } from 'classes';
 import { Field, FieldProps, useFormikContext } from 'formik';
 import TokenInputField from 'components/v2/Common/Form/TokenInputField';
@@ -16,12 +16,15 @@ const TokenQuoteProvider : React.FC<{
   tokenOut: Token;
   state: FormTokenState;
   showTokenSelect: () => void;
-}> = ({
+  disableTokenSelect: boolean;
+} & TextFieldProps> = ({
   name,
   balance,
   tokenOut,
   state,
   showTokenSelect,
+  disableTokenSelect,
+  ...props
 }) => {
   // Setup a price quote for this token
   const [amountOut, quoting, getAmountOut] = useQuote(tokenOut);
@@ -52,13 +55,21 @@ const TokenQuoteProvider : React.FC<{
       <TokenAdornment
         token={state.token}
         onClick={showTokenSelect}
-        disabled={isSubmitting}
+        disabled={isSubmitting || disableTokenSelect}
+        sx={{ 
+          // TEMP:
+          // Before Unpause, grey out the token selector
+          // if `disableTokenSelect` is provided; also
+          // reduce the opacity to make it less obvious.
+          opacity: disableTokenSelect ? 0.3 : 1,
+        }}
       />
     )
   }), [
     state.token,
     showTokenSelect,
-    isSubmitting
+    isSubmitting,
+    disableTokenSelect
   ]);
 
   // Render info about the quote beneath the input.
@@ -77,13 +88,14 @@ const TokenQuoteProvider : React.FC<{
 
   return (  
     <Field name={`${name}.amount`}>
-      {(props: FieldProps) => (
+      {(fieldProps: FieldProps) => (
         <TokenInputField
-          {...props}
+          {...fieldProps}
           fullWidth
           balance={balance}
           quote={Quote}
           InputProps={InputProps}
+          {...props}
         />
       )}
     </Field>

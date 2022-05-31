@@ -6,10 +6,10 @@ import { tokenResult } from 'util/TokenUtilities';
 
 import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
-import { BeanstalkSiloAssets } from '.';
 import BigNumber from 'bignumber.js';
 import { SupportedChainId } from 'constants/chains';
+import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
+import { BeanstalkSiloAssets } from '.';
 
 export const useBeanstalkSilo = () => {
   const dispatch = useDispatch();

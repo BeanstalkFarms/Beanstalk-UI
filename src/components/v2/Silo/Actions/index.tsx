@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Card, IconButton, Stack, Tab, Tabs } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Card, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Token } from 'classes';
 import { BEAN, ETH, SEEDS, STALK } from 'constants/v2/tokens';
@@ -60,73 +60,78 @@ const DepositForm : React.FC<
   }, [values.tokens, setFieldValue]);
   
   return (
-    <Form noValidate>
-      <Stack gap={1}>
-        <FieldArray name="tokens">
-          {() => (
-            <div>
-              <TokenSelectDialog
-                open={showTokenSelect}
-                handleClose={handleClose}
-                selected={values.tokens}
-                handleSubmit={handleSelectTokens}
-                balances={balances}
-                tokenList={erc20TokenList}
+    <Tooltip title={<>Deposits will be available upon Unpause.</>} followCursor>
+      <Form noValidate>
+        <Stack gap={1}>
+          <FieldArray name="tokens">
+            {() => (
+              <div>
+                <TokenSelectDialog
+                  open={showTokenSelect}
+                  handleClose={handleClose}
+                  selected={values.tokens}
+                  handleSubmit={handleSelectTokens}
+                  balances={balances}
+                  tokenList={erc20TokenList}
+                />
+                <Stack gap={1.5}>
+                  {values.tokens.map((state, index) => (
+                    <TokenQuoteProvider
+                      name={`tokens.${index}`}
+                      tokenOut={to}
+                      balance={balances[state.token.address] || undefined}
+                      state={state}
+                      showTokenSelect={handleOpen}
+                      disabled
+                      disableTokenSelect
+                    />
+                  ))}
+                </Stack>
+              </div>
+            )}
+          </FieldArray>
+          {/* <Box sx={{ fontSize: 12 }}>
+            <pre>{JSON.stringify(values, null, 2)}</pre>
+          </Box> */}
+          {bdv.gt(0) ? (
+            <Stack direction="column" gap={1}>
+              <TokenOutputField
+                token={to}
+                value={bdv}
               />
-              <Stack gap={1.5}>
-                {values.tokens.map((state, index) => (
-                  <TokenQuoteProvider
-                    name={`tokens.${index}`}
-                    tokenOut={to}
-                    balance={balances[state.token.address] || undefined}
-                    state={state}
-                    showTokenSelect={handleOpen}
+              <Stack direction="row" gap={1} justifyContent="center">
+                <Box sx={{ flex: 1 }}>
+                  <TokenOutputField
+                    token={STALK}
+                    value={stalk}
                   />
-                ))}
+                </Box>
+                <Box sx={{ flex: 1 }}>
+                  <TokenOutputField
+                    token={SEEDS}
+                    value={seeds}
+                  />
+                </Box>
               </Stack>
-            </div>
-          )}
-        </FieldArray>
-        {/* <Box sx={{ fontSize: 12 }}>
-          <pre>{JSON.stringify(values, null, 2)}</pre>
-        </Box> */}
-        {bdv.gt(0) ? (
-          <Stack direction="column" gap={1}>
-            <TokenOutputField
-              token={to}
-              value={bdv}
-            />
-            <Stack direction="row" gap={1} justifyContent="center">
-              <Box sx={{ flex: 1 }}>
-                <TokenOutputField
-                  token={STALK}
-                  value={stalk}
-                />
-              </Box>
-              <Box sx={{ flex: 1 }}>
-                <TokenOutputField
-                  token={SEEDS}
-                  value={seeds}
-                />
+              <Box>
+                <Accordion defaultExpanded variant="outlined">
+                  <StyledAccordionSummary title="Transaction Details" />
+                  <AccordionDetails>
+                    <TransactionPreview
+                      actions={actions}
+                    />
+                  </AccordionDetails>
+                </Accordion>
               </Box>
             </Stack>
-            <Box>
-              <Accordion defaultExpanded variant="outlined">
-                <StyledAccordionSummary title="Transaction Details" />
-                <AccordionDetails>
-                  <TransactionPreview
-                    actions={actions}
-                  />
-                </AccordionDetails>
-              </Accordion>
-            </Box>
-          </Stack>
-        ) : null}
-        <Button disabled type="submit" size="large" fullWidth>
-          Deposit
-        </Button>
-      </Stack>
-    </Form>
+          ) : null}
+          <Button disabled type="submit" size="large" fullWidth>
+            Deposit
+          </Button>
+           
+        </Stack>
+      </Form>
+    </Tooltip>
   );
 };
 
@@ -140,7 +145,7 @@ const Deposit : React.FC<{ to: Token; }> = ({ to }) => {
     tokens: [
       {
         token: Bean,
-        amount: undefined,
+        amount: null,
       },
     ],
   }), [Bean]);
@@ -179,7 +184,16 @@ const Actions : React.FC<{
         {/* Tabs */}
         <Box>
           {tab === 0 ? (
-            <Deposit to={props.token} />
+            <Box sx={{ position: 'relative' }}>
+              <Deposit to={props.token} />
+            </Box>
+          ) : null}
+          {tab === 1 ? (
+            <Stack sx={{ p: 4 }} direction="row" justifyContent="center" alignItems="center">
+              <Typography color="text.secondary">
+                Withdrawals will be available upon Unpause.
+              </Typography>
+            </Stack>
           ) : null}
         </Box>
       </Stack>

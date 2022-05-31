@@ -1,7 +1,5 @@
 import { Box, Button, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { SupportedChainId } from 'constants/chains';
-import useChainId from 'hooks/useChain';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
 import useUSD from 'hooks/useUSD';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -10,6 +8,7 @@ import { displayBN, displayUSD } from 'util/index';
 
 import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
 import { mockDepositData, mockOwnershipPctData } from '../Charts/SimpleLineChart.mock';
+import MainnetOverlay from '../Common/MainnetOverlay';
 
 // ------------------------------------------------
 
@@ -26,33 +25,6 @@ type TabData = {
   season: BigNumber;
   current: BigNumber[];
   series: (DataPoint[])[]
-}
-
-// ------------------------------------------------
-
-const MainnetOverlay : React.FC = () => {
-  const chainId = useChainId();
-  return chainId === SupportedChainId.MAINNET ? (
-    <Stack
-      sx={{
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        backgroundColor: 'rgba(255,255,255,0.4)',
-        backdropFilter: 'blur(8px)',
-        zIndex: 999,
-        pb: 5,
-      }}
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Typography variant="subtitle1" color="text.secondary" sx={{ opacity: 0.7 }}>
-        Deposit value over time will be available upon Unpause
-      </Typography>
-    </Stack>
-  ) : null
 }
 
 // ------------------------------------------------
@@ -81,7 +53,9 @@ const DepositsTab : React.FC<TabData> = ({
         </Stack>
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        <MainnetOverlay />
+        <MainnetOverlay>
+          Deposit value over time will be available upon Unpause
+        </MainnetOverlay>
         <SimpleLineChart
           series={series}
           onCursor={handleCursor}
@@ -128,7 +102,9 @@ const StalkOwnershipTab : React.FC<
         </Stack>
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        <MainnetOverlay />
+        <MainnetOverlay>
+          Stalk value over time will be available upon Unpause
+        </MainnetOverlay>
         <SimpleLineChart
           series={series}
           onCursor={handleCursor}

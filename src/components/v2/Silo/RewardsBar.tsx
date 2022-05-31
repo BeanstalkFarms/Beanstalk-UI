@@ -52,7 +52,7 @@ const RewardsBar : React.FC<{
       {/* Claim */}
       {/* TEMP: Hide Claim button on MAINNET */}
       <Box sx={{ justifySelf: 'flex-end' }}>
-        <Tooltip title={chainId === SupportedChainId.MAINNET ? <>Claiming Silo rewards will be re-enabled upon Unpause.</> : false}>
+        <Tooltip title={chainId === SupportedChainId.MAINNET ? <>Claiming Silo rewards will be available upon Unpause.</> : false}>
           <span>
             <Button
               disabled={chainId === SupportedChainId.MAINNET}
