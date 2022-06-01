@@ -150,6 +150,8 @@ export function useERC20Contract(addressOrAddressMap: AddressOrAddressMap) {
   return get(addressOrAddressMap);
 }
 
+// --------------------------------------------------
+
 export function useFertilizerContract(signer?: ethers.Signer | null) {
   const fertAddress = useChainConstant(BEANSTALK_FERTILIZER_ADDRESSES);
   const provider = useProvider();

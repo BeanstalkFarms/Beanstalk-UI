@@ -79,8 +79,6 @@ const SmartSubmitButton : React.FC<{
     [allowances, tokens]
   );
 
-  console.log('[SmartSubmitButton]', selectedTokens, allowances, nextApprovalIndex);
-
   // Derived
   const nextApprovalToken = nextApprovalIndex > -1 ? selectedTokens[nextApprovalIndex] : null;
   const isApproving = !!values?.approving;
