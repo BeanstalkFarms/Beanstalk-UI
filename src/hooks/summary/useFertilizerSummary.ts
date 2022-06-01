@@ -37,21 +37,22 @@ const useFertilizerSummary = (tokens: FormTokenState[]) => {
     return agg;
   }, {
     usdc:     new BigNumber(0),  // The amount of USDC to be swapped for FERT.
+    fert:     new BigNumber(0),
     humidity: humidity,          //
     actions:  [] as Action[],    // 
   });
 
   // 
-  summary.usdc = summary.usdc.dp(0, BigNumber.ROUND_DOWN);
+  summary.fert = summary.usdc.dp(0, BigNumber.ROUND_DOWN);
 
   summary.actions.push({
     type: ActionType.BUY_FERTILIZER,
-    amountIn: summary.usdc,
+    amountIn: summary.fert,
     humidity,
   });
   summary.actions.push({
     type: ActionType.RECEIVE_FERT_REWARDS,
-    amountOut: humidity.plus(1).times(summary.usdc),
+    amountOut: humidity.plus(1).times(summary.fert),
   });
 
   return summary;
