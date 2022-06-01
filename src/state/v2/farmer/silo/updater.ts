@@ -5,7 +5,7 @@ import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
 import { useAccount } from 'wagmi';
 
-import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
+import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/account';
@@ -13,7 +13,7 @@ import { resetFarmerSilo, updateFarmerSiloAssets } from './actions';
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
-  const [beanstalk] = useBeanstalkContract();
+  const beanstalk = useBeanstalkContract();
 
   // Handlers
   const fetch = useCallback(async (_account: string) => {

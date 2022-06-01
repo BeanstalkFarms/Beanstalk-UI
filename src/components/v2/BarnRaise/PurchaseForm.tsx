@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Card, Stack, Typography } from '@mui/material';
+import { Box, Card, Divider, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import { displayBN, displayFullBN, toStringBaseUnitBN } from 'util/index';
-import { ETH, USDC } from 'constants/v2/tokens';
-import { TokensByAddress } from 'constants/v2';
+import { ETH, USDC } from 'constants/tokens';
+import { TokensByAddress } from 'constants/index';
 import { BalanceState } from 'state/v2/farmer/balances/reducer';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
@@ -78,12 +78,13 @@ const FertilizeForm : React.FC<
   // 
   const {
     usdc,
+    fert,
     humidity,
     actions
   } = useFertilizerSummary(values.tokens);
 
   // Extract
-  const isValid = usdc?.gt(0);
+  const isValid = fert?.gt(0);
 
   // Handlers
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
@@ -121,14 +122,14 @@ const FertilizeForm : React.FC<
             />
           ))}
           {/* Outputs */}
-          {usdc?.gt(0) ? (
+          {fert?.gt(0) ? (
             <Stack direction="column" gap={1} alignItems="center" justifyContent="center">
               <KeyboardArrowDownIcon color="secondary" />
               <Box sx={{ width: 180, pb: 1 }}>
                 <FertilizerItem
                   isNew
-                  amount={usdc}
-                  remaining={usdc.multipliedBy(humidity.plus(1))}
+                  amount={fert}
+                  remaining={fert.multipliedBy(humidity.plus(1))}
                   humidity={humidity}
                   state="active"
                 />
@@ -138,6 +139,10 @@ const FertilizeForm : React.FC<
                   <TransactionPreview
                     actions={actions}
                   />
+                  <Divider sx={{ my: 2, opacity: 0.4 }} />
+                  <Box>
+                    <Typography>Note: The amount of FERT received rounds down to the nearest USDC. {usdc?.toFixed(2)} USDC = {fert?.toFixed(0)} FERT.</Typography>
+                  </Box>
                 </TxnAccordion>
               </Box>
             </Stack>
@@ -157,7 +162,7 @@ const FertilizeForm : React.FC<
           contract={contract}
           tokens={values.tokens}
         >
-          Purchase{usdc && usdc.gt(0) && ` ${displayBN(usdc)}`} Fertilizer
+          Purchase{fert && fert.gt(0) && ` ${displayBN(fert)}`} Fertilizer
         </SmartSubmitButton>
       </Stack>
     </Form>
@@ -196,7 +201,7 @@ const SetupForm: React.FC<{}> = () => {
         token === Eth
           ? values.tokens[0].amountOut
           : values.tokens[0].amount
-      );
+      )?.dp(0, BigNumber.ROUND_DOWN);
 
       if (!amount || !amountUsdc) {
         toast.error('An error occurred.');

@@ -13,7 +13,7 @@ import {
   Beanstalk__factory,
   UniswapV2Router__factory,
 } from 'constants/generated';
-import { BEANSTALK_PRICE_ADDRESSES } from 'constants/v2/addresses';
+import { BEANSTALK_PRICE_ADDRESSES } from 'constants/addresses';
 import { SupportedChainId } from 'constants/chains';
 import client from './wagmi';
 

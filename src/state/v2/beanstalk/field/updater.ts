@@ -3,13 +3,13 @@ import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
 
-import { BEAN } from 'constants/v2/tokens';
+import { BEAN } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { resetBeanstalkField, updateBeanstalkField, updateHarvestableIndex } from './actions';
 
 export const useBeanstalkField = () => {
   const dispatch = useDispatch();
-  const [beanstalk] = useBeanstalkContract();
+  const beanstalk = useBeanstalkContract();
 
   // Handlers
   const fetch = useCallback(async () => {

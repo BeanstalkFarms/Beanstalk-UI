@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Accordion, AccordionDetails, Box, Button, Card, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Token } from 'classes';
-import { BEAN, ETH, SEEDS, STALK } from 'constants/v2/tokens';
+import { BEAN, ETH, SEEDS, STALK } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
 import { AppState } from 'state';

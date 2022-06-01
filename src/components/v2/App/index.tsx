@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Routes, Route } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { Box, CssBaseline } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
 
@@ -15,7 +14,6 @@ import BalancesPage from 'pages/balances';
 
 import pageBackground from 'img/theme/bg-mainnet.png';
 import NavBar from 'components/v2/Nav/NavBar';
-import { setWidth } from 'state/general/actions';
 
 import PoolsUpdater from 'state/v2/bean/pools/updater';
 import SunUpdater from 'state/v2/beanstalk/sun/updater';
@@ -26,10 +24,10 @@ import FarmerEventsUpdater from 'state/v2/farmer/events/updater';
 import FarmerEventsProcessor from 'state/v2/farmer/processor';
 import FarmerBalancesUpdater from 'state/v2/farmer/balances/updater';
 import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
-
-import './App.css';
 import FieldUpdater from 'state/v2/beanstalk/field/updater';
+
 import { BeanstalkPalette } from './muiTheme';
+import './App.css';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -78,35 +76,6 @@ const CustomToaster : React.FC = () => (
 );
 
 export default function App() {
-  const dispatch = useDispatch();
-
-  // HANDLE WINDOW SIZE CHANGE
-  // Used throughout the app to show/hide components and
-  // control elements of the theme.
-  const handleWindowSizeChange = () => dispatch(setWidth(window.innerWidth));
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSizeChange);
-    return () => {
-      window.removeEventListener('resize', handleWindowSizeChange);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
-
-  const app = (
-    <div>
-      <Routes>
-        <Route path="/" element={<BarnRaisePage />} />
-        <Route path="/silo" element={<SiloPage />} />
-        <Route path="/silo/:address" element={<SiloTokenPage />} />
-        <Route path="/field" element={<FieldPage />} />
-        <Route path="/forecast" element={<ForecastPage />} />
-        <Route path="/history" element={<TransactionHistoryPage />} />
-        <Route path="/balances" element={<BalancesPage />} />
-      </Routes>
-    </div>
-  );
-  // }
-
   return (
     <>
       <CssBaseline />
@@ -153,7 +122,15 @@ export default function App() {
             xs: 2 
           }
         }}>
-        {app}
+        <Routes>
+          <Route path="/" element={<BarnRaisePage />} />
+          <Route path="/silo" element={<SiloPage />} />
+          <Route path="/silo/:address" element={<SiloTokenPage />} />
+          <Route path="/field" element={<FieldPage />} />
+          <Route path="/forecast" element={<ForecastPage />} />
+          <Route path="/history" element={<TransactionHistoryPage />} />
+          <Route path="/balances" element={<BalancesPage />} />
+        </Routes>
       </Box>
     </>
   );

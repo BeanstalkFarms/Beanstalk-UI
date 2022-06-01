@@ -5,7 +5,7 @@ import gearIcon from 'img/gear.svg';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import { displayBN } from 'util/index';
-import { TokensByAddress } from 'constants/v2/tokens';
+import { TokensByAddress } from 'constants/tokens';
 import { BalanceState } from 'state/v2/farmer/balances/reducer';
 import TokenInputField from '../../Common/Form/TokenInputFieldOld';
 import PurchaseDropdown from './PurchaseFertilizer/PurchaseDropdown';

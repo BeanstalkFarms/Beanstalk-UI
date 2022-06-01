@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useNetwork } from 'wagmi';
 import { Box, Button, Dialog, Stack, Typography } from '@mui/material';
 import { SupportedChainId } from 'constants/chains';
-import { ETH } from 'constants/v2/tokens';
+import { ETH } from 'constants/tokens';
 import TokenIcon from './TokenIcon';
 import DropdownIcon from './DropdownIcon';
 

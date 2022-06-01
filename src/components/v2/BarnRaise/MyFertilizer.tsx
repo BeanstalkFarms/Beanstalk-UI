@@ -7,7 +7,7 @@ import { AppState } from 'state';
 import FertilizerItem from 'components/v2/BarnRaise/FertilizerItem';
 import { zeroBN } from 'constants/index';
 import { SupportedChainId } from 'constants/chains';
-import { BEAN } from 'constants/v2/tokens';
+import { BEAN } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from 'util/TokenUtilities';
 import TokenIcon from '../Common/TokenIcon';

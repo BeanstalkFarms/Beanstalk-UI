@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Stack, Typography } from '@mui/material';
-import { PODS } from 'constants/v2/tokens';
+import { PODS } from 'constants/tokens';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { AppState } from 'state';
 import { displayBN } from 'util/index';

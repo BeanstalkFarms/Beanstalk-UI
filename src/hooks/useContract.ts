@@ -11,7 +11,7 @@ import {
   BEANSTALK_ADDRESSES,
   BEANSTALK_FERTILIZER_ADDRESSES,
   BEANSTALK_PRICE_ADDRESSES,
-} from 'constants/v2/addresses';
+} from 'constants/addresses';
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useSigner, useContract as useWagmiContract } from 'wagmi';
@@ -110,12 +110,12 @@ export function useContract<T extends Contract = Contract>(
 
 // --------------------------------------------------
 
-export function useBeanstalkContract() {
-  return useContractReadOnly<Beanstalk>(
-    BEANSTALK_ADDRESSES,
-    BEANSTALK_ABI
-  );
-}
+// export function useBeanstalkContract() {
+//   return useContractReadOnly<Beanstalk>(
+//     BEANSTALK_ADDRESSES,
+//     BEANSTALK_ABI
+//   );
+// }
 
 const BEANSTALK_PRICE_ABIS = {
   [SupportedChainId.MAINNET]: BEANSTALK_PRICE_V0_ABI,
@@ -158,6 +158,16 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
   return useWagmiContract<BeanstalkFertilizer>({
     addressOrName: fertAddress,
     contractInterface: BEANSTALK_FERTILIZER_ABI,
+    signerOrProvider: signer || provider,
+  });
+}
+
+export function useBeanstalkContract(signer?: ethers.Signer | null) {
+  const address = useChainConstant(BEANSTALK_ADDRESSES);
+  const provider = useProvider();
+  return useWagmiContract<Beanstalk>({
+    addressOrName: address,
+    contractInterface: BEANSTALK_ABI,
     signerOrProvider: signer || provider,
   });
 }

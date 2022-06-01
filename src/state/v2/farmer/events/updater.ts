@@ -10,11 +10,13 @@ import ethers, { BigNumber as BN } from 'ethers';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/account';
 import { resetEvents, setEvents } from './actions';
+import { getEventFacet } from '../../../../util/GetEventFacet';
 
 export type ParsedEvent = {
   event: ethers.Event['event'];
   blockNumber: ethers.Event['blockNumber'];
   logIndex: ethers.Event['logIndex'];
+  facet: string;
   returnValues: any;
 };
 
@@ -148,9 +150,9 @@ const parseBNJS = (_o: { [key: string]: any }) => {
 };
 
 const useFarmerEvents = () => {
-  const [beanstalk] = useBeanstalkContract();
   const blocks = useBlocks();
   const dispatch = useDispatch();
+  const beanstalk = useBeanstalkContract();
 
   // Handlers
   const fetch = useCallback(async (_account?: string) => {
@@ -165,6 +167,7 @@ const useFarmerEvents = () => {
             event: event.event,
             blockNumber: event.blockNumber,
             logIndex: event.logIndex,
+            facet: getEventFacet(event.event),
             // args: event.args,
             returnValues: event.decode
               ? parseBNJS({

@@ -1,12 +1,12 @@
 import BigNumber from 'bignumber.js';
 import { LP_TO_SEEDS } from 'constants/index';
-import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/v2/tokens';
+import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/tokens';
 import { useGetChainConstant } from 'hooks/useChainConstant';
+import useEventProcessor, { EventParsingParameters } from 'hooks/useEventProcessor';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { getAccount } from 'util/account';
-import processFarmerEvents from 'util/processFarmerEvents';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
 import { Deposit } from './silo';
@@ -31,26 +31,35 @@ const FarmerEventsProcessor = () => {
   );
 
   //
-  // const getBDV = useBDV();
+  const processFarmerEvents = useEventProcessor();
   const getChainConstant = useGetChainConstant();
   const SiloTokens = useMemo(() => ({
-      Bean:       getChainConstant(BEAN),
-      BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
-      BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
-      BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
-    }), [getChainConstant]);
+    Bean:       getChainConstant(BEAN),
+    BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
+    BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
+    BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
+  }), [getChainConstant]);
 
-  const eventParsingParameters = useMemo(() => {
-    if (account?.address && season && earnedBeans && harvestableIndex) {
+  // Required to properly parse event data
+  const eventParsingParameters = useMemo<null | EventParsingParameters>(() => {
+    if (account?.address && season && earnedBeans && harvestableIndex && SiloTokens) {
       return {
+        // override account if necessary
         account: getAccount(account.address.toLowerCase()),
         farmableBeans: earnedBeans,
         season: season,
-        harvestableIndex: harvestableIndex
+        harvestableIndex: harvestableIndex,
+        siloTokens: SiloTokens,
       };
     }
     return null;
-  }, [account?.address, season, earnedBeans, harvestableIndex]);
+  }, [
+    account?.address,
+    season,
+    earnedBeans,
+    harvestableIndex,
+    SiloTokens
+  ]);
 
   /**
    * Process events.
@@ -62,7 +71,10 @@ const FarmerEventsProcessor = () => {
     if (eventParsingParameters) {
       if (events && events.length > 0) {
         console.debug(`[farmer/updater] process ${events.length} events`, eventParsingParameters);
-        const results = processFarmerEvents(events, eventParsingParameters);
+        const results = processFarmerEvents(
+          events,
+          eventParsingParameters
+        );
         console.debug('[farmer/updater] ...processed events!', results);
 
         // TEMP:
@@ -170,9 +182,8 @@ const FarmerEventsProcessor = () => {
     account,
     dispatch,
     eventParsingParameters,
-    //
+    processFarmerEvents,
     SiloTokens,
-    // getBDV,
   ]);
 
   return null;

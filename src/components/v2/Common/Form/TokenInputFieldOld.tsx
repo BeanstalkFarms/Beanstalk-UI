@@ -22,7 +22,7 @@ import { displayBN } from 'util/index';
 import Token from 'classes/Token';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { TokensByAddress } from 'constants/v2/tokens';
+import { TokensByAddress } from 'constants/tokens';
 
 const useStyles = makeStyles(() => ({
   //

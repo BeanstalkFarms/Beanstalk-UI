@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { BEAN } from 'constants/v2/tokens';
+import { BEAN } from 'constants/tokens';
 import Token from 'classes/Token';
 import useChainConstant from './useChainConstant';
 

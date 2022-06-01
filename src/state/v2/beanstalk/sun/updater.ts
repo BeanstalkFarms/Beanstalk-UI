@@ -7,13 +7,13 @@ import { resetSun, setAwaitingSunrise, updateSeason } from './actions';
 
 export const useSun = () => {
   const dispatch = useDispatch();
-  const [beanstalk, chainId] = useBeanstalkContract();
+  const beanstalk = useBeanstalkContract();
 
   // Handlers
   const fetch = useCallback(async () => {
     try {
       if (beanstalk) {
-        console.debug(`[beanstalk/sun/useSun] FETCH (contract = ${beanstalk.address}, chainId = ${chainId})`);
+        console.debug(`[beanstalk/sun/useSun] FETCH (contract = ${beanstalk.address})`);
         const [
           season
         ] = await Promise.all([
@@ -30,7 +30,6 @@ export const useSun = () => {
   }, [
     dispatch,
     beanstalk,
-    chainId
   ]);
   
   const clear = useCallback(() => {

@@ -1,4 +1,7 @@
-/* Futura PT */
+/** ------------------------- **/
+/** Fonts                     **/
+/** ------------------------- **/
+
 @font-face {
   font-family: 'Futura PT';
   src: url('./font/FuturaPT/FuturaPTLight.otf');
@@ -22,6 +25,10 @@
   src: url('./font/LucidaConsole/LucidaConsoleRegular.ttf');
 }
 
+/** ------------------------- **/
+/** Globals                   **/
+/** ------------------------- **/
+
 html, body {
   height: 100%;
   background-color: #daf2ff;
@@ -35,4 +42,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /** Prevent page overscrolling: https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior */
   overscroll-behavior: none;
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
 }

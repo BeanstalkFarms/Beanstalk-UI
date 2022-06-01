@@ -1,16 +1,13 @@
-/// <reference> mui.d.ts
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
 import { WagmiConfig } from 'wagmi';
+import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
 import { setUseWhatChange } from '@simbathesailor/use-what-changed';
 
 import store from 'state';
 import App from 'components/v2/App';
-import ScrollToTop from 'components/Common/ScrollToTop';
 import theme from 'components/v2/App/muiTheme';
 import client from './util/wagmi';
 
@@ -28,7 +25,6 @@ declare module '@mui/styles/defaultTheme' {
 ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
-      <ScrollToTop />
       <ReduxProvider store={store}>
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>

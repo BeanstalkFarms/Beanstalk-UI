@@ -6,8 +6,7 @@ import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { AppState } from 'state';
-import { zeroBN } from 'constants/index';
-import { TokensByAddress } from 'constants/v2';
+import { TokensByAddress, zeroBN } from 'constants/index';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
