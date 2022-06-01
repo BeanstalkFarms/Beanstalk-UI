@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Card, Container, Dialog, Grid, Link, Stack, Typography } from '@mui/material';
+import { Box, Card, Container, Dialog, Divider, Grid, Link, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -59,23 +59,6 @@ const FieldPage: React.FC = () => {
 
   const podLine = beanstalkField?.pods.minus(beanstalkField.harvestableIndex);
 
-  const podBalance = (
-    <Stack direction="row" gap={0.5}>
-      <Typography variant="h4">My Pod Balance:</Typography>
-      <Stack direction="row" alignItems="center" gap={0.25}>
-        <img alt="" src={podIcon} height="17px" />
-        <Typography variant="h4">{displayBN(farmerField.pods)}</Typography>
-      </Stack>
-    </Stack>
-  );
-
-  const podLineBox = (
-    <Stack gap={0.5} sx={{ backgroundColor: '#F6FAFE', px: 2, py: 1.5, borderRadius: 1.5 }}>
-      <Typography variant="h4" color="text.secondary">Pod Line</Typography>
-      <Typography variant="h1">{displayBN(podLine)}</Typography>
-    </Stack>
-  );
-
   return (
     <Container maxWidth="md">
       <Stack spacing={2}>
@@ -112,12 +95,21 @@ const FieldPage: React.FC = () => {
               </Grid>
               <Grid item xs={12}>
                 <Box>
-                  {podLineBox}
+                  <Stack gap={0.5} sx={{ backgroundColor: '#F6FAFE', px: 2, py: 1.5, borderRadius: 1.5 }}>
+                    <Typography variant="h4" color="text.secondary">Pod Line</Typography>
+                    <Typography variant="h1">{displayBN(podLine)}</Typography>
+                  </Stack>
                 </Box>
               </Grid>
               <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between">
-                  <>{podBalance}</>
+                  <Stack direction="row" gap={0.5}>
+                    <Typography variant="h4">My Pod Balance:</Typography>
+                    <Stack direction="row" alignItems="center" gap={0.25}>
+                      <img alt="" src={podIcon} height="17px" />
+                      <Typography variant="h4">{displayBN(farmerField.pods)}</Typography>
+                    </Stack>
+                  </Stack>
                   <Link onClick={openModal} underline="none" sx={{ cursor: 'pointer' }}>
                     <Typography variant="h4">View My Plots</Typography>
                   </Link>
@@ -135,10 +127,15 @@ const FieldPage: React.FC = () => {
               <ClearIcon sx={{ cursor: 'pointer', color: '#bbbcd1' }} onClick={closeModal} />
             </Stack>
             <Box>
-              {podLineBox}
-            </Box>
-            <Box sx={{ pt: 1.2, pb: 1.5 }}>
-              {podBalance}
+              <Stack gap={0.5} sx={{ backgroundColor: '#F6FAFE', px: 2, py: 1.5, borderRadius: 1.5 }}>
+                <Typography variant="h4" color="text.secondary">Pod Balance</Typography>
+                <Stack direction="row" gap={0.5} alignItems="center">
+                  <img alt="" src={podIcon} height="22px" />
+                  <Typography variant="h1">
+                    {displayBN(farmerField.pods)}
+                  </Typography>
+                </Stack>
+              </Stack>
             </Box>
           </Stack>
           <Box

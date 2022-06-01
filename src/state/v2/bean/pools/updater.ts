@@ -23,7 +23,7 @@ export const PRE_EXPLOIT_BEAN_DATA = {
           tokenResult(BEAN)(new BigNumber(32425202653220)),              // BEAN 0xDC59ac4FeFa32293A95889Dc396682858d52e5Db
           tokenResult(WETH)(new BigNumber(10886690345515907745338)),     // WETH 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2
         ],
-        deltaB: tokenResult(BEAN)(new BigNumber(-333052664565)),
+        deltaB: tokenResult(BEAN)(new BigNumber(333052664565)),
         supply: tokenResult(BEAN_ETH_UNIV2_LP)(new BigNumber(540894218294675521)),
         liquidity: tokenResult(BEAN)(new BigNumber(66189447135944)),
       }
