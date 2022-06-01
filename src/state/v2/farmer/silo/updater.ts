@@ -13,7 +13,7 @@ import { resetFarmerSilo, updateFarmerSiloAssets } from './actions';
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
-  const [beanstalk] = useBeanstalkContract();
+  const beanstalk = useBeanstalkContract();
 
   // Handlers
   const fetch = useCallback(async (_account: string) => {

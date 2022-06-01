@@ -9,10 +9,12 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import BigNumber from 'bignumber.js';
 import { SupportedChainId } from 'constants/chains';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
+import useChainId from 'hooks/useChain';
 
 export const useBeanstalkSilo = () => {
   const dispatch = useDispatch();
-  const [beanstalk, chainId] = useBeanstalkContract();
+  const beanstalk = useBeanstalkContract();
+  const chainId = useChainId();
 
   // Handlers
   const fetch = useCallback(async () => {

@@ -148,9 +148,9 @@ const parseBNJS = (_o: { [key: string]: any }) => {
 };
 
 const useFarmerEvents = () => {
-  const [beanstalk] = useBeanstalkContract();
   const blocks = useBlocks();
   const dispatch = useDispatch();
+  const beanstalk = useBeanstalkContract();
 
   // Handlers
   const fetch = useCallback(async (_account?: string) => {

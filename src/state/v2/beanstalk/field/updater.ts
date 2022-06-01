@@ -9,7 +9,7 @@ import { resetBeanstalkField, updateBeanstalkField, updateHarvestableIndex } fro
 
 export const useBeanstalkField = () => {
   const dispatch = useDispatch();
-  const [beanstalk] = useBeanstalkContract();
+  const beanstalk = useBeanstalkContract();
 
   // Handlers
   const fetch = useCallback(async () => {
