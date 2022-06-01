@@ -3,23 +3,26 @@ import {Container} from '@mui/system';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {AppState} from 'state';
-import PageHeader from "../components/v2/Common/PageHeader";
-import {Box, Button, Card, Divider, Grid, Stack, Typography} from "@mui/material";
-import {makeStyles} from "@mui/styles";
-import ButtonFilters from "../components/v2/History/ButtonFilters";
-import BigNumber from "bignumber.js";
-import {displayBN} from "../util";
+import {Box, Card, Divider, Grid, Stack, Typography} from "@mui/material";
+import {account, displayBN, toTokenUnitsBN} from "../util";
 import {FIELD, OTHER, SILO} from "../util/GetEventFacet";
 import {ParsedEvent} from "../state/v2/farmer/events/updater";
+import WalletEvent from "../components/Navigation/WalletEvent";
+import BigNumber from "bignumber.js";
+import {BEAN, ETH, UNI_V2_ETH_BEAN_LP, WITHDRAWAL_FROZEN} from "../constants";
+import {
+  ClaimableAsset,
+  CryptoAsset,
+  FarmAsset,
+  SiloAsset,
+  TokenTypeImageModule,
+  TransitAsset
+} from "../components/Common";
+import {PodListingFilledEvent, PodOrderFilledEvent} from "../state/marketplace/updater";
+import EventItem from "../components/v2/History/EventItem";
 
 const buttonStyle = {
   cursor: "pointer",
-  // border: 1,
-  // pl: 1,
-  // pr: 1,
-  // pt: 0.5,
-  // pb: 0.5,
-  // borderRadius: "25px"
 }
 
 const TransactionHistoryPage: React.FC = () => {
@@ -69,30 +72,15 @@ const TransactionHistoryPage: React.FC = () => {
                   {walletEvents.map((event) => {
                     return (
                       <Grid item width="100%">
-                        <Stack gap={0.2} pt={1} pb={1}>
-                          {
-                            event?.returnValues?.season && (
-                              <Typography>Season {displayBN(event.returnValues.season)}</Typography>
-                            )
-                          }
-                          <Stack direction="row" justifyContent="space-between">
-                            <Typography>{event.event}</Typography>
-                            <Typography>10</Typography>
-                          </Stack>
-                          <Stack direction="row" justifyContent="space-between">
-                            <Typography sx={{opacity: 0.7}}>03/24/2022 13:24:24 PM</Typography>
-                            <Typography>20</Typography>
-                          </Stack>
-                        </Stack>
-                        <Divider/>
+                        <EventItem event={event} />
                       </Grid>
-                    )
+                    );
                   })}
                 </Grid>
               ) : (
-                <Box display="flex" justifyContent="center" alignItems="center" height="250px">
+                <Stack direction="column" justifyContent="center" alignItems="center" height="250px" gap={1}>
                   <Typography variant="h3">No events of this type!</Typography>
-                </Box>
+                </Stack>
               )}
           </Stack>
         </Card>
