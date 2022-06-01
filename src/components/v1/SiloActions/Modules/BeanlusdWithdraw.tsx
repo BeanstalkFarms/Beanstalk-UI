@@ -5,7 +5,7 @@ import { List as ListIcon } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
-import { updateBeanstalkCurveAllowance } from 'state/allowances/actions';
+import { updateBeanstalkCurveAllowance } from 'state/v1/allowances/actions';
 import { BASE_SLIPPAGE, LUSD_BDV_TO_SEEDS } from 'constants/index';
 import { approveBeanstalkCurve, poolForLP } from 'util/index';
 import { BaseModule, beanlusdStrings, ListTable, SiloAsset, TransitAsset, siloStrings  } from 'components/Common';

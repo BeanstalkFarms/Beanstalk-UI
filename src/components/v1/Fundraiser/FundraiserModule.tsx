@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { updateBeanstalkUSDCAllowance } from 'state/allowances/actions';
+import { updateBeanstalkUSDCAllowance } from 'state/v1/allowances/actions';
 import { makeStyles } from '@mui/styles';
 import {
   approveBeanstalkUSDC,

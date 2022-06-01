@@ -7,7 +7,7 @@ import { List as ListIcon } from '@mui/icons-material';
 import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
-} from 'state/allowances/actions';
+} from 'state/v1/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
 import {
   approveBeanstalkBean,

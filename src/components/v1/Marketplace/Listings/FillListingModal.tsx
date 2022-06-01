@@ -9,7 +9,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { PodListing } from 'state/marketplace/reducer';
-import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
+import { updateBeanstalkBeanAllowance } from 'state/v1/allowances/actions';
 import {
   FarmAsset,
   TrimBN,

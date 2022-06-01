@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
+import { updateBeanstalkBeanAllowance } from 'state/v1/allowances/actions';
 import { PodListing } from 'state/marketplace/reducer';
 import {
   approveBeanstalkBean,

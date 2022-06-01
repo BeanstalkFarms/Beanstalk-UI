@@ -11,7 +11,7 @@ import {
   updateBeanstalkUSDCAllowance,
   updateBeanstalkCurveAllowance,
   updateBeanstalkBeanlusdAllowance,
-} from 'state/allowances/actions';
+} from 'state/v1/allowances/actions';
 import { setUserBalance } from 'state/userBalance/actions';
 import { setTotalBalance } from 'state/totalBalance/actions';
 import { setSeason } from 'state/season/actions';

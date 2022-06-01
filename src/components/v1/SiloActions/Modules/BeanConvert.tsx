@@ -8,7 +8,7 @@ import { AppState } from 'state';
 import {
   updateBeanstalkBeanAllowance,
   updateBeanstalkLPAllowance,
-} from 'state/allowances/actions';
+} from 'state/v1/allowances/actions';
 import {
   CONVERT_BEAN_SLIPPAGE,
   CONVERT_LP_SLIPPAGE

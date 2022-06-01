@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { IconButton, Box } from '@mui/material';
 import ListIcon from '@mui/icons-material/List';
 import { AppState } from 'state';
-import { updateBeanstalkBeanAllowance } from 'state/allowances/actions';
+import { updateBeanstalkBeanAllowance } from 'state/v1/allowances/actions';
 import { BASE_SLIPPAGE } from 'constants/index';
 import { approveBeanstalkBean, SwapMode, poolForLP } from 'util/index';
 import {
