@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { LP_TO_SEEDS } from 'constants/index';
-import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/v2/tokens';
+import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/tokens';
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import useEventProcessor, { EventParsingParameters } from 'hooks/useEventProcessor';
 import { useEffect, useMemo } from 'react';

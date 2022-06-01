@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { SEEDS, STALK } from 'constants/v2/tokens';
+import { SEEDS, STALK } from 'constants/tokens';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { AppState } from 'state';
 import { displayBN, displayFullBN } from 'util/index';

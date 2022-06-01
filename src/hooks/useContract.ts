@@ -11,7 +11,7 @@ import {
   BEANSTALK_ADDRESSES,
   BEANSTALK_FERTILIZER_ADDRESSES,
   BEANSTALK_PRICE_ADDRESSES,
-} from 'constants/v2/addresses';
+} from 'constants/addresses';
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useSigner, useContract as useWagmiContract } from 'wagmi';

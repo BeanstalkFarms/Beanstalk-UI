@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
 import SiloAssetCard from 'components/v2/Balances/Cards/SiloAssetCard';
-import { BEAN, PODS, SEEDS, STALK } from 'constants/v2/tokens';
+import { BEAN, PODS, SEEDS, STALK } from 'constants/tokens';
 import PodCard from 'components/v2/Balances/Cards/PodsCard';
 import Stat from 'components/v2/Common/Stat';
 import { displayBN } from 'util/index';

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Button, ButtonProps, Link, Stack, Typography } from '@mui/material';
 import { useAllowances } from 'hooks/useAllowance';
-import { BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES } from 'constants/v2/addresses';
+import { BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES } from 'constants/addresses';
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
 import useChainConstant from 'hooks/useChainConstant';
 import { ethers } from 'ethers';

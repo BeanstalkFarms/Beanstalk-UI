@@ -5,7 +5,7 @@ import {
   UniswapV2Pair__factory,
 } from 'constants/generated';
 import { ChainConstant } from 'constants/v2';
-import { AddressMap } from 'constants/v2/addresses';
+import { AddressMap } from 'constants/addresses';
 import { MinBN } from 'util/TokenUtilities';
 import client from 'util/wagmi';
 import Dex from './Dex';

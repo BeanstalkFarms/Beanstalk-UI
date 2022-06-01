@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, Tooltip, Typography } from '@mui/material';
-import { BEAN } from 'constants/v2/tokens';
+import { BEAN } from 'constants/tokens';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
 import BigNumber from 'bignumber.js';

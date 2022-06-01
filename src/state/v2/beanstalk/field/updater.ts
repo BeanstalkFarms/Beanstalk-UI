@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
 
-import { BEAN } from 'constants/v2/tokens';
+import { BEAN } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { resetBeanstalkField, updateBeanstalkField, updateHarvestableIndex } from './actions';
 

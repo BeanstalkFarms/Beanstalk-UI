@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import { displayBN, displayFullBN, toStringBaseUnitBN } from 'util/index';
-import { ETH, USDC } from 'constants/v2/tokens';
+import { ETH, USDC } from 'constants/tokens';
 import { TokensByAddress } from 'constants/v2';
 import { BalanceState } from 'state/v2/farmer/balances/reducer';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';

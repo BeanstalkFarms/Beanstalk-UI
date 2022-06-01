@@ -1,4 +1,4 @@
-import { SupportedChainId } from '../chains';
+import { SupportedChainId } from './chains';
 
 export enum DeploymentEvent {
   BEANSTALK_GENESIS,

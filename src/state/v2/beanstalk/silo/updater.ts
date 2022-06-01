@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
 
-import { BEAN, SEEDS, STALK } from 'constants/v2/tokens';
+import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import BigNumber from 'bignumber.js';
 import { SupportedChainId } from 'constants/chains';

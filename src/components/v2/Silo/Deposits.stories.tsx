@@ -4,7 +4,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import BigNumber from 'bignumber.js';
 import Deposits from './Deposits';
 import { Deposit, FarmerTokenBalance, Withdrawal } from '../../../state/v2/farmer/silo';
-import { BEAN_ETH_UNISWAP_V2_LP } from '../../../constants/v2/tokens';
+import { BEAN_ETH_UNISWAP_V2_LP } from '../../../constants/tokens';
 import { SupportedChainId } from '../../../constants/chains';
 
 export default {

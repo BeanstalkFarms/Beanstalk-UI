@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
-import { BEAN, SEEDS, STALK, USDC } from 'constants/v2/tokens';
+import { BEAN, SEEDS, STALK, USDC } from 'constants/tokens';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction } from 'util/actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';

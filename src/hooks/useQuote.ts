@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/TokenUtilities';
 import debounce from 'lodash/debounce';
 import { sleep } from 'util/TimeUtilities';
-import { ETH_DECIMALS } from 'constants/v2/tokens';
+import { ETH_DECIMALS } from 'constants/tokens';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import toast from 'react-hot-toast';
 import { useFertilizerContract } from './useContract';

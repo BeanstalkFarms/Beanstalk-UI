@@ -1,4 +1,4 @@
-import { BALANCE_TOKENS } from 'constants/v2/tokens';
+import { BALANCE_TOKENS } from 'constants/tokens';
 import useChainId from 'hooks/useChain';
 import useTokenMap from 'hooks/useTokenMap';
 import { useCallback, useEffect } from 'react';

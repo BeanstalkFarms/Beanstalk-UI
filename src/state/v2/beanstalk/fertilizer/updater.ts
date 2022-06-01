@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from 'constants/v2/addresses';
-import { BEAN, USDC } from 'constants/v2/tokens';
+import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from 'constants/addresses';
+import { BEAN, USDC } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkFertilizerContract, useERC20Contract } from 'hooks/useContract';
 import { tokenResult } from 'util/TokenUtilities';

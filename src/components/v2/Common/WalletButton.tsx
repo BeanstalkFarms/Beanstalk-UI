@@ -28,7 +28,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import tempUserIcon from 'img/temp-user-icon.svg';
 import { trimAddress } from 'util/index';
 import { CHAIN_INFO } from 'constants/chains';
-import { CONNECTION_ERRORS_TO_MESSAGES, CONNECTOR_LOGOS } from 'constants/v2/connectors';
+import { CONNECTION_ERRORS_TO_MESSAGES, CONNECTOR_LOGOS } from 'constants/connectors';
 
 import { getAccount } from 'util/account';
 import { StyledDialogTitle } from './Dialog';

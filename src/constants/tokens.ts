@@ -19,7 +19,7 @@ import seedLogo from 'img/seed-logo.svg';
 import podsLogo from 'img/pod-logo.svg';
 
 import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
-import { SupportedChainId } from '../chains';
+import { SupportedChainId } from './chains';
 import { ChainConstant, TokenMap } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES } from './addresses';
 

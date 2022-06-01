@@ -1,7 +1,7 @@
 import React from 'react';
 import { Accordion, AccordionDetails, Box, Divider, Grid, Stack, Typography } from '@mui/material';
 import { SupportedChainId } from 'constants/chains';
-import { BEAN, STALK } from 'constants/v2/tokens';
+import { BEAN, STALK } from 'constants/tokens';
 import AccordionWrapper from 'components/v2/Common/Accordion/AccordionWrapper';
 import StyledAccordionSummary from 'components/v2/Common/Accordion/AccordionSummary';
 import TokenIcon from 'components/v2/Common/TokenIcon';

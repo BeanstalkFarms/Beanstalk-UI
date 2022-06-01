@@ -10,7 +10,7 @@ import {
   BEAN_ETH_UNIV2_LP,
   BEAN_CRV3_LP,
   BEAN_LUSD_LP,
-} from 'constants/v2/tokens';
+} from 'constants/tokens';
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import { ERC20Token } from 'classes/Token';
 
