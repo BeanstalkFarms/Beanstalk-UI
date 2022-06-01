@@ -1,4 +1,4 @@
-import { TokenOrTokenMap, TokensByAddress } from 'constants/v2';
+import { TokenOrTokenMap, TokensByAddress } from 'constants/index';
 import { useMemo } from 'react';
 import Token from 'classes/Token';
 import { useGetChainConstant } from './useChainConstant';

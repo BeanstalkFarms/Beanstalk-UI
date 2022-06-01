@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { TokenOrTokenMap } from 'constants/v2';
+import { TokenOrTokenMap } from 'constants/index';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useGetChainToken from './useGetChainToken';

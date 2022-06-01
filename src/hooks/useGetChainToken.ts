@@ -1,5 +1,5 @@
 import Token from 'classes/Token';
-import { TokenOrTokenMap } from 'constants/v2';
+import { TokenOrTokenMap } from 'constants/index';
 import { useCallback } from 'react';
 import { useGetChainConstant } from './useChainConstant';
 
