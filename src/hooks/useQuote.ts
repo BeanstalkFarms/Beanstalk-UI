@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import { sleep } from 'util/TimeUtilities';
 import { ETH_DECIMALS } from 'constants/v2/tokens';
 import { bigNumberResult } from 'util/LedgerUtilities';
-import { useBeanstalkFertilizerContract } from './useContract';
+import { useFertilizerContract } from './useContract';
 
 export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
   amountIn: BigNumber | undefined,
@@ -18,7 +18,7 @@ export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
   /** Whether we're currently waiting for a quote for this swap. */
   const [quoting, setQuoting] = useState<boolean>(false);
   /** */
-  const [fertContract] = useBeanstalkFertilizerContract();
+  const fertContract = useFertilizerContract();
   
   // When token changes, reset the amount.
   useEffect(() => {
@@ -26,6 +26,7 @@ export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
     setQuoting(false);
   }, [tokenOut]);
 
+  // Below prevents error b/c React can't know the deps of debounce
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const _getAmountOut = useCallback(debounce(
     (tokenIn: Token, amountIn: BigNumber) => {
@@ -39,7 +40,7 @@ export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
         //
         return call.then((result) => {
           const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
-          console.debug(`[useQuote] got amount out: ${amountOut?.toString()}`, result);
+          console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
           setAmountOut(_amountOut);
           setQuoting(false);
           return result;

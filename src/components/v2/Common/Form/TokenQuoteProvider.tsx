@@ -36,16 +36,24 @@ const TokenQuoteProvider : React.FC<{
   // listen for changes to `amountOut` and `quouting`
   // via effects and update form state accordingly.
   useEffect(() => {
-    getAmountOut(state.token, new BigNumber(state.amount || 0));
-  }, [state.token, state.amount, getAmountOut]);
+    if (state.token !== tokenOut) {
+      console.debug(`[TokenQuoteProvider] getting amount out: ${state.amount} ${state.token.symbol} => X ${tokenOut.symbol}`);
+      getAmountOut(
+        state.token,                      // tokenIn
+        new BigNumber(state.amount || 0)  // amountIn
+      );
+    }
+  }, [state.token, state.amount, getAmountOut, tokenOut]);
 
   // Store amountOut and quoting in form state.
   // FIXME: Antipattern here? Should we have 
   // a version of `useQuote` that handles this automatically?
   useEffect(() => {
+    console.debug(`[TokenQuoteProvider] update ${name}.amountOut => ${amountOut}`);
     setFieldValue(`${name}.amountOut`, amountOut);
   }, [name, setFieldValue, amountOut]);
   useEffect(() => {
+    console.debug(`[TokenQuoteProvider] update ${name}.quoting => ${quoting}`);
     setFieldValue(`${name}.quoting`, quoting);
   }, [name, setFieldValue, quoting]);
 

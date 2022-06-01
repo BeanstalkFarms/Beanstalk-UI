@@ -10,9 +10,11 @@ import { MAX_UINT256 } from 'util/LedgerUtilities';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useGetERC20Contract } from 'hooks/useContract';
+import { useConnect } from 'wagmi';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
+import WalletButton from '../WalletButton';
 
 const CONTRACT_NAMES : { [address: string] : string } = {
   [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',
@@ -50,19 +52,24 @@ const SmartSubmitButton : React.FC<{
 }) => {
   const { explorer } = useChainConstant(CHAIN_INFO);
   const { values, setFieldValue } = useFormikContext<FormState>();
+  const { status } = useConnect();
   const getErc20Contract = useGetERC20Contract();
 
   // Convert the current `FormTokenState[]` into more convenient forms,
   // and find the next token that we need to seek approval for.
   const selectedTokens = useMemo(() => tokens.map((elem) => elem.token), [tokens]);
-  const [allowances, refetchAllowances] = useAllowances(contract?.address, selectedTokens, { loadIfAbsent: true });
+  const [allowances, refetchAllowances] = useAllowances(
+    contract?.address,
+    selectedTokens,
+    { loadIfAbsent: true }
+  );
   const nextApprovalIndex = useMemo(
     () => allowances.findIndex(
       (allowance, index) => {
         const amt = tokens[index].amount;
         return (
-          !allowance                              // waiting for allowance to load
-          || allowance.eq(0)                      // allowance is zero
+          !allowance                    // waiting for allowance to load
+          || allowance.eq(0)            // allowance is zero
           || (amt !== null && amt.gt(0) // entered amount is greater than allowance
               ? amt.gt(allowance)
               : false)
@@ -71,6 +78,8 @@ const SmartSubmitButton : React.FC<{
     ),
     [allowances, tokens]
   );
+
+  console.log('[SmartSubmitButton]', selectedTokens, allowances, nextApprovalIndex);
 
   // Derived
   const nextApprovalToken = nextApprovalIndex > -1 ? selectedTokens[nextApprovalIndex] : null;
@@ -142,6 +151,19 @@ const SmartSubmitButton : React.FC<{
     handleApproval,
     handleOpen
   ]);
+
+  if (status === 'disconnected') {
+    return (
+      <WalletButton
+        {...props}
+        // Prevent `type='submit'` from getting passed through here.
+        // Otherwise this will call the form's submit function when
+        // the wallet button is pressed to connect.
+        type="button"
+        disabled={false}
+      />
+    );
+  }
 
   return (
     <>

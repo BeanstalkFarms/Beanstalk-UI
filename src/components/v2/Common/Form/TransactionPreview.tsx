@@ -28,13 +28,13 @@ const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
     if (!agg.in.addrs.has(a.tokenIn.address)) {
       agg.in.addrs.add(a.tokenIn.address);
       agg.in.elems.push(
-        <ActionTokenImage token={a.tokenIn} />
+        <ActionTokenImage key={a.tokenIn.address} token={a.tokenIn} />
       );
     }
     if (!agg.out.addrs.has(a.tokenOut.address)) {
       agg.out.addrs.add(a.tokenOut.address);
       agg.out.elems.push(
-        <ActionTokenImage token={a.tokenOut} />
+        <ActionTokenImage key={a.tokenOut.address} token={a.tokenOut} />
       );
     }
     return agg;
@@ -196,10 +196,10 @@ const TransactionPreview : React.FC<{
               height: '100%' // of TXN_PREVIEW_HEIGHT
             }}
           >
-            {EXECUTION_STEPS.map((step) => (
+            {EXECUTION_STEPS.map((step, index) => (
               instructionsByType[step] ? (
                 <TransactionStep
-                  key={step}
+                  key={index}
                   type={step}
                   actions={instructionsByType[step]}
                   highlighted={highlighted}

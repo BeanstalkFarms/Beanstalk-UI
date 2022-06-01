@@ -33,7 +33,7 @@ export const useHumidityAtSeason = () => {
 
   // Decrease by 0.5% every season until 20%
   return useCallback((season: BigNumber) => {
-    // MaxBN provides a constraint on Ropsten because the actual season is 564-fish
+    // MaxBN provides a constraint on Ropsten because the actual season is 564-ish
     // but we need to pass a REPLANT_SEASON of 6074 to the contract to get the user's balance
     const seasonsAfterReplant = MaxBN(season.minus(replantSeason.plus(1)), zeroBN);
     if (season.lte(replantSeason))       return [INITIAL_HUMIDITY, HUMIDITY_DECREASE_AT_REPLANT] as const;

@@ -15,6 +15,8 @@ import { FormTokenState } from 'components/v2/Common/Form';
 import TokenQuoteProvider from 'components/v2/Common/Form/TokenQuoteProvider';
 import useDepositSummary from 'hooks/summary/useDepositSummary';
 import TransactionPreview from 'components/v2/Common/Form/TransactionPreview';
+import useChainId from 'hooks/useChain';
+import { SupportedChainId } from 'constants/chains';
 
 // -----------------------------------------------------------------------
 
@@ -40,6 +42,7 @@ const DepositForm : React.FC<
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
   const { bdv, stalk, seeds, actions } = useDepositSummary(to, values.tokens);
+  const chainId = useChainId();
 
   // console.debug('[DepositForm] render');
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
@@ -58,9 +61,11 @@ const DepositForm : React.FC<
       ...Array.from(copy).map((token) => ({ token, amount: undefined })),
     ]);
   }, [values.tokens, setFieldValue]);
+
+  const isMainnet = chainId === SupportedChainId.MAINNET;
   
   return (
-    <Tooltip title={<>Deposits will be available upon Unpause.</>} followCursor>
+    <Tooltip title={isMainnet ? <>Deposits will be available upon Unpause.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
           <FieldArray name="tokens">
@@ -82,8 +87,8 @@ const DepositForm : React.FC<
                       balance={balances[state.token.address] || undefined}
                       state={state}
                       showTokenSelect={handleOpen}
-                      disabled
-                      disableTokenSelect
+                      disabled={isMainnet}
+                      disableTokenSelect={isMainnet}
                     />
                   ))}
                 </Stack>
@@ -128,7 +133,6 @@ const DepositForm : React.FC<
           <Button disabled type="submit" size="large" fullWidth>
             Deposit
           </Button>
-           
         </Stack>
       </Form>
     </Tooltip>

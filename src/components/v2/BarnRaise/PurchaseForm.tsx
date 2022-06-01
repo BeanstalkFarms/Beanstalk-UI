@@ -13,9 +13,8 @@ import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
 import useChainConstant from 'hooks/useChainConstant';
-import useFarmerReady from 'hooks/useFarmerReady';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useBeanstalkFertilizerContract } from 'hooks/useContract';
+import { useFertilizerContract } from 'hooks/useContract';
 import useFertilizerSummary from 'hooks/summary/useFertilizerSummary';
 import TokenSelectDialog, { TokenSelectMode } from 'components/v2/Common/Form/TokenSelectDialog';
 import TokenQuoteProvider from 'components/v2/Common/Form/TokenQuoteProvider';
@@ -24,7 +23,7 @@ import TransactionPreview from 'components/v2/Common/Form/TransactionPreview';
 import TxnAccordion from 'components/v2/Common/TxnAccordion';
 import { ethers } from 'ethers';
 import { useFetchFarmerFertilizer } from 'state/v2/farmer/fertilizer/updater';
-import { useAccount } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import { useFetchFarmerBalances } from 'state/v2/farmer/balances/updater';
 import { useFetchFarmerAllowances } from 'state/v2/farmer/allowances/updater';
 import FertilizerItem from './FertilizerItem';
@@ -84,7 +83,7 @@ const FertilizeForm : React.FC<
   } = useFertilizerSummary(values.tokens);
 
   // Extract
-  const ready = usdc?.gt(0);
+  const isValid = usdc?.gt(0);
 
   // Handlers
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
@@ -153,7 +152,7 @@ const FertilizeForm : React.FC<
           color="primary"
           size="large"
           loading={isSubmitting}
-          disabled={!ready}
+          disabled={!isValid}
           // Smart props
           contract={contract}
           tokens={values.tokens}
@@ -169,13 +168,14 @@ const FertilizeForm : React.FC<
 
 const SetupForm: React.FC<{}> = () => {
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
-  const [fertContract] = useBeanstalkFertilizerContract();
   const { data: account } = useAccount();
   const Usdc = useChainConstant(USDC);
   const Eth  = useChainConstant(ETH);
   const [refetchFertilizer] = useFetchFarmerFertilizer();
   const [refetchBalances]   = useFetchFarmerBalances();
   const [refetchAllowances] = useFetchFarmerAllowances();
+  const { data: signer } = useSigner();
+  const fertContract = useFertilizerContract(signer);
 
   //
   const initialValues : FertilizerFormValues = useMemo(() => ({
@@ -186,6 +186,8 @@ const SetupForm: React.FC<{}> = () => {
       },
     ],
   }), [baseToken]);
+
+  //
   const onSubmit = useCallback((values: FertilizerFormValues, actions: FormikHelpers<FertilizerFormValues>) => {
     if (fertContract && account?.address) {
       const token   = values.tokens[0].token;
@@ -238,6 +240,7 @@ const SetupForm: React.FC<{}> = () => {
           txToast.error(err);
         });
     }
+    return Promise.resolve();
   }, [
     Eth,
     Usdc,
@@ -262,8 +265,4 @@ const SetupForm: React.FC<{}> = () => {
 
 // ---------------------------------------------------
 
-export default () => {
-  const isReady = useFarmerReady();
-  if (isReady) return <SetupForm />;
-  return <div>Setting up....</div>;
-};
+export default () => <SetupForm />;
