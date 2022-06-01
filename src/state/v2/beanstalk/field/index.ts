@@ -1,11 +1,11 @@
 import BigNumber from 'bignumber.js';
 
 export type BeanstalkField = {
-  /** */
+  /** The number of Pods that have become Harvestable. */
   harvestableIndex: BigNumber;
-  /** */
+  /** The total number of outstanding Pods. */
   pods: BigNumber;
-  /** The current soil */
+  /** The amount of available Soil. */
   soil: BigNumber;
   /** The weather */
   weather: {

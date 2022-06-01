@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Card, Container, Dialog, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Card, Container, Dialog, Grid, Link, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -13,25 +13,24 @@ import ClearIcon from '@mui/icons-material/Clear';
 const columns: DataGridProps['columns'] = [
   {
     field: 'placeInLine',
-    headerName: 'Place In Line:',
-    width: 200,
+    headerName: 'Place In Line',
+    flex: 1,
     valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 0)}`,
     renderCell: (params) => (
       <Typography>{displayBN(params.value)}</Typography>
-      )
+    )
   },
   {
     field: 'amount',
-    headerName: 'Number of Pods:',
-    width: 200,
-    disableColumnMenu: true,
+    headerName: 'Number of Pods',
     flex: 1,
+    disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',
     valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
     renderCell: (params) => (
       <Typography>{displayBN(params.value)}</Typography>
-      )
+    )
   },
 ];
 
@@ -42,16 +41,16 @@ const FieldPage: React.FC = () => {
   const closeModal = useCallback(() => setModalOpen(false), []);
   const openModal = useCallback(() => setModalOpen(true), []);
   // Data
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
-  const { harvestableIndex } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  const farmerField    = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  const beanToken      = useSelector<AppState, AppState['_bean']['token']>((state) => state._bean.token);
 
   // Rows
   const rows = useMemo(() => Object.keys(farmerField.plots).map((index) => ({
     id: index,
-    placeInLine: new BigNumber(index).minus(harvestableIndex),
+    placeInLine: new BigNumber(index).minus(beanstalkField.harvestableIndex),
     amount: new BigNumber(farmerField.plots[index]),
-  })), [farmerField?.plots, harvestableIndex]);
+  })), [farmerField?.plots, beanstalkField.harvestableIndex]);
 
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '200px';
@@ -61,21 +60,20 @@ const FieldPage: React.FC = () => {
   const podLine = beanstalkField?.pods.minus(beanstalkField.harvestableIndex);
 
   const podBalance = (
-    <Stack direction="row" gap={0.3}>
+    <Stack direction="row" gap={0.5}>
       <Typography variant="h4">My Pod Balance:</Typography>
-      <Stack direction="row" alignItems="center">
+      <Stack direction="row" alignItems="center" gap={0.25}>
         <img alt="" src={podIcon} height="17px" />
-        <Typography variant="h4">100</Typography>
-        {/* <Typography variant="h4">{displayBN(farmerField.pods)}</Typography> */}
+        <Typography variant="h4">{displayBN(farmerField.pods)}</Typography>
       </Stack>
     </Stack>
   );
 
   const podLineBox = (
-    <Box sx={{ backgroundColor: '#F6FAFE', p: 1.5, borderRadius: 1.5 }}>
+    <Stack gap={0.5} sx={{ backgroundColor: '#F6FAFE', px: 2, py: 1.5, borderRadius: 1.5 }}>
       <Typography variant="h4" color="text.secondary">Pod Line</Typography>
       <Typography variant="h1">{displayBN(podLine)}</Typography>
-    </Box>
+    </Stack>
   );
 
   return (
@@ -85,9 +83,7 @@ const FieldPage: React.FC = () => {
           title={
             <>
               <strong>The Field</strong>
-              <Box component="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: The
-                Decentralized Credit Facility
-              </Box>
+              <Box component="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: The Decentralized Credit Facility</Box>
             </>
           }
           description="Earn yield through lending Beans to Beanstalk when there is Available Soil in exchange for Pods"
@@ -96,13 +92,23 @@ const FieldPage: React.FC = () => {
           <Stack gap={2}>
             <Typography variant="h2">Field Conditions</Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <Typography variant="h4">Available Soil</Typography>
-                <Typography variant="h1">{displayBN(beanstalkField.soil)}</Typography>
+              <Grid item xs={12} md={4}>
+                <Stack gap={0.5}>
+                  <Typography variant="h4">Available Soil</Typography>
+                  <Typography variant="h1">{displayBN(beanstalkField.soil)}</Typography>
+                </Stack>
               </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography variant="h4">Weather</Typography>
-                <Typography variant="h1">{displayBN(beanstalkField.weather.yield)}%</Typography>
+              <Grid item xs={12} md={4}>
+                <Stack gap={0.5}>
+                  <Typography variant="h4">Weather</Typography>
+                  <Typography variant="h1">{displayBN(beanstalkField.weather.yield)}%</Typography>
+                </Stack>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Stack gap={0.5}>
+                  <Typography variant="h4">Pod Rate</Typography>
+                  <Typography variant="h1">{displayBN(beanstalkField?.pods.div(beanToken?.supply).times(100))}%</Typography>
+                </Stack>
               </Grid>
               <Grid item xs={12}>
                 <Box>
@@ -122,10 +128,10 @@ const FieldPage: React.FC = () => {
         </Card>
       </Stack>
       <Dialog onClose={() => setModalOpen(false)} open={modalOpen} fullWidth>
-        <Card sx={{ p: 2 }}>
+        <Card sx={{ p: 2, pb: 0.5 }}>
           <Stack gap={1}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography variant="h4" color="text.secondary">My Plots:</Typography>
+              <Typography variant="h4" color="text.secondary">My Plots</Typography>
               <ClearIcon sx={{ cursor: 'pointer', color: '#bbbcd1' }} onClick={closeModal} />
             </Stack>
             <Box>

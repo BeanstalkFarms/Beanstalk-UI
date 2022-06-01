@@ -6,8 +6,8 @@ import debounce from 'lodash/debounce';
 import { sleep } from 'util/TimeUtilities';
 import { ETH_DECIMALS } from 'constants/v2/tokens';
 import { bigNumberResult } from 'util/LedgerUtilities';
-import { useFertilizerContract } from './useContract';
 import toast from 'react-hot-toast';
+import { useFertilizerContract } from './useContract';
 
 export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
   amountOut: BigNumber | null,

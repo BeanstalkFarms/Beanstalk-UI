@@ -58,8 +58,8 @@ const BeanProgressIcon : React.FC<CircularProgressProps & {
 // ------------------------------------------------------------
 
 const PriceButton: React.FC = () => {
-  const beanPrice = useSelector<AppState, AppState['_bean']['price']>(
-    (state) => state._bean.price
+  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
+    (state) => state._bean.token.price
   );
   const beanPools = useSelector<AppState, AppState['_bean']['pools']>(
     (state) => state._bean.pools
@@ -96,7 +96,7 @@ const PriceButton: React.FC = () => {
   const onClickPriceButton = isMobile ? handleOpenDrawer : handleOpenPopover;
 
   // Pools
-  const isPriceLoading = beanPrice[0].eq(new BigNumber(-1));
+  const isPriceLoading = beanPrice.eq(new BigNumber(-1));
   const StartIcon = isTiny ? null : (
     <BeanProgressIcon
       size={25}
@@ -134,7 +134,7 @@ const PriceButton: React.FC = () => {
           }}
         >
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-            ${(isPriceLoading ? 0.0000 : beanPrice[0]).toFixed(isMobile ? 2 : 4)}
+            ${(isPriceLoading ? 0.0000 : beanPrice).toFixed(isMobile ? 2 : 4)}
           </Typography>
         </Button>
         <Popper
