@@ -9,7 +9,7 @@ import {
   Grid,
   siloStrings
 } from 'components/Common';
-import { SiloToken } from 'constants/v0/siloTokens';
+import { SiloToken } from 'constants/v1/siloTokens';
 import TabbedForm from './TabbedForm';
 
 const descriptionLinks = [

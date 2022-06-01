@@ -16,7 +16,7 @@ import { APYTuple, CryptoAsset, displayBN, getAPYs, SiloAsset } from 'util/index
 import makeStyles from '@mui/styles/makeStyles';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-import TOKENS from 'constants/v0/siloTokens';
+import TOKENS from 'constants/v1/siloTokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import { StyledTooltip, QuestionModule, siloStrings } from 'components/Common';
 import { theme as beanstalkTheme } from '../../constants';

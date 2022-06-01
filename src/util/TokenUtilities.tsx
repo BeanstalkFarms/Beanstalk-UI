@@ -163,8 +163,8 @@ export function toTokenUnitsBN(
 }
 
 export const tokenResult = (_token: TokenOrTokenMap) => {
-  // if a mapping is provided, default to mainnet's decimals
-  // assume number of decimals are the same across all chains
+  // If a mapping is provided, default to MAINNET decimals.
+  // ASSUMPTION: the number of decimals are the same across all chains.
   const token = _token instanceof Token ? _token : _token[SupportedChainId.MAINNET];
   return (result: any) => toTokenUnitsBN(
     bigNumberResult(result),
