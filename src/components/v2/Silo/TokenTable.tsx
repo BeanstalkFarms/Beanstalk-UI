@@ -13,7 +13,7 @@ import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
-import { displayBN } from 'util/TokenUtilitiesOld';
+import { displayBN } from 'util/v1/TokenUtilitiesOld';
 import useChainConstant from 'hooks/useChainConstant';
 
 const arrowContainerWidth = 20;

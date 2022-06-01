@@ -1,5 +1,5 @@
 import { beanstalkContract } from '../index';
-import { handleCallbacks, TxnCallbacks } from '../TxnUtilities';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 // Deposit a token
 // function deposit(address token, uint256 amount) external;

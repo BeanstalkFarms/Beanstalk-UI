@@ -1,8 +1,7 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
-import { zeroBN } from 'constants/index';
 import { SupportedChainId } from 'constants/chains';
-import { TokenOrTokenMap } from 'constants/v2';
+import { zeroBN, TokenOrTokenMap } from 'constants/index';
 import { bigNumberResult } from './LedgerUtilities';
 
 /** Trim a BigNumber to a set number of decimals. */

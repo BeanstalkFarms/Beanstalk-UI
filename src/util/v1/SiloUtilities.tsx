@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js';
 
 import { account, beanstalkContract } from '../index';
-import { handleCallbacks, TxnCallbacks } from '../TxnUtilities';
-import { poolForLP } from '../UniswapUtilities';
+import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
+import { poolForLP } from './UniswapUtilities';
 import { AppState } from '../../state';
 
 // FIXME: this should be auto-gen'd from `siloTokens`.

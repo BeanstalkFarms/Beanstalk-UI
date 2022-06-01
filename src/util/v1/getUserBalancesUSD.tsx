@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { poolForLP } from '../UniswapUtilities';
+import { poolForLP } from './UniswapUtilities';
 import { AppState } from '../../state';
 
 /**

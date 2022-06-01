@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { BEAN, WETH, zeroBN } from 'constants/index';
-import { MinBN, uniswapRouterContract } from './index';
+import { MinBN, uniswapRouterContract } from '../index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
 const account = null;
