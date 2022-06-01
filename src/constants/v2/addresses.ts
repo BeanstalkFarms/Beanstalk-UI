@@ -1,40 +1,38 @@
 import { SupportedChainId } from '../chains';
 
-export type AddressMap<T = string> = { [chainId: number]: T };
-
 // -- Beanstalk Contracts
 
-export const BEANSTALK_ADDRESSES : AddressMap = {
+export const BEANSTALK_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5', // Stays the same
   [SupportedChainId.ROPSTEN]: '0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5', // Stays the same
 };
 
-export const BEANSTALK_PRICE_ADDRESSES : AddressMap = {
+export const BEANSTALK_PRICE_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF', // Stays the same
   [SupportedChainId.ROPSTEN]: '0xB721C3386052389892A898EC700619A7Ab20C6B7', // Stays the same
 };
 
-export const BEANSTALK_FERTILIZER_ADDRESSES : AddressMap = {
+export const BEANSTALK_FERTILIZER_ADDRESSES = {
   [SupportedChainId.MAINNET]: '',
   [SupportedChainId.ROPSTEN]: '0xd598d3799521a3F95784A81c883ddf1122Ad769B', // Post-Exploit
   [SupportedChainId.LOCALHOST]: '0xCABEe62adFB2a4d4172Fc2F7536f324FC52C274a', // Publius' dev node
 };
 
 // https://ropsten.etherscan.io/address/0xf023d179bc3f571778f57978eca318e1154ee8e3#code
-export const BARNRAISE_CUSTODIAN_ADDRESSES : AddressMap = {
+export const BARNRAISE_CUSTODIAN_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x2B7829448eaf27E1515E6Ed5fCB2cDF229B68144',
   [SupportedChainId.ROPSTEN]: '0xA3D5F4042899a52f2ae7A0Cc58C079EFB62B9e43'
 };
 
 // -- ERC20 Token Contracts
 
-export const USDC_ADDRESSES : AddressMap = {
+export const USDC_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   [SupportedChainId.ROPSTEN]: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
   // [SupportedChainId.RINKEBY]: '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
 };
 
-export const CRV3_ADDRESSES : AddressMap = {
+export const CRV3_ADDRESSES = {
   // --------------------------------------------------
   // "Curve.fi: 3CRV Token"
   // [Implements: ERC-20]
@@ -49,7 +47,7 @@ export const CRV3_ADDRESSES : AddressMap = {
   [SupportedChainId.ROPSTEN]: '0x3D1449b23Ed2Eff19c2da41170d0760299eE9dbD'
 };
 
-export const LUSD_ADDRESSES : AddressMap = {
+export const LUSD_ADDRESSES = {
   // --------------------------------------------------
   // -------------------------------------------------
   [SupportedChainId.MAINNET]: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
@@ -61,7 +59,7 @@ export const LUSD_ADDRESSES : AddressMap = {
 
 // -- Pool Contracts
 
-export const BEAN_ETH_UNIV2_ADDRESSES : AddressMap = {
+export const BEAN_ETH_UNIV2_ADDRESSES = {
   // --------------------------------------------------
   // "Uniswap V2: BEAN 3": Uniswap V2 Pair, Mainnet
   // --------------------------------------------------
@@ -77,7 +75,7 @@ export const BEAN_ETH_UNIV2_ADDRESSES : AddressMap = {
   [SupportedChainId.ROPSTEN]: '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db',
 };
 
-export const BEAN_CRV3_ADDRESSES : AddressMap = {
+export const BEAN_CRV3_ADDRESSES = {
   // --------------------------------------------------
   // "Curve.fi Factory USD Metapool: Bean (BEAN3CRV-f)"
   // [Implements: ERC20 & Metapool]
@@ -111,7 +109,7 @@ export const BEAN_CRV3_ADDRESSES : AddressMap = {
   [SupportedChainId.ROPSTEN]: '0x9ED0380C5dedadd3b2a32f5D5FD6B3929f8d39d9',
 };
 
-export const BEAN_LUSD_ADDRESSES : AddressMap = {
+export const BEAN_LUSD_ADDRESSES = {
   // --------------------------------------------------
   // "Curve.fi Factory Plain Pool: Bean-LUSD (BEANLUSD-f)""
   // [Implements: ERC20 & Metapool]
@@ -125,7 +123,7 @@ export const BEAN_LUSD_ADDRESSES : AddressMap = {
   // [SupportedChainId.ROPSTEN]: '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC',
 };
 
-export const POOL3_ADDRESSES : AddressMap = {
+export const POOL3_ADDRESSES = {
   // --------------------------------------------------
   // "Curve.fi: DAI/USDC/USDT Pool" (aka 3pool)
   // --------------------------------------------------
@@ -143,12 +141,12 @@ export const POOL3_ADDRESSES : AddressMap = {
 
 // -- BeaNFT Contracts
 
-export const BEANFT_GENESIS_ADDRESSES : AddressMap = {
+export const BEANFT_GENESIS_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xa755A670Aaf1FeCeF2bea56115E65e03F7722A79', // Stays the same
   [SupportedChainId.ROPSTEN]: '0xa755A670Aaf1FeCeF2bea56115E65e03F7722A79', // Stays the same
 };
 
-export const BEANFT_WINTER_ADDRESSES : AddressMap = {
+export const BEANFT_WINTER_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x459895483556daD32526eFa461F75E33E458d9E9', // Stays the same
   [SupportedChainId.ROPSTEN]: '0x459895483556daD32526eFa461F75E33E458d9E9', // Stays the same
 };

@@ -1,12 +1,11 @@
-import Pool, { CurveMetaPool, CurvePlainPool, UniswapV2Pool } from 'classes/Pool';
+import { CurveMetaPool, CurvePlainPool, UniswapV2Pool } from 'classes/Pool';
 import { SupportedChainId } from 'constants/chains';
 
 import curveLogo from 'img/curve-logo.svg';
 import uniswapLogo from 'img/uniswap-logo.svg';
 
-import { ChainConstant } from '.';
+import { ChainConstant, PoolsByAddress } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_ETH_UNIV2_ADDRESSES, BEAN_LUSD_ADDRESSES } from './addresses';
-// import { Curve, Uniswap } from './dexes';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, CRV3, LUSD, WETH } from './tokens';
 
 // ------------------------------------
@@ -82,8 +81,6 @@ export const BEAN_LUSD_CURVE_POOL_MAINNET = new CurvePlainPool(
 );
 
 // --------------------------------------------------
-
-export type PoolsByAddress = { [address: string] : Pool };
 
 const Pools : ChainConstant<PoolsByAddress> = {
   [SupportedChainId.MAINNET]: {

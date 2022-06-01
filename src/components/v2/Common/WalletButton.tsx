@@ -28,26 +28,11 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import tempUserIcon from 'img/temp-user-icon.svg';
 import { trimAddress } from 'util/index';
 import { CHAIN_INFO } from 'constants/chains';
+import { CONNECTION_ERRORS_TO_MESSAGES, CONNECTOR_LOGOS } from 'constants/v2/connectors';
 
-import metamaskLogo from 'img/metamask-icon.png';
-import walletConnectLogo from 'img/walletconnect-logo.svg';
 import { getAccount } from 'util/account';
 import { StyledDialogTitle } from './Dialog';
 import DropdownIcon from './DropdownIcon';
-
-// -----------------------------------------------------------------
-
-const CONNECTOR_LOGOS : { [key: string] : string } = {
-  MetaMask: metamaskLogo,
-  'Coinbase Wallet': metamaskLogo,
-  WalletConnect: walletConnectLogo,
-};
-
-const CONNECTION_ERRORS_TO_MESSAGES : { 
-  [key: string] : (c?: Connector) => string } = {
-  UserRejectedRequestError: () => 'The connection was cancelled while in progress. Try connecting again.',
-  'Already processing eth_requestAccounts. Please wait.': (c) => `Connection already in progress. Try unlocking ${c?.name || 'your wallet'} to allow Beanstalk to connect.`,
-};
 
 // -----------------------------------------------------------------
 

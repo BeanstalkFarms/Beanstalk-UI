@@ -3,7 +3,6 @@ import { SupportedChainId } from '../chains';
 export enum DeploymentEvent {
   BEANSTALK_GENESIS,
   BIP10_FARMERS_MARKET,
-  // EXPLOIT,
 }
 
 export const DEPLOYMENT_BLOCKS = {

@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { TokenOrTokenMap } from 'constants/v2';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useGetChainToken from './useChainToken';
+import useGetChainToken from './useGetChainToken';
 
 export type PreferredToken = {
   token: TokenOrTokenMap;

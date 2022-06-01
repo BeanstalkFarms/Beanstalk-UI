@@ -8,11 +8,12 @@ import beanEthLpLogoUrl from 'img/bean-eth-lp-logo.svg';
 import beanCrv3LpLogoUrl from 'img/bean-crv3-logo.svg';
 import beanLusdLogoUrl from 'img/bean-lusd-logo.svg';
 
+// Common token icons
 import usdcLogoUrl from 'img/usdc-logo.svg';
 import crv3LogoUrl from 'img/crv3-logo.svg';
 import lusdLogoUrl from 'img/lusd-icon.svg';
 
-//
+// Beanstalk Token Logos
 import stalkLogo from 'img/stalk-logo.svg';
 import seedLogo from 'img/seed-logo.svg';
 import podsLogo from 'img/pod-logo.svg';
