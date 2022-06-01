@@ -19,7 +19,6 @@ export interface EventItemProps {
   event: ParsedEvent;
 }
 
-
 /**
  * Token Display with respect to the User.
  * - "in"  = I receive something.
