@@ -4,9 +4,9 @@ import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {AppState} from 'state';
 import {Box, Card, Grid, Stack, Typography} from "@mui/material";
-import {FIELD, OTHER, SILO} from "../util/GetEventFacet";
-import {ParsedEvent} from "../state/v2/farmer/events/updater";
-import EventItem from "../components/v2/History/EventItem";
+import {FIELD, OTHER, SILO} from "util/GetEventFacet";
+import {ParsedEvent} from "state/v2/farmer/events/updater";
+import EventItem from "components/v2/History/EventItem";
 
 const buttonStyle = {
   cursor: "pointer",
