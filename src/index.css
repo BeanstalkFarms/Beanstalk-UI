@@ -1,4 +1,7 @@
-/* Futura PT */
+/** ------------------------- **/
+/** Fonts                     **/
+/** ------------------------- **/
+
 @font-face {
   font-family: 'Futura PT';
   src: url('./font/FuturaPT/FuturaPTLight.otf');
@@ -21,6 +24,10 @@
   font-family: 'Lucida Console';
   src: url('./font/LucidaConsole/LucidaConsoleRegular.ttf');
 }
+
+/** ------------------------- **/
+/** Globals                   **/
+/** ------------------------- **/
 
 html, body {
   height: 100%;
