@@ -1,3 +1,4 @@
+import { useWhatChanged } from '@simbathesailor/use-what-changed';
 import { SupportedChainId } from 'constants/chains';
 import {
   Beanstalk,
@@ -13,8 +14,10 @@ import {
 } from 'constants/v2/addresses';
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
-import {  useProvider, useSigner } from 'wagmi';
-import { getChainConstant } from './useChainConstant';
+import { useProvider, useSigner, useContract as useWagmiContract } from 'wagmi';
+import useChainConstant, { getChainConstant } from './useChainConstant';
+
+// -------------------------------------------------
 
 const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
 const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
@@ -24,6 +27,8 @@ const ERC20_ABI = require('constants/abi/ERC20.json');
 
 export type AddressOrAddressMap = string | AddressMap;
 export type AbiOrAbiMap = AddressMap<ContractInterface[]>;
+
+// -------------------------------------------------
 
 export function useContractReadOnly<T extends Contract = Contract>(
   addressOrAddressMap: AddressOrAddressMap,
@@ -69,13 +74,16 @@ export function useGetContract<T extends Contract = Contract>(
 ): (addressOrAddressMap: AddressOrAddressMap) => [T | null, SupportedChainId] {
   const provider         = useProvider();
   const { data: signer } = useSigner();
-  const chainId = provider.network.chainId;
-  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, chainId);
+  const chainId          = provider.network.chainId;
+  const abi              = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, chainId);
   const signerOrProvider = useSignerIfPossible && signer ? signer : provider;
+  useWhatChanged([abi,signerOrProvider,chainId], 'abi,signerOrProvider,chainId');
+  
+  // 
   return useCallback(
     (addressOrAddressMap: AddressOrAddressMap) => {
       const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, chainId);
-      console.debug(`[useContract] creating new instance of ${address}`);
+      console.debug(`[useGetContract] creating new instance of ${address}, ${abi.length}, ${signerOrProvider}, ${chainId}`);
       return [
         address 
           ? new ethers.Contract(
@@ -140,4 +148,16 @@ export function useGetERC20Contract() {
 export function useERC20Contract(addressOrAddressMap: AddressOrAddressMap) {
   const get = useGetERC20Contract();
   return get(addressOrAddressMap);
+}
+
+// --------------------------------------------------
+
+export function useFertilizerContract(signer?: ethers.Signer | null) {
+  const fertAddress = useChainConstant(BEANSTALK_FERTILIZER_ADDRESSES);
+  const provider = useProvider();
+  return useWagmiContract<BeanstalkFertilizer>({
+    addressOrName: fertAddress,
+    contractInterface: BEANSTALK_FERTILIZER_ABI,
+    signerOrProvider: signer || provider,
+  });
 }

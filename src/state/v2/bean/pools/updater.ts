@@ -8,9 +8,10 @@ import { getChainConstant } from 'hooks/useChainConstant';
 import POOLS from 'constants/v2/pools';
 import { SupportedChainId } from 'constants/chains';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
-import { updateBeanPrice } from '../reducer';
+import { updateBeanPrice, updateBeanSupply } from '../token/actions';
 
 export const PRE_EXPLOIT_BEAN_DATA = {
+  updateBeanSupply: tokenResult(BEAN)(new BigNumber(108155457359439)),
   updateBeanPrice: new BigNumber(1.020270),
   // Mock price contract responses.
   updateBeanPools: [
@@ -22,7 +23,7 @@ export const PRE_EXPLOIT_BEAN_DATA = {
           tokenResult(BEAN)(new BigNumber(32425202653220)),              // BEAN 0xDC59ac4FeFa32293A95889Dc396682858d52e5Db
           tokenResult(WETH)(new BigNumber(10886690345515907745338)),     // WETH 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2
         ],
-        deltaB: tokenResult(BEAN)(new BigNumber(-333052664565)),
+        deltaB: tokenResult(BEAN)(new BigNumber(333052664565)),
         supply: tokenResult(BEAN_ETH_UNIV2_LP)(new BigNumber(540894218294675521)),
         liquidity: tokenResult(BEAN)(new BigNumber(66189447135944)),
       }
@@ -71,16 +72,24 @@ export const useGetPools = () => {
           if (chainId === SupportedChainId.MAINNET) {
             dispatch(updateBeanPools(PRE_EXPLOIT_BEAN_DATA.updateBeanPools));
             dispatch(updateBeanPrice(PRE_EXPLOIT_BEAN_DATA.updateBeanPrice));
+            dispatch(updateBeanSupply(PRE_EXPLOIT_BEAN_DATA.updateBeanSupply));
             console.debug('[bean/pools/useGetPools] OVERRIDE: using pre-exploit data');
             return;
           }
 
           console.debug('[bean/pools/useGetPools] FETCH', beanstalkPriceContract.address, chainId);
-          const pools = getChainConstant(POOLS, chainId);
-          const priceResult = await beanstalkPriceContract.price();
+          const Pools = getChainConstant(POOLS, chainId);
+          const Bean  = getChainConstant(BEAN, chainId);
+          const [
+            priceResult,
+            beanSupply,
+          ] = await Promise.all([
+            beanstalkPriceContract.price(),
+            Bean.getTotalSupply(),
+          ]);
           if (!priceResult) return;
 
-          console.debug('[bean/pools/useGetPools] RESULT: price contract result =', priceResult);
+          console.debug('[bean/pools/useGetPools] RESULT: price contract result =', priceResult, beanSupply.toString());
 
           // Step 2: Get LP token supply data and format as UpdatePoolPayload
           const dataWithSupplyResult : (Promise<UpdatePoolPayload>)[] = [
@@ -90,8 +99,8 @@ export const useGetPools = () => {
               // If a new pool is added to the Pools contract before it's
               // configured in the frontend, this function would throw an error.
               // Thus, we only process the pool's data if we have it configured.
-              if (pools[address]) {
-                const POOL = pools[address];
+              if (Pools[address]) {
+                const POOL = Pools[address];
                 acc.push(
                   POOL.lpToken.getTotalSupply().then((supply) => ({
                     address: poolData.pool,
@@ -117,7 +126,7 @@ export const useGetPools = () => {
                   }))
                 );
               } else {
-                console.debug(`[bean/pools/useGetPools] price contract returned data for pool ${address} but it isn't configured, skipping. available pools:`, pools);
+                console.debug(`[bean/pools/useGetPools] price contract returned data for pool ${address} but it isn't configured, skipping. available pools:`, Pools);
               }
               return acc;
             }, [])
@@ -127,6 +136,7 @@ export const useGetPools = () => {
           
           dispatch(updateBeanPools(await Promise.all(dataWithSupplyResult)));
           dispatch(updateBeanPrice(tokenResult(BEAN)(priceResult.price.toString())));
+          dispatch(updateBeanSupply(tokenResult(BEAN)(beanSupply.toString())));
         }
       } catch (e) {
         console.debug('[bean/pools/useGetPools] FAILED', e);

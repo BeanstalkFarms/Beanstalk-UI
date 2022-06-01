@@ -11,6 +11,7 @@ import {
   Alert,
   Box,
   Button,
+  ButtonProps,
   CircularProgress,
   Dialog,
   ListItemText,
@@ -105,7 +106,7 @@ const SelectWalletDialog: React.FC<{
   );
 };
 
-const WalletButton: React.FC = () => {
+const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const { disconnect } = useDisconnect();
@@ -147,6 +148,7 @@ const WalletButton: React.FC = () => {
           )}
           endIcon={<DropdownIcon open={menuVisible} />}
           onClick={handleShowMenu}
+          {...props}
         >
           <Typography variant="subtitle1">
             {trimAddress(getAccount(account.address), !isMobile)}
@@ -233,6 +235,7 @@ const WalletButton: React.FC = () => {
         variant="contained"
         color="light"
         onClick={() => setShowDialog(true)}
+        {...props}
       >
         Connect Wallet
       </Button>

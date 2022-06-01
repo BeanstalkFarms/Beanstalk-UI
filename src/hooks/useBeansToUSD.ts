@@ -8,8 +8,8 @@ import { zeroBN } from 'constants/index';
  * Convert an amount of Beans into USD.
  */
 const useBeansToUSD = () => {
-  const price = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
-  return useCallback((bdv: BigNumber) => bdv?.multipliedBy(price[0]) || zeroBN, [price]);
+  const price = useSelector<AppState, AppState['_bean']['token']['price']>((state) => state._bean.token.price);
+  return useCallback((bdv: BigNumber) => bdv?.multipliedBy(price) || zeroBN, [price]);
 };
 
 export default useBeansToUSD;

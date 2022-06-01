@@ -23,8 +23,8 @@ export const useAllowances = (
   // If a provided Token is a NativeToken, there is no allowance.
   // Otherwise, see if we've loaded an approval for this contract + token combo.
   const currentAllowances : (null | BigNumber)[] = useMemo(() => tokens.map((curr) => {
-    if (!contract) return null;
     if (curr instanceof NativeToken) return new BigNumber(MAX_UINT256);
+    if (!contract) return null;
     return allowances[contract]
       ? (allowances[contract][curr.address] || null)
       : null;

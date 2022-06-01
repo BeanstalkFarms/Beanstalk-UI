@@ -22,9 +22,6 @@ export function getChainConstant<T extends ConstantByChain>(map: T, chainId?: Su
 export function useGetChainConstant() {
   const { activeChain } = useNetwork();
   return useCallback(
-    // I find the function expression much easier to parse here,
-    // so going to break our usual preference for arrow functions. -SC
-    // eslint-disable-next-line prefer-arrow-callback
     (map) => getChainConstant(map, activeChain?.id),
     [activeChain?.id]
   );

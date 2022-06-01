@@ -21,7 +21,7 @@ const ForecastPage : React.FC = () => (
           <Stack direction="column" gap={2}>
             <Button
               component={RouterLink}
-              to="/barn-raise"
+              to="/"
               color="primary"
               variant="outlined"
               size="large"
