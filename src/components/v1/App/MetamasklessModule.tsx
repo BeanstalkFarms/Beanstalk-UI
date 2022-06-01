@@ -3,8 +3,8 @@ import { Grid, Button, Link } from '@mui/material';
 import { initialize, metamaskFailure, switchToMainnet } from 'util/index';
 import { METAMASK_LINK } from 'constants/index';
 
-import SvgCloudIcon from 'components/About/SvgCloudIcon';
-import About from 'components/About';
+import SvgCloudIcon from 'components/v1/About/SvgCloudIcon';
+import About from 'components/v1/About';
 import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles(({
