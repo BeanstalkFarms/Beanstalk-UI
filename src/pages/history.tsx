@@ -7,12 +7,15 @@ import {Box, Card, Grid, Stack, Typography} from "@mui/material";
 import {FIELD, OTHER, SILO} from "util/GetEventFacet";
 import {ParsedEvent} from "state/v2/farmer/events/updater";
 import EventItem from "components/v2/History/EventItem";
+import { useAccount } from 'wagmi';
+import WalletButton from 'components/v2/Common/WalletButton';
 
 const buttonStyle = {
   cursor: "pointer",
 }
 
 const TransactionHistoryPage: React.FC = () => {
+  const { data: account } = useAccount();
   const [currentTab, setCurrentTab] = useState(SILO.toString());
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
   const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>(filterEventsByFacet(currentTab));
@@ -27,6 +30,14 @@ const TransactionHistoryPage: React.FC = () => {
   useEffect(() => {
     setWalletEvents(filterEventsByFacet(currentTab));
   }, [currentTab])
+
+  if (!account) {
+    return (
+      <Card component={Stack} direction="row" alignItems="center" justifyContent="center" sx={{ p: 4 }}>
+        <WalletButton variant="outlined" color="primary" />
+      </Card>
+    )
+  }
 
   return (
     <Container maxWidth="lg">
@@ -52,22 +63,24 @@ const TransactionHistoryPage: React.FC = () => {
                 </Box>
               </Stack>
             </Stack>
-            {
-              walletEvents.length > 1 ? (
-                <Grid container>
-                  {walletEvents.map((event) => {
-                    return (
-                      <Grid item width="100%">
-                        <EventItem event={event} />
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              ) : (
-                <Stack direction="column" justifyContent="center" alignItems="center" height="250px" gap={1}>
-                  <Typography variant="h3">No events of this type!</Typography>
-                </Stack>
-              )}
+            {walletEvents.length > 1 ? (
+              <Grid container>
+                {walletEvents.map((event) => {
+                  return (
+                    <Grid item width="100%">
+                      <EventItem
+                        event={event}
+                        account={account}
+                      />
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            ) : (
+              <Stack direction="column" justifyContent="center" alignItems="center" height="250px" gap={1}>
+                <Typography variant="h3">No events of this type!</Typography>
+              </Stack>
+            )}
           </Stack>
         </Card>
       </Stack>

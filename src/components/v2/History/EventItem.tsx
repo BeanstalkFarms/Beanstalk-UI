@@ -1,20 +1,17 @@
-/* eslint-disable */
 import React from 'react';
-import {Divider, Stack, Typography} from '@mui/material';
-import {makeStyles} from '@mui/styles';
-import {ParsedEvent} from "../../../state/v2/farmer/events/updater";
-import {account, displayBN, toTokenUnitsBN} from "../../../util";
-import BigNumber from "bignumber.js";
-import {PodListingFilledEvent, PodOrderFilledEvent} from "../../../state/marketplace/updater";
+import { Divider, Stack, Typography } from '@mui/material';
+import { ParsedEvent } from 'state/v2/farmer/events/updater';
+import { displayBN, toTokenUnitsBN } from 'util/index';
+import BigNumber from 'bignumber.js';
+import { PodListingFilledEvent, PodOrderFilledEvent } from 'state/v1/marketplace/updater';
 import Token from 'classes/Token';
-import {BEAN, BEAN_ETH_UNIV2_LP, ETH, PODS} from "../../../constants/v2/tokens";
-import {SupportedChainId} from "../../../constants/chains";
-import TokenIcon from "../Common/TokenIcon";
-
-const useStyles = makeStyles(() => ({}))
+import { BEAN, BEAN_ETH_UNIV2_LP, ETH, PODS } from 'constants/tokens';
+import { SupportedChainId } from 'constants/chains';
+import TokenIcon from '../Common/TokenIcon';
 
 export interface EventItemProps {
   event: ParsedEvent;
+  account: string;
 }
 
 /**
@@ -25,38 +22,36 @@ export interface EventItemProps {
 const TokenDisplay: React.FC<{
   color?: 'green' | 'red';
   input?: [BigNumber, Token],
-}> = (props) => {
-  return (
-    <div>
-      {props.input ? (
-        <Stack direction="row" gap={0.1}>
-          <Typography style={{color: props.color}}>
-            {props.color === 'red' ? '-' : '+'}
-          </Typography>
-          <TokenIcon token={props.input[1]}/>
-          <Typography style={{color: props.color}}>
-            {`${displayBN(props.input[0])}`}
-          </Typography>
-        </Stack>
+}> = (props) => (
+  <div>
+    {props.input ? (
+      <Stack direction="row" gap={0.1}>
+        <Typography style={{ color: props.color }}>
+          {props.color === 'red' ? '-' : '+'}
+        </Typography>
+        <TokenIcon token={props.input[1]} />
+        <Typography style={{ color: props.color }}>
+          {`${displayBN(props.input[0])}`}
+        </Typography>
+      </Stack>
       ) : null}
-    </div>
-  );
-};
+  </div>
+);
 
-const EventItem: React.FC<EventItemProps> = ({event}) => {
+const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
   let eventTitle = `${event.event}`;
   let amountIn;
   let amountOut;
   switch (event.event) {
     case 'BeanDeposit': {
-      const s = event.returnValues.season;
+      // const s = event.returnValues.season;
       const beans = toTokenUnitsBN(
         new BigNumber(event.returnValues.beans),
         BEAN[SupportedChainId.MAINNET].decimals
       );
-      eventTitle = `Bean Deposit`;
+      eventTitle = 'Bean Deposit';
       amountIn = (
-        <TokenDisplay color={'green'} input={[beans, BEAN[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="green" input={[beans, BEAN[SupportedChainId.MAINNET]]} />
       );
       break;
     }
@@ -68,26 +63,26 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
 
       eventTitle = 'Bean Claim';
       amountOut = (
-        <TokenDisplay color={'red'} input={[beans, BEAN[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="red" input={[beans, BEAN[SupportedChainId.MAINNET]]} />
       );
       amountIn = (
-        <TokenDisplay color={'green'} input={[beans, BEAN[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="green" input={[beans, BEAN[SupportedChainId.MAINNET]]} />
       );
       break;
     }
     case 'BeanWithdraw': {
-      const s = parseInt(event.returnValues.season, 10);
+      // const s = parseInt(event.returnValues.season, 10);
       const beans = toTokenUnitsBN(
         new BigNumber(event.returnValues.beans),
         BEAN[SupportedChainId.MAINNET].decimals
       );
 
-      eventTitle = `Bean Withdrawal`; //TODO: add withdraw frozen
+      eventTitle = 'Bean Withdrawal'; // TODO: add withdraw frozen
       amountOut = (
-        <TokenDisplay color={'red'} input={[beans, BEAN[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="red" input={[beans, BEAN[SupportedChainId.MAINNET]]} />
       );
       amountIn = (
-        <TokenDisplay color={'green'} input={[beans, BEAN[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="green" input={[beans, BEAN[SupportedChainId.MAINNET]]} />
       );
       break;
     }
@@ -104,16 +99,15 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
 
         eventTitle = `Bean Sow (${weather}% Weather)`;
         amountOut = (
-          <TokenDisplay color={'red'} input={[beans, BEAN[SupportedChainId.MAINNET]]}/>
+          <TokenDisplay color="red" input={[beans, BEAN[SupportedChainId.MAINNET]]} />
         );
         amountIn = (
-          <TokenDisplay color={'green'} input={[pods, PODS]}/>
+          <TokenDisplay color="green" input={[pods, PODS]} />
         );
-
       } else {
         eventTitle = 'Bean Sow';
         amountIn = (
-          <TokenDisplay color={'green'} input={[pods, PODS]}/>
+          <TokenDisplay color="green" input={[pods, PODS]} />
         );
       }
       break;
@@ -126,23 +120,23 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
 
       eventTitle = 'Pod Harvest';
       amountOut = (
-        <TokenDisplay color={'red'} input={[beans, PODS]}/>
+        <TokenDisplay color="red" input={[beans, PODS]} />
       );
       amountIn = (
-        <TokenDisplay color={'green'} input={[beans, BEAN[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="green" input={[beans, BEAN[SupportedChainId.MAINNET]]} />
       );
       break;
     }
     case 'LPDeposit': {
-      const s = event.returnValues.season;
+      // const s = event.returnValues.season;
       const lp = toTokenUnitsBN(
         new BigNumber(event.returnValues.lp),
         BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET].decimals
       );
 
-      eventTitle = `LP Deposit`;
+      eventTitle = 'LP Deposit';
       amountIn = (
-        <TokenDisplay color={'green'} input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="green" input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]} />
       );
       break;
     }
@@ -154,33 +148,33 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
 
       eventTitle = 'LP Claim';
       amountOut = (
-        <TokenDisplay color={'red'} input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="red" input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]} />
       );
       amountIn = (
-        <TokenDisplay color={'green'} input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="green" input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]} />
       );
       break;
     }
     case 'LPWithdraw': {
-      const s = parseInt(event.returnValues.season, 10);
+      // const s = parseInt(event.returnValues.season, 10);
       const lp = toTokenUnitsBN(
         new BigNumber(event.returnValues.lp),
         BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET].decimals
       );
 
-      eventTitle = `LP Withdrawal`; //TODO: add withdraw frozen
+      eventTitle = 'LP Withdrawal'; // TODO: add withdraw frozen
       amountOut = (
-        <TokenDisplay color={'red'} input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="red" input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]} />
       );
       amountIn = (
-        <TokenDisplay color={'green'} input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="green" input={[lp, BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]]} />
       );
       break;
     }
     case 'Vote': {
       eventTitle = 'BIP Vote';
       amountOut = (
-        <span style={{color: 'green', fontFamily: 'Futura-PT-Book'}}>
+        <span style={{ color: 'green', fontFamily: 'Futura-PT-Book' }}>
           {`BIP ${event.returnValues.bip}`}
         </span>
       );
@@ -189,7 +183,7 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
     case 'Unvote': {
       eventTitle = 'BIP Unvote';
       amountOut = (
-        <span style={{color: 'red', fontFamily: 'Futura-PT-Book'}}>
+        <span style={{ color: 'red', fontFamily: 'Futura-PT-Book' }}>
           {`BIP ${event.returnValues.bip}`}
         </span>
       );
@@ -203,7 +197,7 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
 
       eventTitle = 'Sunrise Reward';
       amountOut = (
-        <TokenDisplay color={'red'} input={[beanReward, BEAN[SupportedChainId.MAINNET]]}/>
+        <TokenDisplay color="red" input={[beanReward, BEAN[SupportedChainId.MAINNET]]} />
       );
       break;
     }
@@ -220,10 +214,10 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
 
         eventTitle = 'ETH to Bean Swap';
         amountOut = (
-          <TokenDisplay color={'red'} input={[swapFrom, ETH[SupportedChainId.MAINNET]]}/>
+          <TokenDisplay color="red" input={[swapFrom, ETH[SupportedChainId.MAINNET]]} />
         );
         amountIn = (
-          <TokenDisplay color={'green'} input={[swapTo, BEAN[SupportedChainId.MAINNET]]}/>
+          <TokenDisplay color="green" input={[swapTo, BEAN[SupportedChainId.MAINNET]]} />
         );
       } else if (event.returnValues.amount1In !== '0') {
         const swapFrom = toTokenUnitsBN(
@@ -237,10 +231,10 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
 
         eventTitle = 'Bean to ETH Swap';
         amountOut = (
-          <TokenDisplay color={'red'} input={[swapFrom, BEAN[SupportedChainId.MAINNET]]}/>
+          <TokenDisplay color="red" input={[swapFrom, BEAN[SupportedChainId.MAINNET]]} />
         );
         amountIn = (
-          <TokenDisplay color={'green'} input={[swapTo, ETH[SupportedChainId.MAINNET]]}/>
+          <TokenDisplay color="green" input={[swapTo, ETH[SupportedChainId.MAINNET]]} />
         );
       }
       break;
@@ -253,12 +247,12 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
       if (event.returnValues.from.toLowerCase() === account) {
         eventTitle = 'Send Plot';
         amountOut = (
-          <TokenDisplay color={'red'} input={[pods, PODS]}/>
+          <TokenDisplay color="red" input={[pods, PODS]} />
         );
       } else {
         eventTitle = 'Receive Plot';
         amountIn = (
-          <TokenDisplay color={'green'} input={[pods, PODS]}/>
+          <TokenDisplay color="green" input={[pods, PODS]} />
         );
       }
       break;
@@ -311,11 +305,11 @@ const EventItem: React.FC<EventItemProps> = ({event}) => {
           {amountOut}
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Typography sx={{opacity: 0.7}}>03/24/2022 13:24:24 PM</Typography>
+          <Typography sx={{ opacity: 0.7 }}>03/24/2022 13:24:24 PM</Typography>
           {amountIn}
         </Stack>
       </Stack>
-      <Divider/>
+      <Divider />
     </>
   );
 };
