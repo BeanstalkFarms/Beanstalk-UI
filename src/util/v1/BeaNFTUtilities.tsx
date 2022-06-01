@@ -8,7 +8,7 @@ import {
   beaNFTGenesisContractReadOnly,
   chainId,
   txCallback,
-} from './index';
+} from '../index';
 
 export const mintGenesisNFT = async (_account, nftId, ipfsHash, signature) => {
   beaNFTGenesisContract()

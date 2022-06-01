@@ -1,5 +1,5 @@
-import { beanstalkContract } from './index';
-import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
+import { beanstalkContract } from '../index';
+import { handleCallbacks, TxnCallbacks } from '../TxnUtilities';
 
 export const fund = async (
   id,

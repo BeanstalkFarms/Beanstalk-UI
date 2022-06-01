@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
-import { poolForLP } from './UniswapUtilities';
-import { AppState } from '../state';
+import { poolForLP } from '../UniswapUtilities';
+import { AppState } from '../../state';
 
 /**
  * Calculate the amount each asset the user controls. This includes all token

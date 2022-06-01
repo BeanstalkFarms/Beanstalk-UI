@@ -33,7 +33,7 @@ import {
   // tokenV2ContractReadOnly,
   toTokenUnitsBN,
   chainId,
-} from './index';
+} from '../index';
 
 /* Client is responsible for calling execute() */
 // export const createLedgerBatch = () => new web3.BatchRequest();

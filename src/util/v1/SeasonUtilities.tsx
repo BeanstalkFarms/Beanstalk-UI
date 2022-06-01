@@ -1,4 +1,4 @@
-import { beanstalkContract } from './index';
+import { beanstalkContract } from '../index';
 
 export const sunrise = async () => {
   beanstalkContract()

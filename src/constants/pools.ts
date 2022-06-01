@@ -4,7 +4,7 @@ import { SupportedChainId } from 'constants/chains';
 import curveLogo from 'img/curve-logo.svg';
 import uniswapLogo from 'img/uniswap-logo.svg';
 
-import { ChainConstant, PoolsByAddress } from './v2';
+import { ChainConstant, PoolsByAddress } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_ETH_UNIV2_ADDRESSES, BEAN_LUSD_ADDRESSES } from './addresses';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, CRV3, LUSD, WETH } from './tokens';
 
