@@ -1,12 +1,41 @@
+import { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { BEAN, CURVE, UNI_V2_ETH_BEAN_LP } from 'constants/tokens';
+
 import { UserBalanceState } from 'state/userBalance/reducer';
 import { ParsedEvent } from 'state/v2/farmer/events/updater';
 import { PlotMap } from 'state/v2/farmer/field';
-import { toTokenUnitsBN } from './TokenUtilities';
+import { toTokenUnitsBN } from 'util/TokenUtilities';
+import {
+  BEAN,
+  BEAN_ETH_UNIV2_LP,
+  BEAN_CRV3_LP,
+  BEAN_LUSD_LP,
+} from 'constants/v2/tokens';
+import { useGetChainConstant } from 'hooks/useChainConstant';
+import { ERC20Token } from 'classes/Token';
 
-// @publius to discuss: rename of crates
-// "crate" = a Deposit or Withdrawal
+// ------------------------------------
+// Types
+// ------------------------------------
+
+export type EventParsingParameters = {
+  account: string;
+  season: BigNumber;
+  farmableBeans: BigNumber;
+  harvestableIndex: BigNumber;
+};
+
+export type EventParsingTokens = {
+  Bean:       ERC20Token;
+  BeanEthLP:  ERC20Token;
+  BeanCrv3LP: ERC20Token;
+  BeanLusdLP: ERC20Token;
+}
+
+// ------------------------------------
+// Helper functions: Crates
+// ------------------------------------
+
 export function addRewardedCrates(
   crates: { [season: number] : BigNumber },
   season: any,
@@ -26,6 +55,10 @@ export function addRewardedCrates(
         : crates[ds].plus(rewardedBeans);
   return crates;
 }
+
+// ------------------------------------
+// Helper functions: Plots
+// ------------------------------------
 
 export function parsePlots(
   plots: PlotMap<BigNumber>,
@@ -60,15 +93,22 @@ export function parsePlots(
   return [pods, harvestablePods, unharvestablePlots, harvestablePlots];
 }
 
-export default function processFarmerEvents(
+// ------------------------------------
+// Event processing logic
+// ------------------------------------
+
+function _processFarmerEvents(
   events: ParsedEvent[],
-  params: {
-    account: string;
-    season: BigNumber;
-    farmableBeans: BigNumber;
-    harvestableIndex: BigNumber;
-  },
+  params: EventParsingParameters,
+  tokens: EventParsingTokens,
 ) {
+  const {
+    Bean,
+    BeanEthLP,
+    BeanCrv3LP,
+    // BeanLusdLP,
+  } = tokens;
+
   // These get piped into redux 1:1 and so need to match
   // the type defined in UserBalanceState.
   let userLPSeedDeposits : UserBalanceState['lpSeedDeposits'] = {};
@@ -93,7 +133,7 @@ export default function processFarmerEvents(
       // so this conversion turns `returnValues.beans`
       const beans = toTokenUnitsBN(
         new BigNumber(event.returnValues.beans),
-        BEAN.decimals
+        Bean.decimals
       );
       // Override the bean deposit for season `s`.
       // If a prior deposit exists, add `beans` to that
@@ -108,10 +148,10 @@ export default function processFarmerEvents(
       if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
     } else if (event.event === 'BeanRemove') {
       // FIXME: define crates contract return value
-      event.returnValues.crates.forEach((s, i) => {
+      event.returnValues.crates.forEach((s: string, i: number) => {
         const beans = toTokenUnitsBN(
           event.returnValues.crateBeans[i],
-          BEAN.decimals
+          Bean.decimals
         );
         userBeanDeposits = {
           ...userBeanDeposits,
@@ -126,7 +166,7 @@ export default function processFarmerEvents(
       const s = parseInt(event.returnValues.season, 10);
       const beans = toTokenUnitsBN(
         new BigNumber(event.returnValues.beans),
-        BEAN.decimals
+        Bean.decimals
       );
       beanWithdrawals = {
         ...beanWithdrawals,
@@ -138,22 +178,22 @@ export default function processFarmerEvents(
     } else if (event.event === 'Sow') {
       const s = toTokenUnitsBN(
         new BigNumber(event.returnValues.index),
-        BEAN.decimals
+        Bean.decimals
       );
       userPlots[s.toString()] = toTokenUnitsBN(
         event.returnValues.pods,
-        BEAN.decimals // QUESTION: why is this BEAN.decimals and not PODS? are they the same?
+        Bean.decimals // QUESTION: why is this BEAN.decimals and not PODS? are they the same?
       );
     } else if (event.event === 'PlotTransfer') {
       // The account received a Plot
       if (event.returnValues.to.toLowerCase() === params.account) {
         const index = toTokenUnitsBN(
           new BigNumber(event.returnValues.id),
-          BEAN.decimals
+          Bean.decimals
         );
         userPlots[index.toString()] = toTokenUnitsBN(
           event.returnValues.pods,
-          BEAN.decimals
+          Bean.decimals
         );
       }
       // The account sent a Plot
@@ -162,7 +202,7 @@ export default function processFarmerEvents(
         // Absolute, with respect to Pod 0.
         const index = toTokenUnitsBN(
           new BigNumber(event.returnValues.id),
-          BEAN.decimals
+          Bean.decimals
         );
         // String version of `idx`, used to key
         // objects. This prevents duplicate toString() calls
@@ -171,7 +211,7 @@ export default function processFarmerEvents(
         // Size of the Plot, in pods
         const pods = toTokenUnitsBN(
           new BigNumber(event.returnValues.pods),
-          BEAN.decimals
+          Bean.decimals
         );
 
         let i = 0;
@@ -216,11 +256,11 @@ export default function processFarmerEvents(
       const s = parseInt(event.returnValues.season, 10);
       const lp = toTokenUnitsBN(
         new BigNumber(event.returnValues.lp),
-        UNI_V2_ETH_BEAN_LP.decimals
+        BeanEthLP.decimals
       );
       const seeds = toTokenUnitsBN(
         new BigNumber(event.returnValues.seeds),
-        BEAN.decimals
+        Bean.decimals
       );
       userLPDeposits = {
         ...userLPDeposits,
@@ -235,10 +275,10 @@ export default function processFarmerEvents(
             : seeds,
       };
     } else if (event.event === 'LPRemove') {
-      event.returnValues.crates.forEach((s, i) => {
+      event.returnValues.crates.forEach((s: string, i: number) => {
         const lp = toTokenUnitsBN(
           event.returnValues.crateLP[i],
-          UNI_V2_ETH_BEAN_LP.decimals
+          BeanEthLP.decimals
         );
         const seeds = userLPSeedDeposits[s]
           .multipliedBy(lp)
@@ -260,7 +300,7 @@ export default function processFarmerEvents(
       const s = parseInt(event.returnValues.season, 10);
       const lp = toTokenUnitsBN(
         new BigNumber(event.returnValues.lp),
-        UNI_V2_ETH_BEAN_LP.decimals
+        BeanEthLP.decimals
       );
       lpWithdrawals = {
         ...lpWithdrawals,
@@ -272,13 +312,13 @@ export default function processFarmerEvents(
       const t = event.returnValues.token;
       const lp = toTokenUnitsBN(
         new BigNumber(event.returnValues.amount),
-        UNI_V2_ETH_BEAN_LP.decimals
+        BeanEthLP.decimals
       );
       const bdv = toTokenUnitsBN(
         new BigNumber(event.returnValues.bdv),
-        BEAN.decimals
+        Bean.decimals
       );
-      if (t === CURVE.addr) {
+      if (t === BeanCrv3LP.address) {
         userCurveDeposits = {
           ...userCurveDeposits,
           [s]:
@@ -310,9 +350,9 @@ export default function processFarmerEvents(
       const t = event.returnValues.token;
       const lp = toTokenUnitsBN(
         event.returnValues.amount,
-        UNI_V2_ETH_BEAN_LP.decimals
+        BeanEthLP.decimals
       );
-      if (t === CURVE.addr) {
+      if (t === BeanCrv3LP.address) {
         const bdv = userCurveBDVDeposits[s]
           .multipliedBy(lp)
           .dividedBy(userCurveDeposits[s]);
@@ -343,12 +383,12 @@ export default function processFarmerEvents(
       }
     } else if (event.event === 'RemoveSeasons') {
       const t = event.returnValues.token;
-      event.returnValues.seasons.forEach((s, i) => {
+      event.returnValues.seasons.forEach((s: string, i: number) => {
         const lp = toTokenUnitsBN(
           event.returnValues.amounts[i],
-          UNI_V2_ETH_BEAN_LP.decimals
+          BeanEthLP.decimals
         );
-        if (t === CURVE.addr) {
+        if (t === BeanCrv3LP.address) {
           const bdv = userCurveBDVDeposits[s]
             .multipliedBy(lp)
             .dividedBy(userCurveDeposits[s]);
@@ -383,9 +423,9 @@ export default function processFarmerEvents(
       const t = event.returnValues.token;
       const lp = toTokenUnitsBN(
         new BigNumber(event.returnValues.amount),
-        UNI_V2_ETH_BEAN_LP.decimals
+        BeanEthLP.decimals
       );
-      if (t === CURVE.addr) {
+      if (t === BeanCrv3LP.address) {
         curveWithdrawals = {
           ...curveWithdrawals,
           [s]:
@@ -400,38 +440,38 @@ export default function processFarmerEvents(
       }
     } else if (event.event === 'ClaimSeason') {
       const t = event.returnValues.token;
-      if (t === CURVE.addr) {
+      if (t === BeanCrv3LP.address) {
         delete curveWithdrawals[event.returnValues.season];
       } else {
         delete beanlusdWithdrawals[event.returnValues.season];
       }
     } else if (event.event === 'ClaimSeasons') {
       const t = event.returnValues.token;
-      if (t === CURVE.addr) {
-        event.returnValues.seasons.forEach((s) => {
+      if (t === BeanCrv3LP.address) {
+        event.returnValues.seasons.forEach((s: string) => {
           delete curveWithdrawals[s];
         });
       } else {
-        event.returnValues.seasons.forEach((s) => {
+        event.returnValues.seasons.forEach((s: string) => {
           delete beanlusdWithdrawals[s];
         });
       }
     } else if (event.event === 'Harvest') {
       let beansClaimed = toTokenUnitsBN(
         event.returnValues.beans,
-        BEAN.decimals
+        Bean.decimals
       );
       let plots = event.returnValues.plots
         .slice()
-        .map((p) => toTokenUnitsBN(p, BEAN.decimals));
-      plots = plots.sort((a, b) => a.minus(b));
+        .map((p: any) => toTokenUnitsBN(p, Bean.decimals)); // FIXME: what's the type of p
+      plots = plots.sort((a: BigNumber, b: BigNumber) => a.minus(b));
 
-      plots.forEach((index) => {
+      plots.forEach((index: string) => {
         if (beansClaimed.isLessThan(userPlots[index])) {
           const partialIndex = beansClaimed.plus(index);
           userPlots = {
             ...userPlots,
-            [partialIndex]: userPlots[index].minus(beansClaimed),
+            [partialIndex.toString()]: userPlots[index].minus(beansClaimed),
           };
         } else {
           beansClaimed = beansClaimed.minus(userPlots[index]);
@@ -440,11 +480,11 @@ export default function processFarmerEvents(
       });
     } else if (event.event === 'BeanClaim') {
       event.returnValues.withdrawals.forEach(
-        (s) => delete beanWithdrawals[s]
+        (s: string) => delete beanWithdrawals[s]
       );
     } else if (event.event === 'LPClaim') {
       event.returnValues.withdrawals.forEach(
-        (s) => delete lpWithdrawals[s]
+        (s: string) => delete lpWithdrawals[s]
       );
     } else if (event.event === 'Vote') {
       votedBips.add(event.returnValues.bip);
@@ -507,3 +547,26 @@ export default function processFarmerEvents(
     harvestablePlots,
   };
 }
+
+// ------------------------------------
+// Hooks
+// ------------------------------------
+
+const useEventProcessor = () => {
+  const getChainConstant = useGetChainConstant();
+  const Tokens = useMemo<EventParsingTokens>(() => ({
+    // FIXME: cast these to the correct types
+    Bean:       getChainConstant(BEAN),
+    BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
+    BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
+    BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
+  }), [getChainConstant]);
+  
+  return useCallback(
+    (events: ParsedEvent[], params: EventParsingParameters) =>
+      _processFarmerEvents(events, params, Tokens),
+    [Tokens],
+  );
+};
+
+export default useEventProcessor;

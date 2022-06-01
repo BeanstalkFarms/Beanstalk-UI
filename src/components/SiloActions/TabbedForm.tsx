@@ -7,7 +7,7 @@ import { Button } from '@mui/material';
 
 import { AppState } from 'state';
 import { theme } from 'constants/index';
-import { SiloToken } from 'constants/siloTokens';
+import { SiloToken } from 'constants/v0/siloTokens';
 import { BaseModule, Grid, siloStrings } from 'components/Common';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';

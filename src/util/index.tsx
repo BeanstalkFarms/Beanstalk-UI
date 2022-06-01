@@ -1,34 +1,10 @@
 import { ethers } from 'ethers';
 
-import { changeTheme } from 'constants/index';
-import { changeTokenAddresses } from 'constants/tokens';
-import { SupportedChainId } from 'constants/chains';
-
 // -- Exports
-// export * from './SeasonUtilities';
-// export * from './SiloUtilities';
-// export * from './CurveUtilities';
 export * from './TokenUtilities';
-// export * from './TimeUtilities';
-// export * from './UniswapUtilities';
-// export * from './TimeUtilities';
-// export * from './APYUtilities';
-// export * from './FundraiserUtilities';
-// export * from './MarketUtilities';
 export type EventData = ethers.Event
 
 // -- Globals
-export let chainId : SupportedChainId = 1; // fixme
-export const account = null;
-
-// -- Helpers
-export async function switchChain(_chainId: SupportedChainId) {
-  // Update chain information, tokens, theme
-  chainId = _chainId;
-  changeTokenAddresses(chainId);
-  if (chainId === 1) changeTheme('spring');
-  if (chainId === 3) changeTheme('ropsten');
-}
 
 export function getPreviouslyConnectedWallets() : null | string[] {
   return JSON.parse(

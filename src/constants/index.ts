@@ -1,7 +1,7 @@
-export * from './bips';
+export * from './v0/bips';
 export * from './links';
-export * from './funds';
-export * from './tokens';
+export * from './v0/funds';
+export * from './v0/tokens';
 export * from './values';
-export * from './colors';
+// export * from './v0/colors';
 export * from './contracts';

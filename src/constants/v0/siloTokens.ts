@@ -8,15 +8,15 @@ import {
   LUSD_BDV_TO_STALK,
   LP_TO_STALK,
   LP_TO_SEEDS
-} from './values';
-import { getAPYs } from '../util';
-import { AppState } from '../state';
+} from '../values';
+import { getAPYs } from '../../util';
+import { AppState } from '../../state';
 
 import beanIcon from '../img/bean-logo.svg';
 import beanEthIcon from '../img/lp-logo.svg';
 import bean3CrvIcon from '../img/bean-crv3-logo.svg';
 import beanlusdIcon from '../img/bean-lusd-logo.svg';
-import { getUserSiloDepositsUSD } from '../util/SiloUtilities';
+import { getUserSiloDepositsUSD } from '../../util/SiloUtilities';
 
 export type SiloToken = {
   name: string;
