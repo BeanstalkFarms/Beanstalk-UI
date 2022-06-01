@@ -3,22 +3,9 @@ import {Container} from '@mui/system';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {AppState} from 'state';
-import {Box, Card, Divider, Grid, Stack, Typography} from "@mui/material";
-import {account, displayBN, toTokenUnitsBN} from "../util";
+import {Box, Card, Grid, Stack, Typography} from "@mui/material";
 import {FIELD, OTHER, SILO} from "../util/GetEventFacet";
 import {ParsedEvent} from "../state/v2/farmer/events/updater";
-import WalletEvent from "../components/Navigation/WalletEvent";
-import BigNumber from "bignumber.js";
-import {BEAN, ETH, UNI_V2_ETH_BEAN_LP, WITHDRAWAL_FROZEN} from "../constants";
-import {
-  ClaimableAsset,
-  CryptoAsset,
-  FarmAsset,
-  SiloAsset,
-  TokenTypeImageModule,
-  TransitAsset
-} from "../components/Common";
-import {PodListingFilledEvent, PodOrderFilledEvent} from "../state/marketplace/updater";
 import EventItem from "../components/v2/History/EventItem";
 
 const buttonStyle = {
@@ -26,20 +13,19 @@ const buttonStyle = {
 }
 
 const TransactionHistoryPage: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState(SILO)
+  const [currentTab, setCurrentTab] = useState(SILO.toString());
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
-  const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>([]);
+  const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>(filterEventsByFacet(currentTab));
   const handleSetTab = (tab: string) => setCurrentTab(tab);
 
-  function filterEventsByFacet() {
-    const filteredEvents = events.filter((event) => {
-      return event.facet === currentTab;
+  function filterEventsByFacet(tab: string) {
+    return events.filter((event) => {
+      return event.facet === tab;
     })
-    setWalletEvents(filteredEvents);
   }
 
   useEffect(() => {
-    filterEventsByFacet();
+    setWalletEvents(filterEventsByFacet(currentTab));
   }, [currentTab])
 
   return (

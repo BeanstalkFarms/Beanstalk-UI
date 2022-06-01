@@ -1,14 +1,12 @@
 /* eslint-disable */
 import React from 'react';
-import {Box, Divider, Stack, Typography} from '@mui/material';
+import {Divider, Stack, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import {ParsedEvent} from "../../../state/v2/farmer/events/updater";
-import {account, displayBN, tokenResult, toTokenUnitsBN} from "../../../util";
-import WalletEvent from "../../Navigation/WalletEvent";
+import {account, displayBN, toTokenUnitsBN} from "../../../util";
 import BigNumber from "bignumber.js";
 import {PodListingFilledEvent, PodOrderFilledEvent} from "../../../state/marketplace/updater";
 import Token from 'classes/Token';
-import useChainId from "../../../hooks/useChain";
 import {BEAN, BEAN_ETH_UNIV2_LP, ETH, PODS} from "../../../constants/v2/tokens";
 import {SupportedChainId} from "../../../constants/chains";
 import TokenIcon from "../Common/TokenIcon";
@@ -28,12 +26,6 @@ const TokenDisplay: React.FC<{
   color?: 'green' | 'red';
   input?: [BigNumber, Token],
 }> = (props) => {
-  const classes = useStyles();
-  const tokenImageStyle = {
-    height: '15px',
-    float: 'right',
-    margin: '0px 8px 0px 4px',
-  };
   return (
     <div>
       {props.input ? (
