@@ -49,7 +49,7 @@ const RemainingFertilizer: React.FC = () => {
                 </Stack>
               </Stack>
               <Stack gap={1}>
-                <Typography sx={{ opacity: 0.7 }}>Current Humidity (Interest Rate)</Typography>
+                <Typography color="text.secondary">Current Humidity (Interest Rate)</Typography>
                 <Stack direction="row" alignItems="center" gap={1}>
                   <Typography sx={{ fontSize: '25px', fontWeight: 400 }}>
                     {displayFullBN(humidity.multipliedBy(100))}%

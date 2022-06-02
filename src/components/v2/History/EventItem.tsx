@@ -305,7 +305,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
           {amountOut}
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Typography sx={{ opacity: 0.7 }}>03/24/2022 13:24:24 PM</Typography>
+          <Typography color="text.secondary">03/24/2022 13:24:24 PM</Typography>
           {amountIn}
         </Stack>
       </Stack>
