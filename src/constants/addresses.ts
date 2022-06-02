@@ -14,7 +14,7 @@ export const BEANSTALK_PRICE_ADDRESSES = {
 
 export const BEANSTALK_FERTILIZER_ADDRESSES = {
   [SupportedChainId.MAINNET]: '',
-  [SupportedChainId.ROPSTEN]: '0xd598d3799521a3F95784A81c883ddf1122Ad769B', // Post-Exploit
+  [SupportedChainId.ROPSTEN]: '0x82025f355969E7D2A64e4Dba1Ca0263843E6fbB1', // '0xd598d3799521a3F95784A81c883ddf1122Ad769B', // Post-Exploit
   [SupportedChainId.LOCALHOST]: '0xCABEe62adFB2a4d4172Fc2F7536f324FC52C274a', // Publius' dev node
 };
 

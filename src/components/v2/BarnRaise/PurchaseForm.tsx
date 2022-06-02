@@ -27,6 +27,8 @@ import { useAccount, useSigner } from 'wagmi';
 import { useFetchFarmerBalances } from 'state/v2/farmer/balances/updater';
 import { useFetchFarmerAllowances } from 'state/v2/farmer/allowances/updater';
 import { timeToStringDetailed } from 'util/v1/TimeUtilities';
+import useChainId from 'hooks/useChain';
+import { SupportedChainId } from 'constants/chains';
 import FertilizerItem from './FertilizerItem';
 import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
 import TransactionToast from '../Common/TxnToast';
@@ -275,10 +277,11 @@ const launch = 1654531200 * 1000; // June 6th, 2022 12pm EST
 const getDiff = () => (launch - new Date().getTime()) / 1000;
 
 export default () => {
+  const chainId = useChainId();
   const [timeStr, setTimeStr] = useState('Loading...');
-  const [isLaunched, setIsLaunched] = useState(false); 
+  const [isLaunched, setIsLaunched] = useState(chainId !== SupportedChainId.MAINNET); 
   useEffect(() => {
-    if (!isLaunched) {
+    if (!isLaunched && chainId !== SupportedChainId.MAINNET) {
       const interval = setInterval(() => {
         const diff = getDiff();
         if (diff <= 0) {
@@ -288,7 +291,7 @@ export default () => {
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [isLaunched]);
+  }, [isLaunched, chainId]);
 
   if (isLaunched) return <SetupForm />;
   return (

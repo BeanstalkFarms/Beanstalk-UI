@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 import { useAccount } from 'wagmi';
-import { REPLANT_SEASON } from 'hooks/useHumidity';
+import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/account';
@@ -11,30 +11,30 @@ import { resetFertilizer, updateFertilizer } from './actions';
 
 export const useFetchFarmerFertilizer = () => {
   const dispatch = useDispatch();
-  const replantSeason = useChainConstant(REPLANT_SEASON);
+  const replantId = useChainConstant(REPLANT_INITIAL_ID);
   const [fertContract] = useBeanstalkFertilizerContract();
 
   // Handlers
   const fetch = useCallback(async (_account: string) => {
     const account = getAccount(_account);
     if (fertContract && account) {
-      console.debug('[farmer/fertilizer/updater] FETCH');
+      console.debug('[farmer/fertilizer/updater] FETCH: ', replantId.toString());
       const [
         balance,
       ] = await Promise.all([
-        fertContract.balanceOf(account, replantSeason.toString()).then(bigNumberResult),
+        fertContract.balanceOf(account, replantId.toString()).then(bigNumberResult),
       ] as const);
       console.debug(`[farmer/fertilizer/updater] RESULT: balance = ${balance.toFixed(10)}`);
       if (balance.gt(0)) {
         dispatch(updateFertilizer({
-          [replantSeason.toNumber()]: balance
+          [replantId.toNumber()]: balance
         }));
       }
     }
   }, [
     dispatch,
     fertContract,
-    replantSeason
+    replantId
   ]); 
   const clear = useCallback(() => { 
     dispatch(resetFertilizer());

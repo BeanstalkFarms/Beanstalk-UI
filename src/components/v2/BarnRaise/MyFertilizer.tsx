@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Box, Card, Divider, Grid, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { useHumidityAtSeason } from 'hooks/useHumidity';
+import { useHumidityFromId } from 'hooks/useHumidity';
 import { AppState } from 'state';
 import FertilizerItem from 'components/v2/BarnRaise/FertilizerItem';
 import { zeroBN } from 'constants/index';
@@ -19,7 +19,7 @@ enum TabState {
 
 const MyFertilizer : React.FC = () => {
   const farmerFertilizer = useSelector<AppState, AppState['_farmer']['fertilizer']>((state) => state._farmer.fertilizer);
-  const humidityAt = useHumidityAtSeason();
+  const getHumidity = useHumidityFromId();
   const [tab, setTab] = useState<TabState>(TabState.ACTIVE);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -34,7 +34,7 @@ const MyFertilizer : React.FC = () => {
   const fertilizerSummary = useMemo(
     () => tokenIds.reduce(
       (agg, thisId) => {
-        const [humidity] = humidityAt(new BigNumber(thisId));
+        const [humidity] = getHumidity(); // new BigNumber(thisId);
         const amount = farmerFertilizer.tokens[thisId];
         agg.unfertilized = agg.unfertilized.plus(
           amount.multipliedBy(humidity.plus(1))
@@ -43,7 +43,7 @@ const MyFertilizer : React.FC = () => {
       },
       { unfertilized: new BigNumber(0) }
     ),
-    [farmerFertilizer, tokenIds, humidityAt]
+    [farmerFertilizer, tokenIds, getHumidity]
   );
 
   return (
@@ -90,7 +90,7 @@ const MyFertilizer : React.FC = () => {
             <Grid container spacing={2}>
               {tokenIds.map((id) => {
                 const season = new BigNumber(id);
-                const [humidity] = humidityAt(season);
+                const [humidity] = getHumidity(season);
                 const amount = farmerFertilizer.tokens[id];
                 const remaining = amount.multipliedBy(humidity.plus(1));
                 return (
