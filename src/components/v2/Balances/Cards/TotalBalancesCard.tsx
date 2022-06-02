@@ -64,10 +64,14 @@ const TokenRow : React.FC<{
 )
 
 const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
+  /** Convert Bean value to USD.  */
   const getUSD  = useBeansToUSD();
+  /** Get Whitelisted Silo Tokens */
   const whitelist = useWhitelist();
-  
+  /** Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.) */
   const [drilldown, setDrilldown] = useState<StateID | null>(null);
+  
+  // Drilldown handlers
   const onMouseOut = useCallback(() => setDrilldown(null), []);
   const onMouseOver = useCallback((v: StateID) => {
     return () => setDrilldown(v);
@@ -83,7 +87,11 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
 
   return (
     <Box>
-      <Stat title="My Balances" amount={`$${displayFullBN(getUSD(breakdown.bdv), 2)}`} icon={undefined} />
+      <Stat
+        title="My Balances"
+        amount={`$${displayFullBN(getUSD(breakdown.bdv), 2)}`}
+        icon={undefined}
+      />
       {/* Left Column */}
       <Grid container direction="row" alignItems="center" sx={{ mb: 4, mt: { md: 0, xs: 0 } }} rowSpacing={2}>
         <Grid item xs={12} md={3.5}>

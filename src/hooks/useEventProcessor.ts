@@ -737,6 +737,7 @@ const useEventProcessor = () => {
   const getChainConstant = useGetChainConstant();
   const Tokens = useMemo<EventParsingTokens>(() => ({
     // FIXME: cast these to the correct types
+    // FIXME: duplicated from `processor.ts`
     Bean:       getChainConstant(BEAN),
     BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
     BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),

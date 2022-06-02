@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
@@ -6,15 +6,15 @@ import { Pool, Token } from 'classes';
 import { AppState } from 'state';
 import useBeansToUSD from 'hooks/useBeansToUSD';
 import { displayUSD } from 'util/index';
-import { zeroBN } from 'constants/index';
 import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
 import TokenIcon from 'components/v2/Common/TokenIcon';
-import { BEAN, SEEDS, STALK } from 'constants/tokens';
+import { SEEDS, STALK } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
 import { displayBN } from 'util/v1/TokenUtilitiesOld';
-import useChainConstant from 'hooks/useChainConstant';
+import useSiloTokenToUSD from 'hooks/useSiloTokenToUSD';
+import { useTVL } from 'hooks/useTVL';
 
 const arrowContainerWidth = 20;
 
@@ -25,35 +25,22 @@ const TokenTable : React.FC<{
     /** */
     poolsByAddress: { [address: string] : Pool };
   };
-  beanPools:  AppState['_bean']['pools'];
+  // beanPools:  AppState['_bean']['pools'];
   farmerSilo: AppState['_farmer']['silo'];
-  beanstalkSilo: AppState['_beanstalk']['silo'];
+  // beanstalkSilo: AppState['_beanstalk']['silo'];
 }> = ({
   config,
-  beanPools,
+  // beanPools,
   farmerSilo,
-  beanstalkSilo,
+  // beanstalkSilo,
 }) => {
   const beansToUSD = useBeansToUSD();
   const chainId = useChainId();
   const breakdown = useSiloTokenBreakdown();
-  const Bean = useChainConstant(BEAN);
-  const getTVL = useCallback((_token: Token) => {
-    // For Beans, grab the amount in the Silo.
-    if (_token === Bean) return beansToUSD(beanstalkSilo.beans.total || zeroBN);
-    // For everything else, use `liquidity` from the price contract.
-    return beanPools[_token.address]?.liquidity || zeroBN;
-  }, [beanPools, beanstalkSilo, Bean, beansToUSD]);
-  const poolTokenToUSD = useCallback((_token: Token, _amount: BigNumber) => {
-    if (!_amount) return zeroBN;
-    // For Beans, use the aggregate Bean price.
-    if (_token === Bean) return beansToUSD(_amount);
-    // For everything else, use the value of the LP token via the beanPool liquidity/supply ratio.
-    const pool = beanPools[_token.address];
-    return (pool?.liquidity && pool?.supply) ? _amount.times(pool.liquidity.div(pool.supply)) : zeroBN;
-  }, [Bean, beanPools, beansToUSD]);
+  const getTVL = useTVL();
+  const poolTokenToUSD = useSiloTokenToUSD();
 
-  //
+  // Aggregate the total TVL
   const aggregateTVL = useMemo(
     () => config.whitelist.reduce<BigNumber>(
       (agg, token) => agg.plus(getTVL(token)),

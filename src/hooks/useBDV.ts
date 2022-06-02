@@ -12,7 +12,7 @@ import useChainConstant from './useChainConstant';
 const useBDV = () => {
   const poolState = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   const Bean      = useChainConstant(BEAN);
-  const getBDV = useCallback((token: Token, amount: BigNumber) => {
+  return useCallback((token: Token, amount: BigNumber) => {
     if (token === Bean) return amount;
     if (poolState[token.address]) {
       // Instantaneous BDV. If I deposit right now, this is the BDV
@@ -44,7 +44,6 @@ const useBDV = () => {
     poolState,
     Bean,
   ]);
-  return getBDV;
 };
 
 export default useBDV;
