@@ -176,9 +176,9 @@ const useFarmerEvents = () => {
                       ...(event.decode(event.data, event.topics) as Array<any>),
                     })
                   : null,
-              })
+              });
             } catch (e) {
-              console.debug(`[farmer/events/userFarmerEvents] failed to decode event values ${index}`, event)
+              console.debug(`[farmer/events/userFarmerEvents] failed to decode event values ${index}`, event);
               console.error(e);
             }
             return agg;
