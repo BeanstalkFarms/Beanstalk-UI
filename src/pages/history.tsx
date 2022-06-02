@@ -7,7 +7,7 @@ import {Box, Card, Grid, Stack, Typography} from "@mui/material";
 import {FIELD, OTHER, SILO} from "util/GetEventFacet";
 import {ParsedEvent} from "state/v2/farmer/events/updater";
 import EventItem from "components/v2/History/EventItem";
-import { useAccount, useBlockNumber } from 'wagmi';
+import { useAccount } from 'wagmi';
 import WalletButton from 'components/v2/Common/WalletButton';
 
 const buttonStyle = {
@@ -20,11 +20,6 @@ const TransactionHistoryPage: React.FC = () => {
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
   const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>(filterEventsByFacet(currentTab));
   const handleSetTab = (tab: string) => setCurrentTab(tab);
-
-  // const newEvents = events.map((event) => ({
-  //   ...event,
-  //   timestamp: useBlockNumber(event.blockNumber)
-  // }));
 
   function filterEventsByFacet(tab: string) {
     return events.filter((event) => {
