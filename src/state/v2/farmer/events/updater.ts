@@ -163,18 +163,26 @@ const useFarmerEvents = () => {
         Promise.all(getEvents(beanstalk, account, blocks)).then((results) => {
           const flattened = flatten<ethers.Event>(results);
           console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
-          const allEvents: ParsedEvent[] = flattened.map((event) => ({
-            event: event.event,
-            blockNumber: event.blockNumber,
-            logIndex: event.logIndex,
-            facet: getEventFacet(event.event),
-            // args: event.args,
-            returnValues: event.decode
-              ? parseBNJS({
-                  ...(event.decode(event.data, event.topics) as Array<any>),
-                })
-              : null,
-          }))
+          const allEvents: ParsedEvent[] = flattened.map((event, index) => {
+            try {
+              return {
+                event: event.event,
+                blockNumber: event.blockNumber,
+                logIndex: event.logIndex,
+                facet: getEventFacet(event.event),
+                // args: event.args,
+                returnValues: event.decode
+                  ? parseBNJS({
+                      ...(event.decode(event.data, event.topics) as Array<any>),
+                    })
+                  : null,
+              };
+            } catch (e) {
+              console.debug(`[farmer/events/userFarmerEvents] failed to process event ${index}`, event)
+              console.error(e);
+              throw e;
+            }
+          })
           .sort((a, b) => {
             const diff = a.blockNumber - b.blockNumber;
             if (diff !== 0) return diff;
