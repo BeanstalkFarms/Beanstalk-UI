@@ -75,7 +75,7 @@ const TokenTable : React.FC<{
           </Grid>
           <Grid item xs={3} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
             <Typography color="gray">My Deposits</Typography>
-            <Typography color="black" fontWeight="bold">{displayUSD(beansToUSD(breakdown.totalValue))}</Typography>
+            <Typography color="black" fontWeight="bold">{displayUSD(breakdown.deposited.value)}</Typography>
           </Grid>
         </Grid>
       </Box>
