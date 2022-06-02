@@ -281,7 +281,7 @@ export default () => {
   const [timeStr, setTimeStr] = useState('Loading...');
   const [isLaunched, setIsLaunched] = useState(chainId !== SupportedChainId.MAINNET); 
   useEffect(() => {
-    if (!isLaunched && chainId !== SupportedChainId.MAINNET) {
+    if (!isLaunched && chainId === SupportedChainId.MAINNET) {
       const interval = setInterval(() => {
         const diff = getDiff();
         if (diff <= 0) {
