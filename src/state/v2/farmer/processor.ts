@@ -82,7 +82,7 @@ const FarmerEventsProcessor = () => {
             deposited: Object.keys(results.userBeanDeposits).reduce((prev, s) => {
               const tokenAmount = results.userBeanDeposits[s];
               const bdv         = tokenAmount; // only for Bean
-              prev.total = prev.total.plus(tokenAmount);
+              prev.amount = prev.amount.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);
               prev.crates.push({
                 amount: tokenAmount,
@@ -93,14 +93,14 @@ const FarmerEventsProcessor = () => {
               });
               return prev;
             }, {
-              total:  new BigNumber(0),
+              amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             }),
             withdrawn: Object.keys(results.beanWithdrawals).reduce((prev, s) => {
               const tokenAmount = results.beanWithdrawals[s];
               const bdv         = tokenAmount; // only for Bean
-              prev.total = prev.total.plus(tokenAmount);
+              prev.amount = prev.amount.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);
               prev.crates.push({
                 amount: tokenAmount,
@@ -108,7 +108,7 @@ const FarmerEventsProcessor = () => {
               });
               return prev;
             }, {
-              total:  new BigNumber(0),
+              amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
               crates: [] as Withdrawal[],
             }),
@@ -127,7 +127,7 @@ const FarmerEventsProcessor = () => {
               // BDV of a LP deposit was previously calculated via
               // 'userLPSeedDeposits / 4'.
               const bdv  = results.userLPSeedDeposits[s].div(LP_TO_SEEDS);
-              prev.total = prev.total.plus(tokenAmount);
+              prev.amount = prev.amount.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);
               prev.crates.push({
                 amount: tokenAmount,
@@ -138,14 +138,14 @@ const FarmerEventsProcessor = () => {
               });
               return prev;
             }, {
-              total:  new BigNumber(0),
+              amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             }),
             withdrawn: Object.keys(results.lpWithdrawals).reduce((prev, s) => {
               const tokenAmount = results.lpWithdrawals[s];
               const bdv         = tokenAmount;            // FIXME: wrong calc
-              prev.total = prev.total.plus(tokenAmount);
+              prev.amount = prev.amount.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);            // FIXME: wrong calc
               prev.crates.push({
                 amount: tokenAmount,
@@ -153,7 +153,7 @@ const FarmerEventsProcessor = () => {
               });
               return prev;
             }, {
-              total:  new BigNumber(0),
+              amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
               crates: [] as Withdrawal[],
             }),
@@ -164,7 +164,7 @@ const FarmerEventsProcessor = () => {
             deposited: Object.keys(results.userCurveDeposits).reduce((prev, s) => {
               const tokenAmount = results.userCurveDeposits[s];
               const bdv         = results.userCurveBDVDeposits[s];
-              prev.total = prev.total.plus(tokenAmount);
+              prev.amount = prev.amount.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);
               prev.crates.push({
                 amount: tokenAmount,
@@ -175,7 +175,7 @@ const FarmerEventsProcessor = () => {
               });
               return prev;
             }, {
-              total:  new BigNumber(0),
+              amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             })
@@ -186,7 +186,7 @@ const FarmerEventsProcessor = () => {
             deposited: Object.keys(results.userBeanlusdDeposits).reduce((prev, s) => {
               const tokenAmount = results.userBeanlusdDeposits[s];
               const bdv         = results.userBeanlusdBDVDeposits[s];
-              prev.total = prev.total.plus(tokenAmount);
+              prev.amount = prev.amount.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);
               prev.crates.push({
                 amount: tokenAmount,
@@ -197,14 +197,14 @@ const FarmerEventsProcessor = () => {
               });
               return prev;
             }, {
-              total:  new BigNumber(0),
+              amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             }),
             withdrawn: Object.keys(results.lpWithdrawals).reduce((prev, s) => {
               const tokenAmount = results.beanlusdWithdrawals[s];
               const bdv         = new BigNumber(0);           // FIXME: wrong calc
-              prev.total = prev.total.plus(tokenAmount);
+              prev.amount = prev.amount.plus(tokenAmount);
               prev.bdv   = prev.bdv.plus(bdv);                // FIXME: wrong calc
               prev.crates.push({
                 amount: tokenAmount,
@@ -212,7 +212,7 @@ const FarmerEventsProcessor = () => {
               });
               return prev;
             }, {
-              total:  new BigNumber(0),
+              amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
               crates: [] as Withdrawal[],
             }),

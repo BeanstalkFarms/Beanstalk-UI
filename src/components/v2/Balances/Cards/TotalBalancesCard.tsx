@@ -3,13 +3,13 @@ import React, { useCallback, useMemo, useState } from 'react';
 import {Box, Grid, Stack, Typography} from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from 'components/v2/Charts/Pie';
 import StatCard from '../StatCard';
-import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
 import useBeansToUSD from 'hooks/useBeansToUSD';
 import useWhitelist from 'hooks/useWhitelist';
 import { displayFullBN, displayUSD } from 'util/index';
 import Stat from 'components/v2/Common/Stat';
 export interface TotalBalanceCardProps {
-  breakdown: ReturnType<typeof useSiloTokenBreakdown>;
+  breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
 }
 
 type DrilldownValues = keyof TotalBalanceCardProps['breakdown'];
@@ -17,7 +17,7 @@ type DrilldownValues = keyof TotalBalanceCardProps['breakdown'];
 // Matches the key => value mapping of TotalBalanceCardProps['breakdown'],
 // but without the 'bdv' key.
 // https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
-const STATE_CONFIG : { [name in DrilldownValues as Exclude<name, "bdv">]: [name: string, color: string] } = {
+const STATE_CONFIG : { [name in DrilldownValues as Exclude<name, "totalValue">]: [name: string, color: string] } = {
   'deposited':    ['Deposited',   'rgba(70, 185, 85, 1)'],
   'withdrawn':    ['Withdrawn',   'rgba(31, 120, 180, 0.3)'],
   'claimable':    ['Claimable',   'rgba(178, 223, 138, 0.3)'],
@@ -80,7 +80,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
   const pieChartData = useMemo(() => {
     return STATE_IDS.map((id: StateID) => ({
       label: STATE_CONFIG[id][0],
-      value: breakdown[id].bdv.toNumber(),
+      value: breakdown[id].value.toNumber(),
       color: STATE_CONFIG[id][1]
     } as PieDataPoint))
   }, [breakdown])
@@ -89,7 +89,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
     <Box>
       <Stat
         title="My Balances"
-        amount={`$${displayFullBN(getUSD(breakdown.bdv), 2)}`}
+        amount={`$${displayFullBN(getUSD(breakdown.totalValue.abs()), 2)}`}
         icon={undefined}
       />
       {/* Left Column */}
@@ -101,7 +101,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
                 <TokenRow
                   key={id}
                   name={`${STATE_CONFIG[id][0]} Tokens`}
-                  value={`$${displayFullBN(getUSD(breakdown[id].bdv), 2)}`}
+                  value={displayUSD(breakdown[id].value)}
                   isFaded={drilldown !== null && drilldown !== id}
                   onMouseOver={onMouseOver(id)}
                   onMouseOut={onMouseOut}
@@ -114,7 +114,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
         <Grid item xs={12} md={5}>
           <Box display="flex" justifyContent="center" sx={{ height: 250, py: { xs: 1, md: 0 } }}>
             <ResizablePieChart
-              data={breakdown.bdv.gt(0) ? pieChartData : undefined}
+              data={breakdown.totalValue.gt(0) ? pieChartData : undefined}
             />
           </Box>
         </Grid>
@@ -133,7 +133,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
                   return (
                     <TokenRow
                       name={`${whitelist[address].name}`}
-                      value={displayUSD(getUSD(breakdown[drilldown].bdvByToken[address]))}
+                      value={displayUSD(breakdown[drilldown].valueByToken[address])}
                       onMouseOver={onMouseOver('deposited')}
                       isFaded={false}
                     />

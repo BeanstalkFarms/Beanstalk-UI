@@ -44,22 +44,22 @@ const SunUpdater = () => {
   const [fetch, clear] = useSun();
   const dispatch = useDispatch();
   const { season, sunrise } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
-  const { awaiting, next } = sunrise;
+  const { awaiting } = sunrise;
 
   // Update sunrise timer
-  useEffect(() => {
-    if (awaiting === false) {
-      const i = setInterval(() => {
-        const _remaining = next.diffNow();
-        // dispatch(setRemainingUntilSunrise(_remaining));
-        // console.debug(`[beanstalk/sun/updater] remaining until sunrise: ${(_remaining.milliseconds / 1000 / 60).toFixed(2)} minutes`);
-        if (_remaining.milliseconds < 0 && awaiting === false) {
-          dispatch(setAwaitingSunrise(true));
-        }
-      }, 1000);
-      return () => clearInterval(i);
-    }
-  }, [dispatch, awaiting, next]);
+  // useEffect(() => {
+  //   if (awaiting === false) {
+  //     const i = setInterval(() => {
+  //       const _remaining = next.diffNow();
+  //       // dispatch(setRemainingUntilSunrise(_remaining));
+  //       // console.debug(`[beanstalk/sun/updater] remaining until sunrise: ${(_remaining.milliseconds / 1000 / 60).toFixed(2)} minutes`);
+  //       if (_remaining.milliseconds < 0 && awaiting === false) {
+  //         dispatch(setAwaitingSunrise(true));
+  //       }
+  //     }, 1000);
+  //     return () => clearInterval(i);
+  //   }
+  // }, [dispatch, awaiting, next]);
 
   // When the season changes
   useEffect(() => {

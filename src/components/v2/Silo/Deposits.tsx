@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { Box, Card, Stack, Tooltip, Typography } from '@mui/material';
 import { DataGrid, GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 
-import { FarmerTokenBalance } from 'state/v2/farmer/silo';
+import { FarmerSiloBalance } from 'state/v2/farmer/silo';
 import type { Deposit } from 'state/v2/farmer/silo';
 import { displayBN, displayFullBN } from 'util/index';
 import useBeansToUSD from 'hooks/useBeansToUSD';
@@ -15,7 +15,7 @@ const basicCell = (params : GridRenderCellParams) => <Typography>{params.formatt
 
 const Deposits : React.FC<{
   token: Token;
-  balance: FarmerTokenBalance | undefined;
+  balance: FarmerSiloBalance | undefined;
 }> = ({
   token,
   balance,

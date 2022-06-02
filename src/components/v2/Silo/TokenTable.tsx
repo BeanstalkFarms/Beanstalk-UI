@@ -6,7 +6,7 @@ import { Pool, Token } from 'classes';
 import { AppState } from 'state';
 import useBeansToUSD from 'hooks/useBeansToUSD';
 import { displayUSD } from 'util/index';
-import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { SEEDS, STALK } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
@@ -36,7 +36,7 @@ const TokenTable : React.FC<{
 }) => {
   const beansToUSD = useBeansToUSD();
   const chainId = useChainId();
-  const breakdown = useSiloTokenBreakdown();
+  const breakdown = useFarmerSiloBreakdown();
   const getTVL = useTVL();
   const poolTokenToUSD = useSiloTokenToUSD();
 
@@ -75,7 +75,7 @@ const TokenTable : React.FC<{
           </Grid>
           <Grid item xs={3} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
             <Typography color="gray">My Deposits</Typography>
-            <Typography color="black" fontWeight="bold">{displayUSD(beansToUSD(breakdown.bdv))}</Typography>
+            <Typography color="black" fontWeight="bold">{displayUSD(beansToUSD(breakdown.totalValue))}</Typography>
           </Grid>
         </Grid>
       </Box>
@@ -123,7 +123,7 @@ const TokenTable : React.FC<{
                   <Grid item xs={3} sx={{ textAlign: 'right' }}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
-                        {deposited?.total ? displayUSD(poolTokenToUSD(token, deposited.total)) : '$0'}
+                        {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'}
                       </Typography>
                       <Stack sx={{ width: arrowContainerWidth, }} alignItems="center">
                         <ArrowRightIcon />

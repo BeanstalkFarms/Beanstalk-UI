@@ -13,7 +13,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
-import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 
@@ -23,7 +23,7 @@ const SiloPage : React.FC = () => {
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const { sunrise, season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
-  const breakdown   = useSiloTokenBreakdown();
+  const breakdown   = useFarmerSiloBreakdown();
   const whitelist   = useWhitelist();
   const poolsByAddress = usePools();
   const chainId = useChainId();

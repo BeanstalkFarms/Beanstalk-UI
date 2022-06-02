@@ -3,7 +3,6 @@ import BigNumber from 'bignumber.js';
 import { Routes, Route } from 'react-router-dom';
 import { Box, CssBaseline } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
-
 import SiloPage from 'pages/silo';
 import SiloTokenPage from 'pages/silo/token';
 import FieldPage from 'pages/field';
@@ -11,10 +10,8 @@ import ForecastPage from 'pages/forecast';
 import BarnRaisePage from 'pages/barn-raise';
 import TransactionHistoryPage from 'pages/history';
 import BalancesPage from 'pages/balances';
-
 import pageBackground from 'img/theme/bg-mainnet.png';
 import NavBar from 'components/v2/Nav/NavBar';
-
 import PoolsUpdater from 'state/v2/bean/pools/updater';
 import SunUpdater from 'state/v2/beanstalk/sun/updater';
 import FertilizerUpdater from 'state/v2/beanstalk/fertilizer/updater';
@@ -25,7 +22,6 @@ import FarmerEventsProcessor from 'state/v2/farmer/processor';
 import FarmerBalancesUpdater from 'state/v2/farmer/balances/updater';
 import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
 import FieldUpdater from 'state/v2/beanstalk/field/updater';
-
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
 

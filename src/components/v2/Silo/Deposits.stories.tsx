@@ -3,7 +3,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import BigNumber from 'bignumber.js';
 import Deposits from './Deposits';
-import { Deposit, FarmerTokenBalance, Withdrawal } from '../../../state/v2/farmer/silo';
+import { Deposit, FarmerSiloBalance, Withdrawal } from '../../../state/v2/farmer/silo';
 import { BEAN_ETH_UNISWAP_V2_LP } from '../../../constants/tokens';
 import { SupportedChainId } from '../../../constants/chains';
 
@@ -38,7 +38,7 @@ const withdrawal2: Withdrawal = {
   amount: new BigNumber(753460)
 };
 
-const siloToken: FarmerTokenBalance = {
+const siloToken: FarmerSiloBalance = {
   circulating: new BigNumber(100), // The circulating balance in the Farmer's wallet.
   wrapped: new BigNumber(100), // The Farmer's wrapped balance.
   deposited: new BigNumber(100), //

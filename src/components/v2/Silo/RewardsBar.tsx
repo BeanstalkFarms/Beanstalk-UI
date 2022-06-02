@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Card, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { FarmerSiloAssets } from 'state/v2/farmer/silo';
+import { FarmerSiloRewards } from 'state/v2/farmer/silo';
 import { displayBN } from 'util/index';
 import { SupportedChainId } from 'constants/chains';
 
@@ -9,9 +9,9 @@ const gap = 4;
 
 const RewardsBar : React.FC<{
   chainId: SupportedChainId;
-  beans: FarmerSiloAssets['beans'];
-  stalk: FarmerSiloAssets['stalk'];
-  seeds: FarmerSiloAssets['seeds'];
+  beans: FarmerSiloRewards['beans'];
+  stalk: FarmerSiloRewards['stalk'];
+  seeds: FarmerSiloRewards['seeds'];
 }> = ({
   chainId,
   beans,

@@ -7,7 +7,7 @@ import FertilizerCard from 'components/v2/Balances/Cards/FertilizerCard';
 import RewardsCard from 'components/v2/Balances/Cards/RewardsCard';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
 import SiloAssetCard from 'components/v2/Balances/Cards/SiloAssetCard';
 import { BEAN, PODS, SEEDS, STALK } from 'constants/tokens';
 import PodCard from 'components/v2/Balances/Cards/PodsCard';
@@ -21,7 +21,7 @@ const BalancesPage: React.FC = () => {
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field)
   const farmerFertilizer = useSelector<AppState, AppState['_farmer']['fertilizer']>((state) => state._farmer.fertilizer)
   // const farmerField = useSelector<AppState, AppState['_farmer']['fertilizer']>((state) => state._farmer.field)
-  const breakdown = useSiloTokenBreakdown();
+  const breakdown = useFarmerSiloBreakdown();
 
   if(!farmerSilo) return null;
 

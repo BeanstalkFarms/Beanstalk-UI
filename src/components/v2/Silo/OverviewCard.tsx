@@ -1,6 +1,6 @@
 import { Box, Button, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import useSiloTokenBreakdown from 'hooks/useSiloTokenBreakdown';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
 import useBeansToUSD from 'hooks/useBeansToUSD';
 import React, { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'state';
@@ -115,7 +115,7 @@ const StalkOwnershipTab : React.FC<
 const OverviewCard : React.FC<{
   farmerSilo: AppState['_farmer']['silo'];
   beanstalkSilo: AppState['_beanstalk']['silo'];
-  breakdown: ReturnType<typeof useSiloTokenBreakdown>;
+  breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
   season: BigNumber;
 }> = ({
   farmerSilo,
@@ -155,7 +155,7 @@ const OverviewCard : React.FC<{
       </Stack>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
         <DepositsTab
-          current={[breakdown.bdv]}
+          current={[breakdown.totalValue]}
           series={[mockDepositData]}
           season={season}
         />
