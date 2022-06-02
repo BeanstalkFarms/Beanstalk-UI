@@ -4,7 +4,6 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
 import { Pool, Token } from 'classes';
 import { AppState } from 'state';
-import useBeansToUSD from 'hooks/useBeansToUSD';
 import { displayUSD } from 'util/index';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
 import TokenIcon from 'components/v2/Common/TokenIcon';
@@ -34,7 +33,6 @@ const TokenTable : React.FC<{
   farmerSilo,
   // beanstalkSilo,
 }) => {
-  const beansToUSD = useBeansToUSD();
   const chainId = useChainId();
   const breakdown = useFarmerSiloBreakdown();
   const getTVL = useTVL();

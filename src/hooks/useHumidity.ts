@@ -18,6 +18,10 @@ export const REPLANT_SEASON : { [key: number] : BigNumber } = {
   [SupportedChainId.MAINNET]: new BigNumber(6074),
   [SupportedChainId.ROPSTEN]: new BigNumber(6074)
 };
+export const REPLANT_INITIAL_ID : { [key: number] : BigNumber } = {
+  [SupportedChainId.MAINNET]: new BigNumber(6_000_000),
+  [SupportedChainId.ROPSTEN]: new BigNumber(6_000_000)
+};
 
 // ----------------------------------------s
 
@@ -45,6 +49,8 @@ export const useHumidityAtSeason = () => {
     replantSeason,
   ]);
 };
+
+export const useHumidityFromId = () => useCallback(() => [INITIAL_HUMIDITY, HUMIDITY_DECREASE_AT_REPLANT], []);
 
 // ----------------------------------------
 

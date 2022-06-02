@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useCallback, useMemo, useState } from 'react';
-import {Box, Grid, Stack, Typography} from '@mui/material';
+import {Alert, AlertTitle, Box, Grid, Stack, Typography} from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from 'components/v2/Charts/Pie';
 import StatCard from '../StatCard';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
@@ -20,9 +20,9 @@ type DrilldownValues = keyof TotalBalanceCardProps['breakdown'];
 const STATE_CONFIG : { [name in DrilldownValues as Exclude<name, "totalValue">]: [name: string, color: string] } = {
   'deposited':    ['Deposited',   'rgba(70, 185, 85, 1)'],
   'withdrawn':    ['Withdrawn',   'rgba(31, 120, 180, 0.3)'],
-  'claimable':    ['Claimable',   'rgba(178, 223, 138, 0.3)'],
-  'circulating':  ['Circulating', 'rgba(25, 135, 59, 1)'],
-  'wrapped':      ['Wrapped',     'rgba(25, 135, 59, 0.5)'],
+  // 'claimable':    ['Claimable',   'rgba(178, 223, 138, 0.3)'],
+  // 'circulating':  ['Circulating', 'rgba(25, 135, 59, 1)'],
+  // 'wrapped':      ['Wrapped',     'rgba(25, 135, 59, 0.5)'],
 };
 
 type StateID = keyof typeof STATE_CONFIG;
@@ -89,9 +89,14 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
     <Box>
       <Stat
         title="My Balances"
-        amount={`$${displayFullBN(getUSD(breakdown.totalValue.abs()), 2)}`}
+        amount={`$${displayFullBN(breakdown.totalValue.abs(), 2)}`}
         icon={undefined}
       />
+      <Alert severity="warning" sx={{ mt: 2, mb: 1 }}>
+        <AlertTitle>Note regarding balances</AlertTitle>
+        Balances are fixed to their pre-exploit values. USD value of Silo deposits are calculated using a fixed $BEAN price of <strong>$1.02027</strong>.<br/>
+        Due to upgrades to the Beanstalk contract and website infrastructure, pre-exploit balances may be temporarily hidden or show incorrect values for some users. Please report issues in <strong>#ui-feedback</strong> and stay tuned for updates in <strong>#ui-updates</strong> on Discord. Upgrades will continue throughout the month of June.
+      </Alert>
       {/* Left Column */}
       <Grid container direction="row" alignItems="center" sx={{ mb: 4, mt: { md: 0, xs: 0 } }} rowSpacing={2}>
         <Grid item xs={12} md={3.5}>
@@ -132,6 +137,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
                 {Object.keys(whitelist).map((address) => {
                   return (
                     <TokenRow
+                      key={address}
                       name={`${whitelist[address].name}`}
                       value={displayUSD(breakdown[drilldown].valueByToken[address])}
                       onMouseOver={onMouseOver('deposited')}
