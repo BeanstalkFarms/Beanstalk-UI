@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Card, Divider, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
@@ -26,6 +26,7 @@ import { useFetchFarmerFertilizer } from 'state/v2/farmer/fertilizer/updater';
 import { useAccount, useSigner } from 'wagmi';
 import { useFetchFarmerBalances } from 'state/v2/farmer/balances/updater';
 import { useFetchFarmerAllowances } from 'state/v2/farmer/allowances/updater';
+import { timeToStringDetailed } from 'util/v1/TimeUtilities';
 import FertilizerItem from './FertilizerItem';
 import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
 import TransactionToast from '../Common/TxnToast';
@@ -270,4 +271,30 @@ const SetupForm: React.FC<{}> = () => {
 
 // ---------------------------------------------------
 
-export default () => <SetupForm />;
+const launch = 1654531200 * 1000; // June 6th, 2022 12pm EST
+const getDiff = () => (launch - new Date().getTime()) / 1000;
+
+export default () => {
+  const [timeStr, setTimeStr] = useState('Loading...');
+  const [isLaunched, setIsLaunched] = useState(false); 
+  useEffect(() => {
+    if (!isLaunched) {
+      const interval = setInterval(() => {
+        const diff = getDiff();
+        if (diff <= 0) {
+          setIsLaunched(true);
+        }
+        setTimeStr(timeToStringDetailed(diff));
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isLaunched]);
+
+  if (isLaunched) return <SetupForm />;
+  return (
+    <Card component={Stack} gap={0.5} alignItems="center" sx={{ p: 2 }}>
+      <Typography color="text.secondary">The Barn Raise begins in</Typography>
+      <Typography variant="h2">{timeStr}</Typography>
+    </Card>
+  );
+};
