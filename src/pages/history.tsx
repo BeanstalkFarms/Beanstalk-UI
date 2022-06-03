@@ -21,9 +21,6 @@ const TransactionHistoryPage: React.FC = () => {
   const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>(filterEventsByFacet(currentTab));
   const handleSetTab = (tab: string) => setCurrentTab(tab);
 
-  console.log("Account");
-  console.log(account?.address?.toLowerCase());
-
   function filterEventsByFacet(tab: string) {
     return events.filter((event) => {
       return event.facet === tab;
