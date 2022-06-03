@@ -51,7 +51,7 @@ const NavBar: React.FC<{}> = () => {
           </StyledDialogTitle>
           <StyledDialogContent>
             <Typography>
-              Until Beanstalk is Unpaused in early July, some balances displayed in the Beanstalk UI will remaining hard-coded to their values at the block before the exploit (14602789).
+              Until Beanstalk is Replanted in early July, some balances displayed in the Beanstalk UI will remain hard-coded to their values at the block before the exploit (14602789).
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Stack gap={1}>

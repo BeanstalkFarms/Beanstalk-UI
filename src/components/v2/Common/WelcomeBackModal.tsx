@@ -22,14 +22,14 @@ const WelcomeBackModal: React.FC = () => {
         <Grid container direction="column" spacing={1}>
           <Grid item>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography variant="h2">Welcome back to Beanstalk! 👋🌱☀️</Typography>
+              <Typography variant="h2">Welcome back to Beanstalk! 👋 🌱 ☀️</Typography>
               <ClearIcon sx={{ cursor: 'pointer', color: '#bbbcd1' }} onClick={() => setModalOpen(false)} />
             </Stack>
           </Grid>
           <Grid item>
             <Typography variant="body1">
-              We’re excited to Unpause Beanstalk. We’ve taken the liberty to apply some new styling to the site & we
-              hope you enjoy it! If you have any questions or feedback, please drop by the Discord & share with us.
+              We’re excited to Replant Beanstalk. We’ve taken the liberty to apply some new styling to the site & we
+              hope you enjoy it! If you have any questions or feedback, please let us know in the <strong>#ui-feedback</strong> channel in Discord.
             </Typography>
           </Grid>
           <Grid item>
