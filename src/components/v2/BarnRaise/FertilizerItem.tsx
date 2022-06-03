@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN } from 'util/index';
 import OpacityIcon from '@mui/icons-material/Opacity';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
+import humidityIcon from 'img/humidity-icon.svg';
 
 export type FertilizerData = {
   /** The amount of Fertilizer owned at this */
@@ -42,21 +43,33 @@ const FertilizerItem : React.FC<{
     ) : (
       <Stack direction="column" rowGap={0.25}>
         <Stack direction="row" justifyContent="space-between">
+          <Typography color="text.primary" fontWeight="bold">
+            Fertilizer Season
+          </Typography>
+          <Typography color="text.primary" fontWeight="bold">
+            3476
+          </Typography>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between">
           <Tooltip title="1 FERT = 1 USDC put into the Barn Raise." placement="left">
             <Typography color="text.secondary">
-              {displayFullBN(amount, 0)} FERT
+              x{displayFullBN(amount, 0)}
             </Typography>
           </Tooltip>
           <Tooltip title="Humidity — interest rate earned for buying Fertilizer." placement="right">
             <Typography color="text.secondary">
-              <OpacityIcon sx={{ fontSize: 14 }} /> {displayBN(humidity.times(100))}%
+              {/*<OpacityIcon sx={{ fontSize: 14 }} /> */}
+              <Stack direction="row" gap={0.2} alignItems="center">
+                <img alt="" src={humidityIcon} height="13px" />
+                {displayBN(humidity.times(100))}%
+              </Stack>
             </Typography>
           </Tooltip>
         </Stack>
         <Tooltip title="The Beans remaining to be distributed to this Fertilizer." placement="bottom">
           <Stack direction="row" justifyContent="space-between">
             <Typography color="text.primary" fontWeight="bold">
-              {isNew ? 'Rewards' : 'Remaining'}
+              {isNew ? 'Unfertilized Beans' : 'Remaining'}
             </Typography>
             <Typography color="text.primary" fontWeight="bold">
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} /> {displayBN(remaining)}

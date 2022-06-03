@@ -17,9 +17,12 @@ const Stat : React.FC<StatProps> = ({
   variant = 'h1',
 }) => (
   <Stack gap={1}>
-    <Typography color="text.secondary">{title}</Typography>
+    <Typography>{title}</Typography>
     <Typography variant={variant} sx={{ marginLeft: '-3px', ...sx }}>
-      {icon} {amount}
+      <Stack direction="row" alignItems="center" gap={0.5}>
+        {icon} {amount}
+      </Stack>
+
     </Typography>
   </Stack>
 );
