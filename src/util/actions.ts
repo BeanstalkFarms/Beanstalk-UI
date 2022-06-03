@@ -62,7 +62,7 @@ const ACTION_MESSAGES = {
   [ActionType.BUY_FERTILIZER]: (a: FertilizerBuyAction) =>
     `Purchase ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`,
   [ActionType.RECEIVE_FERT_REWARDS]: (a: FertilizerRewardsAction) =>
-    `Receive a pro-rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are recouped.`
+    `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are recouped.`
 };
 
 // -----------------------------------------------------------------------
