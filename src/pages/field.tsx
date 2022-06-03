@@ -147,8 +147,8 @@ const FieldPage: React.FC = () => {
               columns={columns}
               rows={rows}
               pageSize={5}
-              rowsPerPageOptions={[5]}
               disableSelectionOnClick
+              density="compact"
             />
           </Box>
         </Card>
