@@ -10,7 +10,6 @@ type QuestionModuleProps = {
   marginTooltip?: string;
   placement?: string;
   description?: string;
-  widthTooltip?: string | number;
   fontSize?: string;
 }
 
