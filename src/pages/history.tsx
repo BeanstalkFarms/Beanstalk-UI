@@ -70,7 +70,7 @@ const TransactionHistoryPage: React.FC = () => {
                     <Grid item width="100%">
                       <EventItem
                         event={event}
-                        account={account?.address ? account.address.toLowerCase(): ""}
+                        account={account?.address ? account.address.toString().toLowerCase(): ""}
                       />
                     </Grid>
                   );
