@@ -2,11 +2,9 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Alert, AlertTitle, Box, Grid, Stack, Typography } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from 'components/v2/Charts/Pie';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
-import useBeansToUSD from 'hooks/useBeansToUSD';
 import useWhitelist from 'hooks/useWhitelist';
 import { displayFullBN, displayUSD } from 'util/index';
 import Stat from 'components/v2/Common/Stat';
-import StatCard from '../StatCard';
 
 export interface TotalBalanceCardProps {
   breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
@@ -65,7 +63,7 @@ const TokenRow : React.FC<{
 
 const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
   /** Convert Bean value to USD.  */
-  const getUSD  = useBeansToUSD();
+  // const getUSD  = useBeansToUSD();
   /** Get Whitelisted Silo Tokens */
   const whitelist = useWhitelist();
   /** Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.) */
