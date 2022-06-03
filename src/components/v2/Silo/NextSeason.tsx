@@ -49,8 +49,8 @@ const NextSeason : React.FC<{ title: string | JSX.Element }> = ({ title }) => (
               <Stat name="New Beans">
                 730,012
               </Stat>
-              <Stat name="% of New Beans">
-                33%
+              <Stat name="% of new Beans allocated to the Silo">
+                33.3333%
               </Stat>
               <Stat name="My % Ownership of Stalk">
                 0.1012%

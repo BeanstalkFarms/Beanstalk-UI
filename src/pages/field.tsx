@@ -69,7 +69,7 @@ const FieldPage: React.FC = () => {
               <Box component="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: The Decentralized Credit Facility</Box>
             </>
           }
-          description="Earn yield through lending Beans to Beanstalk when there is Available Soil in exchange for Pods"
+          description="Earn yield by lending Beans to Beanstalk in exchange for Pods when there is Soil"
         />
         <Card sx={{ p: 2 }}>
           <Stack gap={2}>

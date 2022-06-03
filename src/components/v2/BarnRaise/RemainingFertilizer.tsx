@@ -36,14 +36,14 @@ const RemainingFertilizer: React.FC = () => {
           <Stack justifyContent="space-between" gap={3}>
             <Stack gap={3}>
               <Stack gap={1}>
-                <Typography color="text.secondary">Available Unused Fertilizer</Typography>
+                <Typography color="text.secondary">Available Fertilizer</Typography>
                 <Stack direction="row" gap={1} alignItems="center">
                   <Typography display="inline-block" variant="h1" sx={{ fontWeight: 400 }}>
                     {displayFullBN(fertilizer.remaining, 0)}&nbsp;
                   </Typography>
                   {progress.gt(0) ? (
                     <Typography display="inline-block" variant="body1" color="text.secondary">
-                      {displayFullBN(progress.multipliedBy(100), 2)}% Filled
+                      {displayFullBN(progress.multipliedBy(100), 2)}% Purchased
                     </Typography>
                   ) : null}
                 </Stack>
@@ -64,7 +64,7 @@ const RemainingFertilizer: React.FC = () => {
             </Stack>
             <Stack>
               <Link
-                href="#"
+                href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise"
                 rel="noreferrer"
                 color="text.secondary"
                 >

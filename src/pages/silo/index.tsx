@@ -33,7 +33,7 @@ const SiloPage : React.FC = () => {
       <Stack gap={2}>
         <PageHeader
           title={<><strong>The Silo</strong><Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>: The Beanstalk DAO</Box></>}
-          description="Earn yield by depositing liquidity & participating in protocol governance"
+          description="Earn yield by depositing liquidity & participate in protocol governance"
           control={(
             <Button
               href={SNAPSHOT_LINK}
