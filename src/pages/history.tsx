@@ -45,20 +45,20 @@ const TransactionHistoryPage: React.FC = () => {
         <Card sx={{border: "none", p: 2}}>
           <Stack gap={0.5}>
             <Stack gap={1}>
-              <Stack direction="row" gap={1.5}>
+              <Stack direction="row" gap={1}>
                 <Box sx={{...buttonStyle}} onClick={() => handleSetTab(SILO.toString())}>
                   <Typography
-                    variant="h2"
+                    sx={{ fontSize: "17px"}}
                     color={currentTab === SILO.toString() ? "text.primary" : "text.secondary"}>Silo</Typography>
                 </Box>
                 <Box sx={{...buttonStyle}} onClick={() => handleSetTab(FIELD.toString())}>
                   <Typography
-                    variant="h2"
+                    sx={{ fontSize: "17px"}}
                     color={currentTab === FIELD.toString() ? "text.primary" : "text.secondary"}>Field</Typography>
                 </Box>
                 <Box sx={{...buttonStyle}} onClick={() => handleSetTab(OTHER.toString())}>
                   <Typography
-                    variant="h2"
+                    sx={{ fontSize: "17px"}}
                     color={currentTab === OTHER.toString() ? "text.primary" : "text.secondary"}>Other</Typography>
                 </Box>
               </Stack>

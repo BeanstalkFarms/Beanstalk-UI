@@ -50,12 +50,12 @@ const MyFertilizer : React.FC = () => {
     <Card>
       {/* Card Header */}
       <Stack sx={{ p: 2 }} gap={1}>
-        <Typography variant="h6">My Active Fertilizer</Typography>
+        <Typography variant="h2">My Fertilizer</Typography>
         <Stack gap={1}>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Tooltip title="Unfertilized Beans are Beans owed to you based on your Fertilizer holdings." placement="right">
+            <Tooltip title="Beans owed to you based on your ownership of Fertilizer." placement="right">
               <Typography variant="body1">
-                Unfertilized Beans&nbsp;<HelpOutlineIcon fontSize="14px" sx={{ color: 'text.secondary' }} />
+                Total Unfertilized Beans&nbsp;<HelpOutlineIcon fontSize="14px" sx={{ color: 'text.secondary' }} />
               </Typography>
             </Tooltip>
             <Stack direction="row" alignItems="center" gap={0.2}>
@@ -64,9 +64,9 @@ const MyFertilizer : React.FC = () => {
             </Stack>
           </Stack>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Tooltip title="Fertilized Beans are Beans you can claim from your Fertilizer yield." placement="right">
+            <Tooltip title="Beans earned from Fertilizer. These Beans are Claimable." placement="right">
               <Typography variant="body1">
-                Fertilized Beans&nbsp;<HelpOutlineIcon fontSize="14px" sx={{ color: 'text.secondary' }} />
+                Total Fertilized Beans&nbsp;<HelpOutlineIcon fontSize="14px" sx={{ color: 'text.secondary' }} />
               </Typography>
             </Tooltip>
             <Stack direction="row" alignItems="center" gap={0.1}>

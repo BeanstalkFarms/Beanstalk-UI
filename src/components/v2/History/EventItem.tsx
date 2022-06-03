@@ -42,6 +42,13 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
   let eventTitle = `${event.event}`;
   let amountIn;
   let amountOut;
+
+  // console.log("EVENT FROM ADDRESS");
+  // console.log(event.returnValues.from.toLowerCase());
+  //
+  // console.log("ACCOUNT");
+  // console.log(account);
+
   switch (event.event) {
     case 'BeanDeposit': {
       // const s = event.returnValues.season;
@@ -244,7 +251,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
         new BigNumber(event.returnValues.pods),
         BEAN[SupportedChainId.MAINNET].decimals
       );
-      if (event.returnValues.from.toLowerCase()) {
+      if (event.returnValues.from.toLowerCase() === account) {
         eventTitle = 'Send Plot';
         amountOut = (
           <TokenDisplay color="red" input={[pods, PODS]} />
