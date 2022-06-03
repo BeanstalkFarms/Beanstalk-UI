@@ -6,14 +6,14 @@ import { SupportedChainId } from 'constants/chains';
 import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN } from 'util/index';
 import OpacityIcon from '@mui/icons-material/Opacity';
-import FertilizerImage, { FertilizerState } from './FertilizerImage';
 import humidityIcon from 'img/humidity-icon.svg';
+import FertilizerImage, { FertilizerState } from './FertilizerImage';
 
 export type FertilizerData = {
   /** The amount of Fertilizer owned at this */
   amount: BigNumber;
-  /** 
-   * The Humidity at which this Fertilizer was purchased. 
+  /**
+   * The Humidity at which this Fertilizer was purchased.
    * Derived from the Season using hooks provided in `useHumidity`.
    */
   humidity: BigNumber;
@@ -23,23 +23,23 @@ export type FertilizerData = {
   progress?: number;
 }
 
-const FertilizerItem : React.FC<{
+const FertilizerItem: React.FC<{
   /** Fertilizer can be `unused` -> `active` -> `used`.  */
   state?: FertilizerState;
   /**  */
   isNew?: boolean;
 } & FertilizerData> = ({
-  state,
-  isNew,
-  amount,
-  humidity,
-  remaining,
-  progress,
-}) => (
-  <Stack rowGap={0.75}>
-    <FertilizerImage isNew={isNew} state={state} progress={progress} />
-    {amount.eq(0) ? (
-      <Typography textAlign="center">x0</Typography>
+                         state,
+                         isNew,
+                         amount,
+                         humidity,
+                         remaining,
+                         progress,
+                       }) => (
+                         <Stack rowGap={0.75}>
+                           <FertilizerImage isNew={isNew} state={state} progress={progress} />
+                           {amount.eq(0) ? (
+                             <Typography textAlign="center">x0</Typography>
     ) : (
       <Stack direction="column" rowGap={0.25}>
         <Stack direction="row" justifyContent="space-between">
@@ -52,18 +52,18 @@ const FertilizerItem : React.FC<{
         </Stack>
         <Stack direction="row" justifyContent="space-between">
           <Tooltip title="1 FERT = 1 USDC put into the Barn Raise." placement="left">
-            <Typography color="text.secondary">
+            <Typography color="text.secondary" sx={{ opacity: 0.6 }}>
               x{displayFullBN(amount, 0)}
             </Typography>
           </Tooltip>
           <Tooltip title="Humidity — interest rate earned for buying Fertilizer." placement="right">
-            <Typography color="text.secondary">
-              {/*<OpacityIcon sx={{ fontSize: 14 }} /> */}
-              <Stack direction="row" gap={0.2} alignItems="center">
-                <img alt="" src={humidityIcon} height="13px" />
+            {/* <OpacityIcon sx={{ fontSize: 14 }} /> */}
+            <Stack direction="row" gap={0.2} alignItems="center">
+              <img alt="" src={humidityIcon} height="13px" />
+              <Typography color="text.secondary" sx={{ opacity: 0.6 }}>
                 {displayBN(humidity.times(100))}%
-              </Stack>
-            </Typography>
+              </Typography>
+            </Stack>
           </Tooltip>
         </Stack>
         <Tooltip title="The Beans remaining to be distributed to this Fertilizer." placement="bottom">
@@ -78,7 +78,7 @@ const FertilizerItem : React.FC<{
         </Tooltip>
       </Stack>
     )}
-  </Stack>
+                         </Stack>
 );
 
 export default FertilizerItem;
