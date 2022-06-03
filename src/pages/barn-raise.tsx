@@ -1,4 +1,4 @@
-import React, from 'react';
+import React from 'react';
 import { Box, Button, Container, Stack } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import PurchaseForm from 'components/v2/BarnRaise/PurchaseForm';
