@@ -227,12 +227,12 @@ export default function Updater() {
         totalLP0, // TEMP VARIABLE NAME
         totalCrv30, // TEMP VARIABLE NAME
         totalBeanlusd0, // TEMP VARIABLE NAME
-        totalSeeds0, // TEMP VARIABLE NAME
-        totalStalk0, // TEMP VARIABLE NAME
+        totalSeeds, // TEMP VARIABLE NAME
+        totalStalk, // TEMP VARIABLE NAME
         totalSiloBeans,
         totalSiloLP,
-        totalSiloCurve0, // TEMP VARIABLE NAME
-        totalSiloBeanlusd0, // TEMP VARIABLE NAME
+        totalSiloCurve, // TEMP VARIABLE NAME
+        totalSiloBeanlusd, // TEMP VARIABLE NAME
         totalTransitBeans,
         totalTransitLP,
         totalTransitCurve,
@@ -241,7 +241,7 @@ export default function Updater() {
         soil,
         podIndex,
         harvestableIndex, // 16 indexed
-        totalRoots0, // TEMP VARIABLE NAME
+        totalRoots, // TEMP VARIABLE NAME
         _weather,
         rain,
         _season, // 20 indexed
@@ -270,12 +270,12 @@ export default function Updater() {
       const totalBeanlusdBeans = toTokenUnitsBN(386525983128, 6); // 386,525.983128
 
       // remove exploiter contract balances from totals (0x79224bC0bf70EC34F0ef56ed8251619499a59dEf)
-      const totalSiloCurve = totalSiloCurve0.minus(new BigNumber(795425740.813818200295323741)); // 795,425,740.813818200295323741
-      const totalSiloBeanlusd = totalSiloBeanlusd0.minus(new BigNumber(58924887.872471876761750555)); // 58,924,887.872471876761750555
+      // const totalSiloCurve = totalSiloCurve0.minus(new BigNumber(795425740.813818200295323741)); // 795,425,740.813818200295323741
+      // const totalSiloBeanlusd = totalSiloBeanlusd0.minus(new BigNumber(58924887.872471876761750555)); // 58,924,887.872471876761750555
 
-      const totalSeeds = totalSeeds0.minus(new BigNumber(3330860480.776205)); // 3,330,860,480.776205
-      const totalStalk = totalStalk0.minus(new BigNumber(847198363.98969)); // 847,198,363.98969
-      const totalRoots = totalRoots0.minus(new BigNumber(386865631100312795430494480222)); // 386865631100312795430494480222
+      // const totalSeeds = totalSeeds0.minus(new BigNumber(3330860480.776205)); // 3,330,860,480.776205
+      // const totalStalk = totalStalk0.minus(new BigNumber(847198363.98969)); // 847,198,363.98969
+      // const totalRoots = totalRoots0.minus(new BigNumber(386865631100312795430494480222)); // 386865631100312795430494480222
 
       // eslint-disable-next-line
       const lintHolder = [
