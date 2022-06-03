@@ -75,10 +75,12 @@ const NextSeason : React.FC<{ title: string | JSX.Element }> = ({ title }) => (
               title="My New Earned Beans"
               icon={(
                 <>
-                  <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
-                  <Typography variant="h3">
-                    244.33
-                  </Typography>
+                  <Stack direction="row" gap={0.3}>
+                    <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
+                    <Typography variant="h3">
+                      244.33
+                    </Typography>
+                  </Stack>
                 </>
               )}
             />
@@ -86,10 +88,12 @@ const NextSeason : React.FC<{ title: string | JSX.Element }> = ({ title }) => (
               title="My New Earned Stalk"
               icon={(
                 <>
-                  <TokenIcon token={STALK} />
-                  <Typography variant="h3">
-                    244.33
-                  </Typography>
+                  <Stack direction="row" gap={0.3}>
+                    <TokenIcon token={STALK} />
+                    <Typography variant="h3">
+                      244.33
+                    </Typography>
+                  </Stack>
                 </>
               )}
             />
