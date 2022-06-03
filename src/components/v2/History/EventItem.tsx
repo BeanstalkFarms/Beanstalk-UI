@@ -244,7 +244,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
         new BigNumber(event.returnValues.pods),
         BEAN[SupportedChainId.MAINNET].decimals
       );
-      if (event.returnValues.from.toLowerCase() === account.toLowerCase()) {
+      if (event.returnValues.from.toLowerCase()) {
         eventTitle = 'Send Plot';
         amountOut = (
           <TokenDisplay color="red" input={[pods, PODS]} />
