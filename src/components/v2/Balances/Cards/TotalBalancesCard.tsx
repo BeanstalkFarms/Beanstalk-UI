@@ -127,7 +127,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
           {drilldown === null ? (
             <Stack alignItems="center" justifyContent="center" sx={{ pt: 5, pb: 5 }}>
               <Typography color="text.secondary">
-                Hover a state to see breakdown
+                Hover over a state to see breakdown
               </Typography>
             </Stack>
           ) : (

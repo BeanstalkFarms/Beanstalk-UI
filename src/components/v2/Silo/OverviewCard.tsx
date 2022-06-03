@@ -54,7 +54,7 @@ const DepositsTab : React.FC<TabData> = ({
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetOverlay>
-          Deposit value over time chart will be available upon Unpause
+          Deposit value over time will be available upon the Replanting of Beanstalk
         </MainnetOverlay>
         <SimpleLineChart
           series={series}
@@ -99,7 +99,7 @@ const StalkOwnershipTab : React.FC<
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetOverlay>
-          Stalk value over time chart will be available upon Unpause
+          Stalk and ownership % over time will be available upon the Replanting of Beanstalk
         </MainnetOverlay>
         <SimpleLineChart
           series={series}

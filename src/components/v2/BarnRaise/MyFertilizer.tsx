@@ -53,7 +53,7 @@ const MyFertilizer : React.FC = () => {
         <Typography variant="h6">My Active Fertilizer</Typography>
         <Stack gap={1}>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Tooltip title="Unfertilized Beans are Beans owed to you based on your ownership of Fertilizer." placement="right">
+            <Tooltip title="Unfertilized Beans are Beans owed to you based on your Fertilizer holdings." placement="right">
               <Typography variant="body1">
                 Unfertilized Beans&nbsp;<HelpOutlineIcon fontSize="14px" sx={{ color: 'text.secondary' }} />
               </Typography>
@@ -64,7 +64,7 @@ const MyFertilizer : React.FC = () => {
             </Stack>
           </Stack>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Tooltip title="Fertilized Beans are Beans you can claim from Fertilizer." placement="right">
+            <Tooltip title="Fertilized Beans are Beans you can claim from your Fertilizer yield." placement="right">
               <Typography variant="body1">
                 Fertilized Beans&nbsp;<HelpOutlineIcon fontSize="14px" sx={{ color: 'text.secondary' }} />
               </Typography>
@@ -117,7 +117,7 @@ const MyFertilizer : React.FC = () => {
                 />
               </Box>
               <Typography variant="body2" textAlign="center">
-                Purchase Available Fertilizer using the module above to receive interest at the specified Humidity in the form of future Bean Mints.
+                Purchase Fertilizer using the module above to receive interest at the specified Humidity in the form of future Bean mints.
               </Typography>
             </Stack>
           )}

@@ -65,7 +65,7 @@ const DepositForm : React.FC<
   const isMainnet = chainId === SupportedChainId.MAINNET;
   
   return (
-    <Tooltip title={isMainnet ? <>Deposits will be available upon Unpause.</> : ''} followCursor>
+    <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
           <FieldArray name="tokens">
@@ -192,7 +192,7 @@ const Actions : React.FC<{ token: Token; }> = (props) => {
           {tab === 1 ? (
             <Stack sx={{ p: 4 }} direction="row" justifyContent="center" alignItems="center">
               <Typography color="text.secondary">
-                Withdrawals will be available upon Unpause.
+                Withdrawals will be available once Beanstalk is Replanted.
               </Typography>
             </Stack>
           ) : null}
