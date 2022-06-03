@@ -146,7 +146,7 @@ const FieldPage: React.FC = () => {
             <DataGrid
               columns={columns}
               rows={rows}
-              pageSize={5}
+              pageSize={8}
               disableSelectionOnClick
               density="compact"
             />
