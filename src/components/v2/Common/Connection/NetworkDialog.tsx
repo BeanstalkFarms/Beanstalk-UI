@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
-import { Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { StyledDialogContent } from '../Dialog';
+import { NETWORK_ERRORS_TO_MESSAGES } from 'constants/connection';
+import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 const NetworkDialog: React.FC<{
   open: boolean;
@@ -11,7 +12,7 @@ const NetworkDialog: React.FC<{
   open,
   handleClose
 }) => {
-  const { chains, error, switchNetwork } = useNetwork({
+  const { chains, error, pendingChainId, switchNetwork } = useNetwork({
     onSettled(data, err) {
       if (!err) {
         console.debug('[NetworkButton] settled network change...');
@@ -39,20 +40,35 @@ const NetworkDialog: React.FC<{
 
   return (
     <Dialog onClose={handleClose} open={open} fullScreen={isMedium}>
+      <StyledDialogTitle onClose={handleClose}>
+        Select chain
+      </StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={1}>
           {chains.map((chain) => (
             <Button
+              variant="outlined"
+              color="primary"
               key={chain.id}
-              variant="contained"
-              color="secondary"
               onClick={handleSwitch(chain.id)}
+              sx={{
+                py: 1,
+                minWidth: isMedium ? null : 400,
+              }}
             >
-              <Typography variant="subtitle1">{chain.name}</Typography>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
+                <Typography color="text.primary" sx={{ fontSize: 20 }}>
+                  {chain.name}
+                </Typography>
+              </Stack>
             </Button>
           ))}
+          {error && (
+            <Alert severity="error">
+              {NETWORK_ERRORS_TO_MESSAGES[error.name || error.message](pendingChainId) || error.message}
+            </Alert>
+          )}
         </Stack>
-        {error && <div>{error.message}</div>}
       </StyledDialogContent>
     </Dialog>
   );

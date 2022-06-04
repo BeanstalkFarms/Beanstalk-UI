@@ -11,7 +11,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { CONNECTION_ERRORS_TO_MESSAGES, CONNECTOR_LOGOS } from 'constants/connectors';
+import { CONNECTION_ERRORS_TO_MESSAGES, CONNECTOR_LOGOS } from 'constants/connection';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 // -----------------------------------------------------------------

@@ -1,12 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useNetwork } from 'wagmi';
-import { Button, ButtonProps, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Button, ButtonProps, Typography } from '@mui/material';
 import { SupportedChainId } from 'constants/chains';
 import { ETH } from 'constants/tokens';
 import TokenIcon from '../TokenIcon';
 import DropdownIcon from '../DropdownIcon';
-import { StyledDialogContent } from '../Dialog';
 import NetworkDialog from './NetworkDialog';
 
 const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
