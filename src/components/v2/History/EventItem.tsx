@@ -1,5 +1,5 @@
-import React from 'react';
-import { Divider, Stack, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Divider, Stack, Tooltip, Typography } from '@mui/material';
 import { ParsedEvent } from 'state/v2/farmer/events/updater';
 import { displayBN, toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
@@ -8,6 +8,7 @@ import Token from 'classes/Token';
 import { BEAN, BEAN_ETH_UNIV2_LP, ETH, PODS } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import TokenIcon from '../Common/TokenIcon';
+import { getBlockTimestamp } from '../../../util/LedgerUtilities';
 
 export interface EventItemProps {
   event: ParsedEvent;
@@ -34,7 +35,7 @@ const TokenDisplay: React.FC<{
           {`${displayBN(props.input[0])}`}
         </Typography>
       </Stack>
-      ) : null}
+    ) : null}
   </div>
 );
 
@@ -43,11 +44,19 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
   let amountIn;
   let amountOut;
 
-  // console.log("EVENT FROM ADDRESS");
-  // console.log(event.returnValues.from.toLowerCase());
-  //
-  // console.log("ACCOUNT");
-  // console.log(account);
+  const [eventDatetime, setEventDatetime] = useState('');
+
+  useEffect(() => {
+    function handleSetDatetimeTwo() {
+      getBlockTimestamp(event.blockNumber).then((t) => {
+        const date = new Date(t * 1e3);
+        const dateString = date.toLocaleDateString('en-US');
+        const timeString = date.toLocaleTimeString('en-US');
+        setEventDatetime(`${dateString} ${timeString}`);
+      });
+    }
+    handleSetDatetimeTwo();
+  }, [event.blockNumber]);
 
   switch (event.event) {
     case 'BeanDeposit': {
@@ -312,7 +321,9 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
           {amountOut}
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Typography color="text.secondary">03/24/2022 13:24:24 PM</Typography>
+          <Tooltip placement="right" title={`Block #: ${event.blockNumber}`}>
+            <Typography color="text.secondary">{eventDatetime}</Typography>
+          </Tooltip>
           {amountIn}
         </Stack>
       </Stack>
