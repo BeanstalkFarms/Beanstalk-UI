@@ -31,7 +31,7 @@ import { CHAIN_INFO } from 'constants/chains';
 import { CONNECTION_ERRORS_TO_MESSAGES, CONNECTOR_LOGOS } from 'constants/connectors';
 
 import { getAccount } from 'util/account';
-import { StyledDialogTitle } from './Dialog';
+import { StyledDialogContent, StyledDialogTitle } from './Dialog';
 import DropdownIcon from './DropdownIcon';
 
 // -----------------------------------------------------------------
@@ -39,7 +39,8 @@ import DropdownIcon from './DropdownIcon';
 const SelectWalletDialog: React.FC<{
   handleClose: () => void;
   open: boolean;
-}> = ({ handleClose, open }) => {
+  fullScreen: boolean;
+}> = ({ handleClose, open, fullScreen }) => {
   const { connect, connectors, error, isConnecting, pendingConnector } =
     useConnect({
       onConnect() {
@@ -51,11 +52,11 @@ const SelectWalletDialog: React.FC<{
     [connect]
   );
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} fullScreen={fullScreen}>
       <StyledDialogTitle onClose={handleClose}>
         Connect a wallet
       </StyledDialogTitle>
-      <Box sx={{ p: 2, pt: 0, width: '90vw', maxWidth: 400 }}>
+      <StyledDialogContent>
         <Stack gap={1}>
           {connectors.map((connector) => (
             <Button
@@ -65,17 +66,18 @@ const SelectWalletDialog: React.FC<{
               disabled={!connector.ready}
               onClick={handleConnect(connector)}
               sx={{
-                py: 1
+                py: 1,
+                minWidth: fullScreen ? null : 400,
               }}
             >
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
                 <Typography color="text.primary" sx={{ fontSize: 20 }}>
                   {isConnecting && (connector.id === pendingConnector?.id)
                     ? <CircularProgress variant="indeterminate" color="primary" size={20} />
                     : connector.name}
                 </Typography>
                 {CONNECTOR_LOGOS[connector.name] && (
-                  <img src={CONNECTOR_LOGOS[connector.name]} alt="" style={{ height: 40 }} />
+                  <img src={CONNECTOR_LOGOS[connector.name]} alt="" style={{ height: 35 }} />
                 )}
               </Stack>
             </Button>
@@ -86,7 +88,7 @@ const SelectWalletDialog: React.FC<{
             </Alert>
           )}
         </Stack>
-      </Box>
+      </StyledDialogContent>
     </Dialog>
   );
 };
@@ -100,8 +102,8 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const [showDialog, setShowDialog] = useState(false);
   const handleCloseDialog = useCallback(() => setShowDialog(false), []);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  const isTiny = useMediaQuery('(max-width:380px)');
+  const isMedium = useMediaQuery(theme.breakpoints.down('md'));   // trim additional account text
+  const isTiny = useMediaQuery('(max-width:380px)');              //      
 
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -136,7 +138,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           {...props}
         >
           <Typography variant="subtitle1">
-            {trimAddress(getAccount(account.address), !isMobile)}
+            {trimAddress(getAccount(account.address), !isMedium)}
           </Typography>
         </Button>
         <Menu
@@ -227,6 +229,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       <SelectWalletDialog
         open={showDialog}
         handleClose={handleCloseDialog}
+        fullScreen={isMedium}
       />
     </>
   );

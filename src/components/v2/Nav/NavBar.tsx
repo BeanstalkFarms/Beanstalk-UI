@@ -157,7 +157,7 @@ const NavBar: React.FC<{}> = () => {
                 display: { lg: 'none', xs: 'block' },
                 // Match the height of the Wallet / Priice buttons.
                 // FIXME: need a cleaner way to enforce this height
-                minHeight: '43.5px',
+                minHeight: '38.25px',
                 // IconButton has some annoying behavior so we're
                 // using a regular button instead. This prevents
                 // the contained icon from being treated like text
