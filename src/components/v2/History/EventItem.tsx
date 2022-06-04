@@ -47,6 +47,9 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
   const [eventDatetime, setEventDatetime] = useState('');
 
   useEffect(() => {
+    /** This is NOT an optimal way to get timestamps for events.
+     * A more ideal solution will 1) be off-chain and 2) not
+     * repeat calls for the same block number. - Cool Bean */
     function handleSetDatetimeTwo() {
       getBlockTimestamp(event.blockNumber).then((t) => {
         const date = new Date(t * 1e3);
@@ -55,6 +58,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
         setEventDatetime(`${dateString} ${timeString}`);
       });
     }
+
     handleSetDatetimeTwo();
   }, [event.blockNumber]);
 
