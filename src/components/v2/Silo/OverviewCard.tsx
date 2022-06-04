@@ -1,7 +1,6 @@
 import { Box, Button, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
-import useBeansToUSD from 'hooks/useBeansToUSD';
 import React, { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { displayBN, displayUSD } from 'util/index';
@@ -34,7 +33,6 @@ const DepositsTab : React.FC<TabData> = ({
   current,
   series
 }) => {
-  const getUSD = useBeansToUSD();
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback((ds?: DataPoint[]) => {
     setDisplayValue(ds ? ds.map((d) => new BigNumber(d.value)) : current);
@@ -47,7 +45,7 @@ const DepositsTab : React.FC<TabData> = ({
         <Stack gap={0.5}>
           <Typography color="gray">Total Silo Deposits</Typography>
           <Typography variant="h1" color="primary">
-            {displayUSD(getUSD(displayValue[0]))}
+            {displayUSD(displayValue[0])}
           </Typography>
           <Typography>Season {displayBN(season)}</Typography>
         </Stack>
