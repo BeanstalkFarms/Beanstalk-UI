@@ -78,7 +78,7 @@ const MyFertilizer : React.FC = () => {
       </Stack>
       <Divider />
       {/* Fertilizers */}
-      <Stack sx={{ px: 2, pb: 2 }} spacing={0}>
+      <Stack sx={{ px: 2, pb: 2, pt: 1 }} spacing={0}>
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ py: 1 }}>
           <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
             <Tab label="Active" />
@@ -116,7 +116,7 @@ const MyFertilizer : React.FC = () => {
                   remaining={zeroBN}
                 />
               </Box>
-              <Typography variant="body2" textAlign="center">
+              <Typography variant="body2" textAlign="center" sx={{ maxWidth: { md: 400 } }}>
                 Purchase Fertilizer using the module above to receive interest at the specified Humidity in the form of future Bean mints.
               </Typography>
             </Stack>

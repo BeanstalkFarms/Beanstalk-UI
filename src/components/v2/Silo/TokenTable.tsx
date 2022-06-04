@@ -61,17 +61,17 @@ const TokenTable : React.FC<{
         }}
       >
         <Grid container alignItems="flex-end">
-          <Grid item xs={3}>
+          <Grid item md={3} xs={4}>
             <Typography color="gray">Silo Whitelisted Token</Typography>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">Rewards</Typography>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">TVL</Typography>
             <Typography color="black" fontWeight="bold">${displayBN(aggregateTVL)}</Typography>
           </Grid>
-          <Grid item xs={3} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
+          <Grid item md={3} xs={8} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
             <Typography color="gray">My Deposits</Typography>
             <Typography color="black" fontWeight="bold">{displayUSD(breakdown.deposited.value)}</Typography>
           </Grid>
@@ -95,7 +95,7 @@ const TokenTable : React.FC<{
                 }}
               >
                 <Grid container alignItems="center">
-                  <Grid item xs={3}>
+                  <Grid item md={3} xs={4}>
                     <Stack direction="row" alignItems="center" gap={1}>
                       <img
                         src={token.logo}
@@ -107,18 +107,18 @@ const TokenTable : React.FC<{
                       </Typography>
                     </Stack>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
                       <TokenIcon token={SEEDS} />{token.rewards?.seeds}
                     </Typography>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       ${displayBN(getTVL(token))}
                     </Typography>
                   </Grid>
-                  <Grid item xs={3} sx={{ textAlign: 'right' }}>
+                  <Grid item md={3} xs={8} sx={{ textAlign: 'right' }}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
                         {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'}
