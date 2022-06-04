@@ -45,7 +45,31 @@ const NavBar: React.FC<{}> = () => {
       />
       {/* TEMP: Pre-exploit Dialog */}
       {chainId === SupportedChainId.MAINNET ? (
-        <Dialog onClose={() => setNoticeOpen(false)} open={noticeOpen}>
+        <Dialog
+          onClose={() => setNoticeOpen(false)}
+          open={noticeOpen}
+          // Makes modal full-screen on mobile
+          sx={{
+            '& .MuiDialog-container': {
+              height: {
+                xs: 'auto',
+                md: '100%',
+              }
+            },
+          }}
+          PaperProps={{ 
+            sx: { 
+              margin: { 
+                xs: 0,
+                md: 'auto',
+              },
+              borderRadius: {
+                xs: 0,
+                md: 1
+              }
+            } 
+          }}
+        >
           <StyledDialogTitle onClose={() => setNoticeOpen(false)}>
             Notice
           </StyledDialogTitle>

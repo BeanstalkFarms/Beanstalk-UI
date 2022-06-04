@@ -222,7 +222,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         onClick={() => setShowDialog(true)}
         {...props}
       >
-        Connect Wallet
+        Connect<Box component="span" display={{ xs: 'none', md: 'inline' }}>&nbsp;Wallet</Box>
       </Button>
       <SelectWalletDialog
         open={showDialog}

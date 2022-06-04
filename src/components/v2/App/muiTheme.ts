@@ -295,6 +295,13 @@ let muiTheme = createTheme({
         color: 'transparent',
       },
     },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: sx({
+          px: 2,
+        })
+      }
+    }
   },
 });
 

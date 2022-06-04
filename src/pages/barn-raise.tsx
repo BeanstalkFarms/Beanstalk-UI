@@ -5,7 +5,6 @@ import PurchaseForm from 'components/v2/BarnRaise/PurchaseForm';
 import RemainingFertilizer from 'components/v2/BarnRaise/RemainingFertilizer';
 import MyFertilizer from 'components/v2/BarnRaise/MyFertilizer';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import WelcomeBackModal from '../components/v2/Common/WelcomeBackModal';
 
 const BarnRaisePage: React.FC = () => (
   <Container maxWidth="md">
