@@ -62,7 +62,7 @@ const TokenTable : React.FC<{
       >
         <Grid container alignItems="flex-end">
           <Grid item md={3} xs={4}>
-            <Typography color="gray">Silo Whitelisted Token</Typography>
+            <Typography color="gray">Token</Typography>
           </Grid>
           <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">Rewards</Typography>
