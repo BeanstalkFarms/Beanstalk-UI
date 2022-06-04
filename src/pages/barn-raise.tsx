@@ -26,7 +26,6 @@ const BarnRaisePage: React.FC = () => (
           </Button>
         )}
       />
-      <WelcomeBackModal />
       {/* Section 1: Fertilizer Remaining */}
       <RemainingFertilizer />
       {/* Section 2: Purchase Fertilizer */}

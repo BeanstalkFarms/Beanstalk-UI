@@ -1,6 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Box, CssBaseline } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
 import SiloPage from 'pages/silo';
@@ -24,6 +24,7 @@ import FarmerFertilizerUpdater from 'state/v2/farmer/fertilizer/updater';
 import FieldUpdater from 'state/v2/beanstalk/field/updater';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
+import WelcomeBackModal from '../Common/WelcomeBackModal';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -72,6 +73,7 @@ const CustomToaster : React.FC = () => (
 );
 
 export default function App() {
+  const location = useLocation();
   return (
     <>
       <CssBaseline />
@@ -99,6 +101,8 @@ export default function App() {
         * ----------------------- */}
       <NavBar />
       <CustomToaster />
+      {/* only show welcome back modal on non barn-raise pages */}
+      {location.pathname !== '/' && <WelcomeBackModal />}
       <Box
         sx={{
           backgroundColor: BeanstalkPalette.lighterBlue,

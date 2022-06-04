@@ -6,15 +6,15 @@ const WelcomeBackModal: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(true);
 
   // only show "welcome back" modal on first visit
-  // useEffect(() => {
-  //   const visited = localStorage['already-visited'];
-  //   if (visited) {
-  //     setModalOpen(false);
-  //   } else {
-  //     localStorage['already-visited'] = true;
-  //     setModalOpen(true);
-  //   }
-  // }, [setModalOpen]);
+  useEffect(() => {
+    const visited = localStorage['already-visited'];
+    if (visited) {
+      setModalOpen(false);
+    } else {
+      localStorage['already-visited'] = true;
+      setModalOpen(true);
+    }
+  }, [setModalOpen]);
 
   return (
     <StyledDialog onClose={() => setModalOpen(false)} open={modalOpen} fullWidth>
