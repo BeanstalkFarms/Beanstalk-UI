@@ -131,7 +131,7 @@ type Nft = {
 
 export async function loadNFTs(account: string) {
   // FIXME: API load this
-  const nftData = (await import('../json/parsed-accounts.json')).default as { [key: string] : Nft[] };
+  const nftData = (await import('../data/parsed-accounts.json')).default as { [key: string] : Nft[] };
   if (!nftData[account]) {
     return {
       genesis: [],
