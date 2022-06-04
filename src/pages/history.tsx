@@ -3,12 +3,12 @@ import {Container} from '@mui/system';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {AppState} from 'state';
+import { useAccount } from 'wagmi';
 import {Box, Card, Grid, Stack, Typography} from "@mui/material";
 import {FIELD, OTHER, SILO} from "util/GetEventFacet";
 import {ParsedEvent} from "state/v2/farmer/events/updater";
 import EventItem from "components/v2/History/EventItem";
-import { useAccount } from 'wagmi';
-import WalletButton from 'components/v2/Common/WalletButton';
+import WalletButton from 'components/v2/Common/Connection/WalletButton';
 
 const buttonStyle = {
   cursor: "pointer",

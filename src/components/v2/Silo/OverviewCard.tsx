@@ -8,7 +8,7 @@ import { displayBN, displayUSD } from 'util/index';
 
 import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
 import { mockDepositData, mockOwnershipPctData } from '../Charts/SimpleLineChart.mock';
-import MainnetOverlay from '../Common/MainnetOverlay';
+import MainnetBlur from '../Common/MainnetBlur';
 
 // ------------------------------------------------
 
@@ -53,9 +53,9 @@ const DepositsTab : React.FC<TabData> = ({
         </Stack>
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        <MainnetOverlay>
+        <MainnetBlur>
           Deposit value over time will be available upon the Replanting of Beanstalk
-        </MainnetOverlay>
+        </MainnetBlur>
         <SimpleLineChart
           series={series}
           onCursor={handleCursor}
@@ -98,9 +98,9 @@ const StalkOwnershipTab : React.FC<
         </Stack>
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        <MainnetOverlay>
+        <MainnetBlur>
           Stalk and ownership % over time will be available upon the Replanting of Beanstalk
-        </MainnetOverlay>
+        </MainnetBlur>
         <SimpleLineChart
           series={series}
           onCursor={handleCursor}

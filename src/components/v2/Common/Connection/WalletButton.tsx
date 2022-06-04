@@ -1,19 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Connector,
   useAccount,
-  useConnect,
   useDisconnect,
   useNetwork,
 } from 'wagmi';
 import {
-  Alert,
   Box,
   Button,
   ButtonProps,
-  CircularProgress,
-  Dialog,
   ListItemText,
   Menu,
   MenuItem,
@@ -28,68 +23,12 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import tempUserIcon from 'img/temp-user-icon.svg';
 import { trimAddress } from 'util/index';
 import { CHAIN_INFO } from 'constants/chains';
-import { CONNECTION_ERRORS_TO_MESSAGES, CONNECTOR_LOGOS } from 'constants/connectors';
 
 import { getAccount } from 'util/account';
-import { StyledDialogTitle } from './Dialog';
-import DropdownIcon from './DropdownIcon';
+import DropdownIcon from '../DropdownIcon';
+import WalletDialog from './WalletDialog';
 
 // -----------------------------------------------------------------
-
-const SelectWalletDialog: React.FC<{
-  handleClose: () => void;
-  open: boolean;
-}> = ({ handleClose, open }) => {
-  const { connect, connectors, error, isConnecting, pendingConnector } =
-    useConnect({
-      onConnect() {
-        handleClose();
-      }
-    });
-  const handleConnect = useCallback(
-    (connector: Connector) => () => connect(connector),
-    [connect]
-  );
-  return (
-    <Dialog onClose={handleClose} open={open}>
-      <StyledDialogTitle onClose={handleClose}>
-        Connect a wallet
-      </StyledDialogTitle>
-      <Box sx={{ p: 2, pt: 0, width: '90vw', maxWidth: 400 }}>
-        <Stack gap={1}>
-          {connectors.map((connector) => (
-            <Button
-              variant="outlined"
-              color="primary"
-              key={connector.id}
-              disabled={!connector.ready}
-              onClick={handleConnect(connector)}
-              sx={{
-                py: 1
-              }}
-            >
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
-                <Typography color="text.primary" sx={{ fontSize: 20 }}>
-                  {isConnecting && (connector.id === pendingConnector?.id)
-                    ? <CircularProgress variant="indeterminate" color="primary" size={20} />
-                    : connector.name}
-                </Typography>
-                {CONNECTOR_LOGOS[connector.name] && (
-                  <img src={CONNECTOR_LOGOS[connector.name]} alt="" style={{ height: 40 }} />
-                )}
-              </Stack>
-            </Button>
-          ))}
-          {error && (
-            <Alert severity="error">
-              {CONNECTION_ERRORS_TO_MESSAGES[error.name || error.message](pendingConnector) || error.message}
-            </Alert>
-          )}
-        </Stack>
-      </Box>
-    </Dialog>
-  );
-};
 
 const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { data: account } = useAccount();
@@ -100,8 +39,8 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const [showDialog, setShowDialog] = useState(false);
   const handleCloseDialog = useCallback(() => setShowDialog(false), []);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  const isTiny = useMediaQuery('(max-width:380px)');
+  const isMedium = useMediaQuery(theme.breakpoints.down('md'));   // trim additional account text
+  const isTiny = useMediaQuery('(max-width:380px)');              //      
 
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -136,7 +75,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           {...props}
         >
           <Typography variant="subtitle1">
-            {trimAddress(getAccount(account.address), !isMobile)}
+            {trimAddress(getAccount(account.address), !isMedium)}
           </Typography>
         </Button>
         <Menu
@@ -222,11 +161,12 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         onClick={() => setShowDialog(true)}
         {...props}
       >
-        Connect Wallet
+        Connect<Box component="span" display={{ xs: 'none', md: 'inline' }}>&nbsp;Wallet</Box>
       </Button>
-      <SelectWalletDialog
+      <WalletDialog
         open={showDialog}
         handleClose={handleCloseDialog}
+        fullScreen={isMedium}
       />
     </>
   );

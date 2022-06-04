@@ -117,7 +117,7 @@ let muiTheme = createTheme({
     },
     // h2: card titles, tabs, large button text
     h2: {
-      fontSize: remBase(0.75 * 24),
+      fontSize: remBase(20),
       fontWeight: 600, //
     },
     // h3: bold section titles
@@ -295,6 +295,13 @@ let muiTheme = createTheme({
         color: 'transparent',
       },
     },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: sx({
+          px: 2,
+        })
+      }
+    }
   },
 });
 

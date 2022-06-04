@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Button, Card, Divider, Stack, Tooltip, Typography } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { FarmerSiloRewards } from 'state/v2/farmer/silo';
 import { displayBN } from 'util/index';
 import { SupportedChainId } from 'constants/chains';
+import DropdownIcon from '../Common/DropdownIcon';
 
 const gap = 4;
 
@@ -19,16 +19,16 @@ const RewardsBar : React.FC<{
   seeds
 }) => (
   <Card sx={{ pl: 2, pr: 1, py: 1.5 }}>
-    <Stack direction="row" justifyContent="space-between" alignItems="center">
+    <Stack direction={{ md: 'row', xs: 'column' }} justifyContent={{ md: 'space-between', }} alignItems={{ md: 'center', xs: 'auto' }} rowGap={1.5}>
       {/* Statistics */}
-      <Stack direction="row" gap={gap}>
+      <Stack direction={{ md: 'row', xs: 'column' }} columnGap={gap} rowGap={1.5}>
         {/* Earned */}
         <Stack direction="row" gap={gap}>
-          <Box>
+          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
             <Typography color="gray">Earned Beans</Typography>
             <Typography variant="h3">{displayBN(beans.earned)}</Typography>
           </Box>
-          <Box>
+          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
             <Typography color="gray">Earned Stalk</Typography>
             <Typography variant="h3">{displayBN(stalk.earned)}</Typography>
           </Box>
@@ -39,11 +39,11 @@ const RewardsBar : React.FC<{
         </Box>
         {/* Grown */}
         <Stack direction="row" gap={gap}>
-          <Box>
+          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
             <Typography color="gray">Earned Seeds</Typography>
             <Typography variant="h3">{displayBN(seeds.earned)}</Typography>
           </Box>
-          <Box>
+          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
             <Typography color="gray">Grown Stalk</Typography>
             <Typography variant="h3">{displayBN(stalk.grown)}</Typography>
           </Box>
@@ -51,14 +51,14 @@ const RewardsBar : React.FC<{
       </Stack>
       {/* Claim */}
       {/* TEMP: Hide Claim button on MAINNET */}
-      <Box sx={{ justifySelf: 'flex-end' }}>
+      <Box sx={{ justifySelf: { md: 'flex-end', xs: 'auto' }, width: { xs: '100%', md: 'auto' } }}>
         <Tooltip title={chainId === SupportedChainId.MAINNET ? <>Claiming Silo rewards will be available upon Unpause.</> : false}>
           <span>
             <Button
               disabled={chainId === SupportedChainId.MAINNET}
               variant="contained"
-              sx={{ h: '100%' }}
-              endIcon={<ArrowDropDownIcon />}
+              sx={{ height: '100%', width: { xs: '100%', md: 'auto' } }}
+              endIcon={<DropdownIcon open={false} />}
             >
               Claim Rewards
             </Button>

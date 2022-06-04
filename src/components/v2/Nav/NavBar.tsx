@@ -17,8 +17,8 @@ import useChainId from 'hooks/useChain';
 import { PRE_EXPLOIT_BEAN_DATA } from 'state/v2/bean/pools/updater';
 import { displayFullBN, trimAddress } from 'util/index';
 import usePools from 'hooks/usePools';
-import WalletButton from '../Common/WalletButton';
-import NetworkButton from '../Common/NetworkButton';
+import WalletButton from '../Common/Connection/WalletButton';
+import NetworkButton from '../Common/Connection/NetworkButton';
 import PriceButton from './PriceButton';
 import ROUTES from './routes';
 import NavButton from './NavButton';
@@ -45,7 +45,31 @@ const NavBar: React.FC<{}> = () => {
       />
       {/* TEMP: Pre-exploit Dialog */}
       {chainId === SupportedChainId.MAINNET ? (
-        <Dialog onClose={() => setNoticeOpen(false)} open={noticeOpen}>
+        <Dialog
+          onClose={() => setNoticeOpen(false)}
+          open={noticeOpen}
+          // Makes modal full-screen on mobile
+          sx={{
+            '& .MuiDialog-container': {
+              height: {
+                xs: 'auto',
+                md: '100%',
+              }
+            },
+          }}
+          PaperProps={{ 
+            sx: { 
+              margin: { 
+                xs: 0,
+                md: 'auto',
+              },
+              borderRadius: {
+                xs: 0,
+                md: 1
+              }
+            } 
+          }}
+        >
           <StyledDialogTitle onClose={() => setNoticeOpen(false)}>
             Notice
           </StyledDialogTitle>
@@ -105,7 +129,11 @@ const NavBar: React.FC<{}> = () => {
         <Stack direction="row" alignItems="center" gap={1} sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}>
           {/* Desktop: Left Side */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }}>
-            <PriceButton />
+            <PriceButton
+              sx={{
+                height: 44,
+              }}
+            />
             <Stack direction="row" alignItems="center" sx={{ display: { lg: 'block', xs: 'none' } }}>
               {ROUTES.top.map((item) => (
                 <NavButton
@@ -120,20 +148,25 @@ const NavBar: React.FC<{}> = () => {
           </Stack>
           {/* Desktop: Right Side */}
           <Stack direction="row" justifyContent="flex-end" alignItems="center" sx={{ }} spacing={1}>
-            <Box sx={{ display: { lg: 'block', xs: 'none' } }}>
-              <NetworkButton />
+            <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
+              <NetworkButton
+                sx={{ height: 44 }}
+              />
             </Box>
-            <WalletButton />
+            <WalletButton
+              sx={{ height: 44 }}
+            />
             <Button
               color="light"
               variant="contained"
               aria-label="open drawer"
               onClick={showDrawer}
               sx={{
+                height: 44,
                 display: { lg: 'none', xs: 'block' },
                 // Match the height of the Wallet / Priice buttons.
                 // FIXME: need a cleaner way to enforce this height
-                minHeight: '43.5px',
+                // minHeight: '38.25px',
                 // IconButton has some annoying behavior so we're
                 // using a regular button instead. This prevents
                 // the contained icon from being treated like text
