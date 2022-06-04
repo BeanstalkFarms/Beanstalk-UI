@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, CircularProgress, CircularProgressProps, Drawer, Popper, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, ButtonProps, CircularProgress, CircularProgressProps, Drawer, Popper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -57,7 +57,7 @@ const BeanProgressIcon : React.FC<CircularProgressProps & {
 
 // ------------------------------------------------------------
 
-const PriceButton: React.FC = () => {
+const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
     (state) => state._bean.token.price
   );
@@ -126,11 +126,13 @@ const PriceButton: React.FC = () => {
           endIcon={<DropdownIcon open={(popoverOpen || drawerOpen)} />}
           onClick={onClickPriceButton}
           disableRipple
+          {...props}
           sx={{
             borderBottomLeftRadius: anchorEl ? 0 : undefined,
             borderBottomRightRadius: anchorEl ? 0 : undefined,
             zIndex: anchorEl ? 999 : undefined,
             mr: 1,
+            ...props.sx
           }}
         >
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>

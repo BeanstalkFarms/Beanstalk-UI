@@ -129,7 +129,11 @@ const NavBar: React.FC<{}> = () => {
         <Stack direction="row" alignItems="center" gap={1} sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}>
           {/* Desktop: Left Side */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }}>
-            <PriceButton />
+            <PriceButton
+              sx={{
+                height: 44,
+              }}
+            />
             <Stack direction="row" alignItems="center" sx={{ display: { lg: 'block', xs: 'none' } }}>
               {ROUTES.top.map((item) => (
                 <NavButton
@@ -144,20 +148,25 @@ const NavBar: React.FC<{}> = () => {
           </Stack>
           {/* Desktop: Right Side */}
           <Stack direction="row" justifyContent="flex-end" alignItems="center" sx={{ }} spacing={1}>
-            <Box sx={{ display: { lg: 'block', xs: 'none' } }}>
-              <NetworkButton />
+            <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
+              <NetworkButton
+                sx={{ height: 44 }}
+              />
             </Box>
-            <WalletButton />
+            <WalletButton
+              sx={{ height: 44 }}
+            />
             <Button
               color="light"
               variant="contained"
               aria-label="open drawer"
               onClick={showDrawer}
               sx={{
+                height: 44,
                 display: { lg: 'none', xs: 'block' },
                 // Match the height of the Wallet / Priice buttons.
                 // FIXME: need a cleaner way to enforce this height
-                minHeight: '38.25px',
+                // minHeight: '38.25px',
                 // IconButton has some annoying behavior so we're
                 // using a regular button instead. This prevents
                 // the contained icon from being treated like text

@@ -1,12 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import { useNetwork } from 'wagmi';
-import { Box, Button, Dialog, Stack, Typography } from '@mui/material';
+import { Button, ButtonProps, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { SupportedChainId } from 'constants/chains';
 import { ETH } from 'constants/tokens';
 import TokenIcon from './TokenIcon';
 import DropdownIcon from './DropdownIcon';
+import { StyledDialogContent } from './Dialog';
 
-const NetworkButton: React.FC = () => {
+const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { activeChain, chains, error, switchNetwork } = useNetwork({
     onSettled(data, err) {
       if (!err) {
@@ -18,6 +20,12 @@ const NetworkButton: React.FC = () => {
       }
     }
   });
+
+  // 
+  const theme = useTheme();
+  const isMedium = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Network Dialog
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,6 +47,7 @@ const NetworkButton: React.FC = () => {
 
   return (
     <>
+      {/* Button */}
       {activeChain && (
         <Button
           disableFocusRipple
@@ -53,6 +62,7 @@ const NetworkButton: React.FC = () => {
           )}
           endIcon={<DropdownIcon open={open} />}
           onClick={handleClick}
+          {...props}
           sx={{
             // MUI adds a default margin to start and
             // end icons to give them space between text.
@@ -68,7 +78,8 @@ const NetworkButton: React.FC = () => {
                 md: 0.8,  // FIXME: couldn't get 'inherit' to work here
                 xs: 0
               }
-            }
+            },
+            ...props.sx
           }}
         >
           <Typography variant="subtitle1" sx={{ display: { md: 'block', xs: 'none' } }}>
@@ -76,8 +87,9 @@ const NetworkButton: React.FC = () => {
           </Typography>
         </Button>
       )}
-      <Dialog onClose={handleClose} open={open}>
-        <Box sx={{ p: 2, minWidth: 340 }}>
+      {/* Dialog */}
+      <Dialog onClose={handleClose} open={open} fullScreen={isMedium}>
+        <StyledDialogContent>
           <Stack gap={1}>
             {chains.map((chain) => (
               <Button
@@ -91,7 +103,7 @@ const NetworkButton: React.FC = () => {
             ))}
           </Stack>
           {error && <div>{error.message}</div>}
-        </Box>
+        </StyledDialogContent>
       </Dialog>
     </>
   );
