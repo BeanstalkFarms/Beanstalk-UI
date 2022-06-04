@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
 import { Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { StyledDialogContent } from './Dialog';
+import { StyledDialogContent } from '../Dialog';
 
 const NetworkDialog: React.FC<{
   open: boolean;
@@ -30,7 +30,7 @@ const NetworkDialog: React.FC<{
         handleClose();
       }
     },
-    [switchNetwork]
+    [switchNetwork, handleClose]
   );
 
   // 
