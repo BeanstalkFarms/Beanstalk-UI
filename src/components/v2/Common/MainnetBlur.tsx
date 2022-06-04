@@ -3,7 +3,7 @@ import { Stack, Typography } from '@mui/material';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 
-const MainnetOverlay : React.FC = ({ children }) => {
+const MainnetBlur : React.FC = ({ children }) => {
   const chainId = useChainId();
   return chainId === SupportedChainId.MAINNET ? (
     <Stack
@@ -30,4 +30,4 @@ const MainnetOverlay : React.FC = ({ children }) => {
   ) : null;
 };
 
-export default MainnetOverlay;
+export default MainnetBlur;
