@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Card, Container, Dialog, Grid, Link, Stack, Typography } from '@mui/material';
+import { Box, Card, Container, Dialog, Grid, Link, Stack, Typography, useMediaQuery } from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -8,7 +8,8 @@ import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
 import podIcon from 'img/pod-logo.svg';
-import ClearIcon from '@mui/icons-material/Clear';
+import useTheme from '@mui/styles/useTheme';
+import { StyledDialogContent, StyledDialogTitle } from 'components/v2/Common/Dialog';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -38,13 +39,15 @@ const MAX_ROWS = 5;
 
 const FieldPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const closeModal = useCallback(() => setModalOpen(false), []);
-  const openModal = useCallback(() => setModalOpen(true), []);
+  const handleClose = useCallback(() => setModalOpen(false), []);
+  const handleOpen = useCallback(() => setModalOpen(true), []);
+  
   // Data
   const farmerField    = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const beanToken      = useSelector<AppState, AppState['_bean']['token']>((state) => state._bean.token);
-
+  const podLine = beanstalkField?.pods.minus(beanstalkField.harvestableIndex);
+  
   // Rows
   const rows = useMemo(() => Object.keys(farmerField.plots).map((index) => ({
     id: index,
@@ -57,7 +60,9 @@ const FieldPage: React.FC = () => {
     return Math.min(rows.length, MAX_ROWS) * 52 + 112;
   }, [rows]);
 
-  const podLine = beanstalkField?.pods.minus(beanstalkField.harvestableIndex);
+  // Theme
+  const theme = useTheme();
+  const isMedium = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Container maxWidth="md">
@@ -110,7 +115,7 @@ const FieldPage: React.FC = () => {
                       <Typography variant="h4">{displayBN(farmerField.pods)}</Typography>
                     </Stack>
                   </Stack>
-                  <Link onClick={openModal} underline="none" sx={{ cursor: 'pointer' }}>
+                  <Link onClick={handleOpen} underline="none" sx={{ cursor: 'pointer' }}>
                     <Typography variant="h4">View My Plots</Typography>
                   </Link>
                 </Stack>
@@ -119,13 +124,13 @@ const FieldPage: React.FC = () => {
           </Stack>
         </Card>
       </Stack>
-      <Dialog onClose={() => setModalOpen(false)} open={modalOpen} fullWidth>
-        <Card sx={{ p: 2, pb: 0.5 }}>
-          <Stack gap={1}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography variant="h4" color="text.secondary">My Plots</Typography>
-              <ClearIcon sx={{ cursor: 'pointer', color: '#bbbcd1' }} onClick={closeModal} />
-            </Stack>
+      <Dialog onClose={handleClose} open={modalOpen} fullWidth fullScreen={isMedium}>
+        <StyledDialogTitle onClose={handleClose}>
+          My Plots
+        </StyledDialogTitle>
+        <StyledDialogContent sx={{ pb: 0.5 }}>
+          <Stack gap={2}>
+            {/* Pod Balance */}
             <Box>
               <Stack gap={0.5} sx={{ backgroundColor: '#F6FAFE', px: 2, py: 1.5, borderRadius: 1.5 }}>
                 <Typography variant="h4" color="text.secondary">Pod Balance</Typography>
@@ -137,21 +142,21 @@ const FieldPage: React.FC = () => {
                 </Stack>
               </Stack>
             </Box>
+            <Box
+              sx={{
+                height: tableHeight,
+                ...tableStyle,
+              }}>
+              <DataGrid
+                columns={columns}
+                rows={rows}
+                pageSize={8}
+                disableSelectionOnClick
+                density="compact"
+              />
+            </Box>
           </Stack>
-          <Box
-            sx={{
-              height: tableHeight,
-              ...tableStyle,
-            }}>
-            <DataGrid
-              columns={columns}
-              rows={rows}
-              pageSize={8}
-              disableSelectionOnClick
-              density="compact"
-            />
-          </Box>
-        </Card>
+        </StyledDialogContent>
       </Dialog>
     </Container>
   );

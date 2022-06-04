@@ -1,10 +1,8 @@
 import React from 'react';
-import { Box, Button, Card, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Box, Button, Card, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import { FarmerSiloRewards } from 'state/v2/farmer/silo';
 import { displayBN } from 'util/index';
 import { SupportedChainId } from 'constants/chains';
-import { BeanstalkPalette } from '../App/muiTheme';
 import DropdownIcon from '../Common/DropdownIcon';
 
 const gap = 4;
