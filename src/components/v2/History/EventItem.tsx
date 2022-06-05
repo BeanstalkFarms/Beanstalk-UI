@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Divider, Stack, Tooltip, Typography } from '@mui/material';
+import { Divider, Link, Stack, Tooltip, Typography } from '@mui/material';
 import { ParsedEvent } from 'state/v2/farmer/events/updater';
 import { displayBN, toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
@@ -44,23 +44,32 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
   let amountIn;
   let amountOut;
 
-  const [eventDatetime, setEventDatetime] = useState('');
+  // const [eventDatetime, setEventDatetime] = useState('');
+  //
+  // const handleSetDatetime = () => {
+  //   getBlockTimestamp(event.blockNumber).then((t) => {
+  //     const date = new Date(t * 1e3);
+  //     const dateString = date.toLocaleDateString('en-US');
+  //     const timeString = date.toLocaleTimeString('en-US');
+  //     setEventDatetime(`${dateString} ${timeString}`);
+  //   });
+  // };
 
-  useEffect(() => {
-    /** This is NOT an optimal way to get timestamps for events.
-     * A more ideal solution will 1) be off-chain and 2) not
-     * repeat calls for the same block number. - Cool Bean */
-    function handleSetDatetimeTwo() {
-      getBlockTimestamp(event.blockNumber).then((t) => {
-        const date = new Date(t * 1e3);
-        const dateString = date.toLocaleDateString('en-US');
-        const timeString = date.toLocaleTimeString('en-US');
-        setEventDatetime(`${dateString} ${timeString}`);
-      });
-    }
-
-    handleSetDatetimeTwo();
-  }, [event.blockNumber]);
+  // useEffect(() => {
+  //   /** This is NOT an optimal way to get timestamps for events.
+  //    * A more ideal solution will 1) be off-chain and 2) not
+  //    * repeat calls for the same block number. - Cool Bean */
+  //   function handleSetDatetimeTwo() {
+  //     getBlockTimestamp(event.blockNumber).then((t) => {
+  //       const date = new Date(t * 1e3);
+  //       const dateString = date.toLocaleDateString('en-US');
+  //       const timeString = date.toLocaleTimeString('en-US');
+  //       setEventDatetime(`${dateString} ${timeString}`);
+  //     });
+  //   }
+  //
+  //   handleSetDatetimeTwo();
+  // }, [event.blockNumber]);
 
   switch (event.event) {
     case 'BeanDeposit': {
@@ -325,8 +334,11 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
           {amountOut}
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Tooltip placement="right" title={`Block #: ${event.blockNumber}`}>
-            <Typography color="text.secondary">{eventDatetime}</Typography>
+          {/* <Tooltip placement="right" title={eventDatetime}> */}
+          <Tooltip placement="right" title="View block on Etherscan.">
+            <Link underline="none" href={`https://etherscan.io/block/${event.blockNumber}`}>
+              <Typography color="text.secondary">{`Block #: ${event.blockNumber}`}</Typography>
+            </Link>
           </Tooltip>
           {amountIn}
         </Stack>
