@@ -41,6 +41,7 @@ const MoreButton: React.FC = () => {
           px: 1.5,
           fontSize: '1rem',
           fontWeight: '400',
+          mb: 1
         }}
         className={open ? 'Mui-focusVisible' : ''}
       >

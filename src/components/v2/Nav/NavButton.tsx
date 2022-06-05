@@ -29,6 +29,7 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
         minWidth: 0,
         px: 1.5,
         display: 'inline-flex',
+        mb: 1,
       }}
     >
       <Typography
@@ -55,6 +56,7 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
         </Box>
       )}
     </Button>
+
   );
 };
 

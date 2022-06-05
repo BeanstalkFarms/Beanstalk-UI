@@ -165,14 +165,15 @@ const NavBar: React.FC<{}> = () => {
         <Stack
           direction="row"
           alignItems="center"
-          gap={20}
-          sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}
+          justifyContent="flex-end"
+          sx={{ p: 1, pb: 0, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}
         >
           {/* Desktop: Left Side */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }}>
             <PriceButton
               sx={{
                 height: 44,
+                mb: 1
               }}
             />
             <Stack
@@ -196,7 +197,7 @@ const NavBar: React.FC<{}> = () => {
             direction="row"
             justifyContent="flex-end"
             alignItems="center"
-            sx={{}}
+            sx={{ pb: 1 }}
             spacing={1}
           >
             <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
