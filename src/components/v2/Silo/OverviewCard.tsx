@@ -31,11 +31,7 @@ type TabData = {
 
 // ------------------------------------------------
 
-const DepositsTab : React.FC<TabData> = ({
-  season,
-  current,
-  series
-}) => {
+const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback(
     (ds?: DataPoint[]) => {
@@ -85,14 +81,14 @@ const StalkOwnershipTab: React.FC<
     <>
       <Stack direction="row" gap={4} sx={{ px: 2 }}>
         <Stack gap={0.5} sx={{ minWidth: 180 }}>
-          <Typography color="gray">My Stalk</Typography>
+          <Typography>My Stalk</Typography>
           <Typography variant="h1" color="primary">
             {displayBN(displayValue[0])}
           </Typography>
           <Typography>Season {displayBN(season)}</Typography>
         </Stack>
         <Stack gap={0.5}>
-          <Typography color="gray">Ownership % of all Stalk</Typography>
+          <Typography>Ownership % of all Stalk</Typography>
           <Typography variant="h1" color="secondary.dark">
             {displayValue[1].multipliedBy(100).toFixed(3)}%
           </Typography>
