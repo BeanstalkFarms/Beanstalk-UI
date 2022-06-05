@@ -111,7 +111,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
         {/* Left Column */}
         <Grid container direction="row" alignItems="center" sx={{ mb: 4, mt: { md: 0, xs: 0 } }} rowSpacing={2}>
           <Grid item xs={12} md={3.5}>
-            <Stack>
+            <Stack p={1}>
               {STATE_IDS.map((id: StateID) => (
                 <TokenRow
                   key={id}
