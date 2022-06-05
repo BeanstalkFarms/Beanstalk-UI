@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN } from 'util/index';
 import humidityIcon from 'img/humidity-icon.svg';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
+import { FertilizerTooltip } from '../../../constants/fertilizerItem';
 
 export type FertilizerData = {
   /** The amount of Fertilizer owned at this */
@@ -28,7 +29,9 @@ const FertilizerItem: React.FC<{
   state?: FertilizerState;
   /**  */
   isNew?: boolean;
+  tooltip: FertilizerTooltip;
 } & FertilizerData> = ({
+  tooltip,
   state,
   isNew,
   amount,
@@ -54,12 +57,12 @@ const FertilizerItem: React.FC<{
           </Stack>
         )}
         <Stack direction="row" justifyContent="space-between">
-          <Tooltip title="1 FERT = 1 USDC put into the Barn Raise." placement="left">
+          <Tooltip title={tooltip.fertilizer} placement="left">
             <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
               x{displayFullBN(amount, 0)}
             </Typography>
           </Tooltip>
-          <Tooltip title="Humidity — interest rate earned for buying Fertilizer." placement="right">
+          <Tooltip title={tooltip.humidity} placement="right">
             {/* <OpacityIcon sx={{ fontSize: 14 }} /> */}
             <Stack direction="row" gap={0.2} alignItems="center">
               <img alt="" src={humidityIcon} height="13px" />
@@ -69,7 +72,7 @@ const FertilizerItem: React.FC<{
             </Stack>
           </Tooltip>
         </Stack>
-        <Tooltip title="The Beans remaining to be distributed to this Fertilizer." placement="bottom">
+        <Tooltip title={tooltip.reward} placement="bottom">
           <Stack direction="row" justifyContent="space-between">
             <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
               {isNew ? 'Unfertilized Beans' : 'Remaining'}

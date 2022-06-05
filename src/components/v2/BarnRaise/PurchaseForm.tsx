@@ -29,6 +29,7 @@ import { useFetchFarmerAllowances } from 'state/v2/farmer/allowances/updater';
 import { timeToStringDetailed } from 'util/v1/TimeUtilities';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
+import { BUY_FERTILIZER } from 'constants/fertilizerItem';
 import FertilizerItem from './FertilizerItem';
 import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
 import TransactionToast from '../Common/TxnToast';
@@ -135,6 +136,7 @@ const FertilizeForm : React.FC<
                   remaining={fert.multipliedBy(humidity.plus(1))}
                   humidity={humidity}
                   state="active"
+                  tooltip={BUY_FERTILIZER}
                 />
               </Box>
               <Box sx={{ width: '100%', mt: 0 }}>

@@ -20,6 +20,7 @@ import { SupportedChainId } from 'constants/chains';
 import { BEAN } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from 'util/TokenUtilities';
+import { MY_FERTILIZER } from 'constants/fertilizerItem';
 import TokenIcon from '../Common/TokenIcon';
 
 enum TabState {
@@ -145,6 +146,7 @@ const MyFertilizer: React.FC = () => {
                       remaining={remaining}
                       amount={amount}
                       season={season}
+                      tooltip={MY_FERTILIZER}
                     />
                   </Grid>
                 );
@@ -165,6 +167,7 @@ const MyFertilizer: React.FC = () => {
                   humidity={zeroBN}
                   remaining={zeroBN}
                   season={zeroBN}
+                  tooltip={MY_FERTILIZER}
                 />
               </Box>
               <Typography
