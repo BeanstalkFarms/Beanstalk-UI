@@ -74,7 +74,6 @@ export const useBeanstalkSilo = () => {
   }, [
     dispatch,
     beanstalk,
-    chainId,  
   ]);
   
   const clear = useCallback(() => {
