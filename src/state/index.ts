@@ -1,29 +1,14 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import allowances from './allowances/reducer';
-import season from './season/reducer';
-import userBalance from './userBalance/reducer';
-import totalBalance from './totalBalance/reducer';
-import prices from './prices/reducer';
-import weather from './weather/reducer';
-import beansPerSeason from './beansPerSeason/reducer';
-import general from './general/reducer';
-import marketplace from './marketplace/reducer';
-import nfts from './nfts/reducer';
-import tokenBalances from './tokenBalance/reducer';
+
+import _bean from './v2/bean/reducer';
+import _beanstalk from './v2/beanstalk/reducer';
+import _farmer from './v2/farmer/reducer';
 
 const store = configureStore({
   reducer: {
-    allowances,
-    userBalance,
-    totalBalance,
-    season,
-    weather,
-    prices,
-    beansPerSeason,
-    general,
-    marketplace,
-    nfts,
-    tokenBalances,
+    _bean,
+    _beanstalk,
+    _farmer,
   },
   middleware: [
     ...getDefaultMiddleware({
