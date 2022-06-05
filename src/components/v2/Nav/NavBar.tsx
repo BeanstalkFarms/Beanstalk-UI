@@ -165,7 +165,7 @@ const NavBar: React.FC<{}> = () => {
         <Stack
           direction="row"
           alignItems="center"
-          gap={20}
+          justifyContent="space-between"
           sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}
         >
           {/* Desktop: Left Side */}

@@ -55,7 +55,7 @@ const FertilizerItem: React.FC<{
         )}
         <Stack direction="row" justifyContent="space-between">
           <Tooltip title="1 FERT = 1 USDC put into the Barn Raise." placement="left">
-            <Typography color="text.secondary" sx={{ opacity: 0.6 }}>
+            <Typography sx={{ fontSize: "14px", opacity: 0.6 }} color="text.secondary">
               x{displayFullBN(amount, 0)}
             </Typography>
           </Tooltip>
@@ -63,7 +63,7 @@ const FertilizerItem: React.FC<{
             {/* <OpacityIcon sx={{ fontSize: 14 }} /> */}
             <Stack direction="row" gap={0.2} alignItems="center">
               <img alt="" src={humidityIcon} height="13px" />
-              <Typography color="text.secondary" sx={{ opacity: 0.6 }}>
+              <Typography sx={{ fontSize: "14px", opacity: 0.6 }} color="text.secondary">
                 {displayBN(humidity.times(100))}%
               </Typography>
             </Stack>
@@ -71,10 +71,10 @@ const FertilizerItem: React.FC<{
         </Stack>
         <Tooltip title="The Beans remaining to be distributed to this Fertilizer." placement="bottom">
           <Stack direction="row" justifyContent="space-between">
-            <Typography color="text.primary" fontWeight="bold">
+            <Typography sx={{ fontSize: "14px" }} color="text.primary" fontWeight="bold">
               {isNew ? 'Unfertilized Beans' : 'Remaining'}
             </Typography>
-            <Typography color="text.primary" fontWeight="bold">
+            <Typography sx={{ fontSize: "14px" }} color="text.primary" fontWeight="bold">
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} /> {displayBN(remaining)}
             </Typography>
           </Stack>

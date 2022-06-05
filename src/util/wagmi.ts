@@ -11,7 +11,7 @@ import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { SupportedChainId } from 'constants/chains';
 import { ALCHEMY_API_KEYS } from 'constants/rpc/alchemy';
 
-const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.ROPSTEN];
+const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.MAINNET];
 
 const { chains, provider } = configureChains(
   [
