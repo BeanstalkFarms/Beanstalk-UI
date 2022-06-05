@@ -133,14 +133,14 @@ const MyFertilizer: React.FC = () => {
         </Stack>
         <Box>
           {tokenIds.length > 0 ? (
-            <Grid container spacing={2}>
+            <Grid container spacing={4.5}>
               {tokenIds.map((id) => {
                 const season = new BigNumber(id);
                 const [humidity] = getHumidity(season);
                 const amount = farmerFertilizer.tokens[id];
                 const remaining = amount.multipliedBy(humidity.plus(1));
                 return (
-                  <Grid key={id} item xs={12} md={3}>
+                  <Grid key={id} item xs={12} md={4}>
                     <FertilizerItem
                       state="active"
                       humidity={humidity}
@@ -160,7 +160,7 @@ const MyFertilizer: React.FC = () => {
               alignItems="center"
               gap={2}
             >
-              <Box width={155}>
+              <Box width={250}>
                 <FertilizerItem
                   state="used"
                   amount={zeroBN}

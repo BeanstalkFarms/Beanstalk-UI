@@ -128,7 +128,7 @@ const FertilizeForm : React.FC<
           {fert?.gt(0) ? (
             <Stack direction="column" gap={1} alignItems="center" justifyContent="center">
               <KeyboardArrowDownIcon color="secondary" />
-              <Box sx={{ width: 180, pb: 1 }}>
+              <Box sx={{ width: 250, pb: 1 }}>
                 <FertilizerItem
                   isNew
                   amount={fert}
