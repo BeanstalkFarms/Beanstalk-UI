@@ -9,22 +9,30 @@ import FertilizerImage from './FertilizerImage';
 
 const RemainingFertilizer: React.FC = () => {
   const [humidity, nextDecreaseAmount] = useHumidity();
-  const fertilizer = useSelector<AppState, AppState['_beanstalk']['fertilizer']>((state) => state._beanstalk.fertilizer);
-  const nextDecreaseDuration = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']['remaining']>(
-    (state) => state._beanstalk.sun.sunrise.remaining
-  );
-  const nextDecreaseTimeString = humidity.eq(INITIAL_HUMIDITY) ? 'in early July' : `in ${nextDecreaseDuration.toFormat('mm:ss')}`;
-  const progress = fertilizer.totalRaised.gt(0) 
-    ? fertilizer.totalRaised.div(fertilizer.totalRaised.plus(fertilizer.remaining))
+  const fertilizer = useSelector<
+    AppState,
+    AppState['_beanstalk']['fertilizer']
+  >((state) => state._beanstalk.fertilizer);
+  const nextDecreaseDuration = useSelector<
+    AppState,
+    AppState['_beanstalk']['sun']['sunrise']['remaining']
+  >((state) => state._beanstalk.sun.sunrise.remaining);
+  const nextDecreaseTimeString = humidity.eq(INITIAL_HUMIDITY)
+    ? 'in early July'
+    : `in ${nextDecreaseDuration.toFormat('mm:ss')}`;
+  const progress = fertilizer.totalRaised.gt(0)
+    ? fertilizer.totalRaised.div(
+        fertilizer.totalRaised.plus(fertilizer.remaining)
+      )
     : new BigNumber(0);
-  
+
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={2}>
         <Typography variant="h2">Remaining Fertilizer</Typography>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
-          alignItems={{ xs: 'left',  md: 'center' }}
+          alignItems={{ xs: 'left', md: 'center' }}
           justifyContent={{ md: 'left' }}
           gap={2}
         >
@@ -36,20 +44,28 @@ const RemainingFertilizer: React.FC = () => {
           <Stack justifyContent="space-between" gap={3}>
             <Stack gap={3}>
               <Stack gap={1}>
-                <Typography color="text.secondary">Available Fertilizer</Typography>
+                <Typography>Available Fertilizer</Typography>
                 <Stack direction="row" gap={1} alignItems="center">
-                  <Typography display="inline-block" variant="h1" sx={{ fontWeight: 400 }}>
+                  <Typography
+                    display="inline-block"
+                    variant="h1"
+                    sx={{ fontWeight: 400 }}
+                  >
                     {displayFullBN(fertilizer.remaining, 0)}&nbsp;
                   </Typography>
                   {progress.gt(0) ? (
-                    <Typography display="inline-block" variant="body1" color="text.secondary">
+                    <Typography
+                      display="inline-block"
+                      variant="body1"
+                      color="text.secondary"
+                    >
                       {displayFullBN(progress.multipliedBy(100), 2)}% Purchased
                     </Typography>
                   ) : null}
                 </Stack>
               </Stack>
               <Stack gap={1}>
-                <Typography color="text.secondary">Current Humidity (Interest Rate)</Typography>
+                <Typography>Current Humidity (Interest Rate)</Typography>
                 <Stack direction="row" alignItems="center" gap={1}>
                   <Typography sx={{ fontSize: '25px', fontWeight: 400 }}>
                     {displayFullBN(humidity.multipliedBy(100))}%
@@ -57,7 +73,8 @@ const RemainingFertilizer: React.FC = () => {
                   <Typography sx={{ color: '#c35f42' }}>
                     {nextDecreaseAmount.eq(0)
                       ? null
-                      : displayFullBN(nextDecreaseAmount.multipliedBy(-100))}% {nextDecreaseTimeString}
+                      : displayFullBN(nextDecreaseAmount.multipliedBy(-100))}
+                    % {nextDecreaseTimeString}
                   </Typography>
                 </Stack>
               </Stack>
@@ -67,7 +84,7 @@ const RemainingFertilizer: React.FC = () => {
                 href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise"
                 rel="noreferrer"
                 color="text.secondary"
-                >
+              >
                 <Typography variant="body1">
                   Learn more about the Barn Raise
                 </Typography>
