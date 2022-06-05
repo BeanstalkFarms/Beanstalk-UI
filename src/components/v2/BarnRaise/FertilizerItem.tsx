@@ -74,9 +74,12 @@ const FertilizerItem: React.FC<{
             <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
               {isNew ? 'Unfertilized Beans' : 'Remaining'}
             </Typography>
-            <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
-              <TokenIcon token={BEAN[SupportedChainId.MAINNET]} /> {displayBN(remaining)}
-            </Typography>
+            <Stack direction="row" alignItems="center" gap={0.2}>
+              <TokenIcon token={BEAN[SupportedChainId.MAINNET]} style={{ width: '14px' }} />
+              <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
+                {displayBN(remaining)}
+              </Typography>
+            </Stack>
           </Stack>
         </Tooltip>
       </Stack>
