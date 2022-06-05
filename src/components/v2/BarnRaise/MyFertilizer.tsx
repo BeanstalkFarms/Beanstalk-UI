@@ -78,15 +78,14 @@ const MyFertilizer: React.FC = () => {
               placement="right"
             >
               <Typography variant="body1">
-                Total Unfertilized Beans&nbsp;
+                Total Unfertilized Beans
                 <HelpOutlineIcon
                   sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
               </Typography>
             </Tooltip>
-            <Stack direction="row" alignItems="top">
+            <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
-              &nbsp;
               <Typography>
                 {displayBN(fertilizerSummary.unfertilized, 0)}
               </Typography>
@@ -108,9 +107,8 @@ const MyFertilizer: React.FC = () => {
                 />
               </Typography>
             </Tooltip>
-            <Stack direction="row" alignItems="top">
+            <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
-              &nbsp;
               <Typography>0</Typography>
             </Stack>
           </Stack>
