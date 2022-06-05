@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Card, Container, Grid, Stack } from '@mui/material';
+import {Box, Card, Container, Grid, Stack} from '@mui/material';
 import PageHeader from 'components/v2/Common/PageHeader';
 import TotalBalanceCard from 'components/v2/Balances/Cards/TotalBalancesCard';
 import FertilizerCard from 'components/v2/Balances/Cards/FertilizerCard';
@@ -15,6 +15,9 @@ import Stat from 'components/v2/Common/Stat';
 import { displayBN } from 'util/index';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
+import BlurComponent from "../components/v2/Common/BlurComponent";
+import MainnetBlur from "../components/v2/Common/MainnetBlur";
+import SimpleLineChart from "../components/v2/Charts/SimpleLineChart";
 
 const BalancesPage: React.FC = () => {
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo)
@@ -28,8 +31,14 @@ const BalancesPage: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Card sx={{ p: 2 }}>
+        {/*<Box sx={{ width: '100%', position: 'relative' }}>*/}
+        {/*  <BlurComponent>*/}
+        {/*    Connect your wallet to see your Beanstalk balances.*/}
+        {/*  </BlurComponent>*/}
+        {/*  <TotalBalanceCard breakdown={breakdown} />*/}
+        {/*</Box>*/}
         <TotalBalanceCard breakdown={breakdown} />
-        <Card sx={{ p: 2 }}>
+        <Stack sx={{ p: 2 }}>
           <Grid container spacing={1} rowSpacing={3}>
             <Grid item xs={12} md={3}>
               <Stat
@@ -68,7 +77,7 @@ const BalancesPage: React.FC = () => {
               />
             </Grid>
           </Grid>
-        </Card>
+        </Stack>
       </Card>
       {/* <Stack gap={2}>
         <PageHeader
