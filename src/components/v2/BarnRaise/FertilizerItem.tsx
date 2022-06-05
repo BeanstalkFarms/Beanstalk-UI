@@ -20,6 +20,7 @@ export type FertilizerData = {
   remaining: BigNumber;
   /** The percentage this Fertilizer has been paid back. */
   progress?: number;
+  season?: BigNumber;
 }
 
 const FertilizerItem: React.FC<{
@@ -34,21 +35,24 @@ const FertilizerItem: React.FC<{
   humidity,
   remaining,
   progress,
+  season
 }) => (
-  <Stack rowGap={0.75}>
+  <Stack alignItems="center" rowGap={0.75}>
     <FertilizerImage isNew={isNew} state={state} progress={progress} />
     {amount.eq(0) ? (
       <Typography textAlign="center">x0</Typography>
     ) : (
-      <Stack direction="column" rowGap={0.25}>
-        <Stack direction="row" justifyContent="space-between">
-          <Typography color="text.primary" fontWeight="bold">
-            Fertilizer Season
-          </Typography>
-          <Typography color="text.primary" fontWeight="bold">
-            3476
-          </Typography>
-        </Stack>
+      <Stack width="250px" direction="column" rowGap={0.25}>
+        {season && (
+          <Stack direction="row" justifyContent="space-between">
+            <Typography color="text.primary" fontWeight="bold">
+              Fertilizer Season
+            </Typography>
+            <Typography color="text.primary" fontWeight="bold">
+              {displayBN(season)}
+            </Typography>
+          </Stack>
+        )}
         <Stack direction="row" justifyContent="space-between">
           <Tooltip title="1 FERT = 1 USDC put into the Barn Raise." placement="left">
             <Typography color="text.secondary" sx={{ opacity: 0.6 }}>

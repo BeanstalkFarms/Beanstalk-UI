@@ -146,6 +146,7 @@ const MyFertilizer: React.FC = () => {
                       humidity={humidity}
                       remaining={remaining}
                       amount={amount}
+                      season={season}
                     />
                   </Grid>
                 );
@@ -165,6 +166,7 @@ const MyFertilizer: React.FC = () => {
                   amount={zeroBN}
                   humidity={zeroBN}
                   remaining={zeroBN}
+                  season={zeroBN}
                 />
               </Box>
               <Typography
