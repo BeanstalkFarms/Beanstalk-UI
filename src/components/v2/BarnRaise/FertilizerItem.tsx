@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN } from 'util/index';
 import humidityIcon from 'img/humidity-icon.svg';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
+import { FertilizerTooltip } from '../../../constants/fertilizerItem';
 
 export type FertilizerData = {
   /** The amount of Fertilizer owned at this */
@@ -28,7 +29,9 @@ const FertilizerItem: React.FC<{
   state?: FertilizerState;
   /**  */
   isNew?: boolean;
+  tooltip: FertilizerTooltip;
 } & FertilizerData> = ({
+  tooltip,
   state,
   isNew,
   amount,
@@ -37,46 +40,49 @@ const FertilizerItem: React.FC<{
   progress,
   season
 }) => (
-  <Stack alignItems="center" rowGap={0.75}>
+  <Stack width="100%" alignItems="center" rowGap={0.75}>
     <FertilizerImage isNew={isNew} state={state} progress={progress} />
     {amount.eq(0) ? (
       <Typography textAlign="center">x0</Typography>
     ) : (
-      <Stack width="250px" direction="column" rowGap={0.25}>
+      <Stack width="100%" direction="column" rowGap={0.25}>
         {season && (
           <Stack direction="row" justifyContent="space-between">
-            <Typography color="text.primary" fontWeight="bold">
+            <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
               Fertilizer Season
             </Typography>
-            <Typography color="text.primary" fontWeight="bold">
+            <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
               {displayBN(season)}
             </Typography>
           </Stack>
         )}
         <Stack direction="row" justifyContent="space-between">
-          <Tooltip title="1 FERT = 1 USDC put into the Barn Raise." placement="left">
-            <Typography sx={{ fontSize: "14px", opacity: 0.6 }} color="text.secondary">
+          <Tooltip title={tooltip.fertilizer} placement="left">
+            <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
               x{displayFullBN(amount, 0)}
             </Typography>
           </Tooltip>
-          <Tooltip title="Humidity — interest rate earned for buying Fertilizer." placement="right">
+          <Tooltip title={tooltip.humidity} placement="right">
             {/* <OpacityIcon sx={{ fontSize: 14 }} /> */}
             <Stack direction="row" gap={0.2} alignItems="center">
               <img alt="" src={humidityIcon} height="13px" />
-              <Typography sx={{ fontSize: "14px", opacity: 0.6 }} color="text.secondary">
+              <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
                 {displayBN(humidity.times(100))}%
               </Typography>
             </Stack>
           </Tooltip>
         </Stack>
-        <Tooltip title="The Beans remaining to be distributed to this Fertilizer." placement="bottom">
+        <Tooltip title={tooltip.reward} placement="bottom">
           <Stack direction="row" justifyContent="space-between">
-            <Typography sx={{ fontSize: "14px" }} color="text.primary" fontWeight="bold">
+            <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
               {isNew ? 'Unfertilized Beans' : 'Remaining'}
             </Typography>
-            <Typography sx={{ fontSize: "14px" }} color="text.primary" fontWeight="bold">
-              <TokenIcon token={BEAN[SupportedChainId.MAINNET]} /> {displayBN(remaining)}
-            </Typography>
+            <Stack direction="row" alignItems="center" gap={0.2}>
+              <TokenIcon token={BEAN[SupportedChainId.MAINNET]} style={{ width: '14px' }} />
+              <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
+                {displayBN(remaining)}
+              </Typography>
+            </Stack>
           </Stack>
         </Tooltip>
       </Stack>
