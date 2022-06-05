@@ -18,7 +18,7 @@ const RemainingFertilizer: React.FC = () => {
     AppState['_beanstalk']['sun']['sunrise']['remaining']
   >((state) => state._beanstalk.sun.sunrise.remaining);
   const nextDecreaseTimeString = humidity.eq(INITIAL_HUMIDITY)
-    ? 'in early July'
+    ? 'when Beanstalk is Replanted'
     : `in ${nextDecreaseDuration.toFormat('mm:ss')}`;
   const progress = fertilizer.totalRaised.gt(0)
     ? fertilizer.totalRaised.div(
