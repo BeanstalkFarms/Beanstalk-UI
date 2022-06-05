@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Stack, Typography } from '@mui/material';
+import { Divider, Link, Stack, Tooltip, Typography } from '@mui/material';
 import { ParsedEvent } from 'state/v2/farmer/events/updater';
 import { displayBN, toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
@@ -34,7 +34,7 @@ const TokenDisplay: React.FC<{
           {`${displayBN(props.input[0])}`}
         </Typography>
       </Stack>
-      ) : null}
+    ) : null}
   </div>
 );
 
@@ -43,11 +43,32 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
   let amountIn;
   let amountOut;
 
-  // console.log("EVENT FROM ADDRESS");
-  // console.log(event.returnValues.from.toLowerCase());
+  // const [eventDatetime, setEventDatetime] = useState('');
   //
-  // console.log("ACCOUNT");
-  // console.log(account);
+  // const handleSetDatetime = () => {
+  //   getBlockTimestamp(event.blockNumber).then((t) => {
+  //     const date = new Date(t * 1e3);
+  //     const dateString = date.toLocaleDateString('en-US');
+  //     const timeString = date.toLocaleTimeString('en-US');
+  //     setEventDatetime(`${dateString} ${timeString}`);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   /** This is NOT an optimal way to get timestamps for events.
+  //    * A more ideal solution will 1) be off-chain and 2) not
+  //    * repeat calls for the same block number. - Cool Bean */
+  //   function handleSetDatetimeTwo() {
+  //     getBlockTimestamp(event.blockNumber).then((t) => {
+  //       const date = new Date(t * 1e3);
+  //       const dateString = date.toLocaleDateString('en-US');
+  //       const timeString = date.toLocaleTimeString('en-US');
+  //       setEventDatetime(`${dateString} ${timeString}`);
+  //     });
+  //   }
+  //
+  //   handleSetDatetimeTwo();
+  // }, [event.blockNumber]);
 
   switch (event.event) {
     case 'BeanDeposit': {
@@ -312,7 +333,11 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
           {amountOut}
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Typography color="text.secondary">03/24/2022 13:24:24 PM</Typography>
+          <Tooltip placement="right" title="View block on Etherscan.">
+            <Link underline="none" href={`https://etherscan.io/block/${event.blockNumber}`}>
+              <Typography color="text.secondary">{`Block #: ${event.blockNumber}`}</Typography>
+            </Link>
+          </Tooltip>
           {amountIn}
         </Stack>
       </Stack>
