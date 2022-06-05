@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Divider, Link, Stack, Tooltip, Typography } from '@mui/material';
 import { ParsedEvent } from 'state/v2/farmer/events/updater';
 import { displayBN, toTokenUnitsBN } from 'util/index';
@@ -8,7 +8,6 @@ import Token from 'classes/Token';
 import { BEAN, BEAN_ETH_UNIV2_LP, ETH, PODS } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import TokenIcon from '../Common/TokenIcon';
-import { getBlockTimestamp } from '../../../util/LedgerUtilities';
 
 export interface EventItemProps {
   event: ParsedEvent;
@@ -334,7 +333,6 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
           {amountOut}
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          {/* <Tooltip placement="right" title={eventDatetime}> */}
           <Tooltip placement="right" title="View block on Etherscan.">
             <Link underline="none" href={`https://etherscan.io/block/${event.blockNumber}`}>
               <Typography color="text.secondary">{`Block #: ${event.blockNumber}`}</Typography>
