@@ -29,7 +29,7 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
     alignItems="center"
     justifyContent="center"
     sx={{
-      width: '100%',
+      width: '250px',
       aspectRatio: '1/1',
       borderColor: isNew ? BeanstalkPalette.logoGreen : grey[300],
       borderWidth: 1,
