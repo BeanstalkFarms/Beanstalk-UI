@@ -79,8 +79,7 @@ const MyFertilizer: React.FC = () => {
               <Typography variant="body1">
                 Total Unfertilized Beans&nbsp;
                 <HelpOutlineIcon
-                  fontSize="14px"
-                  sx={{ color: 'text.secondary' }}
+                  sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
               </Typography>
             </Tooltip>
@@ -104,8 +103,7 @@ const MyFertilizer: React.FC = () => {
               <Typography variant="body1">
                 Total Fertilized Beans&nbsp;
                 <HelpOutlineIcon
-                  fontSize="14px"
-                  sx={{ color: 'text.secondary' }}
+                  sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
               </Typography>
             </Tooltip>

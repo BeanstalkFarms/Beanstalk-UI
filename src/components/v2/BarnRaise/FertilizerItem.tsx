@@ -45,10 +45,10 @@ const FertilizerItem: React.FC<{
       <Stack width="100%" direction="column" rowGap={0.25}>
         {season && (
           <Stack direction="row" justifyContent="space-between">
-            <Typography color="text.primary" fontWeight="bold">
+            <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
               Fertilizer Season
             </Typography>
-            <Typography color="text.primary" fontWeight="bold">
+            <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
               {displayBN(season)}
             </Typography>
           </Stack>
