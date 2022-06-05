@@ -39,7 +39,10 @@ const NavBar: React.FC<{}> = () => {
   return (
     <>
       {/* Drawer */}
-      <NavDrawer open={drawerOpen} hideDrawer={hideDrawer} />
+      <NavDrawer
+        open={drawerOpen}
+        hideDrawer={hideDrawer}
+      />
       {/* TEMP: Pre-exploit Dialog */}
       {chainId === SupportedChainId.MAINNET ? (
         <Dialog
@@ -51,20 +54,20 @@ const NavBar: React.FC<{}> = () => {
               height: {
                 xs: 'auto',
                 md: '100%',
-              },
+              }
             },
           }}
-          PaperProps={{
-            sx: {
-              margin: {
+          PaperProps={{ 
+            sx: { 
+              margin: { 
                 xs: 0,
                 md: 'auto',
               },
               borderRadius: {
                 xs: 0,
-                md: 1,
-              },
-            },
+                md: 1
+              }
+            } 
           }}
         >
           <StyledDialogTitle onClose={() => setNoticeOpen(false)}>
@@ -72,9 +75,7 @@ const NavBar: React.FC<{}> = () => {
           </StyledDialogTitle>
           <StyledDialogContent>
             <Typography>
-              Until Beanstalk is Replanted in early July, some balances
-              displayed in the Beanstalk UI will remain hard-coded to their
-              values at the block before the exploit (14602789).
+              Until Beanstalk is Replanted in early July, some balances displayed in the Beanstalk UI will remain hard-coded to their values at the block before the exploit (14602789).
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Stack gap={1}>
@@ -85,46 +86,19 @@ const NavBar: React.FC<{}> = () => {
                 return (
                   <div key={elem.address}>
                     <Typography variant="h3">
-                      {pool.name}:{' '}
-                      <Link
-                        href={`https://etherscan.io/address/${elem.address}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {trimAddress(elem.address)}
-                      </Link>
+                      {pool.name}: <Link href={`https://etherscan.io/address/${elem.address}`} target="_blank" rel="noreferrer">{trimAddress(elem.address)}</Link>
                     </Typography>
                     <ul>
                       {Object.keys(elem.pool).map((key) => (
                         <li key={key}>
                           <Typography>
-                            <Box
-                              component="span"
-                              sx={{
-                                display: 'inline-block',
-                                width: 100,
-                                textTransform: 'capitalize',
-                              }}
-                            >
-                              {key}:
-                            </Box>
+                            <Box component="span" sx={{ display: 'inline-block', width: 100, textTransform: 'capitalize' }}>{key}:</Box>
                             {key === 'price' || key === 'liquidity' ? '$' : ''}
-                            {Array.isArray(elem.pool[key])
-                              ? elem.pool[key]
-                                  .map(
-                                    (e, i) =>
-                                      `${displayFullBN(e)} ${
-                                        pools[elem.address].tokens[i].symbol
-                                      }`
-                                  )
-                                  .join(', ')
-                              : displayFullBN(elem.pool[key])}
-                            {key === 'supply'
-                              ? ` ${pools[elem.address].lpToken.symbol}`
-                              : ''}
+                            {Array.isArray(elem.pool[key]) ? elem.pool[key].map((e, i) => `${displayFullBN(e)} ${pools[elem.address].tokens[i].symbol}`).join(', ') : displayFullBN(elem.pool[key])}
+                            {key === 'supply' ? ` ${pools[elem.address].lpToken.symbol}` : ''}
                           </Typography>
                         </li>
-                      ))}
+                        ))}
                     </ul>
                   </div>
                 );
@@ -135,7 +109,7 @@ const NavBar: React.FC<{}> = () => {
       ) : null}
       {/* Navigation Bar */}
       <AppBar
-        // Using position: sticky means that
+        // Using position: sticky means that 
         // the main content region will always start
         // below the header, regardless of height!
         sx={{
@@ -146,28 +120,13 @@ const NavBar: React.FC<{}> = () => {
       >
         {/* TEMP: */}
         {chainId === SupportedChainId.MAINNET && (
-          <Box
-            sx={{
-              backgroundColor: 'white',
-              textAlign: 'center',
-              px: 1,
-              py: 0.5,
-              cursor: 'pointer',
-            }}
-            onClick={() => setNoticeOpen(true)}
-          >
+          <Box sx={{ textAlign: 'center', px: 1, pt: 1, cursor: 'pointer' }} onClick={() => setNoticeOpen(true)}>
             <Typography sx={{ fontSize: 14 }} color="text.secondary">
-              You are viewing $BEAN price data as of block 14602789.{' '}
-              <strong>Learn more</strong>
+              You are viewing $BEAN price data as of block 14602789. <strong>Learn more</strong>
             </Typography>
           </Box>
         )}
-        <Stack
-          direction="row"
-          alignItems="center"
-          gap={1}
-          sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}
-        >
+        <Stack direction="row" alignItems="center" gap={1} sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}>
           {/* Desktop: Left Side */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }}>
             <PriceButton
@@ -175,11 +134,7 @@ const NavBar: React.FC<{}> = () => {
                 height: 44,
               }}
             />
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ display: { lg: 'block', xs: 'none' } }}
-            >
+            <Stack direction="row" alignItems="center" sx={{ display: { lg: 'block', xs: 'none' } }}>
               {ROUTES.top.map((item) => (
                 <NavButton
                   key={item.path}
@@ -192,17 +147,15 @@ const NavBar: React.FC<{}> = () => {
             </Stack>
           </Stack>
           {/* Desktop: Right Side */}
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="center"
-            sx={{}}
-            spacing={1}
-          >
+          <Stack direction="row" justifyContent="flex-end" alignItems="center" sx={{ }} spacing={1}>
             <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
-              <NetworkButton sx={{ height: 44 }} />
+              <NetworkButton
+                sx={{ height: 44 }}
+              />
             </Box>
-            <WalletButton sx={{ height: 44 }} />
+            <WalletButton
+              sx={{ height: 44 }}
+            />
             <Button
               color="light"
               variant="contained"

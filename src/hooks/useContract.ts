@@ -32,23 +32,27 @@ export type AbiOrAbiMap = AddressMap<ContractInterface[]>;
 
 export function useContractReadOnly<T extends Contract = Contract>(
   addressOrAddressMap: AddressOrAddressMap,
-  abiOrAbiMap: AbiOrAbiMap
+  abiOrAbiMap: AbiOrAbiMap,
 ): [T | null, SupportedChainId] {
-  const provider = useProvider();
-  const address =
-    typeof addressOrAddressMap === 'string'
-      ? addressOrAddressMap
-      : getChainConstant(addressOrAddressMap, provider.network.chainId);
-  const abi = Array.isArray(abiOrAbiMap)
-    ? abiOrAbiMap
-    : getChainConstant(abiOrAbiMap, provider.network.chainId);
-  return useMemo(() => {
-    console.debug(`[useContractReadOnly] creating new instance of ${address}`);
-    return [
-      address ? (new ethers.Contract(address, abi, provider) as T) : null,
-      provider.network.chainId,
-    ];
-  }, [address, abi, provider]);
+  const provider  = useProvider();
+  const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, provider.network.chainId);
+  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, provider.network.chainId);
+  return useMemo(
+    () => {
+      console.debug(`[useContractReadOnly] creating new instance of ${address}`);
+      return [
+        address
+          ? new ethers.Contract(
+            address,
+            abi,
+            provider
+          ) as T
+          : null,
+        provider.network.chainId,
+      ];
+    },
+    [address, abi, provider]
+  );
   // if (!address) throw new Error('Attempted to instantiate contract without address.')
   // if (!abi)     throw new Error('Attempted to instantiate contract without ABI.')
   // console.debug(`[useContractReadOnly] contract = ${address}, chainId = ${provider.network.chainId}`, {
@@ -68,31 +72,25 @@ export function useGetContract<T extends Contract = Contract>(
   abiOrAbiMap: AbiOrAbiMap,
   useSignerIfPossible: boolean = true
 ): (addressOrAddressMap: AddressOrAddressMap) => [T | null, SupportedChainId] {
-  const provider = useProvider();
+  const provider         = useProvider();
   const { data: signer } = useSigner();
-  const chainId = provider.network.chainId;
-  const abi = Array.isArray(abiOrAbiMap)
-    ? abiOrAbiMap
-    : getChainConstant(abiOrAbiMap, chainId);
+  const chainId          = provider.network.chainId;
+  const abi              = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, chainId);
   const signerOrProvider = useSignerIfPossible && signer ? signer : provider;
-  useWhatChanged(
-    [abi, signerOrProvider, chainId],
-    'abi,signerOrProvider,chainId'
-  );
-
-  //
+  useWhatChanged([abi,signerOrProvider,chainId], 'abi,signerOrProvider,chainId');
+  
+  // 
   return useCallback(
     (addressOrAddressMap: AddressOrAddressMap) => {
-      const address =
-        typeof addressOrAddressMap === 'string'
-          ? addressOrAddressMap
-          : getChainConstant(addressOrAddressMap, chainId);
-      console.debug(
-        `[useGetContract] creating new instance of ${address}, ${abi.length}, ${signerOrProvider}, ${chainId}`
-      );
+      const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, chainId);
+      console.debug(`[useGetContract] creating new instance of ${address}, ${abi.length}, ${signerOrProvider}, ${chainId}`);
       return [
-        address
-          ? (new ethers.Contract(address, abi, signerOrProvider) as T)
+        address 
+          ? new ethers.Contract(
+            address,
+            abi,
+            signerOrProvider
+          ) as T
           : null,
         chainId,
       ];
@@ -122,13 +120,13 @@ export function useContract<T extends Contract = Contract>(
 const BEANSTALK_PRICE_ABIS = {
   [SupportedChainId.MAINNET]: BEANSTALK_PRICE_V0_ABI,
   [SupportedChainId.ROPSTEN]: BEANSTALK_PRICE_ABI,
-  [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_V0_ABI,
+  [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_V0_ABI
 };
 
 export function useBeanstalkPriceContract() {
   return useContractReadOnly<BeanstalkPrice>(
     BEANSTALK_PRICE_ADDRESSES,
-    BEANSTALK_PRICE_ABIS
+    BEANSTALK_PRICE_ABIS,
   );
 }
 
@@ -141,7 +139,10 @@ export function useBeanstalkFertilizerContract() {
 }
 
 export function useGetERC20Contract() {
-  return useGetContract<ERC20>(ERC20_ABI, true);
+  return useGetContract<ERC20>(
+    ERC20_ABI,
+    true
+  );
 }
 
 export function useERC20Contract(addressOrAddressMap: AddressOrAddressMap) {
