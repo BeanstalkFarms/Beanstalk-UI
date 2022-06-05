@@ -102,7 +102,7 @@ const FieldPage: React.FC = () => {
               </Box>
             </>
           }
-          description="Earn yield by lending Beans to Beanstalk in exchange for Pods when there is Soil"
+          description="Earn yield by lending Beans to Beanstalk in exchange for Pods"
         />
         <Card sx={{ p: 2 }}>
           <Stack gap={2}>
