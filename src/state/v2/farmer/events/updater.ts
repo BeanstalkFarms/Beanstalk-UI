@@ -9,8 +9,8 @@ import { Beanstalk } from 'constants/generated';
 import ethers, { BigNumber as BN } from 'ethers';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/account';
+import { getEventFacet } from 'util/GetEventFacet';
 import { resetEvents, setEvents } from './actions';
-import { getEventFacet } from '../../../../util/GetEventFacet';
 
 export type ParsedEvent = {
   event: ethers.Event['event'];

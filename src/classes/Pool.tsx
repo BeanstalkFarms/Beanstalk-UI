@@ -4,8 +4,7 @@ import {
   CurvePlainPool__factory,
   UniswapV2Pair__factory,
 } from 'constants/generated';
-import { ChainConstant } from 'constants/index';
-import { AddressMap } from 'constants/addresses';
+import { ChainConstant, AddressMap } from 'constants/index';
 import { MinBN } from 'util/TokenUtilities';
 import client from 'util/wagmi';
 import Dex from './Dex';

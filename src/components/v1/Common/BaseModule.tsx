@@ -64,6 +64,7 @@ const useStyles = makeStyles(() => ({
   noIndicator: {
     backgroundColor: 'transparent',
   },
+  // Overlay to make things look grey
   moduleContent: {
     backgroundColor: theme.module.background,
     height: '100%',
@@ -78,34 +79,43 @@ const useStyles = makeStyles(() => ({
 
 type BaseModuleProps = {
   removeBackground: boolean;
+
+  setAllowance: any;
 }
 export default function BaseModule({
+  // Styling
   size,
-  allowance,
-  setAllowance,
   marginTop,
   textTransform,
-  sectionTitles,
-  locked,
-  handleApprove,
-  handleForm,
-  section,
-  isDisabled,
-  children,
-  resetForm,
-  normalBox,
-  style,
-  removeBackground,
-  handleTabChange,
-  sectionTitlesDescription,
   textTabSize,
   widthTooltip,
   marginTooltip,
   margin,
   marginMeta,
+  normalBox,
+  style,
+  // Display
   showButton,
   singleReset,
-  setButtonLabel
+  setButtonLabel,
+  // Allowances
+  allowance,
+  setAllowance,
+  handleApprove,
+  approvalToken = 'Beans',
+  // Form
+  locked,
+  handleForm,
+  resetForm,
+  // Sections
+  section,
+  removeBackground,
+  handleTabChange,
+  isDisabled,
+  sectionTitles,
+  sectionTitlesDescription,
+  // Other
+  children,
 } : Partial<BaseModuleProps>) {
   const dispatch = useDispatch();
   const s = size === 'small' || window.innerWidth < 450;
@@ -202,17 +212,16 @@ export default function BaseModule({
   // style={{ position: 'relative', zIndex: '0' }}
   const moduleContent = (
     <>
-      <Box>
+      <Box sx={allowance.isEqualTo(0) ? {
+        opacity: 0.5,
+        pointerEvents: 'none',
+      } : null}>
         {children}
-        {allowance.isEqualTo(0) ? (
-          <Box className={classes.moduleContent} />
-        ) : null}
       </Box>
       {actionButton}
       {allowance.isEqualTo(0) ? (
         <span>
-          To use this module, send an Approval by clicking the Approve button
-          above.
+          To use this module, approve Beanstalk to use your {approvalToken}.
           {resetLink}
         </span>
       ) : null}

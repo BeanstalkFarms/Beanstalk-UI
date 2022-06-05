@@ -13,8 +13,6 @@ import { AppState } from 'state';
 import BeanIcon from 'img/bean-logo.svg';
 import CoinGeckoIcon from 'img/coingecko-icon.svg';
 import CoinMarketCapIcon from 'img/coinmarketcap-icon.svg';
-import CommonwealthIcon from 'img/commonwealth-icon.svg';
-import CurveIcon from 'img/curve-dao-icon.svg';
 import DuneWinterIcon from 'img/dune-icon-winter.svg'; // Icon is 2 colors so manually changed for winter theme
 import DuneIcon from 'img/dune-icon.svg'; // Icon is 2 colors so manually changed for winter theme
 import DiscordIcon from 'img/discord-icon.svg';
@@ -22,7 +20,6 @@ import EtherscanIcon from 'img/etherscan-logo.svg';
 import MediumIcon from 'img/medium-icon.svg';
 import OpenSeaIcon from 'img/opensea-icon.svg';
 import RedditIcon from 'img/reddit-icon.svg';
-import UniswapIcon from 'img/uniswap-logo-black.svg';
 
 import ThemeBackground from 'components/Themes';
 import {
@@ -30,8 +27,6 @@ import {
   CODE_OF_CONDUCT_LINK,
   COINGECKO_LINK,
   COINMARKETCAP_LINK,
-  COMMONWEALTH_LINK,
-  CURVE_LINK,
   DUNE_LINK,
   DISCORD_LINK,
   GITHUB_LINK,
@@ -43,7 +38,6 @@ import {
   SILO_CONTRACT_LINK,
   TELEGRAM_LINK,
   TWITTER_LINK,
-  UNISWAP_CONTRACT_LINK,
   theme,
 } from 'constants/index';
 import LogoLink from './LogoLink';
@@ -144,19 +138,6 @@ export default function Footer() {
         <LogoLink link={SILO_CONTRACT_LINK}>
           <img src={EtherscanIcon} alt="Etherscan Icon" className={classes.logoStyle} />
         </LogoLink>
-        {width > 900 ? (
-          <>
-            <LogoLink link={UNISWAP_CONTRACT_LINK}>
-              <img src={UniswapIcon} alt="Uniswap Icon" className={classes.logoStyle} />
-            </LogoLink>
-            <LogoLink link={CURVE_LINK}>
-              <img src={CurveIcon} alt="Curve Icon" style={theme.name === 'winterUpgrade' ? { height: '25px', width: '25px', fill: 'url(#winterGradient)' } : { height: '25px', width: '25px', fill: 'url(#blackGradient)', backgroundColor: 'rgba(200, 165, 126, 0.4', borderRadius: '5px' }} />
-            </LogoLink>
-            <LogoLink link={COMMONWEALTH_LINK}>
-              <img src={CommonwealthIcon} alt="Commonwealth Icon" className={classes.logoStyle} />
-            </LogoLink>
-          </>
-        ) : null}
         {/* Row 2 */}
         <Grid container justifyContent="center" style={{ marginTop: '-10px' }}>
           <Grid item>
@@ -185,8 +166,8 @@ export default function Footer() {
             </Link>
           </Grid>
         </Grid>
-        {!theme.flowers 
-          ? null 
+        {!theme.flowers
+          ? null
           : (
             <img
               alt="Rainbow Icon"

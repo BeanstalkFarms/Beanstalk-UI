@@ -320,6 +320,7 @@ const LPDepositAction = forwardRef(({
       updateExpectedPrice={updateExpectedPrice}
       value={TrimBN(fromBeanValue, BEAN.decimals)}
       visible={settings.mode < 2}
+      token={CryptoAsset.Bean}
     />
   );
   const fromLPField = (

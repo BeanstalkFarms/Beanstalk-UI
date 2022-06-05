@@ -15,7 +15,7 @@ import { AppState } from 'state';
 import { BEAN, theme, zeroBN } from 'constants/index';
 import BeanLogo from 'img/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
-import { getAPYs, percentForStalk, toTokenUnitsBN } from 'util/index';
+import { getAPYs, toTokenUnitsBN } from 'util/index';
 import { useStyles } from './NavigationStyles';
 import PriceTooltip from './PriceTooltip';
 
@@ -122,9 +122,9 @@ export default function NavigationSidebar() {
   const { totalStalk, totalSeeds } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { season } = useSelector<AppState, AppState['season']>(
-    (state) => state.season
-  );
+  // const { season } = useSelector<AppState, AppState['season']>(
+  //   (state) => state.season
+  // );
   const { farmableMonth } = useSelector<AppState, AppState['beansPerSeason']>(
     (state) => state.beansPerSeason
   );
@@ -134,25 +134,25 @@ export default function NavigationSidebar() {
   const { beanPrice, ethPrices, usdcPrice } = useSelector<AppState, AppState['prices']>(
     (state) => state.prices
   );
-  const { totalPods, totalBeans, totalRoots } = useSelector<AppState, AppState['totalBalance']>(
+  const { totalPods, totalBeans } = useSelector<AppState, AppState['totalBalance']>(
     (state) => state.totalBalance
   );
-  const { initialized, drawerOpen, width, bips, fundraisers } = useSelector<AppState, AppState['general']>(
+  const { initialized, drawerOpen, width, fundraisers } = useSelector<AppState, AppState['general']>(
     (state) => state.general
   );
 
-  const activeBips = bips.reduce((aBips, bip) => {
-    if (bip.active) {
-      const voted = percentForStalk(
-        bip.roots,
-        bip.endTotalRoots.isGreaterThan(0)
-          ? bip.endTotalRoots
-          : totalRoots
-      );
-      aBips.push(<Badge badge={bip} percent={voted} type="bips" />);
-    }
-    return aBips;
-  }, [] as React.ReactElement[]);
+  // const activeBips = bips.reduce((aBips, bip) => {
+  //   if (bip.active) {
+  //     const voted = percentForStalk(
+  //       bip.roots,
+  //       bip.endTotalRoots.isGreaterThan(0)
+  //         ? bip.endTotalRoots
+  //         : totalRoots
+  //     );
+  //     aBips.push(<Badge badge={bip} percent={voted} type="bips" />);
+  //   }
+  //   return aBips;
+  // }, [] as React.ReactElement[]);
 
   const activeFundraisers = fundraisers.reduce((afundraisers, fundraiser) => {
     if (fundraiser.remaining.isGreaterThan(0)) {
@@ -186,12 +186,12 @@ export default function NavigationSidebar() {
   };
 
   // Add conditional badges
-  if (activeBips.length > 0) {
-    badgeDataByPath.governance = activeBips.slice(0, 3);
-  }
-  if (activeFundraisers.length > 0) {
-    badgeDataByPath.fundraiser = activeFundraisers;
-  }
+  // if (activeBips.length > 0) {
+  //   badgeDataByPath.governance = activeBips.slice(0, 3);
+  // }
+  // if (activeFundraisers.length > 0) {
+  //   badgeDataByPath.fundraiser = activeFundraisers;
+  // }
 
   const currentBeanPrice = (
     <PriceTooltip
@@ -275,7 +275,7 @@ export default function NavigationSidebar() {
         <Metric label="Mkt. Cap" value={marketCap?.isGreaterThan(0) && `$${toTokenUnitsBN(marketCap, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${toTokenUnitsBN(totalPods, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${toTokenUnitsBN(weather.harvestableIndex, BEAN.decimals).toFixed(1)}M`} hideIfNull />
-        <Metric label="Season" value={season ? season.toFixed(0) : null} hideIfNull />
+        {/* <Metric label="Season" value={season ? season.toFixed(0) : null} hideIfNull /> */}
         <Metric label="ETH" value={usdcPrice && usdcPrice.gt(zeroBN) && `$${(new BigNumber(1)).div(usdcPrice).toFixed(2)}`} hideIfNull />
         <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} hideIfNull />
       </Box>

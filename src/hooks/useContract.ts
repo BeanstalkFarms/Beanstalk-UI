@@ -7,11 +7,11 @@ import {
   ERC20,
 } from 'constants/generated';
 import {
-  AddressMap,
   BEANSTALK_ADDRESSES,
   BEANSTALK_FERTILIZER_ADDRESSES,
   BEANSTALK_PRICE_ADDRESSES,
 } from 'constants/addresses';
+import { AddressMap } from 'constants/index';
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useSigner, useContract as useWagmiContract } from 'wagmi';

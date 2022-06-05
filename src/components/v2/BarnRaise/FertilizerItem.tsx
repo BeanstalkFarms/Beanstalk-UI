@@ -5,7 +5,6 @@ import TokenIcon from 'components/v2/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
 import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN } from 'util/index';
-import OpacityIcon from '@mui/icons-material/Opacity';
 import humidityIcon from 'img/humidity-icon.svg';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
 
@@ -29,17 +28,17 @@ const FertilizerItem: React.FC<{
   /**  */
   isNew?: boolean;
 } & FertilizerData> = ({
-                         state,
-                         isNew,
-                         amount,
-                         humidity,
-                         remaining,
-                         progress,
-                       }) => (
-                         <Stack rowGap={0.75}>
-                           <FertilizerImage isNew={isNew} state={state} progress={progress} />
-                           {amount.eq(0) ? (
-                             <Typography textAlign="center">x0</Typography>
+  state,
+  isNew,
+  amount,
+  humidity,
+  remaining,
+  progress,
+}) => (
+  <Stack rowGap={0.75}>
+    <FertilizerImage isNew={isNew} state={state} progress={progress} />
+    {amount.eq(0) ? (
+      <Typography textAlign="center">x0</Typography>
     ) : (
       <Stack direction="column" rowGap={0.25}>
         <Stack direction="row" justifyContent="space-between">
@@ -78,7 +77,7 @@ const FertilizerItem: React.FC<{
         </Tooltip>
       </Stack>
     )}
-                         </Stack>
+  </Stack>
 );
 
 export default FertilizerItem;
