@@ -1,4 +1,3 @@
-import { useWhatChanged } from '@simbathesailor/use-what-changed';
 import { SupportedChainId } from 'constants/chains';
 import {
   Beanstalk,
@@ -77,7 +76,7 @@ export function useGetContract<T extends Contract = Contract>(
   const chainId          = provider.network.chainId;
   const abi              = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, chainId);
   const signerOrProvider = useSignerIfPossible && signer ? signer : provider;
-  useWhatChanged([abi,signerOrProvider,chainId], 'abi,signerOrProvider,chainId');
+  // useWhatChanged([abi,signerOrProvider,chainId], 'abi,signerOrProvider,chainId');
   
   // 
   return useCallback(
