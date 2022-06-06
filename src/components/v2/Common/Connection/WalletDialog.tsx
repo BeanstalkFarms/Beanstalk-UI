@@ -32,7 +32,7 @@ const WalletDialog: React.FC<{
     [connect]
   );
   return (
-    <Dialog onClose={handleClose} open={open} fullScreen={fullScreen}>
+    <Dialog onClose={handleClose} open={open} fullScreen={fullScreen} disableScrollLock>
       <StyledDialogTitle onClose={handleClose}>
         Connect a wallet
       </StyledDialogTitle>

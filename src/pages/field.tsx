@@ -50,7 +50,9 @@ const MAX_ROWS = 5;
 
 const FieldPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const handleClose = useCallback(() => setModalOpen(false), []);
+  const handleClose = useCallback(() => {
+    setModalOpen(false);
+  }, []);
   const handleOpen = useCallback(() => setModalOpen(true), []);
 
   // Data
@@ -180,6 +182,7 @@ const FieldPage: React.FC = () => {
         open={modalOpen}
         fullWidth
         fullScreen={isMedium}
+        disableScrollLock
       >
         <StyledDialogTitle onClose={handleClose}>My Plots</StyledDialogTitle>
         <StyledDialogContent sx={{ pb: 0.5 }}>
