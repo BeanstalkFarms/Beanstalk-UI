@@ -72,7 +72,7 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Tooltip
-              title="Beans owed to you based on your ownership of Fertilizer."
+              title="The number of Beans owed to you based on your Fertilizer."
               placement="right"
             >
               <Typography variant="body1">
@@ -95,7 +95,7 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Tooltip
-              title="Beans earned from Fertilizer. These Beans are Claimable."
+              title="The number of Beans earned from your Fertilizer. Fertilized Beans are Claimable."
               placement="right"
             >
               <Typography variant="body1">
