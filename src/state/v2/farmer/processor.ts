@@ -112,11 +112,6 @@ const FarmerEventsProcessor = () => {
               bdv:    new BigNumber(0),
               crates: [] as Withdrawal[],
             }),
-            // withdrawals: undefined,
-            // withdrawn: undefined,
-            // circulating: undefined,
-            // claimable: undefined,
-            // wrapped: undefined,
           },
 
           // -----------------------------
@@ -126,9 +121,9 @@ const FarmerEventsProcessor = () => {
               // LEGACY: 
               // BDV of a LP deposit was previously calculated via
               // 'userLPSeedDeposits / 4'.
-              const bdv  = results.userLPSeedDeposits[s].div(LP_TO_SEEDS);
+              const bdv   = results.userLPSeedDeposits[s].div(LP_TO_SEEDS);
               prev.amount = prev.amount.plus(tokenAmount);
-              prev.bdv   = prev.bdv.plus(bdv);
+              prev.bdv    = prev.bdv.plus(bdv);
               prev.crates.push({
                 amount: tokenAmount,
                 bdv:    bdv,
@@ -165,7 +160,7 @@ const FarmerEventsProcessor = () => {
               const tokenAmount = results.userCurveDeposits[s];
               const bdv         = results.userCurveBDVDeposits[s];
               prev.amount = prev.amount.plus(tokenAmount);
-              prev.bdv   = prev.bdv.plus(bdv);
+              prev.bdv    = prev.bdv.plus(bdv);
               prev.crates.push({
                 amount: tokenAmount,
                 bdv:    bdv,
@@ -178,7 +173,22 @@ const FarmerEventsProcessor = () => {
               amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
-            })
+            }),
+            withdrawn: Object.keys(results.curveWithdrawals).reduce((prev, s) => {
+              const tokenAmount = results.curveWithdrawals[s];
+              const bdv         = new BigNumber(0);           // FIXME: wrong calc
+              prev.amount = prev.amount.plus(tokenAmount);
+              prev.bdv    = prev.bdv.plus(bdv);               // FIXME: wrong calc
+              prev.crates.push({
+                amount: tokenAmount,
+                season: new BigNumber(s),
+              });
+              return prev;
+            }, {
+              amount:  new BigNumber(0),
+              bdv:    new BigNumber(0),
+              crates: [] as Withdrawal[],
+            }),
           },
 
           // -----------------------------
@@ -201,7 +211,7 @@ const FarmerEventsProcessor = () => {
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             }),
-            withdrawn: Object.keys(results.lpWithdrawals).reduce((prev, s) => {
+            withdrawn: Object.keys(results.beanlusdWithdrawals).reduce((prev, s) => {
               const tokenAmount = results.beanlusdWithdrawals[s];
               const bdv         = new BigNumber(0);           // FIXME: wrong calc
               prev.amount = prev.amount.plus(tokenAmount);
