@@ -1,42 +1,28 @@
 /* eslint-disable */
-import React, { useState } from 'react';
-import {Box, Card, Container, Grid, Stack} from '@mui/material';
-import PageHeader from 'components/v2/Common/PageHeader';
+import React from 'react';
+import {Card, Container, Grid, Stack} from '@mui/material';
 import TotalBalanceCard from 'components/v2/Balances/Cards/TotalBalancesCard';
-import FertilizerCard from 'components/v2/Balances/Cards/FertilizerCard';
-import RewardsCard from 'components/v2/Balances/Cards/RewardsCard';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
-import SiloAssetCard from 'components/v2/Balances/Cards/SiloAssetCard';
 import { BEAN, PODS, SEEDS, STALK } from 'constants/tokens';
-import PodCard from 'components/v2/Balances/Cards/PodsCard';
 import Stat from 'components/v2/Common/Stat';
 import { displayBN } from 'util/index';
 import TokenIcon from 'components/v2/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
-import BlurComponent from "../components/v2/Common/BlurComponent";
-import MainnetBlur from "../components/v2/Common/MainnetBlur";
-import SimpleLineChart from "../components/v2/Charts/SimpleLineChart";
+import useFarmerTotalFertilizer from "../hooks/useFarmerTotalFertilizer";
 
 const BalancesPage: React.FC = () => {
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo)
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field)
-  const farmerFertilizer = useSelector<AppState, AppState['_farmer']['fertilizer']>((state) => state._farmer.fertilizer)
-  // const farmerField = useSelector<AppState, AppState['_farmer']['fertilizer']>((state) => state._farmer.field)
   const breakdown = useFarmerSiloBreakdown();
+  const fertilizerSummary = useFarmerTotalFertilizer()
 
   if(!farmerSilo) return null;
 
   return (
     <Container maxWidth="lg">
       <Card sx={{ p: 2 }}>
-        {/*<Box sx={{ width: '100%', position: 'relative' }}>*/}
-        {/*  <BlurComponent>*/}
-        {/*    Connect your wallet to see your Beanstalk balances.*/}
-        {/*  </BlurComponent>*/}
-        {/*  <TotalBalanceCard breakdown={breakdown} />*/}
-        {/*</Box>*/}
         <TotalBalanceCard breakdown={breakdown} />
         <Stack sx={{ p: 2 }}>
           <Grid container spacing={1} rowSpacing={3}>
@@ -71,7 +57,7 @@ const BalancesPage: React.FC = () => {
               <Stat
                 title={`Unfertilized Beans`}
                 icon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
-                amount={displayBN(farmerFertilizer.tokens['6074'])}
+                amount={displayBN(fertilizerSummary.unfertilized)}
                 variant="h2"
                 sx={{ fontSize: '24px !important' }}
               />
