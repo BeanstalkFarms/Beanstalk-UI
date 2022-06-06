@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-
 import { BeanstalkPalette } from 'components/v2/App/muiTheme';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
