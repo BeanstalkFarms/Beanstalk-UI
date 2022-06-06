@@ -223,7 +223,7 @@ const SetupForm: React.FC<{}> = () => {
       let call;
       if (token === Eth) {
         call = fertContract.buyAndMint(
-          toStringBaseUnitBN(amountUsdc, Usdc.decimals),
+          toStringBaseUnitBN(amountUsdc.multipliedBy(0.999), Usdc.decimals),
           { value: toStringBaseUnitBN(amount, Eth.decimals) }
         );
       } else if (token === Usdc) {
