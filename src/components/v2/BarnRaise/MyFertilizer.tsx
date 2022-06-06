@@ -22,6 +22,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from 'util/TokenUtilities';
 import { MY_FERTILIZER } from 'constants/FertilizerItemTooltips';
 import TokenIcon from '../Common/TokenIcon';
+import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
 
 enum TabState {
   ACTIVE = 0,
@@ -44,21 +45,7 @@ const MyFertilizer: React.FC = () => {
     [farmerFertilizer.tokens, tab]
   );
 
-  const fertilizerSummary = useMemo(
-    () =>
-      tokenIds.reduce(
-        (agg, thisId) => {
-          const [humidity] = getHumidity(); // new BigNumber(thisId);
-          const amount = farmerFertilizer.tokens[thisId];
-          agg.unfertilized = agg.unfertilized.plus(
-            amount.multipliedBy(humidity.plus(1))
-          );
-          return agg;
-        },
-        { unfertilized: new BigNumber(0) }
-      ),
-    [farmerFertilizer, tokenIds, getHumidity]
-  );
+  const fertilizerSummary = useFarmerTotalFertilizer(tokenIds);
 
   return (
     <Card>
