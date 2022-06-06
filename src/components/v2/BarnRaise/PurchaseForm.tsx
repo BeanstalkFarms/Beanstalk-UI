@@ -286,7 +286,7 @@ export default () => {
     if (!isLaunched && chainId === SupportedChainId.MAINNET) {
       const interval = setInterval(() => {
         const diff = getDiff();
-        if (diff <= 0) {
+        if (Math.floor(diff) <= 0) {
           setIsLaunched(true);
         }
         setTimeStr(timeToStringDetailed(diff));

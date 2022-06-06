@@ -33,6 +33,7 @@ export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
     (tokenIn: Token, amountIn: BigNumber) => {
       try {
         if (fertContract) {
+          // FIXME: this is the lazy way of doing this
           const call = (tokenIn.symbol === 'ETH' || tokenIn.symbol === 'ropETH')
             ? fertContract.callStatic.getUsdcOut(
               toStringBaseUnitBN(amountIn, ETH_DECIMALS),
@@ -40,13 +41,18 @@ export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
             : sleep(250).then(() => new BigNumber(3000_000000).times(amountIn));
 
           //
-          return call.then((result) => {
-            const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
-            console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
-            setAmountOut(_amountOut);
-            setQuoting(false);
-            return result;
-          });
+          return call
+            .then((result) => {
+              const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
+              console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
+              setAmountOut(_amountOut);
+              setQuoting(false);
+              return result;
+            })
+            .catch((e) => {
+              toast.error(e.toString());
+              setQuoting(false);
+            });
         }
       } catch (e : any) {
         setQuoting(false);

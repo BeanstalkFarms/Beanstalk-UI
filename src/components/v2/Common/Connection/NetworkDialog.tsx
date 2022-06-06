@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
 import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { NETWORK_ERRORS_TO_MESSAGES } from 'constants/connection';
+import { SWITCH_NETWORK_ERRORS } from 'constants/connection';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 const NetworkDialog: React.FC<{
@@ -65,7 +65,7 @@ const NetworkDialog: React.FC<{
           ))}
           {error && (
             <Alert severity="error">
-              {NETWORK_ERRORS_TO_MESSAGES[error.name || error.message](pendingChainId) || error.message}
+              {SWITCH_NETWORK_ERRORS[error.name || error.message](pendingChainId) || error.message}
             </Alert>
           )}
         </Stack>
