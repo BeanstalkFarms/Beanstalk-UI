@@ -3,33 +3,35 @@ import {Container} from '@mui/system';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {AppState} from 'state';
-import {Box, Card, Grid, Stack, Typography} from "@mui/material";
+import {Card, Grid, Stack, Tab, Tabs, Typography} from "@mui/material";
 import {FIELD, OTHER, SILO} from "util/GetEventFacet";
 import {ParsedEvent} from "state/v2/farmer/events/updater";
 import EventItem from "components/v2/History/EventItem";
 import { useAccount } from 'wagmi';
 import WalletButton from "components/v2/Common/Connection/WalletButton";
 
-const buttonStyle = {
-  cursor: "pointer",
+const mappedTabs = {
+  0: SILO,
+  1: FIELD,
+  2: OTHER
 }
 
 const TransactionHistoryPage: React.FC = () => {
   const { data: account } = useAccount();
-  const [currentTab, setCurrentTab] = useState(SILO.toString());
+  const [tab, setTab] = useState(0);
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
-  const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>(filterEventsByFacet(currentTab));
-  const handleSetTab = (tab: string) => setCurrentTab(tab);
+  const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>();
 
-  function filterEventsByFacet(tab: string) {
-    return events.filter((event) => {
-      return event.facet === tab;
-    })
-  }
+  const handleSetTab = (event: React.SyntheticEvent, newValue: number) => setTab(newValue);
 
   useEffect(() => {
-    setWalletEvents(filterEventsByFacet(currentTab));
-  }, [currentTab])
+    function filterEventsByFacet(faucet: string) {
+      return events.filter((event) => {
+        return event.facet === faucet;
+      })
+    }
+    setWalletEvents(filterEventsByFacet(mappedTabs[tab]));
+  }, [events, tab])
 
   if (!account) {
     return (
@@ -44,26 +46,12 @@ const TransactionHistoryPage: React.FC = () => {
       <Stack gap={2}>
         <Card sx={{border: "none", p: 2}}>
           <Stack gap={0.5}>
-            <Stack gap={1}>
-              <Stack direction="row" gap={1}>
-                <Box sx={{...buttonStyle}} onClick={() => handleSetTab(SILO.toString())}>
-                  <Typography
-                    sx={{ fontSize: "17px"}}
-                    color={currentTab === SILO.toString() ? "text.primary" : "text.secondary"}>Silo</Typography>
-                </Box>
-                <Box sx={{...buttonStyle}} onClick={() => handleSetTab(FIELD.toString())}>
-                  <Typography
-                    sx={{ fontSize: "17px"}}
-                    color={currentTab === FIELD.toString() ? "text.primary" : "text.secondary"}>Field</Typography>
-                </Box>
-                <Box sx={{...buttonStyle}} onClick={() => handleSetTab(OTHER.toString())}>
-                  <Typography
-                    sx={{ fontSize: "17px"}}
-                    color={currentTab === OTHER.toString() ? "text.primary" : "text.secondary"}>Other</Typography>
-                </Box>
-              </Stack>
-            </Stack>
-            {walletEvents.length > 1 ? (
+            <Tabs value={tab} onChange={handleSetTab} sx={{ minHeight: 0 }}>
+              <Tab label="Silo" />
+              <Tab label="Field" />
+              <Tab label="Other" />
+            </Tabs>
+            {walletEvents !== undefined && walletEvents.length > 1 ? (
               <Grid container>
                 {walletEvents.map((event) => {
                   return (
