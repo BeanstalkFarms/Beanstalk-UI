@@ -9,10 +9,12 @@ import {
   Box,
   Button,
   ButtonProps,
+  Card,
   ListItemText,
-  Menu,
   MenuItem,
+  MenuList,
   Stack,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from '@mui/material';
@@ -43,51 +45,128 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const isTiny = useMediaQuery('(max-width:380px)');              //      
 
   // Menu
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const menuVisible = Boolean(anchorEl);
-  const handleShowMenu = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
-    },
-    []
-  );
+  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  // const menuVisible = Boolean(anchorEl);
+  // const handleShowMenu = useCallback(
+  //   (event: React.MouseEvent<HTMLButtonElement>) => {
+  //     setAnchorEl(event.currentTarget);
+  //   },
+  //   []
+  // );
+  // const handleHideMenu = useCallback(() => {
+  //   setAnchorEl(null);
+  // }, []);
+
+  const [open, setOpen] = useState(false);
+  const handleShowMenu = useCallback(() => {
+    setOpen(true);
+  }, []);
   const handleHideMenu = useCallback(() => {
-    setAnchorEl(null);
+    setOpen(false);
   }, []);
 
   // Display: Connected
   if (account?.address && activeChain?.id) {
+    const menu = (
+      <MenuList sx={{ minWidth: 250 }}>
+        <MenuItem
+          component={RouterLink}
+          to="/balances"
+          onClick={handleHideMenu}
+        >
+          <ListItemText>Balances</ListItemText>
+        </MenuItem>
+        <MenuItem
+          component={RouterLink}
+          to="/history"
+          onClick={handleHideMenu}
+        >
+          <ListItemText>History</ListItemText>
+        </MenuItem>
+        <MenuItem
+          component="a"
+          href={`${CHAIN_INFO[activeChain.id].explorer}/address/${
+            account.address
+          }`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Stack
+            sx={{ width: '100%' }}
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="body2" color="text.primary">
+              View on Etherscan
+            </Typography>
+            <ArrowForwardIcon
+              sx={{
+                transform: 'rotate(-45deg)',
+                fontSize: '1rem',
+                color: 'text.secondary',
+              }}
+            />
+          </Stack>
+        </MenuItem>
+        <MenuItem onClick={() => disconnect()}>Disconnect</MenuItem>
+      </MenuList>
+    );
+
     return (
       <>
-        <Button
-          disableFocusRipple
-          variant="contained"
-          color="light"
-          startIcon={(
-            isTiny
-              ? null
-              : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
-              ? <WarningAmberIcon />
-              : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
-          )}
-          endIcon={<DropdownIcon open={menuVisible} />}
-          onClick={handleShowMenu}
-          {...props}
+        <Tooltip    
+          components={{ Tooltip: Card }}
+          title={menu}
+          open={open}
+          onOpen={handleShowMenu}
+          onClose={handleHideMenu}
+          enterTouchDelay={50}
+          leaveTouchDelay={10000}
+          placement="bottom-end"
+          sx={{ marginTop: 10 }}
+          componentsProps={{
+            popper: {
+              sx: {
+                paddingTop: 0.5
+              }
+            }
+          }}
         >
-          <Typography variant="subtitle1">
-            {trimAddress(getAccount(account.address), !isMedium)}
-          </Typography>
-        </Button>
-        <Menu
-          elevation={1}
+          <Button
+            disableFocusRipple
+            variant="contained"
+            color="light"
+            startIcon={(
+              isTiny
+                ? null
+                : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
+                ? <WarningAmberIcon />
+                : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
+            )}
+            endIcon={<DropdownIcon open={open} />}
+            {...props}
+          >
+            <Typography variant="subtitle1">
+              {trimAddress(getAccount(account.address), !isMedium)}
+            </Typography>
+          </Button>
+        </Tooltip>
+        {/* <Menu
+          elevation={0}
           anchorEl={anchorEl}
           open={menuVisible}
           onClose={handleHideMenu}
+          components={{
+            // Root: Card
+          }}
           MenuListProps={{
             sx: {
               // py: 0
             }
           }}
+          disablePortal
+          disableScrollLock
           // Align the menu to the bottom 
           // right side of the anchor button. 
           anchorOrigin={{
@@ -147,7 +226,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
             </MenuItem>
             <MenuItem onClick={() => disconnect()}>Disconnect</MenuItem>
           </Box>
-        </Menu>
+        </Menu> */}
       </>
     );
   }
