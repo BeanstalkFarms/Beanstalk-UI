@@ -166,19 +166,22 @@ const NavBar: React.FC<{}> = () => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}
         >
           {/* Desktop: Left Side */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }}>
             <PriceButton
               sx={{
                 height: 44,
+                mt: chainId === SupportedChainId.MAINNET ? 0.75 : 1,
+                mb: 1,
+                ml: 1,
+                mr: 1
               }}
             />
             <Stack
               direction="row"
               alignItems="center"
-              sx={{ display: { lg: 'block', xs: 'none' } }}
+              sx={{ display: { lg: 'flex', xs: 'none' } }}
             >
               {ROUTES.top.map((item) => (
                 <NavButton
