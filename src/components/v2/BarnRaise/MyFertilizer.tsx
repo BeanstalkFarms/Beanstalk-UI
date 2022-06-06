@@ -20,7 +20,7 @@ import { SupportedChainId } from 'constants/chains';
 import { BEAN } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from 'util/TokenUtilities';
-import { MY_FERTILIZER } from 'constants/fertilizerItem';
+import { MY_FERTILIZER } from 'constants/FertilizerItemTooltips';
 import TokenIcon from '../Common/TokenIcon';
 
 enum TabState {
@@ -29,10 +29,8 @@ enum TabState {
 }
 
 const MyFertilizer: React.FC = () => {
-  const farmerFertilizer = useSelector<
-    AppState,
-    AppState['_farmer']['fertilizer']
-  >((state) => state._farmer.fertilizer);
+  const farmerFertilizer = useSelector<AppState,
+    AppState['_farmer']['fertilizer']>((state) => state._farmer.fertilizer);
   const getHumidity = useHumidityFromId();
   const [tab, setTab] = useState<TabState>(TabState.ACTIVE);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
