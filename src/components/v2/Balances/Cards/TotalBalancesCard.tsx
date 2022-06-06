@@ -7,8 +7,6 @@ import { displayFullBN, displayUSD } from 'util/index';
 import Stat from 'components/v2/Common/Stat';
 import { useAccount } from 'wagmi';
 import BlurComponent from '../../Common/BlurComponent';
-import MainnetBlur from '../../Common/MainnetBlur';
-import SimpleLineChart from '../../Charts/SimpleLineChart';
 
 export interface TotalBalanceCardProps {
   breakdown: ReturnType<typeof useFarmerSiloBreakdown>;

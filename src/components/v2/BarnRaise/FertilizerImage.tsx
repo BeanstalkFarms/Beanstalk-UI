@@ -45,6 +45,13 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
       style={{ position: 'relative', zIndex: 2 }}
       className={isNew ? 'fert bounce' : undefined}
     />
+    {/* <Box sx={{
+      position: 'absolute',
+      top: 10,
+      left: 10,
+    }}>
+      <Typography variant="body2" color="text.secondary">6,074</Typography>
+    </Box> */}
     {progress && (
       <Box
         sx={{

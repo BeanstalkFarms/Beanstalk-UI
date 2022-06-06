@@ -76,7 +76,7 @@ const MyFertilizer: React.FC = () => {
               placement="right"
             >
               <Typography variant="body1">
-                Total Unfertilized Beans
+                Total Unfertilized Beans&nbsp;
                 <HelpOutlineIcon
                   sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
@@ -85,7 +85,7 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
               <Typography>
-                {displayBN(fertilizerSummary.unfertilized, 0)}
+                {displayBN(fertilizerSummary.unfertilized)}
               </Typography>
             </Stack>
           </Stack>
@@ -129,14 +129,17 @@ const MyFertilizer: React.FC = () => {
         <Box>
           {tokenIds.length > 0 ? (
             <Grid container spacing={4.5}>
-              {tokenIds.map((id) => {
-                const season = new BigNumber(id);
-                const [humidity] = getHumidity(season);
-                const amount = farmerFertilizer.tokens[id];
+              {tokenIds.map((_id) => {
+                const id     = new BigNumber(_id);
+                const season = new BigNumber(6_074);
+                const amount = farmerFertilizer.tokens[_id];
+                const [humidity] = getHumidity(); // Until Unpause, fixed to 6_074.
                 const remaining = amount.multipliedBy(humidity.plus(1));
                 return (
-                  <Grid key={id} item xs={12} md={4}>
+                  <Grid key={_id} item xs={12} md={4}>
                     <FertilizerItem
+                      id={id}
+                      season={season}
                       state="active"
                       humidity={humidity}
                       remaining={remaining}

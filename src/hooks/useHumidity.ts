@@ -50,7 +50,9 @@ export const useHumidityAtSeason = () => {
   ]);
 };
 
-export const useHumidityFromId = () => useCallback(() => [INITIAL_HUMIDITY, HUMIDITY_DECREASE_AT_REPLANT], []);
+// Until a sufficient subgraph is built, Humidity will
+// be hard-coded to these values.
+export const useHumidityFromId = () => useCallback(() => [INITIAL_HUMIDITY, HUMIDITY_DECREASE_AT_REPLANT] as const, []);
 
 // ----------------------------------------
 
