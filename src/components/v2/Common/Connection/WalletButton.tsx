@@ -77,6 +77,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           variant="contained"
           color="light"
           {...props}
+          onClick={() => setShowDialog(true)}
         >
           Connect<Box component="span" display={{ xs: 'none', md: 'inline' }}>&nbsp;Wallet</Box>
         </Button>
@@ -95,7 +96,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         component={RouterLink}
         to="/balances"
         onClick={handleHideMenu}
-        // onClick={(e) => { console.debug(`clicked nav link button`, e) }}
       >
         <ListItemText>Balances</ListItemText>
       </MenuItem>
@@ -134,6 +134,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
     </MenuList>
   );
 
+  // Connected
   return (
     <>
       {/* <Tooltip    
@@ -195,7 +196,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         )}
         endIcon={<DropdownIcon open={Boolean(anchorEl)} />}
         {...props}
-        // onClick={(e) => { console.debug(`clicked main button`) }}
         onClick={handleShowMenu}
       >
         <Typography variant="subtitle1">

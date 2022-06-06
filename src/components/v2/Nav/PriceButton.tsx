@@ -144,6 +144,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           anchorEl={anchorEl}
           placement="bottom-start"
           disablePortal
+          popperOptions={{
+
+          }}
         >
           <Box
             sx={(_theme) => ({
@@ -175,6 +178,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         anchor="bottom"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
+        disableScrollLock
       >
         <Stack sx={{ p: 2 }} gap={2}>
           <Typography variant="h2">
