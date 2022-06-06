@@ -3,12 +3,10 @@ import {
   Box,
   Drawer,
   IconButton,
-  List, ListItemText, MenuItem, Stack, Tooltip, Typography,
+  List
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { Link as RouterLink } from 'react-router-dom';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ROUTES from './routes';
 import NavListItem from './NavListItem';
 
@@ -16,9 +14,9 @@ const NavDrawer: React.FC<{
   open: boolean;
   hideDrawer: () => void;
 }> = ({
-        open,
-        hideDrawer
-      }) => (
+  open,
+  hideDrawer
+}) => (
   <Drawer
     anchor="bottom"
     open={open}

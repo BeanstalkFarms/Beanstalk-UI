@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import {
   Button,
+  Card,
   ListItemText,
-  Menu,
   MenuItem,
+  MenuList,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -15,28 +16,71 @@ import ROUTES from './routes';
 import DropdownIcon from '../Common/DropdownIcon';
 
 const MoreButton: React.FC = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
   // Handlers
-  const handleClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
-    },
-    []
-  );
-  const handleClose = useCallback(() => {
-    setAnchorEl(null);
+  const [open, setOpen] = useState(false);
+  const handleShowMenu = useCallback(() => {
+    setOpen(true);
+  }, []);
+  const handleHideMenu = useCallback(() => {
+    setOpen(false);
   }, []);
 
+  const menu = (
+    <MenuList>
+      {ROUTES.more.map((item) => (
+        <MenuItem
+          disabled={item.disabled}
+          component={item.href ? 'a' : RouterLink}
+          key={item.path}
+          href={item.href}
+          target={item.href ? '_blank' : undefined}
+          rel={item.href ? 'noreferrer' : undefined}
+          to={item.href ? undefined : item.path}
+          sx={{ minWidth: 200 }}
+          onClick={handleHideMenu}
+        >
+          {item.disabled ? (
+            <Tooltip title={<>{item.title} will be available upon Unpause</>}>
+              <span>
+                <ListItemText>{item.title}</ListItemText>
+              </span>
+            </Tooltip>
+          ) : (
+            <ListItemText>{item.title}</ListItemText>
+          )}
+          {item.href ? (
+            <Typography variant="body2" color="text.secondary">
+              <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: 12 }} />
+            </Typography>
+          ) : null}
+        </MenuItem>
+      ))}
+    </MenuList>
+  );
+
   return (
-    <>
+    <Tooltip
+      components={{ Tooltip: Card }}
+      title={menu}
+      onOpen={handleShowMenu}
+      onClose={handleHideMenu}
+      enterTouchDelay={50}
+      leaveTouchDelay={10000}
+      placement="bottom-start"
+      sx={{ marginTop: 10 }}
+      componentsProps={{
+        popper: {
+          sx: {
+            paddingTop: 0.5
+          }
+        }
+      }}
+    >
       <Button
         size="small"
         variant="text"
         color="dark"
         endIcon={<DropdownIcon open={open} />}
-        onMouseOver={handleClick}
         sx={{
           px: 1.5,
           fontSize: '1rem',
@@ -46,57 +90,7 @@ const MoreButton: React.FC = () => {
       >
         <Typography variant="subtitle1">More</Typography>
       </Button>
-      <Menu
-        id="basic-menu"
-        elevation={1}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          onMouseLeave: handleClose,
-          sx: {
-            cursor: 'pointer',
-          },
-        }}
-        // https://mui.com/material-ui/react-popover/#anchor-playground
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        {ROUTES.more.map((item) => (
-          <MenuItem
-            disabled={item.disabled}
-            component={item.href ? 'a' : RouterLink}
-            key={item.path}
-            href={item.href}
-            target={item.href ? '_blank' : undefined}
-            rel={item.href ? 'noreferrer' : undefined}
-            to={item.href ? undefined : item.path}
-            sx={{ minWidth: 200 }}
-          >
-            {item.disabled ? (
-              <Tooltip title={<>{item.title} will be available upon Unpause</>}>
-                <span>
-                  <ListItemText>{item.title}</ListItemText>
-                </span>
-              </Tooltip>
-            ) : (
-              <ListItemText>{item.title}</ListItemText>
-            )}
-            {item.href ? (
-              <Typography variant="body2" color="text.secondary">
-                <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: 12 }} />
-              </Typography>
-            ) : null}
-          </MenuItem>
-        ))}
-      </Menu>
-    </>
+    </Tooltip>
   );
 };
 

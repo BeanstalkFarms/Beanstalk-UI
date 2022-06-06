@@ -17,20 +17,35 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
+  if (!activeChain) return null;
 
-  return activeChain ? (
+  const startIcon = SupportedChainId[activeChain.id] ? (
+    <TokenIcon
+      token={ETH[SupportedChainId.MAINNET]}
+      // Want this icon bigger than surrounding text
+      style={{ height: '1.4em' }}
+    />
+  ) : (
+    <TokenIcon
+      token={ETH[SupportedChainId.MAINNET]}
+      // Want this icon bigger than surrounding text
+      style={{ height: '1.4em' }}
+    />
+  );
+  const text = SupportedChainId[activeChain.id] ? (
+    activeChain.name
+  ) : (
+    'Switch Network'
+  );
+
+  return (
     <>
       <Button
         disableFocusRipple
         variant="contained"
         color="light"
-        startIcon={(
-          <TokenIcon
-            token={ETH[SupportedChainId.MAINNET]}
-            // Want this icon bigger than surrounding text
-            style={{ height: '1.4em' }}
-          />
-        )}
+        startIcon={startIcon}
         endIcon={<DropdownIcon open={open} />}
         onClick={handleClick}
         {...props}
@@ -54,7 +69,7 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
         }}
       >
         <Typography variant="subtitle1" sx={{ display: { md: 'block', xs: 'none' } }}>
-          {activeChain?.name}
+          {text}
         </Typography>
       </Button>
       <NetworkDialog
@@ -62,7 +77,7 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
         handleClose={handleClose}
       />
     </>
-  ) : null;
+  );
 };
 
 export default NetworkButton;

@@ -24,6 +24,16 @@ const ROUTES = {
   ],
   more: [
     {
+      path: 'trade',
+      title: 'Trade',
+      disabled: true,
+    },
+    {
+      path: 'beanfts',
+      title: 'BeaNFTs',
+      disabled: true,
+    },
+    {
       path: 'governance',
       href: 'https://snapshot.org/#/beanstalkfarms.eth',
       title: 'Governance',
@@ -37,16 +47,6 @@ const ROUTES = {
       path: 'discord',
       href: 'https://discord.gg/beanstalk',
       title: 'Discord',
-    },
-    {
-      path: 'trade',
-      title: 'Trade',
-      disabled: true,
-    },
-    {
-      path: 'beanfts',
-      title: 'BeaNFTs',
-      disabled: true,
     },
     {
       path: 'about',

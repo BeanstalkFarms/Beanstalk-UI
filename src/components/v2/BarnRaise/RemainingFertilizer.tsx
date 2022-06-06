@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Card, Link, Stack, Typography } from '@mui/material';
+import { Box, Card, Link, Stack, Typography, Tooltip } from '@mui/material';
 import { displayFullBN } from 'util/index';
 import useHumidity, { INITIAL_HUMIDITY } from 'hooks/useHumidity';
 import { AppState } from 'state';
@@ -44,7 +44,9 @@ const RemainingFertilizer: React.FC = () => {
           <Stack justifyContent="space-between" gap={3}>
             <Stack gap={3}>
               <Stack gap={1}>
-                <Typography>Available Fertilizer</Typography>
+                <Tooltip title="Fertilizer, once purchased, will receive a pro rata share of one-third of new Bean mints." placement="top-start">
+                  <Typography>Available Fertilizer</Typography>
+                </Tooltip>
                 <Stack direction="row" gap={1} alignItems="center">
                   <Typography
                     display="inline-block"
@@ -65,7 +67,9 @@ const RemainingFertilizer: React.FC = () => {
                 </Stack>
               </Stack>
               <Stack gap={1}>
-                <Typography>Current Humidity (Interest Rate)</Typography>
+                <Tooltip title="The current interest rate on Fertilizer. Once Beanstalk is Replanted, Humidity will decrease to 250%." placement="top-start">
+                  <Typography>Current Humidity (Interest Rate)</Typography>
+                </Tooltip>
                 <Stack direction="row" alignItems="center" gap={1}>
                   <Typography sx={{ fontSize: '25px', fontWeight: 400 }}>
                     {displayFullBN(humidity.multipliedBy(100))}%

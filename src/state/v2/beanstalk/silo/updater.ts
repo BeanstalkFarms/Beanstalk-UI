@@ -6,15 +6,11 @@ import { tokenResult } from 'util/TokenUtilities';
 
 import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
-import BigNumber from 'bignumber.js';
-import { SupportedChainId } from 'constants/chains';
-import useChainId from 'hooks/useChain';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 
 export const useBeanstalkSilo = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
-  const chainId = useChainId();
 
   // Handlers
   const fetch = useCallback(async () => {

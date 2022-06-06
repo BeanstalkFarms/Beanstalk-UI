@@ -6,7 +6,7 @@ type ConstantByChain = { [key: number] : any };
 
 export function getChainConstant<T extends ConstantByChain>(map: T, chainId?: SupportedChainId) : T[keyof T] {
   // If no chain available, use the value for MAINNET.
-  if (!chainId) {
+  if (!chainId || !SupportedChainId[chainId]) {
     return map[SupportedChainId.MAINNET];
   }
   // If we're on LOCALHOST, it's probably a forked mainnet node.
