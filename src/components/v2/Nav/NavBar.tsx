@@ -142,6 +142,8 @@ const NavBar: React.FC<{}> = () => {
           position: 'sticky',
           backgroundColor: BeanstalkPalette.lighterBlue,
           borderBottom: `1px solid ${BeanstalkPalette.lightBlue}`,
+          // height: '65px'
+          // pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1
         }}
       >
         {/* TEMP: */}
@@ -166,22 +168,21 @@ const NavBar: React.FC<{}> = () => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
+          height="64px"
+          sx={{ pr: 1, pl: 1 }}
         >
           {/* Desktop: Left Side */}
-          <Stack direction="row" alignItems="center" sx={{ flex: 1 }}>
+          <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%">
             <PriceButton
               sx={{
                 height: 44,
-                mt: chainId === SupportedChainId.MAINNET ? 0.75 : 1,
-                mb: 1,
-                ml: 1,
-                mr: 1
               }}
             />
             <Stack
               direction="row"
               alignItems="center"
               sx={{ display: { lg: 'flex', xs: 'none' } }}
+              height="100%"
             >
               {ROUTES.top.map((item) => (
                 <NavButton

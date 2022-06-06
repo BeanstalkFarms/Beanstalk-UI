@@ -14,7 +14,15 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
   return (
-    <Stack sx={{ borderBottom: match ? 3 : null, borderColor: '#67b761', pt: 1.1, pb: 1.1 }}>
+    // <Stack sx={{ borderBottom: match ? 3 : null, borderColor: '#67b761', pt: 1.1, pb: 1.1 }}>
+    <Stack sx={{
+      borderBottom: match ? 3 : null,
+      mb: match ? '-2px' : null, // or else selected text will raise 3px
+      borderColor: '#67b761',
+      height: '100%',
+      justifyContent: 'center',
+
+    }}>
       <Button
         disableRipple
         component={RouterLink}
