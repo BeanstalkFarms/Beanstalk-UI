@@ -32,6 +32,7 @@ import { SupportedChainId } from 'constants/chains';
 import FertilizerItem from './FertilizerItem';
 import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
 import TransactionToast from '../Common/TxnToast';
+import { BUY_FERTILIZER } from "constants/FertilizerItemTooltips";
 
 // ---------------------------------------------------
 export interface BarnraiseFormProps {
@@ -128,13 +129,14 @@ const FertilizeForm : React.FC<
           {fert?.gt(0) ? (
             <Stack direction="column" gap={1} alignItems="center" justifyContent="center">
               <KeyboardArrowDownIcon color="secondary" />
-              <Box sx={{ width: 180, pb: 1 }}>
+              <Box sx={{ width: 250, pb: 1 }}>
                 <FertilizerItem
                   isNew
                   amount={fert}
                   remaining={fert.multipliedBy(humidity.plus(1))}
                   humidity={humidity}
                   state="active"
+                  tooltip={BUY_FERTILIZER}
                 />
               </Box>
               <Box sx={{ width: '100%', mt: 0 }}>

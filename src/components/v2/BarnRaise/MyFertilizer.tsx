@@ -20,6 +20,7 @@ import { SupportedChainId } from 'constants/chains';
 import { BEAN } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from 'util/TokenUtilities';
+import { MY_FERTILIZER } from 'constants/FertilizerItemTooltips';
 import TokenIcon from '../Common/TokenIcon';
 
 enum TabState {
@@ -28,10 +29,8 @@ enum TabState {
 }
 
 const MyFertilizer: React.FC = () => {
-  const farmerFertilizer = useSelector<
-    AppState,
-    AppState['_farmer']['fertilizer']
-  >((state) => state._farmer.fertilizer);
+  const farmerFertilizer = useSelector<AppState,
+    AppState['_farmer']['fertilizer']>((state) => state._farmer.fertilizer);
   const getHumidity = useHumidityFromId();
   const [tab, setTab] = useState<TabState>(TabState.ACTIVE);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -77,16 +76,14 @@ const MyFertilizer: React.FC = () => {
               placement="right"
             >
               <Typography variant="body1">
-                Total Unfertilized Beans&nbsp;
+                Total Unfertilized Beans
                 <HelpOutlineIcon
-                  fontSize="14px"
-                  sx={{ color: 'text.secondary' }}
+                  sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
               </Typography>
             </Tooltip>
-            <Stack direction="row" alignItems="top">
+            <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
-              &nbsp;
               <Typography>
                 {displayBN(fertilizerSummary.unfertilized, 0)}
               </Typography>
@@ -104,14 +101,12 @@ const MyFertilizer: React.FC = () => {
               <Typography variant="body1">
                 Total Fertilized Beans&nbsp;
                 <HelpOutlineIcon
-                  fontSize="14px"
-                  sx={{ color: 'text.secondary' }}
+                  sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
               </Typography>
             </Tooltip>
-            <Stack direction="row" alignItems="top">
+            <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
-              &nbsp;
               <Typography>0</Typography>
             </Stack>
           </Stack>
@@ -133,20 +128,21 @@ const MyFertilizer: React.FC = () => {
         </Stack>
         <Box>
           {tokenIds.length > 0 ? (
-            <Grid container spacing={2}>
+            <Grid container spacing={4.5}>
               {tokenIds.map((id) => {
                 const season = new BigNumber(id);
                 const [humidity] = getHumidity(season);
                 const amount = farmerFertilizer.tokens[id];
                 const remaining = amount.multipliedBy(humidity.plus(1));
                 return (
-                  <Grid key={id} item xs={12} md={3}>
+                  <Grid key={id} item xs={12} md={4}>
                     <FertilizerItem
                       state="active"
                       humidity={humidity}
                       remaining={remaining}
                       amount={amount}
-                      season={season}
+                      // season={season}
+                      tooltip={MY_FERTILIZER}
                     />
                   </Grid>
                 );
@@ -160,13 +156,14 @@ const MyFertilizer: React.FC = () => {
               alignItems="center"
               gap={2}
             >
-              <Box width={155}>
+              <Box width={250}>
                 <FertilizerItem
                   state="used"
                   amount={zeroBN}
                   humidity={zeroBN}
                   remaining={zeroBN}
                   season={zeroBN}
+                  tooltip={MY_FERTILIZER}
                 />
               </Box>
               <Typography

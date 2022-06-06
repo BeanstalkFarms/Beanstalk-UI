@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-
 import { BeanstalkPalette } from 'components/v2/App/muiTheme';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
@@ -142,6 +141,8 @@ const NavBar: React.FC<{}> = () => {
           position: 'sticky',
           backgroundColor: BeanstalkPalette.lighterBlue,
           borderBottom: `1px solid ${BeanstalkPalette.lightBlue}`,
+          // height: '65px'
+          // pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1
         }}
       >
         {/* TEMP: */}
@@ -166,10 +167,11 @@ const NavBar: React.FC<{}> = () => {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          sx={{ p: 1, pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1 }}
+          height="64px"
+          sx={{ pr: 1, pl: 1 }}
         >
           {/* Desktop: Left Side */}
-          <Stack direction="row" alignItems="center" sx={{ flex: 1 }}>
+          <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%">
             <PriceButton
               sx={{
                 height: 44,
@@ -178,7 +180,8 @@ const NavBar: React.FC<{}> = () => {
             <Stack
               direction="row"
               alignItems="center"
-              sx={{ display: { lg: 'block', xs: 'none' } }}
+              sx={{ display: { lg: 'flex', xs: 'none' } }}
+              height="100%"
             >
               {ROUTES.top.map((item) => (
                 <NavButton
