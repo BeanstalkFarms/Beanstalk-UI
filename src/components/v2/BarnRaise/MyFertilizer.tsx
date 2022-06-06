@@ -141,7 +141,7 @@ const MyFertilizer: React.FC = () => {
                       humidity={humidity}
                       remaining={remaining}
                       amount={amount}
-                      season={season}
+                      // season={season}
                       tooltip={MY_FERTILIZER}
                     />
                   </Grid>
