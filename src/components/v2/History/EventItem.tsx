@@ -334,8 +334,8 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
         </Stack>
         <Stack direction="row" justifyContent="space-between">
           <Tooltip placement="right" title="View block on Etherscan.">
-            <Link underline="none" href={`https://etherscan.io/block/${event.blockNumber}`}>
-              <Typography color="text.secondary">{`Block #: ${event.blockNumber}`}</Typography>
+            <Link underline="none" sx={{ textDecoration: 'none' }} href={`https://etherscan.io/block/${event.blockNumber}`}>
+              <Typography color="text.secondary">{`Block ${event.blockNumber}`}</Typography>
             </Link>
           </Tooltip>
           {amountIn}
