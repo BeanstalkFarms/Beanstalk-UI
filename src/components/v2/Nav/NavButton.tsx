@@ -54,11 +54,12 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
           <Box sx={{
             textDecoration: 'none !important',
             display: 'inline-block',
-            ml: 1,
+            ml: 0.5,
             backgroundColor: 'rgba(255,255,255,.9)',
             px: 1,
+            py: 0.1,
             borderRadius: 1,
-            fontSize: '0.8em',
+            fontSize: '0.7em',
           }}>
             {tag}
           </Box>
