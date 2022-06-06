@@ -39,7 +39,7 @@ export function displayTokenAmount(amount: BigNumber, token: Token) {
 }
 
 export function displayBN(bn: BigNumber, allowNegative: Boolean = false) : string {
-  if (bn === undefined) return '0';
+  if (bn === undefined || !(bn instanceof BigNumber)) return '0';
   if (bn.isLessThan(new BigNumber(0))) {
     return allowNegative ? `-${displayBN(bn.multipliedBy(-1))}` : '0';
   }

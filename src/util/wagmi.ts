@@ -13,12 +13,17 @@ import { ALCHEMY_API_KEYS } from 'constants/rpc/alchemy';
 
 const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.MAINNET];
 
+const baseChains = [
+  chain.mainnet,
+  chain.ropsten,
+];
+
+if (Boolean(process.env.REACT_APP_DISABLE_NETWORK_LOCALHOST) === false) {
+  baseChains.push(chain.localhost);
+}
+
 const { chains, provider } = configureChains(
-  [
-    chain.mainnet,
-    chain.ropsten,
-    chain.localhost,
-  ], 
+  baseChains, 
   [
     alchemyProvider({
       alchemyId,

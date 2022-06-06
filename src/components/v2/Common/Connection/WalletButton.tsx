@@ -9,10 +9,12 @@ import {
   Box,
   Button,
   ButtonProps,
+  Card,
   ListItemText,
-  Menu,
   MenuItem,
+  MenuList,
   Stack,
+  Tooltip,
   Typography,
   useMediaQuery,
 } from '@mui/material';
@@ -25,6 +27,7 @@ import { trimAddress } from 'util/index';
 import { CHAIN_INFO } from 'constants/chains';
 
 import { getAccount } from 'util/account';
+import useChainConstant from 'hooks/useChainConstant';
 import DropdownIcon from '../DropdownIcon';
 import WalletDialog from './WalletDialog';
 
@@ -43,22 +46,113 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const isTiny = useMediaQuery('(max-width:380px)');              //      
 
   // Menu
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const menuVisible = Boolean(anchorEl);
-  const handleShowMenu = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
-    },
-    []
-  );
+  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  // const menuVisible = Boolean(anchorEl);
+  // const handleShowMenu = useCallback(
+  //   (event: React.MouseEvent<HTMLButtonElement>) => {
+  //     setAnchorEl(event.currentTarget);
+  //   },
+  //   []
+  // );
+  // const handleHideMenu = useCallback(() => {
+  //   setAnchorEl(null);
+  // }, []);
+
+  const chain = useChainConstant(CHAIN_INFO);
+
+  const [open, setOpen] = useState(false);
+  const handleShowMenu = useCallback(() => {
+    setOpen(true);
+  }, []);
   const handleHideMenu = useCallback(() => {
-    setAnchorEl(null);
+    setOpen(false);
   }, []);
 
-  // Display: Connected
-  if (account?.address && activeChain?.id) {
+  // Display: Not Connected
+  if (!account?.address || !activeChain?.id) {
     return (
       <>
+        <Button
+          variant="contained"
+          color="light"
+          onClick={() => setShowDialog(true)}
+          {...props}
+        >
+          Connect<Box component="span" display={{ xs: 'none', md: 'inline' }}>&nbsp;Wallet</Box>
+        </Button>
+        <WalletDialog
+          open={showDialog}
+          handleClose={handleCloseDialog}
+          fullScreen={isMedium}
+        />
+      </>
+    );
+  }
+
+  const menu = (
+    <MenuList sx={{ minWidth: 250 }}>
+      <MenuItem
+        component={RouterLink}
+        to="/balances"
+        onClick={handleHideMenu}
+      >
+        <ListItemText>Balances</ListItemText>
+      </MenuItem>
+      <MenuItem
+        component={RouterLink}
+        to="/history"
+        onClick={handleHideMenu}
+      >
+        <ListItemText>History</ListItemText>
+      </MenuItem>
+      <MenuItem
+        component="a"
+        href={`${chain.explorer}/address/${account.address}`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <Stack
+          sx={{ width: '100%' }}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Typography variant="body2" color="text.primary">
+            View on Etherscan
+          </Typography>
+          <ArrowForwardIcon
+            sx={{
+              transform: 'rotate(-45deg)',
+              fontSize: '1rem',
+              color: 'text.secondary',
+            }}
+          />
+        </Stack>
+      </MenuItem>
+      <MenuItem onClick={() => disconnect()}>Disconnect</MenuItem>
+    </MenuList>
+  );
+
+  return (
+    <>
+      <Tooltip    
+        components={{ Tooltip: Card }}
+        title={menu}
+        open={open}
+        onOpen={handleShowMenu}
+        onClose={handleHideMenu}
+        enterTouchDelay={50}
+        leaveTouchDelay={10000}
+        placement="bottom-end"
+        sx={{ marginTop: 10 }}
+        componentsProps={{
+          popper: {
+            sx: {
+              paddingTop: 0.5
+            }
+          }
+        }}
+      >
         <Button
           disableFocusRipple
           variant="contained"
@@ -70,104 +164,89 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
               ? <WarningAmberIcon />
               : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
           )}
-          endIcon={<DropdownIcon open={menuVisible} />}
-          onClick={handleShowMenu}
+          endIcon={<DropdownIcon open={open} />}
           {...props}
         >
           <Typography variant="subtitle1">
             {trimAddress(getAccount(account.address), !isMedium)}
           </Typography>
         </Button>
-        <Menu
-          elevation={1}
-          anchorEl={anchorEl}
-          open={menuVisible}
-          onClose={handleHideMenu}
-          MenuListProps={{
-            sx: {
-              // py: 0
-            }
-          }}
-          // Align the menu to the bottom 
-          // right side of the anchor button. 
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          sx={{
-            // Give some room between the WalletButton
-            // and the popper when it's opened.
-            mt: 0.5,
-          }}
-        >
-          <Box sx={{ minWidth: 250 }}>
-            <MenuItem
-              component={RouterLink}
-              to="/balances"
-              onClick={handleHideMenu}
-            >
-              <ListItemText>Balances</ListItemText>
-            </MenuItem>
-            <MenuItem
-              component={RouterLink}
-              to="/history"
-              onClick={handleHideMenu}
-            >
-              <ListItemText>History</ListItemText>
-            </MenuItem>
-            <MenuItem
-              component="a"
-              href={`${CHAIN_INFO[activeChain.id].explorer}/address/${
-                account.address
-              }`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Stack
-                sx={{ width: '100%' }}
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Typography variant="body2" color="text.primary">
-                  View on Etherscan
-                </Typography>
-                <ArrowForwardIcon
-                  sx={{
-                    transform: 'rotate(-45deg)',
-                    fontSize: '1rem',
-                    color: 'text.secondary',
-                  }}
-                />
-              </Stack>
-            </MenuItem>
-            <MenuItem onClick={() => disconnect()}>Disconnect</MenuItem>
-          </Box>
-        </Menu>
-      </>
-    );
-  }
-
-  // Display: Not Connected
-  return (
-    <>
-      <Button
-        variant="contained"
-        color="light"
-        onClick={() => setShowDialog(true)}
-        {...props}
+      </Tooltip>
+      {/* <Menu
+        elevation={0}
+        anchorEl={anchorEl}
+        open={menuVisible}
+        onClose={handleHideMenu}
+        components={{
+          // Root: Card
+        }}
+        MenuListProps={{
+          sx: {
+            // py: 0
+          }
+        }}
+        disablePortal
+        disableScrollLock
+        // Align the menu to the bottom 
+        // right side of the anchor button. 
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        sx={{
+          // Give some room between the WalletButton
+          // and the popper when it's opened.
+          mt: 0.5,
+        }}
       >
-        Connect<Box component="span" display={{ xs: 'none', md: 'inline' }}>&nbsp;Wallet</Box>
-      </Button>
-      <WalletDialog
-        open={showDialog}
-        handleClose={handleCloseDialog}
-        fullScreen={isMedium}
-      />
+        <Box sx={{ minWidth: 250 }}>
+          <MenuItem
+            component={RouterLink}
+            to="/balances"
+            onClick={handleHideMenu}
+          >
+            <ListItemText>Balances</ListItemText>
+          </MenuItem>
+          <MenuItem
+            component={RouterLink}
+            to="/history"
+            onClick={handleHideMenu}
+          >
+            <ListItemText>History</ListItemText>
+          </MenuItem>
+          <MenuItem
+            component="a"
+            href={`${CHAIN_INFO[activeChain.id].explorer}/address/${
+              account.address
+            }`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Stack
+              sx={{ width: '100%' }}
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography variant="body2" color="text.primary">
+                View on Etherscan
+              </Typography>
+              <ArrowForwardIcon
+                sx={{
+                  transform: 'rotate(-45deg)',
+                  fontSize: '1rem',
+                  color: 'text.secondary',
+                }}
+              />
+            </Stack>
+          </MenuItem>
+          <MenuItem onClick={() => disconnect()}>Disconnect</MenuItem>
+        </Box>
+      </Menu> */}
     </>
   );
 };

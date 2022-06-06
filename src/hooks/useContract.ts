@@ -1,4 +1,3 @@
-import { useWhatChanged } from '@simbathesailor/use-what-changed';
 import { SupportedChainId } from 'constants/chains';
 import {
   Beanstalk,
@@ -11,7 +10,7 @@ import {
   BEANSTALK_FERTILIZER_ADDRESSES,
   BEANSTALK_PRICE_ADDRESSES,
 } from 'constants/addresses';
-import { AddressMap } from 'constants/index';
+import { ChainConstant } from 'constants/index';
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useSigner, useContract as useWagmiContract } from 'wagmi';
@@ -25,8 +24,8 @@ const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0
 const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
 const ERC20_ABI = require('constants/abi/ERC20.json');
 
-export type AddressOrAddressMap = string | AddressMap;
-export type AbiOrAbiMap = AddressMap<ContractInterface[]>;
+export type AddressOrAddressMap = string | ChainConstant<string>;
+export type AbiOrAbiMap = ContractInterface | ChainConstant<ContractInterface>;
 
 // -------------------------------------------------
 
@@ -36,11 +35,11 @@ export function useContractReadOnly<T extends Contract = Contract>(
 ): [T | null, SupportedChainId] {
   const provider  = useProvider();
   const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, provider.network.chainId);
-  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, provider.network.chainId);
+  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap as ChainConstant<ContractInterface>, provider.network.chainId);
   return useMemo(
-    () => {
-      console.debug(`[useContractReadOnly] creating new instance of ${address}`);
-      return [
+    () => 
+      // console.debug(`[useContractReadOnly] creating new instance of ${address}`);
+       [
         address
           ? new ethers.Contract(
             address,
@@ -49,8 +48,7 @@ export function useContractReadOnly<T extends Contract = Contract>(
           ) as T
           : null,
         provider.network.chainId,
-      ];
-    },
+      ],    
     [address, abi, provider]
   );
   // if (!address) throw new Error('Attempted to instantiate contract without address.')
@@ -75,15 +73,15 @@ export function useGetContract<T extends Contract = Contract>(
   const provider         = useProvider();
   const { data: signer } = useSigner();
   const chainId          = provider.network.chainId;
-  const abi              = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap, chainId);
+  const abi              = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap as ChainConstant<ContractInterface>, chainId);
   const signerOrProvider = useSignerIfPossible && signer ? signer : provider;
-  useWhatChanged([abi,signerOrProvider,chainId], 'abi,signerOrProvider,chainId');
+  // useWhatChanged([abi,signerOrProvider,chainId], 'abi,signerOrProvider,chainId');
   
   // 
   return useCallback(
     (addressOrAddressMap: AddressOrAddressMap) => {
       const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, chainId);
-      console.debug(`[useGetContract] creating new instance of ${address}, ${abi.length}, ${signerOrProvider}, ${chainId}`);
+      // console.debug(`[useGetContract] creating new instance of ${address}, ${abi.length}, ${signerOrProvider}, ${chainId}`);
       return [
         address 
           ? new ethers.Contract(

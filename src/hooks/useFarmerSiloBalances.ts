@@ -50,8 +50,9 @@ const useFarmerSiloBreakdown = () => {
   const tokenAddresses = useMemo(() => Object.keys(whitelist), [whitelist]);
 
   //
-  return useMemo(() => 
-    tokenAddresses.reduce((prev, address) => {
+  return useMemo(() => {
+    console.debug('[useFarmerSiloBalances] running reducer');
+    return tokenAddresses.reduce((prev, address) => {
       const token       = whitelist[address];
       const siloBalance = balances[address];
 
@@ -65,7 +66,7 @@ const useFarmerSiloBreakdown = () => {
           getUSD(token, siloBalance.withdrawn?.amount)
         ];
 
-        console.debug('[useFarmerSiloBalances] run', token, _depositedUsd, _withdrawnUsd);
+        // console.debug('[useFarmerSiloBalances] running reducer:', token, _depositedUsd, _withdrawnUsd);
 
         prev.totalValue = (
           prev.totalValue
@@ -90,7 +91,8 @@ const useFarmerSiloBreakdown = () => {
       claimable:    initState(tokenAddresses),
       wrapped:      initState(tokenAddresses),
       withdrawn:    initState(tokenAddresses),
-    }),
+    });
+  },
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [tokenAddresses, balances]);
 };

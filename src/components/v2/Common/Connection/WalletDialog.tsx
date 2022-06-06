@@ -11,7 +11,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { CONNECTION_ERRORS_TO_MESSAGES, CONNECTOR_LOGOS } from 'constants/connection';
+import { CONNECT_WALLET_ERRORS, CONNECTOR_LOGOS } from 'constants/connection';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 // -----------------------------------------------------------------
@@ -64,7 +64,7 @@ const WalletDialog: React.FC<{
           ))}
           {error && (
             <Alert severity="error">
-              {CONNECTION_ERRORS_TO_MESSAGES[error.name || error.message](pendingConnector) || error.message}
+              {CONNECT_WALLET_ERRORS[error.name || error.message](pendingConnector) || error.message}
             </Alert>
           )}
         </Stack>

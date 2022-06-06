@@ -2,7 +2,8 @@ import React, { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
 import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { NETWORK_ERRORS_TO_MESSAGES } from 'constants/connection';
+import { SWITCH_NETWORK_ERRORS } from 'constants/connection';
+import { SupportedChainId } from 'constants/chains';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 const NetworkDialog: React.FC<{
@@ -12,7 +13,7 @@ const NetworkDialog: React.FC<{
   open,
   handleClose
 }) => {
-  const { chains, error, pendingChainId, switchNetwork } = useNetwork({
+  const { activeChain, chains, error, pendingChainId, switchNetwork } = useNetwork({
     onSettled(data, err) {
       if (!err) {
         console.debug('[NetworkButton] settled network change...');
@@ -45,6 +46,11 @@ const NetworkDialog: React.FC<{
       </StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={1}>
+          {activeChain?.id && !SupportedChainId[activeChain.id] ? (
+            <Alert severity="info">
+              {activeChain.name} is not supported. Please select another network below.
+            </Alert>
+          ) : null}
           {chains.map((chain) => (
             <Button
               variant="outlined"
@@ -60,12 +66,17 @@ const NetworkDialog: React.FC<{
                 <Typography color="text.primary" sx={{ fontSize: 20 }}>
                   {chain.name}
                 </Typography>
+                {chain.testnet && (
+                  <Typography color="text.secondary">
+                    Testnet
+                  </Typography>
+                )}
               </Stack>
             </Button>
           ))}
           {error && (
             <Alert severity="error">
-              {NETWORK_ERRORS_TO_MESSAGES[error.name || error.message](pendingChainId) || error.message}
+              {SWITCH_NETWORK_ERRORS[error.name || error.message](pendingChainId) || error.message}
             </Alert>
           )}
         </Stack>

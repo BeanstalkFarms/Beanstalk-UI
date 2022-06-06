@@ -12,17 +12,17 @@ const BarnRaisePage: React.FC = () => (
       <PageHeader
         title={<><strong>The Barn Raise</strong></>}
         // <Box component="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: Fertilizing Beanstalk</Box>
-        description="Earn yield through purchasing & activating Fertilizer"
+        description="Earn yield and recapitalize Beanstalk by purchasing Fertilizer"
         control={(
           <Button
-            href="https://bean.money/blog/path-forward"
+            href="https://bean.money/blog/how-to-purchase-fertilizer"
             target="_blank"
             rel="noreferrer"
             color="light"
             variant="contained"
             endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
           >
-            Learn more
+            Guide
           </Button>
         )}
       />

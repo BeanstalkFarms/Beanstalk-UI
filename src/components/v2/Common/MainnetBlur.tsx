@@ -1,7 +1,7 @@
 import React from 'react';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
-import BlurComponent from "./BlurComponent";
+import BlurComponent from './BlurComponent';
 
 const MainnetBlur : React.FC = ({ children }) => {
   const chainId = useChainId();
