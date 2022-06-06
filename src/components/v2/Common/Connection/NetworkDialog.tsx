@@ -40,7 +40,7 @@ const NetworkDialog: React.FC<{
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Dialog onClose={handleClose} open={open} fullScreen={isMedium}>
+    <Dialog onClose={handleClose} open={open} disableScrollLock>
       <StyledDialogTitle onClose={handleClose}>
         Select chain
       </StyledDialogTitle>

@@ -11,10 +11,10 @@ import {
   ButtonProps,
   Card,
   ListItemText,
+  Menu,
   MenuItem,
   MenuList,
   Stack,
-  Tooltip,
   Typography,
   useMediaQuery,
 } from '@mui/material';
@@ -46,27 +46,28 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const isTiny = useMediaQuery('(max-width:380px)');              //      
 
   // Menu
-  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  // const menuVisible = Boolean(anchorEl);
-  // const handleShowMenu = useCallback(
-  //   (event: React.MouseEvent<HTMLButtonElement>) => {
-  //     setAnchorEl(event.currentTarget);
-  //   },
-  //   []
-  // );
-  // const handleHideMenu = useCallback(() => {
-  //   setAnchorEl(null);
-  // }, []);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const menuVisible = Boolean(anchorEl);
+  const handleShowMenu = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    },
+    []
+  );
+  const handleHideMenu = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
 
   const chain = useChainConstant(CHAIN_INFO);
 
-  const [open, setOpen] = useState(false);
-  const handleShowMenu = useCallback(() => {
-    setOpen(true);
-  }, []);
-  const handleHideMenu = useCallback(() => {
-    setOpen(false);
-  }, []);
+  // Popup
+  // const [open, setOpen] = useState(false);
+  // const handleShowMenu = useCallback(() => {
+  //   setOpen(true);
+  // }, []);
+  // const handleHideMenu = useCallback(() => {
+  //   setOpen(false);
+  // }, []);
 
   // Display: Not Connected
   if (!account?.address || !activeChain?.id) {
@@ -75,7 +76,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         <Button
           variant="contained"
           color="light"
-          onClick={() => setShowDialog(true)}
           {...props}
         >
           Connect<Box component="span" display={{ xs: 'none', md: 'inline' }}>&nbsp;Wallet</Box>
@@ -90,11 +90,12 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   }
 
   const menu = (
-    <MenuList sx={{ minWidth: 250 }}>
+    <MenuList sx={{ minWidth: 250 }} component={Card}>
       <MenuItem
         component={RouterLink}
         to="/balances"
         onClick={handleHideMenu}
+        // onClick={(e) => { console.debug(`clicked nav link button`, e) }}
       >
         <ListItemText>Balances</ListItemText>
       </MenuItem>
@@ -135,22 +136,29 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
 
   return (
     <>
-      <Tooltip    
-        components={{ Tooltip: Card }}
+      {/* <Tooltip    
+        // components={{ Tooltip: Card }}
         title={menu}
         open={open}
         onOpen={handleShowMenu}
         onClose={handleHideMenu}
-        enterTouchDelay={50}
-        leaveTouchDelay={10000}
+        // enterTouchDelay={50}
+        // leaveTouchDelay={10000}
         placement="bottom-end"
-        sx={{ marginTop: 10 }}
+        sx={{
+          marginTop: 10,
+          pointerEvents: 'auto'
+        }}
         componentsProps={{
           popper: {
             sx: {
               paddingTop: 0.5
             }
           }
+        }}
+        PopperProps={{
+          keepMounted: true,
+          disablePortal: true,
         }}
       >
         <Button
@@ -166,13 +174,35 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           )}
           endIcon={<DropdownIcon open={open} />}
           {...props}
+          onClick={(e) => { console.debug(`clicked main button`) }}
         >
           <Typography variant="subtitle1">
             {trimAddress(getAccount(account.address), !isMedium)}
           </Typography>
         </Button>
-      </Tooltip>
-      {/* <Menu
+      </Tooltip> */}
+
+      <Button
+        disableFocusRipple
+        variant="contained"
+        color="light"
+        startIcon={(
+          isTiny
+            ? null
+            : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
+            ? <WarningAmberIcon />
+            : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
+        )}
+        endIcon={<DropdownIcon open={Boolean(anchorEl)} />}
+        {...props}
+        // onClick={(e) => { console.debug(`clicked main button`) }}
+        onClick={handleShowMenu}
+      >
+        <Typography variant="subtitle1">
+          {trimAddress(getAccount(account.address), !isMedium)}
+        </Typography>
+      </Button>
+      <Menu
         elevation={0}
         anchorEl={anchorEl}
         open={menuVisible}
@@ -182,7 +212,8 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         }}
         MenuListProps={{
           sx: {
-            // py: 0
+            py: 0,
+            mt: 0,
           }
         }}
         disablePortal
@@ -200,53 +231,11 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         sx={{
           // Give some room between the WalletButton
           // and the popper when it's opened.
-          mt: 0.5,
+          // mt: 0.5,
         }}
       >
-        <Box sx={{ minWidth: 250 }}>
-          <MenuItem
-            component={RouterLink}
-            to="/balances"
-            onClick={handleHideMenu}
-          >
-            <ListItemText>Balances</ListItemText>
-          </MenuItem>
-          <MenuItem
-            component={RouterLink}
-            to="/history"
-            onClick={handleHideMenu}
-          >
-            <ListItemText>History</ListItemText>
-          </MenuItem>
-          <MenuItem
-            component="a"
-            href={`${CHAIN_INFO[activeChain.id].explorer}/address/${
-              account.address
-            }`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Stack
-              sx={{ width: '100%' }}
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Typography variant="body2" color="text.primary">
-                View on Etherscan
-              </Typography>
-              <ArrowForwardIcon
-                sx={{
-                  transform: 'rotate(-45deg)',
-                  fontSize: '1rem',
-                  color: 'text.secondary',
-                }}
-              />
-            </Stack>
-          </MenuItem>
-          <MenuItem onClick={() => disconnect()}>Disconnect</MenuItem>
-        </Box>
-      </Menu> */}
+        {menu}
+      </Menu>
     </>
   );
 };
