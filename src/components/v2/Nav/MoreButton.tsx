@@ -32,7 +32,7 @@ const MoreButton: React.FC = () => {
           disabled={item.disabled}
           component={item.href ? 'a' : RouterLink}
           key={item.path}
-          href={item.href}
+          href={item.href ? item.href : undefined}
           target={item.href ? '_blank' : undefined}
           rel={item.href ? 'noreferrer' : undefined}
           to={item.href ? undefined : item.path}
