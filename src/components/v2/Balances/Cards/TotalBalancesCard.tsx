@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Alert, AlertTitle, Box, Grid, Stack, Typography } from '@mui/material';
+import { Alert, AlertTitle, Box, Grid, Stack, Typography, Link } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from 'components/v2/Charts/Pie';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
 import useWhitelist from 'hooks/useWhitelist';
@@ -92,13 +92,13 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
         icon={undefined}
       />
       {account && (
-        <Alert severity="warning" sx={{ mt: 2, mb: 1 }}>
+        <Alert severity="warning" sx={{ mt: 2, mb: 1 }}>[]
           <AlertTitle>Note regarding balances</AlertTitle>
           Balances are fixed to their pre-exploit values. USD value of Silo deposits are calculated using a fixed $BEAN
           price of <strong>$1.02027</strong>.<br />
           Due to upgrades to the Beanstalk contract and website infrastructure, pre-exploit balances may be temporarily
           hidden or show incorrect values for some users. Please report issues in <strong>#ui-feedback</strong> and stay
-          tuned for updates in <strong>#ui-updates</strong> on Discord. Upgrades will continue throughout the month of
+          tuned for updates in <strong>#ui-updates</strong> on <Link href="https://discord.gg/beanstalk">Discord</Link>. Upgrades will continue throughout the month of
           June.
         </Alert>
       )}

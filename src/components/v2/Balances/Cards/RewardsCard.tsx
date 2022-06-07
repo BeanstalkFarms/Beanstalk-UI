@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Grid, Stack, Typography } from '@mui/material';
+import { Button, Card, Grid, Stack, Typography, Tooltip } from '@mui/material';
 import seedIcon from 'img/seed-logo.svg';
 import stalkIcon from 'img/stalk-logo.svg';
 import beanCircleIcon from 'img/bean-circle.svg';

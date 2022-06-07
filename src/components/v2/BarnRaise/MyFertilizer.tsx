@@ -171,8 +171,7 @@ const MyFertilizer: React.FC = () => {
                 textAlign="center"
                 sx={{ maxWidth: { md: 400 } }}
               >
-                Purchase Fertilizer using the module above to receive interest
-                at the specified Humidity in the form of future Bean mints.
+                Purchase Fertilizer using the module above.
               </Typography>
             </Stack>
           )}
