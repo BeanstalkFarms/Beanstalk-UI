@@ -4,6 +4,7 @@ import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/ma
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from 'constants/connection';
 import { SupportedChainId } from 'constants/chains';
+import { grey } from '@mui/material/colors';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import { ETH } from '../../../../constants/tokens';
 
@@ -65,6 +66,7 @@ const NetworkDialog: React.FC<{
               sx={{
                 py: 1,
                 minWidth: isMedium ? null : 400,
+                borderColor: grey[300]
               }}
             >
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
