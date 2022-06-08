@@ -14,16 +14,28 @@ const BarnRaisePage: React.FC = () => (
         // <Box component="span" sx={{ display: { md: 'inline', xs: 'none' } }}>: Fertilizing Beanstalk</Box>
         description="Earn yield and recapitalize Beanstalk by purchasing Fertilizer"
         control={(
-          <Button
-            href="https://bean.money/blog/how-to-purchase-fertilizer"
-            target="_blank"
-            rel="noreferrer"
-            color="light"
-            variant="contained"
-            endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
-          >
-            Guide
-          </Button>
+          <Stack direction="row" gap={1}>
+            <Button
+              href="https://dune.com/tbiq/beanstalk-barn-raise"
+              target="_blank"
+              rel="noreferrer"
+              color="light"
+              variant="contained"
+              endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
+            >
+              Analytics
+            </Button>
+            <Button
+              href="https://bean.money/blog/how-to-purchase-fertilizer"
+              target="_blank"
+              rel="noreferrer"
+              color="light"
+              variant="contained"
+              endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
+            >
+              Guide
+            </Button>
+          </Stack>
         )}
       />
       {/* Section 1: Fertilizer Remaining */}
