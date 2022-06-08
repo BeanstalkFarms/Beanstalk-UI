@@ -5,14 +5,20 @@ import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from 'constants/connection';
 import { SupportedChainId } from 'constants/chains';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
+import { ETH } from '../../../../constants/tokens';
+
+const chainImgMap = {
+  Ethereum: ETH[SupportedChainId.MAINNET].logo,
+  Ropsten: ETH[SupportedChainId.ROPSTEN].logo
+};
 
 const NetworkDialog: React.FC<{
   open: boolean;
   handleClose: () => void;
 }> = ({
-  open,
-  handleClose
-}) => {
+        open,
+        handleClose
+      }) => {
   const { activeChain, chains, error, pendingChainId, switchNetwork } = useNetwork({
     onSettled(data, err) {
       if (!err) {
@@ -34,7 +40,6 @@ const NetworkDialog: React.FC<{
     },
     [switchNetwork, handleClose]
   );
-
   // 
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));
@@ -66,11 +71,7 @@ const NetworkDialog: React.FC<{
                 <Typography color="text.primary" sx={{ fontSize: 20 }}>
                   {chain.name}
                 </Typography>
-                {chain.testnet && (
-                  <Typography color="text.secondary">
-                    Testnet
-                  </Typography>
-                )}
+                <img src={chainImgMap[chain.name]} alt="" style={{ height: 35 }} />
               </Stack>
             </Button>
           ))}
