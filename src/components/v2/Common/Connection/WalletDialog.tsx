@@ -12,6 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { CONNECT_WALLET_ERRORS, CONNECTOR_LOGOS } from 'constants/connection';
+import { grey } from '@mui/material/colors';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 // -----------------------------------------------------------------
@@ -48,6 +49,7 @@ const WalletDialog: React.FC<{
               sx={{
                 py: 1,
                 minWidth: fullScreen ? null : 400,
+                borderColor: grey[300]
               }}
             >
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
