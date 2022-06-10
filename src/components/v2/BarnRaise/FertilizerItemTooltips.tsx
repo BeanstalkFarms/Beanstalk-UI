@@ -1,10 +1,10 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Stack, Typography } from '@mui/material';
-import { displayBN } from '../util';
-import TokenIcon from '../components/v2/Common/TokenIcon';
-import { BEAN } from './tokens';
-import { SupportedChainId } from './chains';
+import { displayBN } from '../../../util';
+import TokenIcon from '../Common/TokenIcon';
+import { BEAN } from '../../../constants/tokens';
+import { SupportedChainId } from '../../../constants/chains';
 
 export type FertilizerTooltip = {
   name?: string;

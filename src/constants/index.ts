@@ -46,6 +46,8 @@ export type PoolsByAddress<P = Pool> = AddressMap<P>;
 // -------------------
 // Re-exports
 // -------------------
+// We refrain from re-exporting `tokens.ts` and `pools.ts`
+// to prevent circular dependency errors.
 
 export * from './addresses';
 export * from './blocks';

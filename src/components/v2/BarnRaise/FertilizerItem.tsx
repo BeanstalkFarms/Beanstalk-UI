@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN } from 'util/index';
 import humidityIcon from 'img/beanstalk/humidity-icon.svg';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
-import { FertilizerTooltip } from '../../../constants/FertilizerItemTooltips';
+import { FertilizerTooltip } from './FertilizerItemTooltips';
 
 export type FertilizerData = {
   /**
