@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { zeroBN } from 'constants/index';
+import { ZERO_BN } from 'constants/index';
 
 /**
  * Convert an amount of Beans into USD.
@@ -10,7 +10,7 @@ import { zeroBN } from 'constants/index';
 const useBeansToUSD = () => {
   const price = useSelector<AppState, AppState['_bean']['token']['price']>((state) => state._bean.token.price);
   return useCallback(
-    (bdv: BigNumber) => bdv?.multipliedBy(price) || zeroBN,
+    (bdv: BigNumber) => bdv?.multipliedBy(price) || ZERO_BN,
     [price]
   );
 };

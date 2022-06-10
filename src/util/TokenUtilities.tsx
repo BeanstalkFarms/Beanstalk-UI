@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { SupportedChainId } from 'constants/chains';
-import { zeroBN, TokenOrTokenMap } from 'constants/index';
+import { ZERO_BN, TokenOrTokenMap } from 'constants/index';
 import { bigNumberResult } from './LedgerUtilities';
 
 /** Trim a BigNumber to a set number of decimals. */
@@ -104,7 +104,7 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
 }
 
 export function displayUSD(bn: BigNumber, allowNegative : boolean = false) {
-  const v = allowNegative === false ? MaxBN(zeroBN, bn).abs() : bn;
+  const v = allowNegative === false ? MaxBN(ZERO_BN, bn).abs() : bn;
   return `$${displayFullBN(v, 2, 2)}`;
 }
 

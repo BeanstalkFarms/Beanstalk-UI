@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { AppState } from 'state';
-import { TokensByAddress, zeroBN } from 'constants/index';
+import { TokensByAddress, ZERO_BN } from 'constants/index';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -120,7 +120,7 @@ const TokenSelectDialog : React.FC<{
               color="primary"
               selected={newSelection.has(_token)}
               disablePadding
-              secondaryAction={<Typography>{displayBN(balances ? balances[_token.address] : zeroBN)}</Typography>}
+              secondaryAction={<Typography>{displayBN(balances ? balances[_token.address] : ZERO_BN)}</Typography>}
               onClick={onClickItem(_token)}
             >
               <ListItemButton disableRipple>

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { AddressMap, zeroBN, MAX_UINT256 } from 'constants/index';
+import { AddressMap, ZERO_BN, MAX_UINT256 } from 'constants/index';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { erc20TokenContract } from 'util/contracts';
 import client from 'util/wagmi';
@@ -99,13 +99,13 @@ export default abstract class Token {
   }
 
   public getStalk(bdv?: BigNumber) : BigNumber {
-    if (!this.rewards?.stalk) return zeroBN;
+    if (!this.rewards?.stalk) return ZERO_BN;
     if (!bdv) return new BigNumber(this.rewards.stalk);
     return bdv.times(this.rewards.stalk);
   }
   
   public getSeeds(bdv?: BigNumber) : BigNumber {
-    if (!this.rewards?.seeds) return zeroBN;
+    if (!this.rewards?.seeds) return ZERO_BN;
     if (!bdv) return new BigNumber(this.rewards.seeds);
     return bdv.times(this.rewards.seeds);
   }

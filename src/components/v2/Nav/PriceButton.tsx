@@ -11,7 +11,7 @@ import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
 
 import { AppState } from 'state';
 import usePools from 'hooks/usePools';
-import { zeroBN } from 'constants/index';
+import { ZERO_BN } from 'constants/index';
 import { displayBN } from 'util/TokenUtilities';
 import { CHAIN_INFO } from 'constants/chains';
 import useChainId from 'hooks/useChain';
@@ -167,7 +167,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             <Stack gap={1}>
               <Typography variant="body1" textAlign="left" mx={0.5} mt={1}>
                 {/* <img src={sunriseIcon} alt="Sun" style={{ height: 20 }} /> */}
-                Season {displayBN(season || zeroBN)}
+                Season {displayBN(season || ZERO_BN)}
               </Typography>
               {Pools}
             </Stack>
@@ -183,7 +183,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       >
         <Stack sx={{ p: 2 }} gap={2}>
           <Typography variant="h2">
-            Pools — Season {displayBN(season || zeroBN)}
+            Pools — Season {displayBN(season || ZERO_BN)}
           </Typography>
           <Stack gap={1}>
             {Pools}

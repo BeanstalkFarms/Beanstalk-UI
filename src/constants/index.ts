@@ -7,7 +7,7 @@ import Token from 'classes/Token';
 // --------------
 
 /* Diamonds */
-export const zeroBN = new BigNumber(0);
+export const ZERO_BN = new BigNumber(0);
 export const newBN  = new BigNumber(-1);
 export const MAX_UINT32  = 4294967295;
 export const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';

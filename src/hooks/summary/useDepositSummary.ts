@@ -1,5 +1,5 @@
 import { Token } from 'classes';
-import { zeroBN } from 'constants/index';
+import { ZERO_BN } from 'constants/index';
 import { FormTokenState } from 'components/v2/Common/Form';
 import { Action, ActionType } from 'util/actions';
 
@@ -41,9 +41,9 @@ const useDepositSummary = (to: Token, tokens: FormTokenState[]) => {
     }
     return agg;
   }, {  
-    bdv: zeroBN,    // The aggregate BDV to be Deposited.
-    stalk: zeroBN,  // The Stalk earned for the Deposit.
-    seeds: zeroBN,  // The Seeds earned for the Deposit.
+    bdv: ZERO_BN,    // The aggregate BDV to be Deposited.
+    stalk: ZERO_BN,  // The Stalk earned for the Deposit.
+    seeds: ZERO_BN,  // The Seeds earned for the Deposit.
     actions: [] as Action[],
   });
 

@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { useHumidityFromId } from 'hooks/useHumidity';
 import { AppState } from 'state';
 import FertilizerItem from 'components/v2/BarnRaise/FertilizerItem';
-import { zeroBN } from 'constants/index';
+import { ZERO_BN } from 'constants/index';
 import { SupportedChainId } from 'constants/chains';
 import { BEAN } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -149,10 +149,10 @@ const MyFertilizer: React.FC = () => {
               <Box width={250}>
                 <FertilizerItem
                   state="used"
-                  amount={zeroBN}
-                  humidity={zeroBN}
-                  remaining={zeroBN}
-                  season={zeroBN}
+                  amount={ZERO_BN}
+                  humidity={ZERO_BN}
+                  remaining={ZERO_BN}
+                  season={ZERO_BN}
                   tooltip={MY_FERTILIZER}
                 />
               </Box>

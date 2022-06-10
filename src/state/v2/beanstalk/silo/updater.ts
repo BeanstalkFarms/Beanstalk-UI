@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK, zeroBN } from 'constants/index';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/LedgerUtilities';
 import { tokenResult } from 'util/TokenUtilities';
@@ -54,7 +54,7 @@ export const useBeanstalkSilo = () => {
         stalk: {
           active: activeStalkTotal,
           earned: earnedStalkTotal,
-          grown:  zeroBN,
+          grown:  ZERO_BN,
           total:  activeStalkTotal,
         },
         seeds: {
