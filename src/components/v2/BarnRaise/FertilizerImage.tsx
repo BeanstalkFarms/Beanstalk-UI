@@ -1,9 +1,9 @@
 import { Box, Stack } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import React from 'react';
-import fertUnusedIcon from 'img/icon/fertilizer/unused.svg';
-import fertActiveIcon from 'img/icon/fertilizer/active.svg';
-import fertUsedIcon   from 'img/icon/fertilizer/used.svg';
+import fertUnusedIcon from 'img/tokens/fert-logo-unused.svg';
+import fertActiveIcon from 'img/tokens/fert-logo-active.svg';
+import fertUsedIcon   from 'img/tokens/fert-logo-used.svg';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 import './FertilizerImage.css';

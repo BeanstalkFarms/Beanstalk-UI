@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import { Box } from '@mui/material';
-import BeanLogo from 'img/bean-logo.svg';
+import BeanLogo from 'img/tokens/bean-logo.svg';
 import { theme } from 'constants/index';
 import './index.tsx';
 import {makeStyles} from "@mui/styles";

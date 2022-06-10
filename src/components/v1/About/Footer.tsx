@@ -10,8 +10,8 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 
 //
-import BeanIcon from 'img/bean-logo.svg';
-import CoinGeckoIcon from 'img/coingecko-icon.svg';
+import BeanIcon from 'img/tokens/bean-logo.svg';
+import CoinGeckoIcon from 'img/ecosystem/coingecko-logo.svg';
 import CoinMarketCapIcon from 'img/coinmarketcap-icon.svg';
 import DuneWinterIcon from 'img/dune-icon-winter.svg'; // Icon is 2 colors so manually changed for winter theme
 import DuneIcon from 'img/dune-icon.svg'; // Icon is 2 colors so manually changed for winter theme

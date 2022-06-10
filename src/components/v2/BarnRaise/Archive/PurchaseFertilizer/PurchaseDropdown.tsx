@@ -3,7 +3,7 @@ import { Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import chevronDownIcon from '../../../../img/chevron-down.svg';
 import fertilizerOpenedIcon from '../../../../img/fertilizer-opened.svg';
-import beanCircleIcon from '../../../../img/bean-circle.svg';
+import beanCircleIcon from '../../../../img/tokens/bean-logo-circled.svg';
 import TxnAccordion from './TxnAccordion';
 import { ERC20Token, NativeToken } from '../../../../../classes/Token';
 

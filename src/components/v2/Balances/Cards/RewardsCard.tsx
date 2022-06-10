@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Card, Grid, Stack, Typography } from '@mui/material';
-import seedIcon from 'img/seed-logo.svg';
-import stalkIcon from 'img/stalk-logo.svg';
-import beanCircleIcon from 'img/bean-circle.svg';
+import seedIcon from 'img/beanstalk/seed-icon.svg';
+import stalkIcon from 'img/beanstalk/stalk-icon.svg';
+import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
 import { AppState } from 'state';
 import { displayBN } from 'util/index';
 

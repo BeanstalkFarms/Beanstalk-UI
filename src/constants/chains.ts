@@ -1,4 +1,4 @@
-import ethereumLogoUrl from 'img/eth-logo.svg';
+import ethereumLogoUrl from 'img/tokens/eth-logo.svg';
 
 export enum SupportedChainId {
   MAINNET = 1,

@@ -4,7 +4,8 @@ import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 
-import beanCircleIcon from 'img/bean-circle.svg';
+import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
+
 // import sunIcon from 'img/Sun.svg';
 // import sunriseIcon from 'img/sunrise-icon.svg';
 

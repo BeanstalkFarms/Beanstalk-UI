@@ -13,7 +13,7 @@ import BigNumber from 'bignumber.js';
 
 import { AppState } from 'state';
 import { BEAN, theme, zeroBN } from 'constants/index';
-import BeanLogo from 'img/bean-logo.svg';
+import BeanLogo from 'img/tokens/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
 import { getAPYs, toTokenUnitsBN } from 'util/index';
 import { useStyles } from './NavigationStyles';

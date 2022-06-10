@@ -17,7 +17,7 @@ import BigNumber from 'bignumber.js';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
-import podIcon from 'img/pod-logo.svg';
+import podIcon from 'img/beanstalk/pod-icon.svg';
 import useTheme from '@mui/styles/useTheme';
 import {
   StyledDialogContent,

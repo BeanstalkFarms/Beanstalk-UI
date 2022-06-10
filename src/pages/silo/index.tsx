@@ -8,7 +8,7 @@ import RewardsBar from 'components/v2/Silo/RewardsBar';
 import TokenTable from 'components/v2/Silo/TokenTable';
 import PageHeader from 'components/v2/Common/PageHeader';
 import { SNAPSHOT_LINK } from 'constants/index';
-import snapshotIcon from 'img/snapshot-icon.svg';
+import snapshotIcon from 'img/ecosystem/snapshot-logo.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import useWhitelist from 'hooks/useWhitelist';

@@ -5,7 +5,7 @@ import TokenIcon from 'components/v2/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
 import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN } from 'util/index';
-import humidityIcon from 'img/humidity-icon.svg';
+import humidityIcon from 'img/beanstalk/humidity-icon.svg';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
 import { FertilizerTooltip } from '../../../constants/FertilizerItemTooltips';
 

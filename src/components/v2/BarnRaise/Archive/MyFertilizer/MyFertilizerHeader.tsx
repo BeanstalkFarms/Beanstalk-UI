@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import {Divider, Link, Stack, Typography} from '@mui/material';
-import beanCircleIcon from 'img/bean-circle.svg';
+import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
 
 export interface MyFertilizerHeaderProps {
 

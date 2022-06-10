@@ -1,7 +1,7 @@
 import React from 'react';
 import { AccordionSummary, Stack, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import splitArrowsIcon from '../../../../img/split-arrows.svg';
+import splitArrowsIcon from '../../../../img/interface/split-arrows.svg';
 
 const StyledAccordionSummary : React.FC<{
   title: string | JSX.Element;

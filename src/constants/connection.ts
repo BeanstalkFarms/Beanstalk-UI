@@ -1,6 +1,6 @@
-import metamaskIcon from 'img/wallets/metamask-icon.png';
-import walletConnectIcon from 'img/wallets/walletconnect-icon.svg';
-import coinbaseWalletIcon from 'img/wallets/coinbase-wallet-icon.png';
+import metamaskIcon from 'img/wallets/metamask-logo.png';
+import walletConnectIcon from 'img/wallets/walletconnect-logo.svg';
+import coinbaseWalletIcon from 'img/wallets/coinbase-wallet-logo.png';
 import { Connector } from 'wagmi';
 import { SupportedChainId } from './chains';
 

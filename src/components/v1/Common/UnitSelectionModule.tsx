@@ -1,8 +1,8 @@
 import React from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import BeanEthIcon from 'img/bean-eth-logo.svg';
-import BeanEthSwapIcon from 'img/bean-eth-swap-logo.svg';
+import BeanEthIcon from 'img/tokens/bean-eth-logo.svg';
+import BeanEthSwapIcon from 'img/tokens/bean-eth-swap-logo.svg';
 import { CryptoAsset, SwapMode, TokenImage } from 'util/index';
 import { makeStyles } from '@mui/styles';
 

@@ -5,7 +5,7 @@ import {ScrollMenu, VisibilityContext} from 'react-horizontal-scrolling-menu';
 import {makeStyles} from '@mui/styles';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import beanCircleIcon from 'img/bean-circle.svg';
+import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
 import fertilizerOpenedIcon from 'img/fertilizer-opened.svg';
 import fertilizerClosedIcon from 'img/fertilizer-closed.svg';
 import {ERC20Token, NativeToken} from "../../../../../classes/Token";
