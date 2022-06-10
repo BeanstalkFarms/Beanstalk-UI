@@ -21,7 +21,7 @@ function dismissErrors(id?: any) {
   }
 }
 
-export function ToastAlert({ desc, hash, msg, id }: { desc: string, hash?: string, msg?: string, id?: any }) {
+export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: string, msg?: string, id?: any }) {
   const classes = useStyles();
   const handleClick = useCallback(() => (id !== null ? dismissErrors(id) : dismissErrors()), [id]);
   const chainInfo = useChainConstant(CHAIN_INFO);

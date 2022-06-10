@@ -18,16 +18,16 @@ const mappedTabs = {
 
 const TransactionHistoryPage: React.FC = () => {
   const { data: account } = useAccount();
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState<0 | 1 | 2>(0);
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
   const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>();
 
-  const handleSetTab = (event: React.SyntheticEvent, newValue: number) => setTab(newValue);
+  const handleSetTab = (event: React.SyntheticEvent, newValue: 0 | 1 | 2) => setTab(newValue);
 
   useEffect(() => {
-    function filterEventsByFacet(faucet: string) {
+    function filterEventsByFacet(facet: string) {
       return events.filter((event) => {
-        return event.facet === faucet;
+        return event.facet === facet;
       })
     }
     setWalletEvents(filterEventsByFacet(mappedTabs[tab]));

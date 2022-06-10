@@ -25,5 +25,11 @@
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "src/components/v1",
+    "src/state/v1",
+    "src/constants/v1",
+    "src/constants/generated"
   ]
 }

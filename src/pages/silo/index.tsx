@@ -75,9 +75,9 @@ const SiloPage : React.FC = () => {
             whitelist: Object.values(WHITELIST),
             poolsByAddress: POOLS,
           }}
-          beanPools={beanPools}
           farmerSilo={farmerSilo}
-          beanstalkSilo={beanstalkSilo}
+          // beanPools={beanPools}
+          // beanstalkSilo={beanstalkSilo}
         />
       </Stack>
     </Container>

@@ -156,9 +156,9 @@ const useFarmerEvents = () => {
 
   // Handlers
   const fetch = useCallback(async (_account?: string) => {
-    const account = getAccount(_account);
     try {
-      if (beanstalk && account && blocks) {
+      if (beanstalk && _account && blocks) {
+        const account = getAccount(_account);
         console.debug(`[farmer/events/useFarmerEvents] FETCH: beanstalk = ${beanstalk.address}, farmer = ${account}`, blocks);
         Promise.all(getEvents(beanstalk, account, blocks)).then((results) => {
           const flattened = flatten<ethers.Event>(results);
@@ -192,7 +192,7 @@ const useFarmerEvents = () => {
           dispatch(setEvents(allEvents));
         });
       } else {
-        console.debug('[farmer/events/useFarmerEvents] effect refreshed but vars missing', beanstalk, account, blocks);
+        console.debug('[farmer/events/useFarmerEvents] effect refreshed but vars missing', beanstalk, _account, blocks);
       }
     } catch (e) {
       console.debug('[farmer/events/useFarmerEvents] FAILED', e);

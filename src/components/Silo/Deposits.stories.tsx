@@ -3,9 +3,9 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import BigNumber from 'bignumber.js';
 import Deposits from './Deposits';
-import { Deposit, FarmerSiloBalance, Withdrawal } from '../../../state/farmer/silo';
-import { BEAN_ETH_UNISWAP_V2_LP } from '../../../constants/tokens';
-import { SupportedChainId } from '../../../constants/chains';
+import { Deposit, FarmerSiloBalance, Withdrawal } from '../../state/farmer/silo';
+import { BEAN_ETH_UNIV2_LP } from '../../constants/tokens';
+import { SupportedChainId } from '../../constants/chains';
 
 export default {
   component: Deposits,
@@ -38,18 +38,37 @@ const withdrawal2: Withdrawal = {
   amount: new BigNumber(753460)
 };
 
-const siloToken: FarmerSiloBalance = {
+const siloBalance: FarmerSiloBalance = {
   circulating: new BigNumber(100), // The circulating balance in the Farmer's wallet.
   wrapped: new BigNumber(100), // The Farmer's wrapped balance.
-  deposited: new BigNumber(100), //
-  deposits: [deposit, deposit2],
-  withdrawn: new BigNumber(100),
-  withdrawals: [withdrawal, withdrawal2],
+  deposited: {
+    amount: new BigNumber(100),
+    bdv: new BigNumber(100),
+    crates: [
+      {
+        amount: new BigNumber(100),
+        bdv: new BigNumber(100),
+        season: new BigNumber(6074),
+        stalk: new BigNumber(100),
+        seeds: new BigNumber(200),
+      }
+    ]
+  },
+  withdrawn: {
+    amount: new BigNumber(100),
+    bdv: new BigNumber(100),
+    crates: [
+      {
+        amount: new BigNumber(100),
+        season: new BigNumber(6074),
+      }
+    ]
+  },
   claimable: new BigNumber(100)
 };
 
 const Template: ComponentStory<typeof Deposits> = (args: any) => (
-  <Deposits token={BEAN_ETH_UNISWAP_V2_LP[SupportedChainId.MAINNET]} balance={siloToken} {...args} />
+  <Deposits token={BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]} balance={siloBalance} {...args} />
 );
 
 export const Default = Template.bind({});

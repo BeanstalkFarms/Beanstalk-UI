@@ -30,7 +30,10 @@ export default createReducer(initialState, (builder) =>
     .addCase(resetBeanstalkField, () => initialState)
     .addCase(updateBeanstalkField, (state, { payload }) => {
       Object.keys(payload).forEach((key) => {
-        state[key] = payload[key];
+        const _k = key as keyof BeanstalkField;
+        const _p = payload[_k];
+        // @ts-ignore
+        state[_k] = _p;
       });
     })
     .addCase(updateHarvestableIndex, (state, { payload }) => {

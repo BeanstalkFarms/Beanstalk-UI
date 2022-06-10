@@ -3,7 +3,7 @@ import { BeanPoolState } from '.';
 
 export type UpdatePoolPayload = {
   address: string;
-  pool: Partial<BeanPoolState>;
+  pool: BeanPoolState;
 };
 
 export const updateBeanPool = createAction<UpdatePoolPayload>(

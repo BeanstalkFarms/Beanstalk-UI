@@ -6,7 +6,7 @@ export const resetBeanstalkField = createAction(
   'beanstalk/field/reset'
 );
 
-export const updateBeanstalkField = createAction<Partial<BeanstalkField>>(
+export const updateBeanstalkField = createAction<BeanstalkField>(
   'beanstalk/field/update'
 );
 

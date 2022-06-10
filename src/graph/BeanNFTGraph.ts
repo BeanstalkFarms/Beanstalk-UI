@@ -53,7 +53,7 @@ query winterNFTs($season: String) {
   }
 }`;
 
-export async function queryWinterNFTs(): Promise {
+export async function queryWinterNFTs(): Promise<any> {
   let data = await client.query({
     query: gql(StateQuery),
   });
@@ -66,8 +66,8 @@ export async function queryWinterNFTs(): Promise {
     variables: { season: season },
   });
 
-  const investments = data.data.investments.map((i) => {
-    const investment = {};
+  const investments = data.data.investments.map((i: any) => {
+    const investment : any = {};
     investment.account = i.user.id;
     investment.beans = i.beans;
     investment.type = i.type;
@@ -75,8 +75,8 @@ export async function queryWinterNFTs(): Promise {
     return investment;
   });
 
-  const accounts = data.data.users.map((a) => {
-    const account = {};
+  const accounts = data.data.users.map((a : any) => {
+    const account : any = {};
     account.account = a.id;
     account.investedBeans = a.investedBeans;
     account.nfts = a.earnedNFTs;
@@ -107,7 +107,7 @@ query accounts($account: String) {
   }
 }`;
 
-export async function queryAccountNFTStats(account) {
+export async function queryAccountNFTStats(account: string) {
   const data = await client.query({
     query: gql(AccountQuery),
     variables: { account: account },

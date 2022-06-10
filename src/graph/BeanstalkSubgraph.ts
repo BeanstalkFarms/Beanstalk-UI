@@ -74,11 +74,11 @@ const FarmableMonthTotalQuery = `
   }
 `;
 
-function roundTo4Digits(num) {
+function roundTo4Digits(num: number) {
   return parseFloat(num.toFixed(4));
 }
 
-function querySeasons(first: Number, skip: Number): Promise {
+function querySeasons(first: Number, skip: Number): Promise<any> {
   return client.query({
     query: gql(SeasonQuery),
     variables: { first: first, skip: skip },
@@ -100,7 +100,7 @@ export async function beanstalkQuery() {
     const data = flatMap(results, (d: any) => d.data.seasons);
 
     const seasons = data.map((s) => {
-      const season = {};
+      const season : any = {};
       Object.keys(s).forEach((key) => {
         season[key] = roundTo4Digits(parseFloat(s[key]));
       });

@@ -15,7 +15,6 @@ const poolState: BeanPoolState = {
   reserves: [new BigNumber(100), new BigNumber(100)],
   deltaB: new BigNumber(100000),
   liquidity: new BigNumber(123567),
-  totalCrosses: new BigNumber(100),
   supply: new BigNumber(1234)
 };
 

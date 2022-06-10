@@ -67,6 +67,7 @@ const DepositForm : React.FC<
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
+          {/* @ts-ignore */}
           <FieldArray name="tokens">
             {() => (
               <div>

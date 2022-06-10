@@ -54,11 +54,6 @@ export type BeanPoolState = {
    * The total supply of the Pool's LP token.
    */
   supply: BigNumber;
-  /**
-   * The number of times this Pool has crossed peg.
-   * @deprecated
-   */
-  totalCrosses: BigNumber;
 }
 
 export type BeanPools = { 

@@ -24,6 +24,7 @@ import NavButton from './NavButton';
 import MoreButton from './MoreButton';
 import NavDrawer from './NavDrawer';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
+import BigNumber from 'bignumber.js';
 
 const NavBar: React.FC<{}> = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -95,36 +96,39 @@ const NavBar: React.FC<{}> = () => {
                       </Link>
                     </Typography>
                     <ul>
-                      {Object.keys(elem.pool).map((key) => (
-                        <li key={key}>
-                          <Typography>
-                            <Box
-                              component="span"
-                              sx={{
-                                display: 'inline-block',
-                                width: 100,
-                                textTransform: 'capitalize',
-                              }}
-                            >
-                              {key}:
-                            </Box>
-                            {key === 'price' || key === 'liquidity' ? '$' : ''}
-                            {Array.isArray(elem.pool[key])
-                              ? elem.pool[key]
-                                  .map(
-                                    (e, i) =>
-                                      `${displayFullBN(e)} ${
-                                        pools[elem.address].tokens[i].symbol
-                                      }`
-                                  )
-                                  .join(', ')
-                              : displayFullBN(elem.pool[key])}
-                            {key === 'supply'
-                              ? ` ${pools[elem.address].lpToken.symbol}`
-                              : ''}
-                          </Typography>
-                        </li>
-                      ))}
+                      {Object.keys(elem.pool).map((key) => {
+                        const thisElem = elem.pool[key as keyof typeof elem.pool];
+                        return (
+                          <li key={key}>
+                            <Typography>
+                              <Box
+                                component="span"
+                                sx={{
+                                  display: 'inline-block',
+                                  width: 100,
+                                  textTransform: 'capitalize',
+                                }}
+                              >
+                                {key}:
+                              </Box>
+                              {key === 'price' || key === 'liquidity' ? '$' : ''}
+                              {Array.isArray(thisElem)
+                                ? thisElem
+                                    .map(
+                                      (e: BigNumber, i: number) =>
+                                        `${displayFullBN(e)} ${
+                                          pools[elem.address].tokens[i].symbol
+                                        }`
+                                    )
+                                    .join(', ')
+                                : displayFullBN(thisElem)}
+                              {key === 'supply'
+                                ? ` ${pools[elem.address].lpToken.symbol}`
+                                : ''}
+                            </Typography>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 );

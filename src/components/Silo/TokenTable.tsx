@@ -29,8 +29,8 @@ const TokenTable : React.FC<{
   // beanstalkSilo: AppState['_beanstalk']['silo'];
 }> = ({
   config,
-  // beanPools,
   farmerSilo,
+  // beanPools,
   // beanstalkSilo,
 }) => {
   const chainId = useChainId();

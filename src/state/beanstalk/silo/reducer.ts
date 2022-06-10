@@ -1,27 +1,26 @@
 import { createReducer } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
+import { NEW_BN } from 'constants/index';
 import { BeanstalkSilo } from '.';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 
-const NEG1 = new BigNumber(-1);
-
 const initialState : BeanstalkSilo = {
   beans: {
-    earned: NEG1,
+    total: NEW_BN,
+    earned: NEW_BN,
   },
   stalk: {
-    active: NEG1,
-    earned: NEG1,
-    grown: NEG1,
-    total: NEG1,
+    active: NEW_BN,
+    earned: NEW_BN,
+    grown: NEW_BN,
+    total: NEW_BN,
   },
   seeds: {
-    active: NEG1,
-    earned: NEG1,
-    total: NEG1,
+    active: NEW_BN,
+    earned: NEW_BN,
+    total: NEW_BN,
   },
   roots: {
-    total: NEG1, 
+    total: NEW_BN, 
   }
 };
 
