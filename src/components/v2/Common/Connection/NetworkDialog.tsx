@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
 import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { SWITCH_NETWORK_ERRORS } from 'constants/connection';
+import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
 import { SupportedChainId } from 'constants/chains';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
