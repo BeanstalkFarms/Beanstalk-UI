@@ -44,10 +44,10 @@ export const useBeanstalkField = () => {
 
       console.debug('[beanstalk/field/useBeanstalkField] RESULT');
 
-      const totalPods = podIndex.minus(harvestableIndex);
-      dispatch(updateHarvestableIndex(harvestableIndex));
       dispatch(updateBeanstalkField({
-        pods: totalPods,
+        harvestableIndex,
+        podIndex,
+        totalPods: harvestableIndex.plus(podIndex),
         soil,
         weather,
         rain,

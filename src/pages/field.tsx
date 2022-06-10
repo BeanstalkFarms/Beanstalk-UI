@@ -65,7 +65,7 @@ const FieldPage: React.FC = () => {
   const beanToken = useSelector<AppState, AppState['_bean']['token']>(
     (state) => state._bean.token
   );
-  const podLine = beanstalkField?.pods.minus(beanstalkField.harvestableIndex);
+  const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
 
   // Rows
   const rows = useMemo(
@@ -131,7 +131,7 @@ const FieldPage: React.FC = () => {
                   <Typography variant="h4">Pod Rate</Typography>
                   <Typography variant="h1">
                     {displayBN(
-                      beanstalkField?.pods.div(beanToken?.supply).times(100)
+                      beanstalkField?.podIndex.div(beanToken?.supply).times(100)
                     )}
                     %
                   </Typography>

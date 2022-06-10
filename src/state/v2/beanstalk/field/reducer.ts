@@ -5,7 +5,8 @@ import { resetBeanstalkField, updateBeanstalkField, updateHarvestableIndex } fro
 
 const initialState : BeanstalkField = {
   harvestableIndex: new BigNumber(-1),
-  pods: new BigNumber(-1),
+  podIndex: new BigNumber(-1),
+  totalPods: new BigNumber(-1),
   soil: new BigNumber(-1),
   weather: {
     didSowBelowMin: false,
