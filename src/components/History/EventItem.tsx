@@ -3,10 +3,10 @@ import { Divider, Link, Stack, Tooltip, Typography } from '@mui/material';
 import { ParsedEvent } from 'state/farmer/events/updater';
 import { displayBN, toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
-import { PodListingFilledEvent, PodOrderFilledEvent } from 'state/v1/marketplace/updater';
 import Token from 'classes/Token';
 import { BEAN, BEAN_ETH_UNIV2_LP, ETH, PODS } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
+import { PodListingFilledEventObject, PodOrderFilledEventObject } from 'constants/generated/Beanstalk/Beanstalk';
 import TokenIcon from '../Common/TokenIcon';
 
 export interface EventItemProps {
@@ -291,7 +291,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
     // do efficiently in the frontend so it should be likely be
     // moved to the subgraph.
     case 'PodOrderFilled': {
-      const values = (event.returnValues as PodOrderFilledEvent);
+      const values = (event.returnValues as PodOrderFilledEventObject);
       // const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
       if (values.to.toLowerCase() === account) {
         // My Pod Order was "Filled".
@@ -305,7 +305,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
       break;
     }
     case 'PodListingFilled': {
-      const values = (event.returnValues as PodListingFilledEvent);
+      const values = (event.returnValues as PodListingFilledEventObject);
       // const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
       if (values.to.toLowerCase() === account) {
         // I "Filled" a Pod Listing (I spent Beans to buy someone's Pods)

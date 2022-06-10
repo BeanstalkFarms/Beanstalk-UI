@@ -16,6 +16,7 @@ import useChainId from 'hooks/useChain';
 import { PRE_EXPLOIT_BEAN_DATA } from 'state/bean/pools/updater';
 import { displayFullBN, trimAddress } from 'util/index';
 import usePools from 'hooks/usePools';
+import BigNumber from 'bignumber.js';
 import WalletButton from '../Common/Connection/WalletButton';
 import NetworkButton from '../Common/Connection/NetworkButton';
 import PriceButton from './PriceButton';
@@ -24,7 +25,6 @@ import NavButton from './NavButton';
 import MoreButton from './MoreButton';
 import NavDrawer from './NavDrawer';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
-import BigNumber from 'bignumber.js';
 
 const NavBar: React.FC<{}> = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);

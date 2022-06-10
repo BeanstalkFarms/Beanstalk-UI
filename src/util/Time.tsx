@@ -1,4 +1,4 @@
-export const sleep = (ms: number = 1000) => new Promise((r) => setTimeout(() => { r(); }, ms));
+export const sleep = (ms: number = 1000) => new Promise<void>((r) => setTimeout(() => { r(); }, ms));
 
 export function timeToString(timeDifference: number) {
   const timeInDays = Math.floor(timeDifference / 86400);

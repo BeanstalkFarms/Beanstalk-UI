@@ -20,9 +20,9 @@ type DrilldownValues = keyof TotalBalanceCardProps['breakdown'];
 const STATE_CONFIG: { [name in DrilldownValues as Exclude<name, 'totalValue'>]: [name: string, color: string] } = {
   deposited: ['Deposited', 'rgba(70, 185, 85, 1)'],
   withdrawn: ['Withdrawn', 'rgba(31, 120, 180, 0.3)'],
-  'claimable':    ['Claimable',   'rgba(178, 223, 138, 0.3)'],
-  'circulating':  ['Circulating', 'rgba(25, 135, 59, 1)'],
-  'wrapped':      ['Wrapped',     'rgba(25, 135, 59, 0.5)'],
+  claimable:    ['Claimable',   'rgba(178, 223, 138, 0.3)'],
+  circulating:  ['Circulating', 'rgba(25, 135, 59, 1)'],
+  wrapped:      ['Wrapped',     'rgba(25, 135, 59, 0.5)'],
 };
 
 type StateID = keyof typeof STATE_CONFIG;

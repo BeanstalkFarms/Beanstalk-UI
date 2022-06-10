@@ -11,9 +11,10 @@ import { SEEDS, STALK } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
-import { displayBN } from 'util/v1/TokenUtilitiesOld';
+import { displayBN } from 'util/Tokens';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useTVL from 'hooks/useTVL';
+import { AddressMap } from 'constants/index';
 
 const arrowContainerWidth = 20;
 
@@ -22,10 +23,10 @@ const TokenTable : React.FC<{
     /** Array of Whitelisted tokens in the Silo. */
     whitelist: Token[];
     /** */
-    poolsByAddress: { [address: string] : Pool };
+    poolsByAddress: AddressMap<Pool>;
   };
-  // beanPools:  AppState['_bean']['pools'];
   farmerSilo: AppState['_farmer']['silo'];
+  // beanPools:  AppState['_bean']['pools'];
   // beanstalkSilo: AppState['_beanstalk']['silo'];
 }> = ({
   config,

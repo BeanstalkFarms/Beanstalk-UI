@@ -16,7 +16,7 @@ export function trimAddress(address: string, showSuffix : boolean = true) {
 }
 
 const ordinalRulesEN = new Intl.PluralRules('en', { type: 'ordinal' });
-const suffixes = {
+const suffixes : { [k: string] : string } = {
   one: 'st',
   two: 'nd',
   few: 'rd',

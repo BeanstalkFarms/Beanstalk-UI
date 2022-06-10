@@ -41,5 +41,5 @@ Primary.args = {};
 export const Outlined = Template.bind({});
 Outlined.args = {
   variant: 'outlined',
-  wrapped: false,
+  // wrapped: false,
 };

@@ -26,7 +26,7 @@ import { useFetchFarmerFertilizer } from 'state/farmer/fertilizer/updater';
 import { useAccount, useSigner } from 'wagmi';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { useFetchFarmerAllowances } from 'state/farmer/allowances/updater';
-import { timeToStringDetailed } from 'util/v1/TimeUtilities';
+import { timeToStringDetailed } from 'util/Time';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import { BUY_FERTILIZER } from 'components/BarnRaise/FertilizerItemTooltips';

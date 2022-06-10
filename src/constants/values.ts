@@ -1,5 +1,3 @@
-import BigNumber from 'bignumber.js';
-
 /* Governance */
 export const BASE_COMMIT_INCENTIVE = 1e8; /* 100 beans */
 export const GOVERNANCE_PERIOD = 168; /* 168 seasons */

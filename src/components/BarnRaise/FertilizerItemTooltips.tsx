@@ -2,9 +2,9 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Stack, Typography } from '@mui/material';
 import { displayBN } from 'util/index';
-import TokenIcon from '../Common/TokenIcon';
 import { BEAN } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
+import TokenIcon from '../Common/TokenIcon';
 
 export type FertilizerTooltip = {
   name?: string;

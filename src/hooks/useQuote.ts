@@ -3,7 +3,7 @@ import Token from 'classes/Token';
 import { useCallback, useEffect, useState } from 'react';
 import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
-import { sleep } from 'util/v1/TimeUtilities';
+import { sleep } from 'util/Time';
 import { ETH_DECIMALS } from 'constants/tokens';
 import { bigNumberResult } from 'util/Ledger';
 import toast from 'react-hot-toast';

@@ -52,19 +52,34 @@ export type Action = (
   | FertilizerRewardsAction
 );
 
-const ACTION_MESSAGES = {
-  [ActionType.SWAP]: (a: SwapAction) => 
-    `Swap ${displayTokenAmount(a.amountIn, a.tokenIn)} for ${displayTokenAmount(a.amountOut, a.tokenOut)}.`,
-  [ActionType.DEPOSIT]: (a: SiloDepositAction) =>
-    `Deposit ${displayTokenAmount(a.amountIn, a.tokenIn)} into the Silo.`,
-  [ActionType.RECEIVE_SILO_REWARDS]: (a: SiloRewardsAction) =>
-    `Receive ${displayFullBN(a.stalk, 2)} Stalk and ${displayFullBN(a.seeds, 2)} Seeds.`,
-  [ActionType.BUY_FERTILIZER]: (a: FertilizerBuyAction) =>
-    `Purchase ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`,
-  [ActionType.RECEIVE_FERT_REWARDS]: (a: FertilizerRewardsAction) =>
-    `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are recouped.`
-};
+// export const ACTION_MESSAGES = {
+//   [ActionType.SWAP]: (a: SwapAction) => 
+//     `Swap ${displayTokenAmount(a.amountIn, a.tokenIn)} for ${displayTokenAmount(a.amountOut, a.tokenOut)}.`,
+//   [ActionType.DEPOSIT]: (a: SiloDepositAction) =>
+//     `Deposit ${displayTokenAmount(a.amountIn, a.tokenIn)} into the Silo.`,
+//   [ActionType.RECEIVE_SILO_REWARDS]: (a: SiloRewardsAction) =>
+//     `Receive ${displayFullBN(a.stalk, 2)} Stalk and ${displayFullBN(a.seeds, 2)} Seeds.`,
+//   [ActionType.BUY_FERTILIZER]: (a: FertilizerBuyAction) =>
+//     `Purchase ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`,
+//   [ActionType.RECEIVE_FERT_REWARDS]: (a: FertilizerRewardsAction) =>
+//     `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are recouped.`
+// };
 
 // -----------------------------------------------------------------------
 
-export const parseActionMessage = (i: Action) => ACTION_MESSAGES[i.type as keyof typeof ACTION_MESSAGES](i);
+export const parseActionMessage = (a: Action) => {
+  switch (a.type) {
+    case ActionType.SWAP:
+      return `Swap ${displayTokenAmount(a.amountIn, a.tokenIn)} for ${displayTokenAmount(a.amountOut, a.tokenOut)}.`;
+    case ActionType.DEPOSIT:
+      return `Deposit ${displayTokenAmount(a.amountIn, a.tokenIn)} into the Silo.`;
+    case ActionType.RECEIVE_SILO_REWARDS:
+      return `Receive ${displayFullBN(a.stalk, 2)} Stalk and ${displayFullBN(a.seeds, 2)} Seeds.`;
+    case ActionType.BUY_FERTILIZER:
+      return `Purchase ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`;
+    case ActionType.RECEIVE_FERT_REWARDS:
+      return `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are recouped.`;
+    default: 
+      return 'Unknown action';
+  }
+};

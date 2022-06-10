@@ -2,8 +2,8 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { ChainConstant } from 'constants/index';
 import { AppState } from 'state';
-import useGetChainToken from './useGetChainToken';
 import Token from 'classes/Token';
+import useGetChainToken from './useGetChainToken';
 
 export type PreferredToken = {
   token: Token | ChainConstant<Token>;
