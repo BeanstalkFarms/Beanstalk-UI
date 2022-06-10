@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
+import { AddressMap } from 'constants/index';
 import useSiloTokenToUSD from './currency/useSiloTokenToUSD';
 import useWhitelist from './useWhitelist';
 
@@ -17,9 +18,7 @@ export type SiloStateBreakdown = {
   /** 
    * The 
    */
-  valueByToken: {
-    [address: string] : BigNumber;
-  } 
+  valueByToken: AddressMap<BigNumber>;
 }
 
 const initState = (tokenAddresses: string[]) => ({
@@ -49,19 +48,18 @@ const initState = (tokenAddresses: string[]) => ({
  * First we break things down by state, then by type of token.
  */
 export default function useFarmerSiloBreakdown() {
-  /**  */
-  const balances = useSelector<AppState, AppState['_farmer']['silo']['tokens']>((state) => state._farmer.silo.tokens);
-  /** All tokenAddresses currently available in balances */
-  const getUSD = useSiloTokenToUSD();
-  
-  const whitelist = useWhitelist();
-  const tokenAddresses = useMemo(() => Object.keys(whitelist), [whitelist]);
+  // Constants
+  const WHITELIST = useWhitelist();
+  const WHITELIST_ADDRS = useMemo(() => Object.keys(WHITELIST), [WHITELIST]);
 
   //
+  const balances = useSelector<AppState, AppState['_farmer']['silo']['tokens']>((state) => state._farmer.silo.tokens);
+  const getUSD = useSiloTokenToUSD();
+
   return useMemo(() => {
     console.debug('[useFarmerSiloBalances] running reducer');
-    return tokenAddresses.reduce((prev, address) => {
-      const token       = whitelist[address];
+    return WHITELIST_ADDRS.reduce((prev, address) => {
+      const TOKEN       = WHITELIST[address];
       const siloBalance = balances[address];
 
       // Ensure we've loaded a Silo Balance for this token.
@@ -70,11 +68,9 @@ export default function useFarmerSiloBreakdown() {
           _depositedUsd,
           _withdrawnUsd,
         ] = [
-          getUSD(token, siloBalance.deposited?.amount),
-          getUSD(token, siloBalance.withdrawn?.amount)
+          getUSD(TOKEN, siloBalance.deposited?.amount),
+          getUSD(TOKEN, siloBalance.withdrawn?.amount)
         ];
-
-        // console.debug('[useFarmerSiloBalances] running reducer:', token, _depositedUsd, _withdrawnUsd);
 
         prev.totalValue = (
           prev.totalValue
@@ -94,13 +90,17 @@ export default function useFarmerSiloBreakdown() {
     }, {
       /** The total USD value of all tokens in the Silo. */
       totalValue:   new BigNumber(0),
-      circulating:  initState(tokenAddresses),
-      deposited:    initState(tokenAddresses),
-      claimable:    initState(tokenAddresses),
-      wrapped:      initState(tokenAddresses),
-      withdrawn:    initState(tokenAddresses),
+      circulating:  initState(WHITELIST_ADDRS),
+      deposited:    initState(WHITELIST_ADDRS),
+      claimable:    initState(WHITELIST_ADDRS),
+      wrapped:      initState(WHITELIST_ADDRS),
+      withdrawn:    initState(WHITELIST_ADDRS),
     });
   },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  [tokenAddresses, balances]);
+  [
+    WHITELIST,
+    WHITELIST_ADDRS,
+    balances,
+    getUSD,
+  ]);
 }

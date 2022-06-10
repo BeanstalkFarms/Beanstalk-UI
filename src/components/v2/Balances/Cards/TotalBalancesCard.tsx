@@ -35,47 +35,46 @@ const TokenRow: React.FC<{
   onMouseOver?: () => void;
   onMouseOut?: () => void;
 }> = ({
-        name,
-        value,
-        isFaded,
-        onMouseOver,
-        onMouseOut
-      }) => (
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          sx={{
+  name,
+  value,
+  isFaded,
+  onMouseOver,
+  onMouseOut
+}) => (
+  <Stack
+    direction="row"
+    justifyContent="space-between"
+    sx={{
       cursor: 'pointer',
       py: 0.5,
       opacity: isFaded ? 0.3 : 1,
     }}
-          onMouseOver={onMouseOver}
-          onFocus={onMouseOver}
-          onMouseOut={onMouseOut}
-          onBlur={onMouseOut}
+    onMouseOver={onMouseOver}
+    onFocus={onMouseOver}
+    onMouseOut={onMouseOut}
+    onBlur={onMouseOut}
   >
-          <Typography color="text.secondary">
-            {name}
-          </Typography>
-          <Typography>
-            {value}
-          </Typography>
-        </Stack>
+    <Typography color="text.secondary">
+      {name}
+    </Typography>
+    <Typography>
+      {value}
+    </Typography>
+  </Stack>
 );
 
 const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
+  const WHITELIST = useWhitelist();
   const { data: account } = useAccount();
-  /** Convert Bean value to USD.  */
-  // const getUSD  = useBeansToUSD();
-  /** Get Whitelisted Silo Tokens */
-  const whitelist = useWhitelist();
-  /** Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.) */
+  
+  // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
   const [drilldown, setDrilldown] = useState<StateID | null>(null);
 
   // Drilldown handlers
   const onMouseOut = useCallback(() => setDrilldown(null), []);
   const onMouseOver = useCallback((v: StateID) => () => setDrilldown(v), []);
 
+  // Compile Pie chart data
   const pieChartData = useMemo(() => STATE_IDS.map((id: StateID) => ({
     label: STATE_CONFIG[id][0],
     value: breakdown[id].value.toNumber(),
@@ -141,10 +140,10 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
               <Stack gap={1}>
                 <Typography variant="h2">{STATE_CONFIG[drilldown][0]} Tokens</Typography>
                 <Box>
-                  {Object.keys(whitelist).map((address) => (
+                  {Object.keys(WHITELIST).map((address) => (
                     <TokenRow
                       key={address}
-                      name={`${whitelist[address].name}`}
+                      name={`${WHITELIST[address].name}`}
                       value={displayUSD(breakdown[drilldown].valueByToken[address])}
                       onMouseOver={onMouseOver('deposited')}
                       isFaded={false}
@@ -155,7 +154,6 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
             )}
           </Grid>
         </Grid>
-
       </Box>
     </Box>
   );

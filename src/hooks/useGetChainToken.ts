@@ -13,12 +13,9 @@ import { useGetChainConstant } from './useChainConstant';
 export default function useGetChainToken() {
   const getChainConstant = useGetChainConstant();
   return useCallback(
-    // I find the function expression much easier to parse here,
-    // so going to break our usual preference for arrow functions. -SC
-    // eslint-disable-next-line prefer-arrow-callback
-    function getChainToken(t: Token | ChainConstant<Token>) {
-      return t instanceof Token ? t : getChainConstant(t);
-    },
+    (t: Token | ChainConstant<Token>) : Token => (
+      (t instanceof Token) ? t : getChainConstant(t as ChainConstant<Token>)
+    ),
     [getChainConstant]
   );
 }

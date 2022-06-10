@@ -22,9 +22,9 @@ type FallbackMode = 'use-best';
  * 
  * `list` should be ordered according to preference.
  * 
- * @param list An ordered list of tokens to select from.
- * @param fallbackMode What to do if no tokens meet the minimum.
- *    `use-best` Default to the first token in the list.
+ * @param list An ordered list of Token to select from.
+ * @param fallbackMode What to do if no Token meets the minimum amount requested.
+ *    `use-best` Default to the first Token in the list.
  * @returns 
  */
 export default function usePreferredToken(
@@ -37,7 +37,6 @@ export default function usePreferredToken(
     const tok = get(pt.token);
     const min = pt.minimum || new BigNumber(tok.displayDecimals * 100);
     const bal = balances[tok.address];
-    // console.debug(`[usePreferredToken] ${tok.symbol} ${tok.address} ${min.toString()} ${bal.toString()}`);
     return bal?.gte(min) || false;
   });
   console.debug(`[hooks/usePreferredToken] found a preferred token: ${index}`);
