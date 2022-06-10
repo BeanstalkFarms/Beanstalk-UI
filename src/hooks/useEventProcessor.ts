@@ -733,7 +733,7 @@ function _processFarmerEvents(
 // Hooks
 // ------------------------------------
 
-const useEventProcessor = () => {
+export default function useEventProcessor() {
   const getChainConstant = useGetChainConstant();
   const Tokens = useMemo<EventParsingTokens>(() => ({
     // FIXME: cast these to the correct types
@@ -749,6 +749,4 @@ const useEventProcessor = () => {
       _processFarmerEvents(events, params, Tokens),
     [Tokens],
   );
-};
-
-export default useEventProcessor;
+}

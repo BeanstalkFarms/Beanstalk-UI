@@ -9,13 +9,13 @@ import { useAccount } from 'wagmi';
 
 // ----------------------------------------
 
-export const useAllowances = (
+export default function useAllowances(
   contract: string | undefined,
   tokens: Token[],
   config: { loadIfAbsent: boolean } = {
     loadIfAbsent: true
   }
-) => {
+) {
   const allowances = useSelector<AppState, AppState['_farmer']['allowances']>((state) => state._farmer.allowances);
   const { data: account } = useAccount();
   const [fetchAllowances] = useFetchFarmerAllowances();
@@ -71,16 +71,4 @@ export const useAllowances = (
   }, [fetchAllowances, account?.address, tokens, contract]);
 
   return [currentAllowances, refetch] as const;
-};
-
-// ----------------------------------------
-
-// const useAllowance = (contract: string, token: Token) => {
-//   const allowances = useSelector<AppState, AppState['_farmer']['allowances']>((state) => state._farmer.allowances);
-//   if (token instanceof NativeToken) return new BigNumber(MAX_UINT256);
-//   return allowances[contract]
-//     ? (allowances[contract][token.address] || null)
-//     : null;
-// };
-
-// export default useAllowance;
+}

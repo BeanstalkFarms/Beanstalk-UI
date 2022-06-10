@@ -8,12 +8,10 @@ import { useNetwork } from 'wagmi';
  * 
  * @returns SupportedChainId
  */
-const useChainId = () => {
+export default function useChainId() {
   const { activeChain } = useNetwork();
   return useMemo(
     () => activeChain?.id || SupportedChainId.MAINNET,
     [activeChain?.id]
   );
-};
-
-export default useChainId;
+}

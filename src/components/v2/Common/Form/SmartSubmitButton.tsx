@@ -6,7 +6,7 @@ import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
 import { MAX_UINT256 } from 'constants/index';
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains';
-import { useAllowances } from 'hooks/useAllowance';
+import useAllowances from 'hooks/useAllowances';
 import { BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES } from 'constants/addresses';
 import useChainConstant from 'hooks/useChainConstant';
 import { useGetERC20Contract } from 'hooks/useContract';

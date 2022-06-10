@@ -7,7 +7,7 @@ import { DataGrid, GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 import { FarmerSiloBalance } from 'state/v2/farmer/silo';
 import type { Deposit } from 'state/v2/farmer/silo';
 import { displayBN, displayFullBN } from 'util/index';
-import useBeansToUSD from 'hooks/useBeansToUSD';
+import useBeansToUSD from 'hooks/currency/useBeansToUSD';
 import { tableStyle } from '../../../util/tableStyle';
 
 const MAX_ROWS = 10;

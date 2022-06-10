@@ -13,7 +13,9 @@ import { Action, ActionType } from 'util/actions';
  * @param to A whitelisted Silo Token which the Farmer is depositing to.
  * @param tokens Token form state.
  */
-const useFertilizerSummary = (tokens: FormTokenState[]) => {
+export default function useFertilizerSummary(
+  tokens: FormTokenState[]
+) {
   const Usdc = useChainConstant(USDC);
   const [humidity] = useHumidity();
   const summary = tokens.reduce((agg, curr) => {
@@ -56,6 +58,4 @@ const useFertilizerSummary = (tokens: FormTokenState[]) => {
   });
 
   return summary;
-};
-
-export default useFertilizerSummary;
+}

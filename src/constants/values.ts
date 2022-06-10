@@ -66,7 +66,6 @@ export const SLIPPAGE_THRESHOLD = 0.97; /* 3% slippage threshold for frontrunnin
 export const LP_FEE = 0.003; /* 0.3% LP fee */
 export const MIN_BALANCE = 0.05; /* 0.05 minimum eth withtheld to transact */
 
-
 export const UNISWAP_V2_ROUTER = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
 
 /* NFTs */

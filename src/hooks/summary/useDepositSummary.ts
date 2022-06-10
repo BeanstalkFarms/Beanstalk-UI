@@ -11,7 +11,10 @@ import { Action, ActionType } from 'util/actions';
  * @param to A whitelisted Silo Token which the Farmer is depositing to.
  * @param tokens Token form state.
  */
-const useDepositSummary = (to: Token, tokens: FormTokenState[]) => {
+export default function useDepositSummary(
+  to: Token,
+  tokens: FormTokenState[]
+) {
   const summary = tokens.reduce((agg, curr) => {
     const amount = (
       curr.token === to
@@ -62,6 +65,4 @@ const useDepositSummary = (to: Token, tokens: FormTokenState[]) => {
   });
 
   return summary;
-};
-
-export default useDepositSummary;
+}

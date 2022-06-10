@@ -1,13 +1,13 @@
-import Token from 'classes/Token';
-import { ZERO_BN } from 'constants/index';
-import { BEAN } from 'constants/tokens';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useBeansToUSD from './useBeansToUSD';
+import Token from 'classes/Token';
+import { ZERO_BN } from 'constants/index';
+import { BEAN } from 'constants/tokens';
+import useBeansToUSD from './currency/useBeansToUSD';
 import useChainConstant from './useChainConstant';
 
-export const useTVL = () => {
+export default function useTVL() {
   const beansToUSD = useBeansToUSD();
   const Bean = useChainConstant(BEAN);
   const siloedBeans = useSelector<AppState, AppState['_beanstalk']['silo']['beans']['total']>((state) => state._beanstalk.silo.beans.total);
@@ -26,4 +26,4 @@ export const useTVL = () => {
     Bean,
     beansToUSD
   ]);
-};
+}

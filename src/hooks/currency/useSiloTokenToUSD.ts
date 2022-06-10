@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useBeansToUSD from './useBeansToUSD';
-import useChainConstant from './useChainConstant';
+import useChainConstant from '../useChainConstant';
 
 const useSiloTokenToUSD = () => {
   const beansToUSD = useBeansToUSD();

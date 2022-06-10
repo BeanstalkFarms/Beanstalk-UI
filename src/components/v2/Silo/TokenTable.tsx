@@ -12,8 +12,8 @@ import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
 import { displayBN } from 'util/v1/TokenUtilitiesOld';
-import useSiloTokenToUSD from 'hooks/useSiloTokenToUSD';
-import { useTVL } from 'hooks/useTVL';
+import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
+import useTVL from 'hooks/useTVL';
 
 const arrowContainerWidth = 20;
 

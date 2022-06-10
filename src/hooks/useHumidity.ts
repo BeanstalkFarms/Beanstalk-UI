@@ -56,10 +56,8 @@ export const useHumidityFromId = () => useCallback(() => [INITIAL_HUMIDITY, HUMI
 
 // ----------------------------------------
 
-const useHumidity = () => {
+export default function useHumidity() {
   const season = useSelector<AppState, AppState['_beanstalk']['sun']['season']>((state) => state._beanstalk.sun.season);
   const humidityAt = useHumidityAtSeason();
   return humidityAt(season);
-};
-
-export default useHumidity;
+}

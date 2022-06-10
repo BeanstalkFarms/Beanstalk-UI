@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
-import { TokenOrTokenMap } from 'constants/index';
 import { useSelector } from 'react-redux';
+import { TokenOrTokenMap } from 'constants/index';
 import { AppState } from 'state';
 import useGetChainToken from './useGetChainToken';
 
@@ -26,7 +26,10 @@ type FallbackMode = 'use-best';
  *    `use-best` Default to the first token in the list.
  * @returns 
  */
-const usePreferredToken = (list: PreferredToken[], fallbackMode : FallbackMode = 'use-best') => {
+export default function usePreferredToken(
+  list: PreferredToken[],
+  fallbackMode : FallbackMode = 'use-best'
+) {
   const get = useGetChainToken();
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const index = list.findIndex((pt) => {
@@ -43,6 +46,4 @@ const usePreferredToken = (list: PreferredToken[], fallbackMode : FallbackMode =
     case 'use-best':
       return get(list[0].token);
   }
-};
-
-export default usePreferredToken;
+}

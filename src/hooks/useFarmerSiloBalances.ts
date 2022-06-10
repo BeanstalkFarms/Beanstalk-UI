@@ -2,8 +2,12 @@ import { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useSiloTokenToUSD from './useSiloTokenToUSD';
+import useSiloTokenToUSD from './currency/useSiloTokenToUSD';
 import useWhitelist from './useWhitelist';
+
+// -----------------
+// Types and Helpers
+// -----------------
 
 export type SiloStateBreakdown = {
   /**
@@ -29,6 +33,10 @@ const initState = (tokenAddresses: string[]) => ({
   ),
 } as SiloStateBreakdown);
 
+// -----------------
+// Hooks
+// -----------------
+
 /**
  * Breakdown the state of Silo Tokens.
  * 
@@ -40,7 +48,7 @@ const initState = (tokenAddresses: string[]) => ({
  * 
  * First we break things down by state, then by type of token.
  */
-const useFarmerSiloBreakdown = () => {
+export default function useFarmerSiloBreakdown() {
   /**  */
   const balances = useSelector<AppState, AppState['_farmer']['silo']['tokens']>((state) => state._farmer.silo.tokens);
   /** All tokenAddresses currently available in balances */
@@ -95,6 +103,4 @@ const useFarmerSiloBreakdown = () => {
   },
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [tokenAddresses, balances]);
-};
-
-export default useFarmerSiloBreakdown;
+}

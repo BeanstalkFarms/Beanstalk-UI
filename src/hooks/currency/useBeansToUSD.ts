@@ -6,6 +6,7 @@ import { ZERO_BN } from 'constants/index';
 
 /**
  * Convert an amount of Beans into USD.
+ * Uses the aggregate Bean price.
  */
 const useBeansToUSD = () => {
   const price = useSelector<AppState, AppState['_bean']['token']['price']>((state) => state._bean.token.price);
