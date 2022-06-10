@@ -3,7 +3,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import BigNumber from 'bignumber.js';
 import Deposits from './Deposits';
-import { Deposit, FarmerSiloBalance, Withdrawal } from '../../../state/v2/farmer/silo';
+import { Deposit, FarmerSiloBalance, Withdrawal } from '../../../state/farmer/silo';
 import { BEAN_ETH_UNISWAP_V2_LP } from '../../../constants/tokens';
 import { SupportedChainId } from '../../../constants/chains';
 

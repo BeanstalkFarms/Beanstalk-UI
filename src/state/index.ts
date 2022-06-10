@@ -1,8 +1,8 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
-import _bean from './v2/bean/reducer';
-import _beanstalk from './v2/beanstalk/reducer';
-import _farmer from './v2/farmer/reducer';
+import _bean from './bean/reducer';
+import _beanstalk from './/beanstalk/reducer';
+import _farmer from './/farmer/reducer';
 
 const store = configureStore({
   reducer: {

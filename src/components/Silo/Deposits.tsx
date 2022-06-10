@@ -4,8 +4,8 @@ import BigNumber from 'bignumber.js';
 import { Box, Card, Stack, Tooltip, Typography } from '@mui/material';
 import { DataGrid, GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 
-import { FarmerSiloBalance } from 'state/v2/farmer/silo';
-import type { Deposit } from 'state/v2/farmer/silo';
+import { FarmerSiloBalance } from 'state/farmer/silo';
+import type { Deposit } from 'state/farmer/silo';
 import { displayBN, displayFullBN } from 'util/index';
 import useBeansToUSD from 'hooks/currency/useBeansToUSD';
 import { tableStyle } from 'util/tableStyle';

@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
+import { useAccount, useConnect, useNetwork, useProvider } from 'wagmi';
 import { useWhatChanged } from '@simbathesailor/use-what-changed';
 import useChainId from 'hooks/useChain';
-import { useAccount, useConnect, useNetwork, useProvider } from 'wagmi';
 import { useGetPools } from './bean/pools/updater';
 
 // -- Updater

@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import BigNumber from 'bignumber.js';
 import { BEAN_ETH_UNIV2_POOL_MAINNET } from 'constants/pools';
-import { BeanPoolState } from 'state/v2/bean/pools';
+import { BeanPoolState } from 'state/bean/pools';
 import PoolCard from './PoolCard';
 
 export default {

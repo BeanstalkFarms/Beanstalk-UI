@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 
-import { ParsedEvent } from 'state/v2/farmer/events/updater';
-import { PlotMap, SeasonMap } from 'state/v2/farmer/field';
+import { ParsedEvent } from 'state/farmer/events/updater';
+import { PlotMap, SeasonMap } from 'state/farmer/field';
 import { toTokenUnitsBN } from 'util/TokenUtilities';
 import {
   BEAN,

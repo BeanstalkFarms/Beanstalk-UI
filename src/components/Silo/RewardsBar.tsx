@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Card, Divider, Stack, Tooltip, Typography } from '@mui/material';
-import { FarmerSiloRewards } from 'state/v2/farmer/silo';
+import { FarmerSiloRewards } from 'state/farmer/silo';
 import { displayBN } from 'util/index';
 import { SupportedChainId } from 'constants/chains';
 import DropdownIcon from '../Common/DropdownIcon';

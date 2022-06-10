@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider, Link, Stack, Tooltip, Typography } from '@mui/material';
-import { ParsedEvent } from 'state/v2/farmer/events/updater';
+import { ParsedEvent } from 'state/farmer/events/updater';
 import { displayBN, toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { PodListingFilledEvent, PodOrderFilledEvent } from 'state/v1/marketplace/updater';

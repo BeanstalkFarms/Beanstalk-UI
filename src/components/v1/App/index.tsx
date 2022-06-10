@@ -32,13 +32,13 @@
 // import NavBar from 'components/Nav/NavBar';
 // import pageBackground from 'img/bg-mainnet.png';
 // import ForecastPage from 'pages/forecast';
-// import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';
-// import PoolsUpdater from 'state/v2/bean/pools/updater';
-// import FarmerEventsUpdater from 'state/v2/farmer/events/updater';
-// import FarmerUpdater from 'state/v2/farmer/updater';
-// import SunUpdater from 'state/v2/beanstalk/sun/updater';
-// import BalancesUpdater from 'state/v2/farmer/balances/updater';
-// import { BeanstalkPalette } from '../v2/App/muiTheme';
+// import FarmerSiloUpdater from 'state/farmer/silo/updater';
+// import PoolsUpdater from 'state/bean/pools/updater';
+// import FarmerEventsUpdater from 'state/farmer/events/updater';
+// import FarmerUpdater from 'state/farmer/updater';
+// import SunUpdater from 'state/beanstalk/sun/updater';
+// import BalancesUpdater from 'state/farmer/balances/updater';
+// import { BeanstalkPalette } from '..//App/muiTheme';
 
 // BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 

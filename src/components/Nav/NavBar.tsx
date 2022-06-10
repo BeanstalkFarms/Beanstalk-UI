@@ -13,7 +13,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
-import { PRE_EXPLOIT_BEAN_DATA } from 'state/v2/bean/pools/updater';
+import { PRE_EXPLOIT_BEAN_DATA } from 'state/bean/pools/updater';
 import { displayFullBN, trimAddress } from 'util/index';
 import usePools from 'hooks/usePools';
 import WalletButton from '../Common/Connection/WalletButton';
