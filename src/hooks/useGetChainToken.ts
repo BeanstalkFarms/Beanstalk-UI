@@ -1,5 +1,5 @@
 import Token from 'classes/Token';
-import { TokenOrTokenMap } from 'constants/index';
+import { ChainConstant } from 'constants/index';
 import { useCallback } from 'react';
 import { useGetChainConstant } from './useChainConstant';
 
@@ -16,7 +16,7 @@ export default function useGetChainToken() {
     // I find the function expression much easier to parse here,
     // so going to break our usual preference for arrow functions. -SC
     // eslint-disable-next-line prefer-arrow-callback
-    function getChainToken(t: TokenOrTokenMap) {
+    function getChainToken(t: Token | ChainConstant<Token>) {
       return t instanceof Token ? t : getChainConstant(t);
     },
     [getChainConstant]

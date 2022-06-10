@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { SupportedChainId } from 'constants/chains';
-import { ZERO_BN, TokenOrTokenMap } from 'constants/index';
+import { ZERO_BN, ChainConstant } from 'constants/index';
 import { bigNumberResult } from './LedgerUtilities';
 
 /** Trim a BigNumber to a set number of decimals. */
@@ -161,7 +161,7 @@ export function toTokenUnitsBN(
   return toBaseUnitBN(rawAmt, decimals).toString();
 }
 
-export const tokenResult = (_token: TokenOrTokenMap) => {
+export const tokenResult = (_token: Token | ChainConstant<Token>) => {
   // If a mapping is provided, default to MAINNET decimals.
   // ASSUMPTION: the number of decimals are the same across all chains.
   const token = _token instanceof Token ? _token : _token[SupportedChainId.MAINNET];

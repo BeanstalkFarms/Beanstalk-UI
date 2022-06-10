@@ -18,10 +18,15 @@ import stalkLogo from 'img/beanstalk/stalk-icon.svg';
 import seedLogo from 'img/beanstalk/seed-icon.svg';
 import podsLogo from 'img/beanstalk/pod-icon.svg';
 
-import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
+import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from './chains';
-import { ChainConstant, TokenMap } from '.';
+import { ChainConstant } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES } from './addresses';
+
+// ----------------------------------------
+// Types
+// ----------------------------------------
+type TokenMap = ChainConstant<Token>;
 
 // ----------------------------------------
 // Native Tokens

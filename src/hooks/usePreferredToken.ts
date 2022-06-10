@@ -1,11 +1,12 @@
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { TokenOrTokenMap } from 'constants/index';
+import { ChainConstant } from 'constants/index';
 import { AppState } from 'state';
 import useGetChainToken from './useGetChainToken';
+import Token from 'classes/Token';
 
 export type PreferredToken = {
-  token: TokenOrTokenMap;
+  token: Token | ChainConstant<Token>;
   minimum?: BigNumber;
 }
 

@@ -27,10 +27,6 @@ export type AddressMap<T>    = { [address: string] : T };
 // By default these assume a type parameter of Token,
 // but this can be narrowed to ERC20Token, etc.
 
-/** A Map of SupportedChainId => Token */
-export type TokenMap<T = Token>        = ChainConstant<T>;
-/** A Token or TokenMap. */
-export type TokenOrTokenMap<T = Token> = T | TokenMap<T>;
 /** A Map of address => Token */
 export type TokensByAddress<T = Token> = AddressMap<T>;
 
