@@ -5,7 +5,7 @@ import { useBeanstalkPriceContract } from 'hooks/useContract';
 import { tokenResult } from 'util/TokenUtilities';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, CRV3, WETH } from 'constants/tokens';
 import { getChainConstant } from 'hooks/useChainConstant';
-import POOLS from 'constants/pools';
+import ALL_POOLS from 'constants/pools';
 import { SupportedChainId } from 'constants/chains';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 import { updateBeanPrice, updateBeanSupply } from '../token/actions';
@@ -78,7 +78,7 @@ export const useGetPools = () => {
           }
 
           console.debug('[bean/pools/useGetPools] FETCH', beanstalkPriceContract.address, chainId);
-          const Pools = getChainConstant(POOLS, chainId);
+          const Pools = getChainConstant(ALL_POOLS, chainId);
           const Bean  = getChainConstant(BEAN, chainId);
           const [
             priceResult,

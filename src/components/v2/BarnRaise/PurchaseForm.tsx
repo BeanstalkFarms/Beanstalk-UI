@@ -60,6 +60,8 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   }
 ];
 
+const TOKEN_LIST = [USDC, ETH];
+
 // ---------------------------------------------------
 
 const FertilizeForm : React.FC<
@@ -74,8 +76,8 @@ const FertilizeForm : React.FC<
   isSubmitting,
   contract,
 }) => {
-  const tokenList = useTokenMap(useMemo(() => ([USDC, ETH]), []));
-  const Usdc = useChainConstant(USDC);
+  const tokenMap = useTokenMap(TOKEN_LIST);
+  const Usdc = useChainConstant(USDC);  // FIXME: naming
   const balances = useFarmerBalances();
   const [showTokenSelect, setShowTokenSelect] = useState(false);
   
@@ -109,7 +111,7 @@ const FertilizeForm : React.FC<
           selected={values.tokens}
           handleSubmit={handleSelectTokens}
           balances={balances}
-          tokenList={tokenList}
+          tokenList={tokenMap}
           mode={TokenSelectMode.SINGLE}
         />
         {/* Form Contents */}

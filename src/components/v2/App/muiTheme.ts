@@ -20,6 +20,12 @@ declare module '@mui/material/Button' {
     dark: true;
   }
 }
+declare module '@mui/material/IconButton' {
+  interface IconButtonPropsColorOverrides {
+    light: true;
+    dark: true;
+  }
+}
 
 // --------------------------------------------------
 

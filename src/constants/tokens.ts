@@ -321,7 +321,7 @@ export const BALANCE_TOKENS : TokenMap[] = [
   ...ERC20_TOKENS,
 ];
 
-export const SILO_TOKENS : TokenMap[] = [
+export const SILO_WHITELIST : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
   BEAN_CRV3_LP,

@@ -13,23 +13,23 @@ import { clearBalances, updateBalances } from './actions';
 
 export const useFetchFarmerBalances = () => {
   const dispatch = useDispatch();
-  const tokens = useTokenMap(BALANCE_TOKENS);
+  const tokenMap = useTokenMap(BALANCE_TOKENS);
 
   // Handlers
   // FIXME: make this callback accept a tokens array to prevent reloading all balances on every call
   const fetch = useCallback(async (_account: string/* , _tokens? : any */) => {
     const account = getAccount(_account);
     try {
-      if (account && tokens) {
-        const balancePromises = Object.keys(tokens).map((tokenAddr) => (
-          tokens[tokenAddr]?.getBalance(account)
-            .then(tokenResult(tokens[tokenAddr]))
+      if (account && tokenMap) {
+        const balancePromises = Object.keys(tokenMap).map((tokenAddr) => (
+          tokenMap[tokenAddr]?.getBalance(account)
+            .then(tokenResult(tokenMap[tokenAddr]))
             .then((result) => {
-              console.debug(`[farmer/balances/updater] | ${tokens[tokenAddr].symbol} => ${result.toString()}`);
+              console.debug(`[farmer/balances/updater] | ${tokenMap[tokenAddr].symbol} => ${result.toString()}`);
               return result;
             })
             .then((balanceResult) => ({
-              token: tokens[tokenAddr],
+              token: tokenMap[tokenAddr],
               balance: balanceResult
             }))
         ));
@@ -48,7 +48,7 @@ export const useFetchFarmerBalances = () => {
     }
   }, [
     dispatch,
-    tokens
+    tokenMap
   ]);
 
   const clear = useCallback(() => {

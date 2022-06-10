@@ -8,7 +8,7 @@ import TokenIcon from '../Common/TokenIcon';
 const PoolCard: React.FC<{
   pool: Pool;
   poolState: BeanPoolState;
-  ButtonProps: MuiButtonProps & LinkProps;
+  ButtonProps?: MuiButtonProps & LinkProps;
 }> = ({
   pool,
   poolState,

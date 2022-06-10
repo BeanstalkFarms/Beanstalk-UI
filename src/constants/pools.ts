@@ -82,7 +82,7 @@ export const BEAN_LUSD_CURVE_POOL_MAINNET = new CurvePlainPool(
 
 // --------------------------------------------------
 
-const Pools : ChainConstant<PoolMap> = {
+export const ALL_POOLS : ChainConstant<PoolMap> = {
   [SupportedChainId.MAINNET]: {
     [BEAN_ETH_UNIV2_POOL_MAINNET.address]: BEAN_ETH_UNIV2_POOL_MAINNET,
     [BEAN_CRV3_CURVE_POOL_MAINNET.address]: BEAN_CRV3_CURVE_POOL_MAINNET,
@@ -94,4 +94,4 @@ const Pools : ChainConstant<PoolMap> = {
   }
 };
 
-export default Pools;
+export default ALL_POOLS;

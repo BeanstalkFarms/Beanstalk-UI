@@ -26,6 +26,8 @@ type DepositFormValues = {
 
 // -----------------------------------------------------------------------
 
+const TOKEN_LIST = [BEAN, ETH];
+
 const DepositForm : React.FC<
   FormikProps<DepositFormValues>
   & { to: Token }
@@ -36,15 +38,12 @@ const DepositForm : React.FC<
   values,
   setFieldValue,
 }) => {
-  // TODO: extract these?
-  const baseTokens = useMemo(() => ([BEAN, ETH]), []);
-  const erc20TokenList = useTokenMap(baseTokens);
+  const erc20TokenMap = useTokenMap(TOKEN_LIST);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
   const { bdv, stalk, seeds, actions } = useDepositSummary(to, values.tokens);
   const chainId = useChainId();
 
-  // console.debug('[DepositForm] render');
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
   const handleOpen  = useCallback(() => setShowTokenSelect(true),  []);
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -77,7 +76,7 @@ const DepositForm : React.FC<
                   selected={values.tokens}
                   handleSubmit={handleSelectTokens}
                   balances={balances}
-                  tokenList={erc20TokenList}
+                  tokenList={erc20TokenMap}
                 />
                 <Stack gap={1.5}>
                   {values.tokens.map((state, index) => (
@@ -95,9 +94,6 @@ const DepositForm : React.FC<
               </div>
             )}
           </FieldArray>
-          {/* <Box sx={{ fontSize: 12 }}>
-            <pre>{JSON.stringify(values, null, 2)}</pre>
-          </Box> */}
           {bdv.gt(0) ? (
             <Stack direction="column" gap={1}>
               <TokenOutputField

@@ -18,14 +18,16 @@ import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 
 const SiloPage : React.FC = () => {
-  // const beanPrice   = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
+  // Constants
+  const WHITELIST = useWhitelist();
+  const POOLS     = usePools();
+
+  // State
   const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const { sunrise, season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const breakdown   = useFarmerSiloBreakdown();
-  const whitelist   = useWhitelist();
-  const poolsByAddress = usePools();
   const chainId = useChainId();
 
   return (
@@ -70,8 +72,8 @@ const SiloPage : React.FC = () => {
         />
         <TokenTable
           config={{
-            whitelist: Object.values(whitelist),
-            poolsByAddress: poolsByAddress,
+            whitelist: Object.values(WHITELIST),
+            poolsByAddress: POOLS,
           }}
           beanPools={beanPools}
           farmerSilo={farmerSilo}

@@ -13,10 +13,13 @@ import { SupportedChainId } from 'constants/chains';
 import useFarmerTotalFertilizer from "../hooks/useFarmerTotalFertilizer";
 
 const BalancesPage: React.FC = () => {
+  // State
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo)
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field)
+
+  // Breakdowns
   const breakdown = useFarmerSiloBreakdown();
-  const fertilizerSummary = useFarmerTotalFertilizer()
+  const fertilizerSummary = useFarmerTotalFertilizer();
 
   if(!farmerSilo) return null;
 
