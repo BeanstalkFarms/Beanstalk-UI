@@ -1,7 +1,7 @@
 import { Token } from 'classes';
 import { ZERO_BN } from 'constants/index';
 import { FormTokenState } from 'components/Common/Form';
-import { Action, ActionType } from 'util/actions';
+import { Action, ActionType } from 'util/Actions';
 
 /**
  * Summarize the Actions that will occur when making a Deposit.

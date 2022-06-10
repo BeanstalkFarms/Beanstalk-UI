@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { SupportedChainId } from 'constants/chains';
 import { ZERO_BN } from 'constants/index';
-import { MaxBN } from 'util/TokenUtilities';
+import { MaxBN } from 'util/Tokens';
 import useChainConstant from './useChainConstant';
 
 // ----------------------------------------

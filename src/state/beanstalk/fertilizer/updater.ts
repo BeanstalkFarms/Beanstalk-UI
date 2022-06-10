@@ -4,7 +4,7 @@ import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from 'constants/address
 import { BEAN, USDC } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkFertilizerContract, useERC20Contract } from 'hooks/useContract';
-import { tokenResult } from 'util/TokenUtilities';
+import { tokenResult } from 'util/Tokens';
 import useChainId from 'hooks/useChain';
 import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 

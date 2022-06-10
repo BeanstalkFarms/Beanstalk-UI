@@ -1,11 +1,11 @@
 import { BigNumber } from 'bignumber.js';
 import Token from 'classes/Token';
 import { useCallback, useEffect, useState } from 'react';
-import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/TokenUtilities';
+import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
 import { sleep } from 'util/v1/TimeUtilities';
 import { ETH_DECIMALS } from 'constants/tokens';
-import { bigNumberResult } from 'util/LedgerUtilities';
+import { bigNumberResult } from 'util/Ledger';
 import toast from 'react-hot-toast';
 import { useFertilizerContract } from './useContract';
 

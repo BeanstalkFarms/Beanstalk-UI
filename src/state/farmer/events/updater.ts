@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { Beanstalk } from 'constants/generated';
 import ethers, { BigNumber as BN } from 'ethers';
 import useChainId from 'hooks/useChain';
-import { getAccount } from 'util/account';
+import { getAccount } from 'util/Account';
 import { getEventFacet } from 'util/GetEventFacet';
 import { resetEvents, setEvents } from './actions';
 

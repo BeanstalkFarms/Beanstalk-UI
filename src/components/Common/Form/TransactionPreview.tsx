@@ -3,7 +3,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
 import { BEAN, SEEDS, STALK, USDC } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
-import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction } from 'util/actions';
+import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction } from 'util/Actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 // import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 // import ArrowRightIcon from '@mui/icons-material/ArrowRight';

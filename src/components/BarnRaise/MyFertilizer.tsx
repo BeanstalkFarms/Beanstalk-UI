@@ -19,7 +19,7 @@ import { ZERO_BN } from 'constants/index';
 import { SupportedChainId } from 'constants/chains';
 import { BEAN } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { displayBN } from 'util/TokenUtilities';
+import { displayBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/BarnRaise/FertilizerItemTooltips';
 import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
 import TokenIcon from '../Common/TokenIcon';

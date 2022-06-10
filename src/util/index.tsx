@@ -1,16 +1,15 @@
 import { ethers } from 'ethers';
 
-// -- Exports
-export * from './TokenUtilities';
+// -----------------
+// Exports
+// -----------------
+
+export * from './Tokens';
 export type EventData = ethers.Event
 
-// -- Globals
-
-export function getPreviouslyConnectedWallets() : null | string[] {
-  return JSON.parse(
-    window.localStorage.getItem('connectedWallets') || 'null',
-  );
-}
+// -----------------
+// Helpers
+// -----------------
 
 export function trimAddress(address: string, showSuffix : boolean = true) {
   return `${address.substring(0, 6)}${showSuffix ? `..${address.slice(-4)}` : ''}`;

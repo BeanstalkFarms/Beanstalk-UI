@@ -9,7 +9,7 @@ import { setUseWhatChange } from '@simbathesailor/use-what-changed';
 import store from 'state';
 import App from 'components/App';
 import theme from 'components/App/muiTheme';
-import client from './util/wagmi';
+import client from './util/Client';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';

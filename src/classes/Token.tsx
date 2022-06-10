@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js';
 import { AddressMap, ZERO_BN, MAX_UINT256 } from 'constants/index';
-import { bigNumberResult } from 'util/LedgerUtilities';
-import { erc20TokenContract } from 'util/contracts';
-import client from 'util/wagmi';
+import { bigNumberResult } from 'util/Ledger';
+import { erc20TokenContract } from 'util/Contracts';
+import client from 'util/Client';
 
 /**
  * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
@@ -63,7 +63,7 @@ export default abstract class Token {
    */
   constructor(
     chainId: number,
-    address: AddressMap | string,
+    address: string | AddressMap<string>,
     decimals: number,
     metadata: {
       name: string,

@@ -3,9 +3,9 @@ import useChainId from 'hooks/useChain';
 import useTokenMap from 'hooks/useTokenMap';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { getAccount } from 'util/account';
+import { getAccount } from 'util/Account';
 
-import { tokenResult } from 'util/TokenUtilities';
+import { tokenResult } from 'util/Tokens';
 import { useAccount } from 'wagmi';
 import { clearBalances, updateBalances } from './actions';
 

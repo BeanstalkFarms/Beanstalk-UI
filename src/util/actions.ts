@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
-import { displayFullBN, displayTokenAmount } from 'util/TokenUtilities';
+import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 
 export enum ActionType {
   // Generic: Swap

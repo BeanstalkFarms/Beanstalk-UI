@@ -5,14 +5,13 @@ import { ethers } from 'ethers';
 //   BEANFTGENESIS,
 //   UNISWAP_V2_ROUTER,
 // } from 'constants/index';
-
 import { ERC20__factory } from 'constants/generated/factories/ERC20__factory';
 import {
   BeanstalkPrice__factory,
 } from 'constants/generated';
 import { BEANSTALK_PRICE_ADDRESSES } from 'constants/addresses';
 import { SupportedChainId } from 'constants/chains';
-import client from './wagmi';
+import client from './Client';
 
 // -- Contracts
 export const erc20TokenContract = (address: string, signer?: ethers.Signer) =>

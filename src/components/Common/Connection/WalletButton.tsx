@@ -26,7 +26,7 @@ import tempUserIcon from 'img/interface/temp-user-icon.svg';
 import { trimAddress } from 'util/index';
 import { CHAIN_INFO } from 'constants/chains';
 
-import { getAccount } from 'util/account';
+import { getAccount } from 'util/Account';
 import useChainConstant from 'hooks/useChainConstant';
 import DropdownIcon from '../DropdownIcon';
 import WalletDialog from './WalletDialog';

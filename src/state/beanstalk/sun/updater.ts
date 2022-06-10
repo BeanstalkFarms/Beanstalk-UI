@@ -2,7 +2,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { bigNumberResult } from 'util/LedgerUtilities';
+import { bigNumberResult } from 'util/Ledger';
 import { resetSun, setAwaitingSunrise, updateSeason } from './actions';
 
 export const useSun = () => {

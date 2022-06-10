@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { bigNumberResult } from 'util/LedgerUtilities';
-import { tokenResult } from 'util/TokenUtilities';
+import { bigNumberResult } from 'util/Ledger';
+import { tokenResult } from 'util/Tokens';
 
 import { BEAN } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';

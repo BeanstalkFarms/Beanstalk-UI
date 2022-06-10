@@ -4,9 +4,9 @@ import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkFertilizerContract } from 'hooks/useContract';
 import { useAccount } from 'wagmi';
 import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
-import { bigNumberResult } from 'util/LedgerUtilities';
+import { bigNumberResult } from 'util/Ledger';
 import useChainId from 'hooks/useChain';
-import { getAccount } from 'util/account';
+import { getAccount } from 'util/Account';
 import { resetFertilizer, updateFertilizer } from './actions';
 
 export const useFetchFarmerFertilizer = () => {

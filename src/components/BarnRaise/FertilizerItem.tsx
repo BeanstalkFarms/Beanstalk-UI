@@ -18,7 +18,7 @@ export type FertilizerData = {
    * support will be added during June. For now ID is fixed to
    * 6_000_000 and season to 6_074.
    */
-  // id: BigNumber;
+  id?: BigNumber;
   /**
    * The amount of Fertilizer owned at this ID.
    */
@@ -38,7 +38,7 @@ export type FertilizerData = {
   /**
    * The Season in which this Fertilizer was purchased.
    */
-  // season?: BigNumber;
+  season?: BigNumber;
 }
 
 const FertilizerItem: React.FC<{

@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 
 import { ParsedEvent } from 'state/farmer/events/updater';
 import { PlotMap, SeasonMap } from 'state/farmer/field';
-import { toTokenUnitsBN } from 'util/TokenUtilities';
+import { toTokenUnitsBN } from 'util/Tokens';
 import {
   BEAN,
   BEAN_ETH_UNIV2_LP,

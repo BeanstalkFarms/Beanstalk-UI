@@ -5,7 +5,7 @@ import { Field, FieldProps, useFormikContext } from 'formik';
 import TokenInputField from 'components/Common/Form/TokenInputField';
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
-import { displayFullBN } from 'util/TokenUtilities';
+import { displayFullBN } from 'util/Tokens';
 import useQuote from 'hooks/useQuote';
 // import { PinDropSharp } from '@mui/icons-material';
 import { FormTokenState } from '.';

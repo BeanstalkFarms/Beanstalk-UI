@@ -6,7 +6,7 @@ import useEventProcessor, { EventParsingParameters } from 'hooks/useEventProcess
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { getAccount } from 'util/account';
+import { getAccount } from 'util/Account';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
 import { Deposit, Withdrawal } from './silo';
