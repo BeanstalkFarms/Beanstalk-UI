@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { AppState } from 'state';
-import { TokensByAddress, ZERO_BN } from 'constants/index';
+import { TokenMap, ZERO_BN } from 'constants/index';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -39,7 +39,7 @@ const TokenSelectDialog : React.FC<{
   /** The Farmer's current balances. Displayed alongside each token; hidden if not provided. */
   balances: AppState['_farmer']['balances'];
   /** A list of tokens to show in the Dialog. */
-  tokenList: TokensByAddress;
+  tokenList: TokenMap;
   /** Single or multi-select */
   mode?: TokenSelectMode;
 }> = React.memo(({

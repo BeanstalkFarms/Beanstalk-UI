@@ -28,7 +28,7 @@ export type AddressMap<T>    = { [address: string] : T };
 // but this can be narrowed to ERC20Token, etc.
 
 /** A Map of address => Token */
-export type TokensByAddress<T = Token> = AddressMap<T>;
+export type TokenMap<T = Token> = AddressMap<T>;
 
 // -------------------
 // Pool-specific types
@@ -37,7 +37,7 @@ export type TokensByAddress<T = Token> = AddressMap<T>;
 // but this can be narrowed.
 
 /** A Map of address => Pool */
-export type PoolsByAddress<P = Pool> = AddressMap<P>;
+export type PoolMap<P = Pool> = AddressMap<P>;
 
 // -------------------
 // Re-exports

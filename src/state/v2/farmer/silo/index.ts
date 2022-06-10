@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { TokensByAddress } from 'constants/index';
+import { TokenMap } from 'constants/index';
 
 /**
  * A Crate is an `amount` of a token Deposited or
@@ -68,7 +68,7 @@ export type FarmerSiloBalance = {
  * FIXME: enforce that `address` is a key of whitelisted tokens?
  */
 export type FarmerSiloBalances = {
-  tokens: TokensByAddress<FarmerSiloBalance>;
+  tokens: TokenMap<FarmerSiloBalance>;
 }
 
 /**
