@@ -1,6 +1,6 @@
+import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Stack, Typography } from '@mui/material';
-import React from 'react';
 import { displayBN } from '../util';
 import TokenIcon from '../components/v2/Common/TokenIcon';
 import { BEAN } from './tokens';

@@ -1,5 +1,16 @@
+import BigNumber from 'bignumber.js';
 import Pool from 'classes/Pool';
 import Token from 'classes/Token';
+
+// --------------
+// Utilities
+// --------------
+
+/* Diamonds */
+export const zeroBN = new BigNumber(0);
+export const newBN  = new BigNumber(-1);
+export const MAX_UINT32  = 4294967295;
+export const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
 // --------------
 // Reusable types
@@ -36,6 +47,9 @@ export type PoolsByAddress<P = Pool> = AddressMap<P>;
 // Re-exports
 // -------------------
 
+export * from './addresses';
+export * from './blocks';
+export * from './chains';
+export * from './connection';
 export * from './links';
 export * from './values';
-export * from './contracts';

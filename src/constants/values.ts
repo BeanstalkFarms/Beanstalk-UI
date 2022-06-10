@@ -66,7 +66,6 @@ export const SLIPPAGE_THRESHOLD = 0.97; /* 3% slippage threshold for frontrunnin
 export const LP_FEE = 0.003; /* 0.3% LP fee */
 export const MIN_BALANCE = 0.05; /* 0.05 minimum eth withtheld to transact */
 
-export const MAX_UINT32 = 4294967295;
 
 export const UNISWAP_V2_ROUTER = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
 
@@ -78,7 +77,3 @@ export const GENESIS_NFT = {
   id: 0,
   txn: '💎',
 };
-
-/* Diamonds */
-export const zeroBN = new BigNumber(0);
-export const newBN = new BigNumber(-1);

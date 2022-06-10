@@ -1,9 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { AddressMap } from 'constants/addresses';
-import { bigNumberResult, MAX_UINT256 } from 'util/LedgerUtilities';
-import { beanstalkContract, erc20TokenContract } from 'util/contracts';
+import { AddressMap, zeroBN, MAX_UINT256 } from 'constants/index';
+import { bigNumberResult } from 'util/LedgerUtilities';
+import { erc20TokenContract } from 'util/contracts';
 import client from 'util/wagmi';
-import { zeroBN } from 'constants/index';
 
 /**
  * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
@@ -170,7 +169,7 @@ export class ERC20Token extends Token {
 export class BeanstalkToken extends Token {
   // eslint-disable-next-line class-methods-use-this
   public getContract() {
-    return beanstalkContract();
+    return null;
   }
 
   // eslint-disable-next-line class-methods-use-this

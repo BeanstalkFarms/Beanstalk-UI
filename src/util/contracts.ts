@@ -1,17 +1,14 @@
 import { ethers } from 'ethers';
-import {
-  BEANSTALK,
-  BEANFTCOLLECTION,
-  BEANFTGENESIS,
-  UNISWAP_V2_ROUTER,
-} from 'constants/index';
+// import {
+//   BEANSTALK,
+//   BEANFTCOLLECTION,
+//   BEANFTGENESIS,
+//   UNISWAP_V2_ROUTER,
+// } from 'constants/index';
 
 import { ERC20__factory } from 'constants/generated/factories/ERC20__factory';
 import {
-  BeaNFTGenesis__factory,
   BeanstalkPrice__factory,
-  Beanstalk__factory,
-  UniswapV2Router__factory,
 } from 'constants/generated';
 import { BEANSTALK_PRICE_ADDRESSES } from 'constants/addresses';
 import { SupportedChainId } from 'constants/chains';
@@ -27,17 +24,17 @@ export const beanstalkPriceContract = () =>
     client.provider
   );
 
-export const beanstalkContract = (signer?: ethers.Signer) =>
-  Beanstalk__factory.connect(BEANSTALK, signer || client.provider);
+// export const beanstalkContract = (signer?: ethers.Signer) =>
+//   Beanstalk__factory.connect(BEANSTALK, signer || client.provider);
 
-export const beaNFTGenesisContract = (signer?: ethers.Signer) =>
-  BeaNFTGenesis__factory.connect(BEANFTGENESIS, signer || client.provider);
+// export const beaNFTGenesisContract = (signer?: ethers.Signer) =>
+//   BeaNFTGenesis__factory.connect(BEANFTGENESIS, signer || client.provider);
 
-export const beaNFTWinterContract = (signer?: ethers.Signer) =>
-  BeaNFTGenesis__factory.connect(BEANFTCOLLECTION, signer || client.provider);
+// export const beaNFTWinterContract = (signer?: ethers.Signer) =>
+//   BeaNFTGenesis__factory.connect(BEANFTCOLLECTION, signer || client.provider);
 
-export const uniswapRouterContract = (signer?: ethers.Signer) =>
-  UniswapV2Router__factory.connect(
-    UNISWAP_V2_ROUTER,
-    signer || client.provider
-  );
+// export const uniswapRouterContract = (signer?: ethers.Signer) =>
+//   UniswapV2Router__factory.connect(
+//     UNISWAP_V2_ROUTER,
+//     signer || client.provider
+//   );
