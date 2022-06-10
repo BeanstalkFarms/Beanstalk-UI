@@ -6,9 +6,9 @@ import {AppState} from 'state';
 import {Card, Grid, Stack, Tab, Tabs, Typography} from "@mui/material";
 import {FIELD, OTHER, SILO} from "util/GetEventFacet";
 import {ParsedEvent} from "state/v2/farmer/events/updater";
-import EventItem from "components/v2/History/EventItem";
+import EventItem from "components/History/EventItem";
 import { useAccount } from 'wagmi';
-import WalletButton from "components/v2/Common/Connection/WalletButton";
+import WalletButton from "components/Common/Connection/WalletButton";
 
 const mappedTabs = {
   0: SILO,

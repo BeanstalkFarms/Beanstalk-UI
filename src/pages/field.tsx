@@ -10,7 +10,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import PageHeader from 'components/v2/Common/PageHeader';
+import PageHeader from 'components/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
@@ -22,7 +22,7 @@ import useTheme from '@mui/styles/useTheme';
 import {
   StyledDialogContent,
   StyledDialogTitle,
-} from 'components/v2/Common/Dialog';
+} from 'components/Common/Dialog';
 
 const columns: DataGridProps['columns'] = [
   {

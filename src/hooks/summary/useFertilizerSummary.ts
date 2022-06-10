@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { FormTokenState } from 'components/v2/Common/Form';
+import { FormTokenState } from 'components/Common/Form';
 import { USDC } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useHumidity from 'hooks/useHumidity';

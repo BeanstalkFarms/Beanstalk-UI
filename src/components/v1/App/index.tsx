@@ -29,7 +29,7 @@
 // // import PageBackground from './PageBackground';
 // // import LoadingBean from './LoadingBean';
 // import './App.css';
-// import NavBar from 'components/v2/Nav/NavBar';
+// import NavBar from 'components/Nav/NavBar';
 // import pageBackground from 'img/bg-mainnet.png';
 // import ForecastPage from 'pages/forecast';
 // import FarmerSiloUpdater from 'state/v2/farmer/silo/updater';

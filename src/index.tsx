@@ -7,8 +7,8 @@ import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles
 import { setUseWhatChange } from '@simbathesailor/use-what-changed';
 
 import store from 'state';
-import App from 'components/v2/App';
-import theme from 'components/v2/App/muiTheme';
+import App from 'components/App';
+import theme from 'components/App/muiTheme';
 import client from './util/wagmi';
 
 import './index.css';

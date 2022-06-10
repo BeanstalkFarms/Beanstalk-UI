@@ -2,13 +2,13 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import SiloActions from 'components/v2/Silo/Actions';
-import DepositsTable from 'components/v2/Silo/Deposits';
+import SiloActions from 'components/Silo/Actions';
+import DepositsTable from 'components/Silo/Deposits';
 import useWhitelist from 'hooks/useWhitelist';
 import { Container, Stack } from '@mui/material';
 import usePools from 'hooks/usePools';
-import PageHeader from 'components/v2/Common/PageHeader';
-import PoolCard from 'components/v2/Silo/PoolCard';
+import PageHeader from 'components/Common/PageHeader';
+import PoolCard from 'components/Silo/PoolCard';
 
 const TokenPage: React.FC<{}> = () => {
   // Constants

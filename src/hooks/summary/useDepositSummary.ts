@@ -1,6 +1,6 @@
 import { Token } from 'classes';
 import { ZERO_BN } from 'constants/index';
-import { FormTokenState } from 'components/v2/Common/Form';
+import { FormTokenState } from 'components/Common/Form';
 import { Action, ActionType } from 'util/actions';
 
 /**

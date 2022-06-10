@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Card, Container, Stack, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import PageHeader from 'components/v2/Common/PageHeader';
+import PageHeader from 'components/Common/PageHeader';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 // import duneIcon from 'img/dune-icon.svg';
 // import activeFert from 'img/tokens/fert-logo-active.svg';
