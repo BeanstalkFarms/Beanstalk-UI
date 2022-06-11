@@ -54,7 +54,7 @@ const SiloPage : React.FC = () => {
         {chainId !== SupportedChainId.MAINNET && (
           <NextSeason
             title={(
-              `Next Season's Predicted Silo Rewards in ${sunrise.remaining.as('minutes').toLocaleString('en-US', { maximumFractionDigits: 0 })}m`
+              `Next Season's predicted Silo rewards in ${sunrise.remaining.as('minutes').toLocaleString('en-US', { maximumFractionDigits: 0 })}m`
             )}
           />
         )}

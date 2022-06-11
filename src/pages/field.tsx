@@ -8,6 +8,7 @@ import {
   Link,
   Stack,
   Typography,
+  Tooltip,
   useMediaQuery,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
@@ -112,7 +113,9 @@ const FieldPage: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Typography variant="h4">Available Soil</Typography>
+                  <Tooltip title="The number of Beans that can currently be Sown, or lent, to Beanstalk." placement="top">
+                    <Typography variant="h4">Available Soil</Typography>
+                  </Tooltip>
                   <Typography variant="h1">
                     {displayBN(beanstalkField.soil)}
                   </Typography>
@@ -120,7 +123,9 @@ const FieldPage: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Typography variant="h4">Weather</Typography>
+                  <Tooltip title="The interest rate for Sowing Beans." placement="top">
+                    <Typography variant="h4">Weather</Typography>
+                  </Tooltip>
                   <Typography variant="h1">
                     {displayBN(beanstalkField.weather.yield)}%
                   </Typography>
@@ -128,7 +133,9 @@ const FieldPage: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Typography variant="h4">Pod Rate</Typography>
+                  <Tooltip title="The ratio of Unharvested Pods to the total Bean supply. The Pod Rate is often used as a proxy for Beanstalk’s leverage." placement="top">
+                    <Typography variant="h4">Pod Rate</Typography>
+                  </Tooltip>
                   <Typography variant="h1">
                     {displayBN(
                       beanstalkField?.podIndex.div(beanToken?.supply).times(100)
@@ -148,7 +155,9 @@ const FieldPage: React.FC = () => {
                       borderRadius: 1.5,
                     }}
                   >
-                    <Typography variant="h4">Pod Line</Typography>
+                    <Tooltip title="The total number of Unharvested Pods. Pods harvest on a First In, First Out basis." placement="left">
+                      <Typography variant="h4">Pod Line</Typography>
+                    </Tooltip>
                     <Typography variant="h1">{displayBN(podLine)}</Typography>
                   </Stack>
                 </Box>
@@ -159,9 +168,11 @@ const FieldPage: React.FC = () => {
                     <Typography variant="h4">My Pod Balance:</Typography>
                     <Stack direction="row" alignItems="center" gap={0.25}>
                       <img alt="" src={podIcon} height="17px" />
-                      <Typography variant="h4">
-                        {displayBN(farmerField.pods)}
-                      </Typography>
+                      <Tooltip title="The number of Beans you are owed by Beanstalk." placement="right">
+                        <Typography variant="h4">
+                          {displayBN(farmerField.pods)}
+                        </Typography>
+                      </Tooltip>
                     </Stack>
                   </Stack>
                   <Link

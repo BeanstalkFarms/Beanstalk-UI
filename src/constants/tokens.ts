@@ -1,5 +1,5 @@
-// import ethLogoUrl from 'img/tokens/eth-logo.svg';
 import ethIconCircledUrl from 'img/tokens/eth-logo-circled.svg';
+import ropEthIconCircledUrl from 'img/tokens/ropeth-logo-circled.svg';
 
 // -- BEAN
 // import beanLogoUrl from 'img/tokens/bean-logo.svg';
@@ -51,7 +51,7 @@ export const ETH = {
     {
       name: 'Ropsten Ether',
       symbol: 'ropETH',
-      logo: ethIconCircledUrl
+      logo: ropEthIconCircledUrl
     }
   ),
 };

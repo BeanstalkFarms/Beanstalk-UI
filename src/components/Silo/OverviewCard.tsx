@@ -54,8 +54,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetBlur>
-          Deposit value over time will be available upon the Replanting of
-          Beanstalk
+          Historical Deposit value will be available once Beanstalk is Replanted.
         </MainnetBlur>
         <SimpleLineChart series={series} onCursor={handleCursor} />
       </Box>
@@ -96,8 +95,7 @@ const StalkOwnershipTab: React.FC<
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetBlur>
-          Stalk and ownership % over time will be available upon the Replanting
-          of Beanstalk
+          Historical Stalk balance and ownership % will be available once Beanstalk is Replanted.
         </MainnetBlur>
         <SimpleLineChart series={series} onCursor={handleCursor} />
       </Box>

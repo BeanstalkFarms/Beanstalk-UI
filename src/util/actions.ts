@@ -52,7 +52,7 @@ export type Action = (
   | FertilizerRewardsAction
 );
 
-// export const ACTION_MESSAGES = {
+// const ACTION_MESSAGES = {
 //   [ActionType.SWAP]: (a: SwapAction) => 
 //     `Swap ${displayTokenAmount(a.amountIn, a.tokenIn)} for ${displayTokenAmount(a.amountOut, a.tokenOut)}.`,
 //   [ActionType.DEPOSIT]: (a: SiloDepositAction) =>
@@ -62,7 +62,7 @@ export type Action = (
 //   [ActionType.BUY_FERTILIZER]: (a: FertilizerBuyAction) =>
 //     `Purchase ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`,
 //   [ActionType.RECEIVE_FERT_REWARDS]: (a: FertilizerRewardsAction) =>
-//     `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are recouped.`
+//     `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are earned.`
 // };
 
 // -----------------------------------------------------------------------
@@ -78,7 +78,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.BUY_FERTILIZER:
       return `Purchase ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`;
     case ActionType.RECEIVE_FERT_REWARDS:
-      return `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are recouped.`;
+      return `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are earned.`;
     default: 
       return 'Unknown action';
   }

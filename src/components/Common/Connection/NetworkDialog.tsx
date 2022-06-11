@@ -1,10 +1,17 @@
 import React, { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
 import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
 import { SupportedChainId } from 'constants/chains';
+import { ETH } from 'constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
+
+const chainImgMap : { [key: string] : string | undefined } = {
+  Ethereum: ETH[SupportedChainId.MAINNET].logo,
+  Ropsten:  ETH[SupportedChainId.ROPSTEN].logo
+};
 
 const NetworkDialog: React.FC<{
   open: boolean;
@@ -34,7 +41,6 @@ const NetworkDialog: React.FC<{
     },
     [switchNetwork, handleClose]
   );
-
   // 
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));
@@ -60,17 +66,14 @@ const NetworkDialog: React.FC<{
               sx={{
                 py: 1,
                 minWidth: isMedium ? null : 400,
+                borderColor: grey[300]
               }}
             >
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
                 <Typography color="text.primary" sx={{ fontSize: 20 }}>
                   {chain.name}
                 </Typography>
-                {chain.testnet && (
-                  <Typography color="text.secondary">
-                    Testnet
-                  </Typography>
-                )}
+                <img src={chainImgMap[chain.name]} alt="" style={{ height: 35 }} />
               </Stack>
             </Button>
           ))}
