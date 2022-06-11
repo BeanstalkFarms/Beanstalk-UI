@@ -5,7 +5,7 @@ import { tokenResult } from 'util/Tokens';
 
 import { BEAN } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { resetBeanstalkField, updateBeanstalkField, updateHarvestableIndex } from './actions';
+import { resetBeanstalkField, updateBeanstalkField } from './actions';
 
 export const useBeanstalkField = () => {
   const dispatch = useDispatch();

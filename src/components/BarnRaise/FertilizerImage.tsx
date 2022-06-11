@@ -1,18 +1,18 @@
 import { Box, Stack } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import React from 'react';
-import fertUnusedIcon from 'img/tokens/fert-logo-unused.svg';
-import fertActiveIcon from 'img/tokens/fert-logo-active.svg';
-import fertUsedIcon   from 'img/tokens/fert-logo-used.svg';
+import fertUnusedImage from 'img/tokens/fert-logo-unused.svg';
+import fertActiveImage from 'img/tokens/fert-logo-active.svg';
+import fertUsedImage   from 'img/tokens/fert-logo-used.svg';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 import './FertilizerImage.css';
 
 export type FertilizerState = 'unused' | 'active' | 'used'
 export const FERTILIZER_ICONS : { [key in FertilizerState]: string } = {
-  unused: fertUnusedIcon,
-  active: fertActiveIcon,
-  used:   fertUsedIcon,
+  unused: fertUnusedImage,
+  active: fertActiveImage,
+  used:   fertUsedImage,
 };
 export type FertilizerImageProps = {
   state?: FertilizerState;

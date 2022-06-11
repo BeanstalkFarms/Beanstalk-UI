@@ -23,7 +23,7 @@ const SiloPage : React.FC = () => {
   const POOLS     = usePools();
 
   // State
-  const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+  // const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const { sunrise, season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);

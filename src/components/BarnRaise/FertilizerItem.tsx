@@ -41,7 +41,7 @@ export type FertilizerData = {
   season?: BigNumber;
 }
 
-const FertilizerItem: React.FC<{
+const FertilizerItem: React.FC<FertilizerData & {
   /**
    * Customize the Fertilizer image used.
    * Fertilizer can be `unused` -> `active` -> `used`.
@@ -55,14 +55,19 @@ const FertilizerItem: React.FC<{
    * 
    */
   tooltip: FertilizerTooltip;
-} & FertilizerData> = ({
-  tooltip,
-  state,
-  isNew,
+}> = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  id,
   amount,
   humidity,
   remaining,
   progress,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  season,
+  //
+  tooltip,
+  state,
+  isNew,
 }) => {
   const fertilizedBeans = new BigNumber(0); // TODO: update this
   const unfertilizedBeans = amount.multipliedBy(humidity.plus(1));
