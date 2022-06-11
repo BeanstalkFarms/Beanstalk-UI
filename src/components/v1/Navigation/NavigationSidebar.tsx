@@ -12,8 +12,8 @@ import {
 import BigNumber from 'bignumber.js';
 
 import { AppState } from 'state';
-import { BEAN, theme, zeroBN } from 'constants/index';
-import BeanLogo from 'img/bean-logo.svg';
+import { BEAN, theme, ZERO_BN } from 'constants/index';
+import BeanLogo from 'img/tokens/bean-logo.svg';
 import { setDrawerOpen } from 'state/general/actions';
 import { getAPYs, toTokenUnitsBN } from 'util/index';
 import { useStyles } from './NavigationStyles';
@@ -276,7 +276,7 @@ export default function NavigationSidebar() {
         <Metric label="Pod Line" value={totalPods?.isGreaterThan(0) && `${toTokenUnitsBN(totalPods, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         <Metric label="Harvested" value={weather?.harvestableIndex?.isGreaterThan(0) && `${toTokenUnitsBN(weather.harvestableIndex, BEAN.decimals).toFixed(1)}M`} hideIfNull />
         {/* <Metric label="Season" value={season ? season.toFixed(0) : null} hideIfNull /> */}
-        <Metric label="ETH" value={usdcPrice && usdcPrice.gt(zeroBN) && `$${(new BigNumber(1)).div(usdcPrice).toFixed(2)}`} hideIfNull />
+        <Metric label="ETH" value={usdcPrice && usdcPrice.gt(ZERO_BN) && `$${(new BigNumber(1)).div(usdcPrice).toFixed(2)}`} hideIfNull />
         <Metric label="Gas" value={ethPrices?.propose && ethPrices.propose > 0 && `${ethPrices.propose} gwei`} hideIfNull />
       </Box>
     </>

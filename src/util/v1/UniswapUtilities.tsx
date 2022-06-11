@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { BEAN, WETH, zeroBN } from 'constants/index';
+import { BEAN, WETH, ZERO_BN } from 'constants/index';
 import { MinBN, uniswapRouterContract } from '../index';
 import { handleCallbacks, TxnCallbacks } from './TxnUtilities';
 
@@ -187,7 +187,7 @@ export const getBuyAndAddLPAmount = (
     .multipliedBy(fee)
     .multipliedBy(beanReserve)
     .multipliedBy(beanReserve);
-  const b = zeroBN
+  const b = ZERO_BN
     .minus(fee.multipliedBy(2).multipliedBy(eth).multipliedBy(beanReserve))
     .minus(fee.multipliedBy(ethReserve).multipliedBy(beanReserve))
     .minus(ethReserve.multipliedBy(beanReserve));
@@ -196,10 +196,10 @@ export const getBuyAndAddLPAmount = (
     .multipliedBy(b)
     .minus(a.multipliedBy(c).multipliedBy(4));
 
-  const beans1 = zeroBN
+  const beans1 = ZERO_BN
     .minus(b.minus(determinant.sqrt()))
     .dividedBy(a.multipliedBy(2));
-  const beans2 = zeroBN
+  const beans2 = ZERO_BN
     .minus(b.plus(determinant.sqrt()))
     .dividedBy(a.multipliedBy(2));
   const estBeans = getToAmount(eth, ethReserve, beanReserve);

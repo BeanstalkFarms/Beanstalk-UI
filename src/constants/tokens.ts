@@ -1,28 +1,32 @@
-// import ethLogoUrl from 'img/eth-logo.svg';
-import ethIconCircledUrl from 'img/eth-icon-circled.svg';
-import ropstenIconCircledUrl from 'img/ropsten-icon-circled.svg';
+import ethIconCircledUrl from 'img/tokens/eth-logo-circled.svg';
+import ropEthIconCircledUrl from 'img/tokens/ropeth-logo-circled.svg';
 
 // -- BEAN
-// import beanLogoUrl from 'img/bean-logo.svg';
-import beanCircleLogoUrl from 'img/bean-circle.svg';
-import beanEthLpLogoUrl from 'img/bean-eth-lp-logo.svg';
-import beanCrv3LpLogoUrl from 'img/bean-crv3-logo.svg';
-import beanLusdLogoUrl from 'img/bean-lusd-logo.svg';
+// import beanLogoUrl from 'img/tokens/bean-logo.svg';
+import beanCircleLogoUrl from 'img/tokens/bean-logo-circled.svg';
+import beanEthLpLogoUrl from 'img/tokens/bean-eth-lp-logo.svg';
+import beanCrv3LpLogoUrl from 'img/tokens/bean-crv3-logo.svg';
+import beanLusdLogoUrl from 'img/tokens/bean-lusd-logo.svg';
 
 // Common token icons
-import usdcLogoUrl from 'img/usdc-logo.svg';
-import crv3LogoUrl from 'img/crv3-logo.svg';
-import lusdLogoUrl from 'img/lusd-icon.svg';
+import usdcLogoUrl from 'img/tokens/usdc-logo.svg';
+import crv3LogoUrl from 'img/tokens/crv3-logo.svg';
+import lusdLogoUrl from 'img/tokens/lusd-logo.svg';
 
 // Beanstalk Token Logos
-import stalkLogo from 'img/stalk-logo.svg';
-import seedLogo from 'img/seed-logo.svg';
-import podsLogo from 'img/pod-logo.svg';
+import stalkLogo from 'img/beanstalk/stalk-icon.svg';
+import seedLogo from 'img/beanstalk/seed-icon.svg';
+import podsLogo from 'img/beanstalk/pod-icon.svg';
 
-import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
+import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from './chains';
-import { ChainConstant, TokenMap } from '.';
+import { ChainConstant } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES } from './addresses';
+
+// ----------------------------------------
+// Types
+// ----------------------------------------
+type TokenMap = ChainConstant<Token>;
 
 // ----------------------------------------
 // Native Tokens
@@ -47,7 +51,7 @@ export const ETH = {
     {
       name: 'Ropsten Ether',
       symbol: 'ropETH',
-      logo: ropstenIconCircledUrl
+      logo: ropEthIconCircledUrl
     }
   ),
 };
@@ -317,7 +321,7 @@ export const BALANCE_TOKENS : TokenMap[] = [
   ...ERC20_TOKENS,
 ];
 
-export const SILO_TOKENS : TokenMap[] = [
+export const SILO_WHITELIST : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
   BEAN_CRV3_LP,

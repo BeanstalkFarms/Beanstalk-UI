@@ -11,19 +11,19 @@ import {
   Tooltip,
   useMediaQuery,
 } from '@mui/material';
-import PageHeader from 'components/v2/Common/PageHeader';
+import PageHeader from 'components/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
-import podIcon from 'img/pod-logo.svg';
+import podIcon from 'img/beanstalk/pod-icon.svg';
 import useTheme from '@mui/styles/useTheme';
 import {
   StyledDialogContent,
   StyledDialogTitle,
-} from 'components/v2/Common/Dialog';
+} from 'components/Common/Dialog';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -66,7 +66,7 @@ const FieldPage: React.FC = () => {
   const beanToken = useSelector<AppState, AppState['_bean']['token']>(
     (state) => state._bean.token
   );
-  const podLine = beanstalkField?.pods.minus(beanstalkField.harvestableIndex);
+  const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
 
   // Rows
   const rows = useMemo(
@@ -138,7 +138,7 @@ const FieldPage: React.FC = () => {
                   </Tooltip>
                   <Typography variant="h1">
                     {displayBN(
-                      beanstalkField?.pods.div(beanToken?.supply).times(100)
+                      beanstalkField?.podIndex.div(beanToken?.supply).times(100)
                     )}
                     %
                   </Typography>

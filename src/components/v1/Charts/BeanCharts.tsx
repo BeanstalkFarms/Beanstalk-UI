@@ -5,7 +5,7 @@ import {
   dayBeanQuery,
   hourBeanQuery,
 } from 'graph/index';
-import useIsMounted from 'hooks/isMounted';
+import useIsMounted from 'hooks/useIsMounted';
 import { beanChartStrings } from 'components/Common';
 import Charts from './Charts';
 

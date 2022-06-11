@@ -79,11 +79,11 @@ const DayBeanQuery = `
   }
 `;
 
-function roundTo4Digits(num) {
+function roundTo4Digits(num: number) {
   return parseFloat(num.toFixed(4));
 }
 
-function queryHourData(first: Number, skip: Number): Promise {
+function queryHourData(first: Number, skip: Number): Promise<any> {
   return client.query({
       query: gql(HourBeanQuery),
       variables: { first: first, skip: skip },
@@ -107,7 +107,7 @@ export async function hourBeanQuery() {
       .concat(d3.data.hourDatas)
       .concat(d4.data.hourDatas)
       .concat(d5.data.hourDatas);
-    const dates = data.reduce((acc, d) => {
+    const dates = data.reduce((acc: any[], d: any) => {
       const date = new Date();
       date.setTime(d.hourTimestamp * 1000);
       acc.push({
@@ -132,7 +132,7 @@ export async function dayBeanQuery() {
     const data = await client.query({
       query: gql(DayBeanQuery),
     });
-    const dates = data.data.dayDatas.reduce((acc, d) => {
+    const dates = data.data.dayDatas.reduce((acc: any[], d: any) => {
       const date = new Date();
       date.setTime(d.dayTimestamp * 1000);
       acc.push({

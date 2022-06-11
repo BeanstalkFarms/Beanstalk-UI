@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js';
-import { FormTokenState } from 'components/v2/Common/Form';
+import { FormTokenState } from 'components/Common/Form';
 import { USDC } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useHumidity from 'hooks/useHumidity';
-import { Action, ActionType } from 'util/actions';
+import { Action, ActionType } from 'util/Actions';
 
 /**
  * Summarize the Actions that will occur when making a Deposit.
@@ -13,7 +13,9 @@ import { Action, ActionType } from 'util/actions';
  * @param to A whitelisted Silo Token which the Farmer is depositing to.
  * @param tokens Token form state.
  */
-const useFertilizerSummary = (tokens: FormTokenState[]) => {
+export default function useFertilizerSummary(
+  tokens: FormTokenState[]
+) {
   const Usdc = useChainConstant(USDC);
   const [humidity] = useHumidity();
   const summary = tokens.reduce((agg, curr) => {
@@ -56,6 +58,4 @@ const useFertilizerSummary = (tokens: FormTokenState[]) => {
   });
 
   return summary;
-};
-
-export default useFertilizerSummary;
+}

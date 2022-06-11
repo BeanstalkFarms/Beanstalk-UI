@@ -55,9 +55,9 @@ import {
   benchmarkStart,
   benchmarkEnd,
 } from 'util/index';
-import { updateBeanPools } from 'state/v2/bean/pools/actions';
+import { updateBeanPools } from 'state/bean/pools/actions';
 import { BEAN_ETH_UNIV2_POOL_MAINNET } from 'constants/pools';
-import { updateSiloAssets, updateUserTokenBalances } from 'state/v2/farmer/silo/actions';
+import { updateSiloAssets, updateUserTokenBalances } from 'state/farmer/silo/actions';
 import { Bean } from 'constants/tokensv2';
 import { BeanEthUniswapLP } from 'constants/tokens';
 import { UserBalanceState } from './reducer';

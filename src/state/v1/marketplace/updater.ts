@@ -4,7 +4,7 @@ import { AppState } from 'state';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setMarketplaceState,
-} from 'state/marketplace/actions';
+} from 'state/v1/marketplace/actions';
 import orderBy from 'lodash/orderBy';
 import {
   beanstalkContract,

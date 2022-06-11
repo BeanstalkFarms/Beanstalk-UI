@@ -1,14 +1,18 @@
 import { useEffect, useRef } from 'react';
 
-export const usePrevious = (value:any, initialValue:any) => {
+export function usePrevious(value:any, initialValue:any) {
   const ref = useRef(initialValue);
   useEffect(() => {
     ref.current = value;
   });
   return ref.current;
-};
+}
 
-export const useEffectDebugger = (effectHook:any, dependencies:any, dependencyNames = []) => {
+export default function useEffectDebugger(
+  effectHook: any,
+  dependencies:any,
+  dependencyNames = []
+) {
   const previousDeps = usePrevious(dependencies, []);
 
   const changedDeps = dependencies.reduce((accum: any, dependency:any, index:any) => {
@@ -32,4 +36,4 @@ export const useEffectDebugger = (effectHook:any, dependencies:any, dependencyNa
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(effectHook, dependencies);
-};
+}

@@ -2,7 +2,7 @@
 // // import mainSun from 'img/main/Sun.svg';
 // // import mainGround from 'img/main/ground.png';
 // // import mainBarn from 'img/main/Barn.svg';
-// // import bean from 'img/bean-bold-logo.svg';
+// // import bean from 'img/tokens/bean-bold-logo.svg';
 // // import springGround from 'img/spring/ground.svg';
 // // import rainbow from 'img/spring/rainbow.svg';
 
@@ -22,7 +22,7 @@
 // // import fallBarn from 'img/fall/Barn.svg';
 // // import winterBarn from 'img/winter/Barn.svg';
 // // import winterUpgradeBarn from 'img/winter/upgrade/Barn.svg';
-// // import beanWhite from 'img/bean-white-logo.svg';
+// // import beanWhite from 'img/tokens/bean-white-logo.svg';
 
 // const mainTheme = {
 //   name: 'main',

@@ -11,7 +11,7 @@ import { account, CryptoAsset, displayBN, FarmAsset } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { filterStrings, QuestionModule } from 'components/Common';
 
-import { zeroBN } from 'constants/index';
+import { ZERO_BN } from 'constants/index';
 import FillListingModal from './FillListingModal';
 import ListingsTable from './ListingsTable';
 import Filters, { StyledSlider } from '../Filters';
@@ -60,7 +60,7 @@ export default function Listings(props: ListingsProps) {
   const [tempPriceFilters, setTempPriceFilters] = useState<number[]>([0, 1]);
 
   const placesInLine   = [0, totalPods.toNumber()];
-  const placesInLineBN = [zeroBN, totalPods];
+  const placesInLineBN = [ZERO_BN, totalPods];
 
   const [placeInLineFilters, setPlaceInLineFilters] =
     useState<BigNumber[]>(placesInLineBN);
@@ -91,7 +91,7 @@ export default function Listings(props: ListingsProps) {
           .lte(new BigNumber(placeInLineFilters[1])) &&
         listing.maxHarvestableIndex
           .minus(harvestableIndex)
-          .gte(zeroBN)
+          .gte(ZERO_BN)
       ));
     }
 
@@ -119,7 +119,7 @@ export default function Listings(props: ListingsProps) {
 
   const numPods = filteredListings.current.reduce(
     (sum, curr) => sum.plus(curr.remainingAmount),
-    zeroBN
+    ZERO_BN
   );
 
   // Filters
