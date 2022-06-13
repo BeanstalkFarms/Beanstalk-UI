@@ -1,17 +1,17 @@
-import { Box, Button, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Card, Stack, Tab, Tabs } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
 import React, { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'state';
-import { displayBN, displayFullBN, displayUSD } from 'util/index';
+import { displayBN, displayUSD } from 'util/index';
 
 import SimpleLineChart, { DataPoint } from 'components/Charts/SimpleLineChart';
 import {
   mockDepositData,
   mockOwnershipPctData,
 } from 'components/Charts/SimpleLineChart.mock';
-import MainnetBlur from '../Common/MainnetBlur';
-import Stat from '../Common/Stat';
+import MainnetBlur from 'components/Common/MainnetBlur';
+import Stat from 'components/Common/Stat';
 
 // ------------------------------------------------
 

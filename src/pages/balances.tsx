@@ -10,7 +10,7 @@ import Stat from 'components/Common/Stat';
 import { displayBN } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
-import useFarmerTotalFertilizer from "../hooks/useFarmerTotalFertilizer";
+import useFarmerTotalFertilizer from "hooks/useFarmerTotalFertilizer";
 
 const BalancesPage: React.FC = () => {
   // State
