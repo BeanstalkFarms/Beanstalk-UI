@@ -35,11 +35,13 @@ const Template: ComponentStory<typeof Button> = (args: any) => {
   return a;
 };
 
-export const Primary = Template.bind({});
+const Primary = Template.bind({});
 Primary.args = {};
 
-export const Outlined = Template.bind({});
+const Outlined = Template.bind({});
 Outlined.args = {
   variant: 'outlined',
   // wrapped: false,
 };
+
+export { Primary, Outlined };

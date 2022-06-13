@@ -1,15 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter } from 'react-router-dom';
-import { Provider as ReduxProvider } from 'react-redux';
-import { WagmiConfig } from 'wagmi';
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles';
 import { setUseWhatChange } from '@simbathesailor/use-what-changed';
 
-import store from 'state';
 import App from 'components/App';
-import theme from 'components/App/muiTheme';
-import client from './util/Client';
+import Wrapper from 'components/App/Wrapper';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -24,17 +19,9 @@ declare module '@mui/styles/defaultTheme' {
 
 ReactDOM.render(
   <React.StrictMode>
-    <HashRouter>
-      <ReduxProvider store={store}>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <WagmiConfig client={client}>
-              <App />
-            </WagmiConfig>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </ReduxProvider>
-    </HashRouter>
+    <Wrapper>
+      <App />
+    </Wrapper>
   </React.StrictMode>,
   document.getElementById('root')
 );

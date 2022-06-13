@@ -2,6 +2,7 @@ import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import BigNumber from 'bignumber.js';
 import RewardsBar from './RewardsBar';
+import { SupportedChainId } from 'constants/chains';
 
 export default {
   component: RewardsBar,
@@ -10,7 +11,7 @@ export default {
 
 const Template: ComponentStory<typeof RewardsBar> = (args: any) => (
   <RewardsBar
-    {...args}
+    chainId={SupportedChainId.MAINNET}
     beans={{
       earned: new BigNumber(100),
     }}
@@ -28,4 +29,4 @@ const Template: ComponentStory<typeof RewardsBar> = (args: any) => (
   />
 );
 
-export const Default = Template.bind({});
+export const Main = Template.bind({});

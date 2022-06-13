@@ -3,7 +3,7 @@ import { NEW_BN } from 'constants/index';
 import { BeanstalkSilo } from '.';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 
-const initialState : BeanstalkSilo = {
+export const initialBeanstalkSilo : BeanstalkSilo = {
   beans: {
     total: NEW_BN,
     earned: NEW_BN,
@@ -24,11 +24,11 @@ const initialState : BeanstalkSilo = {
   }
 };
 
-export default createReducer(initialState, (builder) =>
+export default createReducer(initialBeanstalkSilo, (builder) =>
   builder
     .addCase(resetBeanstalkSilo, () => {
       console.debug('[beanstalk/silo/reducer] reset');
-      return initialState;
+      return initialBeanstalkSilo;
     })
     .addCase(updateBeanstalkSiloAssets, (state, { payload }) => {
       state.beans = payload.beans;

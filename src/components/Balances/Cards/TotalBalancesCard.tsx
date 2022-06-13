@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Alert, AlertTitle, Box, Grid, Link, Stack, Typography } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useWhitelist from 'hooks/useWhitelist';
 import { displayFullBN, displayUSD } from 'util/index';
 import Stat from 'components/Common/Stat';

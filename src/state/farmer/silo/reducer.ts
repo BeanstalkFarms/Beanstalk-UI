@@ -5,7 +5,7 @@ import { resetFarmerSilo, updateFarmerSiloAssets, updateFarmerTokenBalances } fr
 
 const NEG1 = new BigNumber(-1);
 
-const initialState : FarmerSilo = {
+export const initialFarmerSilo : FarmerSilo = {
   tokens: {},
   beans: {
     earned: NEG1,
@@ -26,11 +26,11 @@ const initialState : FarmerSilo = {
   }
 };
 
-export default createReducer(initialState, (builder) =>
+export default createReducer(initialFarmerSilo, (builder) =>
   builder
     .addCase(resetFarmerSilo, () => {
       console.debug('[farmer/silo/reducer] reset');
-      return initialState;
+      return initialFarmerSilo;
     })
     .addCase(updateFarmerTokenBalances, (state, { payload }) => {
       const addresses = Object.keys(payload);
