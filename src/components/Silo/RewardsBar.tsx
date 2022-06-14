@@ -31,7 +31,7 @@ const RewardsBar : React.FC<{
             <Typography variant="h3">{displayBN(beans.earned)}</Typography>
           </Box>
           <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-            <Tooltip title="The number of Stalk earned from Earned Beans. Earned Stalk automatically contribute to total Stalk ownership." placement="top">
+            <Tooltip title="The number of Stalk earned from Earned Beans. Earned Stalk automatically contributes to total Stalk ownership." placement="top">
               <Typography color="gray">Earned Stalk</Typography>
             </Tooltip>
             <Typography variant="h3">{displayBN(stalk.earned)}</Typography>
