@@ -13,13 +13,15 @@ import { BEAN } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from '../util';
 import { ANALYTICS_LINK, SupportedChainId } from '../constants';
+import SiloBalances from '../components/Common/SiloBalances';
+import useBeanstalkSiloBreakdown from '../hooks/useBeanstalkSiloBreakdown';
 
 const ForecastPage: React.FC = () => {
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
-  const breakdown = useFarmerSiloBreakdown();
+  const breakdown = useBeanstalkSiloBreakdown();
   const chainId = useChainId();
 
   return (
@@ -88,6 +90,12 @@ const ForecastPage: React.FC = () => {
             amount={`$${displayFullBN(new BigNumber(1000000))}`}
             icon={undefined}
           />
+          <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
+            <Typography>TEST</Typography>
+          </Box>
+          <Box sx={{ display: tab === 1 ? 'block' : 'none' }}>
+            <SiloBalances breakdown={breakdown} />
+          </Box>
         </Card>
       </Stack>
     </Container>
