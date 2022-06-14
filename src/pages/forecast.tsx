@@ -21,6 +21,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { displayBN, displayFullBN } from '../util';
 import { ANALYTICS_LINK, SupportedChainId } from '../constants';
 import SiloBalances from '../components/Common/SiloBalances';
@@ -28,7 +29,6 @@ import useBeanstalkSiloBreakdown from '../hooks/useBeanstalkSiloBreakdown';
 import { AppState } from '../state';
 import { tableStyle } from '../util/tableStyle';
 import { BeanstalkPalette } from '../components/App/muiTheme';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 const columns: GridColumns = [
   {
@@ -61,7 +61,7 @@ const columns: GridColumns = [
         {
           params.value.gt(0) ? (
             <Stack direction="row" alignItems="center">
-              <ArrowUpwardIcon sx={{ color: BeanstalkPalette.logoGreen, height: "20px" }} />
+              <ArrowUpwardIcon sx={{ color: BeanstalkPalette.logoGreen, height: '17px' }} />
               <Typography sx={{ color: BeanstalkPalette.logoGreen }}>{displayBN(params.value)}</Typography>
             </Stack>
           ) : (
@@ -84,7 +84,7 @@ const columns: GridColumns = [
         {
           params.value.gt(0) ? (
             <Stack direction="row" alignItems="center">
-              <ArrowUpwardIcon sx={{ color: BeanstalkPalette.logoGreen, height: "20px" }} />
+              <ArrowUpwardIcon sx={{ color: BeanstalkPalette.logoGreen, height: '17px' }} />
               <Typography sx={{ color: BeanstalkPalette.logoGreen }}>{displayBN(params.value)}</Typography>
             </Stack>
           ) : (
