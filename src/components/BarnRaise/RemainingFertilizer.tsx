@@ -44,7 +44,7 @@ const RemainingFertilizer: React.FC = () => {
           <Stack justifyContent="space-between" gap={3}>
             <Stack gap={3}>
               <Stack gap={1}>
-                <Tooltip title="Fertilizer, once purchased, will receive a pro rata share of one-third of new Bean mints." placement="top-start">
+                <Tooltip title="Once purchased, Fertilizer will receive a pro rata share of one-third of new Bean mints until the Humidity is paid back." placement="top-start">
                   <Typography>Available Fertilizer</Typography>
                 </Tooltip>
                 <Stack direction="row" gap={1} alignItems="center">
