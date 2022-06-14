@@ -74,9 +74,6 @@ const FarmerEventsProcessor = () => {
         );
         console.debug('[farmer/updater] ...processed events!', results);
 
-        console.log("USER BEAN DEPOSITS!!!");
-        console.log(results.userBeanDeposits);
-
         // TEMP:
         // Hardcode this because the event process returns `beanDepositsBalance`, etc.
         dispatch(updateFarmerTokenBalances({

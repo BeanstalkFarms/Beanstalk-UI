@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK, LP_TO_SEEDS, TokenMap, ZERO_BN } from 'constants/index';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK,  TokenMap, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/Ledger';
 import { tokenResult } from 'util/Tokens';
@@ -9,8 +9,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { useGeneralizedWhitelist } from 'hooks/useWhitelist';
 import BigNumber from 'bignumber.js';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
-import { Deposit, Withdrawal } from '../../farmer/silo';
-import { useGetChainConstant } from '../../../hooks/useChainConstant';
+import { useGetChainConstant } from 'hooks/useChainConstant';
 import { BeanstalkSiloBalance } from './index';
 
 export const useBeanstalkSilo = () => {
@@ -65,10 +64,6 @@ export const useBeanstalkSilo = () => {
         )
       ] as const);
 
-      console.log('BEANSTALK Pool BALANCES');
-      console.log(poolBalancesTotal);
-      console.log(depositedBeansTotal);
-      console.log(depositedLpTotal);
       console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [stalkTotal, seedsTotal]);
 
       // farmableStalk and farmableSeed are derived from farmableBeans
@@ -76,9 +71,6 @@ export const useBeanstalkSilo = () => {
       const earnedStalkTotal = earnedBeansTotal.times(BEAN_TO_STALK);
       const activeStalkTotal = stalkTotal.plus(earnedStalkTotal);
       const earnedSeedTotal = earnedBeansTotal.times(BEAN_TO_SEEDS);
-
-      const a = { one: '1' };
-      const b = { two: '2' };
 
       // total:   active & inactive
       // active:  owned, actively earning other silo assets
@@ -117,11 +109,11 @@ export const useBeanstalkSilo = () => {
           [SiloTokens.BeanEthLP.address]: {
             deposited: {
               amount:  depositedLpTotal,
-              bdv:    depositedLpTotal, // TODO: calculate
+              bdv:    new BigNumber(0),
             },
             withdrawn: {
               amount:  withdrawnLpTotal,
-              bdv:    withdrawnLpTotal, // TODO: calculate
+              bdv:    new BigNumber(0),
             }
           },
           ...poolBalancesTotal.reduce((agg, curr) => {
