@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Card, Container, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Stack, Tab, Tabs, TabScrollButton, Typography } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 // import duneIcon from 'img/dune-icon.svg';
@@ -56,11 +56,9 @@ const ForecastPage: React.FC = () => {
           )}
         />
         {/* TEMP: Hide next Season metrics on MAINNET. */}
-        {chainId !== SupportedChainId.MAINNET && (
-          <NextSeason
-            title="DUMMY ACCORDION. REPLACE LATER."
-          />
-        )}
+        <Card sx={{ width: "100%", p: 2 }}>
+          <Typography>PLACEHOLDER</Typography>
+        </Card>
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Card sx={{ width: '100%' }}>
             <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
