@@ -116,24 +116,40 @@ const rows: GridRowsProp = [
     id: 2,
     season: new BigNumber(5674),
     twap: new BigNumber(1.004),
-    newBeans: new BigNumber(5),
-    newSoil: new BigNumber(2000),
+    newBeans: new BigNumber(500),
+    newSoil: new BigNumber(1),
     weather: new BigNumber(689)
   },
   {
     id: 3,
     season: new BigNumber(5674),
-    twap: new BigNumber(0.996),
-    newBeans: new BigNumber(0),
+    twap: new BigNumber(1.069),
+    newBeans: new BigNumber(1),
     newSoil: new BigNumber(0),
     weather: new BigNumber(689)
   },
   {
     id: 4,
-    season: new BigNumber(5674),
-    twap: new BigNumber(1),
-    newBeans: new BigNumber(1),
-    newSoil: new BigNumber(0),
+    season: new BigNumber(0),
+    twap: new BigNumber(0.95),
+    newBeans: new BigNumber(0),
+    newSoil: new BigNumber(5000),
+    weather: new BigNumber(689)
+  },
+  {
+    id: 5,
+    season: new BigNumber(5673),
+    twap: new BigNumber(0.9099),
+    newBeans: new BigNumber(0),
+    newSoil: new BigNumber(3785),
+    weather: new BigNumber(689)
+  },
+  {
+    id: 6,
+    season: new BigNumber(5673),
+    twap: new BigNumber(0.60009),
+    newBeans: new BigNumber(0),
+    newSoil: new BigNumber(1092),
     weather: new BigNumber(689)
   }
 ];
