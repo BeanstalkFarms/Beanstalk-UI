@@ -3,11 +3,11 @@ import { Stack, Typography, CardProps, Box, Card } from '@mui/material';
 
 export type ForecastCardProps = {
   stats: React.ReactElement;
-  graph: React.ReactElement;
+  graphSection: React.ReactElement;
   showLastCross?: boolean;
 }
 
-const ForecastCard: React.FC<ForecastCardProps & CardProps> = ({ children, showLastCross, graph, stats, sx }) => (
+const ForecastCard: React.FC<ForecastCardProps & CardProps> = ({ children, showLastCross, graphSection, stats, sx }) => (
   <Card sx={{ width: '100%' }}>
     <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
       {stats}
@@ -17,7 +17,7 @@ const ForecastCard: React.FC<ForecastCardProps & CardProps> = ({ children, showL
         </Box>
       )}
     </Stack>
-    {graph}
+    {graphSection}
   </Card>
 );
 

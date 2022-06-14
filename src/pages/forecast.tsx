@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Box,
   Button,
   Card,
-  Container,
+  Container, Divider,
   Stack,
   Tab,
   Tabs,
@@ -29,7 +29,9 @@ import useBeanstalkSiloBreakdown from '../hooks/useBeanstalkSiloBreakdown';
 import { AppState } from '../state';
 import { tableStyle } from '../util/tableStyle';
 import { BeanstalkPalette } from '../components/App/muiTheme';
-import ForecastCard from "../components/Forecast/ForecastCard";
+import ForecastCard from '../components/Forecast/ForecastCard';
+import SimpleLineChart, { DataPoint } from '../components/Charts/SimpleLineChart';
+import { mockPodRateData, mockTWAPData } from '../components/Charts/SimpleLineChart.mock';
 
 const columns: GridColumns = [
   {
@@ -180,6 +182,21 @@ const ForecastPage: React.FC = () => {
     return Math.min(rows.length, MAX_ROWS) * 52 + 112;
   }, []);
 
+  const [displayTWAP, setDisplayTWAP] = useState([beanPrice]);
+  const [displayPodRate, setDisplayPodRate] = useState([podRate]);
+  const handleCursorTWAP = useCallback(
+    (dps?: DataPoint[]) => {
+      setDisplayTWAP(dps ? dps.map((dp) => new BigNumber(dp.value)) : [beanPrice]);
+    },
+    [beanPrice]
+  );
+  const handleCursorPodRate = useCallback(
+    (dps?: DataPoint[]) => {
+      setDisplayPodRate(dps ? dps.map((dp) => new BigNumber(dp.value)) : [podRate]);
+    },
+    [podRate]
+  );
+
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>
@@ -210,28 +227,58 @@ const ForecastPage: React.FC = () => {
               <Stat
                 title="Time Weighted Average Price"
                 color="primary"
-                amount={`$${(isPriceLoading ? 0.0000 : beanPrice).toFixed(4)}`}
+                amount={`$${(isPriceLoading ? 0.0000 : displayTWAP[0]).toFixed(4)}`}
                 icon={undefined}
                 topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 bottomText={`Season ${displayBN(season)}`}
               />
             )}
-            graph={(
-              <Typography>TEST GRAPH</Typography>
+            graphSection={(
+              <>
+                <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
+                  <SimpleLineChart series={[mockTWAPData]} onCursor={handleCursorTWAP} />
+                </Box>
+                <Box>
+                  <Divider color={BeanstalkPalette.lightBlue} />
+                  <Stack direction="row" justifyContent="space-between" sx={{ p: 0.75, pr: 2, pl: 2 }}>
+                    <Typography color={BeanstalkPalette.lightishGrey}>2/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>3/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>4/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>5/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>6/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>7/21</Typography>
+                  </Stack>
+                </Box>
+              </>
             )}
           />
           <ForecastCard
             stats={(
               <Stat
                 title="Pod Rate"
-                amount={`${displayBN(podRate)}%`}
+                amount={`${displayBN(displayPodRate[0])}%`}
                 icon={undefined}
                 topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 bottomText={`Season ${displayBN(season)}`}
               />
             )}
-            graph={(
-              <Typography>TEST GRAPH</Typography>
+            graphSection={(
+              <>
+                <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
+                  <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursorTWAP} />
+                </Box>
+                <Box>
+                  <Divider color={BeanstalkPalette.lightBlue} />
+                  <Stack direction="row" justifyContent="space-between" sx={{ p: 0.75, pr: 2, pl: 2 }}>
+                    <Typography color={BeanstalkPalette.lightishGrey}>2/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>3/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>4/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>5/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>6/21</Typography>
+                    <Typography color={BeanstalkPalette.lightishGrey}>7/21</Typography>
+                  </Stack>
+                </Box>
+              </>
             )}
           />
         </Stack>
