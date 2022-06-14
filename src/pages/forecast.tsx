@@ -1,27 +1,27 @@
-import React from 'react';
-import { Box, Button, Card, Container, Stack, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Box, Button, Card, Container, Stack, Tab, Tabs, Typography } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 // import duneIcon from 'img/dune-icon.svg';
 // import activeFert from 'img/tokens/fert-logo-active.svg';
-import forecast from 'img/beanstalk/forecast-banner.svg';
-import { useSelector } from 'react-redux';
-import { ANALYTICS_LINK, SupportedChainId } from '../constants';
-import RewardsBar from '../components/Silo/RewardsBar';
-import { AppState } from '../state';
-import useFarmerSiloBreakdown from '../hooks/useFarmerSiloBalances';
-import useChainId from '../hooks/useChain';
-import NextSeason from '../components/Silo/NextSeason';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
+import useChainId from 'hooks/useChain';
+import NextSeason from 'components/Silo/NextSeason';
+import Stat from 'components/Common/Stat';
+import TokenIcon from 'components/Common/TokenIcon';
+import { BEAN } from 'constants/tokens';
+import BigNumber from 'bignumber.js';
 import { displayFullBN } from '../util';
-import Stat from '../components/Common/Stat';
+import { ANALYTICS_LINK, SupportedChainId } from '../constants';
 
 const ForecastPage: React.FC = () => {
-  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-  const { sunrise, season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
+  const [tab, setTab] = useState(0);
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
   const breakdown = useFarmerSiloBreakdown();
   const chainId = useChainId();
+
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>
@@ -48,22 +48,47 @@ const ForecastPage: React.FC = () => {
           />
         )}
         <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Card>
-            <Stack direction="row" sx={{ p: 1 }}>
+          <Card sx={{ width: '100%' }}>
+            <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
+              <Stat
+                title="Time Weighted Average Price"
+                color="primary"
+                amount={`$${displayFullBN(breakdown.totalValue.abs(), 2)}`}
+                icon={undefined}
+                topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
+              />
               <Box>
-                <Stat
-                  title="Time Weighted Average Price"
-                  amount={`$${displayFullBN(breakdown.totalValue.abs(), 2)}`}
-                  icon={undefined}
-                />
-
+                <Typography>Last cross: 2m ago</Typography>
               </Box>
             </Stack>
             <Typography>test</Typography>
-
+          </Card>
+          <Card sx={{ width: '100%' }}>
+            <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
+              <Stat
+                title="Pod Rate"
+                amount={`${displayFullBN(breakdown.totalValue.abs(), 2)}%`}
+                icon={undefined}
+                topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
+              />
+              <Box>
+                <Typography>Last cross: 2m ago</Typography>
+              </Box>
+            </Stack>
+            <Typography>test</Typography>
           </Card>
         </Stack>
-
+        <Card sx={{ p: 2, width: '100%' }}>
+          <Tabs value={tab} onChange={handleChangeTab}>
+            <Tab label="Liquidity Over Time" />
+            <Tab label="Liquidity By State" />
+          </Tabs>
+          <Stat
+            title="Total Beanstalk Liquidity"
+            amount={`$${displayFullBN(new BigNumber(1000000))}`}
+            icon={undefined}
+          />
+        </Card>
       </Stack>
     </Container>
   );

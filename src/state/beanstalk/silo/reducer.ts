@@ -4,6 +4,7 @@ import { BeanstalkSilo } from '.';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 
 const initialState : BeanstalkSilo = {
+  tokens: {},
   beans: {
     total: NEW_BN,
     earned: NEW_BN,
@@ -31,6 +32,7 @@ export default createReducer(initialState, (builder) =>
       return initialState;
     })
     .addCase(updateBeanstalkSiloAssets, (state, { payload }) => {
+      state.tokens = payload.tokens;
       state.beans = payload.beans;
       state.stalk = payload.stalk;
       state.seeds = payload.seeds;
