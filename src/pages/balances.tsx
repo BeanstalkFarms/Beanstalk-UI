@@ -58,7 +58,7 @@ const BalancesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Stat
-                title={`Unfertilized Beans`}
+                title={`My Unfertilized Beans`}
                 icon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 amount={displayBN(fertilizerSummary.unfertilized)}
                 variant="h2"

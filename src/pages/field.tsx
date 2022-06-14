@@ -113,7 +113,7 @@ const FieldPage: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Tooltip title="The number of Beans that can currently be Sown, or lent, to Beanstalk." placement="top">
+                  <Tooltip title="The number of Beans that can currently be Sown, or lent to Beanstalk." placement="top">
                     <Typography variant="h4">Available Soil</Typography>
                   </Tooltip>
                   <Typography variant="h1">
@@ -133,7 +133,7 @@ const FieldPage: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Tooltip title="The ratio of Unharvested Pods to the total Bean supply. The Pod Rate is often used as a proxy for Beanstalk’s leverage." placement="top">
+                  <Tooltip title="The ratio of Unharvested Pods to total Bean supply. The Pod Rate is often used as a proxy for Beanstalk’s leverage." placement="top">
                     <Typography variant="h4">Pod Rate</Typography>
                   </Tooltip>
                   <Typography variant="h1">

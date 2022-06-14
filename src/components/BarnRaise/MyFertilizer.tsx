@@ -59,7 +59,7 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Tooltip
-              title="The number of Beans owed to you based on your Fertilizer."
+              title="The number of Beans owed based on the Fertilizer you have purchased and its Humidity."
               placement="right"
             >
               <Typography variant="body1">
