@@ -29,6 +29,7 @@ import useBeanstalkSiloBreakdown from '../hooks/useBeanstalkSiloBreakdown';
 import { AppState } from '../state';
 import { tableStyle } from '../util/tableStyle';
 import { BeanstalkPalette } from '../components/App/muiTheme';
+import ForecastCard from "../components/Forecast/ForecastCard";
 
 const columns: GridColumns = [
   {
@@ -203,8 +204,9 @@ const ForecastPage: React.FC = () => {
           <Typography>PLACEHOLDER</Typography>
         </Card>
         <Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" gap={2}>
-          <Card sx={{ width: '100%' }}>
-            <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
+          <ForecastCard
+            showLastCross
+            stats={(
               <Stat
                 title="Time Weighted Average Price"
                 color="primary"
@@ -213,14 +215,13 @@ const ForecastPage: React.FC = () => {
                 topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 bottomText={`Season ${displayBN(season)}`}
               />
-              <Box>
-                <Typography>Last cross: 2m ago</Typography>
-              </Box>
-            </Stack>
-            <Typography>test</Typography>
-          </Card>
-          <Card sx={{ width: '100%' }}>
-            <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
+            )}
+            graph={(
+              <Typography>TEST GRAPH</Typography>
+            )}
+          />
+          <ForecastCard
+            stats={(
               <Stat
                 title="Pod Rate"
                 amount={`${displayBN(podRate)}%`}
@@ -228,9 +229,11 @@ const ForecastPage: React.FC = () => {
                 topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 bottomText={`Season ${displayBN(season)}`}
               />
-            </Stack>
-            <Typography>test</Typography>
-          </Card>
+            )}
+            graph={(
+              <Typography>TEST GRAPH</Typography>
+            )}
+          />
         </Stack>
         <Card sx={{ p: 2, width: '100%' }}>
           <Tabs value={tab} onChange={handleChangeTab}>
