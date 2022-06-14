@@ -234,7 +234,20 @@ const ForecastPage: React.FC = () => {
           </Box>
         </Card>
         <Card sx={{ p: 1 }}>
-          <Box width="100%" height={tableHeight} sx={{ ...tableStyle }}>
+          <Box
+            width="100%"
+            height={tableHeight}
+            sx={{
+              ...tableStyle,
+              '& .MuiDataGrid-row': {
+                borderBottom: 1,
+                borderColor: BeanstalkPalette.lightBlue,
+              },
+              '& .MuiDataGrid-columnHeadersInner': {
+                borderBottom: 2, // TODO: why 2 here but 1 above?
+                borderColor: BeanstalkPalette.lightBlue,
+              }
+            }}>
             <DataGrid
               columns={columns}
               rows={rows}
