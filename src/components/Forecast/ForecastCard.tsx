@@ -5,15 +5,16 @@ export type ForecastCardProps = {
   stats: React.ReactElement;
   graphSection: React.ReactElement;
   showLastCross?: boolean;
+  topRight?: React.ReactElement;
 }
 
-const ForecastCard: React.FC<ForecastCardProps & CardProps> = ({ children, showLastCross, graphSection, stats, sx }) => (
+const ForecastCard: React.FC<ForecastCardProps & CardProps> = ({ children, topRight, showLastCross, graphSection, stats, sx }) => (
   <Card sx={{ width: '100%' }}>
     <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
       {stats}
-      {showLastCross && (
+      {topRight !== undefined && (
         <Box>
-          <Typography>Last cross: 2m ago</Typography>
+          {topRight}
         </Box>
       )}
     </Stack>

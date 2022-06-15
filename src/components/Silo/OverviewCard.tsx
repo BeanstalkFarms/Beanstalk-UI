@@ -12,17 +12,9 @@ import {
 } from 'components/Charts/SimpleLineChart.mock';
 import MainnetBlur from 'components/Common/MainnetBlur';
 import Stat from 'components/Common/Stat';
+import TimeTabs from '../TimeTabs';
 
 // ------------------------------------------------
-
-const WINDOWS = [
-  { label: '1H' },
-  { label: '1D' },
-  { label: '1W' },
-  { label: '1M' },
-  { label: '1Y' },
-  { label: 'All' },
-];
 
 type TabData = {
   season: BigNumber;
@@ -121,6 +113,11 @@ const OverviewCard: React.FC<{
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
+
+  const [timeTab, setTimeTab] = useState(0);
+  const handleChangeTimeTab = (i: number) => {
+    setTimeTab(i);
+  };
   return (
     <Card>
       {/* FIXME: sizing between deposits tab and Total Silo Deposits */}
@@ -136,19 +133,7 @@ const OverviewCard: React.FC<{
         </Tabs>
         {/* "Windows" (time range selector) */}
         <Box sx={{ display: 'none' }}>
-          <Stack direction="row">
-            {WINDOWS.map((w) => (
-              <Button
-                key={w.label}
-                variant="text"
-                size="small"
-                color="dark"
-                sx={{ px: 0.5, py: 0.5, minWidth: 0 }}
-              >
-                {w.label}
-              </Button>
-            ))}
-          </Stack>
+          <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />
         </Box>
       </Stack>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>

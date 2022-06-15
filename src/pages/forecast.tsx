@@ -32,6 +32,7 @@ import { BeanstalkPalette } from '../components/App/muiTheme';
 import ForecastCard from '../components/Forecast/ForecastCard';
 import SimpleLineChart, { DataPoint } from '../components/Charts/SimpleLineChart';
 import { mockPodRateData, mockTWAPData } from '../components/Charts/SimpleLineChart.mock';
+import TimeTabs from '../components/TimeTabs';
 
 const columns: GridColumns = [
   {
@@ -204,6 +205,16 @@ const ForecastPage: React.FC = () => {
     [podRate]
   );
 
+  const [timeTab, setTimeTab] = useState(0);
+  const handleChangeTimeTab = (i: number) => {
+    setTimeTab(i);
+  };
+
+  useEffect(() => {
+    console.log('TAB');
+    console.log(timeTab);
+  }, [timeTab]);
+
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>
@@ -241,6 +252,7 @@ const ForecastPage: React.FC = () => {
               />
             )}
             graphSection={(
+              // TODO: componentize graphSection
               <>
                 <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
                   <SimpleLineChart series={[mockTWAPData]} onCursor={handleCursorTWAP} />
@@ -258,6 +270,14 @@ const ForecastPage: React.FC = () => {
                 </Box>
               </>
             )}
+            topRight={(
+              <>
+                <Stack alignItems="right">
+                  <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />
+                  <Typography sx={{ textAlign: 'right', pr: 0.5 }}>Last cross: 2m ago</Typography>
+                </Stack>
+              </>
+            )}
           />
           <ForecastCard
             stats={(
@@ -270,6 +290,7 @@ const ForecastPage: React.FC = () => {
               />
             )}
             graphSection={(
+              // TODO: componentize graphSection
               <>
                 <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
                   <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursorPodRate} />
