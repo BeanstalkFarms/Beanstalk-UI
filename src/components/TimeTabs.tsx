@@ -29,7 +29,15 @@ const TimeTabs: React.FC<TimeTabProps & StackProps> = ({ sx, setState, tab }) =>
           variant="text"
           size="small"
           color="dark"
-          sx={{ px: 0.5, py: 0.5, minWidth: 0 }}
+          sx={{
+            px: 0.3,
+            py: 0.3,
+            minWidth: 0,
+            '&:hover': {
+              backgroundColor: 'transparent'
+            }
+          }}
+          disableRipple
         >
           <Typography color={tab === w.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
             {w.label}
