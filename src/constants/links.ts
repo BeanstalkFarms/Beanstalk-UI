@@ -24,7 +24,7 @@ export const CURVE_LINK = 'https://curve.fi/factory/81/';
 export const LUSD_LINK = 'https://curve.fi/factory/103/';
 export const DUNE_LINK = 'https://dune.xyz/tbiq/Beanstalk';
 export const NETLIFY_LINK = 'https://www.netlify.com/';
-export const SNAPSHOT_LINK = 'https://snapshot.org/#/beanstalkfarms.eth';
+export const SNAPSHOT_LINK = 'https://snapshot.org/#/beanstalkdao.eth';
 
 /* Path Links */
 export const APY_CALCULATION = '/docs/APY.html';
