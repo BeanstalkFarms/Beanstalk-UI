@@ -1,11 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Alert, AlertTitle, Box, Grid, Link, Stack, Typography } from '@mui/material';
-import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
+import { useAccount } from 'wagmi';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useWhitelist from 'hooks/useWhitelist';
+import useChainId from 'hooks/useChain';
 import { displayFullBN, displayUSD } from 'util/index';
+import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
 import Stat from 'components/Common/Stat';
-import { useAccount } from 'wagmi';
+import { SupportedChainId } from 'constants/index';
 import BlurComponent from '../../Common/BlurComponent';
 
 export interface TotalBalanceCardProps {
@@ -66,6 +68,7 @@ const TokenRow: React.FC<{
 const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
   const WHITELIST = useWhitelist();
   const { data: account } = useAccount();
+  const chainId = useChainId();
   
   // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
   const [drilldown, setDrilldown] = useState<StateID | null>(null);
@@ -88,7 +91,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
         amount={`$${displayFullBN(breakdown.totalValue.abs(), 2)}`}
         icon={undefined}
       />
-      {account && (
+      {(account && chainId === SupportedChainId.MAINNET) && (
         <Alert severity="warning" sx={{ mt: 2, mb: 1 }}>
           <AlertTitle>Note regarding balances</AlertTitle>
           Balances are fixed to their pre-exploit values. The USD value of Silo deposits are calculated using a fixed $BEAN
