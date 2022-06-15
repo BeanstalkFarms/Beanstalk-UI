@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -174,6 +174,7 @@ const ForecastPage: React.FC = () => {
   const podRate = totalPods.dividedBy(totalBeanSupply).multipliedBy(100);
 
   const isPriceLoading = beanPrice.eq(new BigNumber(-1));
+  const isPodRateLoading = totalPods.eq(new BigNumber(-1)) || totalBeanSupply.eq(new BigNumber(-1));
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -182,17 +183,23 @@ const ForecastPage: React.FC = () => {
     return Math.min(rows.length, MAX_ROWS) * 52 + 112;
   }, []);
 
-  const [displayTWAP, setDisplayTWAP] = useState([beanPrice]);
-  const [displayPodRate, setDisplayPodRate] = useState([podRate]);
+  const [displayTWAP, setDisplayTWAP] = useState<BigNumber[]>([new BigNumber(-1)]);
+
+  const [isHoveringTWAP, setIsHoveringTWAP] = useState(false);
   const handleCursorTWAP = useCallback(
     (dps?: DataPoint[]) => {
       setDisplayTWAP(dps ? dps.map((dp) => new BigNumber(dp.value)) : [beanPrice]);
+      setIsHoveringTWAP(!!dps);
     },
     [beanPrice]
   );
+
+  const [displayPodRate, setDisplayPodRate] = useState<BigNumber[]>([new BigNumber(-1)]);
+  const [isHoveringPodRate, setIsHoveringPodRate] = useState(false);
   const handleCursorPodRate = useCallback(
     (dps?: DataPoint[]) => {
       setDisplayPodRate(dps ? dps.map((dp) => new BigNumber(dp.value)) : [podRate]);
+      setIsHoveringPodRate(!!dps);
     },
     [podRate]
   );
@@ -227,7 +234,7 @@ const ForecastPage: React.FC = () => {
               <Stat
                 title="Time Weighted Average Price"
                 color="primary"
-                amount={`$${(isPriceLoading ? 0.0000 : displayTWAP[0]).toFixed(4)}`}
+                amount={`$${(isHoveringTWAP ? displayTWAP[0] : beanPrice).toFixed(4)}`}
                 icon={undefined}
                 topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 bottomText={`Season ${displayBN(season)}`}
@@ -235,7 +242,7 @@ const ForecastPage: React.FC = () => {
             )}
             graphSection={(
               <>
-                <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
+                <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
                   <SimpleLineChart series={[mockTWAPData]} onCursor={handleCursorTWAP} />
                 </Box>
                 <Box>
@@ -256,7 +263,7 @@ const ForecastPage: React.FC = () => {
             stats={(
               <Stat
                 title="Pod Rate"
-                amount={`${displayBN(displayPodRate[0])}%`}
+                amount={`${displayBN(isHoveringPodRate ? displayPodRate[0] : podRate)}%`}
                 icon={undefined}
                 topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 bottomText={`Season ${displayBN(season)}`}
@@ -264,8 +271,8 @@ const ForecastPage: React.FC = () => {
             )}
             graphSection={(
               <>
-                <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-                  <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursorTWAP} />
+                <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
+                  <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursorPodRate} />
                 </Box>
                 <Box>
                   <Divider color={BeanstalkPalette.lightBlue} />
