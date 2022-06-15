@@ -173,8 +173,8 @@ const ForecastPage: React.FC = () => {
   const { supply: totalBeanSupply } = useSelector<AppState, AppState['_bean']['token']>((state) => state._bean.token);
   const podRate = totalPods.dividedBy(totalBeanSupply).multipliedBy(100);
 
-  const isPriceLoading = beanPrice.eq(new BigNumber(-1));
-  const isPodRateLoading = totalPods.eq(new BigNumber(-1)) || totalBeanSupply.eq(new BigNumber(-1));
+  // const isPriceLoading = beanPrice.eq(new BigNumber(-1));
+  // const isPodRateLoading = totalPods.eq(new BigNumber(-1)) || totalBeanSupply.eq(new BigNumber(-1));
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
