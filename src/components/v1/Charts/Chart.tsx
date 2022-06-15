@@ -9,7 +9,7 @@ import {
   AnimatedLineSeries,
   buildChartTheme,
 } from '@visx/xychart';
-import BeanLogo from 'img/bean-logo.svg';
+import BeanLogo from 'img/tokens/bean-logo.svg';
 import { theme as colorTheme } from 'constants/index';
 import makeStyles from '@mui/styles/makeStyles';
 import { DataSelector, TimeSelector } from './Selectors';

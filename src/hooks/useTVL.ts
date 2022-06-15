@@ -1,13 +1,13 @@
-import Token from 'classes/Token';
-import { zeroBN } from 'constants/index';
-import { BEAN } from 'constants/tokens';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useBeansToUSD from './useBeansToUSD';
+import Token from 'classes/Token';
+import { ZERO_BN } from 'constants/index';
+import { BEAN } from 'constants/tokens';
+import useBeansToUSD from './currency/useBeansToUSD';
 import useChainConstant from './useChainConstant';
 
-export const useTVL = () => {
+export default function useTVL() {
   const beansToUSD = useBeansToUSD();
   const Bean = useChainConstant(BEAN);
   const siloedBeans = useSelector<AppState, AppState['_beanstalk']['silo']['beans']['total']>((state) => state._beanstalk.silo.beans.total);
@@ -16,14 +16,14 @@ export const useTVL = () => {
   return useCallback((_token: Token) => {
     // For Beans, grab the amount in the Silo.
     if (_token === Bean) {
-      return beansToUSD(siloedBeans || zeroBN);
+      return beansToUSD(siloedBeans || ZERO_BN);
     }
     // For everything else, use `liquidity` from the price contract.
-    return beanPools[_token.address]?.liquidity || zeroBN;
+    return beanPools[_token.address]?.liquidity || ZERO_BN;
   }, [
     beanPools,
     siloedBeans,
     Bean,
     beansToUSD
   ]);
-};
+}

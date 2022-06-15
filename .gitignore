@@ -9,3 +9,5 @@ stats.json
 
 # Ignore generated Typechain files.
 src/constants/generated
+
+.vscode/

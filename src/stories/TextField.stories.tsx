@@ -17,7 +17,7 @@ const Template : any = (args : any) => (
   />
 );
 
-export const WithAdornment = Template.bind({});
+const WithAdornment = Template.bind({});
 WithAdornment.args = {
   endAdornment: (
     <Button
@@ -30,3 +30,7 @@ WithAdornment.args = {
     </Button>
   ),
 };
+
+export {
+  WithAdornment
+}

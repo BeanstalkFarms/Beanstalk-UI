@@ -9,19 +9,19 @@ import BigNumber from 'bignumber.js';
 //   USDC,
 // } from 'constants/index';
 
-// import BeanLogo from 'img/bean-logo.svg';
+// import BeanLogo from 'img/tokens/bean-logo.svg';
 // import ClaimableIcon from 'img/claimable-icon.svg';
-// import EthereumLogo from 'img/eth-logo.svg';
+// import EthereumLogo from 'img/tokens/eth-logo.svg';
 // import LPLogo from 'img/lp-logo.svg';
-// import PodLogo from 'img/pod-logo.svg';
-// import SeedLogo from 'img/seed-logo.svg';
+// import PodLogo from 'img/beanstalk/pod-icon.svg';
+// import SeedLogo from 'img/beanstalk/seed-icon.svg';
 // import SiloIcon from 'img/silo-icon.svg';
-// import StalkLogo from 'img/stalk-logo.svg';
+// import StalkLogo from 'img/beanstalk/stalk-icon.svg';
 // import TransitIcon from 'img/transit-icon.svg';
 // import PooledIcon from 'img/pooled-icon.svg';
-// import USDCLogo from 'img/usdc-logo.svg';
-// import CRV3Logo from 'img/bean-crv3-logo.svg';
-// import BeanlusdLogo from 'img/bean-lusd-logo.svg';
+// import USDCLogo from 'img/token/usdc-logo.svg';
+// import CRV3Logo from 'img/tokens/bean-crv3-logo.svg';
+// import BeanlusdLogo from 'img/tokens/bean-lusd-logo.svg';
 // import BudgetIcon from 'img/treasury-icon.svg';
 import Token from 'classes/Token';
 

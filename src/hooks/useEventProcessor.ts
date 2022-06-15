@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 
-import { ParsedEvent } from 'state/v2/farmer/events/updater';
-import { PlotMap, SeasonMap } from 'state/v2/farmer/field';
-import { toTokenUnitsBN } from 'util/TokenUtilities';
+import { ParsedEvent } from 'state/farmer/events/updater';
+import { PlotMap, SeasonMap } from 'state/farmer/field';
+import { toTokenUnitsBN } from 'util/Tokens';
 import {
   BEAN,
   BEAN_ETH_UNIV2_LP,
@@ -697,35 +697,39 @@ function _processFarmerEvents(
     (a, c) => a.plus(c),
     zeroBN
   );
-  const [podBalance, harvestablePodBalance, plots, harvestablePlots] =
-    parsePlots(userPlots, params.harvestableIndex);
-
-  return {
-    // Bean
-    userBeanDeposits,
-    beanWithdrawals,
-    beanDepositsBalance,
-    // LP
-    userLPSeedDeposits,
-    userLPDeposits,
-    lpWithdrawals,
-    lpDepositsBalance,
-    // Curve
-    userCurveDeposits,
-    userCurveBDVDeposits,
-    curveWithdrawals,
-    curveDepositsBalance,
-    // BEAN:LUSD
-    userBeanlusdDeposits,
-    userBeanlusdBDVDeposits,
-    beanlusdWithdrawals,
-    beanlusdDepositsBalance,
-    // Field
-    userPlots,
+  const [
     podBalance,
     harvestablePodBalance,
     plots,
-    harvestablePlots,
+    harvestablePlots
+  ] = parsePlots(userPlots, params.harvestableIndex);
+
+  return {
+    // Bean
+    userBeanDeposits,         // crates
+    beanWithdrawals,          // crates
+    beanDepositsBalance,      // sum of deposits
+    // LP
+    userLPSeedDeposits,       // crates where value is Seeds
+    userLPDeposits,           // crates
+    lpWithdrawals,            // crates
+    lpDepositsBalance,        // sum of deposits
+    // Curve
+    userCurveDeposits,        // crates
+    userCurveBDVDeposits,     // crates where value is BDV
+    curveWithdrawals,         // crates
+    curveDepositsBalance,     // sum of deposits
+    // BEAN:LUSD
+    userBeanlusdDeposits,     // crates
+    userBeanlusdBDVDeposits,  // crates where value is BDV
+    beanlusdWithdrawals,      // crates
+    beanlusdDepositsBalance,  // sum of deposits
+    // Field
+    userPlots,                // raw plots data (?)
+    podBalance,               // sum of pods that are unharvestable
+    harvestablePodBalance,    // sum of pods that are harvestable
+    plots,                    // parsed plots that are unharvestable
+    harvestablePlots,         // parsed plots that are harvestable
   };
 }
 
@@ -733,7 +737,7 @@ function _processFarmerEvents(
 // Hooks
 // ------------------------------------
 
-const useEventProcessor = () => {
+export default function useEventProcessor() {
   const getChainConstant = useGetChainConstant();
   const Tokens = useMemo<EventParsingTokens>(() => ({
     // FIXME: cast these to the correct types
@@ -749,6 +753,4 @@ const useEventProcessor = () => {
       _processFarmerEvents(events, params, Tokens),
     [Tokens],
   );
-};
-
-export default useEventProcessor;
+}

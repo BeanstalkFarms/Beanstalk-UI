@@ -22,7 +22,7 @@ export function getChainConstant<T extends ConstantByChain>(map: T, chainId?: Su
 export function useGetChainConstant() {
   const { activeChain } = useNetwork();
   return useCallback(
-    (map) => getChainConstant(map, activeChain?.id),
+    (map: ConstantByChain) => getChainConstant(map, activeChain?.id),
     [activeChain?.id]
   );
 }

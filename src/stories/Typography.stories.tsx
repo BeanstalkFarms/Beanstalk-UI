@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
+import { Button, Typography, TypographyProps } from '@mui/material';
 import { Box } from '@mui/system';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
@@ -22,10 +22,13 @@ const variants = [
 ];
 const Template: ComponentStory<typeof Button> = (args) => (
   <Box sx={{ width: 800 }}>
-    {variants.map(([v, t]) => <Typography key={v} variant={v}>{t || v}</Typography>)}
+    {variants.map(([v, t]) => <Typography key={v} variant={v as TypographyProps['variant']}>{t || v}</Typography>)}
   </Box>
 );
 
-export const Primary = Template.bind({});
-
+const Primary = Template.bind({});
 Primary.args = {};
+
+export {
+  Primary
+}

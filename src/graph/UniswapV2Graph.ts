@@ -48,11 +48,11 @@ const DayPoolQuery = `
   }
 `;
 
-function roundTo4Digits(num) {
+function roundTo4Digits(num: number) {
   return parseFloat(num.toFixed(4));
 }
 
-function queryHourData(first: Number, skip: Number): Promise {
+function queryHourData(first: Number, skip: Number): Promise<any> {
   return client.query({
     query: gql(HourPoolQuery),
     variables: { first: first, skip: skip },
@@ -71,7 +71,7 @@ export async function hourUniswapQuery() {
       .concat(d2.data.pairHourDatas)
       .concat(d3.data.pairHourDatas)
       .concat(d4.data.pairHourDatas);
-    const dates = data.reduce((acc, d) => {
+    const dates = data.reduce((acc: any[], d: any) => {
       const date = new Date();
       date.setTime(d.hourStartUnix * 1000);
       acc.push({
@@ -94,7 +94,7 @@ export async function dayUniswapQuery() {
     const data = await client.query({
       query: gql(DayPoolQuery),
     });
-    const dates = data.data.tokenDayDatas.reduce((acc, d) => {
+    const dates = data.data.tokenDayDatas.reduce((acc: any[], d: any) => {
       const date = new Date();
       date.setTime(d.date * 1000);
       // date = `${date.getMonth() + 1}/${date.getDate()}`

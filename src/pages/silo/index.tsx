@@ -2,30 +2,32 @@ import React from 'react';
 import { Box, Button,  Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import NextSeason from 'components/v2/Silo/NextSeason';
-import OverviewCard from 'components/v2/Silo/OverviewCard';
-import RewardsBar from 'components/v2/Silo/RewardsBar';
-import TokenTable from 'components/v2/Silo/TokenTable';
-import PageHeader from 'components/v2/Common/PageHeader';
+import NextSeason from 'components/Silo/NextSeason';
+import OverviewCard from 'components/Silo/OverviewCard';
+import RewardsBar from 'components/Silo/RewardsBar';
+import TokenTable from 'components/Silo/TokenTable';
+import PageHeader from 'components/Common/PageHeader';
 import { SNAPSHOT_LINK } from 'constants/index';
-import snapshotIcon from 'img/snapshot-icon.svg';
+import snapshotIcon from 'img/ecosystem/snapshot-logo.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 
 const SiloPage : React.FC = () => {
-  // const beanPrice   = useSelector<AppState, AppState['_bean']['price']>((state) => state._bean.price);
-  const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+  // Constants
+  const WHITELIST = useWhitelist();
+  const POOLS     = usePools();
+
+  // State
+  // const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const { sunrise, season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const breakdown   = useFarmerSiloBreakdown();
-  const whitelist   = useWhitelist();
-  const poolsByAddress = usePools();
   const chainId = useChainId();
 
   return (
@@ -70,12 +72,12 @@ const SiloPage : React.FC = () => {
         />
         <TokenTable
           config={{
-            whitelist: Object.values(whitelist),
-            poolsByAddress: poolsByAddress,
+            whitelist: Object.values(WHITELIST),
+            poolsByAddress: POOLS,
           }}
-          beanPools={beanPools}
           farmerSilo={farmerSilo}
-          beanstalkSilo={beanstalkSilo}
+          // beanPools={beanPools}
+          // beanstalkSilo={beanstalkSilo}
         />
       </Stack>
     </Container>

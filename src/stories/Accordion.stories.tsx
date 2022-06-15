@@ -2,7 +2,7 @@ import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import AccordionWrapper from 'components/v2/Common/Accordion/AccordionWrapper';
+import AccordionWrapper from 'components/Common/Accordion/AccordionWrapper';
 
 export default {
   component: Button,
@@ -35,11 +35,13 @@ const Template: ComponentStory<typeof Button> = (args: any) => {
   return a;
 };
 
-export const Primary = Template.bind({});
+const Primary = Template.bind({});
 Primary.args = {};
 
-export const Outlined = Template.bind({});
+const Outlined = Template.bind({});
 Outlined.args = {
   variant: 'outlined',
-  wrapped: false,
+  // wrapped: false,
 };
+
+export { Primary, Outlined };

@@ -5,12 +5,16 @@ import {
   UniswapV2Pair__factory,
 } from 'constants/generated';
 import { ChainConstant, AddressMap } from 'constants/index';
-import { MinBN } from 'util/TokenUtilities';
-import client from 'util/wagmi';
-import Dex from './Dex';
+import { MinBN } from 'util/Tokens';
+import client from 'util/Client';
 import Token, { ERC20Token } from './Token';
 
 type Reserves = [BigNumber, BigNumber];
+
+/**
+ * The decentralized exchange associated with the pool
+ */
+// public readonly dex: Dex;
 
 /**
  * A Pool is an AMM liquidity pool between at least 2 tokens.
@@ -37,11 +41,6 @@ export default abstract class Pool {
   public readonly tokens: ERC20Token[];
 
   /**
-   * The decentralized exchange associated with the pool
-   */
-  public readonly dex: Dex;
-
-  /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
    */
   public readonly name: string;
@@ -64,7 +63,7 @@ export default abstract class Pool {
    */
   constructor(
     chainId: number,
-    address: AddressMap,
+    address: AddressMap<string>,
     // dex: Dex,
     lpToken: ChainConstant<ERC20Token>,
     tokens: ChainConstant<ERC20Token>[],
@@ -196,7 +195,7 @@ export class UniswapV2Pool extends Pool {
 
   public getReserves() {
     console.debug(
-      `[UniswapV2Pool] getReserves: ${this.address} ${this.name} on chain ${client.provider._network.chainId} via ${client.provider.connection.url}`
+      `[UniswapV2Pool] getReserves: ${this.address} ${this.name} on chain ${client.provider._network.chainId}`
     );
     return this.getContract()
       .getReserves()

@@ -1,9 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { AddressMap } from 'constants/addresses';
-import { bigNumberResult, MAX_UINT256 } from 'util/LedgerUtilities';
-import { beanstalkContract, erc20TokenContract } from 'util/contracts';
-import client from 'util/wagmi';
-import { zeroBN } from 'constants/index';
+import { AddressMap, ZERO_BN, MAX_UINT256 } from 'constants/index';
+import { bigNumberResult } from 'util/Ledger';
+import { erc20TokenContract } from 'util/Contracts';
+import client from 'util/Client';
 
 /**
  * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
@@ -64,7 +63,7 @@ export default abstract class Token {
    */
   constructor(
     chainId: number,
-    address: AddressMap | string,
+    address: string | AddressMap<string>,
     decimals: number,
     metadata: {
       name: string,
@@ -100,13 +99,13 @@ export default abstract class Token {
   }
 
   public getStalk(bdv?: BigNumber) : BigNumber {
-    if (!this.rewards?.stalk) return zeroBN;
+    if (!this.rewards?.stalk) return ZERO_BN;
     if (!bdv) return new BigNumber(this.rewards.stalk);
     return bdv.times(this.rewards.stalk);
   }
   
   public getSeeds(bdv?: BigNumber) : BigNumber {
-    if (!this.rewards?.seeds) return zeroBN;
+    if (!this.rewards?.seeds) return ZERO_BN;
     if (!bdv) return new BigNumber(this.rewards.seeds);
     return bdv.times(this.rewards.seeds);
   }
@@ -170,7 +169,7 @@ export class ERC20Token extends Token {
 export class BeanstalkToken extends Token {
   // eslint-disable-next-line class-methods-use-this
   public getContract() {
-    return beanstalkContract();
+    return null;
   }
 
   // eslint-disable-next-line class-methods-use-this

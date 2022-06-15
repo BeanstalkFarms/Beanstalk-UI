@@ -5,10 +5,10 @@ import {useSelector} from 'react-redux';
 import {AppState} from 'state';
 import {Card, Grid, Stack, Tab, Tabs, Typography} from "@mui/material";
 import {FIELD, OTHER, SILO} from "util/GetEventFacet";
-import {ParsedEvent} from "state/v2/farmer/events/updater";
-import EventItem from "components/v2/History/EventItem";
+import {ParsedEvent} from "state/farmer/events/updater";
+import EventItem from "components/History/EventItem";
 import { useAccount } from 'wagmi';
-import WalletButton from "components/v2/Common/Connection/WalletButton";
+import WalletButton from "components/Common/Connection/WalletButton";
 
 const mappedTabs = {
   0: SILO,
@@ -18,16 +18,16 @@ const mappedTabs = {
 
 const TransactionHistoryPage: React.FC = () => {
   const { data: account } = useAccount();
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState<0 | 1 | 2>(0);
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
   const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>();
 
-  const handleSetTab = (event: React.SyntheticEvent, newValue: number) => setTab(newValue);
+  const handleSetTab = (event: React.SyntheticEvent, newValue: 0 | 1 | 2) => setTab(newValue);
 
   useEffect(() => {
-    function filterEventsByFacet(faucet: string) {
+    function filterEventsByFacet(facet: string) {
       return events.filter((event) => {
-        return event.facet === faucet;
+        return event.facet === facet;
       })
     }
     setWalletEvents(filterEventsByFacet(mappedTabs[tab]));

@@ -1,22 +1,25 @@
 /* eslint-disable */
 import React from 'react';
 import {Card, Container, Grid, Stack} from '@mui/material';
-import TotalBalanceCard from 'components/v2/Balances/Cards/TotalBalancesCard';
+import TotalBalanceCard from 'components/Balances/Cards/TotalBalancesCard';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import { BEAN, PODS, SEEDS, STALK } from 'constants/tokens';
-import Stat from 'components/v2/Common/Stat';
+import Stat from 'components/Common/Stat';
 import { displayBN } from 'util/index';
-import TokenIcon from 'components/v2/Common/TokenIcon';
+import TokenIcon from 'components/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
 import useFarmerTotalFertilizer from "../hooks/useFarmerTotalFertilizer";
 
 const BalancesPage: React.FC = () => {
+  // State
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo)
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field)
+
+  // Breakdowns
   const breakdown = useFarmerSiloBreakdown();
-  const fertilizerSummary = useFarmerTotalFertilizer()
+  const fertilizerSummary = useFarmerTotalFertilizer();
 
   if(!farmerSilo) return null;
 
@@ -55,7 +58,7 @@ const BalancesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Stat
-                title={`Unfertilized Beans`}
+                title={`My Unfertilized Beans`}
                 icon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 amount={displayBN(fertilizerSummary.unfertilized)}
                 variant="h2"

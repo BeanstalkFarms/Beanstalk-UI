@@ -11,19 +11,19 @@ import {
   Tooltip,
   useMediaQuery,
 } from '@mui/material';
-import PageHeader from 'components/v2/Common/PageHeader';
+import PageHeader from 'components/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
-import podIcon from 'img/pod-logo.svg';
+import podIcon from 'img/beanstalk/pod-icon.svg';
 import useTheme from '@mui/styles/useTheme';
 import {
   StyledDialogContent,
   StyledDialogTitle,
-} from 'components/v2/Common/Dialog';
+} from 'components/Common/Dialog';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -66,7 +66,7 @@ const FieldPage: React.FC = () => {
   const beanToken = useSelector<AppState, AppState['_bean']['token']>(
     (state) => state._bean.token
   );
-  const podLine = beanstalkField?.pods.minus(beanstalkField.harvestableIndex);
+  const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
 
   // Rows
   const rows = useMemo(
@@ -113,7 +113,7 @@ const FieldPage: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Tooltip title="The number of Beans that can currently be Sown, or lent, to Beanstalk." placement="top">
+                  <Tooltip title="The number of Beans that can currently be Sown, or lent to Beanstalk." placement="top">
                     <Typography variant="h4">Available Soil</Typography>
                   </Tooltip>
                   <Typography variant="h1">
@@ -133,12 +133,12 @@ const FieldPage: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Tooltip title="The ratio of Unharvested Pods to the total Bean supply. The Pod Rate is often used as a proxy for Beanstalk’s leverage." placement="top">
+                  <Tooltip title="The ratio of Unharvested Pods to total Bean supply. The Pod Rate is often used as a proxy for Beanstalk’s leverage." placement="top">
                     <Typography variant="h4">Pod Rate</Typography>
                   </Tooltip>
                   <Typography variant="h1">
                     {displayBN(
-                      beanstalkField?.pods.div(beanToken?.supply).times(100)
+                      beanstalkField?.podIndex.div(beanToken?.supply).times(100)
                     )}
                     %
                   </Typography>

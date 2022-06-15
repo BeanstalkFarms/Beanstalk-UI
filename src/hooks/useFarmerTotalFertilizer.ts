@@ -13,7 +13,7 @@ export default function useFarmerTotalFertilizer(tokenIds?: string[]) {
     () =>
       ids.reduce(
         (agg, thisId) => {
-          const [humidity] = getHumidity(); // new BigNumber(thisId);
+          const [humidity] = getHumidity();
           const amount = farmerFertilizer.tokens[thisId];
           agg.unfertilized = agg.unfertilized.plus(
             amount.multipliedBy(humidity.plus(1))

@@ -1,7 +1,14 @@
 module.exports = {
   "stories": [
-    "../src/**/*.stories.mdx",
-    "../src/**/*.stories.@(js|jsx|ts|tsx)"
+    // "../src/components/Nav/*.stories.@(js|jsx|ts|tsx)",
+    // "../src/stories/*.stories.@(js|jsx|ts|tsx)",
+    // "../src/components/Silo/**/*.stories.@(js|jsx|ts|tsx)",
+    // "../src/stories/Accordion.stories.@(js|jsx|ts|tsx)"
+
+    // "../src/**/*.stories.mdx",
+    "../src/**/*.stories.@(js|jsx|ts|tsx)",
+
+    // "../src/components/**/*.stories.@(js|jsx|ts|tsx)",
   ],
   "addons": [
     "@storybook/addon-links",

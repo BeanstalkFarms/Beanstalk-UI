@@ -13,8 +13,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import uniswapLogo from 'img/uniswap-icon.svg';
-import curveLogo from 'img/curve-logo.svg';
-import lusdLogo from 'img/lusd-icon.svg';
+import curveLogo from 'img/dexes/curve-logo.svg';
+import lusdLogo from 'img/tokens/lusd-logo.svg';
 import TokenIcon from 'components/Common/TokenIcon';
 
 export const StyledPriceTooltip = withStyles(() => ({
