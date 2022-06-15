@@ -35,7 +35,7 @@ const ROUTES = {
     },
     {
       path: 'governance',
-      href: 'https://snapshot.org/#/beanstalkfarms.eth',
+      href: 'https://snapshot.org/#/beanstalkdao.eth',
       title: 'Governance',
     },
     {
