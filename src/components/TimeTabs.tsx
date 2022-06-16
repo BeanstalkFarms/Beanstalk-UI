@@ -30,11 +30,12 @@ const TimeTabs: React.FC<TimeTabProps & StackProps> = ({ sx, setState, tab }) =>
           size="small"
           color="dark"
           sx={{
+            borderRadius: 0.5,
             px: 0.3,
             py: 0.3,
             minWidth: 0,
             '&:hover': {
-              backgroundColor: 'transparent'
+              // backgroundColor: 'transparent'
             }
           }}
           disableRipple

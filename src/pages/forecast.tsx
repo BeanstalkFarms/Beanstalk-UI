@@ -33,6 +33,10 @@ import ForecastCard from '../components/Forecast/ForecastCard';
 import SimpleLineChart, { DataPoint } from '../components/Charts/SimpleLineChart';
 import { mockPodRateData, mockTWAPData } from '../components/Charts/SimpleLineChart.mock';
 import TimeTabs from '../components/TimeTabs';
+import LiquidityBalances from "../components/Forecast/LiquidityBalances";
+import SeasonsTable from "../components/Forecast/SeasonsTable";
+import ForecastTopBar from "../components/Forecast/ForecastTopBar";
+import usePools from "../hooks/usePools";
 
 const columns: GridColumns = [
   {
@@ -158,8 +162,6 @@ const rows: GridRowsProp = [
   }
 ];
 
-const MAX_ROWS = 5;
-
 const ForecastPage: React.FC = () => {
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -172,17 +174,13 @@ const ForecastPage: React.FC = () => {
   const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const { totalPods } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const { supply: totalBeanSupply } = useSelector<AppState, AppState['_bean']['token']>((state) => state._bean.token);
+  const balances = useSelector<AppState, AppState['_beanstalk']['silo']['tokens']>((state) => state._beanstalk.silo.tokens);
   const podRate = totalPods.dividedBy(totalBeanSupply).multipliedBy(100);
 
   // const isPriceLoading = beanPrice.eq(new BigNumber(-1));
   // const isPodRateLoading = totalPods.eq(new BigNumber(-1)) || totalBeanSupply.eq(new BigNumber(-1));
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const tableHeight = useMemo(() => {
-    if (!rows || rows.length === 0) return '200px';
-    return Math.min(rows.length, MAX_ROWS) * 52 + 112;
-  }, []);
 
   const [displayTWAP, setDisplayTWAP] = useState<BigNumber[]>([new BigNumber(-1)]);
 
@@ -235,9 +233,7 @@ const ForecastPage: React.FC = () => {
           )}
         />
         {/* TEMP: Hide next Season metrics on MAINNET. */}
-        <Card sx={{ width: '100%', p: 2 }}>
-          <Typography>PLACEHOLDER</Typography>
-        </Card>
+        <ForecastTopBar />
         <Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" gap={2}>
           <ForecastCard
             showLastCross
@@ -321,36 +317,13 @@ const ForecastPage: React.FC = () => {
             icon={undefined}
           />
           <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
-            <Typography>TEST</Typography>
+            <LiquidityBalances balances={balances} />
           </Box>
           <Box sx={{ display: tab === 1 ? 'block' : 'none' }}>
             <SiloBalances breakdown={breakdown} />
           </Box>
         </Card>
-        <Card sx={{ p: 1 }}>
-          <Box
-            width="100%"
-            height={tableHeight}
-            sx={{
-              ...tableStyle,
-              '& .MuiDataGrid-row': {
-                borderBottom: 1,
-                borderColor: BeanstalkPalette.lightBlue,
-              },
-              '& .MuiDataGrid-columnHeadersInner': {
-                borderBottom: 2, // TODO: why 2 here but 1 above?
-                borderColor: BeanstalkPalette.lightBlue,
-              }
-            }}>
-            <DataGrid
-              columns={columns}
-              rows={rows}
-              pageSize={8}
-              disableSelectionOnClick
-              density="compact"
-            />
-          </Box>
-        </Card>
+        <SeasonsTable columns={columns} rows={rows} />
       </Stack>
     </Container>
   );
