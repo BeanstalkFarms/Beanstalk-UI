@@ -50,12 +50,17 @@ export type FarmerSiloBalance = {
   withdrawn: {
     /** The total amount of this Token currently in the Withdrawn state. */
     amount: BigNumber;
-    /** ??? */
+    /** */
     bdv: BigNumber;
     /** All Withdrawal crates. */
     crates: Withdrawal[];
   };
-  claimable: BigNumber;
+  claimable: {
+    /** The total amount of this Token currently in the Claimable state. */
+    amount: BigNumber;
+    /** All Claimable crates. */
+    crates: Crate[];
+  };
   wrapped: BigNumber;
   circulating: BigNumber;
 }

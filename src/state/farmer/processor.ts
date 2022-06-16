@@ -7,6 +7,7 @@ import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { getAccount } from 'util/Account';
+import { parseWithdrawals } from 'util/Crates';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
 import { Deposit, Withdrawal } from './silo';
@@ -97,21 +98,7 @@ const FarmerEventsProcessor = () => {
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             }),
-            withdrawn: Object.keys(results.beanWithdrawals).reduce((prev, s) => {
-              const tokenAmount = results.beanWithdrawals[s];
-              const bdv         = tokenAmount; // only for Bean
-              prev.amount = prev.amount.plus(tokenAmount);
-              prev.bdv   = prev.bdv.plus(bdv);
-              prev.crates.push({
-                amount: tokenAmount,
-                season: new BigNumber(s),
-              });
-              return prev;
-            }, {
-              amount:  new BigNumber(0),
-              bdv:    new BigNumber(0),
-              crates: [] as Withdrawal[],
-            }),
+            ...parseWithdrawals(results.beanWithdrawals, eventParsingParameters.season)
           },
 
           // -----------------------------
@@ -137,21 +124,7 @@ const FarmerEventsProcessor = () => {
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             }),
-            withdrawn: Object.keys(results.lpWithdrawals).reduce((prev, s) => {
-              const tokenAmount = results.lpWithdrawals[s];
-              const bdv         = tokenAmount;            // FIXME: wrong calc
-              prev.amount = prev.amount.plus(tokenAmount);
-              prev.bdv   = prev.bdv.plus(bdv);            // FIXME: wrong calc
-              prev.crates.push({
-                amount: tokenAmount,
-                season: new BigNumber(s),
-              });
-              return prev;
-            }, {
-              amount:  new BigNumber(0),
-              bdv:    new BigNumber(0),
-              crates: [] as Withdrawal[],
-            }),
+            ...parseWithdrawals(results.userLPDeposits, eventParsingParameters.season)
           },
 
           // -----------------------------
@@ -174,21 +147,7 @@ const FarmerEventsProcessor = () => {
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             }),
-            withdrawn: Object.keys(results.curveWithdrawals).reduce((prev, s) => {
-              const tokenAmount = results.curveWithdrawals[s];
-              const bdv         = new BigNumber(0);           // FIXME: wrong calc
-              prev.amount = prev.amount.plus(tokenAmount);
-              prev.bdv    = prev.bdv.plus(bdv);               // FIXME: wrong calc
-              prev.crates.push({
-                amount: tokenAmount,
-                season: new BigNumber(s),
-              });
-              return prev;
-            }, {
-              amount:  new BigNumber(0),
-              bdv:    new BigNumber(0),
-              crates: [] as Withdrawal[],
-            }),
+            ...parseWithdrawals(results.curveWithdrawals, eventParsingParameters.season)
           },
 
           // -----------------------------
@@ -211,21 +170,7 @@ const FarmerEventsProcessor = () => {
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             }),
-            withdrawn: Object.keys(results.beanlusdWithdrawals).reduce((prev, s) => {
-              const tokenAmount = results.beanlusdWithdrawals[s];
-              const bdv         = new BigNumber(0);           // FIXME: wrong calc
-              prev.amount = prev.amount.plus(tokenAmount);
-              prev.bdv   = prev.bdv.plus(bdv);                // FIXME: wrong calc
-              prev.crates.push({
-                amount: tokenAmount,
-                season: new BigNumber(s),
-              });
-              return prev;
-            }, {
-              amount:  new BigNumber(0),
-              bdv:    new BigNumber(0),
-              crates: [] as Withdrawal[],
-            }),
+            ...parseWithdrawals(results.beanlusdWithdrawals, eventParsingParameters.season)
           }
         }));
         dispatch(updateFarmerField({

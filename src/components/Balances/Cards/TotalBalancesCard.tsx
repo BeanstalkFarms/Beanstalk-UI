@@ -8,23 +8,22 @@ import { displayFullBN, displayUSD } from 'util/index';
 import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
 import Stat from 'components/Common/Stat';
 import { SupportedChainId } from 'constants/index';
-import BlurComponent from '../../Common/BlurComponent';
+import BlurComponent from 'components/Common/BlurComponent';
+import BigNumber from 'bignumber.js';
 
 export interface TotalBalanceCardProps {
   breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
 }
 
-type DrilldownValues = keyof TotalBalanceCardProps['breakdown'];
-
 // Matches the key => value mapping of TotalBalanceCardProps['breakdown'],
 // but without the 'bdv' key.
 // https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
-const STATE_CONFIG: { [name in DrilldownValues as Exclude<name, 'totalValue'>]: [name: string, color: string] } = {
-  deposited: ['Deposited', 'rgba(70, 185, 85, 1)'],
-  withdrawn: ['Withdrawn', 'rgba(31, 120, 180, 0.3)'],
+const STATE_CONFIG: { [name in 'deposited' | 'withdrawn' | 'claimable' | 'circulating']: [name: string, color: string] } = {
+  deposited:    ['Deposited', 'rgba(70, 185, 85, 1)'],
+  withdrawn:    ['Withdrawn', 'rgba(31, 120, 180, 0.3)'],
   claimable:    ['Claimable',   'rgba(178, 223, 138, 0.3)'],
+  // wrapped:      ['Wrapped',     'rgba(25, 135, 59, 0.5)'],
   circulating:  ['Circulating', 'rgba(25, 135, 59, 1)'],
-  wrapped:      ['Wrapped',     'rgba(25, 135, 59, 0.5)'],
 };
 
 type StateID = keyof typeof STATE_CONFIG;
@@ -33,12 +32,14 @@ const STATE_IDS = Object.keys(STATE_CONFIG) as StateID[];
 const TokenRow: React.FC<{
   name: string;
   value: string | JSX.Element;
+  secondaryValue?: string | JSX.Element;
   isFaded: boolean;
   onMouseOver?: () => void;
   onMouseOut?: () => void;
 }> = ({
   name,
   value,
+  secondaryValue,
   isFaded,
   onMouseOver,
   onMouseOut
@@ -60,7 +61,7 @@ const TokenRow: React.FC<{
       {name}
     </Typography>
     <Typography>
-      {value}
+      {value}{secondaryValue ? <>&nbsp;({secondaryValue})</> : null}
     </Typography>
   </Stack>
 );
@@ -147,7 +148,8 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
                     <TokenRow
                       key={address}
                       name={`${WHITELIST[address].name}`}
-                      value={displayUSD(breakdown[drilldown].valueByToken[address])}
+                      value={displayFullBN(breakdown[drilldown].byToken[address][0] || new BigNumber(0), WHITELIST[address].displayDecimals)}
+                      secondaryValue={displayUSD(breakdown[drilldown].byToken[address][1])}
                       onMouseOver={onMouseOver('deposited')}
                       isFaded={false}
                     />

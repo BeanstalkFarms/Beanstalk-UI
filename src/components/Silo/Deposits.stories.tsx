@@ -64,7 +64,15 @@ const siloBalance: FarmerSiloBalance = {
       }
     ]
   },
-  claimable: new BigNumber(100)
+  claimable: {
+    amount: new BigNumber(100),
+    crates: [
+      {
+        amount: new BigNumber(100),
+        season: new BigNumber(6074),
+      }
+    ]
+  },
 };
 
 const Template: ComponentStory<typeof Deposits> = (args: any) => (

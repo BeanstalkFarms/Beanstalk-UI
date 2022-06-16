@@ -33,4 +33,4 @@ WithAdornment.args = {
 
 export {
   WithAdornment
-}
+};

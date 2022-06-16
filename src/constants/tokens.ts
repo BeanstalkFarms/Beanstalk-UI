@@ -248,6 +248,7 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
       name: 'BEAN:ETH LP',
       symbol: 'BEAN:ETH',
       logo: beanEthLpLogoUrl,
+      displayDecimals: 8,
     },
     {
       stalk: 1,
