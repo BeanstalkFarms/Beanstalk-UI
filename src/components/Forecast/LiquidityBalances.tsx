@@ -6,6 +6,7 @@ import usePools from '../../hooks/usePools';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
 import { TokenMap } from '../../constants';
 import { displayBN } from '../../util';
+import StackedAreaChart from "./StackedAreaChart";
 
 export type LiquidityBalancesProps = {
   balances: TokenMap<BeanstalkSiloBalance>;
@@ -41,7 +42,7 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
   return (
     <Stack direction="row" justifyContent="center">
       <Stack width="80%" justifyContent="end">
-        {/* TODO: PUT GRAPH HERE */}
+        <StackedAreaChart height={150} width={850} />
         <Stack direction="row" justifyContent="space-between" sx={{ pt: 0.75, pr: 2, pl: 2, pb: 0 }}>
           <Typography color={BeanstalkPalette.lightishGrey}>2/21</Typography>
           <Typography color={BeanstalkPalette.lightishGrey}>3/21</Typography>
