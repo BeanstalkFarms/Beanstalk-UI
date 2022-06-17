@@ -12,3 +12,15 @@ export const mockOwnershipPctData = new Array(N).fill(null).map((_, i) => ({
   date: today.minus({ days: N - i }).toJSDate(),
   value: 0.01 - 0.0001 * i + 0.001 * (Math.random() - 0.5)
 }));
+
+export const mockTWAPData = new Array(N).fill(null).map((_, i) => ({
+  date: today.minus({ days: N - i }).toJSDate(),
+  // value: 0.01 - 0.0001 * i + 0.001 * (Math.random() - 0.5)
+  value: 1 + 0.1 * Math.random(),
+}));
+
+export const mockPodRateData = new Array(N).fill(null).map((_, i) => ({
+  date: today.minus({ days: N - i }).toJSDate(),
+  // value: 0.01 - 0.0001 * i + 0.001 * (Math.random() - 0.5)
+  value: 1000 - i * 10 * Math.random(),
+}));

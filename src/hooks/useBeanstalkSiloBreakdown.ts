@@ -4,27 +4,35 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { AddressMap, ZERO_BN } from 'constants/index';
 import useSiloTokenToUSD from './currency/useSiloTokenToUSD';
-import useWhitelist from './useWhitelist';
+import useGeneralizedWhitelist from './useWhitelist';
 
 // -----------------
 // Types and Helpers
 // -----------------
 
+// SiloStateBreakdown
 export type SiloStateBreakdown = {
   /**
    * The amount of token in the given State (DEPOSITED, etc.)
    * denominated in in that token. Ex. amount=0.005 BEAN:ETH LP. */
   value: BigNumber;
-  /** 
+  /**
    * The
    */
   byToken: AddressMap<[amount: BigNumber, value: BigNumber]>;
 }
 
+const TOKEN_STATE = [
+  'deposited',
+  'withdrawn',
+  'wrapped',
+  'circulating'
+] as const;
+
 const initState = (tokenAddresses: string[]) => ({
   value: new BigNumber(0),
   byToken: tokenAddresses.reduce<SiloStateBreakdown['byToken']>(
-    (prev, curr) => { 
+    (prev, curr) => {
       prev[curr] = [new BigNumber(0), new BigNumber(0)];
       return prev;
     },
@@ -38,30 +46,22 @@ const initState = (tokenAddresses: string[]) => ({
 
 /**
  * Breakdown the state of Silo Tokens.
- * 
+ *
  * A "Token State" is the state of a whitelisted Silo Token
- * within Beanstalk. 
- *  
+ * within Beanstalk.
+ *
  *    (1)--[deposited => withdrawn => claimable]-->(2)
  *    (2)--[circulating <-> wrapped]-->(1)
- * 
+ *
  * First we break things down by state, then by type of token.
  */
-const TOKEN_STATE = [
-  'deposited',
-  'withdrawn',
-  'claimable',
-  'wrapped',
-  'circulating'
-] as const;
-
-export default function useFarmerSiloBreakdown() {
+export default function useBeanstalkSiloBreakdown() {
   // Constants
-  const WHITELIST = useWhitelist();
+  const WHITELIST = useGeneralizedWhitelist();
   const WHITELIST_ADDRS = useMemo(() => Object.keys(WHITELIST), [WHITELIST]);
 
   //
-  const siloBalances  = useSelector<AppState, AppState['_farmer']['silo']['tokens']>((state) => state._farmer.silo.tokens);
+  const siloBalances = useSelector<AppState, AppState['_beanstalk']['silo']['tokens']>((state) => state._beanstalk.silo.tokens);
   const tokenBalances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const getUSD = useSiloTokenToUSD();
 
@@ -77,14 +77,12 @@ export default function useFarmerSiloBreakdown() {
         const amountByState = {
           deposited:   siloBalance.deposited?.amount,
           withdrawn:   siloBalance.withdrawn?.amount,
-          claimable:   siloBalance.claimable?.amount,
           wrapped:     new BigNumber(0),
           circulating: tokenBalance,
         };
         const usdValueByState = {
           deposited:   getUSD(TOKEN, siloBalance.deposited?.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn?.amount),
-          claimable:   getUSD(TOKEN, siloBalance.claimable?.amount),
           wrapped:     getUSD(TOKEN, new BigNumber(0)),
           circulating: getUSD(TOKEN, tokenBalance),
         };

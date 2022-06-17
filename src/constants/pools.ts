@@ -20,7 +20,8 @@ export const BEAN_ETH_UNIV2_POOL_MAINNET = new UniswapV2Pool(
   {
     name: 'BEAN:ETH Uniswap V2 Pool',
     logo: uniswapLogo,
-    symbol: 'BEAN:ETH'
+    symbol: 'BEAN:ETH',
+    color: '#6dcb60'
   },
 );
 
@@ -32,7 +33,8 @@ export const BEAN_ETH_UNIV2_POOL_ROPSTEN = new UniswapV2Pool(
   {
     name: 'BEAN:ETH Uniswap V2 Pool',
     logo: uniswapLogo,
-    symbol: 'BEAN:ETH'
+    symbol: 'BEAN:ETH',
+    color: '#6dcb60'
   },
 );
 
@@ -48,7 +50,8 @@ export const BEAN_CRV3_CURVE_POOL_MAINNET = new CurveMetaPool(
   {
     name: 'BEAN:3CRV Pool',
     logo: curveLogo,
-    symbol: 'BEAN:3CRV'
+    symbol: 'BEAN:3CRV',
+    color: '#ed9f9c'
   },
 );
 
@@ -60,7 +63,8 @@ export const BEAN_CRV3_CURVE_POOL_ROPSTEN = new CurveMetaPool(
   {
     name: 'BEAN:3CRV Pool',
     logo: curveLogo,
-    symbol: 'BEAN:3CRV'
+    symbol: 'BEAN:3CRV',
+    color: '#ed9f9c'
   },
 );
 
@@ -76,7 +80,8 @@ export const BEAN_LUSD_CURVE_POOL_MAINNET = new CurvePlainPool(
   {
     name: 'BEAN:LUSD Pool',
     logo: curveLogo,
-    symbol: 'BEAN:LUSD'
+    symbol: 'BEAN:LUSD',
+    color: '#549e3f'
   },
 );
 

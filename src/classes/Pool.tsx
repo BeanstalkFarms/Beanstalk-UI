@@ -55,6 +55,8 @@ export default abstract class Pool {
    */
   public readonly logo: string;
 
+  public readonly color: string;
+
   /**
    * @param chainId the chain ID on which this currency resides
    * @param decimals decimals of the currency
@@ -71,6 +73,7 @@ export default abstract class Pool {
       name: string;
       symbol: string;
       logo: string;
+      color: string; // ['#ed9f9c', '#549e3f', '#6dcb60', '#3c76af', '#aecde1'];
     }
   ) {
     this.chainId = chainId;
@@ -82,6 +85,7 @@ export default abstract class Pool {
     this.name = metadata.name;
     this.symbol = metadata.symbol;
     this.logo = metadata.logo;
+    this.color = metadata.color;
   }
 
   /**
