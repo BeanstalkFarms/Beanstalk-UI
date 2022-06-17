@@ -6,7 +6,8 @@ import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { AppState } from 'state';
-import { TokenMap, ZERO_BN } from 'constants/index';
+import { AddressMap, TokenMap, ZERO_BN } from 'constants/index';
+import BigNumber from 'bignumber.js';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -37,9 +38,9 @@ const TokenSelectDialog : React.FC<{
   /** Called when the user "submits" their changes to selected tokens. */
   handleSubmit: (s: Set<Token>) => void;
   /** The Farmer's current balances. Displayed alongside each token; hidden if not provided. */
-  balances: AppState['_farmer']['balances'];
+  balances: AddressMap<BigNumber>;
   /** A list of tokens to show in the Dialog. */
-  tokenList: TokenMap;
+  tokenList: Token[];
   /** Single or multi-select */
   mode?: TokenSelectMode;
 }> = React.memo(({
@@ -52,7 +53,6 @@ const TokenSelectDialog : React.FC<{
   mode = TokenSelectMode.MULTI,
 }) => {
   const classes = useStyles();
-  const tokenListValues = useMemo(() => Object.values(tokenList), [tokenList]);
   const [newSelection, setNewSelection] = useState<Set<Token>>(new Set());
 
   // Toggle the selection state of a token.
@@ -114,7 +114,7 @@ const TokenSelectDialog : React.FC<{
       </StyledDialogTitle>
       <StyledDialogContent sx={{ padding: 0 }}>
         <List sx={{ padding: 0 }}>
-          {tokenList ? tokenListValues.map((_token) => (
+          {tokenList ? tokenList.map((_token) => (
             <ListItem
               key={_token.address}
               color="primary"

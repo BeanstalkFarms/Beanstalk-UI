@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import SiloActions from 'components/Silo/Actions';
-import DepositsTable from 'components/Silo/Deposits';
+import DepositsCard from 'components/Silo/DepositsCard';
 import useWhitelist from 'hooks/useWhitelist';
 import { Container, Stack } from '@mui/material';
 import usePools from 'hooks/usePools';
@@ -60,7 +60,7 @@ const TokenPage: React.FC<{}> = () => {
           />
         )}
         <SiloActions token={TOKEN} />
-        <DepositsTable
+        <DepositsCard
           token={TOKEN}
           balance={balance}
         />

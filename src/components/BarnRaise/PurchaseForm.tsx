@@ -77,7 +77,7 @@ const FertilizeForm : React.FC<
   contract,
 }) => {
   const tokenMap = useTokenMap(TOKEN_LIST);
-  const Usdc = useChainConstant(USDC);  // FIXME: naming
+  const Usdc = useChainConstant(USDC);
   const balances = useFarmerBalances();
   const [showTokenSelect, setShowTokenSelect] = useState(false);
   
@@ -111,7 +111,7 @@ const FertilizeForm : React.FC<
           selected={values.tokens}
           handleSubmit={handleSelectTokens}
           balances={balances}
-          tokenList={tokenMap}
+          tokenList={Object.values(tokenMap)}
           mode={TokenSelectMode.SINGLE}
         />
         {/* Form Contents */}

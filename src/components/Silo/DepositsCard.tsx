@@ -13,7 +13,7 @@ import { tableStyle } from 'util/tableStyle';
 const MAX_ROWS = 10;
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
-const Deposits : React.FC<{
+const DepositsCard : React.FC<{
   token: Token;
   balance: FarmerSiloBalance | undefined;
 }> = ({
@@ -110,4 +110,4 @@ const Deposits : React.FC<{
   );
 };
 
-export default Deposits;
+export default DepositsCard;
