@@ -57,8 +57,8 @@ const keys = Object.keys(mockSiloData[0]).filter((k) => k !== 'date') as any[];
 const parseDate = timeParse('%Y %b %d');
 export const background = 'transparent';
 
-console.log('SACHART DATA');
-console.log(data);
+// console.log('SACHART DATA');
+// console.log(data);
 
 const getDate = (d: MockPastSiloData) => (parseDate(d.date) as Date).valueOf();
 const getY0 = (d: SeriesPoint<MockPastSiloData>) => d[0] / 100;
@@ -93,7 +93,6 @@ const StackedAreaChart: React.FC<StackedAreasProps> =
     return width < 10 ? null : (
       <svg width={width} height={height}>
         <GradientOrangeRed id="stacked-area-orangered" />
-        {/* <LinearGradient id="area-background-gradient" from="#a18cd1" to="#fbc2eb" />; */}
         <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
         <AreaStack
           top={margin.top}
@@ -106,10 +105,10 @@ const StackedAreaChart: React.FC<StackedAreasProps> =
         >
           {({ stacks, path }) =>
             stacks.map((stack) => {
-              console.log('STACK');
-              console.log(stack);
-              console.log("POOL")
-              console.log(ALL_POOLS[SupportedChainId.MAINNET][stack.key])
+              // console.log('STACK');
+              // console.log(stack);
+              // console.log("POOL")
+              // console.log(ALL_POOLS[SupportedChainId.MAINNET][stack.key])
               return (
                 <path
                   key={`stack-${stack.key}`}

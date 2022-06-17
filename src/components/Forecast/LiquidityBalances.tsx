@@ -1,12 +1,13 @@
-import { Stack, Typography, Box } from '@mui/material';
-import React from 'react';
+import { Stack, Typography, Box, useMediaQuery } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { useTheme } from '@mui/material/styles';
 import { BeanstalkPalette } from '../App/muiTheme';
 import usePools from '../../hooks/usePools';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
 import { TokenMap } from '../../constants';
 import { displayBN } from '../../util';
-import StackedAreaChart from "./StackedAreaChart";
+import StackedAreaChart from './StackedAreaChart';
 
 export type LiquidityBalancesProps = {
   balances: TokenMap<BeanstalkSiloBalance>;
@@ -35,14 +36,32 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
   ];
 
   // sort pools by amount
-  reducedPoolData.sort((a, b) => {
-    return b.amount?.minus(a.amount)?.toNumber();
-  });
+  reducedPoolData.sort((a, b) => b.amount?.minus(a.amount)?.toNumber());
+
+  // sets width of graph to the width of its parent's component
+  
+  const ref = useRef<any>(null);
+  const [graphWidth, setGraphWidth] = useState(ref.current ? ref.current.offsetWidth : 0);
+  window.addEventListener('resize', () => setGraphWidth(ref.current ? ref.current.offsetWidth : 0));
+
+  useEffect(() => {
+    setGraphWidth(ref.current ? ref.current.offsetWidth : 0)
+  }, [])
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Stack direction="row" justifyContent="center">
-      <Stack width="80%" justifyContent="end">
-        <StackedAreaChart height={150} width={850} />
+    <Stack
+      direction={isMobile ? 'column' : 'row'}
+      justifyContent={isMobile ? 'start' : 'center'}
+      flexDirection={isMobile ? 'column-reverse' : 'row'}
+      mt={isMobile ? 2 : 0}
+      alignItems="center"
+      gap={1}
+    >
+      <Stack width={isMobile ? '100%' : '75%'} ref={ref} justifyContent="end">
+        <StackedAreaChart height={150} width={graphWidth} />
         <Stack direction="row" justifyContent="space-between" sx={{ pt: 0.75, pr: 2, pl: 2, pb: 0 }}>
           <Typography color={BeanstalkPalette.lightishGrey}>2/21</Typography>
           <Typography color={BeanstalkPalette.lightishGrey}>3/21</Typography>
@@ -52,7 +71,7 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
           <Typography color={BeanstalkPalette.lightishGrey}>7/21</Typography>
         </Stack>
       </Stack>
-      <Stack width="20%" direction="row" justifyContent="space-between" gap={2}>
+      <Stack width={isMobile ? '100%' : '25%'} direction="row" justifyContent="space-between" gap={2}>
         <Stack gap={0.5}>
           <Typography sx={{ ml: 2 }} color="text.secondary">Pool</Typography>
           {reducedPoolData.map((pool: ReducedPoolData) => (
