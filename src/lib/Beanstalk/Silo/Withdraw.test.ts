@@ -8,7 +8,7 @@ type WResult = ReturnType<typeof Beanstalk.Silo.Withdraw._selectCratesToWithdraw
 
 // Setup
 const currentSeason = new BigNumber(100);
-const depositedCrates = [
+export const depositedCrates = [
   // Deposit: 10 Beans in Season 24
   {
     season: new BigNumber(24),
@@ -28,13 +28,6 @@ const depositedCrates = [
 ] as DepositCrate[];
 
 // --------------------------------------------------------
-
-it('sorts crates by descending Season', () => {
-  const sorted = Beanstalk.Silo.Withdraw._sortCratesBySeasonDescending(depositedCrates);
-  expect(sorted.length).toBe(2);
-  expect(sorted[0].season.toNumber()).toBe(77);
-  expect(sorted[1].season.toNumber()).toBe(24);
-});
 
 it('selects a single Deposit crate to Withdraw', () => {
   const withdrawAmount = new BigNumber(2);
