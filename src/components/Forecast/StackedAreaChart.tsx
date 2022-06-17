@@ -1,4 +1,3 @@
-import { Stack, Typography, Box } from '@mui/material';
 import React from 'react';
 import { AreaStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
@@ -8,13 +7,7 @@ import { scaleTime, scaleLinear } from '@visx/scale';
 import { timeParse } from 'd3-time-format';
 import { SupportedChainId, TokenMap } from '../../constants';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
-import { BEAN_ETH_UNIV2_LP } from '../../constants/tokens';
-import ALL_POOLS, {
-  BEAN_CRV3_CURVE_POOL_MAINNET,
-  BEAN_ETH_UNIV2_POOL_MAINNET,
-  BEAN_LUSD_CURVE_POOL_MAINNET
-} from '../../constants/pools';
-import { Pool } from '../../classes';
+import ALL_POOLS from 'constants/pools';
 // import mock = jest.mock;
 
 export type LiquidityBalancesProps = {
@@ -62,15 +55,11 @@ const data = browserUsage;
 // const keys = Object.keys(data[0]).filter((k) => k !== 'date') as BrowserNames[];
 const keys = Object.keys(mockSiloData[0]).filter((k) => k !== 'date') as any[];
 const parseDate = timeParse('%Y %b %d');
-// export const background = '#f38181';
 export const background = 'transparent';
 
 console.log('SACHART DATA');
 console.log(data);
 
-// const getDate = (d: BrowserUsage) => (parseDate(d.date) as Date).valueOf();
-// const getY0 = (d: SeriesPoint<BrowserUsage>) => d[0] / 100;
-// const getY1 = (d: SeriesPoint<BrowserUsage>) => d[1] / 100;
 const getDate = (d: MockPastSiloData) => (parseDate(d.date) as Date).valueOf();
 const getY0 = (d: SeriesPoint<MockPastSiloData>) => d[0] / 100;
 const getY1 = (d: SeriesPoint<MockPastSiloData>) => d[1] / 100;
@@ -96,7 +85,6 @@ const StackedAreaChart: React.FC<StackedAreasProps> =
     // scales
     const xScale = scaleTime<number>({
       range: [0, xMax],
-      // domain: [Math.min(...data.map(getDate)), Math.max(...data.map(getDate))],
       domain: [Math.min(...mockSiloData.map(getDate)), Math.max(...mockSiloData.map(getDate))],
     });
     const yScale = scaleLinear<number>({
@@ -111,7 +99,6 @@ const StackedAreaChart: React.FC<StackedAreasProps> =
           top={margin.top}
           left={margin.left}
           keys={keys}
-          // data={data}
           data={mockSiloData}
           x={(d) => xScale(getDate(d.data)) ?? 0}
           y0={(d) => yScale(getY0(d)) ?? 0}
