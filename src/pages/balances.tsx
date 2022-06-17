@@ -4,7 +4,7 @@ import {Card, Container, Grid, Stack} from '@mui/material';
 import TotalBalanceCard from 'components/Balances/Cards/TotalBalancesCard';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import { BEAN, PODS, SEEDS, STALK } from 'constants/tokens';
 import Stat from 'components/Common/Stat';
 import { displayBN } from 'util/index';
@@ -58,7 +58,7 @@ const BalancesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Stat
-                title={`Unfertilized Beans`}
+                title={`My Unfertilized Beans`}
                 icon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 amount={displayBN(fertilizerSummary.unfertilized)}
                 variant="h2"

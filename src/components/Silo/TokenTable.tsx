@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Pool, Token } from 'classes';
 import { AppState } from 'state';
 import { displayUSD } from 'util/index';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import TokenIcon from 'components/Common/TokenIcon';
 import { SEEDS, STALK } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';

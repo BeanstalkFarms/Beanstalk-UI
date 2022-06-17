@@ -2,20 +2,24 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { BeanstalkPalette } from 'components/App/muiTheme';
-import NavBar from './NavBar';
+// import NavBar from './NavBar';
 
 export default {
-  component: NavBar,
+  // component: NavBar,
   args: {},
-  parameters: {
-    layout: 'fullscreen'
-  }
-} as ComponentMeta<typeof NavBar>;
+  // parameters: {
+  //   layout: 'fullscreen'
+  // }
+};// as ComponentMeta<typeof NavBar>;
 
-const Template: ComponentStory<typeof NavBar> = (args: any) => (
-  <Box sx={{ backgroundColor: BeanstalkPalette.lightBlue, minHeight: 200 }}>
-    <NavBar {...args} />
+const Template = (args: any) => (
+  <Box>
+    {/* <NavBar /> */}
+    There is a problem bundling NavBar right now.
   </Box>
-  );
+);
 
-export const Default = Template.bind({});
+const Primary = Template.bind({});
+export {
+  Primary
+};

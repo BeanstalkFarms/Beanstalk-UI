@@ -13,7 +13,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 

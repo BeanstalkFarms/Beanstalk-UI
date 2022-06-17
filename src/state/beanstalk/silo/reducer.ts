@@ -25,11 +25,11 @@ const initialState : BeanstalkSilo = {
   }
 };
 
-export default createReducer(initialState, (builder) =>
+export default createReducer(initialBeanstalkSilo, (builder) =>
   builder
     .addCase(resetBeanstalkSilo, () => {
       console.debug('[beanstalk/silo/reducer] reset');
-      return initialState;
+      return initialBeanstalkSilo;
     })
     .addCase(updateBeanstalkSiloAssets, (state, { payload }) => {
       state.tokens = payload.tokens;

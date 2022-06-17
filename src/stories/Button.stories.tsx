@@ -29,13 +29,12 @@ const Template: ComponentStory<typeof Button> = (args) => (
   </Box>
 );
 
-export const Primary = Template.bind({});
-
+const Primary = Template.bind({});
 Primary.args = {
   color: 'primary',
 };
 
-export const Dropdown = Template.bind({});
+const Dropdown = Template.bind({});
 Dropdown.args = {
   variant: 'contained',
   color: 'secondary',
@@ -43,11 +42,17 @@ Dropdown.args = {
   endIcon: <ArrowDropDownIcon />
 };
 
-export const Large = Template.bind({});
+const Large = Template.bind({});
 Large.args = {
   variant: 'contained',
   color: 'primary',
   children: 'Convert Allocation of Deposited Assets',
   size: 'large',
   fullWidth: true,
+};
+
+export {
+  Primary,
+  Dropdown,
+  Large,
 };

@@ -19,11 +19,12 @@ const poolState: BeanPoolState = {
 };
 
 const Template: ComponentStory<typeof PoolCard> = (args: any) => (
-  <PoolCard
-    {...args}
-    pool={BEAN_ETH_UNIV2_POOL_MAINNET}
-    poolState={poolState}
-  />
+  <div>Currently broken (unexpected default), will need to investigate</div>
+  // <PoolCard
+  //   // {...args}
+  //   pool={BEAN_ETH_UNIV2_POOL_MAINNET}
+  //   poolState={poolState}
+  // />
 );
 
-export const Default = Template.bind({});
+export const Main = Template.bind({});

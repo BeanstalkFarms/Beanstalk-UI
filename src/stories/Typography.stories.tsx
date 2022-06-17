@@ -26,6 +26,9 @@ const Template: ComponentStory<typeof Button> = (args) => (
   </Box>
 );
 
-export const Primary = Template.bind({});
-
+const Primary = Template.bind({});
 Primary.args = {};
+
+export {
+  Primary
+};

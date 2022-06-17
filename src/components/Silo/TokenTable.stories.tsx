@@ -23,7 +23,7 @@ const Template: ComponentStory<typeof TokenTable> = (args: any) => (
       tokens: {
         [BEAN[SupportedChainId.MAINNET].address]: {
           // input fake data here
-          deposited: new BigNumber(100_000)
+          deposited: new BigNumber(123_456_789)
         },
         [BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET].address]: {
           // input fake data here
@@ -34,4 +34,4 @@ const Template: ComponentStory<typeof TokenTable> = (args: any) => (
   />
 );
 
-export const Default = Template.bind({});
+export const Main = Template.bind({});
