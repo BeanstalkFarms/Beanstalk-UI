@@ -4,9 +4,7 @@ import { Token } from 'classes';
 import { BEAN, ETH, SEEDS, STALK } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
-import { AppState } from 'state';
-import { useSelector } from 'react-redux';
-import { Form, Formik, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import TokenSelectDialog from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
@@ -18,6 +16,11 @@ import { SupportedChainId } from 'constants/chains';
 import Beanstalk from 'lib/Beanstalk';
 import BigNumber from 'bignumber.js';
 import { useBeanstalkContract } from 'hooks/useContract';
+import useFarmerBalances from 'hooks/useFarmerBalances';
+import { BalanceState } from 'state/farmer/balances/reducer';
+import { displayFullBN, toStringBaseUnitBN } from 'util/Tokens';
+import TransactionToast from 'components/Common/TxnToast';
+import { useSigner } from 'wagmi';
 
 // -----------------------------------------------------------------------
 
@@ -30,27 +33,31 @@ type DepositFormValues = {
 const TOKEN_LIST = [BEAN, ETH];
 
 const DepositForm : React.FC<
-  FormikProps<DepositFormValues>
-  & { to: Token }
+  FormikProps<DepositFormValues> & {
+    to: Token;
+    balances: BalanceState;
+  }
 > = ({
   // Custom
   to,
+  balances,
   // Formik
   values,
+  isSubmitting,
   setFieldValue,
 }) => {
+  const chainId = useChainId();
   const erc20TokenMap = useTokenMap(TOKEN_LIST);
-  const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
-  const [beanstalk] = useBeanstalkContract();
 
   const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
     to,
     values.tokens,
     (amount: BigNumber) => amount,
   );
-  const chainId = useChainId();
 
+  const isMainnet = chainId === SupportedChainId.MAINNET;
+  const isReady   = bdv.gt(0);
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
   const handleOpen  = useCallback(() => setShowTokenSelect(true),  []);
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -67,8 +74,6 @@ const DepositForm : React.FC<
       ...Array.from(copy).map((token) => ({ token, amount: undefined })),
     ]);
   }, [values.tokens, setFieldValue]);
-
-  const isMainnet = chainId === SupportedChainId.MAINNET;
   
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
@@ -92,13 +97,14 @@ const DepositForm : React.FC<
                 showTokenSelect={handleOpen}
                 disabled={isMainnet}
                 disableTokenSelect={isMainnet}
-                handleQuote={() => {
-                  return Promise.reject();
-                }}
+                handleQuote={(tokenIn, amountIn) => 
+                   Promise.resolve(amountIn.times(1E9))
+                  // return beanstalk.callStatic.curveToBDV(amountIn.toString()).then(bigNumberResult)
+                }
               />
             ))}
           </Stack>
-          {bdv.gt(0) ? (
+          {isReady ? (
             <Stack direction="column" gap={1}>
               <TokenOutputField
                 token={to}
@@ -130,7 +136,7 @@ const DepositForm : React.FC<
               </Box>
             </Stack>
           ) : null}
-          <Button disabled type="submit" size="large" fullWidth>
+          <Button disabled={!isReady || isSubmitting} type="submit" size="large" fullWidth>
             Deposit
           </Button>
         </Stack>
@@ -143,8 +149,11 @@ const DepositForm : React.FC<
 
 // TODO:
 // - implement usePreferredToken here
-const Deposit : React.FC<{ to: Token; }> = ({ to }) => {
+const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
   const Bean = useChainConstant(BEAN);
+  const balances = useFarmerBalances();
+  const { data: signer } = useSigner();
+  const beanstalk = useBeanstalkContract(signer);
   const initialValues : DepositFormValues = useMemo(() => ({
     tokens: [
       {
@@ -153,9 +162,62 @@ const Deposit : React.FC<{ to: Token; }> = ({ to }) => {
       },
     ],
   }), [Bean]);
+  const onSubmit = useCallback((values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
+    const { amount } = Beanstalk.Silo.Deposit.deposit(
+      token,
+      values.tokens,
+      (_amount: BigNumber) => _amount,
+    );
+    if (values.tokens.length > 1) throw new Error('Only one token supported at this time.');
+    if (values.tokens[0].token !== token) throw new Error('Must deposit token directly at this time.');
+
+    let call;
+    if (token === Bean) {
+      call = beanstalk.depositBeans(
+        toStringBaseUnitBN(amount, token.decimals)
+      );
+    } else {
+      call = Promise.reject(new Error(`No supported deposit method for ${token.name}`));
+    }
+
+    const txToast = new TransactionToast({
+      loading: `Depositing ${displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} to the Silo`,
+      success: `Withdraw successful. Your ${token.symbol} will be available to Claim in N Seasons.`,
+    });
+
+    return call
+      .then((txn) => {
+        txToast.confirming(txn);
+        return txn.wait();
+      })
+      .then((receipt) => {
+        txToast.success(receipt);
+        formActions.resetForm();
+      })
+      .catch((err) => {
+        console.error(
+          txToast.error(err.error || err),
+          {
+            calldata: {
+              amount: toStringBaseUnitBN(amount, token.decimals)
+            }
+          }
+        );
+      });
+  }, [
+    Bean,
+    beanstalk,
+    token,
+  ]);
   return (
-    <Formik initialValues={initialValues} onSubmit={() => {}}>
-      {(props) => <DepositForm to={to} {...props} />}
+    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+      {(formikProps) => (
+        <DepositForm
+          to={token}
+          balances={balances}
+          {...formikProps}
+        />
+      )}
     </Formik>
   );
 };

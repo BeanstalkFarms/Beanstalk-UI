@@ -9,7 +9,8 @@ import { CHAIN_INFO } from 'constants/chains';
 
 const useStyles = makeStyles({
   errorMessage: {
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
+    '&:first-letter': { textTransform: 'capitalize' },
   }
 });
 
@@ -75,11 +76,6 @@ type ToastMessages = {
   error?: string;
 }
 
-type MetamaskErrorObject = {
-  code: number;
-  message: string;
-}
-
 /**
  * A lightweight wrapper around react-hot-toast
  * to minimize repetitive Toast code when issuing transactions.
@@ -140,31 +136,27 @@ export default class TransactionToast {
     );
   }
 
-  error(error: MetamaskErrorObject | Error | string) {
+  error(error: any) {
     let msg;
-    let duration = 5000;
-    if (typeof error === 'object') {
-      duration = Infinity;
-      // SC: Is there a better way to do this?
-      if (error.message && error.message.substring(0, 8).toLowerCase() === 'metamask') {
-        switch ((error as MetamaskErrorObject).code) {
-          // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature.
-          case 4001:
-            msg = 'You rejected the signature request.';
-            break;
-          // Unknown
-          default:
-            msg = 'An error occurred with Metamask';
-            break;
-        }
-      } else {
-        const message = error.message.substring(0, 200);
-        msg = error.message.length > 200 ? message.concat('...') : message;
-      }
-    } else {
-      console.error(error);
-      msg = 'An unknown error occurred.';
+    const duration = Infinity;
+
+    switch (error.code) {
+      // ethers: 
+      case 'UNSUPPORTED_OPERATION':
+        msg = error.reason;
+        break;
+      // ethers: UNPREDICTABLE_GAS_LIMIT
+      case -32603:
+        msg = error.message.replace('execution reverted: ', '');
+        break;
+      // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature.
+      case 4001:
+        msg = 'You rejected the signature request.';
+        break;
+      default:
+        msg = `An unknown error occurred: ${error?.message || error?.toString()}. code = ${error.code}`;
     }
+
     toast.error(
       <ToastAlert
         desc={this.messages.error}
@@ -176,5 +168,7 @@ export default class TransactionToast {
         duration: duration
       }
     );
+
+    return msg;
   }
 }

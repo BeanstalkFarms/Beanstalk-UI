@@ -200,7 +200,7 @@ const SetupForm: React.FC<{}> = () => {
   }), [baseToken]);
 
   //
-  const onSubmit = useCallback((values: FertilizerFormValues, actions: FormikHelpers<FertilizerFormValues>) => {
+  const onSubmit = useCallback((values: FertilizerFormValues, formActions: FormikHelpers<FertilizerFormValues>) => {
     if (fertContract && account?.address) {
       const token   = values.tokens[0].token;
       const amount  = values.tokens[0].amount;
@@ -243,7 +243,7 @@ const SetupForm: React.FC<{}> = () => {
         })
         .then((receipt) => {
           txToast.success(receipt);
-          actions.resetForm();
+          formActions.resetForm();
           refetchFertilizer(account.address as string);
           refetchBalances(account.address as string);
           refetchAllowances(account.address as string, fertContract.address, Usdc);

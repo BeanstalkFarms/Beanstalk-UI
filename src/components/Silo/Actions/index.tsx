@@ -29,12 +29,12 @@ const Actions : React.FC<{ token: Token; }> = (props) => {
         <Box>
           {tab === 0 ? (
             <Box sx={{ position: 'relative' }}>
-              <Deposit to={props.token} />
+              <Deposit token={props.token} />
             </Box>
           ) : null}
           {tab === 1 ? (
             <Box sx={{ position: 'relative' }}>
-              <Withdraw from={props.token} />
+              <Withdraw token={props.token} />
             </Box>
             // <Stack sx={{ p: 4 }} direction="row" justifyContent="center" alignItems="center">
             //   <Typography color="text.secondary">
