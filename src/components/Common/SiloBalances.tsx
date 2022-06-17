@@ -1,10 +1,11 @@
-import { Stack, Typography, TypographyProps, StackProps, Grid, Box } from '@mui/material';
+import { Stack, Typography, Grid, Box } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
-import { displayUSD } from '../../util';
-import { TotalBalanceCardProps } from '../Balances/Cards/TotalBalancesCard';
 import useWhitelist from 'hooks/useWhitelist';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
+import { displayUSD } from '../../util';
+import { TotalBalanceCardProps } from '../Balances/Cards/TotalBalancesCard';
+import useBeanstalkSiloBreakdown from '../../hooks/useBeanstalkSiloBreakdown';
 
 const TokenRow: React.FC<{
   name: string;
@@ -43,7 +44,8 @@ const TokenRow: React.FC<{
   );
 
 export type SiloBalancesProps = {
-  breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
+  breakdown: ReturnType<typeof useFarmerSiloBreakdown | typeof useBeanstalkSiloBreakdown>;
+  whitelist: any;
 }
 
 type DrilldownValues = keyof TotalBalanceCardProps['breakdown'];
@@ -62,8 +64,8 @@ const STATE_CONFIG: { [name in DrilldownValues as Exclude<name, 'totalValue'>]: 
 type StateID = keyof typeof STATE_CONFIG;
 const STATE_IDS = Object.keys(STATE_CONFIG) as StateID[];
 
-const SiloBalances: React.FC<SiloBalancesProps> = ({ breakdown }) => {
-  const WHITELIST = useWhitelist();
+const SiloBalances: React.FC<SiloBalancesProps> = ({ breakdown, whitelist }) => {
+  // const WHITELIST = useWhitelist();
 
   // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
   const [drilldown, setDrilldown] = useState<StateID | null>(null);
@@ -114,11 +116,11 @@ const SiloBalances: React.FC<SiloBalancesProps> = ({ breakdown }) => {
           <Stack gap={1}>
             <Typography variant="h2">{STATE_CONFIG[drilldown][0]} Tokens</Typography>
             <Box>
-              {Object.keys(WHITELIST).map((address) => (
+              {Object.keys(whitelist).map((address) => (
                 <TokenRow
                   key={address}
-                  name={`${WHITELIST[address].name}`}
-                  value={displayUSD(breakdown[drilldown].byToken[address][0])}
+                  name={`${whitelist[address].name}`}
+                  value={displayUSD(breakdown[drilldown]?.byToken[address][0])}
                   onMouseOver={onMouseOver('deposited')}
                   isFaded={false}
                 />

@@ -22,10 +22,7 @@ import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { displayBN, displayFullBN } from '../util';
-import { ANALYTICS_LINK, SupportedChainId } from '../constants';
 import SiloBalances from 'components/Common/SiloBalances';
-import useBeanstalkSiloBreakdown from '../hooks/useBeanstalkSiloBreakdown';
 import { AppState } from 'state';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import ForecastCard from 'components/Forecast/ForecastCard';
@@ -35,6 +32,10 @@ import TimeTabs from 'components/TimeTabs';
 import LiquidityBalances from 'components/Forecast/LiquidityBalances';
 import SeasonsTable from 'components/Forecast/SeasonsTable';
 import ForecastTopBar from 'components/Forecast/ForecastTopBar';
+import useBeanstalkSiloBreakdown from '../hooks/useBeanstalkSiloBreakdown';
+import { ANALYTICS_LINK, SupportedChainId } from '../constants';
+import { displayBN, displayFullBN } from '../util';
+import { useGeneralizedWhitelist } from '../hooks/useWhitelist';
 
 const columns: GridColumns = [
   {
@@ -318,7 +319,7 @@ const ForecastPage: React.FC = () => {
             <LiquidityBalances balances={balances} />
           </Box>
           <Box sx={{ display: tab === 1 ? 'block' : 'none' }}>
-            <SiloBalances breakdown={breakdown} />
+            <SiloBalances breakdown={breakdown} whitelist={useGeneralizedWhitelist()} />
           </Box>
         </Card>
         <SeasonsTable columns={columns} rows={rows} />

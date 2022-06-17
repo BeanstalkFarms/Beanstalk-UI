@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { AddressMap, ZERO_BN } from 'constants/index';
 import useSiloTokenToUSD from './currency/useSiloTokenToUSD';
-import useWhitelist, { useGeneralizedWhitelist } from './useWhitelist';
+import useGeneralizedWhitelist from './useWhitelist';
 
 // -----------------
 // Types and Helpers

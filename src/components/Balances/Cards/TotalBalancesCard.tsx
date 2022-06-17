@@ -8,6 +8,7 @@ import BlurComponent from 'components/Common/BlurComponent';
 import SiloBalances from 'components/Common/SiloBalances';
 import useChainId from '../../../hooks/useChain';
 import { SupportedChainId } from '../../../constants';
+import useWhitelist from "../../../hooks/useWhitelist";
 
 export interface TotalBalanceCardProps {
   breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
@@ -41,7 +42,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
             Connect your wallet to see your Beanstalk balances.
           </BlurComponent>
         )}
-        <SiloBalances breakdown={breakdown} />
+        <SiloBalances breakdown={breakdown} whitelist={useWhitelist()} />
       </Box>
     </Box>
   );
