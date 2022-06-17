@@ -361,7 +361,7 @@ export const getBips = async (
  *       instead of the separate `beanstalkGetters` contract.
  * @rpc 1 call to Beanstalk Getters contract.
  * @rpc 4/10/2022: 1 call
- * 
+ *
  */
 export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
   const beanstalkG = beanstalkGettersContractReadOnly();
@@ -438,7 +438,7 @@ export const getPrices = async (batch: BatchRequest) => {
 
   // Curve prices (only works on mainnet or dev)
   // https://besu.hyperledger.org/en/stable/Concepts/NetworkID-And-ChainID/
-  if (chainId === 1 || chainId === 1337) {
+  if (chainId === 1 || chainId === 1337 || chainId === 31337) {
     promises = promises.concat([
       // Curve virtual price
       exec(curveContract.methods.get_virtual_price()).then(

@@ -121,7 +121,7 @@ export const BEANSTALK_GETTERS = {
 export function changeTokenAddresses(chainId: number) {
   console.log(`changeAddresses: ${chainId}`);
   // Mainnet Addresses
-  if (chainId === 1) {
+  if (chainId === 1 || chainId === 31337) {
     UNI_V2_USDC_ETH_LP.addr = '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc';
     WETH.addr = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
     UNI_V2_ETH_BEAN_LP.addr = '0x87898263B6C5BABe34b4ec53F22d98430b91e371';

@@ -38,6 +38,8 @@ export async function initializeEventListener(
 ) : Promise<EventData[]> {
   const startTime = benchmarkStart('EVENT LISTENER');
   const beanstalk = beanstalkContractReadOnly(true);
+  
+  console.log(DEPLOYMENT_BLOCKS);
 
   const {
     BEANSTALK_GENESIS_BLOCK,
@@ -215,7 +217,7 @@ export async function initializeEventListener(
     if (IGNORED_EVENTS.has(event.event)) {
       return;
     }
-    
+
     const newEventHash = event.transactionHash + String(event.logIndex);
     if (newEventHashes.has(newEventHash)) {
       return;
@@ -250,7 +252,7 @@ export async function initializeEventListener(
 
 //
 export function parseWithdrawals(
-  withdrawals: Withdrawals, 
+  withdrawals: Withdrawals,
   currentSeason: BigNumber
 ) : [
   transitBalance: BigNumber,
