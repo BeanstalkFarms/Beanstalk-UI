@@ -1,11 +1,13 @@
 import React from 'react';
 import { Alert, AlertTitle, Box, Link } from '@mui/material';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import { displayFullBN } from 'util/index';
 import Stat from 'components/Common/Stat';
 import { useAccount } from 'wagmi';
 import BlurComponent from 'components/Common/BlurComponent';
 import SiloBalances from 'components/Common/SiloBalances';
+import useChainId from '../../../hooks/useChain';
+import { SupportedChainId } from '../../../constants';
 
 export interface TotalBalanceCardProps {
   breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
@@ -13,6 +15,7 @@ export interface TotalBalanceCardProps {
 
 const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
   const { data: account } = useAccount();
+  const chainId = useChainId();
 
   return (
     <Box>

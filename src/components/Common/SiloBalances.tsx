@@ -4,7 +4,7 @@ import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
 import { displayUSD } from '../../util';
 import { TotalBalanceCardProps } from '../Balances/Cards/TotalBalancesCard';
 import useWhitelist from 'hooks/useWhitelist';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBalances';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 
 const TokenRow: React.FC<{
   name: string;
@@ -118,7 +118,7 @@ const SiloBalances: React.FC<SiloBalancesProps> = ({ breakdown }) => {
                 <TokenRow
                   key={address}
                   name={`${WHITELIST[address].name}`}
-                  value={displayUSD(breakdown[drilldown].valueByToken[address])}
+                  value={displayUSD(breakdown[drilldown].byToken[address][0])}
                   onMouseOver={onMouseOver('deposited')}
                   isFaded={false}
                 />

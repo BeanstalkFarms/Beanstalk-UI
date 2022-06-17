@@ -3,7 +3,7 @@ import { NEW_BN } from 'constants/index';
 import { BeanstalkSilo } from '.';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 
-const initialState : BeanstalkSilo = {
+export const initialBeanstalkSilo : BeanstalkSilo = {
   tokens: {},
   beans: {
     total: NEW_BN,

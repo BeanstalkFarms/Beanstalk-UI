@@ -16,7 +16,7 @@ export type SiloStateBreakdown = {
    * denominated in in that token. Ex. amount=0.005 BEAN:ETH LP. */
   value: BigNumber;
   /** 
-   * The 
+   * The
    */
   byToken: AddressMap<[amount: BigNumber, value: BigNumber]>;
 }

@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
-import {Deposit, FarmerSiloBalance, Withdrawal} from '../../farmer/silo';
-import {TokenMap} from "../../../constants";
+import { Deposit, FarmerSiloBalance, Withdrawal } from '../../farmer/silo';
+import { TokenMap } from '../../../constants';
 
 /**
  * A "Silo Balance" provides all information
