@@ -80,11 +80,11 @@ const WithdrawForm : React.FC<
               />
             )}
           </Field>
-          {(withdrawResult && withdrawResult.bdv.lt(0)) ? (
+          {(withdrawResult && withdrawResult.amount.lt(0)) ? (
             <Stack direction="column" gap={1}>
               <TokenOutputField
                 token={from}
-                value={withdrawResult.bdv}
+                value={withdrawResult.amount}
               />
               <Stack direction="row" gap={1} justifyContent="center">
                 <Box sx={{ flex: 1 }}>

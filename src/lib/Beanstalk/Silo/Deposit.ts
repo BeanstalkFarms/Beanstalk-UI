@@ -2,6 +2,7 @@ import { Token } from 'classes';
 import { ZERO_BN } from 'constants/index';
 import { FormState } from 'components/Common/Form';
 import { Action, ActionType } from 'util/Actions';
+import BigNumber from 'bignumber.js';
 
 /**
  * Summarize the Actions that will occur when making a Deposit.
@@ -14,6 +15,7 @@ import { Action, ActionType } from 'util/Actions';
 export function deposit(
   to: Token,
   tokens: FormState['tokens'],
+  amountToBDV: (amount: BigNumber) => BigNumber,
 ) {
   const summary = tokens.reduce((agg, curr) => {
     const amount = (
@@ -22,10 +24,11 @@ export function deposit(
         : curr.amountOut
     );
     if (amount) {
-      // BDV
+      // AMOUNT + BDV
       // FIXME: the below is only the case for BEAN deposits. Need a generalized
       //        way to calculate this regardless of token.
-      agg.bdv   = agg.bdv.plus(amount);
+      agg.amount = agg.amount.plus(amount);
+      agg.bdv    = agg.bdv.plus(amountToBDV(amount));
 
       // REWARDS
       // NOTE: this is a function of `to.rewards.stalk` for the destination token.
@@ -47,9 +50,10 @@ export function deposit(
     }
     return agg;
   }, {  
-    bdv: ZERO_BN,    // The aggregate BDV to be Deposited.
-    stalk: ZERO_BN,  // The Stalk earned for the Deposit.
-    seeds: ZERO_BN,  // The Seeds earned for the Deposit.
+    amount: ZERO_BN,  //
+    bdv: ZERO_BN,     // The aggregate BDV to be Deposited.
+    stalk: ZERO_BN,   // The Stalk earned for the Deposit.
+    seeds: ZERO_BN,   // The Seeds earned for the Deposit.
     actions: [] as Action[],
   });
 

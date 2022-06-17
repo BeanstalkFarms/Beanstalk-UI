@@ -21,6 +21,7 @@ export function _selectCratesToWithdraw(
   currentSeason: BigNumber,
 ) {
   let totalAmountRemoved = new BigNumber(0);
+  let totalBDVRemoved    = new BigNumber(0);
   let totalStalkRemoved  = new BigNumber(0);
   const deltaCrates : DepositCrate[] = [];
   const sortedCrates = _sortCratesBySeasonDescending(depositedCrates);
@@ -46,6 +47,7 @@ export function _selectCratesToWithdraw(
 
     // Update totals
     totalAmountRemoved = totalAmountRemoved.plus(crateAmountToRemove);
+    totalBDVRemoved    = totalBDVRemoved.plus(crateBDVToRemove);
     totalStalkRemoved  = totalStalkRemoved.plus(crateStalkToRemove);
     deltaCrates.push({
       season: crate.season,
@@ -61,6 +63,7 @@ export function _selectCratesToWithdraw(
 
   return {
     deltaAmount: totalAmountRemoved.negated(),
+    deltaBDV:    totalBDVRemoved.negated(),
     deltaStalk:  totalStalkRemoved.negated(),
     deltaCrates,
   };
@@ -84,7 +87,12 @@ export function withdraw(
   if (!tokens[0].amount) return null;
 
   const withdrawAmount = tokens[0].amount;
-  const { deltaAmount, deltaStalk, deltaCrates } = _selectCratesToWithdraw(
+  const {
+    deltaAmount,
+    deltaBDV,
+    deltaStalk,
+    deltaCrates
+  } = _selectCratesToWithdraw(
     from,
     withdrawAmount,
     depositedCrates,
@@ -92,9 +100,10 @@ export function withdraw(
   );
   
   return {
-    bdv: deltaAmount,
-    stalk: deltaStalk,
-    seeds: from.getSeeds(deltaAmount),
+    amount: deltaAmount,
+    bdv:    deltaBDV,
+    stalk:  deltaStalk,
+    seeds:  from.getSeeds(deltaAmount),
     actions: [],
     deltaCrates,
   };

@@ -17,6 +17,7 @@ import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import Beanstalk from 'lib/Beanstalk';
 import BigNumber from 'bignumber.js';
+import { useBeanstalkContract } from 'hooks/useContract';
 
 // -----------------------------------------------------------------------
 
@@ -41,7 +42,13 @@ const DepositForm : React.FC<
   const erc20TokenMap = useTokenMap(TOKEN_LIST);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
-  const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(to, values.tokens);
+  const [beanstalk] = useBeanstalkContract();
+
+  const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
+    to,
+    values.tokens,
+    (amount: BigNumber) => amount,
+  );
   const chainId = useChainId();
 
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
@@ -85,7 +92,9 @@ const DepositForm : React.FC<
                 showTokenSelect={handleOpen}
                 disabled={isMainnet}
                 disableTokenSelect={isMainnet}
-                handleQuote={() => Promise.resolve(new BigNumber(0))}
+                handleQuote={() => {
+                  return Promise.reject();
+                }}
               />
             ))}
           </Stack>
