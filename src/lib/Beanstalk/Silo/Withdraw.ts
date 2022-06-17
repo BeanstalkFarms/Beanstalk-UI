@@ -1,8 +1,7 @@
 import { Token } from 'classes';
-import { BEAN_TO_SEEDS } from 'constants/index';
 import { FormState } from 'components/Common/Form';
 // import { Action, ActionType } from 'util/Actions';
-import { Crate, DepositCrate } from 'state/farmer/silo';
+import { DepositCrate } from 'state/farmer/silo';
 import BigNumber from 'bignumber.js';
 
 export default class SiloWithdraw {
@@ -25,6 +24,7 @@ export default class SiloWithdraw {
 
     const withdrawAmount = tokens[0].amount;
     const { deltaAmount, deltaStalk, deltaCrates } = SiloWithdraw._selectCratesToWithdraw(
+      from,
       withdrawAmount,
       depositedCrates,
       currentSeason,
@@ -44,7 +44,7 @@ export default class SiloWithdraw {
   /**
    * Order crates by Season, in descending order.
    */
-  static _sortCratesBySeasonDescending(crates: Crate[]) {
+  static _sortCratesBySeasonDescending(crates: DepositCrate[]) {
     return [...crates].sort((a, b) => b.season.toNumber() - a.season.toNumber());
   }
 
@@ -58,13 +58,14 @@ export default class SiloWithdraw {
    * @returns removedCrates       
    */
   static _selectCratesToWithdraw(
+    token: Token,
     amount: BigNumber,
     depositedCrates: DepositCrate[],
     currentSeason: BigNumber,
   ) {
     let totalAmountRemoved = new BigNumber(0);
     let totalStalkRemoved  = new BigNumber(0);
-    const deltaCrates : (Partial<DepositCrate>)[] = [];
+    const deltaCrates : DepositCrate[] = [];
     const sortedCrates = SiloWithdraw._sortCratesBySeasonDescending(depositedCrates);
 
     sortedCrates.some((crate) => {
@@ -74,21 +75,27 @@ export default class SiloWithdraw {
           ? crate.amount                       // remove the entire crate
           : amount.minus(totalAmountRemoved)   // remove the remaining amount
       );
+      const elapsedSeasons      = currentSeason.minus(crate.season);      // 
+      const cratePctToRemove    = crateAmountToRemove.div(crate.amount);  // (0, 1]
+      const crateBDVToRemove    = cratePctToRemove.times(crate.bdv);      // 
+      const crateSeedsToRemove  = cratePctToRemove.times(crate.seeds);    //
 
-      // Estimating the Stalk lost based on the delta between
-      // the current season and the season of Deposit.
-      const crateStalkToRemove = (
-        crateAmountToRemove
-          .multipliedBy(currentSeason.minus(crate.season))
-          .multipliedBy(BEAN_TO_SEEDS)
-      );
+      // Stalk is removed for two reasons:
+      //  'base stalk' associated with the initial deposit is forfeited
+      //  'accrued stalk' earned from Seeds over time is forfeited.
+      const baseStalkToRemove     = token.getStalk(crateBDVToRemove);    // more or less, BDV * 1
+      const accruedStalkToRemove  = crateSeedsToRemove.times(elapsedSeasons).times(0.00001);
+      const crateStalkToRemove    = baseStalkToRemove.plus(accruedStalkToRemove);
 
+      // Update totals
       totalAmountRemoved = totalAmountRemoved.plus(crateAmountToRemove);
       totalStalkRemoved  = totalStalkRemoved.plus(crateStalkToRemove);
       deltaCrates.push({
         season: crate.season,
         amount: crateAmountToRemove.negated(),
+        bdv:    crateBDVToRemove.negated(),
         stalk:  crateStalkToRemove.negated(),
+        seeds:  crateSeedsToRemove.negated(),
       });
 
       // Finish when...
@@ -96,8 +103,8 @@ export default class SiloWithdraw {
     });
 
     return {
-      deltaStalk:  totalStalkRemoved.negated(),
       deltaAmount: totalAmountRemoved.negated(),
+      deltaStalk:  totalStalkRemoved.negated(),
       deltaCrates,
     };
   }
