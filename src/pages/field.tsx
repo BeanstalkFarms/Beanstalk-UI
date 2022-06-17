@@ -193,7 +193,7 @@ const FieldPage: React.FC = () => {
         open={modalOpen}
         fullWidth
         fullScreen={isMedium}
-        disableScrollLock
+       
       >
         <StyledDialogTitle onClose={handleClose}>My Plots</StyledDialogTitle>
         <StyledDialogContent sx={{ pb: 0.5 }}>

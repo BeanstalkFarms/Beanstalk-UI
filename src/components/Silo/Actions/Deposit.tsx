@@ -67,34 +67,27 @@ const DepositForm : React.FC<
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
-          {/* @ts-ignore */}
-          <FieldArray name="tokens">
-            {() => (
-              <div>
-                <TokenSelectDialog
-                  open={showTokenSelect}
-                  handleClose={handleClose}
-                  selected={values.tokens}
-                  handleSubmit={handleSelectTokens}
-                  balances={balances}
-                  tokenList={Object.values(erc20TokenMap)}
-                />
-                <Stack gap={1.5}>
-                  {values.tokens.map((state, index) => (
-                    <TokenQuoteProvider
-                      name={`tokens.${index}`}
-                      tokenOut={to}
-                      balance={balances[state.token.address] || undefined}
-                      state={state}
-                      showTokenSelect={handleOpen}
-                      disabled={isMainnet}
-                      disableTokenSelect={isMainnet}
-                    />
-                  ))}
-                </Stack>
-              </div>
-            )}
-          </FieldArray>
+          <TokenSelectDialog
+            open={showTokenSelect}
+            handleClose={handleClose}
+            selected={values.tokens}
+            handleSubmit={handleSelectTokens}
+            balances={balances}
+            tokenList={Object.values(erc20TokenMap)}
+          />
+          <Stack gap={1.5}>
+            {values.tokens.map((state, index) => (
+              <TokenQuoteProvider
+                name={`tokens.${index}`}
+                tokenOut={to}
+                balance={balances[state.token.address] || undefined}
+                state={state}
+                showTokenSelect={handleOpen}
+                disabled={isMainnet}
+                disableTokenSelect={isMainnet}
+              />
+            ))}
+          </Stack>
           {bdv.gt(0) ? (
             <Stack direction="column" gap={1}>
               <TokenOutputField

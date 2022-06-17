@@ -179,7 +179,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         anchor="bottom"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        disableScrollLock
+       
       >
         <Stack sx={{ p: 2 }} gap={2}>
           <Typography variant="h2">

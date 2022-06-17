@@ -54,7 +54,6 @@ const NavBar: React.FC<{}> = () => {
               },
             },
           }}
-          disableScrollLock
           PaperProps={{
             sx: {
               margin: {

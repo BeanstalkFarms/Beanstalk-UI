@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Link, Typography } from '@mui/material';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from './Dialog';
 
+const STORAGE_KEY = 'beanstalk.welcome-back.seen';
+
 const WelcomeBackModal: React.FC = () => {
-  const [modalOpen, setModalOpen] = useState<boolean>(true);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  
+  const handleClose = useCallback(() => setModalOpen(false), []);
 
   // only show "welcome back" modal on first visit
   useEffect(() => {
-    const visited = localStorage['already-visited'];
-    if (visited) {
-      setModalOpen(false);
-    } else {
-      localStorage['already-visited'] = true;
+    const visited = localStorage.getItem(STORAGE_KEY);
+    if (!visited) {
+      localStorage.setItem(STORAGE_KEY, 'true');
       setModalOpen(true);
     }
   }, [setModalOpen]);
 
   return (
-    <StyledDialog onClose={() => setModalOpen(false)} open={modalOpen} fullWidth>
+    <StyledDialog onClose={handleClose} open={modalOpen} fullWidth>
       <StyledDialogTitle>
         🌱 Welcome back to Beanstalk!
       </StyledDialogTitle>
@@ -38,7 +40,7 @@ const WelcomeBackModal: React.FC = () => {
         </Grid> */}
       </StyledDialogContent>
       <StyledDialogActions>
-        <Button onClick={() => setModalOpen(false)} fullWidth>
+        <Button onClick={handleClose} fullWidth>
           Continue
         </Button>
       </StyledDialogActions>

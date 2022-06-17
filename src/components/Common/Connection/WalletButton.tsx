@@ -182,7 +182,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           </Typography>
         </Button>
       </Tooltip> */}
-
       <Button
         disableFocusRipple
         variant="contained"
@@ -217,7 +216,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           }
         }}
         disablePortal
-        disableScrollLock
         // Align the menu to the bottom 
         // right side of the anchor button. 
         anchorOrigin={{
