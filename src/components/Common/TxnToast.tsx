@@ -154,7 +154,12 @@ export default class TransactionToast {
         msg = 'You rejected the signature request.';
         break;
       default:
-        msg = `An unknown error occurred: ${error?.message || error?.toString()}. code = ${error.code}`;
+        if (error?.message) {
+          msg = `${error?.message || error?.toString()}.${error?.code ? ` (code=${error?.code})` : ''}`;
+        } else {
+          msg = `An unknown error occurred.${error?.code ? ` (code=${error?.code})` : ''}`;
+        }
+        break;
     }
 
     toast.error(

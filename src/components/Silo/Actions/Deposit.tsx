@@ -168,42 +168,46 @@ const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
       values.tokens,
       (_amount: BigNumber) => _amount,
     );
-    if (values.tokens.length > 1) throw new Error('Only one token supported at this time.');
-    if (values.tokens[0].token !== token) throw new Error('Must deposit token directly at this time.');
-
-    let call;
-    if (token === Bean) {
-      call = beanstalk.depositBeans(
-        toStringBaseUnitBN(amount, token.decimals)
-      );
-    } else {
-      call = Promise.reject(new Error(`No supported deposit method for ${token.name}`));
-    }
-
     const txToast = new TransactionToast({
       loading: `Depositing ${displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} to the Silo`,
-      success: `Withdraw successful. Your ${token.symbol} will be available to Claim in N Seasons.`,
+      success: 'Deposit successful.',
     });
+    
+    try {
+      if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
+      if (values.tokens[0].token !== token) throw new Error('Must deposit token directly at this time');
 
-    return call
-      .then((txn) => {
-        txToast.confirming(txn);
-        return txn.wait();
-      })
-      .then((receipt) => {
-        txToast.success(receipt);
-        formActions.resetForm();
-      })
-      .catch((err) => {
-        console.error(
-          txToast.error(err.error || err),
-          {
-            calldata: {
-              amount: toStringBaseUnitBN(amount, token.decimals)
-            }
-          }
+      let call;
+      if (token === Bean) {
+        call = beanstalk.depositBeans(
+          toStringBaseUnitBN(amount, token.decimals)
         );
-      });
+      } else {
+        call = Promise.reject(new Error(`No supported deposit method for ${token.name}`));
+      }
+
+      return call
+        .then((txn) => {
+          txToast.confirming(txn);
+          return txn.wait();
+        })
+        .then((receipt) => {
+          txToast.success(receipt);
+          formActions.resetForm();
+        })
+        .catch((err) => {
+          console.error(
+            txToast.error(err.error || err),
+            {
+              calldata: {
+                amount: toStringBaseUnitBN(amount, token.decimals)
+              }
+            }
+          );
+        });
+      } catch (err) {
+        txToast.error(err);
+      }
   }, [
     Bean,
     beanstalk,
