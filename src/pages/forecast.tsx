@@ -249,7 +249,7 @@ const ForecastPage: React.FC = () => {
               // TODO: componentize graphSection
               <>
                 <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-                  <SimpleLineChart series={[mockTWAPData]} onCursor={handleCursorTWAP} />
+                  <SimpleLineChart isTWAP series={[mockTWAPData]} onCursor={handleCursorTWAP} />
                 </Box>
                 <Box>
                   <Divider color={BeanstalkPalette.lightBlue} />
