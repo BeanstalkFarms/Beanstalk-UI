@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
-import { AppState } from 'state';
-import { AddressMap, TokenMap, ZERO_BN } from 'constants/index';
+import { AddressMap, ZERO_BN } from 'constants/index';
 import BigNumber from 'bignumber.js';
 
 const useStyles = makeStyles(() => ({

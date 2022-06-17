@@ -3,7 +3,7 @@ import { ZERO_BN } from 'constants/index';
 import { FormState } from 'components/Common/Form';
 import { Action, ActionType } from 'util/Actions';
 
-export class Beanstalk {
+export default class Beanstalk {
   /**
    * Summarize the Actions that will occur when making a Deposit.
    * This includes pre-deposit Swaps, the Deposit itself, and resulting
@@ -80,7 +80,7 @@ export class Beanstalk {
     from: Token,
     tokens: FormState['tokens'],
   ) {
-    if (tokens.length > 1) throw new Error(`Multi-token Withdrawal is currently not supported.`);
+    if (tokens.length > 1) throw new Error('Multi-token Withdrawal is currently not supported.');
     const summary = tokens.reduce((agg, curr) => {
       const amount = curr.amount;
       if (amount) {

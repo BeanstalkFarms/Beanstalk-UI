@@ -13,7 +13,6 @@ import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { FormState, FormTokenState } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
-import useDepositSummary from 'hooks/summary/useDepositSummary';
 import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
@@ -29,12 +28,10 @@ type WithdrawFormValues = FormState;
 const simplifySiloBalances = (
   state : 'deposited' | 'withdrawn' | 'claimable',
   balances: AppState['_farmer']['silo']['balances']
-) => {
-  return Object.keys(balances).reduce((prev, k) => {
+) => Object.keys(balances).reduce((prev, k) => {
     prev[k] = balances[k][state].amount;
     return prev;
-  }, {} as AddressMap<BigNumber>)
-}
+  }, {} as AddressMap<BigNumber>);
 
 // -----------------------------------------------------------------------
 
@@ -67,10 +64,11 @@ const WithdrawForm : React.FC<
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
-          <Field name={`tokens.0.amount`}>
+          <Field name="tokens.0.amount">
             {(fieldProps: FieldProps) => (
               <TokenInputField
                 {...fieldProps}
+                token={from}
                 balance={depositedBalances[values.tokens[0].token.address] || undefined}
                 InputProps={InputProps}
               />
@@ -133,15 +131,14 @@ const WithdrawForm : React.FC<
 // TODO:
 // - implement usePreferredToken here
 const Withdraw : React.FC<{ from: Token; }> = ({ from }) => {
-  const Bean = useChainConstant(BEAN);
   const initialValues : WithdrawFormValues = useMemo(() => ({
     tokens: [
       {
-        token: Bean,
+        token: from,
         amount: null,
       },
     ],
-  }), [Bean]);
+  }), [from]);
   return (
     <Formik initialValues={initialValues} onSubmit={() => {}}>
       {(props) => <WithdrawForm from={from} {...props} />}

@@ -1,13 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Card, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip } from '@mui/material';
 import { Token } from 'classes';
 import { BEAN, ETH, SEEDS, STALK } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { FieldArray, Form, Formik, FormikProps } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
 import TokenSelectDialog from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
@@ -17,6 +16,7 @@ import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import Beanstalk from 'lib/Beanstalk';
+import BigNumber from 'bignumber.js';
 
 // -----------------------------------------------------------------------
 
@@ -85,6 +85,7 @@ const DepositForm : React.FC<
                 showTokenSelect={handleOpen}
                 disabled={isMainnet}
                 disableTokenSelect={isMainnet}
+                handleQuote={() => Promise.resolve(new BigNumber(0))}
               />
             ))}
           </Stack>
