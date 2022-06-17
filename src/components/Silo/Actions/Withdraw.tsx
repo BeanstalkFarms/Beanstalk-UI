@@ -34,7 +34,7 @@ const WithdrawForm : React.FC<
   values,
   setFieldValue,
 }) => {
-  const balances = useSelector<AppState, AppState['_farmer']['silo']['tokens']>((state) => state._farmer.silo.tokens);
+  const balances = useSelector<AppState, AppState['_farmer']['silo']['balances']>((state) => state._farmer.silo.balances);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
   // const { bdv, stalk, seeds, actions } = useDepositSummary(to, values.tokens);
   const chainId = useChainId();

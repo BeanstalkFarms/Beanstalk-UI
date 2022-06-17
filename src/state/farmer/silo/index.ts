@@ -73,7 +73,7 @@ export type FarmerSiloBalance = {
  * FIXME: enforce that `address` is a key of whitelisted tokens?
  */
 export type FarmerSiloBalances = {
-  tokens: TokenMap<FarmerSiloBalance>;
+  balances: TokenMap<FarmerSiloBalance>;
 }
 
 /**

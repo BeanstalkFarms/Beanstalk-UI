@@ -61,7 +61,7 @@ export default function useFarmerSiloBreakdown() {
   const WHITELIST_ADDRS = useMemo(() => Object.keys(WHITELIST), [WHITELIST]);
 
   //
-  const siloBalances  = useSelector<AppState, AppState['_farmer']['silo']['tokens']>((state) => state._farmer.silo.tokens);
+  const siloBalances  = useSelector<AppState, AppState['_farmer']['silo']['balances']>((state) => state._farmer.silo.balances);
   const tokenBalances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const getUSD = useSiloTokenToUSD();
 

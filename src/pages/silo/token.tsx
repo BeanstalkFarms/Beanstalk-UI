@@ -34,7 +34,7 @@ const TokenPage: React.FC<{}> = () => {
 
   // Load this Token from the whitelist
   const TOKEN = WHITELIST[address];
-  const balance = farmerSilo.tokens[TOKEN.address];
+  const balance = farmerSilo.balances[TOKEN.address];
 
   // Most Silo Tokens will have a corresponding Pool.
   // If one is available, show a PoolCard with state info.
