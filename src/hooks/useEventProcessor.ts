@@ -327,7 +327,10 @@ function _processFarmerEvents(
             : beans,
       };
       if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
-    } else if (event.event === 'BeanRemove') {
+    }
+    // BeanRemove is removing a deposit. It's issued at the same time as a
+    // Withdrawal. During convert you remove Deposits but don't Withdraw. 
+    else if (event.event === 'BeanRemove') {
       // FIXME: define crates contract return value
       event.returnValues.crates.forEach((s: string, i: number) => {
         const beans = toTokenUnitsBN(
@@ -472,6 +475,7 @@ function _processFarmerEvents(
           ...userLPSeedDeposits,
           [s]: userLPSeedDeposits[s].minus(seeds),
         };
+        console.debug('[processor:event/LPRemove]', userLPDeposits[s].toNumber(), userLPSeedDeposits[s].toNumber(), event);
         if (userLPDeposits[s].isEqualTo(0)) delete userLPDeposits[s];
         if (userLPSeedDeposits[s].isEqualTo(0)) {
           delete userLPSeedDeposits[s];

@@ -10,7 +10,7 @@ import { getAccount } from 'util/Account';
 import { parseWithdrawals } from 'util/Crates';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
-import { Deposit, Withdrawal } from './silo';
+import { Deposit } from './silo';
 import { updateFarmerTokenBalances } from './silo/actions';
 
 const FarmerEventsProcessor = () => {
@@ -75,6 +75,9 @@ const FarmerEventsProcessor = () => {
         );
         console.debug('[farmer/updater] ...processed events!', results);
 
+        console.debug('beanWithdrawals', results.beanWithdrawals, parseWithdrawals(results.beanWithdrawals, eventParsingParameters.season));
+        console.debug('lpWithdrawals', results.lpWithdrawals);
+
         // TEMP:
         // Hardcode this because the event process returns `beanDepositsBalance`, etc.
         dispatch(updateFarmerTokenBalances({
@@ -124,7 +127,7 @@ const FarmerEventsProcessor = () => {
               bdv:    new BigNumber(0),
               crates: [] as Deposit[],
             }),
-            ...parseWithdrawals(results.userLPDeposits, eventParsingParameters.season)
+            ...parseWithdrawals(results.lpWithdrawals, eventParsingParameters.season)
           },
 
           // -----------------------------
