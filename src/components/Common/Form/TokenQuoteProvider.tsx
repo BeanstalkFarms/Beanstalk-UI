@@ -15,7 +15,7 @@ const TokenQuoteProvider : React.FC<{
   balance: BigNumber | undefined;
   tokenOut: Token;
   state: FormTokenState;
-  showTokenSelect: () => void;
+  showTokenSelect?: () => void;
   disableTokenSelect?: boolean;
 } & TextFieldProps> = ({
   name,

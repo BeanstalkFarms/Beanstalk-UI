@@ -84,9 +84,9 @@ const TokenSelectDialog : React.FC<{
   // the newSelection state variable so the handler can
   // be reused with onClickItem.
   const onClickSubmit = useCallback((_newSelection: Set<Token>) => () => {
-      handleSubmit(_newSelection); // update form state
-      handleClose();               // hide dialog
-    }, [handleSubmit, handleClose]);
+    handleSubmit(_newSelection); // update form state
+    handleClose();               // hide dialog
+  }, [handleSubmit, handleClose]);
 
   // Click an item in the token list.
   const onClickItem = useCallback((_token: Token) => {

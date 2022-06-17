@@ -7,7 +7,7 @@ import useChainConstant from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { FieldArray, Form, Formik, FormikProps } from 'formik';
+import { Field, FieldArray, FieldProps, Form, Formik, FormikProps } from 'formik';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
@@ -17,10 +17,24 @@ import useDepositSummary from 'hooks/summary/useDepositSummary';
 import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
+import { AddressMap } from 'constants/index';
+import BigNumber from 'bignumber.js';
+import TokenInputField from 'components/Common/Form/TokenInputField';
+import TokenAdornment from 'components/Common/Form/TokenAdornment';
 
 // -----------------------------------------------------------------------
 
 type WithdrawFormValues = FormState;
+
+const simplifySiloBalances = (
+  state : 'deposited' | 'withdrawn' | 'claimable',
+  balances: AppState['_farmer']['silo']['balances']
+) => {
+  return Object.keys(balances).reduce((prev, k) => {
+    prev[k] = balances[k][state].amount;
+    return prev;
+  }, {} as AddressMap<BigNumber>)
+}
 
 // -----------------------------------------------------------------------
 
@@ -35,62 +49,44 @@ const WithdrawForm : React.FC<
   setFieldValue,
 }) => {
   const balances = useSelector<AppState, AppState['_farmer']['silo']['balances']>((state) => state._farmer.silo.balances);
-  const [showTokenSelect, setShowTokenSelect] = useState(false);
   // const { bdv, stalk, seeds, actions } = useDepositSummary(to, values.tokens);
   const chainId = useChainId();
 
-  const handleClose = useCallback(() => setShowTokenSelect(false), []);
-  const handleOpen  = useCallback(() => setShowTokenSelect(true),  []);
-  const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
-    // If the user has typed some existing values in,
-    // save them. Add new tokens to the end of the list.
-    // FIXME: match sorting of erc20TokenList
-    const copy = new Set(_tokens);
-    const v = values.tokens.filter((x) => {
-      copy.delete(x.token);
-      return _tokens.has(x.token);
-    });
-    setFieldValue('tokens', [
-      ...v,
-      ...Array.from(copy).map((token) => ({ token, amount: undefined })),
-    ]);
-  }, [values.tokens, setFieldValue]);
-
+  //
   const isMainnet = chainId === SupportedChainId.MAINNET;
+  const depositedBalances = useMemo(() => simplifySiloBalances('deposited', balances), [balances]);
   
+  // Input props
+  const InputProps = useMemo(() => ({
+    endAdornment: (
+      <TokenAdornment token={from} />
+    )
+  }), [from]);
+
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
+          <Field name={`tokens.0.amount`}>
+            {(fieldProps: FieldProps) => (
+              <TokenInputField
+                {...fieldProps}
+                balance={depositedBalances[values.tokens[0].token.address] || undefined}
+                InputProps={InputProps}
+              />
+            )}
+          </Field>
           {/* @ts-ignore */}
-          <FieldArray name="tokens">
+          {/* <FieldArray name="tokens">
             {() => (
               <div>
-                <TokenSelectDialog
-                  open={showTokenSelect}
-                  handleClose={handleClose}
-                  selected={values.tokens}
-                  handleSubmit={handleSelectTokens}
-                  balances={balances}
-                  tokenList={[from]}
-                  mode={TokenSelectMode.SINGLE}
-                />
                 <Stack gap={1.5}>
                   {values.tokens.map((state, index) => (
-                    <TokenQuoteProvider
-                      name={`tokens.${index}`}
-                      tokenOut={from}
-                      balance={balances[state.token.address] || undefined}
-                      state={state}
-                      showTokenSelect={handleOpen}
-                      disabled={isMainnet}
-                      disableTokenSelect={isMainnet}
-                    />
                   ))}
                 </Stack>
               </div>
             )}
-          </FieldArray>
+          </FieldArray> */}
           {/* {bdv.gt(0) ? (
             <Stack direction="column" gap={1}>
               <TokenOutputField

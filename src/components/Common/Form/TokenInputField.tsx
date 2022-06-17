@@ -11,13 +11,13 @@ import { displayFullBN } from 'util/index';
 
 type TokenInputFieldProps = { 
   balance: BigNumber | undefined;
-  quote: JSX.Element;
+  quote?: JSX.Element;
 };
 
 const TokenInputField : React.FC<
-  TokenInputFieldProps  // custom
-  & TextFieldProps      // MUI TextField
-  & FieldProps          // Formik Field
+  TokenInputFieldProps      // custom
+  & Partial<TextFieldProps> // MUI TextField
+  & FieldProps              // Formik Field
 > = ({
   // -- Custom props
   balance,

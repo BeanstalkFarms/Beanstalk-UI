@@ -13,10 +13,10 @@ import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { FormTokenState } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
-import useDepositSummary from 'hooks/summary/useDepositSummary';
 import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
+import Beanstalk from 'lib/Beanstalk';
 
 // -----------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ const DepositForm : React.FC<
   const erc20TokenMap = useTokenMap(TOKEN_LIST);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
-  const { bdv, stalk, seeds, actions } = useDepositSummary(to, values.tokens);
+  const { bdv, stalk, seeds, actions } = Beanstalk.deposit(to, values.tokens);
   const chainId = useChainId();
 
   const handleClose = useCallback(() => setShowTokenSelect(false), []);

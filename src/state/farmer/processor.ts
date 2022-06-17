@@ -11,7 +11,7 @@ import { parseWithdrawals } from 'util/Crates';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
 import { Deposit } from './silo';
-import { updateFarmerTokenBalances } from './silo/actions';
+import { updateFarmerSiloBalances } from './silo/actions';
 
 const FarmerEventsProcessor = () => {
   const { data: account } = useAccount();
@@ -80,7 +80,7 @@ const FarmerEventsProcessor = () => {
 
         // TEMP:
         // Hardcode this because the event process returns `beanDepositsBalance`, etc.
-        dispatch(updateFarmerTokenBalances({
+        dispatch(updateFarmerSiloBalances({
           // -----------------------------
           [SiloTokens.Bean.address]: {
             deposited: Object.keys(results.userBeanDeposits).reduce((prev, s) => {

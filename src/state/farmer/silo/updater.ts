@@ -9,7 +9,7 @@ import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
-import { resetFarmerSilo, updateFarmerSiloAssets } from './actions';
+import { resetFarmerSilo, updateFarmerSiloRewards } from './actions';
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ export const useFarmerSilo = () => {
       // active:  owned, actively earning other silo assets
       // earned:  active but not yet deposited into a Season
       // grown:   inactive
-      dispatch(updateFarmerSiloAssets({
+      dispatch(updateFarmerSiloRewards({
         beans: {
           earned: earnedBeanBalance,
         },
