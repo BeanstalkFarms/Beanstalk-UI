@@ -20,23 +20,21 @@ import { BEAN } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
-import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { displayBN, displayFullBN } from '../util';
 import { ANALYTICS_LINK, SupportedChainId } from '../constants';
-import SiloBalances from '../components/Common/SiloBalances';
+import SiloBalances from 'components/Common/SiloBalances';
 import useBeanstalkSiloBreakdown from '../hooks/useBeanstalkSiloBreakdown';
-import { AppState } from '../state';
-import { tableStyle } from '../util/tableStyle';
-import { BeanstalkPalette } from '../components/App/muiTheme';
-import ForecastCard from '../components/Forecast/ForecastCard';
-import SimpleLineChart, { DataPoint } from '../components/Charts/SimpleLineChart';
-import { mockPodRateData, mockTWAPData } from '../components/Charts/SimpleLineChart.mock';
-import TimeTabs from '../components/TimeTabs';
-import LiquidityBalances from "../components/Forecast/LiquidityBalances";
-import SeasonsTable from "../components/Forecast/SeasonsTable";
-import ForecastTopBar from "../components/Forecast/ForecastTopBar";
-import usePools from "../hooks/usePools";
+import { AppState } from 'state';
+import { BeanstalkPalette } from 'components/App/muiTheme';
+import ForecastCard from 'components/Forecast/ForecastCard';
+import SimpleLineChart, { DataPoint } from 'components/Charts/SimpleLineChart';
+import { mockPodRateData, mockTWAPData } from 'components/Charts/SimpleLineChart.mock';
+import TimeTabs from 'components/TimeTabs';
+import LiquidityBalances from 'components/Forecast/LiquidityBalances';
+import SeasonsTable from 'components/Forecast/SeasonsTable';
+import ForecastTopBar from 'components/Forecast/ForecastTopBar';
 
 const columns: GridColumns = [
   {

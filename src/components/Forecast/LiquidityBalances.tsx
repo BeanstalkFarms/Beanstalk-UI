@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useTheme } from '@mui/material/styles';
 import { BeanstalkPalette } from '../App/muiTheme';
-import usePools from '../../hooks/usePools';
+import usePools from 'hooks/usePools';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
 import { TokenMap } from '../../constants';
 import { displayBN } from '../../util';
@@ -22,6 +22,8 @@ export type ReducedPoolData = {
 
 const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
   const pools = usePools();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const reducedPoolData = [
     ...Object.keys(pools).reduce((agg, curr) => {
@@ -34,22 +36,18 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
       return agg;
     }, [] as ReducedPoolData[])
   ];
-
   // sort pools by amount
   reducedPoolData.sort((a, b) => b.amount?.minus(a.amount)?.toNumber());
 
   // sets width of graph to the width of its parent's component
-  
   const ref = useRef<any>(null);
   const [graphWidth, setGraphWidth] = useState(ref.current ? ref.current.offsetWidth : 0);
   window.addEventListener('resize', () => setGraphWidth(ref.current ? ref.current.offsetWidth : 0));
 
+  // sets width of graph on page load
   useEffect(() => {
-    setGraphWidth(ref.current ? ref.current.offsetWidth : 0)
-  }, [])
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    setGraphWidth(ref.current ? ref.current.offsetWidth : 0);
+  }, []);
 
   return (
     <Stack
