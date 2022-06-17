@@ -1,5 +1,5 @@
-import Beanstalk from "..";
-import { depositedCrates } from "./Withdraw.test";
+import Beanstalk from '..';
+import { depositedCrates } from './Withdraw.test';
 
 it('sorts crates by descending Season', () => {
   const sorted = Beanstalk.Silo.Utils._sortCratesBySeasonDescending(depositedCrates);

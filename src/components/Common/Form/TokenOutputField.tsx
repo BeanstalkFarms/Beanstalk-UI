@@ -28,7 +28,7 @@ const TokenOutputField : React.FC<{
       >
       <Box>
         <Typography sx={{ fontSize: 24, fontWeight: 'normal' }}>
-          {isNegative ? '-' : '+'}&nbsp;{displayFullBN(value.abs(), token.displayDecimals+2, token.displayDecimals)}
+          {isNegative ? '-' : '+'}&nbsp;{displayFullBN(value.abs(), token.displayDecimals + 2, token.displayDecimals)}
         </Typography>
       </Box>
       <Stack direction="row" alignItems="center" gap={0.5}>
