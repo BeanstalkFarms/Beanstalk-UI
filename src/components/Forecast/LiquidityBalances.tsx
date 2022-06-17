@@ -71,7 +71,7 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
           <Typography color={BeanstalkPalette.lightishGrey}>7/21</Typography>
         </Stack>
       </Stack>
-      <Stack width={isMobile ? '100%' : '25%'} direction="row" justifyContent="space-between" gap={2}>
+      <Stack width={isMobile ? '100%' : '20%'} direction="row" justifyContent="space-between" gap={1}>
         <Stack gap={0.5}>
           <Typography sx={{ ml: 2 }} color="text.secondary">Pool</Typography>
           {reducedPoolData.map((pool: ReducedPoolData) => (
