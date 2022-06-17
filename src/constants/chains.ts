@@ -4,12 +4,14 @@ export enum SupportedChainId {
   MAINNET = 1,
   ROPSTEN = 3,
   LOCALHOST = 1337,
+  CUJO = 31337,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
   [SupportedChainId.ROPSTEN]: 'ropsten',
   [SupportedChainId.LOCALHOST]: 'localhost',
+  [SupportedChainId.CUJO]: 'cujo',
 };
 
 export enum NetworkType {
@@ -20,7 +22,8 @@ export enum NetworkType {
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
   SupportedChainId.ROPSTEN,
-  SupportedChainId.LOCALHOST
+  SupportedChainId.LOCALHOST,
+  SupportedChainId.CUJO
 ] as const;
 
 export const L2_CHAIN_IDS = [] as const;
@@ -56,7 +59,7 @@ export interface L2ChainInfo extends BaseChainInfo {
   readonly defaultListUrl: string
 }
 
-export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } 
+export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo }
 & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 & { readonly [chainId in SupportedL2ChainId]: L2ChainInfo }
 
