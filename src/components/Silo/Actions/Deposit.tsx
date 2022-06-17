@@ -41,7 +41,7 @@ const DepositForm : React.FC<
   const erc20TokenMap = useTokenMap(TOKEN_LIST);
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
-  const { bdv, stalk, seeds, actions } = Beanstalk.deposit(to, values.tokens);
+  const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(to, values.tokens);
   const chainId = useChainId();
 
   const handleClose = useCallback(() => setShowTokenSelect(false), []);

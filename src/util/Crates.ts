@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { Withdrawals } from 'hooks/useEventProcessor';
-import { FarmerSiloBalance, Withdrawal } from 'state/farmer/silo';
+import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
 
 export function parseWithdrawals(
   withdrawals: Withdrawals, 
@@ -13,8 +13,8 @@ export function parseWithdrawals(
   let receivableBalance = new BigNumber(0);
   // const transitWithdrawals    : Withdrawals = {};
   // const receivableWithdrawals : Withdrawals = {};
-  const transitWithdrawals    : Withdrawal[] = [];
-  const receivableWithdrawals : Withdrawal[] = [];
+  const transitWithdrawals    : WithdrawalCrate[] = [];
+  const receivableWithdrawals : WithdrawalCrate[] = [];
 
   // Split each withdrawal between `receivable` and `transit`.
   Object.keys(withdrawals).forEach((season: string) => {

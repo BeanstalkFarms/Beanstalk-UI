@@ -1,18 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Card, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
+import React, { useMemo } from 'react';
+import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip } from '@mui/material';
 import { Token } from 'classes';
-import { BEAN, ETH, SEEDS, STALK } from 'constants/tokens';
-import useChainConstant from 'hooks/useChainConstant';
-import useTokenMap from 'hooks/useTokenMap';
+import { SEEDS, STALK } from 'constants/tokens';
 import { AppState } from 'state';
 import { useSelector } from 'react-redux';
-import { Field, FieldArray, FieldProps, Form, Formik, FormikProps } from 'formik';
-import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
+import { Field, FieldProps, Form, Formik, FormikProps } from 'formik';
+// import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormState, FormTokenState } from 'components/Common/Form';
-import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
+import { FormState } from 'components/Common/Form';
+// import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
@@ -20,6 +17,8 @@ import { AddressMap } from 'constants/index';
 import BigNumber from 'bignumber.js';
 import TokenInputField from 'components/Common/Form/TokenInputField';
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
+import Beanstalk from 'lib/Beanstalk';
+import useSeason from 'hooks/useSeason';
 
 // -----------------------------------------------------------------------
 
@@ -43,10 +42,10 @@ const WithdrawForm : React.FC<
   from,
   // Formik
   values,
-  setFieldValue,
+  // setFieldValue,
 }) => {
   const balances = useSelector<AppState, AppState['_farmer']['silo']['balances']>((state) => state._farmer.silo.balances);
-  // const { bdv, stalk, seeds, actions } = useDepositSummary(to, values.tokens);
+  const season = useSeason();
   const chainId = useChainId();
 
   //
@@ -59,6 +58,13 @@ const WithdrawForm : React.FC<
       <TokenAdornment token={from} />
     )
   }), [from]);
+
+  const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
+    from,
+    values.tokens,
+    balances[from.address].deposited.crates,
+    season,
+  );
 
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
@@ -74,34 +80,23 @@ const WithdrawForm : React.FC<
               />
             )}
           </Field>
-          {/* @ts-ignore */}
-          {/* <FieldArray name="tokens">
-            {() => (
-              <div>
-                <Stack gap={1.5}>
-                  {values.tokens.map((state, index) => (
-                  ))}
-                </Stack>
-              </div>
-            )}
-          </FieldArray> */}
-          {/* {bdv.gt(0) ? (
+          {(withdrawResult && withdrawResult.bdv.lt(0)) ? (
             <Stack direction="column" gap={1}>
               <TokenOutputField
                 token={from}
-                value={bdv}
+                value={withdrawResult.bdv}
               />
               <Stack direction="row" gap={1} justifyContent="center">
                 <Box sx={{ flex: 1 }}>
                   <TokenOutputField
                     token={STALK}
-                    value={stalk}
+                    value={withdrawResult.stalk}
                   />
                 </Box>
                 <Box sx={{ flex: 1 }}>
                   <TokenOutputField
                     token={SEEDS}
-                    value={seeds}
+                    value={withdrawResult.seeds}
                   />
                 </Box>
               </Stack>
@@ -110,13 +105,13 @@ const WithdrawForm : React.FC<
                   <StyledAccordionSummary title="Transaction Details" />
                   <AccordionDetails>
                     <TransactionPreview
-                      actions={actions}
+                      actions={withdrawResult.actions}
                     />
                   </AccordionDetails>
                 </Accordion>
               </Box>
             </Stack>
-          ) : null} */}
+          ) : null}
           <Button disabled type="submit" size="large" fullWidth>
             Withdraw
           </Button>

@@ -97,9 +97,9 @@ const FertilizeForm : React.FC<
       Array.from(_tokens).map((token) => ({ token, amount: null }))
     );
   }, [setFieldValue]);
-  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn, tokenOut) => fertContract.callStatic.getUsdcOut(
-      toStringBaseUnitBN(amountIn, ETH_DECIMALS),
-    ).then(bigNumberResult), [fertContract]);
+  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn) => fertContract.callStatic.getUsdcOut(
+    toStringBaseUnitBN(amountIn, ETH_DECIMALS),
+  ).then(bigNumberResult), [fertContract]);
 
   return (
     <Form noValidate>

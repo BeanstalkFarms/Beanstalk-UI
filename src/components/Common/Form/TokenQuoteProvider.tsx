@@ -7,7 +7,6 @@ import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/Tokens';
 import useQuote, { QuoteHandler } from 'hooks/useQuote';
-// import { PinDropSharp } from '@mui/icons-material';
 import { FormTokenState } from '.';
 
 const TokenQuoteProvider : React.FC<{
@@ -36,10 +35,7 @@ const TokenQuoteProvider : React.FC<{
   ...props
 }) => {
   // Setup a price quote for this token
-  const [amountOut, quoting, getAmountOut] = useQuote(
-    tokenOut,
-    handleQuote,
-  );
+  const [amountOut, quoting, getAmountOut] = useQuote(tokenOut, handleQuote);
   const { isSubmitting, setFieldValue } = useFormikContext();
 
   // Run getAmountOut whenever the amount changes.

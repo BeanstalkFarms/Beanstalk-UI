@@ -10,7 +10,7 @@ import { getAccount } from 'util/Account';
 import { parseWithdrawals } from 'util/Crates';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
-import { Deposit } from './silo';
+import { DepositCrate } from './silo';
 import { updateFarmerSiloBalances } from './silo/actions';
 
 const FarmerEventsProcessor = () => {
@@ -99,7 +99,7 @@ const FarmerEventsProcessor = () => {
             }, {
               amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
-              crates: [] as Deposit[],
+              crates: [] as DepositCrate[],
             }),
             ...parseWithdrawals(results.beanWithdrawals, eventParsingParameters.season)
           },
@@ -125,7 +125,7 @@ const FarmerEventsProcessor = () => {
             }, {
               amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
-              crates: [] as Deposit[],
+              crates: [] as DepositCrate[],
             }),
             ...parseWithdrawals(results.lpWithdrawals, eventParsingParameters.season)
           },
@@ -148,7 +148,7 @@ const FarmerEventsProcessor = () => {
             }, {
               amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
-              crates: [] as Deposit[],
+              crates: [] as DepositCrate[],
             }),
             ...parseWithdrawals(results.curveWithdrawals, eventParsingParameters.season)
           },
@@ -171,7 +171,7 @@ const FarmerEventsProcessor = () => {
             }, {
               amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
-              crates: [] as Deposit[],
+              crates: [] as DepositCrate[],
             }),
             ...parseWithdrawals(results.beanlusdWithdrawals, eventParsingParameters.season)
           }
