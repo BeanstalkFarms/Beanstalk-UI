@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Stack } from '@mui/material';
-import RipeAssetCharts from '../../components/Analytics/Bean/Silo/RipeAssetCharts';
-import UnripeAssetCharts from '../../components/Analytics/Bean/Silo/UnripeAssetCharts';
+import RipeAssetCharts from '../../components/Analytics/Silo/RipeAssetCharts';
+import UnripeAssetCharts from '../../components/Analytics/Silo/UnripeAssetCharts';
 
 const SiloAnalytics: React.FC<{}> = () => (
   <Container maxWidth="lg">

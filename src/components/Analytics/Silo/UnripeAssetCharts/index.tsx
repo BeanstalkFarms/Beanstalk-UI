@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Stack,  CardProps,  Card,  Tab, Tabs } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { AppState } from '../../../../../state';
-import BeanPrice from '../../BeanCharts/BeanPrice';
-import Volume from '../../BeanCharts/Volume';
+import { AppState } from '../../../../state';
+import BeanPrice from '../../Bean/BeanCharts/BeanPrice';
+import Volume from '../../Bean/BeanCharts/Volume';
+import DepositedUnripeBeans from "./DepositedUnripeBeans";
+import DepositedUnripeLP from "./DepositedUnripeLP";
 
-export type UnripeAssetChartsProps = {
-
-}
-
-const UnripeAssetCharts: React.FC<UnripeAssetChartsProps & CardProps> = ({ sx  }) => {
+const UnripeAssetCharts: React.FC<CardProps> = ({ sx  }) => {
     const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
     const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
     (state) => state._bean.token.price
@@ -27,8 +25,8 @@ const UnripeAssetCharts: React.FC<UnripeAssetChartsProps & CardProps> = ({ sx  }
             <Tab label="Deposited Unripe Beans" />
             <Tab label="Deposited Unripe LP" />
           </Tabs>
-          {tab === 0 && <BeanPrice season={season} beanPrice={beanPrice} />}
-          {tab === 1 && <Volume season={season} beanPrice={beanPrice} />}
+          {tab === 0 && <DepositedUnripeBeans season={season} beanPrice={beanPrice} />}
+          {tab === 1 && <DepositedUnripeLP season={season} beanPrice={beanPrice} />}
         </Stack>
       </Card>
     );

@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { Stack,  CardProps,  Card,  Tab, Tabs } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { AppState } from '../../../../../state';
-import BeanPrice from '../../BeanCharts/BeanPrice';
-import Volume from '../../BeanCharts/Volume';
-import Liquidity from '../../BeanCharts/Liquidity';
-import MarketCap from '../../BeanCharts/MarketCap';
-import Supply from '../../BeanCharts/Supply';
-import Crosses from '../../BeanCharts/Crosses';
+import { AppState } from '../../../../state';
+import BeanPrice from '../../Bean/BeanCharts/BeanPrice';
+import Volume from '../../Bean/BeanCharts/Volume';
+import Liquidity from '../../Bean/BeanCharts/Liquidity';
+import MarketCap from '../../Bean/BeanCharts/MarketCap';
+import Supply from '../../Bean/BeanCharts/Supply';
+import Crosses from '../../Bean/BeanCharts/Crosses';
+import DepositedBeans from "./DepositedBeans";
+import WithdrawnBeans from "./WithdrawnBeans";
+import DepositedLP from "./DepositedLP";
+import WithdrawnLP from "./WithdrawnLP";
+import Stalk from "./Stalk";
+import Seeds from "./Seeds";
 
 export type RipeAssetChartsProps = {
 }
@@ -34,12 +40,12 @@ const RipeAssetCharts: React.FC<RipeAssetChartsProps & CardProps> = ({ sx }) => 
             <Tab label="Stalk" />
             <Tab label="Seeds" />
           </Tabs>
-          {tab === 0 && <BeanPrice season={season} beanPrice={beanPrice} />}
-          {tab === 1 && <Volume season={season} beanPrice={beanPrice} />}
-          {tab === 2 && <Liquidity season={season} beanPrice={beanPrice} />}
-          {tab === 3 && <MarketCap season={season} beanPrice={beanPrice} />}
-          {tab === 4 && <Supply season={season} beanPrice={beanPrice} />}
-          {tab === 5 && <Crosses season={season} beanPrice={beanPrice} />}
+          {tab === 0 && <DepositedBeans season={season} beanPrice={beanPrice} />}
+          {tab === 1 && <WithdrawnBeans season={season} beanPrice={beanPrice} />}
+          {tab === 2 && <DepositedLP season={season} beanPrice={beanPrice} />}
+          {tab === 3 && <WithdrawnLP season={season} beanPrice={beanPrice} />}
+          {tab === 4 && <Stalk season={season} beanPrice={beanPrice} />}
+          {tab === 5 && <Seeds season={season} beanPrice={beanPrice} />}
         </Stack>
       </Card>
     );

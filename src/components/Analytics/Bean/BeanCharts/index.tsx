@@ -9,10 +9,7 @@ import Supply from './Supply';
 import { AppState } from '../../../../state';
 import Crosses from './Crosses';
 
-export type BeanChartsProps = {
-}
-
-const BeanCharts: React.FC<BeanChartsProps & CardProps> = ({ sx }) => {
+const BeanCharts: React.FC<CardProps> = ({ sx }) => {
     const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
     const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
     (state) => state._bean.token.price

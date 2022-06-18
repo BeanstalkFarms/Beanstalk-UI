@@ -34,6 +34,18 @@ const ROUTES = {
       title: 'Silo Analytics',
       disabled: false,
       href: null
+    },
+    {
+      path: 'analytics/field',
+      title: 'Field Analytics',
+      disabled: false,
+      href: null
+    },
+    {
+      path: 'analytics/barnraise',
+      title: 'Barnraise Analytics',
+      disabled: false,
+      href: null
     }
   ],
   more: [
