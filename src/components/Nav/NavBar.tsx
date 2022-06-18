@@ -17,6 +17,7 @@ import { PRE_EXPLOIT_BEAN_DATA } from 'state/bean/pools/updater';
 import { displayFullBN, trimAddress } from 'util/index';
 import usePools from 'hooks/usePools';
 import BigNumber from 'bignumber.js';
+import { Analytics } from '@mui/icons-material';
 import WalletButton from '../Common/Connection/WalletButton';
 import NetworkButton from '../Common/Connection/NetworkButton';
 import PriceButton from './PriceButton';
@@ -25,6 +26,7 @@ import NavButton from './NavButton';
 import MoreButton from './MoreButton';
 import NavDrawer from './NavDrawer';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
+import AnalyticsButton from './AnalyticsButton';
 
 const NavBar: React.FC<{}> = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -196,6 +198,7 @@ const NavBar: React.FC<{}> = () => {
                   tag={item.tag}
                 />
               ))}
+              <AnalyticsButton />
               <MoreButton />
             </Stack>
           </Stack>
