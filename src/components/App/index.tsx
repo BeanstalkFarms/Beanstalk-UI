@@ -26,8 +26,9 @@ import { BeanstalkPalette } from './muiTheme';
 import './App.css';
 import WelcomeBackModal from '../Common/WelcomeBackModal';
 import BeanAnalytics from '../../pages/analytics/bean';
-import SiloAnalytics from "../../pages/analytics/silo";
-import FieldAnalytics from "../../pages/analytics/field";
+import SiloAnalytics from '../../pages/analytics/silo';
+import FieldAnalytics from '../../pages/analytics/field';
+import BarnraiseAnalytics from '../../pages/analytics/barnraise';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -136,6 +137,7 @@ export default function App() {
           <Route path="/analytics/bean" element={<BeanAnalytics />} />
           <Route path="/analytics/silo" element={<SiloAnalytics />} />
           <Route path="/analytics/field" element={<FieldAnalytics />} />
+          <Route path="/analytics/barnraise" element={<BarnraiseAnalytics />} />
         </Routes>
       </Box>
     </>
