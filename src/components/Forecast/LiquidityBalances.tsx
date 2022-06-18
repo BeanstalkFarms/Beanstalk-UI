@@ -2,12 +2,12 @@ import { Stack, Typography, Box, useMediaQuery } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useTheme } from '@mui/material/styles';
-import { BeanstalkPalette } from '../App/muiTheme';
 import usePools from 'hooks/usePools';
+import { BeanstalkPalette } from '../App/muiTheme';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
 import { TokenMap } from '../../constants';
 import { displayBN } from '../../util';
-import StackedAreaChart from './StackedAreaChart';
+import SimpleStackedAreaChart from './StackedAreaChart';
 
 export type LiquidityBalancesProps = {
   balances: TokenMap<BeanstalkSiloBalance>;
@@ -59,7 +59,7 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
       gap={1}
     >
       <Stack width={isMobile ? '100%' : '75%'} ref={ref} justifyContent="end">
-        <StackedAreaChart height={150} width={graphWidth} />
+        <SimpleStackedAreaChart />
         <Stack direction="row" justifyContent="space-between" sx={{ pt: 0.75, pr: 2, pl: 2, pb: 0 }}>
           <Typography color={BeanstalkPalette.lightishGrey}>2/21</Typography>
           <Typography color={BeanstalkPalette.lightishGrey}>3/21</Typography>

@@ -2,19 +2,18 @@ import React from 'react';
 import { AreaStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { GradientOrangeRed } from '@visx/gradient';
-import browserUsage, { BrowserUsage } from '@visx/mock-data/lib/mocks/browserUsage';
+import browserUsage from '@visx/mock-data/lib/mocks/browserUsage';
 import { scaleTime, scaleLinear } from '@visx/scale';
 import { timeParse } from 'd3-time-format';
+import ALL_POOLS from 'constants/pools';
+import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { SupportedChainId, TokenMap } from '../../constants';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
-import ALL_POOLS from 'constants/pools';
 // import mock = jest.mock;
 
 export type LiquidityBalancesProps = {
   balances: TokenMap<BeanstalkSiloBalance>;
 }
-
-type BrowserNames = keyof BrowserUsage;
 
 export interface MockPastSiloData {
   date: string;
@@ -104,27 +103,40 @@ const StackedAreaChart: React.FC<StackedAreasProps> =
           y1={(d) => yScale(getY1(d)) ?? 0}
         >
           {({ stacks, path }) =>
-            stacks.map((stack) => {
+            stacks.map((stack) => 
               // console.log('STACK');
               // console.log(stack);
               // console.log("POOL")
               // console.log(ALL_POOLS[SupportedChainId.MAINNET][stack.key])
-              return (
-                <path
-                  key={`stack-${stack.key}`}
-                  d={path(stack) || ''}
-                  stroke="transparent"
+               (
+                 <path
+                   key={`stack-${stack.key}`}
+                   d={path(stack) || ''}
+                   stroke="transparent"
                 // fill="url(#stacked-area-orangered)"
-                  fill={`${ALL_POOLS[SupportedChainId.MAINNET][stack.key]?.color}`}
-                  onClick={() => {
+                   fill={`${ALL_POOLS[SupportedChainId.MAINNET][stack.key]?.color}`}
+                   onClick={() => {
                   if (events) alert(`${stack.key}`);
                 }}
               />
-            ); })
+            ))
           }
         </AreaStack>
       </svg>
     );
   };
 
-export default StackedAreaChart;
+/**
+ * Wrap the graph in a ParentSize handler.
+ */
+const SimpleStackedAreaChart: React.FC<{
+
+}> = (props) => (
+  <ParentSize debounceTime={10}>
+    {({ width: visWidth, height: visHeight }) => (
+      <StackedAreaChart height={150} width={visWidth} />
+    )}
+  </ParentSize>
+);
+
+export default SimpleStackedAreaChart;
