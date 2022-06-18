@@ -22,10 +22,24 @@ const ROUTES = {
       title: 'Forecast',
     },
   ],
+  analytics: [
+    {
+      path: 'analytics/bean',
+      title: 'Bean Analytics',
+      disabled: false,
+      href: null
+    },
+    {
+      path: 'analytics/silo',
+      title: 'Silo Analytics',
+      disabled: false,
+      href: null
+    }
+  ],
   more: [
     {
       path: 'trade',
-      title: 'Trade',
+      title: 'Silo',
       disabled: true,
     },
     {

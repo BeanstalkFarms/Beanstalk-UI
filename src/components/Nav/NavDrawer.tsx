@@ -41,6 +41,16 @@ const NavDrawer: React.FC<{
             onClick={hideDrawer}
           />
         ))}
+        {ROUTES.analytics.map((item) => (
+          <NavListItem
+            key={item.path}
+            to={item.path}
+            title={item.title}
+            // href={item.href}
+            onClick={hideDrawer}
+            disabled={item.disabled}
+          />
+        ))}
         {ROUTES.more.map((item) => (
           <NavListItem
             key={item.path}
