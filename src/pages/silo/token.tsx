@@ -34,20 +34,19 @@ const TokenPage: React.FC<{}> = () => {
 
   // Load this Token from the whitelist
   const TOKEN = WHITELIST[address];
-  const balance = farmerSilo.balances[TOKEN.address];
+  const siloBalance = farmerSilo.balances[TOKEN.address];
 
   // Most Silo Tokens will have a corresponding Pool.
   // If one is available, show a PoolCard with state info.
   const POOL  = POOLS[address];
   const beanPool = beanPools[address];
-
+  
   // If no data loaded...
   if (!TOKEN) return null;
 
   return (
     <Container maxWidth="sm">
       <Stack gap={2}>
-        {/* Header */}
         <PageHeader
           title={<strong>{TOKEN.name} Silo</strong>}
           description={`Deposit ${TOKEN.name} to earn Stalk & Seeds`}
@@ -59,10 +58,13 @@ const TokenPage: React.FC<{}> = () => {
             poolState={beanPool}
           />
         )}
-        <SiloActions token={TOKEN} />
+        <SiloActions
+          token={TOKEN}
+          siloBalance={siloBalance}
+        />
         <DepositsCard
           token={TOKEN}
-          balance={balance}
+          balance={siloBalance}
         />
       </Stack>
     </Container>

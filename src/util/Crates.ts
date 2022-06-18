@@ -11,8 +11,6 @@ export function parseWithdrawals(
 } {
   let transitBalance    = new BigNumber(0);
   let receivableBalance = new BigNumber(0);
-  // const transitWithdrawals    : Withdrawals = {};
-  // const receivableWithdrawals : Withdrawals = {};
   const transitWithdrawals    : WithdrawalCrate[] = [];
   const receivableWithdrawals : WithdrawalCrate[] = [];
 
@@ -21,15 +19,15 @@ export function parseWithdrawals(
     const v = withdrawals[season];
     const s = new BigNumber(season);
     if (s.isLessThanOrEqualTo(currentSeason)) {
+      // console.debug(`[util/Crates] Withdrawal of ${v.toNumber()} in Season ${s.toString()} is Receivable`)
       receivableBalance = receivableBalance.plus(v);
-      // receivableWithdrawals[season] = v;
       receivableWithdrawals.push({
         amount: v,
         season: s,
       });
     } else {
+      // console.debug(`[util/Crates] Withdrawal of ${v.toNumber()} in Season ${s.toString()} is Transit`)
       transitBalance = transitBalance.plus(v);
-      // transitWithdrawals[season] = v;
       transitWithdrawals.push({
         amount: v,
         season: s,
@@ -41,7 +39,7 @@ export function parseWithdrawals(
     withdrawn: {
       amount: transitBalance,
       bdv: new BigNumber(0),
-      crates: receivableWithdrawals
+      crates: transitWithdrawals,
     },
     claimable: {
       amount: receivableBalance,

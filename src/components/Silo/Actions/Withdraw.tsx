@@ -24,6 +24,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { displayFullBN, toStringBaseUnitBN } from 'util/index';
 import TransactionToast from 'components/Common/TxnToast';
 import { useSigner } from 'wagmi';
+import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 
 // -----------------------------------------------------------------------
 
@@ -33,9 +34,9 @@ const simplifySiloBalances = (
   state : 'deposited' | 'withdrawn' | 'claimable',
   balances: AppState['_farmer']['silo']['balances']
 ) => Object.keys(balances).reduce((prev, k) => {
-    prev[k] = balances[k][state].amount;
-    return prev;
-  }, {} as AddressMap<BigNumber>);
+  prev[k] = balances[k][state].amount;
+  return prev;
+}, {} as AddressMap<BigNumber>);
 
 // -----------------------------------------------------------------------
 
@@ -43,7 +44,8 @@ const WithdrawForm : React.FC<
   FormikProps<WithdrawFormValues> & {
     token: Token;
     siloBalances: FarmerSilo['balances'];
-    depositedBalances: AddressMap<BigNumber>;
+    // depositedBalances: AddressMap<BigNumber>;
+    depositedBalance: BigNumber;
     season: BigNumber;
   }
 > = ({
@@ -53,7 +55,8 @@ const WithdrawForm : React.FC<
   // Custom
   token,
   siloBalances,
-  depositedBalances,
+  // depositedBalances,
+  depositedBalance,
   season,
 }) => {
   const chainId = useChainId();
@@ -66,6 +69,7 @@ const WithdrawForm : React.FC<
     )
   }), [token]);
 
+  //
   const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
     token,
     values.tokens,
@@ -83,7 +87,7 @@ const WithdrawForm : React.FC<
               <TokenInputField
                 {...fieldProps}
                 token={token}
-                balance={depositedBalances[values.tokens[0].token.address] || undefined}
+                balance={depositedBalance || undefined}
                 InputProps={InputProps}
               />
             )}
@@ -135,10 +139,13 @@ const WithdrawForm : React.FC<
 // - implement usePreferredToken here
 const Withdraw : React.FC<{ token: Token; }> = ({ token }) => {
   const season = useSeason();
-  const siloBalances = useSelector<AppState, FarmerSilo['balances']>((state) => state._farmer.silo.balances);
-  const depositedBalances = useMemo(() => simplifySiloBalances('deposited', siloBalances), [siloBalances]);
+  const siloBalances = useFarmerSiloBalances();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
+
+  // Form data
+  // const depositedBalances = useMemo(() => simplifySiloBalances('deposited', siloBalances), [siloBalances]);
+  const depositedBalance = siloBalances[token.address]?.deposited.amount;
   const initialValues : WithdrawFormValues = useMemo(() => ({
     tokens: [
       {
@@ -147,6 +154,8 @@ const Withdraw : React.FC<{ token: Token; }> = ({ token }) => {
       },
     ],
   }), [token]);
+
+  // Handlers
   const onSubmit = useCallback((values: WithdrawFormValues, formActions: FormikHelpers<WithdrawFormValues>) => {
     const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
       token,
@@ -218,13 +227,15 @@ const Withdraw : React.FC<{ token: Token; }> = ({ token }) => {
     token,
     season,
   ]);
+
+  //
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
         <WithdrawForm
           token={token}
           siloBalances={siloBalances}
-          depositedBalances={depositedBalances}
+          depositedBalance={depositedBalance}
           season={season}
           {...formikProps}
         />
