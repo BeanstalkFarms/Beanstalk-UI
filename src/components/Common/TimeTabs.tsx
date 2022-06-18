@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Stack, StackProps, Typography } from '@mui/material';
-import { BeanstalkPalette } from './App/muiTheme';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 const WINDOWS = [
   { label: '1H', index: 0 },

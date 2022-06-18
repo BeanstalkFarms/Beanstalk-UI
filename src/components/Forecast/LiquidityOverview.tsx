@@ -6,7 +6,7 @@ import TokenIcon from '../Common/TokenIcon';
 import { BEAN } from '../../constants/tokens';
 import { SupportedChainId, TokenMap } from '../../constants';
 import { displayBN, displayFullBN } from '../../util';
-import TimeTabs from '../TimeTabs';
+import TimeTabs from '../Common/TimeTabs';
 import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
 import { mockPodRateData, mockTWAPData } from '../Charts/SimpleLineChart.mock';
 import { BeanstalkPalette } from '../App/muiTheme';

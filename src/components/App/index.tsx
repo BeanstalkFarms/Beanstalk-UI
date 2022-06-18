@@ -25,6 +25,8 @@ import FieldUpdater from 'state/beanstalk/field/updater';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
 import WelcomeBackModal from '../Common/WelcomeBackModal';
+import BeanAnalytics from '../../pages/analytics/bean';
+import SiloAnalytics from "../../pages/analytics/silo";
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -130,6 +132,8 @@ export default function App() {
           <Route path="/forecast" element={<ForecastPage />} />
           <Route path="/history" element={<TransactionHistoryPage />} />
           <Route path="/balances" element={<BalancesPage />} />
+          <Route path="/analytics/bean" element={<BeanAnalytics />} />
+          <Route path="/analytics/silo" element={<SiloAnalytics />} />
         </Routes>
       </Box>
     </>
