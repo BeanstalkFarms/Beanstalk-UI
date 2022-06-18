@@ -1,35 +1,30 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Stack, Typography, CardProps, Box, Card, Divider } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import { Stack, Typography, Box, Divider } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Stat from '../Common/Stat';
-import TokenIcon from '../Common/TokenIcon';
-import { BEAN } from '../../constants/tokens';
-import { SupportedChainId } from '../../constants';
-import { displayBN } from '../../util';
-import TimeTabs from '../Common/TimeTabs';
-import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
-import { mockTWAPData } from '../Charts/SimpleLineChart.mock';
-import { BeanstalkPalette } from '../App/muiTheme';
+import SimpleLineChart, { DataPoint } from '../../../Charts/SimpleLineChart';
+import Stat from '../../../Common/Stat';
+import { displayBN } from '../../../../util';
+import TimeTabs from '../../../Common/TimeTabs';
+import { BeanstalkPalette } from '../../../App/muiTheme';
+import { mockPodRateData } from '../../../Charts/SimpleLineChart.mock';
 
-export type TWAPCardProps = {
+export type SeedsProps = {
   beanPrice: BigNumber;
   season: BigNumber;
 }
 
-const TWAPCard: React.FC<TWAPCardProps & CardProps> =
+const Seeds: React.FC<SeedsProps> =
   ({
      children,
-     beanPrice,
      season,
-     sx
+     beanPrice,
    }) => {
     const [displayTWAP, setDisplayTWAP] = useState<BigNumber[]>([new BigNumber(-1)]);
-
-    const [isHoveringTWAP, setIsHoveringTWAP] = useState(false);
-    const handleCursorTWAP = useCallback(
+    const [isHovering, setIsHovering] = useState(false);
+    const handleCursor = useCallback(
       (dps?: DataPoint[]) => {
         setDisplayTWAP(dps ? dps.map((dp) => new BigNumber(dp.value)) : [beanPrice]);
-        setIsHoveringTWAP(!!dps);
+        setIsHovering(!!dps);
       },
       [beanPrice]
     );
@@ -39,29 +34,22 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> =
       setTimeTab(i);
     };
 
-    useEffect(() => {
-      console.log('TAB');
-      console.log(timeTab);
-    }, [timeTab]);
-
     return (
-      <Card sx={{ width: '100%', ...sx }}>
+      <>
         <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
           <Stat
-            title="Time Weighted Average Price"
+            title="Seeds"
             color="primary"
-            amount={`$${(isHoveringTWAP ? displayTWAP[0] : beanPrice).toFixed(4)}`}
+            amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
             icon={undefined}
-            topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
             bottomText={`Season ${displayBN(season)}`}
           />
           <Stack alignItems="right">
             <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />
-            <Typography sx={{ textAlign: 'right', pr: 0.5 }}>Last cross: 2m ago</Typography>
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart isTWAP series={[mockTWAPData]} onCursor={handleCursorTWAP} />
+          <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursor} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />
@@ -74,8 +62,8 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> =
             <Typography color={BeanstalkPalette.lightishGrey}>7/21</Typography>
           </Stack>
         </Box>
-      </Card>
+      </>
     );
   };
 
-export default TWAPCard;
+export default Seeds;
