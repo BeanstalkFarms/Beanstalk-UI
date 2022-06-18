@@ -232,13 +232,23 @@ const Withdraw : React.FC<{ token: Token; }> = ({ token }) => {
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
-        <WithdrawForm
-          token={token}
-          siloBalances={siloBalances}
-          depositedBalance={depositedBalance}
-          season={season}
-          {...formikProps}
-        />
+        <>
+          {/* Padding below matches tabs and input position. See Figma. */}
+          {/* <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
+            <TransactionSettings>
+              {token !== Bean && (
+                <SettingSwitch name="settings.removeLP" label="Remove LP" />
+              )}
+            </TransactionSettings>
+          </Box> */}
+          <WithdrawForm
+            token={token}
+            siloBalances={siloBalances}
+            depositedBalance={depositedBalance}
+            season={season}
+            {...formikProps}
+          />
+        </>
       )}
     </Formik>
   );

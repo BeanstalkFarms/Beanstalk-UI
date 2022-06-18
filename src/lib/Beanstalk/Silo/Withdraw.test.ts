@@ -33,7 +33,7 @@ it('selects a single Deposit crate to Withdraw', () => {
   const withdrawAmount = new BigNumber(2);
 
   // Expected results
-  const expectedBdvRemoved   = withdrawAmount;
+  const expectedBDVRemoved   = withdrawAmount;
   const expectedSeedsRemoved = new BigNumber(4);
   const expectedStalkRemoved = new BigNumber(2).plus(expectedSeedsRemoved.times(100 - 77).times(0.00001));
   const result = Beanstalk.Silo.Withdraw._selectCratesToWithdraw(
@@ -46,11 +46,12 @@ it('selects a single Deposit crate to Withdraw', () => {
   expect(result)
     .toStrictEqual({
       deltaAmount: withdrawAmount.negated(),
+      deltaBDV:    expectedBDVRemoved.negated(),
       deltaStalk:  expectedStalkRemoved.negated(),
       deltaCrates: [{
         season: new BigNumber(77),
         amount: withdrawAmount.negated(),
-        bdv:    expectedBdvRemoved.negated(),
+        bdv:    expectedBDVRemoved.negated(),
         stalk:  expectedStalkRemoved.negated(),
         seeds:  expectedSeedsRemoved.negated(),
       }],
@@ -74,6 +75,7 @@ it('selects multiple Deposit Crates to Withdraw', () => {
   expect(result)
     .toStrictEqual({
       deltaAmount: withdrawAmount.negated(),
+      deltaBDV:    new BigNumber(12).negated(),
       deltaStalk:  expectedStalkRemoved.negated(),
       deltaCrates: [
         // All of the most recent crate is now removed.

@@ -38,12 +38,12 @@ const TOKEN_LIST = [BEAN, ETH];
 
 const DepositForm : React.FC<
   FormikProps<DepositFormValues> & {
-    to: Token;
+    token: Token;
     balances: BalanceState;
   }
 > = ({
   // Custom
-  to,
+  token,
   balances,
   // Formik
   values,
@@ -51,11 +51,11 @@ const DepositForm : React.FC<
   setFieldValue,
 }) => {
   const chainId = useChainId();
-  const erc20TokenMap = useTokenMap(TOKEN_LIST);
+  const erc20TokenMap = useTokenMap([BEAN, ETH, token]);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
 
   const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
-    to,
+    token,
     values.tokens,
     (amount: BigNumber) => amount,
   );
@@ -75,7 +75,7 @@ const DepositForm : React.FC<
     });
     setFieldValue('tokens', [
       ...v,
-      ...Array.from(copy).map((token) => ({ token, amount: undefined })),
+      ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
     ]);
   }, [values.tokens, setFieldValue]);
   
@@ -95,7 +95,7 @@ const DepositForm : React.FC<
             {values.tokens.map((state, index) => (
               <TokenQuoteProvider
                 name={`tokens.${index}`}
-                tokenOut={to}
+                tokenOut={token}
                 balance={balances[state.token.address] || undefined}
                 state={state}
                 showTokenSelect={handleOpen}
@@ -111,7 +111,7 @@ const DepositForm : React.FC<
           {isReady ? (
             <Stack direction="column" gap={1}>
               <TokenOutputField
-                token={to}
+                token={token}
                 value={bdv}
               />
               <Stack direction="row" gap={1} justifyContent="center">
@@ -161,7 +161,6 @@ const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
   const initialValues : DepositFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1,
-      removeLP: true,
     },
     tokens: [
       {
@@ -227,14 +226,14 @@ const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
         <>
-          <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.5, pt: 1.5 }}>
+          {/* Padding below matches tabs and input position. See Figma. */}
+          <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
             <TransactionSettings>
               <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-              <SettingSwitch name="settings.removeLP" label="Remove LP" />
             </TransactionSettings>
           </Box>
           <DepositForm
-            to={token}
+            token={token}
             balances={balances}
             {...formikProps}
           />

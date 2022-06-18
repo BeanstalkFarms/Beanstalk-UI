@@ -72,17 +72,3 @@ const client = createWagmiClient({
 });
 
 export default client;
-
-//
-// provider: (config) => {
-//   if (config.chainId !== SupportedChainId.LOCALHOST) {
-//     return new ethers.providers.AlchemyProvider(
-//       config.chainId,
-//       ALCHEMY_API_KEYS[(config.chainId as SupportedChainId) || SupportedChainId.MAINNET]
-//     );
-//   }
-//   return new ethers.providers.JsonRpcProvider(
-//     process.env.REACT_APP_RPC_URL,
-//     config.chainId,
-//   );
-// },

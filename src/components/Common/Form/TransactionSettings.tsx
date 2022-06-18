@@ -49,9 +49,9 @@ const TransactionSettings : React.FC = ({ children }) => {
         }}
       >
         <Stack gap={1}>
-          <Typography>Transaction Settings</Typography>
+          <Typography fontWeight="bold">Transaction Settings</Typography>
           <Box>
-            {children}
+            {children || <Typography>No settings for this transaction.</Typography>}
           </Box>
         </Stack>
       </Menu>
