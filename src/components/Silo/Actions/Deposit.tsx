@@ -1,10 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, IconButton, Stack, Tooltip } from '@mui/material';
 import { Token } from 'classes';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import BigNumber from 'bignumber.js';
+import { useSigner } from 'wagmi';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { BEAN, ETH, SEEDS, STALK } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import TokenSelectDialog from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
@@ -14,13 +17,14 @@ import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import Beanstalk from 'lib/Beanstalk';
-import BigNumber from 'bignumber.js';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import { BalanceState } from 'state/farmer/balances/reducer';
 import { displayFullBN, toStringBaseUnitBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
-import { useSigner } from 'wagmi';
+import TransactionSettings from 'components/Common/Form/TransactionSettings';
+import SettingInput from 'components/Common/Form/SettingInput';
+import SettingSwitch from 'components/Common/Form/SettingSwitch';
 
 // -----------------------------------------------------------------------
 
@@ -155,6 +159,10 @@ const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
   const initialValues : DepositFormValues = useMemo(() => ({
+    settings: {
+      slippage: 0.1,
+      removeLP: true,
+    },
     tokens: [
       {
         token: Bean,
@@ -213,14 +221,24 @@ const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
     beanstalk,
     token,
   ]);
+
+  //
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
-        <DepositForm
-          to={token}
-          balances={balances}
-          {...formikProps}
-        />
+        <>
+          <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.5, pt: 1.5 }}>
+            <TransactionSettings>
+              <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
+              <SettingSwitch name="settings.removeLP" label="Remove LP" />
+            </TransactionSettings>
+          </Box>
+          <DepositForm
+            to={token}
+            balances={balances}
+            {...formikProps}
+          />
+        </>
       )}
     </Formik>
   );

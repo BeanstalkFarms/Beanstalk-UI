@@ -3,14 +3,21 @@ import Token from 'classes/Token';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 
 export enum ActionType {
+  BASE,
   // Generic: Swap
   SWAP,
   // Silo
   DEPOSIT,
   RECEIVE_SILO_REWARDS,
+  CLAIM_WITHDRAWAL,
   // Fertilizer
   BUY_FERTILIZER,
   RECEIVE_FERT_REWARDS,
+}
+
+export type BaseAction = {
+  type: ActionType.BASE;
+  message?: string;
 }
 
 export type SwapAction = {
@@ -44,10 +51,18 @@ export type FertilizerRewardsAction = {
   amountOut: BigNumber;
 }
 
+export type ClaimWithdrawalAction = {
+  type: ActionType.CLAIM_WITHDRAWAL;
+  amountIn: BigNumber;
+  tokenIn: Token;
+}
+
 export type Action = (
-  SwapAction
+  BaseAction
+  | SwapAction
   | SiloDepositAction
   | SiloRewardsAction
+  | ClaimWithdrawalAction
   | FertilizerBuyAction
   | FertilizerRewardsAction
 );
@@ -66,7 +81,9 @@ export const parseActionMessage = (a: Action) => {
       return `Purchase ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`;
     case ActionType.RECEIVE_FERT_REWARDS:
       return `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are earned.`;
+    case ActionType.CLAIM_WITHDRAWAL:
+      return `Claim ${displayFullBN(a.amountIn, 2)} ${a.tokenIn.symbol}.`;
     default: 
-      return 'Unknown action';
+      return a.message || 'Unknown action';
   }
 };

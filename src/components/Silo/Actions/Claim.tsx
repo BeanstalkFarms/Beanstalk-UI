@@ -24,6 +24,7 @@ import { useSigner } from 'wagmi';
 import { FarmerSilo, FarmerSiloBalance } from 'state/farmer/silo';
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import TokenInputField from 'components/Common/Form/TokenInputField';
+import { ActionType } from 'util/Actions';
 
 // -----------------------------------------------------------------------
 
@@ -62,13 +63,8 @@ const ClaimForm : React.FC<
   }), [token]);
 
   //
-  // const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
-  //   token,
-  //   values.tokens,
-  //   siloBalance.deposited.crates,
-  //   season,
-  // );
-  // const isReady = (withdrawResult && withdrawResult.amount.lt(0));
+  const amount  = values.tokens[0].amount;
+  const isReady = amount && amount?.gt(0);
 
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
@@ -84,39 +80,30 @@ const ClaimForm : React.FC<
               />
             )}
           </Field>
-          {/* {isReady ? (
+          {isReady ? (
             <Stack direction="column" gap={1}>
               <TokenOutputField
                 token={token}
-                value={withdrawResult.amount}
+                value={amount}
               />
-              <Stack direction="row" gap={1} justifyContent="center">
-                <Box sx={{ flex: 1 }}>
-                  <TokenOutputField
-                    token={STALK}
-                    value={withdrawResult.stalk}
-                  />
-                </Box>
-                <Box sx={{ flex: 1 }}>
-                  <TokenOutputField
-                    token={SEEDS}
-                    value={withdrawResult.seeds}
-                  />
-                </Box>
-              </Stack>
               <Box>
                 <Accordion defaultExpanded variant="outlined">
                   <StyledAccordionSummary title="Transaction Details" />
                   <AccordionDetails>
                     <TransactionPreview
-                      actions={withdrawResult.actions}
+                      actions={[
+                        {
+                          type: ActionType.BASE,
+                          message: 'Test'
+                        }
+                      ]}
                     />
                   </AccordionDetails>
                 </Accordion>
               </Box>
             </Stack>
-          ) : null} */}
-          <Button disabled={isSubmitting || isMainnet} type="submit" size="large" fullWidth>
+          ) : null}
+          <Button disabled={!isReady || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
             Claim
           </Button>
         </Stack>

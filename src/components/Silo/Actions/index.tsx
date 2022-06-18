@@ -22,7 +22,7 @@ const Actions : React.FC<{
   );
 
   return (
-    <Card sx={{ p: 2 }}>
+    <Card sx={{ p: 2, position: 'relative' }}>
       <Stack gap={1.5}>
         {/* Header */}
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible' }}>
@@ -33,41 +33,33 @@ const Actions : React.FC<{
               <Tab label={<Badge color="primary" variant="dot">Claim</Badge>} sx={{ overflow: 'visible' }} />
             ) : null}
           </Tabs>
-          <Box>
-            <IconButton size="small">
-              <SettingsIcon sx={{ fontSize: 20 }} />
-            </IconButton>
-          </Box>
         </Stack>
         {/* Tab Content */}
-        <Box>
-          {tab === 0 ? (
-            <Box sx={{ position: 'relative' }}>
-              <Deposit token={props.token} />
-            </Box>
-          ) : null}
-          {tab === 1 ? (
-            <Box sx={{ position: 'relative' }}>
-              <Withdraw token={props.token} />
-            </Box>
-            // <Stack sx={{ p: 4 }} direction="row" justifyContent="center" alignItems="center">
-            //   <Typography color="text.secondary">
-            //     Withdrawals will be available once Beanstalk is Replanted.
-            //   </Typography>
-            // </Stack>
-          ) : null}
-          {tab === 2 ? (
-            <Box sx={{ position: 'relative' }}>
-              <Claim
-                token={props.token}
-                siloBalance={props.siloBalance}
-              />
-            </Box>
-          ) : null}
-        </Box>
+        {tab === 0 ? (
+          <Deposit
+            token={props.token}
+          />
+        ) : null}
+        {tab === 1 ? (
+          <Withdraw
+            token={props.token}
+          />
+        ) : null}
+        {tab === 2 ? (
+          <Claim
+            token={props.token}
+            siloBalance={props.siloBalance}
+          />
+        ) : null}
       </Stack>
     </Card>
   );
 };
 
 export default Actions;
+
+// <Stack sx={{ p: 4 }} direction="row" justifyContent="center" alignItems="center">
+//   <Typography color="text.secondary">
+//     Withdrawals will be available once Beanstalk is Replanted.
+//   </Typography>
+// </Stack>
