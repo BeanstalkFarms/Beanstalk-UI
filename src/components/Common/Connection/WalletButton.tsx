@@ -166,7 +166,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
             // fontWeight: 400,
             '&:hover': {
               backgroundColor: BeanstalkPalette.brown,
-              opacity: 0.8
+              opacity: 0.98
             }
           }}>
           <Stack direction="row" alignItems="center">

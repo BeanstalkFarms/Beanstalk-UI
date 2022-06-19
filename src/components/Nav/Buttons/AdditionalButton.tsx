@@ -103,7 +103,7 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
             fontWeight: 400,
             '&:hover': {
               backgroundColor: BeanstalkPalette.babyBlue,
-              opacity: 0.8
+              opacity: 0.95
             }
           }}>
           <Stack direction="row" alignItems="center">
