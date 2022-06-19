@@ -17,13 +17,13 @@ import usePools from 'hooks/usePools';
 import BigNumber from 'bignumber.js';
 import WalletButton from '../Common/Connection/WalletButton';
 import NetworkButton from '../Common/Connection/NetworkButton';
-import PriceButton from './Buttons/PriceButton';
 import ROUTES from './routes';
-import NavButton from './Buttons/NavButton';
-import MoreDropdown from './Buttons/MoreDropdown';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import AnalyticsDropdown from './Buttons/AnalyticsDropdown';
 import AdditionalButton from './Buttons/AdditionalButton';
+import MoreDropdown from './Buttons/MoreDropdown';
+import NavButton from './Buttons/NavButton';
+import PriceButton from './Buttons/PriceButton';
 
 const NavBar: React.FC<{}> = () => {
   const chainId = useChainId();
