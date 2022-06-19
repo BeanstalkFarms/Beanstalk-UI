@@ -24,6 +24,12 @@ const ROUTES = {
   ],
   analytics: [
     {
+      path: 'analytics/barnraise',
+      title: 'Barnraise Analytics',
+      disabled: false,
+      href: null
+    },
+    {
       path: 'analytics/bean',
       title: 'Bean Analytics',
       disabled: false,
@@ -38,12 +44,6 @@ const ROUTES = {
     {
       path: 'analytics/field',
       title: 'Field Analytics',
-      disabled: false,
-      href: null
-    },
-    {
-      path: 'analytics/barnraise',
-      title: 'Barnraise Analytics',
       disabled: false,
       href: null
     }

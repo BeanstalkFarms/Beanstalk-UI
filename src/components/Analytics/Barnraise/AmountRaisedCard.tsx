@@ -3,30 +3,46 @@ import { Stack, Typography, LinearProgress, Card } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Stat from '../../Common/Stat';
 import { displayBN } from '../../../util';
+import { BeanstalkPalette } from '../../App/muiTheme';
 
-const AmountRaisedCard: React.FC<{}> =
-  ({ children }) => (
-    <Card sx={{ p: 2 }}>
-      <Stack gap={1.3}>
-        <Stack direction="row" justifyContent="space-between" alignItems="end">
-          <Stat
-            title="Total Recapitalization (Amount raised)"
-            amount={`${displayBN(new BigNumber(10000000))}`}
+export type AmountRaisedProps = {
+  totalRaised: BigNumber;
+}
+
+const AmountRaisedCard: React.FC<AmountRaisedProps> =
+  ({
+     children,
+     totalRaised
+   }) => {
+    const startingAmount = new BigNumber(77000000);
+    const percentageRaised = totalRaised.div(startingAmount).multipliedBy(100);
+    return (
+      <Card sx={{ p: 2 }}>
+        <Stack gap={1.3}>
+          <Stack direction="row" justifyContent="space-between" alignItems="end">
+            <Stat
+              title="Total Recapitalization (Amount raised)"
+              amount={`${displayBN(percentageRaised)}%`}
             />
-          <Typography variant="h1">
-            $0/$77,000,000
-          </Typography>
-        </Stack>
-        <LinearProgress
-          variant="determinate"
-          value={12}
-          sx={{
-              height: '40px',
-              borderRadius: '25px'
+            <Typography variant="h1">
+              ${displayBN(totalRaised)}/${displayBN(startingAmount)}
+            </Typography>
+          </Stack>
+          <LinearProgress
+            variant="determinate"
+            value={12}
+            sx={{
+              height: '45px',
+              borderRadius: '25px',
+              // background: '#f5fff6',
+              background: 'transparent',
+              border: 2,
+              borderColor: BeanstalkPalette.logoGreen
             }}
           />
-      </Stack>
-    </Card>
+        </Stack>
+      </Card>
     );
+  };
 
 export default AmountRaisedCard;
