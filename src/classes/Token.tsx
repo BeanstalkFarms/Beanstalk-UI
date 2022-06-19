@@ -151,7 +151,7 @@ export class ERC20Token extends Token {
   
   public getBalance(account: string) {
     console.debug(`[ERC20Token] ${this.symbol} (${this.chainId} / ${this.address}) -> balanceOf(${account})`);
-    return this.getContract().balanceOf(account).then(bigNumberResult);
+    return this.getContract().balanceOf(account).then(bigNumberResult).catch((err) => { console.error(`[ERC20Token] ${this.symbol} failed to call balanceOf(${account})`, err); throw err; });
   }
 
   // eslint-disable-next-line class-methods-use-this

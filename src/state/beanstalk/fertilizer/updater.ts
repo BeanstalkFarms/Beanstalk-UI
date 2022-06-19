@@ -3,16 +3,21 @@ import { useDispatch } from 'react-redux';
 import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from 'constants/addresses';
 import { BEAN, USDC } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
-import { useBeanstalkFertilizerContract, useERC20Contract } from 'hooks/useContract';
+import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from 'hooks/useContract';
 import { tokenResult } from 'util/Tokens';
 import useChainId from 'hooks/useChain';
 import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
+import useMigrateCall from 'hooks/useMigrateCall';
+import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { ZERO_BN } from 'constants/index';
 
 export const useFertilizer = () => {
   const dispatch = useDispatch();
+  const beanstalk = useBeanstalkContract();
   const [fertContract] = useBeanstalkFertilizerContract();
   const [usdcContract] = useERC20Contract(USDC_ADDRESSES);
   const custodian = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
+  const migrate = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async () => {
@@ -22,7 +27,10 @@ export const useFertilizer = () => {
         remaining,
         totalRaised
       ] = await Promise.all([
-        fertContract.remaining().then(tokenResult(BEAN)),
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          ()  => fertContract.remaining().then(tokenResult(BEAN)),
+          (b) => Promise.resolve(ZERO_BN),
+        ]),
         usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
       ] as const);
       console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remaining.toFixed(2)}`);
@@ -31,6 +39,8 @@ export const useFertilizer = () => {
     }
   }, [
     dispatch,
+    migrate,
+    beanstalk,
     fertContract,
     usdcContract,
     custodian

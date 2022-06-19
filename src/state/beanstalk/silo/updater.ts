@@ -7,10 +7,13 @@ import { tokenResult } from 'util/Tokens';
 import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
+import useMigrateCall from 'hooks/useMigrateCall';
+import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
 
 export const useBeanstalkSilo = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
+  const migrate = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async () => {
@@ -28,8 +31,14 @@ export const useBeanstalkSilo = () => {
         beanstalk.totalStalk().then(tokenResult(STALK)),
         beanstalk.totalSeeds().then(tokenResult(SEEDS)),
         beanstalk.totalRoots().then(bigNumberResult),
-        beanstalk.totalFarmableBeans().then(tokenResult(BEAN)),   // internally, earned == farmable 
-        beanstalk.totalDepositedBeans().then(tokenResult(BEAN)),
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.totalFarmableBeans(),
+          (b) => b.totalEarnedBeans(),
+        ]).then(tokenResult(BEAN)),
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.totalDepositedBeans(),
+          (b) => Promise.resolve(ZERO_BN), // FIXME
+        ]).then(tokenResult(BEAN)),
         // beanstalk.totalWithdrawnBeans().then(tokenResult(BEAN)),  // 
         // beanstalk.withdrawSeasons().then(bigNumberResult)
       ] as const);
@@ -69,6 +78,7 @@ export const useBeanstalkSilo = () => {
     }
   }, [
     dispatch,
+    migrate,
     beanstalk,
   ]);
   

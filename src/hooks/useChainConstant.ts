@@ -12,10 +12,10 @@ export function getChainConstant<T extends ConstantByChain>(map: T, chainId?: Su
   // If we're on LOCALHOST, it's probably a forked mainnet node.
   // Use LOCALHOST-specific value if available, otherwise
   // fall back to MAINNET. This allows for test forking.
-  if (chainId === SupportedChainId.LOCALHOST) {
+  if (chainId === SupportedChainId.LOCALHOST || chainId === SupportedChainId.HARDHAT) {
     return map[chainId] || map[SupportedChainId.MAINNET];
   }
-  // Return value for the actitve chainId.
+  // Return value for the active chainId.
   return map[chainId];
 }
 

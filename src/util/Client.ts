@@ -20,6 +20,7 @@ const baseChains = [
 
 if (Boolean(process.env.REACT_APP_DISABLE_NETWORK_LOCALHOST) === false) {
   baseChains.push(chain.localhost);
+  baseChains.push(chain.hardhat);
 }
 
 const { chains, provider } = configureChains(
@@ -32,8 +33,13 @@ const { chains, provider } = configureChains(
     jsonRpcProvider({
       priority: 1,
       rpc: (_chain) => {
-        if (_chain.id !== SupportedChainId.LOCALHOST) return null;
-        return { http: 'http://3b63-193-19-109-12.ngrok.io/' };
+        if (_chain.id === SupportedChainId.HARDHAT) {
+          return { http: 'http://bean-rpc.treetree.finance/' };
+        }
+        if (_chain.id === SupportedChainId.LOCALHOST) {
+          return { http: 'http://localhost:8545' };
+        }
+        return null;
       }
     }),
     publicProvider({

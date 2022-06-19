@@ -3,6 +3,7 @@ import {
   Beanstalk,
   BeanstalkFertilizer,
   BeanstalkPrice,
+  BeanstalkReplanted,
   ERC20,
 } from 'constants/generated';
 import {
@@ -19,6 +20,7 @@ import useChainConstant, { getChainConstant } from './useChainConstant';
 // -------------------------------------------------
 
 const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
+const BEANSTALK_REPLANTED_ABI = require('constants/abi/Beanstalk/BeanstalkReplanted.json');
 const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
 const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0.json');
 const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
@@ -160,12 +162,20 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
   });
 }
 
+const BEANSTALK_ABIS = {
+  [SupportedChainId.MAINNET]: BEANSTALK_ABI,
+  [SupportedChainId.ROPSTEN]: BEANSTALK_ABI,
+  [SupportedChainId.LOCALHOST]: BEANSTALK_REPLANTED_ABI,
+  [SupportedChainId.HARDHAT]: BEANSTALK_REPLANTED_ABI,
+};
+
 export function useBeanstalkContract(signer?: ethers.Signer | null) {
   const address = useChainConstant(BEANSTALK_ADDRESSES);
+  const abi     = useChainConstant(BEANSTALK_ABIS);
   const provider = useProvider();
   return useWagmiContract<Beanstalk>({
     addressOrName: address,
-    contractInterface: BEANSTALK_ABI,
+    contractInterface: abi,
     signerOrProvider: signer || provider,
   });
 }
