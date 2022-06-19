@@ -12,10 +12,10 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
   Link as RouterLink,
 } from 'react-router-dom';
-import ROUTES from './routes';
-import DropdownIcon from '../Common/DropdownIcon';
+import ROUTES from '../routes';
+import DropdownIcon from '../../Common/DropdownIcon';
 
-const AnalyticsButton: React.FC = () => {
+const AnalyticsDropdown: React.FC = () => {
   // Handlers
   const [open, setOpen] = useState(false);
   const handleShowMenu = useCallback(() => {
@@ -94,4 +94,4 @@ const AnalyticsButton: React.FC = () => {
   );
 };
 
-export default AnalyticsButton;
+export default AnalyticsDropdown;

@@ -44,6 +44,7 @@ export const BeanstalkPalette = {
   lightGreen: '#E1F8E6',
   // Blues
   lightBlue: '#C1DEF2',
+  babyBlue: '#E2F2FE',
   lighterBlue: '#daf2ff', // see `bodyBackground`
   darkBlue: '#1F78B4',
   // Other
@@ -52,7 +53,8 @@ export const BeanstalkPalette = {
   lightishGrey: '#9E9E9E',
   washedRed: '#c35f42',
   yellow: '#f0df6a',
-  darkNavyBlue: '#3c76af'
+  darkNavyBlue: '#3c76af',
+  brown: '#795739'
 };
 
 // FIXME: changes to createTheme don't hot reload.

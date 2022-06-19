@@ -1,15 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Box,
-  Button,
   Dialog,
   Divider,
   Link,
   Stack,
   Typography,
 } from '@mui/material';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
@@ -17,21 +15,17 @@ import { PRE_EXPLOIT_BEAN_DATA } from 'state/bean/pools/updater';
 import { displayFullBN, trimAddress } from 'util/index';
 import usePools from 'hooks/usePools';
 import BigNumber from 'bignumber.js';
-import { Analytics } from '@mui/icons-material';
 import WalletButton from '../Common/Connection/WalletButton';
 import NetworkButton from '../Common/Connection/NetworkButton';
-import PriceButton from './PriceButton';
+import PriceButton from './Buttons/PriceButton';
 import ROUTES from './routes';
-import NavButton from './NavButton';
-import MoreButton from './MoreButton';
-import NavDrawer from './NavDrawer';
+import NavButton from './Buttons/NavButton';
+import MoreDropdown from './Buttons/MoreDropdown';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
-import AnalyticsButton from './AnalyticsButton';
+import AnalyticsDropdown from './Buttons/AnalyticsDropdown';
+import AdditionalButton from './Buttons/AdditionalButton';
 
 const NavBar: React.FC<{}> = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const hideDrawer = useCallback(() => setDrawerOpen(false), []);
-  const showDrawer = useCallback(() => setDrawerOpen(true), []);
   const chainId = useChainId();
   const pools = usePools();
 
@@ -40,8 +34,6 @@ const NavBar: React.FC<{}> = () => {
 
   return (
     <>
-      {/* Drawer */}
-      <NavDrawer open={drawerOpen} hideDrawer={hideDrawer} />
       {/* TEMP: Pre-exploit Dialog */}
       {chainId === SupportedChainId.MAINNET ? (
         <Dialog
@@ -198,8 +190,8 @@ const NavBar: React.FC<{}> = () => {
                   tag={item.tag}
                 />
               ))}
-              <AnalyticsButton />
-              <MoreButton />
+              <AnalyticsDropdown />
+              <MoreDropdown />
             </Stack>
           </Stack>
           {/* Desktop: Right Side */}
@@ -214,29 +206,7 @@ const NavBar: React.FC<{}> = () => {
               <NetworkButton sx={{ height: 44 }} />
             </Box>
             <WalletButton sx={{ height: 44 }} />
-            <Button
-              color="light"
-              variant="contained"
-              aria-label="open drawer"
-              onClick={showDrawer}
-              sx={{
-                height: 44,
-                display: { lg: 'none', xs: 'block' },
-                // Match the height of the Wallet / Priice buttons.
-                // FIXME: need a cleaner way to enforce this height
-                // minHeight: '38.25px',
-                // IconButton has some annoying behavior so we're
-                // using a regular button instead. This prevents
-                // the contained icon from being treated like text
-                // with line-height
-                lineHeight: 0,
-                // Make the button more square
-                minWidth: 0,
-                px: 1,
-              }}
-            >
-              <MoreHorizIcon />
-            </Button>
+            <AdditionalButton />
           </Stack>
         </Stack>
       </AppBar>

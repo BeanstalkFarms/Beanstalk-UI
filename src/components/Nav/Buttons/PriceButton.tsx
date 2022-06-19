@@ -11,12 +11,12 @@ import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
 
 import { AppState } from 'state';
 import usePools from 'hooks/usePools';
-import { ZERO_BN } from 'constants/index';
 import { displayBN } from 'util/Tokens';
 import { CHAIN_INFO } from 'constants/chains';
 import useChainId from 'hooks/useChain';
-import PoolCard from '../Silo/PoolCard';
-import DropdownIcon from '../Common/DropdownIcon';
+import PoolCard from '../../Silo/PoolCard';
+import DropdownIcon from '../../Common/DropdownIcon';
+import { ZERO_BN } from '../../../constants';
 
 // ------------------------------------------------------------
 
