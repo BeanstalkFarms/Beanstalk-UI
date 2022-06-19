@@ -19,7 +19,7 @@ import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
 import podIcon from 'img/beanstalk/pod-icon.svg';
-import useTheme from '@mui/styles/useTheme';
+import { useTheme } from '@mui/material/styles';
 import {
   StyledDialogContent,
   StyledDialogTitle,
@@ -88,7 +88,7 @@ const FieldPage: React.FC = () => {
 
   // Theme
   const theme = useTheme();
-  const isMedium = useMediaQuery(theme.breakpoints.down('md'));
+  const isMedium = useMediaQuery(theme?.breakpoints.down('md'));
 
   return (
     <Container maxWidth="md">
