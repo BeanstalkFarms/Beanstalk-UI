@@ -51,15 +51,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));   // trim additional account text
   const isTiny = useMediaQuery('(max-width:380px)');              //
 
-  // Pick Unripe Beans Dialog
-  const [modalOpen, setModalOpen] = useState(false);
-  const handleOpen = useCallback(() => {
-    setModalOpen(true);
-  }, []);
-  const handleClose = useCallback(() => {
-    setModalOpen(false);
-  }, []);
-
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuVisible = Boolean(anchorEl);
@@ -71,6 +62,16 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   );
   const handleHideMenu = useCallback(() => {
     setAnchorEl(null);
+  }, []);
+
+  // Pick Unripe Beans Dialog
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleOpen = useCallback(() => {
+    handleHideMenu();
+    setModalOpen(true);
+  }, [handleHideMenu]);
+  const handleClose = useCallback(() => {
+    setModalOpen(false);
   }, []);
 
   const chain = useChainConstant(CHAIN_INFO);
