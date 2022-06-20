@@ -4,6 +4,10 @@ import {
   HarvestEvent,
   PlotTransferEvent,
   AddDepositEvent,
+  AddWithdrawalEvent,
+  RemoveWithdrawalEvent,
+  RemoveDepositEvent,
+  RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event,
 } from 'constants/generated/Beanstalk/BeanstalkReplanted';
 import { BEAN, ERC20_TOKENS } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
@@ -11,14 +15,14 @@ import { TypedEvent } from 'constants/generated/common';
 import Token from 'classes/Token';
 import { getChainConstant } from 'hooks/useChainConstant';
 import { TokenMap } from 'constants/index';
-import { FarmerSilo } from 'state/farmer/silo';
-import { SeasonMap } from 'state/farmer/field';
 
 const SupportedEvents = [
   'Sow',
   'Harvest',
   'PlotTransfer',
   'AddDeposit',
+  'RemoveDeposit',
+  'AddWithdrawal',
 ] as const;
 const SupportedEventsSet = new Set(SupportedEvents);
 type SupportedEvents = typeof SupportedEvents;
@@ -84,6 +88,9 @@ export default class EventProcessor {
     return this[event.event as SupportedEvents[number]](event);
   }
 
+
+  // ----------------------------
+  // |          FIELD           |
   // ----------------------------
 
   Sow(event: SowEvent) {
@@ -187,11 +194,15 @@ export default class EventProcessor {
   }
 
   // ----------------------------
+  // |          SILO            |
+  // ----------------------------
 
-  _makeDeposit(
+  // --------[ DEPOSIT ]---------
+
+  _upsertDeposit(
     existing: EventProcessorData['deposits'][string][string] | undefined,
     amount: BigNumber,
-    bdv: BigNumber
+    bdv: BigNumber,
   ) {
     return existing ? {
       amount: existing.amount.plus(amount),
@@ -202,17 +213,104 @@ export default class EventProcessor {
     };
   }
 
+  // _unpackDeposit(event: AddDepositEvent) {
+  //   const token  = event.args.token.toLowerCase();
+  //   if (!this.epp.tokenMap[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+  //   const seasonBN = BN(event.args.season);
+  //   const season = seasonBN.toString();
+  //   const amount = tokenBN(event.args.amount, this.epp.tokenMap[token]);
+  //   const bdv    = tokenBN(event.args.bdv, Bean);
+  //   return { token, season, amount, bdv }
+  // }
+
   AddDeposit(event: AddDepositEvent) {
+    // const { token, season, amount, bdv } = this._unpackDeposit(event);
     const token  = event.args.token.toLowerCase();
     if (!this.epp.tokenMap[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
-    const season = BN(event.args.season);
-    const seasonStr = season.toString();
+    const seasonBN = BN(event.args.season);
+    const season = seasonBN.toString();
     const amount = tokenBN(event.args.amount, this.epp.tokenMap[token]);
     const bdv    = tokenBN(event.args.bdv, Bean);
+
     this.deposits[token] = {
       ...this.deposits[token],
-      [seasonStr]: this._makeDeposit(this.deposits[token][seasonStr], amount, bdv)
+      [season]: this._upsertDeposit(this.deposits[token][season], amount, bdv),
     };
   }
+
+  RemoveDeposit(event: RemoveDepositEvent) {
+    // const { token, season, amount } = this._unpackRemoval(event);
+    const token  = event.args.token.toLowerCase();
+    if (!this.epp.tokenMap[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+    const seasonBN = BN(event.args.season);
+    const season = seasonBN.toString();
+    const amount = tokenBN(event.args.amount, this.epp.tokenMap[token]);
+    const existingDeposit = this.deposits[token][season];
+    if (!existingDeposit) throw new Error(`Received a 'RemoveDeposit' event for an unknown deposit.`);
+
+    // BDV scales linearly with the amount of the underlying token.
+    // Ex. if we remove 60% of the `amount`, we also remove 60% of the BDV.
+    // Because of this, the `RemoveDeposit` event doesn't contain the BDV to save gas.
+    const bdv = existingDeposit.bdv.times(amount.dividedBy(existingDeposit.amount));
+
+    this.deposits[token] = {
+      ...this.deposits[token],
+      [season]: this._upsertDeposit(
+        this.deposits[token][season],
+        amount.negated(),
+        bdv.negated()
+      )
+    }
+
+    if (this.deposits[token][season].amount.eq(0)) {
+      delete this.deposits[token][season];
+    }
+  }
+  RemoveDeposits(event: RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event) {
+
+  }
+
+  // --------[ WITHDRAW ]---------
+
+  _upsertWithdrawal(
+    existing: EventProcessorData['withdrawals'][string][string] | undefined,
+    amount: BigNumber,
+  ) {
+    return existing ? {
+      amount: existing.amount.plus(amount),
+     } : {
+      amount,
+    };
+  }
+
+  // _unpackWithdrawal(event: AddWithdrawalEvent) {
+  //   const token  = event.args.token.toLowerCase();
+  //   if (!this.epp.tokenMap[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+  //   const seasonBN = BN(event.args.season);
+  //   const season = seasonBN.toString();
+  //   const amount = tokenBN(event.args.amount, this.epp.tokenMap[token]);
+  //   return { token, season, amount }
+  // }
+
+  AddWithdrawal(event: AddWithdrawalEvent) {
+    // const { token, season, amount } = this._unpackWithdrawal(event)
+    const token  = event.args.token.toLowerCase();
+    if (!this.epp.tokenMap[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+    const seasonBN = BN(event.args.season);
+    const season = seasonBN.toString();
+    const amount = tokenBN(event.args.amount, this.epp.tokenMap[token]);
+    
+    this.withdrawals[token] = {
+      ...this.withdrawals[token],
+      [season]: this._upsertWithdrawal(this.withdrawals[token][season], amount),
+    };
+  }
+
+  // -----------[ CLAIM ]------------
+
+  // _unpackRemoval = this._unpackWithdrawal;
+
+  // RemoveWithdrawal(event: RemoveWithdrawalEvent) {}
+  // RemoveWithdrawals(event: RemoveWithdrawalEvent) {}
 
 }
