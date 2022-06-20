@@ -7,6 +7,7 @@ import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
 import { SupportedChainId } from 'constants/chains';
 import { ETH } from 'constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
+import { TESTNET_RPC_ADDRESSES } from 'util/Client';
 
 const chainImgMap : { [key: string] : string | undefined } = {
   Ethereum: ETH[SupportedChainId.MAINNET].logo,
@@ -73,7 +74,13 @@ const NetworkDialog: React.FC<{
                 <Typography color="text.primary" sx={{ fontSize: 20 }}>
                   {chain.name}
                 </Typography>
-                <img src={chainImgMap[chain.name]} alt="" style={{ height: 35 }} />
+                {TESTNET_RPC_ADDRESSES[chain.id] ? (
+                  <Typography color="text.secondary" sx={{ fontSize: 12 }}>
+                    {TESTNET_RPC_ADDRESSES[chain.id]}
+                  </Typography>
+                ) : (
+                  <img src={chainImgMap[chain.name]} alt="" style={{ height: 35 }} />
+                )}
               </Stack>
             </Button>
           ))}

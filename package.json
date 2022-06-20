@@ -1,6 +1,6 @@
 {
-  "name": "beanstalk",
-  "version": "0.1.0",
+  "name": "beanstalk-ui",
+  "version": "2.0.0-beta1",
   "private": true,
   "homepage": "https://app.bean.money",
   "dependencies": {
@@ -18,6 +18,7 @@
     "@visx/xychart": "^2.1.0",
     "@visx/zoom": "^2.6.1",
     "bignumber.js": "^9.0.1",
+    "d3-time-format": "^4.1.0",
     "ethers": "^5.6.8",
     "formik": "^2.2.9",
     "graphql": "^15.5.3",
@@ -50,6 +51,7 @@
     "@testing-library/user-event": "^12.1.10",
     "@typechain/ethers-v5": "^10.0.0",
     "@types/d3-array": "^3.0.2",
+    "@types/d3-time-format": "^4.0.0",
     "@types/jest": "^26.0.15",
     "@types/luxon": "^2.3.2",
     "@types/node": "^12.0.0",
@@ -61,6 +63,7 @@
     "@types/react-scrollspy": "^3.3.3",
     "@typescript-eslint/eslint-plugin": "4.13.0",
     "@typescript-eslint/parser": "4.13.0",
+    "@visx/gradient": "^2.10.0",
     "@visx/mock-data": "^2.1.2",
     "babel-plugin-import": "^1.13.5",
     "babel-plugin-transform-remove-console": "^6.9.4",
@@ -89,7 +92,9 @@
   },
   "scripts": {
     "start": "node --max_old_space_size=4096 node_modules/.bin/react-app-rewired start",
-    "build": "yarn generate && node --optimize_for_size --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
+    "build": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version yarn generate && node --optimize_for_size --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
+    "build-netlify": "REACT_APP_HOST='netlify' REACT_APP_NETLIFY_CONTEXT=$CONTEXT REACT_APP_NETLIFY_BUILD_ID=$BUILD_ID REACT_APP_GIT_COMMIT_REF=$COMMIT_REF yarn build",
+    "build-fleek": "REACT_APP_HOST='fleek' REACT_APP_GIT_COMMIT_REF=$(git rev-parse HEAD) yarn build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
     "eject": "react-scripts-rewired eject",

@@ -4,7 +4,7 @@ import {
   Card,
   ListItemText,
   MenuItem,
-  MenuList,
+  MenuList, Stack,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -12,10 +12,11 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
   Link as RouterLink,
 } from 'react-router-dom';
-import ROUTES from './routes';
-import DropdownIcon from '../Common/DropdownIcon';
+import ROUTES from '../routes';
+import DropdownIcon from '../../Common/DropdownIcon';
+import balancesIcon from '../../../img/nav-icons/balances.svg';
 
-const MoreButton: React.FC = () => {
+const MoreDropdown: React.FC = () => {
   // Handlers
   const [open, setOpen] = useState(false);
   const handleShowMenu = useCallback(() => {
@@ -42,11 +43,19 @@ const MoreButton: React.FC = () => {
           {item.disabled ? (
             <Tooltip title={<>{item.title} will be available upon Unpause</>}>
               <span>
-                <ListItemText>{item.title}</ListItemText>
+                <Stack direction="row" gap={1} alignItems="center">
+                  {item.icon && <img src={item.icon} alt={`${item.title}`} width={20} />}
+                  {item.title}
+                </Stack>
               </span>
             </Tooltip>
           ) : (
-            <ListItemText>{item.title}</ListItemText>
+            <ListItemText>
+              <Stack direction="row" gap={1} alignItems="center">
+                {item.icon && <img src={item.icon} alt={`${item.title}`} width={20} />}
+                {item.title}
+              </Stack>
+            </ListItemText>
           )}
           {item.href ? (
             <Typography variant="body2" color="text.secondary">
@@ -94,4 +103,4 @@ const MoreButton: React.FC = () => {
   );
 };
 
-export default MoreButton;
+export default MoreDropdown;

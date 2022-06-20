@@ -2,10 +2,9 @@ import { useCallback } from 'react';
 import { SupportedChainId } from 'constants/index';
 import useChainId from './useChain';
 
-const REPLANTED_CHAINS = new Set([
-  // SupportedChainId.GOERLI,
+export const REPLANTED_CHAINS = new Set([
+  // SupportedChainId.LOCALHOST,
   SupportedChainId.HARDHAT,
-  SupportedChainId.LOCALHOST,
 ]);
 
 export default function useMigrateCall() {
@@ -16,7 +15,7 @@ export default function useMigrateCall() {
       contract: T1 | T2,
       opts: [
         (c: T1) => Promise<any>,
-        (c: T2) => Promise<any>
+        (c: T2) => Promise<any>,
       ],
     ) {
       if (REPLANTED_CHAINS.has(chainId)) {

@@ -13,12 +13,17 @@ import { ALCHEMY_API_KEYS } from 'constants/rpc/alchemy';
 
 const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.MAINNET];
 
+export const TESTNET_RPC_ADDRESSES : { [chainId: number] : string } = {
+  [SupportedChainId.LOCALHOST]: 'http://localhost:8545',
+  [SupportedChainId.HARDHAT]:   'http://bean-rpc.treetree.finance/',
+}
+
 const baseChains = [
   chain.mainnet,
   chain.ropsten,
 ];
 
-if (Boolean(process.env.REACT_APP_DISABLE_NETWORK_LOCALHOST) === false) {
+if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
   baseChains.push(chain.localhost);
   baseChains.push(chain.hardhat);
 }
@@ -33,13 +38,8 @@ const { chains, provider } = configureChains(
     jsonRpcProvider({
       priority: 1,
       rpc: (_chain) => {
-        if (_chain.id === SupportedChainId.HARDHAT) {
-          return { http: 'http://bean-rpc.treetree.finance/' };
-        }
-        if (_chain.id === SupportedChainId.LOCALHOST) {
-          return { http: 'http://localhost:8545' };
-        }
-        return null;
+        if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
+        return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
       }
     }),
     publicProvider({

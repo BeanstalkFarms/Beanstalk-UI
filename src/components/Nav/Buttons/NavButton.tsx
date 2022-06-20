@@ -14,14 +14,17 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
   return (
-    // <Stack sx={{ borderBottom: match ? 3 : null, borderColor: '#67b761', pt: 1.1, pb: 1.1 }}>
     <Stack sx={{
-      borderBottom: match ? 3 : null,
-      mb: match ? '-2px' : null, // or else selected text will raise 3px
-      borderColor: '#67b761',
+      // Set a default transparent bottom border.
+      // Switch to green when selected.
+      borderBottom: 3,
+      borderColor: 'transparent',
+      borderBottomColor: match ? '#67b761' : 'transparent',
+      // Pull the button down slightly so that it overlaps the Nav's
+      // bottom blue border.
+      mb: '-1.5px',
       height: '100%',
       justifyContent: 'center',
-
     }}>
       <Button
         disableRipple
@@ -32,7 +35,6 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
         color={match ? 'primary' : 'dark'}
         sx={{
           '&:hover > h6': {
-            // textDecoration: match ? 'underline' : null,
             textDecorationThickness: '2px',
           },
           minWidth: 0,
@@ -44,7 +46,6 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
           variant="subtitle1"
           sx={{
             display: 'inline-block',
-            // textDecoration: match ? 'underline' : null,
             textDecorationThickness: '2px',
           }}
         >

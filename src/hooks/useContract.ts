@@ -162,10 +162,10 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
 }
 
 const BEANSTALK_ABIS = {
-  [SupportedChainId.MAINNET]: BEANSTALK_ABI,
-  [SupportedChainId.ROPSTEN]: BEANSTALK_ABI,
-  [SupportedChainId.LOCALHOST]: BEANSTALK_REPLANTED_ABI,
-  [SupportedChainId.HARDHAT]: BEANSTALK_REPLANTED_ABI,
+  [SupportedChainId.MAINNET]:   BEANSTALK_ABI,
+  [SupportedChainId.ROPSTEN]:   BEANSTALK_ABI,
+  [SupportedChainId.LOCALHOST]: BEANSTALK_ABI,
+  [SupportedChainId.HARDHAT]:   BEANSTALK_REPLANTED_ABI,
 };
 
 export function useBeanstalkContract(signer?: ethers.Signer | null) {

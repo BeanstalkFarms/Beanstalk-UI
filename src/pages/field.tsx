@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Card,
@@ -24,6 +24,7 @@ import {
   StyledDialogContent,
   StyledDialogTitle,
 } from 'components/Common/Dialog';
+import PodLineSection from '../components/Field/PodLineSection';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -51,6 +52,9 @@ const MAX_ROWS = 5;
 
 const FieldPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const theme = useTheme();
+  // Theme
+  const isMedium = useMediaQuery(theme.breakpoints.down('md'));
   const handleClose = useCallback(() => {
     setModalOpen(false);
   }, []);
@@ -86,9 +90,16 @@ const FieldPage: React.FC = () => {
     return Math.min(rows.length, MAX_ROWS) * 52 + 112;
   }, [rows]);
 
-  // Theme
-  const theme = useTheme();
-  const isMedium = useMediaQuery(theme?.breakpoints.down('md'));
+  // const data = series[0];
+  const ref = useRef<any>(null);
+  const [graphWidth, setGraphWidth] = useState(ref.current ? ref.current.offsetWidth : 0);
+  window.addEventListener('resize', () => setGraphWidth(ref.current ? ref.current.offsetWidth : 0));
+  // sets width of graph on page load
+  useEffect(() => {
+    setGraphWidth(ref.current ? ref.current.offsetWidth : 0);
+  }, []);
+
+  console.log('GRAPH WIDTH', graphWidth);
 
   return (
     <Container maxWidth="md">
@@ -113,7 +124,9 @@ const FieldPage: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Tooltip title="The number of Beans that can currently be Sown, or lent to Beanstalk." placement="top">
+                  <Tooltip
+                    title="The number of Beans that can currently be Sown, or lent to Beanstalk."
+                    placement="top">
                     <Typography variant="h4">Available Soil</Typography>
                   </Tooltip>
                   <Typography variant="h1">
@@ -133,34 +146,24 @@ const FieldPage: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Tooltip title="The ratio of Unharvested Pods to total Bean supply. The Pod Rate is often used as a proxy for Beanstalk’s leverage." placement="top">
-                    <Typography variant="h4">Pod Rate</Typography>
+                  <Tooltip
+                    title="The ratio of Unharvested Pods to total Bean supply. The Pod Rate is often used as a proxy for Beanstalk’s leverage."
+                    placement="top">
+                    <Typography variant="h4">Harvested</Typography>
                   </Tooltip>
                   <Typography variant="h1">
-                    {displayBN(
-                      beanstalkField?.podIndex.div(beanToken?.supply).times(100)
-                    )}
-                    %
+                    {displayBN(beanstalkField?.harvestableIndex)}
                   </Typography>
                 </Stack>
               </Grid>
               <Grid item xs={12}>
-                <Box>
-                  <Stack
-                    gap={0.5}
-                    sx={{
-                      backgroundColor: '#F6FAFE',
-                      px: 2,
-                      py: 1.5,
-                      borderRadius: 1.5,
-                    }}
-                  >
-                    <Tooltip title="The total number of Unharvested Pods. Pods harvest on a First In, First Out basis." placement="left">
-                      <Typography variant="h4">Pod Line</Typography>
-                    </Tooltip>
-                    <Typography variant="h1">{displayBN(podLine)}</Typography>
-                  </Stack>
-                </Box>
+                <PodLineSection
+                  numPodsTitle="Pod Line"
+                  numPodsDisplay={podLine}
+                  podLine={podLine}
+                  harvestableIndex={beanstalkField.harvestableIndex}
+                  plots={farmerField.plots}
+                />
               </Grid>
               <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between">
@@ -199,27 +202,13 @@ const FieldPage: React.FC = () => {
         <StyledDialogContent sx={{ pb: 0.5 }}>
           <Stack gap={2}>
             {/* Pod Balance */}
-            <Box>
-              <Stack
-                gap={0.5}
-                sx={{
-                  backgroundColor: '#F6FAFE',
-                  px: 2,
-                  py: 1.5,
-                  borderRadius: 1.5,
-                }}
-              >
-                <Typography variant="h4" color="text.secondary">
-                  Pod Balance
-                </Typography>
-                <Stack direction="row" gap={0.5} alignItems="center">
-                  <img alt="" src={podIcon} height="22px" />
-                  <Typography variant="h1">
-                    {displayBN(farmerField.pods)}
-                  </Typography>
-                </Stack>
-              </Stack>
-            </Box>
+            <PodLineSection
+              numPodsTitle="Pod Balance"
+              numPodsDisplay={farmerField.pods}
+              podLine={podLine}
+              harvestableIndex={beanstalkField.harvestableIndex}
+              plots={farmerField.plots}
+            />
             <Box
               sx={{
                 height: tableHeight,
@@ -232,6 +221,11 @@ const FieldPage: React.FC = () => {
                 pageSize={8}
                 disableSelectionOnClick
                 density="compact"
+                initialState={{
+                  sorting: {
+                    sortModel: [{ field: 'placeInLine', sort: 'asc' }],
+                  }
+                }}
               />
             </Box>
           </Stack>

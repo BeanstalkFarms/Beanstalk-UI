@@ -63,6 +63,8 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
           bottom: 0,
           left: 0,
           zIndex: 0,
+          borderBottomLeftRadius: 9,
+          borderBottomRightRadius: 9
         }}
       />
     )}

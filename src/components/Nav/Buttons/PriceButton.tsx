@@ -1,60 +1,17 @@
 import React, { useState } from 'react';
-import { Box, Button, ButtonProps, CircularProgress, CircularProgressProps, Drawer, Popper, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, ButtonProps, Drawer, Popper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-
-import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
-
-// import sunIcon from 'img/Sun.svg';
-// import sunriseIcon from 'img/sunrise-icon.svg';
-
 import { AppState } from 'state';
 import usePools from 'hooks/usePools';
-import { ZERO_BN } from 'constants/index';
 import { displayBN } from 'util/Tokens';
 import { CHAIN_INFO } from 'constants/chains';
 import useChainId from 'hooks/useChain';
-import PoolCard from '../Silo/PoolCard';
-import DropdownIcon from '../Common/DropdownIcon';
-
-// ------------------------------------------------------------
-
-const PROGRESS_THICKNESS = 2;
-const PROGRESS_GAP = 3.5;
-const BeanProgressIcon : React.FC<CircularProgressProps & {
-  size: number;
-  enabled: boolean;
-  progress?: number;
-}> = ({
-  size,
-  enabled,
-  variant,
-  progress
-}) => (
-  <Stack sx={{ position: 'relative' }}>
-    {enabled ? (
-      <CircularProgress
-        variant={variant}
-        color="primary"
-        size={size + PROGRESS_GAP * 2}
-        value={progress}
-        sx={{
-          position: 'absolute',
-          left: -PROGRESS_GAP,
-          top: -PROGRESS_GAP,
-          zIndex: 10,
-        }}
-        thickness={PROGRESS_THICKNESS}
-      />
-    ) : null}
-    <img
-      src={beanCircleIcon}
-      alt="Bean"
-      style={{ height: size }}
-    />
-  </Stack>
-);
+import PoolCard from 'components/Silo/PoolCard';
+import DropdownIcon from 'components/Common/DropdownIcon';
+import { ZERO_BN } from 'constants/index';
+import BeanProgressIcon from 'components/Common/BeanProgressIcon';
 
 // ------------------------------------------------------------
 
@@ -98,14 +55,14 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
 
   // Pools
   const isPriceLoading = beanPrice.eq(new BigNumber(-1));
-  const StartIcon = isTiny ? null : (
+  const startIcon = isTiny ? null : (
     <BeanProgressIcon
       size={25}
       enabled={isPriceLoading}
       variant="indeterminate"
     />
   );
-  const Pools = Object.values(pools).map((pool) => (
+  const poolsContent = Object.values(pools).map((pool) => (
     <PoolCard
       key={pool.address}
       pool={pool}
@@ -123,15 +80,31 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       <Box>
         <Button
           color="light"
-          startIcon={StartIcon}
+          startIcon={startIcon}
           endIcon={<DropdownIcon open={(popoverOpen || drawerOpen)} />}
           onClick={onClickPriceButton}
           disableRipple
           {...props}
           sx={{
-            borderBottomLeftRadius: anchorEl ? 0 : undefined,
-            borderBottomRightRadius: anchorEl ? 0 : undefined,
+            // Fully rounded by default; when open, remove
+            // the bottom rounding to look like a "tab".
+            borderBottomLeftRadius:  anchorEl ? 0 : undefined,
+            borderBottomRightRadius: anchorEl ? 0 : undefined,  
+            // Enforce a default white border; switch the color
+            // to secondary when the Popper is open.
+            borderWidth: 1,
+            borderStyle: 'solid',
+            borderColor: anchorEl ? 'secondary.main' : 'white',
+            // Keep this white so we can make it look like the
+            // button is "expanding" into a Box when you click it.
+            borderBottomColor: 'white',
+            // Without disabling the transition, the border fades
+            // in/out and looks weird.
+            transition: 'none !important',
+            // Move the button above the Box so we can slice off
+            // the 1px border at the top of the Box.
             zIndex: anchorEl ? 999 : undefined,
+            // Positioning and other styles.
             mr: 1,
             ...props.sx
           }}
@@ -145,22 +118,23 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           anchorEl={anchorEl}
           placement="bottom-start"
           disablePortal
-          popperOptions={{
-
-          }}
         >
           <Box
             sx={(_theme) => ({
               background: 'white',
               width: '400px',
-              borderColor: 'primary.main',
-              overflow: 'hidden',
               borderBottomLeftRadius: _theme.shape.borderRadius,
               borderBottomRightRadius: _theme.shape.borderRadius,
               borderTopRightRadius: _theme.shape.borderRadius,
+              borderColor: 'secondary.main',
+              borderWidth: 1,
+              borderStyle: 'solid',
               px: 1,
               py: 1,
-              boxShadow: _theme.shadows[1],
+              boxShadow: _theme.shadows[0],
+              // Should be below the zIndex of the Button.
+              zIndex: 998,
+              mt: '-1px',
             })}
             className="border border-t-0 shadow-xl"
           >
@@ -169,7 +143,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
                 {/* <img src={sunriseIcon} alt="Sun" style={{ height: 20 }} /> */}
                 Season {displayBN(season || ZERO_BN)}
               </Typography>
-              {Pools}
+              {poolsContent}
             </Stack>
           </Box>
         </Popper>
@@ -186,7 +160,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             Pools — Season {displayBN(season || ZERO_BN)}
           </Typography>
           <Stack gap={1}>
-            {Pools}
+            {poolsContent}
           </Stack>
         </Stack>
       </Drawer>

@@ -330,3 +330,8 @@ export const SILO_WHITELIST : TokenMap[] = [
   BEAN_CRV3_LP,
   BEAN_LUSD_LP,
 ];
+
+export const GENERALIZED_SILO_WHITELIST : TokenMap[] = [
+  BEAN_CRV3_LP,
+  BEAN_LUSD_LP,
+];
