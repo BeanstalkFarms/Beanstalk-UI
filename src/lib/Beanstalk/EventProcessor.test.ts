@@ -1,10 +1,10 @@
 import { BigNumber as EBN } from 'ethers';
-import { AddDepositEvent, AddWithdrawalEvent, PlotTransferEvent, RemoveDepositEvent, SowEvent } from 'constants/generated/Beanstalk/BeanstalkReplanted';
+import { AddDepositEvent, AddWithdrawalEvent, PlotTransferEvent, RemoveDepositEvent, RemoveWithdrawalEvent, SowEvent } from 'constants/generated/Beanstalk/BeanstalkReplanted';
 import { BEAN, BEAN_CRV3_LP, ERC20_TOKENS, SILO_WHITELIST } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import { HarvestEvent } from 'constants/generated/Beanstalk/Beanstalk';
-import EventProcessor, { BN, EventProcessingParameters } from './EventProcessor';
 import { TokenMap } from 'constants/index';
+import EventProcessor, { BN, EventProcessingParameters } from './EventProcessor';
 
 // ------------------------------------------
 
@@ -174,12 +174,12 @@ describe('the Silo', () => {
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(1000*10**Bean.decimals), // Deposited 1,000 Bean
-        bdv:    EBN.from(1000*10**Bean.decimals), 
+        amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+        bdv:    EBN.from(1000 * 10 ** Bean.decimals), 
       }),
     } as AddDepositEvent);
 
-    expect(p.deposits[t1]["6074"]).toStrictEqual({
+    expect(p.deposits[t1]['6074']).toStrictEqual({
       amount: BN(1000),
       bdv:    BN(1000),
     });
@@ -191,12 +191,12 @@ describe('the Silo', () => {
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(500*10**Bean.decimals), // Deposited 500 Bean
-        bdv:    EBN.from(500*10**Bean.decimals), 
+        amount: EBN.from(500 * 10 ** Bean.decimals), // Deposited 500 Bean
+        bdv:    EBN.from(500 * 10 ** Bean.decimals), 
       }),
     } as AddDepositEvent);
 
-    expect(p.deposits[t1]["6074"]).toStrictEqual({
+    expect(p.deposits[t1]['6074']).toStrictEqual({
       amount: BN(1500),
       bdv:    BN(1500),
     });
@@ -209,13 +209,13 @@ describe('the Silo', () => {
         token:  t2,
         season: EBN.from(6100),
         amount: EBN.from(1000).mul(EBN.from(10).pow(BeanCrv3.decimals)), // Deposited 1,000 Bean:CRV3
-        bdv:    EBN.from( 900).mul(EBN.from(10).pow(Bean.decimals))
+        bdv:    EBN.from(900).mul(EBN.from(10).pow(Bean.decimals))
       }),
     } as AddDepositEvent);
 
-    expect(p.deposits[t2]["6100"]).toStrictEqual({
+    expect(p.deposits[t2]['6100']).toStrictEqual({
       amount: BN(1000),
-      bdv:    BN( 900),
+      bdv:    BN(900),
     });
   });
 
@@ -231,11 +231,11 @@ describe('the Silo', () => {
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(1000*10**Bean.decimals), // Withdrew 1,000 Bean
+        amount: EBN.from(1000 * 10 ** Bean.decimals), // Withdrew 1,000 Bean
       }),
     } as AddWithdrawalEvent);
 
-    expect(p.withdrawals[t1]["6074"]).toStrictEqual({
+    expect(p.withdrawals[t1]['6074']).toStrictEqual({
       amount: BN(1000),
     });
 
@@ -246,11 +246,11 @@ describe('the Silo', () => {
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(500*10**Bean.decimals), // Withdrew 500 Bean
+        amount: EBN.from(500 * 10 ** Bean.decimals), // Withdrew 500 Bean
       }),
     } as AddWithdrawalEvent);
 
-    expect(p.withdrawals[t1]["6074"]).toStrictEqual({
+    expect(p.withdrawals[t1]['6074']).toStrictEqual({
       amount: BN(1500),
     });
 
@@ -265,7 +265,7 @@ describe('the Silo', () => {
       }),
     } as AddWithdrawalEvent);
 
-    expect(p.withdrawals[t2]["6100"]).toStrictEqual({
+    expect(p.withdrawals[t2]['6100']).toStrictEqual({
       amount: BN(1000),
     });
   });
@@ -281,8 +281,8 @@ describe('the Silo', () => {
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(1000*10**Bean.decimals), // Deposited 1,000 Bean
-        bdv:    EBN.from(1000*10**Bean.decimals), 
+        amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+        bdv:    EBN.from(1000 * 10 ** Bean.decimals), 
       }),
     } as AddDepositEvent);
 
@@ -292,15 +292,15 @@ describe('the Silo', () => {
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(600*10**Bean.decimals),
-        bdv:    EBN.from(600*10**Bean.decimals),
+        amount: EBN.from(600 * 10 ** Bean.decimals),
+        bdv:    EBN.from(600 * 10 ** Bean.decimals),
       })
-    } as RemoveDepositEvent)
+    } as RemoveDepositEvent);
 
-    expect(p.deposits[t1]["6074"]).toStrictEqual({
+    expect(p.deposits[t1]['6074']).toStrictEqual({
       amount: BN(400),
       bdv: BN(400),
-    })
+    });
 
     p.ingest({
       event: 'RemoveDeposit',
@@ -308,15 +308,96 @@ describe('the Silo', () => {
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(400*10**Bean.decimals),
-        bdv:    EBN.from(400*10**Bean.decimals),
+        amount: EBN.from(400 * 10 ** Bean.decimals),
+        bdv:    EBN.from(400 * 10 ** Bean.decimals),
       })
-    } as RemoveDepositEvent)
+    } as RemoveDepositEvent);
 
-    expect(p.deposits[t1]["6074"]).toBeUndefined();
-  })  
+    expect(p.deposits[t1]['6074']).toBeUndefined();
+  });
+
+  it('removes a single withdrawal, partial -> full', () => {
+    const p = mockProcessor();
+    const t1 = Bean.address.toLowerCase();
+
+    // Withdraw: 1000 Bean in Season 6074
+    p.ingest({
+      event: 'AddWithdrawal',
+      args: propArray({
+        account,
+        token:  t1,
+        season: EBN.from(6074),
+        amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+      }),
+    } as AddWithdrawalEvent);
+
+    // Claim: 600 Bean from Withdrawal in Season 6074
+    p.ingest({
+      event: 'RemoveWithdrawal',
+      args: propArray({
+        account,
+        token:  t1,
+        season: EBN.from(6074),
+        amount: EBN.from(600 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+      }),
+    } as RemoveWithdrawalEvent);
+
+    expect(p.withdrawals[t1]['6074']).toStrictEqual({
+      amount: BN(400),
+    });
+
+    // Claim: 400 Bean from Withdrawal in Season 6074
+    p.ingest({
+      event: 'RemoveWithdrawal',
+      args: propArray({
+        account,
+        token:  t1,
+        season: EBN.from(6074),
+        amount: EBN.from(400 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+      }),
+    } as RemoveWithdrawalEvent);
+
+    expect(p.withdrawals[t1]['6074']).toBeUndefined();
+  });
+
+  it('removes multiple withdrawals, full', () => {
+    const p = mockProcessor();
+    const t1 = Bean.address.toLowerCase();
+
+    // Withdraw: 1000 Bean in Season 6074
+    p.ingest({
+      event: 'AddWithdrawal',
+      args: propArray({
+        account,
+        token:  t1,
+        season: EBN.from(6074),
+        amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+      }),
+    } as AddWithdrawalEvent);
+
+    // Withdraw: 5000 Bean in Season 6100
+    p.ingest({
+      event: 'AddWithdrawal',
+      args: propArray({
+        account,
+        token:  t1,
+        season: EBN.from(6100),
+        amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+      }),
+    } as AddWithdrawalEvent);
+
+    // Claim: 
+    // p.ingest({
+    //   event: 'RemoveWithdrawals',
+    //   args: propArray({
+    //     account,
+    //     token:  t1,
+    //     season: ["6074", "6100"],
+    //     amount: EBN.from(400*10**Bean.decimals), // Deposited 1,000 Bean
+    //   }),
+    // } as RemoveWithdrawalEvent);
+  });
 });
-
 
 // const mockEvent = <T extends Event['args']>(name: string, args: T) => ({
 //   // Used for event processing

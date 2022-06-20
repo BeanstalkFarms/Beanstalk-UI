@@ -533,17 +533,17 @@ function _processFarmerEvents(
     } else if (event.event === 'RemoveSeason') {
       const s = parseInt(event.returnValues.season, 10);
       const t = event.returnValues.token;
-      const lp = toTokenUnitsBN(
+      const amount = toTokenUnitsBN(
         event.returnValues.amount,
         BeanEthLP.decimals
       );
       if (t === BeanCrv3LP.address) {
         const bdv = userCurveBDVDeposits[s]
-          .multipliedBy(lp)
+          .multipliedBy(amount)
           .dividedBy(userCurveDeposits[s]);
         userCurveDeposits = {
           ...userCurveDeposits,
-          [s]: userCurveDeposits[s].minus(lp),
+          [s]: userCurveDeposits[s].minus(amount),
         };
         userCurveBDVDeposits = {
           ...userCurveBDVDeposits,
@@ -553,11 +553,11 @@ function _processFarmerEvents(
         if (userCurveBDVDeposits[s].isEqualTo(0)) delete userCurveBDVDeposits[s];
       } else {
         const bdv = userBeanlusdBDVDeposits[s]
-          .multipliedBy(lp)
+          .multipliedBy(amount)
           .dividedBy(userBeanlusdBDVDeposits[s]);
         userBeanlusdBDVDeposits = {
           ...userBeanlusdBDVDeposits,
-          [s]: userBeanlusdBDVDeposits[s].minus(lp),
+          [s]: userBeanlusdBDVDeposits[s].minus(amount),
         };
         userBeanlusdBDVDeposits = {
           ...userBeanlusdBDVDeposits,
