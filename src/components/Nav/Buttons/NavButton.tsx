@@ -14,7 +14,6 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
   return (
-    // <Stack sx={{ borderBottom: match ? 3 : null, borderColor: '#67b761', pt: 1.1, pb: 1.1 }}>
     <Stack sx={{
       borderBottom: match ? 3 : null,
       mb: match ? '-2px' : null, // or else selected text will raise 3px
@@ -32,7 +31,6 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
         color={match ? 'primary' : 'dark'}
         sx={{
           '&:hover > h6': {
-            // textDecoration: match ? 'underline' : null,
             textDecorationThickness: '2px',
           },
           minWidth: 0,
@@ -44,7 +42,6 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
           variant="subtitle1"
           sx={{
             display: 'inline-block',
-            // textDecoration: match ? 'underline' : null,
             textDecorationThickness: '2px',
           }}
         >

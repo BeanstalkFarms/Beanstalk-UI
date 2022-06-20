@@ -1,11 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  useAccount,
-  useDisconnect,
-  useNetwork,
-} from 'wagmi';
-import {
   Box,
   Button,
   ButtonProps,
@@ -20,24 +15,25 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-
-import tempUserIcon from 'img/interface/temp-user-icon.svg';
-import { CHAIN_INFO } from 'constants/chains';
-
-import { getAccount } from 'util/Account';
-import useChainConstant from 'hooks/useChainConstant';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+
+import { BEANSTALK_ADDRESSES, CHAIN_INFO } from 'constants/index';
 import NavDrawer from '../Mobile/NavDrawer';
 import ROUTES from '../routes';
 import { BeanstalkPalette } from '../../App/muiTheme';
+import useChainConstant from 'hooks/useChainConstant';
 
 // -----------------------------------------------------------------
 
 const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
+  // Theme
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));   // trim additional account text
   const isTiny = useMediaQuery('(max-width:380px)');              //
+
+  // Constants
+  const chainInfo = useChainConstant(CHAIN_INFO);
+  const beanstalkAddress = useChainConstant(BEANSTALK_ADDRESSES);
 
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -45,6 +41,7 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
     setAnchorEl(null);
   }, []);
 
+  // Drawer
   const [drawerOpen, setDrawerOpen] = useState(false);
   const hideDrawer = useCallback(() => {
     setDrawerOpen(false);
@@ -55,7 +52,7 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
     setAnchorEl(event.currentTarget);
   }, []);
 
-  const menu = (
+  const menuContent = (
     <MenuList component={Card}>
       {ROUTES.additional.map((item) => (
         <MenuItem
@@ -66,7 +63,7 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
           target={item.href ? '_blank' : undefined}
           rel={item.href ? 'noreferrer' : undefined}
           to={item.href ? undefined : item.path}
-          sx={{ minWidth: 200 }}
+          sx={{ minWidth: 250 }}
           onClick={handleHideMenu}
         >
           {item.disabled ? (
@@ -93,32 +90,35 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
           ) : null}
         </MenuItem>
       ))}
-      <Box sx={{ px: 1, py: 0.3 }}>
+      <Box sx={{ px: 1, pt: 0.75 }}>
         <Button
           fullWidth
-          href="#"
-          sx={{
-            backgroundColor: BeanstalkPalette.babyBlue,
-            color: BeanstalkPalette.black,
-            fontWeight: 400,
-            '&:hover': {
-              backgroundColor: BeanstalkPalette.babyBlue,
-              opacity: 0.95
-            }
-          }}>
-          <Stack direction="row" alignItems="center">
-            <ListItemText>Contract: 0X000...</ListItemText>
+          href={`${chainInfo.explorer}/address/${beanstalkAddress}`}
+          target="_blank"
+          rel="noreferrer"
+          variant="contained"
+          color="secondary"
+          // sx={{
+          //   backgroundColor: BeanstalkPalette.babyBlue,
+          //   color: BeanstalkPalette.black,
+          //   fontWeight: 400,
+          //   '&:hover': {
+          //     backgroundColor: BeanstalkPalette.babyBlue,
+          //     opacity: 0.95
+          //   }
+          // }}
+          >
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <ListItemText>Contract: {beanstalkAddress.slice(0, 6)}...</ListItemText>
             <Typography variant="body2" color="text.secondary">
               <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: 12 }} />
             </Typography>
           </Stack>
         </Button>
       </Box>
-
     </MenuList>
   );
 
-  // Connected
   return (
     <>
       {/* Drawer - only show on mobile or medium layout */}
@@ -170,7 +170,7 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
           // mt: 0.5,
         }}
       >
-        {menu}
+        {menuContent}
       </Menu>
     </>
   );

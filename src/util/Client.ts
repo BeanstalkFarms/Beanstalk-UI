@@ -18,7 +18,7 @@ const baseChains = [
   chain.ropsten,
 ];
 
-if (Boolean(process.env.REACT_APP_DISABLE_NETWORK_LOCALHOST) === false) {
+if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
   baseChains.push(chain.localhost);
   baseChains.push(chain.hardhat);
 }

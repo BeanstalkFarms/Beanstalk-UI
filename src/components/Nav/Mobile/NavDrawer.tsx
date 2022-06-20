@@ -52,7 +52,6 @@ const NavDrawer: React.FC<{
             onClick={hideDrawer}
             disabled={item.disabled}
             small={item.small}
-
           />
         ))}
         {ROUTES.additional.map((item) => (
@@ -81,6 +80,7 @@ const NavDrawer: React.FC<{
                 opacity: 0.8
               }
             }}>
+            {/* FIXME: duplicate of the desktop version */}
             <Stack direction="row" alignItems="center">
               <ListItemText>Contract: 0X000...</ListItemText>
               <Typography variant="body1" color="text.secondary">

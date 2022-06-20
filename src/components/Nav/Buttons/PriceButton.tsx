@@ -3,12 +3,7 @@ import { Box, Button, ButtonProps, CircularProgress, CircularProgressProps, Draw
 import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-
 import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
-
-// import sunIcon from 'img/Sun.svg';
-// import sunriseIcon from 'img/sunrise-icon.svg';
-
 import { AppState } from 'state';
 import usePools from 'hooks/usePools';
 import { displayBN } from 'util/Tokens';
@@ -129,9 +124,25 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           disableRipple
           {...props}
           sx={{
-            borderBottomLeftRadius: anchorEl ? 0 : undefined,
-            borderBottomRightRadius: anchorEl ? 0 : undefined,
+            // Fully rounded by default; when open, remove
+            // the bottom rounding to look like a "tab".
+            borderBottomLeftRadius:  anchorEl ? 0 : undefined,
+            borderBottomRightRadius: anchorEl ? 0 : undefined,  
+            // Enforce a default white border; switch the color
+            // to secondary when the Popper is open.
+            borderWidth: 1,
+            borderStyle: 'solid',
+            borderColor: anchorEl ? 'secondary.main' : 'white',
+            // Keep this white so we can make it look like the
+            // button is "expanding" into a Box when you click it.
+            borderBottomColor: 'white',
+            // Without disabling the transition, the border fades
+            // in/out and looks weird.
+            transition: 'none !important',
+            // Move the button above the Box so we can slice off
+            // the 1px border at the top of the Box.
             zIndex: anchorEl ? 999 : undefined,
+            // Positioning and other styles.
             mr: 1,
             ...props.sx
           }}
@@ -145,22 +156,22 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           anchorEl={anchorEl}
           placement="bottom-start"
           disablePortal
-          popperOptions={{
-
-          }}
         >
           <Box
             sx={(_theme) => ({
               background: 'white',
               width: '400px',
-              borderColor: 'primary.main',
-              overflow: 'hidden',
+              mt: '-1px',
               borderBottomLeftRadius: _theme.shape.borderRadius,
               borderBottomRightRadius: _theme.shape.borderRadius,
               borderTopRightRadius: _theme.shape.borderRadius,
+              borderColor: 'secondary.main',
+              borderWidth: 1,
+              borderStyle: 'solid',
               px: 1,
               py: 1,
-              boxShadow: _theme.shadows[1],
+              boxShadow: _theme.shadows[0],
+              zIndex: 998,
             })}
             className="border border-t-0 shadow-xl"
           >
