@@ -6,10 +6,10 @@ import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from 'hooks/useContract';
 import { tokenResult } from 'util/Tokens';
 import useChainId from 'hooks/useChain';
-import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
 import { ZERO_BN } from 'constants/index';
+import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 
 export const useFertilizer = () => {
   const dispatch = useDispatch();

@@ -35,8 +35,9 @@ export default createReducer(initialFarmerSilo, (builder) =>
     .addCase(updateFarmerSiloBalances, (state, { payload }) => {
       const addresses = Object.keys(payload);
       addresses.forEach((address) => {
-        state.balances[address] = {
-          ...state.balances[address],
+        const a = address.toLowerCase();
+        state.balances[a] = {
+          ...state.balances[a],
           ...payload[address]
         };
       });

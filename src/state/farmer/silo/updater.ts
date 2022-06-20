@@ -9,9 +9,9 @@ import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
-import { resetFarmerSilo, updateFarmerSiloRewards } from './actions';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { resetFarmerSilo, updateFarmerSiloRewards } from './actions';
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();

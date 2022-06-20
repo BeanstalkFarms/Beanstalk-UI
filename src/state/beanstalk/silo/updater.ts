@@ -6,9 +6,9 @@ import { tokenResult } from 'util/Tokens';
 
 import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 
 export const useBeanstalkSilo = () => {
   const dispatch = useDispatch();

@@ -7,9 +7,9 @@ import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
 import { bigNumberResult } from 'util/Ledger';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
-import { resetFertilizer, updateFertilizer } from './actions';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { ZERO_BN } from 'constants/index';
+import { resetFertilizer, updateFertilizer } from './actions';
 
 export const useFetchFarmerFertilizer = () => {
   const dispatch = useDispatch();

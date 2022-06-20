@@ -1,13 +1,13 @@
-import { useCallback } from "react";
-import { SupportedChainId } from "constants/index";
-import { Beanstalk, BeanstalkReplanted } from "constants/generated";
-import useChainId from "./useChain";
+import { useCallback } from 'react';
+import { SupportedChainId } from 'constants/index';
+import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import useChainId from './useChain';
 
 const REPLANTED_CHAINS = new Set([
-  //SupportedChainId.GOERLI,
+  // SupportedChainId.GOERLI,
   SupportedChainId.HARDHAT,
   SupportedChainId.LOCALHOST,
-])
+]);
 
 export default function useMigrateCall() {
   const chainId = useChainId();
@@ -26,7 +26,7 @@ export default function useMigrateCall() {
       return opts[0](contract as T1);
     },
     [chainId]
-  )
+  );
 }
 
 // export default function useMigrateCall() {
