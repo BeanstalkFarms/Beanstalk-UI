@@ -224,6 +224,11 @@ const FieldPage: React.FC = () => {
                 pageSize={8}
                 disableSelectionOnClick
                 density="compact"
+                initialState={{
+                  sorting: {
+                    sortModel: [{ field: 'placeInLine', sort: 'asc' }],
+                  }
+                }}
               />
             </Box>
           </Stack>
