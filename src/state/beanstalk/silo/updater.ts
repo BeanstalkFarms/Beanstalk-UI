@@ -37,7 +37,7 @@ export const useBeanstalkSilo = () => {
         ]).then(tokenResult(BEAN)),
         migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
           (b) => b.totalDepositedBeans(),
-          (b) => Promise.resolve(ZERO_BN), // FIXME
+          () => Promise.resolve(ZERO_BN), // FIXME
         ]).then(tokenResult(BEAN)),
         // beanstalk.totalWithdrawnBeans().then(tokenResult(BEAN)),  // 
         // beanstalk.withdrawSeasons().then(bigNumberResult)

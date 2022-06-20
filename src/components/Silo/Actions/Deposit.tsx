@@ -1,10 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Button, IconButton, Stack, Tooltip } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip } from '@mui/material';
 import { Token } from 'classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useSigner } from 'wagmi';
-import SettingsIcon from '@mui/icons-material/Settings';
 import { BEAN, ETH, SEEDS, STALK } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
@@ -24,7 +23,6 @@ import { displayFullBN, toStringBaseUnitBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
 import TransactionSettings from 'components/Common/Form/TransactionSettings';
 import SettingInput from 'components/Common/Form/SettingInput';
-import SettingSwitch from 'components/Common/Form/SettingSwitch';
 
 // -----------------------------------------------------------------------
 
@@ -33,8 +31,6 @@ type DepositFormValues = {
 }
 
 // -----------------------------------------------------------------------
-
-const TOKEN_LIST = [BEAN, ETH];
 
 const DepositForm : React.FC<
   FormikProps<DepositFormValues> & {

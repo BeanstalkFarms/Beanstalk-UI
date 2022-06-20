@@ -1,27 +1,20 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Button, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { Token } from 'classes';
-import { BEAN, ETH, SEEDS, STALK } from 'constants/tokens';
+import { BEAN } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
-import useTokenMap from 'hooks/useTokenMap';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import TokenSelectDialog from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { FormTokenState } from 'components/Common/Form';
-import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
-import Beanstalk from 'lib/Beanstalk';
 import BigNumber from 'bignumber.js';
 import { useBeanstalkContract } from 'hooks/useContract';
-import useFarmerBalances from 'hooks/useFarmerBalances';
-import { BalanceState } from 'state/farmer/balances/reducer';
-import { displayBN, displayFullBN, toStringBaseUnitBN } from 'util/Tokens';
-import TransactionToast from 'components/Common/TxnToast';
+import { displayBN } from 'util/Tokens';
 import { useSigner } from 'wagmi';
-import { FarmerSilo, FarmerSiloBalance } from 'state/farmer/silo';
+import { FarmerSiloBalance } from 'state/farmer/silo';
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import TokenInputField from 'components/Common/Form/TokenInputField';
 import { ActionType } from 'util/Actions';
@@ -40,23 +33,19 @@ type ClaimFormValues = {
 
 // -----------------------------------------------------------------------
 
-const TOKEN_LIST = [BEAN, ETH];
-
 const ClaimForm : React.FC<
   FormikProps<ClaimFormValues> & {
     token: Token;
-    siloBalance: FarmerSiloBalance;
     claimableBalance: BigNumber;
   }
 > = ({
   // Custom
   token,
   claimableBalance,
-  siloBalance,
   // Formik
   values,
   isSubmitting,
-  setFieldValue,
+  // setFieldValue,
 }) => {
   const chainId = useChainId();
   const pools = usePools();
@@ -138,8 +127,6 @@ const ClaimForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-// TODO:
-// - implement usePreferredToken here
 const Claim : React.FC<{
   token: Token;
   siloBalance: FarmerSiloBalance;
@@ -147,9 +134,17 @@ const Claim : React.FC<{
   token,
   siloBalance
 }) => {
+  // Constants
   const Bean = useChainConstant(BEAN);
+
+  // Contracts
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
+
+  // Balances
+  const claimableBalance = siloBalance.claimable.amount;
+
+  // Form
   const initialValues : ClaimFormValues = useMemo(() => ({
     settings: {
       removeLP: token !== Bean
@@ -161,19 +156,11 @@ const Claim : React.FC<{
       },
     ],
   }), [token, Bean]);
-
-  //
   const onSubmit = useCallback((values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
-    // let call;
-    // beanstalk.
+    console.debug(beanstalk, formActions);
   }, [
-    // Bean,
-    // beanstalk,
-    // token,
+    beanstalk
   ]);
-
-  // const withdrawnBalance = siloBalance.deposited.amount;
-  const claimableBalance = siloBalance.claimable.amount;
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
@@ -199,7 +186,6 @@ const Claim : React.FC<{
             ) : null}
             <ClaimForm
               token={token}
-              siloBalance={siloBalance}
               claimableBalance={claimableBalance}
               {...formikProps}
             />

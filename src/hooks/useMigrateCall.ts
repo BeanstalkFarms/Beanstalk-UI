@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { SupportedChainId } from 'constants/index';
-import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
 import useChainId from './useChain';
 
 const REPLANTED_CHAINS = new Set([
@@ -28,19 +27,3 @@ export default function useMigrateCall() {
     [chainId]
   );
 }
-
-// export default function useMigrateCall() {
-//   const chainId = useChainId();
-//   return useCallback((
-//     contract: Beanstalk | BeanstalkReplanted,
-//     opts: [
-//       (c: Beanstalk) => Promise<any>,
-//       (c: BeanstalkReplanted) => Promise<any>
-//     ],
-//   ) => {
-//     if (REPLANTED_CHAINS.has(chainId)) {
-//       return opts[1](contract as BeanstalkReplanted);
-//     }
-//     return opts[0](contract as Beanstalk);
-//   }, [chainId])
-// }

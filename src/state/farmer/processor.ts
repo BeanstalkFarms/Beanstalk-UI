@@ -68,15 +68,12 @@ const FarmerEventsProcessor = () => {
   useEffect(() => {
     if (eventParsingParameters) {
       if (events && events.length > 0) {
-        console.debug(`[farmer/updater] process ${events.length} events`, eventParsingParameters);
+        console.debug(`[farmer/updater] process ${events.length} events`, events, eventParsingParameters);
         const results = processFarmerEvents(
           events,
           eventParsingParameters
         );
         console.debug('[farmer/updater] ...processed events!', results);
-
-        console.debug('beanWithdrawals', results.beanWithdrawals, parseWithdrawals(results.beanWithdrawals, eventParsingParameters.season));
-        console.debug('lpWithdrawals', results.lpWithdrawals);
 
         // TEMP:
         // Hardcode this because the event process returns `beanDepositsBalance`, etc.

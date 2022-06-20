@@ -29,7 +29,7 @@ export const useFertilizer = () => {
       ] = await Promise.all([
         migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
           ()  => fertContract.remaining().then(tokenResult(BEAN)),
-          (b) => Promise.resolve(ZERO_BN),
+          () => Promise.resolve(ZERO_BN),
         ]),
         usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
       ] as const);

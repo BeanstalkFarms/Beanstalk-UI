@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Badge, Box, Card, IconButton, Stack, Tab, Tabs } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { Badge, Card, Stack, Tab, Tabs } from '@mui/material';
 import { Token } from 'classes';
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import Deposit from './Deposit';

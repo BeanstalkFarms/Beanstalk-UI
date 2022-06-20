@@ -3,7 +3,7 @@ import ethers, { BigNumber as BN } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { useAccount } from 'wagmi';
 import { useDispatch } from 'react-redux';
-import flatten from 'lodash/flatten';
+import flattenDeep from 'lodash/flattenDeep';
 import useBlocks from 'hooks/useBlocks';
 import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -203,10 +203,11 @@ const useFarmerEvents = () => {
         const account = getAccount(_account);
         console.debug(`[farmer/events/useFarmerEvents] FETCH: beanstalk = ${beanstalk.address}, farmer = ${account}`, blocks);
         Promise.all(getEvents(beanstalk, migrate, account, blocks)).then((results) => {
-          const flattened = flatten<ethers.Event>(results);
+          const flattened = flattenDeep<ethers.Event>(results);
           console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
           const allEvents: ParsedEvent[] = flattened.reduce<ParsedEvent[]>((agg, event, index) => {
             try {
+              console.debug('[farmer/events/useFarmerEvents]: parse -> ', event);
               agg.push({
                 event: event.event,
                 blockNumber: event.blockNumber,

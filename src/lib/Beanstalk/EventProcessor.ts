@@ -59,7 +59,6 @@ export type EventProcessorData = {
 }
 
 export default class EventProcessor {
-  
   // ----------------------------
   // |       PROCESSING         |
   // ----------------------------

@@ -2,8 +2,6 @@ import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip } from '@mui/material';
 import { Token } from 'classes';
 import { SEEDS, STALK } from 'constants/tokens';
-import { AppState } from 'state';
-import { useSelector } from 'react-redux';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 // import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
@@ -13,7 +11,6 @@ import { FormState } from 'components/Common/Form';
 import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
-import { AddressMap } from 'constants/index';
 import BigNumber from 'bignumber.js';
 import TokenInputField from 'components/Common/Form/TokenInputField';
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
@@ -30,13 +27,13 @@ import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 
 type WithdrawFormValues = FormState;
 
-const simplifySiloBalances = (
-  state : 'deposited' | 'withdrawn' | 'claimable',
-  balances: AppState['_farmer']['silo']['balances']
-) => Object.keys(balances).reduce((prev, k) => {
-  prev[k] = balances[k][state].amount;
-  return prev;
-}, {} as AddressMap<BigNumber>);
+// const simplifySiloBalances = (
+//   state : 'deposited' | 'withdrawn' | 'claimable',
+//   balances: AppState['_farmer']['silo']['balances']
+// ) => Object.keys(balances).reduce((prev, k) => {
+//   prev[k] = balances[k][state].amount;
+//   return prev;
+// }, {} as AddressMap<BigNumber>);
 
 // -----------------------------------------------------------------------
 
