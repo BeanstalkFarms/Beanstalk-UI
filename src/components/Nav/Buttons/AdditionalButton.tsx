@@ -119,12 +119,10 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
       </Box>
       {/* */}
       <Box sx={{ px: 1, pt: 0.75, opacity: 0.7 }}>
-        <Typography color="text.secondary" fontSize={12}>
-          {process.env.REACT_APP_NAME || 'beanstalk-ui'} v{process.env.REACT_APP_VERSION || '0.0.0'}
+        <Typography color="text.secondary" fontSize={12} textAlign="center">
+          {process.env.REACT_APP_NAME || 'beanstalk-ui'} v{process.env.REACT_APP_VERSION || '0.0.0'}@{process.env.REACT_APP_GIT_COMMIT_REF?.slice(0,6) || 'HEAD'}
           {` · `}
-          {process.env.REACT_APP_HOST || 'unknown'}
-          {` · `}
-          {process.env.REACT_APP_GIT_COMMIT_REF?.slice(0,6) || 'HEAD'}
+          hosted on {process.env.REACT_APP_HOST || 'unknown'}
         </Typography>
       </Box>
     </MenuList>

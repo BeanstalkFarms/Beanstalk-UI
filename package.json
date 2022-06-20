@@ -92,8 +92,9 @@
   },
   "scripts": {
     "start": "node --max_old_space_size=4096 node_modules/.bin/react-app-rewired start",
-    "build": "yarn generate && node --optimize_for_size --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
-    "build-netlify": "echo \"Building $npm_package_version\" && REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version REACT_APP_HOST='netlify' REACT_APP_NETLIFY_CONTEXT=$CONTEXT REACT_APP_NETLIFY_BUILD_ID=$BUILD_ID REACT_APP_GIT_BRANCH=$BRANCH REACT_APP_GIT_COMMIT_REF=$COMMIT_REF REACT_APP_GIT_REVIEW_ID=$REVIEW_ID yarn build",
+    "build": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version yarn generate && node --optimize_for_size --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
+    "build-netlify": "REACT_APP_HOST='netlify' REACT_APP_NETLIFY_CONTEXT=$CONTEXT REACT_APP_NETLIFY_BUILD_ID=$BUILD_ID REACT_APP_GIT_COMMIT_REF=$COMMIT_REF yarn build",
+    "build-fleek": "REACT_APP_HOST='fleek' REACT_APP_GIT_COMMIT_REF=$(git rev-parse HEAD) yarn build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
     "eject": "react-scripts-rewired eject",
@@ -103,7 +104,8 @@
     "lint": "eslint \"src/**/**/*.ts{,x}\"",
     "generate": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/constants/generated './src/constants/abi/**/*.json'",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "callout": "echo \"Building $REACT_APP_NAME v$REACT_APP_VERSION@$REACT_APP_GIT_COMMIT_REF\""
   },
   "lint-staged": {
     "*.{ts,tsx,json}": "prettier --write"
