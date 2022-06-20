@@ -90,6 +90,7 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
           ) : null}
         </MenuItem>
       ))}
+      {/* Contract Button Container */}
       <Box sx={{ px: 1, pt: 0.75 }}>
         <Button
           fullWidth
@@ -115,6 +116,16 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
             </Typography>
           </Stack>
         </Button>
+      </Box>
+      {/* */}
+      <Box sx={{ px: 1, pt: 0.75, opacity: 0.7 }}>
+        <Typography color="text.secondary" fontSize={12}>
+          {process.env.REACT_APP_NAME || 'beanstalk-ui'} v{process.env.REACT_APP_VERSION || '0.0.0'}
+          {` · `}
+          {process.env.REACT_APP_HOST}
+          {` · `}
+          {process.env.REACT_APP_GIT_COMMIT_REF?.slice(0,6) || 'HEAD'}
+        </Typography>
       </Box>
     </MenuList>
   );
