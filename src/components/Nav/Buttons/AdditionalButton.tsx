@@ -122,7 +122,7 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
         <Typography color="text.secondary" fontSize={12}>
           {process.env.REACT_APP_NAME || 'beanstalk-ui'} v{process.env.REACT_APP_VERSION || '0.0.0'}
           {` · `}
-          {process.env.REACT_APP_HOST}
+          {process.env.REACT_APP_HOST || 'unknown'}
           {` · `}
           {process.env.REACT_APP_GIT_COMMIT_REF?.slice(0,6) || 'HEAD'}
         </Typography>
