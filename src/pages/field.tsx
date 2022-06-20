@@ -149,13 +149,10 @@ const FieldPage: React.FC = () => {
                   <Tooltip
                     title="The ratio of Unharvested Pods to total Bean supply. The Pod Rate is often used as a proxy for Beanstalk’s leverage."
                     placement="top">
-                    <Typography variant="h4">Pod Rate</Typography>
+                    <Typography variant="h4">Harvested</Typography>
                   </Tooltip>
                   <Typography variant="h1">
-                    {displayBN(
-                      beanstalkField?.podIndex.div(beanToken?.supply).times(100)
-                    )}
-                    %
+                    {displayBN(beanstalkField?.harvestableIndex)}
                   </Typography>
                 </Stack>
               </Grid>
