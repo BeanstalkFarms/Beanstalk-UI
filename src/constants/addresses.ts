@@ -15,7 +15,7 @@ export const BEANSTALK_PRICE_ADDRESSES = {
 export const BEANSTALK_FERTILIZER_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x402c84De2Ce49aF88f5e2eF3710ff89bFED36cB6'.toLowerCase(),
   [SupportedChainId.ROPSTEN]: '0x82025f355969E7D2A64e4Dba1Ca0263843E6fbB1'.toLowerCase(),
-  [SupportedChainId.LOCALHOST]: '0xCABEe62adFB2a4d4172Fc2F7536f324FC52C274a'.toLowerCase(), // Publius' dev node
+  // [SupportedChainId.LOCALHOST]: '0xCABEe62adFB2a4d4172Fc2F7536f324FC52C274a'.toLowerCase(), // Publius' dev node
 };
 
 // https://ropsten.etherscan.io/address/0xf023d179bc3f571778f57978eca318e1154ee8e3#code

@@ -104,8 +104,7 @@
     "lint": "eslint \"src/**/**/*.ts{,x}\"",
     "generate": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/constants/generated './src/constants/abi/**/*.json'",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public",
-    "callout": "echo \"Building $REACT_APP_NAME v$REACT_APP_VERSION@$REACT_APP_GIT_COMMIT_REF\""
+    "build-storybook": "build-storybook -s public"
   },
   "lint-staged": {
     "*.{ts,tsx,json}": "prettier --write"
