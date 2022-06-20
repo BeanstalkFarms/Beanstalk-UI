@@ -15,12 +15,16 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
   const match = useMatch({ path: resolved.pathname, end: true });
   return (
     <Stack sx={{
-      borderBottom: match ? 3 : null,
-      mb: match ? '-2px' : null, // or else selected text will raise 3px
-      borderColor: '#67b761',
+      // Set a default transparent bottom border.
+      // Switch to green when selected.
+      borderBottom: 3,
+      borderColor: 'transparent',
+      borderBottomColor: match ? '#67b761' : 'transparent',
+      // Pull the button down slightly so that it overlaps the Nav's
+      // bottom blue border.
+      mb: '-1.5px',
       height: '100%',
       justifyContent: 'center',
-
     }}>
       <Button
         disableRipple
