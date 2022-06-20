@@ -6,6 +6,7 @@ export enum SupportedChainId {
   // RINKEBY = 4,
   // GOERLI = 5,
   LOCALHOST = 1337,
+  HARDHAT = 31337,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
@@ -14,6 +15,7 @@ export const CHAIN_IDS_TO_NAMES = {
   // [SupportedChainId.RINKEBY]: 'Rinkeby',
   // [SupportedChainId.GOERLI]: 'Goerli',
   [SupportedChainId.LOCALHOST]: 'Localhost',
+  [SupportedChainId.HARDHAT]: 'Hardhat',
 };
 
 export enum NetworkType {
@@ -26,7 +28,8 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.ROPSTEN,
   // SupportedChainId.RINKEBY,
   // SupportedChainId.GOERLI,
-  SupportedChainId.LOCALHOST
+  SupportedChainId.LOCALHOST,
+  SupportedChainId.HARDHAT
 ] as const;
 
 export const L2_CHAIN_IDS = [] as const;
@@ -87,6 +90,13 @@ export const CHAIN_INFO : ChainInfoMap = {
     label: 'Localhost',
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Localhost Ether', symbol: 'locETH', decimals: 18 },
+  },
+  [SupportedChainId.HARDHAT]: {
+    networkType: NetworkType.L1,
+    explorer: 'https://etherscan.io',
+    label: 'Harhat',
+    logoUrl: ethereumLogoUrl,
+    nativeCurrency: { name: 'Hardhat Ether', symbol: 'hETH', decimals: 18 },
   }
   // [SupportedChainId.RINKEBY]: {
   //   networkType: NetworkType.L1,

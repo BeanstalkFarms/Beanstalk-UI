@@ -46,6 +46,7 @@ export const BeanstalkPalette = {
   lightBlue: '#C1DEF2',
   babyBlue: '#E2F2FE',
   lighterBlue: '#daf2ff', // see `bodyBackground`
+  lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
   // Other
   white: '#fff',
@@ -68,6 +69,7 @@ let muiTheme = createTheme({
       xl: 1536,
     },
   },
+  
   /**
    *
    */

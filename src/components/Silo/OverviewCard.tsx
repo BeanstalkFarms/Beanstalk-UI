@@ -104,10 +104,10 @@ const StalkOwnershipTab: React.FC<TabData
 // ------------------------------------------------
 
 const OverviewCard: React.FC<{
-  farmerSilo: AppState['_farmer']['silo'];
-  beanstalkSilo: AppState['_beanstalk']['silo'];
-  breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
-  season: BigNumber;
+  farmerSilo:     AppState['_farmer']['silo'];
+  beanstalkSilo:  AppState['_beanstalk']['silo'];
+  breakdown:      ReturnType<typeof useFarmerSiloBreakdown>;
+  season:         BigNumber;
 }> = ({ farmerSilo, beanstalkSilo, breakdown, season }) => {
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -138,8 +138,12 @@ const OverviewCard: React.FC<{
       </Stack>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
         <DepositsTab
-          current={[breakdown.totalValue]}
-          series={[mockDepositData]}
+          current={[
+            breakdown.deposited.value
+          ]}
+          series={[
+            mockDepositData
+          ]}
           season={season}
         />
       </Box>

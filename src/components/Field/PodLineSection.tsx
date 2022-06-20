@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Stack, Tooltip, Typography, useMediaQuery } from '@mui/material';
-import useTheme from '@mui/styles/useTheme';
+import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { displayBN } from '../../util';
 import SimplePodLineChart from './PodLineChart';

@@ -19,7 +19,7 @@ const useSiloTokenToUSD = () => {
     if (_token === Bean) return beansToUSD(_amount);
     // For everything else, use the value of the LP token via the beanPool liquidity/supply ratio.
     const pool = beanPools[_token.address];
-    return (pool?.liquidity && pool?.supply) ? _amount.times(pool.liquidity.div(pool.supply)) : ZERO_BN;
+    return (pool?.liquidity && pool?.supply) ? _amount.div(pool.supply).times(pool.liquidity) : ZERO_BN;
   }, [Bean, beanPools, beansToUSD]);
 };
 

@@ -1,13 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
+import { AddressMap } from 'constants/index';
 import {
   clearBalances,
   updateBalance, updateBalances,
 } from './actions';
 
-export interface BalanceState {
-  [tokenAddress: string]: BigNumber;
-}
+export type BalanceState = AddressMap<BigNumber>;
 
 export const initialState: BalanceState = {};
 

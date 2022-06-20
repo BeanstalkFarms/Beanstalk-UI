@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNetwork } from 'wagmi';
 import { Button, ButtonProps, Typography } from '@mui/material';
 import { SupportedChainId } from 'constants/chains';
@@ -9,14 +9,18 @@ import NetworkDialog from './NetworkDialog';
 
 const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { activeChain } = useNetwork();
+
+  // Dialog: State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+
+  // Dialog: Handlers
+  const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
+  }, [setAnchorEl]);
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, [setAnchorEl]);
   
   if (!activeChain) return null;
 

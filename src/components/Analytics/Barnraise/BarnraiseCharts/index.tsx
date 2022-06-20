@@ -6,7 +6,7 @@ import { AppState } from '../../../../state';
 import RRoR from '../../Field/FieldCharts/RRoR';
 import AllFertilizer from './AllFertilizer';
 import AllUnripeAssets from './AllUnripeAssets';
-import Forfeitures from "./Forfeitures";
+import Forfeitures from './Forfeitures';
 
 const BarnraiseCharts: React.FC<CardProps> = ({ sx }) => {
     const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);

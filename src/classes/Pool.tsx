@@ -77,8 +77,7 @@ export default abstract class Pool {
     }
   ) {
     this.chainId = chainId;
-    this.address = address[chainId];
-    // this.dex = dex;
+    this.address = address[chainId].toLowerCase();
     this.lpToken = lpToken[chainId];
     this.tokens = tokens.map((token) => token[chainId]);
 

@@ -19,7 +19,7 @@ import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
 import podIcon from 'img/beanstalk/pod-icon.svg';
-import useTheme from '@mui/styles/useTheme';
+import { useTheme } from '@mui/material/styles';
 import {
   StyledDialogContent,
   StyledDialogTitle,
@@ -199,7 +199,7 @@ const FieldPage: React.FC = () => {
         open={modalOpen}
         fullWidth
         fullScreen={isMedium}
-        disableScrollLock
+       
       >
         <StyledDialogTitle onClose={handleClose}>My Plots</StyledDialogTitle>
         <StyledDialogContent sx={{ pb: 0.5 }}>

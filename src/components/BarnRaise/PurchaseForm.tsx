@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import { displayBN, displayFullBN, toStringBaseUnitBN } from 'util/index';
-import { ETH, USDC } from 'constants/tokens';
+import { ETH, ETH_DECIMALS, USDC } from 'constants/tokens';
 import { TokenMap } from 'constants/index';
 import { BalanceState } from 'state/farmer/balances/reducer';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
@@ -30,6 +30,8 @@ import { timeToStringDetailed } from 'util/Time';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import { BUY_FERTILIZER } from 'components/BarnRaise/FertilizerItemTooltips';
+import { QuoteHandler } from 'hooks/useQuote';
+import { bigNumberResult } from 'util/Ledger';
 import FertilizerItem from './FertilizerItem';
 import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
 import TransactionToast from '../Common/TxnToast';
@@ -77,17 +79,11 @@ const FertilizeForm : React.FC<
   contract,
 }) => {
   const tokenMap = useTokenMap(TOKEN_LIST);
-  const Usdc = useChainConstant(USDC);  // FIXME: naming
+  const Usdc = useChainConstant(USDC);
   const balances = useFarmerBalances();
-  const [showTokenSelect, setShowTokenSelect] = useState(false);
-  
-  // 
-  const {
-    usdc,
-    fert,
-    humidity,
-    actions
-  } = useFertilizerSummary(values.tokens);
+  const [showTokenSelect, setShowTokenSelect] = useState(false);  
+  const fertContract = useFertilizerContract();
+  const { usdc, fert, humidity, actions } = useFertilizerSummary(values.tokens);
 
   // Extract
   const isValid = fert?.gt(0);
@@ -101,6 +97,9 @@ const FertilizeForm : React.FC<
       Array.from(_tokens).map((token) => ({ token, amount: null }))
     );
   }, [setFieldValue]);
+  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn) => fertContract.callStatic.getUsdcOut(
+    toStringBaseUnitBN(amountIn, ETH_DECIMALS),
+  ).then(bigNumberResult), [fertContract]);
 
   return (
     <Form noValidate>
@@ -111,7 +110,7 @@ const FertilizeForm : React.FC<
           selected={values.tokens}
           handleSubmit={handleSelectTokens}
           balances={balances}
-          tokenList={tokenMap}
+          tokenList={Object.values(tokenMap)}
           mode={TokenSelectMode.SINGLE}
         />
         {/* Form Contents */}
@@ -121,10 +120,11 @@ const FertilizeForm : React.FC<
             <TokenQuoteProvider
               key={state.token.address}
               name={`tokens.${index}`}
+              state={state}
               tokenOut={Usdc}
               balance={balances[state.token.address] || undefined}
-              state={state}
               showTokenSelect={handleOpen}
+              handleQuote={handleQuote}
             />
           ))}
           {/* Outputs */}
@@ -200,7 +200,7 @@ const SetupForm: React.FC<{}> = () => {
   }), [baseToken]);
 
   //
-  const onSubmit = useCallback((values: FertilizerFormValues, actions: FormikHelpers<FertilizerFormValues>) => {
+  const onSubmit = useCallback((values: FertilizerFormValues, formActions: FormikHelpers<FertilizerFormValues>) => {
     if (fertContract && account?.address) {
       const token   = values.tokens[0].token;
       const amount  = values.tokens[0].amount;
@@ -243,7 +243,7 @@ const SetupForm: React.FC<{}> = () => {
         })
         .then((receipt) => {
           txToast.success(receipt);
-          actions.resetForm();
+          formActions.resetForm();
           refetchFertilizer(account.address as string);
           refetchBalances(account.address as string);
           refetchAllowances(account.address as string, fertContract.address, Usdc);

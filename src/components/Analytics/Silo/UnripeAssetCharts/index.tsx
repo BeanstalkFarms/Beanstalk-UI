@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 import { AppState } from '../../../../state';
 import BeanPrice from '../../Bean/BeanCharts/BeanPrice';
 import Volume from '../../Bean/BeanCharts/Volume';
-import DepositedUnripeBeans from "./DepositedUnripeBeans";
-import DepositedUnripeLP from "./DepositedUnripeLP";
+import DepositedUnripeBeans from './DepositedUnripeBeans';
+import DepositedUnripeLP from './DepositedUnripeLP';
 
 const UnripeAssetCharts: React.FC<CardProps> = ({ sx  }) => {
     const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);

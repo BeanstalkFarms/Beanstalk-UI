@@ -8,12 +8,12 @@ import Liquidity from '../../Bean/BeanCharts/Liquidity';
 import MarketCap from '../../Bean/BeanCharts/MarketCap';
 import Supply from '../../Bean/BeanCharts/Supply';
 import Crosses from '../../Bean/BeanCharts/Crosses';
-import DepositedBeans from "./DepositedBeans";
-import WithdrawnBeans from "./WithdrawnBeans";
-import DepositedLP from "./DepositedLP";
-import WithdrawnLP from "./WithdrawnLP";
-import Stalk from "./Stalk";
-import Seeds from "./Seeds";
+import DepositedBeans from './DepositedBeans';
+import WithdrawnBeans from './WithdrawnBeans';
+import DepositedLP from './DepositedLP';
+import WithdrawnLP from './WithdrawnLP';
+import Stalk from './Stalk';
+import Seeds from './Seeds';
 
 export type RipeAssetChartsProps = {
 }

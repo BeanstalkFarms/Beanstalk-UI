@@ -13,13 +13,13 @@ import {
 } from '@mui/material';
 import brownBeanIcon from 'img/tokens/bean-logo-circled-brown.svg';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { useTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import greenBeanIcon from 'img/tokens/bean-logo-circled.svg';
-import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
-import { BeanstalkPalette } from '../../App/muiTheme';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { BeanstalkPalette } from '../../App/muiTheme';
+import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 const PickBeansDialog: React.FC<{ handleClose: any; } & DialogProps> =
   ({

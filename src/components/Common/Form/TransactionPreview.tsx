@@ -151,7 +151,8 @@ const TransactionPreview : React.FC<{
 }> = ({
   actions
 }) => {
-  const instructionsByType = useMemo(() => groupBy(actions, 'type'), [actions]);
+  const instructionsByType = useMemo(() => groupBy(actions.filter((a) => a.type !== ActionType.BASE), 'type'), [actions]);
+  const instructionGroupCount = Object.keys(instructionsByType).length;
   const [highlighted, setHighlighted] = useState<ActionType | undefined>(undefined);
 
   if (actions.length === 0) {
@@ -164,48 +165,50 @@ const TransactionPreview : React.FC<{
 
   return (
     <Stack gap={2}>
-      <Box sx={{
-        position: 'relative',
-        height: `${TXN_PREVIEW_HEIGHT}px`,
-      }}>
-        <Box
-          sx={{
-            borderColor: 'secondary.main',
-            borderBottomStyle: 'dotted',
-            borderBottomWidth: TXN_PREVIEW_LINE_WIDTH,
-            width: '100%',
-            position: 'absolute',
-            left: 0,
-            top: TXN_PREVIEW_HEIGHT / 2 - TXN_PREVIEW_LINE_WIDTH / 2,
-            zIndex: 1,
-          }}
-        />
+      {instructionGroupCount > 0 ? (
         <Box sx={{
           position: 'relative',
-          zIndex: 2,      // above the Divider
-          height: '100%'  // of TXN_PREVIEW_HEIGHT
+          height: `${TXN_PREVIEW_HEIGHT}px`,
         }}>
-          <Stack 
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
+          <Box
             sx={{
-              height: '100%' // of TXN_PREVIEW_HEIGHT
+              borderColor: 'secondary.main',
+              borderBottomStyle: 'dotted',
+              borderBottomWidth: TXN_PREVIEW_LINE_WIDTH,
+              width: '100%',
+              position: 'absolute',
+              left: 0,
+              top: TXN_PREVIEW_HEIGHT / 2 - TXN_PREVIEW_LINE_WIDTH / 2,
+              zIndex: 1,
             }}
-          >
-            {EXECUTION_STEPS.map((step, index) => (
-              instructionsByType[step] ? (
-                <TransactionStep
-                  key={index}
-                  type={step}
-                  actions={instructionsByType[step]}
-                  highlighted={highlighted}
-                /> 
-              ) : null 
-            ))}
-          </Stack>
+          />
+          <Box sx={{
+            position: 'relative',
+            zIndex: 2,      // above the Divider
+            height: '100%'  // of TXN_PREVIEW_HEIGHT
+          }}>
+            <Stack 
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{
+                height: '100%' // of TXN_PREVIEW_HEIGHT
+              }}
+            >
+              {EXECUTION_STEPS.map((step, index) => (
+                instructionsByType[step] ? (
+                  <TransactionStep
+                    key={index}
+                    type={step}
+                    actions={instructionsByType[step]}
+                    highlighted={highlighted}
+                  /> 
+                ) : null 
+              ))}
+            </Stack>
+          </Box>
         </Box>
-      </Box>
+      ) : null}
       <Stack>
         {actions.map((a, index) => (
           <Box

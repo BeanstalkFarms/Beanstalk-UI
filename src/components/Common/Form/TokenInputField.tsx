@@ -8,18 +8,21 @@ import {
 import { FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/index';
+import Token from 'classes/Token';
 
 type TokenInputFieldProps = { 
+  token: Token;
   balance: BigNumber | undefined;
-  quote: JSX.Element;
+  quote?: JSX.Element;
 };
 
 const TokenInputField : React.FC<
-  TokenInputFieldProps  // custom
-  & TextFieldProps      // MUI TextField
-  & FieldProps          // Formik Field
+  TokenInputFieldProps      // custom
+  & Partial<TextFieldProps> // MUI TextField
+  & FieldProps              // Formik Field
 > = ({
   // -- Custom props
+  token,
   balance,
   quote,
   // -- Formik props
@@ -121,7 +124,7 @@ const TokenInputField : React.FC<
           {quote}
         </Stack>
         <Typography sx={{ fontSize: 13.5 }}>
-          Balance: {balance ? `${displayFullBN(balance, 2)}` : '0'}
+          Balance: {balance ? `${displayFullBN(balance, token.displayDecimals)}` : '0'}
         </Typography>
         <Typography
           variant="body1"

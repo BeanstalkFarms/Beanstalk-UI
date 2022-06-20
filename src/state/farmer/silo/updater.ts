@@ -9,11 +9,14 @@ import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
-import { resetFarmerSilo, updateFarmerSiloAssets } from './actions';
+import useMigrateCall from 'hooks/useMigrateCall';
+import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { resetFarmerSilo, updateFarmerSiloRewards } from './actions';
 
 export const useFarmerSilo = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
+  const migrate = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async (_account: string) => {
@@ -31,7 +34,10 @@ export const useFarmerSilo = () => {
         beanstalk.balanceOfStalk(account).then(tokenResult(STALK)),
         beanstalk.balanceOfSeeds(account).then(tokenResult(SEEDS)),
         beanstalk.balanceOfRoots(account).then(bigNumberResult),
-        beanstalk.balanceOfFarmableBeans(account).then(tokenResult(BEAN)),
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.balanceOfFarmableBeans(account),
+          (b) => b.balanceOfEarnedBeans(account),
+        ]).then(tokenResult(BEAN)),
         beanstalk.balanceOfGrownStalk(account).then(tokenResult(STALK)),
       ] as const);
 
@@ -47,7 +53,7 @@ export const useFarmerSilo = () => {
       // active:  owned, actively earning other silo assets
       // earned:  active but not yet deposited into a Season
       // grown:   inactive
-      dispatch(updateFarmerSiloAssets({
+      dispatch(updateFarmerSiloRewards({
         beans: {
           earned: earnedBeanBalance,
         },
@@ -69,6 +75,7 @@ export const useFarmerSilo = () => {
     }
   }, [
     dispatch,
+    migrate,
     beanstalk,
   ]);
   

@@ -10,8 +10,8 @@ import { getAccount } from 'util/Account';
 import { parseWithdrawals } from 'util/Crates';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
-import { Deposit, Withdrawal } from './silo';
-import { updateFarmerTokenBalances } from './silo/actions';
+import { DepositCrate } from './silo';
+import { updateFarmerSiloBalances } from './silo/actions';
 
 const FarmerEventsProcessor = () => {
   const { data: account } = useAccount();
@@ -68,7 +68,7 @@ const FarmerEventsProcessor = () => {
   useEffect(() => {
     if (eventParsingParameters) {
       if (events && events.length > 0) {
-        console.debug(`[farmer/updater] process ${events.length} events`, eventParsingParameters);
+        console.debug(`[farmer/updater] process ${events.length} events`, events, eventParsingParameters);
         const results = processFarmerEvents(
           events,
           eventParsingParameters
@@ -77,7 +77,7 @@ const FarmerEventsProcessor = () => {
 
         // TEMP:
         // Hardcode this because the event process returns `beanDepositsBalance`, etc.
-        dispatch(updateFarmerTokenBalances({
+        dispatch(updateFarmerSiloBalances({
           // -----------------------------
           [SiloTokens.Bean.address]: {
             deposited: Object.keys(results.userBeanDeposits).reduce((prev, s) => {
@@ -96,7 +96,7 @@ const FarmerEventsProcessor = () => {
             }, {
               amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
-              crates: [] as Deposit[],
+              crates: [] as DepositCrate[],
             }),
             ...parseWithdrawals(results.beanWithdrawals, eventParsingParameters.season)
           },
@@ -122,9 +122,9 @@ const FarmerEventsProcessor = () => {
             }, {
               amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
-              crates: [] as Deposit[],
+              crates: [] as DepositCrate[],
             }),
-            ...parseWithdrawals(results.userLPDeposits, eventParsingParameters.season)
+            ...parseWithdrawals(results.lpWithdrawals, eventParsingParameters.season)
           },
 
           // -----------------------------
@@ -145,7 +145,7 @@ const FarmerEventsProcessor = () => {
             }, {
               amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
-              crates: [] as Deposit[],
+              crates: [] as DepositCrate[],
             }),
             ...parseWithdrawals(results.curveWithdrawals, eventParsingParameters.season)
           },
@@ -168,7 +168,7 @@ const FarmerEventsProcessor = () => {
             }, {
               amount:  new BigNumber(0),
               bdv:    new BigNumber(0),
-              crates: [] as Deposit[],
+              crates: [] as DepositCrate[],
             }),
             ...parseWithdrawals(results.beanlusdWithdrawals, eventParsingParameters.season)
           }

@@ -1,19 +1,21 @@
 import { Token } from 'classes';
 import { ZERO_BN } from 'constants/index';
-import { FormTokenState } from 'components/Common/Form';
+import { FormState } from 'components/Common/Form';
 import { Action, ActionType } from 'util/Actions';
+import BigNumber from 'bignumber.js';
 
 /**
  * Summarize the Actions that will occur when making a Deposit.
  * This includes pre-deposit Swaps, the Deposit itself, and resulting
  * rewards provided by Beanstalk depending on the destination of Deposit.
  * 
- * @param to A whitelisted Silo Token which the Farmer is depositing to.
- * @param tokens Token form state.
+ * @param to A Whitelisted Silo Token which the Farmer is Depositing.
+ * @param tokens Input Tokens to Deposit. Could be multiple Tokens.
  */
-export default function useDepositSummary(
+export function deposit(
   to: Token,
-  tokens: FormTokenState[]
+  tokens: FormState['tokens'],
+  amountToBDV: (amount: BigNumber) => BigNumber,
 ) {
   const summary = tokens.reduce((agg, curr) => {
     const amount = (
@@ -22,8 +24,12 @@ export default function useDepositSummary(
         : curr.amountOut
     );
     if (amount) {
-      // BDV
-      agg.bdv   = agg.bdv.plus(amount);
+      // AMOUNT + BDV
+      // FIXME: the below is only the case for BEAN deposits. Need a generalized
+      //        way to calculate this regardless of token.
+      agg.amount = agg.amount.plus(amount);
+      agg.bdv    = agg.bdv.plus(amountToBDV(amount));
+
       // REWARDS
       // NOTE: this is a function of `to.rewards.stalk` for the destination token.
       // we could pull it outside the reduce function.
@@ -44,9 +50,10 @@ export default function useDepositSummary(
     }
     return agg;
   }, {  
-    bdv: ZERO_BN,    // The aggregate BDV to be Deposited.
-    stalk: ZERO_BN,  // The Stalk earned for the Deposit.
-    seeds: ZERO_BN,  // The Seeds earned for the Deposit.
+    amount: ZERO_BN,  //
+    bdv: ZERO_BN,     // The aggregate BDV to be Deposited.
+    stalk: ZERO_BN,   // The Stalk earned for the Deposit.
+    seeds: ZERO_BN,   // The Seeds earned for the Deposit.
     actions: [] as Action[],
   });
 

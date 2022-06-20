@@ -5,15 +5,17 @@ import { Box, Card, Stack, Tooltip, Typography } from '@mui/material';
 import { DataGrid, GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 
 import { FarmerSiloBalance } from 'state/farmer/silo';
-import type { Deposit } from 'state/farmer/silo';
+import type { DepositCrate } from 'state/farmer/silo';
 import { displayBN, displayFullBN } from 'util/index';
 import useBeansToUSD from 'hooks/currency/useBeansToUSD';
 import { tableStyle } from 'util/tableStyle';
+import useSeason from 'hooks/useSeason';
+import { STALK } from 'constants/tokens';
 
 const MAX_ROWS = 10;
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
-const Deposits : React.FC<{
+const DepositsCard : React.FC<{
   token: Token;
   balance: FarmerSiloBalance | undefined;
 }> = ({
@@ -21,7 +23,10 @@ const Deposits : React.FC<{
   balance,
 }) => {
   const getUSD = useBeansToUSD();
-  const rows : (Deposit & { id: BigNumber })[] = useMemo(() => 
+  const currentSeason = useSeason();
+
+  //
+  const rows : (DepositCrate & { id: BigNumber })[] = useMemo(() => 
     balance?.deposited.crates.map((deposit) => ({
       id: deposit.season,
       ...deposit
@@ -52,11 +57,11 @@ const Deposits : React.FC<{
               <Typography>BDV: {displayBN(params.row.bdv)}</Typography>
               <Typography>Value: ${displayBN(getUSD(params.row.bdv))}</Typography>
             </>
-            )}
-          >
+          )}
+        >
           <Typography>{displayFullBN(params.value, token.displayDecimals, token.displayDecimals)}</Typography>
         </Tooltip>
-        )
+      )
     },
     {
       field: 'stalk',
@@ -65,7 +70,25 @@ const Deposits : React.FC<{
       align: 'right',
       headerAlign: 'right',
       valueFormatter: (params) => displayBN(params.value),
-      renderCell: basicCell,
+      renderCell: (params) => {
+        const seedsPerSeason = params.row.seeds.times(0.00001);
+        const accrued = seedsPerSeason.times(currentSeason.minus(params.row.season));
+        return (
+          <Tooltip
+            title={(
+              <>
+                <Typography>Base: {displayBN(params.row.stalk)} Stalk</Typography>
+                <Typography>Accrued: {displayBN(accrued)} Stalk</Typography>
+                <Typography>Earning {displayBN(seedsPerSeason)} Stalk per Season</Typography>
+              </>
+            )}
+          >
+            <Typography>
+              {displayFullBN(params.value.plus(accrued), STALK.displayDecimals, STALK.displayDecimals)}
+            </Typography>
+          </Tooltip>
+        );
+      },
     },
     {
       field: 'seeds',
@@ -76,11 +99,11 @@ const Deposits : React.FC<{
       valueFormatter: (params) => displayBN(params.value),
       renderCell: basicCell,
     }
-  ] as GridColumns), [token.displayDecimals, getUSD]);
+  ] as GridColumns), [token.displayDecimals, getUSD, currentSeason]);
 
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '200px';
-    return Math.min(rows.length, MAX_ROWS) * 52 + 112;
+    return Math.min(rows.length, MAX_ROWS) * 36 + 94;
   }, [rows]);
 
   return (
@@ -103,6 +126,11 @@ const Deposits : React.FC<{
             disableSelectionOnClick
             disableColumnMenu
             density="compact"
+            initialState={{
+              sorting: {
+                sortModel: [{ field: 'season', sort: 'desc' }],
+              }
+            }}
           />
         </Box>
       </Stack>
@@ -110,4 +138,4 @@ const Deposits : React.FC<{
   );
 };
 
-export default Deposits;
+export default DepositsCard;

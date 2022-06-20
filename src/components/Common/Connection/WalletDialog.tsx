@@ -27,13 +27,13 @@ const WalletDialog: React.FC<{
       onConnect() {
         handleClose();
       }
-    });
+  });
   const handleConnect = useCallback(
     (connector: Connector) => () => connect(connector),
     [connect]
   );
   return (
-    <Dialog onClose={handleClose} open={open} fullScreen={fullScreen} disableScrollLock>
+    <Dialog onClose={handleClose} open={open} fullScreen={fullScreen}>
       <StyledDialogTitle onClose={handleClose}>
         Connect a wallet
       </StyledDialogTitle>

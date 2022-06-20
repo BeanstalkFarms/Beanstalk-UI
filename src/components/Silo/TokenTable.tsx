@@ -80,7 +80,7 @@ const TokenTable : React.FC<{
       </Box>
       <Stack direction="column" gap={1} sx={{ p: 1 }}>
         {config.whitelist.map((token) => {
-          const deposited = farmerSilo.tokens[token.address]?.deposited;
+          const deposited = farmerSilo.balances[token.address]?.deposited;
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button

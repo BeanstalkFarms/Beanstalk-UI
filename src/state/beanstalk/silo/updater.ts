@@ -6,15 +6,18 @@ import { tokenResult } from 'util/Tokens';
 
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
+import useMigrateCall from 'hooks/useMigrateCall';
+import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
 import { useGeneralizedWhitelist } from 'hooks/useWhitelist';
 import BigNumber from 'bignumber.js';
-import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 import { useGetChainConstant } from 'hooks/useChainConstant';
+import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 import { BeanstalkSiloBalance } from './index';
 
 export const useBeanstalkSilo = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
+  const migrate = useMigrateCall();
   const WHITELIST = useGeneralizedWhitelist();
 
   const getChainConstant = useGetChainConstant();
@@ -31,25 +34,49 @@ export const useBeanstalkSilo = () => {
       console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH');
 
       const [
+        // 0
         stalkTotal,
         seedsTotal,
         rootsTotal,
+        // 1
         earnedBeansTotal,
+        // 2
         depositedBeansTotal,
         withdrawnBeansTotal,
+        // 3
         depositedLpTotal,
         withdrawnLpTotal,
+        // 4
         poolBalancesTotal,
       ] = await Promise.all([
+        // 0
         beanstalk.totalStalk().then(tokenResult(STALK)),
         beanstalk.totalSeeds().then(tokenResult(SEEDS)),
         beanstalk.totalRoots().then(bigNumberResult),
-        beanstalk.totalFarmableBeans().then(tokenResult(BEAN)),   // internally, earned == farmable
-        beanstalk.totalDepositedBeans().then(tokenResult(BEAN)),
-        beanstalk.totalWithdrawnBeans().then(tokenResult(BEAN)),
-        beanstalk.totalDepositedLP().then(tokenResult(BEAN_ETH_UNIV2_LP)),
-        beanstalk.totalWithdrawnLP().then(tokenResult(BEAN_ETH_UNIV2_LP)),
-        //
+        // 1
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.totalFarmableBeans(),
+          (b) => b.totalEarnedBeans(),
+        ]).then(tokenResult(BEAN)),
+        // 2
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.totalDepositedBeans(),
+          () => Promise.resolve(ZERO_BN), // FIXME
+        ]).then(tokenResult(BEAN)),
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.totalWithdrawnBeans(),
+          () => Promise.resolve(ZERO_BN), // FIXME
+        ]).then(tokenResult(BEAN)),
+        // 3
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.totalDepositedLP(),
+          () => Promise.resolve(ZERO_BN), // FIXME
+        ]).then(tokenResult(BEAN_ETH_UNIV2_LP)),
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.totalWithdrawnLP(),
+          () => Promise.resolve(ZERO_BN), // FIXME
+        ]).then(tokenResult(BEAN_ETH_UNIV2_LP)),
+        // 4
         Promise.all(
           Object.keys(WHITELIST).map((addr) => (
             Promise.all([
@@ -62,6 +89,7 @@ export const useBeanstalkSilo = () => {
             }))
           ))
         )
+        // beanstalk.withdrawSeasons().then(bigNumberResult)
       ] as const);
 
       console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [stalkTotal, seedsTotal]);
@@ -136,6 +164,7 @@ export const useBeanstalkSilo = () => {
     SiloTokens.Bean.address,
     SiloTokens.BeanEthLP.address,
     dispatch,
+    migrate,
     beanstalk,
     WHITELIST
   ]);

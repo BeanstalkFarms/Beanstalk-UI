@@ -181,6 +181,51 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   // Connected
   return (
     <>
+      {/* <Tooltip    
+        // components={{ Tooltip: Card }}
+        title={menu}
+        open={open}
+        onOpen={handleShowMenu}
+        onClose={handleHideMenu}
+        // enterTouchDelay={50}
+        // leaveTouchDelay={10000}
+        placement="bottom-end"
+        sx={{
+          marginTop: 10,
+          pointerEvents: 'auto'
+        }}
+        componentsProps={{
+          popper: {
+            sx: {
+              paddingTop: 0.5
+            }
+          }
+        }}
+        PopperProps={{
+          keepMounted: true,
+          disablePortal: true,
+        }}
+      >
+        <Button
+          disableFocusRipple
+          variant="contained"
+          color="light"
+          startIcon={(
+            isTiny
+              ? null
+              : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
+              ? <WarningAmberIcon />
+              : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
+          )}
+          endIcon={<DropdownIcon open={open} />}
+          {...props}
+          onClick={(e) => { console.debug(`clicked main button`) }}
+        >
+          <Typography variant="subtitle1">
+            {trimAddress(getAccount(account.address), !isMedium)}
+          </Typography>
+        </Button>
+      </Tooltip> */}
       <Button
         disableFocusRipple
         variant="contained"
@@ -215,7 +260,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           }
         }}
         disablePortal
-        disableScrollLock
         // Align the menu to the bottom 
         // right side of the anchor button. 
         anchorOrigin={{

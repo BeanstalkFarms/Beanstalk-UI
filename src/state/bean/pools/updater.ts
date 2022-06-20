@@ -94,8 +94,10 @@ export const useGetPools = () => {
           // Step 2: Get LP token supply data and format as UpdatePoolPayload
           const dataWithSupplyResult : (Promise<UpdatePoolPayload>)[] = [
             ...priceResult.ps.reduce<(Promise<UpdatePoolPayload>)[]>((acc, poolData) => {
-              // const poolData = 
-              const address = poolData.pool;
+              // NOTE:
+              // The below address must be lower-cased. All internal Pool/Token
+              // addresses are case-insensitive and stored as lowercase strings.
+              const address = poolData.pool.toLowerCase();
               // If a new pool is added to the Pools contract before it's
               // configured in the frontend, this function would throw an error.
               // Thus, we only process the pool's data if we have it configured.
