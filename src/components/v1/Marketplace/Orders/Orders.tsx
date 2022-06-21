@@ -9,7 +9,7 @@ import { PodOrder } from 'state/marketplace/reducer';
 import { AppState } from 'state';
 import { filterStrings, SwitchModule, QuestionModule } from 'components/Common';
 import TokenIcon from 'components/Common/TokenIcon';
-import FillOrderModal from 'components/Marketplace/Orders/FillOrderModal';
+import FillOrderModal from 'components/Marktplatz/Orders/FillOrderModal';
 
 import { makeStyles } from '@mui/styles';
 import OrdersTable from './OrdersTable';
@@ -91,7 +91,7 @@ export default function Orders(props: OrdersProps) {
           // bumped up slightly. Probably a rounding error when creating
           // the order. If the end filter is maxed (equal to the total
           // number of pods) we ignore the filter entirely.
-          // [Marketplace/Orders]
+          // [Marktplatz/Orders]
           //    end filter                  = 682,224,755.387
           //    first order maxPlaceInLine  = 682,224,755.391
           //    totalPods                   = 682,224,755.387
@@ -103,8 +103,8 @@ export default function Orders(props: OrdersProps) {
     }
 
     console.debug(`[Marketplace/Orders] Filtering ${allOrders.length} Orders (mode = ${props.mode}, account = ${account})`);
-    console.debug('[Marketplace/Orders] priceFilters = ', priceFilters);
-    console.debug('[Marketplace/Orders] placeInLineFilters = ', placeInLineFilters);
+    console.debug('[Marktplatz/Orders] priceFilters = ', priceFilters);
+    console.debug('[Marktplatz/Orders] placeInLineFilters = ', placeInLineFilters);
     console.debug(`[Marketplace/Orders] filteredOrders (${filteredOrders.current.length}) = `, filteredOrders.current);
     console.debug(`[Marketplace/Orders] end filter = ${placeInLineFilters[1].toNumber().toLocaleString()}, first order maxPlaceInLine = ${filteredOrders.current[0] ? filteredOrders.current[0].maxPlaceInLine.toNumber().toLocaleString() : null}, totalPods = ${totalPods.toNumber().toLocaleString()}`);
 

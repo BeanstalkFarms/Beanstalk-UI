@@ -29,6 +29,7 @@ import BeanAnalytics from '../../pages/analytics/bean';
 import SiloAnalytics from '../../pages/analytics/silo';
 import FieldAnalytics from '../../pages/analytics/field';
 import BarnraiseAnalytics from '../../pages/analytics/barnraise';
+import MarketplacePage from '../../pages/marketplace';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -138,6 +139,7 @@ export default function App() {
           <Route path="/analytics/silo" element={<SiloAnalytics />} />
           <Route path="/analytics/field" element={<FieldAnalytics />} />
           <Route path="/analytics/barnraise" element={<BarnraiseAnalytics />} />
+          <Route path="/marketplace" element={<MarketplacePage />} />
         </Routes>
       </Box>
     </>
