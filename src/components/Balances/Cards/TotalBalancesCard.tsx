@@ -42,7 +42,10 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
             Connect your wallet to see your Beanstalk balances.
           </BlurComponent>
         )}
-        <SiloBalances breakdown={breakdown} whitelist={useWhitelist()} />
+        <SiloBalances
+          breakdown={breakdown}
+          whitelist={useWhitelist()}
+        />
       </Box>
     </Box>
   );

@@ -70,7 +70,7 @@ const WithdrawForm : React.FC<
   const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
     token,
     values.tokens,
-    siloBalances[token.address].deposited.crates,
+    siloBalances[token.address]?.deposited.crates,
     season,
   );
   const isReady = (withdrawResult && withdrawResult.amount.lt(0));
@@ -157,7 +157,7 @@ const Withdraw : React.FC<{ token: Token; }> = ({ token }) => {
     const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
       token,
       values.tokens,
-      siloBalances[token.address].deposited.crates,
+      siloBalances[token.address]?.deposited.crates,
       season,
     );
     if (withdrawResult) {

@@ -10,18 +10,6 @@ import useGeneralizedWhitelist from './useWhitelist';
 // Types and Helpers
 // -----------------
 
-// SiloStateBreakdown
-export type SiloStateBreakdown = {
-  /**
-   * The amount of token in the given State (DEPOSITED, etc.)
-   * denominated in in that token. Ex. amount=0.005 BEAN:ETH LP. */
-  value: BigNumber;
-  /**
-   * The
-   */
-  byToken: AddressMap<[amount: BigNumber, value: BigNumber]>;
-}
-
 const TOKEN_STATE = [
   'deposited',
   'withdrawn',
@@ -29,11 +17,27 @@ const TOKEN_STATE = [
   'circulating'
 ] as const;
 
+// SiloStateBreakdown
+export type SiloStateBreakdown = {
+  /**
+   * The amount of token in the given State (DEPOSITED, etc.)
+   * denominated in in that token. Ex. amount=0.005 BEAN:ETH LP. */
+  value: BigNumber;
+  /** 
+   * A mapping of address => { amount, value } for Tokens in this State.
+   * Ex. I have a Bean deposit: 0xBEAN => { amount: 100, value: 101 } if 1 BEAN = $1.01
+   */
+  byToken: AddressMap<{ amount: BigNumber, value: BigNumber }>;
+}
+
 const initState = (tokenAddresses: string[]) => ({
   value: new BigNumber(0),
   byToken: tokenAddresses.reduce<SiloStateBreakdown['byToken']>(
-    (prev, curr) => {
-      prev[curr] = [new BigNumber(0), new BigNumber(0)];
+    (prev, curr) => { 
+      prev[curr] = {
+        amount: new BigNumber(0),
+        value: new BigNumber(0)
+      };
       return prev;
     },
     {},
@@ -97,22 +101,9 @@ export default function useBeanstalkSiloBreakdown() {
         // Aggregate amounts of each State
         TOKEN_STATE.forEach((s) => {
           prev[s].value = prev[s].value.plus(usdValueByState[s]);
-          prev[s].byToken[address][0] = prev[s].byToken[address][0].plus(amountByState[s]);
-          prev[s].byToken[address][1] = prev[s].byToken[address][1].plus(usdValueByState[s]);
+          prev[s].byToken[address].amount = prev[s].byToken[address].amount.plus(amountByState[s]);
+          prev[s].byToken[address].value  = prev[s].byToken[address].value.plus(usdValueByState[s]);
         });
-
-        // prev.deposited.value = prev.deposited.value.plus(_depositedUsd);
-        // prev.withdrawn.value = prev.withdrawn.value.plus(_withdrawnUsd);
-        // prev.claimable.value = prev.claimable.value.plus(_claimableUsd);
-        // prev.wrapped.value   = prev.wrapped.value.plus(_wrappedUsd);
-        // prev.circulating.value = prev.circulating.value.plus(_circulatingUsd);
-
-        // Aggregate amount of each Token in this State
-        // prev.deposited.byToken[address] = prev.deposited.byToken[address].plus(_depositedUsd);
-        // prev.withdrawn.byToken[address] = prev.withdrawn.byToken[address].plus(_withdrawnUsd);
-        // prev.claimable.byToken[address] = prev.claimable.byToken[address].plus(_claimableUsd);
-        // prev.wrapped.byToken[address]   = prev.wrapped.byToken[address].plus(_wrappedUsd);
-        // prev.circulating.byToken[address] = prev.circulating.byToken[address].plus(_circulatingUsd);
       }
       return prev;
     }, {

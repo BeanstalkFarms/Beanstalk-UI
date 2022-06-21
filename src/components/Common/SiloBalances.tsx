@@ -1,11 +1,10 @@
-import { Stack, Typography, Grid, Box } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
-import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
-import useWhitelist from 'hooks/useWhitelist';
+import { Stack, Typography, Grid, Box } from '@mui/material';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import { displayUSD } from '../../util';
-import { TotalBalanceCardProps } from '../Balances/Cards/TotalBalancesCard';
-import useBeanstalkSiloBreakdown from '../../hooks/useBeanstalkSiloBreakdown';
+import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';
+import { displayUSD } from 'util/index';
+import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
+import { TotalBalanceCardProps } from 'components/Balances/Cards/TotalBalancesCard';
 
 const TokenRow: React.FC<{
   name: string;
@@ -13,35 +12,34 @@ const TokenRow: React.FC<{
   isFaded: boolean;
   onMouseOver?: () => void;
   onMouseOut?: () => void;
-}> =
-  ({
-     name,
-     value,
-     isFaded,
-     onMouseOver,
-     onMouseOut
-   }) => (
-     <Stack
-       direction="row"
-       justifyContent="space-between"
-       sx={{
-        cursor: 'pointer',
-        py: 0.5,
-        opacity: isFaded ? 0.3 : 1,
-      }}
-       onMouseOver={onMouseOver}
-       onFocus={onMouseOver}
-       onMouseOut={onMouseOut}
-       onBlur={onMouseOut}
-    >
-       <Typography color="text.secondary">
-         {name}
-       </Typography>
-       <Typography>
-         {value}
-       </Typography>
-     </Stack>
-  );
+}> = ({
+  name,
+  value,
+  isFaded,
+  onMouseOver,
+  onMouseOut
+}) => (
+  <Stack
+    direction="row"
+    justifyContent="space-between"
+    sx={{
+    cursor: 'pointer',
+    py: 0.5,
+    opacity: isFaded ? 0.3 : 1,
+  }}
+    onMouseOver={onMouseOver}
+    onFocus={onMouseOver}
+    onMouseOut={onMouseOut}
+    onBlur={onMouseOut}
+>
+    <Typography color="text.secondary">
+      {name}
+    </Typography>
+    <Typography>
+      {value}
+    </Typography>
+  </Stack>
+);
 
 export type SiloBalancesProps = {
   breakdown: ReturnType<typeof useFarmerSiloBreakdown | typeof useBeanstalkSiloBreakdown>;
@@ -68,11 +66,11 @@ const SiloBalances: React.FC<SiloBalancesProps> = ({ breakdown, whitelist }) => 
   // const WHITELIST = useWhitelist();
 
   // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
-  const [drilldown, setDrilldown] = useState<StateID | null>(null);
+  const [hoverState, setHoverState] = useState<StateID | null>(null);
 
   // Drilldown handlers
-  const onMouseOut = useCallback(() => setDrilldown(null), []);
-  const onMouseOver = useCallback((v: StateID) => () => setDrilldown(v), []);
+  const onMouseOut = useCallback(() => setHoverState(null), []);
+  const onMouseOver = useCallback((v: StateID) => () => setHoverState(v), []);
 
   // Compile Pie chart data
   const pieChartData = useMemo(() => STATE_IDS.map((id: StateID) => ({
@@ -90,7 +88,7 @@ const SiloBalances: React.FC<SiloBalancesProps> = ({ breakdown, whitelist }) => 
               key={id}
               name={`${STATE_CONFIG[id][0]} Tokens`}
               value={displayUSD(breakdown[id].value)}
-              isFaded={drilldown !== null && drilldown !== id}
+              isFaded={hoverState !== null && hoverState !== id}
               onMouseOver={onMouseOver(id)}
               onMouseOut={onMouseOut}
             />
@@ -106,7 +104,7 @@ const SiloBalances: React.FC<SiloBalancesProps> = ({ breakdown, whitelist }) => 
         </Box>
       </Grid>
       <Grid item xs={12} md={3.5}>
-        {drilldown === null ? (
+        {hoverState === null ? (
           <Stack alignItems="center" justifyContent="center" sx={{ pt: 5, pb: 5 }}>
             <Typography color="text.secondary">
               Hover over a state to see breakdown
@@ -114,13 +112,13 @@ const SiloBalances: React.FC<SiloBalancesProps> = ({ breakdown, whitelist }) => 
           </Stack>
         ) : (
           <Stack gap={1}>
-            <Typography variant="h2">{STATE_CONFIG[drilldown][0]} Tokens</Typography>
+            <Typography variant="h2">{STATE_CONFIG[hoverState][0]} Tokens</Typography>
             <Box>
               {Object.keys(whitelist).map((address) => (
                 <TokenRow
                   key={address}
                   name={`${whitelist[address].name}`}
-                  value={displayUSD(breakdown[drilldown]?.byToken[address][0])}
+                  value={displayUSD(breakdown[hoverState]?.byToken[address].value)}
                   onMouseOver={onMouseOver('deposited')}
                   isFaded={false}
                 />
