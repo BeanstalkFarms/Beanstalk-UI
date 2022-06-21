@@ -6,6 +6,8 @@ import { useTheme } from '@mui/material/styles';
 import { marketplaceTableStyle } from '../../util/marketplaceTableStyle';
 import BuySellTable from './BuySellTable';
 import { displayBN, displayFullBN } from '../../util';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import podIcon from 'img/beanstalk/pod-icon.svg';
 
 const buyColumns: DataGridProps['columns'] = [
   {
@@ -32,7 +34,12 @@ const buyColumns: DataGridProps['columns'] = [
     flex: 1,
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 0)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => (
+      <Stack direction="row" gap={0.3} alignItems="center">
+        <Typography>{displayBN(params.value)}</Typography>
+        <img src={beanIcon} alt="Bean Icon" height="18px" />
+      </Stack>
+    ),
   },
   {
     field: 'amount',
@@ -42,7 +49,12 @@ const buyColumns: DataGridProps['columns'] = [
     align: 'right',
     headerAlign: 'right',
     valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => (
+      <Stack direction="row" gap={0.3} alignItems="center">
+        <Typography>{displayBN(params.value)}</Typography>
+        <img src={podIcon} alt="Pods Icon" height="18px" />
+      </Stack>
+    ),
   },
 ];
 
@@ -106,7 +118,12 @@ const sellColumns: DataGridProps['columns'] = [
     flex: 1,
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 0)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => (
+      <Stack direction="row" gap={0.3} alignItems="center">
+        <Typography>{displayBN(params.value)}</Typography>
+        <img src={beanIcon} alt="Bean Icon" height="18px" />
+      </Stack>
+    ),
   },
   {
     field: 'podsRequested',
@@ -117,7 +134,12 @@ const sellColumns: DataGridProps['columns'] = [
     headerAlign: 'right',
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => (
+      <Stack direction="row" gap={0.3} alignItems="center">
+        <Typography>{displayBN(params.value)}</Typography>
+        <img src={podIcon} alt="Pods Icon" height="18px" />
+      </Stack>
+    ),
   },
 ];
 
