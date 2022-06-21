@@ -9,7 +9,7 @@ export type BuySellTableProps = {
   hideHeader?: boolean;
 }
 
-const BuySellTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ rows, columns, hideHeader }) => {
+const BuySellTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ rows, columns, hideHeader, onRowClick }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '200px';
     return MAX_ROWS * 61 + 112;
@@ -37,6 +37,7 @@ const BuySellTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ 
           pageSize={MAX_ROWS}
           disableSelectionOnClick
           density="compact"
+          onRowClick={onRowClick !== undefined ? onRowClick : () => {}}
           initialState={{
             sorting: {
               sortModel: [{ field: 'placeInLine', sort: 'asc' }],

@@ -1,13 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Box, Button, Card, CardProps, Stack, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
-import { DataGrid, DataGridProps } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { useTheme } from '@mui/material/styles';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import podIcon from 'img/beanstalk/pod-icon.svg';
 import { marketplaceTableStyle } from '../../util/marketplaceTableStyle';
 import BuySellTable from './BuySellTable';
 import { displayBN, displayFullBN } from '../../util';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import podIcon from 'img/beanstalk/pod-icon.svg';
+import PickBeansDialog from '../Common/Dialogs/PickBeansDialog';
+import BuyOrderModal from './Dialogs/BuyOrderModal';
+import SellListingModal from './Dialogs/SellListingModal';
+import BuyNowModal from './Dialogs/BuyNowModal';
+import SellNowModal from './Dialogs/SellNowModal';
 
 const buyColumns: DataGridProps['columns'] = [
   {
@@ -174,31 +179,78 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [tab, setTab] = useState(0);
-    const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-      setTab(newValue);
-    };
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
+
+  // Create Buy Order
+  const [buyModalOpen, setBuyModalOpen] = useState(false);
+  const handleBuyModalOpen = useCallback(() => {
+    setBuyModalOpen(true);
+  }, []);
+  const handleBuyModalClose = useCallback(() => {
+    setBuyModalOpen(false);
+  }, []);
+
+  // Buy Now
+  const [buyNowModalOpen, setBuyNowModalOpen] = useState(false);
+  const [buyNowRow, setBuyNowRow] = useState<any>();
+  const handleBuyNowModalOpen = useCallback((params: GridRowParams) => {
+    setBuyNowRow(params.row);
+    setBuyNowModalOpen(true);
+  }, []);
+  const handleBuyNowModalClose = useCallback(() => {
+    setBuyNowModalOpen(false);
+  }, []);
+
+  // Create Sell Listing
+  const [sellModalOpen, setSellModalOpen] = useState(false);
+  const handleSellModalOpen = useCallback(() => {
+    setSellModalOpen(true);
+  }, []);
+  const handleSellModalClose = useCallback(() => {
+    setSellModalOpen(false);
+  }, []);
+
+  // Sell Now
+  const [sellNowModalOpen, setSellNowModalOpen] = useState(false);
+  const [sellNowRow, setSellNowRow] = useState<any>();
+  const handleSellNowModalOpen = useCallback((params: GridRowParams) => {
+    setSellNowRow(params.row);
+    setSellNowModalOpen(true);
+  }, []);
+  const handleSellNowModalClose = useCallback(() => {
+    setSellNowModalOpen(false);
+  }, []);
 
   return (
-    <Card sx={{ p: 2, width: isMobile ? '100%' : '70%', ...sx }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-        <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
-          <Tab label="Buy Now" />
-          <Tab label="Sell Now" />
-        </Tabs>
-        {tab === 0 && (
-          <Button>
-            Create Buy Order
-          </Button>
-        )}
-        {tab === 1 && (
-          <Button>
-            Create Sell Listing
-          </Button>
-        )}
-      </Stack>
-      {tab === 0 && <BuySellTable columns={buyColumns} rows={buyRows} />}
-      {tab === 1 && <BuySellTable columns={sellColumns} rows={sellRows} />}
-    </Card>
+    <>
+      <Card sx={{ p: 2, width: isMobile ? '100%' : '70%', ...sx }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+          <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
+            <Tab label="Buy Now" />
+            <Tab label="Sell Now" />
+          </Tabs>
+          {tab === 0 && (
+            <Button onClick={handleBuyModalOpen}>
+              Create Buy Order
+            </Button>
+          )}
+          {tab === 1 && (
+            <Button onClick={handleSellModalOpen}>
+              Create Sell Listing
+            </Button>
+          )}
+        </Stack>
+        {tab === 0 && <BuySellTable columns={buyColumns} rows={buyRows} onRowClick={handleBuyNowModalOpen} />}
+        {tab === 1 && <BuySellTable columns={sellColumns} rows={sellRows} onRowClick={handleSellNowModalOpen} />}
+      </Card>
+      {/* modals */}
+      <BuyOrderModal fullWidth open={buyModalOpen} handleClose={handleBuyModalClose} />
+      <SellListingModal fullWidth open={sellModalOpen} handleClose={handleSellModalClose} />
+      <BuyNowModal fullWidth handleClose={handleBuyNowModalClose} open={buyNowModalOpen} row={buyNowRow} />
+      <SellNowModal fullWidth handleClose={handleSellNowModalClose} open={sellNowModalOpen} row={sellNowRow} />
+    </>
   );
 };
 
