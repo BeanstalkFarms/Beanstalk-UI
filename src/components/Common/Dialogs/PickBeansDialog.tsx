@@ -241,7 +241,7 @@ const PickBeansDialog: React.FC<{ handleClose: any; } & DialogProps> =
                 p: 2.5,
                 cursor: 'pointer',
                 '&:hover': {
-                  backgroundColor: '#f9fcff'
+                  backgroundColor: BeanstalkPalette.hoverBlue
                 }
               }}
               onClick={handlePickBeans}

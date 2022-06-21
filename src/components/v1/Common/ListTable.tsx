@@ -65,7 +65,7 @@ const useStyles = makeStyles({
   },
 });
 
-// FIXME: Resolve this with the tables used in the Marketplace.
+// FIXME: Resolve this with the tables used in the Marktplatz.
 // FIXME: types and code ceanup
 const BasicTable = (props) => {
   const classes = useStyles();

@@ -46,7 +46,7 @@ export default function TabbedMarketplace() {
     />
   ];
 
-  // FIXME: Add Marketplace medium link
+  // FIXME: Add Marktplatz medium link
   const descriptionLinks = [
     {
       href: `${MEDIUM_INTEREST_LINK}#8b79`,
