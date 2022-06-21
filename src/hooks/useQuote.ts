@@ -49,7 +49,8 @@ export default function useQuote(
           });
       } catch (e : any) {
         setQuoting(false);
-        toast.error(e.toString());
+        console.error(e);
+        toast.error(e?.toString());
       }
     },  
     debounceMs,
@@ -57,7 +58,8 @@ export default function useQuote(
   ), [
     tokenOut,
     setQuoting,
-    setAmountOut
+    setAmountOut,
+    quoteHandler,
   ]);
 
   // Handler to refresh

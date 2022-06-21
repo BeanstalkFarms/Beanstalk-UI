@@ -6,8 +6,8 @@ import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
 import { SupportedChainId } from 'constants/chains';
 import { ETH } from 'constants/tokens';
-import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import { TESTNET_RPC_ADDRESSES } from 'util/Client';
+import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 const chainImgMap : { [key: string] : string | undefined } = {
   Ethereum: ETH[SupportedChainId.MAINNET].logo,

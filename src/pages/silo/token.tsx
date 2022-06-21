@@ -22,7 +22,7 @@ const TokenPage: React.FC<{}> = () => {
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanPools  = useSelector<AppState, AppState['_bean']['pools']>((state) =>  state._bean.pools);
 
-  console.debug('[page:silo/token] whitelist ', WHITELIST, POOLS, beanPools);
+  // console.debug('[page:silo/token] whitelist ', WHITELIST, POOLS, beanPools);
 
   // Ensure this address is a whitelisted token
   // FIXME: case sensitivity

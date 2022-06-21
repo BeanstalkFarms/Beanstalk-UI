@@ -18,10 +18,10 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { BEANSTALK_ADDRESSES, CHAIN_INFO } from 'constants/index';
+import useChainConstant from 'hooks/useChainConstant';
 import NavDrawer from '../Mobile/NavDrawer';
 import ROUTES from '../routes';
 import { BeanstalkPalette } from '../../App/muiTheme';
-import useChainConstant from 'hooks/useChainConstant';
 
 // -----------------------------------------------------------------
 
@@ -121,7 +121,7 @@ const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
       <Box sx={{ px: 1, pt: 0.75, opacity: 0.7 }}>
         <Typography color="text.secondary" fontSize={12} textAlign="center">
           {process.env.REACT_APP_NAME || 'beanstalk-ui'} v{process.env.REACT_APP_VERSION || '0.0.0'}@{process.env.REACT_APP_GIT_COMMIT_REF?.slice(0,6) || 'HEAD'}
-          {` · `}
+          {' · '}
           hosted on {process.env.REACT_APP_HOST || 'unknown'}
         </Typography>
       </Box>

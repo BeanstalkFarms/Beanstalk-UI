@@ -4,15 +4,21 @@ import { useNetwork } from 'wagmi';
 
 type ConstantByChain = { [key: number] : any };
 
+const TESTNET_CHAINS = new Set([
+  SupportedChainId.ASTRO,
+  SupportedChainId.LOCALHOST,
+  SupportedChainId.MAINNET,
+]);
+
 export function getChainConstant<T extends ConstantByChain>(map: T, chainId?: SupportedChainId) : T[keyof T] {
   // If no chain available, use the value for MAINNET.
   if (!chainId || !SupportedChainId[chainId]) {
     return map[SupportedChainId.MAINNET];
   }
-  // If we're on LOCALHOST, it's probably a forked mainnet node.
-  // Use LOCALHOST-specific value if available, otherwise
+  // If we're on a Testnet, it's probably a forked mainnet node.
+  // Use Testnet-specific value if available, otherwise
   // fall back to MAINNET. This allows for test forking.
-  if (chainId === SupportedChainId.LOCALHOST || chainId === SupportedChainId.HARDHAT) {
+  if (TESTNET_CHAINS.has(chainId)) {
     return map[chainId] || map[SupportedChainId.MAINNET];
   }
   // Return value for the active chainId.

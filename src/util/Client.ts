@@ -1,4 +1,4 @@
-import { createClient as createWagmiClient, configureChains, chain } from 'wagmi';
+import { createClient as createWagmiClient, configureChains, chain, Chain } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
@@ -11,12 +11,34 @@ import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { SupportedChainId } from 'constants/chains';
 import { ALCHEMY_API_KEYS } from 'constants/rpc/alchemy';
 
+// ------------------------------------------------------------
+
 const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.MAINNET];
 
 export const TESTNET_RPC_ADDRESSES : { [chainId: number] : string } = {
+  [SupportedChainId.ASTRO]:     'https://astro.node.bean.money',
+  [SupportedChainId.HARDHAT]:   'http://cujo.node.bean.money',
   [SupportedChainId.LOCALHOST]: 'http://localhost:8545',
-  [SupportedChainId.HARDHAT]:   'http://bean-rpc.treetree.finance/',
-}
+};
+
+// Setup node
+const makeTestnet = (_chainId: number, name: string) : Chain => ({
+  id: _chainId,
+  name: name,
+  network: 'ethereum',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ether',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    default: TESTNET_RPC_ADDRESSES[_chainId],
+  },
+  blockExplorers: {
+    default: { name: 'Etherscan', url: 'https://etherscan.io' },
+  },
+  testnet: true,
+});
 
 const baseChains = [
   chain.mainnet,
@@ -24,8 +46,9 @@ const baseChains = [
 ];
 
 if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
+  baseChains.push(makeTestnet(SupportedChainId.ASTRO,   'Astro'));
+  baseChains.push(makeTestnet(SupportedChainId.HARDHAT, 'Cujo'));
   baseChains.push(chain.localhost);
-  baseChains.push(chain.hardhat);
 }
 
 const { chains, provider } = configureChains(

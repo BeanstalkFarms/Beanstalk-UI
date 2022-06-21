@@ -19,10 +19,13 @@ import Beanstalk from 'lib/Beanstalk';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import { BalanceState } from 'state/farmer/balances/reducer';
-import { displayFullBN, toStringBaseUnitBN } from 'util/Tokens';
+import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
 import TransactionSettings from 'components/Common/Form/TransactionSettings';
 import SettingInput from 'components/Common/Form/SettingInput';
+import { BeanstalkReplanted } from 'constants/generated';
+import useCurve from 'hooks/useCurve';
+import { QuoteHandler } from 'hooks/useQuote';
 
 // -----------------------------------------------------------------------
 
@@ -39,7 +42,7 @@ const DepositForm : React.FC<
   }
 > = ({
   // Custom
-  token,
+  token: depositToken,
   balances,
   // Formik
   values,
@@ -47,11 +50,12 @@ const DepositForm : React.FC<
   setFieldValue,
 }) => {
   const chainId = useChainId();
-  const erc20TokenMap = useTokenMap([BEAN, ETH, token]);
+  const erc20TokenMap = useTokenMap([BEAN, ETH, depositToken]);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
+  const curve = useCurve();
 
   const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
-    token,
+    depositToken,
     values.tokens,
     (amount: BigNumber) => amount,
   );
@@ -74,7 +78,18 @@ const DepositForm : React.FC<
       ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
     ]);
   }, [values.tokens, setFieldValue]);
-  
+  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn, tokenOut) : Promise<BigNumber> => {
+    console.debug('[handleQuote] curve: ', curve);
+    if (curve) {
+      return curve.router.getBestRouteAndOutput(
+        tokenIn.address,
+        tokenOut.address,
+        toStringBaseUnitBN(amountIn, tokenIn.decimals),
+      ).then((result) => toTokenUnitsBN(result.output, tokenOut.decimals));
+    }
+    return Promise.reject();
+  }, [curve]);
+   
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
@@ -90,24 +105,22 @@ const DepositForm : React.FC<
           <Stack gap={1.5}>
             {values.tokens.map((state, index) => (
               <TokenQuoteProvider
+                key={`tokens.${index}`}
                 name={`tokens.${index}`}
-                tokenOut={token}
+                tokenOut={depositToken}
                 balance={balances[state.token.address] || undefined}
                 state={state}
                 showTokenSelect={handleOpen}
                 disabled={isMainnet}
                 disableTokenSelect={isMainnet}
-                handleQuote={(tokenIn, amountIn) => 
-                   Promise.resolve(amountIn.times(1E9))
-                  // return beanstalk.callStatic.curveToBDV(amountIn.toString()).then(bigNumberResult)
-                }
+                handleQuote={handleQuote}
               />
             ))}
           </Stack>
           {isReady ? (
             <Stack direction="column" gap={1}>
               <TokenOutputField
-                token={token}
+                token={depositToken}
                 value={bdv}
               />
               <Stack direction="row" gap={1} justifyContent="center">
@@ -147,10 +160,18 @@ const DepositForm : React.FC<
 
 // -----------------------------------------------------------------------
 
+enum TransferMode {
+  EXTERNAL = '0',
+  INTERNAL = '1',
+  INTERNAL_EXTERNAL = '2',
+  INTERNAL_TOLERANT = '3',
+}
+
 // TODO:
 // - implement usePreferredToken here
 const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
   const Bean = useChainConstant(BEAN);
+  const Eth = useChainConstant(ETH);
   const balances = useFarmerBalances();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
@@ -160,12 +181,12 @@ const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
     },
     tokens: [
       {
-        token: Bean,
+        token: Eth,
         amount: null,
       },
     ],
-  }), [Bean]);
-  const onSubmit = useCallback((values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
+  }), [Eth]);
+  const onSubmit = useCallback(async (values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
     const { amount } = Beanstalk.Silo.Deposit.deposit(
       token,
       values.tokens,
@@ -178,15 +199,33 @@ const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
     
     try {
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
-      if (values.tokens[0].token !== token) throw new Error('Must deposit token directly at this time');
+      // if (values.tokens[0].token !== token) throw new Error('Must deposit token directly at this time');
+
+      // TEMP: recast as BeanstalkReplanted 
+      const b = ((beanstalk as unknown) as BeanstalkReplanted);
 
       let call;
       if (token === Bean) {
-        call = beanstalk.depositBeans(
-          toStringBaseUnitBN(amount, token.decimals)
-        );
+        const data = [
+          b.interface.encodeFunctionData('wrapEth', [
+            toStringBaseUnitBN('1', Eth.decimals),
+            TransferMode.INTERNAL
+          ]),
+          // b.interface.encodeFunctionData("exchange", [
+          //   "0xD51a44d3FaE010294C616388b506AcdA1bfAAE46",
+          //   "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+          //   "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+          //   '1',
+          //   // toStringBaseUnitBN(1, )
+          // ]),
+        ];
+        console.log(await b.callStatic.farm(data, { value: toStringBaseUnitBN('1', Eth.decimals) }));
+        call = b.farm(data, { value: toStringBaseUnitBN('1', Eth.decimals) });
+        // call = beanstalk.depositBeans(
+        //   toStringBaseUnitBN(amount, token.decimals)
+        // );
       } else {
-        call = Promise.reject(new Error(`No supported deposit method for ${token.name}`));
+        call = Promise.reject(new Error(`No supported Deposit method for ${token.name}`));
       }
 
       return call
@@ -210,9 +249,13 @@ const Deposit : React.FC<{ token: Token; }> = ({ token }) => {
         });
       } catch (err) {
         txToast.error(err);
+        // formActions.setErrors(null);
+        formActions.setSubmitting(false);
+        formActions.resetForm();
       }
   }, [
     Bean,
+    Eth,
     beanstalk,
     token,
   ]);

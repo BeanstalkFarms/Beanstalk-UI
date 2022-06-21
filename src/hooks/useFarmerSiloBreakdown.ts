@@ -17,17 +17,20 @@ export type SiloStateBreakdown = {
    */
   value: BigNumber;
   /** 
-   * A mapping of address => [amount, value] for Tokens in this State.
-   * Ex. I have a Bean deposit: 0xBEAN => [100, 101] if 1 BEAN = $1.01
+   * A mapping of address => { amount, value } for Tokens in this State.
+   * Ex. I have a Bean deposit: 0xBEAN => { amount: 100, value: 101 } if 1 BEAN = $1.01
    */
-  byToken: AddressMap<[amount: BigNumber, value: BigNumber]>;
+  byToken: AddressMap<{ amount: BigNumber, value: BigNumber }>;
 }
 
 const initState = (tokenAddresses: string[]) => ({
   value: new BigNumber(0),
   byToken: tokenAddresses.reduce<SiloStateBreakdown['byToken']>(
     (prev, curr) => { 
-      prev[curr] = [new BigNumber(0), new BigNumber(0)];
+      prev[curr] = {
+        amount: new BigNumber(0),
+        value: new BigNumber(0)
+      };
       return prev;
     },
     {},
@@ -107,8 +110,8 @@ export default function useFarmerSiloBreakdown() {
         // Aggregate amounts of each State
         TOKEN_STATE.forEach((s) => {
           prev[s].value = prev[s].value.plus(usdValueByState[s]);
-          prev[s].byToken[address][0] = prev[s].byToken[address][0].plus(amountByState[s]);
-          prev[s].byToken[address][1] = prev[s].byToken[address][1].plus(usdValueByState[s]);
+          prev[s].byToken[address].amount = prev[s].byToken[address].amount.plus(amountByState[s]);
+          prev[s].byToken[address].value  = prev[s].byToken[address].value.plus(usdValueByState[s]);
         });
       }
       return prev;
