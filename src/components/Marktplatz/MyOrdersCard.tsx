@@ -28,38 +28,13 @@ const buyColumns: DataGridProps['columns'] = [
   },
 ];
 
-const buyRows = [
+const buyRows = new Array(20).fill(null).map((_, i) => (
   {
-    id: 0,
-    amount: new BigNumber(634533),
-    placeInLine: '0 - 100,000'
-  },
-  {
-    id: 1,
-    amount: new BigNumber(34533),
-    placeInLine: '0 - 100,000'
-  },
-  {
-    id: 2,
-    amount: new BigNumber(34563456),
-    placeInLine: '0 - 100,000'
-  },
-  {
-    id: 3,
-    amount: new BigNumber(34563456),
-    placeInLine: '0 - 100,000'
-  },
-  {
-    id: 4,
-    amount: new BigNumber(34563456),
-    placeInLine: '0 - 100,000'
-  },
-  {
-    id: 5,
-    amount: new BigNumber(34563456),
+    id: i,
+    amount: new BigNumber(634533).multipliedBy(Math.random()),
     placeInLine: '0 - 100,000'
   }
-];
+));
 
 const MyOrdersCard: React.FC<CardProps> = ({ sx }) => {
   const theme = useTheme();

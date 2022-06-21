@@ -63,50 +63,15 @@ const buyColumns: DataGridProps['columns'] = [
   },
 ];
 
-const buyRows = [
+const buyRows = new Array(20).fill(null).map((_, i) => (
   {
-    id: 0,
-    placeInLine: new BigNumber(634533),
-    expiry: new BigNumber(123),
-    price: new BigNumber(345345345),
-    amount: new BigNumber(1)
-  },
-  {
-    id: 1,
-    placeInLine: new BigNumber(634533),
-    expiry: new BigNumber(2342),
-    price: new BigNumber(345),
-    amount: new BigNumber(234234233)
-  },
-  {
-    id: 2,
-    placeInLine: new BigNumber(34454),
-    expiry: new BigNumber(234234),
-    price: new BigNumber(1),
-    amount: new BigNumber(2333)
-  },
-  {
-    id: 3,
-    placeInLine: new BigNumber(145),
-    expiry: new BigNumber(2344532),
-    price: new BigNumber(0.5),
-    amount: new BigNumber(2342333)
-  },
-  {
-    id: 4,
-    placeInLine: new BigNumber(145),
-    expiry: new BigNumber(2344532),
-    price: new BigNumber(0.5),
-    amount: new BigNumber(2342333)
-  },
-  {
-    id: 5,
-    placeInLine: new BigNumber(145),
-    expiry: new BigNumber(2344532),
-    price: new BigNumber(0.5),
-    amount: new BigNumber(2342333)
+    id: i,
+    placeInLine: new BigNumber(634533).multipliedBy(Math.random()),
+    expiry: new BigNumber(123).multipliedBy(Math.random()),
+    price: new BigNumber(345345345).multipliedBy(Math.random()),
+    amount: new BigNumber(123123123).multipliedBy(Math.random())
   }
-];
+));
 
 const sellColumns: DataGridProps['columns'] = [
   {
@@ -148,32 +113,14 @@ const sellColumns: DataGridProps['columns'] = [
   },
 ];
 
-const sellRows = [
+const sellRows = new Array(20).fill(null).map((_, i) => (
   {
-    id: 0,
+    id: i,
     placeInLine: '0 - 14,000',
-    price: new BigNumber(345345345),
-    podsRequested: new BigNumber(1)
-  },
-  {
-    id: 1,
-    placeInLine: '0 - 14,000',
-    price: new BigNumber(345),
-    podsRequested: new BigNumber(234234233)
-  },
-  {
-    id: 2,
-    placeInLine: '0 - 14,000',
-    price: new BigNumber(1),
-    podsRequested: new BigNumber(2333)
-  },
-  {
-    id: 3,
-    placeInLine: '0 - 14,000',
-    price: new BigNumber(0.5),
-    podsRequested: new BigNumber(2342333)
+    price: new BigNumber(345345345).multipliedBy(Math.random()),
+    podsRequested: new BigNumber(10234234).multipliedBy(Math.random())
   }
-];
+));
 
 const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   const theme = useTheme();
@@ -183,7 +130,9 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
     setTab(newValue);
   };
 
-  // Create Buy Order
+  /**
+   * user clicks "Create Buy Order" button
+   * */
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const handleBuyModalOpen = useCallback(() => {
     setBuyModalOpen(true);
@@ -192,7 +141,9 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
     setBuyModalOpen(false);
   }, []);
 
-  // Buy Now
+  /**
+   * user clicks a row under Buy Now tab
+   * */
   const [buyNowModalOpen, setBuyNowModalOpen] = useState(false);
   const [buyNowRow, setBuyNowRow] = useState<any>();
   const handleBuyNowModalOpen = useCallback((params: GridRowParams) => {
@@ -203,7 +154,9 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
     setBuyNowModalOpen(false);
   }, []);
 
-  // Create Sell Listing
+  /**
+   * user clicks "Create Sell Listing" button
+   * */
   const [sellModalOpen, setSellModalOpen] = useState(false);
   const handleSellModalOpen = useCallback(() => {
     setSellModalOpen(true);
@@ -212,7 +165,9 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
     setSellModalOpen(false);
   }, []);
 
-  // Sell Now
+  /**
+   * user clicks a row under Sell Now tab
+   * */
   const [sellNowModalOpen, setSellNowModalOpen] = useState(false);
   const [sellNowRow, setSellNowRow] = useState<any>();
   const handleSellNowModalOpen = useCallback((params: GridRowParams) => {
@@ -226,7 +181,11 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   return (
     <>
       <Card sx={{ p: 2, width: isMobile ? '100%' : '70%', ...sx }}>
-        <Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" alignItems={isMobile ? 'start' : 'center'} sx={{ mb: 2 }}>
+        <Stack
+          direction={isMobile ? 'column' : 'row'}
+          justifyContent="space-between"
+          alignItems={isMobile ? 'start' : 'center'}
+          sx={{ mb: 2 }}>
           <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
             <Tab label="Buy Now" />
             <Tab label="Sell Now" />
@@ -245,10 +204,14 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
         {tab === 0 && <BuySellTable columns={buyColumns} rows={buyRows} onRowClick={handleBuyNowModalOpen} />}
         {tab === 1 && <BuySellTable columns={sellColumns} rows={sellRows} onRowClick={handleSellNowModalOpen} />}
       </Card>
-      {/* modals */}
+      {/* ----- modals ----- */}
+      {/* user clicks "Create Buy Order" button */}
       <BuyOrderModal fullWidth open={buyModalOpen} handleClose={handleBuyModalClose} />
+      {/* user clicks "Create Sell Listing" button */}
       <SellListingModal fullWidth open={sellModalOpen} handleClose={handleSellModalClose} />
+      {/* user clicks a row under Buy Now tab */}
       <BuyNowModal fullWidth handleClose={handleBuyNowModalClose} open={buyNowModalOpen} row={buyNowRow} />
+      {/* user clicks a row under Sell Now tab */}
       <SellNowModal fullWidth handleClose={handleSellNowModalClose} open={sellNowModalOpen} row={sellNowRow} />
     </>
   );
