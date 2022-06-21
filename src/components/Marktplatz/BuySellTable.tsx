@@ -12,7 +12,8 @@ export type BuySellTableProps = {
 const BuySellTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ rows, columns, hideHeader }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '200px';
-    return Math.min(rows.length, MAX_ROWS) * 61 + 112;
+    return MAX_ROWS * 61 + 112;
+    // return Math.min(rows.length, MAX_ROWS) * 61 + 112;
   }, [rows]);
 
   return (
