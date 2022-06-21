@@ -78,7 +78,7 @@ const MyOrdersCard: React.FC<CardProps> = ({ sx }) => {
         </Tabs>
       </Stack>
       {tab === 0 && <BuySellTable columns={buyColumns} rows={buyRows} hideHeader />}
-      {/*{tab === 1 && <BuySellTable columns={sellColumns} rows={sellRows} />}*/}
+      {tab === 1 && <BuySellTable columns={buyColumns} rows={buyRows} hideHeader />}
     </Card>
   );
 };
