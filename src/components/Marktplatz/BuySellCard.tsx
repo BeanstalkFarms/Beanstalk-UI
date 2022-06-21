@@ -185,7 +185,8 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
           direction={isMobile ? 'column' : 'row'}
           justifyContent="space-between"
           alignItems={isMobile ? 'start' : 'center'}
-          sx={{ mb: 2 }}>
+          sx={{ mb: 2 }}
+        >
           <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
             <Tab label="Buy Now" />
             <Tab label="Sell Now" />
@@ -212,10 +213,13 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
       {/* ----- modals ----- */}
       {/** User clicks "Create Buy Order" button */}
       <BuyOrderModal fullWidth open={buyModalOpen} handleClose={handleBuyModalClose} />
+
       {/** User clicks "Create Sell Listing" button */}
       <SellListingModal fullWidth open={sellModalOpen} handleClose={handleSellModalClose} />
+
       {/** User clicks a row under Buy Now tab */}
       <BuyNowModal fullWidth handleClose={handleBuyNowModalClose} open={buyNowModalOpen} row={buyNowRow} />
+
       {/** User clicks a row under Sell Now tab */}
       <SellNowModal fullWidth handleClose={handleSellNowModalClose} open={sellNowModalOpen} row={sellNowRow} />
     </>
