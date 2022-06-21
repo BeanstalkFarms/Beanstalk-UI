@@ -226,7 +226,7 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   return (
     <>
       <Card sx={{ p: 2, width: isMobile ? '100%' : '70%', ...sx }}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+        <Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" alignItems={isMobile ? 'start' : 'center'} sx={{ mb: 2 }}>
           <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
             <Tab label="Buy Now" />
             <Tab label="Sell Now" />
