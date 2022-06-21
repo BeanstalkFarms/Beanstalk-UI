@@ -134,9 +134,11 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
    * User clicks "Create Buy Order" button
   */
   const [buyModalOpen, setBuyModalOpen] = useState(false);
+
   const handleBuyModalOpen = useCallback(() => {
     setBuyModalOpen(true);
   }, []);
+
   const handleBuyModalClose = useCallback(() => {
     setBuyModalOpen(false);
   }, []);
@@ -146,10 +148,12 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   */
   const [buyNowModalOpen, setBuyNowModalOpen] = useState(false);
   const [buyNowRow, setBuyNowRow] = useState<any>();
+
   const handleBuyNowModalOpen = useCallback((params: GridRowParams) => {
     setBuyNowRow(params.row);
     setBuyNowModalOpen(true);
   }, []);
+
   const handleBuyNowModalClose = useCallback(() => {
     setBuyNowModalOpen(false);
   }, []);
@@ -158,9 +162,11 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
    * User clicks "Create Sell Listing" button
   */
   const [sellModalOpen, setSellModalOpen] = useState(false);
+
   const handleSellModalOpen = useCallback(() => {
     setSellModalOpen(true);
   }, []);
+
   const handleSellModalClose = useCallback(() => {
     setSellModalOpen(false);
   }, []);
@@ -170,10 +176,12 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   */
   const [sellNowModalOpen, setSellNowModalOpen] = useState(false);
   const [sellNowRow, setSellNowRow] = useState<any>();
+
   const handleSellNowModalOpen = useCallback((params: GridRowParams) => {
     setSellNowRow(params.row);
     setSellNowModalOpen(true);
   }, []);
+
   const handleSellNowModalClose = useCallback(() => {
     setSellNowModalOpen(false);
   }, []);
