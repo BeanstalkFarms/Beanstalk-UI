@@ -131,7 +131,7 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   };
 
   /**
-   * user clicks "Create Buy Order" button
+   * User clicks "Create Buy Order" button
   */
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const handleBuyModalOpen = useCallback(() => {
@@ -142,7 +142,7 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   }, []);
 
   /**
-   * user clicks a row under Buy Now tab
+   * User clicks a row under Buy Now tab
   */
   const [buyNowModalOpen, setBuyNowModalOpen] = useState(false);
   const [buyNowRow, setBuyNowRow] = useState<any>();
@@ -155,7 +155,7 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   }, []);
 
   /**
-   * user clicks "Create Sell Listing" button
+   * User clicks "Create Sell Listing" button
   */
   const [sellModalOpen, setSellModalOpen] = useState(false);
   const handleSellModalOpen = useCallback(() => {
@@ -166,7 +166,7 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
   }, []);
 
   /**
-   * user clicks a row under Sell Now tab
+   * User clicks a row under Sell Now tab
   */
   const [sellNowModalOpen, setSellNowModalOpen] = useState(false);
   const [sellNowRow, setSellNowRow] = useState<any>();
@@ -203,20 +203,20 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
             </Button>
           )}
         </Stack>
-        {/* Buy Now */}
+        {/** Buy Now */}
         {tab === 0 && <BuySellTable columns={buyColumns} rows={buyRows} onRowClick={handleBuyNowModalOpen} />}
-        {/* Sell Now */}
+        {/** Sell Now */}
         {tab === 1 && <BuySellTable columns={sellColumns} rows={sellRows} onRowClick={handleSellNowModalOpen} />}
       </Card>
 
       {/* ----- modals ----- */}
-      {/* user clicks "Create Buy Order" button */}
+      {/** User clicks "Create Buy Order" button */}
       <BuyOrderModal fullWidth open={buyModalOpen} handleClose={handleBuyModalClose} />
-      {/* user clicks "Create Sell Listing" button */}
+      {/** User clicks "Create Sell Listing" button */}
       <SellListingModal fullWidth open={sellModalOpen} handleClose={handleSellModalClose} />
-      {/* user clicks a row under Buy Now tab */}
+      {/** User clicks a row under Buy Now tab */}
       <BuyNowModal fullWidth handleClose={handleBuyNowModalClose} open={buyNowModalOpen} row={buyNowRow} />
-      {/* user clicks a row under Sell Now tab */}
+      {/** User clicks a row under Sell Now tab */}
       <SellNowModal fullWidth handleClose={handleSellNowModalClose} open={sellNowModalOpen} row={sellNowRow} />
     </>
   );
