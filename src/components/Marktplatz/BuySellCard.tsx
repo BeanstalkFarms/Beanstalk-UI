@@ -201,9 +201,12 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
             </Button>
           )}
         </Stack>
+        {/* Buy Now */}
         {tab === 0 && <BuySellTable columns={buyColumns} rows={buyRows} onRowClick={handleBuyNowModalOpen} />}
+        {/* Sell Now */}
         {tab === 1 && <BuySellTable columns={sellColumns} rows={sellRows} onRowClick={handleSellNowModalOpen} />}
       </Card>
+
       {/* ----- modals ----- */}
       {/* user clicks "Create Buy Order" button */}
       <BuyOrderModal fullWidth open={buyModalOpen} handleClose={handleBuyModalClose} />
