@@ -3,7 +3,7 @@ import { Card, CardProps, Stack, Tab, Tabs, Typography, useMediaQuery } from '@m
 import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { useTheme } from '@mui/material/styles';
-import BuySellTable from './BuySellTable';
+import BuySellTable from './Tables/BuySellTable';
 import { displayBN, displayFullBN } from '../../util';
 
 const buyColumns: DataGridProps['columns'] = [

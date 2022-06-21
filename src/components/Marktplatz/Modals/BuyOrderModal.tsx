@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   DialogProps,
   Stack,
   Dialog,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 
 const BuyOrderModal: React.FC<{ handleClose: any; } & DialogProps> =
@@ -19,13 +17,8 @@ const BuyOrderModal: React.FC<{ handleClose: any; } & DialogProps> =
      disableScrollLock,
      handleClose
    }) => {
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-    const [tab, setTab] = useState(0);
-
     const handleDialogClose = () => {
       handleClose();
-      setTab(0);
     };
 
     return (
@@ -40,7 +33,6 @@ const BuyOrderModal: React.FC<{ handleClose: any; } & DialogProps> =
         <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Create Buy Order</StyledDialogTitle>
         <StyledDialogContent>
           <Stack gap={2}>
-            {/* Pod Balance */}
             <Typography color="text.secondary">Unripe Beans represent a pro rata share of underlying Beans that are
               minted as Fertilizer is sold and debt is repaid to Fertilizer.
             </Typography>

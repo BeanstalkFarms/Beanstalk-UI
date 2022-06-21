@@ -14,7 +14,7 @@ import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import BuySellCard from '../components/Marktplatz/BuySellCard';
 import MyOrdersCard from '../components/Marktplatz/MyOrdersCard';
-import ActivityTable from '../components/Marktplatz/ActivityTable';
+import ActivityTable from '../components/Marktplatz/Tables/ActivityTable';
 import { displayBN, displayFullBN } from '../util';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';

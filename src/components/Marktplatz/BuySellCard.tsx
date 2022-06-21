@@ -6,13 +6,13 @@ import { useTheme } from '@mui/material/styles';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import { marketplaceTableStyle } from '../../util/marketplaceTableStyle';
-import BuySellTable from './BuySellTable';
+import BuySellTable from './Tables/BuySellTable';
 import { displayBN, displayFullBN } from '../../util';
 import PickBeansDialog from '../Common/Dialogs/PickBeansDialog';
-import BuyOrderModal from './Dialogs/BuyOrderModal';
-import SellListingModal from './Dialogs/SellListingModal';
-import BuyNowModal from './Dialogs/BuyNowModal';
-import SellNowModal from './Dialogs/SellNowModal';
+import BuyOrderModal from './Modals/BuyOrderModal';
+import SellListingModal from './Modals/SellListingModal';
+import BuyNowModal from './Modals/BuyNowModal';
+import SellNowModal from './Modals/SellNowModal';
 
 const buyColumns: DataGridProps['columns'] = [
   {

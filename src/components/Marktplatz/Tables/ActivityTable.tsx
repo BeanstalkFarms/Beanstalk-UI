@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { Box, BoxProps, Card } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
-import { marketplaceTableStyle } from '../../util/marketplaceTableStyle';
-import { tableStyle } from '../../util/tableStyle';
+import { marketplaceTableStyle } from '../../../util/marketplaceTableStyle';
+import { tableStyle } from '../../../util/tableStyle';
 
 const MAX_ROWS = 10;
 
