@@ -199,12 +199,14 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
             <Tab label="Buy Now" />
             <Tab label="Sell Now" />
           </Tabs>
+
           {/** Buy Now */}
           {tab === 0 && (
             <Button onClick={handleBuyModalOpen}>
               Create Buy Order
             </Button>
           )}
+
           {/** Sell Now */}
           {tab === 1 && (
             <Button onClick={handleSellModalOpen}>
@@ -212,8 +214,10 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
             </Button>
           )}
         </Stack>
+
         {/** Buy Now */}
         {tab === 0 && <BuySellTable columns={buyColumns} rows={buyRows} onRowClick={handleBuyNowModalOpen} />}
+
         {/** Sell Now */}
         {tab === 1 && <BuySellTable columns={sellColumns} rows={sellRows} onRowClick={handleSellNowModalOpen} />}
       </Card>
