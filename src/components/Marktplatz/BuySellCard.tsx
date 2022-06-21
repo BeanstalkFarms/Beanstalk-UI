@@ -190,13 +190,13 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
             <Tab label="Buy Now" />
             <Tab label="Sell Now" />
           </Tabs>
-          {/* Buy Now */}
+          {/** Buy Now */}
           {tab === 0 && (
             <Button onClick={handleBuyModalOpen}>
               Create Buy Order
             </Button>
           )}
-          {/* Sell Now */}
+          {/** Sell Now */}
           {tab === 1 && (
             <Button onClick={handleSellModalOpen}>
               Create Sell Listing
