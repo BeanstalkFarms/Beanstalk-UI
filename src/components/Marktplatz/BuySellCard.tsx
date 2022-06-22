@@ -200,14 +200,14 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
             <Tab label="Sell Now" />
           </Tabs>
 
-          {/** Buy Now */}
+          {/* Buy Now tab */}
           {tab === 0 && (
             <Button onClick={handleBuyModalOpen}>
               Create Buy Order
             </Button>
           )}
 
-          {/** Sell Now */}
+          {/* Sell Now tab */}
           {tab === 1 && (
             <Button onClick={handleSellModalOpen}>
               Create Sell Listing
@@ -215,24 +215,24 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
           )}
         </Stack>
 
-        {/** Buy Now */}
+        {/* Buy Now tab */}
         {tab === 0 && <BuySellTable columns={buyColumns} rows={buyRows} onRowClick={handleBuyNowModalOpen} />}
 
-        {/** Sell Now */}
+        {/* Sell Now tab */}
         {tab === 1 && <BuySellTable columns={sellColumns} rows={sellRows} onRowClick={handleSellNowModalOpen} />}
       </Card>
 
       {/* ----- modals ----- */}
-      {/** User clicks "Create Buy Order" button */}
+      {/* User clicks "Create Buy Order" button */}
       <BuyOrderModal fullWidth open={buyModalOpen} handleClose={handleBuyModalClose} />
 
-      {/** User clicks "Create Sell Listing" button */}
+      {/* User clicks "Create Sell Listing" button */}
       <SellListingModal fullWidth open={sellModalOpen} handleClose={handleSellModalClose} />
 
-      {/** User clicks a row under Buy Now tab */}
+      {/* User clicks a row under Buy Now tab */}
       <BuyNowModal fullWidth handleClose={handleBuyNowModalClose} open={buyNowModalOpen} row={buyNowRow} />
 
-      {/** User clicks a row under Sell Now tab */}
+      {/* User clicks a row under Sell Now tab */}
       <SellNowModal fullWidth handleClose={handleSellNowModalClose} open={sellNowModalOpen} row={sellNowRow} />
     </>
   );
