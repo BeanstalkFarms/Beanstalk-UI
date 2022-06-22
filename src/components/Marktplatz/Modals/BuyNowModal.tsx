@@ -20,7 +20,6 @@ const BuyNowModal: React.FC<{ row: any | undefined; handleClose: any; } & Dialog
      handleClose,
      row
    }) => {
-
     const handleDialogClose = () => {
       handleClose();
     };

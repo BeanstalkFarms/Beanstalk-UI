@@ -12,12 +12,12 @@ import PageHeader from 'components/Common/PageHeader';
 import { useTheme } from '@mui/material/styles';
 import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
+import podIcon from 'img/beanstalk/pod-icon.svg';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import BuySellCard from '../components/Marktplatz/BuySellCard';
 import MyOrdersCard from '../components/Marktplatz/MyOrdersCard';
 import ActivityTable from '../components/Marktplatz/Tables/ActivityTable';
 import { displayBN, displayFullBN } from '../util';
-import podIcon from 'img/beanstalk/pod-icon.svg';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
 
 const columns: DataGridProps['columns'] = [
   {
