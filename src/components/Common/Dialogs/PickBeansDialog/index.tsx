@@ -4,28 +4,24 @@ import {
   Stack,
   Dialog,
   Typography,
-  Card,
   Button,
   Box,
   useMediaQuery,
-  Divider, Tooltip
+  Divider
 } from '@mui/material';
 import unripeBeanIcon from 'img/tokens/unripe-bean-logo-circled.svg';
 import brownLPIcon from 'img/tokens/unripe-lp-logo-circled.svg';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useTheme } from '@mui/material/styles';
-import greenBeanIcon from 'img/tokens/bean-logo-circled.svg';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useAccount } from 'wagmi';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
-import { BeanstalkPalette } from '../../../App/muiTheme';
+import { BeanstalkPalette } from 'components/App/muiTheme';
+import { UNRIPE_ASSETS } from 'constants/tooltips';
 import { StyledDialogContent, StyledDialogTitle } from '../../Dialog';
 import { displayBN, toTokenUnitsBN } from '../../../../util';
-import { UNRIPE_ASSETS } from '../../../../constants/tooltips';
-import TokenStateRow from "./TokenStateRow";
+import TokenStateRow from './TokenStateRow';
+import SelectorCard from './SelectorCard';
 
 // ----------------------------------------------------
 
@@ -202,13 +198,11 @@ const PickBeansDialog: React.FC<{
         <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Pick Unripe Beans</StyledDialogTitle>
         <StyledDialogContent>
           <Stack gap={1.3}>
-            {/* Pod Balance */}
             <Typography sx={{ fontSize: '15px' }} color="text.secondary">
               Your Unripe Beans & LP available to Pick are assets which were not Deposited pre-exploit. Upon Unpause,
               Beanstalk will automatically deposit your pre-exploit Deposited balance.
             </Typography>
             <Stack sx={{ pl: isMobile ? 0 : 2, pb: 0.5 }} gap={0.5}>
-              {/* Deposited Balance */}
               <Stack gap={0.5}>
                 <Stack direction="row" justifyContent="space-between">
                   <Typography sx={{ fontSize: '16px' }}>Deposited Balance</Typography>
@@ -265,6 +259,7 @@ const PickBeansDialog: React.FC<{
                 {
                   (unripeBeanData !== undefined) ? (
                     unripeBeanData.map((obj, i) => (
+                      // exclude 'token' attribute to show Bean state
                       <TokenStateRow
                         name={`${obj?.state} Beans`}
                         amount={obj?.amount}
@@ -319,45 +314,17 @@ const PickBeansDialog: React.FC<{
         </StyledDialogTitle>
         <StyledDialogContent sx={{ width: isMobile ? null : '560px' }}>
           <Stack gap={0.8}>
-            <Card
-              sx={{
-                p: 2.5,
-                cursor: 'pointer',
-                '&:hover': {
-                  backgroundColor: BeanstalkPalette.hoverBlue
-                }
-              }}
-              onClick={handlePickBeans}
-            >
-              <Stack justifyContent="center" alignItems="start">
-                <Typography sx={{ fontSize: '20px' }}>Pick Unripe Beans</Typography>
-                <Typography sx={{ fontSize: '14px' }} color="text.secondary">
-                  Claim the Unripe Beans to your wallet.
-                </Typography>
-              </Stack>
-            </Card>
-            <Card
-              sx={{
-                p: 2.5,
-                cursor: 'pointer',
-                '&:hover': {
-                  backgroundColor: '#f9fcff'
-                }
-              }}
-              onClick={handlePickAndDepositBeans}
-            >
-              <Stack justifyContent="center" alignItems="start">
-                <Stack direction="row" gap={0.3}>
-                  <Typography sx={{ fontSize: '20px' }}>Pick & Deposit Unripe Beans</Typography>
-                  <Typography sx={{ fontSize: '15px', color: BeanstalkPalette.logoGreen }}>
-                    (Recommended)
-                  </Typography>
-                </Stack>
-                <Typography sx={{ fontSize: '14px' }} color="text.secondary">
-                  Claim the Unripe Beans & Deposit them in the Silo to earn yield.
-                </Typography>
-              </Stack>
-            </Card>
+            <SelectorCard 
+              title="Pick Unripe Beans" 
+              description="Claim the Unripe Beans to your wallet." 
+              handleClick={() => {}}
+            />
+            <SelectorCard 
+              title="Pick Unripe Beans" 
+              description="Claim your Unripe Beans & LP, then Deposit them in the Silo to earn yield."
+              handleClick={() => {}}
+              recommendOption
+            />
           </Stack>
         </StyledDialogContent>
       </>

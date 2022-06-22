@@ -1,15 +1,14 @@
-import React, {useMemo, useState} from 'react';
-import {Stack, Tooltip, Typography, useMediaQuery} from '@mui/material';
+import React from 'react';
+import { Stack, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import {BeanstalkPalette} from 'components/App/muiTheme';
-import {UNRIPE_ASSETS} from 'constants/tooltips';
+import { BeanstalkPalette } from 'components/App/muiTheme';
 import greenBeanIcon from 'img/tokens/bean-logo-circled.svg';
-import {useTheme} from '@mui/material/styles';
-import {displayBN} from '../../../../util';
-import {Token} from 'classes';
-import BigNumber from "bignumber.js";
+import { useTheme } from '@mui/material/styles';
+import { Token } from 'classes';
+import BigNumber from 'bignumber.js';
+import { displayBN } from '../../../../util';
 
 export type TokenStateRowProps = {
   name: string;
@@ -30,13 +29,13 @@ const TokenStateRow: React.FC<TokenStateRowProps> =
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     return (
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction="row" justifyContent="space-between" alignItems="start">
         <Stack direction="row" alignItems="center" gap={0.3}>
           {
             (amount.gt(0) ? (
-              <CheckIcon sx={{fontSize: '16px', color: BeanstalkPalette.logoGreen}}/>
+              <CheckIcon sx={{ fontSize: '16px', color: BeanstalkPalette.logoGreen }} />
             ) : (
-              <CloseIcon sx={{fontSize: '16px', color: BeanstalkPalette.lightishGrey}}/>
+              <CloseIcon sx={{ fontSize: '16px', color: BeanstalkPalette.lightishGrey }} />
             ))
           }
           <Typography
@@ -52,7 +51,7 @@ const TokenStateRow: React.FC<TokenStateRowProps> =
           {!isMobile && (
             <Tooltip placement="right" title={tooltip}>
               <HelpOutlineIcon
-                sx={{color: 'text.secondary', fontSize: '14px'}}
+                sx={{ color: 'text.secondary', fontSize: '14px' }}
               />
             </Tooltip>
           )}
@@ -61,9 +60,9 @@ const TokenStateRow: React.FC<TokenStateRowProps> =
           {
             (token !== undefined) ? (
               // LP states
-              <>
+              <Stack direction={isMobile ? 'column' : 'row'} alignItems={isMobile ? 'end' : null} gap={0.3}>
                 <Stack direction="row" alignItems="center" gap={0.3}>
-                  <img src={token?.logo} alt="Circulating Beans" height={13}/>
+                  <img src={token?.logo} alt="Circulating Beans" height={13} />
                   <Typography
                     sx={{
                       fontSize: '16px',
@@ -86,7 +85,7 @@ const TokenStateRow: React.FC<TokenStateRowProps> =
                   >
                     (~
                   </Typography>
-                  <img src={greenBeanIcon} alt="Circulating Beans" width={13}/>
+                  <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
                   <Typography
                     sx={{
                       fontSize: '16px',
@@ -99,12 +98,11 @@ const TokenStateRow: React.FC<TokenStateRowProps> =
                     )
                   </Typography>
                 </Stack>
-              </>
-
+              </Stack>
             ) : (
               // bean states
               <Stack direction="row" alignItems="center" gap={0.3}>
-                <img src={greenBeanIcon} alt="Circulating Beans" width={13}/>
+                <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
                 <Typography sx={{
                   fontSize: '16px',
                   color: amount.eq(0) ? BeanstalkPalette.lightishGrey : null
