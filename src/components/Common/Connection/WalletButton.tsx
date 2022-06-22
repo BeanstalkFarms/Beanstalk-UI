@@ -36,13 +36,15 @@ import disconnectIcon from 'img/nav-icons/disconnect.svg';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import WalletDialog from './WalletDialog';
 import DropdownIcon from '../DropdownIcon';
-import PickBeansDialog from '../Dialogs/PickBeansDialog';
+import PickBeansDialog from '../../Farmer/Unripe/PickDialog';
+
 // -----------------------------------------------------------------
 
 const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const { disconnect } = useDisconnect();
+  const chain = useChainConstant(CHAIN_INFO);
 
   // Wallet Dialog
   const [showDialog, setShowDialog] = useState(false);
@@ -74,7 +76,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
     setModalOpen(false);
   }, []);
 
-  const chain = useChainConstant(CHAIN_INFO);
+
   // Display: Not Connected
   if (!account?.address || !activeChain?.id) {
     return (
@@ -138,7 +140,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
               View on Etherscan
             </Typography>
           </Stack>
-
           <ArrowForwardIcon
             sx={{
               transform: 'rotate(-45deg)',
@@ -156,7 +157,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           </Typography>
         </Stack>
       </MenuItem>
-      <Box sx={{ px: 1, py: 0.3 }}>
+      <Box sx={{ px: 1, pt: 0.75, pb: 0.25 }}>
         <Button
           fullWidth
           onClick={handleOpen}
@@ -164,10 +165,9 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
             py: 0.9,
             backgroundColor: BeanstalkPalette.brown,
             color: BeanstalkPalette.white,
-            // fontWeight: 400,
             '&:hover': {
               backgroundColor: BeanstalkPalette.brown,
-              opacity: 0.98
+              opacity: 0.96
             }
           }}>
           <Stack direction="row" alignItems="center">
@@ -181,51 +181,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   // Connected
   return (
     <>
-      {/* <Tooltip    
-        // components={{ Tooltip: Card }}
-        title={menu}
-        open={open}
-        onOpen={handleShowMenu}
-        onClose={handleHideMenu}
-        // enterTouchDelay={50}
-        // leaveTouchDelay={10000}
-        placement="bottom-end"
-        sx={{
-          marginTop: 10,
-          pointerEvents: 'auto'
-        }}
-        componentsProps={{
-          popper: {
-            sx: {
-              paddingTop: 0.5
-            }
-          }
-        }}
-        PopperProps={{
-          keepMounted: true,
-          disablePortal: true,
-        }}
-      >
-        <Button
-          disableFocusRipple
-          variant="contained"
-          color="light"
-          startIcon={(
-            isTiny
-              ? null
-              : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
-              ? <WarningAmberIcon />
-              : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
-          )}
-          endIcon={<DropdownIcon open={open} />}
-          {...props}
-          onClick={(e) => { console.debug(`clicked main button`) }}
-        >
-          <Typography variant="subtitle1">
-            {trimAddress(getAccount(account.address), !isMedium)}
-          </Typography>
-        </Button>
-      </Tooltip> */}
+      {/* Wallet Button */}
       <Button
         disableFocusRipple
         variant="contained"
@@ -245,6 +201,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           {trimAddress(getAccount(account.address), !isMedium)}
         </Typography>
       </Button>
+      {/* Popup Menu */}
       <Menu
         elevation={0}
         anchorEl={anchorEl}
@@ -278,7 +235,11 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       >
         {menu}
       </Menu>
-      <PickBeansDialog open={modalOpen} handleClose={handleClose} />
+      {/* Pick Beans Dialog */}
+      <PickBeansDialog
+        open={modalOpen}
+        handleClose={handleClose}
+      />
     </>
   );
 };

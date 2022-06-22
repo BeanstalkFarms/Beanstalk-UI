@@ -8,17 +8,15 @@ import greenBeanIcon from 'img/tokens/bean-logo-circled.svg';
 import { useTheme } from '@mui/material/styles';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
-import { displayBN } from '../../../../util';
+import { displayBN } from '../../../util';
 
-export type TokenStateRowProps = {
+const UnripeTokenRow: React.FC<{
   name: string;
   amount: BigNumber;
   bdv?: BigNumber;
   tooltip: string;
   token: Token;
-}
-
-const TokenStateRow: React.FC<TokenStateRowProps> = ({
+}> = ({
   name,
   amount,
   bdv,
@@ -115,4 +113,4 @@ const TokenStateRow: React.FC<TokenStateRowProps> = ({
   );
 };
 
-export default TokenStateRow;
+export default UnripeTokenRow;
