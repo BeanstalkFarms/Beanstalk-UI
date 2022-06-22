@@ -1,14 +1,12 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Button, Card, CardProps, Stack, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
-import { DataGrid, DataGridProps, GridRowParams } from '@mui/x-data-grid';
+import React, { useCallback, useState } from 'react';
+import { Button, Card, CardProps, Stack, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
+import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { useTheme } from '@mui/material/styles';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import podIcon from 'img/beanstalk/pod-icon.svg';
-import { marketplaceTableStyle } from '../../util/marketplaceTableStyle';
 import BuySellTable from './Tables/BuySellTable';
 import { displayBN, displayFullBN } from '../../util';
-import PickBeansDialog from '../Common/Dialogs/PickBeansDialog';
 import BuyOrderModal from './Modals/BuyOrderModal';
 import SellListingModal from './Modals/SellListingModal';
 import BuyNowModal from './Modals/BuyNowModal';
@@ -21,7 +19,9 @@ const buyColumns: DataGridProps['columns'] = [
     flex: 1,
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 0)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => (
+      <Typography>{displayBN(params.value)}</Typography>
+    ),
   },
   {
     field: 'expiry',
@@ -29,7 +29,9 @@ const buyColumns: DataGridProps['columns'] = [
     flex: 0.5,
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 0)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => (
+      <Typography>{displayBN(params.value)}</Typography>
+    ),
   },
   {
     field: 'price',
@@ -53,7 +55,9 @@ const buyColumns: DataGridProps['columns'] = [
     disableColumnMenu: true,
     align: 'right',
     headerAlign: 'right',
-    valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
+    valueFormatter: (params) => (
+      `${displayFullBN(params.value as BigNumber, 2)}`
+    ),
     renderCell: (params) => (
       <Stack direction="row" gap={0.3} alignItems="center">
         <Typography>{displayBN(params.value)}</Typography>
@@ -78,7 +82,9 @@ const sellColumns: DataGridProps['columns'] = [
     field: 'placeInLine',
     headerName: 'Place In Line',
     flex: 0.5,
-    renderCell: (params) => <Typography>{params.value}</Typography>,
+    renderCell: (params) => (
+      <Typography>{params.value}</Typography>
+    ),
   },
   {
     field: 'price',
@@ -216,24 +222,54 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
         </Stack>
 
         {/* Buy Now tab */}
-        {tab === 0 && <BuySellTable columns={buyColumns} rows={buyRows} onRowClick={handleBuyNowModalOpen} />}
+        {tab === 0 && (
+          <BuySellTable
+            columns={buyColumns}
+            rows={buyRows}
+            onRowClick={handleBuyNowModalOpen}
+          />
+        )}
 
         {/* Sell Now tab */}
-        {tab === 1 && <BuySellTable columns={sellColumns} rows={sellRows} onRowClick={handleSellNowModalOpen} />}
+        {tab === 1 && (
+          <BuySellTable
+            columns={sellColumns}
+            rows={sellRows}
+            onRowClick={handleSellNowModalOpen}
+          />
+        )}
       </Card>
 
       {/* ----- modals ----- */}
       {/* User clicks "Create Buy Order" button */}
-      <BuyOrderModal fullWidth open={buyModalOpen} handleClose={handleBuyModalClose} />
+      <BuyOrderModal
+        fullWidth
+        open={buyModalOpen}
+        handleClose={handleBuyModalClose}
+      />
 
       {/* User clicks "Create Sell Listing" button */}
-      <SellListingModal fullWidth open={sellModalOpen} handleClose={handleSellModalClose} />
+      <SellListingModal
+        fullWidth
+        open={sellModalOpen}
+        handleClose={handleSellModalClose}
+      />
 
       {/* User clicks a row under Buy Now tab */}
-      <BuyNowModal fullWidth handleClose={handleBuyNowModalClose} open={buyNowModalOpen} row={buyNowRow} />
+      <BuyNowModal
+        fullWidth
+        handleClose={handleBuyNowModalClose}
+        open={buyNowModalOpen}
+        row={buyNowRow}
+      />
 
       {/* User clicks a row under Sell Now tab */}
-      <SellNowModal fullWidth handleClose={handleSellNowModalClose} open={sellNowModalOpen} row={sellNowRow} />
+      <SellNowModal
+        fullWidth
+        handleClose={handleSellNowModalClose}
+        open={sellNowModalOpen}
+        row={sellNowRow}
+      />
     </>
   );
 };
