@@ -7,7 +7,7 @@ type ConstantByChain = { [key: number] : any };
 const TESTNET_CHAINS = new Set([
   SupportedChainId.ASTRO,
   SupportedChainId.LOCALHOST,
-  SupportedChainId.MAINNET,
+  SupportedChainId.HARDHAT,
 ]);
 
 export function getChainConstant<T extends ConstantByChain>(map: T, chainId?: SupportedChainId) : T[keyof T] {
