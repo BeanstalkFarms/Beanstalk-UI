@@ -18,11 +18,11 @@ const SettingSwitch : React.FC<{
           <Switch
             {...fieldProps.field}
             checked={fieldProps.field.value === true}
-            />
+          />
         </Box>
       </Stack>
-      )}
+    )}
   </Field>
-  );
+);
 
 export default SettingSwitch;

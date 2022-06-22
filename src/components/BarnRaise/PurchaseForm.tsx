@@ -268,7 +268,7 @@ const SetupForm: React.FC<{}> = () => {
       <Stack gap={1}>
         <Typography variant="h2">Purchase Fertilizer</Typography>
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
-          {(props) => <FertilizeForm contract={fertContract} {...props} />}
+          {(formikProps) => <FertilizeForm contract={fertContract} {...formikProps} />}
         </Formik>
       </Stack>
     </Card>

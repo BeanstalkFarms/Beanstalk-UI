@@ -18,10 +18,14 @@ import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/t
 import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import { UNRIPE_ASSETS } from 'constants/tooltips';
-import { StyledDialogContent, StyledDialogTitle } from '../../Dialog';
-import { displayBN, toTokenUnitsBN } from '../../../../util';
+import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../../Dialog';
+import { displayBN, displayUSD, toTokenUnitsBN } from '../../../../util';
 import TokenStateRow from './TokenStateRow';
 import SelectorCard from './SelectorCard';
+import { getAccount } from 'util/Account';
+import { ZERO_BN } from 'constants/index';
+import Token from 'classes/Token';
+import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 
 // ----------------------------------------------------
 
@@ -79,6 +83,11 @@ const UNRIPE_LP_CATEGORIES = [
 
 // ----------------------------------------------------
 
+const tokenOrZero = (amount: string | undefined, token: Token) => {
+  if (!amount) return ZERO_BN;
+  return toTokenUnitsBN(amount, token.decimals);
+}
+
 const PickBeansDialog: React.FC<{
   handleClose: any;
 } & DialogProps> =
@@ -96,10 +105,11 @@ const PickBeansDialog: React.FC<{
     const [tab, setTab] = useState(0);
     const { data: account } = useAccount();
     const [unripe, setUnripe] = useState<GetUnripeResponse | null>(null);
+    const breakdown = useFarmerSiloBreakdown();
 
     useEffect(() => {
       if (account?.address) {
-        fetch(`/.netlify/functions/unripe?account=${account.address.toLowerCase()}`)
+        fetch(`/.netlify/functions/unripe?account=${getAccount(account.address.toLowerCase())}`)
           .then((response) => response.json())
           .then((json) => {
             setUnripe(json);
@@ -108,7 +118,9 @@ const PickBeansDialog: React.FC<{
             console.error(e);
           });
       }
-    }, [account, unripe]);
+    }, [account]);
+
+    // -- Data
 
     const unripeBeanData = useMemo(() => {
       if (unripe !== null) {
@@ -128,28 +140,18 @@ const PickBeansDialog: React.FC<{
     }, [unripe]);
 
     const unripeLPData = useMemo(() => {
-      if (unripe !== null) {
-        return (
-          UNRIPE_LP_CATEGORIES.map((obj, i) => (
-            {
-              key: `circulating${obj.key}Lp`,
-              token: obj.token,
-              circulating: unripe[`circulating${obj.key}Lp`] !== undefined
-                ? toTokenUnitsBN(unripe[`circulating${obj.key}Lp`] as string, obj?.token?.decimals)
-                : new BigNumber(0),
-              withdrawn: unripe[`withdrawn${obj.key}Lp`] !== undefined
-                ? toTokenUnitsBN(unripe[`withdrawn${obj.key}Lp`] as string, obj?.token?.decimals)
-                : new BigNumber(0),
-              circulatingBdv: unripe[`circulating${obj.key}Bdv`] !== undefined
-                ? toTokenUnitsBN(unripe[`circulating${obj.key}Bdv`] as string, obj?.token?.decimals)
-                : new BigNumber(0),
-              withdrawnBdv: unripe[`withdrawn${obj.key}Bdv`] !== undefined
-                ? toTokenUnitsBN(unripe[`withdrawn${obj.key}Bdv`] as string, obj?.token?.decimals)
-                : new BigNumber(0),
-            }
-          ))
-        );
-      }
+      return (
+        UNRIPE_LP_CATEGORIES.map((obj, i) => (
+          {
+            key: `circulating${obj.key}Lp`,
+            token: obj.token,
+            circulating:    tokenOrZero(unripe?.[`circulating${obj.key}Lp`], obj.token),
+            withdrawn:      tokenOrZero(unripe?.[`withdrawn${obj.key}Lp`], obj.token),
+            circulatingBdv: tokenOrZero(unripe?.[`circulating${obj.key}Bdv`], obj.token),
+            withdrawnBdv:   tokenOrZero(unripe?.[`withdrawn${obj.key}Bdv`], obj.token),
+          }
+        ))
+      );
     }, [unripe]);
 
     const totalUnripeBeans = useMemo(() => {
@@ -171,6 +173,8 @@ const PickBeansDialog: React.FC<{
         );
       }
     }, [unripe]);
+
+    // -- Handler
 
     const handleDialogClose = () => {
       handleClose();
@@ -206,7 +210,7 @@ const PickBeansDialog: React.FC<{
               <Stack gap={0.5}>
                 <Stack direction="row" justifyContent="space-between">
                   <Typography sx={{ fontSize: '16px' }}>Deposited Balance</Typography>
-                  <Typography sx={{ fontSize: '16px' }}>$XX</Typography>
+                  <Typography sx={{ fontSize: '16px' }}>{displayUSD(breakdown.states.deposited.value)}</Typography>
                 </Stack>
                 <Typography sx={{ fontSize: '12px' }} color="text.secondary">
                   Your Deposited Balance will automatically be deposited upon Replant, these beans do not need to be
@@ -214,31 +218,30 @@ const PickBeansDialog: React.FC<{
                 </Typography>
               </Stack>
               <Divider />
+              {/**
+                * Section 1: LP
+                */}
               <Stack gap={0.9}>
                 <Typography variant="h3">Pre-exploit LP Balances Available to Pick</Typography>
-                {
-                  (unripeLPData !== undefined) ? (
-                    unripeLPData.map((obj, i) => (
-                      <>
-                        <Typography sx={{ fontSize: '16px' }}>{obj?.token?.name} Balances</Typography>
-                        <TokenStateRow
-                          name={`Circulating ${obj?.token?.name}`}
-                          amount={obj?.circulating}
-                          tooltip={UNRIPE_ASSETS[obj.key]}
-                          token={obj?.token}
-                          bdv={obj?.circulatingBdv}
-                        />
-                        <TokenStateRow
-                          name={`Withdrawn ${obj?.token?.name}`}
-                          amount={obj?.circulating}
-                          tooltip={UNRIPE_ASSETS[obj?.key]}
-                          token={obj?.token}
-                          bdv={obj?.circulatingBdv}
-                        />
-                      </>
-                    ))
-                  ) : null
-                }
+                {unripeLPData.map((obj) => (
+                  <>
+                    <Typography sx={{ fontSize: '16px' }}>{obj.token.name} Balances</Typography>
+                    <TokenStateRow
+                      name={`Circulating ${obj.token.name}`}
+                      amount={obj.circulating}
+                      tooltip={UNRIPE_ASSETS[obj.key]}
+                      token={obj.token}
+                      bdv={obj.circulatingBdv}
+                    />
+                    <TokenStateRow
+                      name={`Withdrawn ${obj.token.name}`}
+                      amount={obj.circulating}
+                      tooltip={UNRIPE_ASSETS[obj.key]}
+                      token={obj.token}
+                      bdv={obj.circulatingBdv}
+                    />
+                  </>
+                ))}
               </Stack>
               <Divider />
               <Stack direction="row" justifyContent="space-between">
@@ -253,22 +256,23 @@ const PickBeansDialog: React.FC<{
                 </Stack>
               </Stack>
             </Stack>
+            {/**
+              * Section 2: Unripe Beans
+              */}
             <Stack sx={{ pl: isMobile ? 0 : 2 }} gap={0.5}>
               <Stack gap={0.9}>
                 <Typography variant="h3">Pre-exploit Bean Balances Available to Pick</Typography>
-                {
-                  (unripeBeanData !== undefined) ? (
-                    unripeBeanData.map((obj, i) => (
-                      // exclude 'token' attribute to show Bean state
-                      <TokenStateRow
-                        name={`${obj?.state} Beans`}
-                        amount={obj?.amount}
-                        tooltip={UNRIPE_ASSETS[obj?.key]}
-                        bdv={obj?.amount}
-                      />
-                    ))
-                  ) : null
-                }
+                {(unripeBeanData !== undefined) ? (
+                  unripeBeanData.map((obj, i) => (
+                    // exclude 'token' attribute to show Bean state
+                    <TokenStateRow
+                      name={`${obj?.state} Beans`}
+                      amount={obj?.amount}
+                      tooltip={UNRIPE_ASSETS[obj?.key]}
+                      bdv={obj?.amount}
+                    />
+                  ))
+                ) : null}
               </Stack>
               <Divider />
               <Stack direction="row" justifyContent="space-between">
@@ -284,20 +288,23 @@ const PickBeansDialog: React.FC<{
                 </Stack>
               </Stack>
             </Stack>
-            <Button
-              onClick={handleNextTab}
-              sx={{
-                py: 1,
-                backgroundColor: BeanstalkPalette.brown,
-                '&:hover': {
-                  backgroundColor: BeanstalkPalette.brown,
-                  opacity: 0.98
-                }
-              }}>
-              Pick Unripe Assets
-            </Button>
           </Stack>
         </StyledDialogContent>
+        <StyledDialogActions>
+          <Button
+            onClick={handleNextTab}
+            fullWidth
+            sx={{
+              py: 1,
+              backgroundColor: BeanstalkPalette.brown,
+              '&:hover': {
+                backgroundColor: BeanstalkPalette.brown,
+                opacity: 0.98
+              }
+            }}>
+            Pick Unripe Assets
+          </Button>
+        </StyledDialogActions>
       </>
     );
 
