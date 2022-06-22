@@ -54,6 +54,11 @@ const ROUTES = {
   ],
   more: [
     {
+      path: 'marketplace',
+      title: 'Marketplace',
+      icon: tradeIcon
+    },
+    {
       path: 'governance',
       href: 'https://snapshot.org/#/beanstalkdao.eth',
       title: 'Governance',

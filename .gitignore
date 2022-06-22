@@ -11,3 +11,5 @@ stats.json
 src/constants/generated
 
 .vscode/
+
+.netlify/

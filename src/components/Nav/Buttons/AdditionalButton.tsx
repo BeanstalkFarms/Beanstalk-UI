@@ -28,7 +28,7 @@ import { BeanstalkPalette } from '../../App/muiTheme';
 const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
   // Theme
   const theme = useTheme();
-  const isMedium = useMediaQuery(theme.breakpoints.down('md'));   // trim additional account text
+  const isMedium = useMediaQuery(theme.breakpoints.down('lg'));   // trim additional account text
   const isTiny = useMediaQuery('(max-width:380px)');              //
 
   // Constants

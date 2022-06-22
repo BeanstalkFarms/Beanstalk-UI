@@ -13,6 +13,7 @@
     "@mui/material": "^5.8.4",
     "@mui/styles": "^5.6.1",
     "@mui/x-data-grid": "^5.9.0",
+    "@netlify/functions": "^1.0.0",
     "@reduxjs/toolkit": "^1.5.0",
     "@visx/pattern": "^2.1.2",
     "@visx/xychart": "^2.1.0",

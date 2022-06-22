@@ -55,7 +55,8 @@ export const BeanstalkPalette = {
   washedRed: '#c35f42',
   yellow: '#f0df6a',
   darkNavyBlue: '#3c76af',
-  brown: '#795739'
+  brown: '#795739',
+  hoverBlue: '#f9fcff'
 };
 
 // FIXME: changes to createTheme don't hot reload.
