@@ -139,7 +139,7 @@ const OverviewCard: React.FC<{
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
         <DepositsTab
           current={[
-            breakdown.deposited.value
+            breakdown.states.deposited.value
           ]}
           series={[
             mockDepositData

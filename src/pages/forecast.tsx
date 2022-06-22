@@ -156,7 +156,7 @@ const ForecastPage: React.FC = () => {
   const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const { totalPods } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const { supply: totalBeanSupply } = useSelector<AppState, AppState['_bean']['token']>((state) => state._bean.token);
-  const balances = useSelector<AppState, AppState['_beanstalk']['silo']['tokens']>((state) => state._beanstalk.silo.tokens);
+  const balances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
   const podRate = totalPods.dividedBy(totalBeanSupply).multipliedBy(100);
 
   // const isPriceLoading = beanPrice.eq(new BigNumber(-1));

@@ -8,5 +8,5 @@ export const ALCHEMY_API_KEYS : { [key in SupportedChainId]: string } = {
   [SupportedChainId.ROPSTEN]: 'ds4ljBC_Pq-PaIQ3aHo04t27y2n8qpry',
   [SupportedChainId.ASTRO]: '',
   [SupportedChainId.LOCALHOST]: '',
-  [SupportedChainId.HARDHAT]: '',
+  [SupportedChainId.CUJO]: '',
 };

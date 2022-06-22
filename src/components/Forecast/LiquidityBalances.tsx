@@ -58,6 +58,7 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
       alignItems="center"
       gap={1}
     >
+      {/* Chart */}
       <Stack width={isMobile ? '100%' : '75%'} ref={ref} justifyContent="end">
         <SimpleStackedAreaChart />
         <Stack direction="row" justifyContent="space-between" sx={{ pt: 0.75, pr: 2, pl: 2, pb: 0 }}>
@@ -69,6 +70,7 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
           <Typography color={BeanstalkPalette.lightishGrey}>7/21</Typography>
         </Stack>
       </Stack>
+      {/* Table */}
       <Stack width={isMobile ? '100%' : '20%'} direction="row" justifyContent="space-between" gap={1}>
         <Stack gap={0.5}>
           <Typography sx={{ ml: 2 }} color="text.secondary">Pool</Typography>

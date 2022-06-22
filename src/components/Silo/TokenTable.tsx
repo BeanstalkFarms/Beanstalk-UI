@@ -70,11 +70,13 @@ const TokenTable : React.FC<{
           </Grid>
           <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">TVL</Typography>
-            <Typography color="black" fontWeight="bold">${displayBN(aggregateTVL)}</Typography>
+            <Typography color="black" fontWeight="bold">
+              ${displayBN(aggregateTVL)}
+            </Typography>
           </Grid>
           <Grid item md={3} xs={8} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
             <Typography color="gray">My Deposits</Typography>
-            <Typography color="black" fontWeight="bold">{displayUSD(breakdown.deposited.value)}</Typography>
+            <Typography color="black" fontWeight="bold">{displayUSD(breakdown.states.deposited.value)}</Typography>
           </Grid>
         </Grid>
       </Box>
@@ -96,6 +98,7 @@ const TokenTable : React.FC<{
                 }}
               >
                 <Grid container alignItems="center">
+                  {/* Cell: Token */}
                   <Grid item md={3} xs={4}>
                     <Stack direction="row" alignItems="center" gap={1}>
                       <img
@@ -108,17 +111,20 @@ const TokenTable : React.FC<{
                       </Typography>
                     </Stack>
                   </Grid>
+                  {/* Cell: Rewards */}
                   <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
                       <TokenIcon token={SEEDS} />{token.rewards?.seeds}
                     </Typography>
                   </Grid>
+                  {/* Cell: TVL */}
                   <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       ${displayBN(getTVL(token))}
                     </Typography>
                   </Grid>
+                  {/* Cell: My Deposits */}
                   <Grid item md={3} xs={8} sx={{ textAlign: 'right' }}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">

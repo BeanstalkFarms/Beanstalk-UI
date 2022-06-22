@@ -1,3 +1,3 @@
-import { ParsedEvent } from './updater';
+import { Event } from 'lib/Beanstalk/EventProcessor';
 
-export type Events = ParsedEvent[];
+export type Events = Event[];

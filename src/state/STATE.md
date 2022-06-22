@@ -12,6 +12,15 @@
 - governance
 - market
 - silo
+  - balances
+    - deposited
+      - amount
+    - withdrawn
+      - amount
+    - claimable
+      - amount
+    - circulating
+    - wrapped
 - sun
   - season
 
@@ -20,21 +29,37 @@
 - balances: ERC-20 token balances
 - events: Beanstalk events related to this farmer, used to calculate deposits etc.
 - field
+  - pods
   - plots
+  - harvestablePods
   - harvestablePlots
 - governance
 - market
 - nfts
 - silo
-  - tokens (keyed by tokenAddress)
+  - balances (tokenAddress => SiloBalance)
+    - deposited
+      - amount
+      - bdv
+      - crates
+    - withdrawn
+      - amount
+      - crates
+    - claimable
+      - amount
+      - crates
     - circulating
     - wrapped
-    - deposits
-    - deposited
-    - withdrawn
-    - withdrawals
-    - claimable
   - beans
+    - earned
   - stalk
+    - total
+    - active
+    - earned
+    - grown
   - seeds
+    - total
+    - active
+    - earned
   - roots
+    - total

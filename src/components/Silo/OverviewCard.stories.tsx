@@ -22,11 +22,13 @@ const Template: ComponentStory<typeof OverviewCard> = (args: any) => (
     beanstalkSilo={initialBeanstalkSilo}
     breakdown={{
       totalValue: n,
-      circulating: s,
-      wrapped: s,
-      claimable: s,
-      deposited: s,
-      withdrawn: s,
+      states: {
+        circulating: s,
+        wrapped: s,
+        claimable: s,
+        deposited: s,
+        withdrawn: s,
+      }
     }}
     season={new BigNumber(6074)}
   />

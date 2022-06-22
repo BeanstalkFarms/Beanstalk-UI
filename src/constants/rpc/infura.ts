@@ -13,7 +13,7 @@ export const INFURA_HTTPS_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.ASTRO]: '',
   [SupportedChainId.LOCALHOST]: '',
-  [SupportedChainId.HARDHAT]: '',
+  [SupportedChainId.CUJO]: '',
 };
 
 export const INFURA_WS_URLS: { [key in SupportedChainId]: string } = {
@@ -21,5 +21,5 @@ export const INFURA_WS_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ROPSTEN]: `wss://ropsten.infura.io/ws/v3/${INFURA_KEY}`,
   [SupportedChainId.ASTRO]: '',
   [SupportedChainId.LOCALHOST]: '',
-  [SupportedChainId.HARDHAT]: '',
+  [SupportedChainId.CUJO]: '',
 };
