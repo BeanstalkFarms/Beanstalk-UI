@@ -60,7 +60,7 @@ const TokenStateRow: React.FC<TokenStateRowProps> =
           {
             (token !== undefined) ? (
               // LP states
-              <Stack direction={isMobile ? 'column' : 'row'} alignItems={isMobile ? 'end' : null} gap={0.3}>
+              <Stack direction={isMobile ? 'column' : 'row'} sx={{ alignItems: isMobile ? 'end' : null }} gap={0.3}>
                 <Stack direction="row" alignItems="center" gap={0.3}>
                   <img src={token?.logo} alt="Circulating Beans" height={13} />
                   <Typography

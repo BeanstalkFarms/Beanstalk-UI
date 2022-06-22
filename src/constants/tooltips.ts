@@ -1,5 +1,5 @@
 export const EXAMPLE_TOOLTIP = '';
-export const UNRIPE_ASSETS = {
+export const UNRIPE_ASSETS : { [key: string]: string } = {
   // Beans
   circulatingBeans: 'Beans that are in Farmers wallets',
   withdrawnBeans: 'Beans in the process of being Withdrawn.',

@@ -224,7 +224,7 @@ const PickBeansDialog: React.FC<{
                         <TokenStateRow
                           name={`Circulating ${obj?.token?.name}`}
                           amount={obj?.circulating}
-                          tooltip={UNRIPE_ASSETS[obj?.key]}
+                          tooltip={UNRIPE_ASSETS[obj.key]}
                           token={obj?.token}
                           bdv={obj?.circulatingBdv}
                         />
