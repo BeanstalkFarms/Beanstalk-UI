@@ -35,7 +35,7 @@ const FarmerEventsProcessor = () => {
     (state) => state._beanstalk.field.harvestableIndex,
   );
 
-  const processFarmerEvents = useEventProcessor();
+  const processFarmerEventsV1 = useEventProcessor();
   const getChainConstant = useGetChainConstant();
   const chainId = useChainId();
   const SiloTokens = useMemo(() => ({
@@ -128,7 +128,7 @@ const FarmerEventsProcessor = () => {
           ));
         } else {
           // v1
-          const results = processFarmerEvents(
+          const results = processFarmerEventsV1(
             events,
             eventParsingParameters
           );
@@ -248,7 +248,7 @@ const FarmerEventsProcessor = () => {
     whitelist,
     dispatch,
     eventParsingParameters,
-    processFarmerEvents,
+    processFarmerEventsV1,
     SiloTokens,
   ]);
 

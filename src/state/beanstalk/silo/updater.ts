@@ -6,11 +6,12 @@ import { tokenResult } from 'util/Tokens';
 
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
-import useMigrateCall from 'hooks/useMigrateCall';
+import useMigrateCall, { REPLANTED_CHAINS } from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
-import { useGeneralizedWhitelist } from 'hooks/useWhitelist';
+import useWhitelist, { useGeneralizedWhitelist } from 'hooks/useWhitelist';
 import BigNumber from 'bignumber.js';
 import { useGetChainConstant } from 'hooks/useChainConstant';
+import useChainId from 'hooks/useChain';
 import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
 import { BeanstalkSiloBalance } from './index';
 
@@ -18,7 +19,11 @@ export const useBeanstalkSilo = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
   const migrate = useMigrateCall();
-  const WHITELIST = useGeneralizedWhitelist();
+  const chainId = useChainId();
+  const FULL_WHITELIST = useWhitelist();
+  const GEN_WHITELIST  = useGeneralizedWhitelist();
+  const IS_REPLANTED = REPLANTED_CHAINS.has(chainId);
+  const WHITELIST = IS_REPLANTED  ? FULL_WHITELIST : GEN_WHITELIST;
 
   const getChainConstant = useGetChainConstant();
   const SiloTokens = useMemo(() => ({
@@ -92,7 +97,7 @@ export const useBeanstalkSilo = () => {
         // beanstalk.withdrawSeasons().then(bigNumberResult)
       ] as const);
 
-      console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [stalkTotal, seedsTotal]);
+      console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [stalkTotal, seedsTotal, poolBalancesTotal[0], poolBalancesTotal[0].deposited.toString()]);
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
@@ -123,36 +128,32 @@ export const useBeanstalkSilo = () => {
         roots: {
           total: rootsTotal,
         },
-        tokens: {
-          [SiloTokens.Bean.address]: {
-            deposited: {
-              amount:  depositedBeansTotal,
-              bdv:    depositedBeansTotal,
+        balances: {
+          ...(IS_REPLANTED ? {} : {
+            [SiloTokens.Bean.address]: {
+              deposited: {
+                amount:  depositedBeansTotal,
+              },
+              withdrawn: {
+                amount:  withdrawnBeansTotal,
+              }
             },
-            withdrawn: {
-              amount:  withdrawnBeansTotal,
-              bdv:    withdrawnBeansTotal,
-            }
-          },
-          [SiloTokens.BeanEthLP.address]: {
-            deposited: {
-              amount:  depositedLpTotal,
-              bdv:    new BigNumber(0),
+            [SiloTokens.BeanEthLP.address]: {
+              deposited: {
+                amount:  depositedLpTotal,
+              },
+              withdrawn: {
+                amount:  withdrawnLpTotal,
+              }
             },
-            withdrawn: {
-              amount:  withdrawnLpTotal,
-              bdv:    new BigNumber(0),
-            }
-          },
+          }),
           ...poolBalancesTotal.reduce((agg, curr) => {
             agg[curr.token] = {
               deposited: {
                 amount: curr.deposited,
-                bdv: new BigNumber(0),
               },
               withdrawn: {
                 amount: curr.withdrawn,
-                bdv: new BigNumber(0),
               }
             };
             return agg;
@@ -166,7 +167,8 @@ export const useBeanstalkSilo = () => {
     dispatch,
     migrate,
     beanstalk,
-    WHITELIST
+    WHITELIST,
+    IS_REPLANTED
   ]);
 
   const clear = useCallback(() => {

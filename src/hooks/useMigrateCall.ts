@@ -3,7 +3,7 @@ import { SupportedChainId } from 'constants/index';
 import useChainId from './useChain';
 
 export const REPLANTED_CHAINS = new Set([
-  SupportedChainId.HARDHAT,
+  SupportedChainId.CUJO,
 ]);
 
 export default function useMigrateCall() {

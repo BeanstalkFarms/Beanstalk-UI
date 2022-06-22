@@ -211,7 +211,7 @@ const useFarmerEvents = () => {
                 transactionIndex: e.transactionIndex,
                 // backwards compat
                 facet: getEventFacet(e.event),
-                returnValues: e.args,
+                returnValues: parseBNJS(e.decode?.(e.data, e.topics) || {}),
               }))
               .sort((a, b) => {
                 const diff = a.blockNumber - b.blockNumber;

@@ -7,5 +7,5 @@ export const POKT_HTTPS_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ROPSTEN]: 'https://eth-ropsten.gateway.pokt.network/v1/lb/624de453a846f20039ba3b7b',
   [SupportedChainId.ASTRO]: '',
   [SupportedChainId.LOCALHOST]: '',
-  [SupportedChainId.HARDHAT]: '',
+  [SupportedChainId.CUJO]: '',
 };

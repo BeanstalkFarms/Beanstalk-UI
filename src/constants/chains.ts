@@ -4,8 +4,8 @@ export enum SupportedChainId {
   MAINNET = 1,
   ROPSTEN = 3,
   ASTRO = 6074,
+  CUJO = 31337,
   LOCALHOST = 1337,
-  HARDHAT = 31337,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
@@ -13,7 +13,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.ROPSTEN]: 'Ropsten',
   [SupportedChainId.ASTRO]: 'Astro',
   [SupportedChainId.LOCALHOST]: 'Localhost',
-  [SupportedChainId.HARDHAT]: 'Hardhat',
+  [SupportedChainId.CUJO]: 'Cujo',
 };
 
 export enum NetworkType {
@@ -26,7 +26,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.ROPSTEN,
   SupportedChainId.ASTRO,
   SupportedChainId.LOCALHOST,
-  SupportedChainId.HARDHAT
+  SupportedChainId.CUJO
 ] as const;
 
 export const L2_CHAIN_IDS = [] as const;
@@ -95,7 +95,7 @@ export const CHAIN_INFO : ChainInfoMap = {
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Localhost Ether', symbol: 'locETH', decimals: 18 },
   },
-  [SupportedChainId.HARDHAT]: {
+  [SupportedChainId.CUJO]: {
     networkType: NetworkType.L1,
     explorer: 'https://etherscan.io',
     label: 'Harhat',

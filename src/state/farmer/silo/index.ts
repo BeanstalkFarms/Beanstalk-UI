@@ -84,7 +84,7 @@ export type FarmerSiloRewards = {
   beans: {
     /**
      * The amount of Beans the Farmer has earned 
-     * rom their ownership of the Silo.
+     * from their ownership of the Silo.
      */
     earned: BigNumber;
   }

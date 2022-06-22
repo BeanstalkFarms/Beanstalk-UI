@@ -9,18 +9,11 @@ export type BeanstalkSiloBalance = {
   deposited: {
     /** The total amount of this Token currently in the Deposited state. */
     amount: BigNumber;
-    /** The BDV of this Token currently in the Deposited state. */
-    bdv: BigNumber;
   };
   withdrawn: {
     /** The total amount of this Token currently in the Withdrawn state. */
     amount: BigNumber;
-    /** ??? */
-    bdv: BigNumber;
   };
-  // claimable: BigNumber;
-  // wrapped: BigNumber;
-  // circulating: BigNumber;
 }
 
 /**
@@ -31,7 +24,7 @@ export type BeanstalkSiloBalance = {
  * FIXME: enforce that `address` is a key of whitelisted tokens?
  */
 export type BeanstalkSiloBalances = {
-  tokens: TokenMap<BeanstalkSiloBalance>;
+  balances: TokenMap<BeanstalkSiloBalance>;
 }
 
 /**

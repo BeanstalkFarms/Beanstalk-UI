@@ -59,9 +59,7 @@ const TOKEN_STATE = [
   'wrapped',
   'circulating'
 ] as const;
-
-// FIXME:
-// Rename since this is no longer Silo-specific.
+ 
 export default function useFarmerSiloBreakdown() {
   // Constants
   const WHITELIST = useWhitelist();
@@ -76,7 +74,7 @@ export default function useFarmerSiloBreakdown() {
 
   return useMemo(() => {
     console.debug('[useFarmerSiloBalances] running reducer');
-    const baseState = initState(WHITELIST_ADDRS);
+
     return WHITELIST_ADDRS.reduce((prev, address) => {
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];
@@ -109,9 +107,9 @@ export default function useFarmerSiloBreakdown() {
 
         // Aggregate amounts of each State
         TOKEN_STATE.forEach((s) => {
-          prev[s].value = prev[s].value.plus(usdValueByState[s]);
-          prev[s].byToken[address].amount = prev[s].byToken[address].amount.plus(amountByState[s]);
-          prev[s].byToken[address].value  = prev[s].byToken[address].value.plus(usdValueByState[s]);
+          prev.states[s].value                   = prev.states[s].value.plus(usdValueByState[s]);
+          prev.states[s].byToken[address].amount = prev.states[s].byToken[address].amount.plus(amountByState[s]);
+          prev.states[s].byToken[address].value  = prev.states[s].byToken[address].value.plus(usdValueByState[s]);
         });
       }
       return prev;
@@ -119,11 +117,13 @@ export default function useFarmerSiloBreakdown() {
       /** The total USD value of all tokens in the Silo. */
       totalValue:   new BigNumber(0),
       /** */
-      deposited:    { ...baseState },
-      withdrawn:    { ...baseState },
-      claimable:    { ...baseState },
-      wrapped:      { ...baseState },
-      circulating:  { ...baseState },
+      states: {
+        deposited:    initState(WHITELIST_ADDRS),
+        withdrawn:    initState(WHITELIST_ADDRS),
+        claimable:    initState(WHITELIST_ADDRS),
+        wrapped:      initState(WHITELIST_ADDRS),
+        circulating:  initState(WHITELIST_ADDRS),
+      }
     });
   },
   [

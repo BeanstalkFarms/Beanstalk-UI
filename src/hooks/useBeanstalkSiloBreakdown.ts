@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
+import { AddressMap, ZERO_BN } from 'constants/index';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { AddressMap, ZERO_BN } from 'constants/index';
 import useSiloTokenToUSD from './currency/useSiloTokenToUSD';
-import useGeneralizedWhitelist from './useWhitelist';
+import useWhitelist from './useWhitelist';
 
 // -----------------
 // Types and Helpers
@@ -13,8 +13,6 @@ import useGeneralizedWhitelist from './useWhitelist';
 const TOKEN_STATE = [
   'deposited',
   'withdrawn',
-  'wrapped',
-  'circulating'
 ] as const;
 
 // SiloStateBreakdown
@@ -61,66 +59,61 @@ const initState = (tokenAddresses: string[]) => ({
  */
 export default function useBeanstalkSiloBreakdown() {
   // Constants
-  const WHITELIST = useGeneralizedWhitelist();
+  const WHITELIST = useWhitelist();
   const WHITELIST_ADDRS = useMemo(() => Object.keys(WHITELIST), [WHITELIST]);
 
   //
-  const siloBalances = useSelector<AppState, AppState['_beanstalk']['silo']['tokens']>((state) => state._beanstalk.silo.tokens);
-  const tokenBalances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
+  const siloBalances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
   const getUSD = useSiloTokenToUSD();
 
   return useMemo(() => {
     console.debug('[useFarmerSiloBalances] running reducer');
+    const baseState = initState(WHITELIST_ADDRS);
     return WHITELIST_ADDRS.reduce((prev, address) => {
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];
-      const tokenBalance = tokenBalances[address] || ZERO_BN;
 
       // Ensure we've loaded a Silo Balance for this token.
       if (siloBalance) {
         const amountByState = {
           deposited:   siloBalance.deposited?.amount,
           withdrawn:   siloBalance.withdrawn?.amount,
-          wrapped:     new BigNumber(0),
-          circulating: tokenBalance,
         };
         const usdValueByState = {
           deposited:   getUSD(TOKEN, siloBalance.deposited?.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn?.amount),
-          wrapped:     getUSD(TOKEN, new BigNumber(0)),
-          circulating: getUSD(TOKEN, tokenBalance),
         };
 
+        // Aggregate value of all states.
         prev.totalValue = (
           prev.totalValue
             .plus(
-              Object.values(usdValueByState).reduce((p, c) => p.plus(c))
+              TOKEN_STATE.reduce((p, c) => p.plus(usdValueByState[c]), ZERO_BN)
             )
         );
 
         // Aggregate amounts of each State
         TOKEN_STATE.forEach((s) => {
-          prev[s].value = prev[s].value.plus(usdValueByState[s]);
-          prev[s].byToken[address].amount = prev[s].byToken[address].amount.plus(amountByState[s]);
-          prev[s].byToken[address].value  = prev[s].byToken[address].value.plus(usdValueByState[s]);
+          prev.states[s].value = prev.states[s].value.plus(usdValueByState[s]);
+          prev.states[s].byToken[address].amount = prev.states[s].byToken[address].amount.plus(amountByState[s]);
+          prev.states[s].byToken[address].value  = prev.states[s].byToken[address].value.plus(usdValueByState[s]);
         });
       }
       return prev;
     }, {
       /** The total USD value of all tokens in the Silo. */
       totalValue:   new BigNumber(0),
-      deposited:    initState(WHITELIST_ADDRS),
-      withdrawn:    initState(WHITELIST_ADDRS),
-      claimable:    initState(WHITELIST_ADDRS),
-      wrapped:      initState(WHITELIST_ADDRS),
-      circulating:  initState(WHITELIST_ADDRS),
+      /** */
+      states: {
+        deposited: initState(WHITELIST_ADDRS),
+        withdrawn: initState(WHITELIST_ADDRS),
+      }
     });
   },
   [
     WHITELIST,
     WHITELIST_ADDRS,
     siloBalances,
-    tokenBalances,
     getUSD,
   ]);
 }
