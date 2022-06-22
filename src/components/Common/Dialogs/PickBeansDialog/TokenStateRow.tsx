@@ -13,17 +13,17 @@ import { displayBN } from '../../../../util';
 export type TokenStateRowProps = {
   name: string;
   amount: BigNumber;
+  bdv?: BigNumber;
   tooltip: string;
-  token?: Token;
-  bdv: BigNumber;
+  token: Token;
 }
 
 const TokenStateRow: React.FC<TokenStateRowProps> = ({
   name,
   amount,
+  bdv,
   tooltip,
   token,
-  bdv
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -42,7 +42,8 @@ const TokenStateRow: React.FC<TokenStateRowProps> = ({
             fontSize: '16px',
             color: amount.eq(0)
               ? BeanstalkPalette.lightishGrey
-              : null
+              : null,
+            textTransform: 'capitalize'
           }}
         >
           {name}
@@ -56,60 +57,59 @@ const TokenStateRow: React.FC<TokenStateRowProps> = ({
         )}
       </Stack>
       <Stack direction={isMobile ? 'column' : 'row'} alignItems="center" gap={0.3}>
-        {
-          (token !== undefined) ? (
-            // LP states
-            <Stack direction={isMobile ? 'column' : 'row'} sx={{ alignItems: isMobile ? 'end' : null }} gap={0.3}>
-              <Stack direction="row" alignItems="center" gap={0.3}>
-                <img src={token?.logo} alt="Circulating Beans" height={13} />
-                <Typography
-                  sx={{
-                    fontSize: '16px',
-                    color: amount.eq(0)
-                      ? BeanstalkPalette.lightishGrey
-                      : null
-                  }}
-                >
-                  {displayBN(amount)}
-                </Typography>
-              </Stack>
-              <Stack direction="row" alignItems="center" gap={0.3}>
-                <Typography
-                  sx={{
-                    fontSize: '16px',
-                    color: amount.eq(0)
-                      ? BeanstalkPalette.lightishGrey
-                      : null
-                  }}
-                >
-                  (~
-                </Typography>
-                <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
-                <Typography
-                  sx={{
-                    fontSize: '16px',
-                    color: bdv.eq(0)
-                      ? BeanstalkPalette.lightishGrey
-                      : null
-                  }}
-                >
-                  {displayBN(amount)}
-                  )
-                </Typography>
-              </Stack>
-            </Stack>
-          ) : (
-            // bean states
+        {(amount && bdv) ? (
+          // LP states
+          <Stack direction={isMobile ? 'column' : 'row'} sx={{ alignItems: isMobile ? 'end' : null }} gap={0.3}>
             <Stack direction="row" alignItems="center" gap={0.3}>
-              <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
-              <Typography sx={{
-                fontSize: '16px',
-                color: amount.eq(0) ? BeanstalkPalette.lightishGrey : null
-              }}>{displayBN(bdv)}
+              <img src={token.logo} alt="Circulating Beans" height={13} />
+              <Typography
+                sx={{
+                  fontSize: '16px',
+                  color: amount.eq(0)
+                    ? BeanstalkPalette.lightishGrey
+                    : null
+                }}
+              >
+                {displayBN(amount)}
               </Typography>
             </Stack>
-          )
-        }
+            <Stack direction="row" alignItems="center" gap={0.3}>
+              <Typography
+                sx={{
+                  fontSize: '16px',
+                  color: amount.eq(0)
+                    ? BeanstalkPalette.lightishGrey
+                    : null
+                }}
+              >
+                (~
+              </Typography>
+              <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
+              <Typography
+                sx={{
+                  fontSize: '16px',
+                  color: bdv.eq(0)
+                    ? BeanstalkPalette.lightishGrey
+                    : null
+                }}
+              >
+                {displayBN(bdv)}
+                )
+              </Typography>
+            </Stack>
+          </Stack>
+        ) : (
+          // Bean states
+          <Stack direction="row" alignItems="center" gap={0.3}>
+            <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
+            <Typography sx={{
+              fontSize: '16px',
+              color: amount.eq(0) ? BeanstalkPalette.lightishGrey : null
+            }}>
+              {displayBN(amount)}
+            </Typography>
+          </Stack>
+        )}
       </Stack>
     </Stack>
   );
