@@ -1,8 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { Event } from 'lib/Beanstalk/EventProcessor';
 import { resetEvents, setEvents } from './actions';
-import { ParsedEvent } from './updater';
 
-const initialState : ParsedEvent[] = [];
+const initialState : Event[] = [];
 
 export default createReducer(initialState, (builder) =>
   builder

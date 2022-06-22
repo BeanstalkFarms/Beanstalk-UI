@@ -15,7 +15,7 @@ const epp : EventProcessingParameters = {
   farmableBeans: BN(0),
   season: BN(6074),
   harvestableIndex: BN(100),  // fixme
-  tokenMap: SILO_WHITELIST.reduce<TokenMap>((prev, curr) => {
+  whitelist: SILO_WHITELIST.reduce<TokenMap>((prev, curr) => {
     prev[curr[1].address] = curr[1];
     return prev;
   }, {}),

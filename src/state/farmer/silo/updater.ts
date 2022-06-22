@@ -41,7 +41,7 @@ export const useFarmerSilo = () => {
         beanstalk.balanceOfGrownStalk(account).then(tokenResult(STALK)),
       ] as const);
 
-      console.debug('[farmer/silo/useFarmerSilo] RESULT', [stalkBalance, seedBalance]);
+      console.debug('[farmer/silo/useFarmerSilo] RESULT', [stalkBalance, seedBalance, earnedBeanBalance]);
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds

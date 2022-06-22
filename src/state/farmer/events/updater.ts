@@ -12,14 +12,7 @@ import { getAccount } from 'util/Account';
 import { getEventFacet } from 'util/GetEventFacet';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { resetEvents, setEvents } from './actions';
-
-export type ParsedEvent = {
-  event: ethers.Event['event'];
-  blockNumber: ethers.Event['blockNumber'];
-  logIndex: ethers.Event['logIndex'];
-  facet: string;
-  returnValues: any;
-};
+import { Event } from 'lib/Beanstalk/EventProcessor';
 
 const getEvents = (
   beanstalk: Beanstalk,
@@ -190,6 +183,8 @@ const parseBNJS = (_o: { [key: string]: any }) => {
   return o;
 };
 
+// ----------------------------------------
+
 const useFarmerEvents = () => {
   const blocks = useBlocks();
   const dispatch = useDispatch();
@@ -205,32 +200,29 @@ const useFarmerEvents = () => {
         Promise.all(getEvents(beanstalk, migrate, account, blocks)).then((results) => {
           const flattened = flattenDeep<ethers.Event>(results);
           console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
-          const allEvents: ParsedEvent[] = flattened.reduce<ParsedEvent[]>((agg, event, index) => {
-            try {
-              console.debug('[farmer/events/useFarmerEvents]: parse -> ', event);
-              agg.push({
-                event: event.event,
-                blockNumber: event.blockNumber,
-                logIndex: event.logIndex,
-                facet: getEventFacet(event.event),
-                // args: event.args,
-                returnValues: event.decode
+          const allEvents : Event[] = (
+            flattened
+              .map<Event>((e) => ({
+                event: e.event,
+                args: e.args,
+                blockNumber: e.blockNumber,
+                logIndex: e.logIndex,
+                transactionHash: e.transactionHash,
+                transactionIndex: e.transactionIndex,
+                // backwards compat
+                facet: getEventFacet(e.event),
+                returnValues: e.decode
                   ? parseBNJS({
-                      ...(event.decode(event.data, event.topics) as Array<any>),
+                      ...(e.decode(e.data, e.topics) as Array<any>),
                     })
                   : null,
-              });
-            } catch (e) {
-              console.debug(`[farmer/events/userFarmerEvents] failed to decode event values ${index}`, event);
-              console.error(e);
-            }
-            return agg;
-          }, [])
-          .sort((a, b) => {
-            const diff = a.blockNumber - b.blockNumber;
-            if (diff !== 0) return diff;
-            return a.logIndex - b.logIndex;
-          });
+              }))
+              .sort((a, b) => {
+                const diff = a.blockNumber - b.blockNumber;
+                if (diff !== 0) return diff;
+                return a.logIndex - b.logIndex;
+              })
+          );
           console.debug(`[farmer/events/useFarmerEvents] RESULT: received ${allEvents.length} events`, allEvents);
           dispatch(setEvents(allEvents));
         });
@@ -255,6 +247,8 @@ const useFarmerEvents = () => {
 
   return [fetch, clear] as const;
 };
+
+// ----------------------------------------
 
 const FarmerEventsUpdater = () => {
   const [fetch, clear] = useFarmerEvents();

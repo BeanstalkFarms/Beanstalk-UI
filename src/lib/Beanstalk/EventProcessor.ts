@@ -1,4 +1,4 @@
-import { BigNumber as EBN } from 'ethers';
+import { BigNumber as EBN, ethers } from 'ethers';
 import {
   SowEvent,
   HarvestEvent,
@@ -10,12 +10,16 @@ import {
   RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event,
   RemoveWithdrawalsEvent,
 } from 'constants/generated/Beanstalk/BeanstalkReplanted';
-import { BEAN, ERC20_TOKENS } from 'constants/tokens';
+import { BEAN } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import { TypedEvent } from 'constants/generated/common';
 import Token from 'classes/Token';
-import { getChainConstant } from 'hooks/useChainConstant';
 import { TokenMap } from 'constants/index';
+import { PlotMap } from 'state/farmer/field';
+import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
+import { Withdrawals } from 'hooks/useEventProcessor';
+
+// ----------------------------------------
 
 const SupportedEvents = [
   'Sow',
@@ -29,9 +33,9 @@ const SupportedEvents = [
   'RemoveWithdrawals',
 ] as const;
 const SupportedEventsSet = new Set(SupportedEvents);
-type SupportedEvents = typeof SupportedEvents;
-
 const Bean = BEAN[1];
+
+// ----------------------------------------
 
 /** */
 export const BN      = (v: EBN | BigNumber.Value) => (v instanceof EBN ? new BigNumber(v.toString()) : new BigNumber(v));
@@ -46,17 +50,34 @@ export const initTokens = (tokenMap: TokenMap) =>
     {}
   );
 
+// ----------------------------------------
+
+type SupportedEvents = typeof SupportedEvents;
 export type EventProcessingParameters = {
   season: BigNumber;
   farmableBeans: BigNumber;
   harvestableIndex: BigNumber;
-  tokenMap: TokenMap;
+  whitelist: TokenMap;
 }
 export type EventProcessorData = {
-  plots: { [index: string] : BigNumber };
-  deposits:     TokenMap<{ [season: string]: { amount: BigNumber, bdv: BigNumber; } }>;
-  withdrawals:  TokenMap<{ [season: string]: { amount: BigNumber } }>;
+  plots: {
+    [index: string] : BigNumber
+  };
+  deposits: TokenMap<{ 
+    [season: string]: { 
+      amount: BigNumber;
+      bdv: BigNumber;
+    }
+  }>;
+  withdrawals: TokenMap<{
+    [season: string]: { 
+      amount: BigNumber;
+    }
+  }>;
 }
+export type EventKeys = 'event' | 'args' | 'blockNumber' | 'transactionIndex' | 'transactionHash' | 'logIndex'
+export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & { facet?: string };
+export type Event = Simplify<ethers.Event>;
 
 export default class EventProcessor {
   // ----------------------------
@@ -86,30 +107,43 @@ export default class EventProcessor {
     initialState?: Partial<EventProcessorData>,
   ) {
     this.account = account.toLowerCase();
-    if (!epp.tokenMap || typeof epp !== 'object') throw new Error('EventProcessor: Missing tokenMap');
+    if (!epp.whitelist || typeof epp !== 'object') throw new Error('EventProcessor: Missing tokenMap');
     this.epp = epp;
     this.plots = initialState?.plots || {};
-    this.deposits    = initialState?.deposits    || initTokens(this.epp.tokenMap);
-    this.withdrawals = initialState?.withdrawals || initTokens(this.epp.tokenMap);
+    this.deposits    = initialState?.deposits    || initTokens(this.epp.whitelist);
+    this.withdrawals = initialState?.withdrawals || initTokens(this.epp.whitelist);
   }
   
-  ingest<T extends TypedEvent>(event: T) {
-    if (!event.event) throw new Error('Missing event name');
-    if (!SupportedEventsSet.has(event.event as SupportedEvents[number])) throw new Error(`No handler for event: ${event.event}`);
-    return this[event.event as SupportedEvents[number]](event);
+  ingest<T extends Event>(event: T) {
+    if (!event.event) { return }; //throw new Error('Missing event name');
+    if (!SupportedEventsSet.has(event.event as SupportedEvents[number])) { return } // throw new Error(`No handler for event: ${event.event}`);
+    return this[event.event as SupportedEvents[number]](event as any);
+  }
+
+  ingestAll<T extends Event>(events: T[]) {
+    events.forEach((event) => this.ingest(event));
+    return this.data();
+  }
+
+  data() {
+    return {
+      plots: this.plots,
+      deposits: this.deposits,
+      withdrawals: this.withdrawals,
+    }
   }
 
   // ----------------------------
   // |          FIELD           |
   // ----------------------------
 
-  Sow(event: SowEvent) {
+  Sow(event: Simplify<SowEvent>) {
     const index = event.args.index.div(10 ** Bean.decimals).toString();
     this.plots[index] = BN(event.args.pods.div(10 ** Bean.decimals));
     return [index, this.plots[index]];
   }
 
-  Harvest(event: HarvestEvent) {
+  Harvest(event: Simplify<HarvestEvent>) {
     let beansClaimed = BN(event.args.beans.div(10 ** Bean.decimals));
     const plots = (
       event.args.plots
@@ -150,7 +184,7 @@ export default class EventProcessor {
     });
   }
 
-  PlotTransfer(event: PlotTransferEvent) {
+  PlotTransfer(event: Simplify<PlotTransferEvent>) {
     // Numerical "index" of the Plot.
     // Absolute, with respect to Pod 0.
     const index = tokenBN(event.args.id, Bean);
@@ -203,6 +237,101 @@ export default class EventProcessor {
     }
   }
 
+  parsePlots(_harvestableIndex: BigNumber) {
+    return EventProcessor.parsePlots(
+      this.plots,
+      _harvestableIndex || this.epp.harvestableIndex
+    )
+  }
+
+  static parsePlots(plots: EventProcessorData['plots'], index: BigNumber) {
+    let pods = new BigNumber(0);
+    let harvestablePods = new BigNumber(0);
+    const unharvestablePlots  : PlotMap<BigNumber> = {};
+    const harvestablePlots    : PlotMap<BigNumber> = {};
+
+    Object.keys(plots).forEach((p) => {
+      if (plots[p].plus(p).isLessThanOrEqualTo(index)) {
+        harvestablePods = harvestablePods.plus(plots[p]);
+        harvestablePlots[p] = plots[p];
+      } else if (new BigNumber(p).isLessThan(index)) {
+        harvestablePods = harvestablePods.plus(index.minus(p));
+        pods = pods.plus(
+          plots[p].minus(index.minus(p))
+        );
+        harvestablePlots[p] = index.minus(p);
+        unharvestablePlots[index.minus(p).plus(p).toString()] = plots[p].minus(
+          index.minus(p)
+        );
+      } else {
+        pods = pods.plus(plots[p]);
+        unharvestablePlots[p] = plots[p];
+      }
+    });
+    
+    // FIXME: "unharvestable pods" are just Pods,
+    // but we can't reuse "plots" in the same way.
+    return [
+      pods, harvestablePods,
+      unharvestablePlots, harvestablePlots
+    ] as const;
+  }
+
+  // ----------------------------
+  // |      SILO: UTILITIES     |
+  // ----------------------------
+  
+  // parseWithdrawals(currentSeason?: BigNumber) {
+  //   return EventProcessor._parseWithdrawals(
+  //     this.withdrawals,
+  //     currentSeason || this.epp.season,
+  //   );
+  // }
+
+  static _parseWithdrawals(
+    withdrawals: EventProcessorData['withdrawals'][string], 
+    currentSeason: BigNumber
+  ) : {
+    withdrawn: FarmerSiloBalance['withdrawn'];
+    claimable: FarmerSiloBalance['claimable'];
+  } {
+    let transitBalance    = new BigNumber(0);
+    let receivableBalance = new BigNumber(0);
+    const transitWithdrawals    : WithdrawalCrate[] = [];
+    const receivableWithdrawals : WithdrawalCrate[] = [];
+  
+    // Split each withdrawal between `receivable` and `transit`.
+    Object.keys(withdrawals).forEach((season: string) => {
+      const v = withdrawals[season].amount;
+      const s = new BigNumber(season);
+      if (s.isLessThanOrEqualTo(currentSeason)) {
+        receivableBalance = receivableBalance.plus(v);
+        receivableWithdrawals.push({
+          amount: v,
+          season: s,
+        });
+      } else {
+        transitBalance = transitBalance.plus(v);
+        transitWithdrawals.push({
+          amount: v,
+          season: s,
+        });
+      }
+    });
+  
+    return {
+      withdrawn: {
+        amount: transitBalance,
+        bdv: new BigNumber(0),
+        crates: transitWithdrawals,
+      },
+      claimable: {
+        amount: receivableBalance,
+        crates: receivableWithdrawals,
+      }
+    };
+  }
+
   // ----------------------------
   // |      SILO: DEPOSIT       |
   // ----------------------------
@@ -226,8 +355,8 @@ export default class EventProcessor {
     token: string,
     _amount: EBN,
   ) {
-    if (!this.epp.tokenMap[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
-    const amount    = tokenBN(_amount, this.epp.tokenMap[token]);
+    if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+    const amount    = tokenBN(_amount, this.epp.whitelist[token]);
     const existingDeposit = this.deposits[token][season];
     if (!existingDeposit) throw new Error('Received a \'RemoveDeposit\' event for an unknown deposit.');
 
@@ -250,12 +379,12 @@ export default class EventProcessor {
     }
   }
 
-  AddDeposit(event: AddDepositEvent) {
+  AddDeposit(event: Simplify<AddDepositEvent>) {
     const token     = event.args.token.toLowerCase();
-    if (!this.epp.tokenMap[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+    if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
     const seasonBN  = BN(event.args.season);
     const season    = seasonBN.toString();
-    const amount    = tokenBN(event.args.amount, this.epp.tokenMap[token]);
+    const amount    = tokenBN(event.args.amount, this.epp.whitelist[token]);
     const bdv       = tokenBN(event.args.bdv, Bean);
 
     this.deposits[token] = {
@@ -264,7 +393,7 @@ export default class EventProcessor {
     };
   }
 
-  RemoveDeposit(event: RemoveDepositEvent) {
+  RemoveDeposit(event: Simplify<RemoveDepositEvent>) {
     this._removeDeposit(
       event.args.season.toString(),
       event.args.token.toLowerCase(),
@@ -272,7 +401,7 @@ export default class EventProcessor {
     );
   }
 
-  RemoveDeposits(event: RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event) {
+  RemoveDeposits(event: Simplify<RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event>) {
     event.args.seasons.forEach((seasonNum, index) => {
       this._removeDeposit(
         seasonNum.toString(),
@@ -302,8 +431,8 @@ export default class EventProcessor {
     token: string,
     _amount: EBN,
   ) {
-    if (!this.epp.tokenMap[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
-    const amount    = tokenBN(_amount, this.epp.tokenMap[token]);
+    if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+    const amount    = tokenBN(_amount, this.epp.whitelist[token]);
     const existingDeposit = this.withdrawals[token][season];
     if (!existingDeposit) throw new Error('Received a \'RemoveWithdrawal\' event for an unknown Withdrawal.');
 
@@ -320,12 +449,12 @@ export default class EventProcessor {
     }
   }
 
-  AddWithdrawal(event: AddWithdrawalEvent) {
+  AddWithdrawal(event: Simplify<AddWithdrawalEvent>) {
     const token  = event.args.token.toLowerCase();
-    if (!this.epp.tokenMap[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+    if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
     const seasonBN = BN(event.args.season);
     const season = seasonBN.toString();
-    const amount = tokenBN(event.args.amount, this.epp.tokenMap[token]);
+    const amount = tokenBN(event.args.amount, this.epp.whitelist[token]);
     
     this.withdrawals[token] = {
       ...this.withdrawals[token],
@@ -333,7 +462,7 @@ export default class EventProcessor {
     };
   }
   
-  RemoveWithdrawal(event: RemoveWithdrawalEvent) {
+  RemoveWithdrawal(event: Simplify<RemoveWithdrawalEvent>) {
     this._removeWithdrawal(
       event.args.season.toString(),
       event.args.token.toLowerCase(),
@@ -341,7 +470,7 @@ export default class EventProcessor {
     );
   }
 
-  RemoveWithdrawals(event: RemoveWithdrawalsEvent) {
+  RemoveWithdrawals(event: Simplify<RemoveWithdrawalsEvent>) {
     event.args.seasons.forEach((seasonNum, index) => {
       this._removeWithdrawal(
         seasonNum.toString(),
