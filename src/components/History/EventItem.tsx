@@ -1,16 +1,16 @@
 import React from 'react';
 import { Divider, Link, Stack, Tooltip, Typography } from '@mui/material';
-import { ParsedEvent } from 'state/farmer/events/updater';
 import { displayBN, toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { BEAN, BEAN_ETH_UNIV2_LP, ETH, PODS } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import { PodListingFilledEventObject, PodOrderFilledEventObject } from 'constants/generated/Beanstalk/Beanstalk';
+import { Event } from 'lib/Beanstalk/EventProcessor';
 import TokenIcon from '../Common/TokenIcon';
 
 export interface EventItemProps {
-  event: ParsedEvent;
+  event: Event;
   account: string;
 }
 
@@ -72,9 +72,9 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
 
   switch (event.event) {
     case 'BeanDeposit': {
-      // const s = event.returnValues.season;
+      // const s = event.args?.season;
       const beans = toTokenUnitsBN(
-        new BigNumber(event.returnValues.beans),
+        new BigNumber(event.args?.beans),
         BEAN[SupportedChainId.MAINNET].decimals
       );
       eventTitle = 'Bean Deposit';
@@ -85,7 +85,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
     }
     case 'BeanClaim': {
       const beans = toTokenUnitsBN(
-        new BigNumber(event.returnValues.beans),
+        new BigNumber(event.args?.beans),
         BEAN[SupportedChainId.MAINNET].decimals
       );
 
@@ -99,9 +99,9 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
       break;
     }
     case 'BeanWithdraw': {
-      // const s = parseInt(event.returnValues.season, 10);
+      // const s = parseInt(event.args?.season, 10);
       const beans = toTokenUnitsBN(
-        new BigNumber(event.returnValues.beans),
+        new BigNumber(event.args?.beans),
         BEAN[SupportedChainId.MAINNET].decimals
       );
 
@@ -115,10 +115,10 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
       break;
     }
     case 'Sow': {
-      const pods = toTokenUnitsBN(event.returnValues.pods, BEAN[SupportedChainId.MAINNET].decimals);
+      const pods = toTokenUnitsBN(event.args?.pods, BEAN[SupportedChainId.MAINNET].decimals);
 
-      if (event.returnValues.beans !== undefined) {
-        const beans = toTokenUnitsBN(event.returnValues.beans, BEAN[SupportedChainId.MAINNET].decimals);
+      if (event.args?.beans !== undefined) {
+        const beans = toTokenUnitsBN(event.args?.beans, BEAN[SupportedChainId.MAINNET].decimals);
         const weather = pods
           .dividedBy(beans)
           .minus(new BigNumber(1))
@@ -142,7 +142,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
     }
     case 'Harvest': {
       const beans = toTokenUnitsBN(
-        new BigNumber(event.returnValues.beans),
+        new BigNumber(event.args?.beans),
         BEAN[SupportedChainId.MAINNET].decimals
       );
 
@@ -156,9 +156,9 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
       break;
     }
     case 'LPDeposit': {
-      // const s = event.returnValues.season;
+      // const s = event.args?.season;
       const lp = toTokenUnitsBN(
-        new BigNumber(event.returnValues.lp),
+        new BigNumber(event.args?.lp),
         BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET].decimals
       );
 
@@ -170,7 +170,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
     }
     case 'LPClaim': {
       const lp = toTokenUnitsBN(
-        new BigNumber(event.returnValues.lp),
+        new BigNumber(event.args?.lp),
         BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET].decimals
       );
 
@@ -184,9 +184,9 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
       break;
     }
     case 'LPWithdraw': {
-      // const s = parseInt(event.returnValues.season, 10);
+      // const s = parseInt(event.args?.season, 10);
       const lp = toTokenUnitsBN(
-        new BigNumber(event.returnValues.lp),
+        new BigNumber(event.args?.lp),
         BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET].decimals
       );
 
@@ -203,7 +203,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
       eventTitle = 'BIP Vote';
       amountOut = (
         <span style={{ color: 'green', fontFamily: 'Futura-PT-Book' }}>
-          {`BIP ${event.returnValues.bip}`}
+          {`BIP ${event.args?.bip}`}
         </span>
       );
       break;
@@ -212,14 +212,14 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
       eventTitle = 'BIP Unvote';
       amountOut = (
         <span style={{ color: 'red', fontFamily: 'Futura-PT-Book' }}>
-          {`BIP ${event.returnValues.bip}`}
+          {`BIP ${event.args?.bip}`}
         </span>
       );
       break;
     }
     case 'Incentivization': {
       const beanReward = toTokenUnitsBN(
-        new BigNumber(event.returnValues.beans),
+        new BigNumber(event.args?.beans),
         BEAN[SupportedChainId.MAINNET].decimals
       );
 
@@ -230,13 +230,13 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
       break;
     }
     case 'Swap': {
-      if (event.returnValues.amount0In !== '0') {
+      if (event.args?.amount0In !== '0') {
         const swapFrom = toTokenUnitsBN(
-          new BigNumber(event.returnValues.amount0In),
+          new BigNumber(event.args?.amount0In),
           ETH[SupportedChainId.MAINNET].decimals
         );
         const swapTo = toTokenUnitsBN(
-          new BigNumber(event.returnValues.amount1Out),
+          new BigNumber(event.args?.amount1Out),
           BEAN[SupportedChainId.MAINNET].decimals
         );
 
@@ -247,13 +247,13 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
         amountIn = (
           <TokenDisplay color="green" input={[swapTo, BEAN[SupportedChainId.MAINNET]]} />
         );
-      } else if (event.returnValues.amount1In !== '0') {
+      } else if (event.args?.amount1In !== '0') {
         const swapFrom = toTokenUnitsBN(
-          new BigNumber(event.returnValues.amount1In),
+          new BigNumber(event.args?.amount1In),
           BEAN[SupportedChainId.MAINNET].decimals
         );
         const swapTo = toTokenUnitsBN(
-          new BigNumber(event.returnValues.amount0Out),
+          new BigNumber(event.args?.amount0Out),
           ETH[SupportedChainId.MAINNET].decimals
         );
 
@@ -269,10 +269,10 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
     }
     case 'PlotTransfer': {
       const pods = toTokenUnitsBN(
-        new BigNumber(event.returnValues.pods),
+        new BigNumber(event.args?.pods),
         BEAN[SupportedChainId.MAINNET].decimals
       );
-      if (event.returnValues.from.toLowerCase() === account) {
+      if (event.args?.from.toLowerCase() === account) {
         eventTitle = 'Send Plot';
         amountOut = (
           <TokenDisplay color="red" input={[pods, PODS]} />
@@ -291,9 +291,9 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
     // do efficiently in the frontend so it should be likely be
     // moved to the subgraph.
     case 'PodOrderFilled': {
-      const values = (event.returnValues as PodOrderFilledEventObject);
+      const values = event.args;
       // const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
-      if (values.to.toLowerCase() === account) {
+      if (values?.to.toLowerCase() === account) {
         // My Pod Order was "Filled".
         // I lose Beans, gain the Plot.
         eventTitle = 'Bought Plot via Farmer\'s Market';
@@ -305,9 +305,9 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
       break;
     }
     case 'PodListingFilled': {
-      const values = (event.returnValues as PodListingFilledEventObject);
+      const values = event.args;
       // const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
-      if (values.to.toLowerCase() === account) {
+      if (values?.to.toLowerCase() === account) {
         // I "Filled" a Pod Listing (I spent Beans to buy someone's Pods)
         eventTitle = 'Bought Plot via Farmer\'s Market';
       } else {
@@ -324,8 +324,8 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
     <>
       <Stack gap={0.2} pt={1} pb={1}>
         {
-          event?.returnValues?.season && (
-            <Typography>Season {displayBN(event.returnValues.season)}</Typography>
+          event?.args?.season && (
+            <Typography>Season {displayBN(event.args?.season)}</Typography>
           )
         }
         <Stack direction="row" justifyContent="space-between">

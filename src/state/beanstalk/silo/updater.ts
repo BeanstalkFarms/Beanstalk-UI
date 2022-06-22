@@ -83,7 +83,7 @@ export const useBeanstalkSilo = () => {
               beanstalk.getTotalDeposited(addr).then(tokenResult(WHITELIST[addr])),
               beanstalk.getTotalWithdrawn(addr).then(tokenResult(WHITELIST[addr]))
             ]).then((data) => ({
-              token: addr,
+              token: addr.toLowerCase(),
               deposited: data[0],
               withdrawn: data[1],
             }))

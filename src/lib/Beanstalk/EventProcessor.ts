@@ -52,7 +52,6 @@ export const initTokens = (tokenMap: TokenMap) =>
 
 // ----------------------------------------
 
-type SupportedEvents = typeof SupportedEvents;
 export type EventProcessingParameters = {
   season: BigNumber;
   farmableBeans: BigNumber;
@@ -76,7 +75,7 @@ export type EventProcessorData = {
   }>;
 }
 export type EventKeys = 'event' | 'args' | 'blockNumber' | 'transactionIndex' | 'transactionHash' | 'logIndex'
-export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & { facet?: string };
+export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & { facet?: string, returnValues: any };
 export type Event = Simplify<ethers.Event>;
 
 export default class EventProcessor {
@@ -115,9 +114,9 @@ export default class EventProcessor {
   }
   
   ingest<T extends Event>(event: T) {
-    if (!event.event) { return }; //throw new Error('Missing event name');
-    if (!SupportedEventsSet.has(event.event as SupportedEvents[number])) { return } // throw new Error(`No handler for event: ${event.event}`);
-    return this[event.event as SupportedEvents[number]](event as any);
+    if (!event.event) { return; } // throw new Error('Missing event name');
+    if (!SupportedEventsSet.has(event.event as (typeof SupportedEvents)[number])) { return; } // throw new Error(`No handler for event: ${event.event}`);
+    return this[event.event as (typeof SupportedEvents)[number]](event as any);
   }
 
   ingestAll<T extends Event>(events: T[]) {
@@ -130,7 +129,7 @@ export default class EventProcessor {
       plots: this.plots,
       deposits: this.deposits,
       withdrawals: this.withdrawals,
-    }
+    };
   }
 
   // ----------------------------
@@ -241,7 +240,7 @@ export default class EventProcessor {
     return EventProcessor.parsePlots(
       this.plots,
       _harvestableIndex || this.epp.harvestableIndex
-    )
+    );
   }
 
   static parsePlots(plots: EventProcessorData['plots'], index: BigNumber) {
@@ -271,10 +270,12 @@ export default class EventProcessor {
     
     // FIXME: "unharvestable pods" are just Pods,
     // but we can't reuse "plots" in the same way.
-    return [
-      pods, harvestablePods,
-      unharvestablePlots, harvestablePlots
-    ] as const;
+    return {
+      pods,
+      harvestablePods,
+      plots: unharvestablePlots,
+      harvestablePlots
+    };
   }
 
   // ----------------------------
@@ -336,6 +337,7 @@ export default class EventProcessor {
   // |      SILO: DEPOSIT       |
   // ----------------------------
 
+  // eslint-disable-next-line class-methods-use-this
   _upsertDeposit(
     existing: EventProcessorData['deposits'][string][string] | undefined,
     amount: BigNumber,
@@ -415,6 +417,7 @@ export default class EventProcessor {
   // |      SILO: WITHDRAW      |
   // ----------------------------
 
+// eslint-disable-next-line class-methods-use-this
   _upsertWithdrawal(
     existing: EventProcessorData['withdrawals'][string][string] | undefined,
     amount: BigNumber,

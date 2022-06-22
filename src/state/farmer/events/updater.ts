@@ -11,8 +11,8 @@ import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
 import { getEventFacet } from 'util/GetEventFacet';
 import useMigrateCall from 'hooks/useMigrateCall';
-import { resetEvents, setEvents } from './actions';
 import { Event } from 'lib/Beanstalk/EventProcessor';
+import { resetEvents, setEvents } from './actions';
 
 const getEvents = (
   beanstalk: Beanstalk,
@@ -211,11 +211,7 @@ const useFarmerEvents = () => {
                 transactionIndex: e.transactionIndex,
                 // backwards compat
                 facet: getEventFacet(e.event),
-                returnValues: e.decode
-                  ? parseBNJS({
-                      ...(e.decode(e.data, e.topics) as Array<any>),
-                    })
-                  : null,
+                returnValues: e.args,
               }))
               .sort((a, b) => {
                 const diff = a.blockNumber - b.blockNumber;

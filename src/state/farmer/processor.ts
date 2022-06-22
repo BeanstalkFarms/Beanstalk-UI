@@ -37,7 +37,7 @@ const FarmerEventsProcessor = () => {
 
   const processFarmerEvents = useEventProcessor();
   const getChainConstant = useGetChainConstant();
-  const chainId = useChainId()
+  const chainId = useChainId();
   const SiloTokens = useMemo(() => ({
     Bean:       getChainConstant(BEAN),
     BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
@@ -89,33 +89,28 @@ const FarmerEventsProcessor = () => {
           console.debug('[farmer/updater] ...processed events!', results);
           
           // Update Field
-          const [
-            pods,  harvestablePods,
-            plots, harvestablePlots
-          ] = p.parsePlots(eventParsingParameters.harvestableIndex);
-          dispatch(updateFarmerField({
-            pods,  harvestablePods,
-            plots, harvestablePlots,
-          }))
+          dispatch(updateFarmerField(
+            p.parsePlots(eventParsingParameters.harvestableIndex)
+          ));
 
           // Update Silo
           dispatch(updateFarmerSiloBalances(
             Object.keys(whitelist).reduce<UpdateFarmerSiloBalancesPayload>((prev, addr) => {
               prev[addr] = {
                 deposited: {
-                  ...Object.keys(results.deposits[addr]).reduce((prev, season) => {
-                    const crate = results.deposits[addr][season];
+                  ...Object.keys(results.deposits[addr]).reduce((dep, s) => {
+                    const crate = results.deposits[addr][s];
                     const bdv   = crate.bdv;
-                    prev.amount = prev.amount.plus(crate.amount);
-                    prev.bdv    = prev.bdv.plus(bdv);
-                    prev.crates.push({
-                      season: new BigNumber(season),
+                    dep.amount  = dep.amount.plus(crate.amount);
+                    dep.bdv     = dep.bdv.plus(bdv);
+                    dep.crates.push({
+                      season: new BigNumber(s),
                       amount: crate.amount,
                       bdv:    bdv,
                       stalk:  whitelist[addr].getStalk(bdv),
                       seeds:  whitelist[addr].getSeeds(bdv),
                     });
-                    return prev;
+                    return dep;
                   }, {
                     amount: ZERO_BN,
                     bdv:    ZERO_BN,
@@ -127,11 +122,10 @@ const FarmerEventsProcessor = () => {
                   results.withdrawals[addr],
                   eventParsingParameters.season,
                 )
-              }
+              };
               return prev;
             }, {})
           ));
-
         } else {
           // v1
           const results = processFarmerEvents(
@@ -250,6 +244,8 @@ const FarmerEventsProcessor = () => {
   }, [
     events,
     account,
+    chainId,
+    whitelist,
     dispatch,
     eventParsingParameters,
     processFarmerEvents,

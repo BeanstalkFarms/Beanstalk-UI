@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 
-import { ParsedEvent } from 'state/farmer/events/updater';
 import { PlotMap, SeasonMap } from 'state/farmer/field';
 import { toTokenUnitsBN } from 'util/Tokens';
 import {
@@ -12,6 +11,7 @@ import {
 } from 'constants/tokens';
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import { ERC20Token } from 'classes/Token';
+import { Event } from 'lib/Beanstalk/EventProcessor';
 
 // ------------------------------------
 // Types
@@ -279,7 +279,7 @@ export function parsePlots(
 // ------------------------------------
 
 function _processFarmerEvents(
-  events: ParsedEvent[],
+  events: Event[],
   params: EventParsingParameters,
   tokens: EventParsingTokens,
 ) {
@@ -753,7 +753,7 @@ export default function useEventProcessor() {
   }), [getChainConstant]);
   
   return useCallback(
-    (events: ParsedEvent[], params: EventParsingParameters) =>
+    (events: Event[], params: EventParsingParameters) =>
       _processFarmerEvents(events, params, Tokens),
     [Tokens],
   );
