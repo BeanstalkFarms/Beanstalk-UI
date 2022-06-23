@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   DialogProps,
   Stack,
@@ -6,6 +6,12 @@ import {
   Typography,
 } from '@mui/material';
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
+import { Formik, FormikHelpers } from 'formik';
+import SellListingForm from '../Forms/SellListing/SellListingForm';
+
+export type SellListingFormValues = {
+  card: string;
+}
 
 const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
   ({
@@ -20,6 +26,17 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
     const handleDialogClose = () => {
       handleClose();
     };
+
+    //
+    const initialValues: SellListingFormValues = useMemo(() => ({
+      card: ''
+    }), []);
+
+    //
+    const onSubmit = useCallback((values: SellListingFormValues, formActions: FormikHelpers<SellListingFormValues>) => {
+      console.log('CARD: ', values.card);
+      Promise.resolve();
+    }, []);
 
     return (
       <Dialog
@@ -36,6 +53,9 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
             <Typography color="text.secondary">Unripe Beans represent a pro rata share of underlying Beans that are
               minted as Fertilizer is sold and debt is repaid to Fertilizer.
             </Typography>
+            <Formik initialValues={initialValues} onSubmit={onSubmit}>
+              {(formikProps) => <SellListingForm {...formikProps} />}
+            </Formik>
           </Stack>
         </StyledDialogContent>
       </Dialog>
