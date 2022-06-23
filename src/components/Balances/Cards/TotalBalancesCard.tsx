@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, AlertTitle, Box, Link } from '@mui/material';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import { displayFullBN } from 'util/index';
+import { displayFullBN, displayUSD } from 'util/index';
 import Stat from 'components/Common/Stat';
 import { useAccount } from 'wagmi';
 import BlurComponent from 'components/Common/BlurComponent';
@@ -21,8 +21,8 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
   return (
     <Box>
       <Stat
-        title="My Balances"
-        amount={`$${displayFullBN(breakdown.totalValue.abs(), 2)}`}
+        title="My Total Balance"
+        amount={displayUSD(breakdown.totalValue.abs())}
         icon={undefined}
       />
       {(account && chainId === SupportedChainId.MAINNET) && (

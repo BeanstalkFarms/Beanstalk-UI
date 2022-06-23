@@ -84,3 +84,28 @@ it('makes a "straight swap" route of 3CRV reserve assets (USDT -> DAI)', async (
   expect(route[0].outputCoinAddress).toBe('0x6B175474E89094C44Da98b954EedeAC495271d0F'.toLowerCase());
   expect(parseFloat(output)).toBeGreaterThan(0);
 }, 10000);
+
+it('makes a "straight swap" route of 3CRV reserve assets (WETH -> CRV3)', async () => {
+  const [
+    { route: route1, output: output1 },
+    { route: route2, output: output2 },
+  ] = await Promise.all([
+    curve.router.getBestRouteAndOutput(
+      '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', // WETH
+      '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490', // CRV3
+      '1'
+    ),
+    curve.router.getBestRouteAndOutput(
+      '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', // WETH
+      '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
+      '1'
+    ),
+  ]);
+
+  console.log('WETH -> CRV3', route1, output1);
+  console.log('WETH -> USDT', route2, output2);
+
+  expect(route1.length).toBeGreaterThan(0);
+  expect(route1[route1.length - 1].outputCoinAddress.toLowerCase()).toBe('0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490'.toLowerCase());
+  expect(parseFloat(output1)).toBeGreaterThan(0);
+}, 10000);

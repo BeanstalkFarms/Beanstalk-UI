@@ -88,7 +88,7 @@ function AnimatedPie<Datum>({
           onClick={() => onClickDatum(arc)}
           onTouchStart={() => onClickDatum(arc)}
         />
-        {hasSpaceForLabel && (
+        {/* {hasSpaceForLabel && (
           <animated.g style={{ opacity: props.opacity }}>
             <text
               fill="#333"
@@ -104,7 +104,7 @@ function AnimatedPie<Datum>({
               {getKey(arc)}
             </text>
           </animated.g>
-        )}
+        )} */}
       </g>
     );
   });
@@ -125,6 +125,7 @@ type PieProps = {
 };
 
 type PieCustomizationProps = {
+  title?: string;
   margin?: typeof DEFAULT_MARGIN;
   animate?: boolean;
   data: PieDataPoint[] | undefined;
@@ -132,12 +133,13 @@ type PieCustomizationProps = {
 }
 
 const Pie : React.FC<PieProps & PieCustomizationProps> = ({
+  title,
   width,
   height,
   margin = DEFAULT_MARGIN,
   animate = true,
   data,
-  donutThickness = 50,
+  donutThickness = 35,
 }) => {
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
@@ -175,6 +177,21 @@ const Pie : React.FC<PieProps & PieCustomizationProps> = ({
             />
           )}
         </VisxPie>
+        {title && (
+          <text
+            fill="#333"
+            x={0}
+            y={0}
+            dy=".33em"
+            fontSize={15}
+            fontFamily="Futura PT"
+            fontWeight="bold"
+            textAnchor="middle"
+            pointerEvents="none"
+          >
+            {title}
+          </text>
+        )}
       </Group>
     </svg>
   );

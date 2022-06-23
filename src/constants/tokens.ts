@@ -233,7 +233,7 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
       name: 'BEAN:ETH LP',
       symbol: 'BEAN:ETH',
       logo: beanEthLpLogoUrl,
-      displayDecimals: 8,
+      displayDecimals: 9,
     },
     {
       stalk: 1,
@@ -248,7 +248,7 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
       name: 'BEAN:ETH LP',
       symbol: 'BEAN:ETH',
       logo: beanEthLpLogoUrl,
-      displayDecimals: 8,
+      displayDecimals: 9,
     },
     {
       stalk: 1,

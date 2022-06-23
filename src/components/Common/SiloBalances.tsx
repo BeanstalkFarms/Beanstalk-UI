@@ -2,9 +2,12 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';
-import { displayUSD } from 'util/index';
+import { displayBN, displayFullBN, displayUSD } from 'util/index';
 import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
 import { TotalBalanceCardProps } from 'components/Balances/Cards/TotalBalancesCard';
+import { Token } from 'classes';
+import TokenIcon from './TokenIcon';
+import { BeanstalkPalette } from 'components/App/muiTheme';
 
 type DrilldownValues = keyof (ReturnType<typeof useFarmerSiloBreakdown>)['states'];
 
@@ -12,36 +15,59 @@ type DrilldownValues = keyof (ReturnType<typeof useFarmerSiloBreakdown>)['states
 
 const TokenRow: React.FC<{
   name: string;
-  value: string | JSX.Element;
+  token? : Token;
+  amount?: string | JSX.Element;
+  value?: string | JSX.Element;
   isFaded: boolean;
+  isSelected?: boolean;
   onMouseOver?: () => void;
   onMouseOut?: () => void;
+  onClick?: () => void;
 }> = ({
   name,
+  token,
+  amount,
   value,
-  isFaded,
+  isFaded = false,
+  isSelected = false,
   onMouseOver,
-  onMouseOut
+  onMouseOut,
+  onClick
 }) => (
   <Stack
     direction="row"
     justifyContent="space-between"
+    alignItems="flex-start"
     sx={{
-    cursor: 'pointer',
-    py: 0.5,
-    opacity: isFaded ? 0.3 : 1,
-  }}
+      cursor: onMouseOver ? 'pointer' : 'inherit',
+      py: 0.5,
+      opacity: isFaded ? 0.3 : 1,
+      outline: isSelected ? `1px solid ${BeanstalkPalette.lightBlue}` : null,
+      px: 0.75,
+      borderRadius: 1,
+    }}
     onMouseOver={onMouseOver}
     onFocus={onMouseOver}
     onMouseOut={onMouseOut}
     onBlur={onMouseOut}
->
+    onClick={onClick}
+  >
     <Typography color="text.secondary">
       {name}
     </Typography>
-    <Typography>
-      {value}
-    </Typography>
+    <Stack direction="row" alignItems="center" gap={0.5}>
+      {token && <TokenIcon token={token} />}
+      {amount && (
+        <Typography>
+          {amount}
+        </Typography>
+      )}
+      {value && (
+        <Typography textAlign="right">
+          {value}
+        </Typography>
+      )}
+    </Stack>
   </Stack>
 );
 
@@ -73,21 +99,59 @@ const SiloBalances: React.FC<{
 }) => {
   // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
   const [hoverState, setHoverState] = useState<StateID | null>(null);
+  const [allowNewHoverState, setAllow] = useState<boolean>(true);
 
   // Drilldown handlers
-  const onMouseOut = useCallback(() => setHoverState(null), []);
-  const onMouseOver = useCallback((v: StateID) => () => setHoverState(v), []);
+  const onMouseOutContainer = useCallback(() => { 
+    if (!allowNewHoverState) {
+      setHoverState(null);
+      setAllow(true);
+    }
+  }, [allowNewHoverState]);
+  const onMouseOver = useCallback((v: StateID) => (
+    allowNewHoverState ? () => setHoverState(v) : undefined
+  ), [allowNewHoverState]);
+  const onClick = useCallback((v: StateID) => () => {
+    if (allowNewHoverState === false) {
+      setHoverState(v);
+      setAllow(true);
+    } else {
+      setHoverState(null);
+      setAllow(false);
+    }
+  }, [allowNewHoverState]);
   const availableStates = Object.keys(breakdown.states);
 
   // Compile Pie chart data
-  const pieChartData = useMemo(() => availableStates.map((id) => ({
-    label: STATE_CONFIG[id][0],
-    value: breakdown.states[id as keyof typeof breakdown.states].value.toNumber(),
-    color: STATE_CONFIG[id][1]
-  } as PieDataPoint)), [breakdown, availableStates]);
+  const pieChartData = useMemo(() => {
+    if (hoverState) {
+      const thisState = breakdown.states[hoverState as keyof typeof breakdown.states];
+      return Object.keys(thisState.byToken).reduce<PieDataPoint[]>((prev, addr, index) => {
+        const value = thisState.byToken[addr].value.toNumber();
+        if (value > 0) {
+          prev.push({
+            label: whitelist[addr].name,
+            value,
+            color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
+          });
+        }
+        return prev;
+      }, [])
+    }
+    return availableStates.map((id) => ({
+      label: STATE_CONFIG[id][0],
+      value: breakdown.states[id as keyof typeof breakdown.states].value.toNumber(),
+      color: STATE_CONFIG[id][1]
+    } as PieDataPoint));
+  }, [
+    hoverState,
+    whitelist,
+    breakdown,
+    availableStates
+  ]);
 
   return (
-    <Box>
+    <div>
       {/* <pre>{JSON.stringify(availableStates)}</pre> */}
       {/* <pre>{JSON.stringify(breakdown, null, 2)}</pre> */}
       <Grid container direction="row" alignItems="center" sx={{ mb: 4, mt: { md: 0, xs: 0 } }} rowSpacing={2}>
@@ -96,15 +160,17 @@ const SiloBalances: React.FC<{
           *   Show each Token Sate [deposited, withdrawn, ...] and the total USD
           *   value of all tokens in that State.
           */}
-        <Grid item xs={12} md={3.5}>
-          <Stack p={1}>
+        <Grid item xs={12} md={4}>
+          <Stack p={1} onMouseLeave={onMouseOutContainer} onBlur={onMouseOutContainer}>
             {availableStates.map((id) => (
               <TokenRow
                 key={id}
                 name={`${STATE_CONFIG[id][0]} Tokens`}
                 value={displayUSD(breakdown.states[id as keyof typeof breakdown.states].value)}
                 isFaded={hoverState !== null && hoverState !== id}
+                isSelected={hoverState === id}
                 onMouseOver={onMouseOver(id)}
+                onClick={onClick(id)}
               />
             ))}
           </Stack>
@@ -113,9 +179,10 @@ const SiloBalances: React.FC<{
           * Center Column:
           * Show a pie chart breaking down each of the above States.
           */}
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={4}>
           <Box display="flex" justifyContent="center" sx={{ height: 250, py: { xs: 1, md: 0 } }}>
             <ResizablePieChart
+              title={hoverState ? STATE_CONFIG[hoverState][0] : 'All Balances'}
               data={breakdown.totalValue.gt(0) ? pieChartData : undefined}
             />
           </Box>
@@ -126,7 +193,7 @@ const SiloBalances: React.FC<{
           * individual tokens in that state. Ex. if there is
           * $100,000 Deposited in the Silo, how much of it is Bean?
           */}
-        <Grid item xs={12} md={3.5}>
+        <Grid item xs={12} md={4}>
           {hoverState === null ? (
             <Stack alignItems="center" justifyContent="center" sx={{ pt: 5, pb: 5 }}>
               <Typography color="text.secondary">
@@ -135,22 +202,31 @@ const SiloBalances: React.FC<{
             </Stack>
           ) : (
             <Stack gap={1}>
-              <Typography variant="h2">{STATE_CONFIG[hoverState][0]} Tokens</Typography>
+              <Typography variant="h2" sx={{ mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Tokens</Typography>
               <Box>
-                {Object.keys(whitelist).map((address) => (
-                  <TokenRow
-                    key={address}
-                    name={`${whitelist[address].name}`}
-                    value={displayUSD(breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[address]?.value)}
-                    isFaded={false}
-                  />
-                ))}
+                {Object.keys(whitelist).sort((a, b) => {
+                  const _a : number = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[a]?.value.toNumber() || 0;
+                  const _b : number = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[b]?.value.toNumber() || 0;
+                  return _b - _a;
+                }).map((address) => {
+                  const token = whitelist[address];
+                  const inThisState = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[address];
+                  return (
+                    <TokenRow
+                      key={address}
+                      name={`${token.name}`}
+                      token={token}
+                      isFaded={false}
+                      amount={`${displayFullBN(inThisState?.amount, token.displayDecimals)} ${token.name}`}
+                    />
+                  );
+                })}
               </Box>
             </Stack>
           )}
         </Grid>
       </Grid>
-    </Box>
+    </div>
   );
 };
 
