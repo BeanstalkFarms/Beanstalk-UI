@@ -38,7 +38,7 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
     );
 
     const [tab, setTab] = useState(0);
-    const [selectedPlot, setSelectedPlot] = useState<any>(null);
+    const [selectedPlotIndex, setSelectedPlotIndex] = useState<string | null>(null);
 
     // Handlers
     const handleDialogClose = () => {
@@ -65,7 +65,7 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
     }, []);
 
     const handleSetPlot = (index: string) => {
-      setSelectedPlot(farmerField.plots[index]);
+      setSelectedPlotIndex(index);
       handleNextTab();
     };
 
@@ -95,7 +95,7 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
                     onClick={() => handleSetPlot(index)}
                   >
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
-                      <Stack direction="row" gap={0.3}>
+                      <Stack direction="row" gap={0.4}>
                         <Typography sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(index).minus(beanstalkField?.harvestableIndex))}</Typography>
                         <Typography sx={{ fontSize: '18px' }}>in Line</Typography>
                       </Stack>
@@ -103,7 +103,6 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
                         <Typography sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(farmerField.plots[index]))}</Typography>
                         <img src={podIcon} alt="" height="18px" />
                       </Stack>
-
                     </Stack>
                   </Card>
                 ))}
@@ -122,7 +121,18 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
             <StyledDialogContent>
               <Stack gap={2}>
                 <Formik initialValues={initialValues} onSubmit={onSubmit}>
-                  {(formikProps) => <SellListingForm plot={selectedPlot} {...formikProps} />}
+                  {(formikProps) => (
+                    <>
+                      {selectedPlotIndex && (
+                        <SellListingForm
+                          plot={farmerField.plots[selectedPlotIndex]}
+                          placeInLine={new BigNumber(selectedPlotIndex).minus(beanstalkField?.harvestableIndex)}
+                          numPods={new BigNumber(farmerField.plots[selectedPlotIndex])}
+                          {...formikProps}
+                        />
+                      )}
+                    </>
+                  )}
                 </Formik>
               </Stack>
             </StyledDialogContent>
