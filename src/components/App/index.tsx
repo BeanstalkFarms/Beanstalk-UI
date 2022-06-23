@@ -139,7 +139,7 @@ export default function App() {
           <Route path="/analytics/silo" element={<SiloAnalytics />} />
           <Route path="/analytics/field" element={<FieldAnalytics />} />
           <Route path="/analytics/barnraise" element={<BarnraiseAnalytics />} />
-          <Route path="/marketplace" element={<MarketplacePage />} />
+          <Route path="/market" element={<MarketplacePage />} />
         </Routes>
       </Box>
     </>

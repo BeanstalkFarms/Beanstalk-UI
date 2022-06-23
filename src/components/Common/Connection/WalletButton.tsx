@@ -76,7 +76,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
     setModalOpen(false);
   }, []);
 
-
   // Display: Not Connected
   if (!account?.address || !activeChain?.id) {
     return (

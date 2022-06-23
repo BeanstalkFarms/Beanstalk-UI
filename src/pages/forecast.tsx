@@ -6,24 +6,25 @@ import {
   Typography,
   useMediaQuery
 } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-// import duneIcon from 'img/dune-icon.svg';
-// import activeFert from 'img/tokens/fert-logo-active.svg';
-import BigNumber from 'bignumber.js';
-import { useSelector } from 'react-redux';
-import { useTheme } from '@mui/material/styles';
 import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { useTheme } from '@mui/material/styles';
+import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
+
 import { AppState } from 'state';
+import { ANALYTICS_LINK, SupportedChainId } from 'constants/index';
+import { displayBN, displayFullBN } from 'util/index';
 import { BeanstalkPalette } from 'components/App/muiTheme';
+import PageHeader from 'components/Common/PageHeader';
 import SeasonsTable from 'components/Forecast/SeasonsTable';
 import ForecastTopBar from 'components/Forecast/ForecastTopBar';
-import { ANALYTICS_LINK } from '../constants';
-import { displayBN, displayFullBN } from '../util';
-import TWAPCard from '../components/Forecast/TWAPCard';
-import PodRateCard from '../components/Forecast/PodRateCard';
-import LiquidityOverview from '../components/Forecast/LiquidityOverview';
+import TWAPCard from 'components/Forecast/TWAPCard';
+import PodRateCard from 'components/Forecast/PodRateCard';
+import LiquidityOverview from 'components/Forecast/LiquidityOverview';
+import useChainId from 'hooks/useChain';
+import ComingSoonCard from 'components/Common/ComingSoonCard';
 
 const columns: GridColumns = [
   {
@@ -150,19 +151,42 @@ const rows: GridRowsProp = [
 ];
 
 const ForecastPage: React.FC = () => {
-  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
-    (state) => state._bean.token.price
-  );
+  const chainId = useChainId();
+
+  // Data
+  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>((state) => state._bean.token.price);
   const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const { totalPods } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const { supply: totalBeanSupply } = useSelector<AppState, AppState['_bean']['token']>((state) => state._bean.token);
   const balances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
-  const podRate = totalPods.dividedBy(totalBeanSupply).multipliedBy(100);
-
-  // const isPriceLoading = beanPrice.eq(new BigNumber(-1));
-  // const isPodRateLoading = totalPods.eq(new BigNumber(-1)) || totalBeanSupply.eq(new BigNumber(-1));
+  
+  // Theme
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
+  // Calculations
+  const podRate = totalPods.dividedBy(totalBeanSupply).multipliedBy(100);
+  // const isPriceLoading = beanPrice.eq(new BigNumber(-1));
+  // const isPodRateLoading = totalPods.eq(new BigNumber(-1)) || totalBeanSupply.eq(new BigNumber(-1));
+
+  let content;
+  if (chainId === SupportedChainId.MAINNET) {
+    content = (
+      <ComingSoonCard title="Forecast" />
+    );
+  } else {
+    content = (
+      <>
+        <ForecastTopBar />
+        <Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" gap={2}>
+          <TWAPCard beanPrice={beanPrice} season={season} />
+          <PodRateCard podRate={podRate} season={season} />
+        </Stack>
+        <LiquidityOverview balances={balances} />
+        <SeasonsTable columns={columns} rows={rows} />
+      </>
+    );
+  }
 
   return (
     <Container maxWidth="lg">
@@ -183,14 +207,7 @@ const ForecastPage: React.FC = () => {
             </Button>
           )}
         />
-        {/* TEMP: Hide next Season metrics on MAINNET. */}
-        <ForecastTopBar />
-        <Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" gap={2}>
-          <TWAPCard beanPrice={beanPrice} season={season} />
-          <PodRateCard podRate={podRate} season={season} />
-        </Stack>
-        <LiquidityOverview balances={balances} />
-        <SeasonsTable columns={columns} rows={rows} />
+        {content}
       </Stack>
     </Container>
   );

@@ -23,10 +23,10 @@ import Token from 'classes/Token';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import { displayBN, displayUSD, toTokenUnitsBN } from 'util/index';
-import UnripeTokenRow from './UnripeTokenRow';
-import SelectorCard from './SelectorCard';
 import useChainId from 'hooks/useChain';
 import pickImage from 'img/pick.png';
+import UnripeTokenRow from './UnripeTokenRow';
+import SelectorCard from './SelectorCard';
 
 // ----------------------------------------------------
 
@@ -149,7 +149,7 @@ const PickBeansDialog: React.FC<{
           <Stack direction="row" alignItems="center" gap={1}>
             <img src={pickImage} alt="pick" style={{ height: 100 }} />
             <Typography sx={{ fontSize: '15px' }} color="text.secondary">
-              Your prior Deposits will stay in the Silo as Unripe Deposits.<br/><br/>To claim Unripe Beans and Unripe LP Tokens outside the Silo, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them in the Silo directly. 
+              Your prior Deposits will stay in the Silo as Unripe Deposits.<br /><br />To claim Unripe Beans and Unripe LP Tokens outside the Silo, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them in the Silo directly. 
               
             </Typography>
           </Stack>
@@ -161,9 +161,9 @@ const PickBeansDialog: React.FC<{
               <Typography sx={{ fontSize: '16px' }}>Deposited Assets</Typography>
               <Typography sx={{ fontSize: '16px' }}>{displayUSD(breakdown.states.deposited.value)}</Typography>
             </Stack>
-            <Typography sx={{ fontSize: '12px' }} color="text.secondary">
+            {/* <Typography sx={{ fontSize: '12px' }} color="text.secondary">
               These assets do not need to be Picked and are automatically Deposited in their Unripe state upon Replant.
-            </Typography>
+            </Typography> */}
           </Stack>
           <Divider />
           {/**
@@ -178,7 +178,7 @@ const PickBeansDialog: React.FC<{
               {UNRIPE_BEAN_CATEGORIES.map((key) => (
                 <UnripeTokenRow
                   key={key}
-                  name={key === 'harvestable' ? `Harvestable Pods` : key === 'farmable' ? 'Earned Beans' : `${key} Beans`}
+                  name={key === 'harvestable' ? 'Harvestable Pods' : key === 'farmable' ? 'Earned Beans' : `${key} Beans`}
                   amount={tokenOrZero(unripe?.[`${key}Beans`], BEAN[1])}
                   tooltip={UNRIPE_ASSET_TOOLTIPS[`${key}Beans`]}
                   token={BEAN[1]}
@@ -247,7 +247,7 @@ const PickBeansDialog: React.FC<{
         </Stack>
       </StyledDialogContent>
       <StyledDialogActions>
-        <Tooltip title={chainId === SupportedChainId.MAINNET ? `Picking Unripe Assets will be available upon Replant.` : false}>
+        <Tooltip title={chainId === SupportedChainId.MAINNET ? 'Picking Unripe Assets will be available upon Replant.' : false}>
           <Box width="100%">
             <Button
               disabled={chainId === SupportedChainId.MAINNET}

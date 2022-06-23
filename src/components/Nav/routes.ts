@@ -54,8 +54,8 @@ const ROUTES = {
   ],
   more: [
     {
-      path: 'marketplace',
-      title: 'Marketplace',
+      path: 'market',
+      title: 'Pod Market',
       icon: tradeIcon
     },
     {

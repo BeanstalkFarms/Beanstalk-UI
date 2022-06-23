@@ -14,10 +14,13 @@ import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import BuySellCard from '../components/Marktplatz/BuySellCard';
-import MyOrdersCard from '../components/Marktplatz/MyOrdersCard';
-import ActivityTable from '../components/Marktplatz/Tables/ActivityTable';
-import { displayBN, displayFullBN } from '../util';
+import BuySellCard from 'components/Marktplatz/BuySellCard';
+import MyOrdersCard from 'components/Marktplatz/MyOrdersCard';
+import ActivityTable from 'components/Marktplatz/Tables/ActivityTable';
+import { displayBN, displayFullBN } from 'util/index';
+import ComingSoonCard from 'components/Common/ComingSoonCard';
+import useChainId from 'hooks/useChain';
+import { SupportedChainId } from 'constants/index';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -102,24 +105,16 @@ const rows = new Array(20).fill(null).map((_, i) => (
 const MarketplacePage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const chainId = useChainId();
   
-  return (
-    <Container maxWidth="lg">
-      <Stack spacing={2}>
-        <PageHeader
-          title={
-            <>
-              <strong>The Market</strong>
-              <Box
-                component="span"
-                sx={{ display: { md: 'inline', xs: 'none' } }}
-              >
-                : The Pod Marketplace
-              </Box>
-            </>
-          }
-          description="Trade Pods, the Beanstalk-native debt asset."
-        />
+  let content;
+  if (chainId === SupportedChainId.MAINNET) {
+    content = (
+      <ComingSoonCard title="Pod Market" />
+    );
+  } else {
+    content = (
+      <>
         <Card sx={{ p: 2 }}>
           <Box display="flex" alignItems="center" justifyContent="center" height={300}>
             <Typography variant="h2">insert graph</Typography>
@@ -130,6 +125,22 @@ const MarketplacePage: React.FC = () => {
           <MyOrdersCard />
         </Stack>
         <ActivityTable columns={columns} rows={rows} />
+      </>
+    );
+  }
+
+  return (
+    <Container maxWidth="lg">
+      <Stack spacing={2}>
+        <PageHeader
+          title={
+            <>
+              <strong>The Pod Market</strong>
+            </>
+          }
+          description="Trade Pods, the Beanstalk-native debt asset."
+        />
+        {content}
       </Stack>
     </Container>
   );
