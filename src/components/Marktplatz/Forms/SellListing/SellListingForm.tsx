@@ -1,8 +1,8 @@
 import React from 'react';
-import { Field, FieldProps, Form, FormikProps } from 'formik';
+import { Form, FormikProps } from 'formik';
 import { Button } from '@mui/material';
 import { SellListingFormValues } from '../../Modals/SellListingModal';
-import CardField from './CardField';
+import CardField from '../../../Common/Form/Field/CardField';
 
 const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
   values,
@@ -35,13 +35,6 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
         width: '100%'
       }}
       />
-    {/* <Field name="other"> */}
-    {/*  {(fieldProps: FieldProps) => ( */}
-    {/*    <input */}
-    {/*      {...fieldProps.field} */}
-    {/*    /> */}
-    {/*  )} */}
-    {/* </Field> */}
     <Button type="submit">
       Submit
     </Button>
