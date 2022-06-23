@@ -263,8 +263,6 @@ const SetupForm: React.FC<{}> = () => {
     refetchAllowances
   ]);
 
-  console.log('IVs', initialValues);
-
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
