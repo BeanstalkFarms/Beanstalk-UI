@@ -34,6 +34,9 @@ const CardField: React.FC<CardFieldProps & StackProps & CardProps & GridProps> =
                 cursor: 'pointer',
                 border: fieldProps.field.value === opt.value ? 1.5 : 1,
                 borderColor: fieldProps.field.value === opt.value ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightBlue,
+                '&:hover': {
+                  backgroundColor: BeanstalkPalette.hoverBlue
+                },
                 ...sx
               }}
                 onClick={() => {

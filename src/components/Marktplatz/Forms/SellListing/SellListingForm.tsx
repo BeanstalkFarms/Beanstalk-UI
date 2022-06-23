@@ -4,14 +4,19 @@ import { Button } from '@mui/material';
 import { SellListingFormValues } from '../../Modals/SellListingModal';
 import CardField from '../../../Common/Form/Field/CardField';
 
-const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
+export type SellListingFormProps = {
+  plot: any;
+}
+
+const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFormValues>> = ({
+  plot,
   values,
   setFieldValue,
   isSubmitting,
 }) => (
   <Form noValidate>
     Selected value: {values.option?.toString()}
-    <pre>{JSON.stringify(values, null, 2)}</pre>
+    <pre>{JSON.stringify({ ...values, ...{ selectedPlot: { ...plot } } }, null, 2)}</pre>
     <CardField
       name="option"
       // Grid Props
