@@ -161,27 +161,30 @@ export default function App() {
             <Button variant="contained" fullWidth color="primary" onClick={() => setOpen(false)}>I understand - enter site</Button>
           </DialogActions>
         </Dialog>
-        <Box sx={{ display: 'flex' }}>
-          <NavigationSidebar />
-          <Box component="main" sx={{ flex: 1, position: 'relative' }}>
-            <NavigationBar />
-            {app}
-            <Toaster
-              containerStyle={{
-                // Shift toast by side nav bar width
-                left: width < 800 ? 0 : 280,
-                marginTop: -2,
-              }}
-              toastOptions={{
-                style: {
-                  minWidth: 300,
-                  maxWidth: 450,
-                  // paddingRight: 0,
-                  paddingLeft: '16px',
-                }
-              }}
-            />
-            <Footer />
+        <Box>
+          <Box sx={{ backgroundColor: 'white', px: 2, py: 1, textAlign: 'center', cursor: 'pointer' }} onClick={() => setOpen(true)}>You are viewing Beanstalk forked at block 14602789. <strong>Learn more</strong></Box>
+          <Box sx={{ display: 'flex' }}>
+            <NavigationSidebar />
+            <Box component="main" sx={{ flex: 1, position: 'relative' }}>
+              <NavigationBar />
+              {app}
+              <Toaster
+                containerStyle={{
+                  // Shift toast by side nav bar width
+                  left: width < 800 ? 0 : 280,
+                  marginTop: -2,
+                }}
+                toastOptions={{
+                  style: {
+                    minWidth: 300,
+                    maxWidth: 450,
+                    // paddingRight: 0,
+                    paddingLeft: '16px',
+                  }
+                }}
+              />
+              <Footer />
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -250,9 +250,9 @@ export async function initialize(): Promise<boolean> {
 
   // Convert the hex chain ID returned by web3-onboard
   // into our decimal format. Switch
-  const chainHexId = wallets[0].chains[0].id;
-  chainId = parseInt(chainHexId, 16);
-  switchChain(chainId);
+  // const chainHexId = wallets[0].chains[0].id;
+  // chainId = parseInt(chainHexId, 16);
+  switchChain(1);
 
   // NOTE: the toLowerCase() is important here. Need to make sure
   // that any location that uses an address is lower-cased (the PlotTransfer
