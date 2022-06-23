@@ -1,7 +1,6 @@
 import React from 'react';
 import { Field, FieldProps } from 'formik';
-import { Card, SelectProps, Typography } from '@mui/material';
-import { SellListingFormValues } from '../../Modals/SellListingModal';
+import { Card, CardProps, Grid, GridProps, Stack, StackProps, Typography } from '@mui/material';
 import { BeanstalkPalette } from '../../../App/muiTheme';
 
 export type CardFieldProps = {
@@ -9,33 +8,107 @@ export type CardFieldProps = {
   options: ({ title: string; description: string; value: any; })[];
 }
 
-const CardField: React.FC<CardFieldProps & SelectProps> = ({
-  name,
-  options,
-}) => {
+/**
+ * -------------
+*/
+const CardField: React.FC<CardFieldProps & StackProps & CardProps & GridProps> = ({
+    name,
+    options,
+    direction,
+    sx,
+    xs,
+    md,
+    spacing
+  }) =>
   // const handleSetFieldValue = () => {
   //   setValue('card', value);
   // };
-  return (
+  (
     <Field name={name}>
       {(fieldProps: FieldProps) => (
-        <div>
+        <Grid container direction={direction} spacing={spacing}>
           {options.map((opt) => (
-            <Card
-              key={opt.value}
-              sx={{
-                cursor: 'pointer',
-                backgroundColor: fieldProps.field.value === opt.value ? BeanstalkPalette.lightishGrey : null
-              }}
-              onClick={() => {
-                fieldProps.form.setFieldValue(name, opt.value);
-              }}
-            >
-              <Typography>{opt.title}</Typography>
-              <Typography>{opt.description}</Typography>
-            </Card>
+            <Grid item xs={xs} md={md}>
+              <Card
+                key={opt.value}
+                sx={{
+                  px: 1,
+                  py: 1.5,
+                  height: '100%',
+                  cursor: 'pointer',
+                  border: fieldProps.field.value === opt.value ? 1.5 : 1,
+                  borderColor: fieldProps.field.value === opt.value ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightBlue,
+                  ...sx
+                }}
+                onClick={() => {
+                  fieldProps.form.setFieldValue(name, opt.value);
+                }}
+              >
+                <Stack justifyContent="center" alignItems="center" height="100%">
+                  <Typography
+                    sx={{
+                      textAlign: 'center',
+                      fontSize: '16px',
+                      color: fieldProps.field.value === opt.value ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightishGrey,
+                    }}
+                  >
+                    {opt.title}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      textAlign: 'center',
+                      fontSize: '13px',
+                      color: fieldProps.field.value === opt.value ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightishGrey,
+                    }}
+                  >
+                    {opt.description}
+                  </Typography>
+                </Stack>
+              </Card>
+            </Grid>
           ))}
-        </div>
+        </Grid>
+
+        // <Stack direction={direction} gap={gap}>
+        //   {options.map((opt) => (
+        //     <Card
+        //       key={opt.value}
+        //       sx={{
+        //         px: 1,
+        //         py: 1.5,
+        //         cursor: 'pointer',
+        //         border: fieldProps.field.value === opt.value ? 1.5 : 1,
+        //         borderColor: fieldProps.field.value === opt.value ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightBlue,
+        //         ...sx
+        //       }}
+        //       onClick={() => {
+        //         fieldProps.form.setFieldValue(name, opt.value);
+        //       }}
+        //     >
+        //       <Stack justifyContent="center" alignItems="center" height="100%">
+        //         <Typography
+        //           sx={{
+        //             textAlign: 'center',
+        //             fontSize: '16px',
+        //             color: fieldProps.field.value === opt.value ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightishGrey,
+        //           }}
+        //         >
+        //           {opt.title}
+        //         </Typography>
+        //         <Typography
+        //           sx={{
+        //             textAlign: 'center',
+        //             fontSize: '13px',
+        //             color: fieldProps.field.value === opt.value ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightishGrey,
+        //           }}
+        //         >
+        //           {opt.description}
+        //         </Typography>
+        //       </Stack>
+        //     </Card>
+        //   ))}
+        // </Stack>
+
         // <Card
         //   sx={{
         //     cursor: 'pointer',
@@ -48,6 +121,6 @@ const CardField: React.FC<CardFieldProps & SelectProps> = ({
       )}
     </Field>
   );
-};
-
 export default CardField;
+
+// fieldProps.form.setFieldValue(name, opt.value);

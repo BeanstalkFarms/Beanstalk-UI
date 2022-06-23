@@ -8,53 +8,44 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
   values,
   setFieldValue,
   isSubmitting,
-}) => {
-  const data = [
-    {
-      key: 'one',
-      title: 'Test Title',
-    },
-    {
-      key: 'two',
-      title: 'Test Title 2',
-    },
-    {
-      key: 'three',
-      title: 'Test Title 3',
-    }
-  ];
-
-  return (
-    <Form noValidate>
-      Selected value: {values.destination?.toString()}
-      <pre>{JSON.stringify(values, null, 2)}</pre>
-      <CardField
-        name="destination"
-        options={[
-          {
-            title: "Wallet",
-            description: "asdf",
-            value: 0,
-          },
-          {
-            title: "Farmable Balance",
-            description: "asdf",
-            value: 1,
-          }
-        ]}
+}) => (
+  <Form noValidate>
+    Selected value: {values.option?.toString()}
+    <pre>{JSON.stringify(values, null, 2)}</pre>
+    <CardField
+      name="option"
+      // Grid Props
+      spacing={1}
+      direction="row"
+      xs={12}
+      md={6}
+      options={[
+        {
+          title: 'Wallet',
+          description: 'Beans will be delivered directly to your wallet',
+          value: 0,
+        },
+        {
+          title: 'Farmable Balance',
+          description: 'Beans will be made Farmable within Beanstalk',
+          value: 1,
+        }
+      ]}
+      sx={{
+        width: '100%'
+      }}
       />
-      <Field name="other">
-        {(fieldProps: FieldProps) => (
-          <input
-            {...fieldProps.field}
-          />
-        )}
-      </Field>
-      <Button type="submit">
-        Submit
-      </Button>
-    </Form>
+    {/* <Field name="other"> */}
+    {/*  {(fieldProps: FieldProps) => ( */}
+    {/*    <input */}
+    {/*      {...fieldProps.field} */}
+    {/*    /> */}
+    {/*  )} */}
+    {/* </Field> */}
+    <Button type="submit">
+      Submit
+    </Button>
+  </Form>
   );
-};
 
 export default SellListingForm;
