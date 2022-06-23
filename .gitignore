@@ -1,6 +1,8 @@
 .DS_Store
 build
-node_modules
+node_modules/
+node_modules_pre/
+node_modules_post/
 package-lock.json
 yarn-error.log
 .idea/
