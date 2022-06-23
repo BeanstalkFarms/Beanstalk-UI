@@ -170,9 +170,9 @@ export default function PriceTooltip({
 
   // Open popover after component mounts. This ensures that `ref` is
   // populated so we can position things correctly by default.
-  useEffect(() => {
-    if (!isMobile) setOpen(true);
-  }, [isMobile]);
+  // useEffect(() => {
+  //   if (!isMobile) setOpen(true);
+  // }, [isMobile]);
 
   if (!beanPrice || beanPrice.isLessThan(0)) return null;
 

@@ -28,7 +28,7 @@ export const buyExactBeans = async (
   to: string | undefined,
   onResponse: TxnCallbacks['onResponse'],
 ) => handleCallbacks(
-  uniswapRouterContract().swapETHForExactTokens(
+  () => uniswapRouterContract().swapETHForExactTokens(
     amountOut,
     [WETH.addr, BEAN.addr],
     to || account,          // custom destination if provided; otherwise, to connected wallet
@@ -46,7 +46,7 @@ export const buyBeans = async (
   amountOutMin: string,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  uniswapRouterContract().swapExactETHForTokens(
+  () => uniswapRouterContract().swapExactETHForTokens(
     amountOutMin,
     [WETH.addr, BEAN.addr],
     account,
@@ -64,7 +64,7 @@ export const sellBeans = async (
   amountOutMin: string,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  uniswapRouterContract().swapExactTokensForETH(
+  () => uniswapRouterContract().swapExactTokensForETH(
     amountIn,
     amountOutMin,
     [BEAN.addr, WETH.addr],

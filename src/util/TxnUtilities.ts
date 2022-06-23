@@ -63,31 +63,32 @@ export type TxnCallbacks = {
  * @param callbacks 
  */
 export async function handleCallbacks(
-  fn: Promise<ContractTransaction>,
+  fn: () => Promise<ContractTransaction>,
   callbacks: TxnCallbacks
-) : Promise<ContractReceipt> {
-  return new Promise((resolve, reject) => {
-    fn
-      .then((response: ContractTransaction) => {
-        // Received a response. Our transaction is now pending.
-        // ContractTransaction contains useful info about the
-        // status of the transaction.
-        callbacks.onResponse(response);
-        response.wait().then(
-          // onfulfilled
-          (value: ContractReceipt) => {
-            resolve(value);
-            txCallback && txCallback();
-          },
-          // onrejected
-          (reason: any) => {
-            reject(reason);
-          }
-        );
-      })
-      .catch((err) => {
-        // Received some sort of error.
-        reject(err);
-      });
-  });
+) : Promise<ContractReceipt | null> {
+  return Promise.resolve(null);
+  // return new Promise((resolve, reject) => {
+  //   fn
+  //     .then((response: ContractTransaction) => {
+  //       // Received a response. Our transaction is now pending.
+  //       // ContractTransaction contains useful info about the
+  //       // status of the transaction.
+  //       callbacks.onResponse(response);
+  //       response.wait().then(
+  //         // onfulfilled
+  //         (value: ContractReceipt) => {
+  //           resolve(value);
+  //           txCallback && txCallback();
+  //         },
+  //         // onrejected
+  //         (reason: any) => {
+  //           reject(reason);
+  //         }
+  //       );
+  //     })
+  //     .catch((err) => {
+  //       // Received some sort of error.
+  //       reject(err);
+  //     });
+  // });
 }

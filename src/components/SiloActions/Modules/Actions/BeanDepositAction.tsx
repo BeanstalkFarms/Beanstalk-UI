@@ -280,22 +280,22 @@ const BeanDepositAction = forwardRef(({
         });
 
         // Execute
-        buyAndDepositBeans(
-          beans,
-          buyBeans,
-          eth,
-          _claimable,
-          (response) => {
-            fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
-            txToast.confirming(response);
-          }
-        )
-        .then((value) => {
-          txToast.success(value);
-        })
-        .catch((err) => {
-          txToast.error(err);
-        });
+        // buyAndDepositBeans(
+        //   beans,
+        //   buyBeans,
+        //   eth,
+        //   _claimable,
+        //   (response) => {
+        //     fromValueUpdated(new BigNumber(-1), new BigNumber(-1));
+        //     txToast.confirming(response);
+        //   }
+        // )
+        // .then((value) => {
+        //   txToast.success(value);
+        // })
+        // .catch((err) => {
+        //   txToast.error(err);
+        // });
       } else {
         // Toast
         const txToast = new TransactionToast({

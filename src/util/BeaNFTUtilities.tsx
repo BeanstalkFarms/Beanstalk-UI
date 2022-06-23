@@ -11,43 +11,47 @@ import {
 } from './index';
 
 export const mintGenesisNFT = async (_account, nftId, ipfsHash, signature) => {
-  beaNFTGenesisContract()
-    .mint(_account, nftId, ipfsHash, signature)
-    .then((response) => {
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
+  return Promise.resolve(null);
+  // beaNFTGenesisContract()
+  //   .mint(_account, nftId, ipfsHash, signature)
+  //   .then((response) => {
+  //     response.wait().then(() => {
+  //       txCallback();
+  //     });
+  //   });
 };
 
 export const mintNFT = async (_account, nftId, signature) => {
-  beaNFTContract()
-  .mint(_account, nftId, signature)
-  .then((response) => {
-    response.wait().then(() => {
-      txCallback();
-    });
-  });
+  return Promise.resolve(null);
+  // beaNFTContract()
+  // .mint(_account, nftId, signature)
+  // .then((response) => {
+  //   response.wait().then(() => {
+  //     txCallback();
+  //   });
+  // });
 };
 
 export const mintAllNFTs = async (_account, nftId, ipfsHash, signature) => {
-  beaNFTGenesisContract()
-    .batchMint(_account, nftId, ipfsHash, signature)
-    .then((response) => {
-      response.wait().then(() => {
-        txCallback();
-      });
-    });
+  return Promise.resolve(null);
+  // beaNFTGenesisContract()
+  //   .batchMint(_account, nftId, ipfsHash, signature)
+  //   .then((response) => {
+  //     response.wait().then(() => {
+  //       txCallback();
+  //     });
+  //   });
 };
 
 export const mintAllAccountNFTs = async (nftIds, signatures) => {
-  beaNFTContract()
-  .batchMintAccount(account, nftIds, signatures)
-  .then((response) => {
-    response.wait().then(() => {
-      txCallback();
-    });
-  });
+  return Promise.resolve(null);
+  // beaNFTContract()
+  // .batchMintAccount(account, nftIds, signatures)
+  // .then((response) => {
+  //   response.wait().then(() => {
+  //     txCallback();
+  //   });
+  // });
 };
 
 /**

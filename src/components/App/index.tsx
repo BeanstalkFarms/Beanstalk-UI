@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, CssBaseline } from '@mui/material';
+import { Box, Button, CssBaseline, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
 
 import { AppState } from 'state';
@@ -135,6 +135,8 @@ export default function App() {
     );
   }
 
+  const [open, setOpen] = useState(true);
+
   return (
     <>
       <CssBaseline />
@@ -145,6 +147,20 @@ export default function App() {
       {/* CONTENT */}
       <Box className="App">
         <Wrapper />
+        <Dialog fullScreen={false} open={open}>
+          <DialogTitle>
+            Notice
+          </DialogTitle>
+          <DialogContent>
+            <p><strong>You are viewing Beanstalk forked at block <a href="https://etherscan.io/block/14602789" target="_blank" rel="noreferrer">14602789</a>, the last block before <a href="https://bean.money/blog/beanstalk-governance-exploit" target="_blank" rel="noreferrer">Beanstalk was attacked</a>.</strong></p>
+            <p><strong>‼️ Your wallet remains connected to the network you had selected prior</strong>. The website is talking to a fork of Ethereum, while your wallet is talking to Ethereum mainnet or some other network. Thus, transactions are disabled in this UI—don{"'"}t try to send them.</p>
+            <p>This website is for informational purposes. Farmers can view their prior balances and the state of Beanstalk. The latest version of the Beanstalk Interface remains at <a href="https://app.bean.money" target="_blank" rel="noreferrer">app.bean.money</a>.</p>
+            <p>Be wary of scams as Beanstalk approaches Replant. <ul><li>The latest Beanstalk UI is hosted on <strong>app.bean.money</strong>.</li><li>The pre-exploit Beanstalk UI is hosted on <strong>pre-exploit.app.bean.money</strong></li><li>No one from Beanstalk Farms will DM you first. All official links flow through <strong>#announcements in Discord</strong>.</li></ul></p>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" fullWidth color="primary" onClick={() => setOpen(false)}>I understand - enter site</Button>
+          </DialogActions>
+        </Dialog>
         <Box sx={{ display: 'flex' }}>
           <NavigationSidebar />
           <Box component="main" sx={{ flex: 1, position: 'relative' }}>

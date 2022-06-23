@@ -22,8 +22,11 @@ const IGNORED_EVENTS = new Set([
   'Transfer',
 ]);
 
+// eslint-disable-next-line prefer-const
 let listeningForEvents = false;
+// eslint-disable-next-line prefer-const
 let lastPriceRefresh = new Date().getTime();
+// eslint-disable-next-line prefer-const
 let lastTotalsRefresh = new Date().getTime();
 const newEventHashes = new Set();
 
@@ -167,85 +170,85 @@ export async function initializeEventListener(
     return a.logIndex - b.logIndex;
   });
 
-  benchmarkEnd('EVENT LISTENER (BEANSTALK)', startTime);
+  // benchmarkEnd('EVENT LISTENER (BEANSTALK)', startTime);
 
-  if (listeningForEvents) {
-    benchmarkEnd('EVENT LISTENER (already listening)', startTime);
-    return allEvents;
-  }
-  listeningForEvents = true;
+  // if (listeningForEvents) {
+  //   benchmarkEnd('EVENT LISTENER (already listening)', startTime);
+  //   return allEvents;
+  // }
+  // listeningForEvents = true;
 
-  const beanstalkWs = beanstalkContractReadOnlyWs();
-  const beanPairWs = pairContractReadOnlyWs(UNI_V2_ETH_BEAN_LP);
-  const usdcPairWs = pairContractReadOnlyWs(UNI_V2_USDC_ETH_LP);
+  // const beanstalkWs = beanstalkContractReadOnlyWs();
+  // const beanPairWs = pairContractReadOnlyWs(UNI_V2_ETH_BEAN_LP);
+  // const usdcPairWs = pairContractReadOnlyWs(UNI_V2_USDC_ETH_LP);
 
-  /* Listen for new Contract events */
-  beanPairWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
-    if (error) {
-      console.error(error);
-      return;
-    }
-    if (
-      new Date().getTime() - lastPriceRefresh > 5000 &&
-      (event?.returnValues.to === undefined ||
-        event?.returnValues.to.toLowerCase() !== account.toLowerCase())
-    ) {
-      console.debug('[ws:Contract/BeanPair] Received event + past refresh threshold.');
-      console.log('UPDATING PRICES!');
-      updatePrices();
-      lastPriceRefresh = new Date().getTime();
-    }
-  });
-  usdcPairWs.events.Swap({ fromBlock: 'latest' }, (error: any) => {
-    if (error) {
-      console.error(error);
-      return;
-    }
-    if (new Date().getTime() - lastPriceRefresh > 5000) {
-      console.debug('[ws:Contract/UsdcPair] Received event + past refresh threshold.');
-      console.log('UPDATING PRICES!');
-      updatePrices();
-      lastPriceRefresh = new Date().getTime();
-    }
-  });
-  beanstalkWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
-    console.debug('[ws:Contract/Beanstalk] Received event: ', event, error);
-    if (error) {
-      console.error(error);
-      return;
-    }
-    if (IGNORED_EVENTS.has(event.event)) {
-      return;
-    }
+  // /* Listen for new Contract events */
+  // beanPairWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
+  //   if (error) {
+  //     console.error(error);
+  //     return;
+  //   }
+  //   if (
+  //     new Date().getTime() - lastPriceRefresh > 5000 &&
+  //     (event?.returnValues.to === undefined ||
+  //       event?.returnValues.to.toLowerCase() !== account.toLowerCase())
+  //   ) {
+  //     console.debug('[ws:Contract/BeanPair] Received event + past refresh threshold.');
+  //     console.log('UPDATING PRICES!');
+  //     updatePrices();
+  //     lastPriceRefresh = new Date().getTime();
+  //   }
+  // });
+  // usdcPairWs.events.Swap({ fromBlock: 'latest' }, (error: any) => {
+  //   if (error) {
+  //     console.error(error);
+  //     return;
+  //   }
+  //   if (new Date().getTime() - lastPriceRefresh > 5000) {
+  //     console.debug('[ws:Contract/UsdcPair] Received event + past refresh threshold.');
+  //     console.log('UPDATING PRICES!');
+  //     updatePrices();
+  //     lastPriceRefresh = new Date().getTime();
+  //   }
+  // });
+  // beanstalkWs.events.allEvents({ fromBlock: 'latest' }, (error: any, event: any) => {
+  //   console.debug('[ws:Contract/Beanstalk] Received event: ', event, error);
+  //   if (error) {
+  //     console.error(error);
+  //     return;
+  //   }
+  //   if (IGNORED_EVENTS.has(event.event)) {
+  //     return;
+  //   }
 
-    const newEventHash = event.transactionHash + String(event.logIndex);
-    if (newEventHashes.has(newEventHash)) {
-      return;
-    }
-    newEventHashes.add(newEventHash);
+  //   const newEventHash = event.transactionHash + String(event.logIndex);
+  //   if (newEventHashes.has(newEventHash)) {
+  //     return;
+  //   }
+  //   newEventHashes.add(newEventHash);
 
-    if (
-      event?.returnValues.account !== undefined &&
-      event?.returnValues.account.toLowerCase() === account.toLowerCase()
-    ) {
-      // FIXME: looks like this is mutating state directly?
-      allEvents = [...allEvents, event];
-      processEvents(allEvents);
-    } else if (event.event === 'Sunrise') {
-      processEvents(allEvents);
-      if (txCallback) txCallback();
-      console.log('-------UPDATING TOTALS!');
-      updateTotals();
-      lastTotalsRefresh = new Date().getTime();
-      lastPriceRefresh = new Date().getTime();
-    } else if (new Date().getTime() - lastTotalsRefresh > 5000) {
-      console.log('UPDATING TOTALS!');
-      updateTotals();
-      lastTotalsRefresh = new Date().getTime();
-    }
-  });
+  //   if (
+  //     event?.returnValues.account !== undefined &&
+  //     event?.returnValues.account.toLowerCase() === account.toLowerCase()
+  //   ) {
+  //     // FIXME: looks like this is mutating state directly?
+  //     allEvents = [...allEvents, event];
+  //     processEvents(allEvents);
+  //   } else if (event.event === 'Sunrise') {
+  //     processEvents(allEvents);
+  //     if (txCallback) txCallback();
+  //     console.log('-------UPDATING TOTALS!');
+  //     updateTotals();
+  //     lastTotalsRefresh = new Date().getTime();
+  //     lastPriceRefresh = new Date().getTime();
+  //   } else if (new Date().getTime() - lastTotalsRefresh > 5000) {
+  //     console.log('UPDATING TOTALS!');
+  //     updateTotals();
+  //     lastTotalsRefresh = new Date().getTime();
+  //   }
+  // });
 
-  benchmarkEnd('EVENT LISTENER', startTime);
+  // benchmarkEnd('EVENT LISTENER', startTime);
 
   return allEvents;
 }

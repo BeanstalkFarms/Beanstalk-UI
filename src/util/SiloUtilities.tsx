@@ -120,7 +120,7 @@ export const depositBeans = async (
   claimable,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
+  () => (claimable
     ? beanstalkContract().claimAndDepositBeans(amount, claimable)
     : beanstalkContract().depositBeans(amount)
   ),
@@ -133,7 +133,7 @@ export const claimAndWithdrawBeans = async (
   claimable,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().claimAndWithdrawBeans(crates, amounts, claimable),
+  () => beanstalkContract().claimAndWithdrawBeans(crates, amounts, claimable),
   { onResponse }
 );
 
@@ -142,7 +142,7 @@ export const withdrawBeans = async (
   amounts,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().withdrawBeans(crates, amounts),
+  () => beanstalkContract().withdrawBeans(crates, amounts),
   { onResponse }
 );
 
@@ -150,7 +150,7 @@ export const claimBeans = async (
   withdrawals,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().claimBeans(withdrawals),
+  () => beanstalkContract().claimBeans(withdrawals),
   { onResponse }
 );
 
@@ -159,7 +159,7 @@ export const depositLP = async (
   claimable,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
+  () => (claimable
     ? beanstalkContract().claimAndDepositLP(amount, claimable)
     : beanstalkContract().depositLP(amount)
   ),
@@ -175,7 +175,7 @@ export const addAndDepositLP = async (
   claimable,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
+  () => (claimable
     ? beanstalkContract().claimAddAndDepositLP(
         lp,
         buyBeanAmount,
@@ -204,7 +204,7 @@ export const convertAddAndDepositLP = async (
   claimable,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
+  () => (claimable
     ? beanstalkContract().claimConvertAddAndDepositLP(
         lp,
         addLP,
@@ -225,7 +225,7 @@ export const withdrawLP = async (
   amounts,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().withdrawLP(crates, amounts),
+  () => beanstalkContract().withdrawLP(crates, amounts),
   { onResponse }
 );
 
@@ -235,7 +235,7 @@ export const claimAndWithdrawLP = async (
   claimable,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().claimAndWithdrawLP(crates, amounts, claimable),
+  () => beanstalkContract().claimAndWithdrawLP(crates, amounts, claimable),
   { onResponse }
 );
 
@@ -245,7 +245,7 @@ export const removeAndClaimLP = async (
   minEthAmount,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().removeAndClaimLP(withdrawals, minBeanAmount, minEthAmount),
+  () => beanstalkContract().removeAndClaimLP(withdrawals, minBeanAmount, minEthAmount),
   { onResponse }
 );
 
@@ -253,7 +253,7 @@ export const claimLP = async (
   withdrawals,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().claimLP(withdrawals),
+  () => beanstalkContract().claimLP(withdrawals),
   { onResponse }
 );
 
@@ -263,7 +263,7 @@ export const claim = async (
   wrappedBeans = '0',
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (wrappedBeans === '0'
+  () => (wrappedBeans === '0'
     ? beanstalkContract().claim(
       [
         ...claimable,
@@ -285,7 +285,7 @@ export const updateSilo = async (
   // claimable: any, // FIXME
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().updateSilo(account),
+  () => beanstalkContract().updateSilo(account),
   { onResponse }
 );
 
@@ -296,7 +296,7 @@ export const buyAndDepositBeans = async (
   claimable,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
+  () => (claimable
     ? beanstalkContract().claimBuyAndDepositBeans(
         amount,
         buyBeanAmount,
@@ -317,7 +317,7 @@ export const convertDepositedBeans = async (
   amounts,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().convertDepositedBeans(beans, minLP, crates, amounts),
+  () => beanstalkContract().convertDepositedBeans(beans, minLP, crates, amounts),
   { onResponse }
 );
 
@@ -328,6 +328,6 @@ export const convertDepositedLP = async (
   amounts,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().convertDepositedLP(lp, minBeans, crates, amounts),
+  () => beanstalkContract().convertDepositedLP(lp, minBeans, crates, amounts),
   { onResponse }
 );

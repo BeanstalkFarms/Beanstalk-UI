@@ -8,7 +8,7 @@ export const deposit = async (
   addy,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().deposit(addy, amount),
+  () => beanstalkContract().deposit(addy, amount),
   { onResponse }
 );
 
@@ -21,9 +21,9 @@ export const withdraw = async (
   addy,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (seasons.length === 1) ?
-  beanstalkContract().withdrawTokenBySeason(addy, seasons[0], amounts[0]) :
-  beanstalkContract().withdrawTokenBySeasons(addy, seasons, amounts),
+  () => ((seasons.length === 1) ?
+    beanstalkContract().withdrawTokenBySeason(addy, seasons[0], amounts[0]) :
+    beanstalkContract().withdrawTokenBySeasons(addy, seasons, amounts)),
   { onResponse }
 );
 
@@ -35,9 +35,9 @@ export const claimSeasons = async (
   addy,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (seasons.length === 1) ?
-  beanstalkContract().claimTokenBySeason(addy, seasons[0]) :
-  beanstalkContract().claimTokenBySeasons(addy, seasons),
+  () => ((seasons.length === 1) ?
+    beanstalkContract().claimTokenBySeason(addy, seasons[0]) :
+    beanstalkContract().claimTokenBySeasons(addy, seasons)),
   { onResponse }
 );
 
@@ -59,8 +59,8 @@ export const claimTokensBySeason = async (
   addy,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (SeasonsClaim.seasons.length === 1) ?
-  beanstalkContract().claimTokenBySeason(addy, SeasonsClaim.seasons[0]) :
-  beanstalkContract().claimTokenBySeasons(addy, SeasonsClaim.seasons),
+  () => ((SeasonsClaim.seasons.length === 1) ?
+    beanstalkContract().claimTokenBySeason(addy, SeasonsClaim.seasons[0]) :
+    beanstalkContract().claimTokenBySeasons(addy, SeasonsClaim.seasons)),
   { onResponse }
 );

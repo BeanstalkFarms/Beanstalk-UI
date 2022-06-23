@@ -6,3 +6,6 @@ yarn-error.log
 .idea/
 stats.json
 .env.local
+.netlify/
+src/constants/generated
+.vscode

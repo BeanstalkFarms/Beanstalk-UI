@@ -6,7 +6,7 @@ export const vote = async (
   bip,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().vote(bip),
+  () => beanstalkContract().vote(bip),
   { onResponse }
 );
 
@@ -14,7 +14,7 @@ export const unvote = async (
   bip,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().unvote(bip),
+  () => beanstalkContract().unvote(bip),
   { onResponse }
 );
 
@@ -38,7 +38,7 @@ export const megaVote = async (
   else voteFunction = bs.voteAll(bips);
 
   return handleCallbacks(
-    voteFunction,
+    () => voteFunction,
     { onResponse }
   );
 };
@@ -51,7 +51,7 @@ export const commit = async (
   const estGas = await beanstalkContract().estimateGas.commit(bip);
   const newGas = (parseInt(estGas.toString(), 10) * 1.5).toString(); // overestimate gas so transaction doesnt revert
   return handleCallbacks(
-    beanstalkContract().commit(bip, { gasLimit: newGas }),
+    () => beanstalkContract().commit(bip, { gasLimit: newGas }),
     { onResponse }
   );
 };
@@ -65,7 +65,7 @@ export const emergencyCommit = async (
   const newGas = (parseInt(estGas.toString(), 10) * 1.5).toString(); // overestimate gas so transaction doesnt revert
   console.log(newGas);
   return handleCallbacks(
-    beanstalkContract().emergencyCommit(bip, { gasLimit: newGas }),
+    () => beanstalkContract().emergencyCommit(bip, { gasLimit: newGas }),
     { onResponse }
   );
 };

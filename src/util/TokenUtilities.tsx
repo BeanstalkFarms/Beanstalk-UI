@@ -90,7 +90,7 @@ export const transferBeans = async (
   amount: string,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  tokenContract(BEAN).transfer(to, amount),
+  () => tokenContract(BEAN).transfer(to, amount),
   { onResponse }
 );
 

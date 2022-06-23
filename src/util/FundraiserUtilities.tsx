@@ -6,6 +6,6 @@ export const fund = async (
   amount,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().fund(id, amount),
+  () => beanstalkContract().fund(id, amount),
   { onResponse }
 );

@@ -23,7 +23,7 @@ export const createPodListing = async (
   params: CreatePodListingParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().createPodListing(
+  () => beanstalkContract().createPodListing(
     params.index,
     params.start,
     params.amount,
@@ -43,7 +43,7 @@ export const cancelPodListing = (
   params: CancelPodListingParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().cancelPodListing(
+  () => beanstalkContract().cancelPodListing(
     params.index
   ),
   { onResponse }
@@ -83,7 +83,7 @@ export const fillPodListing = async (
     params.listing.toWallet,
   ];
   return handleCallbacks(
-    (params.claimable
+    () => (params.claimable
       ? beanstalkContract().claimAndFillPodListing(
         l,
         params.beanAmount,
@@ -130,7 +130,7 @@ export const buyBeansAndFillPodListing = async (
     params.listing.toWallet,
   ];
   return handleCallbacks(
-    (params.claimable
+    () => (params.claimable
       ? beanstalkContract().claimBuyBeansAndFillPodListing(
         l,
         params.beanAmount,
@@ -178,7 +178,7 @@ export const fillPodOrder = async (
   params: FillPodOrderParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().fillPodOrder(
+  () => beanstalkContract().fillPodOrder(
     [
       params.order.account,
       params.order.pricePerPod,
@@ -207,7 +207,7 @@ export const createPodOrder = async (
   params: CreatePodOrderParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (params.claimable
+  () => (params.claimable
     ? beanstalkContract().claimAndCreatePodOrder(
       params.beanAmount,
       params.pricePerPod,
@@ -242,7 +242,7 @@ export const buyBeansAndCreatePodOrder = async (
   params: BuyBeansAndCreatePodOrderParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (params.claimable
+  () => (params.claimable
     ? beanstalkContract().claimBuyBeansAndCreatePodOrder(
         params.beanAmount,
         params.buyBeanAmount,
@@ -275,7 +275,7 @@ export const cancelPodOrder = (
   params: CancelPodOrderParams,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().cancelPodOrder(
+  () => beanstalkContract().cancelPodOrder(
     params.pricePerPod,
     params.maxPlaceInLine,
     params.toWallet

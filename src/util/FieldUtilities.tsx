@@ -8,7 +8,7 @@ export const sowBeans = async (
   claimable: string,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
+  () => (claimable
     ? beanstalkContract().claimAndSowBeansWithMin(amount, MIN_SOIL, claimable)
     : beanstalkContract().sowBeansWithMin(amount, MIN_SOIL)
   ),
@@ -22,7 +22,7 @@ export const buyAndSowBeans = async (
   claimable,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  (claimable
+  () => (claimable
     ? beanstalkContract().claimBuyAndSowBeansWithMin(
         amount,
         buyBeanAmount,
@@ -41,7 +41,7 @@ export const harvest = async (
   plots,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().harvest(plots),
+  () => beanstalkContract().harvest(plots),
   { onResponse }
 );
 
@@ -52,6 +52,6 @@ export const transferPlot = async (
   end,
   onResponse: TxnCallbacks['onResponse']
 ) => handleCallbacks(
-  beanstalkContract().transferPlot(account, recipient, index, start, end),
+  () => beanstalkContract().transferPlot(account, recipient, index, start, end),
   { onResponse }
 );

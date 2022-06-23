@@ -43,7 +43,8 @@ export default function Trade() {
     <Container maxWidth="sm">
       <Stack spacing={4}>
         <div>
-          <TradeModule />
+          {/* <TradeModule /> */}
+          The trade module is currently disabled
         </div>
         <Container maxWidth="sm">
           <Stack spacing={1}>
