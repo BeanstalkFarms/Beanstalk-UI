@@ -10,7 +10,7 @@ import { Formik, FormikHelpers } from 'formik';
 import SellListingForm from '../Forms/SellListing/SellListingForm';
 
 export type SellListingFormValues = {
-  card: string;
+  destination: number | null;
 }
 
 const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
@@ -29,12 +29,12 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
 
     //
     const initialValues: SellListingFormValues = useMemo(() => ({
-      card: ''
+      destination: null
     }), []);
 
     //
     const onSubmit = useCallback((values: SellListingFormValues, formActions: FormikHelpers<SellListingFormValues>) => {
-      console.log('CARD: ', values.card);
+      console.log('CARD: ', values.destination);
       Promise.resolve();
     }, []);
 
