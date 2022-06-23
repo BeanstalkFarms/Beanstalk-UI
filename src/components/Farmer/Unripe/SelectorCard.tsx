@@ -26,7 +26,7 @@ const SelectorCard: React.FC<SelectorCardProps> = ({
       }}
       onClick={handleClick}
     >
-      <Stack justifyContent="center" alignItems="start">
+      <Stack justifyContent="center" alignItems="start" spacing={0.3}>
         <Stack direction="row" gap={0.3}>
           <Typography sx={{ fontSize: '20px' }}>{title}</Typography>
           {recommendOption && (

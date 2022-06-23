@@ -14,7 +14,7 @@ const UnripeTokenRow: React.FC<{
   name: string;
   amount: BigNumber;
   bdv?: BigNumber;
-  tooltip: string;
+  tooltip: string | React.ReactElement;
   token: Token;
 }> = ({
   name,
@@ -25,22 +25,18 @@ const UnripeTokenRow: React.FC<{
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const primaryColor = amount.eq(0) ? BeanstalkPalette.lightishGrey : null;
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="start">
-      <Stack direction="row" alignItems="center" gap={0.3}>
-        {
-          (amount.gt(0) ? (
-            <CheckIcon sx={{ fontSize: '16px', color: BeanstalkPalette.logoGreen }} />
-          ) : (
-            <CloseIcon sx={{ fontSize: '16px', color: BeanstalkPalette.lightishGrey }} />
-          ))
-        }
+      <Stack direction="row" alignItems="center" gap={0.4}>
+        {amount.gt(0) ? (
+          <CheckIcon sx={{ fontSize: 16, color: BeanstalkPalette.logoGreen }} />
+        ) : (
+          <CloseIcon sx={{ fontSize: 16, color: BeanstalkPalette.lightishGrey }} />
+        )}
         <Typography
           sx={{
-            fontSize: '16px',
-            color: amount.eq(0)
-              ? BeanstalkPalette.lightishGrey
-              : null,
+            color: primaryColor,
             textTransform: 'capitalize'
           }}
         >
@@ -49,7 +45,7 @@ const UnripeTokenRow: React.FC<{
         {!isMobile && (
           <Tooltip placement="right" title={tooltip}>
             <HelpOutlineIcon
-              sx={{ color: 'text.secondary', fontSize: '14px' }}
+              sx={{ color: BeanstalkPalette.lightishGrey, fontSize: '13px' }}
             />
           </Tooltip>
         )}
@@ -57,40 +53,19 @@ const UnripeTokenRow: React.FC<{
       <Stack direction={isMobile ? 'column' : 'row'} alignItems="center" gap={0.3}>
         {(amount && bdv) ? (
           // LP states
-          <Stack direction={isMobile ? 'column' : 'row'} sx={{ alignItems: isMobile ? 'end' : null }} gap={0.3}>
+          <Stack direction={isMobile ? 'column' : 'row'} sx={{ alignItems: isMobile ? 'end' : null }} gap={0.5}>
             <Stack direction="row" alignItems="center" gap={0.3}>
               <img src={token.logo} alt="Circulating Beans" height={13} />
-              <Typography
-                sx={{
-                  fontSize: '16px',
-                  color: amount.eq(0)
-                    ? BeanstalkPalette.lightishGrey
-                    : null
-                }}
-              >
+              <Typography sx={{ color: primaryColor }}>
                 {displayBN(amount)}
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center" gap={0.3}>
-              <Typography
-                sx={{
-                  fontSize: '16px',
-                  color: amount.eq(0)
-                    ? BeanstalkPalette.lightishGrey
-                    : null
-                }}
-              >
-                (~
+              <Typography sx={{ color: primaryColor }}>
+                (
               </Typography>
               <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
-              <Typography
-                sx={{
-                  fontSize: '16px',
-                  color: bdv.eq(0)
-                    ? BeanstalkPalette.lightishGrey
-                    : null
-                }}
-              >
+              <Typography sx={{ color: primaryColor }}>
                 {displayBN(bdv)}
                 )
               </Typography>
