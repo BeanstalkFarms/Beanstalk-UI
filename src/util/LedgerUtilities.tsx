@@ -125,7 +125,7 @@ const tokenResult = (token : SupportedToken) => (result: BigNumber.Value) =>
 
 export async function getBlockTimestamp(blockNumber: any) {
   await initializing;
-  return Promise.resolve(new Date().getTime());
+  return Promise.resolve(new Date().getTime()/1000);
   // return (await web3.eth.getBlock(blockNumber)).timestamp;
 }
 
