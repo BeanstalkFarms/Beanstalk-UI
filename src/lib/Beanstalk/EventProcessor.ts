@@ -75,7 +75,7 @@ export type EventProcessorData = {
   }>;
 }
 export type EventKeys = 'event' | 'args' | 'blockNumber' | 'transactionIndex' | 'transactionHash' | 'logIndex'
-export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & { facet?: string, returnValues: any };
+export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & { facet?: string, returnValues?: any };
 export type Event = Simplify<ethers.Event>;
 
 export default class EventProcessor {
