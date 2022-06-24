@@ -1,4 +1,4 @@
-import { createClient as createWagmiClient, configureChains, chain } from 'wagmi';
+import { createClient as createWagmiClient, configureChains, chain, Chain } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
@@ -11,14 +11,43 @@ import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { SupportedChainId } from 'constants/chains';
 import { ALCHEMY_API_KEYS } from 'constants/rpc/alchemy';
 
+// ------------------------------------------------------------
+
 const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.MAINNET];
+
+export const TESTNET_RPC_ADDRESSES : { [chainId: number] : string } = {
+  [SupportedChainId.ASTRO]:     'https://astro.node.bean.money',
+  [SupportedChainId.CUJO]:   'https://bean-rpc.treetree.finance',
+  [SupportedChainId.LOCALHOST]: 'http://localhost:8545',
+};
+
+// Setup node
+const makeTestnet = (_chainId: number, name: string) : Chain => ({
+  id: _chainId,
+  name: name,
+  network: 'ethereum',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ether',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    default: TESTNET_RPC_ADDRESSES[_chainId],
+  },
+  blockExplorers: {
+    default: { name: 'Etherscan', url: 'https://etherscan.io' },
+  },
+  testnet: true,
+});
 
 const baseChains = [
   chain.mainnet,
   chain.ropsten,
 ];
 
-if (Boolean(process.env.REACT_APP_DISABLE_NETWORK_LOCALHOST) === false) {
+if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
+  baseChains.push(makeTestnet(SupportedChainId.ASTRO,   'Astro'));
+  baseChains.push(makeTestnet(SupportedChainId.CUJO, 'Cujo'));
   baseChains.push(chain.localhost);
 }
 
@@ -32,8 +61,8 @@ const { chains, provider } = configureChains(
     jsonRpcProvider({
       priority: 1,
       rpc: (_chain) => {
-        if (_chain.id !== SupportedChainId.LOCALHOST) return null;
-        return { http: 'http://3b63-193-19-109-12.ngrok.io/' };
+        if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
+        return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
       }
     }),
     publicProvider({
@@ -72,17 +101,3 @@ const client = createWagmiClient({
 });
 
 export default client;
-
-//
-// provider: (config) => {
-//   if (config.chainId !== SupportedChainId.LOCALHOST) {
-//     return new ethers.providers.AlchemyProvider(
-//       config.chainId,
-//       ALCHEMY_API_KEYS[(config.chainId as SupportedChainId) || SupportedChainId.MAINNET]
-//     );
-//   }
-//   return new ethers.providers.JsonRpcProvider(
-//     process.env.REACT_APP_RPC_URL,
-//     config.chainId,
-//   );
-// },

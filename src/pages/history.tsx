@@ -5,10 +5,10 @@ import {useSelector} from 'react-redux';
 import {AppState} from 'state';
 import {Card, Grid, Stack, Tab, Tabs, Typography} from "@mui/material";
 import {FIELD, OTHER, SILO} from "util/GetEventFacet";
-import {ParsedEvent} from "state/farmer/events/updater";
 import EventItem from "components/History/EventItem";
 import { useAccount } from 'wagmi';
 import WalletButton from "components/Common/Connection/WalletButton";
+import { Event } from 'lib/Beanstalk/EventProcessor';
 
 const mappedTabs = {
   0: SILO,
@@ -20,7 +20,7 @@ const TransactionHistoryPage: React.FC = () => {
   const { data: account } = useAccount();
   const [tab, setTab] = useState<0 | 1 | 2>(0);
   const events = useSelector<AppState, AppState['_farmer']['events']>((state) => state._farmer.events);
-  const [walletEvents, setWalletEvents] = useState<ParsedEvent[]>();
+  const [walletEvents, setWalletEvents] = useState<Event[]>();
 
   const handleSetTab = (event: React.SyntheticEvent, newValue: 0 | 1 | 2) => setTab(newValue);
 

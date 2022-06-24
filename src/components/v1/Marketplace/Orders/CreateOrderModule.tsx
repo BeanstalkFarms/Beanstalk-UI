@@ -122,7 +122,7 @@ export const CreateOrderModule = forwardRef((props: CreateOrderModuleProps, ref)
       setToPodValue(new BigNumber(0));
     } else {
       // The number of Beans that must be locked
-      // in the Marketplace to buy `amount` Pods
+      // in the Marktplatz to buy `amount` Pods
       // at `price`.
       const beansNeeded = amount.times(price);
 

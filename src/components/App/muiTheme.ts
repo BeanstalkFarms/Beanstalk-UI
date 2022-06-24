@@ -44,12 +44,19 @@ export const BeanstalkPalette = {
   lightGreen: '#E1F8E6',
   // Blues
   lightBlue: '#C1DEF2',
+  babyBlue: '#E2F2FE',
   lighterBlue: '#daf2ff', // see `bodyBackground`
+  lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
   // Other
   white: '#fff',
   black: '#333',
   lightishGrey: '#9E9E9E',
+  washedRed: '#c35f42',
+  yellow: '#f0df6a',
+  darkNavyBlue: '#3c76af',
+  brown: '#795739',
+  hoverBlue: '#f9fcff'
 };
 
 // FIXME: changes to createTheme don't hot reload.
@@ -63,6 +70,7 @@ let muiTheme = createTheme({
       xl: 1536,
     },
   },
+  
   /**
    *
    */

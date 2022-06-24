@@ -1,4 +1,4 @@
-import { Box, Button, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Card, Stack, Tab, Tabs } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -10,18 +10,11 @@ import {
   mockDepositData,
   mockOwnershipPctData,
 } from 'components/Charts/SimpleLineChart.mock';
-import MainnetBlur from '../Common/MainnetBlur';
+import MainnetBlur from 'components/Common/MainnetBlur';
+import Stat from 'components/Common/Stat';
+import TimeTabs from '../Common/TimeTabs';
 
 // ------------------------------------------------
-
-const WINDOWS = [
-  { label: '1H' },
-  { label: '1D' },
-  { label: '1W' },
-  { label: '1M' },
-  { label: '1Y' },
-  { label: 'All' },
-];
 
 type TabData = {
   season: BigNumber;
@@ -44,13 +37,15 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
   return (
     <>
       <Box sx={{ px: 2 }}>
-        <Stack gap={0.5}>
-          <Typography>Total Silo Deposits</Typography>
-          <Typography variant="h1" color="primary">
-            {displayUSD(displayValue[0])}
-          </Typography>
-          <Typography>Season {displayBN(season)}</Typography>
-        </Stack>
+        <Stat
+          title="Total Silo Deposits"
+          bottomText={`Season ${displayBN(season)}`}
+          amount={displayUSD(displayValue[0])}
+          color="primary"
+          icon={undefined}
+          gap={0.5}
+          sx={{ ml: 0 }}
+        />
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetBlur>
@@ -62,10 +57,9 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
   );
 };
 
-const StalkOwnershipTab: React.FC<
-  TabData
+const StalkOwnershipTab: React.FC<TabData
   // & { beanstalkSilo: AppState['_beanstalk']['silo']; }
-> = ({ current, series, season }) => {
+  > = ({ current, series, season }) => {
   // Display value is an array [stalk, pct]
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback(
@@ -79,19 +73,23 @@ const StalkOwnershipTab: React.FC<
   return (
     <>
       <Stack direction="row" gap={4} sx={{ px: 2 }}>
-        <Stack gap={0.5} sx={{ minWidth: 180 }}>
-          <Typography>My Stalk</Typography>
-          <Typography variant="h1" color="primary">
-            {displayBN(displayValue[0])}
-          </Typography>
-          <Typography>Season {displayBN(season)}</Typography>
-        </Stack>
-        <Stack gap={0.5}>
-          <Typography>Ownership % of all Stalk</Typography>
-          <Typography variant="h1" color="secondary.dark">
-            {displayValue[1].multipliedBy(100).toFixed(3)}%
-          </Typography>
-        </Stack>
+        <Stat
+          title="My Stalk"
+          bottomText={`Season ${displayBN(season)}`}
+          amount={displayBN(displayValue[0])}
+          color="primary"
+          sx={{ minWidth: 180, ml: 0 }}
+          icon={undefined}
+          gap={0.5}
+        />
+        <Stat
+          title="Ownership % of all Stalk"
+          amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
+          color="secondary.dark"
+          icon={undefined}
+          gap={0.5}
+          sx={{ ml: 0 }}
+        />
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetBlur>
@@ -106,14 +104,19 @@ const StalkOwnershipTab: React.FC<
 // ------------------------------------------------
 
 const OverviewCard: React.FC<{
-  farmerSilo: AppState['_farmer']['silo'];
-  beanstalkSilo: AppState['_beanstalk']['silo'];
-  breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
-  season: BigNumber;
+  farmerSilo:     AppState['_farmer']['silo'];
+  beanstalkSilo:  AppState['_beanstalk']['silo'];
+  breakdown:      ReturnType<typeof useFarmerSiloBreakdown>;
+  season:         BigNumber;
 }> = ({ farmerSilo, beanstalkSilo, breakdown, season }) => {
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
+  };
+
+  const [timeTab, setTimeTab] = useState(0);
+  const handleChangeTimeTab = (i: number) => {
+    setTimeTab(i);
   };
   return (
     <Card>
@@ -130,25 +133,17 @@ const OverviewCard: React.FC<{
         </Tabs>
         {/* "Windows" (time range selector) */}
         <Box sx={{ display: 'none' }}>
-          <Stack direction="row">
-            {WINDOWS.map((w) => (
-              <Button
-                key={w.label}
-                variant="text"
-                size="small"
-                color="dark"
-                sx={{ px: 0.5, py: 0.5, minWidth: 0 }}
-              >
-                {w.label}
-              </Button>
-            ))}
-          </Stack>
+          <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />
         </Box>
       </Stack>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
         <DepositsTab
-          current={[breakdown.totalValue]}
-          series={[mockDepositData]}
+          current={[
+            breakdown.states.deposited.value
+          ]}
+          series={[
+            mockDepositData
+          ]}
           season={season}
         />
       </Box>

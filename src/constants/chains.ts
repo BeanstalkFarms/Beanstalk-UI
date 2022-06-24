@@ -3,17 +3,17 @@ import ethereumLogoUrl from 'img/tokens/eth-logo.svg';
 export enum SupportedChainId {
   MAINNET = 1,
   ROPSTEN = 3,
-  // RINKEBY = 4,
-  // GOERLI = 5,
+  ASTRO = 6074,
+  CUJO = 31337,
   LOCALHOST = 1337,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'Mainnet',
   [SupportedChainId.ROPSTEN]: 'Ropsten',
-  // [SupportedChainId.RINKEBY]: 'Rinkeby',
-  // [SupportedChainId.GOERLI]: 'Goerli',
+  [SupportedChainId.ASTRO]: 'Astro',
   [SupportedChainId.LOCALHOST]: 'Localhost',
+  [SupportedChainId.CUJO]: 'Cujo',
 };
 
 export enum NetworkType {
@@ -24,9 +24,9 @@ export enum NetworkType {
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
   SupportedChainId.ROPSTEN,
-  // SupportedChainId.RINKEBY,
-  // SupportedChainId.GOERLI,
-  SupportedChainId.LOCALHOST
+  SupportedChainId.ASTRO,
+  SupportedChainId.LOCALHOST,
+  SupportedChainId.CUJO
 ] as const;
 
 export const L2_CHAIN_IDS = [] as const;
@@ -81,25 +81,25 @@ export const CHAIN_INFO : ChainInfoMap = {
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
   },
+  [SupportedChainId.ASTRO]: {
+    networkType: NetworkType.L1,
+    explorer: 'https://etherscan.io',
+    label: 'Astro',
+    logoUrl: ethereumLogoUrl,
+    nativeCurrency: { name: 'Astro Ether', symbol: 'astroETH', decimals: 18 },
+  },
   [SupportedChainId.LOCALHOST]: {
     networkType: NetworkType.L1,
     explorer: 'https://etherscan.io',
     label: 'Localhost',
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Localhost Ether', symbol: 'locETH', decimals: 18 },
+  },
+  [SupportedChainId.CUJO]: {
+    networkType: NetworkType.L1,
+    explorer: 'https://etherscan.io',
+    label: 'Harhat',
+    logoUrl: ethereumLogoUrl,
+    nativeCurrency: { name: 'Hardhat Ether', symbol: 'hETH', decimals: 18 },
   }
-  // [SupportedChainId.RINKEBY]: {
-  //   networkType: NetworkType.L1,
-  //   explorer: 'https://rinkeby.etherscan.io',
-  //   label: 'Rinkeby',
-  //   logoUrl: ethereumLogoUrl,
-  //   nativeCurrency: { name: 'Rinkeby Ether', symbol: 'rinkETH', decimals: 18 },
-  // },
-  // [SupportedChainId.GOERLI]: {
-  //   networkType: NetworkType.L1,
-  //   explorer: 'https://goerli.etherscan.io',
-  //   label: 'Goerli',
-  //   logoUrl: ethereumLogoUrl,
-  //   nativeCurrency: { name: 'Goerli Ether', symbol: 'goerETH', decimals: 18 },
-  // },
 };

@@ -233,7 +233,7 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
       name: 'BEAN:ETH LP',
       symbol: 'BEAN:ETH',
       logo: beanEthLpLogoUrl,
-      displayDecimals: 8,
+      displayDecimals: 9,
     },
     {
       stalk: 1,
@@ -248,6 +248,7 @@ export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
       name: 'BEAN:ETH LP',
       symbol: 'BEAN:ETH',
       logo: beanEthLpLogoUrl,
+      displayDecimals: 9,
     },
     {
       stalk: 1,
@@ -311,6 +312,7 @@ export const BEAN_LUSD_LP = {
 export const ERC20_TOKENS : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
+  BEAN_CRV3_LP,
   WETH,
   USDC,
 ];
@@ -321,9 +323,15 @@ export const BALANCE_TOKENS : TokenMap[] = [
   ...ERC20_TOKENS,
 ];
 
+//
 export const SILO_WHITELIST : TokenMap[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
+  BEAN_CRV3_LP,
+  BEAN_LUSD_LP,
+];
+
+export const GENERALIZED_SILO_WHITELIST : TokenMap[] = [
   BEAN_CRV3_LP,
   BEAN_LUSD_LP,
 ];

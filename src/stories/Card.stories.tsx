@@ -23,4 +23,4 @@ Primary.args = {};
 
 export {
   Primary
-}
+};

@@ -1,81 +1,122 @@
 import { useCallback, useEffect } from 'react';
-import BigNumber from 'bignumber.js';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { useAccount } from 'wagmi';
-import flatten from 'lodash/flatten';
-import useBlocks from 'hooks/useBlocks';
-import { useDispatch } from 'react-redux';
-import { Beanstalk } from 'constants/generated';
 import ethers, { BigNumber as BN } from 'ethers';
+import BigNumber from 'bignumber.js';
+import { useAccount } from 'wagmi';
+import { useDispatch } from 'react-redux';
+import flattenDeep from 'lodash/flattenDeep';
+import useBlocks from 'hooks/useBlocks';
+import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
 import { getEventFacet } from 'util/GetEventFacet';
+import useMigrateCall from 'hooks/useMigrateCall';
+import { Event } from 'lib/Beanstalk/EventProcessor';
 import { resetEvents, setEvents } from './actions';
-
-export type ParsedEvent = {
-  event: ethers.Event['event'];
-  blockNumber: ethers.Event['blockNumber'];
-  logIndex: ethers.Event['logIndex'];
-  facet: string;
-  returnValues: any;
-};
 
 const getEvents = (
   beanstalk: Beanstalk,
+  migrate: ReturnType<typeof useMigrateCall>,
   account: string,
   blocks: ReturnType<typeof useBlocks>
 ) =>
   [
-    beanstalk.queryFilter(
-      beanstalk.filters.BeanDeposit(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters['BeanRemove(address,uint32[],uint256[],uint256)'](
-        account
-      ),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters.BeanWithdraw(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters['LPDeposit(address,uint256,uint256,uint256)'](
-        account
-      ),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters['LPRemove(address,uint32[],uint256[],uint256)'](
-        account
-      ),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters.LPWithdraw(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters.Deposit(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters.RemoveSeason(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters.RemoveSeasons(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters.Withdraw(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters.ClaimSeason(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
+    migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+      (b) => Promise.all([
+        // Silo (v1)
+        b.queryFilter(
+          b.filters.BeanDeposit(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters.BeanWithdraw(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters['BeanRemove(address,uint32[],uint256[],uint256)'](
+            account
+          ),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        beanstalk.queryFilter(
+          beanstalk.filters.BeanClaim(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters['LPDeposit(address,uint256,uint256,uint256)'](
+            account
+          ),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters.LPWithdraw(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters['LPRemove(address,uint32[],uint256[],uint256)'](
+            account
+          ),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        beanstalk.queryFilter(
+          beanstalk.filters.LPClaim(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        // Silo (Generalized v1)
+        beanstalk.queryFilter(
+          beanstalk.filters.Deposit(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        beanstalk.queryFilter(
+          beanstalk.filters.Withdraw(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        beanstalk.queryFilter(
+          beanstalk.filters.RemoveSeason(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        beanstalk.queryFilter(
+          beanstalk.filters.RemoveSeasons(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        beanstalk.queryFilter(
+          beanstalk.filters.ClaimSeason(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        beanstalk.queryFilter(
+          beanstalk.filters['ClaimSeasons(address,address,uint32[],uint256)'](account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+      ]),
+      (b) => Promise.all([
+        // Silo (Generalized v2)
+        b.queryFilter(
+          b.filters.AddDeposit(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters.AddWithdrawal(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters.RemoveWithdrawal(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters.RemoveWithdrawals(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters.RemoveDeposit(account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+        b.queryFilter(
+          b.filters['RemoveDeposits(address,address,uint32[],uint256[],uint256)'](account),
+          blocks.BEANSTALK_GENESIS_BLOCK
+        ),
+      ]),
+    ]),
+    // Field
     beanstalk.queryFilter(
       beanstalk.filters['Sow(address,uint256,uint256,uint256)'](
         account
@@ -86,14 +127,7 @@ const getEvents = (
       beanstalk.filters.Harvest(account),
       blocks.BEANSTALK_GENESIS_BLOCK
     ),
-    beanstalk.queryFilter(
-      beanstalk.filters.BeanClaim(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
-    beanstalk.queryFilter(
-      beanstalk.filters.LPClaim(account),
-      blocks.BEANSTALK_GENESIS_BLOCK
-    ),
+    // Pod Market
     beanstalk.queryFilter(
       beanstalk.filters.PlotTransfer(account, null), // from
       blocks.BEANSTALK_GENESIS_BLOCK
@@ -149,10 +183,13 @@ const parseBNJS = (_o: { [key: string]: any }) => {
   return o;
 };
 
+// ----------------------------------------
+
 const useFarmerEvents = () => {
   const blocks = useBlocks();
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
+  const migrate = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async (_account?: string) => {
@@ -160,34 +197,28 @@ const useFarmerEvents = () => {
       if (beanstalk && _account && blocks) {
         const account = getAccount(_account);
         console.debug(`[farmer/events/useFarmerEvents] FETCH: beanstalk = ${beanstalk.address}, farmer = ${account}`, blocks);
-        Promise.all(getEvents(beanstalk, account, blocks)).then((results) => {
-          const flattened = flatten<ethers.Event>(results);
+        Promise.all(getEvents(beanstalk, migrate, account, blocks)).then((results) => {
+          const flattened = flattenDeep<ethers.Event>(results);
           console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
-          const allEvents: ParsedEvent[] = flattened.reduce<ParsedEvent[]>((agg, event, index) => {
-            try {
-              agg.push({
-                event: event.event,
-                blockNumber: event.blockNumber,
-                logIndex: event.logIndex,
-                facet: getEventFacet(event.event),
-                // args: event.args,
-                returnValues: event.decode
-                  ? parseBNJS({
-                      ...(event.decode(event.data, event.topics) as Array<any>),
-                    })
-                  : null,
-              });
-            } catch (e) {
-              console.debug(`[farmer/events/userFarmerEvents] failed to decode event values ${index}`, event);
-              console.error(e);
-            }
-            return agg;
-          }, [])
-          .sort((a, b) => {
-            const diff = a.blockNumber - b.blockNumber;
-            if (diff !== 0) return diff;
-            return a.logIndex - b.logIndex;
-          });
+          const allEvents : Event[] = (
+            flattened
+              .map<Event>((e) => ({
+                event: e.event,
+                args: e.args,
+                blockNumber: e.blockNumber,
+                logIndex: e.logIndex,
+                transactionHash: e.transactionHash,
+                transactionIndex: e.transactionIndex,
+                // backwards compat
+                facet: getEventFacet(e.event),
+                returnValues: parseBNJS(e.decode?.(e.data, e.topics) || {}),
+              }))
+              .sort((a, b) => {
+                const diff = a.blockNumber - b.blockNumber;
+                if (diff !== 0) return diff;
+                return a.logIndex - b.logIndex;
+              })
+          );
           console.debug(`[farmer/events/useFarmerEvents] RESULT: received ${allEvents.length} events`, allEvents);
           dispatch(setEvents(allEvents));
         });
@@ -200,6 +231,7 @@ const useFarmerEvents = () => {
     }
   }, [
     dispatch,
+    migrate,
     beanstalk,
     blocks,
   ]);
@@ -211,6 +243,8 @@ const useFarmerEvents = () => {
 
   return [fetch, clear] as const;
 };
+
+// ----------------------------------------
 
 const FarmerEventsUpdater = () => {
   const [fetch, clear] = useFarmerEvents();

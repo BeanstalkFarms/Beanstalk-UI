@@ -3,7 +3,8 @@ import { Button, ButtonProps as MuiButtonProps, Card, LinkProps, Stack, Typograp
 import { BeanPoolState } from 'state/bean/pools';
 import { displayBN, displayFullBN } from 'util/index';
 import { Pool } from 'classes';
-import TokenIcon from '../Common/TokenIcon';
+import TokenIcon from 'components/Common/TokenIcon';
+import { ZERO_BN } from 'constants/index';
 
 const PoolCard: React.FC<{
   pool: Pool;
@@ -26,7 +27,7 @@ const PoolCard: React.FC<{
           <TokenIcon token={pool.tokens[1]} />
         </Stack>
         <Typography sx={{ fontWeight: 600, pt: 0.2 }}>
-          ${displayFullBN(poolState?.price, 4)}
+          ${displayFullBN(poolState?.price || ZERO_BN, 4)}
         </Typography>
       </Stack>
       <Stack>
@@ -39,7 +40,7 @@ const PoolCard: React.FC<{
           <Typography
             sx={{ fontSize: ButtonProps ? '13px' : null }}
           >
-            ${displayBN(poolState?.liquidity)}
+            ${displayBN(poolState?.liquidity || ZERO_BN)}
           </Typography>
         </Stack>
         <Stack justifyContent="end" direction="row" gap={0.6}>
@@ -53,7 +54,7 @@ const PoolCard: React.FC<{
               sx={{ fontSize: ButtonProps ? '13px' : null }}
             >
               {poolState?.deltaB?.gte(0) ? '+' : ''}
-              {displayBN(poolState?.deltaB, true)}
+              {displayBN(poolState?.deltaB || ZERO_BN, true)}
             </Typography>
           </Stack>
         </Stack>

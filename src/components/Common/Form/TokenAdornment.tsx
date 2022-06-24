@@ -32,20 +32,39 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TokenAdornment : React.FC<{ token: Token } & ButtonProps> = ({ token, ...props }) => {
+const TokenAdornment : React.FC<
+  { token: Token }
+  & ButtonProps
+> = ({
+  token,
+  disabled,
+  onClick,
+  ...props
+}) => {
   const classes = useStyles();
   return (
     <InputAdornment position="end">
-      <Button variant="text" color="primary" className={classes.pill} {...props}>
+      <Button
+        variant="text"
+        color="primary"
+        className={classes.pill}
+        // If no click handler is provided, disable so that
+        // no mouse events work (i.e. no hover bg)
+        disabled={disabled || !onClick}
+        onClick={onClick}
+        {...props}
+      >
         {token.logo ? <img src={token.logo} alt="" className={classes.tokenIcon} /> : null}
         <Box className={classes.tokenName}>{token.symbol}</Box>
-        <KeyboardArrowDownIcon
-          sx={{
-            marginLeft: 0.5,
-            fontSize: 18,
-            color: 'rgba(0,0,0,0.87)' // FIXME
-          }}
-        />
+        {onClick && (
+          <KeyboardArrowDownIcon
+            sx={{
+              marginLeft: 0.5,
+              fontSize: 18,
+              color: 'rgba(0,0,0,0.87)'
+            }}
+          />
+        )}
       </Button>
     </InputAdornment>
   );

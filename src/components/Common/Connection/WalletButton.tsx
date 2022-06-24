@@ -28,8 +28,15 @@ import { CHAIN_INFO } from 'constants/chains';
 
 import { getAccount } from 'util/Account';
 import useChainConstant from 'hooks/useChainConstant';
-import DropdownIcon from '../DropdownIcon';
+
+import balancesIcon from 'img/nav-icons/balances.svg';
+import historyIcon from 'img/nav-icons/history.svg';
+import etherscanIcon from 'img/nav-icons/etherscan.svg';
+import disconnectIcon from 'img/nav-icons/disconnect.svg';
+import { BeanstalkPalette } from '../../App/muiTheme';
 import WalletDialog from './WalletDialog';
+import DropdownIcon from '../DropdownIcon';
+import PickBeansDialog from '../../Farmer/Unripe/PickDialog';
 
 // -----------------------------------------------------------------
 
@@ -37,13 +44,14 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const { disconnect } = useDisconnect();
+  const chain = useChainConstant(CHAIN_INFO);
 
   // Wallet Dialog
   const [showDialog, setShowDialog] = useState(false);
   const handleCloseDialog = useCallback(() => setShowDialog(false), []);
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));   // trim additional account text
-  const isTiny = useMediaQuery('(max-width:380px)');              //      
+  const isTiny = useMediaQuery('(max-width:380px)');              //
 
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -58,16 +66,15 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
     setAnchorEl(null);
   }, []);
 
-  const chain = useChainConstant(CHAIN_INFO);
-
-  // Popup
-  // const [open, setOpen] = useState(false);
-  // const handleShowMenu = useCallback(() => {
-  //   setOpen(true);
-  // }, []);
-  // const handleHideMenu = useCallback(() => {
-  //   setOpen(false);
-  // }, []);
+  // Pick Unripe Beans Dialog
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleOpen = useCallback(() => {
+    handleHideMenu();
+    setModalOpen(true);
+  }, [handleHideMenu]);
+  const handleClose = useCallback(() => {
+    setModalOpen(false);
+  }, []);
 
   // Display: Not Connected
   if (!account?.address || !activeChain?.id) {
@@ -97,14 +104,22 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         to="/balances"
         onClick={handleHideMenu}
       >
-        <ListItemText>Balances</ListItemText>
+        <ListItemText>
+          <Stack direction="row" gap={1} alignItems="center">
+            <img src={balancesIcon} alt="Balances" width={20} />
+            Balances
+          </Stack>
+        </ListItemText>
       </MenuItem>
       <MenuItem
         component={RouterLink}
         to="/history"
         onClick={handleHideMenu}
       >
-        <ListItemText>History</ListItemText>
+        <Stack direction="row" gap={1} alignItems="center">
+          <img src={historyIcon} alt="History" width={20} />
+          History
+        </Stack>
       </MenuItem>
       <MenuItem
         component="a"
@@ -118,9 +133,12 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography variant="body2" color="text.primary">
-            View on Etherscan
-          </Typography>
+          <Stack direction="row" gap={1} alignItems="center">
+            <img src={etherscanIcon} alt="Etherscan" width={20} />
+            <Typography variant="body2" color="text.primary">
+              View on Etherscan
+            </Typography>
+          </Stack>
           <ArrowForwardIcon
             sx={{
               transform: 'rotate(-45deg)',
@@ -130,59 +148,39 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           />
         </Stack>
       </MenuItem>
-      <MenuItem onClick={() => disconnect()}>Disconnect</MenuItem>
+      <MenuItem onClick={() => disconnect()}>
+        <Stack direction="row" gap={1} alignItems="center">
+          <img src={disconnectIcon} alt="Disconnect" width={20} />
+          <Typography variant="body2" color="text.primary">
+            Disconnect Wallet
+          </Typography>
+        </Stack>
+      </MenuItem>
+      <Box sx={{ px: 1, pt: 0.75, pb: 0.25 }}>
+        <Button
+          fullWidth
+          onClick={handleOpen}
+          sx={{
+            py: 0.9,
+            backgroundColor: BeanstalkPalette.brown,
+            color: BeanstalkPalette.white,
+            '&:hover': {
+              backgroundColor: BeanstalkPalette.brown,
+              opacity: 0.96
+            }
+          }}>
+          <Stack direction="row" alignItems="center">
+            <ListItemText>Pick Unripe Beans</ListItemText>
+          </Stack>
+        </Button>
+      </Box>
     </MenuList>
   );
 
   // Connected
   return (
     <>
-      {/* <Tooltip    
-        // components={{ Tooltip: Card }}
-        title={menu}
-        open={open}
-        onOpen={handleShowMenu}
-        onClose={handleHideMenu}
-        // enterTouchDelay={50}
-        // leaveTouchDelay={10000}
-        placement="bottom-end"
-        sx={{
-          marginTop: 10,
-          pointerEvents: 'auto'
-        }}
-        componentsProps={{
-          popper: {
-            sx: {
-              paddingTop: 0.5
-            }
-          }
-        }}
-        PopperProps={{
-          keepMounted: true,
-          disablePortal: true,
-        }}
-      >
-        <Button
-          disableFocusRipple
-          variant="contained"
-          color="light"
-          startIcon={(
-            isTiny
-              ? null
-              : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
-              ? <WarningAmberIcon />
-              : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
-          )}
-          endIcon={<DropdownIcon open={open} />}
-          {...props}
-          onClick={(e) => { console.debug(`clicked main button`) }}
-        >
-          <Typography variant="subtitle1">
-            {trimAddress(getAccount(account.address), !isMedium)}
-          </Typography>
-        </Button>
-      </Tooltip> */}
-
+      {/* Wallet Button */}
       <Button
         disableFocusRipple
         variant="contained"
@@ -202,6 +200,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           {trimAddress(getAccount(account.address), !isMedium)}
         </Typography>
       </Button>
+      {/* Popup Menu */}
       <Menu
         elevation={0}
         anchorEl={anchorEl}
@@ -217,7 +216,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           }
         }}
         disablePortal
-        disableScrollLock
         // Align the menu to the bottom 
         // right side of the anchor button. 
         anchorOrigin={{
@@ -236,6 +234,11 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       >
         {menu}
       </Menu>
+      {/* Pick Beans Dialog */}
+      <PickBeansDialog
+        open={modalOpen}
+        handleClose={handleClose}
+      />
     </>
   );
 };

@@ -31,4 +31,4 @@ Primary.args = {};
 
 export {
   Primary
-}
+};

@@ -10,7 +10,7 @@ import Stat from 'components/Common/Stat';
 import { displayBN } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { SupportedChainId } from 'constants/chains';
-import useFarmerTotalFertilizer from "../hooks/useFarmerTotalFertilizer";
+import useFarmerTotalFertilizer from "hooks/useFarmerTotalFertilizer";
 
 const BalancesPage: React.FC = () => {
   // State
@@ -27,7 +27,7 @@ const BalancesPage: React.FC = () => {
     <Container maxWidth="lg">
       <Card sx={{ p: 2 }}>
         <TotalBalanceCard breakdown={breakdown} />
-        <Stack sx={{ p: 2 }}>
+        <Card sx={{ p: 2 }}>
           <Grid container spacing={1} rowSpacing={3}>
             <Grid item xs={12} md={3}>
               <Stat
@@ -66,47 +66,8 @@ const BalancesPage: React.FC = () => {
               />
             </Grid>
           </Grid>
-        </Stack>
+        </Card>
       </Card>
-      {/* <Stack gap={2}>
-        <PageHeader
-          title={<strong>Balances</strong>}
-          description="View your Beanstalk balances and claim rewards"
-        />
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <TotalBalanceCard breakdown={breakdown} />
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container direction="row" alignItems="stretch" spacing={1}>
-              <Grid item xs={12} md={6} lg={3}>
-                <SiloAssetCard
-                  token={STALK}
-                  state={farmerSilo.stalk}
-                />
-              </Grid>
-              <Grid item xs={12} md={6} lg={3}>
-                <SiloAssetCard
-                  token={SEEDS}
-                  state={farmerSilo.seeds}
-                />
-              </Grid>
-              <Grid item xs={12} md={6} lg={3}>
-                <PodCard state={farmerField} />
-              </Grid>
-              <Grid item xs={12} md={6} lg={3}>
-                <FertilizerCard />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <RewardsCard
-            farmerSilo={farmerSilo}
-            farmerField={farmerField}
-          />
-        </Grid>
-      </Stack> */}
     </Container>
   )
 };

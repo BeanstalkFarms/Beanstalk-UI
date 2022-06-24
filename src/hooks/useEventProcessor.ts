@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 
-import { ParsedEvent } from 'state/farmer/events/updater';
 import { PlotMap, SeasonMap } from 'state/farmer/field';
 import { toTokenUnitsBN } from 'util/Tokens';
 import {
@@ -12,6 +11,7 @@ import {
 } from 'constants/tokens';
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import { ERC20Token } from 'classes/Token';
+import { Event } from 'lib/Beanstalk/EventProcessor';
 
 // ------------------------------------
 // Types
@@ -279,7 +279,7 @@ export function parsePlots(
 // ------------------------------------
 
 function _processFarmerEvents(
-  events: ParsedEvent[],
+  events: Event[],
   params: EventParsingParameters,
   tokens: EventParsingTokens,
 ) {
@@ -327,7 +327,10 @@ function _processFarmerEvents(
             : beans,
       };
       if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
-    } else if (event.event === 'BeanRemove') {
+    }
+    // BeanRemove is removing a deposit. It's issued at the same time as a
+    // Withdrawal. During convert you remove Deposits but don't Withdraw. 
+    else if (event.event === 'BeanRemove') {
       // FIXME: define crates contract return value
       event.returnValues.crates.forEach((s: string, i: number) => {
         const beans = toTokenUnitsBN(
@@ -472,6 +475,7 @@ function _processFarmerEvents(
           ...userLPSeedDeposits,
           [s]: userLPSeedDeposits[s].minus(seeds),
         };
+        console.debug('[processor:event/LPRemove]', userLPDeposits[s].toNumber(), userLPSeedDeposits[s].toNumber(), event);
         if (userLPDeposits[s].isEqualTo(0)) delete userLPDeposits[s];
         if (userLPSeedDeposits[s].isEqualTo(0)) {
           delete userLPSeedDeposits[s];
@@ -529,17 +533,17 @@ function _processFarmerEvents(
     } else if (event.event === 'RemoveSeason') {
       const s = parseInt(event.returnValues.season, 10);
       const t = event.returnValues.token;
-      const lp = toTokenUnitsBN(
+      const amount = toTokenUnitsBN(
         event.returnValues.amount,
         BeanEthLP.decimals
       );
       if (t === BeanCrv3LP.address) {
         const bdv = userCurveBDVDeposits[s]
-          .multipliedBy(lp)
+          .multipliedBy(amount)
           .dividedBy(userCurveDeposits[s]);
         userCurveDeposits = {
           ...userCurveDeposits,
-          [s]: userCurveDeposits[s].minus(lp),
+          [s]: userCurveDeposits[s].minus(amount),
         };
         userCurveBDVDeposits = {
           ...userCurveBDVDeposits,
@@ -549,11 +553,11 @@ function _processFarmerEvents(
         if (userCurveBDVDeposits[s].isEqualTo(0)) delete userCurveBDVDeposits[s];
       } else {
         const bdv = userBeanlusdBDVDeposits[s]
-          .multipliedBy(lp)
+          .multipliedBy(amount)
           .dividedBy(userBeanlusdBDVDeposits[s]);
         userBeanlusdBDVDeposits = {
           ...userBeanlusdBDVDeposits,
-          [s]: userBeanlusdBDVDeposits[s].minus(lp),
+          [s]: userBeanlusdBDVDeposits[s].minus(amount),
         };
         userBeanlusdBDVDeposits = {
           ...userBeanlusdBDVDeposits,
@@ -749,7 +753,7 @@ export default function useEventProcessor() {
   }), [getChainConstant]);
   
   return useCallback(
-    (events: ParsedEvent[], params: EventParsingParameters) =>
+    (events: Event[], params: EventParsingParameters) =>
       _processFarmerEvents(events, params, Tokens),
     [Tokens],
   );

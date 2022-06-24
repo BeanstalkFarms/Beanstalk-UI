@@ -3,8 +3,8 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { initialFarmerSilo } from 'state/farmer/silo/reducer';
 import { initialBeanstalkSilo } from 'state/beanstalk/silo/reducer';
 
-import OverviewCard from './OverviewCard';
 import BigNumber from 'bignumber.js';
+import OverviewCard from './OverviewCard';
 
 export default {
   component: OverviewCard,
@@ -13,7 +13,7 @@ export default {
 const n = new BigNumber(60_740);
 const s = {
   value: n,
-  valueByToken: {}
+  byToken: {}
 };
 
 const Template: ComponentStory<typeof OverviewCard> = (args: any) => (
@@ -22,11 +22,13 @@ const Template: ComponentStory<typeof OverviewCard> = (args: any) => (
     beanstalkSilo={initialBeanstalkSilo}
     breakdown={{
       totalValue: n,
-      circulating: s,
-      wrapped: s,
-      claimable: s,
-      deposited: s,
-      withdrawn: s,
+      states: {
+        circulating: s,
+        wrapped: s,
+        claimable: s,
+        deposited: s,
+        withdrawn: s,
+      }
     }}
     season={new BigNumber(6074)}
   />

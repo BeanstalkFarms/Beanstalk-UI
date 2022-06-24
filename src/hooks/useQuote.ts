@@ -1,15 +1,20 @@
 import { BigNumber } from 'bignumber.js';
 import Token from 'classes/Token';
 import { useCallback, useEffect, useState } from 'react';
-import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
+import { toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
-import { sleep } from 'util/Time';
-import { ETH_DECIMALS } from 'constants/tokens';
-import { bigNumberResult } from 'util/Ledger';
 import toast from 'react-hot-toast';
-import { useFertilizerContract } from './useContract';
 
-export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
+export type QuoteHandler = (tokenIn: Token, amountIn: BigNumber, tokenOut: Token) => Promise<BigNumber>;
+
+export default function useQuote(
+  /** */
+  tokenOut: Token,
+  /** */
+  quoteHandler: QuoteHandler,
+  /** The number of milliseconds to wait before calling */
+  debounceMs : number = 250
+) : [
   amountOut: BigNumber | null,
   quoting: boolean,
   refreshAmountOut: (_tokenIn: Token, _amountIn: BigNumber) => void,
@@ -18,8 +23,6 @@ export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
   const [amountOut, setAmountOut] = useState<BigNumber | null>(null);
   /** Whether we're currently waiting for a quote for this swap. */
   const [quoting, setQuoting] = useState<boolean>(false);
-  /** */
-  const fertContract = useFertilizerContract();
   
   // When token changes, reset the amount.
   useEffect(() => {
@@ -32,40 +35,31 @@ export default function useQuote(tokenOut: Token, debounceMs : number = 250) : [
   const _getAmountOut = useCallback(debounce(
     (tokenIn: Token, amountIn: BigNumber) => {
       try {
-        if (fertContract) {
-          // FIXME: this is the lazy way of doing this
-          const call = (tokenIn.symbol === 'ETH' || tokenIn.symbol === 'ropETH')
-            ? fertContract.callStatic.getUsdcOut(
-              toStringBaseUnitBN(amountIn, ETH_DECIMALS),
-            ).then(bigNumberResult)
-            : sleep(250).then(() => new BigNumber(3000_000000).times(amountIn));
-
-          //
-          return call
-            .then((result) => {
-              const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
-              console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
-              setAmountOut(_amountOut);
-              setQuoting(false);
-              return result;
-            })
-            .catch((e) => {
-              toast.error(e.toString());
-              setQuoting(false);
-            });
-        }
+        return quoteHandler(tokenIn, amountIn, tokenOut)
+          .then((result) => {
+            const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
+            console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
+            setAmountOut(_amountOut);
+            setQuoting(false);
+            return result;
+          })
+          .catch((e) => {
+            toast.error(e.toString());
+            setQuoting(false);
+          });
       } catch (e : any) {
         setQuoting(false);
-        toast.error(e.toString());
+        console.error(e);
+        toast.error(e?.toString());
       }
     },  
     debounceMs,
     { trailing: true }
   ), [
     tokenOut,
-    fertContract,
     setQuoting,
-    setAmountOut
+    setAmountOut,
+    quoteHandler,
   ]);
 
   // Handler to refresh

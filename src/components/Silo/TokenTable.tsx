@@ -11,10 +11,10 @@ import { SEEDS, STALK } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
-import { displayBN } from 'util/Tokens';
+import { displayBN, displayTokenAmount } from 'util/Tokens';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useTVL from 'hooks/useTVL';
-import { AddressMap } from 'constants/index';
+import { AddressMap, ZERO_BN } from 'constants/index';
 
 const arrowContainerWidth = 20;
 
@@ -55,32 +55,38 @@ const TokenTable : React.FC<{
         display="flex"
         sx={{ 
           px: 3, // 1 + 2 from Table Body
-          py: 1,
+          pt: '14px',
+          pb: '5px',
           borderBottomStyle: 'solid',
           borderBottomColor: 'secondary.main', 
-          borderBottomWidth: 1.5 
+          borderBottomWidth: 1.5,
         }}
       >
         <Grid container alignItems="flex-end">
           <Grid item md={3} xs={4}>
             <Typography color="gray">Token</Typography>
           </Grid>
-          <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={2} xs={2} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">Rewards</Typography>
           </Grid>
-          <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={2} xs={2} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">TVL</Typography>
-            <Typography color="black" fontWeight="bold">${displayBN(aggregateTVL)}</Typography>
+            {/* <Typography color="black" fontWeight="bold">
+              ${displayBN(aggregateTVL)}
+            </Typography> */}
           </Grid>
-          <Grid item md={3} xs={8} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
-            <Typography color="gray">My Deposits</Typography>
-            <Typography color="black" fontWeight="bold">{displayUSD(breakdown.deposited.value)}</Typography>
+          <Grid item md={2.5} xs={4} display={{ xs: 'none', md: 'block' }}>
+            <Typography color="gray">Deposited Amount</Typography>
+          </Grid>
+          <Grid item md={2.5} xs={4} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
+            <Typography color="gray">Value</Typography>
+            {/* <Typography color="black" fontWeight="bold">{displayUSD(breakdown.states.deposited.value)}</Typography> */}
           </Grid>
         </Grid>
       </Box>
       <Stack direction="column" gap={1} sx={{ p: 1 }}>
         {config.whitelist.map((token) => {
-          const deposited = farmerSilo.tokens[token.address]?.deposited;
+          const deposited = farmerSilo.balances[token.address]?.deposited;
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -96,6 +102,7 @@ const TokenTable : React.FC<{
                 }}
               >
                 <Grid container alignItems="center">
+                  {/* Cell: Token */}
                   <Grid item md={3} xs={4}>
                     <Stack direction="row" alignItems="center" gap={1}>
                       <img
@@ -108,18 +115,27 @@ const TokenTable : React.FC<{
                       </Typography>
                     </Stack>
                   </Grid>
-                  <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
+                  {/* Cell: Rewards */}
+                  <Grid item md={2} xs={2} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
-                      <TokenIcon token={SEEDS} />{token.rewards?.seeds}
+                      <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
                     </Typography>
                   </Grid>
-                  <Grid item xs={3} display={{ xs: 'none', md: 'block' }}>
+                  {/* Cell: TVL */}
+                  <Grid item md={2} xs={2} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       ${displayBN(getTVL(token))}
                     </Typography>
                   </Grid>
-                  <Grid item md={3} xs={8} sx={{ textAlign: 'right' }}>
+                  {/* Cell: Deposited Amount */}
+                  <Grid item md={2.5} xs={2.5}>
+                    <Typography color="black">
+                      {displayTokenAmount(deposited?.amount || ZERO_BN, token)}
+                    </Typography>
+                  </Grid>
+                  {/* Cell: My Deposits */}
+                  <Grid item md={2.5} xs={2.5}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
                         {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'}
@@ -134,13 +150,13 @@ const TokenTable : React.FC<{
             </Box>
           );
         })}
-        {chainId !== SupportedChainId.MAINNET && (
+        {/* {chainId !== SupportedChainId.MAINNET && (
           <Box>
             <Button variant="contained" color="primary" size="large" fullWidth>
               Convert Allocation of Deposited Assets
             </Button>
           </Box>
-        )}
+        )} */}
       </Stack>
     </Card>
   );

@@ -7,11 +7,11 @@ const initialState : BeanPools = {};
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(updateBeanPool, (state, { payload }) => {
-      state[payload.address] = payload.pool;
+      state[payload.address.toLowerCase()] = payload.pool;
     })
     .addCase(updateBeanPools, (state, { payload }) => {
       payload.forEach((pl) => {
-        state[pl.address] = pl.pool;
+        state[pl.address.toLowerCase()] = pl.pool;
       });
     })
     .addCase(resetPools, () => initialState)

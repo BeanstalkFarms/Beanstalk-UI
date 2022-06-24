@@ -7,12 +7,15 @@ import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
 import { bigNumberResult } from 'util/Ledger';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
+import useMigrateCall from 'hooks/useMigrateCall';
+import { ZERO_BN } from 'constants/index';
 import { resetFertilizer, updateFertilizer } from './actions';
 
 export const useFetchFarmerFertilizer = () => {
   const dispatch = useDispatch();
   const replantId = useChainConstant(REPLANT_INITIAL_ID);
   const [fertContract] = useBeanstalkFertilizerContract();
+  const migrate = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async (_account: string) => {
@@ -22,7 +25,10 @@ export const useFetchFarmerFertilizer = () => {
       const [
         balance,
       ] = await Promise.all([
-        fertContract.balanceOf(account, replantId.toString()).then(bigNumberResult),
+        migrate(fertContract, [
+          () => fertContract.balanceOf(account, replantId.toString()).then(bigNumberResult),
+          () => Promise.resolve(ZERO_BN),
+        ]),
       ] as const);
       console.debug(`[farmer/fertilizer/updater] RESULT: balance = ${balance.toFixed(10)}`);
       if (balance.gt(0)) {
@@ -33,6 +39,7 @@ export const useFetchFarmerFertilizer = () => {
     }
   }, [
     dispatch,
+    migrate,
     fertContract,
     replantId
   ]); 

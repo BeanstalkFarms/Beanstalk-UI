@@ -1,11 +1,11 @@
 import { createAction } from '@reduxjs/toolkit';
-import { ParsedEvent } from './updater';
+import { Event } from 'lib/Beanstalk/EventProcessor';
 
 export const resetEvents = createAction(
   'farmer/events/reset'
 );
 
-export const setEvents = createAction<ParsedEvent[]>(
+export const setEvents = createAction<Event[]>(
   'farmer/events/set'
 );
 

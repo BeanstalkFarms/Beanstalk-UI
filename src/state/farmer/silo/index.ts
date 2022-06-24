@@ -18,7 +18,7 @@ export type Crate = {
  * A "Deposit" represents an amount of a Whitelisted Silo Token
  * that has been added to the Silo.
  */
-export type Deposit = Crate & {
+export type DepositCrate = Crate & {
   /** The BDV of the Deposit is determined upon Deposit. */
   bdv: BigNumber;
   /** The amount of Stalk granted for this Deposit. */
@@ -32,7 +32,7 @@ export type Deposit = Crate & {
  * that was removed from the Silo. Withdrawals remain pending
  * for several seasons until they are ready to be Claimed.
  */
-export type Withdrawal = Crate & {}
+export type WithdrawalCrate = Crate & {}
 
 /**
  * A "Silo Balance" provides all information
@@ -45,17 +45,22 @@ export type FarmerSiloBalance = {
     /** The BDV of this Token currently in the Deposited state. */
     bdv: BigNumber;
     /** All Deposit crates. */
-    crates: Deposit[];
+    crates: DepositCrate[];
   };
   withdrawn: {
     /** The total amount of this Token currently in the Withdrawn state. */
     amount: BigNumber;
-    /** ??? */
+    /** */
     bdv: BigNumber;
     /** All Withdrawal crates. */
-    crates: Withdrawal[];
+    crates: WithdrawalCrate[];
   };
-  claimable: BigNumber;
+  claimable: {
+    /** The total amount of this Token currently in the Claimable state. */
+    amount: BigNumber;
+    /** All Claimable crates. */
+    crates: Crate[];
+  };
   wrapped: BigNumber;
   circulating: BigNumber;
 }
@@ -68,7 +73,7 @@ export type FarmerSiloBalance = {
  * FIXME: enforce that `address` is a key of whitelisted tokens?
  */
 export type FarmerSiloBalances = {
-  tokens: TokenMap<FarmerSiloBalance>;
+  balances: TokenMap<FarmerSiloBalance>;
 }
 
 /**
@@ -79,7 +84,7 @@ export type FarmerSiloRewards = {
   beans: {
     /**
      * The amount of Beans the Farmer has earned 
-     * rom their ownership of the Silo.
+     * from their ownership of the Silo.
      */
     earned: BigNumber;
   }

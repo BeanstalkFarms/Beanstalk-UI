@@ -20,7 +20,7 @@ const Template: ComponentStory<typeof TokenTable> = (args: any) => (
       ]
     }}
     farmerSilo={{
-      tokens: {
+      balances: {
         [BEAN[SupportedChainId.MAINNET].address]: {
           // input fake data here
           deposited: new BigNumber(123_456_789)

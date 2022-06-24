@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import SiloActions from 'components/Silo/Actions';
-import DepositsTable from 'components/Silo/Deposits';
+import DepositsCard from 'components/Silo/DepositsCard';
 import useWhitelist from 'hooks/useWhitelist';
 import { Container, Stack } from '@mui/material';
 import usePools from 'hooks/usePools';
@@ -22,7 +22,7 @@ const TokenPage: React.FC<{}> = () => {
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanPools  = useSelector<AppState, AppState['_bean']['pools']>((state) =>  state._bean.pools);
 
-  console.debug('[page:silo/token] whitelist ', WHITELIST, POOLS, beanPools);
+  // console.debug('[page:silo/token] whitelist ', WHITELIST, POOLS, beanPools);
 
   // Ensure this address is a whitelisted token
   // FIXME: case sensitivity
@@ -34,20 +34,19 @@ const TokenPage: React.FC<{}> = () => {
 
   // Load this Token from the whitelist
   const TOKEN = WHITELIST[address];
-  const balance = farmerSilo.tokens[TOKEN.address];
+  const siloBalance = farmerSilo.balances[TOKEN.address];
 
   // Most Silo Tokens will have a corresponding Pool.
   // If one is available, show a PoolCard with state info.
   const POOL  = POOLS[address];
   const beanPool = beanPools[address];
-
+  
   // If no data loaded...
   if (!TOKEN) return null;
 
   return (
     <Container maxWidth="sm">
       <Stack gap={2}>
-        {/* Header */}
         <PageHeader
           title={<strong>{TOKEN.name} Silo</strong>}
           description={`Deposit ${TOKEN.name} to earn Stalk & Seeds`}
@@ -59,10 +58,13 @@ const TokenPage: React.FC<{}> = () => {
             poolState={beanPool}
           />
         )}
-        <SiloActions token={TOKEN} />
-        <DepositsTable
+        <SiloActions
           token={TOKEN}
-          balance={balance}
+          siloBalance={siloBalance}
+        />
+        <DepositsCard
+          token={TOKEN}
+          balance={siloBalance}
         />
       </Stack>
     </Container>

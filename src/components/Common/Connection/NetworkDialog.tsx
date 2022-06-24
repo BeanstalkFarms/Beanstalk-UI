@@ -6,6 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
 import { SupportedChainId } from 'constants/chains';
 import { ETH } from 'constants/tokens';
+import { TESTNET_RPC_ADDRESSES } from 'util/Client';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 const chainImgMap : { [key: string] : string | undefined } = {
@@ -41,12 +42,12 @@ const NetworkDialog: React.FC<{
     },
     [switchNetwork, handleClose]
   );
-  // 
+  
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Dialog onClose={handleClose} open={open} disableScrollLock>
+    <Dialog onClose={handleClose} open={open}>
       <StyledDialogTitle onClose={handleClose}>
         Select chain
       </StyledDialogTitle>
@@ -73,7 +74,13 @@ const NetworkDialog: React.FC<{
                 <Typography color="text.primary" sx={{ fontSize: 20 }}>
                   {chain.name}
                 </Typography>
-                <img src={chainImgMap[chain.name]} alt="" style={{ height: 35 }} />
+                {TESTNET_RPC_ADDRESSES[chain.id] ? (
+                  <Typography color="text.secondary" sx={{ fontSize: 12 }}>
+                    {TESTNET_RPC_ADDRESSES[chain.id]}
+                  </Typography>
+                ) : (
+                  <img src={chainImgMap[chain.name]} alt="" style={{ height: 35 }} />
+                )}
               </Stack>
             </Button>
           ))}

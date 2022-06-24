@@ -6,28 +6,36 @@ import TokenInputField from 'components/Common/Form/TokenInputField';
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/Tokens';
-import useQuote from 'hooks/useQuote';
-// import { PinDropSharp } from '@mui/icons-material';
+import useQuote, { QuoteHandler } from 'hooks/useQuote';
 import { FormTokenState } from '.';
 
 const TokenQuoteProvider : React.FC<{
+  /** Field name */
   name: string;
-  balance: BigNumber | undefined;
-  tokenOut: Token;
+  /** Input state */
   state: FormTokenState;
-  showTokenSelect: () => void;
+  /** Balance for TokenInputField */
+  balance: BigNumber | undefined;
+  /** Token which we're quoting to */
+  tokenOut: Token;
+  /** Handler to show token select */
+  showTokenSelect?: () => void;
+  /** */
   disableTokenSelect?: boolean;
+  /** */
+  handleQuote: QuoteHandler;
 } & TextFieldProps> = ({
   name,
+  state,
   balance,
   tokenOut,
-  state,
   showTokenSelect,
   disableTokenSelect,
+  handleQuote,
   ...props
 }) => {
   // Setup a price quote for this token
-  const [amountOut, quoting, getAmountOut] = useQuote(tokenOut);
+  const [amountOut, quoting, getAmountOut] = useQuote(tokenOut, handleQuote);
   const { isSubmitting, setFieldValue } = useFormikContext();
 
   // Run getAmountOut whenever the amount changes.
@@ -99,6 +107,7 @@ const TokenQuoteProvider : React.FC<{
       {(fieldProps: FieldProps) => (
         <TokenInputField
           {...fieldProps}
+          token={state.token}
           fullWidth
           balance={balance}
           quote={Quote}

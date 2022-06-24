@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import BigNumber from 'bignumber.js';
-import RewardsBar from './RewardsBar';
 import { SupportedChainId } from 'constants/chains';
+import RewardsBar from './RewardsBar';
 
 export default {
   component: RewardsBar,

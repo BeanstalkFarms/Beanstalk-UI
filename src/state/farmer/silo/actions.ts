@@ -1,18 +1,17 @@
 import { createAction } from '@reduxjs/toolkit';
+import { AddressMap } from 'constants/index';
 import { FarmerSiloRewards, FarmerSiloBalance } from '.';
 
-export type UpdateFarmerTokenBalancesPayload = { 
-  [address: string]: Partial<FarmerSiloBalance>;
-};
+export type UpdateFarmerSiloBalancesPayload = AddressMap<Partial<FarmerSiloBalance>>
 
 export const resetFarmerSilo = createAction(
   'farmer/silo/reset'
 );
 
-export const updateFarmerSiloAssets = createAction<FarmerSiloRewards>(
+export const updateFarmerSiloRewards = createAction<FarmerSiloRewards>(
   'farmer/silo/update'
 );
 
-export const updateFarmerTokenBalances = createAction<UpdateFarmerTokenBalancesPayload>(
-  'farmer/silo/updateFarmerTokenBalances'
+export const updateFarmerSiloBalances = createAction<UpdateFarmerSiloBalancesPayload>(
+  'farmer/silo/updateFarmerSiloBalances'
 );

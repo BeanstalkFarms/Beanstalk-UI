@@ -86,7 +86,10 @@ export function displayTokenAmount(
 ) {
   return `${amount
     .toNumber()
-    .toLocaleString('en-US', { maximumFractionDigits: token.displayDecimals })} ${token.name}`;
+    .toLocaleString('en-US', { 
+      maximumFractionDigits: token.displayDecimals,
+      // maximumSignificantDigits: 3,
+    })} ${token.name}`;
 }
 
 /**
