@@ -156,15 +156,15 @@ const PickBeansDialog: React.FC<{
           {/**
             * Section 1: Deposited Balance
             */}
-          <Stack gap={0.25}>
+          {/* <Stack gap={0.25}>
             <Stack direction="row" justifyContent="space-between">
               <Typography sx={{ fontSize: '16px' }}>Deposited Assets</Typography>
               <Typography sx={{ fontSize: '16px' }}>{displayUSD(breakdown.states.deposited.value)}</Typography>
-            </Stack>
+            </Stack> */}
             {/* <Typography sx={{ fontSize: '12px' }} color="text.secondary">
               These assets do not need to be Picked and are automatically Deposited in their Unripe state upon Replant.
             </Typography> */}
-          </Stack>
+          {/* </Stack> */}
           <Divider />
           {/**
             * Section 2: Unripe Beans
@@ -247,7 +247,7 @@ const PickBeansDialog: React.FC<{
         </Stack>
       </StyledDialogContent>
       <StyledDialogActions>
-        <Tooltip title={chainId === SupportedChainId.MAINNET ? 'Picking Unripe Assets will be available upon Replant.' : false}>
+        <Tooltip title={chainId === SupportedChainId.MAINNET ? 'Picking Unripe Assets will be available upon Replant.' : ''}>
           <Box width="100%">
             <Button
               disabled={chainId === SupportedChainId.MAINNET}

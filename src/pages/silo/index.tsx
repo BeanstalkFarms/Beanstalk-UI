@@ -51,13 +51,13 @@ const SiloPage : React.FC = () => {
           )}
         />
         {/* TEMP: Hide next Season metrics on MAINNET. */}
-        {chainId !== SupportedChainId.MAINNET && (
+        {/* {chainId !== SupportedChainId.MAINNET && (
           <NextSeason
             title={(
               `Next Season's predicted Silo rewards in ${sunrise.remaining.as('minutes').toLocaleString('en-US', { maximumFractionDigits: 0 })}m`
             )}
           />
-        )}
+        )} */}
         <OverviewCard
           farmerSilo={farmerSilo}
           beanstalkSilo={beanstalkSilo}

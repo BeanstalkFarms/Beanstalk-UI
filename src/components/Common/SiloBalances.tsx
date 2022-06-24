@@ -42,10 +42,12 @@ const TokenRow: React.FC<{
     alignItems="flex-start"
     sx={{
       cursor: onMouseOver ? 'pointer' : 'inherit',
-      py: 0.5,
+      // py: 1,
+      // px: 1.25,
+      py: 0.75,
+      px: 0.75,
       opacity: isFaded ? 0.3 : 1,
       outline: isSelected ? `1px solid ${BeanstalkPalette.lightBlue}` : null,
-      px: 0.75,
       borderRadius: 1,
     }}
     onMouseOver={onMouseOver}
@@ -54,19 +56,19 @@ const TokenRow: React.FC<{
     onBlur={onMouseOut}
     onClick={onClick}
   >
-    <Typography color="text.secondary">
+    <Typography color="text.secondary" sx={token ? { display: { lg: 'block', md: 'none', xs: 'block' } } : undefined}>
       {name}
     </Typography>
-    <Tooltip title={tooltip || false}>
+    <Tooltip title={tooltip || ''}>
       <Stack direction="row" alignItems="center" gap={0.5}>
         {token && <TokenIcon token={token} />}
         {amount && (
-          <Typography>
+          <Typography textAlign="right">
             {amount}
           </Typography>
         )}
         {value && (
-          <Typography textAlign="right">
+          <Typography textAlign="right" display="block">
             {value}
           </Typography>
         )}
@@ -165,7 +167,7 @@ const SiloBalances: React.FC<{
           *   value of all tokens in that State.
           */}
         <Grid item xs={12} md={4}>
-          <Stack p={1} onMouseLeave={onMouseOutContainer} onBlur={onMouseOutContainer}>
+          <Stack px={{ xs: 0, md: 1 }} py={1} onMouseLeave={onMouseOutContainer} onBlur={onMouseOutContainer}>
             {availableStates.map((id) => (
               <TokenRow
                 key={id}
@@ -184,7 +186,7 @@ const SiloBalances: React.FC<{
           * Show a pie chart breaking down each of the above States.
           */}
         <Grid item xs={12} md={4}>
-          <Box display="flex" justifyContent="center" sx={{ height: 250, py: { xs: 1, md: 0 } }}>
+          <Box display="flex" justifyContent="center" sx={{ height: 235, py: { xs: 1, md: 0 }, px: 1 }}>
             <ResizablePieChart
               title={hoverState ? STATE_CONFIG[hoverState][0] : 'All Balances'}
               data={breakdown.totalValue.gt(0) ? pieChartData : undefined}
@@ -206,7 +208,7 @@ const SiloBalances: React.FC<{
             </Stack>
           ) : (
             <Stack gap={1}>
-              <Typography variant="h2" sx={{ mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Tokens</Typography>
+              <Typography variant="h2" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Tokens</Typography>
               <Box>
                 {Object.keys(whitelist).sort((a, b) => {
                   const _a : number = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[a]?.value.toNumber() || 0;

@@ -139,10 +139,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             className="border border-t-0 shadow-xl"
           >
             <Stack gap={1}>
-              <Typography variant="body1" textAlign="left" mx={0.5} mt={1}>
-                {/* <img src={sunriseIcon} alt="Sun" style={{ height: 20 }} /> */}
+              {/* <Typography variant="body1" textAlign="left" mx={0.5} mt={1}>
                 Season {displayBN(season || ZERO_BN)}
-              </Typography>
+              </Typography> */}
               {poolsContent}
             </Stack>
           </Box>

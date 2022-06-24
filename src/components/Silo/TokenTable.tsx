@@ -55,10 +55,11 @@ const TokenTable : React.FC<{
         display="flex"
         sx={{ 
           px: 3, // 1 + 2 from Table Body
-          py: 1,
+          pt: '14px',
+          pb: '5px',
           borderBottomStyle: 'solid',
           borderBottomColor: 'secondary.main', 
-          borderBottomWidth: 1.5 
+          borderBottomWidth: 1.5,
         }}
       >
         <Grid container alignItems="flex-end">
@@ -118,7 +119,7 @@ const TokenTable : React.FC<{
                   <Grid item md={2} xs={2} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
-                      <TokenIcon token={SEEDS} />{token.rewards?.seeds}
+                      <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
                     </Typography>
                   </Grid>
                   {/* Cell: TVL */}
@@ -149,13 +150,13 @@ const TokenTable : React.FC<{
             </Box>
           );
         })}
-        {chainId !== SupportedChainId.MAINNET && (
+        {/* {chainId !== SupportedChainId.MAINNET && (
           <Box>
             <Button variant="contained" color="primary" size="large" fullWidth>
               Convert Allocation of Deposited Assets
             </Button>
           </Box>
-        )}
+        )} */}
       </Stack>
     </Card>
   );
