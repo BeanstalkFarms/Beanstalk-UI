@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Stack, Typography, Grid, Box } from '@mui/material';
+import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';
 import { displayBN, displayFullBN, displayUSD } from 'util/index';
@@ -23,11 +23,13 @@ const TokenRow: React.FC<{
   onMouseOver?: () => void;
   onMouseOut?: () => void;
   onClick?: () => void;
+  tooltip?: string | JSX. Element;
 }> = ({
   name,
   token,
   amount,
   value,
+  tooltip,
   isFaded = false,
   isSelected = false,
   onMouseOver,
@@ -55,19 +57,21 @@ const TokenRow: React.FC<{
     <Typography color="text.secondary">
       {name}
     </Typography>
-    <Stack direction="row" alignItems="center" gap={0.5}>
-      {token && <TokenIcon token={token} />}
-      {amount && (
-        <Typography>
-          {amount}
-        </Typography>
-      )}
-      {value && (
-        <Typography textAlign="right">
-          {value}
-        </Typography>
-      )}
-    </Stack>
+    <Tooltip title={tooltip || false}>
+      <Stack direction="row" alignItems="center" gap={0.5}>
+        {token && <TokenIcon token={token} />}
+        {amount && (
+          <Typography>
+            {amount}
+          </Typography>
+        )}
+        {value && (
+          <Typography textAlign="right">
+            {value}
+          </Typography>
+        )}
+      </Stack>
+    </Tooltip>
   </Stack>
 );
 
@@ -218,6 +222,11 @@ const SiloBalances: React.FC<{
                       token={token}
                       isFaded={false}
                       amount={`${displayFullBN(inThisState?.amount, token.displayDecimals)} ${token.name}`}
+                      tooltip={(
+                        <>
+                          {displayFullBN(inThisState?.amount)} {token.name}
+                        </>
+                      )}
                     />
                   );
                 })}
