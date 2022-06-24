@@ -1,6 +1,6 @@
 {
   "name": "beanstalk-ui",
-  "version": "2.0.0-beta2",
+  "version": "2.0.0-beta3",
   "private": true,
   "homepage": "https://app.bean.money",
   "dependencies": {
@@ -94,9 +94,9 @@
   },
   "scripts": {
     "start": "node --max_old_space_size=4096 node_modules/.bin/react-app-rewired start",
-    "build": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version yarn generate && node --optimize_for_size --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
-    "build-netlify": "REACT_APP_HOST='netlify' REACT_APP_NETLIFY_CONTEXT=$CONTEXT REACT_APP_NETLIFY_BUILD_ID=$BUILD_ID REACT_APP_GIT_COMMIT_REF=$COMMIT_REF yarn build",
-    "build-fleek": "REACT_APP_HOST='fleek' REACT_APP_GIT_COMMIT_REF=$(git rev-parse HEAD) yarn build",
+    "build": "yarn generate && node --optimize_for_size --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
+    "build-netlify": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version REACT_APP_HOST='netlify' REACT_APP_NETLIFY_CONTEXT=$CONTEXT REACT_APP_NETLIFY_BUILD_ID=$BUILD_ID REACT_APP_GIT_COMMIT_REF=$COMMIT_REF yarn build",
+    "build-fleek": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version REACT_APP_HOST='fleek' REACT_APP_GIT_COMMIT_REF=$(git rev-parse HEAD) yarn build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
     "eject": "react-scripts-rewired eject",

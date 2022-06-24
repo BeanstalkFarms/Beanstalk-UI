@@ -11,7 +11,7 @@ import { SEEDS, STALK } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
-import { displayBN, displayTokenAmount } from 'util/Tokens';
+import { displayBN, displayFullBN, displayTokenAmount } from 'util/Tokens';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useTVL from 'hooks/useTVL';
 import { AddressMap, ZERO_BN } from 'constants/index';
@@ -66,19 +66,19 @@ const TokenTable : React.FC<{
           <Grid item md={3} xs={4}>
             <Typography color="gray">Token</Typography>
           </Grid>
-          <Grid item md={2} xs={2} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">Rewards</Typography>
           </Grid>
-          <Grid item md={2} xs={2} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">TVL</Typography>
             {/* <Typography color="black" fontWeight="bold">
               ${displayBN(aggregateTVL)}
             </Typography> */}
           </Grid>
-          <Grid item md={2.5} xs={4} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">Deposited Amount</Typography>
           </Grid>
-          <Grid item md={2.5} xs={4} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
+          <Grid item md={2.5} xs={8} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
             <Typography color="gray">Value</Typography>
             {/* <Typography color="black" fontWeight="bold">{displayUSD(breakdown.states.deposited.value)}</Typography> */}
           </Grid>
@@ -116,26 +116,27 @@ const TokenTable : React.FC<{
                     </Stack>
                   </Grid>
                   {/* Cell: Rewards */}
-                  <Grid item md={2} xs={2} display={{ xs: 'none', md: 'block' }}>
+                  <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
                       <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
                     </Typography>
                   </Grid>
                   {/* Cell: TVL */}
-                  <Grid item md={2} xs={2} display={{ xs: 'none', md: 'block' }}>
+                  <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       ${displayBN(getTVL(token))}
                     </Typography>
                   </Grid>
                   {/* Cell: Deposited Amount */}
-                  <Grid item md={2.5} xs={2.5}>
+                  <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
-                      {displayTokenAmount(deposited?.amount || ZERO_BN, token)}
+                      {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)}
+                      <Box display={{ md: 'inline', xs: 'none' }}>&nbsp; {token.name}</Box>
                     </Typography>
                   </Grid>
                   {/* Cell: My Deposits */}
-                  <Grid item md={2.5} xs={2.5}>
+                  <Grid item md={2.5} xs={8}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
                         {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'}

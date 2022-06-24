@@ -14,7 +14,7 @@ export type PieDataPoint = {
   label: string;
   value: number;
   color: string;
-}
+} & { [key: string] : any }
 
 export type PieColorsByLabel = {
   [key: string]: string

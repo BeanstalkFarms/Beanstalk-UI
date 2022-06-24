@@ -8,6 +8,11 @@ export enum SupportedChainId {
   LOCALHOST = 1337,
 }
 
+export const REPLANTED_CHAINS = new Set([
+  SupportedChainId.LOCALHOST,
+  SupportedChainId.CUJO,
+]);
+
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'Mainnet',
   [SupportedChainId.ROPSTEN]: 'Ropsten',

@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK,  TokenMap, ZERO_BN } from 'constants/index';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK,  REPLANTED_CHAINS,  TokenMap, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/Ledger';
 import { tokenResult } from 'util/Tokens';
-
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
-import useMigrateCall, { REPLANTED_CHAINS } from 'hooks/useMigrateCall';
+import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
 import useWhitelist, { useGeneralizedWhitelist } from 'hooks/useWhitelist';
 import BigNumber from 'bignumber.js';

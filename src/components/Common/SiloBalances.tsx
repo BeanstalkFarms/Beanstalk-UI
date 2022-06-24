@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
+import { Stack, Typography, Grid, Box, Tooltip, Badge } from '@mui/material';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';
 import { displayBN, displayFullBN, displayUSD } from 'util/index';
@@ -14,18 +14,32 @@ type DrilldownValues = keyof (ReturnType<typeof useFarmerSiloBreakdown>)['states
 // ------------------------------------------------------
 
 const TokenRow: React.FC<{
-  name: string;
+  /* Label */
+  label: string;
+  /* Matches color shown in pie chart */
+  color?: string;
+  /* */
+  showColor?: boolean;
+  /* If this row represents a Token, pass it */
   token? : Token;
+  /* The amount of Token */
   amount?: string | JSX.Element;
+  /* The USD value of the amount of Token */
   value?: string | JSX.Element;
+  /* Fade this row out when others are selected */
   isFaded: boolean;
+  /* Show a border when this row is selected */
   isSelected?: boolean;
+  /* Handlers */
   onMouseOver?: () => void;
   onMouseOut?: () => void;
   onClick?: () => void;
+  /* Display a tooltip when hovering over the value */
   tooltip?: string | JSX. Element;
 }> = ({
-  name,
+  label,
+  color,
+  showColor,
   token,
   amount,
   value,
@@ -56,9 +70,15 @@ const TokenRow: React.FC<{
     onBlur={onMouseOut}
     onClick={onClick}
   >
-    <Typography color="text.secondary" sx={token ? { display: { lg: 'block', md: 'none', xs: 'block' } } : undefined}>
-      {name}
-    </Typography>
+    {/* 5px gap between color and typography; shift circle back width+gap px*/}
+    <Stack direction="row" gap={'5px'} alignItems="center">
+      {color && (
+        <Box sx={{ width: 8, height: 8, borderRadius: 8, backgroundColor: showColor ? color : 'transparent', mt: '-2px', ml: '-13px' }} />
+      )}
+      <Typography color="text.secondary" sx={token ? { display: { lg: 'block', md: 'none', xs: 'block' } } : undefined}>
+        {label}
+      </Typography>
+    </Stack>
     <Tooltip title={tooltip || ''}>
       <Stack direction="row" alignItems="center" gap={0.5}>
         {token && <TokenIcon token={token} />}
@@ -134,15 +154,14 @@ const SiloBalances: React.FC<{
       const thisState = breakdown.states[hoverState as keyof typeof breakdown.states];
       return Object.keys(thisState.byToken).reduce<PieDataPoint[]>((prev, addr, index) => {
         const value = thisState.byToken[addr].value.toNumber();
-        if (value > 0) {
-          prev.push({
-            label: whitelist[addr].name,
-            value,
-            color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
-          });
-        }
+        prev.push({
+          tokenAddress: addr,
+          label: whitelist[addr].name,
+          value,
+          color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
+        });
         return prev;
-      }, [])
+      }, []).sort((a, b) => b.value - a.value)
     }
     return availableStates.map((id) => ({
       label: STATE_CONFIG[id][0],
@@ -158,8 +177,6 @@ const SiloBalances: React.FC<{
 
   return (
     <div>
-      {/* <pre>{JSON.stringify(availableStates)}</pre> */}
-      {/* <pre>{JSON.stringify(breakdown, null, 2)}</pre> */}
       <Grid container direction="row" alignItems="center" sx={{ mb: 4, mt: { md: 0, xs: 0 } }} rowSpacing={2}>
         {/**
           * Left column:
@@ -171,7 +188,7 @@ const SiloBalances: React.FC<{
             {availableStates.map((id) => (
               <TokenRow
                 key={id}
-                name={`${STATE_CONFIG[id][0]} Tokens`}
+                label={`${STATE_CONFIG[id][0]} Tokens`}
                 value={displayUSD(breakdown.states[id as keyof typeof breakdown.states].value)}
                 isFaded={hoverState !== null && hoverState !== id}
                 isSelected={hoverState === id}
@@ -210,7 +227,28 @@ const SiloBalances: React.FC<{
             <Stack gap={1}>
               <Typography variant="h2" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Tokens</Typography>
               <Box>
-                {Object.keys(whitelist).sort((a, b) => {
+                {pieChartData.map((dp) => {
+                  const token = whitelist[dp.tokenAddress];
+                  const inThisState = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[token.address];
+                  return (
+                    <TokenRow
+                      key={token.address}
+                      label={`${token.name}`}
+                      color={dp.color}
+                      showColor={inThisState?.amount.gt(0)}
+                      token={token}
+                      isFaded={false}
+                      amount={`${displayFullBN(inThisState?.amount, token.displayDecimals)} ${token.name}`}
+                      tooltip={(
+                        <>
+                          {displayFullBN(inThisState?.amount)} {token.name}<br/>
+                          ≈ {displayUSD(inThisState?.value)}
+                        </>
+                      )}
+                    />
+                  );
+                })}
+                {/* {Object.keys(whitelist).sort((a, b) => {
                   const _a : number = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[a]?.value.toNumber() || 0;
                   const _b : number = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[b]?.value.toNumber() || 0;
                   return _b - _a;
@@ -220,7 +258,8 @@ const SiloBalances: React.FC<{
                   return (
                     <TokenRow
                       key={address}
-                      name={`${token.name}`}
+                      label={`${token.name}`}
+                      color={token.color}
                       token={token}
                       isFaded={false}
                       amount={`${displayFullBN(inThisState?.amount, token.displayDecimals)} ${token.name}`}
@@ -231,7 +270,7 @@ const SiloBalances: React.FC<{
                       )}
                     />
                   );
-                })}
+                })} */}
               </Box>
             </Stack>
           )}

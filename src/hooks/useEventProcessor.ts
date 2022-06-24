@@ -494,7 +494,7 @@ function _processFarmerEvents(
       };
     } else if (event.event === 'Deposit') {
       const s = parseInt(event.returnValues.season, 10);
-      const t = event.returnValues.token;
+      const t = event.returnValues.token.toLowerCase();
       const lp = toTokenUnitsBN(
         new BigNumber(event.returnValues.amount),
         BeanEthLP.decimals
@@ -503,7 +503,7 @@ function _processFarmerEvents(
         new BigNumber(event.returnValues.bdv),
         Bean.decimals
       );
-      if (t === BeanCrv3LP.address) {
+      if (t === BeanCrv3LP.address.toLowerCase()) {
         userCurveDeposits = {
           ...userCurveDeposits,
           [s]:
@@ -532,12 +532,12 @@ function _processFarmerEvents(
       }
     } else if (event.event === 'RemoveSeason') {
       const s = parseInt(event.returnValues.season, 10);
-      const t = event.returnValues.token;
+      const t = event.returnValues.token.toLowerCase();
       const amount = toTokenUnitsBN(
         event.returnValues.amount,
         BeanEthLP.decimals
       );
-      if (t === BeanCrv3LP.address) {
+      if (t === BeanCrv3LP.address.toLowerCase()) {
         const bdv = userCurveBDVDeposits[s]
           .multipliedBy(amount)
           .dividedBy(userCurveDeposits[s]);
@@ -567,13 +567,13 @@ function _processFarmerEvents(
         if (userBeanlusdBDVDeposits[s].isEqualTo(0)) delete userBeanlusdBDVDeposits[s];
       }
     } else if (event.event === 'RemoveSeasons') {
-      const t = event.returnValues.token;
+      const t = event.returnValues.token.toLowerCase();
       event.returnValues.seasons.forEach((s: string, i: number) => {
         const lp = toTokenUnitsBN(
           event.returnValues.amounts[i],
           BeanEthLP.decimals
         );
-        if (t === BeanCrv3LP.address) {
+        if (t === BeanCrv3LP.address.toLowerCase()) {
           const bdv = userCurveBDVDeposits[s]
             .multipliedBy(lp)
             .dividedBy(userCurveDeposits[s]);
@@ -605,12 +605,12 @@ function _processFarmerEvents(
       });
     } else if (event.event === 'Withdraw') {
       const s = parseInt(event.returnValues.season, 10);
-      const t = event.returnValues.token;
+      const t = event.returnValues.token.toLowerCase();
       const lp = toTokenUnitsBN(
         new BigNumber(event.returnValues.amount),
         BeanEthLP.decimals
       );
-      if (t === BeanCrv3LP.address) {
+      if (t === BeanCrv3LP.address.toLowerCase()) {
         curveWithdrawals = {
           ...curveWithdrawals,
           [s]:
@@ -624,15 +624,15 @@ function _processFarmerEvents(
         };
       }
     } else if (event.event === 'ClaimSeason') {
-      const t = event.returnValues.token;
-      if (t === BeanCrv3LP.address) {
+      const t = event.returnValues.token.toLowerCase();
+      if (t === BeanCrv3LP.address.toLowerCase()) {
         delete curveWithdrawals[event.returnValues.season];
       } else {
         delete beanlusdWithdrawals[event.returnValues.season];
       }
     } else if (event.event === 'ClaimSeasons') {
-      const t = event.returnValues.token;
-      if (t === BeanCrv3LP.address) {
+      const t = event.returnValues.token.toLowerCase();
+      if (t === BeanCrv3LP.address.toLowerCase()) {
         event.returnValues.seasons.forEach((s: string) => {
           delete curveWithdrawals[s];
         });

@@ -1,10 +1,6 @@
 import { useCallback } from 'react';
-import { SupportedChainId } from 'constants/index';
+import { REPLANTED_CHAINS } from 'constants/index';
 import useChainId from './useChain';
-
-export const REPLANTED_CHAINS = new Set([
-  SupportedChainId.CUJO,
-]);
 
 export default function useMigrateCall() {
   const chainId = useChainId();
