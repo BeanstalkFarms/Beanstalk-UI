@@ -3,20 +3,23 @@ import {
   DialogProps,
   Stack,
   Dialog,
-  Typography, Box,
+  Box,
 } from '@mui/material';
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import { Formik, FormikHelpers } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import SellListingForm from '../Forms/SellListing/SellListingForm';
-import { ZERO_BN } from '../../../constants';
 import BuyOrderForm from '../Forms/BuyOrder/BuyOrderForm';
 import { AppState } from '../../../state';
+import useChainConstant from '../../../hooks/useChainConstant';
+import { BEAN, ETH, PODS } from '../../../constants/tokens';
+import useFarmerBalances from '../../../hooks/useFarmerBalances';
+import { FormTokenState } from '../../Common/Form';
 
 export type BuyOrderFormValues = {
   placeInLine: BigNumber | null;
   pricePerPod: BigNumber | null;
+  tokens: FormTokenState[];
 }
 
 const BuyOrderDialog: React.FC<{ handleClose: any; } & DialogProps> =
@@ -37,10 +40,20 @@ const BuyOrderDialog: React.FC<{ handleClose: any; } & DialogProps> =
       handleClose();
     };
     
+    const Bean = useChainConstant(BEAN);
+    const Eth = useChainConstant(ETH);
+    const balances = useFarmerBalances();
+    
     const initialValues: BuyOrderFormValues = useMemo(() => ({
       placeInLine: null,
       pricePerPod: null,
-    }), []);
+      tokens: [
+        {
+          token: Eth,
+          amount: null,
+        },
+      ],
+    }), [Eth]);
 
     //
     const onSubmit = useCallback((values: BuyOrderFormValues, formActions: FormikHelpers<BuyOrderFormValues>) => {
@@ -68,6 +81,7 @@ const BuyOrderDialog: React.FC<{ handleClose: any; } & DialogProps> =
                 {(formikProps) => (
                   <>
                     <BuyOrderForm
+                      token={BEAN[1]}
                       podLine={beanstalkField.totalPods.minus(beanstalkField.harvestableIndex)}
                       {...formikProps}
                     />
