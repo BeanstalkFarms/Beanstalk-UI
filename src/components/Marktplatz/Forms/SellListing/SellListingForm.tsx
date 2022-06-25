@@ -4,7 +4,8 @@ import { Box, Button, InputAdornment, Stack, Tooltip, Typography } from '@mui/ma
 import BigNumber from 'bignumber.js';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import podsIcon from 'img/beanstalk/pod-icon.svg';
-import { SellListingFormValues } from '../../Modals/SellListingModal';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { SellListingFormValues } from '../../Dialogs/SellListingDialog';
 import CardField from '../../../Common/Form/Field/CardField';
 import PlotDetails from './PlotDetails';
 import InputAmountField from './InputAmountField';
@@ -12,6 +13,7 @@ import { ZERO_BN } from '../../../../constants';
 import SliderInputField from './SliderInputField';
 import { MaxBN, MinBN } from '../../../../util';
 import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
+import { BeanstalkPalette } from '../../../App/muiTheme';
 
 export type SellListingFormProps = {
   plot: any;
@@ -214,6 +216,10 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
               width: '100%'
             }}
           />
+        </Stack>
+        <Stack direction="row" sx={{ p: 1, backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 1 }} alignItems="center" gap={1}>
+          <WarningAmberIcon sx={{ ml: 0.5, color: BeanstalkPalette.warningYellow }} />
+          <Typography>Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing.</Typography>
         </Stack>
         <Button sx={{ p: 1 }} type="submit" disabled>
           Create Listing

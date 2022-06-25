@@ -25,7 +25,7 @@ export type SellListingFormValues = {
   expiresAt: BigNumber
 }
 
-const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> = ({
+const SellListingDialog: React.FC<{ handleClose: any; } & DialogProps> = ({
      open,
      sx,
      onClose,
@@ -152,4 +152,4 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> = ({
     );
   };
 
-export default SellListingModal;
+export default SellListingDialog;

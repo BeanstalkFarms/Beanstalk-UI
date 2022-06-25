@@ -7,10 +7,10 @@ import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import BuySellTable from './Tables/BuySellTable';
 import { displayBN, displayFullBN } from '../../util';
-import BuyOrderModal from './Modals/BuyOrderModal';
-import SellListingModal from './Modals/SellListingModal';
-import BuyNowModal from './Modals/BuyNowModal';
-import SellNowModal from './Modals/SellNowModal';
+import BuyOrderDialog from './Dialogs/BuyOrderDialog';
+import SellListingDialog from './Dialogs/SellListingDialog';
+import BuyNowDialog from './Dialogs/BuyNowDialog';
+import SellNowDialog from './Dialogs/SellNowDialog';
 
 const buyColumns: DataGridProps['columns'] = [
   {
@@ -242,21 +242,21 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
 
       {/* ----- modals ----- */}
       {/* User clicks "Create Buy Order" button */}
-      <BuyOrderModal
+      <BuyOrderDialog
         fullWidth
         open={buyModalOpen}
         handleClose={handleBuyModalClose}
       />
 
       {/* User clicks "Create Sell Listing" button */}
-      <SellListingModal
+      <SellListingDialog
         fullWidth
         open={sellModalOpen}
         handleClose={handleSellModalClose}
       />
 
       {/* User clicks a row under Buy Now tab */}
-      <BuyNowModal
+      <BuyNowDialog
         fullWidth
         handleClose={handleBuyNowModalClose}
         open={buyNowModalOpen}
@@ -264,7 +264,7 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
       />
 
       {/* User clicks a row under Sell Now tab */}
-      <SellNowModal
+      <SellNowDialog
         fullWidth
         handleClose={handleSellNowModalClose}
         open={sellNowModalOpen}

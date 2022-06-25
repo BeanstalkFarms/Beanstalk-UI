@@ -10,7 +10,7 @@ import {
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import { displayBN } from '../../../util';
 
-const SellNowModal: React.FC<{ row: any | undefined; handleClose: any; } & DialogProps> =
+const SellNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & DialogProps> =
   ({
      open,
      sx,
@@ -58,4 +58,4 @@ const SellNowModal: React.FC<{ row: any | undefined; handleClose: any; } & Dialo
     );
   };
 
-export default SellNowModal;
+export default SellNowDialog;

@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 
-const BuyOrderModal: React.FC<{ handleClose: any; } & DialogProps> =
+const BuyOrderDialog: React.FC<{ handleClose: any; } & DialogProps> =
   ({
      open,
      sx,
@@ -42,4 +42,4 @@ const BuyOrderModal: React.FC<{ handleClose: any; } & DialogProps> =
     );
   };
 
-export default BuyOrderModal;
+export default BuyOrderDialog;
