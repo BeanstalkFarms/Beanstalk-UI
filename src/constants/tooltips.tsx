@@ -1,6 +1,21 @@
 import React from 'react';
 
 export const EXAMPLE_TOOLTIP = '';
+
+/** Pod Marketplace specific tooltips */
+export const POD_MARKET_TOOLTIPS: { [key: string]: any | React.ReactElement } = {
+  // Pod market -> Sell Now -> Create Sell Listing
+  createPodListingForm: {
+    plotToList: 'TODO: austin',
+    start: 'TODO: austin',
+    end: 'TODO: austin',
+    amount: 'TODO: austin',
+    pricePerPod: 'TODO: austin',
+    expiresAt: 'TODO: austin',
+    receiveBeansTo: 'TODO: austin'
+  }
+};
+
 export const UNRIPE_ASSET_TOOLTIPS : { [key: string]: string | React.ReactElement } = {
   // Beans
   circulatingBeans: 'Beans that were in Farmers\' wallets.',

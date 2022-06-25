@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { Field, FieldProps, Form, FormikProps } from 'formik';
-import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
+import { Box, Button, InputAdornment, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import podsIcon from 'img/beanstalk/pod-icon.svg';
 import { SellListingFormValues } from '../../Modals/SellListingModal';
 import CardField from '../../../Common/Form/Field/CardField';
 import PlotDetails from './PlotDetails';
@@ -9,8 +11,7 @@ import InputAmountField from './InputAmountField';
 import { ZERO_BN } from '../../../../constants';
 import SliderInputField from './SliderInputField';
 import { MaxBN, MinBN } from '../../../../util';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import podsIcon from 'img/beanstalk/pod-icon.svg';
+import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
 
 export type SellListingFormProps = {
   plot: any;
@@ -45,7 +46,9 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
       <Stack gap={1}>
         <Stack gap={0.8}>
           <Box pl={0.5}>
-            <Typography>Plot to List</Typography>
+            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.plotToList}>
+              <Typography>Plot to List</Typography>
+            </Tooltip>
           </Box>
           <PlotDetails placeInLine={placeInLine} numPods={numPods} />
         </Stack>
@@ -65,7 +68,9 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           <Box width="50%">
             <Stack gap={0.8}>
               <Box pl={0.5}>
-                <Typography>Start</Typography>
+                <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.start}>
+                  <Typography>Start</Typography>
+                </Tooltip>
               </Box>
               <Field name="min">
                 {(fieldProps: FieldProps) => (
@@ -82,7 +87,9 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           <Box width="50%">
             <Stack gap={0.8}>
               <Box pl={0.5}>
-                <Typography>End</Typography>
+                <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.end}>
+                  <Typography>End</Typography>
+                </Tooltip>
               </Box>
               <Field name="max">
                 {(fieldProps: FieldProps) => (
@@ -99,7 +106,9 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
         </Stack>
         <Stack gap={0.8}>
           <Box pl={0.5}>
-            <Typography>Amount</Typography>
+            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.amount}>
+              <Typography>Amount</Typography>
+            </Tooltip>
           </Box>
           <Field name="amount">
             {(fieldProps: FieldProps) => (
@@ -124,7 +133,9 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
         </Stack>
         <Stack gap={0.8}>
           <Box pl={0.5}>
-            <Typography>Price Per Pod</Typography>
+            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.pricePerPod}>
+              <Typography>Price Per Pod</Typography>
+            </Tooltip>
           </Box>
           <Field name="pricePerPod">
             {(fieldProps: FieldProps) => (
@@ -150,7 +161,9 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
         </Stack>
         <Stack gap={0.8}>
           <Box pl={0.5}>
-            <Typography>Expires At</Typography>
+            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.expiresAt}>
+              <Typography>Expires At</Typography>
+            </Tooltip>
           </Box>
           <Field name="expiresAt">
             {(fieldProps: FieldProps) => (
@@ -174,7 +187,9 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
         </Stack>
         <Stack gap={0.8}>
           <Box pl={0.5}>
-            <Typography>Receive Beans to</Typography>
+            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.receiveBeansTo}>
+              <Typography>Receive Beans to</Typography>
+            </Tooltip>
           </Box>
           <CardField
             name="option"
