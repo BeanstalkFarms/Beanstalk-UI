@@ -20,6 +20,7 @@ import { displayBN, displayFullBN } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import { useTheme } from '@mui/material/styles';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import {
   StyledDialogContent,
   StyledDialogTitle,
@@ -124,11 +125,15 @@ const FieldPage: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Tooltip
-                    title="The number of Beans that can currently be Sown, or lent to Beanstalk."
-                    placement="top">
-                    <Typography variant="h4">Available Soil</Typography>
-                  </Tooltip>
+                  <Typography variant="h4">Available Soil&nbsp;
+                    <Tooltip
+                      title="The number of Beans that can currently be Sown, or lent to Beanstalk."
+                      placement="top">
+                      <HelpOutlineIcon
+                        sx={{ color: 'text.secondary', fontSize: '14px' }}
+                      />
+                    </Tooltip>
+                  </Typography>
                   <Typography variant="h1">
                     {displayBN(beanstalkField.soil)}
                   </Typography>
@@ -136,9 +141,13 @@ const FieldPage: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Tooltip title="The interest rate for Sowing Beans." placement="top">
-                    <Typography variant="h4">Weather</Typography>
-                  </Tooltip>
+                  <Typography variant="h4">Weather&nbsp;
+                    <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
+                      <HelpOutlineIcon
+                        sx={{ color: 'text.secondary', fontSize: '14px' }}
+                      />
+                    </Tooltip>
+                  </Typography>
                   <Typography variant="h1">
                     {displayBN(beanstalkField.weather.yield)}%
                   </Typography>
@@ -146,11 +155,15 @@ const FieldPage: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={4}>
                 <Stack gap={0.5}>
-                  <Tooltip
-                    title="The ratio of Unharvested Pods to total Bean supply. The Pod Rate is often used as a proxy for Beanstalk’s leverage."
-                    placement="top">
-                    <Typography variant="h4">Harvested</Typography>
-                  </Tooltip>
+                  <Typography variant="h4">Pods Harvested&nbsp;
+                    <Tooltip
+                      title="The number of Beans that Beanstalk has paid back to Sowers."
+                      placement="top">
+                      <HelpOutlineIcon
+                        sx={{ color: 'text.secondary', fontSize: '14px' }}
+                      />
+                    </Tooltip>
+                  </Typography>
                   <Typography variant="h1">
                     {displayBN(beanstalkField?.harvestableIndex)}
                   </Typography>
