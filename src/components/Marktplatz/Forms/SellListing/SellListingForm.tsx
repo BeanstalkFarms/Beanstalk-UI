@@ -80,7 +80,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                     {...fieldProps}
                     placeholder="0.0000"
                     minValue={new BigNumber(0)}
-                    maxValue={values.max ? values.max : numPods}
+                    maxValue={values.max ? values.max.minus(1) : numPods.minus(1)}
                   />
                 )}
               </Field>
