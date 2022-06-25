@@ -149,8 +149,7 @@ const PickBeansDialog: React.FC<{
           <Stack direction="row" alignItems="center" gap={1}>
             <img src={pickImage} alt="pick" style={{ height: 100 }} />
             <Typography sx={{ fontSize: '15px' }} color="text.secondary">
-              Your prior Deposits will stay in the Silo as Unripe Deposits.<br /><br />To claim Unripe Beans and Unripe LP Tokens outside the Silo, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them in the Silo directly. 
-              
+              Your prior Deposits will stay in the Silo as Unripe Deposits.<br /><br />To claim Unripe Beans and Unripe LP Tokens outside the Silo, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo. 
             </Typography>
           </Stack>
           {/**
@@ -173,7 +172,7 @@ const PickBeansDialog: React.FC<{
             {/**
               * Section 2a: Beans by State
               */}
-            <Typography variant="h3">Pre-exploit Bean balances available to Pick</Typography>
+            <Typography variant="h3">Non-Deposited pre-exploit Bean balances</Typography>
             <Stack gap={0.5} pl={1}>
               {UNRIPE_BEAN_CATEGORIES.map((key) => (
                 <UnripeTokenRow
@@ -191,7 +190,7 @@ const PickBeansDialog: React.FC<{
               */}
             <Stack direction="row" justifyContent="space-between" pl={1}>
               <Typography>
-                Total Unripe Beans available to Pick
+                Total Unripe Beans that will be available to Pick at Replant
               </Typography>
               <Stack direction="row" alignItems="center" gap={0.3}>
                 <img src={unripeBeanIcon} alt="Circulating Beans" width={13} />
@@ -208,7 +207,7 @@ const PickBeansDialog: React.FC<{
             {/**
               * Section 2a: LP by State
               */}
-            <Typography variant="h3">Pre-exploit LP balances available to Pick</Typography>
+            <Typography variant="h3">Non-Deposited pre-exploit LP balances</Typography>
             {UNRIPE_LP_CATEGORIES.map((obj) => (
               <Stack key={obj.token.address} gap={0.5} pl={1}>
                 <Typography sx={{ fontSize: '16px' }}>{obj.token.name} Balances</Typography>
@@ -234,7 +233,7 @@ const PickBeansDialog: React.FC<{
               */}
             <Stack direction="row" justifyContent="space-between" pl={1}>
               <Typography>
-                Total Unripe LP available to Pick
+                Total Unripe LP that will be available to Pick at Replant
               </Typography>
               <Stack direction="row" alignItems="center" gap={0.3}>
                 <img src={brownLPIcon} alt="Circulating Beans" width={13} />
