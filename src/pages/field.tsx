@@ -181,14 +181,18 @@ const FieldPage: React.FC = () => {
               <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between">
                   <Stack direction="row" gap={0.5}>
-                    <Typography variant="h4">My Pod Balance:</Typography>
+                    <Tooltip 
+                      title="This is your total Pod Balance. Pods become Harvestable on a FIFO basis." 
+                      placement="top">
+                      <Typography variant="h4">My Pod Balance:</Typography>
+                    </Tooltip>
                     <Stack direction="row" alignItems="center" gap={0.25}>
                       <img alt="" src={podIcon} height="17px" />
-                      <Tooltip title="The number of Beans you are owed by Beanstalk." placement="right">
+                      
                         <Typography variant="h4">
                           {displayBN(farmerField.pods)}
                         </Typography>
-                      </Tooltip>
+                      
                     </Stack>
                   </Stack>
                   <Link

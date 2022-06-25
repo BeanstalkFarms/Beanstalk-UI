@@ -74,7 +74,8 @@ const StalkOwnershipTab: React.FC<TabData
     <>
       <Stack direction="row" gap={4} sx={{ px: 2 }}>
         <Stat
-          title="My Stalk"
+          title="Stalk Balance"
+          tooltip="This is your total Stalk Balance. Stalk is the governance token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
           bottomText={`Season ${displayBN(season)}`}
           amount={displayBN(displayValue[0])}
           color="primary"
@@ -83,7 +84,8 @@ const StalkOwnershipTab: React.FC<TabData
           gap={0.5}
         />
         <Stat
-          title="Stalk Ownership"
+          title="Ownership"
+          tooltip="Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk."
           amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
           color="secondary.dark"
           icon={undefined}
@@ -93,7 +95,7 @@ const StalkOwnershipTab: React.FC<TabData
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetBlur>
-          Historical Stalk balance and ownership % will be available once Beanstalk is Replanted.
+          Historical Stalk balance and ownership will be available once Beanstalk is Replanted.
         </MainnetBlur>
         <SimpleLineChart series={series} onCursor={handleCursor} />
       </Box>

@@ -33,7 +33,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
           Due to upgrades to the Beanstalk contract and website infrastructure, pre-exploit balances may be temporarily
           hidden or show incorrect values for some users. Please report issues in <strong>#ui-feedback</strong> and stay
           tuned for updates in <strong>#ui-updates</strong> on <Link href="https://discord.gg/beanstalk">Discord</Link>. Upgrades will 
-          between now and Replant.
+          continue to happen between now and Replant.
         </Alert>
       )}
       <Box sx={{ width: '100%', position: 'relative' }}>
