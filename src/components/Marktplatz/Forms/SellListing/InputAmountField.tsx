@@ -10,6 +10,7 @@ import { displayFullBN } from '../../../../util';
 
 type InputAmountFieldProps = {
   maxValue?: BigNumber | undefined;
+  minValue?: BigNumber | undefined;
   showMaxButton?: boolean
   handleChangeOverride?: any;
 };
@@ -23,6 +24,7 @@ const InputAmountField : React.FC<
   maxValue,
   showMaxButton,
   handleChangeOverride,
+  minValue,
   // -- Formik props
   field,
   form,
@@ -63,6 +65,10 @@ const InputAmountField : React.FC<
 
   // Handlers
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // don't do anything if value entered is less than min
+    if (minValue && new BigNumber(e.target.value).lt(minValue)) {
+      return;
+    }
     // Always update the display amount right away.
     setDisplayAmount(e.target.value);
     // If set, convert the value to a BigNumber
@@ -80,7 +86,7 @@ const InputAmountField : React.FC<
       //
       handleChangeOverride?.(finalValue)
     }
-  }, [form, field.name, field.value, maxValue, handleChangeOverride]);
+  }, [form, field.name, field.value, maxValue, handleChangeOverride, minValue]);
 
   const handleWheel = useCallback((e) => {
     // @ts-ignore

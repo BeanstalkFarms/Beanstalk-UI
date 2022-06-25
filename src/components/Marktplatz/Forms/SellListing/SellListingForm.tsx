@@ -63,7 +63,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           <Box width="50%">
             <Stack gap={0.8}>
               <Box pl={0.5}>
-                <Typography>Min</Typography>
+                <Typography>Start</Typography>
               </Box>
               <Field name="min">
                 {(fieldProps: FieldProps) => (
@@ -79,7 +79,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           <Box width="50%">
             <Stack gap={0.8}>
               <Box pl={0.5}>
-                <Typography>Max</Typography>
+                <Typography>End</Typography>
               </Box>
               <Field name="max">
                 {(fieldProps: FieldProps) => (
@@ -118,7 +118,9 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                 {...fieldProps}
                 placeholder="0.0000"
                 showMaxButton
+                InputProps={{ inputProps: { step: '0.01' } }}
                 maxValue={new BigNumber(1)}
+                minValue={new BigNumber(0)}
               />
             )}
           </Field>
