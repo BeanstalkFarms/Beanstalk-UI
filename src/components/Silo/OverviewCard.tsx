@@ -75,7 +75,7 @@ const StalkOwnershipTab: React.FC<TabData
       <Stack direction="row" gap={4} sx={{ px: 2 }}>
         <Stat
           title="Stalk Balance"
-          tooltip="This is your total Stalk Balance. Stalk is the governance token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
+          tooltip="This is your total Stalk Balance. Stalk are the governance token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
           bottomText={`Season ${displayBN(season)}`}
           amount={displayBN(displayValue[0])}
           color="primary"

@@ -73,7 +73,7 @@ const RemainingFertilizer: React.FC = () => {
               </Stack>
               <Stack gap={1}>
                 <Typography>Humidity&nbsp;
-                  <Tooltip title="The interest rate on Fertilizer. Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached." placement="top-start">
+                  <Tooltip title="The interest rate on Fertilizer. The Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached." placement="top-start">
                     <HelpOutlineIcon
                       sx={{ color: 'text.secondary', fontSize: '14px' }}
                     />
