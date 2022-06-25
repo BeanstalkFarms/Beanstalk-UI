@@ -70,6 +70,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                   <InputAmountField
                     {...fieldProps}
                     placeholder="0.0000"
+                    minValue={new BigNumber(0)}
                     maxValue={values.max ? values.max : numPods}
                   />
                 )}
@@ -86,6 +87,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                   <InputAmountField
                     {...fieldProps}
                     placeholder="0.0000"
+                    minValue={new BigNumber(0)}
                     maxValue={numPods}
                   />
                 )}
@@ -103,6 +105,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                 {...fieldProps}
                 handleChangeOverride={handleChangeAmount}
                 maxValue={numPods}
+                minValue={new BigNumber(0)}
                 // disabled
               />
             )}
@@ -135,6 +138,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                 {...fieldProps}
                 placeholder="0.0000"
                 showMaxButton
+                minValue={new BigNumber(0)}
                 maxValue={placeInLine.plus(values.min ? values.min : ZERO_BN)}
               />
             )}
