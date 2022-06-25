@@ -172,7 +172,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
             }}
           />
         </Stack>
-        <Button sx={{ p: 1 }} type="submit">
+        <Button sx={{ p: 1 }} type="submit" disabled>
           Create Listing
         </Button>
       </Stack>
