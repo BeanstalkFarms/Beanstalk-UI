@@ -11,6 +11,9 @@ type SliderInputFieldProps = {
   displayValues: number[];
 };
 
+/**
+ * Double Slider: the form must have min & max value
+ */
 const SliderInputField : React.FC<
   SliderInputFieldProps      // custom// MUI TextField
   & FieldProps
@@ -20,17 +23,19 @@ const SliderInputField : React.FC<
   displayValues,
   // -- Formik props
   form,
+  field,
   // -- Slider Props
   min,
   max,
 }) => {
-  const [value2, setValue2] = React.useState<number[]>(displayValues);
+  const [value, setValue] = React.useState<number[]>(displayValues);
 
   useEffect(() => {
-    setValue2(displayValues);
+    setValue(displayValues);
   }, [displayValues]);
 
   // makes the scroll adjust a little snappier
+  // === undefined if is a single slider
   const minVal = useMemo(() => form.values.min, [form.values.min]);
   const maxVal = useMemo(() => form.values.max, [form.values.max]);
 
@@ -43,12 +48,20 @@ const SliderInputField : React.FC<
       return;
     }
 
+    // ----- single slider -----
+    if (newValue.length === 1) {
+      form.setFieldValue(field.name, new BigNumber(newValue[0]));
+      return;
+    }
+
+    // ----- double slider -----
     if (newValue[0] !== minVal) {
-      setValue2(newValue as number[]);
+      setValue(newValue as number[]);
       form.setFieldValue('min', new BigNumber(newValue[0]));
     }
+
     if (newValue[1] !== maxVal) {
-      setValue2(newValue as number[]);
+      setValue(newValue as number[]);
       form.setFieldValue('max', new BigNumber(newValue[1]));
     }
   };
@@ -59,7 +72,7 @@ const SliderInputField : React.FC<
         min={min}
         max={max}
         getAriaLabel={() => 'Minimum distance shift'}
-        value={value2}
+        value={value}
         onChange={handleChange}
         valueLabelDisplay="auto"
         disableSwap
