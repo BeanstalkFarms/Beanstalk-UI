@@ -9,18 +9,23 @@ import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog
 import { Formik, FormikHelpers } from 'formik';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
+import podIcon from 'img/beanstalk/pod-icon.svg';
 import SellListingForm from '../Forms/SellListing/SellListingForm';
 import { AppState } from '../../../state';
 import { displayBN } from '../../../util';
 import { BeanstalkPalette } from '../../App/muiTheme';
-import podIcon from 'img/beanstalk/pod-icon.svg';
+import { ZERO_BN } from '../../../constants';
 
 export type SellListingFormValues = {
   option: number | null;
+  min: BigNumber | null;
+  max: BigNumber | null;
+  amount: BigNumber | null;
+  pricePerPod: BigNumber | null;
+  expiresAt: BigNumber
 }
 
-const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
-  ({
+const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> = ({
      open,
      sx,
      onClose,
@@ -55,8 +60,13 @@ const SellListingModal: React.FC<{ handleClose: any; } & DialogProps> =
 
     //
     const initialValues: SellListingFormValues = useMemo(() => ({
-      option: null
-    }), []);
+      option: null,
+      min: ZERO_BN,
+      max: selectedPlotIndex ? new BigNumber(farmerField.plots[selectedPlotIndex]) : ZERO_BN,
+      amount: selectedPlotIndex ? new BigNumber(farmerField.plots[selectedPlotIndex]) : ZERO_BN,
+      pricePerPod: null,
+      expiresAt: selectedPlotIndex ? new BigNumber(selectedPlotIndex).minus(beanstalkField?.harvestableIndex) : ZERO_BN,
+    }), [selectedPlotIndex, farmerField, beanstalkField?.harvestableIndex]);
 
     //
     const onSubmit = useCallback((values: SellListingFormValues, formActions: FormikHelpers<SellListingFormValues>) => {

@@ -89,7 +89,7 @@ const DepositForm : React.FC<
     }
     return Promise.reject();
   }, [curve]);
-   
+
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>

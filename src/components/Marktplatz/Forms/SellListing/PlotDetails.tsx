@@ -14,7 +14,7 @@ const PlotDetails: React.FC<PlotDetailsProps> = ({
    placeInLine,
    numPods,
  }) => (
- <Card sx={{ p: 2, border: 'none', backgroundColor: BeanstalkPalette.lightestBlue }}>
+ <Card sx={{ px: 2, py: 2.5, border: 'none', backgroundColor: BeanstalkPalette.lightestBlue }}>
    <Stack direction="row" justifyContent="space-between" alignItems="center">
      <Stack direction="row" gap={0.4}>
        <Typography sx={{ fontSize: '18px' }}>{displayBN(placeInLine)}</Typography>
