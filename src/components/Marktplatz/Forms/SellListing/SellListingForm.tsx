@@ -8,9 +8,9 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { SellListingFormValues } from '../../Dialogs/SellListingDialog';
 import CardField from '../../../Common/Form/Field/CardField';
 import PlotDetails from './PlotDetails';
-import InputAmountField from './InputAmountField';
+import InputAmountField from '../../../Common/Form/Field/InputAmountField';
 import { ZERO_BN } from '../../../../constants';
-import SliderInputField from './SliderInputField';
+import SliderInputField from '../../../Common/Form/Field/SliderInputField';
 import { MaxBN, MinBN } from '../../../../util';
 import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
 import { BeanstalkPalette } from '../../../App/muiTheme';
@@ -55,13 +55,15 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           <PlotDetails placeInLine={placeInLine} numPods={numPods} />
         </Stack>
         <Box px={3}>
-          <Field name="min">
+          {/* double slider sets the form's 'min' and 'max' values */}
+          {/* so we leave the name field blank */}
+          <Field name="">
             {(fieldProps: FieldProps) => (
               <SliderInputField
                 {...fieldProps}
                 min={0}
                 max={numPods.toNumber()}
-                displayValues={(values.min && values.max) ? [values.min?.toNumber(), values.max?.toNumber()] : [0, numPods.toNumber()]}
+                initialState={[0, numPods.toNumber()]}
               />
             )}
           </Field>

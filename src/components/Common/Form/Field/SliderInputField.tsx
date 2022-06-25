@@ -8,29 +8,38 @@ import { FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
 
 type SliderInputFieldProps = {
-  displayValues: number[];
+  initialState: number[] | number;
 };
 
+/**
+ * Double Slider: the form must have min & max value
+ */
 const SliderInputField : React.FC<
   SliderInputFieldProps      // custom// MUI TextField
   & FieldProps
   & SliderProps// Formik Field
 > = ({
   // -- Custom props
-  displayValues,
+  initialState,
   // -- Formik props
   form,
+  field,
   // -- Slider Props
   min,
   max,
 }) => {
-  const [value2, setValue2] = React.useState<number[]>(displayValues);
+  const [value, setValue] = React.useState<number[] | number>(initialState);
 
+  // update slider values on double slider when the form's
+  // min or max value is changed (i.e. adjusting 'amount' input)
   useEffect(() => {
-    setValue2(displayValues);
-  }, [displayValues]);
+    if (form.values.min && form.values.max) {
+      setValue([form.values.min, form.values.max]);
+    }
+  }, [form.values.min, form.values.max]);
 
   // makes the scroll adjust a little snappier
+  // === undefined if is a single slider
   const minVal = useMemo(() => form.values.min, [form.values.min]);
   const maxVal = useMemo(() => form.values.max, [form.values.max]);
 
@@ -39,16 +48,21 @@ const SliderInputField : React.FC<
     newValue: number | number[],
     activeThumb: number,
   ) => {
+    // ----- single slider -----
     if (!Array.isArray(newValue)) {
+      setValue(newValue);
+      form.setFieldValue(field.name, new BigNumber(newValue));
       return;
     }
 
+    // ----- double slider -----
     if (newValue[0] !== minVal) {
-      setValue2(newValue as number[]);
+      setValue(newValue as number[]);
       form.setFieldValue('min', new BigNumber(newValue[0]));
     }
+
     if (newValue[1] !== maxVal) {
-      setValue2(newValue as number[]);
+      setValue(newValue as number[]);
       form.setFieldValue('max', new BigNumber(newValue[1]));
     }
   };
@@ -59,7 +73,7 @@ const SliderInputField : React.FC<
         min={min}
         max={max}
         getAriaLabel={() => 'Minimum distance shift'}
-        value={value2}
+        value={value}
         onChange={handleChange}
         valueLabelDisplay="auto"
         disableSwap
