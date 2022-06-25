@@ -8,7 +8,7 @@ import { FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
 
 type SliderInputFieldProps = {
-  displayValues: number[];
+  initialState: number[] | number;
 };
 
 /**
@@ -20,7 +20,7 @@ const SliderInputField : React.FC<
   & SliderProps// Formik Field
 > = ({
   // -- Custom props
-  displayValues,
+  initialState,
   // -- Formik props
   form,
   field,
@@ -28,11 +28,15 @@ const SliderInputField : React.FC<
   min,
   max,
 }) => {
-  const [value, setValue] = React.useState<number[]>(displayValues);
+  const [value, setValue] = React.useState<number[] | number>(initialState);
 
+  // update slider values on double slider when the form's
+  // min or max value is changed (i.e. adjusting 'amount' input)
   useEffect(() => {
-    setValue(displayValues);
-  }, [displayValues]);
+    if (form.values.min && form.values.max) {
+      setValue([form.values.min, form.values.max]);
+    }
+  }, [form.values.min, form.values.max]);
 
   // makes the scroll adjust a little snappier
   // === undefined if is a single slider
@@ -44,13 +48,10 @@ const SliderInputField : React.FC<
     newValue: number | number[],
     activeThumb: number,
   ) => {
-    if (!Array.isArray(newValue)) {
-      return;
-    }
-
     // ----- single slider -----
-    if (newValue.length === 1) {
-      form.setFieldValue(field.name, new BigNumber(newValue[0]));
+    if (!Array.isArray(newValue)) {
+      setValue(newValue);
+      form.setFieldValue(field.name, new BigNumber(newValue));
       return;
     }
 

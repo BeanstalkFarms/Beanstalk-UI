@@ -6,15 +6,12 @@ import { BuyOrderFormValues } from '../../Dialogs/BuyOrderDialog';
 import SliderInputField from '../../../Common/Form/Field/SliderInputField';
 import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
 import InputAmountField from '../../../Common/Form/Field/InputAmountField';
-import podsIcon from '../../../../img/beanstalk/pod-icon.svg';
 import { BeanstalkPalette } from '../../../App/muiTheme';
 import beanIcon from '../../../../img/tokens/bean-logo-circled.svg';
-import TokenInputField from '../../../Common/Form/TokenInputField';
 import TokenQuoteProvider from '../../../Common/Form/TokenQuoteProvider';
 import { SupportedChainId } from '../../../../constants';
 import { Token } from '../../../../classes';
 import useChainId from '../../../../hooks/useChain';
-import Beanstalk from '../../../../lib/Beanstalk';
 import { QuoteHandler } from '../../../../hooks/useQuote';
 import { toStringBaseUnitBN, toTokenUnitsBN } from '../../../../util';
 import useCurve from '../../../../hooks/useCurve';
@@ -33,7 +30,7 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
   podLine,
   setFieldValue,
   isSubmitting,
-  token: depositToken
+  token: depositToken// BEAN
 }) => {
   const chainId = useChainId();
   const [showTokenSelect, setShowTokenSelect] = useState(false);
@@ -97,7 +94,7 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
                 {...fieldProps}
                 min={0}
                 max={podLine.toNumber()}
-                displayValues={values.placeInLine ? [values.placeInLine.toNumber()] : [0]}
+                initialState={0}
               />
             )}
           </Field>
@@ -156,7 +153,7 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
         <Stack gap={0.8}>
           <Box pl={0.5}>
             <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.pricePerPod}>
-              <Typography>Price Per Pod</Typography>
+              <Typography>Number of Beans</Typography>
             </Tooltip>
           </Box>
           {values.tokens.map((state, index) => (

@@ -63,7 +63,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                 {...fieldProps}
                 min={0}
                 max={numPods.toNumber()}
-                displayValues={(values.min && values.max) ? [values.min?.toNumber(), values.max?.toNumber()] : [0, numPods.toNumber()]}
+                initialState={[0, numPods.toNumber()]}
               />
             )}
           </Field>
