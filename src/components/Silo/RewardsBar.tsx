@@ -54,7 +54,7 @@ const RewardsBar : React.FC<{
         <Stack direction="row" gap={gap}>
           <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
             <Typography color="gray">Earned Seeds&nbsp;
-              <Tooltip title="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until Earned Beans are claimed." placement="top">
+              <Tooltip title="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed." placement="top">
                 <HelpOutlineIcon
                   sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />

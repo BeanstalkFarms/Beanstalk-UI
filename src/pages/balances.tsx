@@ -62,7 +62,7 @@ const BalancesPage: React.FC = () => {
             <Grid item xs={12} md={3}>
               <Stat
                 title={`Unfertilized Beans`}
-                tooltip='The number of Beans to be earned from your Fertilizer. For more information on your Fertilizer, head over to the Barn Raise page.'
+                tooltip='This is your total Unfertilized Bean balance. Unfertilized Beans become Fertilized pro rata as the Bean supply increases. For more information on your Fertilizer, head over to the Barn Raise page.'
                 icon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 amount={displayBN(fertilizerSummary.unfertilized)}
                 variant="h2"
