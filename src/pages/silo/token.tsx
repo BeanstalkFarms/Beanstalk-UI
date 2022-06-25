@@ -48,8 +48,8 @@ const TokenPage: React.FC<{}> = () => {
     <Container maxWidth="sm">
       <Stack gap={2}>
         <PageHeader
-          title={<strong>{TOKEN.name} Silo</strong>}
-          description={`Deposit ${TOKEN.name} to earn Stalk & Seeds`}
+          title={<strong>{TOKEN.name} Deposits</strong>}
+          description={`Deposit ${TOKEN.name} to earn Stalk and Seeds`}
           returnPath="/silo"
         />
         {beanPool && (

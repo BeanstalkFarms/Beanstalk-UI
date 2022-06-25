@@ -35,11 +35,7 @@ const PodLineSection: React.FC<PodLineSectionProps> =
       >
         <Stack direction={isMobile ? 'column' : 'row'} gap={2} alignItems={isMobile ? 'left' : 'center'}>
           <Stack width={isMobile ? '100%' : '20%'} gap={0.5}>
-            <Tooltip
-              title="The total number of Unharvested Pods. Pods harvest on a First In, First Out basis."
-              placement="left">
-              <Typography variant="h4">{numPodsTitle}</Typography>
-            </Tooltip>
+            <Typography variant="h4">{numPodsTitle}</Typography>
             <Typography variant="h1">{displayBN(numPodsDisplay)}</Typography>
           </Stack>
           <Stack width={isMobile ? '100%' : '80%'}>

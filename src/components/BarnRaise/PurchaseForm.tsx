@@ -169,7 +169,7 @@ const FertilizeForm : React.FC<
           contract={contract}
           tokens={values.tokens}
         >
-          Purchase{fert && fert.gt(0) && ` ${displayBN(fert)}`} Fertilizer
+          Buy{fert && fert.gt(0) && ` ${displayBN(fert)}`} Fertilizer
         </SmartSubmitButton>
       </Stack>
     </Form>
@@ -266,7 +266,7 @@ const SetupForm: React.FC<{}> = () => {
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
-        <Typography variant="h2">Purchase Fertilizer</Typography>
+        <Typography variant="h2">Buy Fertilizer</Typography>
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
           {(formikProps) => <FertilizeForm contract={fertContract} {...formikProps} />}
         </Formik>

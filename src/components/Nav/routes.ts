@@ -29,7 +29,7 @@ const ROUTES = {
   analytics: [
     {
       path: 'analytics/barnraise',
-      title: 'Barnraise Analytics',
+      title: 'Barn Raise Analytics',
       disabled: false,
       href: null
     },

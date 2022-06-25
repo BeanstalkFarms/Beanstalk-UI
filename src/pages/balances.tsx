@@ -31,7 +31,8 @@ const BalancesPage: React.FC = () => {
           <Grid container spacing={1} rowSpacing={3}>
             <Grid item xs={12} md={3}>
               <Stat
-                title={`My Stalk`}
+                title={`Stalk`}
+                tooltip='This is your total Stalk balance. Stalk is the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo.'
                 icon={<TokenIcon token={STALK} />}
                 amount={displayBN(farmerSilo.stalk.total)}
                 variant="h2"
@@ -40,7 +41,8 @@ const BalancesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Stat
-                title={`My Seeds`}
+                title={`Seeds`}
+                tooltip='This is your total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be claimed in order to be included in your Stalk balance and start earning interest.'
                 icon={<TokenIcon token={SEEDS} />}
                 amount={displayBN(farmerSilo.seeds.total)}
                 variant="h2"
@@ -49,7 +51,8 @@ const BalancesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Stat
-                title={`My Pods`}
+                title={`Pods`}
+                tooltip='This is your total Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, head over to the Field page.'
                 icon={<TokenIcon token={PODS} />}
                 amount={displayBN(farmerField.pods)}
                 variant="h2"
@@ -58,7 +61,8 @@ const BalancesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={3}>
               <Stat
-                title={`My Unfertilized Beans`}
+                title={`Unfertilized Beans`}
+                tooltip='This is your total Unfertilized Bean balance. Unfertilized Beans become Fertilized pro rata as the Bean supply increases. For more information on your Fertilizer, head over to the Barn Raise page.'
                 icon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
                 amount={displayBN(fertilizerSummary.unfertilized)}
                 variant="h2"

@@ -355,7 +355,7 @@ export default function FillOrderModal({
     || errorAmount
   );
 
-  // Users select how they want to receive their Beans from their listed Plots once purchased
+  // Users select how they want to receive their Beans from their listed Plots once bought
   // FIXME:
   // Once new pod marketplace contract is updated we will need to send in this variable
   // const showSettings = (
