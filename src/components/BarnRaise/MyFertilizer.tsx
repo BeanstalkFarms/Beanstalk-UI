@@ -58,17 +58,17 @@ const MyFertilizer: React.FC = () => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Tooltip
-              title="The number of Beans to be earned from your Fertilizer."
-              placement="right"
-            >
-              <Typography variant="body1">
-                Unfertilized Beans&nbsp;
+            <Typography variant="body1">
+              Unfertilized Beans&nbsp;
+              <Tooltip
+                title="The number of Beans to be earned from your Fertilizer."
+                placement="right"
+              >
                 <HelpOutlineIcon
                   sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
-              </Typography>
-            </Tooltip>
+              </Tooltip>
+            </Typography>
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
               <Typography>
@@ -81,17 +81,17 @@ const MyFertilizer: React.FC = () => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Tooltip
-              title="The number of Beans earned from your Fertilizer."
-              placement="right"
-            >
-              <Typography variant="body1">
-                Fertilized Beans&nbsp;
+            <Typography variant="body1">
+              Fertilized Beans&nbsp;
+              <Tooltip
+                title="The number of Beans earned from your Fertilizer."
+                placement="right"
+              >
                 <HelpOutlineIcon
                   sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
-              </Typography>
-            </Tooltip>
+              </Tooltip>
+            </Typography>
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
               <Typography>0</Typography>

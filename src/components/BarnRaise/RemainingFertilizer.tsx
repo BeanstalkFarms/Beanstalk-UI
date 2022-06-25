@@ -44,15 +44,14 @@ const RemainingFertilizer: React.FC = () => {
           {/* right column */}
           <Stack justifyContent="space-between" gap={3}>
             <Stack gap={3}>
-              <Stack gap={1}>
-                <Tooltip title="Once bought, Fertilizer will receive a pro rata share of one-third of new Bean mints until the Humidity, or interest rate, is paid back." placement="top-start">
-                  <Typography>Available Fertilizer&nbsp;
+              <Stack gap={1}>  
+                <Typography>Available Fertilizer&nbsp;
+                  <Tooltip title="Once bought, Fertilizer will receive a pro rata share of one-third of new Bean mints until the Humidity, or interest rate, is paid back." placement="top-start">
                     <HelpOutlineIcon
                       sx={{ color: 'text.secondary', fontSize: '14px' }}
                     />
-                  </Typography>
-                  
-                </Tooltip>
+                  </Tooltip>
+                </Typography>
                 <Stack direction="row" gap={1} alignItems="center">
                   <Typography
                     display="inline-block"
@@ -73,13 +72,13 @@ const RemainingFertilizer: React.FC = () => {
                 </Stack>
               </Stack>
               <Stack gap={1}>
-                <Tooltip title="The interest rate on Fertilizer. Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached." placement="top-start">
-                  <Typography>Humidity&nbsp;
+                <Typography>Humidity&nbsp;
+                  <Tooltip title="The interest rate on Fertilizer. Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached." placement="top-start">
                     <HelpOutlineIcon
                       sx={{ color: 'text.secondary', fontSize: '14px' }}
                     />
-                  </Typography>
-                </Tooltip>
+                  </Tooltip>
+                </Typography>
                 <Stack direction="row" alignItems="center" gap={1}>
                   <Typography sx={{ fontSize: '25px', fontWeight: 400 }}>
                     {displayFullBN(humidity.multipliedBy(100))}%

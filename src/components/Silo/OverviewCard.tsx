@@ -83,7 +83,7 @@ const StalkOwnershipTab: React.FC<TabData
           gap={0.5}
         />
         <Stat
-          title="Ownership % of all Stalk"
+          title="Stalk Ownership"
           amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
           color="secondary.dark"
           icon={undefined}
