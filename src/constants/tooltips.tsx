@@ -6,13 +6,13 @@ export const EXAMPLE_TOOLTIP = '';
 export const POD_MARKET_TOOLTIPS: { [key: string]: any | React.ReactElement } = {
   // Pod market -> Sell Now -> Create Sell Listing
   createPodListingForm: {
-    plotToList: 'TODO: austin',
-    start: 'TODO: austin',
-    end: 'TODO: austin',
-    amount: 'TODO: austin',
-    pricePerPod: 'TODO: austin',
-    expiresAt: 'TODO: austin',
-    receiveBeansTo: 'TODO: austin'
+    plotToList: '[remove this]',
+    start: 'The start index in this Plot that you would like to List.',
+    end: 'The end index in this Plot that you would like to List.',
+    amount: 'Number of Pods to List based on the start and end indices.',
+    pricePerPod: 'Price per Pod to List this Plot at, denominated in Beans.',
+    expiresAt: 'The Place in Line at which this Listing will expire. maximum Place in Line is the Place in Line right in front of the Start index you set.',
+    receiveBeansTo: '[remove this]',
   }
 };
 

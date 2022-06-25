@@ -24,7 +24,7 @@ export type FertilizerData = {
    */
   amount: BigNumber;
   /**
-   * The Humidity at which this Fertilizer was purchased.
+   * The Humidity at which this Fertilizer was bought.
    */
   humidity: BigNumber;
   /**
@@ -36,7 +36,7 @@ export type FertilizerData = {
    */
   progress?: number;
   /**
-   * The Season in which this Fertilizer was purchased.
+   * The Season in which this Fertilizer was bought.
    */
   season?: BigNumber;
 }

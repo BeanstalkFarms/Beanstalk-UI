@@ -11,7 +11,7 @@ const BarnRaisePage: React.FC = () => (
     <Stack gap={2}>
       <PageHeader
         title={<><strong>The Barn Raise</strong></>}
-        description="Earn yield and recapitalize Beanstalk by purchasing Fertilizer"
+        description="Earn yield and recapitalize Beanstalk by buying Fertilizer"
         control={(
           <Stack direction="row" gap={1}>
             <Button

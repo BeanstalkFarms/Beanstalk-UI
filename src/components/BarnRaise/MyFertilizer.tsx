@@ -59,11 +59,11 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Tooltip
-              title="The number of Beans owed based on the Fertilizer you have purchased and its Humidity."
+              title="The number of Beans to be earned from your Fertilizer."
               placement="right"
             >
               <Typography variant="body1">
-                Total Unfertilized Beans&nbsp;
+                Unfertilized Beans&nbsp;
                 <HelpOutlineIcon
                   sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
@@ -82,11 +82,11 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Tooltip
-              title="The number of Beans earned from your Fertilizer. Fertilized Beans are Claimable."
+              title="The number of Beans earned from your Fertilizer."
               placement="right"
             >
               <Typography variant="body1">
-                Total Fertilized Beans&nbsp;
+                Fertilized Beans&nbsp;
                 <HelpOutlineIcon
                   sx={{ color: 'text.secondary', fontSize: '14px' }}
                 />
@@ -161,7 +161,7 @@ const MyFertilizer: React.FC = () => {
                 textAlign="center"
                 sx={{ maxWidth: { md: 400 } }}
               >
-                Purchase Fertilizer using the module above.
+                Buy Fertilizer using the module above.
               </Typography>
             </Stack>
           )}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Card, Link, Stack, Typography, Tooltip } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayFullBN } from 'util/index';
 import useHumidity, { INITIAL_HUMIDITY } from 'hooks/useHumidity';
 import { AppState } from 'state';
@@ -44,8 +45,13 @@ const RemainingFertilizer: React.FC = () => {
           <Stack justifyContent="space-between" gap={3}>
             <Stack gap={3}>
               <Stack gap={1}>
-                <Tooltip title="Once purchased, Fertilizer will receive a pro rata share of one-third of new Bean mints until the Humidity is paid back." placement="top-start">
-                  <Typography>Available Fertilizer</Typography>
+                <Tooltip title="Once bought, Fertilizer will receive a pro rata share of one-third of new Bean mints until the Humidity, or interest rate, is paid back." placement="top-start">
+                  <Typography>Available Fertilizer&nbsp;
+                    <HelpOutlineIcon
+                      sx={{ color: 'text.secondary', fontSize: '14px' }}
+                    />
+                  </Typography>
+                  
                 </Tooltip>
                 <Stack direction="row" gap={1} alignItems="center">
                   <Typography
@@ -67,8 +73,12 @@ const RemainingFertilizer: React.FC = () => {
                 </Stack>
               </Stack>
               <Stack gap={1}>
-                <Tooltip title="The current interest rate on Fertilizer. Once Beanstalk is Replanted, Humidity will decrease to 250%." placement="top-start">
-                  <Typography>Current Humidity (Interest Rate)</Typography>
+                <Tooltip title="The interest rate on Fertilizer. Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached." placement="top-start">
+                  <Typography>Humidity&nbsp;
+                    <HelpOutlineIcon
+                      sx={{ color: 'text.secondary', fontSize: '14px' }}
+                    />
+                  </Typography>
                 </Tooltip>
                 <Stack direction="row" alignItems="center" gap={1}>
                   <Typography sx={{ fontSize: '25px', fontWeight: 400 }}>
