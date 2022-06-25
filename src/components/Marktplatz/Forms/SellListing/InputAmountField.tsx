@@ -124,7 +124,6 @@ const InputAmountField : React.FC<
         {...props}
         onWheel={handleWheel}
         value={displayAmount || ''}
-        // onChange={handleChangeOverride !== undefined ? handleChangeAmountOverride : handleChange}
         onChange={handleChange}
         InputProps={inputProps}
         sx={{

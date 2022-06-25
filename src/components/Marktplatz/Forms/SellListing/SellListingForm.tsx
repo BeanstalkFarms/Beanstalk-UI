@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Field, FieldProps, Form, FormikProps } from 'formik';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { SellListingFormValues } from '../../Modals/SellListingModal';
 import CardField from '../../../Common/Form/Field/CardField';
@@ -9,6 +9,8 @@ import InputAmountField from './InputAmountField';
 import { ZERO_BN } from '../../../../constants';
 import SliderInputField from './SliderInputField';
 import { MaxBN, MinBN } from '../../../../util';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import podsIcon from 'img/beanstalk/pod-icon.svg';
 
 export type SellListingFormProps = {
   plot: any;
@@ -106,6 +108,15 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                 handleChangeOverride={handleChangeAmount}
                 maxValue={numPods}
                 minValue={new BigNumber(0)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>
+                        <img src={podsIcon} alt="" height="30px" />
+                        <Typography sx={{ fontSize: '20px' }}>PODS</Typography>
+                      </Stack>
+                    </InputAdornment>)
+                }}
                 // disabled
               />
             )}
@@ -121,7 +132,16 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                 {...fieldProps}
                 placeholder="0.0000"
                 showMaxButton
-                InputProps={{ inputProps: { step: '0.01' } }}
+                InputProps={{
+                  inputProps: { step: '0.01' },
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>
+                        <img src={beanIcon} alt="" height="30px" />
+                        <Typography sx={{ fontSize: '20px' }}>BEAN</Typography>
+                      </Stack>
+                    </InputAdornment>)
+                }}
                 maxValue={new BigNumber(1)}
                 minValue={new BigNumber(0)}
               />
@@ -140,6 +160,14 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                 showMaxButton
                 minValue={new BigNumber(0)}
                 maxValue={placeInLine.plus(values.min ? values.min : ZERO_BN)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Box sx={{ pr: 1 }}>
+                        <Typography sx={{ fontSize: '18px' }}>Place in Line</Typography>
+                      </Box>
+                    </InputAdornment>)
+                }}
               />
             )}
           </Field>
