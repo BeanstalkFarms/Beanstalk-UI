@@ -21,7 +21,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
   return (
     <Box>
       <Stat
-        title="My Total Balance"
+        title="Total Balances"
         amount={displayUSD(breakdown.totalValue.abs())}
         icon={undefined}
       />
