@@ -99,7 +99,6 @@ const PodLineChart: React.FC<GraphProps> = withTooltip(
           </Tooltip>
         ))}
       </svg>
-
     );
   });
 
