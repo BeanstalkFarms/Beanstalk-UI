@@ -260,7 +260,7 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
         fullWidth
         handleClose={handleBuyNowModalClose}
         open={buyNowModalOpen}
-        row={buyNowRow}
+        podListing={buyNowRow}
       />
 
       {/* User clicks a row under Sell Now tab */}
@@ -268,7 +268,7 @@ const BuySellCard: React.FC<CardProps> = ({ sx }) => {
         fullWidth
         handleClose={handleSellNowModalClose}
         open={sellNowModalOpen}
-        row={sellNowRow}
+        podListing={sellNowRow}
       />
     </>
   );

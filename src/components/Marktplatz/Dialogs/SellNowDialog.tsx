@@ -10,7 +10,7 @@ import {
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import { displayBN } from '../../../util';
 
-const SellNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & DialogProps> =
+const SellNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } & DialogProps> =
   ({
      open,
      sx,
@@ -19,7 +19,7 @@ const SellNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & Dial
      fullScreen,
      disableScrollLock,
      handleClose,
-     row
+     podListing
    }) => {
     const handleDialogClose = () => {
       handleClose();
@@ -45,9 +45,9 @@ const SellNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & Dial
               </Stack>
               <Card sx={{ p: 1 }}>
                 <Stack direction="row" justifyContent="space-between">
-                  <Typography sx={{ width: '25%' }}>{displayBN(row?.placeInLine)}</Typography>
-                  <Typography sx={{ width: '25%', textAlign: 'center' }}>{displayBN(row?.price)}</Typography>
-                  <Typography sx={{ width: '25%', textAlign: 'right' }}>{displayBN(row?.podsRequested)}</Typography>
+                  <Typography sx={{ width: '25%' }}>{displayBN(podListing?.placeInLine)}</Typography>
+                  <Typography sx={{ width: '25%', textAlign: 'center' }}>{displayBN(podListing?.price)}</Typography>
+                  <Typography sx={{ width: '25%', textAlign: 'right' }}>{displayBN(podListing?.podsRequested)}</Typography>
                 </Stack>
               </Card>
             </Stack>
