@@ -5,15 +5,15 @@ import BigNumber from 'bignumber.js';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import podsIcon from 'img/beanstalk/pod-icon.svg';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { SellListingFormValues } from '../../Dialogs/SellListingDialog';
-import CardField from '../../../Common/Form/Field/CardField';
+import { SellListingFormValues } from '../Dialogs/SellListingDialog';
+import CardField from '../../Common/Form/Field/CardField';
 import PlotDetails from './PlotDetails';
-import InputAmountField from '../../../Common/Form/Field/InputAmountField';
-import { ZERO_BN } from '../../../../constants';
-import { MaxBN, MinBN } from '../../../../util';
-import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
-import { BeanstalkPalette } from '../../../App/muiTheme';
-import SliderInputField from '../../../Common/Form/Field/SliderInputField';
+import InputAmountField from '../../Common/Form/Field/InputAmountField';
+import { ZERO_BN } from '../../../constants';
+import { MaxBN, MinBN } from '../../../util';
+import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
+import { BeanstalkPalette } from '../../App/muiTheme';
+import SliderInputField from '../../Common/Form/Field/SliderInputField';
 
 export type SellListingFormProps = {
   plot: any;

@@ -2,19 +2,19 @@ import React, { useCallback, useState } from 'react';
 import { Form, FormikProps } from 'formik';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { BuyOrderFormValues } from '../../Dialogs/BuyOrderDialog';
-import TokenQuoteProvider from '../../../Common/Form/TokenQuoteProvider';
-import { SupportedChainId } from '../../../../constants';
-import { Token } from '../../../../classes';
-import useChainId from '../../../../hooks/useChain';
-import { QuoteHandler } from '../../../../hooks/useQuote';
-import { toStringBaseUnitBN, toTokenUnitsBN } from '../../../../util';
-import useCurve from '../../../../hooks/useCurve';
-import useFarmerBalances from '../../../../hooks/useFarmerBalances';
-import TokenSelectDialog from '../../../Common/Form/TokenSelectDialog';
-import useTokenMap from '../../../../hooks/useTokenMap';
-import { BEAN, ETH } from '../../../../constants/tokens';
-import { BuyNowFormValues } from '../../Dialogs/BuyNowDialog';
+import { BuyOrderFormValues } from '../Dialogs/BuyOrderDialog';
+import TokenQuoteProvider from '../../Common/Form/TokenQuoteProvider';
+import { SupportedChainId } from '../../../constants';
+import { Token } from '../../../classes';
+import useChainId from '../../../hooks/useChain';
+import { QuoteHandler } from '../../../hooks/useQuote';
+import { toStringBaseUnitBN, toTokenUnitsBN } from '../../../util';
+import useCurve from '../../../hooks/useCurve';
+import useFarmerBalances from '../../../hooks/useFarmerBalances';
+import TokenSelectDialog from '../../Common/Form/TokenSelectDialog';
+import useTokenMap from '../../../hooks/useTokenMap';
+import { BEAN, ETH } from '../../../constants/tokens';
+import { BuyNowFormValues } from '../Dialogs/BuyNowDialog';
 
 export type BuyNowFormProps = {
   token: Token

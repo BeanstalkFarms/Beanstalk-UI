@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   DialogProps,
   Stack,
@@ -19,12 +19,13 @@ import SimplePodLineChart from '../../Field/PodLineChart';
 import { AppState } from '../../../state';
 import { PlotMap } from '../../../state/farmer/field';
 import TokenQuoteProvider from '../../Common/Form/TokenQuoteProvider';
-import BuyOrderForm from '../Forms/BuyOrder/BuyOrderForm';
+import BuyOrderForm from '../Forms/BuyOrderForm';
 import { BEAN, ETH } from '../../../constants/tokens';
 import { BuyOrderFormValues } from './BuyOrderDialog';
 import useChainConstant from '../../../hooks/useChainConstant';
 import { FormTokenState } from '../../Common/Form';
-import BuyNowForm from '../Forms/BuyNow/BuyNowForm';
+import BuyNowForm from '../Forms/BuyNowForm';
+import PlotDetailsCard from './PlotDetailsCard';
 
 export type BuyNowFormValues = {
   tokens: FormTokenState[];
@@ -82,39 +83,7 @@ const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } 
         <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Buy Now</StyledDialogTitle>
         <StyledDialogContent>
           <Stack gap={2}>
-            <Card sx={{ p: 2 }}>
-              <Stack gap={2}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Stack direction="row" gap={0.3} alignItems="center">
-                    <Typography>Pod Listing</Typography>
-                    <Box sx={{ px: 0.5, py: 0.2, borderRadius: 0.5, backgroundColor: BeanstalkPalette.washedGreen, color: BeanstalkPalette.logoGreen }}>
-                      <Typography>0x1243</Typography>
-                    </Box>
-                  </Stack>
-                  <Typography color={BeanstalkPalette.gray}>Listing expires when Plot is at <Typography display="inline" color={BeanstalkPalette.black}>500,000</Typography> in the Pod Line</Typography>
-                </Stack>
-                <Stack direction="row" justifyContent="space-between">
-                  <Stack>
-                    <Typography>Place in Line</Typography>
-                    <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography>
-                  </Stack>
-                  <Stack>
-                    <Typography>Pripe per Pod</Typography>
-                    <Stack direction="row" gap={0.3} alignItems="center">
-                      <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography>
-                      <img src={beanIcon} alt="" height="25px" />
-                    </Stack>
-                  </Stack>
-                  <Stack>
-                    <Typography>Pods Sold</Typography>
-                    <Stack direction="row" gap={0.3} alignItems="center">
-                      <Typography variant="h1" sx={{ fontWeight: 400 }}>0/113,403</Typography>
-                      <img src={podIcon} alt="" height="25px" />
-                    </Stack>
-                  </Stack>
-                </Stack>
-              </Stack>
-            </Card>
+            <PlotDetailsCard />
             <Formik initialValues={initialValues} onSubmit={onSubmit}>
               {(formikProps) => (
                 <>
