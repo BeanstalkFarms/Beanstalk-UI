@@ -4,26 +4,13 @@ import { ethers } from 'ethers';
 import { TESTNET_RPC_ADDRESSES } from './Client';
 
 export async function initCurve(chainId : SupportedChainId = 1) {
-  // await curve.init('JsonRpc', {}, {});
-  // switch(chainId) {
-  //   case SupportedChainId.HARDHAT:
-  //   case SupportedChainId.LOCALHOST:
-  //     console.debug(`[initCurve] initializing with testnet ${TESTNET_RPC_ADDRESSES[chainId]} ${chainId}`)
-  //     break;
-  //   default:
-  //     await curve.init(
-  //       'Alchemy',
-  //       { apiKey: 'f06l9TnsZyxvF0JaPzjoWQ_6baS5hEQs' },
-  //       { chainId }
-  //     );
-  //     break;
-  // }
+  // curve.chainId = chainId;
   if (TESTNET_RPC_ADDRESSES[chainId]) {
-    console.debug('[curve/init] using Web3');
+    console.debug('[curve/init] using JsonRPC');
     await curve.init(
       'JsonRpc',
       { url: TESTNET_RPC_ADDRESSES[chainId] },
-      { chainId: 1 }
+      { chainId }
     );
   } else {
     console.debug('[curve/init] using Alchemy');
@@ -34,8 +21,8 @@ export async function initCurve(chainId : SupportedChainId = 1) {
     );
   }
   console.debug('[curve/init] initialized instance');
-  await Promise.all([
-    curve.fetchFactoryPools(),
+  await Promise.all([ 
+    curve.fetchFactoryPools(), // chainId === 1
     curve.fetchCryptoFactoryPools(),
   ]);
   console.debug('[curve/init] fetched pools');

@@ -4,10 +4,10 @@ import { Token } from 'classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useSigner } from 'wagmi';
-import { BEAN, ETH, SEEDS, STALK } from 'constants/tokens';
+import { BEAN, BEAN_CRV3_LP, ETH, LUSD, SEEDS, STALK, USDC, WETH } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
-import TokenSelectDialog from 'components/Common/Form/TokenSelectDialog';
+import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { FormTokenState } from 'components/Common/Form';
@@ -26,6 +26,9 @@ import SettingInput from 'components/Common/Form/SettingInput';
 import { BeanstalkReplanted } from 'constants/generated';
 import useCurve from 'hooks/useCurve';
 import { QuoteHandler } from 'hooks/useQuote';
+import { ZERO_BN } from 'constants/index';
+import { NativeToken } from 'classes/Token';
+import { BEAN_CRV3_CURVE_POOL_MAINNET } from 'constants/pools';
 
 // -----------------------------------------------------------------------
 
@@ -78,16 +81,35 @@ const DepositForm : React.FC<
       ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
     ]);
   }, [values.tokens, setFieldValue]);
-  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn, tokenOut) : Promise<BigNumber> => {
-    console.debug('[handleQuote] curve: ', curve);
+  const handleQuote = useCallback<QuoteHandler>(async (_tokenIn, _amountIn, _tokenOut) : Promise<BigNumber> => {
+    // console.debug('[handleQuote] curve: ', curve);
     if (curve) {
-      return curve.router.getBestRouteAndOutput(
-        tokenIn.address,
-        tokenOut.address,
-        toStringBaseUnitBN(amountIn, tokenIn.decimals),
-      ).then((result) => toTokenUnitsBN(result.output, tokenOut.decimals));
+      // const tokenIn  = (_tokenIn  instanceof NativeToken) ? WETH[1] : _tokenIn;
+      // const tokenOut = (_tokenOut instanceof NativeToken) ? WETH[1] : _tokenOut;
+      const tokenIn  = BEAN[1];
+      const tokenOut = BEAN_CRV3_LP[1];
+      // const amountIn = toStringBaseUnitBN(_amountIn, tokenIn.decimals)
+      console.debug(`[Deposit]: routing ${_amountIn.toFixed()} ${tokenIn.symbol} => ${tokenOut.symbol}`)
+      
+      // return curve.getPool(BEAN_CRV3_CURVE_POOL_MAINNET.address);
+    
+      // return curve.router.getBestRouteAndOutput(
+      //   tokenIn.address,
+      //   tokenOut.address,
+      //   // '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', // WETH
+      //   // '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490', // CRV3
+      //   _amountIn.toFixed(),
+      //   // tokenIn.address.toLowerCase(),
+      //   // tokenOut.address.toLowerCase(),
+      //   // amountIn
+      // ).then((result) => {
+      //   console.debug(`[Deposit] received quote`, result);
+      //   return new BigNumber(result.output)
+      //   // return toTokenUnitsBN(result.output, tokenOut.decimals);
+      //   // return new BigNumber(result.output);
+      // });
     }
-    return Promise.reject();
+    return Promise.resolve(ZERO_BN);
   }, [curve]);
 
   return (
@@ -101,13 +123,15 @@ const DepositForm : React.FC<
             handleSubmit={handleSelectTokens}
             balances={balances}
             tokenList={Object.values(erc20TokenMap)}
+            mode={TokenSelectMode.SINGLE}
           />
           <Stack gap={1.5}>
             {values.tokens.map((state, index) => (
               <TokenQuoteProvider
                 key={`tokens.${index}`}
                 name={`tokens.${index}`}
-                tokenOut={depositToken}
+                // tokenOut={depositToken}
+                tokenOut={BEAN_CRV3_LP[1]}
                 balance={balances[state.token.address] || undefined}
                 state={state}
                 showTokenSelect={handleOpen}

@@ -16,7 +16,7 @@ const TokenQuoteProvider : React.FC<{
   state: FormTokenState;
   /** Balance for TokenInputField */
   balance: BigNumber | undefined;
-  /** Token which we're quoting to */
+  /** Token which we're quoting to. Required to display a proper `amountOut` below the input. */
   tokenOut: Token;
   /** Handler to show token select */
   showTokenSelect?: () => void;
@@ -36,9 +36,10 @@ const TokenQuoteProvider : React.FC<{
 }) => {
   // Setup a price quote for this token
   const [amountOut, quoting, getAmountOut] = useQuote(tokenOut, handleQuote);
-  const { isSubmitting, setFieldValue } = useFormikContext();
+  const { isSubmitting, setFieldValue }    = useFormikContext();
 
-  // Run getAmountOut whenever the amount changes.
+  // Run getAmountOut selected token changes.
+  // ------------------------------------------
   // NOTE: because the getAmountOut function is debounced,
   // it returns undefined in some cases, so instead we 
   // listen for changes to `amountOut` and `quouting`
@@ -51,9 +52,15 @@ const TokenQuoteProvider : React.FC<{
         new BigNumber(state.amount || 0)  // amountIn
       );
     }
-  }, [state.token, state.amount, getAmountOut, tokenOut]);
+  }, [
+    state.token,
+    state.amount,
+    getAmountOut,
+    tokenOut
+  ]);
 
   // Store amountOut and quoting in form state.
+  // ------------------------------------------
   // FIXME: Antipattern here? Should we have 
   // a version of `useQuote` that handles this automatically?
   useEffect(() => {
@@ -93,7 +100,7 @@ const TokenQuoteProvider : React.FC<{
     <>
       {amountOut && (
         <Typography variant="body1" sx={{ fontSize: 13.5 }}>
-          = {displayFullBN(amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
+          ≈ {displayFullBN(amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
         </Typography>
       )}
       {quoting && (

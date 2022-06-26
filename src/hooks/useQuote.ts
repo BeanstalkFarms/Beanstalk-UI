@@ -5,12 +5,16 @@ import { toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
 import toast from 'react-hot-toast';
 
-export type QuoteHandler = (tokenIn: Token, amountIn: BigNumber, tokenOut: Token) => Promise<BigNumber>;
+export type QuoteHandler = (
+  tokenIn: Token,
+  amountIn: BigNumber,
+  tokenOut: Token
+) => Promise<BigNumber>; 
 
 export default function useQuote(
   /** */
   tokenOut: Token,
-  /** */
+  /** A function that returns a quoted amountOut value. */
   quoteHandler: QuoteHandler,
   /** The number of milliseconds to wait before calling */
   debounceMs : number = 250
@@ -36,12 +40,14 @@ export default function useQuote(
     (tokenIn: Token, amountIn: BigNumber) => {
       try {
         return quoteHandler(tokenIn, amountIn, tokenOut)
-          .then((result) => {
-            const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
-            console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
+          // quoteHandler should parse amountOut however it needs to.
+          // (i.e. call toTokenUnitsBN or similar)
+          .then((_amountOut) => {
+            // const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
+            // console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
             setAmountOut(_amountOut);
             setQuoting(false);
-            return result;
+            return _amountOut;
           })
           .catch((e) => {
             toast.error(e.toString());

@@ -201,7 +201,7 @@ export const LUSD = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
     LUSD_ADDRESSES,
-    6,
+    18,
     {
       name: 'LUSD',
       symbol: 'LUSD',
@@ -211,7 +211,7 @@ export const LUSD = {
   [SupportedChainId.ROPSTEN]: new ERC20Token(
     SupportedChainId.ROPSTEN,
     LUSD_ADDRESSES,
-    6,
+    18,
     {
       name: 'LUSD',
       symbol: 'LUSD',

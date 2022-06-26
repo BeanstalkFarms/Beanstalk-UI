@@ -4,8 +4,8 @@ import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
-import { displayBN, displayFullBN, toStringBaseUnitBN } from 'util/index';
-import { ETH, ETH_DECIMALS, USDC } from 'constants/tokens';
+import { displayBN, displayFullBN, tokenResult, toStringBaseUnitBN } from 'util/index';
+import { BEAN, ETH, ETH_DECIMALS, USDC } from 'constants/tokens';
 import { TokenMap } from 'constants/index';
 import { BalanceState } from 'state/farmer/balances/reducer';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
@@ -97,9 +97,11 @@ const FertilizeForm : React.FC<
       Array.from(_tokens).map((token) => ({ token, amount: null }))
     );
   }, [setFieldValue]);
-  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn) => fertContract.callStatic.getUsdcOut(
-    toStringBaseUnitBN(amountIn, ETH_DECIMALS),
-  ).then(bigNumberResult), [fertContract]);
+  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn) => 
+    fertContract.callStatic.getUsdcOut(
+      toStringBaseUnitBN(amountIn, ETH_DECIMALS),
+    ).then(tokenResult(BEAN)),
+  [fertContract]);
 
   return (
     <Form noValidate>

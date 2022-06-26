@@ -203,7 +203,7 @@ export function toTokenUnitsBN(
   rawAmt:   BigNumber.Value,
   decimals: BigNumber.Value,
 ): string {
-  return toBaseUnitBN(rawAmt, decimals).toString();
+  return toBaseUnitBN(rawAmt, decimals).toFixed();
 }
 
 // -------------------------

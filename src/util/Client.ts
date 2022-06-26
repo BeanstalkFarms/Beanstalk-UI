@@ -17,7 +17,7 @@ const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.MAINNET];
 
 export const TESTNET_RPC_ADDRESSES : { [chainId: number] : string } = {
   [SupportedChainId.ASTRO]:     'https://astro.node.bean.money',
-  [SupportedChainId.CUJO]:   'https://bean-rpc.treetree.finance',
+  [SupportedChainId.CUJO]:      'https://bean-rpc.treetree.finance',
   [SupportedChainId.LOCALHOST]: 'http://localhost:8545',
 };
 
