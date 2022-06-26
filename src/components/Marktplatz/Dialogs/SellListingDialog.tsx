@@ -10,7 +10,7 @@ import { Formik, FormikHelpers } from 'formik';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import podIcon from 'img/beanstalk/pod-icon.svg';
-import SellListingForm from '../Forms/SellListing/SellListingForm';
+import SellListingForm from '../Forms/SellListingForm';
 import { AppState } from '../../../state';
 import { displayBN } from '../../../util';
 import { BeanstalkPalette } from '../../App/muiTheme';
