@@ -126,7 +126,7 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
         </Box>
         <Stack gap={0.8}>
           <Box pl={0.5}>
-            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.pricePerPod}>
+            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.pricePerPod}>
               <Typography>Price Per Pod</Typography>
             </Tooltip>
           </Box>
@@ -154,9 +154,7 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
         </Stack>
         <Stack gap={0.8}>
           <Box pl={0.5}>
-            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.createPodListingForm.pricePerPod}>
-              <Typography>Number of Beans</Typography>
-            </Tooltip>
+            <Typography>Number of Beans</Typography>
           </Box>
           {values.tokens.map((state, index) => (
             <TokenQuoteProvider
