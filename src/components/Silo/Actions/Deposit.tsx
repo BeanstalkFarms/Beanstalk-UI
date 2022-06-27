@@ -32,15 +32,13 @@ import { BEAN_CRV3_CURVE_POOL_MAINNET } from 'constants/pools';
 import { CurveMetaPool } from 'classes/Pool';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import { BigNumberish, ethers } from 'ethers';
+import Farm from 'lib/Beanstalk/Farm';
 
 // -----------------------------------------------------------------------
 
 type DepositFormValues = {
   tokens: FormTokenState[];
 }
-
-const TRICRYPTO2 = '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46';
-const CURVE_FACTORY = '0xB9fC157394Af804a3578134A6585C0dc9cc990d4';
 
 // -----------------------------------------------------------------------
 
@@ -96,13 +94,15 @@ const DepositForm : React.FC<
 
       const tokenIn  = _tokenIn  instanceof NativeToken ? WETH[1] : _tokenIn;
       const tokenOut = _tokenOut instanceof NativeToken ? WETH[1] : _tokenOut;
+
+      const farm = new Farm(provider);
       
       // Get amount received for swapping _amountIn WETH -> USDT
-      const beanCrv3Pool    = BEAN_CRV3_CURVE_POOL_MAINNET.getContract();                 // BEAN:3CRV metapool
-      const tricryptoPoolV2 = CurveTriCrypto2Pool__factory.connect(TRICRYPTO2, provider); // tricrypto2
-      const pool3           = Curve3Pool__factory.connect(POOL3_ADDRESSES[1], provider);  // 3pool
-      const curveFactory    = CurveFactory__factory.connect(CURVE_FACTORY, provider);     // registry
-      const beanstalk       = ((contract as unknown) as BeanstalkReplanted);
+      // const beanCrv3Pool    = BEAN_CRV3_CURVE_POOL_MAINNET.getContract();                 // BEAN:3CRV metapool
+      // const tricryptoPoolV2 = CurveTriCrypto2Pool__factory.connect(TRICRYPTO2, provider); // tricrypto2
+      // const pool3           = Curve3Pool__factory.connect(POOL3_ADDRESSES[1], provider);  // 3pool
+      // const curveFactory    = CurveFactory__factory.connect(CURVE_FACTORY, provider);     // registry
+      // const beanstalk       = ((contract as unknown) as BeanstalkReplanted);
 
       // 1. Get amount of USDT resulting from BEAN
       // The get_coin_indices call isn't working because curveFactory doesn't
@@ -118,98 +118,90 @@ const DepositForm : React.FC<
       //   { gasLimit: 10000000 },
       // );
 
-      type ChainableFunction = (amountIn: ethers.BigNumber) => Promise<[
-        amountOut: ethers.BigNumber,
-        encode: (amountIn: ethers.BigNumber, minAmountOut: ethers.BigNumber) => string,
-        data?: any
-      ]>;
+      // type ChainableFunction = (amountIn: ethers.BigNumber) => Promise<[
+      //   amountOut: ethers.BigNumber,
+      //   encode: (amountIn: ethers.BigNumber, minAmountOut: ethers.BigNumber) => string,
+      //   data?: any
+      // ]>;
+      // function buyBeansAction() {
+      //   const estimate = async (
+      //     initAmountIn: ethers.BigNumber
+      //   ) => {
+      //     // console.debug(`SWAP QUOTE: amountOutUSDT = `, amountOutUSDT.toString())
+      //     return chain([
+      //       async (amountInStep: ethers.BigNumber) => {
+      //         const amountOut = await tricryptoPoolV2.get_dy(
+      //           2, // i = WETH = tricryptoPoolV2.coins[2]
+      //           0, // j = USDT = tricryptoPoolV2.coins[0]
+      //           amountInStep,
+      //           { gasLimit: 10000000 }
+      //         );
+      //         return [
+      //           amountOut,
+      //           (amountIn, minAmountOut) => beanstalk.interface.encodeFunctionData('exchange', [
+      //             tricryptoPoolV2.address,
+      //             WETH[1].address,                                            // WETH
+      //             '0xdAC17F958D2ee523a2206206994597C13D831ec7'.toLowerCase(), // USDT
+      //             amountIn,
+      //             minAmountOut,
+      //             false,
+      //             FarmFromMode.INTERNAL_TOLERANT,
+      //             FarmToMode.INTERNAL,
+      //           ]),
+      //           {
+      //             amountIn: amountInStep,
+      //             tokenIn
+      //           }
+      //         ];
+      //       },
+      //       async (amountInStep: ethers.BigNumber) => {
+      //         const amountOut = await beanCrv3Pool.callStatic['get_dy_underlying(int128,int128,uint256)'](
+      //           3,  // i = USDT = coins[3] ([BEAN, CRV3] => [BEAN, DAI, USDC, USDT])
+      //           0,  // j = BEAN = coins[0]
+      //           amountInStep,
+      //           { gasLimit: 10000000 }
+      //         );
+      //         return [
+      //           amountOut,
+      //           (amountIn, minAmountOut) => beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
+      //             BEAN_CRV3_CURVE_POOL_MAINNET.address,
+      //             '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
+      //             BEAN[1].address, // BEAN
+      //             amountIn,
+      //             minAmountOut,
+      //             FarmFromMode.INTERNAL_TOLERANT,
+      //             FarmToMode.INTERNAL,
+      //           ]),
+      //           {}
+      //         ];
+      //       }
+      //     ], [
+      //       initAmountIn
+      //     ]);
+      //   };
+      //   return {
+      //     estimate,
+      //     farm: () => {}
+      //   };
+      // }
 
-      async function chain(
-        fns: ChainableFunction[],
-        initialArgs: [amountIn: ethers.BigNumber]
-      ) : Promise<ethers.BigNumber> {
-        let args = initialArgs;
-        for (let i = 0; i < fns.length; i += 1) {
-          console.debug(`[chain] calling ${i}`);
-          const call = await fns[i](...args);
-          console.debug(`[chain] called ${i} = `, call);
-          args = [call[0]];
-        }
-        return args[0];
+      let estimate;
+      if (tokenOut === BEAN_CRV3_LP[1]) {
+        estimate = await Farm.estimate(
+          farm.buyAndDepositBeanCrv3LP(),
+          [ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals))]
+        );
+      } else {
+        estimate = await Farm.estimate(
+          farm.buyBeans(),
+          [ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals))]
+        );
       }
 
-      function buyBeansAction() {
-        const estimate = async (
-          initAmountIn: ethers.BigNumber
-        ) => {
-          // console.debug(`SWAP QUOTE: amountOutUSDT = `, amountOutUSDT.toString())
-          return chain([
-            async (amountInStep: ethers.BigNumber) => {
-              const amountOut = await tricryptoPoolV2.get_dy(
-                2, // i = WETH = tricryptoPoolV2.coins[2]
-                0, // j = USDT = tricryptoPoolV2.coins[0]
-                amountInStep,
-                { gasLimit: 10000000 }
-              );
-              return [
-                amountOut,
-                (amountIn, minAmountOut) => beanstalk.interface.encodeFunctionData('exchange', [
-                  tricryptoPoolV2.address,
-                  WETH[1].address,                                            // WETH
-                  '0xdAC17F958D2ee523a2206206994597C13D831ec7'.toLowerCase(), // USDT
-                  amountIn,
-                  minAmountOut,
-                  false,
-                  FarmFromMode.INTERNAL_TOLERANT,
-                  FarmToMode.INTERNAL,
-                ]),
-                {
-                  amountIn: amountInStep,
-                  tokenIn
-                }
-              ];
-            },
-            async (amountInStep: ethers.BigNumber) => {
-              const amountOut = await beanCrv3Pool.callStatic['get_dy_underlying(int128,int128,uint256)'](
-                3,  // i = USDT = coins[3] ([BEAN, CRV3] => [BEAN, DAI, USDC, USDT])
-                0,  // j = BEAN = coins[0]
-                amountInStep,
-                { gasLimit: 10000000 }
-              );
-              return [
-                amountOut,
-                (amountIn, minAmountOut) => beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
-                  BEAN_CRV3_CURVE_POOL_MAINNET.address,
-                  '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
-                  BEAN[1].address, // BEAN
-                  amountIn,
-                  minAmountOut,
-                  FarmFromMode.INTERNAL_TOLERANT,
-                  FarmToMode.INTERNAL,
-                ]),
-                {}
-              ];
-            }
-          ], [
-            initAmountIn
-          ]);
-        };
-        return {
-          estimate,
-          farm: () => {}
-        };
-      }
-
-      function buyCrv3Action() {
-        
-      }
+      console.debug('[chain] estimate = ', estimate);
 
       return toTokenUnitsBN(
-        (await buyBeansAction().estimate(
-          ethers.BigNumber.from(
-            toStringBaseUnitBN(_amountIn, tokenIn.decimals)
-          )
-        )).toString(),
+        estimate.amountOut.toString(),
         tokenOut.decimals,
       );
 

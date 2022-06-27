@@ -73,7 +73,7 @@ const SmartSubmitButton : React.FC<{
     () => allowances.findIndex(
       (allowance, index) => {
         const amt = tokens[index].amount;
-        console.debug(`allowance ${index} ${tokens[index].token.symbol}`, allowance, amt)
+        // console.debug(`allowance ${index} ${tokens[index].token.symbol}`, allowance, amt)
         return (
           !allowance                    // waiting for allowance to load
           || allowance.eq(0)            // allowance is zero
