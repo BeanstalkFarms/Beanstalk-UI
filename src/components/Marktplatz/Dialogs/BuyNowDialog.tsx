@@ -54,9 +54,9 @@ const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } 
     const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
 
     // const farmerPlots: PlotMap<BigNumber> = { [podListing.placeInLine]: '' };
-    
+
     const Eth = useChainConstant(ETH);
-    
+
     const initialValues: BuyNowFormValues = useMemo(() => ({
       tokens: [
         {
