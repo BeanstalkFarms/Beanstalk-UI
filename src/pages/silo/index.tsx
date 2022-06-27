@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Button,  Container, Stack } from '@mui/material';
+import { Alert, Box, Button,  Card,  Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import OverviewCard from 'components/Silo/OverviewCard';
 import RewardsBar from 'components/Silo/RewardsBar';
 import TokenTable from 'components/Silo/TokenTable';
 import PageHeader from 'components/Common/PageHeader';
-import { SNAPSHOT_LINK } from 'constants/index';
+import { SNAPSHOT_LINK, SupportedChainId } from 'constants/index';
 import snapshotIcon from 'img/ecosystem/snapshot-logo.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
@@ -14,6 +14,8 @@ import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useChainId from 'hooks/useChain';
+import BigNumber from 'bignumber.js';
+import { displayFullBN } from 'util/index';
 
 const SiloPage : React.FC = () => {
   // Constants
@@ -27,6 +29,10 @@ const SiloPage : React.FC = () => {
   const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const breakdown   = useFarmerSiloBreakdown();
   const chainId = useChainId();
+
+  //
+  const exploiterEarnedBeans = new BigNumber(6458.005059);
+  const ownership = farmerSilo.stalk.active.div(beanstalkSilo.stalk.active);
 
   return (
     <Container maxWidth="lg">
@@ -54,6 +60,13 @@ const SiloPage : React.FC = () => {
           breakdown={breakdown}
           season={season}
         />
+        {chainId === SupportedChainId.MAINNET ? (
+          // <Card>
+            <Alert severity="info" variant="standard" sx={{ borderColor: 'secondary.dark', borderWidth: 1, borderStyle: 'solid' }}>
+              The exploiter{`'`}s Earned Beans were distributed pro-rata to Silo Members. Your Earned Bean balance has increased by ~{displayFullBN(exploiterEarnedBeans.times(ownership), 2)} Beans.
+            </Alert>
+          // </Card>
+        ): null}
         <RewardsBar
           chainId={chainId}
           beans={farmerSilo.beans}

@@ -203,6 +203,7 @@ const useFarmerEvents = () => {
           const allEvents : Event[] = (
             flattened
               .reduce<Event[]>((prev, e) => {
+                console.debug(`[farmer/events/useFarmerEvents] event = ${e.event}, data.length = ${e.data.length}, topics = ${e.topics}`, e)
                 try {
                   prev.push({
                     event: e.event,
@@ -213,7 +214,12 @@ const useFarmerEvents = () => {
                     transactionIndex: e.transactionIndex,
                     // backwards compat
                     facet: getEventFacet(e.event),
-                    returnValues: parseBNJS(e.decode?.(e.data, e.topics) || {}),
+                    returnValues: parseBNJS(
+                      e.decode?.(
+                        e.data === '0x' ? `0x${'0'.repeat(192)}` : e.data,
+                        e.topics
+                      ) || {}
+                    ),
                   })
                 } catch(err) {
                   console.error(`Failed to parse event ${e.event} ${e.transactionHash}`, err, e)
