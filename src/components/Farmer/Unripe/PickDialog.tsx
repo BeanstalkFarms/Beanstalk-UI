@@ -150,7 +150,7 @@ const PickBeansDialog: React.FC<{
         <Typography sx={{ fontSize: '15px' }} color="text.secondary">
           To claim non-Deposited Unripe Beans and Unripe LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
           Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.<br /><br />
-          Note: Unripe assets represent a pro rata share of underlying assets. You can read more about them <Link href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise" target="_blank" rel="noreferrer">here</Link>.
+          Unripe assets represent a pro rata share of underlying assets. You can read more about them <Link href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise" target="_blank" rel="noreferrer">here</Link>.
         </Typography>
       </Stack>
       <Divider />
@@ -220,14 +220,14 @@ const PickBeansDialog: React.FC<{
                   amount={tokenOrZero(unripe?.[`circulating${obj.key}Lp`], obj.token)}
                   tooltip={UNRIPE_ASSET_TOOLTIPS[`circulating${obj.key}Lp`]}
                   token={obj.token}
-                  bdv={tokenOrZero(unripe?.[`circulating${obj.key}Bdv`], obj.token)}
+                  bdv={tokenOrZero(unripe?.[`circulating${obj.key}Bdv`], BEAN[1])}
                 />
                 <UnripeTokenRow
                   name={`Withdrawn ${obj.token.name}`}
                   amount={tokenOrZero(unripe?.[`withdrawn${obj.key}Lp`], obj.token)}
                   tooltip={UNRIPE_ASSET_TOOLTIPS[`withdrawn${obj.key}Lp`]}
                   token={obj.token}
-                  bdv={tokenOrZero(unripe?.[`withdrawn${obj.key}Bdv`], obj.token)}
+                  bdv={tokenOrZero(unripe?.[`withdrawn${obj.key}Bdv`], BEAN[1])}
                 />
               </Stack>
             ))}
