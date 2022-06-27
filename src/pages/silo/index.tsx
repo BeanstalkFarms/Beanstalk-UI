@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Button,  Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import NextSeason from 'components/Silo/NextSeason';
 import OverviewCard from 'components/Silo/OverviewCard';
 import RewardsBar from 'components/Silo/RewardsBar';
 import TokenTable from 'components/Silo/TokenTable';
@@ -15,7 +14,6 @@ import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/chains';
 
 const SiloPage : React.FC = () => {
   // Constants
@@ -26,7 +24,7 @@ const SiloPage : React.FC = () => {
   // const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-  const { sunrise, season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
+  const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const breakdown   = useFarmerSiloBreakdown();
   const chainId = useChainId();
 
@@ -50,14 +48,6 @@ const SiloPage : React.FC = () => {
             </Button>
           )}
         />
-        {/* TEMP: Hide next Season metrics on MAINNET. */}
-        {/* {chainId !== SupportedChainId.MAINNET && (
-          <NextSeason
-            title={(
-              `Next Season's predicted Silo rewards in ${sunrise.remaining.as('minutes').toLocaleString('en-US', { maximumFractionDigits: 0 })}m`
-            )}
-          />
-        )} */}
         <OverviewCard
           farmerSilo={farmerSilo}
           beanstalkSilo={beanstalkSilo}

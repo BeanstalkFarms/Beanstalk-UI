@@ -1,20 +1,17 @@
 import React, { useMemo } from 'react';
-import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
 import { Pool, Token } from 'classes';
 import { AppState } from 'state';
 import { displayUSD } from 'util/index';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import TokenIcon from 'components/Common/TokenIcon';
-import { SEEDS, STALK } from 'constants/tokens';
-import { SupportedChainId } from 'constants/chains';
-import useChainId from 'hooks/useChain';
-import BigNumber from 'bignumber.js';
-import { displayBN, displayFullBN, displayTokenAmount } from 'util/Tokens';
+import { BEAN, SEEDS, STALK } from 'constants/tokens';
+import { displayBN, displayFullBN } from 'util/Tokens';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useTVL from 'hooks/useTVL';
 import { AddressMap, ZERO_BN } from 'constants/index';
+import useChainConstant from 'hooks/useChainConstant';
 
 const arrowContainerWidth = 20;
 
@@ -26,27 +23,25 @@ const TokenTable : React.FC<{
     poolsByAddress: AddressMap<Pool>;
   };
   farmerSilo: AppState['_farmer']['silo'];
-  // beanPools:  AppState['_bean']['pools'];
-  // beanstalkSilo: AppState['_beanstalk']['silo'];
 }> = ({
   config,
   farmerSilo,
   // beanPools,
   // beanstalkSilo,
 }) => {
-  const chainId = useChainId();
-  const breakdown = useFarmerSiloBreakdown();
   const getTVL = useTVL();
   const poolTokenToUSD = useSiloTokenToUSD();
+  const Bean = useChainConstant(BEAN);
 
   // Aggregate the total TVL
-  const aggregateTVL = useMemo(
-    () => config.whitelist.reduce<BigNumber>(
-      (agg, token) => agg.plus(getTVL(token)),
-      new BigNumber(0)
-    ),
-    [config.whitelist, getTVL]
-  );
+  // const breakdown = useFarmerSiloBreakdown();
+  // const aggregateTVL = useMemo(
+  //   () => config.whitelist.reduce<BigNumber>(
+  //     (agg, token) => agg.plus(getTVL(token)),
+  //     new BigNumber(0)
+  //   ),
+  //   [config.whitelist, getTVL]
+  // );
 
   return (
     <Card>
@@ -131,7 +126,33 @@ const TokenTable : React.FC<{
                   {/* Cell: Deposited Amount */}
                   <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
-                      {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)}
+                      {/**
+                        * If this is the entry for Bean deposits,
+                        * display Earned Beans and Deposited Beans separately.
+                        * Internally they are both considered "Deposited".
+                        */}
+                      {token === Bean
+                        ? (
+                          <Tooltip title={(
+                            <>
+                              {displayFullBN(deposited?.amount.minus(farmerSilo.beans.earned) || ZERO_BN, token.displayDecimals)} Deposited Beans<br/>
+                              {displayFullBN(farmerSilo.beans.earned || ZERO_BN, token.displayDecimals)} Earned Beans<br/>
+                              <Divider sx={{ my: 0.5, opacity: 0.3 }} />
+                              = {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Silo Beans<br/>
+                            </>
+                          )}>
+                            <span>
+                              {displayFullBN(deposited?.amount.minus(farmerSilo.beans.earned) || ZERO_BN, token.displayDecimals)}
+                              {farmerSilo.beans.earned.gt(0) ? (
+                                <Typography component="span" color="primary.main">
+                                  {' + '}
+                                  {displayFullBN(farmerSilo.beans.earned, token.displayDecimals)}
+                                </Typography>
+                              ) : null}
+                            </span>
+                          </Tooltip>
+                        )
+                        : displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)}
                       <Box display={{ md: 'inline', xs: 'none' }}>&nbsp; {token.name}</Box>
                     </Typography>
                   </Grid>
