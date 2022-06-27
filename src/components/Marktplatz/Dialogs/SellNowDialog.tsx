@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   DialogProps,
   Stack,
@@ -8,9 +8,26 @@ import {
   Divider,
 } from '@mui/material';
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
+import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
+import { Formik, FormikHelpers } from 'formik';
 import { displayBN } from '../../../util';
+import PlotDetailsCard from './PlotDetailsCard';
+import { BeanstalkPalette } from '../../App/muiTheme';
+import podIcon from '../../../img/beanstalk/pod-icon.svg';
+import { AppState } from '../../../state';
+import { ZERO_BN } from '../../../constants';
+import { SellListingFormValues } from './SellListingDialog';
+import SellListingForm from '../Forms/SellListingForm';
+import SellNowForm from '../Forms/SellNowForm';
 
-const SellNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & DialogProps> =
+export type SellNowFormValues = {
+  min: BigNumber | null;
+  max: BigNumber | null;
+  amount: BigNumber | null;
+}
+
+const SellNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } & DialogProps> =
   ({
      open,
      sx,
@@ -19,11 +36,47 @@ const SellNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & Dial
      fullScreen,
      disableScrollLock,
      handleClose,
-     row
+     podListing
    }) => {
+    const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
+      (state) => state._farmer.field
+    );
+
+    const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
+      (state) => state._beanstalk.field
+    );
+
+    const [tab, setTab] = useState(0);
+    const [selectedPlotIndex, setSelectedPlotIndex] = useState<string | null>(null);
+
     const handleDialogClose = () => {
       handleClose();
+      setTab(0);
     };
+
+    const handleNextTab = () => {
+      setTab(tab + 1);
+    };
+    const handlePreviousTab = () => {
+      setTab(tab - 1);
+    };
+
+    const handleSetPlot = (index: string) => {
+      setSelectedPlotIndex(index);
+      handleNextTab();
+    };
+
+    //
+    const initialValues: SellNowFormValues = useMemo(() => ({
+      min: ZERO_BN,
+      max: selectedPlotIndex ? new BigNumber(farmerField.plots[selectedPlotIndex]) : ZERO_BN,
+      amount: selectedPlotIndex ? new BigNumber(farmerField.plots[selectedPlotIndex]) : ZERO_BN,
+    }), [selectedPlotIndex, farmerField]);
+    
+    //
+    const onSubmit = useCallback((values: SellNowFormValues, formActions: FormikHelpers<SellNowFormValues>) => {
+      Promise.resolve();
+    }, []);
 
     return (
       <Dialog
@@ -34,26 +87,69 @@ const SellNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & Dial
         disableScrollLock={disableScrollLock}
         sx={{ ...sx }}
       >
-        <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Sell Now</StyledDialogTitle>
-        <StyledDialogContent>
-          <Stack gap={2}>
-            <Stack gap={1}>
-              <Stack direction="row" justifyContent="space-between" sx={{ px: 1 }}>
-                <Typography sx={{ width: '25%' }}>Place in Line</Typography>
-                <Typography sx={{ width: '25%', textAlign: 'center' }}>Price</Typography>
-                <Typography sx={{ width: '25%', textAlign: 'right' }}>Pods Requested</Typography>
-              </Stack>
-              <Card sx={{ p: 1 }}>
-                <Stack direction="row" justifyContent="space-between">
-                  <Typography sx={{ width: '25%' }}>{displayBN(row?.placeInLine)}</Typography>
-                  <Typography sx={{ width: '25%', textAlign: 'center' }}>{displayBN(row?.price)}</Typography>
-                  <Typography sx={{ width: '25%', textAlign: 'right' }}>{displayBN(row?.podsRequested)}</Typography>
+        {tab === 0 && (
+          <>
+            <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Select Plot to sell</StyledDialogTitle>
+            <StyledDialogContent>
+              <Stack gap={2}>
+                <PlotDetailsCard />
+                <Stack gap={1}>
+                  {Object.keys(farmerField?.plots).map((index) => (
+                    <Card
+                      sx={{
+                        p: 2,
+                        '&:hover': {
+                          backgroundColor: BeanstalkPalette.hoverBlue,
+                          cursor: 'pointer'
+                        }
+                      }}
+                      onClick={() => handleSetPlot(index)}
+                    >
+                      <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Stack direction="row" gap={0.4}>
+                          <Typography
+                            sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(index).minus(beanstalkField?.harvestableIndex))}
+                          </Typography>
+                          <Typography sx={{ fontSize: '18px' }}>in Line</Typography>
+                        </Stack>
+                        <Stack direction="row" gap={0.3} alignItems="center">
+                          <Typography
+                            sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(farmerField.plots[index]))}
+                          </Typography>
+                          <img src={podIcon} alt="" height="18px" />
+                        </Stack>
+                      </Stack>
+                    </Card>
+                  ))}
                 </Stack>
-              </Card>
-            </Stack>
-            <Divider />
-          </Stack>
-        </StyledDialogContent>
+              </Stack>
+            </StyledDialogContent>
+          </>
+        )}
+        {tab === 1 && (
+          <>
+            <StyledDialogTitle sx={{ pb: 0.5 }} onBack={handlePreviousTab} onClose={handleDialogClose}>Sell Pods</StyledDialogTitle>
+            <StyledDialogContent>
+              <Stack gap={2}>
+                <PlotDetailsCard />
+                <Formik initialValues={initialValues} onSubmit={onSubmit}>
+                  {(formikProps) => (
+                    <>
+                      {selectedPlotIndex && (
+                        <SellNowForm
+                          plot={farmerField.plots[selectedPlotIndex]}
+                          placeInLine={new BigNumber(selectedPlotIndex).minus(beanstalkField?.harvestableIndex)}
+                          numPods={new BigNumber(farmerField.plots[selectedPlotIndex])}
+                          {...formikProps}
+                        />
+                      )}
+                    </>
+                  )}
+                </Formik>
+              </Stack>
+            </StyledDialogContent>
+          </>
+        )}
       </Dialog>
     );
   };

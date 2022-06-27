@@ -10,10 +10,11 @@ import { useAccount } from 'wagmi';
 import WalletButton from "components/Common/Connection/WalletButton";
 import { Event } from 'lib/Beanstalk/EventProcessor';
 
-const mappedTabs = {
-  0: SILO,
-  1: FIELD,
-  2: OTHER
+const facetByTabIndex = {
+  0: undefined,
+  1: SILO,
+  2: FIELD,
+  3: OTHER
 }
 
 const TransactionHistoryPage: React.FC = () => {
@@ -25,12 +26,17 @@ const TransactionHistoryPage: React.FC = () => {
   const handleSetTab = (event: React.SyntheticEvent, newValue: 0 | 1 | 2) => setTab(newValue);
 
   useEffect(() => {
-    function filterEventsByFacet(facet: string) {
-      return events.filter((event) => {
-        return event.facet === facet;
-      })
+    function filterEventsByFacet(facet: string | undefined) {
+      const e = Array.from(events).reverse();
+      if (facet) {
+        return e.filter((event) => {
+          return event.facet === facet;
+        })
+      }
+      return e
+    
     }
-    setWalletEvents(filterEventsByFacet(mappedTabs[tab]));
+    setWalletEvents(filterEventsByFacet(facetByTabIndex[tab]));
   }, [events, tab])
 
   if (!account) {
@@ -42,11 +48,12 @@ const TransactionHistoryPage: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="md">
       <Stack gap={2}>
         <Card sx={{border: "none", p: 2}}>
           <Stack gap={0.5}>
             <Tabs value={tab} onChange={handleSetTab} sx={{ minHeight: 0 }}>
+              <Tab label="All" />
               <Tab label="Silo" />
               <Tab label="Field" />
               <Tab label="Other" />
@@ -55,7 +62,7 @@ const TransactionHistoryPage: React.FC = () => {
               <Grid container>
                 {walletEvents.map((event) => {
                   return (
-                    <Grid item width="100%">
+                    <Grid key={`${event.transactionHash}-${event.logIndex}`} item width="100%">
                       <EventItem
                         event={event}
                         account={account?.address ? account.address.toString().toLowerCase(): ""}

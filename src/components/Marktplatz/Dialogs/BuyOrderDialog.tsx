@@ -9,7 +9,7 @@ import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog
 import { Formik, FormikHelpers } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import BuyOrderForm from '../Forms/BuyOrder/BuyOrderForm';
+import BuyOrderForm from '../Forms/BuyOrderForm';
 import { AppState } from '../../../state';
 import useChainConstant from '../../../hooks/useChainConstant';
 import { BEAN, ETH, PODS } from '../../../constants/tokens';

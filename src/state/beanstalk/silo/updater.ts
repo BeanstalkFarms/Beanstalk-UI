@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK,  REPLANTED_CHAINS,  TokenMap, ZERO_BN } from 'constants/index';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK,  REPLANTED_CHAINS,  SupportedChainId,  TokenMap, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/Ledger';
 import { tokenResult } from 'util/Tokens';
@@ -54,9 +54,9 @@ export const useBeanstalkSilo = () => {
         poolBalancesTotal,
       ] = await Promise.all([
         // 0
-        beanstalk.totalStalk().then(tokenResult(STALK)),
-        beanstalk.totalSeeds().then(tokenResult(SEEDS)),
-        beanstalk.totalRoots().then(bigNumberResult),
+        beanstalk.totalStalk().then(tokenResult(STALK)),  // Includes Stalk from Earned Beans.
+        beanstalk.totalSeeds().then(tokenResult(SEEDS)),  // 
+        beanstalk.totalRoots().then(bigNumberResult),     //
         // 1
         migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
           (b) => b.totalFarmableBeans(),
@@ -100,9 +100,13 @@ export const useBeanstalkSilo = () => {
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
+      const activeStalkTotal = (
+        chainId === SupportedChainId.MAINNET
+          ? stalkTotal //.minus(219316.5007560000) // subtract exploiter stalk balance
+          : stalkTotal
+      );
       const earnedStalkTotal = earnedBeansTotal.times(BEAN_TO_STALK);
-      const activeStalkTotal = stalkTotal.plus(earnedStalkTotal);
-      const earnedSeedTotal = earnedBeansTotal.times(BEAN_TO_SEEDS);
+      const earnedSeedTotal  = earnedBeansTotal.times(BEAN_TO_SEEDS);
 
       // total:   active & inactive
       // active:  owned, actively earning other silo assets
@@ -111,21 +115,21 @@ export const useBeanstalkSilo = () => {
       dispatch(updateBeanstalkSiloAssets({
         beans: {
           earned: earnedBeansTotal,
-          total: depositedBeansTotal,
+          total:  depositedBeansTotal,
         },
         stalk: {
           active: activeStalkTotal,
           earned: earnedStalkTotal,
-          grown: ZERO_BN,
-          total: activeStalkTotal,
+          grown:  ZERO_BN,
+          total:  activeStalkTotal.plus(ZERO_BN),
         },
         seeds: {
           active: seedsTotal,
           earned: earnedSeedTotal,
-          total: seedsTotal.plus(earnedSeedTotal),
+          total:  seedsTotal.plus(earnedSeedTotal),
         },
         roots: {
-          total: rootsTotal,
+          total:  rootsTotal,
         },
         balances: {
           ...(IS_REPLANTED ? {} : {
@@ -167,7 +171,8 @@ export const useBeanstalkSilo = () => {
     migrate,
     beanstalk,
     WHITELIST,
-    IS_REPLANTED
+    IS_REPLANTED,
+    chainId
   ]);
 
   const clear = useCallback(() => {

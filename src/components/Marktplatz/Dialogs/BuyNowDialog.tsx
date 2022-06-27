@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   DialogProps,
   Stack,
   Dialog,
   Typography,
-  Card, Divider,
+  Card, Divider, Box, useMediaQuery,
 } from '@mui/material';
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import podIcon from 'img/beanstalk/pod-icon.svg';
+import { useSelector } from 'react-redux';
+import { useTheme } from '@mui/material/styles';
+import BigNumber from 'bignumber.js';
+import { Formik, FormikHelpers } from 'formik';
 import { displayBN } from '../../../util';
+import { BeanstalkPalette } from '../../App/muiTheme';
+import SimplePodLineChart from '../../Field/PodLineChart';
+import { AppState } from '../../../state';
+import { PlotMap } from '../../../state/farmer/field';
+import TokenQuoteProvider from '../../Common/Form/TokenQuoteProvider';
+import BuyOrderForm from '../Forms/BuyOrderForm';
+import { BEAN, ETH } from '../../../constants/tokens';
+import { BuyOrderFormValues } from './BuyOrderDialog';
+import useChainConstant from '../../../hooks/useChainConstant';
+import { FormTokenState } from '../../Common/Form';
+import BuyNowForm from '../Forms/BuyNowForm';
+import PlotDetailsCard from './PlotDetailsCard';
 
-const BuyNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & DialogProps> =
+export type BuyNowFormValues = {
+  tokens: FormTokenState[];
+}
+
+const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } & DialogProps> =
   ({
      open,
      sx,
@@ -18,11 +40,36 @@ const BuyNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & Dialo
      fullScreen,
      disableScrollLock,
      handleClose,
-     row
+     podListing
    }) => {
     const handleDialogClose = () => {
       handleClose();
     };
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
+      (state) => state._beanstalk.field
+    );
+    const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
+
+    // const farmerPlots: PlotMap<BigNumber> = { [podListing.placeInLine]: '' };
+    
+    const Eth = useChainConstant(ETH);
+    
+    const initialValues: BuyNowFormValues = useMemo(() => ({
+      tokens: [
+        {
+          token: Eth,
+          amount: null,
+        },
+      ],
+    }), [Eth]);
+
+    //
+    const onSubmit = useCallback((values: BuyNowFormValues, formActions: FormikHelpers<BuyNowFormValues>) => {
+      Promise.resolve();
+    }, []);
 
     return (
       <Dialog
@@ -36,23 +83,17 @@ const BuyNowDialog: React.FC<{ row: any | undefined; handleClose: any; } & Dialo
         <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Buy Now</StyledDialogTitle>
         <StyledDialogContent>
           <Stack gap={2}>
-            <Stack gap={1}>
-              <Stack direction="row" justifyContent="space-between" sx={{ px: 1 }}>
-                <Typography sx={{ width: '25%' }}>Place in Line</Typography>
-                <Typography sx={{ width: '25%', textAlign: 'center' }}>Expiry</Typography>
-                <Typography sx={{ width: '25%', textAlign: 'center' }}>Price</Typography>
-                <Typography sx={{ width: '25%', textAlign: 'right' }}>Amount</Typography>
-              </Stack>
-              <Card sx={{ p: 1 }}>
-                <Stack direction="row" justifyContent="space-between">
-                  <Typography sx={{ width: '25%' }}>{displayBN(row?.placeInLine)}</Typography>
-                  <Typography sx={{ width: '25%', textAlign: 'center' }}>{displayBN(row?.expiry)}</Typography>
-                  <Typography sx={{ width: '25%', textAlign: 'center' }}>{displayBN(row?.price)}</Typography>
-                  <Typography sx={{ width: '25%', textAlign: 'right' }}>{displayBN(row?.amount)}</Typography>
-                </Stack>
-              </Card>
-            </Stack>
-            <Divider />
+            <PlotDetailsCard />
+            <Formik initialValues={initialValues} onSubmit={onSubmit}>
+              {(formikProps) => (
+                <>
+                  <BuyNowForm
+                    token={BEAN[1]}
+                    {...formikProps}
+                  />
+                </>
+              )}
+            </Formik>
           </Stack>
         </StyledDialogContent>
       </Dialog>

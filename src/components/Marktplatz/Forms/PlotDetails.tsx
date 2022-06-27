@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from 'components/App/muiTheme';
-import { displayBN } from '../../../../util';
+import { displayBN } from '../../../util';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 
 export type PlotDetailsProps = {

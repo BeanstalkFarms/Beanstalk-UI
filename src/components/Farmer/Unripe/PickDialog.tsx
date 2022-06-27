@@ -8,7 +8,8 @@ import {
   useMediaQuery,
   Divider,
   Tooltip,
-  Box
+  Box,
+  Link
 } from '@mui/material';
 import unripeBeanIcon from 'img/tokens/unripe-bean-logo-circled.svg';
 import brownLPIcon from 'img/tokens/unripe-lp-logo-circled.svg';
@@ -142,28 +143,31 @@ const PickBeansDialog: React.FC<{
   const tab0 = (
     <>
       <StyledDialogTitle sx={{ pb: 1 }} onClose={handleDialogClose}>
-        Pick Unripe Beans and Unripe LP
+        Pick non-Deposited Unripe Beans and Unripe LP
       </StyledDialogTitle>
+      <Stack direction="row" alignItems="center" gap={1} pb={2} pl={1} pr={3}>
+        <img src={pickImage} alt="pick" style={{ height: 120 }} />
+        <Typography sx={{ fontSize: '15px' }} color="text.secondary">
+          To claim non-Deposited Unripe Beans and Unripe LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
+          Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.<br /><br />
+          Note: Unripe assets represent a pro rata share of underlying assets. You can read more about them <Link href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise" target="_blank" rel="noreferrer">here</Link>.
+        </Typography>
+      </Stack>
+      <Divider />
       <StyledDialogContent>
         <Stack gap={2}>
-          <Stack direction="row" alignItems="center" gap={1}>
-            <img src={pickImage} alt="pick" style={{ height: 100 }} />
-            <Typography sx={{ fontSize: '15px' }} color="text.secondary">
-              Your prior Deposits will stay in the Silo as Unripe Deposits.<br /><br />To claim Unripe Beans and Unripe LP Tokens outside the Silo, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo. 
-            </Typography>
-          </Stack>
           {/**
             * Section 1: Deposited Balance
             */}
-          {/* <Stack gap={0.25}>
+          <Stack gap={0.25}>
             <Stack direction="row" justifyContent="space-between">
               <Typography sx={{ fontSize: '16px' }}>Deposited Assets</Typography>
               <Typography sx={{ fontSize: '16px' }}>{displayUSD(breakdown.states.deposited.value)}</Typography>
-            </Stack> */}
-            {/* <Typography sx={{ fontSize: '12px' }} color="text.secondary">
-              These assets do not need to be Picked and are automatically Deposited in their Unripe state upon Replant.
-            </Typography> */}
-          {/* </Stack> */}
+            </Stack>
+            <Typography sx={{ fontSize: '13px' }} color="text.secondary">
+              These assets do not need to be Picked and will be automatically Deposited in their Unripe state at Replant. Head to the Silo page to view your balances.
+            </Typography>
+          </Stack>
           <Divider />
           {/**
             * Section 2: Unripe Beans
@@ -246,24 +250,22 @@ const PickBeansDialog: React.FC<{
         </Stack>
       </StyledDialogContent>
       <StyledDialogActions>
-        <Tooltip title={chainId === SupportedChainId.MAINNET ? 'Picking Unripe Assets will be available upon Replant.' : ''}>
-          <Box width="100%">
-            <Button
-              disabled={chainId === SupportedChainId.MAINNET}
-              onClick={handleNextTab}
-              fullWidth
-              sx={{
-                py: 1,
+        <Box width="100%">
+          <Button
+            disabled={chainId === SupportedChainId.MAINNET}
+            onClick={handleNextTab}
+            fullWidth
+            sx={{
+              py: 1,
+              backgroundColor: BeanstalkPalette.brown,
+              '&:hover': {
                 backgroundColor: BeanstalkPalette.brown,
-                '&:hover': {
-                  backgroundColor: BeanstalkPalette.brown,
-                  opacity: 0.96
-                }
-              }}>
-              Pick Unripe Assets
-            </Button>
-          </Box>
-        </Tooltip>
+                opacity: 0.96
+              }
+            }}>
+            Picking Unripe Assets will be available upon Replant
+          </Button>
+        </Box>
       </StyledDialogActions>
     </>
   );
