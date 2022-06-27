@@ -7,8 +7,12 @@ import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/Tokens';
 import useQuote, { QuoteHandler } from 'hooks/useQuote';
-import { FormTokenState } from '.';
+import { FormState, FormTokenState } from '.';
 
+/**
+ * FIXME:
+ * - Quote doesn't clear if the output value is 0 and the selected token is switched.
+ */
 const TokenQuoteProvider : React.FC<{
   /** Field name */
   name: string;
@@ -36,7 +40,7 @@ const TokenQuoteProvider : React.FC<{
 }) => {
   // Setup a price quote for this token
   const [amountOut, quoting, getAmountOut] = useQuote(tokenOut, handleQuote);
-  const { isSubmitting, setFieldValue }    = useFormikContext();
+  const { isSubmitting, setFieldValue } = useFormikContext<FormState>();
 
   // Run getAmountOut selected token changes.
   // ------------------------------------------
@@ -96,18 +100,25 @@ const TokenQuoteProvider : React.FC<{
   ]);
 
   // Render info about the quote beneath the input.
+  // use state.amountOut instead of amountOut to hide Quote display
+  // when the user switches selected tokens.
   const Quote = useMemo(() => (
     <>
-      {amountOut && (
+      {state.amountOut && (
         <Typography variant="body1" sx={{ fontSize: 13.5 }}>
-          ≈ {displayFullBN(amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
+          ≈ {displayFullBN(state.amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
         </Typography>
       )}
       {quoting && (
         <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />
       )}
     </>
-  ), [amountOut, quoting, tokenOut.displayDecimals, tokenOut.symbol]);
+  ), [
+    state.amountOut,
+    quoting,
+    tokenOut.displayDecimals,
+    tokenOut.symbol
+  ]);
 
   return (  
     <Field name={`${name}.amount`}>

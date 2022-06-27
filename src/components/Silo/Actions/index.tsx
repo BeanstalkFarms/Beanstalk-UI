@@ -36,7 +36,7 @@ const Actions : React.FC<{
         {/* Tab Content */}
         {tab === 0 ? (
           <Deposit
-            token={props.token}
+            siloToken={props.token}
           />
         ) : null}
         {tab === 1 ? (

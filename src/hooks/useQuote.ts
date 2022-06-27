@@ -5,11 +5,30 @@ import { toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
 import toast from 'react-hot-toast';
 
+export type Step = {
+  poolAddress: string;
+  tokenIn: string;
+  amountIn: string;
+  tokenOut: string;
+  amountOut: string;
+}
+
+export type Action = {
+  estimate: () => void;
+  farm: () => void;
+  steps?: Step[];
+}
+
+export type QuoteHandlerResponse = {
+  amountOut: BigNumber;
+  action?: Action;
+}
+
 export type QuoteHandler = (
   tokenIn: Token,
   amountIn: BigNumber,
   tokenOut: Token
-) => Promise<BigNumber>; 
+) => Promise<BigNumber | QuoteHandlerResponse>; 
 
 export default function useQuote(
   /** */
@@ -42,15 +61,16 @@ export default function useQuote(
         return quoteHandler(tokenIn, amountIn, tokenOut)
           // quoteHandler should parse amountOut however it needs to.
           // (i.e. call toTokenUnitsBN or similar)
-          .then((_amountOut) => {
+          .then((_result) => {
             // const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
             // console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
-            setAmountOut(_amountOut);
+            setAmountOut(_result instanceof BigNumber ? _result : _result.amountOut);
             setQuoting(false);
-            return _amountOut;
+            return _result;
           })
           .catch((e) => {
             toast.error(e.toString());
+            console.error(e);
             setQuoting(false);
           });
       } catch (e : any) {

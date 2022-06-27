@@ -15,6 +15,7 @@ import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTit
 import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
 import WalletButton from '../Connection/WalletButton';
+import Token from 'classes/Token';
 
 const CONTRACT_NAMES : { [address: string] : string } = {
   [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',
@@ -23,6 +24,11 @@ const CONTRACT_NAMES : { [address: string] : string } = {
   [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.ROPSTEN]]: 'Beanstalk Fertilizer',
 };
 
+/**
+ * FIXME:
+ * - Since this depends on `tokens` which is derived directly from
+ *   form state, it changes every time an input value changes.
+ */
 const SmartSubmitButton : React.FC<{
   /**
    * The contract we're interacting with. Must approve 
@@ -42,7 +48,7 @@ const SmartSubmitButton : React.FC<{
   /**
    * LoadingButton
    */
-  loading: boolean;
+  loading?: boolean;
 } & ButtonProps> = ({
   contract,
   tokens,
@@ -57,9 +63,9 @@ const SmartSubmitButton : React.FC<{
 
   // Convert the current `FormTokenState[]` into more convenient forms,
   // and find the next token that we need to seek approval for.
-  const selectedTokens = useMemo(() => tokens.map((elem) => elem.token), [tokens]);
+  const selectedTokens : Token[] = useMemo(() => tokens.map((elem) => elem.token), [tokens]);
   const [allowances, refetchAllowances] = useAllowances(
-    contract?.address,
+    contract.address,
     selectedTokens,
     { loadIfAbsent: true }
   );
@@ -67,10 +73,11 @@ const SmartSubmitButton : React.FC<{
     () => allowances.findIndex(
       (allowance, index) => {
         const amt = tokens[index].amount;
+        console.debug(`allowance ${index} ${tokens[index].token.symbol}`, allowance, amt)
         return (
           !allowance                    // waiting for allowance to load
           || allowance.eq(0)            // allowance is zero
-          || (amt !== null && amt.gt(0) // entered amount is greater than allowance
+          || (amt && amt.gt(0)          // entered amount is greater than allowance
               ? amt.gt(allowance)
               : false)
         );
