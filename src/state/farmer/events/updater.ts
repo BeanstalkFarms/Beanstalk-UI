@@ -202,17 +202,32 @@ const useFarmerEvents = () => {
           console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
           const allEvents : Event[] = (
             flattened
-              .map<Event>((e) => ({
-                event: e.event,
-                args: e.args,
-                blockNumber: e.blockNumber,
-                logIndex: e.logIndex,
-                transactionHash: e.transactionHash,
-                transactionIndex: e.transactionIndex,
-                // backwards compat
-                facet: getEventFacet(e.event),
-                returnValues: parseBNJS(e.decode?.(e.data, e.topics) || {}),
-              }))
+              .reduce<Event[]>((prev, e) => {
+                try {
+                  const returnValues = parseBNJS(
+                    e.decode?.(
+                      // e.data === '0x' ? `0x${'0'.repeat(192)}` : e.data,
+                      e.data,
+                      e.topics
+                    ) || {}
+                  );  
+                  // console.debug(`[farmer/events/useFarmerEvents] event = ${e.event}, data.length = ${e.data.length}, topics = ${e.topics}`, returnValues, e)
+                  prev.push({
+                    event: e.event,
+                    args: e.args,
+                    blockNumber: e.blockNumber,
+                    logIndex: e.logIndex,
+                    transactionHash: e.transactionHash,
+                    transactionIndex: e.transactionIndex,
+                    // backwards compat
+                    facet: getEventFacet(e.event),
+                    returnValues,
+                  })
+                } catch(err) {
+                  console.error(`Failed to parse event ${e.event} ${e.transactionHash}`, err, e)
+                }
+                return prev;
+              }, [])
               .sort((a, b) => {
                 const diff = a.blockNumber - b.blockNumber;
                 if (diff !== 0) return diff;

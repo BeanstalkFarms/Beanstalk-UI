@@ -1,8 +1,10 @@
-import { Stack, Typography, TypographyProps, StackProps } from '@mui/material';
+import { Stack, Typography, TypographyProps, StackProps, Tooltip } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import React from 'react';
 
 export type StatProps = {
   title: string;
+  tooltip?: string;
   bottomText?: string;
   icon?: JSX.Element | string;
   topIcon?: JSX.Element | string;
@@ -16,6 +18,7 @@ export type StatProps = {
 const Stat: React.FC<StatProps> =
   ({
      title,
+     tooltip,
      bottomText,
      icon,
      amount,
@@ -29,6 +32,13 @@ const Stat: React.FC<StatProps> =
       <Typography>
         <Stack direction="row" alignItems="center" gap={0.5}>
           {topIcon !== undefined ? topIcon : null} {title}
+          {(tooltip !== undefined) && (
+            <Tooltip title={tooltip} placement="top">
+              <HelpOutlineIcon
+                sx={{ color: 'text.secondary', fontSize: '14px' }}
+              />
+            </Tooltip>
+          ) }
         </Stack>
       </Typography>
       <Typography variant={variant} color={color} sx={{ marginLeft: '-3px', ...sx }}>

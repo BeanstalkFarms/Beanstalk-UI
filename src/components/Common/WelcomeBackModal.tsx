@@ -25,7 +25,7 @@ const WelcomeBackModal: React.FC = () => {
       </StyledDialogTitle>
       <StyledDialogContent>
         <Typography variant="body1">
-          We&apos;ve updated the Beanstalk UI with a fresh design. Most prior balances are now available — more will be released throughout June.
+          We&apos;ve updated the Beanstalk UI with a fresh design. Most prior balances are now available — more will be released between now and Replant.
         </Typography><br />
         <Typography variant="body1">
           <Link href="https://discord.gg/beanstalk" target="_blank" rel="noreferrer">Join Discord</Link> for announcements about Beanstalk, the Barn Raise, and more.

@@ -203,7 +203,7 @@ const ForecastPage: React.FC = () => {
               variant="contained"
               endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
             >
-              View More Analytics
+              More Analytics
             </Button>
           )}
         />

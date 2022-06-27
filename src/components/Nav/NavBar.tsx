@@ -67,7 +67,7 @@ const NavBar: React.FC<{}> = () => {
           <StyledDialogContent>
             <Typography>
               Until Beanstalk is Replanted, some balances
-              displayed in the Beanstalk UI will remain hard-coded to their
+              displayed in the Beanstalk UI will remain fixed to their
               values at the block before the exploit (14602789).
             </Typography>
             <Divider sx={{ my: 2 }} />

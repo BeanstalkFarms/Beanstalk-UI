@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box, Tooltip, Badge } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';
 import { displayBN, displayFullBN, displayUSD } from 'util/index';
@@ -36,6 +37,8 @@ const TokenRow: React.FC<{
   onClick?: () => void;
   /* Display a tooltip when hovering over the value */
   tooltip?: string | JSX. Element;
+  /* Include tooltips about asset states (Deposited, Withdrawn, etc.) */
+  assetStates?: boolean;
 }> = ({
   label,
   color,
@@ -44,6 +47,7 @@ const TokenRow: React.FC<{
   amount,
   value,
   tooltip,
+  assetStates = false,
   isFaded = false,
   isSelected = false,
   onMouseOver,
@@ -78,8 +82,15 @@ const TokenRow: React.FC<{
       <Typography color="text.secondary" sx={token ? { display: { lg: 'block', md: 'none', xs: 'block' } } : undefined}>
         {label}
       </Typography>
+      {(assetStates) && (
+        <Tooltip title={tooltip || ''} placement="right">
+          <HelpOutlineIcon
+            sx={{ color: 'text.secondary', fontSize: '14px' }}
+          />
+        </Tooltip>
+      )}
     </Stack>
-    <Tooltip title={tooltip || ''}>
+    <Tooltip title={!assetStates ? tooltip || '' : ''} placement="top">
       <Stack direction="row" alignItems="center" gap={0.5}>
         {token && <TokenIcon token={token} />}
         {amount && (
@@ -100,12 +111,12 @@ const TokenRow: React.FC<{
 // Matches the key => value mapping of TotalBalanceCardProps['breakdown'],
 // but without the 'bdv' key.
 // https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
-const STATE_CONFIG: { [key: string]: [name: string, color: string] } = {
-  deposited:    ['Deposited', 'rgba(70, 185, 85, 1)'],
-  withdrawn:    ['Withdrawn', 'rgba(31, 120, 180, 0.3)'],
-  claimable:    ['Claimable', 'rgba(178, 223, 138, 0.3)'],
-  circulating:  ['Circulating', 'rgba(25, 135, 59, 1)'],
-  wrapped:      ['Wrapped', 'rgba(25, 135, 59, 0.5)'],
+const STATE_CONFIG: { [key: string]: [name: string, color: string, tooltip: string] } = {
+  deposited:    ['Deposited', 'rgba(70, 185, 85, 1)', 'Assets that are Deposited in the Silo.'],
+  withdrawn:    ['Withdrawn', 'rgba(31, 120, 180, 0.3)', 'Assets being Withdrawn from the Silo. Once the Withdrawal timer elapses, Withdrawn assets become Claimable.'],
+  claimable:    ['Claimable', 'rgba(178, 223, 138, 0.3)', 'Assets that can be claimed to your wallet, Deposited in the Silo, etc.'],
+  circulating:  ['Circulating', 'rgba(25, 135, 59, 1)', 'Beanstalk assets in your wallet.'],
+  wrapped:      ['Wrapped', 'rgba(25, 135, 59, 0.5)', 'Assets stored in Beanstalk but not Deposited.'],
 };
 
 type StateID = keyof typeof STATE_CONFIG;
@@ -188,12 +199,14 @@ const SiloBalances: React.FC<{
             {availableStates.map((id) => (
               <TokenRow
                 key={id}
-                label={`${STATE_CONFIG[id][0]} Tokens`}
+                label={`${STATE_CONFIG[id][0]} Assets`}
                 value={displayUSD(breakdown.states[id as keyof typeof breakdown.states].value)}
                 isFaded={hoverState !== null && hoverState !== id}
                 isSelected={hoverState === id}
                 onMouseOver={onMouseOver(id)}
                 onClick={onClick(id)}
+                assetStates
+                tooltip={`${STATE_CONFIG[id][2]}`}
               />
             ))}
           </Stack>
@@ -225,7 +238,7 @@ const SiloBalances: React.FC<{
             </Stack>
           ) : (
             <Stack gap={1}>
-              <Typography variant="h2" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Tokens</Typography>
+              <Typography variant="h2" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Assets</Typography>
               <Box>
                 {pieChartData.map((dp) => {
                   const token = whitelist[dp.tokenAddress];

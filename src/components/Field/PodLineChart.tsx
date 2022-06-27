@@ -82,24 +82,25 @@ const PodLineChart: React.FC<GraphProps> = withTooltip(
           rx={10}
         />
         {Object.keys(farmerPlots).map((key) => (
-          <Tooltip title={(
-            <Stack width={150}>
-              <Stack direction="row" gap={1} justifyContent="space-between">
-                <Typography>Place in line:</Typography>
-                <Typography>{displayBN(new BigNumber(key).minus(harvestableIndex))}</Typography>
+          <Tooltip
+            key={key}
+            title={(
+              <Stack width={150}>
+                <Stack direction="row" gap={1} justifyContent="space-between">
+                  <Typography>Place in line:</Typography>
+                  <Typography>{displayBN(new BigNumber(key).minus(harvestableIndex))}</Typography>
+                </Stack>
+                <Stack direction="row" gap={1} justifyContent="space-between">
+                  <Typography>Num Pods:</Typography>
+                  <Typography>{displayBN(new BigNumber(farmerPlots[key]))}</Typography>
+                </Stack>
               </Stack>
-              <Stack direction="row" gap={1} justifyContent="space-between">
-                <Typography>Num Pods:</Typography>
-                <Typography>{displayBN(new BigNumber(farmerPlots[key]))}</Typography>
-              </Stack>
-            </Stack>
-          )}
+            )}
           >
             {plotMarker2(xScale(new BigNumber(key).minus(harvestableIndex).toNumber()), 2)}
           </Tooltip>
         ))}
       </svg>
-
     );
   });
 

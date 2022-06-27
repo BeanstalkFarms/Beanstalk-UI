@@ -45,8 +45,8 @@ export const useFarmerSilo = () => {
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
-      const earnedStalkBalance = earnedBeanBalance.times(BEAN_TO_STALK);
       const activeStalkBalance = stalkBalance;
+      const earnedStalkBalance = earnedBeanBalance.times(BEAN_TO_STALK);
       const earnedSeedBalance  = earnedBeanBalance.times(BEAN_TO_SEEDS);
       
       // total:   active & inactive
