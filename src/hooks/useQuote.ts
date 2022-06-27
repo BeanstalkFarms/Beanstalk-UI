@@ -4,31 +4,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
 import toast from 'react-hot-toast';
+import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';
 
-export type Step = {
-  poolAddress: string;
-  tokenIn: string;
-  amountIn: string;
-  tokenOut: string;
-  amountOut: string;
-}
-
-export type Action = {
-  estimate: () => void;
-  farm: () => void;
-  steps?: Step[];
-}
-
-export type QuoteHandlerResponse = {
+export type QuoteHandlerResult = {
   amountOut: BigNumber;
-  action?: Action;
-}
-
+  steps?: ChainableFunctionResult[];
+};
 export type QuoteHandler = (
   tokenIn: Token,
   amountIn: BigNumber,
   tokenOut: Token
-) => Promise<BigNumber | QuoteHandlerResponse>; 
+) => Promise<QuoteHandlerResult['amountOut'] | QuoteHandlerResult>; 
 
 export default function useQuote(
   /** */
@@ -38,18 +24,17 @@ export default function useQuote(
   /** The number of milliseconds to wait before calling */
   debounceMs : number = 250
 ) : [
-  amountOut: BigNumber | null,
+  result: QuoteHandlerResult | null,
   quoting: boolean,
   refreshAmountOut: (_tokenIn: Token, _amountIn: BigNumber) => void,
 ] {
-  /** The `amountOut` of `tokenOut` received in exchange for `amountIn` of `tokenIn`. */
-  const [amountOut, setAmountOut] = useState<BigNumber | null>(null);
+  const [result, setResult] = useState<QuoteHandlerResult | null>(null);
   /** Whether we're currently waiting for a quote for this swap. */
   const [quoting, setQuoting] = useState<boolean>(false);
   
   // When token changes, reset the amount.
   useEffect(() => {
-    setAmountOut(null);
+    setResult(null);
     setQuoting(false);
   }, [tokenOut]);
 
@@ -64,7 +49,7 @@ export default function useQuote(
           .then((_result) => {
             // const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
             // console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
-            setAmountOut(_result instanceof BigNumber ? _result : _result.amountOut);
+            setResult(_result instanceof BigNumber ? { amountOut: _result } : _result);
             setQuoting(false);
             return _result;
           })
@@ -84,7 +69,7 @@ export default function useQuote(
   ), [
     tokenOut,
     setQuoting,
-    setAmountOut,
+    setResult,
     quoteHandler,
   ]);
 
@@ -92,7 +77,7 @@ export default function useQuote(
   const getAmountOut = useCallback((tokenIn: Token, amountIn: BigNumber) => {
     if (tokenIn === tokenOut) return;
     if (amountIn.lte(0)) {
-      setAmountOut(null);
+      setResult(null);
       setQuoting(false);
     } else {
       setQuoting(true);
@@ -101,9 +86,9 @@ export default function useQuote(
   }, [
     tokenOut,
     _getAmountOut,
-    setAmountOut,
+    setResult,
     setQuoting
   ]);
 
-  return [amountOut, quoting, getAmountOut];
+  return [result, quoting, getAmountOut];
 }

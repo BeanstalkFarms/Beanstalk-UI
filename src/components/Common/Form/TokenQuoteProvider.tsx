@@ -39,7 +39,7 @@ const TokenQuoteProvider : React.FC<{
   ...props
 }) => {
   // Setup a price quote for this token
-  const [amountOut, quoting, getAmountOut] = useQuote(tokenOut, handleQuote);
+  const [result, quoting, getAmountOut] = useQuote(tokenOut, handleQuote);
   const { isSubmitting, setFieldValue } = useFormikContext<FormState>();
 
   // Run getAmountOut selected token changes.
@@ -68,9 +68,10 @@ const TokenQuoteProvider : React.FC<{
   // FIXME: Antipattern here? Should we have 
   // a version of `useQuote` that handles this automatically?
   useEffect(() => {
-    console.debug(`[TokenQuoteProvider] update ${name}.amountOut => ${amountOut}`);
-    setFieldValue(`${name}.amountOut`, amountOut);
-  }, [name, setFieldValue, amountOut]);
+    console.debug(`[TokenQuoteProvider] update ${name}.amountOut => ${result}`);
+    setFieldValue(`${name}.amountOut`, result?.amountOut);
+    setFieldValue(`${name}.steps`, result?.steps);
+  }, [name, setFieldValue, result]);
   useEffect(() => {
     console.debug(`[TokenQuoteProvider] update ${name}.quoting => ${quoting}`);
     setFieldValue(`${name}.quoting`, quoting);

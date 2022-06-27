@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
+import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';
 
 export type FormTokenState = {
   /** */
@@ -7,9 +8,11 @@ export type FormTokenState = {
   /** */
   amount: BigNumber | null;
   /** */
+  quoting?: boolean;
+  /** */
   amountOut?: BigNumber;
   /** */
-  quoting?: boolean;
+  steps?: ChainableFunctionResult[];
 }
 
 export type FormApprovingState = {

@@ -25,7 +25,7 @@ import TransactionSettings from 'components/Common/Form/TransactionSettings';
 import SettingInput from 'components/Common/Form/SettingInput';
 import { BeanstalkReplanted, Curve3Pool__factory, CurveFactory__factory, CurveMetaPool__factory, CurvePlainPool__factory, CurveTriCrypto2Pool__factory } from 'constants/generated';
 import useCurve from 'hooks/useCurve';
-import { Action, QuoteHandler, Step } from 'hooks/useQuote';
+import { QuoteHandler } from 'hooks/useQuote';
 import { POOL3_ADDRESSES, ZERO_BN } from 'constants/index';
 import { NativeToken } from 'classes/Token';
 import { BEAN_CRV3_CURVE_POOL_MAINNET } from 'constants/pools';
@@ -89,7 +89,7 @@ const DepositForm : React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
   const handleQuote = useCallback<QuoteHandler>(
-    async (_tokenIn, _amountIn, _tokenOut) : Promise<BigNumber> => {
+    async (_tokenIn, _amountIn, _tokenOut) => {
       if (_tokenIn.symbol !== 'ETH') return Promise.resolve(ZERO_BN);
 
       const tokenIn  = _tokenIn  instanceof NativeToken ? WETH[1] : _tokenIn;
@@ -113,10 +113,13 @@ const DepositForm : React.FC<
 
       console.debug('[chain] estimate = ', estimate);
 
-      return toTokenUnitsBN(
-        estimate.amountOut.toString(),
-        tokenOut.decimals,
-      );
+      return {
+        amountOut: toTokenUnitsBN(
+          estimate.amountOut.toString(),
+          tokenOut.decimals,
+        ),
+        steps: estimate.steps,
+      }
     },
     [provider]
   );
@@ -252,11 +255,11 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
 
       // TEMP: recast as BeanstalkReplanted 
       const b = ((beanstalk as unknown) as BeanstalkReplanted);
-
+      const data : string[] = [];
+      let value = ZERO_BN;
       let call;
-      if (siloToken === Bean) {
-        const data : string[] = [];
 
+      if (siloToken === Bean) {
         // Bean -> Deposit
         if (values.tokens[0].token === Bean) {
           data.push(...[
@@ -270,26 +273,35 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
         
         // ETH -> USDT -> Bean -> Deposit
         else if (values.tokens[0].token === Eth) {
+          if (!values.tokens[0].steps || !values.tokens[0].amountOut) throw new Error(`No quote available for ${Eth.symbol}`);
+          // value = value.plus(values.tokens[0].amount);
+          // eslint-disable-next-line no-self-assign
+          value = value;
           data.push(...[
-            b.interface.encodeFunctionData('wrapEth', [
-              toStringBaseUnitBN(
-                values.tokens[0].amount,
-                Eth.decimals
-              ),
-              FarmFromMode.INTERNAL
+            // b.interface.encodeFunctionData('wrapEth', [
+            //   toStringBaseUnitBN(value, Eth.decimals),
+            //   FarmToMode.INTERNAL
+            // ]),
+            // ...Farm.encodeSlippage(
+            //   values.tokens[0].steps,
+            //   ethers.BigNumber.from(
+            //     toStringBaseUnitBN(
+            //       values.tokens[0].amount,
+            //       Eth.decimals,
+            //     )
+            //   ),
+            //   ethers.BigNumber.from(
+            //     toStringBaseUnitBN(
+            //       0.1/100,  
+            //       6
+            //     )
+            //   ),
+            // ),
+            b.interface.encodeFunctionData('deposit', [
+              Bean.address,
+              toStringBaseUnitBN(values.tokens[0].amountOut, Bean.decimals),
+              FarmFromMode.EXTERNAL,
             ]),
-            // b.interface.encodeFunctionData('exchange', [
-            //   '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46'.toLowerCase(), // tricrypto2
-            //   WETH[1].address,                                            // WETH
-            //   '0xdAC17F958D2ee523a2206206994597C13D831ec7'.toLowerCase(), // USDT
-            // ]),
-            // b.interface.encodeFunctionData("exchange", [
-            //   "0xD51a44d3FaE010294C616388b506AcdA1bfAAE46",
-            //   "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-            //   "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-            //   '1',
-            //   // toStringBaseUnitBN(1, )
-            // ]),
           ]);
         }
         
@@ -302,7 +314,9 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
         //   '0'
         // );
         // toStringBaseUnitBN(values.tokens[0].amount, Bean.decimals),
-        call = b.farm(data);
+        const gas = await b.estimateGas.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
+        console.debug(`[Deposit] gas: `, gas)
+        call = b.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) });
       } else {
         call = Promise.reject(new Error(`No supported Deposit method for ${siloToken.name}`));
       }
