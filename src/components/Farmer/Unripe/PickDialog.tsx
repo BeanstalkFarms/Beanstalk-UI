@@ -147,8 +147,8 @@ const PickBeansDialog: React.FC<{
       <Stack direction="row" alignItems="center" gap={1} pb={2} pl={1} pr={3}>
         <img src={pickImage} alt="pick" style={{ height: 120 }} />
         <Typography sx={{ fontSize: '15px' }} color="text.secondary">
-          To claim Unripe Beans and Unripe LP Tokens <em>outside the Silo</em>, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
-          Your pre-exploit Deposits will stay in the Silo as Unripe Deposits and do not need to be Picked.
+          To claim non-Deposited Unripe Beans and Unripe LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
+          Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.
         </Typography>
       </Stack>
       <Divider />
@@ -163,7 +163,7 @@ const PickBeansDialog: React.FC<{
               <Typography sx={{ fontSize: '16px' }}>{displayUSD(breakdown.states.deposited.value)}</Typography>
             </Stack>
             <Typography sx={{ fontSize: '13px' }} color="text.secondary">
-              These assets do not need to be Picked and are automatically Deposited in their Unripe state upon Replant. Head to the Silo page to view your balances.
+              These assets do not need to be Picked and will be automatically Deposited in their Unripe state at Replant. Head to the Silo page to view your balances.
             </Typography>
           </Stack>
           <Divider />
