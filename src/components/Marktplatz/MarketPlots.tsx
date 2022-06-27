@@ -9,7 +9,7 @@ import BuyOrderDialog from './Dialogs/BuyOrderDialog';
 import SellListingDialog from './Dialogs/SellListingDialog';
 import BuyNowDialog from './Dialogs/BuyNowDialog';
 import SellNowDialog from './Dialogs/SellNowDialog';
-import { mockPodListingData, mockPodOrderData } from './Plots.mock';
+import { mockPodListingData, mockPodOrderData, PodListing, PodOrder } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
 import beanIcon from '../../img/tokens/bean-logo-circled.svg';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
@@ -180,7 +180,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
    * User clicks a row under Buy Now tab
    */
   const [buyNowModalOpen, setBuyNowModalOpen] = useState(false);
-  const [buyNowRow, setBuyNowRow] = useState<any>();
+  const [buyNowRow, setBuyNowRow] = useState<PodListing | undefined>();
 
   const handleBuyNowModalOpen = useCallback((params: GridRowParams) => {
     setBuyNowRow(params.row);
@@ -208,7 +208,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
    * User clicks a row under Sell Now tab
    */
   const [sellNowModalOpen, setSellNowModalOpen] = useState(false);
-  const [sellNowRow, setSellNowRow] = useState<any>();
+  const [sellNowRow, setSellNowRow] = useState<PodOrder | undefined>();
 
   const handleSellNowModalOpen = useCallback((params: GridRowParams) => {
     setSellNowRow(params.row);
@@ -290,6 +290,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
         handleClose={handleBuyNowModalClose}
         open={buyNowModalOpen}
         podListing={buyNowRow}
+        harvestableIndex={beanstalkField.harvestableIndex}
       />
 
       {/* User clicks a row under Sell Now tab */}
@@ -298,6 +299,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
         handleClose={handleSellNowModalClose}
         open={sellNowModalOpen}
         podListing={sellNowRow}
+        harvestableIndex={beanstalkField.harvestableIndex}
       />
     </>
   );

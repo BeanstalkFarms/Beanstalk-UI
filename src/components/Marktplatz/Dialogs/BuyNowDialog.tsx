@@ -25,13 +25,15 @@ import { BuyOrderFormValues } from './BuyOrderDialog';
 import useChainConstant from '../../../hooks/useChainConstant';
 import { FormTokenState } from '../../Common/Form';
 import BuyNowForm from '../Forms/BuyNowForm';
-import PlotDetailsCard from './PlotDetailsCard';
+import PlotOrderDetails from '../PlotOrderDetails';
+import { PodListing, PodOrder } from '../Plots.mock';
+import PlotListingDetails from '../PlotListingDetails';
 
 export type BuyNowFormValues = {
   tokens: FormTokenState[];
 }
 
-const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } & DialogProps> =
+const BuyNowDialog: React.FC<{ podListing: PodListing | undefined; handleClose: any; harvestableIndex: BigNumber; } & DialogProps> =
   ({
      open,
      sx,
@@ -40,7 +42,8 @@ const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } 
      fullScreen,
      disableScrollLock,
      handleClose,
-     podListing
+     podListing,
+     harvestableIndex
    }) => {
     const handleDialogClose = () => {
       handleClose();
@@ -83,7 +86,7 @@ const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } 
         <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Buy Now</StyledDialogTitle>
         <StyledDialogContent>
           <Stack gap={2}>
-            <PlotDetailsCard />
+            <PlotListingDetails podListing={podListing} harvestableIndex={harvestableIndex} />
             <Formik initialValues={initialValues} onSubmit={onSubmit}>
               {(formikProps) => (
                 <>
