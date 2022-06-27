@@ -33,16 +33,6 @@ export const mockPodOrderData: PodOrder[] = new Array(20).fill(null).map((_, i) 
   status: 'status',
 }));
 
-// order
-export const sellRows = new Array(20).fill(null).map((_, i) => (
-  {
-    id: i,
-    placeInLine: '0 - 14,000',
-    price: new BigNumber(345345345).multipliedBy(Math.random()),
-    podsRequested: new BigNumber(10234234).multipliedBy(Math.random())
-  }
-));
-
 // below are copied from /src/state/v1/marketplace/reducer.ts
 export type PodListing = {
   /**
