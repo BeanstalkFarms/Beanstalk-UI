@@ -142,7 +142,7 @@ const PickBeansDialog: React.FC<{
   const tab0 = (
     <>
       <StyledDialogTitle sx={{ pb: 1 }} onClose={handleDialogClose}>
-        Pick Unripe Beans and Unripe LP
+        Pick non-Deposited Unripe Beans and Unripe LP
       </StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={2}>
