@@ -13,7 +13,7 @@ import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
 import podIcon from '../../../img/beanstalk/pod-icon.svg';
 import { displayBN, displayFullBN } from '../../../util';
 import { PodListing, PodOrder } from '../Plots.mock';
-import PlotOrderDetails from "../PlotOrderDetails";
+import PlotOrderDetails from "../Cards/PlotOrderDetails";
 
 export type BuyOrderFormValues = {
   placeInLine: BigNumber | null;

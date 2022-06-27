@@ -12,7 +12,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Formik, FormikHelpers } from 'formik';
 import { displayBN } from '../../../util';
-import PlotOrderDetails from '../PlotOrderDetails';
+import PlotOrderDetails from '../Cards/PlotOrderDetails';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import podIcon from '../../../img/beanstalk/pod-icon.svg';
 import { AppState } from '../../../state';

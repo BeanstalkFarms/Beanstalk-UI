@@ -15,13 +15,13 @@ import useChainConstant from '../../../hooks/useChainConstant';
 import { BEAN, ETH, PODS } from '../../../constants/tokens';
 import useFarmerBalances from '../../../hooks/useFarmerBalances';
 import { FormTokenState } from '../../Common/Form';
-import PlotOrderDetails from '../PlotOrderDetails';
+import PlotOrderDetails from '../Cards/PlotOrderDetails';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
 import podIcon from '../../../img/beanstalk/pod-icon.svg';
 import { displayBN, displayFullBN } from '../../../util';
 import { PodListing } from '../Plots.mock';
-import PlotListingDetails from "../PlotListingDetails";
+import PlotListingDetails from "../Cards/PlotListingDetails";
 
 const MyListingsDialog: React.FC<{ podListing: PodListing | undefined; handleClose: any; harvestableIndex: BigNumber; } & DialogProps> =
   ({

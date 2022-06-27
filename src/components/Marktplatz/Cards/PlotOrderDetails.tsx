@@ -7,9 +7,9 @@ import {
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import BigNumber from 'bignumber.js';
-import { BeanstalkPalette } from '../App/muiTheme';
-import { displayBN, displayFullBN } from '../../util';
-import { PodOrder } from './Plots.mock';
+import { BeanstalkPalette } from '../../App/muiTheme';
+import { displayBN, displayFullBN } from '../../../util';
+import { PodOrder } from '../Plots.mock';
 
 export type PlotDetailsCardProps = {
   podListing: PodOrder | undefined;

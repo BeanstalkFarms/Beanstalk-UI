@@ -25,9 +25,9 @@ import { BuyOrderFormValues } from './BuyOrderDialog';
 import useChainConstant from '../../../hooks/useChainConstant';
 import { FormTokenState } from '../../Common/Form';
 import BuyNowForm from '../Forms/BuyNowForm';
-import PlotOrderDetails from '../PlotOrderDetails';
+import PlotOrderDetails from '../Cards/PlotOrderDetails';
 import { PodListing, PodOrder } from '../Plots.mock';
-import PlotListingDetails from '../PlotListingDetails';
+import PlotListingDetails from '../Cards/PlotListingDetails';
 
 export type BuyNowFormValues = {
   tokens: FormTokenState[];
