@@ -144,26 +144,28 @@ const PickBeansDialog: React.FC<{
       <StyledDialogTitle sx={{ pb: 1 }} onClose={handleDialogClose}>
         Pick non-Deposited Unripe Beans and Unripe LP
       </StyledDialogTitle>
+      <Stack direction="row" alignItems="center" gap={1} pb={2} pl={1} pr={3}>
+        <img src={pickImage} alt="pick" style={{ height: 120 }} />
+        <Typography sx={{ fontSize: '15px' }} color="text.secondary">
+          To claim Unripe Beans and Unripe LP Tokens <em>outside the Silo</em>, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
+          Your pre-exploit Deposits will stay in the Silo as Unripe Deposits and do not need to be Picked.
+        </Typography>
+      </Stack>
+      <Divider />
       <StyledDialogContent>
         <Stack gap={2}>
-          <Stack direction="row" alignItems="center" gap={1}>
-            <img src={pickImage} alt="pick" style={{ height: 100 }} />
-            <Typography sx={{ fontSize: '15px' }} color="text.secondary">
-              Your prior Deposits will stay in the Silo as Unripe Deposits.<br /><br />To claim Unripe Beans and Unripe LP Tokens outside the Silo, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo. 
-            </Typography>
-          </Stack>
           {/**
             * Section 1: Deposited Balance
             */}
-          {/* <Stack gap={0.25}>
+          <Stack gap={0.25}>
             <Stack direction="row" justifyContent="space-between">
               <Typography sx={{ fontSize: '16px' }}>Deposited Assets</Typography>
               <Typography sx={{ fontSize: '16px' }}>{displayUSD(breakdown.states.deposited.value)}</Typography>
-            </Stack> */}
-            {/* <Typography sx={{ fontSize: '12px' }} color="text.secondary">
-              These assets do not need to be Picked and are automatically Deposited in their Unripe state upon Replant.
-            </Typography> */}
-          {/* </Stack> */}
+            </Stack>
+            <Typography sx={{ fontSize: '13px' }} color="text.secondary">
+              These assets do not need to be Picked and are automatically Deposited in their Unripe state upon Replant. Head to the Silo page to view your balances.
+            </Typography>
+          </Stack>
           <Divider />
           {/**
             * Section 2: Unripe Beans
@@ -246,24 +248,22 @@ const PickBeansDialog: React.FC<{
         </Stack>
       </StyledDialogContent>
       <StyledDialogActions>
-        <Tooltip title={chainId === SupportedChainId.MAINNET ? 'Picking Unripe Assets will be available upon Replant.' : ''}>
-          <Box width="100%">
-            <Button
-              disabled={chainId === SupportedChainId.MAINNET}
-              onClick={handleNextTab}
-              fullWidth
-              sx={{
-                py: 1,
+        <Box width="100%">
+          <Button
+            disabled={chainId === SupportedChainId.MAINNET}
+            onClick={handleNextTab}
+            fullWidth
+            sx={{
+              py: 1,
+              backgroundColor: BeanstalkPalette.brown,
+              '&:hover': {
                 backgroundColor: BeanstalkPalette.brown,
-                '&:hover': {
-                  backgroundColor: BeanstalkPalette.brown,
-                  opacity: 0.96
-                }
-              }}>
-              Pick Unripe Assets
-            </Button>
-          </Box>
-        </Tooltip>
+                opacity: 0.96
+              }
+            }}>
+            Picking Unripe Assets will be available upon Replant
+          </Button>
+        </Box>
       </StyledDialogActions>
     </>
   );
