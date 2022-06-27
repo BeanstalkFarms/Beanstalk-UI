@@ -46,22 +46,15 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
     {
       field: 'index',
       headerName: 'Place In Line',
-      flex: 1,
+      flex: 1.5,
       valueFormatter: (params) =>
         `${displayFullBN(params.value as BigNumber, 0)}`,
         // `${displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex))}`,
       renderCell: (params) => (
-        <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)}</Typography>
-      ),
-    },
-    {
-      field: 'maxHarvestableIndex',
-      headerName: 'Expiry',
-      flex: 0.5,
-      valueFormatter: (params) =>
-        `${displayFullBN(params.value as BigNumber, 0)}`,
-      renderCell: (params) => (
-        <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)}</Typography>
+        <Stack direction="row" gap={1}>
+          <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)} in Line</Typography>
+          <Typography color={BeanstalkPalette.lightishGrey}>expires at {displayFullBN(new BigNumber(params.row.maxHarvestableIndex).minus(beanstalkField.harvestableIndex), 0)}</Typography>
+        </Stack>
       ),
     },
     {
@@ -92,8 +85,8 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
       ),
       renderCell: (params) => (
         <Stack direction="row" gap={0.3} alignItems="center">
-          <Typography>{displayBN(params.value)}</Typography>
           <img src={podIcon} alt="Pods Icon" height="18px" />
+          <Typography>{displayBN(params.value)}</Typography>
         </Stack>
       ),
     },
@@ -156,8 +149,8 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
         `${displayFullBN(params.value as BigNumber, 2)}`,
       renderCell: (params) => (
         <Stack direction="row" gap={0.3} alignItems="center">
-          <Typography>{displayBN(params.value)}</Typography>
           <img src={podIcon} alt="Pods Icon" height="18px" />
+          <Typography>{displayBN(params.value)}</Typography>
         </Stack>
       ),
     },
