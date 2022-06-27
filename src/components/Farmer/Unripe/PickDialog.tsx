@@ -8,7 +8,8 @@ import {
   useMediaQuery,
   Divider,
   Tooltip,
-  Box
+  Box,
+  Link
 } from '@mui/material';
 import unripeBeanIcon from 'img/tokens/unripe-bean-logo-circled.svg';
 import brownLPIcon from 'img/tokens/unripe-lp-logo-circled.svg';
@@ -148,7 +149,8 @@ const PickBeansDialog: React.FC<{
         <img src={pickImage} alt="pick" style={{ height: 120 }} />
         <Typography sx={{ fontSize: '15px' }} color="text.secondary">
           To claim non-Deposited Unripe Beans and Unripe LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
-          Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.
+          Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.<br /><br />
+          Note: Unripe assets represent a pro rata share of underlying assets. You can read more about them <Link href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise" target="_blank" rel="noreferrer">here</Link>.
         </Typography>
       </Stack>
       <Divider />
