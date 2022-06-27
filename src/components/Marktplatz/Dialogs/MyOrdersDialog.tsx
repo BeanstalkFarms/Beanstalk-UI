@@ -3,20 +3,16 @@ import {
   DialogProps,
   Stack,
   Dialog,
-  Box, Button,
+  Box, Button, Typography, Card,
 } from '@mui/material';
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { Formik, FormikHelpers } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useSelector } from 'react-redux';
-import BuyOrderForm from '../Forms/BuyOrderForm';
-import { AppState } from '../../../state';
-import useChainConstant from '../../../hooks/useChainConstant';
-import { BEAN, ETH, PODS } from '../../../constants/tokens';
-import useFarmerBalances from '../../../hooks/useFarmerBalances';
 import { FormTokenState } from '../../Common/Form';
-import PlotDetailsCard from './PlotDetailsCard';
 import { BeanstalkPalette } from '../../App/muiTheme';
+import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
+import podIcon from '../../../img/beanstalk/pod-icon.svg';
+import { displayBN, displayFullBN } from '../../../util';
+import { PodListing, PodOrder } from '../Plots.mock';
 
 export type BuyOrderFormValues = {
   placeInLine: BigNumber | null;
@@ -24,7 +20,7 @@ export type BuyOrderFormValues = {
   tokens: FormTokenState[];
 }
 
-const MyOrdersDialog: React.FC<{ podListing: any | undefined; handleClose: any; } & DialogProps> =
+const MyOrdersDialog: React.FC<{ podListing: PodOrder | undefined; handleClose: any; harvestableIndex: BigNumber; } & DialogProps> =
   ({
      open,
      sx,
@@ -33,11 +29,18 @@ const MyOrdersDialog: React.FC<{ podListing: any | undefined; handleClose: any; 
      fullScreen,
      disableScrollLock,
      handleClose,
-     podListing
+     podListing,
+     harvestableIndex
    }) => {
     const handleDialogClose = () => {
       handleClose();
     };
+
+    console.log('POD LISTING', podListing);
+
+    if (podListing === undefined) {
+      return null;
+    }
 
     return (
       <Dialog
@@ -56,7 +59,45 @@ const MyOrdersDialog: React.FC<{ podListing: any | undefined; handleClose: any; 
           </StyledDialogTitle>
           <StyledDialogContent>
             <Stack gap={2}>
-              <PlotDetailsCard />
+              <Card sx={{ p: 2, ...sx }}>
+                <Stack gap={2}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Stack direction="row" gap={0.3} alignItems="center">
+                      <Typography>Pod Listing</Typography>
+                      <Box sx={{
+                        px: 0.5,
+                        py: 0.2,
+                        borderRadius: 0.5,
+                        backgroundColor: BeanstalkPalette.washedGreen,
+                        color: BeanstalkPalette.logoGreen
+                      }}>
+                        <Typography>{podListing.account.substring(0, 6)}</Typography>
+                      </Box>
+                    </Stack>
+                  </Stack>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Stack>
+                      <Typography>Place in Line</Typography>
+                      {/* <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography> */}
+                      <Typography variant="h1" sx={{ fontWeight: 400 }}>0 - {displayFullBN(new BigNumber(podListing.maxPlaceInLine).minus(harvestableIndex), 0)}</Typography>
+                    </Stack>
+                    <Stack>
+                      <Typography>Price per Pod</Typography>
+                      <Stack direction="row" gap={0.3} alignItems="center">
+                        <Typography variant="h1" sx={{ fontWeight: 400 }}>{displayBN(podListing.pricePerPod)}</Typography>
+                        <img src={beanIcon} alt="" height="25px" />
+                      </Stack>
+                    </Stack>
+                    <Stack>
+                      <Typography>Pods Purchased</Typography>
+                      <Stack direction="row" gap={0.3} alignItems="center">
+                        <Typography variant="h1" sx={{ fontWeight: 400 }}>{displayBN(podListing.filledAmount)}/{displayBN(podListing.totalAmount)}</Typography>
+                        <img src={podIcon} alt="" height="25px" />
+                      </Stack>
+                    </Stack>
+                  </Stack>
+                </Stack>
+              </Card>
               <Button
                 variant="outlined"
                 sx={{

@@ -117,9 +117,9 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
     {
       field: 'maxPlaceInLine',
       headerName: 'Place In Line',
-      flex: 0.5,
+      flex: 1,
       renderCell: (params) => (
-        <Typography>1 - {displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)}</Typography>
+        <Typography>0 - {displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)} <Typography display="inline" color={BeanstalkPalette.lightishGrey}>in Line</Typography></Typography>
       ),
     },
     {

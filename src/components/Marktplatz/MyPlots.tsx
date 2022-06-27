@@ -4,16 +4,16 @@ import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
+import CloseIcon from '@mui/icons-material/Close';
 import PlotTable from './Tables/PlotTable';
 import MyOrdersDialog from './Dialogs/MyOrdersDialog';
 import MyListingsDialog from './Dialogs/MyListingsDialog';
-import { mockPodListingData, mockPodOrderData } from './Plots.mock';
+import { mockPodListingData, mockPodOrderData, PodListing, PodOrder } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
 import { BeanstalkPalette } from '../App/muiTheme';
 import { AppState } from '../../state';
 import beanIcon from '../../img/tokens/bean-logo-circled.svg';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
-import CloseIcon from '@mui/icons-material/Close';
 
 const MyPlots: React.FC<CardProps> = ({ sx }) => {
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
@@ -164,7 +164,7 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
    * User clicks "Create Buy Order" button
    */
   const [myOrdersOpen, setMyOrdersOpen] = useState(false);
-  const [myOrderRow, setMyOrderRow] = useState<any>();
+  const [myOrderRow, setMyOrderRow] = useState<PodOrder | undefined>();
 
   const handleMyOrdersOpen = useCallback((params: GridRowParams) => {
     setMyOrderRow(params.row);
@@ -179,7 +179,7 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
    * User clicks "Create Sell Listing" button
    */
   const [sellModalOpen, setSellModalOpen] = useState(false);
-  const [myListingRow, setMyListingRow] = useState<any>();
+  const [myListingRow, setMyListingRow] = useState<PodListing | undefined>();
 
   const handleSellModalOpen = useCallback((params: GridRowParams) => {
     setMyListingRow(params.row);
@@ -224,6 +224,7 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
         open={myOrdersOpen}
         handleClose={handleMyOrdersClose}
         podListing={myOrderRow}
+        harvestableIndex={beanstalkField.harvestableIndex}
       />
 
       {/* User clicks "My Listings" tab */}
@@ -232,6 +233,7 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
         open={sellModalOpen}
         handleClose={handleSellModalClose}
         podListing={myListingRow}
+        harvestableIndex={beanstalkField.harvestableIndex}
       />
     </>
   );
