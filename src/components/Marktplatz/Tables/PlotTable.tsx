@@ -7,14 +7,16 @@ const MAX_ROWS = 5;
 
 export type BuySellTableProps = {
   hideHeader?: boolean;
+  maxRows?: number;
 }
 
-const BuySellTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ rows, columns, hideHeader, onRowClick }) => {
+const PlotTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ rows, columns, maxRows, onRowClick }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '200px';
-    return MAX_ROWS * 61 + 112;
+    if (maxRows !== undefined) return maxRows * 56 + 112;
+    return MAX_ROWS * 56 + 112;
     // return Math.min(rows.length, MAX_ROWS) * 61 + 112;
-  }, [rows]);
+  }, [rows, maxRows]);
 
   return (
     <Box display="flex" alignItems="center" justifyContent="center">
@@ -23,18 +25,18 @@ const BuySellTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ 
           height: tableHeight,
           width: '100%',
           ...marketplaceTableStyle,
-          '& .MuiDataGrid-columnHeaders': {
-            display: hideHeader ? 'none' : null,
-          },
-          '& .MuiDataGrid-virtualScroller': {
-            marginTop: hideHeader ? '0!important' : null
-          },
+          // '& .MuiDataGrid-columnHeaders': {
+          //   display: hideHeader ? 'none' : null,
+          // },
+          // '& .MuiDataGrid-virtualScroller': {
+          //   marginTop: hideHeader ? '0!important' : null
+          // },
         }}
       >
         <DataGrid
           columns={columns}
           rows={rows}
-          pageSize={MAX_ROWS}
+          pageSize={maxRows !== undefined ? maxRows : MAX_ROWS}
           disableSelectionOnClick
           density="compact"
           onRowClick={onRowClick !== undefined ? onRowClick : () => {}}
@@ -49,4 +51,4 @@ const BuySellTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ 
   );
 };
 
-export default BuySellTable;
+export default PlotTable;

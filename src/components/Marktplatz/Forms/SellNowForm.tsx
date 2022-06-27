@@ -7,7 +7,7 @@ import podsIcon from 'img/beanstalk/pod-icon.svg';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { SellListingFormValues } from '../Dialogs/SellListingDialog';
 import CardField from '../../Common/Form/Field/CardField';
-import PlotDetails from './PlotDetails';
+import PlotDetails from '../Cards/PlotDetails';
 import InputAmountField from '../../Common/Form/Field/InputAmountField';
 import { ZERO_BN } from '../../../constants';
 import { MaxBN, MinBN } from '../../../util';
