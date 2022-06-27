@@ -18,7 +18,7 @@ export const UNRIPE_ASSET_TOOLTIPS : { [key: string]: string | React.ReactElemen
   harvestableBeans: 'Beans from Harvestable Plots that weren\'t yet Harvested.',
   orderedBeans:     'Beans that were stored in Pod Orders.',
   farmableBeans:    (
-    <>Previously called <em>Farmable Beans</em> — Beans earned in the Silo that had not yet been Deposited in a particular Season.</>
+    <>Previously called <em>Farmable Beans</em> — Beans earned from Silo rewards that had not yet been Deposited in a particular Season.</>
   ),
   wrappedBeans:     'Beans that were stored in Beanstalk but not Deposited.',
   // LP
