@@ -19,15 +19,14 @@ export interface TimeTabProps {
 }
 
 const TimeTabs: React.FC<TimeTabProps & StackProps> = ({ sx, setState, tab }) => {
-  // const handleChange = (i: number) => {
-  //   setState(i);
-  // };
   const handleChangeX = (i: number) => {
     setState([i, tab[1]]);
   };
+
   const handleChangeY = (i: number) => {
     setState([tab[0], i]);
   };
+
   return (
     <Stack direction="row" sx={{ ...sx }} gap={0.2} alignItems="center">
       {DISPLAY.map((d) => (

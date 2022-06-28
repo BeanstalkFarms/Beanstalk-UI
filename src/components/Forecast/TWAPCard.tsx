@@ -39,11 +39,6 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> =
       setTimeTab(i);
     };
 
-    useEffect(() => {
-      console.log('TAB');
-      console.log(timeTab);
-    }, [timeTab]);
-
     return (
       <Card sx={{ width: '100%', ...sx }}>
         <Stack direction="row" justifyContent="space-between" sx={{ p: 1.5 }}>

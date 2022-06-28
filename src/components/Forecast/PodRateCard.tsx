@@ -1,10 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { Stack, Typography, CardProps, Box, Card, Divider } from '@mui/material';
+import { Box, Card, CardProps, Divider, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Stat from '../Common/Stat';
-import TokenIcon from '../Common/TokenIcon';
-import { BEAN } from '../../constants/tokens';
-import { SupportedChainId } from '../../constants';
 import { displayBN } from '../../util';
 import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
 import { mockPodRateData } from '../Charts/SimpleLineChart.mock';
