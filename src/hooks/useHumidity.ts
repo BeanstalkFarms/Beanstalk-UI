@@ -40,8 +40,8 @@ export const useHumidityAtSeason = () => {
     // MaxBN provides a constraint on Ropsten because the actual season is 564-ish
     // but we need to pass a REPLANT_SEASON of 6074 to the contract to get the user's balance
     const seasonsAfterReplant = MaxBN(season.minus(replantSeason.plus(1)), ZERO_BN);
-    if (season.lte(replantSeason))       return [INITIAL_HUMIDITY, HUMIDITY_DECREASE_AT_REPLANT] as const;
-    if (season.gte(endDecreaseSeason))  return [MIN_HUMIDITY, ZERO_BN] as const;
+    if (season.lte(replantSeason))     return [INITIAL_HUMIDITY, HUMIDITY_DECREASE_AT_REPLANT] as const;
+    if (season.gte(endDecreaseSeason)) return [MIN_HUMIDITY, ZERO_BN] as const;
     const humidityDecrease = seasonsAfterReplant.multipliedBy(HUMIDITY_DECREASE_PER_SEASON);
     return [RESTART_HUMIDITY.minus(humidityDecrease), HUMIDITY_DECREASE_PER_SEASON] as const;
   }, [

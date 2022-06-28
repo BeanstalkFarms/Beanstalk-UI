@@ -32,6 +32,12 @@ export const USDC_ADDRESSES = {
   // [SupportedChainId.RINKEBY]: '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
 };
 
+export const USDT_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7'.toLowerCase(),
+  // [SupportedChainId.ROPSTEN]: '0x07865c6E87B9F70255377e024ace6630C1Eaa37F'.toLowerCase(),
+  // [SupportedChainId.RINKEBY]: '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
+};
+
 export const CRV3_ADDRESSES = {
   // --------------------------------------------------
   // "Curve.fi: 3CRV Token"

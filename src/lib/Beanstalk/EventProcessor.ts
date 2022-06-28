@@ -417,7 +417,7 @@ export default class EventProcessor {
   // |      SILO: WITHDRAW      |
   // ----------------------------
 
-// eslint-disable-next-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this
   _upsertWithdrawal(
     existing: EventProcessorData['withdrawals'][string][string] | undefined,
     amount: BigNumber,

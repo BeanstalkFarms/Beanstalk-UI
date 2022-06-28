@@ -10,6 +10,7 @@ import beanLusdLogoUrl from 'img/tokens/bean-lusd-logo.svg';
 
 // Common token icons
 import usdcLogoUrl from 'img/tokens/usdc-logo.svg';
+import usdtLogoUrl from 'img/tokens/usdt-logo.svg';
 import crv3LogoUrl from 'img/tokens/crv3-logo.svg';
 import lusdLogoUrl from 'img/tokens/lusd-logo.svg';
 
@@ -21,7 +22,7 @@ import podsLogo from 'img/beanstalk/pod-icon.svg';
 import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from './chains';
 import { ChainConstant } from '.';
-import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES } from './addresses';
+import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES } from './addresses';
 
 // ----------------------------------------
 // Types
@@ -197,6 +198,19 @@ export const USDC = {
   ),
 };
 
+export const USDT = {
+  [SupportedChainId.MAINNET]: new ERC20Token(
+    SupportedChainId.MAINNET,
+    USDT_ADDRESSES,
+    6,
+    {
+      name: 'Tether',
+      symbol: 'USDT',
+      logo: usdtLogoUrl,
+    }
+  ),
+};
+
 export const LUSD = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
@@ -315,6 +329,7 @@ export const ERC20_TOKENS : TokenMap[] = [
   BEAN_CRV3_LP,
   WETH,
   USDC,
+  USDT,
 ];
 
 // Load the Farmer's balance of these tokens.
