@@ -8,7 +8,7 @@ import { SupportedChainId } from '../../constants';
 import { displayBN } from '../../util';
 import TimeTabs from '../Common/TimeTabs';
 import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
-import { mockTWAPData } from '../Charts/SimpleLineChart.mock';
+import { mockTWAPData, mockTWAPDataVariable } from '../Charts/SimpleLineChart.mock';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 export type TWAPCardProps = {
@@ -57,7 +57,7 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> =
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart isTWAP series={[mockTWAPData]} onCursor={handleCursorTWAP} />
+          <SimpleLineChart isTWAP series={[mockTWAPDataVariable]} onCursor={handleCursorTWAP} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />
