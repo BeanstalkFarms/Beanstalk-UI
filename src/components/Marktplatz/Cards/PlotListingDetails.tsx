@@ -46,7 +46,7 @@ const PlotListingDetails: React.FC<PlotListingCardProps & CardProps> =
             <Stack>
               <Typography>Place in Line</Typography>
               {/* <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography> */}
-              <Typography variant="h1" sx={{ fontWeight: 400 }}>{displayFullBN(new BigNumber(podListing.index).minus(harvestableIndex), 0)}</Typography>
+              <Typography variant="h1" sx={{ fontWeight: 400 }}>{displayBN(new BigNumber(podListing.index).minus(harvestableIndex))}</Typography>
             </Stack>
             <Stack>
               <Typography>Price per Pod</Typography>

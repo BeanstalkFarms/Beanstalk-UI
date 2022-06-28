@@ -47,7 +47,7 @@ const PlotOrderDetails: React.FC<PlotDetailsCardProps & CardProps> =
               <Typography>Place in Line</Typography>
               {/* <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography> */}
               <Typography variant="h1" sx={{ fontWeight: 400 }}>0
-                - {displayFullBN(new BigNumber(podListing.maxPlaceInLine).minus(harvestableIndex), 0)}
+                - {displayBN(new BigNumber(podListing.maxPlaceInLine).minus(harvestableIndex))}
               </Typography>
             </Stack>
             <Stack>
