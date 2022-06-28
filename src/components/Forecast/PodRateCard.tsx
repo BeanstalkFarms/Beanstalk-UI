@@ -6,6 +6,7 @@ import { displayBN } from '../../util';
 import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
 import { mockPodRateData } from '../Charts/SimpleLineChart.mock';
 import { BeanstalkPalette } from '../App/muiTheme';
+import TimeTabs from "../Common/TimeTabs";
 
 export type TWAPCardProps = {
   podRate: BigNumber;
@@ -29,6 +30,11 @@ const PodRateCard: React.FC<TWAPCardProps & CardProps> =
       [podRate]
     );
 
+    const [timeTab, setTimeTab] = useState([0,0]);
+    const handleChangeTimeTab = (i: number[]) => {
+      setTimeTab(i);
+    };
+
     return (
       <Card sx={{ width: '100%', ...sx }}>
         <Stack direction="row" justifyContent="space-between" sx={{ p: 1.5 }}>
@@ -39,6 +45,9 @@ const PodRateCard: React.FC<TWAPCardProps & CardProps> =
             icon={undefined}
             bottomText={`Season ${displayBN(season)}`}
           />
+          <Stack alignItems="right">
+            <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />
+          </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
           <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursorPodRate} />
