@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card, Grid, Link, Stack, Tooltip, Typography, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Card, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import podIcon from 'img/beanstalk/pod-icon.svg';
@@ -22,12 +21,10 @@ const FieldConditions: React.FC<FieldConditionsProps> =
      handleOpenDialog,
      podLine,
    }) => {
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
     const handleOpen = () => {
       handleOpenDialog();
     };
+
     return (
       <Card sx={{ p: 2 }}>
         <Stack gap={2}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { Box, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { displayBN } from '../../util';
@@ -41,8 +41,6 @@ const PodLineSection: React.FC<PodLineSectionProps> =
           <Stack width={isMobile ? '100%' : '80%'}>
             <SimplePodLineChart
               harvestableIndex={harvestableIndex}
-              // width={graphWidth}
-              // height={50}
               farmerPlots={plots}
               podLineSize={podLine}
             />
