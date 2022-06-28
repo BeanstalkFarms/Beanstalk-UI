@@ -78,7 +78,7 @@ const Graph: React.FC<GraphProps> = withTooltip(
       if (isTWAP) {
         const yMin = min(_data, getY);
         yScale = scaleLinear<number>({
-          domain: [(yMin !== undefined) && (yMin <= 1) ? yMin : 0.95, max(_data, getY) as number],
+          domain: [(yMin !== undefined) && (yMin <= 1) ? yMin : 0.80, max(_data, getY) as number],
         });
       } else {
         yScale = scaleLinear<number>({
@@ -88,6 +88,7 @@ const Graph: React.FC<GraphProps> = withTooltip(
 
       xScale.range([0, width]);
       yScale.range([height - margin.top, margin.bottom]);
+
       return { xScale, yScale };
     }), [width, height, series, isTWAP]);
 
@@ -106,6 +107,7 @@ const Graph: React.FC<GraphProps> = withTooltip(
           if (d1 && getX(d1)) {
             d = x0.valueOf() - getX(d0).valueOf() > getX(d1).valueOf() - x0.valueOf() ? d1 : d0;
           }
+
           return d;
         });
 

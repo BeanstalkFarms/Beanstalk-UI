@@ -1,14 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { Stack, Typography, CardProps, Box, Card, Divider } from '@mui/material';
+import { Box, Card, CardProps, Divider, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Stat from '../Common/Stat';
-import TokenIcon from '../Common/TokenIcon';
-import { BEAN } from '../../constants/tokens';
-import { SupportedChainId } from '../../constants';
 import { displayBN } from '../../util';
 import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
 import { mockPodRateData } from '../Charts/SimpleLineChart.mock';
 import { BeanstalkPalette } from '../App/muiTheme';
+import TimeTabs from "../Common/TimeTabs";
 
 export type TWAPCardProps = {
   podRate: BigNumber;
@@ -32,16 +30,24 @@ const PodRateCard: React.FC<TWAPCardProps & CardProps> =
       [podRate]
     );
 
+    const [timeTab, setTimeTab] = useState([0,0]);
+    const handleChangeTimeTab = (i: number[]) => {
+      setTimeTab(i);
+    };
+
     return (
       <Card sx={{ width: '100%', ...sx }}>
-        <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
+        <Stack direction="row" justifyContent="space-between" sx={{ p: 1.5 }}>
           <Stat
+            gap={0.5}
             title="Pod Rate"
             amount={`${displayBN(isHoveringPodRate ? displayPodRate[0] : podRate)}%`}
             icon={undefined}
-            topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
             bottomText={`Season ${displayBN(season)}`}
           />
+          <Stack alignItems="right">
+            <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />
+          </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
           <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursorPodRate} />

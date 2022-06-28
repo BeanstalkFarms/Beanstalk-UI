@@ -34,20 +34,16 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> =
       [beanPrice]
     );
 
-    const [timeTab, setTimeTab] = useState(0);
-    const handleChangeTimeTab = (i: number) => {
+    const [timeTab, setTimeTab] = useState([0,0]);
+    const handleChangeTimeTab = (i: number[]) => {
       setTimeTab(i);
     };
 
-    useEffect(() => {
-      console.log('TAB');
-      console.log(timeTab);
-    }, [timeTab]);
-
     return (
       <Card sx={{ width: '100%', ...sx }}>
-        <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
+        <Stack direction="row" justifyContent="space-between" sx={{ p: 1.5 }}>
           <Stat
+            gap={0.5}
             title="Time Weighted Average Price"
             color="primary"
             amount={`$${(isHoveringTWAP ? displayTWAP[0] : beanPrice).toFixed(4)}`}
