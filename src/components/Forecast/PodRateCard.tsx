@@ -34,12 +34,12 @@ const PodRateCard: React.FC<TWAPCardProps & CardProps> =
 
     return (
       <Card sx={{ width: '100%', ...sx }}>
-        <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
+        <Stack direction="row" justifyContent="space-between" sx={{ p: 1.5 }}>
           <Stat
+            gap={0.5}
             title="Pod Rate"
             amount={`${displayBN(isHoveringPodRate ? displayPodRate[0] : podRate)}%`}
             icon={undefined}
-            topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
             bottomText={`Season ${displayBN(season)}`}
           />
         </Stack>

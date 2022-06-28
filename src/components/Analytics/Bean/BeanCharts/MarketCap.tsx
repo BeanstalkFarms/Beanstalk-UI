@@ -32,8 +32,8 @@ const MarketCap: React.FC<MarketCapProps> =
       [beanPrice]
     );
 
-    const [timeTab, setTimeTab] = useState(0);
-    const handleChangeTimeTab = (i: number) => {
+    const [timeTab, setTimeTab] = useState([0,0]);
+    const handleChangeTimeTab = (i: number[]) => {
       setTimeTab(i);
     };
 

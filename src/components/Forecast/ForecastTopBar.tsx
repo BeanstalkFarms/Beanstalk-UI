@@ -22,10 +22,6 @@ const ForecastTopBar: React.FC<ForecastTopBarProps & CardProps> = ({ sx }) => (
         <Typography>Weather:</Typography>
         <Typography sx={{ fontWeight: 'bold' }}>5,000%</Typography>
       </Stack>
-      <Stack direction="row" gap={0.5}>
-        <Typography>Delta Demand:</Typography>
-        <Typography sx={{ fontWeight: 'bold' }}>39.12%</Typography>
-      </Stack>
     </Stack>
   </Card>
 );
