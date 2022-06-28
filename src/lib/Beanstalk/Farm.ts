@@ -28,7 +28,7 @@ enum FarmToMode {
 export type ChainableFunctionResult = {
   amountOut: ethers.BigNumber;
   data?: any;
-  encode: (amountIn: ethers.BigNumber, minAmountOut: ethers.BigNumber) => string;
+  encode: (minAmountOut: ethers.BigNumber) => string;
   decode: (data: string) => Result;
 };
 export type ChainableFunction = (amountIn: ethers.BigNumber) => Promise<ChainableFunctionResult>;
@@ -93,20 +93,20 @@ export default class Farm {
 
   static SLIPPAGE_PRECISION = ethers.BigNumber.from(10**6);
 
-  static encodeSlippage(
+  static encodeStepsWithSlippage(
     steps: ChainableFunctionResult[],
-    _amountIn: ethers.BigNumber,
-    slippage: ethers.BigNumber,
+    _slippage: ethers.BigNumber,
   ) {
+    const slipMultiplier = (Farm.SLIPPAGE_PRECISION.sub(_slippage)).div(Farm.SLIPPAGE_PRECISION);
     const fnData : string[] = [];
-    let amountIn = _amountIn;
+    // let amountIn = _amountIn;
     for (let i = 0; i < steps.length; i += 1) {
       const amountOut    = steps[i].amountOut;
-      const minAmountOut = amountOut.mul(Farm.SLIPPAGE_PRECISION.sub(slippage)).div(this.SLIPPAGE_PRECISION);
-      console.debug(`[chain] encoding step ${i}: amountIn = ${amountIn}, expected amountOut = ${amountOut}, minAmountOut = ${minAmountOut}`)
-      const encoded = steps[i].encode(amountIn, minAmountOut);
+      const minAmountOut = amountOut.mul(slipMultiplier);
+      console.debug(`[chain] encoding step ${i}: expected amountOut = ${amountOut}, minAmountOut = ${minAmountOut}`)
+      const encoded = steps[i].encode(minAmountOut);
       fnData.push(encoded);
-      amountIn = amountOut;
+      // amountIn = amountOut;
     }
     return fnData;
   }
@@ -154,12 +154,12 @@ export default class Farm {
       );
       return {
         amountOut,
-        encode: (amountIn: ethers.BigNumber, minAmountOut: ethers.BigNumber) => (
+        encode: (minAmountOut: ethers.BigNumber) => (
           this.contracts.beanstalk.interface.encodeFunctionData('exchange', [
             pool,
             tokenIn,
             tokenOut,
-            amountIn,
+            amountInStep,
             minAmountOut,
             false,
             FarmFromMode.INTERNAL_TOLERANT,
@@ -189,40 +189,6 @@ export default class Farm {
       '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // WETH
       '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
     )(amountInStep);
-    // const pool      = this.contracts.curve.tricrypto2.address;
-    // const tokenIn   = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'; // WETH
-    // const tokenOut  = '0xdAC17F958D2ee523a2206206994597C13D831ec7'; // USDT
-    // const amountOut = await this.contracts.curve.tricrypto2.get_dy(
-    //   2, // i = WETH = tricryptoPoolV2.coins[2]
-    //   0, // j = USDT = tricryptoPoolV2.coins[0]
-    //   amountInStep,
-    //   { gasLimit: 10000000 }
-    // );
-    // return {
-    //   amountOut,
-    //   encode: (amountIn: ethers.BigNumber, minAmountOut: ethers.BigNumber) => (
-    //     this.contracts.beanstalk.interface.encodeFunctionData('exchange', [
-    //       pool,
-    //       tokenIn,
-    //       tokenOut,
-    //       amountIn,
-    //       minAmountOut,
-    //       false,
-    //       FarmFromMode.INTERNAL_TOLERANT,
-    //       FarmToMode.INTERNAL,
-    //     ])
-    //   ),
-    //   data: {
-    //     tokenIn,
-    //     amountIn: amountInStep,
-    //     tokenOut,
-    //     amountOut,
-    //     swap: {
-    //       dex: 'curve',
-    //       pool,
-    //     }
-    //   }
-    // };
   }
 
   swapBeanCrv3Pool : ChainableFunction = async (amountInStep: ethers.BigNumber) => {
@@ -237,15 +203,15 @@ export default class Farm {
     );
     return {
       amountOut,
-      encode: (amountIn: ethers.BigNumber, minAmountOut: ethers.BigNumber) => (
+      encode: (minAmountOut: ethers.BigNumber) => (
         this.contracts.beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
           pool,
           tokenIn,
           tokenOut,
-          amountIn,
+          amountInStep,
           minAmountOut,
-          FarmFromMode.INTERNAL_EXTERNAL,
-          FarmToMode.EXTERNAL,
+          FarmFromMode.INTERNAL_TOLERANT,
+          FarmToMode.INTERNAL,
         ])
       ),
       decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('exchangeUnderlying', data),
@@ -271,10 +237,10 @@ export default class Farm {
     );
     return {
       amountOut,
-      encode: (amountIn: ethers.BigNumber, minAmountOut: ethers.BigNumber) => (
+      encode: (minAmountOut: ethers.BigNumber) => (
         this.contracts.beanstalk.interface.encodeFunctionData('addLiquidity', [
           pool.address,
-          [0, 0, amountIn],
+          [0, 0, amountInStep],
           minAmountOut,
           true,
           FarmFromMode.INTERNAL_TOLERANT,
@@ -294,10 +260,10 @@ export default class Farm {
     );
     return {
       amountOut,
-      encode: (amountIn: ethers.BigNumber, minAmountOut: ethers.BigNumber) => (
+      encode: (minAmountOut: ethers.BigNumber) => (
         this.contracts.beanstalk.interface.encodeFunctionData('addLiquidity', [
           pool.address,
-          [0, amountIn],
+          [0, amountInStep],
           minAmountOut,
           true,
           FarmFromMode.INTERNAL_TOLERANT,

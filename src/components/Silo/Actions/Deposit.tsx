@@ -195,9 +195,9 @@ const DepositForm : React.FC<
           >
             Deposit
           </SmartSubmitButton>
-          <Box>
+          {/* <Box>
             <pre>{JSON.stringify(values, null, 2)}</pre>
-          </Box>
+          </Box> */}
         </Stack>
       </Form>
     </Tooltip>
@@ -252,112 +252,69 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
     });
     
     try {
+      const formData = values.tokens[0];
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
-      if (!values.tokens[0]?.amount || values.tokens[0].amount.eq(0)) throw new Error('No amount set');
+      if (!formData?.amount || formData.amount.eq(0)) throw new Error('No amount set');
 
       // TEMP: recast as BeanstalkReplanted 
       const b = ((beanstalk as unknown) as BeanstalkReplanted);
       const data : string[] = [];
-      let value = ZERO_BN;
-      let call;
-
+      
       //
-      if (siloToken === Bean) {
-        // Bean -> Deposit
-        if (values.tokens[0].token === Bean) {
-          call = b.deposit(
-            Bean.address,
-            toStringBaseUnitBN(values.tokens[0].amount, Bean.decimals),
-            FarmFromMode.EXTERNAL,
-          );
-          // data.push(...[
-            // b.interface.encodeFunctionData('deposit', [
-            //   Bean.address,
-            //   '1000000', // toStringBaseUnitBN(values.tokens[0].amount, Bean.decimals),
-            //   FarmFromMode.INTERNAL,
-            // ]),
-          // ]);
-        }
+      const inputToken = formData.token;
+      let value = ZERO_BN;
+      let depositAmount;
+      let depositFrom;
 
-        // ETH -> USDT -> Bean -> Deposit
-        else if (values.tokens[0].token === Eth) {
-          if (!values.tokens[0].steps || !values.tokens[0].amountOut) throw new Error(`No quote available for ${Eth.symbol}`);
-          
-          // value = value.plus(values.tokens[0].amount);
-          // eslint-disable-next-line no-self-assign
-          value = value;
-
-          // TEST 1
-          const encoded = Farm.encodeSlippage(
-            values.tokens[0].steps,
-            ethers.BigNumber.from(
-              toStringBaseUnitBN(
-                values.tokens[0].amount,
-                Eth.decimals,
-              )
-            ),
-            ethers.BigNumber.from(
-              toStringBaseUnitBN(
-                0.1/100,  
-                6
-              )
-            ),
-          );
-          
-          encoded.forEach((_data, index) => console.debug(`step ${index}:`, values.tokens[0]?.steps?.[index]?.decode(_data).map((elem) => elem.toString())))
-
-          // TEST 2
-          const usdtIn = ethers.BigNumber.from(toStringBaseUnitBN(10, USDT[1].decimals));
-          const buyBeansStep = await farm.swapBeanCrv3Pool(usdtIn);
-          console.debug(`buyBeansStep`, buyBeansStep);
-          const pool      = farm.contracts.curve.beanCrv3.address;
-          const tokenIn   = '0xdAC17F958D2ee523a2206206994597C13D831ec7'; // USDT
-          const tokenOut  = '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'; // BEAN
-
-          data.push(...[
-            // buyBeansStep.encode(usdtIn, buyBeansStep.amountOut.mul(999).div(1000)),
-            farm.contracts.beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
-              '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD', // bean3Crv pool
-              '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
-              '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db', // BEAN
-              toStringBaseUnitBN(10, USDT[1].decimals),     // amountIn
-              toStringBaseUnitBN(9, Bean.decimals),         // minAmountOut
-              FarmFromMode.EXTERNAL,                        //
-              FarmToMode.INTERNAL,                          //
-            ]),
-            // b.interface.encodeFunctionData('wrapEth', [
-            //   toStringBaseUnitBN(value, Eth.decimals),
-            //   FarmToMode.EXTERNAL
-            // ]),
-            // b.interface.encodeFunctionData('exchange', [
-            //   '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46', // tricrypto2
-            //   '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // WETH
-            //   '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
-            //   toStringBaseUnitBN('1', 18),                  // amountIn
-            //   toStringBaseUnitBN('2800', 6),                // minAmountOut
-            //   false,
-            //   FarmFromMode.INTERNAL_TOLERANT,
-            //   FarmToMode.EXTERNAL,
-            // ]),
-            // ...encoded,
-            // b.interface.encodeFunctionData('deposit', [
-            //   Bean.address,
-            //   toStringBaseUnitBN(values.tokens[0].amountOut, Bean.decimals),
-            //   FarmFromMode.INTERNAL_TOLERANT,
-            // ]),
-          ]);
-        
-          console.debug(`[Deposit] data: `, data);
-          console.debug(`[Deposit] gas: `, await b.estimateGas.farm(data))
-          call = b.farm(data);
-        } else {
-          call = Promise.reject(new Error(`No supported Deposit method for ${siloToken.name}`));
-        }
-      } else {
-        call = Promise.reject(new Error(`No supported Deposit method for ${siloToken.name}`));
+      // Direct Deposit
+      if (inputToken === siloToken) {
+        // TODO: verify we have approval for `inputToken`
+        depositAmount = formData.amount; // implicit: amount = amountOut since the tokens are the same
+        depositFrom   = FarmFromMode.INTERNAL_EXTERNAL;
       }
+      
+      // Swap and Deposit
+      else {
+        // Require a quote
+        if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
 
-      return call
+        // Wrap ETH to WETH
+        if (inputToken === Eth) {
+          value = value.plus(formData.amount); 
+          data.push(b.interface.encodeFunctionData('wrapEth', [
+            toStringBaseUnitBN(value, Eth.decimals),
+            FarmToMode.INTERNAL,
+          ]))
+        }
+        
+        // `amountOut` of `siloToken` is received when swapping for 
+        // `amount` of `inputToken`. this may include multiple swaps.
+        // using "tolerant" mode allows for slippage during swaps.
+        depositAmount = formData.amountOut;
+        depositFrom   = FarmFromMode.INTERNAL_TOLERANT;
+
+        // Encode steps to get from token i to siloToken
+        const encoded = Farm.encodeStepsWithSlippage(
+          formData.steps,
+          ethers.BigNumber.from(toStringBaseUnitBN(0.1/100, 6)), // slippage
+        );
+        data.push(...encoded);
+      } 
+
+      // Deposit step
+      data.push(
+        b.interface.encodeFunctionData('deposit', [
+          siloToken.address,
+          toStringBaseUnitBN(depositAmount, siloToken.decimals),  // expected amountOut from all steps
+          depositFrom,
+        ])
+      )
+
+      // CALL: FARM
+      console.debug(`[Deposit] data: `, data);
+      console.debug(`[Deposit] gas: `, await b.estimateGas.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) }))
+     
+      return b.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
         .then((txn) => {
           txToast.confirming(txn);
           return txn.wait();
@@ -383,11 +340,9 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
         // formActions.resetForm();
       }
   }, [
-    Bean,
     Eth,
     beanstalk,
     siloToken,
-    farm,
   ]);
 
   //
