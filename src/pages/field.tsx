@@ -1,31 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Box,
-  Card,
   Container,
-  Dialog,
-  Grid,
-  Link,
   Stack,
   Typography,
-  Tooltip,
-  useMediaQuery,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
-import { DataGrid, DataGridProps, GridRowParams } from '@mui/x-data-grid';
+import { DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
-import { tableStyle } from 'util/tableStyle';
-import podIcon from 'img/beanstalk/pod-icon.svg';
-import { useTheme } from '@mui/material/styles';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import {
-  StyledDialogContent,
-  StyledDialogTitle,
-} from 'components/Common/Dialog';
-import PodLineSection from '../components/Field/PodLineSection';
+import FieldConditions from '../components/Field/FieldConditions';
+import MyPlotsDialog from '../components/Field/MyPlotsDialog';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -49,13 +36,9 @@ const columns: DataGridProps['columns'] = [
   },
 ];
 
-const MAX_ROWS = 5;
-
 const FieldPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const theme = useTheme();
   // Theme
-  const isMedium = useMediaQuery(theme.breakpoints.down('md'));
   const handleClose = useCallback(() => {
     setModalOpen(false);
   }, []);
@@ -67,9 +50,6 @@ const FieldPage: React.FC = () => {
   );
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
-  );
-  const beanToken = useSelector<AppState, AppState['_bean']['token']>(
-    (state) => state._bean.token
   );
   const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
 
@@ -85,22 +65,6 @@ const FieldPage: React.FC = () => {
       })),
     [farmerField?.plots, beanstalkField.harvestableIndex]
   );
-
-  const tableHeight = useMemo(() => {
-    if (!rows || rows.length === 0) return '200px';
-    return Math.min(rows.length, MAX_ROWS) * 52 + 112;
-  }, [rows]);
-
-  // const data = series[0];
-  const ref = useRef<any>(null);
-  const [graphWidth, setGraphWidth] = useState(ref.current ? ref.current.offsetWidth : 0);
-  window.addEventListener('resize', () => setGraphWidth(ref.current ? ref.current.offsetWidth : 0));
-  // sets width of graph on page load
-  useEffect(() => {
-    setGraphWidth(ref.current ? ref.current.offsetWidth : 0);
-  }, []);
-
-  console.log('GRAPH WIDTH', graphWidth);
 
   return (
     <Container maxWidth="md">
@@ -119,135 +83,22 @@ const FieldPage: React.FC = () => {
           }
           description="Earn yield by lending Beans to Beanstalk in exchange for Pods"
         />
-        <Card sx={{ p: 2 }}>
-          <Stack gap={2}>
-            <Typography variant="h2">Field Conditions</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <Stack gap={0.5}>
-                  <Typography variant="h4">Available Soil&nbsp;
-                    <Tooltip
-                      title="The number of Beans that can currently be Sown, or lent to Beanstalk."
-                      placement="top">
-                      <HelpOutlineIcon
-                        sx={{ color: 'text.secondary', fontSize: '14px' }}
-                      />
-                    </Tooltip>
-                  </Typography>
-                  <Typography variant="h1">
-                    {displayBN(beanstalkField.soil)}
-                  </Typography>
-                </Stack>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Stack gap={0.5}>
-                  <Typography variant="h4">Weather&nbsp;
-                    <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
-                      <HelpOutlineIcon
-                        sx={{ color: 'text.secondary', fontSize: '14px' }}
-                      />
-                    </Tooltip>
-                  </Typography>
-                  <Typography variant="h1">
-                    {displayBN(beanstalkField.weather.yield)}%
-                  </Typography>
-                </Stack>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Stack gap={0.5}>
-                  <Typography variant="h4">Pods Harvested&nbsp;
-                    <Tooltip
-                      title="The number of Beans that Beanstalk has paid back to Sowers."
-                      placement="top">
-                      <HelpOutlineIcon
-                        sx={{ color: 'text.secondary', fontSize: '14px' }}
-                      />
-                    </Tooltip>
-                  </Typography>
-                  <Typography variant="h1">
-                    {displayBN(beanstalkField?.harvestableIndex)}
-                  </Typography>
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <PodLineSection
-                  numPodsTitle="Pod Line"
-                  numPodsDisplay={podLine}
-                  podLine={podLine}
-                  harvestableIndex={beanstalkField.harvestableIndex}
-                  plots={farmerField.plots}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Stack direction="row" justifyContent="space-between">
-                  <Stack direction="row" gap={0.5}>
-                    <Tooltip 
-                      title="This is your total Pod Balance. Pods become Harvestable on a FIFO basis." 
-                      placement="top">
-                      <Typography variant="h4">My Pod Balance:</Typography>
-                    </Tooltip>
-                    <Stack direction="row" alignItems="center" gap={0.25}>
-                      <img alt="" src={podIcon} height="17px" />
-                      
-                        <Typography variant="h4">
-                          {displayBN(farmerField.pods)}
-                        </Typography>
-                      
-                    </Stack>
-                  </Stack>
-                  <Link
-                    onClick={handleOpen}
-                    underline="none"
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <Typography variant="h4">View My Plots</Typography>
-                  </Link>
-                </Stack>
-              </Grid>
-            </Grid>
-          </Stack>
-        </Card>
+        <FieldConditions
+          beanstalkField={beanstalkField}
+          handleOpenDialog={handleOpen}
+          farmerField={farmerField}
+          podLine={podLine}
+        />
       </Stack>
-      <Dialog
-        onClose={handleClose}
-        open={modalOpen}
-        fullWidth
-        fullScreen={isMedium}
-       
-      >
-        <StyledDialogTitle onClose={handleClose}>My Plots</StyledDialogTitle>
-        <StyledDialogContent sx={{ pb: 0.5 }}>
-          <Stack gap={2}>
-            {/* Pod Balance */}
-            <PodLineSection
-              numPodsTitle="Pod Balance"
-              numPodsDisplay={farmerField.pods}
-              podLine={podLine}
-              harvestableIndex={beanstalkField.harvestableIndex}
-              plots={farmerField.plots}
-            />
-            <Box
-              sx={{
-                height: tableHeight,
-                ...tableStyle,
-              }}
-            >
-              <DataGrid
-                columns={columns}
-                rows={rows}
-                pageSize={8}
-                disableSelectionOnClick
-                density="compact"
-                initialState={{
-                  sorting: {
-                    sortModel: [{ field: 'placeInLine', sort: 'asc' }],
-                  }
-                }}
-              />
-            </Box>
-          </Stack>
-        </StyledDialogContent>
-      </Dialog>
+      <MyPlotsDialog
+        beanstalkField={beanstalkField}
+        handleCloseDialog={handleClose}
+        farmerField={farmerField}
+        modalOpen={modalOpen}
+        podLine={podLine}
+        columns={columns}
+        rows={rows}
+      />
     </Container>
   );
 };
