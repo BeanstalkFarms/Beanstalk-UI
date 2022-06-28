@@ -7,11 +7,8 @@ import { scaleTime, scaleLinear } from '@visx/scale';
 import { timeParse } from 'd3-time-format';
 import ALL_POOLS from 'constants/pools';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { Typography } from '@mui/material';
 import { SupportedChainId, TokenMap } from '../../constants';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
-import { BeanstalkPalette } from '../App/muiTheme';
-// import mock = jest.mock;
 
 export type LiquidityBalancesProps = {
   balances: TokenMap<BeanstalkSiloBalance>;
@@ -52,14 +49,9 @@ const mockSiloData: MockPastSiloData[] = [
   }
 ];
 
-const data = browserUsage;
-// const keys = Object.keys(data[0]).filter((k) => k !== 'date') as BrowserNames[];
 const keys = Object.keys(mockSiloData[0]).filter((k) => k !== 'date') as any[];
 const parseDate = timeParse('%Y %b %d');
 export const background = 'transparent';
-
-// console.log('SACHART DATA');
-// console.log(data);
 
 const getDate = (d: MockPastSiloData) => (parseDate(d.date) as Date).valueOf();
 const getY0 = (d: SeriesPoint<MockPastSiloData>) => d[0] / 100;
@@ -108,19 +100,15 @@ const StackedAreaChart: React.FC<StackedAreasProps> =
         >
           {({ stacks, path }) =>
             stacks.map((stack) =>
-              // console.log('STACK');
-              // console.log(stack);
-              // console.log("POOL")
-              // console.log(ALL_POOLS[SupportedChainId.MAINNET][stack.key]);
               (
                 <>
-                  {/*{console.log('STACK KEY', stack.key)}*/}
-                  {/*{console.log('POOL COLOR', ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color)}*/}
+                  {/* --- example of how to debug this: --- */}
+                  {/* {console.log('STACK KEY', stack.key)} */}
+                  {/* {console.log('POOL COLOR', ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color)} */}
                   <path
                     key={`stack-${stack.key}`}
                     d={path(stack) || ''}
                     stroke="transparent"
-                    // fill="url(#stacked-area-orangered)"
                     fill={`${ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color}`}
                     onClick={() => {
                       if (events) alert(`${stack.key}`);
