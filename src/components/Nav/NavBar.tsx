@@ -19,12 +19,13 @@ import WalletButton from '../Common/Connection/WalletButton';
 import NetworkButton from '../Common/Connection/NetworkButton';
 import ROUTES from './routes';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
-import AnalyticsDropdown from './Buttons/AnalyticsDropdown';
+import AnalyticsMenu from './Menus/AnalyticsMenu';
 import AdditionalButton from './Buttons/AdditionalButton';
-import MoreDropdown from './Buttons/MoreDropdown';
-import NavButton from './Buttons/NavButton';
+import MoreDropdown from './Menus/MoreMenu';
+import RouteButton from './Buttons/RouteButton';
 import PriceButton from './Buttons/PriceButton';
 import DevButton from './Buttons/DevButton';
+import SunButton from './Buttons/SunButton';
 
 const NavBar: React.FC<{}> = () => {
   const chainId = useChainId();
@@ -171,11 +172,8 @@ const NavBar: React.FC<{}> = () => {
         >
           {/* Desktop: Left Side */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%">
-            <PriceButton
-              sx={{
-                height: 44,
-              }}
-            />
+            <PriceButton sx={{ height: 44 }} />
+            <SunButton sx={{ height: 44 }} />
             <Stack
               direction="row"
               alignItems="center"
@@ -183,14 +181,14 @@ const NavBar: React.FC<{}> = () => {
               height="100%"
             >
               {ROUTES.top.map((item) => (
-                <NavButton
+                <RouteButton
                   key={item.path}
                   to={item.path}
                   title={item.title}
                   tag={item.tag}
                 />
               ))}
-              <AnalyticsDropdown />
+              <AnalyticsMenu />
               <MoreDropdown />
             </Stack>
           </Stack>
@@ -202,9 +200,9 @@ const NavBar: React.FC<{}> = () => {
             sx={{}}
             spacing={1}
           >
-            {process.env.NODE_ENV === 'development' ? (
+            {/* {process.env.NODE_ENV === 'development' ? (
               <DevButton sx={{ height: 44 }} />
-            ) : null}
+            ) : null} */}
             <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
               <NetworkButton sx={{ height: 44 }} />
             </Box>

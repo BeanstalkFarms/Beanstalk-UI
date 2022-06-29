@@ -15,7 +15,7 @@ import {
 import ROUTES from '../routes';
 import DropdownIcon from '../../Common/DropdownIcon';
 
-const AnalyticsDropdown: React.FC = () => {
+const AnalyticsMenu: React.FC = () => {
   // Handlers
   const [open, setOpen] = useState(false);
   const handleShowMenu = useCallback(() => {
@@ -94,4 +94,4 @@ const AnalyticsDropdown: React.FC = () => {
   );
 };
 
-export default AnalyticsDropdown;
+export default AnalyticsMenu;

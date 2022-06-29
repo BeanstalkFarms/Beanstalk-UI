@@ -1,12 +1,11 @@
+import React, { useCallback } from "react";
 import { Button } from "@mui/material";
 import { BeanstalkReplanted } from "constants/generated";
 import { useBeanstalkContract } from "hooks/useContract";
-import React, { useCallback } from "react";
 import CachedIcon from '@mui/icons-material/Cached';
 import { getAccount } from "util/Account";
 import { useAccount } from "wagmi";
 import { ERC20_TOKENS } from "constants/tokens";
-import useGetChainToken from "hooks/useGetChainToken";
 import useTokenMap from "hooks/useTokenMap";
 import { toTokenUnitsBN } from "util/Tokens";
 

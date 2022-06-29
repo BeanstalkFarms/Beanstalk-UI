@@ -8,9 +8,9 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ROUTES from '../routes';
+import ROUTES from './routes';
 import MobileNavItem from './MobileNavItem';
-import { BeanstalkPalette } from '../../App/muiTheme';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 const NavDrawer: React.FC<{
   open: boolean;

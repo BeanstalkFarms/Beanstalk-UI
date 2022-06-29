@@ -10,7 +10,7 @@ import {
   useResolvedPath,
 } from 'react-router-dom';
 
-const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, title, tag }) => {
+const RouteButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, title, tag }) => {
   const resolved = useResolvedPath(to);
   const match = useMatch({ path: resolved.pathname, end: true });
   return (
@@ -70,4 +70,4 @@ const NavButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, 
   );
 };
 
-export default NavButton;
+export default RouteButton;
