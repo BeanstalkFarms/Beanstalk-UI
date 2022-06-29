@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Card, Divider, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import toast from 'react-hot-toast';
+import { ethers } from 'ethers';
+import { useAccount, useSigner } from 'wagmi';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import { displayBN, displayFullBN, tokenResult, toStringBaseUnitBN } from 'util/index';
@@ -13,7 +16,6 @@ import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
 import useChainConstant from 'hooks/useChainConstant';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useFertilizerContract } from 'hooks/useContract';
 import useFertilizerSummary from 'hooks/summary/useFertilizerSummary';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
@@ -21,9 +23,7 @@ import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import { FormState } from 'components/Common/Form';
 import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import TxnAccordion from 'components/Common/TxnAccordion';
-import { ethers } from 'ethers';
 import { useFetchFarmerFertilizer } from 'state/farmer/fertilizer/updater';
-import { useAccount, useSigner } from 'wagmi';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { useFetchFarmerAllowances } from 'state/farmer/allowances/updater';
 import { timeToStringDetailed } from 'util/Time';
@@ -31,10 +31,9 @@ import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import { BUY_FERTILIZER } from 'components/BarnRaise/FertilizerItemTooltips';
 import { QuoteHandler } from 'hooks/useQuote';
-import { bigNumberResult } from 'util/Ledger';
+import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
+import TransactionToast from 'components/Common/TxnToast';
 import FertilizerItem from './FertilizerItem';
-import SmartSubmitButton from '../Common/Form/SmartSubmitButton';
-import TransactionToast from '../Common/TxnToast';
 
 // ---------------------------------------------------
 export interface BarnraiseFormProps {
@@ -78,7 +77,7 @@ const FertilizeForm : React.FC<
   isSubmitting,
   contract,
 }) => {
-  const tokenMap = useTokenMap(TOKEN_LIST);
+  const tokenMap = useTokenMap<ERC20Token | NativeToken>(TOKEN_LIST);
   const Usdc = useChainConstant(USDC);
   const balances = useFarmerBalances();
   const [showTokenSelect, setShowTokenSelect] = useState(false);  
@@ -195,7 +194,7 @@ const SetupForm: React.FC<{}> = () => {
   const initialValues : FertilizerFormValues = useMemo(() => ({
     tokens: [
       {
-        token: baseToken,
+        token: baseToken as (ERC20Token | NativeToken),
         amount: null,
       },
     ],

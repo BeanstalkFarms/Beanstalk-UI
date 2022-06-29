@@ -1,33 +1,35 @@
+// Ethereum Images
 import ethIconCircledUrl from 'img/tokens/eth-logo-circled.svg';
 import ropEthIconCircledUrl from 'img/tokens/ropeth-logo-circled.svg';
 
-// -- BEAN
+// Bean Images
 // import beanLogoUrl from 'img/tokens/bean-logo.svg';
 import beanCircleLogoUrl from 'img/tokens/bean-logo-circled.svg';
 import beanEthLpLogoUrl from 'img/tokens/bean-eth-lp-logo.svg';
 import beanCrv3LpLogoUrl from 'img/tokens/bean-crv3-logo.svg';
 import beanLusdLogoUrl from 'img/tokens/bean-lusd-logo.svg';
 
-// Common token icons
-import usdcLogoUrl from 'img/tokens/usdc-logo.svg';
-import usdtLogoUrl from 'img/tokens/usdt-logo.svg';
-import crv3LogoUrl from 'img/tokens/crv3-logo.svg';
-import lusdLogoUrl from 'img/tokens/lusd-logo.svg';
-
 // Beanstalk Token Logos
 import stalkLogo from 'img/beanstalk/stalk-icon.svg';
 import seedLogo from 'img/beanstalk/seed-icon.svg';
 import podsLogo from 'img/beanstalk/pod-icon.svg';
 
+// ERC-20 Token Images
+import crv3LogoUrl from 'img/tokens/crv3-logo.svg';
+import daiLogoUrl  from 'img/tokens/dai-logo.svg';
+import usdcLogoUrl from 'img/tokens/usdc-logo.svg';
+import usdtLogoUrl from 'img/tokens/usdt-logo.svg';
+import lusdLogoUrl from 'img/tokens/lusd-logo.svg';
+
+// Other imports
 import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from './chains';
 import { ChainConstant } from '.';
-import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES } from './addresses';
+import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, DAI_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES } from './addresses';
 
 // ----------------------------------------
 // Types
 // ----------------------------------------
-type TokenMap = ChainConstant<Token>;
 
 // ----------------------------------------
 // Native Tokens
@@ -152,6 +154,8 @@ export const BEAN = {
   ),
 };
 
+// CRV3 + Underlying Stables
+
 export const CRV3 = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
@@ -171,6 +175,19 @@ export const CRV3 = {
       name: '3CRV',
       symbol: '3CRV',
       logo: crv3LogoUrl,
+    }
+  ),
+};
+
+export const DAI = {
+  [SupportedChainId.MAINNET]: new ERC20Token(
+    SupportedChainId.MAINNET,
+    DAI_ADDRESSES,
+    6,
+    {
+      name: 'Dai',
+      symbol: 'DAI',
+      logo: daiLogoUrl,
     }
   ),
 };
@@ -211,6 +228,8 @@ export const USDT = {
   ),
 };
 
+// Other
+
 export const LUSD = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
@@ -238,7 +257,7 @@ export const LUSD = {
 // ERC20 Tokens - LP
 // ----------------------------------------
 
-export const BEAN_ETH_UNIV2_LP : ChainConstant<ERC20Token> = {
+export const BEAN_ETH_UNIV2_LP = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
     '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
@@ -323,30 +342,36 @@ export const BEAN_LUSD_LP = {
 // Token Lists
 // ----------------------------------------
 
-export const ERC20_TOKENS : TokenMap[] = [
+export const ERC20_TOKENS : ChainConstant<ERC20Token>[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
   BEAN_CRV3_LP,
   WETH,
+  DAI,
   USDC,
   USDT,
+  CRV3,
 ];
 
-// Load the Farmer's balance of these tokens.
-export const BALANCE_TOKENS : TokenMap[] = [
+export const BALANCE_TOKENS : ChainConstant<NativeToken | ERC20Token>[] = [
   ETH,
   ...ERC20_TOKENS,
 ];
 
-//
-export const SILO_WHITELIST : TokenMap[] = [
+export const SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
   BEAN_CRV3_LP,
   BEAN_LUSD_LP,
 ];
 
-export const GENERALIZED_SILO_WHITELIST : TokenMap[] = [
+export const GENERALIZED_SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
   BEAN_CRV3_LP,
   BEAN_LUSD_LP,
+];
+
+export const CRV3_UNDERLYING : ChainConstant<ERC20Token>[] = [
+  DAI,
+  USDC,
+  USDT,
 ];

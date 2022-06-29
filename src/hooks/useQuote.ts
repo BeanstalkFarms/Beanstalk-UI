@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import Token from 'classes/Token';
+import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import { useCallback, useEffect, useState } from 'react';
 import { toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
@@ -11,14 +11,14 @@ export type QuoteHandlerResult = {
   steps?: ChainableFunctionResult[];
 };
 export type QuoteHandler = (
-  tokenIn: Token,
+  tokenIn: ERC20Token | NativeToken,
   amountIn: BigNumber,
-  tokenOut: Token
+  tokenOut: ERC20Token | NativeToken
 ) => Promise<QuoteHandlerResult['amountOut'] | QuoteHandlerResult>; 
 
 export default function useQuote(
   /** */
-  tokenOut: Token,
+  tokenOut: ERC20Token | NativeToken,
   /** A function that returns a quoted amountOut value. */
   quoteHandler: QuoteHandler,
   /** The number of milliseconds to wait before calling */
@@ -26,7 +26,7 @@ export default function useQuote(
 ) : [
   result: QuoteHandlerResult | null,
   quoting: boolean,
-  refreshAmountOut: (_tokenIn: Token, _amountIn: BigNumber) => void,
+  refreshAmountOut: (_tokenIn: ERC20Token | NativeToken, _amountIn: BigNumber) => void,
 ] {
   const [result, setResult] = useState<QuoteHandlerResult | null>(null);
   /** Whether we're currently waiting for a quote for this swap. */
@@ -41,7 +41,7 @@ export default function useQuote(
   // Below prevents error b/c React can't know the deps of debounce
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const _getAmountOut = useCallback(debounce(
-    (tokenIn: Token, amountIn: BigNumber) => {
+    (tokenIn: ERC20Token | NativeToken, amountIn: BigNumber) => {
       try {
         return quoteHandler(tokenIn, amountIn, tokenOut)
           // quoteHandler should parse amountOut however it needs to.
@@ -74,7 +74,7 @@ export default function useQuote(
   ]);
 
   // Handler to refresh
-  const getAmountOut = useCallback((tokenIn: Token, amountIn: BigNumber) => {
+  const getAmountOut = useCallback((tokenIn: ERC20Token | NativeToken, amountIn: BigNumber) => {
     if (tokenIn === tokenOut) return;
     if (amountIn.lte(0)) {
       setResult(null);

@@ -1,30 +1,50 @@
 import { SupportedChainId } from './chains';
 
-// -- Beanstalk Contracts
+// ----------------------------------------
+// Beanstalk Contracts
+// ----------------------------------------
 
 export const BEANSTALK_ADDRESSES = {
-  [SupportedChainId.MAINNET]: '0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5'.toLowerCase(), // Stays the same
-  [SupportedChainId.ROPSTEN]: '0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5'.toLowerCase(), // Stays the same
+  [SupportedChainId.MAINNET]: '0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5'.toLowerCase(),
+  [SupportedChainId.ROPSTEN]: '0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5'.toLowerCase(),
 };
 
 export const BEANSTALK_PRICE_ADDRESSES = {
-  [SupportedChainId.MAINNET]: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF'.toLowerCase(), // Stays the same
-  [SupportedChainId.ROPSTEN]: '0xB721C3386052389892A898EC700619A7Ab20C6B7'.toLowerCase(), // Stays the same
+  [SupportedChainId.MAINNET]: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF'.toLowerCase(),
+  [SupportedChainId.ROPSTEN]: '0xB721C3386052389892A898EC700619A7Ab20C6B7'.toLowerCase(),
 };
 
 export const BEANSTALK_FERTILIZER_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x402c84De2Ce49aF88f5e2eF3710ff89bFED36cB6'.toLowerCase(),
   [SupportedChainId.ROPSTEN]: '0x82025f355969E7D2A64e4Dba1Ca0263843E6fbB1'.toLowerCase(),
-  // [SupportedChainId.LOCALHOST]: '0xCABEe62adFB2a4d4172Fc2F7536f324FC52C274a'.toLowerCase(), // Publius' dev node
 };
 
-// https://ropsten.etherscan.io/address/0xf023d179bc3f571778f57978eca318e1154ee8e3#code
 export const BARNRAISE_CUSTODIAN_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xa9bA2C40b263843C04d344727b954A545c81D043'.toLowerCase(),
   [SupportedChainId.ROPSTEN]: '0xA3D5F4042899a52f2ae7A0Cc58C079EFB62B9e43'.toLowerCase(),
 };
 
-// -- ERC20 Token Contracts
+// ----------------------------------------
+// BeaNFT Contracts
+// ----------------------------------------
+
+export const BEANFT_GENESIS_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0xa755A670Aaf1FeCeF2bea56115E65e03F7722A79'.toLowerCase(),
+  [SupportedChainId.ROPSTEN]: '0xa755A670Aaf1FeCeF2bea56115E65e03F7722A79'.toLowerCase(),
+};
+
+export const BEANFT_WINTER_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0x459895483556daD32526eFa461F75E33E458d9E9'.toLowerCase(),
+  [SupportedChainId.ROPSTEN]: '0x459895483556daD32526eFa461F75E33E458d9E9'.toLowerCase(),
+};
+
+// ----------------------------------------
+// ERC-20 Token Contracts
+// ----------------------------------------
+
+export const DAI_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0x6B175474E89094C44Da98b954EedeAC495271d0F'.toLowerCase(),
+}
 
 export const USDC_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'.toLowerCase(),
@@ -54,16 +74,13 @@ export const CRV3_ADDRESSES = {
 };
 
 export const LUSD_ADDRESSES = {
-  // --------------------------------------------------
-  // -------------------------------------------------
   [SupportedChainId.MAINNET]: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0'.toLowerCase(),
-
-  // --------------------------------------------------
-  // --------------------------------------------------
   [SupportedChainId.ROPSTEN]: '0x86E5040C1F0459cb59B8cf2794555615554799D3'.toLowerCase()
 };
 
-// -- Pool Contracts
+// ----------------------------------------
+// Uniswap Pools
+// ----------------------------------------
 
 export const BEAN_ETH_UNIV2_ADDRESSES = {
   // --------------------------------------------------
@@ -80,6 +97,10 @@ export const BEAN_ETH_UNIV2_ADDRESSES = {
   // token1 = 0xdc59ac4fefa32293a95889dc396682858d52e5db (BEAN)
   [SupportedChainId.ROPSTEN]: '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db'.toLowerCase(),
 };
+
+// ----------------------------------------
+// Curve Pools: BEAN
+// ----------------------------------------
 
 export const BEAN_CRV3_ADDRESSES = {
   // --------------------------------------------------
@@ -129,6 +150,10 @@ export const BEAN_LUSD_ADDRESSES = {
   // [SupportedChainId.ROPSTEN]: '0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC',
 };
 
+// ----------------------------------------
+// Curve Pools: Other
+// ----------------------------------------
+
 export const POOL3_ADDRESSES = {
   // --------------------------------------------------
   // "Curve.fi: DAI/USDC/USDT Pool" (aka 3pool)
@@ -145,21 +170,34 @@ export const POOL3_ADDRESSES = {
   [SupportedChainId.ROPSTEN]: '0x6412bbCeEf0b384B7f8142BDafeFE119178F1E22,'.toLowerCase()
 };
 
-// -- BeaNFT Contracts
+export const TRICRYPTO2_ADDRESSES = {
+  // --------------------------------------------------
+  // tricrypto2
+  // --------------------------------------------------
+  // coins[0] = 0xdAC17F958D2ee523a2206206994597C13D831ec7 (USDT)
+  // coins[1] = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599 (WBTC)
+  // coins[2] = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 (WETH)
+  [SupportedChainId.MAINNET]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46'.toLowerCase(),
+}
 
-export const BEANFT_GENESIS_ADDRESSES = {
-  [SupportedChainId.MAINNET]: '0xa755A670Aaf1FeCeF2bea56115E65e03F7722A79'.toLowerCase(), // Stays the same
-  [SupportedChainId.ROPSTEN]: '0xa755A670Aaf1FeCeF2bea56115E65e03F7722A79'.toLowerCase(), // Stays the same
+// ----------------------------------------
+// Curve: Registries / Factories
+// ----------------------------------------
+// "metapool" and "cryptoswap" are simultaneously
+// - "registries" (they track a list of pools)
+// - "factories"  (they allow creation of new pools)
+
+// 3pool, etc.
+export const POOL_REGISTRY_ADDRESSES  = {
+  [SupportedChainId.MAINNET]: '0x90e00ace148ca3b23ac1bc8c240c2a7dd9c2d7f5'.toLowerCase()
+}
+
+// X:3CRV, etc. aka StableFactory
+export const META_FACTORY_ADDRESSES   = {
+  [SupportedChainId.MAINNET]: '0xB9fC157394Af804a3578134A6585C0dc9cc990d4'.toLowerCase()
 };
 
-export const BEANFT_WINTER_ADDRESSES = {
-  [SupportedChainId.MAINNET]: '0x459895483556daD32526eFa461F75E33E458d9E9'.toLowerCase(), // Stays the same
-  [SupportedChainId.ROPSTEN]: '0x459895483556daD32526eFa461F75E33E458d9E9'.toLowerCase(), // Stays the same
-};
-
-// --------------------------------------------------
-// tricrypto2 (0xD51a44d3FaE010294C616388b506AcdA1bfAAE46)
-// --------------------------------------------------
-// coins[0] = 0xdAC17F958D2ee523a2206206994597C13D831ec7 (USDT)
-// coins[1] = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599 (WBTC)
-// coins[2] = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 (WETH)
+// tricrypto2, etc.
+export const CRYPTO_FACTORY_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0x8F942C20D02bEfc377D41445793068908E2250D0'.toLowerCase()
+}

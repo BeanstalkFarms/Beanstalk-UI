@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/Tokens';
 import useQuote, { QuoteHandler } from 'hooks/useQuote';
 import { FormState, FormTokenState } from '.';
+import { ERC20Token, NativeToken } from 'classes/Token';
 
 /**
  * FIXME:
@@ -21,7 +22,7 @@ const TokenQuoteProvider : React.FC<{
   /** Balance for TokenInputField */
   balance: BigNumber | undefined;
   /** Token which we're quoting to. Required to display a proper `amountOut` below the input. */
-  tokenOut: Token;
+  tokenOut: ERC20Token | NativeToken;
   /** Handler to show token select */
   showTokenSelect?: () => void;
   /** */

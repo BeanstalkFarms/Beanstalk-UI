@@ -6,12 +6,12 @@ import useGetChainToken from './useGetChainToken';
 /**
  * 
  */
-export default function useTokenMap(
-  list: (Token | ChainConstant<Token>)[]
+export default function useTokenMap<T extends Token>(
+  list: (T | ChainConstant<T>)[]
 ) : TokenMap {
   const getChainToken = useGetChainToken();
   return useMemo(
-    () => list.reduce<TokenMap>(
+    () => list.reduce<TokenMap<T>>(
       (acc, curr) => {
         // If this entry in the list is a Token and not a TokenMap, we
         // simply return the token. Otherwise we get the appropriate chain-

@@ -1,42 +1,30 @@
 import { ethers } from "ethers";
-import { BeanstalkReplanted__factory, Curve3Pool__factory, CurveTriCrypto2Pool__factory, CurveRegistry__factory, CurveMetaFactory__factory, CurveCryptoFactory__factory, CurveCryptoFactory, CurveMetaPool__factory, CurveRegistry, CurveMetaFactory, CurvePlainPool__factory, CurveMetaPool } from "constants/generated";
-import { BEANSTALK_ADDRESSES, BEAN_CRV3_ADDRESSES, POOL3_ADDRESSES } from "constants/index";
+import { BeanstalkReplanted__factory, Curve3Pool__factory, CurveTriCrypto2Pool__factory, CurveRegistry__factory, CurveMetaFactory__factory, CurveCryptoFactory__factory, CurveMetaPool__factory, CurvePlainPool__factory } from "constants/generated";
+import { BEANSTALK_ADDRESSES, BEAN_CRV3_ADDRESSES, CRYPTO_FACTORY_ADDRESSES, META_FACTORY_ADDRESSES, POOL3_ADDRESSES, POOL_REGISTRY_ADDRESSES, TRICRYPTO2_ADDRESSES } from "constants/index";
 import { getChainConstant } from "hooks/useChainConstant";
 import { Result } from "ethers/lib/utils";
 import { BEAN, USDT, WETH } from "constants/tokens";
 
-// declare function assert(condition : boolean, message?: string): asserts value;
 function assert(condition : boolean, message?: string) : asserts condition is true {
   if(!condition) throw Error(message || 'Assertion failed');
 }
 
-const TRICRYPTO2 = '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46';
-
-// Curve Registry Addresses
-// -----–-----–-----–-----–-----–-----–-----–--------
-// "metapool" and "cryptoswap" are simultaneously
-// - "registries" (they track a list of pools)
-// - "factories"  (they allow creation of new pools)
-const POOL_REGISTRY  = '0x90e00ace148ca3b23ac1bc8c240c2a7dd9c2d7f5' as const; // has 3pool
-const META_FACTORY   = '0xB9fC157394Af804a3578134A6585C0dc9cc990d4' as const; // has X:3CRV pools
-const CRYPTO_FACTORY = '0x8F942C20D02bEfc377D41445793068908E2250D0' as const; // has tricrypto2
-
-enum FarmFromMode {
+export enum FarmFromMode {
   EXTERNAL = '0',
   INTERNAL = '1',
   INTERNAL_EXTERNAL = '2',
   INTERNAL_TOLERANT = '3',
 }
-enum FarmToMode {
+export enum FarmToMode {
   EXTERNAL = '0',
   INTERNAL = '1',
 }
 
-type CurveRegistries = {
-  [POOL_REGISTRY]:  CurveRegistry;
-  [META_FACTORY]:   CurveMetaFactory;
-  [CRYPTO_FACTORY]: CurveCryptoFactory;
-}
+// type CurveRegistries = {
+//   poolRegistry:  CurveRegistry;
+//   metaFactory:   CurveMetaFactory;
+//   cryptoFactory: CurveCryptoFactory;
+// }
 
 export type ChainableFunctionResult = {
   amountOut: ethers.BigNumber;
@@ -47,9 +35,20 @@ export type ChainableFunctionResult = {
 export type ChainableFunction = (amountIn: ethers.BigNumber) => Promise<ChainableFunctionResult>;
 
 const getContracts = (provider: ethers.providers.BaseProvider) => {
-  const BEANSTALK =  getChainConstant(BEANSTALK_ADDRESSES, provider.network.chainId)
-  const POOL3 = getChainConstant(POOL3_ADDRESSES, provider.network.chainId);
-  const BEAN_CRV3 = getChainConstant(BEAN_CRV3_ADDRESSES, provider.network.chainId);
+  const chainId = provider.network.chainId;
+  // Addressses
+  const BEANSTALK       = getChainConstant(BEANSTALK_ADDRESSES, chainId)
+  const POOL3           = getChainConstant(POOL3_ADDRESSES, chainId);
+  const TRICRYPTO2      = getChainConstant(TRICRYPTO2_ADDRESSES, chainId)
+  const BEAN_CRV3       = getChainConstant(BEAN_CRV3_ADDRESSES, chainId);
+  const POOL_REGISTRY   = getChainConstant(POOL_REGISTRY_ADDRESSES, chainId);
+  const META_FACTORY    = getChainConstant(META_FACTORY_ADDRESSES, chainId);
+  const CRYPTO_FACTORY  = getChainConstant(CRYPTO_FACTORY_ADDRESSES, chainId);
+  // Instances
+  const poolRegistry    = CurveRegistry__factory.connect(POOL_REGISTRY, provider);
+  const metaFactory     = CurveMetaFactory__factory.connect(META_FACTORY, provider);
+  const cryptoFactory   = CurveCryptoFactory__factory.connect(CRYPTO_FACTORY, provider);
+
   return {
     beanstalk: BeanstalkReplanted__factory.connect(BEANSTALK, provider),
     curve: {
@@ -60,10 +59,13 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
         beanCrv3:   CurveMetaPool__factory.connect(BEAN_CRV3, provider),
       },
       // Registries
-      registries: <CurveRegistries>{
-        [POOL_REGISTRY]:  CurveRegistry__factory.connect(POOL_REGISTRY, provider),
-        [META_FACTORY]:   CurveMetaFactory__factory.connect(META_FACTORY, provider),
-        [CRYPTO_FACTORY]: CurveCryptoFactory__factory.connect(CRYPTO_FACTORY, provider)
+      registries: {
+        poolRegistry,
+        [POOL_REGISTRY]: poolRegistry,
+        metaFactory,
+        [META_FACTORY]: metaFactory,
+        cryptoFactory,
+        [CRYPTO_FACTORY]: cryptoFactory,
       },
     }
   }
@@ -80,7 +82,7 @@ export default class Farm {
   // ------------------------------------------
 
   constructor(provider: ethers.providers.BaseProvider) {
-    this.provider = provider;
+    this.provider  = provider;
     this.contracts = getContracts(provider);
   }
 
@@ -130,8 +132,8 @@ export default class Farm {
     return [
       // WETH -> USDT via tricrypto2 exchange
       this.exchange(
-        TRICRYPTO2,
-        CRYPTO_FACTORY,
+        this.contracts.curve.pools.tricrypto2.address,
+        this.contracts.curve.registries.cryptoFactory.address,
         WETH[1].address,
         USDT[1].address,
       ),
@@ -148,21 +150,21 @@ export default class Farm {
     return [
       // WETH -> USDT via tricrypto2 exchange
       this.exchange(
-        TRICRYPTO2,
-        CRYPTO_FACTORY,
+        this.contracts.curve.pools.tricrypto2.address,
+        this.contracts.curve.registries.cryptoFactory.address,
         WETH[1].address,
         USDT[1].address,
       ),
       // USDT -> deposit into pool3 for CRV3
       this.addLiquidity(
         this.contracts.curve.pools.pool3.address,
-        POOL_REGISTRY,
+        this.contracts.curve.registries.poolRegistry.address,
         [0, 0, 1], // [DAI, USDC, USDT] use Tether from previous call
       ),
       // CRV3 -> deposit into beanCrv3 for BEAN:CRV3
       this.addLiquidity(
         this.contracts.curve.pools.beanCrv3.address,
-        META_FACTORY,
+        this.contracts.curve.registries.metaFactory.address,
         [0, 1],    // [BEAN, CRV3] use CRV3 from previous call
       ),
     ]
@@ -192,7 +194,7 @@ export default class Farm {
 
   exchange = (
     _pool: string,
-    _registry: keyof CurveRegistries,
+    _registry: string,
     _tokenIn: string,
     _tokenOut: string
   ) : ChainableFunction => {
@@ -243,7 +245,7 @@ export default class Farm {
     return async (amountInStep: ethers.BigNumber) => {
       // const registry = this.contracts.curve.registries[_registry];
       // if (!registry) throw new Error(`Unknown registry: ${_registry}`);
-      const registry = this.contracts.curve.registries[META_FACTORY];
+      const registry = this.contracts.curve.registries.metaFactory;
       const [i, j] = await registry.get_coin_indices(
         _pool,
         _tokenIn,
@@ -292,7 +294,7 @@ export default class Farm {
 
   addLiquidity(
     _pool: string,
-    _registry: keyof CurveRegistries,
+    _registry: string,
     _amounts: (
       readonly   [number, number]
       | readonly [number, number, number]
@@ -316,12 +318,12 @@ export default class Farm {
           amountInStep as [any, any, any],
           true,
         )
-      } else if (_registry === META_FACTORY) {
+      } else if (_registry === this.contracts.curve.registries.metaFactory.address) {
         amountOut = await CurveMetaPool__factory.connect(_pool, this.provider)["calc_token_amount(uint256[2],bool)"](
           amountInStep as [any, any],
           true,
         );
-      } else if (_registry === CRYPTO_FACTORY) {
+      } else if (_registry === this.contracts.curve.registries.cryptoFactory.address) {
         amountOut = await CurvePlainPool__factory.connect(_pool, this.provider).calc_token_amount(
           amountInStep as [any, any],
           true

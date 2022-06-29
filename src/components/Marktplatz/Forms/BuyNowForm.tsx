@@ -15,9 +15,10 @@ import TokenSelectDialog from '../../Common/Form/TokenSelectDialog';
 import useTokenMap from '../../../hooks/useTokenMap';
 import { BEAN, ETH } from '../../../constants/tokens';
 import { BuyNowFormValues } from '../Dialogs/BuyNowDialog';
+import { ERC20Token, NativeToken } from 'classes/Token';
 
 export type BuyNowFormProps = {
-  token: Token
+  token: NativeToken | ERC20Token
 }
 
 const BuyNowForm: React.FC<BuyNowFormProps & FormikProps<BuyNowFormValues>> = ({

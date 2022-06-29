@@ -28,8 +28,8 @@ export const BEAN_ETH_UNIV2_POOL_MAINNET = new UniswapV2Pool(
 export const BEAN_ETH_UNIV2_POOL_ROPSTEN = new UniswapV2Pool(
   SupportedChainId.ROPSTEN,
   BEAN_ETH_UNIV2_ADDRESSES,
-  BEAN_ETH_UNIV2_LP,
-  [BEAN, WETH],
+  BEAN_ETH_UNIV2_LP,  // lpToken
+  [BEAN, WETH],       // tokens
   {
     name: 'BEAN:ETH Uniswap V2 Pool',
     logo: uniswapLogo,

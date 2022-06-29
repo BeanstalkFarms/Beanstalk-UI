@@ -17,7 +17,7 @@ export const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffff
 // --------------
 
 /** A Map of SupportedChainId => any arbitrary type */
-export type ChainConstant<T> = { [chainId: number] : T }
+export type ChainConstant<T> = { [chainId: number] : T };
 /** A Map of address => any arbitrary type. */
 export type AddressMap<T>    = { [address: string] : T };
 

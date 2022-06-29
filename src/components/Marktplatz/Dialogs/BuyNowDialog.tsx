@@ -21,15 +21,12 @@ import { PlotMap } from '../../../state/farmer/field';
 import TokenQuoteProvider from '../../Common/Form/TokenQuoteProvider';
 import BuyOrderForm from '../Forms/BuyOrderForm';
 import { BEAN, ETH } from '../../../constants/tokens';
-import { BuyOrderFormValues } from './BuyOrderDialog';
 import useChainConstant from '../../../hooks/useChainConstant';
-import { FormTokenState } from '../../Common/Form';
+import { FormState } from '../../Common/Form';
 import BuyNowForm from '../Forms/BuyNowForm';
 import PlotDetailsCard from './PlotDetailsCard';
 
-export type BuyNowFormValues = {
-  tokens: FormTokenState[];
-}
+export type BuyNowFormValues = FormState
 
 const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } & DialogProps> =
   ({

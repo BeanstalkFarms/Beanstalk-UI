@@ -19,10 +19,11 @@ import useFarmerBalances from '../../../hooks/useFarmerBalances';
 import TokenSelectDialog from '../../Common/Form/TokenSelectDialog';
 import useTokenMap from '../../../hooks/useTokenMap';
 import { BEAN, ETH } from '../../../constants/tokens';
+import { ERC20Token, NativeToken } from 'classes/Token';
 
 export type BuyOrderFormProps = {
   podLine: BigNumber;
-  token: Token
+  token: ERC20Token | NativeToken
 }
 
 const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>> = ({

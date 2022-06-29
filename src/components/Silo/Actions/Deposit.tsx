@@ -4,7 +4,7 @@ import { Token } from 'classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider, useSigner } from 'wagmi';
-import { BEAN, BEAN_CRV3_LP, ETH, ETH_DECIMALS, LUSD, SEEDS, STALK, USDC, USDT, WETH } from 'constants/tokens';
+import { BEAN, BEAN_CRV3_LP, DAI, ETH, ETH_DECIMALS, LUSD, SEEDS, STALK, USDC, USDT, WETH } from 'constants/tokens';
 import useChainConstant, { getChainConstant } from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
@@ -27,12 +27,12 @@ import { BeanstalkReplanted } from 'constants/generated';
 import useCurve from 'hooks/useCurve';
 import { QuoteHandler } from 'hooks/useQuote';
 import { POOL3_ADDRESSES, ZERO_BN } from 'constants/index';
-import { NativeToken } from 'classes/Token';
+import { ERC20Token, NativeToken } from 'classes/Token';
 import { BEAN_CRV3_CURVE_POOL_MAINNET } from 'constants/pools';
-import { CurveMetaPool } from 'classes/Pool';
+import Pool, { CurveMetaPool } from 'classes/Pool';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import { BigNumberish, ethers } from 'ethers';
-import Farm from 'lib/Beanstalk/Farm';
+import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 
 // -----------------------------------------------------------------------
@@ -45,13 +45,15 @@ type DepositFormValues = {
 
 const DepositForm : React.FC<
   FormikProps<DepositFormValues> & {
-    siloToken: Token;
+    pool: Pool;
+    siloToken: ERC20Token | NativeToken;
     balances: BalanceState;
     contract: ethers.Contract;
     farm: Farm;
   }
 > = ({
   // Custom
+  pool,
   siloToken,
   balances,
   contract,
@@ -62,7 +64,8 @@ const DepositForm : React.FC<
   setFieldValue,
 }) => {
   const chainId = useChainId();
-  const erc20TokenMap = useTokenMap([BEAN, ETH, WETH, USDT, USDC, siloToken]);
+  // TODO: constrain this when siloToken = Unripe
+  const erc20TokenMap  = useTokenMap([BEAN, ETH, WETH, siloToken, DAI, USDC, USDT]);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
   const getChainToken = useGetChainToken();
 
@@ -94,38 +97,62 @@ const DepositForm : React.FC<
   // This handler does not run when _tokenIn = _tokenOut
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
-      const tokenIn  : Token = _tokenIn  instanceof NativeToken ? getChainToken(WETH) : _tokenIn;
-      const tokenOut : Token = _tokenOut instanceof NativeToken ? getChainToken(WETH) : _tokenOut;
+      const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? getChainToken<ERC20Token>(WETH) : _tokenIn;
+      const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? getChainToken<ERC20Token>(WETH) : _tokenOut;
       const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
       let estimate;
 
-      // exclude ETH because we already parsed to WETH
-      if (tokenIn !== getChainToken(WETH)) {
-        return Promise.resolve(ZERO_BN)
-      }
-
-      // Swap to Beans
+      // Depositing BEAN
       if (tokenOut === getChainToken(BEAN)) {
         estimate = await Farm.estimate(
           farm.buyBeans(), // this assumes we're coming from WETH
           [amountIn]
         );
+      } 
+      
+      // Depositing LP Tokens
+      else {
+        if (!pool) throw new Error(`Depositing to ${tokenOut.symbol} but no corresponding pool data found.`);
+        
+        // This is a Curve pool...
+        if (/* pool is Curve */true) {
+          // ...and we're depositing one of the underlying pool tokens.
+          // Ex. for BEAN:3CRV this could be [BEAN, (DAI, USDC, USDT)].
+          const underlyingIndex = pool.underlying.indexOf(tokenIn);
+          if (underlyingIndex > -1) {
+            console.debug(`[Deposit] underlyingIndex = ${underlyingIndex}`);
+            estimate = await Farm.estimate([
+              farm.addLiquidity(
+                farm.contracts.curve.pools.pool3.address,
+                farm.contracts.curve.registries.poolRegistry.address,
+                [0, 0, 1], // [DAI, USDC, USDT] use Tether from previous call
+              ),
+              farm.addLiquidity(
+                farm.contracts.curve.pools.beanCrv3.address,
+                farm.contracts.curve.registries.metaFactory.address,
+                [0, 1]
+              ),
+            ], [amountIn]);
+          } else {
+            throw new Error('Unknown MODE');
+          }
+        }
       }
 
-      // Swap to a 3CRV stable and addLiquidity to the BEAN:3CRV Pool.
+      // Swap `tokenIn` to a 3CRV stable and addLiquidity to the BEAN:3CRV Pool.
       // how many BEAN:3CRV LP tokens do we get for the `addLiquidity`?
-      else if (tokenOut === getChainToken(BEAN_CRV3_LP)) {
-        estimate = await Farm.estimate(
-          farm.buyAndAddBEANCRV3Liquidity(), // this assumes we're coming from WETH
-          [amountIn]
-        );
-      }
+      // else if (tokenOut === getChainToken(BEAN_CRV3_LP)) {
+      //   estimate = await Farm.estimate(
+      //     farm.buyAndAddBEANCRV3Liquidity(), // this assumes we're coming from WETH
+      //     [amountIn]
+      //   );
+      // }
       
       // Unknown
-      else {
-        // return Promise.resolve(ZERO_BN)
-        throw new Error(`Unsupported tokenOut: ${tokenOut.symbol}`)
-      }
+      // else {
+      //   // return Promise.resolve(ZERO_BN)
+      //   throw new Error(`Unsupported tokenOut: ${tokenOut.symbol}`)
+      // }
 
       console.debug('[chain] estimate = ', estimate);
 
@@ -134,7 +161,7 @@ const DepositForm : React.FC<
         steps: estimate.steps,
       }
     },
-    [farm, getChainToken]
+    [farm, pool, getChainToken]
   );
 
   return (
@@ -209,9 +236,6 @@ const DepositForm : React.FC<
           >
             Deposit
           </SmartSubmitButton>
-          {/* <Box>
-            <pre>{JSON.stringify(values, null, 2)}</pre>
-          </Box> */}
         </Stack>
       </Form>
     </Tooltip>
@@ -220,28 +244,23 @@ const DepositForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-enum FarmFromMode {
-  EXTERNAL = '0',
-  INTERNAL = '1',
-  INTERNAL_EXTERNAL = '2',
-  INTERNAL_TOLERANT = '3',
-}
-enum FarmToMode {
-  EXTERNAL = '0',
-  INTERNAL = '1',
-}
-
 // TODO:
 // - implement usePreferredToken here
-const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
-  const Bean = useChainConstant(BEAN);
+const Deposit : React.FC<{
+  pool: Pool;
+  siloToken: ERC20Token | NativeToken;
+}> = ({
+  pool,
+  siloToken
+}) => {
   const Eth = useChainConstant(ETH);
   const balances = useFarmerBalances();
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer);
   const provider = useProvider();
+  const beanstalk = useBeanstalkContract(signer);
   const farm = useMemo(() => new Farm(provider), [provider]);
 
+  // Form setup
   const initialValues : DepositFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1,
@@ -253,6 +272,8 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
       },
     ],
   }), [Eth]);
+
+  // Handlers
   const onSubmit = useCallback(async (values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
     const { amount } = Beanstalk.Silo.Deposit.deposit(
       siloToken,
@@ -362,7 +383,6 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
     siloToken,
   ]);
 
-  //
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
@@ -374,6 +394,7 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
             </TransactionSettings>
           </Box>
           <DepositForm
+            pool={pool}
             siloToken={siloToken}
             balances={balances}
             contract={beanstalk}
