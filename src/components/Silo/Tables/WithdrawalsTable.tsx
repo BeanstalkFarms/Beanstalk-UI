@@ -42,19 +42,20 @@ const WithdrawalsTable : React.FC<{
       headerName: 'Seasons to Arrival',
       align: 'left',
       headerAlign: 'left',
-      renderCell: (params) => (
-        params.value.minus(currentSeason).lte(0) ? (
+      renderCell: (params) => {
+        const arrival = params.value.minus(currentSeason);
+        return arrival.lte(0) ? (
           <Typography color="primary">Claimable</Typography>
         ) : (
-          <Typography>{params.value.toFixed()}</Typography>
+          <Typography>{arrival.toFixed()}</Typography>
         )
-      ),
+      },
       sortable: false,
     },
     {
       field: 'amount',
       flex: 2,
-      headerName: 'Withdrawn LP',
+      headerName: 'Withdrawn',
       align: 'right',
       headerAlign: 'right',
       // valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
@@ -69,8 +70,7 @@ const WithdrawalsTable : React.FC<{
           )}
         >
           <Typography>
-            {displayFullBN(params.value, token.displayDecimals, token.displayDecimals)}
-            (~{displayUSD(getUSD(token, params.row.amount))})
+            {displayFullBN(params.value, token.displayDecimals, token.displayDecimals)} (~{displayUSD(getUSD(token, params.row.amount))})
           </Typography>
         </Tooltip>
       ),
@@ -82,7 +82,7 @@ const WithdrawalsTable : React.FC<{
     currentSeason
   ]);
 
-  const amount = balance?.deposited.amount;
+  const amount = balance?.withdrawn.amount;
   const state = !account ? 'disconnected' : !currentSeason ? 'loading' : 'ready';
 
   return (

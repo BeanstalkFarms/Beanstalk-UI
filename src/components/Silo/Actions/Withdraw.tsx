@@ -23,6 +23,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import { useSigner } from 'wagmi';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 import { ERC20Token } from 'classes/Token';
+import { BeanstalkReplanted } from 'constants/generated';
 
 // -----------------------------------------------------------------------
 
@@ -139,7 +140,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const season = useSeason();
   const siloBalances = useFarmerSiloBalances();
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer);
+  const beanstalk = (useBeanstalkContract(signer) as unknown) as BeanstalkReplanted;
 
   // Form data
   // const depositedBalances = useMemo(() => simplifySiloBalances('deposited', siloBalances), [siloBalances]);
@@ -174,22 +175,38 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
         },
       });
 
-      if (token.symbol === 'BEAN') {
-        call = beanstalk.withdrawBeans(
-          seasons,
-          amounts,
-        );
-      } else if (withdrawResult.deltaCrates.length > 1) {
-        call = beanstalk.withdrawTokenBySeasons(
-          token.address,
-          seasons,
-          amounts
-        );
-      } else {
-        call = beanstalk.withdrawTokenBySeason(
+      // if (token.symbol === 'BEAN') {
+      //   call = beanstalk.withdrawBeans(
+      //     seasons,
+      //     amounts,
+      //   );
+      // } else if (withdrawResult.deltaCrates.length > 1) {
+      //   call = beanstalk.withdrawTokenBySeasons(
+      //     token.address,
+      //     seasons,
+      //     amounts
+      //   );
+      // } else {
+      //   call = beanstalk.withdrawTokenBySeason(
+      //     token.address,
+      //     seasons[0],
+      //     amounts[0],
+      //   );
+      // }
+      
+      if (seasons.length === 0) {
+        throw new Error('Malformatted crates.')
+      } else if (seasons.length === 1) {
+        call = beanstalk.withdrawDeposit(
           token.address,
           seasons[0],
           amounts[0],
+        );
+      } else {
+        call = beanstalk.withdrawDeposits(
+          token.address,
+          seasons,
+          amounts,
         );
       }
 
@@ -210,7 +227,6 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
         .catch((err) => {
           console.error(
             txToast.error(err.error || err),
-
             {
               token: token.address,
               seasons,
