@@ -91,7 +91,7 @@ const ClaimForm : React.FC<
                     <Grid key={_token.address} item xs={12} md={6}>
                       <TokenOutputField
                         token={_token}
-                        value={amount}
+                        amount={amount}
                       />
                     </Grid>
                   ))}
@@ -99,7 +99,7 @@ const ClaimForm : React.FC<
               ) : (
                 <TokenOutputField
                   token={token}
-                  value={amount}
+                  amount={amount}
                 />
               )}
               <Box>

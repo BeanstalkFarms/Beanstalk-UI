@@ -2,17 +2,19 @@ import { Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Token } from 'classes';
 import React from 'react';
-import { displayFullBN } from 'util/index';
+import { displayFullBN, displayUSD } from 'util/index';
 import TokenIcon from '../TokenIcon';
 
 const TokenOutputField : React.FC<{
   token: Token;
-  value: BigNumber;
+  amount: BigNumber;
+  value?: BigNumber;
 }> = ({
   token,
-  value
+  amount,
+  value,
 }) => {
-  const isNegative = value.lt(0);
+  const isNegative = amount.lt(0);
   return (
     <Stack
       sx={{
@@ -27,9 +29,12 @@ const TokenOutputField : React.FC<{
       justifyContent="space-between"
       >
       <Box>
-        <Typography sx={{ fontSize: 24, fontWeight: 'normal' }}>
-          {isNegative ? '-' : '+'}&nbsp;{displayFullBN(value.abs(), token.displayDecimals + 2, token.displayDecimals)}
+        <Typography display="inline" sx={{ fontSize: 24, fontWeight: 'normal' }}>
+          {isNegative ? '-' : '+'}&nbsp;{displayFullBN(amount.abs(), token.displayDecimals + 2, token.displayDecimals)}
         </Typography>
+        {value && (
+          <>&nbsp;&nbsp;<Typography display="inline" fontSize={14}>(~{displayUSD(value)})</Typography></>
+        )}
       </Box>
       <Stack direction="row" alignItems="center" gap={0.5}>
         {token.logo && (

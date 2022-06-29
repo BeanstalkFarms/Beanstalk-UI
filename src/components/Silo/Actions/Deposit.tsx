@@ -254,19 +254,19 @@ const DepositForm : React.FC<
             <Stack direction="column" gap={1}>
               <TokenOutputField
                 token={siloToken}
-                value={bdv}
+                amount={bdv}
               />
               <Stack direction="row" gap={1} justifyContent="center">
                 <Box sx={{ flex: 1 }}>
                   <TokenOutputField
                     token={STALK}
-                    value={stalk}
+                    amount={stalk}
                   />
                 </Box>
                 <Box sx={{ flex: 1 }}>
                   <TokenOutputField
                     token={SEEDS}
-                    value={seeds}
+                    amount={seeds}
                   />
                 </Box>
               </Stack>
