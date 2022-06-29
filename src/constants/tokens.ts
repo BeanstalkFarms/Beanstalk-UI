@@ -183,7 +183,7 @@ export const DAI = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
     DAI_ADDRESSES,
-    6,
+    18,
     {
       name: 'Dai',
       symbol: 'DAI',

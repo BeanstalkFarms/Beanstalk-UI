@@ -51,7 +51,7 @@ export default function useAllowances(
         if (!curr) prev.push(tokens[index]);
         return prev;
       }, [] as Token[]);
-      console.debug(`[hooks/useAllowance] found ${absent.length} absent tokens for ${contractAddress}`);
+      // console.debug(`[hooks/useAllowance] found ${absent.length} absent tokens for ${contractAddress}`);
       if (absent.length > 0) {
         fetchAllowances(
           account?.address,

@@ -299,6 +299,8 @@ export default class Farm {
       readonly   [number, number]
       | readonly [number, number, number]
     ),
+    _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
+    _toMode : FarmToMode = FarmToMode.INTERNAL,
   ) : ChainableFunction {
     return async (_amountInStep: ethers.BigNumber) => {
       const amountInStep = _amounts.map((k) => (k === 1 ? _amountInStep : ethers.BigNumber.from(0)));
@@ -342,8 +344,8 @@ export default class Farm {
             _registry,
             amountInStep as any[], // could be 2 or 3 elems
             minAmountOut,
-            FarmFromMode.INTERNAL_TOLERANT,
-            FarmToMode.INTERNAL,
+            _fromMode,
+            _toMode,
           ])
         ),
         decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('addLiquidity', data),
