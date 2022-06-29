@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Badge, Card, Stack, Tab, Tabs } from '@mui/material';
+import { Badge, Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import { Pool } from 'classes';
 import { ERC20Token } from 'classes/Token';
 import { FarmerSiloBalance } from 'state/farmer/silo';
@@ -33,9 +33,10 @@ const Actions : React.FC<{
             <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
               <Tab label="Deposit" />
               <Tab label="Withdraw" />
-              {isClaimVisible ? (
-                <Tab label={<Badge color="primary" variant="dot">Claim</Badge>} sx={{ overflow: 'visible' }} />
-              ) : null}
+              <Tab
+                label={isClaimVisible ? <Badge color="primary" variant="dot">Claim</Badge> : 'Claim'}
+                sx={{ overflow: 'visible' }}
+              />
             </Tabs>
           </Stack>
           {/* Tab Content */}
@@ -59,17 +60,18 @@ const Actions : React.FC<{
         </Stack>
       </Card>
       {/* Tables */}
-      {tab === 0 ? (
+      <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
         <DepositsTable
           token={props.token}
           balance={props.siloBalance}
         />
-      ) : (
+      </Box>
+      <Box sx={{ display: tab !== 0 ? 'block' : 'none' }}>
         <WithdrawalsTable
           token={props.token}
           balance={props.siloBalance}
         />
-      )}
+      </Box>
     </>
   );
 };

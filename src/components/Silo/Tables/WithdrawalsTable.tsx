@@ -43,11 +43,11 @@ const WithdrawalsTable : React.FC<{
       align: 'left',
       headerAlign: 'left',
       renderCell: (params) => {
-        const arrival = params.value.minus(currentSeason);
-        return arrival.lte(0) ? (
+        const seasonsToArrival = params.value.minus(currentSeason);
+        return seasonsToArrival.lte(0) ? (
           <Typography color="primary">Claimable</Typography>
         ) : (
-          <Typography>{arrival.toFixed()}</Typography>
+          <Typography>{seasonsToArrival.toFixed()}</Typography>
         )
       },
       sortable: false,

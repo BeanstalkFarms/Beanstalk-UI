@@ -24,6 +24,8 @@ import { useSigner } from 'wagmi';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 import { ERC20Token } from 'classes/Token';
 import { BeanstalkReplanted } from 'constants/generated';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 
 // -----------------------------------------------------------------------
 
@@ -141,6 +143,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const siloBalances = useFarmerSiloBalances();
   const { data: signer } = useSigner();
   const beanstalk = (useBeanstalkContract(signer) as unknown) as BeanstalkReplanted;
+  const withdrawSeasons = useSelector<AppState, AppState['_beanstalk']['silo']['withdrawSeasons']>(state => state._beanstalk.silo.withdrawSeasons);
 
   // Form data
   // const depositedBalances = useMemo(() => simplifySiloBalances('deposited', siloBalances), [siloBalances]);
@@ -175,25 +178,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
         },
       });
 
-      // if (token.symbol === 'BEAN') {
-      //   call = beanstalk.withdrawBeans(
-      //     seasons,
-      //     amounts,
-      //   );
-      // } else if (withdrawResult.deltaCrates.length > 1) {
-      //   call = beanstalk.withdrawTokenBySeasons(
-      //     token.address,
-      //     seasons,
-      //     amounts
-      //   );
-      // } else {
-      //   call = beanstalk.withdrawTokenBySeason(
-      //     token.address,
-      //     seasons[0],
-      //     amounts[0],
-      //   );
-      // }
-      
+      //
       if (seasons.length === 0) {
         throw new Error('Malformatted crates.')
       } else if (seasons.length === 1) {
@@ -212,7 +197,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
 
       const txToast = new TransactionToast({
         loading: `Withdrawing ${displayFullBN(withdrawResult.amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} from the Silo`,
-        success: `Withdraw successful. Your ${token.symbol} will be available to Claim in N Seasons.`,
+        success: `Withdraw successful. Your ${token.name} will be available to Claim in ${withdrawSeasons.toFixed()} Seasons.`,
       });
 
       return call
@@ -240,6 +225,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
     beanstalk,
     token,
     season,
+    withdrawSeasons,
   ]);
 
   //
