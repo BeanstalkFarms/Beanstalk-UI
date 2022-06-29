@@ -50,151 +50,148 @@ const strokes = [
   },
 ];
 
-const Graph: React.FC<GraphProps> = withTooltip(
-  ({
-     // Chart sizing
-     width,
-     height,
-     // Tooltip
-     showTooltip,
-     hideTooltip,
-     tooltipData,
-     // tooltipTop = 0,
-     tooltipLeft = 0,
-     // Data
-     series,
-     // Events
-     onCursor,
-     isTWAP
-   }) => {
-    const data = series[0];
+const Graph: React.FC<GraphProps> = withTooltip(({
+  // Chart sizing
+  width,
+  height,
+  // Tooltip
+  showTooltip,
+  hideTooltip,
+  tooltipData,
+  // tooltipTop = 0,
+  tooltipLeft = 0,
+  // Data
+  series,
+  // Events
+  onCursor,
+  isTWAP
+}) => {
+  const data = series[0];
 
-    console.log('HEIGHT', height);
-
-    // scales
-    const scales = useMemo(() => series.map((_data) => {
-      const xScale = scaleTime<number>({
-        domain: extent(_data, getX) as [Date, Date],
+  // scales
+  const scales = useMemo(() => series.map((_data) => {
+    const xScale = scaleTime<number>({
+      domain: extent(_data, getX) as [Date, Date],
+    });
+    let yScale;
+    if (isTWAP) {
+      const yMin = min(_data, getY);
+      const yMax = max(_data, getY);
+      // sets the yScale so that 1 is always perfectly in the middle
+      const biggestDifference = Math.max(Math.abs(1 - (yMin as number)), Math.abs(1 - (yMax as number)));
+      yScale = scaleLinear<number>({
+        domain: [1 - biggestDifference, 1 + biggestDifference],
       });
-      let yScale;
-      if (isTWAP) {
-        const yMin = min(_data, getY);
-        const yMax = max(_data, getY);
-        // sets the yScale so that 1 is always perfectly in the middle
-        const biggestDifference = Math.max(Math.abs(1 - (yMin as number)), Math.abs(1 - (yMax as number)));
-        yScale = scaleLinear<number>({
-          domain: [1 - biggestDifference, 1 + biggestDifference],
-        });
-      } else {
-        yScale = scaleLinear<number>({
-          domain: [min(_data, getY) as number, max(_data, getY) as number],
-        });
-      }
+    } else {
+      yScale = scaleLinear<number>({
+        domain: [min(_data, getY) as number, max(_data, getY) as number],
+      });
+    }
 
-      xScale.range([0, width]);
-      yScale.range([height - margin.top, margin.bottom]);
+    xScale.range([0, width]);
+    yScale.range([height - margin.top, margin.bottom]);
 
-      return { xScale, yScale };
-    }), [width, height, series, isTWAP]);
+    return { xScale, yScale };
+  }), [width, height, series, isTWAP]);
 
-    //
-    const handleTooltip = useCallback(
-      (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
-        const { x } = localPoint(event) || { x: 0 };
+  //
+  const handleTooltip = useCallback(
+    (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
+      const { x } = localPoint(event) || { x: 0 };
 
-        // for each series
-        const ds = scales.map((scale, i) => {
-          const x0 = scale.xScale.invert(x);
-          const index = bisectDate(data, x0, 1);
-          const d0 = series[i][index - 1];
-          const d1 = series[i][index];
-          let d = d0;
-          if (d1 && getX(d1)) {
-            d = x0.valueOf() - getX(d0).valueOf() > getX(d1).valueOf() - x0.valueOf() ? d1 : d0;
-          }
+      // for each series
+      const ds = scales.map((scale, i) => {
+        const x0 = scale.xScale.invert(x);
+        const index = bisectDate(data, x0, 1);
+        const d0 = series[i][index - 1];
+        const d1 = series[i][index];
+        let d = d0;
+        if (d1 && getX(d1)) {
+          d = x0.valueOf() - getX(d0).valueOf() > getX(d1).valueOf() - x0.valueOf() ? d1 : d0;
+        }
 
-          return d;
-        });
+        return d;
+      });
 
-        showTooltip({
-          tooltipData: ds,
-          tooltipLeft: x,
-          // tooltipTop: syScale(getY(d)),
-        });
-        onCursor(ds);
-      },
-      [showTooltip, onCursor, data, scales, series],
-    );
+      showTooltip({
+        tooltipData: ds,
+        tooltipLeft: x,
+        // tooltipTop: syScale(getY(d)),
+      });
+      onCursor(ds);
+    },
+    [showTooltip, onCursor, data, scales, series],
+  );
 
-    const handleMouseLeave = useCallback(() => {
-      hideTooltip();
-      onCursor(undefined);
-    }, [hideTooltip, onCursor]);
+  const handleMouseLeave = useCallback(() => {
+    hideTooltip();
+    onCursor(undefined);
+  }, [hideTooltip, onCursor]);
 
-    return (
-      <>
-        <svg width={width} height={height}>
-          {/**
-           * Lines
-           */}
-          <Group>
-            {series.map((_data, index) => (
-              <>
-                {isTWAP && (
-                  <LinePath<DateValue>
-                    key={index}
-                    curve={curveNatural}
-                    data={_data}
-                    x={(d) => scales[index].xScale(getX(d)) ?? 0}
-                    y={scales[0].yScale(1)}
-                    {...strokes[2]}
-                  />
-                )}
+  return (
+    <>
+      <svg width={width} height={height}>
+        {/**
+          * Lines
+          */}
+        <Group>
+          {series.map((_data, index) => (
+            <>
+              {isTWAP && (
                 <LinePath<DateValue>
-                  key={index + 1}
-                  curve={isTWAP ? curveBasis : curveNatural}
+                  key={index}
+                  curve={curveNatural}
                   data={_data}
                   x={(d) => scales[index].xScale(getX(d)) ?? 0}
-                  y={(d) => scales[index].yScale(getY(d)) ?? 0}
-                  {...strokes[index]}
+                  y={scales[0].yScale(1)}
+                  {...strokes[2]}
                 />
-              </>
-            ))}
-          </Group>
-          {/**
-           * Cursor
-           */}
-          {tooltipData && (
-            <g>
-              <Line
-                from={{ x: tooltipLeft, y: margin.top }}
-                to={{ x: tooltipLeft, y: height + margin.top }}
-                stroke={BeanstalkPalette.lightishGrey}
-                strokeWidth={1}
-                pointerEvents="none"
+              )}
+              <LinePath<DateValue>
+                key={index + 1}
+                curve={isTWAP ? curveBasis : curveNatural}
+                data={_data}
+                x={(d) => scales[index].xScale(getX(d)) ?? 0}
+                y={(d) => scales[index].yScale(getY(d)) ?? 0}
+                {...strokes[index]}
               />
-            </g>
-          )}
-          {/**
-           * Overlay to handle tooltip.
-           * Needs to be the last item to maintain mouse control.
-           */}
-          <Bar
-            x={0}
-            y={0}
-            width={width}
-            height={height}
-            fill="transparent"
-            rx={14}
-            onTouchStart={handleTooltip}
-            onTouchMove={handleTooltip}
-            onMouseMove={handleTooltip}
-            onMouseLeave={handleMouseLeave}
-          />
-        </svg>
-      </>
-    );
-  });
+            </>
+          ))}
+        </Group>
+        {/**
+          * Cursor
+          */}
+        {tooltipData && (
+          <g>
+            <Line
+              from={{ x: tooltipLeft, y: margin.top }}
+              to={{ x: tooltipLeft, y: height + margin.top }}
+              stroke={BeanstalkPalette.lightishGrey}
+              strokeWidth={1}
+              pointerEvents="none"
+            />
+          </g>
+        )}
+        {/**
+          * Overlay to handle tooltip.
+          * Needs to be the last item to maintain mouse control.
+          */}
+        <Bar
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          fill="transparent"
+          rx={14}
+          onTouchStart={handleTooltip}
+          onTouchMove={handleTooltip}
+          onMouseMove={handleTooltip}
+          onMouseLeave={handleMouseLeave}
+        />
+      </svg>
+    </>
+  );
+});
 
 /**
  * Wrap the graph in a ParentSize handler.

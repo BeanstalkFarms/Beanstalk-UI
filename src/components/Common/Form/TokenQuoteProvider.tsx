@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { CircularProgress, TextFieldProps, Typography } from '@mui/material';
 import { Token } from 'classes';
 import { Field, FieldProps, useFormikContext } from 'formik';
-import TokenInputField from 'components/Common/Form/TokenInputField';
+import TokenInputField, { TokenInputFieldProps } from 'components/Common/Form/TokenInputField';
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/Tokens';
@@ -10,26 +10,20 @@ import useQuote, { QuoteHandler } from 'hooks/useQuote';
 import { FormState, FormTokenState } from '.';
 import { ERC20Token, NativeToken } from 'classes/Token';
 
-/**
- * FIXME:
- * - Quote doesn't clear if the output value is 0 and the selected token is switched.
- */
 const TokenQuoteProvider : React.FC<{
   /** Field name */
   name: string;
   /** Input state */
   state: FormTokenState;
-  /** Balance for TokenInputField */
-  balance: BigNumber | undefined;
   /** Token which we're quoting to. Required to display a proper `amountOut` below the input. */
   tokenOut: ERC20Token | NativeToken;
   /** Handler to show token select */
   showTokenSelect?: () => void;
-  /** */
+  /** Disable the token selector button inside the input. */
   disableTokenSelect?: boolean;
   /** */
   handleQuote: QuoteHandler;
-} & TextFieldProps> = ({
+} & Partial<TokenInputFieldProps>> = ({
   name,
   state,
   balance,
@@ -126,13 +120,16 @@ const TokenQuoteProvider : React.FC<{
     <Field name={`${name}.amount`}>
       {(fieldProps: FieldProps) => (
         <TokenInputField
-          {...fieldProps}
-          token={state.token}
+          // MUI
           fullWidth
+          InputProps={InputProps}
+          // Formik
+          {...fieldProps}
+          {...props}
+          // Other
           balance={balance}
           quote={Quote}
-          InputProps={InputProps}
-          {...props}
+          token={state.token}
         />
       )}
     </Field>

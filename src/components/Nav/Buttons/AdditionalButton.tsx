@@ -19,7 +19,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { BEANSTALK_ADDRESSES, CHAIN_INFO } from 'constants/index';
 import useChainConstant from 'hooks/useChainConstant';
-import NavDrawer from '../Mobile/NavDrawer';
+import NavDrawer from '../NavDrawer';
 import ROUTES from '../routes';
 
 // -----------------------------------------------------------------

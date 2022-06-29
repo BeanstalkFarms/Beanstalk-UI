@@ -241,14 +241,15 @@ const FarmerEventsProcessor = () => {
       }
     }
   }, [
-    events,
-    account,
-    chainId,
-    whitelist,
-    dispatch,
-    eventParsingParameters,
-    processFarmerEventsV1,
-    SiloTokens,
+    // FIXME: cascading renders here
+    events,       // receives new events
+    account,      // user changes their wallet address
+    chainId,      // chain changes
+    whitelist,    // changes when chainId changes
+    eventParsingParameters, // changes for new account, season, harvestableIndex
+    processFarmerEventsV1,  // changes when chainId changes
+    SiloTokens,   // changes when chainId changes
+    dispatch,     // shouldn't change
   ]);
 
   return null;

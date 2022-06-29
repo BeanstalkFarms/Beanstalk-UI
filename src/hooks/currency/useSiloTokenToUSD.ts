@@ -8,6 +8,9 @@ import { AppState } from 'state';
 import useBeansToUSD from './useBeansToUSD';
 import useChainConstant from '../useChainConstant';
 
+/**
+ * FIXME: this function is being called very frequently
+ */
 const useSiloTokenToUSD = () => {
   const beansToUSD = useBeansToUSD();
   const Bean = useChainConstant(BEAN);

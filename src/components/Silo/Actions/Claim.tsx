@@ -22,6 +22,7 @@ import TransactionSettings from 'components/Common/Form/TransactionSettings';
 import SettingSwitch from 'components/Common/Form/SettingSwitch';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
+import useSeason from 'hooks/useSeason';
 
 // -----------------------------------------------------------------------
 
@@ -77,6 +78,7 @@ const ClaimForm : React.FC<
                 {...fieldProps}
                 token={token}
                 balance={claimableBalance || undefined}
+                balanceLabel="Claimable Balance"
                 InputProps={InputProps}
               />
             )}
@@ -89,7 +91,7 @@ const ClaimForm : React.FC<
                     <Grid key={_token.address} item xs={12} md={6}>
                       <TokenOutputField
                         token={_token}
-                        value={amount}
+                        amount={amount}
                       />
                     </Grid>
                   ))}
@@ -97,7 +99,7 @@ const ClaimForm : React.FC<
               ) : (
                 <TokenOutputField
                   token={token}
-                  value={amount}
+                  amount={amount}
                 />
               )}
               <Box>
@@ -141,6 +143,7 @@ const Claim : React.FC<{
   // Contracts
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
+  const currentSeason = useSeason();
 
   // Balances
   const claimableBalance = siloBalance.claimable.amount;
@@ -176,13 +179,20 @@ const Claim : React.FC<{
             </TransactionSettings>
           </Box>
           <Stack spacing={1}>
+            {/* Show an alert box if there are Withdrawals that aren't yet Claimable. */}
             {siloBalance?.withdrawn?.crates.length > 0 ? (
               <Box sx={{ borderColor: 'primary.main', borderWidth: 1, borderStyle: 'solid', p: 1, borderRadius: 1 }}>
-                {siloBalance.withdrawn.crates.map((crate) => (
-                  <Typography key={crate.season.toString()} color="primary">
-                    {displayBN(crate.amount)} {token.symbol} will become Claimable in N Seasons
-                  </Typography>
-                ))}
+                {siloBalance.withdrawn.crates.map((crate) => {
+                  const seasonsToArrival = crate.season.minus(currentSeason);
+                  if (seasonsToArrival.gt(0)) {
+                    return (
+                      <Typography key={crate.season.toString()} color="primary">
+                        {displayBN(crate.amount)} {token.name} will become Claimable in {seasonsToArrival.toFixed()} Season{seasonsToArrival.eq(1) ? '' : 's'}
+                      </Typography>
+                    );
+                  }
+                  return null;
+                })}
               </Box>
             ) : null}
             <ClaimForm

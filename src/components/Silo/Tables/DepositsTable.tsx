@@ -1,31 +1,38 @@
 import React, { useMemo } from 'react';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
-import { Box, Card, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import { DataGrid, GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import type { DepositCrate } from 'state/farmer/silo';
-import { displayBN, displayFullBN } from 'util/index';
+import { displayBN, displayFullBN, displayUSD } from 'util/index';
 import useBeansToUSD from 'hooks/currency/useBeansToUSD';
 import { tableStyle } from 'util/tableStyle';
 import useSeason from 'hooks/useSeason';
-import { STALK } from 'constants/tokens';
+import { BEAN, STALK } from 'constants/tokens';
+import { ZERO_BN } from 'constants/index';
+import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
+import useChainConstant from 'hooks/useChainConstant';
+import Crates from './Crates';
+import COLUMNS from 'components/Common/Table/cells';
+import { useAccount } from 'wagmi';
 
 const MAX_ROWS = 10;
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
-const DepositsCard : React.FC<{
+const DepositsTable : React.FC<{
   token: Token;
   balance: FarmerSiloBalance | undefined;
 }> = ({
   token,
   balance,
 }) => {
-  const getUSD = useBeansToUSD();
+  const Bean = useChainConstant(BEAN);
+  const getUSD = useSiloTokenToUSD();
   const currentSeason = useSeason();
+  const { data: account } = useAccount();
 
-  //
   const rows : (DepositCrate & { id: BigNumber })[] = useMemo(() => 
     balance?.deposited.crates.map((deposit) => ({
       id: deposit.season,
@@ -33,16 +40,9 @@ const DepositsCard : React.FC<{
     })) || [],
     [balance?.deposited.crates]
   );
+
   const columns = useMemo(() => ([
-    {
-      field: 'season',
-      flex: 1,
-      headerName: 'Season',
-      align: 'left',
-      headerAlign: 'left',
-      valueFormatter: (params) => displayBN(params.value),
-      renderCell: basicCell,
-    },
+    COLUMNS.season,
     {
       field: 'amount',
       flex: 2,
@@ -55,13 +55,14 @@ const DepositsCard : React.FC<{
           title={(
             <>
               <Typography>BDV: {displayBN(params.row.bdv)}</Typography>
-              <Typography>Value: ${displayBN(getUSD(params.row.bdv))}</Typography>
+              <Typography>Value: {displayUSD(getUSD(Bean, params.row.bdv))}</Typography>
             </>
           )}
         >
           <Typography>{displayFullBN(params.value, token.displayDecimals, token.displayDecimals)}</Typography>
         </Tooltip>
-      )
+      ),
+      sortable: false,
     },
     {
       field: 'stalk',
@@ -89,53 +90,29 @@ const DepositsCard : React.FC<{
           </Tooltip>
         );
       },
+      sortable: false,
     },
-    {
-      field: 'seeds',
-      flex: 1,
-      headerName: 'Seeds',
-      align: 'right',
-      headerAlign: 'right',
-      valueFormatter: (params) => displayBN(params.value),
-      renderCell: basicCell,
-    }
-  ] as GridColumns), [token.displayDecimals, getUSD, currentSeason]);
+    COLUMNS.seeds,
+  ] as GridColumns), [
+    token.displayDecimals,
+    getUSD,
+    Bean,
+    currentSeason
+  ]);
 
-  const tableHeight = useMemo(() => {
-    if (!rows || rows.length === 0) return '200px';
-    return Math.min(rows.length, MAX_ROWS) * 36 + 94;
-  }, [rows]);
+  const amount = balance?.deposited.amount;
+  const state = !account ? 'disconnected' : 'ready';
 
   return (
-    <Card>
-      <Stack gap={0.5}>
-        <Box sx={{ px: 2, pt: 2 }}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{token.name} Deposits</Typography>
-        </Box>
-        <Box
-          sx={{
-            px: 1,
-            height: tableHeight,
-            width: '100%',
-            ...tableStyle
-          }}>
-          <DataGrid
-            columns={columns}
-            rows={rows}
-            pageSize={MAX_ROWS}
-            disableSelectionOnClick
-            disableColumnMenu
-            density="compact"
-            initialState={{
-              sorting: {
-                sortModel: [{ field: 'season', sort: 'desc' }],
-              }
-            }}
-          />
-        </Box>
-      </Stack>
-    </Card>
+    <Crates
+      title={`${token.name} Deposits`}
+      rows={rows}
+      columns={columns}
+      amount={amount}
+      value={getUSD(token, amount || ZERO_BN)}
+      state={state}
+    />
   );
 };
 
-export default DepositsCard;
+export default DepositsTable;

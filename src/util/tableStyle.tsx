@@ -2,34 +2,50 @@ export const tableStyle = {
   '& .MuiDataGrid-root': {
     outline: 'none',
     border: 'none',
+    
+    // Rows
     '& .MuiDataGrid-row.odd': {
       backgroundColor: '#F6FAFE'
     },
     '& .MuiDataGrid-iconSeparator': {
       display: 'none'
     },
+
+    // Header
+    '& .MuiDataGrid-columnHeaders': {
+      border: 'none',
+      color: '#000000',
+      borderRadius: 0,
+      // fontSize: '18px',
+    },
+    '& .MuiDataGrid-columnHeader': {
+      '&:focus': {
+        outline: 'none'
+      },
+    },
     '& .MuiDataGrid-columnHeaderTitle': {
       fontWeight: 500
     },
+
+    // Cells
     '& .MuiDataGrid-cellContent': {
       color: '#677166',
-      fontSize: '18px'
+      // fontSize: '18px'
     },
     '& .MuiDataGrid-cell': {
-      outline: 'none',
+      '&:focus': {
+        outline: 'none'
+      },
       border: 'none',
     },
+
+    // Footer
     '& .MuiDataGrid-footerContainer': {
-      outline: 'none',
       borderBottom: 'none',
       borderTop: 'none',
     },
-    '& .MuiDataGrid-columnHeaders': {
-      outline: 'none',
-      border: 'none',
-      fontSize: '18px',
-      color: '#000000'
-    },
+
+    // Other
     '& .MuiDataGrid-virtualScrollerRenderZone :hover': {
       // backgroundColor: "transparent"
       // backgroundColor: "#D8F2DB"

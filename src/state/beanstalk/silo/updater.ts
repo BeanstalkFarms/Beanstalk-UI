@@ -11,7 +11,7 @@ import useWhitelist, { useGeneralizedWhitelist } from 'hooks/useWhitelist';
 import BigNumber from 'bignumber.js';
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import useChainId from 'hooks/useChain';
-import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
+import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 import { BeanstalkSiloBalance } from './index';
 
 export const useBeanstalkSilo = () => {
@@ -52,6 +52,8 @@ export const useBeanstalkSilo = () => {
         withdrawnLpTotal,
         // 4
         poolBalancesTotal,
+        // 5
+        withdrawSeasons,
       ] = await Promise.all([
         // 0
         beanstalk.totalStalk().then(tokenResult(STALK)),  // Includes Stalk from Earned Beans.
@@ -92,8 +94,12 @@ export const useBeanstalkSilo = () => {
               withdrawn: data[1],
             }))
           ))
-        )
-        // beanstalk.withdrawSeasons().then(bigNumberResult)
+        ),
+        // 5
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.withdrawSeasons(),
+          (b) => b.withdrawFreeze(),
+        ]).then(bigNumberResult),
       ] as const);
 
       console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [stalkTotal, seedsTotal, poolBalancesTotal[0], poolBalancesTotal[0].deposited.toString()]);
@@ -112,25 +118,8 @@ export const useBeanstalkSilo = () => {
       // active:  owned, actively earning other silo assets
       // earned:  active but not yet deposited into a Season
       // grown:   inactive
-      dispatch(updateBeanstalkSiloAssets({
-        beans: {
-          earned: earnedBeansTotal,
-          total:  depositedBeansTotal,
-        },
-        stalk: {
-          active: activeStalkTotal,
-          earned: earnedStalkTotal,
-          grown:  ZERO_BN,
-          total:  activeStalkTotal.plus(ZERO_BN),
-        },
-        seeds: {
-          active: seedsTotal,
-          earned: earnedSeedTotal,
-          total:  seedsTotal.plus(earnedSeedTotal),
-        },
-        roots: {
-          total:  rootsTotal,
-        },
+      dispatch(updateBeanstalkSilo({
+        // Balances
         balances: {
           ...(IS_REPLANTED ? {} : {
             [SiloTokens.Bean.address]: {
@@ -161,7 +150,28 @@ export const useBeanstalkSilo = () => {
             };
             return agg;
           }, {} as TokenMap<BeanstalkSiloBalance>)
-        }
+        },
+        // Rewards
+        beans: {
+          earned: earnedBeansTotal,
+          total:  depositedBeansTotal,
+        },
+        stalk: {
+          active: activeStalkTotal,
+          earned: earnedStalkTotal,
+          grown:  ZERO_BN,
+          total:  activeStalkTotal.plus(ZERO_BN),
+        },
+        seeds: {
+          active: seedsTotal,
+          earned: earnedSeedTotal,
+          total:  seedsTotal.plus(earnedSeedTotal),
+        },
+        roots: {
+          total:  rootsTotal,
+        },
+        // Metadata
+        withdrawSeasons: withdrawSeasons
       }));
     }
   }, [

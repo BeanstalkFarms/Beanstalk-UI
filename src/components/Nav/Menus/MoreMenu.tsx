@@ -14,7 +14,6 @@ import {
 } from 'react-router-dom';
 import ROUTES from '../routes';
 import DropdownIcon from '../../Common/DropdownIcon';
-import balancesIcon from '../../../img/nav-icons/balances.svg';
 
 const MoreDropdown: React.FC = () => {
   // Handlers
