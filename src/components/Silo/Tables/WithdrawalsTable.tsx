@@ -16,6 +16,8 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { useAccount } from 'wagmi';
 
+type RowData = WithdrawalCrate & { id: BigNumber };
+
 const WithdrawalsTable : React.FC<{
   token: Token;
   balance: FarmerSiloBalance | undefined;
@@ -27,13 +29,30 @@ const WithdrawalsTable : React.FC<{
   const currentSeason = useSeason();
   const { data: account } = useAccount();
 
-  const rows : (WithdrawalCrate & { id: BigNumber })[] = useMemo(() => 
-    balance?.withdrawn.crates.map((deposit) => ({
-      id: deposit.season,
-      ...deposit
-    })) || [],
-    [balance?.withdrawn.crates]
-  );
+  const rows : RowData[] = useMemo(() => {
+    const data : RowData[] = [];
+    if (balance) {
+      if (balance.claimable.amount.gt(0)) {
+        data.push({
+          id: currentSeason,
+          amount: balance.claimable.amount,
+          season: currentSeason,
+        });
+      }
+      if (balance.withdrawn?.crates?.length > 0) {
+        data.push(
+          ...(balance.withdrawn.crates.map((crate) => ({
+            id: crate.season,
+            ...crate
+          })))
+        )
+      }
+    }
+    return data;
+  }, [
+    balance,
+    currentSeason,
+  ]);
 
   const columns = useMemo(() => ([
     {
@@ -42,6 +61,7 @@ const WithdrawalsTable : React.FC<{
       headerName: 'Seasons to Arrival',
       align: 'left',
       headerAlign: 'left',
+      valueParser: (value: BigNumber) => value.toNumber(),
       renderCell: (params) => {
         const seasonsToArrival = params.value.minus(currentSeason);
         return seasonsToArrival.lte(0) ? (
@@ -93,6 +113,7 @@ const WithdrawalsTable : React.FC<{
       amount={amount}
       value={getUSD(token, amount || ZERO_BN)}
       state={state}
+      sort={{ field: 'season', sort: 'asc' }}
     />
   );
 };

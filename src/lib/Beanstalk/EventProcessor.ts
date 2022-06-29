@@ -12,12 +12,10 @@ import {
 } from 'constants/generated/Beanstalk/BeanstalkReplanted';
 import { BEAN } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
-import { TypedEvent } from 'constants/generated/common';
 import Token from 'classes/Token';
 import { TokenMap } from 'constants/index';
 import { PlotMap } from 'state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
-import { Withdrawals } from 'hooks/useEventProcessor';
 
 // ----------------------------------------
 

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box, Card, CircularProgress, Divider, Stack, Typography } from '@mui/material';
-import { DataGrid, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, GridColumns, GridSortItem, GridSortModel } from '@mui/x-data-grid';
 
 import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
@@ -17,6 +17,7 @@ const Crates : React.FC<{
   amount?: BigNumber;
   value?: BigNumber;
   state: 'disconnected' | 'loading' | 'ready';
+  sort?: GridSortItem;
 }> = ({
   title,
   columns,
@@ -24,6 +25,7 @@ const Crates : React.FC<{
   amount,
   value,
   state,
+  sort = { field: 'season', sort: 'desc' }
 }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '180px';
@@ -82,7 +84,7 @@ const Crates : React.FC<{
           }}
           initialState={{
             sorting: {
-              sortModel: [{ field: 'season', sort: 'desc' }],
+              sortModel: [sort],
             }
           }}
         />

@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js';
+import { AddDepositEvent, AddWithdrawalEvent, RemoveDepositEvent } from 'constants/generated/Beanstalk/BeanstalkReplanted';
 import { LP_TO_SEEDS, REPLANTED_CHAINS, ZERO_BN } from 'constants/index';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/tokens';
+import { ethers } from 'ethers';
 import useChainId from 'hooks/useChain';
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import useEventProcessor, { EventParsingParameters } from 'hooks/useEventProcessor';
@@ -79,14 +81,75 @@ const FarmerEventsProcessor = () => {
           // Run processor
           const p = new Beanstalk.EventProcessor(
             eventParsingParameters.account,
-            {
+            { 
               ...eventParsingParameters,
               whitelist: whitelist,
             }
           );
-          const results = p.ingestAll(events);
-          console.debug('[farmer/updater] ...processed events!', results);
           
+          p.ingestAll(events);
+          p.ingest({
+            event: 'AddDeposit',
+            args: {
+              token: BEAN[1].address,
+              account: eventParsingParameters.account,
+              amount: ethers.BigNumber.from(100_000000),
+              bdv: ethers.BigNumber.from(100_000000),
+              season: 6070,
+            }
+          } as AddDepositEvent);
+          p.ingest({
+            event: 'AddDeposit',
+            args: {
+              token: BEAN[1].address,
+              account: eventParsingParameters.account,
+              amount: ethers.BigNumber.from(100_000000),
+              bdv: ethers.BigNumber.from(100_000000),
+              season: 6072,
+            }
+          } as AddDepositEvent);
+          // TEMP
+          p.ingest({
+            event: 'RemoveDeposit',
+            args: {
+              account: eventParsingParameters.account,
+              token: BEAN[1].address,
+              season: 6070,
+              amount: ethers.BigNumber.from(100_000000),
+            }
+          } as RemoveDepositEvent);
+          p.ingest({
+            event: 'RemoveDeposit',
+            args: {
+              account: eventParsingParameters.account,
+              token: BEAN[1].address,
+              season: 6072,
+              amount: ethers.BigNumber.from(100_000000),
+            }
+          } as RemoveDepositEvent);
+          p.ingest({
+            event: 'AddWithdrawal',
+            args: {
+              account: eventParsingParameters.account,
+              token: BEAN[1].address,
+              season: 6073,
+              amount: ethers.BigNumber.from(100_000000),
+            }
+          } as AddWithdrawalEvent);
+          p.ingest({
+            event: 'AddWithdrawal',
+            args: {
+              account: eventParsingParameters.account,
+              token: BEAN[1].address,
+              season: 6076,
+              amount: ethers.BigNumber.from(100_000000),
+            }
+          } as AddWithdrawalEvent);
+          
+          const results = p.data();
+
+          console.debug(`[processor.ts] ...received results:`, results)
+        
           // Update Field
           dispatch(updateFarmerField(
             p.parsePlots(eventParsingParameters.harvestableIndex)
