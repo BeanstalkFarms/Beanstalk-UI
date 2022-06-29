@@ -2,15 +2,15 @@ import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import BigNumber from 'bignumber.js';
-import DepositsCard from './DepositsCard';
-import { DepositCrate, FarmerSiloBalance, WithdrawalCrate } from '../../state/farmer/silo';
-import { BEAN_ETH_UNIV2_LP } from '../../constants/tokens';
-import { SupportedChainId } from '../../constants/chains';
+import DepositsTable from './DepositsTable';
+import { DepositCrate, FarmerSiloBalance, WithdrawalCrate } from '../../../state/farmer/silo';
+import { BEAN_ETH_UNIV2_LP } from '../../../constants/tokens';
+import { SupportedChainId } from '../../../constants/chains';
 
 export default {
-  component: DepositsCard,
+  component: DepositsTable,
   args: {}
-} as ComponentMeta<typeof DepositsCard>;
+} as ComponentMeta<typeof DepositsTable>;
 
 const deposit: DepositCrate = {
   season: new BigNumber(100),
@@ -75,8 +75,8 @@ const siloBalance: FarmerSiloBalance = {
   },
 };
 
-const Template: ComponentStory<typeof DepositsCard> = (args: any) => (
-  <DepositsCard token={BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]} balance={siloBalance} />
+const Template: ComponentStory<typeof DepositsTable> = (args: any) => (
+  <DepositsTable token={BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]} balance={siloBalance} />
   // <div></div>
 );
 

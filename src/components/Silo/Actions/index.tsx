@@ -6,6 +6,8 @@ import { FarmerSiloBalance } from 'state/farmer/silo';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Claim from './Claim';
+import DepositsTable from '../Tables/DepositsTable';
+import WithdrawalsTable from '../Tables/WithdrawalsTable';
 
 const Actions : React.FC<{
   pool: Pool;
@@ -23,38 +25,52 @@ const Actions : React.FC<{
   );
 
   return (
-    <Card sx={{ p: 2, position: 'relative' }}>
-      <Stack gap={1.5}>
-        {/* Header */}
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible' }}>
-          <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
-            <Tab label="Deposit" />
-            <Tab label="Withdraw" />
-            {isClaimVisible ? (
-              <Tab label={<Badge color="primary" variant="dot">Claim</Badge>} sx={{ overflow: 'visible' }} />
-            ) : null}
-          </Tabs>
+    <>
+      <Card sx={{ p: 2, position: 'relative' }}>
+        <Stack gap={1.5}>
+          {/* Header */}
+          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible' }}>
+            <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
+              <Tab label="Deposit" />
+              <Tab label="Withdraw" />
+              {isClaimVisible ? (
+                <Tab label={<Badge color="primary" variant="dot">Claim</Badge>} sx={{ overflow: 'visible' }} />
+              ) : null}
+            </Tabs>
+          </Stack>
+          {/* Tab Content */}
+          {tab === 0 ? (
+            <Deposit
+              pool={props.pool}
+              siloToken={props.token}
+            />
+          ) : null}
+          {tab === 1 ? (
+            <Withdraw
+              token={props.token}
+            />
+          ) : null}
+          {tab === 2 ? (
+            <Claim
+              token={props.token}
+              siloBalance={props.siloBalance}
+            />
+          ) : null}
         </Stack>
-        {/* Tab Content */}
-        {tab === 0 ? (
-          <Deposit
-            pool={props.pool}
-            siloToken={props.token}
-          />
-        ) : null}
-        {tab === 1 ? (
-          <Withdraw
-            token={props.token}
-          />
-        ) : null}
-        {tab === 2 ? (
-          <Claim
-            token={props.token}
-            siloBalance={props.siloBalance}
-          />
-        ) : null}
-      </Stack>
-    </Card>
+      </Card>
+      {/* Tables */}
+      {tab === 0 ? (
+        <DepositsTable
+          token={props.token}
+          balance={props.siloBalance}
+        />
+      ) : (
+        <WithdrawalsTable
+          token={props.token}
+          balance={props.siloBalance}
+        />
+      )}
+    </>
   );
 };
 

@@ -10,7 +10,7 @@ import useTokenMap from 'hooks/useTokenMap';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormTokenState } from 'components/Common/Form';
+import { FormState, FormTokenState } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
@@ -24,11 +24,9 @@ import TransactionToast from 'components/Common/TxnToast';
 import TransactionSettings from 'components/Common/Form/TransactionSettings';
 import SettingInput from 'components/Common/Form/SettingInput';
 import { BeanstalkReplanted } from 'constants/generated';
-import useCurve from 'hooks/useCurve';
 import { QuoteHandler } from 'hooks/useQuote';
-import { POOL3_ADDRESSES, ZERO_BN } from 'constants/index';
+import { ZERO_BN } from 'constants/index';
 import { ERC20Token, NativeToken } from 'classes/Token';
-import { BEAN_CRV3_CURVE_POOL_MAINNET } from 'constants/pools';
 import Pool, { CurveMetaPool } from 'classes/Pool';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import { BigNumberish, ethers } from 'ethers';
@@ -37,9 +35,11 @@ import useGetChainToken from 'hooks/useGetChainToken';
 
 // -----------------------------------------------------------------------
 
-type DepositFormValues = {
-  tokens: FormTokenState[];
-}
+type DepositFormValues = FormState & {
+  settings: {
+    slippage: number;
+  }
+};
 
 // -----------------------------------------------------------------------
 
@@ -241,7 +241,6 @@ const DepositForm : React.FC<
                 key={`tokens.${index}`}
                 name={`tokens.${index}`}
                 tokenOut={siloToken}
-                // tokenOut={BEAN_CRV3_LP[1]}
                 balance={balances[state.token.address] || undefined}
                 state={state}
                 showTokenSelect={handleOpen}
@@ -333,6 +332,11 @@ const Deposit : React.FC<{
 
   // Handlers
   const onSubmit = useCallback(async (values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
+    if (!values.settings.slippage) throw new Error('No slippage value set.');
+
+    console.debug(`Settings`, values.settings)
+
+    // FIXME: getting BDV per amount here
     const { amount } = Beanstalk.Silo.Deposit.deposit(
       siloToken,
       values.tokens,
@@ -377,7 +381,7 @@ const Deposit : React.FC<{
           data.push(b.interface.encodeFunctionData('wrapEth', [
             toStringBaseUnitBN(value, Eth.decimals),
             FarmToMode.INTERNAL,
-          ]))
+          ]));
         }
         
         // `amountOut` of `siloToken` is received when swapping for 
@@ -389,7 +393,7 @@ const Deposit : React.FC<{
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          ethers.BigNumber.from(toStringBaseUnitBN(0.1/100, 6)), // slippage
+          ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage/100, 6)), // slippage
         );
         data.push(...encoded);
         encoded.forEach((_data, index) => 
@@ -432,8 +436,6 @@ const Deposit : React.FC<{
       } catch (err) {
         txToast.error(err);
         formActions.setSubmitting(false);
-        // formActions.setErrors(null);
-        // formActions.resetForm();
       }
   }, [
     Eth,
