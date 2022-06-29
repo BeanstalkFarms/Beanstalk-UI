@@ -89,6 +89,7 @@ const WithdrawForm : React.FC<
                 {...fieldProps}
                 token={token}
                 balance={depositedBalance || undefined}
+                balanceLabel="Deposited Balance"
                 InputProps={InputProps}
               />
             )}

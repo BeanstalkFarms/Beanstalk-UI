@@ -78,6 +78,7 @@ const ClaimForm : React.FC<
                 {...fieldProps}
                 token={token}
                 balance={claimableBalance || undefined}
+                balanceLabel="Claimable Balance"
                 InputProps={InputProps}
               />
             )}
