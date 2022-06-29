@@ -4,10 +4,11 @@ import {
   CurvePlainPool__factory,
   UniswapV2Pair__factory,
 } from 'constants/generated';
-import { ChainConstant, AddressMap } from 'constants/index';
+import { ChainConstant, AddressMap, SupportedChainId } from 'constants/index';
 import { MinBN } from 'util/Tokens';
 import client from 'util/Client';
 import Token, { ERC20Token } from './Token';
+import { CRV3, DAI, USDC, USDT } from 'constants/tokens';
 
 type Reserves = [BigNumber, BigNumber];
 
@@ -41,6 +42,11 @@ export default abstract class Pool {
   public readonly tokens: ERC20Token[];
 
   /**
+   * 
+   */
+  public readonly underlying: ERC20Token[];
+
+  /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
    */
   public readonly name: string;
@@ -64,11 +70,11 @@ export default abstract class Pool {
    * @param name of the currency
    */
   constructor(
-    chainId: number,
+    chainId: SupportedChainId,
     address: AddressMap<string>,
     // dex: Dex,
     lpToken: ChainConstant<ERC20Token>,
-    tokens: ChainConstant<ERC20Token>[],
+    tokens:  ChainConstant<ERC20Token>[],
     metadata: {
       name: string;
       symbol: string;
@@ -80,6 +86,19 @@ export default abstract class Pool {
     this.address = address[chainId].toLowerCase();
     this.lpToken = lpToken[chainId];
     this.tokens = tokens.map((token) => token[chainId]);
+    this.underlying = tokens.reduce<ERC20Token[]>((prev, token) => {
+      // CRV3 pools can access the underlying stables [DAI, USDC, USDT].
+      if (token === CRV3) {
+        prev.push(...[
+          DAI[chainId as keyof typeof DAI],
+          USDC[chainId as keyof typeof USDC],
+          USDT[chainId as keyof typeof USDT],
+        ]);
+      } else {
+        prev.push(token[chainId]);
+      }
+      return prev
+    }, [])
 
     this.name = metadata.name;
     this.symbol = metadata.symbol;
@@ -231,6 +250,11 @@ export class CurveMetaPool extends Pool {
           ] as Reserves
       );
   }
+
+  // public getAmountOut(): Promise<BigNumber> {
+  //   return this.getContract()
+  //     .get_dy()
+  // }
 }
 
 // ------------------------------------

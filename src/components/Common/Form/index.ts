@@ -1,22 +1,25 @@
 import BigNumber from 'bignumber.js';
-import Token from 'classes/Token';
+import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';
 
 export type FormTokenState = {
   /** */
-  token: Token;
+  token: ERC20Token | NativeToken;
   /** */
   amount: BigNumber | null;
   /** */
+  quoting?: boolean;
+  /** */
   amountOut?: BigNumber;
   /** */
-  quoting?: boolean;
+  steps?: ChainableFunctionResult[];
 }
 
 export type FormApprovingState = {
   /** */
   contract: string;
   /** */
-  token: Token;
+  token: ERC20Token | NativeToken;
   /** */
   amount: BigNumber;
 }

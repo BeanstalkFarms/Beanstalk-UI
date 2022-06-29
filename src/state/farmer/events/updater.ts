@@ -199,7 +199,7 @@ const useFarmerEvents = () => {
         console.debug(`[farmer/events/useFarmerEvents] FETCH: beanstalk = ${beanstalk.address}, farmer = ${account}`, blocks);
         Promise.all(getEvents(beanstalk, migrate, account, blocks)).then((results) => {
           const flattened = flattenDeep<ethers.Event>(results);
-          console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
+          console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> flattened to ${flattened.length} events`);
           const allEvents : Event[] = (
             flattened
               .reduce<Event[]>((prev, e) => {

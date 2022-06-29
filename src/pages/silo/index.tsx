@@ -21,6 +21,7 @@ const SiloPage : React.FC = () => {
   // Constants
   const WHITELIST = useWhitelist();
   const POOLS     = usePools();
+  const chainId = useChainId();
 
   // State
   // const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
@@ -28,7 +29,6 @@ const SiloPage : React.FC = () => {
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const breakdown   = useFarmerSiloBreakdown();
-  const chainId = useChainId();
 
   //
   const exploiterEarnedBeans = new BigNumber(6458.005059);
@@ -61,11 +61,9 @@ const SiloPage : React.FC = () => {
           season={season}
         />
         {chainId === SupportedChainId.MAINNET ? (
-          // <Card>
-            <Alert severity="info" variant="standard" sx={{ borderColor: 'secondary.dark', borderWidth: 1, borderStyle: 'solid' }}>
+          <Alert severity="info" variant="standard" sx={{ borderColor: 'secondary.dark', borderWidth: 1, borderStyle: 'solid' }}>
               The exploiter{`'`}s Earned Beans were distributed pro rata to Silo Members. Your Earned Bean balance has increased by ~{displayFullBN(exploiterEarnedBeans.times(ownership), 2)} Beans.
-            </Alert>
-          // </Card>
+          </Alert>
         ): null}
         <RewardsBar
           chainId={chainId}

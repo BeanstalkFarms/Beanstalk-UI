@@ -24,6 +24,7 @@ import AdditionalButton from './Buttons/AdditionalButton';
 import MoreDropdown from './Buttons/MoreDropdown';
 import NavButton from './Buttons/NavButton';
 import PriceButton from './Buttons/PriceButton';
+import DevButton from './Buttons/DevButton';
 
 const NavBar: React.FC<{}> = () => {
   const chainId = useChainId();
@@ -201,6 +202,9 @@ const NavBar: React.FC<{}> = () => {
             sx={{}}
             spacing={1}
           >
+            {process.env.NODE_ENV === 'development' ? (
+              <DevButton sx={{ height: 44 }} />
+            ) : null}
             <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
               <NetworkButton sx={{ height: 44 }} />
             </Box>

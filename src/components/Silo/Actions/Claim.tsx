@@ -21,6 +21,7 @@ import { ActionType } from 'util/Actions';
 import TransactionSettings from 'components/Common/Form/TransactionSettings';
 import SettingSwitch from 'components/Common/Form/SettingSwitch';
 import usePools from 'hooks/usePools';
+import { ERC20Token, NativeToken } from 'classes/Token';
 
 // -----------------------------------------------------------------------
 
@@ -128,7 +129,7 @@ const ClaimForm : React.FC<
 // -----------------------------------------------------------------------
 
 const Claim : React.FC<{
-  token: Token;
+  token: ERC20Token | NativeToken;
   siloBalance: FarmerSiloBalance;
 }> = ({
   token,

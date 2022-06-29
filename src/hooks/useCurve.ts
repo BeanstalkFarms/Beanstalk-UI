@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import curve, { initCurve } from 'util/Curve';
 import { useAccount, useProvider } from 'wagmi';
 import useChainId from './useChain';
@@ -27,23 +27,37 @@ import useChainId from './useChain';
 
 export default function useCurve() {
   const [_curve, setCurve] = useState<typeof curve | null>(null);
-  // const chainId = useChainId();
-  // const provider = useProvider();
-  // const { data: address } = useAccount();
+  const [initializing, setInitializing] = useState(false);
+  const chainId = useChainId();
   
-  // useEffect(() => {
-  //   if (provider && address && chainId) {
-  //     setCurve(null);
-  //     console.debug(`[curve/use] initializing: `, chainId, provider, provider.network)
-  //     initCurve(chainId)
-  //       .then((c) => {
-  //         console.debug(`[curve/use] initialized: `, c);
-  //         setCurve(c);
-  //       })
-  //       .catch((e) => {
-  //         console.error('[curve/use]', e);
-  //       });
-  //     }
-  // }, [provider, address, chainId]);
+  useEffect(() => {
+    if (chainId) {
+      setCurve(null);
+      // setInitializing(true);
+      console.debug(`[curve/use] initializing: `, chainId)
+      initCurve(chainId)
+        .then((c) => {
+          console.debug(`[curve/use] initialized: `, c);
+          setCurve(c);
+        })
+        .catch((e) => {
+          console.error('[curve/use]', e);
+        });
+    }
+  }, [
+    chainId,
+    initializing,
+  ]);
+  
   return _curve;
+
+  // return new Promise<typeof curve>((resolve, reject) => {
+  //   if (_curve) {
+  //     resolve(_curve);
+  //   } else {
+  //     resolve(initCurve(chainId));
+  //   }
+  // });
+
+  // return []
 }

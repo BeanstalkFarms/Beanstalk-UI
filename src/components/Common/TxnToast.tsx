@@ -143,7 +143,11 @@ export default class TransactionToast {
     switch (error.code) {
       // ethers: 
       case 'UNSUPPORTED_OPERATION':
-        msg = error.reason;
+        msg = `Error: ${error.reason}`;
+        break;
+      case 'CALL_EXCEPTION':
+      case 'UNPREDICTABLE_GAS_LIMIT':
+        msg = `Error: ${error.reason}`;
         break;
       // ethers: UNPREDICTABLE_GAS_LIMIT
       case -32603:

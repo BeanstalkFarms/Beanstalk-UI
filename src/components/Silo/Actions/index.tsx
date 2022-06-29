@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Badge, Card, Stack, Tab, Tabs } from '@mui/material';
-import { Token } from 'classes';
+import { Pool } from 'classes';
+import { ERC20Token } from 'classes/Token';
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Claim from './Claim';
 
 const Actions : React.FC<{
-  token: Token;
+  pool: Pool;
+  token: ERC20Token;
   siloBalance: FarmerSiloBalance;
 }> = (props) => {
   const [tab, setTab] = useState(0);
@@ -36,7 +38,8 @@ const Actions : React.FC<{
         {/* Tab Content */}
         {tab === 0 ? (
           <Deposit
-            token={props.token}
+            pool={props.pool}
+            siloToken={props.token}
           />
         ) : null}
         {tab === 1 ? (

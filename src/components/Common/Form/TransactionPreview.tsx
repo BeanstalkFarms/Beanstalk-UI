@@ -67,7 +67,7 @@ const TransactionStep : React.FC<{
   switch (type) {
     case ActionType.DEPOSIT:
       action = (actions as SiloDepositAction[]).map((a) => (
-        <ActionTokenImage token={a.tokenIn} />
+        <ActionTokenImage key={a.tokenIn.address} token={a.tokenIn} />
       ));
       break;
     case ActionType.SWAP:

@@ -15,6 +15,7 @@ import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useSigner, useContract as useWagmiContract } from 'wagmi';
 import useChainConstant, { getChainConstant } from './useChainConstant';
+import { CurveMetaPool } from 'classes/Pool';
 
 // -------------------------------------------------
 
@@ -24,6 +25,7 @@ const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json
 const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0.json');
 const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
 const ERC20_ABI = require('constants/abi/ERC20.json');
+const CURVE_METAPOOL_ABI = require('constants/abi/Pools/Curve/CurveMetaPool.json');
 
 export type AddressOrAddressMap = string | ChainConstant<string>;
 export type AbiOrAbiMap = ContractInterface | ChainConstant<ContractInterface>;
@@ -165,7 +167,7 @@ const BEANSTALK_ABIS = {
   [SupportedChainId.MAINNET]:   BEANSTALK_ABI,
   [SupportedChainId.ROPSTEN]:   BEANSTALK_ABI,
   [SupportedChainId.LOCALHOST]: BEANSTALK_ABI,
-  [SupportedChainId.CUJO]:   BEANSTALK_REPLANTED_ABI,
+  [SupportedChainId.CUJO]:      BEANSTALK_REPLANTED_ABI,
 };
 
 export function useBeanstalkContract(signer?: ethers.Signer | null) {
@@ -175,6 +177,20 @@ export function useBeanstalkContract(signer?: ethers.Signer | null) {
   return useWagmiContract<Beanstalk>({
     addressOrName: address,
     contractInterface: abi,
+    signerOrProvider: signer || provider,
+  });
+}
+
+const metaPoolAddresses : {[key: string] : string} = {
+  'tricrypto2': '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46',
+}
+
+export function useCurveMetapool(tagOrAddress: string, signer?: ethers.Signer | null) {
+  const address = metaPoolAddresses[tagOrAddress] || tagOrAddress;
+  const provider = useProvider();
+  return useWagmiContract<CurveMetaPool>({
+    addressOrName: address,
+    contractInterface: CURVE_METAPOOL_ABI,
     signerOrProvider: signer || provider,
   });
 }

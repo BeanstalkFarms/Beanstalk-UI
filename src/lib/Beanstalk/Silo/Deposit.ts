@@ -23,6 +23,7 @@ export function deposit(
         ? curr.amount
         : curr.amountOut
     );
+
     if (amount) {
       // AMOUNT + BDV
       // FIXME: the below is only the case for BEAN deposits. Need a generalized
@@ -37,6 +38,7 @@ export function deposit(
       // when bdv does not always go up during an Action. -SC
       agg.stalk = agg.stalk.plus(amount.times(to.rewards?.stalk || 0));
       agg.seeds = agg.seeds.plus(amount.times(to.rewards?.seeds || 0));
+      
       // INSTRUCTIONS
       if (curr.amount && curr.amountOut) {
         agg.actions.push({
@@ -48,6 +50,7 @@ export function deposit(
         });
       }
     }
+    
     return agg;
   }, {  
     amount: ZERO_BN,  //

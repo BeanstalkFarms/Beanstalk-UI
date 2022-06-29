@@ -1,50 +1,61 @@
 import { BigNumber } from 'bignumber.js';
-import Token from 'classes/Token';
+import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import { useCallback, useEffect, useState } from 'react';
 import { toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
 import toast from 'react-hot-toast';
+import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';
 
-export type QuoteHandler = (tokenIn: Token, amountIn: BigNumber, tokenOut: Token) => Promise<BigNumber>;
+export type QuoteHandlerResult = {
+  amountOut: BigNumber;
+  steps?: ChainableFunctionResult[];
+};
+export type QuoteHandler = (
+  tokenIn: ERC20Token | NativeToken,
+  amountIn: BigNumber,
+  tokenOut: ERC20Token | NativeToken
+) => Promise<QuoteHandlerResult['amountOut'] | QuoteHandlerResult>; 
 
 export default function useQuote(
   /** */
-  tokenOut: Token,
-  /** */
+  tokenOut: ERC20Token | NativeToken,
+  /** A function that returns a quoted amountOut value. */
   quoteHandler: QuoteHandler,
   /** The number of milliseconds to wait before calling */
   debounceMs : number = 250
 ) : [
-  amountOut: BigNumber | null,
+  result: QuoteHandlerResult | null,
   quoting: boolean,
-  refreshAmountOut: (_tokenIn: Token, _amountIn: BigNumber) => void,
+  refreshAmountOut: (_tokenIn: ERC20Token | NativeToken, _amountIn: BigNumber) => void,
 ] {
-  /** The `amountOut` of `tokenOut` received in exchange for `amountIn` of `tokenIn`. */
-  const [amountOut, setAmountOut] = useState<BigNumber | null>(null);
+  const [result, setResult] = useState<QuoteHandlerResult | null>(null);
   /** Whether we're currently waiting for a quote for this swap. */
   const [quoting, setQuoting] = useState<boolean>(false);
   
   // When token changes, reset the amount.
   useEffect(() => {
-    setAmountOut(null);
+    setResult(null);
     setQuoting(false);
   }, [tokenOut]);
 
   // Below prevents error b/c React can't know the deps of debounce
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const _getAmountOut = useCallback(debounce(
-    (tokenIn: Token, amountIn: BigNumber) => {
+    (tokenIn: ERC20Token | NativeToken, amountIn: BigNumber) => {
       try {
         return quoteHandler(tokenIn, amountIn, tokenOut)
-          .then((result) => {
-            const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
-            console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
-            setAmountOut(_amountOut);
+          // quoteHandler should parse amountOut however it needs to.
+          // (i.e. call toTokenUnitsBN or similar)
+          .then((_result) => {
+            // const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
+            // console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
+            setResult(_result instanceof BigNumber ? { amountOut: _result } : _result);
             setQuoting(false);
-            return result;
+            return _result;
           })
           .catch((e) => {
             toast.error(e.toString());
+            console.error(e);
             setQuoting(false);
           });
       } catch (e : any) {
@@ -58,15 +69,15 @@ export default function useQuote(
   ), [
     tokenOut,
     setQuoting,
-    setAmountOut,
+    setResult,
     quoteHandler,
   ]);
 
   // Handler to refresh
-  const getAmountOut = useCallback((tokenIn: Token, amountIn: BigNumber) => {
+  const getAmountOut = useCallback((tokenIn: ERC20Token | NativeToken, amountIn: BigNumber) => {
     if (tokenIn === tokenOut) return;
     if (amountIn.lte(0)) {
-      setAmountOut(null);
+      setResult(null);
       setQuoting(false);
     } else {
       setQuoting(true);
@@ -75,9 +86,9 @@ export default function useQuote(
   }, [
     tokenOut,
     _getAmountOut,
-    setAmountOut,
+    setResult,
     setQuoting
   ]);
 
-  return [amountOut, quoting, getAmountOut];
+  return [result, quoting, getAmountOut];
 }

@@ -22,6 +22,7 @@ import { displayFullBN, toStringBaseUnitBN } from 'util/index';
 import TransactionToast from 'components/Common/TxnToast';
 import { useSigner } from 'wagmi';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
+import { ERC20Token } from 'classes/Token';
 
 // -----------------------------------------------------------------------
 
@@ -134,7 +135,7 @@ const WithdrawForm : React.FC<
 
 // TODO:
 // - implement usePreferredToken here
-const Withdraw : React.FC<{ token: Token; }> = ({ token }) => {
+const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const season = useSeason();
   const siloBalances = useFarmerSiloBalances();
   const { data: signer } = useSigner();

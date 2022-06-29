@@ -21,11 +21,10 @@ import { BEANSTALK_ADDRESSES, CHAIN_INFO } from 'constants/index';
 import useChainConstant from 'hooks/useChainConstant';
 import NavDrawer from '../Mobile/NavDrawer';
 import ROUTES from '../routes';
-import { BeanstalkPalette } from '../../App/muiTheme';
 
 // -----------------------------------------------------------------
 
-const AdditionalButton: React.FC<ButtonProps> = ({ ...props }) => {
+const AdditionalButton: React.FC<ButtonProps> = () => {
   // Theme
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('lg'));   // trim additional account text
