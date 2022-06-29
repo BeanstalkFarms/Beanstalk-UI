@@ -69,6 +69,8 @@ const Graph: React.FC<GraphProps> = withTooltip(
    }) => {
     const data = series[0];
 
+    console.log('HEIGHT', height);
+
     // scales
     const scales = useMemo(() => series.map((_data) => {
       const xScale = scaleTime<number>({
@@ -77,8 +79,11 @@ const Graph: React.FC<GraphProps> = withTooltip(
       let yScale;
       if (isTWAP) {
         const yMin = min(_data, getY);
+        const yMax = max(_data, getY);
+        // sets the yScale so that 1 is always perfectly in the middle
+        const biggestDifference = Math.max(Math.abs(1 - (yMin as number)), Math.abs(1 - (yMax as number)));
         yScale = scaleLinear<number>({
-          domain: [(yMin !== undefined) && (yMin <= 1) ? yMin : 0.95, max(_data, getY) as number],
+          domain: [1 - biggestDifference, 1 + biggestDifference],
         });
       } else {
         yScale = scaleLinear<number>({
@@ -88,6 +93,7 @@ const Graph: React.FC<GraphProps> = withTooltip(
 
       xScale.range([0, width]);
       yScale.range([height - margin.top, margin.bottom]);
+
       return { xScale, yScale };
     }), [width, height, series, isTWAP]);
 
@@ -106,6 +112,7 @@ const Graph: React.FC<GraphProps> = withTooltip(
           if (d1 && getX(d1)) {
             d = x0.valueOf() - getX(d0).valueOf() > getX(d1).valueOf() - x0.valueOf() ? d1 : d0;
           }
+
           return d;
         });
 

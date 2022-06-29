@@ -9,7 +9,6 @@ import ALL_POOLS from 'constants/pools';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { SupportedChainId, TokenMap } from '../../constants';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
-// import mock = jest.mock;
 
 export type LiquidityBalancesProps = {
   balances: TokenMap<BeanstalkSiloBalance>;
@@ -50,14 +49,9 @@ const mockSiloData: MockPastSiloData[] = [
   }
 ];
 
-const data = browserUsage;
-// const keys = Object.keys(data[0]).filter((k) => k !== 'date') as BrowserNames[];
 const keys = Object.keys(mockSiloData[0]).filter((k) => k !== 'date') as any[];
 const parseDate = timeParse('%Y %b %d');
 export const background = 'transparent';
-
-// console.log('SACHART DATA');
-// console.log(data);
 
 const getDate = (d: MockPastSiloData) => (parseDate(d.date) as Date).valueOf();
 const getY0 = (d: SeriesPoint<MockPastSiloData>) => d[0] / 100;
@@ -86,9 +80,11 @@ const StackedAreaChart: React.FC<StackedAreasProps> =
       range: [0, xMax],
       domain: [Math.min(...mockSiloData.map(getDate)), Math.max(...mockSiloData.map(getDate))],
     });
+
     const yScale = scaleLinear<number>({
       range: [yMax, 0],
     });
+
     return width < 10 ? null : (
       <svg width={width} height={height}>
         <GradientOrangeRed id="stacked-area-orangered" />
@@ -103,23 +99,23 @@ const StackedAreaChart: React.FC<StackedAreasProps> =
           y1={(d) => yScale(getY1(d)) ?? 0}
         >
           {({ stacks, path }) =>
-            stacks.map((stack) => 
-              // console.log('STACK');
-              // console.log(stack);
-              // console.log("POOL")
-              // console.log(ALL_POOLS[SupportedChainId.MAINNET][stack.key])
-               (
-                 <path
-                   key={`stack-${stack.key}`}
-                   d={path(stack) || ''}
-                   stroke="transparent"
-                // fill="url(#stacked-area-orangered)"
-                   fill={`${ALL_POOLS[SupportedChainId.MAINNET][stack.key]?.color}`}
-                   onClick={() => {
-                  if (events) alert(`${stack.key}`);
-                }}
-              />
-            ))
+            stacks.map((stack) =>
+              (
+                <>
+                  {/* --- example of how to debug this: --- */}
+                  {/* {console.log('STACK KEY', stack.key)} */}
+                  {/* {console.log('POOL COLOR', ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color)} */}
+                  <path
+                    key={`stack-${stack.key}`}
+                    d={path(stack) || ''}
+                    stroke="transparent"
+                    fill={`${ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color}`}
+                    onClick={() => {
+                      if (events) alert(`${stack.key}`);
+                    }}
+                  />
+                </>
+              ))
           }
         </AreaStack>
       </svg>
@@ -129,9 +125,7 @@ const StackedAreaChart: React.FC<StackedAreasProps> =
 /**
  * Wrap the graph in a ParentSize handler.
  */
-const SimpleStackedAreaChart: React.FC<{
-
-}> = (props) => (
+const SimpleStackedAreaChart: React.FC<{}> = (props) => (
   <ParentSize debounceTime={10}>
     {({ width: visWidth, height: visHeight }) => (
       <StackedAreaChart height={150} width={visWidth} />

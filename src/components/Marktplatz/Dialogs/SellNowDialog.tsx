@@ -12,7 +12,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Formik, FormikHelpers } from 'formik';
 import { displayBN } from '../../../util';
-import PlotDetailsCard from './PlotDetailsCard';
+import PlotOrderDetails from '../Cards/PlotOrderDetails';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import podIcon from '../../../img/beanstalk/pod-icon.svg';
 import { AppState } from '../../../state';
@@ -20,6 +20,7 @@ import { ZERO_BN } from '../../../constants';
 import { SellListingFormValues } from './SellListingDialog';
 import SellListingForm from '../Forms/SellListingForm';
 import SellNowForm from '../Forms/SellNowForm';
+import { PodOrder } from '../Plots.mock';
 
 export type SellNowFormValues = {
   min: BigNumber | null;
@@ -27,7 +28,7 @@ export type SellNowFormValues = {
   amount: BigNumber | null;
 }
 
-const SellNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } & DialogProps> =
+const SellNowDialog: React.FC<{ podListing: PodOrder | undefined; handleClose: any; harvestableIndex: BigNumber } & DialogProps> =
   ({
      open,
      sx,
@@ -36,7 +37,8 @@ const SellNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; }
      fullScreen,
      disableScrollLock,
      handleClose,
-     podListing
+     podListing,
+     harvestableIndex
    }) => {
     const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
       (state) => state._farmer.field
@@ -92,7 +94,7 @@ const SellNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; }
             <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Select Plot to sell</StyledDialogTitle>
             <StyledDialogContent>
               <Stack gap={2}>
-                <PlotDetailsCard />
+                <PlotOrderDetails podListing={podListing} harvestableIndex={harvestableIndex} />
                 <Stack gap={1}>
                   {Object.keys(farmerField?.plots).map((index) => (
                     <Card
@@ -131,7 +133,7 @@ const SellNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; }
             <StyledDialogTitle sx={{ pb: 0.5 }} onBack={handlePreviousTab} onClose={handleDialogClose}>Sell Pods</StyledDialogTitle>
             <StyledDialogContent>
               <Stack gap={2}>
-                <PlotDetailsCard />
+                <PlotOrderDetails podListing={podListing} harvestableIndex={harvestableIndex} />
                 <Formik initialValues={initialValues} onSubmit={onSubmit}>
                   {(formikProps) => (
                     <>

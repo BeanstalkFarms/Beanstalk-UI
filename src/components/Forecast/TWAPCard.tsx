@@ -8,7 +8,7 @@ import { SupportedChainId } from '../../constants';
 import { displayBN } from '../../util';
 import TimeTabs from '../Common/TimeTabs';
 import SimpleLineChart, { DataPoint } from '../Charts/SimpleLineChart';
-import { mockTWAPData } from '../Charts/SimpleLineChart.mock';
+import { mockTWAPData, mockTWAPDataVariable } from '../Charts/SimpleLineChart.mock';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 export type TWAPCardProps = {
@@ -34,20 +34,16 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> =
       [beanPrice]
     );
 
-    const [timeTab, setTimeTab] = useState(0);
-    const handleChangeTimeTab = (i: number) => {
+    const [timeTab, setTimeTab] = useState([0,0]);
+    const handleChangeTimeTab = (i: number[]) => {
       setTimeTab(i);
     };
 
-    useEffect(() => {
-      console.log('TAB');
-      console.log(timeTab);
-    }, [timeTab]);
-
     return (
       <Card sx={{ width: '100%', ...sx }}>
-        <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
+        <Stack direction="row" justifyContent="space-between" sx={{ px: 1.5, pt: 1.5 }}>
           <Stat
+            gap={0.5}
             title="Time Weighted Average Price"
             color="primary"
             amount={`$${(isHoveringTWAP ? displayTWAP[0] : beanPrice).toFixed(4)}`}
@@ -61,7 +57,7 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> =
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart isTWAP series={[mockTWAPData]} onCursor={handleCursorTWAP} />
+          <SimpleLineChart isTWAP series={[mockTWAPDataVariable]} onCursor={handleCursorTWAP} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />

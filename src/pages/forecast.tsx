@@ -22,9 +22,10 @@ import SeasonsTable from 'components/Forecast/SeasonsTable';
 import ForecastTopBar from 'components/Forecast/ForecastTopBar';
 import TWAPCard from 'components/Forecast/TWAPCard';
 import PodRateCard from 'components/Forecast/PodRateCard';
-import LiquidityOverview from 'components/Forecast/LiquidityOverview';
+import LiquidityOverTime from 'components/Forecast/LiquidityOverTime';
 import useChainId from 'hooks/useChain';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
+import LiquidityByState from '../components/Forecast/LiquidityByState';
 
 const columns: GridColumns = [
   {
@@ -182,8 +183,9 @@ const ForecastPage: React.FC = () => {
           <TWAPCard beanPrice={beanPrice} season={season} />
           <PodRateCard podRate={podRate} season={season} />
         </Stack>
-        <LiquidityOverview balances={balances} />
-        <SeasonsTable columns={columns} rows={rows} />
+        <LiquidityOverTime balances={balances} />
+        <LiquidityByState />
+        {/* <SeasonsTable columns={columns} rows={rows} /> */}
       </>
     );
   }

@@ -65,6 +65,7 @@ const PodLineChart: React.FC<GraphProps> = withTooltip(
       domain: [0, podLineSize.toNumber()],
       range: [0, width - 49]
     });
+
     const yScale = scaleLinear<number>({
       domain: [0, 18],
       range: [height - margin.top, margin.bottom]

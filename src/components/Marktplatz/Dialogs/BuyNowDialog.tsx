@@ -24,11 +24,13 @@ import { BEAN, ETH } from '../../../constants/tokens';
 import useChainConstant from '../../../hooks/useChainConstant';
 import { FormState } from '../../Common/Form';
 import BuyNowForm from '../Forms/BuyNowForm';
-import PlotDetailsCard from './PlotDetailsCard';
+import PlotOrderDetails from '../Cards/PlotOrderDetails';
+import { PodListing, PodOrder } from '../Plots.mock';
+import PlotListingDetails from '../Cards/PlotListingDetails';
 
 export type BuyNowFormValues = FormState
 
-const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } & DialogProps> =
+const BuyNowDialog: React.FC<{ podListing: PodListing | undefined; handleClose: any; harvestableIndex: BigNumber; } & DialogProps> =
   ({
      open,
      sx,
@@ -37,7 +39,8 @@ const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } 
      fullScreen,
      disableScrollLock,
      handleClose,
-     podListing
+     podListing,
+     harvestableIndex
    }) => {
     const handleDialogClose = () => {
       handleClose();
@@ -51,9 +54,9 @@ const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } 
     const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
 
     // const farmerPlots: PlotMap<BigNumber> = { [podListing.placeInLine]: '' };
-    
+
     const Eth = useChainConstant(ETH);
-    
+
     const initialValues: BuyNowFormValues = useMemo(() => ({
       tokens: [
         {
@@ -80,7 +83,7 @@ const BuyNowDialog: React.FC<{ podListing: any | undefined; handleClose: any; } 
         <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Buy Now</StyledDialogTitle>
         <StyledDialogContent>
           <Stack gap={2}>
-            <PlotDetailsCard />
+            <PlotListingDetails podListing={podListing} harvestableIndex={harvestableIndex} />
             <Formik initialValues={initialValues} onSubmit={onSubmit}>
               {(formikProps) => (
                 <>

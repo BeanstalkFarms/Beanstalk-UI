@@ -62,7 +62,7 @@ const SiloPage : React.FC = () => {
         />
         {chainId === SupportedChainId.MAINNET ? (
           <Alert severity="info" variant="standard" sx={{ borderColor: 'secondary.dark', borderWidth: 1, borderStyle: 'solid' }}>
-            The exploiter{`'`}s Earned Beans were distributed pro-rata to Silo Members. Your Earned Bean balance has increased by ~{displayFullBN(exploiterEarnedBeans.times(ownership), 2)} Beans.
+              The exploiter{`'`}s Earned Beans were distributed pro rata to Silo Members. Your Earned Bean balance has increased by ~{displayFullBN(exploiterEarnedBeans.times(ownership), 2)} Beans.
           </Alert>
         ): null}
         <RewardsBar
