@@ -5,7 +5,7 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider, useSigner } from 'wagmi';
 import { BEAN, BEAN_CRV3_LP, ETH, ETH_DECIMALS, LUSD, SEEDS, STALK, USDC, USDT, WETH } from 'constants/tokens';
-import useChainConstant from 'hooks/useChainConstant';
+import useChainConstant, { getChainConstant } from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
@@ -23,7 +23,7 @@ import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
 import TransactionSettings from 'components/Common/Form/TransactionSettings';
 import SettingInput from 'components/Common/Form/SettingInput';
-import { BeanstalkReplanted, Curve3Pool__factory, CurveFactory__factory, CurveMetaPool__factory, CurvePlainPool__factory, CurveTriCrypto2Pool__factory } from 'constants/generated';
+import { BeanstalkReplanted } from 'constants/generated';
 import useCurve from 'hooks/useCurve';
 import { QuoteHandler } from 'hooks/useQuote';
 import { POOL3_ADDRESSES, ZERO_BN } from 'constants/index';
@@ -33,6 +33,7 @@ import { CurveMetaPool } from 'classes/Pool';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import { BigNumberish, ethers } from 'ethers';
 import Farm from 'lib/Beanstalk/Farm';
+import useGetChainToken from 'hooks/useGetChainToken';
 
 // -----------------------------------------------------------------------
 
@@ -63,7 +64,7 @@ const DepositForm : React.FC<
   const chainId = useChainId();
   const erc20TokenMap = useTokenMap([BEAN, ETH, WETH, USDT, USDC, siloToken]);
   const [showTokenSelect, setShowTokenSelect] = useState(false);
-  // const curve = useCurve();
+  const getChainToken = useGetChainToken();
 
   const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
     siloToken,
@@ -89,38 +90,51 @@ const DepositForm : React.FC<
       ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
     ]);
   }, [values.tokens, setFieldValue]);
+
+  // This handler does not run when _tokenIn = _tokenOut
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
-      if (_tokenIn.symbol !== 'ETH') return Promise.resolve(ZERO_BN);
-
-      const tokenIn  = _tokenIn  instanceof NativeToken ? WETH[1] : _tokenIn;
-      const tokenOut = _tokenOut instanceof NativeToken ? WETH[1] : _tokenOut;
-
-      //
+      const tokenIn  : Token = _tokenIn  instanceof NativeToken ? getChainToken(WETH) : _tokenIn;
+      const tokenOut : Token = _tokenOut instanceof NativeToken ? getChainToken(WETH) : _tokenOut;
+      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
       let estimate;
-      if (tokenOut === BEAN_CRV3_LP[1]) {
+
+      // exclude ETH because we already parsed to WETH
+      if (tokenIn !== getChainToken(WETH)) {
+        return Promise.resolve(ZERO_BN)
+      }
+
+      // Swap to Beans
+      if (tokenOut === getChainToken(BEAN)) {
         estimate = await Farm.estimate(
-          farm.buyAndDepositBeanCrv3LP(),
-          [ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals))]
+          farm.buyBeans(), // this assumes we're coming from WETH
+          [amountIn]
         );
-      } else {
+      }
+
+      // Swap to a 3CRV stable and addLiquidity to the BEAN:3CRV Pool.
+      // how many BEAN:3CRV LP tokens do we get for the `addLiquidity`?
+      else if (tokenOut === getChainToken(BEAN_CRV3_LP)) {
         estimate = await Farm.estimate(
-          farm.buyBeans(),
-          [ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals))]
+          farm.buyAndAddBEANCRV3Liquidity(), // this assumes we're coming from WETH
+          [amountIn]
         );
+      }
+      
+      // Unknown
+      else {
+        // return Promise.resolve(ZERO_BN)
+        throw new Error(`Unsupported tokenOut: ${tokenOut.symbol}`)
       }
 
       console.debug('[chain] estimate = ', estimate);
 
       return {
-        amountOut: toTokenUnitsBN(
-          estimate.amountOut.toString(),
-          tokenOut.decimals,
-        ),
+        amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
         steps: estimate.steps,
       }
     },
-    [farm]
+    [farm, getChainToken]
   );
 
   return (
@@ -234,11 +248,11 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
     },
     tokens: [
       {
-        token: Bean,
-        amount: null,
+        token: Eth,
+        amount: new BigNumber(0.01),
       },
     ],
-  }), [Bean]);
+  }), [Eth]);
   const onSubmit = useCallback(async (values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
     const { amount } = Beanstalk.Silo.Deposit.deposit(
       siloToken,
@@ -299,6 +313,9 @@ const Deposit : React.FC<{ siloToken: Token; }> = ({ siloToken }) => {
           ethers.BigNumber.from(toStringBaseUnitBN(0.1/100, 6)), // slippage
         );
         data.push(...encoded);
+        encoded.forEach((_data, index) => 
+          console.debug(`[Deposit] step ${index}:`, formData.steps?.[index]?.decode(_data).map((elem) => (elem instanceof ethers.BigNumber ? elem.toString() : elem)))
+        );
       } 
 
       // Deposit step
