@@ -7,7 +7,7 @@ import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'util/tableStyle';
 import { ZERO_BN } from 'constants/index';
 
-const MAX_ROWS = 10;
+const MAX_ROWS = 5;
 
 const Crates : React.FC<{
   title: string;
@@ -29,7 +29,7 @@ const Crates : React.FC<{
 }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '180px';
-    return Math.min(rows.length, MAX_ROWS) * 36 + 180;
+    return (60.5 + 6 + 39 - 5) + Math.min(rows.length, MAX_ROWS) * 36;
   }, [rows]);
 
   return (
