@@ -3,15 +3,14 @@ import { Box, Button, ButtonProps, Drawer, Popper, Typography, useMediaQuery } f
 import { useTheme } from '@mui/material/styles';
 import DropdownIcon from 'components/Common/DropdownIcon';
 
-
 /**
- * Show a "Folder".
+ * Show a "Folder". A folder is a button that shows a popup;
+ * the type of popup varies depending on the screen size.
  * 
- * On desktop:
- * - Clicking the Button creates a folder-like Popover. 
- * 
- * On mobile:
- * - Clicking the Button shows a Drawer.
+ * On desktop: Clicking the Button creates a folder-like Popover. 
+ *             The Popover is designed to look like it "expands"
+ *             out of the button. See <PriceButton/> for example.
+ * On mobile:  Clicking the Button shows a Drawer.
  */
 const Folder: React.FC<{
   startIcon?: any;
@@ -25,7 +24,6 @@ const Folder: React.FC<{
   drawerContent,
   ...buttonProps
 }) => {
-  
   // Setup
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
@@ -33,7 +31,7 @@ const Folder: React.FC<{
   // Popover
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const popoverOpen = Boolean(anchorEl);
-  const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const onTogglePopover = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (anchorEl) {
       setAnchorEl(null);
     } else {
@@ -43,15 +41,26 @@ const Folder: React.FC<{
 
   // Drawer
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const handleOpenDrawer = () => {
+  const onOpenDrawer = () => {
     setDrawerOpen(true);
+  };
+  const onCloseDrawer = () => {
+    setDrawerOpen(false);
   };
 
   // Handlers
-  const onClickButton = isMobile ? handleOpenDrawer : handleOpenPopover;
+  const onClickButton = isMobile ? onOpenDrawer : onTogglePopover;
 
   return (
     <>
+      {/* Mobile: Drawer */}
+      <Drawer
+        anchor="bottom"
+        open={drawerOpen}
+        onClose={onCloseDrawer}
+      >
+        {drawerContent}
+      </Drawer>
       <Box>
         <Button
           color="light"
@@ -94,37 +103,26 @@ const Folder: React.FC<{
           placement="bottom-start"
           disablePortal
         >
-          <Box
-            sx={(_theme) => ({
-              background: 'white',
-              width: '400px',
-              borderBottomLeftRadius: _theme.shape.borderRadius,
-              borderBottomRightRadius: _theme.shape.borderRadius,
-              borderTopRightRadius: _theme.shape.borderRadius,
-              borderColor: 'secondary.main',
-              borderWidth: 1,
-              borderStyle: 'solid',
-              px: 1,
-              py: 1,
-              boxShadow: _theme.shadows[0],
-              // Should be below the zIndex of the Button.
-              zIndex: 998,
-              mt: '-1px',
-            })}
-            className="border border-t-0 shadow-xl"
-          >
+          <Box sx={(_theme) => ({
+            background: 'white',
+            width: '400px',
+            borderBottomLeftRadius: _theme.shape.borderRadius,
+            borderBottomRightRadius: _theme.shape.borderRadius,
+            borderTopRightRadius: _theme.shape.borderRadius,
+            borderColor: 'secondary.main',
+            borderWidth: 1,
+            borderStyle: 'solid',
+            px: 1,
+            py: 1,
+            boxShadow: _theme.shadows[0],
+            // Should be below the zIndex of the Button.
+            zIndex: 998,
+            mt: '-1px',
+          })}>
             {popoverContent}
           </Box>
         </Popper>
       </Box>
-      {/* Mobile: Drawer */}
-      <Drawer
-        anchor="bottom"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      >
-        {drawerContent}
-      </Drawer>
     </>
   );
 };

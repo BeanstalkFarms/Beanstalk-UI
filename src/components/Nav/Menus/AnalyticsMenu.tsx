@@ -2,58 +2,23 @@ import React, { useCallback, useState } from 'react';
 import {
   Button,
   Card,
-  ListItemText,
-  MenuItem,
   MenuList,
   Tooltip,
   Typography,
 } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import {
-  Link as RouterLink,
-} from 'react-router-dom';
+import DropdownIcon from 'components/Common/DropdownIcon';
 import ROUTES from '../routes';
-import DropdownIcon from '../../Common/DropdownIcon';
+import MenuItem from '../MenuItem';
+import useToggle from 'hooks/display/useToggle';
 
 const AnalyticsMenu: React.FC = () => {
   // Handlers
-  const [open, setOpen] = useState(false);
-  const handleShowMenu = useCallback(() => {
-    setOpen(true);
-  }, []);
-  const handleHideMenu = useCallback(() => {
-    setOpen(false);
-  }, []);
+  const [open, show, hide] = useToggle();
 
-  const menu = (
+  const menuContent = (
     <MenuList>
       {ROUTES.analytics.map((item) => (
-        <MenuItem
-          disabled={item.disabled}
-          component={item.href ? 'a' : RouterLink}
-          key={item.path}
-          href={item.href ? item.href : undefined}
-          target={item.href ? '_blank' : undefined}
-          rel={item.href ? 'noreferrer' : undefined}
-          to={item.href ? undefined : item.path}
-          sx={{ minWidth: 200 }}
-          onClick={handleHideMenu}
-        >
-          {item.disabled ? (
-            <Tooltip title={<>{item.title} will be available upon Unpause</>}>
-              <span>
-                <ListItemText>{item.title}</ListItemText>
-              </span>
-            </Tooltip>
-          ) : (
-            <ListItemText>{item.title}</ListItemText>
-          )}
-          {item.href ? (
-            <Typography variant="body2" color="text.secondary">
-              <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: 12 }} />
-            </Typography>
-          ) : null}
-        </MenuItem>
+        <MenuItem key={item.path} item={item} onClick={hide} />
       ))}
     </MenuList>
   );
@@ -61,9 +26,10 @@ const AnalyticsMenu: React.FC = () => {
   return (
     <Tooltip
       components={{ Tooltip: Card }}
-      title={menu}
-      onOpen={handleShowMenu}
-      onClose={handleHideMenu}
+      title={menuContent}
+      open={open}
+      onOpen={show}
+      onClose={hide}
       enterTouchDelay={50}
       leaveTouchDelay={10000}
       placement="bottom-start"

@@ -6,7 +6,25 @@ import governanceIcon from 'img/nav-icons/governance.svg';
 import tradeIcon from 'img/nav-icons/trade.svg';
 import twitterIcon from 'img/nav-icons/twitter.svg';
 
-const ROUTES = {
+export type RouteData = {
+  /** If set, link to this internal path. */
+  path: string;
+  /** Nav item title */
+  title: string;
+  /** Tag to show inside the nav item */
+  tag?: string;
+  /** If set, link out to this external URL. */
+  href?: string;
+  //
+  icon?: string;
+  disabled?: boolean;
+  small?: boolean;
+}
+
+type RouteKeys = 'top' | 'analytics' | 'more' | 'additional'
+
+const ROUTES : { [key in RouteKeys] : RouteData[] } = {
+  // Main Navigation
   top: [
     {
       path: '/',
@@ -26,32 +44,26 @@ const ROUTES = {
       title: 'Forecast',
     },
   ],
+  // Analytics Menu
   analytics: [
     {
       path: 'analytics/barnraise',
       title: 'Barn Raise Analytics',
-      disabled: false,
-      href: null
     },
     {
       path: 'analytics/bean',
       title: 'Bean Analytics',
-      disabled: false,
-      href: null
     },
     {
       path: 'analytics/silo',
       title: 'Silo Analytics',
-      disabled: false,
-      href: null
     },
     {
       path: 'analytics/field',
       title: 'Field Analytics',
-      disabled: false,
-      href: null
     }
   ],
+  // More Menu
   more: [
     {
       path: 'market',
@@ -79,12 +91,12 @@ const ROUTES = {
       icon: tradeIcon
     },
   ],
+  // About Button
   additional: [
     {
       path: 'about',
       title: 'About',
       href: 'https://bean.money',
-      disabled: false,
       icon: aboutIcon
     },
     {

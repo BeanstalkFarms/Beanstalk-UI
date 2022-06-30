@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -7,28 +6,24 @@ import {
   Card,
   ListItemText,
   Menu,
-  MenuItem,
   MenuList,
-  Stack, Tooltip,
+  Stack,
   Typography,
   useMediaQuery,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-
+import MenuItem from '../MenuItem';
 import { BEANSTALK_ADDRESSES, CHAIN_INFO } from 'constants/index';
 import useChainConstant from 'hooks/useChainConstant';
 import NavDrawer from '../NavDrawer';
 import ROUTES from '../routes';
 
-// -----------------------------------------------------------------
-
-const AdditionalButton: React.FC<ButtonProps> = () => {
+const AboutButton: React.FC<ButtonProps> = () => {
   // Theme
   const theme = useTheme();
-  const isMedium = useMediaQuery(theme.breakpoints.down('lg'));   // trim additional account text
-  const isTiny = useMediaQuery('(max-width:380px)');              //
+  const isMedium = useMediaQuery(theme.breakpoints.down('lg'));   // trim additional account text at medium
 
   // Constants
   const chainInfo = useChainConstant(CHAIN_INFO);
@@ -36,7 +31,7 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
 
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const handleHideMenu = useCallback(() => {
+  const hideMenu = useCallback(() => {
     setAnchorEl(null);
   }, []);
 
@@ -53,41 +48,9 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
 
   const menuContent = (
     <MenuList component={Card}>
+      {/* Menu Items */}
       {ROUTES.additional.map((item) => (
-        <MenuItem
-          disabled={item.disabled}
-          component={item.href ? 'a' : RouterLink}
-          key={item.path}
-          href={item.href ? item.href : undefined}
-          target={item.href ? '_blank' : undefined}
-          rel={item.href ? 'noreferrer' : undefined}
-          to={item.href ? undefined : item.path}
-          sx={{ minWidth: 250 }}
-          onClick={handleHideMenu}
-        >
-          {item.disabled ? (
-            <Tooltip title={<>{item.title} will be available upon Unpause</>}>
-              <span>
-                <Stack direction="row" gap={1} alignItems="center">
-                  {item.icon && <img src={item.icon} alt={item.title} width={20} />}
-                  {item.title}
-                </Stack>
-              </span>
-            </Tooltip>
-          ) : (
-            <ListItemText>
-              <Stack direction="row" gap={1} alignItems="center">
-                {item.icon && <img src={item.icon} alt={item.title} width={16} />}
-                {item.title}
-              </Stack>
-            </ListItemText>
-          )}
-          {item.href ? (
-            <Typography variant="body2" color="text.secondary">
-              <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: 12 }} />
-            </Typography>
-          ) : null}
-        </MenuItem>
+        <MenuItem key={item.path} item={item} onClick={hideMenu} />
       ))}
       {/* Contract Button Container */}
       <Box sx={{ px: 1, pt: 0.75 }}>
@@ -98,16 +61,7 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
           rel="noreferrer"
           variant="contained"
           color="secondary"
-          // sx={{
-          //   backgroundColor: BeanstalkPalette.babyBlue,
-          //   color: BeanstalkPalette.black,
-          //   fontWeight: 400,
-          //   '&:hover': {
-          //     backgroundColor: BeanstalkPalette.babyBlue,
-          //     opacity: 0.95
-          //   }
-          // }}
-          >
+        >
           <Stack direction="row" alignItems="center" spacing={1}>
             <ListItemText>Contract: {beanstalkAddress.slice(0, 6)}...</ListItemText>
             <Typography variant="body2" color="text.secondary">
@@ -116,7 +70,7 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
           </Stack>
         </Button>
       </Box>
-      {/* */}
+      {/* Build Information */}
       <Box sx={{ px: 1, pt: 0.75, opacity: 0.7 }}>
         <Typography color="text.secondary" fontSize={12} textAlign="center">
           {process.env.REACT_APP_NAME || 'beanstalk-ui'} v{process.env.REACT_APP_VERSION || '0.0.0'}@{process.env.REACT_APP_GIT_COMMIT_REF?.slice(0,6) || 'HEAD'}
@@ -129,8 +83,16 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
 
   return (
     <>
-      {/* Drawer - only show on mobile or medium layout */}
-      <NavDrawer open={drawerOpen && (isTiny || isMedium)} hideDrawer={hideDrawer} />
+      {/**
+        * Nav Drawer
+        * ----------
+        * Contains all nav items in one fullscreen drawer.
+        * Triggered by AboutButton on mobile.
+        */}
+      <NavDrawer
+        open={drawerOpen && (isMedium)}
+        hideDrawer={hideDrawer}
+      />
       <Button
         color="light"
         variant="contained"
@@ -149,11 +111,8 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
       <Menu
         elevation={0}
         anchorEl={anchorEl}
-        open={drawerOpen && !(isTiny || isMedium)}
+        open={drawerOpen && !(isMedium)}
         onClose={hideDrawer}
-        components={{
-          // Root: Card
-        }}
         MenuListProps={{
           sx: {
             py: 0,
@@ -162,8 +121,7 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
         }}
         disablePortal
         disableScrollLock
-        // Align the menu to the bottom
-        // right side of the anchor button.
+        // Align the menu to the bottom-right side of the anchor button.
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -172,11 +130,6 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
           vertical: 'top',
           horizontal: 'right',
         }}
-        sx={{
-          // Give some room between the WalletButton
-          // and the popper when it's opened.
-          // mt: 0.5,
-        }}
       >
         {menuContent}
       </Menu>
@@ -184,4 +137,4 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
   );
 };
 
-export default AdditionalButton;
+export default AboutButton;

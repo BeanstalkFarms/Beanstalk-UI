@@ -8,24 +8,23 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import { SupportedChainId } from 'constants/chains';
 import useChainId from 'hooks/useChain';
 import { PRE_EXPLOIT_BEAN_DATA } from 'state/bean/pools/updater';
 import { displayFullBN, trimAddress } from 'util/index';
 import usePools from 'hooks/usePools';
-import BigNumber from 'bignumber.js';
-import WalletButton from '../Common/Connection/WalletButton';
-import NetworkButton from '../Common/Connection/NetworkButton';
-import ROUTES from './routes';
-import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
-import AnalyticsMenu from './Menus/AnalyticsMenu';
-import AdditionalButton from './Buttons/AdditionalButton';
-import MoreDropdown from './Menus/MoreMenu';
-import RouteButton from './Buttons/RouteButton';
+import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import PriceButton from './Buttons/PriceButton';
-import DevButton from './Buttons/DevButton';
 import SunButton from './Buttons/SunButton';
+import LinkButton from './Buttons/LinkButton';
+import AnalyticsMenu from './Menus/AnalyticsMenu';
+import MoreMenu from './Menus/MoreMenu';
+import WalletButton from 'components/Common/Connection/WalletButton';
+import NetworkButton from 'components/Common/Connection/NetworkButton';
+import AboutButton from './Buttons/AboutButton';
+import ROUTES from './routes';
 
 const NavBar: React.FC<{}> = () => {
   const chainId = useChainId();
@@ -145,7 +144,6 @@ const NavBar: React.FC<{}> = () => {
           // pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1
         }}
       >
-        {/* TEMP: */}
         {chainId === SupportedChainId.MAINNET && (
           <Box
             sx={{
@@ -168,7 +166,7 @@ const NavBar: React.FC<{}> = () => {
           alignItems="center"
           justifyContent="space-between"
           height="64px"
-          sx={{ pr: 1, pl: 1 }}
+          px={1}
         >
           {/* Desktop: Left Side */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%">
@@ -181,7 +179,7 @@ const NavBar: React.FC<{}> = () => {
               height="100%"
             >
               {ROUTES.top.map((item) => (
-                <RouteButton
+                <LinkButton
                   key={item.path}
                   to={item.path}
                   title={item.title}
@@ -189,7 +187,7 @@ const NavBar: React.FC<{}> = () => {
                 />
               ))}
               <AnalyticsMenu />
-              <MoreDropdown />
+              <MoreMenu />
             </Stack>
           </Stack>
           {/* Desktop: Right Side */}
@@ -197,17 +195,13 @@ const NavBar: React.FC<{}> = () => {
             direction="row"
             justifyContent="flex-end"
             alignItems="center"
-            sx={{}}
             spacing={1}
           >
-            {/* {process.env.NODE_ENV === 'development' ? (
-              <DevButton sx={{ height: 44 }} />
-            ) : null} */}
             <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
               <NetworkButton sx={{ height: 44 }} />
             </Box>
             <WalletButton sx={{ height: 44 }} />
-            <AdditionalButton />
+            <AboutButton />
           </Stack>
         </Stack>
       </AppBar>

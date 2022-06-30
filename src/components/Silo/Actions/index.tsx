@@ -6,7 +6,7 @@ import { FarmerSiloBalance } from 'state/farmer/silo';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Claim from './Claim';
-import Deposits from '../Tables/Deposits';
+import Deposits from './Deposits';
 import Withdrawals from './Withdrawals';
 
 /**

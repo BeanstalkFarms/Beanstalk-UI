@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ROUTES from './routes';
-import MobileNavItem from './MobileNavItem';
+import NavItemMobile from './MenuItemMobile';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 const NavDrawer: React.FC<{
@@ -36,7 +36,7 @@ const NavDrawer: React.FC<{
       {/* Items */}
       <List style={{ fontSize: 22 }}>
         {ROUTES.top.map((item) => (
-          <MobileNavItem
+          <NavItemMobile
             key={item.path}
             to={item.path}
             title={item.title}
@@ -44,7 +44,7 @@ const NavDrawer: React.FC<{
           />
         ))}
         {ROUTES.more.map((item) => (
-          <MobileNavItem
+          <NavItemMobile
             key={item.path}
             to={item.path}
             title={item.title}
@@ -55,7 +55,7 @@ const NavDrawer: React.FC<{
           />
         ))}
         {ROUTES.additional.map((item) => (
-          <MobileNavItem
+          <NavItemMobile
             key={item.path}
             to={item.path}
             title={item.title}

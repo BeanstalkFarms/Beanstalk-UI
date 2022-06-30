@@ -6,21 +6,14 @@ import { ETH } from 'constants/tokens';
 import TokenIcon from '../TokenIcon';
 import DropdownIcon from '../DropdownIcon';
 import NetworkDialog from './NetworkDialog';
+import useAnchor from 'hooks/display/useAnchor';
 
 const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { activeChain } = useNetwork();
 
-  // Dialog: State
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  // Dialog: Handlers
-  const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  }, [setAnchorEl]);
-  const handleClose = useCallback(() => {
-    setAnchorEl(null);
-  }, [setAnchorEl]);
+  // Dialog
+  const [anchor, toggleAnchor] = useAnchor();
+  const open = Boolean(anchor);
   
   if (!activeChain) return null;
 
@@ -51,7 +44,7 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
         color="light"
         startIcon={startIcon}
         endIcon={<DropdownIcon open={open} />}
-        onClick={handleClick}
+        onClick={toggleAnchor}
         {...props}
         sx={{
           // MUI adds a default margin to start and
@@ -78,7 +71,8 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
       </Button>
       <NetworkDialog
         open={open}
-        handleClose={handleClose}
+        // toggling always removes the anchor when open === true
+        handleClose={toggleAnchor}
       />
     </>
   );

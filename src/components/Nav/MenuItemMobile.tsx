@@ -1,10 +1,10 @@
 import React from 'react';
-import { ListItemText, MenuItem, Stack, Tooltip, Typography } from '@mui/material';
+import { MenuItem, Stack, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 /** Use for mobile nav. */
-const MobileNavItem: React.FC<{
+const NavItemMobile: React.FC<{
   to: string,
   title: string,
   onClick: () => void,
@@ -43,4 +43,4 @@ const MobileNavItem: React.FC<{
   </MenuItem>
 );
 
-export default MobileNavItem;
+export default NavItemMobile;
