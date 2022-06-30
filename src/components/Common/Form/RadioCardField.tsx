@@ -25,19 +25,19 @@ const RadioCardField: React.FC<(
   // Styling
   direction,
   sx,
-  xs,
-  md,
-  spacing
+  xs = 12,
+  md = 6,
+  spacing = 1,
 }) => {
   return (
     <Field name={name}>
       {(fieldProps: FieldProps) => (
         <Grid container direction={direction} spacing={spacing}>
-          {options.map((opt) => {
+          {options.map((opt, index) => {
             const selected = fieldProps.field.value === opt.value;
             const color    = selected ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightishGrey
             return (
-              <Grid item xs={xs} md={md}>
+              <Grid key={index} item xs={xs} md={md}>
                 <Card
                   key={opt.value}
                   sx={{
@@ -45,8 +45,9 @@ const RadioCardField: React.FC<(
                     py: 1.5,
                     height: '100%',
                     cursor: 'pointer',
-                    border: selected ? 1.5 : 1,
-                    borderColor: color,
+                    border: selected ? 1 : 1,
+                    outline: selected ? `1.5px solid ${BeanstalkPalette.logoGreen}` : 'none',
+                    borderColor: selected ? 'transparent' : BeanstalkPalette.lightishGrey,
                     '&:hover': {
                       backgroundColor: BeanstalkPalette.hoverBlue
                     },

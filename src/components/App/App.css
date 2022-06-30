@@ -22,3 +22,12 @@
     /* opacity: 0; */
   }
 }
+
+@keyframes grow-width {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}

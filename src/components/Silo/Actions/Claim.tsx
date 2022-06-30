@@ -15,7 +15,8 @@ import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
-import { FormTokenState, SettingSwitch, TxnSeparator, TxnPreview, TxnSettings, TokenInputField, TokenOutputField, TokenAdornment } from 'components/Common/Form';
+import { FormTokenState, SettingSwitch, TxnSeparator, TxnPreview, TxnSettings, TokenInputField, TokenOutputField, TokenAdornment, RadioCardField } from 'components/Common/Form';
+import { BeanstalkReplanted } from 'constants/generated';
 
 
 // -----------------------------------------------------------------------
@@ -77,6 +78,21 @@ const ClaimForm : React.FC<
               />
             )}
           </Field>
+          <RadioCardField
+            name="settings.removeLP"
+            options={[
+              {
+                title: `3CRV`,
+                description: `Remove LP from the ${pool.name} and receive 3CRV to your wallet`,
+                value: true,
+              },
+              {
+                title: `LP Token`,
+                description: `Receive ${token.name} Tokens to your wallet`,
+                value: false,
+              }
+            ]}
+          />
           {isReady ? (
             <Stack direction="column" gap={1}>
               <TxnSeparator />
@@ -137,7 +153,7 @@ const Claim : React.FC<{
 
   // Contracts
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer);
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const currentSeason = useSeason();
 
   // Balances
@@ -156,9 +172,14 @@ const Claim : React.FC<{
     ],
   }), [token, Bean]);
   const onSubmit = useCallback((values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
-    console.debug(beanstalk, formActions);
+    // let call;
+    // if (token === Bean) {
+    //   call = false;
+    // }
   }, [
-    beanstalk
+    // Bean,
+    // beanstalk,
+    // token
   ]);
 
   return (
@@ -171,25 +192,10 @@ const Claim : React.FC<{
               {token !== Bean && (
                 <SettingSwitch name="settings.removeLP" label="Remove LP" />
               )}
+              <SettingSwitch name="settings.toWallet" label="Send to wallet" />
             </TxnSettings>
           </Box>
           <Stack spacing={1}>
-            {/* Show an alert box if there are Withdrawals that aren't yet Claimable. */}
-            {/* {siloBalance?.withdrawn?.crates.length > 0 ? (
-              <Box sx={{ borderColor: 'primary.main', borderWidth: 1, borderStyle: 'solid', p: 1, borderRadius: 1 }}>
-                {siloBalance.withdrawn.crates.map((crate) => {
-                  const seasonsToArrival = crate.season.minus(currentSeason);
-                  if (seasonsToArrival.gt(0)) {
-                    return (
-                      <Typography key={crate.season.toString()} color="primary">
-                        {displayBN(crate.amount)} {token.name} will become Claimable in {seasonsToArrival.toFixed()} Season{seasonsToArrival.eq(1) ? '' : 's'}
-                      </Typography>
-                    );
-                  }
-                  return null;
-                })}
-              </Box>
-            ) : null} */}
             <ClaimForm
               token={token}
               claimableBalance={claimableBalance}
@@ -203,3 +209,19 @@ const Claim : React.FC<{
 };
 
 export default Claim;
+
+/* {siloBalance?.withdrawn?.crates.length > 0 ? (
+  <Box sx={{ borderColor: 'primary.main', borderWidth: 1, borderStyle: 'solid', p: 1, borderRadius: 1 }}>
+    {siloBalance.withdrawn.crates.map((crate) => {
+      const seasonsToArrival = crate.season.minus(currentSeason);
+      if (seasonsToArrival.gt(0)) {
+        return (
+          <Typography key={crate.season.toString()} color="primary">
+            {displayBN(crate.amount)} {token.name} will become Claimable in {seasonsToArrival.toFixed()} Season{seasonsToArrival.eq(1) ? '' : 's'}
+          </Typography>
+        );
+      }
+      return null;
+    })}
+  </Box>
+) : null} */

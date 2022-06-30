@@ -1,19 +1,14 @@
-import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip } from '@mui/material';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
+import BigNumber from 'bignumber.js';
+import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { LoadingButton } from '@mui/lab';
 import { Token } from 'classes';
 import { SEEDS, STALK } from 'constants/tokens';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-// import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormState } from 'components/Common/Form';
-// import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
-import TxnPreview from 'components/Common/Form/TxnPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
-import BigNumber from 'bignumber.js';
-import TokenInputField from 'components/Common/Form/TokenInputField';
-import TokenAdornment from 'components/Common/Form/TokenAdornment';
+import { FormState, TxnPreview, TokenOutputField, TokenInputField, TokenAdornment, TxnSeparator } from 'components/Common/Form';
 import Beanstalk from 'lib/Beanstalk';
 import useSeason from 'hooks/useSeason';
 import { FarmerSilo } from 'state/farmer/silo';
@@ -27,7 +22,7 @@ import { BeanstalkReplanted } from 'constants/generated';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
-import TxnSeparator from 'components/Common/Form/TxnSeparator';
+import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 
 // -----------------------------------------------------------------------
 
@@ -55,6 +50,7 @@ const WithdrawForm : React.FC<
   // Formik
   values,
   isSubmitting,
+  submitForm,
   // Custom
   token,
   siloBalances,
@@ -73,7 +69,31 @@ const WithdrawForm : React.FC<
     )
   }), [token]);
 
-  //
+  // Confirmation dialog
+  const CONFIRM_DELAY = 2000; // ms
+  const [confirming, setConfirming] = useState(false);
+  const [allowConfirm, setAllowConfirm] = useState(false);
+  const [fill, setFill] = useState('');
+  const onClose = useCallback(() => {
+    setConfirming(false);
+    setAllowConfirm(false);
+    setFill('');
+  }, []);
+  const onOpen  = useCallback(() => {
+    setConfirming(true);
+    setTimeout(() => {
+      setFill('fill');
+    }, 0);
+    setTimeout(() => {
+      setAllowConfirm(true);
+    }, CONFIRM_DELAY);
+  }, []);
+  const onSubmit = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    submitForm();
+    onClose();
+  }, [onClose, submitForm])
+
+  // Results
   const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
     token,
     values.tokens,
@@ -82,9 +102,71 @@ const WithdrawForm : React.FC<
   );
   const isReady = (withdrawResult && withdrawResult.amount.lt(0));
 
+  const tokenOutputs = isReady ? (
+    <>
+      <Stack direction="row" gap={1} justifyContent="center">
+        <Box sx={{ flex: 1 }}>
+          <TokenOutputField
+            token={STALK}
+            amount={withdrawResult.stalk}
+          />
+        </Box>
+        <Box sx={{ flex: 1 }}>
+          <TokenOutputField
+            token={SEEDS}
+            amount={withdrawResult.seeds}
+          />
+        </Box>
+      </Stack>
+      <TokenOutputField
+        token={token}
+        amount={withdrawResult.amount.abs()}
+        value={getUSD(token, withdrawResult.amount).abs()}
+        state={'Withdrawn'}
+      />
+    </>
+  ) : null;
+
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
+        {/* Confirmation Dialog */}
+        <StyledDialog open={confirming} onClose={onClose}>
+          <StyledDialogTitle onClose={onClose}>Confirm Silo Withdrawal</StyledDialogTitle>
+          <StyledDialogContent sx={{ pb: 1 }}>
+            <Stack direction="column" gap={1}>
+              <Box>
+                <Typography variant="body2">
+                  You will forfeit .0001% ownership of Beanstalk. Withdrawing will burn your Grown Stalk & Seeds associated with your initial Deposit. 
+                </Typography>
+              </Box>
+              {tokenOutputs}
+            </Stack>
+          </StyledDialogContent>
+          <StyledDialogActions>
+            <Button disabled={!allowConfirm} type="submit" onClick={onSubmit} variant="contained" color="warning" size="large" fullWidth sx={{ position: 'relative', overflow: 'hidden' }}>
+              <Box
+                sx={{
+                  background: 'rgba(0,0,0,0.03)',
+                  // display: !allowConfirm ? 'none' : 'block',
+                  width: '100%',
+                  transition: `height ${CONFIRM_DELAY}ms linear`,
+                  height: '0%',
+                  position: 'absolute',
+                  left: 0,
+                  bottom: 0,
+                  '&.fill': {
+                    transition: `height ${CONFIRM_DELAY}ms linear`,
+                    height: '100%',
+                  }
+                }}
+                className={fill}
+              />
+              Confirm Withdrawal
+            </Button>
+          </StyledDialogActions>
+        </StyledDialog>
+        {/* Form Content */}
         <Stack gap={1}>
           <Field name="tokens.0.amount">
             {(fieldProps: FieldProps) => (
@@ -100,25 +182,7 @@ const WithdrawForm : React.FC<
           {isReady ? (
             <Stack direction="column" gap={1}>
               <TxnSeparator />
-              <TokenOutputField
-                token={token}
-                amount={withdrawResult.amount}
-                value={getUSD(token, withdrawResult.amount).abs()}
-              />
-              <Stack direction="row" gap={1} justifyContent="center">
-                <Box sx={{ flex: 1 }}>
-                  <TokenOutputField
-                    token={STALK}
-                    amount={withdrawResult.stalk}
-                  />
-                </Box>
-                <Box sx={{ flex: 1 }}>
-                  <TokenOutputField
-                    token={SEEDS}
-                    amount={withdrawResult.seeds}
-                  />
-                </Box>
-              </Stack>
+              {tokenOutputs}
               <Box>
                 <Accordion defaultExpanded variant="outlined">
                   <StyledAccordionSummary title="Transaction Details" />
@@ -131,9 +195,17 @@ const WithdrawForm : React.FC<
               </Box>
             </Stack>
           ) : null}
-          <Button disabled={!isReady || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            loading={isSubmitting}
+            onClick={onOpen}
+            disabled={!isReady || isSubmitting || isMainnet}
+            size="large"
+            fullWidth
+          >
             Withdraw
-          </Button>
+          </LoadingButton>
         </Stack>
       </Form>
     </Tooltip>

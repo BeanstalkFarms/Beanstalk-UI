@@ -38,7 +38,7 @@ const Stat: React.FC<StatProps> =
                 sx={{ color: 'text.secondary', fontSize: '14px' }}
               />
             </Tooltip>
-          ) }
+          )}
         </Stack>
       </Typography>
       <Typography variant={variant} color={color} sx={{ marginLeft: '-3px', ...sx }}>

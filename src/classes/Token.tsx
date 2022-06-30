@@ -53,6 +53,9 @@ export default abstract class Token {
    */
   public readonly rewards?: { stalk: number; seeds: number };
 
+  /**
+   * 
+   */
   public readonly displayDecimals: number;
 
   /**
@@ -86,24 +89,14 @@ export default abstract class Token {
     this.rewards = rewards;
   }
 
-  /**
-   * Returns whether this currency is functionally equivalent to the other currency
-   * @param other the other currency
-   */
-  public equals(other: Token): boolean {
-    return this.chainId === other.chainId && this.address === other.address;
-  }
-
-  public toString(): string {
-    return this.name;
-  }
-
+  /** Get the amount of Stalk rewarded per deposited BDV of this Token. */
   public getStalk(bdv?: BigNumber) : BigNumber {
     if (!this.rewards?.stalk) return ZERO_BN;
     if (!bdv) return new BigNumber(this.rewards.stalk);
     return bdv.times(this.rewards.stalk);
   }
   
+  /** Get the amount of Seeds rewarded per deposited BDV of this Token. */
   public getSeeds(bdv?: BigNumber) : BigNumber {
     if (!this.rewards?.seeds) return ZERO_BN;
     if (!bdv) return new BigNumber(this.rewards.seeds);
@@ -117,6 +110,18 @@ export default abstract class Token {
   abstract getAllowance(account: string, spender: string) : Promise<BigNumber | undefined>;
   
   abstract getTotalSupply() : Promise<BigNumber> | undefined;
+
+  /**
+   * Returns whether this currency is functionally equivalent to the other currency
+   * @param other the other currency
+   */
+  public equals(other: Token): boolean {
+    return this.chainId === other.chainId && this.address === other.address;
+  }
+
+  public toString(): string {
+    return this.name;
+  }
 }
 
 export class NativeToken extends Token {

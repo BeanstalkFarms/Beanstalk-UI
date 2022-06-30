@@ -11,11 +11,12 @@ import Beanstalk from 'lib/Beanstalk';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
+import { toStringBaseUnitBN } from 'util/index';
 import { getAccount } from 'util/Account';
 import { parseWithdrawals } from 'util/Crates';
 import { useAccount } from 'wagmi';
 import { updateFarmerField } from './field/actions';
-import { DepositCrate, WithdrawalCrate } from './silo';
+import { DepositCrate } from './silo';
 import { updateFarmerSiloBalances, UpdateFarmerSiloBalancesPayload } from './silo/actions';
 
 const FarmerEventsProcessor = () => {
@@ -91,20 +92,20 @@ const FarmerEventsProcessor = () => {
           p.ingest({
             event: 'AddDeposit',
             args: {
-              token: BEAN[1].address,
+              token: BEAN_CRV3_LP[1].address,
               account: eventParsingParameters.account,
-              amount: ethers.BigNumber.from(100_000000),
-              bdv: ethers.BigNumber.from(100_000000),
+              amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
+              bdv: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
               season: 6070,
             }
           } as AddDepositEvent);
           p.ingest({
             event: 'AddDeposit',
             args: {
-              token: BEAN[1].address,
+              token: BEAN_CRV3_LP[1].address,
               account: eventParsingParameters.account,
-              amount: ethers.BigNumber.from(100_000000),
-              bdv: ethers.BigNumber.from(100_000000),
+              amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
+              bdv: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
               season: 6072,
             }
           } as AddDepositEvent);
@@ -113,36 +114,36 @@ const FarmerEventsProcessor = () => {
             event: 'RemoveDeposit',
             args: {
               account: eventParsingParameters.account,
-              token: BEAN[1].address,
+              token: BEAN_CRV3_LP[1].address,
               season: 6070,
-              amount: ethers.BigNumber.from(100_000000),
+              amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
             }
           } as RemoveDepositEvent);
           p.ingest({
             event: 'RemoveDeposit',
             args: {
               account: eventParsingParameters.account,
-              token: BEAN[1].address,
+              token: BEAN_CRV3_LP[1].address,
               season: 6072,
-              amount: ethers.BigNumber.from(100_000000),
+              amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
             }
           } as RemoveDepositEvent);
           p.ingest({
             event: 'AddWithdrawal',
             args: {
               account: eventParsingParameters.account,
-              token: BEAN[1].address,
+              token: BEAN_CRV3_LP[1].address,
               season: 6073,
-              amount: ethers.BigNumber.from(100_000000),
+              amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
             }
           } as AddWithdrawalEvent);
           p.ingest({
             event: 'AddWithdrawal',
             args: {
               account: eventParsingParameters.account,
-              token: BEAN[1].address,
+              token: BEAN_CRV3_LP[1].address,
               season: 6076,
-              amount: ethers.BigNumber.from(100_000000),
+              amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
             }
           } as AddWithdrawalEvent);
           

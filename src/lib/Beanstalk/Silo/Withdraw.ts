@@ -1,9 +1,9 @@
 import { Token } from 'classes';
 import { FormState } from 'components/Common/Form';
 // import { Action, ActionType } from 'util/Actions';
-import { DepositCrate } from 'state/farmer/silo';
+import { DepositCrate, WithdrawalCrate } from 'state/farmer/silo';
 import BigNumber from 'bignumber.js';
-import { _sortCratesBySeasonDescending } from './Utils';
+import { _sortCratesBySeason } from './Utils';
 
 /**
  * Select how much to Withdraw from Crates.
@@ -24,7 +24,7 @@ export function _selectCratesToWithdraw(
   let totalBDVRemoved    = new BigNumber(0);
   let totalStalkRemoved  = new BigNumber(0);
   const deltaCrates : DepositCrate[] = [];
-  const sortedCrates = _sortCratesBySeasonDescending(depositedCrates);
+  const sortedCrates = _sortCratesBySeason<DepositCrate>(depositedCrates);
 
   sortedCrates.some((crate) => {
     // How much to remove from the current crate.
@@ -41,8 +41,8 @@ export function _selectCratesToWithdraw(
     // Stalk is removed for two reasons:
     //  'base stalk' associated with the initial deposit is forfeited
     //  'accrued stalk' earned from Seeds over time is forfeited.
-    const baseStalkToRemove     = token.getStalk(crateBDVToRemove);    // more or less, BDV * 1
-    const accruedStalkToRemove  = crateSeedsToRemove.times(elapsedSeasons).times(0.00001);
+    const baseStalkToRemove     = token.getStalk(crateBDVToRemove); // more or less, BDV * 1
+    const accruedStalkToRemove  = crateSeedsToRemove.times(elapsedSeasons).times(0.00001); // FIXME: use constant
     const crateStalkToRemove    = baseStalkToRemove.plus(accruedStalkToRemove);
 
     // Update totals
@@ -67,6 +67,14 @@ export function _selectCratesToWithdraw(
     deltaStalk:  totalStalkRemoved.negated(),
     deltaCrates,
   };
+}
+
+export function _selectCratesToClaim(
+  amount: BigNumber,
+  withdrawnCrates: WithdrawalCrate[],
+  currentSeason: BigNumber,
+) {
+  const sortedCrates = _sortCratesBySeason<WithdrawalCrate>(withdrawnCrates);
 }
 
 /**

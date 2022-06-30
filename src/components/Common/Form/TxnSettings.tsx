@@ -41,11 +41,11 @@ const TxnSettings : React.FC = ({ children }) => {
         // right side of the anchor button. 
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left',
+          horizontal: 'right',
         }}
       >
         <Stack gap={1}>

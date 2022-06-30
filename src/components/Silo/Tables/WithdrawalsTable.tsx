@@ -90,7 +90,10 @@ const WithdrawalsTable : React.FC<{
           )}
         >
           <Typography>
-            {displayFullBN(params.value, token.displayDecimals, token.displayDecimals)} (~{displayUSD(getUSD(token, params.row.amount))})
+            {displayFullBN(params.value, token.displayDecimals, token.displayDecimals)} 
+            <Typography display="inline" color="text.secondary">
+              {' '}(~{displayUSD(getUSD(token, params.row.amount))})
+            </Typography>
           </Typography>
         </Tooltip>
       ),
