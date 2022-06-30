@@ -3,7 +3,7 @@ import { Box, IconButton, Menu, Stack, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 
-const TransactionSettings : React.FC = ({ children }) => {
+const TxnSettings : React.FC = ({ children }) => {
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuVisible = Boolean(anchorEl);
@@ -59,4 +59,4 @@ const TransactionSettings : React.FC = ({ children }) => {
   );
 };
 
-export default TransactionSettings;
+export default TxnSettings;

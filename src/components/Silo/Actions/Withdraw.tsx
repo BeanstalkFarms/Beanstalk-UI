@@ -8,7 +8,7 @@ import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { FormState } from 'components/Common/Form';
 // import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
-import TransactionPreview from 'components/Common/Form/TransactionPreview';
+import TxnPreview from 'components/Common/Form/TxnPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import BigNumber from 'bignumber.js';
@@ -27,7 +27,7 @@ import { BeanstalkReplanted } from 'constants/generated';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
-import TransactionSeparator from 'components/Common/Form/TransactionSeparator';
+import TxnSeparator from 'components/Common/Form/TxnSeparator';
 
 // -----------------------------------------------------------------------
 
@@ -99,7 +99,7 @@ const WithdrawForm : React.FC<
           </Field>
           {isReady ? (
             <Stack direction="column" gap={1}>
-              <TransactionSeparator />
+              <TxnSeparator />
               <TokenOutputField
                 token={token}
                 amount={withdrawResult.amount}
@@ -123,7 +123,7 @@ const WithdrawForm : React.FC<
                 <Accordion defaultExpanded variant="outlined">
                   <StyledAccordionSummary title="Transaction Details" />
                   <AccordionDetails>
-                    <TransactionPreview
+                    <TxnPreview
                       actions={withdrawResult.actions}
                     />
                   </AccordionDetails>

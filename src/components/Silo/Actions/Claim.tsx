@@ -1,29 +1,23 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Grid, Stack, Tooltip } from '@mui/material';
+import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import BigNumber from 'bignumber.js';
+import { useSigner } from 'wagmi';
 import { Token } from 'classes';
 import { BEAN } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { FormTokenState } from 'components/Common/Form';
-import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
-import BigNumber from 'bignumber.js';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { displayBN } from 'util/Tokens';
-import { useSigner } from 'wagmi';
 import { FarmerSiloBalance } from 'state/farmer/silo';
-import TokenAdornment from 'components/Common/Form/TokenAdornment';
-import TokenInputField from 'components/Common/Form/TokenInputField';
 import { ActionType } from 'util/Actions';
-import TransactionSettings from 'components/Common/Form/TransactionSettings';
-import SettingSwitch from 'components/Common/Form/SettingSwitch';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
-import TransactionSeparator from 'components/Common/Form/TransactionSeparator';
+import { SettingSwitch, TxnSeparator, TxnPreview, TxnSettings, TokenInputField, TokenOutputField, TokenAdornment } from 'components/Common/Form';
+
 
 // -----------------------------------------------------------------------
 
@@ -86,7 +80,7 @@ const ClaimForm : React.FC<
           </Field>
           {isReady ? (
             <Stack direction="column" gap={1}>
-              <TransactionSeparator />
+              <TxnSeparator />
               {values.settings.removeLP ? (
                 <Grid container spacing={1}>
                   {pool?.tokens.map((_token) => (
@@ -108,7 +102,7 @@ const ClaimForm : React.FC<
                 <Accordion defaultExpanded variant="outlined">
                   <StyledAccordionSummary title="Transaction Details" />
                   <AccordionDetails>
-                    <TransactionPreview
+                    <TxnPreview
                       actions={[
                         {
                           type: ActionType.BASE,
@@ -174,11 +168,11 @@ const Claim : React.FC<{
         <>
           {/* Padding below matches tabs and input position. See Figma. */}
           <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
-            <TransactionSettings>
+            <TxnSettings>
               {token !== Bean && (
                 <SettingSwitch name="settings.removeLP" label="Remove LP" />
               )}
-            </TransactionSettings>
+            </TxnSettings>
           </Box>
           <Stack spacing={1}>
             {/* Show an alert box if there are Withdrawals that aren't yet Claimable. */}
