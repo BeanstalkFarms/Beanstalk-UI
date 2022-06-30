@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Box, Button, ButtonProps, Drawer, Popper, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DropdownIcon from 'components/Common/DropdownIcon';
+import useToggle from 'hooks/display/useToggle';
+import useAnchor from 'hooks/display/useAnchor';
 
 /**
  * Show a "Folder". A folder is a button that shows a popup;
@@ -12,7 +14,7 @@ import DropdownIcon from 'components/Common/DropdownIcon';
  *             out of the button. See <PriceButton/> for example.
  * On mobile:  Clicking the Button shows a Drawer.
  */
-const Folder: React.FC<{
+const FolderMenu: React.FC<{
   startIcon?: any;
   buttonContent: JSX.Element;
   popoverContent: JSX.Element;
@@ -29,27 +31,14 @@ const Folder: React.FC<{
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   
   // Popover
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, toggleAnchor] = useAnchor();
   const popoverOpen = Boolean(anchorEl);
-  const onTogglePopover = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (anchorEl) {
-      setAnchorEl(null);
-    } else {
-      setAnchorEl(event.currentTarget);
-    }
-  };
 
   // Drawer
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const onOpenDrawer = () => {
-    setDrawerOpen(true);
-  };
-  const onCloseDrawer = () => {
-    setDrawerOpen(false);
-  };
+  const [drawerOpen, openDrawer, closeDrawer] = useToggle();
 
   // Handlers
-  const onClickButton = isMobile ? onOpenDrawer : onTogglePopover;
+  const onClickButton = isMobile ? openDrawer : toggleAnchor;
 
   return (
     <>
@@ -57,7 +46,7 @@ const Folder: React.FC<{
       <Drawer
         anchor="bottom"
         open={drawerOpen}
-        onClose={onCloseDrawer}
+        onClose={closeDrawer}
       >
         {drawerContent}
       </Drawer>
@@ -72,13 +61,13 @@ const Folder: React.FC<{
           sx={{
             // Fully rounded by default; when open, remove
             // the bottom rounding to look like a "tab".
-            borderBottomLeftRadius:  anchorEl ? 0 : undefined,
-            borderBottomRightRadius: anchorEl ? 0 : undefined,  
+            borderBottomLeftRadius:  popoverOpen ? 0 : undefined,
+            borderBottomRightRadius: popoverOpen ? 0 : undefined,  
             // Enforce a default white border; switch the color
             // to secondary when the Popper is open.
             borderWidth: 1,
             borderStyle: 'solid',
-            borderColor: anchorEl ? 'secondary.main' : 'white',
+            borderColor: popoverOpen ? 'secondary.main' : 'white',
             // Keep this white so we can make it look like the
             // button is "expanding" into a Box when you click it.
             borderBottomColor: 'white',
@@ -87,7 +76,7 @@ const Folder: React.FC<{
             transition: 'none !important',
             // Move the button above the Box so we can slice off
             // the 1px border at the top of the Box.
-            zIndex: anchorEl ? 999 : undefined,
+            zIndex: popoverOpen ? 999 : undefined,
             // Positioning and other styles.
             mr: 1,
             ...buttonProps.sx
@@ -127,4 +116,4 @@ const Folder: React.FC<{
   );
 };
 
-export default Folder;
+export default FolderMenu;

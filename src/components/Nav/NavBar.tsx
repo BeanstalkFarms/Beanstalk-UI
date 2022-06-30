@@ -19,12 +19,11 @@ import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog
 import PriceButton from './Buttons/PriceButton';
 import SunButton from './Buttons/SunButton';
 import LinkButton from './Buttons/LinkButton';
-import AnalyticsMenu from './Menus/AnalyticsMenu';
-import MoreMenu from './Menus/MoreMenu';
 import WalletButton from 'components/Common/Connection/WalletButton';
 import NetworkButton from 'components/Common/Connection/NetworkButton';
 import AboutButton from './Buttons/AboutButton';
 import ROUTES from './routes';
+import HoverMenu from './HoverMenu';
 
 const NavBar: React.FC<{}> = () => {
   const chainId = useChainId();
@@ -186,8 +185,12 @@ const NavBar: React.FC<{}> = () => {
                   tag={item.tag}
                 />
               ))}
-              <AnalyticsMenu />
-              <MoreMenu />
+              <HoverMenu items={ROUTES.analytics}>
+                Analytics
+              </HoverMenu>
+              <HoverMenu items={ROUTES.more}>
+                More
+              </HoverMenu>
             </Stack>
           </Stack>
           {/* Desktop: Right Side */}

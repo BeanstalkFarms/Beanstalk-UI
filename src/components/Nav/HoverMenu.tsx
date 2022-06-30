@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import {
   Button,
   Card,
@@ -6,28 +6,28 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { RouteData } from './routes';
 import DropdownIcon from 'components/Common/DropdownIcon';
-import ROUTES from '../routes';
-import MenuItem from '../MenuItem';
 import useToggle from 'hooks/display/useToggle';
+import MenuItem from './MenuItem';
 
-const AnalyticsMenu: React.FC = () => {
-  // Handlers
+const HoverMenu: React.FC<{
+  items: RouteData[];
+}> = ({
+  children,
+  items
+}) => {
   const [open, show, hide] = useToggle();
-
-  const menuContent = (
-    <MenuList>
-      {ROUTES.analytics.map((item) => (
-        <MenuItem key={item.path} item={item} onClick={hide} />
-      ))}
-    </MenuList>
-  );
-
   return (
     <Tooltip
       components={{ Tooltip: Card }}
-      title={menuContent}
-      open={open}
+      title={(
+        <MenuList>
+          {items.map((item) => (
+            <MenuItem key={item.path} item={item} onClick={hide} />
+          ))}
+        </MenuList>
+      )}
       onOpen={show}
       onClose={hide}
       enterTouchDelay={50}
@@ -42,6 +42,7 @@ const AnalyticsMenu: React.FC = () => {
         }
       }}
     >
+      {/* Partial duplicate of LinkButton */}
       <Button
         size="small"
         variant="text"
@@ -54,10 +55,12 @@ const AnalyticsMenu: React.FC = () => {
         }}
         className={open ? 'Mui-focusVisible' : ''}
       >
-        <Typography variant="subtitle1">Analytics</Typography>
+        <Typography variant="subtitle1">
+          {children}
+        </Typography>
       </Button>
     </Tooltip>
   );
 };
 
-export default AnalyticsMenu;
+export default HoverMenu;

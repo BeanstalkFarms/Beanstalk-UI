@@ -19,6 +19,8 @@ import { BEANSTALK_ADDRESSES, CHAIN_INFO } from 'constants/index';
 import useChainConstant from 'hooks/useChainConstant';
 import NavDrawer from '../NavDrawer';
 import ROUTES from '../routes';
+import useAnchor from 'hooks/display/useAnchor';
+import useToggle from 'hooks/display/useToggle';
 
 const AboutButton: React.FC<ButtonProps> = () => {
   // Theme
@@ -30,27 +32,16 @@ const AboutButton: React.FC<ButtonProps> = () => {
   const beanstalkAddress = useChainConstant(BEANSTALK_ADDRESSES);
 
   // Menu
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const hideMenu = useCallback(() => {
-    setAnchorEl(null);
-  }, []);
+  const [anchorEl, toggleAnchor] = useAnchor();
 
   // Drawer
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const hideDrawer = useCallback(() => {
-    setDrawerOpen(false);
-    setAnchorEl(null);
-  }, []);
-  const showDrawer = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setDrawerOpen(true);
-    setAnchorEl(event.currentTarget);
-  }, []);
+  const [drawerOpen, showDrawer, hideDrawer] = useToggle(toggleAnchor, toggleAnchor);
 
   const menuContent = (
     <MenuList component={Card}>
       {/* Menu Items */}
       {ROUTES.additional.map((item) => (
-        <MenuItem key={item.path} item={item} onClick={hideMenu} />
+        <MenuItem key={item.path} item={item} onClick={toggleAnchor} />
       ))}
       {/* Contract Button Container */}
       <Box sx={{ px: 1, pt: 0.75 }}>

@@ -12,7 +12,7 @@ import PoolCard from 'components/Silo/PoolCard';
 import DropdownIcon from 'components/Common/DropdownIcon';
 import { NEW_BN, ZERO_BN } from 'constants/index';
 import BeanProgressIcon from 'components/Common/BeanProgressIcon';
-import Folder from '../Folder';
+import FolderMenu from '../FolderMenu';
 import useSeason from 'hooks/useSeason';
 
 // ------------------------------------------------------------
@@ -57,7 +57,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   ));
 
   return (
-    <Folder
+    <FolderMenu
       startIcon={startIcon}
       buttonContent={
         <>

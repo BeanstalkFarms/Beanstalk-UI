@@ -1,7 +1,7 @@
 import React from 'react';
 import { ButtonProps, Stack, Typography, useMediaQuery } from '@mui/material';
 import { NEW_BN } from 'constants/index';
-import Folder from '../Folder';
+import FolderMenu from '../FolderMenu';
 import useSeason from 'hooks/useSeason';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
@@ -37,7 +37,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   )
 
   return (
-    <Folder
+    <FolderMenu
       startIcon={startIcon}
       buttonContent={
         <>
