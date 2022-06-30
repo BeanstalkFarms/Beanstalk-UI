@@ -3,7 +3,16 @@ import { Box, IconButton, Menu, Stack, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 
-const TxnSettings : React.FC = ({ children }) => {
+const PLACEMENTS = {
+  'form-top-right': { position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 },
+}
+
+const TxnSettings : React.FC<{
+  placement?: 'form-top-right',
+}> = ({ 
+  placement = 'form-top-right',
+  children
+}) => {
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuVisible = Boolean(anchorEl);
@@ -16,9 +25,9 @@ const TxnSettings : React.FC = ({ children }) => {
   const handleHideMenu = useCallback(() => {
     setAnchorEl(null);
   }, []);
-  
+
   return (
-    <>
+    <Box sx={PLACEMENTS[placement]}>
       <IconButton size="small" onClick={handleToggleMenu}>
         <SettingsIcon sx={{ fontSize: 20, transform: `rotate(${anchorEl ? 30 : 0}deg)`, transition: 'transform 150ms ease-in-out' }} />
       </IconButton>
@@ -55,7 +64,7 @@ const TxnSettings : React.FC = ({ children }) => {
           </Box>
         </Stack>
       </Menu>
-    </>
+    </Box>
   );
 };
 

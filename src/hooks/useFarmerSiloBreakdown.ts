@@ -23,7 +23,7 @@ export type SiloStateBreakdown = {
   byToken: AddressMap<{ amount: BigNumber, value: BigNumber }>;
 }
 
-const initState = (tokenAddresses: string[]) => ({
+const _initState = (tokenAddresses: string[]) => ({
   value: new BigNumber(0),
   byToken: tokenAddresses.reduce<SiloStateBreakdown['byToken']>(
     (prev, curr) => { 
@@ -118,11 +118,11 @@ export default function useFarmerSiloBreakdown() {
       totalValue:   new BigNumber(0),
       /** */
       states: {
-        deposited:    initState(WHITELIST_ADDRS),
-        withdrawn:    initState(WHITELIST_ADDRS),
-        claimable:    initState(WHITELIST_ADDRS),
-        wrapped:      initState(WHITELIST_ADDRS),
-        circulating:  initState(WHITELIST_ADDRS),
+        deposited:    _initState(WHITELIST_ADDRS),
+        withdrawn:    _initState(WHITELIST_ADDRS),
+        claimable:    _initState(WHITELIST_ADDRS),
+        wrapped:      _initState(WHITELIST_ADDRS),
+        circulating:  _initState(WHITELIST_ADDRS),
       }
     });
   },

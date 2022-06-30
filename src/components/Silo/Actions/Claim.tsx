@@ -18,7 +18,6 @@ import useSeason from 'hooks/useSeason';
 import { FormTokenState, SettingSwitch, TxnSeparator, TxnPreview, TxnSettings, TokenInputField, TokenOutputField, TokenAdornment, RadioCardField } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'constants/generated';
 
-
 // -----------------------------------------------------------------------
 
 type ClaimFormValues = {

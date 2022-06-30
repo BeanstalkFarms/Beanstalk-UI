@@ -12,10 +12,13 @@ import { BEAN, STALK } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useChainConstant from 'hooks/useChainConstant';
-import Crates from './Crates';
+import CratesCard from '../CratesCard';
 import COLUMNS from 'components/Common/Table/cells';
 
-const DepositsTable : React.FC<{
+/**
+ * Prep data to loading to a CratesCard.
+ */
+const Deposits : React.FC<{
   token: Token;
   balance: FarmerSiloBalance | undefined;
 }> = ({
@@ -98,7 +101,7 @@ const DepositsTable : React.FC<{
   const state = !account ? 'disconnected' : 'ready';
 
   return (
-    <Crates
+    <CratesCard
       title={`${token.name} Deposits`}
       rows={rows}
       columns={columns}
@@ -109,4 +112,4 @@ const DepositsTable : React.FC<{
   );
 };
 
-export default DepositsTable;
+export default Deposits;

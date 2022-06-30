@@ -3,14 +3,12 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import SiloActions from 'components/Silo/Actions';
-import DepositsTable from 'components/Silo/Tables/DepositsTable';
 import useWhitelist from 'hooks/useWhitelist';
 import { Container, Stack } from '@mui/material';
 import usePools from 'hooks/usePools';
 import PageHeader from 'components/Common/PageHeader';
 import PoolCard from 'components/Silo/PoolCard';
 import { ERC20Token } from 'classes/Token';
-import { useAccount } from 'wagmi';
 
 const TokenPage: React.FC<{}> = () => {
   // Constants

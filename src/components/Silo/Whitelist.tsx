@@ -15,12 +15,14 @@ import useChainConstant from 'hooks/useChainConstant';
 
 const ARROW_CONTAINER_WIDTH = 20;
 
+/**
+ * Display a pseudo-table of Whitelisted Silo Tokens.
+ * This table is the entry point to deposit Beans, LP, etc.
+ */
 const Whitelist : React.FC<{
   farmerSilo: AppState['_farmer']['silo'];
   config: {
-    /** Array of Whitelisted tokens in the Silo. */
     whitelist: Token[];
-    /** */
     poolsByAddress: AddressMap<Pool>;
   };
 }> = ({
@@ -160,13 +162,6 @@ const Whitelist : React.FC<{
             </Box>
           );
         })}
-        {/* {chainId !== SupportedChainId.MAINNET && (
-          <Box>
-            <Button variant="contained" color="primary" size="large" fullWidth>
-              Convert Allocation of Deposited Assets
-            </Button>
-          </Box>
-        )} */}
       </Stack>
     </Card>
   );

@@ -1,24 +1,19 @@
 import React, { useMemo } from 'react';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
+import { useAccount } from 'wagmi';
 import { Tooltip, Typography } from '@mui/material';
-import { GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColumns } from '@mui/x-data-grid';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
 import { displayFullBN, displayUSD } from 'util/index';
 import useSeason from 'hooks/useSeason';
-import { BEAN, STALK } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
-import useChainConstant from 'hooks/useChainConstant';
-import Crates from './Crates';
-import COLUMNS from 'components/Common/Table/cells';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { useAccount } from 'wagmi';
+import CratesCard from '../CratesCard';
 
 type RowData = WithdrawalCrate & { id: BigNumber };
 
-const WithdrawalsTable : React.FC<{
+const Withdrawals : React.FC<{
   token: Token;
   balance: FarmerSiloBalance | undefined;
 }> = ({
@@ -109,7 +104,7 @@ const WithdrawalsTable : React.FC<{
   const state = !account ? 'disconnected' : !currentSeason ? 'loading' : 'ready';
 
   return (
-    <Crates
+    <CratesCard
       title={`${token.name} Withdrawals`}
       rows={rows}
       columns={columns}
@@ -121,4 +116,4 @@ const WithdrawalsTable : React.FC<{
   );
 };
 
-export default WithdrawalsTable;
+export default Withdrawals;
