@@ -32,6 +32,7 @@ import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import { BigNumberish, ethers } from 'ethers';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
+import TransactionSeparator from 'components/Common/Form/TransactionSeparator';
 
 // -----------------------------------------------------------------------
 
@@ -252,6 +253,7 @@ const DepositForm : React.FC<
           </Stack>
           {isReady ? (
             <Stack direction="column" gap={1}>
+              <TransactionSeparator />
               <TokenOutputField
                 token={siloToken}
                 amount={bdv}

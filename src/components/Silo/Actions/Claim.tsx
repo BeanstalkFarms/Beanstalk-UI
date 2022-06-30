@@ -23,6 +23,7 @@ import SettingSwitch from 'components/Common/Form/SettingSwitch';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
+import TransactionSeparator from 'components/Common/Form/TransactionSeparator';
 
 // -----------------------------------------------------------------------
 
@@ -85,6 +86,7 @@ const ClaimForm : React.FC<
           </Field>
           {isReady ? (
             <Stack direction="column" gap={1}>
+              <TransactionSeparator />
               {values.settings.removeLP ? (
                 <Grid container spacing={1}>
                   {pool?.tokens.map((_token) => (
@@ -146,7 +148,7 @@ const Claim : React.FC<{
   const currentSeason = useSeason();
 
   // Balances
-  const claimableBalance = siloBalance.claimable.amount;
+  const claimableBalance = siloBalance?.claimable.amount;
 
   // Form
   const initialValues : ClaimFormValues = useMemo(() => ({
@@ -180,7 +182,7 @@ const Claim : React.FC<{
           </Box>
           <Stack spacing={1}>
             {/* Show an alert box if there are Withdrawals that aren't yet Claimable. */}
-            {siloBalance?.withdrawn?.crates.length > 0 ? (
+            {/* {siloBalance?.withdrawn?.crates.length > 0 ? (
               <Box sx={{ borderColor: 'primary.main', borderWidth: 1, borderStyle: 'solid', p: 1, borderRadius: 1 }}>
                 {siloBalance.withdrawn.crates.map((crate) => {
                   const seasonsToArrival = crate.season.minus(currentSeason);
@@ -194,7 +196,7 @@ const Claim : React.FC<{
                   return null;
                 })}
               </Box>
-            ) : null}
+            ) : null} */}
             <ClaimForm
               token={token}
               claimableBalance={claimableBalance}

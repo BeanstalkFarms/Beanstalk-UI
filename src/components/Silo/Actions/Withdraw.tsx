@@ -27,6 +27,7 @@ import { BeanstalkReplanted } from 'constants/generated';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
+import TransactionSeparator from 'components/Common/Form/TransactionSeparator';
 
 // -----------------------------------------------------------------------
 
@@ -98,6 +99,7 @@ const WithdrawForm : React.FC<
           </Field>
           {isReady ? (
             <Stack direction="column" gap={1}>
+              <TransactionSeparator />
               <TokenOutputField
                 token={token}
                 amount={withdrawResult.amount}
