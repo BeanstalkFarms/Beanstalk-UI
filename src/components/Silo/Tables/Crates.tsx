@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box, Card, CircularProgress, Divider, Stack, Typography } from '@mui/material';
-import { DataGrid, GridColumns, GridSortItem, GridSortModel } from '@mui/x-data-grid';
+import { DataGrid, GridColumns, GridSortItem } from '@mui/x-data-grid';
 
 import { displayBN, displayUSD } from 'util/index';
-import { tableStyle } from 'util/tableStyle';
+import { tableStyle } from 'components/Common/Table/styles';
 import { ZERO_BN } from 'constants/index';
 
 const MAX_ROWS = 5;

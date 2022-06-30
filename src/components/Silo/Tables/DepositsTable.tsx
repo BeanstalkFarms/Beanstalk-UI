@@ -1,14 +1,12 @@
 import React, { useMemo } from 'react';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
-import { Box, Card, CircularProgress, Divider, Stack, Tooltip, Typography } from '@mui/material';
-import { DataGrid, GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
+import { Tooltip, Typography } from '@mui/material';
+import { GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import type { DepositCrate } from 'state/farmer/silo';
 import { displayBN, displayFullBN, displayUSD } from 'util/index';
-import useBeansToUSD from 'hooks/currency/useBeansToUSD';
-import { tableStyle } from 'util/tableStyle';
 import useSeason from 'hooks/useSeason';
 import { BEAN, STALK } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';

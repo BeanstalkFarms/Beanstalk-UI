@@ -6,7 +6,7 @@ import { DataGrid, GridColumns } from '@mui/x-data-grid';
 import { AppState } from '../../state';
 import PodLineSection from './PodLineSection';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
-import { tableStyle } from '../../util/tableStyle';
+import { tableStyle } from '../Common/Table/styles';
 
 export interface MyPlotsDialogProps {
   podLine: BigNumber;
