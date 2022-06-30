@@ -6,11 +6,10 @@ import {
   List, ListItemText, Stack, Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { BeanstalkPalette } from 'components/App/muiTheme';
 import ROUTES from './routes';
-import NavItemMobile from './MenuItemMobile';
-import { BeanstalkPalette } from '../App/muiTheme';
+import MenuItemMobile from './MenuItemMobile';
 
 const NavDrawer: React.FC<{
   open: boolean;
@@ -36,19 +35,19 @@ const NavDrawer: React.FC<{
       {/* Items */}
       <List style={{ fontSize: 22 }}>
         {ROUTES.top.map((item) => (
-          <NavItemMobile
+          <MenuItemMobile
             item={item}
             onClick={hideDrawer}
           />
         ))}
         {ROUTES.more.map((item) => (
-          <NavItemMobile
+          <MenuItemMobile
             item={item}
             onClick={hideDrawer}
           />
         ))}
         {ROUTES.additional.map((item) => (
-          <NavItemMobile
+          <MenuItemMobile
             item={item}
             onClick={hideDrawer}
           />
