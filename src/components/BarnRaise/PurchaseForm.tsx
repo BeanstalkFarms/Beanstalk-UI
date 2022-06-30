@@ -21,7 +21,7 @@ import useFertilizerSummary from 'hooks/summary/useFertilizerSummary';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import { FormState } from 'components/Common/Form';
-import TransactionPreview from 'components/Common/Form/TransactionPreview';
+import TxnPreview from 'components/Common/Form/TxnPreview';
 import TxnAccordion from 'components/Common/TxnAccordion';
 import { useFetchFarmerFertilizer } from 'state/farmer/fertilizer/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
@@ -144,7 +144,7 @@ const FertilizeForm : React.FC<
               </Box>
               <Box sx={{ width: '100%', mt: 0 }}>
                 <TxnAccordion defaultExpanded={false}>
-                  <TransactionPreview
+                  <TxnPreview
                     actions={actions}
                   />
                   <Divider sx={{ my: 2, opacity: 0.4 }} />

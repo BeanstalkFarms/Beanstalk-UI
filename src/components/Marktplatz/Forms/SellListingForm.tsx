@@ -6,14 +6,14 @@ import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import podsIcon from 'img/beanstalk/pod-icon.svg';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { SellListingFormValues } from '../Dialogs/SellListingDialog';
-import CardField from '../../Common/Form/Field/CardField';
+import RadioCardField from '../../Common/Form/RadioCardField';
 import PlotDetails from '../Cards/PlotDetails';
-import InputAmountField from '../../Common/Form/Field/InputAmountField';
+import InputField from '../../Common/Form/InputField';
 import { ZERO_BN } from '../../../constants';
 import { MaxBN, MinBN } from '../../../util';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
-import SliderInputField from '../../Common/Form/Field/SliderInputField';
+import SliderField from '../../Common/Form/SliderField';
 
 export type SellListingFormProps = {
   plot: any;
@@ -57,7 +57,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           {/* so we leave the name field blank */}
           <Field name="">
             {(fieldProps: FieldProps) => (
-              <SliderInputField
+              <SliderField
                 {...fieldProps}
                 min={0}
                 max={numPods.toNumber()}
@@ -76,7 +76,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
               </Box>
               <Field name="min">
                 {(fieldProps: FieldProps) => (
-                  <InputAmountField
+                  <InputField
                     {...fieldProps}
                     placeholder="0.0000"
                     minValue={new BigNumber(0)}
@@ -95,7 +95,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
               </Box>
               <Field name="max">
                 {(fieldProps: FieldProps) => (
-                  <InputAmountField
+                  <InputField
                     {...fieldProps}
                     placeholder="0.0000"
                     minValue={new BigNumber(0)}
@@ -114,7 +114,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           </Box>
           <Field name="amount">
             {(fieldProps: FieldProps) => (
-              <InputAmountField
+              <InputField
                 {...fieldProps}
                 handleChangeOverride={handleChangeAmount}
                 maxValue={numPods}
@@ -141,7 +141,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           </Box>
           <Field name="pricePerPod">
             {(fieldProps: FieldProps) => (
-              <InputAmountField
+              <InputField
                 {...fieldProps}
                 placeholder="0.0000"
                 showMaxButton
@@ -169,7 +169,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           </Box>
           <Field name="expiresAt">
             {(fieldProps: FieldProps) => (
-              <InputAmountField
+              <InputField
                 {...fieldProps}
                 placeholder="0.0000"
                 showMaxButton
@@ -191,7 +191,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
           <Box pl={0.5}>
             <Typography>Receive Beans to</Typography>
           </Box>
-          <CardField
+          <RadioCardField
             name="option"
             // Grid Props
             spacing={1}

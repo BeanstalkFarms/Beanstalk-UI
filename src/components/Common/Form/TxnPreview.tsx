@@ -54,7 +54,7 @@ const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
   );
 };
 
-const TransactionStep : React.FC<{
+const TxnStep : React.FC<{
   type: ActionType;
   actions: Action[];
   highlighted: ActionType | undefined;
@@ -146,7 +146,7 @@ const EXECUTION_STEPS = [
 const TXN_PREVIEW_HEIGHT = 35;
 const TXN_PREVIEW_LINE_WIDTH = 5;
 
-const TransactionPreview : React.FC<{ 
+const TxnPreview : React.FC<{ 
   actions: Action[]
 }> = ({
   actions
@@ -197,7 +197,7 @@ const TransactionPreview : React.FC<{
             >
               {EXECUTION_STEPS.map((step, index) => (
                 instructionsByType[step] ? (
-                  <TransactionStep
+                  <TxnStep
                     key={index}
                     type={step}
                     actions={instructionsByType[step]}
@@ -233,4 +233,4 @@ const TransactionPreview : React.FC<{
   );
 };
 
-export default TransactionPreview;
+export default TxnPreview;

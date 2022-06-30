@@ -12,7 +12,7 @@ import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { FormState, FormTokenState } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
-import TransactionPreview from 'components/Common/Form/TransactionPreview';
+import TxnPreview from 'components/Common/Form/TxnPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import Beanstalk from 'lib/Beanstalk';
@@ -21,7 +21,7 @@ import useFarmerBalances from 'hooks/useFarmerBalances';
 import { BalanceState } from 'state/farmer/balances/reducer';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
-import TransactionSettings from 'components/Common/Form/TransactionSettings';
+import TxnSettings from 'components/Common/Form/TxnSettings';
 import SettingInput from 'components/Common/Form/SettingInput';
 import { BeanstalkReplanted } from 'constants/generated';
 import { QuoteHandler } from 'hooks/useQuote';
@@ -32,6 +32,7 @@ import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import { BigNumberish, ethers } from 'ethers';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
+import TxnSeparator from 'components/Common/Form/TxnSeparator';
 
 // -----------------------------------------------------------------------
 
@@ -252,6 +253,7 @@ const DepositForm : React.FC<
           </Stack>
           {isReady ? (
             <Stack direction="column" gap={1}>
+              <TxnSeparator />
               <TokenOutputField
                 token={siloToken}
                 amount={bdv}
@@ -274,7 +276,7 @@ const DepositForm : React.FC<
                 <Accordion defaultExpanded variant="outlined">
                   <StyledAccordionSummary title="Transaction Details" />
                   <AccordionDetails>
-                    <TransactionPreview
+                    <TxnPreview
                       actions={actions}
                     />
                   </AccordionDetails>
@@ -449,9 +451,9 @@ const Deposit : React.FC<{
         <>
           {/* Padding below matches tabs and input position. See Figma. */}
           <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
-            <TransactionSettings>
+            <TxnSettings>
               <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-            </TransactionSettings>
+            </TxnSettings>
           </Box>
           <DepositForm
             pool={pool}

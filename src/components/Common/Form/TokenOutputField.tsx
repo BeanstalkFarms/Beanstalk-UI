@@ -9,10 +9,12 @@ const TokenOutputField : React.FC<{
   token: Token;
   amount: BigNumber;
   value?: BigNumber;
+  state?: string;
 }> = ({
   token,
   amount,
   value,
+  state,
 }) => {
   const isNegative = amount.lt(0);
   return (
@@ -48,7 +50,7 @@ const TokenOutputField : React.FC<{
           />
         )}
         <Typography>
-          {token.name}
+          {state && `${state} `}{token.name}
         </Typography>
       </Stack>
     </Stack>

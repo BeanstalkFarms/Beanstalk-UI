@@ -6,17 +6,22 @@ import {
 } from '@mui/material';
 import { FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { displayFullBN } from '../../../../util';
+import { displayFullBN } from '../../../util';
 
-type InputAmountFieldProps = {
+type InputFieldProps = {
   maxValue?: BigNumber | undefined;
   minValue?: BigNumber | undefined;
   showMaxButton?: boolean
   handleChangeOverride?: any;
 };
 
-const InputAmountField : React.FC<
-  InputAmountFieldProps      // custom
+/**
+ * FIXME: this was built for the Pod Marketplace as a
+ * variant of TokenInputField that didn't require a token. 
+ * Can we reduce the duplicate code?
+ */
+const InputField : React.FC<
+  InputFieldProps      // custom
   & Partial<TextFieldProps> // MUI TextField
   & FieldProps              // Formik Field
 > = ({
@@ -157,4 +162,4 @@ const InputAmountField : React.FC<
   );
 };
 
-export default InputAmountField;
+export default InputField;

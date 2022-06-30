@@ -7,15 +7,15 @@ import {
 import { FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
 
-type SliderInputFieldProps = {
+type SliderFieldProps = {
   initialState: number[] | number;
 };
 
 /**
  * Double Slider: the form must have min & max value
  */
-const SliderInputField : React.FC<
-  SliderInputFieldProps      // custom// MUI TextField
+const SliderField : React.FC<
+  SliderFieldProps      // custom// MUI TextField
   & FieldProps
   & SliderProps// Formik Field
 > = ({
@@ -92,4 +92,4 @@ const SliderInputField : React.FC<
   );
 };
 
-export default SliderInputField;
+export default SliderField;

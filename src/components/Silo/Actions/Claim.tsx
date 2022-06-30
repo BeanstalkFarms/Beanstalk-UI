@@ -1,28 +1,23 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Grid, Stack, Tooltip } from '@mui/material';
+import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import BigNumber from 'bignumber.js';
+import { useSigner } from 'wagmi';
 import { Token } from 'classes';
 import { BEAN } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormTokenState } from 'components/Common/Form';
-import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
-import BigNumber from 'bignumber.js';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { displayBN } from 'util/Tokens';
-import { useSigner } from 'wagmi';
 import { FarmerSiloBalance } from 'state/farmer/silo';
-import TokenAdornment from 'components/Common/Form/TokenAdornment';
-import TokenInputField from 'components/Common/Form/TokenInputField';
 import { ActionType } from 'util/Actions';
-import TransactionSettings from 'components/Common/Form/TransactionSettings';
-import SettingSwitch from 'components/Common/Form/SettingSwitch';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
+import { FormTokenState, SettingSwitch, TxnSeparator, TxnPreview, TxnSettings, TokenInputField, TokenOutputField, TokenAdornment, RadioCardField } from 'components/Common/Form';
+import { BeanstalkReplanted } from 'constants/generated';
+
 
 // -----------------------------------------------------------------------
 
@@ -83,8 +78,24 @@ const ClaimForm : React.FC<
               />
             )}
           </Field>
+          <RadioCardField
+            name="settings.removeLP"
+            options={[
+              {
+                title: `3CRV`,
+                description: `Remove LP from the ${pool.name} and receive 3CRV to your wallet`,
+                value: true,
+              },
+              {
+                title: `LP Token`,
+                description: `Receive ${token.name} Tokens to your wallet`,
+                value: false,
+              }
+            ]}
+          />
           {isReady ? (
             <Stack direction="column" gap={1}>
+              <TxnSeparator />
               {values.settings.removeLP ? (
                 <Grid container spacing={1}>
                   {pool?.tokens.map((_token) => (
@@ -106,7 +117,7 @@ const ClaimForm : React.FC<
                 <Accordion defaultExpanded variant="outlined">
                   <StyledAccordionSummary title="Transaction Details" />
                   <AccordionDetails>
-                    <TransactionPreview
+                    <TxnPreview
                       actions={[
                         {
                           type: ActionType.BASE,
@@ -142,11 +153,11 @@ const Claim : React.FC<{
 
   // Contracts
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer);
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const currentSeason = useSeason();
 
   // Balances
-  const claimableBalance = siloBalance.claimable.amount;
+  const claimableBalance = siloBalance?.claimable.amount;
 
   // Form
   const initialValues : ClaimFormValues = useMemo(() => ({
@@ -161,9 +172,14 @@ const Claim : React.FC<{
     ],
   }), [token, Bean]);
   const onSubmit = useCallback((values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
-    console.debug(beanstalk, formActions);
+    // let call;
+    // if (token === Bean) {
+    //   call = false;
+    // }
   }, [
-    beanstalk
+    // Bean,
+    // beanstalk,
+    // token
   ]);
 
   return (
@@ -172,29 +188,14 @@ const Claim : React.FC<{
         <>
           {/* Padding below matches tabs and input position. See Figma. */}
           <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
-            <TransactionSettings>
+            <TxnSettings>
               {token !== Bean && (
                 <SettingSwitch name="settings.removeLP" label="Remove LP" />
               )}
-            </TransactionSettings>
+              <SettingSwitch name="settings.toWallet" label="Send to wallet" />
+            </TxnSettings>
           </Box>
           <Stack spacing={1}>
-            {/* Show an alert box if there are Withdrawals that aren't yet Claimable. */}
-            {siloBalance?.withdrawn?.crates.length > 0 ? (
-              <Box sx={{ borderColor: 'primary.main', borderWidth: 1, borderStyle: 'solid', p: 1, borderRadius: 1 }}>
-                {siloBalance.withdrawn.crates.map((crate) => {
-                  const seasonsToArrival = crate.season.minus(currentSeason);
-                  if (seasonsToArrival.gt(0)) {
-                    return (
-                      <Typography key={crate.season.toString()} color="primary">
-                        {displayBN(crate.amount)} {token.name} will become Claimable in {seasonsToArrival.toFixed()} Season{seasonsToArrival.eq(1) ? '' : 's'}
-                      </Typography>
-                    );
-                  }
-                  return null;
-                })}
-              </Box>
-            ) : null}
             <ClaimForm
               token={token}
               claimableBalance={claimableBalance}
@@ -208,3 +209,19 @@ const Claim : React.FC<{
 };
 
 export default Claim;
+
+/* {siloBalance?.withdrawn?.crates.length > 0 ? (
+  <Box sx={{ borderColor: 'primary.main', borderWidth: 1, borderStyle: 'solid', p: 1, borderRadius: 1 }}>
+    {siloBalance.withdrawn.crates.map((crate) => {
+      const seasonsToArrival = crate.season.minus(currentSeason);
+      if (seasonsToArrival.gt(0)) {
+        return (
+          <Typography key={crate.season.toString()} color="primary">
+            {displayBN(crate.amount)} {token.name} will become Claimable in {seasonsToArrival.toFixed()} Season{seasonsToArrival.eq(1) ? '' : 's'}
+          </Typography>
+        );
+      }
+      return null;
+    })}
+  </Box>
+) : null} */
