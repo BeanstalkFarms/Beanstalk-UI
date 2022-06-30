@@ -18,8 +18,6 @@ import { ANALYTICS_LINK, SupportedChainId } from 'constants/index';
 import { displayBN, displayFullBN } from 'util/index';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import PageHeader from 'components/Common/PageHeader';
-import SeasonsTable from 'components/Forecast/SeasonsTable';
-import ForecastTopBar from 'components/Forecast/ForecastTopBar';
 import TWAPCard from 'components/Forecast/TWAPCard';
 import PodRateCard from 'components/Forecast/PodRateCard';
 import LiquidityOverTime from 'components/Forecast/LiquidityOverTime';
@@ -178,7 +176,6 @@ const ForecastPage: React.FC = () => {
   } else {
     content = (
       <>
-        <ForecastTopBar />
         <Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" gap={2}>
           <TWAPCard beanPrice={beanPrice} season={season} />
           <PodRateCard podRate={podRate} season={season} />

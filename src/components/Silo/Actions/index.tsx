@@ -6,9 +6,18 @@ import { FarmerSiloBalance } from 'state/farmer/silo';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Claim from './Claim';
-import DepositsTable from '../Tables/DepositsTable';
-import WithdrawalsTable from '../Tables/WithdrawalsTable';
+import Deposits from './Deposits';
+import Withdrawals from './Withdrawals';
 
+/**
+ * Show the three primary Silo actions: Deposit, Withdraw, Claim.
+ * Displays two components:
+ * (1) a Card containing the Deposit / Withdraw / Claim forms, broken
+ *     up by tabs. Each tab contains a single form.
+ * (2) a table of Deposits and Withdrawals, shown dependent on the
+ *     selected tab. The Withdrawals table also displays an aggregated
+ *     "claimable" row and is shown for both Withdraw & Claim tabs.    
+ */
 const Actions : React.FC<{
   pool: Pool;
   token: ERC20Token;
@@ -61,13 +70,13 @@ const Actions : React.FC<{
       </Card>
       {/* Tables */}
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
-        <DepositsTable
+        <Deposits
           token={props.token}
           balance={props.siloBalance}
         />
       </Box>
       <Box sx={{ display: tab !== 0 ? 'block' : 'none' }}>
-        <WithdrawalsTable
+        <Withdrawals
           token={props.token}
           balance={props.siloBalance}
         />
@@ -77,9 +86,3 @@ const Actions : React.FC<{
 };
 
 export default Actions;
-
-// <Stack sx={{ p: 4 }} direction="row" justifyContent="center" alignItems="center">
-//   <Typography color="text.secondary">
-//     Withdrawals will be available once Beanstalk is Replanted.
-//   </Typography>
-// </Stack>

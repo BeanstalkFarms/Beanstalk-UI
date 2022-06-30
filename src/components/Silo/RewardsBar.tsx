@@ -2,11 +2,11 @@ import React from 'react';
 import { Box, Button, Card, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { FarmerSiloRewards } from 'state/farmer/silo';
-import { displayBN, displayFullBN } from 'util/index';
+import { displayFullBN } from 'util/index';
 import { SupportedChainId } from 'constants/chains';
 import DropdownIcon from '../Common/DropdownIcon';
 
-const gap = 4;
+const GAP = 4;
 
 const RewardsBar : React.FC<{
   chainId: SupportedChainId;
@@ -20,11 +20,11 @@ const RewardsBar : React.FC<{
   seeds
 }) => (
   <Card sx={{ pl: 2, pr: 1, py: 1.5 }}>
-    <Stack direction={{ md: 'row', xs: 'column' }} justifyContent={{ md: 'space-between', }} alignItems={{ md: 'center', xs: 'auto' }} rowGap={1.5}>
+    <Stack direction={{ md: 'row', xs: 'column' }} justifyContent={{ md: 'space-between' }} alignItems={{ md: 'center', xs: 'auto' }} rowGap={1.5}>
       {/* Statistics */}
-      <Stack direction={{ md: 'row', xs: 'column' }} columnGap={gap} rowGap={1.5}>
+      <Stack direction={{ md: 'row', xs: 'column' }} columnGap={GAP} rowGap={1.5}>
         {/* Earned */}
-        <Stack direction="row" gap={gap}>
+        <Stack direction="row" gap={GAP}>
           <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
             <Typography color="gray">Earned Beans&nbsp;
               <Tooltip title="The number of Beans earned since your last interaction with the Silo. Earned Beans are automatically Deposited in the Silo." placement="top">
@@ -51,7 +51,7 @@ const RewardsBar : React.FC<{
           <Divider orientation="vertical" />
         </Box>
         {/* Grown */}
-        <Stack direction="row" gap={gap}>
+        <Stack direction="row" gap={GAP}>
           <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
             <Typography color="gray">Earned Seeds&nbsp;
               <Tooltip title="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed." placement="top">

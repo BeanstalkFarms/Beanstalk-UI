@@ -2,10 +2,9 @@ import { Box, Card } from '@mui/material';
 import React, { useMemo } from 'react';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette } from '../App/muiTheme';
-import { tableStyle } from '../../util/tableStyle';
+import { tableStyle } from '../Common/Table/styles';
 
-export type SeasonsTableProps = {
-}
+export type SeasonsTableProps = {}
 
 const MAX_ROWS = 5;
 

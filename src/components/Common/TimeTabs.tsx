@@ -18,7 +18,14 @@ export interface TimeTabProps {
   setState: (i: number[]) => void;
 }
 
-const TimeTabs: React.FC<TimeTabProps & StackProps> = ({ sx, setState, tab }) => {
+const TimeTabs: React.FC<
+  TimeTabProps & 
+  StackProps
+> = ({ 
+  sx, 
+  setState, 
+  tab 
+}) => {
   const handleChangeX = (i: number) => {
     setState([i, tab[1]]);
   };

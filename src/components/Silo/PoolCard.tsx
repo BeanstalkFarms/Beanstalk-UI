@@ -6,6 +6,9 @@ import { Pool } from 'classes';
 import TokenIcon from 'components/Common/TokenIcon';
 import { ZERO_BN } from 'constants/index';
 
+/**
+ * Displays data about a Pool containing Beans and other assets.
+ */
 const PoolCard: React.FC<{
   pool: Pool;
   poolState: BeanPoolState;
@@ -23,8 +26,9 @@ const PoolCard: React.FC<{
         gap={2}
       >
         <Stack direction="row" spacing={0.25} sx={{ fontSize: 24 }}>
-          <TokenIcon token={pool.tokens[0]} />
-          <TokenIcon token={pool.tokens[1]} />
+          {pool.tokens.map(token => (
+            <TokenIcon key={token.address} token={token} />
+          ))}
         </Stack>
         <Typography sx={{ fontWeight: 600, pt: 0.2 }}>
           ${displayFullBN(poolState?.price || ZERO_BN, 4)}

@@ -3,6 +3,6 @@ import React from 'react';
 
 const TxnHistory : React.FC = () => (
   <Box>Test</Box>
-  );
+);
 
 export default TxnHistory;

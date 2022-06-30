@@ -6,11 +6,10 @@ import {
   List, ListItemText, Stack, Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { BeanstalkPalette } from 'components/App/muiTheme';
 import ROUTES from './routes';
-import MobileNavItem from './MobileNavItem';
-import { BeanstalkPalette } from '../App/muiTheme';
+import MenuItemMobile from './MenuItemMobile';
 
 const NavDrawer: React.FC<{
   open: boolean;
@@ -36,33 +35,21 @@ const NavDrawer: React.FC<{
       {/* Items */}
       <List style={{ fontSize: 22 }}>
         {ROUTES.top.map((item) => (
-          <MobileNavItem
-            key={item.path}
-            to={item.path}
-            title={item.title}
+          <MenuItemMobile
+            item={item}
             onClick={hideDrawer}
           />
         ))}
         {ROUTES.more.map((item) => (
-          <MobileNavItem
-            key={item.path}
-            to={item.path}
-            title={item.title}
-            href={item.href}
+          <MenuItemMobile
+            item={item}
             onClick={hideDrawer}
-            disabled={item.disabled}
-            small={item.small}
           />
         ))}
         {ROUTES.additional.map((item) => (
-          <MobileNavItem
-            key={item.path}
-            to={item.path}
-            title={item.title}
-            href={item.href}
+          <MenuItemMobile
+            item={item}
             onClick={hideDrawer}
-            disabled={item.disabled}
-            small
           />
         ))}
         <Box sx={{ px: 1, py: 0.6 }}>

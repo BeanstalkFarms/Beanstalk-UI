@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { Stack, Typography, Box, Divider } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import SimpleLineChart, { DataPoint } from '../../../Charts/SimpleLineChart';
+import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
 import Stat from '../../../Common/Stat';
 import { displayBN } from '../../../../util';
 import TimeTabs from '../../../Common/TimeTabs';
 import { BeanstalkPalette } from '../../../App/muiTheme';
-import { mockPodRateData } from '../../../Charts/SimpleLineChart.mock';
+import { mockPodRateData } from '../../../Common/Charts/SimpleLineChart.mock';
 
 export type DepositedBeansProps = {
   beanPrice: BigNumber;

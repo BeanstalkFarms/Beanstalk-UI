@@ -6,8 +6,8 @@ import TokenIcon from '../../../Common/TokenIcon';
 import { BEAN } from '../../../../constants/tokens';
 import { SupportedChainId } from '../../../../constants';
 import { displayBN } from '../../../../util';
-import SimpleLineChart, { DataPoint } from '../../../Charts/SimpleLineChart';
-import { mockPodRateData, mockTWAPData } from '../../../Charts/SimpleLineChart.mock';
+import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
+import { mockPodRateData, mockTWAPData } from '../../../Common/Charts/SimpleLineChart.mock';
 import { BeanstalkPalette } from '../../../App/muiTheme';
 import TimeTabs from '../../../Common/TimeTabs';
 

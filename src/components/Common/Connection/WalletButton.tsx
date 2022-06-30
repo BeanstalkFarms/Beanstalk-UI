@@ -37,6 +37,8 @@ import { BeanstalkPalette } from '../../App/muiTheme';
 import WalletDialog from './WalletDialog';
 import DropdownIcon from '../DropdownIcon';
 import PickBeansDialog from '../../Farmer/Unripe/PickDialog';
+import useAnchor from 'hooks/display/useAnchor';
+import useToggle from 'hooks/display/useToggle';
 
 // -----------------------------------------------------------------
 
@@ -46,35 +48,20 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { disconnect } = useDisconnect();
   const chain = useChainConstant(CHAIN_INFO);
 
-  // Wallet Dialog
-  const [showDialog, setShowDialog] = useState(false);
-  const handleCloseDialog = useCallback(() => setShowDialog(false), []);
+  // Theme
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));   // trim additional account text
   const isTiny = useMediaQuery('(max-width:380px)');              //
 
   // Menu
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const menuVisible = Boolean(anchorEl);
-  const handleShowMenu = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
-    },
-    []
-  );
-  const handleHideMenu = useCallback(() => {
-    setAnchorEl(null);
-  }, []);
+  const [menuAnchor, toggleMenuAnchor] = useAnchor();
+  const menuVisible = Boolean(menuAnchor);
 
-  // Pick Unripe Beans Dialog
-  const [modalOpen, setModalOpen] = useState(false);
-  const handleOpen = useCallback(() => {
-    handleHideMenu();
-    setModalOpen(true);
-  }, [handleHideMenu]);
-  const handleClose = useCallback(() => {
-    setModalOpen(false);
-  }, []);
+  // Dialog: Wallet
+  const [selectingWallet, showWallets, hideWallets] = useToggle(); 
+
+  // Dialog: Pick Unripe Beans 
+  const [picking, showPick, hidePick] = useToggle(toggleMenuAnchor);
 
   // Display: Not Connected
   if (!account?.address || !activeChain?.id) {
@@ -84,13 +71,13 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           variant="contained"
           color="light"
           {...props}
-          onClick={() => setShowDialog(true)}
+          onClick={showWallets}
         >
           Connect<Box component="span" display={{ xs: 'none', md: 'inline' }}>&nbsp;Wallet</Box>
         </Button>
         <WalletDialog
-          open={showDialog}
-          handleClose={handleCloseDialog}
+          open={selectingWallet}
+          handleClose={hideWallets}
           fullScreen={isMedium}
         />
       </>
@@ -102,7 +89,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       <MenuItem
         component={RouterLink}
         to="/balances"
-        onClick={handleHideMenu}
+        onClick={toggleMenuAnchor}
       >
         <ListItemText>
           <Stack direction="row" gap={1} alignItems="center">
@@ -114,7 +101,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       <MenuItem
         component={RouterLink}
         to="/history"
-        onClick={handleHideMenu}
+        onClick={toggleMenuAnchor}
       >
         <Stack direction="row" gap={1} alignItems="center">
           <img src={historyIcon} alt="History" width={20} />
@@ -159,7 +146,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       <Box sx={{ px: 1, pt: 0.75, pb: 0.25 }}>
         <Button
           fullWidth
-          onClick={handleOpen}
+          onClick={showPick}
           sx={{
             py: 0.9,
             backgroundColor: BeanstalkPalette.brown,
@@ -192,9 +179,9 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
             ? <WarningAmberIcon />
             : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
         )}
-        endIcon={<DropdownIcon open={Boolean(anchorEl)} />}
+        endIcon={<DropdownIcon open={menuVisible} />}
         {...props}
-        onClick={handleShowMenu}
+        onClick={toggleMenuAnchor}
       >
         <Typography variant="subtitle1">
           {trimAddress(getAccount(account.address), !isMedium)}
@@ -203,12 +190,9 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       {/* Popup Menu */}
       <Menu
         elevation={0}
-        anchorEl={anchorEl}
+        anchorEl={menuAnchor}
         open={menuVisible}
-        onClose={handleHideMenu}
-        components={{
-          // Root: Card
-        }}
+        onClose={toggleMenuAnchor}
         MenuListProps={{
           sx: {
             py: 0,
@@ -236,8 +220,8 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       </Menu>
       {/* Pick Beans Dialog */}
       <PickBeansDialog
-        open={modalOpen}
-        handleClose={handleClose}
+        open={picking}
+        handleClose={hidePick}
       />
     </>
   );

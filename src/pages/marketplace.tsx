@@ -14,9 +14,9 @@ import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import MarketPlots from 'components/Marktplatz/MarketPlots';
-import MyPlots from 'components/Marktplatz/MyPlots';
-import ActivityTable from 'components/Marktplatz/Tables/ActivityTable';
+import MarketPlots from 'components/Market/MarketPlots';
+import MyPlots from 'components/Market/MyPlots';
+import ActivityTable from 'components/Market/Tables/ActivityTable';
 import { displayBN, displayFullBN } from 'util/index';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
@@ -104,7 +104,6 @@ const rows = new Array(20).fill(null).map((_, i) => (
 
 const MarketplacePage: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const chainId = useChainId();
   
   let content;
@@ -122,9 +121,6 @@ const MarketplacePage: React.FC = () => {
         </Card>
         <MarketPlots />
         <MyPlots />
-        {/*<Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" gap={2} height="100%">*/}
-        {/*  */}
-        {/*</Stack>*/}
         <ActivityTable columns={columns} rows={rows} />
       </>
     );
