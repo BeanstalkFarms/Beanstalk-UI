@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Box, Button, Card, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
@@ -7,41 +7,29 @@ import { AppState } from 'state';
 import { displayUSD } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, SEEDS, STALK } from 'constants/tokens';
+import { AddressMap, ZERO_BN } from 'constants/index';
 import { displayBN, displayFullBN } from 'util/Tokens';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useTVL from 'hooks/useTVL';
-import { AddressMap, ZERO_BN } from 'constants/index';
 import useChainConstant from 'hooks/useChainConstant';
 
-const arrowContainerWidth = 20;
+const ARROW_CONTAINER_WIDTH = 20;
 
-const TokenTable : React.FC<{
+const Whitelist : React.FC<{
+  farmerSilo: AppState['_farmer']['silo'];
   config: {
     /** Array of Whitelisted tokens in the Silo. */
     whitelist: Token[];
     /** */
     poolsByAddress: AddressMap<Pool>;
   };
-  farmerSilo: AppState['_farmer']['silo'];
 }> = ({
-  config,
   farmerSilo,
-  // beanPools,
-  // beanstalkSilo,
+  config,
 }) => {
   const getTVL = useTVL();
   const poolTokenToUSD = useSiloTokenToUSD();
   const Bean = useChainConstant(BEAN);
-
-  // Aggregate the total TVL
-  // const breakdown = useFarmerSiloBreakdown();
-  // const aggregateTVL = useMemo(
-  //   () => config.whitelist.reduce<BigNumber>(
-  //     (agg, token) => agg.plus(getTVL(token)),
-  //     new BigNumber(0)
-  //   ),
-  //   [config.whitelist, getTVL]
-  // );
 
   return (
     <Card>
@@ -73,7 +61,7 @@ const TokenTable : React.FC<{
           <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">Deposited Amount</Typography>
           </Grid>
-          <Grid item md={2.5} xs={8} sx={{ textAlign: 'right', paddingRight: `${arrowContainerWidth}px` }}>
+          <Grid item md={2.5} xs={8} sx={{ textAlign: 'right', paddingRight: `${ARROW_CONTAINER_WIDTH}px` }}>
             <Typography color="gray">Value</Typography>
             {/* <Typography color="black" fontWeight="bold">{displayUSD(breakdown.states.deposited.value)}</Typography> */}
           </Grid>
@@ -162,7 +150,7 @@ const TokenTable : React.FC<{
                       <Typography color="black">
                         {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'}
                       </Typography>
-                      <Stack sx={{ width: arrowContainerWidth, }} alignItems="center">
+                      <Stack sx={{ width: ARROW_CONTAINER_WIDTH, }} alignItems="center">
                         <ArrowRightIcon />
                       </Stack>
                     </Stack>
@@ -184,4 +172,14 @@ const TokenTable : React.FC<{
   );
 };
 
-export default TokenTable;
+export default Whitelist;
+
+// Aggregate the total TVL
+// const breakdown = useFarmerSiloBreakdown();
+// const aggregateTVL = useMemo(
+//   () => config.whitelist.reduce<BigNumber>(
+//     (agg, token) => agg.plus(getTVL(token)),
+//     new BigNumber(0)
+//   ),
+//   [config.whitelist, getTVL]
+// );

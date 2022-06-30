@@ -22,6 +22,6 @@ const ComingSoonCard : React.FC<{ title: string }> = ({ title }) => (
       </Stack>
     </Stack>
   </Card>
-  );
+);
 
 export default ComingSoonCard;

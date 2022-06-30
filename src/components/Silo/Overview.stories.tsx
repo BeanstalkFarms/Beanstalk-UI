@@ -4,11 +4,11 @@ import { initialFarmerSilo } from 'state/farmer/silo/reducer';
 import { initialBeanstalkSilo } from 'state/beanstalk/silo/reducer';
 
 import BigNumber from 'bignumber.js';
-import OverviewCard from './OverviewCard';
+import Overview from './Overview';
 
 export default {
-  component: OverviewCard,
-} as ComponentMeta<typeof OverviewCard>;
+  component: Overview,
+} as ComponentMeta<typeof Overview>;
 
 const n = new BigNumber(60_740);
 const s = {
@@ -16,8 +16,8 @@ const s = {
   byToken: {}
 };
 
-const Template: ComponentStory<typeof OverviewCard> = (args: any) => (
-  <OverviewCard
+const Template: ComponentStory<typeof Overview> = (args: any) => (
+  <Overview
     farmerSilo={initialFarmerSilo}
     beanstalkSilo={initialBeanstalkSilo}
     breakdown={{

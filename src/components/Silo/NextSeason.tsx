@@ -6,6 +6,8 @@ import AccordionWrapper from 'components/Common/Accordion/AccordionWrapper';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import TokenIcon from 'components/Common/TokenIcon';
 
+// ---------------------------------------------------------------
+
 const Stat : React.FC<{ name: string }> = ({ children, name }) => (
   <Stack direction="row" justifyContent="space-between">
     <Typography variant="h4">{name}</Typography>
@@ -31,6 +33,8 @@ const StatColumn : React.FC<{
     </Stack>
   </Grid>
 );
+
+// ---------------------------------------------------------------
 
 const NextSeason : React.FC<{ title: string | JSX.Element }> = ({ title }) => (
   <AccordionWrapper>

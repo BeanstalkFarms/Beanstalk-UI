@@ -16,12 +16,13 @@ import podIcon from '../../img/beanstalk/pod-icon.svg';
 import { AppState } from '../../state';
 import { BeanstalkPalette } from '../App/muiTheme';
 
+
 const MarketPlots: React.FC<CardProps> = ({ sx }) => {
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
-
-  const listingColumns: DataGridProps['columns'] = [
+  
+  const LISTING_COLUMNS : DataGridProps['columns'] = [
     {
       field: 'account',
       headerName: 'Listing',
@@ -251,7 +252,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
         {/* Buy Now tab */}
         {tab === 0 && (
           <PlotTable
-            columns={listingColumns}
+            columns={LISTING_COLUMNS}
             rows={mockPodListingData}
             maxRows={8}
             onRowClick={handleBuyNowModalOpen}

@@ -1,4 +1,4 @@
-import { Box, Button, Card, Stack, Tab, Tabs } from '@mui/material';
+import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -12,7 +12,7 @@ import {
 } from 'components/Common/Charts/SimpleLineChart.mock';
 import MainnetBlur from 'components/Common/MainnetBlur';
 import Stat from 'components/Common/Stat';
-import TimeTabs from '../Common/TimeTabs';
+import TimeTabs from 'components/Common/TimeTabs';
 
 // ------------------------------------------------
 
@@ -59,7 +59,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
 
 const StalkOwnershipTab: React.FC<TabData
   // & { beanstalkSilo: AppState['_beanstalk']['silo']; }
-  > = ({ current, series, season }) => {
+> = ({ current, series, season }) => {
   // Display value is an array [stalk, pct]
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback(
@@ -105,7 +105,7 @@ const StalkOwnershipTab: React.FC<TabData
 
 // ------------------------------------------------
 
-const OverviewCard: React.FC<{
+const Overview: React.FC<{
   farmerSilo:     AppState['_farmer']['silo'];
   beanstalkSilo:  AppState['_beanstalk']['silo'];
   breakdown:      ReturnType<typeof useFarmerSiloBreakdown>;
@@ -163,4 +163,4 @@ const OverviewCard: React.FC<{
   );
 };
 
-export default OverviewCard;
+export default Overview;

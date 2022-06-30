@@ -3,15 +3,15 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { SupportedChainId } from 'constants/chains';
 import { BEAN, BEAN_ETH_UNIV2_LP } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
-import TokenTable from './TokenTable';
+import Whitelist from './Whitelist';
 
 export default {
-  component: TokenTable,
+  component: Whitelist,
   args: {}
-} as ComponentMeta<typeof TokenTable>;
+} as ComponentMeta<typeof Whitelist>;
 
-const Template: ComponentStory<typeof TokenTable> = (args: any) => (
-  <TokenTable
+const Template: ComponentStory<typeof Whitelist> = (args: any) => (
+  <Whitelist
     {...args}
     config={{
       whitelist: [

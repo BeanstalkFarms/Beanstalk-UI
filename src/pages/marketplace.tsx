@@ -104,7 +104,6 @@ const rows = new Array(20).fill(null).map((_, i) => (
 
 const MarketplacePage: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const chainId = useChainId();
   
   let content;
@@ -122,9 +121,6 @@ const MarketplacePage: React.FC = () => {
         </Card>
         <MarketPlots />
         <MyPlots />
-        {/*<Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" gap={2} height="100%">*/}
-        {/*  */}
-        {/*</Stack>*/}
         <ActivityTable columns={columns} rows={rows} />
       </>
     );

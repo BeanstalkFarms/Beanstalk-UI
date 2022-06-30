@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
+import { useAccount } from 'wagmi';
 import { Tooltip, Typography } from '@mui/material';
-import { GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
-
+import { GridColumns } from '@mui/x-data-grid';
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import type { DepositCrate } from 'state/farmer/silo';
 import { displayBN, displayFullBN, displayUSD } from 'util/index';
@@ -14,10 +14,6 @@ import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useChainConstant from 'hooks/useChainConstant';
 import Crates from './Crates';
 import COLUMNS from 'components/Common/Table/cells';
-import { useAccount } from 'wagmi';
-
-const MAX_ROWS = 10;
-const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
 const DepositsTable : React.FC<{
   token: Token;

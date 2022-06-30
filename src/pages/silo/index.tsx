@@ -2,9 +2,9 @@ import React from 'react';
 import { Alert, Box, Button,  Card,  Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import OverviewCard from 'components/Silo/OverviewCard';
+import Overview from 'components/Silo/Overview';
 import RewardsBar from 'components/Silo/RewardsBar';
-import TokenTable from 'components/Silo/TokenTable';
+import Whitelist from 'components/Silo/Whitelist';
 import PageHeader from 'components/Common/PageHeader';
 import { SNAPSHOT_LINK, SupportedChainId } from 'constants/index';
 import snapshotIcon from 'img/ecosystem/snapshot-logo.svg';
@@ -30,7 +30,7 @@ const SiloPage : React.FC = () => {
   const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const breakdown   = useFarmerSiloBreakdown();
 
-  //
+  // Temporary
   const exploiterEarnedBeans = new BigNumber(6458.005059);
   const ownership = farmerSilo.stalk.active.div(beanstalkSilo.stalk.active);
 
@@ -54,7 +54,7 @@ const SiloPage : React.FC = () => {
             </Button>
           )}
         />
-        <OverviewCard
+        <Overview
           farmerSilo={farmerSilo}
           beanstalkSilo={beanstalkSilo}
           breakdown={breakdown}
@@ -71,7 +71,7 @@ const SiloPage : React.FC = () => {
           stalk={farmerSilo.stalk}
           seeds={farmerSilo.seeds}
         />
-        <TokenTable
+        <Whitelist
           config={{
             whitelist: Object.values(WHITELIST),
             poolsByAddress: POOLS,
