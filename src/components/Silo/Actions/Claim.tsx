@@ -7,7 +7,6 @@ import { Token } from 'classes';
 import { BEAN } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormTokenState } from 'components/Common/Form';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -16,7 +15,7 @@ import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
-import { SettingSwitch, TxnSeparator, TxnPreview, TxnSettings, TokenInputField, TokenOutputField, TokenAdornment } from 'components/Common/Form';
+import { FormTokenState, SettingSwitch, TxnSeparator, TxnPreview, TxnSettings, TokenInputField, TokenOutputField, TokenAdornment } from 'components/Common/Form';
 
 
 // -----------------------------------------------------------------------

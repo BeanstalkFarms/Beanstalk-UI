@@ -3,9 +3,9 @@ import { Field, FieldProps, Form, FormikProps } from 'formik';
 import { Box, Button, InputAdornment, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { BuyOrderFormValues } from '../Dialogs/BuyOrderDialog';
-import SliderInputField from '../../Common/Form/Field/SliderInputField';
+import SliderField from '../../Common/Form/SliderField';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
-import InputAmountField from '../../Common/Form/Field/InputAmountField';
+import InputField from '../../Common/Form/InputField';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
 import TokenQuoteProvider from '../../Common/Form/TokenQuoteProvider';
@@ -92,7 +92,7 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
           <Box px={2}>
             <Field name="placeInLine">
               {(fieldProps: FieldProps) => (
-                <SliderInputField
+                <SliderField
                   {...fieldProps}
                   min={0}
                   max={podLine.toNumber()}
@@ -105,7 +105,7 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
         <Box>
           <Field name="placeInLine">
             {(fieldProps: FieldProps) => (
-              <InputAmountField
+              <InputField
                 {...fieldProps}
                 minValue={new BigNumber(0)}
                 placeholder={podLine.toNumber().toString()}
@@ -133,7 +133,7 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
           </Box>
           <Field name="pricePerPod">
             {(fieldProps: FieldProps) => (
-              <InputAmountField
+              <InputField
                 {...fieldProps}
                 placeholder="0.0000"
                 showMaxButton

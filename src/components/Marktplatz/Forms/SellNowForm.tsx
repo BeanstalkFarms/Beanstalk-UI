@@ -6,14 +6,14 @@ import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import podsIcon from 'img/beanstalk/pod-icon.svg';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { SellListingFormValues } from '../Dialogs/SellListingDialog';
-import CardField from '../../Common/Form/Field/CardField';
+import RadioCardField from '../../Common/Form/RadioCardField';
 import PlotDetails from '../Cards/PlotDetails';
-import InputAmountField from '../../Common/Form/Field/InputAmountField';
+import InputField from '../../Common/Form/InputField';
 import { ZERO_BN } from '../../../constants';
 import { MaxBN, MinBN } from '../../../util';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
-import SliderInputField from '../../Common/Form/Field/SliderInputField';
+import SliderField from '../../Common/Form/SliderField';
 import { SellNowFormValues } from '../Dialogs/SellNowDialog';
 
 export type SellNowFormProps = {
@@ -61,7 +61,7 @@ const SellNowForm: React.FC<SellNowFormProps & FormikProps<SellNowFormValues>> =
           </Box>
           <Field name="amount">
             {(fieldProps: FieldProps) => (
-              <InputAmountField
+              <InputField
                 {...fieldProps}
                 handleChangeOverride={handleChangeAmount}
                 maxValue={numPods}
@@ -86,7 +86,7 @@ const SellNowForm: React.FC<SellNowFormProps & FormikProps<SellNowFormValues>> =
           {/* so we leave the name field blank */}
           <Field name="">
             {(fieldProps: FieldProps) => (
-              <SliderInputField
+              <SliderField
                 {...fieldProps}
                 min={0}
                 max={numPods.toNumber()}
@@ -105,7 +105,7 @@ const SellNowForm: React.FC<SellNowFormProps & FormikProps<SellNowFormValues>> =
               </Box>
               <Field name="min">
                 {(fieldProps: FieldProps) => (
-                  <InputAmountField
+                  <InputField
                     {...fieldProps}
                     placeholder="0.0000"
                     minValue={new BigNumber(0)}
@@ -124,7 +124,7 @@ const SellNowForm: React.FC<SellNowFormProps & FormikProps<SellNowFormValues>> =
               </Box>
               <Field name="max">
                 {(fieldProps: FieldProps) => (
-                  <InputAmountField
+                  <InputField
                     {...fieldProps}
                     placeholder="0.0000"
                     minValue={new BigNumber(0)}
