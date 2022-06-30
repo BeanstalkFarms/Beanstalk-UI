@@ -69,7 +69,7 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
             <Tooltip title={<>{item.title} will be available upon Unpause</>}>
               <span>
                 <Stack direction="row" gap={1} alignItems="center">
-                  {item.icon && <img src={item.icon} alt={`${item.title}`} width={20} />}
+                  {item.icon && <img src={item.icon} alt={item.title} width={20} />}
                   {item.title}
                 </Stack>
               </span>
@@ -77,7 +77,7 @@ const AdditionalButton: React.FC<ButtonProps> = () => {
           ) : (
             <ListItemText>
               <Stack direction="row" gap={1} alignItems="center">
-                {item.icon && <img src={item.icon} alt={`${item.title}`} width={20} />}
+                {item.icon && <img src={item.icon} alt={item.title} width={16} />}
                 {item.title}
               </Stack>
             </ListItemText>

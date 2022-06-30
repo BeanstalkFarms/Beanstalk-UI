@@ -65,12 +65,6 @@ const ROUTES = {
       icon: governanceIcon
     },
     {
-      path: 'analytics',
-      href: 'https://dune.xyz/tbiq/Beanstalk',
-      title: 'Analytics',
-      icon: beanNFTIcon
-    },
-    {
       path: 'beanfts',
       title: 'BeaNFTs',
       disabled: true,
@@ -110,7 +104,13 @@ const ROUTES = {
       href: 'https://github.com/beanstalkfarms',
       title: 'Github',
       icon: githubIcon
-    }
+    },
+    {
+      path: 'analytics',
+      href: 'https://dune.xyz/tbiq/Beanstalk',
+      title: 'Dune',
+      icon: beanNFTIcon
+    },
   ],
 };
 

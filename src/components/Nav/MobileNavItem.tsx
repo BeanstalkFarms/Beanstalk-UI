@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItem, Tooltip, Typography } from '@mui/material';
+import { ListItemText, MenuItem, Stack, Tooltip, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
@@ -30,20 +30,16 @@ const MobileNavItem: React.FC<{
     sx={{ minWidth: 200 }}
     onClick={onClick}
   >
-    {disabled ? (
-      <Tooltip title={<>{title} will be available upon Unpause</>}>
-        <span>
-          <Typography sx={{ fontSize: (small !== undefined && small) ? '18px' : '25px' }} variant="body1" color="text.secondary">{title}</Typography>
-        </span>
-      </Tooltip>
-    ) : (
-      <Typography sx={{ fontSize: (small !== undefined && small) ? '18px' : '25px' }} variant="body1" color="text.secondary">{title}</Typography>
-    )}
-    {href ? (
-      <Typography variant="body2" color="text.secondary">
-        <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: (small !== undefined && small) ? 12 : 16 }} />
+    <Stack direction="row" alignItems="center" spacing={0.5}>
+      <Typography sx={{ fontSize: small ? '18px' : '25px' }} variant="body1" color="text.secondary">
+        {title}
       </Typography>
-    ) : null}
+      {href ? (
+        <Typography variant="body2" color="text.secondary">
+          <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: small ? 12 : 16 }} />
+        </Typography>
+      ) : null}
+    </Stack>
   </MenuItem>
 );
 
