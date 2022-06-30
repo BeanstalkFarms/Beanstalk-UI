@@ -6,9 +6,9 @@ import Stat from 'components/Common/Stat';
 import { useAccount } from 'wagmi';
 import BlurComponent from 'components/Common/BlurComponent';
 import SiloBalances from 'components/Common/SiloBalances';
-import useChainId from '../../../hooks/useChain';
-import { SupportedChainId } from '../../../constants';
-import useWhitelist from '../../../hooks/useWhitelist';
+import useChainId from '../../hooks/useChain';
+import { SupportedChainId } from '../../constants';
+import useWhitelist from '../../hooks/useWhitelist';
 
 export interface TotalBalanceCardProps {
   breakdown: ReturnType<typeof useFarmerSiloBreakdown>;

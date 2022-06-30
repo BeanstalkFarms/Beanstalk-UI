@@ -21,7 +21,10 @@ export type BuyNowFormProps = {
   token: NativeToken | ERC20Token
 }
 
-const BuyNowForm: React.FC<BuyNowFormProps & FormikProps<BuyNowFormValues>> = ({
+const BuyNowForm: React.FC<
+  BuyNowFormProps & 
+  FormikProps<BuyNowFormValues>
+> = ({
   values,
   setFieldValue,
   isSubmitting,

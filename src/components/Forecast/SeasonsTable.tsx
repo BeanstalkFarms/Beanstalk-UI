@@ -4,8 +4,7 @@ import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette } from '../App/muiTheme';
 import { tableStyle } from '../../util/tableStyle';
 
-export type SeasonsTableProps = {
-}
+export type SeasonsTableProps = {}
 
 const MAX_ROWS = 5;
 

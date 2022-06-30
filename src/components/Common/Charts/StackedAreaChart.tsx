@@ -7,8 +7,8 @@ import { scaleTime, scaleLinear } from '@visx/scale';
 import { timeParse } from 'd3-time-format';
 import ALL_POOLS from 'constants/pools';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { SupportedChainId, TokenMap } from '../../constants';
-import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
+import { SupportedChainId, TokenMap } from '../../../constants';
+import { BeanstalkSiloBalance } from '../../../state/beanstalk/silo';
 
 export type LiquidityBalancesProps = {
   balances: TokenMap<BeanstalkSiloBalance>;
@@ -64,63 +64,62 @@ export type StackedAreasProps = {
   margin?: { top: number; right: number; bottom: number; left: number };
 };
 
-const StackedAreaChart: React.FC<StackedAreasProps> =
-  ({
-     width,
-     height,
-     margin = { top: 0, right: 0, bottom: 0, left: 0 },
-     events = false,
-   }) => {
-    // bounds
-    const yMax = height - margin.top - margin.bottom;
-    const xMax = width - margin.left - margin.right;
+const StackedAreaChart: React.FC<StackedAreasProps> = ({
+  width,
+  height,
+  margin = { top: 0, right: 0, bottom: 0, left: 0 },
+  events = false,
+}) => {
+  // bounds
+  const yMax = height - margin.top - margin.bottom;
+  const xMax = width - margin.left - margin.right;
 
-    // scales
-    const xScale = scaleTime<number>({
-      range: [0, xMax],
-      domain: [Math.min(...mockSiloData.map(getDate)), Math.max(...mockSiloData.map(getDate))],
-    });
+  // scales
+  const xScale = scaleTime<number>({
+    range: [0, xMax],
+    domain: [Math.min(...mockSiloData.map(getDate)), Math.max(...mockSiloData.map(getDate))],
+  });
 
-    const yScale = scaleLinear<number>({
-      range: [yMax, 0],
-    });
+  const yScale = scaleLinear<number>({
+    range: [yMax, 0],
+  });
 
-    return width < 10 ? null : (
-      <svg width={width} height={height}>
-        <GradientOrangeRed id="stacked-area-orangered" />
-        <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
-        <AreaStack
-          top={margin.top}
-          left={margin.left}
-          keys={keys}
-          data={mockSiloData}
-          x={(d) => xScale(getDate(d.data)) ?? 0}
-          y0={(d) => yScale(getY0(d)) ?? 0}
-          y1={(d) => yScale(getY1(d)) ?? 0}
-        >
-          {({ stacks, path }) =>
-            stacks.map((stack) =>
-              (
-                <>
-                  {/* --- example of how to debug this: --- */}
-                  {/* {console.log('STACK KEY', stack.key)} */}
-                  {/* {console.log('POOL COLOR', ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color)} */}
-                  <path
-                    key={`stack-${stack.key}`}
-                    d={path(stack) || ''}
-                    stroke="transparent"
-                    fill={`${ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color}`}
-                    onClick={() => {
-                      if (events) alert(`${stack.key}`);
-                    }}
-                  />
-                </>
-              ))
-          }
-        </AreaStack>
-      </svg>
-    );
-  };
+  return width < 10 ? null : (
+    <svg width={width} height={height}>
+      <GradientOrangeRed id="stacked-area-orangered" />
+      <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
+      <AreaStack
+        top={margin.top}
+        left={margin.left}
+        keys={keys}
+        data={mockSiloData}
+        x={(d) => xScale(getDate(d.data)) ?? 0}
+        y0={(d) => yScale(getY0(d)) ?? 0}
+        y1={(d) => yScale(getY1(d)) ?? 0}
+      >
+        {({ stacks, path }) =>
+          stacks.map((stack) =>
+            (
+              <>
+                {/* --- example of how to debug this: --- */}
+                {/* {console.log('STACK KEY', stack.key)} */}
+                {/* {console.log('POOL COLOR', ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color)} */}
+                <path
+                  key={`stack-${stack.key}`}
+                  d={path(stack) || ''}
+                  stroke="transparent"
+                  fill={`${ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color}`}
+                  onClick={() => {
+                    if (events) alert(`${stack.key}`);
+                  }}
+                />
+              </>
+            ))
+        }
+      </AreaStack>
+    </svg>
+  );
+};
 
 /**
  * Wrap the graph in a ParentSize handler.

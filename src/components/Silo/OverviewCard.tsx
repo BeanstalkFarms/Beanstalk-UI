@@ -5,11 +5,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { displayBN, displayUSD } from 'util/index';
 
-import SimpleLineChart, { DataPoint } from 'components/Charts/SimpleLineChart';
+import SimpleLineChart, { DataPoint } from 'components/Common/Charts/SimpleLineChart';
 import {
   mockDepositData,
   mockOwnershipPctData,
-} from 'components/Charts/SimpleLineChart.mock';
+} from 'components/Common/Charts/SimpleLineChart.mock';
 import MainnetBlur from 'components/Common/MainnetBlur';
 import Stat from 'components/Common/Stat';
 import TimeTabs from '../Common/TimeTabs';

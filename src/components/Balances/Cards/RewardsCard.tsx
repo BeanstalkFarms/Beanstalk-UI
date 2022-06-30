@@ -84,6 +84,6 @@ const RewardsCard: React.FC<{
       </Grid>
     </Grid>
   </Card>
-  );
+);
 
 export default RewardsCard;
