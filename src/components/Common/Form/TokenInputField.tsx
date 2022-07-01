@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FormControl,
+  FormLabel,
   Stack,
   TextField,
   TextFieldProps,
@@ -10,6 +11,7 @@ import { FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/index';
 import Token from 'classes/Token';
+import NumberFormatInput from './NumberFormatInput';
 
 export type TokenInputFieldCustomProps = { 
   /**
@@ -49,7 +51,11 @@ const TokenInputField : React.FC<TokenInputFieldProps> = ({
 }) => {
   const [displayAmount, setDisplayAmount] = useState<string>(field.value);
   const inputProps = useMemo(() => ({
-    inputProps: { min: 0.00 },
+    inputProps: {
+      min: 0.00,
+      inputMode: 'numeric',
+    },
+    inputComponent: NumberFormatInput as any,
     ...InputProps,
   } as TextFieldProps['InputProps']), [InputProps]);
 
@@ -87,7 +93,7 @@ const TokenInputField : React.FC<TokenInputFieldProps> = ({
 
   // Ignore scroll events on the input. Prevents
   // accidentally scrolling up/down the number input.
-  const handleWheel = useCallback((e) => {
+  const handleWheel = useCallback((e: any) => {
     // @ts-ignore
     e.target.blur();
   }, []);
@@ -116,7 +122,8 @@ const TokenInputField : React.FC<TokenInputFieldProps> = ({
       )}
       {/* Input */}
       <TextField
-        type="number"
+        // type="number"
+        type="string"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
         {...props}

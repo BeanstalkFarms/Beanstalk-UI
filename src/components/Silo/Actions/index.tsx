@@ -8,6 +8,7 @@ import Withdraw from './Withdraw';
 import Claim from './Claim';
 import Deposits from './Deposits';
 import Withdrawals from './Withdrawals';
+import Send from './Send';
 
 /**
  * Show the three primary Silo actions: Deposit, Withdraw, Claim.
@@ -64,6 +65,12 @@ const Actions : React.FC<{
             <Claim
               token={props.token}
               siloBalance={props.siloBalance}
+            />
+          ) : null}
+          {tab === 3 ? (
+            <Send
+              // token={props.token}
+              // siloBalance={props.siloBalance}
             />
           ) : null}
         </Stack>

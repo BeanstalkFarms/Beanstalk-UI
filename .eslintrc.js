@@ -51,6 +51,7 @@ module.exports = {
     'keyword-spacing': 'warn',
     'jsx-a11y/anchor-is-valid': 0,
     'react/self-closing-comp': 'warn',
+    'react/jsx-no-duplicate-props': ['warn', { "ignoreCase": false }],
     // 'comma-dangle': ['warn', {
     //   arrays: 'always-multiline',
     //   imports: 'always-multiline',
