@@ -59,8 +59,8 @@ const ClaimForm : React.FC<
   const pool = pools[token.address];
 
   //
-  const amount  = values.tokens[0].amount;
-  const isReady = amount && amount?.gt(0);
+  const amount = values.tokens[0].amount;
+  const isSubmittable = amount && amount?.gt(0);
 
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
@@ -77,22 +77,24 @@ const ClaimForm : React.FC<
               />
             )}
           </Field>
-          <RadioCardField
-            name="settings.removeLP"
-            options={[
-              {
-                title: `3CRV`,
-                description: `Remove LP from the ${pool.name} and receive 3CRV to your wallet`,
-                value: true,
-              },
-              {
-                title: `LP Token`,
-                description: `Receive ${token.name} Tokens to your wallet`,
-                value: false,
-              }
-            ]}
-          />
-          {isReady ? (
+          {pool ? (
+            <RadioCardField
+              name="settings.removeLP"
+              options={[
+                {
+                  title: `3CRV`,
+                  description: `Remove LP from the ${pool.name} and receive 3CRV to your wallet`,
+                  value: true,
+                },
+                {
+                  title: `LP Token`,
+                  description: `Receive ${token.name} Tokens to your wallet`,
+                  value: false,
+                }
+              ]}
+            />
+          ) : null}
+          {isSubmittable ? (
             <Stack direction="column" gap={1}>
               <TxnSeparator />
               {values.settings.removeLP ? (
@@ -129,7 +131,7 @@ const ClaimForm : React.FC<
               </Box>
             </Stack>
           ) : null}
-          <Button disabled={!isReady || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
+          <Button disabled={!isSubmittable || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
             Claim
           </Button>
         </Stack>

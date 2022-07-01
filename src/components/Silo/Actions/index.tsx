@@ -28,9 +28,8 @@ const Actions : React.FC<{
     setTab(newValue);
   };
 
-  const isClaimVisible = (
-    props.siloBalance?.withdrawn?.amount.gt(0)
-    || props.siloBalance?.claimable?.amount.gt(0)
+  const hasClaimable = (
+    props.siloBalance?.claimable?.amount.gt(0)
   );
 
   return (
@@ -43,9 +42,10 @@ const Actions : React.FC<{
               <Tab label="Deposit" />
               <Tab label="Withdraw" />
               <Tab
-                label={isClaimVisible ? <Badge color="primary" variant="dot">Claim</Badge> : 'Claim'}
+                label={hasClaimable ? <Badge color="primary" variant="dot">Claim</Badge> : 'Claim'}
                 sx={{ overflow: 'visible' }}
               />
+              <Tab label="Send" />
             </Tabs>
           </Stack>
           {/* Tab Content */}
@@ -69,13 +69,13 @@ const Actions : React.FC<{
         </Stack>
       </Card>
       {/* Tables */}
-      <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
+      <Box sx={{ display: tab === 0 || tab === 3 ? 'block' : 'none' }}>
         <Deposits
           token={props.token}
           balance={props.siloBalance}
         />
       </Box>
-      <Box sx={{ display: tab !== 0 ? 'block' : 'none' }}>
+      <Box sx={{ display: tab === 1 || tab === 2 ? 'block' : 'none' }}>
         <Withdrawals
           token={props.token}
           balance={props.siloBalance}
