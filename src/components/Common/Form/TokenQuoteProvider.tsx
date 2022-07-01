@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { CircularProgress, TextFieldProps, Typography } from '@mui/material';
 import { Token } from 'classes';
 import { Field, FieldProps, useFormikContext } from 'formik';
-import TokenInputField, { TokenInputFieldProps } from 'components/Common/Form/TokenInputField';
+import TokenInputField, { TokenInputProps } from 'components/Common/Form/TokenInputField';
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/Tokens';
@@ -10,7 +10,7 @@ import useQuote, { QuoteHandler } from 'hooks/useQuote';
 import { FormState, FormTokenState } from '.';
 import { ERC20Token, NativeToken } from 'classes/Token';
 
-const TokenQuoteProvider : React.FC<{
+type TokenQuoteProviderCustomProps = {
   /** Field name */
   name: string;
   /** Input state */
@@ -23,7 +23,14 @@ const TokenQuoteProvider : React.FC<{
   disableTokenSelect?: boolean;
   /** */
   handleQuote: QuoteHandler;
-} & Partial<TokenInputFieldProps>> = ({
+};
+type TokenQuoteProviderProps = (
+  TokenQuoteProviderCustomProps
+  & Partial<TokenInputProps>
+);
+
+const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
+  // Custom
   name,
   state,
   balance,
@@ -31,6 +38,7 @@ const TokenQuoteProvider : React.FC<{
   showTokenSelect,
   disableTokenSelect,
   handleQuote,
+  // 
   ...props
 }) => {
   // Setup a price quote for this token
@@ -117,22 +125,17 @@ const TokenQuoteProvider : React.FC<{
   ]);
 
   return (  
-    <Field name={`${name}.amount`}>
-      {(fieldProps: FieldProps) => (
-        <TokenInputField
-          // MUI
-          fullWidth
-          InputProps={InputProps}
-          // Formik
-          {...fieldProps}
-          {...props}
-          // Other
-          balance={balance}
-          quote={Quote}
-          token={state.token}
-        />
-      )}
-    </Field>
+    <TokenInputField
+      name={`${name}.amount`}
+      // MUI
+      fullWidth
+      InputProps={InputProps}
+      {...props}
+      // Other
+      balance={balance}
+      quote={Quote}
+      token={state.token}
+    />
   );
 };
 

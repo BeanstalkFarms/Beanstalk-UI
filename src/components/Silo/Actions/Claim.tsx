@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Button, Grid, Stack, Tooltip } from '@mui/material';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useSigner } from 'wagmi';
 import { Token } from 'classes';
-import { BEAN } from 'constants/tokens';
+import { BEAN, CRV3 } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import useChainId from 'hooks/useChain';
@@ -15,13 +15,17 @@ import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
-import { FormTokenState, SettingSwitch, TxnSeparator, TxnPreview, TxnSettings, TokenInputField, TokenOutputField, TokenAdornment, RadioCardField } from 'components/Common/Form';
+import { FormTokenState, SettingSwitch, TxnPreview, TxnSettings, TokenOutputField, TokenAdornment, RadioCardField, TxnSeparator } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'constants/generated';
+import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import FieldWrapper from 'components/Common/Form/FieldWrapper';
+import useGetChainToken from 'hooks/useGetChainToken';
 
 // -----------------------------------------------------------------------
 
 type ClaimFormValues = {
   settings: {
+    destination: FarmToMode;
     removeLP: boolean;
   };
   tokens: FormTokenState[];
@@ -46,6 +50,7 @@ const ClaimForm : React.FC<
   const chainId = useChainId();
   const pools = usePools();
   const isMainnet = chainId === SupportedChainId.MAINNET;
+  const getChainToken = useGetChainToken();
 
   // Input props
   const InputProps = useMemo(() => ({
@@ -59,77 +64,76 @@ const ClaimForm : React.FC<
   const pool = pools[token.address];
 
   //
-  const amount = values.tokens[0].amount;
-  const isSubmittable = amount && amount?.gt(0);
+  const amount = claimableBalance;
+  const isSubmittable = (
+    amount.gt(0)
+    && values.settings.destination !== undefined
+    && (pool ? values.settings.removeLP !== undefined : true)
+  );
 
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
-          <Field name="tokens.0.amount">
-            {(fieldProps: FieldProps) => (
-              <TokenInputField
-                {...fieldProps}
-                token={token}
-                balance={claimableBalance || undefined}
-                balanceLabel="Claimable Balance"
-                InputProps={InputProps}
-              />
-            )}
-          </Field>
-          {pool ? (
-            <RadioCardField
-              name="settings.removeLP"
-              options={[
-                {
-                  title: `3CRV`,
-                  description: `Remove LP from the ${pool.name} and receive 3CRV to your wallet`,
-                  value: true,
-                },
-                {
-                  title: `LP Token`,
-                  description: `Receive ${token.name} Tokens to your wallet`,
-                  value: false,
-                }
-              ]}
+          <Stack gap={1} pb={0.5}>
+            <TokenOutputField
+              token={values.settings.removeLP ? getChainToken(CRV3) : token}
+              amount={amount}
+              modifier="Claimable"
             />
-          ) : null}
-          {isSubmittable ? (
-            <Stack direction="column" gap={1}>
-              <TxnSeparator />
-              {values.settings.removeLP ? (
-                <Grid container spacing={1}>
-                  {pool?.tokens.map((_token) => (
-                    <Grid key={_token.address} item xs={12} md={6}>
-                      <TokenOutputField
-                        token={_token}
-                        amount={amount}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <TokenOutputField
-                  token={token}
-                  amount={amount}
+            <FieldWrapper label="Destination">
+              <RadioCardField
+                name="settings.destination"
+                options={[
+                  {
+                    title: `Farm Balance`,
+                    description: `Keep tokens within Beanstalk`,
+                    value: FarmToMode.INTERNAL,
+                  },
+                  {
+                    title: `Wallet`,
+                    description: `Send tokens to your wallet`,
+                    value: FarmToMode.EXTERNAL,
+                  }
+                ]}
+              />
+            </FieldWrapper>
+            {pool ? (
+              <FieldWrapper label="Claim as">
+                <RadioCardField
+                  name="settings.removeLP"
+                  options={[
+                    {
+                      title: `3CRV`,
+                      description: `Unpack LP into underlying 3CRV`,
+                      value: true,
+                    },
+                    {
+                      title: `LP`,
+                      description: `Receive ${token.name} Tokens`,
+                      value: false,
+                    }
+                  ]}
                 />
-              )}
-              <Box>
-                <Accordion defaultExpanded variant="outlined">
-                  <StyledAccordionSummary title="Transaction Details" />
-                  <AccordionDetails>
-                    <TxnPreview
-                      actions={[
-                        {
-                          type: ActionType.BASE,
-                          message: 'Test'
-                        }
-                      ]}
-                    />
-                  </AccordionDetails>
-                </Accordion>
-              </Box>
-            </Stack>
+              </FieldWrapper>
+            ) : null}
+          </Stack>
+          {isSubmittable ? (
+            <Box>
+              <Accordion variant="outlined">
+                <StyledAccordionSummary title="Transaction Details" />
+                <AccordionDetails>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type: ActionType.BASE,
+                        message: 'Test'
+                      }
+                    ]}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
           ) : null}
           <Button disabled={!isSubmittable || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
             Claim
@@ -163,7 +167,8 @@ const Claim : React.FC<{
   // Form
   const initialValues : ClaimFormValues = useMemo(() => ({
     settings: {
-      removeLP: token !== Bean
+      removeLP: token !== Bean,
+      destination: FarmToMode.INTERNAL,
     },
     tokens: [
       {
@@ -188,14 +193,14 @@ const Claim : React.FC<{
       {(formikProps) => (
         <>
           {/* Padding below matches tabs and input position. See Figma. */}
-          <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
+          {/* <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
             <TxnSettings>
               {token !== Bean && (
                 <SettingSwitch name="settings.removeLP" label="Remove LP" />
               )}
               <SettingSwitch name="settings.toWallet" label="Send to wallet" />
             </TxnSettings>
-          </Box>
+          </Box> */}
           <Stack spacing={1}>
             <ClaimForm
               token={token}
@@ -226,3 +231,17 @@ export default Claim;
     })}
   </Box>
 ) : null} */
+
+// {values.settings.removeLP ? (
+//   <Grid container spacing={1}>
+//     {pool?.tokens.map((_token) => (
+//       <Grid key={_token.address} item xs={12} md={6}>
+//         <TokenOutputField
+//           token={_token}
+//           amount={amount}
+//         />
+//       </Grid>
+//     ))}
+//   </Grid>
+// ) : (
+// )}

@@ -82,14 +82,15 @@ export function displayFullBN(
  */
 export function displayTokenAmount(
   amount: BigNumber,
-  token: Token
+  token: Token,
+  modifier?: string
 ) {
   return `${amount
     .toNumber()
     .toLocaleString('en-US', { 
       maximumFractionDigits: token.displayDecimals,
       // maximumSignificantDigits: 3,
-    })} ${token.name}`;
+    })} ${modifier ? `${modifier} ` : ''}${token.name}`;
 }
 
 /**

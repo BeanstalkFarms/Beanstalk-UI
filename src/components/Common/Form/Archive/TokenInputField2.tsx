@@ -1,8 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FormControl,
+  FormControlProps as MUIFormControlProps,
   FormLabel,
   InputBase,
+  InputBaseProps,
+  OutlinedInput,
+  OutlinedInputProps,
   Stack,
   TextField,
   TextFieldProps,
@@ -12,10 +16,9 @@ import { Field, FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/index';
 import Token from 'classes/Token';
-import NumberFormatInput from './NumberFormatInput';
-import FieldWrapper from './FieldWrapper';
+import NumberFormatInput from '../NumberFormatInput';
 
-export type TokenInputCustomProps = { 
+export type TokenInputField2CustomProps = { 
   /**
    * If provided, the Balance is displayed with respect
    * to this token's displayDecimals.
@@ -24,43 +27,36 @@ export type TokenInputCustomProps = {
   balance?: BigNumber | undefined;
   balanceLabel?: string;
   quote?: JSX.Element;
+  label?: string | null;
 };
 
-export type TokenInputProps = (
-  TokenInputCustomProps // custom
-  & Partial<TextFieldProps>  // MUI TextField
+export type TokenInputField2Props = (
+  TokenInputField2CustomProps // custom
+  & { FormControlProps?: MUIFormControlProps }
+  & OutlinedInputProps        // MUI InputBase
 );
 
-const TokenInput : React.FC<
-  TokenInputProps
-  & FieldProps // Formik Field
-> = ({
+const TokenInputField : React.FC<TokenInputField2Props & FieldProps> = ({
   // -- Custom props
   token,
   balance,
-  quote,
   balanceLabel = 'Balance',
+  quote,
+  label,
   // -- Formik props
   field,
   form,
   meta,
-  // -- TextField props
+  // -- FormControl props
+  FormControlProps = {},
+  // -- InputBase props
   placeholder,
   disabled,
   sx,
-  InputProps,
-  label,
-  ...textFieldProps
+  inputProps,
+  ...outlinedInputProps
 }) => {
   const [displayAmount, setDisplayAmount] = useState<string>(field.value);
-  const inputProps = useMemo(() => ({
-    inputProps: {
-      min: 0.00,
-      inputMode: 'numeric',
-    },
-    inputComponent: NumberFormatInput as any,
-    ...InputProps,
-  } as TextFieldProps['InputProps']), [InputProps]);
 
   // Derived
   const isInputDisabled = (
@@ -119,18 +115,29 @@ const TokenInput : React.FC<
   }, [field.value, displayAmount]);
 
   return (
-    <FieldWrapper label={label}>
-      {/* Input */}
-      <TextField
+    <Stack gap={0.5}>
+      {label && (
+        <Typography sx={{ fontSize: 15, px: 0.5 }}>
+          {label}
+        </Typography>
+      )}
+      <OutlinedInput
         type="string"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
-        {...textFieldProps}
+        color="secondary"
+        inputProps={{
+          min: 0.00,
+          inputMode: 'numeric',
+          ...inputProps,
+        }}
+        inputComponent={NumberFormatInput as any}
+        {...outlinedInputProps}
+        // FORMIK
         // Override the following props.
-        onWheel={handleWheel}
         value={displayAmount || ''}
         onChange={handleChange}
-        InputProps={inputProps}
+        onWheel={handleWheel}
         sx={{
           '& .MuiOutlinedInput-root': {
             fontSize: '1.5rem'
@@ -138,7 +145,6 @@ const TokenInput : React.FC<
           ...sx
         }}
       />
-      {/* Bottom Adornment */}
       <Stack direction="row" alignItems="center" spacing={0.5} px={0.5}>
         {/* Leaving the Stack rendered regardless of whether `quote` is defined
           * ensures that the Balance section gets flexed to the right side of
@@ -174,21 +180,21 @@ const TokenInput : React.FC<
           </>
         )}
       </Stack>
-    </FieldWrapper>
+    </Stack>
   );
 };
 
-const TokenInputField : React.FC<TokenInputProps> = ({ name, ...props }) => {
+const TokenInputField2 : React.FC<TokenInputField2Props & { name: string }> = ({ name, ...tokenInputFieldProps }) => {
   return (
     <Field name={name}>
       {(fieldProps: FieldProps) => (
-        <TokenInput
+        <TokenInputField
           {...fieldProps}
-          {...props}
+          {...tokenInputFieldProps}
         />
       )}
     </Field>
   )
 };
 
-export default TokenInputField;
+export default TokenInputField2;

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, FormControl, FormControlLabel, InputLabel, Stack, Tooltip } from '@mui/material';
 import { Token } from 'classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
@@ -225,7 +225,7 @@ const DepositForm : React.FC<
 
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
-      <Form noValidate>
+      <Form noValidate autoComplete="off">
         <Stack gap={1}>
           <TokenSelectDialog
             open={showTokenSelect}

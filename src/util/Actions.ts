@@ -8,7 +8,9 @@ export enum ActionType {
   SWAP,
   // Silo
   DEPOSIT,
-  RECEIVE_SILO_REWARDS,
+  WITHDRAW,
+  IN_TRANSIT,
+  UPDATE_SILO_REWARDS,
   CLAIM_WITHDRAWAL,
   // Fertilizer
   BUY_FERTILIZER,
@@ -29,15 +31,25 @@ export type SwapAction = {
 }
 
 export type SiloRewardsAction = {
-  type: ActionType.RECEIVE_SILO_REWARDS;
+  type: ActionType.UPDATE_SILO_REWARDS;
   stalk: BigNumber;
   seeds: BigNumber;
 }
 
-export type SiloDepositAction = {
+type SiloAction = {
+  amount: BigNumber;
+  token: Token;
+}
+
+export type SiloDepositAction = SiloAction & {
   type: ActionType.DEPOSIT;
-  amountIn: BigNumber;
-  tokenIn: Token;
+}
+export type SiloWithdrawAction = SiloAction & {
+  type: ActionType.WITHDRAW;
+}
+export type SiloTransitAction = SiloAction & {
+  type: ActionType.IN_TRANSIT;
+  withdrawSeasons: BigNumber;
 }
 
 export type FertilizerBuyAction = {
@@ -61,6 +73,8 @@ export type Action = (
   BaseAction
   | SwapAction
   | SiloDepositAction
+  | SiloWithdrawAction
+  | SiloTransitAction
   | SiloRewardsAction
   | ClaimWithdrawalAction
   | FertilizerBuyAction
@@ -71,18 +85,29 @@ export type Action = (
 
 export const parseActionMessage = (a: Action) => {
   switch (a.type) {
+    /// SWAP
     case ActionType.SWAP:
       return `Swap ${displayTokenAmount(a.amountIn, a.tokenIn)} for ${displayTokenAmount(a.amountOut, a.tokenOut)}.`;
+
+    /// SILO
     case ActionType.DEPOSIT:
-      return `Deposit ${displayTokenAmount(a.amountIn, a.tokenIn)} into the Silo.`;
-    case ActionType.RECEIVE_SILO_REWARDS:
-      return `Receive ${displayFullBN(a.stalk, 2)} Stalk and ${displayFullBN(a.seeds, 2)} Seeds.`;
+      return `Deposit ${displayTokenAmount(a.amount, a.token)} into the Silo.`;
+    case ActionType.WITHDRAW:
+      return `Withdraw ${displayTokenAmount(a.amount.abs(), a.token)} from the Silo.`;
+    case ActionType.IN_TRANSIT:
+      return `Receive ${displayTokenAmount(a.amount.abs(), a.token, 'Claimable')} in ${a.withdrawSeasons.toFixed()} Season${a.withdrawSeasons.eq(1) ? '' : 's'}.`;
+    case ActionType.UPDATE_SILO_REWARDS: // FIXME: don't like "update" here
+      return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
+    case ActionType.CLAIM_WITHDRAWAL:
+      return `Claim ${displayFullBN(a.amountIn, 2)} ${a.tokenIn.symbol}.`;
+
+    /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
       return `Buy ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`;
     case ActionType.RECEIVE_FERT_REWARDS:
       return `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are earned.`;
-    case ActionType.CLAIM_WITHDRAWAL:
-      return `Claim ${displayFullBN(a.amountIn, 2)} ${a.tokenIn.symbol}.`;
+
+    /// DEFAULT
     default: 
       return a.message || 'Unknown action';
   }

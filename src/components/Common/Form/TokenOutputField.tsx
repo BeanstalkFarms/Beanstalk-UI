@@ -9,13 +9,14 @@ const TokenOutputField : React.FC<{
   token: Token;
   amount: BigNumber;
   value?: BigNumber;
-  state?: string;
+  modifier?: string;
 }> = ({
   token,
   amount,
   value,
-  state,
+  modifier,
 }) => {
+  const isZero = amount.eq(0);
   const isNegative = amount.lt(0);
   return (
     <Stack
@@ -32,7 +33,7 @@ const TokenOutputField : React.FC<{
       >
       <Box>
         <Typography display="inline" sx={{ fontSize: 24, fontWeight: 'normal' }}>
-          {isNegative ? '-' : '+'}&nbsp;{displayFullBN(amount.abs(), token.displayDecimals + 2, token.displayDecimals)}
+          {isZero ? '' : isNegative ? '-' : '+'}&nbsp;{displayFullBN(amount.abs(), token.displayDecimals + 2, token.displayDecimals)}
         </Typography>
         {value && (
           <>&nbsp;&nbsp;<Typography display="inline" fontSize={14}>(~{displayUSD(value)})</Typography></>
@@ -50,7 +51,7 @@ const TokenOutputField : React.FC<{
           />
         )}
         <Typography>
-          {state && `${state} `}{token.name}
+          {modifier && `${modifier} `}{token.name}
         </Typography>
       </Stack>
     </Stack>

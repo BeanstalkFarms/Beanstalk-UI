@@ -63,13 +63,13 @@ export function deposit(
   // DEPOSIT and RECEIVE_REWARDS always come last
   summary.actions.push({
     type: ActionType.DEPOSIT,
-    amountIn: summary.bdv,
+    amount: summary.bdv,
     // from the perspective of the deposit,
     // the token is "coming in".
-    tokenIn: to, 
+    token: to, 
   });
   summary.actions.push({
-    type: ActionType.RECEIVE_SILO_REWARDS,
+    type: ActionType.UPDATE_SILO_REWARDS,
     stalk: summary.stalk,
     seeds: summary.seeds,
   });
