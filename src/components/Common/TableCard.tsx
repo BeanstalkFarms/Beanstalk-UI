@@ -13,7 +13,7 @@ const MAX_ROWS = 5;
  * a header with title, aggregate amount, and aggregate value.
  * Used to display deposits/withdrawals within the Silo.
  */
-const CratesCard : React.FC<{
+const TableCard : React.FC<{
   /** Card title */
   title: string;
   /** Column setup */
@@ -102,4 +102,4 @@ const CratesCard : React.FC<{
   );
 };
 
-export default CratesCard;
+export default TableCard;

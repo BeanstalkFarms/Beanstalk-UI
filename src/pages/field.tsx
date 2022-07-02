@@ -13,6 +13,8 @@ import { DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import FieldConditions from '../components/Field/FieldConditions';
 import MyPlotsDialog from '../components/Field/MyPlotsDialog';
+import useToggle from 'hooks/display/useToggle';
+import FieldActions from 'components/Field/Actions';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -37,12 +39,8 @@ const columns: DataGridProps['columns'] = [
 ];
 
 const FieldPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  // Theme
-  const handleClose = useCallback(() => {
-    setModalOpen(false);
-  }, []);
-  const handleOpen = useCallback(() => setModalOpen(true), []);
+  //
+  // const [modalOpen, handleOpen, handleClose] = useToggle();
 
   // Data
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
@@ -67,7 +65,7 @@ const FieldPage: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="sm">
       <Stack spacing={2}>
         <PageHeader
           title={
@@ -85,12 +83,13 @@ const FieldPage: React.FC = () => {
         />
         <FieldConditions
           beanstalkField={beanstalkField}
-          handleOpenDialog={handleOpen}
-          farmerField={farmerField}
-          podLine={podLine}
+          // farmerField={farmerField}
+          // podLine={podLine}
+          // handleOpenDialog={handleOpen}
         />
+        <FieldActions />
       </Stack>
-      <MyPlotsDialog
+      {/* <MyPlotsDialog
         beanstalkField={beanstalkField}
         handleCloseDialog={handleClose}
         farmerField={farmerField}
@@ -98,7 +97,7 @@ const FieldPage: React.FC = () => {
         podLine={podLine}
         columns={columns}
         rows={rows}
-      />
+      /> */}
     </Container>
   );
 };

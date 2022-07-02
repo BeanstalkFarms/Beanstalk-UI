@@ -12,7 +12,7 @@ import { BEAN, STALK } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useChainConstant from 'hooks/useChainConstant';
-import CratesCard from '../CratesCard';
+import TableCard from '../../Common/TableCard';
 import COLUMNS from 'components/Common/Table/cells';
 
 /**
@@ -101,7 +101,7 @@ const Deposits : React.FC<{
   const state = !account ? 'disconnected' : 'ready';
 
   return (
-    <CratesCard
+    <TableCard
       title={`${token.name} Deposits`}
       rows={rows}
       columns={columns}

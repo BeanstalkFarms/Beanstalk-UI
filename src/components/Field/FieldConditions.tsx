@@ -8,22 +8,16 @@ import { AppState } from '../../state';
 import PodLineSection from './PodLineSection';
 
 export interface FieldConditionsProps {
-  podLine: BigNumber;
   beanstalkField: AppState['_beanstalk']['field'];
-  farmerField: AppState['_farmer']['field'];
-  handleOpenDialog: any;
+  // farmerField: AppState['_farmer']['field'];
+  // podLine: BigNumber;
 }
 
 const FieldConditions: React.FC<FieldConditionsProps> = ({
   beanstalkField,
-  farmerField,
-  handleOpenDialog,
-  podLine,
+  // farmerField,
+  // podLine,
 }) => {
-  const handleOpen = () => {
-    handleOpenDialog();
-  };
-
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={2}>
@@ -40,7 +34,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
                   />
                 </Tooltip>
               </Typography>
-              <Typography variant="h1">
+              <Typography variant="h1" fontWeight="400">
                 {displayBN(beanstalkField.soil)}
               </Typography>
             </Stack>
@@ -54,7 +48,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
                   />
                 </Tooltip>
               </Typography>
-              <Typography variant="h1">
+              <Typography variant="h1" fontWeight="400">
                 {displayBN(beanstalkField.weather.yield)}%
               </Typography>
             </Stack>
@@ -70,12 +64,12 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
                   />
                 </Tooltip>
               </Typography>
-              <Typography variant="h1">
+              <Typography variant="h1" fontWeight="400">
                 {displayBN(beanstalkField?.harvestableIndex)}
               </Typography>
             </Stack>
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <PodLineSection
               numPodsTitle="Pod Line"
               numPodsDisplay={podLine}
@@ -83,8 +77,8 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
               harvestableIndex={beanstalkField.harvestableIndex}
               plots={farmerField.plots}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </Grid> */}
+          {/* <Grid item xs={12}>
             <Stack direction="row" justifyContent="space-between">
               <Stack direction="row" gap={0.5}>
                 <Tooltip
@@ -107,7 +101,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
                 <Typography variant="h4">View My Plots</Typography>
               </Link>
             </Stack>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Stack>
     </Card>

@@ -117,7 +117,7 @@ export default function App() {
           backgroundSize: '100%',
           backgroundRepeat: 'no-repeat',
           width: '100%',
-          minHeight: '100vh',
+          minHeight: 'calc(100vh - 65px)',
           paddingTop: {
             md: 4,
             xs: 2,
