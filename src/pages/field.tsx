@@ -15,6 +15,7 @@ import FieldConditions from '../components/Field/FieldConditions';
 import MyPlotsDialog from '../components/Field/MyPlotsDialog';
 import useToggle from 'hooks/display/useToggle';
 import FieldActions from 'components/Field/Actions';
+import TableCard from 'components/Common/TableCard';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -34,7 +35,7 @@ const columns: DataGridProps['columns'] = [
     headerAlign: 'left',
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => <Typography>{displayBN(params.value, true)}</Typography>,
   },
 ];
 
@@ -88,7 +89,16 @@ const FieldPage: React.FC = () => {
           // handleOpenDialog={handleOpen}
         />
         <FieldActions />
-      </Stack>
+        <TableCard
+          title="My Pods"
+          state="ready"
+          amount={farmerField.pods}
+          rows={rows}
+          columns={columns}
+          sort={{ field: 'placeInLine', sort: 'asc' }}
+          // token={PODS}
+        />
+      </Stack>  
       {/* <MyPlotsDialog
         beanstalkField={beanstalkField}
         handleCloseDialog={handleClose}

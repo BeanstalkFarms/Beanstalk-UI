@@ -184,41 +184,111 @@ export default class EventProcessor {
   PlotTransfer(event: Simplify<PlotTransferEvent>) {
     // Numerical "index" of the Plot.
     // Absolute, with respect to Pod 0.
-    const index = tokenBN(event.args.id, Bean);
-    const pods  = tokenBN(event.args.pods, Bean);
+    const transferIndex = tokenBN(event.args.id, Bean);
+    const podsTransferred = tokenBN(event.args.pods, Bean);
 
     // This account received a Plot
     if (event.args.to.toLowerCase() === this.account) {
-      this.plots[index.toString()] = pods;
+      this.plots[transferIndex.toString()] = podsTransferred;
     }
-
     // This account sent a Plot
     else {
       // String version of `idx`, used to key
       // objects. This prevents duplicate toString() calls
       // and resolves Typescript errors.
-      const indexStr = index.toString();
+      const indexStr = transferIndex.toString();
 
-      // If we've located the plot in a prior event
+      // ----------------------------------------
+      // The PlotTransfer event doesn't contain info
+      // about the `start` position of a Transfer. 
+      // Say for example I have the following plot:
+      //
+      //  0       9 10         20              END
+      // [---------[0123456789)-----------------]
+      //                 ^
+      // PlotTransfer   [56789)
+      //                 15    20
+      //
+      // PlotTransfer(from=0x, to=0x, id=15, pods=5)
+      // This means we send Pods: 15, 16, 17, 18, 19
+      // 
+      // However this Plot doesn't exist yet in our
+      // cache. To find it we search for the Plot
+      // beginning at 10 and ending at 20, then
+      // split it depending on params provided in
+      // the PlotTransfer event.
+      // ----------------------------------------
       if (this.plots[indexStr] !== undefined) {
-        // Send partial plot
-        if (!pods.isEqualTo(this.plots[indexStr])) {
-          const newStartIndex = index.plus(pods);
-          this.plots[newStartIndex.toString()] = this.plots[indexStr].minus(pods);
+        // ----------------------------------------
+        // A known Plot was sent.
+        // ----------------------------------------
+        if (!podsTransferred.isEqualTo(this.plots[indexStr])) {
+          const newStartIndex = transferIndex.plus(podsTransferred);
+          this.plots[newStartIndex.toString()] = this.plots[indexStr].minus(podsTransferred);
         }
         delete this.plots[indexStr];
       }
       else {
+        // ----------------------------------------
+        // A Plot was partially sent from a non-zero
+        // starting index. Find the containing Plot
+        // in our cache.
+        // ----------------------------------------
         let i = 0;
         let found = false;
-        while (found === false && i < Object.keys(this.plots).length) {
-          const startIndex = BN(Object.keys(this.plots)[i]);
+        const plotIndices = Object.keys(this.plots);
+        while (found === false && i < plotIndices.length) {
+          // Setup the boundaries of this Plot
+          const startIndex = BN(plotIndices[i]); 
           const endIndex   = startIndex.plus(this.plots[startIndex.toString()]);
-          if (startIndex.isLessThanOrEqualTo(index) && endIndex.isGreaterThan(index)) {
-            this.plots[startIndex.toString()] = index.minus(startIndex);
-            if (!index.isEqualTo(endIndex)) {
-              const s2 = index.plus(pods);
-              if (!s2.isEqualTo(endIndex)) {
+          // Check if the Transfer happened within this Plot
+          if (startIndex.isLessThanOrEqualTo(transferIndex) 
+             && endIndex.isGreaterThan(transferIndex)) {
+            // ----------------------------------------
+            // Slice #1. This is the part that
+            // the user keeps (they sent the other part).
+            //
+            // Following the above example:
+            //  transferIndex   = 15
+            //  podsTransferred = 5
+            //  startIndex      = 10
+            //  endIndex        = 20
+            //  
+            // This would update the existing Plot such that:
+            //  this.plots[10] = (15 - 10) = 5
+            // containing Pods 10, 11, 12, 13, 14
+            // ----------------------------------------
+            if (transferIndex.eq(startIndex)) {
+              delete this.plots[startIndex.toString()];
+            } else {
+              this.plots[startIndex.toString()] = transferIndex.minus(startIndex);
+            }
+
+            // ----------------------------------------
+            // Slice #2. Handles the below case where
+            // the amount sent doesn't reach the end
+            // of the Plot (i.e. I sent Pods in the middle.
+            // 
+            //  0       9 10         20              END
+            // [---------[0123456789)-----------------]
+            //                 ^
+            // PlotTransfer   [567)
+            //                 15  18
+            //
+            //  transferIndex   = 15
+            //  podsTransferred = 3
+            //  startIndex      = 10
+            //  endIndex        = 20
+            //
+            // PlotTransfer(from=0x, to=0x, id=15, pods=3)
+            // This means we send Pods: 15, 16, 17.
+            if (!transferIndex.isEqualTo(endIndex)) {
+              // s2 = 15 + 3 = 18
+              // Requires another split since 18 != 20
+              const s2 = transferIndex.plus(podsTransferred);
+              const requiresAnotherSplit = !s2.isEqualTo(endIndex);
+              if (requiresAnotherSplit) {
+                // Create a new plot at s2=18 with 20-18 Pods.
                 const s2Str = s2.toString();
                 this.plots[s2Str] = endIndex.minus(s2);
                 if (this.plots[s2Str].isEqualTo(0)) {
