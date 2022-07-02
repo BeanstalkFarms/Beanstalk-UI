@@ -273,7 +273,7 @@ const DepositForm : React.FC<
                 </Box>
               </Stack>
               <Box>
-                <Accordion defaultExpanded variant="outlined">
+                <Accordion variant="outlined">
                   <StyledAccordionSummary title="Transaction Details" />
                   <AccordionDetails>
                     <TxnPreview

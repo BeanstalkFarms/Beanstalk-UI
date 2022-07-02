@@ -15,11 +15,13 @@ import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
-import { FormTokenState, SettingSwitch, TxnPreview, TxnSettings, TokenOutputField, TokenAdornment, RadioCardField, TxnSeparator } from 'components/Common/Form';
+import { FormTokenState, TxnPreview, TokenOutputField, TokenAdornment, RadioCardField } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'constants/generated';
-import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import { FarmToMode } from 'lib/Beanstalk/Farm';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import useGetChainToken from 'hooks/useGetChainToken';
+import { ZERO_BN } from 'constants/index';
+import { displayTokenAmount } from 'util/index';
 
 // -----------------------------------------------------------------------
 
@@ -66,9 +68,16 @@ const ClaimForm : React.FC<
   //
   const amount = claimableBalance;
   const isSubmittable = (
-    amount.gt(0)
+    amount
+    && amount.gt(0)
     && values.settings.destination !== undefined
     && (pool ? values.settings.removeLP !== undefined : true)
+  );
+
+  const destination = (
+    values.settings.destination === FarmToMode.EXTERNAL
+      ? `to your wallet`
+      : `to your internal balance`
   );
 
   return (
@@ -78,7 +87,7 @@ const ClaimForm : React.FC<
           <Stack gap={1} pb={0.5}>
             <TokenOutputField
               token={values.settings.removeLP ? getChainToken(CRV3) : token}
-              amount={amount}
+              amount={amount || ZERO_BN}
               modifier="Claimable"
             />
             <FieldWrapper label="Destination">
@@ -127,7 +136,15 @@ const ClaimForm : React.FC<
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: 'Test'
+                        message: `Claim ${displayTokenAmount(amount, token)}.`
+                      },
+                      {
+                        type: ActionType.BASE,
+                        message: values.settings.removeLP ? (
+                          `Unpack ${displayTokenAmount(amount, token)} into 3CRV and send ${destination}.`
+                        ) : (
+                          `Send ${displayTokenAmount(amount, token)} and send ${destination}.`
+                        )
                       }
                     ]}
                   />

@@ -51,6 +51,9 @@ export type SiloTransitAction = SiloAction & {
   type: ActionType.IN_TRANSIT;
   withdrawSeasons: BigNumber;
 }
+export type SiloClaimAction = SiloAction & {
+  type: ActionType.CLAIM_WITHDRAWAL;
+}
 
 export type FertilizerBuyAction = {
   type: ActionType.BUY_FERTILIZER;
@@ -63,12 +66,6 @@ export type FertilizerRewardsAction = {
   amountOut: BigNumber;
 }
 
-export type ClaimWithdrawalAction = {
-  type: ActionType.CLAIM_WITHDRAWAL;
-  amountIn: BigNumber;
-  tokenIn: Token;
-}
-
 export type Action = (
   BaseAction
   | SwapAction
@@ -76,7 +73,7 @@ export type Action = (
   | SiloWithdrawAction
   | SiloTransitAction
   | SiloRewardsAction
-  | ClaimWithdrawalAction
+  | SiloClaimAction
   | FertilizerBuyAction
   | FertilizerRewardsAction
 );
@@ -99,7 +96,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.UPDATE_SILO_REWARDS: // FIXME: don't like "update" here
       return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
     case ActionType.CLAIM_WITHDRAWAL:
-      return `Claim ${displayFullBN(a.amountIn, 2)} ${a.tokenIn.symbol}.`;
+      return `Claim ${displayFullBN(a.amount, 2)} ${a.token.symbol}.`;
 
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:

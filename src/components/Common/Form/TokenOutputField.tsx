@@ -33,7 +33,7 @@ const TokenOutputField : React.FC<{
       >
       <Box>
         <Typography display="inline" sx={{ fontSize: 24, fontWeight: 'normal' }}>
-          {isZero ? '' : isNegative ? '-' : '+'}&nbsp;{displayFullBN(amount.abs(), token.displayDecimals + 2, token.displayDecimals)}
+          {isZero ? '' : isNegative ? '-' : '+'}&nbsp;{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
         </Typography>
         {value && (
           <>&nbsp;&nbsp;<Typography display="inline" fontSize={14}>(~{displayUSD(value)})</Typography></>

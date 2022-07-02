@@ -9,6 +9,7 @@ import Token from 'classes/Token';
 import { FERTILIZER_ICONS } from 'components/BarnRaise/FertilizerImage';
 import { SupportedChainId } from 'constants/chains';
 import siloIcon from 'img/beanstalk/silo-icon.svg';
+import { AccountTreeRounded } from '@mui/icons-material';
 
 // -----------------------------------------------------------------------
 
@@ -176,6 +177,8 @@ const EXECUTION_STEPS = [
   ActionType.RECEIVE_FERT_REWARDS,
   //
   ActionType.IN_TRANSIT,
+  //
+  ActionType.CLAIM_WITHDRAWAL,
 ];
 
 const TXN_PREVIEW_HEIGHT = 35;
@@ -186,7 +189,18 @@ const TxnPreview : React.FC<{
 }> = ({
   actions
 }) => {
-  const instructionsByType = useMemo(() => groupBy(actions.filter((a) => a.type !== ActionType.BASE), 'type'), [actions]);
+  const instructionsByType = useMemo(() =>
+    // actions.reduce((prev, curr) => {
+    //   if (curr.type !== ActionType.BASE) {
+    //     prev.grouped[curr.type] = curr;
+
+    //   }
+    //   return prev;
+    // }, { grouped: {}, total: 0 }),
+    // [actions]
+    groupBy(actions.filter((a) => a.type !== ActionType.BASE), 'type'),
+    [actions]
+  );
   const instructionGroupCount = Object.keys(instructionsByType).length;
   const [highlighted, setHighlighted] = useState<ActionType | undefined>(undefined);
 
@@ -200,7 +214,7 @@ const TxnPreview : React.FC<{
 
   return (
     <Stack gap={2}>
-      {instructionGroupCount > 0 ? (
+      {instructionGroupCount > 1 ? (
         <Box sx={{
           position: 'relative',
           height: `${TXN_PREVIEW_HEIGHT}px`,
