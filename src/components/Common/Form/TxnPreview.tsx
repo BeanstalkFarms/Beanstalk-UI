@@ -3,14 +3,21 @@ import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
 import { BEAN, SEEDS, STALK, USDC } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
-import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction } from 'util/Actions';
+import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction, SiloRewardsAction, SiloTransitAction } from 'util/Actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import Token from 'classes/Token';
 import { FERTILIZER_ICONS } from 'components/BarnRaise/FertilizerImage';
 import { SupportedChainId } from 'constants/chains';
+import siloIcon from 'img/beanstalk/silo-icon.svg';
+import { AccountTreeRounded } from '@mui/icons-material';
 
 // -----------------------------------------------------------------------
 
+const IconRow : React.FC<{ spacing?: number }> = ({ children, spacing=0.75 }) => (
+  <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={spacing}>
+    {children}
+  </Stack>
+)
 const ActionTokenImage : React.FC<{ token: Token }> = ({ token }) => (
   <img
     key={token.address}
@@ -46,7 +53,7 @@ const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
     }
   });
   return (
-    <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={0.75}>
+    <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={0.33}>
       {data.in.elems}
       <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
       {data.out.elems}
@@ -65,40 +72,57 @@ const TxnStep : React.FC<{
 }) => {
   let action;
   switch (type) {
-    case ActionType.DEPOSIT:
-      action = (actions as SiloDepositAction[]).map((a) => (
-        <ActionTokenImage key={a.tokenIn.address} token={a.tokenIn} />
-      ));
-      break;
+    /// SWAP
     case ActionType.SWAP:
       action = (
         <SwapStep actions={actions as SwapAction[]} />
       );
       break;
-    case ActionType.RECEIVE_SILO_REWARDS:
+    /// SILO
+    case ActionType.DEPOSIT:
+    case ActionType.WITHDRAW:
       action = (
-        <>
-          <TokenIcon token={STALK} />
-          <TokenIcon token={SEEDS} />
-        </>
+        <IconRow>
+          <img src={siloIcon} style={{ height: '100%' }} alt="" />
+          {(actions as SiloDepositAction[]).map((a) => (
+            <ActionTokenImage key={a.token.address} token={a.token} />
+          ))}
+        </IconRow>
       );
       break;
+    case ActionType.UPDATE_SILO_REWARDS:
+      action = (
+        <IconRow spacing={0}>
+          <Typography fontWeight="bold" sx={{ fontSize: 20 }}>{(actions[0] as SiloRewardsAction).stalk.lt(0) ? '🔥' : '+'}</Typography>
+          <TokenIcon token={STALK} style={{ height: '100%' }} />
+          <TokenIcon token={SEEDS} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
+    case ActionType.IN_TRANSIT:
+      action = (
+        <IconRow>
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} />
+        </IconRow>
+      );
+      break;
+    /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
       action = (
-        <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={0.75}>
+        <IconRow>
           <TokenIcon token={USDC[SupportedChainId.MAINNET]} style={{ height: '100%', marginTop: 0, }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
           <img src={FERTILIZER_ICONS.unused} alt="FERT" style={{ height: '100%' }} />
-        </Stack>
+        </IconRow>
       );
       break;
     case ActionType.RECEIVE_FERT_REWARDS:
       action = (
-        <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={0.75}>
+        <IconRow>
           <img src={FERTILIZER_ICONS.active} alt="FERT" style={{ height: '100%' }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
           <TokenIcon token={BEAN[SupportedChainId.MAINNET]} style={{ height: '100%', marginTop: 0, }} />
-        </Stack>
+        </IconRow>
       );
       break;
     default:
@@ -106,25 +130,34 @@ const TxnStep : React.FC<{
   }
 
   return (
-    <Box sx={{
-      background: 'white',
+    <Box sx={{ 
+      width: '80px', 
       height: '100%', // of TXN_PREVIEW_HEIGHT
-      py: 0.5,
-      px: 0.5,
+      textAlign: 'center',
+      '&:first-child': {
+        textAlign: 'left',
+      },
+      '&:last-child': {
+        textAlign: 'right',
+      }
     }}>
-      <Box
-        display="inline-block"
-        sx={(highlighted === undefined || highlighted === type) 
-          ? {
+      <Box sx={{
+        height: '100%',
+        display: 'inline-block',
+        py: 0.5,
+        px: 0.5,
+        mx: 'auto',
+        background: 'white',
+      }}>
+        <Box
+          display="inline-block"
+          sx={{
             height: '100%',
-          } 
-          : {
-            height: '100%',
-            opacity: 0.2,
-          }
-        }
-      >
-        {action}
+            opacity: (highlighted === undefined || highlighted === type) ? 1 : 0.2,
+          }}
+        >
+          {action}
+        </Box>
       </Box>
     </Box>
   );
@@ -137,10 +170,15 @@ const EXECUTION_STEPS = [
   ActionType.SWAP,
   // Group 2
   ActionType.DEPOSIT,
+  ActionType.WITHDRAW,
   ActionType.BUY_FERTILIZER,
   // Group 3
-  ActionType.RECEIVE_SILO_REWARDS,
+  ActionType.UPDATE_SILO_REWARDS,
   ActionType.RECEIVE_FERT_REWARDS,
+  //
+  ActionType.IN_TRANSIT,
+  //
+  ActionType.CLAIM_WITHDRAWAL,
 ];
 
 const TXN_PREVIEW_HEIGHT = 35;
@@ -151,7 +189,18 @@ const TxnPreview : React.FC<{
 }> = ({
   actions
 }) => {
-  const instructionsByType = useMemo(() => groupBy(actions.filter((a) => a.type !== ActionType.BASE), 'type'), [actions]);
+  const instructionsByType = useMemo(() =>
+    // actions.reduce((prev, curr) => {
+    //   if (curr.type !== ActionType.BASE) {
+    //     prev.grouped[curr.type] = curr;
+
+    //   }
+    //   return prev;
+    // }, { grouped: {}, total: 0 }),
+    // [actions]
+    groupBy(actions.filter((a) => a.type !== ActionType.BASE), 'type'),
+    [actions]
+  );
   const instructionGroupCount = Object.keys(instructionsByType).length;
   const [highlighted, setHighlighted] = useState<ActionType | undefined>(undefined);
 
@@ -165,11 +214,12 @@ const TxnPreview : React.FC<{
 
   return (
     <Stack gap={2}>
-      {instructionGroupCount > 0 ? (
+      {instructionGroupCount > 1 ? (
         <Box sx={{
           position: 'relative',
           height: `${TXN_PREVIEW_HEIGHT}px`,
         }}>
+          {/* Dotted line */}
           <Box
             sx={{
               borderColor: 'secondary.main',
@@ -182,11 +232,14 @@ const TxnPreview : React.FC<{
               zIndex: 1,
             }}
           />
+          {/* Content */}
           <Box sx={{
             position: 'relative',
             zIndex: 2,      // above the Divider
             height: '100%'  // of TXN_PREVIEW_HEIGHT
           }}>
+            {/* Distribute content equally spaced
+              * across the entire container */}
             <Stack 
               direction="row"
               justifyContent="space-between"
@@ -209,6 +262,7 @@ const TxnPreview : React.FC<{
           </Box>
         </Box>
       ) : null}
+      {/* Show highlightable explanations of each action */}
       <Stack>
         {actions.map((a, index) => (
           <Box

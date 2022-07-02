@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
+import { ActionType } from 'util/Actions';
 
 // -----------------------------------------------------------------------
 
@@ -42,8 +43,8 @@ const WithdrawForm : React.FC<
   FormikProps<WithdrawFormValues> & {
     token: Token;
     siloBalances: FarmerSilo['balances'];
-    // depositedBalances: AddressMap<BigNumber>;
     depositedBalance: BigNumber;
+    withdrawSeasons: BigNumber;
     season: BigNumber;
   }
 > = ({
@@ -54,8 +55,8 @@ const WithdrawForm : React.FC<
   // Custom
   token,
   siloBalances,
-  // depositedBalances,
   depositedBalance,
+  withdrawSeasons,
   season,
 }) => {
   const chainId = useChainId();
@@ -122,7 +123,7 @@ const WithdrawForm : React.FC<
         token={token}
         amount={withdrawResult.amount.abs()}
         value={getUSD(token, withdrawResult.amount).abs()}
-        state={'Withdrawn'}
+        modifier={'Withdrawn'}
       />
     </>
   ) : null;
@@ -168,17 +169,13 @@ const WithdrawForm : React.FC<
         </StyledDialog>
         {/* Form Content */}
         <Stack gap={1}>
-          <Field name="tokens.0.amount">
-            {(fieldProps: FieldProps) => (
-              <TokenInputField
-                {...fieldProps}
-                token={token}
-                balance={depositedBalance || undefined}
-                balanceLabel="Deposited Balance"
-                InputProps={InputProps}
-              />
-            )}
-          </Field>
+          <TokenInputField
+            name="tokens.0.amount"
+            token={token}
+            balance={depositedBalance || undefined}
+            balanceLabel="Deposited Balance"
+            InputProps={InputProps}
+          />
           {isReady ? (
             <Stack direction="column" gap={1}>
               <TxnSeparator />
@@ -188,7 +185,24 @@ const WithdrawForm : React.FC<
                   <StyledAccordionSummary title="Transaction Details" />
                   <AccordionDetails>
                     <TxnPreview
-                      actions={withdrawResult.actions}
+                      actions={[
+                        {
+                          type: ActionType.WITHDRAW,
+                          amount: withdrawResult.amount,
+                          token: token,
+                        },
+                        {
+                          type: ActionType.UPDATE_SILO_REWARDS,
+                          stalk: withdrawResult.stalk,
+                          seeds: withdrawResult.seeds,
+                        },
+                        {
+                          type: ActionType.IN_TRANSIT,
+                          amount: withdrawResult.amount,
+                          token: token,
+                          withdrawSeasons
+                        }
+                      ]}
                     />
                   </AccordionDetails>
                 </Accordion>
@@ -311,6 +325,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
           token={token}
           siloBalances={siloBalances}
           depositedBalance={depositedBalance}
+          withdrawSeasons={withdrawSeasons}
           season={season}
           {...formikProps}
         />

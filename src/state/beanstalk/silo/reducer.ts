@@ -41,5 +41,6 @@ export default createReducer(initialBeanstalkSilo, (builder) =>
       state.stalk = payload.stalk;
       state.seeds = payload.seeds;
       state.roots = payload.roots;
+      state.withdrawSeasons = payload.withdrawSeasons;
     })
 );

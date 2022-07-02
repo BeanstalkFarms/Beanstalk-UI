@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, FieldProps } from 'formik';
-import { Card, CardProps, Grid, GridProps, Stack, StackProps, Typography } from '@mui/material';
+import { Button, Card, CardProps, Grid, GridProps, Stack, StackProps, Typography } from '@mui/material';
 import { BeanstalkPalette } from '../../App/muiTheme';
 
 export type RadioCardFieldProps = {
@@ -38,7 +38,52 @@ const RadioCardField: React.FC<(
             const color    = selected ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightishGrey
             return (
               <Grid key={index} item xs={xs} md={md}>
-                <Card
+                <Button
+                  onClick={() => {
+                    fieldProps.form.setFieldValue(name, opt.value);
+                  }}
+                  fullWidth
+                  // variant={selected ? 'contained' : 'outlined'}
+                  variant="outlined"
+                  color={'primary'}
+                  sx={{
+                    textAlign: 'left',
+                    px: 1,
+                    py: 1,
+                    // backgroundColor: selected ? 'primary.light' : 'inherit',
+                    borderColor: selected ? `${BeanstalkPalette.logoGreen} !important` : 'gray',
+                    outlineColor: 'primary',
+                    outlineWidth: selected ? 0.5 : 0,
+                    outlineStyle: 'solid',
+                    '&:hover': {
+                      backgroundColor: selected ? 'primary.light' : 'inherit',
+                      borderColor: selected ? 'gray' : 'inherit',
+                    }
+                  }}
+                >
+                  <Stack justifyContent="center" alignItems="center" height="100%">
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        fontsize: '18px',
+                        // fontWeight: 'bold',
+                        color
+                      }}
+                    >
+                      {opt.title}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        textAlign: 'center',
+                        fontSize: '13px',
+                        color
+                      }}
+                    >
+                      {opt.description}
+                    </Typography>
+                  </Stack>
+                </Button>
+                {/* <Card
                   key={opt.value}
                   sx={{
                     px: 1,
@@ -77,7 +122,7 @@ const RadioCardField: React.FC<(
                       {opt.description}
                     </Typography>
                   </Stack>
-                </Card>
+                </Card> */}
               </Grid>
             )
           })}
