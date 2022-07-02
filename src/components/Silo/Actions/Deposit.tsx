@@ -1,16 +1,17 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Button, FormControl, FormControlLabel, InputLabel, Stack, Tooltip } from '@mui/material';
+import React, { useCallback, useMemo } from 'react';
+import { Accordion, AccordionDetails, Box, Stack, Tooltip } from '@mui/material';
 import { Token } from 'classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider, useSigner } from 'wagmi';
-import { BEAN, BEAN_CRV3_LP, CRV3, CRV3_UNDERLYING, DAI, ETH, ETH_DECIMALS, LUSD, SEEDS, STALK, USDC, USDT, WETH } from 'constants/tokens';
-import useChainConstant, { getChainConstant } from 'hooks/useChainConstant';
+import { ethers } from 'ethers';
+import { BEAN, CRV3, DAI, ETH, SEEDS, STALK, USDC, USDT, WETH } from 'constants/tokens';
+import useChainConstant from 'hooks/useChainConstant';
 import useTokenMap from 'hooks/useTokenMap';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormState, FormTokenState } from 'components/Common/Form';
+import { FormState } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import useChainId from 'hooks/useChain';
@@ -29,10 +30,10 @@ import { ZERO_BN } from 'constants/index';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import Pool from 'classes/Pool';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
-import { ethers } from 'ethers';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import TxnSeparator from 'components/Common/Form/TxnSeparator';
+import useToggle from 'hooks/display/useToggle';
 
 // -----------------------------------------------------------------------
 
@@ -66,31 +67,31 @@ const DepositForm : React.FC<
 }) => {
   const chainId = useChainId();
   // TODO: constrain this when siloToken = Unripe
-  const erc20TokenMap  = useTokenMap([BEAN, ETH, WETH, siloToken, CRV3, DAI, USDC, USDT]);
-  const [showTokenSelect, setShowTokenSelect] = useState(false);
+  const erc20TokenMap = useTokenMap([BEAN, ETH, WETH, siloToken, CRV3, DAI, USDC, USDT]);
+  const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
   const getChainToken = useGetChainToken();
 
+  //
   const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
     siloToken,
     values.tokens,
     (amount: BigNumber) => amount,
   );
-
   const isMainnet = chainId === SupportedChainId.MAINNET;
   const isReady   = bdv.gt(0);
-  const handleClose = useCallback(() => setShowTokenSelect(false), []);
-  const handleOpen  = useCallback(() => setShowTokenSelect(true),  []);
+
+  //
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
     // If the user has typed some existing values in,
     // save them. Add new tokens to the end of the list.
     // FIXME: match sorting of erc20TokenList
     const copy = new Set(_tokens);
-    const v = values.tokens.filter((x) => {
+    const newValue = values.tokens.filter((x) => {
       copy.delete(x.token);
       return _tokens.has(x.token);
     });
     setFieldValue('tokens', [
-      ...v,
+      ...newValue,
       ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
     ]);
   }, [values.tokens, setFieldValue]);
@@ -226,16 +227,16 @@ const DepositForm : React.FC<
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate autoComplete="off">
+        <TokenSelectDialog
+          open={isTokenSelectVisible}
+          handleClose={hideTokenSelect}
+          handleSubmit={handleSelectTokens}
+          selected={values.tokens}
+          balances={balances}
+          tokenList={Object.values(erc20TokenMap)}
+          mode={TokenSelectMode.SINGLE}
+        />
         <Stack gap={1}>
-          <TokenSelectDialog
-            open={showTokenSelect}
-            handleClose={handleClose}
-            selected={values.tokens}
-            handleSubmit={handleSelectTokens}
-            balances={balances}
-            tokenList={Object.values(erc20TokenMap)}
-            mode={TokenSelectMode.SINGLE}
-          />
           <Stack gap={1.5}>
             {values.tokens.map((state, index) => (
               <TokenQuoteProvider
@@ -244,7 +245,7 @@ const DepositForm : React.FC<
                 tokenOut={siloToken}
                 balance={balances[state.token.address] || undefined}
                 state={state}
-                showTokenSelect={handleOpen}
+                showTokenSelect={showTokenSelect}
                 disabled={isMainnet}
                 disableTokenSelect={isMainnet}
                 handleQuote={handleQuote}
@@ -252,7 +253,7 @@ const DepositForm : React.FC<
             ))}
           </Stack>
           {isReady ? (
-            <Stack direction="column" gap={1}>
+            <>
               <TxnSeparator />
               <TokenOutputField
                 token={siloToken}
@@ -282,7 +283,7 @@ const DepositForm : React.FC<
                   </AccordionDetails>
                 </Accordion>
               </Box>
-            </Stack>
+            </>
           ) : null}
           <SmartSubmitButton
             type="submit"

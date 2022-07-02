@@ -9,7 +9,7 @@ import { displayFullBN, displayUSD } from 'util/index';
 import useSeason from 'hooks/useSeason';
 import { ZERO_BN } from 'constants/index';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
-import CratesCard from '../CratesCard';
+import TableCard from '../../Common/TableCard';
 
 type RowData = WithdrawalCrate & { id: BigNumber };
 
@@ -104,7 +104,7 @@ const Withdrawals : React.FC<{
   const state = !account ? 'disconnected' : !currentSeason ? 'loading' : 'ready';
 
   return (
-    <CratesCard
+    <TableCard
       title={`${token.name} Withdrawals`}
       rows={rows}
       columns={columns}
