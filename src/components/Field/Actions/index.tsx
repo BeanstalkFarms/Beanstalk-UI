@@ -8,12 +8,13 @@ const FieldActions : React.FC<{}> = () => {
     setTab(newValue);
   }, []);
   return (
-    <Card sx={{ p: 2 }}>
+    <Card sx={{ p: 2, position: 'relative' }}>
       <Stack gap={1.5}>
         {/* Header */}
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible' }}>
           <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
             <Tab label="Sow" />
+            <Tab label="Harvest" />
             <Tab label="Send" />
           </Tabs>
         </Stack>
