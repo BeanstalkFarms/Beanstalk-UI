@@ -238,13 +238,13 @@ const DepositForm : React.FC<
         />
         <Stack gap={1}>
           <Stack gap={1.5}>
-            {values.tokens.map((state, index) => (
+            {values.tokens.map((tokenState, index) => (
               <TokenQuoteProvider
                 key={`tokens.${index}`}
                 name={`tokens.${index}`}
                 tokenOut={siloToken}
-                balance={balances[state.token.address] || undefined}
-                state={state}
+                balance={balances[tokenState.token.address] || undefined}
+                state={tokenState}
                 showTokenSelect={showTokenSelect}
                 disabled={isMainnet}
                 disableTokenSelect={isMainnet}
@@ -316,8 +316,8 @@ const Deposit : React.FC<{
   const Eth = useChainConstant(ETH);
   const balances = useFarmerBalances();
   const { data: signer } = useSigner();
-  const provider = useProvider();
   const beanstalk = useBeanstalkContract(signer);
+  const provider = useProvider();
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   // Form setup

@@ -314,6 +314,11 @@ let muiTheme = createTheme({
         color: 'transparent',
       },
     },
+    MuiDialog: {
+      defaultProps: {  
+        transitionDuration: 0,
+      }
+    },
     MuiDialogContent: {
       styleOverrides: {
         root: sx({

@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
 import toast from 'react-hot-toast';
@@ -16,27 +16,41 @@ export type QuoteHandler = (
   tokenOut: ERC20Token | NativeToken
 ) => Promise<QuoteHandlerResult['amountOut'] | QuoteHandlerResult>; 
 
+export type QuoteSettings = {
+  /** The number of milliseconds to wait before calling */
+  debounceMs : number;
+  /** If true, returns amountOut = amountIn when tokenOut = tokenIn. Otherwise returns void. */
+  ignoreSameToken : boolean;
+  /** */
+  onReset: () => QuoteHandlerResult | null;
+}
+
+const baseSettings = {
+  debounceMs: 250,
+  ignoreSameToken: true,
+  onReset: () => null,
+};
+
 export default function useQuote(
   /** */
   tokenOut: ERC20Token | NativeToken,
   /** A function that returns a quoted amountOut value. */
   quoteHandler: QuoteHandler,
-  /** The number of milliseconds to wait before calling */
-  debounceMs : number = 250
+  _settings?: Partial<QuoteSettings>,
 ) : [
   result: QuoteHandlerResult | null,
   quoting: boolean,
   refreshAmountOut: (_tokenIn: ERC20Token | NativeToken, _amountIn: BigNumber) => void,
 ] {
-  const [result, setResult] = useState<QuoteHandlerResult | null>(null);
-  /** Whether we're currently waiting for a quote for this swap. */
+  const [result, setResult]   = useState<QuoteHandlerResult | null>(null);
   const [quoting, setQuoting] = useState<boolean>(false);
+  const settings = useMemo(() => ({ ...baseSettings, ..._settings }), [_settings])
   
   // When token changes, reset the amount.
   useEffect(() => {
-    setResult(null);
+    setResult(settings.onReset());
     setQuoting(false);
-  }, [tokenOut]);
+  }, [tokenOut, settings]);
 
   // Below prevents error b/c React can't know the deps of debounce
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,7 +78,7 @@ export default function useQuote(
         toast.error(e?.toString());
       }
     },  
-    debounceMs,
+    settings.debounceMs,
     { trailing: true }
   ), [
     tokenOut,
@@ -75,7 +89,12 @@ export default function useQuote(
 
   // Handler to refresh
   const getAmountOut = useCallback((tokenIn: ERC20Token | NativeToken, amountIn: BigNumber) => {
-    if (tokenIn === tokenOut) return;
+    // FIXME: this should return amountIn instead of doing nothing
+    if (tokenIn === tokenOut) {
+      if (settings.ignoreSameToken) return;
+      setQuoting(true);
+      _getAmountOut(tokenIn, amountIn);
+    }
     if (amountIn.lte(0)) {
       setResult(null);
       setQuoting(false);
@@ -85,6 +104,7 @@ export default function useQuote(
     }
   }, [
     tokenOut,
+    settings.ignoreSameToken,
     _getAmountOut,
     setResult,
     setQuoting
