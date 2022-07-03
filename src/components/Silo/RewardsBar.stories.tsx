@@ -11,6 +11,7 @@ export default {
 
 const Template: ComponentStory<typeof RewardsBar> = (args: any) => (
   <RewardsBar
+    handleOpenDialog={null}
     chainId={SupportedChainId.MAINNET}
     beans={{
       earned: new BigNumber(100),

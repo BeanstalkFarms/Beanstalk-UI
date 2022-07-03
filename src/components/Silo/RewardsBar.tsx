@@ -13,11 +13,13 @@ const RewardsBar : React.FC<{
   beans: FarmerSiloRewards['beans'];
   stalk: FarmerSiloRewards['stalk'];
   seeds: FarmerSiloRewards['seeds'];
+  handleOpenDialog: any;
 }> = ({
   chainId,
   beans,
   stalk,
-  seeds
+  seeds,
+  handleOpenDialog
 }) => (
   <Card sx={{ pl: 2, pr: 1, py: 1.5 }}>
     <Stack direction={{ md: 'row', xs: 'column' }} justifyContent={{ md: 'space-between' }} alignItems={{ md: 'center', xs: 'auto' }} rowGap={1.5}>
@@ -84,6 +86,7 @@ const RewardsBar : React.FC<{
               variant="contained"
               sx={{ height: '100%', width: { xs: '100%', md: 'auto' } }}
               endIcon={<DropdownIcon open={false} />}
+              onClick={handleOpenDialog}
             >
               Claim Rewards
             </Button>

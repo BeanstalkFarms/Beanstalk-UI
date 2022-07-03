@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, Box, Button,  Card,  Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -16,6 +16,7 @@ import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/index';
+import RewardsDialog from '../../components/Silo/RewardsDialog';
 
 const SiloPage : React.FC = () => {
   // Constants
@@ -30,9 +31,21 @@ const SiloPage : React.FC = () => {
   const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const breakdown   = useFarmerSiloBreakdown();
 
+  // Local state
+  const [rewardsDialogOpen, setRewardsDialogOpen] = useState<boolean>(false);
+
   // Temporary
   const exploiterEarnedBeans = new BigNumber(6458.005059);
   const ownership = farmerSilo.stalk.active.div(beanstalkSilo.stalk.active);
+
+  // Handlers
+  const handleOpenRewardsDialog = () => {
+    setRewardsDialogOpen(true);
+  };
+
+  const handleCloseRewardsDialog = () => {
+    setRewardsDialogOpen(false);
+  };
 
   return (
     <Container maxWidth="lg">
@@ -62,14 +75,15 @@ const SiloPage : React.FC = () => {
         />
         {chainId === SupportedChainId.MAINNET ? (
           <Alert severity="info" variant="standard" sx={{ borderColor: 'secondary.dark', borderWidth: 1, borderStyle: 'solid' }}>
-              The exploiter{`'`}s Earned Beans were distributed pro rata to Silo Members. Your Earned Bean balance has increased by ~{displayFullBN(exploiterEarnedBeans.times(ownership), 2)} Beans.
+            The exploiter{'\''}s Earned Beans were distributed pro rata to Silo Members. Your Earned Bean balance has increased by ~{displayFullBN(exploiterEarnedBeans.times(ownership), 2)} Beans.
           </Alert>
-        ): null}
+        ) : null}
         <RewardsBar
           chainId={chainId}
           beans={farmerSilo.beans}
           stalk={farmerSilo.stalk}
           seeds={farmerSilo.seeds}
+          handleOpenDialog={handleOpenRewardsDialog}
         />
         <Whitelist
           config={{
@@ -81,6 +95,7 @@ const SiloPage : React.FC = () => {
           // beanstalkSilo={beanstalkSilo}
         />
       </Stack>
+      <RewardsDialog handleClose={handleCloseRewardsDialog} open={rewardsDialogOpen} />
     </Container>
   );
 };
