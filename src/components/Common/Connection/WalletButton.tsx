@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   useAccount,
@@ -39,6 +39,7 @@ import DropdownIcon from '../DropdownIcon';
 import PickBeansDialog from '../../Farmer/Unripe/PickDialog';
 import useAnchor from 'hooks/display/useAnchor';
 import useToggle from 'hooks/display/useToggle';
+import AddressIcon from '../AddressIcon';
 
 // -----------------------------------------------------------------
 
@@ -177,7 +178,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
             ? null
             : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
             ? <WarningAmberIcon />
-            : <img src={tempUserIcon} alt="User" style={{ height: 25 }} />
+            : <AddressIcon address={account.address} />
         )}
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}

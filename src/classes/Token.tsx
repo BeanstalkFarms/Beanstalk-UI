@@ -59,6 +59,11 @@ export default abstract class Token {
   public readonly displayDecimals: number;
 
   /**
+   * 
+   */
+  public readonly isLP: boolean;
+
+  /**
    * @param chainId the chain ID on which this currency resides
    * @param decimals decimals of the currency
    * @param symbol symbol of the currency
@@ -73,6 +78,7 @@ export default abstract class Token {
       symbol: string,
       logo: string,
       displayDecimals?: number,
+      isLP?: boolean;
     },
     rewards?: {
       stalk: number;
@@ -86,6 +92,7 @@ export default abstract class Token {
     this.name = metadata.name;
     this.logo = metadata.logo;
     this.displayDecimals = metadata.displayDecimals || 2;
+    this.isLP = metadata.isLP || false;
     this.rewards = rewards;
   }
 

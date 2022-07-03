@@ -10,7 +10,7 @@ export type PlotMap<T> = {
 
 export type Field = {
   plots: PlotMap<BigNumber>;
-  harvestablePlots: PlotMap<BigNumber>;
   pods: BigNumber;
+  harvestablePlots: PlotMap<BigNumber>;
   harvestablePods: BigNumber;
 }

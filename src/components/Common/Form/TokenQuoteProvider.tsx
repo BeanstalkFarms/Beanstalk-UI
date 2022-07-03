@@ -6,14 +6,14 @@ import TokenInputField, { TokenInputProps } from 'components/Common/Form/TokenIn
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/Tokens';
-import useQuote, { QuoteHandler } from 'hooks/useQuote';
+import useQuote, { QuoteHandler, QuoteSettings } from 'hooks/useQuote';
 import { FormState, FormTokenState } from '.';
 import { ERC20Token, NativeToken } from 'classes/Token';
 
 type TokenQuoteProviderCustomProps = {
   /** Field name */
   name: string;
-  /** Input state */
+  /** The current form state of this token */
   state: FormTokenState;
   /** Token which we're quoting to. Required to display a proper `amountOut` below the input. */
   tokenOut: ERC20Token | NativeToken;
@@ -23,6 +23,10 @@ type TokenQuoteProviderCustomProps = {
   disableTokenSelect?: boolean;
   /** */
   handleQuote: QuoteHandler;
+  /** */
+  hideQuote?: boolean;
+  /** */
+  quoteSettings?: Partial<QuoteSettings>
 };
 type TokenQuoteProviderProps = (
   TokenQuoteProviderCustomProps
@@ -38,11 +42,13 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   showTokenSelect,
   disableTokenSelect,
   handleQuote,
+  hideQuote = false,
+  quoteSettings,
   // 
   ...props
 }) => {
   // Setup a price quote for this token
-  const [result, quoting, getAmountOut] = useQuote(tokenOut, handleQuote);
+  const [result, quoting, getAmountOut] = useQuote(tokenOut, handleQuote, quoteSettings);
   const { isSubmitting, setFieldValue } = useFormikContext<FormState>();
 
   // Run getAmountOut selected token changes.
@@ -107,21 +113,24 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // use state.amountOut instead of amountOut to hide Quote display
   // when the user switches selected tokens.
   const Quote = useMemo(() => (
-    <>
-      {state.amountOut && (
-        <Typography variant="body1" sx={{ fontSize: 13.5 }}>
-          ≈ {displayFullBN(state.amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
-        </Typography>
-      )}
-      {quoting && (
-        <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />
-      )}
-    </>
+    hideQuote ? undefined : (
+      <>
+        {state.amountOut && (
+          <Typography variant="body1" sx={{ fontSize: 13.5 }}>
+            ≈ {displayFullBN(state.amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
+          </Typography>
+        )}
+        {quoting && (
+          <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />
+        )}
+      </>
+    )
   ), [
     state.amountOut,
     quoting,
     tokenOut.displayDecimals,
-    tokenOut.symbol
+    tokenOut.symbol,
+    hideQuote
   ]);
 
   return (  

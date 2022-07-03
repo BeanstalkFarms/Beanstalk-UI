@@ -52,7 +52,7 @@ const TokenInput : React.FC<
   label,
   ...textFieldProps
 }) => {
-  const [displayAmount, setDisplayAmount] = useState<string>(field.value);
+  const [displayAmount, setDisplayAmount] = useState<string>(field.value?.toString() || '');
   const inputProps = useMemo(() => ({
     inputProps: {
       min: 0.00,

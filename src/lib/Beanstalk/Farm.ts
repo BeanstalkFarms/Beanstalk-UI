@@ -303,6 +303,7 @@ export default class Farm {
     _toMode : FarmToMode = FarmToMode.INTERNAL,
   ) : ChainableFunction {
     return async (_amountInStep: ethers.BigNumber) => {
+      // [0, 0, 1] => [0, 0, amountIn]
       const amountInStep = _amounts.map((k) => (k === 1 ? _amountInStep : ethers.BigNumber.from(0)));
 
       // Get amount out based on the selected pool
@@ -333,7 +334,7 @@ export default class Farm {
       }
       if (!amountOut) throw new Error('No supported pool found');
 
-      console.debug(`[step@exchange] amounts.length=${_amounts.length} amountInStep=[${amountInStep.toString()}], amountOut=${amountOut.toString()}`)
+      console.debug(`[step@addLiquidity] amounts.length=${_amounts.length} amountInStep=[${amountInStep.toString()}], amountOut=${amountOut.toString()}`)
       
       //
       return {
@@ -349,6 +350,68 @@ export default class Farm {
           ])
         ),
         decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('addLiquidity', data),
+        data: {}
+      };
+    }
+  }
+
+  removeLiquidity(
+    _pool: string,
+    _registry: string,
+    _amounts: (
+      readonly   [number, number]
+      | readonly [number, number, number]
+    ),
+    _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
+    _toMode : FarmToMode = FarmToMode.INTERNAL,
+  ) : ChainableFunction {
+    // _amountInStep is an an amount of LP token
+    return async (_amountInStep: ethers.BigNumber) => {
+      const i = _amounts.findIndex((k) => k === 1);
+
+      // FIXME: only difference between this and addLiquidity is the boolean
+      // Get amount out based on the selected pool
+      const poolAddr = _pool.toLowerCase();
+      const pools = this.contracts.curve.pools;
+      let amountOut;
+      if (poolAddr === pools.tricrypto2.address.toLowerCase()) {
+        amountOut = await pools.tricrypto2.callStatic.calc_withdraw_one_coin(
+          _amountInStep,
+          i,
+        );
+      } else if (poolAddr === pools.pool3.address.toLowerCase()) {
+        amountOut = await pools.pool3.callStatic.calc_withdraw_one_coin(
+          _amountInStep,
+          i,
+        );
+      } else if (_registry === this.contracts.curve.registries.metaFactory.address) {
+        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider)["calc_withdraw_one_coin(uint256,int128)"](
+          _amountInStep,
+          i,
+        );
+      } else if (_registry === this.contracts.curve.registries.cryptoFactory.address) {
+        amountOut = await CurvePlainPool__factory.connect(_pool, this.provider).calc_withdraw_one_coin(
+          _amountInStep,
+          i,
+        );
+      }
+      if (!amountOut) throw new Error('No supported pool found');
+
+      console.debug(`[step@removeLiquidity] amounts.length=${_amounts.length}, amountOut=${amountOut.toString()}`)
+
+      return {
+        amountOut,
+        encode: (minAmountOut: ethers.BigNumber) => (
+          this.contracts.beanstalk.interface.encodeFunctionData('removeLiquidity', [
+            _pool,
+            _registry,
+            _amountInStep,
+            _amounts.map((k) => (k === 1 ? minAmountOut : ethers.BigNumber.from(0))), // [0, 0, 1] => [0, 0, minAmountOut]
+            _fromMode,
+            _toMode,
+          ])
+        ),
+        decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('removeLiquidity', data),
         data: {}
       };
     }

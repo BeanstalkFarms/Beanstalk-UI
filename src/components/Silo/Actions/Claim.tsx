@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Grid, Stack, Tooltip } from '@mui/material';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Accordion, AccordionDetails, Box, Button, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useSigner } from 'wagmi';
+import { useProvider, useSigner } from 'wagmi';
 import { Token } from 'classes';
 import { BEAN, CRV3 } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
@@ -15,22 +15,37 @@ import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
-import { FormTokenState, TxnPreview, TokenOutputField, TokenAdornment, RadioCardField } from 'components/Common/Form';
+import { FormTokenState, TxnPreview, TokenOutputField, TokenAdornment, RadioCardField, TokenSelectDialog, TxnSeparator, TokenInputField, TokenQuoteProvider } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'constants/generated';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
+import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
-import { displayTokenAmount } from 'util/index';
+import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import PillDialogField from 'components/Common/Form/PillDialogField';
+import DestinationField from 'components/Common/Form/DestinationField';
+import PillSelectField from 'components/Common/Form/PillSelectField';
+import TokenIcon from 'components/Common/TokenIcon';
+import useToggle from 'hooks/display/useToggle';
+import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
+import PillRow from 'components/Common/Form/PillRow';
+import useQuote, { QuoteHandler } from 'hooks/useQuote';
+import { ethers } from 'ethers';
 
 // -----------------------------------------------------------------------
 
 type ClaimFormValues = {
-  settings: {
-    destination: FarmToMode;
-    removeLP: boolean;
-  };
-  tokens: FormTokenState[];
+  /**
+   * When claiming, there is only one input token
+   * (the claimable LP token). the amount of this
+   * token is always the full claimable balance.
+   * 
+   * In this case, token.amountOut is the amount received
+   * for converting LP into `tokenOut`.
+   */
+  token: FormTokenState;
+  destination: FarmToMode;
+  tokenOut: ERC20Token;
 }
 
 // -----------------------------------------------------------------------
@@ -39,118 +54,179 @@ const ClaimForm : React.FC<
   FormikProps<ClaimFormValues> & {
     token: Token;
     claimableBalance: BigNumber;
+    farm: Farm;
   }
 > = ({
   // Custom
   token,
   claimableBalance,
+  farm,
   // Formik
   values,
   isSubmitting,
-  // setFieldValue,
+  setFieldValue,
 }) => {
   const chainId = useChainId();
   const pools = usePools();
   const isMainnet = chainId === SupportedChainId.MAINNET;
   const getChainToken = useGetChainToken();
-
-  // Input props
-  const InputProps = useMemo(() => ({
-    endAdornment: (
-      <TokenAdornment token={token} />
-    )
-  }), [token]);
-
+  
   // ASSUMPTION: Pool address === LP Token address
   // Lazy way to do this. Should key pools by lpToken.address.
   const pool = pools[token.address];
+  const claimableTokens = useMemo(() => ([
+    token,
+    ...(token.isLP && pool?.tokens || []),
+  ]), [pool, token])
 
   //
   const amount = claimableBalance;
   const isSubmittable = (
     amount
     && amount.gt(0)
-    && values.settings.destination !== undefined
-    && (pool ? values.settings.removeLP !== undefined : true)
+    && values.destination !== undefined
   );
-
   const destination = (
-    values.settings.destination === FarmToMode.EXTERNAL
+    values.destination === FarmToMode.EXTERNAL
       ? `to your wallet`
       : `to your internal balance`
   );
+  
+  //
+  const handleQuote = useCallback<QuoteHandler>(
+    async (_tokenIn, _amountIn, _tokenOut) => {
+      if (_tokenIn === _tokenOut) return { amountOut: _amountIn };
+      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, _tokenIn.decimals));
+      
+      // Require pooldata to be loaded first
+      if (token.isLP && !pool) return null; 
+
+      const tokenIndex = pool.tokens.findIndex((tok) => tok === _tokenOut);
+      if (tokenIndex === -1) throw new Error('No token found');
+      const indices = [0, 0];
+      indices[tokenIndex] = 1; // becomes [0, 1] or [1, 0]
+      const estimate = await Farm.estimate([
+        farm.removeLiquidity(
+          pool.address,
+          farm.contracts.curve.registries.metaFactory.address,
+          indices as [number, number],
+          FarmFromMode.INTERNAL,
+          // FIXME: changes to values.destination trigger
+          // re-calculations here when they shouldn't
+          values.destination
+        ),
+      ], [amountIn]);
+      return {
+        amountOut: toTokenUnitsBN(estimate.amountOut.toString(), _tokenOut.decimals),
+        steps: estimate.steps,
+      }
+    },
+    [
+      farm,
+      token.isLP,
+      pool,
+      values.destination
+    ]
+  );
+
+  //
+  // const [result, quoting, refreshQuote] = useQuote(values.tokenOut, handleQuote, { ignoreSameToken: false })
+  const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
+
+  //
+  const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
+    const _token = Array.from(_tokens)[0]
+    setFieldValue('tokenOut', _token);
+  }, [setFieldValue]);
+
+  // This should be memoized to prevent an infinite reset loop
+  const quoteSettings = useMemo(() => ({
+    ignoreSameToken: false,
+    onReset: () => ({ amountOut: claimableBalance }),
+  }), [claimableBalance])
 
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
-          <Stack gap={1} pb={0.5}>
-            <TokenOutputField
-              token={values.settings.removeLP ? getChainToken(CRV3) : token}
-              amount={amount || ZERO_BN}
-              modifier="Claimable"
+          {/* Form Content */}
+          <Stack gap={1}>
+            {/* Claimable Token */}
+            <TokenQuoteProvider
+              name="token"
+              tokenOut={values.tokenOut}
+              // balance={amount}
+              balance={undefined}
+              state={values.token}
+              disabled={true}
+              // FIXME:
+              // "disableTokenSelect" applies the disabled prop to
+              // the TokenSelect button. However if we don't pass
+              // a handler to the button then it's effectively disabled
+              // but shows with stronger-colored text. param names are
+              // a bit confusing.
+              // disableTokenSelect={true}
+              quoteSettings={quoteSettings}
+              handleQuote={handleQuote}
+              hideQuote
             />
-            <FieldWrapper label="Destination">
-              <RadioCardField
-                name="settings.destination"
-                options={[
-                  {
-                    title: `Farm Balance`,
-                    description: `Keep tokens within Beanstalk`,
-                    value: FarmToMode.INTERNAL,
-                  },
-                  {
-                    title: `Wallet`,
-                    description: `Send tokens to your wallet`,
-                    value: FarmToMode.EXTERNAL,
-                  }
-                ]}
-              />
-            </FieldWrapper>
-            {pool ? (
-              <FieldWrapper label="Claim as">
-                <RadioCardField
-                  name="settings.removeLP"
-                  options={[
-                    {
-                      title: `3CRV`,
-                      description: `Unpack LP into underlying 3CRV`,
-                      value: true,
-                    },
-                    {
-                      title: `LP`,
-                      description: `Receive ${token.name} Tokens`,
-                      value: false,
-                    }
-                  ]}
-                />
-              </FieldWrapper>
+            {/* Setting: Destination */}
+            <DestinationField
+              name="destination"
+            />
+            {/* Setting: Claim LP */}
+            {token.isLP ? (
+              <PillRow
+                isOpen={isTokenSelectVisible}
+                label="Claim LP as"
+                onClick={showTokenSelect}> 
+                <TokenIcon token={values.tokenOut} />
+                <Typography>{values.tokenOut.name}</Typography>
+              </PillRow>
             ) : null}
+            <TokenSelectDialog
+              open={isTokenSelectVisible}
+              handleClose={hideTokenSelect}
+              handleSubmit={handleSelectTokens}
+              selected={[values.tokenOut]}
+              balances={undefined} // hide balances from right side of selector
+              tokenList={claimableTokens}
+              mode={TokenSelectMode.SINGLE}
+            />
           </Stack>
+          {/* Transaction Details */}
           {isSubmittable ? (
-            <Box>
-              <Accordion variant="outlined">
-                <StyledAccordionSummary title="Transaction Details" />
-                <AccordionDetails>
-                  <TxnPreview
-                    actions={[
-                      {
-                        type: ActionType.BASE,
-                        message: `Claim ${displayTokenAmount(amount, token)}.`
-                      },
-                      {
-                        type: ActionType.BASE,
-                        message: values.settings.removeLP ? (
-                          `Unpack ${displayTokenAmount(amount, token)} into 3CRV and send ${destination}.`
-                        ) : (
-                          `Send ${displayTokenAmount(amount, token)} and send ${destination}.`
-                        )
-                      }
-                    ]}
-                  />
-                </AccordionDetails>
-              </Accordion>
-            </Box>
+            <>
+              <TxnSeparator mt={-1} />
+              <TokenOutputField
+                token={values.tokenOut}
+                amount={values.token.amountOut || ZERO_BN}
+                isLoading={values.token.quoting}
+              />
+              <Box>
+                <Accordion variant="outlined">
+                  <StyledAccordionSummary title="Transaction Details" />
+                  <AccordionDetails>
+                    <TxnPreview
+                      actions={[
+                        {
+                          type: ActionType.BASE,
+                          message: `Claim ${displayTokenAmount(amount, token)}.`
+                        },
+                        {
+                          type: ActionType.BASE,
+                          message: values.tokenOut === token ? (
+                            `Unpack ${displayTokenAmount(amount, token)} into 3CRV and send ${destination}.`
+                          ) : (
+                            `Send ${displayTokenAmount(amount, token)} and send ${destination}.`
+                          )
+                        }
+                      ]}
+                    />
+                  </AccordionDetails>
+                </Accordion>
+              </Box>
+            </>
           ) : null}
           <Button disabled={!isSubmittable || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
             Claim
@@ -164,7 +240,7 @@ const ClaimForm : React.FC<
 // -----------------------------------------------------------------------
 
 const Claim : React.FC<{
-  token: ERC20Token | NativeToken;
+  token: ERC20Token;
   siloBalance: FarmerSiloBalance;
 }> = ({
   token,
@@ -177,23 +253,22 @@ const Claim : React.FC<{
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const currentSeason = useSeason();
+  const provider = useProvider();
+  const farm = useMemo(() => new Farm(provider), [provider]);
 
   // Balances
   const claimableBalance = siloBalance?.claimable.amount;
 
   // Form
   const initialValues : ClaimFormValues = useMemo(() => ({
-    settings: {
-      removeLP: token !== Bean,
-      destination: FarmToMode.INTERNAL,
-    },
-    tokens: [
-      {
-        token,
-        amount: null,
-      },
-    ],
-  }), [token, Bean]);
+    destination: FarmToMode.INTERNAL,
+    tokenOut: token,
+    token: {
+      token: token,
+      amount: claimableBalance,
+      amountOut: claimableBalance
+    }
+  }), [token, claimableBalance]);
   const onSubmit = useCallback((values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
     // let call;
     // if (token === Bean) {
@@ -208,24 +283,15 @@ const Claim : React.FC<{
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
-        <>
-          {/* Padding below matches tabs and input position. See Figma. */}
-          {/* <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
-            <TxnSettings>
-              {token !== Bean && (
-                <SettingSwitch name="settings.removeLP" label="Remove LP" />
-              )}
-              <SettingSwitch name="settings.toWallet" label="Send to wallet" />
-            </TxnSettings>
-          </Box> */}
-          <Stack spacing={1}>
-            <ClaimForm
-              token={token}
-              claimableBalance={claimableBalance}
-              {...formikProps}
-            />
-          </Stack>
-        </>
+        <Stack spacing={1}>
+          <ClaimForm
+            token={token}
+            claimableBalance={claimableBalance}
+            farm={farm}
+            {...formikProps}
+          />
+          {/* <pre>{JSON.stringify(formikProps.values, null, 2)}</pre> */}
+        </Stack>
       )}
     </Formik>
   );
