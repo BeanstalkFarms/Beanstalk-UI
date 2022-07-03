@@ -90,16 +90,12 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
             </Tooltip>
           </Box>
           <Box px={2}>
-            <Field name="placeInLine">
-              {(fieldProps: FieldProps) => (
-                <SliderField
-                  {...fieldProps}
-                  min={0}
-                  max={podLine.toNumber()}
-                  initialState={0}
-                />
-              )}
-            </Field>
+            <SliderField
+              min={0}
+              fields={['placeInLine']}
+              max={podLine.toNumber()}
+              initialState={0}
+            />
           </Box>
         </Stack>
         <Box>

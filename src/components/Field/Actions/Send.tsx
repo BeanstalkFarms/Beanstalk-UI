@@ -1,8 +1,8 @@
-import { Button, Stack } from '@mui/material';
+import { Box, Button, InputAdornment, Stack, Tooltip, Typography } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
-import { Form, Formik, FormikProps } from 'formik';
-import React, { useMemo, useState } from 'react';
+import { Field, FieldProps, Form, Formik, FormikProps } from 'formik';
+import React, { useEffect, useMemo, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import DropdownField from '../../Common/Form/DropdownField';
@@ -10,6 +10,12 @@ import SelectPlotDialog from '../SelectPlotDialog';
 import PlotDetails from '../../Market/Cards/PlotDetails';
 import { AppState } from '../../../state';
 import { ZERO_BN } from '../../../constants';
+import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
+import InputField from '../../Common/Form/InputField';
+import podsIcon from '../../../img/beanstalk/pod-icon.svg';
+import { MaxBN, MinBN } from '../../../util';
+import SliderField from '../../Common/Form/SliderField';
+import Warning from "../../Common/Form/Warning";
 
 export type SendFormValues = {
   to: string | null;
@@ -23,10 +29,10 @@ export interface SendFormProps {
 
 }
 
-const SendForm : React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
-  values,
-  setFieldValue
-}) => {
+const SendForm: React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
+                                                                           values,
+                                                                           setFieldValue
+                                                                         }) => {
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
   );
@@ -34,6 +40,8 @@ const SendForm : React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
+
+  const numPods = useMemo(() => (values?.plotIndex ? new BigNumber(farmerField.plots[values?.plotIndex]) : ZERO_BN), [farmerField.plots, values?.plotIndex]);
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
@@ -47,13 +55,25 @@ const SendForm : React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
 
   const handlePlotSelect = (index: string) => {
     setFieldValue('plotIndex', index);
-    if (values.plotIndex !== null) {
-      setFieldValue('max', new BigNumber(farmerField.plots[values.plotIndex]));
-      setFieldValue('amount', new BigNumber(farmerField.plots[values.plotIndex]));
+  };
+
+  const handleChangeAmount = (amount: BigNumber) => {
+    const delta = (values?.max || ZERO_BN).minus(amount);
+    setFieldValue('min', MaxBN(ZERO_BN, delta));
+    if (delta.lt(0)) {
+      setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
     }
   };
 
   console.log('PLOT SELECTED', values?.plotIndex);
+
+  useEffect(() => {
+    if (values.plotIndex !== null) {
+      setFieldValue('min', new BigNumber(0));
+      setFieldValue('max', numPods);
+      setFieldValue('amount', numPods);
+    }
+  }, [values.plotIndex, setFieldValue, numPods]);
 
   return (
     <Form autoComplete="off">
@@ -72,7 +92,7 @@ const SendForm : React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
           {(values?.plotIndex === null) ? (
             <DropdownField buttonText="Select A Plot" handleOpenDialog={handleDialogOpen} />
           ) : (
-            <>
+            <Stack gap={1}>
               <PlotDetails
                 placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)}
                 numPods={new BigNumber(farmerField.plots[values?.plotIndex])}
@@ -80,10 +100,75 @@ const SendForm : React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
                   setDialogOpen(true);
                 }}
               />
-            </>
+              <Box px={3}>
+                <SliderField
+                  min={0}
+                  fields={['min', 'max']}
+                  max={numPods.toNumber()}
+                  initialState={[0, numPods.toNumber()]}
+                />
+              </Box>
+              <Stack direction="row" gap={1} alignItems="end">
+                <Box width="50%">
+                  <FieldWrapper tooltip={POD_MARKET_TOOLTIPS.start} label="Plot Range">
+                    <Field name="min">
+                      {(fieldProps: FieldProps) => (
+                        <InputField
+                          {...fieldProps}
+                          placeholder="0.0000"
+                          minValue={new BigNumber(0)}
+                          maxValue={values.max ? values.max.minus(1) : numPods.minus(1)}
+                        />
+                      )}
+                    </Field>
+                  </FieldWrapper>
+                </Box>
+                <Box width="50%">
+                  <Field name="max">
+                    {(fieldProps: FieldProps) => (
+                      <InputField
+                        {...fieldProps}
+                        placeholder="0.0000"
+                        minValue={new BigNumber(0)}
+                        maxValue={numPods}
+                      />
+                    )}
+                  </Field>
+                </Box>
+              </Stack>
+              <FieldWrapper label="Amount" tooltip={POD_MARKET_TOOLTIPS.amount}>
+                <Field name="amount">
+                  {(fieldProps: FieldProps) => (
+                    <InputField
+                      {...fieldProps}
+                      handleChangeOverride={handleChangeAmount}
+                      maxValue={numPods}
+                      minValue={new BigNumber(0)}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>
+                              <img src={podsIcon} alt="" height="30px" />
+                              <Typography sx={{ fontSize: '20px' }}>PODS</Typography>
+                            </Stack>
+                          </InputAdornment>)
+                      }}
+                      // disabled
+                    />
+                  )}
+                </Field>
+              </FieldWrapper>
+              <Warning message="You can exchange your Pod in a decentralized fashion on the Farmers Market. Send Plots at your own risk." />
+            </Stack>
           )}
         </FieldWrapper>
-        <Button fullWidth type="submit" variant="contained" size="large">
+
+        <Button
+          disabled={values.plotIndex === null || values.to === null}
+          fullWidth
+          type="submit"
+          variant="contained"
+          size="large">
           Send
         </Button>
       </Stack>
@@ -91,23 +176,26 @@ const SendForm : React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
   );
 };
 
-const Send : React.FC<{}> = () => {
+const Send: React.FC<{}> = () => {
   // Form setup
-  const initialValues : SendFormValues = useMemo(() => ({
+  const initialValues: SendFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1, // 0.1%
     },
     to: null,
     plotIndex: null,
-    min: ZERO_BN,
-    max: ZERO_BN,
+    min: null,
+    max: null,
     // max: selectedPlotIndex ? new BigNumber(farmerField.plots[selectedPlotIndex]) : ZERO_BN,
-    amount: ZERO_BN,
+    amount: null,
     // amount: selectedPlotIndex ? new BigNumber(farmerField.plots[selectedPlotIndex]) : ZERO_BN,
   }), []);
-  
+
   return (
-    <Formik initialValues={initialValues} onSubmit={() => {}}>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={() => {
+      }}>
       {(formikProps: FormikProps<SendFormValues>) => (
         <SendForm
           {...formikProps}

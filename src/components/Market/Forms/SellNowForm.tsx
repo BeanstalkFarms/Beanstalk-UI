@@ -84,16 +84,12 @@ const SellNowForm: React.FC<SellNowFormProps & FormikProps<SellNowFormValues>> =
         <Box px={3}>
           {/* double slider sets the form's 'min' and 'max' values */}
           {/* so we leave the name field blank */}
-          <Field name="">
-            {(fieldProps: FieldProps) => (
-              <SliderField
-                {...fieldProps}
-                min={0}
-                max={numPods.toNumber()}
-                initialState={[0, numPods.toNumber()]}
-              />
-            )}
-          </Field>
+          <SliderField
+            min={0}
+            fields={['min', 'max']}
+            max={numPods.toNumber()}
+            initialState={[0, numPods.toNumber()]}
+          />
         </Box>
         <Stack direction="row" gap={1}>
           <Box width="50%">

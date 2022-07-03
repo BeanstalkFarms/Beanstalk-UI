@@ -14,6 +14,7 @@ import { MaxBN, MinBN } from '../../../util';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
+import Warning from "../../Common/Form/Warning";
 
 export type SellListingFormProps = {
   plot: any;
@@ -55,16 +56,12 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
         <Box px={3}>
           {/* double slider sets the form's 'min' and 'max' values */}
           {/* so we leave the name field blank */}
-          <Field name="">
-            {(fieldProps: FieldProps) => (
-              <SliderField
-                {...fieldProps}
-                min={0}
-                max={numPods.toNumber()}
-                initialState={[0, numPods.toNumber()]}
-              />
-            )}
-          </Field>
+          <SliderField
+            min={0}
+            fields={['min', 'max']}
+            max={numPods.toNumber()}
+            initialState={[0, numPods.toNumber()]}
+          />
         </Box>
         <Stack direction="row" gap={1}>
           <Box width="50%">
@@ -215,10 +212,7 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
             }}
           />
         </Stack>
-        <Stack direction="row" sx={{ p: 1, backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 1 }} alignItems="center" gap={1}>
-          <WarningAmberIcon sx={{ ml: 0.5, color: BeanstalkPalette.warningYellow }} />
-          <Typography>Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing.</Typography>
-        </Stack>
+        <Warning message="Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing." />
         <Button sx={{ p: 1 }} type="submit" disabled>
           Create Listing
         </Button>
