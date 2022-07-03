@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { IconButton, InputAdornment, TextField, TextFieldProps } from '@mui/material';
 import { Field, FieldProps } from 'formik';
 import { ethers } from 'ethers';
@@ -17,11 +17,10 @@ const validateAddress = (value: string) => {
   let error;
   // if (!ETHEREUM_ADDRESS.test(value)) {
   if (!ethers.utils.isAddress(value)) {
-    error = 'Invalid address'
+    error = 'Invalid address';
   }
   return error;
-}
-
+};
 
 const AddressInputField : React.FC<AddressInputFieldProps> = ({
   name,
@@ -78,7 +77,7 @@ const AddressInputField : React.FC<AddressInputFieldProps> = ({
         );
       }}
     </Field>
-  )
-}
+  );
+};
 
 export default AddressInputField

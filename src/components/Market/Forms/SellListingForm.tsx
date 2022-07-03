@@ -14,6 +14,8 @@ import { MaxBN, MinBN } from '../../../util';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
+import Warning from "../../Common/Form/Warning";
+import FieldWrapper from "../../Common/Form/FieldWrapper";
 
 export type SellListingFormProps = {
   plot: any;
@@ -43,37 +45,23 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
 
   return (
     <Form noValidate>
-      {/* Selected value: {values.option?.toString()} */}
-      {/* <pre>{JSON.stringify({ ...values, ...{ selectedPlot: { ...plot } } }, null, 2)}</pre> */}
       <Stack gap={1}>
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Typography>Plot to List</Typography>
-          </Box>
+        <FieldWrapper label="Plot to List">
           <PlotDetails placeInLine={placeInLine} numPods={numPods} />
-        </Stack>
+        </FieldWrapper>
         <Box px={3}>
           {/* double slider sets the form's 'min' and 'max' values */}
           {/* so we leave the name field blank */}
-          <Field name="">
-            {(fieldProps: FieldProps) => (
-              <SliderField
-                {...fieldProps}
-                min={0}
-                max={numPods.toNumber()}
-                initialState={[0, numPods.toNumber()]}
-              />
-            )}
-          </Field>
+          <SliderField
+            min={0}
+            fields={['min', 'max']}
+            max={numPods.toNumber()}
+            initialState={[0, numPods.toNumber()]}
+          />
         </Box>
         <Stack direction="row" gap={1}>
           <Box width="50%">
-            <Stack gap={0.8}>
-              <Box pl={0.5}>
-                <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.start}>
-                  <Typography>Start</Typography>
-                </Tooltip>
-              </Box>
+            <FieldWrapper label="Start" tooltip={POD_MARKET_TOOLTIPS.start}>
               <Field name="min">
                 {(fieldProps: FieldProps) => (
                   <InputField
@@ -84,34 +72,26 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
                   />
                 )}
               </Field>
-            </Stack>
+            </FieldWrapper>
           </Box>
           <Box width="50%">
             <Stack gap={0.8}>
-              <Box pl={0.5}>
-                <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.end}>
-                  <Typography>End</Typography>
-                </Tooltip>
-              </Box>
-              <Field name="max">
-                {(fieldProps: FieldProps) => (
-                  <InputField
-                    {...fieldProps}
-                    placeholder="0.0000"
-                    minValue={new BigNumber(0)}
-                    maxValue={numPods}
-                  />
-                )}
-              </Field>
+              <FieldWrapper label="End" tooltip={POD_MARKET_TOOLTIPS.end}>
+                <Field name="max">
+                  {(fieldProps: FieldProps) => (
+                    <InputField
+                      {...fieldProps}
+                      placeholder="0.0000"
+                      minValue={new BigNumber(0)}
+                      maxValue={numPods}
+                    />
+                  )}
+                </Field>
+              </FieldWrapper>
             </Stack>
           </Box>
         </Stack>
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.amount}>
-              <Typography>Amount</Typography>
-            </Tooltip>
-          </Box>
+        <FieldWrapper label="Amount" tooltip={POD_MARKET_TOOLTIPS.amount}>
           <Field name="amount">
             {(fieldProps: FieldProps) => (
               <InputField
@@ -132,13 +112,8 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
               />
             )}
           </Field>
-        </Stack>
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.pricePerPod}>
-              <Typography>Price Per Pod</Typography>
-            </Tooltip>
-          </Box>
+        </FieldWrapper>
+        <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
           <Field name="pricePerPod">
             {(fieldProps: FieldProps) => (
               <InputField
@@ -160,13 +135,8 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
               />
             )}
           </Field>
-        </Stack>
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.expiresAt}>
-              <Typography>Expires At</Typography>
-            </Tooltip>
-          </Box>
+        </FieldWrapper>
+        <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
           <Field name="expiresAt">
             {(fieldProps: FieldProps) => (
               <InputField
@@ -186,11 +156,8 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
               />
             )}
           </Field>
-        </Stack>
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Typography>Receive Beans to</Typography>
-          </Box>
+        </FieldWrapper>
+        <FieldWrapper label="Receive Beans to">
           <RadioCardField
             name="option"
             // Grid Props
@@ -214,11 +181,8 @@ const SellListingForm: React.FC<SellListingFormProps & FormikProps<SellListingFo
               width: '100%'
             }}
           />
-        </Stack>
-        <Stack direction="row" sx={{ p: 1, backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 1 }} alignItems="center" gap={1}>
-          <WarningAmberIcon sx={{ ml: 0.5, color: BeanstalkPalette.warningYellow }} />
-          <Typography>Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing.</Typography>
-        </Stack>
+        </FieldWrapper>
+        <Warning message="Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing." />
         <Button sx={{ p: 1 }} type="submit" disabled>
           Create Listing
         </Button>

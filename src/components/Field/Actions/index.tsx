@@ -1,6 +1,7 @@
 import { Card, Stack, Tab, Tabs } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import Sow from './Sow';
+import Send from './Send';
 
 const FieldActions : React.FC<{}> = () => {
   const [tab, setTab] = useState(0);
@@ -18,12 +19,12 @@ const FieldActions : React.FC<{}> = () => {
             <Tab label="Send" />
           </Tabs>
         </Stack>
-        {tab === 0 ? (
-          <Sow />
-        ) : null}
+        {tab === 0 && <Sow />}
+
+        {tab === 2 && <Send />}
       </Stack>
     </Card>
   );
-}
+};
 
 export default FieldActions;
