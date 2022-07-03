@@ -167,29 +167,29 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
   /**
    * User clicks "Create Buy Order" button
    */
-  const [buyModalOpen, setBuyModalOpen] = useState(false);
+  const [buyDialogOpen, setBuyDialogOpen] = useState(false);
 
   const handleBuyModalOpen = useCallback(() => {
-    setBuyModalOpen(true);
+    setBuyDialogOpen(true);
   }, []);
 
   const handleBuyModalClose = useCallback(() => {
-    setBuyModalOpen(false);
+    setBuyDialogOpen(false);
   }, []);
 
   /**
    * User clicks a row under Buy Now tab
    */
-  const [buyNowModalOpen, setBuyNowModalOpen] = useState(false);
+  const [buyNowDialogOpen, setBuyNowDialogOpen] = useState(false);
   const [buyNowRow, setBuyNowRow] = useState<PodListing | undefined>();
 
   const handleBuyNowModalOpen = useCallback((params: GridRowParams) => {
     setBuyNowRow(params.row);
-    setBuyNowModalOpen(true);
+    setBuyNowDialogOpen(true);
   }, []);
 
   const handleBuyNowModalClose = useCallback(() => {
-    setBuyNowModalOpen(false);
+    setBuyNowDialogOpen(false);
   }, []);
 
   /**
@@ -270,11 +270,11 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
          )}
       </Card>
 
-      {/* ----- modals ----- */}
+      {/* ----- dialogs ----- */}
       {/* User clicks "Create Buy Order" button */}
       <BuyOrderDialog
         fullWidth
-        open={buyModalOpen}
+        open={buyDialogOpen}
         handleClose={handleBuyModalClose}
       />
 
@@ -289,7 +289,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
       <BuyNowDialog
         fullWidth
         handleClose={handleBuyNowModalClose}
-        open={buyNowModalOpen}
+        open={buyNowDialogOpen}
         podListing={buyNowRow}
         harvestableIndex={beanstalkField.harvestableIndex}
       />

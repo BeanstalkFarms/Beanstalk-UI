@@ -9,7 +9,7 @@ const FieldWrapper : React.FC<{ label?: ReactNode | string }> = ({ label, childr
       )}
       {children}
     </Stack>
-  )
-}
+  );
+};
 
 export default FieldWrapper;
