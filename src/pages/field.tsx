@@ -13,6 +13,9 @@ import { DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import FieldConditions from '../components/Field/FieldConditions';
 import MyPlotsDialog from '../components/Field/MyPlotsDialog';
+import useToggle from 'hooks/display/useToggle';
+import FieldActions from 'components/Field/Actions';
+import TableCard from 'components/Common/TableCard';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -32,17 +35,13 @@ const columns: DataGridProps['columns'] = [
     headerAlign: 'left',
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => <Typography>{displayBN(params.value, true)}</Typography>,
   },
 ];
 
 const FieldPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  // Theme
-  const handleClose = useCallback(() => {
-    setModalOpen(false);
-  }, []);
-  const handleOpen = useCallback(() => setModalOpen(true), []);
+  //
+  // const [modalOpen, handleOpen, handleClose] = useToggle();
 
   // Data
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
@@ -67,7 +66,7 @@ const FieldPage: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="sm">
       <Stack spacing={2}>
         <PageHeader
           title={
@@ -85,12 +84,22 @@ const FieldPage: React.FC = () => {
         />
         <FieldConditions
           beanstalkField={beanstalkField}
-          handleOpenDialog={handleOpen}
-          farmerField={farmerField}
-          podLine={podLine}
+          // farmerField={farmerField}
+          // podLine={podLine}
+          // handleOpenDialog={handleOpen}
         />
-      </Stack>
-      <MyPlotsDialog
+        <FieldActions />
+        <TableCard
+          title="My Pods"
+          state="ready"
+          amount={farmerField.pods}
+          rows={rows}
+          columns={columns}
+          sort={{ field: 'placeInLine', sort: 'asc' }}
+          // token={PODS}
+        />
+      </Stack>  
+      {/* <MyPlotsDialog
         beanstalkField={beanstalkField}
         handleCloseDialog={handleClose}
         farmerField={farmerField}
@@ -98,7 +107,7 @@ const FieldPage: React.FC = () => {
         podLine={podLine}
         columns={columns}
         rows={rows}
-      />
+      /> */}
     </Container>
   );
 };

@@ -67,7 +67,7 @@ export default function useBeanstalkSiloBreakdown() {
   const getUSD = useSiloTokenToUSD();
 
   return useMemo(() => {
-    console.debug('[useFarmerSiloBalances] running reducer');
+    console.debug('[useBeanstalkSiloBreakdown] running reducer');
     return WHITELIST_ADDRS.reduce((prev, address) => {
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];

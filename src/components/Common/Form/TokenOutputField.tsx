@@ -45,8 +45,6 @@ const TokenOutputField : React.FC<{
             token={token}
             style={{ 
               height: 18,
-              color: 'red',
-              fill: 'red',
             }}
           />
         )}

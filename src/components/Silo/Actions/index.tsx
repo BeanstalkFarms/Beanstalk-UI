@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Badge, Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import { Pool } from 'classes';
 import { ERC20Token } from 'classes/Token';
@@ -19,20 +19,16 @@ import Send from './Send';
  *     selected tab. The Withdrawals table also displays an aggregated
  *     "claimable" row and is shown for both Withdraw & Claim tabs.    
  */
-const Actions : React.FC<{
+const SiloActions : React.FC<{
   pool: Pool;
   token: ERC20Token;
   siloBalance: FarmerSiloBalance;
 }> = (props) => {
   const [tab, setTab] = useState(0);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
-  };
-
-  const hasClaimable = (
-    props.siloBalance?.claimable?.amount.gt(0)
-  );
-
+  }, []);
+  const hasClaimable = props.siloBalance?.claimable?.amount.gt(0);
   return (
     <>
       <Card sx={{ p: 2, position: 'relative' }}>
@@ -92,4 +88,4 @@ const Actions : React.FC<{
   );
 };
 
-export default Actions;
+export default SiloActions;
