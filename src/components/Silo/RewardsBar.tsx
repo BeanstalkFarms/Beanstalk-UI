@@ -5,6 +5,7 @@ import { FarmerSiloRewards } from 'state/farmer/silo';
 import { displayFullBN } from 'util/index';
 import { SupportedChainId } from 'constants/chains';
 import DropdownIcon from '../Common/DropdownIcon';
+import RewardItem from "./RewardItem";
 
 const GAP = 4;
 
@@ -27,26 +28,16 @@ const RewardsBar : React.FC<{
       <Stack direction={{ md: 'row', xs: 'column' }} columnGap={GAP} rowGap={1.5}>
         {/* Earned */}
         <Stack direction="row" gap={GAP}>
-          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-            <Typography color="gray">Earned Beans&nbsp;
-              <Tooltip title="The number of Beans earned since your last interaction with the Silo. Earned Beans are automatically Deposited in the Silo." placement="top">
-                <HelpOutlineIcon
-                  sx={{ color: 'gray', fontSize: '13px' }}
-                />
-              </Tooltip>
-            </Typography>
-            <Typography variant="h3">{displayFullBN(beans.earned, 2)}</Typography>
-          </Box>
-          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-            <Typography color="gray">Earned Stalk&nbsp;
-              <Tooltip title="The number of Stalk earned from Earned Beans. Earned Stalk automatically contributes to total Stalk ownership." placement="top">
-                <HelpOutlineIcon
-                  sx={{ color: 'gray', fontSize: '13px' }}
-                />
-              </Tooltip>
-            </Typography>
-            <Typography variant="h3">{displayFullBN(stalk.earned, 2)}</Typography>
-          </Box>
+          <RewardItem
+            title="Earned Beans"
+            tooltip="The number of Beans earned since your last interaction with the Silo. Earned Beans are automatically Deposited in the Silo."
+            amount={beans.earned}
+          />
+          <RewardItem
+            title="Earned Stalk"
+            tooltip="The number of Stalk earned from Earned Beans. Earned Stalk automatically contributes to total Stalk ownership."
+            amount={stalk.earned}
+          />
         </Stack>
         {/* Divider */}
         <Box>
@@ -54,26 +45,16 @@ const RewardsBar : React.FC<{
         </Box>
         {/* Grown */}
         <Stack direction="row" gap={GAP}>
-          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-            <Typography color="gray">Earned Seeds&nbsp;
-              <Tooltip title="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed." placement="top">
-                <HelpOutlineIcon
-                  sx={{ color: 'gray', fontSize: '13px' }}
-                />
-              </Tooltip>
-            </Typography>
-            <Typography variant="h3">{displayFullBN(seeds.earned, 2)}</Typography>
-          </Box>
-          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-            <Typography color="gray">Grown Stalk&nbsp;
-              <Tooltip title="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership." placement="top">
-                <HelpOutlineIcon
-                  sx={{ color: 'gray', fontSize: '13px' }}
-                />
-              </Tooltip>
-            </Typography>
-            <Typography variant="h3">{displayFullBN(stalk.grown, 2)}</Typography>
-          </Box>
+          <RewardItem
+            title="Earned Seeds"
+            tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
+            amount={seeds.earned}
+          />
+          <RewardItem
+            title="Grown Stalk"
+            tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
+            amount={stalk.grown}
+          />
         </Stack>
       </Stack>
       {/* Claim */}
