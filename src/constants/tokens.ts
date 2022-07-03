@@ -155,27 +155,24 @@ export const BEAN = {
 };
 
 // CRV3 + Underlying Stables
-
+const crv3Meta = {
+  name: '3CRV',
+  symbol: '3CRV',
+  logo: crv3LogoUrl,
+  isLP: true,
+}
 export const CRV3 = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
     CRV3_ADDRESSES,
     18,
-    {
-      name: '3CRV',
-      symbol: '3CRV',
-      logo: crv3LogoUrl,
-    }
+    crv3Meta,
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
     SupportedChainId.ROPSTEN,
     CRV3_ADDRESSES,
     18,
-    {
-      name: '3CRV',
-      symbol: '3CRV',
-      logo: crv3LogoUrl,
-    }
+    crv3Meta,
   ),
 };
 
@@ -192,26 +189,23 @@ export const DAI = {
   ),
 };
 
+const usdcMeta = {
+  name: 'USD Coin',
+  symbol: 'USDC',
+  logo: usdcLogoUrl,
+};
 export const USDC = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
     USDC_ADDRESSES,
     6,
-    {
-      name: 'USD Coin',
-      symbol: 'USDC',
-      logo: usdcLogoUrl,
-    }
+    usdcMeta,
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
     SupportedChainId.ROPSTEN,
     USDC_ADDRESSES,
     6,
-    {
-      name: 'USD Coin',
-      symbol: 'USDC',
-      logo: usdcLogoUrl,
-    }
+    usdcMeta,
   ),
 };
 
@@ -229,27 +223,23 @@ export const USDT = {
 };
 
 // Other
-
+const lusdMeta = {
+  name: 'LUSD',
+  symbol: 'LUSD',
+  logo: lusdLogoUrl,
+}
 export const LUSD = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
     LUSD_ADDRESSES,
     18,
-    {
-      name: 'LUSD',
-      symbol: 'LUSD',
-      logo: lusdLogoUrl,
-    }
+    lusdMeta,
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
     SupportedChainId.ROPSTEN,
     LUSD_ADDRESSES,
     18,
-    {
-      name: 'LUSD',
-      symbol: 'LUSD',
-      logo: lusdLogoUrl,
-    }
+    lusdMeta,
   ),
 };
 
@@ -257,17 +247,19 @@ export const LUSD = {
 // ERC20 Tokens - LP
 // ----------------------------------------
 
+const beanEthLpMeta = {
+  name: 'BEAN:ETH LP',
+  symbol: 'BEAN:ETH',
+  logo: beanEthLpLogoUrl,
+  displayDecimals: 9,
+  isLP: true,
+};
 export const BEAN_ETH_UNIV2_LP = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
     '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
     18,
-    {
-      name: 'BEAN:ETH LP',
-      symbol: 'BEAN:ETH',
-      logo: beanEthLpLogoUrl,
-      displayDecimals: 9,
-    },
+    beanEthLpMeta,
     {
       stalk: 1,
       seeds: 4,
@@ -277,12 +269,7 @@ export const BEAN_ETH_UNIV2_LP = {
     SupportedChainId.ROPSTEN,
     '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db',
     18,
-    {
-      name: 'BEAN:ETH LP',
-      symbol: 'BEAN:ETH',
-      logo: beanEthLpLogoUrl,
-      displayDecimals: 9,
-    },
+    beanEthLpMeta,
     {
       stalk: 1,
       seeds: 4,
@@ -298,7 +285,8 @@ export const BEAN_CRV3_LP = {
     {
       name: 'BEAN:3CRV LP',
       symbol: 'BEAN:3CRV',
-      logo: beanCrv3LpLogoUrl
+      logo: beanCrv3LpLogoUrl,
+      isLP: true,
     },
     {
       stalk: 1,
@@ -313,6 +301,7 @@ export const BEAN_CRV3_LP = {
       name: 'BEAN:3CRV LP',
       symbol: 'BEAN:3CRV',
       logo: beanCrv3LpLogoUrl,
+      isLP: true,
     },
     {
       stalk: 1,
@@ -330,6 +319,7 @@ export const BEAN_LUSD_LP = {
       name: 'BEAN:LUSD LP',
       symbol: 'BEAN:LUSD',
       logo: beanLusdLogoUrl,
+      isLP: true,
     },
     {
       stalk: 1,
@@ -342,6 +332,7 @@ export const BEAN_LUSD_LP = {
 // Token Lists
 // ----------------------------------------
 
+// All supported ERC20 tokens.
 export const ERC20_TOKENS : ChainConstant<ERC20Token>[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
@@ -353,11 +344,13 @@ export const ERC20_TOKENS : ChainConstant<ERC20Token>[] = [
   CRV3,
 ];
 
+// Preemptively load balances for these tokens.
 export const BALANCE_TOKENS : ChainConstant<NativeToken | ERC20Token>[] = [
   ETH,
   ...ERC20_TOKENS,
 ];
 
+// Show these tokens as whitelisted in the Silo.
 export const SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
@@ -365,11 +358,13 @@ export const SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
   BEAN_LUSD_LP,
 ];
 
+// Tokens that used the generalized silo whitelist in Beanstalk V1.
 export const GENERALIZED_SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
   BEAN_CRV3_LP,
   BEAN_LUSD_LP,
 ];
 
+// Assets underlying 3CRV (accessible when depositing/removing liquidity)
 export const CRV3_UNDERLYING : ChainConstant<ERC20Token>[] = [
   DAI,
   USDC,

@@ -46,11 +46,9 @@ type ClaimFormValues = {
   token: FormTokenState;
   destination: FarmToMode;
   tokenOut: ERC20Token;
-  // amountOut: BigNumber | undefined;
 }
 
 // -----------------------------------------------------------------------
-
 
 const ClaimForm : React.FC<
   FormikProps<ClaimFormValues> & {
@@ -78,7 +76,7 @@ const ClaimForm : React.FC<
   const pool = pools[token.address];
   const claimableTokens = useMemo(() => ([
     token,
-    ...(pool.tokens),
+    ...(token.isLP && pool?.tokens || []),
   ]), [pool, token])
 
   //
@@ -97,9 +95,12 @@ const ClaimForm : React.FC<
   //
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
-      console.debug(`call quotehandler`)
       if (_tokenIn === _tokenOut) return { amountOut: _amountIn };
       const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, _tokenIn.decimals));
+      
+      // Require pooldata to be loaded first
+      if (token.isLP && !pool) return null; 
+
       const tokenIndex = pool.tokens.findIndex((tok) => tok === _tokenOut);
       if (tokenIndex === -1) throw new Error('No token found');
       const indices = [0, 0];
@@ -120,7 +121,12 @@ const ClaimForm : React.FC<
         steps: estimate.steps,
       }
     },
-    [farm, pool.address, pool.tokens, values.destination]
+    [
+      farm,
+      token.isLP,
+      pool,
+      values.destination
+    ]
   );
 
   //
@@ -169,13 +175,15 @@ const ClaimForm : React.FC<
               name="destination"
             />
             {/* Setting: Claim LP */}
-            <PillRow
-              isOpen={isTokenSelectVisible}
-              label="Claim LP as"
-              onClick={showTokenSelect}> 
-              <TokenIcon token={values.tokenOut} />
-              <Typography>{values.tokenOut.name}</Typography>
-            </PillRow>
+            {token.isLP ? (
+              <PillRow
+                isOpen={isTokenSelectVisible}
+                label="Claim LP as"
+                onClick={showTokenSelect}> 
+                <TokenIcon token={values.tokenOut} />
+                <Typography>{values.tokenOut.name}</Typography>
+              </PillRow>
+            ) : null}
             <TokenSelectDialog
               open={isTokenSelectVisible}
               handleClose={hideTokenSelect}
@@ -275,17 +283,15 @@ const Claim : React.FC<{
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
-        <>
-          <Stack spacing={1}>
-            <ClaimForm
-              token={token}
-              claimableBalance={claimableBalance}
-              farm={farm}
-              {...formikProps}
-            />
-            <pre>{JSON.stringify(formikProps.values, null, 2)}</pre>
-          </Stack>
-        </>
+        <Stack spacing={1}>
+          <ClaimForm
+            token={token}
+            claimableBalance={claimableBalance}
+            farm={farm}
+            {...formikProps}
+          />
+          {/* <pre>{JSON.stringify(formikProps.values, null, 2)}</pre> */}
+        </Stack>
       )}
     </Formik>
   );

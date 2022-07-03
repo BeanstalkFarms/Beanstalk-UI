@@ -14,7 +14,7 @@ export type QuoteHandler = (
   tokenIn: ERC20Token | NativeToken,
   amountIn: BigNumber,
   tokenOut: ERC20Token | NativeToken
-) => Promise<QuoteHandlerResult['amountOut'] | QuoteHandlerResult>; 
+) => Promise<null | QuoteHandlerResult['amountOut'] | QuoteHandlerResult>; 
 
 export type QuoteSettings = {
   /** The number of milliseconds to wait before calling */
@@ -61,6 +61,9 @@ export default function useQuote(
           // quoteHandler should parse amountOut however it needs to.
           // (i.e. call toTokenUnitsBN or similar)
           .then((_result) => {
+            if (!_result === null) {
+              return _result;
+            }
             // const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
             // console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
             setResult(_result instanceof BigNumber ? { amountOut: _result } : _result);
