@@ -19,6 +19,12 @@ export enum FarmToMode {
   EXTERNAL = '0',
   INTERNAL = '1',
 }
+export enum ClaimRewardsAction {
+  MOW = '0',
+  PLANT_AND_MOW = '1',
+  ENROOT_AND_MOW = '2',
+  CLAIM_ALL = '3',
+}
 
 // type CurveRegistries = {
 //   poolRegistry:  CurveRegistry;

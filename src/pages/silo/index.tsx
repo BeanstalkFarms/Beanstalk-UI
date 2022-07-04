@@ -95,7 +95,13 @@ const SiloPage : React.FC = () => {
           // beanstalkSilo={beanstalkSilo}
         />
       </Stack>
-      <RewardsDialog handleClose={handleCloseRewardsDialog} open={rewardsDialogOpen} />
+      <RewardsDialog
+        handleClose={handleCloseRewardsDialog}
+        beans={farmerSilo.beans}
+        stalk={farmerSilo.stalk}
+        seeds={farmerSilo.seeds}
+        open={rewardsDialogOpen}
+      />
     </Container>
   );
 };

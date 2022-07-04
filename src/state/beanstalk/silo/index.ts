@@ -45,6 +45,7 @@ export type BeanstalkSiloAssets = {
   seeds: {
     total: BigNumber;
     active: BigNumber;
+    // FIXME: earned -> plantable
     earned: BigNumber;
   };
   roots: {

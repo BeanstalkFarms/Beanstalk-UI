@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Button, ButtonProps, Stack, Typography } from '@mui/material';
-import { BeanstalkPalette } from 'components/App/muiTheme';
 
 const GAP = 2;
 
@@ -46,5 +45,6 @@ const DescriptionButton : React.FC<ButtonProps & {
       </Stack>
     </Button>
   );
-}
+};
+
 export default DescriptionButton;
