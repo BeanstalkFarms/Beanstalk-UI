@@ -1,11 +1,13 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Box, Dialog, DialogProps, Divider, Stack } from '@mui/material';
 import { Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
+import { useTheme } from '@mui/material/styles';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import RewardItem from './RewardItem';
 import { FarmerSiloRewards } from '../../state/farmer/silo';
 import { ClaimRewardsAction } from '../../lib/Beanstalk/Farm';
 import DescriptionButton from '../Common/DescriptionButton';
+import Claim from "./Actions/Claim";
 
 export interface RewardDialogProps {
   /** Closes dialog */
@@ -19,6 +21,8 @@ type ClaimRewardsFormValues = {
   action: ClaimRewardsAction | null;
 }
 
+type RewardAction = keyof typeof ClaimRewardsAction;
+
 const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
   handleClose,
   onClose,
@@ -31,6 +35,8 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({
     action: null,
   }), []);
+
+  const [hoverState, setHoverState] = useState<ClaimRewardsAction | null>(null);
 
   const onSubmit = useCallback(async (values: ClaimRewardsFormValues, formActions: FormikHelpers<ClaimRewardsFormValues>) => {
     console.log('SUBMIT');
@@ -59,6 +65,30 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
       value: ClaimRewardsAction.CLAIM_ALL,
     }]
   ), []);
+
+  const hoverMap: any = useMemo(() => (
+    {
+      [ClaimRewardsAction.MOW]: [ClaimRewardsAction.MOW],
+      [ClaimRewardsAction.PLANT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW],
+      [ClaimRewardsAction.ENROOT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.ENROOT_AND_MOW],
+      [ClaimRewardsAction.CLAIM_ALL]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW, ClaimRewardsAction.ENROOT_AND_MOW, ClaimRewardsAction.CLAIM_ALL],
+    }
+  ), []);
+
+  const onMouseOver = useCallback((v: ClaimRewardsAction) => (
+    () => setHoverState(v)
+  ), []);
+
+  // Drilldown handlers
+  const onMouseOutContainer = useCallback(() => {
+    setHoverState(null);
+  }, []);
+
+  const showHover = (c: ClaimRewardsAction) => {
+    return (hoverState && hoverMap[hoverState].includes(c))
+  }
+
+  console.log('HOVER STATE', hoverState);
 
   return (
     <Dialog
@@ -136,6 +166,9 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
                               key={ClaimRewardsAction.MOW}
                               {...options[0]}
                               onClick={set(ClaimRewardsAction.MOW)}
+                              onMouseOver={onMouseOver(ClaimRewardsAction.MOW)}
+                              onMouseLeave={onMouseOutContainer}
+                              forceHover={showHover(ClaimRewardsAction.MOW)}
                               fullWidth
                               disableRipple
                             />
@@ -145,15 +178,21 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
                                   key={ClaimRewardsAction.PLANT_AND_MOW}
                                   {...options[1]}
                                   onClick={set(ClaimRewardsAction.PLANT_AND_MOW)}
+                                  onMouseOver={onMouseOver(ClaimRewardsAction.PLANT_AND_MOW)}
+                                  onMouseLeave={onMouseOutContainer}
+                                  forceHover={showHover(ClaimRewardsAction.PLANT_AND_MOW)}
                                   fullWidth
                                   disableRipple
                                 />
                               </Box>
                               <Box width={{ xs: '100%', md: '50%' }}>
                                 <DescriptionButton
-                                  key={ClaimRewardsAction.PLANT_AND_MOW}
+                                  key={ClaimRewardsAction.ENROOT_AND_MOW}
                                   {...options[2]}
-                                  onClick={set(ClaimRewardsAction.PLANT_AND_MOW)}
+                                  onClick={set(ClaimRewardsAction.ENROOT_AND_MOW)}
+                                  onMouseOver={onMouseOver(ClaimRewardsAction.ENROOT_AND_MOW)}
+                                  onMouseLeave={onMouseOutContainer}
+                                  forceHover={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
                                   fullWidth
                                   disableRipple
                                 />
@@ -163,6 +202,10 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
                               key={ClaimRewardsAction.CLAIM_ALL}
                               {...options[3]}
                               onClick={set(ClaimRewardsAction.CLAIM_ALL)}
+                              onMouseOver={onMouseOver(ClaimRewardsAction.CLAIM_ALL)}
+                              onMouseLeave={onMouseOutContainer}
+                              forceHover={showHover(ClaimRewardsAction.CLAIM_ALL)}
+                              recommended
                               fullWidth
                               disableRipple
                             />

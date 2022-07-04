@@ -1,26 +1,35 @@
 import React from 'react';
 import { Box, Button, ButtonProps, Stack, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 const GAP = 2;
 
-const DescriptionButton : React.FC<ButtonProps & {
+const DescriptionButton : React.FC<
+  ButtonProps
+  & {
   title?: string;
   description?: string;
   icon?: React.ReactNode | string;
+  recommended?: boolean;
+  forceHover?: boolean;
 }> = ({
   title,
   description,
+  recommended,
+  forceHover,
   icon,
   sx,
   ...props 
 }) => {
+  const theme = useTheme();
   return (
     <Button
       variant="outlined"
       color="secondary"
       {...props}
       sx={{
-        textAlign: 'left', 
+        textAlign: 'left',
         px: GAP,
         py: GAP,
         ...sx,
@@ -28,6 +37,10 @@ const DescriptionButton : React.FC<ButtonProps & {
         // changing the internal layout.
         display: 'block',
         color: 'inherit',
+        backgroundColor: forceHover ? theme.palette.action.hover : null,
+        '&:hover': {
+          backgroundColor: forceHover ? theme.palette.action.hover : null,
+        }
       }}
     >
       <Stack direction="row" gap={GAP} alignItems="center">
@@ -39,7 +52,15 @@ const DescriptionButton : React.FC<ButtonProps & {
           </Box>
         )}
         <Box>
-          <Typography variant="h2">{title}</Typography>
+          <Stack direction="row" gap={0.3}>
+            <Typography variant="h2">{title}</Typography>
+            {recommended && (
+              <Typography variant="h2" sx={{ color: BeanstalkPalette.logoGreen }}>
+                (Recommended)
+              </Typography>
+            )}
+          </Stack>
+
           <Typography variant="body2" color="gray">{description}</Typography>
         </Box>
       </Stack>
