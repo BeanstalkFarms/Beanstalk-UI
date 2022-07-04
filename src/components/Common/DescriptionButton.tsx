@@ -37,9 +37,9 @@ const DescriptionButton : React.FC<
         // changing the internal layout.
         display: 'block',
         color: 'inherit',
-        backgroundColor: forceHover ? theme.palette.action.hover : null,
+        backgroundColor: forceHover ? BeanstalkPalette.lightestBlue : null,
         '&:hover': {
-          backgroundColor: forceHover ? theme.palette.action.hover : null,
+          backgroundColor: forceHover ? BeanstalkPalette.lightestBlue : null,
         }
       }}
     >
