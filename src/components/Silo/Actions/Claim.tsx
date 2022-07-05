@@ -161,7 +161,7 @@ const ClaimForm : React.FC<
               // for consistency with other forms.
               disabled={true} 
               // 
-              balance={amount?.gt(0) ? undefined : ZERO_BN}
+              balance={amount || ZERO_BN}
               balanceLabel="Claimable Balance"
               // -----
               // FIXME:
