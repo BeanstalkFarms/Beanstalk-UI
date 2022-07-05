@@ -10,26 +10,31 @@ export type RewardItemProps = {
   amount: BigNumber;
   tooltip: string;
   isClaimable?: boolean;
+  icon?: any;
 }
 
 const RewardItem: React.FC<RewardItemProps> = ({
   amount,
   tooltip,
   title,
-  isClaimable
+  isClaimable,
+  icon
 }) => (
   <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-    <Typography color={isClaimable ? 'gray' : BeanstalkPalette.lightishGrey}>
+    <Typography color={isClaimable === false ? BeanstalkPalette.lightishGrey : 'gray'}>
       <Stack direction="row" gap={0.3} alignItems="center">
         {title}
         <Tooltip title={tooltip} placement="top">
           <HelpOutlineIcon
-            sx={{ color: isClaimable ? 'gray' : BeanstalkPalette.lightishGrey, fontSize: '13px' }}
+            sx={{ color: isClaimable === false ? BeanstalkPalette.lightishGrey : 'gray', fontSize: '13px' }}
           />
         </Tooltip>
       </Stack>
     </Typography>
-    <Typography color={isClaimable ? BeanstalkPalette.black : BeanstalkPalette.lightishGrey} variant="h3">{displayFullBN(amount, 2)}</Typography>
+    <Stack direction="row" gap={0.3} alignItems="center">
+      {icon && <img src={icon} alt="" height="17px" style={{ opacity: isClaimable === false ? 0.2 : 1 }} />}
+      <Typography color={isClaimable === false ? BeanstalkPalette.lightishGrey : BeanstalkPalette.black} variant="h3">{displayFullBN(amount, 2)}</Typography>
+    </Stack>
   </Box>
 );
 

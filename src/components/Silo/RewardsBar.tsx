@@ -1,13 +1,17 @@
 import React from 'react';
-import { Box, Button, Card, Divider, Stack, Tooltip, Typography } from '@mui/material';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { Box, Button, Card, Divider, Stack, Tooltip } from '@mui/material';
 import { FarmerSiloRewards } from 'state/farmer/silo';
-import { displayFullBN } from 'util/index';
 import { SupportedChainId } from 'constants/chains';
+import BigNumber from 'bignumber.js';
 import DropdownIcon from '../Common/DropdownIcon';
-import RewardItem from "./RewardItem";
+import RewardItem from './RewardItem';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import stalkIcon from 'img/beanstalk/stalk-icon.svg';
+import seedIcon from 'img/beanstalk/seed-icon.svg';
 
-const GAP = 4;
+const GAP_LG = 3.5;
+const GAP_MD = 2;
+const GAP_XS = 1;
 
 const RewardsBar : React.FC<{
   chainId: SupportedChainId;
@@ -25,18 +29,20 @@ const RewardsBar : React.FC<{
   <Card sx={{ pl: 2, pr: 1, py: 1.5 }}>
     <Stack direction={{ md: 'row', xs: 'column' }} justifyContent={{ md: 'space-between' }} alignItems={{ md: 'center', xs: 'auto' }} rowGap={1.5}>
       {/* Statistics */}
-      <Stack direction={{ md: 'row', xs: 'column' }} columnGap={GAP} rowGap={1.5}>
+      <Stack direction={{ md: 'row', xs: 'column' }} columnGap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }} rowGap={1.5}>
         {/* Earned */}
-        <Stack direction="row" gap={GAP}>
+        <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
           <RewardItem
             title="Earned Beans"
             tooltip="The number of Beans earned since your last interaction with the Silo. Earned Beans are automatically Deposited in the Silo."
             amount={beans.earned}
+            icon={beanIcon}
           />
           <RewardItem
             title="Earned Stalk"
             tooltip="The number of Stalk earned from Earned Beans. Earned Stalk automatically contributes to total Stalk ownership."
             amount={stalk.earned}
+            icon={stalkIcon}
           />
         </Stack>
         {/* Divider */}
@@ -44,16 +50,36 @@ const RewardsBar : React.FC<{
           <Divider orientation="vertical" />
         </Box>
         {/* Grown */}
-        <Stack direction="row" gap={GAP}>
+        <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
           <RewardItem
-            title="Earned Seeds"
+            title="Plantable Seeds"
             tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
             amount={seeds.earned}
+            icon={seedIcon}
           />
           <RewardItem
             title="Grown Stalk"
             tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
             amount={stalk.grown}
+            icon={stalkIcon}
+          />
+        </Stack>
+        <Box>
+          <Divider orientation="vertical" />
+        </Box>
+        {/* Grown */}
+        <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
+          <RewardItem
+            title="Revitalized Stalk"
+            tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
+            amount={new BigNumber(0)}
+            icon={stalkIcon}
+          />
+          <RewardItem
+            title="Revitalized Seed"
+            tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
+            amount={new BigNumber(0)}
+            icon={seedIcon}
           />
         </Stack>
       </Stack>

@@ -7,6 +7,9 @@ import RewardItem from './RewardItem';
 import { FarmerSiloRewards } from '../../state/farmer/silo';
 import { ClaimRewardsAction } from '../../lib/Beanstalk/Farm';
 import DescriptionButton from '../Common/DescriptionButton';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import stalkIcon from 'img/beanstalk/stalk-icon.svg';
+import seedIcon from 'img/beanstalk/seed-icon.svg';
 
 export interface RewardDialogProps {
   /** Closes dialog */
@@ -86,8 +89,6 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
 
   const showHover = (c: ClaimRewardsAction) => (hoverState && hoverMap[hoverState].includes(c));
 
-  console.log('HOVER STATE', hoverState);
-
   return (
     <Dialog
       onClose={onClose}
@@ -106,12 +107,14 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
                 tooltip="The number of Beans earned since your last interaction with the Silo. Earned Beans are automatically Deposited in the Silo."
                 amount={beans.earned}
                 isClaimable={showHover(ClaimRewardsAction.MOW)}
+                icon={beanIcon}
               />
               <RewardItem
                 title="Earned Stalk"
                 tooltip="The number of Stalk earned from Earned Beans. Earned Stalk automatically contributes to total Stalk ownership."
                 amount={stalk.earned}
                 isClaimable={showHover(ClaimRewardsAction.MOW)}
+                icon={stalkIcon}
               />
             </Stack>
             {/* Divider */}
@@ -125,12 +128,14 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
                 tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
                 amount={seeds.earned}
                 isClaimable={showHover(ClaimRewardsAction.PLANT_AND_MOW)}
+                icon={seedIcon}
               />
               <RewardItem
                 title="Grown Stalk"
                 tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
                 amount={stalk.grown}
                 isClaimable={showHover(ClaimRewardsAction.MOW)}
+                icon={stalkIcon}
               />
             </Stack>
             {/* Divider */}
@@ -144,12 +149,14 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
                 tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
                 amount={new BigNumber(0)}
                 isClaimable={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
+                icon={stalkIcon}
               />
               <RewardItem
                 title="Revitalized Seed"
                 tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
                 amount={new BigNumber(0)}
                 isClaimable={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
+                icon={seedIcon}
               />
             </Stack>
           </Stack>
