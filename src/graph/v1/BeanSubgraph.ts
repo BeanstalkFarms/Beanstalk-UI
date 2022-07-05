@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { BEAN_SUBGRAPH_API_LINK } from '../constants';
+import { BEAN_SUBGRAPH_API_LINK } from 'constants/index';
 
 const LastCrossQuery = `
 {

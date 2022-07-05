@@ -51,7 +51,7 @@ const PodRateCard: React.FC<TWAPCardProps & CardProps> = ({
       <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
         <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursorPodRate} />
       </Box>
-      <Box>
+      {/* <Box>
         <Divider color={BeanstalkPalette.lightBlue} />
         <Stack direction="row" justifyContent="space-between" sx={{ p: 0.75, pr: 2, pl: 2 }}>
           <Typography color={BeanstalkPalette.lightishGrey}>2/21</Typography>
@@ -61,7 +61,7 @@ const PodRateCard: React.FC<TWAPCardProps & CardProps> = ({
           <Typography color={BeanstalkPalette.lightishGrey}>6/21</Typography>
           <Typography color={BeanstalkPalette.lightishGrey}>7/21</Typography>
         </Stack>
-      </Box>
+      </Box> */}
     </Card>
   );
 };

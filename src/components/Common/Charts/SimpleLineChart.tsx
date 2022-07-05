@@ -3,11 +3,13 @@ import { bisector, extent, max, min } from 'd3-array';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { LinePath, Bar, Line } from '@visx/shape';
 import { Group } from '@visx/group';
+import { Text } from '@visx/text';
 import { scaleTime, scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { withTooltip } from '@visx/tooltip';
 import { DateValue } from '@visx/mock-data/lib/generators/genDateValue';
 import { curveNatural, curveStep, curveBasis } from '@visx/curve';
+import { Axis, Orientation, SharedAxisProps, AxisScale } from '@visx/axis';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 
 export type DataPoint = {
@@ -28,13 +30,16 @@ type GraphProps = {
   isTWAP?: boolean;
 }
 
-// plot config
+// PLOT
 const margin = {
-  top: 20,
-  bottom: 20,
+  top: 10,
+  bottom: 9,
   left: 0,
   right: 0,
 };
+const axisHeight = 21;
+
+// SERIES
 const strokes = [
   {
     stroke: BeanstalkPalette.logoGreen,
@@ -49,6 +54,22 @@ const strokes = [
     strokeWidth: 0.5,
   },
 ];
+// How much padding to add to edges so that the stroke doesn't get
+// partially cut off by the bottom axis
+const strokeBuffer = 2;
+
+// AXIS
+export const backgroundColor = '#da7cff';
+export const labelColor = '#340098';
+const axisColor      = BeanstalkPalette.lightishGrey;
+const tickLabelColor = BeanstalkPalette.lightishGrey;
+const gridColor = '#6e0fca';
+const tickLabelProps = () => ({
+  fill: tickLabelColor,
+  fontSize: 12,
+  fontFamily: 'Futura PT',
+  textAnchor: 'middle',
+} as const);
 
 const Graph: React.FC<GraphProps> = withTooltip(({
   // Chart sizing
@@ -58,7 +79,7 @@ const Graph: React.FC<GraphProps> = withTooltip(({
   showTooltip,
   hideTooltip,
   tooltipData,
-  // tooltipTop = 0,
+  tooltipTop = 0,
   tooltipLeft = 0,
   // Data
   series,
@@ -69,7 +90,7 @@ const Graph: React.FC<GraphProps> = withTooltip(({
   const data = series[0];
 
   // scales
-  const scales = useMemo(() => series.map((_data) => {
+  const scales = useMemo(() => series.map((_data, index) => {
     const xScale = scaleTime<number>({
       domain: extent(_data, getX) as [Date, Date],
     });
@@ -88,8 +109,16 @@ const Graph: React.FC<GraphProps> = withTooltip(({
       });
     }
 
-    xScale.range([0, width]);
-    yScale.range([height - margin.top, margin.bottom]);
+    xScale.range([
+      0,
+      width
+    ]);
+    yScale.range([
+      height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
+      margin.top,
+      // height     - margin.top - axisHeight, // max
+      // axisHeight + margin.bottom            // min
+    ]);
 
     return { xScale, yScale };
   }), [width, height, series, isTWAP]);
@@ -116,7 +145,7 @@ const Graph: React.FC<GraphProps> = withTooltip(({
       showTooltip({
         tooltipData: ds,
         tooltipLeft: x,
-        // tooltipTop: syScale(getY(d)),
+        tooltipTop: scales[0].yScale(getY(ds[0])),
       });
       onCursor(ds);
     },
@@ -128,13 +157,25 @@ const Graph: React.FC<GraphProps> = withTooltip(({
     onCursor(undefined);
   }, [hideTooltip, onCursor]);
 
+  /**
+   * Height: `height` (controlled by container)
+   * Width:  `width`  (controlled by container)
+   * 
+   * ----------------------------------
+   * |                                |
+   * |           plot                 |  
+   * |                                |
+   * ----------------------------------
+   * |           axes                 |  Axis
+   * ----------------------------------
+   */
   return (
     <>
       <svg width={width} height={height}>
         {/**
           * Lines
           */}
-        <Group>
+        <Group width={width} height={height - axisHeight}>
           {series.map((_data, index) => (
             <>
               {isTWAP && (
@@ -158,16 +199,59 @@ const Graph: React.FC<GraphProps> = withTooltip(({
             </>
           ))}
         </Group>
+        {/* Axis */}
+        <g transform={`translate(0, ${height - axisHeight - margin.bottom})`}>
+          <Axis
+            key={`axis`}
+            orientation={Orientation.bottom}
+            scale={scales[0].xScale}
+            tickFormat={(v: any, i: number) => {
+              return `${(v as Date).getMonth()}/${(v as Date).getDate()}`
+            }}
+            stroke={axisColor}
+            tickStroke={axisColor}
+            tickLabelProps={tickLabelProps}
+            tickValues={undefined}
+            numTicks={Math.floor(width/64)}
+            label="time"
+            labelProps={{
+              fill: labelColor,
+              fontSize: 18,
+              strokeWidth: 0,
+              stroke: '#333',
+              paintOrder: 'stroke',
+              fontFamily: 'Futura PT',
+              textAnchor: 'start',
+            }}
+          />
+        </g>
         {/**
           * Cursor
           */}
         {tooltipData && (
           <g>
             <Line
-              from={{ x: tooltipLeft, y: margin.top }}
-              to={{ x: tooltipLeft, y: height + margin.top }}
+              from={{
+                x: tooltipLeft,
+                y: margin.top
+              }}
+              to={{
+                x: tooltipLeft,
+                y: height - axisHeight - margin.bottom
+              }}
               stroke={BeanstalkPalette.lightishGrey}
               strokeWidth={1}
+              pointerEvents="none"
+            />
+            <circle
+              cx={tooltipLeft}
+              cy={tooltipTop + margin.top}
+              r={4}
+              fill="black"
+              fillOpacity={0.1}
+              stroke="black"
+              strokeOpacity={0.1}
+              strokeWidth={2}
               pointerEvents="none"
             />
           </g>

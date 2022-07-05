@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Stack, Typography, CardProps, Box, Card, Divider } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Stat from '../Common/Stat';
@@ -10,6 +10,8 @@ import TimeTabs from '../Common/TimeTabs';
 import SimpleLineChart, { DataPoint } from '../Common/Charts/SimpleLineChart';
 import { mockTWAPData, mockTWAPDataVariable } from '../Common/Charts/SimpleLineChart.mock';
 import { BeanstalkPalette } from '../App/muiTheme';
+import { useQuery } from '@apollo/client';
+import { SEASONS_QUERY } from 'graph/queries/seasons';
 
 export type TWAPCardProps = {
   beanPrice: BigNumber;
@@ -21,16 +23,27 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
   season,
   sx
 }) => {
-  const [displayTWAP, setDisplayTWAP] = useState<BigNumber[]>([new BigNumber(-1)]);
+  const { loading, error, data } = useQuery(SEASONS_QUERY, { variables: { last: 1000 } });
+  const [displayTWAP, setDisplayTWAP] = useState<BigNumber[]>([beanPrice]);
 
   const [isHoveringTWAP, setIsHoveringTWAP] = useState(false);
   const handleCursorTWAP = useCallback(
     (dps?: DataPoint[]) => {
       setDisplayTWAP(dps ? dps.map((dp) => new BigNumber(dp.value)) : [beanPrice]);
-      setIsHoveringTWAP(!!dps);
+      // setIsHoveringTWAP(!!dps);
     },
     [beanPrice]
   );
+
+  const series = useMemo(() => {
+    if (data) {
+      return data.seasons.map((_season: any) => ({
+        date: new Date(parseInt(`${_season.timestamp}000`, 10)),
+        value: new BigNumber(_season.twap).toNumber(),
+      }))
+    }
+    return [];
+  }, [data])
 
   const [timeTab, setTimeTab] = useState([0,0]);
   const handleChangeTimeTab = (i: number[]) => {
@@ -44,7 +57,7 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
           gap={0.5}
           title="Time Weighted Average Price"
           color="primary"
-          amount={`$${(isHoveringTWAP ? displayTWAP[0] : beanPrice).toFixed(4)}`}
+          amount={`$${(displayTWAP[0]).toFixed(4)}`}
           icon={undefined}
           topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
           bottomText={`Season ${displayBN(season)}`}
@@ -55,9 +68,13 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
         </Stack>
       </Stack>
       <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-        <SimpleLineChart isTWAP series={[mockTWAPDataVariable]} onCursor={handleCursorTWAP} />
+        <SimpleLineChart
+          isTWAP
+          series={[series]}
+          onCursor={handleCursorTWAP}
+        />
       </Box>
-      <Box>
+      {/* <Box>
         <Divider color={BeanstalkPalette.lightBlue} />
         <Stack direction="row" justifyContent="space-between" sx={{ p: 0.75, pr: 2, pl: 2 }}>
           <Typography color={BeanstalkPalette.lightishGrey}>2/21</Typography>
@@ -67,7 +84,7 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
           <Typography color={BeanstalkPalette.lightishGrey}>6/21</Typography>
           <Typography color={BeanstalkPalette.lightishGrey}>7/21</Typography>
         </Stack>
-      </Box>
+      </Box> */}
     </Card>
   );
 };
