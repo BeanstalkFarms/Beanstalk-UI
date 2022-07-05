@@ -23,7 +23,7 @@ const columns: DataGridProps['columns'] = [
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 0)}`,
     renderCell: (params) => (
-      (params.value.eq(0))
+      (params.value.eq(-1))
         ? (<Typography color="primary">Harvestable</Typography>)
         : (<Typography>{displayBN(params.value)}</Typography>)
     )
@@ -52,15 +52,15 @@ const FieldPage: React.FC = () => {
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
-  // const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
+  const harvestablePods = farmerField.harvestablePods;
 
   const rows: any[] = useMemo(() => {
     const data: any[] = [];
-    if (farmerField.harvestablePods?.gt(0)) {
+    if (harvestablePods?.gt(0)) {
       data.push({
-        id: farmerField.harvestablePods,
-        placeInLine: new BigNumber(0),
-        amount: farmerField.harvestablePods,
+        id: harvestablePods,
+        placeInLine: new BigNumber(-1),
+        amount: harvestablePods,
       });
     }
     if (Object.keys(farmerField.plots).length > 0) {
@@ -75,7 +75,7 @@ const FieldPage: React.FC = () => {
       );
     }
     return data;
-  }, [beanstalkField.harvestableIndex, farmerField.plots, farmerField.harvestablePods]);
+  }, [beanstalkField.harvestableIndex, farmerField.plots, harvestablePods]);
 
   return (
     <Container maxWidth="sm">
