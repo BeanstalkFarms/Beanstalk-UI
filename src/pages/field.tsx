@@ -11,11 +11,9 @@ import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import { DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
-import FieldConditions from '../components/Field/FieldConditions';
-import MyPlotsDialog from '../components/Field/MyPlotsDialog';
-import useToggle from 'hooks/display/useToggle';
 import FieldActions from 'components/Field/Actions';
 import TableCard from 'components/Common/TableCard';
+import FieldConditions from '../components/Field/FieldConditions';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -24,7 +22,11 @@ const columns: DataGridProps['columns'] = [
     flex: 1,
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 0)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => (
+      (params.value.eq(0))
+        ? (<Typography color="primary">Harvestable</Typography>)
+        : (<Typography>{displayBN(params.value)}</Typography>)
+    )
   },
   {
     field: 'amount',
@@ -50,20 +52,30 @@ const FieldPage: React.FC = () => {
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
-  const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
+  // const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
 
-  // Rows
-  const rows = useMemo(
-    () =>
-      Object.keys(farmerField.plots).map((index) => ({
-        id: index,
-        placeInLine: new BigNumber(index).minus(
-          beanstalkField.harvestableIndex
-        ),
-        amount: new BigNumber(farmerField.plots[index]),
-      })),
-    [farmerField?.plots, beanstalkField.harvestableIndex]
-  );
+  const rows: any[] = useMemo(() => {
+    const data: any[] = [];
+    if (farmerField.harvestablePods?.gt(0)) {
+      data.push({
+        id: farmerField.harvestablePods,
+        placeInLine: new BigNumber(0),
+        amount: farmerField.harvestablePods,
+      });
+    }
+    if (Object.keys(farmerField.plots).length > 0) {
+      data.push(
+        ...Object.keys(farmerField.plots).map((index) => ({
+          id: index,
+          placeInLine: new BigNumber(index).minus(
+            beanstalkField.harvestableIndex
+          ),
+          amount: new BigNumber(farmerField.plots[index]),
+        }))
+      );
+    }
+    return data;
+  }, [beanstalkField.harvestableIndex, farmerField.plots, farmerField.harvestablePods]);
 
   return (
     <Container maxWidth="sm">
@@ -98,7 +110,7 @@ const FieldPage: React.FC = () => {
           sort={{ field: 'placeInLine', sort: 'asc' }}
           // token={PODS}
         />
-      </Stack>  
+      </Stack>
       {/* <MyPlotsDialog
         beanstalkField={beanstalkField}
         handleCloseDialog={handleClose}
