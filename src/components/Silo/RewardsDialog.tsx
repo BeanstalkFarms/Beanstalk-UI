@@ -1,13 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Box, Dialog, DialogProps, Divider, Stack } from '@mui/material';
 import { Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
-import { useTheme } from '@mui/material/styles';
+import BigNumber from 'bignumber.js';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import RewardItem from './RewardItem';
 import { FarmerSiloRewards } from '../../state/farmer/silo';
 import { ClaimRewardsAction } from '../../lib/Beanstalk/Farm';
 import DescriptionButton from '../Common/DescriptionButton';
-import Claim from "./Actions/Claim";
 
 export interface RewardDialogProps {
   /** Closes dialog */
@@ -66,6 +65,7 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
     }]
   ), []);
 
+  // when this is hovered: show hover state for these
   const hoverMap: any = useMemo(() => (
     {
       [ClaimRewardsAction.MOW]: [ClaimRewardsAction.MOW],
@@ -84,9 +84,7 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
     setHoverState(null);
   }, []);
 
-  const showHover = (c: ClaimRewardsAction) => {
-    return (hoverState && hoverMap[hoverState].includes(c))
-  }
+  const showHover = (c: ClaimRewardsAction) => (hoverState && hoverMap[hoverState].includes(c));
 
   console.log('HOVER STATE', hoverState);
 
@@ -107,11 +105,13 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
                 title="Earned Beans"
                 tooltip="The number of Beans earned since your last interaction with the Silo. Earned Beans are automatically Deposited in the Silo."
                 amount={beans.earned}
+                isClaimable={showHover(ClaimRewardsAction.MOW)}
               />
               <RewardItem
                 title="Earned Stalk"
                 tooltip="The number of Stalk earned from Earned Beans. Earned Stalk automatically contributes to total Stalk ownership."
                 amount={stalk.earned}
+                isClaimable={showHover(ClaimRewardsAction.MOW)}
               />
             </Stack>
             {/* Divider */}
@@ -124,11 +124,13 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
                 title="Plantable Seeds"
                 tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
                 amount={seeds.earned}
+                isClaimable={showHover(ClaimRewardsAction.PLANT_AND_MOW)}
               />
               <RewardItem
                 title="Grown Stalk"
                 tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
                 amount={stalk.grown}
+                isClaimable={showHover(ClaimRewardsAction.MOW)}
               />
             </Stack>
             {/* Divider */}
@@ -140,12 +142,14 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
               <RewardItem
                 title="Revitalized Stalk"
                 tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
-                amount={seeds.earned}
+                amount={new BigNumber(0)}
+                isClaimable={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
               />
               <RewardItem
                 title="Revitalized Seed"
                 tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
-                amount={stalk.grown}
+                amount={new BigNumber(0)}
+                isClaimable={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
               />
             </Stack>
           </Stack>
