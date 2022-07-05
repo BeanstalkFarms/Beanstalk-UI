@@ -14,6 +14,7 @@ import { displayBN, displayFullBN } from 'util/index';
 import FieldActions from 'components/Field/Actions';
 import TableCard from 'components/Common/TableCard';
 import FieldConditions from '../components/Field/FieldConditions';
+import { PODS } from '../constants/tokens';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -108,7 +109,7 @@ const FieldPage: React.FC = () => {
           rows={rows}
           columns={columns}
           sort={{ field: 'placeInLine', sort: 'asc' }}
-          // token={PODS}
+          token={PODS}
         />
       </Stack>
       {/* <MyPlotsDialog
