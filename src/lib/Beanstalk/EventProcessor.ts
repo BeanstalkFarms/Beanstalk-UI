@@ -282,6 +282,7 @@ export default class EventProcessor {
             //
             // PlotTransfer(from=0x, to=0x, id=15, pods=3)
             // This means we send Pods: 15, 16, 17.
+            // ----------------------------------------
             if (!transferIndex.isEqualTo(endIndex)) {
               // s2 = 15 + 3 = 18
               // Requires another split since 18 != 20
@@ -503,7 +504,7 @@ export default class EventProcessor {
     _amount: EBN,
   ) {
     if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
-    const amount    = tokenBN(_amount, this.epp.whitelist[token]);
+    const amount = tokenBN(_amount, this.epp.whitelist[token]);
     const existingDeposit = this.withdrawals[token][season];
     if (!existingDeposit) throw new Error('Received a \'RemoveWithdrawal\' event for an unknown Withdrawal.');
 
