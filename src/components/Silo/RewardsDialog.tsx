@@ -84,6 +84,7 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
     setHoverState(null);
   }, []);
 
+  // checks if the current hoverState includes a given ClaimRewardsAction
   const showHover = (c: ClaimRewardsAction) => (hoverState && hoverMap[hoverState].includes(c));
 
   return (
