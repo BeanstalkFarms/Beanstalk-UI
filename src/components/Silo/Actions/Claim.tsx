@@ -155,10 +155,15 @@ const ClaimForm : React.FC<
             <TokenQuoteProvider
               name="token"
               tokenOut={values.tokenOut}
-              // balance={amount}
-              balance={undefined}
               state={values.token}
-              disabled={true}
+              // This input is always disabled but we use
+              // the underlying handleQuote functionality
+              // for consistency with other forms.
+              disabled={true} 
+              // 
+              balance={amount?.gt(0) ? undefined : ZERO_BN}
+              balanceLabel="Claimable Balance"
+              // -----
               // FIXME:
               // "disableTokenSelect" applies the disabled prop to
               // the TokenSelect button. However if we don't pass
