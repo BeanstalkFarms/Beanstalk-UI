@@ -3,11 +3,11 @@ import { Box, Button, Card, Divider, Stack, Tooltip } from '@mui/material';
 import { FarmerSiloRewards } from 'state/farmer/silo';
 import { SupportedChainId } from 'constants/chains';
 import BigNumber from 'bignumber.js';
-import DropdownIcon from '../Common/DropdownIcon';
-import RewardItem from './RewardItem';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import stalkIcon from 'img/beanstalk/stalk-icon.svg';
 import seedIcon from 'img/beanstalk/seed-icon.svg';
+import RewardItem from './RewardItem';
+import DropdownIcon from '../Common/DropdownIcon';
 
 const GAP_LG = 3.5;
 const GAP_MD = 2;
@@ -67,7 +67,7 @@ const RewardsBar : React.FC<{
         <Box>
           <Divider orientation="vertical" />
         </Box>
-        {/* Grown */}
+        {/* Revitalized */}
         <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
           <RewardItem
             title="Revitalized Stalk"

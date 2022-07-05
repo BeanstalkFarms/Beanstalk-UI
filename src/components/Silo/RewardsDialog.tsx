@@ -2,14 +2,14 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Box, Dialog, DialogProps, Divider, Stack } from '@mui/material';
 import { Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
 import BigNumber from 'bignumber.js';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import stalkIcon from 'img/beanstalk/stalk-icon.svg';
+import seedIcon from 'img/beanstalk/seed-icon.svg';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import RewardItem from './RewardItem';
 import { FarmerSiloRewards } from '../../state/farmer/silo';
 import { ClaimRewardsAction } from '../../lib/Beanstalk/Farm';
 import DescriptionButton from '../Common/DescriptionButton';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import stalkIcon from 'img/beanstalk/stalk-icon.svg';
-import seedIcon from 'img/beanstalk/seed-icon.svg';
 
 export interface RewardDialogProps {
   /** Closes dialog */
@@ -22,8 +22,6 @@ export interface RewardDialogProps {
 type ClaimRewardsFormValues = {
   action: ClaimRewardsAction | null;
 }
-
-type RewardAction = keyof typeof ClaimRewardsAction;
 
 const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
   handleClose,
@@ -81,8 +79,7 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
   const onMouseOver = useCallback((v: ClaimRewardsAction) => (
     () => setHoverState(v)
   ), []);
-
-  // Drilldown handlers
+  
   const onMouseOutContainer = useCallback(() => {
     setHoverState(null);
   }, []);
@@ -142,7 +139,7 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
             <Box>
               <Divider orientation="vertical" />
             </Box>
-            {/* Grown */}
+            {/* Revitalized */}
             <Stack direction="row" gap={1}>
               <RewardItem
                 title="Revitalized Stalk"
@@ -160,73 +157,68 @@ const RewardsDialog: React.FC<RewardDialogProps & DialogProps> = ({
               />
             </Stack>
           </Stack>
-          {/* goes here */}
           <Stack>
             <Formik initialValues={initialValues} onSubmit={onSubmit}>
-              {(formikProps) => (
-                <>
-                  <Form noValidate>
-                    <Field name="action">
-                      {(fieldProps: FieldProps<any>) => {
-                        const set = (v: any) => () => {
-                          fieldProps.form.setFieldValue('action', v);
-                        };
-                        return (
-                          <Stack gap={1}>
+              <Form noValidate>
+                <Field name="action">
+                  {(fieldProps: FieldProps<any>) => {
+                    const set = (v: any) => () => {
+                      fieldProps.form.setFieldValue('action', v);
+                    };
+                    return (
+                      <Stack gap={1}>
+                        <DescriptionButton
+                          key={ClaimRewardsAction.MOW}
+                          {...options[0]}
+                          onClick={set(ClaimRewardsAction.MOW)}
+                          onMouseOver={onMouseOver(ClaimRewardsAction.MOW)}
+                          onMouseLeave={onMouseOutContainer}
+                          forceHover={showHover(ClaimRewardsAction.MOW)}
+                          fullWidth
+                          disableRipple
+                        />
+                        <Stack direction={{ xs: 'column', md: 'row' }} spacing={1}>
+                          <Box width={{ xs: '100%', md: '50%' }}>
                             <DescriptionButton
-                              key={ClaimRewardsAction.MOW}
-                              {...options[0]}
-                              onClick={set(ClaimRewardsAction.MOW)}
-                              onMouseOver={onMouseOver(ClaimRewardsAction.MOW)}
+                              key={ClaimRewardsAction.PLANT_AND_MOW}
+                              {...options[1]}
+                              onClick={set(ClaimRewardsAction.PLANT_AND_MOW)}
+                              onMouseOver={onMouseOver(ClaimRewardsAction.PLANT_AND_MOW)}
                               onMouseLeave={onMouseOutContainer}
-                              forceHover={showHover(ClaimRewardsAction.MOW)}
+                              forceHover={showHover(ClaimRewardsAction.PLANT_AND_MOW)}
                               fullWidth
                               disableRipple
                             />
-                            <Stack direction={{ xs: 'column', md: 'row' }} spacing={1}>
-                              <Box width={{ xs: '100%', md: '50%' }}>
-                                <DescriptionButton
-                                  key={ClaimRewardsAction.PLANT_AND_MOW}
-                                  {...options[1]}
-                                  onClick={set(ClaimRewardsAction.PLANT_AND_MOW)}
-                                  onMouseOver={onMouseOver(ClaimRewardsAction.PLANT_AND_MOW)}
-                                  onMouseLeave={onMouseOutContainer}
-                                  forceHover={showHover(ClaimRewardsAction.PLANT_AND_MOW)}
-                                  fullWidth
-                                  disableRipple
-                                />
-                              </Box>
-                              <Box width={{ xs: '100%', md: '50%' }}>
-                                <DescriptionButton
-                                  key={ClaimRewardsAction.ENROOT_AND_MOW}
-                                  {...options[2]}
-                                  onClick={set(ClaimRewardsAction.ENROOT_AND_MOW)}
-                                  onMouseOver={onMouseOver(ClaimRewardsAction.ENROOT_AND_MOW)}
-                                  onMouseLeave={onMouseOutContainer}
-                                  forceHover={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
-                                  fullWidth
-                                  disableRipple
-                                />
-                              </Box>
-                            </Stack>
+                          </Box>
+                          <Box width={{ xs: '100%', md: '50%' }}>
                             <DescriptionButton
-                              key={ClaimRewardsAction.CLAIM_ALL}
-                              {...options[3]}
-                              onClick={set(ClaimRewardsAction.CLAIM_ALL)}
-                              onMouseOver={onMouseOver(ClaimRewardsAction.CLAIM_ALL)}
+                              key={ClaimRewardsAction.ENROOT_AND_MOW}
+                              {...options[2]}
+                              onClick={set(ClaimRewardsAction.ENROOT_AND_MOW)}
+                              onMouseOver={onMouseOver(ClaimRewardsAction.ENROOT_AND_MOW)}
                               onMouseLeave={onMouseOutContainer}
-                              forceHover={showHover(ClaimRewardsAction.CLAIM_ALL)}
-                              recommended
+                              forceHover={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
                               fullWidth
                               disableRipple
                             />
-                          </Stack>
-                        );
-                      }}
-                    </Field>
-                  </Form>
-                </>
-              )}
+                          </Box>
+                        </Stack>
+                        <DescriptionButton
+                          key={ClaimRewardsAction.CLAIM_ALL}
+                          {...options[3]}
+                          onClick={set(ClaimRewardsAction.CLAIM_ALL)}
+                          onMouseOver={onMouseOver(ClaimRewardsAction.CLAIM_ALL)}
+                          onMouseLeave={onMouseOutContainer}
+                          forceHover={showHover(ClaimRewardsAction.CLAIM_ALL)}
+                          recommended
+                          fullWidth
+                          disableRipple
+                        />
+                      </Stack>
+                    );
+                  }}
+                </Field>
+              </Form>
             </Formik>
           </Stack>
         </Stack>
