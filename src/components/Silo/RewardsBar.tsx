@@ -26,10 +26,10 @@ const RewardsBar : React.FC<{
   seeds,
   handleOpenDialog
 }) => (
-  <Card sx={{ pl: 2, pr: 1, py: 1.5 }}>
-    <Stack direction={{ md: 'row', xs: 'column' }} justifyContent={{ md: 'space-between' }} alignItems={{ md: 'center', xs: 'auto' }} rowGap={1.5}>
+  <Card sx={{ pl: 2, pr: 2, py: 1.5 }}>
+    <Stack direction={{ lg: 'row', xs: 'column' }} justifyContent={{ lg: 'space-between' }} alignItems={{ lg: 'center', xs: 'auto' }} rowGap={1.5}>
       {/* Statistics */}
-      <Stack direction={{ md: 'row', xs: 'column' }} columnGap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }} rowGap={1.5}>
+      <Stack direction={{ lg: 'row', xs: 'column' }} columnGap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }} rowGap={1.5}>
         {/* Earned */}
         <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
           <RewardItem
@@ -85,13 +85,13 @@ const RewardsBar : React.FC<{
       </Stack>
       {/* Claim */}
       {/* TEMP: Hide Claim button on MAINNET */}
-      <Box sx={{ justifySelf: { md: 'flex-end', xs: 'auto' }, width: { xs: '100%', md: 'auto' } }}>
+      <Box sx={{ justifySelf: { lg: 'flex-end', xs: 'auto' }, width: { xs: '100%', lg: 'auto' } }}>
         <Tooltip title={chainId === SupportedChainId.MAINNET ? <>Claiming Silo rewards will be available upon Replant.</> : ''}>
           <span>
             <Button
               disabled={chainId === SupportedChainId.MAINNET}
               variant="contained"
-              sx={{ height: '100%', width: { xs: '100%', md: 'auto' } }}
+              sx={{ height: '100%', width: { xs: '100%', lg: 'auto' } }}
               endIcon={<DropdownIcon open={false} />}
               onClick={handleOpenDialog}
             >
