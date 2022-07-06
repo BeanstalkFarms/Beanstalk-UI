@@ -1,49 +1,55 @@
-import React, {  useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   Slider,
   SliderProps,
   Stack,
 } from '@mui/material';
-import { FieldProps } from 'formik';
+import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
 
 type SliderFieldProps = {
   initialState: number[] | number;
+  /**
+   * Pass one field if it is a single slider,
+   * and two fields if it is a double slider
+   */
+  fields: string[];
 };
 
 /**
  * Double Slider: the form must have min & max value
  */
 const SliderField : React.FC<
-  SliderFieldProps      // custom// MUI TextField
-  & FieldProps
+  SliderFieldProps
   & SliderProps// Formik Field
 > = ({
   // -- Custom props
   initialState,
-  // -- Formik props
-  form,
-  field,
+  fields,
   // -- Slider Props
   min,
   max,
+  sx,
+  ...props
 }) => {
   const [value, setValue] = React.useState<number[] | number>(initialState);
+  const { values, setFieldValue } = useFormikContext<any>();
 
-  // update slider values on double slider when the form's
-  // min or max value is changed (i.e. adjusting 'amount' input)
+  // update double slider values when the form's
+  // min or max value is changed (ex: adjusting 'amount' input)
   useEffect(() => {
-    if (form.values.min && form.values.max) {
-      setValue([form.values.min, form.values.max]);
+    if (values[fields[0]] && values[fields[1]]) {
+      setValue([
+        values[fields[0]],
+        values[fields[1]]
+      ]);
     }
-  }, [form.values.min, form.values.max]);
+  }, [values, fields]);
 
-  // makes the scroll adjust a little snappier
-  // === undefined if is a single slider
-  const minVal = useMemo(() => form.values.min, [form.values.min]);
-  const maxVal = useMemo(() => form.values.max, [form.values.max]);
+  const minVal = values[fields[0]];
+  const maxVal = values[fields[1]];
 
-  const handleChange = (
+  const handleChange = useCallback((
     event: Event,
     newValue: number | number[],
     activeThumb: number,
@@ -51,21 +57,28 @@ const SliderField : React.FC<
     // ----- single slider -----
     if (!Array.isArray(newValue)) {
       setValue(newValue);
-      form.setFieldValue(field.name, new BigNumber(newValue));
+      setFieldValue(fields[0], new BigNumber(newValue));
       return;
     }
 
     // ----- double slider -----
     if (newValue[0] !== minVal) {
       setValue(newValue as number[]);
-      form.setFieldValue('min', new BigNumber(newValue[0]));
+      setFieldValue(fields[0], new BigNumber(newValue[0]));
     }
 
     if (newValue[1] !== maxVal) {
       setValue(newValue as number[]);
-      form.setFieldValue('max', new BigNumber(newValue[1]));
+      setFieldValue(fields[1], new BigNumber(newValue[1]));
     }
-  };
+  }, [
+    fields,
+    maxVal,
+    minVal,
+    setFieldValue
+  ]);
+
+  // const valueLabelFormat = useCallback((value: string, index: number) => )
 
   return (
     <Stack gap={0.5}>
@@ -75,6 +88,7 @@ const SliderField : React.FC<
         getAriaLabel={() => 'Minimum distance shift'}
         value={value}
         onChange={handleChange}
+        // valueLabelFormat={}
         valueLabelDisplay="auto"
         disableSwap
         sx={{
@@ -85,8 +99,10 @@ const SliderField : React.FC<
           },
           '& .MuiSlider-thumb:before': {
             boxShadow: 'none',
-          }
+          },
+          ...sx
         }}
+        {...props}
       />
     </Stack>
   );

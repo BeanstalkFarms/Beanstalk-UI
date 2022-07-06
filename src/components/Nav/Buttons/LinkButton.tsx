@@ -16,6 +16,7 @@ import {
 const LinkButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, title, tag }) => {
   const resolved = useResolvedPath(to);
   const match    = useMatch({ path: resolved.pathname, end: true });
+  
   return (
     <Stack sx={{
       // Set a default transparent bottom border.

@@ -16,6 +16,7 @@ import useTokenMap from '../../../hooks/useTokenMap';
 import { BEAN, ETH } from '../../../constants/tokens';
 import { BuyNowFormValues } from '../Dialogs/BuyNowDialog';
 import { ERC20Token, NativeToken } from 'classes/Token';
+import FieldWrapper from "../../Common/Form/FieldWrapper";
 
 export type BuyNowFormProps = {
   token: NativeToken | ERC20Token
@@ -80,24 +81,23 @@ const BuyNowForm: React.FC<
           balances={balances}
           tokenList={Object.values(erc20TokenMap)}
         />
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Typography>Number of Beans</Typography>
-          </Box>
-          {values.tokens.map((state, index) => (
-            <TokenQuoteProvider
-              key={`tokens.${index}`}
-              name={`tokens.${index}`}
-              tokenOut={depositToken}
-              balance={balances[state.token.address] || undefined}
-              state={state}
-              showTokenSelect={handleOpen}
-              disabled={isMainnet}
-              disableTokenSelect={isMainnet}
-              handleQuote={handleQuote}
-            />
-          ))}
-        </Stack>
+        <FieldWrapper label="Number of Beans">
+          <>
+            {values.tokens.map((state, index) => (
+              <TokenQuoteProvider
+                key={`tokens.${index}`}
+                name={`tokens.${index}`}
+                tokenOut={depositToken}
+                balance={balances[state.token.address] || undefined}
+                state={state}
+                showTokenSelect={handleOpen}
+                disabled={isMainnet}
+                disableTokenSelect={isMainnet}
+                handleQuote={handleQuote}
+              />
+            ))}
+          </>
+        </FieldWrapper>
         <Button sx={{ p: 1 }} type="submit" disabled>
           Buy Pods
         </Button>

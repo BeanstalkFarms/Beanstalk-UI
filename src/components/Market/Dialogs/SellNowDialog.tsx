@@ -21,6 +21,7 @@ import { SellListingFormValues } from './SellListingDialog';
 import SellListingForm from '../Forms/SellListingForm';
 import SellNowForm from '../Forms/SellNowForm';
 import { PodOrder } from '../Plots.mock';
+import PlotSelect from "../../Common/PlotSelect";
 
 export type SellNowFormValues = {
   min: BigNumber | null;
@@ -78,7 +79,6 @@ const SellNowDialog: React.FC<{ podListing: PodOrder | undefined; handleClose: a
   const onSubmit = useCallback((values: SellNowFormValues, formActions: FormikHelpers<SellNowFormValues>) => {
     Promise.resolve();
   }, []);
-
   return (
     <Dialog
       onClose={onClose}
@@ -92,38 +92,11 @@ const SellNowDialog: React.FC<{ podListing: PodOrder | undefined; handleClose: a
         <>
           <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Select Plot to sell</StyledDialogTitle>
           <StyledDialogContent>
-            <Stack gap={2}>
-              <PlotOrderDetails podListing={podListing} harvestableIndex={harvestableIndex} />
-              <Stack gap={1}>
-                {Object.keys(farmerField?.plots).map((index) => (
-                  <Card
-                    sx={{
-                      p: 2,
-                      '&:hover': {
-                        backgroundColor: BeanstalkPalette.hoverBlue,
-                        cursor: 'pointer'
-                      }
-                    }}
-                    onClick={() => handleSetPlot(index)}
-                  >
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                      <Stack direction="row" gap={0.4}>
-                        <Typography
-                          sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(index).minus(beanstalkField?.harvestableIndex))}
-                        </Typography>
-                        <Typography sx={{ fontSize: '18px' }}>in Line</Typography>
-                      </Stack>
-                      <Stack direction="row" gap={0.3} alignItems="center">
-                        <Typography
-                          sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(farmerField.plots[index]))}
-                        </Typography>
-                        <img src={podIcon} alt="" height="18px" />
-                      </Stack>
-                    </Stack>
-                  </Card>
-                ))}
-              </Stack>
-            </Stack>
+            <PlotSelect
+              handlePlotSelect={handleSetPlot}
+              plots={farmerField?.plots}
+              harvestableIndex={beanstalkField?.harvestableIndex}
+            />
           </StyledDialogContent>
         </>
       )}

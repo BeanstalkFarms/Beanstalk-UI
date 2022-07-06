@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { LoadingButton } from '@mui/lab';
 import { Token } from 'classes';
 import { SEEDS, STALK } from 'constants/tokens';
@@ -24,6 +24,7 @@ import { AppState } from 'state';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import { ActionType } from 'util/Actions';
+import { ZERO_BN } from 'constants/index';
 
 // -----------------------------------------------------------------------
 
@@ -98,11 +99,14 @@ const WithdrawForm : React.FC<
   const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
     token,
     values.tokens,
-    siloBalances[token.address]?.deposited.crates,
+    siloBalances[token.address]?.deposited.crates || [], // fallback
     season,
   );
   const isReady = (withdrawResult && withdrawResult.amount.lt(0));
 
+  // For the Withdraw form, move this fragment outside of the return
+  // statement because it's displayed twice (once in the form and)
+  // once in the final popup
   const tokenOutputs = isReady ? (
     <>
       <Stack direction="row" gap={1} justifyContent="center">
@@ -172,7 +176,8 @@ const WithdrawForm : React.FC<
           <TokenInputField
             name="tokens.0.amount"
             token={token}
-            balance={depositedBalance || undefined}
+            disabled={!depositedBalance || depositedBalance.eq(0)}
+            balance={depositedBalance || ZERO_BN}
             balanceLabel="Deposited Balance"
             InputProps={InputProps}
           />

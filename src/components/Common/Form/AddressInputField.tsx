@@ -1,27 +1,94 @@
-import React, { useCallback } from 'react';
-import { IconButton, InputAdornment, TextField, TextFieldProps } from '@mui/material';
+import React, { useCallback, useMemo } from 'react';
+import { Box, IconButton, InputAdornment, Link, Stack, TextField, TextFieldProps, Tooltip, Typography } from '@mui/material';
 import { Field, FieldProps } from 'formik';
-import { ethers } from 'ethers';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import OutputField from './OutputField';
+import useChainId from 'hooks/useChain';
+import { CHAIN_INFO } from 'constants/index';
 
 export type AddressInputFieldProps = (
   Partial<TextFieldProps>
   & { name: string }
 );
 
-// export const ETHEREUM_ADDRESS = /^0x[a-fA-F0-9]$/;
 export const ETHEREUM_ADDRESS_CHARS = /([0][x]?[a-fA-F0-9]{0,42})$/;
 
 const validateAddress = (value: string) => {
   let error;
-  // if (!ETHEREUM_ADDRESS.test(value)) {
-  if (!ethers.utils.isAddress(value)) {
-    error = 'Invalid address'
+  if (!ETHEREUM_ADDRESS_CHARS.test(value)) {
+    error = 'Invalid address';
   }
   return error;
-}
+};
 
+const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = ({
+  name,
+  disabled,
+  /// Formik
+  field,
+  meta,
+  form,
+  ...props
+}) => {
+  const chainId = useChainId();
+  const isValid = field.value && !meta.error;
+  const onChange = useCallback((e) => {
+    // Allow field to change if the value has been removed, or if
+    // a valid address character has been input.
+    if (!e.target.value || ETHEREUM_ADDRESS_CHARS.test(e.target.value)) {
+      field.onChange(e);
+    }
+  }, [field]);
+  const InputProps = useMemo(() => ({
+    startAdornment: meta.value ? (
+      <InputAdornment position="start">
+        <CloseIcon color="warning" /> 
+      </InputAdornment>
+    ) : null
+  }), [meta.value])
+  if (isValid) {
+    return (
+      <OutputField sx={{ height: 67.5 /* lock to same height as input */ }}>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <CheckIcon sx={{ height: 20, width: 20, fontSize: '100%' }} color="primary" />
+          <Typography>
+            <Tooltip title="View on Etherscan">
+              <Link
+                underline="hover"
+                color="text.primary"
+                href={`${CHAIN_INFO[chainId].explorer}/address/${field.value}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {field.value}
+              </Link>
+            </Tooltip>
+          </Typography>
+        </Stack>
+        <Box>
+          <IconButton onClick={() => form.setFieldValue(name, '')}>
+            <CloseIcon sx={{ height: 20, width: 20, fontSize: '100%' }} />
+          </IconButton>
+        </Box>
+      </OutputField>
+    );
+  }
+  return (
+    <TextField
+      fullWidth
+      type="text"
+      placeholder="0x0000"
+      disabled={isValid || disabled}
+      InputProps={InputProps}
+      {...props}
+      name={field.name}
+      value={field.value}
+      onBlur={field.onBlur}
+      onChange={onChange}
+    />
+  );
+}
 
 const AddressInputField : React.FC<AddressInputFieldProps> = ({
   name,
@@ -29,56 +96,15 @@ const AddressInputField : React.FC<AddressInputFieldProps> = ({
 }) => {
   return (
     <Field name={name} validate={validateAddress} validateOnChange={false} validateOnBlur>
-      {(fieldProps: FieldProps) => {
-        const isValid = fieldProps.field.value && !fieldProps.meta.error;
-        return (
-          <>
-            <TextField
-              fullWidth
-              type="text"
-              placeholder="0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5"
-              disabled={isValid}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    {isValid ? (
-                      <CheckIcon color="primary" />
-                    ) : (
-                      fieldProps.meta.value ? (
-                        <CloseIcon color="warning" />
-                      ) : null
-                    )}
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {isValid && (
-                      <IconButton size="small" onClick={() => fieldProps.form.setFieldValue(name, '')}>
-                        <CloseIcon />
-                      </IconButton>
-                    )}
-                  </InputAdornment>
-                )
-              }}
-              {...props}
-              {...fieldProps.field}
-              value={fieldProps.field.value}
-              // onChange={fieldProps.field.onChange}
-              // onBlur={fieldProps.field.onBlur}
-              onChange={(e) => {
-                // Allow field to change if the value has been removed, or if
-                // a valid address character has been input.
-                if (!e.target.value || ETHEREUM_ADDRESS_CHARS.test(e.target.value)) {
-                  fieldProps.field.onChange(e);
-                }
-              }}
-            />
-            {/* <div>{fieldProps.meta.error}</div> */}
-          </>
-        );
-      }}
+      {(fieldProps: FieldProps) => (
+        <AddressInputFieldInner
+          name={name}
+          {...props}
+          {...fieldProps}
+        />
+      )}
     </Field>
-  )
-}
+  );
+};
 
 export default AddressInputField

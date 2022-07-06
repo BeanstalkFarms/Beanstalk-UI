@@ -147,6 +147,21 @@ describe('the Field', () => {
     expect(Object.keys(p.plots).length).toBe(1);
     expect(p.plots[(10 + 22).toString()]).toStrictEqual(new BigNumber(42 - 22));
   });
+
+  // 5.
+  it('works with large-index plots', () => {
+    const p = mockProcessor();
+    p.ingest({
+      event: 'Sow',
+      args: propArray({
+        index: EBN.from("737663715081254"),
+        pods:  EBN.from("57980000"),
+      })
+    } as SowEvent);
+
+    expect(p.plots["737663715.081254"]).toBeDefined();
+    expect(p.plots["737663715.081254"].eq(57.980000)).toBe(true);
+  })
 });
 
 // --------------------------------
@@ -360,42 +375,60 @@ describe('the Silo', () => {
     expect(p.withdrawals[t1]['6074']).toBeUndefined();
   });
 
-  it('removes multiple withdrawals, full', () => {
+  // it('removes multiple withdrawals, full', () => {
+  //   const p = mockProcessor();
+  //   const t1 = Bean.address.toLowerCase();
+
+  //   // Withdraw: 1000 Bean in Season 6074
+  //   p.ingest({
+  //     event: 'AddWithdrawal',
+  //     args: propArray({
+  //       account,
+  //       token:  t1,
+  //       season: EBN.from(6074),
+  //       amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+  //     }),
+  //   } as AddWithdrawalEvent);
+
+  //   // Withdraw: 5000 Bean in Season 6100
+  //   p.ingest({
+  //     event: 'AddWithdrawal',
+  //     args: propArray({
+  //       account,
+  //       token:  t1,
+  //       season: EBN.from(6100),
+  //       amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+  //     }),
+  //   } as AddWithdrawalEvent);
+
+  //   // Claim: 
+  //   // p.ingest({
+  //   //   event: 'RemoveWithdrawals',
+  //   //   args: propArray({
+  //   //     account,
+  //   //     token:  t1,
+  //   //     season: ["6074", "6100"],
+  //   //     amount: EBN.from(400*10**Bean.decimals), // Deposited 1,000 Bean
+  //   //   }),
+  //   // } as RemoveWithdrawalEvent);
+  // });
+
+  it('ignores empty RemoveWithdrawal events', () => {
     const p = mockProcessor();
     const t1 = Bean.address.toLowerCase();
 
-    // Withdraw: 1000 Bean in Season 6074
-    p.ingest({
-      event: 'AddWithdrawal',
+    expect(() => p.ingest({
+      event: 'RemoveWithdrawal',
       args: propArray({
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+        amount: EBN.from(0), // amount is empty is Withdrawal couldn't be processed
       }),
-    } as AddWithdrawalEvent);
+    } as RemoveWithdrawalEvent)).not.toThrow();
 
-    // Withdraw: 5000 Bean in Season 6100
-    p.ingest({
-      event: 'AddWithdrawal',
-      args: propArray({
-        account,
-        token:  t1,
-        season: EBN.from(6100),
-        amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
-      }),
-    } as AddWithdrawalEvent);
-
-    // Claim: 
-    // p.ingest({
-    //   event: 'RemoveWithdrawals',
-    //   args: propArray({
-    //     account,
-    //     token:  t1,
-    //     season: ["6074", "6100"],
-    //     amount: EBN.from(400*10**Bean.decimals), // Deposited 1,000 Bean
-    //   }),
-    // } as RemoveWithdrawalEvent);
+    // No deposit made in t1
+    expect(p.withdrawals[t1]).toStrictEqual({});
   });
 });
 
@@ -419,11 +452,3 @@ describe('the Silo', () => {
 //   getTransaction: () => {},
 //   getTransactionReceipt: () => {},
 // })
-
-// const mockProcessor = () => new EventProcessor('0xFARMER', epp);
-
-// const propArray = <T extends Event>(o: { [key: string] : any }) => {
-//   const v = Object.values(o) as Record<string | number, any>;
-//   Object.keys(o).map((k) => { v[k] = o[k]; });
-//   return v as T['args'];
-// }

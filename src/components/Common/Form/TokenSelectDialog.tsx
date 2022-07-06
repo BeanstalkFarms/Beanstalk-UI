@@ -36,8 +36,10 @@ const TokenSelectDialog : React.FC<{
   selected: ({ token: Token } & any)[];
   /** Called when the user "submits" their changes to selected tokens. */
   handleSubmit: (s: Set<Token>) => void;
-  /** The Farmer's current balances. Displayed alongside each token; hidden if not provided. */
-  balances: AddressMap<BigNumber>;
+  /** The Farmer's current balances. Displayed alongside each token.
+   * Shows 0 for missing balances if `balances` is an object.
+   * Shows nothing if `balances` is undefined`. */
+  balances: AddressMap<BigNumber> | undefined;
   /** A list of tokens to show in the Dialog. */
   tokenList: Token[];
   /** Single or multi-select */
@@ -119,14 +121,21 @@ const TokenSelectDialog : React.FC<{
               color="primary"
               selected={newSelection.has(_token)}
               disablePadding
-              secondaryAction={<Typography>{displayBN(balances ? balances[_token.address] : ZERO_BN)}</Typography>}
+              secondaryAction={balances ? (
+                <Typography>
+                  {displayBN(balances?.[_token.address] || ZERO_BN)}
+                </Typography>
+              ) : null}
               onClick={onClickItem(_token)}
             >
               <ListItemButton disableRipple>
                 <ListItemIcon>
                   <img src={_token.logo} alt="" className={classes.tokenLogo} />
                 </ListItemIcon>
-                <ListItemText primary={_token.symbol} secondary={_token.name} />
+                <ListItemText
+                  primary={_token.symbol}
+                  secondary={_token.name}
+                />
               </ListItemButton>
             </ListItem>
           )) : null}

@@ -70,6 +70,7 @@ const DepositForm : React.FC<
   const erc20TokenMap = useTokenMap([BEAN, ETH, WETH, siloToken, CRV3, DAI, USDC, USDT]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
   const getChainToken = useGetChainToken();
+  const Weth = getChainToken<ERC20Token>(WETH);
 
   //
   const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
@@ -99,7 +100,6 @@ const DepositForm : React.FC<
   // This handler does not run when _tokenIn = _tokenOut (direct deposit)
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
-      const Weth = getChainToken<ERC20Token>(WETH);
       const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
       const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
       const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
@@ -221,7 +221,7 @@ const DepositForm : React.FC<
         steps: estimate.steps,
       }
     },
-    [farm, pool, getChainToken]
+    [farm, pool, getChainToken, Weth]
   );
 
   return (
@@ -238,13 +238,13 @@ const DepositForm : React.FC<
         />
         <Stack gap={1}>
           <Stack gap={1.5}>
-            {values.tokens.map((state, index) => (
+            {values.tokens.map((tokenState, index) => (
               <TokenQuoteProvider
                 key={`tokens.${index}`}
                 name={`tokens.${index}`}
                 tokenOut={siloToken}
-                balance={balances[state.token.address] || undefined}
-                state={state}
+                balance={balances[tokenState.token.address] || undefined}
+                state={tokenState}
                 showTokenSelect={showTokenSelect}
                 disabled={isMainnet}
                 disableTokenSelect={isMainnet}
@@ -286,6 +286,7 @@ const DepositForm : React.FC<
             </>
           ) : null}
           <SmartSubmitButton
+            loading={isSubmitting}
             type="submit"
             variant="contained"
             color="primary"
@@ -316,8 +317,8 @@ const Deposit : React.FC<{
   const Eth = useChainConstant(ETH);
   const balances = useFarmerBalances();
   const { data: signer } = useSigner();
-  const provider = useProvider();
   const beanstalk = useBeanstalkContract(signer);
+  const provider = useProvider();
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   // Form setup
@@ -450,12 +451,9 @@ const Deposit : React.FC<{
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
         <>
-          {/* Padding below matches tabs and input position. See Figma. */}
-          <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
-            <TxnSettings>
-              <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-            </TxnSettings>
-          </Box>
+          <TxnSettings placement="form-top-right">
+            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
+          </TxnSettings>
           <DepositForm
             pool={pool}
             siloToken={siloToken}

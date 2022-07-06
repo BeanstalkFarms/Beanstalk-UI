@@ -248,7 +248,18 @@ let muiTheme = createTheme({
         color: 'secondary',
       },
       styleOverrides: {
-        root: {},
+        root: {
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.5rem'
+        },
+        sizeSmall: {
+          fontSize: '1.1rem'
+        }
       },
     },
     MuiTabs: {
@@ -313,6 +324,11 @@ let muiTheme = createTheme({
         elevation: 0,
         color: 'transparent',
       },
+    },
+    MuiDialog: {
+      defaultProps: {  
+        transitionDuration: 0,
+      }
     },
     MuiDialogContent: {
       styleOverrides: {

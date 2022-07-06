@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import NumberFormat, { InputAttributes } from 'react-number-format';
 
 interface CustomProps {

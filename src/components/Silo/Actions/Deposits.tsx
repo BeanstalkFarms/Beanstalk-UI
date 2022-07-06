@@ -108,6 +108,7 @@ const Deposits : React.FC<{
       amount={amount}
       value={getUSD(token, amount || ZERO_BN)}
       state={state}
+      token={token}
     />
   );
 };

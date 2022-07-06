@@ -9,6 +9,10 @@ export type FormState = {
   approving?: FormApprovingState; 
 }
 
+export type FormStateWithPlotSelect = FormState & {
+  plot?: BigNumber;
+}
+
 export type FormTokenState = {
   /** */
   token: ERC20Token | NativeToken;
