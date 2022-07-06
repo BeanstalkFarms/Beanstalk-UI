@@ -50,39 +50,71 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     <Stack direction="column">
       <Typography
         color="text.primary"
-        sx={{ fontSize: '14px', fontWeight: 700, pb: 1 }}
+        sx={{ fontSize: '14px', fontWeight: 700 }}
       >
         Upcoming Season in 42m
       </Typography>
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ p: 0.75 }}
+      >
         <Typography
           color="text.primary"
-          sx={{ fontSize: '14px', fontWeight: 500 }}
+          sx={{
+            fontSize: '14px',
+            fontWeight: 500,
+            width: '15%',
+            textAlign: 'left',
+          }}
         >
           Season
         </Typography>
+
         <Typography
           color="text.primary"
-          sx={{ fontSize: '14px', fontWeight: 500 }}
+          sx={{
+            fontSize: '14px',
+            fontWeight: 500,
+            width: '20%',
+            textAlign: 'left',
+          }}
         >
           Precipitation
         </Typography>
+
         <Typography
           color="text.primary"
-          sx={{ fontSize: '14px', fontWeight: 500 }}
+          sx={{
+            fontSize: '14px',
+            fontWeight: 500,
+            width: '20%',
+            textAlign: 'left',
+          }}
         >
           New Beans
         </Typography>
         <Typography
           color="text.primary"
-          sx={{ fontSize: '14px', fontWeight: 500 }}
+          sx={{
+            fontSize: '14px',
+            fontWeight: 500,
+            width: '20%',
+            textAlign: 'left',
+          }}
         >
           New Soil
         </Typography>
         <Typography
           color="text.primary"
-          sx={{ fontSize: '14px', fontWeight: 500 }}
+          sx={{
+            fontSize: '14px',
+            fontWeight: 500,
+            width: '20%',
+            textAlign: 'right',
+          }}
         >
           Weather
         </Typography>
@@ -93,12 +125,13 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const HeaderPastSeasonsLabel = (
     <Typography
       color="text.primary"
-      sx={{ fontSize: '14px', fontWeight: 700, pb: 1 }}
+      sx={{ fontSize: '14px', fontWeight: 700, mv: 1 }}
     >
       Past Seasons
     </Typography>
   );
 
+  // iterate over an array of seasons
   const seasonsContent = (
     <div>
       <SeasonCard />

@@ -2,6 +2,8 @@ import React from 'react';
 import { Stack, Typography, Box } from '@mui/material';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 /**
  * Displays data about a Pool containing Beans and other assets.
@@ -11,20 +13,24 @@ const UpcomingSeasonCard: React.FC = () => (
     sx={{
       border: 1,
       borderColor: '#DDDDDD',
-      p: 1,
-      borderRadius: '10px',
-      mb: '10px',
+      p: 0.75,
+      borderRadius: '8px',
     }}
   >
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Typography
         color="text.primary"
-        sx={{ fontSize: '14px', fontWeight: 500 }}
+        sx={{
+          fontSize: '14px',
+          fontWeight: 500,
+          width: '15%',
+          textAlign: 'left',
+        }}
       >
         6075
       </Typography>
 
-      <Box sx={{ backgroundColor: '#F4DE51', p: 0.3, borderRadius: '5px' }}>
+      <Box sx={{ width: '20%', alignSelf: 'flex-start' }}>
         <Stack direction="row" alignItems="center" spacing="2px">
           <img
             src={drySeasonIcon}
@@ -35,31 +41,81 @@ const UpcomingSeasonCard: React.FC = () => (
             color="text.primary"
             sx={{ fontSize: '14px', fontWeight: 500 }}
           >
-            Dry Season
+            Dry
           </Typography>
         </Stack>
       </Box>
 
       <Typography
         color="text.primary"
-        sx={{ fontSize: '14px', fontWeight: 500 }}
+        sx={{
+          fontSize: '14px',
+          fontWeight: 500,
+          width: '20%',
+          textAlign: 'left',
+        }}
       >
         0
       </Typography>
 
-      <Typography
-        color="text.primary"
-        sx={{ fontSize: '14px', fontWeight: 500 }}
+      <Stack
+        direction="row"
+        alignItems="center"
+        sx={{ width: '20%', alignSelf: 'flex-start' }}
       >
-        193,100
-      </Typography>
+        <ArrowUpwardIcon sx={{ width: '14px', height: '14px' }} />
 
-      <Typography
-        color="text.primary"
-        sx={{ fontSize: '14px', fontWeight: 500 }}
+        <Typography
+          color="text.primary"
+          sx={{
+            fontSize: '14px',
+            fontWeight: 500,
+          }}
+        >
+          193,100
+        </Typography>
+      </Stack>
+
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing="6px"
+        sx={{ width: '20%', alignSelf: 'flex-end' }}
       >
-        5099
-      </Typography>
+        <Typography
+          color="text.primary"
+          sx={{
+            fontSize: '14px',
+            fontWeight: 500,
+          }}
+        >
+          5099
+        </Typography>
+
+        <Stack direction="row" alignItems="center">
+          <Typography
+            color="text.primary"
+            sx={{
+              fontSize: '14px',
+              fontWeight: 500,
+            }}
+          >
+            (
+          </Typography>
+
+          <ArrowUpwardIcon sx={{ width: '14px', height: '14px' }} />
+
+          <Typography
+            color="text.primary"
+            sx={{
+              fontSize: '14px',
+              fontWeight: 500,
+            }}
+          >
+            3%)
+          </Typography>
+        </Stack>
+      </Stack>
     </Stack>
   </Box>
 );
