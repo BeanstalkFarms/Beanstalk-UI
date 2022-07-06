@@ -5,6 +5,7 @@ import {
   Typography,
   useMediaQuery,
   Box,
+  Button,
 } from '@mui/material';
 import { NEW_BN } from 'constants/index';
 import FolderMenu from '../FolderMenu';
@@ -15,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import SeasonCard from '../SeasonCard';
 import UpcomingSeasonCard from '../UpcomingSeasonCard';
+import SunriseButton from 'components/Sun/SunriseButton';
 
 // ------------------------------------------------------------
 
@@ -135,6 +137,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const seasonsContent = (
     <div>
       <SeasonCard />
+      <SunriseButton />
     </div>
   );
 
