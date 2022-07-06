@@ -12,6 +12,6 @@ const Warning : React.FC<{
     <WarningAmberIcon sx={{ ml: 0.5, color: BeanstalkPalette.warningYellow }} />
     <Typography>{message}</Typography>
   </Stack>
-  ));
+));
 
 export default Warning;

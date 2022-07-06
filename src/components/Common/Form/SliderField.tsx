@@ -29,6 +29,8 @@ const SliderField : React.FC<
   // -- Slider Props
   min,
   max,
+  sx,
+  ...props
 }) => {
   const [value, setValue] = React.useState<number[] | number>(initialState);
   const { values, setFieldValue } = useFormikContext<any>();
@@ -37,7 +39,10 @@ const SliderField : React.FC<
   // min or max value is changed (ex: adjusting 'amount' input)
   useEffect(() => {
     if (values[fields[0]] && values[fields[1]]) {
-      setValue([values[fields[0]], values[fields[1]]]);
+      setValue([
+        values[fields[0]],
+        values[fields[1]]
+      ]);
     }
   }, [values, fields]);
 
@@ -73,6 +78,8 @@ const SliderField : React.FC<
     setFieldValue
   ]);
 
+  // const valueLabelFormat = useCallback((value: string, index: number) => )
+
   return (
     <Stack gap={0.5}>
       <Slider
@@ -81,6 +88,7 @@ const SliderField : React.FC<
         getAriaLabel={() => 'Minimum distance shift'}
         value={value}
         onChange={handleChange}
+        // valueLabelFormat={}
         valueLabelDisplay="auto"
         disableSwap
         sx={{
@@ -91,8 +99,10 @@ const SliderField : React.FC<
           },
           '& .MuiSlider-thumb:before': {
             boxShadow: 'none',
-          }
+          },
+          ...sx
         }}
+        {...props}
       />
     </Stack>
   );
