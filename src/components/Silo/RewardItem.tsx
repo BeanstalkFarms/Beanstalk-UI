@@ -33,7 +33,7 @@ const RewardItem: React.FC<RewardItemProps> = ({
     </Typography>
     <Stack direction="row" gap={0.3} alignItems="center">
       {icon && <img src={icon} alt="" height="17px" style={{ opacity: isClaimable === false ? 0.2 : 1 }} />}
-      <Typography color={isClaimable === false ? BeanstalkPalette.lightishGrey : BeanstalkPalette.black} variant="h3">{displayFullBN(amount, 2)}</Typography>
+      {amount && <Typography color={isClaimable === false ? BeanstalkPalette.lightishGrey : BeanstalkPalette.black} variant="h3">{displayFullBN(amount, 2)}</Typography>}
     </Stack>
   </Box>
 );
