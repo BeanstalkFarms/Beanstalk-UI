@@ -147,6 +147,21 @@ describe('the Field', () => {
     expect(Object.keys(p.plots).length).toBe(1);
     expect(p.plots[(10 + 22).toString()]).toStrictEqual(new BigNumber(42 - 22));
   });
+
+  // 5.
+  it('works with large-index plots', () => {
+    const p = mockProcessor();
+    p.ingest({
+      event: 'Sow',
+      args: propArray({
+        index: EBN.from("737663715081254"),
+        pods:  EBN.from("57980000"),
+      })
+    } as SowEvent);
+
+    expect(p.plots["737663715.081254"]).toBeDefined();
+    expect(p.plots["737663715.081254"].eq(57.980000)).toBe(true);
+  })
 });
 
 // --------------------------------

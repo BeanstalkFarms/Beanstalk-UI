@@ -10,12 +10,13 @@ import {
   RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event,
   RemoveWithdrawalsEvent,
 } from 'constants/generated/Beanstalk/BeanstalkReplanted';
-import { BEAN } from 'constants/tokens';
+import { BEAN, PODS } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { TokenMap } from 'constants/index';
 import { PlotMap } from 'state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
+import { toTokenUnitsBN } from 'util/Tokens';
 
 // ----------------------------------------
 
@@ -135,16 +136,15 @@ export default class EventProcessor {
   // ----------------------------
 
   Sow(event: Simplify<SowEvent>) {
-    const index = event.args.index.div(10 ** Bean.decimals).toString();
-    this.plots[index] = BN(event.args.pods.div(10 ** Bean.decimals));
-    return [index, this.plots[index]];
+    const index       = tokenBN(event.args.index, PODS).toString();
+    this.plots[index] = tokenBN(event.args.pods,  PODS);
   }
 
   Harvest(event: Simplify<HarvestEvent>) {
-    let beansClaimed = BN(event.args.beans.div(10 ** Bean.decimals));
+    let beansClaimed = tokenBN(event.args.beans, Bean);
     const plots = (
       event.args.plots
-        .map((p) => BN(p.div(10 ** Bean.decimals)))
+        .map((_index) => tokenBN(_index, Bean))
         .sort((a, b) => a.minus(b).toNumber())
     ); 
     plots.forEach((indexBN) => {
@@ -184,7 +184,7 @@ export default class EventProcessor {
   PlotTransfer(event: Simplify<PlotTransferEvent>) {
     // Numerical "index" of the Plot.
     // Absolute, with respect to Pod 0.
-    const transferIndex = tokenBN(event.args.id, Bean);
+    const transferIndex   = tokenBN(event.args.id, Bean);
     const podsTransferred = tokenBN(event.args.pods, Bean);
 
     // This account received a Plot

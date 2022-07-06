@@ -1,7 +1,7 @@
 import { Box, Button, Grid, InputAdornment, Stack, Tooltip, Typography } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
-import { Field, FieldProps, Form, Formik, FormikProps } from 'formik';
+import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -13,19 +13,23 @@ import { ZERO_BN } from '../../../constants';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import InputField from '../../Common/Form/InputField';
 import podsIcon from '../../../img/beanstalk/pod-icon.svg';
-import { MaxBN, MinBN } from '../../../util';
+import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import SliderField from '../../Common/Form/SliderField';
 import Warning from "../../Common/Form/Warning";
 import useToggle from 'hooks/display/useToggle';
 import { TokenAdornment, TokenInputField } from 'components/Common/Form';
 import { PODS } from 'constants/tokens';
 import { LoadingButton } from '@mui/lab';
+import { useAccount, useSigner } from 'wagmi';
+import { useBeanstalkContract } from 'hooks/useContract';
+import { BeanstalkReplanted } from 'constants/generated';
+import TransactionToast from 'components/Common/TxnToast';
 
 export type SendFormValues = {
   to: string | null;
   plotIndex: string | null;
-  min: BigNumber | null;
-  max: BigNumber | null;
+  start: BigNumber | null;
+  end: BigNumber | null;
   amount: BigNumber | null;
 }
 
@@ -58,21 +62,22 @@ const SendForm: React.FC<
   const [dialogOpen, showDialog, hideDialog] = useToggle()
 
   const handlePlotSelect = useCallback((index: string) => {
+    console.debug(`[field/actions/Send]: selected plot`, index)
     setFieldValue('plotIndex', index);
   }, [setFieldValue])
   
   const reset = useCallback(() => {
-    setFieldValue('min', new BigNumber(0));
-    setFieldValue('max', numPods);
+    setFieldValue('start', new BigNumber(0));
+    setFieldValue('end', numPods);
     setFieldValue('amount', numPods);
   }, [setFieldValue, numPods]);
 
   const handleChangeAmount = (amount: BigNumber | null) => {
     if (amount) {
-      const delta = (values?.max || ZERO_BN).minus(amount);
-      setFieldValue('min', MaxBN(ZERO_BN, delta));
+      const delta = (values?.end || ZERO_BN).minus(amount);
+      setFieldValue('start', MaxBN(ZERO_BN, delta));
       if (delta.lt(0)) {
-        setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
+        setFieldValue('end', MinBN(numPods, (values?.end || ZERO_BN).plus(delta.abs())));
       }
     }
   };
@@ -84,11 +89,15 @@ const SendForm: React.FC<
     }
   }, [values.plotIndex, reset]);
 
+  useEffect(() => {
+    setFieldValue('amount', values.end?.minus(values.start ? values.start : ZERO_BN));
+  }, [values.start, values.end, setFieldValue]);
+
   const isReady = (
     values.plotIndex
     && values.to
-    && values.min
-    && values.amount
+    && values.start
+    && values.amount?.gt(0)
     && isValid
   )
 
@@ -118,8 +127,8 @@ const SendForm: React.FC<
               <Box px={1}>
                 <SliderField
                   min={0}
-                  fields={['min', 'max']}
                   max={numPods.toNumber()}
+                  fields={['start', 'end']}
                   initialState={[0, numPods.toNumber()]}
                   disabled={isSubmitting}
                 />
@@ -127,7 +136,7 @@ const SendForm: React.FC<
               <Grid container spacing={1}>
                 <Grid item xs={6}>
                   <TokenInputField
-                    name="min"
+                    name="start"
                     token={PODS}
                     placeholder="0.0000"
                     balance={numPods || ZERO_BN}
@@ -140,7 +149,7 @@ const SendForm: React.FC<
                 </Grid>
                 <Grid item xs={6}>
                   <TokenInputField
-                    name="max"
+                    name="end"
                     token={PODS}
                     placeholder="0.0000"
                     balance={numPods || ZERO_BN}
@@ -182,6 +191,10 @@ const SendForm: React.FC<
 };
 
 const Send: React.FC<{}> = () => {
+  const { data: account } = useAccount();
+  const { data: signer } = useSigner();
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  
   // Form setup
   const initialValues: SendFormValues = useMemo(() => ({
     settings: {
@@ -189,18 +202,59 @@ const Send: React.FC<{}> = () => {
     },
     to: null,
     plotIndex: null,
-    min: null,
-    max: null,
-    // max: selectedPlotIndex ? new BigNumber(farmerField.plots[selectedPlotIndex]) : ZERO_BN,
+    start: null,
+    end: null,
     amount: null,
-    // amount: selectedPlotIndex ? new BigNumber(farmerField.plots[selectedPlotIndex]) : ZERO_BN,
   }), []);
+
+  const onSubmit = useCallback(async (values: SendFormValues, formActions: FormikHelpers<SendFormValues>) => {
+    if (!account?.address) throw new Error('Connect a wallet first.');
+    const { to, plotIndex, start, end, amount } = values;
+    if (!to || !plotIndex || !start || !end || !amount) throw new Error('Missing data.');
+    const call = beanstalk.transferPlot(
+      account.address,
+      to.toString(),
+      toStringBaseUnitBN(plotIndex, PODS.decimals),
+      toStringBaseUnitBN(start, PODS.decimals),
+      toStringBaseUnitBN(end, PODS.decimals),
+    );
+    // WORKING:
+    // "737663715081254",
+    // "0",
+    // "57980000",
+    // NOT WORKING
+    // "737663715000000",
+    // "0",
+    // "57000000"
+
+    const txToast = new TransactionToast({
+      loading: `Sending ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to)}.`,
+      success: 'Plot sent.',
+    });
+
+    return call
+      .then((txn) => {
+        txToast.confirming(txn);
+        return txn.wait();
+      })
+      .then((receipt) => {
+        txToast.success(receipt);
+        formActions.resetForm();
+      })
+      .catch((err) => {
+        console.error(
+          txToast.error(err.error || err),
+        );
+      });
+  }, [
+    account?.address,
+    beanstalk
+  ]);
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={() => {
-      }}>
+      onSubmit={onSubmit}>
       {(formikProps: FormikProps<SendFormValues>) => (
         <SendForm
           {...formikProps}

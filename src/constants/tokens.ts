@@ -88,7 +88,7 @@ export const SEEDS = new BeanstalkToken(
 export const PODS = new BeanstalkToken(
   SupportedChainId.MAINNET,
   '',
-  10,
+  6,
   {
     name: 'Pods',
     symbol: 'PODS',
