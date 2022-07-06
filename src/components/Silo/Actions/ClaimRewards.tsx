@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Stack } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps, useFormikContext } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useAccount, useSigner } from 'wagmi';
 import BigNumber from 'bignumber.js';
@@ -71,8 +71,17 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
     }
   ), []);
 
+  const actionSelected = useFormikContext<ClaimRewardsFormValues>().values.action;
+
   // checks if the current hoverState includes a given ClaimRewardsAction
-  const showHover = (c: ClaimRewardsAction) => (hoverState && hoverMap[hoverState].includes(c));
+  const showHover = (c: ClaimRewardsAction) => {
+    if (actionSelected !== null) {
+      return hoverMap[actionSelected].includes(c);
+    }
+    return hoverState && hoverMap[hoverState].includes(c);
+  };
+
+  console.log('action set', useFormikContext<ClaimRewardsFormValues>().values.action);
 
   return (
     <Stack gap={2}>
@@ -142,7 +151,12 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
           <Field name="action">
             {(fieldProps: FieldProps<any>) => {
               const set = (v: any) => () => {
-                fieldProps.form.setFieldValue('action', v);
+                // if user clicks on the selected action, unselect the action
+                if (fieldProps.form.values.action !== null && v === fieldProps.form.values.action) {
+                  fieldProps.form.setFieldValue('action', null);
+                } else {
+                  fieldProps.form.setFieldValue('action', v);
+                }
               };
               return (
                 <Stack gap={1}>
@@ -197,7 +211,7 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
               );
             }}
           </Field>
-          <Button disabled fullWidth type="submit" variant="contained" size="large">
+          <Button disabled={useFormikContext<ClaimRewardsFormValues>().values.action === null} fullWidth type="submit" variant="contained" size="large">
             Claim Selected
           </Button>
         </Stack>
