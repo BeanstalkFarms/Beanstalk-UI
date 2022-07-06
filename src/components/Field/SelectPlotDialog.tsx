@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogProps, Stack } from '@mui/material';
+import { Dialog, DialogProps, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import PlotSelect from '../Common/PlotSelect';
@@ -39,11 +39,15 @@ const SelectPlotDialog: React.FC<SelectPlotDialogProps & DialogProps> = ({
       <StyledDialogTitle onClose={handleClose}>My Plots</StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={2}>
-          <PlotSelect
-            handlePlotSelect={handleSelectAndClose}
-            plots={farmerField?.plots}
-            harvestableIndex={beanstalkField?.harvestableIndex}
-          />
+          {Object.keys(farmerField?.plots).length > 0 ? (
+            <PlotSelect
+              handlePlotSelect={handleSelectAndClose}
+              plots={farmerField?.plots}
+              harvestableIndex={beanstalkField?.harvestableIndex}
+            />
+          ) : (
+            <Typography sx={{ textAlign: 'center', pt: 1, pb: 4 }}>You don&apos;t have any plots to send!</Typography>
+          )}
         </Stack>
       </StyledDialogContent>
     </Dialog>
