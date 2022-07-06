@@ -428,7 +428,7 @@ export default class EventProcessor {
     if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
     const amount    = tokenBN(_amount, this.epp.whitelist[token]);
     const existingDeposit = this.deposits[token][season];
-    if (!existingDeposit) throw new Error('Received a \'RemoveDeposit\' event for an unknown deposit.');
+    if (!existingDeposit) throw new Error(`Received a 'RemoveDeposit' event for an unknown deposit: ${token} ${season}`);
 
     // BDV scales linearly with the amount of the underlying token.
     // Ex. if we remove 60% of the `amount`, we also remove 60% of the BDV.
@@ -502,10 +502,18 @@ export default class EventProcessor {
     token: string,
     _amount: EBN,
   ) {
-    if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+    // For gas optimization reasons, `RemoveWithdrawal` is emitted
+    // with a zero amount when the removeWithdrawal method is called with:
+    //  (a) a token that doesn't exist;
+    //  (b) a season that doesn't exist;
+    //  (c) a combo of (a) and (b) where there is no existing Withdrawal.
+    // In these cases we just ignore the event.
+    if (_amount.eq(0) || !this.epp.whitelist[token]) return;
+
+    ///
     const amount    = tokenBN(_amount, this.epp.whitelist[token]);
-    const existingDeposit = this.withdrawals[token][season];
-    if (!existingDeposit) throw new Error('Received a \'RemoveWithdrawal\' event for an unknown Withdrawal.');
+    const existingWithdrawal = this.withdrawals[token][season];
+    if (!existingWithdrawal) throw new Error(`Received a RemoveWithdrawal(s) event for an unknown Withdrawal: ${token} ${season}`);
 
     this.withdrawals[token] = {
       ...this.withdrawals[token],
@@ -546,7 +554,7 @@ export default class EventProcessor {
       this._removeWithdrawal(
         seasonNum.toString(),
         event.args.token,
-        event.args.amount,  // FIXME: 
+        event.args.amount,  // FIXME
       );
     });
   }
