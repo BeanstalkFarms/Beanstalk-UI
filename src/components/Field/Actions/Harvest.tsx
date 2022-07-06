@@ -27,7 +27,6 @@ import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
 import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
-import DestinationField from 'components/Common/Form/DestinationField';
 import TokenIcon from 'components/Common/TokenIcon';
 import useToggle from 'hooks/display/useToggle';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
@@ -36,6 +35,7 @@ import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
 import { AppState } from '../../../state';
 import { QuoteHandler } from '../../../hooks/useQuote';
+import DestinationField from "../DestinationField";
 
 // -----------------------------------------------------------------------
 
@@ -148,15 +148,13 @@ const HarvestForm : React.FC<
               name="destination"
             />
             {/* Setting: Claim LP */}
-            {token.isLP ? (
-              <PillRow
-                isOpen={isTokenSelectVisible}
-                label="Claim LP as"
-                onClick={showTokenSelect}>
-                <TokenIcon token={values.tokenOut} />
-                <Typography>{values.tokenOut.name}</Typography>
-              </PillRow>
-            ) : null}
+            <PillRow
+              isOpen={isTokenSelectVisible}
+              label="Deposit as"
+              onClick={showTokenSelect}>
+              <TokenIcon token={values.tokenOut} />
+              <Typography>{values.tokenOut.name}</Typography>
+            </PillRow>
             <TokenSelectDialog
               open={isTokenSelectVisible}
               handleClose={hideTokenSelect}
@@ -202,7 +200,7 @@ const HarvestForm : React.FC<
           </>
 
           <Button disabled={!isSubmittable || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
-            Claim
+            Harvest
           </Button>
         </Stack>
       </Form>
@@ -237,6 +235,7 @@ const Harvest : React.FC<{}> = () => {
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
         <Stack spacing={1}>
+          {/*<pre>{JSON.stringify(formikProps.values, null, 2)}</pre>*/}
           <HarvestForm
             token={BEAN[1]}
             harvestablePods={farmerField.harvestablePods}
@@ -244,7 +243,6 @@ const Harvest : React.FC<{}> = () => {
             farm={farm}
             {...formikProps}
           />
-          {/* <pre>{JSON.stringify(formikProps.values, null, 2)}</pre> */}
         </Stack>
       )}
     </Formik>
