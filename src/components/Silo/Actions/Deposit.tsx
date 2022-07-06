@@ -286,6 +286,7 @@ const DepositForm : React.FC<
             </>
           ) : null}
           <SmartSubmitButton
+            loading={isSubmitting}
             type="submit"
             variant="contained"
             color="primary"
