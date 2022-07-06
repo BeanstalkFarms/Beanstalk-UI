@@ -15,13 +15,13 @@ import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
-import { FormTokenState, TxnPreview, TokenOutputField, TokenAdornment, RadioCardField, TokenSelectDialog, TxnSeparator, TokenInputField, TokenQuoteProvider } from 'components/Common/Form';
+import { FormTokenState, TxnPreview, TokenOutputField, TokenAdornment, RadioCardField, TokenSelectDialog, TxnSeparator, TokenInputField, TokenQuoteProvider, TxnSettings, SettingInput } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'constants/generated';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
-import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import PillDialogField from 'components/Common/Form/PillDialogField';
 import DestinationField from 'components/Common/Form/DestinationField';
 import PillSelectField from 'components/Common/Form/PillSelectField';
@@ -31,6 +31,8 @@ import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import PillRow from 'components/Common/Form/PillRow';
 import useQuote, { QuoteHandler } from 'hooks/useQuote';
 import { ethers } from 'ethers';
+import { LoadingButton } from '@mui/lab';
+import TransactionToast from 'components/Common/TxnToast';
 
 // -----------------------------------------------------------------------
 
@@ -46,7 +48,11 @@ type ClaimFormValues = {
   token: FormTokenState;
   destination: FarmToMode;
   tokenOut: ERC20Token;
-}
+} & {
+  settings: {
+    slippage: number;
+  }
+};
 
 // -----------------------------------------------------------------------
 
@@ -110,6 +116,7 @@ const ClaimForm : React.FC<
           pool.address,
           farm.contracts.curve.registries.metaFactory.address,
           indices as [number, number],
+          // Always comes from internal balance
           FarmFromMode.INTERNAL,
           // FIXME: changes to values.destination trigger
           // re-calculations here when they shouldn't
@@ -130,7 +137,6 @@ const ClaimForm : React.FC<
   );
 
   //
-  // const [result, quoting, refreshQuote] = useQuote(values.tokenOut, handleQuote, { ignoreSameToken: false })
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
 
   //
@@ -155,10 +161,15 @@ const ClaimForm : React.FC<
             <TokenQuoteProvider
               name="token"
               tokenOut={values.tokenOut}
-              // balance={amount}
-              balance={undefined}
               state={values.token}
-              disabled={true}
+              // This input is always disabled but we use
+              // the underlying handleQuote functionality
+              // for consistency with other forms.
+              disabled={true} 
+              // 
+              balance={amount || ZERO_BN}
+              balanceLabel="Claimable Balance"
+              // -----
               // FIXME:
               // "disableTokenSelect" applies the disabled prop to
               // the TokenSelect button. However if we don't pass
@@ -228,9 +239,16 @@ const ClaimForm : React.FC<
               </Box>
             </>
           ) : null}
-          <Button disabled={!isSubmittable || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
+          <LoadingButton
+            variant="contained"
+            loading={isSubmitting}
+            disabled={!isSubmittable || isSubmitting || isMainnet}
+            type="submit"
+            size="large"
+            fullWidth
+          >
             Claim
-          </Button>
+          </LoadingButton>
         </Stack>
       </Form>
     </Tooltip>
@@ -261,6 +279,9 @@ const Claim : React.FC<{
 
   // Form
   const initialValues : ClaimFormValues = useMemo(() => ({
+    settings: {
+      slippage: 0.1,
+    },
     destination: FarmToMode.INTERNAL,
     tokenOut: token,
     token: {
@@ -270,11 +291,84 @@ const Claim : React.FC<{
     }
   }), [token, claimableBalance]);
   const onSubmit = useCallback((values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
-    // let call;
-    // if (token === Bean) {
-    //   call = false;
-    // }
+    let call;
+    const crates = siloBalance?.claimable?.crates;
+    if (!crates || crates.length === 0) throw new Error('No claimable crates');
+
+    const txToast = new TransactionToast({
+      loading: `Claiming ${displayFullBN(claimableBalance)} ${token.name} from the Silo`,
+      success: 'Claiming successful',
+    });
+    
+    // If the user wants to swap their LP token for something else,
+    // we send their Claimable `token` to their internal balance for
+    // ease of interaction and gas efficiency.
+    const removeLiquidity  = (values.tokenOut !== token);
+    const claimDestination = token.isLP && removeLiquidity
+      ? FarmToMode.INTERNAL
+      : values.destination;
+
+    console.debug(`[Claim] claimDestination = ${claimDestination}, crates = `, crates)
+
+    const data : string[] = [];
+    
+    // Claim multiple withdrawals of `token` in one call
+    if (crates.length > 1) {
+      console.debug(`[Claim] claiming ${crates.length} withdrawals`)
+      data.push(
+        beanstalk.interface.encodeFunctionData("claimWithdrawals", [
+          token.address,
+          crates.map((crate) => crate.season.toString()),
+          claimDestination,
+        ])
+      )
+    } 
+    
+    // Claim a single withdrawal of `token` in one call. Gas efficient.
+    else {
+      console.debug(`[Claim] claiming a single withdrawal`)
+      data.push(
+        beanstalk.interface.encodeFunctionData("claimWithdrawal", [
+          token.address,
+          crates[0].season.toString(),
+          claimDestination,
+        ])
+      )
+    }
+
+    //
+    if (token.isLP && removeLiquidity) {
+      if (!values.token.steps) throw new Error('No quote found.');
+      const encoded = Farm.encodeStepsWithSlippage(
+        values.token.steps,
+        ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage/100, 6))
+      );
+      values?.token?.steps.forEach((step, i) => console.debug(`step ${i}:`, step.decode(encoded[i])));
+      data.push(
+        ...encoded
+      );
+    }
+
+    beanstalk.farm(data, {})
+      .then((txn) => {
+        txToast.confirming(txn);
+        return txn.wait();
+      })
+      .then((receipt) => {
+        txToast.success(receipt);
+        formActions.resetForm();
+      })
+      .catch((err) => {
+        console.error(
+          txToast.error(err.error || err)
+        );
+        formActions.setSubmitting(false);
+      });
   }, [
+    beanstalk,
+    siloBalance?.claimable,
+    claimableBalance,
+    token,
     // Bean,
     // beanstalk,
     // token
@@ -283,15 +377,19 @@ const Claim : React.FC<{
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
-        <Stack spacing={1}>
-          <ClaimForm
-            token={token}
-            claimableBalance={claimableBalance}
-            farm={farm}
-            {...formikProps}
-          />
-          {/* <pre>{JSON.stringify(formikProps.values, null, 2)}</pre> */}
-        </Stack>
+        <>
+          <TxnSettings placement="form-top-right">
+            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
+          </TxnSettings>
+          <Stack spacing={1}>
+            <ClaimForm
+              token={token}
+              claimableBalance={claimableBalance}
+              farm={farm}
+              {...formikProps}
+            />
+          </Stack>
+        </>
       )}
     </Formik>
   );
