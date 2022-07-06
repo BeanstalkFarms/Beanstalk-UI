@@ -1,8 +1,8 @@
-import { Box, Button, InputAdornment, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Grid, InputAdornment, Stack, Tooltip, Typography } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Field, FieldProps, Form, Formik, FormikProps } from 'formik';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import DropdownField from '../../Common/Form/DropdownField';
@@ -16,6 +16,10 @@ import podsIcon from '../../../img/beanstalk/pod-icon.svg';
 import { MaxBN, MinBN } from '../../../util';
 import SliderField from '../../Common/Form/SliderField';
 import Warning from "../../Common/Form/Warning";
+import useToggle from 'hooks/display/useToggle';
+import { TokenAdornment, TokenInputField } from 'components/Common/Form';
+import { PODS } from 'constants/tokens';
+import { LoadingButton } from '@mui/lab';
 
 export type SendFormValues = {
   to: string | null;
@@ -25,14 +29,17 @@ export type SendFormValues = {
   amount: BigNumber | null;
 }
 
-export interface SendFormProps {
+export interface SendFormProps {}
 
-}
-
-const SendForm: React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
-                                                                           values,
-                                                                           setFieldValue
-                                                                         }) => {
+const SendForm: React.FC<
+  SendFormProps & 
+  FormikProps<SendFormValues>
+> = ({
+  values,
+  isValid,
+  isSubmitting,
+  setFieldValue
+}) => {
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
   );
@@ -41,39 +48,49 @@ const SendForm: React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
     (state) => state._beanstalk.field
   );
 
-  const numPods = useMemo(() => (values?.plotIndex ? new BigNumber(farmerField.plots[values?.plotIndex]) : ZERO_BN), [farmerField.plots, values?.plotIndex]);
+  const numPods = useMemo(() => 
+    (values?.plotIndex 
+      ? farmerField.plots[values.plotIndex]
+      : ZERO_BN),
+    [farmerField.plots, values?.plotIndex]
+  );
 
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [dialogOpen, showDialog, hideDialog] = useToggle()
 
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-  };
-
-  const handlePlotSelect = (index: string) => {
+  const handlePlotSelect = useCallback((index: string) => {
     setFieldValue('plotIndex', index);
-  };
+  }, [setFieldValue])
+  
+  const reset = useCallback(() => {
+    setFieldValue('min', new BigNumber(0));
+    setFieldValue('max', numPods);
+    setFieldValue('amount', numPods);
+  }, [setFieldValue, numPods]);
 
-  const handleChangeAmount = (amount: BigNumber) => {
-    const delta = (values?.max || ZERO_BN).minus(amount);
-    setFieldValue('min', MaxBN(ZERO_BN, delta));
-    if (delta.lt(0)) {
-      setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
+  const handleChangeAmount = (amount: BigNumber | null) => {
+    if (amount) {
+      const delta = (values?.max || ZERO_BN).minus(amount);
+      setFieldValue('min', MaxBN(ZERO_BN, delta));
+      if (delta.lt(0)) {
+        setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
+      }
     }
   };
-
-  console.log('PLOT SELECTED', values?.plotIndex);
 
   useEffect(() => {
     if (values.plotIndex !== null) {
-      setFieldValue('min', new BigNumber(0));
-      setFieldValue('max', numPods);
-      setFieldValue('amount', numPods);
+      console.debug('[field/actions/Send] Plot selected: ', values?.plotIndex);
+      reset();
     }
-  }, [values.plotIndex, setFieldValue, numPods]);
+  }, [values.plotIndex, reset]);
+
+  const isReady = (
+    values.plotIndex
+    && values.to
+    && values.min
+    && values.amount
+    && isValid
+  )
 
   return (
     <Form autoComplete="off">
@@ -81,96 +98,84 @@ const SendForm: React.FC<SendFormProps & FormikProps<SendFormValues>> = ({
         farmerField={farmerField}
         beanstalkField={beanstalkField}
         handlePlotSelect={handlePlotSelect}
-        handleClose={handleDialogClose}
+        handleClose={hideDialog}
         open={dialogOpen}
       />
       <Stack gap={1}>
-        <FieldWrapper label="Recipient Address">
-          <AddressInputField name="to" />
-        </FieldWrapper>
-        <FieldWrapper label="Plot to Send">
-          {(values?.plotIndex === null) ? (
-            <DropdownField buttonText="Select A Plot" handleOpenDialog={handleDialogOpen} />
-          ) : (
-            <Stack gap={1}>
-              <PlotDetails
-                placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)}
-                numPods={new BigNumber(farmerField.plots[values?.plotIndex])}
-                onClick={() => {
-                  setDialogOpen(true);
-                }}
-              />
-              <Box px={3}>
+        {(values?.plotIndex === null) ? (
+          <DropdownField buttonText="Select a Plot" handleOpenDialog={showDialog} />
+        ) : (
+          <>
+            <PlotDetails
+              placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)}
+              numPods={new BigNumber(farmerField.plots[values?.plotIndex])}
+              onClick={showDialog}
+            />
+            <FieldWrapper label="Recipient Address">
+              <AddressInputField name="to" />
+            </FieldWrapper>
+            <FieldWrapper label="Pods" tooltip={POD_MARKET_TOOLTIPS.amount}>
+              <Box px={1}>
                 <SliderField
                   min={0}
                   fields={['min', 'max']}
                   max={numPods.toNumber()}
                   initialState={[0, numPods.toNumber()]}
+                  disabled={isSubmitting}
                 />
               </Box>
-              <Stack direction="row" gap={1} alignItems="end">
-                <Box width="50%">
-                  <FieldWrapper tooltip={POD_MARKET_TOOLTIPS.start} label="Plot Range">
-                    <Field name="min">
-                      {(fieldProps: FieldProps) => (
-                        <InputField
-                          {...fieldProps}
-                          placeholder="0.0000"
-                          minValue={new BigNumber(0)}
-                          maxValue={values.max ? values.max.minus(1) : numPods.minus(1)}
-                        />
-                      )}
-                    </Field>
-                  </FieldWrapper>
-                </Box>
-                <Box width="50%">
-                  <Field name="max">
-                    {(fieldProps: FieldProps) => (
-                      <InputField
-                        {...fieldProps}
-                        placeholder="0.0000"
-                        minValue={new BigNumber(0)}
-                        maxValue={numPods}
-                      />
-                    )}
-                  </Field>
-                </Box>
-              </Stack>
-              <FieldWrapper label="Amount" tooltip={POD_MARKET_TOOLTIPS.amount}>
-                <Field name="amount">
-                  {(fieldProps: FieldProps) => (
-                    <InputField
-                      {...fieldProps}
-                      handleChangeOverride={handleChangeAmount}
-                      maxValue={numPods}
-                      minValue={new BigNumber(0)}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>
-                              <img src={podsIcon} alt="" height="30px" />
-                              <Typography sx={{ fontSize: '20px' }}>PODS</Typography>
-                            </Stack>
-                          </InputAdornment>)
-                      }}
-                      // disabled
-                    />
-                  )}
-                </Field>
-              </FieldWrapper>
-              <Warning message="You can exchange your Pod in a decentralized fashion on the Farmers Market. Send Plots at your own risk." />
-            </Stack>
-          )}
-        </FieldWrapper>
-
-        <Button
-          disabled={values.plotIndex === null || values.to === null}
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <TokenInputField
+                    name="min"
+                    token={PODS}
+                    placeholder="0.0000"
+                    balance={numPods || ZERO_BN}
+                    hideBalance
+                    InputProps={{
+                      endAdornment: "Start"
+                    }}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TokenInputField
+                    name="max"
+                    token={PODS}
+                    placeholder="0.0000"
+                    balance={numPods || ZERO_BN}
+                    hideBalance
+                    InputProps={{
+                      endAdornment: "End"
+                    }}
+                    size="small"
+                  />
+                </Grid>
+              </Grid>
+              <TokenInputField
+                name="amount"
+                token={PODS}
+                placeholder="0.0000"
+                balance={numPods || ZERO_BN}
+                hideBalance
+                InputProps={{
+                  endAdornment: <TokenAdornment token={PODS} />
+                }}
+                handleChange={handleChangeAmount}
+              />
+            </FieldWrapper>
+            <Warning message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
+          </>
+        )}
+        <LoadingButton
+          loading={isSubmitting}
+          disabled={!isReady || isSubmitting}
           fullWidth
           type="submit"
           variant="contained"
           size="large">
           Send
-        </Button>
+        </LoadingButton>
       </Stack>
     </Form>
   );
