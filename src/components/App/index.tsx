@@ -30,6 +30,7 @@ import SiloAnalytics from '../../pages/analytics/silo';
 import FieldAnalytics from '../../pages/analytics/field';
 import BarnraiseAnalytics from '../../pages/analytics/barnraise';
 import MarketplacePage from '../../pages/marketplace';
+import NFTPage from "../../pages/nft";
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -140,6 +141,7 @@ export default function App() {
           <Route path="/analytics/field" element={<FieldAnalytics />} />
           <Route path="/analytics/barnraise" element={<BarnraiseAnalytics />} />
           <Route path="/market" element={<MarketplacePage />} />
+          <Route path="/nft" element={<NFTPage />} />
         </Routes>
       </Box>
     </>
