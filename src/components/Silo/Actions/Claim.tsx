@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Grid, Stack, Tooltip, Typography } from '@mui/material';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useMemo } from 'react';
+import { Accordion, AccordionDetails, Box, Stack, Tooltip, Typography } from '@mui/material';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider, useSigner } from 'wagmi';
 import { Token } from 'classes';
-import { BEAN, CRV3 } from 'constants/tokens';
+import { BEAN } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import useChainId from 'hooks/useChain';
@@ -13,23 +13,20 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
-import { ERC20Token, NativeToken } from 'classes/Token';
+import { ERC20Token } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
-import { FormTokenState, TxnPreview, TokenOutputField, TokenAdornment, RadioCardField, TokenSelectDialog, TxnSeparator, TokenInputField, TokenQuoteProvider, TxnSettings, SettingInput } from 'components/Common/Form';
+import { FormTokenState, TxnPreview, TokenOutputField, TokenSelectDialog, TxnSeparator, TokenQuoteProvider, TxnSettings, SettingInput } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'constants/generated';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
 import { displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
-import PillDialogField from 'components/Common/Form/PillDialogField';
 import DestinationField from 'components/Common/Form/DestinationField';
-import PillSelectField from 'components/Common/Form/PillSelectField';
 import TokenIcon from 'components/Common/TokenIcon';
 import useToggle from 'hooks/display/useToggle';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import PillRow from 'components/Common/Form/PillRow';
-import useQuote, { QuoteHandler } from 'hooks/useQuote';
+import { QuoteHandler } from 'hooks/useQuote';
 import { ethers } from 'ethers';
 import { LoadingButton } from '@mui/lab';
 import TransactionToast from 'components/Common/TxnToast';
@@ -107,20 +104,27 @@ const ClaimForm : React.FC<
       // Require pooldata to be loaded first
       if (token.isLP && !pool) return null; 
 
-      const tokenIndex = pool.tokens.findIndex((tok) => tok === _tokenOut);
-      if (tokenIndex === -1) throw new Error('No token found');
-      const indices = [0, 0];
-      indices[tokenIndex] = 1; // becomes [0, 1] or [1, 0]
+      // const tokenIndex = pool.tokens.findIndex((tok) => tok === _tokenOut);
+      // if (tokenIndex === -1) throw new Error('No token found');
+      // const indices = [0, 0];
+      // indices[tokenIndex] = 1; // becomes [0, 1] or [1, 0]
+
       const estimate = await Farm.estimate([
-        farm.removeLiquidity(
+        // pool.address,
+        // farm.contracts.curve.registries.metaFactory.address,
+        // indices as [number, number],
+        // // Always comes from internal balance
+        // FarmFromMode.INTERNAL,
+        // // FIXME: changes to values.destination trigger
+        // // re-calculations here when they shouldn't
+        // values.destination
+        farm.removeLiquidityOneToken(
           pool.address,
           farm.contracts.curve.registries.metaFactory.address,
-          indices as [number, number],
+          _tokenOut.address,
           // Always comes from internal balance
           FarmFromMode.INTERNAL,
-          // FIXME: changes to values.destination trigger
-          // re-calculations here when they shouldn't
-          values.destination
+          values.destination,
         ),
       ], [amountIn]);
       return {
@@ -344,9 +348,7 @@ const Claim : React.FC<{
         ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage/100, 6))
       );
       values?.token?.steps.forEach((step, i) => console.debug(`step ${i}:`, step.decode(encoded[i])));
-      data.push(
-        ...encoded
-      );
+      data.push(...encoded);
     }
 
     beanstalk.farm(data, {})
@@ -396,33 +398,3 @@ const Claim : React.FC<{
 };
 
 export default Claim;
-
-/* {siloBalance?.withdrawn?.crates.length > 0 ? (
-  <Box sx={{ borderColor: 'primary.main', borderWidth: 1, borderStyle: 'solid', p: 1, borderRadius: 1 }}>
-    {siloBalance.withdrawn.crates.map((crate) => {
-      const seasonsToArrival = crate.season.minus(currentSeason);
-      if (seasonsToArrival.gt(0)) {
-        return (
-          <Typography key={crate.season.toString()} color="primary">
-            {displayBN(crate.amount)} {token.name} will become Claimable in {seasonsToArrival.toFixed()} Season{seasonsToArrival.eq(1) ? '' : 's'}
-          </Typography>
-        );
-      }
-      return null;
-    })}
-  </Box>
-) : null} */
-
-// {values.settings.removeLP ? (
-//   <Grid container spacing={1}>
-//     {pool?.tokens.map((_token) => (
-//       <Grid key={_token.address} item xs={12} md={6}>
-//         <TokenOutputField
-//           token={_token}
-//           amount={amount}
-//         />
-//       </Grid>
-//     ))}
-//   </Grid>
-// ) : (
-// )}

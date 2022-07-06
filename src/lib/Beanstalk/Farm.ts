@@ -365,20 +365,19 @@ export default class Farm {
     }
   }
 
-  removeLiquidity(
+  removeLiquidityOneToken(
     _pool: string,
     _registry: string,
-    _amounts: (
-      readonly   [number, number]
-      | readonly [number, number, number]
-    ),
+    _tokenOut: string,
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode = FarmToMode.INTERNAL,
   ) : ChainableFunction {
     // _amountInStep is an an amount of LP token
     return async (_amountInStep: ethers.BigNumber) => {
-      const i = _amounts.findIndex((k) => k === 1);
-
+      const registry = this.contracts.curve.registries.metaFactory;
+      const coins = await registry.get_coins(_pool);
+      const i = coins.findIndex((addr) => addr.toLowerCase() === _tokenOut.toLowerCase());
+      
       // FIXME: only difference between this and addLiquidity is the boolean
       // Get amount out based on the selected pool
       const poolAddr = _pool.toLowerCase();
@@ -407,21 +406,22 @@ export default class Farm {
       }
       if (!amountOut) throw new Error('No supported pool found');
 
-      console.debug(`[step@removeLiquidity] amounts.length=${_amounts.length}, amountOut=${amountOut.toString()}`)
+      console.debug(`[step@removeLiquidity] amountOut=${amountOut.toString()}`)
 
       return {
         amountOut,
         encode: (minAmountOut: ethers.BigNumber) => (
-          this.contracts.beanstalk.interface.encodeFunctionData('removeLiquidity', [
+          this.contracts.beanstalk.interface.encodeFunctionData('removeLiquidityOneToken', [
             _pool,
             _registry,
+            _tokenOut,
             _amountInStep,
-            _amounts.map((k) => (k === 1 ? minAmountOut : ethers.BigNumber.from(0))), // [0, 0, 1] => [0, 0, minAmountOut]
+            minAmountOut,
             _fromMode,
             _toMode,
           ])
         ),
-        decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('removeLiquidity', data),
+        decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('removeLiquidityOneToken', data),
         data: {}
       };
     }
@@ -474,7 +474,7 @@ export default class Farm {
   //     return {
   //       amountOut,
   //       encode: (minAmountOut: ethers.BigNumber) => (
-  //         this.contracts.beanstalk.interface.encodeFunctionData('removeLiquidityOneToken', [
+  //         this.contracts.beanstalk.interface.encodeFunctionData('removeLiquidity', [
   //           _pool,
   //           _registry,
   //           _amountInStep,
@@ -482,20 +482,13 @@ export default class Farm {
   //           _fromMode,
   //           _toMode,
   //         ])
-  //         // this.contracts.beanstalk.interface.encodeFunctionData('removeLiquidity', [
-  //         //   _pool,
-  //         //   _registry,
-  //         //   _amountInStep,
-  //         //   _amounts.map((k) => (k === 1 ? minAmountOut : ethers.BigNumber.from(0))), // [0, 0, 1] => [0, 0, minAmountOut]
-  //         //   _fromMode,
-  //         //   _toMode,
-  //         // ])
   //       ),
   //       decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('removeLiquidity', data),
   //       data: {}
   //     };
   //   }
   // }
+
 }
 
   // ------------------------------------------
