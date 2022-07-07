@@ -44,7 +44,7 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
         value: ClaimRewardsAction.ENROOT_AND_MOW,
       },
       {
-        title: 'Claim all Silo rewards.',
+        title: 'Claim all Silo rewards',
         description: 'Add all Stalk and Seed rewards to your Stalk and Seed balances.',
         value: ClaimRewardsAction.CLAIM_ALL,
       }]
@@ -161,8 +161,8 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
               return (
                 <Stack gap={1}>
                   <DescriptionButton
-                    key={ClaimRewardsAction.MOW}
                     {...options[0]}
+                    key={ClaimRewardsAction.MOW}
                     onClick={set(ClaimRewardsAction.MOW)}
                     onMouseOver={onMouseOver(ClaimRewardsAction.MOW)}
                     onMouseLeave={onMouseOutContainer}
@@ -173,8 +173,8 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
                   <Stack direction={{ xs: 'column', md: 'row' }} spacing={1}>
                     <Box width={{ xs: '100%', md: '50%' }}>
                       <DescriptionButton
-                        key={ClaimRewardsAction.PLANT_AND_MOW}
                         {...options[1]}
+                        key={ClaimRewardsAction.PLANT_AND_MOW}
                         onClick={set(ClaimRewardsAction.PLANT_AND_MOW)}
                         onMouseOver={onMouseOver(ClaimRewardsAction.PLANT_AND_MOW)}
                         onMouseLeave={onMouseOutContainer}
@@ -185,8 +185,8 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
                     </Box>
                     <Box width={{ xs: '100%', md: '50%' }}>
                       <DescriptionButton
-                        key={ClaimRewardsAction.ENROOT_AND_MOW}
                         {...options[2]}
+                        key={ClaimRewardsAction.ENROOT_AND_MOW}
                         onClick={set(ClaimRewardsAction.ENROOT_AND_MOW)}
                         onMouseOver={onMouseOver(ClaimRewardsAction.ENROOT_AND_MOW)}
                         onMouseLeave={onMouseOutContainer}
@@ -197,8 +197,8 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
                     </Box>
                   </Stack>
                   <DescriptionButton
-                    key={ClaimRewardsAction.CLAIM_ALL}
                     {...options[3]}
+                    key={ClaimRewardsAction.CLAIM_ALL}
                     onClick={set(ClaimRewardsAction.CLAIM_ALL)}
                     onMouseOver={onMouseOver(ClaimRewardsAction.CLAIM_ALL)}
                     onMouseLeave={onMouseOutContainer}
@@ -212,7 +212,11 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
             }}
           </Field>
           <Button disabled={useFormikContext<ClaimRewardsFormValues>().values.action === null} fullWidth type="submit" variant="contained" size="large">
-            Claim Selected
+            {actionSelected === null ? (
+              "Claim Selected"
+            ) : (
+              `${options[actionSelected].title}`
+            )}
           </Button>
         </Stack>
       </Form>
