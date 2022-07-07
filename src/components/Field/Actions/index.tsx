@@ -2,6 +2,7 @@ import { Card, Stack, Tab, Tabs } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import Sow from './Sow';
 import Send from './Send';
+import Harvest from './Harvest';
 
 const FieldActions : React.FC<{}> = () => {
   const [tab, setTab] = useState(0);
@@ -20,7 +21,7 @@ const FieldActions : React.FC<{}> = () => {
           </Tabs>
         </Stack>
         {tab === 0 && <Sow />}
-
+        {tab === 1 && <Harvest />}
         {tab === 2 && <Send />}
       </Stack>
     </Card>
