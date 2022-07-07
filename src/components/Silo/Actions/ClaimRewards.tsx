@@ -61,14 +61,12 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
   }, []);
 
   // when this is hovered: show hover state for these
-  const hoverMap: any = useMemo(() => (
-    {
-      [ClaimRewardsAction.MOW]: [ClaimRewardsAction.MOW],
-      [ClaimRewardsAction.PLANT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW],
-      [ClaimRewardsAction.ENROOT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.ENROOT_AND_MOW],
-      [ClaimRewardsAction.CLAIM_ALL]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW, ClaimRewardsAction.ENROOT_AND_MOW, ClaimRewardsAction.CLAIM_ALL],
-    }
-  ), []);
+  const hoverMap: any = {
+    [ClaimRewardsAction.MOW]: [ClaimRewardsAction.MOW],
+    [ClaimRewardsAction.PLANT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW],
+    [ClaimRewardsAction.ENROOT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.ENROOT_AND_MOW],
+    [ClaimRewardsAction.CLAIM_ALL]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW, ClaimRewardsAction.ENROOT_AND_MOW, ClaimRewardsAction.CLAIM_ALL],
+  };
 
   const actionSelected = useFormikContext<ClaimRewardsFormValues>().values.action;
 
