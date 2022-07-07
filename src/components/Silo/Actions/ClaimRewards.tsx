@@ -14,71 +14,72 @@ import stalkIcon from '../../../img/beanstalk/stalk-icon.svg';
 import seedIcon from '../../../img/beanstalk/seed-icon.svg';
 import { AppState } from '../../../state';
 import TransactionToast from '../../Common/TxnToast';
-import { displayFullBN } from '../../../util';
+import { LoadingButton } from '@mui/lab';
 
 export type SendFormValues = {
   to?: string;
 }
 
 type ClaimRewardsFormValues = {
-  action: ClaimRewardsAction | null;
+  action: ClaimRewardsAction | undefined;
+}
+
+const options = [
+  {
+    title: 'Mow',
+    description: 'Add Earned Beans, Earned Stalk, and Grown Stalk to your Silo balance.',
+    value: ClaimRewardsAction.MOW,
+  },
+  {
+    title: 'Plant & Mow',
+    description: 'Add Plantable Seeds to your Seed balance. Also Mows Grown Stalk.',
+    value: ClaimRewardsAction.PLANT_AND_MOW,
+  },
+  {
+    title: 'Enroot & Mow',
+    description: 'Add Revitalized Stalk and Seeds to your Stalk and Seed balance. Also Mows Grown Stalk.',
+    value: ClaimRewardsAction.ENROOT_AND_MOW,
+  },
+  {
+    title: 'Claim all Silo rewards',
+    description: 'Add all Stalk and Seed rewards to your Stalk and Seed balances.',
+    value: ClaimRewardsAction.CLAIM_ALL,
+  }
+];
+
+// When this is hovered: show hover state for these
+const hoverMap = {
+  [ClaimRewardsAction.MOW]: [ClaimRewardsAction.MOW],
+  [ClaimRewardsAction.PLANT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW],
+  [ClaimRewardsAction.ENROOT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.ENROOT_AND_MOW],
+  [ClaimRewardsAction.CLAIM_ALL]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW, ClaimRewardsAction.ENROOT_AND_MOW, ClaimRewardsAction.CLAIM_ALL],
 }
 
 const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
-  const options = useMemo(() => ([
-      {
-        title: 'Mow',
-        description: 'Add Earned Beans, Earned Stalk, and Grown Stalk to your Silo balance.',
-        value: ClaimRewardsAction.MOW,
-        // icon: '🚜',
-      },
-      {
-        title: 'Plant & Mow',
-        description: 'Add Plantable Seeds to your Seed balance. Also Mows Grown Stalk.',
-        value: ClaimRewardsAction.PLANT_AND_MOW,
-      },
-      {
-        title: 'Enroot & Mow',
-        description: 'Add Revitalized Stalk and Seeds to your Stalk and Seed balance. Also Mows Grown Stalk.',
-        value: ClaimRewardsAction.ENROOT_AND_MOW,
-      },
-      {
-        title: 'Claim all Silo rewards',
-        description: 'Add all Stalk and Seed rewards to your Stalk and Seed balances.',
-        value: ClaimRewardsAction.CLAIM_ALL,
-      }]
-  ), []);
-
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const [hoverState, setHoverState] = useState<ClaimRewardsAction | null>(null);
+  const form = useFormikContext<ClaimRewardsFormValues>();
 
+  /** The currently hovered action. */
+  const [hoveredAction, setHoveredAction] = useState<ClaimRewardsAction | undefined>(undefined);
+  /** The currently selected action (after click). */
+  const selectedAction = form.values.action;
+
+  /// Handlers
   const onMouseOver = useCallback((v: ClaimRewardsAction) => (
-    () => setHoverState(v)
+    () => setHoveredAction(v)
   ), []);
 
   const onMouseOutContainer = useCallback(() => {
-    setHoverState(null);
+    setHoveredAction(undefined);
   }, []);
 
-  // when this is hovered: show hover state for these
-  const hoverMap: any = {
-    [ClaimRewardsAction.MOW]: [ClaimRewardsAction.MOW],
-    [ClaimRewardsAction.PLANT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW],
-    [ClaimRewardsAction.ENROOT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.ENROOT_AND_MOW],
-    [ClaimRewardsAction.CLAIM_ALL]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW, ClaimRewardsAction.ENROOT_AND_MOW, ClaimRewardsAction.CLAIM_ALL],
-  };
-
-  const actionSelected = useFormikContext<ClaimRewardsFormValues>().values.action;
-
-  // checks if the current hoverState includes a given ClaimRewardsAction
-  const showHover = (c: ClaimRewardsAction) => {
-    if (actionSelected !== null) {
-      return hoverMap[actionSelected].includes(c);
+  // Checks if the current hoverState includes a given ClaimRewardsAction
+  const isHovering = (c: ClaimRewardsAction) => {
+    if (selectedAction !== undefined) {
+      return hoverMap[selectedAction].includes(c);
     }
-    return hoverState && hoverMap[hoverState].includes(c);
+    return hoveredAction && hoverMap[hoveredAction].includes(c);
   };
-
-  console.log('action set', useFormikContext<ClaimRewardsFormValues>().values.action);
 
   return (
     <Stack gap={2}>
@@ -89,14 +90,14 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
             title="Earned Beans"
             tooltip="The number of Beans earned since your last interaction with the Silo. Earned Beans are automatically Deposited in the Silo."
             amount={farmerSilo.beans?.earned}
-            isClaimable={showHover(ClaimRewardsAction.MOW)}
+            isClaimable={isHovering(ClaimRewardsAction.MOW)}
             icon={beanIcon}
           />
           <RewardItem
             title="Earned Stalk"
             tooltip="The number of Stalk earned from Earned Beans. Earned Stalk automatically contributes to total Stalk ownership."
             amount={farmerSilo.stalk?.earned}
-            isClaimable={showHover(ClaimRewardsAction.MOW)}
+            isClaimable={isHovering(ClaimRewardsAction.MOW)}
             icon={stalkIcon}
           />
         </Stack>
@@ -110,14 +111,14 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
             title="Plantable Seeds"
             tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
             amount={farmerSilo.seeds.earned}
-            isClaimable={showHover(ClaimRewardsAction.PLANT_AND_MOW)}
+            isClaimable={isHovering(ClaimRewardsAction.PLANT_AND_MOW)}
             icon={seedIcon}
           />
           <RewardItem
             title="Grown Stalk"
             tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
             amount={farmerSilo.stalk?.grown}
-            isClaimable={showHover(ClaimRewardsAction.MOW)}
+            isClaimable={isHovering(ClaimRewardsAction.MOW)}
             icon={stalkIcon}
           />
         </Stack>
@@ -131,14 +132,14 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
             title="Revitalized Stalk"
             tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
             amount={new BigNumber(0)}
-            isClaimable={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
+            isClaimable={isHovering(ClaimRewardsAction.ENROOT_AND_MOW)}
             icon={stalkIcon}
           />
           <RewardItem
             title="Revitalized Seed"
             tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
             amount={new BigNumber(0)}
-            isClaimable={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
+            isClaimable={isHovering(ClaimRewardsAction.ENROOT_AND_MOW)}
             icon={seedIcon}
           />
         </Stack>
@@ -149,8 +150,8 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
             {(fieldProps: FieldProps<any>) => {
               const set = (v: any) => () => {
                 // if user clicks on the selected action, unselect the action
-                if (fieldProps.form.values.action !== null && v === fieldProps.form.values.action) {
-                  fieldProps.form.setFieldValue('action', null);
+                if (fieldProps.form.values.action !== undefined && v === fieldProps.form.values.action) {
+                  fieldProps.form.setFieldValue('action', undefined);
                 } else {
                   fieldProps.form.setFieldValue('action', v);
                 }
@@ -163,7 +164,7 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
                     onClick={set(ClaimRewardsAction.MOW)}
                     onMouseOver={onMouseOver(ClaimRewardsAction.MOW)}
                     onMouseLeave={onMouseOutContainer}
-                    forceHover={showHover(ClaimRewardsAction.MOW)}
+                    forceHover={isHovering(ClaimRewardsAction.MOW)}
                     fullWidth
                     disableRipple
                   />
@@ -175,7 +176,7 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
                         onClick={set(ClaimRewardsAction.PLANT_AND_MOW)}
                         onMouseOver={onMouseOver(ClaimRewardsAction.PLANT_AND_MOW)}
                         onMouseLeave={onMouseOutContainer}
-                        forceHover={showHover(ClaimRewardsAction.PLANT_AND_MOW)}
+                        forceHover={isHovering(ClaimRewardsAction.PLANT_AND_MOW)}
                         fullWidth
                         disableRipple
                       />
@@ -187,7 +188,7 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
                         onClick={set(ClaimRewardsAction.ENROOT_AND_MOW)}
                         onMouseOver={onMouseOver(ClaimRewardsAction.ENROOT_AND_MOW)}
                         onMouseLeave={onMouseOutContainer}
-                        forceHover={showHover(ClaimRewardsAction.ENROOT_AND_MOW)}
+                        forceHover={isHovering(ClaimRewardsAction.ENROOT_AND_MOW)}
                         fullWidth
                         disableRipple
                       />
@@ -199,7 +200,7 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
                     onClick={set(ClaimRewardsAction.CLAIM_ALL)}
                     onMouseOver={onMouseOver(ClaimRewardsAction.CLAIM_ALL)}
                     onMouseLeave={onMouseOutContainer}
-                    forceHover={showHover(ClaimRewardsAction.CLAIM_ALL)}
+                    forceHover={isHovering(ClaimRewardsAction.CLAIM_ALL)}
                     recommended
                     fullWidth
                     disableRipple
@@ -208,18 +209,19 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
               );
             }}
           </Field>
-          <Button
-            disabled={useFormikContext<ClaimRewardsFormValues>().values.action === null}
+          <LoadingButton
+            variant="contained"
+            loading={form.isSubmitting}
+            disabled={form.isSubmitting || form.values.action === undefined}
             fullWidth
             type="submit"
-            variant="contained"
             size="large">
-            {actionSelected === null ? (
+            {selectedAction === undefined ? (
               'Claim Selected'
             ) : (
-              `${options[actionSelected].title}`
+              `${options[selectedAction].title}`
             )}
-          </Button>
+          </LoadingButton>
         </Stack>
       </Form>
     </Stack>
@@ -234,7 +236,7 @@ const ClaimRewards: React.FC<{}> = () => {
 
   // Form
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({
-    action: null,
+    action: undefined,
   }), []);
 
   // Handlers
@@ -242,17 +244,28 @@ const ClaimRewards: React.FC<{}> = () => {
     if (!account?.address) throw new Error('Connect a wallet first.');
 
     if (values.action) {
+      // FIXME: suggest using "call" here for consistency with other forms
+      // but this is perfectly functional
       let claimResult;
       if (values.action === ClaimRewardsAction.MOW) {
         claimResult = beanstalk.update(account.address);
       }
-      if (values.action === ClaimRewardsAction.PLANT_AND_MOW) {
+      else if (values.action === ClaimRewardsAction.PLANT_AND_MOW) {
         claimResult = beanstalk.earn(account.address);
       }
-      if (values.action === ClaimRewardsAction.ENROOT_AND_MOW) {
+      else if (values.action === ClaimRewardsAction.ENROOT_AND_MOW) {
         // do something
       }
+      else if (values.action === ClaimRewardsAction.CLAIM_ALL) {
+        claimResult = beanstalk.farm([
+          // PLANT_AND_MOW
+          beanstalk.interface.encodeFunctionData("earn", [account.address]),
+          // ENROOT_AND_MOW
+          // beanstalk.interface.encodeFunctionData("enroot", [account.address]),
+        ])
+      }
 
+      // FIXME: set the name of the action to Mow, etc. depending on `values.action`
       const txToast = new TransactionToast({
         loading: 'Claiming rewards.',
         success: 'Claim successful. You have claimed your rewards.',
