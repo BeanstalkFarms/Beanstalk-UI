@@ -123,7 +123,18 @@ const SendForm: React.FC<
             <FieldWrapper label="Recipient Address">
               <AddressInputField name="to" />
             </FieldWrapper>
-            <FieldWrapper label="Pods" tooltip={POD_MARKET_TOOLTIPS.amount}>
+            <FieldWrapper label="Number of Pods and Plot Range" tooltip={POD_MARKET_TOOLTIPS.amount}>
+              <TokenInputField
+                name="amount"
+                token={PODS}
+                placeholder="0.0000"
+                balance={numPods || ZERO_BN}
+                hideBalance
+                InputProps={{
+                  endAdornment: <TokenAdornment token={PODS} />
+                }}
+                handleChange={handleChangeAmount}
+              />
               <Box px={1}>
                 <SliderField
                   min={0}
@@ -161,17 +172,6 @@ const SendForm: React.FC<
                   />
                 </Grid>
               </Grid>
-              <TokenInputField
-                name="amount"
-                token={PODS}
-                placeholder="0.0000"
-                balance={numPods || ZERO_BN}
-                hideBalance
-                InputProps={{
-                  endAdornment: <TokenAdornment token={PODS} />
-                }}
-                handleChange={handleChangeAmount}
-              />
             </FieldWrapper>
             <Warning message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
           </>
