@@ -15,7 +15,6 @@ import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import SeasonCard from '../SeasonCard';
-import UpcomingSeasonCard from '../UpcomingSeasonCard';
 import SunriseButton from 'components/Sun/SunriseButton';
 
 // ------------------------------------------------------------
@@ -48,83 +47,74 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   );
 
   // Header
-  const HeaderUpcomingSeasonandLabels = (
-    <Stack direction="column">
+  const tableHeader = (
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+      sx={{ p: 0.75 }}
+    >
       <Typography
         color="text.primary"
-        sx={{ fontSize: '14px', fontWeight: 700 }}
+        sx={{
+          fontSize: '14px',
+          fontWeight: 500,
+          width: '15%',
+          textAlign: 'left',
+        }}
       >
-        Upcoming Season in 42m
+        Season
       </Typography>
 
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{ p: 0.75 }}
+      <Typography
+        color="text.primary"
+        sx={{
+          fontSize: '14px',
+          fontWeight: 500,
+          width: '20%',
+          textAlign: 'left',
+        }}
       >
-        <Typography
-          color="text.primary"
-          sx={{
-            fontSize: '14px',
-            fontWeight: 500,
-            width: '15%',
-            textAlign: 'left',
-          }}
-        >
-          Season
-        </Typography>
+        Precipitation
+      </Typography>
 
-        <Typography
-          color="text.primary"
-          sx={{
-            fontSize: '14px',
-            fontWeight: 500,
-            width: '20%',
-            textAlign: 'left',
-          }}
-        >
-          Precipitation
-        </Typography>
-
-        <Typography
-          color="text.primary"
-          sx={{
-            fontSize: '14px',
-            fontWeight: 500,
-            width: '20%',
-            textAlign: 'left',
-          }}
-        >
-          New Beans
-        </Typography>
-        <Typography
-          color="text.primary"
-          sx={{
-            fontSize: '14px',
-            fontWeight: 500,
-            width: '20%',
-            textAlign: 'left',
-          }}
-        >
-          New Soil
-        </Typography>
-        <Typography
-          color="text.primary"
-          sx={{
-            fontSize: '14px',
-            fontWeight: 500,
-            width: '20%',
-            textAlign: 'right',
-          }}
-        >
-          Weather
-        </Typography>
-      </Stack>
+      <Typography
+        color="text.primary"
+        sx={{
+          fontSize: '14px',
+          fontWeight: 500,
+          width: '20%',
+          textAlign: 'left',
+        }}
+      >
+        New Beans
+      </Typography>
+      <Typography
+        color="text.primary"
+        sx={{
+          fontSize: '14px',
+          fontWeight: 500,
+          width: '20%',
+          textAlign: 'left',
+        }}
+      >
+        New Soil
+      </Typography>
+      <Typography
+        color="text.primary"
+        sx={{
+          fontSize: '14px',
+          fontWeight: 500,
+          width: '20%',
+          textAlign: 'right',
+        }}
+      >
+        Weather
+      </Typography>
     </Stack>
   );
 
-  const HeaderPastSeasonsLabel = (
+  const intermediateHeader = (
     <Typography
       color="text.primary"
       sx={{ fontSize: '14px', fontWeight: 700, mv: 1 }}
@@ -141,22 +131,43 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     </div>
   );
 
+  const MAX_ITEMS = 5;
+
   return (
     <FolderMenu
       startIcon={startIcon}
       buttonContent={<>{isLoading ? '0000' : season.toFixed()}</>}
       drawerContent={
-        <Stack sx={{ p: 2 }} gap={2}>
+        <Stack sx={{ p: 2 }} spacing={2}>
           <Typography variant="h2">Title (only on mobile)</Typography>
           <Stack gap={1}>{seasonsContent}</Stack>
         </Stack>
       }
       popoverContent={
-        <Stack>
-          {HeaderUpcomingSeasonandLabels}
-          <UpcomingSeasonCard />
-          {HeaderPastSeasonsLabel}
-          <Stack gap={1}>{seasonsContent}</Stack>
+        <Stack gap={1}>
+          {/* Upcoming Season Header */}
+          <Box>
+            <Typography
+              color="text.primary"
+              sx={{ fontSize: '14px', fontWeight: 700, mv: 1 }}
+            >
+              Upcoming Season in 42m
+            </Typography>
+            {tableHeader}
+            <SeasonCard />
+          </Box>
+          {/* Past Seasons */}
+          {intermediateHeader}
+          <Stack gap={1} sx={{ maxHeight: `${(37.5+10)*MAX_ITEMS - 10}px`, overflowY: 'auto' }}>
+            <SeasonCard />
+            <SeasonCard />
+            <SeasonCard />
+            <SeasonCard />
+            <SeasonCard />
+            <SeasonCard />
+            <SeasonCard />
+          </Stack>
+          <SunriseButton />
         </Stack>
       }
       {...props}
