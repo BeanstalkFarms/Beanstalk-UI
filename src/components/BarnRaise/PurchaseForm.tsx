@@ -10,7 +10,7 @@ import { ERC20Token, NativeToken } from 'classes/Token';
 import { displayBN, displayFullBN, tokenResult, toStringBaseUnitBN } from 'util/index';
 import { BEAN, ETH, ETH_DECIMALS, USDC } from 'constants/tokens';
 import { TokenMap } from 'constants/index';
-import { BalanceState } from 'state/farmer/balances/reducer';
+import { FarmerBalances } from 'state/farmer/balances';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import useFarmerBalances from 'hooks/useFarmerBalances';
@@ -42,7 +42,7 @@ export interface BarnraiseFormProps {
   from: NativeToken | ERC20Token;
   handleSetFrom: (val?: any) => void; // TODO: Add type
   erc20TokenList: TokenMap<Token> | never[];
-  balances: BalanceState;
+  balances: FarmerBalances;
   account: any;
 }
 

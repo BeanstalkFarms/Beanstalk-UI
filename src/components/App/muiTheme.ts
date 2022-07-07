@@ -1,4 +1,8 @@
-import { createTheme, experimental_sx as sx, responsiveFontSizes } from '@mui/material/styles';
+import {
+  createTheme,
+  experimental_sx as sx,
+  responsiveFontSizes
+} from '@mui/material/styles';
 
 // --------------------------------------------------
 
@@ -124,47 +128,52 @@ let muiTheme = createTheme({
    */
   typography: {
     fontFamily: 'Futura PT',
-    fontSize: 16,
-    fontWeightLight: 300,
-    fontWeightRegular: 400,
-    fontWeightMedium: 600,
-    fontWeightBold: 700,
+    fontSize:           16,
+    fontWeightLight:    300,
+    fontWeightRegular:  400,
+    fontWeightMedium:   600,
+    fontWeightBold:     700,
+    // <Typography variant={x} />
+
     // h1: page titles
     h1: {
       fontSize: remBase(0.75 * 40),
-      fontWeight: 700, //
+      fontWeight: 700,        //
     },
     // h2: card titles, tabs, large button text
     h2: {
       fontSize: remBase(20),
-      fontWeight: 600, //
+      fontWeight: 600,        //
     },
     // h3: bold section titles
     h3: {
-      fontSize: '1rem', // 1*16  = 16px
-      fontWeight: 600, //
+      fontSize: '1rem',       // 1*16  = 16px
+      fontWeight: 600,        //
     },
     // h4: normal section titles
     h4: {
-      fontSize: '1rem', // 1*16 = 16px
-      fontWeight: 400, //
+      fontSize: '1rem',       // 1*16 = 16px
+      fontWeight: 400,        //
     },
+    // h5, h6
     // subtitle1: page subtitle
     subtitle1: {
-      fontSize: '1.125rem', // 1.125*16 = 18px
+      fontSize: '1.125rem',   // 1.125*16 = 18px
       fontWeight: 400,
     },
     subtitle2: {},
     body1: {
-      fontSize: '1rem', // 1*16     = 16px
+      fontSize: '1rem',       // 1*16     = 16px
       fontWeight: 400,
-      lineHeight: '1.28rem', // pulled from figma
+      lineHeight: '1.28rem',  // pulled from figma
     },
     body2: {},
     button: {
       fontSize: remBase(0.75 * 20),
     },
   },
+
+  // --------------------------------------------
 
   /**
    *
@@ -284,7 +293,6 @@ let muiTheme = createTheme({
           mr: 2,
           textAlign: 'left',
           minWidth: 0,
-
           fontWeight: 'normal',
           textTransform: 'none',
           color: 'gray',
