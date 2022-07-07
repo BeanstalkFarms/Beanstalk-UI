@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, Typography, Box, Grid } from '@mui/material';
-import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
+// import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -75,7 +75,6 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
             >
               {displayBN(weather)}
             </Typography>
-
             <Stack direction="row" alignItems="center">
               <Typography
                 color="text.primary"
@@ -100,7 +99,6 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
           </Stack>
         </Grid>
       </Grid>
-
     </Stack>
   </Box>
 );
