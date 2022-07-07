@@ -15,8 +15,9 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import SunriseButton from 'components/Sun/SunriseButton';
 import BigNumber from 'bignumber.js';
-import SeasonCard from '../SeasonCard';
 import FolderMenu from '../FolderMenu';
+import { BeanstalkPalette } from '../../App/muiTheme';
+import SeasonCard from '../SeasonCard';
 
 const mockSunData = new Array(20).fill(null).map((_, i) => ({
     season: new BigNumber(5000 * Math.random()),
@@ -108,6 +109,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           />
         ))}
       </Stack>
+      <Typography align="center" color={BeanstalkPalette.lightishGrey} sx={{ fontSize: '14px' }}>The Sunrise advances Beanstalk to the next season for a Bean reward. Beanstalk will only accept the first Sunrise call every season, so this function will often fail.</Typography>
       <SunriseButton />
     </Stack>
   );
