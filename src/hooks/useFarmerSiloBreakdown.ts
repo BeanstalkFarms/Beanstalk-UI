@@ -86,15 +86,15 @@ export default function useFarmerSiloBreakdown() {
           deposited:   siloBalance.deposited?.amount,
           withdrawn:   siloBalance.withdrawn?.amount,
           claimable:   siloBalance.claimable?.amount,
-          wrapped:     new BigNumber(0), // FIXME
-          circulating: tokenBalance,
+          wrapped:     tokenBalance.internal,
+          circulating: tokenBalance.external,
         };
         const usdValueByState = {
           deposited:   getUSD(TOKEN, siloBalance.deposited?.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn?.amount),
           claimable:   getUSD(TOKEN, siloBalance.claimable?.amount),
-          wrapped:     getUSD(TOKEN, new BigNumber(0)),
-          circulating: getUSD(TOKEN, tokenBalance),
+          wrapped:     getUSD(TOKEN, tokenBalance.internal),
+          circulating: getUSD(TOKEN, tokenBalance.external),
         };
 
         // Aggregate value of all states.

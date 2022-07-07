@@ -6,14 +6,16 @@ import {
   Stack,
   TextField,
   TextFieldProps,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { Field, FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { displayFullBN } from 'util/index';
+import { displayBN, displayFullBN, displayTokenAmount } from 'util/index';
 import Token from 'classes/Token';
 import NumberFormatInput from './NumberFormatInput';
 import FieldWrapper from './FieldWrapper';
+import { FarmerBalances } from 'state/farmer/balances';
 
 export type TokenInputCustomProps = { 
   /**
@@ -24,7 +26,7 @@ export type TokenInputCustomProps = {
   /**
    * 
    */
-  balance?: BigNumber | undefined;
+  balance?: FarmerBalances[string] | BigNumber | undefined;
   /**
    * 
    */
@@ -50,13 +52,6 @@ export type TokenInputProps = (
 
 export const VALID_INPUTS = /[0-9]*/;
 
-// const validateInput = (value: string) => {
-//   let error;
-//   if (!ETHEREUM_ADDRESS.test(value)) {
-//   return error;
-// };
-
-
 const TokenInput : React.FC<
   TokenInputProps
   & FieldProps // Formik Field
@@ -64,7 +59,7 @@ const TokenInput : React.FC<
   /// Custom props
   token,
   // Balance
-  balance,
+  balance: _balance,
   balanceLabel = 'Balance',
   hideBalance = false,
   quote,
@@ -90,6 +85,18 @@ const TokenInput : React.FC<
     inputComponent: NumberFormatInput as any,
     ...InputProps,
   } as TextFieldProps['InputProps']), [InputProps]);
+
+  // Unpack balance
+  const [balance, balanceTooltip] = useMemo(() => {
+    if (!_balance) return [undefined, ''];
+    if (_balance instanceof BigNumber) return [_balance, ''];
+    return [_balance.total, (
+      <>
+        Farm Balance: {token ? displayTokenAmount(_balance.internal, token) : displayBN(_balance.internal)}<br/>
+        Circulating Balance: {token ? displayTokenAmount(_balance.external, token) : displayBN(_balance.external)}
+      </>
+    )];
+  }, [_balance, token])
 
   // Automatically disable the input if
   // the form it's contained within is 
@@ -187,17 +194,19 @@ const TokenInput : React.FC<
         </Stack>
         {(balance && !hideBalance) && (
           <>
-            <Typography sx={{ fontSize: 13.5 }}>
-              {balanceLabel}: {(
-                balance 
-                  ? token
-                    // If `token` is provided, use its requested decimals
-                    ? `${displayFullBN(balance, token.displayDecimals)}` 
-                    // Otherwise... *shrug*
-                    : balance.toString() 
-                  : '0'
-              )}
-            </Typography>
+            <Tooltip title={balanceTooltip}>
+              <Typography sx={{ fontSize: 13.5 }}>
+                {balanceLabel}: {(
+                  balance 
+                    ? token
+                      // If `token` is provided, use its requested decimals
+                      ? `${displayFullBN(balance, token.displayDecimals)}` 
+                      // Otherwise... *shrug*
+                      : balance.toString() 
+                    : '0'
+                )}
+              </Typography>
+            </Tooltip>
             <Typography
               variant="body1"
               onClick={isInputDisabled ? undefined : handleMax}

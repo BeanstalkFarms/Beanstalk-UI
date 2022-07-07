@@ -19,7 +19,7 @@ import { SupportedChainId } from 'constants/chains';
 import Beanstalk from 'lib/Beanstalk';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
-import { BalanceState } from 'state/farmer/balances/reducer';
+import { FarmerBalances } from 'state/farmer/balances';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
 import TxnSettings from 'components/Common/Form/TxnSettings';
@@ -49,7 +49,7 @@ const DepositForm : React.FC<
   FormikProps<DepositFormValues> & {
     pool: Pool;
     siloToken: ERC20Token | NativeToken;
-    balances: BalanceState;
+    balances: FarmerBalances;
     contract: ethers.Contract;
     farm: Farm;
   }
@@ -243,7 +243,7 @@ const DepositForm : React.FC<
                 key={`tokens.${index}`}
                 name={`tokens.${index}`}
                 tokenOut={siloToken}
-                balance={balances[tokenState.token.address] || undefined}
+                balance={balances[tokenState.token.address] || ZERO_BN}
                 state={tokenState}
                 showTokenSelect={showTokenSelect}
                 disabled={isMainnet}
