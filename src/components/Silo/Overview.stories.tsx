@@ -24,7 +24,7 @@ const Template: ComponentStory<typeof Overview> = (args: any) => (
       totalValue: n,
       states: {
         circulating: s,
-        wrapped: s,
+        farm:      s,
         claimable: s,
         deposited: s,
         withdrawn: s,

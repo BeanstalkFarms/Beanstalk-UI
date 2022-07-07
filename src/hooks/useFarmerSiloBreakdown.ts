@@ -48,7 +48,7 @@ const _initState = (tokenAddresses: string[]) => ({
  * within Beanstalk. 
  *  
  *    (1)--[deposited => withdrawn => claimable]-->(2)
- *    (2)--[circulating <-> wrapped]-->(1)
+ *    (2)--[circulating <-> farm]-->(1)
  * 
  * First we break things down by state, then by type of token.
  */
@@ -56,7 +56,7 @@ const TOKEN_STATE = [
   'deposited',
   'withdrawn',
   'claimable',
-  'wrapped',
+  'farm',
   'circulating'
 ] as const;
  
@@ -86,14 +86,14 @@ export default function useFarmerSiloBreakdown() {
           deposited:   siloBalance.deposited?.amount,
           withdrawn:   siloBalance.withdrawn?.amount,
           claimable:   siloBalance.claimable?.amount,
-          wrapped:     tokenBalance.internal,
+          farm:        tokenBalance.internal,
           circulating: tokenBalance.external,
         };
         const usdValueByState = {
           deposited:   getUSD(TOKEN, siloBalance.deposited?.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn?.amount),
           claimable:   getUSD(TOKEN, siloBalance.claimable?.amount),
-          wrapped:     getUSD(TOKEN, tokenBalance.internal),
+          farm:        getUSD(TOKEN, tokenBalance.internal),
           circulating: getUSD(TOKEN, tokenBalance.external),
         };
 
@@ -121,7 +121,7 @@ export default function useFarmerSiloBreakdown() {
         deposited:    _initState(WHITELIST_ADDRS),
         withdrawn:    _initState(WHITELIST_ADDRS),
         claimable:    _initState(WHITELIST_ADDRS),
-        wrapped:      _initState(WHITELIST_ADDRS),
+        farm:         _initState(WHITELIST_ADDRS),
         circulating:  _initState(WHITELIST_ADDRS),
       }
     });
