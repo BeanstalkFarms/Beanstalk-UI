@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Button, ButtonProps, Drawer, Popper, Stack, Typography, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonProps,
+  Drawer,
+  Popper,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -19,29 +28,25 @@ import useSeason from 'hooks/useSeason';
 
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   // Data
-  const pools     = usePools();
-  const chainId   = useChainId();
-  const season    = useSeason();
+  const pools = usePools();
+  const chainId = useChainId();
+  const season = useSeason();
   const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
     (state) => state._bean.token.price
   );
   const beanPools = useSelector<AppState, AppState['_bean']['pools']>(
     (state) => state._bean.pools
   );
-  
+
   // Theme
-  const theme     = useTheme();
-  const isMobile  = useMediaQuery(theme.breakpoints.down('lg'));
-  const isTiny    = useMediaQuery('(max-width:350px)');
-  
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isTiny = useMediaQuery('(max-width:350px)');
+
   // Content
   const isLoading = beanPrice.eq(NEW_BN);
   const startIcon = isTiny ? undefined : (
-    <BeanProgressIcon
-      size={25}
-      enabled={isLoading}
-      variant="indeterminate"
-    />
+    <BeanProgressIcon size={25} enabled={isLoading} variant="indeterminate" />
   );
   const poolsContent = Object.values(pools).map((pool) => (
     <PoolCard
@@ -60,25 +65,17 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     <FolderMenu
       startIcon={startIcon}
       buttonContent={
-        <>
-          ${(isLoading ? 0.0000 : beanPrice).toFixed(isMobile ? 2 : 4)}
-        </>
+        <>${(isLoading ? 0.0 : beanPrice).toFixed(isMobile ? 2 : 4)}</>
       }
       drawerContent={
         <Stack sx={{ p: 2 }} gap={2}>
           <Typography variant="h2">
             Pools — Season {displayBN(season || ZERO_BN)}
           </Typography>
-          <Stack gap={1}>
-            {poolsContent}
-          </Stack>
+          <Stack gap={1}>{poolsContent}</Stack>
         </Stack>
       }
-      popoverContent={
-        <Stack gap={1}>
-          {poolsContent}
-        </Stack>
-      }
+      popoverContent={<Stack gap={1}> {poolsContent}</Stack>}
       {...props}
     />
   );
