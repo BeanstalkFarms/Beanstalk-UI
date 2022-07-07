@@ -42,23 +42,21 @@ const PillSelectField : React.FC<{
             pl={0.5}
           >
             <Stack gap={1}>
-              {options.map((option, index) => {
-                return (
-                  <DescriptionButton
-                    key={index}
-                    {...option}
-                    onClick={set(option.value)}
-                    fullWidth
-                    disableRipple
+              {options.map((option, index) => (
+                <DescriptionButton
+                  key={index}
+                  {...option}
+                  onClick={set(option.value)}
+                  fullWidth
+                  disableRipple
                   />
-                )
-              })}
+                ))}
             </Stack>
           </PillDialogField>
         );
       }}
     </Field>
   );
-}
+};
 
 export default PillSelectField;

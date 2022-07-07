@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN } from 'util/index';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import useFarmerTotalFertilizer from "hooks/useFarmerTotalFertilizer";
+import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
 import { BEAN, PODS, SEEDS, STALK } from 'constants/tokens';
 import Stat from 'components/Common/Stat';
 import TotalBalanceCard from 'components/Balances/TotalBalancesCard';
@@ -13,14 +13,14 @@ import { SupportedChainId } from 'constants/chains';
 
 const BalancesPage: React.FC = () => {
   // State
-  const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo)
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field)
+  const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
 
   // Breakdowns
   const breakdown = useFarmerSiloBreakdown();
   const fertilizerSummary = useFarmerTotalFertilizer();
 
-  if(!farmerSilo) return null;
+  if (!farmerSilo) return null;
 
   return (
     <Container maxWidth="lg">
@@ -72,7 +72,7 @@ const BalancesPage: React.FC = () => {
         </Card>
       </Card>
     </Container>
-  )
+  );
 };
 
 export default BalancesPage;

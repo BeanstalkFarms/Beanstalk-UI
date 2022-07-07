@@ -50,6 +50,6 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
       </Stack>
     </>
   );
-}
+};
 
 export default PlotSelect;

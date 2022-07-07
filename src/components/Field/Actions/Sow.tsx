@@ -94,7 +94,7 @@ const SowForm : React.FC<
       return {
         amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
         steps: estimate.steps,
-      }
+      };
     },
     [farm, Weth]
   );
@@ -118,8 +118,8 @@ const SowForm : React.FC<
       />
       <Stack gap={1}>
         <TokenQuoteProvider
-          key={`tokens.0`}
-          name={`tokens.0`}
+          key="tokens.0"
+          name="tokens.0"
           tokenOut={Bean}
           balance={balances[values.tokens[0].token.address] || undefined}
           state={values.tokens[0]}
@@ -234,7 +234,7 @@ const Sow : React.FC<{}> = () => {
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage/100, 6)), // slippage
+          ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6)), // slippage
         );
         data.push(...encoded);
         encoded.forEach((_data, index) => 
@@ -247,7 +247,7 @@ const Sow : React.FC<{}> = () => {
           toStringBaseUnitBN(amountBeans, Bean.decimals),
           FarmFromMode.INTERNAL_EXTERNAL,
         ])
-      )
+      );
  
       //
       return beanstalk.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
@@ -264,8 +264,7 @@ const Sow : React.FC<{}> = () => {
             txToast.error(err.error || err)
           );
         });
-
-    } catch(e) {
+    } catch (e) {
       // txToast.error(err);
       formActions.setSubmitting(false);
     }
@@ -297,7 +296,6 @@ const Sow : React.FC<{}> = () => {
       )}
     </Formik>
   );
-}
-
+};
 
 export default Sow;

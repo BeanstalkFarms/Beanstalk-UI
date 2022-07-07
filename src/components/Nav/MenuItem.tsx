@@ -15,28 +15,27 @@ const MenuItem : React.FC<{
 }> = ({
   item,
   onClick,
-}) => {
-  return (
-    <MuiMenuItem
-      disabled={item.disabled}
-      component={item.href ? 'a' : RouterLink}
-      key={item.path}
-      href={item.href ? item.href : undefined}
-      target={item.href ? '_blank' : undefined}
-      rel={item.href ? 'noreferrer' : undefined}
-      to={item.href ? undefined : item.path}
-      sx={{ minWidth: 250 }}
-      onClick={onClick}
+}) => (
+  <MuiMenuItem
+    disabled={item.disabled}
+    component={item.href ? 'a' : RouterLink}
+    key={item.path}
+    href={item.href ? item.href : undefined}
+    target={item.href ? '_blank' : undefined}
+    rel={item.href ? 'noreferrer' : undefined}
+    to={item.href ? undefined : item.path}
+    sx={{ minWidth: 250 }}
+    onClick={onClick}
     >
-      {item.disabled ? (
-        <Tooltip title={<>{item.title} will be available upon Unpause</>}>
-          <span>
-            <Stack direction="row" gap={1} alignItems="center">
-              {item.icon && <img src={item.icon} alt={item.title} width={20} />}
-              {item.title}
-            </Stack>
-          </span>
-        </Tooltip>
+    {item.disabled ? (
+      <Tooltip title={<>{item.title} will be available upon Unpause</>}>
+        <span>
+          <Stack direction="row" gap={1} alignItems="center">
+            {item.icon && <img src={item.icon} alt={item.title} width={20} />}
+            {item.title}
+          </Stack>
+        </span>
+      </Tooltip>
       ) : (
         <ListItemText>
           <Stack direction="row" gap={1} alignItems="center">
@@ -45,13 +44,12 @@ const MenuItem : React.FC<{
           </Stack>
         </ListItemText>
       )}
-      {item.href ? (
-        <Typography variant="body2" color="text.secondary">
-          <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: 12 }} />
-        </Typography>
+    {item.href ? (
+      <Typography variant="body2" color="text.secondary">
+        <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: 12 }} />
+      </Typography>
       ) : null}
-    </MuiMenuItem>
-  )
-}
+  </MuiMenuItem>
+  );
 
 export default MenuItem;

@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Field, FieldProps, Form, FormikProps } from 'formik';
 import { Box, Button, InputAdornment, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import { ERC20Token, NativeToken } from 'classes/Token';
 import { BuyOrderFormValues } from '../Dialogs/BuyOrderDialog';
 import SliderField from '../../Common/Form/SliderField';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
@@ -19,8 +20,7 @@ import useFarmerBalances from '../../../hooks/useFarmerBalances';
 import TokenSelectDialog from '../../Common/Form/TokenSelectDialog';
 import useTokenMap from '../../../hooks/useTokenMap';
 import { BEAN, ETH } from '../../../constants/tokens';
-import { ERC20Token, NativeToken } from 'classes/Token';
-import FieldWrapper from "../../Common/Form/FieldWrapper";
+import FieldWrapper from '../../Common/Form/FieldWrapper';
 
 export type BuyOrderFormProps = {
   podLine: BigNumber;

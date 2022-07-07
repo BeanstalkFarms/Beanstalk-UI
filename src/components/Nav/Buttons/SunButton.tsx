@@ -17,6 +17,7 @@ import SunriseButton from 'components/Sun/SunriseButton';
 import BigNumber from 'bignumber.js';
 import SeasonCard from '../SeasonCard';
 import FolderMenu from '../FolderMenu';
+import { BeanstalkPalette } from '../../App/muiTheme';
 
 const mockSunData = new Array(20).fill(null).map((_, i) => ({
     season: new BigNumber(5000 * Math.random()),
@@ -66,19 +67,19 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           }}
         >
           <Grid container alignItems="flex-end">
-            <Grid item md={2} xs={4}>
+            <Grid item md={1.8} xs={4}>
               <Typography color="text.primary" sx={{ fontSize: '14px' }}>Season</Typography>
             </Grid>
             <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
               <Typography color="text.primary" sx={{ fontSize: '14px' }}>Precipitation</Typography>
             </Grid>
-            <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
+            <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
               <Typography color="text.primary" sx={{ fontSize: '14px' }}>New Beans</Typography>
             </Grid>
             <Grid item md={2.4} xs={0} display={{ xs: 'none', md: 'block' }}>
               <Typography color="text.primary" sx={{ fontSize: '14px' }}>New Soil</Typography>
             </Grid>
-            <Grid item md={2.4} xs={8} sx={{ textAlign: 'right' }}>
+            <Grid item md={2.7} xs={8} sx={{ textAlign: 'right' }}>
               <Typography color="text.primary" sx={{ fontSize: '14px' }}>Weather</Typography>
             </Grid>
           </Grid>
@@ -108,6 +109,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           />
         ))}
       </Stack>
+      <Typography align="center" color={BeanstalkPalette.lightishGrey} sx={{ fontSize: '14px' }}>The Sunrise advances Beanstalk to the next season for a Bean reward. Beanstalk will only accept the first Sunrise call every season, so this function will often fail.</Typography>
       <SunriseButton />
     </Stack>
   );

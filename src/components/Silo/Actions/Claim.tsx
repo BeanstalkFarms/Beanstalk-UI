@@ -83,7 +83,7 @@ const ClaimForm : React.FC<
   const claimableTokens = useMemo(() => ([
     token,
     ...(token.isLP && pool?.tokens || []),
-  ]), [pool, token])
+  ]), [pool, token]);
 
   //
   const amount = claimableBalance;
@@ -94,8 +94,8 @@ const ClaimForm : React.FC<
   );
   const destination = (
     values.destination === FarmToMode.EXTERNAL
-      ? `to your wallet`
-      : `to your internal balance`
+      ? 'to your wallet'
+      : 'to your internal balance'
   );
   
   //
@@ -126,7 +126,7 @@ const ClaimForm : React.FC<
       return {
         amountOut: toTokenUnitsBN(estimate.amountOut.toString(), _tokenOut.decimals),
         steps: estimate.steps,
-      }
+      };
     },
     [
       farm,
@@ -141,7 +141,7 @@ const ClaimForm : React.FC<
 
   //
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
-    const _token = Array.from(_tokens)[0]
+    const _token = Array.from(_tokens)[0];
     setFieldValue('tokenOut', _token);
   }, [setFieldValue]);
 
@@ -149,7 +149,7 @@ const ClaimForm : React.FC<
   const quoteSettings = useMemo(() => ({
     ignoreSameToken: false,
     onReset: () => ({ amountOut: claimableBalance }),
-  }), [claimableBalance])
+  }), [claimableBalance]);
 
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
@@ -165,7 +165,7 @@ const ClaimForm : React.FC<
               // This input is always disabled but we use
               // the underlying handleQuote functionality
               // for consistency with other forms.
-              disabled={true} 
+              disabled 
               // 
               balance={amount || ZERO_BN}
               balanceLabel="Claimable Balance"
@@ -308,32 +308,32 @@ const Claim : React.FC<{
       ? FarmToMode.INTERNAL
       : values.destination;
 
-    console.debug(`[Claim] claimDestination = ${claimDestination}, crates = `, crates)
+    console.debug(`[Claim] claimDestination = ${claimDestination}, crates = `, crates);
 
     const data : string[] = [];
     
     // Claim multiple withdrawals of `token` in one call
     if (crates.length > 1) {
-      console.debug(`[Claim] claiming ${crates.length} withdrawals`)
+      console.debug(`[Claim] claiming ${crates.length} withdrawals`);
       data.push(
-        beanstalk.interface.encodeFunctionData("claimWithdrawals", [
+        beanstalk.interface.encodeFunctionData('claimWithdrawals', [
           token.address,
           crates.map((crate) => crate.season.toString()),
           claimDestination,
         ])
-      )
+      );
     } 
     
     // Claim a single withdrawal of `token` in one call. Gas efficient.
     else {
-      console.debug(`[Claim] claiming a single withdrawal`)
+      console.debug('[Claim] claiming a single withdrawal');
       data.push(
-        beanstalk.interface.encodeFunctionData("claimWithdrawal", [
+        beanstalk.interface.encodeFunctionData('claimWithdrawal', [
           token.address,
           crates[0].season.toString(),
           claimDestination,
         ])
-      )
+      );
     }
 
     //
@@ -341,7 +341,7 @@ const Claim : React.FC<{
       if (!values.token.steps) throw new Error('No quote found.');
       const encoded = Farm.encodeStepsWithSlippage(
         values.token.steps,
-        ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage/100, 6))
+        ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6))
       );
       values?.token?.steps.forEach((step, i) => console.debug(`step ${i}:`, step.decode(encoded[i])));
       data.push(

@@ -18,25 +18,23 @@ const PillDialogField : React.FC<{
   pill: selected,
   children,
   ...props
-}) => {
-  return (
-    <>
-      <StyledDialog open={isOpen} onClose={hide} transitionDuration={0}>
-        <StyledDialogTitle onClose={hide}>
-          {label}
-        </StyledDialogTitle>
-        <StyledDialogContent>
-          {children}
-        </StyledDialogContent>
-      </StyledDialog>
-      <PillRow
-        isOpen={isOpen}
-        label={label}
-        onClick={show}>
-        {selected}
-      </PillRow>
-    </>
+}) => (
+  <>
+    <StyledDialog open={isOpen} onClose={hide} transitionDuration={0}>
+      <StyledDialogTitle onClose={hide}>
+        {label}
+      </StyledDialogTitle>
+      <StyledDialogContent>
+        {children}
+      </StyledDialogContent>
+    </StyledDialog>
+    <PillRow
+      isOpen={isOpen}
+      label={label}
+      onClick={show}>
+      {selected}
+    </PillRow>
+  </>
   );
-}
 
 export default PillDialogField;

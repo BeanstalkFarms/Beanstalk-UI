@@ -14,8 +14,8 @@ import { MaxBN, MinBN } from '../../../util';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
-import Warning from "../../Common/Form/Warning";
-import FieldWrapper from "../../Common/Form/FieldWrapper";
+import Warning from '../../Common/Form/Warning';
+import FieldWrapper from '../../Common/Form/FieldWrapper';
 
 export type SellListingFormProps = {
   plot: any;

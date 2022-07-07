@@ -93,7 +93,7 @@ const WithdrawForm : React.FC<
   const onSubmit = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     submitForm();
     onClose();
-  }, [onClose, submitForm])
+  }, [onClose, submitForm]);
 
   // Results
   const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
@@ -127,7 +127,7 @@ const WithdrawForm : React.FC<
         token={token}
         amount={withdrawResult.amount.abs()}
         value={getUSD(token, withdrawResult.amount).abs()}
-        modifier={'Withdrawn'}
+        modifier="Withdrawn"
       />
     </>
   ) : null;
@@ -238,7 +238,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const siloBalances = useFarmerSiloBalances();
   const { data: signer } = useSigner();
   const beanstalk = (useBeanstalkContract(signer) as unknown) as BeanstalkReplanted;
-  const withdrawSeasons = useSelector<AppState, AppState['_beanstalk']['silo']['withdrawSeasons']>(state => state._beanstalk.silo.withdrawSeasons);
+  const withdrawSeasons = useSelector<AppState, AppState['_beanstalk']['silo']['withdrawSeasons']>((state) => state._beanstalk.silo.withdrawSeasons);
 
   // Form data
   const depositedBalance = siloBalances[token.address]?.deposited.amount;
@@ -274,7 +274,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
 
       //
       if (seasons.length === 0) {
-        throw new Error('Malformatted crates.')
+        throw new Error('Malformatted crates.');
       } else if (seasons.length === 1) {
         call = beanstalk.withdrawDeposit(
           token.address,

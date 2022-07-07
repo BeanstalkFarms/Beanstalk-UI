@@ -39,7 +39,6 @@ const TokenDisplay: React.FC<{
 );
 
 const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
-
   const [expanded, setExpanded] = useState(false);
   let eventTitle = `${event.event}`;
   let amountIn;

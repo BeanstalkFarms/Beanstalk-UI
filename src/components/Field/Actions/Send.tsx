@@ -5,6 +5,14 @@ import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'for
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
+import useToggle from 'hooks/display/useToggle';
+import { TokenAdornment, TokenInputField } from 'components/Common/Form';
+import { PODS } from 'constants/tokens';
+import { LoadingButton } from '@mui/lab';
+import { useAccount, useSigner } from 'wagmi';
+import { useBeanstalkContract } from 'hooks/useContract';
+import { BeanstalkReplanted } from 'constants/generated';
+import TransactionToast from 'components/Common/TxnToast';
 import DropdownField from '../../Common/Form/DropdownField';
 import SelectPlotDialog from '../SelectPlotDialog';
 import PlotDetails from '../../Market/Cards/PlotDetails';
@@ -15,15 +23,7 @@ import InputField from '../../Common/Form/InputField';
 import podsIcon from '../../../img/beanstalk/pod-icon.svg';
 import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import SliderField from '../../Common/Form/SliderField';
-import Warning from "../../Common/Form/Warning";
-import useToggle from 'hooks/display/useToggle';
-import { TokenAdornment, TokenInputField } from 'components/Common/Form';
-import { PODS } from 'constants/tokens';
-import { LoadingButton } from '@mui/lab';
-import { useAccount, useSigner } from 'wagmi';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'constants/generated';
-import TransactionToast from 'components/Common/TxnToast';
+import Warning from '../../Common/Form/Warning';
 
 export type SendFormValues = {
   to: string | null;
@@ -59,12 +59,12 @@ const SendForm: React.FC<
     [farmerField.plots, values?.plotIndex]
   );
 
-  const [dialogOpen, showDialog, hideDialog] = useToggle()
+  const [dialogOpen, showDialog, hideDialog] = useToggle();
 
   const handlePlotSelect = useCallback((index: string) => {
-    console.debug(`[field/actions/Send]: selected plot`, index)
+    console.debug('[field/actions/Send]: selected plot', index);
     setFieldValue('plotIndex', index);
-  }, [setFieldValue])
+  }, [setFieldValue]);
   
   const reset = useCallback(() => {
     setFieldValue('start', new BigNumber(0));
@@ -99,7 +99,7 @@ const SendForm: React.FC<
     && values.start
     && values.amount?.gt(0)
     && isValid
-  )
+  );
 
   return (
     <Form autoComplete="off">
@@ -142,7 +142,7 @@ const SendForm: React.FC<
                     balance={numPods || ZERO_BN}
                     hideBalance
                     InputProps={{
-                      endAdornment: "Start"
+                      endAdornment: 'Start'
                     }}
                     size="small"
                   />
@@ -155,7 +155,7 @@ const SendForm: React.FC<
                     balance={numPods || ZERO_BN}
                     hideBalance
                     InputProps={{
-                      endAdornment: "End"
+                      endAdornment: 'End'
                     }}
                     size="small"
                   />

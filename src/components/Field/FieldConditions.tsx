@@ -17,59 +17,58 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
   beanstalkField,
   // farmerField,
   // podLine,
-}) => {
-  return (
-    <Card sx={{ p: 2 }}>
-      <Stack gap={2}>
-        <Typography variant="h2">Field Conditions</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <Stack gap={0.5}>
-              <Typography variant="h4">Available Soil&nbsp;
-                <Tooltip
-                  title="The number of Beans that can currently be Sown, or lent to Beanstalk."
-                  placement="top">
-                  <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: '14px' }}
+}) => (
+  <Card sx={{ p: 2 }}>
+    <Stack gap={2}>
+      <Typography variant="h2">Field Conditions</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={4}>
+          <Stack gap={0.5}>
+            <Typography variant="h4">Available Soil&nbsp;
+              <Tooltip
+                title="The number of Beans that can currently be Sown, or lent to Beanstalk."
+                placement="top">
+                <HelpOutlineIcon
+                  sx={{ color: 'text.secondary', fontSize: '14px' }}
                   />
-                </Tooltip>
-              </Typography>
-              <Typography variant="h1" fontWeight="400">
-                {displayBN(beanstalkField.soil)}
-              </Typography>
-            </Stack>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Stack gap={0.5}>
-              <Typography variant="h4">Weather&nbsp;
-                <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
-                  <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: '14px' }}
+              </Tooltip>
+            </Typography>
+            <Typography variant="h1" fontWeight="400">
+              {displayBN(beanstalkField.soil)}
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Stack gap={0.5}>
+            <Typography variant="h4">Weather&nbsp;
+              <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
+                <HelpOutlineIcon
+                  sx={{ color: 'text.secondary', fontSize: '14px' }}
                   />
-                </Tooltip>
-              </Typography>
-              <Typography variant="h1" fontWeight="400">
-                {displayBN(beanstalkField.weather.yield)}%
-              </Typography>
-            </Stack>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Stack gap={0.5}>
-              <Typography variant="h4">Pods Harvested&nbsp;
-                <Tooltip
-                  title="The number of Beans that Beanstalk has paid back to Sowers."
-                  placement="top">
-                  <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: '14px' }}
+              </Tooltip>
+            </Typography>
+            <Typography variant="h1" fontWeight="400">
+              {displayBN(beanstalkField.weather.yield)}%
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Stack gap={0.5}>
+            <Typography variant="h4">Pods Harvested&nbsp;
+              <Tooltip
+                title="The number of Beans that Beanstalk has paid back to Sowers."
+                placement="top">
+                <HelpOutlineIcon
+                  sx={{ color: 'text.secondary', fontSize: '14px' }}
                   />
-                </Tooltip>
-              </Typography>
-              <Typography variant="h1" fontWeight="400">
-                {displayBN(beanstalkField?.harvestableIndex)}
-              </Typography>
-            </Stack>
-          </Grid>
-          {/* <Grid item xs={12}>
+              </Tooltip>
+            </Typography>
+            <Typography variant="h1" fontWeight="400">
+              {displayBN(beanstalkField?.harvestableIndex)}
+            </Typography>
+          </Stack>
+        </Grid>
+        {/* <Grid item xs={12}>
             <PodLineSection
               numPodsTitle="Pod Line"
               numPodsDisplay={podLine}
@@ -78,7 +77,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
               plots={farmerField.plots}
             />
           </Grid> */}
-          {/* <Grid item xs={12}>
+        {/* <Grid item xs={12}>
             <Stack direction="row" justifyContent="space-between">
               <Stack direction="row" gap={0.5}>
                 <Tooltip
@@ -102,10 +101,9 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
               </Link>
             </Stack>
           </Grid> */}
-        </Grid>
-      </Stack>
-    </Card>
+      </Grid>
+    </Stack>
+  </Card>
   );
-};
 
 export default FieldConditions;

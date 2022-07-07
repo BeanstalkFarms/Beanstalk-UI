@@ -11,27 +11,27 @@ const DestinationField : React.FC<{
 }) => {
   const options = useMemo(() => ([
     {
-      title: "My Beanstalk Farm Balance",
-      description: "Receive to an internal balance within Beanstalk. You can use this internal balance within the Beanstalk protocol.",
+      title: 'My Beanstalk Farm Balance',
+      description: 'Receive to an internal balance within Beanstalk. You can use this internal balance within the Beanstalk protocol.',
       pill: <><Typography>🚜</Typography><Typography>Farm Balance</Typography></>,
       icon: '🚜',
       value: FarmToMode.INTERNAL,
     },
     {
-      title: "My Wallet",
-      description: "Receive your Claimable balance from Beanstalk directly to your wallet.",
+      title: 'My Wallet',
+      description: 'Receive your Claimable balance from Beanstalk directly to your wallet.',
       pill: <><AddressIcon size={16} /><Typography>Wallet</Typography></>,
       icon: <AddressIcon size={36} />,
       value: FarmToMode.EXTERNAL,
     }]
-  ), [])
+  ), []);
   return (
     <PillSelectField
       name={name}
       label="Destination"
       options={options}
     />
-  )
-}
+  );
+};
 
-export default DestinationField
+export default DestinationField;

@@ -1,1 +1,1 @@
-beforeAll(() => {})
+beforeAll(() => {});

@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Form, FormikProps } from 'formik';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import { ERC20Token, NativeToken } from 'classes/Token';
 import { BuyOrderFormValues } from '../Dialogs/BuyOrderDialog';
 import TokenQuoteProvider from '../../Common/Form/TokenQuoteProvider';
 import { SupportedChainId } from '../../../constants';
@@ -15,8 +16,7 @@ import TokenSelectDialog from '../../Common/Form/TokenSelectDialog';
 import useTokenMap from '../../../hooks/useTokenMap';
 import { BEAN, ETH } from '../../../constants/tokens';
 import { BuyNowFormValues } from '../Dialogs/BuyNowDialog';
-import { ERC20Token, NativeToken } from 'classes/Token';
-import FieldWrapper from "../../Common/Form/FieldWrapper";
+import FieldWrapper from '../../Common/Form/FieldWrapper';
 
 export type BuyNowFormProps = {
   token: NativeToken | ERC20Token

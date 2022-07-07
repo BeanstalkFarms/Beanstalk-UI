@@ -3,10 +3,10 @@ import { useNetwork } from 'wagmi';
 import { Button, ButtonProps, Typography } from '@mui/material';
 import { SupportedChainId } from 'constants/chains';
 import { ETH } from 'constants/tokens';
+import useAnchor from 'hooks/display/useAnchor';
 import TokenIcon from '../TokenIcon';
 import DropdownIcon from '../DropdownIcon';
 import NetworkDialog from './NetworkDialog';
-import useAnchor from 'hooks/display/useAnchor';
 
 const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { activeChain } = useNetwork();

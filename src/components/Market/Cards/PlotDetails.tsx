@@ -3,8 +3,8 @@ import { Card, CardProps, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import podIcon from 'img/beanstalk/pod-icon.svg';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { displayBN } from '../../../util';
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export type PlotDetailsProps = {
   placeInLine: BigNumber;

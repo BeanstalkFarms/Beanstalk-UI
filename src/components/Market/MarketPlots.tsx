@@ -16,7 +16,6 @@ import podIcon from '../../img/beanstalk/pod-icon.svg';
 import { AppState } from '../../state';
 import { BeanstalkPalette } from '../App/muiTheme';
 
-
 const MarketPlots: React.FC<CardProps> = ({ sx }) => {
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field

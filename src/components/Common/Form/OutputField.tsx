@@ -10,10 +10,9 @@ const OutputField : React.FC<{
   //
   sx,
   ...props
-}) => {
-  return (
-    <Stack
-      sx={{
+}) => (
+  <Stack
+    sx={{
         backgroundColor: isNegative ? '#FFE5DF' : '#F6FAFE',
         borderRadius: 1,
         px: 2,
@@ -21,14 +20,13 @@ const OutputField : React.FC<{
         color: isNegative ? 'hsla(12, 63%, 52%, 1)' : 'inherit',
         ...sx
       }}
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      {...props}
+    direction="row"
+    alignItems="center"
+    justifyContent="space-between"
+    {...props}
     >
-      {children}
-    </Stack>
-  )
-}
+    {children}
+  </Stack>
+  );
 
 export default OutputField;

@@ -160,7 +160,7 @@ const crv3Meta = {
   symbol: '3CRV',
   logo: crv3LogoUrl,
   isLP: true,
-}
+};
 export const CRV3 = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
@@ -227,7 +227,7 @@ const lusdMeta = {
   name: 'LUSD',
   symbol: 'LUSD',
   logo: lusdLogoUrl,
-}
+};
 export const LUSD = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,

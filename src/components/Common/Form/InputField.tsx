@@ -89,7 +89,7 @@ const InputField : React.FC<
         finalValue,
       );
       //
-      handleChangeOverride?.(finalValue)
+      handleChangeOverride?.(finalValue);
     }
   }, [form, field.name, field.value, maxValue, handleChangeOverride, minValue]);
 

@@ -7,8 +7,8 @@ import {
 import { ChainConstant, AddressMap, SupportedChainId } from 'constants/index';
 import { MinBN } from 'util/Tokens';
 import client from 'util/Client';
-import Token, { ERC20Token } from './Token';
 import { CRV3, DAI, USDC, USDT } from 'constants/tokens';
+import Token, { ERC20Token } from './Token';
 
 type Reserves = [BigNumber, BigNumber];
 
@@ -97,8 +97,8 @@ export default abstract class Pool {
       } else {
         prev.push(token[chainId]);
       }
-      return prev
-    }, [])
+      return prev;
+    }, []);
 
     this.name = metadata.name;
     this.symbol = metadata.symbol;

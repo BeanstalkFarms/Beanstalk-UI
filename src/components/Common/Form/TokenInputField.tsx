@@ -56,7 +56,6 @@ export const VALID_INPUTS = /[0-9]*/;
 //   return error;
 // };
 
-
 const TokenInput : React.FC<
   TokenInputProps
   & FieldProps // Formik Field
@@ -120,7 +119,7 @@ const TokenInput : React.FC<
         field.name,
         finalValue,
       );
-      _handleChange?.(finalValue)
+      _handleChange?.(finalValue);
     }
   }, [
     form,
@@ -157,7 +156,7 @@ const TokenInput : React.FC<
   //    a. If `field.value === undefined`         (i.e. the value has been cleared), reset the input.
   //    b. If `field.value !== BN(displayAmount)` (i.e. a new value was provided),   update `displayAmount`.
   useEffect(() => {
-    console.debug(`[TokenInputField] field.value or displayAmount changed`, field.name, field.value, displayAmount)
+    console.debug('[TokenInputField] field.value or displayAmount changed', field.name, field.value, displayAmount);
     if (!field.value) setDisplayAmount('');
     else if (!field.value.eq(new BigNumber(displayAmount))) setDisplayAmount(field.value.toString());
   }, [field.value, field.name, displayAmount]);
@@ -217,17 +216,15 @@ const TokenInput : React.FC<
   );
 };
 
-const TokenInputField : React.FC<TokenInputProps> = ({ name, ...props }) => {
-  return (
-    <Field name={name}>
-      {(fieldProps: FieldProps) => (
-        <TokenInput
-          {...fieldProps}
-          {...props}
+const TokenInputField : React.FC<TokenInputProps> = ({ name, ...props }) => (
+  <Field name={name}>
+    {(fieldProps: FieldProps) => (
+      <TokenInput
+        {...fieldProps}
+        {...props}
         />
       )}
-    </Field>
-  )
-};
+  </Field>
+  );
 
 export default TokenInputField;

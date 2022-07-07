@@ -154,14 +154,14 @@ describe('the Field', () => {
     p.ingest({
       event: 'Sow',
       args: propArray({
-        index: EBN.from("737663715081254"),
-        pods:  EBN.from("57980000"),
+        index: EBN.from('737663715081254'),
+        pods:  EBN.from('57980000'),
       })
     } as SowEvent);
 
-    expect(p.plots["737663715.081254"]).toBeDefined();
-    expect(p.plots["737663715.081254"].eq(57.980000)).toBe(true);
-  })
+    expect(p.plots['737663715.081254']).toBeDefined();
+    expect(p.plots['737663715.081254'].eq(57.980000)).toBe(true);
+  });
 });
 
 // --------------------------------
