@@ -1,22 +1,25 @@
+import { useCallback, useEffect } from 'react';
+import flatMap from 'lodash/flatMap';
 import { ZERO_BN } from 'constants/index';
 import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
-import { BALANCE_TOKENS, ERC20_TOKENS } from 'constants/tokens';
+import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from 'constants/tokens';
 import useChainId from 'hooks/useChain';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';
 import useTokenMap from 'hooks/useTokenMap';
-import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAccount } from 'util/Account';
 
 import { tokenResult } from 'util/Tokens';
 import { useAccount } from 'wagmi';
 import { clearBalances, updateBalances } from './actions';
+import useChainConstant from 'hooks/useChainConstant';
 
 // -- Hooks
 
 export const useFetchFarmerBalances = () => {
   const dispatch = useDispatch();
+  const Eth = useChainConstant(ETH);
   const tokenMap = useTokenMap(BALANCE_TOKENS);
   const erc20TokenMap = useTokenMap(ERC20_TOKENS);
   const beanstalk = useBeanstalkContract();
@@ -43,23 +46,36 @@ export const useFetchFarmerBalances = () => {
           ))),
           async (b) => {
             const erc20Addresses = Object.keys(erc20TokenMap);
-            return b.getAllBalances(account, erc20Addresses)
-              .then((result) => {
-                console.debug(`[farmer/balances/updater]: getAllBalances = `, result)
-                return result;
-              })
-              .then((result) => result.map((struct, index) => {
-                const _token = erc20TokenMap[erc20Addresses[index]];
-                const _tokenResult = tokenResult(_token);
-                return {
-                  token: _token,
-                  balance: {
-                    internal: _tokenResult(struct.internalBalance),
-                    external: _tokenResult(struct.externalBalance),
-                    total:    _tokenResult(struct.totalBalance),
+            const promises = [
+              // ETH cannot have an internal balance and isn't returned
+              // from the standard getAllBalances call.
+              Eth.getBalance(account).then(tokenResult(Eth)).then((result) => ({
+                token: Eth,
+                balance: {
+                  internal: ZERO_BN,
+                  external: result,
+                  total:    result,
+                },
+              })),
+              b.getAllBalances(account, erc20Addresses)
+                .then((result) => {
+                  console.debug(`[farmer/balances/updater]: getAllBalances = `, result)
+                  return result;
+                })
+                .then((result) => result.map((struct, index) => {
+                  const _token = erc20TokenMap[erc20Addresses[index]];
+                  const _tokenResult = tokenResult(_token);
+                  return {
+                    token: _token,
+                    balance: {
+                      internal: _tokenResult(struct.internalBalance),
+                      external: _tokenResult(struct.externalBalance),
+                      total:    _tokenResult(struct.totalBalance),
+                    }
                   }
-                }
-              }))
+                }))
+            ]
+            return Promise.all(promises).then((results) => flatMap(results));
           }
         ]);
 
@@ -80,6 +96,7 @@ export const useFetchFarmerBalances = () => {
     tokenMap,
     // replanted
     beanstalk,
+    Eth,
     erc20TokenMap,
     migrate
   ]);
