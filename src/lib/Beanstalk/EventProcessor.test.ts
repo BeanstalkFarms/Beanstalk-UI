@@ -1,5 +1,5 @@
 import { BigNumber as EBN } from 'ethers';
-import { AddDepositEvent, AddWithdrawalEvent, PlotTransferEvent, RemoveDepositEvent, RemoveWithdrawalEvent, SowEvent } from 'constants/generated/Beanstalk/BeanstalkReplanted';
+import { AddDepositEvent, AddWithdrawalEvent, PlotTransferEvent, RemoveDepositEvent, RemoveWithdrawalEvent, RemoveWithdrawalsEvent, SowEvent } from 'constants/generated/Beanstalk/BeanstalkReplanted';
 import { BEAN, BEAN_CRV3_LP, ERC20_TOKENS, SILO_WHITELIST } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import { HarvestEvent } from 'constants/generated/Beanstalk/Beanstalk';
@@ -331,7 +331,7 @@ describe('the Silo', () => {
     expect(p.deposits[t1]['6074']).toBeUndefined();
   });
 
-  it('removes a single withdrawal, partial -> full', () => {
+  it('removes a single withdrawal', () => {
     const p = mockProcessor();
     const t1 = Bean.address.toLowerCase();
 
@@ -353,65 +353,62 @@ describe('the Silo', () => {
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(600 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+        amount: EBN.from(1000 * 10 ** Bean.decimals),
       }),
     } as RemoveWithdrawalEvent);
 
-    expect(p.withdrawals[t1]['6074']).toStrictEqual({
-      amount: BN(400),
-    });
+    // withdrawal should be deleted
+    expect(p.withdrawals[t1]['6074']).toBeUndefined();
+  });
 
-    // Claim: 400 Bean from Withdrawal in Season 6074
+  it('removes multiple withdrawals, full', () => {
+    const p = mockProcessor();
+    const t1 = Bean.address.toLowerCase();
+
+    // Withdraw: 1000 Bean in Season 6074
     p.ingest({
-      event: 'RemoveWithdrawal',
+      event: 'AddWithdrawal',
       args: propArray({
         account,
         token:  t1,
         season: EBN.from(6074),
-        amount: EBN.from(400 * 10 ** Bean.decimals), // Deposited 1,000 Bean
+        amount: EBN.from(1000 * 10 ** Bean.decimals), // Withdraw 1,000 Bean
       }),
-    } as RemoveWithdrawalEvent);
+    } as AddWithdrawalEvent);
 
-    expect(p.withdrawals[t1]['6074']).toBeUndefined();
+    expect(p.withdrawals[t1]["6074"]).toStrictEqual({
+      amount: BN(1000),
+    })
+
+    // Withdraw: 5000 Bean in Season 6100
+    p.ingest({
+      event: 'AddWithdrawal',
+      args: propArray({
+        account,
+        token:  t1,
+        season: EBN.from(6100),
+        amount: EBN.from(5000 * 10 ** Bean.decimals), // Withdraw 1,000 Bean
+      }),
+    } as AddWithdrawalEvent);
+
+    expect(p.withdrawals[t1]["6100"]).toStrictEqual({
+      amount: BN(5000),
+    })
+
+    // Claim: 
+    p.ingest({
+      event: 'RemoveWithdrawals',
+      args: propArray({
+        account,
+        token:  t1,
+        seasons: ["6074", "6100"],
+        amount: EBN.from(6000 * 10 ** Bean.decimals), // Claim 2000 Bean
+      }),
+    } as RemoveWithdrawalsEvent);
+
+    expect(p.withdrawals[t1]["6074"]).toBeUndefined();
+    expect(p.withdrawals[t1]["6100"]).toBeUndefined();
   });
-
-  // it('removes multiple withdrawals, full', () => {
-  //   const p = mockProcessor();
-  //   const t1 = Bean.address.toLowerCase();
-
-  //   // Withdraw: 1000 Bean in Season 6074
-  //   p.ingest({
-  //     event: 'AddWithdrawal',
-  //     args: propArray({
-  //       account,
-  //       token:  t1,
-  //       season: EBN.from(6074),
-  //       amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
-  //     }),
-  //   } as AddWithdrawalEvent);
-
-  //   // Withdraw: 5000 Bean in Season 6100
-  //   p.ingest({
-  //     event: 'AddWithdrawal',
-  //     args: propArray({
-  //       account,
-  //       token:  t1,
-  //       season: EBN.from(6100),
-  //       amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
-  //     }),
-  //   } as AddWithdrawalEvent);
-
-  //   // Claim: 
-  //   // p.ingest({
-  //   //   event: 'RemoveWithdrawals',
-  //   //   args: propArray({
-  //   //     account,
-  //   //     token:  t1,
-  //   //     season: ["6074", "6100"],
-  //   //     amount: EBN.from(400*10**Bean.decimals), // Deposited 1,000 Bean
-  //   //   }),
-  //   // } as RemoveWithdrawalEvent);
-  // });
 
   it('ignores empty RemoveWithdrawal events', () => {
     const p = mockProcessor();

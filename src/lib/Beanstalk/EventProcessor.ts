@@ -512,21 +512,23 @@ export default class EventProcessor {
     if (_amount.eq(0) || !this.epp.whitelist[token]) return;
 
     ///
-    const amount    = tokenBN(_amount, this.epp.whitelist[token]);
     const existingWithdrawal = this.withdrawals[token][season];
     if (!existingWithdrawal) throw new Error(`Received a RemoveWithdrawal(s) event for an unknown Withdrawal: ${token} ${season}`);
 
-    this.withdrawals[token] = {
-      ...this.withdrawals[token],
-      [season]: this._upsertWithdrawal(
-        this.withdrawals[token][season],
-        amount.negated(),
-      ),
-    };
+    // Removing a Withdrawal always removes the entire season.
+    delete this.withdrawals[token][season];
 
-    if (this.withdrawals[token][season].amount.eq(0)) {
-      delete this.withdrawals[token][season];
-    }
+    // this.withdrawals[token] = {
+    //   ...this.withdrawals[token],
+    //   [season]: this._upsertWithdrawal(
+    //     this.withdrawals[token][season],
+    //     amount.negated(),
+    //   ),
+    // };
+
+    // if (this.withdrawals[token][season].amount.eq(0)) {
+    //    delete this.withdrawals[token][season];
+    // }
   }
 
   AddWithdrawal(event: Simplify<AddWithdrawalEvent>) {
@@ -546,7 +548,7 @@ export default class EventProcessor {
     this._removeWithdrawal(
       event.args.season.toString(),
       event.args.token.toLowerCase(),
-      event.args.amount
+      event.args.amount,
     );
   }
 
@@ -554,8 +556,8 @@ export default class EventProcessor {
     event.args.seasons.forEach((seasonNum, index) => {
       this._removeWithdrawal(
         seasonNum.toString(),
-        event.args.token,
-        event.args.amount,  // FIXME
+        event.args.token.toLowerCase(),
+        event.args.amount,
       );
     });
   }
