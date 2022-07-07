@@ -1,6 +1,4 @@
 import { Box, Button, Divider, Stack } from '@mui/material';
-import AddressInputField from 'components/Common/Form/AddressInputField';
-import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps, useFormikContext } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useAccount, useSigner } from 'wagmi';
@@ -14,8 +12,9 @@ import RewardItem from '../RewardItem';
 import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
 import stalkIcon from '../../../img/beanstalk/stalk-icon.svg';
 import seedIcon from '../../../img/beanstalk/seed-icon.svg';
-import { FarmerSiloRewards } from '../../../state/farmer/silo';
 import { AppState } from '../../../state';
+import TransactionToast from '../../Common/TxnToast';
+import { displayFullBN } from '../../../util';
 
 export type SendFormValues = {
   to?: string;
@@ -49,8 +48,8 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
         value: ClaimRewardsAction.CLAIM_ALL,
       }]
   ), []);
-  
-  const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+
+  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const [hoverState, setHoverState] = useState<ClaimRewardsAction | null>(null);
 
   const onMouseOver = useCallback((v: ClaimRewardsAction) => (
@@ -211,9 +210,14 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
               );
             }}
           </Field>
-          <Button disabled={useFormikContext<ClaimRewardsFormValues>().values.action === null} fullWidth type="submit" variant="contained" size="large">
+          <Button
+            disabled={useFormikContext<ClaimRewardsFormValues>().values.action === null}
+            fullWidth
+            type="submit"
+            variant="contained"
+            size="large">
             {actionSelected === null ? (
-              "Claim Selected"
+              'Claim Selected'
             ) : (
               `${options[actionSelected].title}`
             )}
@@ -238,7 +242,44 @@ const ClaimRewards: React.FC<{}> = () => {
   // Handlers
   const onSubmit = useCallback((values: ClaimRewardsFormValues, formActions: FormikHelpers<ClaimRewardsFormValues>) => {
     if (!account?.address) throw new Error('Connect a wallet first.');
-    const claimResult = beanstalk.update(account.address);
+
+    if (values.action) {
+      let claimResult;
+      if (values.action === ClaimRewardsAction.MOW) {
+        claimResult = beanstalk.update(account.address);
+      }
+      if (values.action === ClaimRewardsAction.PLANT_AND_MOW) {
+        claimResult = beanstalk.earn(account.address);
+      }
+      if (values.action === ClaimRewardsAction.ENROOT_AND_MOW) {
+        // do something
+      }
+
+      const txToast = new TransactionToast({
+        loading: 'Claiming rewards.',
+        success: 'Claim successful. You have claimed your rewards.',
+      });
+
+      if (claimResult !== undefined) {
+        return claimResult
+          .then((txn) => {
+            txToast.confirming(txn);
+            return txn.wait();
+          })
+          .then((receipt) => {
+            txToast.success(receipt);
+            formActions.resetForm();
+          })
+          .catch((err) => {
+            console.error(
+              txToast.error(err.error || err),
+              {
+                action: values.action,
+              }
+            );
+          });
+      }
+    }
   }, [account?.address, beanstalk]);
 
   return (

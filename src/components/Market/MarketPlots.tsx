@@ -261,13 +261,13 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
 
         {/* Sell Now tab */}
         {tab === 1 && (
-        <PlotTable
-          columns={orderColumns}
-          rows={mockPodOrderData}
-          maxRows={8}
-          onRowClick={handleSellNowModalOpen}
+          <PlotTable
+            columns={orderColumns}
+            rows={mockPodOrderData}
+            maxRows={8}
+            onRowClick={handleSellNowModalOpen}
           />
-         )}
+       )}
       </Card>
 
       {/* ----- dialogs ----- */}
