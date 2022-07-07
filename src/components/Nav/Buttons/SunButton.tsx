@@ -5,35 +5,35 @@ import {
   Typography,
   useMediaQuery,
   Box,
-  Button,
+  Grid,
 } from '@mui/material';
 import { NEW_BN } from 'constants/index';
-import FolderMenu from '../FolderMenu';
 import useSeason from 'hooks/useSeason';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import SeasonCard from '../SeasonCard';
 import SunriseButton from 'components/Sun/SunriseButton';
+import BigNumber from 'bignumber.js';
+import SeasonCard from '../SeasonCard';
+import FolderMenu from '../FolderMenu';
 
-// ------------------------------------------------------------
+const mockSunData = new Array(20).fill(null).map((_, i) => ({
+    season: new BigNumber(5000 * Math.random()),
+    newBeans: new BigNumber(100000 * Math.random()),
+    newSoil: new BigNumber(1000 * Math.random()),
+    weather: new BigNumber(5000 * Math.random()),
+  })
+);
 
-// ------------------------------------------------------------
+const MAX_ITEMS = 5;
 
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
-  // Data
-  // const pools     = usePools();
-  // const chainId   = useChainId();
   const season = useSeason();
   const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
     (state) => state._bean.token.price
   );
-  // const beanPools = useSelector<AppState, AppState['_bean']['pools']>(
-  //   (state) => state._bean.pools
-  // );
 
-  // Theme
   const isTiny = useMediaQuery('(max-width:350px)');
 
   // Button Content
@@ -46,130 +46,78 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     />
   );
 
-  // Header
-  const tableHeader = (
-    <Stack
-      direction="row"
-      justifyContent="space-between"
-      alignItems="center"
-      sx={{ p: 0.75 }}
-    >
+  const tableContent = (
+    <Stack gap={1}>
+      {/* Upcoming Season Header */}
+      <Box>
+        <Typography
+          color="text.primary"
+          variant="h3"
+        >
+          Upcoming Season in 42m
+        </Typography>
+        {/* table header */}
+        <Box
+          display="flex"
+          sx={{
+            px: 1, // 1 + 2 from Table Body
+            pt: 1,
+            pb: 0.5,
+          }}
+        >
+          <Grid container alignItems="flex-end">
+            <Grid item md={2} xs={4}>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>Season</Typography>
+            </Grid>
+            <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>Precipitation</Typography>
+            </Grid>
+            <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>New Beans</Typography>
+            </Grid>
+            <Grid item md={2.4} xs={0} display={{ xs: 'none', md: 'block' }}>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>New Soil</Typography>
+            </Grid>
+            <Grid item md={2.4} xs={8} sx={{ textAlign: 'right' }}>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>Weather</Typography>
+            </Grid>
+          </Grid>
+        </Box>
+        {/* current season */}
+        <SeasonCard
+          season={new BigNumber(7845)}
+          newBeans={new BigNumber(100000)}
+          newSoil={new BigNumber(1000)}
+          weather={new BigNumber(5000)}
+        />
+      </Box>
+      {/* Past Seasons */}
       <Typography
         color="text.primary"
-        sx={{
-          fontSize: '14px',
-          fontWeight: 500,
-          width: '15%',
-          textAlign: 'left',
-        }}
+        variant="h3"
       >
-        Season
+        Past Seasons
       </Typography>
-
-      <Typography
-        color="text.primary"
-        sx={{
-          fontSize: '14px',
-          fontWeight: 500,
-          width: '20%',
-          textAlign: 'left',
-        }}
-      >
-        Precipitation
-      </Typography>
-
-      <Typography
-        color="text.primary"
-        sx={{
-          fontSize: '14px',
-          fontWeight: 500,
-          width: '20%',
-          textAlign: 'left',
-        }}
-      >
-        New Beans
-      </Typography>
-      <Typography
-        color="text.primary"
-        sx={{
-          fontSize: '14px',
-          fontWeight: 500,
-          width: '20%',
-          textAlign: 'left',
-        }}
-      >
-        New Soil
-      </Typography>
-      <Typography
-        color="text.primary"
-        sx={{
-          fontSize: '14px',
-          fontWeight: 500,
-          width: '20%',
-          textAlign: 'right',
-        }}
-      >
-        Weather
-      </Typography>
+      <Stack gap={1} sx={{ maxHeight: `${(37.5 + 10) * MAX_ITEMS - 10}px`, overflowY: 'auto' }}>
+        {mockSunData.map((s) => (
+          <SeasonCard
+            season={s.season}
+            newBeans={s.newBeans}
+            newSoil={s.newSoil}
+            weather={s.weather}
+          />
+        ))}
+      </Stack>
+      <SunriseButton />
     </Stack>
   );
-
-  const intermediateHeader = (
-    <Typography
-      color="text.primary"
-      sx={{ fontSize: '14px', fontWeight: 700, mv: 1 }}
-    >
-      Past Seasons
-    </Typography>
-  );
-
-  // iterate over an array of seasons
-  const seasonsContent = (
-    <div>
-      <SeasonCard />
-      <SunriseButton />
-    </div>
-  );
-
-  const MAX_ITEMS = 5;
 
   return (
     <FolderMenu
       startIcon={startIcon}
       buttonContent={<>{isLoading ? '0000' : season.toFixed()}</>}
-      drawerContent={
-        <Stack sx={{ p: 2 }} spacing={2}>
-          <Typography variant="h2">Title (only on mobile)</Typography>
-          <Stack gap={1}>{seasonsContent}</Stack>
-        </Stack>
-      }
-      popoverContent={
-        <Stack gap={1}>
-          {/* Upcoming Season Header */}
-          <Box>
-            <Typography
-              color="text.primary"
-              sx={{ fontSize: '14px', fontWeight: 700, mv: 1 }}
-            >
-              Upcoming Season in 42m
-            </Typography>
-            {tableHeader}
-            <SeasonCard />
-          </Box>
-          {/* Past Seasons */}
-          {intermediateHeader}
-          <Stack gap={1} sx={{ maxHeight: `${(37.5+10)*MAX_ITEMS - 10}px`, overflowY: 'auto' }}>
-            <SeasonCard />
-            <SeasonCard />
-            <SeasonCard />
-            <SeasonCard />
-            <SeasonCard />
-            <SeasonCard />
-            <SeasonCard />
-          </Stack>
-          <SunriseButton />
-        </Stack>
-      }
+      drawerContent={<Box sx={{ p: 1 }}>{tableContent}</Box>}
+      popoverContent={tableContent}
       {...props}
     />
   );
