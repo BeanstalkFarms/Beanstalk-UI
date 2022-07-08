@@ -77,9 +77,8 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       icon: governanceIcon
     },
     {
-      path: 'beanfts',
+      path: 'nft',
       title: 'BeaNFTs',
-      disabled: true,
       small: true,
       icon: beanNFTIcon
     },
