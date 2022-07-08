@@ -7,12 +7,8 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import store from 'state';
 import theme from 'components/App/muiTheme';
 import client from 'util/Client';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-
-const apolloClient = new ApolloClient({
-  uri: `https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev`,
-  cache: new InMemoryCache(),
-});
+import { ApolloProvider } from '@apollo/client';
+import { apolloClient } from 'graph/client';
 
 const Wrapper : React.FC = ({ children }) => (
   <HashRouter>

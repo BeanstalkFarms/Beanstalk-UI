@@ -15,12 +15,14 @@ import { BeanstalkPalette } from 'components/App/muiTheme';
 export type DataPoint = {
   date: Date;
   value: number;
-}
+};
 
 // data accessors
 const getX = (d: DateValue) => d.date;
 const getY = (d: DateValue) => d.value;
-const bisectDate = bisector<DataPoint, Date>((d) => new Date(d.date)).left;
+const bisectDate = bisector<DataPoint, Date>(
+  (d) => d.date
+).left;
 
 type GraphProps = {
   width: number;
@@ -43,7 +45,7 @@ const axisHeight = 21;
 const strokes = [
   {
     stroke: BeanstalkPalette.logoGreen,
-    strokeWidth: 3,
+    strokeWidth: 2,
   },
   {
     stroke: BeanstalkPalette.darkBlue,
@@ -109,10 +111,7 @@ const Graph: React.FC<GraphProps> = withTooltip(({
       });
     }
 
-    xScale.range([
-      0,
-      width
-    ]);
+    xScale.range([0, width]);
     yScale.range([
       height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
       margin.top,
@@ -132,6 +131,7 @@ const Graph: React.FC<GraphProps> = withTooltip(({
       const ds = scales.map((scale, i) => {
         const x0 = scale.xScale.invert(x);
         const index = bisectDate(data, x0, 1);
+      
         const d0 = series[i][index - 1];
         const d1 = series[i][index];
         let d = d0;
@@ -181,7 +181,7 @@ const Graph: React.FC<GraphProps> = withTooltip(({
               {isTWAP && (
                 <LinePath<DateValue>
                   key={index}
-                  curve={curveNatural}
+                  curve={curveStep}
                   data={_data}
                   x={(d) => scales[index].xScale(getX(d)) ?? 0}
                   y={scales[0].yScale(1)}
@@ -190,7 +190,9 @@ const Graph: React.FC<GraphProps> = withTooltip(({
               )}
               <LinePath<DateValue>
                 key={index + 1}
-                curve={isTWAP ? curveBasis : curveNatural}
+                curve={curveBasis}
+                // curve={curveStep}
+                // curve={curveNatural}
                 data={_data}
                 x={(d) => scales[index].xScale(getX(d)) ?? 0}
                 y={(d) => scales[index].yScale(getY(d)) ?? 0}
@@ -199,20 +201,22 @@ const Graph: React.FC<GraphProps> = withTooltip(({
             </>
           ))}
         </Group>
-        {/* Axis */}
+        {/**
+          * Axis
+          */}
         <g transform={`translate(0, ${height - axisHeight - margin.bottom})`}>
           <Axis
             key={`axis`}
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
             tickFormat={(v: any, i: number) => {
-              return `${(v as Date).getMonth()}/${(v as Date).getDate()}`
+              return `${(v as Date).getMonth()+1}/${(v as Date).getDate()}`
             }}
             stroke={axisColor}
             tickStroke={axisColor}
             tickLabelProps={tickLabelProps}
             tickValues={undefined}
-            numTicks={Math.floor(width/64)}
+            numTicks={Math.floor(width/64)} // FIXME: set to intervals of days
             label="time"
             labelProps={{
               fill: labelColor,
@@ -245,7 +249,7 @@ const Graph: React.FC<GraphProps> = withTooltip(({
             />
             <circle
               cx={tooltipLeft}
-              cy={tooltipTop + margin.top}
+              cy={tooltipTop}
               r={4}
               fill="black"
               fillOpacity={0.1}
