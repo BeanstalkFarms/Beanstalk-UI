@@ -15,6 +15,7 @@ import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
 import { SellNowFormValues } from '../Dialogs/SellNowDialog';
+import FieldWrapper from "../../Common/Form/FieldWrapper";
 
 export type SellNowFormProps = {
   plot: any;
@@ -44,21 +45,11 @@ const SellNowForm: React.FC<SellNowFormProps & FormikProps<SellNowFormValues>> =
 
   return (
     <Form noValidate>
-      {/* Selected value: {values.option?.toString()} */}
-      {/* <pre>{JSON.stringify({ ...values, ...{ selectedPlot: { ...plot } } }, null, 2)}</pre> */}
       <Stack gap={1}>
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Typography>Plot to List</Typography>
-          </Box>
+        <FieldWrapper label="Plot to List">
           <PlotDetails placeInLine={placeInLine} numPods={numPods} />
-        </Stack>
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.amount}>
-              <Typography>Number of Pods to sell</Typography>
-            </Tooltip>
-          </Box>
+        </FieldWrapper>
+        <FieldWrapper label="Number of Pods to sell" tooltip={POD_MARKET_TOOLTIPS.amount}>
           <Field name="amount">
             {(fieldProps: FieldProps) => (
               <InputField
@@ -80,29 +71,20 @@ const SellNowForm: React.FC<SellNowFormProps & FormikProps<SellNowFormValues>> =
               />
             )}
           </Field>
-        </Stack>
+        </FieldWrapper>
         <Box px={3}>
           {/* double slider sets the form's 'min' and 'max' values */}
           {/* so we leave the name field blank */}
-          <Field name="">
-            {(fieldProps: FieldProps) => (
-              <SliderField
-                {...fieldProps}
-                min={0}
-                max={numPods.toNumber()}
-                initialState={[0, numPods.toNumber()]}
-              />
-            )}
-          </Field>
+          <SliderField
+            min={0}
+            fields={['min', 'max']}
+            max={numPods.toNumber()}
+            initialState={[0, numPods.toNumber()]}
+          />
         </Box>
         <Stack direction="row" gap={1}>
           <Box width="50%">
-            <Stack gap={0.8}>
-              <Box pl={0.5}>
-                <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.start}>
-                  <Typography>Start</Typography>
-                </Tooltip>
-              </Box>
+            <FieldWrapper label="Start" tooltip={POD_MARKET_TOOLTIPS.start}>
               <Field name="min">
                 {(fieldProps: FieldProps) => (
                   <InputField
@@ -113,15 +95,10 @@ const SellNowForm: React.FC<SellNowFormProps & FormikProps<SellNowFormValues>> =
                   />
                 )}
               </Field>
-            </Stack>
+            </FieldWrapper>
           </Box>
           <Box width="50%">
-            <Stack gap={0.8}>
-              <Box pl={0.5}>
-                <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.end}>
-                  <Typography>End</Typography>
-                </Tooltip>
-              </Box>
+            <FieldWrapper label="End" tooltip={POD_MARKET_TOOLTIPS.end}>
               <Field name="max">
                 {(fieldProps: FieldProps) => (
                   <InputField
@@ -132,7 +109,7 @@ const SellNowForm: React.FC<SellNowFormProps & FormikProps<SellNowFormValues>> =
                   />
                 )}
               </Field>
-            </Stack>
+            </FieldWrapper>
           </Box>
         </Stack>
         <Button sx={{ p: 1 }} type="submit" disabled>

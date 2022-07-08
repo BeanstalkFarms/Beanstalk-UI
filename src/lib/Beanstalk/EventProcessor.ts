@@ -10,12 +10,13 @@ import {
   RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event,
   RemoveWithdrawalsEvent,
 } from 'constants/generated/Beanstalk/BeanstalkReplanted';
-import { BEAN } from 'constants/tokens';
+import { BEAN, PODS } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { TokenMap } from 'constants/index';
 import { PlotMap } from 'state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
+import { toTokenUnitsBN } from 'util/Tokens';
 
 // ----------------------------------------
 
@@ -135,16 +136,15 @@ export default class EventProcessor {
   // ----------------------------
 
   Sow(event: Simplify<SowEvent>) {
-    const index = event.args.index.div(10 ** Bean.decimals).toString();
-    this.plots[index] = BN(event.args.pods.div(10 ** Bean.decimals));
-    return [index, this.plots[index]];
+    const index       = tokenBN(event.args.index, PODS).toString();
+    this.plots[index] = tokenBN(event.args.pods,  PODS);
   }
 
   Harvest(event: Simplify<HarvestEvent>) {
-    let beansClaimed = BN(event.args.beans.div(10 ** Bean.decimals));
+    let beansClaimed = tokenBN(event.args.beans, Bean);
     const plots = (
       event.args.plots
-        .map((p) => BN(p.div(10 ** Bean.decimals)))
+        .map((_index) => tokenBN(_index, Bean))
         .sort((a, b) => a.minus(b).toNumber())
     ); 
     plots.forEach((indexBN) => {
@@ -184,7 +184,7 @@ export default class EventProcessor {
   PlotTransfer(event: Simplify<PlotTransferEvent>) {
     // Numerical "index" of the Plot.
     // Absolute, with respect to Pod 0.
-    const transferIndex = tokenBN(event.args.id, Bean);
+    const transferIndex   = tokenBN(event.args.id, Bean);
     const podsTransferred = tokenBN(event.args.pods, Bean);
 
     // This account received a Plot
@@ -282,6 +282,7 @@ export default class EventProcessor {
             //
             // PlotTransfer(from=0x, to=0x, id=15, pods=3)
             // This means we send Pods: 15, 16, 17.
+            // ----------------------------------------
             if (!transferIndex.isEqualTo(endIndex)) {
               // s2 = 15 + 3 = 18
               // Requires another split since 18 != 20
@@ -428,7 +429,7 @@ export default class EventProcessor {
     if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
     const amount    = tokenBN(_amount, this.epp.whitelist[token]);
     const existingDeposit = this.deposits[token][season];
-    if (!existingDeposit) throw new Error('Received a \'RemoveDeposit\' event for an unknown deposit.');
+    if (!existingDeposit) throw new Error(`Received a 'RemoveDeposit' event for an unknown deposit: ${token} ${season}`);
 
     // BDV scales linearly with the amount of the underlying token.
     // Ex. if we remove 60% of the `amount`, we also remove 60% of the BDV.
@@ -502,22 +503,32 @@ export default class EventProcessor {
     token: string,
     _amount: EBN,
   ) {
-    if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
-    const amount    = tokenBN(_amount, this.epp.whitelist[token]);
-    const existingDeposit = this.withdrawals[token][season];
-    if (!existingDeposit) throw new Error('Received a \'RemoveWithdrawal\' event for an unknown Withdrawal.');
+    // For gas optimization reasons, `RemoveWithdrawal` is emitted
+    // with a zero amount when the removeWithdrawal method is called with:
+    //  (a) a token that doesn't exist;
+    //  (b) a season that doesn't exist;
+    //  (c) a combo of (a) and (b) where there is no existing Withdrawal.
+    // In these cases we just ignore the event.
+    if (_amount.eq(0) || !this.epp.whitelist[token]) return;
 
-    this.withdrawals[token] = {
-      ...this.withdrawals[token],
-      [season]: this._upsertWithdrawal(
-        this.withdrawals[token][season],
-        amount.negated(),
-      ),
-    };
+    ///
+    const existingWithdrawal = this.withdrawals[token][season];
+    if (!existingWithdrawal) throw new Error(`Received a RemoveWithdrawal(s) event for an unknown Withdrawal: ${token} ${season}`);
 
-    if (this.withdrawals[token][season].amount.eq(0)) {
-      delete this.withdrawals[token][season];
-    }
+    // Removing a Withdrawal always removes the entire season.
+    delete this.withdrawals[token][season];
+
+    // this.withdrawals[token] = {
+    //   ...this.withdrawals[token],
+    //   [season]: this._upsertWithdrawal(
+    //     this.withdrawals[token][season],
+    //     amount.negated(),
+    //   ),
+    // };
+
+    // if (this.withdrawals[token][season].amount.eq(0)) {
+    //    delete this.withdrawals[token][season];
+    // }
   }
 
   AddWithdrawal(event: Simplify<AddWithdrawalEvent>) {
@@ -537,7 +548,7 @@ export default class EventProcessor {
     this._removeWithdrawal(
       event.args.season.toString(),
       event.args.token.toLowerCase(),
-      event.args.amount
+      event.args.amount,
     );
   }
 
@@ -545,8 +556,8 @@ export default class EventProcessor {
     event.args.seasons.forEach((seasonNum, index) => {
       this._removeWithdrawal(
         seasonNum.toString(),
-        event.args.token,
-        event.args.amount,  // FIXME: 
+        event.args.token.toLowerCase(),
+        event.args.amount,
       );
     });
   }

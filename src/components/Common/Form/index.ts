@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import Token, { BeanstalkToken, ERC20Token, NativeToken } from 'classes/Token';
 import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';
 
 export type FormState = {
@@ -7,6 +7,10 @@ export type FormState = {
   tokens: FormTokenState[];
   /** */
   approving?: FormApprovingState; 
+}
+
+export type FormStateWithPlotSelect = FormState & {
+  plot?: BigNumber;
 }
 
 export type FormTokenState = {

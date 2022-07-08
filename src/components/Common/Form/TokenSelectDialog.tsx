@@ -7,6 +7,7 @@ import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { AddressMap, ZERO_BN } from 'constants/index';
 import BigNumber from 'bignumber.js';
+import { FarmerBalances } from 'state/farmer/balances';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -39,7 +40,7 @@ const TokenSelectDialog : React.FC<{
   /** The Farmer's current balances. Displayed alongside each token.
    * Shows 0 for missing balances if `balances` is an object.
    * Shows nothing if `balances` is undefined`. */
-  balances: AddressMap<BigNumber> | undefined;
+  balances: FarmerBalances | undefined;
   /** A list of tokens to show in the Dialog. */
   tokenList: Token[];
   /** Single or multi-select */
@@ -123,7 +124,7 @@ const TokenSelectDialog : React.FC<{
               disablePadding
               secondaryAction={balances ? (
                 <Typography>
-                  {displayBN(balances?.[_token.address] || ZERO_BN)}
+                  {displayBN(balances?.[_token.address]?.total || ZERO_BN)}
                 </Typography>
               ) : null}
               onClick={onClickItem(_token)}

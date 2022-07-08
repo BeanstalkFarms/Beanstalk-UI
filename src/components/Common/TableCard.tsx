@@ -5,6 +5,7 @@ import { DataGrid, GridColumns, GridSortItem } from '@mui/x-data-grid';
 import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
 import { ZERO_BN } from 'constants/index';
+import { Token } from '../../classes';
 
 const MAX_ROWS = 5;
 
@@ -28,6 +29,8 @@ const TableCard : React.FC<{
   state: 'disconnected' | 'loading' | 'ready';
   /** Table sorting */
   sort?: GridSortItem;
+  /** Token */
+  token?: Token;
 }> = ({
   title,
   columns,
@@ -35,7 +38,8 @@ const TableCard : React.FC<{
   amount,
   value,
   state,
-  sort = { field: 'season', sort: 'desc' }
+  sort = { field: 'season', sort: 'desc' },
+  token
 }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '180px';
@@ -48,14 +52,18 @@ const TableCard : React.FC<{
           {title}
         </Typography>
         {state === 'ready' ? (
-          <Typography variant="h4">
-            {displayBN(amount || ZERO_BN)}
-            {value && (
-              <Typography display="inline" color="text.secondary">
-                {' '}(~{displayUSD(value)})
-              </Typography>
-            )}
-          </Typography>
+          <Stack direction="row" gap={0.3} alignItems="center">
+            {token && <img src={token.logo} alt="" height="17px" />}
+            <Typography variant="h4">
+              {displayBN(amount || ZERO_BN)}
+              {value && (
+                <Typography display="inline" color="text.secondary">
+                  {' '}(~{displayUSD(value)})
+                </Typography>
+              )}
+            </Typography>
+          </Stack>
+
         ) : (
           state === 'loading' ? (
             <CircularProgress color="primary" variant="indeterminate" size={18} thickness={5} />

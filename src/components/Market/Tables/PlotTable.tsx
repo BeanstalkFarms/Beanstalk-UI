@@ -40,7 +40,7 @@ const marketplaceTableStyle = {
     '& .MuiDataGrid-row': {
       border: 1,
       borderColor: BeanstalkPalette.lightBlue,
-      borderRadius: 2,
+      borderRadius: 1,
       py: 2.4,
       mb: 0.8,
       alignItems: 'center',

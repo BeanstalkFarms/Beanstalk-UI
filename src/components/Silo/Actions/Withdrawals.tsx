@@ -40,7 +40,7 @@ const Withdrawals : React.FC<{
             id: crate.season,
             ...crate
           })))
-        )
+        );
       }
     }
     return data;
@@ -63,7 +63,7 @@ const Withdrawals : React.FC<{
           <Typography color="primary">Claimable</Typography>
         ) : (
           <Typography>{seasonsToArrival.toFixed()}</Typography>
-        )
+        );
       },
       sortable: false,
     },
@@ -112,6 +112,7 @@ const Withdrawals : React.FC<{
       value={getUSD(token, amount || ZERO_BN)}
       state={state}
       sort={{ field: 'season', sort: 'asc' }}
+      token={token}
     />
   );
 };

@@ -6,14 +6,16 @@ import {
   Stack,
   TextField,
   TextFieldProps,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { Field, FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { displayFullBN } from 'util/index';
+import { displayBN, displayFullBN, displayTokenAmount } from 'util/index';
 import Token from 'classes/Token';
 import NumberFormatInput from './NumberFormatInput';
 import FieldWrapper from './FieldWrapper';
+import { FarmerBalances } from 'state/farmer/balances';
 
 export type TokenInputCustomProps = { 
   /**
@@ -21,9 +23,26 @@ export type TokenInputCustomProps = {
    * to this token's displayDecimals.
    */
   token?: Token;
-  balance?: BigNumber | undefined;
+  /**
+   * 
+   */
+  balance?: FarmerBalances[string] | BigNumber | undefined;
+  /**
+   * 
+   */
   balanceLabel?: string;
+  /**
+   * 
+   */
+  hideBalance?: boolean;
+  /**
+   * 
+   */
   quote?: JSX.Element;
+  /**
+   * 
+   */ 
+  handleChange?: (finalValue: BigNumber | null) => void;
 };
 
 export type TokenInputProps = (
@@ -31,20 +50,25 @@ export type TokenInputProps = (
   & Partial<TextFieldProps>  // MUI TextField
 );
 
+export const VALID_INPUTS = /[0-9]*/;
+
 const TokenInput : React.FC<
   TokenInputProps
   & FieldProps // Formik Field
 > = ({
-  // -- Custom props
+  /// Custom props
   token,
-  balance,
-  quote,
+  // Balance
+  balance: _balance,
   balanceLabel = 'Balance',
-  // -- Formik props
+  hideBalance = false,
+  quote,
+  /// Formik props
   field,
   form,
   meta,
-  // -- TextField props
+  /// TextField props
+  handleChange: _handleChange,
   placeholder,
   disabled,
   sx,
@@ -62,7 +86,22 @@ const TokenInput : React.FC<
     ...InputProps,
   } as TextFieldProps['InputProps']), [InputProps]);
 
-  // Derived
+  // Unpack balance
+  const [balance, balanceTooltip] = useMemo(() => {
+    if (!_balance) return [undefined, ''];
+    if (_balance instanceof BigNumber) return [_balance, ''];
+    return [_balance.total, (
+      <>
+        Farm Balance: {token ? displayTokenAmount(_balance.internal, token) : displayBN(_balance.internal)}<br/>
+        Circulating Balance: {token ? displayTokenAmount(_balance.external, token) : displayBN(_balance.external)}
+      </>
+    )];
+  }, [_balance, token])
+
+  // Automatically disable the input if
+  // the form it's contained within is 
+  // submitting, or if a zero balance is provided.
+  // Otherwise fall back to the disabled prop.
   const isInputDisabled = (
     disabled
     || (balance && balance.eq(0))
@@ -71,21 +110,32 @@ const TokenInput : React.FC<
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     // Always update the display amount right away.
-    setDisplayAmount(e.target.value); 
+    setDisplayAmount(
+      // parseFloat converts 01 -> 1
+      e.target.value ? parseFloat(e.target.value).toString() : ''
+    );
     const newValue = e.target.value ? new BigNumber(e.target.value) : null;
     // Only push a new value to form state if the numeric
     // value is different. For example, if the displayValue
     // goes from '1.0' -> '1.00', don't trigger an update.
     if (newValue === null || !newValue.eq(field.value)) {
+      // If a balance is provided, enforce it as a maximum.
+      const finalValue = ((balance && newValue) && newValue.gt(balance))
+        ? balance
+        : newValue;
       form.setFieldValue(
         field.name,
-        // If a balance is provided, enforce it as a maximum.
-        ((balance && newValue) && newValue.gt(balance))
-          ? balance
-          : newValue,
+        finalValue,
       );
+      _handleChange?.(finalValue)
     }
-  }, [form, field.name, field.value, balance]);
+  }, [
+    form,
+    field.name,
+    field.value,
+    balance,
+    _handleChange
+  ]);
 
   // 
   const handleMax = useCallback(() => {
@@ -114,9 +164,10 @@ const TokenInput : React.FC<
   //    a. If `field.value === undefined`         (i.e. the value has been cleared), reset the input.
   //    b. If `field.value !== BN(displayAmount)` (i.e. a new value was provided),   update `displayAmount`.
   useEffect(() => {
+    console.debug(`[TokenInputField] field.value or displayAmount changed`, field.name, field.value, displayAmount)
     if (!field.value) setDisplayAmount('');
     else if (!field.value.eq(new BigNumber(displayAmount))) setDisplayAmount(field.value.toString());
-  }, [field.value, displayAmount]);
+  }, [field.value, field.name, displayAmount]);
 
   return (
     <FieldWrapper label={label}>
@@ -131,12 +182,7 @@ const TokenInput : React.FC<
         value={displayAmount || ''}
         onChange={handleChange}
         InputProps={inputProps}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            fontSize: '1.5rem'
-          },
-          ...sx
-        }}
+        sx={sx}
       />
       {/* Bottom Adornment */}
       <Stack direction="row" alignItems="center" spacing={0.5} px={0.5}>
@@ -146,19 +192,21 @@ const TokenInput : React.FC<
         <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
           {quote}
         </Stack>
-        {balance && (
+        {(balance && !hideBalance) && (
           <>
-            <Typography sx={{ fontSize: 13.5 }}>
-              {balanceLabel}: {(
-                balance 
-                  ? token
-                    // If `token` is provided, use its requested decimals
-                    ? `${displayFullBN(balance, token.displayDecimals)}` 
-                    // Otherwise... *shrug*
-                    : balance.toString() 
-                  : '0'
-              )}
-            </Typography>
+            <Tooltip title={balanceTooltip}>
+              <Typography sx={{ fontSize: 13.5 }}>
+                {balanceLabel}: {(
+                  balance 
+                    ? token
+                      // If `token` is provided, use its requested decimals
+                      ? `${displayFullBN(balance, token.displayDecimals)}` 
+                      // Otherwise... *shrug*
+                      : balance.toString() 
+                    : '0'
+                )}
+              </Typography>
+            </Tooltip>
             <Typography
               variant="body1"
               onClick={isInputDisabled ? undefined : handleMax}

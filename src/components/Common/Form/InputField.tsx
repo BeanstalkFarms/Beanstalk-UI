@@ -98,7 +98,7 @@ const InputField : React.FC<
     e.target.blur();
   }, []);
 
-  /** Update display amount when field.value changes externally */
+  // Update display amount when field.value changes externally
   useEffect(() => {
     // if the value has been removed elsewhere in the form, clear the display amount
     if (!field.value) setDisplayAmount('');
@@ -106,7 +106,7 @@ const InputField : React.FC<
     else if (!field.value.eq(new BigNumber(displayAmount))) setDisplayAmount(field.value.toString());
   }, [field.value, displayAmount]);
 
-  /** Update displayAmount and set field value when the max value changes */
+  // Update displayAmount and set field value when the max value changes
   useEffect(() => {
     if (maxValue && field.value) {
       if (field.value.gt(maxValue)) {

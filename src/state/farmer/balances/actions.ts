@@ -1,10 +1,12 @@
 import { createAction } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
+import { Balance } from '.';
 
 export type UpdateBalancePayload = {
   token: Token,
-  balance: BigNumber
+  balance: Balance;
+  // internalBalance: BigNumber;
+  // externalBalance: BigNumber;
 };
 
 export const updateBalances = createAction<UpdateBalancePayload[]>(

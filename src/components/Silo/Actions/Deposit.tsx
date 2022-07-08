@@ -19,7 +19,7 @@ import { SupportedChainId } from 'constants/chains';
 import Beanstalk from 'lib/Beanstalk';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
-import { BalanceState } from 'state/farmer/balances/reducer';
+import { Balance, FarmerBalances } from 'state/farmer/balances';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
 import TxnSettings from 'components/Common/Form/TxnSettings';
@@ -34,6 +34,7 @@ import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import TxnSeparator from 'components/Common/Form/TxnSeparator';
 import useToggle from 'hooks/display/useToggle';
+import { combineBalances, optimizeFromMode } from 'util/Farm';
 
 // -----------------------------------------------------------------------
 
@@ -47,19 +48,17 @@ type DepositFormValues = FormState & {
 
 const DepositForm : React.FC<
   FormikProps<DepositFormValues> & {
-    pool: Pool;
     siloToken: ERC20Token | NativeToken;
-    balances: BalanceState;
+    balances: FarmerBalances;
     contract: ethers.Contract;
-    farm: Farm;
+    handleQuote: QuoteHandler;
   }
 > = ({
   // Custom
-  pool,
   siloToken,
   balances,
   contract,
-  farm,
+  handleQuote,
   // Formik
   values,
   isSubmitting,
@@ -69,8 +68,6 @@ const DepositForm : React.FC<
   // TODO: constrain this when siloToken = Unripe
   const erc20TokenMap = useTokenMap([BEAN, ETH, WETH, siloToken, CRV3, DAI, USDC, USDT]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-  const getChainToken = useGetChainToken();
-  const Weth = getChainToken<ERC20Token>(WETH);
 
   //
   const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
@@ -97,132 +94,6 @@ const DepositForm : React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
 
-  // This handler does not run when _tokenIn = _tokenOut (direct deposit)
-  const handleQuote = useCallback<QuoteHandler>(
-    async (_tokenIn, _amountIn, _tokenOut) => {
-      const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
-      const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
-      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
-      let estimate;
-
-      // Depositing BEAN
-      if (tokenOut === getChainToken(BEAN)) {
-        if (tokenIn === Weth) {
-          estimate = await Farm.estimate(
-            farm.buyBeans(), // this assumes we're coming from WETH
-            [amountIn]
-          );
-        }
-      } 
-      
-      // Depositing LP Tokens
-      else {
-        if (!pool) throw new Error(`Depositing to ${tokenOut.symbol} but no corresponding pool data found.`);
-        
-        // This is a Curve MetaPool...
-        if (/* pool is Curve MetaPool */true) {
-          // ...and we're depositing one of the underlying pool tokens.
-          // Ex. for BEAN:3CRV this could be [BEAN, (DAI, USDC, USDT)].
-          // pool.tokens      = [BEAN, CRV3]
-          // pool.underlying  = [BEAN, DAI, USDC, USDT] 
-          const tokenIndex = pool.tokens.indexOf(tokenIn);
-          const underlyingTokenIndex = pool.underlying.indexOf(tokenIn);
-          console.debug(`[Deposit] LP Deposit: pool=${pool.name}, tokenIndex=${tokenIndex}, underlyingTokenIndex=${underlyingTokenIndex}`)
-          
-          // This is X or CRV3
-          if (tokenIndex > -1) {
-            const indices = [0, 0];
-            indices[tokenIndex] = 1; // becomes [0, 1] or [1, 0]
-            console.debug(`[Deposit] LP Deposit: indices=`, indices);
-            estimate = await Farm.estimate([
-              farm.addLiquidity(
-                pool.address,
-                // FIXME: bean:lusd was a plain pool, bean:eth on curve would be a crypto pool
-                // perhaps the Curve pool instance needs to track a registry
-                farm.contracts.curve.registries.metaFactory.address,
-                // FIXME: find a better way to define this above
-                indices as [number, number],
-                // Since this is the first piece of the chain (i.e. no swap before this)
-                // switch from INTERNAL_TOLERANT mode to INTERNAL_EXTERNAL.
-                FarmFromMode.INTERNAL_EXTERNAL,
-              ),
-            ], [amountIn]);
-          } 
-
-          // This is a CRV3-underlying stable (DAI/USDC/USDT etc)
-          else if(underlyingTokenIndex > -1) {
-            if (underlyingTokenIndex === 0) throw new Error('Malformatted pool.tokens / pool.underlying');
-            const indices = [0, 0, 0];
-            indices[underlyingTokenIndex - 1] = 1;
-            console.debug(`[Deposit] LP Deposit: indices=`, indices);
-            estimate = await Farm.estimate([
-              // Deposit token into 3pool for 3CRV
-              farm.addLiquidity(
-                farm.contracts.curve.pools.pool3.address,
-                farm.contracts.curve.registries.poolRegistry.address,
-                indices as [number, number, number], // [DAI, USDC, USDT] use Tether from previous call
-                // Since this is the first piece of the chain (i.e. no swap before this)
-                // switch from INTERNAL_TOLERANT mode to INTERNAL_EXTERNAL.
-                FarmFromMode.INTERNAL_EXTERNAL,
-              ),
-              farm.addLiquidity(
-                pool.address,
-                farm.contracts.curve.registries.metaFactory.address,
-                // adding the 3CRV side of liquidity
-                // FIXME: assuming that 3CRV is the second index (X:3CRV)
-                // not sure if this is always the case
-                [0, 1]
-              ),
-            ], [amountIn]);
-          }
-
-          // This is ETH or WETH
-          else if (tokenIn === Weth) {
-            estimate = await Farm.estimate([
-              // FIXME: this assumes the best route from
-              // WETH to [DAI, USDC, USDT] is via tricrypto2
-              // swapping to USDT. we should use routing logic here to
-              // find the best pool and output token.
-              // --------------------------------------------------
-              // WETH -> USDT
-              farm.exchange(
-                farm.contracts.curve.pools.tricrypto2.address,
-                farm.contracts.curve.registries.cryptoFactory.address,
-                Weth.address,
-                getChainToken(USDT).address,
-              ),
-              // USDT -> deposit into pool3 for CRV3
-              // FIXME: assumes USDT is the third index
-              farm.addLiquidity(
-                farm.contracts.curve.pools.pool3.address,
-                farm.contracts.curve.registries.poolRegistry.address,
-                [0, 0, 1], // [DAI, USDC, USDT]; use Tether from previous call
-              ),
-              // CRV3 -> deposit into right side of X:CRV3
-              // FIXME: assumes CRV3 is the second index
-              farm.addLiquidity(
-                pool.address,
-                farm.contracts.curve.registries.metaFactory.address,
-                [0, 1],    // [BEAN, CRV3] use CRV3 from previous call
-              ),
-            ], [amountIn])
-          }
-        }
-      }
-
-      if (!estimate) {
-        throw new Error(`Depositing ${tokenOut.symbol} to the Silo via ${tokenIn.symbol} is currently unsupported.`);
-      }
-
-      console.debug('[chain] estimate = ', estimate);
-
-      return {
-        amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
-        steps: estimate.steps,
-      }
-    },
-    [farm, pool, getChainToken, Weth]
-  );
 
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
@@ -243,7 +114,7 @@ const DepositForm : React.FC<
                 key={`tokens.${index}`}
                 name={`tokens.${index}`}
                 tokenOut={siloToken}
-                balance={balances[tokenState.token.address] || undefined}
+                balance={balances[tokenState.token.address] || ZERO_BN}
                 state={tokenState}
                 showTokenSelect={showTokenSelect}
                 disabled={isMainnet}
@@ -286,6 +157,7 @@ const DepositForm : React.FC<
             </>
           ) : null}
           <SmartSubmitButton
+            loading={isSubmitting}
             type="submit"
             variant="contained"
             color="primary"
@@ -319,6 +191,8 @@ const Deposit : React.FC<{
   const beanstalk = useBeanstalkContract(signer);
   const provider = useProvider();
   const farm = useMemo(() => new Farm(provider), [provider]);
+  const getChainToken = useGetChainToken();
+  const Weth = getChainToken<ERC20Token>(WETH);
 
   // Form setup
   const initialValues : DepositFormValues = useMemo(() => ({
@@ -334,6 +208,142 @@ const Deposit : React.FC<{
   }), [Eth]);
 
   // Handlers
+  // This handler does not run when _tokenIn = _tokenOut (direct deposit)
+  const handleQuote = useCallback<QuoteHandler>(
+    async (_tokenIn, _amountIn, _tokenOut) => {
+      const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
+      const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
+      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
+      const balanceIn : Balance   = _tokenIn  instanceof NativeToken 
+        ? combineBalances(balances[Weth.address], balances[ETH[1].address])
+        : balances[_tokenIn.address];
+
+      //
+      let estimate;
+
+      // Depositing BEAN
+      if (tokenOut === getChainToken(BEAN)) {
+        if (tokenIn === Weth) {
+          estimate = await Farm.estimate(
+            farm.buyBeans(), // this assumes we're coming from WETH
+            [amountIn]
+          );
+        }
+      } 
+      
+      // Depositing LP Tokens
+      else {
+        if (!pool) throw new Error(`Depositing to ${tokenOut.symbol} but no corresponding pool data found.`);
+        
+        // This is a Curve MetaPool...
+        if (/* pool is Curve MetaPool */true) {
+          // ...and we're depositing one of the underlying pool tokens.
+          // Ex. for BEAN:3CRV this could be [BEAN, (DAI, USDC, USDT)].
+          // pool.tokens      = [BEAN, CRV3]
+          // pool.underlying  = [BEAN, DAI, USDC, USDT] 
+          const tokenIndex = pool.tokens.indexOf(tokenIn);
+          const underlyingTokenIndex = pool.underlying.indexOf(tokenIn);
+          console.debug(`[Deposit] LP Deposit: pool=${pool.name}, tokenIndex=${tokenIndex}, underlyingTokenIndex=${underlyingTokenIndex}`)
+          
+          // This is X or CRV3
+          if (tokenIndex > -1) {
+            const indices = [0, 0];
+            indices[tokenIndex] = 1; // becomes [0, 1] or [1, 0]
+            console.debug(`[Deposit] LP Deposit: indices=`, indices);
+            estimate = await Farm.estimate([
+              farm.addLiquidity(
+                pool.address,
+                // FIXME: bean:lusd was a plain pool, bean:eth on curve would be a crypto pool
+                // perhaps the Curve pool instance needs to track a registry
+                farm.contracts.curve.registries.metaFactory.address,
+                // FIXME: find a better way to define this above
+                indices as [number, number],
+                optimizeFromMode(_amountIn, balanceIn) // use the BN version here
+              ),
+            ], [amountIn]);
+          } 
+
+          // This is a CRV3-underlying stable (DAI/USDC/USDT etc)
+          else if (underlyingTokenIndex > -1) {
+            if (underlyingTokenIndex === 0) throw new Error('Malformatted pool.tokens / pool.underlying');
+            const indices = [0, 0, 0];
+            indices[underlyingTokenIndex - 1] = 1;
+            console.debug(`[Deposit] LP Deposit: indices=`, indices);
+            estimate = await Farm.estimate([
+              // Deposit token into 3pool for 3CRV
+              farm.addLiquidity(
+                farm.contracts.curve.pools.pool3.address,
+                farm.contracts.curve.registries.poolRegistry.address,
+                indices as [number, number, number], // [DAI, USDC, USDT] use Tether from previous call
+                optimizeFromMode(_amountIn, balanceIn) // use the BN version here
+              ),
+              farm.addLiquidity(
+                pool.address,
+                farm.contracts.curve.registries.metaFactory.address,
+                // adding the 3CRV side of liquidity
+                // FIXME: assuming that 3CRV is the second index (X:3CRV)
+                // not sure if this is always the case
+                [0, 1]
+              ),
+            ], [amountIn]);
+          }
+
+          // This is ETH or WETH
+          else if (tokenIn === Weth) {
+            estimate = await Farm.estimate([
+              // FIXME: this assumes the best route from
+              // WETH to [DAI, USDC, USDT] is via tricrypto2
+              // swapping to USDT. we should use routing logic here to
+              // find the best pool and output token.
+              // --------------------------------------------------
+              // WETH -> USDT
+              farm.exchange(
+                farm.contracts.curve.pools.tricrypto2.address,
+                farm.contracts.curve.registries.cryptoFactory.address,
+                Weth.address,
+                getChainToken(USDT).address,
+                optimizeFromMode(_amountIn, balanceIn) // use the BN version here
+              ),
+              // USDT -> deposit into pool3 for CRV3
+              // FIXME: assumes USDT is the third index
+              farm.addLiquidity(
+                farm.contracts.curve.pools.pool3.address,
+                farm.contracts.curve.registries.poolRegistry.address,
+                [0, 0, 1], // [DAI, USDC, USDT]; use Tether from previous call
+              ),
+              // CRV3 -> deposit into right side of X:CRV3
+              // FIXME: assumes CRV3 is the second index
+              farm.addLiquidity(
+                pool.address,
+                farm.contracts.curve.registries.metaFactory.address,
+                [0, 1],    // [BEAN, CRV3] use CRV3 from previous call
+              ),
+            ], [amountIn])
+          }
+        }
+      }
+
+      if (!estimate) {
+        throw new Error(`Depositing ${tokenOut.symbol} to the Silo via ${tokenIn.symbol} is currently unsupported.`);
+      }
+
+      console.debug('[chain] estimate = ', estimate);
+
+      return {
+        amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
+        steps: estimate.steps,
+      }
+    },
+    [
+      farm,
+      pool,
+      getChainToken,
+      Weth,
+      balances
+    ]
+  );
+
+  ///
   const onSubmit = useCallback(async (values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
     if (!values.settings.slippage) throw new Error('No slippage value set.');
 
@@ -446,6 +456,7 @@ const Deposit : React.FC<{
     siloToken,
   ]);
 
+  ///
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
@@ -454,11 +465,10 @@ const Deposit : React.FC<{
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
           <DepositForm
-            pool={pool}
+            handleQuote={handleQuote}
             siloToken={siloToken}
             balances={balances}
             contract={beanstalk}
-            farm={farm}
             {...formikProps}
           />
         </>

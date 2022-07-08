@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Box, Button, ButtonProps, Drawer, Popper, Typography, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonProps,
+  Drawer,
+  Popper,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DropdownIcon from 'components/Common/DropdownIcon';
 import useToggle from 'hooks/display/useToggle';
@@ -8,18 +16,20 @@ import useAnchor from 'hooks/display/useAnchor';
 /**
  * Show a "Folder". A folder is a button that shows a popup;
  * the type of popup varies depending on the screen size.
- * 
- * On desktop: Clicking the Button creates a folder-like Popover. 
+ *
+ * On desktop: Clicking the Button creates a folder-like Popover.
  *             The Popover is designed to look like it "expands"
  *             out of the button. See <PriceButton/> for example.
  * On mobile:  Clicking the Button shows a Drawer.
  */
-const FolderMenu: React.FC<{
-  startIcon?: any;
-  buttonContent: JSX.Element;
-  popoverContent: JSX.Element;
-  drawerContent: JSX.Element;
-} & ButtonProps> = ({
+const FolderMenu: React.FC<
+  {
+    startIcon?: any;
+    buttonContent: JSX.Element;
+    popoverContent: JSX.Element;
+    drawerContent: JSX.Element;
+  } & ButtonProps
+> = ({
   startIcon,
   buttonContent,
   popoverContent,
@@ -29,7 +39,7 @@ const FolderMenu: React.FC<{
   // Setup
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  
+
   // Popover
   const [anchorEl, toggleAnchor] = useAnchor();
   const popoverOpen = Boolean(anchorEl);
@@ -43,26 +53,22 @@ const FolderMenu: React.FC<{
   return (
     <>
       {/* Mobile: Drawer */}
-      <Drawer
-        anchor="bottom"
-        open={drawerOpen}
-        onClose={closeDrawer}
-      >
+      <Drawer anchor="bottom" open={drawerOpen} onClose={closeDrawer}>
         {drawerContent}
       </Drawer>
       <Box>
         <Button
           color="light"
           startIcon={startIcon}
-          endIcon={<DropdownIcon open={(popoverOpen || drawerOpen)} />}
+          endIcon={<DropdownIcon open={popoverOpen || drawerOpen} />}
           onClick={onClickButton}
           disableRipple
           {...buttonProps}
           sx={{
             // Fully rounded by default; when open, remove
             // the bottom rounding to look like a "tab".
-            borderBottomLeftRadius:  popoverOpen ? 0 : undefined,
-            borderBottomRightRadius: popoverOpen ? 0 : undefined,  
+            borderBottomLeftRadius: popoverOpen ? 0 : undefined,
+            borderBottomRightRadius: popoverOpen ? 0 : undefined,
             // Enforce a default white border; switch the color
             // to secondary when the Popper is open.
             borderWidth: 1,
@@ -79,7 +85,7 @@ const FolderMenu: React.FC<{
             zIndex: popoverOpen ? 999 : undefined,
             // Positioning and other styles.
             mr: 1,
-            ...buttonProps.sx
+            ...buttonProps.sx,
           }}
         >
           <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -92,22 +98,24 @@ const FolderMenu: React.FC<{
           placement="bottom-start"
           disablePortal
         >
-          <Box sx={(_theme) => ({
-            background: 'white',
-            width: '400px',
-            borderBottomLeftRadius: _theme.shape.borderRadius,
-            borderBottomRightRadius: _theme.shape.borderRadius,
-            borderTopRightRadius: _theme.shape.borderRadius,
-            borderColor: 'secondary.main',
-            borderWidth: 1,
-            borderStyle: 'solid',
-            px: 1,
-            py: 1,
-            boxShadow: _theme.shadows[0],
-            // Should be below the zIndex of the Button.
-            zIndex: 998,
-            mt: '-1px',
-          })}>
+          <Box
+            sx={(_theme) => ({
+              background: 'white',
+              width: '450px',
+              borderBottomLeftRadius: _theme.shape.borderRadius,
+              borderBottomRightRadius: _theme.shape.borderRadius,
+              borderTopRightRadius: _theme.shape.borderRadius,
+              borderColor: 'secondary.main',
+              borderWidth: 1,
+              borderStyle: 'solid',
+              px: 1,
+              py: 1,
+              boxShadow: _theme.shadows[0],
+              // Should be below the zIndex of the Button.
+              zIndex: 998,
+              mt: '-1px',
+            })}
+          >
             {popoverContent}
           </Box>
         </Popper>

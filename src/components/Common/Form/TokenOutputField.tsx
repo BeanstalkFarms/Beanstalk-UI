@@ -4,6 +4,7 @@ import { Token } from 'classes';
 import React from 'react';
 import { displayFullBN, displayUSD } from 'util/index';
 import TokenIcon from '../TokenIcon';
+import OutputField from './OutputField';
 
 const TokenOutputField : React.FC<{
   /** */
@@ -30,18 +31,7 @@ const TokenOutputField : React.FC<{
   const isNegative = amount.lt(0);
   const prefix     = (!isDelta || isZero) ? '' : isNegative ? '- ' : '+ ';
   return (
-    <Stack
-      sx={{
-        backgroundColor: isNegative ? '#FFE5DF' : '#F6FAFE',
-        borderRadius: 1,
-        px: 2,
-        py: 2,
-        color: isNegative ? 'hsla(12, 63%, 52%, 1)' : 'inherit',
-      }}
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-    >
+    <OutputField isNegative={isNegative}>
       {!isLoading ? (
         <Typography display="inline" sx={{ fontSize: 24, fontWeight: 'normal' }}>
           {prefix}{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
@@ -65,7 +55,7 @@ const TokenOutputField : React.FC<{
           {modifier && `${modifier} `}{token.name}
         </Typography>
       </Stack>
-    </Stack>
+    </OutputField>
   );
 };
 

@@ -88,7 +88,7 @@ export const SEEDS = new BeanstalkToken(
 export const PODS = new BeanstalkToken(
   SupportedChainId.MAINNET,
   '',
-  10,
+  6,
   {
     name: 'Pods',
     symbol: 'PODS',
@@ -337,6 +337,7 @@ export const ERC20_TOKENS : ChainConstant<ERC20Token>[] = [
   BEAN,
   BEAN_ETH_UNIV2_LP,
   BEAN_CRV3_LP,
+  BEAN_LUSD_LP,
   WETH,
   DAI,
   USDC,

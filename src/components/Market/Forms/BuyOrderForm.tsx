@@ -20,6 +20,7 @@ import TokenSelectDialog from '../../Common/Form/TokenSelectDialog';
 import useTokenMap from '../../../hooks/useTokenMap';
 import { BEAN, ETH } from '../../../constants/tokens';
 import { ERC20Token, NativeToken } from 'classes/Token';
+import FieldWrapper from "../../Common/Form/FieldWrapper";
 
 export type BuyOrderFormProps = {
   podLine: BigNumber;
@@ -72,8 +73,6 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
 
   return (
     <Form noValidate>
-      {/* Selected value: {values.option?.toString()} */}
-      {/*<pre>{JSON.stringify({ ...values }, null, 2)}</pre>*/}
       <Stack gap={1}>
         <TokenSelectDialog
           open={showTokenSelect}
@@ -83,54 +82,38 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
           balances={balances}
           tokenList={Object.values(erc20TokenMap)}
         />
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Tooltip placement="bottom-start" title="">
-              <Typography>Place in Line</Typography>
-            </Tooltip>
-          </Box>
+        <FieldWrapper label="Place in Line">
           <Box px={2}>
-            <Field name="placeInLine">
-              {(fieldProps: FieldProps) => (
-                <SliderField
-                  {...fieldProps}
-                  min={0}
-                  max={podLine.toNumber()}
-                  initialState={0}
-                />
-              )}
-            </Field>
+            <SliderField
+              min={0}
+              fields={['placeInLine']}
+              max={podLine.toNumber()}
+              initialState={0}
+            />
           </Box>
-        </Stack>
-        <Box>
-          <Field name="placeInLine">
-            {(fieldProps: FieldProps) => (
-              <InputField
-                {...fieldProps}
-                minValue={new BigNumber(0)}
-                placeholder={podLine.toNumber().toString()}
-                maxValue={podLine}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Stack sx={{ pr: 0 }} alignItems="center">
-                        {/* <img src={podsIcon} alt="" height="30px" /> */}
-                        <Typography color={BeanstalkPalette.black} sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
-                          -
-                        </Typography>
-                      </Stack>
-                    </InputAdornment>)
-                }}
-              />
-            )}
-          </Field>
-        </Box>
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Tooltip placement="bottom-start" title={POD_MARKET_TOOLTIPS.pricePerPod}>
-              <Typography>Price Per Pod</Typography>
-            </Tooltip>
-          </Box>
+        </FieldWrapper>
+        <Field name="placeInLine">
+          {(fieldProps: FieldProps) => (
+            <InputField
+              {...fieldProps}
+              minValue={new BigNumber(0)}
+              placeholder={podLine.toNumber().toString()}
+              maxValue={podLine}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Stack sx={{ pr: 0 }} alignItems="center">
+                      {/* <img src={podsIcon} alt="" height="30px" /> */}
+                      <Typography color={BeanstalkPalette.black} sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
+                        -
+                      </Typography>
+                    </Stack>
+                  </InputAdornment>)
+              }}
+            />
+          )}
+        </Field>
+        <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
           <Field name="pricePerPod">
             {(fieldProps: FieldProps) => (
               <InputField
@@ -152,25 +135,24 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
               />
             )}
           </Field>
-        </Stack>
-        <Stack gap={0.8}>
-          <Box pl={0.5}>
-            <Typography>Number of Beans</Typography>
-          </Box>
-          {values.tokens.map((state, index) => (
-            <TokenQuoteProvider
-              key={`tokens.${index}`}
-              name={`tokens.${index}`}
-              tokenOut={depositToken}
-              balance={balances[state.token.address] || undefined}
-              state={state}
-              showTokenSelect={handleOpen}
-              disabled={isMainnet}
-              disableTokenSelect={isMainnet}
-              handleQuote={handleQuote}
-            />
-          ))}
-        </Stack>
+        </FieldWrapper>
+        <FieldWrapper label="Number of Beans">
+          <>
+            {values.tokens.map((state, index) => (
+              <TokenQuoteProvider
+                key={`tokens.${index}`}
+                name={`tokens.${index}`}
+                tokenOut={depositToken}
+                balance={balances[state.token.address] || undefined}
+                state={state}
+                showTokenSelect={handleOpen}
+                disabled={isMainnet}
+                disableTokenSelect={isMainnet}
+                handleQuote={handleQuote}
+              />
+            ))}
+          </>
+        </FieldWrapper>
         <Button sx={{ p: 1 }} type="submit" disabled>
           Create Order
         </Button>
