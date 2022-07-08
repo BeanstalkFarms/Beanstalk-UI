@@ -11,7 +11,6 @@ import Beanstalk from 'lib/Beanstalk';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { toStringBaseUnitBN } from 'util/index';
 import { getAccount } from 'util/Account';
 import { parseWithdrawals } from 'util/Crates';
 import { useAccount } from 'wagmi';

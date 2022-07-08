@@ -4,15 +4,10 @@ import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/ma
 import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
-import { SupportedChainId } from 'constants/chains';
-import { ETH } from 'constants/tokens';
-import { TESTNET_RPC_ADDRESSES } from 'util/Client';
+import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/chains';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
-
-const chainImgMap : { [key: string] : string | undefined } = {
-  Ethereum: ETH[SupportedChainId.MAINNET].logo,
-  Ropsten:  ETH[SupportedChainId.ROPSTEN].logo
-};
+import { useGetChainConstant } from 'hooks/useChainConstant';
+import { ETH } from 'constants/tokens';
 
 const NetworkDialog: React.FC<{
   open: boolean;
@@ -21,6 +16,7 @@ const NetworkDialog: React.FC<{
   open,
   handleClose
 }) => {
+  const getChainConstant = useGetChainConstant();
   const { activeChain, chains, error, pendingChainId, switchNetwork } = useNetwork({
     onSettled(data, err) {
       if (!err) {
@@ -79,7 +75,7 @@ const NetworkDialog: React.FC<{
                     {TESTNET_RPC_ADDRESSES[chain.id]}
                   </Typography>
                 ) : (
-                  <img src={chainImgMap[chain.name]} alt="" style={{ height: 35 }} />
+                  <img src={ETH[chain.id as keyof typeof ETH]?.logo || ETH[SupportedChainId.ROPSTEN].logo} alt="" style={{ height: 35 }} />
                 )}
               </Stack>
             </Button>

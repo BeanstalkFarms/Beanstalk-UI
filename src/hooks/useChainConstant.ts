@@ -1,14 +1,8 @@
-import { SupportedChainId } from 'constants/chains';
+import { SupportedChainId, TESTNET_CHAINS } from 'constants/chains';
 import { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
 
 type ConstantByChain = { [key: number] : any };
-
-const TESTNET_CHAINS = new Set([
-  SupportedChainId.ASTRO,
-  SupportedChainId.LOCALHOST,
-  SupportedChainId.CUJO,
-]);
 
 export function getChainConstant<T extends ConstantByChain>(map: T, chainId?: SupportedChainId) : T[keyof T] {
   // If no chain available, use the value for MAINNET.

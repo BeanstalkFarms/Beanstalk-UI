@@ -1,7 +1,6 @@
 import curve from '@curvefi/api';
-import { SupportedChainId } from 'constants/index';
+import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/index';
 import { ethers } from 'ethers';
-import { TESTNET_RPC_ADDRESSES } from './Client';
 
 export async function initCurve(chainId : SupportedChainId = 1) {
   // curve.chainId = chainId;
