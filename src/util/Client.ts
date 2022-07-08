@@ -8,20 +8,12 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 
-import { SupportedChainId } from 'constants/chains';
-import { ALCHEMY_API_KEYS } from 'constants/rpc/alchemy';
+import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/chains';
 
 // ------------------------------------------------------------
 
-const alchemyId = ALCHEMY_API_KEYS[SupportedChainId.MAINNET];
-
-export const TESTNET_RPC_ADDRESSES : { [chainId: number] : string } = {
-  [SupportedChainId.ASTRO]:     'https://astro.node.bean.money',
-  [SupportedChainId.CUJO]:      'https://bean-rpc.treetree.finance',
-  [SupportedChainId.LOCALHOST]: 'http://localhost:8545',
-};
-
 // Setup node
+// FIXME: overlaps heavily with Uniswap fork implementation
 const makeTestnet = (_chainId: number, name: string) : Chain => ({
   id: _chainId,
   name: name,
@@ -46,7 +38,8 @@ const baseChains = [
 ];
 
 if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
-  baseChains.push(makeTestnet(SupportedChainId.ASTRO,   'Astro'));
+  baseChains.push(makeTestnet(SupportedChainId.ASTRO, 'Astro'));
+  baseChains.push(makeTestnet(SupportedChainId.PHOENIX, 'Phoenix'));
   baseChains.push(makeTestnet(SupportedChainId.CUJO, 'Cujo'));
   baseChains.push(chain.localhost);
 }
@@ -55,7 +48,7 @@ const { chains, provider } = configureChains(
   baseChains, 
   [
     alchemyProvider({
-      alchemyId,
+      alchemyId: process.env.REACT_APP_ALCHEMY_API_KEY,
       priority: 0,
     }),
     jsonRpcProvider({

@@ -1,4 +1,4 @@
-import { SupportedChainId } from 'constants/chains';
+import { REPLANTED_CHAINS, SupportedChainId } from 'constants/chains';
 import {
   Beanstalk,
   BeanstalkFertilizer,
@@ -166,6 +166,7 @@ const BEANSTALK_ABIS = {
   [SupportedChainId.ROPSTEN]:   BEANSTALK_ABI,
   [SupportedChainId.LOCALHOST]: BEANSTALK_ABI,
   [SupportedChainId.CUJO]:      BEANSTALK_REPLANTED_ABI,
+  [SupportedChainId.PHOENIX]:   BEANSTALK_REPLANTED_ABI,
 };
 
 export function useBeanstalkContract(signer?: ethers.Signer | null) {
