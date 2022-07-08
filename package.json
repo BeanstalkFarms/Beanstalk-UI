@@ -109,7 +109,7 @@
     "deploy": "gh-pages -d build",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,js}\"",
     "lint": "eslint \"src/**/**/*.ts{,x}\"",
-    "generate": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/constants/generated './src/constants/abi/**/*.json'",
+    "generate": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },

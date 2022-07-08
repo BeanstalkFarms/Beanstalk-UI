@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 import { useDispatch } from 'react-redux';
 import flattenDeep from 'lodash/flattenDeep';
 import useBlocks from 'hooks/useBlocks';
-import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { Beanstalk, BeanstalkReplanted } from 'generated';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';

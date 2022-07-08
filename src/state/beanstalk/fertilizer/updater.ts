@@ -7,7 +7,7 @@ import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract 
 import { tokenResult } from 'util/Tokens';
 import useChainId from 'hooks/useChain';
 import useMigrateCall from 'hooks/useMigrateCall';
-import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { Beanstalk, BeanstalkReplanted } from 'generated';
 import { ZERO_BN } from 'constants/index';
 import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
 

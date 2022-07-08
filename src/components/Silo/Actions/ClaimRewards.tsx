@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import DescriptionButton from '../../Common/DescriptionButton';
 import { ClaimRewardsAction } from '../../../lib/Beanstalk/Farm';
 import { useBeanstalkContract } from '../../../hooks/useContract';
-import { BeanstalkReplanted } from '../../../constants/generated';
+import { BeanstalkReplanted } from '../../../generated';
 import RewardItem from '../RewardItem';
 import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
 import stalkIcon from '../../../img/beanstalk/stalk-icon.svg';

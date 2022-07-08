@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import sunIcon from 'img/beanstalk/sun/sun-icon.svg';
 import { useBeanstalkContract } from "hooks/useContract";
-import { BeanstalkReplanted } from "constants/generated";
+import { BeanstalkReplanted } from "generated";
 import { useSigner } from "wagmi";
 import TransactionToast from "components/Common/TxnToast";
 import { LoadingButton } from "@mui/lab";

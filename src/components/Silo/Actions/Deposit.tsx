@@ -24,7 +24,7 @@ import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
 import TxnSettings from 'components/Common/Form/TxnSettings';
 import SettingInput from 'components/Common/Form/SettingInput';
-import { BeanstalkReplanted } from 'constants/generated';
+import { BeanstalkReplanted } from 'generated';
 import { QuoteHandler } from 'hooks/useQuote';
 import { ZERO_BN } from 'constants/index';
 import { ERC20Token, NativeToken } from 'classes/Token';

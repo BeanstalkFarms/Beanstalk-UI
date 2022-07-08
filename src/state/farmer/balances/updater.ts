@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import flatMap from 'lodash/flatMap';
 import { ZERO_BN } from 'constants/index';
-import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { Beanstalk, BeanstalkReplanted } from 'generated';
 import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from 'constants/tokens';
 import useChainId from 'hooks/useChain';
 import { useBeanstalkContract } from 'hooks/useContract';

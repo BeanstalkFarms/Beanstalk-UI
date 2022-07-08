@@ -4,7 +4,7 @@ import {
   BeanstalkFertilizer,
   BeanstalkPrice,
   ERC20,
-} from 'constants/generated';
+} from 'generated';
 import {
   BEANSTALK_ADDRESSES,
   BEANSTALK_FERTILIZER_ADDRESSES,

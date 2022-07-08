@@ -22,7 +22,7 @@ import {
   TxnPreview,
   TxnSeparator
 } from 'components/Common/Form';
-import { BeanstalkReplanted } from 'constants/generated';
+import { BeanstalkReplanted } from 'generated';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
