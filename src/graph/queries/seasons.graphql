@@ -1,0 +1,21 @@
+query Seasons(
+  $season_lte: Int,
+  $first: Int,
+)  {
+  seasons(
+    where: {
+      seasonInt_lte: $season_lte
+    }
+    first: $first,
+    orderBy: seasonInt,
+    orderDirection: desc,
+  ) {
+    seasonInt
+    twap
+    timestamp
+    field {
+      weather
+      podRate
+    }
+  }
+}

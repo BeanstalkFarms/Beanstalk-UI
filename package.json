@@ -39,7 +39,11 @@
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.7.0",
+    "@graphql-codegen/cli": "2.7.0",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/typescript": "2.6.0",
+    "@graphql-codegen/typescript-operations": "^2.4.3",
+    "@graphql-codegen/typescript-react-apollo": "3.2.17",
     "@simbathesailor/use-what-changed": "^2.0.0",
     "@storybook/addon-actions": "^6.5.0",
     "@storybook/addon-essentials": "^6.5.0",
@@ -109,9 +113,11 @@
     "deploy": "gh-pages -d build",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,js}\"",
     "lint": "eslint \"src/**/**/*.ts{,x}\"",
-    "generate": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "generate": "yarn generate:typechain && yarn generate:graphql",
+    "generate:typechain": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
+    "generate:graphql": "graphql-codegen --config codegen.yml"
   },
   "lint-staged": {
     "*.{ts,tsx,json}": "prettier --write"

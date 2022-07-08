@@ -4,7 +4,7 @@ import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import { FormState, SettingInput, SmartSubmitButton, TokenOutputField, TokenQuoteProvider, TokenSelectDialog, TxnSeparator, TxnSettings } from 'components/Common/Form';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TransactionToast from 'components/Common/TxnToast';
-import { BeanstalkReplanted } from 'generated';
+import { BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
 import { ethers } from 'ethers';

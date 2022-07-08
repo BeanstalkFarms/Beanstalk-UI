@@ -16,7 +16,7 @@ import usePools from 'hooks/usePools';
 import { ERC20Token } from 'classes/Token';
 import useSeason from 'hooks/useSeason';
 import { FormTokenState, TxnPreview, TokenOutputField, TokenSelectDialog, TxnSeparator, TokenQuoteProvider, TxnSettings, SettingInput } from 'components/Common/Form';
-import { BeanstalkReplanted } from 'generated';
+import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
