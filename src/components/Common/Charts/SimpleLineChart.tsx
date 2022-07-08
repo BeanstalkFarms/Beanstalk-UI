@@ -157,6 +157,10 @@ const Graph: React.FC<GraphProps> = withTooltip(({
     onCursor(undefined);
   }, [hideTooltip, onCursor]);
 
+  if (!series || series.length === 0) {
+    return null;
+  }
+
   /**
    * Height: `height` (controlled by container)
    * Width:  `width`  (controlled by container)

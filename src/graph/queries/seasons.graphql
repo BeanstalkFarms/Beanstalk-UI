@@ -10,6 +10,7 @@ query Seasons(
     orderBy: seasonInt,
     orderDirection: desc,
   ) {
+    id
     seasonInt
     twap
     timestamp

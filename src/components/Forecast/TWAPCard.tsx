@@ -11,8 +11,8 @@ import SimpleLineChart, { DataPoint } from '../Common/Charts/SimpleLineChart';
 import { mockTWAPData, mockTWAPDataVariable } from '../Common/Charts/SimpleLineChart.mock';
 import { BeanstalkPalette } from '../App/muiTheme';
 import { useQuery } from '@apollo/client';
-import { SEASONS_QUERY } from 'graph/queries/seasons';
 import { apolloClient } from 'graph/client';
+import { useSeasonsLazyQuery, useSeasonsQuery } from 'generated/graphql';
 
 export type TWAPCardProps = {
   beanPrice: BigNumber;
@@ -28,22 +28,40 @@ const PAGE_SIZE = 1000;
 const ONE_WEEK_SEASONS = 168;
 const ONE_MONTH_SEASONS = 672;
 
-const getMoreSeasons = async (season_lte : number) => apolloClient.query({
-  query: SEASONS_QUERY,
-  variables: {
-    season_lte,
-    first: 1000,
-  },
-  // needs to be network only until we
-  // figure out how to correctly slice in apollo cache
-  fetchPolicy: 'network-only'
-})
+// const getMoreSeasons = async (season_lte : number) => apolloClient.query({
+//   query: SEASONS_QUERY,
+//   variables: {
+//     season_lte,
+//     first: 1000,
+//   },
+//   // needs to be network only until we
+//   // figure out how to correctly slice in apollo cache
+//   fetchPolicy: 'network-only'
+// })
 
-const useRecentSeasonsData = (range : 'week' | 'month' | 'all' = 'week') => {
+type Range = 'week' | 'month' | 'all';
+const RANGE_TO_SEASONS : { [key in Range]: number | undefined } = {
+  'week': 168,
+  'month': 672,
+  'all': undefined,
+}
+
+const useRecentSeasonsData = (range : Range = 'week') => {
   // Querying SEASONS_QUERY always returns all the data
   // in the cache
-  const query = useQuery<{ seasons: any[] }>(SEASONS_QUERY, { 
-    variables: {},
+  // const query = useQuery<{ seasons: any[] }>(SEASONS_QUERY, { 
+  //   variables: {},
+  //   fetchPolicy: 'cache-only',
+  //   notifyOnNetworkStatusChange: true,
+  // });
+
+  const [first, setFirst] = useState(RANGE_TO_SEASONS[range]);
+
+  const [get, query] = useSeasonsLazyQuery({
+    variables: {
+      // omitting first returns all results
+      first,
+    },
     fetchPolicy: 'cache-only',
     notifyOnNetworkStatusChange: true,
   });
@@ -51,30 +69,56 @@ const useRecentSeasonsData = (range : 'week' | 'month' | 'all' = 'week') => {
   useEffect(() => {
     (async () => {
       console.debug(`[getMoreSeasons] initializing with range = ${range}`)
-      const init = await getMoreSeasons(99999999);
       /** the newest season indexed by the subgraph */
-      const latestSubgraphSeason = init.data.seasons[0].seasonInt;
-      /** the oldest season returned by the previous query */
-      let oldestReceivedSeason = init.data.seasons[init.data.seasons.length - 1].seasonInt;
+      const init = await get({
+        variables: { 
+          first: 1000, 
+          season_lte: 999999999
+        },
+        fetchPolicy: 'network-only',
+      });
+      // data is returned sorted from oldest to newest
+      // so season 0 is the oldest season and length-1 is newest.
+      const latestSubgraphSeason = init.data?.seasons[init.data.seasons.length - 1].seasonInt;
+      /** the oldest season returned by the previous query;
+       * requires that results are sorted by seasonInt descending*/
+      let oldestReceivedSeason = init.data?.seasons[0].seasonInt;
+
       // 
       if (range === 'all') {
+        console.debug(`[useRecentSeasonsData] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${oldestReceivedSeason}`);
+
         let tries = 0;
-        while (oldestReceivedSeason !== 0 && tries < 20) {
+        while (oldestReceivedSeason !== 0 && tries < 10) {
           try {
-            const more = await getMoreSeasons(oldestReceivedSeason); // gets 1000 more seasons, including oldestReceived
-            const newOldestReceivedSeason = more.data.seasons[more.data.seasons.length - 1].seasonInt;
-            if (newOldestReceivedSeason === oldestReceivedSeason) break;
+            // gets 1000 more seasons, including oldestReceived
+            const more = await get({
+              variables: {
+                first: 1000,
+                season_lte: oldestReceivedSeason,
+              },
+              fetchPolicy: 'network-only',
+            }); 
+            console.debug(`[useRecentSeasonsData] more = `, more)
+            const newOldestReceivedSeason = more.data?.seasons[0].seasonInt; //more.data?.seasons.length - 1
+            console.debug(`[useRecentSeasonsData] fetched more seasons. count = ${more.data?.seasons.length}, oldest = ${newOldestReceivedSeason}`)
+            if (newOldestReceivedSeason === oldestReceivedSeason) {
+              console.debug(`[useRecentSeasonsData] fetched all seasons, breaking...`);
+              break;
+            }
             oldestReceivedSeason = newOldestReceivedSeason;
             console.debug(`[useRecentSeasonsData] query for more #${tries+1}: ended at season ${oldestReceivedSeason}`)
             tries += 1;
           } catch (e) {
+            console.debug(`failed to load`);
             console.error(e);
             break;
           }
         }
+        setFirst(latestSubgraphSeason);
       }
     })()
-  }, [range])
+  }, [range, get])
 
   return query;
 }
@@ -86,7 +130,7 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
 }) => {
   const [first, setFirst] = useState(PAGE_SIZE);
   const [stop,  setStop]  = useState(false);
-  const { loading, error, data } = useRecentSeasonsData('all');
+  const { loading, error, data } = useRecentSeasonsData('week');
 
   // Display values
   const [displayValue,  setDisplayValue]    = useState<number[]>([beanPrice.toNumber()]);
@@ -102,9 +146,9 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
   );
 
   const series = useMemo(() => {
+    console.debug(`[TWAPCard] Building series with ${data?.seasons.length || 0} data points`/*, data?.seasons, error*/)
     if (data) {
-      console.debug(`[TWAPCard] Building series with ${data.seasons.length} data points`)
-      const parsed : SeasonDataPoint[] = [...data.seasons].sort((a: any, b: any) => a.seasonInt - b.seasonInt).map((_season: any) => ({
+      const parsed : SeasonDataPoint[] = [...data.seasons].sort((a, b) => a.seasonInt - b.seasonInt).map((_season: any) => ({
         season: _season.seasonInt as number,
         // Required for SimpleLineChart
         date:   new Date(parseInt(`${_season.timestamp}000`, 10)),
@@ -139,7 +183,7 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
         </Stack>
       </Stack>
       <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-        {loading ? (
+        {loading || series.length === 0 ? (
           <Stack width="100%" height="100%" alignItems="center" justifyContent="center">
             <CircularProgress variant="indeterminate" />
           </Stack>

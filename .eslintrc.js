@@ -19,6 +19,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module'
   },
+  ignorePatterns: ["src/generated/**/*"],
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest'],
   extends: ['plugin:react/recommended', 'airbnb', 'plugin:storybook/recommended'],
   rules: {
