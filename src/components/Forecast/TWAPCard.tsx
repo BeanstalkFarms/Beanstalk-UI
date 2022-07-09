@@ -82,14 +82,18 @@ const useRecentSeasonsData = (range : Range = 'week') => {
           // set of Seasons.
           const init = await get({
             variables: { 
-              first: PAGE_SIZE, 
-              season_lte: undefined
+              first: 1, 
+              season_lte: 999999999
             },
+            fetchPolicy: 'network-only'
           }); 
 
           console.debug(`[useRecentSeasonsData] init: data = `, init.data)
           
-          if (!init.data) throw new Error('missing data');
+          if (!init.data) {
+            console.error(init)
+            throw new Error('missing data');
+          }
           
           /** the newest season indexed by the subgraph 
            * data is returned sorted from oldest to newest
@@ -97,35 +101,34 @@ const useRecentSeasonsData = (range : Range = 'week') => {
           const latestSubgraphSeason = init.data.seasons[0].seasonInt;
 
           /** the oldest season returned by the previous query;
-           * requires that results are sorted by seasonInt descending*/
-          const oldestReceivedSeason = init.data.seasons[init.data.seasons.length - 1].seasonInt;
+           * requires that results are sorted by seasonInt descending `*/
+          // const oldestReceivedSeason = init.data.seasons[init.data.seasons.length - 1].seasonInt;
 
-          // 
-          if (range === 'all') {
-            console.debug(`[useRecentSeasonsData] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${oldestReceivedSeason}`, init.data.seasons);
+          console.debug(`[useRecentSeasonsData] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${null}`, init.data.seasons);
 
-            // 3000 / 1000 = 3 queries
-            // Season    1 - 1000
-            //        1001 - 2000
-            //        2001 - 3000
-            const numQueries = Math.ceil(oldestReceivedSeason / PAGE_SIZE);
-            const promises = [];
-            console.debug(`[useRecentSeasonsData] needs ${numQueries} calls to get ${oldestReceivedSeason} more seasons`)
-            for (let i = 0; i < numQueries; i += 1) {
-              const season = Math.max(
-                0, // always at least 0
-                oldestReceivedSeason - i*PAGE_SIZE,
-              );
-              promises.push(
-                get({
-                  variables: {
-                    first: 1000,
-                    season_lte: season,
-                  },
-                  fetchPolicy: 'network-only'
-                })
-              )
-            }
+          // 3000 / 1000 = 3 queries
+          // Season    1 - 1000
+          //        1001 - 2000
+          //        2001 - 3000
+          const numQueries = Math.ceil(latestSubgraphSeason / PAGE_SIZE);
+          const promises = [];
+          console.debug(`[useRecentSeasonsData] needs ${numQueries} calls to get ${latestSubgraphSeason} more seasons`)
+          for (let i = 0; i < numQueries; i += 1) {
+            const season = Math.max(
+              2, // always at least 0
+              latestSubgraphSeason - i*PAGE_SIZE,
+            );
+            console.debug(`[useRecentSeasonsData] get: ${season} -> ${Math.max(season-1000, 2)}`)
+            promises.push(
+              get({
+                variables: {
+                  first: 1000,
+                  season_lte: season,
+                },
+              }).then((result) => {
+                console.debug(`[useRecentSeasonsData] response for ${season} -> ...`)
+              })
+            )
 
             await Promise.all(promises);
 

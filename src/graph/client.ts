@@ -41,6 +41,8 @@ const cache = new InMemoryCache({
               // existing.length = 6074
               // left = 1
               // right = 1+1000 = 1001
+              //
+              // Length 6074
               // 0    6074
               // 1    6073
               // ....
@@ -50,7 +52,7 @@ const cache = new InMemoryCache({
               const left  = Math.max(0, seasonIntToIndex(existing.length - maxSeason)); 
 
               // n = oldest season
-              const right = Math.min(seasonIntToIndex(left + first - 1), existing.length - 1);
+              const right = Math.min(seasonIntToIndex(left + first), existing.length - 1);
 
               console.debug(`[ApolloClient/seasons/read] left = ${left} ${readField("seasonInt", existing[left])}, right = ${right} ${readField("seasonInt", existing[right])}`, existing);
 
@@ -71,7 +73,7 @@ const cache = new InMemoryCache({
 
             // Slicing is necessary because the existing data is
             // immutable, and frozen in development.
-            const merged = existing ? (existing.slice(0).reverse()) : [];
+            const merged = existing ? existing.slice(0) : [];
 
             // Seasons are indexed by seasonInt (could also parseInt the "id" field)
             // This structures stores seasons in ascending order such that
@@ -90,12 +92,15 @@ const cache = new InMemoryCache({
               // x[0]  = undefined
               merged[seasonIntToIndex(seasonInt as number)] = incoming[i];
             }
+            
+            console.debug(`[ApolloClient] merge: `, merged.reverse());
 
             // We complete operations on the array in ascending order,
             // but reverse it before saving back to the cache.
             // Reverse is O(n) while sorting during the read operation
             // is O(n*log(n)) and likely called more often.
-            return merged.reverse();
+            // return merged.reverse();
+            return merged //.sort((a: any, b: any) => (readField("seasonInt", a) as number) - (readField("seasonInt", b) as number));
           },
         }
       }
