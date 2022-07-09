@@ -6,6 +6,7 @@ import { SupportedChainId } from 'constants/index';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useTabs from 'hooks/display/useTabs';
 import Weather from 'components/Analytics/Field/Weather';
+import Pods from 'components/Analytics/Field/Pods';
 
 const FieldAnalytics: React.FC<{}> = () => {
   const chainId = useChainId();
@@ -34,8 +35,8 @@ const FieldAnalytics: React.FC<{}> = () => {
           </Tabs>
           {/* {tab === 0 && <RRoR season={season} beanPrice={beanPrice} />} */}
           {tab === 1 && <Weather />}
-          {/* {tab === 2 && <Pods season={season} beanPrice={beanPrice} />}
-          {tab === 3 && <PodRate season={season} beanPrice={beanPrice} />}
+          {tab === 2 && <Pods />}
+          {/*{tab === 3 && <PodRate season={season} beanPrice={beanPrice} />}
           {tab === 4 && <Sown season={season} beanPrice={beanPrice} />}
           {tab === 5 && <Harvested season={season} beanPrice={beanPrice} />}
           {tab === 6 && <Sowers season={season} beanPrice={beanPrice} />} */}
