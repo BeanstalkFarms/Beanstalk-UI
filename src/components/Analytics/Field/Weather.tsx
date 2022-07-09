@@ -14,7 +14,7 @@ const StatProps = {
 
 const Weather: React.FC<{ }> = () => {
   const weather = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
-  const season = useSeason();
+  const season  = useSeason();
   return (
     <SeasonPlot
       document={SeasonalWeatherDocument}

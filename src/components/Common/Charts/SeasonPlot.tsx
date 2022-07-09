@@ -15,13 +15,25 @@ export type SeasonPlotProps = {
    * pixel number or a percent if the parent element has a constrained height.
    */
   height?: number | string;
-  /** The value displayed when the chart isn't being hovered. */
-  defaultValue: number;
-  /** The season displayed when the chart isn't being hovered. */
-  defaultSeason: number;
-  /** Which value to display from the Season object */
+  /**
+   * The value displayed when the chart isn't being hovered.
+   * If not provided, uses the `value` of the last data point if available,
+   * otherwise returns 0.
+   */
+  defaultValue?: number;
+  /**
+   * The season displayed when the chart isn't being hovered.
+   * If not provided, uses the `season` of the last data point if available,
+   * otherwise returns 0.
+   */
+  defaultSeason?: number;
+  /**
+   * Which value to display from the Season object
+   */
   getValue: (season: Season) => number,
-  /** Format the value from number -> string */
+  /**
+   * Format the value from number -> string
+   */
   formatValue?: (value: number) => string,
 }
 
@@ -40,8 +52,8 @@ type SeasonPlotFinalProps = (
 function SeasonPlot({
   document,
   height = '175px',
-  defaultValue,
-  defaultSeason,
+  defaultValue: _defaultValue,
+  defaultSeason: _defaultSeason,
   getValue,
   StatProps: statProps, // renamed to prevent type collision
   LineChartProps: lineChartProps,
@@ -53,21 +65,6 @@ function SeasonPlot({
   // Display values
   const [displayValue,  setDisplayValue]  = useState<number | undefined>(undefined);
   const [displaySeason, setDisplaySeason] = useState<number | undefined>(undefined);
-
-  // Handlers
-  const handleChangeTimeTab = useCallback(
-    (tabs: TimeTabState) => {
-      setTimeTab(tabs);
-    },
-    []
-  );
-  const handleCursor = useCallback(
-    (dps?: SeasonDataPoint[]) => {
-      setDisplayValue(dps  ? dps[0].value  : undefined);
-      setDisplaySeason(dps ? dps[0].season : undefined);
-    },
-    []
-  );
 
   const series = useMemo(() => {
     console.debug(`[TWAPCard] Building series with ${data?.seasons.length || 0} data points`)
@@ -94,6 +91,31 @@ function SeasonPlot({
     }
     return [];
   }, [data, tabState, getValue])
+
+  // Handlers
+  const handleChangeTimeTab = useCallback(
+    (tabs: TimeTabState) => {
+      setTimeTab(tabs);
+    },
+    []
+  );
+  const handleCursor = useCallback(
+    (dps?: SeasonDataPoint[]) => {
+      setDisplayValue(dps  ? dps[0].value  : undefined);
+      setDisplaySeason(dps ? dps[0].season : undefined);
+    },
+    []
+  );
+
+  // If one of the defaults is missing, use the last data point.
+  let defaultValue  = _defaultValue  || 0;
+  let defaultSeason = _defaultSeason || 0;
+  if (!defaultValue || !defaultSeason) {
+    if (data && series.length > 0) {
+      defaultValue  = series[series.length - 1].value;
+      defaultSeason = series[series.length - 1].season;
+    }
+  }
 
   return (
     <>

@@ -1,18 +1,18 @@
 import React from 'react';
 import SeasonPlot from 'components/Common/Charts/SeasonPlot';
-import { Season, SeasonalPodsDocument } from 'generated/graphql';
+import { Season, SeasonalHarvestedPodsDocument } from 'generated/graphql';
 
-const getValue = (season: Season) => parseFloat(season.field.totalPods);
+const getValue = (season: Season) => parseFloat(season.field.harvestedPods);
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
 const StatProps = {
-  title: "Pods",
+  title: "Harvested Pods",
   gap: 0.5,
 };
 
-const Pods: React.FC<{}> = () => {
+const HarvestedPods: React.FC<{}> = () => {
   return (
     <SeasonPlot
-      document={SeasonalPodsDocument}
+      document={SeasonalHarvestedPodsDocument}
       getValue={getValue}
       formatValue={formatValue}
       StatProps={StatProps}
@@ -20,4 +20,4 @@ const Pods: React.FC<{}> = () => {
   );
 };
 
-export default Pods;
+export default HarvestedPods;
