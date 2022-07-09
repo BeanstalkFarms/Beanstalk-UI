@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { Stack, Typography, Box, Divider } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
+import LineChart, { DataPoint } from '../../../Common/Charts/LineChart';
 import Stat from '../../../Common/Stat';
 import { displayBN } from '../../../../util';
-import TimeTabs from '../../../Common/TimeTabs';
+import TimeTabs from '../../../Common/Charts/TimeTabs';
 import { BeanstalkPalette } from '../../../App/muiTheme';
-import { mockPodRateData } from '../../../Common/Charts/SimpleLineChart.mock';
+import { mockPodRateData } from '../../../Common/Charts/LineChart.mock';
 
 export type WithdrawnBeansProps = {
   beanPrice: BigNumber;
@@ -41,15 +41,15 @@ const WithdrawnBeans: React.FC<WithdrawnBeansProps> =
             title="Withdrawn Beans"
             color="primary"
             amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-            icon={undefined}
-            bottomText={`Season ${displayBN(season)}`}
+            amountIcon={undefined}
+            subtitle={`Season ${displayBN(season)}`}
           />
           <Stack alignItems="right">
             <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursor} />
+          <LineChart series={[mockPodRateData]} onCursor={handleCursor} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />

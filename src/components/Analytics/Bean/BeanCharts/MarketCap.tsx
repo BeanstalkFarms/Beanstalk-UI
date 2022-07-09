@@ -6,10 +6,10 @@ import TokenIcon from '../../../Common/TokenIcon';
 import { BEAN } from '../../../../constants/tokens';
 import { SupportedChainId } from '../../../../constants';
 import { displayBN } from '../../../../util';
-import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
-import { mockPodRateData, mockTWAPData } from '../../../Common/Charts/SimpleLineChart.mock';
+import LineChart, { DataPoint } from '../../../Common/Charts/LineChart';
+import { mockPodRateData, mockTWAPData } from '../../../Common/Charts/LineChart.mock';
 import { BeanstalkPalette } from '../../../App/muiTheme';
-import TimeTabs from '../../../Common/TimeTabs';
+import TimeTabs from '../../../Common/Charts/TimeTabs';
 
 export type MarketCapProps = {
   beanPrice: BigNumber;
@@ -44,15 +44,15 @@ const MarketCap: React.FC<MarketCapProps> =
             title="Market Cap"
             color="primary"
             amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-            icon={undefined}
-            bottomText={`Season ${displayBN(season)}`}
+            amountIcon={undefined}
+            subtitle={`Season ${displayBN(season)}`}
           />
           <Stack alignItems="right">
             <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursor} />
+          <LineChart series={[mockPodRateData]} onCursor={handleCursor} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />

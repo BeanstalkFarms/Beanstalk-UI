@@ -22,7 +22,7 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
       <Stat
         title="Total Beanstalk Liquidity"
         amount={displayUSD(breakdown.totalValue.abs())}
-        icon={undefined}
+        amountIcon={undefined}
       />
       <LiquidityBalances
         balances={balances}

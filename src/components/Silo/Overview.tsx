@@ -5,14 +5,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { displayBN, displayUSD } from 'util/index';
 
-import SimpleLineChart, { DataPoint } from 'components/Common/Charts/SimpleLineChart';
+import LineChart, { DataPoint } from 'components/Common/Charts/LineChart';
 import {
   mockDepositData,
   mockOwnershipPctData,
-} from 'components/Common/Charts/SimpleLineChart.mock';
+} from 'components/Common/Charts/LineChart.mock';
 import MainnetBlur from 'components/Common/MainnetBlur';
 import Stat from 'components/Common/Stat';
-import TimeTabs from 'components/Common/TimeTabs';
+import TimeTabs from 'components/Common/Charts/TimeTabs';
 
 // ------------------------------------------------
 
@@ -39,10 +39,10 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
       <Box sx={{ px: 2 }}>
         <Stat
           title="Total Silo Deposits"
-          bottomText={`Season ${displayBN(season)}`}
+          subtitle={`Season ${displayBN(season)}`}
           amount={displayUSD(displayValue[0])}
           color="primary"
-          icon={undefined}
+          amountIcon={undefined}
           gap={0.5}
           sx={{ ml: 0 }}
         />
@@ -51,7 +51,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
         <MainnetBlur>
           Historical Deposit value will be available once Beanstalk is Replanted.
         </MainnetBlur>
-        <SimpleLineChart series={series} onCursor={handleCursor} />
+        <LineChart series={series} onCursor={handleCursor} />
       </Box>
     </>
   );
@@ -76,11 +76,11 @@ const StalkOwnershipTab: React.FC<TabData
         <Stat
           title="Stalk Balance"
           tooltip="This is your total Stalk Balance. Stalk are the governance token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
-          bottomText={`Season ${displayBN(season)}`}
+          subtitle={`Season ${displayBN(season)}`}
           amount={displayBN(displayValue[0])}
           color="primary"
           sx={{ minWidth: 180, ml: 0 }}
-          icon={undefined}
+          amountIcon={undefined}
           gap={0.5}
         />
         <Stat
@@ -88,7 +88,7 @@ const StalkOwnershipTab: React.FC<TabData
           tooltip="Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk."
           amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
           color="secondary.dark"
-          icon={undefined}
+          amountIcon={undefined}
           gap={0.5}
           sx={{ ml: 0 }}
         />
@@ -97,7 +97,7 @@ const StalkOwnershipTab: React.FC<TabData
         <MainnetBlur>
           Historical Stalk balance and ownership will be available once Beanstalk is Replanted.
         </MainnetBlur>
-        <SimpleLineChart series={series} onCursor={handleCursor} />
+        <LineChart series={series} onCursor={handleCursor} />
       </Box>
     </>
   );

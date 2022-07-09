@@ -6,7 +6,7 @@ import { tokenResult } from 'util/Tokens';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';
-import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import useWhitelist, { useGeneralizedWhitelist } from 'hooks/useWhitelist';
 import BigNumber from 'bignumber.js';
 import { useGetChainConstant } from 'hooks/useChainConstant';

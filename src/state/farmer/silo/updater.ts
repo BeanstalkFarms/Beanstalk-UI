@@ -10,7 +10,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
 import useMigrateCall from 'hooks/useMigrateCall';
-import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { resetFarmerSilo, updateFarmerSiloRewards } from './actions';
 
 export const useFarmerSilo = () => {

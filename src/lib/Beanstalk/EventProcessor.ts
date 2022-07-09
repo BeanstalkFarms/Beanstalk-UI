@@ -9,7 +9,7 @@ import {
   RemoveDepositEvent,
   RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event,
   RemoveWithdrawalsEvent,
-} from 'constants/generated/Beanstalk/BeanstalkReplanted';
+} from 'generated/Beanstalk/BeanstalkReplanted';
 import { BEAN, PODS } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
