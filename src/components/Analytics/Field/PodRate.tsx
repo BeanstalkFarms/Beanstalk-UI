@@ -1,5 +1,4 @@
 import React from 'react';
-import { CardProps, Card } from '@mui/material';
 import SeasonPlot from 'components/Common/Charts/SeasonPlot';
 import { Season, SeasonalPodRateDocument } from 'generated/graphql';
 import useSeason from 'hooks/useSeason';
@@ -12,7 +11,7 @@ const StatProps = {
   gap: 0.5,
 };
 
-const PodRate: React.FC<CardProps> = ({ sx, ...props }) => {
+const PodRate: React.FC<{}> = () => {
   const podRate = usePodRate();
   const season = useSeason();
   return (
