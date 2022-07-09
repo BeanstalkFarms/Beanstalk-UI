@@ -12,7 +12,7 @@ import {
 } from 'components/Common/Charts/SimpleLineChart.mock';
 import MainnetBlur from 'components/Common/MainnetBlur';
 import Stat from 'components/Common/Stat';
-import TimeTabs from 'components/Common/TimeTabs';
+import TimeTabs from 'components/Common/Charts/TimeTabs';
 
 // ------------------------------------------------
 

@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
 import Stat from '../../../Common/Stat';
 import { displayBN } from '../../../../util';
-import TimeTabs from '../../../Common/TimeTabs';
+import TimeTabs from '../../../Common/Charts/TimeTabs';
 import { BeanstalkPalette } from '../../../App/muiTheme';
 import { mockPodRateData } from '../../../Common/Charts/SimpleLineChart.mock';
 

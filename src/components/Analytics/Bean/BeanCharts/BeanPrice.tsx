@@ -6,7 +6,7 @@ import { displayBN } from '../../../../util';
 import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
 import { mockPodRateData } from '../../../Common/Charts/SimpleLineChart.mock';
 import { BeanstalkPalette } from '../../../App/muiTheme';
-import TimeTabs from '../../../Common/TimeTabs';
+import TimeTabs from '../../../Common/Charts/TimeTabs';
 
 export type BeanPriceProps = {
   beanPrice: BigNumber;

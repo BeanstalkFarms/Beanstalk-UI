@@ -9,7 +9,7 @@ export const mockLiquidityByToken = {
   [BEAN_CRV3_LP[m].address]: 66,
 };
 
-export type LiquidityDatum =  {
+export type LiquidityDatum = {
   label: string;
   value: number;
 }

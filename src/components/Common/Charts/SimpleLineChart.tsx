@@ -170,7 +170,7 @@ const Graph: React.FC<GraphProps> = withTooltip(({
    * |           plot                 |  
    * |                                |
    * ----------------------------------
-   * |           axes                 |  Axis
+   * |           axes                 | 
    * ----------------------------------
    */
   return (
@@ -194,7 +194,7 @@ const Graph: React.FC<GraphProps> = withTooltip(({
               )}
               <LinePath<DateValue>
                 key={index + 1}
-                curve={curveBasis}
+                curve={curveStep}
                 // curve={curveStep}
                 // curve={curveNatural}
                 data={_data}
@@ -307,15 +307,3 @@ const SimpleLineChart: React.FC<{
 );
 
 export default SimpleLineChart;
-
-/* <circle
-  cx={tooltipLeft}
-  cy={tooltipTop + margin.top}
-  r={4}
-  fill="black"
-  fillOpacity={0.1}
-  stroke="black"
-  strokeOpacity={0.1}
-  strokeWidth={2}
-  pointerEvents="none"
-/> */
