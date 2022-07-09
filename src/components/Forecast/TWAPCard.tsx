@@ -67,72 +67,111 @@ const useRecentSeasonsData = (range : Range = 'week') => {
     (async () => {
       console.debug(`[useRecentSeasonsData] initializing with range = ${range}`)
       try {
-        const init = await get({
-          variables: { 
-            first: RANGE_TO_SEASONS[range] || undefined, 
-            season_lte: 999999999
-          },
-          // fetchPolicy: 'network-only',
-        });
-
-        console.debug(`[useRecentSeasonsData] init: data = `, init.data)
-        
-        if (!init.data) throw new Error('missing data');
-        
-        /** the newest season indexed by the subgraph 
-         * data is returned sorted from oldest to newest
-         * so season 0 is the oldest season and length-1 is newest. */
-        const latestSubgraphSeason = init.data.seasons[0].seasonInt;
-
-        /** the oldest season returned by the previous query;
-         * requires that results are sorted by seasonInt descending*/
-        let oldestReceivedSeason = init.data.seasons[init.data.seasons.length - 1].seasonInt;
-
-        // 
-        if (range === 'all') {
-          console.debug(`[useRecentSeasonsData] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${oldestReceivedSeason}`, init.data.seasons);
-
-          let tries = 1;
-          while (oldestReceivedSeason !== 0 && tries < 10) {
-            try {
-              // gets 1000 more seasons, including oldestReceived
-              const more = await get({
-                variables: {
-                  first: 1000,
-                  season_lte: oldestReceivedSeason,
-                },
-                // fetchPolicy: 'network-only',
-              }); 
-
-              console.debug(`[useRecentSeasonsData] QUERY #${tries} = `, more)
-              if (!more.data) throw new Error('missing more data');
-              
-              const left  = more.data.seasons[0].seasonInt;
-              const right = more.data.seasons[more.data.seasons.length - 1].seasonInt;
-              const big   = Math.max(left, right);
-              const small = Math.min(left, right);
-
-              console.debug(`[useRecentSeasonsData] QUERY #${tries} count = ${more.data?.seasons.length}, new oldest = ${small}`)
-              if (small === oldestReceivedSeason) {
-                console.debug(`[useRecentSeasonsData] QUERY #${tries} fetched all seasons, breaking...`);
-                break;
-              }
-              oldestReceivedSeason = small;
-              console.debug(`[useRecentSeasonsData] QUERY #${tries} ended at season ${oldestReceivedSeason}`)
-              tries += 1;
-            } catch (e) {
-              console.debug(`failed to load`);
-              console.error(e);
-              break;
-            }
-          }
-          await get({
-            variables: {
-              first: undefined, // get all
-              season_lte: latestSubgraphSeason,
+        if (range !== 'all') {
+          // data.seasons is sorted by season, descending.
+          const init = await get({
+            variables: { 
+              first: RANGE_TO_SEASONS[range], 
+              season_lte: 999999999
             },
-            fetchPolicy: 'cache-only',
-          });
+            fetchPolicy: 'cache-first',
+          }); 
+        } else {
+          
+          // Initialize Season data with a call to the first 
+          // set of Seasons.
+          const init = await get({
+            variables: { 
+              first: PAGE_SIZE, 
+              season_lte: undefined
+            },
+          }); 
+
+          console.debug(`[useRecentSeasonsData] init: data = `, init.data)
+          
+          if (!init.data) throw new Error('missing data');
+          
+          /** the newest season indexed by the subgraph 
+           * data is returned sorted from oldest to newest
+           * so season 0 is the oldest season and length-1 is newest. */
+          const latestSubgraphSeason = init.data.seasons[0].seasonInt;
+
+          /** the oldest season returned by the previous query;
+           * requires that results are sorted by seasonInt descending*/
+          const oldestReceivedSeason = init.data.seasons[init.data.seasons.length - 1].seasonInt;
+
+          // 
+          if (range === 'all') {
+            console.debug(`[useRecentSeasonsData] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${oldestReceivedSeason}`, init.data.seasons);
+
+            // 3000 / 1000 = 3 queries
+            // Season    1 - 1000
+            //        1001 - 2000
+            //        2001 - 3000
+            const numQueries = Math.ceil(oldestReceivedSeason / PAGE_SIZE);
+            const promises = [];
+            console.debug(`[useRecentSeasonsData] needs ${numQueries} calls to get ${oldestReceivedSeason} more seasons`)
+            for (let i = 0; i < numQueries; i += 1) {
+              const season = Math.max(
+                0, // always at least 0
+                oldestReceivedSeason - i*PAGE_SIZE,
+              );
+              promises.push(
+                get({
+                  variables: {
+                    first: 1000,
+                    season_lte: season,
+                  },
+                  fetchPolicy: 'network-only'
+                })
+              )
+            }
+
+            await Promise.all(promises);
+
+            await get({
+              variables: {
+                first: undefined, // get all entries
+                season_lte: latestSubgraphSeason,
+              },
+              fetchPolicy: 'cache-only',
+            });
+          }
+
+          // let tries = 1;
+          // while (oldestReceivedSeason !== 0 && tries < 10) {
+          //   try {
+          //     // gets 1000 more seasons, including oldestReceived
+          //     const more = await get({
+          //       variables: {
+          //         first: 1000,
+          //         season_lte: oldestReceivedSeason,
+          //       },
+          //       // fetchPolicy: 'network-only',
+          //     }); 
+
+          //     console.debug(`[useRecentSeasonsData] QUERY #${tries} = `, more)
+          //     if (!more.data) throw new Error('missing more data');
+              
+          //     const left  = more.data.seasons[0].seasonInt;
+          //     const right = more.data.seasons[more.data.seasons.length - 1].seasonInt;
+          //     const big   = Math.max(left, right);
+          //     const small = Math.min(left, right);
+
+          //     console.debug(`[useRecentSeasonsData] QUERY #${tries} count = ${more.data?.seasons.length}, new oldest = ${small}`)
+          //     if (small === oldestReceivedSeason) {
+          //       console.debug(`[useRecentSeasonsData] QUERY #${tries} fetched all seasons, breaking...`);
+          //       break;
+          //     }
+          //     oldestReceivedSeason = small;
+          //     console.debug(`[useRecentSeasonsData] QUERY #${tries} ended at season ${oldestReceivedSeason}`)
+          //     tries += 1;
+          //   } catch (e) {
+          //     console.debug(`failed to load`);
+          //     console.error(e);
+          //     break;
+          //   }
+          // }
         }
       } catch (e) {
         console.debug(`[useRecentSeasonsData] failed`);
@@ -176,7 +215,7 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
   const series = useMemo(() => {
     console.debug(`[TWAPCard] Building series with ${data?.seasons.length || 0} data points`/*, data?.seasons, error*/)
     if (data) {
-      const parsed : SeasonDataPoint[] = [...data.seasons].sort((a, b) => a.seasonInt - b.seasonInt).map((_season: any) => ({
+      const parsed : SeasonDataPoint[] = [...data.seasons].filter((x) => !!x).sort((a, b) => a.seasonInt - b.seasonInt).map((_season: any) => ({
         season: _season.seasonInt as number,
         // Required for SimpleLineChart
         date:   new Date(parseInt(`${_season.timestamp}000`, 10)),

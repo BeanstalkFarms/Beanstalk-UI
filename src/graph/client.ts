@@ -2,6 +2,8 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { LocalStorageWrapper, persistCache, persistCacheSync } from "apollo3-cache-persist";
 import { QuerySeasonsArgs, Season } from "generated/graphql";
 
+const seasonIntToIndex = (n: number) => n - 0;
+
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -20,7 +22,7 @@ const cache = new InMemoryCache({
            *    "Season:6074"
            * ]
            */
-          read(existing, { args }) {
+          read(existing, { args, readField }) {
             const first       = args?.first;
             const startSeason = args?.where?.seasonInt_lte;       // could be larger than the biggest season
             
@@ -32,11 +34,27 @@ const cache = new InMemoryCache({
             if (!first) {
               dataset = existing;
             } else {
-              const maxSeason = Math.min(startSeason, existing.length)
-              const left  = Math.max(0, first ? (maxSeason - first) : 0);
-              const right = maxSeason - 1;
+              const maxSeason = Math.min(startSeason || existing.length, existing.length);
+              
+              // 0 = latest season; always defined
+              // maxSeason = 6073
+              // existing.length = 6074
+              // left = 1
+              // right = 1+1000 = 1001
+              // 0    6074
+              // 1    6073
+              // ....
+              // 6071 2
+              // 6072 1
+              // 6073 0 (this doesnt exist)
+              const left  = Math.max(0, seasonIntToIndex(existing.length - maxSeason)); 
 
-              console.debug(`[ApolloClient/seasons/read] left = ${left} ${existing[left]}, right = ${right} ${existing[right]}`);
+              // n = oldest season
+              const right = Math.min(seasonIntToIndex(left + first - 1), existing.length - 1);
+
+              console.debug(`[ApolloClient/seasons/read] left = ${left} ${readField("seasonInt", existing[left])}, right = ${right} ${readField("seasonInt", existing[right])}`, existing);
+
+              // If one of the endpoints is missing, force refresh
               if (!existing[left] || !existing[right]) return;
 
               // first = 1000
@@ -46,25 +64,23 @@ const cache = new InMemoryCache({
               dataset = existing.slice(left, right);
             }
 
-            return dataset.filter((x: any) => x !== null) 
+            return dataset //.filter((x: any) => x !== null);
           },
-          // read(existing, { args }) {
-          //   return existing || [];
-          // },
           merge(existing = [], incoming, { args, readField }) {
-            console.debug(`[ApolloClient] merge: `, incoming[0], args)
-            // const { where: { seasonInt_lte } } = (args as QuerySeasonsArgs);
-            // const { where, first } = (args as QuerySeasonsArgs);
-            // const x = where?.seasonInt_lte;
+            console.debug(`[ApolloClient] merge: `, incoming, args);
 
             // Slicing is necessary because the existing data is
             // immutable, and frozen in development.
-            const merged = existing ? existing.slice(0) : [];
+            const merged = existing ? (existing.slice(0).reverse()) : [];
 
-            // Seasons are indexed by seasonInt
+            // Seasons are indexed by seasonInt (could also parseInt the "id" field)
+            // This structures stores seasons in ascending order such that
+            // merged[0] = undefined
+            // merged[1] = Season 1
+            // merged[2] = ...
             for (let i = 0; i < incoming.length; i+=1) {
               const seasonInt = readField("seasonInt", incoming[i]);
-              if (!seasonInt) throw new Error('Seaons queried without seasonIn');
+              if (!seasonInt) throw new Error('Seasons queried without seasonInt');
               // if seasons are queried out of order this should
               // leave empty regions in the array.
               // let x = []
@@ -72,9 +88,14 @@ const cache = new InMemoryCache({
               // x     = [empty × 12, 'test']
               // x.length = 13
               // x[0]  = undefined
-              merged[seasonInt as number] = incoming[i];
+              merged[seasonIntToIndex(seasonInt as number)] = incoming[i];
             }
-            return merged;
+
+            // We complete operations on the array in ascending order,
+            // but reverse it before saving back to the cache.
+            // Reverse is O(n) while sorting during the read operation
+            // is O(n*log(n)) and likely called more often.
+            return merged.reverse();
           },
         }
       }
