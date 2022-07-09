@@ -8,6 +8,13 @@ import { Season } from 'generated/graphql';
 import { DocumentNode } from 'graphql';
 
 export type SeasonPlotProps = {
+  /** */
+  document: DocumentNode
+  /**
+   * Height applied to the chart range. Can be a fixed
+   * pixel number or a percent if the parent element has a constrained height.
+   */
+  height?: number | string;
   /** The value displayed when the chart isn't being hovered. */
   defaultValue: number;
   /** The season displayed when the chart isn't being hovered. */
@@ -26,13 +33,13 @@ const defaultValueFormatter = (value: number) => value.toFixed(4);
 
 type SeasonPlotFinalProps = (
   SeasonPlotProps 
-  & { document: DocumentNode }
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
   & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
 )
 
 function SeasonPlot({
   document,
+  height = '175px',
   defaultValue,
   defaultSeason,
   getValue,
@@ -105,7 +112,7 @@ function SeasonPlot({
         </Stack>
       </Stack>
       {/* Chart Container */}
-      <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
+      <Box sx={{ width: '100%', height, position: 'relative' }}>
         {(loading || series.length === 0) ? (
           <Stack width="100%" height="100%" alignItems="center" justifyContent="center">
             <CircularProgress variant="indeterminate" />

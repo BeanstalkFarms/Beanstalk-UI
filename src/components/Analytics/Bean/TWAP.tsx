@@ -1,7 +1,7 @@
 import React from 'react';
 import { CardProps, Card } from '@mui/material';
-import SeasonPlot from 'components/Common/Charts/SeasonPlot';
-import { Season, SeasonalPriceDocument } from 'generated/graphql';
+import SeasonPlot, { SeasonPlotProps } from 'components/Common/Charts/SeasonPlot';
+import { Season, SeasonalTwapDocument } from 'generated/graphql';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN } from 'constants/tokens';
 import { SupportedChainId } from 'constants/index';
@@ -20,22 +20,21 @@ const LineChartProps = {
   isTWAP: true,
 }
 
-const TWAPCard: React.FC<CardProps> = ({ sx, ...props }) => {
+const TWAP: React.FC<{ height?: SeasonPlotProps['height'] }> = ({ height }) => {
   const price  = usePrice();
   const season = useSeason();
   return (
-    <Card sx={{ width: '100%', ...sx }} {...props}>
-      <SeasonPlot
-        document={SeasonalPriceDocument}
-        defaultValue={price?.gt(0) ? price.toNumber() : 0}
-        defaultSeason={season?.gt(0) ? season.toNumber() : 0}
-        getValue={getValue}
-        formatValue={formatValue}
-        StatProps={StatProps}
-        LineChartProps={LineChartProps}
-      />
-    </Card>
+    <SeasonPlot
+      document={SeasonalTwapDocument}
+      height={height}
+      defaultValue={price?.gt(0) ? price.toNumber() : 0}
+      defaultSeason={season?.gt(0) ? season.toNumber() : 0}
+      getValue={getValue}
+      formatValue={formatValue}
+      StatProps={StatProps}
+      LineChartProps={LineChartProps}
+    />
   );
 };
 
-export default TWAPCard;
+export default TWAP;

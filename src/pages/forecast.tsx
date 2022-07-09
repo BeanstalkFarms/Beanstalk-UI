@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Button,
+  Card,
   Container, 
   Stack,
   Typography,
@@ -18,12 +19,12 @@ import { ANALYTICS_LINK, SupportedChainId } from 'constants/index';
 import { displayBN, displayFullBN } from 'util/index';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import PageHeader from 'components/Common/PageHeader';
-import TWAPCard from 'components/Forecast/TWAPCard';
-import PodRateCard from 'components/Forecast/PodRateCard';
 import LiquidityOverTime from 'components/Forecast/LiquidityOverTime';
 import useChainId from 'hooks/useChain';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import LiquidityByState from '../components/Forecast/LiquidityByState';
+import PodRate from 'components/Analytics/Field/PodRate';
+import TWAP from 'components/Analytics/Bean/TWAP';
 
 const columns: GridColumns = [
   {
@@ -176,9 +177,13 @@ const ForecastPage: React.FC = () => {
   } else {
     content = (
       <>
-        <Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" gap={2}>
-          <TWAPCard />
-          <PodRateCard />
+        <Stack direction={isMobile ? 'column' : 'row'} gap={2}>
+          <Card sx={{ flex: 1 }}>
+            <TWAP />
+          </Card>
+          <Card sx={{ flex: 1 }}>
+            <PodRate />
+          </Card>
         </Stack>
         <LiquidityOverTime balances={balances} />
         <LiquidityByState />

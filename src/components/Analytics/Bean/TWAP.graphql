@@ -1,4 +1,4 @@
-query SeasonalPrice($season_lte: Int, $first: Int) {
+query SeasonalTWAP($season_lte: Int, $first: Int) {
   seasons(
     where: { seasonInt_lte: $season_lte },
     first: $first,
