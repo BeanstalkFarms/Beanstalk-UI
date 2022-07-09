@@ -1,7 +1,7 @@
 import React from 'react';
 import { CardProps, Card } from '@mui/material';
 import SeasonPlot from 'components/Common/Charts/SeasonPlot';
-import { Season } from 'generated/graphql';
+import { Season, SeasonalPodRateDocument } from 'generated/graphql';
 import useSeason from 'hooks/useSeason';
 import usePodRate from 'hooks/usePodRate';
 import LineChart from 'components/Common/Charts/LineChart';
@@ -22,6 +22,7 @@ const PodRateCard: React.FC<CardProps> = ({ sx, ...props }) => {
   return (
     <Card sx={{ width: '100%', ...sx }} {...props}>
       <SeasonPlot
+        document={SeasonalPodRateDocument}
         defaultValue={podRate?.gt(0) ? podRate.toNumber() : 0}
         defaultSeason={season?.gt(0) ? season.toNumber() : 0}
         getValue={getValue}

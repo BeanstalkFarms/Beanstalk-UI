@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
-import { SeasonsDocument, useSeasonsLazyQuery } from "generated/graphql";
+import { useEffect, useState } from 'react';
+import {  Scalars, Season, SeasonalPodRateDocument, SeasonalPodRateQuery, SeasonalPodRateQueryResult } from "generated/graphql";
 import { apolloClient } from 'graph/client';
+import { DocumentNode, useLazyQuery } from '@apollo/client';
 
 const PAGE_SIZE = 1000;
 const WINDOWS = ['hr', 'day'] as const;
@@ -24,10 +25,11 @@ const SEASON_RANGE_TO_COUNT : { [key in SeasonRange]: number | undefined } = {
   [SeasonRange.ALL]:   undefined,
 }
 
-const useSeasons = (range : SeasonRange) => {
-  const [get, query] = useSeasonsLazyQuery({
-    variables: {},
-  });
+type MinimumViableSeason = Partial<Season> & Pick<Season, 'id' | 'seasonInt' | 'timestamp'>;
+
+const useSeasons = <T extends { seasons: MinimumViableSeason[] }>(document: DocumentNode, range : SeasonRange) => {
+  const [loading, setLoading] = useState(false);
+  const [get, query] = useLazyQuery<T>(document, { variables: {} });
 
   useEffect(() => {
     (async () => {
@@ -78,6 +80,7 @@ const useSeasons = (range : SeasonRange) => {
           const numQueries = Math.ceil(latestSubgraphSeason / PAGE_SIZE);
           const promises = [];
           console.debug(`[useRecentSeasonsData] needs ${numQueries} calls to get ${latestSubgraphSeason} more seasons`)
+          setLoading(true);
           for (let i = 0; i < numQueries; i += 1) {
             const season = Math.max(
               0, // always at least 0
@@ -86,7 +89,7 @@ const useSeasons = (range : SeasonRange) => {
             console.debug(`[useRecentSeasonsData] get: ${season} -> ${Math.max(season-1000, 2)}`)
             promises.push(
               apolloClient.query({
-                query: SeasonsDocument,
+                query: document,
                 variables: {
                   first: season < 1000 ? (season - 1) : 1000,
                   season_lte: season,
@@ -100,15 +103,19 @@ const useSeasons = (range : SeasonRange) => {
            * Wait for queries to complete
            */
           await Promise.all(promises);
+          setLoading(false);
         }
       } catch (e) {
         console.debug(`[useRecentSeasonsData] failed`);
         console.error(e)
       }
     })()
-  }, [range, get])
+  }, [range, get, document])
 
-  return query; 
+  return {
+    ...query,
+    loading: loading || query.loading,
+  }; 
 }
 
 export default useSeasons;

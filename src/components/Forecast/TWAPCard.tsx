@@ -1,7 +1,7 @@
 import React from 'react';
 import { CardProps, Card } from '@mui/material';
 import SeasonPlot from 'components/Common/Charts/SeasonPlot';
-import { Season } from 'generated/graphql';
+import { Season, SeasonalPriceDocument } from 'generated/graphql';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN } from 'constants/tokens';
 import { SupportedChainId } from 'constants/index';
@@ -26,6 +26,7 @@ const TWAPCard: React.FC<CardProps> = ({ sx, ...props }) => {
   return (
     <Card sx={{ width: '100%', ...sx }} {...props}>
       <SeasonPlot
+        document={SeasonalPriceDocument}
         defaultValue={price?.gt(0) ? price.toNumber() : 0}
         defaultSeason={season?.gt(0) ? season.toNumber() : 0}
         getValue={getValue}

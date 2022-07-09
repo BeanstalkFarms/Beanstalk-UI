@@ -5,6 +5,7 @@ import LineChart, { DataPoint, LineChartProps } from 'components/Common/Charts/L
 import useSeasons, { SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
 import TimeTabs, { TimeTabState }  from './TimeTabs2';
 import { Season } from 'generated/graphql';
+import { DocumentNode } from 'graphql';
 
 export type SeasonPlotProps = {
   /** The value displayed when the chart isn't being hovered. */
@@ -23,20 +24,24 @@ type SeasonDataPoint = DataPoint & {
 
 const defaultValueFormatter = (value: number) => value.toFixed(4);
 
-const SeasonPlot: React.FC<
+type SeasonPlotFinalProps = (
   SeasonPlotProps 
+  & { document: DocumentNode }
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
   & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
-> = ({
+)
+
+function SeasonPlot({
+  document,
   defaultValue,
   defaultSeason,
   getValue,
   StatProps: statProps, // renamed to prevent type collision
   LineChartProps: lineChartProps,
   formatValue = defaultValueFormatter,
-}) => {
+}: SeasonPlotFinalProps) {
   const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
-  const { loading, data } = useSeasons(tabState[1]);
+  const { loading, data } = useSeasons(document, tabState[1]);
 
   // Display values
   const [displayValue,  setDisplayValue]  = useState<number | undefined>(undefined);
@@ -115,6 +120,6 @@ const SeasonPlot: React.FC<
       </Box>
     </>
   );
-};
+}
 
 export default SeasonPlot;
