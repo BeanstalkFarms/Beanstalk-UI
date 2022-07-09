@@ -20,34 +20,39 @@ const cache = new InMemoryCache({
            *    "Season:6074"
            * ]
            */
-
-          //
           read(existing, { args }) {
             const first       = args?.first;
-            const startSeason = args?.where?.seasonInt_lte; // could be larger than the biggest season
+            const startSeason = args?.where?.seasonInt_lte;       // could be larger than the biggest season
             
             console.debug(`[ApolloClient/seasons/read] read first = ${first} startSeason = ${startSeason} for ${existing?.length || 0} existing items`)
 
             if (!existing) return;
+            
+            let dataset;
+            if (!first) {
+              dataset = existing;
+            } else {
+              const maxSeason = Math.min(startSeason, existing.length)
+              const left  = Math.max(0, first ? (maxSeason - first) : 0);
+              const right = maxSeason - 1;
 
-            const count      = first || existing.length;          // number of items to return
-            const startIndex = startSeason                        // index in the array to count DOWN from
-              ? Math.min(startSeason, existing.length)   
-              : existing.length;
-            const endIndex    = Math.max(startIndex - count, 0);  //
+              console.debug(`[ApolloClient/seasons/read] left = ${left} ${existing[left]}, right = ${right} ${existing[right]}`);
+              if (!existing[left] || !existing[right]) return;
 
-            console.debug(`[ApolloClient/seasons/read] returning ${count} items from index ${endIndex}-${startIndex} in existing (length = ${existing.length})`);
+              // first = 1000
+              // existing.length = 6074
+              // startIndex = 5074
+              // endIndex = 6074
+              dataset = existing.slice(left, right);
+            }
 
-            return existing.slice(
-              Math.max(
-                first ? (existing.length - first) : 0,
-                0
-              ),
-              existing.length,
-            ) //.slice(endIndex, startIndex);
+            return dataset.filter((x: any) => x !== null) 
           },
+          // read(existing, { args }) {
+          //   return existing || [];
+          // },
           merge(existing = [], incoming, { args, readField }) {
-            console.debug(`[ApolloClient] merge: `, existing, incoming[0], args)
+            console.debug(`[ApolloClient] merge: `, incoming[0], args)
             // const { where: { seasonInt_lte } } = (args as QuerySeasonsArgs);
             // const { where, first } = (args as QuerySeasonsArgs);
             // const x = where?.seasonInt_lte;
@@ -65,6 +70,7 @@ const cache = new InMemoryCache({
               // let x = []
               // x[12] = 'asdf'
               // x     = [empty × 12, 'test']
+              // x.length = 13
               // x[0]  = undefined
               merged[seasonInt as number] = incoming[i];
             }

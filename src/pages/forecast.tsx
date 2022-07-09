@@ -182,7 +182,6 @@ const ForecastPage: React.FC = () => {
         </Stack>
         <LiquidityOverTime balances={balances} />
         <LiquidityByState />
-        {/* <SeasonsTable columns={columns} rows={rows} /> */}
       </>
     );
   }

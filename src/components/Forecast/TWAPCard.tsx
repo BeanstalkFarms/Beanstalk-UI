@@ -58,70 +58,93 @@ const useRecentSeasonsData = (range : Range = 'week') => {
   const [first, setFirst] = useState(RANGE_TO_SEASONS[range]);
 
   const [get, query] = useSeasonsLazyQuery({
-    variables: {
-      // omitting first returns all results
-      first,
-    },
-    fetchPolicy: 'cache-only',
-    notifyOnNetworkStatusChange: true,
+    variables: {},
+    // fetchPolicy: 'cache-only',
+    // notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
     (async () => {
-      console.debug(`[getMoreSeasons] initializing with range = ${range}`)
-      /** the newest season indexed by the subgraph */
-      const init = await get({
-        variables: { 
-          first: 1000, 
-          season_lte: 999999999
-        },
-        fetchPolicy: 'network-only',
-      });
-      // data is returned sorted from oldest to newest
-      // so season 0 is the oldest season and length-1 is newest.
-      const latestSubgraphSeason = init.data?.seasons[init.data.seasons.length - 1].seasonInt;
-      /** the oldest season returned by the previous query;
-       * requires that results are sorted by seasonInt descending*/
-      let oldestReceivedSeason = init.data?.seasons[0].seasonInt;
+      console.debug(`[useRecentSeasonsData] initializing with range = ${range}`)
+      try {
+        const init = await get({
+          variables: { 
+            first: RANGE_TO_SEASONS[range] || undefined, 
+            season_lte: 999999999
+          },
+          // fetchPolicy: 'network-only',
+        });
 
-      // 
-      if (range === 'all') {
-        console.debug(`[useRecentSeasonsData] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${oldestReceivedSeason}`);
+        console.debug(`[useRecentSeasonsData] init: data = `, init.data)
+        
+        if (!init.data) throw new Error('missing data');
+        
+        /** the newest season indexed by the subgraph 
+         * data is returned sorted from oldest to newest
+         * so season 0 is the oldest season and length-1 is newest. */
+        const latestSubgraphSeason = init.data.seasons[0].seasonInt;
 
-        let tries = 0;
-        while (oldestReceivedSeason !== 0 && tries < 10) {
-          try {
-            // gets 1000 more seasons, including oldestReceived
-            const more = await get({
-              variables: {
-                first: 1000,
-                season_lte: oldestReceivedSeason,
-              },
-              fetchPolicy: 'network-only',
-            }); 
-            console.debug(`[useRecentSeasonsData] more = `, more)
-            const newOldestReceivedSeason = more.data?.seasons[0].seasonInt; //more.data?.seasons.length - 1
-            console.debug(`[useRecentSeasonsData] fetched more seasons. count = ${more.data?.seasons.length}, oldest = ${newOldestReceivedSeason}`)
-            if (newOldestReceivedSeason === oldestReceivedSeason) {
-              console.debug(`[useRecentSeasonsData] fetched all seasons, breaking...`);
+        /** the oldest season returned by the previous query;
+         * requires that results are sorted by seasonInt descending*/
+        let oldestReceivedSeason = init.data.seasons[init.data.seasons.length - 1].seasonInt;
+
+        // 
+        if (range === 'all') {
+          console.debug(`[useRecentSeasonsData] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${oldestReceivedSeason}`, init.data.seasons);
+
+          let tries = 1;
+          while (oldestReceivedSeason !== 0 && tries < 10) {
+            try {
+              // gets 1000 more seasons, including oldestReceived
+              const more = await get({
+                variables: {
+                  first: 1000,
+                  season_lte: oldestReceivedSeason,
+                },
+                // fetchPolicy: 'network-only',
+              }); 
+
+              console.debug(`[useRecentSeasonsData] QUERY #${tries} = `, more)
+              if (!more.data) throw new Error('missing more data');
+              
+              const left  = more.data.seasons[0].seasonInt;
+              const right = more.data.seasons[more.data.seasons.length - 1].seasonInt;
+              const big   = Math.max(left, right);
+              const small = Math.min(left, right);
+
+              console.debug(`[useRecentSeasonsData] QUERY #${tries} count = ${more.data?.seasons.length}, new oldest = ${small}`)
+              if (small === oldestReceivedSeason) {
+                console.debug(`[useRecentSeasonsData] QUERY #${tries} fetched all seasons, breaking...`);
+                break;
+              }
+              oldestReceivedSeason = small;
+              console.debug(`[useRecentSeasonsData] QUERY #${tries} ended at season ${oldestReceivedSeason}`)
+              tries += 1;
+            } catch (e) {
+              console.debug(`failed to load`);
+              console.error(e);
               break;
             }
-            oldestReceivedSeason = newOldestReceivedSeason;
-            console.debug(`[useRecentSeasonsData] query for more #${tries+1}: ended at season ${oldestReceivedSeason}`)
-            tries += 1;
-          } catch (e) {
-            console.debug(`failed to load`);
-            console.error(e);
-            break;
           }
+          await get({
+            variables: {
+              first: undefined, // get all
+              season_lte: latestSubgraphSeason,
+            },
+            fetchPolicy: 'cache-only',
+          });
         }
-        setFirst(latestSubgraphSeason);
+      } catch (e) {
+        console.debug(`[useRecentSeasonsData] failed`);
+        console.error(e)
       }
     })()
   }, [range, get])
 
-  return query;
+  return query; 
 }
+
+const tabToRange = ['week', 'month', 'all'] as const;
 
 const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
   beanPrice,
@@ -130,7 +153,12 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
 }) => {
   const [first, setFirst] = useState(PAGE_SIZE);
   const [stop,  setStop]  = useState(false);
-  const { loading, error, data } = useRecentSeasonsData('week');
+  const [timeTab, setTimeTab] = useState([0,0]);
+  const handleChangeTimeTab = (i: number[]) => {
+    setTimeTab(i);
+  };
+
+  const { loading, error, data } = useRecentSeasonsData(tabToRange[timeTab[1]]);
 
   // Display values
   const [displayValue,  setDisplayValue]    = useState<number[]>([beanPrice.toNumber()]);
@@ -159,11 +187,6 @@ const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
     }
     return [];
   }, [data])
-
-  const [timeTab, setTimeTab] = useState([0,0]);
-  const handleChangeTimeTab = (i: number[]) => {
-    setTimeTab(i);
-  };
 
   return (
     <Card sx={{ width: '100%', ...sx }}>
