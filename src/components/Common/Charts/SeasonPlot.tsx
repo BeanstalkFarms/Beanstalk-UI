@@ -26,7 +26,7 @@ const defaultValueFormatter = (value: number) => value.toFixed(4);
 const SeasonPlot: React.FC<
   SeasonPlotProps 
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
-  & { LineChartProps?: Pick<LineChartProps, 'isTWAP'> }
+  & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
 > = ({
   defaultValue,
   defaultSeason,
