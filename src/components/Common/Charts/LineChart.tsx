@@ -294,7 +294,7 @@ export type LineChartProps = {
 /**
  * Wrap the graph in a ParentSize handler.
  */
-const SimpleLineChart: React.FC<LineChartProps> = (props) => (
+const LineChart: React.FC<LineChartProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Graph
@@ -308,4 +308,4 @@ const SimpleLineChart: React.FC<LineChartProps> = (props) => (
   </ParentSize>
 );
 
-export default SimpleLineChart;
+export default LineChart;

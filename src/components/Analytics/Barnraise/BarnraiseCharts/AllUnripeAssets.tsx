@@ -3,8 +3,8 @@ import { Stack, Typography, Box, Divider } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Stat from '../../../Common/Stat';
 import { displayBN } from '../../../../util';
-import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
-import { mockOwnershipPctData, mockPodRateData } from '../../../Common/Charts/SimpleLineChart.mock';
+import LineChart, { DataPoint } from '../../../Common/Charts/LineChart';
+import { mockOwnershipPctData, mockPodRateData } from '../../../Common/Charts/LineChart.mock';
 import { BeanstalkPalette } from '../../../App/muiTheme';
 import TimeTabs from '../../../Common/Charts/TimeTabs';
 
@@ -57,7 +57,7 @@ const AllUnripeAssets: React.FC<AllUnripeAssetsProps> =
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart series={[mockPodRateData, mockOwnershipPctData]} onCursor={handleCursor} />
+          <LineChart series={[mockPodRateData, mockOwnershipPctData]} onCursor={handleCursor} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />

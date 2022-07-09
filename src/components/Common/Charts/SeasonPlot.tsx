@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Box, CircularProgress } from '@mui/material';
 import Stat, { StatProps } from 'components/Common/Stat';
-import SimpleLineChart, { DataPoint, LineChartProps } from 'components/Common/Charts/SimpleLineChart';
+import LineChart, { DataPoint, LineChartProps } from 'components/Common/Charts/LineChart';
 import useSeasons, { SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
 import TimeTabs, { TimeTabState }  from './TimeTabs2';
 import { Season } from 'generated/graphql';
@@ -106,7 +106,7 @@ const SeasonPlot: React.FC<
             <CircularProgress variant="indeterminate" />
           </Stack>
         ) : (
-          <SimpleLineChart
+          <LineChart
             series={[series]}
             onCursor={handleCursor as any} // FIXME
             {...lineChartProps}

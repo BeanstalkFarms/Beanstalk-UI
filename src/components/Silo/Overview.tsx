@@ -5,11 +5,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'state';
 import { displayBN, displayUSD } from 'util/index';
 
-import SimpleLineChart, { DataPoint } from 'components/Common/Charts/SimpleLineChart';
+import LineChart, { DataPoint } from 'components/Common/Charts/LineChart';
 import {
   mockDepositData,
   mockOwnershipPctData,
-} from 'components/Common/Charts/SimpleLineChart.mock';
+} from 'components/Common/Charts/LineChart.mock';
 import MainnetBlur from 'components/Common/MainnetBlur';
 import Stat from 'components/Common/Stat';
 import TimeTabs from 'components/Common/Charts/TimeTabs';
@@ -51,7 +51,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
         <MainnetBlur>
           Historical Deposit value will be available once Beanstalk is Replanted.
         </MainnetBlur>
-        <SimpleLineChart series={series} onCursor={handleCursor} />
+        <LineChart series={series} onCursor={handleCursor} />
       </Box>
     </>
   );
@@ -97,7 +97,7 @@ const StalkOwnershipTab: React.FC<TabData
         <MainnetBlur>
           Historical Stalk balance and ownership will be available once Beanstalk is Replanted.
         </MainnetBlur>
-        <SimpleLineChart series={series} onCursor={handleCursor} />
+        <LineChart series={series} onCursor={handleCursor} />
       </Box>
     </>
   );

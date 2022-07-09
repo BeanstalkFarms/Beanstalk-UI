@@ -3,8 +3,8 @@ import { Stack, Typography, Box, Divider } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Stat from '../../../Common/Stat';
 import { displayBN } from '../../../../util';
-import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
-import { mockPodRateData } from '../../../Common/Charts/SimpleLineChart.mock';
+import LineChart, { DataPoint } from '../../../Common/Charts/LineChart';
+import { mockPodRateData } from '../../../Common/Charts/LineChart.mock';
 import { BeanstalkPalette } from '../../../App/muiTheme';
 import TimeTabs from '../../../Common/Charts/TimeTabs';
 
@@ -49,7 +49,7 @@ const Sown: React.FC<SownProps> =
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursor} />
+          <LineChart series={[mockPodRateData]} onCursor={handleCursor} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />

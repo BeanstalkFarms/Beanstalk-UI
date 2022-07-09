@@ -6,8 +6,8 @@ import TokenIcon from '../../../Common/TokenIcon';
 import { BEAN } from '../../../../constants/tokens';
 import { SupportedChainId } from '../../../../constants';
 import { displayBN } from '../../../../util';
-import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
-import { mockPodRateData, mockTWAPData } from '../../../Common/Charts/SimpleLineChart.mock';
+import LineChart, { DataPoint } from '../../../Common/Charts/LineChart';
+import { mockPodRateData, mockTWAPData } from '../../../Common/Charts/LineChart.mock';
 import { BeanstalkPalette } from '../../../App/muiTheme';
 import TimeTabs from '../../../Common/Charts/TimeTabs';
 
@@ -52,7 +52,7 @@ const Supply: React.FC<SupplyProps> =
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursor} />
+          <LineChart series={[mockPodRateData]} onCursor={handleCursor} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />
