@@ -44,8 +44,8 @@ const Liquidity: React.FC<LiquidityProps> =
             title="Liquidity"
             color="primary"
             amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-            icon={undefined}
-            bottomText={`Season ${displayBN(season)}`}
+            amountIcon={undefined}
+            subtitle={`Season ${displayBN(season)}`}
           />
           <Stack alignItems="right">
             <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />

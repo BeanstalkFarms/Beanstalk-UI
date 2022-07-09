@@ -285,14 +285,16 @@ const Graph: React.FC<GraphProps> = withTooltip(({
   );
 });
 
-/**
- * Wrap the graph in a ParentSize handler.
- */
-const SimpleLineChart: React.FC<{
+export type LineChartProps = {
   series: (DataPoint[])[];
   onCursor: GraphProps['onCursor'];
   isTWAP?: boolean; // used to indicate if we are displaying TWAP price
-}> = (props) => (
+};
+
+/**
+ * Wrap the graph in a ParentSize handler.
+ */
+const SimpleLineChart: React.FC<LineChartProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Graph

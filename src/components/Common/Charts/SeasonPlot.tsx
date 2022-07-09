@@ -1,30 +1,39 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Stack, CardProps, Box, CircularProgress } from '@mui/material';
-import BigNumber from 'bignumber.js';
-import Stat from 'components/Common/Stat';
-import TokenIcon from 'components/Common/TokenIcon';
-import { BEAN } from 'constants/tokens';
-import { SupportedChainId } from 'constants/index';
-import SimpleLineChart, { DataPoint } from 'components/Common/Charts/SimpleLineChart';
+import { Stack, Box, CircularProgress } from '@mui/material';
+import Stat, { StatProps } from 'components/Common/Stat';
+import SimpleLineChart, { DataPoint, LineChartProps } from 'components/Common/Charts/SimpleLineChart';
 import useSeasons, { SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
 import TimeTabs, { TimeTabState }  from './TimeTabs2';
 import { Season } from 'generated/graphql';
 
 export type SeasonPlotProps = {
+  /** The value displayed when the chart isn't being hovered. */
   defaultValue: number;
+  /** The season displayed when the chart isn't being hovered. */
   defaultSeason: number;
+  /** Which value to display from the Season object */
   getValue: (season: Season) => number,
+  /** Format the value from number -> string */
+  formatValue?: (value: number) => string,
 }
 
 type SeasonDataPoint = DataPoint & {
   season: number;
 }
 
-const SeasonPlot: React.FC<SeasonPlotProps & CardProps> = ({
+const defaultValueFormatter = (value: number) => value.toFixed(4);
+
+const SeasonPlot: React.FC<
+  SeasonPlotProps 
+  & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
+  & { LineChartProps?: Pick<LineChartProps, 'isTWAP'> }
+> = ({
   defaultValue,
   defaultSeason,
   getValue,
-  sx
+  StatProps: statProps, // renamed to prevent type collision
+  LineChartProps: lineChartProps,
+  formatValue = defaultValueFormatter,
 }) => {
   const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
   const { loading, data } = useSeasons(tabState[1]);
@@ -79,13 +88,9 @@ const SeasonPlot: React.FC<SeasonPlotProps & CardProps> = ({
       {/* Statistic & Controls */}
       <Stack direction="row" justifyContent="space-between" sx={{ px: 1.5, pt: 1.5 }}>
         <Stat
-          gap={0.5}
-          topIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
-          icon={undefined}
-          color="primary"
-          title="Time Weighted Average Price"
-          amount={`$${(displayValue || defaultValue).toFixed(4)}`}
-          bottomText={`Season ${(displaySeason || defaultSeason).toFixed()}`}
+          {...statProps}
+          amount={formatValue(displayValue || defaultValue)}
+          subtitle={`Season ${(displaySeason || defaultSeason).toFixed()}`}
         />
         <Stack alignItems="right">
           <TimeTabs
@@ -96,15 +101,15 @@ const SeasonPlot: React.FC<SeasonPlotProps & CardProps> = ({
       </Stack>
       {/* Chart Container */}
       <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-        {loading || series.length === 0 ? (
+        {(loading || series.length === 0) ? (
           <Stack width="100%" height="100%" alignItems="center" justifyContent="center">
             <CircularProgress variant="indeterminate" />
           </Stack>
         ) : (
           <SimpleLineChart
-            isTWAP
             series={[series]}
-            onCursor={handleCursor as any}
+            onCursor={handleCursor as any} // FIXME
+            {...lineChartProps}
           />
         )}
       </Box>

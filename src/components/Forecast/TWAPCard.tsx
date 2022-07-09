@@ -1,27 +1,37 @@
 import React from 'react';
 import { CardProps, Card } from '@mui/material';
-import BigNumber from 'bignumber.js';
 import SeasonPlot from 'components/Common/Charts/SeasonPlot';
 import { Season } from 'generated/graphql';
-
-export type TWAPCardProps = {
-  beanPrice: BigNumber;
-  season: BigNumber;
-}
+import TokenIcon from 'components/Common/TokenIcon';
+import { BEAN } from 'constants/tokens';
+import { SupportedChainId } from 'constants/index';
+import usePrice from 'hooks/usePrice';
+import useSeason from 'hooks/useSeason';
 
 const getValue = (season: Season) => parseFloat(season.twap);
+const formatValue = (value: number) => `$${value.toFixed(4)}`;
+const StatProps = {
+  title: "Time Weighted Average Price",
+  titleIcon: <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />,
+  gap: 0.5,
+  color: "primary",
+};
+const LineChartProps = {
+  isTWAP: true,
+}
 
-const TWAPCard: React.FC<TWAPCardProps & CardProps> = ({
-  beanPrice,
-  season,
-  sx
-}) => {
+const TWAPCard: React.FC<CardProps> = ({ sx, ...props }) => {
+  const price  = usePrice();
+  const season = useSeason();
   return (
-    <Card sx={{ width: '100%', ...sx }}>
+    <Card sx={{ width: '100%', ...sx }} {...props}>
       <SeasonPlot
-        defaultValue={beanPrice?.gt(0) ? beanPrice.toNumber() : 0}
+        defaultValue={price?.gt(0) ? price.toNumber() : 0}
         defaultSeason={season?.gt(0) ? season.toNumber() : 0}
         getValue={getValue}
+        formatValue={formatValue}
+        StatProps={StatProps}
+        LineChartProps={LineChartProps}
       />
     </Card>
   );

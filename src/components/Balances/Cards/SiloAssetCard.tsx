@@ -42,7 +42,7 @@ const SiloAssetCard: React.FC<StalkCardProps> = ({
   return (
     <StatCard
       title={`My ${token.name}`}
-      icon={<TokenIcon token={token} />}
+      amountIcon={<TokenIcon token={token} />}
       amount={displayBN(state.total)}
     >
       <Stack gap={2} justifyContent="space-between" height="100%">

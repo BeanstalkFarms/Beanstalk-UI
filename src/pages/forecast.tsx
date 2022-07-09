@@ -177,8 +177,8 @@ const ForecastPage: React.FC = () => {
     content = (
       <>
         <Stack direction={isMobile ? 'column' : 'row'} justifyContent="space-between" gap={2}>
-          <TWAPCard    beanPrice={beanPrice} season={season} />
-          <PodRateCard podRate={podRate} season={season} />
+          <TWAPCard />
+          <PodRateCard />
         </Stack>
         <LiquidityOverTime balances={balances} />
         <LiquidityByState />

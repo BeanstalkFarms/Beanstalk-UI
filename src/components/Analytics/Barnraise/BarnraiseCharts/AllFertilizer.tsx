@@ -42,20 +42,20 @@ const AllFertilizer: React.FC<AllFertilizerProps> =
               title="Available Fertilizer"
               color="primary"
               amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-              icon={undefined}
-              bottomText={`Season ${displayBN(season)}`}
+              amountIcon={undefined}
+              subtitle={`Season ${displayBN(season)}`}
             />
             <Stat
               title="Active Fertilizer"
               color={BeanstalkPalette.yellow}
               amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-              icon={undefined}
+              amountIcon={undefined}
             />
             <Stat
               title="Unused Fertilizer"
               color={BeanstalkPalette.darkNavyBlue}
               amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-              icon={undefined}
+              amountIcon={undefined}
             />
           </Stack>
           <Stack alignItems="right">
