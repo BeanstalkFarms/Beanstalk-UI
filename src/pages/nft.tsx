@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Container, Divider, Stack, Tab, Tabs, Typography, } from '@mui/material';
+import { Button, Card, CircularProgress, Container, Divider, Stack, Tab, Tabs, Typography, } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useAccount } from 'wagmi';
 import fetch from 'node-fetch';
@@ -28,8 +28,8 @@ const NFTPage: React.FC = () => {
   const [selectedNFT, setSelectedNFT] = useState<Nft | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [tab, setTab] = useState(0);
-  const [genesisNFTs, setGenesisNFTs] = useState<Nft[]>([]);
-  const [winterNFTs, setWinterNFTs] = useState<Nft[]>([]);
+  const [genesisNFTs, setGenesisNFTs] = useState<Nft[] | null>(null);
+  const [winterNFTs, setWinterNFTs] = useState<Nft[] | null>(null);
 
   // handlers
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -109,8 +109,8 @@ const NFTPage: React.FC = () => {
             <WalletCard address={account.address} />
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
               <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
-                <Tab label={`Genesis (${genesisNFTs.length})`} />
-                <Tab label={`Winter (${winterNFTs.length})`} />
+                <Tab label={`Genesis (${genesisNFTs?.length})`} />
+                <Tab label={`Winter (${winterNFTs?.length})`} />
               </Tabs>
               {tab === 0 && (
                 <Button>Mint All Genesis</Button>
@@ -130,7 +130,8 @@ const NFTPage: React.FC = () => {
             {tab === 1 && (
               <NFTGrid
                 nfts={winterNFTs}
-                handleDialogOpen={handleDialogOpen} />
+                handleDialogOpen={handleDialogOpen}
+              />
             )}
           </Stack>
         </Card>
