@@ -1,13 +1,10 @@
 import React from 'react';
 import { Box, Button, ButtonProps, Stack, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 const GAP = 2;
 
-const DescriptionButton : React.FC<
-  ButtonProps
-  & {
+const DescriptionButton : React.FC<ButtonProps & {
   title?: string;
   description?: string;
   icon?: React.ReactNode | string;
@@ -22,7 +19,6 @@ const DescriptionButton : React.FC<
   sx,
   ...props 
 }) => {
-  const theme = useTheme();
   return (
     <Button
       variant="outlined"
@@ -51,18 +47,19 @@ const DescriptionButton : React.FC<
             </Typography>
           </Box>
         )}
-        <Box>
-          <Stack direction="row" gap={0.3}>
-            <Typography variant="h2">{title}</Typography>
+        <Stack gap={0.25}>
+          <Typography variant="h3">
+            {title}
             {recommended && (
-              <Typography variant="h2" sx={{ color: BeanstalkPalette.logoGreen }}>
-                (Recommended)
+              <Typography display="inline" color="primary">
+                &nbsp;(Recommended)
               </Typography>
             )}
-          </Stack>
-
-          <Typography variant="body2" color="gray">{description}</Typography>
-        </Box>
+          </Typography>
+          <Typography variant="body2" color="gray">
+            {description}
+          </Typography>
+        </Stack>
       </Stack>
     </Button>
   );

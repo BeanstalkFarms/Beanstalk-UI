@@ -3,9 +3,19 @@ import { Handler } from "@netlify/functions";
 const unripeBean     = require("./unripe-beans-merkle.json");
 const unripeBean3CRV = require("./unripe-bean3crv-merkle.json");
 
-const handler: Handler = async (event, context) => {
+export type MerkleRoot = {
+  amount: string;
+  leaf: string;
+  proof: string[];
+}
+
+export type PickMerkleResponse = {
+  bean: MerkleRoot | null;
+  bean3crv: MerkleRoot | null;
+}
+
+const handler : Handler = async (event, context) => {
   const account = event.queryStringParameters?.['account']?.toLowerCase();
-  console.debug(account)
   if (!account) {
     return {
       statusCode: 400,
