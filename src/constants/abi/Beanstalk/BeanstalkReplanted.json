@@ -2234,11 +2234,31 @@
     },
     {
         "inputs": [],
+        "name": "claimOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "owner",
         "outputs": [
             {
                 "internalType": "address",
                 "name": "owner_",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "ownerCandidate",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "ownerCandidate_",
                 "type": "address"
             }
         ],
@@ -2468,7 +2488,7 @@
         "outputs": [
             {
                 "internalType": "int256",
-                "name": "bdv",
+                "name": "deltaB",
                 "type": "int256"
             }
         ],
@@ -4172,29 +4192,6 @@
         "inputs": [
             {
                 "internalType": "address",
-                "name": "token",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bytes32[]",
-                "name": "proof",
-                "type": "bytes32[]"
-            }
-        ],
-        "name": "claimUnripe",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
                 "name": "unripeToken",
                 "type": "address"
             },
@@ -4364,6 +4361,34 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes32[]",
+                "name": "proof",
+                "type": "bytes32[]"
+            },
+            {
+                "internalType": "enum LibTransfer.To",
+                "name": "mode",
+                "type": "uint8"
+            }
+        ],
+        "name": "pick",
+        "outputs": [],
+        "stateMutability": "payable",
         "type": "function"
     },
     {
