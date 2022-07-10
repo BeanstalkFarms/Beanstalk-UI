@@ -109,8 +109,8 @@ const NFTPage: React.FC = () => {
             <WalletCard address={account.address} />
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
               <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
-                <Tab label={`Genesis (${genesisNFTs?.length})`} />
-                <Tab label={`Winter (${winterNFTs?.length})`} />
+                <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs?.length})`} />
+                <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
               </Tabs>
               {tab === 0 && (
                 <Button>Mint All Genesis</Button>
