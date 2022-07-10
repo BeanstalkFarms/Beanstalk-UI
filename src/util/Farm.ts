@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import { ZERO_BN } from "constants/index";
 import { FarmFromMode } from "lib/Beanstalk/Farm"
 import { Balance } from "state/farmer/balances"
 
@@ -32,4 +33,8 @@ export const combineBalances = (
   prev.external = prev.external.plus(curr.external);
   prev.total    = prev.total.plus(curr.total);
   return prev;
+}, {
+  internal: ZERO_BN,
+  external: ZERO_BN,
+  total:    ZERO_BN,
 })
