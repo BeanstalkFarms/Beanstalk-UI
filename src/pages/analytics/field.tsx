@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, Container, Stack, Tab, Tabs } from '@mui/material';
-import FieldCharts from 'components/Analytics/Field/FieldCharts';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/index';
 import ComingSoonCard from 'components/Common/ComingSoonCard';

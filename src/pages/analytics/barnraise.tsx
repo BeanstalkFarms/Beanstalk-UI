@@ -1,16 +1,16 @@
 import React from 'react';
-import { Card, Container, Grid, Stack } from '@mui/material';
+import { Card, Container, Grid, Stack, Tab, Tabs } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import Stat from 'components/Common/Stat';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import AmountRaisedCard from 'components/Analytics/Barnraise/AmountRaisedCard';
-import BarnraiseCharts from 'components/Analytics/Barnraise/BarnraiseCharts';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import { AppState } from 'state';
 import { displayBN } from 'util/index';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/index';
+import useTabs from 'hooks/display/useTabs';
 
 const BarnraiseAnalytics: React.FC<{}> = () => {
   const fertilizer = useSelector<
@@ -19,6 +19,8 @@ const BarnraiseAnalytics: React.FC<{}> = () => {
   >((state) => state._beanstalk.fertilizer);
 
   const chainId = useChainId();
+  const [tab, handleChangeTab] = useTabs();
+
   if (chainId === SupportedChainId.MAINNET) {
     return (
       <Container maxWidth="lg">
@@ -58,7 +60,18 @@ const BarnraiseAnalytics: React.FC<{}> = () => {
             </Card>
           </Grid>
         </Grid>
-        <BarnraiseCharts />
+        <Card>
+          <Stack>
+            <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2 }}>
+              <Tab label="All Fertilizer" />
+              <Tab label="All Unripe Assets" />
+              <Tab label="Forfeitures" />
+            </Tabs>
+            {/* {tab === 0 && <AllFertilizer season={season} beanPrice={beanPrice} />}
+            {tab === 1 && <AllUnripeAssets season={season} beanPrice={beanPrice} />}
+            {tab === 2 && <Forfeitures season={season} beanPrice={beanPrice} />} */}
+          </Stack>
+        </Card>
       </Stack>
     </Container>
   );

@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
-import { Box, Card, Container, Stack, Tab, Tabs } from '@mui/material';
+import React from 'react';
+import { Card, Container, Stack, Tab, Tabs } from '@mui/material';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/index';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import TWAP from 'components/Analytics/Bean/TWAP';
+import useTabs from 'hooks/display/useTabs';
 
 const BeanAnalytics: React.FC<{}> = () => {
   const chainId = useChainId();
-  const [tab, setTab] = useState(0);
-  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
+  const [tab, handleChangeTab] = useTabs();
   
   if (chainId === SupportedChainId.MAINNET) {
     return (
@@ -19,6 +17,7 @@ const BeanAnalytics: React.FC<{}> = () => {
       </Container>
     );
   }
+  
   return (
     <Container maxWidth="lg">
       <Card>
