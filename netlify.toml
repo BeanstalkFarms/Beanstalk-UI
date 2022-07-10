@@ -1,2 +1,5 @@
 [build]
   command = "yarn build-netlify"
+
+[functions]
+  directory = "src/functions"
