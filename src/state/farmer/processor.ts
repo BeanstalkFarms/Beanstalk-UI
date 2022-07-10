@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { AddDepositEvent, AddWithdrawalEvent, RemoveDepositEvent } from 'constants/generated/Beanstalk/BeanstalkReplanted';
+import { AddDepositEvent, AddWithdrawalEvent, RemoveDepositEvent } from 'generated/Beanstalk/BeanstalkReplanted';
 import { LP_TO_SEEDS, REPLANTED_CHAINS, ZERO_BN } from 'constants/index';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/tokens';
 import { ethers } from 'ethers';

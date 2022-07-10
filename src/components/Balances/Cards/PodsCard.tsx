@@ -9,7 +9,7 @@ import StatCard from '../StatCard';
 const PodCard: React.FC<{ state: AppState['_farmer']['field'] }> = ({ state }) => (
   <StatCard
     title="My Pods"
-    icon={<TokenIcon token={PODS} />}
+    amountIcon={<TokenIcon token={PODS} />}
     amount={`${displayBN(state.pods)}`}
   >
     <Stack gap={0.7} sx={{ flex: 1 }} justifyContent="flex-end">

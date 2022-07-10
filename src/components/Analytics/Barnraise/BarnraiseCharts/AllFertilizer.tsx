@@ -3,10 +3,10 @@ import { Stack, Typography, Box, Divider } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Stat from '../../../Common/Stat';
 import { displayBN } from '../../../../util';
-import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
-import { mockPodRateData } from '../../../Common/Charts/SimpleLineChart.mock';
+import LineChart, { DataPoint } from '../../../Common/Charts/LineChart';
+import { mockPodRateData } from '../../../Common/Charts/LineChart.mock';
 import { BeanstalkPalette } from '../../../App/muiTheme';
-import TimeTabs from '../../../Common/TimeTabs';
+import TimeTabs from '../../../Common/Charts/TimeTabs';
 
 export type AllFertilizerProps = {
   beanPrice: BigNumber;
@@ -42,20 +42,20 @@ const AllFertilizer: React.FC<AllFertilizerProps> =
               title="Available Fertilizer"
               color="primary"
               amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-              icon={undefined}
-              bottomText={`Season ${displayBN(season)}`}
+              amountIcon={undefined}
+              subtitle={`Season ${displayBN(season)}`}
             />
             <Stat
               title="Active Fertilizer"
               color={BeanstalkPalette.yellow}
               amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-              icon={undefined}
+              amountIcon={undefined}
             />
             <Stat
               title="Unused Fertilizer"
               color={BeanstalkPalette.darkNavyBlue}
               amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-              icon={undefined}
+              amountIcon={undefined}
             />
           </Stack>
           <Stack alignItems="right">
@@ -63,7 +63,7 @@ const AllFertilizer: React.FC<AllFertilizerProps> =
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart series={[mockPodRateData]} onCursor={handleCursor} />
+          <LineChart series={[mockPodRateData]} onCursor={handleCursor} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />

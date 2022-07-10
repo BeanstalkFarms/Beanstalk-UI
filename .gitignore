@@ -10,7 +10,7 @@ stats.json
 .env.local
 
 # Ignore generated Typechain files.
-src/constants/generated
+src/generated
 
 .vscode/
 

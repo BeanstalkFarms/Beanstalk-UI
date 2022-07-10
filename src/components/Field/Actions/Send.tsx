@@ -22,7 +22,7 @@ import { PODS } from 'constants/tokens';
 import { LoadingButton } from '@mui/lab';
 import { useAccount, useSigner } from 'wagmi';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'constants/generated';
+import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
 
 export type SendFormValues = {

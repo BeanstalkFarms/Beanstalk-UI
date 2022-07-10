@@ -7,17 +7,21 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import store from 'state';
 import theme from 'components/App/muiTheme';
 import client from 'util/Client';
+import { ApolloProvider } from '@apollo/client';
+import { apolloClient } from 'graph/client';
 
 const Wrapper : React.FC = ({ children }) => (
   <HashRouter>
     <ReduxProvider store={store}>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <WagmiConfig client={client}>
-            {children}
-          </WagmiConfig>
-        </ThemeProvider>
-      </StyledEngineProvider>
+      <ApolloProvider client={apolloClient}>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <WagmiConfig client={client}>
+              {children}
+            </WagmiConfig>
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </ApolloProvider>
     </ReduxProvider>
   </HashRouter>
 );

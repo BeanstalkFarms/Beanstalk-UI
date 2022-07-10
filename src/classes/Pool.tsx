@@ -3,7 +3,7 @@ import {
   CurveMetaPool__factory,
   CurvePlainPool__factory,
   UniswapV2Pair__factory,
-} from 'constants/generated';
+} from 'generated/index';
 import { ChainConstant, AddressMap, SupportedChainId } from 'constants/index';
 import { MinBN } from 'util/Tokens';
 import client from 'util/Client';

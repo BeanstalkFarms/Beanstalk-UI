@@ -3,10 +3,10 @@ import { Stack, Typography, Box, Divider } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Stat from '../../../Common/Stat';
 import { displayBN } from '../../../../util';
-import SimpleLineChart, { DataPoint } from '../../../Common/Charts/SimpleLineChart';
-import { mockOwnershipPctData, mockPodRateData } from '../../../Common/Charts/SimpleLineChart.mock';
+import LineChart, { DataPoint } from '../../../Common/Charts/LineChart';
+import { mockOwnershipPctData, mockPodRateData } from '../../../Common/Charts/LineChart.mock';
 import { BeanstalkPalette } from '../../../App/muiTheme';
-import TimeTabs from '../../../Common/TimeTabs';
+import TimeTabs from '../../../Common/Charts/TimeTabs';
 
 export type ForfeituresProps = {
   beanPrice: BigNumber;
@@ -42,14 +42,14 @@ const Forfeitures: React.FC<ForfeituresProps> =
               title="Forfeited Beans"
               color="primary"
               amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-              icon={undefined}
-              bottomText={`Season ${displayBN(season)}`}
+              amountIcon={undefined}
+              subtitle={`Season ${displayBN(season)}`}
             />
             <Stat
               title="Forfeited LP (BDV)"
               color={BeanstalkPalette.yellow}
               amount={`$${(isHovering ? displayTWAP[0] : beanPrice).toFixed(4)}`}
-              icon={undefined}
+              amountIcon={undefined}
             />
           </Stack>
           <Stack alignItems="right">
@@ -57,7 +57,7 @@ const Forfeitures: React.FC<ForfeituresProps> =
           </Stack>
         </Stack>
         <Box sx={{ width: '100%', height: '175px', position: 'relative' }}>
-          <SimpleLineChart series={[mockPodRateData, mockOwnershipPctData]} onCursor={handleCursor} />
+          <LineChart series={[mockPodRateData, mockOwnershipPctData]} onCursor={handleCursor} />
         </Box>
         <Box>
           <Divider color={BeanstalkPalette.lightBlue} />

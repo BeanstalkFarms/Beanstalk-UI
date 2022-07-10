@@ -1,0 +1,13 @@
+query SeasonalWeather($season_lte: Int, $first: Int) {
+  seasons(
+    where: { seasonInt_lte: $season_lte },
+    first: $first,
+    orderBy: seasonInt,
+    orderDirection: desc,
+  ) {
+    id
+    seasonInt
+    timestamp
+    field { weather }
+  }
+}

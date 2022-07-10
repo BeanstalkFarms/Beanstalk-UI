@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Button } from "@mui/material";
-import { BeanstalkReplanted } from "constants/generated";
+import { BeanstalkReplanted } from "generated";
 import { useBeanstalkContract } from "hooks/useContract";
 import CachedIcon from '@mui/icons-material/Cached';
 import { getAccount } from "util/Account";

@@ -18,7 +18,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import { useSigner } from 'wagmi';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 import { ERC20Token } from 'classes/Token';
-import { BeanstalkReplanted } from 'constants/generated';
+import { BeanstalkReplanted } from 'generated/index';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
