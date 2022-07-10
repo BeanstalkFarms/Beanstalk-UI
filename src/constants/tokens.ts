@@ -20,12 +20,15 @@ import daiLogoUrl  from 'img/tokens/dai-logo.svg';
 import usdcLogoUrl from 'img/tokens/usdc-logo.svg';
 import usdtLogoUrl from 'img/tokens/usdt-logo.svg';
 import lusdLogoUrl from 'img/tokens/lusd-logo.svg';
+import unripeBeanLogoUrl from 'img/tokens/unripe-bean-logo-circled.svg';
+import unripeBeanCrv3LogoUrl from 'img/tokens/unripe-lp-logo-circled.svg';
 
 // Other imports
 import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from './chains';
 import { ChainConstant } from '.';
-import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, DAI_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES } from './addresses';
+import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, DAI_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES, UNRIPE_BEAN_ADDRESSES, UNRIPE_BEAN_CRV3_ADDRESSES, BEAN_ADDRESSES } from './addresses';
+
 
 // ----------------------------------------
 // Types
@@ -126,7 +129,7 @@ export const WETH = {
 export const BEAN = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
-    '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
+    BEAN_ADDRESSES,
     6,
     {
       name: 'Bean',
@@ -140,7 +143,7 @@ export const BEAN = {
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
     SupportedChainId.ROPSTEN,
-    '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db',
+    BEAN_ADDRESSES,
     6,
     {
       name: 'Bean',
@@ -329,6 +332,37 @@ export const BEAN_LUSD_LP = {
 };
 
 // ----------------------------------------
+// ERC20 Tokens - Unripe
+// ----------------------------------------
+
+export const UNRIPE_BEAN = {
+  [SupportedChainId.MAINNET]: new ERC20Token(
+    SupportedChainId.MAINNET,
+    UNRIPE_BEAN_ADDRESSES,
+    6,
+    {
+      name: 'Unripe Bean',
+      symbol: 'urBEAN',
+      logo: unripeBeanLogoUrl,
+    }
+  ),
+};
+
+export const UNRIPE_BEAN_CRV3 = {
+  [SupportedChainId.MAINNET]: new ERC20Token(
+    SupportedChainId.MAINNET,
+    UNRIPE_BEAN_CRV3_ADDRESSES,
+    6,
+    {
+      name: 'Unripe BEAN:3CRV LP',
+      symbol: 'urBEAN3CRV',
+      logo: unripeBeanCrv3LogoUrl,
+    }
+  ),
+};
+
+
+// ----------------------------------------
 // Token Lists
 // ----------------------------------------
 
@@ -357,12 +391,16 @@ export const SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
   BEAN_ETH_UNIV2_LP,
   BEAN_CRV3_LP,
   BEAN_LUSD_LP,
+  UNRIPE_BEAN,
+  UNRIPE_BEAN_CRV3
 ];
 
 // Tokens that used the generalized silo whitelist in Beanstalk V1.
 export const GENERALIZED_SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
   BEAN_CRV3_LP,
   BEAN_LUSD_LP,
+  UNRIPE_BEAN,
+  UNRIPE_BEAN_CRV3
 ];
 
 // Assets underlying 3CRV (accessible when depositing/removing liquidity)

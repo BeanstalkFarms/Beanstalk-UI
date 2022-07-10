@@ -164,7 +164,7 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
 const BEANSTALK_ABIS = {
   [SupportedChainId.MAINNET]:   BEANSTALK_ABI,
   [SupportedChainId.ROPSTEN]:   BEANSTALK_ABI,
-  [SupportedChainId.LOCALHOST]: BEANSTALK_ABI,
+  [SupportedChainId.LOCALHOST]: BEANSTALK_REPLANTED_ABI,
   [SupportedChainId.CUJO]:      BEANSTALK_REPLANTED_ABI,
   [SupportedChainId.PHOENIX]:   BEANSTALK_REPLANTED_ABI,
 };

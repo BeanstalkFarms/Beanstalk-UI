@@ -24,6 +24,13 @@ export const BARNRAISE_CUSTODIAN_ADDRESSES = {
   [SupportedChainId.ROPSTEN]: '0xA3D5F4042899a52f2ae7A0Cc58C079EFB62B9e43'.toLowerCase(),
 };
 
+export const BEAN_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
+  [SupportedChainId.ROPSTEN]: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
+  [SupportedChainId.PHOENIX]: '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
+  [SupportedChainId.LOCALHOST]: '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
+}
+
 // ----------------------------------------
 // BeaNFT Contracts
 // ----------------------------------------
@@ -134,6 +141,8 @@ export const BEAN_CRV3_ADDRESSES = {
   // deployment of the BEAN:3CRV Metapool on Ropsten. It is now deprecated.
   // https://ropsten.etherscan.io/address/0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC
   [SupportedChainId.ROPSTEN]: '0x9ED0380C5dedadd3b2a32f5D5FD6B3929f8d39d9'.toLowerCase(),
+  [SupportedChainId.PHOENIX]: "0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49".toLowerCase(),
+  [SupportedChainId.LOCALHOST]: "0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49".toLowerCase(),
 };
 
 export const BEAN_LUSD_ADDRESSES = {
@@ -201,3 +210,21 @@ export const META_FACTORY_ADDRESSES   = {
 export const CRYPTO_FACTORY_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x8F942C20D02bEfc377D41445793068908E2250D0'.toLowerCase()
 }
+
+export const UNRIPE_BEAN_ADDRESSES = {
+  // --------------------------------------------------
+  // "Unripe Bean": Unripe vesting asset for the Bean token, Localhost 
+  // -------------------------------------------------
+  [SupportedChainId.MAINNET]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
+  [SupportedChainId.PHOENIX]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
+  [SupportedChainId.LOCALHOST]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase()
+};
+
+export const UNRIPE_BEAN_CRV3_ADDRESSES = {
+  // --------------------------------------------------
+  // "Unripe BEAN:CRV3 LP": Unripe vesting asset for the BEAN:CRV3 LP token, Localhost
+  // -------------------------------------------------
+  [SupportedChainId.MAINNET]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
+  [SupportedChainId.PHOENIX]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
+  [SupportedChainId.LOCALHOST]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase()
+};
