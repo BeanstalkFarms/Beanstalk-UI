@@ -3,6 +3,7 @@ import {
   experimental_sx as sx,
   responsiveFontSizes
 } from '@mui/material/styles';
+import React from "react";
 
 // --------------------------------------------------
 
@@ -14,6 +15,16 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     light: PaletteOptions['primary'];
     dark: PaletteOptions['primary'];
+  }
+  interface TypographyVariants {
+    bodySmall: React.CSSProperties;
+    bodyMedium: React.CSSProperties;
+    bodyLarge: React.CSSProperties;
+  }
+  interface TypographyVariantsOptions {
+    bodySmall?: React.CSSProperties;
+    bodyMedium?: React.CSSProperties;
+    bodyLarge?: React.CSSProperties;
   }
 }
 
@@ -28,6 +39,15 @@ declare module '@mui/material/IconButton' {
   interface IconButtonPropsColorOverrides {
     light: true;
     dark: true;
+  }
+}
+
+// Update the Typography's variant prop options
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    bodySmall: true;
+    bodyMedium: true;
+    bodyLarge: true;
   }
 }
 
@@ -129,45 +149,61 @@ let muiTheme = createTheme({
   typography: {
     fontFamily: 'Futura PT',
     fontSize:           16,
-    fontWeightLight:    300,
-    fontWeightRegular:  400,
-    fontWeightMedium:   600,
-    fontWeightBold:     700,
-    // <Typography variant={x} />
 
-    // h1: page titles
+    // FONT WEIGHTS
+    fontWeightLight:    400, // normal
+    fontWeightRegular:  450, // medium
+    fontWeightMedium:   600, // semi-bold
+    fontWeightBold:     700, // bold
+
+    // page headers
     h1: {
-      fontSize: remBase(0.75 * 40),
-      fontWeight: 700,        //
+      fontSize: '2rem', // 32px
+      fontWeight: 700,
     },
-    // h2: card titles, tabs, large button text
+    // silo deposit graph
     h2: {
-      fontSize: remBase(20),
-      fontWeight: 600,        //
+      fontSize: '1.5rem', // 1.5*16 = 24px
+      fontWeight: 700,
     },
-    // h3: bold section titles
+    // nav button text
     h3: {
-      fontSize: '1rem',       // 1*16  = 16px
-      fontWeight: 600,        //
+      fontSize: '1.25rem', // 1.25*16 = 20px
+      fontWeight: 600,
     },
-    // h4: normal section titles
+    // component headers / tabs
     h4: {
-      fontSize: '1rem',       // 1*16 = 16px
-      fontWeight: 400,        //
+      fontSize: '1rem', // 1*16 = 16px
+      fontWeight: 600,
     },
-    // h5, h6
-    // subtitle1: page subtitle
-    subtitle1: {
-      fontSize: '1.125rem',   // 1.125*16 = 18px
-      fontWeight: 400,
-    },
-    subtitle2: {},
     body1: {
-      fontSize: '1rem',       // 1*16     = 16px
+      fontSize: '1rem', // 1*16 = 16px
       fontWeight: 400,
-      lineHeight: '1.28rem',  // pulled from figma
+      lineHeight: '1.28rem',
     },
-    body2: {},
+    // all module body text
+    bodySmall: {
+      fontFamily: 'Futura PT',
+      fontSize: '0.875rem', // 0.875*16 = 14px
+      fontWeight: 450
+    },
+    // nav labels, nav button labels, token labels (module)
+    bodyMedium: {
+      fontFamily: 'Futura PT',
+      fontSize: '1.25rem', // 1.25*16 = 20px
+      fontWeight: 450
+    },
+    // token inputs (module)
+    bodyLarge: {
+      fontFamily: 'Futura PT',
+      fontSize: '1.5rem', // 1.5*16 = 24px
+      fontWeight: 450
+    },
+    // page subtitles
+    subtitle1: {
+      fontSize: '1.125rem', // 1.125*16 = 18px
+      fontWeight: 400,
+    },
     button: {
       fontSize: remBase(0.75 * 20),
     },
@@ -293,15 +329,19 @@ let muiTheme = createTheme({
           mr: 2,
           textAlign: 'left',
           minWidth: 0,
-          fontWeight: 'normal',
+          // fontWeight: 'normal',
+          fontWeight: 700,
+          fontSize: '1rem', // 1*16 = 16px
           textTransform: 'none',
           color: 'gray',
-          fontSize: 20,
+          // fontSize: 20,
           '&:active': {},
           // FIXME: unsure why `selected` style
           // override doesn't work here.
           '&.Mui-selected': {
-            fontWeight: 'bold',
+            // fontWeight: 'bold',
+            fontWeight: 700,
+          fontSize: '1rem', // 1*16 = 16px
             color: BeanstalkPalette.black,
           },
         }),

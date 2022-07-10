@@ -88,7 +88,7 @@ const FolderMenu: React.FC<
             ...buttonProps.sx,
           }}
         >
-          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+          <Typography variant="h3" fontWeight="fontWeightMedium">
             {buttonContent}
           </Typography>
         </Button>

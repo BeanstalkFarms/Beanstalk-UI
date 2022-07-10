@@ -135,7 +135,7 @@ const MarketplacePage: React.FC = () => {
               <strong>The Pod Market</strong>
             </>
           }
-          description="Trade Pods, the Beanstalk-native debt asset."
+          description="Trade Pods, the Beanstalk-native debt asset"
         />
         {content}
       </Stack>

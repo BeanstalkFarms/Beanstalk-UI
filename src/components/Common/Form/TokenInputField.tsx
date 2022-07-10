@@ -190,12 +190,14 @@ const TokenInput : React.FC<
           * ensures that the Balance section gets flexed to the right side of
           * the input. */}
         <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
-          {quote}
+          <Typography variant="bodySmall">
+            {quote}
+          </Typography>
         </Stack>
         {(balance && !hideBalance) && (
           <>
             <Tooltip title={balanceTooltip}>
-              <Typography sx={{ fontSize: 13.5 }}>
+              <Typography variant="bodySmall">
                 {balanceLabel}: {(
                   balance 
                     ? token
@@ -208,14 +210,10 @@ const TokenInput : React.FC<
               </Typography>
             </Tooltip>
             <Typography
-              variant="body1"
+              variant="bodySmall"
               onClick={isInputDisabled ? undefined : handleMax}
               color={isInputDisabled ? 'text.secondary' : 'primary'}
-              sx={{
-                fontSize: 13.5,
-                fontWeight: 600,
-                cursor: isInputDisabled ? 'inherit' : 'pointer',
-              }}
+              sx={{ cursor: isInputDisabled ? 'inherit' : 'pointer' }}
             >
               (Max)
             </Typography>
