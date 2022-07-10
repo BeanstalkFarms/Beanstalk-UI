@@ -12,22 +12,22 @@ const DestinationField : React.FC<{
 }) => {
   const options = useMemo(() => ([
     {
-      title: 'My Wallet',
-      description: 'Receive your Claimable balance from Beanstalk directly to your wallet.',
+      title: 'Wallet',
+      description: 'Transfer Harvestable Pods to your wallet as Beans.',
       pill: <><AddressIcon size={16} /><Typography>Wallet</Typography></>,
       icon: <AddressIcon size={36} />,
       value: FarmToMode.EXTERNAL,
     },
     {
-      title: 'My Beanstalk Farm Balance',
-      description: 'Receive to an internal balance within Beanstalk. You can use this internal balance within the Beanstalk protocol.',
+      title: 'Farm Balance',
+      description: 'Transfer Harvestable Pods to your internal Beanstalk balance as Beans.',
       pill: <><Typography>🚜</Typography><Typography>Farm Balance</Typography></>,
       icon: '🚜',
       value: FarmToMode.INTERNAL,
     },
     {
-      title: 'Deposit into the Silo',
-      description: 'Harvest your pods & Deposit them into the Silo to earn yield. These beans will become Deposited.',
+      title: 'The Silo ',
+      description: 'Transfer Harvestable Pods to the Silo as Deposited Beans to earn yield.',
       pill: <><Typography>🚜</Typography><Typography>Farm Balance</Typography></>,
       icon: <img src={siloIcon} alt="" width={35} />,
       value: FarmToMode.DEPOSIT,

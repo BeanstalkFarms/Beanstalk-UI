@@ -13,6 +13,8 @@ import beanLusdLogoUrl from 'img/tokens/bean-lusd-logo.svg';
 import stalkLogo from 'img/beanstalk/stalk-icon.svg';
 import seedLogo from 'img/beanstalk/seed-icon.svg';
 import podsLogo from 'img/beanstalk/pod-icon.svg';
+import sproutLogo from 'img/beanstalk/sprout-icon.svg';
+import fertilizedSproutLogo from 'img/beanstalk/fertilized-sprout-icon.svg';
 
 // ERC-20 Token Images
 import crv3LogoUrl from 'img/tokens/crv3-logo.svg';
@@ -93,6 +95,28 @@ export const PODS = new BeanstalkToken(
     name: 'Pods',
     symbol: 'PODS',
     logo: podsLogo,
+  }
+);
+
+export const SPROUTS = new BeanstalkToken(
+  SupportedChainId.MAINNET,
+  '',
+  6,
+  {
+    name: 'Sprouts',
+    symbol: 'SPROUT',
+    logo: sproutLogo,
+  }
+);
+
+export const FERTILIZED_SPROUTS = new BeanstalkToken(
+  SupportedChainId.MAINNET,
+  '',
+  6,
+  {
+    name: 'Fertilized Sprouts',
+    symbol: 'fSPROUT',
+    logo: fertilizedSproutLogo,
   }
 );
 

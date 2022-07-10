@@ -2,7 +2,7 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Stack, Typography } from '@mui/material';
 import { displayBN } from 'util/index';
-import { BEAN } from 'constants/tokens';
+import { SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
 import TokenIcon from '../Common/TokenIcon';
 
@@ -27,16 +27,16 @@ export const MY_FERTILIZER: FertilizerTooltip = {
   reward: (fertilized: BigNumber, unfertilized: BigNumber) => ((
     <Stack width={200}>
       <Stack direction="row" justifyContent="space-between">
-        <Typography>Fertilized:</Typography>
+        <Typography>Fertilized Sprouts:</Typography>
         <Stack direction="row" alignItems="center" gap={0.2}>
-          <TokenIcon token={BEAN[SupportedChainId.MAINNET]} style={{ width: '14px' }} />
+          <TokenIcon token={FERTILIZED_SPROUTS} style={{ width: '14px' }} />
           <Typography>{displayBN(fertilized)}</Typography>
         </Stack>
       </Stack>
       <Stack direction="row" justifyContent="space-between">
-        <Typography>Unfertilized:</Typography>
+        <Typography>Sprouts:</Typography>
         <Stack direction="row" alignItems="center" gap={0.2}>
-          <TokenIcon token={BEAN[SupportedChainId.MAINNET]} style={{ width: '14px' }} />
+          <TokenIcon token={SPROUTS} style={{ width: '14px' }} />
           <Typography>{displayBN(unfertilized)}</Typography>
         </Stack>
       </Stack>
