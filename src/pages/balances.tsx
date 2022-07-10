@@ -1,16 +1,14 @@
 import React from 'react';
-import { Button, Card, Container, Grid, Stack } from '@mui/material';
+import { Card, Container, Grid, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN } from 'util/index';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import useFarmerTotalFertilizer from "hooks/useFarmerTotalFertilizer";
-import { BEAN, PODS, SEEDS, STALK, SPROUTS } from 'constants/tokens';
+import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
+import { PODS, SEEDS, STALK, SPROUTS } from 'constants/tokens';
 import Stat from 'components/Common/Stat';
 import TotalBalanceCard from 'components/Balances/TotalBalancesCard';
 import TokenIcon from 'components/Common/TokenIcon';
-import { SupportedChainId } from 'constants/chains';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import PageHeader from '../components/Common/PageHeader';
 
 const BalancesPage: React.FC = () => {
@@ -67,9 +65,9 @@ const BalancesPage: React.FC = () => {
               </Grid>
               <Grid item xs={12} md={3}>
                 <Stat
-                  title="Unfertilized Beans"
-                  tooltip="This is your total Unfertilized Bean balance. Unfertilized Beans become Fertilized pro rata as the Bean supply increases. For more information on your Fertilizer, head over to the Barn Raise page."
-                  amountIcon={<TokenIcon token={BEAN[SupportedChainId.MAINNET]} />}
+                  title="Sprouts"
+                  tooltip="This is your total Sprout balance. Sprouts represent how many Beans there are left to be earned from your Fertilizer. Sprouts become Fertilized pro rata as the Bean supply increases. For more information on your Fertilizer, head over to the Barn Raise page."
+                  amountIcon={<TokenIcon token={SPROUTS} />}
                   amount={displayBN(fertilizerSummary.unfertilized)}
                   variant="h2"
                   sx={{ fontSize: '24px !important' }}
@@ -77,42 +75,8 @@ const BalancesPage: React.FC = () => {
               </Grid>
             </Grid>
           </Card>
-            <Grid item xs={12} md={3}>
-              <Stat
-                title="Seeds"
-                tooltip="This is your total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be claimed in order to be included in your Stalk balance and start earning interest."
-                amountIcon={<TokenIcon token={SEEDS} />}
-                amount={displayBN(farmerSilo.seeds.total)}
-                variant="h2"
-                sx={{ fontSize: '24px !important' }}
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Stat
-                title="Pods"
-                tooltip="This is your total Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, head over to the Field page."
-                amountIcon={<TokenIcon token={PODS} />}
-                amount={displayBN(farmerField.pods)}
-                variant="h2"
-                sx={{ fontSize: '24px !important' }}
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <Stat
-                title="Sprouts"
-                tooltip="This is your total Sprout balance. Sprouts represent how many Beans there are left to be earned from your Fertilizer. Sprouts become Fertilized pro rata as the Bean supply increases. For more information on your Fertilizer, head over to the Barn Raise page."
-                amountIcon={<TokenIcon token={SPROUTS} />}
-                amount={displayBN(fertilizerSummary.unfertilized)}
-                variant="h2"
-                sx={{ fontSize: '24px !important' }}
-              />
-            </Grid>
-          </Grid>
-
         </Card>
-
       </Stack>
-
     </Container>
   );
 };
