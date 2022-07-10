@@ -151,7 +151,12 @@ export default class TransactionToast {
         break;
       // ethers: UNPREDICTABLE_GAS_LIMIT
       case -32603:
-        msg = error.message.replace('execution reverted: ', '');
+        if (error.data && error.data.message) {
+          const matches = (error.data.message as string).match(/(["'])(?:(?=(\\?))\2.)*?\1/);
+          msg = matches?.[0]?.replace(/^'(.+(?='$))'$/, '$1') || error.data.message;
+        } else {
+          msg = error.message.replace('execution reverted: ', '');
+        }
         break;
       // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature.
       case 4001:

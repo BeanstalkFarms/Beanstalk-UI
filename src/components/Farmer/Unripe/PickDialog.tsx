@@ -162,38 +162,31 @@ const PickBeansDialog: React.FC<{
     const uBeanCRV3 = getChainToken(UNRIPE_BEAN_CRV3);
 
     if (merkles.bean) {
-      const amount = toStringBaseUnitBN(merkles.bean.amount, uBean.decimals);
-      console.debug(`[PickDialog] claimUnripe (bean)`, [
-        uBean.address,
-        amount,
-        merkles.bean.proof,
-      ]);
       data.push(beanstalk.interface.encodeFunctionData("pick", [
         uBean.address,
-        amount,
+        merkles.bean.amount,
         merkles.bean.proof,
         deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
       ]));
       if (deposit) {
         data.push(beanstalk.interface.encodeFunctionData("deposit", [
           uBean.address,
-          amount,
+          merkles.bean.amount,
           FarmFromMode.INTERNAL, // always use internal for deposits
         ]));
       }
     }
     if (merkles.bean3crv) {
-      const amount = toStringBaseUnitBN(merkles.bean3crv.amount, uBeanCRV3.decimals);
       data.push(beanstalk.interface.encodeFunctionData("pick", [
         uBeanCRV3.address,
-        amount,
+        merkles.bean3crv.amount,
         merkles.bean3crv.proof,
         deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
       ]));
       if (deposit) {
         data.push(beanstalk.interface.encodeFunctionData("deposit", [
           uBeanCRV3.address,
-          amount,
+          merkles.bean3crv.amount,
           FarmFromMode.INTERNAL, // always use internal for deposits
         ]));
       }

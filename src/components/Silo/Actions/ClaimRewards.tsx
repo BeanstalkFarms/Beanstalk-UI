@@ -1,20 +1,20 @@
-import { Box, Button, Divider, Stack } from '@mui/material';
+import { Box, Divider, Stack } from '@mui/material';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps, useFormikContext } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useAccount, useSigner } from 'wagmi';
 import BigNumber from 'bignumber.js';
+import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
 import DescriptionButton from '../../Common/DescriptionButton';
-import { ClaimRewardsAction } from '../../../lib/Beanstalk/Farm';
-import { useBeanstalkContract } from '../../../hooks/useContract';
+import { ClaimRewardsAction } from 'lib/Beanstalk/Farm';
+import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
 import RewardItem from '../RewardItem';
-import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
-import stalkIcon from '../../../img/beanstalk/stalk-icon.svg';
-import seedIcon from '../../../img/beanstalk/seed-icon.svg';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import stalkIcon from 'img/beanstalk/stalk-icon.svg';
+import seedIcon from 'img/beanstalk/seed-icon.svg';
 import { AppState } from '../../../state';
 import TransactionToast from '../../Common/TxnToast';
-import { LoadingButton } from '@mui/lab';
 
 export type SendFormValues = {
   to?: string;
@@ -255,6 +255,7 @@ const ClaimRewards: React.FC<{}> = () => {
       }
       else if (values.action === ClaimRewardsAction.ENROOT_AND_MOW) {
         // do something
+        // claimResult = beanstalk.unripe
       }
       else if (values.action === ClaimRewardsAction.CLAIM_ALL) {
         claimResult = beanstalk.farm([

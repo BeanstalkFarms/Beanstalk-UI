@@ -75,7 +75,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           <Stack gap={1}>{poolsContent}</Stack>
         </Stack>
       }
-      popoverContent={<Stack gap={1}> {poolsContent}</Stack>}
+      popoverContent={<Stack gap={1}>{poolsContent}</Stack>}
       {...props}
     />
   );
