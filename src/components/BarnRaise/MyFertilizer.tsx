@@ -17,7 +17,7 @@ import { AppState } from 'state';
 import FertilizerItem from 'components/BarnRaise/FertilizerItem';
 import { ZERO_BN } from 'constants/index';
 import { SupportedChainId } from 'constants/chains';
-import { BEAN } from 'constants/tokens';
+import { BEAN, SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/BarnRaise/FertilizerItemTooltips';
@@ -59,9 +59,9 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Typography variant="body1">
-              Unfertilized Beans&nbsp;
+              Sprouts&nbsp;
               <Tooltip
-                title="The number of Beans to be earned from your Fertilizer."
+                title="The number of Beans left to be earned from your Fertilizer."
                 placement="right"
               >
                 <HelpOutlineIcon
@@ -70,7 +70,7 @@ const MyFertilizer: React.FC = () => {
               </Tooltip>
             </Typography>
             <Stack direction="row" alignItems="center" gap={0.2}>
-              <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
+              <TokenIcon token={SPROUTS} />
               <Typography>
                 {displayBN(fertilizerSummary.unfertilized)}
               </Typography>
@@ -82,9 +82,9 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Typography variant="body1">
-              Fertilized Beans&nbsp;
+              Fertilized Sprouts&nbsp;
               <Tooltip
-                title="The number of Beans earned from your Fertilizer."
+                title="The number of Beans earned from your Fertilizer that can be Rinsed, or redeemed for 1 Bean each. Upon Rinse, they can be transferred to your wallet or Deposited in the Silo."
                 placement="right"
               >
                 <HelpOutlineIcon
@@ -93,7 +93,7 @@ const MyFertilizer: React.FC = () => {
               </Tooltip>
             </Typography>
             <Stack direction="row" alignItems="center" gap={0.2}>
-              <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
+              <TokenIcon token={FERTILIZED_SPROUTS} />
               <Typography>0</Typography>
             </Stack>
           </Stack>
