@@ -155,6 +155,20 @@ export const BEAN = {
       seeds: 2,
     }
   ),
+  [SupportedChainId.PHOENIX]: new ERC20Token(
+    SupportedChainId.PHOENIX,
+    BEAN_ADDRESSES,
+    6,
+    {
+      name: 'Bean',
+      symbol: 'BEAN',
+      logo: beanCircleLogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 2,
+    }
+  ),
 };
 
 // CRV3 + Underlying Stables
@@ -311,6 +325,21 @@ export const BEAN_CRV3_LP = {
       seeds: 4,
     }
   ),
+  [SupportedChainId.PHOENIX]: new ERC20Token(
+    SupportedChainId.PHOENIX,
+    BEAN_CRV3_ADDRESSES,
+    18,
+    {
+      name: 'BEAN:3CRV LP',
+      symbol: 'BEAN:3CRV',
+      logo: beanCrv3LpLogoUrl,
+      isLP: true,
+    },
+    {
+      stalk: 1,
+      seeds: 4,
+    }
+  ),
 };
 
 export const BEAN_LUSD_LP = {
@@ -388,9 +417,9 @@ export const BALANCE_TOKENS : ChainConstant<NativeToken | ERC20Token>[] = [
 // Show these tokens as whitelisted in the Silo.
 export const SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
   BEAN,
-  BEAN_ETH_UNIV2_LP,
   BEAN_CRV3_LP,
-  BEAN_LUSD_LP,
+  // BEAN_ETH_UNIV2_LP,
+  // BEAN_LUSD_LP,
   UNRIPE_BEAN,
   UNRIPE_BEAN_CRV3
 ];

@@ -14,7 +14,8 @@ import { ChainConstant } from 'constants/index';
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useSigner, useContract as useWagmiContract } from 'wagmi';
-import useChainConstant, { getChainConstant } from './useChainConstant';
+import useChainConstant from './useChainConstant';
+import { getChainConstant } from 'util/Chain';
 
 // -------------------------------------------------
 
@@ -119,7 +120,8 @@ export function useContract<T extends Contract = Contract>(
 const BEANSTALK_PRICE_ABIS = {
   [SupportedChainId.MAINNET]: BEANSTALK_PRICE_V0_ABI,
   [SupportedChainId.ROPSTEN]: BEANSTALK_PRICE_ABI,
-  [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_V0_ABI
+  [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_V0_ABI,
+  [SupportedChainId.PHOENIX]: BEANSTALK_PRICE_V0_ABI,
 };
 
 export function useBeanstalkPriceContract() {

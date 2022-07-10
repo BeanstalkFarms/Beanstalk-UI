@@ -9,6 +9,7 @@ import { MinBN } from 'util/Tokens';
 import client from 'util/Client';
 import Token, { ERC20Token } from './Token';
 import { CRV3, DAI, USDC, USDT } from 'constants/tokens';
+import { getChainConstant } from 'util/Chain';
 
 type Reserves = [BigNumber, BigNumber];
 
@@ -83,9 +84,9 @@ export default abstract class Pool {
     }
   ) {
     this.chainId = chainId;
-    this.address = address[chainId].toLowerCase();
-    this.lpToken = lpToken[chainId];
-    this.tokens = tokens.map((token) => token[chainId]);
+    this.address = getChainConstant(address, chainId).toLowerCase();
+    this.lpToken = getChainConstant(lpToken, chainId);
+    this.tokens = tokens.map((token) => getChainConstant(token, chainId));
     this.underlying = tokens.reduce<ERC20Token[]>((prev, token) => {
       // CRV3 pools can access the underlying stables [DAI, USDC, USDT].
       if (token === CRV3) {
