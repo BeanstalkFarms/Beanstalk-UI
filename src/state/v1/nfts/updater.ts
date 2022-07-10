@@ -44,6 +44,7 @@ export default function NFTUpdater() {
       dispatch(setClaimed(cn));
       // listenForNFTTransfers(loadAccountNFTs); // eslint-disable-line
     }
+
     async function loadAccountNFTs() {
       const {
         genesis,
@@ -57,6 +58,7 @@ export default function NFTUpdater() {
       const data = await queryAccountNFTStats(account.toLowerCase());
       dispatch(setNFTs(data));
     }
+
     async function loadNftLeaderboard() {
       const n = await queryWinterNFTs();
       dispatch(setNFTs(n));
