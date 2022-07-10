@@ -49,7 +49,7 @@ const SiloActions : React.FC<{
           {tab === 0 ? (
             <Deposit
               pool={props.pool}
-              siloToken={props.token}
+              token={props.token}
             />
           ) : null}
           {tab === 1 ? (

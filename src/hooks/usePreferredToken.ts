@@ -5,8 +5,10 @@ import { AppState } from 'state';
 import Token from 'classes/Token';
 import useGetChainToken from './useGetChainToken';
 
+type TokenOrTokenMap = Token | ChainConstant<Token>;
+
 export type PreferredToken = {
-  token: Token | ChainConstant<Token>;
+  token: TokenOrTokenMap;
   minimum?: BigNumber;
 }
 
@@ -28,14 +30,14 @@ type FallbackMode = 'use-best';
  * @returns Token
  */
 export default function usePreferredToken(
-  list: PreferredToken[],
+  list: (PreferredToken)[],
   fallbackMode : FallbackMode = 'use-best'
 ) {
   const get = useGetChainToken();
   const balances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
   const index = list.findIndex((pt) => {
     const tok = get(pt.token);
-    const min = pt.minimum || new BigNumber(tok.displayDecimals * 100);
+    const min = pt.minimum || new BigNumber(tok.displayDecimals / 100); // default: 2 decimals => min 0.02
     const bal = balances[tok.address];
     return bal?.total?.gte(min) || false;
   });
