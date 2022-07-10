@@ -109,7 +109,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           />
         ))}
       </Stack>
-      <Typography align="center" color={BeanstalkPalette.lightishGrey} sx={{ fontSize: '14px' }}>The Sunrise advances Beanstalk to the next season for a Bean reward. Beanstalk will only accept the first Sunrise call every season, so this function will often fail.</Typography>
+      <Typography align="center" color={BeanstalkPalette.lightishGrey} sx={{ fontSize: '14px' }}>Sunrise advances Beanstalk to the next Season and Beanstalk pays a Bean reward to the sender of the first successful Sunrise call at the top of the hour. Bots often call Sunrise, so this function will often fail.</Typography>
       <SunriseButton />
     </Stack>
   );

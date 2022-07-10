@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
-import { BEAN, SEEDS, STALK, USDC } from 'constants/tokens';
+import { BEAN, SEEDS, STALK, USDC, SPROUTS } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction, SiloRewardsAction, SiloTransitAction } from 'util/Actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
@@ -121,7 +121,7 @@ const TxnStep : React.FC<{
         <IconRow>
           <img src={FERTILIZER_ICONS.active} alt="FERT" style={{ height: '100%' }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
-          <TokenIcon token={BEAN[SupportedChainId.MAINNET]} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={SPROUTS} style={{ height: '100%', marginTop: 0, }} />
         </IconRow>
       );
       break;
