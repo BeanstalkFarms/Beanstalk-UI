@@ -48,9 +48,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const startIcon = isTiny ? undefined : (
     <BeanProgressIcon size={25} enabled={isLoading} variant="indeterminate" />
   );
-  const poolsContent = Object.values(pools).map((pool) => (
+  const poolsContent = Object.values(pools).map((pool, index) => (
     <PoolCard
-      key={pool.address}
+      key={`${pool.address}-${index}`}
       pool={pool}
       poolState={beanPools[pool.address]}
       ButtonProps={{

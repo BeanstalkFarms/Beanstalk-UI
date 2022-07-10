@@ -26,7 +26,7 @@ const PoolCard: React.FC<{
         gap={2}
       >
         <Stack direction="row" spacing={0.25} sx={{ fontSize: 24 }}>
-          {pool.tokens.map(token => (
+          {pool.tokens.map((token) => (
             <TokenIcon key={token.address} token={token} />
           ))}
         </Stack>
