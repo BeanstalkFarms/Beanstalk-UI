@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Card, CircularProgress, Container, Divider, Stack, Tab, Tabs, Typography, } from '@mui/material';
+import { Button, Card, Container, Divider, Stack, Tab, Tabs, Typography, } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useAccount } from 'wagmi';
 import fetch from 'node-fetch';
@@ -24,10 +24,12 @@ type Nft = {
 const NFTPage: React.FC = () => {
   const { data: account } = useAccount();
 
-  // local state
-  const [selectedNFT, setSelectedNFT] = useState<Nft | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  // component state
   const [tab, setTab] = useState(0);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  // NFT state
+  const [selectedNFT, setSelectedNFT] = useState<Nft | null>(null);
   const [genesisNFTs, setGenesisNFTs] = useState<Nft[] | null>(null);
   const [winterNFTs, setWinterNFTs] = useState<Nft[] | null>(null);
 
@@ -64,7 +66,6 @@ const NFTPage: React.FC = () => {
         const nftHashes = response.ownedNfts.map((nft: any) => nft.metadata.image.replace('ipfs://', ''));
         for (let i = 0; i < accountNFTs.length; i += 1) {
           if (nftHashes.includes(accountNFTs[i].imageIpfsHash)) {
-            // cn.push(accountNFTs[i]);
             nfts.push({ ...accountNFTs[i], claimed: ClaimStatus.CLAIMED });
           } else {
             nfts.push({ ...accountNFTs[i], claimed: ClaimStatus.UNCLAIMED });
