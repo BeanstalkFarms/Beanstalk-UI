@@ -3,7 +3,7 @@ import {
   experimental_sx as sx,
   responsiveFontSizes
 } from '@mui/material/styles';
-import React from "react";
+import React from 'react';
 
 // --------------------------------------------------
 
@@ -88,6 +88,30 @@ export const BeanstalkPalette = {
   washedGreen: '#E1F8E6',
 };
 
+export const IconSize = {
+  xs: '14px',
+  small: '20px',
+  medium: '25px',
+  large: '50px'
+};
+
+export const FontSize = {
+  '3xl': '2rem', // 2*16 = 32px
+  '2xl': '1.5rem', // 1.5*16 = 24px,
+  '1xl': '1.25rem', // 1.25*16 = 20px,
+  lg: '1.125rem', // 1.125*16 = 18px,
+  base: '1rem', // 1*16 = 16px,
+  sm: '0.875rem', // 0.875*16 = 14px,
+  xs: '0.75rem', // 0.75*16 = 12px
+};
+
+export const FontWeight = {
+  normal: 400,
+  medium: 450,
+  semiBold: 600,
+  bold: 700
+};
+
 // FIXME: changes to createTheme don't hot reload.
 let muiTheme = createTheme({
   breakpoints: {
@@ -151,58 +175,58 @@ let muiTheme = createTheme({
     fontSize:           16,
 
     // FONT WEIGHTS
-    fontWeightLight:    400, // normal
-    fontWeightRegular:  450, // medium
-    fontWeightMedium:   600, // semi-bold
-    fontWeightBold:     700, // bold
+    fontWeightLight:      FontWeight.normal,
+    fontWeightRegular:    FontWeight.medium,
+    fontWeightMedium:   FontWeight.semiBold,
+    fontWeightBold:         FontWeight.bold,
 
     // page headers
     h1: {
-      fontSize: '2rem', // 32px
-      fontWeight: 700,
+      fontSize: FontSize['3xl'], // 32px
+      fontWeight: FontWeight.bold,
     },
     // silo deposit graph
     h2: {
-      fontSize: '1.5rem', // 1.5*16 = 24px
-      fontWeight: 700,
+      fontSize: FontSize['2xl'], // 24px
+      fontWeight: FontWeight.bold,
     },
     // nav button text
     h3: {
-      fontSize: '1.25rem', // 1.25*16 = 20px
-      fontWeight: 600,
+      fontSize: FontSize['1xl'], // 20px
+      fontWeight: FontWeight.semiBold,
     },
     // component headers / tabs
     h4: {
-      fontSize: '1rem', // 1*16 = 16px
-      fontWeight: 600,
+      fontSize: FontSize.base, // 16px
+      fontWeight: FontWeight.semiBold,
     },
     body1: {
-      fontSize: '1rem', // 1*16 = 16px
-      fontWeight: 400,
+      fontSize: FontSize.base, // 16px
+      fontWeight: FontWeight.normal,
       lineHeight: '1.28rem',
     },
     // all module body text
     bodySmall: {
       fontFamily: 'Futura PT',
-      fontSize: '0.875rem', // 0.875*16 = 14px
-      fontWeight: 450
+      fontSize: FontSize.sm, // 14px
+      fontWeight: FontWeight.medium
     },
     // nav labels, nav button labels, token labels (module)
     bodyMedium: {
       fontFamily: 'Futura PT',
-      fontSize: '1.25rem', // 1.25*16 = 20px
-      fontWeight: 450
+      fontSize: FontSize['1xl'], // 20px
+      fontWeight: FontWeight.medium
     },
     // token inputs (module)
     bodyLarge: {
       fontFamily: 'Futura PT',
-      fontSize: '1.5rem', // 1.5*16 = 24px
-      fontWeight: 450
+      fontSize: FontSize['2xl'], // 24px
+      fontWeight: FontWeight.medium
     },
     // page subtitles
     subtitle1: {
-      fontSize: '1.125rem', // 1.125*16 = 18px
-      fontWeight: 400,
+      fontSize: FontSize.lg, // 18px
+      fontWeight: FontWeight.normal,
     },
     button: {
       fontSize: remBase(0.75 * 20),

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Button, ButtonProps, InputAdornment } from '@mui/material';
+import { Box, Button, ButtonProps, InputAdornment, Stack, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
+import { IconSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
   pill: {
@@ -17,14 +18,13 @@ const useStyles = makeStyles(() => ({
     }
   },
   tokenIcon: {
-    minWidth: '18px',
-    width: '18px',
-    height: '18px',
-    marginRight: '5px'
+    minWidth: IconSize.small,
+    width: IconSize.small,
+    height: IconSize.small,
   },
   tokenName: {
     color: '#3B3B3B',
-    fontSize: '20px'
+    // fontSize: '20px'
   },
   tokenLogo: {
     width: 40,
@@ -54,17 +54,19 @@ const TokenAdornment : React.FC<
         onClick={onClick}
         {...props}
       >
-        {token.logo ? <img src={token.logo} alt="" className={classes.tokenIcon} /> : null}
-        <Box className={classes.tokenName}>{token.symbol}</Box>
-        {onClick && (
-          <KeyboardArrowDownIcon
-            sx={{
-              marginLeft: 0.5,
-              fontSize: 18,
-              color: 'rgba(0,0,0,0.87)'
-            }}
-          />
-        )}
+        <Stack direction="row" alignItems="center" gap={0.5}>
+          {token.logo ? <img src={token.logo} alt="" className={classes.tokenIcon} /> : null}
+          <Box className={classes.tokenName}><Typography variant="bodyMedium" fontWeight="fontWeightRegular">{token.symbol}</Typography></Box>
+          {onClick && (
+            <KeyboardArrowDownIcon
+              sx={{
+                // marginLeft: 0.5,
+                fontSize: 18,
+                color: 'rgba(0,0,0,0.87)'
+              }}
+            />
+          )}
+        </Stack>
       </Button>
     </InputAdornment>
   );

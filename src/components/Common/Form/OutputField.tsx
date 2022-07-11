@@ -19,6 +19,7 @@ const OutputField : React.FC<{
         px: 2,
         py: 2,
         color: isNegative ? 'hsla(12, 63%, 52%, 1)' : 'inherit',
+        height: '70px',
         ...sx
       }}
       direction="row"

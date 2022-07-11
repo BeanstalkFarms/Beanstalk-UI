@@ -3,6 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Stack, D
 import CloseIcon from '@mui/icons-material/Close';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { styled } from '@mui/styles';
+import { IconSize } from '../../App/muiTheme';
 
 export const StyledDialog = styled(Dialog)(() => ({
   '& .MuiDialogContent-root': {},
@@ -40,7 +41,7 @@ export const StyledDialogTitle : React.FC<{
             color: (theme) => theme.palette.grey[900],
           }}
         >
-          <ChevronLeftIcon sx={{ fontSize: 20 }} />
+          <ChevronLeftIcon sx={{ fontSize: IconSize.small }} />
         </IconButton>
       ) : null}
       <Typography variant="h3">
@@ -54,7 +55,7 @@ export const StyledDialogTitle : React.FC<{
             color: (theme) => theme.palette.grey[900],
           }}
         >
-          <CloseIcon sx={{ fontSize: 20 }} />
+          <CloseIcon sx={{ fontSize: IconSize.small }} />
         </IconButton>
       ) : null}
     </Stack>

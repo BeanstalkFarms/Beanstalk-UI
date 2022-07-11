@@ -13,14 +13,14 @@ const DestinationField : React.FC<{
     {
       title: 'Farm Balance',
       description: 'Transfer assets to your internal Beanstalk balance to be used in other transactions.',
-      pill: <><Typography>🚜</Typography><Typography>Farm Balance</Typography></>,
+      pill: <Typography variant="bodySmall">🚜 Farm Balance</Typography>,
       icon: '🚜',
       value: FarmToMode.INTERNAL,
     },
     {
       title: 'Wallet',
       description: 'Transfer assets to your wallet.',
-      pill: <><AddressIcon size={16} /><Typography>Wallet</Typography></>,
+      pill: <><AddressIcon size={14} /><Typography variant="bodySmall">Wallet</Typography></>,
       icon: <AddressIcon size={36} />,
       value: FarmToMode.EXTERNAL,
     }]

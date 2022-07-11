@@ -8,6 +8,7 @@ import { displayBN } from 'util/index';
 import { AddressMap, ZERO_BN } from 'constants/index';
 import BigNumber from 'bignumber.js';
 import { FarmerBalances } from 'state/farmer/balances';
+import TokenIcon from "../TokenIcon";
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {

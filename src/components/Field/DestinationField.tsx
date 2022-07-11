@@ -14,21 +14,21 @@ const DestinationField : React.FC<{
     {
       title: 'Wallet',
       description: 'Transfer Harvestable Pods to your wallet as Beans.',
-      pill: <><AddressIcon size={16} /><Typography>Wallet</Typography></>,
+      pill: <><AddressIcon size={14} /><Typography variant="bodySmall">Wallet</Typography></>,
       icon: <AddressIcon size={36} />,
       value: FarmToMode.EXTERNAL,
     },
     {
       title: 'Farm Balance',
       description: 'Transfer Harvestable Pods to your internal Beanstalk balance as Beans.',
-      pill: <><Typography>🚜</Typography><Typography>Farm Balance</Typography></>,
+      pill: <Typography variant="bodySmall">🚜 Farm Balance</Typography>,
       icon: '🚜',
       value: FarmToMode.INTERNAL,
     },
     {
       title: 'The Silo ',
       description: 'Transfer Harvestable Pods to the Silo as Deposited Beans to earn yield.',
-      pill: <><Typography>🚜</Typography><Typography>Farm Balance</Typography></>,
+      pill: <Typography variant="bodySmall">🚜 The Silo</Typography>,
       icon: <img src={siloIcon} alt="" width={35} />,
       value: FarmToMode.DEPOSIT,
     }]
