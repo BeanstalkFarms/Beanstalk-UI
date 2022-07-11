@@ -60,7 +60,6 @@ const DescriptionButton : React.FC<
               </Typography>
             )}
           </Stack>
-
           <Typography variant="body2" color="gray">{description}</Typography>
         </Box>
       </Stack>

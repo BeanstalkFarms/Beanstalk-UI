@@ -193,12 +193,10 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
   return (
     <>
       <Card sx={{ p: 2, ...sx }}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1.5 }}>
-          <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
-            <Tab label="My Orders" />
-            <Tab label="My Listings" />
-          </Tabs>
-        </Stack>
+        <Tabs value={tab} onChange={handleChangeTab}>
+          <Tab label="My Orders" />
+          <Tab label="My Listings" />
+        </Tabs>
         {tab === 0 && (
           <PlotTable
             columns={myOrdersColumns}

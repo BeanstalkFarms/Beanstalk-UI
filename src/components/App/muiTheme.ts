@@ -276,6 +276,7 @@ let muiTheme = createTheme({
         }),
         sizeLarge: sx({
           py: 1.5,
+          height: '60px'
         }),
         disabled: sx({
           pointerEvents: 'auto',
