@@ -116,7 +116,7 @@ const TokenSelectDialog: React.FC<{
       <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
         {mode === TokenSelectMode.MULTI ? 'Select tokens' : 'Select token'}
       </StyledDialogTitle>
-      <StyledDialogContent sx={{ padding: 2 }}>
+      <StyledDialogContent sx={{ padding: 1 }}>
         <List
           sx={{
             padding: 0,
@@ -155,9 +155,7 @@ const TokenSelectDialog: React.FC<{
                 </ListItemButton>
               </ListItem>
             )) : null}
-
           </Stack>
-
         </List>
       </StyledDialogContent>
       {mode === TokenSelectMode.MULTI && (
