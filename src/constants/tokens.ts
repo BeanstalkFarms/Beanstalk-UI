@@ -373,6 +373,10 @@ export const UNRIPE_BEAN = {
       name: 'Unripe Bean',
       symbol: 'urBEAN',
       logo: unripeBeanLogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 2,
     }
   ),
 };
@@ -386,6 +390,10 @@ export const UNRIPE_BEAN_CRV3 = {
       name: 'Unripe BEAN:3CRV LP',
       symbol: 'urBEAN3CRV',
       logo: unripeBeanCrv3LogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 4,
     }
   ),
 };

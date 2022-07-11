@@ -23,6 +23,7 @@ const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
 const BEANSTALK_REPLANTED_ABI = require('constants/abi/Beanstalk/BeanstalkReplanted.json');
 const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
 const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0.json');
+const BEANSTALK_PRICE_REPLANTED_ABI = require('constants/abi/Beanstalk/BeanstalkPriceReplanted.json');
 const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
 const ERC20_ABI = require('constants/abi/ERC20.json');
 
@@ -121,7 +122,7 @@ const BEANSTALK_PRICE_ABIS = {
   [SupportedChainId.MAINNET]: BEANSTALK_PRICE_V0_ABI,
   [SupportedChainId.ROPSTEN]: BEANSTALK_PRICE_ABI,
   [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_V0_ABI,
-  [SupportedChainId.PHOENIX]: BEANSTALK_PRICE_V0_ABI,
+  [SupportedChainId.PHOENIX]: BEANSTALK_PRICE_REPLANTED_ABI,
 };
 
 export function useBeanstalkPriceContract() {

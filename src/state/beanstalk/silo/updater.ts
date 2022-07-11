@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK,  REPLANTED_CHAINS,  SupportedChainId,  TokenMap, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/Ledger';
-import { tokenResult } from 'util/Tokens';
+import { tokenResult, toStringBaseUnitBN } from 'util/Tokens';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';
@@ -86,12 +86,23 @@ export const useBeanstalkSilo = () => {
         Promise.all(
           Object.keys(WHITELIST).map((addr) => (
             Promise.all([
+              // FIXME: duplicate tokenResult optimization
               beanstalk.getTotalDeposited(addr).then(tokenResult(WHITELIST[addr])),
-              beanstalk.getTotalWithdrawn(addr).then(tokenResult(WHITELIST[addr]))
+              beanstalk.getTotalWithdrawn(addr).then(tokenResult(WHITELIST[addr])),
+              IS_REPLANTED ? (
+                // BEAN will always have a fixed BDV of 1,
+                // skip to save a network request
+                WHITELIST[addr] === SiloTokens.Bean 
+                  ? new BigNumber(1)
+                  : (beanstalk as unknown as BeanstalkReplanted)
+                      .bdv(addr, toStringBaseUnitBN(1, WHITELIST[addr].decimals))
+                      .then(tokenResult(BEAN))
+              ) : Promise.resolve(ZERO_BN)
             ]).then((data) => ({
               token: addr.toLowerCase(),
               deposited: data[0],
               withdrawn: data[1],
+              bdvPerToken: data[2],
             }))
           ))
         ),
@@ -123,6 +134,7 @@ export const useBeanstalkSilo = () => {
         balances: {
           ...(IS_REPLANTED ? {} : {
             [SiloTokens.Bean.address]: {
+              bdvPerToken: ZERO_BN,
               deposited: {
                 amount:  depositedBeansTotal,
               },
@@ -131,6 +143,7 @@ export const useBeanstalkSilo = () => {
               }
             },
             [SiloTokens.BeanEthLP.address]: {
+              bdvPerToken: ZERO_BN,
               deposited: {
                 amount:  depositedLpTotal,
               },
@@ -139,8 +152,11 @@ export const useBeanstalkSilo = () => {
               }
             },
           }),
+          // Replanted Beanstalk contains data about
+          // all whitelisted silo tokens in `poolBalancesTotal`
           ...poolBalancesTotal.reduce((agg, curr) => {
             agg[curr.token] = {
+              bdvPerToken: curr.bdvPerToken,
               deposited: {
                 amount: curr.deposited,
               },
