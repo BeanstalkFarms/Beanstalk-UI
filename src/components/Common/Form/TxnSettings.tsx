@@ -58,7 +58,7 @@ const TxnSettings : React.FC<{
         }}
       >
         <Stack gap={1}>
-          <Typography fontWeight="bold">Transaction Settings</Typography>
+          <Typography variant="h4" fontWeight="fontWeightBold">Transaction Settings</Typography>
           <Box>
             {children || <Typography>No settings for this transaction.</Typography>}
           </Box>

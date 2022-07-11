@@ -15,7 +15,7 @@ const SettingInput : React.FC<{
   <Field name={name}>
     {(fieldProps: FieldProps) => (
       <Stack direction="row" gap={5} alignItems="center" justifyContent="space-between">
-        <Typography color="text.secondary">{label}</Typography>
+        <Typography variant="body1">{label}</Typography>
         <Box>
           <TextField
             size="small"
