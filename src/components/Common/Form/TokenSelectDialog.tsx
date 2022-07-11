@@ -114,7 +114,7 @@ const TokenSelectDialog: React.FC<{
       TransitionProps={{}}
     >
       <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
-        {mode === TokenSelectMode.MULTI ? 'Select tokens' : 'Select token'}
+        {mode === TokenSelectMode.MULTI ? 'Select Tokens' : 'Select Token'}
       </StyledDialogTitle>
       <StyledDialogContent sx={{ padding: 1, pb: 2 }}>
         <List>
