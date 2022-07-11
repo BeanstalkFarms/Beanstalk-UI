@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stack, Typography, Card } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { BeanstalkPalette } from '../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 import { displayBN } from '../../util';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
 import { PlotMap } from '../../state/farmer/field';
@@ -36,12 +36,12 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
             >
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Stack direction="row" gap={0.4}>
-                  <Typography sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(index).minus(harvestableIndex))}</Typography>
-                  <Typography sx={{ fontSize: '18px' }}>in Line</Typography>
+                  <Typography variant="bodyLarge">{displayBN(new BigNumber(index).minus(harvestableIndex))}</Typography>
+                  <Typography variant="bodyLarge">in Line</Typography>
                 </Stack>
                 <Stack direction="row" gap={0.3} alignItems="center">
-                  <Typography sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(plots[index]))}</Typography>
-                  <img src={podIcon} alt="" height="18px" />
+                  <img src={podIcon} alt="" height={IconSize.small} />
+                  <Typography variant="bodyMedium">{displayBN(new BigNumber(plots[index]))}</Typography>
                 </Stack>
               </Stack>
             </Card>
@@ -50,6 +50,6 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
       </Stack>
     </>
   );
-}
+};
 
 export default PlotSelect;
