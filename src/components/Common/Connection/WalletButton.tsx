@@ -183,7 +183,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         {...props}
         onClick={toggleMenuAnchor}
       >
-        <Typography variant="bodyMedium" fontWeight="fontWeightRegular">
+        <Typography variant="bodyMedium">
           {trimAddress(getAccount(account.address), !isMedium)}
         </Typography>
       </Button>

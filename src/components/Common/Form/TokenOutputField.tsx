@@ -34,7 +34,7 @@ const TokenOutputField : React.FC<{
   return (
     <OutputField isNegative={isNegative}>
       {!isLoading ? (
-        <Typography display="inline" variant="bodyLarge" fontWeight="fontWeightRegular">
+        <Typography display="inline" variant="bodyLarge">
           {prefix}{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
           {value && (
             <>&nbsp;&nbsp;<Typography display="inline" variant="bodySmall">(~{displayUSD(value)})</Typography></>

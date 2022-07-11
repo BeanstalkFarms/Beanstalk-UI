@@ -153,7 +153,7 @@ const HarvestForm : React.FC<
               label="Deposit as"
               onClick={showTokenSelect}>
               <TokenIcon token={values.tokenOut} />
-              <Typography variant="bodySmall" fontWeight="fontWeightRegular">{values.tokenOut.name}</Typography>
+              <Typography variant="bodySmall">{values.tokenOut.name}</Typography>
             </PillRow>
             <TokenSelectDialog
               open={isTokenSelectVisible}
