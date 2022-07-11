@@ -356,6 +356,13 @@ let muiTheme = createTheme({
         }),
       }
     },
+    MuiList: {
+      styleOverrides: {
+        root: sx({
+          p: 0
+        })
+      }
+    },
     MuiListItemText: {
       styleOverrides: {
         root: {
