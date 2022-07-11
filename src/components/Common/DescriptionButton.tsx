@@ -20,7 +20,7 @@ const DescriptionButton : React.FC<
   forceHover,
   icon,
   sx,
-  ...props 
+  ...props
 }) => {
   const theme = useTheme();
   return (
@@ -43,25 +43,23 @@ const DescriptionButton : React.FC<
         }
       }}
     >
-      <Stack direction="row" gap={GAP} alignItems="center">
-        {icon && (
-          <Box width={36}>
-            <Typography sx={{ fontSize: 36 }}>
-              {icon}
+      <Stack>
+        <Stack direction="row" gap={0.5} alignItems="center">
+          {icon && (
+            <Typography variant="bodyMedium" alignItems="center">
+              <Stack alignItems="center">
+                {icon}
+              </Stack>
             </Typography>
-          </Box>
-        )}
-        <Box>
-          <Stack direction="row" gap={0.3}>
-            <Typography variant="h2">{title}</Typography>
-            {recommended && (
-              <Typography variant="h2" sx={{ color: BeanstalkPalette.logoGreen }}>
-                (Recommended)
-              </Typography>
-            )}
-          </Stack>
-          <Typography variant="body2" color="gray">{description}</Typography>
-        </Box>
+          )}
+          <Typography variant="bodyMedium">{title}</Typography>
+          {recommended && (
+            <Typography variant="bodyMedium" fontWeight="fontWeightBold" sx={{ color: BeanstalkPalette.logoGreen }}>
+              (Recommended)
+            </Typography>
+          )}
+        </Stack>
+        <Typography variant="bodySmall">{description}</Typography>
       </Stack>
     </Button>
   );

@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
+import siloIcon from 'img/beanstalk/silo-icon.svg';
 import AddressIcon from '../Common/AddressIcon';
 import PillSelectField from '../Common/Form/PillSelectField';
-import siloIcon from 'img/beanstalk/silo-icon.svg';
+import { IconSize } from '../App/muiTheme';
 
 const DestinationField : React.FC<{
   name: string;
@@ -15,7 +16,7 @@ const DestinationField : React.FC<{
       title: 'Wallet',
       description: 'Transfer Harvestable Pods to your wallet as Beans.',
       pill: <><AddressIcon size={14} /><Typography variant="bodySmall">Wallet</Typography></>,
-      icon: <AddressIcon size={36} />,
+      icon: <AddressIcon size={IconSize.small} width={IconSize.small} height={IconSize.small} />,
       value: FarmToMode.EXTERNAL,
     },
     {
@@ -29,7 +30,7 @@ const DestinationField : React.FC<{
       title: 'The Silo ',
       description: 'Transfer Harvestable Pods to the Silo as Deposited Beans to earn yield.',
       pill: <Typography variant="bodySmall">🚜 The Silo</Typography>,
-      icon: <img src={siloIcon} alt="" width={35} />,
+      icon: <img src={siloIcon} alt="" height={IconSize.small} />,
       value: FarmToMode.DEPOSIT,
     }]
   ), []);
