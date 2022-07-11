@@ -15,6 +15,7 @@ import { AppState } from '../../../state';
 import { displayBN } from '../../../util';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import { ZERO_BN } from '../../../constants';
+import PlotSelect from "../../Common/PlotSelect";
 
 export type SellListingFormValues = {
   option: number | null;
@@ -95,29 +96,15 @@ const SellListingDialog: React.FC<{
           <StyledDialogTitle sx={{ pb: 0.5 }} onClose={handleDialogClose}>Select Plot to List</StyledDialogTitle>
           <StyledDialogContent>
             <Stack gap={1}>
-              {Object.keys(farmerField?.plots).map((index) => (
-                <Card
-                  sx={{
-                    p: 2,
-                    '&:hover': {
-                      backgroundColor: BeanstalkPalette.hoverBlue,
-                      cursor: 'pointer'
-                    }
-                  }}
-                  onClick={() => handleSetPlot(index)}
-                >
-                  <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Stack direction="row" gap={0.4}>
-                      <Typography sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(index).minus(beanstalkField?.harvestableIndex))}</Typography>
-                      <Typography sx={{ fontSize: '18px' }}>in Line</Typography>
-                    </Stack>
-                    <Stack direction="row" gap={0.3} alignItems="center">
-                      <Typography sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(farmerField.plots[index]))}</Typography>
-                      <img src={podIcon} alt="" height="18px" />
-                    </Stack>
-                  </Stack>
-                </Card>
-              ))}
+              {Object.keys(farmerField?.plots).length > 0 ? (
+                <PlotSelect
+                  handlePlotSelect={handleSetPlot}
+                  plots={farmerField?.plots}
+                  harvestableIndex={beanstalkField?.harvestableIndex}
+                />
+              ) : (
+                <Typography sx={{ textAlign: 'center', pt: 1, pb: 4 }}>You don&apos;t have any plots to send!</Typography>
+              )}
             </Stack>
           </StyledDialogContent>
         </Box>
