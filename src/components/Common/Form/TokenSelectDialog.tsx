@@ -122,15 +122,19 @@ const TokenSelectDialog: React.FC<{
             padding: 0,
             '& .MuiListItemButton-root': {
               borderRadius: 1,
-              px: 1
+              px: 1,
+              py: 0.5
             },
             '& .Mui-selected': {
               backgroundColor: BeanstalkPalette.washedGreen,
               borderRadius: 1,
             },
+            '& .MuiButtonBase-root': {
+              height: '60px'
+            },
           }}
         >
-          <Stack gap={1}>
+          <Stack gap={0.5}>
             {tokenList ? tokenList.map((_token) => (
               <ListItem
                 key={_token.address}

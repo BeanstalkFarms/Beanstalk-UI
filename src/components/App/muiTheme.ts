@@ -207,7 +207,7 @@ let muiTheme = createTheme({
     body1: {
       fontSize: FontSize.base, // 16px
       fontWeight: FontWeight.normal,
-      lineHeight: '1.28rem',
+      lineHeight: '1.25rem',
     },
     // all module body text
     bodySmall: {
@@ -219,7 +219,8 @@ let muiTheme = createTheme({
     bodyMedium: {
       fontFamily: 'Futura PT',
       fontSize: FontSize['1xl'], // 20px
-      fontWeight: FontWeight.medium
+      fontWeight: FontWeight.medium,
+      lineHeight: '1.875rem'
     },
     // token inputs (module)
     bodyLarge: {
@@ -341,10 +342,12 @@ let muiTheme = createTheme({
         root: {
           fontSize: '1.5rem',
           '& .MuiListItemText-primary': {
-            fontSize: FontSize['1xl']
+            fontSize: FontSize['1xl'],
+            lineHeight: '1.875rem'
           },
           '& .MuiListItemText-secondary': {
             fontSize: FontSize.base,
+            lineHeight: '1.25rem',
             color: BeanstalkPalette.lightishGrey
           },
         },
