@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
 
 export enum TokenSelectMode { MULTI, SINGLE }
 
-const TokenSelectDialog : React.FC<{
+const TokenSelectDialog: React.FC<{
   /** Show the dialog. */
   open: boolean;
   /** Close the dialog. */
@@ -48,13 +48,13 @@ const TokenSelectDialog : React.FC<{
   /** Single or multi-select */
   mode?: TokenSelectMode;
 }> = React.memo(({
-  open,
-  handleClose,
-  selected,
-  handleSubmit,
-  balances,
-  tokenList,
-  mode = TokenSelectMode.MULTI,
+ open,
+ handleClose,
+ selected,
+ handleSubmit,
+ balances,
+ tokenList,
+ mode = TokenSelectMode.MULTI,
 }) => {
   const classes = useStyles();
   const [newSelection, setNewSelection] = useState<Set<Token>>(new Set());
@@ -130,30 +130,34 @@ const TokenSelectDialog : React.FC<{
             },
           }}
         >
-          {tokenList ? tokenList.map((_token) => (
-            <ListItem
-              key={_token.address}
-              color="primary"
-              selected={newSelection.has(_token)}
-              disablePadding
-              secondaryAction={balances ? (
-                <Typography variant="bodyLarge">
-                  {displayBN(balances?.[_token.address]?.total || ZERO_BN)}
-                </Typography>
-              ) : null}
-              onClick={onClickItem(_token)}
-            >
-              <ListItemButton disableRipple>
-                <ListItemIcon sx={{ pr: 1 }}>
-                  <img src={_token.logo} alt="" className={classes.tokenLogo} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={_token.symbol}
-                  secondary={_token.name}
-                />
-              </ListItemButton>
-            </ListItem>
-          )) : null}
+          <Stack gap={1}>
+            {tokenList ? tokenList.map((_token) => (
+              <ListItem
+                key={_token.address}
+                color="primary"
+                selected={newSelection.has(_token)}
+                disablePadding
+                secondaryAction={balances ? (
+                  <Typography variant="bodyLarge">
+                    {displayBN(balances?.[_token.address]?.total || ZERO_BN)}
+                  </Typography>
+                ) : null}
+                onClick={onClickItem(_token)}
+              >
+                <ListItemButton disableRipple>
+                  <ListItemIcon sx={{ pr: 1 }}>
+                    <img src={_token.logo} alt="" className={classes.tokenLogo} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={_token.symbol}
+                    secondary={_token.name}
+                  />
+                </ListItemButton>
+              </ListItem>
+            )) : null}
+
+          </Stack>
+
         </List>
       </StyledDialogContent>
       {mode === TokenSelectMode.MULTI && (
@@ -166,7 +170,7 @@ const TokenSelectDialog : React.FC<{
             color="primary"
             size="large"
           >
-            {newSelection.size === 0 
+            {newSelection.size === 0
               ? 'Select Token to Continue'
               : `Select ${newSelection.size} Token${newSelection.size === 1 ? '' : 's'}`}
           </Button>
