@@ -8,7 +8,8 @@ import { displayBN } from 'util/index';
 import { AddressMap, ZERO_BN } from 'constants/index';
 import BigNumber from 'bignumber.js';
 import { FarmerBalances } from 'state/farmer/balances';
-import TokenIcon from "../TokenIcon";
+import TokenIcon from '../TokenIcon';
+import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -22,8 +23,8 @@ const useStyles = makeStyles(() => ({
     fontSize: '20px'
   },
   tokenLogo: {
-    width: 40,
-    height: 40
+    width: IconSize.large,
+    height: IconSize.large,
   }
 }));
 
@@ -106,7 +107,7 @@ const TokenSelectDialog : React.FC<{
       open={open}
       PaperProps={{
         sx: {
-          minWidth: '350px'
+          minWidth: '400px'
         }
       }}
       transitionDuration={0}
@@ -115,8 +116,20 @@ const TokenSelectDialog : React.FC<{
       <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
         {mode === TokenSelectMode.MULTI ? 'Select tokens' : 'Select token'}
       </StyledDialogTitle>
-      <StyledDialogContent sx={{ padding: 0 }}>
-        <List sx={{ padding: 0 }}>
+      <StyledDialogContent sx={{ padding: 2 }}>
+        <List
+          sx={{
+            padding: 0,
+            '& .MuiListItemButton-root': {
+              borderRadius: 1,
+              px: 1
+            },
+            '& .Mui-selected': {
+              backgroundColor: BeanstalkPalette.washedGreen,
+              borderRadius: 1,
+            },
+          }}
+        >
           {tokenList ? tokenList.map((_token) => (
             <ListItem
               key={_token.address}
@@ -124,14 +137,14 @@ const TokenSelectDialog : React.FC<{
               selected={newSelection.has(_token)}
               disablePadding
               secondaryAction={balances ? (
-                <Typography>
+                <Typography variant="bodyLarge">
                   {displayBN(balances?.[_token.address]?.total || ZERO_BN)}
                 </Typography>
               ) : null}
               onClick={onClickItem(_token)}
             >
               <ListItemButton disableRipple>
-                <ListItemIcon>
+                <ListItemIcon sx={{ pr: 1 }}>
                   <img src={_token.logo} alt="" className={classes.tokenLogo} />
                 </ListItemIcon>
                 <ListItemText

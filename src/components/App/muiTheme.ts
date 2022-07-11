@@ -89,10 +89,14 @@ export const BeanstalkPalette = {
 };
 
 export const IconSize = {
-  xs: '14px',
-  small: '20px',
-  medium: '25px',
-  large: '50px'
+  // xs: '14px',
+  // small: '20px',
+  // medium: '25px',
+  // large: '50px',
+  xs: 14,
+  small: 20,
+  medium: 25,
+  large: 50
 };
 
 export const FontSize = {
@@ -331,6 +335,20 @@ let muiTheme = createTheme({
         }
       },
     },
+    MuiListItemText: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.5rem',
+          '& .MuiListItemText-primary': {
+            fontSize: FontSize['1xl']
+          },
+          '& .MuiListItemText-secondary': {
+            fontSize: FontSize.base,
+            color: BeanstalkPalette.lightishGrey
+          },
+        },
+      },
+    },
     MuiTabs: {
       defaultProps: {},
       styleOverrides: {
@@ -408,7 +426,7 @@ let muiTheme = createTheme({
           px: 2,
         })
       }
-    }
+    },
   },
 });
 
