@@ -337,6 +337,25 @@ let muiTheme = createTheme({
         }
       },
     },
+    MuiListItem: {
+      styleOverrides: {
+        root: sx({
+          '&.Mui-selected': {
+            backgroundColor: BeanstalkPalette.washedGreen,
+            borderRadius: 1,
+          },
+        })
+      }
+    },
+    MuiListItemButton: {
+      styleOverrides: {
+        root: sx({
+          borderRadius: 1,
+          px: 1,
+          py: 1
+        }),
+      }
+    },
     MuiListItemText: {
       styleOverrides: {
         root: {

@@ -117,24 +117,8 @@ const TokenSelectDialog: React.FC<{
         {mode === TokenSelectMode.MULTI ? 'Select tokens' : 'Select token'}
       </StyledDialogTitle>
       <StyledDialogContent sx={{ padding: 1, pb: 2 }}>
-        <List
-          sx={{
-            padding: 0,
-            '& .MuiListItemButton-root': {
-              borderRadius: 1,
-              px: 1,
-              py: 0.5
-            },
-            '& .Mui-selected': {
-              backgroundColor: BeanstalkPalette.washedGreen,
-              borderRadius: 1,
-            },
-            '& .MuiButtonBase-root': {
-              height: '60px'
-            },
-          }}
-        >
-          <Stack gap={0.5}>
+        <List>
+          <Stack gap={1}>
             {tokenList ? tokenList.map((_token) => (
               <ListItem
                 key={_token.address}
@@ -155,6 +139,7 @@ const TokenSelectDialog: React.FC<{
                   <ListItemText
                     primary={_token.symbol}
                     secondary={_token.name}
+                    sx={{ my: 0 }}
                   />
                 </ListItemButton>
               </ListItem>
