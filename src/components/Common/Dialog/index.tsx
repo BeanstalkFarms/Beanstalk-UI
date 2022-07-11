@@ -51,6 +51,7 @@ export const StyledDialogTitle : React.FC<{
         <IconButton
           aria-label="close"
           onClick={onClose}
+          disableRipple
           sx={{
             color: (theme) => theme.palette.grey[900],
             p: 0
