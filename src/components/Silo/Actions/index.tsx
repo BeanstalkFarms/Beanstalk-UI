@@ -31,10 +31,11 @@ const SiloActions : React.FC<{
   const hasClaimable = props.siloBalance?.claimable?.amount.gt(0);
   return (
     <>
-      <Card sx={{ p: 2, position: 'relative' }}>
+      {/*<Card sx={{ p: 2, position: 'relative' }}>*/}
+      <Card sx={{ position: 'relative' }}>
         <Stack gap={1.5}>
           {/* Header */}
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible' }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
             <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
               <Tab label="Deposit" />
               <Tab label="Withdraw" />
@@ -45,30 +46,32 @@ const SiloActions : React.FC<{
               <Tab label="Send" />
             </Tabs>
           </Stack>
-          {/* Tab Content */}
-          {tab === 0 ? (
-            <Deposit
-              pool={props.pool}
-              siloToken={props.token}
-            />
-          ) : null}
-          {tab === 1 ? (
-            <Withdraw
-              token={props.token}
-            />
-          ) : null}
-          {tab === 2 ? (
-            <Claim
-              token={props.token}
-              siloBalance={props.siloBalance}
-            />
-          ) : null}
-          {tab === 3 ? (
-            <Send
-              // token={props.token}
-              // siloBalance={props.siloBalance}
-            />
-          ) : null}
+          <Box sx={{ px: 1, pb: 1 }}>
+            {/* Tab Content */}
+            {tab === 0 ? (
+              <Deposit
+                pool={props.pool}
+                siloToken={props.token}
+              />
+            ) : null}
+            {tab === 1 ? (
+              <Withdraw
+                token={props.token}
+              />
+            ) : null}
+            {tab === 2 ? (
+              <Claim
+                token={props.token}
+                siloBalance={props.siloBalance}
+              />
+            ) : null}
+            {tab === 3 ? (
+              <Send
+                // token={props.token}
+                // siloBalance={props.siloBalance}
+              />
+            ) : null}
+          </Box>
         </Stack>
       </Card>
       {/* Tables */}
