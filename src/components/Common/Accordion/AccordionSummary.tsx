@@ -2,7 +2,7 @@ import React from 'react';
 import { AccordionSummary, Stack, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import splitArrowsIcon from 'img/interface/split-arrows.svg';
-import { IconSize } from '../../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 
 const StyledAccordionSummary : React.FC<{
   title: string | JSX.Element;
@@ -13,7 +13,7 @@ const StyledAccordionSummary : React.FC<{
   icon,
   gradientText = true,
 }) => (
-  <AccordionSummary expandIcon={<ExpandMoreIcon width={IconSize.xs} />}>
+  <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: BeanstalkPalette.darkBlue, fontSize: IconSize.xs }} />}>
     <Stack direction="row" gap={1} alignItems="center" sx={{ pr: 2 }}>
       {icon || <img alt="" src={splitArrowsIcon} width={IconSize.xs} />}
       <Typography
