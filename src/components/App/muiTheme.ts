@@ -408,6 +408,9 @@ let muiTheme = createTheme({
           color: 'gray',
           // fontSize: 20,
           '&:active': {},
+          '&:hover': {
+            color: BeanstalkPalette.black,
+          },
           // FIXME: unsure why `selected` style
           // override doesn't work here.
           '&.Mui-selected': {
