@@ -31,7 +31,6 @@ const SiloActions : React.FC<{
   const hasClaimable = props.siloBalance?.claimable?.amount.gt(0);
   return (
     <>
-      {/*<Card sx={{ p: 2, position: 'relative' }}>*/}
       <Card sx={{ position: 'relative' }}>
         <Stack gap={1.5}>
           {/* Header */}
