@@ -1,7 +1,7 @@
 import React from 'react';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { Stack, Typography } from '@mui/material';
-import { BeanstalkPalette } from '../../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 
 const Warning : React.FC<{
   message: string;
@@ -9,8 +9,8 @@ const Warning : React.FC<{
   message
 }) => (
   <Stack direction="row" sx={{ p: 1, backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 1 }} alignItems="center" gap={1}>
-    <WarningAmberIcon sx={{ ml: 0.5, color: BeanstalkPalette.warningYellow }} />
-    <Typography>{message}</Typography>
+    <WarningAmberIcon sx={{ color: BeanstalkPalette.warningYellow, fontSize: IconSize.xs }} />
+    <Typography variant="bodySmall">{message}</Typography>
   </Stack>
 ));
 
