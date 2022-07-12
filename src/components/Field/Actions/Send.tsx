@@ -123,6 +123,7 @@ const SendForm: React.FC<
                   />
                 ),
               }}
+              placeholder="hide"
               disabled
               handleChange={handleChangeAmount}
             />
