@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Container, Divider, Stack, Tab, Tabs, Typography, } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
-import { useAccount } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import fetch from 'node-fetch';
 import NFTDialog from '../components/NFT/NFTDialog';
 import WalletCard from '../components/NFT/WalletCard';
@@ -9,6 +9,7 @@ import { loadNFTs } from '../graph';
 import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '../constants';
 import NFTGrid from '../components/NFT/NFTGrid';
 import { ClaimStatus } from '../util/BeaNFTs';
+import { useGenesisNFTContract, useWinterNFTContract } from '../hooks/useContract';
 
 type Nft = {
   id: number;
@@ -23,6 +24,9 @@ type Nft = {
 
 const NFTPage: React.FC = () => {
   const { data: account } = useAccount();
+  const { data: signer } = useSigner();
+  const beaNFTGenesis = useGenesisNFTContract(signer);
+  const beaNFTWinter = useWinterNFTContract(signer);
 
   // component state
   const [tab, setTab] = useState(0);
