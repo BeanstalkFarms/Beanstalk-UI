@@ -450,7 +450,7 @@ let muiTheme = createTheme({
     MuiDialogContent: {
       styleOverrides: {
         root: sx({
-          px: 2,
+          px: 1,
         })
       }
     },

@@ -121,6 +121,7 @@ const SowForm : React.FC<
 
   const isSubmittable = beans?.gt(0);
   const numPods = beans.multipliedBy(weather.div(100).plus(1));
+  const podLineLength = beanstalkField.podIndex.minus(beanstalkField.harvestableIndex);
 
   return (
     <Form autoComplete="off">
@@ -148,7 +149,7 @@ const SowForm : React.FC<
             <TxnSeparator />
             <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
               <Typography variant="body1">Place in Pod Line:</Typography>
-              <Typography variant="body1">{displayBN(beanstalkField.podIndex.minus(beanstalkField.harvestableIndex))}</Typography>
+              <Typography variant="body1">{displayBN(podLineLength)}</Typography>
             </Stack>
             <TokenOutputField
               token={PODS}
@@ -170,6 +171,10 @@ const SowForm : React.FC<
                       {
                         type: ActionType.BASE,
                         message: 'Then do this.'
+                      },
+                      {
+                        type: ActionType.BASE,
+                        message: `Receive ${displayFullBN(numPods, 2)} Pods at ${displayFullBN(podLineLength, 0)} in the Pod Line`
                       }
                     ]}
                   />
