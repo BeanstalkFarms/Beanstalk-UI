@@ -33,7 +33,7 @@ const MenuItem : React.FC<{
         <span>
           <Stack direction="row" gap={1} alignItems="center">
             {item.icon && <img src={item.icon} alt={item.title} width={IconSize.small} />}
-            <Typography variant="bodyMedium">{item.title}</Typography>
+            <Typography variant="body1">{item.title}</Typography>
           </Stack>
         </span>
       </Tooltip>
@@ -41,7 +41,7 @@ const MenuItem : React.FC<{
         <ListItemText>
           <Stack direction="row" gap={1} alignItems="center">
             {item.icon && <img src={item.icon} alt={item.title} width={IconSize.small} />}
-            <Typography variant="bodyMedium">{item.title}</Typography>
+            <Typography variant="body1">{item.title}</Typography>
           </Stack>
         </ListItemText>
       )}

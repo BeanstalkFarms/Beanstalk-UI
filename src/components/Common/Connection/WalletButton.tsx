@@ -94,7 +94,9 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         <ListItemText>
           <Stack direction="row" gap={1} alignItems="center">
             <img src={balancesIcon} alt="Balances" width={20} />
-            Balances
+            <Typography variant="body1" color="text.primary">
+              Balances
+            </Typography>
           </Stack>
         </ListItemText>
       </MenuItem>
@@ -105,7 +107,9 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       >
         <Stack direction="row" gap={1} alignItems="center">
           <img src={historyIcon} alt="History" width={20} />
-          History
+          <Typography variant="body1" color="text.primary">
+            History
+          </Typography>
         </Stack>
       </MenuItem>
       <MenuItem
@@ -122,7 +126,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         >
           <Stack direction="row" gap={1} alignItems="center">
             <img src={etherscanIcon} alt="Etherscan" width={20} />
-            <Typography variant="body2" color="text.primary">
+            <Typography variant="body1" color="text.primary">
               View on Etherscan
             </Typography>
           </Stack>
@@ -138,7 +142,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       <MenuItem onClick={() => disconnect()}>
         <Stack direction="row" gap={1} alignItems="center">
           <img src={disconnectIcon} alt="Disconnect" width={20} />
-          <Typography variant="body2" color="text.primary">
+          <Typography variant="body1" color="text.primary">
             Disconnect Wallet
           </Typography>
         </Stack>

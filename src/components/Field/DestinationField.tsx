@@ -29,7 +29,7 @@ const DestinationField : React.FC<{
     {
       title: 'The Silo ',
       description: 'Transfer Harvestable Pods to the Silo as Deposited Beans to earn yield.',
-      pill: <Typography variant="bodySmall">🚜 The Silo</Typography>,
+      pill: <Typography variant="body1">🚜 The Silo</Typography>,
       icon: <img src={siloIcon} alt="" height={IconSize.small} />,
       value: FarmToMode.DEPOSIT,
     }]

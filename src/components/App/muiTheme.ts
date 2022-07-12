@@ -359,23 +359,13 @@ let muiTheme = createTheme({
     MuiList: {
       styleOverrides: {
         root: sx({
-          p: 0
+          // p: 0
         })
       }
     },
     MuiListItemText: {
       styleOverrides: {
         root: {
-          fontSize: '1.5rem',
-          '& .MuiListItemText-primary': {
-            fontSize: FontSize['1xl'],
-            lineHeight: '1.875rem'
-          },
-          '& .MuiListItemText-secondary': {
-            fontSize: FontSize.base,
-            lineHeight: '1.25rem',
-            color: BeanstalkPalette.lightishGrey
-          },
         },
       },
     },

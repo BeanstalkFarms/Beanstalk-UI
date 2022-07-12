@@ -123,7 +123,7 @@ const HarvestForm : React.FC<
       <Form noValidate>
         <Stack gap={1}>
           {/* Form Content */}
-          <Stack gap={0}>
+          <Stack gap={1}>
             {/* Claimable Token */}
             <TokenQuoteProvider
               name="token"

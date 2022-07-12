@@ -117,7 +117,7 @@ const TokenSelectDialog: React.FC<{
         {mode === TokenSelectMode.MULTI ? 'Select Tokens' : 'Select Token'}
       </StyledDialogTitle>
       <StyledDialogContent sx={{ padding: 1, pb: 2 }}>
-        <List>
+        <List sx={{ p: 0 }}>
           <Stack gap={1}>
             {tokenList ? tokenList.map((_token) => (
               <ListItem
@@ -131,6 +131,19 @@ const TokenSelectDialog: React.FC<{
                   </Typography>
                 ) : null}
                 onClick={onClickItem(_token)}
+                sx={{
+                  // ListItem is used elsewhere so we define here
+                  // instead of in muiTheme.ts
+                  '& .MuiListItemText-primary': {
+                    fontSize: FontSize['1xl'],
+                    lineHeight: '1.875rem'
+                  },
+                  '& .MuiListItemText-secondary': {
+                    fontSize: FontSize.base,
+                    lineHeight: '1.25rem',
+                    color: BeanstalkPalette.lightishGrey
+                  },
+                }}
               >
                 <ListItemButton disableRipple>
                   <ListItemIcon sx={{ pr: 1 }}>
