@@ -33,10 +33,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 const TokenAdornment : React.FC<
-  { token: Token }
+  { token: Token, buttonLabel?: string }
   & ButtonProps
 > = ({
   token,
+  buttonLabel,
   disabled,
   onClick,
   ...props
@@ -56,7 +57,11 @@ const TokenAdornment : React.FC<
       >
         <Stack direction="row" alignItems="center" gap={0.5}>
           {token.logo ? <img src={token.logo} alt="" className={classes.tokenIcon} /> : null}
-          <Box className={classes.tokenName}><Typography variant="bodyMedium" fontWeight="fontWeightRegular">{token.symbol}</Typography></Box>
+          {buttonLabel ? (
+            <Box className={classes.tokenName}><Typography variant="bodyMedium" fontWeight="fontWeightRegular">{buttonLabel}</Typography></Box>
+          ) : (
+            <Box className={classes.tokenName}><Typography variant="bodyMedium" fontWeight="fontWeightRegular">{token.symbol}</Typography></Box>
+          )}
           {onClick && (
             <KeyboardArrowDownIcon
               sx={{

@@ -1,18 +1,8 @@
-import {
-  Accordion,
-  AccordionDetails,
-  Box,
-  Button,
-  Grid,
-  InputAdornment,
-  Stack,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Accordion, AccordionDetails, Box, Grid, Stack } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import useToggle from 'hooks/display/useToggle';
@@ -23,22 +13,14 @@ import { useAccount, useSigner } from 'wagmi';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import DropdownField from '../../Common/Form/DropdownField';
 import SelectPlotDialog from '../SelectPlotDialog';
-import PlotDetails from '../../Market/Cards/PlotDetails';
 import { AppState } from '../../../state';
 import { ZERO_BN } from '../../../constants';
-import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
-import InputField from '../../Common/Form/InputField';
-import podIcon from '../../../img/beanstalk/pod-icon.svg';
 import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import SliderField from '../../Common/Form/SliderField';
 import Warning from '../../Common/Form/Warning';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
-import { IconSize } from '../../App/muiTheme';
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export type SendFormValues = {
   to: string | null;
@@ -127,7 +109,24 @@ const SendForm: React.FC<
       />
       <Stack gap={1}>
         {(values?.plotIndex === null) ? (
-          <DropdownField buttonText="Select a Plot" handleOpenDialog={showDialog} />
+          <FieldWrapper>
+            <TokenInputField
+              name="amount"
+              // MUI
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <TokenAdornment
+                    token={PODS}
+                    onClick={showDialog}
+                    buttonLabel="SELECT PLOT"
+                  />
+                ),
+              }}
+              disabled
+              handleChange={handleChangeAmount}
+            />
+          </FieldWrapper>
         ) : (
           <>
             <FieldWrapper>
@@ -149,11 +148,11 @@ const SendForm: React.FC<
                 handleChange={handleChangeAmount}
               />
             </FieldWrapper>
-            {/*<PlotDetails*/}
-            {/*  placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)}*/}
-            {/*  numPods={new BigNumber(farmerField.plots[values?.plotIndex])}*/}
-            {/*  onClick={showDialog}*/}
-            {/*/>*/}
+            {/* <PlotDetails */}
+            {/*  placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)} */}
+            {/*  numPods={new BigNumber(farmerField.plots[values?.plotIndex])} */}
+            {/*  onClick={showDialog} */}
+            {/* /> */}
             <FieldWrapper>
               {/* <TokenInputField */}
               {/*  name="amount" */}
