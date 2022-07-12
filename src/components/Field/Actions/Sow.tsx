@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import { FormState, SettingInput, SmartSubmitButton, TokenOutputField, TokenQuoteProvider, TokenSelectDialog, TxnSeparator, TxnSettings } from 'components/Common/Form';
@@ -22,7 +22,7 @@ import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import { useProvider, useSigner } from 'wagmi';
 
 type SowFormValues = FormState & {
@@ -55,6 +55,10 @@ const SowForm : React.FC<
   const getChainToken = useGetChainToken();
   const Bean = getChainToken(BEAN);
   const Weth = getChainToken<ERC20Token>(WETH);
+
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
+    (state) => state._beanstalk.field
+  );
 
   //
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -94,7 +98,7 @@ const SowForm : React.FC<
       return {
         amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
         steps: estimate.steps,
-      }
+      };
     },
     [farm, Weth]
   );
@@ -104,6 +108,7 @@ const SowForm : React.FC<
     : values.tokens[0]?.amountOut || ZERO_BN;
 
   const isSubmittable = beans?.gt(0);
+  const numPods = beans.multipliedBy(weather.div(100).plus(1));
 
   return (
     <Form autoComplete="off">
@@ -118,8 +123,8 @@ const SowForm : React.FC<
       />
       <Stack gap={1}>
         <TokenQuoteProvider
-          key={`tokens.0`}
-          name={`tokens.0`}
+          key="tokens.0"
+          name="tokens.0"
           tokenOut={Bean}
           balance={balances[values.tokens[0].token.address] || undefined}
           state={values.tokens[0]}
@@ -128,11 +133,18 @@ const SowForm : React.FC<
         />
         {isSubmittable ? (
           <>
-            <TxnSeparator mt={-1.5} />
+            <TxnSeparator />
+            <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
+              <Typography variant="body1">Place in Pod Line:</Typography>
+              <Typography variant="body1">{displayBN(beanstalkField.podIndex.minus(beanstalkField.harvestableIndex))}</Typography>
+            </Stack>
             <TokenOutputField
               token={PODS}
-              amount={beans.multipliedBy(weather.div(100).plus(1))}
+              amount={numPods}
             />
+            <Box sx={{ py: 1 }}>
+              <Typography variant="body1" textAlign="center">Upon harvest {displayBN(numPods)} PODS will be redeemable for {displayBN(numPods)} BEAN</Typography>
+            </Box>
           </>
         ) : null}
         <SmartSubmitButton
@@ -234,7 +246,7 @@ const Sow : React.FC<{}> = () => {
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage/100, 6)), // slippage
+          ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6)), // slippage
         );
         data.push(...encoded);
         encoded.forEach((_data, index) => 
@@ -247,7 +259,7 @@ const Sow : React.FC<{}> = () => {
           toStringBaseUnitBN(amountBeans, Bean.decimals),
           FarmFromMode.INTERNAL_EXTERNAL,
         ])
-      )
+      );
  
       //
       return beanstalk.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
@@ -264,8 +276,7 @@ const Sow : React.FC<{}> = () => {
             txToast.error(err.error || err)
           );
         });
-
-    } catch(e) {
+    } catch (e) {
       // txToast.error(err);
       formActions.setSubmitting(false);
     }
@@ -297,7 +308,6 @@ const Sow : React.FC<{}> = () => {
       )}
     </Formik>
   );
-}
-
+};
 
 export default Sow;

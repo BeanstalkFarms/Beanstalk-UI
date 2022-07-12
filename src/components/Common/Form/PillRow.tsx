@@ -19,7 +19,7 @@ const PillDialogField : React.FC<{
     direction="row"
     justifyContent="space-between"
     alignItems="center"
-    sx={{ ml: 0.5, ...sx }}
+    sx={{ ml: 0.5, py: 1, ...sx }}
     {...props}
     >
     <Typography color="gray">

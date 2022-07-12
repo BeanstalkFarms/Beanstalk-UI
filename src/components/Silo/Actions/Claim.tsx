@@ -196,7 +196,7 @@ const ClaimForm : React.FC<
                 label="Claim LP as"
                 onClick={showTokenSelect}> 
                 <TokenIcon token={values.tokenOut} />
-                <Typography variant="bodySmall">{values.tokenOut.name}</Typography>
+                <Typography variant="body1">{values.tokenOut.name}</Typography>
               </PillRow>
             ) : null}
             <TokenSelectDialog

@@ -10,7 +10,7 @@ const Warning : React.FC<{
 }) => (
   <Stack direction="row" sx={{ p: 1, backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 1 }} alignItems="center" gap={1}>
     <WarningAmberIcon sx={{ color: BeanstalkPalette.warningYellow, fontSize: IconSize.xs }} />
-    <Typography variant="bodySmall">{message}</Typography>
+    <Typography variant="body1">{message}</Typography>
   </Stack>
 ));
 

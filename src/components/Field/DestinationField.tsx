@@ -15,14 +15,14 @@ const DestinationField : React.FC<{
     {
       title: 'Wallet',
       description: 'Transfer Harvestable Pods to your wallet as Beans.',
-      pill: <><AddressIcon size={14} /><Typography variant="bodySmall">Wallet</Typography></>,
+      pill: <><AddressIcon size={14} /><Typography variant="body1">Wallet</Typography></>,
       icon: <AddressIcon size={IconSize.small} width={IconSize.small} height={IconSize.small} />,
       value: FarmToMode.EXTERNAL,
     },
     {
       title: 'Farm Balance',
       description: 'Transfer Harvestable Pods to your internal Beanstalk balance as Beans.',
-      pill: <Typography variant="bodySmall">🚜 Farm Balance</Typography>,
+      pill: <Typography variant="body1">🚜 Farm Balance</Typography>,
       icon: '🚜',
       value: FarmToMode.INTERNAL,
     },

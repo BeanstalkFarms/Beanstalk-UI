@@ -123,7 +123,7 @@ const HarvestForm : React.FC<
       <Form noValidate>
         <Stack gap={1}>
           {/* Form Content */}
-          <Stack gap={1}>
+          <Stack gap={0}>
             {/* Claimable Token */}
             <TokenQuoteProvider
               name="token"
@@ -153,7 +153,7 @@ const HarvestForm : React.FC<
               label="Deposit as"
               onClick={showTokenSelect}>
               <TokenIcon token={values.tokenOut} />
-              <Typography variant="bodySmall">{values.tokenOut.name}</Typography>
+              <Typography variant="body1">{values.tokenOut.name}</Typography>
             </PillRow>
             <TokenSelectDialog
               open={isTokenSelectVisible}
