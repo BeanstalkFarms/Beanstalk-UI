@@ -26,7 +26,7 @@ const BalancesPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack gap={2}>
         <PageHeader
-          title={<><strong>Balances</strong></>}
+          title="Balances"
           description="View all balances"
         />
         <Card sx={{ p: 2 }}>

@@ -195,7 +195,7 @@ const ForecastPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack gap={2}>
         <PageHeader
-          title={<strong>Forecast</strong>}
+          title="Forecast"
           description="View conditions on the Bean Farm"
           control={(
             <Button

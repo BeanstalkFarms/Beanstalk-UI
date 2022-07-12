@@ -130,11 +130,7 @@ const MarketplacePage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack spacing={2}>
         <PageHeader
-          title={
-            <>
-              <strong>The Pod Market</strong>
-            </>
-          }
+          title="The Pod Market"
           description="Trade Pods, the Beanstalk-native debt asset"
         />
         {content}

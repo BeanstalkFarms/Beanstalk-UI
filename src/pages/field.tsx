@@ -82,17 +82,7 @@ const FieldPage: React.FC = () => {
     <Container maxWidth="sm">
       <Stack spacing={2}>
         <PageHeader
-          title={
-            <>
-              <strong>The Field</strong>
-              <Box
-                component="span"
-                sx={{ display: { md: 'inline', xs: 'none' } }}
-              >
-                : The Decentralized Credit Facility
-              </Box>
-            </>
-          }
+          title="The Field"
           description="Earn yield by lending Beans to Beanstalk in exchange for Pods"
         />
         <FieldConditions

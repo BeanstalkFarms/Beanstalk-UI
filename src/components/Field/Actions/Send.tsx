@@ -1,7 +1,7 @@
-import { Accordion, AccordionDetails, Box, Grid, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Grid, InputAdornment, Stack, Typography } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -21,6 +21,8 @@ import SliderField from '../../Common/Form/SliderField';
 import Warning from '../../Common/Form/Warning';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
+import InputField from '../../Common/Form/InputField';
+import podsIcon from '../../../img/beanstalk/pod-icon.svg';
 
 export type SendFormValues = {
   to: string | null;
@@ -30,17 +32,16 @@ export type SendFormValues = {
   amount: BigNumber | null;
 }
 
-export interface SendFormProps {}
+export interface SendFormProps {
+}
 
-const SendForm: React.FC<
-  SendFormProps & 
-  FormikProps<SendFormValues>
-> = ({
-  values,
-  isValid,
-  isSubmitting,
-  setFieldValue
-}) => {
+const SendForm: React.FC<SendFormProps &
+  FormikProps<SendFormValues>> = ({
+                                    values,
+                                    isValid,
+                                    isSubmitting,
+                                    setFieldValue
+                                  }) => {
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
   );
@@ -49,10 +50,10 @@ const SendForm: React.FC<
     (state) => state._beanstalk.field
   );
 
-  const numPods = useMemo(() => 
-    (values?.plotIndex 
-      ? farmerField.plots[values.plotIndex]
-      : ZERO_BN),
+  const numPods = useMemo(() =>
+      (values?.plotIndex
+        ? farmerField.plots[values.plotIndex]
+        : ZERO_BN),
     [farmerField.plots, values?.plotIndex]
   );
 
@@ -62,7 +63,7 @@ const SendForm: React.FC<
     console.debug('[field/actions/Send]: selected plot', index);
     setFieldValue('plotIndex', index);
   }, [setFieldValue]);
-  
+
   const reset = useCallback(() => {
     setFieldValue('start', new BigNumber(0));
     setFieldValue('end', numPods);
@@ -123,7 +124,7 @@ const SendForm: React.FC<
                   />
                 ),
               }}
-              placeholder="hide"
+              // placeholder="hide"
               disabled
               handleChange={handleChangeAmount}
             />
@@ -133,7 +134,7 @@ const SendForm: React.FC<
             <FieldWrapper>
               <TokenInputField
                 name="amount"
-                // MUI
+                // MUI 
                 fullWidth
                 InputProps={{
                   endAdornment: (
@@ -143,7 +144,7 @@ const SendForm: React.FC<
                     />
                   ),
                 }}
-                // Other
+                // Other 
                 balance={new BigNumber(farmerField.plots[values?.plotIndex])}
                 balanceLabel="Plot Size"
                 handleChange={handleChangeAmount}
@@ -207,7 +208,8 @@ const SendForm: React.FC<
             <FieldWrapper label="Recipient Address">
               <AddressInputField name="to" />
             </FieldWrapper>
-            <Warning message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
+            <Warning
+              message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
             <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />
@@ -247,7 +249,7 @@ const Send: React.FC<{}> = () => {
   const { data: account } = useAccount();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  
+
   // Form setup
   const initialValues: SendFormValues = useMemo(() => ({
     settings: {

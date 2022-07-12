@@ -170,7 +170,7 @@ const TokenInput: React.FC<TokenInputProps
       {/* Input */}
       <TextField
         type="string"
-        placeholder={placeholder === 'hide' ? undefined : placeholder || '0'}
+        placeholder={placeholder || '0'}
         disabled={isInputDisabled}
         {...textFieldProps}
         // Override the following props.
