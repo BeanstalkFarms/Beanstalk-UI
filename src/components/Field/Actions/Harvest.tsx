@@ -198,7 +198,6 @@ const HarvestForm : React.FC<
               </Accordion>
             </Box>
           </>
-
           <Button disabled={!isSubmittable || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
             Harvest
           </Button>

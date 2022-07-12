@@ -1,7 +1,17 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
-import { FormState, SettingInput, SmartSubmitButton, TokenOutputField, TokenQuoteProvider, TokenSelectDialog, TxnSeparator, TxnSettings } from 'components/Common/Form';
+import {
+  FormState,
+  SettingInput,
+  SmartSubmitButton,
+  TokenOutputField,
+  TokenQuoteProvider,
+  TokenSelectDialog,
+  TxnPreview,
+  TxnSeparator,
+  TxnSettings
+} from 'components/Common/Form';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TransactionToast from 'components/Common/TxnToast';
 import { BeanstalkReplanted } from 'generated/index';
@@ -22,8 +32,10 @@ import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayBN, displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import { useProvider, useSigner } from 'wagmi';
+import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
+import { ActionType } from '../../../util/Actions';
 
 type SowFormValues = FormState & {
   settings: {
@@ -144,6 +156,25 @@ const SowForm : React.FC<
             />
             <Box sx={{ py: 1 }}>
               <Typography variant="body1" textAlign="center">Upon harvest {displayBN(numPods)} PODS will be redeemable for {displayBN(numPods)} BEAN</Typography>
+            </Box>
+            <Box>
+              <Accordion variant="outlined">
+                <StyledAccordionSummary title="Transaction Details" />
+                <AccordionDetails>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type: ActionType.BASE,
+                        message: 'Do this.'
+                      },
+                      {
+                        type: ActionType.BASE,
+                        message: 'Then do this.'
+                      }
+                    ]}
+                  />
+                </AccordionDetails>
+              </Accordion>
             </Box>
           </>
         ) : null}

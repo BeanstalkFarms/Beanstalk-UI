@@ -66,12 +66,16 @@ export const BeanstalkPalette = {
   // Greens
   logoGreen: '#46B955',
   lightGreen: '#E1F8E6',
+  washedGreen: '#E1F8E6',
+  supportGreen: '#19873B',
   // Blues
   lightBlue: '#C1DEF2',
   babyBlue: '#E2F2FE',
   lighterBlue: '#daf2ff', // see `bodyBackground`
   lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
+  darkNavyBlue: '#3c76af',
+  hoverBlue: '#f9fcff',
   // Other
   white: '#fff',
   black: '#333',
@@ -80,12 +84,9 @@ export const BeanstalkPalette = {
   washedRed: '#c35f42',
   hoverRed: '#fef9f8',
   yellow: '#f0df6a',
-  darkNavyBlue: '#3c76af',
   brown: '#795739',
-  hoverBlue: '#f9fcff',
   lightYellow: '#FDF4E7',
   warningYellow: '#F2A64A',
-  washedGreen: '#E1F8E6',
 };
 
 export const IconSize = {
@@ -269,11 +270,15 @@ let muiTheme = createTheme({
       defaultProps: {
         disableElevation: true,
         variant: 'contained',
+        disableRipple: true
       },
       styleOverrides: {
         root: sx({
           textTransform: 'none',
           fontWeight: 'bold',
+          '&.MuiLoadingButton-root:hover': {
+            backgroundColor: BeanstalkPalette.supportGreen,
+          }
         }),
         sizeLarge: sx({
           py: 1.5,
@@ -414,7 +419,6 @@ let muiTheme = createTheme({
     },
     MuiButtonBase: {
       styleOverrides: {
-        root: {},
       },
     },
     MuiButtonGroup: {
