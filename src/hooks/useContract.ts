@@ -1,11 +1,14 @@
 import { REPLANTED_CHAINS, SupportedChainId } from 'constants/chains';
 import {
   Beanstalk,
+  BeaNFTGenesis,
+  BeaNFTWinter,
   BeanstalkFertilizer,
   BeanstalkPrice,
   ERC20,
 } from 'generated/index';
 import {
+  BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES,
   BEANSTALK_ADDRESSES,
   BEANSTALK_FERTILIZER_ADDRESSES,
   BEANSTALK_PRICE_ADDRESSES,
@@ -24,6 +27,8 @@ const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json
 const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0.json');
 const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
 const ERC20_ABI = require('constants/abi/ERC20.json');
+const BEANFT_GENESIS_ABI = require('constants/abi/BeaNFT/BeaNFTGenesis.json');
+const BEANFT_WINTER_ABI = require('constants/abi/BeaNFT/BeaNFTWinter.json');
 
 export type AddressOrAddressMap = string | ChainConstant<string>;
 export type AbiOrAbiMap = ContractInterface | ChainConstant<ContractInterface>;
@@ -174,6 +179,44 @@ export function useBeanstalkContract(signer?: ethers.Signer | null) {
   const abi     = useChainConstant(BEANSTALK_ABIS);
   const provider = useProvider();
   return useWagmiContract<Beanstalk>({
+    addressOrName: address,
+    contractInterface: abi,
+    signerOrProvider: signer || provider,
+  });
+}
+
+const BEANFT_GENESIS_ABIS = {
+  [SupportedChainId.MAINNET]:   BEANFT_GENESIS_ABI,
+  [SupportedChainId.ROPSTEN]:   BEANFT_GENESIS_ABI,
+  [SupportedChainId.LOCALHOST]: BEANFT_GENESIS_ABI,
+  [SupportedChainId.CUJO]:      BEANFT_GENESIS_ABI,
+  [SupportedChainId.PHOENIX]:   BEANFT_GENESIS_ABI,
+};
+
+export function useGenesisNFTContract(signer?: ethers.Signer | null) {
+  const address = useChainConstant(BEANFT_GENESIS_ADDRESSES);
+  const abi     = useChainConstant(BEANFT_GENESIS_ABIS);
+  const provider = useProvider();
+  return useWagmiContract<BeaNFTGenesis>({
+    addressOrName: address,
+    contractInterface: abi,
+    signerOrProvider: signer || provider,
+  });
+}
+
+const BEANFT_WINTER_ABIS = {
+  [SupportedChainId.MAINNET]:   BEANFT_WINTER_ABI,
+  [SupportedChainId.ROPSTEN]:   BEANFT_WINTER_ABI,
+  [SupportedChainId.LOCALHOST]: BEANFT_WINTER_ABI,
+  [SupportedChainId.CUJO]:      BEANFT_WINTER_ABI,
+  [SupportedChainId.PHOENIX]:   BEANFT_WINTER_ABI,
+};
+
+export function useWinterNFTContract(signer?: ethers.Signer | null) {
+  const address = useChainConstant(BEANFT_WINTER_ADDRESSES);
+  const abi     = useChainConstant(BEANFT_WINTER_ABIS);
+  const provider = useProvider();
+  return useWagmiContract<BeaNFTWinter>({
     addressOrName: address,
     contractInterface: abi,
     signerOrProvider: signer || provider,
