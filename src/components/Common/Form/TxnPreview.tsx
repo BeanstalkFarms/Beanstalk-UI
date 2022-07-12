@@ -263,12 +263,11 @@ const TxnPreview : React.FC<{
         </Box>
       ) : null}
       {/* Show highlightable explanations of each action */}
-      <Stack>
+      <Stack gap={0.5}>
         {actions.map((a, index) => (
           <Box
             key={index}
             sx={{
-              py: 0.5,
               opacity: (highlighted === undefined || a.type === highlighted) ? 1 : 0.3,
               cursor: 'pointer'
             }}
@@ -277,7 +276,7 @@ const TxnPreview : React.FC<{
             onFocus={() => setHighlighted(a.type)}
             onBlur={() => setHighlighted(undefined)}
           >
-            <Typography color="grey[300]">
+            <Typography variant="bodySmall" color="grey[300]">
               {parseActionMessage(a)}
             </Typography>
           </Box>

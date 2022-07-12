@@ -1,10 +1,29 @@
 import React from 'react';
-import { Stack, Typography, Card } from '@mui/material';
+import { Stack, Typography, Card, ListItem, ListItemButton, ListItemIcon, ListItemText, List } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { BeanstalkPalette } from '../App/muiTheme';
+import { makeStyles } from '@mui/styles';
+import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 import { displayBN } from '../../util';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
 import { PlotMap } from '../../state/farmer/field';
+import { ZERO_BN } from '../../constants';
+
+const useStyles = makeStyles(() => ({
+  tokenIcon: {
+    minWidth: '18px',
+    width: '18px',
+    height: '18px',
+    marginRight: '5px'
+  },
+  tokenName: {
+    color: '#3B3B3B',
+    fontSize: '20px'
+  },
+  tokenLogo: {
+    width: IconSize.large,
+    height: IconSize.large,
+  }
+}));
 
 export interface PlotSelectProps {
   /** A farmer's plots */
@@ -16,40 +35,56 @@ export interface PlotSelectProps {
 }
 
 const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handlePlotSelect }) => {
+  const classes = useStyles();
   if (plots === null) {
     return null;
   }
   return (
     <>
-      <Stack gap={2}>
+      <List sx={{ p: 0 }}>
         <Stack gap={1}>
           {Object.keys(plots).map((index) => (
-            <Card
-              sx={{
-                p: 2,
-                '&:hover': {
-                  backgroundColor: BeanstalkPalette.hoverBlue,
-                  cursor: 'pointer'
-                }
-              }}
+            <ListItem
+              key={index}
+              color="primary"
+              // selected={newSelection.has(_token)}
+              disablePadding
+              secondaryAction={(
+                <Typography variant="bodyLarge">
+                  {displayBN(new BigNumber(plots[index]))}
+                </Typography>
+              )}
               onClick={() => handlePlotSelect(index)}
+              sx={{
+                // ListItem is used elsewhere so we define here
+                // instead of in muiTheme.ts
+                '& .MuiListItemText-primary': {
+                  fontSize: FontSize['1xl'],
+                  lineHeight: '1.875rem'
+                },
+                '& .MuiListItemText-secondary': {
+                  fontSize: FontSize.base,
+                  lineHeight: '1.25rem',
+                  color: BeanstalkPalette.lightishGrey
+                },
+              }}
             >
-              <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <Stack direction="row" gap={0.4}>
-                  <Typography sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(index).minus(harvestableIndex))}</Typography>
-                  <Typography sx={{ fontSize: '18px' }}>in Line</Typography>
-                </Stack>
-                <Stack direction="row" gap={0.3} alignItems="center">
-                  <Typography sx={{ fontSize: '18px' }}>{displayBN(new BigNumber(plots[index]))}</Typography>
-                  <img src={podIcon} alt="" height="18px" />
-                </Stack>
-              </Stack>
-            </Card>
+              <ListItemButton disableRipple>
+                <ListItemIcon sx={{ pr: 1 }}>
+                  <img src={podIcon} alt="" className={classes.tokenLogo} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="PODS"
+                  secondary={`Place in Line: ${displayBN(new BigNumber(index).minus(harvestableIndex))}`}
+                  sx={{ my: 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
           ))}
         </Stack>
-      </Stack>
+      </List>
     </>
   );
-}
+};
 
 export default PlotSelect;

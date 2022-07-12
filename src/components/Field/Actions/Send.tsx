@@ -1,29 +1,28 @@
-import { Box, Button, Grid, InputAdornment, Stack, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Grid, InputAdornment, Stack, Typography } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import DropdownField from '../../Common/Form/DropdownField';
-import SelectPlotDialog from '../SelectPlotDialog';
-import PlotDetails from '../../Market/Cards/PlotDetails';
-import { AppState } from '../../../state';
-import { ZERO_BN } from '../../../constants';
-import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
-import InputField from '../../Common/Form/InputField';
-import podsIcon from '../../../img/beanstalk/pod-icon.svg';
-import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN, trimAddress } from '../../../util';
-import SliderField from '../../Common/Form/SliderField';
-import Warning from "../../Common/Form/Warning";
 import useToggle from 'hooks/display/useToggle';
-import { TokenAdornment, TokenInputField } from 'components/Common/Form';
+import { TokenAdornment, TokenInputField, TxnPreview } from 'components/Common/Form';
 import { PODS } from 'constants/tokens';
 import { LoadingButton } from '@mui/lab';
 import { useAccount, useSigner } from 'wagmi';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
+import SelectPlotDialog from '../SelectPlotDialog';
+import { AppState } from '../../../state';
+import { ZERO_BN } from '../../../constants';
+import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN, trimAddress } from '../../../util';
+import SliderField from '../../Common/Form/SliderField';
+import Warning from '../../Common/Form/Warning';
+import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
+import { ActionType } from '../../../util/Actions';
+import InputField from '../../Common/Form/InputField';
+import podsIcon from '../../../img/beanstalk/pod-icon.svg';
 
 export type SendFormValues = {
   to: string | null;
@@ -33,17 +32,16 @@ export type SendFormValues = {
   amount: BigNumber | null;
 }
 
-export interface SendFormProps {}
+export interface SendFormProps {
+}
 
-const SendForm: React.FC<
-  SendFormProps & 
-  FormikProps<SendFormValues>
-> = ({
-  values,
-  isValid,
-  isSubmitting,
-  setFieldValue
-}) => {
+const SendForm: React.FC<SendFormProps &
+  FormikProps<SendFormValues>> = ({
+                                    values,
+                                    isValid,
+                                    isSubmitting,
+                                    setFieldValue
+                                  }) => {
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
   );
@@ -52,20 +50,20 @@ const SendForm: React.FC<
     (state) => state._beanstalk.field
   );
 
-  const numPods = useMemo(() => 
-    (values?.plotIndex 
-      ? farmerField.plots[values.plotIndex]
-      : ZERO_BN),
+  const numPods = useMemo(() =>
+      (values?.plotIndex
+        ? farmerField.plots[values.plotIndex]
+        : ZERO_BN),
     [farmerField.plots, values?.plotIndex]
   );
 
-  const [dialogOpen, showDialog, hideDialog] = useToggle()
+  const [dialogOpen, showDialog, hideDialog] = useToggle();
 
   const handlePlotSelect = useCallback((index: string) => {
-    console.debug(`[field/actions/Send]: selected plot`, index)
+    console.debug('[field/actions/Send]: selected plot', index);
     setFieldValue('plotIndex', index);
-  }, [setFieldValue])
-  
+  }, [setFieldValue]);
+
   const reset = useCallback(() => {
     setFieldValue('start', new BigNumber(0));
     setFieldValue('end', numPods);
@@ -99,7 +97,7 @@ const SendForm: React.FC<
     && values.start
     && values.amount?.gt(0)
     && isValid
-  )
+  );
 
   return (
     <Form autoComplete="off">
@@ -112,29 +110,63 @@ const SendForm: React.FC<
       />
       <Stack gap={1}>
         {(values?.plotIndex === null) ? (
-          <DropdownField buttonText="Select a Plot" handleOpenDialog={showDialog} />
+          <FieldWrapper>
+            <TokenInputField
+              name="amount"
+              // MUI
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <TokenAdornment
+                    token={PODS}
+                    onClick={showDialog}
+                    buttonLabel="SELECT PLOT"
+                  />
+                ),
+              }}
+              // placeholder="hide"
+              disabled
+              handleChange={handleChangeAmount}
+            />
+          </FieldWrapper>
         ) : (
           <>
-            <PlotDetails
-              placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)}
-              numPods={new BigNumber(farmerField.plots[values?.plotIndex])}
-              onClick={showDialog}
-            />
-            <FieldWrapper label="Recipient Address">
-              <AddressInputField name="to" />
-            </FieldWrapper>
-            <FieldWrapper label="Number of Pods and Plot Range" tooltip={POD_MARKET_TOOLTIPS.amount}>
+            <FieldWrapper>
               <TokenInputField
                 name="amount"
-                token={PODS}
-                placeholder="0.0000"
-                balance={numPods || ZERO_BN}
-                hideBalance
+                // MUI 
+                fullWidth
                 InputProps={{
-                  endAdornment: <TokenAdornment token={PODS} />
+                  endAdornment: (
+                    <TokenAdornment
+                      token={PODS}
+                      onClick={showDialog}
+                    />
+                  ),
                 }}
+                // Other 
+                balance={new BigNumber(farmerField.plots[values?.plotIndex])}
+                balanceLabel="Plot Size"
                 handleChange={handleChangeAmount}
               />
+            </FieldWrapper>
+            {/* <PlotDetails */}
+            {/*  placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)} */}
+            {/*  numPods={new BigNumber(farmerField.plots[values?.plotIndex])} */}
+            {/*  onClick={showDialog} */}
+            {/* /> */}
+            <FieldWrapper>
+              {/* <TokenInputField */}
+              {/*  name="amount" */}
+              {/*  token={PODS} */}
+              {/*  placeholder="0.0000" */}
+              {/*  balance={numPods || ZERO_BN} */}
+              {/*  hideBalance */}
+              {/*  InputProps={{ */}
+              {/*    endAdornment: <TokenAdornment token={PODS} /> */}
+              {/*  }} */}
+              {/*  handleChange={handleChangeAmount} */}
+              {/* /> */}
               <Box px={1}>
                 <SliderField
                   min={0}
@@ -153,7 +185,7 @@ const SendForm: React.FC<
                     balance={numPods || ZERO_BN}
                     hideBalance
                     InputProps={{
-                      endAdornment: "Start"
+                      endAdornment: 'Start'
                     }}
                     size="small"
                   />
@@ -166,14 +198,37 @@ const SendForm: React.FC<
                     balance={numPods || ZERO_BN}
                     hideBalance
                     InputProps={{
-                      endAdornment: "End"
+                      endAdornment: 'End'
                     }}
                     size="small"
                   />
                 </Grid>
               </Grid>
             </FieldWrapper>
-            <Warning message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
+            <FieldWrapper label="Recipient Address">
+              <AddressInputField name="to" />
+            </FieldWrapper>
+            <Warning
+              message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
+            <Box>
+              <Accordion variant="outlined">
+                <StyledAccordionSummary title="Transaction Details" />
+                <AccordionDetails>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type: ActionType.BASE,
+                        message: 'Do this.'
+                      },
+                      {
+                        type: ActionType.BASE,
+                        message: 'Then do this.'
+                      }
+                    ]}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
           </>
         )}
         <LoadingButton
@@ -194,7 +249,7 @@ const Send: React.FC<{}> = () => {
   const { data: account } = useAccount();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  
+
   // Form setup
   const initialValues: SendFormValues = useMemo(() => ({
     settings: {

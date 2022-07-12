@@ -116,7 +116,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
     hideQuote ? undefined : (
       <>
         {state.amountOut && (
-          <Typography variant="body1" sx={{ fontSize: 13.5 }}>
+          <Typography variant="body1">
             ≈ {displayFullBN(state.amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
           </Typography>
         )}

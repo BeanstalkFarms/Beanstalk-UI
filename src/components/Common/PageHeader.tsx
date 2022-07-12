@@ -26,11 +26,12 @@ const PageHeader : React.FC<{
           <ChevronLeftIcon />
         </Button>
       )}
-      <Stack direction="column" gap={0.5}>
+      <Stack direction="column" gap={0}>
         <Box>
           <Typography
             variant="h1"
-            sx={{ fontWeight: 'normal' }}>
+            fontWeight="fontWeightBold"
+          >
             {props.title}
           </Typography>
         </Box>

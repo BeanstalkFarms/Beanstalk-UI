@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { AddressMap, ZERO_BN } from 'constants/index';
 import BigNumber from 'bignumber.js';
 import { FarmerBalances } from 'state/farmer/balances';
+import TokenIcon from '../TokenIcon';
+import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -21,14 +23,14 @@ const useStyles = makeStyles(() => ({
     fontSize: '20px'
   },
   tokenLogo: {
-    width: 40,
-    height: 40
+    width: IconSize.large,
+    height: IconSize.large,
   }
 }));
 
 export enum TokenSelectMode { MULTI, SINGLE }
 
-const TokenSelectDialog : React.FC<{
+const TokenSelectDialog: React.FC<{
   /** Show the dialog. */
   open: boolean;
   /** Close the dialog. */
@@ -46,13 +48,13 @@ const TokenSelectDialog : React.FC<{
   /** Single or multi-select */
   mode?: TokenSelectMode;
 }> = React.memo(({
-  open,
-  handleClose,
-  selected,
-  handleSubmit,
-  balances,
-  tokenList,
-  mode = TokenSelectMode.MULTI,
+ open,
+ handleClose,
+ selected,
+ handleSubmit,
+ balances,
+ tokenList,
+ mode = TokenSelectMode.MULTI,
 }) => {
   const classes = useStyles();
   const [newSelection, setNewSelection] = useState<Set<Token>>(new Set());
@@ -105,41 +107,57 @@ const TokenSelectDialog : React.FC<{
       open={open}
       PaperProps={{
         sx: {
-          minWidth: '350px'
+          minWidth: '400px'
         }
       }}
       transitionDuration={0}
       TransitionProps={{}}
     >
       <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
-        {mode === TokenSelectMode.MULTI ? 'Select tokens' : 'Select token'}
+        {mode === TokenSelectMode.MULTI ? 'Select Tokens' : 'Select Token'}
       </StyledDialogTitle>
-      <StyledDialogContent sx={{ padding: 0 }}>
-        <List sx={{ padding: 0 }}>
-          {tokenList ? tokenList.map((_token) => (
-            <ListItem
-              key={_token.address}
-              color="primary"
-              selected={newSelection.has(_token)}
-              disablePadding
-              secondaryAction={balances ? (
-                <Typography>
-                  {displayBN(balances?.[_token.address]?.total || ZERO_BN)}
-                </Typography>
-              ) : null}
-              onClick={onClickItem(_token)}
-            >
-              <ListItemButton disableRipple>
-                <ListItemIcon>
-                  <img src={_token.logo} alt="" className={classes.tokenLogo} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={_token.symbol}
-                  secondary={_token.name}
-                />
-              </ListItemButton>
-            </ListItem>
-          )) : null}
+      <StyledDialogContent sx={{ padding: 1, pb: 2 }}>
+        <List sx={{ p: 0 }}>
+          <Stack gap={1}>
+            {tokenList ? tokenList.map((_token) => (
+              <ListItem
+                key={_token.address}
+                color="primary"
+                selected={newSelection.has(_token)}
+                disablePadding
+                secondaryAction={balances ? (
+                  <Typography variant="bodyLarge">
+                    {displayBN(balances?.[_token.address]?.total || ZERO_BN)}
+                  </Typography>
+                ) : null}
+                onClick={onClickItem(_token)}
+                sx={{
+                  // ListItem is used elsewhere so we define here
+                  // instead of in muiTheme.ts
+                  '& .MuiListItemText-primary': {
+                    fontSize: FontSize['1xl'],
+                    lineHeight: '1.875rem'
+                  },
+                  '& .MuiListItemText-secondary': {
+                    fontSize: FontSize.base,
+                    lineHeight: '1.25rem',
+                    color: BeanstalkPalette.lightishGrey
+                  },
+                }}
+              >
+                <ListItemButton disableRipple>
+                  <ListItemIcon sx={{ pr: 1 }}>
+                    <img src={_token.logo} alt="" className={classes.tokenLogo} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={_token.symbol}
+                    secondary={_token.name}
+                    sx={{ my: 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            )) : null}
+          </Stack>
         </List>
       </StyledDialogContent>
       {mode === TokenSelectMode.MULTI && (
@@ -152,7 +170,7 @@ const TokenSelectDialog : React.FC<{
             color="primary"
             size="large"
           >
-            {newSelection.size === 0 
+            {newSelection.size === 0
               ? 'Select Token to Continue'
               : `Select ${newSelection.size} Token${newSelection.size === 1 ? '' : 's'}`}
           </Button>

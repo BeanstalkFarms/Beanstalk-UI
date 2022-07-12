@@ -169,8 +169,8 @@ const NavBar: React.FC<{}> = () => {
         >
           {/* Desktop: Left Side */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%">
-            <PriceButton sx={{ height: 44 }} />
-            <SunButton sx={{ height: 44 }} />
+            <PriceButton sx={{ height: 45 }} />
+            <SunButton sx={{ height: 45 }} />
             <Stack
               direction="row"
               alignItems="center"
@@ -201,10 +201,10 @@ const NavBar: React.FC<{}> = () => {
             spacing={1}
           >
             <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
-              <NetworkButton sx={{ height: 44 }} />
+              <NetworkButton sx={{ height: 45 }} />
             </Box>
-            <WalletButton sx={{ height: 44 }} />
-            <AboutButton />
+            <WalletButton sx={{ height: 45 }} />
+            <AboutButton sx={{ height: 45 }} />
           </Stack>
         </Stack>
       </AppBar>

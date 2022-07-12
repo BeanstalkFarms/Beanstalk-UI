@@ -153,7 +153,7 @@ const HarvestForm : React.FC<
               label="Deposit as"
               onClick={showTokenSelect}>
               <TokenIcon token={values.tokenOut} />
-              <Typography>{values.tokenOut.name}</Typography>
+              <Typography variant="body1">{values.tokenOut.name}</Typography>
             </PillRow>
             <TokenSelectDialog
               open={isTokenSelectVisible}
@@ -198,7 +198,6 @@ const HarvestForm : React.FC<
               </Accordion>
             </Box>
           </>
-
           <Button disabled={!isSubmittable || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
             Harvest
           </Button>

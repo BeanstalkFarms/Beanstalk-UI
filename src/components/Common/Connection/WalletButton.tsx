@@ -22,7 +22,6 @@ import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
-import tempUserIcon from 'img/interface/temp-user-icon.svg';
 import { trimAddress } from 'util/index';
 import { CHAIN_INFO } from 'constants/chains';
 
@@ -33,12 +32,12 @@ import balancesIcon from 'img/nav-icons/balances.svg';
 import historyIcon from 'img/nav-icons/history.svg';
 import etherscanIcon from 'img/nav-icons/etherscan.svg';
 import disconnectIcon from 'img/nav-icons/disconnect.svg';
+import useAnchor from 'hooks/display/useAnchor';
+import useToggle from 'hooks/display/useToggle';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import WalletDialog from './WalletDialog';
 import DropdownIcon from '../DropdownIcon';
 import PickBeansDialog from '../../Farmer/Unripe/PickDialog';
-import useAnchor from 'hooks/display/useAnchor';
-import useToggle from 'hooks/display/useToggle';
 import AddressIcon from '../AddressIcon';
 
 // -----------------------------------------------------------------
@@ -95,7 +94,9 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         <ListItemText>
           <Stack direction="row" gap={1} alignItems="center">
             <img src={balancesIcon} alt="Balances" width={20} />
-            Balances
+            <Typography variant="body1" color="text.primary">
+              Balances
+            </Typography>
           </Stack>
         </ListItemText>
       </MenuItem>
@@ -106,7 +107,9 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       >
         <Stack direction="row" gap={1} alignItems="center">
           <img src={historyIcon} alt="History" width={20} />
-          History
+          <Typography variant="body1" color="text.primary">
+            History
+          </Typography>
         </Stack>
       </MenuItem>
       <MenuItem
@@ -123,7 +126,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         >
           <Stack direction="row" gap={1} alignItems="center">
             <img src={etherscanIcon} alt="Etherscan" width={20} />
-            <Typography variant="body2" color="text.primary">
+            <Typography variant="body1" color="text.primary">
               View on Etherscan
             </Typography>
           </Stack>
@@ -139,7 +142,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       <MenuItem onClick={() => disconnect()}>
         <Stack direction="row" gap={1} alignItems="center">
           <img src={disconnectIcon} alt="Disconnect" width={20} />
-          <Typography variant="body2" color="text.primary">
+          <Typography variant="body1" color="text.primary">
             Disconnect Wallet
           </Typography>
         </Stack>
@@ -184,7 +187,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         {...props}
         onClick={toggleMenuAnchor}
       >
-        <Typography variant="subtitle1">
+        <Typography variant="bodyMedium">
           {trimAddress(getAccount(account.address), !isMedium)}
         </Typography>
       </Button>

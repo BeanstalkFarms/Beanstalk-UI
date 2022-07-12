@@ -65,7 +65,7 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
           ...props.sx
         }}
       >
-        <Typography variant="subtitle1" sx={{ display: { md: 'block', xs: 'none' } }}>
+        <Typography variant="bodyMedium" sx={{ display: { md: 'block', xs: 'none' } }}>
           {text}
         </Typography>
       </Button>

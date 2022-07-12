@@ -97,11 +97,7 @@ const NFTPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack spacing={2}>
         <PageHeader
-          title={
-            <>
-              <strong>BeaNFTs</strong>
-            </>
-          }
+          title="BeaNFTs"
           description="View and mint your BeaNFTs"
         />
         <Card sx={{ p: 2 }}>

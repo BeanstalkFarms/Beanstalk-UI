@@ -1,5 +1,6 @@
 // Ethereum Images
 import ethIconCircledUrl from 'img/tokens/eth-logo-circled.svg';
+import wEthIconCircledUrl from 'img/tokens/weth-logo-circled.svg';
 import ropEthIconCircledUrl from 'img/tokens/ropeth-logo-circled.svg';
 
 // Bean Images
@@ -132,7 +133,7 @@ export const WETH = {
     {
       name: 'Wrapped Ether',
       symbol: 'WETH',
-      logo: ethIconCircledUrl
+      logo: wEthIconCircledUrl
     }
   ),
   [SupportedChainId.ROPSTEN]: new ERC20Token(
@@ -142,7 +143,7 @@ export const WETH = {
     {
       name: 'Wrapped Ether',
       symbol: 'WETH',
-      logo: ethIconCircledUrl
+      logo: wEthIconCircledUrl
     }
   )
 };

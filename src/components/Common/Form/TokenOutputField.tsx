@@ -5,6 +5,7 @@ import React from 'react';
 import { displayFullBN, displayUSD } from 'util/index';
 import TokenIcon from '../TokenIcon';
 import OutputField from './OutputField';
+import { IconSize } from '../../App/muiTheme';
 
 const TokenOutputField : React.FC<{
   /** */
@@ -33,10 +34,10 @@ const TokenOutputField : React.FC<{
   return (
     <OutputField isNegative={isNegative}>
       {!isLoading ? (
-        <Typography display="inline" sx={{ fontSize: 24, fontWeight: 'normal' }}>
+        <Typography display="inline" variant="bodyLarge">
           {prefix}{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
           {value && (
-            <>&nbsp;&nbsp;<Typography display="inline" fontSize={14}>(~{displayUSD(value)})</Typography></>
+            <>&nbsp;&nbsp;<Typography display="inline" variant="bodySmall">(~{displayUSD(value)})</Typography></>
           )}
         </Typography>
       ) : (
@@ -47,11 +48,11 @@ const TokenOutputField : React.FC<{
           <TokenIcon
             token={token}
             style={{ 
-              height: 18,
+              height: IconSize.small,
             }}
           />
         )}
-        <Typography>
+        <Typography variant="bodyMedium">
           {modifier && `${modifier} `}{token.name}
         </Typography>
       </Stack>

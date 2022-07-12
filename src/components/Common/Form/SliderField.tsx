@@ -81,7 +81,7 @@ const SliderField : React.FC<
   // const valueLabelFormat = useCallback((value: string, index: number) => )
 
   return (
-    <Stack gap={0.5}>
+    <Stack gap={0.5} py={1.5}>
       <Slider
         min={min}
         max={max}

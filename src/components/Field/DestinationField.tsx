@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
+import siloIcon from 'img/beanstalk/silo-icon.svg';
 import AddressIcon from '../Common/AddressIcon';
 import PillSelectField from '../Common/Form/PillSelectField';
-import siloIcon from 'img/beanstalk/silo-icon.svg';
+import { IconSize } from '../App/muiTheme';
 
 const DestinationField : React.FC<{
   name: string;
@@ -14,22 +15,22 @@ const DestinationField : React.FC<{
     {
       title: 'Wallet',
       description: 'Transfer Harvestable Pods to your wallet as Beans.',
-      pill: <><AddressIcon size={16} /><Typography>Wallet</Typography></>,
-      icon: <AddressIcon size={36} />,
+      pill: <><AddressIcon size={14} /><Typography variant="body1">Wallet</Typography></>,
+      icon: <AddressIcon size={IconSize.small} width={IconSize.small} height={IconSize.small} />,
       value: FarmToMode.EXTERNAL,
     },
     {
       title: 'Farm Balance',
       description: 'Transfer Harvestable Pods to your internal Beanstalk balance as Beans.',
-      pill: <><Typography>🚜</Typography><Typography>Farm Balance</Typography></>,
+      pill: <Typography variant="body1">🚜 Farm Balance</Typography>,
       icon: '🚜',
       value: FarmToMode.INTERNAL,
     },
     {
       title: 'The Silo ',
       description: 'Transfer Harvestable Pods to the Silo as Deposited Beans to earn yield.',
-      pill: <><Typography>🚜</Typography><Typography>Farm Balance</Typography></>,
-      icon: <img src={siloIcon} alt="" width={35} />,
+      pill: <Typography variant="body1">🚜 The Silo</Typography>,
+      icon: <img src={siloIcon} alt="" height={IconSize.small} />,
       value: FarmToMode.DEPOSIT,
     }]
   ), []);

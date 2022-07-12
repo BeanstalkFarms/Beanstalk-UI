@@ -22,7 +22,7 @@ import ROUTES from '../routes';
 import useAnchor from 'hooks/display/useAnchor';
 import useToggle from 'hooks/display/useToggle';
 
-const AboutButton: React.FC<ButtonProps> = () => {
+const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   // Theme
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('lg'));   // trim additional account text at medium
@@ -95,6 +95,7 @@ const AboutButton: React.FC<ButtonProps> = () => {
           lineHeight: 0,
           minWidth: 0,
           px: 1,
+          ...sx
         }}
       >
         <MoreHorizIcon />
