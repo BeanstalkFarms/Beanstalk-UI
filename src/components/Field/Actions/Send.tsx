@@ -23,6 +23,7 @@ import { useAccount, useSigner } from 'wagmi';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import DropdownField from '../../Common/Form/DropdownField';
 import SelectPlotDialog from '../SelectPlotDialog';
 import PlotDetails from '../../Market/Cards/PlotDetails';
@@ -30,12 +31,14 @@ import { AppState } from '../../../state';
 import { ZERO_BN } from '../../../constants';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import InputField from '../../Common/Form/InputField';
-import podsIcon from '../../../img/beanstalk/pod-icon.svg';
+import podIcon from '../../../img/beanstalk/pod-icon.svg';
 import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import SliderField from '../../Common/Form/SliderField';
 import Warning from '../../Common/Form/Warning';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
+import { IconSize } from '../../App/muiTheme';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export type SendFormValues = {
   to: string | null;
@@ -127,23 +130,42 @@ const SendForm: React.FC<
           <DropdownField buttonText="Select a Plot" handleOpenDialog={showDialog} />
         ) : (
           <>
-            <PlotDetails
-              placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)}
-              numPods={new BigNumber(farmerField.plots[values?.plotIndex])}
-              onClick={showDialog}
-            />
             <FieldWrapper>
-              {/*<TokenInputField*/}
-              {/*  name="amount"*/}
-              {/*  token={PODS}*/}
-              {/*  placeholder="0.0000"*/}
-              {/*  balance={numPods || ZERO_BN}*/}
-              {/*  hideBalance*/}
-              {/*  InputProps={{*/}
-              {/*    endAdornment: <TokenAdornment token={PODS} />*/}
-              {/*  }}*/}
-              {/*  handleChange={handleChangeAmount}*/}
-              {/*/>*/}
+              <TokenInputField
+                name="amount"
+                // MUI
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <TokenAdornment
+                      token={PODS}
+                      onClick={showDialog}
+                    />
+                  ),
+                }}
+                // Other
+                balance={new BigNumber(farmerField.plots[values?.plotIndex])}
+                balanceLabel="Plot Size"
+                handleChange={handleChangeAmount}
+              />
+            </FieldWrapper>
+            {/*<PlotDetails*/}
+            {/*  placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)}*/}
+            {/*  numPods={new BigNumber(farmerField.plots[values?.plotIndex])}*/}
+            {/*  onClick={showDialog}*/}
+            {/*/>*/}
+            <FieldWrapper>
+              {/* <TokenInputField */}
+              {/*  name="amount" */}
+              {/*  token={PODS} */}
+              {/*  placeholder="0.0000" */}
+              {/*  balance={numPods || ZERO_BN} */}
+              {/*  hideBalance */}
+              {/*  InputProps={{ */}
+              {/*    endAdornment: <TokenAdornment token={PODS} /> */}
+              {/*  }} */}
+              {/*  handleChange={handleChangeAmount} */}
+              {/* /> */}
               <Box px={1}>
                 <SliderField
                   min={0}

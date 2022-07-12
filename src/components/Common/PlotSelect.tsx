@@ -74,7 +74,7 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
                   <img src={podIcon} alt="" className={classes.tokenLogo} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="POD"
+                  primary="PODS"
                   secondary={`Place in Line: ${displayBN(new BigNumber(index).minus(harvestableIndex))}`}
                   sx={{ my: 0 }}
                 />
