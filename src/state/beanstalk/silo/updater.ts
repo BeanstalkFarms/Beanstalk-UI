@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK,  REPLANTED_CHAINS,  SupportedChainId,  TokenMap, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/Ledger';
-import { tokenResult, toStringBaseUnitBN } from 'util/Tokens';
+import { tokenResult, toStringBaseUnitBN } from 'util/index';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';

@@ -1,5 +1,7 @@
 import { useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
+import { useAccount } from 'wagmi';
 import { ZERO_BN } from 'constants/index';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from 'constants/tokens';
@@ -7,11 +9,7 @@ import useChainId from 'hooks/useChain';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';
 import useTokenMap from 'hooks/useTokenMap';
-import { useDispatch } from 'react-redux';
-import { getAccount } from 'util/Account';
-
-import { tokenResult } from 'util/Tokens';
-import { useAccount } from 'wagmi';
+import { getAccount, tokenResult } from 'util/index';
 import useChainConstant from 'hooks/useChainConstant';
 import { clearBalances, updateBalances } from './actions';
 

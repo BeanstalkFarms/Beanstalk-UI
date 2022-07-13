@@ -218,7 +218,7 @@ export const TRICRYPTO2_ADDRESSES = {
 };
 
 // ----------------------------------------
-// Curve: Registries / Factories
+// Curve: Registries / Factories / Utils
 // ----------------------------------------
 // "metapool" and "cryptoswap" are simultaneously
 // - "registries" (they track a list of pools)
@@ -237,4 +237,9 @@ export const META_FACTORY_ADDRESSES   = {
 // tricrypto2, etc.
 export const CRYPTO_FACTORY_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x8F942C20D02bEfc377D41445793068908E2250D0'.toLowerCase()
+};
+
+// zap
+export const CURVE_ZAP_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0xA79828DF1850E8a3A3064576f380D90aECDD3359'.toLowerCase()
 };

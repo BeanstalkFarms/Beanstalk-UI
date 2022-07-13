@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
-import { BeanstalkReplanted__factory, Curve3Pool__factory, CurveTriCrypto2Pool__factory, CurveRegistry__factory, CurveMetaFactory__factory, CurveCryptoFactory__factory, CurveMetaPool__factory, CurvePlainPool__factory } from 'generated';
-import { BEANSTALK_ADDRESSES, BEAN_CRV3_ADDRESSES, CRYPTO_FACTORY_ADDRESSES, META_FACTORY_ADDRESSES, POOL3_ADDRESSES, POOL_REGISTRY_ADDRESSES, TRICRYPTO2_ADDRESSES } from 'constants/index';
+import { BeanstalkReplanted__factory, Curve3Pool__factory, CurveTriCrypto2Pool__factory, CurveRegistry__factory, CurveMetaFactory__factory, CurveCryptoFactory__factory, CurveMetaPool__factory, CurvePlainPool__factory, CurveZap__factory } from 'generated';
+import { BEANSTALK_ADDRESSES, BEAN_CRV3_ADDRESSES, CRYPTO_FACTORY_ADDRESSES, CURVE_ZAP_ADDRESSES, META_FACTORY_ADDRESSES, POOL3_ADDRESSES, POOL_REGISTRY_ADDRESSES, TRICRYPTO2_ADDRESSES } from 'constants/index';
 import { Result } from 'ethers/lib/utils';
 import { BEAN, USDT, WETH } from 'constants/tokens';
 import { getChainConstant } from 'util/Chain';
@@ -45,10 +45,13 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
   const POOL_REGISTRY   = getChainConstant(POOL_REGISTRY_ADDRESSES, chainId);
   const META_FACTORY    = getChainConstant(META_FACTORY_ADDRESSES, chainId);
   const CRYPTO_FACTORY  = getChainConstant(CRYPTO_FACTORY_ADDRESSES, chainId);
+  const ZAP             = getChainConstant(CURVE_ZAP_ADDRESSES, chainId);
+
   // Instances
   const poolRegistry    = CurveRegistry__factory.connect(POOL_REGISTRY, provider);
   const metaFactory     = CurveMetaFactory__factory.connect(META_FACTORY, provider);
   const cryptoFactory   = CurveCryptoFactory__factory.connect(CRYPTO_FACTORY, provider);
+  const zap             = CurveZap__factory.connect(ZAP, provider);
 
   return {
     beanstalk: BeanstalkReplanted__factory.connect(BEANSTALK, provider),
@@ -68,6 +71,7 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
         cryptoFactory,
         [CRYPTO_FACTORY]: cryptoFactory,
       },
+      zap,
     }
   };
 };

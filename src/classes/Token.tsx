@@ -3,6 +3,7 @@ import { AddressMap, ZERO_BN, MAX_UINT256 } from 'constants/index';
 import { bigNumberResult } from 'util/Ledger';
 import { erc20TokenContract } from 'util/Contracts';
 import client from 'util/Client';
+import { toStringBaseUnitBN } from 'util/Tokens';
 
 /**
  * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
@@ -128,6 +129,16 @@ export default abstract class Token {
 
   public toString(): string {
     return this.name;
+  }
+
+  /**
+   * Convert an `amount` of this Token into a string value
+   * based on the configured number of decimals.
+   * @param amount amount to convert
+   * @returns string 
+   */
+  public stringify(amount: BigNumber) {
+    return toStringBaseUnitBN(amount, this.decimals);
   }
 }
 

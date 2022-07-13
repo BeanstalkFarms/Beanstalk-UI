@@ -1,8 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { bigNumberResult } from 'util/Ledger';
-import { tokenResult } from 'util/Tokens';
-
+import { bigNumberResult, tokenResult } from 'util/index';
 import { BEAN } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { resetBeanstalkField, updateBeanstalkField } from './actions';
