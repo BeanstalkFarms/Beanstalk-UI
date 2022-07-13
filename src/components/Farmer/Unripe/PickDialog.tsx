@@ -22,7 +22,7 @@ import { SupportedChainId, ZERO_BN } from 'constants/index';
 import Token from 'classes/Token';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { displayFullBN, displayUSD, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayFullBN, displayUSD, toTokenUnitsBN } from 'util/index';
 import useChainId from 'hooks/useChain';
 import pickImage from 'img/pick.png';
 import UnripeTokenRow from './UnripeTokenRow';
@@ -126,15 +126,15 @@ const PickBeansDialog: React.FC<{
     (async () => {
       if (account?.address && open) {
         const [
-          unripe,
-          merkles
+          _unripe,
+          _merkles
         ] = await Promise.all([
           fetch(`/.netlify/functions/unripe?account=${getAccount(account.address.toLowerCase())}`).then((response) => response.json()),
           fetch(`/.netlify/functions/pick?account=${getAccount(account.address.toLowerCase())}`).then((response) => response.json())
         ]);
 
-        setUnripe(unripe);
-        setMerkles(merkles);
+        setUnripe(_unripe);
+        setMerkles(_merkles);
       }
     })();
   }, [account, open]);
@@ -190,7 +190,7 @@ const PickBeansDialog: React.FC<{
           FarmFromMode.INTERNAL, // always use internal for deposits
         ]));
       }
-    };
+    }
 
     const txToast = new TransactionToast({
       loading: `Picking${deposit ? ` and depositing` : ''} Unripe Assets`,
@@ -212,7 +212,11 @@ const PickBeansDialog: React.FC<{
         );
         setPickStatus('error');
       });
-  }, [merkles, beanstalk])
+  }, [
+    merkles,
+    beanstalk,
+    getChainToken,
+  ])
 
   /// Tab: Pick Overview
   let buttonText = "Nothing to Pick";

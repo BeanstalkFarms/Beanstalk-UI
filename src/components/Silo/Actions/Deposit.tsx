@@ -217,13 +217,13 @@ const Deposit : React.FC<{
         [whitelistedToken],
         [{ token: whitelistedToken }]
       ];
-    } else {
-      let _tokenList = Object.values(allAvailableTokens);
-      return [
-        _tokenList,
-        _tokenList.map((t) => ({ token: t })),
-      ]
-    }
+    } 
+
+    const _tokenList = Object.values(allAvailableTokens);
+    return [
+      _tokenList,
+      _tokenList.map((t) => ({ token: t })),
+    ]
   }, [
     isUnripe,
     whitelistedToken,
@@ -514,7 +514,7 @@ const Deposit : React.FC<{
           </TxnSettings>
           <DepositForm
             handleQuote={handleQuote}
-            tokenList={tokenList}
+            tokenList={tokenList as (ERC20Token | NativeToken)[]}
             whitelistedToken={whitelistedToken}
             balances={balances}
             contract={beanstalk}

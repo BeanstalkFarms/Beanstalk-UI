@@ -191,7 +191,7 @@ export const useBeanstalkSilo = () => {
       }));
     }
   }, [
-    SiloTokens.Bean.address,
+    SiloTokens.Bean,
     SiloTokens.BeanEthLP.address,
     dispatch,
     migrate,

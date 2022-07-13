@@ -44,7 +44,8 @@ export const useFetchFarmerFertilizer = () => {
     dispatch,
     migrate,
     fertContract,
-    replantId
+    replantId,
+    beanstalk
   ]); 
   const clear = useCallback(() => { 
     dispatch(resetFertilizer());
