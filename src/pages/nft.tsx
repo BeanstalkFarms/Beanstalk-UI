@@ -1,28 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Container, Divider, Stack, Tab, Tabs, Typography, } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
-import { useAccount } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import fetch from 'node-fetch';
+import { getAccount } from 'util/Account';
+import { ClaimStatus, loadNFTs, Nft } from 'util/BeaNFTs';
 import NFTDialog from '../components/NFT/NFTDialog';
 import WalletCard from '../components/NFT/WalletCard';
-import { loadNFTs } from '../graph';
 import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '../constants';
 import NFTGrid from '../components/NFT/NFTGrid';
-import { ClaimStatus } from '../util/BeaNFTs';
-
-type Nft = {
-  id: number;
-  metadataIpfsHash?: string;
-  imageIpfsHash?: string;
-  signature?: string;
-  account: string;
-  subcollection: string;
-  /** 0 => claimed, 1 => unclaimed  */
-  claimed?: ClaimStatus;
-}
+import { useGenesisNFTContract, useWinterNFTContract } from '../hooks/useContract';
+import TransactionToast from '../components/Common/TxnToast';
 
 const NFTPage: React.FC = () => {
   const { data: account } = useAccount();
+  const { data: signer } = useSigner();
+  const genesisContract = useGenesisNFTContract(signer);
+  const winterContract = useWinterNFTContract(signer);
 
   // component state
   const [tab, setTab] = useState(0);
@@ -31,7 +25,9 @@ const NFTPage: React.FC = () => {
   // NFT state
   const [selectedNFT, setSelectedNFT] = useState<Nft | null>(null);
   const [genesisNFTs, setGenesisNFTs] = useState<Nft[] | null>(null);
-  const [winterNFTs, setWinterNFTs] = useState<Nft[] | null>(null);
+  const [winterNFTs, setWinterNFTs]   = useState<Nft[] | null>(null);
+  const unmintedGenesis = genesisNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
+  const unmintedWinter = winterNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
 
   // handlers
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -62,6 +58,7 @@ const NFTPage: React.FC = () => {
     fetch(fetchURL, requestOptions)
       .then((response) => response.json())
       .then((response) => {
+        console.debug('[parseMints] response: ', response);
         // hashes of only user's claimed nfts
         const nftHashes = response.ownedNfts.map((nft: any) => nft.metadata.image.replace('ipfs://', ''));
         for (let i = 0; i < accountNFTs.length; i += 1) {
@@ -75,11 +72,117 @@ const NFTPage: React.FC = () => {
       });
   }, [account?.address]);
 
+  // Mint Single Genesis BeaNFT
+  const mintGenesis = () => {
+    if (selectedNFT?.claimed === ClaimStatus.UNCLAIMED && account?.address) {
+      const txToast = new TransactionToast({
+        loading: `Minting Genesis BeaNFT ${selectedNFT.id}`,
+        success: 'Mint complete!',
+      });
+      
+      genesisContract.mint(getAccount(account.address), selectedNFT.id, selectedNFT.metadataIpfsHash as string, selectedNFT.signature as string)
+        .then((txn) => {
+          txToast.confirming(txn);
+          return txn.wait();
+        })
+        .then((receipt) => {
+          txToast.success(receipt);
+        })
+        .catch((err) => {
+          console.error(
+            txToast.error(err.error || err)
+          );
+        });
+    }
+  };
+
+  // Mint All Genesis BeaNFTs
+  const mintAllGenesis = () => {
+    if (unmintedGenesis && genesisNFTs && account?.address && unmintedGenesis?.length > 0) {
+      const txToast = new TransactionToast({
+        loading: 'Minting all Genesis BeaNFTs',
+        success: 'Mint complete!',
+      });
+      
+      const accounts   = Array(unmintedGenesis.length).fill(getAccount(account.address));
+      const tokenIds   = unmintedGenesis.map((nft) => nft.id);
+      const ipfsHashes = unmintedGenesis.map((nft) => (nft.metadataIpfsHash as string));
+      const signatures = unmintedGenesis.map((nft) => (nft.signature as string));
+      genesisContract.batchMint(accounts, tokenIds, ipfsHashes, signatures)
+        .then((txn) => {
+          txToast.confirming(txn);
+          return txn.wait();
+        })
+        .then((receipt) => {
+          txToast.success(receipt);
+        })
+        .catch((err) => {
+          console.error(
+            txToast.error(err.error || err)
+          );
+        });
+    }
+  };
+  
+  // Mint Single Winter BeaNFT
+  const mintWinter = () => {
+    if (selectedNFT?.claimed === ClaimStatus.UNCLAIMED && account?.address) {
+      const txToast = new TransactionToast({
+        loading: `Minting Winter BeaNFT ${selectedNFT.id}`,
+        success: 'Mint complete!',
+      });
+      
+      winterContract.mint(getAccount(account.address), selectedNFT.id, selectedNFT.signature2 as string)
+        .then((txn) => {
+          txToast.confirming(txn);
+          return txn.wait();
+        })
+        .then((receipt) => {
+          txToast.success(receipt);
+        })
+        .catch((err) => {
+          console.error(
+            txToast.error(err.error || err)
+          );
+        });
+    }
+  };
+
+  // Mint All Winter BeaNFTs
+  const mintAllWinter = () => {
+    if (unmintedWinter && winterNFTs && account?.address && (unmintedWinter.length > 0)) {
+      const txToast = new TransactionToast({
+        loading: 'Minting all Winter BeaNFTs',
+        success: 'Mint complete!',
+      });
+      
+      const tokenIds   = unmintedWinter.map((nft) => nft.id);
+      const signatures = unmintedWinter.map((nft) => (nft.signature2 as string));
+      winterContract.batchMintAccount(getAccount(account.address), tokenIds, signatures)
+        .then((txn) => {
+          txToast.confirming(txn);
+          return txn.wait();
+        })
+        .then((receipt) => {
+          txToast.success(receipt);
+        })
+        .catch((err) => {
+          console.error(
+            txToast.error(err.error || err)
+          );
+        });
+    }
+  };
+
+  // maps a NFT collection to a mint function
+  const contractMap: {[s: string]: any} = {
+    Genesis: mintGenesis,
+    Winter: mintWinter,
+  };
+
   useEffect(() => {
     if (account?.address !== undefined) {
-      // FIXME: move this to a datastore and fetch with an API
-      // gets all BeaNFTs (claimed & unclaimed) from parsed-accounts.json
-      loadNFTs(account.address.toLowerCase()).then((data) => {
+      loadNFTs(getAccount(account.address)).then((data) => {
         const genNFTs = data.genesis;
         const winNFTs = data.winter;
 
@@ -89,6 +192,7 @@ const NFTPage: React.FC = () => {
     }
   }, [account?.address, parseMints]);
 
+  // TODO: direct user to connect a wallet
   if (account?.address === undefined) {
     return null;
   }
@@ -109,11 +213,11 @@ const NFTPage: React.FC = () => {
                 <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs?.length})`} />
                 <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
               </Tabs>
-              {tab === 0 && (
-                <Button>Mint All Genesis</Button>
+              {tab === 0 && genesisNFTs && (
+                <Button disabled={!unmintedGenesis || unmintedGenesis.length === 0} onClick={mintAllGenesis}>Mint All Genesis</Button>
               )}
-              {tab === 1 && (
-                <Button>Mint All Winter</Button>
+              {tab === 1 && winterNFTs && (
+                <Button disabled={!unmintedWinter || unmintedWinter.length === 0} onClick={mintAllWinter}>Mint All Winter</Button>
               )}
             </Stack>
             <Divider />
@@ -138,7 +242,10 @@ const NFTPage: React.FC = () => {
         nft={selectedNFT}
         dialogOpen={dialogOpen}
         handleDialogClose={handleDialogClose}
-        address={account.address} />}
+        address={account.address}
+        handleMint={contractMap[selectedNFT.subcollection]}
+      />}
+      
     </Container>
   );
 };

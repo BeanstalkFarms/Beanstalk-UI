@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { CircularProgress, TextFieldProps, Typography } from '@mui/material';
+import { CircularProgress, Stack, TextFieldProps, Typography } from '@mui/material';
 import { Token } from 'classes';
 import { Field, FieldProps, useFormikContext } from 'formik';
 import TokenInputField, { TokenInputProps } from 'components/Common/Form/TokenInputField';
@@ -114,7 +114,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // when the user switches selected tokens.
   const Quote = useMemo(() => (
     hideQuote ? undefined : (
-      <>
+      <Stack direction="row" alignItems="center" gap={0.5}>
         {state.amountOut && (
           <Typography variant="body1">
             ≈ {displayFullBN(state.amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
@@ -123,7 +123,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
         {quoting && (
           <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />
         )}
-      </>
+      </Stack>
     )
   ), [
     state.amountOut,
