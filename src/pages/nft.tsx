@@ -26,6 +26,8 @@ const NFTPage: React.FC = () => {
   const [selectedNFT, setSelectedNFT] = useState<Nft | null>(null);
   const [genesisNFTs, setGenesisNFTs] = useState<Nft[] | null>(null);
   const [winterNFTs, setWinterNFTs]   = useState<Nft[] | null>(null);
+  const unmintedGenesis = genesisNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
+  const unmintedWinter = winterNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
 
   // handlers
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -70,40 +72,30 @@ const NFTPage: React.FC = () => {
       });
   }, [account?.address]);
 
-  // TODO: not working
   const mintAllGenesis = () => {
-    if (account?.address && genesisNFTs) {
-      const unminted = genesisNFTs.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
-      if (unminted.length > 0) {
-        const accounts   = Array(unminted.length).fill(getAccount(account.address));
-        const tokenIds   = unminted.map((nft) => nft.id);
-        const ipfsHashes = unminted.map((nft) => (nft.metadataIpfsHash as string));
-        const signatures = unminted.map((nft) => (nft.signature as string));
-        console.log(`[mintAllGenesis] Minting ${unminted.length} NFTs`, accounts, tokenIds, ipfsHashes, signatures);
-        genesisContract.batchMint(
-          accounts,
-          tokenIds,
-          ipfsHashes,
-          signatures
-        );
-      }
+    if (unmintedGenesis && (account?.address && genesisNFTs) && (unmintedGenesis.length > 0)) {
+      const accounts   = Array(unmintedGenesis.length).fill(getAccount(account.address));
+      const tokenIds   = unmintedGenesis.map((nft) => nft.id);
+      const ipfsHashes = unmintedGenesis.map((nft) => (nft.metadataIpfsHash as string));
+      const signatures = unmintedGenesis.map((nft) => (nft.signature as string));
+      genesisContract.batchMint(
+        accounts,
+        tokenIds,
+        ipfsHashes,
+        signatures
+      );
     }
   };
 
-  // WORKS
   const mintAllWinter = () => {
-    if (account?.address && winterNFTs) {
-      const unminted = winterNFTs.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
-      console.debug(`[mintAllWinter] trying to mint`, winterNFTs, unminted)
-      if (unminted.length > 0) {
-        const tokenIds   = unminted.map((nft) => nft.id);
-        const signatures = unminted.map((nft) => (nft.signature2 as string));
-        winterContract.batchMintAccount(
-          account.address,
-          tokenIds,
-          signatures
-        );
-      }
+    if (unmintedWinter && (account?.address && winterNFTs) && (unmintedWinter.length > 0)) {
+      const tokenIds   = unmintedWinter.map((nft) => nft.id);
+      const signatures = unmintedWinter.map((nft) => (nft.signature2 as string));
+      winterContract.batchMintAccount(
+        account.address,
+        tokenIds,
+        signatures
+      );
     }
   };
 
@@ -142,10 +134,10 @@ const NFTPage: React.FC = () => {
                 <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
               </Tabs>
               {tab === 0 && genesisNFTs && (
-                <Button onClick={mintAllGenesis}>Mint All Genesis</Button>
+                <Button disabled={!unmintedGenesis || unmintedGenesis.length === 0} onClick={mintAllGenesis}>Mint All Genesis</Button>
               )}
               {tab === 1 && winterNFTs && (
-                <Button onClick={mintAllWinter}>Mint All Winter</Button>
+                <Button disabled={!unmintedWinter || unmintedWinter.length === 0} onClick={mintAllWinter}>Mint All Winter</Button>
               )}
             </Stack>
             <Divider />
