@@ -12,6 +12,52 @@ import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/chains';
 
 // ------------------------------------------------------------
 
+import { providers } from 'ethers'
+
+export type JsonRpcBatchProviderConfig = Omit<providers.FallbackProviderConfig, 'provider'> & {
+  pollingInterval?: number
+  rpc: (chain: Chain) => { http: string; webSocket?: string } | null
+}
+
+export function jsonRpcBatchProvider({
+  pollingInterval,
+  rpc,
+  //
+  priority,
+  stallTimeout,
+  weight,
+}: JsonRpcBatchProviderConfig) {
+  return function (_chain: Chain) {
+    const rpcConfig = rpc(_chain)
+    if (!rpcConfig || rpcConfig.http === '') return null
+    return {
+      chain: {
+        ..._chain,
+        rpcUrls: {
+          ..._chain.rpcUrls,
+          default: rpcConfig.http,
+        },
+      },
+      provider: () => {
+        const RpcProvider = providers.JsonRpcBatchProvider;
+        const provider = new RpcProvider(rpcConfig.http, {
+          chainId: _chain.id,
+          name: _chain.network,
+        })
+        if (pollingInterval) provider.pollingInterval = pollingInterval
+        return Object.assign(provider, { priority, stallTimeout, weight })
+      },
+      ...(rpcConfig.webSocket && {
+        webSocketProvider: () =>
+          new providers.WebSocketProvider(
+            rpcConfig.webSocket as string,
+            _chain.id,
+          ),
+      }),
+    }
+  }
+}
+
 // Setup node
 // FIXME: overlaps heavily with Uniswap fork implementation
 const makeTestnet = (_chainId: number, name: string) : Chain => ({
@@ -51,13 +97,21 @@ const { chains, provider } = configureChains(
       alchemyId: process.env.REACT_APP_ALCHEMY_API_KEY,
       priority: 0,
     }),
-    jsonRpcProvider({
+    jsonRpcBatchProvider({
       priority: 1,
       rpc: (_chain) => {
         if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
         return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
-      }
+      },
     }),
+    // jsonRpcProvider({
+    //   priority: 1,
+    //   rpc: (_chain) => {
+    //     if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
+    //     return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
+    //   },
+    //   static: false,
+    // }),
     publicProvider({
       priority: 2,
     }),
