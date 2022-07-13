@@ -46,7 +46,7 @@ const RemainingFertilizer: React.FC = () => {
             <Stack gap={3}>
               <Stack gap={1}>  
                 <Typography>Available Fertilizer&nbsp;
-                  <Tooltip title="Once bought, Fertilizer will receive a pro rata share of one-third of new Bean mints until the Humidity, or interest rate, is paid back." placement="top-start">
+                  <Tooltip title="Once bought, Available Fertilizer becomes Active. Active Fertilizer comes with Sprouts, the number of Beans to be earned from Active Fertilizer. One-third of Bean mints go towards ripening Sprouts when there is Active Fertilizer." placement="top-start">
                     <HelpOutlineIcon
                       sx={{ color: 'text.secondary', fontSize: '14px' }}
                     />
@@ -73,7 +73,7 @@ const RemainingFertilizer: React.FC = () => {
               </Stack>
               <Stack gap={1}>
                 <Typography>Humidity&nbsp;
-                  <Tooltip title="The interest rate on Fertilizer. The Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached." placement="top-start">
+                  <Tooltip title="The interest rate on Fertilizer. The Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached. The Humidity determines how many Sprouts come with Fertilizer." placement="top-start">
                     <HelpOutlineIcon
                       sx={{ color: 'text.secondary', fontSize: '14px' }}
                     />

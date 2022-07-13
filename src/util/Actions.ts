@@ -102,7 +102,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.BUY_FERTILIZER:
       return `Buy ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`;
     case ActionType.RECEIVE_FERT_REWARDS:
-      return `Receive a pro rata share of ⅓ of new Bean mints until ${displayFullBN(a.amountOut, 2)} Beans are earned.`;
+      return `Receive ${displayFullBN(a.amountOut, 2)} Sprouts. Sprouts become Fertilized pro rata as the Bean supply increases.`;
 
     /// DEFAULT
     default: 

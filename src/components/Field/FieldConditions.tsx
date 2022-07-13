@@ -41,7 +41,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
           </Grid>
           <Grid item xs={12} md={4}>
             <Stack gap={0.5}>
-              <Typography variant="h4">Weather&nbsp;
+              <Typography variant="h4">Temperature&nbsp;
                 <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
                   <HelpOutlineIcon
                     sx={{ color: 'text.secondary', fontSize: '14px' }}

@@ -1,15 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
+import { NEW_BN, ZERO_BN } from 'constants/index';
 import { Fertilizer } from '.';
-import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
+import { resetFertilizer, setRemaining, setTotalRaised, setHumidity } from './actions';
 
-const ZERO = new BigNumber(0);
-// const NEG1 = new BigNumber(-1);
 
 const initialState : Fertilizer = {
-  remaining: ZERO,
-  totalRaised: ZERO,
-  // humidity: NEG1,
+  remaining: ZERO_BN,
+  totalRaised: ZERO_BN,
+  humidity: NEW_BN,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -20,8 +19,8 @@ export default createReducer(initialState, (builder) =>
     .addCase(setTotalRaised, (state, { payload }) => {
       state.totalRaised = payload;
     })
+    .addCase(setHumidity, (state, { payload }) => {
+      state.humidity = payload;
+    })
     .addCase(resetFertilizer, () => initialState)
-    // .addCase(setHumidity, (state, { payload }) => {
-    //   state.humidity = payload;
-    // })
 );

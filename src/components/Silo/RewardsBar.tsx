@@ -34,13 +34,13 @@ const RewardsBar : React.FC<{
         <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
           <RewardItem
             title="Earned Beans"
-            tooltip="The number of Beans earned since your last interaction with the Silo. Earned Beans are automatically Deposited in the Silo."
+            tooltip="The number of Beans earned since your last Mow, or last interaction with the Silo. Earned Beans are already Deposited in the Silo."
             amount={beans.earned}
             icon={beanIcon}
           />
           <RewardItem
             title="Earned Stalk"
-            tooltip="The number of Stalk earned from Earned Beans. Earned Stalk automatically contributes to total Stalk ownership."
+            tooltip="The number of Stalk earned from Earned Beans. Earned Stalk automatically contribute to your Stalk ownership and do not require any action to activate them."
             amount={stalk.earned}
             icon={stalkIcon}
           />
@@ -53,13 +53,13 @@ const RewardsBar : React.FC<{
         <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
           <RewardItem
             title="Plantable Seeds"
-            tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
+            tooltip="The number of Seeds earned from Earned Beans. Plantable Seeds do not grow Stalk until they are Planted."
             amount={seeds.earned}
             icon={seedIcon}
           />
           <RewardItem
             title="Grown Stalk"
-            tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
+            tooltip="The number of Stalk earned from Seeds. Grown Stalk does not contribute to your Stalk ownership and must be Mown to add it to your Stalk balance."
             amount={stalk.grown}
             icon={stalkIcon}
           />
@@ -71,13 +71,13 @@ const RewardsBar : React.FC<{
         <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
           <RewardItem
             title="Revitalized Stalk"
-            tooltip="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed."
+            tooltip="The number of pre-exploit Stalk that has vested as a function of Fertilizer sold. Revitalized Stalk does not contribute to your Stalk ownership and must be Enrooted to add it to your Stalk balance."
             amount={new BigNumber(0)}
             icon={stalkIcon}
           />
           <RewardItem
-            title="Revitalized Seed"
-            tooltip="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership."
+            title="Revitalized Seeds"
+            tooltip="The number of pre-exploit Seeds that have vested as a function of Fertilizer sold. Revitalized Seeds do not grow Stalk until they are Enrooted."
             amount={new BigNumber(0)}
             icon={seedIcon}
           />

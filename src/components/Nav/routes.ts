@@ -67,7 +67,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
   more: [
     {
       path: 'market',
-      title: 'Pod Market',
+      title: 'Market',
       icon: tradeIcon
     },
     {

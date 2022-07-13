@@ -895,6 +895,19 @@
     },
     {
         "inputs": [],
+        "name": "getCurrentHumidity",
+        "outputs": [
+            {
+                "internalType": "uint128",
+                "name": "humidity",
+                "type": "uint128"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "getEndBpf",
         "outputs": [
             {
@@ -942,7 +955,7 @@
         "inputs": [
             {
                 "internalType": "uint128",
-                "name": "id",
+                "name": "_s",
                 "type": "uint128"
             }
         ],
@@ -4083,7 +4096,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "ClaimUnripe",
+        "name": "Pick",
         "type": "event"
     },
     {
@@ -4389,6 +4402,30 @@
         "name": "pick",
         "outputs": [],
         "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            }
+        ],
+        "name": "picked",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
