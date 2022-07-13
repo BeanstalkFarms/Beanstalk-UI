@@ -72,9 +72,9 @@ export default function useFarmerSiloBreakdown() {
   // Helpers
   const getUSD = useSiloTokenToUSD();
 
-  return useMemo(() => {
+  return useMemo(() => 
     // console.debug('[useFarmerSiloBreakdown] running reducer');
-    return WHITELIST_ADDRS.reduce((prev, address) => {
+     WHITELIST_ADDRS.reduce((prev, address) => {
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];
       const tokenBalance = tokenBalances[address] || ZERO_BN;
@@ -123,8 +123,7 @@ export default function useFarmerSiloBreakdown() {
         farm:         _initState(WHITELIST_ADDRS),
         circulating:  _initState(WHITELIST_ADDRS),
       }
-    });
-  },
+    }),  
   [
     WHITELIST,
     WHITELIST_ADDRS,

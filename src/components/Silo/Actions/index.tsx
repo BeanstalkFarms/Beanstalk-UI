@@ -46,26 +46,26 @@ const SiloActions : React.FC<{
             </Tabs>
           </Stack>
           <Box sx={{ px: 1, pb: 1 }}>
-          {/* Tab Content */}
-          {tab === 0 ? (
-            <Deposit
-              pool={props.pool}
-              token={props.token}
+            {/* Tab Content */}
+            {tab === 0 ? (
+              <Deposit
+                pool={props.pool}
+                token={props.token}
             />
           ) : null}
-          {tab === 1 ? (
-            <Withdraw
-              token={props.token}
+            {tab === 1 ? (
+              <Withdraw
+                token={props.token}
             />
           ) : null}
-          {tab === 2 ? (
-            <Claim
-              token={props.token}
-              siloBalance={props.siloBalance}
+            {tab === 2 ? (
+              <Claim
+                token={props.token}
+                siloBalance={props.siloBalance}
             />
           ) : null}
-          {tab === 3 ? (
-            <Send
+            {tab === 3 ? (
+              <Send
               // token={props.token}
               // siloBalance={props.siloBalance}
             />

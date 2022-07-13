@@ -66,9 +66,9 @@ export default function useBeanstalkSiloBreakdown() {
   const siloBalances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
   const getUSD = useSiloTokenToUSD();
 
-  return useMemo(() => {
+  return useMemo(() => 
     // console.debug('[useBeanstalkSiloBreakdown] running reducer');
-    return WHITELIST_ADDRS.reduce((prev, address) => {
+     WHITELIST_ADDRS.reduce((prev, address) => {
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];
 
@@ -107,8 +107,7 @@ export default function useBeanstalkSiloBreakdown() {
         deposited: _initState(WHITELIST_ADDRS),
         withdrawn: _initState(WHITELIST_ADDRS),
       }
-    });
-  },
+    }),  
   [
     WHITELIST,
     WHITELIST_ADDRS,

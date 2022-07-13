@@ -5,14 +5,14 @@ import { useAccount, useSigner } from 'wagmi';
 import BigNumber from 'bignumber.js';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
-import DescriptionButton from '../../Common/DescriptionButton';
 import { ClaimRewardsAction } from 'lib/Beanstalk/Farm';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
-import RewardItem from '../RewardItem';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import stalkIcon from 'img/beanstalk/stalk-icon.svg';
 import seedIcon from 'img/beanstalk/seed-icon.svg';
+import RewardItem from '../RewardItem';
+import DescriptionButton from '../../Common/DescriptionButton';
 import { AppState } from '../../../state';
 import TransactionToast from '../../Common/TxnToast';
 
@@ -53,7 +53,7 @@ const hoverMap = {
   [ClaimRewardsAction.PLANT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW],
   [ClaimRewardsAction.ENROOT_AND_MOW]: [ClaimRewardsAction.MOW, ClaimRewardsAction.ENROOT_AND_MOW],
   [ClaimRewardsAction.CLAIM_ALL]: [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW, ClaimRewardsAction.ENROOT_AND_MOW, ClaimRewardsAction.CLAIM_ALL],
-}
+};
 
 const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
@@ -260,10 +260,10 @@ const ClaimRewards: React.FC<{}> = () => {
       else if (values.action === ClaimRewardsAction.CLAIM_ALL) {
         claimResult = beanstalk.farm([
           // PLANT_AND_MOW
-          beanstalk.interface.encodeFunctionData("earn", [account.address]),
+          beanstalk.interface.encodeFunctionData('earn', [account.address]),
           // ENROOT_AND_MOW
           // beanstalk.interface.encodeFunctionData("enroot", [account.address]),
-        ])
+        ]);
       }
 
       // FIXME: set the name of the action to Mow, etc. depending on `values.action`

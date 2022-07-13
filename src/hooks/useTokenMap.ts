@@ -3,7 +3,6 @@ import { ChainConstant, TokenMap } from 'constants/index';
 import Token from 'classes/Token';
 import useGetChainToken from './useGetChainToken';
 
-
 export default function useTokenMap<T extends Token>(
   list: (T | ChainConstant<T>)[]
 ) : TokenMap {

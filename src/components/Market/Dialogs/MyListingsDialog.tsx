@@ -9,7 +9,7 @@ import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog
 import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import { PodListing } from '../Plots.mock';
-import PlotListingDetails from "../Cards/PlotListingDetails";
+import PlotListingDetails from '../Cards/PlotListingDetails';
 
 const MyListingsDialog: React.FC<{ podListing: PodListing | undefined; handleClose: any; harvestableIndex: BigNumber; } & DialogProps> = ({
   open,

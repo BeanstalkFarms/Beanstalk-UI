@@ -32,7 +32,6 @@ import { SupportedChainId } from './chains';
 import { ChainConstant } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, DAI_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES, UNRIPE_BEAN_ADDRESSES, UNRIPE_BEAN_CRV3_ADDRESSES, BEAN_ADDRESSES } from './addresses';
 
-
 // ----------------------------------------
 // Types
 // ----------------------------------------
@@ -202,7 +201,7 @@ const crv3Meta = {
   symbol: '3CRV',
   logo: crv3LogoUrl,
   isLP: true,
-}
+};
 export const CRV3 = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
@@ -269,7 +268,7 @@ const lusdMeta = {
   name: 'LUSD',
   symbol: 'LUSD',
   logo: lusdLogoUrl,
-}
+};
 export const LUSD = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
@@ -422,7 +421,6 @@ export const UNRIPE_BEAN_CRV3 = {
     }
   ),
 };
-
 
 // ----------------------------------------
 // Token Lists

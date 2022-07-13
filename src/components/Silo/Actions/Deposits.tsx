@@ -12,8 +12,8 @@ import { BEAN, STALK } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useChainConstant from 'hooks/useChainConstant';
-import TableCard from '../../Common/TableCard';
 import COLUMNS from 'components/Common/Table/cells';
+import TableCard from '../../Common/TableCard';
 
 /**
  * Prep data to loading to a CratesCard.

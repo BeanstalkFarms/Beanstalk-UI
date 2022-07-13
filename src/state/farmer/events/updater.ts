@@ -222,9 +222,9 @@ const useFarmerEvents = () => {
                     // backwards compat
                     facet: getEventFacet(e.event),
                     returnValues,
-                  })
-                } catch(err) {
-                  console.error(`Failed to parse event ${e.event} ${e.transactionHash}`, err, e)
+                  });
+                } catch (err) {
+                  console.error(`Failed to parse event ${e.event} ${e.transactionHash}`, err, e);
                 }
                 return prev;
               }, [])

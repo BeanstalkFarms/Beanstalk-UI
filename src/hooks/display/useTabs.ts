@@ -1,4 +1,4 @@
-import { useCallback, useState, SyntheticEvent } from "react";
+import { useCallback, useState, SyntheticEvent } from 'react';
 
 const useTabs = () => {
   const [tab, setTab] = useState(0);
@@ -6,6 +6,6 @@ const useTabs = () => {
     setTab(newValue);
   }, []);
   return [tab, handleChangeTab] as const;
-}
+};
 
 export default useTabs;

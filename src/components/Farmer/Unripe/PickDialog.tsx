@@ -25,7 +25,6 @@ import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'com
 import { displayFullBN, displayUSD, toTokenUnitsBN } from 'util/index';
 import useChainId from 'hooks/useChain';
 import pickImage from 'img/pick.png';
-import UnripeTokenRow from './UnripeTokenRow';
 import DescriptionButton from 'components/Common/DescriptionButton';
 import { PickMerkleResponse } from 'functions/pick/pick';
 import { LoadingButton } from '@mui/lab';
@@ -34,6 +33,7 @@ import { BeanstalkReplanted } from 'generated';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import TransactionToast from 'components/Common/TxnToast';
+import UnripeTokenRow from './UnripeTokenRow';
 
 // ----------------------------------------------------
 
@@ -162,14 +162,14 @@ const PickBeansDialog: React.FC<{
     const uBeanCRV3 = getChainToken(UNRIPE_BEAN_CRV3);
 
     if (merkles.bean) {
-      data.push(beanstalk.interface.encodeFunctionData("pick", [
+      data.push(beanstalk.interface.encodeFunctionData('pick', [
         uBean.address,
         merkles.bean.amount,
         merkles.bean.proof,
         deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
       ]));
       if (deposit) {
-        data.push(beanstalk.interface.encodeFunctionData("deposit", [
+        data.push(beanstalk.interface.encodeFunctionData('deposit', [
           uBean.address,
           merkles.bean.amount,
           FarmFromMode.INTERNAL, // always use internal for deposits
@@ -177,14 +177,14 @@ const PickBeansDialog: React.FC<{
       }
     }
     if (merkles.bean3crv) {
-      data.push(beanstalk.interface.encodeFunctionData("pick", [
+      data.push(beanstalk.interface.encodeFunctionData('pick', [
         uBeanCRV3.address,
         merkles.bean3crv.amount,
         merkles.bean3crv.proof,
         deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
       ]));
       if (deposit) {
-        data.push(beanstalk.interface.encodeFunctionData("deposit", [
+        data.push(beanstalk.interface.encodeFunctionData('deposit', [
           uBeanCRV3.address,
           merkles.bean3crv.amount,
           FarmFromMode.INTERNAL, // always use internal for deposits
@@ -193,8 +193,8 @@ const PickBeansDialog: React.FC<{
     }
 
     const txToast = new TransactionToast({
-      loading: `Picking${deposit ? ` and depositing` : ''} Unripe Assets`,
-      success: `Pick${deposit ? ` and deposit` : ''} successful. You can find your Unripe Assets ${deposit ? `in the Silo` : `in your wallet`}.`,
+      loading: `Picking${deposit ? ' and depositing' : ''} Unripe Assets`,
+      success: `Pick${deposit ? ' and deposit' : ''} successful. You can find your Unripe Assets ${deposit ? 'in the Silo' : 'in your wallet'}.`,
     });
 
     beanstalk.farm(data)
@@ -216,17 +216,17 @@ const PickBeansDialog: React.FC<{
     merkles,
     beanstalk,
     getChainToken,
-  ])
+  ]);
 
   /// Tab: Pick Overview
-  let buttonText = "Nothing to Pick";
+  let buttonText = 'Nothing to Pick';
   let buttonDisabled = true;
   const buttonLoading = !merkles;
   if (merkles && (merkles.bean || merkles.bean3crv)) {
     buttonDisabled = false;
     const avail = [];
-    if (merkles.bean) avail.push(`Unripe Beans`);
-    if (merkles.bean3crv) avail.push(`Unripe BEAN:3CRV LP`);
+    if (merkles.bean) avail.push('Unripe Beans');
+    if (merkles.bean3crv) avail.push('Unripe BEAN:3CRV LP');
     buttonText = `Pick ${avail.join(' & ')}`;
   }
 

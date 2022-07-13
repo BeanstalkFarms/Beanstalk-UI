@@ -9,14 +9,14 @@ import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { ZERO_BN } from 'constants/index';
-import { resetFertilizer, updateFertilizer } from './actions';
 import { Beanstalk, BeanstalkReplanted } from 'generated';
+import { resetFertilizer, updateFertilizer } from './actions';
 
 export const useFetchFarmerFertilizer = () => {
   const dispatch = useDispatch();
   const replantId = useChainConstant(REPLANT_INITIAL_ID);
   const [fertContract] = useBeanstalkFertilizerContract();
-  const beanstalk = useBeanstalkContract()
+  const beanstalk = useBeanstalkContract();
   const migrate = useMigrateCall();
 
   // Handlers

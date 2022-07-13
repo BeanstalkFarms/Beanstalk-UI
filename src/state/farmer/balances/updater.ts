@@ -12,8 +12,8 @@ import { getAccount } from 'util/Account';
 
 import { tokenResult } from 'util/Tokens';
 import { useAccount } from 'wagmi';
-import { clearBalances, updateBalances } from './actions';
 import useChainConstant from 'hooks/useChainConstant';
+import { clearBalances, updateBalances } from './actions';
 
 // -- Hooks
 
@@ -59,7 +59,7 @@ export const useFetchFarmerBalances = () => {
               })),
               b.getAllBalances(account, erc20Addresses)
                 .then((result) => {
-                  console.debug(`[farmer/balances/updater]: getAllBalances = `, result)
+                  console.debug('[farmer/balances/updater]: getAllBalances = ', result);
                   return result;
                 })
                 .then((result) => result.map((struct, index) => {
@@ -72,9 +72,9 @@ export const useFetchFarmerBalances = () => {
                       external: _tokenResult(struct.externalBalance),
                       total:    _tokenResult(struct.totalBalance),
                     }
-                  }
+                  };
                 }))
-            ]
+            ];
             return Promise.all(promises).then((results) => flatMap(results));
           }
         ]);

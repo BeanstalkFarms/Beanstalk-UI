@@ -184,17 +184,15 @@ const TokenInputField : React.FC<TokenInputField2Props & FieldProps> = ({
   );
 };
 
-const TokenInputField2 : React.FC<TokenInputField2Props & { name: string }> = ({ name, ...tokenInputFieldProps }) => {
-  return (
-    <Field name={name}>
-      {(fieldProps: FieldProps) => (
-        <TokenInputField
-          {...fieldProps}
-          {...tokenInputFieldProps}
+const TokenInputField2 : React.FC<TokenInputField2Props & { name: string }> = ({ name, ...tokenInputFieldProps }) => (
+  <Field name={name}>
+    {(fieldProps: FieldProps) => (
+      <TokenInputField
+        {...fieldProps}
+        {...tokenInputFieldProps}
         />
       )}
-    </Field>
-  )
-};
+  </Field>
+  );
 
 export default TokenInputField2;

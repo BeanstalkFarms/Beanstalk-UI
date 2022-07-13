@@ -9,7 +9,5 @@ export default function useTVL() {
     AppState,
     AppState['_beanstalk']['silo']['balances']
   >((state) => state._beanstalk.silo.balances);
-  return useCallback((_token: Token) => {
-    return beanstalkSiloBalances[_token.address]?.bdvPerToken || NEW_BN;
-  }, [beanstalkSiloBalances]);
+  return useCallback((_token: Token) => beanstalkSiloBalances[_token.address]?.bdvPerToken || NEW_BN, [beanstalkSiloBalances]);
 }

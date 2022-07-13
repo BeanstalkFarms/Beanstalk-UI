@@ -1,6 +1,6 @@
-import { FarmFromMode } from "lib/Beanstalk/Farm";
-import { BN } from "./BigNumber"
-import { combineBalances, optimizeFromMode } from "./Farm"
+import { FarmFromMode } from 'lib/Beanstalk/Farm';
+import { BN } from './BigNumber';
+import { combineBalances, optimizeFromMode } from './Farm';
 
 describe('optimize from mode', () => {
   it('throws if amountIn is greater than total', () => {
@@ -43,7 +43,7 @@ describe('optimize from mode', () => {
       }
     )).toEqual(FarmFromMode.INTERNAL_EXTERNAL);
   });
-})
+});
 
 describe('combines balances', () => {
   it('adds balances correctly', () => {

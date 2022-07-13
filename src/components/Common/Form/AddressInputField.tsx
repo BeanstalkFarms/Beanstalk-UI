@@ -3,9 +3,9 @@ import { Box, IconButton, InputAdornment, Link, Stack, TextField, TextFieldProps
 import { Field, FieldProps } from 'formik';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import OutputField from './OutputField';
 import useChainId from 'hooks/useChain';
 import { CHAIN_INFO } from 'constants/index';
+import OutputField from './OutputField';
 
 export type AddressInputFieldProps = (
   Partial<TextFieldProps>
@@ -46,7 +46,7 @@ const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = (
         <CloseIcon color="warning" /> 
       </InputAdornment>
     ) : null
-  }), [meta.value])
+  }), [meta.value]);
   if (isValid) {
     return (
       <OutputField sx={{ height: 67.5 /* lock to same height as input */ }}>
@@ -88,23 +88,21 @@ const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = (
       onChange={onChange}
     />
   );
-}
+};
 
 const AddressInputField : React.FC<AddressInputFieldProps> = ({
   name,
   ...props
-}) => {
-  return (
-    <Field name={name} validate={validateAddress} validateOnChange={false} validateOnBlur>
-      {(fieldProps: FieldProps) => (
-        <AddressInputFieldInner
-          name={name}
-          {...props}
-          {...fieldProps}
+}) => (
+  <Field name={name} validate={validateAddress} validateOnChange={false} validateOnBlur>
+    {(fieldProps: FieldProps) => (
+      <AddressInputFieldInner
+        name={name}
+        {...props}
+        {...fieldProps}
         />
       )}
-    </Field>
+  </Field>
   );
-};
 
-export default AddressInputField
+export default AddressInputField;

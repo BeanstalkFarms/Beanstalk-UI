@@ -7,8 +7,8 @@ import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/Tokens';
 import useQuote, { QuoteHandler, QuoteSettings } from 'hooks/useQuote';
-import { FormState, FormTokenState } from '.';
 import { ERC20Token, NativeToken } from 'classes/Token';
+import { FormState, FormTokenState } from '.';
 
 type TokenQuoteProviderCustomProps = {
   /** Field name */

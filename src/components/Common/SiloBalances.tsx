@@ -6,8 +6,8 @@ import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';
 import { displayFullBN, displayUSD } from 'util/index';
 import ResizablePieChart, { PieDataPoint } from 'components/Common/Charts/Pie';
 import { Token } from 'classes';
-import TokenIcon from './TokenIcon';
 import { BeanstalkPalette } from 'components/App/muiTheme';
+import TokenIcon from './TokenIcon';
 
 // ------------------------------------------------------
 
@@ -71,8 +71,8 @@ const TokenRow: React.FC<{
     onBlur={onMouseOut}
     onClick={onClick}
   >
-    {/* 5px gap between color and typography; shift circle back width+gap px*/}
-    <Stack direction="row" gap={'5px'} alignItems="center">
+    {/* 5px gap between color and typography; shift circle back width+gap px */}
+    <Stack direction="row" gap="5px" alignItems="center">
       {color && (
         <Box sx={{ width: 8, height: 8, borderRadius: 8, backgroundColor: showColor ? color : 'transparent', mt: '-2px', ml: '-13px' }} />
       )}
@@ -168,7 +168,7 @@ const SiloBalances: React.FC<{
           color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
         });
         return prev;
-      }, []).sort((a, b) => b.value - a.value)
+      }, []).sort((a, b) => b.value - a.value);
     }
     return availableStates.map((id) => ({
       label: STATE_CONFIG[id][0],
@@ -250,7 +250,7 @@ const SiloBalances: React.FC<{
                       amount={`${displayFullBN(inThisState?.amount, token.displayDecimals)} ${token.name}`}
                       tooltip={(
                         <>
-                          {displayFullBN(inThisState?.amount)} {token.name}<br/>
+                          {displayFullBN(inThisState?.amount)} {token.name}<br />
                           ≈ {displayUSD(inThisState?.value)}
                         </>
                       )}

@@ -1,7 +1,7 @@
-import BigNumber from "bignumber.js";
-import { ZERO_BN } from "constants/index";
-import { FarmFromMode } from "lib/Beanstalk/Farm"
-import { Balance } from "state/farmer/balances"
+import BigNumber from 'bignumber.js';
+import { ZERO_BN } from 'constants/index';
+import { FarmFromMode } from 'lib/Beanstalk/Farm';
+import { Balance } from 'state/farmer/balances';
 
 /**
  * Gas minimization strategy:
@@ -17,11 +17,11 @@ export const optimizeFromMode = (
   balance: Balance,
 ) : FarmFromMode => {
   const { internal, external, total } = balance;
-  if (amountIn.gte(total))    throw new Error(`Amount in is greater than total balance. INTERNAL_EXTERNAL_TOLERANT not yet supported.`);
+  if (amountIn.gte(total))    throw new Error('Amount in is greater than total balance. INTERNAL_EXTERNAL_TOLERANT not yet supported.');
   if (amountIn.lte(internal)) return FarmFromMode.INTERNAL;
   if (amountIn.lte(external)) return FarmFromMode.EXTERNAL;
   return FarmFromMode.INTERNAL_EXTERNAL;
-}
+};
 
 /**
  * 
@@ -37,4 +37,4 @@ export const combineBalances = (
   internal: ZERO_BN,
   external: ZERO_BN,
   total:    ZERO_BN,
-})
+});

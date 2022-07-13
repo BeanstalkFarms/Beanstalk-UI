@@ -18,13 +18,12 @@ const DescriptionButton : React.FC<ButtonProps & {
   icon,
   sx,
   ...props
-}) => {
-  return (
-    <Button
-      variant="outlined"
-      color="secondary"
-      {...props}
-      sx={{
+}) => (
+  <Button
+    variant="outlined"
+    color="secondary"
+    {...props}
+    sx={{
         textAlign: 'left',
         px: GAP,
         py: GAP,
@@ -39,26 +38,25 @@ const DescriptionButton : React.FC<ButtonProps & {
         }
       }}
     >
-      <Stack>
-        <Stack direction="row" gap={0.5} alignItems="center">
-          {icon && (
-            <Typography variant="bodyMedium" alignItems="center">
-              <Stack alignItems="center">
-                {icon}
-              </Stack>
-            </Typography>
+    <Stack>
+      <Stack direction="row" gap={0.5} alignItems="center">
+        {icon && (
+        <Typography variant="bodyMedium" alignItems="center">
+          <Stack alignItems="center">
+            {icon}
+          </Stack>
+        </Typography>
           )}
-          <Typography variant="bodyMedium">{title}</Typography>
-          {recommended && (
-            <Typography variant="bodyMedium" fontWeight="fontWeightBold" sx={{ color: BeanstalkPalette.logoGreen }}>
-              (Recommended)
-            </Typography>
+        <Typography variant="bodyMedium">{title}</Typography>
+        {recommended && (
+        <Typography variant="bodyMedium" fontWeight="fontWeightBold" sx={{ color: BeanstalkPalette.logoGreen }}>
+          (Recommended)
+        </Typography>
           )}
-        </Stack>
-        <Typography variant="bodySmall">{description}</Typography>
       </Stack>
-    </Button>
+      <Typography variant="bodySmall">{description}</Typography>
+    </Stack>
+  </Button>
   );
-};
 
 export default DescriptionButton;

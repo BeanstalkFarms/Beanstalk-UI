@@ -5,9 +5,9 @@ import useSeason from 'hooks/useSeason';
 import usePodRate from 'hooks/usePodRate';
 
 const getValue = (season: Season) => parseFloat(season.field.podRate);
-const formatValue = (value: number) => `${value.toFixed(2)}%`
+const formatValue = (value: number) => `${value.toFixed(2)}%`;
 const StatProps = {
-  title: "Pod Rate",
+  title: 'Pod Rate',
   gap: 0.5,
 };
 

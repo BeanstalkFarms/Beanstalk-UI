@@ -8,31 +8,27 @@ export type SendFormValues = {
   to?: string;
 }
 
-const SendForm : React.FC<FormikProps<SendFormValues>> = (props) => {
-  return (
-    <Form autoComplete="off">
-      <Stack gap={1}>
-        <FieldWrapper label="Send Deposits to">
-          <AddressInputField name="to" />
-        </FieldWrapper>
-        <Button fullWidth type="submit" variant="contained" size="large">
-          Send
-        </Button>
-      </Stack>
-    </Form>
-  )
-}
+const SendForm : React.FC<FormikProps<SendFormValues>> = (props) => (
+  <Form autoComplete="off">
+    <Stack gap={1}>
+      <FieldWrapper label="Send Deposits to">
+        <AddressInputField name="to" />
+      </FieldWrapper>
+      <Button fullWidth type="submit" variant="contained" size="large">
+        Send
+      </Button>
+    </Stack>
+  </Form>
+  );
 
-const Send : React.FC<{}> = () => {
-  return (
-    <Formik initialValues={{ to: '' }} onSubmit={() => {}}>
-      {(formikProps: FormikProps<SendFormValues>) => (
-        <SendForm
-          {...formikProps}
+const Send : React.FC<{}> = () => (
+  <Formik initialValues={{ to: '' }} onSubmit={() => {}}>
+    {(formikProps: FormikProps<SendFormValues>) => (
+      <SendForm
+        {...formikProps}
         />
       )}
-    </Formik>
+  </Formik>
   );
-}
 
 export default Send;

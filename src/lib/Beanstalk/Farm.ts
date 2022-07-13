@@ -1,12 +1,12 @@
-import { ethers } from "ethers";
-import { BeanstalkReplanted__factory, Curve3Pool__factory, CurveTriCrypto2Pool__factory, CurveRegistry__factory, CurveMetaFactory__factory, CurveCryptoFactory__factory, CurveMetaPool__factory, CurvePlainPool__factory } from "generated";
-import { BEANSTALK_ADDRESSES, BEAN_CRV3_ADDRESSES, CRYPTO_FACTORY_ADDRESSES, META_FACTORY_ADDRESSES, POOL3_ADDRESSES, POOL_REGISTRY_ADDRESSES, TRICRYPTO2_ADDRESSES } from "constants/index";
-import { Result } from "ethers/lib/utils";
-import { BEAN, USDT, WETH } from "constants/tokens";
-import { getChainConstant } from "util/Chain";
+import { ethers } from 'ethers';
+import { BeanstalkReplanted__factory, Curve3Pool__factory, CurveTriCrypto2Pool__factory, CurveRegistry__factory, CurveMetaFactory__factory, CurveCryptoFactory__factory, CurveMetaPool__factory, CurvePlainPool__factory } from 'generated';
+import { BEANSTALK_ADDRESSES, BEAN_CRV3_ADDRESSES, CRYPTO_FACTORY_ADDRESSES, META_FACTORY_ADDRESSES, POOL3_ADDRESSES, POOL_REGISTRY_ADDRESSES, TRICRYPTO2_ADDRESSES } from 'constants/index';
+import { Result } from 'ethers/lib/utils';
+import { BEAN, USDT, WETH } from 'constants/tokens';
+import { getChainConstant } from 'util/Chain';
 
 function assert(condition : boolean, message?: string) : asserts condition is true {
-  if(!condition) throw Error(message || 'Assertion failed');
+  if (!condition) throw Error(message || 'Assertion failed');
 }
 
 export enum FarmFromMode {
@@ -38,9 +38,9 @@ export type ChainableFunction = (amountIn: ethers.BigNumber) => Promise<Chainabl
 const getContracts = (provider: ethers.providers.BaseProvider) => {
   const chainId = provider.network.chainId;
   // Addressses
-  const BEANSTALK       = getChainConstant(BEANSTALK_ADDRESSES, chainId)
+  const BEANSTALK       = getChainConstant(BEANSTALK_ADDRESSES, chainId);
   const POOL3           = getChainConstant(POOL3_ADDRESSES, chainId);
-  const TRICRYPTO2      = getChainConstant(TRICRYPTO2_ADDRESSES, chainId)
+  const TRICRYPTO2      = getChainConstant(TRICRYPTO2_ADDRESSES, chainId);
   const BEAN_CRV3       = getChainConstant(BEAN_CRV3_ADDRESSES, chainId);
   const POOL_REGISTRY   = getChainConstant(POOL_REGISTRY_ADDRESSES, chainId);
   const META_FACTORY    = getChainConstant(META_FACTORY_ADDRESSES, chainId);
@@ -69,16 +69,15 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
         [CRYPTO_FACTORY]: cryptoFactory,
       },
     }
-  }
-}
+  };
+};
 
 export default class Farm {
-
   provider : ethers.providers.BaseProvider;
 
   contracts : ReturnType<typeof getContracts>;
 
-  static SLIPPAGE_PRECISION = ethers.BigNumber.from(10**6);
+  static SLIPPAGE_PRECISION = ethers.BigNumber.from(10 ** 6);
 
   // ------------------------------------------
 
@@ -132,7 +131,7 @@ export default class Farm {
       const amountOut = steps[i].amountOut;
       // slippage is calculated at each step
       const minAmountOut = amountOut.mul(Farm.SLIPPAGE_PRECISION.sub(_slippage)).div(Farm.SLIPPAGE_PRECISION);
-      console.debug(`[chain] encoding step ${i}: expected amountOut = ${amountOut}, minAmountOut = ${minAmountOut}`)
+      console.debug(`[chain] encoding step ${i}: expected amountOut = ${amountOut}, minAmountOut = ${minAmountOut}`);
       const encoded = steps[i].encode(minAmountOut);
       fnData.push(encoded);
     }
@@ -141,8 +140,7 @@ export default class Farm {
 
   // ------------------------------------------
 
-  buyBeans = () => {
-    return [
+  buyBeans = () => [
       // WETH -> USDT via tricrypto2 exchange
       this.exchange(
         this.contracts.curve.pools.tricrypto2.address,
@@ -157,10 +155,8 @@ export default class Farm {
         BEAN[1].address,
       ),
     ]
-  }
   
-  buyAndAddBEANCRV3Liquidity = () => {
-    return [
+  buyAndAddBEANCRV3Liquidity = () => [
       // WETH -> USDT via tricrypto2 exchange
       this.exchange(
         this.contracts.curve.pools.tricrypto2.address,
@@ -181,7 +177,6 @@ export default class Farm {
         [0, 1],    // [BEAN, CRV3] use CRV3 from previous call
       ),
     ]
-  }
 
   // ------------------------------------------
 
@@ -192,8 +187,7 @@ export default class Farm {
     _tokenOut : string,
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
-  ) : ChainableFunction => {
-    return async (amountInStep: ethers.BigNumber) => {
+  ) : ChainableFunction => async (amountInStep: ethers.BigNumber) => {
       const registry = this.contracts.curve.registries[_registry];
       if (!registry) throw new Error(`Unknown registry: ${_registry}`);
       const [i, j] = await registry.get_coin_indices(
@@ -212,7 +206,7 @@ export default class Farm {
       );
 
       //
-      console.debug(`[step@exchange] i=${i}, j=${j}, amountOut=${amountOut.toString()}`)
+      console.debug(`[step@exchange] i=${i}, j=${j}, amountOut=${amountOut.toString()}`);
 
       return {
         amountOut,
@@ -230,9 +224,8 @@ export default class Farm {
         ),
         decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('exchange', data),
         data: {}
-      }
+      };
     }
-  }
 
   exchangeUnderlying = (
     _pool     : string,
@@ -241,8 +234,7 @@ export default class Farm {
     _tokenOut : string,
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
-  ) : ChainableFunction => {
-    return async (amountInStep: ethers.BigNumber) => {
+  ) : ChainableFunction => async (amountInStep: ethers.BigNumber) => {
       // const registry = this.contracts.curve.registries[_registry];
       // if (!registry) throw new Error(`Unknown registry: ${_registry}`);
       const registry = this.contracts.curve.registries.metaFactory;
@@ -263,7 +255,7 @@ export default class Farm {
       );
       
       //
-      console.debug(`[step@exchangeUnderlying] i=${i}, j=${j}, amountOut=${amountOut.toString()}`)
+      console.debug(`[step@exchangeUnderlying] i=${i}, j=${j}, amountOut=${amountOut.toString()}`);
 
       return {
         amountOut,
@@ -281,9 +273,7 @@ export default class Farm {
         decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('exchangeUnderlying', data),
         data: {}
       };
-
     }
-  }
 
   addLiquidity(
     _pool     : string,
@@ -314,10 +304,10 @@ export default class Farm {
         amountOut = await pools.pool3.callStatic.calc_token_amount(
           amountInStep as [any, any, any],
           true, // _is_deposit
-        )
+        );
       } else if (_registry === this.contracts.curve.registries.metaFactory.address) {
         assert(amountInStep.length === 2);
-        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider)["calc_token_amount(uint256[2],bool)"](
+        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider)['calc_token_amount(uint256[2],bool)'](
           amountInStep as [any, any],
           true, // _is_deposit
         );
@@ -331,7 +321,7 @@ export default class Farm {
 
       //
       if (!amountOut) throw new Error('No supported pool found');
-      console.debug(`[step@addLiquidity] amounts.length=${_amounts.length} amountInStep=[${amountInStep.toString()}], amountOut=${amountOut.toString()}`)
+      console.debug(`[step@addLiquidity] amounts.length=${_amounts.length} amountInStep=[${amountInStep.toString()}], amountOut=${amountOut.toString()}`);
       
       return {
         amountOut,
@@ -348,7 +338,7 @@ export default class Farm {
         decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('addLiquidity', data),
         data: {}
       };
-    }
+    };
   }
 
   removeLiquidityOneToken(
@@ -380,7 +370,7 @@ export default class Farm {
           i,
         );
       } else if (_registry === this.contracts.curve.registries.metaFactory.address) {
-        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider)["calc_withdraw_one_coin(uint256,int128)"](
+        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider)['calc_withdraw_one_coin(uint256,int128)'](
           _amountInStep,
           i,
         );
@@ -392,7 +382,7 @@ export default class Farm {
       }
       if (!amountOut) throw new Error('No supported pool found');
 
-      console.debug(`[step@removeLiquidity] amountOut=${amountOut.toString()}`)
+      console.debug(`[step@removeLiquidity] amountOut=${amountOut.toString()}`);
 
       return {
         amountOut,
@@ -410,7 +400,7 @@ export default class Farm {
         decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('removeLiquidityOneToken', data),
         data: {}
       };
-    }
+    };
   }
 
   // removeLiquidity(
@@ -474,7 +464,6 @@ export default class Farm {
   //     };
   //   }
   // }
-
 }
 
   // ------------------------------------------
@@ -651,4 +640,3 @@ export default class Farm {
   //   }*/
   //   throw new Error(`Unknown pool + registry combination: ${_pool} ${_registry}`)
   // }
-  

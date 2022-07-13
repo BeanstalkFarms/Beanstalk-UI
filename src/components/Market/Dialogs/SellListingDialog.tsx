@@ -15,7 +15,7 @@ import { AppState } from '../../../state';
 import { displayBN } from '../../../util';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import { ZERO_BN } from '../../../constants';
-import PlotSelect from "../../Common/PlotSelect";
+import PlotSelect from '../../Common/PlotSelect';
 
 export type SellListingFormValues = {
   option: number | null;

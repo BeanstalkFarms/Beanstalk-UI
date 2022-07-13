@@ -1,6 +1,6 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { LocalStorageWrapper, persistCache, persistCacheSync } from "apollo3-cache-persist";
-import { QuerySeasonsArgs, Season } from "generated/graphql";
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { LocalStorageWrapper, persistCache, persistCacheSync } from 'apollo3-cache-persist';
+import { QuerySeasonsArgs, Season } from 'generated/graphql';
 
 const seasonIntToIndex = (n: number) => n - 0;
 
@@ -19,7 +19,7 @@ const cache = new InMemoryCache({
             const first       = args?.first;
             const startSeason = args?.where?.seasonInt_lte;       // could be larger than the biggest season
             
-            console.debug(`[ApolloClient/seasons/read] read first = ${first} startSeason = ${startSeason} for ${existing?.length || 0} existing items`, existing)
+            console.debug(`[ApolloClient/seasons/read] read first = ${first} startSeason = ${startSeason} for ${existing?.length || 0} existing items`, existing);
 
             if (!existing) return;
             
@@ -54,12 +54,12 @@ const cache = new InMemoryCache({
                 existing.length - 1,         // clamp to last index
               );
 
-              console.debug(`[ApolloClient/seasons/read] READ:`)
-              console.debug(`| left:  index = ${left}, season = ${readField("seasonInt", existing[left])}`);
-              console.debug(`| right: index = ${right}, season = ${readField("seasonInt", existing[right])}`);
+              console.debug('[ApolloClient/seasons/read] READ:');
+              console.debug(`| left:  index = ${left}, season = ${readField('seasonInt', existing[left])}`);
+              console.debug(`| right: index = ${right}, season = ${readField('seasonInt', existing[right])}`);
               console.debug(`| existing.length = ${existing.length}`);
-              console.debug(`| existing[0] = ${readField("seasonInt", existing[0])}`, existing);
-              console.debug(`| existing[${existing.length-1}] = ${readField("seasonInt", existing[existing.length - 1])}`);
+              console.debug(`| existing[0] = ${readField('seasonInt', existing[0])}`, existing);
+              console.debug(`| existing[${existing.length - 1}] = ${readField('seasonInt', existing[existing.length - 1])}`);
 
               // If one of the endpoints is missing, force refresh
               if (!existing[left] || !existing[right]) return;
@@ -68,13 +68,13 @@ const cache = new InMemoryCache({
               // existing.length = 6074
               // startIndex = 5074
               // endIndex = 6074
-              dataset = existing.slice(left, right+1); // slice = [left, right)
+              dataset = existing.slice(left, right + 1); // slice = [left, right)
             }
 
             return dataset;
           },
           merge(existing = [], incoming, { args, readField }) {
-            console.debug(`[ApolloClient] init merge: `, existing, incoming, args);
+            console.debug('[ApolloClient] init merge: ', existing, incoming, args);
 
             // Slicing is necessary because the existing data is
             // immutable, and frozen in development.
@@ -85,8 +85,8 @@ const cache = new InMemoryCache({
             // merged[0] = undefined
             // merged[1] = Season 1
             // merged[2] = ...
-            for (let i = 0; i < incoming.length; i+=1) {
-              const seasonInt = readField("seasonInt", incoming[i]);
+            for (let i = 0; i < incoming.length; i += 1) {
+              const seasonInt = readField('seasonInt', incoming[i]);
               if (!seasonInt) throw new Error('Seasons queried without seasonInt');
               // Season 1 = Index 0
               merged[(seasonInt as number) - 1] = incoming[i];
@@ -94,14 +94,14 @@ const cache = new InMemoryCache({
             
             merged = merged.reverse();
 
-            console.debug(`[ApolloClient] merge: finalize`, merged);
+            console.debug('[ApolloClient] merge: finalize', merged);
 
             // We complete operations on the array in ascending order,
             // but reverse it before saving back to the cache.
             // Reverse is O(n) while sorting during the read operation
             // is O(n*log(n)) and likely called more often.
             // return merged.reverse();
-            return merged //.sort((a: any, b: any) => (readField("seasonInt", a) as number) - (readField("seasonInt", b) as number));
+            return merged; // .sort((a: any, b: any) => (readField("seasonInt", a) as number) - (readField("seasonInt", b) as number));
           },
         }
       }
@@ -115,7 +115,7 @@ persistCacheSync({
 });
 
 export const apolloClient = new ApolloClient({
-  uri: `https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev`,
+  uri: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev',
   cache,
 });
 

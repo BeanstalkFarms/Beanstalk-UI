@@ -81,7 +81,6 @@ export const BEAN_CRV3_CURVE_POOL_PHOENIX = new CurveMetaPool(
   },
 );
 
-
 // ------------------------------------
 // BEAN:LUSD Curve Plain Pool
 // ------------------------------------

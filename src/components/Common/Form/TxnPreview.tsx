@@ -13,11 +13,11 @@ import { AccountTreeRounded } from '@mui/icons-material';
 
 // -----------------------------------------------------------------------
 
-const IconRow : React.FC<{ spacing?: number }> = ({ children, spacing=0.75 }) => (
+const IconRow : React.FC<{ spacing?: number }> = ({ children, spacing = 0.75 }) => (
   <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={spacing}>
     {children}
   </Stack>
-)
+);
 const ActionTokenImage : React.FC<{ token: Token }> = ({ token }) => (
   <img
     key={token.address}

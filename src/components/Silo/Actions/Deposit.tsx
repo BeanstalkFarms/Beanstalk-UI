@@ -96,7 +96,6 @@ const DepositForm : React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
 
-
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate autoComplete="off">
@@ -223,12 +222,12 @@ const Deposit : React.FC<{
     return [
       _tokenList,
       _tokenList.map((t) => ({ token: t })),
-    ]
+    ];
   }, [
     isUnripe,
     whitelistedToken,
     allAvailableTokens,
-  ])
+  ]);
   const baseToken = usePreferredToken(preferredTokens, 'use-best') as (ERC20Token | NativeToken);
 
   /// Farmer
@@ -293,13 +292,13 @@ const Deposit : React.FC<{
           // pool.underlying  = [BEAN, DAI, USDC, USDT] 
           const tokenIndex = pool.tokens.indexOf(tokenIn);
           const underlyingTokenIndex = pool.underlying.indexOf(tokenIn);
-          console.debug(`[Deposit] LP Deposit: pool=${pool.name}, tokenIndex=${tokenIndex}, underlyingTokenIndex=${underlyingTokenIndex}`)
+          console.debug(`[Deposit] LP Deposit: pool=${pool.name}, tokenIndex=${tokenIndex}, underlyingTokenIndex=${underlyingTokenIndex}`);
           
           // This is X or CRV3
           if (tokenIndex > -1) {
             const indices = [0, 0];
             indices[tokenIndex] = 1; // becomes [0, 1] or [1, 0]
-            console.debug(`[Deposit] LP Deposit: indices=`, indices);
+            console.debug('[Deposit] LP Deposit: indices=', indices);
             estimate = await Farm.estimate([
               farm.addLiquidity(
                 pool.address,
@@ -318,7 +317,7 @@ const Deposit : React.FC<{
             if (underlyingTokenIndex === 0) throw new Error('Malformatted pool.tokens / pool.underlying');
             const indices = [0, 0, 0];
             indices[underlyingTokenIndex - 1] = 1;
-            console.debug(`[Deposit] LP Deposit: indices=`, indices);
+            console.debug('[Deposit] LP Deposit: indices=', indices);
             estimate = await Farm.estimate([
               // Deposit token into 3pool for 3CRV
               farm.addLiquidity(
@@ -368,7 +367,7 @@ const Deposit : React.FC<{
                 farm.contracts.curve.registries.metaFactory.address,
                 [0, 1],    // [BEAN, CRV3] use CRV3 from previous call
               ),
-            ], [amountIn])
+            ], [amountIn]);
           }
         }
       }
@@ -382,7 +381,7 @@ const Deposit : React.FC<{
       return {
         amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
         steps: estimate.steps,
-      }
+      };
     },
     [
       farm,
@@ -396,7 +395,7 @@ const Deposit : React.FC<{
   const onSubmit = useCallback(async (values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
     if (!values.settings.slippage) throw new Error('No slippage value set.');
 
-    console.debug(`Settings`, values.settings)
+    console.debug('Settings', values.settings);
 
     // FIXME: getting BDV per amount here
     const { amount } = Beanstalk.Silo.Deposit.deposit(
@@ -455,7 +454,7 @@ const Deposit : React.FC<{
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage/100, 6)), // slippage
+          ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6)), // slippage
         );
         data.push(...encoded);
         encoded.forEach((_data, index) => 
@@ -470,11 +469,11 @@ const Deposit : React.FC<{
           toStringBaseUnitBN(depositAmount, whitelistedToken.decimals),  // expected amountOut from all steps
           depositFrom,
         ])
-      )
+      );
 
       // CALL: FARM
-      console.debug(`[Deposit] data: `, data);
-      console.debug(`[Deposit] gas: `, await b.estimateGas.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) }))
+      console.debug('[Deposit] data: ', data);
+      console.debug('[Deposit] gas: ', await b.estimateGas.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) }));
      
       return b.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
         .then((txn) => {

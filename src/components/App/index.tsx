@@ -30,7 +30,7 @@ import SiloAnalytics from '../../pages/analytics/silo';
 import FieldAnalytics from '../../pages/analytics/field';
 import BarnraiseAnalytics from '../../pages/analytics/barnraise';
 import MarketplacePage from '../../pages/marketplace';
-import NFTPage from "../../pages/nft";
+import NFTPage from '../../pages/nft';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 

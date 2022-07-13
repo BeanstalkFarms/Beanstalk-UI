@@ -15,7 +15,7 @@ import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
 import { SellNowFormValues } from '../Dialogs/SellNowDialog';
-import FieldWrapper from "../../Common/Form/FieldWrapper";
+import FieldWrapper from '../../Common/Form/FieldWrapper';
 
 export type SellNowFormProps = {
   plot: any;

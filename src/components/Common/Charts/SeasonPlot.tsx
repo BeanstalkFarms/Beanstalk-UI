@@ -3,9 +3,9 @@ import { Stack, Box, CircularProgress } from '@mui/material';
 import Stat, { StatProps } from 'components/Common/Stat';
 import LineChart, { DataPoint, LineChartProps } from 'components/Common/Charts/LineChart';
 import useSeasons, { SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
-import TimeTabs, { TimeTabState }  from './TimeTabs2';
 import { Season } from 'generated/graphql';
 import { DocumentNode } from 'graphql';
+import TimeTabs, { TimeTabState }  from './TimeTabs2';
 
 export type SeasonPlotProps = {
   /** */
@@ -67,7 +67,7 @@ function SeasonPlot({
   const [displaySeason, setDisplaySeason] = useState<number | undefined>(undefined);
 
   const series = useMemo(() => {
-    console.debug(`[TWAPCard] Building series with ${data?.seasons.length || 0} data points`)
+    console.debug(`[TWAPCard] Building series with ${data?.seasons.length || 0} data points`);
     if (data) {
       const lastIndex = data.seasons.length - 1;
       const baseData  = data.seasons.reduce<SeasonDataPoint[]>((prev, curr, index) => {
@@ -85,12 +85,12 @@ function SeasonPlot({
           });
         }
         return prev;
-      }, [])
+      }, []);
       
       return baseData.sort((a, b) => a.season - b.season);
     }
     return [];
-  }, [data, tabState, getValue])
+  }, [data, tabState, getValue]);
 
   // Handlers
   const handleChangeTimeTab = useCallback(

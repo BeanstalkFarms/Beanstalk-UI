@@ -154,14 +154,14 @@ describe('the Field', () => {
     p.ingest({
       event: 'Sow',
       args: propArray({
-        index: EBN.from("737663715081254"),
-        pods:  EBN.from("57980000"),
+        index: EBN.from('737663715081254'),
+        pods:  EBN.from('57980000'),
       })
     } as SowEvent);
 
-    expect(p.plots["737663715.081254"]).toBeDefined();
-    expect(p.plots["737663715.081254"].eq(57.980000)).toBe(true);
-  })
+    expect(p.plots['737663715.081254']).toBeDefined();
+    expect(p.plots['737663715.081254'].eq(57.980000)).toBe(true);
+  });
 });
 
 // --------------------------------
@@ -376,9 +376,9 @@ describe('the Silo', () => {
       }),
     } as AddWithdrawalEvent);
 
-    expect(p.withdrawals[t1]["6074"]).toStrictEqual({
+    expect(p.withdrawals[t1]['6074']).toStrictEqual({
       amount: BN(1000),
-    })
+    });
 
     // Withdraw: 5000 Bean in Season 6100
     p.ingest({
@@ -391,9 +391,9 @@ describe('the Silo', () => {
       }),
     } as AddWithdrawalEvent);
 
-    expect(p.withdrawals[t1]["6100"]).toStrictEqual({
+    expect(p.withdrawals[t1]['6100']).toStrictEqual({
       amount: BN(5000),
-    })
+    });
 
     // Claim: 
     p.ingest({
@@ -401,13 +401,13 @@ describe('the Silo', () => {
       args: propArray({
         account,
         token:  t1,
-        seasons: ["6074", "6100"],
+        seasons: ['6074', '6100'],
         amount: EBN.from(6000 * 10 ** Bean.decimals), // Claim 2000 Bean
       }),
     } as RemoveWithdrawalsEvent);
 
-    expect(p.withdrawals[t1]["6074"]).toBeUndefined();
-    expect(p.withdrawals[t1]["6100"]).toBeUndefined();
+    expect(p.withdrawals[t1]['6074']).toBeUndefined();
+    expect(p.withdrawals[t1]['6100']).toBeUndefined();
   });
 
   it('ignores empty RemoveWithdrawal events', () => {

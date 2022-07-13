@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Button, Divider, Stack, StackProps, Typography } from '@mui/material';
-import { BeanstalkPalette } from '../../App/muiTheme';
 import { SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
+import { BeanstalkPalette } from '../../App/muiTheme';
 
 const DISPLAY = [
   { label: 'HR', index: 0 },

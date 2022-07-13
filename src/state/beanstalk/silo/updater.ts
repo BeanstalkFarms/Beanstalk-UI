@@ -119,7 +119,7 @@ export const useBeanstalkSilo = () => {
       // because 1 bean = 1 stalk, 2 seeds
       const activeStalkTotal = (
         chainId === SupportedChainId.MAINNET
-          ? stalkTotal //.minus(219316.5007560000) // subtract exploiter stalk balance
+          ? stalkTotal // .minus(219316.5007560000) // subtract exploiter stalk balance
           : stalkTotal
       );
       const earnedStalkTotal = earnedBeansTotal.times(BEAN_TO_STALK);

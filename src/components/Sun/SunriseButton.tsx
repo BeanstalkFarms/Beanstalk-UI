@@ -1,18 +1,18 @@
-import React, { useCallback } from "react";
-import { Form, Formik, FormikHelpers, FormikProps } from "formik";
+import React, { useCallback } from 'react';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import sunIcon from 'img/beanstalk/sun/sun-icon.svg';
-import { useBeanstalkContract } from "hooks/useContract";
-import { BeanstalkReplanted } from "generated/index";
-import { useSigner } from "wagmi";
-import TransactionToast from "components/Common/TxnToast";
-import { LoadingButton } from "@mui/lab";
+import { useBeanstalkContract } from 'hooks/useContract';
+import { BeanstalkReplanted } from 'generated/index';
+import { useSigner } from 'wagmi';
+import TransactionToast from 'components/Common/TxnToast';
+import { LoadingButton } from '@mui/lab';
 
 const SunriseButton : React.FC = () => {
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const onSubmit = useCallback(async (_, formActions: FormikHelpers<{}>) => {
     const txToast = new TransactionToast({
-      loading: `Calling Sunrise...`,
+      loading: 'Calling Sunrise...',
       success: 'The Sun has risen.',
     });
 
@@ -29,7 +29,7 @@ const SunriseButton : React.FC = () => {
       .catch((err) => {
         console.error(txToast.error(err.error || err));
       });
-  }, [beanstalk])
+  }, [beanstalk]);
   return (
     <Formik initialValues={{}} onSubmit={onSubmit}>
       {(formikProps: FormikProps<{}>) => (
@@ -45,7 +45,7 @@ const SunriseButton : React.FC = () => {
               borderColor: '#F7CF2D',
               borderWidth: 1,
               borderStyle: 'solid',
-              color: "text.primary"
+              color: 'text.primary'
             }}
             fullWidth
           >
@@ -56,7 +56,7 @@ const SunriseButton : React.FC = () => {
         </Form>
       )}
     </Formik>
-  )
-}
+  );
+};
 
 export default SunriseButton;

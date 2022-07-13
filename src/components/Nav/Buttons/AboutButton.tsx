@@ -14,13 +14,13 @@ import {
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import MenuItem from '../MenuItem';
 import { BEANSTALK_ADDRESSES, CHAIN_INFO } from 'constants/index';
 import useChainConstant from 'hooks/useChainConstant';
-import NavDrawer from '../NavDrawer';
-import ROUTES from '../routes';
 import useAnchor from 'hooks/display/useAnchor';
 import useToggle from 'hooks/display/useToggle';
+import NavDrawer from '../NavDrawer';
+import ROUTES from '../routes';
+import MenuItem from '../MenuItem';
 
 const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   // Theme

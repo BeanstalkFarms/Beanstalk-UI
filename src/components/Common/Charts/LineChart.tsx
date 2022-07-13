@@ -15,16 +15,16 @@ import {
   curveMonotoneX,
 } from '@visx/curve';
 import { Axis, Orientation } from '@visx/axis';
-import { CurveFactory } from 'd3-shape'
+import { CurveFactory } from 'd3-shape';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 
 const CURVES = {
-  'linear': curveLinear,
-  'step': curveStep,
-  'natural': curveNatural,
-  'basis': curveBasis,
-  'monotoneX': curveMonotoneX,
-}
+  linear: curveLinear,
+  step: curveStep,
+  natural: curveNatural,
+  basis: curveBasis,
+  monotoneX: curveMonotoneX,
+};
 
 export type LineChartProps = {
   series: (DataPoint[])[];
@@ -56,7 +56,6 @@ const bisectDate = bisector<DataPoint, Date>(
 const bisectValue = bisector<DataPoint, number>(
   (d) => d.value
 ).left;
-
 
 // ------------------------
 //        Plot Sizing
@@ -107,7 +106,6 @@ const tickLabelProps = () => ({
   textAnchor: 'middle',
 } as const);
 
-
 // ------------------------
 //      Graph (Inner)
 // ------------------------
@@ -126,7 +124,7 @@ const Graph: React.FC<GraphProps> = ({
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
   const data = series[0];
-  const curve = typeof _curve === "string" ? CURVES[_curve] : _curve;
+  const curve = typeof _curve === 'string' ? CURVES[_curve] : _curve;
 
   /**
    * 
@@ -137,7 +135,7 @@ const Graph: React.FC<GraphProps> = ({
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
-  } = useTooltip<DataPoint[] | undefined>()
+  } = useTooltip<DataPoint[] | undefined>();
 
   /**
    * Build scales.
@@ -270,17 +268,15 @@ const Graph: React.FC<GraphProps> = ({
           */}
         <g transform={`translate(0, ${height - axisHeight - margin.bottom})`}>
           <Axis
-            key={`axis`}
+            key="axis"
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
-            tickFormat={(v: any, i: number) => {
-              return `${(v as Date).getMonth()+1}/${(v as Date).getDate()}`
-            }}
+            tickFormat={(v: any, i: number) => `${(v as Date).getMonth() + 1}/${(v as Date).getDate()}`}
             stroke={axisColor}
             tickStroke={axisColor}
             tickLabelProps={tickLabelProps}
             tickValues={undefined}
-            numTicks={Math.floor(width/64)} // FIXME: set to intervals of days
+            numTicks={Math.floor(width / 64)} // FIXME: set to intervals of days
             label="time"
             labelProps={{
               fill: labelColor,
@@ -344,7 +340,6 @@ const Graph: React.FC<GraphProps> = ({
     </>
   );
 };
-
 
 // ------------------------
 //       Line Chart

@@ -21,7 +21,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
         <Grid item md={2} xs={4}>
           <Typography color="text.primary" sx={{ fontSize: '14px' }}>{displayBN(season)}</Typography>
         </Grid>
-         <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
+        <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
           <Stack direction="row" alignItems="center" spacing="2px">
             <img
               src={rainySeasonIcon}
@@ -35,11 +35,11 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
               Rainy
             </Typography>
           </Stack>
-         </Grid>
-         <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
+        </Grid>
+        <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
           <Typography color="text.primary" sx={{ fontSize: '14px' }}>{displayBN(newBeans)}</Typography>
-         </Grid>
-         <Grid item md={2.4} xs={0} display={{ xs: 'none', md: 'block' }}>
+        </Grid>
+        <Grid item md={2.4} xs={0} display={{ xs: 'none', md: 'block' }}>
           <Stack
             direction="row"
             alignItems="center"
@@ -56,8 +56,8 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
               {displayBN(newSoil)}
             </Typography>
           </Stack>
-         </Grid>
-         <Grid item md={2.4} xs={8} sx={{ textAlign: 'right' }}>
+        </Grid>
+        <Grid item md={2.4} xs={8} sx={{ textAlign: 'right' }}>
           <Stack
             direction="row"
             alignItems="center"
@@ -95,7 +95,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
               </Typography>
             </Stack>
           </Stack>
-         </Grid>
+        </Grid>
       </Grid>
     </Stack>
   </Box>

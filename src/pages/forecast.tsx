@@ -22,9 +22,9 @@ import PageHeader from 'components/Common/PageHeader';
 import LiquidityOverTime from 'components/Forecast/LiquidityOverTime';
 import useChainId from 'hooks/useChain';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
-import LiquidityByState from '../components/Forecast/LiquidityByState';
 import PodRate from 'components/Analytics/Field/PodRate';
 import TWAP from 'components/Analytics/Bean/TWAP';
+import LiquidityByState from '../components/Forecast/LiquidityByState';
 
 const columns: GridColumns = [
   {

@@ -11,11 +11,11 @@ import { BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES } from 'constants/a
 import useChainConstant from 'hooks/useChainConstant';
 import { useGetERC20Contract } from 'hooks/useContract';
 import { useConnect } from 'wagmi';
+import Token from 'classes/Token';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
 import WalletButton from '../Connection/WalletButton';
-import Token from 'classes/Token';
 
 const CONTRACT_NAMES : { [address: string] : string } = {
   [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',

@@ -10,7 +10,7 @@ import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog
 import BigNumber from 'bignumber.js';
 import { FormTokenState } from '../../Common/Form';
 import { BeanstalkPalette } from '../../App/muiTheme';
-import PlotOrderDetails from "../Cards/PlotOrderDetails";
+import PlotOrderDetails from '../Cards/PlotOrderDetails';
 import { PodOrder } from '../Plots.mock';
 
 export type BuyOrderFormValues = {

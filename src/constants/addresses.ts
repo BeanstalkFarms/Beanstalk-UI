@@ -48,7 +48,7 @@ export const BEAN_ADDRESSES = {
   [SupportedChainId.ROPSTEN]:   '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
   [SupportedChainId.PHOENIX]:   '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
   [SupportedChainId.LOCALHOST]: '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
-}
+};
 
 export const UNRIPE_BEAN_ADDRESSES = {
   // --------------------------------------------------
@@ -74,7 +74,7 @@ export const UNRIPE_BEAN_CRV3_ADDRESSES = {
 
 export const DAI_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x6B175474E89094C44Da98b954EedeAC495271d0F'.toLowerCase(),
-}
+};
 
 export const USDC_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'.toLowerCase(),
@@ -169,8 +169,8 @@ export const BEAN_CRV3_ADDRESSES = {
   // Below is the address for the new BEAN:3CRV
   // metapool deployed as part of Replanting Beanstalk.
   // --------------------------------------------------
-  [SupportedChainId.PHOENIX]: "0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49".toLowerCase(),
-  [SupportedChainId.LOCALHOST]: "0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49".toLowerCase(),
+  [SupportedChainId.PHOENIX]: '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49'.toLowerCase(),
+  [SupportedChainId.LOCALHOST]: '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49'.toLowerCase(),
 };
 
 export const BEAN_LUSD_ADDRESSES = {
@@ -215,7 +215,7 @@ export const TRICRYPTO2_ADDRESSES = {
   // coins[1] = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599 (WBTC)
   // coins[2] = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 (WETH)
   [SupportedChainId.MAINNET]: '0xD51a44d3FaE010294C616388b506AcdA1bfAAE46'.toLowerCase(),
-}
+};
 
 // ----------------------------------------
 // Curve: Registries / Factories
@@ -227,7 +227,7 @@ export const TRICRYPTO2_ADDRESSES = {
 // 3pool, etc.
 export const POOL_REGISTRY_ADDRESSES  = {
   [SupportedChainId.MAINNET]: '0x90e00ace148ca3b23ac1bc8c240c2a7dd9c2d7f5'.toLowerCase()
-}
+};
 
 // X:3CRV, etc. aka StableFactory
 export const META_FACTORY_ADDRESSES   = {
@@ -237,4 +237,4 @@ export const META_FACTORY_ADDRESSES   = {
 // tricrypto2, etc.
 export const CRYPTO_FACTORY_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x8F942C20D02bEfc377D41445793068908E2250D0'.toLowerCase()
-}
+};

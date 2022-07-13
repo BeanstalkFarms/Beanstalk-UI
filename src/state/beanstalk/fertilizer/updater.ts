@@ -9,9 +9,9 @@ import useChainId from 'hooks/useChain';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
-import { resetFertilizer, setRemaining, setTotalRaised, setHumidity } from './actions';
 import BigNumber from 'bignumber.js';
 import { bigNumberResult } from 'util/Ledger';
+import { resetFertilizer, setRemaining, setTotalRaised, setHumidity } from './actions';
 
 export const useFertilizer = () => {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ export const useFertilizer = () => {
         ]),
         migrate(beanstalk, [
           () => Promise.resolve(ZERO_BN),
-          () => Promise.resolve(ZERO_BN), //beanstalk.getRecapFundedPercent(),
+          () => Promise.resolve(ZERO_BN), // beanstalk.getRecapFundedPercent(),
         ]),
         migrate(beanstalk, [
           () => Promise.resolve(new BigNumber(500)),
@@ -51,7 +51,7 @@ export const useFertilizer = () => {
       console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remaining.toFixed(2)}`);
       dispatch(setRemaining(remaining));
       dispatch(setTotalRaised(totalRaised));
-      dispatch(setHumidity(humidity))
+      dispatch(setHumidity(humidity));
     }
   }, [
     dispatch,

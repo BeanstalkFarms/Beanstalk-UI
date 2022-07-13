@@ -1,10 +1,10 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import TokenInputField from './TokenInputField';
 import { BEAN } from 'constants/tokens';
 import { Field, FieldProps, Formik } from 'formik';
 import { Box, Card } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import TokenInputField from './TokenInputField';
 
 export default {
   component: TokenInputField,
@@ -21,7 +21,7 @@ const Template: ComponentStory<typeof TokenInputField> = (args: any) => {
   const a = (
     <Card sx={{ maxWidth: 300, p: 2 }}>
       <Formik initialValues={{ test: undefined }} onSubmit={() => {}}>
-        <Field name={"test"}>
+        <Field name="test">
           {(fieldProps: FieldProps) => (
             <TokenInputField
               {...fieldProps}

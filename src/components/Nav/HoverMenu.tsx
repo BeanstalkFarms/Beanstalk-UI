@@ -6,9 +6,9 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { RouteData } from './routes';
 import DropdownIcon from 'components/Common/DropdownIcon';
 import useToggle from 'hooks/display/useToggle';
+import { RouteData } from './routes';
 import MenuItem from './MenuItem';
 
 const HoverMenu: React.FC<{

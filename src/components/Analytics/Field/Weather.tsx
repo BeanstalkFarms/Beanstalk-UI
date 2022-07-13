@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 
 const getValue = (season: Season) => season.field.weather;
-const formatValue = (value: number) => `${value.toFixed(0)}%`
+const formatValue = (value: number) => `${value.toFixed(0)}%`;
 const StatProps = {
-  title: "Weather",
+  title: 'Weather',
   gap: 0.5,
 };
 

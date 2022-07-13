@@ -35,7 +35,7 @@ import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
 import { AppState } from '../../../state';
 import { QuoteHandler } from '../../../hooks/useQuote';
-import DestinationField from "../DestinationField";
+import DestinationField from '../DestinationField';
 
 // -----------------------------------------------------------------------
 
@@ -234,7 +234,7 @@ const Harvest : React.FC<{}> = () => {
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
         <Stack spacing={1}>
-          {/*<pre>{JSON.stringify(formikProps.values, null, 2)}</pre>*/}
+          {/* <pre>{JSON.stringify(formikProps.values, null, 2)}</pre> */}
           <HarvestForm
             token={BEAN[1]}
             harvestablePods={farmerField.harvestablePods}

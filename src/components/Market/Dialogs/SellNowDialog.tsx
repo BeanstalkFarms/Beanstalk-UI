@@ -21,7 +21,7 @@ import { SellListingFormValues } from './SellListingDialog';
 import SellListingForm from '../Forms/SellListingForm';
 import SellNowForm from '../Forms/SellNowForm';
 import { PodOrder } from '../Plots.mock';
-import PlotSelect from "../../Common/PlotSelect";
+import PlotSelect from '../../Common/PlotSelect';
 
 export type SellNowFormValues = {
   min: BigNumber | null;

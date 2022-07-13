@@ -148,7 +148,7 @@ const FarmerEventsProcessor = () => {
           
           const results = p.data();
 
-          console.debug(`[processor.ts] ...received results:`, results)
+          console.debug('[processor.ts] ...received results:', results);
         
           // Update Field
           dispatch(updateFarmerField(

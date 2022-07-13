@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {  Scalars, Season, SeasonalPodRateDocument, SeasonalPodRateQuery, SeasonalPodRateQueryResult } from "generated/graphql";
+import {  Scalars, Season, SeasonalPodRateDocument, SeasonalPodRateQuery, SeasonalPodRateQueryResult } from 'generated/graphql';
 import { apolloClient } from 'graph/client';
 import { DocumentNode, useLazyQuery } from '@apollo/client';
 
@@ -23,7 +23,7 @@ const SEASON_RANGE_TO_COUNT : { [key in SeasonRange]: number | undefined } = {
   [SeasonRange.WEEK]:  168, // 7*24
   [SeasonRange.MONTH]: 672, // 28*24
   [SeasonRange.ALL]:   undefined,
-}
+};
 
 type MinimumViableSeason = Partial<Season> & Pick<Season, 'id' | 'seasonInt' | 'timestamp'>;
 
@@ -33,7 +33,7 @@ const useSeasons = <T extends { seasons: MinimumViableSeason[] }>(document: Docu
 
   useEffect(() => {
     (async () => {
-      console.debug(`[useRecentSeasonsData] initializing with range = ${range}`)
+      console.debug(`[useRecentSeasonsData] initializing with range = ${range}`);
       try {
         if (range !== SeasonRange.ALL) {
           // data.seasons is sorted by season, descending.
@@ -45,7 +45,6 @@ const useSeasons = <T extends { seasons: MinimumViableSeason[] }>(document: Docu
             fetchPolicy: 'cache-first',
           }); 
         } else {
-          
           // Initialize Season data with a call to the first 
           // set of Seasons.
           const init = await get({
@@ -55,10 +54,10 @@ const useSeasons = <T extends { seasons: MinimumViableSeason[] }>(document: Docu
             },
           }); 
 
-          console.debug(`[useRecentSeasonsData] init: data = `, init.data)
+          console.debug('[useRecentSeasonsData] init: data = ', init.data);
           
           if (!init.data) {
-            console.error(init)
+            console.error(init);
             throw new Error('missing data');
           }
           
@@ -79,14 +78,14 @@ const useSeasons = <T extends { seasons: MinimumViableSeason[] }>(document: Docu
            */
           const numQueries = Math.ceil(latestSubgraphSeason / PAGE_SIZE);
           const promises = [];
-          console.debug(`[useRecentSeasonsData] needs ${numQueries} calls to get ${latestSubgraphSeason} more seasons`)
+          console.debug(`[useRecentSeasonsData] needs ${numQueries} calls to get ${latestSubgraphSeason} more seasons`);
           setLoading(true);
           for (let i = 0; i < numQueries; i += 1) {
             const season = Math.max(
               0, // always at least 0
-              latestSubgraphSeason - i*PAGE_SIZE,
+              latestSubgraphSeason - i * PAGE_SIZE,
             );
-            console.debug(`[useRecentSeasonsData] get: ${season} -> ${Math.max(season-1000, 2)}`)
+            console.debug(`[useRecentSeasonsData] get: ${season} -> ${Math.max(season - 1000, 2)}`);
             promises.push(
               apolloClient.query({
                 query: document,
@@ -106,16 +105,16 @@ const useSeasons = <T extends { seasons: MinimumViableSeason[] }>(document: Docu
           setLoading(false);
         }
       } catch (e) {
-        console.debug(`[useRecentSeasonsData] failed`);
-        console.error(e)
+        console.debug('[useRecentSeasonsData] failed');
+        console.error(e);
       }
-    })()
-  }, [range, get, document])
+    })();
+  }, [range, get, document]);
 
   return {
     ...query,
     loading: loading || query.loading,
   }; 
-}
+};
 
 export default useSeasons;

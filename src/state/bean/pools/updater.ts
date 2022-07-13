@@ -6,9 +6,9 @@ import { tokenResult } from 'util/Tokens';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, CRV3, WETH } from 'constants/tokens';
 import ALL_POOLS from 'constants/pools';
 import { SupportedChainId } from 'constants/chains';
+import { getChainConstant } from 'util/Chain';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 import { updateBeanPrice, updateBeanSupply } from '../token/actions';
-import { getChainConstant } from 'util/Chain';
 
 export const PRE_EXPLOIT_BEAN_DATA = {
   updateBeanSupply: tokenResult(BEAN)(new BigNumber(108155457359439)),

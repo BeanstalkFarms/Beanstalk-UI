@@ -34,10 +34,10 @@ export default function useCurve() {
     if (chainId) {
       setCurve(null);
       // setInitializing(true);
-      console.debug(`[curve/use] initializing: `, chainId)
+      console.debug('[curve/use] initializing: ', chainId);
       initCurve(chainId)
         .then((c) => {
-          console.debug(`[curve/use] initialized: `, c);
+          console.debug('[curve/use] initialized: ', c);
           setCurve(c);
         })
         .catch((e) => {

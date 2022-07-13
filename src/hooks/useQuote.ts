@@ -44,7 +44,7 @@ export default function useQuote(
 ] {
   const [result, setResult]   = useState<QuoteHandlerResult | null>(null);
   const [quoting, setQuoting] = useState<boolean>(false);
-  const settings = useMemo(() => ({ ...baseSettings, ..._settings }), [_settings])
+  const settings = useMemo(() => ({ ...baseSettings, ..._settings }), [_settings]);
   
   // When token changes, reset the amount.
   useEffect(() => {

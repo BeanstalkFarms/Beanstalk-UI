@@ -4,7 +4,6 @@ import { NEW_BN, ZERO_BN } from 'constants/index';
 import { Fertilizer } from '.';
 import { resetFertilizer, setRemaining, setTotalRaised, setHumidity } from './actions';
 
-
 const initialState : Fertilizer = {
   remaining: ZERO_BN,
   totalRaised: ZERO_BN,

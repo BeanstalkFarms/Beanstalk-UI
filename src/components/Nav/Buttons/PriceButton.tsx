@@ -21,8 +21,8 @@ import PoolCard from 'components/Silo/PoolCard';
 import DropdownIcon from 'components/Common/DropdownIcon';
 import { NEW_BN, ZERO_BN } from 'constants/index';
 import BeanProgressIcon from 'components/Common/BeanProgressIcon';
-import FolderMenu from '../FolderMenu';
 import useSeason from 'hooks/useSeason';
+import FolderMenu from '../FolderMenu';
 
 // ------------------------------------------------------------
 

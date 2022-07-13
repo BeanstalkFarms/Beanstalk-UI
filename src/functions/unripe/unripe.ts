@@ -1,8 +1,9 @@
-import { Handler } from "@netlify/functions";
-const unripe = require("./unripe.json");
+import { Handler } from '@netlify/functions';
+
+const unripe = require('./unripe.json');
 
 const handler: Handler = async (event, context) => {
-  const account = event.queryStringParameters?.['account']?.toLowerCase();
+  const account = event.queryStringParameters?.account?.toLowerCase();
   if (!account) {
     return {
       statusCode: 400,

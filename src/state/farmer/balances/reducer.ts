@@ -5,7 +5,6 @@ import {
   updateBalance, updateBalances,
 } from './actions';
 
-
 export const initialState: FarmerBalances = {};
 
 export default createReducer(initialState, (builder) =>
