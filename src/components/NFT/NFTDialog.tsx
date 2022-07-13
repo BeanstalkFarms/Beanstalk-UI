@@ -8,13 +8,15 @@ import { ClaimStatus } from '../../util/BeaNFTs';
 export interface NFTDialogProps {
   handleDialogClose: any;
   dialogOpen: boolean;
+  handleMint: any;
   address: string;
   nft: any;
 }
 
 const NFTDialog: React.FC<NFTDialogProps> = ({
-  dialogOpen,
   handleDialogClose,
+  dialogOpen,
+  handleMint,
   address,
   nft
 }) => (
@@ -33,7 +35,7 @@ const NFTDialog: React.FC<NFTDialogProps> = ({
         </Stack>
         <Divider />
         {/* FIXME: should be a LoadingButton */}
-        <Button disabled={nft.claimed === ClaimStatus.CLAIMED}>Mint</Button>
+        <Button onClick={handleMint} disabled={nft.claimed === ClaimStatus.CLAIMED}>Mint</Button>
       </Stack>
     </StyledDialogContent>
   </Dialog>
