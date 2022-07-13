@@ -29,7 +29,7 @@ import { useFetchFarmerAllowances } from 'state/farmer/allowances/updater';
 import { timeToStringDetailed } from 'util/Time';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
-import { BUY_FERTILIZER } from 'components/BarnRaise/FertilizerItemTooltips';
+import { BUY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import { QuoteHandler } from 'hooks/useQuote';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import TransactionToast from 'components/Common/TxnToast';

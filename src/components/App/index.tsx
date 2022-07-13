@@ -7,7 +7,7 @@ import SiloPage from 'pages/silo';
 import SiloTokenPage from 'pages/silo/token';
 import FieldPage from 'pages/field';
 import ForecastPage from 'pages/forecast';
-import BarnRaisePage from 'pages/barn-raise';
+import Barn from 'pages/barn';
 import TransactionHistoryPage from 'pages/history';
 import BalancesPage from 'pages/balances';
 import pageBackground from 'img/theme/bg-mainnet.png';
@@ -133,7 +133,7 @@ export default function App() {
           <Route path="/silo" element={<SiloPage />} />
           <Route path="/silo/:address" element={<SiloTokenPage />} />
           <Route path="/field" element={<FieldPage />} />
-          <Route path="/barn" element={<BarnRaisePage />} />
+          <Route path="/barn" element={<Barn />} />
           <Route path="/market" element={<MarketplacePage />} />
           <Route path="/analytics/bean" element={<BeanAnalytics />} />
           <Route path="/analytics/silo" element={<SiloAnalytics />} />

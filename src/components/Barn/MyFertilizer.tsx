@@ -14,13 +14,13 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useHumidityFromId } from 'hooks/useHumidity';
 import { AppState } from 'state';
-import FertilizerItem from 'components/BarnRaise/FertilizerItem';
+import FertilizerItem from 'components/Barn/FertilizerItem';
 import { ZERO_BN } from 'constants/index';
 import { SupportedChainId } from 'constants/chains';
 import { BEAN, SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from 'util/Tokens';
-import { MY_FERTILIZER } from 'components/BarnRaise/FertilizerItemTooltips';
+import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
 import TokenIcon from '../Common/TokenIcon';
 

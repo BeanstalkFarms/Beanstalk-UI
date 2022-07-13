@@ -1,15 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
-import { BEAN, SEEDS, STALK, USDC, SPROUTS } from 'constants/tokens';
+import { SEEDS, STALK, USDC, SPROUTS } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction, SiloRewardsAction, SiloTransitAction } from 'util/Actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import Token from 'classes/Token';
-import { FERTILIZER_ICONS } from 'components/BarnRaise/FertilizerImage';
+import { FERTILIZER_ICONS } from 'components/Barn/FertilizerImage';
 import { SupportedChainId } from 'constants/chains';
 import siloIcon from 'img/beanstalk/silo-icon.svg';
-import { AccountTreeRounded } from '@mui/icons-material';
 
 // -----------------------------------------------------------------------
 
