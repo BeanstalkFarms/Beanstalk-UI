@@ -1,13 +1,10 @@
 import React from 'react';
 import { Box, Button, ButtonProps, Stack, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 const GAP = 2;
 
-const DescriptionButton : React.FC<
-  ButtonProps
-  & {
+const DescriptionButton : React.FC<ButtonProps & {
   title?: string;
   description?: string;
   icon?: React.ReactNode | string;
@@ -22,7 +19,6 @@ const DescriptionButton : React.FC<
   sx,
   ...props
 }) => {
-  const theme = useTheme();
   return (
     <Button
       variant="outlined"

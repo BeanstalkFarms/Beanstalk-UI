@@ -83,46 +83,6 @@ const RadioCardField: React.FC<(
                     </Typography>
                   </Stack>
                 </Button>
-                {/* <Card
-                  key={opt.value}
-                  sx={{
-                    px: 1,
-                    py: 1.5,
-                    height: '100%',
-                    cursor: 'pointer',
-                    border: selected ? 1 : 1,
-                    outline: selected ? `1.5px solid ${BeanstalkPalette.logoGreen}` : 'none',
-                    borderColor: selected ? 'transparent' : BeanstalkPalette.lightishGrey,
-                    '&:hover': {
-                      backgroundColor: BeanstalkPalette.hoverBlue
-                    },
-                    ...sx
-                  }}
-                  onClick={() => {
-                    fieldProps.form.setFieldValue(name, opt.value);
-                  }}
-                >
-                  <Stack justifyContent="center" alignItems="center" height="100%">
-                    <Typography
-                      sx={{
-                        textAlign: 'center',
-                        fontSize: '16px',
-                        color
-                      }}
-                    >
-                      {opt.title}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        textAlign: 'center',
-                        fontSize: '13px',
-                        color
-                      }}
-                    >
-                      {opt.description}
-                    </Typography>
-                  </Stack>
-                </Card> */}
               </Grid>
             )
           })}

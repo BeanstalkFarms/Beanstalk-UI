@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Button, Card, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
 import { Pool, Token } from 'classes';
@@ -8,10 +9,11 @@ import { displayUSD } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { AddressMap, ZERO_BN } from 'constants/index';
-import { displayBN, displayFullBN } from 'util/Tokens';
+import { displayBN, displayFullBN, displayTokenAmount } from 'util/Tokens';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useTVL from 'hooks/useTVL';
 import useChainConstant from 'hooks/useChainConstant';
+import useBDV from 'hooks/useBDV';
 
 const ARROW_CONTAINER_WIDTH = 20;
 
@@ -30,6 +32,7 @@ const Whitelist : React.FC<{
   config,
 }) => {
   const getTVL = useTVL();
+  const getBDV = useBDV();
   const poolTokenToUSD = useSiloTokenToUSD();
   const Bean = useChainConstant(BEAN);
 
@@ -52,18 +55,24 @@ const Whitelist : React.FC<{
             <Typography color="gray">Token</Typography>
           </Grid>
           <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-            <Typography color="gray">Rewards</Typography>
+            <Tooltip title="Stalk and Seeds earned for each BDV Deposited in the Silo. BDV is [FIXME].">
+              <span>
+                <Typography color="gray">
+                  Rewards
+                </Typography>
+              </span>
+            </Tooltip>
           </Grid>
-          <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">TVL</Typography>
             {/* <Typography color="black" fontWeight="bold">
               ${displayBN(aggregateTVL)}
             </Typography> */}
           </Grid>
-          <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">Deposited Amount</Typography>
           </Grid>
-          <Grid item md={2.5} xs={8} sx={{ textAlign: 'right', paddingRight: `${ARROW_CONTAINER_WIDTH}px` }}>
+          <Grid item md={1.5} xs={8} sx={{ textAlign: 'right', paddingRight: `${ARROW_CONTAINER_WIDTH}px` }}>
             <Typography color="gray">Value</Typography>
             {/* <Typography color="black" fontWeight="bold">{displayUSD(breakdown.states.deposited.value)}</Typography> */}
           </Grid>
@@ -102,19 +111,21 @@ const Whitelist : React.FC<{
                   </Grid>
                   {/* Cell: Rewards */}
                   <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-                    <Typography color="black">
-                      <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
-                      <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
-                    </Typography>
+                    <Tooltip title={<>BDV per {token.symbol}: {displayFullBN(getBDV(token))} BEAN</>}>
+                      <Typography color="black">
+                        <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
+                        <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
+                      </Typography>
+                    </Tooltip>
                   </Grid>
                   {/* Cell: TVL */}
-                  <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
+                  <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       ${displayBN(getTVL(token))}
                     </Typography>
                   </Grid>
                   {/* Cell: Deposited Amount */}
-                  <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
+                  <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       {/**
                         * If this is the entry for Bean deposits,
@@ -143,11 +154,11 @@ const Whitelist : React.FC<{
                           </Tooltip>
                         )
                         : displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)}
-                      <Box display={{ md: 'inline', xs: 'none' }}>&nbsp; {token.name}</Box>
+                      <Box display={{ md: 'inline', xs: 'none' }}>&nbsp;{token.name}</Box>
                     </Typography>
                   </Grid>
                   {/* Cell: My Deposits */}
-                  <Grid item md={2.5} xs={8}>
+                  <Grid item md={1.5} xs={8}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
                         {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'}

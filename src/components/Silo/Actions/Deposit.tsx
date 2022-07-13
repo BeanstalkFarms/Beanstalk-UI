@@ -5,9 +5,8 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider, useSigner } from 'wagmi';
 import { ethers } from 'ethers';
-import { BEAN, CRV3, DAI, ETH, SEEDS, STALK, USDC, USDT, WETH } from 'constants/tokens';
+import { BEAN, CRV3, DAI, ETH, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3, USDC, USDT, WETH } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
-import useTokenMap from 'hooks/useTokenMap';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
@@ -35,6 +34,8 @@ import useGetChainToken from 'hooks/useGetChainToken';
 import TxnSeparator from 'components/Common/Form/TxnSeparator';
 import useToggle from 'hooks/display/useToggle';
 import { combineBalances, optimizeFromMode } from 'util/Farm';
+import usePreferredToken from 'hooks/usePreferredToken';
+import useTokenMap from 'hooks/useTokenMap';
 
 // -----------------------------------------------------------------------
 
@@ -48,14 +49,16 @@ type DepositFormValues = FormState & {
 
 const DepositForm : React.FC<
   FormikProps<DepositFormValues> & {
-    siloToken: ERC20Token | NativeToken;
+    tokenList: (ERC20Token | NativeToken)[];
+    whitelistedToken: ERC20Token | NativeToken;
     balances: FarmerBalances;
     contract: ethers.Contract;
     handleQuote: QuoteHandler;
   }
 > = ({
   // Custom
-  siloToken,
+  tokenList,
+  whitelistedToken: siloToken,
   balances,
   contract,
   handleQuote,
@@ -66,7 +69,6 @@ const DepositForm : React.FC<
 }) => {
   const chainId = useChainId();
   // TODO: constrain this when siloToken = Unripe
-  const erc20TokenMap = useTokenMap([BEAN, ETH, WETH, siloToken, CRV3, DAI, USDC, USDT]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
 
   //
@@ -104,7 +106,7 @@ const DepositForm : React.FC<
           handleSubmit={handleSelectTokens}
           selected={values.tokens}
           balances={balances}
-          tokenList={Object.values(erc20TokenMap)}
+          tokenList={tokenList}
           mode={TokenSelectMode.SINGLE}
         />
         <Stack gap={1}>
@@ -180,19 +182,67 @@ const DepositForm : React.FC<
 // - implement usePreferredToken here
 const Deposit : React.FC<{
   pool: Pool;
-  siloToken: ERC20Token | NativeToken;
+  token: ERC20Token | NativeToken;
 }> = ({
   pool,
-  siloToken
+  token: whitelistedToken
 }) => {
-  const Eth = useChainConstant(ETH);
+  /// Chain Constants
+  const getChainToken = useGetChainToken();
+  const Eth  = useChainConstant(ETH);
+  const Weth = useChainConstant(WETH);
+  const urBean = useChainConstant(UNRIPE_BEAN);
+  const urBeanCrv3 = useChainConstant(UNRIPE_BEAN_CRV3);
+  const allAvailableTokens = useTokenMap([
+    BEAN,
+    ETH,
+    WETH,
+    whitelistedToken,
+    CRV3,
+    DAI,
+    USDC,
+    USDT
+  ]);
+  const isUnripe = (
+    whitelistedToken === urBean || 
+    whitelistedToken === urBeanCrv3
+  );
+
+  /// Token List
+  const [tokenList, preferredTokens] = useMemo(() => {
+    // Exception: if page is Depositing Unripe assets
+    // then constrain the token list to only unripe.
+    if (isUnripe) {
+      return [
+        [whitelistedToken],
+        [{ token: whitelistedToken }]
+      ];
+    } else {
+      let _tokenList = Object.values(allAvailableTokens);
+      return [
+        _tokenList,
+        _tokenList.map((t) => ({ token: t })),
+      ]
+    }
+  }, [
+    isUnripe,
+    whitelistedToken,
+    allAvailableTokens,
+  ])
+  const baseToken = usePreferredToken(preferredTokens, 'use-best') as (ERC20Token | NativeToken);
+
+  /// Farmer
   const balances = useFarmerBalances();
+
+  /// Network
+  const provider = useProvider();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
-  const provider = useProvider();
+
+  /// Farm
   const farm = useMemo(() => new Farm(provider), [provider]);
-  const getChainToken = useGetChainToken();
-  const Weth = getChainToken<ERC20Token>(WETH);
+
+  // const 
 
   // Form setup
   const initialValues : DepositFormValues = useMemo(() => ({
@@ -201,13 +251,13 @@ const Deposit : React.FC<{
     },
     tokens: [
       {
-        token: Eth,
+        token: baseToken,
         amount: null,
       },
     ],
-  }), [Eth]);
+  }), [baseToken]);
 
-  // Handlers
+  /// Handlers
   // This handler does not run when _tokenIn = _tokenOut (direct deposit)
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
@@ -343,7 +393,6 @@ const Deposit : React.FC<{
     ]
   );
 
-  ///
   const onSubmit = useCallback(async (values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
     if (!values.settings.slippage) throw new Error('No slippage value set.');
 
@@ -351,13 +400,13 @@ const Deposit : React.FC<{
 
     // FIXME: getting BDV per amount here
     const { amount } = Beanstalk.Silo.Deposit.deposit(
-      siloToken,
+      whitelistedToken,
       values.tokens,
       (_amount: BigNumber) => _amount,
     );
 
     const txToast = new TransactionToast({
-      loading: `Depositing ${displayFullBN(amount.abs(), siloToken.displayDecimals, siloToken.displayDecimals)} ${siloToken.name} to the Silo`,
+      loading: `Depositing ${displayFullBN(amount.abs(), whitelistedToken.displayDecimals, whitelistedToken.displayDecimals)} ${whitelistedToken.name} to the Silo`,
       success: 'Deposit successful.',
     });
     
@@ -377,7 +426,7 @@ const Deposit : React.FC<{
       let depositFrom;
 
       // Direct Deposit
-      if (inputToken === siloToken) {
+      if (inputToken === whitelistedToken) {
         // TODO: verify we have approval for `inputToken`
         depositAmount = formData.amount; // implicit: amount = amountOut since the tokens are the same
         depositFrom   = FarmFromMode.INTERNAL_EXTERNAL;
@@ -417,8 +466,8 @@ const Deposit : React.FC<{
       // Deposit step
       data.push(
         b.interface.encodeFunctionData('deposit', [
-          siloToken.address,
-          toStringBaseUnitBN(depositAmount, siloToken.decimals),  // expected amountOut from all steps
+          whitelistedToken.address,
+          toStringBaseUnitBN(depositAmount, whitelistedToken.decimals),  // expected amountOut from all steps
           depositFrom,
         ])
       )
@@ -441,7 +490,7 @@ const Deposit : React.FC<{
             txToast.error(err.error || err),
             {
               calldata: {
-                amount: toStringBaseUnitBN(amount, siloToken.decimals)
+                amount: toStringBaseUnitBN(amount, whitelistedToken.decimals)
               }
             }
           );
@@ -453,10 +502,9 @@ const Deposit : React.FC<{
   }, [
     Eth,
     beanstalk,
-    siloToken,
+    whitelistedToken,
   ]);
 
-  ///
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
@@ -466,7 +514,8 @@ const Deposit : React.FC<{
           </TxnSettings>
           <DepositForm
             handleQuote={handleQuote}
-            siloToken={siloToken}
+            tokenList={tokenList}
+            whitelistedToken={whitelistedToken}
             balances={balances}
             contract={beanstalk}
             {...formikProps}

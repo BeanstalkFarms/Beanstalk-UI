@@ -102,6 +102,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       <Stack gap={1} sx={{ maxHeight: `${(37.5 + 10) * MAX_ITEMS - 10}px`, overflowY: 'auto' }}>
         {mockSunData.map((s) => (
           <SeasonCard
+            key={s.season.toString()}
             season={s.season}
             newBeans={s.newBeans}
             newSoil={s.newSoil}

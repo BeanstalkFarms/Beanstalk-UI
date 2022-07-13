@@ -14,7 +14,8 @@ import { ChainConstant } from 'constants/index';
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useSigner, useContract as useWagmiContract } from 'wagmi';
-import useChainConstant, { getChainConstant } from './useChainConstant';
+import useChainConstant from './useChainConstant';
+import { getChainConstant } from 'util/Chain';
 
 // -------------------------------------------------
 
@@ -22,6 +23,7 @@ const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
 const BEANSTALK_REPLANTED_ABI = require('constants/abi/Beanstalk/BeanstalkReplanted.json');
 const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
 const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0.json');
+const BEANSTALK_PRICE_REPLANTED_ABI = require('constants/abi/Beanstalk/BeanstalkPriceReplanted.json');
 const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
 const ERC20_ABI = require('constants/abi/ERC20.json');
 
@@ -119,7 +121,8 @@ export function useContract<T extends Contract = Contract>(
 const BEANSTALK_PRICE_ABIS = {
   [SupportedChainId.MAINNET]: BEANSTALK_PRICE_V0_ABI,
   [SupportedChainId.ROPSTEN]: BEANSTALK_PRICE_ABI,
-  [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_V0_ABI
+  [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_V0_ABI,
+  [SupportedChainId.PHOENIX]: BEANSTALK_PRICE_REPLANTED_ABI,
 };
 
 export function useBeanstalkPriceContract() {
@@ -164,7 +167,7 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
 const BEANSTALK_ABIS = {
   [SupportedChainId.MAINNET]:   BEANSTALK_ABI,
   [SupportedChainId.ROPSTEN]:   BEANSTALK_ABI,
-  [SupportedChainId.LOCALHOST]: BEANSTALK_ABI,
+  [SupportedChainId.LOCALHOST]: BEANSTALK_REPLANTED_ABI,
   [SupportedChainId.CUJO]:      BEANSTALK_REPLANTED_ABI,
   [SupportedChainId.PHOENIX]:   BEANSTALK_REPLANTED_ABI,
 };

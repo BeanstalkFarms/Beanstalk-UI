@@ -36,18 +36,21 @@ const NavDrawer: React.FC<{
       <List style={{ fontSize: 22 }}>
         {ROUTES.top.map((item) => (
           <MenuItemMobile
+            key={item.path}
             item={item}
             onClick={hideDrawer}
           />
         ))}
         {ROUTES.more.map((item) => (
           <MenuItemMobile
+            key={item.path}
             item={item}
             onClick={hideDrawer}
           />
         ))}
         {ROUTES.additional.map((item) => (
           <MenuItemMobile
+            key={item.path}
             item={item}
             onClick={hideDrawer}
           />

@@ -9,11 +9,13 @@ import useChainId from 'hooks/useChain';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
-import { resetFertilizer, setRemaining, setTotalRaised } from './actions';
+import { resetFertilizer, setRemaining, setTotalRaised, setHumidity } from './actions';
+import BigNumber from 'bignumber.js';
+import { bigNumberResult } from 'util/Ledger';
 
 export const useFertilizer = () => {
   const dispatch = useDispatch();
-  const beanstalk = useBeanstalkContract();
+  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
   const [fertContract] = useBeanstalkFertilizerContract();
   const [usdcContract] = useERC20Contract(USDC_ADDRESSES);
   const custodian = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
@@ -25,17 +27,31 @@ export const useFertilizer = () => {
       console.debug('[beanstalk/fertilizer/updater] FETCH');
       const [
         remaining,
-        totalRaised
+        totalRaised,
+        fundedPercent,
+        humidity
       ] = await Promise.all([
         migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
-          ()  => fertContract.remaining().then(tokenResult(BEAN)),
-          () => Promise.resolve(ZERO_BN),
+          () => fertContract.remaining().then(tokenResult(BEAN)),
+          () => beanstalk.remainingRecapitalization().then(tokenResult(BEAN)),
         ]),
-        usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          () => usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
+          () => beanstalk.totalFertilizerBeans().then(tokenResult(USDC)),
+        ]),
+        migrate(beanstalk, [
+          () => Promise.resolve(ZERO_BN),
+          () => Promise.resolve(ZERO_BN), //beanstalk.getRecapFundedPercent(),
+        ]),
+        migrate(beanstalk, [
+          () => Promise.resolve(new BigNumber(500)),
+          () => beanstalk.getCurrentHumidity().then(bigNumberResult)
+        ])
       ] as const);
       console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remaining.toFixed(2)}`);
       dispatch(setRemaining(remaining));
       dispatch(setTotalRaised(totalRaised));
+      dispatch(setHumidity(humidity))
     }
   }, [
     dispatch,
