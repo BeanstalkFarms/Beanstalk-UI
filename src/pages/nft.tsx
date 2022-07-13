@@ -5,29 +5,17 @@ import { useAccount, useSigner } from 'wagmi';
 import fetch from 'node-fetch';
 import NFTDialog from '../components/NFT/NFTDialog';
 import WalletCard from '../components/NFT/WalletCard';
-import { loadNFTs } from '../graph';
 import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '../constants';
 import NFTGrid from '../components/NFT/NFTGrid';
-import { ClaimStatus } from '../util/BeaNFTs';
 import { useGenesisNFTContract, useWinterNFTContract } from '../hooks/useContract';
 import { BeaNFTGenesis, BeaNFTWinter } from '../generated';
-
-type Nft = {
-  id: number;
-  metadataIpfsHash?: string;
-  imageIpfsHash: string;
-  signature: string;
-  signature2: string;
-  account: string;
-  subcollection: string;
-  /** 0 => claimed, 1 => unclaimed  */
-  claimed?: ClaimStatus;
-}
+import { getAccount } from 'util/Account';
+import { ClaimStatus, loadNFTs, Nft } from 'util/BeaNFTs';
 
 const NFTPage: React.FC = () => {
   const { data: account } = useAccount();
   const { data: signer } = useSigner();
-  const genesisContract = useGenesisNFTContract(signer);
+  const   genesisContract = useGenesisNFTContract(signer);
   const winterContract = useWinterNFTContract(signer);
 
   // component state
@@ -37,7 +25,7 @@ const NFTPage: React.FC = () => {
   // NFT state
   const [selectedNFT, setSelectedNFT] = useState<Nft | null>(null);
   const [genesisNFTs, setGenesisNFTs] = useState<Nft[] | null>(null);
-  const [winterNFTs, setWinterNFTs] = useState<Nft[] | null>(null);
+  const [winterNFTs, setWinterNFTs]   = useState<Nft[] | null>(null);
 
   // handlers
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -68,6 +56,7 @@ const NFTPage: React.FC = () => {
     fetch(fetchURL, requestOptions)
       .then((response) => response.json())
       .then((response) => {
+        console.debug(`[parseMints] response: `, response);
         // hashes of only user's claimed nfts
         const nftHashes = response.ownedNfts.map((nft: any) => nft.metadata.image.replace('ipfs://', ''));
         for (let i = 0; i < accountNFTs.length; i += 1) {
@@ -86,10 +75,17 @@ const NFTPage: React.FC = () => {
     if (account?.address && genesisNFTs) {
       const unminted = genesisNFTs.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
       if (unminted.length > 0) {
-        const tokenIds = unminted.map((nft) => nft.id);
-        const ipfsHashes = unminted.map((nft) => nft.imageIpfsHash);
-        const signatures = unminted.map((nft) => nft.signature);
-        genesisContract.batchMint(Array(account.address), tokenIds, ipfsHashes, signatures);
+        const accounts   = Array(unminted.length).fill(getAccount(account.address));
+        const tokenIds   = unminted.map((nft) => nft.id);
+        const ipfsHashes = unminted.map((nft) => (nft.metadataIpfsHash as string));
+        const signatures = unminted.map((nft) => (nft.signature as string));
+        console.log(`[mintAllGenesis] Minting ${unminted.length} NFTs`, accounts, tokenIds, ipfsHashes, signatures);
+        genesisContract.batchMint(
+          accounts,
+          tokenIds,
+          ipfsHashes,
+          signatures
+        );
       }
     }
   };
@@ -98,10 +94,15 @@ const NFTPage: React.FC = () => {
   const mintAllWinter = () => {
     if (account?.address && winterNFTs) {
       const unminted = winterNFTs.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
+      console.debug(`[mintAllWinter] trying to mint`, winterNFTs, unminted)
       if (unminted.length > 0) {
-        const tokenIds = unminted.map((nft) => nft.id);
-        const signatures = unminted.map((nft) => nft.signature2);
-        winterContract.batchMintAccount(account.address, tokenIds, signatures);
+        const tokenIds   = unminted.map((nft) => nft.id);
+        const signatures = unminted.map((nft) => (nft.signature2 as string));
+        winterContract.batchMintAccount(
+          account.address,
+          tokenIds,
+          signatures
+        );
       }
     }
   };
@@ -110,7 +111,7 @@ const NFTPage: React.FC = () => {
     if (account?.address !== undefined) {
       // FIXME: move this to a datastore and fetch with an API
       // gets all BeaNFTs (claimed & unclaimed) from parsed-accounts.json
-      loadNFTs(account.address.toLowerCase()).then((data) => {
+      loadNFTs(getAccount(account.address)).then((data) => {
         const genNFTs = data.genesis;
         const winNFTs = data.winter;
 
