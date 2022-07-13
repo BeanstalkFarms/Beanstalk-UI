@@ -7,9 +7,9 @@ import { ethers } from 'ethers';
 import { useAccount, useProvider, useSigner } from 'wagmi';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
-import { displayBN, displayFullBN, tokenResult, toStringBaseUnitBN } from 'util/index';
-import { BEAN, BEAN_CRV3_LP, ETH, ETH_DECIMALS, USDC } from 'constants/tokens';
-import { CURVE_ZAP_ADDRESSES, TokenMap } from 'constants/index';
+import { displayBN, displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { BEAN, BEAN_CRV3_LP, ETH, ETH_DECIMALS, USDC, USDT, WETH } from 'constants/tokens';
+import { CURVE_ZAP_ADDRESSES, TokenMap, ZERO_BN } from 'constants/index';
 import { FarmerBalances } from 'state/farmer/balances';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
@@ -36,7 +36,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import FertilizerItem from './FertilizerItem';
 import { BeanstalkReplanted } from 'generated';
 import { getChainConstant } from 'util/Chain';
-import Farm from 'lib/Beanstalk/Farm';
+import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import { optimizeFromMode } from 'util/Farm';
 
 // ---------------------------------------------------
@@ -205,6 +205,8 @@ const SetupForm: React.FC<{}> = () => {
   // Constants
   const Usdc = getChainConstant(USDC, chainId);
   const Eth  = getChainConstant(ETH,  chainId);
+  const Weth = getChainConstant(WETH, chainId);
+  const Usdt = getChainConstant(USDT, chainId);
   const BeanCrv3 = getChainConstant(BEAN_CRV3_LP, chainId);
   const Zap  = getChainConstant(CURVE_ZAP_ADDRESSES, chainId);
   const isReplanted = REPLANTED_CHAINS.has(chainId);
@@ -222,14 +224,52 @@ const SetupForm: React.FC<{}> = () => {
   }), [baseToken]);
 
   // Doesn't get called if tokenIn === tokenOut
-  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn) => 
-    fertContract.callStatic.getUsdcOut(
-      tokenIn.stringify(amountIn)
-    ).then(tokenResult(BEAN)),
-  [fertContract]);
+  const handleQuote = useCallback<QuoteHandler>(async (_tokenIn, _amountIn, _tokenOut) => {
+    if (!isReplanted) {
+      return fertContract.callStatic.getUsdcOut(
+        _tokenIn.stringify(_amountIn)
+      ).then(tokenResult(BEAN));
+    }
+
+    const estimate = await Farm.estimate([
+      // WETH -> USDT
+      farm.exchange(
+        farm.contracts.curve.pools.tricrypto2.address,
+        farm.contracts.curve.registries.cryptoFactory.address,
+        Weth.address,
+        Usdt.address,
+        FarmFromMode.EXTERNAL, // FIXME
+        FarmToMode.INTERNAL,
+        // optimizeFromMode(_amountIn, balanceIn) // use the BN version here
+      ),
+      // USDT -> USDC
+      farm.exchange(
+        farm.contracts.curve.pools.pool3.address,
+        farm.contracts.curve.registries.poolRegistry.address,
+        Usdt.address,
+        Usdc.address,
+        FarmFromMode.INTERNAL_TOLERANT,
+        FarmToMode.INTERNAL,
+      )
+    ], [
+      ethers.BigNumber.from(_tokenIn.stringify(_amountIn))
+    ]);
+
+    return {
+      amountOut: toTokenUnitsBN(estimate.amountOut.toString(), _tokenOut.decimals),
+      steps: estimate.steps,
+    };
+  }, [
+    Usdc,
+    Usdt,
+    Weth,
+    fertContract,
+    farm,
+    isReplanted,
+  ]);
 
   const onSubmit = useCallback(async (values: FertilizerFormValues, formActions: FormikHelpers<FertilizerFormValues>) => {
-    if (fertContract && account?.address) {
+    if (fertContract && beanstalk && account?.address) {
       const token   = values.tokens[0].token;
       const amount  = values.tokens[0].amount;
       const amountUsdc = (
@@ -249,35 +289,82 @@ const SetupForm: React.FC<{}> = () => {
       });
 
       let call;
+      let value = ZERO_BN
       // Once Replanted we need to use the Farm function
       // to acquire USDC (if necessary) and buy Fertilizer.
       if (isReplanted) {
         switch (token) {
-          case Eth:
-            //
+          case Eth: {
+            if (!values.tokens[0].steps) throw new Error('No quote found'); // FIXME: standardize this err message across forms
+            
+            // Calculate the amount of underlying LP created when minting
+            // `amountUsdc` FERT. This holds because 1 FERT = 1 USDC.
+            const amountLPOut = await farm.contracts.curve.zap.callStatic.calc_token_amount(
+              farm.contracts.curve.pools.beanCrv3.address,
+              [
+                // 0.866616 is the ratio to add USDC/Bean at such that post-exploit
+                // delta B in the Bean:3Crv pool with A=1 equals the pre-export 
+                // total delta B times the haircut. Independent of the haircut %.
+                Usdc.stringify(amountUsdc.times(0.866616)), // BEAN
+                0, // DAI
+                Usdc.stringify(amountUsdc), // USDC
+                0, // USDT
+              ],
+              true, // _is_deposit
+              { gasLimit: 10000000 }
+            );
+
+            console.debug(`[PurchaseForm] calculated amountLPOut = `, amountLPOut.toString())
+
+            value = value.plus(amount);
+            call = beanstalk.farm([
+              // Wrap input ETH into our internal balance
+              beanstalk.interface.encodeFunctionData("wrapEth", [
+                Eth.stringify(amount),
+                FarmToMode.INTERNAL,
+              ]),
+              // Swap WETH -> USDC
+              ...Farm.encodeStepsWithSlippage(
+                values.tokens[0].steps,
+                ethers.BigNumber.from(0.1/100)
+              ), // -> INTERNAL
+              // Mint Fertilizer, which also mints Beans and 
+              // deposits the underlying LP in the same txn.
+              beanstalk.interface.encodeFunctionData('mintFertilizer', [
+                Usdc.stringify(amountUsdc),
+                amountLPOut,
+                FarmFromMode.INTERNAL,
+              ])
+            ], {
+              value: Eth.stringify(value)
+            })
             break;
-          case Usdc:
+          }
+          case Usdc: {
+            const amountLPOut = await farm.contracts.curve.zap.calc_token_amount(
+              farm.contracts.curve.pools.beanCrv3.address,
+              [
+                // 0.866616 is the ratio to add USDC/Bean at such that post-exploit
+                // delta B in the Bean:3Crv pool with A=1 equals the pre-export 
+                // total delta B times the haircut. Independent of the haircut %.
+                Usdc.stringify(amountUsdc.times(0.866616)),
+                0,
+                Usdc.stringify(amountUsdc),
+                0
+              ],
+              true
+            )
             call = beanstalk.mintFertilizer(
               Usdc.stringify(amountUsdc),
-              await farm.contracts.curve.zap.calc_token_amount(
-                farm.contracts.curve.pools.beanCrv3.address,
-                [
-                  // 0.866616 is the ratio to add USDC/Bean at such that post-exploit
-                  // delta B in the Bean:3Crv pool with A=1 equals the pre-export 
-                  // total delta B times the haircut. Independent of the haircut %.
-                  Usdc.stringify(amountUsdc.times(0.866616)),
-                  0,
-                  Usdc.stringify(amountUsdc),
-                  0
-                ],
-                true
-              ),
+              amountLPOut,
               optimizeFromMode(amountUsdc, balances[tokenOut.address])
             );
             break;
-          default:
+          }
+          default: {
             call = Promise.reject(new Error('Unrecognized token.'));
             break;
+          }
         }
       }
 
@@ -318,6 +405,7 @@ const SetupForm: React.FC<{}> = () => {
         })
         .catch((err) => {
           txToast.error(err);
+          console.error(err);
         });
     }
 

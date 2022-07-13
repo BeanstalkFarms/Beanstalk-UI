@@ -134,6 +134,10 @@ export default abstract class Token {
   /**
    * Convert an `amount` of this Token into a string value
    * based on the configured number of decimals.
+   * 
+   * FIXME: better name
+   * FIXME: provide other side (toTokenUnitsBN)
+   * 
    * @param amount amount to convert
    * @returns string 
    */

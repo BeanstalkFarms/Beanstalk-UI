@@ -41,13 +41,16 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
   const BEANSTALK       = getChainConstant(BEANSTALK_ADDRESSES, chainId);
   const POOL3           = getChainConstant(POOL3_ADDRESSES, chainId);
   const TRICRYPTO2      = getChainConstant(TRICRYPTO2_ADDRESSES, chainId);
-  const BEAN_CRV3       = getChainConstant(BEAN_CRV3_ADDRESSES, chainId);
+  const BEANCRV3       = getChainConstant(BEAN_CRV3_ADDRESSES, chainId);
   const POOL_REGISTRY   = getChainConstant(POOL_REGISTRY_ADDRESSES, chainId);
   const META_FACTORY    = getChainConstant(META_FACTORY_ADDRESSES, chainId);
   const CRYPTO_FACTORY  = getChainConstant(CRYPTO_FACTORY_ADDRESSES, chainId);
   const ZAP             = getChainConstant(CURVE_ZAP_ADDRESSES, chainId);
 
   // Instances
+  const pool3           = Curve3Pool__factory.connect(POOL3, provider);
+  const tricrypto2      = CurveTriCrypto2Pool__factory.connect(TRICRYPTO2, provider);
+  const beanCrv3        = CurveMetaPool__factory.connect(BEANCRV3, provider);
   const poolRegistry    = CurveRegistry__factory.connect(POOL_REGISTRY, provider);
   const metaFactory     = CurveMetaFactory__factory.connect(META_FACTORY, provider);
   const cryptoFactory   = CurveCryptoFactory__factory.connect(CRYPTO_FACTORY, provider);
@@ -58,9 +61,12 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
     curve: {
       // Pools
       pools: {
-        pool3:      Curve3Pool__factory.connect(POOL3, provider),
-        tricrypto2: CurveTriCrypto2Pool__factory.connect(TRICRYPTO2, provider),
-        beanCrv3:   CurveMetaPool__factory.connect(BEAN_CRV3, provider),
+        pool3,
+        [POOL3]: pool3,
+        tricrypto2,
+        [TRICRYPTO2]: tricrypto2,
+        beanCrv3,
+        [BEANCRV3]: beanCrv3
       },
       // Registries
       registries: {
@@ -110,11 +116,18 @@ export default class Farm {
     const steps : ChainableFunctionResult[] = [];
     // ratchet Promise.waterfall()
     for (let i = 0; i < fns.length; i += 1) {
-      const step = await fns[i](...args);
-      args = [step.amountOut];
-      steps.push(step);
+      try {
+        const step = await fns[i](...args);
+        args = [step.amountOut];
+        steps.push(step);
+      } catch (e) {
+        console.debug(`[farm/estimate] Failed to estimate step ${i}`, fns[i].name, args);
+        console.error(e)
+      }
     }
     return {
+      // the resulting amountOut is just the argument
+      // that would've been passed to the next function
       amountOut: args[0],
       steps,
     };
@@ -194,22 +207,49 @@ export default class Farm {
   ) : ChainableFunction => async (amountInStep: ethers.BigNumber) => {
       const registry = this.contracts.curve.registries[_registry];
       if (!registry) throw new Error(`Unknown registry: ${_registry}`);
-      const [i, j] = await registry.get_coin_indices(
+      const [i, j] = await registry.callStatic.get_coin_indices(
         _pool,
         _tokenIn,
         _tokenOut,
         { gasLimit: 10000000 }
       );
 
-      // FIXME: assumes exchange via tricrypto2
-      const amountOut = await this.contracts.curve.pools.tricrypto2.get_dy(
-        i,
-        j,
-        amountInStep,
-        { gasLimit: 10000000 }
-      );
+      // Get amount out based on the selected pool
+      const poolAddr = _pool.toLowerCase();
+      const pools = this.contracts.curve.pools;
+      let amountOut;
+      if (poolAddr === pools.tricrypto2.address.toLowerCase()) {
+        amountOut = await pools.tricrypto2.callStatic.get_dy(
+          i,
+          j,
+          amountInStep,
+          { gasLimit: 10000000 }
+        );
+      } else if (poolAddr === pools.pool3.address.toLowerCase()) {
+        amountOut = await pools.pool3.callStatic.get_dy(
+          i,
+          j,
+          amountInStep,
+          { gasLimit: 10000000 }
+        );
+      } else if (_registry === this.contracts.curve.registries.metaFactory.address) {
+        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['get_dy(int128,int128,uint256)'](
+          i,
+          j,
+          amountInStep,
+          { gasLimit: 10000000 }
+        );
+      } else if (_registry === this.contracts.curve.registries.cryptoFactory.address) {
+        amountOut = await CurvePlainPool__factory.connect(_pool, this.provider).callStatic.get_dy(
+          i,
+          j,
+          amountInStep,
+          { gasLimit: 10000000 }
+        )
+      }
 
       //
+      if (!amountOut) throw new Error('No supported pool found');
       console.debug(`[step@exchange] i=${i}, j=${j}, amountOut=${amountOut.toString()}`);
 
       return {
@@ -302,24 +342,28 @@ export default class Farm {
         amountOut = await pools.tricrypto2.callStatic.calc_token_amount(
           amountInStep as [any, any, any], // [DAI, USDC, USDT]; assumes that amountInStep is USDT
           true, // _is_deposit
+          { gasLimit: 10000000 }
         );
       } else if (poolAddr === pools.pool3.address.toLowerCase()) {
         assert(amountInStep.length === 3);
         amountOut = await pools.pool3.callStatic.calc_token_amount(
           amountInStep as [any, any, any],
           true, // _is_deposit
+          { gasLimit: 10000000 }
         );
       } else if (_registry === this.contracts.curve.registries.metaFactory.address) {
         assert(amountInStep.length === 2);
-        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider)['calc_token_amount(uint256[2],bool)'](
+        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['calc_token_amount(uint256[2],bool)'](
           amountInStep as [any, any],
           true, // _is_deposit
+          { gasLimit: 10000000 }
         );
       } else if (_registry === this.contracts.curve.registries.cryptoFactory.address) {
         assert(amountInStep.length === 2);
-        amountOut = await CurvePlainPool__factory.connect(_pool, this.provider).calc_token_amount(
+        amountOut = await CurvePlainPool__factory.connect(_pool, this.provider).callStatic.calc_token_amount(
           amountInStep as [any, any],
           true, // _is_deposit
+          { gasLimit: 10000000 }
         );
       }
 
@@ -355,7 +399,7 @@ export default class Farm {
     // _amountInStep is an an amount of LP token
     return async (_amountInStep: ethers.BigNumber) => {
       const registry = this.contracts.curve.registries.metaFactory;
-      const coins = await registry.get_coins(_pool);
+      const coins = await registry.callStatic.get_coins(_pool, { gasLimit: 10000000 });
       const i = coins.findIndex((addr) => addr.toLowerCase() === _tokenOut.toLowerCase());
       
       // FIXME: only difference between this and addLiquidity is the boolean
@@ -367,21 +411,25 @@ export default class Farm {
         amountOut = await pools.tricrypto2.callStatic.calc_withdraw_one_coin(
           _amountInStep,
           i,
+          { gasLimit: 10000000 }
         );
       } else if (poolAddr === pools.pool3.address.toLowerCase()) {
         amountOut = await pools.pool3.callStatic.calc_withdraw_one_coin(
           _amountInStep,
           i,
+          { gasLimit: 10000000 }
         );
       } else if (_registry === this.contracts.curve.registries.metaFactory.address) {
-        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider)['calc_withdraw_one_coin(uint256,int128)'](
+        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['calc_withdraw_one_coin(uint256,int128)'](
           _amountInStep,
           i,
+          { gasLimit: 10000000 }
         );
       } else if (_registry === this.contracts.curve.registries.cryptoFactory.address) {
-        amountOut = await CurvePlainPool__factory.connect(_pool, this.provider).calc_withdraw_one_coin(
+        amountOut = await CurvePlainPool__factory.connect(_pool, this.provider).callStatic.calc_withdraw_one_coin(
           _amountInStep,
           i,
+          { gasLimit: 10000000 }
         );
       }
       if (!amountOut) throw new Error('No supported pool found');
