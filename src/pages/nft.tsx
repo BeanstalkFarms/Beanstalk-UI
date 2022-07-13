@@ -17,6 +17,7 @@ type Nft = {
   metadataIpfsHash?: string;
   imageIpfsHash: string;
   signature: string;
+  signature2: string;
   account: string;
   subcollection: string;
   /** 0 => claimed, 1 => unclaimed  */
@@ -80,14 +81,28 @@ const NFTPage: React.FC = () => {
       });
   }, [account?.address]);
 
-  // mints all of a user's NFTs in a given collection
-  const handleMintAll = (contract: BeaNFTGenesis | BeaNFTWinter, nfts: Nft[]) => {
-    if (account?.address) {
-      const unminted = nfts.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
-      const tokenIds = unminted.map((nft) => nft.id);
-      const ipfsHashes = unminted.map((nft) => nft.imageIpfsHash);
-      const signatures = unminted.map((nft) => nft.signature);
-      contract.batchMint([account.address], tokenIds, ipfsHashes, signatures);
+  // TODO: not working
+  const mintAllGenesis = () => {
+    if (account?.address && genesisNFTs) {
+      const unminted = genesisNFTs.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
+      if (unminted.length > 0) {
+        const tokenIds = unminted.map((nft) => nft.id);
+        const ipfsHashes = unminted.map((nft) => nft.imageIpfsHash);
+        const signatures = unminted.map((nft) => nft.signature);
+        genesisContract.batchMint(Array(account.address), tokenIds, ipfsHashes, signatures);
+      }
+    }
+  };
+
+  // WORKS
+  const mintAllWinter = () => {
+    if (account?.address && winterNFTs) {
+      const unminted = winterNFTs.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
+      if (unminted.length > 0) {
+        const tokenIds = unminted.map((nft) => nft.id);
+        const signatures = unminted.map((nft) => nft.signature2);
+        winterContract.batchMintAccount(account.address, tokenIds, signatures);
+      }
     }
   };
 
@@ -126,10 +141,10 @@ const NFTPage: React.FC = () => {
                 <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
               </Tabs>
               {tab === 0 && genesisNFTs && (
-                <Button onClick={() => handleMintAll(genesisContract, genesisNFTs)}>Mint All Genesis</Button>
+                <Button onClick={mintAllGenesis}>Mint All Genesis</Button>
               )}
               {tab === 1 && winterNFTs && (
-                <Button onClick={() => handleMintAll(winterContract, winterNFTs)}>Mint All Winter</Button>
+                <Button onClick={mintAllWinter}>Mint All Winter</Button>
               )}
             </Stack>
             <Divider />
