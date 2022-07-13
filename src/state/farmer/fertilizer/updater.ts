@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useChainConstant from 'hooks/useChainConstant';
-import { useBeanstalkFertilizerContract } from 'hooks/useContract';
+import { useBeanstalkContract, useBeanstalkFertilizerContract } from 'hooks/useContract';
 import { useAccount } from 'wagmi';
 import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
 import { bigNumberResult } from 'util/Ledger';
@@ -10,11 +10,13 @@ import { getAccount } from 'util/Account';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { ZERO_BN } from 'constants/index';
 import { resetFertilizer, updateFertilizer } from './actions';
+import { Beanstalk, BeanstalkReplanted } from 'generated';
 
 export const useFetchFarmerFertilizer = () => {
   const dispatch = useDispatch();
   const replantId = useChainConstant(REPLANT_INITIAL_ID);
   const [fertContract] = useBeanstalkFertilizerContract();
+  const beanstalk = useBeanstalkContract()
   const migrate = useMigrateCall();
 
   // Handlers
@@ -25,10 +27,11 @@ export const useFetchFarmerFertilizer = () => {
       const [
         balance,
       ] = await Promise.all([
-        migrate(fertContract, [
-          () => fertContract.balanceOf(account, replantId.toString()).then(bigNumberResult),
-          () => Promise.resolve(ZERO_BN),
-        ]),
+        fertContract.balanceOf(account, replantId.toString()).then(bigNumberResult).catch(() => ZERO_BN),
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => Promise.resolve(ZERO_BN),
+          (b) => Promise.resolve(ZERO_BN),
+        ])
       ] as const);
       console.debug(`[farmer/fertilizer/updater] RESULT: balance = ${balance.toFixed(10)}`);
       if (balance.gt(0)) {

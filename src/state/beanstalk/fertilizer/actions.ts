@@ -10,6 +10,6 @@ export const setTotalRaised = createAction<BigNumber>(
 export const resetFertilizer = createAction(
   'beanstalk/fertilizer/reset'
 );
-// export const setHumidity = createAction<BigNumber>(
-//   'beanstalk/fertilizer/setHumidity'
-// );
+export const setHumidity = createAction<BigNumber>(
+  'beanstalk/fertilizer/setHumidity'
+);
