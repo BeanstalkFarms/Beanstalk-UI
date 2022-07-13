@@ -28,8 +28,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
   top: [
     {
       path: '/',
-      title: 'Barn Raise',
-      tag: 'NEW'
+      title: 'Forecast',
     },
     {
       path: '/silo',
@@ -40,8 +39,13 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       title: 'Field',
     },
     {
-      path: '/forecast',
-      title: 'Forecast',
+      path: '/barn',
+      title: 'Barn',
+      tag: 'NEW',
+    },
+    {
+      path: 'market',
+      title: 'Market',
     },
   ],
   // Analytics Menu
@@ -66,8 +70,13 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
   // More Menu
   more: [
     {
-      path: 'market',
-      title: 'Market',
+      path: 'nft',
+      title: 'BeaNFTs',
+      icon: beanNFTIcon
+    },
+    {
+      path: 'trade',
+      title: 'Trade',
       icon: tradeIcon
     },
     {
@@ -75,19 +84,6 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       href: 'https://snapshot.org/#/beanstalkdao.eth',
       title: 'Governance',
       icon: governanceIcon
-    },
-    {
-      path: 'nft',
-      title: 'BeaNFTs',
-      small: true,
-      icon: beanNFTIcon
-    },
-    {
-      path: 'trade',
-      title: 'Trade',
-      disabled: true,
-      small: true,
-      icon: tradeIcon
     },
   ],
   // About Button

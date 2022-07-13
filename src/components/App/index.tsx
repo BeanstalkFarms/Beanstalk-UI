@@ -129,19 +129,19 @@ export default function App() {
           }
         }}>
         <Routes>
-          <Route path="/" element={<BarnRaisePage />} />
+          <Route path="/" element={<ForecastPage />} />
           <Route path="/silo" element={<SiloPage />} />
           <Route path="/silo/:address" element={<SiloTokenPage />} />
           <Route path="/field" element={<FieldPage />} />
-          <Route path="/forecast" element={<ForecastPage />} />
-          <Route path="/history" element={<TransactionHistoryPage />} />
-          <Route path="/balances" element={<BalancesPage />} />
+          <Route path="/barn" element={<BarnRaisePage />} />
+          <Route path="/market" element={<MarketplacePage />} />
           <Route path="/analytics/bean" element={<BeanAnalytics />} />
           <Route path="/analytics/silo" element={<SiloAnalytics />} />
           <Route path="/analytics/field" element={<FieldAnalytics />} />
           <Route path="/analytics/barnraise" element={<BarnraiseAnalytics />} />
-          <Route path="/market" element={<MarketplacePage />} />
           <Route path="/nft" element={<NFTPage />} />
+          <Route path="/history" element={<TransactionHistoryPage />} />
+          <Route path="/balances" element={<BalancesPage />} />
         </Routes>
       </Box>
     </>

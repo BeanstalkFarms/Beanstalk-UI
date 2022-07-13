@@ -88,7 +88,7 @@ const FolderMenu: React.FC<
             ...buttonProps.sx,
           }}
         >
-          <Typography variant="h3">
+          <Typography variant="h4">
             {buttonContent}
           </Typography>
         </Button>

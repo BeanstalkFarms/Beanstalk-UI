@@ -205,6 +205,7 @@ let muiTheme = createTheme({
       fontSize: FontSize.base, // 16px
       fontWeight: FontWeight.semiBold,
     },
+    // ---
     body1: {
       fontSize: FontSize.base, // 16px
       fontWeight: FontWeight.normal,
