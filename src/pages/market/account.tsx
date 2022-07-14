@@ -15,7 +15,7 @@ import { useAccount } from 'wagmi';
 import { SupportedChainId } from '../../constants';
 import { getAccount } from '../../util/Account';
 import AddressIcon from '../../components/Common/AddressIcon';
-import CreateButtons from "./CreateButtons";
+import CreateButtons from '../../components/Market/CreateButtons';
 
 const MarketAccountPage: React.FC = () => {
   const { data: account } = useAccount();

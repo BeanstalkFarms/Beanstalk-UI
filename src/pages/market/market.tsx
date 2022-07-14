@@ -21,7 +21,7 @@ import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
 import { displayBN, displayFullBN } from '../../util';
 import { SupportedChainId } from '../../constants';
-import CreateButtons from "./CreateButtons";
+import CreateButtons from "../../components/Market/CreateButtons";
 
 const columns: DataGridProps['columns'] = [
   {

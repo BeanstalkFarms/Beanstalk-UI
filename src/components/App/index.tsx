@@ -34,6 +34,7 @@ import NFTPage from '../../pages/nft';
 import ChopPage from "../../pages/chop";
 import MarketAccountPage from "../../pages/market/account";
 import MarketActivityPage from "../../pages/market/activity";
+import CreatePage from "../../pages/market/create";
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -140,6 +141,7 @@ export default function App() {
           <Route path="/market" element={<PodMarketPage />} />
           <Route path="/market/account" element={<MarketAccountPage />} />
           <Route path="/market/activity" element={<MarketActivityPage />} />
+          <Route path="/market/create" element={<CreatePage />} />
           <Route path="/analytics/bean" element={<BeanAnalytics />} />
           <Route path="/analytics/silo" element={<SiloAnalytics />} />
           <Route path="/analytics/field" element={<FieldAnalytics />} />

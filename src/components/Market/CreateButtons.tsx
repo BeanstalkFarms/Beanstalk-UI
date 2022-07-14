@@ -10,9 +10,7 @@ const CreateButtons: React.FC = () => {
   return (
     <Stack direction="row" gap={1} alignItems="end" height="100%">
       <Button
-        href="https://dune.com/tbiq/beanstalk-barn-raise"
-        target="_blank"
-        rel="noreferrer"
+        href="#/market/create"
         color="primary"
         variant="contained"
         sx={{ py: 1 }}
@@ -20,9 +18,7 @@ const CreateButtons: React.FC = () => {
         <Typography variant="h4">Create Buy Order</Typography>
       </Button>
       <Button
-        href="https://bean.money/blog/how-to-purchase-fertilizer"
-        target="_blank"
-        rel="noreferrer"
+        href="#/market/create"
         color="primary"
         variant="contained"
         sx={{ py: 1 }}
