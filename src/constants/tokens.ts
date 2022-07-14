@@ -440,6 +440,7 @@ export const UNRIPE_BEAN = {
       name: 'Unripe Bean',
       symbol: 'urBEAN',
       logo: unripeBeanLogoUrl,
+      displayDecimals: 3,
     },
     {
       stalk: 1,
@@ -457,6 +458,7 @@ export const UNRIPE_BEAN_CRV3 = {
       name: 'Unripe BEAN:3CRV LP',
       symbol: 'urBEAN3CRV',
       logo: unripeBeanCrv3LogoUrl,
+      displayDecimals: 3,
     },
     {
       stalk: 1,
@@ -469,33 +471,33 @@ export const UNRIPE_BEAN_CRV3 = {
 // Token Lists
 // ----------------------------------------
 
+// Show these tokens as whitelisted in the Silo.
+export const SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
+  BEAN,
+  BEAN_CRV3_LP,
+  UNRIPE_BEAN,
+  UNRIPE_BEAN_CRV3
+  // Legacy LP tokens
+  // BEAN_ETH_UNIV2_LP,
+  // BEAN_LUSD_LP,
+];
+
 // All supported ERC20 tokens.
 export const ERC20_TOKENS : ChainConstant<ERC20Token>[] = [
-  BEAN,
-  BEAN_ETH_UNIV2_LP,
-  BEAN_CRV3_LP,
-  BEAN_LUSD_LP,
+  // Whitelisted Silo tokens
+  ...SILO_WHITELIST,
+  // Commonly-used tokens
   WETH,
+  CRV3,
   DAI,
   USDC,
   USDT,
-  CRV3,
 ];
 
 // Preemptively load balances for these tokens.
 export const BALANCE_TOKENS : ChainConstant<NativeToken | ERC20Token>[] = [
   ETH,
   ...ERC20_TOKENS,
-];
-
-// Show these tokens as whitelisted in the Silo.
-export const SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
-  BEAN,
-  BEAN_CRV3_LP,
-  // BEAN_ETH_UNIV2_LP,
-  // BEAN_LUSD_LP,
-  UNRIPE_BEAN,
-  UNRIPE_BEAN_CRV3
 ];
 
 // Tokens that used the generalized silo whitelist in Beanstalk V1.

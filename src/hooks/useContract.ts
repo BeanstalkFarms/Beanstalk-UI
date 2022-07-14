@@ -121,8 +121,8 @@ export function useContract<T extends Contract = Contract>(
 const BEANSTALK_PRICE_ABIS = {
   [SupportedChainId.MAINNET]: BEANSTALK_PRICE_V0_ABI,
   [SupportedChainId.ROPSTEN]: BEANSTALK_PRICE_ABI,
-  [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_V0_ABI,
   [SupportedChainId.PHOENIX]: BEANSTALK_PRICE_REPLANTED_ABI,
+  [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_REPLANTED_ABI,
 };
 
 export function useBeanstalkPriceContract() {
@@ -167,9 +167,9 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
 const BEANSTALK_ABIS = {
   [SupportedChainId.MAINNET]:   BEANSTALK_ABI,
   [SupportedChainId.ROPSTEN]:   BEANSTALK_ABI,
-  [SupportedChainId.LOCALHOST]: BEANSTALK_REPLANTED_ABI,
   [SupportedChainId.CUJO]:      BEANSTALK_REPLANTED_ABI,
   [SupportedChainId.PHOENIX]:   BEANSTALK_REPLANTED_ABI,
+  [SupportedChainId.LOCALHOST]: BEANSTALK_REPLANTED_ABI,
 };
 
 export function useBeanstalkContract(signer?: ethers.Signer | null) {

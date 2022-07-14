@@ -199,17 +199,18 @@ const SetupForm: React.FC<{}> = () => {
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   // Constants
+  const Bean = getChainConstant(BEAN, chainId);
   const Usdc = getChainConstant(USDC, chainId);
   const Eth  = getChainConstant(ETH,  chainId);
   const Weth = getChainConstant(WETH, chainId);
   const Usdt = getChainConstant(USDT, chainId);
-  // const BeanCrv3 = getChainConstant(BEAN_CRV3_LP, chainId);
-  // const Zap  = getChainConstant(CURVE_ZAP_ADDRESSES, chainId);
   const isReplanted = REPLANTED_CHAINS.has(chainId);
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const tokenOut = Usdc;
-
-  //
+  /// Will need approval to use USDC; contract to approve
+  /// varies depending on if we're replanted
+  const contract = isReplanted ? beanstalk : fertContract;
+  
   const initialValues : FertilizerFormValues = useMemo(() => ({
     tokens: [
       {
@@ -235,9 +236,8 @@ const SetupForm: React.FC<{}> = () => {
         farm.contracts.curve.registries.cryptoFactory.address,
         Weth.address,
         Usdt.address,
-        FarmFromMode.EXTERNAL, // FIXME
+        FarmFromMode.INTERNAL,
         FarmToMode.INTERNAL,
-        // optimizeFromMode(_amountIn, balanceIn) // use the BN version here
       ),
       // USDT -> USDC
       farm.exchange(
@@ -249,7 +249,9 @@ const SetupForm: React.FC<{}> = () => {
         FarmToMode.INTERNAL,
       )
     ], [
-      ethers.BigNumber.from(_tokenIn.stringify(_amountIn))
+      ethers.BigNumber.from(
+        toStringBaseUnitBN(_amountIn, _tokenIn.decimals)
+      )
     ]);
 
     return {
@@ -271,18 +273,18 @@ const SetupForm: React.FC<{}> = () => {
       if (!fertContract || !beanstalk || !account?.address) throw new Error('Unable to access contracts');
 
       /// Get amounts
-      const token   = values.tokens[0].token;
-      const amount  = values.tokens[0].amount;
+      const token   = values.tokens[0].token;  // input token
+      const amount  = values.tokens[0].amount; // input amount (entered into the form)
       const amountUsdc = (
         token === Eth
-          ? values.tokens[0].amountOut
-          : values.tokens[0].amount
+          ? values.tokens[0].amountOut         // get amount of USDC received for some ETH
+          : values.tokens[0].amount            // identity
       )?.dp(0, BigNumber.ROUND_DOWN);
 
       if (!amount || !amountUsdc) throw new Error('An error occurred.');
     
       txToast = new TransactionToast({
-        loading: `Buying ${displayFullBN(amountUsdc, Usdc.displayDecimals)} FERT`,
+        loading: `Buying ${displayFullBN(amountUsdc, Usdc.displayDecimals)} Fertilizer`,
         success: 'Success!',
       });
 
@@ -291,73 +293,70 @@ const SetupForm: React.FC<{}> = () => {
       // Once Replanted we need to use the Farm function
       // to acquire USDC (if necessary) and buy Fertilizer.
       if (isReplanted) {
+        // Calculate the amount of underlying LP created when minting
+        // `amountUsdc` FERT. This holds because 1 FERT = 1 USDC.
+        const minLP = await farm.contracts.curve.zap.callStatic.calc_token_amount(
+          farm.contracts.curve.pools.beanCrv3.address,
+          [
+            // 0.866616 is the ratio to add USDC/Bean at such that post-exploit
+            // delta B in the Bean:3Crv pool with A=1 equals the pre-export 
+            // total delta B times the haircut. Independent of the haircut %.
+            Usdc.stringify(amountUsdc.times(0.866616)), // BEAN
+            0, // DAI
+            Usdc.stringify(amountUsdc), // USDC
+            0, // USDT
+          ],
+          true, // _is_deposit
+          { gasLimit: 10000000 }
+        );
         switch (token) {
           case Eth: {
             if (!values.tokens[0].steps) throw new Error('No quote found'); // FIXME: standardize this err message across forms
             
-            // Calculate the amount of underlying LP created when minting
-            // `amountUsdc` FERT. This holds because 1 FERT = 1 USDC.
-            const amountLPOut = await farm.contracts.curve.zap.callStatic.calc_token_amount(
-              farm.contracts.curve.pools.beanCrv3.address,
-              [
-                // 0.866616 is the ratio to add USDC/Bean at such that post-exploit
-                // delta B in the Bean:3Crv pool with A=1 equals the pre-export 
-                // total delta B times the haircut. Independent of the haircut %.
-                Usdc.stringify(amountUsdc.times(0.866616)), // BEAN
-                0, // DAI
-                Usdc.stringify(amountUsdc), // USDC
-                0, // USDT
-              ],
-              true, // _is_deposit
-              { gasLimit: 10000000 }
-            );
-
-            console.debug(`[PurchaseForm] calculated amountLPOut = `, amountLPOut.toString())
-
             value = value.plus(amount);
-            call = beanstalk.farm([
+            const data : string[] = [
               // Wrap input ETH into our internal balance
               beanstalk.interface.encodeFunctionData("wrapEth", [
-                Eth.stringify(amount),
+                toStringBaseUnitBN(value, Eth.decimals),
                 FarmToMode.INTERNAL,
               ]),
               // Swap WETH -> USDC
               ...Farm.encodeStepsWithSlippage(
                 values.tokens[0].steps,
                 0.1/100
-              ), // -> INTERNAL
+              ),
               // Mint Fertilizer, which also mints Beans and 
               // deposits the underlying LP in the same txn.
-              beanstalk.interface.encodeFunctionData('mintFertilizer', [
-                Usdc.stringify(amountUsdc),
-                amountLPOut,
-                FarmFromMode.INTERNAL_TOLERANT,
-              ])
-            ], {
-              value: Eth.stringify(value)
+              // beanstalk.interface.encodeFunctionData('mintFertilizer', [
+              //   toStringBaseUnitBN(amountUsdc, 0),
+              //   Farm.slip(minLP, 0.1/100),
+              //   FarmFromMode.EXTERNAL,
+              //   // FarmFromMode.INTERNAL_TOLERANT,
+              // ])
+            ];
+            const gas = await beanstalk.estimateGas.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) });
+            console.debug(`gas`, gas);
+            call = beanstalk.farm(data, {
+              value: toStringBaseUnitBN(value, Eth.decimals),
+              gasLimit: gas.mul(120).div(100)
             })
             break;
           }
           case Usdc: {
-            const amountLPOut = await farm.contracts.curve.zap.calc_token_amount(
-              farm.contracts.curve.pools.beanCrv3.address,
-              [
-                // 0.866616 is the ratio to add USDC/Bean at such that post-exploit
-                // delta B in the Bean:3Crv pool with A=1 equals the pre-export 
-                // total delta B times the haircut. Independent of the haircut %.
-                toStringBaseUnitBN(amountUsdc.times(0.866616), Usdc.decimals),
-                0,
-                toStringBaseUnitBN(amountUsdc, Usdc.decimals),
-                0
-              ],
-              true
-            );
-            console.debug(`[PurchaseForm] calculated amountLPOut = `, amountLPOut.toString())
+            console.debug(`[PurchaseForm] purchasing with USDC`, {
+              address: farm.contracts.curve.pools.beanCrv3.address,
+              beanAmount: toStringBaseUnitBN(amountUsdc.times(0.866616), Usdc.decimals),
+              usdcAmount: toStringBaseUnitBN(amountUsdc, Usdc.decimals),
+              fertAmount: toStringBaseUnitBN(amountUsdc, 0),
+              minLP: minLP.toString(),
+              minLPSlip: Farm.slip(minLP, 0.1/100).toString(),
+            })
             call = beanstalk.mintFertilizer(
-              toStringBaseUnitBN(amountUsdc, Usdc.decimals),
-              Farm.slip(amountLPOut, 0.1/100),
+              /// The input for Fertilizer has 0 decimals;
+              /// it's the exact number of FERT you want to mint.
+              toStringBaseUnitBN(amountUsdc, 0),
+              Farm.slip(minLP, 0.1/100),
               FarmFromMode.EXTERNAL,
-              // optimizeFromMode(amountUsdc, balances[tokenOut.address])
             );
             break;
           }
@@ -406,6 +405,7 @@ const SetupForm: React.FC<{}> = () => {
       console.error(err);
     }
   }, [
+    Bean,
     Eth,
     Usdc,
     // balances,
@@ -428,7 +428,7 @@ const SetupForm: React.FC<{}> = () => {
           {(formikProps) => (
             <FertilizeForm
               handleQuote={handleQuote}
-              contract={fertContract}
+              contract={contract}
               balances={balances}
               tokenOut={tokenOut}
               {...formikProps}

@@ -205,7 +205,7 @@ export default class Farm {
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
   ) : ChainableFunction => async (amountInStep: ethers.BigNumber) => {
-    console.debug(`[step@exchange] run: `, {
+    console.debug(`[step@exchange] run:`, {
       _pool,
       _registry,
       _tokenIn,
@@ -260,7 +260,7 @@ export default class Farm {
 
     //
     if (!amountOut) throw new Error('No supported pool found');
-    console.debug(`[step@exchange] finish: `, {
+    console.debug(`[step@exchange] finish:`, {
       i,
       j,
       amountOut: amountOut.toString(),
