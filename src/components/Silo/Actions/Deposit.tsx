@@ -352,7 +352,9 @@ const Deposit : React.FC<{
                 farm.contracts.curve.registries.cryptoFactory.address,
                 Weth.address,
                 getChainToken(USDT).address,
-                optimizeFromMode(_amountIn, balanceIn) // use the BN version here
+                // The prior step is a ETH->WETH "swap", from which
+                // we should expect to get an exact amount of WETH.
+                FarmFromMode.INTERNAL,
               ),
               // USDT -> deposit into pool3 for CRV3
               // FIXME: assumes USDT is the third index
@@ -442,7 +444,7 @@ const Deposit : React.FC<{
           value = value.plus(formData.amount); 
           data.push(b.interface.encodeFunctionData('wrapEth', [
             toStringBaseUnitBN(value, Eth.decimals),
-            FarmToMode.INTERNAL,
+            FarmToMode.INTERNAL, // to
           ]));
         }
         

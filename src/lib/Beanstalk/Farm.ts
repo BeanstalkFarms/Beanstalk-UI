@@ -185,28 +185,6 @@ export default class Farm {
       getChainConstant(BEAN, this.provider.network.chainId).address,
     ),
   ]
-  
-  buyAndAddBEANCRV3Liquidity = () => [
-    // WETH -> USDT via tricrypto2 exchange
-    this.exchange(
-      this.contracts.curve.pools.tricrypto2.address,
-      this.contracts.curve.registries.cryptoFactory.address,
-      getChainConstant(WETH, this.provider.network.chainId).address,
-      getChainConstant(USDT, this.provider.network.chainId).address,
-    ),
-    // USDT -> deposit into pool3 for CRV3
-    this.addLiquidity(
-      this.contracts.curve.pools.pool3.address,
-      this.contracts.curve.registries.poolRegistry.address,
-      [0, 0, 1], // [DAI, USDC, USDT] use Tether from previous call
-    ),
-    // CRV3 -> deposit into beanCrv3 for BEAN:CRV3
-    this.addLiquidity(
-      this.contracts.curve.pools.beanCrv3.address,
-      this.contracts.curve.registries.metaFactory.address,
-      [0, 1],    // [BEAN, CRV3] use CRV3 from previous call
-    ),
-  ]
 
   // ------------------------------------------
 
@@ -227,6 +205,7 @@ export default class Farm {
       _toMode,
       amountInStep,
     });
+
     const registry = this.contracts.curve.registries[_registry];
     if (!registry) throw new Error(`Unknown registry: ${_registry}`);
     const [i, j] = await registry.callStatic.get_coin_indices(
@@ -370,10 +349,19 @@ export default class Farm {
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
   ) : ChainableFunction {
     return async (_amountInStep: ethers.BigNumber) => {
-      // [0, 0, 1] => [0, 0, amountIn]
+      console.debug(`[step@addLiquidity] run: `, {
+        _pool,
+        _registry,
+        _amounts,
+        _fromMode,
+        _toMode,
+        _amountInStep,
+      });
+
+      /// [0, 0, 1] => [0, 0, amountIn]
       const amountInStep = _amounts.map((k) => (k === 1 ? _amountInStep : ethers.BigNumber.from(0)));
 
-      // Get amount out based on the selected pool
+      /// Get amount out based on the selected pool
       const poolAddr = _pool.toLowerCase();
       const pools = this.contracts.curve.pools;
       let amountOut;
@@ -407,9 +395,11 @@ export default class Farm {
         );
       }
 
-      //
       if (!amountOut) throw new Error('No supported pool found');
-      console.debug(`[step@addLiquidity] amounts.length=${_amounts.length} amountInStep=[${amountInStep.toString()}], amountOut=${amountOut.toString()}`);
+      console.debug(`[step@addLiquidity] finish: `, {
+        amountInStep: amountInStep.toString(),
+        amountOut: amountOut.toString(),
+      });
       
       return {
         amountOut,
@@ -494,6 +484,28 @@ export default class Farm {
       };
     };
   }
+
+  // buyAndAddBEANCRV3Liquidity = () => [
+  //   // WETH -> USDT via tricrypto2 exchange
+  //   this.exchange(
+  //     this.contracts.curve.pools.tricrypto2.address,
+  //     this.contracts.curve.registries.cryptoFactory.address,
+  //     getChainConstant(WETH, this.provider.network.chainId).address,
+  //     getChainConstant(USDT, this.provider.network.chainId).address,
+  //   ),
+  //   // USDT -> deposit into pool3 for CRV3
+  //   this.addLiquidity(
+  //     this.contracts.curve.pools.pool3.address,
+  //     this.contracts.curve.registries.poolRegistry.address,
+  //     [0, 0, 1], // [DAI, USDC, USDT] use Tether from previous call
+  //   ),
+  //   // CRV3 -> deposit into beanCrv3 for BEAN:CRV3
+  //   this.addLiquidity(
+  //     this.contracts.curve.pools.beanCrv3.address,
+  //     this.contracts.curve.registries.metaFactory.address,
+  //     [0, 1],    // [BEAN, CRV3] use CRV3 from previous call
+  //   ),
+  // ]
 
   // removeLiquidity(
   //   _pool: string,
