@@ -29,7 +29,7 @@ export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: stri
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
       <Typography sx={{ pl: 1, pr: 2, flex: 1, textAlign: 'center' }}>
-        <div>
+        <span>
           {desc}
           {hash && (
             <>
@@ -37,11 +37,11 @@ export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: stri
               <a href={`${chainInfo.explorer}/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
             </>
           )}
-        </div>
+        </span>
         {msg && (
-          <div className={classes.errorMessage}>
+          <span className={classes.errorMessage}>
             {msg}
-          </div>
+          </span>
         )}
       </Typography>
       {msg && (
