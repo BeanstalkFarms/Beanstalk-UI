@@ -24,6 +24,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
         title="Total Balances"
         amount={displayUSD(breakdown.totalValue.abs())}
         amountIcon={undefined}
+        gap={0}
       />
       {(account && chainId === SupportedChainId.MAINNET) && (
         <Alert severity="warning" sx={{ mt: 2, mb: 1 }}>

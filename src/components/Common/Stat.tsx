@@ -43,7 +43,8 @@ const Stat: React.FC<StatProps> = ({
     {/* Title */}
     <Typography>
       <Stack direction="row" alignItems="center" gap={0.5}>
-        {titleIcon ? <>{titleIcon}&nbsp;</> : null}{title}
+        {titleIcon && <>{titleIcon}</>}
+        <Typography variant="body1">{title}</Typography>
         {tooltip && (
           <Tooltip title={tooltip} placement="top">
             <HelpOutlineIcon
@@ -56,12 +57,12 @@ const Stat: React.FC<StatProps> = ({
     {/* Amount */}
     <Typography variant={variant} color={color} sx={{ marginLeft: '-3px', ...sx }}>
       <Stack direction="row" alignItems="center" gap={0.5}>
-        {amountIcon ? <>{amountIcon}&nbsp;</> : null}{amount}
+        {amountIcon && <>{amountIcon}</>}{amount}
       </Stack>
     </Typography>
     {/* Subtitle */}
     {subtitle !== undefined && (
-      <Typography>{subtitle}</Typography>
+      <Typography variant="body1">{subtitle}</Typography>
     )}
   </Stack>
 );

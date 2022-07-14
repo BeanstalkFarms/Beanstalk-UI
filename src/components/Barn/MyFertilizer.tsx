@@ -51,7 +51,7 @@ const MyFertilizer: React.FC = () => {
     <Card>
       {/* Card Header */}
       <Stack sx={{ p: 2 }} gap={1}>
-        <Typography variant="h2">My Fertilizer</Typography>
+        <Typography variant="h4">My Fertilizer</Typography>
         <Stack gap={1}>
           <Stack
             direction="row"

@@ -16,6 +16,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
         title="Total Value"
         amount={displayUSD(breakdown.totalValue.abs())}
         amountIcon={undefined}
+        gap={0}
       />
       <SiloBalances
         breakdown={breakdown}

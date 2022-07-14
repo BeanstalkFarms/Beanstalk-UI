@@ -83,6 +83,7 @@ export const BeanstalkPalette = {
   lightishGrey: '#9E9E9E',
   washedRed: '#c35f42',
   hoverRed: '#fef9f8',
+  trueRed: '#AE2D20',
   yellow: '#f0df6a',
   brown: 'rgba(121,87,57,1)',
   lightBrown: 'rgba(121,87,57,0.2)',

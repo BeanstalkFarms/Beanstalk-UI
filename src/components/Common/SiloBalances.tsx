@@ -76,7 +76,7 @@ const TokenRow: React.FC<{
       {color && (
         <Box sx={{ width: 8, height: 8, borderRadius: 8, backgroundColor: showColor ? color : 'transparent', mt: '-2px', ml: '-13px' }} />
       )}
-      <Typography color="text.secondary" sx={token ? { display: { lg: 'block', md: 'none', xs: 'block' } } : undefined}>
+      <Typography variant="body1" color="text.secondary" sx={token ? { display: { lg: 'block', md: 'none', xs: 'block' } } : undefined}>
         {label}
       </Typography>
       {(assetStates) && (
@@ -91,12 +91,12 @@ const TokenRow: React.FC<{
       <Stack direction="row" alignItems="center" gap={0.5}>
         {token && <TokenIcon token={token} />}
         {amount && (
-          <Typography textAlign="right">
+          <Typography variant="body1" textAlign="right">
             {amount}
           </Typography>
         )}
         {value && (
-          <Typography textAlign="right" display="block">
+          <Typography variant="body1" textAlign="right" display="block">
             {value}
           </Typography>
         )}
@@ -234,7 +234,7 @@ const SiloBalances: React.FC<{
             </Stack>
           ) : (
             <Stack gap={1}>
-              <Typography variant="h2" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Assets</Typography>
+              <Typography variant="h3" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Assets</Typography>
               <Box>
                 {pieChartData.map((dp) => {
                   const token = whitelist[dp.tokenAddress];

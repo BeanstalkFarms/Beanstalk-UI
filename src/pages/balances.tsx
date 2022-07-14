@@ -41,6 +41,7 @@ const BalancesPage: React.FC = () => {
                   amount={displayBN(farmerSilo.stalk.total)}
                   variant="h2"
                   sx={{ fontSize: '24px !important' }}
+                  gap={0}
                 />
               </Grid>
               <Grid item xs={12} md={3}>
@@ -51,6 +52,7 @@ const BalancesPage: React.FC = () => {
                   amount={displayBN(farmerSilo.seeds.total)}
                   variant="h2"
                   sx={{ fontSize: '24px !important' }}
+                  gap={0}
                 />
               </Grid>
               <Grid item xs={12} md={3}>
@@ -61,6 +63,7 @@ const BalancesPage: React.FC = () => {
                   amount={displayBN(farmerField.pods)}
                   variant="h2"
                   sx={{ fontSize: '24px !important' }}
+                  gap={0}
                 />
               </Grid>
               <Grid item xs={12} md={3}>
@@ -71,6 +74,7 @@ const BalancesPage: React.FC = () => {
                   amount={displayBN(fertilizerSummary.unfertilized)}
                   variant="h2"
                   sx={{ fontSize: '24px !important' }}
+                  gap={0}
                 />
               </Grid>
             </Grid>

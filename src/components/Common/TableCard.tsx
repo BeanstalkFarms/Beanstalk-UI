@@ -48,7 +48,7 @@ const TableCard : React.FC<{
   return (
     <Card>
       <Stack p={2} direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h4">
           {title}
         </Typography>
         {state === 'ready' ? (
