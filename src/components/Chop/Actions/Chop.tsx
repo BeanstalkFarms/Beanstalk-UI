@@ -4,9 +4,9 @@ import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormState,
   SettingInput,
-  SmartSubmitButton, TokenAdornment,
+  SmartSubmitButton,
+  TokenAdornment,
   TokenOutputField,
-  TokenQuoteProvider,
   TokenSelectDialog,
   TxnPreview,
   TxnSeparator,
@@ -16,27 +16,25 @@ import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TransactionToast from 'components/Common/TxnToast';
 import { BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
-import { BEAN, ETH, PODS, UNRIPE_BEAN, UNRIPE_BEAN_CRV3, WETH } from 'constants/tokens';
+import { BEAN, ETH, PODS, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
 import { ethers } from 'ethers';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useToggle from 'hooks/display/useToggle';
-import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
-import useGetChainToken from 'hooks/useGetChainToken';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
-import { QuoteHandler } from 'hooks/useQuote';
 import useTokenMap from 'hooks/useTokenMap';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayBN, displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayFullBN, toStringBaseUnitBN } from 'util/index';
 import { useProvider, useSigner } from 'wagmi';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
-import TokenInputField from "../../Common/Form/TokenInputField";
+import TokenInputField from '../../Common/Form/TokenInputField';
+import { BeanstalkPalette } from '../../App/muiTheme';
 
 type ChopFormValues = FormState & {
   settings: {
@@ -61,16 +59,10 @@ const ChopForm : React.FC<
   weather,
   farm,
 }) => {
-  const chainId = useChainId();
   // TODO: constrain this when siloToken = Unripe
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([UNRIPE_BEAN, UNRIPE_BEAN_CRV3]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-  const getChainToken = useGetChainToken();
   const Bean = useChainConstant(BEAN);
-
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
 
   //
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -94,7 +86,7 @@ const ChopForm : React.FC<
 
   const isSubmittable = beans?.gt(0);
   const numPods = beans.multipliedBy(weather.div(100).plus(1));
-  const podLineLength = beanstalkField.podIndex.minus(beanstalkField.harvestableIndex);
+  const chopPenalty = new BigNumber(999); // TODO: calculate chop penalty
 
   return (
     <Form autoComplete="off">
@@ -110,7 +102,7 @@ const ChopForm : React.FC<
       <Stack gap={1}>
         <pre>{JSON.stringify(values, null, 2)}</pre>
         <TokenInputField
-          name={`tokens.token`}
+          name="tokens.token"
           fullWidth
           InputProps={{
             endAdornment: (
@@ -121,22 +113,20 @@ const ChopForm : React.FC<
             ),
           }}
           // Other
-          balance={balances[values.tokens[0].token.address] || undefined}
+          // balance={balances[values.tokens[0].token.address] || undefined}
+          balance={new BigNumber(1000)} // TODO: pass user's unripe bean balance
         />
         {isSubmittable ? (
           <>
             <TxnSeparator />
             <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
-              <Typography variant="body1">Place in Pod Line:</Typography>
-              <Typography variant="body1">{displayBN(podLineLength)}</Typography>
+              <Typography variant="body1" color={BeanstalkPalette.washedRed}>Chop Penalty:</Typography>
+              <Typography variant="body1" color={BeanstalkPalette.washedRed}>{displayBN(chopPenalty)}</Typography>
             </Stack>
             <TokenOutputField
               token={BEAN[1]}
               amount={numPods}
             />
-            <Box sx={{ py: 1 }}>
-              <Typography variant="body1" textAlign="center">Upon harvest {displayBN(numPods)} PODS will be redeemable for {displayBN(numPods)} BEAN</Typography>
-            </Box>
             <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />
@@ -151,10 +141,6 @@ const ChopForm : React.FC<
                         type: ActionType.BASE,
                         message: 'Then do this.'
                       },
-                      {
-                        type: ActionType.BASE,
-                        message: `Receive ${displayFullBN(numPods, 2)} Pods at ${displayFullBN(podLineLength, 0)} in the Pod Line`
-                      }
                     ]}
                   />
                 </AccordionDetails>
@@ -172,7 +158,7 @@ const ChopForm : React.FC<
           tokens={values.tokens}
           mode="auto"
         >
-          Sow
+          Chop
         </SmartSubmitButton>
       </Stack>
     </Form>
