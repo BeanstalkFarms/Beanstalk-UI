@@ -90,11 +90,7 @@ const FolderMenu: React.FC<
             ...buttonProps.sx,
           }}
         >
-          <Box
-            sx={{
-              display: { xs: hideTextOnMobile ? 'none' : 'block', sm: 'block' },
-            }}
-          >
+          <Box sx={{ display: { xs: hideTextOnMobile ? 'none' : 'block', sm: 'block' } }}>
             <Typography variant="h3">{buttonContent}</Typography>
           </Box>
         </Button>

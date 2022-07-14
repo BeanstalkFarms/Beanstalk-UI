@@ -10,11 +10,7 @@ const Barn: React.FC = () => (
   <Container maxWidth="md">
     <Stack gap={2}>
       <PageHeader
-        title={
-          <>
-            <strong>The Barn</strong>
-          </>
-        }
+        title="The Barn"
         description="Earn yield and recapitalize Beanstalk by buying Fertilizer"
         control={
           <Stack direction="row" gap={1}>
