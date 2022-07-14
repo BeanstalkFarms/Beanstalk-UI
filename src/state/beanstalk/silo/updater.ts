@@ -26,8 +26,8 @@ export const useBeanstalkSilo = () => {
 
   const getChainConstant = useGetChainConstant();
   const SiloTokens = useMemo(() => ({
-    Bean: getChainConstant(BEAN),
-    BeanEthLP: getChainConstant(BEAN_ETH_UNIV2_LP),
+    Bean:       getChainConstant(BEAN),
+    BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
     BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
     BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
   }), [getChainConstant]);
@@ -35,7 +35,7 @@ export const useBeanstalkSilo = () => {
   // Handlers
   const fetch = useCallback(async () => {
     if (beanstalk) {
-      console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH');
+      console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH: whitelist = ', WHITELIST);
 
       const [
         // 0
@@ -97,6 +97,11 @@ export const useBeanstalkSilo = () => {
                   : (beanstalk as unknown as BeanstalkReplanted)
                       .bdv(addr, toStringBaseUnitBN(1, WHITELIST[addr].decimals))
                       .then(tokenResult(BEAN))
+                      .catch((err) => {
+                        console.error(`Failed to fetch BDV: ${addr}`)
+                        console.error(err)
+                        throw err;
+                      })
               ) : Promise.resolve(ZERO_BN)
             ]).then((data) => ({
               token: addr.toLowerCase(),

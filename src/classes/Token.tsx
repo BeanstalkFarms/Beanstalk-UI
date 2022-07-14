@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { AddressMap, ZERO_BN, MAX_UINT256 } from 'constants/index';
+import { ZERO_BN, MAX_UINT256, ChainConstant } from 'constants/index';
 import { bigNumberResult } from 'util/Ledger';
 import { erc20TokenContract } from 'util/Contracts';
 import client from 'util/Client';
@@ -72,7 +72,7 @@ export default abstract class Token {
    */
   constructor(
     chainId: number,
-    address: string | AddressMap<string>,
+    address: string | ChainConstant<string>,
     decimals: number,
     metadata: {
       name: string,
