@@ -9,7 +9,7 @@ import {
   Box,
   Button,
   ButtonProps,
-  Card,
+  Card, Divider,
   ListItemText,
   Menu,
   MenuItem,
@@ -147,12 +147,31 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           </Typography>
         </Stack>
       </MenuItem>
+      <Divider sx={{ mx: 1 }} />
       <Box sx={{ px: 1, pt: 0.75, pb: 0.25 }}>
         <Button
           fullWidth
           onClick={showPick}
           sx={{
-            py: 0.9,
+            py: 1,
+            backgroundColor: BeanstalkPalette.lightBrown,
+            color: BeanstalkPalette.brown,
+            '&:hover': {
+              backgroundColor: BeanstalkPalette.lightBrown,
+              opacity: 0.94
+            }
+          }}>
+          <Stack direction="row" alignItems="center">
+            <Typography variant="h4">Pick Unripe Beans</Typography>
+          </Stack>
+        </Button>
+      </Box>
+      <Box sx={{ px: 1, pt: 0.75, pb: 0.25 }}>
+        <Button
+          fullWidth
+          href="/#/chop"
+          sx={{
+            py: 1,
             backgroundColor: BeanstalkPalette.brown,
             color: BeanstalkPalette.white,
             '&:hover': {
@@ -161,7 +180,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
             }
           }}>
           <Stack direction="row" alignItems="center">
-            <ListItemText>Pick Unripe Beans</ListItemText>
+            <Typography variant="h4">Chop Unripe Beans</Typography>
           </Stack>
         </Button>
       </Box>

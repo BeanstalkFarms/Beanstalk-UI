@@ -31,6 +31,7 @@ import FieldAnalytics from '../../pages/analytics/field';
 import BarnraiseAnalytics from '../../pages/analytics/barnraise';
 import MarketplacePage from '../../pages/marketplace';
 import NFTPage from '../../pages/nft';
+import ChopPage from "../../pages/chop";
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -142,6 +143,7 @@ export default function App() {
           <Route path="/nft" element={<NFTPage />} />
           <Route path="/history" element={<TransactionHistoryPage />} />
           <Route path="/balances" element={<BalancesPage />} />
+          <Route path="/chop" element={<ChopPage />} />
         </Routes>
       </Box>
     </>
