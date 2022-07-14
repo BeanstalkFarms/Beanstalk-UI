@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Box,
+  Box, Button,
   Card,
   Container, Link,
   Stack,
@@ -17,10 +17,11 @@ import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import MarketPlots from 'components/Market/MarketPlots';
 import MyPlots from 'components/Market/MyPlots';
 import ActivityTable from 'components/Market/Tables/ActivityTable';
-import { displayBN, displayFullBN } from 'util/index';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/index';
+import { displayBN, displayFullBN } from '../../util';
+import { SupportedChainId } from '../../constants';
+import CreateButtons from "./CreateButtons";
 
 const columns: DataGridProps['columns'] = [
   {
@@ -30,7 +31,7 @@ const columns: DataGridProps['columns'] = [
     disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',
-    renderCell: (params) => <Typography><Link href="">{params.value}</Link></Typography>,
+    renderCell: (params) => <Typography><Link href="pages/market/marketplace">{params.value}</Link></Typography>,
   },
   {
     field: 'pods',
@@ -102,7 +103,7 @@ const rows = new Array(20).fill(null).map((_, i) => (
   }
 ));
 
-const MarketplacePage: React.FC = () => {
+const PodMarketPage: React.FC = () => {
   const theme = useTheme();
   const chainId = useChainId();
   
@@ -120,8 +121,6 @@ const MarketplacePage: React.FC = () => {
           </Box>
         </Card>
         <MarketPlots />
-        <MyPlots />
-        <ActivityTable columns={columns} rows={rows} />
       </>
     );
   }
@@ -132,10 +131,11 @@ const MarketplacePage: React.FC = () => {
         <PageHeader
           title="The Pod Market"
           description="Trade Pods, the Beanstalk-native debt asset"
+          control={<CreateButtons />}
         />
         {content}
       </Stack>
     </Container>
   );
 };
-export default MarketplacePage;
+export default PodMarketPage;

@@ -28,10 +28,7 @@ const PageHeader : React.FC<{
       )}
       <Stack direction="column" gap={0}>
         <Box>
-          <Typography
-            variant="h1"
-            fontWeight="fontWeightBold"
-          >
+          <Typography variant="h1">
             {props.title}
           </Typography>
         </Box>

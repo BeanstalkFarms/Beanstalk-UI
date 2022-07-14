@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box, BoxProps, Card } from '@mui/material';
+import { Box, BoxProps, Card, Typography } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { tableStyle } from '../../Common/Table/styles';
 
@@ -17,6 +17,7 @@ const ActivityTable: React.FC<ActivityTableProps & DataGridProps & BoxProps> = (
 
   return (
     <Card sx={{ p: 2 }}>
+      <Typography variant="h4" sx={{ pb: 1 }}>Marketplace Activity</Typography>
       <Box display="flex" alignItems="center" justifyContent="center">
         <Box
           sx={{

@@ -29,9 +29,11 @@ import BeanAnalytics from '../../pages/analytics/bean';
 import SiloAnalytics from '../../pages/analytics/silo';
 import FieldAnalytics from '../../pages/analytics/field';
 import BarnraiseAnalytics from '../../pages/analytics/barnraise';
-import MarketplacePage from '../../pages/marketplace';
+import PodMarketPage from '../../pages/market/market';
 import NFTPage from '../../pages/nft';
 import ChopPage from "../../pages/chop";
+import MarketAccountPage from "../../pages/market/account";
+import MarketActivityPage from "../../pages/market/activity";
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -135,7 +137,9 @@ export default function App() {
           <Route path="/silo/:address" element={<SiloTokenPage />} />
           <Route path="/field" element={<FieldPage />} />
           <Route path="/barn" element={<Barn />} />
-          <Route path="/market" element={<MarketplacePage />} />
+          <Route path="/market" element={<PodMarketPage />} />
+          <Route path="/market/account" element={<MarketAccountPage />} />
+          <Route path="/market/activity" element={<MarketActivityPage />} />
           <Route path="/analytics/bean" element={<BeanAnalytics />} />
           <Route path="/analytics/silo" element={<SiloAnalytics />} />
           <Route path="/analytics/field" element={<FieldAnalytics />} />

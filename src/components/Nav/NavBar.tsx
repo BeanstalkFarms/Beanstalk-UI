@@ -185,6 +185,9 @@ const NavBar: React.FC<{}> = () => {
                   tag={item.tag}
                 />
               ))}
+              <HoverMenu items={ROUTES.market}>
+                Market
+              </HoverMenu>
               <HoverMenu items={ROUTES.analytics}>
                 Analytics
               </HoverMenu>

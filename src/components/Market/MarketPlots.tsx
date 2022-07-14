@@ -222,31 +222,10 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
   return (
     <>
       <Card sx={{ p: 2, ...sx }}>
-        <Stack
-          direction={isMobile ? 'column' : 'row'}
-          justifyContent="space-between"
-          alignItems={isMobile ? 'start' : 'center'}
-          sx={{ mb: 1.5 }}
-        >
-          <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
-            <Tab label="Buy Now" />
-            <Tab label="Sell Now" />
-          </Tabs>
-
-          {/* Buy Now tab */}
-          {tab === 0 && (
-            <Button onClick={handleBuyModalOpen}>
-              Create Buy Order
-            </Button>
-          )}
-
-          {/* Sell Now tab */}
-          {tab === 1 && (
-            <Button onClick={handleSellModalOpen}>
-              Create Sell Listing
-            </Button>
-          )}
-        </Stack>
+        <Tabs value={tab} onChange={handleChangeTab}>
+          <Tab label="Buy Now" />
+          <Tab label="Sell Now" />
+        </Tabs>
 
         {/* Buy Now tab */}
         {tab === 0 && (
