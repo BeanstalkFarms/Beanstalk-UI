@@ -46,9 +46,13 @@ const RemainingFertilizer: React.FC = () => {
           {/* right column */}
 
           <Stack justifyContent="space-between">
-            <Stack>
-              <Typography variant="body1">Available Fertilizer&nbsp;
-                <Tooltip title="Once bought, Available Fertilizer becomes Active. Active Fertilizer comes with Sprouts, the number of Beans to be earned from Active Fertilizer. One-third of Bean mints go towards ripening Sprouts when there is Active Fertilizer." placement="top-start">
+            <Stack gap={0.5}>
+              <Typography variant="body1">
+                Available Fertilizer&nbsp;
+                <Tooltip
+                  title="Once bought, Available Fertilizer becomes Active. Active Fertilizer comes with Sprouts, the number of Beans to be earned from Active Fertilizer. One-third of Bean mints go towards ripening Sprouts when there is Active Fertilizer."
+                  placement="top-start"
+                >
                   <HelpOutlineIcon
                     sx={{ color: 'text.secondary', fontSize: '14px' }}
                   />
@@ -73,9 +77,13 @@ const RemainingFertilizer: React.FC = () => {
                 ) : null}
               </Stack>
             </Stack>
-            <Stack>
-              <Typography>Humidity&nbsp;
-                <Tooltip title="The interest rate on Fertilizer. The Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached. The Humidity determines how many Sprouts come with Fertilizer." placement="top-start">
+            <Stack gap={0.5}>
+              <Typography>
+                Humidity&nbsp;
+                <Tooltip
+                  title="The interest rate on Fertilizer. The Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached. The Humidity determines how many Sprouts come with Fertilizer."
+                  placement="top-start"
+                >
                   <HelpOutlineIcon
                     sx={{ color: 'text.secondary', fontSize: '14px' }}
                   />
@@ -85,7 +93,10 @@ const RemainingFertilizer: React.FC = () => {
                 <Typography variant="bodyLarge">
                   {displayFullBN(humidity.multipliedBy(100))}%
                 </Typography>
-                <Typography variant="bodySmall" color={BeanstalkPalette.trueRed}>
+                <Typography
+                  variant="bodySmall"
+                  color={BeanstalkPalette.trueRed}
+                >
                   {nextDecreaseAmount.eq(0)
                     ? null
                     : displayFullBN(nextDecreaseAmount.multipliedBy(-100))}

@@ -91,9 +91,7 @@ const FolderMenu: React.FC<
           }}
         >
           <Box sx={{ display: { xs: hideTextOnMobile ? 'none' : 'block', sm: 'block' } }}>
-            <Typography variant="h4">
-              {buttonContent}
-            </Typography>
+            <Typography variant="h3">{buttonContent}</Typography>
           </Box>
         </Button>
         <Popper
