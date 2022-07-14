@@ -6,6 +6,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { makeStyles } from '@mui/styles';
 import useChainConstant from 'hooks/useChainConstant';
 import { CHAIN_INFO } from 'constants/chains';
+import { parseError } from 'util/index';
 
 const useStyles = makeStyles({
   errorMessage: {
@@ -137,40 +138,8 @@ export default class TransactionToast {
   }
 
   error(error: any) {
-    let msg;
     const duration = Infinity;
-
-    switch (error.code) {
-      // ethers: 
-      case 'UNSUPPORTED_OPERATION':
-        msg = `Error: ${error.reason}`;
-        break;
-      case 'CALL_EXCEPTION':
-      case 'UNPREDICTABLE_GAS_LIMIT':
-        msg = `Error: ${error.reason}`;
-        break;
-      // ethers: UNPREDICTABLE_GAS_LIMIT
-      case -32603:
-        if (error.data && error.data.message) {
-          const matches = (error.data.message as string).match(/(["'])(?:(?=(\\?))\2.)*?\1/);
-          msg = matches?.[0]?.replace(/^'(.+(?='$))'$/, '$1') || error.data.message;
-        } else {
-          msg = error.message.replace('execution reverted: ', '');
-        }
-        break;
-      // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature.
-      case 4001:
-        msg = 'You rejected the signature request.';
-        break;
-      default:
-        if (error?.message) {
-          msg = `${error?.message || error?.toString()}.${error?.code ? ` (code=${error?.code})` : ''}`;
-        } else {
-          msg = `An unknown error occurred.${error?.code ? ` (code=${error?.code})` : ''}`;
-        }
-        break;
-    }
-
+    const msg = parseError(error);
     toast.error(
       <ToastAlert
         desc={this.messages.error}
@@ -182,7 +151,6 @@ export default class TransactionToast {
         duration: duration
       }
     );
-
     return msg;
   }
 }

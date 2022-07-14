@@ -345,7 +345,8 @@ const Claim : React.FC<{
       if (!values.token.steps) throw new Error('No quote found.');
       const encoded = Farm.encodeStepsWithSlippage(
         values.token.steps,
-        ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6))
+        values.settings.slippage/100,
+        // ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6))
       );
       values?.token?.steps.forEach((step, i) => console.debug(`step ${i}:`, step.decode(encoded[i])));
       data.push(...encoded);

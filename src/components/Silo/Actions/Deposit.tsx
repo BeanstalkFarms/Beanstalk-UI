@@ -457,7 +457,13 @@ const Deposit : React.FC<{
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6)), // slippage
+          0.1/100,
+          // ethers.BigNumber.from(
+          //   toStringBaseUnitBN(
+          //     values.settings.slippage / 100,
+          //     Farm.SLIPPAGE_PRECISION.toNumber()
+          //   )
+          // ), // slippage
         );
         data.push(...encoded);
         encoded.forEach((_data, index) => 

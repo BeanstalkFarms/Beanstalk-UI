@@ -99,7 +99,7 @@ export default class Farm {
 
   contracts : ReturnType<typeof getContracts>;
 
-  static SLIPPAGE_PRECISION = ethers.BigNumber.from(10 ** 6);
+  static SLIPPAGE_PRECISION = 10**6;
 
   // ------------------------------------------
 
@@ -109,6 +109,14 @@ export default class Farm {
   }
 
   // ------------------------------------------
+
+  static slip(amount: ethers.BigNumber, slippage: number) {
+    return (
+      amount
+        .mul(Farm.SLIPPAGE_PRECISION * (1 - slippage))
+        .div(Farm.SLIPPAGE_PRECISION)
+    )
+  }
 
   /**
    * Executes a sequence of contract calls to estimate the `amountOut` received of some token
@@ -149,18 +157,19 @@ export default class Farm {
   /**
    * Encode function calls with a predefined slippage amount.
    * @param steps from a previous call to `estimate()`
-   * @param _slippage slippage as a percentage (ex 0.1 => 0.1%)
+   * @param _slippage slippage passed as a percentage. ex. 0.1% slippage => 0.001
    * @returns array of strings containing encoded function data.
    */
   static encodeStepsWithSlippage(
     steps: ChainableFunctionResult[],
-    _slippage: ethers.BigNumber
+    _slippage: number,
+    // _slippage: ethers.BigNumber
   ) {
     const fnData : string[] = [];
     for (let i = 0; i < steps.length; i += 1) {
       const amountOut = steps[i].amountOut;
       // slippage is calculated at each step
-      const minAmountOut = amountOut.mul(Farm.SLIPPAGE_PRECISION.sub(_slippage)).div(Farm.SLIPPAGE_PRECISION);
+      const minAmountOut = Farm.slip(amountOut, _slippage);
       console.debug(`[chain] encoding step ${i}: expected amountOut = ${amountOut}, minAmountOut = ${minAmountOut}`);
       const encoded = steps[i].encode(minAmountOut);
       fnData.push(encoded);

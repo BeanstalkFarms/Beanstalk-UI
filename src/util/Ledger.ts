@@ -27,3 +27,30 @@ export const tokenResult = (_token: Token | ChainConstant<Token>) => {
     token.decimals
   );
 };
+
+export const parseError = (error: any) => {
+  switch (error.code) {
+    /// ethers
+    case 'UNSUPPORTED_OPERATION':
+    case 'CALL_EXCEPTION':
+    case 'UNPREDICTABLE_GAS_LIMIT':
+      return `Error: ${error.reason}`;
+    
+    ///
+    case -32603:
+      if (error.data && error.data.message) {
+        const matches = (error.data.message as string).match(/(["'])(?:(?=(\\?))\2.)*?\1/);
+        return matches?.[0]?.replace(/^'(.+(?='$))'$/, '$1') || error.data.message;
+      }
+      return error.message.replace('execution reverted: ', '');
+    
+    /// MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature.
+    case 4001:
+      return 'You rejected the signature request.';
+
+    /// Unknown
+    default:
+      if (error?.message) return `${error?.message || error?.toString()}.${error?.code ? ` (code=${error?.code})` : ''}`;    
+      return `An unknown error occurred.${error?.code ? ` (code=${error?.code})` : ''}`;
+  }
+}
