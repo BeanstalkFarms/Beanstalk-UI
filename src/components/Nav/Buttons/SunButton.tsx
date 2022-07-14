@@ -121,6 +121,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       buttonContent={<>{isLoading ? '0000' : season.toFixed()}</>}
       drawerContent={<Box sx={{ p: 1 }}>{tableContent}</Box>}
       popoverContent={tableContent}
+      hideTextOnMobile
       {...props}
     />
   );

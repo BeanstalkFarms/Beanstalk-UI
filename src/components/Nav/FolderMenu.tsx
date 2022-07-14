@@ -28,12 +28,14 @@ const FolderMenu: React.FC<
     buttonContent: JSX.Element;
     popoverContent: JSX.Element;
     drawerContent: JSX.Element;
+    hideTextOnMobile?: boolean;
   } & ButtonProps
 > = ({
   startIcon,
   buttonContent,
   popoverContent,
   drawerContent,
+  hideTextOnMobile,
   ...buttonProps
 }) => {
   // Setup
@@ -88,9 +90,11 @@ const FolderMenu: React.FC<
             ...buttonProps.sx,
           }}
         >
-          <Typography variant="h4">
-            {buttonContent}
-          </Typography>
+          <Box sx={{ display: { xs: hideTextOnMobile ? 'none' : 'block', sm: 'block' } }}>
+            <Typography variant="h4">
+              {buttonContent}
+            </Typography>
+          </Box>
         </Button>
         <Popper
           open={popoverOpen}
