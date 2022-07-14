@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, ButtonProps, InputAdornment, Stack, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { makeStyles } from '@mui/styles';
-import Token from 'classes/Token';
+import Token, { ERC20Token } from 'classes/Token';
 import { IconSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({

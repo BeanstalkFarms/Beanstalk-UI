@@ -84,7 +84,8 @@ export const BeanstalkPalette = {
   washedRed: '#c35f42',
   hoverRed: '#fef9f8',
   yellow: '#f0df6a',
-  brown: '#795739',
+  brown: 'rgba(121,87,57,1)',
+  lightBrown: 'rgba(121,87,57,0.2)',
   lightYellow: '#FDF4E7',
   warningYellow: '#F2A64A',
 };
@@ -204,6 +205,7 @@ let muiTheme = createTheme({
     h4: {
       fontSize: FontSize.base, // 16px
       fontWeight: FontWeight.semiBold,
+      lineHeight: '1.25rem' // 20px
     },
     // ---
     body1: {

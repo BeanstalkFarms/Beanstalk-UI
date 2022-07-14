@@ -16,8 +16,8 @@ const FieldActions : React.FC<{}> = () => {
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
           <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
             <Tab label="Sow" />
-            <Tab label="Harvest" />
-            <Tab label="Send" />
+            {/*<Tab label="Harvest" />*/}
+            {/*<Tab label="Send" />*/}
           </Tabs>
         </Stack>
         <Box sx={{ px: 1, pb: 1 }}>
