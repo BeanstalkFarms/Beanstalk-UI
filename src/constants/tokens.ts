@@ -29,12 +29,24 @@ import unripeBeanCrv3LogoUrl from 'img/tokens/unripe-lp-logo-circled.svg';
 // Other imports
 import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from './chains';
-import { ChainConstant } from '.';
+import { AddressMap, ChainConstant } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, DAI_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES, UNRIPE_BEAN_ADDRESSES, UNRIPE_BEAN_CRV3_ADDRESSES, BEAN_ADDRESSES } from './addresses';
 
 // ----------------------------------------
-// Types
+// Types + Utilities
 // ----------------------------------------
+
+// const multiChain = (
+//   addressByChainId: ChainConstant<string>,
+//   token:  BaseClassConstructor<Token>,
+//   params: ConstructorParameters<typeof Token>,
+// ) => {
+//   const result : { [key: number]: Token }= {};
+//   return Object.keys(addressByChainId).reduce<{ [key: number]: Token }>((prev, chainId) => {
+//     prev[curr as number] = addressByChainId[curr]
+//     return prev;
+//   }, {});
+// }
 
 // ----------------------------------------
 // Native Tokens
@@ -179,8 +191,23 @@ export const BEAN = {
       seeds: 2,
     }
   ),
+  // ------[Post-Replant]------
   [SupportedChainId.PHOENIX]: new ERC20Token(
     SupportedChainId.PHOENIX,
+    BEAN_ADDRESSES,
+    6,
+    {
+      name: 'Bean',
+      symbol: 'BEAN',
+      logo: beanCircleLogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 2,
+    }
+  ),
+  [SupportedChainId.LOCALHOST]: new ERC20Token(
+    SupportedChainId.LOCALHOST,
     BEAN_ADDRESSES,
     6,
     {
@@ -349,8 +376,24 @@ export const BEAN_CRV3_LP = {
       seeds: 4,
     }
   ),
+  // ------[Post-Replant]------
   [SupportedChainId.PHOENIX]: new ERC20Token(
     SupportedChainId.PHOENIX,
+    BEAN_CRV3_ADDRESSES,
+    18,
+    {
+      name: 'BEAN:3CRV LP',
+      symbol: 'BEAN:3CRV',
+      logo: beanCrv3LpLogoUrl,
+      isLP: true,
+    },
+    {
+      stalk: 1,
+      seeds: 4,
+    }
+  ),
+  [SupportedChainId.LOCALHOST]: new ERC20Token(
+    SupportedChainId.LOCALHOST,
     BEAN_CRV3_ADDRESSES,
     18,
     {

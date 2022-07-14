@@ -37,11 +37,12 @@ export type ChainableFunction = (amountIn: ethers.BigNumber) => Promise<Chainabl
 
 const getContracts = (provider: ethers.providers.BaseProvider) => {
   const chainId = provider.network.chainId;
+
   // Addressses
   const BEANSTALK       = getChainConstant(BEANSTALK_ADDRESSES, chainId);
   const POOL3           = getChainConstant(POOL3_ADDRESSES, chainId);
   const TRICRYPTO2      = getChainConstant(TRICRYPTO2_ADDRESSES, chainId);
-  const BEANCRV3       = getChainConstant(BEAN_CRV3_ADDRESSES, chainId);
+  const BEANCRV3        = getChainConstant(BEAN_CRV3_ADDRESSES, chainId);
   const POOL_REGISTRY   = getChainConstant(POOL_REGISTRY_ADDRESSES, chainId);
   const META_FACTORY    = getChainConstant(META_FACTORY_ADDRESSES, chainId);
   const CRYPTO_FACTORY  = getChainConstant(CRYPTO_FACTORY_ADDRESSES, chainId);
@@ -55,6 +56,17 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
   const metaFactory     = CurveMetaFactory__factory.connect(META_FACTORY, provider);
   const cryptoFactory   = CurveCryptoFactory__factory.connect(CRYPTO_FACTORY, provider);
   const zap             = CurveZap__factory.connect(ZAP, provider);
+
+  console.debug(`[Farm] Connected to addresses: `, {
+    BEANSTALK,
+    POOL3,
+    TRICRYPTO2,
+    BEANCRV3,
+    POOL_REGISTRY,
+    META_FACTORY,
+    CRYPTO_FACTORY,
+    ZAP,
+  })
 
   return {
     beanstalk: BeanstalkReplanted__factory.connect(BEANSTALK, provider),
@@ -123,6 +135,7 @@ export default class Farm {
       } catch (e) {
         console.debug(`[farm/estimate] Failed to estimate step ${i}`, fns[i].name, args);
         console.error(e)
+        throw e;
       }
     }
     return {
@@ -158,42 +171,42 @@ export default class Farm {
   // ------------------------------------------
 
   buyBeans = () => [
-      // WETH -> USDT via tricrypto2 exchange
-      this.exchange(
-        this.contracts.curve.pools.tricrypto2.address,
-        this.contracts.curve.registries.cryptoFactory.address,
-        WETH[1].address,
-        USDT[1].address,
-      ),
-      // USDT -> BEAN via bean3crv exchange_underlying
-      this.exchangeUnderlying(
-        this.contracts.curve.pools.beanCrv3.address,
-        USDT[1].address,
-        BEAN[1].address,
-      ),
-    ]
+    // WETH -> USDT via tricrypto2 exchange
+    this.exchange(
+      this.contracts.curve.pools.tricrypto2.address,
+      this.contracts.curve.registries.cryptoFactory.address,
+      getChainConstant(WETH, this.provider.network.chainId).address,
+      getChainConstant(USDT, this.provider.network.chainId).address,
+    ),
+    // USDT -> BEAN via bean3crv exchange_underlying
+    this.exchangeUnderlying(
+      this.contracts.curve.pools.beanCrv3.address,
+      getChainConstant(USDT, this.provider.network.chainId).address,
+      getChainConstant(BEAN, this.provider.network.chainId).address,
+    ),
+  ]
   
   buyAndAddBEANCRV3Liquidity = () => [
-      // WETH -> USDT via tricrypto2 exchange
-      this.exchange(
-        this.contracts.curve.pools.tricrypto2.address,
-        this.contracts.curve.registries.cryptoFactory.address,
-        WETH[1].address,
-        USDT[1].address,
-      ),
-      // USDT -> deposit into pool3 for CRV3
-      this.addLiquidity(
-        this.contracts.curve.pools.pool3.address,
-        this.contracts.curve.registries.poolRegistry.address,
-        [0, 0, 1], // [DAI, USDC, USDT] use Tether from previous call
-      ),
-      // CRV3 -> deposit into beanCrv3 for BEAN:CRV3
-      this.addLiquidity(
-        this.contracts.curve.pools.beanCrv3.address,
-        this.contracts.curve.registries.metaFactory.address,
-        [0, 1],    // [BEAN, CRV3] use CRV3 from previous call
-      ),
-    ]
+    // WETH -> USDT via tricrypto2 exchange
+    this.exchange(
+      this.contracts.curve.pools.tricrypto2.address,
+      this.contracts.curve.registries.cryptoFactory.address,
+      getChainConstant(WETH, this.provider.network.chainId).address,
+      getChainConstant(USDT, this.provider.network.chainId).address,
+    ),
+    // USDT -> deposit into pool3 for CRV3
+    this.addLiquidity(
+      this.contracts.curve.pools.pool3.address,
+      this.contracts.curve.registries.poolRegistry.address,
+      [0, 0, 1], // [DAI, USDC, USDT] use Tether from previous call
+    ),
+    // CRV3 -> deposit into beanCrv3 for BEAN:CRV3
+    this.addLiquidity(
+      this.contracts.curve.pools.beanCrv3.address,
+      this.contracts.curve.registries.metaFactory.address,
+      [0, 1],    // [BEAN, CRV3] use CRV3 from previous call
+    ),
+  ]
 
   // ------------------------------------------
 
@@ -205,71 +218,84 @@ export default class Farm {
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
   ) : ChainableFunction => async (amountInStep: ethers.BigNumber) => {
-      const registry = this.contracts.curve.registries[_registry];
-      if (!registry) throw new Error(`Unknown registry: ${_registry}`);
-      const [i, j] = await registry.callStatic.get_coin_indices(
-        _pool,
-        _tokenIn,
-        _tokenOut,
+    console.debug(`[step@exchange] run: `, {
+      _pool,
+      _registry,
+      _tokenIn,
+      _tokenOut,
+      _fromMode,
+      _toMode,
+      amountInStep,
+    });
+    const registry = this.contracts.curve.registries[_registry];
+    if (!registry) throw new Error(`Unknown registry: ${_registry}`);
+    const [i, j] = await registry.callStatic.get_coin_indices(
+      _pool,
+      _tokenIn,
+      _tokenOut,
+      { gasLimit: 10000000 }
+    );
+
+    // Get amount out based on the selected pool
+    const poolAddr = _pool.toLowerCase();
+    const pools = this.contracts.curve.pools;
+    let amountOut;
+    if (poolAddr === pools.tricrypto2.address.toLowerCase()) {
+      amountOut = await pools.tricrypto2.callStatic.get_dy(
+        i,
+        j,
+        amountInStep,
         { gasLimit: 10000000 }
       );
-
-      // Get amount out based on the selected pool
-      const poolAddr = _pool.toLowerCase();
-      const pools = this.contracts.curve.pools;
-      let amountOut;
-      if (poolAddr === pools.tricrypto2.address.toLowerCase()) {
-        amountOut = await pools.tricrypto2.callStatic.get_dy(
-          i,
-          j,
-          amountInStep,
-          { gasLimit: 10000000 }
-        );
-      } else if (poolAddr === pools.pool3.address.toLowerCase()) {
-        amountOut = await pools.pool3.callStatic.get_dy(
-          i,
-          j,
-          amountInStep,
-          { gasLimit: 10000000 }
-        );
-      } else if (_registry === this.contracts.curve.registries.metaFactory.address) {
-        amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['get_dy(int128,int128,uint256)'](
-          i,
-          j,
-          amountInStep,
-          { gasLimit: 10000000 }
-        );
-      } else if (_registry === this.contracts.curve.registries.cryptoFactory.address) {
-        amountOut = await CurvePlainPool__factory.connect(_pool, this.provider).callStatic.get_dy(
-          i,
-          j,
-          amountInStep,
-          { gasLimit: 10000000 }
-        )
-      }
-
-      //
-      if (!amountOut) throw new Error('No supported pool found');
-      console.debug(`[step@exchange] i=${i}, j=${j}, amountOut=${amountOut.toString()}`);
-
-      return {
-        amountOut,
-        encode: (minAmountOut: ethers.BigNumber) => (
-          this.contracts.beanstalk.interface.encodeFunctionData('exchange', [
-            _pool,
-            _registry,
-            _tokenIn,
-            _tokenOut,
-            amountInStep,
-            minAmountOut,
-            _fromMode,
-            _toMode,
-          ])
-        ),
-        decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('exchange', data),
-        data: {}
-      };
+    } else if (poolAddr === pools.pool3.address.toLowerCase()) {
+      amountOut = await pools.pool3.callStatic.get_dy(
+        i,
+        j,
+        amountInStep,
+        { gasLimit: 10000000 }
+      );
+    } else if (_registry === this.contracts.curve.registries.metaFactory.address) {
+      amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['get_dy(int128,int128,uint256)'](
+        i,
+        j,
+        amountInStep,
+        { gasLimit: 10000000 }
+      );
+    } else if (_registry === this.contracts.curve.registries.cryptoFactory.address) {
+      amountOut = await CurvePlainPool__factory.connect(_pool, this.provider).callStatic.get_dy(
+        i,
+        j,
+        amountInStep,
+        { gasLimit: 10000000 }
+      )
     }
+
+    //
+    if (!amountOut) throw new Error('No supported pool found');
+    console.debug(`[step@exchange] finish: `, {
+      i,
+      j,
+      amountOut: amountOut.toString(),
+    });
+
+    return {
+      amountOut,
+      encode: (minAmountOut: ethers.BigNumber) => (
+        this.contracts.beanstalk.interface.encodeFunctionData('exchange', [
+          _pool,
+          _registry,
+          _tokenIn,
+          _tokenOut,
+          amountInStep,
+          minAmountOut,
+          _fromMode,
+          _toMode,
+        ])
+      ),
+      decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('exchange', data),
+      data: {}
+    };
+  }
 
   exchangeUnderlying = (
     _pool     : string,
@@ -279,45 +305,59 @@ export default class Farm {
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
   ) : ChainableFunction => async (amountInStep: ethers.BigNumber) => {
-      // const registry = this.contracts.curve.registries[_registry];
-      // if (!registry) throw new Error(`Unknown registry: ${_registry}`);
-      const registry = this.contracts.curve.registries.metaFactory;
-      const [i, j] = await registry.get_coin_indices(
-        _pool,
-        _tokenIn,
-        _tokenOut,
-        { gasLimit: 1000000 }
-      );
-      
-      // Only MetaPools have the ability to exchange_underlying
-      // FIXME: 3pool also has a single get_dy_underlying method, will we ever use this?
-      const amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['get_dy_underlying(int128,int128,uint256)'](
-        i, // 3,  // i = USDT = coins[3] ([0=BEAN, 1=CRV3] => [0=BEAN, 1=DAI, 2=USDC, 3=USDT])
-        j, // 0,  // j = BEAN = coins[0]
-        amountInStep,
-        { gasLimit: 10000000 }
-      );
-      
-      //
-      console.debug(`[step@exchangeUnderlying] i=${i}, j=${j}, amountOut=${amountOut.toString()}`);
+    console.debug(`[step@exchangeUnderlying] run: `, {
+      _pool,
+      _tokenIn,
+      _tokenOut,
+      _fromMode,
+      _toMode,
+      amountInStep,
+    });
+    
+    // const registry = this.contracts.curve.registries[_registry];
+    // if (!registry) throw new Error(`Unknown registry: ${_registry}`);
+    const registry = this.contracts.curve.registries.metaFactory;
+    const [i, j] = await registry.get_coin_indices(
+      _pool,
+      _tokenIn,
+      _tokenOut,
+      { gasLimit: 1000000 }
+    );
+    
+    // Only MetaPools have the ability to exchange_underlying
+    // FIXME: 3pool also has a single get_dy_underlying method, will we ever use this?
+    const amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['get_dy_underlying(int128,int128,uint256)'](
+      i, // 3,  // i = USDT = coins[3] ([0=BEAN, 1=CRV3] => [0=BEAN, 1=DAI, 2=USDC, 3=USDT])
+      j, // 0,  // j = BEAN = coins[0]
+      amountInStep,
+      { gasLimit: 10000000 }
+    );
+    
+    //
+    if (!amountOut) throw new Error('No supported pool found');
+    console.debug(`[step@exchangeUnderlying] finish: `, {
+      i,
+      j,
+      amountOut: amountOut.toString(),
+    });
 
-      return {
-        amountOut,
-        encode: (minAmountOut: ethers.BigNumber) => (
-          this.contracts.beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
-            _pool,
-            _tokenIn,
-            _tokenOut,
-            amountInStep,
-            minAmountOut,
-            _fromMode,
-            _toMode,
-          ])
-        ),
-        decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('exchangeUnderlying', data),
-        data: {}
-      };
-    }
+    return {
+      amountOut,
+      encode: (minAmountOut: ethers.BigNumber) => (
+        this.contracts.beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
+          _pool,
+          _tokenIn,
+          _tokenOut,
+          amountInStep,
+          minAmountOut,
+          _fromMode,
+          _toMode,
+        ])
+      ),
+      decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('exchangeUnderlying', data),
+      data: {}
+    };
+  }
 
   addLiquidity(
     _pool     : string,
