@@ -77,12 +77,12 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // FIXME: Antipattern here? Should we have 
   // a version of `useQuote` that handles this automatically?
   useEffect(() => {
-    console.debug(`[TokenQuoteProvider] update ${name}.amountOut => ${result}`);
+    console.debug(`[TokenQuoteProvider] update ${name}.amountOut =>`, result?.amountOut.toString());
     setFieldValue(`${name}.amountOut`, result?.amountOut);
     setFieldValue(`${name}.steps`, result?.steps);
   }, [name, setFieldValue, result]);
   useEffect(() => {
-    console.debug(`[TokenQuoteProvider] update ${name}.quoting => ${quoting}`);
+    console.debug(`[TokenQuoteProvider] update ${name}.quoting =>`, quoting);
     setFieldValue(`${name}.quoting`, quoting);
   }, [name, setFieldValue, quoting]);
 

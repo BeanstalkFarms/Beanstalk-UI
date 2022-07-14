@@ -206,17 +206,3 @@ export function toTokenUnitsBN(
 ): string {
   return toBaseUnitBN(rawAmt, decimals).toFixed();
 }
-
-// -------------------------
-// Chain Result Helpers
-// -------------------------
-
-export const tokenResult = (_token: Token | ChainConstant<Token>) => {
-  // If a mapping is provided, default to MAINNET decimals.
-  // ASSUMPTION: the number of decimals are the same across all chains.
-  const token = _token instanceof Token ? _token : _token[SupportedChainId.MAINNET];
-  return (result: any) => toTokenUnitsBN(
-    bigNumberResult(result),
-    token.decimals
-  );
-};

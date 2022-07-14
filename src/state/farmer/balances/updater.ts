@@ -1,5 +1,7 @@
 import { useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
+import { useAccount } from 'wagmi';
 import { ZERO_BN } from 'constants/index';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from 'constants/tokens';
@@ -7,23 +9,27 @@ import useChainId from 'hooks/useChain';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';
 import useTokenMap from 'hooks/useTokenMap';
-import { useDispatch } from 'react-redux';
-import { getAccount } from 'util/Account';
-
-import { tokenResult } from 'util/Tokens';
-import { useAccount } from 'wagmi';
+import { getAccount, tokenResult } from 'util/index';
 import useChainConstant from 'hooks/useChainConstant';
 import { clearBalances, updateBalances } from './actions';
+import useMulticall from 'hooks/useMulticall';
+import { ContractCall } from 'ethers-multicall';
 
 // -- Hooks
 
 export const useFetchFarmerBalances = () => {
+  // State
   const dispatch = useDispatch();
+  
+  // Constants
   const Eth = useChainConstant(ETH);
   const tokenMap = useTokenMap(BALANCE_TOKENS);
   const erc20TokenMap = useTokenMap(ERC20_TOKENS);
+
+  // Contracts
   const beanstalk = useBeanstalkContract();
-  const migrate = useMigrateCall();
+  const migrate   = useMigrateCall();
+  const [multiCall, wrap] = useMulticall();
 
   // Handlers
   // FIXME: make this callback accept a tokens array to prevent reloading all balances on every call
@@ -32,6 +38,7 @@ export const useFetchFarmerBalances = () => {
     try {
       if (account && tokenMap) {
         const balancePromises = migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          // V1
           async () => Promise.all(Object.keys(tokenMap).map((tokenAddr) => (
             tokenMap[tokenAddr]?.getBalance(account)
               .then(tokenResult(tokenMap[tokenAddr]))
@@ -44,20 +51,24 @@ export const useFetchFarmerBalances = () => {
                 },
               }))
           ))),
-          async (b) => {
+          // V2
+          async (beanstalkReplanted) => {
             const erc20Addresses = Object.keys(erc20TokenMap);
             const promises = [
               // ETH cannot have an internal balance and isn't returned
               // from the standard getAllBalances call.
-              Eth.getBalance(account).then(tokenResult(Eth)).then((result) => ({
-                token: Eth,
-                balance: {
-                  internal: ZERO_BN,
-                  external: result,
-                  total:    result,
-                },
-              })),
-              b.getAllBalances(account, erc20Addresses)
+              // multiCall.getEthBalance(account)
+              Eth.getBalance(account)
+                .then(tokenResult(Eth))
+                .then((result) => ({
+                  token: Eth,
+                  balance: {
+                    internal: ZERO_BN,
+                    external: result,
+                    total:    result,
+                  },
+                })),
+              beanstalkReplanted.getAllBalances(account, erc20Addresses)
                 .then((result) => {
                   console.debug('[farmer/balances/updater]: getAllBalances = ', result);
                   return result;
@@ -73,8 +84,17 @@ export const useFetchFarmerBalances = () => {
                       total:    _tokenResult(struct.totalBalance),
                     }
                   };
-                }))
+                })),
             ];
+            // const calls = [
+            //   // ETH cannot have an internal balance and isn't returned
+            //   // from the standard getAllBalances call.
+            //   multiCall.getEthBalance(account),
+            //   wrap(beanstalkReplanted).getAllBalances(account, erc20Addresses)
+            // ];
+
+            // const data = await multiCall.all(calls as unknown as ContractCall[]);
+            // .then((results) => flatMap(results))
             return Promise.all(promises).then((results) => flatMap(results));
           }
         ]);
@@ -95,6 +115,8 @@ export const useFetchFarmerBalances = () => {
     dispatch,
     tokenMap,
     // replanted
+    // multiCall,
+    // wrap,
     beanstalk,
     Eth,
     erc20TokenMap,

@@ -68,6 +68,7 @@ export const BEAN_CRV3_CURVE_POOL_ROPSTEN = new CurveMetaPool(
   },
 );
 
+/// this is the Replanted Bean:3CRV pool
 export const BEAN_CRV3_CURVE_POOL_PHOENIX = new CurveMetaPool(
   SupportedChainId.PHOENIX,
   BEAN_CRV3_ADDRESSES,
@@ -111,6 +112,9 @@ export const ALL_POOLS : ChainConstant<PoolMap> = {
     [BEAN_CRV3_CURVE_POOL_ROPSTEN.address]: BEAN_CRV3_CURVE_POOL_ROPSTEN,
   },
   [SupportedChainId.PHOENIX]: {
+    [BEAN_CRV3_CURVE_POOL_PHOENIX.address]: BEAN_CRV3_CURVE_POOL_PHOENIX,
+  },
+  [SupportedChainId.LOCALHOST]: {
     [BEAN_CRV3_CURVE_POOL_PHOENIX.address]: BEAN_CRV3_CURVE_POOL_PHOENIX,
   }
 };

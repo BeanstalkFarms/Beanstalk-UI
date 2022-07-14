@@ -12,7 +12,8 @@ export const BEANSTALK_ADDRESSES = {
 export const BEANSTALK_PRICE_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF'.toLowerCase(),
   [SupportedChainId.ROPSTEN]: '0xB721C3386052389892A898EC700619A7Ab20C6B7'.toLowerCase(),
-  [SupportedChainId.PHOENIX]: '0x285Dd7701F831Ba8258F18DA3FC049268f254df0'.toLowerCase(),
+  [SupportedChainId.PHOENIX]:   '0xb98841fFe70B3127A440E30c409Fb63D956b015D'.toLowerCase(),
+  [SupportedChainId.LOCALHOST]: '0xb98841fFe70B3127A440E30c409Fb63D956b015D'.toLowerCase(),
 };
 
 export const BEANSTALK_FERTILIZER_ADDRESSES = {
@@ -175,7 +176,7 @@ export const BEAN_CRV3_ADDRESSES = {
 
 export const BEAN_LUSD_ADDRESSES = {
   // --------------------------------------------------
-  // "Curve.fi Factory Plain Pool: Bean-LUSD (BEANLUSD-f)""
+  // "Curve.fi Factory Plain Pool: Bean-LUSD (BEANLUSD-f)"
   // [Implements: ERC20 & Metapool]
   // --------------------------------------------------
   [SupportedChainId.MAINNET]: '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D'.toLowerCase(),
@@ -218,7 +219,7 @@ export const TRICRYPTO2_ADDRESSES = {
 };
 
 // ----------------------------------------
-// Curve: Registries / Factories
+// Curve: Registries / Factories / Utils
 // ----------------------------------------
 // "metapool" and "cryptoswap" are simultaneously
 // - "registries" (they track a list of pools)
@@ -237,4 +238,9 @@ export const META_FACTORY_ADDRESSES   = {
 // tricrypto2, etc.
 export const CRYPTO_FACTORY_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x8F942C20D02bEfc377D41445793068908E2250D0'.toLowerCase()
+};
+
+// zap
+export const CURVE_ZAP_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0xA79828DF1850E8a3A3064576f380D90aECDD3359'.toLowerCase()
 };

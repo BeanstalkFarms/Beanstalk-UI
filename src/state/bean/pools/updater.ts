@@ -2,11 +2,10 @@ import { useCallback, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
 import { useBeanstalkPriceContract } from 'hooks/useContract';
-import { tokenResult } from 'util/Tokens';
+import { tokenResult, getChainConstant } from 'util/index';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, CRV3, WETH } from 'constants/tokens';
 import ALL_POOLS from 'constants/pools';
 import { SupportedChainId } from 'constants/chains';
-import { getChainConstant } from 'util/Chain';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 import { updateBeanPrice, updateBeanSupply } from '../token/actions';
 
