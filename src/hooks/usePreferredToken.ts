@@ -43,7 +43,7 @@ export default function usePreferredToken(
       const bal = balances[tok.address];
       return bal?.total?.gte(min) || false;
     });
-    console.debug(`[hooks/usePreferredToken] found a preferred token: ${index}`);
+    // console.debug(`[hooks/usePreferredToken] found a preferred token: ${index}`);
     if (index > -1) return getChainToken(list[index].token);
     switch (fallbackMode) {
       default:

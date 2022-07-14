@@ -10,7 +10,7 @@ import useChainConstant from 'hooks/useChainConstant';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormState } from 'components/Common/Form';
+import { FormState, SettingInput, TxnSettings } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import useChainId from 'hooks/useChain';
@@ -21,8 +21,6 @@ import useFarmerBalances from 'hooks/useFarmerBalances';
 import { Balance, FarmerBalances } from 'state/farmer/balances';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
-import TxnSettings from 'components/Common/Form/TxnSettings';
-import SettingInput from 'components/Common/Form/SettingInput';
 import { BeanstalkReplanted } from 'generated/index';
 import { QuoteHandler } from 'hooks/useQuote';
 import { ZERO_BN } from 'constants/index';
@@ -177,8 +175,6 @@ const DepositForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-// TODO:
-// - implement usePreferredToken here
 const Deposit : React.FC<{
   pool: Pool;
   token: ERC20Token | NativeToken;
@@ -292,7 +288,12 @@ const Deposit : React.FC<{
           // pool.underlying  = [BEAN, DAI, USDC, USDT] 
           const tokenIndex = pool.tokens.indexOf(tokenIn);
           const underlyingTokenIndex = pool.underlying.indexOf(tokenIn);
-          console.debug(`[Deposit] LP Deposit: pool=${pool.name}, tokenIndex=${tokenIndex}, underlyingTokenIndex=${underlyingTokenIndex}`);
+          console.debug(`[Deposit] LP Deposit`, {
+            pool,
+            tokenIn,
+            tokenIndex,
+            underlyingTokenIndex,
+          });
           
           // This is X or CRV3
           if (tokenIndex > -1) {

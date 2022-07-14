@@ -90,13 +90,14 @@ export default abstract class Pool {
     this.underlying = tokens.reduce<ERC20Token[]>((prev, token) => {
       // CRV3 pools can access the underlying stables [DAI, USDC, USDT].
       if (token === CRV3) {
+        // FIXME: hardcoded indices for 3CRV
         prev.push(...[
-          DAI[chainId as keyof typeof DAI],
-          USDC[chainId as keyof typeof USDC],
-          USDT[chainId as keyof typeof USDT],
+          getChainConstant(DAI, chainId),
+          getChainConstant(USDC, chainId),
+          getChainConstant(USDT, chainId),
         ]);
       } else {
-        prev.push(token[chainId]);
+        prev.push(getChainConstant(token, chainId));
       }
       return prev;
     }, []);
