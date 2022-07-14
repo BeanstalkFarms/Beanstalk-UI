@@ -11,6 +11,6 @@ export function useGetChainConstant() {
 }
 
 export default function useChainConstant<T extends ConstantByChain>(map: T) : T[keyof T] {
-  const get = useGetChainConstant();
-  return get(map);
+  const { activeChain } = useNetwork();
+  return getChainConstant<T>(map, activeChain?.id);
 }
