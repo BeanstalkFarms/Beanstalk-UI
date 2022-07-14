@@ -405,7 +405,6 @@ const SetupForm: React.FC<{}> = () => {
       console.error(err);
     }
   }, [
-    Bean,
     Eth,
     Usdc,
     // balances,
