@@ -25,7 +25,7 @@ import MenuItem from '../MenuItem';
 const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   // Theme
   const theme = useTheme();
-  const isMedium = useMediaQuery(theme.breakpoints.down('lg'));   // trim additional account text at medium
+  const isMedium = useMediaQuery(theme.breakpoints.down('lg')); // trim additional account text at medium
 
   // Constants
   const chainInfo = useChainConstant(CHAIN_INFO);
@@ -35,7 +35,10 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   const [anchorEl, toggleAnchor] = useAnchor();
 
   // Drawer
-  const [drawerOpen, showDrawer, hideDrawer] = useToggle(toggleAnchor, toggleAnchor);
+  const [drawerOpen, showDrawer, hideDrawer] = useToggle(
+    toggleAnchor,
+    toggleAnchor
+  );
 
   const menuContent = (
     <MenuList component={Card}>
@@ -54,9 +57,15 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
           color="secondary"
         >
           <Stack direction="row" alignItems="center" spacing={1}>
-            <ListItemText>Contract: {beanstalkAddress.slice(0, 6)}...</ListItemText>
+            <ListItemText>
+              <Typography variant="h4">
+                Contract: {beanstalkAddress.slice(0, 6)}...
+              </Typography>
+            </ListItemText>
             <Typography variant="body2" color="text.secondary">
-              <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: 12 }} />
+              <ArrowForwardIcon
+                sx={{ transform: 'rotate(-45deg)', fontSize: 12 }}
+              />
             </Typography>
           </Stack>
         </Button>
@@ -64,7 +73,9 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
       {/* Build Information */}
       <Box sx={{ px: 1, pt: 0.75, opacity: 0.7 }}>
         <Typography color="text.secondary" fontSize={12} textAlign="center">
-          {process.env.REACT_APP_NAME || 'beanstalk-ui'} v{process.env.REACT_APP_VERSION || '0.0.0'}@{process.env.REACT_APP_GIT_COMMIT_REF?.slice(0,6) || 'HEAD'}
+          {process.env.REACT_APP_NAME || 'beanstalk-ui'} v
+          {process.env.REACT_APP_VERSION || '0.0.0'}@
+          {process.env.REACT_APP_GIT_COMMIT_REF?.slice(0, 6) || 'HEAD'}
           {' · '}
           hosted on {process.env.REACT_APP_HOST || 'unknown'}
         </Typography>
@@ -75,15 +86,12 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   return (
     <>
       {/**
-        * Nav Drawer
-        * ----------
-        * Contains all nav items in one fullscreen drawer.
-        * Triggered by AboutButton on mobile.
-        */}
-      <NavDrawer
-        open={drawerOpen && (isMedium)}
-        hideDrawer={hideDrawer}
-      />
+       * Nav Drawer
+       * ----------
+       * Contains all nav items in one fullscreen drawer.
+       * Triggered by AboutButton on mobile.
+       */}
+      <NavDrawer open={drawerOpen && isMedium} hideDrawer={hideDrawer} />
       <Button
         color="light"
         variant="contained"
@@ -95,7 +103,7 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
           lineHeight: 0,
           minWidth: 0,
           px: 1,
-          ...sx
+          ...sx,
         }}
       >
         <MoreHorizIcon />
@@ -103,13 +111,13 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
       <Menu
         elevation={0}
         anchorEl={anchorEl}
-        open={drawerOpen && !(isMedium)}
+        open={drawerOpen && !isMedium}
         onClose={hideDrawer}
         MenuListProps={{
           sx: {
             py: 0,
             mt: 0,
-          }
+          },
         }}
         disablePortal
         disableScrollLock

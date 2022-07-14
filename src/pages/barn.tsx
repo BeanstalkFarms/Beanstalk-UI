@@ -10,9 +10,13 @@ const Barn: React.FC = () => (
   <Container maxWidth="md">
     <Stack gap={2}>
       <PageHeader
-        title={<><strong>The Barn</strong></>}
+        title={
+          <>
+            <strong>The Barn</strong>
+          </>
+        }
         description="Earn yield and recapitalize Beanstalk by buying Fertilizer"
-        control={(
+        control={
           <Stack direction="row" gap={1}>
             <Button
               href="https://dune.com/tbiq/beanstalk-barn-raise"
@@ -20,7 +24,9 @@ const Barn: React.FC = () => (
               rel="noreferrer"
               color="light"
               variant="contained"
-              endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
+              endIcon={
+                <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />
+              }
             >
               Analytics
             </Button>
@@ -30,12 +36,14 @@ const Barn: React.FC = () => (
               rel="noreferrer"
               color="light"
               variant="contained"
-              endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
+              endIcon={
+                <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />
+              }
             >
               Guide
             </Button>
           </Stack>
-        )}
+        }
       />
       {/* Section 1: Fertilizer Remaining */}
       <RemainingFertilizer />

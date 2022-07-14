@@ -20,12 +20,11 @@ import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
 
 const mockSunData = new Array(20).fill(null).map((_, i) => ({
-    season: new BigNumber(5000 * Math.random()),
-    newBeans: new BigNumber(100000 * Math.random()),
-    newSoil: new BigNumber(1000 * Math.random()),
-    weather: new BigNumber(5000 * Math.random()),
-  })
-);
+  season: new BigNumber(5000 * Math.random()),
+  newBeans: new BigNumber(100000 * Math.random()),
+  newSoil: new BigNumber(1000 * Math.random()),
+  weather: new BigNumber(5000 * Math.random()),
+}));
 
 const MAX_ITEMS = 5;
 
@@ -51,10 +50,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     <Stack gap={1}>
       {/* Upcoming Season Header */}
       <Box>
-        <Typography
-          color="text.primary"
-          variant="h3"
-        >
+        <Typography color="text.primary" variant="h4">
           Upcoming Season in 42m
         </Typography>
         {/* table header */}
@@ -68,19 +64,29 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         >
           <Grid container alignItems="flex-end">
             <Grid item md={2} xs={4}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>Season</Typography>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+                Season
+              </Typography>
             </Grid>
             <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>Precipitation</Typography>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+                Precipitation
+              </Typography>
             </Grid>
             <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>New Beans</Typography>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+                New Beans
+              </Typography>
             </Grid>
             <Grid item md={2.4} xs={0} display={{ xs: 'none', md: 'block' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>New Soil</Typography>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+                New Soil
+              </Typography>
             </Grid>
             <Grid item md={2.4} xs={8} sx={{ textAlign: 'right' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>Weather</Typography>
+              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+                Weather
+              </Typography>
             </Grid>
           </Grid>
         </Box>
@@ -93,13 +99,16 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         />
       </Box>
       {/* Past Seasons */}
-      <Typography
-        color="text.primary"
-        variant="h3"
-      >
+      <Typography color="text.primary" variant="h4">
         Past Seasons
       </Typography>
-      <Stack gap={1} sx={{ maxHeight: `${(37.5 + 10) * MAX_ITEMS - 10}px`, overflowY: 'auto' }}>
+      <Stack
+        gap={1}
+        sx={{
+          maxHeight: `${(37.5 + 10) * MAX_ITEMS - 10}px`,
+          overflowY: 'auto',
+        }}
+      >
         {mockSunData.map((s) => (
           <SeasonCard
             key={s.season.toString()}
@@ -110,7 +119,16 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           />
         ))}
       </Stack>
-      <Typography align="center" color={BeanstalkPalette.lightishGrey} sx={{ fontSize: '14px' }}>Sunrise advances Beanstalk to the next Season and Beanstalk pays a Bean reward to the sender of the first successful Sunrise call at the top of the hour. Bots often call Sunrise, so this function will often fail.</Typography>
+      <Typography
+        align="center"
+        color={BeanstalkPalette.lightishGrey}
+        sx={{ fontSize: '14px' }}
+      >
+        Sunrise advances Beanstalk to the next Season and Beanstalk pays a Bean
+        reward to the sender of the first successful Sunrise call at the top of
+        the hour. Bots often call Sunrise, so calling this function from the
+        website will often fail.
+      </Typography>
       <SunriseButton />
     </Stack>
   );
