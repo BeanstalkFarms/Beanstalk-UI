@@ -27,7 +27,6 @@ const OrderPage: React.FC = () => {
         <PageHeader
           returnPath="/market"
         />
-        <Typography>POD ID: {id}</Typography>
         <PlotOrderDetails podListing={mockPodOrderData[0]} harvestableIndex={beanstalkField.harvestableIndex} />
         <Card sx={{ position: 'relative' }}>
           <Stack gap={1.5}>
