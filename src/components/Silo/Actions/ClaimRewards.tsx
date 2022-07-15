@@ -247,48 +247,47 @@ const ClaimRewards: React.FC<{}> = () => {
   const onSubmit = useCallback(async (values: ClaimRewardsFormValues, formActions: FormikHelpers<ClaimRewardsFormValues>) => {
     let txToast;
     try {
-      if (!account?.address) throw new Error('Connect a wallet first.');
+      if (!account?.address)  throw new Error('Connect a wallet first.');
+      if (!values.action)     throw new Error('No action selected.');
 
-      if (values.action) {
-        // FIXME: suggest using "call" here for consistency with other forms
-        // but this is perfectly functional
-        let call;
-        if (values.action === ClaimRewardsAction.MOW) {
-          call = beanstalk.update(account.address);
-        }
-        else if (values.action === ClaimRewardsAction.PLANT_AND_MOW) {
-          call = beanstalk.earn(account.address);
-        }
-        else if (values.action === ClaimRewardsAction.ENROOT_AND_MOW) {
-          // do something
-          // claimResult = beanstalk.unripe
-        }
-        else if (values.action === ClaimRewardsAction.CLAIM_ALL) {
-          call = beanstalk.farm([
-            // PLANT_AND_MOW
-            beanstalk.interface.encodeFunctionData('earn', [account.address]),
-            // ENROOT_AND_MOW
-            // beanstalk.interface.encodeFunctionData("enroot", [account.address]),
-          ]);
-        }
-
-        // FIXME: set the name of the action to Mow, etc. depending on `values.action`
-        txToast = new TransactionToast({
-          loading: 'Claiming rewards.',
-          success: 'Claim successful. You have claimed your rewards.',
-        });
-
-        if (!call) throw new Error('Unknown action.');
-
-        const txn = await call;
-        txToast.confirming(txn);
-
-        const receipt = await txn.wait();
-        await fetchFarmerSilo(account.address);
-        // if (values.action === ClaimRewards)
-        txToast.success(receipt);
-        formActions.resetForm();
+      // FIXME: suggest using "call" here for consistency with other forms
+      // but this is perfectly functional
+      let call;
+      if (values.action === ClaimRewardsAction.MOW) {
+        call = beanstalk.update(account.address);
       }
+      else if (values.action === ClaimRewardsAction.PLANT_AND_MOW) {
+        call = beanstalk.earn(account.address);
+      }
+      else if (values.action === ClaimRewardsAction.ENROOT_AND_MOW) {
+        // do something
+        // claimResult = beanstalk.unripe
+      }
+      else if (values.action === ClaimRewardsAction.CLAIM_ALL) {
+        call = beanstalk.farm([
+          // PLANT_AND_MOW
+          beanstalk.interface.encodeFunctionData('earn', [account.address]),
+          // ENROOT_AND_MOW
+          // beanstalk.interface.encodeFunctionData("enroot", [account.address]),
+        ]);
+      }
+
+      // FIXME: set the name of the action to Mow, etc. depending on `values.action`
+      txToast = new TransactionToast({
+        loading: 'Claiming rewards.',
+        success: 'Claim successful. You have claimed your rewards.',
+      });
+
+      if (!call) throw new Error('Unknown action.');
+
+      const txn = await call;
+      txToast.confirming(txn);
+
+      const receipt = await txn.wait();
+      await fetchFarmerSilo(account.address);
+      // if (values.action === ClaimRewards)
+      txToast.success(receipt);
+      formActions.resetForm();
     } catch (err) {
       txToast ? txToast.error(err) : toast.error(parseError(err));
     }
