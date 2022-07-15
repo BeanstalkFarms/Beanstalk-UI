@@ -11,7 +11,7 @@ import { useAccount } from 'wagmi';
 import { mockPodOrderData } from '../../components/Market/Plots.mock';
 import PlotOrderDetails from '../../components/Market/Cards/PlotOrderDetails';
 import { AppState } from '../../state';
-import CancelButton from '../../components/Market/CancelButton';
+import CancelButton from '../../components/Common/CancelButton';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util/Account';
 
@@ -46,4 +46,5 @@ const EditOrderPage: React.FC = () => {
     </Container>
   );
 };
+
 export default EditOrderPage;

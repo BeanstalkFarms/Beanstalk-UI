@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   Container,
   Stack,
   Typography,
@@ -12,7 +11,7 @@ import PlotListingDetails from '../../components/Market/Cards/PlotListingDetails
 import { mockPodListingData } from '../../components/Market/Plots.mock';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util/Account';
-import CancelButton from '../../components/Market/CancelButton';
+import CancelButton from '../../components/Common/CancelButton';
 
 const EditListingPage: React.FC = () => {
   // index of plot
@@ -41,4 +40,5 @@ const EditListingPage: React.FC = () => {
     </Container>
   );
 };
+
 export default EditListingPage;

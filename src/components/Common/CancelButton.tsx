@@ -13,4 +13,5 @@ const CancelButton: React.FC<ButtonProps & { buttonText?: string; }> = ({ onClic
     </Button>
   </Stack>
   );
+
 export default CancelButton;

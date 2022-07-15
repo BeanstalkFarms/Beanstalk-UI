@@ -120,4 +120,5 @@ const MarketActivityPage: React.FC = () => {
     </Container>
   );
 };
+
 export default MarketActivityPage;

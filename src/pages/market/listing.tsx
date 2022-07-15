@@ -37,4 +37,5 @@ const ListingPage: React.FC = () => {
     </Container>
   );
 };
+
 export default ListingPage;

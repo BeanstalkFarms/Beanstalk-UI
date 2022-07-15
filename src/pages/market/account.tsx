@@ -1,13 +1,10 @@
 import React from 'react';
 import {
-  Button,
   Container,
   Stack,
   Typography,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
-
-import { useTheme } from '@mui/material/styles';
 import MyPlots from 'components/Market/MyPlots';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
@@ -52,4 +49,5 @@ const MarketAccountPage: React.FC = () => {
     </Container>
   );
 };
+
 export default MarketAccountPage;

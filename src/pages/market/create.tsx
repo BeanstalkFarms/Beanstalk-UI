@@ -16,4 +16,5 @@ const CreatePage: React.FC = () => (
     </Stack>
   </Container>
   );
+
 export default CreatePage;
