@@ -2,7 +2,8 @@ import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Stack, Tooltip, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useProvider, useSigner } from 'wagmi';
+import { useProvider } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import { Token } from 'classes';
 import { BEAN } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
@@ -345,7 +346,7 @@ const Claim : React.FC<{
       if (!values.token.steps) throw new Error('No quote found.');
       const encoded = Farm.encodeStepsWithSlippage(
         values.token.steps,
-        values.settings.slippage/100,
+        values.settings.slippage / 100,
         // ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6))
       );
       values?.token?.steps.forEach((step, i) => console.debug(`step ${i}:`, step.decode(encoded[i])));

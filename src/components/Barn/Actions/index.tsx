@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 
-import Buy from './Buy';
-import Rinse from './Rinse';
 import useTabs from 'hooks/display/useTabs';
 import BadgeTab from 'components/Common/BadgeTab';
 import useFarmerFertilizer from 'hooks/redux/useFarmerFertilizer';
+import Rinse from './Rinse';
+import Buy from './Buy';
 
 const BarnActions : React.FC<{}> = () => {
   const [tab, handleChange] = useTabs();

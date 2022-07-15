@@ -4,7 +4,8 @@ import BigNumber from 'bignumber.js';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import toast from 'react-hot-toast';
 import { ethers } from 'ethers';
-import { useAccount, useProvider, useSigner } from 'wagmi';
+import { useAccount, useProvider } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import { BEAN, ETH, USDC, USDT, WETH } from 'constants/tokens';
@@ -30,10 +31,10 @@ import { BUY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import { QuoteHandler } from 'hooks/useQuote';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import TransactionToast from 'components/Common/TxnToast';
-import FertilizerItem from '../FertilizerItem';
 import { displayBN, displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import FertilizerItem from '../FertilizerItem';
 
 // ---------------------------------------------------
 
@@ -281,7 +282,7 @@ const Buy : React.FC<{}> = () => {
       });
 
       let call;
-      let value = ZERO_BN
+      let value = ZERO_BN;
       // Once Replanted we need to use the Farm function
       // to acquire USDC (if necessary) and buy Fertilizer.
       if (isReplanted) {
@@ -308,45 +309,45 @@ const Buy : React.FC<{}> = () => {
             value = value.plus(amount);
             const data : string[] = [
               // Wrap input ETH into our internal balance
-              beanstalk.interface.encodeFunctionData("wrapEth", [
+              beanstalk.interface.encodeFunctionData('wrapEth', [
                 toStringBaseUnitBN(value, Eth.decimals),
                 FarmToMode.INTERNAL,
               ]),
               // Swap WETH -> USDC
               ...Farm.encodeStepsWithSlippage(
                 values.tokens[0].steps,
-                0.1/100
+                0.1 / 100
               ),
               // Mint Fertilizer, which also mints Beans and 
               // deposits the underlying LP in the same txn.
               beanstalk.interface.encodeFunctionData('mintFertilizer', [
                 toStringBaseUnitBN(amountUsdc, 0),
-                Farm.slip(minLP, 0.1/100),
+                Farm.slip(minLP, 0.1 / 100),
                 FarmFromMode.INTERNAL_TOLERANT,
               ])
             ];
             const gas = await beanstalk.estimateGas.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) });
-            console.debug(`gas`, gas);
+            console.debug('gas', gas);
             call = beanstalk.farm(data, {
               value: toStringBaseUnitBN(value, Eth.decimals),
               gasLimit: gas.mul(120).div(100)
-            })
+            });
             break;
           }
           case Usdc: {
-            console.debug(`[PurchaseForm] purchasing with USDC`, {
+            console.debug('[PurchaseForm] purchasing with USDC', {
               address: farm.contracts.curve.pools.beanCrv3.address,
               beanAmount: toStringBaseUnitBN(amountUsdc.times(0.866616), Usdc.decimals),
               usdcAmount: toStringBaseUnitBN(amountUsdc, Usdc.decimals),
               fertAmount: toStringBaseUnitBN(amountUsdc, 0),
               minLP: minLP.toString(),
-              minLPSlip: Farm.slip(minLP, 0.1/100).toString(),
-            })
+              minLPSlip: Farm.slip(minLP, 0.1 / 100).toString(),
+            });
             call = beanstalk.mintFertilizer(
               /// The input for Fertilizer has 0 decimals;
               /// it's the exact number of FERT you want to mint.
               toStringBaseUnitBN(amountUsdc, 0),
-              Farm.slip(minLP, 0.1/100),
+              Farm.slip(minLP, 0.1 / 100),
               FarmFromMode.EXTERNAL,
             );
             break;
@@ -361,7 +362,7 @@ const Buy : React.FC<{}> = () => {
       // Beanstalk pre-Replant but post-BR launch used the below
       // methods directly from the Fertilizer ERC1155 contract.
       else {
-        switch(token) {
+        switch (token) {
           case Eth:
             call = fertContract.buyAndMint(
               toStringBaseUnitBN(amountUsdc.multipliedBy(0.999), Usdc.decimals),

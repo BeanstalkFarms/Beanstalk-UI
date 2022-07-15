@@ -453,13 +453,13 @@ export default class EventProcessor {
     const amount    = tokenBN(event.args.amount, this.epp.whitelist[token]);
     const bdv       = tokenBN(event.args.bdv, Bean);
 
-    console.debug(`[EventProcessor@AddDeposit] `, {
+    console.debug('[EventProcessor@AddDeposit] ', {
       season,
       amount: amount.toString(),
       bdv: bdv.toString(),
       token,
       event,
-    })
+    });
 
     this.deposits[token] = {
       ...this.deposits[token],

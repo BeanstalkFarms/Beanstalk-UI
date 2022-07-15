@@ -1,8 +1,8 @@
-import { TESTNET_CHAINS, TESTNET_RPC_ADDRESSES } from "constants/index";
-import { ethers } from "ethers";
-import useChainId from "hooks/useChain";
-import { useEffect, useState } from "react";
-import { useSigner as useWagmiSigner } from "wagmi";
+import { TESTNET_CHAINS, TESTNET_RPC_ADDRESSES } from 'constants/index';
+import { ethers } from 'ethers';
+import useChainId from 'hooks/useChain';
+import { useEffect, useState } from 'react';
+import { useSigner as useWagmiSigner } from 'wagmi';
 
 export let useSigner = useWagmiSigner;
 
@@ -22,15 +22,15 @@ if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_OVERRIDE_FAR
         if (account.address && isTestnet) {
           try {
             const provider = new ethers.providers.JsonRpcProvider(TESTNET_RPC_ADDRESSES[chainId]);
-            await provider.send("hardhat_impersonateAccount", [account.address]);
+            await provider.send('hardhat_impersonateAccount', [account.address]);
             setSigner(provider.getSigner(account.address));
           } catch (e) {
             console.error(e);
           }
         } else {
-          console.error('Missing send on provider')
+          console.error('Missing send on provider');
         }
-      })()
+      })();
     }, [
       account?.address,
       chainId,
@@ -56,6 +56,6 @@ if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_OVERRIDE_FAR
       isSuccess: false,
       refetch: () => {},
       status: null,
-    }
+    };
   };
 }

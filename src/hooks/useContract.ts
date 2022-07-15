@@ -16,7 +16,8 @@ import {
 import { ChainConstant } from 'constants/index';
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
-import { useProvider, useSigner, useContract as useWagmiContract } from 'wagmi';
+import { useProvider, useContract as useWagmiContract } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import { getChainConstant } from 'util/Chain';
 import useChainConstant from './useChainConstant';
 

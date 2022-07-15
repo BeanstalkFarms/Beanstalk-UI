@@ -1,7 +1,8 @@
 import { Box, Divider, Stack } from '@mui/material';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps, useFormikContext } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import BigNumber from 'bignumber.js';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
@@ -11,13 +12,13 @@ import { BeanstalkReplanted } from 'generated/index';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import stalkIcon from 'img/beanstalk/stalk-icon.svg';
 import seedIcon from 'img/beanstalk/seed-icon.svg';
+import toast from 'react-hot-toast';
+import { parseError } from 'util/index'; 
+import { useFarmerSilo } from 'state/farmer/silo/updater';
 import RewardItem from '../RewardItem';
 import DescriptionButton from '../../Common/DescriptionButton';
 import { AppState } from '../../../state';
 import TransactionToast from '../../Common/TxnToast';
-import toast from 'react-hot-toast';
-import { parseError } from 'util/index'; 
-import { useFarmerSilo } from 'state/farmer/silo/updater';
 
 export type SendFormValues = {
   to?: string;

@@ -14,16 +14,15 @@ const Badge = () => (
   />
 );
 
-const BadgeTab : React.FC<TabProps & { showBadge: boolean }> = ({ showBadge, label, sx, ...props }) => {
-  return (
-    <Tab
-      label={
-        <Stack display="inline-flex" direction="row" alignItems="center" gap={0.25}>
-          {showBadge && <Badge />}
-          <span>{label}</span>
-        </Stack>
+const BadgeTab : React.FC<TabProps & { showBadge: boolean }> = ({ showBadge, label, sx, ...props }) => (
+  <Tab
+    label={
+      <Stack display="inline-flex" direction="row" alignItems="center" gap={0.25}>
+        {showBadge && <Badge />}
+        <span>{label}</span>
+      </Stack>
       }
-      sx={{
+    sx={{
         overflow: 'visible',
         /// Show the badge in full color when selected.
         '&.Mui-selected .B-badge': {
@@ -31,9 +30,8 @@ const BadgeTab : React.FC<TabProps & { showBadge: boolean }> = ({ showBadge, lab
         },
         ...sx
       }}
-      {...props}
+    {...props}
     />
-  )
-}
+  );
 
 export default BadgeTab;

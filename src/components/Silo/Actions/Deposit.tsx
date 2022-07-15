@@ -289,7 +289,7 @@ const Deposit : React.FC<{
           // pool.underlying  = [BEAN, DAI, USDC, USDT] 
           const tokenIndex = pool.tokens.indexOf(tokenIn);
           const underlyingTokenIndex = pool.underlying.indexOf(tokenIn);
-          console.debug(`[Deposit] LP Deposit`, {
+          console.debug('[Deposit] LP Deposit', {
             pool,
             tokenIn,
             tokenIndex,
@@ -458,7 +458,7 @@ const Deposit : React.FC<{
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          0.1/100,
+          0.1 / 100,
           // ethers.BigNumber.from(
           //   toStringBaseUnitBN(
           //     values.settings.slippage / 100,

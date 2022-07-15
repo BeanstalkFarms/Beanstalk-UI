@@ -3,7 +3,6 @@ export enum ClaimStatus {
   UNCLAIMED = 1,
 }
 
-
 export type Nft = {
   id: number;
   account: string;
@@ -23,7 +22,7 @@ export type Nft = {
 export async function loadNFTs(account: string) {
   // FIXME: API load this
   // const nftData = (await import('../data/parsed-accounts.json')).default as { [key: string] : Nft[] };
-  const nftData : Nft[] = await fetch(`/.netlify/functions/nfts?account=${account}`).then(response => response.json());
+  const nftData : Nft[] = await fetch(`/.netlify/functions/nfts?account=${account}`).then((response) => response.json());
   
   if (nftData.length === 0) {
     return {

@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { ChainConstant } from 'constants/index';
@@ -55,5 +54,5 @@ export default function usePreferredToken(
     getChainToken,
     balances,
     fallbackMode
-  ])
+  ]);
 }
