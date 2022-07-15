@@ -143,7 +143,7 @@ const Whitelist : React.FC<{
                             </>
                           )}>
                             <span>
-                              {displayFullBN(deposited?.amount.minus(farmerSilo.beans.earned) || ZERO_BN, token.displayDecimals)}
+                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)}
                               {farmerSilo.beans.earned.gt(0) ? (
                                 <Typography component="span" color="primary.main">
                                   {' + '}

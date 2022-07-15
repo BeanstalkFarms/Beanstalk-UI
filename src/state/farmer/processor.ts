@@ -77,8 +77,13 @@ const FarmerEventsProcessor = () => {
       if (events && events.length > 0) {
         console.debug(`[farmer/updater] process ${events.length} events`, events, eventParsingParameters);
 
+        /// EVENT PROCESSING v2: POST-REPLANT
+        /// ---------------------------------
+        /// Notable differences:
+        /// (1) Beanstalk.EventProcessor does not add Earned Beans
+        ///     as a deposit in the current season. The UI is responsible
+        ///     for showing these Beans wherever necessary.
         if (REPLANTED_CHAINS.has(chainId)) {
-          // Run processor
           const p = new Beanstalk.EventProcessor(
             eventParsingParameters.account,
             { 
@@ -86,68 +91,7 @@ const FarmerEventsProcessor = () => {
               whitelist: whitelist,
             }
           );
-          
-          p.ingestAll(events);
-          // p.ingest({
-          //   event: 'AddDeposit',
-          //   args: {
-          //     token: BEAN_CRV3_LP[1].address,
-          //     account: eventParsingParameters.account,
-          //     amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
-          //     bdv: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
-          //     season: 6070,
-          //   }
-          // } as AddDepositEvent);
-          // p.ingest({
-          //   event: 'AddDeposit',
-          //   args: {
-          //     token: BEAN_CRV3_LP[1].address,
-          //     account: eventParsingParameters.account,
-          //     amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
-          //     bdv: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
-          //     season: 6072,
-          //   }
-          // } as AddDepositEvent);
-          // // TEMP
-          // p.ingest({
-          //   event: 'RemoveDeposit',
-          //   args: {
-          //     account: eventParsingParameters.account,
-          //     token: BEAN_CRV3_LP[1].address,
-          //     season: 6070,
-          //     amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
-          //   }
-          // } as RemoveDepositEvent);
-          // p.ingest({
-          //   event: 'RemoveDeposit',
-          //   args: {
-          //     account: eventParsingParameters.account,
-          //     token: BEAN_CRV3_LP[1].address,
-          //     season: 6072,
-          //     amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
-          //   }
-          // } as RemoveDepositEvent);
-          // p.ingest({
-          //   event: 'AddWithdrawal',
-          //   args: {
-          //     account: eventParsingParameters.account,
-          //     token: BEAN_CRV3_LP[1].address,
-          //     season: 6073,
-          //     amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
-          //   }
-          // } as AddWithdrawalEvent);
-          // p.ingest({
-          //   event: 'AddWithdrawal',
-          //   args: {
-          //     account: eventParsingParameters.account,
-          //     token: BEAN_CRV3_LP[1].address,
-          //     season: 6076,
-          //     amount: ethers.BigNumber.from(toStringBaseUnitBN(1, 18)),
-          //   }
-          // } as AddWithdrawalEvent);
-          
-          const results = p.data();
-
+          const results = p.ingestAll(events);
           console.debug('[processor.ts] ...received results:', results);
         
           // Update Field
@@ -188,8 +132,10 @@ const FarmerEventsProcessor = () => {
               return prev;
             }, {})
           ));
-        } else {
-          // v1
+        }
+        
+        /// EVENT PROCESSING v1: PRE-REPLANT
+        else {
           const results = processFarmerEventsV1(
             events,
             eventParsingParameters
