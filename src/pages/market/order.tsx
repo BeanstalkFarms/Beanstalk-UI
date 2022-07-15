@@ -35,7 +35,7 @@ const OrderPage: React.FC = () => {
               <Typography variant="h4">Sell Pods to Pod Order</Typography>
             </Stack>
             <Box sx={{ px: 1, pb: 1 }}>
-              <SellNow />
+              <SellNow podOrder={mockPodOrderData[0]} />
             </Box>
           </Stack>
         </Card>

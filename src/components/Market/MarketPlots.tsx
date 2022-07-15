@@ -5,7 +5,6 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import PlotTable from './Tables/PlotTable';
-import SellNowDialog from './Dialogs/SellNowDialog';
 import { mockPodListingData, mockPodOrderData, PodOrder } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
 import beanIcon from '../../img/tokens/bean-logo-circled.svg';
@@ -165,22 +164,12 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
     // setBuyNowDialogOpen(true);
   }, [navigate]);
 
-  /**
-   * User clicks a row under Sell Now tab
-   */
-  const [sellNowModalOpen, setSellNowModalOpen] = useState(false);
-  const [sellNowRow, setSellNowRow] = useState<PodOrder | undefined>();
-
   const handleSellNowModalOpen = useCallback((params: GridRowParams) => {
     console.log('ROW', params.row.id);
     navigate(`/market/order/${params.row.id}`);
     // setSellNowRow(params.row);
     // setSellNowModalOpen(true);
   }, [navigate]);
-
-  const handleSellNowModalClose = useCallback(() => {
-    setSellNowModalOpen(false);
-  }, []);
 
   return (
     <>
@@ -210,15 +199,6 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
           />
        )}
       </Card>
-
-      {/* User clicks a row under Sell Now tab */}
-      <SellNowDialog
-        fullWidth
-        handleClose={handleSellNowModalClose}
-        open={sellNowModalOpen}
-        podListing={sellNowRow}
-        harvestableIndex={beanstalkField.harvestableIndex}
-      />
     </>
   );
 };

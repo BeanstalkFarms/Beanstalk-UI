@@ -22,7 +22,6 @@ const ListingPage: React.FC = () => {
         <PageHeader
           returnPath="/market"
         />
-        <Typography>POD ID: {id}</Typography>
         <PlotListingDetails podListing={mockPodListingData[0]} harvestableIndex={mockPodListingData[0].index} />
         <Card sx={{ position: 'relative' }}>
           <Stack gap={1.5}>
@@ -30,7 +29,7 @@ const ListingPage: React.FC = () => {
               <Typography variant="h4">Buy Pods from Pod Listing</Typography>
             </Stack>
             <Box sx={{ px: 1, pb: 1 }}>
-              <BuyNow />
+              <BuyNow podListing={mockPodListingData[0]} />
             </Box>
           </Stack>
         </Card>

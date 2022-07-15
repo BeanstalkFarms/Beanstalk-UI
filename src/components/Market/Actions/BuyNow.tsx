@@ -1,16 +1,16 @@
-import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormState,
   FormTokenState,
-  SettingInput,
+  SettingInput, TokenOutputField,
   TokenQuoteProvider,
-  TokenSelectDialog,
+  TokenSelectDialog, TxnPreview, TxnSeparator,
   TxnSettings
 } from 'components/Common/Form';
-import { SupportedChainId } from 'constants/index';
-import { BEAN, ETH } from 'constants/tokens';
+import { SupportedChainId, ZERO_BN } from 'constants/index';
+import { BEAN, ETH, PODS } from 'constants/tokens';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
@@ -20,7 +20,7 @@ import useTokenMap from 'hooks/useTokenMap';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
 import InputField from '../../Common/Form/InputField';
@@ -28,6 +28,9 @@ import { BeanstalkPalette } from '../../App/muiTheme';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
 import useCurve from '../../../hooks/useCurve';
+import { PodListing } from '../Plots.mock';
+import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
+import { ActionType } from '../../../util/Actions';
 
 export type BuyNowFormValues = FormState
 
@@ -35,10 +38,12 @@ const BuyNowForm : React.FC<
   FormikProps<BuyNowFormValues>
   & {
     token: ERC20Token | NativeToken;
+    podListing: PodListing;
   }
 > = ({
   values,
   setFieldValue,
+  podListing,
   //
   token: depositToken, // BEAN
 }) => {
@@ -64,6 +69,10 @@ const BuyNowForm : React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
 
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
+    (state) => state._beanstalk.field
+  );
+
   const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn, tokenOut): Promise<BigNumber> => {
     console.debug('[handleQuote] curve: ', curve);
     if (curve) {
@@ -82,7 +91,7 @@ const BuyNowForm : React.FC<
   return (
     <Form noValidate>
       {/* Selected value: {values.option?.toString()} */}
-      {/* <pre>{JSON.stringify({ ...values }, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify({ ...values }, null, 2)}</pre>*/}
       <Stack gap={1}>
         <TokenSelectDialog
           open={showTokenSelect}
@@ -92,7 +101,7 @@ const BuyNowForm : React.FC<
           balances={balances}
           tokenList={Object.values(erc20TokenMap)}
         />
-        <FieldWrapper label="Number of Beans">
+        <FieldWrapper label="Buy Pods">
           <>
             {values.tokens.map((state, index) => (
               <TokenQuoteProvider
@@ -109,6 +118,35 @@ const BuyNowForm : React.FC<
             ))}
           </>
         </FieldWrapper>
+        <TxnSeparator mt={0} />
+        <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
+          <Typography variant="body1">Place in Pod Line:</Typography>
+          <Typography variant="body1">{displayBN(podListing.index.minus(beanstalkField.harvestableIndex))}</Typography>
+        </Stack>
+        <TokenOutputField
+          token={PODS}
+          amount={podListing.remainingAmount}
+          isLoading={false}
+          />
+        <Box>
+          <Accordion variant="outlined">
+            <StyledAccordionSummary title="Transaction Details" />
+            <AccordionDetails>
+              <TxnPreview
+                actions={[
+                    {
+                      type: ActionType.BASE,
+                      message: 'DO SOMETHING'
+                    },
+                    {
+                      type: ActionType.BASE,
+                      message: 'DO SOMETHING!'
+                    }
+                  ]}
+                />
+            </AccordionDetails>
+          </Accordion>
+        </Box>
         <Button sx={{ p: 1 }} type="submit" disabled>
           Buy Pods
         </Button>
@@ -119,7 +157,7 @@ const BuyNowForm : React.FC<
 
 // ---------------------------------------------------
 
-const BuyNow : React.FC<{}> = () => {
+const BuyNow : React.FC<{podListing: PodListing}> = ({ podListing }) => {
   const Eth = useChainConstant(ETH);
 
   const initialValues: BuyNowFormValues = useMemo(() => ({
@@ -147,6 +185,7 @@ const BuyNow : React.FC<{}> = () => {
           </TxnSettings>
           <BuyNowForm
             token={BEAN[1]}
+            podListing={podListing}
             {...formikProps}
           />
         </>

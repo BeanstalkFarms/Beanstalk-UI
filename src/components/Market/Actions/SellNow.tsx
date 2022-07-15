@@ -1,16 +1,23 @@
-import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Grid, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { ERC20Token, NativeToken } from 'classes/Token';
-import { SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
+import {
+  SettingInput,
+  TokenAdornment,
+  TokenInputField,
+  TokenOutputField, TxnPreview,
+  TxnSeparator,
+  TxnSettings
+} from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS } from 'constants/tokens';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { MaxBN, MinBN } from 'util/index';
+import { displayTokenAmount, MaxBN, MinBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
 import InputField from '../../Common/Form/InputField';
@@ -18,6 +25,9 @@ import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import podsIcon from '../../../img/beanstalk/pod-icon.svg';
 import useToggle from '../../../hooks/display/useToggle';
 import SelectPlotDialog from '../../Field/SelectPlotDialog';
+import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
+import { ActionType } from '../../../util/Actions';
+import { PodListing, PodOrder } from '../Plots.mock';
 
 export type SellNowFormValues = {
   plotIndex: string | null;
@@ -29,31 +39,32 @@ export type SellNowFormValues = {
 const SellNowForm: React.FC<FormikProps<SellNowFormValues>
   & {
   token: ERC20Token | NativeToken;
+  podOrder: PodOrder;
 }> = ({
-        values,
-        setFieldValue,
-        //
-        token: depositToken, // BEAN
-      }) => {
+  values,
+  setFieldValue,
+  podOrder,
+  //
+  token: depositToken, // BEAN
+}) => {
   const [dialogOpen, showDialog, hideDialog] = useToggle();
 
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
   );
   
-  const numPods = values.plotIndex !== null ? new BigNumber(farmerField.plots[values.plotIndex]) : ZERO_BN;
-
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
 
+  const numPods = useMemo(() => (values.plotIndex !== null ? new BigNumber(farmerField.plots[values.plotIndex]) : ZERO_BN), [farmerField.plots, values.plotIndex]);
+  
   const handlePlotSelect = useCallback((index: string) => {
     setFieldValue('plotIndex', index);
     setFieldValue('min', ZERO_BN);
     setFieldValue('max', new BigNumber(farmerField.plots[index]));
-    setFieldValue('amount', values.max?.minus(values.min ? values.min : ZERO_BN));
-    setFieldValue('expiresAt', new BigNumber(index).minus(beanstalkField?.harvestableIndex));
-  }, [beanstalkField?.harvestableIndex, farmerField.plots, setFieldValue, values.max, values.min]);
+    setFieldValue('amount', new BigNumber(farmerField.plots[index]));
+  }, [farmerField.plots, setFieldValue]);
 
   const handleChangeAmount = (amount: BigNumber) => {
     const delta = (values?.max || ZERO_BN).minus(amount);
@@ -63,8 +74,13 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
     }
   };
 
+  useEffect(() => {
+    setFieldValue('amount', values.max?.minus(values.min ? values.min : ZERO_BN));
+  }, [values.min, values.max, setFieldValue]);
+
   return (
     <Form noValidate>
+      {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
       <SelectPlotDialog
         farmerField={farmerField}
         beanstalkField={beanstalkField}
@@ -89,11 +105,10 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
                 ),
               }}
               disabled
-              handleChange={handleChangeAmount as any}
             />
           </FieldWrapper>
         ) : (
-          <>
+          <Stack gap={1}>
             <FieldWrapper>
               <TokenInputField
                 name="amount"
@@ -112,29 +127,6 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
                 handleChange={handleChangeAmount as any}
               />
             </FieldWrapper>
-            <FieldWrapper label="Number of Pods to sell" tooltip={POD_MARKET_TOOLTIPS.amount}>
-              <Field name="amount">
-                {(fieldProps: FieldProps) => (
-                  <InputField
-                    {...fieldProps}
-                    handleChangeOverride={handleChangeAmount}
-                    maxValue={numPods}
-                    minValue={new BigNumber(0)}
-                    showMaxButton
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>
-                            <img src={podsIcon} alt="" height="30px" />
-                            <Typography sx={{ fontSize: '20px' }}>PODS</Typography>
-                          </Stack>
-                        </InputAdornment>)
-                    }}
-                    // disabled
-                  />
-                )}
-              </Field>
-            </FieldWrapper>
             <Box px={3}>
               {/* double slider sets the form's 'min' and 'max' values */}
               {/* so we leave the name field blank */}
@@ -145,39 +137,61 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
                 initialState={[0, numPods.toNumber()]}
               />
             </Box>
-            <Stack direction="row" gap={1}>
-              <Box width="50%">
-                <FieldWrapper label="Start" tooltip={POD_MARKET_TOOLTIPS.start}>
-                  <Field name="min">
-                    {(fieldProps: FieldProps) => (
-                      <InputField
-                        {...fieldProps}
-                        placeholder="0.0000"
-                        minValue={new BigNumber(0)}
-                        maxValue={values.max ? values.max.minus(1) : numPods.minus(1)}
-                      />
-                    )}
-                  </Field>
-                </FieldWrapper>
-              </Box>
-              <Box width="50%">
-                <FieldWrapper label="End" tooltip={POD_MARKET_TOOLTIPS.end}>
-                  <Field name="max">
-                    {(fieldProps: FieldProps) => (
-                      <InputField
-                        {...fieldProps}
-                        placeholder="0.0000"
-                        minValue={new BigNumber(0)}
-                        maxValue={numPods}
-                      />
-                    )}
-                  </Field>
-                </FieldWrapper>
-              </Box>
-            </Stack>
-          </>
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <TokenInputField
+                  name="min"
+                  token={PODS}
+                  placeholder="0.0000"
+                  balance={numPods || ZERO_BN}
+                  hideBalance
+                  InputProps={{
+                    endAdornment: 'Start'
+                  }}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TokenInputField
+                  name="max"
+                  token={PODS}
+                  placeholder="0.0000"
+                  balance={numPods || ZERO_BN}
+                  hideBalance
+                  InputProps={{
+                    endAdornment: 'End'
+                  }}
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+            <TxnSeparator mt={0} />
+            <TokenOutputField
+              token={BEAN[1]}
+              amount={podOrder.pricePerPod.multipliedBy(values.amount ? values.amount : ZERO_BN)}
+              isLoading={false}
+            />
+            <Box>
+              <Accordion variant="outlined">
+                <StyledAccordionSummary title="Transaction Details" />
+                <AccordionDetails>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type: ActionType.BASE,
+                        message: 'DO SOMETHING'
+                      },
+                      {
+                        type: ActionType.BASE,
+                        message: 'DO SOMETHING!'
+                      }
+                    ]}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          </Stack>
         )}
-
         <Button sx={{ p: 1 }} type="submit" disabled>
           Create Listing
         </Button>
@@ -188,7 +202,7 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
 
 // ---------------------------------------------------
 
-const SellNow: React.FC<{}> = () => {
+const SellNow: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
   const Eth = useChainConstant(ETH);
 
   const initialValues: SellNowFormValues = useMemo(() => ({
@@ -219,6 +233,7 @@ const SellNow: React.FC<{}> = () => {
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
           <SellNowForm
+            podOrder={podOrder}
             token={BEAN[1]}
             {...formikProps}
           />
