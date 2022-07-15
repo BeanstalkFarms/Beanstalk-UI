@@ -54,7 +54,7 @@ const RewardsBar : React.FC<{
           <RewardItem
             title="Plantable Seeds"
             tooltip="The number of Seeds earned from Earned Beans. Plantable Seeds do not grow Stalk until they are Planted."
-            amount={seeds.earned}
+            amount={seeds.plantable}
             icon={seedIcon}
           />
           <RewardItem

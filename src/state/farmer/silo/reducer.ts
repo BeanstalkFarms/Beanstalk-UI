@@ -18,7 +18,7 @@ export const initialFarmerSilo : FarmerSilo = {
   },
   seeds: {
     active: NEG1,
-    earned: NEG1,
+    plantable: NEG1,
     total: NEG1,
   },
   roots: {
