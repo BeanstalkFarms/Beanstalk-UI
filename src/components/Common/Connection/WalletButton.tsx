@@ -1,15 +1,12 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-  useAccount,
-  useDisconnect,
-  useNetwork,
-} from 'wagmi';
+import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 import {
   Box,
   Button,
   ButtonProps,
-  Card, Divider,
+  Card,
+  Divider,
   ListItemText,
   Menu,
   MenuItem,
@@ -50,17 +47,17 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
 
   // Theme
   const theme = useTheme();
-  const isMedium = useMediaQuery(theme.breakpoints.down('md'));   // trim additional account text
-  const isTiny = useMediaQuery('(max-width:380px)');              //
+  const isMedium = useMediaQuery(theme.breakpoints.down('md')); // trim additional account text
+  const isTiny = useMediaQuery('(max-width:380px)'); //
 
   // Menu
   const [menuAnchor, toggleMenuAnchor] = useAnchor();
   const menuVisible = Boolean(menuAnchor);
 
   // Dialog: Wallet
-  const [selectingWallet, showWallets, hideWallets] = useToggle(); 
+  const [selectingWallet, showWallets, hideWallets] = useToggle();
 
-  // Dialog: Pick Unripe Beans 
+  // Dialog: Pick Unripe Beans
   const [picking, showPick, hidePick] = useToggle(toggleMenuAnchor);
 
   // Display: Not Connected
@@ -73,7 +70,10 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           {...props}
           onClick={showWallets}
         >
-          Connect<Box component="span" display={{ xs: 'none', md: 'inline' }}>&nbsp;Wallet</Box>
+          Connect
+          <Box component="span" display={{ xs: 'none', md: 'inline' }}>
+            &nbsp;Wallet
+          </Box>
         </Button>
         <WalletDialog
           open={selectingWallet}
@@ -100,11 +100,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           </Stack>
         </ListItemText>
       </MenuItem>
-      <MenuItem
-        component={RouterLink}
-        to="/history"
-        onClick={toggleMenuAnchor}
-      >
+      <MenuItem component={RouterLink} to="/history" onClick={toggleMenuAnchor}>
         <Stack direction="row" gap={1} alignItems="center">
           <img src={historyIcon} alt="History" width={20} />
           <Typography variant="body1" color="text.primary">
@@ -148,19 +144,20 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         </Stack>
       </MenuItem>
       <Divider sx={{ mx: 1 }} />
-      <Box sx={{ px: 1, pt: 0.75, pb: 0.25 }}>
+      <Box sx={{ px: 1, pb: 0.25 }}>
         <Button
           fullWidth
           onClick={showPick}
           sx={{
-            py: 1,
+            py: 1.25,
             backgroundColor: BeanstalkPalette.lightBrown,
             color: BeanstalkPalette.brown,
             '&:hover': {
               backgroundColor: BeanstalkPalette.lightBrown,
-              opacity: 0.94
-            }
-          }}>
+              opacity: 0.94,
+            },
+          }}
+        >
           <Stack direction="row" alignItems="center">
             <Typography variant="h4">Pick Unripe Beans</Typography>
           </Stack>
@@ -171,14 +168,15 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           fullWidth
           href="/#/chop"
           sx={{
-            py: 1,
+            py: 1.25,
             backgroundColor: BeanstalkPalette.brown,
             color: BeanstalkPalette.white,
             '&:hover': {
               backgroundColor: BeanstalkPalette.brown,
-              opacity: 0.96
-            }
-          }}>
+              opacity: 0.96,
+            },
+          }}
+        >
           <Stack direction="row" alignItems="center">
             <Typography variant="h4">Chop Unripe Beans</Typography>
           </Stack>
@@ -195,13 +193,13 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         disableFocusRipple
         variant="contained"
         color="light"
-        startIcon={(
-          isTiny
-            ? null
-            : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
-            ? <WarningAmberIcon />
-            : <AddressIcon address={account.address} />
-        )}
+        startIcon={
+          isTiny ? null : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT ? (
+            <WarningAmberIcon />
+          ) : (
+            <AddressIcon address={account.address} />
+          )
+        }
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}
         onClick={toggleMenuAnchor}
@@ -220,11 +218,11 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           sx: {
             py: 0,
             mt: 0,
-          }
+          },
         }}
         disablePortal
-        // Align the menu to the bottom 
-        // right side of the anchor button. 
+        // Align the menu to the bottom
+        // right side of the anchor button.
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -233,19 +231,18 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           vertical: 'top',
           horizontal: 'right',
         }}
-        sx={{
-          // Give some room between the WalletButton
-          // and the popper when it's opened.
-          // mt: 0.5,
-        }}
+        sx={
+          {
+            // Give some room between the WalletButton
+            // and the popper when it's opened.
+            // mt: 0.5,
+          }
+        }
       >
         {menu}
       </Menu>
       {/* Pick Beans Dialog */}
-      <PickBeansDialog
-        open={picking}
-        handleClose={hidePick}
-      />
+      <PickBeansDialog open={picking} handleClose={hidePick} />
     </>
   );
 };

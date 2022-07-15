@@ -55,6 +55,7 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
           rel="noreferrer"
           variant="contained"
           color="secondary"
+          sx={{ py: 0.9 }}
         >
           <Stack direction="row" alignItems="center" spacing={1}>
             <ListItemText>
