@@ -2,29 +2,25 @@ import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
-  FormState, FormTokenState,
+  FormTokenState,
   SettingInput,
   TokenQuoteProvider,
   TokenSelectDialog,
   TxnSettings
 } from 'components/Common/Form';
-import { BeanstalkReplanted } from 'generated/index';
 import { SupportedChainId } from 'constants/index';
 import { BEAN, ETH, WETH } from 'constants/tokens';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
-import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
-import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
+import { PreferredToken } from 'hooks/usePreferredToken';
 import { QuoteHandler } from 'hooks/useQuote';
 import useTokenMap from 'hooks/useTokenMap';
-import Farm from 'lib/Beanstalk/Farm';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
-import { useProvider, useSigner } from 'wagmi';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
 import InputField from '../../Common/Form/InputField';

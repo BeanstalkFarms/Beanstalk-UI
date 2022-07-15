@@ -1,178 +1,282 @@
 import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
-import {
-  FormState, FormTokenState,
-  SettingInput,
-  TokenQuoteProvider,
-  TokenSelectDialog,
-  TxnSettings
-} from 'components/Common/Form';
-import { BeanstalkReplanted } from 'generated/index';
-import { SupportedChainId } from 'constants/index';
-import { BEAN, ETH, WETH } from 'constants/tokens';
+import { ERC20Token, NativeToken } from 'classes/Token';
+import { FormTokenState, SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
+import { ZERO_BN } from 'constants/index';
+import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
-import { useBeanstalkContract } from 'hooks/useContract';
-import useFarmerBalances from 'hooks/useFarmerBalances';
-import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
-import { QuoteHandler } from 'hooks/useQuote';
-import useTokenMap from 'hooks/useTokenMap';
-import Farm from 'lib/Beanstalk/Farm';
-import React, { useCallback, useMemo, useState } from 'react';
+import { PreferredToken } from 'hooks/usePreferredToken';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
-import { useProvider, useSigner } from 'wagmi';
+import { MaxBN, MinBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
 import InputField from '../../Common/Form/InputField';
-import { BeanstalkPalette } from '../../App/muiTheme';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
-import useCurve from '../../../hooks/useCurve';
+import PlotDetails from '../Cards/PlotDetails';
+import podsIcon from '../../../img/beanstalk/pod-icon.svg';
+import RadioCardField from '../../Common/Form/RadioCardField';
+import Warning from '../../Common/Form/Warning';
+import useToggle from '../../../hooks/display/useToggle';
+import SelectPlotDialog from '../../Field/SelectPlotDialog';
 
 export type SellListingFormValues = {
-  placeInLine: BigNumber | null;
+  option: number | null;
+  min: BigNumber;
+  max: BigNumber | null;
+  amount: BigNumber | null;
   pricePerPod: BigNumber | null;
-  tokens: FormTokenState[];
+  expiresAt: BigNumber | null;
+  plotIndex: string | null;
 }
 
-const SellListingForm : React.FC<
-  FormikProps<SellListingFormValues>
+const SellListingForm: React.FC<FormikProps<SellListingFormValues>
   & {
-    podLine: BigNumber;
-    token: ERC20Token | NativeToken;
-  }
-> = ({
-  values,
-  podLine,
-  setFieldValue,
-  //
-  token: depositToken, // BEAN
-}) => {
-  const chainId = useChainId();
-  const [showTokenSelect, setShowTokenSelect] = useState(false);
+  // plot: any;
+  // placeInLine: BigNumber;
+  // numPods: BigNumber;
+}> = ({
+        values,
+        // plot,
+        // placeInLine,
+        // numPods,
+        setFieldValue,
+      }) => {
+  const [dialogOpen, showDialog, hideDialog] = useToggle();
+  
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
+    (state) => state._farmer.field
+  );
 
-  const isMainnet = chainId === SupportedChainId.MAINNET;
-  const curve = useCurve();
-  const handleClose = useCallback(() => setShowTokenSelect(false), []);
-  const handleOpen = useCallback(() => setShowTokenSelect(true), []);
-  const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
-    // If the user has typed some existing values in,
-    // save them. Add new tokens to the end of the list.
-    // FIXME: match sorting of erc20TokenList
-    const copy = new Set(_tokens);
-    const v = values.tokens.filter((x) => {
-      copy.delete(x.token);
-      return _tokens.has(x.token);
-    });
-    setFieldValue('tokens', [
-      ...v,
-      ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
-    ]);
-  }, [values.tokens, setFieldValue]);
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
+    (state) => state._beanstalk.field
+  );
 
-  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn, tokenOut): Promise<BigNumber> => {
-    console.debug('[handleQuote] curve: ', curve);
-    if (curve) {
-      return curve.router.getBestRouteAndOutput(
-        tokenIn.address,
-        tokenOut.address,
-        toStringBaseUnitBN(amountIn, tokenIn.decimals),
-      ).then((result) => toTokenUnitsBN(result.output, tokenOut.decimals));
+  // const numPods = new BigNumber(100);
+  // const placeInLine = new BigNumber(100);
+  const plot = values.plotIndex !== null ? farmerField.plots[values.plotIndex] : ZERO_BN;
+  const placeInLine = values.plotIndex !== null ? new BigNumber(values.plotIndex).minus(beanstalkField?.harvestableIndex) : ZERO_BN;
+  const numPods = values.plotIndex !== null ? new BigNumber(farmerField.plots[values.plotIndex]) : ZERO_BN;
+  // plot={farmerField.plots[selectedPlotIndex]}
+  // placeInLine={new BigNumber(selectedPlotIndex).minus(beanstalkField?.harvestableIndex)}
+  // numPods={new BigNumber(farmerField.plots[selectedPlotIndex])}
+  
+  const handlePlotSelect = useCallback((index: string) => {
+    setFieldValue('plotIndex', index);
+    setFieldValue('min', ZERO_BN);
+    setFieldValue('max', new BigNumber(farmerField.plots[index]));
+    setFieldValue('amount', values.max?.minus(values.min ? values.min : ZERO_BN));
+    setFieldValue('expiresAt', new BigNumber(index).minus(beanstalkField?.harvestableIndex));
+  }, [beanstalkField?.harvestableIndex, farmerField.plots, setFieldValue, values.max, values.min]);
+  
+  const handleChangeAmount = (amount: BigNumber) => {
+    const delta = (values?.max || ZERO_BN).minus(amount);
+    setFieldValue('min', MaxBN(ZERO_BN, delta));
+    if (delta.lt(0)) {
+      setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
     }
-    return Promise.reject();
-  }, [curve]);
+  };
 
-  const balances = useFarmerBalances();
-  const erc20TokenMap = useTokenMap([BEAN, ETH, depositToken]);
+  useEffect(() => {
+    setFieldValue('amount', values.max?.minus(values.min ? values.min : ZERO_BN));
+  }, [values.min, values.max, setFieldValue]);
 
   return (
     <Form noValidate>
+      <SelectPlotDialog
+        farmerField={farmerField}
+        beanstalkField={beanstalkField}
+        handlePlotSelect={handlePlotSelect}
+        handleClose={hideDialog}
+        open={dialogOpen}
+      />
       <Stack gap={1}>
-        <TokenSelectDialog
-          open={showTokenSelect}
-          handleClose={handleClose}
-          selected={values.tokens}
-          handleSubmit={handleSelectTokens}
-          balances={balances}
-          tokenList={Object.values(erc20TokenMap)}
-        />
-        <FieldWrapper label="Place in Line">
-          <Box px={2}>
-            <SliderField
-              min={0}
-              fields={['placeInLine']}
-              max={podLine.toNumber()}
-              initialState={0}
-            />
-          </Box>
-        </FieldWrapper>
-        <Field name="placeInLine">
-          {(fieldProps: FieldProps) => (
-            <InputField
-              {...fieldProps}
-              minValue={new BigNumber(0)}
-              placeholder={podLine.toNumber().toString()}
-              maxValue={podLine}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Stack sx={{ pr: 0 }} alignItems="center">
-                      {/* <img src={podsIcon} alt="" height="30px" /> */}
-                      <Typography color={BeanstalkPalette.black} sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
-                        -
-                      </Typography>
-                    </Stack>
-                  </InputAdornment>)
-              }}
-            />
-          )}
-        </Field>
-        <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
-          <Field name="pricePerPod">
-            {(fieldProps: FieldProps) => (
-              <InputField
-                {...fieldProps}
-                placeholder="0.0000"
-                showMaxButton
+        <pre>{JSON.stringify(values, null, 2)}</pre>
+        {(values?.plotIndex === null)
+          ? (
+            <FieldWrapper>
+              <TokenInputField
+                name="amount"
+                // MUI
+                fullWidth
                 InputProps={{
-                  inputProps: { step: '0.01' },
                   endAdornment: (
-                    <InputAdornment position="end">
-                      <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>
-                        <img src={beanIcon} alt="" height="30px" />
-                        <Typography sx={{ fontSize: '20px' }}>BEAN</Typography>
-                      </Stack>
-                    </InputAdornment>)
+                    <TokenAdornment
+                      token={PODS}
+                      onClick={showDialog}
+                      buttonLabel="SELECT PLOT"
+                    />
+                  ),
                 }}
-                maxValue={new BigNumber(1)}
-                minValue={new BigNumber(0)}
+                // placeholder="hide"
+                disabled
+                handleChange={handleChangeAmount as any}
               />
-            )}
-          </Field>
-        </FieldWrapper>
-        <FieldWrapper label="Number of Beans">
-          <>
-            {values.tokens.map((state, index) => (
-              <TokenQuoteProvider
-                key={`tokens.${index}`}
-                name={`tokens.${index}`}
-                tokenOut={depositToken}
-                balance={balances[state.token.address] || undefined}
-                state={state}
-                showTokenSelect={handleOpen}
-                disabled={isMainnet}
-                disableTokenSelect={isMainnet}
-                handleQuote={handleQuote}
-              />
-            ))}
-          </>
-        </FieldWrapper>
+            </FieldWrapper>
+          ) : (
+            <>
+              <FieldWrapper>
+                <TokenInputField
+                  name="amount"
+                  // MUI
+                  fullWidth
+                  InputProps={{
+                    endAdornment: (
+                      <TokenAdornment
+                        token={PODS}
+                        onClick={showDialog}
+                      />
+                    ),
+                  }}
+                  // Other
+                  balance={new BigNumber(farmerField.plots[values?.plotIndex])}
+                  balanceLabel="Plot Size"
+                  handleChange={handleChangeAmount as any}
+                />
+              </FieldWrapper>
+              <Box px={3}>
+                {/* double slider sets the form's 'min' and 'max' values */}
+                {/* so we leave the name field blank */}
+                <SliderField
+                  min={0}
+                  fields={['min', 'max']}
+                  max={numPods?.toNumber()}
+                  initialState={[0, numPods?.toNumber()]}
+                />
+              </Box>
+              <Stack direction="row" gap={1}>
+                <Box width="50%">
+                  <FieldWrapper label="Start" tooltip={POD_MARKET_TOOLTIPS.start}>
+                    <Field name="min">
+                      {(fieldProps: FieldProps) => (
+                        <InputField
+                          {...fieldProps}
+                          placeholder="0.0000"
+                          minValue={new BigNumber(0)}
+                          maxValue={values.max ? values.max.minus(1) : numPods?.minus(1)}
+                        />
+                      )}
+                    </Field>
+                  </FieldWrapper>
+                </Box>
+                <Box width="50%">
+                  <Stack gap={0.8}>
+                    <FieldWrapper label="End" tooltip={POD_MARKET_TOOLTIPS.end}>
+                      <Field name="max">
+                        {(fieldProps: FieldProps) => (
+                          <InputField
+                            {...fieldProps}
+                            placeholder="0.0000"
+                            minValue={new BigNumber(0)}
+                            maxValue={numPods}
+                          />
+                        )}
+                      </Field>
+                    </FieldWrapper>
+                  </Stack>
+                </Box>
+              </Stack>
+              {/*<FieldWrapper label="Amount" tooltip={POD_MARKET_TOOLTIPS.amount}>*/}
+              {/*  <Field name="amount">*/}
+              {/*    {(fieldProps: FieldProps) => (*/}
+              {/*      <InputField*/}
+              {/*        {...fieldProps}*/}
+              {/*        handleChangeOverride={handleChangeAmount}*/}
+              {/*        maxValue={numPods}*/}
+              {/*        minValue={new BigNumber(0)}*/}
+              {/*        InputProps={{*/}
+              {/*          endAdornment: (*/}
+              {/*            <InputAdornment position="end">*/}
+              {/*              <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>*/}
+              {/*                <img src={podsIcon} alt="" height="30px" />*/}
+              {/*                <Typography sx={{ fontSize: '20px' }}>PODS</Typography>*/}
+              {/*              </Stack>*/}
+              {/*            </InputAdornment>)*/}
+              {/*        }}*/}
+              {/*        // disabled*/}
+              {/*      />*/}
+              {/*    )}*/}
+              {/*  </Field>*/}
+              {/*</FieldWrapper>*/}
+              <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
+                <Field name="pricePerPod">
+                  {(fieldProps: FieldProps) => (
+                    <InputField
+                      {...fieldProps}
+                      placeholder="0.0000"
+                      showMaxButton
+                      InputProps={{
+                        inputProps: { step: '0.01' },
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>
+                              <img src={beanIcon} alt="" height="30px" />
+                              <Typography sx={{ fontSize: '20px' }}>BEAN</Typography>
+                            </Stack>
+                          </InputAdornment>)
+                      }}
+                      maxValue={new BigNumber(1)}
+                      minValue={new BigNumber(0)}
+                    />
+                  )}
+                </Field>
+              </FieldWrapper>
+              <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
+                <Field name="expiresAt">
+                  {(fieldProps: FieldProps) => (
+                    <InputField
+                      {...fieldProps}
+                      placeholder="0.0000"
+                      showMaxButton
+                      minValue={new BigNumber(0)}
+                      maxValue={placeInLine.plus(values.min ? values.min : ZERO_BN)}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Box sx={{ pr: 1 }}>
+                              <Typography sx={{ fontSize: '18px' }}>Place in Line</Typography>
+                            </Box>
+                          </InputAdornment>)
+                      }}
+                    />
+                  )}
+                </Field>
+              </FieldWrapper>
+              <FieldWrapper label="Receive Beans to">
+                <RadioCardField
+                  name="option"
+                  // Grid Props
+                  spacing={1}
+                  direction="row"
+                  xs={12}
+                  md={6}
+                  options={[
+                    {
+                      title: 'Wallet',
+                      description: 'Beans will be delivered directly to your wallet',
+                      value: 0,
+                    },
+                    {
+                      title: 'Farmable Balance',
+                      description: 'Beans will be made Farmable within Beanstalk',
+                      value: 1,
+                    }
+                  ]}
+                  sx={{
+                    width: '100%'
+                  }}
+                />
+              </FieldWrapper>
+              <Warning
+                message="Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing." />
+            </>
+          )}
+
         <Button sx={{ p: 1 }} type="submit" disabled>
-          Create Order
+          Create Listing
         </Button>
       </Stack>
     </Form>
@@ -181,7 +285,7 @@ const SellListingForm : React.FC<
 
 // ---------------------------------------------------
 
-const PREFERRED_TOKENS : PreferredToken[] = [
+const PREFERRED_TOKENS: PreferredToken[] = [
   {
     token: BEAN,
     minimum: new BigNumber(1),    // $1
@@ -196,24 +300,19 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   }
 ];
 
-const SellListing : React.FC<{}> = () => {
-  const Eth = useChainConstant(ETH);
-
+const SellListing: React.FC<{}> = () => {
   const initialValues: SellListingFormValues = useMemo(() => ({
-    placeInLine: null,
+    option: null,
+    min: ZERO_BN,
+    max: null,
+    amount: null,
     pricePerPod: null,
-    tokens: [
-      {
-        token: Eth,
-        amount: null,
-      },
-    ],
-  }), [Eth]);
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
+    expiresAt: null,
+    plotIndex: null,
+  }), []);
 
   const onSubmit = useCallback((values: SellListingFormValues, formActions: FormikHelpers<SellListingFormValues>) => {
+    console.log('CARD: ', values.option);
     Promise.resolve();
   }, []);
 
@@ -228,8 +327,9 @@ const SellListing : React.FC<{}> = () => {
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
           <SellListingForm
-            token={BEAN[1]}
-            podLine={beanstalkField.totalPods.minus(beanstalkField.harvestableIndex)}
+            // plot={farmerField.plots[selectedPlotIndex]}
+            // placeInLine={new BigNumber(selectedPlotIndex).minus(beanstalkField?.harvestableIndex)}
+            // numPods={new BigNumber(farmerField.plots[selectedPlotIndex])}
             {...formikProps}
           />
         </>

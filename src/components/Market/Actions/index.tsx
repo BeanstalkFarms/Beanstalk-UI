@@ -2,6 +2,7 @@ import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import Harvest from '../../Field/Actions/Harvest';
 import BuyOrder from './BuyOrder';
+import SellListing from './SellListing';
 
 const MarketActions : React.FC<{}> = () => {
   const [tab, setTab] = useState(0);
@@ -20,7 +21,7 @@ const MarketActions : React.FC<{}> = () => {
         </Stack>
         <Box sx={{ px: 1, pb: 1 }}>
           {tab === 0 && <BuyOrder />}
-          {tab === 1 && <Harvest />}
+          {tab === 1 && <SellListing />}
         </Box>
       </Stack>
     </Card>
