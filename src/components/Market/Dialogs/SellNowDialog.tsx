@@ -3,22 +3,14 @@ import {
   DialogProps,
   Stack,
   Dialog,
-  Typography,
-  Card,
-  Divider,
 } from '@mui/material';
 import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { Formik, FormikHelpers } from 'formik';
-import { displayBN } from '../../../util';
 import PlotOrderDetails from '../Cards/PlotOrderDetails';
-import { BeanstalkPalette } from '../../App/muiTheme';
-import podIcon from '../../../img/beanstalk/pod-icon.svg';
 import { AppState } from '../../../state';
 import { ZERO_BN } from '../../../constants';
-import { SellListingFormValues } from './SellListingDialog';
-import SellListingForm from '../Forms/SellListingForm';
 import SellNowForm from '../Forms/SellNowForm';
 import { PodOrder } from '../Plots.mock';
 import PlotSelect from '../../Common/PlotSelect';
