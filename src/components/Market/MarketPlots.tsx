@@ -4,10 +4,10 @@ import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import PlotTable from './Tables/PlotTable';
 import BuyOrderDialog from './Dialogs/BuyOrderDialog';
 import SellListingDialog from './Dialogs/SellListingDialog';
-import BuyNowDialog from './Dialogs/BuyNowDialog';
 import SellNowDialog from './Dialogs/SellNowDialog';
 import { mockPodListingData, mockPodOrderData, PodListing, PodOrder } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
@@ -156,8 +156,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
     },
   ];
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -168,37 +167,23 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
    */
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
 
-  const handleBuyModalOpen = useCallback(() => {
-    setBuyDialogOpen(true);
-  }, []);
 
   const handleBuyModalClose = useCallback(() => {
     setBuyDialogOpen(false);
   }, []);
 
-  /**
-   * User clicks a row under Buy Now tab
-   */
-  const [buyNowDialogOpen, setBuyNowDialogOpen] = useState(false);
-  const [buyNowRow, setBuyNowRow] = useState<PodListing | undefined>();
-
   const handleBuyNowModalOpen = useCallback((params: GridRowParams) => {
-    setBuyNowRow(params.row);
-    setBuyNowDialogOpen(true);
-  }, []);
+    console.log('ROW', params.row.id);
+    navigate(`/market/listing/${params.row.id}`);
+    // setBuyNowRow(params.row);
+    // setBuyNowDialogOpen(true);
+  }, [navigate]);
 
-  const handleBuyNowModalClose = useCallback(() => {
-    setBuyNowDialogOpen(false);
-  }, []);
 
   /**
    * User clicks "Create Sell Listing" button
    */
   const [sellModalOpen, setSellModalOpen] = useState(false);
-
-  const handleSellModalOpen = useCallback(() => {
-    setSellModalOpen(true);
-  }, []);
 
   const handleSellModalClose = useCallback(() => {
     setSellModalOpen(false);
@@ -211,9 +196,11 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
   const [sellNowRow, setSellNowRow] = useState<PodOrder | undefined>();
 
   const handleSellNowModalOpen = useCallback((params: GridRowParams) => {
-    setSellNowRow(params.row);
-    setSellNowModalOpen(true);
-  }, []);
+    console.log('ROW', params.row.id);
+    navigate(`/market/order/${params.row.id}`);
+    // setSellNowRow(params.row);
+    // setSellNowModalOpen(true);
+  }, [navigate]);
 
   const handleSellNowModalClose = useCallback(() => {
     setSellNowModalOpen(false);
@@ -261,15 +248,6 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
         fullWidth
         open={sellModalOpen}
         handleClose={handleSellModalClose}
-      />
-
-      {/* User clicks a row under Buy Now tab */}
-      <BuyNowDialog
-        fullWidth
-        handleClose={handleBuyNowModalClose}
-        open={buyNowDialogOpen}
-        podListing={buyNowRow}
-        harvestableIndex={beanstalkField.harvestableIndex}
       />
 
       {/* User clicks a row under Sell Now tab */}

@@ -1,35 +1,46 @@
-import React, { useCallback, useState } from 'react';
-import { Form, FormikProps } from 'formik';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { ERC20Token, NativeToken } from 'classes/Token';
-import { BuyOrderFormValues } from '../Dialogs/BuyOrderDialog';
-import TokenQuoteProvider from '../../Common/Form/TokenQuoteProvider';
-import { SupportedChainId } from '../../../constants';
-import { Token } from '../../../classes';
-import useChainId from '../../../hooks/useChain';
-import { QuoteHandler } from '../../../hooks/useQuote';
-import { toStringBaseUnitBN, toTokenUnitsBN } from '../../../util';
-import useCurve from '../../../hooks/useCurve';
-import useFarmerBalances from '../../../hooks/useFarmerBalances';
-import TokenSelectDialog from '../../Common/Form/TokenSelectDialog';
-import useTokenMap from '../../../hooks/useTokenMap';
-import { BEAN, ETH } from '../../../constants/tokens';
-import { BuyNowFormValues } from '../Dialogs/BuyNowDialog';
+import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import {
+  FormState,
+  FormTokenState,
+  SettingInput,
+  TokenQuoteProvider,
+  TokenSelectDialog,
+  TxnSettings
+} from 'components/Common/Form';
+import { SupportedChainId } from 'constants/index';
+import { BEAN, ETH } from 'constants/tokens';
+import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import useChainId from 'hooks/useChain';
+import useChainConstant from 'hooks/useChainConstant';
+import useFarmerBalances from 'hooks/useFarmerBalances';
+import { QuoteHandler } from 'hooks/useQuote';
+import useTokenMap from 'hooks/useTokenMap';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
+import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
+import SliderField from '../../Common/Form/SliderField';
+import InputField from '../../Common/Form/InputField';
+import { BeanstalkPalette } from '../../App/muiTheme';
+import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
+import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
+import useCurve from '../../../hooks/useCurve';
 
-export type BuyNowFormProps = {
-  token: NativeToken | ERC20Token
-}
+export type BuyNowFormValues = FormState
 
-const BuyNowForm: React.FC<
-  BuyNowFormProps & 
+const BuyNowForm : React.FC<
   FormikProps<BuyNowFormValues>
+  & {
+    token: ERC20Token | NativeToken;
+  }
 > = ({
   values,
   setFieldValue,
-  isSubmitting,
-  token: depositToken// BEAN
+  //
+  token: depositToken, // BEAN
 }) => {
   const chainId = useChainId();
   const [showTokenSelect, setShowTokenSelect] = useState(false);
@@ -106,4 +117,42 @@ const BuyNowForm: React.FC<
   );
 };
 
-export default BuyNowForm;
+// ---------------------------------------------------
+
+const BuyNow : React.FC<{}> = () => {
+  const Eth = useChainConstant(ETH);
+
+  const initialValues: BuyNowFormValues = useMemo(() => ({
+    tokens: [
+      {
+        token: Eth,
+        amount: null,
+      },
+    ],
+  }), [Eth]);
+
+  const onSubmit = useCallback((values: BuyNowFormValues, formActions: FormikHelpers<BuyNowFormValues>) => {
+    Promise.resolve();
+  }, []);
+
+  return (
+    <Formik<BuyNowFormValues>
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+    >
+      {(formikProps: FormikProps<BuyNowFormValues>) => (
+        <>
+          <TxnSettings placement="form-top-right">
+            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
+          </TxnSettings>
+          <BuyNowForm
+            token={BEAN[1]}
+            {...formikProps}
+          />
+        </>
+      )}
+    </Formik>
+  );
+};
+
+export default BuyNow;

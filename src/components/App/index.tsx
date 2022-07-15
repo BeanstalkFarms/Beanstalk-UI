@@ -31,10 +31,12 @@ import FieldAnalytics from '../../pages/analytics/field';
 import BarnraiseAnalytics from '../../pages/analytics/barnraise';
 import PodMarketPage from '../../pages/market/market';
 import NFTPage from '../../pages/nft';
-import ChopPage from "../../pages/chop";
-import MarketAccountPage from "../../pages/market/account";
-import MarketActivityPage from "../../pages/market/activity";
-import CreatePage from "../../pages/market/create";
+import ChopPage from '../../pages/chop';
+import MarketAccountPage from '../../pages/market/account';
+import MarketActivityPage from '../../pages/market/activity';
+import CreatePage from '../../pages/market/create';
+import OrderPage from '../../pages/market/order';
+import ListingPage from '../../pages/market/listing';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -142,6 +144,8 @@ export default function App() {
           <Route path="/market/account" element={<MarketAccountPage />} />
           <Route path="/market/activity" element={<MarketActivityPage />} />
           <Route path="/market/create" element={<CreatePage />} />
+          <Route path="/market/order/:id" element={<OrderPage />} />
+          <Route path="/market/listing/:id" element={<ListingPage />} />
           <Route path="/analytics/bean" element={<BeanAnalytics />} />
           <Route path="/analytics/silo" element={<SiloAnalytics />} />
           <Route path="/analytics/field" element={<FieldAnalytics />} />
