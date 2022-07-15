@@ -21,7 +21,7 @@ export type RouteData = {
   small?: boolean;
 }
 
-type RouteKeys = 'top' | 'analytics' | 'more' | 'additional'
+type RouteKeys = 'top' | 'market' | 'analytics' | 'more' | 'additional'
 
 const ROUTES : { [key in RouteKeys] : RouteData[] } = {
   // Main Navigation
@@ -43,9 +43,20 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       title: 'Barn',
       tag: 'NEW',
     },
+  ],
+  // Market Menu
+  market: [
     {
       path: 'market',
-      title: 'Market',
+      title: 'Pod Market',
+    },
+    {
+      path: 'market/account',
+      title: 'My Orders/Listings',
+    },
+    {
+      path: 'market/activity',
+      title: 'Activity',
     },
   ],
   // Analytics Menu

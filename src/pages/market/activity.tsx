@@ -1,26 +1,20 @@
 import React from 'react';
 import {
-  Box,
-  Card,
-  Container, Link,
+  Container,
+  Link,
   Stack,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
-
-import { useTheme } from '@mui/material/styles';
 import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import MarketPlots from 'components/Market/MarketPlots';
-import MyPlots from 'components/Market/MyPlots';
 import ActivityTable from 'components/Market/Tables/ActivityTable';
-import { displayBN, displayFullBN } from 'util/index';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/index';
+import { displayBN, displayFullBN } from '../../util';
+import { SupportedChainId } from '../../constants';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -30,7 +24,7 @@ const columns: DataGridProps['columns'] = [
     disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',
-    renderCell: (params) => <Typography><Link href="">{params.value}</Link></Typography>,
+    renderCell: (params) => <Typography><Link href="pages/market/marketplace">{params.value}</Link></Typography>,
   },
   {
     field: 'pods',
@@ -102,40 +96,29 @@ const rows = new Array(20).fill(null).map((_, i) => (
   }
 ));
 
-const MarketplacePage: React.FC = () => {
-  const theme = useTheme();
+const MarketActivityPage: React.FC = () => {
   const chainId = useChainId();
-  
+
   let content;
   if (chainId === SupportedChainId.MAINNET) {
     content = (
-      <ComingSoonCard title="Pod Market" />
+      <ComingSoonCard title="Pod Market Activity" />
     );
   } else {
-    content = (
-      <>
-        <Card sx={{ p: 2 }}>
-          <Box display="flex" alignItems="center" justifyContent="center" height={300}>
-            <Typography variant="h2">insert graph</Typography>
-          </Box>
-        </Card>
-        <MarketPlots />
-        <MyPlots />
-        <ActivityTable columns={columns} rows={rows} />
-      </>
-    );
+    content = (<ActivityTable columns={columns} rows={rows} />);
   }
 
   return (
     <Container maxWidth="lg">
       <Stack spacing={2}>
         <PageHeader
-          title="The Pod Market"
-          description="Trade Pods, the Beanstalk-native debt asset"
+          title="Pod Market Activity"
+          description="View all activity for the Pod Market"
         />
         {content}
       </Stack>
     </Container>
   );
 };
-export default MarketplacePage;
+
+export default MarketActivityPage;

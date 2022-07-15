@@ -1,15 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Button, Card, CardProps, Stack, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, CardProps, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
-import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import PlotTable from './Tables/PlotTable';
-import BuyOrderDialog from './Dialogs/BuyOrderDialog';
-import SellListingDialog from './Dialogs/SellListingDialog';
-import BuyNowDialog from './Dialogs/BuyNowDialog';
-import SellNowDialog from './Dialogs/SellNowDialog';
-import { mockPodListingData, mockPodOrderData, PodListing, PodOrder } from './Plots.mock';
+import { mockPodListingData, mockPodOrderData } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
 import beanIcon from '../../img/tokens/bean-logo-circled.svg';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
@@ -49,7 +45,6 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
       flex: 1.5,
       valueFormatter: (params) =>
         `${displayFullBN(params.value as BigNumber, 0)}`,
-        // `${displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex))}`,
       renderCell: (params) => (
         <Stack direction="row" gap={1}>
           <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)} in Line</Typography>
@@ -156,97 +151,27 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
     },
   ];
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
 
-  /**
-   * User clicks "Create Buy Order" button
-   */
-  const [buyDialogOpen, setBuyDialogOpen] = useState(false);
+  const handleBuyNowClick = useCallback((params: GridRowParams) => {
+    navigate(`/market/listing/${params.row.id}`);
+  }, [navigate]);
 
-  const handleBuyModalOpen = useCallback(() => {
-    setBuyDialogOpen(true);
-  }, []);
-
-  const handleBuyModalClose = useCallback(() => {
-    setBuyDialogOpen(false);
-  }, []);
-
-  /**
-   * User clicks a row under Buy Now tab
-   */
-  const [buyNowDialogOpen, setBuyNowDialogOpen] = useState(false);
-  const [buyNowRow, setBuyNowRow] = useState<PodListing | undefined>();
-
-  const handleBuyNowModalOpen = useCallback((params: GridRowParams) => {
-    setBuyNowRow(params.row);
-    setBuyNowDialogOpen(true);
-  }, []);
-
-  const handleBuyNowModalClose = useCallback(() => {
-    setBuyNowDialogOpen(false);
-  }, []);
-
-  /**
-   * User clicks "Create Sell Listing" button
-   */
-  const [sellModalOpen, setSellModalOpen] = useState(false);
-
-  const handleSellModalOpen = useCallback(() => {
-    setSellModalOpen(true);
-  }, []);
-
-  const handleSellModalClose = useCallback(() => {
-    setSellModalOpen(false);
-  }, []);
-
-  /**
-   * User clicks a row under Sell Now tab
-   */
-  const [sellNowModalOpen, setSellNowModalOpen] = useState(false);
-  const [sellNowRow, setSellNowRow] = useState<PodOrder | undefined>();
-
-  const handleSellNowModalOpen = useCallback((params: GridRowParams) => {
-    setSellNowRow(params.row);
-    setSellNowModalOpen(true);
-  }, []);
-
-  const handleSellNowModalClose = useCallback(() => {
-    setSellNowModalOpen(false);
-  }, []);
+  const handleSellNowClick = useCallback((params: GridRowParams) => {
+    navigate(`/market/order/${params.row.id}`);
+  }, [navigate]);
 
   return (
     <>
       <Card sx={{ p: 2, ...sx }}>
-        <Stack
-          direction={isMobile ? 'column' : 'row'}
-          justifyContent="space-between"
-          alignItems={isMobile ? 'start' : 'center'}
-          sx={{ mb: 1.5 }}
-        >
-          <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
-            <Tab label="Buy Now" />
-            <Tab label="Sell Now" />
-          </Tabs>
-
-          {/* Buy Now tab */}
-          {tab === 0 && (
-            <Button onClick={handleBuyModalOpen}>
-              Create Buy Order
-            </Button>
-          )}
-
-          {/* Sell Now tab */}
-          {tab === 1 && (
-            <Button onClick={handleSellModalOpen}>
-              Create Sell Listing
-            </Button>
-          )}
-        </Stack>
+        <Tabs value={tab} onChange={handleChangeTab}>
+          <Tab label="Buy Now" />
+          <Tab label="Sell Now" />
+        </Tabs>
 
         {/* Buy Now tab */}
         {tab === 0 && (
@@ -254,7 +179,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
             columns={LISTING_COLUMNS}
             rows={mockPodListingData}
             maxRows={8}
-            onRowClick={handleBuyNowModalOpen}
+            onRowClick={handleBuyNowClick}
           />
         )}
 
@@ -264,43 +189,10 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
             columns={orderColumns}
             rows={mockPodOrderData}
             maxRows={8}
-            onRowClick={handleSellNowModalOpen}
+            onRowClick={handleSellNowClick}
           />
        )}
       </Card>
-
-      {/* ----- dialogs ----- */}
-      {/* User clicks "Create Buy Order" button */}
-      <BuyOrderDialog
-        fullWidth
-        open={buyDialogOpen}
-        handleClose={handleBuyModalClose}
-      />
-
-      {/* User clicks "Create Sell Listing" button */}
-      <SellListingDialog
-        fullWidth
-        open={sellModalOpen}
-        handleClose={handleSellModalClose}
-      />
-
-      {/* User clicks a row under Buy Now tab */}
-      <BuyNowDialog
-        fullWidth
-        handleClose={handleBuyNowModalClose}
-        open={buyNowDialogOpen}
-        podListing={buyNowRow}
-        harvestableIndex={beanstalkField.harvestableIndex}
-      />
-
-      {/* User clicks a row under Sell Now tab */}
-      <SellNowDialog
-        fullWidth
-        handleClose={handleSellNowModalClose}
-        open={sellNowModalOpen}
-        podListing={sellNowRow}
-        harvestableIndex={beanstalkField.harvestableIndex}
-      />
     </>
   );
 };
