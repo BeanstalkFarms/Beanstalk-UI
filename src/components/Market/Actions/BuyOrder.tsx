@@ -9,12 +9,11 @@ import {
   TxnSettings
 } from 'components/Common/Form';
 import { SupportedChainId } from 'constants/index';
-import { BEAN, ETH, WETH } from 'constants/tokens';
+import { BEAN, ETH } from 'constants/tokens';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
 import useFarmerBalances from 'hooks/useFarmerBalances';
-import { PreferredToken } from 'hooks/usePreferredToken';
 import { QuoteHandler } from 'hooks/useQuote';
 import useTokenMap from 'hooks/useTokenMap';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -176,21 +175,6 @@ const BuyOrderForm : React.FC<
 };
 
 // ---------------------------------------------------
-
-const PREFERRED_TOKENS : PreferredToken[] = [
-  {
-    token: BEAN,
-    minimum: new BigNumber(1),    // $1
-  },
-  {
-    token: ETH,
-    minimum: new BigNumber(0.001) // ~$2-4
-  },
-  {
-    token: WETH,
-    minimum: new BigNumber(0.001) // ~$2-4
-  }
-];
 
 const BuyOrder : React.FC<{}> = () => {
   const Eth = useChainConstant(ETH);

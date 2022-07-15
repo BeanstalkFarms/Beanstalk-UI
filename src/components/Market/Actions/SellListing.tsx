@@ -1,13 +1,10 @@
 import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { ERC20Token, NativeToken } from 'classes/Token';
-import { FormTokenState, SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
+import { SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
-import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
+import { PODS } from 'constants/tokens';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import useChainConstant from 'hooks/useChainConstant';
-import { PreferredToken } from 'hooks/usePreferredToken';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { MaxBN, MinBN } from 'util/index';
@@ -16,8 +13,6 @@ import SliderField from '../../Common/Form/SliderField';
 import InputField from '../../Common/Form/InputField';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
-import PlotDetails from '../Cards/PlotDetails';
-import podsIcon from '../../../img/beanstalk/pod-icon.svg';
 import RadioCardField from '../../Common/Form/RadioCardField';
 import Warning from '../../Common/Form/Warning';
 import useToggle from '../../../hooks/display/useToggle';
@@ -33,18 +28,10 @@ export type SellListingFormValues = {
   plotIndex: string | null;
 }
 
-const SellListingForm: React.FC<FormikProps<SellListingFormValues>
-  & {
-  // plot: any;
-  // placeInLine: BigNumber;
-  // numPods: BigNumber;
-}> = ({
-        values,
-        // plot,
-        // placeInLine,
-        // numPods,
-        setFieldValue,
-      }) => {
+const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
+  values,
+  setFieldValue,
+}) => {
   const [dialogOpen, showDialog, hideDialog] = useToggle();
   
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
@@ -54,15 +41,9 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
-
-  // const numPods = new BigNumber(100);
-  // const placeInLine = new BigNumber(100);
-  const plot = values.plotIndex !== null ? farmerField.plots[values.plotIndex] : ZERO_BN;
+  
   const placeInLine = values.plotIndex !== null ? new BigNumber(values.plotIndex).minus(beanstalkField?.harvestableIndex) : ZERO_BN;
   const numPods = values.plotIndex !== null ? new BigNumber(farmerField.plots[values.plotIndex]) : ZERO_BN;
-  // plot={farmerField.plots[selectedPlotIndex]}
-  // placeInLine={new BigNumber(selectedPlotIndex).minus(beanstalkField?.harvestableIndex)}
-  // numPods={new BigNumber(farmerField.plots[selectedPlotIndex])}
   
   const handlePlotSelect = useCallback((index: string) => {
     setFieldValue('plotIndex', index);
@@ -111,7 +92,6 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>
                     />
                   ),
                 }}
-                // placeholder="hide"
                 disabled
                 handleChange={handleChangeAmount as any}
               />
@@ -121,7 +101,6 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>
               <FieldWrapper>
                 <TokenInputField
                   name="amount"
-                  // MUI
                   fullWidth
                   InputProps={{
                     endAdornment: (
@@ -179,28 +158,6 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>
                   </Stack>
                 </Box>
               </Stack>
-              {/*<FieldWrapper label="Amount" tooltip={POD_MARKET_TOOLTIPS.amount}>*/}
-              {/*  <Field name="amount">*/}
-              {/*    {(fieldProps: FieldProps) => (*/}
-              {/*      <InputField*/}
-              {/*        {...fieldProps}*/}
-              {/*        handleChangeOverride={handleChangeAmount}*/}
-              {/*        maxValue={numPods}*/}
-              {/*        minValue={new BigNumber(0)}*/}
-              {/*        InputProps={{*/}
-              {/*          endAdornment: (*/}
-              {/*            <InputAdornment position="end">*/}
-              {/*              <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>*/}
-              {/*                <img src={podsIcon} alt="" height="30px" />*/}
-              {/*                <Typography sx={{ fontSize: '20px' }}>PODS</Typography>*/}
-              {/*              </Stack>*/}
-              {/*            </InputAdornment>)*/}
-              {/*        }}*/}
-              {/*        // disabled*/}
-              {/*      />*/}
-              {/*    )}*/}
-              {/*  </Field>*/}
-              {/*</FieldWrapper>*/}
               <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
                 <Field name="pricePerPod">
                   {(fieldProps: FieldProps) => (
@@ -285,21 +242,6 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>
 
 // ---------------------------------------------------
 
-const PREFERRED_TOKENS: PreferredToken[] = [
-  {
-    token: BEAN,
-    minimum: new BigNumber(1),    // $1
-  },
-  {
-    token: ETH,
-    minimum: new BigNumber(0.001) // ~$2-4
-  },
-  {
-    token: WETH,
-    minimum: new BigNumber(0.001) // ~$2-4
-  }
-];
-
 const SellListing: React.FC<{}> = () => {
   const initialValues: SellListingFormValues = useMemo(() => ({
     option: null,
@@ -327,9 +269,6 @@ const SellListing: React.FC<{}> = () => {
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
           <SellListingForm
-            // plot={farmerField.plots[selectedPlotIndex]}
-            // placeInLine={new BigNumber(selectedPlotIndex).minus(beanstalkField?.harvestableIndex)}
-            // numPods={new BigNumber(farmerField.plots[selectedPlotIndex])}
             {...formikProps}
           />
         </>
