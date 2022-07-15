@@ -1,10 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Button, Card, CardProps, Stack, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, CardProps, Stack, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-import CloseIcon from '@mui/icons-material/Close';
 import PlotTable from './Tables/PlotTable';
 import MyOrdersDialog from './Dialogs/MyOrdersDialog';
 import MyListingsDialog from './Dialogs/MyListingsDialog';
@@ -154,7 +153,6 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
   ];
   
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);

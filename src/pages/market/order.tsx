@@ -8,9 +8,7 @@ import {
 import PageHeader from 'components/Common/PageHeader';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import PlotListingDetails from '../../components/Market/Cards/PlotListingDetails';
-import { mockPodListingData, mockPodOrderData } from '../../components/Market/Plots.mock';
-import BuyNow from '../../components/Market/Actions/BuyNow';
+import { mockPodOrderData } from '../../components/Market/Plots.mock';
 import SellNow from '../../components/Market/Actions/SellNow';
 import PlotOrderDetails from '../../components/Market/Cards/PlotOrderDetails';
 import { AppState } from '../../state';

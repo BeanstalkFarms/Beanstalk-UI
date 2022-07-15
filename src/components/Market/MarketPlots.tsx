@@ -1,15 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Button, Card, CardProps, Stack, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, CardProps, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
-import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import PlotTable from './Tables/PlotTable';
-import BuyOrderDialog from './Dialogs/BuyOrderDialog';
-import SellListingDialog from './Dialogs/SellListingDialog';
 import SellNowDialog from './Dialogs/SellNowDialog';
-import { mockPodListingData, mockPodOrderData, PodListing, PodOrder } from './Plots.mock';
+import { mockPodListingData, mockPodOrderData, PodOrder } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
 import beanIcon from '../../img/tokens/bean-logo-circled.svg';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
@@ -49,7 +46,6 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
       flex: 1.5,
       valueFormatter: (params) =>
         `${displayFullBN(params.value as BigNumber, 0)}`,
-        // `${displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex))}`,
       renderCell: (params) => (
         <Stack direction="row" gap={1}>
           <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)} in Line</Typography>
@@ -162,32 +158,12 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
     setTab(newValue);
   };
 
-  /**
-   * User clicks "Create Buy Order" button
-   */
-  const [buyDialogOpen, setBuyDialogOpen] = useState(false);
-
-
-  const handleBuyModalClose = useCallback(() => {
-    setBuyDialogOpen(false);
-  }, []);
-
   const handleBuyNowModalOpen = useCallback((params: GridRowParams) => {
     console.log('ROW', params.row.id);
     navigate(`/market/listing/${params.row.id}`);
     // setBuyNowRow(params.row);
     // setBuyNowDialogOpen(true);
   }, [navigate]);
-
-
-  /**
-   * User clicks "Create Sell Listing" button
-   */
-  const [sellModalOpen, setSellModalOpen] = useState(false);
-
-  const handleSellModalClose = useCallback(() => {
-    setSellModalOpen(false);
-  }, []);
 
   /**
    * User clicks a row under Sell Now tab
@@ -234,21 +210,6 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
           />
        )}
       </Card>
-
-      {/* ----- dialogs ----- */}
-      {/* User clicks "Create Buy Order" button */}
-      <BuyOrderDialog
-        fullWidth
-        open={buyDialogOpen}
-        handleClose={handleBuyModalClose}
-      />
-
-      {/* User clicks "Create Sell Listing" button */}
-      <SellListingDialog
-        fullWidth
-        open={sellModalOpen}
-        handleClose={handleSellModalClose}
-      />
 
       {/* User clicks a row under Sell Now tab */}
       <SellNowDialog
